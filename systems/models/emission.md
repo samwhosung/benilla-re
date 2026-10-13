@@ -37,10 +37,11 @@ Proof: one
 Test: none
 
 The loop steps records by 0x1f8 (`0x7100a0`) and states by 0x16c. `0x70f9b9` switches on the 16-bit
-type with `dec`: 1 builds a plane (0x2a0 bytes), 2 a sphere (0x2a4), 3 a spline (0x2d0), any other
-skips the record. Each track's first value is read through its values pointer, track `+0x18`
-(`0x70fa5e` reads `+0xf4` for the rate track at `+0xdc`). `0x70fd22` passes `+0x30` and `+0x32`
-to `0x7b4ed0`; `0x717db5` samples the byte track `+0x1dc` into state `+0x14c`.
+type with `dec`: 1 builds a plane (0x2a0 bytes), 2 a sphere (0x2a4), 3 a spline (0x2d0); any other
+type, like a failed allocation, takes `0x70f92f`, which returns 0 from the initializer. Each track's
+first value is read through its values pointer, track `+0x18` (`0x70fa5e` reads `+0xf4` for the rate
+track at `+0xdc`). `0x70fd22` passes `+0x30` and `+0x32` to `0x7b4ed0`; `0x717db5` samples the byte
+track `+0x1dc` into state `+0x14c`.
 
 ## Record to emitter
 
@@ -64,8 +65,8 @@ Proof: one
 Test: none
 
 `0x70ff3f` stores `+0x188` at `+0x1b8` and `+0x18c − +0x188` at `+0x1c0`; the three model pairs
-store the minimum and `max − min` the same way. `0x7b5d30(s0, f0, s1, f1)` stores the slope
-`(f1 − f0)/(s1 − s0)` and `f0 − slope·s0`, or zero for both when `|s1 − s0| ≤ 2.384186e-7`.
+store the minimum and `max − min` the same way. `0x7b5d30(s0, f0, s1, f1)` stores the slope `(f1 −
+f0)/(s1 − s0)` and `f0 − slope·s0`, or zero for both when `|s1 − s0| < 2.384186e-7`.
 
 ## Record flags
 
@@ -86,15 +87,16 @@ Material flag 1 is set when record flag 1 is clear, flag 2 when record flag 8 is
 `+0x28` maps 1 to 6 to modes 1, 2, 0, 3, 4, 5, any other value to mode 0, and flag 4 stays set only
 for blend 1, 3 or another value.
 
-Addresses: `0x70faf8`, `0x70fb8e`, `0x70fc32`, `0x70fc44`, `0x70fca4`, `0x70fcf2`, `0x70fd13`, `0x7b4f60`, `0x7b5d00`
+Addresses: `0x70faf8`, `0x70fb8e`, `0x70fc32`, `0x70fc44`, `0x70fca4`, `0x70fcf2`, `0x70fd13`, `0x7b4f60`, `0x7b5d00`, `0x70fcae`, `0x7102d0`
 Confidence: verified
 Proof: one
 Test: none
 
 Each test sets its bit with `and ~bit; xor bit`. The sphere bits sit under `cmp word [+0x2a], 2`.
 `0x70fc44` shifts flag 0x400 into the fourth argument of `0x7b4f60`, which also takes head and tail
-from `+0x2c` and the tail length `+0x17c` into `+0xb4`. The blend uses the jump table `0x7102d0`;
-`0x70fcf2` and `0x70fd01` fold record bits 0 and 3, inverted, into the material.
+from `+0x2c` and the tail length `+0x17c` into `+0xb4`. The blend switch `0x70fcae` jumps through
+`0x7102d0` on `+0x28` minus 1; `0x70fcf2` and `0x70fd01` fold record bits 0 and 3, inverted, into
+the material.
 
 ## Per-frame parameters
 
@@ -122,9 +124,11 @@ and width slots 6 and 7, z source `0x7b5cd0`, which stores 0 when `|z| < 0.001`.
 ## Speed and birth
 
 Every shape starts a particle the same way: gradient byte 0 and age `U·dt`, where `U` is uniform in
-[0, 1) and `dt` the substep (0 for a burst). The speed is `speed·(1 + S·variation)` with `S`
-uniform in (−1, 1). `U` is `asfloat((w & 0x7fffff) | 0x3f800000) − 1`; `S` takes the same float `x`
-in [1, 2) and gives `2 − x` when the word `w` is negative, else `x − 2`.
+[0, 1) and `dt` the substep (0 for a burst). The speed is `speed·(1 + S·variation)`. With `m` the
+low 23 bits of a random word `w`, `U = m/2^23` and `S = ±(1 − m/2^23)`, positive when `w` is
+negative: `S` takes the values `±j/2^23`, `j` from 1 to 2^23, so it is never 0 and can be ±1. `U` is
+`asfloat((w & 0x7fffff) | 0x3f800000) − 1`; `S` takes the same float `x` in [1, 2) and gives `2 − x`
+in (0, 1] when `w` is negative, else `x − 2` in [−1, 0).
 
 Addresses: `0x7b1cc0`, `0x7b88c4`, `0x7b8da4`, `0x7b9532`, `0x4531e0`, `0x801628`
 Confidence: verified
@@ -141,7 +145,7 @@ A plane particle starts at `(S·length/2, S·width/2, 0)`, the x draw taken afte
 z source `z` its velocity is `speed·normalize(p − (0, 0, z))`; otherwise, with `θ = S·vertical` and
 `φ = S·horizontal`, it is `speed·(cos φ·sin θ, sin φ·sin θ, cos θ)`.
 
-Addresses: `0x7b8890`, `0x7b892b`, `0x7b8970`, `0x7b8a73`, `0x7b8c10`, `0x7b8c40`
+Addresses: `0x7b8890`, `0x7b892b`, `0x7b8970`, `0x7b8a73`, `0x7b8c10`, `0x7b8c20`, `0x7b8c30`, `0x7b8c40`
 Confidence: verified
 Proof: one
 Test: none
@@ -163,29 +167,35 @@ Confidence: verified
 Proof: one
 Test: none
 
-Slots 6 and 7 store the minimum `+0x290` and maximum `+0x294` and keep `+0x298 = max − min`;
-slots 8 and 9 store `+0x29c` and `+0x2a0`. `0x7b8e5b` and `0x7b8e76` take `fsincos` of A and B.
-The direction is scaled by `R` into the position, and the chosen velocity by the speed roll at
-`0x7b8fe6`.
+Slots 6 and 7 store the minimum `+0x290` and maximum `+0x294` and keep `+0x298 = max − min`; slots 8
+and 9 store `+0x29c` and `+0x2a0`. `0x7b8e5b` and `0x7b8e76` take `fsincos` of A and B. The
+direction is scaled by `R` into the position, and the chosen velocity by the speed roll at
+`0x7b8fe6`, unrounded: `0x7b8fee` multiplies by the roll still on the FPU stack, where the plane and
+the spline store it as a float first (`0x7b896d`, `0x7b95a4`).
 
 ## Spline spawn
 
-A spline particle sits at parameter `t = start + U·(end − start)` of the emitter's spline; after
-the end changes, the next one sits at `t = end`. With a z source its velocity is radial as for a
-plane. With a vertical spread `v`, the direction is +z rotated by `S·v` about the spline's unit
-tangent at `t`, the position moves `U·horizontal` along it, and the velocity is the speed along it.
-With neither, the velocity is `(0, 0, speed)`.
+A spline particle sits at parameter `t = start + U·(end − start)` of the emitter's spline; after the
+end changes, the next one sits at `t = end`. With a z source its velocity is radial as for a plane.
+With a vertical spread `v`, the direction is +z rotated by `S·v` about the spline's unit tangent at
+`t`, the velocity is the speed along it, and with a horizontal spread the position moves
+`U·horizontal` along it. With neither, the velocity is `(0, 0, speed)`. The three tests read their
+words as integers, so −0.0 counts as set.
 
-Addresses: `0x7b9500`, `0x7b9538`, `0x7b9598`, `0x7b963b`, `0x7b96f0`, `0x7b9737`, `0x7b9970`, `0x7b99c0`, `0x7b9a60`, `0x453390`, `0x453420`, `0x7be490`
+Addresses: `0x7b9500`, `0x7b9538`, `0x7b9598`, `0x7b963b`, `0x7b96f0`, `0x7b9737`, `0x7b9970`, `0x7b99c0`, `0x7b9a60`, `0x453390`, `0x453420`, `0x7be490`, `0x7b973f`, `0x7b9747`, `0x7b9a09`
 Confidence: verified
 Proof: one
 Test: none
 
-Slot 6 clamps the start into [0, 1] at `+0x294`. Slot 7 clamps the end, and when it moves by more
-than 2.384186e-7 stores it at `+0x298`, sets `+0x2a4` and the rate `+0xa8 = end·+0x290`; slot 10
-stores the rate at `+0x290`. `0x7b9538` takes `+0x298` and clears `+0x2a4`. The rotated +z is row
-2 of `0x7be490(tangent, angle, 1)` (rows 0 and 1 enter times 0.0). The zero-spread branch leaves
-the speed in the z slot (`0x7b95a4`).
+Slot 6 clamps the start into [0, 1] at `+0x294`. Slot 7 clamps the end into [0, 1] (NaN to 1) and,
+when `|end − +0x298|` is at least 2.384186e-7, stores it at `+0x298`, sets `+0x2a4` and the rate
+`+0xa8 = end·+0x290`: `jnp` at `0x7b9a09` returns on C0 alone, so an equal move stores; slot 10
+stores the rate at `+0x290`. `0x7b9538` takes `+0x298` and clears `+0x2a4`. The rotated +z is row 2
+of `0x7be490(out, tangent, angle, 1)` (rows 0 and 1 enter times 0.0); `0x7be490` normalizes the axis
+when its byte is 0, takes `fsincos` of the angle and returns `out` (`ret 8`). The z source `+0x188`,
+the spread `+0x29c` and the horizontal `+0x2a0` are tested with `test eax, eax`; the horizontal draw
+at `0x7b9747` runs only when `+0x2a0` is set (`0x7b973f`), so it shifts the random stream only then.
+The zero-spread branch leaves the speed in the z slot (`0x7b95a4`).
 
 ## Spawn space
 

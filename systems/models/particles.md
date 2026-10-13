@@ -25,20 +25,22 @@ the clone and deleting destructor, four shape setters and the rate setter.
 | 0 | `0x7b1dd0` | same | same | same |
 | 1 | `0x7b2420` | same | same | same |
 | 2 | `0x7b22b0` | `0x7b8890` | `0x7b8d70` | `0x7b9500` |
-| 4, 5 | pure | `0x7b87b0`, `0x7b87f0` | `0x7b8c90`, `0x7b8cd0` | `0x7b9260`, `0x7b92a0` |
+| 4 | pure | `0x7b87b0` | `0x7b8c90` | `0x7b9260` |
+| 5 | `0x7b1470` | `0x7b87f0` | `0x7b8cd0` | `0x7b92a0` |
 | 6 to 9 | pure | `0x7b8c10` to `0x7b8c40` | `0x7b9180` to `0x7b91d0` | `0x7b9970` to `0x7b9a50` |
 | 10 | `0x7b4bf0` | same | same | `0x7b9a60` |
 
-Addresses: `0x7b8770`, `0x7b8c50`, `0x7b91e0`, `0x7b11b0`, `0x81d83c`, `0x81d888`, `0x81d8b4`, `0x81d8e0`, `0x7b4bf0`, `0x7b9a60`, `0x70ebd0`
+Addresses: `0x7b8770`, `0x7b8c50`, `0x7b91e0`, `0x7b11b0`, `0x81d83c`, `0x81d888`, `0x81d8b4`, `0x81d8e0`, `0x7b4bf0`, `0x7b9a60`, `0x70ebd0`, `0x7b1470`, `0x40a2d7`, `0x70f9b9`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7b8770` calls `0x7b11b0`, zeroes `+0x290` to `+0x29c`, stores `0x81d888` and sets `+0x24` to 1.
 The table is read from the image at `0x81d83c` to `0x81d908`; slot 3 is `0x7b4b90` in every table.
-The model's initializer picks the shape through the jump table `0x7102d0` on the record's emitter
-type. `0x7b4bf0` stores the rate at `+0xa8`, or 0 when it is not positive; the spline's
-`0x7b9a60` stores its argument at `+0x290` and `+0xa8 = arg · +0x298`.
+The base's pure slots hold `0x40a2d7`; its slot 5 is the deleting destructor `0x7b1470`. The model's
+initializer picks the shape with the `dec` chain at `0x70f9b9` on the record's 16-bit type `+0x2a`
+(`emission#record-to-emitter`). `0x7b4bf0` stores the rate at `+0xa8`, or 0 when it is not positive;
+the spline's `0x7b9a60` stores its argument at `+0x290` and `+0xa8 = arg · +0x298`.
 
 ## Update
 
