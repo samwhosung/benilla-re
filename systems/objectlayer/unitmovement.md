@@ -221,7 +221,7 @@ mode has a 12-byte row of `0x860a58`: enabled, a maximum squared distance, and t
 | 7 | walk to a game object | 6400 | `0xc4d998`² |
 | 9 | walk into spell range | 6400 | range · 0.9, squared |
 
-Addresses: `0x860a58`, `0x60e590`, `0x611240`, `0x6113d8`, `0x6110a0`, `0x6103a0`, `0x611590`, `0x60f9fc`, `0xc4d888`, `0xc4d9c0`, `0xc4d910`
+Addresses: `0x860a58`, `0x60e590`, `0x611240`, `0x6113d8`, `0x611310`, `0x61132c`, `0x6111ab`, `0x6110a0`, `0x6103a0`, `0x611590`, `0x60f9fc`, `0xc4d888`, `0xc4d9c0`, `0xc4d910`
 Confidence: verified
 Proof: one
 Test: none
@@ -232,8 +232,8 @@ guid)` takes row `+0` and `+9` and switches modes 3 to 10 through `0x6113d8`: 3 
 (3², `0x60e6e0`), 4 `0xc4d9b0` (0.5²), 5 `0xc4d958` (2.7777777²), 6 and 10 the combat reaches
 (field 130) plus 4/3, at least 5, mode 10 less 4/3, 7 `0xc4d998` squared, 9 `0x6e3480`'s range
 of the spell in 0xb700e4 times `0x804588` (0.9), squared. `0x611130` keeps the value at
-`0xc4d9c0` and its square root at `0xc4d910`, so modes 6 and 10, whose value is no square, stop at
-the root of the reach. `0x6110a0` refuses a target past the
+`0xc4d9c0` and its square root at `0xc4d910` (`0x6111ab`), so modes 6 and 10, whose value
+`0x611310` and `0x61132c` store unsquared, stop at the root of the reach, not at the reach. `0x6110a0` refuses a target past the
 row's maximum with message 0x126, `ERR_AUTOFOLLOW_TOO_FAR`. `0x6103a0` is the active mover with a
 mode set; `0x611590(mask)` tests `1 << mode`.
 

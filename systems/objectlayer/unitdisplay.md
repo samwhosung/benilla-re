@@ -116,24 +116,23 @@ A creature's hands come from `UNIT_VIRTUAL_ITEM_SLOT_DISPLAY` (fields 37 to 39) 
 it between them; `0x611e10` hangs the ranged weapon and a bow's string. A disarmed unit hides its
 main-hand weapon. Each hand keeps a weapon trail.
 
-Addresses: `0x605da0`, `0x605e30`, `0x605ee0`, `0x605f10`, `0x60b770`, `0x60b590`, `0x611e10`, `0x611ff0`, `0x608d60`, `0x60ba00`, `0x60d5d0`, `0x60e550`, `0x608dd0`
+Addresses: `0x605da0`, `0x605ddb`, `0x605e0f`, `0x605e30`, `0x605ee0`, `0x605f10`, `0x60b770`, `0x60b590`, `0x611e10`, `0x611ff0`, `0x608d60`, `0x60ba00`, `0x60d5d0`, `0x60e550`, `0x608dd0`
 Confidence: verified
 Proof: one
 Test: none
 
 Info bytes: 0 class, 1 subclass, 3 inventory type, 4 sheath type. `0x605e30(slot, raw)` is null
 without a display (`0x605f10`); unless raw, with `UNIT_FIELD_FLAGS` bit 21, slot 0 is null when it holds a weapon, and slot 1 when it holds one and slot 0 does not.
-`0x605ee0` (slot 39) is the `ItemDisplayInfo` row. `0x605da0` uses model option
-0x860a50[slot] with `AttachItemModel`; the table holds two dwords, so slot 2 reads 0 from the
-next table, 0x860a58. `0x60b770(hand)`
+`0x605da0` uses model option
+0x860a50[slot] with `AttachItemModel` (`0x605ddb`, `0x605e0f`); the table holds two dwords, so
+slot 2 reads past it and takes 0 from the next table, 0x860a58. `0x60b770(hand)`
 uses options 15 and 16 and sends hand 2 to `0x611e10`; a non-player's off hand stays empty behind
-a two-handed main hand (subclasses 1, 5, 6, 8, 10, 12, 17, 20). `0x60b590(hand, sheathed)` moves the
+a two-handed main hand (subclass 1, 5, 6, 8, 10, 12, 17 or 20). `0x60b590(hand, sheathed)` moves the
 model between the hand attachment (1; 2, or 0 for a shield; 1 or 2 for ranged) and the sheath
 one (0x47a070), opening or closing the hand.
 `0x611e10` uses option 17, keeps the model at `+0xd24`, gives a bow `0x611ff0` (a line from `$WTT`
-to `$WTB` through attachment 35 or 1 while drawn) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
-`WTOBJECT`); `0x60ba00` and `0x60d5d0` release them; `0x60e550` passes animation arguments to
-both. `0x608dd0`, which nothing reaches, rebuilds both.
+to `$WTB`) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
+`WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both.
 
 ## Shapeshift forms
 
