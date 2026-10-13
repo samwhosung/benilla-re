@@ -31,9 +31,9 @@ the string pushed just before the id push; it is a declaration, not a count of w
 pushed.
 
 The glue screens run a different event table (tables/glue_events.tsv), so the same integer names a
-different event there. The glue code is the source files whose assert strings sit at 0x46a70c to
-0x47466f, inside [0x46a400, 0x476020); sites there are space `glue` and take their names from
-the glue table, all others are `game`.
+different event there. The glue code is glue's run of object files, [0x46a260, 0x475b70): its first
+function is 0x46a260 and the next file starts at 0x475b70. Sites there are space `glue` and take
+their names from the glue table, all others are `game`.
 """
 
 import re
@@ -44,7 +44,7 @@ from lib import Disasm, Image, addr, note, parse_args, write_table
 import events
 
 SE, SE2 = 0x703E50, 0x703F50
-GLUE_TU = (0x46A400, 0x476020)
+GLUE_TU = (0x46A260, 0x475B70)
 CONTROLS = {0x46AA34: {22}, 0x4930C7: {208, 209}, 0x49211A: {397, 398},
             0x4945CA: {224, 225}, 0x515E7A: None}
 

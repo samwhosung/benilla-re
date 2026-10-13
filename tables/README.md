@@ -75,7 +75,7 @@ than in `events.tsv`. Columns as in `events.tsv`.
 
 ## event_sites.tsv
 
-Every call or tail jump to `FrameScript_SignalEvent 0x703e50` or `SignalEvent2 0x703f50` (485
+Every call or tail jump to `FrameScript_SignalEvent 0x703e50` or `FrameScript_SignalEvent2 0x703f50` (485
 sites, 149 of them `SignalEvent2`).
 
 | column | meaning |
@@ -85,7 +85,7 @@ sites, 149 of them `SignalEvent2`).
 | `event_ids` | Every id that reaches the site along any path, ascending, `|`-separated; `?` where the id is a parameter or a table lookup. |
 | `event_names` | The names, in the same order; empty where an id has no name. |
 | `arg_format` | The format string `SignalEvent2` is given: a declaration, not a count of what the caller pushed. Empty for `SignalEvent`. |
-| `space` | `glue` for a site in the glue source files (`0x46a400` to `0x476020`), named from `glue_events.tsv`; otherwise `game`, named from `events.tsv`. |
+| `space` | `glue` for a site in glue's object files (`0x46a260` to `0x475b50`), named from `glue_events.tsv`; otherwise `game`, named from `events.tsv`. |
 
 An event with no row here may still be fired: the unit-field events reach the dispatcher through
 a wrapper, `0x515e50`, which is the `?` row at `0x515e7a`.
