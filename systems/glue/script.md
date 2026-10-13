@@ -301,14 +301,15 @@ Proof: one
 Test: none
 
 `0x46dad0` passes `[[0xcf0bd8]+0x1118]` and `+0x111c` to `0x41ad80`, which stores `K1·fx` and
-`K2·fy` as floats. `0x41ad70` loads `A` from `0x832a4c`; `fmul` by 1024.0 and by the float are
-exact at 53 bits, two 24-bit significands; `fstp dword` rounds to float; `0x41ae40` loads it and
-`fdiv`s by `[0x832a44]`, rounding to 53 bits, and returns in `st0`; `fstp qword` stores it
-unchanged for `lua_pushnumber`. The calls are at `0x46db17` and `0x46db3b`, both `0x41ae40`. The
-size functions push 1.0 to `0x41ae60` (`K1·1`) or `0x41ae70` (`K2·1`), store that as a float and
-follow the same steps. `0x41ad10` stores `a·0.75` rounded to float at `0x832a4c` and the
-scales at `0x832a44` and `0x832a48`; the examples apply its arithmetic. `0x58b590` calls slot
-`+0xec` of the device object with the argument.
+`K2·fy` as floats. `0x41ad70` loads `A` from `0x832a4c`; `fmul` by 1024.0 and by the float are exact
+at 53 bits, two 24-bit significands; `fstp dword` rounds to float; `0x41ae40` loads it and `fdiv`s
+by `[0x832a44]`, rounding to 53 bits, and returns in `st0`; `fstp qword` stores it unchanged for
+`lua_pushnumber`. The calls are at `0x46db17` and `0x46db3b`, both `0x41ae40`. The size functions
+push 1.0 to `0x41ae60` (`K1·1`) or `0x41ae70` (`K2·1`), store that as a float and follow the same
+steps. `0x41ad10` stores `a·0.75` rounded to float at `0x832a4c` (`fstp dword`, `0x41ad24`) and the
+scales at `0x832a44` and `0x832a48`; a scan of the image for the dword `0x832a4c` finds only that
+store and `0x41ad70`'s `fld dword`, and the same scan finds the nine uses of `0x832a48`; the
+examples apply its arithmetic. `0x58b590` calls slot `+0xec` of the device object with the argument.
 
 ## Billing
 

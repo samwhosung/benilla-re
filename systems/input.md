@@ -73,16 +73,17 @@ Test: `screencoord::sc_41ad10_set_scale`, `screencoord::sc_41ad80_scale_xy`
 `test ah,1`, `je`: at least 8.0, NaN under. `0x514b24` adds −200, `setge`. The release handler
 `0x514b70` calls it at `0x514d4b` only when a primary was held before the release (`0x514ba4`,
 `0x514ba8`) and none after (`0x514c35`). On 0 it dispatches `0x481f60(1)` for click mode 1 and
-`0x481f60(4)` for mode 2; otherwise it clears the mode.
+`0x481f60(4)` for mode 2, else it clears the mode.
 
 The press time is latched at `0x514919` when the first primary goes down, which also zeroes both
-sums (`0x514910`). `0x514400` adds each mouse message's absolute x and y motion to the sums while
-any command is held: the raw deltas times `K1` and `K2` (`0x41ad80`, called at `0x766fb1` in `0x766f70`).
-`0x41ad10` sets them, at `0x832a44` and `0x832a48`, from an aspect `a`: `K2 = 1/√(a² + 1)`,
-`K1 = a·K2`. `0x46ab40` gives `a` as `gxResolution`'s width over height while the `widescreen`
-option (default `1`) is on, and 4/3 when it is off.
+sums (`0x514910`). With a command held, `0x514400` adds each mouse message's absolute x and
+y motion times `K1` and `K2` to the sums (`0x41ad80`, called at `0x766fb1` in `0x766f70`).
+`0x41ad10` sets them, at `0x832a44` and `0x832a48`, from an aspect `a`: `K2 = 1/√(a² + 1)` and
+`K1 = a·K2` with `K2` unrounded in `st0` after `fst` (`0x41ad3e`). Tests run both whole.
+`0x46ab40` gives `a` as `gxResolution`'s width over height, or 4/3 with the `widescreen` option
+(default `1`) off.
 
 Times are client clock values (`0x42c010`) in milliseconds: the input queue stamps messages at
 `0x42d7bb` in `0x42d780`, and `0x42b8b0` scales the counter to 1000 per second. `0x5144c0`
-releases every held command at the current clock through `0x514b70`, and `0x514b40` asks
-`0x514ae0` at the current clock too.
+releases every held command through `0x514b70`, and `0x514b40` asks `0x514ae0`, both at the
+current clock.

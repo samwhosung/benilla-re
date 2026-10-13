@@ -47,10 +47,10 @@ fn camera_view_lookat() {
                 fuzz(&mut s, 500.0),
                 fuzz(&mut s, 500.0),
             ],
-            cos: fuzz(&mut s, 1.0),
-            sin: fuzz(&mut s, 1.0),
-            upscale: fuzz(&mut s, 4.0),
-            rollz: fuzz(&mut s, 4.0),
+            sin_yaw: fuzz(&mut s, 1.0),
+            cos_yaw: fuzz(&mut s, 1.0),
+            sin_roll: fuzz(&mut s, 4.0),
+            cos_roll: fuzz(&mut s, 4.0),
         };
         // The projection's other inputs, which the test does not check.
         e.write_u32(this + 0xcc, fuzz(&mut s, 100.0).to_bits()); // near
@@ -63,10 +63,10 @@ fn camera_view_lookat() {
         e.write_u32(this + 0x64, p.target[0].to_bits());
         e.write_u32(this + 0x68, p.target[1].to_bits());
         e.write_u32(this + 0x6c, p.target[2].to_bits());
-        e.write_u32(this + 0x16c, p.cos.to_bits());
-        e.write_u32(this + 0x168, p.sin.to_bits());
-        e.write_u32(this + 0x144, p.upscale.to_bits());
-        e.write_u32(this + 0x140, p.rollz.to_bits());
+        e.write_u32(this + 0x16c, p.sin_yaw.to_bits());
+        e.write_u32(this + 0x168, p.cos_yaw.to_bits());
+        e.write_u32(this + 0x144, p.sin_roll.to_bits());
+        e.write_u32(this + 0x140, p.cos_roll.to_bits());
         for (i, &x) in vpr.iter().enumerate() {
             e.write_u32(vp + 4 * i as u64, x.to_bits());
         }

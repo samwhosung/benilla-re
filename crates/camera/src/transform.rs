@@ -4,22 +4,29 @@
 
 #![allow(clippy::float_cmp)]
 
-/// The `CCamera` fields [`view_lookat_owned`] reads, by offset: `eye` `+0x3c`, `target` `+0x64`,
-/// `cos` `+0x16c`, `sin` `+0x168`, `upscale` `+0x144`, `rollz` `+0x140`
-/// (`systems/camera.md#view-and-projection` says what they hold).
+/// The `CCamera` fields [`view_lookat_owned`] reads (`systems/camera.md#properties`): the eye
+/// `+0x3c` and target `+0x64`, and the cosine and sine an angle property keeps at its `+0x20` and
+/// `+0x24` (`systems/camera.md#angle-properties`), of yaw (`+0x148`, so `+0x168` and `+0x16c`) and of roll (`+0x120`, so `+0x140` and
+/// `+0x144`).
 #[derive(Clone, Copy, Debug)]
 pub struct LookParams {
     pub eye: [f32; 3],
     pub target: [f32; 3],
-    pub cos: f32,
-    pub sin: f32,
-    pub upscale: f32,
-    pub rollz: f32,
+    /// `+0x16c`
+    pub sin_yaw: f32,
+    /// `+0x168`
+    pub cos_yaw: f32,
+    /// `+0x144`
+    pub sin_roll: f32,
+    /// `+0x140`
+    pub cos_roll: f32,
 }
 
 /// What `CCamera::SetDeviceTransforms` (`0x7ac640`, `systems/camera.md#view-and-projection`)
 /// computes for the matrix builders: the aspect `(vp[3]−vp[1])/(vp[2]−vp[0])` for the projection,
-/// and the direction `target − eye` and up `(+0x16c·+0x144, −(+0x168·+0x144), +0x140)` for the view.
+/// and for the view the direction `target − eye` and the up
+/// `(sin yaw·sin roll, −(cos yaw·sin roll), cos roll)`, read as `+0x16c·+0x144`, `−(+0x168·+0x144)`
+/// and `+0x140` (`0x7ac778` to `0x7ac7dc`).
 #[must_use]
 pub fn view_lookat_owned(vp: &[f32; 4], p: &LookParams) -> (f32, [f32; 3], [f32; 3]) {
     let aspect =
@@ -30,9 +37,9 @@ pub fn view_lookat_owned(vp: &[f32; 4], p: &LookParams) -> (f32, [f32; 3], [f32;
         (f64::from(p.target[2]) - f64::from(p.eye[2])) as f32,
     ];
     let up = [
-        (f64::from(p.cos) * f64::from(p.upscale)) as f32,
-        (-(f64::from(p.sin) * f64::from(p.upscale))) as f32,
-        p.rollz,
+        (f64::from(p.sin_yaw) * f64::from(p.sin_roll)) as f32,
+        (-(f64::from(p.cos_yaw) * f64::from(p.sin_roll))) as f32,
+        p.cos_roll,
     ];
     (aspect, dir, up)
 }

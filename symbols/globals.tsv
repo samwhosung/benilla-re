@@ -432,7 +432,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x827000	void (*[7180])(void)	__xc_a		crt	Lists the C++ static initializers __cinit runs in ascending order, up to __xc_z	verified	one	random#static-initializers
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	input#click-versus-drag
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	input#click-versus-drag
-0x832a4c	uint32_t	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	inferred	none	
+0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	glue/script#cursor-and-screen-size
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
 0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
