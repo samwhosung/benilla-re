@@ -52,12 +52,35 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5f3b40	void *[4]	s_switch5f3b40		objectlayer	Holds the 4 case addresses of the switch in 0x5f3930	verified	one	objectlayer/overview#switch-tables
 0x5f41e4	void *[12]	s_switch5f41e4		objectlayer	Holds the 12 case addresses of the switch in 0x5f4120	verified	one	objectlayer/overview#switch-tables
 0x5f76cc	void *[31]	s_switch5f76cc		objectlayer	Holds the 31 case addresses of the switch in 0x5f6f30	verified	one	objectlayer/overview#switch-tables
+0x5fc3c8	void *[2]	s_twoHandedCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fc390	verified	one	objectlayer/unitanim#animation-sets
+0x5fc3d0	uint8_t[20]	s_twoHandedIndex		objectlayer	Maps weapon subclasses 1 to 20 to the cases of 0x5fc390's switch	verified	one	objectlayer/unitanim#animation-sets
 0x5fc7ec	void *[23]	s_switch5fc7ec		objectlayer	Holds the 23 case addresses of the switch in 0x5fc3f0	verified	one	objectlayer/overview#indexed-switch-tables
 0x5fc848	uint8_t[201]	s_switchIndex5fc848		objectlayer	Maps the switch value of 0x5fc3f0 to its case in 0x5fc7ec	verified	one	objectlayer/overview#indexed-switch-tables
+0x5fcb40	void *[4]	s_animDoneEventCases		objectlayer	Holds the 4 case addresses of the event switch in 0x5fc920	verified	one	objectlayer/unitanim#when-a-sequence-ends
+0x5fcb50	uint8_t[89]	s_animDoneEventIndex		objectlayer	Maps animations 39 to 127 to the cases of 0x5fc920's event switch	verified	one	objectlayer/unitanim#when-a-sequence-ends
+0x5fcbd0	void *[2]	s_spellCastAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fcbb0	verified	one	objectlayer/unitanim#animation-sets
+0x5fcbd8	uint8_t[53]	s_spellCastAnimIndex		objectlayer	Maps animations 2 to 54 to the cases of 0x5fcbb0's switch	verified	one	objectlayer/unitanim#animation-sets
+0x5fcc30	void *[2]	s_swingAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fcc10	verified	one	objectlayer/unitanim#animation-sets
+0x5fcc38	uint8_t[109]	s_swingAnimIndex		objectlayer	Maps animations 10 to 118 to the cases of 0x5fcc10's switch	verified	one	objectlayer/unitanim#animation-sets
+0x5fce04	void *[4]	s_readyAnimCases		objectlayer	Holds the 4 case addresses of the switch in 0x5fcdc0	verified	one	objectlayer/unitanim#choosing-the-base-animation
+0x5fce14	uint8_t[18]	s_readyAnimIndex		objectlayer	Maps weapon subclasses 0 to 17 to the cases of 0x5fcdc0's switch	verified	one	objectlayer/unitanim#choosing-the-base-animation
+0x5fcef4	void *[2]	s_emoteAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fced0	verified	one	objectlayer/unitanim#animation-sets
+0x5fcefc	uint8_t[136]	s_emoteAnimIndex		objectlayer	Maps animations 60 to 195 to the cases of 0x5fced0's switch	verified	one	objectlayer/unitanim#animation-sets
 0x5fd51c	void *[5]	s_switch5fd51c		objectlayer	Holds the 5 case addresses of the switch in 0x5fd460	verified	one	objectlayer/overview#indexed-switch-tables
 0x5fd530	uint8_t[18]	s_switchIndex5fd530		objectlayer	Maps the switch value of 0x5fd460 to its case in 0x5fd51c	verified	one	objectlayer/overview#indexed-switch-tables
+0x5fd658	void *[9]	s_standStateAnimCases		objectlayer	Holds the 9 case addresses of the switch in 0x5fd550, stand states 0 to 8	verified	one	objectlayer/unitanim#choosing-the-base-animation
+0x5fdabc	void *[2]	s_deathAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fda90	verified	one	objectlayer/unitanim#animation-sets
+0x5fdac4	uint8_t[132]	s_deathAnimIndex		objectlayer	Maps animations 1 to 132 to the cases of 0x5fda90's switch	verified	one	objectlayer/unitanim#animation-sets
 0x5fdd7c	void *[5]	s_switch5fdd7c		objectlayer	Holds the 5 case addresses of the switch in 0x5fdba0	verified	one	objectlayer/overview#indexed-switch-tables
 0x5fdd90	uint8_t[162]	s_switchIndex5fdd90		objectlayer	Maps the switch value of 0x5fdba0 to its case in 0x5fdd7c	verified	one	objectlayer/overview#indexed-switch-tables
+0x5fe1a0	void *[2]	s_rangedAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fe180	verified	one	objectlayer/unitanim#animation-sets
+0x5fe1a8	uint8_t[67]	s_rangedAnimIndex		objectlayer	Maps animations 46 to 112 to the cases of 0x5fe180's switch	verified	one	objectlayer/unitanim#animation-sets
+0x5feca0	void *[2]	s_fullBodyAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fec80	verified	one	objectlayer/unitanim#animation-sets
+0x5feca8	uint8_t[188]	s_fullBodyAnimIndex		objectlayer	Maps animations 0 to 187 to the cases of 0x5fec80's switch	verified	one	objectlayer/unitanim#animation-sets
+0x5fedb4	void *[2]	s_upperBodyAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fed90	verified	one	objectlayer/unitanim#animation-sets
+0x5fedbc	uint8_t[194]	s_upperBodyAnimIndex		objectlayer	Maps animations 2 to 195 to the cases of 0x5fed90's switch	verified	one	objectlayer/unitanim#animation-sets
+0x5feea4	void *[2]	s_moveAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fee80	verified	one	objectlayer/unitanim#animation-sets
+0x5feeac	uint8_t[184]	s_moveAnimIndex		objectlayer	Maps animations 4 to 187 to the cases of 0x5fee80's switch	verified	one	objectlayer/unitanim#animation-sets
 0x6012fc	void *[12]	s_ownSpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for the active mover, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60132c	void *[12]	s_relaySpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for other units, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x601408	void *[6]	s_splineSpeedOpcodeCases		objectlayer	Holds the 6 case addresses of the switch in 0x601360, opcodes 0x2fe to 0x303	verified	one	objectlayer/unitmovement#movement-message-handlers
@@ -68,12 +91,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x602114	void *[4]	s_switch602114		objectlayer	Holds the 4 case addresses of the switch in 0x6018f0	verified	one	objectlayer/overview#switch-tables
 0x602a2c	void *[9]	s_forcedMoveCases		objectlayer	Holds the 9 case addresses of the switch in 0x602780	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x602a50	uint8_t[36]	s_forcedMoveIndex		objectlayer	Maps opcodes 0xc7 to 0xea to the cases of 0x602780's switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60b700	void *[2]	s_unarmedAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x60b6e0	verified	one	objectlayer/unitanim#animation-sets
+0x60b708	uint8_t[103]	s_unarmedAnimIndex		objectlayer	Maps animations 16 to 118 to the cases of 0x60b6e0's switch	verified	one	objectlayer/unitanim#animation-sets
 0x60dbfc	void *[9]	s_kitCharProcJumpTable		objectlayer	Holds the 9 case addresses of the switch in 0x60d7c0	verified	one	objectlayer/overview#indexed-switch-tables
 0x60dc20	uint8_t[16]	s_kitCharProcIndexTable		objectlayer	Maps kit procedure kinds 0 to 15 to the cases of 0x60d7c0's switch	verified	one	spell/visuals#chain-effect-creation
 0x60e3fc	void *[3]	s_localMoveCases		objectlayer	Holds the 3 case addresses of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60e408	uint8_t[45]	s_localMoveIndex		objectlayer	Maps opcodes 0xb7 to 0xe3 to the cases of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60e438	void *[4]	s_localMoveSendCases		objectlayer	Holds the 4 case addresses of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60e448	uint8_t[53]	s_localMoveSendIndex		objectlayer	Maps opcodes 0xb7 to 0xeb to the cases of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60e520	void *[5]	s_moveOpcodeAnimCases		objectlayer	Holds the 5 case addresses of the switch in 0x60e480	verified	one	objectlayer/unitanim#reactions-and-move-animations
+0x60e534	uint8_t[23]	s_moveOpcodeAnimIndex		objectlayer	Maps opcodes 0xb5 to 0xcb to the cases of 0x60e480's switch	verified	one	objectlayer/unitanim#reactions-and-move-animations
 0x60ec84	void *[5]	s_switch60ec84		objectlayer	Holds the 5 case addresses of the switch in 0x60ec00	verified	one	objectlayer/overview#indexed-switch-tables
 0x60ec98	uint8_t[18]	s_switchIndex60ec98		objectlayer	Maps the switch value of 0x60ec00 to its case in 0x60ec84	verified	one	objectlayer/overview#indexed-switch-tables
 0x60f4f8	void *[5]	s_unitSpellVisualKitJumpTable		objectlayer	Holds the 5 case addresses of the switch in 0x60edf0	verified	one	objectlayer/overview#switch-tables
@@ -811,6 +838,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d93c	float	s_autoMoveTurnSpeed		objectlayer	Holds the auto-move turn speed in radians, π from 0x611130, latched from a CVar by 0x6103d0	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d950	uint64_t	s_pendingUseGuid		objectlayer	Holds the game object an arrived mode 7 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d958	float	s_talkStopDistanceSq		objectlayer	Holds 2.7777777², the squared stop distance of mode 5, written by 0x60e6b0	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d95c	void *[5]	s_talkEmotes		objectlayer	Holds the Emotes.dbc rows of the talk, question, exclamation, shout and laugh emotes, set by 0x603a60	verified	one	objectlayer/unitanim#emotes
 0xc4d980	uint64_t	s_autoMoveTargetGuid		objectlayer	Holds the auto-move target object's GUID, cleared by 0x60fb60	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d998	float	s_useStopDistance		objectlayer	Holds the mode 7 stop distance, 0x610300's argument times 0.9	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9a4	void *	s_autoInteractCVar		objectlayer	Holds the AutoInteract CVar record, registered "1" under locale index 1 and "0" otherwise	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
