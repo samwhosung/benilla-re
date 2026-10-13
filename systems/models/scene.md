@@ -281,12 +281,52 @@ digits 6 to 0. `0x70b040` returns the id unchanged unless `+0x148 & 0x18`, reads
 ## Ray hits
 
 `0x7089c0` finds the nearest triangle of the hit-test instances a segment crosses; segments
-shorter than 1e-5 clear the hit list. `0x7099e0` tests a segment against the same instances' bounds.
+shorter than 1e-5 clear the hit list.
 
-Addresses: `0x7089c0`, `0x7099e0`, `0x70a060`, `0x7089b0`, `0x713cb0`
+Addresses: `0x7089c0`, `0x7089b0`, `0x713cb0`
 Confidence: inferred
 Proof: none
 Test: none
 
-`0x713cb0` links an instance into the hit list at scene `+0x130`; `0x7089b0` sets `+0x12c`.
-Candidates are 16-byte records sorted by `0x70a060`. The triangle test was not transcribed.
+`0x713cb0` links an instance into the hit list at scene `+0x130`; `0x7089b0` sets `+0x12c`. The
+triangle test was not transcribed.
+
+## Segment collision
+
+`0x7099e0(p0, p1, &f)` finds the nearest collision triangle of the scene's hit-test instances on
+the segment within the fraction `f`, writes the hit's fraction to `f` and returns the instance's
+user value `+0x41c`, else 0. A segment or `f` under 1e-5 returns 0. Each listed, loaded instance is
+first a sphere: its current sequence's bounds, or the model's when that radius is 0, through the
+base matrix; the sphere must meet the line with its near point before the segment end and its far
+point not behind the start. Candidates sorted by near then far distance are tested while their
+near distance is under the best hit, and only mode 3 instances test triangles. Every call empties
+the hit list.
+
+Addresses: `0x7099e0`, `0x709a00`, `0x709bc4`, `0x709da8`, `0x709e64`, `0x709ec1`, `0x709fc5`, `0x70a060`, `0x7c29f0`, `0x7bcf90`, `0x7bd6c0`
+Confidence: verified
+Proof: one
+Test: none
+
+The sphere centre is half of box min plus max of sequence `+0x24` (index from bone state `+0xa4`),
+radius `+0x3c`, else header `+0xb4` and `+0xcc`; the radius scales by the length of base row 0.
+`0x709da8` misses when the squared distance from the line exceeds r². `0x70a060` breaks ties by
+index. `0x709ec1` skips modes other than 3; the segment goes into model space through the inverse
+base matrix and `0x7c29f0` tests the header's collision triangles (`+0xf0`, `+0xf8`) with
+tolerance 1e-6, keeping hits with t ≥ 0.
+
+## Ray triangle test
+
+The triangle test is two-sided Möller–Trumbore: with `e1 = v1 − v0`, `e2 = v2 − v0` and
+`p = d × e2`, it misses when `|e1·p| < 1e-6`; with `s = o − v0` and `q = s × e1`,
+`u = (s·p)/det` and `v = (d·q)/det` must each be at least `−ε`, and `u` and `u + v` at most
+`1 + ε`; `t = (e2·q)/det` and `(u, v)` are written when asked. It does not bound `t`.
+
+Addresses: `0x7c29f0`, `0x7c2adc`, `0x7c2b55`, `0x7c2bc8`, `0x81d9bc`, `0x80e2e4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c29f0(ray, vertices, indices, &t, &uv, ε)` reads the ray's origin at `+0x0` and direction at
+`+0xc`. `0x7c2adc` passes on `det ≤ −1e-6` or `det ≥ 1e-6` (`0x81d9bc`, `0x80e2e4`).
+`0x7c2b55` multiplies by `1/det` and compares with `−ε` and `1 + ε`. Map object leaves
+(`0x6b8acf`, `0x6bc764`) call it too.

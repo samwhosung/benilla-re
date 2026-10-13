@@ -11419,8 +11419,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x708900	172	M2SceneDraw		models	primitive		Draws one of a scene's three element lists, and the grouped list with list 0	verified	one	models/render#list-draw	
 0x7089b0	11	M2SceneEnableRayHits		models	orchestration		Sets the scene flag that enables ray hits against its models	inferred	none	models/scene#ray-hits	
 0x7089c0	4126	M2SceneRayHit		models	primitive		Finds the nearest model triangle a segment crosses among a scene's hit-testable models	inferred	none	models/scene#ray-hits	
-0x7099e0	1650	M2SceneRayHitBox		models	primitive		Tests a segment against the hit-testable models of a scene with a widened bound	inferred	none	models/scene#ray-hits	
-0x70a060	143	M2SceneCompareHits		models	primitive		Orders ray-hit candidates by entry distance, exit distance, then index	inferred	none	models/scene#ray-hits	
+0x7099e0	1650	M2SceneSegmentCollision		models	primitive	uint32_t __thiscall (M2Scene *this, const float *p0, const float *p1, float *fraction)	Finds the nearest collision triangle of the mode 3 hit-test instances on a segment and returns that instance's value	verified	one	models/scene#segment-collision	
+0x70a060	143	M2SceneCompareHits		models	primitive		Orders two hit candidates by near distance, then far distance, then index	verified	one	models/scene#segment-collision	
 0x70a0f0	312	M2SceneAddLightsForPoint		models	primitive		Adds a scene's global lights and the grid lights around a point to a lighting record	verified	one	models/lights#scene-light-grid	
 0x70a230	25	M2SceneSetSpecialCallback		models	orchestration		Stores the scene's special-batch draw callback and its argument	verified	one	models/scene#scene-object	
 0x70a250	36	M2SceneSetProjection		models	orchestration		Stores two scene values at +0x124 and +0x128 and copies them to two globals	inferred	none		
@@ -12645,6 +12645,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	
 0x7bcb40	284	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	
 0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	
+0x7bcf90	201	Determinant4		cmath		float __thiscall (const float *m)	Returns the determinant of a 4x4 matrix by cofactors	inferred	none	models/scene#segment-collision	
+0x7bd6c0	50	InvertMatrix4WithDeterminant		cmath		float * __thiscall (const float *m, float *out, float det)	Writes the inverse of a 4x4 matrix given its determinant	inferred	none	models/scene#segment-collision	
 0x7bd700	280	InvertRigidMatrix		cmath		void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
 0x7bd820	347	InvertAffineMatrix		cmath			Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	
 0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	
@@ -12680,7 +12682,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c2620	279	IsPointInIndexedPolygon32		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	inferred	none		
 0x7c2740	139	IntersectRayPolygonTriangle		unassigned	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	inferred	none		
 0x7c27d0	530	IntersectRayTriangleInline		unassigned	unreached		Intersects a ray with a triangle of three stored vertices, with a slack	inferred	none		
-0x7c29f0	581	IntersectRayTriangle16		unassigned	primitive		Intersects a ray with a triangle by 16-bit vertex indices, with a slack, writing t and u, v	inferred	none		cmath::intersect_difftest
+0x7c29f0	581	IntersectRayTriangleIndexed		cmath		bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	models/scene#ray-triangle-test	cmath::intersect_difftest
 0x7c2c40	580	IntersectRayTriangle		cmath		uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle and returns its fraction	inferred	none		cmath::intersect_difftest
 0x7c2e90	525	IntersectRayTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle of three stored vertices	inferred	none		
 0x7c30a0	577	IntersectRayIndexedTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle by 16-bit vertex indices	inferred	none		
