@@ -1,6 +1,5 @@
-//! A group's liquid grid (`systems/models/wmo.md#queries`): the height and tile-flag queries
-//! `CMapObjGroup::LiquidHeight` (`0x6b9f10`) and `CMapObjGroup::LiquidTileFlags` (`0x6b9e50`), and
-//! the arithmetic of the vertex fill `CMapObjGroup::BuildLiquidVertices` (`0x6ba9b0`), the ray test
+//! A group's liquid grid (`systems/models/wmo.md#queries`): the height query
+//! `CMapObjGroup::LiquidHeight` (`0x6b9f10`), and the arithmetic of the vertex fill `CMapObjGroup::BuildLiquidVertices` (`0x6ba9b0`), the ray test
 //! `CMapObjGroup::RayHitLiquid` (`0x6baa70`) and the collectors
 //! `CMapObjGroup::CollectLiquidSegment` (`0x6bb170`) and `CMapObjGroup::CollectLiquidVolume`
 //! (`0x6bb6b0`).
@@ -126,39 +125,6 @@ pub fn mliq_liquid_height(
         liquid_type,
         hit: f64::from(pos[2]) < limit,
     }
-}
-
-/// The result of [`mliq_tile_flag`].
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct MliqTileFlag {
-    /// What is stored through the second argument; `None` when nothing is.
-    pub out: Option<u32>,
-    /// The return value, always 1.
-    pub ret: bool,
-}
-
-/// `0x6b9e50(pos, out)`: a group whose `+0x10` lacks 0x1000 stores 0; otherwise a point inside
-/// the grid stores bit 6 of its tile byte and a point outside stores nothing. Returns 1.
-pub fn mliq_tile_flag(
-    flags: u32,
-    pos: [f32; 3],
-    base: [f32; 2],
-    inv_step: f32,
-    cols: i32,
-    rows: i32,
-    tiles: &[u8],
-) -> MliqTileFlag {
-    if flags & 0x1000 == 0 {
-        return MliqTileFlag {
-            out: Some(0),
-            ret: true,
-        };
-    }
-    let (_, ix, _) = mliq_grid_coord(pos[0], base[0], inv_step);
-    let (_, iy, _) = mliq_grid_coord(pos[1], base[1], inv_step);
-    let out = (ix >= 0 && iy >= 0 && ix < cols && iy < rows)
-        .then(|| (u32::from(tiles[(cols * iy + ix) as usize]) >> 6) & 1);
-    MliqTileFlag { out, ret: true }
 }
 
 /// `a − b` stored as `f32`: the grid-relative coordinates of `0x6baa70` (`0x6baa9f` to

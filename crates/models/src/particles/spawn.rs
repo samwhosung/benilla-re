@@ -82,10 +82,15 @@ pub fn count_subtract(pos: f32, count: i32) -> f32 {
 }
 
 /// `0x7b22d5..0x7b2301`: the age `(r − 1)·dt` from the draw `r`, kept unless 0 compares above it
-/// (`test ah,0x41; jne`), so a NaN stays and a negative, however small, becomes +0.
+/// (`test ah,0x41; jne`), so a NaN and -0 stay and a negative, however small, becomes +0. The
+/// test is on the bits: an optimizer reads `x < 0 ? 0 : x` as `x <= 0 ? 0 : x`, which turns -0
+/// into +0.
 pub fn spawn_random_scale(rnd_unit: f32, scale: f32) -> f32 {
     let product = (f64::from(rnd_unit) - f64::from(ONE)) * f64::from(scale);
-    if product < 0.0 {
+    let magnitude = product.to_bits() & !(1 << 63);
+    let below_zero =
+        product.is_sign_negative() && magnitude != 0 && magnitude <= f64::INFINITY.to_bits();
+    if below_zero {
         ZERO
     } else {
         product as f32

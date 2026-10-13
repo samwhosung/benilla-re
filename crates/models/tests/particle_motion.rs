@@ -448,6 +448,25 @@ fn particle_spin_integrate_difftest() {
             },
             1.0,
         ),
+        // |spin|² summed (x² + y²) + z² stays at 1e-4, so it does not turn; summed z first it
+        // would.
+        (
+            Spin {
+                orient: [0.0, 0.0, 0.0, 1.0],
+                spin: [
+                    f32::from_bits(0x38d1_b717),
+                    f32::from_bits(0x2b47_0c09),
+                    f32::from_bits(0x2b51_3e17),
+                ],
+            },
+            Particle {
+                pos: [0.0, 0.0, 0.0],
+                vel: [0.0, 0.0, 0.0],
+                flag: 0,
+                age: 0.0,
+            },
+            1.0,
+        ),
     ];
 
     let mut rng = SimRng(0x7b28_e001);

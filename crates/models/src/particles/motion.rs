@@ -124,7 +124,7 @@ pub struct Spin {
     pub spin: [f32; 3],
 }
 
-/// `0x7b28e0` (ecx = the emitter; the particle and `dt`; `ret 8`): `m = √((z² + y²) + x²)` of the
+/// `0x7b28e0` (ecx = the emitter; the particle and `dt`; `ret 8`): `m = √((x² + y²) + z²)` of the
 /// spin, compared in the register after `fst`; above 1e-4 the orientation becomes `orient·q` with
 /// `h = f32(m·dt·0.5)`, `q = (s·ω, cos h)` and `s = (1/m)·sin h` from the stored `m`, `fsincos`
 /// stored as `f32`. Then the step of `0x7b2680`.
@@ -135,7 +135,7 @@ pub fn particle_spin_integrate(
     dt: f32,
 ) -> u32 {
     let [sx, sy, sz] = spin.spin.map(f64::from);
-    let mag_live = (sz * sz + sy * sy + sx * sx).sqrt();
+    let mag_live = ((sx * sx + sy * sy) + sz * sz).sqrt();
     let mag = mag_live as f32;
     if mag_live > f64::from(SPIN_EPS) {
         let theta = (f64::from(mag) * f64::from(dt) * f64::from(HALF)) as f32;
