@@ -19,6 +19,8 @@ Bring your own client. Nothing here comes from a WoW install. The tools read `Wo
   [core](systems/core) (main loop, events, window input, clock),
   [net](systems/net) (the wire, dispatch, session, logon),
   [collision](systems/collision) (movement physics),
+  [terrain](systems/terrain) (the world map, chunks, liquid, queries, cull and LOD),
+  [models](systems/models) (M2 and WMO, the scene, rendering, animation, lights, particles),
   [objectlayer](systems/objectlayer) (the update packet, objects, fields, reaction),
   [spell](systems/spell), [glue](systems/glue) (the login and character screens),
   [ui](systems/ui) (the frame and layout core),
