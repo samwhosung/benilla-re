@@ -1,8 +1,11 @@
 address	size	name	name_from	system	class	signature	meaning	confidence	proof	finding	test
+0x401520	16			client	orchestration		Arms a repeating timer through EventSetTimer	inferred	none	objectlayer/players#area-triggers	
+0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
 0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	inferred	none		
 0x401570	646	ClientInitializeGame	idb	client			Initializes the game systems, among them the spell tables through 0x6dda50	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x401a40	187	MovementInit	idb	client		void __cdecl (void)	Runs 0x616860 on the movement log path and registers 0x616800 as the handler of event 5	verified	one	collision/mover#initialisation-and-teardown	
 0x401bc0	325	LoadNewWorld	idb	client			Calls 0x616910 and then unregisters 0x616800 from event 5, among other teardown	verified	one	collision/mover#initialisation-and-teardown	
+0x401ec0	26			client	orchestration		Runs another tick function on its argument, then polls the area list; returns 1	inferred	none	objectlayer/players#area-list-polling	
 0x401ee0	443	ClientDestroyGame	idb	client			Shuts the game systems down, among them the spell tables through 0x6dde30	inferred	none	spell/tables#teardown-at-shutdown	
 0x402120	222	ClientMain		client			Runs the client: creates the time manager, initializes, runs the event loop through 0x41f5c0 and shuts down	inferred	none	core/loop#startup-and-shutdown	
 0x402350	1253	InitializeGlobal	idb	client			Initializes the client's systems, then the event library and its interactive context	inferred	none	core/loop#startup-and-shutdown	
@@ -21,6 +24,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4078e0	22	SplatVector3		loadingscreen	orchestration	float * __thiscall (float *this, float v)	Stores one float in all three components	verified	one	camera#unprojection	
 0x407e70	14	IsLoadingScreenUp		loadingscreen			Returns whether the loading screen object exists	inferred	none		
 0x407e80	237	EndLoadingScreen		loadingscreen			Ends the loading screen and clears its object	inferred	none		
+0x4083c0	58			unassigned	primitive		Runs code the arrival calls on a transport; not read here	inferred	none	objectlayer/players#arrival-in-the-world	
 0x4098c0	253	_WinMainCRTStartup	idb	crt	boundary		Starts the process: runs __cinit at 0x409965, then calls WinMain at 0x40999b	verified	one	random#the-c-runtime-rand	
 0x409aef	18	_atexit	idb	crt	boundary	int __cdecl (void (*function)(void))	Registers a function to run at exit	inferred	none	net/layout#static-initializers	
 0x409bf2	20	__clearfp	idb	crt	boundary	unsigned int __cdecl (void)	Clears the x87 exception flags and returns the old status word in abstract form	verified	one	METHOD#the-harness	
@@ -42,6 +46,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	
 0x418570	267	CDataStore::PutData		base			Appends a given number of raw bytes to a data store	verified	one	spell/cast#cast-request-packets	
 0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore *__thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
+0x418d30	123			base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
 0x418db0	123	CDataStore::GetUInt16	idb	base		void *__thiscall (void *store, uint16_t *out)	Reads a little-endian 16-bit word from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
 0x418e30	121	CDataStore::GetInt32	idb	base		CDataStore *__thiscall (CDataStore *this, uint32_t *out)	Reads four bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
 0x418eb0	121	CDataStore::GetUInt32	idb	base		void *__thiscall (void *store, uint32_t *out)	Reads a little-endian dword from a data store, or moves past the end and writes nothing	verified	one	spell/handlers#handler-calling-convention	
@@ -553,6 +558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4374d0	138	BindContextToThread		os			Binds a context's record to the calling thread's record	inferred	none	core/loop#one-tick	
 0x437560	181	UnbindContextFromThread		os			Unbinds a context's record from the calling thread's record	inferred	none	core/loop#one-tick	
 0x43f050	25	PollingWait		os	orchestration		Runs the network pump for a time when it exists, else sleeps for that time	inferred	none	core/loop#the-loop	
+0x4429f0	4			unassigned	primitive		Stores a dword at +0x2c of the object it is given	inferred	none		
 0x442a70	3	ReturnZero		client	orchestration	uint32_t __cdecl (void)	Returns 0; a shared vtable slot	verified	one	camera#lifetime	
 0x443e20	78	IsAsyncLoadPending		client			Returns 1 while either of two load lists is non-empty or a load count is non-zero, under one lock	inferred	none		
 0x449010	172	FreeTextureCaches		gx			Frees every entry of the CGxTexCache lists	inferred	none		
@@ -641,13 +647,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	inferred	none		
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound			Plays an item sound of a kind for an item	inferred	none	spell/cast#cast-attempt-commit	
 0x458030	187	SndInterfacePlayInterfaceSound	idb	sound			Plays the interface sound a name gives	inferred	none	spell/cast#cast-attempt-refusals	
+0x4580f0	266			sound	primitive		Runs sound code with a race and gender at the active player's arrival; not read here	inferred	none	objectlayer/players#arrival-in-the-world	
+0x458680	33			sound	primitive		Stores whether a byte is nonzero and acts when that changes	inferred	none	objectlayer/playerfields#ghost-state	
 0x4587f0	30	LoadSoundScriptFunctions		sound			Registers the four sound script functions PlaySound to StopMusic	inferred	none		
 0x458810	24	UnloadSoundScriptFunctions		sound			Unregisters the four sound script functions	inferred	none		
 0x458850	23	SndInterfacePlaySound	idb	sound			Plays a sound and returns whether it started	inferred	none		
 0x458870	27	PlaySoundAtArgs		sound			Plays a sound from two arguments with a volume	inferred	none	spell/visuals#shard-model-start-and-end	
 0x458a50	96	PlaySpellSchoolSound		sound		void __fastcall (uint32_t spell, void *unit)	Passes the sound id of the Resistances.dbc row of a spell's school, with a unit, to 0x458870	inferred	none	spell/failures#reporter-inputs-and-first-effects	
+0x4592b0	52			sound	primitive		Returns a text emote's sound for a race and gender; not read here	inferred	none	objectlayer/interaction#text-emotes	
 0x45aeb0	325	SndInterfaceSetGlueMusic		sound			Starts the named glue music, or with null stops it with a 3.0 fade, when enableMusic is on	inferred	none		
 0x45b050	36	StopGlueMusic		sound			Stops the glue music stream with a fade time, when one is playing	inferred	none		
+0x460b00	201			sound	primitive		Replaces the held music with the one its selector picks when they differ	inferred	none		
+0x460c20	7			sound	primitive		Refreshes the held music with the immediate flag clear	inferred	none		
 0x4621a0	1	DestroyVector3		cmath	orchestration	void __thiscall (float *this)	Returns; the element destructor of vector arrays	verified	one	camera#unprojection	
 0x463920	216	ObjectAllocAddHeap	idb	objectalloc			Creates an object pool for blocks of a size and a name, storing the size at +0x10 and the count at +0x14	inferred	none		
 0x463a60	147	ObjectAllocNew		objectalloc			Takes a block from a pool and returns its handle	inferred	none	objectlayer/manager#allocating-and-reusing	
@@ -1634,6 +1645,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x478660	214	SetCharacterFacialHair		charactermodel			Sets a character component's facial hair index	inferred	none		
 0x478790	354	SetCharacterSkinColor		charactermodel			Sets a character component's skin colour index	inferred	none		
 0x478960	318	UnequipCharacterSlot		charactermodel			Removes the item from one of a character component's 12 outfit slots	inferred	none		
+0x478bd0	150			charactermodel	orchestration		Unequips one or several character model slots for an equipment slot; not read here	inferred	none	objectlayer/inventory#helm-and-cloak	
 0x478cb0	194	SetCharacterComponentItem		charactermodel			Puts an item display on one equipment slot of a character component	inferred	none		
 0x479010	268	EquipCharacterDisplay		charactermodel			Equips an item display id in an inventory type's slot of a character component	inferred	none		
 0x4797b0	263	ApplyCreatureDisplay		charactermodel			Applies a CreatureDisplayInfo row's textures to a model, given its CreatureModelData row	inferred	none		
@@ -2260,46 +2272,149 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ad70	285	Script::UseSoulstone		ui	orchestration		Implements the Lua function UseSoulstone	inferred	none	spell/cancel#who-cancels-a-cast	
 0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Calls 0x6e6900 and returns no Lua results	verified	one	spell/targeting#binding-the-trade-slot	
 0x48e980	487	Script::LoadAddOn		ui	orchestration		Loads an add-on for the in-game script, keeping a shared load-log status	inferred	none		
+0x48ecd0	251			ui	primitive		Plays a cinematic, reading EnableMusic and hiding the cursor	inferred	none	objectlayer/playermessages#notices	
+0x48f200	396			ui	primitive		Ends the loot window, releasing the held loot and showing ERR_LOOT_NO_UI where it applies	inferred	none	objectlayer/players#death	
+0x48f3a0	54			ui	primitive		Opens the loot window for an object, money and loot type	inferred	none	objectlayer/inventory#loot	
+0x48f3e0	20	SignalResurrectRequest		ui	orchestration		Signals RESURRECT_REQUEST with a name	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x48f400	27	SignalPlayerSkinned		ui	primitive		Signals PLAYER_SKINNED with whether its byte is nonzero	verified	one	objectlayer/playermessages#other-small-handlers	
+0x48f420	20			ui	orchestration		Signals the group invitation with a name	inferred	none	objectlayer/party#group-notices	
+0x48f440	10			ui	orchestration		Signals the cancelled group invitation	inferred	none	objectlayer/party#group-notices	
+0x48f450	21	SignalGuildInviteRequest		ui	orchestration		Signals GUILD_INVITE_REQUEST with an inviter and a guild	verified	one	objectlayer/party#guild-notices	
+0x490a80	321			ui	primitive		Resets interface state on the player's release, among it the trade and loot windows	inferred	none	objectlayer/players#release-and-reactivation	
 0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
+0x4918e0	32	IsPartyOrRaidMember		ui	orchestration		Returns 1 for a GUID in the party or the raid	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
+0x491a00	65			ui	orchestration		Marks the name of a GUID's unit dirty	inferred	none	objectlayer/playerfields#watchers-on-every-player	
+0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	objectlayer/party#guild-tabards	
+0x491a60	1145			ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
+0x491f50	187			ui	primitive		Asks the server for the corpse position through MSG_CORPSE_QUERY	inferred	none	objectlayer/playerfields#player-flag-changes	
+0x4921c0	201			ui	primitive		Cancels the spirit healer aura state and queries an area spirit healer for a GUID	inferred	none	objectlayer/interaction#talking-to-an-npc	
 0x492580	76			ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x492c20	90			ui	orchestration		Rotates the placement or stops targeting for a world input whose +0x14 is 4	inferred	none	spell/targeting#placement-model-and-rotation	
+0x4931c0	104			ui	primitive		Sets or clears the unit the interaction windows belong to	inferred	none	objectlayer/players#death	
+0x493310	557			ui	primitive		Clears the interaction unit and closes the window that belongs to it	inferred	none		
 0x493540	966			ui	primitive		Selects the unit of a guid as the player's target	inferred	none	spell/handlers#spell-start	
+0x493910	398			ui	primitive		Releases a GUID's unit tokens and interface state; not read here	inferred	none	objectlayer/party#the-group-list	
+0x494600	164	SignalUnitCombat		ui	primitive		Signals UNIT_COMBAT for each unit token of a GUID with an action, a hit word, an amount and a school	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x4946b0	27	SignalUnitCombatWound		ui	orchestration		Signals UNIT_COMBAT with WOUND, an amount, a school and marks	verified	one	objectlayer/playercombat#non-melee-damage	
 0x494720	28			ui	orchestration		Passes a miss reason below 12, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
+0x494740	33	SignalUnitCombatHeal		ui	primitive		Signals UNIT_COMBAT with HEAL and the critical mark 0x80 when its byte is set	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x494770	3	SignalUnitCombatEnergize		ui	orchestration		Returns at once, dropping its stack argument	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x494a50	247	CheckActivePlayer		ui	orchestration		Returns 0 or 1 from a check chosen by its argument, 0 to 11, through a jump table	inferred	none	input#mouse-commands	
+0x494c80	49			ui	orchestration		Returns the cursor's item with its bag and slot	inferred	none	objectlayer/interaction#world-clicks	
+0x494df0	22			ui	primitive		Drops what the cursor holds when it holds a spell	inferred	none	objectlayer/playercombat#unlearning-a-spell	
+0x494e10	6	GetCursorSpell		ui	orchestration		Returns a ui global dword the unlearn compares with the spell	verified	one	objectlayer/playercombat#unlearning-a-spell	
+0x495170	6	GetCursorAmmo		ui	orchestration		Returns a ui global dword, the cursor ammo entry	verified	one	objectlayer/inventory#moving-items	
+0x495190	321			ui	primitive		Drops what the cursor holds, by the kind it holds	inferred	none		
+0x495300	209			ui	orchestration		Asks to confirm destroying an item, or refuses one that cannot be destroyed	inferred	none	objectlayer/interaction#world-clicks	
+0x495420	62			ui	primitive		Clears an item's lock bit and signals ITEM_LOCK_CHANGED	inferred	none	objectlayer/playerfields#inventory-and-money-changes	
+0x495850	72			ui	orchestration		Signals PLAYER_DEAD for the active player	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
 0x495920	24			ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
 0x495d60	1026			ui	primitive		Checks an item against the pending spell's enchant effects, then binds it through 0x6e5b40	inferred	none	spell/targeting#flag-word-predicates	
 0x496170	204			ui	orchestration		Binds the trade slot through 0x6e6900 unless the spell would replace the slot's enchantment	inferred	none	spell/targeting#binding-the-trade-slot	
+0x496240	7	SetRestStart		ui	orchestration		Stores its argument as the rest start time	verified	one	objectlayer/playermessages#error-notices	
+0x496250	36	ArmReleaseTimer		ui	primitive		Stores now plus a delay as the release time, or 1 for a zero delay, and clears its flag	verified	one	objectlayer/players#death	
+0x496280	18	ClearReleaseTimer		ui	orchestration		Clears the release time and sets its flag	verified	one	objectlayer/players#death	
+0x496340	51			ui	primitive		Arms a delay from now for the raid-only notice; not read here	inferred	none	objectlayer/playermessages#error-notices	
+0x4963a0	56			ui	primitive		Keeps a summon's zone, expiry and summoner and signals CONFIRM_SUMMON	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x496720	357	CGGameUI::DisplayError	idb	ui	orchestration	void __cdecl (uint32_t id, ...)	Formats a catalogue message with its arguments, copies the text to 0xb4da40 and shows it by the message kind	verified	one	spell/failures#display-log-and-events	
 0x4968a0	6	GetLastDisplayedMessage		ui	orchestration	const char *__cdecl (void)	Returns 0xb4da40, the text DisplayError last formatted	verified	one	spell/failures#display-log-and-events	
+0x49a810	32	HasChatHistoryLine		ui	primitive		Returns whether line i of the 60-line chat history ring holds text	verified	one	objectlayer/playermessages#gm-tickets	
+0x49a830	26	GetChatHistoryLine		ui	primitive		Returns the address of line i of the 60-line chat history ring	verified	one	objectlayer/playermessages#gm-tickets	
+0x49a850	23	GetChatHistoryTime		ui	primitive		Returns the time of line i of the 60-line chat history ring	verified	one	objectlayer/playermessages#gm-tickets	
+0x49a870	1904			ui	primitive		Adds a message of a chat type to the chat frames	inferred	none	objectlayer/playerfields#player-flag-changes	
+0x49ea90	217			ui	primitive		Refreshes the chat channel state and signals UPDATE_CHAT_WINDOWS	inferred	none	objectlayer/players#arrival-in-the-world	
+0x4a1a60	564			ui	primitive		Replaces profane words in a string	inferred	none	objectlayer/party#guild-events	
+0x4b25b0	1535			ui	primitive		Adds a spell to the spell book's display list; not read here	inferred	none	objectlayer/playercombat#learning-a-spell	
+0x4b2c50	760			ui	primitive		Removes a spell from the spell book's display list; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
+0x4b2f50	32	ReplaceSpellInBook		ui	orchestration		Calls 0x4b2c50(old, 1) and then 0x4b25b0(new, 1, old)	verified	one	objectlayer/playercombat#spell-book-messages	
+0x4b2fd0	100			ui	orchestration		Sorts the spell book's lists; not read here	inferred	none	objectlayer/quests#quest-giver-status-refresh	
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
 0x4b3250	15			ui	orchestration		Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive		Returns a form-bar entry's icon, name, active and castable values to Lua	inferred	none	spell/checks#usability-callers-and-events	
 0x4b5390	300			ui	primitive		Sets a bit of a flag set when the set exists and the bit is clear	inferred	none	spell/failures#player-unit-cleanup	
+0x4b54c0	248			ui	primitive		Sets a tutorial flag and tells the server with CMSG_TUTORIAL_FLAG; not read here	inferred	none	objectlayer/party#group-and-guild-messages-sent	
+0x4ba550	150			ui	primitive		Leaves the raid, shows ERR_RAID_YOU_LEFT and signals RAID_ROSTER_UPDATE	inferred	none	objectlayer/party#the-group-list	
+0x4ba5f0	1754			ui	primitive		Rebuilds the raid roster from member GUIDs, flags and online bytes	inferred	none	objectlayer/party#the-group-list	
+0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
+0x4bb0f0	60			ui	primitive		Returns the raid member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
 0x4bce90	10	FirePetBarCooldownEvent		ui	orchestration	void __cdecl (void)	Signals PET_BAR_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4bd1d0	765			ui	primitive		Handles a pet bar action press; calls 0x6e2de0 with pet 1 for a spell	inferred	none	spell/records#global-cooldown-start	
 0x4bf2b0	556	TradeInfoSetTargetItems		ui	orchestration		Takes the partner's trade item records for the interface	inferred	none		
 0x4bf720	743	CGTradeInfo::HandleTradeMessage	idb	ui	orchestration		Passes a trade status to the interface	inferred	none		
 0x4bfbd0	121	TradeInfoClearPlayerItem		ui	orchestration		Clears the interface's record of one own trade slot	inferred	none		
+0x4c1fa0	696			ui	primitive		Opens or refreshes the loot window, auto-looting when its byte is set; not read here	inferred	none	objectlayer/interaction#looting	
+0x4c2750	59			ui	primitive		Signals LOOT_SLOT_CLEARED for the money slot and ends the loot when nothing is left	inferred	none	objectlayer/inventory#loot	
+0x4c6f70	54	SetInspectTarget		ui	orchestration		Stores a GUID as the inspect target and clears two dwords when it changes	verified	one	objectlayer/interaction#other-units	
 0x4c7300	1634			ui	primitive		Passes an inventory item to 0x495d60 while the flag word wants an item	inferred	none	spell/targeting#flag-word-predicates	
+0x4c7ee0	433			ui	primitive		Refreshes the counts the interface shows for carried items	inferred	none	objectlayer/inventory#visible-equipment	
+0x4d1160	45			ui	orchestration		Signals GUILD_ROSTER_UPDATE with its argument	inferred	none	objectlayer/party#guild-events	
+0x4d2cb0	531			ui	primitive		Rebuilds the interface's skill list from the player's skills	inferred	none	objectlayer/playerfields#skill-changes	
 0x4d61b0	33	CGReputationInfo::IsAtWar	idb	ui	primitive	bool __fastcall (uint32_t faction)	Returns bit 1 of the flag byte of the faction's reputation slot, the at-war flag; false with no slot below 64	verified	one	objectlayer/reaction#faction-toward-a-unit	
 0x4d63a0	93	CGReputationInfo::GetFactionStandingReaction	idb	ui	primitive	uint32_t __fastcall (uint32_t faction)	Returns the rank 0 to 7 of the player's standing with a faction, by thresholds from -6000 to 42000	verified	one	objectlayer/reaction#faction-toward-a-unit	
 0x4d6490	46	CGReputationInfo::GetForcedReaction	idb	ui	orchestration	bool __fastcall (uint32_t faction, uint32_t *rank)	Finds the faction in the forced-reaction pairs and stores its rank; false when absent	verified	one	objectlayer/reaction#faction-toward-a-unit	
+0x4d7440	172			ui	primitive		Closes or opens the trainer for a GUID and type; not read here	inferred	none	objectlayer/inventory#trainers	
+0x4d7560	1571			ui	primitive		Fills the trainer window from the server's spell arrays and greeting	inferred	none	objectlayer/inventory#trainers	
 0x4d7d40	1733			ui	primitive		Rebuilds state for the open trainer after a talent modifier changes	inferred	none	spell/records#talent-modifier-tables	
+0x4db710	947			ui	primitive		Opens the taxi map with the flight master, the current node and the known nodes	inferred	none	objectlayer/interaction#taxis	
+0x4dc0f0	117			ui	primitive		Closes the taxi map for a started flight	inferred	none	objectlayer/interaction#taxis	
+0x4df0e0	29	CloseQuestIfCurrent		ui	orchestration		Calls a ui function when a quest id is the one the quest window holds	verified	one	objectlayer/quests#the-quest-log-watcher	
+0x4df4b0	64			ui	primitive		Returns whether a quest is completed	inferred	none	objectlayer/quests#quest-updates	
+0x4df550	42			ui	primitive		Marks a timed quest failed	inferred	none	objectlayer/quests#quest-updates	
+0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based index of a quest among 40 log entries, or 0	verified	one	objectlayer/quests#quest-updates	
+0x4e1fa0	97			ui	primitive		Closes the taxi map	inferred	none	objectlayer/interaction#taxis	
+0x4e35b0	702			ui	primitive		Shows or closes an item's text window; not read here	inferred	none	objectlayer/playermessages#reading-items	
+0x4e4390	32	SetAuraDuration		ui	primitive		Stores now plus a duration for an aura slot below 0x30	verified	one	objectlayer/playermessages#notices	
+0x4e4fc0	98			ui	orchestration		Refreshes the shapeshift bar for the active player	inferred	none	objectlayer/playerfields#combo-points-form-and-far-sight	
 0x4e5050	480	GetActionSlotUsable		ui	primitive		Computes an action slot's usable and no-power pair, through 0x6e3d60 for a spell	inferred	none	spell/checks#usability-callers-and-events	
 0x4e56f0	212	GetActionSlotInRange		ui	orchestration		Computes an action slot's range answer through the range pre-check 0x6e4440	inferred	none	spell/checks#range-pre-check	
 0x4e5bf0	10			ui	orchestration		Signals event 214 through 0x703e50	verified	one	spell/targeting#the-binds-range-test	
 0x4e5c00	92	RefreshActionBarUsable		ui	orchestration		Recomputes the 120 action slots' usable pairs and signals ACTIONBAR_UPDATE_USABLE on a change	verified	one	spell/checks#usability-callers-and-events	
 0x4e5c60	10	FireActionBarCooldownEvent		ui	orchestration		Signals ACTIONBAR_UPDATE_COOLDOWN	verified	one	spell/cooldowns#cooldown-events-fired	
+0x4e5c70	80			ui	primitive		Refreshes the action slots of an item	inferred	none	objectlayer/inventory#visible-equipment	
+0x4e5d60	79			ui	primitive		Sets an action slot's value and refreshes it	inferred	none	objectlayer/players#arrival-in-the-world	
+0x4e5e20	49			ui	primitive		Removes a spell from the action slots; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
+0x4e5e60	119			ui	primitive		Replaces a spell's action slots with its new rank	inferred	none	objectlayer/playercombat#spell-book-messages	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
+0x4e8250	124			ui	primitive		Stores the party leader and signals PARTY_LEADER_CHANGED when it changes	inferred	none	objectlayer/party#group-notices	
+0x4e82d0	437			ui	primitive		Stores a party member's GUID, online state and record and asks for its stats	inferred	none	objectlayer/party#the-group-list	
+0x4e84a0	302			ui	primitive		Clears the party, releasing the members' tokens; not read here	inferred	none	objectlayer/party#group-notices	
+0x4e85d0	250			ui	primitive		Updates a player's party token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
+0x4e86d0	28	CountPartyMembers		ui	primitive		Counts the nonzero GUIDs of the four party slots	verified	one	objectlayer/party#group-notices	
+0x4e86f0	282			ui	primitive		Stores the loot method, master and threshold and shows the changes	inferred	none	objectlayer/party#the-group-list	
+0x4e8820	61			ui	primitive		Returns the party member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
+0x4e89c0	346			ui	primitive		Rebuilds the looking-for-group types for the active player; not read here	inferred	none	objectlayer/quests#quest-giver-status-refresh	
+0x4e8be0	150			ui	primitive		Rebuilds the sorted quest log for the active player	inferred	none	objectlayer/quests#the-quest-log-watcher	
+0x4ee330	364			ui	primitive		Shows a minimap ping from a party member's GUID at a point	inferred	none	objectlayer/playermessages#notices	
 0x4eeca0	805	Script::PingLocation		ui	primitive		Binds the clicked minimap point through 0x6e60f0 while the flag word wants a position	inferred	none	spell/targeting#binding-a-clicked-location	
+0x4f2f10	249			ui	primitive		Refreshes the spell book from the known spells	inferred	none	objectlayer/playercombat#learning-a-spell	
+0x4f3f60	299			ui	primitive		Keeps a petition's id and GUID for the signature window, declining an earlier one	inferred	none	objectlayer/party#petitions	
+0x4f40b0	271			ui	primitive		Stores a petition's signers and signals PETITION_SHOW	inferred	none	objectlayer/party#petitions	
+0x4f41c0	344			ui	primitive		Adds a signer to the open petition, shows ERR_PETITION_SIGNED_S and signals PETITION_SHOW	inferred	none	objectlayer/party#petitions	
+0x4f4fb0	94			ui	orchestration		Opens the guild registrar for a vendor and signals GUILD_REGISTRAR_SHOW	inferred	none	objectlayer/party#petitions	
+0x4f5840	82			ui	orchestration		Opens the tabard frame for a vendor	inferred	none	objectlayer/party#guild-notices	
 0x4f6000	69			ui	orchestration		Toggles the craft window: closes it with CRAFT_CLOSE for the current profession, else opens it with CRAFT_SHOW	inferred	none	spell/cast#cast-attempt-refusals	
+0x4f60c0	1381			ui	primitive		Rebuilds the craft window's spell list	inferred	none	objectlayer/playercombat#learning-a-spell	
+0x4f84d0	87			ui	primitive		Opens the bank for a banker	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x4f93d0	10	FireBagCooldownEvent		ui	orchestration	void __cdecl (void)	Signals BAG_UPDATE_COOLDOWN	verified	one	spell/records#cooldown-queries	
+0x4f9410	110			ui	primitive		Signals BAG_OPEN for a container of the active player	inferred	none	objectlayer/playermessages#notices	
 0x4f9b30	1085	Script::PickupContainerItem		ui	primitive		Passes a container item to 0x495d60 while the flag word wants an item	inferred	none	spell/targeting#flag-word-predicates	
+0x4facf0	174			ui	primitive		Opens the merchant window for a vendor's list and signals MERCHANT_SHOW; not read here	inferred	none	objectlayer/inventory#vendors	
 0x4fc910	150			ui	orchestration		Toggles the trade-skill window: TRADE_SKILL_CLOSE for the current skill, else TRADE_SKILL_SHOW when a count is nonzero	inferred	none	spell/cast#cast-attempt-refusals	
+0x4fca20	1884			ui	primitive		Rebuilds the trade skill window's list; not read here	inferred	none	objectlayer/playercombat#learning-a-spell	
 0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	spell/failures#reporter-inputs-and-first-effects	
 0x4fd7b0	60			ui	orchestration		Runs the post-cast step of a repeated trade skill cast for a spell id	inferred	none	spell/go#player-cast-tail	
+0x500bd0	465			ui	primitive		Opens the quest frame on a page with a text for a GUID; not read here	inferred	none	objectlayer/quests#the-greeting-list	
+0x500dc0	118			ui	orchestration		Copies a quest's objective text for the quest window	inferred	none	objectlayer/quests#details-request-and-reward	
+0x500e40	74			ui	primitive		Adds an available quest with its title and level to the greeting	inferred	none	objectlayer/quests#the-greeting-list	
+0x500e90	75			ui	primitive		Adds an active quest with its title and level to the greeting	inferred	none	objectlayer/quests#the-greeting-list	
+0x500ee0	10	SignalQuestGreeting		ui	orchestration		Signals event 0x12c	verified	one	objectlayer/quests#the-greeting-list	
+0x500ef0	376			ui	primitive		Copies a quest's title and rewards for the quest window and signals QUEST_COMPLETE	inferred	none	objectlayer/quests#details-request-and-reward	
+0x501070	187			ui	primitive		Copies a quest's title and required items and signals QUEST_PROGRESS	inferred	none	objectlayer/quests#details-request-and-reward	
+0x501130	241			ui	primitive		Closes the quest frame, answering a shared quest with MSG_QUEST_PUSH_RESULT	inferred	none	objectlayer/quests#quest-giver-messages	
+0x5019a0	112			ui	orchestration		Signals QUEST_ACCEPT_CONFIRM with the sharer's name and the title	inferred	none	objectlayer/quests#shared-quests	
+0x511250	116			unassigned	primitive		Sets the camera's drunk level	inferred	none	objectlayer/playerfields#drunk-messages	
 0x511d40	81	CameraAddShake		uicamera			Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
 0x511da0	237	SetCameraTransport		uicamera		void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
 0x513bd0	376	Script::Jump		input	orchestration		Implements the Lua function Jump	inferred	none	spell/cancel#who-cancels-a-cast	
@@ -2309,6 +2424,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5143e0	6	GetInputControl		input	orchestration	CInputControl * __cdecl (void)	Returns the CInputControl singleton from 0xbe1148	verified	one	input#input-state	
 0x514400	134	CInputControl::AccumulateMotion		input	primitive	void __thiscall (CInputControl *this, const void *message)	Adds |dx| and |dy| of a mouse message to the travel sums while any command is held	verified	one	input#click-versus-drag	
 0x5144c0	28	CInputControl::ReleaseAll		input	orchestration	void __thiscall (CInputControl *this)	Releases every held command at the current clock through 0x514b70	verified	one	input#click-versus-drag	
+0x514640	458			input	primitive		Stops the input control's movement at a time	inferred	none	objectlayer/interaction#stand-state	
 0x514810	38	CInputControl::ArmClick		input	orchestration	void __thiscall (CInputControl *this, uint32_t mode)	Stores the click mode unless a primary is held, and for a nonzero mode picks the object under the cursor	verified	one	input#mouse-commands	
 0x514840	660	CInputControl::PressCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t time)	Presses command bits; on the first primary, latches the time and zeroes the travel sums	verified	one	input#click-versus-drag	
 0x514ae0	85	CInputControl::IsDragRelease		input	primitive	uint32_t __thiscall (CInputControl *this, uint32_t release_time)	Returns 1 when a release is a drag: held 800 ms or more, or 200 ms or more with 8.0 of travel	verified	two	input#click-versus-drag	
@@ -2317,6 +2433,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515090	284	CInputControl::SetCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t press, uint32_t time, uint32_t extra)	Sends commands to 0x514840 when press is nonzero, else to 0x514b70	verified	one	input#mouse-commands	
 0x515940	34			ui	orchestration		Returns the unit a unit token names through 0x515970 and 0x468460, or null	inferred	none	spell/targeting#lua-targeting-functions	
 0x515970	725	Script::GetGUIDFromName	idb	ui	primitive		Returns the guid a unit token names	inferred	none	spell/targeting#lua-targeting-functions	
+0x515e50	65			ui	primitive		Signals a unit event for each unit token of a GUID	inferred	none	objectlayer/party#party-member-events	
 0x51bb20	30	LoadGameScriptFunctions		ui	orchestration		Registers the six shared script functions GetTime to AppendToFile	inferred	none		
 0x51bb40	24	UnloadGameScriptFunctions		ui	orchestration		Unregisters the six shared script functions	inferred	none		
 0x51c740	28	LoadAddOnsForAccount		ui	orchestration		Sets the account name and loads the add-on list from Interface\AddOns for it	inferred	none		
@@ -2328,6 +2445,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523c20	20			ui	orchestration		Sets the current cursor index and refreshes the cursor when it changes	inferred	none	spell/cast#targeting-refusal-or-cursor	
 0x523d20	7			ui	orchestration		Stores the default cursor index	verified	one	spell/cast#targeting-refusal-or-cursor	
 0x523d30	11			ui	orchestration		Sets the shown cursor to the base cursor through 0x523c20	inferred	none	spell/targeting#the-targeting-cursor	
+0x524e10	321			ui	primitive		Refreshes the portraits that show a GUID	inferred	none	objectlayer/party#guild-tabards	
+0x52adb0	80			ui	orchestration		Formats an item link with its quality colour	inferred	none	objectlayer/quests#quest-completion	
 0x536eb0	5	InitCopy1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536ec0; a static initializer	verified	one	net/layout#static-initializers	
 0x536ec0	11	InitCopy1		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x536ed0	5	InitDouble1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536ee0; a static initializer	verified	one	net/layout#static-initializers	
@@ -2475,14 +2594,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x538790	218	NETEVENTQUEUE::AddEvent		net	primitive	void __thiscall (NETEVENTQUEUE *this, uint32_t type, void *source, NetClient *client, const void *data, uint32_t size)	Appends an event with a private copy of the data and a timestamp, and takes a reference on the client	verified	one	net/dispatch#network-thread-handoff	
 0x538870	41	NextEventQueueLink		net	orchestration	void * __thiscall (void *link, int32_t linkOffset)	Returns the link inside the next node: the untagged end pointer, or next plus the link offset	inferred	none		
 0x5388a0	60	TSLink_NETEVENTQUEUENODE_::Unlink	idb	net	orchestration	void __thiscall (void *link)	Unlinks an event-queue link from its neighbours and zeroes it	verified	one	net/layout#object-files	
+0x53f8a0	9	GetUnarmedSkillSpell		unassigned	orchestration		Returns the dword at +4 of the record a global points at	verified	one	objectlayer/playercombat#weapon-skills	
 0x5411b0	567	LoadCfgCategoriesStore		dbc			Loads Cfg_Categories.dbc into its store as 0x30-byte records with the row ordinal at +0x2c	inferred	none		
 0x541620	535			dbc			Loads CharBaseInfo.dbc into the store 0xc0df8c as 8-byte records	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x542360	570			dbc			Loads ChrClasses.dbc into the store at 0xc0deec	inferred	none	spell/records#record-lookups	
 0x5425a0	570			dbc			Loads ChrRaces.dbc into the store 0xc0ded8, keying its id map by record +0x00	inferred	none	spell/tables#startup-build-of-the-indexes	
+0x544290	570			dbc	host		Loads DBFilesClient\Emotes.dbc into its store	inferred	none	objectlayer/interaction#text-emotes	
 0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache			Returns a cached item record by id, or requests it with an optional callback	inferred	none	spell/cooldowns#reading-a-cooldown	
+0x55bc60	3			dbcache	orchestration		Returns at once, dropping three stack arguments	verified	one	objectlayer/players#arrival-in-the-world	
 0x55bc70	308			dbcache			Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
 0x55f080	620	DBCache::NameCache::GetRecord	idb	dbcache			Returns a name cache record for a GUID or queues a query with a callback	inferred	none		
 0x560e30	534	DbCacheGetRecord		dbcache			Returns a cached record by id, or keeps a callback and sends the cache's query on a miss	inferred	none		
+0x5614c0	236			dbcache	primitive		Removes a pending callback from a cache's request	inferred	none	objectlayer/players#destruction	
+0x561d20	424			dbcache	primitive		Drops a cached record so the next request asks the server	inferred	none	objectlayer/playerfields#guild-timestamps	
 0x575280	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\CharBaseInfo.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x5764f0	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\ChrRaces.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x589ca0	11	QueryDevice		gx	host	uint32_t __cdecl (void)	Returns the graphics device's dword at +0x1fc through a tail call to 0x592120	verified	one	camera#orthographic-setup	
@@ -4023,409 +4147,409 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5db8b0	23	InitPlayerClear4		objectlayer	orchestration	void __cdecl (void)	Clears or sets 4 dwords of a global	verified	one	objectlayer/initializers#other-initializers	
 0x5db8d0	12	InitPlayerRegisterExit5		objectlayer	orchestration	void __cdecl (void)	Registers 0x5db8e0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5db8e0	25	InitPlayerFree3		objectlayer	host	void __cdecl (void)	Frees a global block through SMemFree when its pointer is set, at exit	verified	one	objectlayer/initializers#exit-callbacks	
-0x5db900	123			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, ClntObjMgrGetMapID; not read here	inferred	none		
-0x5db980	371			objectlayer	primitive		Runs Player_C.cpp code that calls ConsoleWrite; not read here	inferred	none		
-0x5dbb10	387			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dbca0	113			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5dbd50	761			objectlayer	primitive		Runs Player_C.cpp code that calls __alloca_probe, ClntObjMgrObjectPtr, ClientServices::Send; not read here	inferred	none		
-0x5dc050	396			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dc1e0	540			objectlayer	primitive		Runs Player_C.cpp code that calls __alloca_probe, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dc400	782			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SStrCopy;	inferred	none		
-0x5dc710	145			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGGameUI::DisplayError; not read here	inferred	none		
-0x5dc7b0	138			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5dc840	224			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5dc920	203			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5dc9f0	106			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dca60	760			objectlayer	primitive		Runs Player_C.cpp code that calls __alloca_probe; not read here	inferred	none		
-0x5dcd60	310			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5dced0	391			objectlayer	primitive		Runs Player_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x5dd060	278			objectlayer	primitive		Signals the interface event QUEST_WATCH_UPDATE; not read further here	inferred	none		
-0x5dd180	104			objectlayer	orchestration		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5dd1f0	139			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
+0x5db900	123	PollMoverZone		objectlayer	primitive		Reports the active mover's, else the active player's, world node to the area list on every tenth call	verified	one	objectlayer/players#area-list-polling	
+0x5db980	371	ReadVendorInventory		objectlayer	primitive		Reads a vendor's list into the 128-entry table 0xc4c4a0 without bounding its count, or prints the refusal	verified	one	objectlayer/inventory#vendors	
+0x5dbb10	387	ReadQuestGiverQuestList		objectlayer	primitive		Reads a quest giver's greeting and up to 255 quests into 32-entry arrays and opens the greeting	verified	one	objectlayer/quests#the-greeting-list	
+0x5dbca0	113	ReadQuestInvalid		objectlayer	orchestration		Reads why a quest cannot be taken, shows the matching error and calls 0x501130(0, 0)	verified	one	objectlayer/quests#quest-giver-messages	
+0x5dbd50	761	ReadQuestDetails		objectlayer	primitive		Reads a quest's details, choices and rewards into fixed stack arrays and shows them	verified	one	objectlayer/quests#details-request-and-reward	
+0x5dc050	396	ReadQuestRequestItems		objectlayer	primitive		Reads a quest's required items into 6-entry stack arrays and shows the hand-in page	verified	one	objectlayer/quests#details-request-and-reward	
+0x5dc1e0	540	ReadQuestOfferReward		objectlayer	primitive		Reads a quest's emotes, choices and rewards into fixed stack arrays and shows the reward page	verified	one	objectlayer/quests#details-request-and-reward	
+0x5dc400	782	CGPlayer_C::ReadQuestComplete		objectlayer	primitive		Reads a completed quest's rewards and prints the completion, experience, money and item lines	verified	one	objectlayer/quests#quest-completion	
+0x5dc710	145	OnQuestCompleteRecord		objectlayer	orchestration		Prints the completion line once the quest record arrives and refreshes quest-giver statuses	verified	one	objectlayer/quests#quest-completion	
+0x5dc7b0	138	OnRewardItemRecord		objectlayer	orchestration		Prints a reward item's line with its link once the item record arrives	verified	one	objectlayer/quests#quest-completion	
+0x5dc840	224	ReadQuestFailed		objectlayer	primitive		Reads a failed quest and its reason and shows the failure message for it	verified	one	objectlayer/quests#quest-failure	
+0x5dc920	203	OnQuestFailedRecord		objectlayer	primitive		Shows the quest failure message once the quest record arrives	verified	one	objectlayer/quests#quest-failure	
+0x5dc9f0	106	ReadQuestGiverStatus		objectlayer	primitive		Reads a GUID and a status and sets it on that unit when its NPC flags mark a quest giver	verified	one	objectlayer/quests#quest-giver-messages	
+0x5dca60	760	CGPlayer_C::ReadTrainerList		objectlayer	primitive		Reads a trainer's spells into stack arrays sized from its count and opens the trainer it was asked	verified	one	objectlayer/inventory#trainers	
+0x5dcd60	310	ReadBuyFailed		objectlayer	primitive		Reads a refused purchase, zeroes a sold-out item's stock and shows the error for its code	verified	one	objectlayer/inventory#vendors	
+0x5dced0	391	CGPlayer_C::ReadBuyItem		objectlayer	primitive		Reads a purchase, stores the item's new stock and reports quest progress for the bought item	verified	one	objectlayer/inventory#vendors	
+0x5dd060	278	ReportQuestItemProgress		objectlayer	primitive		Shows a quest's item progress for an item it needs, returning 0 when it needs none of it	verified	one	objectlayer/quests#quest-progress-for-items	
+0x5dd180	104	OnQuestRecordForItem		objectlayer	orchestration		Reports an item's quest progress once the quest record arrives, then frees the pending pair	verified	one	objectlayer/quests#quest-progress-for-items	
+0x5dd1f0	139	ReadSellItemResult		objectlayer	primitive		Reads a sale's result and shows the error for a nonzero code, passing the item to 0x495420	verified	one	objectlayer/inventory#vendors	
 0x5dd2a0	54	CGPlayer_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t *fields, uint32_t *copy)	Runs the unit's storage, then points +0xe68 at field 188 and +0xe6c past the unit's 170 watched fields	verified	one	objectlayer/classes#field-storage	
-0x5dd2e0	530	SetupPlayerInventory		objectlayer	primitive		Sets up a player's inventory fields, 113 slots for the active player	inferred	none	spell/checks#totems-and-reagents	
-0x5dd500	43			objectlayer	orchestration		Fills slot 0 of the player vtable; its body is not read here	inferred	none		
-0x5dd530	196			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetC8; not read here	inferred	none		
-0x5dd600	604			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, DbCacheGetRecord, SMemFree; not read here	inferred	none		
-0x5dd860	52			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dd8a0	1102			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x5ddcf0	141			objectlayer	primitive		Signals the interface event PLAYERBANKSLOTS_CHANGED; not read further here	inferred	none		
-0x5ddd80	301			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGGameUI::DisplayError; not read here	inferred	none		
-0x5ddeb0	115			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5ddf30	189			objectlayer	primitive		Signals the interface event PLAYER_MONEY; not read further here	inferred	none		
-0x5ddff0	23			objectlayer	orchestration		Signals the interface event PLAYER_COMBO_POINTS; not read further here	inferred	none		
-0x5de010	125			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, FireUsableEvents; not read here	inferred	none		
-0x5de090	51			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5de0d0	166			objectlayer	orchestration		Signals the interface event PLAYER_FARSIGHT_FOCUS_CHANGED; not read further here	inferred	none		
-0x5de180	711			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGGameUI::DisplayError; not read here	inferred	none		
-0x5de450	25			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5de470	56			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5de4b0	34			objectlayer	orchestration		Runs Player_C.cpp code that calls FrameScript_SignalEvent2; not read here	inferred	none		
-0x5de4e0	113			objectlayer	orchestration		Signals the interface event UPDATE_EXHAUSTION; not read further here	inferred	none		
-0x5de560	71			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5de5b0	1037			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
-0x5de9c0	132			objectlayer	primitive		Signals the interface event PLAYER_UNGHOST; not read further here	inferred	none		
-0x5dea50	391			objectlayer	primitive		Signals the interface event ACTIONBAR_SLOT_CHANGED; not read further here	inferred	none		
-0x5debe0	167			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5dec90	44			objectlayer	orchestration		Fills slot 3 of the player vtable; its body is not read here	inferred	none		
-0x5decc0	139			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ded50	37			objectlayer	orchestration		Runs Player_C.cpp code that calls IsDeadOrGhost; not read here	inferred	none		
-0x5ded80	163			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5dee30	766			objectlayer	primitive		Signals the interface event UNIT_RANGED_ATTACK_POWER; not read further here	inferred	none		
-0x5df130	360			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send, UnitSetSpellTargetGuid; not read here	inferred	none		
-0x5df2a0	434			objectlayer	primitive		Runs Player_C.cpp code that calls OsGetAsyncTimeMs, ClientServices::Send, UnitSetSpellTargetGuid; not read here	inferred	none		
-0x5df460	41			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5df490	55			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5df4d0	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5df550	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5df5d0	171			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5df680	174			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5df730	391			objectlayer	primitive		Signals the interface event CONFIRM_XP_LOSS; not read further here	inferred	none		
-0x5df8c0	143			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5df950	48			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5df980	385			objectlayer	primitive		Signals the interface event CONFIRM_TALENT_WIPE; not read further here	inferred	none		
-0x5dfb10	143			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dfba0	385			objectlayer	primitive		Signals the interface event CONFIRM_PET_UNLEARN; not read further here	inferred	none		
-0x5dfd30	143			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dfdc0	387			objectlayer	primitive		Signals the interface event CONFIRM_BINDER; not read further here	inferred	none		
-0x5dff50	143			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5dffe0	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e0060	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e00e0	184			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError, ClientServices::Send; not read here	inferred	none		
-0x5e01a0	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e0220	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e02a0	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e0320	193			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CMovement::WorldToTransport; not read here	inferred	none		
-0x5e03f0	594			objectlayer	orchestration		Signals the interface event TABARD_SAVE_PENDING; not read further here	inferred	none		
-0x5e0650	203			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, SetCharacterComponentEmblem, DbCacheGetRecord; not read here	inferred	none		
-0x5e0720	171			objectlayer	orchestration		Runs Player_C.cpp code that calls SetCharacterComponentItem, SetCharacterComponentEmblem, GetGuildEmblem; not read here	inferred	none		
-0x5e07d0	91			objectlayer	orchestration		Runs Player_C.cpp code that calls UpdateCharacterComponent; not read here	inferred	none		
-0x5e0830	167			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e08e0	185			objectlayer	orchestration		Signals the interface event TABARD_CANSAVE_CHANGED; not read further here	inferred	none		
-0x5e09a0	66			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e09f0	104			objectlayer	primitive		Runs Player_C.cpp code that calls DbCacheGetRecord; not read here	inferred	none		
-0x5e0a60	117			objectlayer	unreached		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e0ae0	107			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send, IsDeadOrGhost; not read here	inferred	none		
-0x5e0b50	137			objectlayer	unreached		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none	objectlayer/overview#unreached-functions	
+0x5dd2e0	530	CGPlayer_C::CGPlayer_C		objectlayer	primitive	CGPlayer_C *__thiscall (CGPlayer_C *this, void *a, void *b)	Builds a player on the unit: 298 watcher lists, the skill and proficiency tables, the inventory and the vtable	verified	one	objectlayer/players#the-player-object	
+0x5dd500	43	CGPlayer_C::DeletingDestructor		objectlayer	orchestration	CGPlayer_C *__thiscall (CGPlayer_C *this, uint32_t flags)	Destroys the player and frees its block on flag bit 0 (vtable slot 0)	verified	one	objectlayer/players#destruction	
+0x5dd530	196	CGPlayer_C::UnlinkActiveWatchLists		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Unlinks every node of the active player's 796 extra watcher lists in the block at +0x1c68	verified	one	objectlayer/players#destruction	
+0x5dd600	604	CGPlayer_C::~CGPlayer_C		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Tears a player down: its tables, pending expirations, tokens, guild callbacks and watcher lists, then the unit	verified	one	objectlayer/players#destruction	
+0x5dd860	52	OnGuildRecordForName		objectlayer	orchestration		Marks the unit's name dirty once its guild record arrives	verified	one	objectlayer/players#destruction	
+0x5dd8a0	1102	CGPlayer_C::AddActiveWatchers		objectlayer	primitive		Registers the active player's object watchers on its inventory, quests, money, skills and other fields	verified	one	objectlayer/playerfields#watchers-on-the-active-player	
+0x5ddcf0	141	OnInventorySlotChanged		objectlayer	primitive		Passes an inventory slot's new GUID to 0x495420 and signals PLAYERBANKSLOTS_CHANGED for a bank slot	verified	one	objectlayer/playerfields#inventory-and-money-changes	
+0x5ddd80	301	OnQuestLogChanged		objectlayer	primitive		Shows a newly accepted quest's line and refreshes quest-giver statuses on a quest-log entry change	verified	one	objectlayer/quests#the-quest-log-watcher	
+0x5ddeb0	115	OnAcceptedQuestRecord		objectlayer	orchestration		Shows the quest-accepted line and its tutorial once the quest record arrives	verified	one	objectlayer/quests#the-quest-log-watcher	
+0x5ddf30	189	OnMoneyChanged		objectlayer	primitive		Plays the coin sound, signals PLAYER_MONEY and trims the player's trade offer to the money left	verified	one	objectlayer/playerfields#inventory-and-money-changes	
+0x5ddff0	23	OnComboPointsChanged		objectlayer	orchestration		Fires the usable-action events and PLAYER_COMBO_POINTS	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight	
+0x5de010	125	OnShapeshiftFormChanged		objectlayer	orchestration		Refreshes usable actions on a form change and calls 0x4931c0 for a form without flag 0x8	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight	
+0x5de090	51	OnCharmedByChanged		objectlayer	orchestration		Refreshes the unit's reaction when its charmer changes	verified	one	objectlayer/playerfields#watchers-on-the-active-player	
+0x5de0d0	166	OnFarSightChanged		objectlayer	orchestration		Runs the far-sight update and signals PLAYER_FARSIGHT_FOCUS_CHANGED	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight	
+0x5de180	711	OnSkillValueChanged		objectlayer	primitive		Prints a skill's rise, shows the gained or skill-up message and refreshes the skill windows	verified	one	objectlayer/playerfields#skill-changes	
+0x5de450	25	OnSkillMaxChanged		objectlayer	orchestration		Calls 0x4d7d40, 0x4fca20(0) and 0x4d2cb0 when a skill's max or permanent bonus changes	verified	one	objectlayer/playerfields#skill-changes	
+0x5de470	56	OnSkillTempBonusChanged		objectlayer	orchestration		Signals the attack events through 0x5ed990 and calls 0x4d2cb0 when a skill's temporary bonus changes	verified	one	objectlayer/playerfields#skill-changes	
+0x5de4b0	34	SignalPlayerFieldEvent		objectlayer	orchestration		Signals the event given as its argument for the unit token player	verified	one	objectlayer/playerfields#watchers-on-the-active-player	
+0x5de4e0	113	OnRestStateChanged		objectlayer	orchestration		Signals UPDATE_EXHAUSTION and shows the rested or normal message and tutorial for the new state	verified	one	objectlayer/playerfields#rest-state	
+0x5de560	71	OnPlayerBytes2Changed		objectlayer	primitive		Refreshes every unit's aura visibility with the changed bits of PLAYER_FIELD_BYTES2 byte 1	verified	one	objectlayer/playerfields#rest-state	
+0x5de5b0	1037	CGPlayer_C::RemoveActiveWatchers		objectlayer	primitive		Removes the active player's object watchers, and one on +0x10ac that was never added	verified	one	objectlayer/playerfields#watchers-on-the-active-player	
+0x5de9c0	132	CGPlayer_C::UpdateGhostState		objectlayer	primitive		Switches the fog, tutorial and spirit state for PLAYER_FLAGS bit 0x10, signalling PLAYER_UNGHOST when clear	verified	one	objectlayer/playerfields#ghost-state	
+0x5dea50	391	CGPlayer_C::OnActiveArrival		objectlayer	primitive		Sets the active player up on arrival: watchers, initial spells, action bar, camera, control and loading end	verified	one	objectlayer/players#arrival-in-the-world	
+0x5debe0	167	CGPlayer_C::PostInit		objectlayer	orchestration		Finishes a created player: unit post-init, name, guild tag, tokens, and the arrival or party record	verified	one	objectlayer/players#arrival-in-the-world	
+0x5dec90	44	CGPlayer_C::PostUpdate		objectlayer	orchestration	void __thiscall (CGPlayer_C *this)	Runs the unit's post-update, refreshes the party and raid tokens and compares the party record (slot 3)	verified	one	objectlayer/players#release-and-reactivation	
+0x5decc0	139	SendInspect		objectlayer	primitive		Sends CMSG_INSPECT with a nonzero GUID and calls 0x4c6f70 with it	verified	one	objectlayer/interaction#other-units	
+0x5ded50	37	ShowResurrectRequest		objectlayer	orchestration		Signals the resurrect request with a non-empty name while the active player is dead or a ghost	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5ded80	163	SendResurrectResponse		objectlayer	primitive		Answers the pending resurrect request with 0x15c and the accept byte and forgets it	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5dee30	766	CGPlayer_C::OnVisibleItemChanged		objectlayer	primitive		Refreshes the action bars and attack events and swaps the model's display for a changed visible item	verified	one	objectlayer/inventory#visible-equipment	
+0x5df130	360	CGPlayer_C::LootCorpse		objectlayer	primitive		Loots a corpse: checks it may, walks up beyond 5 yards, then sends CMSG_LOOT and holds the GUID	verified	one	objectlayer/interaction#looting	
+0x5df2a0	434	CGPlayer_C::LootUnit		objectlayer	primitive		Loots a lootable unit: checks it may, walks up beyond reach, sends CMSG_LOOT and plays animation 50	verified	one	objectlayer/interaction#looting	
+0x5df460	41	CGPlayer_C::SetAutoLoot		objectlayer	primitive		Sets the auto-loot byte +0x1d30 and, with a loot held, calls 0x4c1fa0(0)	verified	one	objectlayer/interaction#looting	
+0x5df490	55	IsQuestGiverToTalk		objectlayer	primitive		Returns 1 for a unit with NPC flag 0x2 whose quest status is neither 0 nor 1	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df4d0	118	SendGossipHello		objectlayer	orchestration		Sends CMSG_GOSSIP_HELLO (0x17b) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df550	118	SendQuestGiverHello		objectlayer	orchestration		Sends CMSG_QUESTGIVER_HELLO (0x184) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df5d0	171	TalkToVendor		objectlayer	primitive		Sells the cursor's item to the vendor, or asks for the vendor's list	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df680	174	TalkToTrainer		objectlayer	orchestration		Remembers the trainer's GUID in 0xc4d788 and sends CMSG_TRAINER_LIST	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df730	391	CGPlayer_C::SpiritHealerDialog		objectlayer	primitive		Asks the ghost to confirm the spirit healer's experience loss, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5df8c0	143	IsSpiritHealerInRange		objectlayer	primitive		Returns 1 while the remembered spirit healer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5df950	48	TalkToSpiritGuide		objectlayer	primitive		Calls 0x4921c0 with 0 and then the GUID while the player is a ghost	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5df980	385	CGPlayer_C::TalentWipeDialog		objectlayer	primitive		Asks to confirm a talent wipe and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dfb10	143	IsTalentWiperInRange		objectlayer	primitive		Returns 1 while the remembered talent trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dfba0	385	CGPlayer_C::PetUnlearnDialog		objectlayer	primitive		Asks to confirm a pet unlearn and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dfd30	143	IsPetUnlearnerInRange		objectlayer	primitive		Returns 1 while the remembered pet trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dfdc0	387	BinderDialog		objectlayer	primitive		Asks to confirm binding at the inn's area, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dff50	143	IsBinderInRange		objectlayer	primitive		Returns 1 while the remembered innkeeper exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dffe0	118	SendBankerActivate		objectlayer	orchestration		Sends CMSG_BANKER_ACTIVATE (0x1b7) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e0060	118	SendPetitionShowList		objectlayer	orchestration		Sends CMSG_PETITION_SHOWLIST (0x1bb) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e00e0	184	CGPlayer_C::TalkToTabardVendor		objectlayer	orchestration		Sends 0x1f2 to a tabard vendor, refusing with error 0x130 while the player's display is not native	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e01a0	118	SendBattlemasterHello		objectlayer	orchestration		Sends CMSG_BATTLEMASTER_HELLO (0x2d7) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e0220	118	SendAuctionHello		objectlayer	orchestration		Sends MSG_AUCTION_HELLO (0x255) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e02a0	118	SendListStabledPets		objectlayer	orchestration		Sends MSG_LIST_STABLED_PETS (0x26f) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5e0320	193	CGPlayer_C::OnWorldClick		objectlayer	primitive		Walks the active mover to a clicked terrain point, acts on a clicked object, or clears the target	verified	one	objectlayer/interaction#world-clicks	
+0x5e03f0	594	CGPlayer_C::SaveGuildEmblem		objectlayer	orchestration		Checks a new tabard emblem and sends MSG_SAVE_GUILD_EMBLEM, or shows why it cannot	verified	one	objectlayer/party#guild-tabards	
+0x5e0650	203	OnGuildEmblem		objectlayer	orchestration		Puts the guild's emblem on the player's tabard once the guild record arrives	verified	one	objectlayer/party#guild-tabards	
+0x5e0720	171	CGPlayer_C::ApplyTabard		objectlayer	orchestration		Puts a tabard display on the model and its guild emblem when the display has one	verified	one	objectlayer/party#guild-tabards	
+0x5e07d0	91	CGPlayer_C::RefreshCharacterComponent		objectlayer	orchestration		Marks the character component dirty, updates it and calls 0x491a50 with the GUID	verified	one	objectlayer/party#guild-tabards	
+0x5e0830	167	CGPlayer_C::ReapplyTabard		objectlayer	orchestration		Reapplies the tabard in inventory slot 18 to the model and calls 0x491a50 with the GUID	verified	one	objectlayer/party#guild-tabards	
+0x5e08e0	185	CGPlayer_C::RefreshGuildTag		objectlayer	orchestration		Invalidates the name, signals TABARD_CANSAVE_CHANGED and PLAYER_GUILD_UPDATE and redraws the tabard	verified	one	objectlayer/party#guild-tabards	
+0x5e09a0	66	RefreshGuildTagIfInList		objectlayer	unreached		Refreshes a player's guild tag when its guild id is in a list	verified	one	objectlayer/overview#unreached-functions	
+0x5e09f0	104	CGPlayer_C::GetGuildName		objectlayer	primitive		Returns the player's guild name from the cache, asking for it with a callback when missing	verified	one	objectlayer/party#guild-tabards	
+0x5e0a60	117	CGPlayer_C::CheckInteractRange		objectlayer	unreached		Returns 1 within a squared range, else shows ERR_OUT_OF_RANGE and returns 0	verified	one	objectlayer/overview#unreached-functions	
+0x5e0ae0	107	CGPlayer_C::SendRepopRequest		objectlayer	orchestration		Sends CMSG_REPOP_REQUEST (0x15a) with no body while the player is dead or a ghost	verified	one	objectlayer/players#death	
+0x5e0b50	137	CGPlayer_C::SendSwapInvItem		objectlayer	unreached		Sends CMSG_SWAP_INV_ITEM with two different slots and returns 1	verified	one	objectlayer/overview#unreached-functions	
 0x5e0be0	10	InitPlayerOther5Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5e0bf0, then jumps to 0x5e0c10 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5e0bf0	23	InitPlayerClear5		objectlayer	orchestration	void __cdecl (void)	Clears or sets 4 dwords of a global	verified	one	objectlayer/initializers#other-initializers	
 0x5e0c10	12	InitPlayerRegisterExit6		objectlayer	orchestration	void __cdecl (void)	Registers 0x5e0c20 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5e0c20	25	InitPlayerFree4		objectlayer	host	void __cdecl (void)	Frees a global block through SMemFree when its pointer is set, at exit	verified	one	objectlayer/initializers#exit-callbacks	
-0x5e0c40	985			objectlayer	primitive		Signals the interface event EQUIP_BIND_CONFIRM; not read further here	inferred	none		
-0x5e1020	228			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer,	inferred	none		
-0x5e1110	245			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e1210	206			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5e12e0	203			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5e13b0	76	CGPlayer_C::FindSlotIndex	idb	objectlayer	primitive		Returns the bag index of a container guid for a player	inferred	none	spell/cast#item-use-fields	
-0x5e1400	122			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, GetItemClass, GetItemSubClass; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e1480	787			objectlayer	primitive		Signals the interface event AUTOEQUIP_BIND_CONFIRM; not read further here	inferred	none		
-0x5e17a0	154			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer,	inferred	none		
-0x5e1840	163			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::DisplayError; not read here	inferred	none		
-0x5e18f0	225			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5e19e0	225			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5e1ad0	112			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e1b40	152			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5e1be0	338			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x5e0c40	985	CGPlayer_C::SwapItems		objectlayer	primitive		Swaps two slots with 0x10d or 0x10c, first asking to confirm binding an item moved into equipment	verified	one	objectlayer/inventory#moving-items	
+0x5e1020	228	OnSwapItemRecord		objectlayer	primitive		Replays every parked swap of an item entry once its record arrives and frees each entry	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
+0x5e1110	245	AllocItemSwap		objectlayer	primitive		Returns a free ITEMSWAP entry's index, growing the table by one when none is free	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
+0x5e1210	206	CGPlayer_C::SplitItem		objectlayer	primitive		Sends CMSG_SPLIT_ITEM with both bags' indices and slots and the count	verified	one	objectlayer/inventory#moving-items	
+0x5e12e0	203	CGPlayer_C::AutoStoreBagItem		objectlayer	primitive		Sends CMSG_AUTOSTORE_BAG_ITEM with the source bag and slot and the destination bag	verified	one	objectlayer/inventory#moving-items	
+0x5e13b0	76	CGPlayer_C::FindSlotIndex	idb	objectlayer	primitive		Returns the inventory slot holding a GUID, 0xff when none holds it	verified	one	objectlayer/inventory#moving-items	
+0x5e1400	122	CGPlayer_C::HasItemOfClassInSlots		objectlayer	unreached		Returns 1 when an item in slots 0 to 22 has the class and subclass	verified	one	objectlayer/overview#unreached-functions	
+0x5e1480	787	CGPlayer_C::AutoEquipCursorItem		objectlayer	primitive		Equips the cursor's item or ammo with 0x10a or 0x268, first asking to confirm binding	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
+0x5e17a0	154	OnAutoEquipItemRecord		objectlayer	orchestration		Retries equipping the cursor's item once its record arrives, when the cursor still holds that entry	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
+0x5e1840	163	CGPlayer_C::AutoEquipItemInSlot		objectlayer	primitive		Picks up a slot's item and auto-equips it, refusing an item in trade	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
+0x5e18f0	225	CGPlayer_C::AutoStoreBankItem		objectlayer	primitive		Sends CMSG_AUTOSTORE_BANK_ITEM (0x282) for an occupied slot	verified	one	objectlayer/inventory#moving-items	
+0x5e19e0	225	CGPlayer_C::AutoBankItem		objectlayer	primitive		Sends CMSG_AUTOBANK_ITEM (0x283) for an occupied slot	verified	one	objectlayer/inventory#moving-items	
+0x5e1ad0	112	SendAutoStoreLootItem		objectlayer	orchestration		Sends CMSG_AUTOSTORE_LOOT_ITEM (0x108) with the loot slot	verified	one	objectlayer/inventory#moving-items	
+0x5e1b40	152	CGPlayer_C::StoreLootInSlot		objectlayer	orchestration		Sends CMSG_STORE_LOOT_IN_SLOT (0x109) with the bag index, slot and loot slot	verified	one	objectlayer/inventory#moving-items	
+0x5e1be0	338	CGPlayer_C::AnswerBindConfirm		objectlayer	primitive		Replays an accepted parked move confirmed, or releases both slots' items, and frees the entry	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
 0x5e1d40	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5e1d50	145			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
+0x5e1d50	145	SendSellItem		objectlayer	orchestration		Sends CMSG_SELL_ITEM (0x1a0) with the vendor, the item and the count	verified	one	objectlayer/inventory#vendors	
 0x5e1df0	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
-0x5e1e00	39			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e1e30	37			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e1e70	17			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5e1e90	154			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e1f30	170			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
+0x5e1e00	39	CGPlayer_C::CopyPlayerFields		objectlayer	unreached		Copies a length of bytes into the player fields	verified	one	objectlayer/overview#unreached-functions	
+0x5e1e30	37	GetFieldBlockOffset		objectlayer	unreached	int32_t __fastcall (uint32_t kind)	Returns 0, 0x18, 0xc0, 0x18 or 0x2f0 for kinds 0 to 4, else −1	verified	one	objectlayer/overview#unreached-functions	
+0x5e1e70	17	GetProficiencyMask		objectlayer	orchestration	uint32_t __fastcall (uint8_t itemClass)	Returns the proficiency mask the server set for an item class below 16, else 0	verified	one	objectlayer/playercombat#using-an-item	
+0x5e1e90	154	SendBuyItem		objectlayer	orchestration		Sends CMSG_BUY_ITEM (0x1a2) with the vendor, the item, the count and a byte	verified	one	objectlayer/inventory#vendors	
+0x5e1f30	170	SendBuyItemInSlot		objectlayer	orchestration		Sends CMSG_BUY_ITEM_IN_SLOT (0x1a3) with the vendor, the item, a bag, a slot and the count	verified	one	objectlayer/inventory#vendors	
 0x5e1fe0	10	InitPlayerOther6Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5e1ff0, then jumps to 0x5e2010 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5e1ff0	31	InitPlayerClear6		objectlayer	orchestration	void __cdecl (void)	Clears or sets 3 dwords of a global	verified	one	objectlayer/initializers#other-initializers	
 0x5e2010	12	InitPlayerRegisterExit7		objectlayer	orchestration	void __cdecl (void)	Registers 0x5e2020 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5e2020	1	InitPlayerEmpty2		objectlayer	orchestration	void __cdecl (void)	Returns at once; the exit callback of an initializer with nothing to release	verified	one	objectlayer/initializers#exit-callbacks	
-0x5e2030	73			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetMapID; not read here	inferred	none		
-0x5e2080	134			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e2110	389			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, ClientServices::Send; not read here	inferred	none		
-0x5e22a0	36			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5e22d0	441			objectlayer	primitive		Runs Player_C.cpp code that calls TransformPoint, InvertRigidMatrix, TranslateMatrix; not read here	inferred	none		
-0x5e2490	101			objectlayer	orchestration		Runs Player_C.cpp code that calls CVar::Register; not read here	inferred	none		
-0x5e2500	15			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5e2510	321			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrSetTypeMirrorHandler; not read here	inferred	none		
-0x5e2660	262			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5e2770	56			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e27b0	18			objectlayer	orchestration		Signals the interface event PLAYER_GUILD_UPDATE; not read further here	inferred	none		
-0x5e27d0	51			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e2810	60			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e2850	57			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e2890	303			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, DbCacheGetRecord; not read here	inferred	none		
-0x5e29c0	26			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrEnumObjects; not read here	inferred	none		
-0x5e29e0	80			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e2a30	20			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5e2a50	59			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e2a90	513			objectlayer	primitive		Signals the interface event UNIT_LEVEL; not read further here	inferred	none		
-0x5e2ca0	264			objectlayer	primitive		Runs Player_C.cpp code that calls FreeUint32Array, ReallocUint32Array; not read here	inferred	none		
-0x5e2db0	93			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e2e10	72			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e2e60	430			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrClearTypeMirrorHandler, SMemFree; not read here	inferred	none		
-0x5e3010	2211			objectlayer	orchestration		Registers or clears the handlers for 130 opcodes from 0x1b to 0x333; not read further here	inferred	none		
-0x5e38c0	4661			objectlayer	primitive		Handles a group of server messages, one of which cancels the cast of the in-flight item	inferred	none	spell/cancel#who-cancels-a-cast	
-0x5e4e70	188			objectlayer	orchestration		Runs Player_C.cpp code that calls DBCache::NameCache::GetRecord, SMemFree, SStrPrintf; not read here	inferred	none		
-0x5e4f30	288			objectlayer	primitive		Handles server opcodes 0x1ea, 0x1eb, as its registration names; its body is not read here	inferred	none		
-0x5e5050	192			objectlayer	primitive		Handles 6 server opcodes from 0x1bc to 0x2c1, as its registration names; its body is not read here	inferred	none		
-0x5e5110	1023			objectlayer	primitive		Handles server opcodes 0x7e, 0x2f2, as its registration names; its body is not read here	inferred	none		
-0x5e5510	527			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e5720	492			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e5910	126			objectlayer	primitive		Handles 4 server opcodes from 0x19f to 0x1a5, as its registration names; its body is not read here	inferred	none		
-0x5e59b0	224			objectlayer	primitive		Handles 9 server opcodes from 0x183 to 0x195, as its registration names; its body is not read here	inferred	none		
-0x5e5ad0	976			objectlayer	primitive		Handles 5 server opcodes from 0x196 to 0x19a, as its registration names; its body is not read here	inferred	none		
-0x5e5eb0	92			objectlayer	orchestration		Handles server opcode 0x19c, as its registration names; its body is not read here	inferred	none		
-0x5e5f10	253			objectlayer	primitive		Handles server opcodes 0x1b1, 0x1b4, as its registration names; its body is not read here	inferred	none		
-0x5e6010	253			objectlayer	orchestration		Handles 11 server opcodes from 0x160 to 0x2a4, as its registration names; its body is not read here	inferred	none		
-0x5e6140	116			objectlayer	orchestration		Handles server opcode 0x2ab, as its registration names; its body is not read here	inferred	none		
-0x5e61c0	368			objectlayer	primitive		Handles server opcode 0x12b, as its registration names; its body is not read here	inferred	none		
-0x5e6330	466			objectlayer	primitive		Handles server opcode 0x12c, as its registration names; its body is not read here	inferred	none		
-0x5e6510	358			objectlayer	primitive		Handles server opcode 0x12a, as its registration names; its body is not read here	inferred	none		
-0x5e6680	45			objectlayer	primitive		Handles server opcode 0x129, as its registration names; its body is not read here	inferred	none		
-0x5e66b0	117			objectlayer	orchestration		Handles server opcode 0x103, as its registration names; its body is not read here	inferred	none		
-0x5e6730	53			objectlayer	orchestration		Handles server opcode 0x6f, as its registration names; its body is not read here	inferred	none		
-0x5e6770	36			objectlayer	orchestration		Handles server opcode 0x71, as its registration names; its body is not read here	inferred	none		
-0x5e67a0	45			objectlayer	orchestration		Handles server opcode 0x74, as its registration names; its body is not read here	inferred	none		
-0x5e67d0	122			objectlayer	orchestration		Handles server opcode 0x79, as its registration names; its body is not read here	inferred	none		
-0x5e6850	37			objectlayer	orchestration		Handles server opcode 0x77, as its registration names; its body is not read here	inferred	none		
-0x5e6880	46			objectlayer	orchestration		Handles server opcode 0x7c, as its registration names; its body is not read here	inferred	none		
-0x5e68b0	353			objectlayer	primitive		Handles server opcode 0x7f, as its registration names; its body is not read here	inferred	none		
-0x5e6a40	1237			objectlayer	primitive		Handles server opcode 0x7d, as its registration names; its body is not read here	inferred	none		
-0x5e6f20	89			objectlayer	orchestration		Handles server opcode 0x83, as its registration names; its body is not read here	inferred	none		
-0x5e6f80	45			objectlayer	orchestration		Handles server opcode 0x86, as its registration names; its body is not read here	inferred	none		
-0x5e6fb0	261			objectlayer	orchestration		Handles server opcode 0x88, as its registration names; its body is not read here	inferred	none		
-0x5e70c0	37			objectlayer	orchestration		Handles server opcode 0x1f2, as its registration names; its body is not read here	inferred	none		
-0x5e70f0	144			objectlayer	orchestration		Handles server opcode 0x1f1, as its registration names; its body is not read here	inferred	none		
-0x5e7180	857			objectlayer	primitive		Handles server opcode 0x92, as its registration names; its body is not read here	inferred	none		
-0x5e7520	642			objectlayer	primitive		Handles server opcode 0x93, as its registration names; its body is not read here	inferred	none		
-0x5e7830	183			objectlayer	primitive		Handles server opcode 0x2f5, as its registration names; its body is not read here	inferred	none		
-0x5e78f0	153			objectlayer	orchestration		Handles server opcode 0x328, as its registration names; its body is not read here	inferred	none		
-0x5e7990	334			objectlayer	primitive		Handles server opcodes 0x1d9, 0x1da, 0x1db, as its registration names; its body is not read here	inferred	none		
-0x5e7ae0	35			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5e7b10	95			objectlayer	orchestration		Runs Player_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x5e7b70	71			objectlayer	orchestration		Handles server opcode 0x127, as its registration names; its body is not read here	inferred	none		
-0x5e7bc0	224			objectlayer	orchestration		Handles server opcode 0x15b, as its registration names; its body is not read here	inferred	none		
-0x5e7ca0	156			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, DBCache::NameCache::GetRecord; not	inferred	none		
-0x5e7d40	37			objectlayer	orchestration		Handles server opcode 0x2bc, as its registration names; its body is not read here	inferred	none		
-0x5e7d70	29			objectlayer	orchestration		Handles server opcode 0x115, as its registration names; its body is not read here	inferred	none		
-0x5e7d90	59			objectlayer	orchestration		Handles server opcodes 0xae, 0xaf, as its registration names; its body is not read here	inferred	none		
-0x5e7dd0	46			objectlayer	orchestration		Handles server opcode 0x14e, as its registration names; its body is not read here	inferred	none		
-0x5e7e00	396			objectlayer	primitive		Handles server opcode 0x24b, as its registration names; its body is not read here	inferred	none		
-0x5e7f90	1183			objectlayer	primitive		Handles server opcode 0x24c, as its registration names; its body is not read here	inferred	none		
-0x5e84e0	191			objectlayer	orchestration		Handles server opcode 0x24f, as its registration names; its body is not read here	inferred	none		
-0x5e85a0	62			objectlayer	orchestration		Handles server opcode 0x32f, as its registration names; its body is not read here	inferred	none		
-0x5e85e0	986			objectlayer	primitive		Handles server opcode 0x250, as its registration names; its body is not read here	inferred	none		
-0x5e89c0	198			objectlayer	orchestration		Handles server opcode 0x150, as its registration names; its body is not read here	inferred	none		
-0x5e8a90	195			objectlayer	primitive		Handles server opcode 0x151, as its registration names; its body is not read here	inferred	none		
-0x5e8b60	156			objectlayer	primitive		Handles server opcode 0x27b, as its registration names; its body is not read here	inferred	none		
-0x5e8c00	156			objectlayer	primitive		Handles server opcode 0x333, as its registration names; its body is not read here	inferred	none		
-0x5e8ca0	134			objectlayer	orchestration		Handles server opcode 0x263, as its registration names; its body is not read here	inferred	none		
-0x5e8d30	478			objectlayer	primitive		Handles server opcode 0x27c, as its registration names; its body is not read here	inferred	none		
-0x5e8f10	13			objectlayer	orchestration		Handles server opcode 0x252, as its registration names; its body is not read here	inferred	none		
-0x5e8f20	1300			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
-0x5e9440	70			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5e9490	119			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9510	182			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClientServices::Send; not read here	inferred	none		
-0x5e95d0	109			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9640	113			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e96c0	95			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9720	95			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9780	95			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e97e0	137			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9870	98			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e98e0	98			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5e9950	95			objectlayer	unreached		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5e99b0	229			objectlayer	primitive		Clears the target and then cancels the cast with failed and send set	inferred	none	spell/cancel#who-cancels-a-cast	
-0x5e9aa0	233			objectlayer	orchestration		Signals the interface event PARTY_MEMBER_DISABLE; not read further here	inferred	none		
-0x5e9b90	37			objectlayer	primitive		Signals the interface event MIRROR_TIMER_STOP; not read further here	inferred	none		
-0x5e9bc0	81			objectlayer	orchestration		Fills slot 2 of the player vtable; its body is not read here	inferred	none		
-0x5e9c20	955			objectlayer	primitive		Runs Player_C.cpp code that calls SysMsgPrintf, GrowableArrayChunk, RoundUpToChunk; not read here	inferred	none		
-0x5e9fe0	730			objectlayer	primitive		Runs Player_C.cpp code that calls SysMsgPrintf, GrowableArrayChunk, RoundUpToChunk; not read here	inferred	none		
-0x5ea2c0	111			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ea330	35			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ea360	28			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ea380	111			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5ea3f0	112			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ea460	185			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ea520	168			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ea5d0	186			objectlayer	primitive		Returns the spell id a player's level lookup uses in place of a spell id	inferred	none	spell/records#caster-level	
-0x5ea690	104			objectlayer	orchestration	uint32_t __thiscall (void *this, uint32_t spellId)	Returns a player's skill value for a spell, capped at its maximum level times 5; slot 42	inferred	none	spell/records#caster-level	
+0x5e2030	73	PlayerInitialize		objectlayer	orchestration	void __cdecl (void)	Registers the player handlers and CVars, clears the player tables and starts the area-trigger timer	verified	one	objectlayer/players#world-entry-and-exit	
+0x5e2080	134	LoadAreaTriggers		objectlayer	primitive		Selects the map's AreaTrigger rows, clears the current trigger and arms the 100 ms check	verified	one	objectlayer/players#area-triggers	
+0x5e2110	389	AreaTriggerCheck		objectlayer	primitive		Arms itself again and sends CMSG_AREATRIGGER when the active player enters a trigger it was not in	verified	one	objectlayer/players#area-triggers	
+0x5e22a0	36	StopAreaTriggerCheck		objectlayer	orchestration	void __cdecl (void)	Kills the area-trigger timer when it is armed	verified	one	objectlayer/players#world-entry-and-exit	
+0x5e22d0	441	IsInsideAreaTrigger		objectlayer	primitive	uint32_t __fastcall (void *row, float *position)	Tests a point inside an AreaTrigger row's sphere, or strictly inside its rotated box when its radius is 0	verified	one	objectlayer/players#area-triggers	
+0x5e2490	101	RegisterPlayerCVars		objectlayer	orchestration	void __cdecl (void)	Registers CombatModeMaxDistance, guildMemberNotify and autoClearAFK and keeps two of the pointers	verified	one	objectlayer/players#world-entry-and-exit	
+0x5e2500	15	PlayerDestroy		objectlayer	orchestration	void __cdecl (void)	Clears the player handlers, calls 0x62f870 and stops the area-trigger timer	verified	one	objectlayer/players#world-entry-and-exit	
+0x5e2510	321	AddPlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Clears player state and registers the type watchers on every player's visible items, flags and guild fields	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2660	262	OnCharmOrSummonChanged		objectlayer	primitive		Refreshes the unit tokens of a player's charm and summon, releasing a gone one's token	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
+0x5e2770	56	OnGuildIdChanged		objectlayer	orchestration		Refreshes the player's guild tag and calls 0x49ea90	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e27b0	18	OnGuildRankChanged		objectlayer	orchestration		Signals the unit event PLAYER_GUILD_UPDATE for the player	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e27d0	51	OnDuelTeamChanged		objectlayer	orchestration		Refreshes the player's reaction when its duel team changes	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2810	60	OnVisibleItemWatch		objectlayer	orchestration		Passes a visible-item change to 0x5dee30 with the offset and the old bytes	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2850	57	OnPlayerFlagsWatch		objectlayer	orchestration		Passes a PLAYER_FLAGS change to 0x5ee990 with the old flags	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2890	303	OnGuildTimestampChanged		objectlayer	primitive		Records a guild's new stamp and, when it changed, drops and requeries the cached guild record	verified	one	objectlayer/playerfields#guild-timestamps	
+0x5e29c0	26	OnGuildRecordRefreshed		objectlayer	orchestration		Walks every object to refresh the guild tag of players in the arrived guild	verified	one	objectlayer/playerfields#guild-timestamps	
+0x5e29e0	80	RefreshGuildTagIfMember		objectlayer	primitive		Refreshes a player's guild tag when its guild is the one walked for	verified	one	objectlayer/playerfields#guild-timestamps	
+0x5e2a30	20	OnPlayerBytes3Byte2Changed		objectlayer	orchestration		Calls 0x491a00 with the player's GUID	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2a50	59	OnPlayerBytes3Byte3Changed		objectlayer	orchestration		Calls 0x491a00 with the player's GUID and refreshes its reaction	verified	one	objectlayer/playerfields#watchers-on-every-player	
+0x5e2a90	513	OnDrunkChanged		objectlayer	primitive		Refreshes the drunk camera and prints the drunk message for each threshold the level crosses	verified	one	objectlayer/playerfields#drunk-messages	
+0x5e2ca0	264	BuildWeaponSkillSpells		objectlayer	primitive		Fills the weapon-subclass spell table 0xc4d730 and the effect-0x1a spell 0xc4d688 from Spell.dbc	verified	one	objectlayer/playercombat#weapon-skills	
+0x5e2db0	93	GetWeaponSubclassCount		objectlayer	primitive	uint32_t __cdecl (void)	Returns one past the highest ItemSubClass subclass of class 2, or 0 when there is none	verified	one	objectlayer/playercombat#weapon-skills	
+0x5e2e10	72	GetSingleBitIndex		objectlayer	primitive	uint32_t __fastcall (uint32_t mask, int32_t *index)	Returns whether a mask has at most one bit and stores that bit's index, −1 for an empty mask	verified	one	objectlayer/playercombat#weapon-skills	
+0x5e2e60	430	RemovePlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Frees the player tables and removes the type watchers, missing the 14 visible-item ones by an offset of 8	verified	one	objectlayer/playerfields#visible-item-watchers-outlive-world-exit	
+0x5e3010	2211	RegisterPlayerHandlers		objectlayer	orchestration	void __cdecl (void)	Registers the player code's 130 server message handlers	verified	one	objectlayer/playermessages#message-handlers	
+0x5e38c0	4661	HandlePlayerNotice		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads 43 small server notices and acts on each, returning 0 for an opcode it does not handle	verified	one	objectlayer/playermessages#the-notice-handler	
+0x5e4e70	188	OnRollerName		objectlayer	orchestration		Prints a dice roll once the roller's name arrives and frees the block it is given	verified	one	objectlayer/playermessages#dice-rolls	
+0x5e4f30	288	HandleItemTimers		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Applies an item's or an enchantment's remaining time, parking it for an item not yet known	verified	one	objectlayer/inventory#item-timers	
+0x5e5050	192	HandlePetitionMessage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches the six petition messages to their readers when an active player exists	verified	one	objectlayer/party#petitions	
+0x5e5110	1023	ReadPartyMemberStats		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a party member's masked stats into its records and raises the unit events for what changed	verified	one	objectlayer/party#party-member-stats	
+0x5e5510	527	DiffPartyRecords		objectlayer	primitive		Returns the mask of the fields in which two party member records differ	verified	one	objectlayer/party#the-party-member-record	
+0x5e5720	492	SignalPartyRecordChanges		objectlayer	primitive		Raises the unit events for a member's and its pet's changed record fields	verified	one	objectlayer/party#party-member-events	
+0x5e5910	126	HandleVendorMessage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches the four vendor messages to their readers when an active player exists, else returns 0	verified	one	objectlayer/inventory#vendors	
+0x5e59b0	224	HandleQuestGiverMessage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches the nine quest giver messages to their readers when an active player exists	verified	one	objectlayer/quests#quest-giver-messages	
+0x5e5ad0	976	HandleQuestUpdate		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the quest updates 0x196 to 0x19a and shows their failure, completion, kill and item messages	verified	one	objectlayer/quests#quest-updates	
+0x5e5eb0	92	ReadQuestConfirmAccept		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a shared quest and its sharer and offers it through 0x5019a0	verified	one	objectlayer/quests#shared-quests	
+0x5e5f10	253	HandleTrainerMessage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a trainer list, or prints a failed trainer purchase's reason to the console	verified	one	objectlayer/inventory#trainers	
+0x5e6010	253	HandleLootMessage		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches the loot messages to the player and the roll messages to LootRoll.cpp	verified	one	objectlayer/inventory#loot	
+0x5e6140	116	ReadSummonRequest		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a summon request and shows it unless the active player is dead or a ghost	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5e61c0	368	ReadLearnedSpell		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Learns a spell with notification, or appends it to the initial list with no player yet	verified	one	objectlayer/playercombat#spell-book-messages	
+0x5e6330	466	ReadSupercededSpell		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Replaces a spell with its new rank in the spell book or the initial list	verified	one	objectlayer/playercombat#spell-book-messages	
+0x5e6510	358	ReadInitialSpells		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the initial spell list and the spell cooldowns	verified	one	objectlayer/playercombat#spell-book-messages	
+0x5e6680	45	ReadActionButtons		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the 120 action buttons into 0xc4c2b4	verified	one	objectlayer/playercombat#spell-book-messages	
+0x5e66b0	117	ReadEmote		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Plays an emote on a unit that is neither asleep nor under mover flag bit 21	verified	one	objectlayer/interaction#text-emotes	
+0x5e6730	53	ReadGroupInvite		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a group invitation from a name	verified	one	objectlayer/party#group-notices	
+0x5e6770	36	ReadGroupCancel		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a name and calls 0x48f440	verified	one	objectlayer/party#group-notices	
+0x5e67a0	45	ReadGroupDecline		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows that a name declined the group invitation	verified	one	objectlayer/party#group-notices	
+0x5e67d0	122	ReadGroupSetLeader		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows the group's new leader, or that the player leads	verified	one	objectlayer/party#group-notices	
+0x5e6850	37	ReadGroupUninvite		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Leaves the group and shows ERR_UNINVITE_YOU	verified	one	objectlayer/party#group-notices	
+0x5e6880	46	ReadGroupDestroyed		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Leaves the group, showing ERR_GROUP_DISBANDED when 0x4e86d0 says so	verified	one	objectlayer/party#group-notices	
+0x5e68b0	353	ReadPartyCommandResult		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a group command's result and leaves the group on a successful leave	verified	one	objectlayer/party#group-notices	
+0x5e6a40	1237	ReadGroupList		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the group's members into 40-entry stack arrays without bounding the count and rebuilds the party	verified	one	objectlayer/party#the-group-list	
+0x5e6f20	89	ReadGuildInvite		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a guild invitation from an inviter to a guild	verified	one	objectlayer/party#guild-notices	
+0x5e6f80	45	ReadGuildDecline		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows that a name declined the guild invitation	verified	one	objectlayer/party#guild-notices	
+0x5e6fb0	261	ReadGuildInfo		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Prints the guild's name and creation figures to the chat frame	verified	one	objectlayer/party#guild-notices	
+0x5e70c0	37	ReadTabardVendorActivate		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Opens the tabard vendor for a GUID through 0x4f5840	verified	one	objectlayer/party#guild-notices	
+0x5e70f0	144	ReadSaveGuildEmblem		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows the emblem save's result, clears the pending flag and drops the guild record on success	verified	one	objectlayer/party#guild-tabards	
+0x5e7180	857	ReadGuildEvent		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a guild event's strings into three stack slots without bounding the count and shows the event	verified	one	objectlayer/party#guild-events	
+0x5e7520	642	ReadGuildCommandResult		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows a guild command's success or error message	verified	one	objectlayer/party#guild-notices	
+0x5e7830	183	ReadPlayTimeWarning		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Shows the play-time warning with the time left as hours and minutes	verified	one	objectlayer/playermessages#play-time	
+0x5e78f0	153	ReadGmTicketStatusUpdate		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Asks for the ticket, signals the no-ticket event with too few arguments, or shows the survey	verified	one	objectlayer/playermessages#gm-tickets	
+0x5e7990	334	ReadMirrorTimer		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Starts, pauses or stops a mirror timer in the interface	verified	one	objectlayer/playermessages#mirror-timers	
+0x5e7ae0	35	GetMirrorTimerName		objectlayer	primitive	const char *__fastcall (uint32_t type)	Returns EXHAUSTION, BREATH or FEIGNDEATH for timer types 0 to 2, else UNKNOWN	verified	one	objectlayer/playermessages#mirror-timers	
+0x5e7b10	95	GetMirrorTimerLabel		objectlayer	orchestration	const char *__fastcall (uint32_t type, uint32_t spell)	Returns the spell's localised name, else the text of the type's <NAME>_LABEL	verified	one	objectlayer/playermessages#mirror-timers	
+0x5e7b70	71	ReadSetProficiency		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores the proficiency mask of an item class at 0xc4d4a0 without bounding the class	verified	one	objectlayer/playermessages#other-small-handlers	
+0x5e7bc0	224	ReadResurrectRequest		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Keeps a resurrect request's GUID and shows it with the resurrecter's name	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5e7ca0	156	OnResurrecterName		objectlayer	orchestration		Shows the resurrect request once the name arrives, or forgets the request	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5e7d40	37	ReadPlayerSkinned		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes the byte's truth to 0x48f400	verified	one	objectlayer/playermessages#other-small-handlers	
+0x5e7d70	29	ReadInspect		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a GUID and drops it	verified	one	objectlayer/playermessages#other-small-handlers	
+0x5e7d90	59	ReadItemText		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes the read-item replies to the active player's 0x5ec600	verified	one	objectlayer/playermessages#reading-items	
+0x5e7dd0	46	ReadCancelCombat		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Stops the active player's melee attack	verified	one	objectlayer/playermessages#other-small-handlers	
+0x5e7e00	396	ReadSpellLogMiss		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a spell's misses per target and logs them, floating each miss word on its target	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e7f90	1183	ReadSpellLogExecute		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a spell's executed effects and their targets and logs each by its effect	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e84e0	191	ReadSpellDamageShield		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a damage shield's hit, logs it, floats the number and raises the victim's WOUND feedback	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e85a0	62	ReadSpellInstakillLog		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads an instant kill's GUID and spell and logs it through 0x62cbe0	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e85e0	986	ReadSpellNonMeleeDamage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a spell's damage, logs it, raises WOUND with its marks and floats the number or miss word	verified	one	objectlayer/playercombat#non-melee-damage	
+0x5e89c0	198	ReadSpellHealLog		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a heal, raises the target's HEAL feedback and logs it	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e8a90	195	ReadSpellEnergizeLog		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads an energize, divides the amount by the power's display divisor and logs it	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e8b60	156	ReadSpellDispelLog		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a dispel's spells and logs each through 0x62d480	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e8c00	156	ReadSpellStealLog		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a steal's spells and logs each through 0x62d630	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e8ca0	134	ReadSpellImmune		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads an immunity's two GUIDs, spell and byte and logs it through 0x62d240	verified	one	objectlayer/playercombat#spell-combat-log-messages	
+0x5e8d30	478	ReadDamageCalcLog		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Prints a damage calculation's attacker, target, spell and entries to the console	verified	one	objectlayer/playercombat#damage-calculation-log	
+0x5e8f10	13	ReadResurrectFailed		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Calls 0x495850 and returns 1	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5e8f20	1300	ClearPlayerHandlers		objectlayer	orchestration	void __cdecl (void)	Clears the player code's 130 server message handlers	verified	one	objectlayer/playermessages#message-handlers	
+0x5e9440	70	InviteByGuid		objectlayer	orchestration		Invites the named unit of a GUID to the group through 0x5e9490	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9490	119	InviteByName		objectlayer	orchestration		Raises flag 0x11 through 0x4b54c0 and sends CMSG_GROUP_INVITE with a name	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9510	182	UninviteByGuid		objectlayer	orchestration		Sends CMSG_GROUP_UNINVITE_GUID for a GUID no unit has, else uninvites the unit's name	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e95d0	109	UninviteByName		objectlayer	orchestration		Sends CMSG_GROUP_UNINVITE with a name	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9640	113	SendGroupSetLeader		objectlayer	orchestration		Sends CMSG_GROUP_SET_LEADER with a GUID	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e96c0	95	SendGroupAccept		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GROUP_ACCEPT with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9720	95	SendGroupDecline		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GROUP_DECLINE with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9780	95	SendGroupDisband		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GROUP_DISBAND with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e97e0	137	SendLootMethod		objectlayer	orchestration		Sends CMSG_LOOT_METHOD with the method, the master's GUID and the threshold	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9870	98	SendGuildAccept		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GUILD_ACCEPT with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e98e0	98	SendGuildDecline		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GUILD_DECLINE with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5e9950	95	SendUndressPlayer		objectlayer	unreached	void __cdecl (void)	Sends opcode 0x20 with no body	verified	one	objectlayer/overview#unreached-functions	
+0x5e99b0	229	CGPlayer_C::OnDied		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Announces a party member's death, or for the active player arms the release timer and resets its state	verified	one	objectlayer/players#death	
+0x5e9aa0	233	CGPlayer_C::Release		objectlayer	orchestration	void __thiscall (CGPlayer_C *this)	Releases a player: tokens, guild callbacks, the active player's watchers and timers, then the unit (slot 1)	verified	one	objectlayer/players#release-and-reactivation	
+0x5e9b90	37	StopMirrorTimers		objectlayer	primitive	void __cdecl (void)	Signals MIRROR_TIMER_STOP for timer types 0 to 2	verified	one	objectlayer/playermessages#mirror-timers	
+0x5e9bc0	81	CGPlayer_C::Reactivate		objectlayer	orchestration	void __thiscall (CGPlayer_C *this)	Copies the stand state, reactivates the unit and re-adds the active player's watchers (slot 2)	verified	one	objectlayer/players#release-and-reactivation	
+0x5e9c20	955	CGPlayer_C::LearnSpell		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t spell, int32_t x, uint32_t a3, uint32_t notify)	Records a known spell on its skill line, spell-book tab, effect slot or weapon proficiency	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5e9fe0	730	CGPlayer_C::UnlearnSpell		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t spell, uint32_t silent)	Removes a spell from its skill line and tab and shows the unlearned message unless silent	verified	one	objectlayer/playercombat#unlearning-a-spell	
+0x5ea2c0	111	CGPlayer_C::FindSkillLineSpells		objectlayer	primitive	void *__thiscall (CGPlayer_C *this, uint32_t skillLine)	Returns the spell array of a skill line's TRADESKILLLINE node, or 0	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5ea330	35	CGPlayer_C::GetTabSpells		objectlayer	primitive	void *__thiscall (CGPlayer_C *this, uint32_t tab)	Returns the spell array of tab 1 to 3, or 0	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5ea360	28	CGPlayer_C::GetEffectSlotSpell		objectlayer	orchestration	uint32_t __thiscall (CGPlayer_C *this, uint32_t slot)	Returns the spell stored for misc value 0 to 3 at +0x1d10, or 0	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5ea380	111	CGPlayer_C::FindProficiencySpell		objectlayer	unreached	uint32_t __thiscall (CGPlayer_C *this, uint32_t key)	Returns the spell of a proficiency's PROFICIENCYSPELL node, or 0	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5ea3f0	112	CGPlayer_C::FindSkillIndex		objectlayer	primitive	int32_t __thiscall (CGPlayer_C *this, uint32_t skill)	Returns the index of a skill id among the 128 entries, or −1	verified	one	objectlayer/playercombat#skills	
+0x5ea460	185	CGPlayer_C::GetSkillValues		objectlayer	primitive	uint8_t __thiscall (CGPlayer_C *this, uint32_t skill, int32_t *base, int32_t *temp)	Returns a skill's base (value plus permanent bonus) and temporary bonus, false when unknown	verified	one	objectlayer/playercombat#skills	
+0x5ea520	168	CGPlayer_C::GetSkillTotal		objectlayer	primitive	int32_t __thiscall (CGPlayer_C *this, uint32_t skill)	Returns a skill's base plus temporary bonus, 0 when negative or unknown	verified	one	objectlayer/playercombat#skills	
+0x5ea5d0	186	CGPlayer_C::GetSkillSpell		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns the weapon-skill spell of a hand's weapon for a spell needing one, else the spell	verified	one	objectlayer/playercombat#skills	
+0x5ea690	104	CGPlayer_C::GetSpellSkillLevel		objectlayer	orchestration	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns a spell's skill line total, capped at five times its max level (vtable slot 42)	verified	one	objectlayer/playercombat#skills	
 0x5ea700	5			objectlayer	orchestration		Jumps to 0x468580	verified	one	objectlayer/overview#small-bodies	
 0x5ea710	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5ea720	214			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5ea800	180			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ea8c0	112			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ea930	431			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5eaae0	134			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5eab70	14			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eab80	130			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eac10	130			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eaca0	130			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ead30	130			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eadc0	142			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eae50	118			objectlayer	unreached		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eaed0	112			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eaf40	112			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eafb0	118			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eb030	60			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eb070	44			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5eb0a0	201			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameObject_C::ObjectReaction, CGUnit_C::UnitReaction; not	inferred	none		
-0x5eb170	121			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eb1f0	44			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eb220	133			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::UnitReaction; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eb2b0	68			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eb300	44			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eb330	133			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::UnitReaction; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5eb3c0	44			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5eb3f0	132			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameObject_C::ObjectReaction; not read here	inferred	none		
-0x5eb480	582			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, ReadGuidAt; not read here	inferred	none		
-0x5eb6d0	31			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eb740	240			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send, SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x5eb830	206			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send, FrameScript_GetText; not read here	inferred	none		
-0x5eb900	868			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::DisplayError, ClientServices::Send; not read here	inferred	none		
-0x5ebc90	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebca0	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebcb0	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebcc0	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebcd0	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebce0	11			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ebcf0	78			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ebd40	160			objectlayer	primitive		Runs Player_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x5ebde0	194			objectlayer	primitive		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5ebeb0	103			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5ebf20	259			objectlayer	primitive		Runs Player_C.cpp code that calls SStrCopy, SStrPack, SStrPrintf; not read here	inferred	none		
-0x5ec030	13			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec040	79			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec090	117			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec110	302			objectlayer	primitive		Runs Player_C.cpp code that calls IsDeadOrGhost; not read here	inferred	none		
-0x5ec240	271			objectlayer	primitive		Fills slot 38 of the player vtable; its body is not read here	inferred	none		
-0x5ec350	46			objectlayer	orchestration		Fills slot 39 of the player vtable; its body is not read here	inferred	none		
-0x5ec380	169			objectlayer	primitive		Fills slot 40 of the player vtable; its body is not read here	inferred	none		
-0x5ec430	72			objectlayer	primitive		Fills slot 37 of the player vtable; its body is not read here	inferred	none		
-0x5ec480	60	GetRaceSexModelData		objectlayer	orchestration		Returns the model record of a race and sex, whose +0x08 is the model path	inferred	none		
-0x5ec4c0	49			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec500	124			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ec580	118			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec600	212			objectlayer	primitive		Signals the interface event ITEM_TEXT_CLOSED, ITEM_TEXT_TRANSLATION; not read further here	inferred	none		
-0x5ec6e0	31			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5ec700	31			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5ec720	361			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, FindSkillLineAbility; not read here	inferred	none		
-0x5ec890	42			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec8c0	19			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec8e0	12			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ec8f0	91			objectlayer	orchestration		Fills slot 16 of the player vtable; its body is not read here	inferred	none		
-0x5ec950	129			objectlayer	primitive		Fills slot 14 of the player vtable; its body is not read here	inferred	none		
-0x5ec9e0	95			objectlayer	orchestration		Fills slot 31 of the player vtable; its body is not read here	inferred	none		
-0x5eca40	57			objectlayer	orchestration		Fills slot 32 of the player vtable; its body is not read here	inferred	none		
-0x5eca80	62			objectlayer	primitive		Fills slot 33 of the player vtable; its body is not read here	inferred	none		
-0x5ecac0	172			objectlayer	primitive		Stops the melee attack, sending CMSG_ATTACKSTOP when attacking, and ends in 0x6e6f30	inferred	none	spell/cancel#cancelling-next-swing-spells	
-0x5ecb70	563			objectlayer	primitive		Starts a melee attack, cancelling an in-flight spell with Attributes 0x2	inferred	none	spell/cancel#who-cancels-a-cast	
-0x5ecdb0	17			objectlayer	orchestration		Runs Player_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x5ecdd0	131			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5ece60	437			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError, ConsolePrintf; not read here	inferred	none		
-0x5ed020	123			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ed0a0	140			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ed130	170			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5ed1e0	44			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x5ed210	154			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, GetUnitCreatureType; not read here	inferred	none		
-0x5ed2b0	126			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ed330	137			objectlayer	unreached		Runs Player_C.cpp code that calls ClntObjMgrGetMapID; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5ed3c0	73			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ed410	6			objectlayer	unreached		Returns 12894836	verified	one	objectlayer/overview#small-bodies	
-0x5ed420	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
-0x5ed430	319			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, ClientServices::Send; not read here	inferred	none		
-0x5ed570	53			objectlayer	orchestration		Fills slot 41 of the player vtable; its body is not read here	inferred	none		
-0x5ed5b0	54			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ed5f0	51			objectlayer	orchestration		Arms the player's loot target with a chest's guid	inferred	none	spell/go#player-cast-tail	
-0x5ed630	21			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ed650	174			objectlayer	primitive		Runs Player_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5ed700	375			objectlayer	primitive		Runs Player_C.cpp code that calls SetCharacterComponentItem, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not	inferred	none		
-0x5ed880	75			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5ed8d0	150			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5ed970	26			objectlayer	orchestration		Signals the interface event UNIT_ATTACK; not read further here	inferred	none		
-0x5ed990	64			objectlayer	orchestration		Signals the interface event UNIT_ATTACK, UNIT_DEFENSE, UNIT_RANGED_ATTACK_POWER; not read further here	inferred	none		
-0x5ed9d0	69			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eda20	87			objectlayer	orchestration		Fills slot 43 of the player vtable; its body is not read here	inferred	none		
-0x5eda80	91			objectlayer	orchestration		Fills slot 44 of the player vtable; its body is not read here	inferred	none		
-0x5edae0	120			objectlayer	orchestration		Runs Player_C.cpp code that calls FindSkillLineAbility; not read here	inferred	none		
-0x5edb60	59			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5edba0	217			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5edc80	209			objectlayer	primitive		Runs Player_C.cpp code that calls EventIsKeyDown, ClientServices::Send; not read here	inferred	none		
-0x5edd60	155			objectlayer	orchestration		Runs Player_C.cpp code that calls SndInterfacePlayInterfaceSound, ClientServices::Send; not read here	inferred	none		
-0x5ede00	155			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::DisplayError; not read here	inferred	none		
-0x5edea0	46			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eded0	50			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5edf10	22			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5edf30	130			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5edfc0	279			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClientServices::Send, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5ee0e0	67			objectlayer	unreached		Runs Player_C.cpp code that calls CMovement::StartSplinePath; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5ee130	25			objectlayer	unreached		Runs Player_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5ee150	277			objectlayer	primitive		Fills slot 45 of the player vtable; its body is not read here	inferred	none		
-0x5ee270	17			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ee290	755			objectlayer	primitive		Answers the gate the aura cancel tests for AttributesEx 0x2000	inferred	none	spell/cancel#channel-and-aura-cancels	
-0x5ee590	15			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5ee5a0	184			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ee660	209			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, SetCharacterComponentItem, ClientServices::Send; not	inferred	none		
-0x5ee740	176			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, ClientServices::Send; not read here	inferred	none		
-0x5ee7f0	211			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, SetCharacterComponentItem, ClientServices::Send; not	inferred	none		
-0x5ee8d0	177			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer, ClientServices::Send; not read here	inferred	none		
-0x5ee990	495			objectlayer	primitive		Signals the interface event PLAYER_UPDATE_RESTING, PLAYTIME_CHANGED; not read further here	inferred	none		
-0x5eeb80	232			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5eec70	130			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eed00	66			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eed50	105			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
-0x5eedc0	150			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5eee60	223			objectlayer	primitive		Runs Player_C.cpp code that calls __alloca_probe, FriendList::IsIgnored; not read here	inferred	none		
-0x5eef40	126			objectlayer	primitive		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5eefc0	286			objectlayer	orchestration		Signals the interface event PETITION_CLOSED; not read further here	inferred	none		
-0x5ef0e0	111			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError, DBCache::NameCache::GetRecord; not read here	inferred	none		
-0x5ef150	116			objectlayer	orchestration		Signals the interface event GUILD_REGISTRAR_CLOSED; not read further here	inferred	none		
-0x5ef1d0	224			objectlayer	primitive		Signals the interface event PETITION_SHOW; not read further here	inferred	none		
-0x5ef2b0	620			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::DisplayError, ClientServices::Send; not read here	inferred	none		
-0x5ef520	52			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5ef560	478			objectlayer	primitive		Runs Player_C.cpp code that calls CGGameUI::DisplayError, ClientServices::Send, IsUnitPlayerDriven; not read here	inferred	none		
-0x5ef740	739			objectlayer	primitive		Runs Player_C.cpp code that calls __alloca_probe, GetUnixTime, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x5ea720	214	CGPlayer_C::CheckItemForSlot		objectlayer	primitive		Refuses a non-empty bag outside the bag slots, else asks the item's check with the class's ranged rule	verified	one	objectlayer/playercombat#using-an-item	
+0x5ea800	180	CGPlayer_C::OnAttackStart		objectlayer	primitive		Resets the attack error and stops the attack when the target is beyond four times the melee reach	verified	one	objectlayer/playercombat#the-melee-attack	
+0x5ea8c0	112	CGPlayer_C::SendLootMoney		objectlayer	primitive		Sends CMSG_LOOT_MONEY (0x15e) while a loot is held	verified	one	objectlayer/inventory#loot	
+0x5ea930	431	CGPlayer_C::CanUseItem		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, void *record, uint32_t *error)	Tests an item record's level, class, race, proficiency, skill, spell, rank and reputation needs	verified	one	objectlayer/playercombat#using-an-item	
+0x5eaae0	134	CGPlayer_C::HasRecordSkill		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, void *record)	Returns whether the skill named at a record's +0xac reaches the value at +0xb0	verified	one	objectlayer/playercombat#skills	
+0x5eab70	14	IsEffect28SpellKnown		objectlayer	orchestration	uint32_t __cdecl (void)	Returns whether an effect-0x28 spell is known (0xc4d770)	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5eab80	130	SendQuestGiverQueryQuest		objectlayer	orchestration		Sends CMSG_QUESTGIVER_QUERY_QUEST with the GUID and quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eac10	130	SendQuestGiverAcceptQuest		objectlayer	orchestration		Sends CMSG_QUESTGIVER_ACCEPT_QUEST with the GUID and quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eaca0	130	SendQuestGiverCompleteQuest		objectlayer	orchestration		Sends CMSG_QUESTGIVER_COMPLETE_QUEST with the GUID and quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5ead30	130	SendQuestGiverRequestReward		objectlayer	orchestration		Sends CMSG_QUESTGIVER_REQUEST_REWARD with the GUID and quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eadc0	142	SendQuestGiverChooseReward		objectlayer	orchestration		Sends CMSG_QUESTGIVER_CHOOSE_REWARD with the GUID, quest and choice	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eae50	118	SendQuestGiverCancel		objectlayer	unreached		Sends CMSG_QUESTGIVER_CANCEL with a GUID	verified	one	objectlayer/overview#unreached-functions	
+0x5eaed0	112	SendPushQuestToParty		objectlayer	orchestration		Sends CMSG_PUSHQUESTTOPARTY with a quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eaf40	112	SendQuestLogRemoveQuest		objectlayer	orchestration		Sends CMSG_QUESTLOG_REMOVE_QUEST with a log slot byte	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eafb0	118	SendQuestGiverStatusQuery		objectlayer	orchestration		Sends CMSG_QUESTGIVER_STATUS_QUERY with a GUID	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eb030	60	QueryQuestGiverStatus		objectlayer	orchestration		Sends the status query for one object's GUID	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5eb070	44	RefreshQuestGiverStatuses		objectlayer	orchestration	void __cdecl (void)	Walks every object for the active player to query or clear quest-giver statuses	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5eb0a0	201	RefreshQuestGiverStatusOf		objectlayer	primitive		Queries a quest giver's status or releases a unit's marker by flags and reaction	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5eb170	121	SendTaxiNodeStatusQuery		objectlayer	orchestration		Sends CMSG_TAXINODE_STATUS_QUERY with an object's GUID	verified	one	objectlayer/interaction#taxis	
+0x5eb1f0	44	RefreshTaxiStatuses		objectlayer	unreached		Walks every object to query flight masters' node statuses	verified	one	objectlayer/overview#unreached-functions	
+0x5eb220	133	RefreshTaxiStatusOf		objectlayer	unreached		Queries a friendly flight master's node status or releases an unfriendly unit's marker	verified	one	objectlayer/overview#unreached-functions	
+0x5eb2b0	68	CGPlayer_C::MarkInnkeeper		objectlayer	unreached		Sets an innkeeper's marker to 0 when 0x5ed330 holds for its position, else 5	verified	one	objectlayer/overview#unreached-functions	
+0x5eb300	44	RefreshInnkeeperMarkers		objectlayer	unreached		Walks every object to mark innkeepers	verified	one	objectlayer/overview#unreached-functions	
+0x5eb330	133	RefreshInnkeeperMarkerOf		objectlayer	unreached		Marks a friendly innkeeper or releases an unfriendly unit's marker	verified	one	objectlayer/overview#unreached-functions	
+0x5eb3c0	44	RefreshQuestGiverObjects		objectlayer	orchestration	void __cdecl (void)	Walks every object for the active player to query game-object quest givers and refresh units	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5eb3f0	132	RefreshQuestGiverObjectOf		objectlayer	primitive		Queries a quest-giving game object's status or refreshes a plain unit's	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5eb480	582	CGPlayer_C::ToggleSheathe		objectlayer	primitive		Cycles the sheathe state between unarmed, melee and ranged when the player and model allow	verified	one	objectlayer/playercombat#sheathing	
+0x5eb6d0	31	IsSheatheBlockedByAnimation		objectlayer	orchestration		Returns 1 for animations 46, 49, 105 to 107 and 109 to 112	verified	one	objectlayer/playercombat#sheathing	
+0x5eb740	240	SetAfk		objectlayer	orchestration		Marks the player AFK with a message, printing the notice once, and sends the AFK chat message	verified	one	objectlayer/interaction#afk	
+0x5eb830	206	ClearAfk		objectlayer	orchestration		Clears AFK when forced or autoClearAFK is on, printing the notice and sending an empty AFK message	verified	one	objectlayer/interaction#afk	
+0x5eb900	868	CGPlayer_C::ReadLootResponse		objectlayer	primitive		Reads a loot's money and items into the 16-entry table without bounding each slot, or its failure	verified	one	objectlayer/inventory#loot	
+0x5ebc90	11	GetLootItem		objectlayer	orchestration		Returns dword +0 of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebca0	11	GetLootItemField4		objectlayer	orchestration		Returns dword +4 of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebcb0	11	GetLootItemField8		objectlayer	orchestration		Returns dword +8 of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebcc0	11	GetLootItemFieldC		objectlayer	orchestration		Returns dword +0xc of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebcd0	11	GetLootItemField10		objectlayer	orchestration		Returns dword +0x10 of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebce0	11	GetLootItemRollState		objectlayer	orchestration		Returns dword +0x14 of a loot table entry	verified	one	objectlayer/inventory#loot	
+0x5ebcf0	78	ClearLootRollState		objectlayer	orchestration		Clears a loot slot's roll byte when the active player holds the given loot	verified	one	objectlayer/inventory#loot	
+0x5ebd40	160	CGPlayer_C::AddPendingItemExpiration		objectlayer	primitive		Links a PlayerPendingItemExpiration for an item not yet known to +0x1cc8	verified	one	objectlayer/inventory#item-timers	
+0x5ebde0	194	CGPlayer_C::ApplyPendingItemExpirations		objectlayer	primitive		Applies and frees every pending enchantment time of a newly created item	verified	one	objectlayer/inventory#item-timers	
+0x5ebeb0	103	CGPlayer_C::ReadLootRemoved		objectlayer	orchestration		Clears a loot slot, unchecked, and passes it to a ui function while the loot's object exists	verified	one	objectlayer/inventory#loot	
+0x5ebf20	259	ReadLootMoneyNotify		objectlayer	primitive		Prints the player's share of a split loot's money	verified	one	objectlayer/inventory#loot	
+0x5ec030	13	ReadLootClearMoney		objectlayer	orchestration		Calls 0x4c2750	verified	one	objectlayer/inventory#loot	
+0x5ec040	79	ReadLootItemNotify		objectlayer	orchestration		Reads a looted item's notice and drops it	verified	one	objectlayer/inventory#loot	
+0x5ec090	117	CGPlayer_C::ReadLootReleaseResponse		objectlayer	orchestration		Ends the held loot when the release names it	verified	one	objectlayer/inventory#loot	
+0x5ec110	302	CGPlayer_C::CanLootNow		objectlayer	primitive		Returns whether the player may loot an object now, in reach when it cannot walk there	verified	one	objectlayer/interaction#looting	
+0x5ec240	271	CGPlayer_C::GetVirtualItem		objectlayer	primitive	void *__thiscall (CGPlayer_C *this, uint32_t hand, uint32_t raw)	Returns a hand's weapon record of class, subclass and three bytes, honouring disarm (vtable slot 38)	verified	one	objectlayer/playercombat#hand-weapons	
+0x5ec350	46	CGPlayer_C::GetVirtualItemRecord		objectlayer	orchestration	void *__thiscall (CGPlayer_C *this, uint32_t hand)	Returns the ItemDisplayInfo row of a hand's weapon (vtable slot 39)	verified	one	objectlayer/playercombat#hand-weapons	
+0x5ec380	169	CGPlayer_C::GetVirtualItemDisplay		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t hand)	Returns the display id of a hand's weapon, honouring disarm (vtable slot 40)	verified	one	objectlayer/playercombat#hand-weapons	
+0x5ec430	72	CGPlayer_C::GetChestItemData		objectlayer	primitive		Returns +0x318 of the item in inventory slot 4, else 0 through 0x625450 (vtable slot 37)	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ec480	60	GetRaceSexModelData		objectlayer	orchestration		Returns the model record of a race and sex, whose +0x08 is the model path	verified	one	objectlayer/interaction#other-units	
+0x5ec4c0	49	GetRaceSexDisplayId		objectlayer	primitive		Returns a race's male or female display id from ChrRaces, else 0	verified	one	objectlayer/interaction#other-units	
+0x5ec500	124	SendReadItem		objectlayer	orchestration	void __stdcall (uint8_t bag, uint8_t slot)	Sends CMSG_READ_ITEM (0xad) with a bag and slot	verified	one	objectlayer/playermessages#reading-items	
+0x5ec580	118	CGPlayer_C::ReadItemAt		objectlayer	primitive		Sends the read request for a slot of the player's own slots or of a bag in slots 19 to 22	verified	one	objectlayer/playermessages#reading-items	
+0x5ec600	212	CGPlayer_C::OnReadItemReply		objectlayer	primitive		Shows a read item's text, its translation time or its closing	verified	one	objectlayer/playermessages#reading-items	
+0x5ec6e0	31	ShowMountResult		objectlayer	orchestration		Shows the mount error for results below 11	verified	one	objectlayer/playermessages#error-notices	
+0x5ec700	31	ShowDismountResult		objectlayer	orchestration		Shows the dismount error for results below 4	verified	one	objectlayer/playermessages#error-notices	
+0x5ec720	361	CGPlayer_C::GetIndexedSpellSkill		objectlayer	primitive		Returns the skill total of the spell at 0xb700ac's index for the active player	verified	one	objectlayer/playercombat#skills	
+0x5ec890	42	CGPlayer_C::GetRaceField20		objectlayer	orchestration		Returns the race's ChrRaces row +0x20, else 0	verified	one	objectlayer/interaction#other-units	
+0x5ec8c0	19	ToggleShowOwnModel		objectlayer	orchestration	void __cdecl (void)	Toggles the flag 0xc4d74c	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ec8e0	12	SetShowOwnModel		objectlayer	orchestration	uint32_t __fastcall (uint32_t value)	Sets the flag 0xc4d74c and returns its old value	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ec8f0	91	CGPlayer_C::OnModelUpdate		objectlayer	orchestration		Updates the model unless displays are pending, hiding the active player's while 0xc4d74c is clear (slot 16)	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ec950	129	CGPlayer_C::Update		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t time)	Updates the unit, then repeats the active player's attack error every 4 s (vtable slot 14)	verified	one	objectlayer/players#attack-error-repeat	
+0x5ec9e0	95	CGPlayer_C::AppendAfkTag		objectlayer	orchestration		Appends CHAT_FLAG_AFK for an AFK player (vtable slot 31)	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5eca40	57	CGPlayer_C::AppendDndTag		objectlayer	orchestration		Appends CHAT_FLAG_DND for PLAYER_FLAGS 0x4 (vtable slot 32)	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5eca80	62	CGPlayer_C::AppendGmTag		objectlayer	primitive		Appends CHAT_FLAG_GM for PLAYER_FLAGS 0x8 (vtable slot 33)	verified	one	objectlayer/players#the-players-virtual-slots	
+0x5ecac0	172	CGPlayer_C::StopMeleeAttack		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Stops the active player's attack with CMSG_ATTACKSTOP after the low-health and low-mana tutorials	verified	one	objectlayer/playercombat#the-melee-attack	
+0x5ecb70	563	CGPlayer_C::StartMeleeAttack		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint64_t *guid)	Starts a melee attack on an attackable unit, sending CMSG_ATTACKSWING unless already attacking	verified	one	objectlayer/playercombat#the-melee-attack	
+0x5ecdb0	17	SetAttackErrorState		objectlayer	orchestration	void __fastcall (uint32_t state)	Sets the attack error state 0xc4d758 and restarts its delay from now	verified	one	objectlayer/players#attack-error-repeat	
+0x5ecdd0	131	ReadTaxiNodeStatus		objectlayer	primitive		Marks a flight master 4 for an unknown node and 0 for a known one	verified	one	objectlayer/interaction#taxis	
+0x5ece60	437	ReadShowTaxiNodes		objectlayer	primitive		Opens the taxi map with the known nodes, refuses with fewer than two, or prints them for mode 0	verified	one	objectlayer/interaction#taxis	
+0x5ed020	123	SendTaxiQueryNodes		objectlayer	orchestration		Sends CMSG_TAXIQUERYAVAILABLENODES (0x1ac) with the GUID	verified	one	objectlayer/interaction#taxis	
+0x5ed0a0	140	SendActivateTaxi		objectlayer	orchestration		Sends CMSG_ACTIVATETAXI (0x1ad) with the GUID and two nodes	verified	one	objectlayer/interaction#taxis	
+0x5ed130	170	SendActivateTaxiExpress		objectlayer	primitive		Sends CMSG_ACTIVATETAXIEXPRESS (0x312) with the GUID, a value, the node count and the nodes	verified	one	objectlayer/interaction#taxis	
+0x5ed1e0	44	ShowActivateTaxiResult		objectlayer	orchestration		Starts the flight for result 0 and shows the taxi error for 1 to 12	verified	one	objectlayer/interaction#taxis	
+0x5ed210	154	CGPlayer_C::IsUnitTracked		objectlayer	primitive		Returns whether the player's tracking shows a unit: stealth, a track flag or its creature type	verified	one	objectlayer/interaction#tracking	
+0x5ed2b0	126	CGPlayer_C::IsGameObjectTracked		objectlayer	primitive		Returns whether a game object's lock has a skill entry the player tracks	verified	one	objectlayer/interaction#tracking	
+0x5ed330	137	IsNearBindPoint		objectlayer	unreached		Returns whether a point lies within 15 yards of the valid bind point on its map	verified	one	objectlayer/interaction#the-bind-point	
+0x5ed3c0	73	ReadBindPoint		objectlayer	orchestration		Stores the bind point's position, map and zone and marks it valid	verified	one	objectlayer/interaction#the-bind-point	
+0x5ed410	6	GetBindPoint		objectlayer	unreached	float *__cdecl (void)	Returns the address of the bind point's position 0xc4c274	verified	one	objectlayer/interaction#the-bind-point	
+0x5ed420	6	GetBindZone		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the bind point's zone	verified	one	objectlayer/interaction#the-bind-point	
+0x5ed430	319	CGPlayer_C::SendStandStateChange		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t state)	Sends CMSG_STANDSTATECHANGE when the active player may change to the state	verified	one	objectlayer/interaction#stand-state	
+0x5ed570	53	CGPlayer_C::GetStandState		objectlayer	orchestration	uint32_t __thiscall (CGPlayer_C *this)	Returns the active player's local stand state, else UNIT_FIELD_BYTES_1 byte 0 (vtable slot 41)	verified	one	objectlayer/interaction#stand-state	
+0x5ed5b0	54	CGPlayer_C::GetGender		objectlayer	orchestration		Returns PLAYER_BYTES_3 byte 0 for the active player, else UNIT_FIELD_BYTES_0 byte 2	verified	one	objectlayer/interaction#other-units	
+0x5ed5f0	51	CGPlayer_C::SetLootTarget		objectlayer	orchestration		Holds a GUID as the loot target and plays animation 0x32 when the unit shows loot animations	verified	one	objectlayer/interaction#looting	
+0x5ed630	21	CGPlayer_C::HasSelfResurrectItem		objectlayer	primitive		Returns the first carried item with an on-use self-resurrect spell	verified	one	objectlayer/interaction#other-units	
+0x5ed650	174	IsSelfResurrectItem		objectlayer	primitive		Returns 1 for an item whose record has an on-use spell with effect 0x5e	verified	one	objectlayer/interaction#other-units	
+0x5ed700	375	CGPlayer_C::ApplyEquipmentDisplay		objectlayer	primitive		Puts a slot's item display on the model, waiting for its record when not cached	verified	one	objectlayer/inventory#visible-equipment	
+0x5ed880	75	OnEquipmentItemRecord		objectlayer	primitive		Applies a slot's display once its item record arrives and counts the wait down	verified	one	objectlayer/inventory#visible-equipment	
+0x5ed8d0	150	CGPlayer_C::ReapplyItemDisplay		objectlayer	primitive		Reapplies an item's display in each visible equipment slot that holds it	verified	one	objectlayer/inventory#visible-equipment	
+0x5ed970	26	SignalPlayerAttack		objectlayer	orchestration		Signals UNIT_ATTACK for the player	verified	one	objectlayer/inventory#visible-equipment	
+0x5ed990	64	SignalPlayerCombatStats		objectlayer	orchestration	void __cdecl (void)	Signals UNIT_ATTACK, UNIT_DEFENSE and UNIT_RANGED_ATTACK_POWER for the player	verified	one	objectlayer/playerfields#skill-changes	
+0x5ed9d0	69	CGPlayer_C::GetWeaponSkillSpell		objectlayer	orchestration		Returns a hand's weapon-skill spell, the unarmed one for no weapon	verified	one	objectlayer/playercombat#weapon-skills	
+0x5eda20	87	CGPlayer_C::GetDefenseSkill		objectlayer	orchestration		Returns the skill values of the effect-0x1a spell's line (vtable slot 43)	verified	one	objectlayer/playercombat#weapon-skills	
+0x5eda80	91	CGPlayer_C::GetWeaponSkill		objectlayer	orchestration		Returns the skill values of a hand's weapon-skill spell's line (vtable slot 44)	verified	one	objectlayer/playercombat#weapon-skills	
+0x5edae0	120	CGPlayer_C::GetRangedSkill		objectlayer	orchestration		Returns the skill values of the ranged weapon's skill spell's line	verified	one	objectlayer/playercombat#weapon-skills	
+0x5edb60	59	CGPlayer_C::OnLevelChanged		objectlayer	orchestration		Refreshes the spell book, trainer, quest-giver statuses and name plates when the active player levels	verified	one	objectlayer/quests#quest-giver-status-refresh	
+0x5edba0	217	CGPlayer_C::GetItemBagSlot		objectlayer	primitive		Finds an item's bag index and slot, 0xff for the player's own slots	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edc80	209	CGPlayer_C::OpenItem		objectlayer	primitive		Sends CMSG_OPEN_ITEM for an item, holding it as the loot target with the auto-loot key's state	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edd60	155	CGPlayer_C::OpenWrappedItem		objectlayer	orchestration		Plays the unwrap sound and sends CMSG_OPEN_ITEM for an item	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5ede00	155	CGPlayer_C::ShowWrongBagError		objectlayer	orchestration		Shows ERR_WRONG_BAG_TYPE_SUBCLASS with a bag's family name, returning 1 when it did	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edea0	46	BeginWrapItem		objectlayer	orchestration		Holds an item as the wrapping paper and switches the cursor to 2	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5eded0	50	EndWrapItem		objectlayer	orchestration	void __cdecl (void)	Releases the wrapping paper and switches the cursor back to 1	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edf10	22	IsWrappingItem		objectlayer	primitive	uint32_t __cdecl (void)	Returns whether wrapping paper is held	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edf30	130	GetSlotInContainer		objectlayer	primitive		Returns an item's slot within its container, 0xff when absent, with no null check on the container	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5edfc0	279	CGPlayer_C::SendWrapItem		objectlayer	orchestration		Sends CMSG_WRAP_ITEM with the paper's and the item's bags and slots, then ends wrapping	verified	one	objectlayer/inventory#opening-and-wrapping-items	
+0x5ee0e0	67	CGPlayer_C::StartSplineRun		objectlayer	unreached		Starts a spline path on the mover and runs along it	verified	one	objectlayer/overview#unreached-functions	
+0x5ee130	25	CGPlayer_C::HasMoverRecordFlag		objectlayer	unreached		Returns 1 when +0xa4c holds a record without bit 0x4 at +0x18	verified	one	objectlayer/overview#unreached-functions	
+0x5ee150	277	CGPlayer_C::GetSpellCastTime		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns a spell's cast time with the casting-time modifier and cast speed, plus 500 for Attributes 0x2 (slot 45)	verified	one	objectlayer/playercombat#cast-time	
+0x5ee270	17	CGPlayer_C::StartFarSight		objectlayer	orchestration		Runs the far-sight update while far sight is off	verified	one	objectlayer/interaction#far-sight	
+0x5ee290	755	CGPlayer_C::UpdateFarSight		objectlayer	primitive	uint8_t __thiscall (CGPlayer_C *this)	Starts or ends far sight on PLAYER_FARSIGHT's object, moving control and telling the server	verified	one	objectlayer/interaction#far-sight	
+0x5ee590	15	CGPlayer_C::EndFarSight		objectlayer	orchestration		Runs the far-sight update while far sight is on	verified	one	objectlayer/interaction#far-sight	
+0x5ee5a0	184	CGPlayer_C::GetPossessedFarSightUnit		objectlayer	primitive		Returns the far-sight unit when it is under unit flag 0x1000000 and owned by the player	verified	one	objectlayer/interaction#far-sight	
+0x5ee660	209	CGPlayer_C::ShowHelm		objectlayer	primitive		Puts the helm on the model and sends CMSG_TOGGLE_HELM while the flag says hidden	verified	one	objectlayer/inventory#helm-and-cloak	
+0x5ee740	176	CGPlayer_C::HideHelm		objectlayer	primitive		Takes the helm off the model and sends CMSG_TOGGLE_HELM while the flag says shown	verified	one	objectlayer/inventory#helm-and-cloak	
+0x5ee7f0	211	CGPlayer_C::ShowCloak		objectlayer	primitive		Puts the cloak on the model and sends CMSG_TOGGLE_CLOAK while the flag says hidden	verified	one	objectlayer/inventory#helm-and-cloak	
+0x5ee8d0	177	CGPlayer_C::HideCloak		objectlayer	primitive		Takes the cloak off the model and sends CMSG_TOGGLE_CLOAK while the flag says shown	verified	one	objectlayer/inventory#helm-and-cloak	
+0x5ee990	495	CGPlayer_C::OnPlayerFlagsChanged		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint32_t old)	Reacts to each changed PLAYER_FLAGS bit: tags, reaction, helm, cloak, ghost, rest, PvP and play time	verified	one	objectlayer/playerfields#player-flag-changes	
+0x5eeb80	232	ReadPetitionShowList		objectlayer	primitive		Reads a vendor's charters into the 10-entry table 0xc4d3d0 without bounding the count and opens it	verified	one	objectlayer/party#petitions	
+0x5eec70	130	SendPetitionBuy		objectlayer	orchestration		Sends CMSG_PETITION_BUY with the vendor's GUID and a petition record	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5eed00	66	CGPlayer_C::AttachHandEnchant		objectlayer	orchestration		Attaches the enchant visual of the main or off hand's weapon at an attachment point	verified	one	objectlayer/inventory#visible-equipment	
+0x5eed50	105	CGPlayer_C::AttachEnchantVisual		objectlayer	orchestration		Puts a weapon record's enchant visual on the model's child at an attachment point	verified	one	objectlayer/inventory#visible-equipment	
+0x5eedc0	150	CGPlayer_C::AttachWeaponEnchant		objectlayer	primitive		Picks the attachment point for a hand's weapon by sheathe state and attaches its enchant visual	verified	one	objectlayer/inventory#visible-equipment	
+0x5eee60	223	ReadPetitionShowSignatures		objectlayer	primitive		Reads a petition's signatures onto the stack and shows them unless the owner is ignored	verified	one	objectlayer/party#petitions	
+0x5eef40	126	SendPetitionShowSignatures		objectlayer	primitive		Sends CMSG_PETITION_SHOW_SIGNATURES with a GUID	verified	one	objectlayer/party#group-and-guild-messages-sent	
+0x5eefc0	286	CGPlayer_C::ReadPetitionSignResults		objectlayer	orchestration		Reports a petition signature, the player's own with its result	verified	one	objectlayer/party#petitions	
+0x5ef0e0	111	ReadPetitionDecline		objectlayer	orchestration		Shows that a cached name declined the petition	verified	one	objectlayer/party#petitions	
+0x5ef150	116	ReadTurnInPetitionResults		objectlayer	orchestration		Closes the registrar on success or shows the turn-in error	verified	one	objectlayer/party#petitions	
+0x5ef1d0	224	ReadPetitionRename		objectlayer	primitive		Renames a charter item's cached petition and signals PETITION_SHOW	verified	one	objectlayer/party#petitions	
+0x5ef2b0	620	CGPlayer_C::TurnInPetition		objectlayer	primitive		Sends CMSG_TURN_IN_PETITION for the first carried charter whose petition is ready, else the error	verified	one	objectlayer/party#petitions	
+0x5ef520	52	OnPetitionRecord		objectlayer	orchestration		Retries the turn-in once a petition record arrives	verified	one	objectlayer/party#petitions	
+0x5ef560	478	CGPlayer_C::SendTextEmote		objectlayer	primitive		Performs a text emote's stand state or animation and sends CMSG_TEXT_EMOTE	verified	one	objectlayer/interaction#text-emotes	
+0x5ef740	739	CreateGmTicket		objectlayer	primitive		Sends CMSG_GMTICKET_CREATE with the position and text, and the compressed chat log for category 2	verified	one	objectlayer/playermessages#gm-tickets	
 0x5efa30	5	InitPlayerProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5efa40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5efa40	19	InitPlayerProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5efa60	5	InitPlayerProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5efa70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5efa70	19	InitPlayerProduct2		objectlayer	primitive	void __cdecl (void)	Stores 0.58333331·−255 = −148.75 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5efa90	5	InitPlayerProduct3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5efaa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5efaa0	19	InitPlayerProduct3		objectlayer	primitive	void __cdecl (void)	Stores 18·0.027777778 = 0.5 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5efac0	181			objectlayer	orchestration		Runs Player_C.cpp code that calls CGGameUI::DisplayError, ClientServices::Send, SStrCopy; not read here	inferred	none		
+0x5efac0	181	UpdateGmTicketText		objectlayer	orchestration		Sends CMSG_GMTICKET_UPDATETEXT with a category and non-empty text	verified	one	objectlayer/playermessages#gm-tickets	
 0x5efb80	5	InitPlayerProduct4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5efb90, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5efb90	19	InitPlayerProduct4		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5efbb0	98			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5efc20	98			objectlayer	orchestration		Runs Player_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x5efc90	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
+0x5efbb0	98	SendGmTicketGetTicket		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GMTICKET_GETTICKET with no body	verified	one	objectlayer/playermessages#gm-tickets	
+0x5efc20	98	SendGmTicketDelete		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GMTICKET_DELETETICKET with no body	verified	one	objectlayer/playermessages#gm-tickets	
+0x5efc90	6	GetPendingCinematic		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the pending cinematic 0xc4d75c	verified	one	objectlayer/playermessages#notices	
 0x5efca0	5	InitPlayerQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5efcb0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5efcb0	19	InitPlayerQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5efcd0	101			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5efd40	82			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5efda0	82			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5efe00	88			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5efe60	56			objectlayer	orchestration		Runs Player_C.cpp code that calls SStrPrintf; not read here	inferred	none		
-0x5efea0	649			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGUnit_C::CanAttack; not read here	inferred	none		
-0x5f0130	1189			objectlayer	primitive		Runs Player_C.cpp code that calls SetVector3, CGGameUI::DisplayError, UnitSetSpellTargetGuid; not read here	inferred	none		
-0x5f05e0	287			objectlayer	primitive		Runs Player_C.cpp code that calls SetVector3, UnitSetSpellTargetGuid, Spell_C::GetMinMaxRange; not read here	inferred	none		
-0x5f0700	133			objectlayer	primitive		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5f0790	97			objectlayer	orchestration		Runs Player_C.cpp code that calls OsGetAsyncTimeMs, GetInputControl; not read here	inferred	none		
-0x5f0800	125			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, DbCacheGetRecord; not read here	inferred	none		
-0x5f0880	765			objectlayer	primitive		Runs Player_C.cpp code that calls __ftol, ClntObjMgrObjectPtr, SStrCopy; not read here	inferred	none		
-0x5f0b80	208			objectlayer	orchestration		Runs Player_C.cpp code not read here	inferred	none		
+0x5efcd0	101	CGPlayer_C::GetStat		objectlayer	primitive		Returns a stat's base, effective, positive and negative values	verified	one	objectlayer/interaction#other-units	
+0x5efd40	82	CGPlayer_C::GetPositiveStat		objectlayer	orchestration		Returns the active player's PLAYER_FIELD_POSSTAT0 for a stat, else 0	verified	one	objectlayer/interaction#other-units	
+0x5efda0	82	CGPlayer_C::GetNegativeStat		objectlayer	orchestration		Returns the active player's PLAYER_FIELD_NEGSTAT0 for a stat, else 0	verified	one	objectlayer/interaction#other-units	
+0x5efe00	88	CGPlayer_C::GetFactionSide		objectlayer	primitive		Returns 0 for a race whose faction template has bit 0x4, 1 for bit 0x2, else −1	verified	one	objectlayer/interaction#other-units	
+0x5efe60	56	CGPlayer_C::GetPvpRankName		objectlayer	orchestration		Returns the gendered PVP_RANK_%d_%d text of a rank for the player's side	verified	one	objectlayer/interaction#other-units	
+0x5efea0	649	ClassifyGuidForPlayer		objectlayer	primitive		Returns the relation of a GUID's unit, or a game object's creator, to the active player, 0 to 9	verified	one	objectlayer/interaction#other-units	
+0x5f0130	1189	CGPlayer_C::InteractWithNpc		objectlayer	primitive		Walks up to an NPC or starts the service its first matching NPC flag names	verified	one	objectlayer/interaction#talking-to-an-npc	
+0x5f05e0	287	CGPlayer_C::InteractWithSpell		objectlayer	primitive		Casts the interaction spell on an object in range, else walks up, and sets the auto-loot byte	verified	one	objectlayer/interaction#interacting-through-a-spell	
+0x5f0700	133	IsTrivialUnit		objectlayer	primitive		Returns whether a unit that is not a player lies below the active player's level by more than its gray gap	verified	one	objectlayer/interaction#other-units	
+0x5f0790	97	CGPlayer_C::SetLocalStandState		objectlayer	orchestration		Keeps a new local stand state, resuming input for 0 or ending looting and the attack otherwise	verified	one	objectlayer/interaction#stand-state	
+0x5f0800	125	CanSaveTabard		objectlayer	orchestration		Returns 1 while the player's guild record exists and no emblem save is pending	verified	one	objectlayer/party#guild-tabards	
+0x5f0880	765	CGPlayer_C::BuildPartyRecord		objectlayer	primitive		Fills a 0x148-byte party member record from the live player and, with pet, its pet	verified	one	objectlayer/party#the-party-member-record	
+0x5f0b80	208	CGPlayer_C::ComparePartyRecord		objectlayer	orchestration		Raises the unit events for the differences between the stored party record and the live player	verified	one	objectlayer/players#release-and-reactivation	
 0x5f0c50	270	FindEquippedItemForSpell		objectlayer	primitive		Returns the first unbroken item in masked equipment slots matching a spell's item class and subclass mask	verified	one	spell/checks#equipped-item-and-ammo	
-0x5f0d60	44			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5f0d90	20			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrEnumObjects; not read here	inferred	none		
-0x5f0db0	60			objectlayer	orchestration		Runs Player_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x5f0d60	44	CGPlayer_C::GetVisibleItem		objectlayer	primitive	void *__thiscall (CGPlayer_C *this, uint32_t slot)	Returns the 48-byte visible-item block of an equipment slot below 19, else 0	verified	one	objectlayer/inventory#visible-equipment	
+0x5f0d90	20	RefreshAllAuraVisibility		objectlayer	orchestration		Refreshes every unit's aura visibility with the given bits	verified	one	objectlayer/playerfields#rest-state	
+0x5f0db0	60	RefreshAuraVisibilityOf		objectlayer	orchestration		Refreshes one unit's aura visibility with the walk's bits	verified	one	objectlayer/playerfields#rest-state	
 0x5f0df0	5	InitPlayerSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f0e00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f0e00	19	InitPlayerSquare18		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f0e20	5	InitPlayerQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f0e30, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f0e30	19	InitPlayerQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f0e50	60			objectlayer	primitive		Runs Player_C.cpp code not read here	inferred	none		
-0x5f0e90	65			objectlayer	orchestration		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f0ee0	191			objectlayer	primitive		Runs Player_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x5f0fa0	189			objectlayer	primitive		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f1060	117			objectlayer	orchestration		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f10e0	179			objectlayer	primitive		Runs Player_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x5f11a0	189			objectlayer	primitive		Runs Player_C.cpp code that calls SMemFree; not read here	inferred	none		
+0x5f0e50	60			objectlayer	primitive		Unlinks a node from its intrusive list and clears its links	verified	one	objectlayer/inventory#item-timers	
+0x5f0e90	65	DeleteTradeSkillLine		objectlayer	orchestration		Frees a TRADESKILLLINE node's spell array, unlinks it and frees it	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5f0ee0	191	NewTradeSkillLine		objectlayer	primitive		Allocates and links a zeroed TRADESKILLLINE node of 0x28 bytes plus extra	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5f0fa0	189	ClearTradeSkillLines		objectlayer	primitive		Unlinks every TRADESKILLLINE node of a table and frees its bucket array	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5f1060	117	DeleteProficiencySpell		objectlayer	orchestration		Unlinks a PROFICIENCYSPELL node and frees it	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5f10e0	179	NewProficiencySpell		objectlayer	primitive		Allocates and links a zeroed PROFICIENCYSPELL node of 0x1c bytes plus extra	verified	one	objectlayer/playercombat#learning-a-spell	
+0x5f11a0	189	ClearProficiencySpells		objectlayer	primitive		Unlinks every PROFICIENCYSPELL node of a table and frees its bucket array	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f1260	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5f1270	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5f1280	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
@@ -6284,29 +6408,29 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6220b0	19	InitBagSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6220d0	5	InitBagCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6220e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6220e0	11	InitBagCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x6220f0	22			objectlayer	unreached		Runs Bag_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x622110	18			objectlayer	unreached		Runs Bag_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
+0x6220f0	22	MinRemainingFour		objectlayer	unreached		Returns the slots from an index to the list's end, at most 4	verified	one	objectlayer/overview#unreached-functions	
+0x622110	18	RemainingQuads		objectlayer	unreached		Returns the slots from an index to the list's end in groups of 4, rounded up	verified	one	objectlayer/overview#unreached-functions	
 0x622130	46	CountInventoryItemsByEntry		objectlayer	orchestration		Sums the stack counts of the inventory's items of an entry through the walk 0x622420	verified	one	spell/checks#totems-and-reagents	
-0x622160	32			objectlayer	primitive		Runs Bag_C.cpp code not read here	inferred	none		
-0x622180	46			objectlayer	orchestration		Runs Bag_C.cpp code not read here	inferred	none		
-0x6221b0	38			objectlayer	primitive		Runs Bag_C.cpp code not read here	inferred	none		
-0x6221e0	43			objectlayer	orchestration		Runs Bag_C.cpp code not read here	inferred	none		
-0x622210	85			objectlayer	primitive		Runs Bag_C.cpp code not read here	inferred	none		
+0x622160	32	AddStackCountIfEntry		objectlayer	primitive		Adds an item's stack count to the sum when its entry matches or the key is −1	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622180	46	CountInventoryCharges		objectlayer	orchestration		Sums the absolute spell charges of the inventory's items of an entry	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6221b0	38	AddChargesIfEntry		objectlayer	primitive		Adds the absolute value of an item's spell charges to the sum when its entry matches	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6221e0	43	ClearItemFlagByEntry		objectlayer	orchestration		Clears bit 0 of +0x314 on the inventory's items of an entry not in trade nor held elsewhere	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622210	85	ClearItemFlagIfFree		objectlayer	primitive		Clears bit 0 of an item's +0x314 unless it is in trade or held at 0xb6ef90 or 0xb72608	verified	one	objectlayer/inventory#searching-the-inventory	
 0x622270	38	FindInventoryItemByEntry		objectlayer	orchestration		Returns the first inventory item of an entry through the walk 0x622420	verified	one	spell/checks#totems-and-reagents	
-0x6222a0	14			objectlayer	primitive		Runs Bag_C.cpp code not read here	inferred	none		
-0x6222b0	33			objectlayer	orchestration		Runs Bag_C.cpp code that calls WalkInventory; not read here	inferred	none		
-0x6222e0	50			objectlayer	orchestration		Runs Bag_C.cpp code that calls WalkInventory; not read here	inferred	none		
-0x622320	58			objectlayer	primitive		Runs Bag_C.cpp code that calls GetItemClass, GetItemSubClass; not read here	inferred	none		
-0x622360	50			objectlayer	unreached		Runs Bag_C.cpp code that calls WalkInventory; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x6223a0	44			objectlayer	orchestration		Runs Bag_C.cpp code that calls WalkInventory; not read here	inferred	none		
-0x6223d0	17			objectlayer	primitive		Runs Bag_C.cpp code not read here	inferred	none		
-0x6223f0	37			objectlayer	orchestration		Runs Bag_C.cpp code that calls WalkInventory; not read here	inferred	none		
+0x6222a0	14	IsItemOfEntry		objectlayer	primitive		Returns 1 when an item's entry matches	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6222b0	33	FindItemByEntry		objectlayer	orchestration		Returns the first item of an entry with its owner and slot	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6222e0	50	FindItemByClass		objectlayer	orchestration		Returns the first item of a class whose subclass is in the mask, any for a zero mask	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622320	58	IsItemOfClass		objectlayer	primitive		Returns 1 when an item's class matches and its subclass is in the mask, or the mask is 0	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622360	50	FindItemByClassWithSlot		objectlayer	unreached		Returns the first item of a class and subclass mask with its owner and slot	verified	one	objectlayer/overview#unreached-functions	
+0x6223a0	44	FindItemByBagFamily		objectlayer	orchestration		Returns the first item of a bag family	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6223d0	17	IsItemOfBagFamily		objectlayer	primitive		Returns 1 when an item's bag family matches	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6223f0	37	WalkInventoryItems		objectlayer	orchestration		Runs the walk with a callback and context, discarding the owner and slot	verified	one	objectlayer/inventory#searching-the-inventory	
 0x622420	425	WalkInventory		objectlayer	primitive		Calls a callback on each unbroken item of an inventory's masked slots and bags until it returns nonzero	verified	one	spell/checks#totems-and-reagents	
-0x6225d0	95			objectlayer	primitive		Runs Bag_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x622630	355			objectlayer	orchestration		Runs Bag_C.cpp code not read here	inferred	none		
-0x6228a0	109			objectlayer	primitive		Returns the item object an inventory holds in a slot, or 0	inferred	none	spell/cooldowns#category-recovery-adjustment	
-0x622910	187			objectlayer	primitive		Runs Bag_C.cpp code that calls GetItemClass; not read here	inferred	none		
-0x6229d0	128			objectlayer	primitive		Runs Bag_C.cpp code that calls __ftol; not read here	inferred	none		
+0x6225d0	95	IndexOfItem		objectlayer	primitive	int32_t __thiscall (void *list, void *item)	Returns the slot whose GUID resolves to an item object, or −1	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622630	355	InventoryResultToError		objectlayer	orchestration	uint32_t __fastcall (uint32_t result)	Maps a server inventory result to an error id through a 67-entry table, ERR_BAG_FULL above it	verified	one	objectlayer/inventory#inventory-results	
+0x6228a0	109	GetItemInSlot		objectlayer	primitive	void *__thiscall (void *list, uint32_t slot)	Returns the item object in a slot, none for a bank slot while no banker is open	verified	one	objectlayer/inventory#searching-the-inventory	
+0x622910	187	CountFreeSlots		objectlayer	primitive	uint32_t __thiscall (void *list)	Counts the empty backpack slots and those of each bag, or every empty slot of a container	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6229d0	128	GetDurabilityPercent		objectlayer	primitive	int32_t __thiscall (void *list)	Returns the equipment's summed durability over its summed maximum, times 100, truncated	verified	one	objectlayer/inventory#searching-the-inventory	
 0x622a50	5	InitUnitSoundDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x622a60, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x622a60	15	InitUnitSoundDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x622a70	5	InitUnitSoundQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x622a80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -7343,6 +7467,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string	inferred	none		
 0x64a760	142	SStrPack		storm			Appends a string within a buffer size and terminates it	inferred	none		
 0x64a7f0	43	SStrPrintf	idb	storm			Formats into a buffer of a given size	inferred	none	spell/failures#reason-text-and-pet-variant	
+0x64ac60	98			storm	boundary		Converts a decimal string to an integer	inferred	none	objectlayer/party#guild-events	
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
 0x64de00	36			storm			Reports an error with a code and a formatted message; not read here	inferred	none	collision/mover#unreached-functions	
 0x64e850	22	SErrSetLastError	idb	storm	boundary	void __stdcall (uint32_t code)	Stores an error code and passes it to SetLastError	inferred	none		
@@ -7358,6 +7483,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65ad40	11	SInterlockedDecrement	idb	storm	boundary		Decrements a dword atomically and returns the result	inferred	none		
 0x65ae90	9	SAtomicRead64		storm	boundary		Reads a qword atomically with lock cmpxchg8b	inferred	none	core/time#calendar-time	
 0x65aec0	27	SAtomicCompareExchange64		storm	boundary		Compares and exchanges a qword atomically with lock cmpxchg8b	inferred	none	core/time#calendar-time	
+0x6605a0	188			zlib	boundary		Compresses a buffer with zlib 1.1.3	inferred	none	objectlayer/playermessages#gm-tickets	
 0x660740	185	ZlibUncompress		zlib			Inflates a zlib stream into a buffer, updating the output length	inferred	none	objectlayer/update#compressed-update	
 0x661da0	36	MD5Init		storm			Starts an MD5 context	inferred	none		
 0x661e90	105	MD5Final		storm			Finishes an MD5 context into a 16-byte digest and clears it	inferred	none		
@@ -10733,6 +10859,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c51b0	973	BuildChunkIndices		terrain	primitive	uint32_t __fastcall (uint32_t start, uint32_t level, uint32_t caps, uint32_t holes, uint32_t a, uint32_t b)	Emits a chunk level's quadtree triangle list, skipping holes and stitching finer neighbours	inferred	none	terrain/lod#chunk-index-building	
 0x6c5af0	92	OnViolenceLevelChanged		client			Stores the violenceLevel CVar value in 0xce8534, clamped to the region's maximum	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
+0x6c6260	59			unassigned	primitive		Splits copper into copper, silver and gold	inferred	none	objectlayer/quests#quest-completion	
+0x6c7800	53			unassigned	primitive		Runs code after a ghost change; not read here	inferred	none	objectlayer/playerfields#player-flag-changes	
 0x6c78f0	9			unassigned		void __thiscall (void *record)	Sets bit 0 of the dword at +0x18 of a non-null record	inferred	none		
 0x6cc130	879	ConstructGlowEffect		ffxeffects			Constructs the glow full-screen effect	inferred	none		
 0x6cc690	551	ConstructDeathEffect		ffxeffects			Constructs the death full-screen effect	inferred	none		
@@ -10742,10 +10870,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cda70	149	EndCurrentFfx		ffxeffects			Ends the current full-screen effect's pass	inferred	none		
 0x6cde60	12	SetCurrentFfx		ffxeffects			Makes an effect the current full-screen effect and returns the previous one	inferred	none		
 0x6d45c0	45	SetSpellScreenTint		lighting			Stores a colour and the byte of 255 times a level used as the screen tint	inferred	none	spell/visuals#screen-tint	
+0x6d4620	7			lighting	orchestration		Stores its argument in a lighting global	verified	one	objectlayer/playerfields#ghost-state	
+0x6d4630	11	ClearSpellScreenTint		lighting	orchestration		Stores −1 in a lighting global	verified	one	objectlayer/playerfields#ghost-state	
 0x6d48b0	6	GetLightState		lighting			Returns the lighting system's current light state object	inferred	none		
+0x6d4900	3			lighting	orchestration		Returns at once, dropping two stack arguments	verified	one	objectlayer/playerfields#ghost-state	
 0x6d62e0	256	EvalLightIntBand		lighting			Evaluates a LightIntBand row's colour at a time of day	inferred	none		
 0x6d6ad0	34	GetLightIntBand		lighting			Returns LightIntBand row 18 times the LightParams id less 17 plus an index, or null	inferred	none		
 0x6d6d20	179	GetGuildEmblem		client			Reads a guild's five emblem values from the guild cache, keeping a callback on a miss; returns 1 when found	inferred	none		
+0x6d6de0	6	GetGuildEmblemCost		client	orchestration		Returns 100000, the emblem's price in copper	verified	one	objectlayer/party#guild-tabards	
 0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Intersects two 2D segments, writing the line intersection when they do not cross	inferred	none		
 0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	inferred	none		
 0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	inferred	none		
@@ -12863,6 +12995,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78b0	19	InitSharedPoint05		collision	primitive	void __cdecl (void)	Stores 0.5/10 = 0.05 as a float	verified	one	collision/overview#shared-file-initializers	
 0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
+0x7c78f0	308			unassigned	primitive		Writes a petition record to a data store	inferred	none	objectlayer/party#group-and-guild-messages-sent	
 0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	
 0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none	ui/README#nameplate-frame-functions	
 0x7e4da0	5	SpellCastTargetsInitCopy1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4db0; a static initializer	verified	one	spell/layout#static-initializers	

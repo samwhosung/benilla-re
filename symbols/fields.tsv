@@ -64,6 +64,23 @@ CGObject_C	0x00e4	4	uint32_t	m_objectFlags	objectlayer	Holds object flags; 0x614
 CGObject_C	0x00e8	4	uint32_t	m_holdCount	objectlayer	Holds the count of holds that keep the object from release, stepped by 0x614f10	verified	one	objectlayer/manager#holding-an-object
 CGPlayer_C	0x0e68	4	uint32_t *	m_playerFields	objectlayer	Points at field 188, the player section, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
 CGPlayer_C	0x0e6c	4	uint32_t *	m_playerWatchCopy	objectlayer	Points at the player section's watch copy, past the unit's 170, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
+CGPlayer_C	0x0e70	3576	uint32_t[894]	m_playerWatcherLists	objectlayer	Holds the 298 player field watcher lists of 12 bytes that the constructor empties	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1c68	4	void *	m_activeWatcherBlock	objectlayer	Points at the active player's block of 796 more watcher lists, past the watch copy	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1c70	4	uint32_t	m_farSightFlags	objectlayer	Holds bit 0, set from the 0x27a with 1 until far sight ends	verified	one	objectlayer/interaction#far-sight
+CGPlayer_C	0x1c74	40	uint8_t[40]	m_tradeSkillLines	objectlayer	Holds the hash table of TRADESKILLLINE nodes, its vtable 0x80b044 and its mask at +0x1c98	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1c9c	40	uint8_t[40]	m_proficiencySpells	objectlayer	Holds the hash table of PROFICIENCYSPELL nodes, its vtable 0x80b034 and its mask at +0x1cc0	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1cc4	12	uint32_t[3]	m_pendingExpirations	objectlayer	Holds the list of pending item expirations: link offset, then the links at +0x1cc8	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1cd0	64	uint8_t[64]	m_tabSpells	objectlayer	Holds four 16-byte spell arrays, indexed by the spell's Spell.dbc +0x0c	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d10	16	uint32_t[4]	m_effect47Spells	objectlayer	Holds four spell ids, indexed by an effect-47 spell's misc value	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d20	4	uint32_t	m_pendingDisplays	objectlayer	Holds the count of equipment displays waiting on an item record	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d28	8	uint64_t	m_lootGuid	objectlayer	Holds the GUID being looted	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d30	1	uint8_t	m_autoLoot	objectlayer	Holds the auto-loot byte, written by 0x5df460	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d38	4	uint32_t	m_inventoryCount	objectlayer	Holds the inventory slot count, 0x71 for the active player and 0 otherwise	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d3c	4	uint64_t *	m_inventoryGuids	objectlayer	Points at the inventory GUIDs, PLAYER_FIELD_INV_SLOT_HEAD in the player fields	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d40	8	uint64_t	m_inventoryOwner	objectlayer	Holds the player's GUID as the inventory's owner	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d48	1	uint8_t	m_inventoryOwn	objectlayer	Holds 1, the inventory's own-flag	verified	one	objectlayer/players#the-player-object
+CGPlayer_C	0x1d50	24	uint8_t[24]	m_handWeapons	objectlayer	Holds each hand's weapon record, 8 bytes apart: class, subclass and three more bytes	verified	one	objectlayer/playercombat#hand-weapons
+CGPlayer_C	0x1d68	4	uint32_t	m_localStandState	objectlayer	Holds the active player's local stand state	verified	one	objectlayer/players#the-player-object
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0118	4	CMovement *	m_movementPtr	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object

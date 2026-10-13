@@ -47,7 +47,9 @@ MovementGlobals	312		collision	Holds the movement manager: log path and files, t
 NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
 NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
+PROFICIENCYSPELL	28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
 PlaneParticleEmitter	672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
+PlayerPendingItemExpiration	24		objectlayer	Holds an enchantment time waiting for its item: list link, item GUID, slot and time	verified	one	objectlayer/inventory#item-timers
 RACECLASSINFO	32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
 RealmCategory	28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
 RealmInfo	308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
@@ -61,5 +63,6 @@ SpellRangeRec	88		dbc	Holds one SpellRange.dbc row: id, minimum and maximum rang
 SpellRec	692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-lookups
 SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
 SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
+TRADESKILLLINE	40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
 WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

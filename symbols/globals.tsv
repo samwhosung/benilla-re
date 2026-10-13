@@ -46,8 +46,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5b3fe8	uint8_t[19]	s_realmMessageIndexTable		net	Maps opcodes 0x3a to 0x4c to their case in the realm connection handler	verified	one	net/dispatch#realm-connection-messages
 0x5d494c	void *[8]	s_tradeStatusJumpTable		objectlayer	Holds the trade status handler's eight cases	verified	one	objectlayer/trade#trade-status-message
 0x5d496c	uint8_t[23]	s_tradeStatusIndexTable		objectlayer	Maps trade statuses 0 to 22 to their case in 0x5d494c	verified	one	objectlayer/trade#trade-status-message
+0x5dbaf4	void *[5]	s_vendorRefusalCases		objectlayer	Holds the 5 case addresses of the refusal switch in 0x5db980	verified	one	objectlayer/inventory#vendors
+0x5dbd14	void *[7]	s_questInvalidCases		objectlayer	Holds the 7 case addresses of the invalid-quest switch in 0x5dbca0	verified	one	objectlayer/quests#quest-giver-messages
+0x5dbd30	uint8_t[22]	s_questInvalidCaseIndex		objectlayer	Maps an invalid-quest reason minus 1 to a case of 0x5dbd14	verified	one	objectlayer/quests#quest-giver-messages
+0x5e4af8	void *[6]	s_noticeCasesA		objectlayer	Holds the 6 case addresses for the notices 0x1b to 0x113 in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4b10	uint8_t[249]	s_noticeCaseIndexA		objectlayer	Maps a notice opcode minus 0x1b to a case of 0x5e4af8	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4c0c	void *[6]	s_noticeCasesB		objectlayer	Holds the 6 case addresses for the notices 0x155 to 0x16e in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4c24	uint8_t[26]	s_noticeCaseIndexB		objectlayer	Maps a notice opcode minus 0x155 to a case of 0x5e4c0c	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4c40	void *[11]	s_noticeCasesC		objectlayer	Holds the 11 case addresses for the notices 0x178 to 0x1c9 in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4c6c	uint8_t[82]	s_noticeCaseIndexC		objectlayer	Maps a notice opcode minus 0x178 to a case of 0x5e4c40	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4cc0	void *[10]	s_noticeCasesD		objectlayer	Holds the 10 case addresses for the notices 0x1d5 to 0x219 in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4ce8	uint8_t[69]	s_noticeCaseIndexD		objectlayer	Maps a notice opcode minus 0x1d5 to a case of 0x5e4cc0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4d44	void *[6]	s_noticeCasesE		objectlayer	Holds the 6 case addresses for the notices 0x21e to 0x2a9 in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4d5c	uint8_t[140]	s_noticeCaseIndexE		objectlayer	Maps a notice opcode minus 0x21e to a case of 0x5e4d44	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4e0c	void *[5]	s_noticeCasesF		objectlayer	Holds the 5 case addresses for the notices 0x2eb to 0x32d in 0x5e38c0	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e4e20	uint8_t[67]	s_noticeCaseIndexF		objectlayer	Maps a notice opcode minus 0x2eb to a case of 0x5e4e0c	verified	one	objectlayer/playermessages#the-notice-handler
+0x5e5a90	void *[10]	s_questGiverCases		objectlayer	Holds the 10 case addresses of the quest giver switch in 0x5e59b0	verified	one	objectlayer/quests#quest-giver-messages
+0x5e5ab8	uint8_t[19]	s_questGiverCaseIndex		objectlayer	Maps a quest giver opcode minus 0x183 to a case of 0x5e5a90	verified	one	objectlayer/quests#quest-giver-messages
+0x5e5ea0	void *[4]	s_questUpdateCases		objectlayer	Holds the 4 case addresses for the quest updates 0x196 to 0x199 in 0x5e5ad0	verified	one	objectlayer/quests#quest-updates
 0x5e6a14	void *[8]	s_opcode7fJumpTable		objectlayer	Holds the 8 case addresses of the switch in 0x5e68b0	verified	one	objectlayer/overview#switch-tables
 0x5e74dc	void *[14]	s_opcode92JumpTable		objectlayer	Holds the 14 case addresses of the switch in 0x5e7180	verified	one	objectlayer/overview#switch-tables
+0x5e77a4	void *[6]	s_guildSuccessCases		objectlayer	Holds the 6 case addresses of the successful guild command switch in 0x5e7520	verified	one	objectlayer/party#guild-notices
+0x5e77bc	uint8_t[21]	s_guildSuccessCaseIndex		objectlayer	Maps a guild command to a case of 0x5e77a4	verified	one	objectlayer/party#guild-notices
+0x5e77d4	void *[20]	s_guildErrorCases		objectlayer	Holds the 20 case addresses for guild command results 1 to 20 in 0x5e7520	verified	one	objectlayer/party#guild-notices
+0x5e8430	void *[11]	s_spellLogEffectCases		objectlayer	Holds the 11 case addresses of the per-target effect switch in 0x5e7f90	verified	one	objectlayer/playercombat#spell-combat-log-messages
+0x5e845c	uint8_t[126]	s_spellLogEffectCaseIndex		objectlayer	Maps a spell effect minus 1 to a case of 0x5e8430	verified	one	objectlayer/playercombat#spell-combat-log-messages
+0x5eb6f8	uint8_t[67]	s_sheatheBlockingAnims		objectlayer	Maps an animation minus 46 to whether it blocks the sheathe toggle (case 0 blocks)	verified	one	objectlayer/playercombat#sheathing
 0x5ebc64	void *[11]	s_switch5ebc64		objectlayer	Holds the 11 case addresses of the switch in 0x5eb900	verified	one	objectlayer/overview#switch-tables
 0x5f3b40	void *[4]	s_switch5f3b40		objectlayer	Holds the 4 case addresses of the switch in 0x5f3930	verified	one	objectlayer/overview#switch-tables
 0x5f41e4	void *[12]	s_switch5f41e4		objectlayer	Holds the 12 case addresses of the switch in 0x5f4120	verified	one	objectlayer/overview#switch-tables
@@ -211,6 +235,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8029b0	const float	s_quarter		ui	Holds 0.25, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
 0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
+0x80306c	float	s_four		objectlayer	Holds 4.0, the multiple of the melee reach an attack start allows	verified	one	objectlayer/playercombat#the-melee-attack
+0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
 0x803600	void *	s_guidHashTableVtable		objectlayer	Holds the vtable the manager's two GUID hash tables carry	inferred	none	objectlayer/manager#manager-block
 0x803640	void *[31]	CGObject_C::vftable		objectlayer	Holds the base object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x803740	uint8_t[180]	s_authUrlKeys		glue	Holds five 36-byte rows of a status code and its URL key, AUTH_BANNED (28) to AUTH_PARENTAL_CONTROL (33)	verified	one	glue/flow#world-connect-failure
@@ -228,6 +254,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
+0x80928c	int32_t[8]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, −42000 to 42000	verified	one	objectlayer/playercombat#using-an-item
+0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
 0x80a658	void *[23]	RealmConnection::vftable		net	Holds RealmConnection's vtable, six slots of it pure virtual	verified	one	net/dispatch#dispatch
@@ -243,9 +271,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80ada0	void *	s_itemSecondaryVtable		objectlayer	Holds the item's one-slot vtable at +0x110	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ada8	void *[31]	CGItem_C::vftable		objectlayer	Holds the item vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ae24	void *	s_itemPureVtable		objectlayer	Holds the one-slot pure-call vtable the item constructor stores at +0x110 first	verified	one	objectlayer/classes#secondary-and-member-vtables
+0x80ae54	float	s_bindPointRadius		objectlayer	Holds 10.0, the bind point radius before its factor	verified	one	objectlayer/interaction#the-bind-point
+0x80ae90	float	s_spiritHealerXpFraction		objectlayer	Holds 0.05, the next level's experience fraction the spirit healer shows	verified	one	objectlayer/interaction#confirmation-dialogs
+0x80ae98	uint32_t[20]	s_grayLevelGaps		objectlayer	Holds the level gap below which a unit is trivial, by the player's level over 5	verified	one	objectlayer/interaction#other-units
+0x80af14	uint32_t[3]	s_buyBankSlotErrors		objectlayer	Holds the errors for bank slot purchase results 0 to 2	verified	one	objectlayer/playermessages#item-push-bank-and-binding
+0x80af50	uint32_t[6]	s_restStateMessages		objectlayer	Holds an error and a tutorial for rest states 0 to 2, 0x1d1 and 0x32 meaning none	verified	one	objectlayer/playerfields#rest-state
+0x80af68	float[3]	s_drunkThresholds		objectlayer	Holds the drunk thresholds 0.01, 0.5 and 0.9	verified	one	objectlayer/playerfields#drunk-messages
+0x80af74	float	s_ghostLightArgument		objectlayer	Holds 7.0, passed to 0x6d4900 when the ghost state clears	verified	one	objectlayer/playerfields#ghost-state
 0x80af78	void *[47]	CGPlayer_C::vftable		objectlayer	Holds the player vtable, 47 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80b034	void *[4]	s_playerMemberVtableA		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c9c	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80b044	void *[4]	s_playerMemberVtableB		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c74	verified	one	objectlayer/classes#secondary-and-member-vtables
+0x80b054	float	s_corpseLootRangeSq		objectlayer	Holds 25.0, the squared distance beyond which a corpse loot walks up	verified	one	objectlayer/interaction#looting
+0x80b058	float	s_meleeReachBonus		objectlayer	Holds 4/3, added to the two combat reaches	verified	one	objectlayer/interaction#looting
 0x80c330	void *[34]	CGGameObject_C::vftable		objectlayer	Holds the game object vtable, 34 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
@@ -549,6 +586,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85cae8	char *[83]	s_errorCodeTokens	idb	net	Holds the 83 status code names, RESPONSE_SUCCESS to CHAR_NAME_SUCCESS, the localization keys	verified	one	net/session#session-status
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
+0x85fc54	uint32_t[141]	s_damageCalcEntryNames		objectlayer	Holds the damage calculation's entry names in 16-byte records, a string first, the last record cut short	verified	one	objectlayer/playercombat#damage-calculation-log
+0x85fe88	uint32_t[6]	s_saveEmblemErrors		objectlayer	Holds the errors for emblem save results 0 to 5	verified	one	objectlayer/party#guild-tabards
+0x85fea0	uint32_t[11]	s_mountResultErrors		objectlayer	Holds the errors for mount results 0 to 10, the last none	verified	one	objectlayer/playermessages#error-notices
+0x85fecc	uint32_t[4]	s_dismountResultErrors		objectlayer	Holds the errors for dismount results 0 to 3, the last none	verified	one	objectlayer/playermessages#error-notices
+0x85fedc	uint32_t[13]	s_activateTaxiErrors		objectlayer	Holds the errors for taxi activation results 0 to 12, 0 unused	verified	one	objectlayer/interaction#taxis
+0x85ff10	uint32_t	s_standStateEmoteMask		objectlayer	Holds 0x10b, the stand states a text emote may set	verified	one	objectlayer/interaction#text-emotes
+0x8603e4	char[15]	s_updateTicketFormat		objectlayer	Holds the format %d%s%f%f%f%d%d of UPDATE_TICKET	verified	one	objectlayer/playermessages#gm-tickets
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
@@ -794,19 +838,42 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb421f4	uint16_t	s_surveyResultSize		glue	Holds the kept survey result's size, at most 1000; written by 0x473f10, cleared by 0x473e30	verified	one	glue/downloads#running-the-survey
 0xb42260	void *	s_patchFile		glue	Holds the patch download file, or null	verified	one	glue/downloads#patch-download
 0xb42264	uint8_t	s_deletePatchAfterList		glue	Holds 1 when prepatch.lst asked to delete wow-patch.mpq; cleared by 0x4749f0, set by 0x474830	verified	one	glue/downloads#applying-the-patch
+0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
+0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption
+0xb4d900	uint32_t	s_cursorType		ui	Holds what the cursor holds, 9 for ammo	inferred	none	objectlayer/inventory#moving-items
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
+0xb4e2b8	void *	s_shownTarget		ui	Holds a target record whose +0x28 a world click tests before clearing the target	inferred	none	objectlayer/interaction#world-clicks
+0xb4e2d0	uint64_t	s_interactionTargetGuid		ui	Holds the GUID of the unit the interaction windows belong to	inferred	none	objectlayer/interaction#talking-to-an-npc
 0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
+0xb4e314	uint32_t	s_zoneId		ui	Holds the player's zone, read into party records and the binder dialog	inferred	none	objectlayer/party#the-party-member-record
+0xb4e318	uint32_t	s_subZoneId		ui	Holds the player's area, which the binder dialog prefers	inferred	none	objectlayer/interaction#confirmation-dialogs
+0xb4e33c	uint32_t			ui	Holds the rest start time 0x496240 stores; nothing reads it	verified	one	objectlayer/playermessages#error-notices
+0xb4e340	uint32_t	s_releaseTime		ui	Holds the time the release timer ends, 0 when off	verified	one	objectlayer/players#death
+0xb6e5cc	uint32_t	s_isAfk		ui	Holds whether the active player is marked AFK	verified	one	objectlayer/interaction#afk
+0xb6ef90	uint64_t	s_heldItemGuidA		ui	Holds an item GUID 0x622210 leaves locked	inferred	none	objectlayer/inventory#searching-the-inventory
+0xb700ac	uint32_t *	s_indexedSpells		ui	Points at the spells 0x5ec720 looks up by index	inferred	none	objectlayer/playercombat#skills
+0xb700e4	uint32_t[2]	s_interactSpells		ui	Holds the spells for interacting with other objects and with corpses and players	inferred	none	objectlayer/interaction#interacting-through-a-spell
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet
 0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
+0xb71b48	uint64_t	s_lootOpenedGuid		ui	Holds a GUID whose presence makes an inventory failure signal LOOT_OPENED	inferred	none	objectlayer/playermessages#inventory-change-failures
+0xb72608	uint64_t	s_heldItemGuidB		ui	Holds an item GUID 0x622210 leaves locked	inferred	none	objectlayer/inventory#searching-the-inventory
+0xbc3f58	uint64_t	s_trainerWindowGuid		ui	Holds the trainer GUID a trainer list may also open for	inferred	none	objectlayer/inventory#trainers
+0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
+0xbdcee8	uint64_t	s_tabardVendorGuid		ui	Holds the GUID of the open tabard vendor	inferred	none	objectlayer/interaction#talking-to-an-npc
 0xbdcfb8	uint32_t	s_currentCraftProfession		ui	Holds the profession the craft window shows; 0x4f6000 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
+0xbdd038	uint64_t	s_bankerGuid		ui	Holds the GUID of the open banker, 0 when none	inferred	none	objectlayer/inventory#searching-the-inventory
 0xbde040	uint32_t	s_currentTradeSkillLine		ui	Holds the skill line the trade-skill window shows; 0x4fc910 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
+0xbe0810	uint64_t	s_questFrameGuid		ui	Holds a GUID whose presence turns a player's shared quest details into a busy answer	inferred	none	objectlayer/quests#details-request-and-reward
+0xbe0828	uint32_t	s_chosenRewardItem		ui	Holds the reward item chosen on the quest frame	inferred	none	objectlayer/quests#quest-completion
 0xbe1148	CInputControl *	s_inputControl		input	Holds the CInputControl singleton	verified	one	input#input-state
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d6b8	uint32_t[5]	s_taxiNodesStore		dbc	Holds the TaxiNodes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#taxis
 0xc0d744	uint32_t[5]	s_spellVisualKitDb		dbc	Holds the SpellVisualKit.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/handlers#small-spell-handlers
 0xc0d758	uint32_t[5]	s_spellVisualEffectNameDb		dbc	Holds the SpellVisualEffectName.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/go#cast-visual-and-dest-effect
+0xc0d76c	uint32_t[5]	s_spellShapeshiftFormStore		dbc	Holds the SpellShapeshiftForm.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight
 0xc0d780	uint32_t[5]	s_spellStore		dbc	Holds the Spell.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	spell/records#record-lookups
 0xc0d794	uint32_t[5]	s_spellRangeStore		dbc	Holds the SpellRange.dbc store	verified	one	spell/records#record-lookups
 0xc0d820	uint32_t[5]	s_spellDurationStore		dbc	Holds the SpellDuration.dbc store	verified	one	spell/records#record-lookups
@@ -817,9 +884,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d94c	uint32_t[5]	s_skillLineAbilityStore		dbc	Holds the SkillLineAbility.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0d960	uint32_t[5]	s_skillCostsDataStore		dbc	Holds the SkillCostsData.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0da78	uint8_t[20]	s_nameGenStore		dbc	Holds the NameGen.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0db90	uint32_t[2]	s_itemSubClassRows		dbc	Holds the ItemSubClass.dbc rows and their count, 0x74 bytes each	verified	one	objectlayer/playercombat#learning-a-spell
+0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playercombat#hand-weapons
+0xc0dc30	uint32_t[5]	s_itemBagFamilyStore		dbc	Holds the ItemBagFamily.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/inventory#opening-and-wrapping-items
 0xc0dcd0	uint8_t[20]	s_gameTipsStore		dbc	Holds the GameTips.dbc store: records, count, id map, maximum id, loaded flag	inferred	none	
 0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0dd5c	uint8_t[20]	s_factionGroupStore		dbc	Holds the FactionGroup.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
 0xc0deb0	uint8_t[20]	s_cinematicSequencesStore		dbc	Holds the CinematicSequences.dbc store	inferred	none	
 0xc0dec4	uint8_t[20]	s_cinematicCameraStore		dbc	Holds the CinematicCamera.dbc store	inferred	none	
 0xc0ded8	uint32_t[5]	s_chrRacesStore		dbc	Holds the ChrRaces.dbc store: records, count, id map by record +0x00, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
@@ -828,9 +899,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0df8c	uint32_t[5]	s_charBaseInfoStore		dbc	Holds the CharBaseInfo.dbc store of 8-byte race and class records	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0dfa0	uint8_t[20]	s_cfgConfigsStore		dbc	Holds the Cfg_Configs.dbc store: records, count, id map, max row and loaded flag	inferred	none	
 0xc0dfb4	uint8_t[20]	s_cfgCategoriesStore		dbc	Holds the Cfg_Categories.dbc store: records, count, index table, highest ordinal and loaded flag	inferred	none	
+0xc0e02c	uint32_t[2]	s_areaTriggerRows		dbc	Holds the AreaTrigger rows, 0x28 bytes each sorted by map, and their count	inferred	none	objectlayer/players#area-triggers
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index that picks a localized string column	inferred	none	spell/handlers#channel-start-and-update
+0xc0e0fc	uint32_t	s_petitionCache		dbcache	Holds the petition record cache charters look up	inferred	none	objectlayer/party#petitions
+0xc0e1b0	uint32_t	s_questCache		dbcache	Holds the quest record cache	inferred	none	objectlayer/quests#quest-completion
+0xc0e1ec	uint32_t	s_guildCache		dbcache	Holds the guild record cache	inferred	none	objectlayer/party#guild-tabards
+0xc0e228	uint32_t	s_nameCache		dbcache	Holds the player name cache	inferred	none	objectlayer/playermessages#resurrection-and-summoning
+0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
+0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
 0xc27fb8	uint8_t[308]	s_selectedRealm		net	Holds the selected realm's 308-byte record; its address text is at +0x109	verified	one	net/session#connecting
 0xc28118	void *	s_realmList		net	Holds the realm list the realm selection searches	verified	one	net/session#connecting
 0xc28120	uint32_t	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	inferred	none	
@@ -849,7 +927,51 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4becc	uint32_t	s_tradeInitiateFlag		objectlayer	Holds the flag the caller gave the trade request	verified	one	objectlayer/trade#trade-state
 0xc4bed0	uint64_t	s_tradeTarget		objectlayer	Holds the trade partner's GUID	verified	one	objectlayer/trade#trade-state
 0xc4bed8	int32_t[2]	s_tradeExtendedHeader		objectlayer	Holds the third header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
-0xc4c28c	float	s_playerFileConstant		objectlayer	Holds a float a Player_C.cpp initializer computes, read by Player_C.cpp code	inferred	none	objectlayer/initializers#float-constants
+0xc4c25c	uint32_t	s_bindZone		objectlayer	Holds the bind point's zone	verified	one	objectlayer/interaction#the-bind-point
+0xc4c264	uint32_t	s_areaTriggerEnd		objectlayer	Holds the end row of the current map's area triggers	verified	one	objectlayer/players#area-triggers
+0xc4c270	uint32_t	s_attackErrorTime		objectlayer	Holds the time the attack error may next show	verified	one	objectlayer/players#attack-error-repeat
+0xc4c274	float[3]	s_bindPosition		objectlayer	Holds the bind point's x, y and z	verified	one	objectlayer/interaction#the-bind-point
+0xc4c28c	float	s_interactRangeSq		objectlayer	Holds 5.5555553² = 30.864195, the squared range of NPC interaction and the confirmation dialogs	verified	one	objectlayer/interaction#talking-to-an-npc
+0xc4c290	uint32_t[4]	s_itemSwaps		objectlayer	Holds the parked bind-confirm moves: capacity, count, data and chunk	verified	one	objectlayer/inventory#bind-on-equip-confirmation
+0xc4c2b4	uint32_t[120]	s_actionButtons		objectlayer	Holds the 120 action buttons the server sends	verified	one	objectlayer/playercombat#spell-book-messages
+0xc4c498	uint32_t	s_areaTriggerMap		objectlayer	Holds the map whose area triggers are selected	verified	one	objectlayer/players#area-triggers
+0xc4c4a0	uint32_t[896]	s_vendorItems		objectlayer	Holds 128 vendor items of 28 bytes, which a longer list overruns	verified	one	objectlayer/inventory#vendors
+0xc4d2a0	uint32_t[4]	s_initialSpells		objectlayer	Holds the initial spell list: capacity, count, data and chunk	verified	one	objectlayer/playercombat#spell-book-messages
+0xc4d2b0	uint32_t[32]	s_greetingQuestIds		objectlayer	Holds a greeting's 32 quest ids	verified	one	objectlayer/quests#the-greeting-list
+0xc4d340	uint32_t[32]	s_greetingQuestIcons		objectlayer	Holds a greeting's 32 quest icons	verified	one	objectlayer/quests#the-greeting-list
+0xc4d3c4	void *	s_combatModeMaxDistanceCVar		objectlayer	Holds the CombatModeMaxDistance CVar	verified	one	objectlayer/players#world-entry-and-exit
+0xc4d3cc	uint32_t	s_areaTriggerTimer		objectlayer	Holds the area-trigger timer's handle	verified	one	objectlayer/players#area-triggers
+0xc4d3d0	uint32_t[50]	s_petitionCharters		objectlayer	Holds 10 charter offers of 20 bytes, which a longer list overruns	verified	one	objectlayer/party#petitions
+0xc4d498	uint64_t	s_vendorGuid		objectlayer	Holds the GUID of the vendor whose list is open	verified	one	objectlayer/inventory#vendors
+0xc4d4a0	uint32_t[16]	s_proficiencyMasks		objectlayer	Holds the server's proficiency mask per item class	verified	one	objectlayer/playermessages#other-small-handlers
+0xc4d4e0	uint32_t	s_bindPointValid		objectlayer	Holds whether the bind point is known	verified	one	objectlayer/interaction#the-bind-point
+0xc4d4e8	uint32_t[96]	s_lootItems		objectlayer	Holds 16 loot entries of 24 bytes, which an unchecked slot overruns	verified	one	objectlayer/inventory#loot
+0xc4d668	uint32_t[4]	s_guildTimestamps		objectlayer	Holds the guild timestamp table: capacity, count, data and chunk	verified	one	objectlayer/playerfields#guild-timestamps
+0xc4d688	uint32_t	s_effect1aSpell		objectlayer	Holds the effect-0x1a spell slot 43 reads the skill of	verified	one	objectlayer/playercombat#weapon-skills
+0xc4d68c	void *	s_autoClearAfkCVar		objectlayer	Holds the autoClearAFK CVar	verified	one	objectlayer/interaction#afk
+0xc4d6a8	uint32_t	s_bindMap		objectlayer	Holds the bind point's map	verified	one	objectlayer/interaction#the-bind-point
+0xc4d6ac	int32_t	s_areaTriggerFirst		objectlayer	Holds the first row of the current map's area triggers, −1 for none	verified	one	objectlayer/players#area-triggers
+0xc4d6b0	uint32_t[32]	s_greetingQuestLevels		objectlayer	Holds a greeting's 32 quest levels	verified	one	objectlayer/quests#the-greeting-list
+0xc4d730	uint32_t[3]	s_weaponSkillSpells		objectlayer	Holds the weapon-subclass spell table: capacity, count and data	verified	one	objectlayer/playercombat#weapon-skills
+0xc4d73c	void *	s_currentAreaTrigger		objectlayer	Holds the area trigger the active player is inside	verified	one	objectlayer/players#area-triggers
+0xc4d740	uint64_t	s_greetingGiverGuid		objectlayer	Holds the GUID of the giver whose greeting is open	verified	one	objectlayer/quests#the-greeting-list
+0xc4d74c	uint32_t	s_showOwnModel		objectlayer	Holds whether the active player's model updates, 1 at world entry	verified	one	objectlayer/players#the-players-virtual-slots
+0xc4d750	uint64_t	s_boundGuid		objectlayer	Holds the GUID the player bound to	verified	one	objectlayer/playermessages#item-push-bank-and-binding
+0xc4d758	uint32_t	s_attackErrorState		objectlayer	Holds the attack error to repeat: 1 bad position, 2 bad facing	verified	one	objectlayer/players#attack-error-repeat
+0xc4d75c	uint32_t	s_pendingCinematic		objectlayer	Holds a cinematic to play on arrival	verified	one	objectlayer/playermessages#notices
+0xc4d760	uint32_t[4]	s_resurrectRequest		objectlayer	Holds the resurrecter's GUID and the request's two bytes	verified	one	objectlayer/playermessages#resurrection-and-summoning
+0xc4d770	uint32_t	s_effect28Spell		objectlayer	Holds the known spell whose first effect is 0x28	verified	one	objectlayer/playercombat#learning-a-spell
+0xc4d778	uint64_t	s_wrapItemGuid		objectlayer	Holds the wrapping paper's GUID	verified	one	objectlayer/inventory#opening-and-wrapping-items
+0xc4d780	uint8_t	s_emblemSavePending		objectlayer	Holds whether an emblem save waits for its answer	verified	one	objectlayer/party#guild-tabards
+0xc4d788	uint64_t	s_askedTrainerGuid		objectlayer	Holds the GUID of the trainer last asked for its list	verified	one	objectlayer/inventory#trainers
+0xc4d790	uint32_t	s_areaListPollCount		objectlayer	Counts calls of 0x5db900 between reports, 0 to 9	verified	one	objectlayer/players#area-list-polling
+0xc4d794	uint32_t	s_questFailReason		objectlayer	Holds the reason of the last quest failure	verified	one	objectlayer/quests#quest-failure
+0xc4d798	uint64_t	s_spiritHealerGuid		objectlayer	Holds the spirit healer awaiting confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d7a0	uint64_t	s_talentWiperGuid		objectlayer	Holds the trainer awaiting the talent wipe confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d7a8	uint32_t	s_talentWipeCost		objectlayer	Holds the talent wipe's cost	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d7b0	uint64_t	s_petUnlearnerGuid		objectlayer	Holds the trainer awaiting the pet unlearn confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d7b8	uint32_t	s_petUnlearnCost		objectlayer	Holds the pet unlearn's cost	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d7c0	uint64_t	s_binderGuid		objectlayer	Holds the innkeeper awaiting the bind confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
 0xc4d888	int32_t	s_autoMoveMode		objectlayer	Holds the auto-move mode, 12 for none; 0x6033c0 and 0x60fb60 store 12, 0x611130 the mode	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d8a0	uint32_t	s_spellDamageColor		objectlayer	Holds 0xffffde00 from 0x5fa0b0, the gold of spell damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers

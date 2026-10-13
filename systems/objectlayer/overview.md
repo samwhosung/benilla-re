@@ -12,8 +12,9 @@ Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x638
 physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and
 `initializers` for the core, `classes` for the hierarchy, `reaction` for how units react to one
 another, `trade` for the trade window, and `units`, `unitmovement`, `unitanim`, `auras`,
-`unitdisplay`, `unitbody` and `unitnames` for Unit_C.cpp; the other object files have no topic of
-their own.
+`unitdisplay`, `unitbody` and `unitnames` for Unit_C.cpp, and `players`, `playerfields`,
+`playermessages`, `quests`, `party`, `inventory`, `interaction` and `playercombat` for Player_C.cpp
+and Bag_C.cpp; the other object files have no topic of their own.
 
 Roots: `0x4651a0`, `0x4672f0`, `0x4674a0`, `0x468460`, `0x468550`
 
