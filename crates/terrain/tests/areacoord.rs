@@ -1,15 +1,13 @@
 //! The area queries' arithmetic, as slices: `FindNearestLiquidInAreas` (`0x68af10`) from
-//! `0x68af1b` to `0x68af63` and from `0x68b031` to `0x68b05d`; `UpdateShowQuery` (`0x6821f0`)
-//! from `0x68223c` to `0x682252` and from `0x6822a2` to `0x6822b3`; and `CWorld::GetAreaIdAt`
-//! (`0x670250`) from `0x6702a2` to `0x6702b8`, from `0x6702c1` to `0x6702d9` and from `0x670345`
-//! to the `jnp` at `0x670350`.
+//! `0x68af1b` to `0x68af63` and from `0x68b031` to `0x68b05d`; and `UpdateShowQuery`
+//! (`0x6821f0`) from `0x68223c` to `0x682252` and from `0x6822a2` to `0x6822b3`.
 
 mod common;
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 use benilla_re_terrain::areacoord::{
-    area_coord_x, area_coord_y, area_param_offset, area_ray_end_z, area_ray_start_z, area_tile_x,
-    area_tile_y, area_window, nearer_keep_wmo_jnp, nearer_select_jp, ray_end_z,
+    area_coord_x, area_coord_y, area_param_offset, area_tile_x, area_tile_y, area_window,
+    nearer_select_jp, ray_end_z,
 };
 use common::{assert_f32, next};
 
@@ -257,112 +255,5 @@ fn world_query_consumer_difftest() {
     eprintln!(
         "world_query_consumer: {checked} ray-end + {sel_checked} select cases bit-exact vs WoW.exe \
          @0x6821f0 slices [68223c,682252)/[6822a2,6822b3) (jp branch, ties={nearer_wmo})"
-    );
-}
-
-#[test]
-fn area_id_resolver_difftest() {
-    let Some(wow) = Wow::load() else {
-        return;
-    };
-    let mut e = Emu::new(&wow);
-    let frame = e.alloc(0x80);
-    let posbuf = e.alloc(0x10); // esi: the stretch copies [esi] and [esi+4]
-    let ebp = frame + 0x60;
-    let slot = |disp: u64| ebp - disp;
-    let mut s = 0x6702_0000u32;
-
-    // 0x6702a2 to 0x6702b8 on [ebp-0x28]; the `mov ecx,[esi]; mov edx,[esi+4]` among it read esi
-    let s_start = slot(0x28);
-    let start_case = |e: &mut Emu, pz: f32, ctx: &str| {
-        e.write_u32(s_start, pz.to_bits());
-        e.set_reg(RegisterX86::ESI, posbuf);
-        e.set_reg(RegisterX86::EBP, ebp);
-        e.set_reg(RegisterX86::ESP, SLICE_ESP);
-        e.run(0x6702a2, 0x6702b8);
-        assert_f32(e.read_f32(s_start), area_ray_start_z(pz), ctx);
-    };
-    // 0x6702c1 to 0x6702d9 on [ebp-0x1c]; its pushes need the slice's ESP
-    let s_end = slot(0x1c);
-    let end_case = |e: &mut Emu, pz: f32, ctx: &str| {
-        e.write_u32(s_end, pz.to_bits());
-        e.set_reg(RegisterX86::EBP, ebp);
-        e.set_reg(RegisterX86::ESP, SLICE_ESP);
-        e.run(0x6702c1, 0x6702d9);
-        assert_f32(e.read_f32(s_end), area_ray_end_z(pz), ctx);
-    };
-    for &pz in &[0.0f32, 0.33, -0.33, 1760.0, 100.5, 1e6, -1e6] {
-        start_case(&mut e, pz, "start edge");
-        end_case(&mut e, pz, "end edge");
-    }
-    let mut checked = 0u32;
-    for i in 0..3000u32 {
-        let pz = if i % 5 == 0 {
-            frand_bits(&mut s)
-        } else {
-            frand(&mut s, -5000.0, 5000.0)
-        };
-        start_case(&mut e, pz, &format!("start fuzz{i}"));
-        end_case(&mut e, pz, &format!("end fuzz{i}"));
-        checked += 1;
-    }
-
-    // 0x670345 to 0x670350, stopping at the `jnp`: PF set (not taken) falls through to 0x670356 and
-    // keeps the object's hit; PF clear jumps to 0x670387.
-    let s_terr = slot(0xc);
-    let s_wmo = slot(0x10);
-    let select_case = |e: &mut Emu, terrain_t: f32, wmo_t: f32, ctx: &str| {
-        e.write_u32(s_terr, terrain_t.to_bits());
-        e.write_u32(s_wmo, wmo_t.to_bits());
-        e.set_reg(RegisterX86::EBP, ebp);
-        e.set_reg(RegisterX86::ESP, SLICE_ESP);
-        // `fld; fcomp; fnstsw; test ah,5` have run
-        e.run(0x670345, 0x670350);
-        let eflags = e.get_reg(RegisterX86::EFLAGS);
-        let pf = (eflags >> 2) & 1; // PF is bit 2
-        let bin_keep_wmo = pf == 1;
-        assert_eq!(
-            bin_keep_wmo,
-            nearer_keep_wmo_jnp(terrain_t, wmo_t),
-            "{ctx} (t={terrain_t} w={wmo_t}) PF={pf}"
-        );
-    };
-    // the tie and both orders; the tie keeps the object's hit, unlike `0x6822a2`
-    select_case(&mut e, 0.5, 0.5, "TIE t==w (PF=1 keep WMO)");
-    select_case(&mut e, 0.3, 0.7, "terrain nearer (PF=0 skip WMO)");
-    select_case(&mut e, 0.7, 0.3, "wmo nearer (PF=1 keep WMO)");
-    select_case(&mut e, 0.0, 0.0, "both 0 tie");
-    select_case(&mut e, -0.0, 0.0, "-0 vs +0 tie");
-    select_case(
-        &mut e,
-        f32::from_bits(0x7fc0_0000),
-        0.5,
-        "NaN terrain (unordered, keep WMO)",
-    );
-    let mut sel_checked = 0u32;
-    let mut nearer_terrain = 0u32;
-    let mut keep_wmo = 0u32;
-    for i in 0..3000u32 {
-        let (t, w) = if (next(&mut s) >> 8).is_multiple_of(3) {
-            let v = frand(&mut s, 0.0, 1.0);
-            (v, v)
-        } else {
-            (frand(&mut s, 0.0, 1.0), frand(&mut s, 0.0, 1.0))
-        };
-        select_case(&mut e, t, w, &format!("fuzz{i}"));
-        if t < w {
-            nearer_terrain += 1;
-        } else {
-            keep_wmo += 1;
-        }
-        sel_checked += 1;
-    }
-    assert!(
-        nearer_terrain > 0 && keep_wmo > 0,
-        "both select orderings exercised (terrain<wmo={nearer_terrain}, keep-wmo={keep_wmo})"
-    );
-    eprintln!(
-        "area_id_resolver: {checked} ray-endpoint + {sel_checked} select cases bit-exact vs WoW.exe \
-         @0x670250 slices [6702a2,6702b8)/[6702c1,6702d9)/[670345,670350) (jnp branch, keep-wmo={keep_wmo})"
     );
 }

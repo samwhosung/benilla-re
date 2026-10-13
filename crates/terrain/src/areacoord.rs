@@ -1,6 +1,6 @@
-//! The arithmetic of three area queries: the tile window of `FindNearestLiquidInAreas`
-//! (`0x68af10`), the downward ray of `UpdateShowQuery` (`0x6821f0`) and that of
-//! `CWorld::GetAreaIdAt` (`0x670250`), with the compare each uses to pick the nearer hit.
+//! The arithmetic of two area queries: the tile window of `FindNearestLiquidInAreas` (`0x68af10`)
+//! and the downward ray of `UpdateShowQuery` (`0x6821f0`), with the compare it uses to pick the
+//! nearer hit. `CWorld::GetAreaIdAt` (`0x670250`), whose ray is the same, is unreached.
 
 use crate::x87::fistp;
 
@@ -73,23 +73,4 @@ pub fn nearer_select_jp(entry_al: u8, terrain_t: f32, wmo_t: f32) -> u8 {
     } else {
         entry_al
     }
-}
-
-/// `[0x808300]`: 0.33 (`0x3ea8f5c3`), the lift of the ray's start.
-pub const RAY_LIFT_Z: f32 = f32::from_bits(0x3ea8_f5c3);
-
-/// `0x6702a2`: the ray's start in `0x670250`, `f32(pos_z + 0.33)`.
-pub fn area_ray_start_z(pos_z: f32) -> f32 {
-    (f64::from(pos_z) + f64::from(RAY_LIFT_Z)) as f32
-}
-
-/// `0x6702c1`: the ray's end in `0x670250`, `f32(pos_z − 1760)`.
-pub fn area_ray_end_z(pos_z: f32) -> f32 {
-    (f64::from(pos_z) - f64::from(RAY_DROP_Z)) as f32
-}
-
-/// `0x670345`: the map object's hit is kept unless the terrain's fraction is below it (`test ah,5;
-/// jnp`); equal or NaN keep it.
-pub fn nearer_keep_wmo_jnp(terrain_t: f32, wmo_t: f32) -> bool {
-    terrain_t.partial_cmp(&wmo_t) != Some(std::cmp::Ordering::Less)
 }

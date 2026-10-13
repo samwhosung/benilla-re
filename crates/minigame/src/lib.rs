@@ -1,8 +1,9 @@
-//! `Minigame_C.cpp`, the client side of a board minigame the server runs. The client's one
-//! computation is whether a move is legal; turns and wins are the server's.
+//! `Minigame_C.cpp` and the board file linked after it, the client side of a board minigame the
+//! server runs. The client's one computation is whether a move is legal; turns and wins are the
+//! server's.
 
-/// `0x728b80`, called by `0x728740`, the class's vtable slot 1: a move is legal when
-/// `0 <= idx <= 9` and `board[idx] == 0xFF`, an empty cell.
+/// `0x728b80`, in the board file, called by `0x728740`, the class's vtable slot 1: a move is legal
+/// when `0 <= idx <= 9` and `board[idx] == 0xFF`, an empty cell.
 ///
 /// The bounds are `test; jl` and `cmp 9; jg`. The cell index is then rebuilt through `idiv 3`:
 /// `r = idx/3`, `c = idx%3`, `(c + 2r) + r`, which is `idx`. `board` is read at `[ecx+0x22+idx]`;

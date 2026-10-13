@@ -1,52 +1,7 @@
-//! The client's software `log2` and `exp2`: the exponent field, a 64-entry table and a polynomial,
-//! with no `fyl2x` or `f2xm1`, so the result is exact on any CPU, unlike CRT `pow` (`0x73f940`).
-//! The x87 runs at 53-bit precision (`f64`).
+//! The client's software `exp2`: the exponent field, a 64-entry table and a polynomial, with no
+//! `f2xm1`, so the result is exact on any CPU, unlike CRT `pow` (`0x73f940`). The x87 runs at
+//! 53-bit precision (`f64`). Its `log2`, `FastLog2` (`0x454c80`), is unreached and owes no port.
 #![allow(clippy::float_cmp)]
-
-/// The data `log2` reads. They come from the reader's exe, which the tests read them from; the
-/// tables are 64 qwords each, indexed by `(hi>>11)&0x1f8`.
-pub struct Log2Tables<'a> {
-    /// `0x802be0`: the reciprocals, `LUT[i] = 64/(64+i)`.
-    pub lut: &'a [u8],
-    /// `0x802de0`: the corrections, `CORR[i] = -log2(LUT[i])`.
-    pub corr: &'a [u8],
-    /// `c1` to `c6`, `(1/ln2)/k`, at `0x802ff8` and `0x803000` to `0x803020`.
-    pub coeffs: [f64; 6],
-    /// `0x802ff0`, about 1e-307: `x` at or under it, and NaN, give `-inf`.
-    pub threshold: f64,
-}
-
-/// `FastLog2` (`0x454c80`): `x` at `[ebp+8]`, the result in `st0`, `ret 8`. With `x = 2^e·m`,
-/// `m` in `[1,2)`, and `i` the top six bits of `m`: `r = m·LUT[i] − 1`, a degree-6 polynomial in
-/// `r` for `log2(1+r)`, and `log2(x) = poly + (e + CORR[i])`. `x <= 1e-307`, negatives and NaN give
-/// `-inf`. The operations are in the client's order.
-#[allow(clippy::neg_cmp_op_on_partial_ord)] // the `fcomp; je` takes NaN with the small inputs
-pub fn log2(x: f64, t: &Log2Tables) -> f64 {
-    // fcomp [0x802ff0]: at or under the threshold, or unordered, returns -inf (fld +inf; fchs).
-    if !(x > t.threshold) {
-        return f64::NEG_INFINITY;
-    }
-    let bits = x.to_bits();
-    let hi = (bits >> 32) as u32;
-    let exp = (((hi >> 20) & 0x7ff) as i32) - 0x3ff; // the unbiased exponent, fild
-    let m = f64::from_bits((bits & 0x000f_ffff_ffff_ffff) | 0x3ff0_0000_0000_0000); // in [1,2)
-    let byte_off = ((hi >> 11) & 0x1f8) as usize; // the top six mantissa bits, as a qword offset
-    let rd =
-        |tbl: &[u8]| -> f64 { f64::from_le_bytes(tbl[byte_off..byte_off + 8].try_into().unwrap()) };
-    let lut = rd(t.lut);
-    let corr = rd(t.corr);
-    let [c1, c2, c3, c4, c5, c6] = t.coeffs;
-
-    // r = m·LUT[i] − 1.0 (1.0 at 0x8015b8), then the polynomial in the client's order:
-    let r = m * lut - 1.0;
-    let r2 = r * r;
-    let a = (c5 - r * c6) * r2; // fld st(1); fmul c6; fsubr c5; fmul st,st(1)
-    let b = a + (c3 - r * c4); // fld st(2); fmul c4; fsubr c3; faddp
-    let c = b * r2; // fmul st,st(1)
-    let d = c + (c1 - r * c2); // fld st(2); fmul c2; fsubr c1; faddp
-    let poly = r * d; // fmulp st(2),st
-    poly + (f64::from(exp) + corr) // fild exp; fadd corr; faddp
-}
 
 /// The data `exp2` reads, from the reader's exe. The table is 64 qwords, `LUT[i] = 2^(i/64)`, indexed
 /// by the top six mantissa bits of the fraction.

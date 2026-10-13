@@ -11,7 +11,7 @@ per-kind handlers, `0x4239a0` to `0x424260`, are in the event library. The masks
 (mouse mode), `0x883f34` (modifier keys) and `0x883f40` (held buttons). The window procedure is
 installed by the window code of another system, which calls it through a pointer.
 
-Roots: `0x42cfe0`, `0x42cd60`, `0x42cd70`, `0x42cde0`, `0x42cf10`, `0x42cfd0`, `0x420540`, `0x420600`, and the static initializers `0x42c9d0`, `0x42e1a0`, `0x42e1c0`
+Roots: `0x42cfe0`, `0x42cd60`, `0x42cd70`, `0x42cde0`, `0x42cf10`, `0x420540`, `0x420600`, and the static initializers `0x42c9d0`, `0x42e1a0`, `0x42e1c0`
 
 ## Window messages
 
@@ -34,7 +34,7 @@ a client position from `GetCursorPos`, not from `lParam`.
 | `WM_MOUSEMOVE` in relative mode: the offset from the held point | 0xc |
 | `GetMessageA` returning 0 (`WM_QUIT`), made by the pump | 0xe |
 
-Addresses: `0x42cfe0`, `0x42d080`, `0x42d0d5`, `0x42d185`, `0x42d21e`, `0x42d292`, `0x42d2d1`, `0x42d31c`, `0x42d37d`, `0x42d3d0`, `0x42d479`, `0x42d54f`, `0x42db90`, `0x42dc00`, `0x42dd00`, `0x42dd90`, `0x42cfd0`, `0x42d47e`
+Addresses: `0x42cfe0`, `0x42d080`, `0x42d0d5`, `0x42d185`, `0x42d21e`, `0x42d292`, `0x42d2d1`, `0x42d31c`, `0x42d37d`, `0x42d3d0`, `0x42d479`, `0x42d54f`, `0x42db90`, `0x42dc00`, `0x42dd00`, `0x42dd90`, `0x42d47e`
 Confidence: verified
 Proof: two
 Test: none
@@ -44,8 +44,8 @@ the byte map `0x42d5e0` and table `0x42d5c0`, 0x100 to 0x112 through `0x42d69c` 
 0x201 to 0x285 through `0x42d6d4` and `0x42d6b0`; `0x200` is tested first (`0x42cfff`). `SC_CLOSE`
 is `cmp edi,0xf060` (`0x42d28a`). The relative test is `[0x884e5c]` at `0x42d31c`. `0x42dc00` maps
 the button messages, `HIWORD(wParam)` selecting X1 or X2. `0x42dd00` reads the position, or the
-saved one in relative mode, and queues the record. Other messages go to the hook `0x884e6c`, which
-`0x42cfd0` sets, or to `DefWindowProcA`. `[0x884e30]`, which the client sets around its own
+saved one in relative mode, and queues the record. Other messages go to the hook `0x884e6c`, or to
+`DefWindowProcA`. `[0x884e30]`, which the client sets around its own
 `ReleaseCapture` (`0x42ddc7`), suppresses kind 0 (`0x42d47e`). The `WM_IME_NOTIFY` case for `wParam`
 6 also queues kind 8 for key 0, a Shift release (`0x42d40e`).
 
@@ -322,9 +322,10 @@ file are one object file is not settled. The initializers' globals are read only
 ## Unreached functions
 
 `0x42cc80` would set the pending size check from two words; nothing calls it or stores its
-address.
+address. `0x42cfd0` would set the hook `0x884e6c`; its two calls, at `0x42e34b` and `0x42e372`, are
+in the unreferenced `0x42e340`.
 
-Addresses: `0x42cc80`
+Addresses: `0x42cc80`, `0x42cfd0`
 Confidence: verified
 Proof: one
 Test: none

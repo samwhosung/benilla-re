@@ -8,7 +8,7 @@ to `CSimpleHyperlinkedFrame`, `0x764160` to 0x7a3a80), `ENGINE\SOURCE\FrameXML` 
 `ENGINE\SOURCE\FrameScript` (`0x701940` to `0x706430`); the Lua 5.0 core between them belongs to
 `lua`. The game side is `WoW\Source\Ui` (0x480380 to 0x509ff0), the interface files of
 `WoW\Source\UIUtil` (`ScriptEvents.cpp` to `Tooltip.cpp`, 0x515880 to 0x536ea0), the LCD files
-(from 0x728b10, ending before zlib at 0x730bc0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and
+(from 0x728f00, ending before zlib at 0x730bc0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and
 `HealthBar.cpp` (from 0x7cc320). In all, about 9,800 functions. The frame and layout core is
 documented in `frames`, `anchors`, `strata`, `visibility`, `input`, `script` and `methods`. The
 rest is not documented yet (`Not documented yet`); its rows are those other systems' findings cite.
