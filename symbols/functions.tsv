@@ -11418,7 +11418,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x707680	4732	M2SceneAnimateAndCollect		models	primitive		Animates a scene's models and sorts their batches, ribbons and particles into its draw lists	verified	one	models/scene#view-rebase	
 0x708900	172	M2SceneDraw		models	primitive		Draws one of a scene's three element lists, and the grouped list with list 0	verified	one	models/render#list-draw	
 0x7089b0	11	M2SceneEnableRayHits		models	orchestration		Sets the scene flag that enables ray hits against its models	inferred	none	models/scene#ray-hits	
-0x7089c0	4126	M2SceneRayHit		models	primitive		Finds the nearest model triangle a segment crosses among a scene's hit-testable models	inferred	none	models/scene#ray-hits	
+0x7089c0	4126	M2SceneRayHit		models	primitive	uint32_t __thiscall (M2Scene *this, const float *p0, const float *p1, float *fraction, uint32_t retry)	Finds the nearest collision or skinned triangle of the hit-test instances on a segment and returns the instance value	verified	one	models/scene#ray-hits	
 0x7099e0	1650	M2SceneSegmentCollision		models	primitive	uint32_t __thiscall (M2Scene *this, const float *p0, const float *p1, float *fraction)	Finds the nearest collision triangle of the mode 3 hit-test instances on a segment and returns that instance's value	verified	one	models/scene#segment-collision	
 0x70a060	143	M2SceneCompareHits		models	primitive		Orders two hit candidates by near distance, then far distance, then index	verified	one	models/scene#segment-collision	
 0x70a0f0	312	M2SceneAddLightsForPoint		models	primitive		Adds a scene's global lights and the grid lights around a point to a lighting record	verified	one	models/lights#scene-light-grid	

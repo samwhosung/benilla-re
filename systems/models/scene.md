@@ -280,16 +280,26 @@ digits 6 to 0. `0x70b040` returns the id unchanged unless `+0x148 & 0x18`, reads
 
 ## Ray hits
 
-`0x7089c0` finds the nearest triangle of the hit-test instances a segment crosses; segments
-shorter than 1e-5 clear the hit list.
+`0x7089c0(p0, p1, &f, retry)` finds the nearest triangle of the hit-test instances on the segment
+within `f`, writes its fraction and returns the instance's user value, else 0; short
+input returns 0 as in `Segment collision`, and every call empties the hit list. Candidates are
+that entry's spheres placed by the world matrix, which an unanimated mode 3 instance without a
+parent rebuilds; other unanimated instances are skipped. Mode 3 tests the collision triangles.
+Modes 1 and 2 skin each visible submesh of view 0 on the CPU and test its triangles, skipping
+units with flag 8, alpha 0 and, for mode 2, blends other than 0. With nothing hit and
+`retry` set, a second pass covers the whole segment.
 
-Addresses: `0x7089c0`, `0x7089b0`, `0x713cb0`
-Confidence: inferred
-Proof: none
+Addresses: `0x7089c0`, `0x708bd9`, `0x708c11`, `0x708ff2`, `0x70902f`, `0x70903b`, `0x70905d`, `0x7090c2`, `0x709229`, `0x70998d`, `0x7089b0`, `0x713cb0`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x713cb0` links an instance into the hit list at scene `+0x130`; `0x7089b0` sets `+0x12c`. The
-triangle test was not transcribed.
+`0x708bd9` compares instance `+0x40` with scene `+0x10`; `0x708c11` builds `+0xfc` from `+0xbc`
+and scene `+0x9c`. The candidate loop stops at the first near distance not below the best on the
+first pass only (`0x708fa3`). `0x70902f` tests unit flag 8, `0x70903b` mode 2's blend word,
+`0x70905d` the visibility words `+0x9c`, else `+0x98`; `0x7090c2` skips alpha 0. `0x709229` scales
+each bone weight byte by 1/255 for a weighted sum of bone matrices. `0x70998d` reruns with the
+full length when `retry` is set. The inline triangle test was not transcribed.
 
 ## Segment collision
 
