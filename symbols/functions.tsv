@@ -9154,9 +9154,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a4270	62	CMapObj::AreGroupsLoaded		models	orchestration		Returns whether a map object and all its groups are loaded	inferred	none		
 0x6a42b0	39	CMapObj::GetGroup		models	orchestration		Returns a loaded group of a map object by index	inferred	none		
 0x6a42e0	44	CMapObj::GroupHasData		models	unreached		Returns whether a group of a map object has its file data; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x6a4310	265	CMapObj::GetBoundingSphere		models	primitive		Returns the centre and radius of a map object's bounding box	inferred	none		
+0x6a4310	265	CMapObj::GetBoundingSphere		models	primitive	float * __thiscall (CMapObj *this, float *sphere)	Returns the centre and radius of a map object's box, or zero when unloaded	verified	one	models/wmo#bounding-spheres-and-volume	
 0x6a4420	132	CMapObj::GetBoundingBox		models	orchestration		Copies a map object's bounding box, or zeroes it when not loaded	inferred	none		
-0x6a44b0	250	CMapObj::GetGroupBoundingSphere		models	primitive		Returns the centre and radius of a group's bounding box	inferred	none		
+0x6a44b0	250	CMapObj::GetGroupBoundingSphere		models	primitive	float * __thiscall (CMapObj *this, float *sphere, uint32_t group)	Returns the centre and radius of a group record's box, or zero when unloaded	verified	one	models/wmo#bounding-spheres-and-volume	
 0x6a45b0	142	CMapObj::GetGroupBoundingBox		models	orchestration		Copies a group's bounding box from the group info	inferred	none		
 0x6a4640	38	CMapObj::GetGroupFlags		models	orchestration		Returns a group's flags from the group info	inferred	none		
 0x6a4670	150	CMapObj::BoxOverlaps		models	orchestration		Returns whether a box overlaps a map object's bounding box	inferred	none		
@@ -9165,7 +9165,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a47e0	73	CMapObj::QueryGroupLiquid		models	primitive		Resolves a group and forwards a liquid query to it	inferred	none		
 0x6a4830	170	CMapObj::BoxOverlapsGroup		models	orchestration		Returns whether a box overlaps a group's bounding box	inferred	none		
 0x6a48e0	166	CMapObj::GroupContainsPoint		models	unreached		Returns whether a point lies in a group's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x6a4990	100	PointInsidePlanes		models	primitive		Returns whether a point lies on the inner side of every plane of a set	inferred	none		
+0x6a4990	100	PointInsidePlanes		models	primitive	bool __thiscall (CMapObj *this, const float *point)	Returns whether a point lies inside a loaded map object's convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume	
 0x6a4a00	46	CMapObj::GetLoadedGroup		models	orchestration		Returns a group of a map object when both are loaded	inferred	none	models/wmo#queries	
 0x6a4a30	18	CMapObj::LoadGroup		models	orchestration		Starts loading a group of a map object	inferred	none	models/wmo#loading	
 0x6a4a50	49	CMapObj::WaitLoad		models	host		Waits for a map object's file read to finish	inferred	none		

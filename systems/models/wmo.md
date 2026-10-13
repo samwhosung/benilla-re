@@ -153,6 +153,25 @@ the split. `0x6bc56e` computes `f0/(f0 − f1)` with `fdivr` and the midpoint `p
 `f0 > 0` takes the positive child first. A leaf calls `0x6b88e0`, and on 0 `0x6bc700` for each of
 its `+0x6` face indices.
 
+## Bounding spheres and volume
+
+A loaded map object's bounding sphere is centred at `(min + max)·0.5` of its box, the sum rounded
+to a float before the halving, with radius `|max − centre|`; a group's comes the same way from its
+group record's box. An unloaded map object gives a zero sphere. A point is inside the map object's
+convex volume when every plane gives `n·p + d ≤ 0`, a NaN counting as inside, and with no planes
+it is inside; an unloaded map object contains nothing.
+
+Addresses: `0x6a4310`, `0x6a44b0`, `0x6a4990`, `0x6a49d7`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6a4310` adds `+0x1ac` to `+0x1a0` and so on into a stored vector, multiplies by 0.5, and takes
+`sqrt` of the squared distance from the centre to `+0x1ac`. `0x6a44b0(out, index)` reads the
+32-byte record at `+0x130`, box at `+0x4` and `+0x10`. `0x6a4990` walks `+0x194` planes of 16
+bytes at `+0x15c` (the `MCVP` chunk), computes `((ny·py + nz·pz) + nx·px) + d` and returns 0 at the
+first plane where `test ah,0x41` finds neither C0 nor C3 (`0x6a49d7`).
+
 ## Vertex buffer pools
 
 The group file also holds the vertex buffer pools the world draws terrain and map objects from:
