@@ -12636,6 +12636,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ba8f0	31	CParticleArrayRoundUp		models	unreached		Rounds a count up to a multiple of a quantum; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7ba910	209	CParticleArrayRealloc		models	unreached		Reallocates a legacy particle array to an exact capacity; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7ba9f0	171	VectorsEqualFuzzy		models	unreached		Compares two vectors component by component; nothing reaches it	inferred	none	models/overview#object-files	
+0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	
 0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	
 0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	
 0x7bd700	280	InvertRigidMatrix		cmath		void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
@@ -12644,6 +12645,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	
 0x7bdd60	75	RotateMatrix		cmath		void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
+0x7bddb0	333	RotateMatrixByQuaternion		cmath	primitive	void __thiscall (float *m, const float *q)	Multiplies a matrix on the left by the rotation matrix of a quaternion (x, y, z, w)	verified	one	models/animation#texture-transforms	
 0x7be0e0	63	Matrix3Determinant		cmath		float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
 0x7be1e0	183	Matrix3Adjugate		cmath		float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
 0x7be2a0	121	InvertMatrix3		cmath		float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3

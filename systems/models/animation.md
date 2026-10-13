@@ -196,10 +196,10 @@ The per-axis cross products were read but their row order not settled.
 
 ## Element tracks
 
-After the bones, every animated element samples with bone 0's times and blend: colours (an RGB
-track and an alpha track of 16-bit values scaled by 1/32767), transparency weights, texture frame
-words (stepped), texture transforms about the centre (0.5, 0.5, 0), light colours and
-intensities, camera positions, ribbon and particle parameters, and attachment visibility.
+After the bones, every animated element samples with bone 0's times and blend: colours (an RGB track
+and an alpha track of 16-bit values scaled by 1/32767), transparency weights, texture frame words
+(stepped), texture transforms (`Texture transforms`), light colours and intensities, camera
+positions, ribbon and particle parameters, and attachment visibility.
 
 Addresses: `0x714260`, `0x811610`, `0xcf043c`, `0x71aff0`, `0x71b010`
 Confidence: inferred
@@ -209,6 +209,63 @@ Test: none
 The 16-bit scale is the float at `0x811610`. The centre is the static at `0xcf043c`, built once
 under a guard bit. The order and the interpolation of each were read; their blend steps were not
 transcribed one by one.
+
+## Instance colours
+
+Each frame the animate pass derives the instance's draw colours from what its caller passes, a
+colour `A`, a colour `B` and an alpha `a`: the diffuse `+0x1a0 = +0x184 · A` and the emissive
+`+0x1ac = +0x190 + B` per channel, and the alpha `+0x19c = a · +0x180`, each stored as a float. A
+top-level instance gets `A` = (1, 1, 1), `B` = (0, 0, 0) and `a` = 1.0; an attached instance gets
+its parent's `+0x1a0`, `+0x1ac` and `+0x19c`, so it multiplies its own diffuse and alpha onto its
+parent's and adds its emissive to the parent's.
+
+Addresses: `0x714260`, `0x7142cc`, `0x714309`, `0x71433b`, `0x71434c`, `0x714160`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7142cc` is `fld A.x; fmul +0x184`, then `+0x188 · A.y` and `+0x18c · A.z`, stored at `+0x1a0`;
+`0x714309` adds `B` to `+0x190` to `+0x198` into `+0x1ac`; `0x71433b` multiplies the alpha argument
+by `+0x180` into `+0x19c` (`0x71434c`). `0x714000` passes the parent's three fields (`0x714160`).
+The scene passes the identities (`Animate pass`).
+
+## Global sequence time
+
+Each frame a global sequence's time is the scene clock less the clock when the instance was
+initialized, modulo the sequence's length, unsigned; a length of 0 gives 0. Tracks with a global
+sequence sample at that time (`Key lookup`).
+
+Addresses: `0x714352`, `0x714370`, `0x714375`, `0x70eae1`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x70eae1` stores scene `+0xc` at instance `+0x68` when it is initialized on a scene. `0x714360`
+walks header `+0x14` lengths at `+0x18`: `clock − +0x68` (`0x714370`), `div` by the length
+(`0x714375`), the remainder stored at `+0x64[i]`.
+
+## Texture transforms
+
+Each frame each texture transform builds its matrix from identity: when its rotation track has keys,
+translate by the centre `p` = (0.5, 0.5, 0), rotate by the sampled quaternion, translate by `−p`;
+then the same with the sampled scale; then translate by the sampled translation. Each step
+multiplies on the left, so for the row vector `(u, v, 0, 1)` the result is `((uv + t − p) ⊙ s)·Q +
+p`, `Q` the quaternion's matrix with rows `(1 − 2(y² + z²), 2xy + 2zw, 2xz − 2yw)`, `(2xy − 2zw, 1 −
+2(x² + z²), 2yz + 2xw)` and `(2xz + 2yw, 2yz − 2xw, 1 − 2(x² + y²))`. The tracks sample at bone 0's
+time.
+
+Addresses: `0x715f45`, `0x715fdb`, `0x716005`, `0x716010`, `0x716048`, `0x716052`, `0x7161e0`, `0x716216`, `0x716384`, `0xcf043c`, `0x7bdc40`, `0x7bdca0`, `0x7bddb0`, `0x7bc6a0`
+Confidence: verified
+Proof: one
+Test: none
+
+The centre is built once under bit 1 of `0xcf04c4` (`0x715f45`). The gates are the time counts of
+the tracks at transform `+0x1c`, `+0x38` and `+0x0` (`0x715fdb`, `0x716052`, `0x716216`). `0x7bdc40`
+adds `v·rows 0–2` to row 3 (`T(v)·M`), `0x7bdca0` scales rows 0 to 2 (`S·M`), and `0x7bddb0` builds
+`Q` with `w = q[3]` and writes `0x7bc6a0(out, Q, M)`, which forms `out[r][c] = Σk Q[r][k]·M[k][c]`.
+Interpolation word 0 copies the key's value (`0x71608d`); otherwise the scale and translation lerp,
+and blend toward the blend slot when bone 0's weight is nonzero and the track has no global
+sequence. The state is `+0xb0[i]` (0x98 bytes), the matrix `+0xb4[i]`.
 
 ## Ensure animated
 
@@ -226,20 +283,29 @@ m00·x) + m30` per column. Without a resolved attachment the parent's world matr
 
 ## Update and events
 
-`Update(dt)` adds `dt` to the instance's pending time and walks the key bones that play. For each,
-it queues the done callback once when the primary sequence reaches its end stamp, and queues the
-event callback for each event key the elapsed interval crosses, forward or backward with the
-looping sequence, with the event's position and the key's time scaled by the speed.
+`Update(dt)` adds `dt` to the pending time and, with a done or event callback set, walks the key
+bones that play. A bone's window runs from `max(start stamp, now − dt)` to `min(now, end stamp)`, or
+to `now` for a looping sequence; reaching the end stamp queues the done callback once. In
+sequence-local times, at most one length apart, it walks the event's keys from `start + (local mod
+length)`, wrapping at the range end, and queues the event callback for each key with `local start ≤
+key < local end`, or the reverse when playing backwards. An event belongs to the first bone up its
+parent chain with a sequence. Attached children with a resolved, visible attachment update too.
 
-Addresses: `0x719370`, `0x70a280`, `0x70a400`, `0x714000`
+Addresses: `0x719370`, `0x7193eb`, `0x719467`, `0x719484`, `0x7194bc`, `0x719503`, `0x71958c`, `0x7195fa`, `0x71965f`, `0x719685`, `0x7196a6`, `0x7196d9`, `0x719781`, `0x719909`, `0x70a280`, `0x70a400`, `0x714000`
 Confidence: verified
 Proof: one
 Test: none
 
-A not-yet-loaded instance defers the call as kind 9. The pending time is `+0x88`. The done
-callback is `+0x70` with arguments `+0x78`, `+0x7c`, latched by bone `+0xc0`; the event callback is
-`+0x1f4`. Event records give the per-sequence key range at `+0x20` and the times at `+0x28`; the
-position is the event offset transformed by its bone and the scene. Children update recursively.
+A not-yet-loaded instance defers the call as kind 9; the pending time is `+0x88`. `0x7193eb` needs
+`+0x1f4` or `+0x70`. The comparisons are unsigned (`0x719467`, `0x719484`); sequence flag 1 keeps
+the end clamp (`0x719503`). The done callback `+0x70` (arguments `+0x78`, `+0x7c`) is latched by
+bone `+0xc0` and skipped for a bone other than 0 whose key bone id is −1 (`0x7194bc`). Local time is
+`ftol((t − start stamp)·speed) + offset`; `0x71958c` clamps the span to the sequence length. Events
+are 0x2c-byte header records `+0x118`, ranges at `+0x20`, times at `+0x28`; `0x7195fa` walks the
+event bone `+0x8` up past bones without a sequence. The cursor is `div` (`0x71965f`), the first key
+is the first with `cursor ≤ time` (`0x719685`), `0x7196a6` wraps, and `0x7196d9` stops at the span.
+The callback gets the event's id `+0x0`, its data `+0x4`, its offset `+0xc` through its bone and the
+scene, and `ftol(|1/speed|·(local end − key))`. `0x719909` reads attachment state byte `+0xc`.
 
 ## Pushing animated state
 
