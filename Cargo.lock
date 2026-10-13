@@ -62,6 +62,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-random"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-screencoord"
 version = "0.1.0"
 dependencies = [

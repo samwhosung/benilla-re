@@ -562,7 +562,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44cbd0	44	SysMsgPrintf	idb	sysmsg			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
 0x44cd40	15			sysmsg			Stores 0 in a global and tail-calls 0x44cd60	inferred	none		
 0x44cd60	1			sysmsg			Returns at once	inferred	none		
-0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	two	random#state-and-seeding	
+0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	test	random#state-and-seeding	random::srand_seed_state_init
 0x44eae0	5	InitRandomInfinityThunk		random	orchestration	void __cdecl (void)	Jumps to 0x44eaf0; a static initializer	verified	one	random#static-initializers	
 0x44eaf0	11	InitRandomInfinity		random	orchestration	void __cdecl (void)	Copies +inf into 0xb05d68	verified	one	random#static-initializers	
 0x44eb00	27	RandomSeedFromString		random	unreached	void __thiscall (NTempest::CRndSeed *this, const char *text)	Seeds a state with the hash of a C string (0x44eb20, then 0x44ea80)	inferred	none	random#unreached-functions	
@@ -591,8 +591,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44fc60	39	RandomFillGaussianDouble		random	unreached	void __fastcall (double *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fa70 once per element	inferred	none	random#unreached-functions	
 0x44fc90	47	RandomFillGaussianScaledFloat		random	unreached	void __fastcall (float *out, uint32_t count, float mean, float sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb30 once per element	inferred	none	random#unreached-functions	
 0x44fcc0	55	RandomFillGaussianScaledDouble		random	unreached	void __fastcall (double *out, uint32_t count, double mean, double sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb50 once per element	inferred	none	random#unreached-functions	
-0x44fd00	284	RandomUnitVector2		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (cos a, sin a), a = 2π·u from one inlined advance	verified	one	random#unit-vectors	
-0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	one	random#unit-vectors	
+0x44fd00	284	RandomUnitVector2		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (cos a, sin a), a = 2π·u from one inlined advance	verified	one	random#unit-vectors	random::rand_44fd00_gradient
+0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	test	random#unit-vectors	random::rand_unit_vector_3d_diff
 0x450050	55	RandomFillUnitVector2		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 2D vectors from 0x44fd00	inferred	none	random#unreached-functions	
 0x450090	63	RandomFillUnitVector3		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 3D vectors from 0x44fe20	inferred	none	random#unreached-functions	
 0x4500d0	25	RandomShuffleString		random	unreached	void __fastcall (char *text, NTempest::CRndSeed *seed)	Shuffles the bytes of a C string with 0x450100	inferred	none	random#unreached-functions	
@@ -626,7 +626,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531a0	15	InitRandomTwoPi		random	primitive	void __cdecl (void)	Stores π + π as a float in 0xb05d70	verified	one	random#static-initializers	
 0x4531b0	5	InitRandomInvTwoPiThunk		random	orchestration	void __cdecl (void)	Jumps to 0x4531c0; a static initializer	verified	one	random#static-initializers	
 0x4531c0	19	InitRandomInvTwoPi		random	primitive	void __cdecl (void)	Stores 1 / [0xb05d70] as a float in 0xb05d6c	verified	one	random#static-initializers	
-0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	
+0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	test	random#state-advance	random::crandom_uint32_advance
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
@@ -11743,7 +11743,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x7400d8	13	_srand	idb	crt	orchestration	void __cdecl (unsigned int seed)	Stores the per-thread seed rand steps	verified	one	random#the-c-runtime-rand	
-0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	
+0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	random::msvc_rand_lcg_difftest
 0x7405a0	20	__CIasin	idb	crt			Computes asin(st0)	inferred	none	collision/kinematics#spline-follower	
 0x741760	20	__CIsqrt	idb	crt	boundary		Returns the square root of st0	inferred	none		
 0x741820	20	__CIacos	idb	crt			Computes acos(st0)	inferred	none	collision/kinematics#spline-follower	
