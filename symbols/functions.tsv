@@ -12202,7 +12202,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
 0x7abbc0	5	InitCameraPropertyInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7abbd0; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7abbd0	11	InitCameraPropertyInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf572c, which nothing reads	verified	one	camera#object-files-and-initializers	
-0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	
+0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	test	camera#angle-properties	camera::camera_normalize_2pi
 0x7abc20	48	RegisterProperty		camera	orchestration	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags, uint8_t type)	Stores a property's type and flags, puts it in slot id, and on flag 0x01 adds it to the update list	verified	one	camera#property-updates	
 0x7abc50	26	RegisterPropertyType1		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 1	inferred	none	camera#unreached-functions	
 0x7abc70	26	RegisterPropertyType2		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 2	inferred	none	camera#unreached-functions	
@@ -12237,14 +12237,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ac550	26	AttachScalarProducer		camera	unreached	void __fastcall (void *object, uint32_t id, void *callback, void *context, float key)	Calls 0x7ac410 with type 6	inferred	none	camera#unreached-functions	
 0x7ac570	41	GetNextLink		camera	orchestration	void * __thiscall (void *link, int32_t link_offset)	Returns the link a node's link points at, or the list head marked by its low bit	verified	one	camera#lifetime	
 0x7ac5a0	5	InitCameraTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5b0; a static initializer	verified	one	camera#object-files-and-initializers	
-0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	one	camera#object-files-and-initializers	
+0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	test	camera#object-files-and-initializers	camera::camera_normalize_2pi
 0x7ac5c0	5	InitCameraInvTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5d0; a static initializer	verified	one	camera#object-files-and-initializers	
-0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	one	camera#object-files-and-initializers	
+0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	test	camera#object-files-and-initializers	camera::camera_normalize_2pi
 0x7ac5f0	5	InitCameraInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac600; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7ac600	11	InitCameraInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf573c, which nothing reads	verified	one	camera#object-files-and-initializers	
 0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7ac620	19	InitDefaultFov		camera	primitive	void __cdecl (void)	Stores π·0.5 as a float in 0xcf5738, the default field of view	verified	one	camera#object-files-and-initializers	
-0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	
+0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	camera::camera_view_lookat
 0x7ac810	140	CCamera::ComputeEye		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes target - distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
 0x7ac8a0	134	CCamera::ComputeTarget		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes eye + distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
 0x7ac930	472	CameraCreate		camera	orchestration	void * __cdecl (void)	Allocates a camera with default properties and returns its handle	verified	one	camera#lifetime	
@@ -12253,7 +12253,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7acb40	3	CBaseManaged::Verify		camera	orchestration	void __thiscall (CBaseManaged *this, uint32_t arg)	Returns; slot 2 of the base property vtable	verified	one	camera#property-updates	
 0x7acb50	102	CBaseManaged::DeletingDestructor		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks a base property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7acbc0	117	InitAngleProperty		camera	primitive	CBaseManaged * __thiscall (CBaseManaged *this, float angle)	Builds an angle property: stores the reduced angle and caches its cosine and sine	verified	two	camera#angle-properties	
-0x7acc40	87	StoreAngleProperty		camera	primitive	void __thiscall (CBaseManaged *this, const float *angle)	Stores the reduced angle when it changes and recomputes its cosine and sine; slot 3 of an angle	verified	one	camera#angle-properties	
+0x7acc40	87	StoreAngleProperty		camera	primitive	void __thiscall (CBaseManaged *this, const float *angle)	Stores the reduced angle when it changes and recomputes its cosine and sine; slot 3 of an angle	verified	one	camera#angle-properties	camera::camera_angle_cossin
 0x7acca0	102	DeleteAngleProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks an angle property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7acd10	109	DeletePropertySet		camera	orchestration	void * __thiscall (void *object, uint32_t flags)	Unlinks every property, frees the slot array, and frees the object when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7acd80	175	CCamera::DeletingDestructor		camera	orchestration	CCamera * __thiscall (CCamera *this, uint32_t flags)	Tears down the nine properties and the base, and frees the camera when bit 0 of flags is set	verified	one	camera#lifetime	
@@ -12262,8 +12262,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7acf10	672	CameraClone		camera	orchestration	void * __fastcall (const CCamera *source)	Allocates a camera, copies each property value from source through its slot 3, returns the handle	verified	one	camera#lifetime	
 0x7ad1b0	25	CBaseManaged::SetProducer		camera	orchestration	void __thiscall (CBaseManaged *this, void *callback, void *context, float key)	Stores a property's producer callback, its context and its ordering key	verified	one	camera#property-updates	
 0x7ad1d0	233	InitPropertySet		camera	orchestration	void * __thiscall (void *object, uint32_t slots)	Builds the camera base: empty update list, link offset 4, a slot array of the given size	verified	one	camera#lifetime	
-0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	one	camera#unprojection	
-0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	one	camera#orthographic-setup	
+0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	test	camera#unprojection	camera::camera_frustum_split
+0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	test	camera#orthographic-setup	camera::camera_ortho
 0x7ada40	32	CameraSetDeviceTransforms		camera	orchestration	void __fastcall (CCamera *camera, const float *rect, uint32_t unused)	Calls 0x7ac640, or raises error 0x57 for a null camera	verified	one	camera#view-and-projection	
 0x7ada60	31	CameraUpdateProperties		camera	unreached	void __fastcall (CCamera *camera, uint32_t arg)	Calls 0x7abdf0, or raises error 0x57 for a null camera	inferred	none	camera#unreached-functions	
 0x7ada80	52	InitScalarProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, const float *value)	Builds a scalar property holding a copy of value	verified	one	camera#lifetime	
@@ -12287,7 +12287,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7adf70	25	GetNodeLink		camera	orchestration	void * __thiscall (void *list, void *node)	Returns a node's link (the node plus the list's link offset), or the head for a null node	verified	one	camera#lifetime	
 0x7adf90	5	InitParticleRegistryInfinityThunk		models	orchestration	void __cdecl (void)	Jumps to 0x7adfa0; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7adfa0	11	InitParticleRegistryInfinity		models	orchestration	void __cdecl (void)	Copies +inf into 0xcf5748, which nothing reads	verified	one	camera#object-files-and-initializers	
-0x7adfb0	75	SetParticleDensity		models	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	
+0x7adfb0	75	SetParticleDensity		models	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	test	camera#particle-density	camera::camera_clamp01
 0x7ae000	7	GetParticleDensity		models	orchestration	float __cdecl (void)	Returns 0x87d5fc	verified	one	camera#particle-density	
 0x7ae010	382	ParticleRegistryGet		models	primitive		Returns the particle emitter registry, creating it and the 128-entry noise table on first use	verified	one	models/cache#noise-table	
 0x7ae190	58	ParticleRegistryDestroy		models	host		Releases the particle buffers, then destroys and frees the particle emitter registry	verified	one	models/cache#scene-creation-and-teardown	
