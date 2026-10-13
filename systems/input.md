@@ -67,7 +67,7 @@ the screen aspect: 8.0 is 10 raw units of x or 13.33 of y at 4:3, and 9.18 or 16
 Addresses: `0x514ae0`, `0x514b70`, `0x514840`, `0x514400`, `0x808b5c`, `0x41ad10`, `0x41ad80`, `0x766f70`
 Confidence: verified
 Proof: two
-Test: none
+Test: `screencoord::sc_41ad10_set_scale`, `screencoord::sc_41ad80_scale_xy`
 
 `0x514aeb` `lea eax,[edx−0x320]`, `jl`: 800. `0x514b01`/`0x514b11` `fcomp [0x808b5c]` (8.0),
 `test ah,1`, `je`: at least 8.0, NaN under. `0x514b24` adds −200, `setge`. The release handler

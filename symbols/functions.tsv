@@ -52,12 +52,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419ac0	136	CDataStore::GetDataInSitu		base			Returns a pointer to the next n bytes in the store and advances the cursor past them	verified	one	objectlayer/movement#skipping-a-movement-block	
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
 0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status	inferred	none		
-0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1), K1 = a·K2	verified	one	input#click-versus-drag	
+0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1), K1 = a·K2	verified	test	input#click-versus-drag	screencoord::sc_41ad10_set_scale
 0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	inferred	none		
-0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	input#click-versus-drag	
-0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	inferred	none		
-0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	inferred	none		
-0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		
+0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	test	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
+0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	inferred	none		screencoord::sc_41ae40_unscale_x
+0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	inferred	none		screencoord::sc_41ae60_scale_x
+0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		screencoord::sc_41ae70_scale_y
 0x41aed0	19	HandleClose	idb	base			Closes a handle	inferred	none	spell/visuals#chain-lifetime	
 0x41af10	20	CreateHandle		base			Returns a handle for an object, or 0 with error 0x57 for a null object	inferred	none	camera#lifetime	
 0x41af70	8	CompareHandles		base			Returns the difference of two handles shifted right by 2	inferred	none	models/scene#element-sort-orders	

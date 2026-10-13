@@ -41,6 +41,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-screencoord"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-sysmsg"
 version = "0.1.0"
 dependencies = [
