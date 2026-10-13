@@ -173,8 +173,34 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x61d76c	void *[6]	s_switch61d76c		objectlayer	Holds the 6 case addresses of the switch in 0x61d720	verified	one	objectlayer/overview#indexed-switch-tables
 0x61d784	uint8_t[11]	s_switchIndex61d784		objectlayer	Maps the switch value of 0x61d720 to its case in 0x61d76c	verified	one	objectlayer/overview#indexed-switch-tables
 0x622794	void *[67]	s_switch622794		objectlayer	Holds the 67 case addresses of the switch in 0x622630	verified	one	objectlayer/overview#switch-tables
+0x623064	void *[13]	s_switch623064		objectlayer	Holds the 13 case addresses of the switch in 0x623020	verified	one	objectlayer/overview#sound-and-log-switch-tables
 0x623afc	void *[5]	s_switch623afc		objectlayer	Holds the 5 case addresses of the switch in 0x623a40	verified	one	objectlayer/overview#switch-tables
+0x623b58	void *[3]	s_switch623b58		objectlayer	Holds the 3 case addresses of the switch in 0x623b10	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x623b64	uint8_t[10]	s_switchIndex623b64		objectlayer	Maps the switch value of 0x623b10 to its case in 0x623b58	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x624794	void *[6]	s_switch624794		objectlayer	Holds the 6 case addresses of the switch in 0x6246a0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x6247ac	uint8_t[21]	s_switchIndex6247ac		objectlayer	Maps the switch value of 0x6246a0 to its case in 0x624794	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x625aec	void *[8]	s_switch625aec		objectlayer	Holds the 8 case addresses of the switch in 0x6255b0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x625b0c	uint8_t[186]	s_switchIndex625b0c		objectlayer	Maps the switch value of 0x6255b0 to its case in 0x625aec	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x626c64	void *[10]	s_switch626c64		objectlayer	Holds the 10 case addresses of the switch in 0x626be0	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x626c8c	void *[3]	s_switch626c8c		objectlayer	Holds the 3 case addresses of the switch in 0x626be0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x626c98	uint8_t[10]	s_switchIndex626c98		objectlayer	Maps the switch value of 0x626be0 to its case in 0x626c8c	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x6271d0	void *[5]	s_switch6271d0		objectlayer	Holds the 5 case addresses of the switch in 0x626dd0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x6271e4	uint8_t[87]	s_switchIndex6271e4		objectlayer	Maps the switch value of 0x626dd0 to its case in 0x6271d0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x6274d0	void *[10]	s_switch6274d0		objectlayer	Holds the 10 case addresses of the switch in 0x6274a0	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x6278a4	void *[10]	s_switch6278a4		objectlayer	Holds the 10 case addresses of the switch in 0x627820	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x6278cc	void *[3]	s_switch6278cc		objectlayer	Holds the 3 case addresses of the switch in 0x627820	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x6278d8	uint8_t[10]	s_switchIndex6278d8		objectlayer	Maps the switch value of 0x627820 to its case in 0x6278cc	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x627db0	void *[10]	s_switch627db0		objectlayer	Holds the 10 case addresses of the switch in 0x627d80	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x62959c	void *[4]	s_switch62959c		objectlayer	Holds the 4 case addresses of the switch in 0x6294b0	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x62a154	void *[10]	s_switch62a154		objectlayer	Holds the 10 case addresses of the switch in 0x62a0d0	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x62a17c	void *[3]	s_switch62a17c		objectlayer	Holds the 3 case addresses of the switch in 0x62a0d0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x62a188	uint8_t[10]	s_switchIndex62a188		objectlayer	Maps the switch value of 0x62a0d0 to its case in 0x62a17c	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x62a364	void *[10]	s_switch62a364		objectlayer	Holds the 10 case addresses of the switch in 0x62a2e0	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x62a38c	void *[3]	s_switch62a38c		objectlayer	Holds the 3 case addresses of the switch in 0x62a2e0	verified	one	objectlayer/overview#sound-and-log-indexed-switches
+0x62a398	uint8_t[10]	s_switchIndex62a398		objectlayer	Maps the switch value of 0x62a2e0 to its case in 0x62a38c	verified	one	objectlayer/overview#sound-and-log-indexed-switches
 0x62a8ec	void *[7]	s_switch62a8ec		objectlayer	Holds the 7 case addresses of the switch in 0x62a710	verified	one	objectlayer/overview#switch-tables
+0x62a908	void *[7]	s_switch62a908		objectlayer	Holds the 7 case addresses of the switch in 0x62a710	verified	one	objectlayer/overview#sound-and-log-switch-tables
+0x62b7f0	void *[4]	s_switch62b7f0		objectlayer	Holds the 4 case addresses of the switch in 0x62b7d0	verified	one	objectlayer/overview#sound-and-log-switch-tables
 0x62bde8	void *[10]	s_spellMissLogJumpTable		objectlayer	Holds the 10 case addresses of the switch in 0x62bab0	verified	one	objectlayer/overview#switch-tables
 0x62be10	void *[10]	s_spellMissLogJumpTable2		objectlayer	Holds the 10 case addresses of the switch in 0x62bab0	verified	one	objectlayer/overview#switch-tables
 0x62c318	void *[2]	s_switch62c318		objectlayer	Holds the 2 case addresses of the switch in 0x62c2d0	verified	one	objectlayer/overview#indexed-switch-tables
@@ -336,7 +362,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804588	float	s_rangeStopFraction		objectlayer	Holds 0.9, the fraction of a range at which a mode 7 or 9 auto-move stops	verified	one	objectlayer/unitmovement#auto-move-modes
 0x804594	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
 0x8046d8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x804710	const uint32_t			ui	Holds a dword that CGChat::InitializeGame, Script::ResetChatColors read; not read here	inferred	none	
+0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
 0x805fb0	const uint32_t			ui	Holds a dword that Script::GetChatWindowMessages, Script::AddChatWindowMessages read; not read here	inferred	none	
 0x806458	const uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
@@ -411,6 +437,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
+0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
 0x80928c	int32_t[8]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, −42000 to 42000	verified	one	objectlayer/playercombat#using-an-item
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
@@ -502,10 +529,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c73c	float	s_collisionRadiusCap		collision	Holds 0.54071623 (0x3f0a6c61), the cap on half width over scale in 0x617460	verified	one	collision/mover#collision-size
 0x80c740	float	s_collisionRadiusCapInverse		collision	Holds 1.8493990 (0x3fecb91b), the reciprocal of 0x80c73c	verified	one	collision/mover#collision-size
 0x80c744	const float	s_float3a4a4588		unassigned	Holds the float 0.00077160494 (0x3a4a4588)	inferred	none	
+0x80c968	int32_t[14]	s_hardcodedEffectAttachments		objectlayer	Holds the attachment each hard-coded effect hangs at, 37 for none	verified	one	objectlayer/effects#hard-coded-effects
 0x80c9a8	const float	s_floatbf000000		objectlayer	Holds the float -0.5 (0xbf000000)	inferred	none	
 0x80c9fc	uint8_t[1392]	s_gameObjectDataNames		objectlayer	Holds 87 semantic data ids of 16 bytes: name, kind, boolean flag, next id	verified	one	objectlayer/gameobjects#the-game-object-record
 0x80d79c	uint8_t[620]	s_gameObjectTypeInfo		objectlayer	Holds 31 game object types of 20 bytes: name, column count, column ids, a second array, id + 1	verified	one	objectlayer/gameobjects#the-game-object-record
-0x80db94	const uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
+0x80db94	uint32_t[4]	s_armourImpactKinds		objectlayer	Maps a sound data armour value to the impact armour kind	verified	one	objectlayer/sounds#weapon-and-armour-sounds
 0x80dcac	const uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
 0x80dcc4	const float	s_float47c35000		objectlayer	Holds the float 100000 (0x47c35000)	inferred	none	
 0x80dfe0	float	s_volumeBevelNormalZ		collision	Holds 0.4756366 (0x3ef386a4), cos 61.6°, the vertical part of the volume bevel normals	verified	one	collision/contact#volume-planes
@@ -1258,20 +1286,22 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8613fc	char[26]	s_invalidMoverText		collision	Holds "Mover at invalid position", the console line a NaN position prints	verified	one	collision/mover#local-player-step
 0x861418	char[62]	s_movementSourcePath		collision	Holds the source path of Movement.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
 0x861790	char[31]	s_textSpellsResistImmuneEffectM2		objectlayer	Holds the string "Spells\Resist_Immune_Effect.M2"	inferred	none	
-0x8617b8	uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
+0x8617b8	const char *[14]	s_hardcodedEffectNames		objectlayer	Holds the names of the 14 hard-coded effects	verified	one	objectlayer/effects#hard-coded-effects
 0x861808	char[29]	s_textHARDCODEDMeetingStoneJoin		unassigned	Holds the string "HARDCODED Meeting Stone Join"	inferred	none	
 0x8618e0	char[24]	s_textHARDCODEDUnitLevelUp		unassigned	Holds the string "HARDCODED Unit Level Up"	inferred	none	
 0x8621e4	char[5]	s_textAttribute		ui	Holds text, the XML attribute name	verified	one	ui/xmltypes#the-text-attribute
 0x862234	char[5]	s_textTrue		ui	Holds the string "true"	inferred	none	
-0x8626d4	uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
-0x862708	float			objectlayer	Holds the first float of a table its object file's code reads; not read here	inferred	none	
+0x8626d4	uint32_t[13]	s_unitVocalChance		objectlayer	Holds per vocal kind the highest roll out of 101 that lets a unit's vocal play	verified	one	objectlayer/sounds#vocal-sounds
+0x862708	float[37]	s_attachmentHeights		objectlayer	Holds the height above a unit used for each attachment its model lacks	verified	one	objectlayer/sounds#creature-reactions
 0x8627bc	char[25]	s_textSpiritWolfDONOTRENAME		objectlayer	Holds the string "SpiritWolf (DONOTRENAME)"	inferred	none	
 0x8628f4	float			objectlayer	Holds a float its object file's code reads; not read here	inferred	none	
-0x8628f8	uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
-0x8629e0	uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
+0x8628f8	uint32_t[10]	s_meleeOutcomeLogged		objectlayer	Marks the victim states a melee swing writes a line for without damage	verified	one	objectlayer/combatlogmessages#melee-lines
+0x862920	const char *[47]	s_combatTextTypeNames		objectlayer	Holds the type names COMBAT_TEXT_UPDATE carries, INTERRUPT to HONOR_GAINED	verified	one	objectlayer/combatlog#combat-text
+0x8629e0	const char *[20]	s_combatLogRangeCVars		objectlayer	Holds each relation class's range CVar name and default	verified	one	objectlayer/combatlog#range
 0x862e14	char[3]	s_text60		objectlayer	Holds the string "60"	inferred	none	
-0x86424c	uint32_t			objectlayer	Holds a dword its object file's code reads; not read here	inferred	none	
+0x86424c	uint32_t[13]	s_playerVocalChance		objectlayer	Holds per vocal kind the highest roll out of 101 that lets a player's vocal play	verified	one	objectlayer/sounds#vocal-sounds
 0x8642e8	char[64]	s_movementCSourcePath		collision	Holds the source path of Movement_C.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
+0x864330	const char *[6]	s_exhaustionXpKeys		objectlayer	Holds the XP line key of each rest state	verified	one	objectlayer/combatlogmessages#experience
 0x8645e0	uint32_t			console	Holds a dword its object file's code reads; not read here	inferred	none	
 0x864644	char[3]	s_text16		unassigned	Holds the string "16"	inferred	none	
 0x864a48	char[7]	s_globalNameKind		unassigned	Holds global	verified	one	ui/luastate#function-names-from-globals
@@ -2214,7 +2244,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4daa4	uint32_t	s_targetFlashRising		objectlayer	Holds the sweep direction 0x607ed0 flips every 500 ms; nonzero sweeps the green byte up	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4db88	uint32_t[3]	s_movementStaticList		collision	Holds the free list of move-event nodes, an intrusive list with link offset 0	verified	one	collision/overview#movementcpp-initializers
 0xc4dc38	uint32_t			objectlayer	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc4e0e4	uint32_t			objectlayer	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc4de28	CMissile *	s_flyingMissiles		objectlayer	Heads the list of missiles in flight	verified	one	objectlayer/missiles#the-missile-object
+0xc4de2c	CMissile *	s_impactMissiles		objectlayer	Heads the list of missiles turned impact models	verified	one	objectlayer/missiles#the-missile-object
+0xc4de30	void *	s_missilePool		objectlayer	Points at the missile pool record: its heap and a byte that skips construction	verified	one	objectlayer/missiles#the-missile-object
+0xc4dec8	CEffect *	s_timedEffects		objectlayer	Heads an effect list that each frame releases past its time and that nothing fills	verified	one	objectlayer/effects#stopping-and-draining
+0xc4dee4	CEffect *	s_dyingEffects		objectlayer	Heads the list of stopped effects waiting for their particles to die	verified	one	objectlayer/effects#the-effect-object
+0xc4df30	uint32_t[14]	s_hardcodedEffectIds		objectlayer	Holds the SpellVisualEffectName row ids of the 14 hard-coded effects	verified	one	objectlayer/effects#hard-coded-effects
+0xc4e0c8	uint32_t	s_spiritWolfSound		objectlayer	Holds the SoundEntries row id of SpiritWolf (DONOTRENAME)	verified	one	objectlayer/sounds#start-up-and-shutdown
+0xc4e0e4	uint32_t	s_alertSoundTime		objectlayer	Holds the time the last alert vocal played, for its 10-second limit	verified	one	objectlayer/sounds#start-up-and-shutdown
+0xc4e0f4	uint32_t[15]	s_deathThudSounds		objectlayer	Holds five arrays of count, capacity and data: per size class, death thud sound pairs by terrain type	verified	one	objectlayer/sounds#start-up-and-shutdown
+0xc4e140	void *	s_footstepSoundsCVar		objectlayer	Holds the FootstepSounds CVar	verified	one	objectlayer/sounds#start-up-and-shutdown
 0xc4e208	uint32_t			objectlayer	Holds a dword that InitCombatLogClear1 reads and writes; not read here	inferred	none	
 0xc4e4b4	uint32_t[3]	s_movementCStaticList		collision	Holds an intrusive list head with link offset 0x208, empty at start-up	verified	one	collision/overview#movement_ccpp-initializers
 0xc4e52c	uint32_t[8]	s_facetList		collision	Holds the solid facet list: count +0x04, 52-byte facets at +0x08, their 64-bit ids at +0x18	verified	one	collision/overview#resolution-file-initializers

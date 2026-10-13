@@ -21159,31 +21159,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61cba0	19	InitMissileSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61cbc0	5	InitMissileSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61cbd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61cbd0	19	InitMissileSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61cbf0	69			objectlayer	orchestration		Runs Missile_C.cpp code that calls ObjectAllocAddHeap, SMemAlloc; not read here	inferred	none		
-0x61cc40	35			objectlayer	orchestration		Runs Missile_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x61cc70	82			objectlayer	orchestration		Runs Missile_C.cpp code that calls ObjectAllocNew; not read here	inferred	none		
-0x61ccd0	30			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61ccf0	116			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61cd70	130			objectlayer	orchestration		Runs Missile_C.cpp code that calls SMemFree, ReleaseWorldObject, HandleClose2; not read here	inferred	none		
-0x61ce00	61			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61ce40	16			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61ce50	49			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
+0x61cbf0	69	CreateMissilePool		objectlayer	orchestration	void __cdecl (void)	Allocates the missile pool record and its 0x90-byte object heap	verified	one	objectlayer/missiles#the-missile-object	
+0x61cc40	35	DestroyMissilePool		objectlayer	orchestration		Frees the missile pool record	verified	one	objectlayer/missiles#the-missile-object	
+0x61cc70	82	NewMissile		objectlayer	orchestration		Takes a missile block from the pool and constructs it unless the pool skips construction	verified	one	objectlayer/missiles#the-missile-object	
+0x61ccd0	30	FreeMissile		objectlayer	orchestration		Destroys a missile and returns its block to the pool	verified	one	objectlayer/missiles#the-missile-object	
+0x61ccf0	116	CMissile::CMissile		objectlayer	orchestration		Zeroes a missile but +0x04 and +0x4c and sets its attachment to -1	verified	one	objectlayer/missiles#the-missile-object	
+0x61cd70	130	CMissile::~CMissile		objectlayer	orchestration		Closes a missile's model, world object, link, sound and arrays	verified	one	objectlayer/missiles#the-missile-object	
+0x61ce00	61	CMissile::OnFrame		objectlayer	orchestration		Advances a missile by the frame time and fades a missed or deflected one	verified	one	objectlayer/missiles#flight-each-frame	
+0x61ce40	16	CMissile::LinkFromStack		objectlayer	orchestration		Passes its stack argument to the missile link 0x61ce50	verified	one	objectlayer/missiles#the-missile-object	
+0x61ce50	49	CMissile::Link		objectlayer	orchestration		Unlinks a missile and pushes it at the head of a list	verified	one	objectlayer/missiles#the-missile-object	
 0x61ce90	5	InitMissileCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61cea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61cea0	11	InitMissileCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x61ceb0	819			objectlayer	primitive		Runs Missile_C.cpp code that calls SplatVector3, __ftol, OsGetAsyncTimeMs; not read here	inferred	none		
-0x61d1f0	57			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61d230	1255			objectlayer	primitive		Runs Missile_C.cpp code that calls NTempest::CRandom::uint32, SetVector3, Vector3LengthSquared; not read here	inferred	none		
-0x61d720	74			objectlayer	primitive		Runs Missile_C.cpp code not read here	inferred	none		
-0x61d790	222			objectlayer	primitive		Runs Missile_C.cpp code that calls ModelSetAlpha; not read here	inferred	none		
-0x61d870	936			objectlayer	primitive		Runs Missile_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, PlayUnitSpellVisualKit; not read here	inferred	none		
-0x61dc20	37			objectlayer	primitive		Runs Missile_C.cpp code not read here	inferred	none		
-0x61dc50	245			objectlayer	orchestration		Runs Missile_C.cpp code that calls PlayUnitSpellVisualKit; not read here	inferred	none		
-0x61dd50	1149			objectlayer	primitive		Runs Missile_C.cpp code that calls NTempest::CRandom::uint32, CreateModelFromPath, HandleClose2; not read here	inferred	none		
-0x61e1d0	197			objectlayer	orchestration		Runs Missile_C.cpp code that calls GetSpellVisualRecord, ModelSetWorldTransform; not read here	inferred	none		
-0x61e2a0	1300			objectlayer	primitive		Runs Missile_C.cpp code that calls SplatVector3, OsGetAsyncTimeMs, SetVector3; not read here	inferred	none		
-0x61e7c0	293			objectlayer	primitive		Runs Missile_C.cpp code that calls OsGetAsyncTimeMs, ReleaseWorldObject, ModelSetWorldTransform; not read here	inferred	none		
-0x61e8f0	64			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
-0x61e930	53			objectlayer	orchestration		Runs Missile_C.cpp code not read here	inferred	none		
+0x61ceb0	819	CMissile::Launch		objectlayer	primitive		Launches a missile from a point: outcome flags, aim, speed fit, target reaction and flight animation	verified	one	objectlayer/missiles#launch-and-flight-time	
+0x61d1f0	57	CMissile::Unlink		objectlayer	orchestration		Unlinks a missile from its list	verified	one	objectlayer/missiles#the-missile-object	
+0x61d230	1255	CMissile::Aim		objectlayer	primitive		Sets a missile's destination: the target point, a missed point past it, or the lead on a moving unit	verified	one	objectlayer/missiles#aiming-and-leading	
+0x61d720	74	CMissile::SetOutcomeFlags		objectlayer	primitive		Sets a missile's outcome flags from its outcome code	verified	one	objectlayer/missiles#outcome-flags	
+0x61d790	222	CMissile::FadeOut		objectlayer	primitive		Fades a missed or deflected missile by a smoothstep of its distance to its destination	verified	one	objectlayer/missiles#fading-out	
+0x61d870	936	CMissile::ArriveWithoutTarget		objectlayer	primitive		Plays a missile's impact on each target GUID and turns it into an impact model	verified	one	objectlayer/missiles#arrival-without-a-target	
+0x61dc20	37	UnitHasAura		objectlayer	primitive	bool __fastcall (CGUnit_C *unit, uint32_t spell)	Returns whether a unit's aura fields hold a spell	verified	one	objectlayer/missiles#arrival-without-a-target	
+0x61dc50	245	CMissile::ArriveHit		objectlayer	orchestration		Plays a missile hit on its target and sticks a bow missile in it	verified	one	objectlayer/missiles#hit-arrival	
+0x61dd50	1149	CMissile::ArriveMiss		objectlayer	primitive		Shows a missile's miss, block, resist, deflection or reflection at its target	verified	one	objectlayer/missiles#misses-resists-and-reflections	
+0x61e1d0	197	CMissile::Arrive		objectlayer	orchestration		Snaps a missile to its destination and dispatches its arrival by target and hit	verified	one	objectlayer/missiles#arrival	
+0x61e2a0	1300	CMissile::Advance		objectlayer	primitive		Moves a missile one frame toward its destination, or makes it arrive	verified	one	objectlayer/missiles#flight-each-frame	
+0x61e7c0	293	CMissile::StickInUnit		objectlayer	primitive		Attaches a missile to a unit's attachment for a time on its sorted stuck list	verified	one	objectlayer/missiles#stuck-missiles	
+0x61e8f0	64	FreeAllMissiles		objectlayer	orchestration	void __cdecl (void)	Frees every missile in flight and every impact missile	verified	one	objectlayer/missiles#the-missile-object	
+0x61e930	53	FreeFinishedImpactMissiles		objectlayer	orchestration	void __cdecl (void)	Frees the impact missiles whose models have no live particles	verified	one	objectlayer/missiles#stuck-missiles	
 0x61e970	5	InitMissileDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61e980, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61e980	15	InitMissileDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61e990	5	InitMissileQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61e9a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21243,7 +21243,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61ee70	19	InitMissileBSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61ee90	5	InitMissileBSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61eea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61eea0	19	InitMissileBSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61eec0	48			objectlayer	primitive		Runs its object file code not read here	inferred	none		
+0x61eec0	48	CMovement::GetVelocity		objectlayer	primitive		Returns a mover's velocity: its speed times its direction	verified	one	objectlayer/missiles#aiming-and-leading	
 0x61eef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61ef00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61ef10	5	InitEffectCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61ef20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21306,41 +21306,41 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61f420	19	InitEffectSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61f440	5	InitEffectSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61f450, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61f450	19	InitEffectSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61f470	32			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x61f490	129			objectlayer	orchestration		Constructs the 0x90-byte spell effect object	inferred	none	spell/go#cast-visual-and-dest-effect	
-0x61f520	118			objectlayer	orchestration		Runs Effect_C.cpp code that calls ReleaseWorldObject, HandleClose2; not read here	inferred	none		
+0x61f470	32	GetHardcodedEffectRecord		objectlayer	orchestration	void * __fastcall (uint32_t slot)	Returns the SpellVisualEffectName record of a hard-coded effect slot	verified	one	objectlayer/effects#hard-coded-effects	
+0x61f490	129	CEffect::CEffect		objectlayer	orchestration		Zeroes an effect, sets its attachment to -1 and its reference count to 1	verified	one	objectlayer/effects#the-effect-object	
+0x61f520	118	CEffect::~CEffect		objectlayer	orchestration		Closes an effect's model and line model, unlinks it, releases its world object and stops its sound and chains	verified	one	objectlayer/effects#the-effect-object	
 0x61f5a0	5			objectlayer	orchestration		Jumps to 0x61f5b0	verified	one	objectlayer/overview#small-bodies	
-0x61f5b0	143			objectlayer	primitive		Runs Effect_C.cpp code not read here	inferred	none		
-0x61f640	64			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x61f680	108			objectlayer	primitive		Runs Effect_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x61f6f0	106			objectlayer	primitive		Runs Effect_C.cpp code that calls PlaySoundAtArgs, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x61f5b0	143	FindHardcodedEffects		objectlayer	primitive	void __cdecl (void)	Stores the SpellVisualEffectName row id of each hard-coded effect name	verified	one	objectlayer/effects#hard-coded-effects	
+0x61f640	64	FreeEffectLists		objectlayer	orchestration	void __cdecl (void)	Releases every effect on the timed and dying lists	verified	one	objectlayer/effects#stopping-and-draining	
+0x61f680	108	DrainDyingEffects		objectlayer	primitive	void __cdecl (void)	Releases dying effects whose models hold no live particles, and timed ones past their time	verified	one	objectlayer/effects#stopping-and-draining	
+0x61f6f0	106	CEffect::OnModelEvent		objectlayer	primitive		Plays an effect model's $SND sound, or its target's wound animation on $HIT	verified	one	objectlayer/effects#model-events	
 0x61f760	5	InitEffectCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61f770, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61f770	11	InitEffectCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x61f780	649			objectlayer	primitive		Runs Effect_C.cpp code that calls __ftol, ClntObjMgrObjectPtr, ModelHasEvent; not read here	inferred	none		
-0x61fa10	193			objectlayer	primitive		Runs Effect_C.cpp code that calls SMemFree, CreateModelFromPath, ModelSetDoneCallback; not read here	inferred	none		
-0x61fae0	281			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr, CreateModelFromPath, ModelSetDoneCallback; not read here	inferred	none		
-0x61fc00	233			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr, CreateModelFromPath, ModelSetDoneCallback; not read here	inferred	none		
-0x61fcf0	219			objectlayer	primitive		Places and starts a spell effect object at a point	inferred	none	spell/go#cast-visual-and-dest-effect	
-0x61fdd0	235			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr, CreateModelFromPath, ModelSetDoneCallback; not read here	inferred	none		
-0x61fec0	220			objectlayer	primitive		Runs Effect_C.cpp code not read here	inferred	none		
-0x61ffa0	112			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x620010	114			objectlayer	unreached		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x620090	102			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x620100	196			objectlayer	unreached		Runs Effect_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x6201d0	301			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x620300	83			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x620360	49			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x6203a0	57			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x6203e0	307			objectlayer	primitive		Runs Effect_C.cpp code that calls ClntObjMgrObjectPtr, StopEffectObjectChains, ModelSetFlagA; not read here	inferred	none		
-0x620520	84			objectlayer	primitive		Runs Effect_C.cpp code that calls OsGetAsyncTimeMs, ModelSetFlagB, ModelSetFlagA; not read here	inferred	none		
-0x620580	803			objectlayer	primitive		Runs Effect_C.cpp code that calls SplatVector3, OsGetAsyncTimeMs, SetVector3; not read here	inferred	none		
-0x6208b0	42	StopEffectObjectChains		objectlayer	primitive		Stops the three chains in an effect object's slots +0x30 through 0x6ece10 and clears each slot	inferred	none	spell/visuals#chain-lifetime	
-0x6208e0	79			objectlayer	orchestration		Runs Effect_C.cpp code not read here	inferred	none		
-0x620930	190			objectlayer	primitive		Runs Effect_C.cpp code that calls _isnan; not read here	inferred	none		
-0x6209f0	147			objectlayer	orchestration		Runs Effect_C.cpp code that calls SStrPrintf; not read here	inferred	none		
-0x620a90	326			objectlayer	orchestration		Runs Effect_C.cpp code that calls TranslateMatrix, RotateMatrix; not read here	inferred	none		
-0x620be0	1269	UpdateSpellEffectObject		objectlayer	primitive		Updates a spell effect object; plays its camera shakes through 0x6ecb40	inferred	none	spell/visuals#camera-shake-groups	
-0x6210e0	33			objectlayer	primitive		Releases a reference to a spell effect object and frees it at zero	inferred	none	spell/go#cast-visual-and-dest-effect	
+0x61f780	649	DrawFishingLine		objectlayer	primitive		Draws a fishing line of 65 sagging points from the pole's $CCH event to the bobber	verified	one	objectlayer/effects#the-fishing-line	
+0x61fa10	193	AddLootArtEffect		objectlayer	primitive		Hangs the loot art effect on a unit at attachment 19	verified	one	objectlayer/effects#hard-coded-effects	
+0x61fae0	281	AddHardcodedEffect		objectlayer	primitive		Hangs a hard-coded effect on a unit at its attachment	verified	one	objectlayer/effects#hard-coded-effects	
+0x61fc00	233	PlantHardcodedEffect		objectlayer	primitive		Plants a hard-coded effect at a point	verified	one	objectlayer/effects#hard-coded-effects	
+0x61fcf0	219	PlantEffect		objectlayer	primitive		Plants a kit's effect model at a point from a start time	verified	one	objectlayer/effects#adding-an-effect	
+0x61fdd0	235	CEffect::AddEffect		objectlayer	primitive		Hangs a kit's effect model at an attachment of the target unit	verified	one	objectlayer/effects#adding-an-effect	
+0x61fec0	220	AddEffectSound		objectlayer	primitive		Plays a kit's sound at a point or on a unit as an effect	verified	one	objectlayer/effects#adding-an-effect	
+0x61ffa0	112	AddBareEffect		objectlayer	primitive		Links an effect holding a spell and a kit, with flags, on a unit	verified	one	objectlayer/effects#adding-an-effect	
+0x620010	114	LinkTimedEffect		objectlayer	unreached		Links a bare effect with times on a unit; nothing calls it	verified	one	objectlayer/effects#unreached-effect-code	
+0x620090	102	AddTimedBareEffect		objectlayer	primitive		Links an effect holding a spell and a kit with an end time on a unit	verified	one	objectlayer/effects#adding-an-effect	
+0x620100	196	LinkTimedUnitEffect		objectlayer	unreached		Links a bare effect with times and sets a unit's +0x94 and +0xa0; nothing calls it	verified	one	objectlayer/effects#unreached-effect-code	
+0x6201d0	301	AddAnimSpeedEffect		objectlayer	primitive		Overrides a unit's animation speeds until an end time, saving the old ones	verified	one	objectlayer/effects#adding-an-effect	
+0x620300	83	AttachFishingLine		objectlayer	orchestration		Hangs a fishing line from a unit's pole model to the bobber	verified	one	objectlayer/effects#the-fishing-line	
+0x620360	49	CEffect::Link		objectlayer	orchestration		Unlinks an effect and pushes it at the head of a list	verified	one	objectlayer/effects#the-effect-object	
+0x6203a0	57	CEffect::Unlink		objectlayer	orchestration		Unlinks an effect from its list	verified	one	objectlayer/effects#the-effect-object	
+0x6203e0	307	CEffect::Stop		objectlayer	primitive		Moves an effect to the dying list, hides it, restores speeds and stops its sound, callbacks and chains	verified	one	objectlayer/effects#stopping-and-draining	
+0x620520	84	CEffect::OnWorldObjectFrame		objectlayer	primitive		Shows a planted effect from its start time and stops it at its end time	verified	one	objectlayer/effects#the-frame-tick	
+0x620580	803	CEffect::Update		objectlayer	primitive		Sets up, moves, ends or stops one effect on its unit's frame	verified	one	objectlayer/effects#the-frame-tick	
+0x6208b0	42	StopEffectObjectChains		objectlayer	primitive		Stops the three chain beams in an effect's slots +0x30 to +0x38 and clears them	verified	one	objectlayer/effects#stopping-and-draining	
+0x6208e0	79	StopUnitEffectsAt		objectlayer	orchestration		Stops a unit's effects of one record at one attachment	verified	one	objectlayer/effects#adding-an-effect	
+0x620930	190	CheckEffectMatrix		objectlayer	primitive		Checks a matrix for NaN entries and an empty first row	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x6209f0	147	ReportFacingTrouble		objectlayer	orchestration		Formats a facing-trouble message into a buffer and drops it	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x620a90	326	BuildPlantedEffectMatrix		objectlayer	orchestration		Builds a planted effect's matrix from its point and its owner's facing and scale	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x620be0	1269	UpdateSpellEffectObject		objectlayer	primitive		Sets up an effect once its model loads: placement, attachment, scale, camera shake and sound	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x6210e0	33	CEffect::Release		objectlayer	primitive		Releases a reference to an effect and frees it at zero	verified	one	objectlayer/effects#the-effect-object	
 0x621110	5	InitEffectDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621120, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x621120	15	InitEffectDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x621130	5	InitEffectQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621140, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21599,43 +21599,43 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x622fd0	47	ReleaseDeathThudSounds		objectlayer	host	void __cdecl (void)	Frees the blocks of the five death thud sound records through SMemFree, at exit	inferred	none	objectlayer/initializers#other-initializers	
 0x623000	5	InitUnitSoundCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x623010, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x623010	11	InitUnitSoundCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x623020	67			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6230a0	17			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6230c0	10			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6230d0	54			objectlayer	primitive		Runs UnitSound_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x623110	140			objectlayer	primitive		Runs UnitSound_C.cpp code that calls OsGetAsyncTimeMs, CVar::Register; not read here	inferred	none		
-0x6231a0	226			objectlayer	primitive		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623290	42			objectlayer	primitive		Runs UnitSound_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x6232c0	194			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623390	166			objectlayer	primitive		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623440	79			objectlayer	primitive		Runs UnitSound_C.cpp code that calls PlaySoundAtArgs; not read here	inferred	none		
-0x623490	135			objectlayer	orchestration		Fills slot 34 of the unit vtable; its body is not read here	inferred	none		
-0x623520	238			objectlayer	primitive		Runs UnitSound_C.cpp code that calls MulHigh32; not read here	inferred	none		
-0x623610	41			objectlayer	orchestration		Fills slot 35 of the unit vtable; its body is not read here	inferred	none		
-0x623640	112			objectlayer	primitive		Runs UnitSound_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x6236b0	44			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x6236e0	211			objectlayer	primitive		Runs UnitSound_C.cpp code that calls PlaySoundAtArgs; not read here	inferred	none		
-0x6237c0	21			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6237e0	30			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623800	112			objectlayer	primitive		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623870	122			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6238f0	29			objectlayer	orchestration		Fills slot 36 of the unit vtable; its body is not read here	inferred	none		
-0x623910	161			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x6239c0	34			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls Sound::Stop; not read here	inferred	none		
-0x6239f0	68			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls PlaySoundAtArgs; not read here	inferred	none		
-0x623a40	185			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls Sound::Stop; not read here	inferred	none		
-0x623b10	69			objectlayer	primitive		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623b70	25			objectlayer	orchestration		Runs UnitSound_C.cpp code not read here	inferred	none		
-0x623b90	123			objectlayer	primitive		Runs UnitSound_C.cpp code that calls ModelHasAttachment, ModelGetAttachmentPosition; not read here	inferred	none		
-0x623c10	111			objectlayer	primitive		Runs UnitSound_C.cpp code that calls CVar::Lookup, Sound::Stop; not read here	inferred	none		
-0x623c80	129			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls CVar::Lookup; not read here	inferred	none		
-0x623d10	39			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls PlaySoundAtArgs; not read here	inferred	none		
+0x623020	67	GetVocalSound		objectlayer	orchestration		Returns a vocal kind's sound from the sound data, 0 for kind 6 or above 12	verified	one	objectlayer/sounds#vocal-sounds	
+0x6230a0	17	GetFoleySound		objectlayer	orchestration		Returns a foley sound of the sound data, 0 from the fifth on	verified	one	objectlayer/sounds#foley-and-the-alert	
+0x6230c0	10	ShutdownUnitSounds		objectlayer	orchestration	void __cdecl (void)	Frees the death thud tables, then clears a global of the sound code	verified	one	objectlayer/sounds#start-up-and-shutdown	
+0x6230d0	54	FreeDeathThudTables		objectlayer	primitive	void __cdecl (void)	Frees each death thud array	verified	one	objectlayer/sounds#start-up-and-shutdown	
+0x623110	140	InitUnitSounds		objectlayer	primitive	void __cdecl (void)	Builds the death thud tables, registers FootstepSounds, starts the alert clock and finds the spirit wolf sound	verified	one	objectlayer/sounds#start-up-and-shutdown	
+0x6231a0	226	BuildDeathThudTables		objectlayer	primitive	void __cdecl (void)	Fills the death thud sound pairs by size class and terrain from DeathThudLookups	verified	one	objectlayer/sounds#start-up-and-shutdown	
+0x623290	42	AlertSoundAllowed		objectlayer	primitive		Passes the alert vocal once 10 seconds have passed and restarts its clock	verified	one	objectlayer/sounds#vocal-sounds	
+0x6232c0	194	CGUnit_C::OnFoleyEvent		objectlayer	orchestration		Plays a unit's foley on $FD1 to $FD9 and its alert on $FDX	verified	one	objectlayer/sounds#foley-and-the-alert	
+0x623390	166	CGUnit_C::PlayFootstep		objectlayer	primitive		Plays a unit's footstep on $FSD with its terrain, liquid and size flags	verified	one	objectlayer/sounds#footsteps	
+0x623440	79	CGUnit_C::PlayFoley		objectlayer	primitive		Plays one foley sound two yards above a unit	verified	one	objectlayer/sounds#foley-and-the-alert	
+0x623490	135	CGUnit_C::PlayVocal		objectlayer	orchestration		Plays a unit's vocal of a kind after its chance and rate limits (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	
+0x623520	238	VocalChancePasses		objectlayer	primitive		Advances the client random state and passes a vocal kind by its chance table	verified	one	objectlayer/sounds#vocal-sounds	
+0x623610	41	CGUnit_C::PlayMaterialSound		objectlayer	orchestration		Plays a unit's material sound from its model data (slot 35)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
+0x623640	112	PlayParryImpact		objectlayer	primitive		Plays a parry or block impact from the attacker's weapon and the victim's item	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
+0x6236b0	44	CGUnit_C::PlayAlert		objectlayer	orchestration		Plays a unit's alert vocal unless it is the active player	verified	one	objectlayer/sounds#foley-and-the-alert	
+0x6236e0	211	CGUnit_C::PlayDeathThud		objectlayer	primitive		Plays a unit's death thud by its size and ground, or its water thud	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
+0x6237c0	21	CGUnit_C::PlaySplash		objectlayer	orchestration		Plays a unit's race splash sound at a point	verified	one	objectlayer/sounds#splashes-and-greetings	
+0x6237e0	30	CGUnit_C::StopLoopSound		objectlayer	orchestration		Stops a unit's loop sound and clears it	verified	one	objectlayer/sounds#the-loop-sound	
+0x623800	112	CGUnit_C::UpdateLoopSound		objectlayer	primitive		Keeps a living creature's loop sound playing, or stops it	verified	one	objectlayer/sounds#the-loop-sound	
+0x623870	122	GetWeaponSwingSize		objectlayer	orchestration		Stores a hand weapon's ItemSubClass swing size, or 0	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
+0x6238f0	29	CGUnit_C::GetArmourImpactKind		objectlayer	orchestration		Returns a unit's armour kind for impact sounds from its sound data (slot 36)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
+0x623910	161	CGUnit_C::NextGreetingSound		objectlayer	orchestration		Picks the next NPCSounds greeting of a creature from its click count	verified	one	objectlayer/sounds#splashes-and-greetings	
+0x6239c0	34	CGUnit_C::StopReactionSound		objectlayer	orchestration		Stops a unit's playing reaction sound when allowed	verified	one	objectlayer/sounds#creature-reactions	
+0x6239f0	68	CGUnit_C::PlayEmoteStateSound		objectlayer	orchestration		Plays a unit's emote state sound on $ESD for an Emotes row of kind 2	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
+0x623a40	185	CGUnit_C::PlayReaction		objectlayer	orchestration		Plays a creature's aggro, death or other reaction at attachment 17, replacing a lower one	verified	one	objectlayer/sounds#creature-reactions	
+0x623b10	69	GetVocalSoundClass		objectlayer	primitive		Returns a vocal kind's sound class, the large one for a creature flagged 0x20	verified	one	objectlayer/sounds#vocal-sounds	
+0x623b70	25	CGUnit_C::IsLargeVocalCreature		objectlayer	orchestration		Returns whether a creature record's flags have 0x20	verified	one	objectlayer/sounds#vocal-sounds	
+0x623b90	123	CGUnit_C::GetAttachmentPoint		objectlayer	primitive		Returns an attachment position, or the unit position raised by the attachment height	verified	one	objectlayer/sounds#creature-reactions	
+0x623c10	111	CGUnit_C::PlayEmoteVoice		objectlayer	primitive		Plays an emote voice at attachment 17 attached to the unit, replacing the last	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
+0x623c80	129	CGUnit_C::PlayTextEmoteVoice		objectlayer	orchestration		Plays a text emote voice for the player or a party member while EmoteSounds is on	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
+0x623d10	39	CGUnit_C::PlaySpiritWolfSound		objectlayer	orchestration		Plays the spirit wolf sound at a unit	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
 0x623d40	5	InitUnitSoundDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x623d50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x623d50	15	InitUnitSoundDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x623d60	5	InitUnitSoundQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x623d70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x623d70	19	InitUnitSoundQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x623d90	56			objectlayer	orchestration		Runs UnitSound_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x623dd0	144			objectlayer	primitive		Runs UnitSound_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
+0x623d90	56	FreeDeathThudArray		objectlayer	orchestration		Frees one death thud array	verified	one	objectlayer/sounds#start-up-and-shutdown	
+0x623dd0	144	ResizeDeathThudArray		objectlayer	primitive		Resizes a death thud array, zeroing new pairs	verified	one	objectlayer/sounds#start-up-and-shutdown	
 0x623e60	5	InitUnitCombatProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x623e70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x623e70	19	InitUnitCombatProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x623e90	5	InitUnitCombatProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x623ea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21692,31 +21692,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x624330	19	InitUnitCombatSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x624350	5	InitUnitCombatCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x624360, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x624360	11	InitUnitCombatCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x624370	112			objectlayer	orchestration		Runs UnitCombat_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
-0x6243e0	327			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x624530	356			objectlayer	primitive		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x6246a0	241			objectlayer	primitive		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x6247d0	1217			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr, GetAutoRepeatSpell, ModelHasAttachment; not read here	inferred	none		
-0x624ca0	29			objectlayer	orchestration		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x624cc0	379			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls __ftol, ModelPlayAnimation; not read here	inferred	none		
-0x624e40	223			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr, HeadingBetweenPoints; not read here	inferred	none		
+0x624370	112	SendAttackStop		objectlayer	orchestration		Sends 0x142 with no body and sets the unit's +0xc54	verified	one	objectlayer/unitcombat#attack-messages	
+0x6243e0	327	FloatSwingResult		objectlayer	primitive		Floats a swing record's word or number on its victim when its line is due	verified	one	objectlayer/unitcombat#showing-a-swing-on-the-victim	
+0x624530	356	ShowSwingOnVictim		objectlayer	primitive		Shows a swing on its victim: the float, wound, blood, impact sounds and pain vocal	verified	one	objectlayer/unitcombat#showing-a-swing-on-the-victim	
+0x6246a0	241	PlaySwingAnimation		objectlayer	primitive		Plays an attacker's swing animation by its weapon, and its exertion vocal	verified	one	objectlayer/unitcombat#holding-a-swing	
+0x6247d0	1217	OnCombatModelEvent		objectlayer	primitive		Presents a pending swing on the attacker's $CAH, $AH0 to $AH3, $CPP, $DTH, $BWP and $CSS events	verified	one	objectlayer/unitcombat#combat-model-events	
+0x624ca0	29	IsAvoidedSwingState		objectlayer	orchestration	bool __fastcall (uint32_t state)	Returns whether a victim state is 0, 2 or 6: a miss, dodge or evade	verified	one	objectlayer/unitcombat#combat-model-events	
+0x624cc0	379	PlayBowPull		objectlayer	primitive		Plays a ranged weapon's 160 BowPull to end with the body animation and attaches the ammo	verified	one	objectlayer/unitcombat#the-ranged-reload-pose	
+0x624e40	223	StopAttack		objectlayer	primitive		Ends a unit's attack: clears its target fields, flushes and zeroes its pending swing, faces a victim	verified	one	objectlayer/unitcombat#attack-messages	
 0x624f20	10			objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t value)	Returns its stack argument unchanged	verified	one	spell/go#missile-and-impact-legs	
-0x624f30	213			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls IsActivePlayerUnit, PlayUnitSpellVisualKit; not read here	inferred	none		
-0x625010	382			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr, SMemAlloc; not read here	inferred	none		
-0x625190	66			objectlayer	orchestration		Runs UnitCombat_C.cpp code that calls IsActivePlayerUnit; not read here	inferred	none		
-0x6251e0	139			objectlayer	orchestration		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x625270	391			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr, SStrCopy, SStrPrintf; not read here	inferred	none		
-0x625400	71			objectlayer	orchestration		Runs UnitCombat_C.cpp code not read here	inferred	none		
+0x624f30	213	OnEnvironmentalDamage		objectlayer	primitive		Writes environmental damage, signals the active player's wound and plays the type's kit	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
+0x625010	382	SpillBlood		objectlayer	primitive		Adds a victim's front or back blood effect from its UnitBlood row	verified	one	objectlayer/unitcombat#blood	
+0x625190	66	PresentUnitDeath		objectlayer	orchestration		Writes a unit's death line, shows its pending XP and plays its death animation and sound	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
+0x6251e0	139	ShowPendingXpGain		objectlayer	orchestration		Logs a unit's pending XP gain, floats it over the active player and clears it	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
+0x625270	391	LogHonorGain		objectlayer	primitive		Writes the honor line, floats HK or DK and raises HONOR_GAINED	verified	one	objectlayer/unitcombat#honor	
+0x625400	71	GetParryItem		objectlayer	orchestration		Returns a victim's parrying weapon, or its blocking shield or weapon	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
 0x625450	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x625460	146			objectlayer	primitive		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x625500	24			objectlayer	orchestration		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x625520	141			objectlayer	orchestration		Registers or clears the handlers for 8 opcodes from 0x143 to 0x1fc; not read further here	inferred	none		
-0x6255b0	1339			objectlayer	primitive		Handles 8 server opcodes from 0x143 to 0x1fc, as its registration names; its body is not read here	inferred	none		
-0x625bd0	85			objectlayer	orchestration		Runs UnitCombat_C.cpp code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
-0x625c30	48			objectlayer	orchestration		Runs UnitCombat_C.cpp code that calls GetActiveCamera, CameraAddShake; not read here	inferred	none		
-0x625c60	444			objectlayer	primitive		Runs UnitCombat_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x625e20	32			objectlayer	orchestration		Runs UnitCombat_C.cpp code not read here	inferred	none		
-0x625e40	26			objectlayer	orchestration		Runs UnitCombat_C.cpp code not read here	inferred	none		
+0x625460	146	GetDrawnWeapon		objectlayer	primitive		Returns a hand's weapon while weapons are drawn, optionally only with its model loaded	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
+0x625500	24	GetUnitSoundSize		objectlayer	orchestration		Returns a unit's sound size class from its display or model data	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
+0x625520	141	RegisterUnitCombatMessages		objectlayer	orchestration		Registers the unit combat handler for eight opcodes, then the combat log handlers	verified	one	objectlayer/unitcombat#attack-messages	
+0x6255b0	1339	HandleUnitCombatMessage		objectlayer	primitive		Handles the attack, attacker state and environmental damage messages	verified	one	objectlayer/unitcombat#attack-messages	
+0x625bd0	85	ClearUnitCombatMessages		objectlayer	orchestration		Clears the unit combat and combat log handlers	verified	one	objectlayer/unitcombat#attack-messages	
+0x625c30	48	ShakeCameraForUnit		objectlayer	orchestration		Shakes the active camera with a unit's model data shake	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
+0x625c60	444	ReadAttackerState		objectlayer	primitive		Reads an attacker state message into a swing record	verified	one	objectlayer/unitcombat#the-attacker-state	
+0x625e20	32	MarkBlockedSwing		objectlayer	orchestration		Sets a swing's victim state to 5 for a block with no damage	verified	one	objectlayer/unitcombat#the-attacker-state	
+0x625e40	26	IsSwingLogDue		objectlayer	orchestration	bool __fastcall (void *record)	Returns whether a swing writes its line and float: +0xac clear or state 1	verified	one	objectlayer/unitcombat#showing-a-swing-on-the-victim	
 0x625e60	5	InitCombatLogDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x625e70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x625e70	15	InitCombatLogDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x625e80	5	InitCombatLogQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x625e90, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21775,165 +21775,165 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x626350	19	InitCombatLogSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x626370	5	InitCombatLogSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x626380, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x626380	19	InitCombatLogSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x6263a0	129			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
+0x6263a0	129	ClearSwingRecord		objectlayer	primitive		Clears a swing record, setting its five schools to -1	verified	one	objectlayer/unitcombat#the-attacker-state	
 0x626430	5	InitCombatLogCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x626440, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x626440	11	InitCombatLogCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x626450	10	InitCombatLogOther1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x626460, then jumps to 0x626480 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x626460	23	InitCombatLogClear1		objectlayer	orchestration	void __cdecl (void)	Clears or sets 4 dwords of a global	verified	one	objectlayer/initializers#other-initializers	
 0x626480	12	InitCombatLogRegisterExit2		objectlayer	orchestration	void __cdecl (void)	Registers 0x626490 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x626490	25	InitCombatLogFree1		objectlayer	host	void __cdecl (void)	Frees a global block through SMemFree when its pointer is set, at exit	verified	one	objectlayer/initializers#exit-callbacks	
-0x6264b0	38			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6264e0	314			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord,	inferred	none		
+0x6264b0	38	GetSchoolName		objectlayer	orchestration	const char * __fastcall (uint32_t school)	Returns a school's Resistances name in the client's locale	verified	one	objectlayer/combatlog#names	
+0x6264e0	314	GetCombatLogName		objectlayer	primitive	const char * __fastcall (uint64_t *guid)	Names a combat log object from the object, item, name or creature cache, else UNKNOWNOBJECT	verified	one	objectlayer/combatlog#names	
 0x626620	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x626630	472			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x626810	59			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls CVar::Lookup; not read here	inferred	none		
-0x626850	64			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x626890	83			objectlayer	orchestration		Signals the interface event COMBAT_TEXT_UPDATE; not read further here	inferred	none		
-0x6268f0	108			objectlayer	orchestration		Signals the interface event COMBAT_TEXT_UPDATE; not read further here	inferred	none		
-0x626960	73			objectlayer	orchestration		Signals the interface event COMBAT_TEXT_UPDATE; not read further here	inferred	none		
-0x6269b0	28			objectlayer	orchestration		Signals the interface event COMBAT_TEXT_UPDATE; not read further here	inferred	none		
-0x6269d0	27			objectlayer	orchestration		Signals the interface event COMBAT_TEXT_UPDATE; not read further here	inferred	none		
-0x6269f0	26			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x626a10	375			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x626b90	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x626be0	129			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
+0x626630	472	ResolveCombatLogPair		objectlayer	primitive		Classifies and resolves a line's source and target and tests the player's range to either	verified	one	objectlayer/combatlog#range	
+0x626810	59	GetCombatLogRange		objectlayer	orchestration	float __fastcall (uint32_t class)	Returns a relation class's combat log range from its CVar, 100000 or 0	verified	one	objectlayer/combatlog#range	
+0x626850	64	AddCombatLogLine		objectlayer	orchestration		Formats a combat log line and adds it under a chat type, and to a file while logging	verified	one	objectlayer/combatlog#a-line	
+0x626890	83	SignalCombatTextNamed		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type, a text and a number	verified	one	objectlayer/combatlog#combat-text	
+0x6268f0	108	SignalCombatTextPair		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type and two numbers	verified	one	objectlayer/combatlog#combat-text	
+0x626960	73	SignalCombatTextNumber		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type and a number	verified	one	objectlayer/combatlog#combat-text	
+0x6269b0	28	SignalCombatTextText		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type and a text	verified	one	objectlayer/combatlog#combat-text	
+0x6269d0	27	SignalCombatText		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type alone	verified	one	objectlayer/combatlog#combat-text	
+0x6269f0	26	WarnMissingCombatString		objectlayer	orchestration		Writes the missing-string warning for a nonempty key under type 0x19	verified	one	objectlayer/combatlog#a-line	
+0x626a10	375	LogSpellInterrupt		objectlayer	orchestration		Writes a spell interrupt line and raises INTERRUPT	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x626b90	80	GetInterruptKey		objectlayer	orchestration		Returns the SPELLINTERRUPT key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x626be0	129	GetSpellDamageChatType		objectlayer	orchestration		Returns the spell damage chat type for a source and target class	verified	one	objectlayer/combatlog#the-chat-type	
 0x626cb0	5	InitCombatLogDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x626cc0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x626cc0	15	InitCombatLogDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x626cd0	5	InitCombatLogQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x626ce0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x626ce0	19	InitCombatLogQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x626d00	204			objectlayer	primitive		Registers or clears the handlers for 6 opcodes from 0x1d7 to 0x2bd; not read further here	inferred	none		
-0x626dd0	1021			objectlayer	primitive		Handles server opcode 0x24e, as its registration names; its body is not read here	inferred	none		
-0x627240	510			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls GetSpellLevel, FrameScript_GetText; not read here	inferred	none		
-0x627440	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6274a0	48			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627500	26			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627520	672			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls SStrCmpI, FrameScript_GetText; not read here	inferred	none		
-0x6277c0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627820	129			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6278f0	26			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x627910	30			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627930	842			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls SStrCmpI, GetPowerDisplayDivisor, FrameScript_GetText; not read here	inferred	none		
-0x627c80	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627cd0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627d30	48			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls GetSpellHostility; not read here	inferred	none		
-0x627d60	28			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls GetSpellHostility; not read here	inferred	none		
-0x627d80	48			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x627de0	554			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, IsActivePlayerUnit; not	inferred	none		
-0x628010	228			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x628100	675			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x6283b0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x628410	414			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls SStrPack, SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x6285b0	265			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x6286c0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x628720	265			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x628830	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x628890	229			objectlayer	orchestration		Handles server opcode 0x1f5, as its registration names; its body is not read here	inferred	none		
-0x628980	20			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6289a0	542			objectlayer	orchestration		Handles server opcode 0x260, as its registration names; its body is not read here	inferred	none		
-0x628bc0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x628c20	466			objectlayer	orchestration		Handles server opcode 0x262, as its registration names; its body is not read here	inferred	none		
-0x628e00	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x628e60	61			objectlayer	orchestration		Handles server opcode 0x2bd, as its registration names; its body is not read here	inferred	none		
-0x628ea0	155			objectlayer	orchestration		Handles server opcode 0x1d7, as its registration names; its body is not read here	inferred	none		
-0x628f40	164			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x628ff0	468			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x6291d0	456			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x6293a0	66			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6293f0	190			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6294b0	236			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x6295b0	83			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x629610	113			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x629690	153			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrGetActivePlayer, FrameScript_GetText; not read here	inferred	none		
-0x629730	34			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x629760	263			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrGetActivePlayer, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord,	inferred	none		
-0x629870	34			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x6298a0	394			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, FrameScript_GetText; not	inferred	none		
-0x629a30	84			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x629a90	124			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls ClientServices::ClearMessageHandler, SMemFree; not read here	inferred	none		
-0x629b10	76			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x629b60	463			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x629d30	593			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x629f90	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x629fe0	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a030	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a080	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a0d0	129			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a1a0	240			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62a290	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a2e0	129			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a3b0	206			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62a480	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a4d0	206			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62a5a0	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a5f0	206			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62a6c0	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a710	473			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62a930	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a980	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62a9d0	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62aa20	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62aa70	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62aac0	532			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62ace0	135			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62ad70	28			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62ad90	35			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62adc0	356			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62af30	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62af90	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62aff0	10			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62b000	387			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62b190	30			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls GetSpellHostility; not read here	inferred	none		
-0x62b1b0	676	CombatLogSpellCast		objectlayer	primitive		Writes a combat-log entry for a spell and a unit GUID, reading the CombatDeathLogRange CVar	inferred	none	spell/visuals#precast-visual-at-cast-start	
-0x62b460	19			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62b480	846			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62b7d0	30			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62b800	685			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls SetVector3, ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x62bab0	824			objectlayer	orchestration		Writes the combat log line for a spell miss	inferred	none	spell/go#inline-miss-report	
-0x62be40	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62bea0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62bf00	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62bf60	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62bfc0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c020	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c080	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c0e0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c140	20			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c160	359			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62c2d0	71			objectlayer	primitive		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c360	643	LogCastFailure		objectlayer	primitive	void __fastcall (void *unit, uint32_t spell, const char *reason)	Writes a unit's cast failure line to the combat log under a SPELLFAILCAST or SPELLFAILPERFORM key	inferred	none	spell/failures#display-log-and-events	
-0x62c5f0	128			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62c670	252			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, SStrPrintf; not read here	inferred	none		
-0x62c770	457			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62c940	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62c9a0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62ca00	26			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62ca20	361			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62cb90	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62cbe0	413			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62cd80	828			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x62d0c0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d120	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d180	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d1e0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d240	407			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls CVar::Lookup, FrameScript_GetText; not read here	inferred	none		
-0x62d3e0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d440	62			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62d480	419			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62d630	353			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62d7a0	83			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62d800	207			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62d8d0	207			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62d9a0	65			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls CVar::Lookup; not read here	inferred	none		
-0x62d9f0	504			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CVar::Lookup; not read here	inferred	none		
-0x62dbf0	30			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62dc10	577			objectlayer	primitive		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrObjectPtr, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord,	inferred	none		
-0x62de60	413			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62e000	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62e050	233			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62e140	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62e190	373			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x62e310	80			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code not read here	inferred	none		
-0x62e360	208			objectlayer	orchestration		Runs UnitCombatLog_C.cpp code that calls ClntObjMgrGetActivePlayer, FrameScript_GetText; not read here	inferred	none		
+0x626d00	204	RegisterCombatLogMessages		objectlayer	primitive		Registers the combat log handlers and range CVars	verified	one	objectlayer/combatlog#range	
+0x626dd0	1021	HandlePeriodicAuraLog		objectlayer	primitive		Handles 0x24e: logs and floats each periodic aura tick of a spell	verified	one	objectlayer/combatlogmessages#periodic-auras	
+0x627240	510	LogPeriodicHeal		objectlayer	primitive		Writes a periodic heal line and raises PERIODIC_HEAL for a short spell on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627440	83	GetPeriodicHealKey		objectlayer	orchestration		Returns the PERIODICAURAHEAL key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x6274a0	48	GetPeriodicBuffChatType		objectlayer	orchestration		Returns the periodic buff chat type for a target class	verified	one	objectlayer/combatlog#the-chat-type	
+0x627500	26	LogPeriodicPowerGain		objectlayer	orchestration		Writes a periodic power gain line	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627520	672	LogPowerGain		objectlayer	orchestration		Writes a power gain line and raises the power combat text for a direct gain on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x6277c0	83	GetPowerGainKey		objectlayer	orchestration		Returns the POWERGAIN key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627820	129	GetSpellBuffChatType		objectlayer	orchestration		Returns the spell buff chat type for a source and target class	verified	one	objectlayer/combatlog#the-chat-type	
+0x6278f0	26	GetPowerName		objectlayer	orchestration	const char * __fastcall (uint32_t power)	Returns the global string of a power below 5, else 0	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627910	30	LogPeriodicPowerDrain		objectlayer	orchestration		Writes a periodic power drain or leech line	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627930	842	LogPowerDrain		objectlayer	primitive		Writes a power drain or leech line and raises the power combat text on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627c80	80	GetPowerLeechKey		objectlayer	orchestration		Returns the SPELLPOWERLEECH key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627cd0	83	GetPowerDrainKey		objectlayer	orchestration		Returns the SPELLPOWERDRAIN key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627d30	48	GetSpellChatType		objectlayer	orchestration		Returns the damage or buff chat type of a spell by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
+0x627d60	28	GetPeriodicSpellChatType		objectlayer	orchestration		Returns the periodic damage or buff chat type of a spell by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
+0x627d80	48	GetPeriodicDamageChatType		objectlayer	orchestration		Returns the periodic damage chat type for a target class	verified	one	objectlayer/combatlog#the-chat-type	
+0x627de0	554	LogHappinessDrain		objectlayer	primitive		Writes a pet happiness drain line under 0x19	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x628010	228	LogOneSidedLine		objectlayer	primitive		Writes a one-unit line after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x628100	675	LogPeriodicDamage		objectlayer	orchestration		Writes a periodic damage line with trailers and raises RESIST, ABSORB or DAMAGE on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x6283b0	83	GetPeriodicDamageKey		objectlayer	orchestration		Returns the PERIODICAURADAMAGE key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x628410	414	AppendDamageTrailers		objectlayer	primitive		Appends the glancing, crushing, resist, vulnerable, block and absorb trailers and writes the line	verified	one	objectlayer/combatlog#trailers	
+0x6285b0	265	LogSpellAbsorb		objectlayer	orchestration		Writes a spell absorb line and raises SPELL_ABSORBED	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x6286c0	83	GetSpellAbsorbKey		objectlayer	orchestration		Returns the SPELLLOGABSORB key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x628720	265	LogSpellResist		objectlayer	orchestration		Writes a spell resist line and raises SPELL_RESISTED	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x628830	83	GetSpellResistKey		objectlayer	orchestration		Returns the SPELLRESIST key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x628890	229	HandlePartyKillLog		objectlayer	orchestration		Handles 0x1f5: writes SELFKILLOTHER or PARTYKILLOTHER	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628980	20	GetDeathChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x2b for a class 0 to 5, else 0x2c	verified	one	objectlayer/combatlogmessages#log-messages	
+0x6289a0	542	HandleProcResistLog		objectlayer	orchestration		Handles 0x260: writes a proc resist line and raises PROC_RESISTED	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628bc0	83	GetProcResistKey		objectlayer	orchestration		Returns the PROCRESIST key for a source and target class	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628c20	466	HandleDispelFailedLog		objectlayer	orchestration		Handles 0x262: writes a dispel failed line per spell and raises DISPEL_FAILED	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628e00	83	GetDispelFailedKey		objectlayer	orchestration		Returns the DISPELFAILED key for a source and target class	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628e60	61	HandleDeathDurabilityLog		objectlayer	orchestration		Handles 0x2bd: writes DURABILITYDAMAGE_DEATH under 0x19	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628ea0	155	HandleEnchantmentLog		objectlayer	orchestration		Handles 0x1d7: passes an item enchantment to its line	verified	one	objectlayer/combatlogmessages#log-messages	
+0x628f40	164	LogItemEnchantment		objectlayer	primitive		Waits for an item and writes its enchantment added or removed line	verified	one	objectlayer/combatlog#item-waits	
+0x628ff0	468	LogEnchantmentRemoved		objectlayer	primitive		Writes an item enchantment removed line and raises ENCHANTMENT_REMOVED	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x6291d0	456	LogEnchantmentAdded		objectlayer	orchestration		Writes an item enchantment added line and raises ENCHANTMENT_ADDED	verified	one	objectlayer/combatlogmessages#log-messages	
+0x6293a0	66	QueueEnchantmentWait		objectlayer	orchestration		Fills an item wait entry for an enchantment line	verified	one	objectlayer/combatlog#item-waits	
+0x6293f0	190	GetFreeItemWait		objectlayer	primitive		Returns a free item wait entry, growing the list by 8	verified	one	objectlayer/combatlog#item-waits	
+0x6294b0	236	OnCombatLogItemRecord		objectlayer	primitive		Reruns each line waiting on an arrived item record by its kind	verified	one	objectlayer/combatlog#item-waits	
+0x6295b0	83	ItemWaitMatches		objectlayer	primitive		Returns whether an item wait entry waits on an item	verified	one	objectlayer/combatlog#item-waits	
+0x629610	113	LogTradeSkillItem		objectlayer	orchestration		Waits for an item and writes the trade skill line	verified	one	objectlayer/combatlog#item-waits	
+0x629690	153	LogTradeSkill		objectlayer	orchestration		Writes the TRADESKILL_LOG line under 0x3e	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x629730	34	QueueTradeSkillWait		objectlayer	orchestration		Fills an item wait entry for a trade skill line	verified	one	objectlayer/combatlog#item-waits	
+0x629760	263	LogFeedPet		objectlayer	orchestration		Waits for an item and writes the FEEDPET_LOG line under 0x3e	verified	one	objectlayer/combatlog#item-waits	
+0x629870	34	QueueFeedPetWait		objectlayer	orchestration		Fills an item wait entry for a feed pet line	verified	one	objectlayer/combatlog#item-waits	
+0x6298a0	394	LogDurabilityItem		objectlayer	orchestration		Waits for an item and writes its durability damage line	verified	one	objectlayer/combatlog#item-waits	
+0x629a30	84	QueueDurabilityWait		objectlayer	orchestration		Fills an item wait entry for a durability line	verified	one	objectlayer/combatlog#item-waits	
+0x629a90	124	ClearCombatLogMessages		objectlayer	orchestration		Clears the combat log handlers and frees the item waits	verified	one	objectlayer/combatlogmessages#log-messages	
+0x629b10	76	LogSwing		objectlayer	orchestration		Flags the active player's own hit and writes a swing line when it is due	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x629b60	463	LogSwingLine		objectlayer	orchestration		Writes a swing line by its hit info and victim state	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x629d30	593	LogMeleeHit		objectlayer	primitive		Writes a melee hit line with its school and trailers and raises its combat text	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x629f90	80	GetCombatHitCritKey		objectlayer	orchestration		Returns the COMBATHITCRIT key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x629fe0	80	GetCombatHitKey		objectlayer	orchestration		Returns the COMBATHIT key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a030	80	GetCombatHitCritSchoolKey		objectlayer	orchestration		Returns the COMBATHITCRITSCHOOL key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a080	80	GetCombatHitSchoolKey		objectlayer	orchestration		Returns the COMBATHITSCHOOL key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a0d0	129	GetMeleeHitChatType		objectlayer	orchestration		Returns the melee hits chat type for a source and target class	verified	one	objectlayer/combatlog#the-chat-type	
+0x62a1a0	240	LogMeleeMiss		objectlayer	orchestration		Writes a melee miss line and raises MISS	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a290	80	GetMissedKey		objectlayer	orchestration		Returns the MISSED key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a2e0	129	GetMeleeMissChatType		objectlayer	orchestration		Returns the melee misses chat type for a source and target class	verified	one	objectlayer/combatlog#the-chat-type	
+0x62a3b0	206	LogMeleeBlock		objectlayer	orchestration		Writes a melee block line and raises BLOCK	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a480	80	GetVsBlockKey		objectlayer	orchestration		Returns the VSBLOCK key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a4d0	206	LogMeleeAbsorb		objectlayer	orchestration		Writes a melee absorb line and raises ABSORB	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a5a0	80	GetVsAbsorbKey		objectlayer	orchestration		Returns the VSABSORB key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a5f0	206	LogMeleeResist		objectlayer	orchestration		Writes a melee resist line and raises RESIST	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a6c0	80	GetVsResistKey		objectlayer	orchestration		Returns the VSRESIST key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a710	473	LogMeleeAvoid		objectlayer	primitive		Writes a melee dodge, parry, evade, immune or deflect line and raises its combat text	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a930	80	GetVsEvadeKey		objectlayer	orchestration		Returns the VSEVADE key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a980	80	GetVsDodgeKey		objectlayer	orchestration		Returns the VSDODGE key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62a9d0	80	GetVsParryKey		objectlayer	orchestration		Returns the VSPARRY key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62aa20	80	GetVsImmuneKey		objectlayer	orchestration		Returns the VSIMMUNE key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62aa70	80	GetVsDeflectKey		objectlayer	orchestration		Returns the VSDEFLECT key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
+0x62aac0	532	LogEnvironmentalDamage		objectlayer	primitive		Writes an environmental damage line, flashes the victim's nameplate and raises its combat text	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
+0x62ace0	135	LogSpellCast		objectlayer	primitive		Writes a cast success line for a spell without effect 36, 33 or 59	verified	one	objectlayer/combatlogmessages#casts	
+0x62ad70	28	SpellHasEffect36		objectlayer	primitive	bool __fastcall (void *spell)	Returns whether a spell has effect 36	verified	one	objectlayer/combatlogmessages#casts	
+0x62ad90	35	SpellHasEffect33Or59		objectlayer	primitive	bool __fastcall (void *spell)	Returns whether a spell has effect 33 or 59	verified	one	objectlayer/combatlogmessages#casts	
+0x62adc0	356	LogSimpleCast		objectlayer	orchestration		Writes a SIMPLECAST or SIMPLEPERFORM line and raises SPELL_CAST	verified	one	objectlayer/combatlogmessages#casts	
+0x62af30	83	GetSimpleCastKey		objectlayer	orchestration		Returns the SIMPLECAST key for a source and target class	verified	one	objectlayer/combatlogmessages#casts	
+0x62af90	83	GetSimplePerformKey		objectlayer	orchestration		Returns the SIMPLEPERFORM key for a source and target class	verified	one	objectlayer/combatlogmessages#casts	
+0x62aff0	10	SpellIsPerform		objectlayer	primitive	uint32_t __fastcall (void *spell)	Returns bit 4 of a spell's Attributes	verified	one	objectlayer/combatlogmessages#casts	
+0x62b000	387	LogTerseCast		objectlayer	primitive		Writes a SPELLTERSE line and raises SPELL_CAST for the player	verified	one	objectlayer/combatlogmessages#casts	
+0x62b190	30	GetCastChatType		objectlayer	orchestration		Returns the damage or buff chat type of a cast by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
+0x62b1b0	676	CombatLogSpellCast		objectlayer	primitive		Writes the start of another unit's cast with a cast time	verified	one	objectlayer/combatlogmessages#casts	
+0x62b460	19	SpellIsInstantFor		objectlayer	primitive		Returns whether a unit's cast time of a spell is 0	verified	one	objectlayer/combatlogmessages#casts	
+0x62b480	846	LogAuraChange		objectlayer	primitive		Writes an aura gained or lost line and raises its aura combat text	verified	one	objectlayer/combatlogmessages#auras	
+0x62b7d0	30	GetAuraGoneChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x41, 0x42 or 0x43 for an aura loss by class	verified	one	objectlayer/combatlogmessages#auras	
+0x62b800	685	LogAuraApplication		objectlayer	primitive		Writes an aura stack line for a stacking spell	verified	one	objectlayer/combatlogmessages#auras	
+0x62bab0	824			objectlayer	orchestration		Writes the combat log line for a spell miss by its reason and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62be40	83	GetSpellDodgedKey		objectlayer	orchestration		Returns the SPELLDODGED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62bea0	83	GetSpellParriedKey		objectlayer	orchestration		Returns the SPELLPARRIED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62bf00	83	GetSpellBlockedKey		objectlayer	orchestration		Returns the SPELLBLOCKED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62bf60	83	GetSpellEvadedKey		objectlayer	orchestration		Returns the SPELLEVADED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62bfc0	83	GetSpellImmuneKey		objectlayer	orchestration		Returns the SPELLIMMUNE key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62c020	83	GetSpellDeflectedKey		objectlayer	orchestration		Returns the SPELLDEFLECTED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62c080	83	GetSpellReflectKey		objectlayer	orchestration		Returns the SPELLREFLECT key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62c0e0	83	GetSpellMissKey		objectlayer	orchestration		Returns the SPELLMISS key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62c140	20	GetDamageShieldChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x3f for class 0 or 1, else 0x40	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62c160	359	LogUnitDeath		objectlayer	primitive		Writes a unit death or destruction line unless a pending XP gain names it	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
+0x62c2d0	71	IsSummonedUnit		objectlayer	primitive	bool __fastcall (CGUnit_C *unit)	Returns whether the spell that created a unit has a summoning or totem first effect	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
+0x62c360	643	LogCastFailure		objectlayer	primitive	void __fastcall (void *unit, uint32_t spell, const char *reason)	Writes a unit's cast failure line to the combat log after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x62c5f0	128	LogFactionStanding		objectlayer	primitive		Writes a reputation increase or decrease line under 0x55 and raises FACTION	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62c670	252	LogFactionStandingChanged		objectlayer	primitive		Writes a reputation standing change with its label under type 10	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62c770	457	LogHeal		objectlayer	orchestration		Writes a heal line and raises HEAL or HEAL_CRIT on the player	verified	one	objectlayer/combatlogmessages#heals	
+0x62c940	83	GetHealedKey		objectlayer	orchestration		Returns the HEALED key for a source and target class	verified	one	objectlayer/combatlogmessages#heals	
+0x62c9a0	83	GetHealedCritKey		objectlayer	orchestration		Returns the HEALEDCRIT key for a source and target class	verified	one	objectlayer/combatlogmessages#heals	
+0x62ca00	26	LogDirectPowerGain		objectlayer	orchestration		Writes a direct power gain line	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x62ca20	361	LogDamageShield		objectlayer	primitive		Writes a damage shield line and raises DAMAGE_SHIELD	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62cb90	80	GetDamageShieldKey		objectlayer	orchestration		Returns the DAMAGESHIELD key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62cbe0	413	LogInstakill		objectlayer	primitive		Writes an INSTAKILL line	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62cd80	828	LogSpellDamage		objectlayer	orchestration		Writes a spell damage line, or its absorb, block or resist, and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62d0c0	83	GetSpellLogCritKey		objectlayer	orchestration		Returns the SPELLLOGCRIT key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62d120	83	GetSpellLogKey		objectlayer	orchestration		Returns the SPELLLOG key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62d180	83	GetSpellLogCritSchoolKey		objectlayer	orchestration		Returns the SPELLLOGCRITSCHOOL key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62d1e0	83	GetSpellLogSchoolKey		objectlayer	orchestration		Returns the SPELLLOGSCHOOL key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62d240	407	LogSpellImmune		objectlayer	orchestration		Writes an IMMUNESPELL line while CombatLogPeriodicSpells is on and raises SPELL_IMMUNE	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62d3e0	83	GetImmuneSpellKey		objectlayer	orchestration		Returns the IMMUNESPELL key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62d440	62	LogPetLoyalty		objectlayer	orchestration		Writes PET_LOYALTY_GAIN or PET_LOYALTY_LOSS under 0x19	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62d480	419	LogAuraDispel		objectlayer	primitive		Writes an AURADISPEL line under 0x45 and raises SPELL_DISPELLED	verified	one	objectlayer/combatlogmessages#auras	
+0x62d630	353	LogAuraStolen		objectlayer	orchestration		Writes an AURASTOLEN line under 0x45 and raises SPELL_DISPELLED	verified	one	objectlayer/combatlogmessages#auras	
+0x62d7a0	83	GetAuraStolenKey		objectlayer	orchestration		Returns the AURASTOLEN key for a source and target class	verified	one	objectlayer/combatlogmessages#auras	
+0x62d800	207	LogFeedPetInRange		objectlayer	primitive		Passes a pet meal to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62d8d0	207	LogTradeSkillInRange		objectlayer	primitive		Passes a trade skill product to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62d9a0	65	LogPeriodicDamageIfOn		objectlayer	orchestration		Passes a periodic hit to its line while CombatLogPeriodicSpells is on	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62d9f0	504	LogExtraAttacks		objectlayer	primitive		Writes an extra attacks line and raises EXTRA_ATTACKS for the player	verified	one	objectlayer/combatlogmessages#casts	
+0x62dbf0	30	LogDirectPowerDrain		objectlayer	orchestration		Writes a direct power drain or leech line	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x62dc10	577	LogOpenLock		objectlayer	primitive		Writes an OPEN_LOCK line naming a game object or an item	verified	one	objectlayer/combatlogmessages#casts	
+0x62de60	413	LogSplitDamage		objectlayer	orchestration		Writes a split damage line and raises SPLIT_DAMAGE	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e000	80	GetSplitDamageKey		objectlayer	orchestration		Returns the SPELLSPLITDAMAGE key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e050	233	LogDurabilityDamage		objectlayer	orchestration		Writes a spell durability damage line for one item once the item is known	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e140	80	GetDurabilityDamageKey		objectlayer	orchestration		Returns the SPELLDURABILITYDAMAGE key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e190	373	LogDurabilityDamageAll		objectlayer	orchestration		Writes a durability damage line for all items	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e310	80	GetDurabilityDamageAllKey		objectlayer	orchestration		Returns the SPELLDURABILITYDAMAGEALL key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62e360	208	LogDismissPet		objectlayer	orchestration		Writes a SPELLDISMISSPET line under 0x19	verified	one	objectlayer/combatlogmessages#casts	
 0x62e430	5	InitCombatLogAProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62e440, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62e440	19	InitCombatLogAProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62e460	5	InitCombatLogAProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62e470, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21948,7 +21948,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62e530	19	InitCombatLogASquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62e550	5	InitCombatLogAQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62e560, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62e560	19	InitCombatLogAQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62e580	154			objectlayer	primitive		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
+0x62e580	154	GrowItemWaits		objectlayer	primitive		Reallocates the 48-byte item wait entries to a larger count, keeping the old ones	verified	one	objectlayer/combatlog#item-waits	
 0x62e620	10	InitCombatLogBCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x62e630, then jumps to 0x62e650 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x62e630	22	InitCombatLogBCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x62e650	12	InitCombatLogBRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x62e660 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -22121,11 +22121,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62f840	19	InitPlayerSoundSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62f860	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x62f870	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x62f880	180			objectlayer	primitive		Fills slot 34 of the player vtable; its body is not read here	inferred	none		
-0x62f940	238			objectlayer	primitive		Runs PlayerSound_C.cpp code that calls MulHigh32; not read here	inferred	none		
-0x62fa30	98			objectlayer	orchestration		Fills slot 35 of the player vtable; its body is not read here	inferred	none		
-0x62faa0	201			objectlayer	primitive		Runs PlayerSound_C.cpp code that calls SysMsgPrintf, PlaySoundAtArgs, UnitGetSpellVisual; not read here	inferred	none		
-0x62fb70	123			objectlayer	primitive		Fills slot 36 of the player vtable; its body is not read here	inferred	none		
+0x62f880	180	CGPlayer_C::PlayVocal		objectlayer	primitive		Plays a player's vocal two yards up after the player's chances (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	
+0x62f940	238	PlayerVocalChancePasses		objectlayer	primitive		Advances the client random state and passes a player vocal kind by its chance table	verified	one	objectlayer/sounds#vocal-sounds	
+0x62fa30	98	CGPlayer_C::PlayMaterialSound		objectlayer	orchestration		Plays the material sound of a player's chest item (slot 35)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
+0x62faa0	201	CGPlayer_C::PlayPrecastSound		objectlayer	primitive		Plays the sound of the spell a player prepares one yard above it	verified	one	objectlayer/sounds#the-precast-sound	
+0x62fb70	123	CGPlayer_C::GetArmourImpactKind		objectlayer	primitive		Returns a player's armour kind for impact sounds from its chest armour's material (slot 36)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
 0x62fbf0	5	InitResistLogCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62fc00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62fc00	11	InitResistLogCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x62fc10	5	InitResistLogDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62fc20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -22186,9 +22186,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x630100	19	InitResistLogSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x630120	5	InitResistLogSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x630130, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x630130	19	InitResistLogSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x630150	18			objectlayer	orchestration		Registers or clears the handlers for 0x1d6; not read further here	inferred	none		
+0x630150	18	RegisterIgnoredMessage		objectlayer	orchestration		Registers the handler for 0x1d6	verified	one	objectlayer/combatlogmessages#log-messages	
 0x630170	58			objectlayer	orchestration		Handles opcode 0x1d6 by reading its body into a local and discarding it	verified	one	spell/cast#small-spell-helpers	
-0x6301b0	10			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x6301b0	10	ClearIgnoredMessage		objectlayer	orchestration		Clears the handler for 0x1d6	verified	one	objectlayer/combatlogmessages#log-messages	
 0x6301c0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x6301d0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x6301e0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
@@ -22475,17 +22475,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x637a30	19	InitCollideSq40		collision	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	collision/overview#resolution-file-initializers	
 0x637a50	5	InitCollideSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x637a60, a static initializer of the file	verified	one	collision/overview#resolution-file-initializers	
 0x637a60	19	InitCollideSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#resolution-file-initializers	
-0x637a80	59			objectlayer	orchestration		Runs UnitCombatLogXP_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x637ac0	528			objectlayer	primitive		Runs UnitCombatLogXP_C.cpp code that calls __ftol, ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x637cd0	279			objectlayer	primitive		Runs UnitCombatLogXP_C.cpp code that calls __ftol, FrameScript_GetText; not read here	inferred	none		
+0x637a80	59	LogPendingXpGain		objectlayer	orchestration		Writes a pending XP gain line	verified	one	objectlayer/combatlogmessages#experience	
+0x637ac0	528	LogExhaustionXpGain		objectlayer	primitive		Writes an XP line with its rest modifier and group bonus or raid penalty	verified	one	objectlayer/combatlogmessages#experience	
+0x637cd0	279	LogXpGainLine		objectlayer	primitive		Writes a plain, group or raid XP line, named or unnamed	verified	one	objectlayer/combatlogmessages#experience	
 0x637df0	5	InitCombatLogXpCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x637e00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x637e00	11	InitCombatLogXpCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x637e10	18			objectlayer	orchestration		Registers or clears the handlers for 0x1d0; not read further here	inferred	none		
-0x637e30	144			objectlayer	orchestration		Handles server opcode 0x1d0, as its registration names; its body is not read here	inferred	none		
-0x637ec0	162			objectlayer	orchestration		Runs UnitCombatLogXP_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x637f70	30			objectlayer	primitive		Runs UnitCombatLogXP_C.cpp code that calls FrameScript_GetText; not read here	inferred	none		
-0x637f90	28			objectlayer	orchestration		Runs UnitCombatLogXP_C.cpp code not read here	inferred	none		
-0x637fb0	10			objectlayer	orchestration		Runs UnitCombatLogXP_C.cpp code not read here	inferred	none		
+0x637e10	18	RegisterXpLogMessage		objectlayer	orchestration		Registers the handler for 0x1d0	verified	one	objectlayer/combatlogmessages#log-messages	
+0x637e30	144	HandleXpLog		objectlayer	orchestration		Handles 0x1d0: reads an XP gain and passes it on	verified	one	objectlayer/combatlogmessages#experience	
+0x637ec0	162	ShowXpGain		objectlayer	orchestration		Writes an XP loss, holds a gain on its victim, or writes and floats it	verified	one	objectlayer/combatlogmessages#experience	
+0x637f70	30	LogXpLoss		objectlayer	primitive		Writes COMBATLOG_XPLOSS_FIRSTPERSON_UNNAMED with the negated XP	verified	one	objectlayer/combatlogmessages#experience	
+0x637f90	28	LogXpGainNow		objectlayer	orchestration		Passes an XP gain to its line	verified	one	objectlayer/combatlogmessages#experience	
+0x637fb0	10	ClearXpLogMessage		objectlayer	orchestration		Clears the handler for 0x1d0	verified	one	objectlayer/combatlogmessages#log-messages	
 0x637fc0	5	InitCombatLogXpDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x637fd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x637fd0	15	InitCombatLogXpDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x637fe0	5	InitCombatLogXpQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x637ff0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -30448,7 +30448,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x713500	59	CM2Model::HasCamera		models	unreached		Returns whether an instance's model has a camera id; nothing reaches it	verified	one	models/overview#unreached-code	
 0x713540	72	CM2Model::GetCameraById		models	orchestration		Returns the camera object of a model camera id	inferred	none		
 0x713590	47	CM2Model::GetCamera		models	orchestration		Returns the camera object of a model camera index	inferred	none		
-0x7135c0	7	CM2Model::HasModelParticles		models	orchestration		Returns whether an instance has particles that are models	inferred	none		
+0x7135c0	7	CM2Model::HasLiveParticles		models	orchestration		Returns an instance's live-particle flag +0x3d8, which CM2Model::Animate sets from its emitters	verified	one	objectlayer/effects#stopping-and-draining	
 0x7135d0	34	CM2Model::GetParticleEmitterCount		models	orchestration		Returns the number of particle emitters in an instance's model	inferred	none		
 0x713600	54	CM2Model::GetParticleEmitter		models	orchestration		Returns an instance's particle emitter by index	inferred	none		
 0x713640	54	CM2Model::GetBoundingBox		models	orchestration		Copies the bounding box of an instance's model	verified	one	models/model#bounds	
@@ -35466,7 +35466,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b5e40	6	EmitterAddRef		models	orchestration		Increments an emitter's reference count	inferred	none		
 0x7b5e50	13	EmitterRelease		models	orchestration		Decrements an emitter's reference count and destroys it through its vtable at zero	inferred	none	models/particles#registries	
 0x7b5e60	245	CParticleEmitter2::TransformParticles		models	primitive		Transforms the live particles of an emitter and its children by a matrix	inferred	none		models::orient_velocity_difftest
-0x7b5f60	59	CParticleEmitter2::HasModelParticles		models	orchestration		Returns whether an emitter or one of its children emits models	inferred	none		
+0x7b5f60	59	CParticleEmitter2::HasLiveParticles		models	orchestration		Returns whether an emitter or one of its children holds a live particle	verified	one	objectlayer/effects#stopping-and-draining	
 0x7b5fa0	53	CParticleEmitter2::CountModelParticles		models	orchestration		Counts the live model particles of an emitter and its children	inferred	none		
 0x7b5fe0	98	CParticleEmitter2::GetParticleModel		models	orchestration		Returns the model of a model particle by index across an emitter and its children	inferred	none		
 0x7b6050	45	SortableParticleHeapDeletingDestructor		models	host		Destroys the sortable particle record heap and frees it when asked	inferred	none		

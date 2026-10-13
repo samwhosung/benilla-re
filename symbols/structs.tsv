@@ -2,6 +2,7 @@ name	size	vtable	system	meaning	confidence	proof	finding
 BlizzardObject	324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
 CBaseManaged	28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
 CCamera	368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
+CEffect	144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
 CFrameStrataNode	284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
 CGContainer_C	2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/classes#class-sizes-and-pools
 CGGameObject_C	784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/classes#class-sizes-and-pools
@@ -16,6 +17,7 @@ CM2Shared	356		models	Holds a model file: its fixed-up data, view, textures, sha
 CMapObj	2036		models	Holds a map object in 0x7f4 fixed bytes the allocation extends: root file, chunk pointers, counts, bounds and groups	verified	one	models/wmo#root-file-chunks
 CMapObjGroup	368		models	Holds a map object group: its header fields, chunk pointers and counts, file data and parse state	verified	one	models/wmo#group-header
 CMirrorHandler	48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
+CMissile	144		objectlayer	Holds a spell missile: model, GUIDs, spell, speed, position, destination, flags, sound, outcome arrays and list link	verified	one	objectlayer/missiles#the-missile-object
 CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
 CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
 CParticleEmitter2	656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter

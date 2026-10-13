@@ -48,6 +48,23 @@ CCamera	0x0148	28	CBaseManaged	m_yawProperty	camera	Holds the yaw angle property
 CCamera	0x0164	4	float	m_yaw	camera	Holds the yaw angle	inferred	none	camera#properties
 CCamera	0x0168	4	float	m_yawCos	camera	Holds the cosine of the yaw angle, recomputed on every store	inferred	none	camera#angle-properties
 CCamera	0x016c	4	float	m_yawSin	camera	Holds the sine of the yaw angle, recomputed on every store	inferred	none	camera#angle-properties
+CEffect	0x0000	4	CM2Model *	m_model	objectlayer	Points at the effect model	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0004	4	CM2Model *	m_lineModel	objectlayer	Points at the fishing line model	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0008	8	uint64_t	m_owner	objectlayer	Holds the owner GUID	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0010	8	uint64_t	m_target	objectlayer	Holds the target GUID	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0018	4	uint32_t	m_spellId	objectlayer	Holds the spell id	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x001c	4	void *	m_kit	objectlayer	Points at the SpellVisualKit record	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0020	4	void *	m_effectName	objectlayer	Points at the SpellVisualEffectName record	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0024	4	int32_t	m_attachment	objectlayer	Holds the attachment, -1 for none	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0028	4	void *	m_sound	objectlayer	Points at the playing kit sound	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x002c	4	uint32_t	m_flags	objectlayer	Holds the sound, planted, speed, shake, timing, visibility, scale and set-up flags	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0048	12	float[3]	m_position	objectlayer	Holds the position of a planted effect	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0054	4	uint32_t	m_startTime	objectlayer	Holds the start time	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0058	4	uint32_t	m_endTime	objectlayer	Holds the end time	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0080	4	void *	m_worldObject	objectlayer	Points at the world object of a planted effect	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0084	4	uint32_t	m_refCount	objectlayer	Holds the reference count, 1 at construction	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x0088	4	CEffect **	m_prevLink	objectlayer	Points at the slot that points at the effect	verified	one	objectlayer/effects#the-effect-object
+CEffect	0x008c	4	CEffect *	m_next	objectlayer	Points at the next effect on its list	verified	one	objectlayer/effects#the-effect-object
 CFrameStrataNode	0x0000	12	uint32_t[3]	m_pending	ui	Holds the frames that joined while the update walked the level	verified	one	ui/strata#strata-records-and-level-nodes
 CFrameStrataNode	0x000c	12	uint32_t[3]	m_frames	ui	Holds the level's frames in update and draw order	verified	one	ui/strata#strata-records-and-level-nodes
 CFrameStrataNode	0x0018	4	CSimpleFrame *	m_cursor	ui	Holds the next frame the update pass visits	verified	one	ui/strata#the-update-pass
@@ -255,6 +272,26 @@ CMirrorHandler	0x0024	4	uint32_t	m_length	objectlayer	Holds the watched range's 
 CMirrorHandler	0x0028	4	uint32_t	m_kind	objectlayer	Holds the kind its registration passes, written by 0x467f00	verified	one	objectlayer/fields#watcher-records
 CMirrorHandler	0x002c	1	uint8_t	m_busy	objectlayer	Holds a flag the removal reads as the callback running; 0x467f00 clears it	inferred	none	objectlayer/fields#watcher-records
 CMirrorHandler	0x002d	1	uint8_t	m_deletePending	objectlayer	Holds 1 when a removal came during the callback, written by 0x467ff0 and read by 0x465570	verified	one	objectlayer/fields#watcher-records
+CMissile	0x0000	4	CM2Model *	m_model	objectlayer	Points at the missile model	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0008	8	uint64_t	m_caster	objectlayer	Holds the caster GUID	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0010	8	uint64_t	m_target	objectlayer	Holds the target GUID	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0018	4	uint32_t	m_spellId	objectlayer	Holds the spell id	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x001c	4	float	m_speed	objectlayer	Holds the speed in yards per second	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0020	12	float[3]	m_position	objectlayer	Holds the position	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x002c	12	float[3]	m_destination	objectlayer	Holds the destination	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0038	4	uint32_t	m_flags	objectlayer	Holds the hit, impact, bow, outcome and reported flags	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x003c	4	int32_t	m_attachment	objectlayer	Holds the target attachment, -1 for none	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0040	4	uint32_t	m_soundId	objectlayer	Holds the flight sound id	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0044	4	void *	m_sound	objectlayer	Points at the playing flight sound	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0048	4	uint32_t	m_outcome	objectlayer	Holds the outcome code	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x004c	4	uint32_t	m_reflectOutcome	objectlayer	Holds the outcome code a reflection takes	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0050	4	uint32_t	m_expiry	objectlayer	Holds the time a stuck or impact missile is freed	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0074	4	uint32_t	m_reactionTime	objectlayer	Holds the time the target plays its block or dodge	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0078	4	uint32_t	m_launchTime	objectlayer	Holds the launch time	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x007c	4	void *	m_worldObject	objectlayer	Points at the world object that carries the model	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0080	4	CMissile **	m_prevLink	objectlayer	Points at the slot that points at the missile	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0084	4	CMissile *	m_next	objectlayer	Points at the next missile on its list	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0088	4	uint32_t	m_poolHandle	objectlayer	Holds the pool handle	verified	one	objectlayer/missiles#the-missile-object
 CMovement	0x0000	8	void *[2]	m_link	collision	Holds a list link, zeroed by the constructor and unlinked by 0x7c5950	verified	one	collision/kinematics#teardown
 CMovement	0x0008	8	void *[2]	m_transportLink	collision	Holds the transport passenger link; linked when its second dword is not 0	inferred	none	collision/kinematics#teardown
 CMovement	0x0010	12	float[3]	m_position	collision	Holds the live position, in transport space while a transport GUID is set	verified	one	collision/kinematics#anchors-and-elapsed-time
