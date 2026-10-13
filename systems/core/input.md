@@ -300,7 +300,7 @@ read.
 
 The window object file runs three static initializers: the +∞ store at its start and the 2π and
 1/2π stores at its end. The three before them, `0x42c830`, `0x42c980` and `0x42c9a0`, are the
-small IME file's below it (`os`).
+IME initializer file's below it, and below that is `OsIME.cpp`; both are `os`.
 
 Addresses: `0x82740c`, `0x827418`, `0x42c830`, `0x42c840`, `0x42c980`, `0x42c990`, `0x42c9a0`, `0x42c9b0`, `0x42c9d0`, `0x42c9e0`, `0x42e1a0`, `0x42e1b0`, `0x42e1c0`, `0x42e1d0`
 Confidence: verified
@@ -308,11 +308,15 @@ Proof: one
 Test: none
 
 The window file's are the slots `0x827418` through `0x827420`, matched by the census of
-`core/loop#static-initializers`; the IME file's run is `0x82740c` to `0x827414`. Every file's
-run opens with its +∞ copy (`collision/overview`, Object files): `0x42c830` copies the +∞ at
-0x801610 and `0x42c980` doubles the π 4 bytes on; `0x42c9d0` copies 0x801618 and `0x42e1a0`
-doubles 0x80161c. The IME file's code, 0x42c850 to 0x42c960, calls `ImmGetContext` and
-`ImmAssociateContext`. Their globals are read only by each other.
+`core/loop#static-initializers`; the IME initializer file's run is `0x82740c` to `0x827414`. A
+file that includes the shared header opens its run with its +∞ (`systems/README`, Object files):
+`0x42c830` copies the +∞ at 0x801610 and `0x42c980` doubles the π 4 bytes on; `0x42c9d0` copies
+0x801618 and `0x42e1a0` doubles 0x80161c, so the window file is `0x42c9d0` to `0x42e1d0` and the
+IME initializer file holds 0x42c850 to 0x42c960, which call `ImmGetContext` and
+`ImmAssociateContext` with the globals 0x884ca0 and 0x884ca8. `OsIME.cpp` is the code from 0x42c1a0
+to 0x42c828: its functions call IMM32, directly or through each other, and its path is pushed at 0x42c5ab, 0x42c64c and
+0x42c808. It has no run of its own and uses neither global, so whether it and the IME initializer
+file are one object file is not settled. The initializers' globals are read only by each other.
 
 ## Unreached functions
 

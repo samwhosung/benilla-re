@@ -25,8 +25,8 @@ Roots: `0x615730`, `0x615ac0`, `0x6185a0`, `0x6185c0`, `0x61abb0`, `0x61abe0`, `
 collision owns four object files. Movement.cpp runs from `0x615730` through `0x61b110`,
 Movement_C.cpp from `0x6307a0` through `0x631270`, the resolution layer from `0x631290` through
 `0x637a60`, and the shared movement code from `0x7c4830` through `0x7c78b0`. The two files without a
-source path are named here by what they hold. Each file's run of initializers opens with its +∞;
-the 2π and 1/2π just before the shared file's run are the geometry file's below it, and the +∞
+source path are named here by what they hold. Each file's run of initializers opens with its +∞
+(`systems/README`, Object files); the 2π and 1/2π just before the shared file's run are the geometry file's below it, and the +∞
 just after opens the next file's.
 
 Addresses: `0x615730`, `0x61b110`, `0x6307a0`, `0x631270`, `0x631290`, `0x637a60`, `0x7c4830`, `0x7c78b0`, `0x616860`, `0x6309b0`, `0x861418`, `0x8642e8`, `0x827000`, `0x613ad0`, `0x6151f0`, `0x61b130`, `0x7c47e0`, `0x7c47f0`, `0x7c4800`, `0x7c4810`, `0x7c78d0`, `0x7c78e0`
@@ -35,19 +35,19 @@ Proof: one
 Test: none
 
 `Movement.cpp` (`0x861418`) is pushed at `0x61686a` in `0x616860`, `Movement_C.cpp` (`0x8642e8`)
-at `0x6309c0` in `0x6309b0`. The table `0x827000` lists each file's initializers as one run, and
-every run opens with a +∞ copy: the first slot, `0x827004`, is one, and the last three, from
-`0x82e024`, are +∞, 2π and 1/2π. A file's code starts at its lowest initializer. Movement.cpp's run
-is `0x82af2c` to `0x82afa0`: +∞ `0x615ac0`, 2π `0x6185a0` onward, and last `0x615730`, its lowest.
-The run before opens at `0x82aeb8` with Object_C.cpp's +∞ `0x613ad0`, copying 0x80c60c; its 2π
-`0x6151f0` doubles 0x80c610, the π 4 bytes on, which Object_C.cpp's code reads at 0x614be8, so
-`0x6151f0` to `0x615710` are Object_C.cpp's. LootRoll.cpp's +∞ `0x61b130` opens the run after.
-Movement_C.cpp's run is `0x82b5e0` to `0x82b654`; `0x6307a0`, below its lowest, is an empty `ret 8`
-whose one caller is the shared code (`0x7c5d14`). The resolution layer's run, `0x82b658` to
-`0x82b6d4`, opens with `0x631290`; the next function pushes `UnitCombatLogXP_C.cpp`. The shared
-file's run is `0x82dab4` to `0x82db20`. Before it, `0x7c47e0` and `0x7c4800` (bodies `0x7c47f0`,
-`0x7c4810`, writing `0xcf5ca8` and `0xcf5ca4`) end the run opened at `0x82daa8`; after it,
-`0x7c78d0` (body `0x7c78e0`, writing `0xcf5d30`) opens one.
+at `0x6309c0` in `0x6309b0`. Each file includes the shared header, so its run in `0x827000` opens
+with its +∞ (`systems/README`, Object files). Movement.cpp's run is `0x82af2c` to `0x82afa0`: +∞
+`0x615ac0`, 2π `0x6185a0` onward, and last `0x615730`, its lowest code. The run before opens at
+`0x82aeb8` with Object_C.cpp's +∞ `0x613ad0`, copying 0x80c60c; its 2π `0x6151f0` doubles
+0x80c610, the π 4 bytes on, which Object_C.cpp's code reads at 0x614be8, so `0x6151f0` to
+`0x615710`, which ends at padding before `0x615730`, are Object_C.cpp's. LootRoll.cpp's +∞
+`0x61b130` follows `0x61b110` at once. Movement_C.cpp's run is `0x82b5e0` to `0x82b654`, lowest
+`0x6307b0`; `0x6307a0`, just below, is an empty `ret 8` whose one caller is the shared code
+(`0x7c5d14`), so the file starts there. The resolution layer's run, `0x82b658` to `0x82b6d4`,
+opens with `0x631290`, right after `0x631270`; the next function, `0x637a80`, pushes
+`UnitCombatLogXP_C.cpp`. The shared file's run is `0x82dab4` to `0x82db20`. Before it, `0x7c47e0`
+and `0x7c4800` (bodies `0x7c47f0`, `0x7c4810`, writing `0xcf5ca8` and `0xcf5ca4`) end the run
+opened at `0x82daa8`; after it, `0x7c78d0` (body `0x7c78e0`, writing `0xcf5d30`) opens one.
 
 ## Shared header constants
 

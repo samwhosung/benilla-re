@@ -25,6 +25,19 @@ structs and globals it owns, and which of its functions the rest of the client a
 A system owns the functions of its object files (`../symbols/README.md`). At most 200 words, no
 addresses beyond what a reader needs to find the code.
 
+### Object files
+
+Most object files include a shared maths header whose static initializers store +∞, 2π, 1/2π and
+a block of constants. The C runtime's initializer table, `0x827000`, lists each file's initializers
+as one contiguous run in link order, and a file that includes the header opens its run with its +∞
+copy: the table's first slot, `0x827004`, is one, and its last three, from `0x82e024`, are +∞, 2π
+and 1/2π. A run gives the file's initializers, not its extent. The file's code can start before
+its +∞ thunk, at a lower initializer of the same run or at a function with no initializer, and
+code past its last initializer can belong to a file with no run. A file without the header or
+without initializers has no run: it is bounded by the source paths its code passes and by its
+callers. One stretch of code between two runs can hold several files, as WardenClient.cpp
+(0x6c9f8e) and FFXEffects.cpp (0x6cbed2) share the stretch after slot `0x82cd78`.
+
 ### Roots
 
 The functions through which anything outside the system enters it:

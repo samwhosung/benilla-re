@@ -36,14 +36,14 @@ The source paths `AaBsp.cpp` (pushed in `0x692ce0`), `MapObj.cpp` (in `0x6a36d0`
 (in `0x706510`), `M2Scene.cpp` (in `0x707350`), `M2Model.cpp` (in `0x70ebd0`),
 `Services/RibbonEmitter.h` (in `0x7aeeb0`) and `ParticleSystem2.h` (in `0x7b87b0`) name the files
 they appear in. Each file's initializer run is contiguous in `0x827000` and opens with its +∞, 2π
-and 1/2π, and the runs give the boundaries: AaBsp.cpp `0x82bfb0` to `0x82bfd4`, MapObj.cpp
+and 1/2π; the runs give each file's initializers: AaBsp.cpp `0x82bfb0` to `0x82bfd4`, MapObj.cpp
 `0x82c408` to `0x82c484`, the group file `0x82c854` to `0x82c8cc`, the reader `0x82cc00` to
 `0x82cc6c`, the model files `0x82d110` to `0x82d190`, the registries `0x82d994` to `0x82d99c`, and
-the particle files `0x82d9b0` to `0x82da04`. Code past a file's last initializer stays with it
-until the next run's +∞: the BSP leaf cache `0x693ca0` to `0x693e80` keeps its counter in AaBsp's
-`.bss` (`0xca03e8`, beside the leaf cache root `0xca03e4` that AaBsp's `0x693080` frees), before the
-next file's first global; `0x6c4c20`, called only by the reader, precedes the next run at
-`0x6c4ca0`.
+the particle files `0x82d9b0` to `0x82da04`. Code past a file's last initializer is placed by the
+data and callers it shares, since a file with no run can follow (`systems/README`, Object files):
+the BSP leaf cache `0x693ca0` to `0x693e80` keeps its counter in AaBsp's `.bss` (`0xca03e8`, beside
+the leaf cache root `0xca03e4` that AaBsp's `0x693080` frees), before the next file's first global;
+`0x6c4c20`, called only by the reader, precedes the next run at `0x6c4ca0`.
 
 ## Shared header constants
 

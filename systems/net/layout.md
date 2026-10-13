@@ -7,9 +7,11 @@ net owns three runs of code. The first, `0x536eb0` to `0x5388a0`, holds `NetClie
 `FriendList.cpp`, the account data and download code, `ChecksumExecutables.cpp`, `Login.cpp`, the
 realm connection, `WowConnection.cpp`, `WDataStore.cpp`, `Grunt.cpp` and `AddressList.cpp`. The
 third, `0x5d1420` to `0x5d3f20`, holds the SHA-1 code, the SHA-1 random pool, SRP6 and its
-big-number helpers. Each object file's code opens with its static initializers. Of the 1,146
-functions in the three runs, 552 are those initializers and their thunks, and 81 are unreached.
-The closure is not yet complete: none of its 323 primitives has a bit-exact test.
+big-number helpers. The files of the first two runs open their code with their static initializers;
+the third run's code has one, the +∞ `0x5d3b20` near its end, and starts at `0x5d1420`, the SHA-1
+compression, right after IGxuFontGlyph.cpp's last initializer. Of the 1,146 functions in the three
+runs, 552 are those initializers and their thunks, and 81 are unreached. The closure is not yet
+complete: none of its 321 primitives has a bit-exact test.
 
 The system's other docs are `wire`, `dispatch`, `session` and `login`.
 
@@ -34,11 +36,12 @@ The source paths are pushed at `0x537639` (`NetClient.cpp`), `0x538813` (`NetInt
 `0x536eb0` passes interface strings; the code after `0x5388a0` passes `DB/WowClientDB.h`; after
 `0x5be840` it allocates `CGxuLight` lists; before `0x5d1420` it is `IGxuFontGlyph.cpp`, whose run
 opens with its +∞ at slot `0x82aaa0` and ends with its 2π and 1/2π, `0x5d13d0` and `0x5d13f0`
-(bodies `0x5d13e0`, `0x5d1400`), as every file's run opens with its +∞ (`collision/overview`,
-Object files); after `0x5d3f20` it is `Trade_C.cpp`. The slots run from `0x829b84` to `0x82aaac`,
-broken by `0x82a9e4`, which holds an initializer in the lighting code after the second run, and by
-IGxuFontGlyph.cpp's run, `0x82aaa0` to `0x82aaa8`; `0x829b80`, just before, holds an interface list
-initializer in the code before the first run. None touches data net code reads.
+(bodies `0x5d13e0`, `0x5d1400`), as a file that includes the shared header opens its run with its
++∞ (`systems/README`, Object files); after `0x5d3f20` it is `Trade_C.cpp`. The slots run from
+`0x829b84` to `0x82aaac`, broken by `0x82a9e4`, which holds an initializer in the lighting code
+after the second run, and by IGxuFontGlyph.cpp's run, `0x82aaa0` to `0x82aaa8`; `0x829b80`, just
+before, holds an interface list initializer in the code before the first run. None touches data net
+code reads.
 
 ## Static initializers
 

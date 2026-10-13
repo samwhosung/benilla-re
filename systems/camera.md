@@ -11,7 +11,7 @@ properties by id through four accessors.
 The code is two object files from `0x7abbc0` through `0x7adf70`: the property machinery, then the
 class with two free transforms the interface uses, an orthographic setup for a rectangle and a
 screen-to-world unprojection. The particle density setting beside them is in the next file,
-`models`' particle registry; its entry stays here.
+`models`' particle registry; its entry is in this doc.
 
 Roots: `0x7ac930`, `0x7acf10`, `0x7ada40`, `0x7ad2c0`, `0x7ad7f0`, `0x7abf80`, `0x7ac0b0`,
 `0x7ac250`, `0x7ac3a0`, and the static initializers `0x7abbc0`, `0x7ac5a0`, `0x7ac5c0`, `0x7ac5f0`,
@@ -224,14 +224,16 @@ Confidence: verified
 Proof: one
 Test: none
 
-Every file's run opens with its +∞ copy (`collision/overview`, Object files). Slot `0x82d978` holds
-`0x7abbc0`, which copies the +∞ at 0x81d7a0; `0x7ac5a0` doubles the π 4 bytes on. `0x7ac5f0` copies
-the +∞ at 0x81d7a8, and `0x7adf20` and `0x7ac610` read the π at 0x81d7ac. `0x7abbe0` reads
-`0xcf5730` and `0xcf5734`, which only the first file's initializers write. `0x7adf90` copies the
-+∞ at 0x81d80c, and the registry's 2π `0x7af1b0`, at slot `0x82d998`, doubles the π at 0x81d810,
-so the code between, `0x7adfb0` and `0x7ae000`, is the registry's. The code below `0x7abbc0`
-allocates with the sound-file cache's tags. Only `0xcf5730`, `0xcf5734` and `0xcf5738` (read by
-`0x7ac930` and `0x7acf10`) are read; the other four are written and never read.
+Each file includes the shared header, so its run opens with its +∞ (`systems/README`, Object
+files). Slot `0x82d978` holds `0x7abbc0`, which copies the +∞ at 0x81d7a0; `0x7ac5a0` doubles the π
+4 bytes on. `0x7ac5f0` copies the +∞ at 0x81d7a8, and `0x7adf20` and `0x7ac610` read the π at
+0x81d7ac. `0x7abbe0` reads `0xcf5730` and `0xcf5734`, which only the first file's initializers
+write. `0x7adf90` copies the +∞ at 0x81d80c, and the registry's 2π `0x7af1b0`, at slot `0x82d998`,
+doubles the π at 0x81d810, so the code between, `0x7adfb0` and `0x7ae000`, is the registry's. The
+class's file ends past its last initializer with `0x7adf70`, whose one caller is the class's
+`0x7acd2e`. The code below `0x7abbc0` allocates with the sound-file cache's tags. Only `0xcf5730`,
+`0xcf5734` and `0xcf5738` (read by `0x7ac930` and `0x7acf10`) are read; the other four are written
+and never read.
 
 ## Unreached functions
 

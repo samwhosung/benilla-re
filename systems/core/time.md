@@ -9,7 +9,7 @@ reports more than one core in the way `Multi-core gate` reads, it stays `GetTick
 The clock lives in three OS object files: the time calls from `0x4293d0` through `0x429790`
 (calendar time, file times and the manager's creation), `TimeManager.cpp` from `0x42b530` through
 `0x42ba90` (the counter, its scale and offset, the calibration thread), and the clock file from
-`0x42bff0` through `0x42c180` (the millisecond clock and the processor frequency). The state is the
+`0x42bff0` (the millisecond clock and the processor frequency), whose end is not settled. The state is the
 counter mode `0x884c80`, the scale `0x8332c8`, the offset `0x884c88`, the counter rate
 `0x8332c0`, and one time manager object at `0x884c78`.
 
@@ -175,11 +175,14 @@ Proof: one
 Test: none
 
 They are the slots `0x8273f4` through `0x827408`, matched by the census of
-`core/loop#static-initializers`. Every file's run opens with its +∞ copy (`collision/overview`,
-Object files): `0x42b530` copies the +∞ at 0x8015a0 and `0x42b670` doubles the π 4 bytes on;
-`0x42bff0` copies 0x8015a8 and `0x42c150` doubles 0x8015ac. So the code between `0x42b530` and
-`0x42b690`, and from `0x42bff0` to `0x42c170`, is one file each; `TimeManager.cpp` is pushed at
-0x42b6c7, in `0x42b6c0`.
+`core/loop#static-initializers`. A file that includes the shared header opens its run with its +∞
+(`systems/README`, Object files): `0x42b530` copies the +∞ at 0x8015a0 and `0x42b670` doubles the π
+4 bytes on; `0x42bff0` copies 0x8015a8 and `0x42c150` doubles 0x8015ac. So the code from
+`0x42b530` to `0x42b690`, and from `0x42bff0` to `0x42c170`, is one file each. Past `0x42b690`,
+`TimeManager.cpp` is pushed at 0x42b6c7, in `0x42b6c0`, and the functions to `0x42ba90` are the
+time manager's own; the clock file's run follows at once. Past `0x42c180` the code from 0x42c1a0
+to 0x42c828 calls IMM32 and passes `OsIME.cpp` (`os`, `core/input`); nothing settles whether the
+clock file ends at `0x42c180` or runs on through it.
 
 ## Unreached functions
 
