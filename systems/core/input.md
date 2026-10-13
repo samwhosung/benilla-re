@@ -5,13 +5,13 @@ five-dword record in a ring; once per tick the loop drains the ring through the 
 a switch on the record's kind, which updates the shared modifier and button masks and dispatches
 one event category (`core/events`).
 
-The window code is the OS object file from `0x42c980` through `0x42e1d0`: the pump, the ring,
+The window code is the OS object file from `0x42c9d0` through `0x42e1d0`: the pump, the ring,
 the window procedure, key translation, cursor placement and the window frame. The switch and the
 per-kind handlers, `0x4239a0` to `0x424260`, are in the event library. The masks are `0x883f30`
 (mouse mode), `0x883f34` (modifier keys) and `0x883f40` (held buttons). The window procedure is
 installed by the window code of another system, which calls it through a pointer.
 
-Roots: `0x42cfe0`, `0x42cd60`, `0x42cd70`, `0x42cde0`, `0x42cf10`, `0x42cfd0`, `0x420540`, `0x420600`, and the static initializers `0x42c980`, `0x42c9a0`, `0x42c9d0`, `0x42e1a0`, `0x42e1c0`
+Roots: `0x42cfe0`, `0x42cd60`, `0x42cd70`, `0x42cde0`, `0x42cf10`, `0x42cfd0`, `0x420540`, `0x420600`, and the static initializers `0x42c9d0`, `0x42e1a0`, `0x42e1c0`
 
 ## Window messages
 
@@ -298,16 +298,21 @@ read.
 
 ## Static initializers
 
-The window object file runs five static initializers: the 2π, 1/2π and +∞ stores at its start
-and the 2π and 1/2π stores at its end.
+The window object file runs three static initializers: the +∞ store at its start and the 2π and
+1/2π stores at its end. The three before them, `0x42c830`, `0x42c980` and `0x42c9a0`, are the
+small IME file's below it (`os`).
 
-Addresses: `0x827410`, `0x42c980`, `0x42c990`, `0x42c9a0`, `0x42c9b0`, `0x42c9d0`, `0x42c9e0`, `0x42e1a0`, `0x42e1b0`, `0x42e1c0`, `0x42e1d0`
+Addresses: `0x82740c`, `0x827418`, `0x42c830`, `0x42c840`, `0x42c980`, `0x42c990`, `0x42c9a0`, `0x42c9b0`, `0x42c9d0`, `0x42c9e0`, `0x42e1a0`, `0x42e1b0`, `0x42e1c0`, `0x42e1d0`
 Confidence: verified
 Proof: one
 Test: none
 
-They are the slots `0x827410` through `0x827420`, matched by the census of
-`core/loop#static-initializers`. Their globals are read only by each other.
+The window file's are the slots `0x827418` through `0x827420`, matched by the census of
+`core/loop#static-initializers`; the IME file's run is `0x82740c` to `0x827414`. Every file's
+run opens with its +∞ copy (`collision/overview`, Object files): `0x42c830` copies the +∞ at
+0x801610 and `0x42c980` doubles the π 4 bytes on; `0x42c9d0` copies 0x801618 and `0x42e1a0`
+doubles 0x80161c. The IME file's code, 0x42c850 to 0x42c960, calls `ImmGetContext` and
+`ImmAssociateContext`. Their globals are read only by each other.
 
 ## Unreached functions
 

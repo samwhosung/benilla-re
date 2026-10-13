@@ -471,6 +471,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42a4e0	32	OsFileExists		os			Returns 1 when a path names an existing file that is not a directory	inferred	none		
 0x42a500	32	OsDirectoryExists		os			Returns 1 when a path names an existing directory	inferred	none		
 0x42a820	127	OsMoveFile		os			Moves a file or folder with MoveFileW after converting both UTF-8 paths to UTF-16	inferred	none		
+0x42b530	5	InitTimeManagerInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b540; a static initializer	verified	one	core/time#static-initializers	
+0x42b540	11	InitTimeManagerInfinity		core	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/time#static-initializers	
 0x42b670	5	InitTimeManagerTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#static-initializers	
 0x42b680	15	InitTimeManagerTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
 0x42b690	5	InitTimeManagerInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#static-initializers	
@@ -488,8 +490,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b9c0	86	CalibrationThreadProc		core	orchestration	uint32_t __stdcall (void *unused)	Runs the calibration, then frees the time manager and saves the counter rate	verified	one	core/time#calibration-thread	
 0x42ba20	103	EstimateCounterRate		core	primitive		Returns counter ticks per second over a span of samples, skipping a zero span	verified	one	core/time#calibration-thread	
 0x42ba90	1374	CalibrateClockCounter		core	primitive		Samples every 250 ms, estimates the counter rate over four spans and switches the counter	verified	one	core/time#calibration-thread	
-0x42bff0	5	InitTimeManagerInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c000; a static initializer	verified	one	core/time#static-initializers	
-0x42c000	11	InitTimeManagerInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/time#static-initializers	
+0x42bff0	5	InitClockInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c000; a static initializer	verified	one	core/time#static-initializers	
+0x42c000	11	InitClockInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/time#static-initializers	
 0x42c010	5	OsGetAsyncTimeMs	idb	core	orchestration	uint32_t __cdecl (void)	Returns the millisecond clock by a tail jump to 0x42b790	verified	two	core/time#the-millisecond-clock	
 0x42c020	17	OsGetClockTicksPerSecond		core	primitive	uint32_t __cdecl (void)	Returns trunc(1000 / 0x8332c8), the clock counter's ticks per second	verified	one	core/time#counter-rate	
 0x42c040	13	OsGetClockSeconds		core	unreached		Returns the clock scale in seconds	inferred	none	core/time#unreached-functions	
@@ -497,14 +499,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42c060	74	OsGetCpuFrequency		core	orchestration	uint64_t __cdecl (void)	Returns the processor's maximum frequency in hertz, or the calibrated counter rate	verified	one	core/time#processor-frequency	
 0x42c0b0	36	GetCachedPowerInfo		core	orchestration		Returns the cached result of 0x42c0e0, calling it once	verified	one	core/time#processor-frequency	
 0x42c0e0	100	QueryCpuMaxMhz		core	host		Stores the maximum MHz from CallNtPowerInformation times 10^6 in 0x884c70; returns 1 on success	verified	one	core/time#processor-frequency	
-0x42c150	5	InitTimeManagerTwoPiThunk2		core	orchestration	void __cdecl (void)	Jumps to 0x42c160; a static initializer	verified	one	core/time#static-initializers	
-0x42c160	15	InitTimeManagerTwoPi2		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
-0x42c170	5	InitTimeManagerInvTwoPiThunk2		core	orchestration	void __cdecl (void)	Jumps to 0x42c180; a static initializer	verified	one	core/time#static-initializers	
-0x42c180	19	InitTimeManagerInvTwoPi2		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/time#static-initializers	
-0x42c980	5	InitInputTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c990; a static initializer	verified	one	core/input#static-initializers	
-0x42c990	15	InitInputTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/input#static-initializers	
-0x42c9a0	5	InitInputInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c9b0; a static initializer	verified	one	core/input#static-initializers	
-0x42c9b0	19	InitInputInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/input#static-initializers	
+0x42c150	5	InitClockTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c160; a static initializer	verified	one	core/time#static-initializers	
+0x42c160	15	InitClockTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
+0x42c170	5	InitClockInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c180; a static initializer	verified	one	core/time#static-initializers	
+0x42c180	19	InitClockInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/time#static-initializers	
+0x42c830	5	InitImeInfinityThunk		os	orchestration	void __cdecl (void)	Jumps to 0x42c840; a static initializer	verified	one	core/input#static-initializers	
+0x42c840	11	InitImeInfinity		os	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/input#static-initializers	
+0x42c980	5	InitImeTwoPiThunk		os	orchestration	void __cdecl (void)	Jumps to 0x42c990; a static initializer	verified	one	core/input#static-initializers	
+0x42c990	15	InitImeTwoPi		os	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/input#static-initializers	
+0x42c9a0	5	InitImeInvTwoPiThunk		os	orchestration	void __cdecl (void)	Jumps to 0x42c9b0; a static initializer	verified	one	core/input#static-initializers	
+0x42c9b0	19	InitImeInvTwoPi		os	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/input#static-initializers	
 0x42c9d0	5	InitInputInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c9e0; a static initializer	verified	one	core/input#static-initializers	
 0x42c9e0	11	InitInputInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/input#static-initializers	
 0x42c9f0	520	OsInputGetEvent		core	host	uint32_t __fastcall (uint32_t *kind, uint32_t *a, uint32_t *b, uint32_t *c, uint32_t *time)	Yields one input record: a client size change, the oldest ring record, or one from pumping messages	verified	two	core/input#the-pump	
@@ -536,10 +540,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42df90	104	OnNonClientButtonDown		core	host		Starts a window drag for the caption and border hit tests, capturing the mouse	inferred	none	core/input#window-frame	
 0x42e000	114	OnNonClientDoubleClick		core	host		Ends a window drag on a non-client double click and runs the box under the cursor	inferred	none	core/input#window-frame	
 0x42e0a0	206	OnNonClientButtonUp		core	host		Ends a window drag on a non-client button release and runs the minimize, maximize or close box	inferred	none	core/input#window-frame	
-0x42e1a0	5	InitInputTwoPiThunk2		core	orchestration	void __cdecl (void)	Jumps to 0x42e1b0; a static initializer	verified	one	core/input#static-initializers	
-0x42e1b0	15	InitInputTwoPi2		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/input#static-initializers	
-0x42e1c0	5	InitInputInvTwoPiThunk2		core	orchestration	void __cdecl (void)	Jumps to 0x42e1d0; a static initializer	verified	one	core/input#static-initializers	
-0x42e1d0	19	InitInputInvTwoPi2		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/input#static-initializers	
+0x42e1a0	5	InitInputTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42e1b0; a static initializer	verified	one	core/input#static-initializers	
+0x42e1b0	15	InitInputTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/input#static-initializers	
+0x42e1c0	5	InitInputInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42e1d0; a static initializer	verified	one	core/input#static-initializers	
+0x42e1d0	19	InitInputInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/input#static-initializers	
 0x42e3d0	305	OsGuiFilterMessage		os			Lets accelerators and dialogs consume a message before it is dispatched	inferred	none	core/input#the-pump	
 0x435f00	246	ShowErrorText		os			Shows a text with a caption to the player	inferred	none		
 0x436db0	9	OsTlsSetValue		os			Stores a value in a TLS slot through TlsSetValue	inferred	none	core/loop#one-tick	
@@ -12140,6 +12144,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a3230	11	HyperlinkedFrameInitInfinity		ui	orchestration		Copies +inf into a global of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#frame-core-object-files	
 0x7a5700	41	Sound::Stop	idb	sound			Stops a sound	inferred	none		
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
+0x7abbc0	5	InitCameraPropertyInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7abbd0; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7abbd0	11	InitCameraPropertyInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf572c, which nothing reads	verified	one	camera#object-files-and-initializers	
 0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	
 0x7abc20	48	RegisterProperty		camera	orchestration	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags, uint8_t type)	Stores a property's type and flags, puts it in slot id, and on flag 0x01 adds it to the update list	verified	one	camera#property-updates	
 0x7abc50	26	RegisterPropertyType1		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 1	inferred	none	camera#unreached-functions	

@@ -962,6 +962,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates
+0xcf572c	float	s_cameraPropertyInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf5730	float	s_cameraInvTwoPi		camera	Holds 1/2π (0x3e22f983), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5734	float	s_cameraTwoPi		camera	Holds 2π (0x40c90fdb), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5738	float	s_defaultFov		camera	Holds π/2, set at startup, the default field of view	verified	one	camera#properties

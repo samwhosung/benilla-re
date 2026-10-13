@@ -6,13 +6,14 @@ thread can move it to the processor's time-stamp counter once its rate estimates
 earliest a quarter of a second in, and back again, keeping it continuous; on a processor whose CPUID
 reports more than one core in the way `Multi-core gate` reads, it stays `GetTickCount` exactly.
 
-The clock lives in two OS object files: the time calls from `0x4293d0` through `0x429790`
-(calendar time, file times and the manager's creation), and `TimeManager.cpp` from `0x42b670`
-through `0x42c180` (the counter, its scale and offset, the calibration thread). The state is the
+The clock lives in three OS object files: the time calls from `0x4293d0` through `0x429790`
+(calendar time, file times and the manager's creation), `TimeManager.cpp` from `0x42b530` through
+`0x42ba90` (the counter, its scale and offset, the calibration thread), and the clock file from
+`0x42bff0` through `0x42c180` (the millisecond clock and the processor frequency). The state is the
 counter mode `0x884c80`, the scale `0x8332c8`, the offset `0x884c88`, the counter rate
 `0x8332c0`, and one time manager object at `0x884c78`.
 
-Roots: `0x42c010`, `0x42c020`, `0x42c060`, `0x4293d0`, `0x429450`, `0x4294c0`, `0x429580`, `0x429780`, `0x429790`, and the static initializers `0x42b670`, `0x42b690`, `0x42bff0`, `0x42c150`, `0x42c170`
+Roots: `0x42c010`, `0x42c020`, `0x42c060`, `0x4293d0`, `0x429450`, `0x4294c0`, `0x429580`, `0x429780`, `0x429790`, and the static initializers `0x42b530`, `0x42b670`, `0x42b690`, `0x42bff0`, `0x42c150`, `0x42c170`
 
 ## The millisecond clock
 
@@ -164,16 +165,21 @@ and the C runtime's `strftime`-style `0x4134e3`.
 
 ## Static initializers
 
-The time manager's object file runs five static initializers: 2π and 1/2π at its start, +∞,
-and 2π and 1/2π at its end.
+`TimeManager.cpp` and the clock file each run three static initializers: +∞ first, then 2π and
+1/2π. The time manager's are `0x42b530`, `0x42b670` and `0x42b690`; the clock file's are
+`0x42bff0`, `0x42c150` and `0x42c170`.
 
-Addresses: `0x8273f8`, `0x42b670`, `0x42b680`, `0x42b690`, `0x42b6a0`, `0x42bff0`, `0x42c000`, `0x42c150`, `0x42c160`, `0x42c170`, `0x42c180`
+Addresses: `0x8273f4`, `0x8273f8`, `0x42b530`, `0x42b540`, `0x42b670`, `0x42b680`, `0x42b690`, `0x42b6a0`, `0x42bff0`, `0x42c000`, `0x42c150`, `0x42c160`, `0x42c170`, `0x42c180`
 Confidence: verified
 Proof: one
 Test: none
 
-They are the slots `0x8273f8` through `0x827408`, matched by the census of
-`core/loop#static-initializers`.
+They are the slots `0x8273f4` through `0x827408`, matched by the census of
+`core/loop#static-initializers`. Every file's run opens with its +∞ copy (`collision/overview`,
+Object files): `0x42b530` copies the +∞ at 0x8015a0 and `0x42b670` doubles the π 4 bytes on;
+`0x42bff0` copies 0x8015a8 and `0x42c150` doubles 0x8015ac. So the code between `0x42b530` and
+`0x42b690`, and from `0x42bff0` to `0x42c170`, is one file each; `TimeManager.cpp` is pushed at
+0x42b6c7, in `0x42b6c0`.
 
 ## Unreached functions
 
