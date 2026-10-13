@@ -245,6 +245,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80b044	void *[4]	s_playerMemberVtableB		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c74	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80c330	void *[34]	CGGameObject_C::vftable		objectlayer	Holds the game object vtable, 34 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
+0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
+0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
 0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
@@ -544,6 +546,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8613fc	char[26]	s_invalidMoverText		collision	Holds "Mover at invalid position", the console line a NaN position prints	verified	one	collision/mover#local-player-step
 0x861418	char[62]	s_movementSourcePath		collision	Holds the source path of Movement.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
 0x8642e8	char[64]	s_movementCSourcePath		collision	Holds the source path of Movement_C.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
+0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x867958	float	s_detailDoodadHorizon		terrain	Holds 70.0, the detail doodad distance	inferred	none	
 0x867960	float	s_lodDistance		terrain	Holds lodDist, 77 at start, the depth beyond which a chunk takes the far level	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867964	uint32_t	s_maxLod		terrain	Holds maxLOD, 3 at start, a near chunk's level	verified	one	terrain/cull#chunk-level-and-idle-release
@@ -835,29 +838,42 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4c28c	float	s_playerFileConstant		objectlayer	Holds a float a Player_C.cpp initializer computes, read by Player_C.cpp code	inferred	none	objectlayer/initializers#float-constants
 0xc4d888	int32_t	s_autoMoveMode		objectlayer	Holds the auto-move mode, 12 for none; 0x6033c0 and 0x60fb60 store 12, 0x611130 the mode	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0xc4d8a0	uint32_t	s_spellDamageColor		objectlayer	Holds 0xffffde00 from 0x5fa0b0, the gold of spell damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0xc4d8a4	uint32_t[8]	s_reactionColors		objectlayer	Holds the selection colours by reaction 0 to 7 that 0x605960 builds: red, red, orange, yellow, then green	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	one	objectlayer/unitmovement#local-movement-commands
 0xc4d8c8	uint32_t	s_targetFlashColor		objectlayer	Holds the attacked target's selection colour, red from 0x5fa3f0 with a green byte 0x607ed0 sweeps	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+0xc4d8cc	uint32_t	s_petMeleeDamageColor		objectlayer	Holds 0xffff8400 from 0x5fa0f0, the orange of a pet's melee damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0xc4d908	uint64_t	s_lastGreetedGuid		objectlayer	Holds the GUID of the unit last greeted by 0x60c270; 0x60c3b0 and 0x604ef0 clear it	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
 0xc4d910	float	s_autoMoveStopDistance		objectlayer	Holds the square root of the stop distance 0x611130 stores, read by the steering	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d918	uint32_t[3]	s_freeNamePlates		objectlayer	Holds the list of released nameplate frames: link offset, end link and first plate	verified	one	objectlayer/unitnames#nameplates
+0xc4d924	uint32_t[3]	s_namePlates		objectlayer	Holds the list of shown nameplates sorted by distance from (0.4, 0.3): link offset, end link and first	verified	one	objectlayer/unitnames#nameplates
 0xc4d934	uint32_t	s_partyPvpColor		objectlayer	Holds the light green 0x605960 gives a PvP-flagged party member	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d93c	float	s_autoMoveTurnSpeed		objectlayer	Holds the auto-move turn speed in radians, π from 0x611130, latched from a CVar by 0x6103d0	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d944	void *	s_combatDamageCVar		objectlayer	Holds the CombatDamage CVar record, read before any damage or miss number	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0xc4d950	uint64_t	s_pendingUseGuid		objectlayer	Holds the game object an arrived mode 7 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d958	float	s_talkStopDistanceSq		objectlayer	Holds 2.7777777², the squared stop distance of mode 5, written by 0x60e6b0	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d95c	void *[5]	s_talkEmotes		objectlayer	Holds the Emotes.dbc rows of the talk, question, exclamation, shout and laugh emotes, set by 0x603a60	verified	one	objectlayer/unitanim#emotes
+0xc4d970	uint32_t	s_greetingCount		objectlayer	Holds the greeting step 0x623910 returned for the last greeted unit	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
 0xc4d978	uint32_t	s_unusedLightRedColor		objectlayer	Holds a light red 0x605960 builds and nothing reads	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d980	uint64_t	s_autoMoveTargetGuid		objectlayer	Holds the auto-move target object's GUID, cleared by 0x60fb60	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d988	float	s_namePlateRangeSq		objectlayer	Holds 20² = 400 from 0x5fa130, the squared distance from the camera's unit within which plates show	verified	one	objectlayer/unitnames#nameplates
 0xc4d990	uint32_t	s_partyColor		objectlayer	Holds the light blue 0x605960 gives an unflagged party member	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d998	float	s_useStopDistance		objectlayer	Holds the mode 7 stop distance, 0x610300's argument times 0.9	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d99c	void *	s_petSpellDamageCVar		objectlayer	Holds the PetSpellDamage CVar record, read before a pet's spell damage number	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0xc4d9a4	void *	s_autoInteractCVar		objectlayer	Holds the AutoInteract CVar record, registered "1" under locale index 1 and "0" otherwise	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d9a8	float	s_autoMoveFacing		objectlayer	Holds the auto-move facing 0x611130 stores, turned with a transport by 0x6115e0	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d9b0	float	s_pointStopDistanceSq		objectlayer	Holds 0.5² = 0.25, the squared stop distance of mode 4, written by 0x60e740	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9b8	uint8_t	s_selectionColorsBuilt		objectlayer	Holds the five guard bits 0x605960 sets as it builds its colours once	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d9c0	float	s_autoMoveStopDistanceSq		objectlayer	Holds the squared stop distance 0x611240 writes for 0x611130	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9c4	float	s_followStopDistanceSq		objectlayer	Holds 3² = 9, the squared stop distance of mode 3, written by 0x60e6e0	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d9cc	void *	s_petMeleeDamageCVar		objectlayer	Holds the PetMeleeDamage CVar record, read before a pet's melee damage number	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0xc4d9d8	void *[16]	s_questMarkerModels		objectlayer	Holds eight pairs of a loaded marker model and its path, filled by 0x5fa430 and loaded by 0x603a00	verified	one	objectlayer/unitnames#quest-markers
 0xc4da20	uint64_t	s_pendingSpellTargetGuid		objectlayer	Holds the target an arrived mode 9 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da28	uint64_t	s_pendingTalkGuid		objectlayer	Holds the NPC an arrived mode 5 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da34	uint32_t	s_namePlateFlags		objectlayer	Holds nameplate switches: 0x1 enemies, 0x8 friends, 0x2 re-sort every frame, 0x4 refresh the plate	verified	one	objectlayer/unitnames#nameplates
 0xc4da48	uint32_t	s_autoMoveInputFlags		objectlayer	Holds auto-move input bits; bit 0 is set while the auto-move itself drives the mover	verified	one	objectlayer/unitmovement#local-movement-commands
 0xc4da4c	uint32_t	s_friendlyPlayerColor		objectlayer	Holds the blue 0x605960 gives an unflagged player-controlled unit, or one that may attack the player only	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+0xc4da50	float[2]	s_namePlateSortPoint		objectlayer	Holds the screen point (0.4, 0.3) 0x6089a0 measures plates from, set on first use	verified	one	objectlayer/unitnames#nameplates
 0xc4da78	uint64_t	s_pendingLootGuid		objectlayer	Holds the corpse an arrived mode 6 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da80	uint32_t	s_deadUnitColor		objectlayer	Holds 0xff7f7f7f from 0x5fa160, the grey 0x605960 gives a dead unit that no player controls	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
