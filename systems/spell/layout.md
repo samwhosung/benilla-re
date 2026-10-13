@@ -6,13 +6,14 @@ spell is the client's half of casting: the cast request and the client's own ref
 targeting cursor, the server's spell messages and the cast bar's events, cooldowns, values read
 from spell records, and the visuals the client drives. Its code is one run, `0x6dd270` to
 `0x6ed920`, of three object files: the spell and skill tables, `Spell_C.cpp` and
-`SpellVisuals.cpp`; and one small file elsewhere, `0x7e4da0` to `0x7e4ed0`, that writes and reads
-the cast target block. Each file's code opens with static initializers. Of the 509 functions in the
-run, 209 are trivial initializers and their thunks; the rest are documented by topic in
-`tables`, `cooldowns`, `failures`, `records`, `checks`, `cast`, `targeting`, `handlers` and
-`visuals`. The system's state lives in fixed globals of each file: the pending cast, the in-flight spell, the targeting flag word, the spell manager with its cooldown history,
-the talent modifier tables and the visuals' pools. The closure is not yet complete: none of its
-primitives has a bit-exact test.
+`SpellVisuals.cpp`; and the cast target code elsewhere, `0x7e4da0` to `0x7e4ed0`, which writes and
+reads the cast target block. The run's files open their code with static initializers. Of the 509
+functions in the run, 209 are trivial initializers and their thunks; the rest are documented by
+topic in `tables`, `cooldowns`, `failures`, `records`, `checks`, `cast`, `targeting`, `handlers`
+and `visuals`. The system's state lives in fixed globals of each file: the pending cast, the
+in-flight spell, the targeting flag word, the spell manager with its cooldown history, the talent
+modifier tables and the visuals' pools. The closure is not yet complete: none of its primitives has
+a bit-exact test.
 
 Roots: the static initializer thunks `0x6dd270`, `0x6dd290`, `0x6dd2b0`, `0x6dd500`, `0x6dd750`, `0x6de1f0`, `0x6de210`, `0x6e0890`, `0x6e08c0`, `0x6e08f0`, `0x6e0920`, `0x6e0950`, `0x6e0980`, `0x6e09b0`, `0x6e09e0`, `0x6e0a10`, `0x6e0a40`, `0x6e0a70`, `0x6e0aa0`, `0x6e0ad0`, `0x6e0b00`, `0x6e0b30`, `0x6e0b60`, `0x6e0b90`, `0x6e0bc0`, `0x6e0bf0`, `0x6e0c20`, `0x6e0c50`, `0x6e0c70`, `0x6e0ca0`, `0x6e0cd0`, `0x6e0d00`, `0x6e0d30`, `0x6e0d80`, `0x6e0da0`, `0x6e0dc0`, `0x6e0df0`, `0x6e1040`, `0x6e11d0`, `0x6ea700`, `0x6ea730`, `0x6ea760`, `0x6ea790`, `0x6ea880`, `0x6ea8b0`, `0x6ea8e0`, `0x6eaaa0`, `0x6eaad0`, `0x6eab00`, `0x6eab30`, `0x6eab60`, `0x6eab90`, `0x6eabc0`, `0x6eabf0`, `0x6eac20`, `0x6eac50`, `0x6eac80`, `0x6eacb0`, `0x6eace0`, `0x6ead10`, `0x6ead30`, `0x6ead60`, `0x6ead90`, `0x6eadc0`, `0x6eb3b0`, `0x6eb650`, `0x6eb670`, `0x6eb690`, `0x6eb6c0`, `0x6eb7b0`, `0x6eb800`, `0x6ebff0`, `0x6ec3e0`, `0x6ec420`, `0x6ed440`, `0x6ed470`, `0x6ed4a0`, `0x6ed4d0`, `0x6ed500`, `0x6ed530`, `0x6ed560`, `0x6ed590`, `0x6ed5c0`, `0x6ed5f0`, `0x6ed620`, `0x6ed650`, `0x6ed680`, `0x6ed6b0`, `0x6ed6e0`, `0x6ed710`, `0x6ed740`, `0x6ed770`, `0x6ed7a0`, `0x6ed7d0`, `0x6ed800`, `0x6ed820`, `0x6ed850`, `0x6ed880`, `0x6ed8b0`, `0x6ed8e0`, `0x7e4da0`, `0x7e4dc0`, `0x7e4de0`
 
@@ -40,13 +41,14 @@ The slot before, `0x82cf0c`, holds an initializer of the geometry file below the
 after, `0x82d0a4`, one of `FrameXML.cpp` above it, whose globals follow the visuals' own. The path
 `Magic\MagicClient\Spell_C.cpp` is pushed at 44 sites from `0x6e1a92` to `0x6e9919`,
 `SpellVisuals.cpp` at `0x6ec0e7`, `0x6ec4b6` and `0x6ec4dc`. The tables file passes no path; its
-code alone uses the type tags of its three lists. Each file's +∞ and π constants sit
-with that file's other constants in `.rdata`, after those of the geometry file below, whose own
-initializers store theirs and whose globals nothing in the run reads. The cast target file is a
-run of its own, three slots that open with its +∞: its code is those initializers, the block's
-writer `0x7e4e10` and its reader `0x7e4ed0`, between the FreeType library and the sky file. Its only
-callers are `Spell_C.cpp`'s: `0x6e5863` in the cast request, `0x6e77f8` and `0x6e7c76` in the
-spell start and spell go handlers.
+code alone uses the type tags of its three lists. Each file's +∞ and π constants sit with that
+file's other constants in `.rdata`, after those of the geometry file below, whose own initializers
+store theirs and whose globals nothing in the run reads. The cast target code lies between the
+FreeType library and the sky file's +∞: a run of three slots that opens with its +∞ `0x7e4da0`,
+then the block's writer `0x7e4e10` and its reader `0x7e4ed0`. The two follow the run's last
+initializer, so they are that file's or a file with no run (`systems/README`, Object files); either
+way nothing else lies there, and their only callers are `Spell_C.cpp`'s: `0x6e5863` in the cast
+request, `0x6e77f8` and `0x6e7c76` in the spell start and spell go handlers.
 
 ## Function starts
 

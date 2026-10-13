@@ -169,7 +169,7 @@ A claim that something never happens is a census, and a census earns its zero.
 A bit-exact test runs the exe's own code in the Unicorn emulator beside the reimplementation. No
 crate, test or harness is in this repo yet: porting them is
 [#4](https://github.com/samwhosung/benilla-re/issues/4). The x87 setting below holds for every
-finding today, and the rules after it are the ones each test follows.
+finding, and the rules after it are the ones each test follows.
 
 The client runs the x87 at 53-bit precision, rounding to nearest, every exception masked: the
 control word `0x027F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and

@@ -4,15 +4,15 @@ The interface engine: frames and their layout, the script layer that runs the in
 the widget types, and the game's own interface code that feeds them.
 
 The system owns two groups of object files. The engine side is `ENGINE\Source\Frame` (`CSimpleTop`
-to `CSimpleHyperlinkedFrame`, `0x764160` to 0x7a3a80), `ENGINE\SOURCE\FrameXML` (from 0x6ed930)
-and `ENGINE\SOURCE\FrameScript` (`0x701940` to `0x706430`); the Lua 5.0 core between them belongs
-to `lua`. The game side is `WoW\Source\Ui` (0x480380 to 0x509ff0), the interface files of
+to `CSimpleHyperlinkedFrame`, `0x764160` to 0x7a3a80), `ENGINE\SOURCE\FrameXML` (from 0x6ed930) and
+`ENGINE\SOURCE\FrameScript` (`0x701940` to `0x706430`); the Lua 5.0 core between them belongs to
+`lua`. The game side is `WoW\Source\Ui` (0x480380 to 0x509ff0), the interface files of
 `WoW\Source\UIUtil` (`ScriptEvents.cpp` to `Tooltip.cpp`, 0x515880 to 0x536ea0), the LCD files
-(0x728b10 to 0x730ba0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and `HealthBar.cpp` (0x7cc320
-to 0x7ccc80). In all, about 9,800 functions. The frame and layout core is documented in `frames`,
-`anchors`, `strata`, `visibility`, `input`, `script` and `methods`. The rest is not documented yet
-(`Not documented yet`); its rows are those other systems' findings cite. None of the primitives
-here has a bit-exact test yet.
+(from 0x728b10, ending before zlib at 0x730bc0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and
+`HealthBar.cpp` (from 0x7cc320). In all, about 9,800 functions. The frame and layout core is
+documented in `frames`, `anchors`, `strata`, `visibility`, `input`, `script` and `methods`. The
+rest is not documented yet (`Not documented yet`); its rows are those other systems' findings cite.
+None of the primitives here has a bit-exact test yet.
 
 Roots: `0x764160`, `0x766800`, `0x766820`, `0x767040`, `0x767070`, `0x7670a0`, `0x767240`, `0x768f70`, `0x768f90`, `0x769030`, `0x769060`, `0x769360`, `0x76b2f0`, `0x76c130`, `0x76c150`, `0x76c490`, `0x76c4c0`, `0x76c7e0`, `0x76c800`, `0x76c820`, `0x76c860`, `0x76c890`, `0x773800`, `0x778300`, `0x7785d0`, `0x7785f0`, `0x778620`, `0x778650`, `0x701940`, `0x701960`, `0x701990`, `0x7019b0`, `0x705e30`, `0x705e50`, `0x705e70`, `0x705ea0`, `0x705ed0`, `0x7a17f0`, `0x7a2c10`, `0x7a2ec0`, `0x7a2ee0`, `0x7a2f10`, `0x7a2f40`, `0x7a2f70`
 
@@ -139,9 +139,9 @@ vertex colour. What the 5000 counts is not read here.
 
 ## Not documented yet
 
-The rest of the system has no doc yet; issue
-[#3](https://github.com/samwhosung/benilla-re/issues/3) tracks it. These are its files in link
-order, with a census of their function starts:
+The rest of the system has no doc yet; the rest of ui is part of
+[#3](https://github.com/samwhosung/benilla-re/issues/3), the rewrite of every system's findings.
+These are its files in link order, with a census of their function starts:
 
 | files | functions |
 |---|---|

@@ -49,7 +49,8 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `loadingscreen`: `LoadingScreen.cpp`
 - `objectalloc`: `ObjectAlloc.cpp`, the object heaps
 - `os`: the engine's Windows layer outside `core`'s time and window files: CPU and system queries,
-  file calls, `OsGui.cpp`, `OsCall.cpp` (engine threads) and `OsTcp.cpp`
+  file calls, `OsIME.cpp` and the IME initializer file after it, `OsGui.cpp`, `OsCall.cpp` (engine
+  threads) and `OsTcp.cpp`
 - `screencoord`: the screen aspect and scale helpers
 - `sound`: `SoundInterface.cpp` and the glue music
 - `spline`: the movement spline file
@@ -117,7 +118,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
 | `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
-| `test` | The bit-exact test that runs this function against the exe: `crate::test_fn`, the function name of a test under `crates/<crate>/tests/`. Empty when there is none, as on every row today: no crate exists until [#4](https://github.com/samwhosung/benilla-re/issues/4). |
+| `test` | The bit-exact test that runs this function against the exe: `crate::test_fn`, the function name of a test under `crates/<crate>/tests/`. Empty when there is none, as on every row: no crate exists until [#4](https://github.com/samwhosung/benilla-re/issues/4). |
 
 A function row's address is a function start (`../METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
