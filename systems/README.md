@@ -54,7 +54,7 @@ anchor rows link to), then this shape:
 Addresses: `0x4531e0`, `0x802700`
 Confidence: verified
 Proof: two
-Test: `random::crandom_uint32_advance`
+Test: none
 
 <Derivation: the path from the bytes to the claim, in a few lines.>
 ```

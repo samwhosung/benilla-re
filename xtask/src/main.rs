@@ -50,12 +50,22 @@ fn main() -> ExitCode {
     }
 }
 
-/// The repo root: the directory that holds `xtask/`.
+/// The repo root: the nearest directory, from where the command runs upwards, that holds
+/// `METHOD.md` and `symbols/`. Found at run time, so a binary built in one checkout checks the
+/// checkout it is run in.
 fn root() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("xtask sits in the repo root")
-        .to_path_buf()
+    let start = std::env::current_dir().expect("the current directory reads");
+    start
+        .ancestors()
+        .find(|dir| dir.join("METHOD.md").is_file() && dir.join("symbols").is_dir())
+        .map(Path::to_path_buf)
+        .unwrap_or_else(|| {
+            eprintln!(
+                "xtask: no benilla-re checkout at or above {}; run it inside one",
+                start.display()
+            );
+            std::process::exit(2)
+        })
 }
 
 /// Prints one line per problem and a summary; true when there is none.

@@ -58,7 +58,7 @@ old value or is NaN.
 Addresses: `0x7abbe0`, `0x7acbc0`, `0x7acc40`, `0xcf5730`, `0xcf5734`
 Confidence: verified
 Proof: two
-Test: `camera::camera_normalize_2pi`, `camera::camera_angle_cossin`
+Test: none
 
 `0x7abbe0`: `fld [0xcf5730]; fmul x`, `__ftol` (`0x40a2b0`, truncation), `fild;
 fmul [0xcf5734]`; the sign test is `fcomp 0.0; test ah,5; jp 0x7abc14`, which falls through only
@@ -138,7 +138,7 @@ of view, the aspect `(r[3] − r[1]) / (r[2] − r[0])`, near and far; it scales
 Addresses: `0x7ada40`, `0x7ac640`, `0x5c3cc0`, `0x5c3e70`, `0x58b040`, `0x58b050`
 Confidence: verified
 Proof: one
-Test: `camera::camera_view_lookat`
+Test: none
 
 The aspect is `fdivp st(1),st` (`de f9`, `0x7ac679`), `st(1)/st(0)`. In `0x5c3cc0`, `0x5c3d43`
 divides the angle by `√(aspect² + 1)` before `fmul 0.5` and `fptan`, and `0x5c3d5b`/`0x5c3d62`
@@ -146,7 +146,7 @@ store the two scales. It refuses a field of view outside `(0, π)`, a non-positi
 `near ≥ far` with error 0x57 and leaves the matrix alone. With the default π/2 at an aspect of
 4/3, `θ` is 27°, a vertical field of 54°. Up reads `+0x16c·+0x144`, `−(+0x168·+0x144)` and
 `+0x140` (`0x7ac778` to `0x7ac7dc`). `0x58b040` and `0x58b050` pass the matrix to the device's
-vtable slots `+0x70` and `+0x74`. The test runs part of `0x7ac640`.
+vtable slots `+0x70` and `+0x74`.
 
 ## Unprojection
 
@@ -159,7 +159,7 @@ not read a camera.
 Addresses: `0x7ad2c0`, `0x58b090`, `0x58b0b0`, `0x5c43b0`
 Confidence: verified
 Proof: one
-Test: `camera::camera_frustum_split`
+Test: none
 
 The range test accepts 1.0: for `a = 1`, `fcomp` sets only C3, `test ah,0x41` leaves one bit, and
 `jp 0x7ad317` falls through (`0x7ad2f5`); a value above 1 or NaN gives error 0x57. `0x58b0b0`
@@ -182,7 +182,7 @@ from `0x58a250`. Its stack argument is unused.
 Addresses: `0x7ad7f0`, `0x5c3d90`, `0x7bdca0`, `0x7bdc40`, `0x589ca0`, `0x58a250`
 Confidence: verified
 Proof: one
-Test: `camera::camera_ortho`
+Test: none
 
 `0x81d7bc` is 500.0, negated for the near side (`0x7ad8dd`). The Z flip is `0x7bdca0` with
 `(1, 1, −1)` (`0x7ad8fe` to `0x7ad913`). The shift subtracts `0.5·(r[3] − r[1])/(s[3] − s[1])`
@@ -200,7 +200,7 @@ and `spellEffectLevel` options write it.
 Addresses: `0x7adfb0`, `0x7ae000`, `0x87d5fc`, `0x688fb0`, `0x689510`
 Confidence: verified
 Proof: one
-Test: `camera::camera_clamp01`
+Test: none
 
 Two `fcomp`, each `test ah,5; jp`: the first falls through to the 0 store only for `x < 0`, the
 second to the `x` store only for `x < 1`. The option handlers `0x688fb0` and `0x689510` are

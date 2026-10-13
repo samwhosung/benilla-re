@@ -558,7 +558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44cbd0	44	SysMsgPrintf	idb	console			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
 0x44cd40	15			sysmsg			Stores 0 in a global and tail-calls 0x44cd60	inferred	none		
 0x44cd60	1			sysmsg			Returns at once	inferred	none		
-0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	two	random#state-and-seeding	random::srand_seed_state_init
+0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	two	random#state-and-seeding	
 0x44eae0	5	InitRandomInfinityThunk		random	orchestration	void __cdecl (void)	Jumps to 0x44eaf0; a static initializer	verified	one	random#static-initializers	
 0x44eaf0	11	InitRandomInfinity		random	orchestration	void __cdecl (void)	Copies +inf into 0xb05d68	verified	one	random#static-initializers	
 0x44eb00	27	RandomSeedFromString		random	unreached	void __thiscall (NTempest::CRndSeed *this, const char *text)	Seeds a state with the hash of a C string (0x44eb20, then 0x44ea80)	inferred	none	random#unreached-functions	
@@ -587,8 +587,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44fc60	39	RandomFillGaussianDouble		random	unreached	void __fastcall (double *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fa70 once per element	inferred	none	random#unreached-functions	
 0x44fc90	47	RandomFillGaussianScaledFloat		random	unreached	void __fastcall (float *out, uint32_t count, float mean, float sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb30 once per element	inferred	none	random#unreached-functions	
 0x44fcc0	55	RandomFillGaussianScaledDouble		random	unreached	void __fastcall (double *out, uint32_t count, double mean, double sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb50 once per element	inferred	none	random#unreached-functions	
-0x44fd00	284	RandomUnitVector2		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (cos a, sin a), a = 2π·u from one inlined advance	verified	one	random#unit-vectors	random::rand_44fd00_gradient
-0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	one	random#unit-vectors	random::rand_unit_vector_3d_diff
+0x44fd00	284	RandomUnitVector2		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (cos a, sin a), a = 2π·u from one inlined advance	verified	one	random#unit-vectors	
+0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	one	random#unit-vectors	
 0x450050	55	RandomFillUnitVector2		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 2D vectors from 0x44fd00	inferred	none	random#unreached-functions	
 0x450090	63	RandomFillUnitVector3		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 3D vectors from 0x44fe20	inferred	none	random#unreached-functions	
 0x4500d0	25	RandomShuffleString		random	unreached	void __fastcall (char *text, NTempest::CRndSeed *seed)	Shuffles the bytes of a C string with 0x450100	inferred	none	random#unreached-functions	
@@ -622,7 +622,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531a0	15	InitRandomTwoPi		random	primitive	void __cdecl (void)	Stores π + π as a float in 0xb05d70	verified	one	random#static-initializers	
 0x4531b0	5	InitRandomInvTwoPiThunk		random	orchestration	void __cdecl (void)	Jumps to 0x4531c0; a static initializer	verified	one	random#static-initializers	
 0x4531c0	19	InitRandomInvTwoPi		random	primitive	void __cdecl (void)	Stores 1 / [0xb05d70] as a float in 0xb05d6c	verified	one	random#static-initializers	
-0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	random::crandom_uint32_advance
+0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
@@ -11683,7 +11683,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x7400d8	13	_srand	idb	crt	orchestration	void __cdecl (unsigned int seed)	Stores the per-thread seed rand steps	verified	one	random#the-c-runtime-rand	
-0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	random::msvc_rand_lcg_difftest
+0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	
 0x7405a0	20	__CIasin	idb	crt			Computes asin(st0)	inferred	none	collision/kinematics#spline-follower	
 0x741760	20	__CIsqrt	idb	crt	boundary		Returns the square root of st0	inferred	none		
 0x741820	20	__CIacos	idb	crt			Computes acos(st0)	inferred	none	collision/kinematics#spline-follower	
@@ -12140,7 +12140,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a3230	11	HyperlinkedFrameInitInfinity		ui	orchestration		Copies +inf into a global of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#this-rounds-object-files	
 0x7a5700	41	Sound::Stop	idb	sound			Stops a sound	inferred	none		
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
-0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	camera::camera_normalize_2pi
+0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	
 0x7abc20	48	RegisterProperty		camera	orchestration	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags, uint8_t type)	Stores a property's type and flags, puts it in slot id, and on flag 0x01 adds it to the update list	verified	one	camera#property-updates	
 0x7abc50	26	RegisterPropertyType1		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 1	inferred	none	camera#unreached-functions	
 0x7abc70	26	RegisterPropertyType2		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 2	inferred	none	camera#unreached-functions	
@@ -12182,7 +12182,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ac600	11	InitCameraInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf573c, which nothing reads	verified	one	camera#object-file-and-initializers	
 0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-file-and-initializers	
 0x7ac620	19	InitDefaultFov		camera	primitive	void __cdecl (void)	Stores π·0.5 as a float in 0xcf5738, the default field of view	verified	one	camera#object-file-and-initializers	
-0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	camera::camera_view_lookat
+0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	
 0x7ac810	140	CCamera::ComputeEye		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes target - distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
 0x7ac8a0	134	CCamera::ComputeTarget		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes eye + distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
 0x7ac930	472	CameraCreate		camera	orchestration	void * __cdecl (void)	Allocates a camera with default properties and returns its handle	verified	one	camera#lifetime	
@@ -12190,8 +12190,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7acb30	3	CBaseManaged::Evaluate		camera	orchestration	void __thiscall (CBaseManaged *this, uint32_t arg)	Returns; slot 1 of the base property vtable	verified	one	camera#property-updates	
 0x7acb40	3	CBaseManaged::Verify		camera	orchestration	void __thiscall (CBaseManaged *this, uint32_t arg)	Returns; slot 2 of the base property vtable	verified	one	camera#property-updates	
 0x7acb50	102	CBaseManaged::DeletingDestructor		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks a base property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
-0x7acbc0	117	InitAngleProperty		camera	primitive	CBaseManaged * __thiscall (CBaseManaged *this, float angle)	Builds an angle property: stores the reduced angle and caches its cosine and sine	verified	two	camera#angle-properties	camera::camera_angle_cossin
-0x7acc40	87	StoreAngleProperty		camera	primitive	void __thiscall (CBaseManaged *this, const float *angle)	Stores the reduced angle when it changes and recomputes its cosine and sine; slot 3 of an angle	verified	one	camera#angle-properties	camera::camera_angle_cossin
+0x7acbc0	117	InitAngleProperty		camera	primitive	CBaseManaged * __thiscall (CBaseManaged *this, float angle)	Builds an angle property: stores the reduced angle and caches its cosine and sine	verified	two	camera#angle-properties	
+0x7acc40	87	StoreAngleProperty		camera	primitive	void __thiscall (CBaseManaged *this, const float *angle)	Stores the reduced angle when it changes and recomputes its cosine and sine; slot 3 of an angle	verified	one	camera#angle-properties	
 0x7acca0	102	DeleteAngleProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks an angle property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7acd10	109	DeletePropertySet		camera	orchestration	void * __thiscall (void *object, uint32_t flags)	Unlinks every property, frees the slot array, and frees the object when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7acd80	175	CCamera::DeletingDestructor		camera	orchestration	CCamera * __thiscall (CCamera *this, uint32_t flags)	Tears down the nine properties and the base, and frees the camera when bit 0 of flags is set	verified	one	camera#lifetime	
@@ -12200,8 +12200,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7acf10	672	CameraClone		camera	orchestration	void * __fastcall (const CCamera *source)	Allocates a camera, copies each property value from source through its slot 3, returns the handle	verified	one	camera#lifetime	
 0x7ad1b0	25	CBaseManaged::SetProducer		camera	orchestration	void __thiscall (CBaseManaged *this, void *callback, void *context, float key)	Stores a property's producer callback, its context and its ordering key	verified	one	camera#property-updates	
 0x7ad1d0	233	InitPropertySet		camera	orchestration	void * __thiscall (void *object, uint32_t slots)	Builds the camera base: empty update list, link offset 4, a slot array of the given size	verified	one	camera#lifetime	
-0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	one	camera#unprojection	camera::camera_frustum_split
-0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	one	camera#orthographic-setup	camera::camera_ortho
+0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	one	camera#unprojection	
+0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	one	camera#orthographic-setup	
 0x7ada40	32	CameraSetDeviceTransforms		camera	orchestration	void __fastcall (CCamera *camera, const float *rect, uint32_t unused)	Calls 0x7ac640, or raises error 0x57 for a null camera	verified	one	camera#view-and-projection	
 0x7ada60	31	CameraUpdateProperties		camera	unreached	void __fastcall (CCamera *camera, uint32_t arg)	Calls 0x7abdf0, or raises error 0x57 for a null camera	inferred	none	camera#unreached-functions	
 0x7ada80	52	InitScalarProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, const float *value)	Builds a scalar property holding a copy of value	verified	one	camera#lifetime	
@@ -12225,7 +12225,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7adf70	25	GetNodeLink		camera	orchestration	void * __thiscall (void *list, void *node)	Returns a node's link (the node plus the list's link offset), or the head for a null node	verified	one	camera#lifetime	
 0x7adf90	5	InitCameraInfinity2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adfa0; a static initializer	verified	one	camera#object-file-and-initializers	
 0x7adfa0	11	InitCameraInfinity2		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf5748, which nothing reads	verified	one	camera#object-file-and-initializers	
-0x7adfb0	75	SetParticleDensity		camera	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	camera::camera_clamp01
+0x7adfb0	75	SetParticleDensity		camera	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	
 0x7ae000	7	GetParticleDensity		camera	orchestration	float __cdecl (void)	Returns 0x87d5fc	verified	one	camera#particle-density	
 0x7ae010	382	ParticleRegistryGet		models	primitive		Returns the particle emitter registry, creating it and the 128-entry noise table on first use	verified	one	models/cache#noise-table	
 0x7ae190	58	ParticleRegistryDestroy		models	host		Releases the particle buffers, then destroys and frees the particle emitter registry	verified	one	models/cache#scene-creation-and-teardown	
