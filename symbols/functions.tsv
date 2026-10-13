@@ -37,8 +37,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401420	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x401440	15			client			Runs its object file code not read here	inferred	none		
 0x401450	17			client	unreached		Runs its object file code not read here	inferred	none		
-0x401470	124			client			Runs its object file code that calls SStrLen, 0x648fb0; not read here	inferred	none		
-0x4014f0	42			client			Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x401470	124	EnumerateArchiveFiles		client			Passes each listfile name of the mounted archives that begins with a prefix to a callback	verified	one	ui/addons#finding-add-ons	
+0x4014f0	42			client			Calls a callback for a name beginning with a prefix, ignoring case, and answers 1 otherwise	verified	one	ui/addons#finding-add-ons	
 0x401520	16			client	orchestration		Arms a repeating timer through EventSetTimer	inferred	none	objectlayer/players#area-triggers	
 0x401530	24			client	unreached		Runs its object file code that calls EventSetTimerEx; not read here	inferred	none		
 0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
@@ -79,7 +79,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x402a90	1			client			Runs Client.cpp code not read here	inferred	none		
 0x402aa0	43			client			Runs Client.cpp code that calls CStatus::~CStatus, SMemFree; not read here	inferred	none		
 0x402ad0	195			client			Initializes the client's systems at startup and ends by registering 0x403620 for event category 6	verified	one	net/dispatch#main-thread-drain	
-0x402ba0	797	ClientRegisterConsoleCommands	idb	client			Runs Client.cpp code that calls ConsoleCommandRegister, CVar::Register, OsInputGetMouseSpeed and 1 more; not read here	inferred	none		
+0x402ba0	797	ClientRegisterConsoleCommands	idb	client			Registers the client console commands and CVars, checkAddonVersion among them	verified	one	ui/addons#whether-an-add-on-may-load	
 0x402ec0	30			client			Runs Client.cpp code that calls SStrToFloat, OsInputSetMouseSpeed; not read here	inferred	none		
 0x402ee0	62			client			Runs Client.cpp code that calls 0x64ac60, 0x409170, 0x4091a0 and 2 more; not read here	inferred	none		
 0x402f20	62			client			Runs Client.cpp code that calls 0x64ac60, 0x4091c0, 0x4091e0 and 2 more; not read here	inferred	none		
@@ -1541,8 +1541,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419e10	10			client			Runs its object file code not read here	inferred	none		
 0x419e20	6			client			Runs its object file code not read here	inferred	none		
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
-0x419ed0	295			client			Runs Status.cpp code that calls SErrSetLastError, SStrVPrintf, SMemAlloc and 1 more; not read here	inferred	none		
-0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status	inferred	none		
+0x419ed0	295	CStatus::Prepend		client			Puts a formatted line of a severity first in a status	verified	one	ui/framexml#the-load-status-and-its-log	
+0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status, raising its highest severity	verified	one	ui/framexml#the-load-status-and-its-log	
 0x41a100	74			client			Runs Status.cpp code not read here	inferred	none		
 0x41a150	23	CStatus::IsEmpty	idb	client			Runs Status.cpp code not read here	inferred	none		
 0x41a170	126	CStatus::Clear	idb	client			Runs Status.cpp code that calls SMemFree; not read here	inferred	none		
@@ -2174,8 +2174,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42a1a0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1b0	15			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1c0	337			os			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
-0x42a320	86			os			Runs its object file code that calls 0x42a380, SStrPrintf, SErrDisplayAppFatal; not read here	inferred	none		
-0x42a380	133			os			Runs its object file code that calls 0x64cc60, strncmp, SErrDisplayAppFatal; not read here	inferred	none		
+0x42a320	86	CheckFunctionPointer		os			Stops the client with Invalid function pointer when an address lies outside the exe .text section	verified	one	ui/luastate#the-c-function-contract	
+0x42a380	133	FindTextSection		os			Stores the start and end of the exe .text section from its section table	verified	one	ui/luastate#the-c-function-contract	
 0x42a410	5			os			Runs its object file code not read here	inferred	none		
 0x42a420	15			os			Runs its object file code not read here	inferred	none		
 0x42a430	5			os			Runs its object file code not read here	inferred	none		
@@ -3936,7 +3936,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457f60	70			sound			Runs its object file code that calls 0x458890; not read here	inferred	none		
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound			Plays an item sound of a kind for an item	inferred	none	spell/cast#cast-attempt-commit	
 0x457ff0	62			sound			Runs its object file code not read here	inferred	none		
-0x458030	187	SndInterfacePlayInterfaceSound	idb	sound			Plays the interface sound a name gives	inferred	none	spell/cast#cast-attempt-refusals	
+0x458030	187	SndInterfacePlayInterfaceSound	idb	sound			Plays the interface sound a name gives, unless the name is empty or sounds are suppressed	verified	one	ui/framexml#sound-while-loading	
 0x4580f0	266			sound	primitive		Runs sound code with a race and gender at the active player's arrival; not read here	inferred	none	objectlayer/players#arrival-in-the-world	
 0x458200	5			sound			Runs its object file code not read here	inferred	none		
 0x458210	15			sound			Runs its object file code not read here	inferred	none		
@@ -3978,8 +3978,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458ed0	62			sound			Runs its object file code that calls Sound::SetPosition, Sound::SetCutoffDistanceSquared, 0x7a5e80; not read here	inferred	none		
 0x458f10	36			sound			Runs its object file code that calls 0x45cdc0, 0x7a5bf0; not read here	inferred	none		
 0x458f40	11			sound			Runs its object file code not read here	inferred	none		
-0x458f50	7	___inc_tmpoff	idb	sound			Runs its object file code not read here	inferred	none		
-0x458f60	7			sound			Runs its object file code not read here	inferred	none		
+0x458f50	7	___inc_tmpoff	idb	sound			Increments the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
+0x458f60	7			sound			Decrements the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
 0x458f70	19			sound			Runs its object file code that calls 0x45cda0; not read here	inferred	none		
 0x458f90	32			sound			Runs its object file code that calls 0x45cf00; not read here	inferred	none		
 0x458fb0	260			sound			Runs its object file code that calls 0x4590c0, 0x45cfe0, 0x4590e0 and 5 more; not read here	inferred	none		
@@ -6622,10 +6622,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x484c90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x484ca0	14184			ui	orchestration		Runs its object file code that calls 0x488410; not read here	inferred	none		
 0x488410	38			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration		Implements the Lua function FrameXML_Debug	inferred	none		
+0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration		Sets the FrameXML trace level from a number argument and returns the level	verified	one	ui/framexml#the-load-status-and-its-log	
 0x4884a0	44			ui	orchestration		Runs its object file code that calls lua_pushstring; not read here	inferred	none		
 0x4884d0	8	Script::ReloadUI	idb	ui	orchestration		Implements the Lua function ReloadUI	inferred	none		
-0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration		Implements the Lua function RegisterForSave	inferred	none		
+0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration		Adds a name to the flat saved variables, raising unless the context word is 0	verified	one	ui/addons#saved-variables-written	
 0x488540	68	Script::SetLayoutMode	idb	ui	orchestration		Implements the Lua function SetLayoutMode	inferred	none		
 0x488590	47	Script::IsShiftKeyDown	idb	ui	orchestration		Implements the Lua function IsShiftKeyDown	inferred	none		
 0x4885c0	50	Script::IsControlKeyDown	idb	ui	orchestration		Implements the Lua function IsControlKeyDown	inferred	none		
@@ -6759,7 +6759,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration		Implements the Lua function GetNetStats	inferred	none		
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration		Implements the Lua function SitOrStand	inferred	none		
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration		Implements the Lua function StopCinematic	inferred	none		
-0x48b980	119	Script::RunScript	idb	ui	primitive		Implements the Lua function RunScript	inferred	none		
+0x48b980	119	Script::RunScript	idb	ui	primitive		Runs argument 1 as a chunk with the context word set to the RunScript word	verified	one	ui/luastate#the-context-word	
 0x48ba00	343	Script::CheckInteractDistance	idb	ui	primitive		Implements the Lua function CheckInteractDistance	inferred	none		
 0x48bb60	10			ui	orchestration		Runs GameUI.cpp code that calls 0x48bb70; not read here	inferred	none		
 0x48bb70	23			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -6876,18 +6876,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48df90	24	Script::GetRealmName	idb	ui	orchestration		Implements the Lua function GetRealmName	inferred	none		
 0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Implements the Lua function GetItemQualityColor	inferred	none		
 0x48e070	726	Script::GetItemInfo	idb	ui	primitive		Implements the Lua function GetItemInfo	inferred	none		
-0x48e350	50			ui	orchestration		Runs GameUI.cpp code that calls 0x51def0, lua_pushnumber; not read here	inferred	none		
-0x48e390	412			ui	primitive		Runs GameUI.cpp code that calls 0x6f34d0, 0x6f3620, __ftol and 17 more; not read here	inferred	none		
-0x48e530	174	Script::GetAddOnMetadata	idb	ui	primitive		Implements the Lua function GetAddOnMetadata	inferred	none		
-0x48e5e0	175			ui	primitive		Runs GameUI.cpp code that calls 0x6f34d0, 0x6f3620, __ftol and 8 more; not read here	inferred	none		
-0x48e690	137			ui	primitive		Runs GameUI.cpp code that calls 0x6f34d0, 0x6f3620, __ftol and 7 more; not read here	inferred	none		
-0x48e720	56			ui	primitive		Runs GameUI.cpp code that calls 0x51def0, GetSelectedCharacterName, 0x51df00 and 1 more; not read here	inferred	none		
-0x48e760	137			ui	primitive		Runs GameUI.cpp code that calls 0x6f34d0, 0x6f3620, __ftol and 7 more; not read here	inferred	none		
-0x48e7f0	56			ui	primitive		Runs GameUI.cpp code that calls 0x51def0, GetSelectedCharacterName, 0x51df00 and 1 more; not read here	inferred	none		
-0x48e830	15	Script::ResetDisabledAddOns	idb	ui	orchestration		Implements the Lua function ResetDisabledAddOns	inferred	none		
-0x48e840	153	Script::IsAddOnLoadOnDemand	idb	ui	primitive		Implements the Lua function IsAddOnLoadOnDemand	inferred	none		
-0x48e8e0	153	Script::IsAddOnLoaded	idb	ui	primitive		Implements the Lua function IsAddOnLoaded	inferred	none		
-0x48e980	487	Script::LoadAddOn		ui	orchestration		Loads an add-on for the in-game script, keeping a shared load-log status	inferred	none		
+0x48e350	50			ui	orchestration		Returns the count of the sorted add-on names	verified	one	ui/addons#the-in-game-add-on-functions	
+0x48e390	412			ui	primitive		Returns an add-on's name, title, notes, enabled, loadable, reason and security	verified	one	ui/addons#the-in-game-add-on-functions	
+0x48e530	174	Script::GetAddOnMetadata	idb	ui	primitive		Returns an add-on's metadata value of a name, or nil	verified	one	ui/addons#add-on-metadata	
+0x48e5e0	175			ui	primitive		Returns an add-on's required dependency names	verified	one	ui/addons#the-in-game-add-on-functions	
+0x48e690	137			ui	primitive		Sets an add-on enabled for the current character	verified	one	ui/addons#reading-the-enable-state	
+0x48e720	56			ui	primitive		Sets every add-on enabled for the current character	verified	one	ui/addons#reading-the-enable-state	
+0x48e760	137			ui	primitive		Sets an add-on disabled for the current character	verified	one	ui/addons#reading-the-enable-state	
+0x48e7f0	56			ui	primitive		Sets every add-on disabled for the current character	verified	one	ui/addons#reading-the-enable-state	
+0x48e830	15	Script::ResetDisabledAddOns	idb	ui	orchestration		Reloads the current character's add-on enable state from its file	verified	one	ui/addons#enable-state	
+0x48e840	153	Script::IsAddOnLoadOnDemand	idb	ui	primitive		Returns 1 when an add-on by index or name declares LoadOnDemand, else nil	verified	one	ui/addons#the-in-game-add-on-functions	
+0x48e8e0	153	Script::IsAddOnLoaded	idb	ui	primitive		Returns 1 when an add-on by index or name is loaded, else nil	verified	one	ui/addons#the-in-game-add-on-functions	
+0x48e980	487	Script::LoadAddOn		ui	orchestration		Loads an add-on on demand and returns 1, or nil and the reason	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48eb70	104	Script::PartialPlayTime	idb	ui	primitive		Implements the Lua function PartialPlayTime	inferred	none		
 0x48ebe0	104	Script::NoPlayTime	idb	ui	primitive		Implements the Lua function NoPlayTime	inferred	none		
 0x48ec50	56			ui	orchestration		Runs GameUI.cpp code that calls ClientServices::GetCurrent, lua_pushnumber; not read here	inferred	none		
@@ -6912,9 +6912,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f470	10			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
 0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Runs GameUI.cpp code that calls ClientServices::SetMessageHandler, CVar::Lookup, 0x63e030 and 34 more; not read here	inferred	none		
 0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration		Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
-0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Runs GameUI.cpp code that calls ___inc_tmpoff, 0x496510, CVar::Register and 49 more; not read here	inferred	none		
+0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	
 0x4901e0	98			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, _sscanf; not read here	inferred	none		
-0x490250	302			ui	primitive		Runs GameUI.cpp code that calls LoadFrameScriptFunctions, 0x5368a0, 0x4ef2f0 and 51 more; not read here	inferred	none		
+0x490250	302	CGGameUI::RegisterScriptFunctions		ui	primitive		Registers the frame types, the game C functions of 0x83de68 and 53 files of functions as globals	verified	one	ui/luastate#the-c-function-contract	
 0x490380	596			ui	primitive		Runs GameUI.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 6 more; not read here	inferred	none		
 0x4905e0	316			ui	primitive		Runs GameUI.cpp code that calls CSimpleFrame::SetFrameLevel, CLayoutFrame::ClearAllPointsThunk and 5 more; not read here	inferred	none		
 0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
@@ -6922,17 +6922,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4907f0	203			ui	primitive		Runs GameUI.cpp code that calls 0x64ac60, 0x494550, GxCapsScreenSize and 2 more; not read here	inferred	none		
 0x4908c0	441			ui	orchestration		Runs GameUI.cpp code that calls ___inc_tmpoff, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 50 more; not read here	inferred	none		
 0x490a80	321			ui	primitive		Resets interface state on the player's release, among it the trade and loot windows	inferred	none	objectlayer/players#release-and-reactivation	
-0x490bd0	270			ui	primitive		Runs GameUI.cpp code that calls ___inc_tmpoff, 0x496510, 0x493540 and 24 more; not read here	inferred	none		
+0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
 0x490ce0	301			ui	primitive		Runs GameUI.cpp code that calls 0x4f5970, UnloadFrameScriptFunctions, 0x5368c0 and 51 more; not read here	inferred	none		
 0x490e10	75			ui	orchestration		Runs GameUI.cpp code that calls 0x490e60; not read here	inferred	none		
 0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	primitive		Runs GameUI.cpp code that calls 0x490bd0, 0x524b70, 0x4edb70 and 37 more; not read here	inferred	none		
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration		Runs GameUI.cpp code that calls CheckActivePlayer; not read here	inferred	none		
 0x4913a0	16			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x4913b0	451			ui	primitive		Runs GameUI.cpp code that calls 0x491580, SFile::Load, SStrTokenize and 6 more; not read here	inferred	none		
-0x491580	79			ui	orchestration		Runs GameUI.cpp code that calls GetAccountName, SStrPrintf, OsDirectoryExists and 2 more; not read here	inferred	none		
-0x4915d0	343			ui	primitive		Runs GameUI.cpp code that calls SStrHashHT, SStrCmp, 0x4974c0 and 5 more; not read here	inferred	none		
-0x491730	411			ui	primitive		Runs GameUI.cpp code that calls 0x491580, OsFileExists, SStrCopy and 10 more; not read here	inferred	none		
+0x4913b0	451	LoadFlatSavedVariables		ui	primitive		Sets string and float globals from the flat SavedVariables.lua lines and signals VARIABLES_LOADED	verified	one	ui/addons#saved-variables-read	
+0x491580	79	GetFlatSavedVariablesPath		ui	orchestration		Builds the account's SavedVariables.lua path, creating its folder	verified	one	ui/addons#saved-variables-read	
+0x4915d0	343	AddFlatSavedVariable		ui	primitive		Adds a name to the list the flat saved variables write	verified	one	ui/addons#saved-variables-written	
+0x491730	411	SaveFlatSavedVariables		ui	primitive		Writes the names RegisterForSave collected to the flat SavedVariables.lua, keeping a .bak	verified	one	ui/addons#saved-variables-written	
 0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4918e0	32	IsPartyOrRaidMember		ui	orchestration		Returns 1 for a GUID in the party or the raid	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
 0x491900	32	CGGameUI::IsRaidMemberOrPet	idb	ui	orchestration		Runs GameUI.cpp code that calls CGPartyInfo::IsMemberOrPet, CGRaidInfo::IsMemberOrPet; not read here	inferred	none		
@@ -7003,7 +7003,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494780	491			ui	primitive		Runs GameUI.cpp code that calls 0x4a6650, SStrCmpI, SMemFree and 6 more; not read here	inferred	none		
 0x494970	126			ui	orchestration		Runs GameUI.cpp code that calls SStrCmpI, SMemFree, SStrDupA; not read here	inferred	none		
 0x4949f0	83			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4925d0 and 1 more; not read here	inferred	none		
-0x494a50	247	CheckActivePlayer		ui	orchestration		Returns 0 or 1 from a check chosen by its argument, 0 to 11, through a jump table	inferred	none	input#mouse-commands	
+0x494a50	247	CheckActivePlayer		ui	orchestration		Answers whether an action of a kind may run; kinds 0 and 11 refuse a nonzero context and signal	verified	one	ui/luastate#the-context-word	
 0x494b60	256	CGGameUI::SetCursorItem	idb	ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x495190 and 6 more; not read here	inferred	none		
 0x494c60	26			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x494c80	49			ui	orchestration		Returns the cursor's item with its bag and slot	inferred	none	objectlayer/interaction#world-clicks	
@@ -7025,13 +7025,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4953e0	62			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, FrameScript_SignalEvent; not read here	inferred	none		
 0x495420	62			ui	primitive		Clears an item's lock bit and signals ITEM_LOCK_CHANGED	inferred	none	objectlayer/playerfields#inventory-and-money-changes	
 0x495460	297			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, FrameScript_SignalEvent; not read here	inferred	none		
-0x495590	696			ui	primitive		Runs GameUI.cpp code that calls FrameScript::GetContext, 0x6f43f0, FrameScriptCollectGarbage and 14 more; not read here	inferred	none		
+0x495590	696			ui	primitive		Runs the game interface frame update, first zeroing the context nesting count	verified	one	ui/luastate#the-context-word	
 0x495850	72			ui	orchestration		Signals PLAYER_DEAD for the active player	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
 0x495920	24			ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
-0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Runs GameUI.cpp code that calls FrameXML::RegisterFactory; not read here	inferred	none		
-0x4959d0	43	CGWorldFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGWorldFrame::CGWorldFrame; not read here	inferred	none		
+0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Registers the eight game frame types, WorldFrame one-shot	verified	one	ui/framexml#frame-types	
+0x4959d0	43	CGWorldFrame::Create	idb	ui	orchestration		Creates the world frame under a parent	verified	one	ui/framexml#frame-types	
 0x495a00	40	CGMinimapFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGMinimapFrame::CGMinimapFrame; not read here	inferred	none		
 0x495a30	70			ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CSimpleButton::CSimpleButton; not read here	inferred	none		
 0x495a80	34			ui	orchestration		Runs GameUI.cpp code that calls CSimpleFrame::SetHighlightLocked, 0x779810; not read here	inferred	none		
@@ -12621,7 +12621,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51a930	352	Script::GetPVPRankInfo	idb	ui	primitive		Implements the Lua function GetPVPRankInfo	inferred	none		
 0x51aa90	107	Script::GetPVPRankProgress	idb	ui	primitive		Implements the Lua function GetPVPRankProgress	inferred	none		
 0x51ab00	43	Script::GetInspectPVPRankProgress	idb	ui	primitive		Implements the Lua function GetInspectPVPRankProgress	inferred	none		
-0x51ab30	4072			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x51ab30	4072	InitGameEventNames		ui	orchestration		Stores the names of the game events in 0xbe1198, PLAYER_LOGOUT to ADDON_ACTION_FORBIDDEN among them	verified	one	ui/luastate#the-context-word	
 0x51bb20	30	LoadGameScriptFunctions		ui	orchestration		Registers the six shared script functions GetTime to AppendToFile	inferred	none		
 0x51bb40	24	UnloadGameScriptFunctions		ui	orchestration		Unregisters the six shared script functions	inferred	none		
 0x51bb60	38			ui	primitive		Runs its object file code that calls LoadGameScriptFunctions, FrameScriptRegisterFunction; not read here	inferred	none		
@@ -12703,52 +12703,52 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51c700	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x51c710	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x51c720	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x51c740	28	LoadAddOnsForAccount		ui	orchestration		Sets the account name and loads the add-on list from Interface\AddOns for it	inferred	none		
-0x51c760	432			ui	primitive		Runs its object file code that calls 0x401470, 0x42ad10, SStrHashHT and 2 more; not read here	inferred	none		
-0x51c910	157			ui	primitive		Runs its object file code that calls 0x64a420, SStrCmpI, SStrLen and 2 more; not read here	inferred	none		
-0x51c9b0	2656			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI, SStrPrintf and 18 more; not read here	inferred	none		
-0x51d410	71			ui	orchestration		Runs AddOns.cpp code that calls SStrPrintf, 0x51d460; not read here	inferred	none		
+0x51c740	28	LoadAddOnsForAccount		ui	orchestration	void __fastcall (const char *account)	Resets the add-on registry, keeps the account name and scans Interface\AddOns	verified	one	ui/addons#finding-add-ons	
+0x51c760	432	ScanAddOns		ui	primitive		Registers the add-ons of the archives' listfiles, then of the loose folders, then links LoadWith lists	verified	one	ui/addons#finding-add-ons	
+0x51c910	157	RegisterArchiveAddOn		ui	primitive	int __fastcall (const char *path)	Registers the folder of a listfile name ending in .toc and returns 1	verified	one	ui/addons#finding-add-ons	
+0x51c9b0	2656	RegisterAddOn		ui	primitive	void __fastcall (const char *name)	Registers an add-on by folder name from its toc's directives, skipping a known name or no toc	verified	one	ui/addons#toc-directives	
+0x51d410	71	ReadAddOnKey		ui	orchestration		Reads an add-on's .pub file into its record	verified	one	ui/addons#secure-add-ons	
 0x51d460	95			ui	orchestration		Runs AddOns.cpp code that calls SFile::Load, 0x648700; not read here	inferred	none		
-0x51d4c0	61			ui	orchestration		Runs AddOns.cpp code that calls SStrPrintf, 0x51d500; not read here	inferred	none		
+0x51d4c0	61	ReadAddOnURL		ui	orchestration		Reads an add-on's .url file into its record	verified	one	ui/addons#secure-add-ons	
 0x51d500	123			ui	primitive		Runs AddOns.cpp code that calls SFile::Load, SStrChr2, SStrDupA and 2 more; not read here	inferred	none		
-0x51d580	558			ui	primitive		Runs AddOns.cpp code that calls SStrCmpI, __alloca_probe, SStrHashHT and 6 more; not read here	inferred	none		
-0x51d7b0	24			ui	primitive		Runs AddOns.cpp code that calls 0x51c9b0; not read here	inferred	none		
-0x51d7d0	6			ui	orchestration		Runs AddOns.cpp code not read here	inferred	none		
+0x51d580	558	SetAddOnMetadata		ui	primitive		Stores a metadata line by name, keeping a locale-suffixed name only for the client locale	verified	one	ui/addons#add-on-metadata	
+0x51d7b0	24	RegisterFolderAddOn		ui	primitive		Registers a folder not beginning with . and returns 0	verified	one	ui/addons#finding-add-ons	
+0x51d7d0	6	GetInterfaceVersion		ui	orchestration	int (void)	Returns 11200, the interface version add-ons are checked against	verified	one	ui/addons#whether-an-add-on-may-load	
 0x51d7e0	20			ui	unreached		Runs AddOns.cpp code that calls 0x51d800; not read here	inferred	none		
 0x51d800	257			ui	unreached		Runs AddOns.cpp code that calls SFile::Load, SStrTokenize, SStrLen and 3 more; not read here	inferred	none		
-0x51d910	352	WriteAddonInfo	idb	ui	primitive		Appends the add-on block to an auth session packet	inferred	none	net/session#session-challenge	
-0x51da70	624			ui	primitive		Runs AddOns.cpp code that calls CDataStore::GetUInt8, 0x419aa0, 0x51dce0 and 10 more; not read here	inferred	none		
-0x51dce0	145			ui	primitive		Runs AddOns.cpp code that calls SStrPrintf, OsDirectoryExists, OsCreateDirectory and 2 more; not read here	inferred	none		
+0x51d910	352	WriteAddonInfo	idb	ui	primitive		Appends the add-on block to an auth session packet from the add-ons declaring Secure	verified	one	ui/addons#secure-add-ons	
+0x51da70	624	ReadAddOnInfoReply		ui	primitive		Applies the realm's add-on reply to each Secure add-on, then rebuilds the sorted name array	verified	one	ui/addons#secure-add-ons	
+0x51dce0	145	WriteAddOnKey		ui	primitive		Writes an add-on's key to its .pub file	verified	one	ui/addons#secure-add-ons	
 0x51dd80	90			ui	orchestration		Runs AddOns.cpp code that calls 0x42a460, 0x42a5d0, 0x42a4d0; not read here	inferred	none		
-0x51dde0	61			ui	orchestration		Runs AddOns.cpp code that calls SStrPrintf, 0x51de20; not read here	inferred	none		
+0x51dde0	61	WriteAddOnURL		ui	orchestration		Writes an add-on's URL to its .url file	verified	one	ui/addons#secure-add-ons	
 0x51de20	133			ui	orchestration		Runs AddOns.cpp code that calls 0x42a460, SStrPrintf, SStrLen and 3 more; not read here	inferred	none		
-0x51deb0	57			ui	orchestration		Runs AddOns.cpp code that calls 0x51df20, SStrCmpI; not read here	inferred	none		
-0x51def0	6			ui	orchestration		Runs AddOns.cpp code not read here	inferred	none		
-0x51df00	20			ui	orchestration		Runs AddOns.cpp code not read here	inferred	none		
-0x51df20	303			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
+0x51deb0	57	CompareAddOnTitles		ui	orchestration	int __cdecl (const char **a, const char **b)	Compares two add-on names by their titles, or names, ignoring case	verified	one	ui/addons#the-order-lua-sees	
+0x51def0	6	GetNumAddOns		ui	orchestration	unsigned int (void)	Returns the count of names in the sorted add-on array	verified	one	ui/addons#the-order-lua-sees	
+0x51df00	20	GetAddOnName		ui	orchestration	const char * __fastcall (unsigned int index)	Returns the name at an index of the sorted add-on array, or null past its end	verified	one	ui/addons#the-order-lua-sees	
+0x51df20	303	GetAddOnTitle		ui	primitive	const char * __fastcall (const char *name)	Returns an add-on's Title metadata, or null	verified	one	ui/addons#the-order-lua-sees	
 0x51e050	303			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
 0x51e180	148			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51e220	299			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51e350	137			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
+0x51e220	299	GetAddOnMetadataValue		ui	primitive		Returns an add-on's metadata value of a name, or null	verified	one	ui/addons#add-on-metadata	
+0x51e350	137	GetAddOnRequiredDeps		ui	primitive		Returns an add-on's list of required dependencies, or null	verified	one	ui/addons#the-in-game-add-on-functions	
 0x51e3e0	140			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51e470	491			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI, 0x5219d0 and 1 more; not read here	inferred	none		
-0x51e660	137			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51e6f0	137			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51e780	431			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI, 0x51e470 and 4 more; not read here	inferred	none		
-0x51e930	66			ui	orchestration		Runs AddOns.cpp code that calls SStrCopy, SStrPrintf; not read here	inferred	none		
-0x51e980	8			ui	orchestration		Runs AddOns.cpp code not read here	inferred	none		
+0x51e470	491	GetAddOnEnableState		ui	primitive	int __fastcall (const char *name, const char *character, int fallback)	Returns an add-on's enable state 0, 1 or 2 for a character or all, with the DefaultState fallback	verified	one	ui/addons#reading-the-enable-state	
+0x51e660	137	IsAddOnLoadOnDemandByName		ui	primitive		Returns whether an add-on declares LoadOnDemand, false for an unknown name	verified	one	ui/addons#the-in-game-add-on-functions	
+0x51e6f0	137	IsAddOnLoadedByName		ui	primitive		Returns an add-on's loaded byte, false for an unknown name	verified	one	ui/addons#the-in-game-add-on-functions	
+0x51e780	431	CanLoadAddOn		ui	primitive		Answers whether an add-on may load, with a reason code and a dependency reason code	verified	one	ui/addons#whether-an-add-on-may-load	
+0x51e930	66	FormatAddOnReason		ui	orchestration		Writes the name of a reason code, or DEP_ and the dependency reason	verified	one	ui/addons#whether-an-add-on-may-load	
+0x51e980	8	GetAddOnSecurityName		ui	orchestration		Returns SECURE, INSECURE or BANNED for a security value	verified	one	ui/addons#the-in-game-add-on-functions	
 0x51e990	140			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x51ea20	448			ui	primitive		Runs AddOns.cpp code that calls SStrCmpI, SStrHashHT, 0x522cc0 and 5 more; not read here	inferred	none		
-0x51ebe0	827	LoadCharacterAddOnState		ui	primitive		Loads a character's add-on enable state into AddOns.cpp's list, or every node's for a null name	inferred	none		
-0x51ef20	390			ui	primitive		Runs AddOns.cpp code that calls GetRealmName, SStrPrintf, OsDirectoryExists and 8 more; not read here	inferred	none		
+0x51ea20	448	SetAddOnEnableState		ui	primitive	void __fastcall (const char *name, const char *character, int state)	Sets an add-on's enabled flag in a character's node, or every node's, marking a changed node	verified	one	ui/addons#reading-the-enable-state	
+0x51ebe0	827	LoadCharacterAddOnState		ui	primitive		Loads a character's add-on enable state from AddOns.txt into its node, or reloads every node for null	verified	one	ui/addons#enable-state	
+0x51ef20	390	SaveAddOnEnableState		ui	primitive		Writes each changed character node to its AddOns.txt	verified	one	ui/addons#enable-state	
 0x51f0b0	194	DropCharacterAddOnState		ui	orchestration		Drops a character's node from AddOns.cpp's add-on state list, or every node for a null name	inferred	none		
-0x51f180	17			ui	orchestration		Runs AddOns.cpp code not read here	inferred	none		
+0x51f180	17	IsAddOnVersionChecked		ui	orchestration	int (void)	Returns whether the checkAddonVersion CVar is nonzero	verified	one	ui/addons#whether-an-add-on-may-load	
 0x51f1a0	40			ui	orchestration		Runs AddOns.cpp code that calls CVar::Set; not read here	inferred	none		
 0x51f1d0	111			ui	primitive		Runs AddOns.cpp code that calls GetSelectedCharacterName, 0x51e780; not read here	inferred	none		
-0x51f240	957			ui	primitive		Runs AddOns.cpp code that calls SStrHashHT, SStrCmpI, 0x5219d0 and 17 more; not read here	inferred	none		
-0x51f600	71			ui	orchestration		Runs AddOns.cpp code that calls 0x51f240; not read here	inferred	none		
-0x51f650	1002			ui	primitive		Runs AddOns.cpp code that calls SStrPrintf, OsDirectoryExists, OsCreateDirectory and 12 more; not read here	inferred	none		
-0x51fa40	257			ui	primitive		Runs AddOns.cpp code that calls 0x5219d0, 0x520a60, SMemFree and 3 more; not read here	inferred	none		
+0x51f240	957	LoadAddOnByName		ui	primitive	int __fastcall (const char *name, char demand, CStatus *status)	Loads an add-on with its dependencies, files, bindings and saved variables, then signals ADDON_LOADED	verified	one	ui/addons#loading-an-add-on	
+0x51f600	71	LoadAddOnsAtStartup		ui	orchestration	void __fastcall (CStatus *status)	Loads every add-on not loaded on demand, in registration order	verified	one	ui/addons#load-order-and-cycles	
+0x51f650	1002	SaveAddOnVariables		ui	primitive		Writes each loaded add-on's account and character saved variables, deleting files with no names	verified	one	ui/addons#saved-variables-written	
+0x51fa40	257	ResetAddOnRegistry		ui	primitive		Frees the add-on registry, the sorted names and the enable state nodes	verified	one	ui/addons#finding-add-ons	
 0x51fb50	156	MoveAsideLooseInterface		ui	orchestration		Handles loose Interface GlueXML and FrameXML folders under %s.old names, then the Blizzard add-ons	inferred	none		
 0x51fbf0	167			ui	orchestration		Runs AddOns.cpp code that calls SStrPrintf, OsFileExists, 0x42aa80 and 1 more; not read here	inferred	none		
 0x51fca0	106			ui	orchestration		Runs AddOns.cpp code that calls SMemFree, 0x521580, 0x521ec0; not read here	inferred	none		
@@ -12762,7 +12762,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x520360	111			ui	orchestration		Runs AddOns.cpp code that calls SMemFree, 0x41c120, 0x520aa0 and 1 more; not read here	inferred	none		
 0x5203d0	185			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x520490	189			ui	primitive		Runs its object file code that calls 0x520aa0, 0x520d30, SMemFree; not read here	inferred	none		
-0x520550	279			ui	primitive		Runs its object file code that calls SMemAlloc, 0x520670, 0x520680 and 3 more; not read here	inferred	none		
+0x520550	279			ui	primitive		Allocates an add-on record zeroed with security 1 and DefaultState 1	verified	one	ui/addons#toc-directives	
 0x520670	9			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x520680	16			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x520690	16			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -12825,7 +12825,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x521a90	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x521ab0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x521ac0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x521ad0	181			ui	primitive		Runs its object file code not read here	inferred	none		
+0x521ad0	181	LinkAddOnNode		ui	primitive		Links a node at the head or tail of an intrusive list	verified	one	ui/addons#finding-add-ons	
 0x521b90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x521ba0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x521bc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -17862,7 +17862,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b3ea0	301	RealmConnection::MessageHandler		net	orchestration	uint32_t __fastcall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Dispatches a login-phase message to its handler, then logs and skips the rest when the message is not fully read	verified	one	net/dispatch#realm-connection-messages	
 0x5b4000	432	RealmConnection::HandleAuthChallenge		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Answers the server seed with opcode 0x1ed: build, the logon link's +0x74 dword, account, client seed, digest, add-ons	verified	one	net/session#session-challenge	
 0x5b41b0	170	RealmConnection::HandleAuthResponse		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Reads the auth result, the billing fields after 0xc or 0x1b when 5 bytes remain, and the queue position after 0x1b	verified	one	net/session#session-response	
-0x5b4260	61	RealmConnection::HandleAddonInfo		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Logs the addon info message, applies it to the addon list and tells the listener	inferred	none	net/dispatch#realm-connection-messages	
+0x5b4260	61	RealmConnection::HandleAddonInfo		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Logs the addon info message, applies it to the addon list and tells the listener	verified	one	ui/addons#the-order-lua-sees	
 0x5b42a0	740	RealmConnection::HandleCharEnum		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Reads up to 10 characters into the character list and passes the list to the listener, emptied on a bad message	inferred	none	net/dispatch#realm-connection-messages	
 0x5b4590	39	RealmConnection::HandleCharacterCreate		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Reads the character create result byte and passes it to its own slot 0x44	inferred	none	net/dispatch#realm-connection-messages	
 0x5b45c0	39	RealmConnection::HandleCharacterDelete		net	orchestration	uint32_t __thiscall (RealmConnection *this, uint32_t opcode, uint32_t arg, CDataStore *msg)	Reads the character delete result byte and passes it to its own slot 0x48	inferred	none	net/dispatch#realm-connection-messages	
@@ -23365,7 +23365,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648ef0	57			storm	boundary		Runs SFile2.cpp code that calls 0x668440, 0x653780, SMemFree; not read here	inferred	none		
 0x648f30	38			storm	unreached		Runs SFile2.cpp code that calls 0x6550b0; not read here	inferred	none		
 0x648f60	67			storm	unreached		Runs SFile2.cpp code not read here	inferred	none		
-0x648fb0	239			storm	boundary		Runs SFile2.cpp code that calls 0x668b30, SFile::Load, 0x64a420 and 2 more; not read here	inferred	none		
+0x648fb0	239			storm	boundary		Calls a callback for each line of an archive's (listfile) not ending in .md5	verified	one	ui/addons#finding-add-ons	
 0x6490a0	23			storm	unreached		Runs SFile2.cpp code that calls 0x655010; not read here	inferred	none		
 0x6490c0	114			storm	boundary		Runs SFile2.cpp code that calls SMemFree, 0x41c120, 0x649380 and 1 more; not read here	inferred	none		
 0x649140	185			storm	boundary		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
@@ -29488,20 +29488,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eda70	10			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6eda80	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6eda90	10			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6edaa0	138			ui	orchestration		Runs its object file code that calls SFile::Load, 0x661dd0, 0x6f2a30 and 1 more; not read here	inferred	none		
-0x6edb30	7			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6edb40	6			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6edb50	60			ui	primitive		Runs its object file code not read here	inferred	none		
-0x6edb90	627	LoadTocFile		ui	primitive		Runs a toc's files into the script, adding the toc's bytes to an MD5 context	inferred	none		
-0x6ede10	1095			ui	primitive		Runs its object file code that calls 0x64b4a0, SStrCopy, 0x64b4f0 and 20 more; not read here	inferred	none		
+0x6edaa0	138	ReadXMLFile		ui	orchestration		Reads and hashes a file and parses it into a node tree, reporting a failure to open or parse	verified	one	ui/framexml#loading-one-file	
+0x6edb30	7	SetFrameXMLDebug		ui	orchestration	void __fastcall (int level)	Stores the FrameXML trace level	verified	one	ui/framexml#the-load-status-and-its-log	
+0x6edb40	6	GetFrameXMLDebug		ui	orchestration	int (void)	Returns the FrameXML trace level	verified	one	ui/framexml#the-load-status-and-its-log	
+0x6edb50	60	CountTocLines		ui	primitive	int __fastcall (const char *text)	Counts the lines of a toc text that do not begin with #	verified	one	ui/framexml#running-a-toc	
+0x6edb90	627	LoadTocFile		ui	primitive	int __fastcall (const char *toc, void *md5, CStatus *status)	Runs each line of a toc not beginning with # as a file under the toc's directory, hashing the toc	verified	one	ui/framexml#running-a-toc	
+0x6ede10	1095	LoadFrameXMLFile		ui	primitive	int __fastcall (const char *path, void *md5, CStatus *status)	Collapses .. in a path and runs a .lua file or loads an XML file and its top-level elements	verified	one	ui/framexml#loading-one-file	
 0x6ee260	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6ee270	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6ee280	632			ui	primitive		Runs its object file code that calls 0x6edb40, 0x6f2cf0, SStrHashHT and 4 more; not read here	inferred	none		
-0x6ee500	492			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI, 0x6f2b70 and 8 more; not read here	inferred	none		
-0x6ee6f0	137			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
+0x6ee280	632	CreateFrameFromXML		ui	primitive	CSimpleFrame * __fastcall (XMLNode *node, CSimpleFrame *parent, CStatus *status)	Creates a frame of a node's type under the parent attribute or argument and loads the node into it	verified	one	ui/framexml#creating-a-frame-from-xml	
+0x6ee500	492	RegisterXMLTemplate		ui	primitive		Keeps a virtual node by name with its context word, refusing a name the client's own code holds	verified	one	ui/framexml#templates	
+0x6ee6f0	137	FindXMLTemplate		ui	primitive	XMLNode * __fastcall (const char *name)	Returns the template node of a name, ignoring case, or null	verified	one	ui/framexml#templates	
 0x6ee780	113			ui	primitive		Runs its object file code that calls 0x6efd80; not read here	inferred	none		
 0x6ee800	113			ui	primitive		Runs its object file code that calls 0x6f01d0; not read here	inferred	none		
-0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type's factory by name	inferred	none		
+0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type factory by name with a one-shot flag, ignoring a name already taken	verified	one	ui/framexml#frame-types	
 0x6eea00	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6eea10	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6eea20	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -29510,11 +29510,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eea60	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6eea80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6eea90	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleButton::CSimpleButton; not read here	inferred	none		
+0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Allocates and constructs a Button under a parent	verified	one	ui/framexml#frame-types	
 0x6eeb20	1			ui	orchestration		Runs FrameXML.cpp code not read here	inferred	none		
 0x6eeb30	109	Create_SimpleCheckButton	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleCheckbox::CSimpleCheckbox; not read here	inferred	none		
 0x6eeba0	109	Create_SimpleEditBox	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleEditBox::CSimpleEditBox; not read here	inferred	none		
-0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Allocates and constructs a Frame under a parent	verified	one	ui/framexml#frame-types	
 0x6eec80	109	Create_SimpleMessageFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleMessageFrame::CSimpleMessageFrame; not read here	inferred	none		
 0x6eecf0	109	Create_SimpleModel	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel; not read here	inferred	none		
 0x6eed60	109	Create_SimpleScrollFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleScrollFrame::CSimpleScrollFrame; not read here	inferred	none		
@@ -29523,8 +29523,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eeeb0	109	Create_SimpleHTML	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleHTML::CSimpleHTML; not read here	inferred	none		
 0x6eef20	109	Create_SimpleStatusBar	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleStatusBar::CSimpleStatusBar; not read here	inferred	none		
 0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleColorSelect::CSimpleColorSelect; not read here	inferred	none		
-0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleMovieFrame::CSimpleMovieFrame; not read here	inferred	none		
-0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Runs its object file code that calls FrameXML::RegisterFactory; not read here	inferred	none		
+0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates and constructs a MovieFrame under a parent	verified	one	ui/framexml#frame-types	
+0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	one	ui/framexml#frame-types	
 0x6ef160	37			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6ef190	180			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6ef250	34			ui	orchestration		Runs its object file code that calls 0x6ef280, SMemFree; not read here	inferred	none		
@@ -29581,7 +29581,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f0fc0	264			ui	primitive		Runs its object file code that calls 0x6f0c00, 0x6f01d0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x6f10d0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6f10e0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6f10f0	268	CheckTocSignature		ui	orchestration		Checks a toc's .sig file: 0 unreadable, 1 bad size or verification, 2 digest differs, 3 good	inferred	none		
+0x6f10f0	268	CheckTocSignature		ui	orchestration		Checks a toc's .sig file: 0 unreadable, 1 bad size or verification, 2 digest differs, 3 good	verified	one	ui/framexml#building-the-game-interface	
 0x6f1200	108			ui	orchestration		Runs its object file code that calls MD5Init, 0x6f1270, SFile::Load and 3 more; not read here	inferred	none		
 0x6f1270	535			ui	primitive		Runs its object file code that calls SStrPrintf, SStrLen, 0x64b4f0 and 9 more; not read here	inferred	none		
 0x6f1490	101			ui	orchestration		Runs its object file code that calls SStrTokenize, 0x6f1270; not read here	inferred	none		
@@ -29608,7 +29608,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1a70	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f1a90	53			ui	primitive		Runs its object file code that calls 0x64b540; not read here	inferred	none		
 0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
-0x6f1b30	130			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive		Reads a script argument as an integer flag: nil 0, a boolean 0 or 1, a number truncated, else by keyword or default	inferred	none		
 0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
 0x6f1eb0	486			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
@@ -29623,20 +29623,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2840	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f2860	20			ui	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
 0x6f2880	20			ui	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
-0x6f28a0	279			ui	primitive		Runs XMLTree.cpp code that calls SMemAlloc, 0x6f2b10, SStrDupA; not read here	inferred	none		
-0x6f29c0	16			ui	orchestration		Runs XMLTree.cpp code not read here	inferred	none		
-0x6f29d0	86			ui	primitive		Runs XMLTree.cpp code that calls SStrLen, SMemReAlloc; not read here	inferred	none		
-0x6f2a30	141			ui	orchestration		Runs XMLTree.cpp code that calls 0x7e6690, SMemAlloc, 0x7e7010 and 4 more; not read here	inferred	none		
+0x6f28a0	279	XMLStartElement		ui	primitive		Appends a node for an element as the last child of the current one and copies its attributes	verified	one	ui/framexml#xml-trees	
+0x6f29c0	16	XMLEndElement		ui	orchestration		Makes the current node's parent current	verified	one	ui/framexml#xml-trees	
+0x6f29d0	86	XMLCharacterData		ui	primitive		Appends character data to the current node's body	verified	one	ui/framexml#xml-trees	
+0x6f2a30	141	ParseXMLBuffer		ui	orchestration		Parses a buffer with expat into a node tree, never freeing the parser	verified	one	ui/framexml#xml-trees	
 0x6f2ac0	50			ui	orchestration		Runs XMLTree.cpp code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
 0x6f2b00	3			ui	orchestration		Runs XMLTree.cpp code not read here	inferred	none		
-0x6f2b10	81			ui	orchestration		Runs XMLTree.cpp code that calls SStrDupA, SStrLen; not read here	inferred	none		
+0x6f2b10	81	InitXMLNode		ui	orchestration		Builds a node with a parent and a copied tag and empty children, body and attributes	verified	one	ui/framexml#xml-trees	
 0x6f2b70	209			ui	primitive		Runs XMLTree.cpp code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
-0x6f2c50	58			ui	orchestration		Runs XMLTree.cpp code that calls SStrCmpI; not read here	inferred	none		
+0x6f2c50	58	FindXMLChild		ui	orchestration	XMLNode * __thiscall (XMLNode *this, const char *name)	Returns the first child whose tag matches a name ignoring case, or null	verified	one	ui/framexml#xml-trees	
 0x6f2c90	5			ui	orchestration		Runs XMLTree.cpp code not read here	inferred	none		
 0x6f2ca0	11			ui	orchestration		Runs XMLTree.cpp code not read here	inferred	none		
 0x6f2cb0	31			ui	unreached		Runs XMLTree.cpp code not read here	inferred	none		
 0x6f2cd0	32			ui	unreached		Runs XMLTree.cpp code not read here	inferred	none		
-0x6f2cf0	73			ui	primitive		Runs XMLTree.cpp code that calls SStrCmpI; not read here	inferred	none		
+0x6f2cf0	73	GetXMLAttribute		ui	primitive	const char * __thiscall (XMLNode *this, const char *name)	Returns the value of the first attribute matching a name ignoring case, or null	verified	one	ui/framexml#xml-trees	
 0x6f2d40	211			ui	primitive		Runs XMLTree.cpp code that calls SStrCmpI, SMemReAlloc, SStrDupA and 1 more; not read here	inferred	none		
 0x6f2e20	69			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2e70	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -29648,43 +29648,43 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2f80	155			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6f3020	10			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6f3030	55			unassigned	unreached		Runs its object file code that calls luaC_collectgarbage, 0x6f6b10; not read here	inferred	none		
-0x6f3070	10	lua_gettop	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x6f3070	10	lua_gettop	idb	lua			Returns the number of values on the stack	verified	one	ui/luastate#reading-numeric-arguments	
 0x6f3080	73	lua_settop	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6f30d0	193			unassigned			Runs its object file code not read here	inferred	none		
 0x6f31a0	265	lua_insert	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6f32b0	156			unassigned			Runs its object file code not read here	inferred	none		
 0x6f3350	173			unassigned			Runs its object file code not read here	inferred	none		
-0x6f3400	16			unassigned			Runs its object file code that calls 0x6f3410; not read here	inferred	none		
-0x6f3410	101			unassigned			Runs its object file code not read here	inferred	none		
+0x6f3400	16	lua_type		lua			Returns the type tag of a stack index, or -1 for an absent one	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f3410	101	index2adr		lua			Returns the value of a stack or pseudo index, null for a positive index at or past the top	verified	one	ui/luastate#reading-numeric-arguments	
 0x6f3480	18			unassigned			Runs its object file code not read here	inferred	none		
 0x6f34a0	33			unassigned	unreached		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
-0x6f34d0	49			unassigned			Runs its object file code that calls 0x6f3410, 0x6f7c20; not read here	inferred	none		
-0x6f3510	24	lua_isstring	idb	lua			Returns whether a stack value is a string or a number	inferred	none	spell/targeting#lua-targeting-functions	
+0x6f34d0	49	lua_isnumber		lua			Returns whether a stack value is a number or a string that converts to one	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f3510	24	lua_isstring	idb	lua			Returns whether a stack value is a string or a number	verified	one	ui/luastate#reading-numeric-arguments	
 0x6f3530	30			lua	unreached		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
 0x6f3550	55			lua	boundary		Runs its object file code that calls 0x6f3410, 0x6f58b0; not read here	inferred	none		
 0x6f3590	71			lua	unreached		Runs its object file code that calls 0x6f3410, 0x6f8330; not read here	inferred	none		
 0x6f35e0	56			lua	boundary		Runs its object file code that calls 0x6f3410, 0x6f8190; not read here	inferred	none		
-0x6f3620	51			lua	boundary		Runs its object file code that calls 0x6f3410, 0x6f7c20; not read here	inferred	none		
+0x6f3620	51	lua_tonumber		lua	boundary		Returns a stack value as a number, 0.0 for anything that does not convert	verified	one	ui/luastate#reading-numeric-arguments	
 0x6f3660	36			lua	boundary		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
-0x6f3690	78	lua_tostring	idb	lua	boundary		Runs its object file code that calls 0x6f3410, 0x6f7c80, luaC_collectgarbage; not read here	inferred	none		
+0x6f3690	78	lua_tostring	idb	lua	boundary		Returns a stack value as text, converting a number in place, null for other types	verified	one	ui/script#creating-a-frame-from-lua	
 0x6f36e0	56			lua	boundary		Runs its object file code that calls 0x6f3410, 0x6f7c80; not read here	inferred	none		
 0x6f3720	31			lua	unreached		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
 0x6f3740	36			lua	boundary		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
 0x6f3770	21			lua	boundary		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
 0x6f3790	54			lua	boundary		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
-0x6f37f0	23	lua_pushnil	idb	lua			Pushes nil	inferred	none	spell/targeting#lua-targeting-functions	
+0x6f37f0	23	lua_pushnil	idb	lua			Pushes nil stamped with the current context word	verified	one	ui/luastate#the-context-word	
 0x6f3810	43	lua_pushnumber	idb	lua			Pushes a number	inferred	none	spell/targeting#lua-targeting-functions	
 0x6f3840	78			lua	boundary		Runs its object file code that calls luaC_collectgarbage, 0x6f9d00; not read here	inferred	none		
-0x6f3890	37	lua_pushstring	idb	lua	boundary		Runs its object file code that calls 0x6f3840; not read here	inferred	none		
+0x6f3890	37	lua_pushstring	idb	lua	boundary		Pushes a string, or nil for a null pointer	verified	one	ui/script#handler-arguments	
 0x6f38c0	46			lua	boundary		Runs its object file code that calls luaC_collectgarbage, luaO_pushvfstring; not read here	inferred	none		
 0x6f38f0	42	lua_pushfstring	idb	lua	boundary		Runs its object file code that calls luaC_collectgarbage, luaO_pushvfstring; not read here	inferred	none		
-0x6f3920	193			lua	boundary		Runs its object file code that calls luaC_collectgarbage, 0x6f9e70; not read here	inferred	none		
+0x6f3920	193	lua_pushcclosure		lua	boundary		Pushes a C closure of a function with upvalues	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f39f0	37			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f3a20	28			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f3a20	28	lua_pushlightuserdata		lua	boundary		Pushes a light userdata stamped with the current context word	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f3a40	187	lua_gettable	idb	lua	boundary		Runs its object file code that calls 0x6f7cf0; not read here	inferred	none		
 0x6f3b00	182			lua	boundary		Runs its object file code that calls 0x6fa7a0; not read here	inferred	none		
 0x6f3bc0	196	lua_rawgeti		lua	boundary		Pushes t[n] of the table at a stack index, without metamethods	inferred	none		
-0x6f3c90	66			lua	boundary		Runs its object file code that calls luaC_collectgarbage, 0x6fa4f0; not read here	inferred	none		
+0x6f3c90	66	lua_newtable		lua	boundary		Pushes a new table stamped with the current context word	verified	one	ui/luastate#the-context-word	
 0x6f3ce0	5			lua	unreached		Runs its object file code not read here	inferred	none		
 0x6f3cf0	86			lua	boundary		Runs its object file code that calls 0x6f3410; not read here	inferred	none		
 0x6f3d50	196			lua	boundary		Runs its object file code not read here	inferred	none		
@@ -29693,20 +29693,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f3f60	186			lua	boundary		Runs its object file code that calls 0x6fad80; not read here	inferred	none		
 0x6f4020	171			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f40d0	163			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f4180	27			lua	boundary		Runs its object file code that calls luaD_call; not read here	inferred	none		
+0x6f4180	27	lua_call		lua	boundary		Calls a function with arguments and results, unprotected	verified	one	ui/luastate#error-handlers	
 0x6f41a0	164	lua_pcall	idb	lua	boundary		Runs its object file code that calls 0x6f6960; not read here	inferred	none		
 0x6f4250	12			lua	boundary		Runs its object file code that calls luaD_call; not read here	inferred	none		
 0x6f4260	44			lua	unreached		Runs its object file code that calls 0x6f6960; not read here	inferred	none		
 0x6f4290	141			lua	unreached		Runs its object file code that calls 0x6f9e70, luaD_growstack, luaD_call; not read here	inferred	none		
-0x6f4320	74			lua	boundary		Runs its object file code that calls 0x6fb4f0, 0x6fb4c0, 0x6f6a00; not read here	inferred	none		
+0x6f4320	74	lua_load		lua	boundary		Loads a chunk through a reader and the protected parser	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f4370	65			lua	boundary		Runs its object file code that calls 0x6fb600; not read here	inferred	none		
-0x6f43c0	8			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f43d0	8			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f43c0	8	lua_enablegc		lua	boundary		Stores 1 in the state word +0x60 that lets the collector run	verified	one	ui/luastate#the-collector-switch	
+0x6f43d0	8	lua_disablegc		lua	boundary		Stores 0 in the state word +0x60, stopping the collector	verified	one	ui/luastate#the-collector-switch	
 0x6f43e0	10			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f43f0	10			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6f4400	43			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f4400	43	lua_setgcthreshold		lua	boundary		Sets the collection threshold in kilobytes and collects when the count reaches it	verified	one	ui/luastate#the-collector-switch	
 0x6f4430	6			lua	unreached		Runs its object file code not read here	inferred	none		
-0x6f4440	8	lua_error	idb	lua	boundary		Runs its object file code that calls luaG_errormsg; not read here	inferred	none		
+0x6f4440	8	lua_error	idb	lua	boundary		Raises the top value as a Lua error, never returning	verified	one	ui/luastate#the-c-function-contract	
 0x6f4450	141			lua	boundary		Runs its object file code that calls 0x6fa2a0; not read here	inferred	none		
 0x6f44e0	113			lua	boundary		Runs its object file code that calls luaC_collectgarbage, 0x6f84d0, 0x6f9d00; not read here	inferred	none		
 0x6f4560	69			lua	unreached		Runs its object file code that calls luaC_collectgarbage, 0x6f9e30; not read here	inferred	none		
@@ -29717,7 +29717,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f4810	143			lua	boundary		Runs its object file code that calls 0x6fbaa0, 0x6fbc70, luaL_error; not read here	inferred	none		
 0x6f48a0	58			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f3480, lua_pushfstring and 1 more; not read here	inferred	none		
 0x6f48e0	88			lua	boundary		Runs its object file code that calls 0x6fbaa0, 0x6fbc70, lua_pushfstring and 1 more; not read here	inferred	none		
-0x6f4940	55	luaL_error	idb	lua			Raises a Lua error with a formatted message	inferred	none	spell/targeting#lua-targeting-functions	
+0x6f4940	55	luaL_error	idb	lua			Raises a formatted message prefixed by the caller's position, never returning	verified	one	ui/luastate#the-c-function-contract	
 0x6f4980	85			lua	unreached		Runs its object file code not read here	inferred	none		
 0x6f49e0	133			lua	unreached		Runs its object file code that calls lua_pushstring, 0x6f3b00, 0x6f3400 and 4 more; not read here	inferred	none		
 0x6f4a70	21			lua	unreached		Runs its object file code that calls lua_pushstring; not read here	inferred	none		
@@ -29732,7 +29732,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f4cd0	42			lua	boundary		Runs its object file code that calls 0x6f3400, 0x6f4c80; not read here	inferred	none		
 0x6f4d00	95			lua	boundary		Runs its object file code that calls 0x6f3cf0, lua_pushstring, 0x6f3b00 and 3 more; not read here	inferred	none		
 0x6f4d60	87			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f4d00, 0x6f3350 and 1 more; not read here	inferred	none		
-0x6f4dc0	224			lua	boundary		Runs its object file code that calls lua_pushstring, lua_gettable, 0x6f3400 and 6 more; not read here	inferred	none		
+0x6f4dc0	224	luaL_openlib		lua	boundary		Sets the functions of a name and function table into a global table of a name	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f4ea0	219			lua	boundary		Runs its object file code that calls lua_gettop, 0x6f3840, 0x6f3b00 and 6 more; not read here	inferred	none		
 0x6f4f80	61			lua	boundary		Runs its object file code that calls 0x6f3620, __ftol, 0x6f34d0 and 1 more; not read here	inferred	none		
 0x6f4fc0	136			lua	boundary		Runs its object file code that calls lua_rawgeti, 0x6f3400, lua_settop and 6 more; not read here	inferred	none		
@@ -29750,7 +29750,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5490	383			lua	unreached		Runs its object file code that calls lua_gettop, 0x6f3840, _getc and 10 more; not read here	inferred	none		
 0x6f5610	56			lua	unreached		Runs its object file code that calls 0x740c97; not read here	inferred	none		
 0x6f5650	62			lua	unreached		Runs its object file code that calls lua_tostring, __errno, _strerror and 2 more; not read here	inferred	none		
-0x6f5690	67			lua	boundary		Runs its object file code that calls 0x6f4320; not read here	inferred	none		
+0x6f5690	67	luaL_loadbuffer		lua	boundary		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f56e0	32			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f5700	18			lua	unreached		Runs its object file code that calls 0x6f5490; not read here	inferred	none		
 0x6f5720	34			lua	unreached		Runs its object file code that calls lua_pcall, 0x6f5750; not read here	inferred	none		
@@ -29765,14 +29765,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5bc0	93			lua	boundary		Runs its object file code that calls 0x6f9d00, luaD_growstack; not read here	inferred	none		
 0x6f5c20	20			lua	boundary		Runs its object file code that calls luaO_pushvfstring; not read here	inferred	none		
 0x6f5c40	311			lua	boundary		Runs its object file code that calls _strncpy, _strcspn, _strncat; not read here	inferred	none		
-0x6f5d80	37	luaD_throw	idb	lua	boundary		Runs its object file code that calls _longjmp, _exit; not read here	inferred	none		
-0x6f5db0	108			lua	boundary		Runs its object file code that calls __setjmp3, 0x42a320; not read here	inferred	none		
+0x6f5d80	37	luaD_throw	idb	lua	boundary		Jumps to the error point with a status through longjmp, or calls the panic function and exits	verified	one	ui/luastate#the-c-function-contract	
+0x6f5db0	108	luaD_rawrunprotected		lua	boundary		Runs a function under setjmp, checking its address first	verified	one	ui/luastate#the-c-function-contract	
 0x6f5e20	71	luaD_reallocstack	idb	lua	boundary		Runs ldo.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f5e70	122			lua	boundary		Runs ldo.c code not read here	inferred	none		
 0x6f5ef0	105			lua	boundary		Runs ldo.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f5f60	24	luaD_growstack	idb	lua	boundary		Runs ldo.c code not read here	inferred	none		
-0x6f5f80	200			lua	boundary		Runs ldo.c code that calls luaD_growstack, 0x42a320; not read here	inferred	none		
-0x6f6050	363			lua	boundary		Runs ldo.c code that calls 0x6f6370, 0x6f61c0, 0x6f6200 and 3 more; not read here	inferred	none		
+0x6f5f80	200	luaD_callhook		lua	boundary		Calls the debug hook, checking its address first	verified	one	ui/luastate#the-c-function-contract	
+0x6f6050	363	luaD_precall		lua	boundary		Prepares a call, checking a C function address before calling it	verified	one	ui/luastate#the-c-function-contract	
 0x6f61c0	60			lua	boundary		Runs ldo.c code that calls 0x6f5ef0, 0x6fc870; not read here	inferred	none		
 0x6f6200	361			lua	boundary		Runs ldo.c code that calls luaD_growstack, 0x6fa4f0, 0x6fad80 and 2 more; not read here	inferred	none		
 0x6f6370	253			lua	boundary		Runs ldo.c code that calls 0x6f7bd0, 0x6fc620, luaD_growstack; not read here	inferred	none		
@@ -29785,20 +29785,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f67b0	170			lua	unreached		Runs ldo.c code that calls 0x6fc870, 0x6f6050, 0x6f6470 and 1 more; not read here	inferred	none		
 0x6f6860	251			lua	unreached		Runs ldo.c code that calls 0x6fc870; not read here	inferred	none		
 0x6f6960	158			lua	boundary		Runs ldo.c code that calls 0x6f5db0, 0x6f9f60, 0x6f6680 and 1 more; not read here	inferred	none		
-0x6f6a00	115			lua	boundary		Runs ldo.c code that calls 0x6f5db0, luaM_irealloc, 0x6f6680; not read here	inferred	none		
-0x6f6a80	134			lua	boundary		Runs its object file code that calls luaC_collectgarbage, 0x6fec00, 0x6fc9b0 and 2 more; not read here	inferred	none		
+0x6f6a00	115	luaD_protectedparser		lua	boundary		Parses a chunk under protection with the binary flag forced to 0	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f6a80	134	f_parser		lua	boundary		Compiles a chunk as source, the undump unreached, and pushes its closure	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6b10	101			lua	unreached		Runs its object file code that calls 0x6f6b80, 0x6f7b20, 0x6f6c40 and 1 more; not read here	inferred	none		
 0x6f6b80	19			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f6ba0	159			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f6c40	69			lua	boundary		Runs lstate.c code not read here	inferred	none		
+0x6f6c40	69			lua	boundary		Zeroes a new state and stores 1 in its collector switch +0x60	verified	one	ui/luastate#the-collector-switch	
 0x6f6c90	36			lua	boundary		Runs lstate.c code that calls 0x6f9f60, 0x6f6ce0; not read here	inferred	none		
 0x6f6cc0	17			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f6ce0	63			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
-0x6f6d20	80			lua	boundary		Runs lstate.c code that calls 0x6f6b80, 0x6f6c40, 0x6f5db0 and 1 more; not read here	inferred	none		
+0x6f6d20	80	lua_open		lua	boundary		Creates a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
 0x6f6d70	354			lua	boundary		Runs lstate.c code that calls luaM_irealloc, luaD_throw, 0x6f6ba0 and 5 more; not read here	inferred	none		
 0x6f6ee0	3			lua	boundary		Runs lstate.c code not read here	inferred	none		
 0x6f6ef0	142			lua	boundary		Runs lstate.c code that calls 0x6f9f60, luaC_sweep, 0x6f9c30 and 3 more; not read here	inferred	none		
-0x6f6f80	89			lua	boundary		Runs its object file code that calls 0x6f9f60, luaC_separateudata, 0x6f5db0 and 1 more; not read here	inferred	none		
+0x6f6f80	89	lua_close		lua	boundary		Destroys a Lua state	verified	one	ui/luastate#opening-and-replacing-the-state	
 0x6f6fe0	5			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f6ff0	140	luaC_separateudata	idb	lua	boundary		Runs its object file code that calls luaT_gettm; not read here	inferred	none		
 0x6f7080	145			lua	boundary		Runs its object file code that calls 0x6f7120; not read here	inferred	none		
@@ -29807,7 +29807,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7210	66			lua	boundary		Runs its object file code that calls 0x6f7260; not read here	inferred	none		
 0x6f7260	109			lua	boundary		Runs lgc.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f72f0	65			lua	boundary		Runs lgc.c code that calls 0x6f7210; not read here	inferred	none		
-0x6f7340	41	luaC_collectgarbage	idb	lua	boundary		Runs lgc.c code that calls 0x6f73e0, luaC_sweep, 0x6f7370; not read here	inferred	none		
+0x6f7340	41	luaC_collectgarbage	idb	lua	boundary		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
 0x6f7370	107			lua	boundary		Runs lgc.c code that calls 0x6f9c50, luaM_irealloc; not read here	inferred	none		
 0x6f73e0	143			lua	boundary		Runs its object file code that calls 0x6f7ab0, 0x6f7510, 0x6f7a20 and 3 more; not read here	inferred	none		
 0x6f7470	38			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
@@ -29826,9 +29826,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7b20	31			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f7b40	94			lua	boundary		Runs its object file code that calls 0x6f9d00; not read here	inferred	none		
 0x6f7ba0	39	luaT_gettm	idb	lua	boundary		Runs its object file code that calls luaH_getstr; not read here	inferred	none		
-0x6f7bd0	69			lua	boundary		Runs its object file code that calls luaH_getstr; not read here	inferred	none		
-0x6f7c20	81			lua	boundary		Runs its object file code that calls 0x6f5900; not read here	inferred	none		
-0x6f7c80	106			lua	boundary		Runs its object file code that calls _sprintf, 0x6f9d00; not read here	inferred	none		
+0x6f7bd0	69	luaT_gettmbyobj		lua	boundary		Returns a metamethod of a table or full userdata, nil for any other type	verified	one	ui/luastate#lua-50-behaviour-kept	
+0x6f7c20	81	luaV_tonumber		lua	boundary		Converts a number or a fully numeric string to a number, else null	verified	one	ui/luastate#reading-numeric-arguments	
+0x6f7c80	106	luaV_tostring		lua	boundary		Converts a number value to a string in place, refusing other types	verified	one	ui/script#creating-a-frame-from-lua	
 0x6f7cf0	99			lua	boundary		Runs its object file code that calls 0x6fc870, 0x6fa7a0, 0x6f7d60 and 1 more; not read here	inferred	none		
 0x6f7d60	99			lua	boundary		Runs its object file code that calls luaT_gettm, 0x6f7dd0, 0x6f7cf0; not read here	inferred	none		
 0x6f7dd0	268			lua	boundary		Runs its object file code that calls luaD_growstack, luaD_call; not read here	inferred	none		
@@ -29842,7 +29842,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f8440	144			lua	boundary		Runs its object file code that calls luaT_gettm, 0x6f58b0; not read here	inferred	none		
 0x6f84d0	413			lua	boundary		Runs its object file code that calls 0x6f7c80, 0x6f8670, 0x6fc6d0 and 3 more; not read here	inferred	none		
 0x6f8670	161			lua	boundary		Runs its object file code that calls 0x6f7bd0, 0x6f7dd0; not read here	inferred	none		
-0x6f8720	4432			lua	boundary		Runs its object file code that calls 0x6f5f80, 0x6f9900, luaH_getstr and 23 more; not read here	inferred	none		
+0x6f8720	4432	luaV_execute		lua	boundary		Runs Lua bytecode, dispatching 35 opcodes through 0x6f9870	verified	one	ui/luastate#lua-50-behaviour-kept	
 0x6f9900	210			lua	boundary		Runs its object file code that calls 0x6f5f80, 0x6fb9e0; not read here	inferred	none		
 0x6f99e0	159			lua	boundary		Runs its object file code that calls 0x6f82a0, 0x6f8210, 0x6fc730; not read here	inferred	none		
 0x6f9a80	399			lua	boundary		Runs its object file code that calls 0x6f7c20, luaH_getstr, 0x6fc870 and 3 more; not read here	inferred	none		
@@ -29861,7 +29861,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fa150	69			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fa1a0	163			lua	boundary		Runs its object file code that calls 0x6fa260; not read here	inferred	none		
 0x6fa260	60			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fa2a0	379			lua	boundary		Runs its object file code that calls 0x6fa420; not read here	inferred	none		
+0x6fa2a0	379	luaH_next		lua	boundary		Answers the entry after a key: the array part by index, then the nodes by slot	verified	one	ui/luastate#lua-50-behaviour-kept	
 0x6fa420	117			lua	boundary		Runs its object file code that calls 0x6fa4a0, 0x6fa7a0, 0x6fc870; not read here	inferred	none		
 0x6fa4a0	70			lua	boundary		Runs its object file code that calls __ftol; not read here	inferred	none		
 0x6fa4f0	103			lua	boundary		Runs ltable.c code that calls luaM_irealloc, 0x6f7b20, 0x6fa560 and 1 more; not read here	inferred	none		
@@ -29915,22 +29915,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fba70	4			lua	unreached		Runs its object file code not read here	inferred	none		
 0x6fba80	5			lua	unreached		Runs its object file code not read here	inferred	none		
 0x6fba90	4			lua	unreached		Runs its object file code not read here	inferred	none		
-0x6fbaa0	120			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6fbaa0	120	lua_getstack		lua	boundary		Fills a debug record for a call level and answers whether it exists	verified	one	ui/luastate#debugstack	
 0x6fbb20	102			lua	unreached		Runs its object file code that calls 0x6fbb90, 0x6fba10, 0x6fa150 and 1 more; not read here	inferred	none		
 0x6fbb90	18			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fbbb0	190			lua	unreached		Runs its object file code that calls 0x6fbb90, 0x6fba10, 0x6fa150; not read here	inferred	none		
-0x6fbc70	171			lua	boundary		Runs its object file code that calls 0x6fc870, 0x6fbd70, 0x6fbd20 and 2 more; not read here	inferred	none		
+0x6fbc70	171	lua_getinfo		lua	boundary		Fills a debug record with the fields its option letters ask for	verified	one	ui/luastate#debugstack	
 0x6fbd20	79			lua	boundary		Runs its object file code that calls 0x6f5c40; not read here	inferred	none		
-0x6fbd70	310			lua	boundary		Runs its object file code that calls 0x6fbf20, 0x6fbef0, 0x6fc460 and 1 more; not read here	inferred	none		
+0x6fbd70	310	auxgetinfo		lua	boundary		Fills debug fields, naming an unnamed function by a global that holds it	verified	one	ui/luastate#function-names-from-globals	
 0x6fbef0	35			lua	boundary		Runs its object file code that calls 0x6fba10; not read here	inferred	none		
 0x6fbf20	99			lua	boundary		Runs its object file code that calls 0x6f5c40; not read here	inferred	none		
-0x6fbf90	103			lua	boundary		Runs its object file code that calls 0x6f58b0; not read here	inferred	none		
+0x6fbf90	103	FindGlobalFunctionName		lua	boundary		Returns the last string key of the globals hash part whose value is a function, or null	verified	one	ui/luastate#function-names-from-globals	
 0x6fc000	14			lua	boundary		Runs its object file code that calls 0x6fc010; not read here	inferred	none		
 0x6fc010	865			lua	boundary		Runs its object file code that calls 0x6fc3d0, 0x6fc430, 0x6fc400; not read here	inferred	none		
 0x6fc3d0	43			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fc400	47			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fc430	38			lua	boundary		Runs its object file code not read here	inferred	none		
-0x6fc460	86			lua	boundary		Runs its object file code that calls 0x6fba10, 0x6fc4c0; not read here	inferred	none		
+0x6fc460	86	getfuncname		lua	boundary		Names the function of a call from the calling instruction, or null	verified	one	ui/luastate#function-names-from-globals	
 0x6fc4c0	265			lua	boundary		Runs its object file code that calls 0x6fba10, 0x6fa150, 0x6fc010 and 1 more; not read here	inferred	none		
 0x6fc5f0	37			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6fc620	126			lua	boundary		Runs its object file code that calls 0x6fc6a0, 0x6fc4c0, 0x6fc870; not read here	inferred	none		
@@ -29938,12 +29938,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fc6d0	25			lua	boundary		Runs its object file code that calls 0x6fc620; not read here	inferred	none		
 0x6fc6f0	51			lua	boundary		Runs its object file code that calls 0x6f7c20, 0x6fc620; not read here	inferred	none		
 0x6fc730	80			lua	boundary		Runs its object file code that calls 0x6fc870; not read here	inferred	none		
-0x6fc780	225	luaG_errormsg	idb	lua	boundary		Runs its object file code that calls luaD_throw, luaD_growstack, luaD_call; not read here	inferred	none		
+0x6fc780	225	luaG_errormsg	idb	lua	boundary		Calls the error function with the message when set and throws, never returning	verified	one	ui/luastate#the-c-function-contract	
 0x6fc870	40			lua	boundary		Runs its object file code that calls luaO_pushvfstring, 0x6fc8a0, luaG_errormsg; not read here	inferred	none		
 0x6fc8a0	85			lua	boundary		Runs its object file code that calls 0x6fbef0, 0x6fbb90, 0x6f5c40 and 1 more; not read here	inferred	none		
 0x6fc900	114			lua	boundary		Runs lmem.c code that calls 0x6fc870, luaM_irealloc; not read here	inferred	none		
 0x6fc980	46	luaM_irealloc	idb	lua	boundary		Runs its object file code that calls luaM_reallocPool; not read here	inferred	none		
-0x6fc9b0	139			lua	boundary		Runs its object file code that calls 0x6f9d00, 0x6ff580, 0x6fca90 and 4 more; not read here	inferred	none		
+0x6fc9b0	139	luaY_parser		lua	boundary		Compiles a chunk from source	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fca40	73			lua	boundary		Runs its object file code that calls 0x6ff610; not read here	inferred	none		
 0x6fca90	100			lua	boundary		Runs its object file code that calls 0x6f9fe0, 0x6fa4f0; not read here	inferred	none		
 0x6fcb00	325			lua	boundary		Runs lparser.c code that calls 0x6fcc50, 0x7018e0, luaM_irealloc; not read here	inferred	none		
@@ -30013,7 +30013,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fea70	104			lua	boundary		Runs its object file code that calls 0x7018e0, 0x700a80; not read here	inferred	none		
 0x6feae0	148			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6fcd10, 0x6fddf0 and 4 more; not read here	inferred	none		
 0x6feb80	114			lua	boundary		Runs its object file code that calls 0x6fca40, 0x6ff4d0, 0x7018e0 and 2 more; not read here	inferred	none		
-0x6fec00	68			lua	boundary		Runs its object file code that calls 0x6fec50; not read here	inferred	none		
+0x6fec00	68	luaU_undump		lua	boundary		Loads a precompiled chunk; its one caller never reaches it	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6fec50	18			lua	boundary		Runs its object file code that calls 0x6ff210; not read here	inferred	none		
 0x6fec70	165			lua	boundary		Runs its object file code that calls 0x6f9fe0, 0x6fee40, 0x6fed80 and 8 more; not read here	inferred	none		
 0x6fed20	60			lua	boundary		Runs its object file code that calls 0x6fb480, 0x6fed60; not read here	inferred	none		
@@ -30040,7 +30040,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ff4d0	88			unassigned			Runs its object file code that calls 0x6ff530, 0x6ff550; not read here	inferred	none		
 0x6ff530	20			unassigned			Runs its object file code that calls 0x6ff480; not read here	inferred	none		
 0x6ff550	35			unassigned			Runs its object file code that calls 0x6f5c20; not read here	inferred	none		
-0x6ff580	135			unassigned			Runs its object file code that calls 0x6fb480; not read here	inferred	none		
+0x6ff580	135	luaX_setinput		lua			Starts the lexer on a chunk, skipping a first line that begins with #	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6ff610	1366			unassigned			Runs its object file code that calls 0x6ffc20, 0x6fb480, 0x700010 and 7 more; not read here	inferred	none		
 0x6ffc20	65			unassigned			Runs its object file code that calls 0x6fb480, 0x6ff440; not read here	inferred	none		
 0x6ffc70	167			unassigned			Runs its object file code that calls 0x6fb5c0, 0x6fb480, __isctype; not read here	inferred	none		
@@ -30116,29 +30116,29 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x701d80	409	FrameScriptRegisterMethods		ui	orchestration		Adds name and function pairs to a method hash table as registry references	inferred	none	ui/methods#method-tables-and-lookup	
 0x701f20	212	FrameScriptUnregisterMethods		ui	orchestration		Frees the function references and nodes of a method hash table	inferred	none	ui/methods#method-tables-and-lookup	
 0x702000	168	FrameScriptPushMethod		ui	orchestration		Pushes the function of a name from a method hash table and answers whether found	inferred	none	ui/methods#method-tables-and-lookup	
-0x7020b0	131	FrameScriptErrorHandler		ui	orchestration		Handles a script error; registered by 0x7039e0	inferred	none		
+0x7020b0	131	FrameScriptObjectIndex		ui	orchestration	int __fastcall (lua_State *L)	Serves as __index of __framescript_meta: looks a string key up through the object's slot 8, else nil	verified	one	ui/luastate#what-a-new-state-holds	
 0x702140	306	FrameScriptRegisterEvent		ui	orchestration		Appends an object to the listeners of an event name and records the event index	verified	one	ui/script#registering-for-an-event	
 0x702280	338	FrameScriptUnregisterEvent		ui	orchestration		Removes an object from the listeners of an event name and its index	verified	one	ui/script#registering-for-an-event	
 0x7023e0	262	FrameScriptRegisterAllEvents		ui	orchestration		Appends an object to the listeners of every event it is not on	verified	one	ui/script#registering-for-an-event	
 0x7024f0	153	FrameScriptUnregisterAllEvents		ui	orchestration		Removes an object from every event it listens to and empties its index array	verified	one	ui/script#registering-for-an-event	
 0x702590	44	GetScriptObjectScriptByName		ui	orchestration		Returns the OnEvent slot for the name OnEvent, else 0	verified	one	ui/frames#script-slots-by-name	
-0x7025c0	173	SetScriptObjectScript		ui	orchestration		Compiles text as a handler named after the object and handler into its slot	verified	one	ui/frames#loading-from-xml	
+0x7025c0	173	SetScriptObjectScript		ui	orchestration		Compiles text as a handler named after the object and handler into its slot, 0 for empty text	verified	one	ui/framexml#script-elements	
 0x702670	21	FrameScriptReleaseScript		ui	orchestration		Releases a script slot's function reference when set	verified	one	ui/frames#destruction	
 0x702690	84	FrameScriptExecute		ui	orchestration		Runs a script slot with the slot's context word as the current context	verified	one	ui/visibility#show-and-hide-scripts	
 0x7026f0	29	FrameScriptExecuteVarArgs		ui	orchestration		Runs a script slot with a format and its variable arguments	verified	one	ui/script#running-a-handler	
 0x702710	96	FrameScriptExecuteV		ui	orchestration		Runs a script slot with a format and an argument list under the slot's context word	verified	one	ui/script#running-a-handler	
-0x702770	50			ui	orchestration		Runs FrameScript.cpp code that calls lua_tostring, lua_pushstring, lua_insert and 1 more; not read here	inferred	none		
-0x7027b0	41			ui	orchestration		Runs FrameScript.cpp code that calls lua_tostring, lua_pushstring, lua_gettable; not read here	inferred	none		
-0x7027e0	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
-0x7027f0	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
-0x702800	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
-0x702810	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
-0x702820	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
-0x702830	3			ui	orchestration		Runs FrameScript.cpp code not read here	inferred	none		
+0x702770	50			ui	orchestration	int __fastcall (lua_State *L)	Serves setglobal: sets the global named by argument 1 to the top value, returning nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x7027b0	41			ui	orchestration	int __fastcall (lua_State *L)	Serves getglobal: returns the global named by argument 1, read with lua_gettable	verified	one	ui/luastate#the-library-scripts-see	
+0x7027e0	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debugload: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x7027f0	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debuginfo: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x702800	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debugprint: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x702810	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debugdump: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x702820	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debugbreak: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
+0x702830	3			ui	orchestration	int __fastcall (lua_State *L)	Serves debugtimestamp: returns nothing and does nothing	verified	one	ui/luastate#the-library-scripts-see	
 0x702840	19	ScriptDebugProfileStart		ui	host		Latches the time-stamp counter for 0x702860	verified	one	core/time#counter-rate	
 0x702860	153	ScriptDebugProfileStop		ui	primitive		Returns the time-stamp counter's advance divided by a thousandth of 0x42c020	verified	one	core/time#counter-rate	
-0x702900	80			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f3400, 0x6f5400, 0x6f5310 and 1 more; not read here	inferred	none		
-0x702950	22			ui	orchestration		Runs FrameScript.cpp code that calls lua_rawgeti; not read here	inferred	none		
+0x702900	80			ui	orchestration	int __fastcall (lua_State *L)	Serves seterrorhandler: keeps a reference to a function argument as the error handler, raising its usage otherwise	verified	one	ui/luastate#error-handlers	
+0x702950	22			ui	orchestration	int __fastcall (lua_State *L)	Serves geterrorhandler: returns the function seterrorhandler set, or nil	verified	one	ui/luastate#error-handlers	
 0x702970	123			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4cd0, __ftol, 0x6f4bb0 and 4 more; not read here	inferred	none		
 0x7029f0	65			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3cf0, lua_pushnil and 1 more; not read here	inferred	none		
 0x702a40	123			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f3400, 0x6f4b50, 0x6f4810 and 4 more; not read here	inferred	none		
@@ -30159,7 +30159,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7031a0	81			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3660, 0x6f4c20 and 2 more; not read here	inferred	none		
 0x703200	67			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f43f0, lua_pushnumber, 0x6f43e0; not read here	inferred	none		
 0x703250	35			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4cd0, __ftol, 0x6f4400; not read here	inferred	none		
-0x703280	98			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4be0, 0x6f4c20, 0x6f5690 and 2 more; not read here	inferred	none		
+0x703280	98			ui	orchestration	int __fastcall (lua_State *L)	Serves loadstring: compiles argument 1 named by argument 2 or itself, returning the function or nil and the message	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x7032f0	68			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4bb0, lua_gettop, lua_pcall and 2 more; not read here	inferred	none		
 0x703340	84			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, lua_settop, lua_insert and 3 more; not read here	inferred	none		
 0x7033a0	411			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4c20, 0x6f4cd0, __ftol and 10 more; not read here	inferred	none		
@@ -30168,37 +30168,37 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7035a0	269			ui	primitive		Runs FrameScript.cpp code that calls 0x6f3400, _time, lua_pushnumber and 6 more; not read here	inferred	none		
 0x7036b0	50			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, lua_gettable, 0x6f3660 and 1 more; not read here	inferred	none		
 0x7036f0	106			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, lua_gettable, 0x6f34d0 and 4 more; not read here	inferred	none		
-0x703760	609			ui	primitive		Runs FrameScript.cpp code that calls 0x6f34d0, 0x6f3620, __ftol and 8 more; not read here	inferred	none		
-0x7039e0	338	FrameScriptInitialize		ui	orchestration		Opens the Lua state, takes the error handler reference and opens the libraries	inferred	none	ui/script#the-lua-state	
-0x703b40	57	FrameScriptRegisteredFunctionB		ui	orchestration		Serves as a C function 0x7039e0 registers	inferred	none		
-0x703b80	20	ResetFrameScript		ui	orchestration		Closes the Lua state and opens it again when one exists	inferred	none	ui/script#the-lua-state	
-0x703ba0	22	FrameScriptDestroy		ui	orchestration		Closes the Lua state and stores 0 in 0xceef74	inferred	none	ui/script#the-lua-state	
-0x703bc0	42	FrameScriptCollectGarbage		ui	orchestration		Runs the collector with a threshold	inferred	none	ui/script#the-lua-state	
-0x703bf0	245	FrameScript_GetText	idb	ui	orchestration		Returns the text of a global string, choosing a variant by a count and gender	inferred	none	ui/script#text-counts-and-running-code	
-0x703cf0	148	FrameScriptGetPluralIndex		ui	orchestration		Calls the Lua GetPluralIndex with a count and returns its result minus one	inferred	none	ui/script#text-counts-and-running-code	
+0x703760	609			ui	primitive	int __fastcall (lua_State *L)	Serves debugstack: returns the call stack from a level as text, one line per level with head and tail windows	verified	one	ui/luastate#debugstack	
+0x7039e0	338	FrameScriptInitialize		ui	orchestration		Creates the Lua state in 0xceef74 and installs the metatable, handlers, libraries and compat.lua	verified	one	ui/luastate#what-a-new-state-holds	
+0x703b40	57	FrameScriptCallErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Calls the function seterrorhandler set with the message and returns its result, or the message	verified	one	ui/luastate#error-handlers	
+0x703b80	20	ResetFrameScript		ui	orchestration		Closes the Lua state when one exists and tail-jumps to 0x7039e0 to open a new one	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x703ba0	22	FrameScriptDestroy		ui	orchestration		Destroys the Lua state and stores 0 in 0xceef74	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x703bc0	42	FrameScriptCollectGarbage		ui	orchestration		Forces a full collection with the collector switch on, leaving it on when its argument is nonzero	verified	one	ui/luastate#the-collector-switch	
+0x703bf0	245	FrameScript_GetText	idb	ui	orchestration		Returns a global string, or GetText of it with a gender and count, or an empty string	verified	one	ui/script#text-counts-and-running-code	
+0x703cf0	148	FrameScriptGetPluralIndex		ui	orchestration	int __fastcall (int count)	Calls the Lua GetPluralIndex with a count and returns its truncated result minus one, or 0	verified	one	ui/script#text-counts-and-running-code	
 0x703d90	178	SetScriptEventTable		ui	orchestration		Replaces the event table with copies of a list of names	verified	one	ui/script#the-event-table	
 0x703e50	246	FrameScript_SignalEvent	idb	ui	orchestration		Runs OnEvent of every listener of an event with the global event set to its name	verified	one	ui/script#signalling-an-event	
 0x703f50	257	FrameScript_SignalEvent2	idb	ui	orchestration		Runs OnEvent of every listener of an event with event and formatted arguments set	verified	one	ui/script#signalling-an-event	
 0x704060	99	FrameScriptDestroyEventTable		ui	unreached		Destroys every event record and frees the array; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x7040d0	6	FrameScript::GetContext	idb	ui	orchestration		Returns the Lua state 0xceef74	inferred	none	ui/script#the-lua-state	
-0x7040e0	59	FrameScriptError		ui	orchestration		Raises a Lua error with a formatted message	inferred	none	ui/script#functions-and-globals	
-0x704120	55	FrameScriptRegisterFunction		ui	orchestration		Sets a global of a name to a C function	inferred	none	ui/script#functions-and-globals	
-0x704160	53	FrameScript_UnregisterFunction	idb	ui	orchestration		Sets a global of a name to nil	inferred	none	ui/script#functions-and-globals	
+0x7040d0	6	FrameScript::GetContext	idb	ui	orchestration	lua_State * (void)	Returns the Lua state 0xceef74	verified	one	ui/luastate#opening-and-replacing-the-state	
+0x7040e0	59	FrameScriptError		ui	orchestration		Raises a Lua error with a formatted message prefixed by the caller's position	verified	one	ui/script#reading-and-writing-globals	
+0x704120	55	FrameScriptRegisterFunction		ui	orchestration	void __fastcall (const char *name, lua_CFunction fn)	Sets the global of a name to a C closure of a function with no upvalues	verified	one	ui/luastate#the-c-function-contract	
+0x704160	53	FrameScript_UnregisterFunction	idb	ui	orchestration	void __fastcall (const char *name)	Sets the global of a name to nil	verified	one	ui/luastate#the-c-function-contract	
 0x7041a0	73	FrameScriptSetNumberGlobalInt		ui	unreached		Sets a global to an integer; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x7041f0	89	FrameScriptGetNumberGlobalInt		ui	unreached		Reads a global as an integer; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x704250	69	FrameScriptSetNumberGlobal		ui	orchestration		Sets a global to a float	inferred	none	ui/script#functions-and-globals	
+0x704250	69	FrameScriptSetNumberGlobal		ui	orchestration	void __fastcall (const char *name, float value)	Sets a global to a single-precision float	verified	one	ui/script#reading-and-writing-globals	
 0x7042a0	84	FrameScriptGetNumberGlobal		ui	unreached		Reads a global as a float; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x704300	71	FrameScriptSetStringGlobal		ui	orchestration		Sets a global to a string, or nil for an empty one	inferred	none	ui/script#functions-and-globals	
-0x704350	84	FrameScript::GetVariable	idb	ui	orchestration		Reads a global as a string and answers whether it was one	inferred	none	ui/script#functions-and-globals	
+0x704300	71	FrameScriptSetStringGlobal		ui	orchestration	void __fastcall (const char *name, const char *value)	Sets a global to a string, or nil for a null or empty one	verified	one	ui/script#reading-and-writing-globals	
+0x704350	84	FrameScript::GetVariable	idb	ui	orchestration	int __fastcall (const char *name, const char **out)	Reads a global as text when it is a string or number and answers whether it is one	verified	one	ui/script#reading-and-writing-globals	
 0x7043b0	53	FrameScriptClearGlobal		ui	unreached		Sets a global to nil; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x7043f0	130	FrameScriptSaveVariable		ui	orchestration		Writes name = value for a global to a saved-variables file	inferred	none	ui/script#saved-variables	
-0x704480	1470	FrameScriptSerializeValue		ui	primitive		Writes a Lua value as text: escaped strings, %.16g numbers and nested tables	inferred	none	ui/script#saved-variables	
-0x704ae0	224	FrameScriptExecuteBuffer		ui	orchestration		Compiles and runs a buffer, reporting errors through a status object	inferred	none	ui/script#text-counts-and-running-code	
-0x704bc0	162	FrameScriptExecuteFile		ui	orchestration		Reads a file and runs it as a script	inferred	none	ui/script#text-counts-and-running-code	
-0x704c70	52	FrameScriptCompileFunction		ui	orchestration		Compiles a buffer and returns a registry reference, or -1	inferred	none	ui/script#compiling-a-script-element	
+0x7043f0	130	FrameScriptSaveVariable		ui	orchestration		Writes CR LF, a global name, " = " and its serialized value to a file	verified	one	ui/addons#the-saved-variables-format	
+0x704480	1470	FrameScriptSerializeValue		ui	primitive		Writes a Lua value as saved-variables text: escaped strings, %.16g numbers and tab-indented tables	verified	one	ui/addons#the-saved-variables-format	
+0x704ae0	224	FrameScriptExecuteBuffer		ui	orchestration		Compiles and runs a buffer under the error handler, reporting failures to a status	verified	one	ui/framexml#loading-one-file	
+0x704bc0	162	FrameScriptExecuteFile		ui	orchestration		Reads a file and runs it as the chunk @path, hashing it into an MD5 context when given	verified	one	ui/framexml#loading-one-file	
+0x704c70	52	FrameScriptCompileFunction		ui	orchestration		Compiles text as a named chunk and returns its registry reference, or -1 leaving the message	verified	one	ui/framexml#script-elements	
 0x704cb0	19	FrameScriptReleaseFunction		ui	orchestration		Frees a function's registry reference	inferred	none	ui/script#compiling-a-script-element	
-0x704cd0	23	FrameScriptExecuteString		ui	orchestration		Runs a string as a script	inferred	none	ui/script#the-lua-state	
-0x704cf0	85	FrameScriptCallFunction		ui	orchestration		Calls a function reference protected under the error handler	inferred	none	ui/script#text-counts-and-running-code	
+0x704cd0	23	FrameScriptExecuteString		ui	orchestration		Runs a string as a chunk of a name under the error handler	verified	one	ui/script#text-counts-and-running-code	
+0x704cf0	85	FrameScriptCallFunction		ui	orchestration		Calls a function reference with no arguments under the error handler	verified	one	ui/script#text-counts-and-running-code	
 0x704d50	402	FrameScriptRunHandler		ui	orchestration		Calls a function with the global this set to an object's table, restoring it after	verified	one	ui/script#running-a-handler	
 0x704ef0	29	FrameScriptRunHandlerVarArgs		ui	unreached		Passes its variable arguments to 0x704f10; nothing reaches it	verified	one	ui/script#running-a-handler	
 0x704f10	914	FrameScriptRunHandlerV		ui	orchestration		Calls a function with this and arg1 to arg19 set from a format, restoring them after	verified	one	ui/script#running-a-handler	
@@ -30233,7 +30233,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x705f00	91	Script::GetNumFrames	idb	ui	orchestration		Returns the number of frames that exist	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x705f60	224	Script::EnumerateFrames	idb	ui	orchestration		Returns the frame after a given one, or the first	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x706040	102	Script::CreateFont	idb	ui	orchestration		Creates a font object of a name	inferred	none	ui/script#method-tables-of-the-frame-types	
-0x7060b0	664	Script::CreateFrame	idb	ui	orchestration		Creates a frame of a type, name, parent and inherited template	inferred	none	ui/script#method-tables-of-the-frame-types	
+0x7060b0	664	Script::CreateFrame	idb	ui	orchestration		Creates a frame from Lua through a node of the type, name and template, parent from the argument	verified	one	ui/script#creating-a-frame-from-lua	
 0x706350	114	LoadFrameScriptFunctions		ui	orchestration		Registers the global script functions and the method tables of the frame types	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x7063d0	108	UnloadFrameScriptFunctions		ui	orchestration		Unregisters what 0x706350 registers	inferred	none	ui/README#frame-core-object-files	
 0x706440	120	M2CacheConstruct		models	host		Zeroes the model cache, its 1021 shared-model buckets and its release list, and creates its two thread events	verified	one	models/cache#cache-object	
@@ -30753,7 +30753,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7290e0	95			ui	primitive		Runs LCD.CPP code that calls SStrLen, SMemFree, SMemAlloc and 1 more; not read here	inferred	none		
 0x729140	188			ui	primitive		Runs LCD.CPP code that calls SStrCmpI; not read here	inferred	none		
 0x729200	26			ui	orchestration		Runs LCD.CPP code not read here	inferred	none		
-0x729220	1638			ui	primitive		Runs LCD.CPP code that calls 0x6f2cf0, 0x64ac60, FrameScript_GetText and 11 more; not read here	inferred	none		
+0x729220	1638			ui	primitive		Loads an LCDText element: name, id, text, font size, alignment, width, wrap, origin and size	verified	one	ui/xmltypes#the-text-attribute	
 0x729890	5			ui	orchestration		Runs LCD.CPP code not read here	inferred	none		
 0x7298a0	11			ui	orchestration		Runs LCD.CPP code not read here	inferred	none		
 0x7298b0	1036			ui	host		Runs LCD.CPP code that calls 0x6f2cf0, 0x64ac60, SStrCmp and 9 more; not read here	inferred	none		
@@ -33303,8 +33303,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x769820	1297	CSimpleFrame::LoadXML		ui	orchestration		Applies an XML node's inheritance, layout, attributes and child elements to a frame	verified	one	ui/frames#loading-from-xml	
 0x769d40	43	DeleteTitleRegion		ui	orchestration		Destroys a title region and frees it when asked	verified	one	ui/frames#destruction	
 0x769d70	369	CSimpleFrame::LoadXMLLayers		ui	orchestration		Creates each Texture and FontString of each Layer of an XML node in its draw layer	verified	one	ui/frames#loading-from-xml	
-0x769ef0	363	CSimpleFrame::LoadXMLScripts		ui	orchestration		Compiles each script element and enables the input kinds the handlers need	verified	one	ui/frames#loading-from-xml	
-0x76a060	104	CSimpleFrame::LoadXMLChildren		ui	orchestration		Creates the Frames children of an XML node, inherited nodes first	verified	one	ui/frames#loading-from-xml	
+0x769ef0	363	CSimpleFrame::LoadXMLScripts		ui	orchestration		Sets each Scripts child's handler and enables the input its name needs, reporting unknown names	verified	one	ui/framexml#script-elements	
+0x76a060	104	CSimpleFrame::LoadXMLChildren		ui	orchestration		Creates the Frames children of a node, its template first, with the frame as parent	verified	one	ui/framexml#child-frames-and-names	
 0x76a0d0	544	CSimpleFrame::GetScriptByName		ui	orchestration		Returns the script slot of a handler name, OnEvent included, or 0	verified	one	ui/frames#script-slots-by-name	
 0x76a2f0	206	CSimpleFrame::PostLoadXML		ui	orchestration		Ends the load: undefers layout, loads children, runs OnLoad, then OnShow when visible	verified	one	ui/visibility#show-and-hide-scripts	
 0x76a3c0	54	CSimpleFrame::SetFrameFlag		ui	orchestration		Sets or clears bits of the frame flags +0xb4	inferred	none	ui/frames#frame-fields	
@@ -33390,7 +33390,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c5b0	153	CScriptRegion::ExpandName		ui	orchestration		Writes a name with a leading $parent replaced by the nearest named ancestor's name	verified	one	ui/frames#names-and-lookup-by-name	
 0x76c650	132	CScriptRegion::SetName		ui	orchestration		Stores the expanded name and makes it a Lua global for the region's table when unset	verified	one	ui/frames#names-and-lookup-by-name	
 0x76c6e0	20	CScriptRegion::GetLayoutParent		ui	orchestration		Returns the parent's layout part, or 0	inferred	none	ui/frames#vtables-and-the-two-parts	
-0x76c700	94	CScriptRegion::GetLayoutFrameByName		ui	orchestration		Returns the layout part of the region a name finds after $parent expansion	verified	one	ui/frames#vtables-and-the-two-parts	
+0x76c700	94	CScriptRegion::GetLayoutFrameByName		ui	orchestration		Finds a region by a name with $parent expanded against the frame, returning its layout part	verified	one	ui/framexml#child-frames-and-names	
 0x76c760	124	FindFrameOfType		ui	orchestration		Returns the object a global of a name holds when it is a table passing a type test	verified	one	ui/frames#names-and-lookup-by-name	
 0x76c7e0	5	RegionInitInfinityThunk		ui	orchestration		Jumps to 0x76c7f0; a static initializer	verified	one	ui/README#static-initializers	
 0x76c7f0	11	RegionInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
@@ -33405,11 +33405,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c8a0	19	RegionInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x76c8c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76c8d0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x76c8e0	311	CSimpleModel::CSimpleModel		ui	orchestration		Constructs a model frame and stores its two vtables	inferred	none		
+0x76c8e0	311	CSimpleModel::CSimpleModel		ui	orchestration		Constructs a Model frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x76ca20	43			ui	orchestration		Runs its object file code that calls DestroyModelFrame, SMemFree; not read here	inferred	none		
 0x76ca50	108	DestroyModelFrame		ui	orchestration		Destroys a model frame's members; the ModelFFX destructor calls it	inferred	none		
-0x76cac0	440			ui	primitive		Runs its object file code that calls CSimpleFrame::LoadXML, 0x6f2cf0, SStrToFloat and 2 more; not read here	inferred	none		
-0x76cc80	92			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x76cac0	440	CSimpleModel::LoadXML		ui	primitive		Loads a Model's frame node, then its file, scale, fog distances and fog colour	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x76cc80	92	CSimpleModel::GetScriptByName		ui	orchestration		Returns a Model's handler slot by name, adding OnUpdateModel and OnAnimFinished	verified	one	ui/xmltypes#handler-names-by-type	
 0x76cce0	68	SimpleModelLoadFile		ui	orchestration		Loads a model file into a model frame's scene and hands the model to slot 36	inferred	none		
 0x76cd30	144	SimpleModelSetModel		ui	primitive		Stores a model frame's scene model at +0x318 and installs its callbacks	inferred	none		
 0x76cdc0	39			ui	orchestration		Runs its object file code that calls FrameScriptExecute; not read here	inferred	none		
@@ -33502,7 +33502,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fda0	40			ui	primitive		Runs its object file code that calls 0x58b2b0; not read here	inferred	none		
 0x76fdd0	32			ui	primitive		Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x76fdf0	41			ui	orchestration		Runs its object file code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
-0x76fe20	913			ui	primitive		Runs its object file code that calls 0x6f2cf0, 0x6ee6f0, CLayoutFrame::LoadXML and 13 more; not read here	inferred	none		
+0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
 0x7701c0	54			ui	primitive		Runs its object file code that calls CLayoutFrame::SetAllPoints; not read here	inferred	none		
 0x770200	245			ui	primitive		Runs its object file code that calls 0x44ac70, CGxTexFlags::CGxTexFlags, TextureCreate and 5 more; not read here	inferred	none		
 0x770300	91			ui	orchestration		Runs its object file code that calls CompareHandles, AddHandleRef, HandleClose and 1 more; not read here	inferred	none		
@@ -33528,7 +33528,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x770e20	43			ui	orchestration		Runs its object file code that calls 0x770e50, CDataAllocator::PutData; not read here	inferred	none		
 0x770e50	177			ui	primitive		Runs CSimpleRender.cpp code that calls SMemFree, 0x7714f0, UnlockScriptObject and 1 more; not read here	inferred	none		
 0x770f10	41			ui	orchestration		Runs CSimpleRender.cpp code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
-0x770f40	1329			ui	primitive		Runs CSimpleRender.cpp code that calls 0x6f2cf0, 0x783870, 0x770c60 and 25 more; not read here	inferred	none		
+0x770f40	1329	CSimpleFontString::LoadXML		ui	primitive		Loads a font string's layout node, template, hidden, text, limits, font, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	
 0x771480	110			ui	primitive		Runs CSimpleRender.cpp code that calls CLayoutFrame::SetPoint; not read here	inferred	none		
 0x7714f0	266			ui	primitive		Runs CSimpleRender.cpp code that calls 0x772790, SStrCmpI, 0x772810 and 3 more; not read here	inferred	none		
 0x771600	121			ui	primitive		Runs CSimpleRender.cpp code that calls HandleClose, CLayoutFrame::Resize; not read here	inferred	none		
@@ -33609,8 +33609,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x773810	11	FrameMethodsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x773820	225	Frame::GetTitleRegion	idb	ui	orchestration		Implements the Frame method GetTitleRegion, its pair in the table 0x878ec0	inferred	none		
 0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	inferred	none		
-0x773a20	520	Frame::CreateTexture	idb	ui	orchestration		Implements the Frame method CreateTexture, its pair in the table 0x878ec0	inferred	none		
-0x773c30	558	Frame::CreateFontString	idb	ui	orchestration		Implements the Frame method CreateFontString, its pair in the table 0x878ec0	inferred	none		
+0x773a20	520	Frame::CreateTexture	idb	ui	orchestration		Creates a texture of the frame with a name, layer and template, the template only from a string	verified	one	ui/script#creating-a-frame-from-lua	
+0x773c30	558	Frame::CreateFontString	idb	ui	orchestration		Creates a font string of the frame, inheriting a font object or else a template named by a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration		Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	inferred	none		
 0x773f60	288	Frame::GetRegions	idb	ui	orchestration		Implements the Frame method GetRegions, its pair in the table 0x878ec0	inferred	none		
 0x774080	242	Frame::GetNumChildren	idb	ui	orchestration		Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	inferred	none		
@@ -33620,8 +33620,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7744a0	187	Frame::GetFrameLevel	idb	ui	orchestration		Implements the Frame method GetFrameLevel, its pair in the table 0x878ec0	inferred	none		
 0x774560	279	Frame::SetFrameLevel	idb	ui	orchestration		Implements the Frame method SetFrameLevel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x774680	256	Frame::HasScript		ui	orchestration		Implements the Frame method HasScript, its pair in the table 0x878ec0	inferred	none		
-0x774780	327	Frame::GetScript		ui	orchestration		Implements the Frame method GetScript, its pair in the table 0x878ec0	inferred	none		
-0x7748d0	368	Frame::SetScript		ui	orchestration		Implements the Frame method SetScript, its pair in the table 0x878ec0	inferred	none		
+0x774780	327	Frame::GetScript		ui	orchestration		Returns the function in a frame's handler slot, nil for none, adopting a nonzero context word	verified	one	ui/framexml#script-elements	
+0x7748d0	368	Frame::SetScript		ui	orchestration		Sets a frame's handler slot to a function or nil with the current context word, enabling no input	verified	one	ui/framexml#script-elements	
 0x774a40	238	Frame::RegisterEvent	idb	ui	orchestration		Implements the Frame method RegisterEvent, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x774b30	238	Frame::UnregisterEvent	idb	ui	orchestration		Implements the Frame method UnregisterEvent, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x774c20	197	Frame::RegisterAllEvents	idb	ui	orchestration		Implements the Frame method RegisterAllEvents, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
@@ -33690,14 +33690,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x778660	19	FrameMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x778680	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x778690	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7786a0	222	CSimpleButton::CSimpleButton	idb	ui	orchestration		Runs its object file code that calls CSimpleFrame::CSimpleFrame, 0x783a40 and 2 more; not read here	inferred	none		
+0x7786a0	222	CSimpleButton::CSimpleButton	idb	ui	orchestration		Constructs a Button frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x778780	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7787b0	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x778810	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x778820	43			ui	orchestration		Runs its object file code that calls 0x778850, SMemFree; not read here	inferred	none		
 0x778850	105			ui	primitive		Runs its object file code that calls 0x778fd0, FrameScriptReleaseScript, 0x783b20; not read here	inferred	none		
-0x7788c0	901			ui	primitive		Runs its object file code that calls CSimpleFrame::LoadXML, SStrCmpI, 0x6f26f0 and 15 more; not read here	inferred	none		
-0x778c50	92			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x7788c0	901	CSimpleButton::LoadXML		ui	primitive		Loads a Button's frame node, then its state textures, fonts, colours, texts and text attribute	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x778c50	92	CSimpleButton::GetScriptByName		ui	orchestration		Returns a Button's handler slot by name, adding OnClick and OnDoubleClick to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
 0x778cb0	101			ui	primitive		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
 0x778d20	149			ui	primitive		Runs its object file code that calls 0x77fd10, CLayoutFrame::SetPoint, 0x779810; not read here	inferred	none		
 0x778dc0	91			ui	orchestration		Runs its object file code that calls GetBlockPoolData, 0x770d30, 0x778d20 and 1 more; not read here	inferred	none		
@@ -33740,15 +33740,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779970	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x779990	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7799a0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7799b0	865	CSimpleEditBox::CSimpleEditBox	idb	ui	primitive		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::CSimpleFrame, SMemAlloc, 0x783a40 and 9 more; not read here	inferred	none		
+0x7799b0	865	CSimpleEditBox::CSimpleEditBox	idb	ui	primitive		Constructs an EditBox frame, its two vtables and its default flags	verified	one	ui/xmltypes#editbox-flags	
 0x779d20	45			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x779d50	89			ui	orchestration		Runs CSimpleEditBox.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x779db0	6			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x779dc0	43			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x779df0, SMemFree; not read here	inferred	none		
 0x779df0	439			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77e410, 0x77cd90, SMemFree and 1 more; not read here	inferred	none		
-0x779fb0	863			ui	primitive		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x783870 and 16 more; not read here	inferred	none		
-0x77a310	352			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
-0x77a470	42			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x779fb0	863	CSimpleEditBox::LoadXML		ui	primitive		Loads an EditBox's frame node, then its font, limits, flags, history and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x77a310	352	CSimpleEditBox::GetScriptByName		ui	orchestration		Returns an EditBox's handler slot by name, adding its ten text handlers to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
+0x77a470	42	CSimpleEditBox::SetAutoFocus		ui	primitive	void __thiscall (CSimpleEditBox *this, int on)	Sets or clears bit 0 of an EditBox's flag word	verified	one	ui/xmltypes#editbox-flags	
 0x77a4a0	425			ui	primitive		Runs CSimpleEditBox.cpp code that calls AddUint32ArrayCount, 0x7724a0, 0x77b8c0; not read here	inferred	none		
 0x77a650	42			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x77a680	42			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
@@ -33955,22 +33955,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x782d30	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x782d50	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x782d60	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x782d80	68	CSimpleStatusBar::CSimpleStatusBar	idb	ui	primitive		Runs its object file code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x782d80	68	CSimpleStatusBar::CSimpleStatusBar	idb	ui	primitive		Constructs a StatusBar frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x782dd0	26			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
 0x782df0	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x782e20	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x782e80	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x782e90	43			ui	orchestration		Runs its object file code that calls 0x782ec0, SMemFree; not read here	inferred	none		
 0x782ec0	47			ui	orchestration		Runs its object file code that calls 0x7831f0, FrameScriptReleaseScript; not read here	inferred	none		
-0x782ef0	441			ui	primitive		Runs its object file code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x6f18b0 and 8 more; not read here	inferred	none		
+0x782ef0	441	CSimpleStatusBar::LoadXML		ui	primitive		Loads a StatusBar's frame node, then its bar texture and colour, range, value and orientation	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x7830b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7830c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7830d0	60			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x7830d0	60	CSimpleStatusBar::GetScriptByName		ui	orchestration		Returns a StatusBar's handler slot by name, adding OnValueChanged	verified	one	ui/xmltypes#handler-names-by-type	
 0x783110	34			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
 0x783140	174			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 2 more; not read here	inferred	none		
 0x7831f0	85			ui	primitive		Runs its object file code that calls 0x77fd10; not read here	inferred	none		
 0x783250	23			ui	primitive		Runs its object file code not read here	inferred	none		
-0x783270	86			ui	primitive		Runs its object file code not read here	inferred	none		
+0x783270	86			ui	primitive		Sets a status bar's range, the minimum no greater than the maximum, reapplying a pending value	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x7832d0	173			ui	primitive		Runs its object file code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
 0x783380	49			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7833c0	156			ui	primitive		Runs its object file code that calls CSimpleFrame::OnFrameUpdate, 0x770410; not read here	inferred	none		
@@ -33989,12 +33989,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x783620	190			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7836e0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7836f0	375			ui	primitive		Runs its object file code that calls 0x784730, 0x7845d0, 0x784610 and 1 more; not read here	inferred	none		
-0x783870	325			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI, 0x784810 and 5 more; not read here	inferred	none		
+0x783870	325			ui	primitive		Returns the font object of a name, ignoring case, creating one when its flag is nonzero	verified	one	ui/framexml#the-elements-of-a-file	
 0x7839c0	113			ui	primitive		Runs its object file code that calls 0x7845d0; not read here	inferred	none		
 0x783a40	171			ui	primitive		Runs its object file code that calls ConstructScriptObject, 0x77f570, 0x41e3a0; not read here	inferred	none		
 0x783af0	43			ui	orchestration		Runs its object file code that calls 0x783b20, SMemFree; not read here	inferred	none		
 0x783b20	270			ui	primitive		Runs its object file code that calls 0x784150, 0x770c60, 0x7845a0 and 1 more; not read here	inferred	none		
-0x783c30	1265			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrHashHT, SStrCmpI and 15 more; not read here	inferred	none		
+0x783c30	1265	CFontObject::LoadXML		ui	primitive		Loads a named font's template, file, height, outline, spacing, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	
 0x784130	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x784140	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x784150	42			ui	orchestration		Runs its object file code that calls UnlockScriptObject, LockScriptObject; not read here	inferred	none		
@@ -34032,13 +34032,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x784fd0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x784ff0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x785000	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x785010	55	CSimpleCheckbox::CSimpleCheckbox	idb	ui	orchestration		Runs its object file code that calls CSimpleButton::CSimpleButton; not read here	inferred	none		
+0x785010	55	CSimpleCheckbox::CSimpleCheckbox	idb	ui	orchestration		Constructs a CheckButton on a Button and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x785050	53			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x785090	110			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x785100	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x785110	43			ui	orchestration		Runs its object file code that calls 0x785140, SMemFree; not read here	inferred	none		
 0x785140	40			ui	orchestration		Runs its object file code that calls 0x785330, 0x785440; not read here	inferred	none		
-0x785170	177			ui	orchestration		Runs its object file code that calls 0x7788c0, 0x6f2cf0, 0x6f1b30 and 5 more; not read here	inferred	none		
+0x785170	177	CSimpleCheckbox::LoadXML		ui	orchestration		Loads a CheckButton's Button node, then checked and its two checked textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x785230	50			ui	orchestration		Runs its object file code that calls 0x778cb0; not read here	inferred	none		
 0x785270	179			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 3 more; not read here	inferred	none		
 0x785330	74			ui	orchestration		Runs its object file code that calls 0x77fd10, 0x7854c0; not read here	inferred	none		
@@ -34056,7 +34056,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7855f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x785610	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x785620	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x785640	279	CSimpleMessageFrame::CSimpleMessageFrame	idb	ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls CSimpleFrame::CSimpleFrame, SMemAlloc, 0x783a40; not read here	inferred	none		
+0x785640	279	CSimpleMessageFrame::CSimpleMessageFrame	idb	ui	orchestration		Constructs a MessageFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x785760	45			ui	orchestration		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
 0x785790	89			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x7857f0	6			ui	orchestration		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
@@ -34064,7 +34064,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x785830	180			ui	primitive		Runs CSimpleMessageFrame.cpp code that calls 0x786720, 0x785e00, SMemFree and 1 more; not read here	inferred	none		
 0x7858f0	5			ui	orchestration		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
 0x785900	11			ui	orchestration		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
-0x785910	622			ui	primitive		Runs CSimpleMessageFrame.cpp code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x783870 and 11 more; not read here	inferred	none		
+0x785910	622	CSimpleMessageFrame::LoadXML		ui	primitive		Loads a MessageFrame's frame node, then its font, fading, insert mode and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x785b80	48			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
 0x785bb0	75			ui	unreached		Runs CSimpleMessageFrame.cpp code that calls 0x771680; not read here	inferred	none		
 0x785c00	24			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
@@ -34102,17 +34102,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7869f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x786a10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x786a20	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x786a40	109	CSimpleScrollFrame::CSimpleScrollFrame	idb	ui	orchestration		Runs its object file code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x786a40	109	CSimpleScrollFrame::CSimpleScrollFrame	idb	ui	orchestration		Constructs a ScrollFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x786ab0	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x786ae0	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x786b40	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x786b50	43			ui	orchestration		Runs its object file code that calls 0x786b80, SMemFree; not read here	inferred	none		
 0x786b80	64			ui	orchestration		Runs its object file code that calls FrameScriptReleaseScript; not read here	inferred	none		
-0x786bc0	125			ui	primitive		Runs its object file code that calls CSimpleFrame::LoadXML, 0x6f2c50, 0x6ee280 and 1 more; not read here	inferred	none		
-0x786c40	124			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x786bc0	125	CSimpleScrollFrame::LoadXML		ui	primitive		Loads a ScrollFrame's frame node, then creates its scroll child from XML	verified	one	ui/xmltypes#scroll-child	
+0x786c40	124	CSimpleScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollFrame's handler slot by name, adding its three scroll handlers	verified	one	ui/xmltypes#handler-names-by-type	
 0x786cc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x786cd0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x786ce0	69			ui	orchestration		Runs its object file code that calls CSimpleFrame::SetDrawsItself, 0x787100; not read here	inferred	none		
+0x786ce0	69			ui	orchestration		Sets a scroll frame's scroll child, detaching the old one and attaching the new	verified	one	ui/xmltypes#scroll-child	
 0x786d30	120			ui	primitive		Runs its object file code that calls 0x787100, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		
 0x786db0	120			ui	primitive		Runs its object file code that calls 0x787100, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		
 0x786e30	322			ui	primitive		Runs its object file code that calls 0x786f80, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		
@@ -34133,15 +34133,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x787630	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x787650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x787660	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x787670	635			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x7a3540, 0x789190, SMemAlloc and 5 more; not read here	inferred	none		
+0x787670	635			ui	primitive		Constructs a ScrollingMessageFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x7878f0	22			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls SMemFree; not read here	inferred	none		
 0x787910	45			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
 0x787940	89			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x7879a0	6			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
 0x7879b0	43			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x7879e0, SMemFree; not read here	inferred	none		
 0x7879e0	311			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788f40, 0x788f90, 0x788c00 and 5 more; not read here	inferred	none		
-0x787b20	615			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x783870 and 11 more; not read here	inferred	none		
-0x787d90	60			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x7a3700, SStrCmpI; not read here	inferred	none		
+0x787b20	615	CSimpleMessageScrollFrame::LoadXML		ui	primitive		Loads a ScrollingMessageFrame's frame node, then its font, fading, line count and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x787d90	60	CSimpleMessageScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollingMessageFrame handler slot by name, adding OnMessageScrollChanged	verified	one	ui/xmltypes#handler-names-by-type	
 0x787dd0	478			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788fe0, SMemFree, 0x7891e0 and 1 more; not read here	inferred	none		
 0x787fb0	48			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788310; not read here	inferred	none		
 0x787fe0	64			ui	unreached		Runs CSimpleMessageScrollFrame.cpp code that calls 0x771680; not read here	inferred	none		
@@ -34193,23 +34193,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7893d0	8			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7893e0	11			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7893f0	11			ui	primitive		Runs its object file code not read here	inferred	none		
-0x789400	115	CSimpleSlider::CSimpleSlider	idb	ui	primitive		Runs its object file code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent; not read here	inferred	none		
+0x789400	115	CSimpleSlider::CSimpleSlider	idb	ui	primitive		Constructs a Slider frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x789480	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7894b0	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x789510	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x789520	43			ui	orchestration		Runs its object file code that calls 0x789550, SMemFree; not read here	inferred	none		
 0x789550	47			ui	orchestration		Runs its object file code that calls 0x789860, FrameScriptReleaseScript; not read here	inferred	none		
-0x789580	420			ui	primitive		Runs its object file code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x6f18b0 and 9 more; not read here	inferred	none		
+0x789580	420	CSimpleSlider::LoadXML		ui	primitive		Loads a Slider's frame node, then its thumb, range, step, value and orientation	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x789730	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x789740	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x789750	60			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x789750	60	CSimpleSlider::GetScriptByName		ui	orchestration		Returns a Slider's handler slot by name, adding OnValueChanged	verified	one	ui/xmltypes#handler-names-by-type	
 0x789790	34			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
 0x7897c0	158			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 1 more; not read here	inferred	none		
 0x789860	83			ui	primitive		Runs its object file code that calls 0x77fd10, CLayoutFrame::ClearAllPointsThunk; not read here	inferred	none		
 0x7898c0	45			ui	primitive		Runs its object file code that calls CLayoutFrame::ClearAllPointsThunk; not read here	inferred	none		
-0x7898f0	64			ui	primitive		Runs its object file code that calls 0x789930; not read here	inferred	none		
-0x789930	302			ui	primitive		Runs its object file code that calls __ftol, FrameScriptExecuteVarArgs; not read here	inferred	none		
-0x789a60	58			ui	primitive		Runs its object file code that calls 0x7898f0; not read here	inferred	none		
+0x7898f0	64			ui	primitive		Sets a slider's minimum and span from a minimum and maximum, reapplying a pending value	verified	one	ui/xmltypes#slider-and-statusbar-values	
+0x789930	302			ui	primitive		Sets a slider's value clamped to its range and rounded to its step	verified	one	ui/xmltypes#slider-and-statusbar-values	
+0x789a60	58			ui	primitive		Sets a slider's value step, reapplying its range when one is set	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x789aa0	253			ui	primitive		Runs its object file code that calls CSimpleFrame::OnFrameUpdate, CLayoutFrame::SetPoint; not read here	inferred	none		
 0x789ba0	200			ui	primitive		Runs its object file code that calls 0x789930, CSimpleFrame::OnMouseMove; not read here	inferred	none		
 0x789c70	27			ui	primitive		Runs its object file code that calls CSimpleFrame::OnFrameSizeChanged; not read here	inferred	none		
@@ -34227,13 +34227,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x789d90	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x789db0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x789dc0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x789dd0	250	CSimpleHTML::CSimpleHTML	idb	ui	primitive		Runs CSimpleHTML.cpp code that calls 0x7a3540, SMemAlloc, 0x783a40 and 1 more; not read here	inferred	none		
+0x789dd0	250	CSimpleHTML::CSimpleHTML	idb	ui	primitive		Constructs a SimpleHTML frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x789ed0	45			ui	orchestration		Runs CSimpleHTML.cpp code not read here	inferred	none		
 0x789f00	89			ui	orchestration		Runs CSimpleHTML.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x789f60	6			ui	orchestration		Runs CSimpleHTML.cpp code not read here	inferred	none		
 0x789f70	43			ui	orchestration		Runs CSimpleHTML.cpp code that calls 0x789fa0, SMemFree; not read here	inferred	none		
 0x789fa0	391			ui	primitive		Runs CSimpleHTML.cpp code that calls 0x78a580, SMemFree, 0x7a35e0; not read here	inferred	none		
-0x78a130	434			ui	primitive		Runs CSimpleHTML.cpp code that calls CSimpleFrame::LoadXML, 0x6f2cf0, 0x783870 and 7 more; not read here	inferred	none		
+0x78a130	434	CSimpleHTML::LoadXML		ui	primitive		Loads a SimpleHTML's frame node, then its fonts, file and hyperlink format	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x78a2f0	47			ui	orchestration		Runs CSimpleHTML.cpp code that calls CSimpleFrame::OnFrameUpdate, 0x78af70; not read here	inferred	none		
 0x78a320	89			ui	primitive		Runs CSimpleHTML.cpp code that calls CSimpleFrame::OnFrameSizeChanged; not read here	inferred	none		
 0x78a380	20			ui	orchestration		Runs CSimpleHTML.cpp code not read here	inferred	none		
@@ -34257,7 +34257,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b1d0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78b1f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78b200	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x78b220	163	CSimpleColorSelect::CSimpleColorSelect	idb	ui	orchestration		Runs its object file code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent; not read here	inferred	none		
+0x78b220	163	CSimpleColorSelect::CSimpleColorSelect	idb	ui	orchestration		Constructs a ColorSelect frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x78b2d0	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78b300	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x78b360	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34265,8 +34265,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b380	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78b390	43			ui	orchestration		Runs its object file code that calls 0x78b3c0, SMemFree; not read here	inferred	none		
 0x78b3c0	36			ui	orchestration		Runs its object file code that calls FrameScriptReleaseScript; not read here	inferred	none		
-0x78b3f0	247			ui	orchestration		Runs its object file code that calls CSimpleFrame::LoadXML, SStrCmpI, 0x6f26f0 and 4 more; not read here	inferred	none		
-0x78b4f0	60			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x78b3f0	247	CSimpleColorSelect::LoadXML		ui	orchestration		Loads a ColorSelect's frame node, then its four wheel and value textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
+0x78b4f0	60	CSimpleColorSelect::GetScriptByName		ui	orchestration		Returns a ColorSelect's handler slot by name, adding OnColorSelect	verified	one	ui/xmltypes#handler-names-by-type	
 0x78b530	78			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
 0x78b580	478			ui	primitive		Runs its object file code that calls _atexit, 0x526930, 0x7bbd60 and 6 more; not read here	inferred	none		
 0x78b760	35			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34297,7 +34297,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c050	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78c070	39			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c0a0	36			ui	primitive		Runs its object file code not read here	inferred	none		
-0x78c0d0	179	CSimpleMovieFrame::CSimpleMovieFrame	idb	ui	orchestration		Runs its object file code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x78c0d0	179	CSimpleMovieFrame::CSimpleMovieFrame	idb	ui	orchestration		Constructs a MovieFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x78c190	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c1c0	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x78c220	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34305,7 +34305,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c260	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c270	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c280	96			ui	orchestration		Runs its object file code that calls 0x78ced0, FrameScriptReleaseScript, SMemFree; not read here	inferred	none		
-0x78c2e0	124			ui	orchestration		Runs its object file code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x78c2e0	124	CSimpleMovieFrame::GetScriptByName		ui	orchestration		Returns a MovieFrame's handler slot by name, adding its three movie handlers	verified	one	ui/xmltypes#handler-names-by-type	
 0x78c360	1080			ui	primitive		Runs CSimpleMovieFrame.cpp code that calls SStrPrintf, SFile::OpenEx, SFile::Read and 5 more; not read here	inferred	none		
 0x78c7a0	495			ui	host		Runs CSimpleMovieFrame.cpp code that calls SMemAlloc, CGxTexFlags::CGxTexFlags, 0x58aa30 and 1 more; not read here	inferred	none		
 0x78c990	158			ui	host		Runs CSimpleMovieFrame.cpp code that calls SMemFree, GxTexDestroy; not read here	inferred	none		
@@ -34883,7 +34883,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a3540	112			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
 0x7a35b0	43			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls 0x7a35e0, SMemFree; not read here	inferred	none		
 0x7a35e0	284			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemFree, FrameScriptReleaseScript; not read here	inferred	none		
-0x7a3700	124			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x7a3700	124	CSimpleHyperlinkedFrame::GetScriptByName		ui	orchestration		Returns a handler slot by name, adding the three hyperlink handlers	verified	one	ui/xmltypes#handler-names-by-type	
 0x7a3780	46			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
 0x7a37b0	46			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
 0x7a37e0	110			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
@@ -37634,7 +37634,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7facd0	76			unassigned			Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
 0x7fad20	66			unassigned			Runs its object file code that calls 0x6f4c80, __ftol, 0x6f3620 and 1 more; not read here	inferred	none		
 0x7fad70	75			unassigned			Runs its object file code that calls 0x6f4c80, __ftol, lua_pushnumber; not read here	inferred	none		
-0x7fadc0	23			unassigned			Runs its object file code that calls 0x6f4dc0; not read here	inferred	none		
+0x7fadc0	23	luaopen_bit		lua			Opens the bit library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
 0x7fade0	35			unassigned			Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
 0x7fae10	35			unassigned			Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
 0x7fae40	35			unassigned			Runs its object file code that calls 0x6f4c80, lua_pushnumber; not read here	inferred	none		
@@ -37659,7 +37659,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fb2a0	106			unassigned			Runs its object file code that calls lua_gettop, 0x6f4c80, lua_pushnumber; not read here	inferred	none		
 0x7fb310	317	math_random		lua			Returns a Lua random number drawn from rand	inferred	none	random#the-c-runtime-rand	
 0x7fb450	27	math_randomseed		lua	orchestration		Seeds rand from its first Lua argument, truncated	verified	one	random#the-c-runtime-rand	
-0x7fb470	110			unassigned			Runs its object file code that calls 0x6f4dc0, 0x6f3840, lua_pushnumber and 2 more; not read here	inferred	none		
+0x7fb470	110	luaopen_math		lua			Opens the math library of 24 functions, math.pi and the global __pow	verified	one	ui/luastate#the-library-scripts-see	
 0x7fb4e0	174			unassigned			Runs its object file code that calls 0x6f4b50, 0x6f5050, 0x6f3350 and 5 more; not read here	inferred	none		
 0x7fb590	155			unassigned			Runs its object file code that calls 0x6f4b50, lua_pushnil, 0x6f4450 and 4 more; not read here	inferred	none		
 0x7fb630	60			unassigned			Runs its object file code that calls 0x6f4b50, 0x6f5050, lua_pushnumber; not read here	inferred	none		
@@ -37671,7 +37671,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fb990	648			unassigned			Runs its object file code that calls lua_rawgeti, 0x7fbc50, 0x7fbc20 and 4 more; not read here	inferred	none		
 0x7fbc20	38			unassigned			Runs its object file code that calls 0x6f3f60; not read here	inferred	none		
 0x7fbc50	123			unassigned			Runs its object file code that calls 0x6f3400, 0x6f3350, 0x6f4180 and 3 more; not read here	inferred	none		
-0x7fbcd0	23			unassigned			Runs its object file code that calls 0x6f4dc0; not read here	inferred	none		
+0x7fbcd0	23	luaopen_table		lua			Opens the table library of 8 functions	verified	one	ui/luastate#what-a-new-state-holds	
 0x7fbcf0	62			unassigned			Runs its object file code that calls 0x6f4be0, lua_pushnumber; not read here	inferred	none		
 0x7fbd30	162			unassigned			Runs its object file code that calls 0x6f4be0, 0x6f4c80, __ftol and 3 more; not read here	inferred	none		
 0x7fbde0	11			unassigned			Runs its object file code not read here	inferred	none		
@@ -37709,7 +37709,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7fd2a0	293			unassigned			Runs its object file code that calls lua_isstring, lua_tostring, 0x6f36e0 and 9 more; not read here	inferred	none		
 0x7fd3d0	691			unassigned			Runs its object file code that calls 0x6f4be0, 0x6f5300, 0x6f5120 and 12 more; not read here	inferred	none		
 0x7fd6d0	211			unassigned			Runs its object file code that calls 0x6f4be0, 0x6f5120, 0x6f51f0; not read here	inferred	none		
-0x7fd810	23			unassigned			Runs its object file code that calls 0x6f4dc0; not read here	inferred	none		
+0x7fd810	23	luaopen_string		lua			Opens the string library of 12 functions	verified	one	ui/luastate#what-a-new-state-holds	
 0x7fd830	31	__EH_prolog	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd84f	140	_bsearch	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x7fd8db	176	_frexp	idb	crt	boundary		Runs its object file code that calls __ctrlfp, __sptype, __handle_qnan1 and 2 more; not read here	inferred	none		
