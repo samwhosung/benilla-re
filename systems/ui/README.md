@@ -10,8 +10,10 @@ to `CSimpleHyperlinkedFrame`, `0x764160` to 0x7a3a80), `ENGINE\SOURCE\FrameXML` 
 `WoW\Source\UIUtil` (`ScriptEvents.cpp` to `Tooltip.cpp`, 0x515880 to 0x536ea0), the LCD files
 (from 0x728f00, ending before zlib at 0x730bc0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and
 `HealthBar.cpp` (from 0x7cc320). In all, about 9,800 functions. The frame and layout core is
-documented in `frames`, `anchors`, `strata`, `visibility`, `input`, `script` and `methods`. The
-rest is not documented yet (`Not documented yet`); its rows are those other systems' findings cite.
+documented in `frames`, `anchors`, `strata`, `visibility`, `input`, `script` and `methods`; the Lua
+state, its library and the C function contract in `luastate`; loading the interface from toc and
+XML files in `framexml` and `xmltypes`; add-ons and saved variables in `addons`. The rest is not
+documented yet (`Not documented yet`); its rows are those other systems' findings cite.
 None of the primitives here has a bit-exact test yet.
 
 Roots: `0x764160`, `0x766800`, `0x766820`, `0x767040`, `0x767070`, `0x7670a0`, `0x767240`, `0x768f70`, `0x768f90`, `0x769030`, `0x769060`, `0x769360`, `0x76b2f0`, `0x76c130`, `0x76c150`, `0x76c490`, `0x76c4c0`, `0x76c7e0`, `0x76c800`, `0x76c820`, `0x76c860`, `0x76c890`, `0x773800`, `0x778300`, `0x7785d0`, `0x7785f0`, `0x778620`, `0x778650`, `0x701940`, `0x701960`, `0x701990`, `0x7019b0`, `0x705e30`, `0x705e50`, `0x705e70`, `0x705ea0`, `0x705ed0`, `0x7a17f0`, `0x7a2c10`, `0x7a2ec0`, `0x7a2ee0`, `0x7a2f10`, `0x7a2f40`, `0x7a2f70`
@@ -148,7 +150,7 @@ These are its files in link order, with a census of their function starts:
 |---|---|
 | regions and drawing: `CSimpleModel`, the textures and batches of `CSimpleRender.cpp`, regions, backdrop, `CSimpleFont`, the texture, font string and font methods, `CSimpleHyperlinkedFrame` | about 600 |
 | widget types and their methods: button, edit box, check button, message frames, status bar, slider, scroll frame, HTML, colour select, movie frame | about 850 |
-| `FrameXML.cpp` and `XMLTree.cpp`, the base library of `FrameScript.cpp`, the LCD files | about 700 |
+| the parts of `FrameXML.cpp`, `XMLTree.cpp` and the base library of `FrameScript.cpp` that `framexml` and `luastate` do not cover, the LCD files | about 700 |
 | `WorldFrame.cpp`, `GameUI.cpp` | about 820 |
 | `ChatFrame.cpp`, `WorldMap.cpp`, `BattlefieldInfo.cpp`, `MailInfo.cpp`, `ChatBubbleFrame.cpp` | about 890 |
 | `SpellBookFrame.cpp` to `TradeFrame.cpp` | about 790 |
@@ -156,7 +158,7 @@ These are its files in link order, with a census of their function starts:
 | `SkillInfo.cpp` to `ItemTextFrame.cpp` | about 900 |
 | `ActionBarFrame.cpp` to `PetitionInfo.cpp` | about 820 |
 | `CraftInfo.cpp` to `CharacterModelBase.cpp` | about 830 |
-| `QuestTextParser.cpp`, `ScriptEvents.cpp`, `AddOns.cpp` | about 590 |
+| `QuestTextParser.cpp`, `ScriptEvents.cpp`, the parts of `AddOns.cpp` that `addons` does not cover | about 590 |
 | `Cursor.cpp`, `PortraitButton.cpp`, `Tooltip.cpp`, `NamePlateFrame.cpp`, `HealthBar.cpp` | about 670 |
 
 Addresses: `0x76c8e0`, `0x6edb90`, `0x729dd0`, `0x496720`, `0x51ebe0`
