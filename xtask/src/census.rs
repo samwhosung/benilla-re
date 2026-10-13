@@ -10,13 +10,15 @@
 //! first instruction no body covers after a path's end, padding or a table's data. It never is an
 //! address the instruction before it falls through to, a conditional jump's target or a jump
 //! table's entry: those are the code of the function above. An address that reached code pushes
-//! or moves is the exception: bytes before it that no body reaches are data, not code falling
-//! through (the C runtime's `VC20XC00` before `__except_handler3`), and code found only after
-//! padding that falls through into a start is that data, decoded. Padding starts nothing, except
+//! or moves is the exception where the bytes before it that no body reaches decode as data
+//! (printable text, as the C runtime's `VC20XC00` before `__except_handler3`, or an instruction
+//! that does not decode): they are not code falling through, and a candidate found only after
+//! padding that runs through them into the start is turned down. Padding starts nothing, except
 //! the `mov edi,edi` a hot-patchable function opens with, which is padding before a branch target,
 //! a `call` target or a start. A filter or handler in a scope table that a function's exception
 //! frame pushes is that function's code. A stored address that the extent of a referenced start
-//! holds is that function's own code (a continuation, a catch block), and so is an instruction
+//! holds is that function's own code (a continuation, a catch block), unless a code address sits
+//! in the dword beside it, a table of entries, and so is an instruction
 //! inside an extent that no padding precedes; a start found only after padding owns no stored
 //! address. A candidate whose body is the decode of data (an undecodable first instruction, a table
 //! of code addresses, an instruction compiled code never holds) is turned down. The jump tables
@@ -75,6 +77,23 @@ fn decodes_data(listing: &Listing, image: &Image, entry: u32, reached: &[u32]) -
     reached
         .iter()
         .any(|&a| GARBAGE.is_match(listing.get(a).unwrap_or_default()))
+}
+
+/// Whether the bytes from `from` to `to` are data the listing decodes: a run of printable text of
+/// four bytes or more (the C runtime's `VC20XC00` before `__except_handler3`), or one instruction
+/// that does not decode.
+fn data_signature(listing: &Listing, image: &Image, from: u32, to: u32) -> bool {
+    let text = (from..to).all(|a| image.byte(a).is_some_and(|b| (0x20..0x7f).contains(&b)));
+    let undecodable = listing
+        .addresses
+        .iter()
+        .skip(listing.addresses.partition_point(|&a| a < from))
+        .take_while(|&&a| a < to)
+        .any(|&a| {
+            let t = listing.get(a).unwrap_or_default();
+            t == "(bad)" || t.starts_with(".byte")
+        });
+    to > from && ((to - from >= 4 && text) || undecodable)
 }
 
 /// Any absolute operand: `ds:0x7ff1a0`, `[eax*4+0x403470]`, `0x82e94c`.
@@ -589,6 +608,28 @@ pub fn run(listing: &Listing, bytes: &[u8], rows: &[u32]) -> Option<Census> {
         .collect();
     stored_data.sort_unstable();
     stored_data.dedup();
+    // The stored addresses with a code address in the dword before or after: a table of entries,
+    // such as the run-time library's packed records of `cosh` and `tanh`, whose entries are
+    // functions however near another function's code they lie.
+    let tabled: HashSet<u32> = program_sections(bytes)
+        .into_iter()
+        .filter(|&(start, _)| start != text_start)
+        .flat_map(|(start, raw)| {
+            let code = |k: usize| {
+                raw.get(k..k + 4)
+                    .map(|b| u32::from_le_bytes(b.try_into().expect("four bytes")))
+                    .filter(|v| (text_start..text_end).contains(v) && listing.contains(*v))
+            };
+            (4..raw.len().saturating_sub(3))
+                .step_by(2)
+                .filter(|&k| !in_ranges(&imports, start + k as u32))
+                .filter_map(|k| {
+                    let v = code(k)?;
+                    (code(k - 4).is_some() || code(k + 4).is_some()).then_some(v)
+                })
+                .collect::<Vec<u32>>()
+        })
+        .collect();
     let exception_code = bodies::exception_code(listing, &image, (text_start, text_end));
     let mut rounds = 0;
     let mut inner_rows: Vec<(u32, String)>;
@@ -675,7 +716,11 @@ pub fn run(listing: &Listing, bytes: &[u8], rows: &[u32]) -> Option<Census> {
             .iter()
             .filter(|(_, h)| matches!(h, How::Stored))
             .map(|(&a, _)| a)
-            .filter(|&a| owns(a) || context.cases.contains(&a) || in_ranges(&context.data, a))
+            .filter(|&a| {
+                (owns(a) && !tabled.contains(&a))
+                    || context.cases.contains(&a)
+                    || in_ranges(&context.data, a)
+            })
             .collect();
         if !owned.is_empty() {
             for a in owned {
@@ -697,14 +742,24 @@ pub fn run(listing: &Listing, bytes: &[u8], rows: &[u32]) -> Option<Census> {
             .filter(|(site, _)| covered_by_bodies.contains(site))
             .map(|&(_, value)| value)
             .collect();
+        // The run of instructions no body reaches right before `address`, back to padding or a
+        // path's end.
+        let run_before = |address: u32| {
+            let mut from = address;
+            while let Some(p) = listing.preceding(from) {
+                let text = listing.get(p).unwrap_or_default();
+                if covered_by_bodies.contains(&p) || context.padding(p) || context.ends(text) {
+                    break;
+                }
+                from = p;
+            }
+            from
+        };
         let not_a_start = |address: u32| {
             context.not_a_start(address).filter(|why| {
                 !(why.starts_with("falls through from")
                     && pushed.contains(&address)
-                    && context
-                        .before(address)
-                        .0
-                        .is_some_and(|b| !covered_by_bodies.contains(&b)))
+                    && data_signature(listing, &image, run_before(address), address))
             })
         };
         // A row the same holds, or that is no start, is listed.
@@ -792,7 +847,8 @@ pub fn run(listing: &Listing, bytes: &[u8], rows: &[u32]) -> Option<Census> {
                                     && !context.ends(listing.get(p).unwrap_or_default())
                             })
                     })
-                    .map(|a| format!("falls through into the start at {a:#x}"))
+                    .filter(|&a| data_signature(listing, &image, address, a))
+                    .map(|a| format!("its bytes before the start at {a:#x} are data"))
             };
             let refused = if found == How::Stored {
                 not_a_start(address)
@@ -836,6 +892,7 @@ pub fn run(listing: &Listing, bytes: &[u8], rows: &[u32]) -> Option<Census> {
                 && listing.contains(value)
                 && !how.contains_key(&value)
                 && owns(value)
+                && !tabled.contains(&value)
             {
                 let i = owning.partition_point(|e| e.0 < value);
                 let owner = owning[..i]
@@ -1598,10 +1655,10 @@ mod tests {
             put(&mut bytes, h + 16, 0x200);
             put(&mut bytes, h + 20, offset);
         }
-        // `.rdata` by its full name.
+        // `.rdata` by its full name; the stored dwords apart, so that none is a table.
         bytes[sections + 40 + 5] = b'a';
         for (k, &value) in stored.iter().enumerate() {
-            put(&mut bytes, 0x400 + 4 * k, value);
+            put(&mut bytes, 0x400 + 8 * k, value);
         }
         // The code bytes the reach scan reads: the call at 0x401001 and the jump at 0x401006.
         bytes[0x201] = 0xe8;
@@ -1728,13 +1785,15 @@ mod tests {
     }
 
     /// The starts no row can hold: the body rule (`symbols/README.md`) cannot size them, since
-    /// another entry lies inside their extent or code above falls through into them. All are the
-    /// C runtime's: hand-written routines that share tails and branches, and the `__finally`
-    /// blocks its functions both call and enter from their unwind code.
-    const REFUSED: [u32; 24] = [
+    /// another entry or an instruction no path reaches lies inside their extent, or code above
+    /// falls through into them. All are the C runtime's: hand-written routines that share tails and
+    /// branches, and the `__finally` blocks its functions both call and enter from their unwind
+    /// code.
+    const REFUSED: [u32; 33] = [
         0x40b115, 0x40b9ff, 0x40bb4d, 0x40bc0d, 0x40bc88, 0x40bccf, 0x40bd95, 0x40beee, 0x40d510,
-        0x40da4e, 0x40dad7, 0x73f962, 0x7405bd, 0x74177d, 0x74183d, 0x741b02, 0x74378a, 0x743a3d,
-        0x743ae9, 0x744890, 0x744aa0, 0x744bd5, 0x746a60, 0x7470ad,
+        0x40da4e, 0x40dad7, 0x73f959, 0x73f962, 0x7405b4, 0x7405bd, 0x741774, 0x74177d, 0x741834,
+        0x74183d, 0x741b02, 0x74378a, 0x743a3d, 0x743ae9, 0x744890, 0x744944, 0x744949, 0x7449d1,
+        0x744aa0, 0x744bd5, 0x746a60, 0x746a79, 0x746ab2, 0x7470ad,
     ];
 
     /// The real exe, listing and table: the census is at its fixed point, so every start but the

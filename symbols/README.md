@@ -154,17 +154,18 @@ plus zero (`lea ecx,[ecx+0x0]`).
 `cargo xtask check --exe` recomputes every size from `dumps/disasm.txt`, which restarts the decode
 at every row, every `call` target and every table's end.
 
-Twenty-four starts, all the C runtime's, can hold no row, since no size satisfies this rule
+Thirty-three starts, all the C runtime's, can hold no row, since no size satisfies this rule
 (`cargo xtask census` lists them, and its test holds the list):
 
 - Another entry lies inside the extent, because hand-written routines share tails and branches:
-  `0x40b115`, `0x40bccf`, `0x40beee`, `0x40d510`, `0x73f962`, `0x7405bd`, `0x74177d`, `0x74183d`,
-  `0x744890`, `0x744aa0`, `0x744bd5`.
+  `0x40b115`, `0x40bccf`, `0x40beee`, `0x40d510`, `0x73f959`, `0x7405b4`, `0x741774`, `0x741834`,
+  `0x744890`, `0x744944`, `0x744949`, `0x744aa0`, `0x744bd5`, and the entries the run-time
+  library's packed records store, `0x746a60`, `0x746a79` (`cosh`) and `0x746ab2` (`tanh`).
 - Code above falls through into the entry: the `__finally` blocks a function both calls and enters
   from its unwind code (`0x40b9ff`, `0x40bb4d`, `0x40bc0d`, `0x40bc88`, `0x40bd95`, `0x40da4e`,
-  `0x40dad7`, `0x7470ad`), and the x87 routines' second entries (`0x74378a`, `0x743a3d`,
-  `0x743ae9`).
-- An instruction no path reaches lies inside the extent: `0x741b02`, `0x746a60`.
+  `0x40dad7`, `0x7470ad`), and the x87 routines' second entries (`0x73f962`, `0x7405bd`,
+  `0x74177d`, `0x74183d`, `0x74378a`, `0x743a3d`, `0x743ae9`, `0x7449d1`).
+- An instruction no path reaches lies inside the extent: `0x741b02`.
 
 Classes:
 

@@ -31402,7 +31402,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x743a23	10			crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
 0x743a2d	7			crt	unreached		Runs its object file code that calls one function; not read here	inferred	none		
 0x743a34	7			crt	boundary		Runs its object file code not read here	inferred	none		
-0x743a3b	7			crt	boundary		Runs its object file code not read here	inferred	none		
+0x743a3b	7			crt	unreached		Runs its object file code not read here	inferred	none		
 0x743a42	43			crt	boundary		Runs its object file code not read here	inferred	none		
 0x743a6d	42			crt	boundary		Runs its object file code not read here	inferred	none		
 0x743a97	63			crt	boundary		Runs its object file code not read here	inferred	none		
@@ -31435,10 +31435,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x744908	18			crt	unreached		Runs its object file code not read here	inferred	none		
 0x74491a	26			crt	unreached		Runs its object file code not read here	inferred	none		
 0x744934	16			crt	unreached		Runs its object file code not read here	inferred	none		
-0x7449d1	16	__rtinfnpop	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x74494d	11			crt	unreached		Runs its object file code not read here	inferred	none		
+0x744958	5			crt	unreached		Runs its object file code not read here	inferred	none		
+0x74495d	53			crt	unreached		Runs its object file code that calls _isintTOS; not read here	inferred	none		
+0x744992	7			crt	unreached		Runs its object file code not read here	inferred	none		
+0x744999	7			crt	unreached		Runs its object file code not read here	inferred	none		
+0x7449cf	18			crt	unreached		Runs its object file code not read here	inferred	none		
 0x7449e1	13			crt	boundary		Runs its object file code not read here	inferred	none		
 0x7449ee	67	__ffexpm1	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x744a31	52	_isintTOS	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x744a31	52	_isintTOS	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x744a65	50			crt	unreached		Runs its object file code that calls __powhlp; not read here	inferred	none		
 0x744ab7	60	__startOneArgErrorHandling	idb	crt	boundary		Runs its object file code that calls __87except; not read here	inferred	none		
 0x744b00	21	__twoToTOS	idb	crt	boundary		Runs its object file code not read here	inferred	none		
@@ -31487,6 +31492,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x746923	41			crt	unreached		Runs its object file code that calls __lock, __getdcwd_lk, __unlock; not read here	inferred	none		
 0x74694c	213	__getdcwd_lk	idb	crt	boundary		Runs its object file code that calls __validdrive, ___doserrno, __errno and 2 more; not read here	inferred	none		
 0x746a21	55	__validdrive	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x746ad4	13			crt	boundary		Runs its object file code not read here	inferred	none		
+0x746ae1	9			crt	boundary		Runs its object file code not read here	inferred	none		
+0x746aea	1			crt	unreached		Runs its object file code not read here	inferred	none		
 0x746b08	49	fFEXPH	idb	crt	boundary		Runs its object file code that calls __ffexpm1, ExpHypCopyInv; not read here	inferred	none		
 0x746b39	18	ExpHypSum	idb	crt	boundary		Runs its object file code that calls ExpHypCopyInv; not read here	inferred	none		
 0x746b4b	17	ExpHypCopyInv	idb	crt	boundary		Runs its object file code not read here	inferred	none		
@@ -32338,7 +32346,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x756120	581			d3dx			Runs its object file code that calls 0x75d78d; not read here	inferred	none		
 0x756380	438			d3dx			Runs its object file code that calls 0x75d752; not read here	inferred	none		
 0x756540	137			d3dx			Runs its object file code not read here	inferred	none		
-0x7565e0	797			d3dx			Runs its object file code that calls 0x75ceaa; not read here	inferred	none		
+0x7565de	799			d3dx	unreached		Runs its object file code that calls 0x75ceaa; not read here	inferred	none		
 0x756900	636			d3dx			Runs its object file code that calls 0x75c3d0; not read here	inferred	none		
 0x756b7c	153			d3dx			Runs its object file code not read here	inferred	none		
 0x756c15	93			d3dx			Runs its object file code not read here	inferred	none		
