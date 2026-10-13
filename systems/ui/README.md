@@ -57,7 +57,8 @@ to `0x7a3200`, read `0x81d56c`, `0x81d570` and `0x81d574`, and the next file,
 
 ## Static initializers
 
-Each run opens or closes with the shared header's initializers: a thunk, a five-byte `jmp` or a
+Each run opens with the shared header's initializers, its +∞ first (`systems/README.md`, Object
+files): a thunk, a five-byte `jmp` or a
 ten-byte `call` and `jmp`, and a body that stores one value in a global of the file: +∞ copied from
 a constant, π + π, 1 over that, 10·10, or 0.5/10. The extra initializers are the layout queue
 (`anchors`), the point getters' second +∞ in `0xcf550c`, the drag threshold 0.01·0.01 in `0xcf0c14`,

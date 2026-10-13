@@ -29,7 +29,7 @@ with its file's copy of +∞, 2π and 1/2π.
 | the spell and skill tables | `0x6dd270` | `0x6e0d70` | `0x82cf10` to `0x82cf94` |
 | `Spell_C.cpp` | `0x6e0d80` | `0x6eb540` | `0x82cf98` to `0x82d014` |
 | `SpellVisuals.cpp` | `0x6eb650` | `0x6ed920` | `0x82d018` to `0x82d0a0` |
-| the cast target block | `0x7e4da0` | `0x7e4ed0` | `0x82dfa8` to `0x82dfb0` |
+| the cast target run and code (one file or two; see below) | `0x7e4da0` | `0x7e4ed0` | `0x82dfa8` to `0x82dfb0` |
 
 Addresses: `0x827000`, `0x82cf10`, `0x82cf94`, `0x82cf98`, `0x82d014`, `0x82d018`, `0x82d0a0`, `0x6dd270`, `0x6e0d70`, `0x6e0d80`, `0x6eb540`, `0x6eb650`, `0x6ed920`, `0x6e1a92`, `0x6e9919`, `0x6ec0e7`, `0x6ec4dc`, `0x7e4da0`, `0x7e4e10`, `0x7e4ed0`, `0x6e5863`, `0x6e77f8`, `0x6e7c76`
 Confidence: verified
@@ -112,5 +112,5 @@ two globals of `visuals`. A scan of the listing for each written global's
 address finds only its writer and, for a quotient or product of a global, the next initializer; the
 counter `0xc2a3c4` is every file's.
 The 24 initializers that build state are documented with that state (`tables`, `cooldowns`,
-`visuals`). The cast target file runs only the first three of the header block: `0x7e4da0`, `0x7e4dc0`
+`visuals`). The cast target run holds only the first three of the header block: `0x7e4da0`, `0x7e4dc0`
 and `0x7e4de0`, with the bodies `0x7e4db0`, `0x7e4dd0` and `0x7e4df0`.
