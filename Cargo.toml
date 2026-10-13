@@ -9,3 +9,4 @@ license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
 benilla-re-difftest = { path = "crates/difftest" }
+benilla-re-fastmath = { path = "crates/fastmath" }

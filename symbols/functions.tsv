@@ -633,7 +633,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
 0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
-0x454c80	186	FastLog2		fastmath	primitive	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		
+0x454c80	186	FastLog2		fastmath	primitive	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		fastmath::log2_diff
 0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	inferred	none		
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound			Plays an item sound of a kind for an item	inferred	none	spell/cast#cast-attempt-commit	
 0x458030	187	SndInterfacePlayInterfaceSound	idb	sound			Plays the interface sound a name gives	inferred	none	spell/cast#cast-attempt-refusals	
