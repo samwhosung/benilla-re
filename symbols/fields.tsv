@@ -630,7 +630,7 @@ M2Submesh	0x0008	4	uint16_t[2]	m_indices	models	Holds the first index and the in
 M2Submesh	0x000c	4	uint16_t[2]	m_bones	models	Holds the bone count and the first bone lookup	verified	one	models/records#submesh-record
 M2Submesh	0x0012	2	uint16_t	m_centerBone	models	Holds the bone the depth key centre rides	verified	one	models/records#submesh-record
 M2Submesh	0x0014	12	float[3]	m_center	models	Holds the depth key centre	verified	one	models/records#submesh-record
-M2TextureUnit	0x0000	1	uint8_t	m_flags	models	Holds the flags: 4 lit by model lights, 0x10 may join the grouped list	verified	one	models/records#texture-unit-record
+M2TextureUnit	0x0000	1	uint8_t	m_flags	models	Holds the flags: 4 a special batch when the scene has a special callback, 0x10 may join the grouped list	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0002	2	int16_t	m_priority	models	Holds the priority plane	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0004	2	uint16_t	m_submesh	models	Holds the submesh index	verified	one	models/records#texture-unit-record
 M2TextureUnit	0x0008	4	uint16_t[2]	m_colorMaterial	models	Holds the colour index and the material index	verified	one	models/records#texture-unit-record

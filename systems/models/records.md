@@ -60,7 +60,7 @@ A texture unit is 0x18 bytes and pairs a submesh with its material and textures.
 
 | offset | holds |
 |---|---|
-| `+0x00` | flags byte: 4 lit by the model's lights, 0x10 may join the grouped list |
+| `+0x00` | flags byte: 4 a special batch when the scene has a special callback, 0x10 may join the grouped list |
 | `+0x02` | priority plane, signed, copied to the element `+0x28` |
 | `+0x04` | submesh index |
 | `+0x08`, `+0x0a` | colour index, material index |
@@ -73,8 +73,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x707b6f` tests flag 4 before taking header `+0x11c`, the light count; `0x707c19` tests 0x10 for
-the grouped kind (`scene#element-collection`). `0x707c76` loads `+0x2` with `movsx`. The other
+`0x707b6f` tests flag 4 before taking scene `+0x11c`, the special callback, which makes the element
+kind 1; `0x707c19` tests 0x10 for the grouped kind 2 (`scene#element-collection`). `0x707c76` loads `+0x2` with `movsx`. The other
 fields are `movzx` reads at the addresses listed, in the order of the table.
 
 ## Sequence record
