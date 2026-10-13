@@ -29,7 +29,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x46e998	void *[4]	s_realmCompareJumpTable		glue	Holds the realm comparator's case addresses for sort keys 0 to 3	verified	one	glue/realms#the-realm-comparator
 0x47106c	void *[5]	s_cycleCustomizationCases		glue	Holds the five case addresses of the customization cycle 0x470f80, skin to facial hair	verified	one	glue/create#cycling-a-customization
 0x4712e0	void *[5]	s_countCustomizationCases		glue	Holds the five case addresses of the customization count 0x471270, skin to facial hair	verified	one	glue/create#randomizing-and-counts
-0x480850	uint8_t[121]	s_worldPickTypeCaseTable		worldframe	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
+0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
 0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
 0x5aa854	void *[11]	s_statusEventJumpTable		net	Holds the case addresses of the status reporter's first switch	inferred	none	net/layout#starts-the-listing-hides
 0x5aa880	void *[39]	s_statusEventJumpTable2		net	Holds the case addresses of the status reporter's second switch	inferred	none	net/layout#starts-the-listing-hides
@@ -556,9 +556,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x873070	char[32]	s_m2DestroyNeverCalled		models	Holds the message logged when the model cache dies initialized	verified	one	models/cache#cache-object
 0x873184	uint32_t[6]	s_m2KindPriority		models	Holds the transparent sort priority of each element kind	verified	one	models/scene#batch-grouping
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
-0x8764f8	void *[74]	s_mathRoutineSlots		cmath	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
-0x876620	void *[74]	s_mathRoutineDefaults		cmath	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
-0x87674c	uint32_t	s_mathRoutineSet		cmath	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
+0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
+0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
+0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
 0x8783a4	char[53]	s_simpleTopPath		ui	Holds the source path of CSimpleTop.cpp	verified	one	ui/input#input-lists
 0x8783e4	char[23]	s_strataNodeTag		ui	Holds .PAVCFrameStrataNode@@, the allocation tag of the level node arrays	verified	one	ui/strata#strata-records-and-level-nodes
 0x878440	char[33]	s_relativeFrameMissing		ui	Holds the error the XML anchors report for a relativeTo name that finds no frame	verified	one	ui/anchors#construction-and-the-xml-anchors
@@ -731,7 +731,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
 0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet
-0xb7150c	uint32_t	s_tradeWindowState		gameui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
+0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
 0xbdcfb8	uint32_t	s_currentCraftProfession		ui	Holds the profession the craft window shows; 0x4f6000 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
 0xbde040	uint32_t	s_currentTradeSkillLine		ui	Holds the skill line the trade-skill window shows; 0x4fc910 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
 0xbe1148	CInputControl *	s_inputControl		input	Holds the CInputControl singleton	verified	one	input#input-state

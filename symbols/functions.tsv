@@ -18,7 +18,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x406630	7	SetLoadingScreenTip		loadingscreen			Stores the game tip text the loading screen shows	inferred	none		
 0x406640	443	BeginLoadingScreen		loadingscreen			Starts the loading screen for a map	inferred	none		
 0x406800	248	CreateLoadingScreen		loadingscreen			Creates the loading screen object	inferred	none		
-0x4078e0	22	SplatVector3		cmath	orchestration	float * __thiscall (float *this, float v)	Stores one float in all three components	verified	one	camera#unprojection	
+0x4078e0	22	SplatVector3		loadingscreen	orchestration	float * __thiscall (float *this, float v)	Stores one float in all three components	verified	one	camera#unprojection	
 0x407e70	14	IsLoadingScreenUp		loadingscreen			Returns whether the loading screen object exists	inferred	none		
 0x407e80	237	EndLoadingScreen		loadingscreen			Ends the loading screen and clears its object	inferred	none		
 0x4098c0	253	_WinMainCRTStartup	idb	crt	boundary		Starts the process: runs __cinit at 0x409965, then calls WinMain at 0x40999b	verified	one	random#the-c-runtime-rand	
@@ -547,15 +547,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4371e0	237	UnregisterEngineThread		os			Unregisters and frees the calling thread's record	inferred	none	core/loop#the-loop	
 0x4374d0	138	BindContextToThread		os			Binds a context's record to the calling thread's record	inferred	none	core/loop#one-tick	
 0x437560	181	UnbindContextFromThread		os			Unbinds a context's record from the calling thread's record	inferred	none	core/loop#one-tick	
-0x43f050	25	PollingWait		net	orchestration		Runs the network pump for a time when it exists, else sleeps for that time	inferred	none	core/loop#the-loop	
+0x43f050	25	PollingWait		os	orchestration		Runs the network pump for a time when it exists, else sleeps for that time	inferred	none	core/loop#the-loop	
 0x442a70	3	ReturnZero		client	orchestration	uint32_t __cdecl (void)	Returns 0; a shared vtable slot	verified	one	camera#lifetime	
 0x443e20	78	IsAsyncLoadPending		client			Returns 1 while either of two load lists is non-empty or a load count is non-zero, under one lock	inferred	none		
 0x449010	172	FreeTextureCaches		gx			Frees every entry of the CGxTexCache lists	inferred	none		
 0x449610	470	TextureCreateFromFile		gx			Loads a texture file as a handle tagged HTEXTURE	inferred	none		
 0x449d90	281	TextureCreate	idb	gx			Creates a texture from a file name	inferred	none	spell/visuals#chain-effect-creation	
 0x44cb20	29	ValidateStatusLevel		sysmsg			Returns 1 for a non-null text and a level below 4; otherwise sets error 0x57 and returns 0	verified	one	objectlayer/update#creating-an-object	
-0x44cb90	63	SysMsgVPrintf		client			Formats a message into 256 bytes with a va_list and passes it on with the first two arguments	inferred	none		
-0x44cbd0	44	SysMsgPrintf	idb	console			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
+0x44cb90	63	SysMsgVPrintf		sysmsg			Formats a message into 256 bytes with a va_list and passes it on with the first two arguments	inferred	none		
+0x44cbd0	44	SysMsgPrintf	idb	sysmsg			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
 0x44cd40	15			sysmsg			Stores 0 in a global and tail-calls 0x44cd60	inferred	none		
 0x44cd60	1			sysmsg			Returns at once	inferred	none		
 0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	two	random#state-and-seeding	
@@ -626,9 +626,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
-0x454980	20	Vector2LengthSquared		cmath		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
-0x4549a0	26	SetVector3		cmath	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
-0x4549f0	31	Vector3LengthSquared		cmath		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
+0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
+0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
+0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x454c80	186	FastLog2		fastmath	primitive	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		
 0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	inferred	none		
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound			Plays an item sound of a kind for an item	inferred	none	spell/cast#cast-attempt-commit	
@@ -2185,36 +2185,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47fc60	222			objectlayer	unreached		Runs its object file code that calls OsGetAsyncTimeMs; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fd40	340			objectlayer	unreached		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fea0	49			objectlayer	primitive		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x480780	187			worldframe			Returns whether the world pick admits an object of type unit, player, game object or corpse	inferred	none	spell/targeting#object-pick-filters	
-0x481050	318			worldframe			Returns the world pick mask, built from the flag word predicates while targeting	inferred	none	spell/targeting#flag-word-predicates	
-0x481790	338			worldframe			Sets the world cursor from the pick result, the targeting cursor included	inferred	none	spell/targeting#the-targeting-cursor	
-0x4818f0	12	GetActiveCamera		worldframe		void * __cdecl (void)	Returns the camera object whose +0x88 holds the GUID it follows	inferred	none	collision/world#camera-notices	
-0x481f00	87	PickObjectUnderCursor		worldframe			Picks the world object under the cursor for the armed click	inferred	none	input#mouse-commands	
-0x481f60	301	DispatchWorldClick		worldframe			Runs world click action 1 or 4 on the object picked at the press	inferred	none	input#click-versus-drag	
-0x4820f0	264			worldframe			Places the area reticle and the targeting cursor over a picked position	inferred	none	spell/targeting#the-targeting-cursor	
-0x4828d0	309			worldframe			Sets the targeting cursor over a hovered object from 0x6e6460	inferred	none	spell/targeting#the-targeting-cursor	
-0x483460	839	RenderWorldFrame		worldframe			Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	
-0x4837b0	442			worldframe			Draws the placement preview model 0xceca8c	inferred	none	spell/targeting#placement-model-and-rotation	
-0x4841c0	36	AddVector3InPlace		cmath		void __thiscall (float *this, const float *v)	Adds a vector to this one component by component, each sum stored	inferred	none		
-0x4841f0	36	SubtractVector3		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes a - b	verified	one	camera#unprojection	
+0x480780	187			ui	orchestration		Returns whether the world pick admits an object of type unit, player, game object or corpse	inferred	none	spell/targeting#object-pick-filters	
+0x481050	318			ui	primitive		Returns the world pick mask, built from the flag word predicates while targeting	inferred	none	spell/targeting#flag-word-predicates	
+0x481790	338			ui	orchestration		Sets the world cursor from the pick result, the targeting cursor included	inferred	none	spell/targeting#the-targeting-cursor	
+0x4818f0	12	GetActiveCamera		ui	orchestration	void * __cdecl (void)	Returns the camera object whose +0x88 holds the GUID it follows	inferred	none	collision/world#camera-notices	
+0x481f00	87	PickObjectUnderCursor		ui	orchestration		Picks the world object under the cursor for the armed click	inferred	none	input#mouse-commands	
+0x481f60	301	DispatchWorldClick		ui	orchestration		Runs world click action 1 or 4 on the object picked at the press	inferred	none	input#click-versus-drag	
+0x4820f0	264			ui	orchestration		Places the area reticle and the targeting cursor over a picked position	inferred	none	spell/targeting#the-targeting-cursor	
+0x4828d0	309			ui	orchestration		Sets the targeting cursor over a hovered object from 0x6e6460	inferred	none	spell/targeting#the-targeting-cursor	
+0x483460	839	RenderWorldFrame		ui	primitive		Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	
+0x4837b0	442			ui	primitive		Draws the placement preview model 0xceca8c	inferred	none	spell/targeting#placement-model-and-rotation	
+0x4841c0	36	AddVector3InPlace		ui	primitive	void __thiscall (float *this, const float *v)	Adds a vector to this one component by component, each sum stored	inferred	none		
+0x4841f0	36	SubtractVector3		ui	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes a - b	verified	one	camera#unprojection	
 0x48ad70	285	Script::UseSoulstone		ui	orchestration		Implements the Lua function UseSoulstone	inferred	none	spell/cancel#who-cancels-a-cast	
-0x48d330	8	Script::ReplaceTradeEnchant	idb	gameui			Calls 0x6e6900 and returns no Lua results	verified	one	spell/targeting#binding-the-trade-slot	
+0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Calls 0x6e6900 and returns no Lua results	verified	one	spell/targeting#binding-the-trade-slot	
 0x48e980	487	Script::LoadAddOn		ui	orchestration		Loads an add-on for the in-game script, keeping a shared load-log status	inferred	none		
-0x4918d0	5	CGGameUI::IsPartyMember	idb	gameui		int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
-0x492580	76			gameui			Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
-0x492c20	90			gameui			Rotates the placement or stops targeting for a world input whose +0x14 is 4	inferred	none	spell/targeting#placement-model-and-rotation	
+0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
+0x492580	76			ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
+0x492c20	90			ui	orchestration		Rotates the placement or stops targeting for a world input whose +0x14 is 4	inferred	none	spell/targeting#placement-model-and-rotation	
 0x493540	966			ui	primitive		Selects the unit of a guid as the player's target	inferred	none	spell/handlers#spell-start	
 0x494720	28			ui	orchestration		Passes a miss reason below 12, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
-0x494a50	247	CheckActivePlayer		gameui			Returns 0 or 1 from a check chosen by its argument, 0 to 11, through a jump table	inferred	none	input#mouse-commands	
+0x494a50	247	CheckActivePlayer		ui	orchestration		Returns 0 or 1 from a check chosen by its argument, 0 to 11, through a jump table	inferred	none	input#mouse-commands	
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
-0x495920	24			gameui			Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
-0x495d60	1026			gameui			Checks an item against the pending spell's enchant effects, then binds it through 0x6e5b40	inferred	none	spell/targeting#flag-word-predicates	
-0x496170	204			gameui			Binds the trade slot through 0x6e6900 unless the spell would replace the slot's enchantment	inferred	none	spell/targeting#binding-the-trade-slot	
+0x495920	24			ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
+0x495d60	1026			ui	primitive		Checks an item against the pending spell's enchant effects, then binds it through 0x6e5b40	inferred	none	spell/targeting#flag-word-predicates	
+0x496170	204			ui	orchestration		Binds the trade slot through 0x6e6900 unless the spell would replace the slot's enchantment	inferred	none	spell/targeting#binding-the-trade-slot	
 0x496720	357	CGGameUI::DisplayError	idb	ui	orchestration	void __cdecl (uint32_t id, ...)	Formats a catalogue message with its arguments, copies the text to 0xb4da40 and shows it by the message kind	verified	one	spell/failures#display-log-and-events	
 0x4968a0	6	GetLastDisplayedMessage		ui	orchestration	const char *__cdecl (void)	Returns 0xb4da40, the text DisplayError last formatted	verified	one	spell/failures#display-log-and-events	
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
-0x4b3250	15			gameui			Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
+0x4b3250	15			ui	orchestration		Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
 0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive		Returns a form-bar entry's icon, name, active and castable values to Lua	inferred	none	spell/checks#usability-callers-and-events	
 0x4b5390	300			ui	primitive		Sets a bit of a flag set when the set exists and the bit is clear	inferred	none	spell/failures#player-unit-cleanup	
 0x4bce90	10	FirePetBarCooldownEvent		ui	orchestration	void __cdecl (void)	Signals PET_BAR_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
@@ -2229,7 +2229,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d7d40	1733			ui	primitive		Rebuilds state for the open trainer after a talent modifier changes	inferred	none	spell/records#talent-modifier-tables	
 0x4e5050	480	GetActionSlotUsable		ui	primitive		Computes an action slot's usable and no-power pair, through 0x6e3d60 for a spell	inferred	none	spell/checks#usability-callers-and-events	
 0x4e56f0	212	GetActionSlotInRange		ui	orchestration		Computes an action slot's range answer through the range pre-check 0x6e4440	inferred	none	spell/checks#range-pre-check	
-0x4e5bf0	10			gameui			Signals event 214 through 0x703e50	verified	one	spell/targeting#the-binds-range-test	
+0x4e5bf0	10			ui	orchestration		Signals event 214 through 0x703e50	verified	one	spell/targeting#the-binds-range-test	
 0x4e5c00	92	RefreshActionBarUsable		ui	orchestration		Recomputes the 120 action slots' usable pairs and signals ACTIONBAR_UPDATE_USABLE on a change	verified	one	spell/checks#usability-callers-and-events	
 0x4e5c60	10	FireActionBarCooldownEvent		ui	orchestration		Signals ACTIONBAR_UPDATE_COOLDOWN	verified	one	spell/cooldowns#cooldown-events-fired	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
@@ -2240,7 +2240,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc910	150			ui	orchestration		Toggles the trade-skill window: TRADE_SKILL_CLOSE for the current skill, else TRADE_SKILL_SHOW when a count is nonzero	inferred	none	spell/cast#cast-attempt-refusals	
 0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	spell/failures#reporter-inputs-and-first-effects	
 0x4fd7b0	60			ui	orchestration		Runs the post-cast step of a repeated trade skill cast for a spell id	inferred	none	spell/go#player-cast-tail	
-0x511d40	81	CameraAddShake		worldframe			Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
+0x511d40	81	CameraAddShake		uicamera			Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
 0x511da0	237	SetCameraTransport		uicamera		void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
 0x513bd0	376	Script::Jump		input	orchestration		Implements the Lua function Jump	inferred	none	spell/cancel#who-cancels-a-cast	
 0x514120	54	Script::TurnOrActionStart	idb	input	orchestration		Arms click mode 2 and presses command bit 0x1, when 0x494a50(0) allows	verified	one	input#mouse-commands	
@@ -2419,10 +2419,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x541620	535			dbc			Loads CharBaseInfo.dbc into the store 0xc0df8c as 8-byte records	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x542360	570			dbc			Loads ChrClasses.dbc into the store at 0xc0deec	inferred	none	spell/records#record-lookups	
 0x5425a0	570			dbc			Loads ChrRaces.dbc into the store 0xc0ded8, keying its id map by record +0x00	inferred	none	spell/tables#startup-build-of-the-indexes	
-0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbc			Returns a cached item record by id, or requests it with an optional callback	inferred	none	spell/cooldowns#reading-a-cooldown	
-0x55bc70	308			dbc			Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
-0x55f080	620	DBCache::NameCache::GetRecord	idb	playername			Returns a name cache record for a GUID or queues a query with a callback	inferred	none		
-0x560e30	534	DbCacheGetRecord		client			Returns a cached record by id, or keeps a callback and sends the cache's query on a miss	inferred	none		
+0x55ba30	534	DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord	idb	dbcache			Returns a cached item record by id, or requests it with an optional callback	inferred	none	spell/cooldowns#reading-a-cooldown	
+0x55bc70	308			dbcache			Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
+0x55f080	620	DBCache::NameCache::GetRecord	idb	dbcache			Returns a name cache record for a GUID or queues a query with a callback	inferred	none		
+0x560e30	534	DbCacheGetRecord		dbcache			Returns a cached record by id, or keeps a callback and sends the cache's query on a miss	inferred	none		
 0x575280	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\CharBaseInfo.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x5764f0	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\ChrRaces.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x589ca0	11	QueryDevice		gx	host	uint32_t __cdecl (void)	Returns the graphics device's dword at +0x1fc through a tail call to 0x592120	verified	one	camera#orthographic-setup	
@@ -2445,7 +2445,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592120	7	ReadDevice1fc		gx	host	uint32_t __thiscall (void *device)	Returns the dword at +0x1fc of the device	verified	one	camera#orthographic-setup	
 0x5923d0	7	GxDeviceGetCaps		gx			Returns the address of a device's capability record	inferred	none		
 0x597ac0	16	CopyColor		gx			Copies a colour dword into this	inferred	none	spell/visuals#screen-tint	
-0x597ad0	38	SetPlane		cmath		float * __thiscall (float *plane, const float *normal, float d)	Stores a normal and a distance as a plane	verified	one	collision/contact#facet-gather	
+0x597ad0	38	SetPlane		gx		float * __thiscall (float *plane, const float *normal, float d)	Stores a normal and a distance as a plane	verified	one	collision/contact#facet-gather	
 0x5995c0	335	CreateD3dDevice		gx			Creates the Direct3D 9 device with behaviour flags 0x22 or 0x52, both with FPU_PRESERVE	verified	one	METHOD#the-harness	
 0x5a9e00	5	InitCopy3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9e10; a static initializer	verified	one	net/layout#static-initializers	
 0x5a9e10	11	InitCopy3		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
@@ -7264,7 +7264,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63cdf0	12	CloseCurrentContext		console			Closes the current context: 0x41f6e0, then a jump to 0x41f9b0	verified	one	core/input#close-and-quit	
 0x63d980	357	SaveConfig		cvar			Writes the configuration file when a CVar changed since the last save	inferred	none		
 0x63db90	585	CVar::Register	idb	cvar			Registers a console variable and returns its record	inferred	none	spell/handlers#system-initialization-and-teardown	
-0x63de30	136	CVar::Lookup	idb	console			Returns the CVar record of a name	inferred	none	spell/visuals#startup-and-shutdown	
+0x63de30	136	CVar::Lookup	idb	cvar			Returns the CVar record of a name	inferred	none	spell/visuals#startup-and-shutdown	
 0x63df50	158	CVar::Set		cvar			Sets an option's value from text	inferred	none		
 0x642e10	118			base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
 0x642ec0	15			base			Appends a packed guid to a data store through 0x642e10	verified	one	spell/cast#cast-request-packets	
@@ -10674,7 +10674,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cd890	472	BeginCurrentFfx		ffxeffects			Begins the current full-screen effect's pass	inferred	none		
 0x6cda70	149	EndCurrentFfx		ffxeffects			Ends the current full-screen effect's pass	inferred	none		
 0x6cde60	12	SetCurrentFfx		ffxeffects			Makes an effect the current full-screen effect and returns the previous one	inferred	none		
-0x6d45c0	45	SetSpellScreenTint		worldframe			Stores a colour and the byte of 255 times a level used as the screen tint	inferred	none	spell/visuals#screen-tint	
+0x6d45c0	45	SetSpellScreenTint		lighting			Stores a colour and the byte of 255 times a level used as the screen tint	inferred	none	spell/visuals#screen-tint	
 0x6d48b0	6	GetLightState		lighting			Returns the lighting system's current light state object	inferred	none		
 0x6d62e0	256	EvalLightIntBand		lighting			Evaluates a LightIntBand row's colour at a time of day	inferred	none		
 0x6d6ad0	34	GetLightIntBand		lighting			Returns LightIntBand row 18 times the LightParams id less 17 plus an index, or null	inferred	none		
@@ -11688,29 +11688,29 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x741760	20	__CIsqrt	idb	crt	boundary		Returns the square root of st0	inferred	none		
 0x741820	20	__CIacos	idb	crt			Computes acos(st0)	inferred	none	collision/kinematics#spline-follower	
 0x7436c0	62	__cintrindisp2	idb	crt			Dispatches a two-operand x87 math intrinsic	inferred	none	collision/kinematics#facing-and-pitch-integration	
-0x74a7ad	19	MultiplyMatrixFirstCall		cmath			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74a7c0	6	MultiplyMatrixDispatch		cmath			Jumps through a pointer to the matrix product routine	inferred	none	models/animation#bone-transform	
-0x74ad38	6	InvertMatrixDispatch		cmath			Jumps through a pointer to the routine that sets the scene matrix from a view	inferred	none	models/scene#view-rebase	
-0x74ad3e	935	InvertMatrixDefault		cmath			Sets the scene matrix from a view; the default routine	inferred	none	models/animation#dispatched-matrix-math	
-0x74b6a2	19	MatrixFromQuaternionFirstCall		cmath			Selects the math routines, then jumps through the quaternion matrix slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74b6b5	6	MatrixFromQuaternionDispatch		cmath			Jumps through a pointer to the quaternion-to-matrix routine	inferred	none	models/animation#bone-transform	
-0x74b6bb	228	MatrixFromQuaternionDefault		cmath			Builds a rotation matrix from a quaternion; the default routine	inferred	none	models/animation#dispatched-matrix-math	
-0x74d0ee	38	BlendQuaternionFirstCall		cmath			Selects the math routines, then calls the quaternion blend slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74d114	6	BlendQuaternionDispatch		cmath			Jumps through a pointer to the quaternion blend routine	inferred	none	models/animation#key-lookup	
-0x74d11a	229	BlendQuaternionDefault		cmath			Blends two quaternions by a weight; the default routine	inferred	none	models/animation#dispatched-matrix-math	
-0x74f951	95	ReadDirect3DValue		cmath			Reads a REG_DWORD value under HKLM Software\Microsoft\Direct3D	inferred	none	models/animation#dispatched-matrix-math	
-0x74fa8a	161	GetCpuidSseFlags		cmath			Returns 4 for CPUID SSE and 8 for SSE2 from leaf 1, under an exception handler	inferred	none	models/animation#dispatched-matrix-math	
-0x74fb49	259	SelectMathRoutines		cmath			Fills the math routine slots once by registry values and processor features	inferred	none	models/animation#dispatched-matrix-math	
-0x74fdf0	371	SetMathRoutinesSse		cmath			Stores the SSE math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
-0x74ff9a	361	SetMathRoutinesSse2		cmath			Stores the SSE2 math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
-0x7501e9	662	SetMathRoutines3DNow		cmath			Stores the 3DNow math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
-0x7507bb	229	MultiplyMatrixBase		cmath			Multiplies two 4x4 matrices; the routine the base set stores	inferred	none	models/animation#dispatched-matrix-math	
-0x750930	74	SetMathRoutinesBase		cmath			Replaces eight default math routine slots, the matrix product among them	inferred	none	models/animation#dispatched-matrix-math	
-0x751055	310	MultiplyMatrixSse		cmath			Multiplies two 4x4 matrices; the SSE set's routine	inferred	none	models/animation#dispatched-matrix-math	
-0x7512c1	681	InvertMatrixSse		cmath			Sets the scene matrix from a view; the SSE set's routine	inferred	none	models/animation#dispatched-matrix-math	
-0x754a66	310	MultiplyMatrixSse2		cmath			Multiplies two 4x4 matrices in single precision with SSE	inferred	none	models/animation#dispatched-matrix-math	
-0x754cd2	681	InvertMatrixSse2		cmath			Sets the scene matrix from a view with SSE; the SSE2 set's routine	inferred	none	models/animation#dispatched-matrix-math	
-0x7580fb	562	MultiplyMatrix3DNow		cmath			Multiplies two 4x4 matrices; the 3DNow set's routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74a7ad	19	MultiplyMatrixFirstCall		d3dx			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
+0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	inferred	none	models/animation#bone-transform	
+0x74ad38	6	InvertMatrixDispatch		d3dx			Jumps through a pointer to the routine that sets the scene matrix from a view	inferred	none	models/scene#view-rebase	
+0x74ad3e	935	InvertMatrixDefault		d3dx			Sets the scene matrix from a view; the default routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74b6a2	19	MatrixFromQuaternionFirstCall		d3dx			Selects the math routines, then jumps through the quaternion matrix slot	inferred	none	models/animation#dispatched-matrix-math	
+0x74b6b5	6	MatrixFromQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion-to-matrix routine	inferred	none	models/animation#bone-transform	
+0x74b6bb	228	MatrixFromQuaternionDefault		d3dx			Builds a rotation matrix from a quaternion; the default routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74d0ee	38	BlendQuaternionFirstCall		d3dx			Selects the math routines, then calls the quaternion blend slot	inferred	none	models/animation#dispatched-matrix-math	
+0x74d114	6	BlendQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion blend routine	inferred	none	models/animation#key-lookup	
+0x74d11a	229	BlendQuaternionDefault		d3dx			Blends two quaternions by a weight; the default routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74f951	95	ReadDirect3DValue		d3dx			Reads a REG_DWORD value under HKLM Software\Microsoft\Direct3D	inferred	none	models/animation#dispatched-matrix-math	
+0x74fa8a	161	GetCpuidSseFlags		d3dx			Returns 4 for CPUID SSE and 8 for SSE2 from leaf 1, under an exception handler	inferred	none	models/animation#dispatched-matrix-math	
+0x74fb49	259	SelectMathRoutines		d3dx			Fills the math routine slots once by registry values and processor features	inferred	none	models/animation#dispatched-matrix-math	
+0x74fdf0	371	SetMathRoutinesSse		d3dx			Stores the SSE math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
+0x74ff9a	361	SetMathRoutinesSse2		d3dx			Stores the SSE2 math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
+0x7501e9	662	SetMathRoutines3DNow		d3dx			Stores the 3DNow math routines in the slots	inferred	none	models/animation#dispatched-matrix-math	
+0x7507bb	229	MultiplyMatrixBase		d3dx			Multiplies two 4x4 matrices; the routine the base set stores	inferred	none	models/animation#dispatched-matrix-math	
+0x750930	74	SetMathRoutinesBase		d3dx			Replaces eight default math routine slots, the matrix product among them	inferred	none	models/animation#dispatched-matrix-math	
+0x751055	310	MultiplyMatrixSse		d3dx			Multiplies two 4x4 matrices; the SSE set's routine	inferred	none	models/animation#dispatched-matrix-math	
+0x7512c1	681	InvertMatrixSse		d3dx			Sets the scene matrix from a view; the SSE set's routine	inferred	none	models/animation#dispatched-matrix-math	
+0x754a66	310	MultiplyMatrixSse2		d3dx			Multiplies two 4x4 matrices in single precision with SSE	inferred	none	models/animation#dispatched-matrix-math	
+0x754cd2	681	InvertMatrixSse2		d3dx			Sets the scene matrix from a view with SSE; the SSE2 set's routine	inferred	none	models/animation#dispatched-matrix-math	
+0x7580fb	562	MultiplyMatrix3DNow		d3dx			Multiplies two 4x4 matrices; the 3DNow set's routine	inferred	none	models/animation#dispatched-matrix-math	
 0x760080	7	CDataAllocator::ResetVtable		base			Stores the data allocator vtable	inferred	none		
 0x760090	104	CDataAllocator::Destroy		base			Frees a data allocator's blocks	inferred	none		
 0x760210	37	CDataAllocator::AllocLarge		base			Allocates a block with SMemAlloc and stores its size through a pointer	verified	one	core/events#deferred-messages	
@@ -12744,7 +12744,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78e0	11	InitSharedInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#shared-file-initializers	
 0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	
 0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none		
-0x7e4e10	192			objectlayer	orchestration		Writes a cast target block: a 16-bit mask, then the guids, positions and text the mask names	verified	one	spell/cast#cast-request-packets	
-0x7e4ed0	187	ReadSpellCastTargets		net	orchestration	void __fastcall (void *targets, void *msg)	Reads a spell target block: a mask, then guids, points and a string as its bits say	verified	one	spell/handlers#target-block	
+0x7e4da0	5	SpellCastTargetsInitCopy1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4db0; a static initializer	verified	one	spell/layout#static-initializers	
+0x7e4db0	11	SpellCastTargetsInitCopy1		spell	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	spell/layout#static-initializers	
+0x7e4dc0	5	SpellCastTargetsInitDouble1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4dd0; a static initializer	verified	one	spell/layout#static-initializers	
+0x7e4dd0	15	SpellCastTargetsInitDouble1		spell	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	spell/layout#static-initializers	
+0x7e4de0	5	SpellCastTargetsInitQuotient1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4df0; a static initializer	verified	one	spell/layout#static-initializers	
+0x7e4df0	19	SpellCastTargetsInitQuotient1		spell	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	spell/layout#static-initializers	
+0x7e4e10	192	WriteSpellCastTargets		spell	orchestration		Writes a cast target block: a 16-bit mask, then the guids, positions and text the mask names	verified	one	spell/cast#cast-request-packets	
+0x7e4ed0	187	ReadSpellCastTargets		spell	orchestration	void __fastcall (void *targets, void *msg)	Reads a spell target block: a mask, then guids, points and a string as its bits say	verified	one	spell/handlers#target-block	
 0x7fb310	317	math_random		lua			Returns a Lua random number drawn from rand	inferred	none	random#the-c-runtime-rand	
 0x7fb450	27	math_randomseed		lua	orchestration		Seeds rand from its first Lua argument, truncated	verified	one	random#the-c-runtime-rand	
