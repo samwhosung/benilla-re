@@ -4910,11 +4910,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fa5f0	13	CGUnit_C::IsClientControlled		objectlayer	primitive		Returns bit 0x400 of the state word +0xc58, the client-control flag	verified	one	objectlayer/unitmovement#the-active-mover	
 0x5fa600	193	CGUnit_C::SetClientControl		objectlayer	primitive		Sets or clears bit 0x400 of +0xc58, re-picks the camera's mover and tells the interface for the active player	verified	one	objectlayer/unitmovement#the-active-mover	
 0x5fa6d0	36	IsActivePlayerUnit		objectlayer	orchestration	uint32_t __fastcall (void *unit)	Returns 1 when a unit's GUID is the active player's, else 0	verified	one	spell/failures#spell-failure-packets	
-0x5fa700	8			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x5fa710	18			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x5fa730	40			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x5fa760	1282			objectlayer	primitive		Runs Unit_C.cpp code that calls __ftol, OsGetAsyncTimeMs, NTempest::CRandom::uint32; not read here	inferred	none		
-0x5fac70	146			objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Takes the frame time after a mover's steps; not read here	inferred	none	collision/mover#local-player-step	
+0x5fa700	8	CGUnit_C::ClearLowHealth		objectlayer	primitive		Clears bit 0x2 of +0xc58, the low-health bit	verified	one	objectlayer/unitbody#low-health-and-bleeding	
+0x5fa710	18	CGUnit_C::SetLowHealth		objectlayer	primitive		Sets bit 0x2 of +0xc58 when the unit has a blood levels row	verified	one	objectlayer/unitbody#low-health-and-bleeding	
+0x5fa730	40	CGUnit_C::UpdateLiquidId		objectlayer	orchestration		Stores the node's liquid id at +0xc60, or -1 without one	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x5fa760	1282	CGUnit_C::EmitWaterRipple		objectlayer	primitive		Leaves a ripple in shallow liquid, along the motion when moving, and schedules the next at +0xc78	verified	one	objectlayer/unitbody#water-ripples-and-swimming	
+0x5fac70	146	CGUnit_C::OnMoverStepped		objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Refreshes the liquid id, hands the liquid depth to the swim decision, then places the object	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x5fad10	51	CGUnit_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
 0x5fad50	1137			objectlayer	primitive		Builds a unit, its CMovement at +0x9a8 through 0x616fa0 and -1 at +0xb08	inferred	none	collision/mover#construction	
 0x5fb1d0	43			objectlayer	orchestration		Fills slot 0 of the unit vtable; its body is not read here	inferred	none		
@@ -5118,7 +5118,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6055e0	17			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x605600	17			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x605620	33			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x605650	142			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x605650	142	CGUnit_C::IsInDeepLiquid		objectlayer	primitive		Returns whether a liquid surface lies more than half the collision height +0xa5c above the unit's feet	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x6056e0	43			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x605710	107	CGUnit_C::SetChannelTargets		objectlayer	orchestration		Stores a tracked channel object, fills the chain targets from a list, and refreshes the channel	verified	one	objectlayer/auras#channels	
 0x605780	216	FillUnitChainTargets		objectlayer	primitive		Fills a unit's chain target array at +0xd44 from a GUID list read from its end, skipping its own GUID	verified	one	objectlayer/auras#channels	
@@ -5173,7 +5173,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6074c0	162			objectlayer	orchestration		Runs Unit_C.cpp code that calls ModelHasAttachment, ModelAttach; not read here	inferred	none		
 0x607570	326			objectlayer	primitive		Runs Unit_C.cpp code that calls ModelSetWorldTransform; not read here	inferred	none		
 0x6076c0	72			objectlayer	orchestration		Runs Unit_C.cpp code that calls ModelPlayAnimation; not read here	inferred	none		
-0x607710	235			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x607710	235	CGUnit_C::UpdateBreathState		objectlayer	primitive		Sets +0xc58 bit 0x20 deep under a liquid surface or 0x40 in a flagged area, next check in 10 s	verified	one	objectlayer/unitbody#breath	
 0x607800	60	CGUnit_C::SetModelCallbacks		objectlayer	orchestration		Installs the model's sequence-done 0x6078d0 and event 0x607840 callbacks with the unit's GUID	verified	one	objectlayer/unitanim#when-a-sequence-ends	
 0x607840	136	UnitModelEventCallback		objectlayer	orchestration		Finds the unit by GUID and passes a model event with a valid position to 0x5ffbd0	verified	one	objectlayer/unitanim#model-events	
 0x6078d0	68	UnitModelDoneCallback		objectlayer	orchestration		Finds the unit by GUID and passes the model and sequence to 0x5fc920	verified	one	objectlayer/unitanim#when-a-sequence-ends	
@@ -5185,7 +5185,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x607da0	256	CGUnit_C::OnModelUpdate		objectlayer	orchestration		Builds a pending character component once the model loads, refreshes the portrait, updates the component (slot 16)	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x607ea0	5			objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
 0x607eb0	19	CGUnit_C::GetWorldBodyFacing		objectlayer	orchestration		Returns the body facing +0xc94 converted to the world through the transport; slot 17 jumps here	verified	one	objectlayer/unitmovement#facing	
-0x607ed0	1565			objectlayer	primitive		Fills slot 14 of the unit vtable; its body is not read here	inferred	none		
+0x607ed0	1565	CGUnit_C::Update		objectlayer	primitive		Runs vtable slot 14: breath, nameplate, target flash, tints, emotes, ripples, effects, facings and spine twist	verified	one	objectlayer/unitbody#the-per-frame-update	
 0x6084f0	99	WrapAngleToPi		objectlayer	primitive		Wraps an angle into −π to π with fmod beyond either end	verified	one	objectlayer/unitmovement#facing	
 0x608560	212	CGUnit_C::PlaceModel		objectlayer	orchestration		Places a swimming unit's model with 0x60a110, others through the base slot 15	verified	one	objectlayer/unitmovement#facing	
 0x608640	145			objectlayer	primitive		Runs Unit_C.cpp code that calls ModelHasAttachment, ModelGetAttachmentPosition; not read here	inferred	none		
@@ -5213,14 +5213,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60a050	97			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x60a0c0	65			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60a110	332	CGUnit_C::BuildSwimTransform		objectlayer	primitive		Builds a swimming unit's model transform from its pitch, slot 17's facing, its scales and its position	verified	one	objectlayer/unitmovement#facing	
-0x60a260	296			objectlayer	primitive		Runs Unit_C.cpp code that calls NTempest::CRandom::uint32, MulHigh32; not read here	inferred	none		
+0x60a260	296	CGUnit_C::UpdateBleed		objectlayer	primitive		Reschedules the bleed time +0xc40 2 to 5 s ahead from the client random; nothing else reads it	verified	one	objectlayer/unitbody#low-health-and-bleeding	
 0x60a390	55	CGUnit_C::GetBloodRecord		objectlayer	orchestration		Returns the UnitBlood row the blood levels row names for the violence level, or null	verified	one	objectlayer/unitdisplay#display-records	
 0x60a3d0	827	CGUnit_C::LaunchSpellMissile		objectlayer	primitive		Launches one spell missile from the unit at a target or point and links it on the unit's list	verified	one	objectlayer/auras#missiles	
 0x60a710	42	IsBowCrossbowOrThrown		objectlayer	primitive		Returns whether an item info is a weapon of subclass 2, 16 or 18: bow, thrown or crossbow	verified	one	objectlayer/unitanim#animation-sets	
-0x60a740	161			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x60a7f0	807			objectlayer	primitive		Runs Unit_C.cpp code that calls IsLoadingScreenUp, EndLoadingScreen, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x60ab20	123			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x60aba0	62			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
+0x60a740	161	CGUnit_C::IsPointAtLiquidSurface		objectlayer	primitive		Returns whether a liquid surface lies from 0.01 below to 2/3 yard above a point	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x60a7f0	807	CGUnit_C::Tick		objectlayer	primitive		Runs a unit's frame: held missiles, done sounds, loading screen end, nameplate, bleed, drunk sway and auto-move	verified	one	objectlayer/unitbody#the-unit-tick	
+0x60ab20	123	DrunkSway		objectlayer	primitive		Returns a drunk sway angle: drunkenness times 0.75° times the mean of three slow cosines of the time	verified	one	objectlayer/unitbody#drunk-sway	
+0x60aba0	62	ClampToHalfPi		objectlayer	primitive		Clamps an angle to -π/2 to π/2	verified	one	objectlayer/unitbody#drunk-sway	
 0x60abe0	558	CGUnit_C::OnDisplayChanged		objectlayer	primitive		Rebuilds the body model, textures, name, auras and mount when the display records change	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x60ae10	200	CGUnit_C::DisplayRecordsChanged		objectlayer	orchestration		Returns 1 when DISPLAYID names other display, extra, model or sound records than the unit holds	verified	one	objectlayer/unitdisplay#display-records	
 0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
@@ -5309,8 +5309,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60de30	63	CGUnit_C::SetFacing		objectlayer	orchestration		Queues a facing after 0x60e990(1,1) and stands a sleeping unit (stand state 3) up	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60de70	39	CGUnit_C::SetPitch		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a pitch on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60dea0	201	CGUnit_C::Jump		objectlayer	orchestration		Queues a jump, or when mounted and standing plays MountSpecial and sends 0x171 instead	verified	one	objectlayer/unitmovement#local-movement-commands	
-0x60df70	121			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::RequestStartSwim, CMovement::QueueStartSwim, CMovement::StartSwim; not	inferred	none		
-0x60dff0	109			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::RequestStopSwim, CMovement::QueueStopSwim, CMovement::StopSwim; not read here	inferred	none		
+0x60df70	121	CGUnit_C::StartSwimming		objectlayer	primitive		Starts swimming: the active mover requests it and sets tutorial flag 0x1b; others apply or queue it	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x60dff0	109	CGUnit_C::StopSwimming		objectlayer	primitive		Stops swimming: the active mover requests it; others apply it at once or queue it	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x60e060	26	CGUnit_C::SetRunMode		objectlayer	orchestration		Queues a run or walk mode on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e080	28	CGUnit_C::ToggleRunMode		objectlayer	orchestration		Passes the walk bit 0x100 of the movement flags to 0x60e060	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e0a0	857	ProcessLocalMoveEvent	idb	objectlayer	primitive	int __thiscall (void *unit, uint32_t time, uint32_t opcode, uint8_t send, float value, uint32_t counter)	Sends a movement opcode for a unit when send is nonzero, then runs the unit's reaction to it	inferred	none	collision/events#tags-and-wire-opcodes	
