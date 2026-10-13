@@ -138,6 +138,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-gx"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+ "benilla-re-random",
+]
+
+[[package]]
 name = "benilla-re-minigame"
 version = "0.1.0"
 dependencies = [
@@ -148,7 +156,10 @@ dependencies = [
 name = "benilla-re-models"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
+ "benilla-re-random",
+ "wow-mpq",
 ]
 
 [[package]]
