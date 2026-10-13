@@ -376,7 +376,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811fc4	uint32_t[7]	s_m2FogModeByBlend		models	Holds the fog mode of each blend mode	verified	one	models/render#lighting-and-fog
 0x811fe0	uint32_t[21]	s_m2DeviceBlendByList		models	Holds the device blend of each blend mode for each of the three lists	verified	one	models/render#material-state
 0x812034	float	s_m2AlphaRefScale		models	Holds 224.0, the alpha test reference of an alpha-keyed batch at full alpha	verified	one	models/render#material-state
-0x81207c	float	s_twoSqrtPi		models	Holds 2·sqrt(π), the scale of an ambient colour into the constant harmonic term	inferred	none	models/lights#spherical-harmonic-terms
+0x81207c	float	s_twoSqrtPi		models	Holds 2·sqrt(π), the scale of an ambient colour into the constant harmonic term	verified	one	models/lights#spherical-harmonic-terms
+0x812080	const float	s_shDirectionalScale		models	Holds 2.956793, the scale of a directional colour into the harmonic terms	verified	one	models/lights#spherical-harmonic-terms
+0x812084	const float[6]	s_shBasisWeights		models	Holds 0.5462742, 0.3153916, -1.0925484, 1.0925484, 0.4886025 and -0.4886025, the basis weights	verified	one	models/lights#spherical-harmonic-terms
+0x81209c	const float[3]	s_luminanceWeights		models	Holds 0.072169, 0.212671 and 0.71516, the blue, red and green luminance weights	verified	one	models/lights#spherical-harmonic-terms
+0x8120a8	const float[8]	s_shPackWeights		models	Holds the irradiance weights that pack the harmonic terms into seven constant vectors	verified	one	models/lights#harmonic-constants
 0x81c378	const float	s_inputPriority		ui	Holds 1.0, the priority of the top's input handlers	verified	one	ui/input#the-handlers
 0x81c380	void *[11]	CSimpleTop::vftable		ui	Holds the vtable of CSimpleTop	verified	one	ui/strata#construction-and-teardown
 0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	one	ui/anchors#edge-resolution-from-points

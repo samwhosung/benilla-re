@@ -634,6 +634,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
 0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
+0x4549c0	38	DivideVector3		spline		float * __thiscall (float *this, float divisor)	Multiplies a 3D vector by the reciprocal of a divisor	verified	one	models/lights#dominant-light	
 0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x454c80	186	FastLog2		fastmath	primitive	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		fastmath::log2_diff
 0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	inferred	none		
@@ -2485,6 +2486,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5764f0	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\ChrRaces.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x589ca0	11	QueryDevice		gx	host	uint32_t __cdecl (void)	Returns the graphics device's dword at +0x1fc through a tail call to 0x592120	verified	one	camera#orthographic-setup	
 0x589d80	61	SetDeviceLight		gx		void __fastcall (uint32_t index, const void *light, float x, float y, float z, uint32_t enabled)	Sets one of the device's four fixed lights and its enable flag; an index of 4 or more fails	verified	one	models/render#lighting-lanes	
+0x589de0	27	SetDeviceLightEnabled		gx		void __fastcall (uint32_t index, uint32_t enabled)	Enables or disables one of the device's four fixed lights, rejecting an index of 4 or more	verified	one	models/lights#fixed-function-lights	
 0x589e60	27	GxRsSet	idb	gx			Sets one of the device's render states, rejecting a state index of 0x46 or more	inferred	none		
 0x58a080	18	GxBufLock		gx		void * __fastcall (void *buffer)	Locks a buffer through the device's slot 0xa8 and returns its memory	inferred	none		
 0x58a0a0	27	GxBufUnlock		gx		void __fastcall (void *buffer, uint32_t count)	Unlocks a buffer through the device	inferred	none		
@@ -2501,6 +2503,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b310	22	GxShaderRelease		gx			Releases a device shader handle through the device	inferred	none		
 0x58b590	18	SetCursorShown		gx			Calls slot +0xec of the device object with a show flag	inferred	none		
 0x58b5c0	21			gx			Calls slot 61 of a global device object with its two register arguments	inferred	none		
+0x591260	116	DeviceLightInitialize		gx		void __thiscall (void *light)	Initializes a device light: directional along +z, black ambient, white diffuse, attenuation 0, 0.7, 0.03	verified	one	models/lights#fixed-function-lights	
 0x592120	7	ReadDevice1fc		gx	host	uint32_t __thiscall (void *device)	Returns the dword at +0x1fc of the device	verified	one	camera#orthographic-setup	
 0x5923d0	7	GxDeviceGetCaps		gx			Returns the address of a device's capability record	inferred	none		
 0x597ac0	16	CopyColor		gx			Copies a colour dword into this	inferred	none	spell/visuals#screen-tint	
@@ -11492,7 +11495,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x710560	64	CM2Model::RunLoadedCallbacks		models	orchestration		Calls the loaded callbacks of an instance and its parents once each is loaded	verified	one	models/model#load-state	
 0x7105a0	24	CM2Model::SetLoadedCallback		models	orchestration		Stores an instance's loaded callback and runs it at once when the instance is loaded	verified	one	models/model#load-state	
 0x7105c0	4	CM2Model::GetScene		models	orchestration		Returns an instance's scene	inferred	none		
-0x7105d0	36	CM2Model::GetPositionInScene		models	orchestration		Transforms an instance's world position by its scene's matrix	inferred	none		
+0x7105d0	36	CM2Model::GetPositionInScene		models	orchestration		Transforms an instance's world position by its scene's matrix	verified	one	models/lights#instance-lighting	
 0x710600	29	CM2Model::GetBaseTransform		models	orchestration		Copies an instance's base matrix	inferred	none		
 0x710620	43	CM2Model::SetBaseTransform		models	orchestration		Sets an instance's base matrix	inferred	none		
 0x710650	108	CM2Model::SetBaseTransformTRS		models	orchestration		Builds an instance's base matrix from a position, an angle about an axis, and a scale	inferred	none	models/model#base-transform	
@@ -11602,7 +11605,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x718870	150	CM2Model::SetReferenceFrame		models	orchestration		Sets the frame an instance's emitters live in and re-expresses them, for it and its children	inferred	none		
 0x718910	77	CM2Model::SetTransportFrame		models	orchestration		Copies a transport matrix into an instance and makes it the emitters' frame	inferred	none		
 0x718960	2374	CM2Model::UpdateAfterAnimate		models	primitive		Pushes an instance's animated lights, cameras, ribbons and particles to their objects, then draws it	verified	one	models/animation#pushing-animated-state	
-0x7192b0	191	CM2Model::UpdateLighting		models	orchestration		Builds an instance's lighting record from the scene lights at its position and its lighting callback	verified	one	models/scene#animate-pass	
+0x7192b0	191	CM2Model::UpdateLighting		models	orchestration		Builds an instance's lighting record from the scene lights at its position and its lighting callback	verified	one	models/lights#instance-lighting	
 0x719370	1470	CM2Model::Update		models	primitive		Advances an instance's time and queues its animation-done and event callbacks for the frame	verified	one	models/animation#update-and-events	
 0x719930	389	CM2Model::FillIndexBuffer		models	primitive		Writes the index buffer of an instance's own batches from its visible submeshes	verified	one	models/render#batch-draw	
 0x719ac0	91	CM2Model::FillVerticesTwoTexCoords		models	host		Skins a submesh's vertices with two texture coordinate sets into a device buffer	verified	one	models/render#batch-draw	
@@ -11640,7 +11643,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71b2e0	33	M2FloatTrackStateClear		models	orchestration		Zeroes a float track state and its blend copy	inferred	none		
 0x71b310	35	M2WordTrackStateClear		models	orchestration		Zeroes a 16-bit track state and its blend copy	inferred	none		
 0x71b340	33	M2ByteTrackStateClear		models	orchestration		Zeroes a byte track state and its blend copy	inferred	none		
-0x71b370	295	M2LightStateConstruct		models	orchestration		Constructs a model light state: cleared tracks, an initialized light, enabled	inferred	none		
+0x71b370	295	M2LightStateConstruct		models	orchestration		Constructs a model light state: cleared tracks, an initialized light, enabled	verified	one	models/lights#model-light-tracks	
 0x71b4a0	97	M2LightInitialize		models	orchestration		Initializes a light: point type, zero colours and position, attenuation 0.7 and 0.03, unlinked	verified	one	models/lights#light-object	
 0x71b510	213	M2LightCopy		models	unreached		Copies a light's type, position, colours and attenuation, unlinked; nothing reaches it	verified	one	models/overview#unreached-code	
 0x71b5f0	19	M2LightSetScene		models	orchestration		Binds a light to a scene, stamped one frame before the scene's current frame	verified	one	models/lights#light-object	
@@ -11650,20 +11653,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71b6a0	114	M2LightSetDirection		models	primitive		Sets a light's direction, normalized when its length exceeds 2.384186e-7	verified	one	models/animation#pushing-animated-state	
 0x71b720	82	M2LightSetAttenuation		models	unreached		Derives a light's attenuation pair from two distances; nothing reaches it	verified	one	models/overview#unreached-code	
 0x71b780	63	M2LightSetEnabled		models	orchestration		Enables or disables a light, linking it into or out of its scene	verified	one	models/animation#pushing-animated-state	
-0x71b7c0	867	M2LightToDeviceLight		models	primitive		Fills a device light record from a light's type, colours, position and direction	inferred	none	models/lights#reaching-the-device	
+0x71b7c0	867	M2LightToDeviceLight		models	primitive		Fills a device light record from a light's type, colours, position and direction	inferred	none	models/lights#fixed-function-lights	
 0x71bb30	36	M2LightUnlink		models	orchestration		Unlinks a light from its scene list or grid cell	verified	one	models/lights#light-object	
 0x71bb60	207	M2LightLink		models	primitive		Links an enabled light into its scene: a point light into its 64x64 grid cell, others into the global list	verified	one	models/lights#light-object	
 0x71bc30	55	M2LightingInitialize		models	orchestration		Clears a lighting record and stores its scene and position	verified	one	models/lights#lighting-record	
-0x71bc70	98	M2LightingAddAmbient		models	primitive		Adds an ambient colour to a lighting record and to its spherical harmonic constant terms	verified	one	models/lights#adding-a-light	
-0x71bce0	633	M2LightingAddDirectional		models	primitive		Adds a directional colour to a lighting record's direction sums and spherical harmonic terms	verified	one	models/lights#adding-a-light	
-0x71bf60	36	M2LightingAddSpecular		models	primitive		Adds a light's third colour to a lighting record's sum	verified	one	models/lights#adding-a-light	
+0x71bc70	98	M2LightingAddAmbient		models	primitive	void __thiscall (M2Lighting *this, const float *colour)	Adds an ambient colour to a lighting record and to its spherical harmonic constant terms	verified	one	models/lights#spherical-harmonic-terms	
+0x71bce0	633	M2LightingAddDirectional		models	primitive	void __thiscall (M2Lighting *this, const float *colour, const float *direction)	Adds a directional colour to a lighting record's direction sums and spherical harmonic terms	verified	one	models/lights#spherical-harmonic-terms	
+0x71bf60	36	M2LightingAddSpecular		models	primitive	void __thiscall (M2Lighting *this, const float *colour)	Adds a light's third colour to a lighting record's sum	verified	one	models/lights#spherical-harmonic-terms	
 0x71bf90	372	LightingAddLight		models	primitive		Adds a light to a lighting record: a point light into the four nearest, others into the sums	verified	one	models/lights#scene-light-grid	
 0x71c110	65	M2LightingSetFog		models	primitive		Sets a lighting record's fog colour, start and end, and the reciprocal of the fog range	verified	one	models/lights#lighting-record	
-0x71c160	387	M2LightingTransformToView		models	primitive		Transforms a lighting record's nearest point lights and its clip plane into view space	inferred	none	models/lights#reaching-the-device	
-0x71c2f0	482	M2LightingDeriveDominantLight		models	primitive		Derives a lighting record's dominant direction and its colours from the directional sums	inferred	none	models/lights#reaching-the-device	
-0x71c4e0	582	M2LightingBuildShConstants		models	primitive		Converts a lighting record's spherical harmonic terms into vertex shader constants	inferred	none	models/lights#spherical-harmonic-terms	
-0x71c730	846	M2LightingSetDeviceLights		models	primitive		Sets the device's fixed-function lights from a lighting record	inferred	none	models/lights#reaching-the-device	
-0x71ca80	439	M2PackLightColor		models	primitive		Packs a colour scaled by its largest component into a device colour and returns that component	inferred	none	models/lights#reaching-the-device	
+0x71c160	387	M2LightingTransformToView		models	primitive	void __thiscall (M2Lighting *this)	Transforms a lighting record's nearest point lights and its clip plane into view space, once	verified	one	models/lights#view-space-lights	
+0x71c2f0	482	M2LightingDeriveDominantLight		models	primitive	void __thiscall (M2Lighting *this)	Derives a lighting record's dominant direction and colour from its directional sums, once	verified	one	models/lights#dominant-light	
+0x71c4e0	582	M2LightingBuildShConstants		models	primitive	void __thiscall (M2Lighting *this, float *out)	Packs a lighting record's harmonic terms into seven constant vectors, once, and copies them out	verified	one	models/lights#harmonic-constants	
+0x71c730	846	M2LightingSetDeviceLights		models	primitive	void __thiscall (M2Lighting *this, const float *origin, uint32_t fog)	Sets the device's four fixed-function lights, and optionally its fog, from a lighting record	verified	one	models/lights#fixed-function-lights	
+0x71ca80	439	M2PackLightColor		models	primitive	void __fastcall (uint32_t *out, float *scale, const float *colour, float alpha)	Packs a colour scaled by its largest component into a device colour and returns that component	verified	one	models/lights#fixed-function-lights	
 0x71cc40	5	InitM2LightInfinityThunk		models	orchestration		Jumps to 0x71cc50; a static initializer	verified	one	models/overview#shared-header-constants	
 0x71cc50	11	InitM2LightInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x71cc60	5	InitM2LightTwoPiThunk		models	orchestration		Jumps to 0x71cc70; a static initializer	verified	one	models/overview#shared-header-constants	

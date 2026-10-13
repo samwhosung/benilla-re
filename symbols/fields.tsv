@@ -450,15 +450,32 @@ M2Header	0x0138	4	void *	m_ribbons	models	Holds the ribbon emitters, 0xdc bytes 
 M2Header	0x013c	4	uint32_t	m_nParticles	models	Holds the count of the particle emitters, 0x1f8 bytes each	verified	one	models/shared#header-fixup
 M2Header	0x0140	4	void *	m_particles	models	Holds the particle emitters, 0x1f8 bytes each, a pointer after the fixup	verified	one	models/shared#header-fixup
 M2Light	0x0000	4	M2Scene *	m_scene	models	Holds the scene the light belongs to	verified	one	models/lights#light-object
+M2Light	0x0004	4	uint32_t	m_frame	models	Holds the scene frame the light was last placed in; a grid light with an older stamp is disabled	verified	one	models/lights#scene-light-grid
 M2Light	0x0008	4	uint32_t	m_type	models	Holds the light type, 1 for a point light	verified	one	models/lights#light-object
 M2Light	0x000c	12	float[3]	m_position	models	Holds the light position	verified	one	models/lights#light-object
+M2Light	0x0018	12	float[3]	m_viewPosition	models	Holds the light position in view space, for the nearest lights of a record	verified	one	models/lights#view-space-lights
 M2Light	0x0024	12	float[3]	m_direction	models	Holds the light direction	verified	one	models/lights#light-object
-M2Light	0x0058	4	float	m_attenuation0	models	Holds the first attenuation term, 0.7 by default	verified	one	models/lights#light-object
-M2Light	0x005c	4	float	m_attenuation1	models	Holds the second attenuation term, 0.03 by default	verified	one	models/lights#light-object
+M2Light	0x0030	12	float[3]	m_ambient	models	Holds the ambient colour	verified	one	models/lights#model-light-tracks
+M2Light	0x003c	12	float[3]	m_diffuse	models	Holds the diffuse colour	verified	one	models/lights#model-light-tracks
+M2Light	0x0048	12	float[3]	m_third	models	Holds the third colour, summed apart from ambient and diffuse	verified	one	models/lights#adding-a-light
+M2Light	0x0054	4	float	m_attenuation0	models	Holds the first attenuation term, 0 by default	verified	one	models/lights#model-light-tracks
+M2Light	0x0058	4	float	m_attenuation1	models	Holds the second attenuation term, 0.7 by default	verified	one	models/lights#model-light-tracks
+M2Light	0x005c	4	float	m_attenuation2	models	Holds the third attenuation term, 0.03 by default	verified	one	models/lights#model-light-tracks
 M2Light	0x0060	4	uint32_t	m_enabled	models	Holds whether the light is enabled	verified	one	models/lights#light-object
+M2Light	0x0064	4	M2Light **	m_linkPrev	models	Holds the address of the link that points at the light	verified	one	models/lights#light-object
+M2Light	0x0068	4	M2Light *	m_linkNext	models	Holds the next light in the same list or cell	verified	one	models/lights#light-object
 M2Lighting	0x0000	4	M2Scene *	m_scene	models	Holds the scene the record gathers lights from	verified	one	models/lights#lighting-record
 M2Lighting	0x0004	12	float[3]	m_position	models	Holds the position the record is lit at	verified	one	models/lights#lighting-record
+M2Lighting	0x0014	4	uint32_t	m_flags	models	Holds what is derived: 1 lights in view space, 2 dominant light, 4 packed constants	verified	one	models/lights#lighting-record
+M2Lighting	0x0018	36	float[9]	m_directionalSums	models	Holds the per-channel sums of colour times direction, three vectors	verified	one	models/lights#spherical-harmonic-terms
+M2Lighting	0x003c	12	float[3]	m_luminanceDirection	models	Holds the sum of luminance times direction over the directional lights	verified	one	models/lights#spherical-harmonic-terms
+M2Lighting	0x0048	12	float[3]	m_directionalColor	models	Holds the sum of the directional colours	verified	one	models/lights#spherical-harmonic-terms
 M2Lighting	0x0054	12	float[3]	m_ambient	models	Holds the summed ambient colour	verified	one	models/lights#lighting-record
+M2Lighting	0x0060	12	float[3]	m_dominantColor	models	Holds the dominant light colour	verified	one	models/lights#dominant-light
+M2Lighting	0x006c	12	float[3]	m_thirdColor	models	Holds the sum of the lights' third colours	verified	one	models/lights#spherical-harmonic-terms
+M2Lighting	0x0078	12	float[3]	m_dominantDirection	models	Holds the dominant light direction	verified	one	models/lights#dominant-light
+M2Lighting	0x0084	108	float[27]	m_shTerms	models	Holds the nine harmonic terms of red, green and blue	verified	one	models/lights#spherical-harmonic-terms
+M2Lighting	0x00f0	112	float[28]	m_shConstants	models	Holds the seven packed harmonic constant vectors	verified	one	models/lights#harmonic-constants
 M2Lighting	0x0160	16	M2Light *[4]	m_nearLights	models	Holds the nearest point lights as a max-heap	verified	one	models/lights#lighting-record
 M2Lighting	0x0170	16	float[4]	m_nearDistances	models	Holds the squared distances of the nearest point lights	verified	one	models/lights#lighting-record
 M2Lighting	0x0180	4	uint32_t	m_nearCount	models	Holds the number of nearest point lights	verified	one	models/lights#lighting-record
@@ -466,6 +483,8 @@ M2Lighting	0x0184	4	float	m_fogStart	models	Holds the fog start	verified	one	mod
 M2Lighting	0x0188	4	float	m_fogEnd	models	Holds the fog end	verified	one	models/lights#lighting-record
 M2Lighting	0x018c	4	float	m_fogScale	models	Holds 1/(fog end - fog start)	verified	one	models/lights#lighting-record
 M2Lighting	0x0190	12	float[3]	m_fogColor	models	Holds the fog colour	verified	one	models/lights#lighting-record
+M2Lighting	0x019c	4	uint32_t	m_hasClipPlane	models	Holds whether the record carries a clip plane	verified	one	models/lights#view-space-lights
+M2Lighting	0x01a0	16	float[4]	m_clipPlane	models	Holds the clip plane normal and distance	verified	one	models/lights#view-space-lights
 M2Scene	0x0000	4	uint32_t	m_refCount	models	Holds the scene's reference count	verified	one	models/scene#scene-object
 M2Scene	0x0004	4	M2Cache *	m_cache	models	Holds the cache the scene belongs to	verified	one	models/scene#scene-object
 M2Scene	0x000c	4	uint32_t	m_time	models	Holds the scene clock in milliseconds	verified	one	models/scene#scene-object
