@@ -32,7 +32,7 @@ step is added to `+0x10`, `+0x78` grows and `0x633240` runs, returning `ms`; wit
 Addresses: `0x635b00`, `0x635b4f`, `0x635b6b`, `0x635b85`, `0x635be1`, `0x7c6140`, `0x7c6110`, `0x633200`, `0x633240`, `0x635600`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::fall_mode_difftest`
 
 `0x7c6140` returns `0x7c6110(ms, z)`, which with flag 0x2000 adds `z − +0x7c` to the curve's
 downward distance D(T): the new z is `+0x7c − D(T)`, and the rising part of a jump, where D is
@@ -65,7 +65,7 @@ hit, and past 5 ends the loop.
 Addresses: `0x6367b0`, `0x6367ce`, `0x6367df`, `0x636893`, `0x6368d2`, `0x636926`, `0x63694d`, `0x636993`, `0x6369e1`, `0x6369f7`, `0x636a25`, `0x636f77`, `0x636d90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::walkmode_difftest`, `collision::walkmode_cos80_difftest`, `collision::walkmode_sweep_miss_difftest`
 
 `0x6367ce`: `fcomp 2^-20 (0x35800000); test ah,5; jnp 0x637129` returns for `|dist|` below it;
 NaN goes on. `0x6367d4` tests `0xc4e530`. The step is `0x4549a0` of `dir·t` products, then three
@@ -181,7 +181,7 @@ one.
 Addresses: `0x635c00`, `0x635c0e`, `0x635c35`, `0x635c45`, `0x635c57`, `0x635c7d`, `0x635c80`, `0x635cac`, `0x635cc1`, `0x635cdc`, `0x635d06`, `0x635d33`, `0x635d5b`, `0x617430`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::speed_select_difftest`
 
 `|B|²` is stored as a float over the B pointer (`0x635c2a`). `0x635c35`: `fcomp cos 50°; test
 ah,0x41; jp` skips the flip above it and for NaN; `0x635c45`: `test ah,5; jnp` skips it below
@@ -204,7 +204,7 @@ does not read `this`.
 Addresses: `0x635d80`, `0x635d98`, `0x635dbd`, `0x635de1`, `0x635e4c`, `0x635e5d`, `0x635e63`, `0x4549f0`, `0x454980`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::walk_helpers_difftest`
 
 `0x635d98` (`test ah,5; jp`) passes `n.z ≥ 0` and NaN; `0x635dbd` (`test ah,0x41; jnp`) zeroes
 only for `−n.z > cos 50°`. `0x635de1` calls `0x454980`, `x² + y²` of the pair. `u.x` is stored
@@ -232,7 +232,7 @@ stays wherever the probe left it. The reach is `s = max(float(r + 1/720), float(
 Addresses: `0x636100`, `0x636147`, `0x636190`, `0x636193`, `0x6361a1`, `0x63622d`, `0x63623f`, `0x6362cb`, `0x6362ed`, `0x63633a`, `0x63637d`, `0x6363c5`, `0x636411`, `0x6364a9`, `0x636516`, `0x636561`, `0x6365a1`, `0x6365b7`, `0x6365c0`, `0x6365df`, `0x6365fc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::multipass_difftest`, `collision::multipass_sweep_miss_difftest`
 
 `0x636147` loads `+0xb0`, adds 1/720 and stores; `0x636168` compares `H·tan 50°` with it (`test
 ah,0x41; jne` keeps the radius term unless the product is greater, NaN included). `0x6361a1` (`jp`)
@@ -255,7 +255,7 @@ and skipped time can still be reported.
 Addresses: `0x635f80`, `0x6359e7`, `0x635a44`, `0x615ae0`, `0x635faf`, `0x635fbf`, `0x635fee`, `0x636049`, `0x63605a`, `0x6360a3`, `0x6360d4`, `0x635ea0`, `0x635f10`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_fall_land_difftest`, `collision::state_copies_difftest`
 
 `0x635faf`: `fcom 0.0; test ah,0x41; jne` subtracts 0.5 at or below 0 and for NaN, else adds it;
 `__ftol` truncates at `0x635fbf`. The constants are 0.1 (`0x3dcccccd`), 1/g (`0x3d54536a`) and
@@ -283,7 +283,7 @@ planes. Then it returns 1 with out:
 Addresses: `0x636610`, `0x636626`, `0x63664a`, `0x636664`, `0x636714`, `0x63672c`, `0x63673d`, `0x636765`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::walk_helpers_difftest`
 
 `0x636626` rejects counts above 4; `0x63664a` (`test ah,5; jp`) rejects a distance of 2^-20 or
 more and NaN. The jump table `0x63679c` holds `0x63666b`, `0x63668c`, `0x6366fb`, `0x6366e2`
@@ -304,7 +304,7 @@ result at `+0x24`. It does not read `this`.
 Addresses: `0x637140`, `0x6371a4`, `0x6371c3`, `0x6371e4`, `0x637230`, `0x637257`, `0x637271`, `0x637287`, `0x631870`, `0x6332a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::walkable_normal_avg_difftest`
 
 `0x6371a4`: `fcomp cos 89° (0x3c8ef859); test ah,0x41; jnp` skips at or below; NaN is kept. Each
 face entry is 0x34 bytes: the normal at `+0x00` and three vertices at `+0x10`, which
@@ -352,7 +352,7 @@ degenerate triangle. `0x6376a0` sets a plane to (0, 0, 1, 0).
 Addresses: `0x6372d0`, `0x637300`, `0x637330`, `0x637350`, `0x6373b0`, `0x637480`, `0x6374c1`, `0x63751c`, `0x6376a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_toolkit_difftest`
 
 In `0x637350`, min tests are `test ah,1; jne` and max tests `test ah,0x41; jp`. In `0x6373b0`
 the ties and NaN take b in all six components. In `0x637480`, `0x6374c1` is `de e9`, `fsubp

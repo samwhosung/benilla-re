@@ -65,7 +65,7 @@ transport space to world and the other two map back.
 Addresses: `0x7c4930`, `0x7c4a00`, `0x7c4ae0`, `0x7c4b30`, `0x7c4b80`, `0x630ac0`, `0x630b70`, `0x7bca80`, `0x7bd820`, `0xcf5d00`, `0x7c5dd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::tf_facing_to_transport_difftest`, `collision::tf_facing_from_transport_difftest`, `collision::tf_dir_to_transport_rotation_difftest`
 
 `0x7c4b4d` is `d8 6d 08`, `fsubr m32`: `f − F`. The wrap is `fcom 2π; test ah,0x41; jne` (taken
 for less, equal and NaN), then `fcom 0.0; test ah,5; jp` (falls into `fadd 2π` only for less).
@@ -77,6 +77,7 @@ static initializer `0x7c5dd0`, π + π. `0x630ac0` starts from the identity, tra
 object's vtable slot `+0x14` and rotates by its slot `+0x18`; that these slots are the transport's
 position and facing is inferred from the calls; `0x7bd820(…, 1.0)` is the rigid inverse of the
 contact topic's facet gather.
+The tests run `0x7c4c2e` to `0x7c4c7c`.
 
 ## Current speed selector
 
@@ -97,7 +98,7 @@ contact topic's facet gather.
 Addresses: `0x7c4c90`, `0x7c4c99`, `0x7c4caa`, `0x7c4cd9`, `0x7c4d11`, `0x7c4d19`, `0x7c4d1d`, `0x7c4d4d`, `0x7c5c20`, `0x7c6ae0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::move_setters_difftest`
 
 `0x7c4c99` tests `dl,0xf`. `0x7c4caa` reads the spline: `fld [+0x30]; fidiv dword [+0x24]` (a
 signed 32-bit divisor) `; fmul 1000.0` (`0x447a0000`). `0x7c4cd9` tests swimming, `0x7c4d11` bit
@@ -118,7 +119,7 @@ bit or falling. The result returns unrounded in `st0`.
 Addresses: `0x7c5c50`, `0x7c5c90`, `0x7c5c73`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::get_strafe_speed_difftest`, `collision::get_pitch_rate_difftest`
 
 `0x7c5c73` and `0x7c5cb3` are `test eax,0x200f; je` around `fmul 0.75`; `0x7c5c9f` tests the
 pitch-down bit as `test al,al; jns`. Both read `this` from `ecx` and take no arguments (`ret`).
@@ -138,7 +139,7 @@ Both read the anchors and write the live values; nothing reads the old `+0x1c` o
 Addresses: `0x7c4f30`, `0x7c4f80`, `0x73f90a`, `0x7436c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::strafe_turn_difftest`, `collision::strafe_turn_trajectory`, `collision::pitch_integrate_difftest`, `collision::pitch_integrate_trajectory`
 
 `0x7c4f4e` to `0x7c4f5d`: `fld ω; fmul t; fadd [+0x50]; fld 2π; call 0x73f90a`, the C runtime's
 `fmod(st1, st0)`, whose result keeps the dividend's sign. `fcom 0.0; test ah,5; jp` adds 2π only
@@ -167,7 +168,7 @@ With no handler `out` is untouched; every caller zeroes it first.
 Addresses: `0x7c5360`, `0x7c53af`, `0x7c53d9`, `0x7c53e6`, `0x7c5468`, `0x7c547c`, `0x616de0`, `0x618bb0`, `0x619090`, `0x618920`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::tf_substep_dt_difftest`
 
 `0x7c538a` is `fild qword` of `ms` with a zero high dword. `0x7c53af`: `test ah,0x20; jne` keeps
 bit 2 clear while falling, so a falling turn still turns the facing but the path stays straight.
@@ -177,6 +178,7 @@ table `0x7c547c`: `00 01 02 00 00 02 02 01 03 01 04 00 03 02 04`. `0x7c53ed` ret
 callers `0x616de0`, `0x618bb0` and `0x619090` zero `out` and pass the elapsed `+0x58` (`0x619090`
 adds a time difference to it) and `0x618920()`, which is `+0x144` when the float `+0x148` is not 0
 (NaN counts as not 0), else null.
+The tests run `0x7c538a` to `0x7c5396`.
 
 ## Straight line displacement
 
@@ -186,7 +188,7 @@ adds a time difference to it) and `0x618920()`, which is `+0x144` when the float
 Addresses: `0x7c4ed0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::linear_move_difftest`
 
 The three products `t·d` are formed first; `t·d.z` is stored as a float (`0x7c4ef1`) and reloaded,
 while `t·d.x` and `t·d.y` meet `s` in the register (`fmul st,st(2)` at `0x7c4ef6`, `fmul st,st(1)`
@@ -207,7 +209,7 @@ The arc bends toward `(−hy, hx)` for `ω > 0`. `sin φ` and `cos φ` are float
 Addresses: `0x7c52c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::simple_turn_move_difftest`
 
 `0x7c52ea` `d8 f1` is `fdiv st,st(1)`, `st0 = s/ω`. `0x7c5307` `fsincos` leaves the cosine in
 `st0`, stored first to `[ebp−4]`. `0x7c531c` `d8 6d f8` is `fsubr m32`: `R − cos φ·R`.
@@ -225,7 +227,7 @@ Past a clamp the time over it is `τ = fl((θ − π/2)·fl(1/p))` and `Δ = fl(
 Addresses: `0x7c5180`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::pitch_arc_difftest`
 
 `0x7c519d` `fdiv st,st(1)` gives `1/p`, kept by `fst` as a float and used unrounded for `Rv`.
 `0x7c51b1`: `fcom π/2; test ah,0x41; jne` enters the upper clamp only for greater; `0x7c51d8`:
@@ -250,7 +252,7 @@ away from the side the facing turns to.
 Addresses: `0x7c4fd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::turn_pitch_arc_difftest`
 
 `0x7c50da` is `d8 65 e0`, `fsub m32`: `cos φ·Rh − Rh`, against `fsubr` (`d8 6d`) at `0x7c50e3`
 for `C` and at `0x7c531c` in `0x7c52c0`. `0x7c50f3` and `0x7c5110` are `de e9`,
@@ -276,7 +278,7 @@ direction bits, first match (`−` applies for `0x2`, `√½` = 0.70710677, `0x3
 Addresses: `0x7c5880`, `0x7c5a20`, `0x4549a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::velocity_basis_difftest`, `collision::velocity_vector_difftest`
 
 `0x7c58cc`: `fabs; fcomp 2⁻²⁰; test ah,5; jnp` takes the flat branch only for less. In `0x7c5a20`,
 the side vector swaps `+0x68` and `+0x6c` and negates one by `test byte [+0x40],4`
@@ -320,7 +322,7 @@ spline bit `0x200`, it rolls `+0x24` about the tangent by a bank toward the poin
 Addresses: `0x7c5490`, `0x7c5623`, `0x616af0`, `0x453480`, `0x453390`, `0x454980`, `0x7be490`, `0x7405a0`, `0x741820`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `collision::spline_follow_frac1`, `collision::spline_follow_frac2`, `collision::spline_follow_facing_wrap`, `collision::spline_follow_turn`, `collision::spline_follow_mat3_mul_vec`, `collision::spline_follow_relative_out`
 
 `u` is `fild`/`fidiv` of signed dwords. `0x453480` clamps `u` to [0, 1] and calls the curve's
 slot `+0x18` on a 4×4 frame whose first row is preset to `+0x5c`; rows 0 and 3 are read back.
@@ -331,6 +333,8 @@ and `v` are each scaled by 1/len, kept at 53 bits, only when their length is at 
 [−1, 1] (NaN to 1); `cross = v.y·h.x − h.y·v.x` stays unrounded on the stack. The angle is `2·acos c` for `cross < 0` or NaN,
 else `−2·acos c`, clamped to ±π/2 (NaN to π/2). A zero `v` gives −π/2. `0x7be490` builds the
 rotation and the frame's third row times it becomes `+0x24`. These callee readings are inferred.
+The tests run `0x7c5509` to `0x7c551c`, `0x7c55a5` to `0x7c55ca`, `0x7c562c` to `0x7c566d`,
+`0x7c569c` to `0x7c57c6`, `0x7c57d9` to `0x7c5841` and `0x7c5841` to `0x7c5871`.
 
 ## Teardown
 

@@ -34,7 +34,7 @@ float(`+0x78`·0.001), U = 0, L = float(|D|), and the fixed h = float(|D.xy|) an
 Addresses: `0x635600`, `0x63561b`, `0x635633`, `0x635662`, `0x6356b2`, `0x6356c2`, `0x6356e1`, `0x635721`, `0x635734`, `0x635742`, `0x635763`, `0x635768`, `0x635788`, `0x635790`, `0x635799`, `0x6357aa`, `0x6357b8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::fall_integrator_difftest`, `collision::fall_integrator_freefly_damage_difftest`
 
 `0x63561b` and `0x635633` take ms and `+0x78` through `fild qword`, times 0.001, to floats.
 `0x635662` is `0x4549f0`, x² + y² + z², and its root is stored as L; `0x6356b2` roots D.y² +
@@ -144,7 +144,7 @@ distance into a. Then:
 Addresses: `0x6351a0`, `0x6351d8`, `0x635245`, `0x63524c`, `0x635267`, `0x63528a`, `0x6352b9`, `0x6352d4`, `0x6352dd`, `0x635323`, `0x635342`, `0x63534a`, `0x63535d`, `0x63536e`, `0x6353ad`, `0x6353d0`, `0x635410`, `0x7c5da0`, `0x632ba0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::walk_slide_difftest`, `collision::walk_slide_sweep_miss_difftest`, `collision::leaf_predicates_difftest`
 
 `0x6351d8`, `test ah,5; jnp`, returns 0 for |a| < 2^-22 (0x34800000). `0x635245` passes the
 list, &u, a, &i, seven planes, &count, the address of a and a null start; `0x63524c` returns 2
@@ -175,7 +175,7 @@ float(`0x7c5da0()`), either t + R < Ta, or t ≤ Ta and ((Ta − t)·`+0x84`)² 
 Addresses: `0x635450`, `0x63546c`, `0x635485`, `0x6354a5`, `0x6354be`, `0x6354cb`, `0x6354f7`, `0x63550e`, `0x635516`, `0x635545`, `0x635550`, `0x63557a`, `0x635597`, `0x6355b0`, `0x6355e7`, `0x7c5f50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::fall_step_difftest`, `collision::fall_feasible_difftest`
 
 `0x63546c` calls `0x635550` and keeps its return in `ecx`, which `0x6354b1` pushes as
 `0x7c5f50`'s second argument. `0x635485`, `test ah,0x41; jne`, needs h > 2^-20; `0x6354a5`
@@ -198,7 +198,7 @@ horizontal motion alone. `0x635600` adds it to x and y only.
 Addresses: `0x635090`, `0x63509e`, `0x6350b6`, `0x6350c5`, `0x6350fa`, `0x635112`, `0x635122`, `0x63514e`, `0x635166`, `0x63517d`, `0x63517f`, `0x63518d`, `0x6336a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::ground_slide_difftest`
 
 `0x63509e` calls `0x6336a0(i)`; `0x6350b6` calls `0x634ae0`, and `0x6350c5` negates the first
 plane's normal. `0x6350fa` is `0x454980`, w.x² + w.y²; its root is not rounded. `0x635112`,
@@ -221,7 +221,7 @@ normalized, and it returns −w when w·planes[0].n > 0, else w; −planes[0].n 
 Addresses: `0x634ae0`, `0x634ae9`, `0x634b3b`, `0x634b99`, `0x634ba9`, `0x634bd4`, `0x634bfd`, `0x634c03`, `0x634c21`, `0x634c33`, `0x634c4a`, `0x634c91`, `0x634d06`, `0x634d6b`, `0x634960`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::slide_normal_difftest`, `collision::flush_probes_difftest`
 
 `0x634ae9` switches on the count: 2 to `0x634b27`, 3 and 4 to `0x634d6b`, the rest to
 `0x634b02`. `0x634b3b` is `de e9`, `fsubp st(1),st`, st1 − st0: c.z = n0.x·n1.y − n0.y·n1.x,
@@ -245,7 +245,7 @@ value; with none it returns (0, 0, 0).
 Addresses: `0x634fc0`, `0x63501e`, `0x63502e`, `0x63504c`, `0x634da0`, `0x634dcd`, `0x634de0`, `0x634e2d`, `0x634e7b`, `0x634e81`, `0x634e9d`, `0x634ee3`, `0x634eed`, `0x634f40`, `0x634f72`, `0x634f7a`, `0x634f8b`, `0x634f92`, `0x7be0e0`, `0x7be2a0`, `0x7be1e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::sibling_pure_difftest`, `collision::slide_normal_difftest`, `cmath::det3b`, `cmath::inv3`, `cmath::adj3t`
 
 `0x7be2a0(out, det)` scales the adjugate `0x7be1e0` writes by float(1/det).
 
@@ -276,7 +276,7 @@ For triangle i of `0xc4e52c` with normal z = n.z, the slope limit s is cos 50° 
 Addresses: `0x6336c3`, `0x6336d3`, `0x633701`, `0x63364a`, `0x633671`, `0x633784`, `0x6337a5`, `0x633755`, `0x633463`, `0x633475`, `0x6334f9`, `0x633507`, `0x633526`, `0x633566`, `0x633595`, `0x632460`, `0x5fa550`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::ground_slide_difftest`, `collision::point_in_tri_difftest`, `collision::walkable_hit_difftest`, `collision::flush_probes_difftest`, `collision::slope_classify_difftest`, `objectlayer::dot3_difftest`
 
 `0x6336c3`, `test ah,0x41; jp`, returns 0 for n.z > cos 50° and NaN; `0x6336d3` returns 1 for
 n.z ≥ 0; `0x633701` tests −n.z the same way. `0x63364a` passes the vertices, the index bytes
@@ -297,7 +297,7 @@ or 0x20000000. With 0x2000 set and `+0xa0` ≠ 0 (NaN included) it sets 0x4000 w
 Addresses: `0x633220`, `0x633231`, `0x633240`, `0x633243`, `0x63325e`, `0x633266`, `0x633271`, `0x633280`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_state_difftest`
 
 `0x633231` is `or dword [ecx+0x40],0x4000`, after the stores of 0 and of `+0x18`. `0x633243`
 is `test edx,0x20004000; jne` to the return. `0x63325e`, `test ah,0x44; jnp`, sends `+0xa0` = 0

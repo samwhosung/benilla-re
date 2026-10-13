@@ -25,6 +25,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-cmath"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
+name = "benilla-re-collision"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-cmath",
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-core"
 version = "0.1.0"
 dependencies = [
@@ -56,6 +71,13 @@ dependencies = [
 
 [[package]]
 name = "benilla-re-minigame"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
+name = "benilla-re-objectlayer"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",

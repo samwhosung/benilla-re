@@ -116,7 +116,7 @@ counter, position and facing.
 Addresses: `0x617e90`, `0x617ead`, `0x617ef1`, `0x617fa9`, `0x6186b0`, `0x6186bd`, `0x618720`, `0x618736`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::facing_pos_gate_difftest`
 
 ```
 617ee5: fld    DWORD PTR ds:0x80c730
@@ -132,6 +132,7 @@ and all three take `jp`. The
 two GUID compares are at `0x617ead` and `0x617eb8`. `0x6186bd push 0x26` feeds `0x618f20`;
 `0x6186e0` picks status +0x14 and +0x20 with the GUID, +0x24 and +0x30 without, and passes 1
 and 0 as the last two arguments. `0x618736 push 0x26` and `push 1` feed `0x617570`.
+The tests run `0x617ebe` to `0x617f09`.
 
 ## Transport attach
 
@@ -146,12 +147,13 @@ the unit's +0xdc, else +0xd8. `0x618b30(status)` passes the GUID `0x7c6900` take
 Addresses: `0x618970`, `0x618a59`, `0x618b30`, `0x7c6510`, `0x7c6900`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `collision::negate_facing_618970_difftest`
 
 `0x61898d je 0x618b1a` is the early return. The leave leg runs `0x618993` to `0x618a29`, the
 board leg `0x618a2c` to `0x618b15`; a zero new GUID returns 1 at `0x618a30`. `0x618a59 fchs` and
 `fstp [ebp+0xc]` store the negated angle as a float; the matrix is 16 floats from `0x618a63`,
 1.0 on the diagonal. The callees' effects on frames and facing are not read here.
+The tests run `0x618a4c` to `0x618a5f`, with `0x630b70` stubbed.
 
 ## Lateness ring
 

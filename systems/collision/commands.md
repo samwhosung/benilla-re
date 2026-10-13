@@ -183,7 +183,7 @@ p ≤ −0.6457718 (−37°, `0x80dfe8`), it calls `0x7c61c0` and returns 1 when
 Addresses: `0x7c6f30`, `0x7c6eb0`, `0x7c6f70`, `0x7c6f49`, `0x7c6f89`, `0x7c6f91`, `0x7c6fcf`, `0x80dfe8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::tf_setfacing_should_store_difftest`, `collision::tf_setfacing_to_world_difftest`, `collision::tf_setpitch_should_store_difftest`
 
 `0x7c6f36` `fld [esi+0x1c]`, `0x7c6f39` `d8 6d 08` `fsubr [ebp+8]` (f − facing), `fabs`,
 `fcomp` 2⁻²⁰ (`0x35800000`), `test ah,5`, `jnp 0x7c6f60` at `0x7c6f49`: odd parity is C0 alone,
@@ -193,6 +193,7 @@ at `0x7c6f91`; `0x7c6f97` `test eax,0x200000`; `0x7c6fb3` `test eax,0x10000000`,
 `test eax,0x200f`, then `fcomp [0x80dfe8]`, `test ah,0x41`, `jp` at `0x7c6fcf`: taken for
 greater and unordered, so less and equal start the fall. In `0x7c6eb0`, `0x7c6ed4` `d8 e1` is
 f − transport facing, stored to the argument slot at `0x7c6ed6`.
+The tests run `0x7c6f36` to `0x7c6f49` and `0x7c6f76` to `0x7c6f8c`.
 
 ## Speed and run-mode setters
 
@@ -216,7 +217,7 @@ re-anchors and updates the speed.
 Addresses: `0x7c70d0`, `0x7c7030`, `0x7c7080`, `0x7c7120`, `0x7c7170`, `0x7c6ff0`, `0x7c71c0`, `0x7c5c50`, `0x7c7009`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::move_setters_difftest`
 
 Each setter is `fld [field]`, `fsubr [ebp+8]`, `fabs`, `fcomp` 2⁻²² (`0x34800000`), `test ah,5`,
 `jp` to the store: taken for greater, equal and unordered (`0x7c7009` in `0x7c6ff0`). The store

@@ -63,7 +63,7 @@ setter `0x7c72e0`, so a changed cap takes hold from that moment.
 Addresses: `0x7c5d20`, `0x7c5d70`, `0x7c72b0`, `0x7c5d40`, `0x7c5d58`, `0x7c5d62`, `0x61a4e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::gravity_fall_difftest`, `collision::gravity_integrate_trajectory`
 
 ```
 7c5d4d  fld   dword [ebp+8]       ; t
@@ -95,7 +95,7 @@ with `+0x78` plus the step's milliseconds (`0x633a31`, `0x635b2e`), and `0x635f8
 Addresses: `0x7c5e70`, `0x7c5f00`, `0x7c5f30`, `0x7c6110`, `0x7c6140`, `0x7c5eb8`, `0x7c5ece`, `0x633840`, `0x635b00`, `0x635f80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::gravity_fall_difftest`
 
 The branch is `0x7c5eae` `fadd` (vc + g·t), `fcomp [ebp−4]` (T), `test ah,0x41`,
 `jp 0x7c5ece` at `0x7c5eb8`: even parity of C3 and C0, taken for greater and unordered. The
@@ -119,7 +119,7 @@ fall resolver `0x635450` calls it. With v = min(`+0xa0`, T) as in `0x7c5d20`:
 Addresses: `0x7c5f50`, `0x635450`, `0x7c5f97`, `0x7c5fc7`, `0x7c6004`, `0x7c6030`, `0x7c606b`, `0x7c609e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::fall_physics_difftest`
 
 `0x7c5f8d` `fabs`, `fcomp` 2⁻²² (`0x34800000`), `test ah,5`, `jp 0x7c6014` at `0x7c5f97`: taken
 for greater, equal and unordered, so only |v| < 2⁻²² takes the low branch. There `0x7c5fc7`
@@ -144,7 +144,7 @@ the swim start while it returns 1 (`0x603132`).
 Addresses: `0x7c5da0`, `0x7c5de0`, `0x7c5dfc`, `0x7c5e24`, `0x6030c0`, `0x603132`, `0x81da5c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::gravity_fall_difftest`, `collision::fall_physics_difftest`, `objectlayer::move_event_pitch_rate`, `objectlayer::move_event_pitch_thresh`
 
 `0x7c5da3` `test ah,0x20` selects `fld [ecx+0xa0]; fmul [0x81da5c]`. In `0x7c5de0` the speed
 test is `fcomp 0.0`, `test ah,0x44` at `0x7c5dfc`, `jnp 0x7c5e32`: odd parity of C3 and C2 is
@@ -153,6 +153,7 @@ C3 alone, equality, which returns 0. The time is `fild qword` over `+0x78` and a
 `0x7c5e24`, `jne 0x7c5e32` returns 0 for less, equal and unordered, so 1 needs −v/g > t. The
 caller's `test eax,eax; jne 0x60314a` after `0x603132` jumps over the swim-start call on 1. The
 two times are −v/g for −7.955547 and −9.096748.
+The tests run `0x6030e0` to `0x6030f7` and `0x60314a` to `0x60315d`.
 
 ## Fall height from the apex
 
@@ -165,7 +166,7 @@ landing handler `0x602d00` is its one caller and stores h as a float.
 Addresses: `0x7c60c0`, `0x81da70`, `0x81da6c`, `0x602d00`, `0x7c60d7`, `0x7c60f8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::gravity_fall_difftest`
 
 `0x7c60c0` `d9 41 7c` `fld [ecx+0x7c]`, `d8 61 18` `fsub [ecx+0x18]`. `fcomp [0x81da70]`,
 `test ah,5`, `jp 0x7c60ed` at `0x7c60d7`: taken for greater, equal and unordered, so the term is
@@ -280,7 +281,7 @@ status +0x14 in `+0x10` and `+0x44`, +0x20 in `+0x1c` and `+0x50`, sets `+0x7c` 
 Addresses: `0x7c6420`, `0x7c6490`, `0x7c6900`, `0x630a80`, `0x618c30`, `0x618b30`, `0x7c6984`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::tf_setfacingto_residual_difftest`
 
 In `0x7c6420` the facing and pitch go `fld`, `fst`, `fstp` (`0x7c6454` to `0x7c6465`) and +0x4c
 goes as a dword (`0x7c6468`). `0x7c6490` reads only `[ebp+8]` and returns with `ret 8`; its call
@@ -290,6 +291,7 @@ speed and the z already in the mover. `0x7c6900` returns at `0x7c691d` for a zer
 (`0x7c697a`, `0x7c6980`). The height is `fld [edi+0x2c]`, `fsub [edi+0x1c]`, then `0x7c6984`
 `d8 ae 80 00 00 00`, `fsubr [esi+0x80]`: `+0x80` minus the difference. `0x618c30` calls the
 first two; `0x618b30` calls `0x7c6900`.
+The tests run `0x7c6977` to `0x7c6990`.
 
 ## Frame transform
 
@@ -304,7 +306,7 @@ its path (through `0x7bca80`) and its facing at +0x14 the same way.
 Addresses: `0x7c6620`, `0x7c6520`, `0x7bcc60`, `0x7bca80`, `0x7c6656`, `0x7c666b`, `0x7c6752`, `0x7c6754`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::frame_transform_facing_advance_a_difftest`, `collision::frame_transform_facing_advance_b_difftest`, `collision::frame_transform_transport_delta_affine_difftest`, `collision::frame_transform_matvec3_difftest`, `collision::frame_transform_normalize2_difftest`, `collision::tf_spline_facing_accumulate_difftest`
 
 The wrap: `fadd`, `fcom` 2π, `test ah,0x41; jne` at `0x7c6656`, so only a sum above 2π takes
 `fsub` 2π; otherwise `fcom 0.0`, `test ah,5; jp` at `0x7c666b` adds 2π only below 0. 2π is the
@@ -317,6 +319,8 @@ only for less; `0x7c6754` `d8 3d` is `fdivr` 1.0, giving 1/len in `st0` at 53 bi
 `0x7c675c` and `0x7c6762` multiply into x and y before each float store (`0x7c66e1` to
 `0x7c6765`). `0x7c6520` sizes its stack copy at
 12 bytes a point.
+The tests run `0x7c6645` to `0x7c6676`, `0x7c6676` to `0x7c66a7`, `0x7c66a7` to `0x7c66ca`,
+`0x7c66ca` to `0x7c671c`, `0x7c672d` to `0x7c676c` and `0x7c6540` to `0x7c6577`.
 
 ## Boarding and leaving transports
 
@@ -331,7 +335,7 @@ transport. It returns f.
 Addresses: `0x7c6790`, `0x7c6840`, `0x617170`, `0x630ac0`, `0x630b70`, `0x630c10`, `0x6309b0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `collision::tf_negate_transport_facing_difftest`
 
 The call order and the arguments are read at the bytes: `0x7c67a8`, `0x7c67b5`, `0x7c67c4`,
 the unlink from `0x7c67c9` to `0x7c6807`, `0x7c6820` behind a nonzero GUID, `0x7c6827`; in
@@ -339,6 +343,7 @@ the unlink from `0x7c67c9` to `0x7c6807`, `0x7c6820` behind a nonzero GUID, `0x7
 `0x7c68c0`. When `tm` is null, m receives the transport matrix itself before the routine runs.
 What the callees compute (the transport's matrix, its facing, the matrix routine as an inverse,
 the link) is not read here.
+The tests run `0x7c684f` to `0x7c6861`, with `0x630b70` stubbed.
 
 ## Unreached functions
 

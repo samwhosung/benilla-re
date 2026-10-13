@@ -41,7 +41,7 @@ shown, stored as a float; the products by 0.0 carry a NaN or infinite coordinate
 Addresses: `0x631440`, `0x80dfe0`, `0x80dfe4`, `0x63145f`, `0x6314cc`, `0x63154c`, `0x6315b3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::kdop_difftest`
 
 `ret 0x10`, and ecx is loaded from the first argument before use. Plane 0 is `mov [eax],
 0xbf800000` and `0x63145f`, the store of `fld [p.x]; fsub r`, so the third argument is r; plane 4
@@ -75,7 +75,7 @@ bytes list the faces of the planes in plane order:
 Addresses: `0x631be0`, `0x80c740`, `0x631c00`, `0x631c0b`, `0x631c4d`, `0x631cf9`, `0x631de6`, `0x631e59`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_clip_difftest`
 
 `ret 0x14`. `0x631c00` calls `0x631440` with r pushed from `[edi+0xb0]`. `0x631c0b fmul
 [0x80c740]` leaves r·1.849399 on the x87 stack unrounded; V1 to V4 each add it to p.z (`0x631c4d`
@@ -104,7 +104,7 @@ the unit flags. It returns 0 when flag 0x2 is clear and any of 0xc00004 is set; 
 Addresses: `0x6315f0`, `0x5fa550`, `0x80dfe8`, `0x6315fa`, `0x631608`, `0x63160d`, `0x631610`, `0x631617`, `0x63161e`, `0x63162c`, `0x63162e`, `0x631648`, `0x631658`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::mask_select_difftest`
 
 `0x6315fa mov edi,0x100111`; `0x631606 jne 0x63160d` skips `0x631608 mov edi,0x102111` on a
 nonzero `al`, and both paths load the flags at `0x63160d`. `0x631610 test eax,0x10000000; je`,
@@ -138,7 +138,7 @@ one index.
 Addresses: `0x6318c0`, `0x631870`, `0x632980`, `0x80dfec`, `0x80dff0`, `0x6318f2`, `0x631909`, `0x631938`, `0x63194c`, `0x6319e7`, `0x631a36`, `0x631a3f`, `0x631b6b`, `0x631b01`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_clip_difftest`, `collision::sibling_pure_difftest`
 
 s is `fld v.x; fmul n.x; fld v.z; fmul n.z; faddp; fld v.y; fmul n.y; faddp; fadd d; fchs`
 (`0x6318f2` to `0x631909`). The minimum test `fcomp st(1); test ah,0x41; jne` stores only when the
@@ -154,26 +154,27 @@ index as the tag and test +0xf0 after each call.
 
 ## Obstruction test
 
-`0x631670(H, r)` on a `CMovement` tells whether the volume of height H and radius r meets solid
+`0x631670(H, r)` tells whether a `CMovement`'s volume of height H and radius r meets solid
 geometry. It writes the box (−r, −r, 0) to (r, r, H) into `0xc4e5a0`, moves it by the position
 `0x7c4930` returns, and calls `0x6721b0(box, 0xc4e52c, mask, 0)` with the mask of `0x6315f0`. A
 zero return returns 1. Otherwise it builds the planes `0x631440(+0x10, H, r)` and returns
 `0x6317c0(planes, 9)`: 1 at the first gathered facet that keeps any part after the clip by all
-nine planes, else 0. On a transport the box is at the world position `0x7c4930` gives, and the
-planes at the stored +0x10.
+nine planes, else 0. On a transport the box is at the world position `0x7c4930` gives, the planes
+at the stored +0x10.
 
 Addresses: `0x631670`, `0x6317c0`, `0x7c4930`, `0x6721b0`, `0xc4e5a0`, `0xc4e52c`, `0x63168f`, `0x6316c5`, `0x63172f`, `0x631738`, `0x63179d`, `0x6317ad`, `0x631816`, `0x617460`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::query_aabb_difftest`
 
 `ret 8`. The box is −r at `0x63168f` (`fst`) and `0x631698`, 0 at `0x6316b5`, r at `0x6316a0` and
-`0x6316ac`, H at `0x6316bf`; each component then adds the vector `0x7c4930` returns (`0x6316c5`,
+`0x6316ac`, H at `0x6316bf`; each component then adds `0x7c4930`'s vector (`0x6316c5`,
 `0x6316ca` to `0x631729`). `0x63172f` calls the query; `0x631738` returns 1 for a zero `al`. The nine
-local planes are set to (0, 0, 1, 0) and overwritten by `0x63179d`. `0x6317c0` walks the count
+local planes start as (0, 0, 1, 0); `0x63179d` overwrites them. `0x6317c0` walks the count
 at `0xc4e530`, copying each record's 36 bytes from +0x10 into a polygon of three vertices tagged −1
-(`0x631816`), and returns 1 on the first nonzero `0x631870`. The one caller is the mover's
-`0x617460`, which passes the height and the radius it scales.
+(`0x631816`), and returns 1 on the first nonzero `0x631870`. Its one caller, the mover's
+`0x617460`, passes the height and radius it scales. The test runs `0x631685` to `0x63172f`,
+with `0x7c4930` stubbed.
 
 ## Facet gather
 
@@ -193,7 +194,7 @@ r = +0xb0 and H = +0xb4, in these steps. It returns 1 unless the solid query fai
 Addresses: `0x631e70`, `0x630ac0`, `0x7bcc60`, `0x637350`, `0x637300`, `0x6372d0`, `0x6373b0`, `0x6721b0`, `0x6315f0`, `0x6320a0`, `0x6320e0`, `0x6320fe`, `0x6721c7`, `0x6721e3`, `0x637330`, `0x597ad0`, `0x63214a`, `0x7bd820`, `0x7bd700`, `0x7bdc40`, `0xc4e5a0`, `0xc4e52c`, `0xc4e564`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::static_overlap_difftest`, `collision::static_overlap_transport_difftest`
 
 `ret 0xc`. M starts as the identity; `0x7bcc60` maps p in place and m becomes m·M by rows, x =
 (m.z·M[8] + m.y·M[4]) + m.x·M[0], each rounded to float; e is float(p + m). The containment test
@@ -225,7 +226,7 @@ clip by the edge planes alone, so the region is the face outline extruded along 
 Addresses: `0x632460`, `0x632f80`, `0x637480`, `0x63256f`, `0x6325b5`, `0x6325d4`, `0x632614`, `0x632629`, `0x6326a2`, `0x6326e1`, `0x633126`, `0x6331a1`, `0x632dc0`, `0x6322e3`, `0x633080`, `0x6330c6`, `0x63313b`, `0x6331e8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::edge_planes_difftest`
 
 Both are `ret 0xc` with the vertices in ecx and the index bytes in edx. A' is float(A + s) and
 A' − A is recomputed as floats. The cross product's three `fsubp st(1),st` (`de e9`, `0x63256f`,
@@ -257,7 +258,7 @@ best)` measures each vertex of the polygon against plane k:
 Addresses: `0x6329e0`, `0x632830`, `0x632980`, `0x80dff4`, `0x6329fa`, `0x632a15`, `0x632a28`, `0x63287e`, `0x632888`, `0x632895`, `0x6328a1`, `0x6328d7`, `0x632910`, `0x63294a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_toolkit_difftest`, `collision::toi_difftest`
 
 `0x6329e0` is `ret 4` with q in ecx and the plane in edx: n·q is (q.z·n.z + q.y·n.y) + q.x·n.x and
 `0x6329fa fadd d`; `0x632a15` compares |n·dir| with the bound, `test ah,5; jp 0x632a28` divides
@@ -280,7 +281,7 @@ record was stored. Two more dwords, the owner's GUID, are passed and never read.
 Addresses: `0x632700`, `0x632830`, `0x631870`, `0x80c5c4`, `0x632753`, `0x63276d`, `0x6327ae`, `0x6327cc`, `0x6327e2`, `0x63234d`, `0x632e37`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::per_face_toi_difftest`
 
 `ret 0x20`, the list in ecx (count at +4, records at +8) and dir in edx; the seventh and eighth
 stack dwords are not read. `0x632753` to `0x63276b` form (n.z·dir.z + n.y·dir.y) + n.x·dir.x, and
@@ -310,7 +311,7 @@ the facet is known only by hit.
 Addresses: `0x632280`, `0x632460`, `0x632700`, `0x6322ff`, `0x632311`, `0x63235f`, `0x632396`, `0x6323d3`, `0x6323eb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::candidate_collect_difftest`
 
 `ret 0x2c`. The faces are planes + 0x50 onward, stepping 16, with the index bytes from +0x14,
 stepping 3. The leading test is (n.z·s.z + n.x·s.x) + n.y·s.y against 0.0 with `test ah,0x41; jnp`
@@ -342,7 +343,7 @@ NaN len sweeps 1/36, finds nothing and returns a NaN dist.
 Addresses: `0x632ba0`, `0x632a30`, `0x631be0`, `0x631e70`, `0x632280`, `0x632f80`, `0x632700`, `0xc4e564`, `0x632bb3`, `0x632c64`, `0x632c6f`, `0x632c7a`, `0x632cba`, `0x632d07`, `0x632d29`, `0x632d74`, `0x632ddd`, `0x632f3d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::earliest_contact_difftest`
 
 `ret 0x20`. `0x632bb3` compares abs(len) with 9.5367432·10⁻⁷, `test ah,5; jp` continuing above, at or
 NaN. `0x632c64 cmp ebx,0xc4e564` gates `0x632c6f fmul [0.75]` (0x3f400000) under 0x200000;
@@ -366,7 +367,7 @@ calls it with D = 1.0.
 Addresses: `0x632a30`, `0x631be0`, `0x631e70`, `0x632280`, `0x632acc`, `0x632af6`, `0x632b17`, `0x632b23`, `0x632b6c`, `0x632b73`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::step_up_difftest`
 
 `ret 0xc`, the list, the float pointer D and the position. `0x632acc` to `0x632aef` set two local
 vectors to (0, 0, −1.0) (0xbf800000); `0x632af6` builds the volume, `0x632b17` gathers, and

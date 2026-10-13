@@ -200,7 +200,7 @@ valid: with a live spline `0x616d60(&acc)`, and with a live spline whose `+0x18`
 Addresses: `0x616de0`, `0x616e20`, `0x616bf0`, `0x616af0`, `0x7c5360`, `0x618920`, `0x6191c0`, `0x616cb0`, `0x616d60`, `0x7c5cd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::integrate_apply_add_difftest`, `collision::integrate_unapply_sub_difftest`
 
 `0x616e20 test [esi+0x40],0x20ff` heads each pass; `0x616e36` to `0x616e3c` add `r`, not the time
 consumed, to `+0x58` (`0x634040` adjusts `+0x58` on its own exits; resolve topic). The branch is
@@ -210,6 +210,7 @@ and only the spline pass writes it. `0x618920` returns `&+0x144` when `+0x148` c
 0.0 (NaN included), else null. The pass time `end − r` is the start of the unsimulated rest
 (`0x616f33`); `0x616af0` gets `end`. A return through a 0 skips the commit, the snap and the
 re-anchor.
+The tests run `0x616e74` to `0x616ea1` and `0x616eff` to `0x616f2c`.
 
 ## Position validity
 
@@ -222,7 +223,7 @@ No NaN reaches the compares.
 Addresses: `0x616bf0`, `0x40a1a4`, `0x80c738`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::pos_valid_difftest`
 
 `0x616c11`, `0x616c2a` and `0x616c3f` call `_finite` (`0x40a1a4`) on `x`, `y`, `z` as doubles.
 `0x616c4e` `fsub` (`d8 25`) then `fchs` gives `17066.666 − y`, kept in `st0`; `x`'s difference is
@@ -243,7 +244,7 @@ per second in `x` and `y` is taken without collision.
 Addresses: `0x616af0`, `0x7c5490`, `0x80c734`, `0x7c5f30`, `0x7c4930`, `0x634030`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::anti_warp_difftest`
 
 `0x616b7c` is `d8 fa`, `fdivr st,st(2)`: `D / T²`. The tests are `test ah,0x41; jp` at
 `0x616b88` and `0x616b95`; parity is set for greater (no bits) and unordered (C0 and C3), and
@@ -262,7 +263,7 @@ live with bit 0x200 in its `+0x18`, or flags & 0x200800. It returns what `0x6340
 Addresses: `0x616cb0`, `0x616cec`, `0x616cfa`, `0x616d03`, `0x634040`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::build_delta_difftest`
 
 `0x616cd2 fstp [ebp−0x10]` rounds the target's `z`; `x` and `y` stay on the stack through
 `fsub [ecx+0x10]` and `fsub [ecx+0x14]`. `0x616cec je` sends a null spline to the flags test;
@@ -279,7 +280,7 @@ spline's `+0x20` to its `+0x24` and ORs 1 into its `+0x18`.
 Addresses: `0x616d60`, `0x616d30`, `0x7c6290`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::dead_band_difftest`
 
 `fcomp 9.0; test ah,5; jnp` (`0x616d90` to `0x616da1`) skips only for C0 alone, below 9.0. The
 squares are `fmul` on the stack in the order `dz`, `dx`, `dy`, summed by two `faddp`.
@@ -327,7 +328,7 @@ for a NaN `d`; `+0xb0` to `fl(w · s · 0.5)`; `+0xb4` to `fl(h · s)`; then cal
 Addresses: `0x6174b0`, `0x617501`, `0x617460`, `0x631670`, `0x80c73c`, `0x80c740`, `0x60b270`, `0x617430`, `0x5fa550`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::param_set_difftest`, `collision::turn_clamp_difftest`
 
 `0x6174b6` loads 1.0 first; `fabs; fcomp 2⁻²²; test ah,5; jnp` keeps it below the bound, else
 `fld s; fdiv d`. `0x617501` stores `+0xb4`. `0x617484 fcomp [ebp+0x10]; test ah,0x41; jne`
@@ -368,7 +369,7 @@ facing in `[0, 2π)` the result lies in `[0, 2π]`.
 Addresses: `0x617080`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::angle_wrap_difftest`
 
 The walk starts at `+0x158` and follows `[node+4]` (`0x617083`, `0x6170d1`). `0x6170bb fcom 2π;
 test ah,0x41; jne` keeps below, equal and unordered sums; `0x6170d6 fcom 0.0; test ah,5; jp` adds

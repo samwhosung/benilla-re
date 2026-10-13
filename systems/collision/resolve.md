@@ -36,7 +36,7 @@ flags `+0x40` hold a bit of 0x200f, one substep runs these steps in order:
 Addresses: `0x634040`, `0x616cb0`, `0x6340a6`, `0x6340ba`, `0x634100`, `0x634122`, `0x634154`, `0x634177`, `0x634260`, `0x63427b`, `0x634285`, `0x634299`, `0x6342a3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_entry_difftest`
 
 The caller `0x616cb0` passes the anchor plus delta minus the position. ms·0.001 is `fild qword`
 times 0.001 (0x3a83126f) at 53 bits; `0x6340a6` is `d8 f9`, `fdivr st,st(1)`, so st0 = L /
@@ -106,7 +106,7 @@ sum; with none it returns (0, 0, 1). The list is the one the last query left.
 Addresses: `0x6332a0`, `0x6333ad`, `0x6333b4`, `0x637140`, `0x631870`, `0x6174b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::capsule_kdop_dists_difftest`
 
 The planes, as normal and d: (1, 0, 0), −x − r (from `0x6332db`, `fchs` then `fsub`); (−1, 0, 0), x − r;
 (0, 1, 0), −y − r; (0, −1, 0), y − r; (0, 0, 1), −z − h; (0, 0, −1), z. Each d is rounded to a
@@ -114,6 +114,7 @@ float. `0x6333b4` adds 0x24 to `esi` and copies the three dwords `0x6333ad` retu
 `0x637140`, `fcomp; test ah,0x41; jnp` skips z ≤ 0.017452406 and keeps NaN. The sum is float per
 triangle, scaled by 1/count, then by 1/√(z² + y² + x²). The constructor `0x7c4850` sets `+0x24`
 to (0, 0, 1). `0x6174b0` writes r as width·scale·0.5 and h as height·scale.
+The tests run `0x6332db` to `0x6333ad`.
 
 ## Swept query frame
 
@@ -127,7 +128,7 @@ m = float(u_i·dist) per component.
 Addresses: `0x633840`, `0x6338e2`, `0x633902`, `0x633907`, `0x63397d`, `0x6339b0`, `0x633a24`, `0x6337d0`, `0x630ac0`, `0x7bcc60`, `0x40a1a4`, `0xc4e5a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::query_difftest`, `collision::query_clear_difftest`, `collision::pos_finite_validate_difftest`
 
 `0x6338e2` skips the transport branch when `+0x38 | +0x3c` is zero. `0x633902` transforms
 `[ebp-0x24]`, the copy of p, in place. `0x633907` starts the rotation: z' = (m22·u.z + m12·u.y)
@@ -207,7 +208,7 @@ failed sweep returns ms at once; after the first, nothing has moved.
 Addresses: `0x634640`, `0x634656`, `0x634683`, `0x6346f0`, `0x634703`, `0x634714`, `0x634734`, `0x63475a`, `0x63476f`, `0x634786`, `0x632ba0`, `0x6376a0`, `0x633200`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::transport_mode_difftest`, `collision::transport_mode_hitindex_mismatch_probe`
 
 `0x634656` calls `0x633200` only when `+0x38 | +0x3c` is nonzero. `0x634683` is `test ah,5;
 jp`: greater, equal and NaN proceed. `0x6346f0` passes the list, &u, dist, &hit, seven planes
@@ -236,7 +237,7 @@ hit or a time end with |T − U| < 2^-20.
 Addresses: `0x634300`, `0x6347d8`, `0x6347ef`, `0x634807`, `0x634813`, `0x634825`, `0x63484c`, `0x634335`, `0x6348ae`, `0x6348c3`, `0x63490c`, `0x634919`, `0x634925`, `0x63493e`, `0x7c5cd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::resolve_state_difftest`
 
 `0x6347d8` computes a/rem·(T − U) at 53 bits. `0x6347ef`, `fcomp 1.0; test ah,0x41; jne`,
 treats t + 2^-20 ≤ 1 and NaN as a stall; `0x634807` stores c = 1, `0x634813` increments and
@@ -260,7 +261,7 @@ from p, without testing whether the sweep failed; on a hit, unless a spline is a
 Addresses: `0x6343b0`, `0x5f5f10`, `0x5f615e`, `0x6343c8`, `0x6344d5`, `0x63450c`, `0x63451f`, `0x634575`, `0x6345b6`, `0x6345c3`, `0x6345c8`, `0x6345cb`, `0x632ca2`, `0x6345d3`, `0x634610`, `0x63462b`, `0x7bca80`, `0x5fa550`, `0x7c61c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::carrier_sweep_difftest`
 
 `0x5f615e` is the one call site, inside a loop over the transport's list that passes the list
 entry in `ecx`; above it, `0x5f60f2` to `0x5f612a` take dist as a square root and store u, a
@@ -273,6 +274,7 @@ sweep `0x6345c8` reloads the M pointer and `0x6345cb` compares that stale value 
 `0x6345cb` returns when the index equals the count, `0x6345d3` when the spline is active (non-null, bit 0x4
 clear). The move rounds u.z·a first. `0x634610` calls `0x7c61c0`; `0x63462b` is reached either
 way.
+The tests run `0x6343b0` to `0x634481`.
 
 ## Transport detach test
 

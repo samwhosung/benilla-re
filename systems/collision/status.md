@@ -182,7 +182,7 @@ nonzero `s` gives Δ = f1 − f0, minus 2π (6.2831855, `0x40c90fdb`) when Δ > 
 Addresses: `0x619030`, `0x618f80`, `0x61904b`, `0x618fd7`, `0x618fff`, `0x619011`, `0x618920`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::facing_interp_difftest`
 
 `0x619030` gates at `0x619044` (`+0x4c`), `0x61904b` (`cmp [eax+0xc],0x26`) and the two GUID
 compares, then passes `t`, `+0x1c`, head `+0x08` and head `+0x1c`. In `0x618f80`, `xor edx,edx`
@@ -206,7 +206,7 @@ stores 0.
 Addresses: `0x619090`, `0x6190bb`, `0x619111`, `0x619139`, `0x619183`, `0x7c5360`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::reconcile_gate_difftest`
 
 Gates: `0x6190b0` (`+0x4c`), `0x6190bb` (tag 0x26), `0x6190c5` and `0x6190d1` (GUID).
 `mov ebx,[edi+8]; sub ebx,ecx` gives `r`; the zeroed vector goes to `0x7c5360(+0x58 + r, rate)`
@@ -228,7 +228,7 @@ zeroes `+0x14c` and returns 0. Precision: `f` = r / D at 53 bits from two intege
 Addresses: `0x6191c0`, `0x6191f2`, `0x619214`, `0x619228`, `0x61922f`, `0x616de0`, `0x616ecb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::pos_lerp_difftest`
 
 `0x6191eb` is `sub esi,[ebp+8]` and `jns` at `0x6191f2`. `fild [ebp+8]; fidiv [ebp-8]` at
 `0x619214` divides by `+0x14c` read as `int32`. The three `fsub` of head `+0x10`, `+0x14`, `+0x18`
@@ -309,12 +309,13 @@ fraction with opcode 0x2c9 through `0x600b10`, then frees the spline (`0x7c6310`
 Addresses: `0x619de0`, `0x619def`, `0x619e57`, `0x600b10`, `0xc4da98`
 Confidence: verified
 Proof: one
-Test: none
+Test: `collision::fall_progress_difftest`
 
 `or dword [eax+0x18],4` at `0x619def`. The GUID at owner `+0x08` is compared with `0xc4da98` and
 `0xc4da9c`. `test edx,edx; ja` on the duration, `test edi,edi; jge` on elapsed, `test [eax+0x18],1`,
 then `fild; fidiv` at `0x619e57` and `fstp`. `0x600b10` pushes `0x2c9` at `0x600b24`, writes the
 id and the float, and sends.
+The tests run `0x619e4a` to `0x619e5d`.
 
 ## Time skip
 

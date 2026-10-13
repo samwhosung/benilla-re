@@ -124,7 +124,7 @@ tag's event, the drain's opcode, the queue producers and the apply-now function.
 Addresses: `0x615c30`, `0x615cfd`, `0x60e0a0`, `0x60e1bb`, `0x618080`, `0x6180b7`, `0x617fe0`, `0x618f20`, `0x618eb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::move_event_move_deadband`
 
 `0x615cf4 cmp eax,0x26; ja 0x615e51`, then the table jump over 39 dwords that follow the
 function. Each case pushes its opcode as the second argument of `call 0x60e0a0`, for example
@@ -134,6 +134,7 @@ is the immediate pushed as the adder's second argument, or `neg; sbb; add k` on 
 which gives `k − 1` for nonzero and `k` for zero, or `sete`, which gives 1 for zero. `0x618f20`
 returns nonzero when it applied the status at once, and otherwise queues the tag through
 `0x6176a0` at the status's fire time (`0x618f70`).
+The tests run `0x60e1f0` to `0x60e205`.
 
 ## Movement key tags
 
