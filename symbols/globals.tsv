@@ -574,7 +574,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87c9b8	uint32_t[38]	s_regionMethods		ui	Holds the 19 pairs of a name and a function of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
-0x87d5fc	float	s_particleDensity		camera	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density
+0x87d5fc	float	s_particleDensity		models	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density
 0x87d894	float	s_terminalVelocity		collision	Holds the fall speed cap, 60.148003 (0x4270978e); its one writer 0x7c6160 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x87d898	float	s_featherFallTerminalVelocity		collision	Holds the cap under flag 0x20000000, 7.0 (0x40e00000); its one writer 0x7c6180 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
@@ -965,20 +965,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5730	float	s_cameraInvTwoPi		camera	Holds 1/2π (0x3e22f983), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5734	float	s_cameraTwoPi		camera	Holds 2π (0x40c90fdb), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5738	float	s_defaultFov		camera	Holds π/2, set at startup, the default field of view	verified	one	camera#properties
-0xcf573c	float	s_cameraInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-file-and-initializers
-0xcf5740	float	s_cameraInvTwoPi2		camera	Holds 1/2π, set at startup; nothing reads it	verified	one	camera#object-file-and-initializers
-0xcf5744	float	s_cameraTwoPi2		camera	Holds 2π, set at startup; read only by 0x7adf50	verified	one	camera#object-file-and-initializers
-0xcf5748	float	s_cameraInfinity2		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-file-and-initializers
+0xcf573c	float	s_cameraInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
+0xcf5740	float	s_cameraInvTwoPi2		camera	Holds 1/2π, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
+0xcf5744	float	s_cameraTwoPi2		camera	Holds 2π, set at startup; read only by 0x7adf50	verified	one	camera#object-files-and-initializers
+0xcf5748	float	s_particleRegistryInfinity		models	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf575c	void *	s_particleRegistry		models	Holds the particle emitter registry, created on first use	verified	one	models/particles#registries
 0xcf5760	void *	s_ribbonRegistry		models	Holds the ribbon emitter registry, created on first use	verified	one	models/particles#registries
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table
-0xcf5ca4	float	s_sharedInvTwoPiA		collision	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#shared-file-initializers
-0xcf5ca8	float	s_sharedTwoPiA		collision	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#shared-file-initializers
-0xcf5cc0	float	s_sharedInfinityA		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers
+0xcf5ca4	float	s_geometryInvTwoPi		unassigned	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#object-files
+0xcf5ca8	float	s_geometryTwoPi		unassigned	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#object-files
+0xcf5cc0	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers
 0xcf5cd0	float	s_sharedInvTwoPi		collision	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#shared-file-initializers
 0xcf5d00	float	s_movementTwoPi		collision	Holds 2π, written only by the static initializer 0x7c5dd0	verified	one	collision/kinematics#transport-space-transforms
-0xcf5d30	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers
+0xcf5d30	float	s_recordInfinity		unassigned	Holds +∞ from start-up	verified	one	collision/overview#object-files
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts
 0xcf7700	uint8_t[96]	s_contextTableLocks		core	Holds the read-write locks of the context table's eight buckets	verified	one	core/loop#contexts

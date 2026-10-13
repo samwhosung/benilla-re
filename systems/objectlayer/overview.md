@@ -7,8 +7,8 @@ and corpses, with the spell effects, missiles and combat log they carry.
 The system owns five runs of code. ObjectMgrClient.cpp, `0x464140` to `0x46a250`, holds the manager
 and the update packet. Ten small files, `0x47bf60` to `0x47fea0`, hold 64-bit copy helpers, each
 type's field counts, the watched-field tables and the movement codec. The `Object/ObjectClient`
-files run from `0x5d3f40` to `0x6151e0` and from `0x61b150` to `0x630780`, around the physics'
-Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x638510`, after the
+files run from `0x5d3f40` to `0x615710` and from `0x61b130` to `0x630780`, around the physics'
+Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x6384e0`, after the
 physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and
 `initializers` for the core, `classes` for the hierarchy, `reaction` for how units react to one
 another and `trade` for the trade window; the other object files have no topic of their own.
@@ -20,7 +20,7 @@ Roots: `0x4651a0`, `0x4672f0`, `0x4674a0`, `0x468460`, `0x468550`
 The runs are bounded by the source paths their functions pass, by the neighbouring systems'
 first and last functions, and by the initializer runs at each file's edge.
 
-Addresses: `0x464140`, `0x46a250`, `0x47bf60`, `0x47bfa0`, `0x47fea0`, `0x5d3f40`, `0x6151e0`, `0x61b150`, `0x630780`, `0x637a80`, `0x638510`, `0x5d3f20`, `0x6151f0`, `0x61b140`, `0x6307a0`, `0x637a60`
+Addresses: `0x464140`, `0x46a250`, `0x47bf60`, `0x47bfa0`, `0x47fea0`, `0x5d3f40`, `0x615710`, `0x61b130`, `0x630780`, `0x637a80`, `0x6384e0`, `0x638500`, `0x638510`, `0x82b74c`, `0x613ad0`, `0x6151f0`, `0x615700`, `0x61b130`, `0x5d3f20`, `0x615730`, `0x61b110`, `0x6307a0`, `0x637a60`
 Confidence: verified
 Proof: one
 Test: none
@@ -32,13 +32,16 @@ Source paths: `ObjectMgrClient.cpp` from `0x46501c`; in the second run `Trade_C.
 `Effect_C.cpp` (`0x61f704`), `Bag_C.cpp` (`0x6224c7`), `UnitSound_C.cpp` (`0x623658`),
 `UnitCombat_C.cpp` (`0x624811`), `UnitCombatLog_C.cpp` (`0x62650a`), `PlayerSound_C.cpp`
 (`0x62fa5b`), and `UnitCombatLogXP_C.cpp` (`0x637a9f`). `net`'s `0x5d3f20` ends just before the
-second run and `glue`'s run starts at `0x46a260`, after the first; `collision` owns `0x6151f0` to `0x61b140` and `0x6307a0` to `0x637a60`. The nine
-field files are ordered as `0x4641c0` reads their counts: corpse, dynamic object, game object,
-player, unit, container, item, object (with the movement codec), and the watcher tables. A tenth
-file comes first: its run opens at slot `0x827d6c` with the +∞ initializer 0x47bee0, which copies
-0x803df0, 4 bytes before the π 0x803df4 that `0x47bfa0` doubles, and the 64-bit copy helpers 0x47bf00 to
-`0x47bf60` lie between the two. From
-0x638520 on, the initializers write globals the console's code uses; they are the console's.
+second run and `glue`'s run starts at `0x46a260`, after the first; `collision` owns `0x615730` to
+`0x61b110` and `0x6307a0` to `0x637a60`. The nine field files are ordered as `0x4641c0` reads their
+counts: corpse, dynamic object, game object, player, unit, container, item, object (with the
+movement codec), and the watcher tables. A tenth file comes first: its run opens at slot `0x827d6c`
+with the +∞ initializer 0x47bee0, which copies 0x803df0, 4 bytes before the π 0x803df4 that
+`0x47bfa0` doubles, and the 64-bit copy helpers 0x47bf00 to `0x47bf60` lie between the two.
+Object_C.cpp's run opens with its +∞ `0x613ad0` and ends with its header block, `0x6151f0` to
+`0x615700`; LootRoll.cpp's opens with `0x61b130`. From `0x638500`, the console file's +∞ (slot
+`0x82b74c`, body `0x638510`), the initializers write globals the console's code uses; they are the
+console's.
 
 ## Starts the listing hides
 

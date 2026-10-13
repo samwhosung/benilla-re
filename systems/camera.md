@@ -8,13 +8,14 @@ eye, target, distance, far and near clip, field of view, roll, pitch and yaw. Ea
 perspective projection and a view for the device, and code outside reads and writes its
 properties by id through four accessors.
 
-The object file runs from `0x7abbe0` through `0x7ae000`: the property machinery, the class, and
-two free transforms the interface uses, an orthographic setup for a rectangle and a
-screen-to-world unprojection. It also holds the particle density setting.
+The code is two object files from `0x7abbe0` through `0x7adf70`: the property machinery, then the
+class with two free transforms the interface uses, an orthographic setup for a rectangle and a
+screen-to-world unprojection. The particle density setting beside them is in the next file,
+`models`' particle registry; its entry stays here.
 
 Roots: `0x7ac930`, `0x7acf10`, `0x7ada40`, `0x7ad2c0`, `0x7ad7f0`, `0x7abf80`, `0x7ac0b0`,
-`0x7ac250`, `0x7ac3a0`, `0x7adfb0`, `0x7ae000`, and the static initializers `0x7ac5a0`,
-`0x7ac5c0`, `0x7ac5f0`, `0x7ac610`, `0x7adf20`, `0x7adf40`, `0x7adf90`.
+`0x7ac250`, `0x7ac3a0`, and the static initializers `0x7ac5a0`, `0x7ac5c0`, `0x7ac5f0`,
+`0x7ac610`, `0x7adf20`, `0x7adf40`.
 
 ## Properties
 
@@ -207,25 +208,30 @@ second to the `x` store only for `x < 1`. The option handlers `0x688fb0` and `0x
 registered with the names `particleDensity` (default `1.0`) and `spellEffectLevel` (default `2`),
 and are the only callers of `0x7adfb0` (three call sites). `0x7ae000` has two call sites.
 
-## Object file and initializers
+## Object files and initializers
 
-The object file's code runs from `0x7abbe0` through `0x7ae000`. Seven static initializers run from consecutive slots `0x82d97c` to
-`0x82d994` of the C runtime's initializer table, in this order: `0x7ac5a0` (2π into `0xcf5734`),
-`0x7ac5c0` (1/2π into `0xcf5730`), `0x7ac5f0` (+∞ into `0xcf573c`), `0x7adf20` (2π into
-`0xcf5744`), `0x7adf40` (1/2π into `0xcf5740`), `0x7ac610` (π/2 into `0xcf5738`) and `0x7adf90`
-(+∞ into `0xcf5748`). Each is a `jmp` thunk to its body 16 bytes on.
+The code is two object files, each opening its run of static initializers in the C runtime's
+table with +∞: the property machinery from `0x7abbe0` through `0x7ac5d0`, and the class from
+`0x7ac5f0` through `0x7adf70`. Six run from consecutive slots `0x82d97c` to `0x82d990`: the
+first file's `0x7ac5a0` (2π into `0xcf5734`) and `0x7ac5c0` (1/2π into `0xcf5730`), after its +∞
+at slot `0x82d978`; then the second file's `0x7ac5f0` (+∞ into `0xcf573c`), `0x7adf20` (2π into
+`0xcf5744`), `0x7adf40` (1/2π into `0xcf5740`) and `0x7ac610` (π/2 into `0xcf5738`). Each is a
+`jmp` thunk to its body 16 bytes on. The next slot holds `0x7adf90` (+∞ into `0xcf5748`), which
+opens the particle registry's file.
 
-Addresses: `0x7abbe0`, `0x7ae000`, `0x7ac5a0`, `0x7ac5b0`, `0x7ac5c0`, `0x7ac5d0`, `0x7ac5f0`, `0x7ac600`, `0x7ac610`, `0x7ac620`, `0x7adf20`, `0x7adf30`, `0x7adf40`, `0x7adf50`, `0x7adf90`, `0x7adfa0`, `0x827000`
+Addresses: `0x7abbe0`, `0x7ac5d0`, `0x7ac5f0`, `0x7adf70`, `0x7ac5a0`, `0x7ac5b0`, `0x7ac5c0`, `0x7ac5d0`, `0x7ac5f0`, `0x7ac600`, `0x7ac610`, `0x7ac620`, `0x7adf20`, `0x7adf30`, `0x7adf40`, `0x7adf50`, `0x7adf90`, `0x7adfa0`, `0xcf5748`, `0x7adfb0`, `0x7ae000`, `0x7af1b0`, `0x827000`
 Confidence: verified
 Proof: one
 Test: none
 
-The slots interleave initializers from both ends of the code; the linker keeps each object
-file's initializers together. `0x7abbe0` reads `0xcf5730` and `0xcf5734`, which only these
-initializers write, so it belongs to the same object file. The code below it allocates with the
-sound-file cache's tags, and the code after `0x7ae000` cites the source path
-`GfxSingletonManager.cpp`. Only `0xcf5730`, `0xcf5734` and `0xcf5738` (read by `0x7ac930` and
-`0x7acf10`) are read; the other four are written and never read.
+Every file's run opens with its +∞ copy (`collision/overview`, Object files). Slot `0x82d978` holds
+0x7abbc0, which copies the +∞ at 0x81d7a0; `0x7ac5a0` doubles the π 4 bytes on. `0x7ac5f0` copies
+the +∞ at 0x81d7a8, and `0x7adf20` and `0x7ac610` read the π at 0x81d7ac. `0x7abbe0` reads
+`0xcf5730` and `0xcf5734`, which only the first file's initializers write. `0x7adf90` copies the
++∞ at 0x81d80c, and the registry's 2π `0x7af1b0`, at slot `0x82d998`, doubles the π at 0x81d810,
+so the code between, `0x7adfb0` and `0x7ae000`, is the registry's. The code below `0x7abbe0`
+allocates with the sound-file cache's tags. Only `0xcf5730`, `0xcf5734` and `0xcf5738` (read by
+`0x7ac930` and `0x7acf10`) are read; the other three are written and never read.
 
 ## Unreached functions
 

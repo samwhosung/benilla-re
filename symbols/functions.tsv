@@ -5484,64 +5484,64 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x615150	81			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
 0x6151b0	33			objectlayer	orchestration		Fills slot 13 of the object vtable and others; its body is not read here	inferred	none		
 0x6151e0	16			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x6151f0	5	InitMovementTwoPiThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615200, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615200	15	InitMovementTwoPi		collision	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#movementcpp-initializers	
-0x615210	5	InitMovementInvTwoPiThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615220, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615220	19	InitMovementInvTwoPi		collision	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	collision/overview#movementcpp-initializers	
-0x615240	5	InitMovementSevenTwelfthsThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615250, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615250	19	InitMovementSevenTwelfths		collision	primitive	void __cdecl (void)	Stores −21·(−1/36) = 0.58333331 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615270	5	InitMovementMinus148p75Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615280, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615280	19	InitMovementMinus148p75		collision	primitive	void __cdecl (void)	Stores 0.58333331·(−255) = −148.75 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6152a0	5	InitMovementHalfThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6152b0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6152b0	19	InitMovementHalf		collision	primitive	void __cdecl (void)	Stores 18·(1/36) = 0.5 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6152d0	5	InitMovementOneTwentyEightThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6152e0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6152e0	19	InitMovementOneTwentyEight		collision	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615300	5	InitMovementPoint24Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615310, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615310	19	InitMovementPoint24		collision	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615330	5	InitMovementSq10AThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615340, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615340	19	InitMovementSq10A		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615360	5	InitMovementPoint05Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615370, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615370	19	InitMovementPoint05		collision	primitive	void __cdecl (void)	Stores 0.5/10 = 0.05 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615390	10	InitMovementLibraryRefThunk		collision	orchestration	void __cdecl (void)	Calls 0x6153a0, then jumps to 0x6153c0 to register the release at exit	verified	one	collision/overview#movementcpp-initializers	
-0x6153a0	22	InitMovementLibraryRef		collision	primitive	void __cdecl (void)	Increments a start-up count shared with other files and calls an empty hook when it becomes 1	verified	one	collision/overview#movementcpp-initializers	
-0x6153c0	12	RegisterMovementLibraryUnref		collision	orchestration	void __cdecl (void)	Registers 0x6153d0 with _atexit	verified	one	collision/overview#movementcpp-initializers	
-0x6153d0	14	ReleaseMovementLibraryRef		collision	primitive	void __cdecl (void)	Decrements the shared start-up count and calls an empty hook when it reaches 0	verified	one	collision/overview#movementcpp-initializers	
-0x6153e0	5	InitMovementSq10BThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6153f0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6153f0	19	InitMovementSq10B		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615410	5	InitMovementSq11p1Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615420, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615420	19	InitMovementSq11p1		collision	primitive	void __cdecl (void)	Stores 11.1111002² = 123.456779 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615440	5	InitMovementSq5p56Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615450, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615450	19	InitMovementSq5p56		collision	primitive	void __cdecl (void)	Stores 5.55556011² = 30.8641949 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615470	5	InitMovementSq10CThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615480, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615480	19	InitMovementSq10C		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6154a0	5	InitMovementSq5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6154b0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6154b0	19	InitMovementSq5		collision	primitive	void __cdecl (void)	Stores 5² = 25 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6154d0	5	InitMovementSq10DThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6154e0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6154e0	19	InitMovementSq10D		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615500	5	InitMovementSq30Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615510, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615510	19	InitMovementSq30		collision	primitive	void __cdecl (void)	Stores 30² = 900 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615530	5	InitMovementSq120Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615540, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615540	19	InitMovementSq120		collision	primitive	void __cdecl (void)	Stores 120² = 14400 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615560	5	InitMovementSq20Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615570, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615570	19	InitMovementSq20		collision	primitive	void __cdecl (void)	Stores 20² = 400 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615590	5	InitMovementSq10EThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6155a0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6155a0	19	InitMovementSq10E		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6155c0	5	InitMovementSqHalfThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6155d0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6155d0	19	InitMovementSqHalf		collision	primitive	void __cdecl (void)	Stores 0.5² = 0.25 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6155f0	5	InitMovementSq3Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615600, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615600	19	InitMovementSq3		collision	primitive	void __cdecl (void)	Stores 3² = 9 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615620	5	InitMovementSq100AThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615630, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615630	19	InitMovementSq100A		collision	primitive	void __cdecl (void)	Stores 100² = 10000 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615650	5	InitMovementFiveThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615660, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615660	11	InitMovementFive		collision	orchestration	void __cdecl (void)	Stores the float 5.0 (0x40a00000) in its global	verified	one	collision/overview#movementcpp-initializers	
-0x615670	5	InitMovementSq50Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615680, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615680	19	InitMovementSq50		collision	primitive	void __cdecl (void)	Stores 50² = 2500 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6156a0	5	InitMovementSq100BThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6156b0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6156b0	19	InitMovementSq100B		collision	primitive	void __cdecl (void)	Stores 100² = 10000 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x6156d0	5	InitMovementSq40Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6156e0, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x6156e0	19	InitMovementSq40		collision	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x615700	5	InitMovementSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x615710, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x615710	19	InitMovementSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#movementcpp-initializers	
+0x6151f0	5	InitObjectBTwoPiThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615200, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615200	15	InitObjectBTwoPi		objectlayer	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	objectlayer/initializers#float-constants	
+0x615210	5	InitObjectBInvTwoPiThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615220, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615220	19	InitObjectBInvTwoPi		objectlayer	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	objectlayer/initializers#float-constants	
+0x615240	5	InitObjectBSevenTwelfthsThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615250, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615250	19	InitObjectBSevenTwelfths		objectlayer	primitive	void __cdecl (void)	Stores −21·(−1/36) = 0.58333331 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615270	5	InitObjectBMinus148p75Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615280, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615280	19	InitObjectBMinus148p75		objectlayer	primitive	void __cdecl (void)	Stores 0.58333331·(−255) = −148.75 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6152a0	5	InitObjectBHalfThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6152b0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6152b0	19	InitObjectBHalf		objectlayer	primitive	void __cdecl (void)	Stores 18·(1/36) = 0.5 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6152d0	5	InitObjectBOneTwentyEightThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6152e0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6152e0	19	InitObjectBOneTwentyEight		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615300	5	InitObjectBPoint24Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615310, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615310	19	InitObjectBPoint24		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615330	5	InitObjectBSq10AThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615340, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615340	19	InitObjectBSq10A		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615360	5	InitObjectBPoint05Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615370, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615370	19	InitObjectBPoint05		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.05 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615390	10	InitObjectBLibraryRefThunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x6153a0, then jumps to 0x6153c0 to register the release at exit	verified	one	objectlayer/initializers#initializer-thunks	
+0x6153a0	22	InitObjectBLibraryRef		objectlayer	primitive	void __cdecl (void)	Increments a start-up count shared with other files and calls an empty hook when it becomes 1	verified	one	objectlayer/initializers#start-up-counts	
+0x6153c0	12	RegisterObjectBLibraryUnref		objectlayer	orchestration	void __cdecl (void)	Registers 0x6153d0 with _atexit	verified	one	objectlayer/initializers#exit-callbacks	
+0x6153d0	14	ReleaseObjectBLibraryRef		objectlayer	primitive	void __cdecl (void)	Decrements the shared start-up count and calls an empty hook when it reaches 0	verified	one	objectlayer/initializers#start-up-counts	
+0x6153e0	5	InitObjectBSq10BThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6153f0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6153f0	19	InitObjectBSq10B		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615410	5	InitObjectBSq11p1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615420, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615420	19	InitObjectBSq11p1		objectlayer	primitive	void __cdecl (void)	Stores 11.1111002² = 123.456779 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615440	5	InitObjectBSq5p56Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615450, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615450	19	InitObjectBSq5p56		objectlayer	primitive	void __cdecl (void)	Stores 5.55556011² = 30.8641949 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615470	5	InitObjectBSq10CThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615480, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615480	19	InitObjectBSq10C		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6154a0	5	InitObjectBSq5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6154b0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6154b0	19	InitObjectBSq5		objectlayer	primitive	void __cdecl (void)	Stores 5² = 25 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6154d0	5	InitObjectBSq10DThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6154e0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6154e0	19	InitObjectBSq10D		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615500	5	InitObjectBSq30Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615510, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615510	19	InitObjectBSq30		objectlayer	primitive	void __cdecl (void)	Stores 30² = 900 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615530	5	InitObjectBSq120Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615540, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615540	19	InitObjectBSq120		objectlayer	primitive	void __cdecl (void)	Stores 120² = 14400 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615560	5	InitObjectBSq20Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615570, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615570	19	InitObjectBSq20		objectlayer	primitive	void __cdecl (void)	Stores 20² = 400 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615590	5	InitObjectBSq10EThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6155a0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6155a0	19	InitObjectBSq10E		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6155c0	5	InitObjectBSqHalfThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6155d0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6155d0	19	InitObjectBSqHalf		objectlayer	primitive	void __cdecl (void)	Stores 0.5² = 0.25 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6155f0	5	InitObjectBSq3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615600, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615600	19	InitObjectBSq3		objectlayer	primitive	void __cdecl (void)	Stores 3² = 9 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615620	5	InitObjectBSq100AThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615630, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615630	19	InitObjectBSq100A		objectlayer	primitive	void __cdecl (void)	Stores 100² = 10000 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615650	5	InitObjectBFiveThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615660, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615660	11	InitObjectBFive		objectlayer	orchestration	void __cdecl (void)	Stores the float 5.0 (0x40a00000) in its global	verified	one	objectlayer/initializers#stored-constants	
+0x615670	5	InitObjectBSq50Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615680, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615680	19	InitObjectBSq50		objectlayer	primitive	void __cdecl (void)	Stores 50² = 2500 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6156a0	5	InitObjectBSq100BThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6156b0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6156b0	19	InitObjectBSq100B		objectlayer	primitive	void __cdecl (void)	Stores 100² = 10000 as a float	verified	one	objectlayer/initializers#float-constants	
+0x6156d0	5	InitObjectBSq40Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6156e0, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x6156e0	19	InitObjectBSq40		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	objectlayer/initializers#float-constants	
+0x615700	5	InitObjectBSq1p5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615710, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x615710	19	InitObjectBSq1p5		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	objectlayer/initializers#float-constants	
 0x615730	10	InitMovementStaticListThunk		collision	orchestration	void __cdecl (void)	Calls 0x615740, then jumps to 0x615770 to register the list teardown at exit	verified	one	collision/overview#movementcpp-initializers	
 0x615740	34	InitMovementStaticList		collision	orchestration	void __cdecl (void)	Sets an intrusive list head to empty with link offset 0	verified	one	collision/overview#movementcpp-initializers	
 0x615770	12	RegisterMovementStaticListTeardown		collision	orchestration	void __cdecl (void)	Registers 0x615780 with _atexit	verified	one	collision/overview#movementcpp-initializers	
@@ -5779,8 +5779,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61b0e0	19	InitMovementBSq40		collision	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	collision/overview#movementcpp-initializers	
 0x61b100	5	InitMovementBSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x61b110, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
 0x61b110	19	InitMovementBSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#movementcpp-initializers	
-0x61b130	5	InitMovementBInfinityThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x61b140, a static initializer of the file	verified	one	collision/overview#movementcpp-initializers	
-0x61b140	11	InitMovementBInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#movementcpp-initializers	
+0x61b130	5	InitLootRollCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61b140, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
+0x61b140	11	InitLootRollCopy1		objectlayer	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	objectlayer/initializers#stored-constants	
 0x61b150	10	InitLootRollListHead1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x61b160, then jumps to 0x61b190 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x61b160	34	InitLootRollListHead1		objectlayer	primitive	void __cdecl (void)	Makes a global list empty: link offset 0, its end link pointing at itself, marked by bit 0	verified	one	objectlayer/initializers#other-initializers	
 0x61b190	12	InitLootRollRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x61b1a0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -7048,8 +7048,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x631240	19	InitMovementCSq40		collision	primitive	void __cdecl (void)	Stores 40² = 1600 as a float	verified	one	collision/overview#movement_ccpp-initializers	
 0x631260	5	InitMovementCSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x631270, a static initializer of the file	verified	one	collision/overview#movement_ccpp-initializers	
 0x631270	19	InitMovementCSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#movement_ccpp-initializers	
-0x631290	5	InitMovementCInfinityBThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6312a0, a static initializer of the file	verified	one	collision/overview#movement_ccpp-initializers	
-0x6312a0	11	InitMovementCInfinityB		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#movement_ccpp-initializers	
+0x631290	5	InitCollideInfinityThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x6312a0, a static initializer of the file	verified	one	collision/overview#resolution-file-initializers	
+0x6312a0	11	InitCollideInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#resolution-file-initializers	
 0x6312b0	10	InitCollideArraysAThunk		collision	orchestration	void __cdecl (void)	Calls 0x6312c0, then jumps to 0x6312f0 to register the arrays' release at exit	verified	one	collision/overview#resolution-file-initializers	
 0x6312c0	48	InitCollideArraysA		collision	orchestration	void __cdecl (void)	Zeroes two static four-dword records and sets the last dword of each to 0x100	verified	one	collision/overview#resolution-file-initializers	
 0x6312f0	12	RegisterCollideArraysARelease		collision	orchestration	void __cdecl (void)	Registers 0x631300 with _atexit	verified	one	collision/overview#resolution-file-initializers	
@@ -7253,8 +7253,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6384b0	19	InitCombatLogXpSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6384d0	5	InitCombatLogXpSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6384e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6384e0	19	InitCombatLogXpSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x638500	5	InitCombatLogXpCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x638510, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
-0x638510	11	InitCombatLogXpCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
+0x638500	5	InitConsoleCopy1Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638510, a static initializer	verified	one	objectlayer/overview#object-files	
+0x638510	11	InitConsoleCopy1		console	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/overview#object-files	
 0x63b460	352	ConsoleScreenInitialize	idb	console			Initializes the console screen and installs the confirm-close callback 0x63c9a0	inferred	none	core/input#close-and-quit	
 0x63c9a0	8	ConfirmCloseCallback		console			Closes the current context through 0x63cdf0 and returns 0	verified	one	core/input#close-and-quit	
 0x63c9b0	203	ConsoleScreenShutdown		console			Shuts the console screen down and removes the confirm-close callback	inferred	none	core/input#close-and-quit	
@@ -12174,14 +12174,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ac530	26	AttachProducerType5Copy		camera	unreached	void __fastcall (void *object, uint32_t id, void *callback, void *context, float key)	Calls 0x7ac410 with type 5	inferred	none	camera#unreached-functions	
 0x7ac550	26	AttachScalarProducer		camera	unreached	void __fastcall (void *object, uint32_t id, void *callback, void *context, float key)	Calls 0x7ac410 with type 6	inferred	none	camera#unreached-functions	
 0x7ac570	41	GetNextLink		camera	orchestration	void * __thiscall (void *link, int32_t link_offset)	Returns the link a node's link points at, or the list head marked by its low bit	verified	one	camera#lifetime	
-0x7ac5a0	5	InitCameraTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5b0; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	one	camera#object-file-and-initializers	
-0x7ac5c0	5	InitCameraInvTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5d0; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	one	camera#object-file-and-initializers	
-0x7ac5f0	5	InitCameraInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac600; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7ac600	11	InitCameraInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf573c, which nothing reads	verified	one	camera#object-file-and-initializers	
-0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7ac620	19	InitDefaultFov		camera	primitive	void __cdecl (void)	Stores π·0.5 as a float in 0xcf5738, the default field of view	verified	one	camera#object-file-and-initializers	
+0x7ac5a0	5	InitCameraTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5b0; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	one	camera#object-files-and-initializers	
+0x7ac5c0	5	InitCameraInvTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5d0; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	one	camera#object-files-and-initializers	
+0x7ac5f0	5	InitCameraInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac600; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7ac600	11	InitCameraInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf573c, which nothing reads	verified	one	camera#object-files-and-initializers	
+0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7ac620	19	InitDefaultFov		camera	primitive	void __cdecl (void)	Stores π·0.5 as a float in 0xcf5738, the default field of view	verified	one	camera#object-files-and-initializers	
 0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	
 0x7ac810	140	CCamera::ComputeEye		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes target - distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
 0x7ac8a0	134	CCamera::ComputeTarget		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes eye + distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
@@ -12218,15 +12218,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ade00	102	DeleteScalarProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks a scalar property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7ade70	102	DeleteVectorProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, uint32_t flags)	Unlinks a vector property and frees it when bit 0 of flags is set	verified	one	camera#lifetime	
 0x7adee0	60	UnlinkListNode		camera	orchestration	void __thiscall (void *link)	Unlinks a node from its list and clears its link	verified	one	camera#lifetime	
-0x7adf20	5	InitCameraTwoPi2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adf30; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7adf30	15	InitCameraTwoPi2		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5744, which only 0x7adf50 reads	verified	one	camera#object-file-and-initializers	
-0x7adf40	5	InitCameraInvTwoPi2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adf50; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7adf50	19	InitCameraInvTwoPi2		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5744] as a float in 0xcf5740, which nothing reads	verified	one	camera#object-file-and-initializers	
+0x7adf20	5	InitCameraTwoPi2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adf30; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7adf30	15	InitCameraTwoPi2		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5744, which only 0x7adf50 reads	verified	one	camera#object-files-and-initializers	
+0x7adf40	5	InitCameraInvTwoPi2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adf50; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7adf50	19	InitCameraInvTwoPi2		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5744] as a float in 0xcf5740, which nothing reads	verified	one	camera#object-files-and-initializers	
 0x7adf70	25	GetNodeLink		camera	orchestration	void * __thiscall (void *list, void *node)	Returns a node's link (the node plus the list's link offset), or the head for a null node	verified	one	camera#lifetime	
-0x7adf90	5	InitCameraInfinity2Thunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7adfa0; a static initializer	verified	one	camera#object-file-and-initializers	
-0x7adfa0	11	InitCameraInfinity2		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf5748, which nothing reads	verified	one	camera#object-file-and-initializers	
-0x7adfb0	75	SetParticleDensity		camera	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	
-0x7ae000	7	GetParticleDensity		camera	orchestration	float __cdecl (void)	Returns 0x87d5fc	verified	one	camera#particle-density	
+0x7adf90	5	InitParticleRegistryInfinityThunk		models	orchestration	void __cdecl (void)	Jumps to 0x7adfa0; a static initializer	verified	one	camera#object-files-and-initializers	
+0x7adfa0	11	InitParticleRegistryInfinity		models	orchestration	void __cdecl (void)	Copies +inf into 0xcf5748, which nothing reads	verified	one	camera#object-files-and-initializers	
+0x7adfb0	75	SetParticleDensity		models	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	
+0x7ae000	7	GetParticleDensity		models	orchestration	float __cdecl (void)	Returns 0x87d5fc	verified	one	camera#particle-density	
 0x7ae010	382	ParticleRegistryGet		models	primitive		Returns the particle emitter registry, creating it and the 128-entry noise table on first use	verified	one	models/cache#noise-table	
 0x7ae190	58	ParticleRegistryDestroy		models	host		Releases the particle buffers, then destroys and frees the particle emitter registry	verified	one	models/cache#scene-creation-and-teardown	
 0x7ae1d0	98	ParticleRegistryDestruct		models	host		Releases the registry's emitters and frees its four emitter arrays	verified	one	models/particles#registries	
@@ -12581,10 +12581,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7be490	282	BuildAxisRotation		cmath			Builds a rotation matrix about an axis by an angle	inferred	none	collision/kinematics#spline-follower	
 0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
 0x7c2c40	580	IntersectRayTriangle		cmath		uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle and returns its fraction	inferred	none		
-0x7c47e0	5	InitSharedATwoPiThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
-0x7c47f0	15	InitSharedATwoPi		collision	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#shared-file-initializers	
-0x7c4800	5	InitSharedAInvTwoPiThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
-0x7c4810	19	InitSharedAInvTwoPi		collision	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	collision/overview#shared-file-initializers	
+0x7c47e0	5	InitGeometryTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
+0x7c47f0	15	InitGeometryTwoPi		unassigned	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
+0x7c4800	5	InitGeometryInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	
+0x7c4810	19	InitGeometryInvTwoPi		unassigned	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	collision/overview#object-files	
 0x7c4830	5	InitSharedAInfinityThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c4840, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
 0x7c4840	11	InitSharedAInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#shared-file-initializers	
 0x7c4850	220	CMovement::InitState		collision	orchestration	CMovement * __thiscall (CMovement *this, const float *position, float facing, const uint64_t *owner)	Stores the position and facing as live and anchor values, zeroes the kinematic fields and stamps the clock	verified	one	collision/kinematics#shared-constructor	
@@ -12740,8 +12740,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c7880	19	InitSharedSq10E		collision	primitive	void __cdecl (void)	Stores 10² = 100 as a float	verified	one	collision/overview#shared-file-initializers	
 0x7c78a0	5	InitSharedPoint05Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c78b0, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
 0x7c78b0	19	InitSharedPoint05		collision	primitive	void __cdecl (void)	Stores 0.5/10 = 0.05 as a float	verified	one	collision/overview#shared-file-initializers	
-0x7c78d0	5	InitSharedInfinityThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
-0x7c78e0	11	InitSharedInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#shared-file-initializers	
+0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
+0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
 0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	
 0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none		
 0x7e4da0	5	SpellCastTargetsInitCopy1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4db0; a static initializer	verified	one	spell/layout#static-initializers	
