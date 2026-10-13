@@ -54,6 +54,37 @@ CFrameStrataNode	0x0018	4	CSimpleFrame *	m_cursor	ui	Holds the next frame the up
 CFrameStrataNode	0x001c	240	uint8_t[240]	m_batches	ui	Holds five draw batches of 0x30 bytes, one per layer	verified	one	ui/strata#the-draw-pass
 CFrameStrataNode	0x010c	4	uint32_t	m_dirtyLayers	ui	Holds a bit per draw layer to rebuild	verified	one	ui/strata#dirty-marks
 CFrameStrataNode	0x0110	12	uint32_t[3]	m_drawBatches	ui	Holds the list of batches the draw pass draws	verified	one	ui/strata#the-draw-pass
+CGContainer_C	0x0348	4	uint32_t *	m_containerFields	objectlayer	Holds the address of field 48, CONTAINER_FIELD_NUM_SLOTS, written by 0x5d76f0	verified	one	objectlayer/items#the-container
+CGContainer_C	0x034c	4	uint32_t *	m_containerWatchCopy	objectlayer	Holds the address of the container part of the watch copy, written by 0x5d76f0	verified	one	objectlayer/items#the-container
+CGContainer_C	0x0350	888	uint8_t[888]	m_containerWatchers	objectlayer	Holds the 74 container field watcher lists, 12 bytes each	verified	one	objectlayer/items#the-container
+CGContainer_C	0x06c8	4	uint32_t	m_slotCount	objectlayer	Holds CONTAINER_FIELD_NUM_SLOTS, the slot list's count	verified	one	objectlayer/items#the-container
+CGContainer_C	0x06cc	4	uint64_t *	m_slotGuids	objectlayer	Holds the address of the slot GUID fields	verified	one	objectlayer/items#the-container
+CGContainer_C	0x06d0	8	uint64_t	m_slotListGuid	objectlayer	Holds the container's GUID for its slot list	verified	one	objectlayer/items#the-container
+CGContainer_C	0x06d8	1	uint8_t	m_slotListByte	objectlayer	Holds a byte 0 the slot list ends with	verified	one	objectlayer/items#the-container
+CGGameObject_C	0x0110	4	uint32_t *	m_gameObjectFields	objectlayer	Holds the address of field 6, GAMEOBJECT_CREATED_BY, written by 0x5f6ef0	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0118	240	uint8_t[240]	m_gameObjectWatchers	objectlayer	Holds the 20 game object field watcher lists, 12 bytes each	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0208	8	uint8_t[8]	m_transportLink	objectlayer	Holds the object's link in the transport list	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0210	4	void *	m_handler	objectlayer	Holds the type handler	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0214	4	void *	m_record	objectlayer	Holds the record, once it arrives	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0218	64	float[16]	m_worldMatrix	objectlayer	Holds the world matrix: translation, rotation and scale	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0260	24	float[6]	m_worldBox	objectlayer	Holds the model's collision box carried by the world matrix	verified	one	objectlayer/gameobjects#world-transform-and-box
+CGGameObject_C	0x0278	4	int32_t	m_pathTimeOffset	objectlayer	Holds the path time offset: the update's last u32 less the time	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x027c	4	uint32_t	m_state	objectlayer	Holds GAMEOBJECT_STATE as the handler last saw it	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0280	4	uint32_t	m_pendingAnimEvent	objectlayer	Holds an animation event waiting for the model	verified	one	objectlayer/gameobjects#the-game-object
+CGGameObject_C	0x0284	4	uint32_t	m_collides	objectlayer	Holds 1 when the object collides	verified	one	objectlayer/gameobjects#the-game-object
+CGItem_C	0x0110	4	void *	m_secondaryVtable	objectlayer	Holds the item's one-slot vtable, 0x80ae24 then 0x80ada0	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0114	4	uint32_t *	m_itemFields	objectlayer	Holds the address of field 6, ITEM_FIELD_OWNER, written by 0x5d81b0	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0118	4	uint32_t *	m_itemWatchCopy	objectlayer	Holds the address of the item part of the watch copy, written by 0x5d81b0	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x011c	504	uint8_t[504]	m_itemWatchers	objectlayer	Holds the 42 item field watcher lists, 12 bytes each	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0314	4	uint32_t	m_itemFlags	objectlayer	Holds bit 0, the interface's item lock, and bit 1, the record's arrival	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0318	1	uint8_t	m_cachedClass	objectlayer	Holds the record's class as a byte	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0319	1	uint8_t	m_cachedSubclass	objectlayer	Holds the record's subclass as a byte	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x031a	1	uint8_t	m_cachedMaterial	objectlayer	Holds the record's material as a byte	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x031b	1	uint8_t	m_cachedInventoryType	objectlayer	Holds the record's inventory type as a byte	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x031c	1	uint8_t	m_cachedRecordByte	objectlayer	Holds the record byte at +0x1b4	verified	one	objectlayer/items#the-item-object
+CGItem_C	0x0320	4	uint32_t	m_expiry	objectlayer	Holds the time the item expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
+CGItem_C	0x0324	28	uint32_t[7]	m_enchantExpiry	objectlayer	Holds the time each enchantment slot expires, 0 for none	verified	one	objectlayer/items#item-and-enchantment-timers
+CGItem_C	0x0340	4	void *	m_groupSounds	objectlayer	Holds the ItemGroupSounds row of the display, set when the record arrives	verified	one	objectlayer/items#the-item-record
 CGObject_C	0x0000	4	void *	__vfptr	objectlayer	Holds the type's vtable, stored last by each constructor	verified	one	objectlayer/classes#constructors-and-final-vtables
 CGObject_C	0x0008	4	uint32_t *	m_fields	objectlayer	Holds the field array, written by 0x613980	verified	one	objectlayer/classes#field-storage
 CGObject_C	0x000c	4	uint32_t *	m_watchCopy	objectlayer	Holds the copy array of the watched fields, written by 0x613980	verified	one	objectlayer/classes#field-storage

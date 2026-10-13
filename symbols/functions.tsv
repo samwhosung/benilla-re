@@ -1837,8 +1837,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47cf20	15	InitGameObjFieldsDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47cf30	5	InitGameObjFieldsQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47cf40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47cf40	19	InitGameObjFieldsQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x47cf60	134			objectlayer	primitive		Runs its object file code that calls TransformPoint; not read here	inferred	none		
-0x47cff0	16			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x47cf60	134			objectlayer	primitive	void __fastcall (const float *matrix, uint32_t count, float *out)	Places a chair's seats 1 yard apart along its local y axis through its world matrix	verified	one	objectlayer/gameobjecttypes#chairs	
+0x47cff0	16			objectlayer	orchestration		Returns whether a game object's section names type 19, a mailbox	verified	one	objectlayer/gameobjects#usable	
 0x47d000	9	GameObjectWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the game object's watched field count, 3 + 5	verified	one	objectlayer/fields#watched-fields	
 0x47d010	25	GameObjectWatchedIndex		objectlayer	orchestration	uint32_t __fastcall (uint32_t field)	Returns a field's position among the game object's watched fields	verified	one	objectlayer/fields#watched-fields	
 0x47d030	5	InitPlayerFieldsSquare1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47d040, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -3905,21 +3905,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d7690	41			objectlayer	primitive		Fills slot 5 of the corpse vtable; its body is not read here	inferred	none		
 0x5d76c0	10			objectlayer	orchestration		Returns the float at +0x8 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
 0x5d76d0	28			objectlayer	orchestration		Fills slot 21 of the corpse vtable; its body is not read here	inferred	none		
-0x5d76f0	54			objectlayer	primitive		Runs the container file code that calls ItemWatchedCount; not read here	inferred	none		
-0x5d7730	148			objectlayer	primitive		Runs the container file code not read here	inferred	none		
-0x5d77d0	187			objectlayer	primitive		Fills slot 0 of the container vtable; its body is not read here	inferred	none		
-0x5d7890	65			objectlayer	primitive		Fills slot 2 of the container vtable; its body is not read here	inferred	none		
-0x5d78e0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5d78f0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5d7900	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/overview#small-bodies	
-0x5d7910	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/overview#small-bodies	
-0x5d7920	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/overview#small-bodies	
-0x5d7930	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/overview#small-bodies	
-0x5d7940	17			objectlayer	unreached		Runs the container file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d7960	13			objectlayer	unreached		Runs the container file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d7970	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
-0x5d7980	39			objectlayer	unreached		Runs the container file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d79b0	30			objectlayer	unreached		Runs the container file code not read here	inferred	none	objectlayer/overview#unreached-functions	
+0x5d76f0	54			objectlayer	primitive		Points a container's slot section and watch copy past the item's	verified	one	objectlayer/items#the-container	
+0x5d7730	148			objectlayer	primitive	CGContainer_C * __thiscall (CGContainer_C *this, uint32_t time, void *block)	Builds a container: the item, 74 more watcher lists and the slot list	verified	one	objectlayer/items#the-container	
+0x5d77d0	187			objectlayer	primitive		Destroys a container and frees it on bit 0	verified	one	objectlayer/items#the-container	
+0x5d7890	65			objectlayer	primitive		Reactivates a container and the item in each slot	verified	one	objectlayer/items#the-container	
+0x5d78e0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/items#the-container	
+0x5d78f0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/items#unreached-item-code	
+0x5d7900	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7910	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7920	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7930	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7940	17			objectlayer	unreached		Returns a container's slot count capped at 4	verified	one	objectlayer/items#unreached-item-code	
+0x5d7960	13			objectlayer	unreached		Returns a container's slot count plus 3, over 4	verified	one	objectlayer/items#unreached-item-code	
+0x5d7970	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/items#unreached-item-code	
+0x5d7980	39			objectlayer	unreached		Copies bytes into a container's slot section	verified	one	objectlayer/items#unreached-item-code	
+0x5d79b0	30			objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, 0xc0, else -1	verified	one	objectlayer/items#unreached-item-code	
 0x5d79d0	5	InitItemCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d79e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d79e0	11	InitItemCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d79f0	5	InitItemDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7a00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -3980,88 +3980,88 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d7ee0	19	InitItemSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d7f00	5	InitItemSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7f10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f10	19	InitItemSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d7f30	7			objectlayer	orchestration		Returns the address of +0x6c8 of its object	verified	one	objectlayer/overview#small-bodies	
+0x5d7f30	7			objectlayer	orchestration		Returns the address of +0x6c8 of its object	verified	one	objectlayer/items#the-container	
 0x5d7f40	5	InitItemCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7f50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f50	11	InitItemCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d7f60	10	InitItemOther1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5d7f70, then jumps to 0x5d8030 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f70	190	InitInventoryArtTable		objectlayer	primitive	void __cdecl (void)	Builds an empty hash table global whose nodes hold inventory art	inferred	none	objectlayer/initializers#other-initializers	
 0x5d8030	12	InitItemRegisterExit2		objectlayer	orchestration	void __cdecl (void)	Registers 0x5d8040 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5d8040	359	ReleaseInventoryArtTable		objectlayer	host	void __cdecl (void)	Unlinks and frees the inventory art hash table's nodes and buckets, at exit	inferred	none	objectlayer/initializers#other-initializers	
-0x5d81b0	51			objectlayer	primitive		Runs Item_C.cpp code that calls ObjectWatchedCount, CGObject_C::SetStorage; not read here	inferred	none		
-0x5d81f0	213			objectlayer	primitive		Runs Item_C.cpp code that calls GetItemClass, GetItemSubClass; not read here	inferred	none		
-0x5d82d0	43			objectlayer	orchestration		Fills slot 0 of the item vtable; its body is not read here	inferred	none		
-0x5d8300	138			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5d8390	99			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d8400	37			objectlayer	orchestration		Runs Item_C.cpp code not read here	inferred	none		
+0x5d81b0	51			objectlayer	primitive		Points an item's field section and watch copy	verified	one	objectlayer/items#the-item-object	
+0x5d81f0	213			objectlayer	primitive	CGItem_C * __thiscall (CGItem_C *this, uint32_t time, void *block)	Builds an item: watcher lists, flags, expiries and the cached record bytes	verified	one	objectlayer/items#the-item-object	
+0x5d82d0	43			objectlayer	orchestration		Destroys an item and frees it on bit 0	verified	one	objectlayer/items#the-item-object	
+0x5d8300	138			objectlayer	primitive		Asks for an item's record; on a miss counts the owner's pending records	verified	one	objectlayer/items#the-item-record	
+0x5d8390	99			objectlayer	primitive		Hands an arrived item record to the item and lowers the owner's pending count	verified	one	objectlayer/items#the-item-record	
+0x5d8400	37			objectlayer	orchestration		Runs an item's creation and asks for its record	verified	one	objectlayer/items#the-item-record	
 0x5d8430	5			objectlayer	orchestration		Jumps to 0x5d8300	verified	one	objectlayer/overview#small-bodies	
-0x5d8440	533			objectlayer	primitive		Signals the interface event ITEM_LOCK_CHANGED; not read further here	inferred	none		
-0x5d8660	367			objectlayer	primitive		Holds an item vtable slot that cancels the cast when the item is the pending cast's	inferred	none	spell/cancel#who-cancels-a-cast	
-0x5d87d0	223			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5d88b0	148			objectlayer	orchestration		Runs Item_C.cpp code that calls SysMsgPrintf; not read here	inferred	none		
-0x5d8950	308			objectlayer	primitive		Runs Item_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5d8a90	91			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5d8af0	12			objectlayer	orchestration		Runs Item_C.cpp code not read here	inferred	none		
-0x5d8b00	181			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SStrCopy, SStrPrintf; not read here	inferred	none		
-0x5d8bc0	48			objectlayer	orchestration		Runs Item_C.cpp code not read here	inferred	none		
+0x5d8440	533			objectlayer	primitive		Takes an item's arrived record: cached bytes, sound row, item lock and interface refreshes	verified	one	objectlayer/items#the-item-record	
+0x5d8660	367			objectlayer	primitive		Deactivates an item: drops cursor, cast, interface and text references and the record request	verified	one	objectlayer/items#item-slots	
+0x5d87d0	223			objectlayer	primitive		Tears an item down: record request, watcher lists and the object	verified	one	objectlayer/items#the-item-object	
+0x5d88b0	148			objectlayer	orchestration	const char * __fastcall (uint32_t displayId)	Returns an item display's inventory icon, cached, or INV_Misc_QuestionMark logging NOINVENTORYICON	verified	one	objectlayer/items#inventory-icons	
+0x5d8950	308			objectlayer	primitive		Inserts an icon name into the icon cache by display id	verified	one	objectlayer/items#inventory-icons	
+0x5d8a90	91			objectlayer	primitive		Returns the cached icon name of a display id, or 0	verified	one	objectlayer/items#inventory-icons	
+0x5d8af0	12			objectlayer	orchestration		Returns an item's inventory icon	verified	one	objectlayer/items#inventory-icons	
+0x5d8b00	181			objectlayer	orchestration	void __fastcall (char *out, uint32_t size, uint32_t entry, uint32_t propertyId)	Writes an item's name with its random property suffix	verified	one	objectlayer/items#item-names	
+0x5d8bc0	48			objectlayer	orchestration		Writes an item's name, without a suffix when it is wrapped	verified	one	objectlayer/items#item-names	
 0x5d8bf0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5d8c00	121			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrGetActivePlayer, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read	inferred	none		
-0x5d8c80	125			objectlayer	primitive		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5d8d00	1410			objectlayer	primitive		Signals the interface event USE_BIND_CONFIRM; not read further here	inferred	none		
-0x5d9290	68			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d92e0	41			objectlayer	unreached		Runs Item_C.cpp code that calls CGObject_C::SetUpdateField; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9310	39			objectlayer	unreached		Runs Item_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9340	21			objectlayer	unreached		Runs Item_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9360	154			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrSetTypeMirrorHandler; not read here	inferred	none		
-0x5d9400	319			objectlayer	orchestration		Signals the interface event ITEM_LOCK_CHANGED; not read further here	inferred	none		
-0x5d9540	88			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, FireBagCooldownEvent; not read here	inferred	none		
-0x5d95a0	51			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d95e0	201			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer,	inferred	none		
-0x5d96b0	47			objectlayer	orchestration		Runs Item_C.cpp code not read here	inferred	none		
-0x5d96e0	219			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5d97c0	373			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, SetCharacterModelOption; not read here	inferred	none		
-0x5d9940	241			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrClearTypeMirrorHandler; not read here	inferred	none		
-0x5d9a40	12			objectlayer	unreached		Runs Item_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9a50	39			objectlayer	orchestration		Runs Item_C.cpp code not read here	inferred	none		
-0x5d9a80	11			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5d9a90	216			objectlayer	orchestration		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGPlayer_C::FindSlotIndex; not read here	inferred	none		
-0x5d9b70	142			objectlayer	unreached		Runs Item_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9c00	55			objectlayer	primitive		Runs Item_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x5d8c00	121			objectlayer	primitive		Returns whether an item's record has a use spell: a spell whose trigger is 0	verified	one	objectlayer/items#item-use-gates	
+0x5d8c80	125			objectlayer	primitive		Returns the first use spell of an item's record, or 0	verified	one	objectlayer/items#item-use-gates	
+0x5d8d00	1410			objectlayer	primitive	uint8_t __thiscall (CGItem_C *this, uint64_t *target, uint32_t confirmed)	Uses an item: wrapping, page text, control, equip, repair, disarm, form and bind gates, then casts	verified	one	objectlayer/items#using-an-item	
+0x5d9290	68			objectlayer	orchestration		Uses the item kept for a bind-on-use confirmation, confirmed	verified	one	objectlayer/items#item-use-gates	
+0x5d92e0	41			objectlayer	unreached		Passes an index below 6 to CGObject_C::SetUpdateField, else stores the value at +0xfc + 4 times it	verified	one	objectlayer/items#unreached-item-code	
+0x5d9310	39			objectlayer	unreached		Copies bytes into an item's field section	verified	one	objectlayer/items#unreached-item-code	
+0x5d9340	21			objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, else -1	verified	one	objectlayer/items#unreached-item-code	
+0x5d9360	154			objectlayer	orchestration		Registers the six item field watchers	verified	one	objectlayer/items#item-field-watchers	
+0x5d9400	319			objectlayer	orchestration		Watches ITEM_FIELD_STACK_COUNT: the item lock step and interface refreshes	verified	one	objectlayer/items#item-field-watchers	
+0x5d9540	88			objectlayer	orchestration		Watches ITEM_FIELD_SPELL_CHARGES: refreshes and signals BAG_UPDATE_COOLDOWN	verified	one	objectlayer/items#item-field-watchers	
+0x5d95a0	51			objectlayer	orchestration		Watches ITEM_FIELD_ENCHANTMENT: passes the item to the enchantment refresh	verified	one	objectlayer/items#item-field-watchers	
+0x5d95e0	201			objectlayer	orchestration		Watches OBJECT_FIELD_ENTRY: asks for the new record and refreshes	verified	one	objectlayer/items#item-field-watchers	
+0x5d96b0	47			objectlayer	orchestration		Refreshes the interface when a changed entry's record arrives	verified	one	objectlayer/items#item-field-watchers	
+0x5d96e0	219			objectlayer	primitive		Watches ITEM_FIELD_FLAGS: refreshes an equipped item whose bit 0x10 changed	verified	one	objectlayer/items#item-field-watchers	
+0x5d97c0	373			objectlayer	primitive		Watches ITEM_FIELD_DURABILITY: hides or shows a broken weapon or shield on the model	verified	one	objectlayer/items#item-field-watchers	
+0x5d9940	241			objectlayer	primitive		Removes the item field watchers and empties the icon cache	verified	one	objectlayer/items#item-field-watchers	
+0x5d9a40	12			objectlayer	unreached		Returns the material flag of an item's record	verified	one	objectlayer/items#unreached-item-code	
+0x5d9a50	39			objectlayer	orchestration	uint32_t __fastcall (uint32_t materialId)	Returns bit 0 of a Material.dbc row's flags	verified	one	objectlayer/items#record-getters	
+0x5d9a80	11			objectlayer	primitive		Sets ITEM_FIELD_FLAGS bit 0x2	verified	one	objectlayer/items#item-slots	
+0x5d9a90	216			objectlayer	orchestration		Refreshes an item's enchantment display and its equipped visual	verified	one	objectlayer/items#item-field-watchers	
+0x5d9b70	142			objectlayer	unreached		Returns an item's visual: -1 with an ItemVisuals row, else its first enchantment's	verified	one	objectlayer/items#unreached-item-code	
+0x5d9c00	55			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t seconds)	Sets an item's expiry to now plus the given seconds, or clears it for 0	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c40	5	InitItemDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9c50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9c50	15	InitItemDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d9c60	40			objectlayer	primitive		Runs Item_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x5d9c60	40			objectlayer	primitive		Returns an item's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c90	5	InitItemQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9ca0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9ca0	19	InitItemQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d9cc0	63			objectlayer	primitive		Runs Item_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x5d9d00	57			objectlayer	primitive		Runs Item_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x5d9d40	21			objectlayer	orchestration		Fills slot 11 of the item vtable and others; its body is not read here	inferred	none		
-0x5d9d60	164			objectlayer	orchestration		Fills slot 24 of the item vtable and others; its body is not read here	inferred	none		
-0x5d9e10	95			objectlayer	orchestration		Fills slot 29 of the item vtable and others; its body is not read here	inferred	none		
-0x5d9e70	89			objectlayer	orchestration		Fills slot 28 of the item vtable and others; its body is not read here	inferred	none		
-0x5d9ed0	92			objectlayer	unreached		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d9f30	88	GetItemClass		objectlayer	orchestration		Returns the first field of an item's stats record, or 0 without one	inferred	none	spell/checks#equipped-item-and-ammo	
-0x5d9f90	89	GetItemSubClass		objectlayer	orchestration		Returns the second field of an item's stats record, or 0 without one	inferred	none	spell/checks#equipped-item-and-ammo	
-0x5d9ff0	89			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da050	92			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da0b0	89			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da110	92			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da170	92			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da1d0	118			objectlayer	primitive		Runs Item_C.cpp code that calls GetItemClass; not read here	inferred	none		
-0x5da250	16			objectlayer	unreached		Runs Item_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5da260	64			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da2a0	22			objectlayer	primitive		Returns the flags dword +0x20 of an item's cached record, 0 when absent	inferred	none	spell/cast#cast-attempt-commit	
-0x5da2c0	103			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5da330	450			objectlayer	primitive		Runs Item_C.cpp code that calls __ftol, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, GetItemClass; not read here	inferred	none		
-0x5da500	101			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da570	101			objectlayer	orchestration		Runs Item_C.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x5da5e0	456			objectlayer	primitive		Runs Item_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, FindInventoryItemByEntry; not read here	inferred	none		
-0x5da7b0	110			objectlayer	orchestration		Runs Item_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5da820	182			objectlayer	primitive		Runs Item_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x5da8e0	189			objectlayer	primitive		Runs Item_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5da9a0	190			objectlayer	primitive		Runs Item_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5daa60	60			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5daaa0	136			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5dab30	108			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5daba0	135			objectlayer	primitive		Runs Item_C.cpp code that calls SMemFree; not read here	inferred	none		
+0x5d9cc0	63			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t slot, uint32_t seconds)	Sets an enchantment slot's expiry to now plus the given seconds, or clears it for 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9d00	57			objectlayer	primitive		Returns an enchantment slot's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9d40	21			objectlayer	orchestration		Writes -1 and returns 1	verified	one	objectlayer/items#item-slots	
+0x5d9d60	164			objectlayer	orchestration		Sends opcode 0x107 with the item's GUID while the active player is alive	verified	one	objectlayer/items#item-slots	
+0x5d9e10	95			objectlayer	orchestration		Returns the page text id of an item's record, asking with a callback	verified	one	objectlayer/items#record-getters	
+0x5d9e70	89			objectlayer	orchestration		Returns an item's record name, or 0	verified	one	objectlayer/items#record-getters	
+0x5d9ed0	92			objectlayer	unreached		Returns the record dword +0x5c of an item	verified	one	objectlayer/items#unreached-item-code	
+0x5d9f30	88	GetItemClass		objectlayer	orchestration		Returns the class of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5d9f90	89	GetItemSubClass		objectlayer	orchestration		Returns the subclass of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5d9ff0	89			objectlayer	orchestration		Returns the inventory type of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5da050	92			objectlayer	orchestration		Returns the bag family of an item's record	verified	one	objectlayer/items#record-getters	
+0x5da0b0	89			objectlayer	orchestration		Returns the display id of an item's record	verified	one	objectlayer/items#record-getters	
+0x5da110	92			objectlayer	orchestration		Returns the material of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5da170	92			objectlayer	orchestration		Returns the record dword +0x1b4 of an item	verified	one	objectlayer/items#the-item-object	
+0x5da1d0	118			objectlayer	primitive	uint32_t __thiscall (CGItem_C *this, int32_t slot, uint32_t flag)	Returns whether an item fits an equipment slot by its inventory type mask	verified	one	objectlayer/items#equipment-slots	
+0x5da250	16			objectlayer	unreached		Returns whether the record dword +0x1b4 of an item is above 4	verified	one	objectlayer/items#unreached-item-code	
+0x5da260	64			objectlayer	orchestration		Returns an item's record, or 0	verified	one	objectlayer/items#record-getters	
+0x5da2a0	22			objectlayer	primitive		Returns the flags of an item's record through its secondary vtable	verified	one	objectlayer/items#record-getters	
+0x5da2c0	103			objectlayer	primitive		Returns whether an item is bound: flags bit 0 or a binding enchantment	verified	one	objectlayer/items#item-use-gates	
+0x5da330	450			objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	
+0x5da500	101			objectlayer	orchestration		Returns whether the record dword +0x1c8 is non-zero	verified	one	objectlayer/items#record-getters	
+0x5da570	101			objectlayer	orchestration		Returns whether the record dword +0x1cc is non-zero	verified	one	objectlayer/items#record-getters	
+0x5da5e0	456			objectlayer	primitive		Finds how the active player opens a lock: a spell of open-lock effect with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
+0x5da7b0	110			objectlayer	orchestration		Frees an icon cache node, its name and its links	verified	one	objectlayer/items#inventory-icons	
+0x5da820	182			objectlayer	primitive		Allocates an icon cache node and links it at the list's tail	verified	one	objectlayer/items#inventory-icons	
+0x5da8e0	189			objectlayer	primitive		Empties the icon cache: unlinks its nodes and buckets and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
+0x5da9a0	190			objectlayer	primitive		Destroys the icon cache table	verified	one	objectlayer/items#inventory-icons	
+0x5daa60	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/items#inventory-icons	
+0x5daaa0	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/items#inventory-icons	
+0x5dab30	108			objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/items#inventory-icons	
+0x5daba0	135			objectlayer	primitive		Unlinks every bucket list of the icon table and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
 0x5dac30	5	InitItemProduct5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dac40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5dac40	19	InitItemProduct5		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5dac60	5	InitItemProduct6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dac70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -4072,19 +4072,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5dacd0	19	InitItemProduct8		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5dacf0	5	InitItemQuotient5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dad00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5dad00	19	InitItemQuotient5		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5dad20	41			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5dad50	483			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5daf40	25			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5daf60	33			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5daf90	181			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5db050	77			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
+0x5dad20	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5dad50	483			objectlayer	primitive		Doubles the icon cache's buckets and rehashes when an insert walks more than 13 nodes, up to mask 0x1fff	verified	one	objectlayer/items#inventory-icons	
+0x5daf40	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/items#inventory-icons	
+0x5daf60	33			objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5daf90	181			objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/items#inventory-icons	
+0x5db050	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/items#inventory-icons	
 0x5db0a0	5	InitItemSquare19Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5db0b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db0b0	19	InitItemSquare19		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5db0d0	5	InitItemQuotient6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5db0e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db0e0	19	InitItemQuotient6		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5db100	12			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5db110	316			objectlayer	primitive		Runs Item_C.cpp code not read here	inferred	none		
-0x5db250	264			objectlayer	primitive		Runs Item_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
+0x5db100	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5db110	316			objectlayer	primitive		Sets the icon table's bucket count, making new buckets and unlinking removed ones	verified	one	objectlayer/items#inventory-icons	
+0x5db250	264			objectlayer	primitive		Reallocates the icon table's bucket array, moving each bucket list	verified	one	objectlayer/items#inventory-icons	
 0x5db360	10	InitPlayerCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5db370, then jumps to 0x5db390 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db370	22	InitPlayerCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x5db390	12	InitPlayerRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x5db3a0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -4595,304 +4595,304 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f15e0	19	InitGameObjSquare16		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f1600	5	InitGameObjSquare17Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f1610, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f1610	19	InitGameObjSquare17		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f1630	190			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f16f0	190			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f17b0	60			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f17f0	255			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f18f0	372			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1a70	33			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1aa0	136			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1b30	16			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1b40	135			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f1bd0	255			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1cd0	33			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1d00	136			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1d90	108			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1e00	16			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1e10	135			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f1ea0	6			objectlayer	orchestration		Returns 1	verified	one	objectlayer/overview#small-bodies	
-0x5f1eb0	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5f1ec0	5			objectlayer	orchestration		Jumps through slot 21 of its object's vtable	verified	one	objectlayer/overview#small-bodies	
-0x5f1ed0	8			objectlayer	orchestration		Fills slot 28 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1ee0	37			objectlayer	primitive		Fills slot 26 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1f10	30			objectlayer	orchestration		Fills slot 5 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1f30	16			objectlayer	orchestration		Fills slot 6 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1f40	26			objectlayer	orchestration		Fills slot 8 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1f60	13			objectlayer	orchestration		Fills slot 9 of the unit vtable and others; its body is not read here	inferred	none		
-0x5f1f70	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5f1f80	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5f1f90	60			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f1fd0	60			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2010	41			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2040	25			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2060	77			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f20b0	483			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f22a0	25			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f22c0	33			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f22f0	181			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f23b0	77			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2400	12			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2410	31			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2430	133			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f24c0	31			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f24e0	144			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f2570	146			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f2610	17			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2630	41			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2660	41			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2690	491			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2880	176			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f2930	12			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2940	316			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2a80	12			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2a90	316			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2bd0	319			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f2d10	264			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f2e20	264			objectlayer	primitive		Runs GameObject_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
+0x5f1630	190			objectlayer	primitive		Destroys the trade skill table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f16f0	190			objectlayer	primitive		Destroys the proficiency table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f17b0	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f17f0	255			objectlayer	primitive		Empties the trade skill table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f18f0	372			objectlayer	primitive		Inserts a node into a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1a70	33			objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1aa0	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1b30	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1b40	135			objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1bd0	255			objectlayer	primitive		Empties the proficiency table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1cd0	33			objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1d00	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1d90	108			objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1e00	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1e10	135			objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ea0	6			objectlayer	orchestration		Returns 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1eb0	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ec0	5			objectlayer	orchestration		Jumps through slot 21 of its object's vtable	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ed0	8			objectlayer	orchestration		Returns a unit's name	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ee0	37			objectlayer	primitive		Returns 0 for a unit with UNIT_FIELD_FLAGS 0x2 or byte +0x213 bit 0x2, else 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f10	30			objectlayer	orchestration		Writes a unit's world position through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f30	16			objectlayer	orchestration		Returns a unit's world facing through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f40	26			objectlayer	orchestration		Writes a unit's world up vector	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f60	13			objectlayer	orchestration		Returns the GUID at +0x9e0 of a unit	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f70	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f80	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f90	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1fd0	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2010	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2040	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2060	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f20b0	483			objectlayer	primitive		Doubles a hash table's buckets and rehashes when a lookup walks more than 13 nodes, up to 0x2000	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22a0	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22c0	33			objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22f0	181			objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f23b0	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2400	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2410	31			objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2430	133			objectlayer	primitive		Grows a player's InitialSpellStruct array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f24c0	31			objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f24e0	144			objectlayer	primitive		Grows a player's GUILDUPDATETIMESTAMP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2570	146			objectlayer	primitive		Grows a player's ITEMSWAP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2610	17			objectlayer	orchestration		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2630	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2660	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2690	491			objectlayer	primitive		Moves a hash table's nodes into a resized bucket array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2880	176			objectlayer	primitive		Unlinks and frees the nodes of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2930	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2940	316			objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2a80	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2a90	316			objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2bd0	319			objectlayer	primitive		Grows a bucket array by a count, rounding the capacity to its quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2d10	264			objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2e20	264			objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2f30	5	InitGameObjCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f2f40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f2f40	11	InitGameObjCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f2f50	37			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f2f80	226			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer,	inferred	none		
-0x5f3070	180			objectlayer	primitive		Runs GameObject_C.cpp code that calls SStrCopy, SStrPrintf; not read here	inferred	none		
-0x5f3130	678			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, IsDeadOrGhost; not read here	inferred	none		
-0x5f33e0	627			objectlayer	primitive		Runs GameObject_C.cpp code that calls CGGameUI::DisplayError, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord,	inferred	none		
-0x5f3660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f3670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f3680	6			objectlayer	orchestration		Returns 8922952	verified	one	objectlayer/overview#small-bodies	
-0x5f3690	42			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f36c0	13			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f2f50	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds a type handler's base: base vtable, the object, error 0xdb and range 5.0	verified	one	objectlayer/gameobjects#building-the-type-handler	
+0x5f2f80	226			objectlayer	primitive		Decides whether the active player may interact with a game object: reaction, trap lock, flags	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f3070	180			objectlayer	primitive		Picks a game object's cursor: its lock type's cursor, Interact or UnableInteract, by usability	verified	one	objectlayer/gameobjects#cursor	
+0x5f3130	678			objectlayer	primitive		Decides whether the active player may use a game object now, giving the error and the use range	verified	one	objectlayer/gameobjects#usable	
+0x5f33e0	627			objectlayer	primitive		Uses a game object: casts the spell that opens it or sends 0xb1, else shows why its lock refuses	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f3660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f3670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f3680	6			objectlayer	unreached		Returns the empty string	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f3690	42			objectlayer	primitive		Writes a game object's GAMEOBJECT_POS_X to _Z	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f36c0	13			objectlayer	orchestration		Returns a game object's GAMEOBJECT_FACING	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f36d0	10	InitGameObjConst2Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5f36e0, then jumps to 0x5f3720 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f36e0	11	InitGameObjConst2		objectlayer	orchestration	void __cdecl (void)	Stores 0x0080b188 in a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f36f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f3700	5			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f3710	6			objectlayer	orchestration		Returns 8784096	verified	one	objectlayer/overview#small-bodies	
+0x5f36f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f3700	5			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f3710	6			objectlayer	unreached		Returns "Unknown Object Type"	verified	one	objectlayer/gameobjects#unreached-game-object-code	
 0x5f3720	12	InitGameObjRegisterExit2		objectlayer	orchestration	void __cdecl (void)	Registers 0x5f3730 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5f3730	11	InitGameObjConst3		objectlayer	orchestration	void __cdecl (void)	Stores 0x0080b100 in a global	verified	one	objectlayer/initializers#stored-constants	
-0x5f3740	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
+0x5f3740	40			objectlayer	orchestration		Restores the base vtable of the static handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
 0x5f3770	5			objectlayer	orchestration		Jumps to 0x5f3c30	verified	one	objectlayer/overview#small-bodies	
-0x5f3780	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f3780	44			objectlayer	orchestration		Moves a family A handler's looping sound to the object's position	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
 0x5f37b0	5			objectlayer	orchestration		Jumps to 0x5f40c0	verified	one	objectlayer/overview#small-bodies	
-0x5f37c0	22			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f37e0	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f37f0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f3820	24			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3840	49			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3880	109			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f38f0	64			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3930	525			objectlayer	primitive		Runs GameObject_C.cpp code that calls SplatVector3, ClntObjMgrHoldObject, ModelPlayAnimation; not read here	inferred	none		
-0x5f3b50	223			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3c30	119			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3cb0	237			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f3da0	124			objectlayer	primitive		Runs GameObject_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x5f3e20	489			objectlayer	primitive		Runs GameObject_C.cpp code that calls PlaySoundAtArgs, GetActiveCamera, CameraAddShake; not read here	inferred	none		
-0x5f4010	162			objectlayer	orchestration		Runs GameObject_C.cpp code that calls PlaySoundAtArgs; not read here	inferred	none		
-0x5f40c0	24			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f40e0	63			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrUnholdObject; not read here	inferred	none		
-0x5f4120	193			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrUnholdObject; not read here	inferred	none		
-0x5f4220	88			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4280	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4290	42			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f42c0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f42f0	100			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4360	55			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f43a0	40			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f43d0	42			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4400	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4430	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4460	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4490	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f44c0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f44f0	36			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4520	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
+0x5f37c0	22			objectlayer	orchestration		Stops a family A handler's looping sound and restores the base vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f37e0	11			objectlayer	orchestration		Returns whether a family A handler's state is not 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f37f0	43			objectlayer	orchestration		Destroys the family A base handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f3820	24			objectlayer	orchestration		Sends a game object animation event 1 when its byte argument is set	verified	one	objectlayer/gameobjecttypes#animation-events	
+0x5f3840	49			objectlayer	orchestration		Picks the state again once a reactivated object's model is loaded	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3880	109			objectlayer	primitive		Pauses or resumes a family A model by GAMEOBJECT_FLAGS 0x80 in its moving states	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f38f0	64			objectlayer	orchestration		Replays the state on a GAMEOBJECT_ANIMPROGRESS change outside a reactivation	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3930	525			objectlayer	primitive	void __thiscall (void *this, CM2Model *model)	Plays a family A state's animation from the saved progress, falling back for missing ones	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f3b50	223			objectlayer	primitive		Sets a family A handler's state and plays its animation, keeping the reverse progress	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f3c30	119			objectlayer	primitive		Picks a family A handler's state after reactivation from the object's state and progress	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f3cb0	237			objectlayer	primitive		Picks the moving state for a change of GAMEOBJECT_STATE and plays it	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f3da0	124			objectlayer	primitive		Ends the state of an object whose release is pending once its model stops	verified	one	objectlayer/gameobjecttypes#progress-frame-and-reload-slots	
+0x5f3e20	489			objectlayer	primitive		Answers a model event: display sounds, sound kits, camera shakes and looping sounds	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
+0x5f4010	162			objectlayer	orchestration		Plays sound slot n of a game object's display row, a looping one replacing the running one	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes	
+0x5f40c0	24			objectlayer	orchestration		Stops a family A handler's looping sound	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f40e0	63			objectlayer	orchestration		Releases the hold of a played state that holds the object	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f4120	193			objectlayer	orchestration		Moves a family A handler to the next state when its animation ends	verified	one	objectlayer/gameobjecttypes#animation-states	
+0x5f4220	88			objectlayer	orchestration		Plays an event's state when the model has its animation, starting the fade for state 0	verified	one	objectlayer/gameobjecttypes#animation-events	
+0x5f4280	11			objectlayer	unreached		Returns the name of a family A handler's state	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f4290	42			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the door handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f42c0	43			objectlayer	orchestration		Destroys the door handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f42f0	100			objectlayer	orchestration		Returns whether a door is not moving and so may be used	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f4360	55			objectlayer	orchestration		Decides whether a door is usable, refusing a moving one with error 0xe3	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f43a0	40			objectlayer	orchestration		Sets a door's state and stores whether it now collides	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f43d0	42			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the button handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4400	43			objectlayer	orchestration		Destroys the button handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4430	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chest handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4460	43			objectlayer	orchestration		Destroys the chest handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4490	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the trap handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f44c0	43			objectlayer	orchestration		Destroys the trap handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f44f0	36			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the area damage handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4520	43			objectlayer	orchestration		Destroys the area damage handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
 0x5f4550	5	InitGameObjDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f4560, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f4560	15	InitGameObjDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f4570	5	InitGameObjQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f4580, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f4580	19	InitGameObjQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f45a0	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f45d0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4600	277			objectlayer	primitive		Runs GameObject_C.cpp code that calls SplatVector3; not read here	inferred	none		
-0x5f4720	65			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4770	37			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f47a0	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f47d0	28			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f47f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f4800	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4830	42			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4860	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4890	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f48a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f48b0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f48c0	4			objectlayer	orchestration		Returns the dword at +0x10 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5f48d0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4900	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/overview#small-bodies	
-0x5f4910	22			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4930	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/overview#small-bodies	
-0x5f4940	5			objectlayer	orchestration		Jumps to 0x5f4950	verified	one	objectlayer/overview#small-bodies	
-0x5f4950	24			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4970	59			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f49b0	68			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ModelPlayAnimation; not read here	inferred	none		
-0x5f4ab0	142			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4b40	33			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f4b70	4			objectlayer	orchestration		Returns the float at +0x50 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5f4b80	4			objectlayer	orchestration		Returns the address of +0x20 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5f4b90	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f4bc0	255			objectlayer	primitive		Runs GameObject_C.cpp code that calls RemoveTransportFromList, SMemFree; not read here	inferred	none		
-0x5f4cc0	700			objectlayer	primitive		Runs GameObject_C.cpp code that calls __alloca_probe, OsGetAsyncTimeMs, AddTransportToList; not read here	inferred	none		
-0x5f4f80	46			objectlayer	orchestration		Runs GameObject_C.cpp code that calls OsGetAsyncTimeMs, AddTransportToList; not read here	inferred	none		
-0x5f4fb0	233			objectlayer	primitive		Runs GameObject_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, GetActiveCamera; not read here	inferred	none		
-0x5f50a0	1118			objectlayer	primitive		Runs GameObject_C.cpp code that calls EndLoadingScreen, EvaluateSplineFrame, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f5500	179			objectlayer	primitive		Runs GameObject_C.cpp code that calls CMovement::SetFlagBit27; not read here	inferred	none		
-0x5f55c0	34			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f55f0	68			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5640	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f5670	226			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5f5760	74			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f57b0	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f57e0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f57f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f5800	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f5830	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5860	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f5890	39			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f58c0	61			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5900	34			objectlayer	orchestration		Fills slot 29 of the game object vtable; its body is not read here	inferred	none		
-0x5f5930	32			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5950	32			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5970	37			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f59a0	47			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f59d0	83			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5a30	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5a40	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5a50	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5a80	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f5ab0	341			objectlayer	primitive		Runs GameObject_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x5f5c10	33			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5c40	45			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5c70	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f5c80	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f5cb0	188			objectlayer	primitive		Runs GameObject_C.cpp code that calls RemoveTransportFromList, SMemFree; not read here	inferred	none		
-0x5f5d70	34			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5da0	41			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5dd0	233			objectlayer	primitive		Runs GameObject_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, GetActiveCamera; not read here	inferred	none		
-0x5f5ec0	72			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f5f10	841			objectlayer	primitive		Walks a transport game object's list and calls 0x6343b0 on each entry with a distance, direction and matrix	inferred	none	collision/resolve#carrier-push	
-0x5f6260	20			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6280	528			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6490	175			objectlayer	primitive		Runs GameObject_C.cpp code that calls CMovement::SetFlagBit27; not read here	inferred	none		
-0x5f6540	34			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6570	28			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6590	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f65c0	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f65f0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f6600	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f6610	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6640	28			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6660	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f6670	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f6680	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f66b0	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f66e0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6710	73			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x5f6760	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6790	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f67c0	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f67f0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6820	21			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6840	39			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6870	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6880	28			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f68a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f68b0	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f68e0	28			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6900	40			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6930	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6960	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6990	49			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f69d0	308			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGGameUI::DisplayError; not	inferred	none		
-0x5f6b10	221			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x5f6bf0	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6c20	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6c50	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6c80	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6cb0	44			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6ce0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6d10	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6d40	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f6d50	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6d80	42			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6db0	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6de0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5f6e10	21			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6e30	39			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6e60	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6e70	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f6ea0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f6eb0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/overview#small-bodies	
-0x5f6ec0	43			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SMemFree; not read here	inferred	none		
+0x5f45a0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the quest giver handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f45d0	43			objectlayer	orchestration		Destroys the quest giver handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4600	277			objectlayer	primitive		Plays a quest giver's open state or custom animation as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f4720	65			objectlayer	orchestration		Plays a quest giver's close state 4 from state 2 or 3	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f4770	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the binder handler with range 10.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47a0	40			objectlayer	orchestration		Restores the base vtable of the binder handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47d0	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the generic handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f47f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f4800	40			objectlayer	orchestration		Restores the base vtable of the generic handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f4830	42			objectlayer	primitive		Returns whether a generic object's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f4860	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the map object handler, world entity 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4890	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/transports#map-objects	
+0x5f48a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f48b0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f48c0	4			objectlayer	orchestration		Returns the dword at +0x10 of its object	verified	one	objectlayer/transports#map-objects	
+0x5f48d0	43			objectlayer	orchestration		Destroys the map object handler's entity and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4900	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
+0x5f4910	22			objectlayer	orchestration		Destroys the map object handler's entity and restores the base vtable	verified	one	objectlayer/transports#map-objects	
+0x5f4930	5			objectlayer	orchestration		Jumps to 0x5f4970	verified	one	objectlayer/transports#map-objects	
+0x5f4940	5			objectlayer	orchestration		Jumps to 0x5f4950	verified	one	objectlayer/transports#map-objects	
+0x5f4950	24			objectlayer	orchestration		Destroys a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
+0x5f4970	59			objectlayer	orchestration		Creates a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
+0x5f49b0	68			objectlayer	orchestration		Chains a transport entity's animations when one ends: 0xa2 to 0xa3, 0xa4 to 0, others replay	verified	one	objectlayer/transports#map-objects	
+0x5f4ab0	142			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the moving transport handler, path and position from the fields	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4b40	33			objectlayer	primitive		Writes a moving transport's position	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b70	4			objectlayer	orchestration		Returns the float at +0x50 of its object	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b80	4			objectlayer	orchestration		Returns the address of +0x20 of its object	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4b90	43			objectlayer	orchestration		Destroys the moving transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f4bc0	255			objectlayer	primitive		Tears a moving transport handler down: transport list, legs and passengers	verified	one	objectlayer/transports#the-moving-transport	
+0x5f4cc0	700			objectlayer	primitive		Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	
+0x5f4f80	46			objectlayer	orchestration		Reactivates a moving transport: entity, transport list and a tick	verified	one	objectlayer/transports#the-ship-path	
+0x5f4fb0	233			objectlayer	primitive		Deactivates a moving transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
+0x5f50a0	1118			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	
+0x5f5500	179			objectlayer	primitive		Boards a mover onto a moving transport, flagging it while the entity is not ready	verified	one	objectlayer/transports#passengers	
+0x5f55c0	34			objectlayer	orchestration		Tests a point against a moving transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
+0x5f55f0	68			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chair handler with five empty seats and range 100.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5640	40			objectlayer	orchestration		Restores the base vtable of the chair handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5670	226			objectlayer	primitive		Decides whether a chair is usable: in use range and within 3 yards of a seat	verified	one	objectlayer/gameobjecttypes#chairs	
+0x5f5760	74			objectlayer	primitive		Places a chair's seats when its record arrives	verified	one	objectlayer/gameobjecttypes#chairs	
+0x5f57b0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell focus handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f57e0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f57f0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f5800	43			objectlayer	orchestration		Destroys the spell focus handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5830	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the text handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5860	43			objectlayer	orchestration		Destroys the text handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5890	39			objectlayer	primitive		Returns a text object's cursor: Inspect when usable, else UnableInspect	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f58c0	61			objectlayer	orchestration		Uses a text object: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5900	34			objectlayer	orchestration		Returns a game object's pageID column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5930	32			objectlayer	orchestration		Returns a game object's language column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5950	32			objectlayer	orchestration		Returns a game object's pageMaterial column	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5970	37			objectlayer	primitive		Returns whether a game object's notInCombat column is 0	verified	one	objectlayer/gameobjects#usable	
+0x5f59a0	47			objectlayer	primitive		Returns 0 for a chest, else whether the noDamageImmune column is 0	verified	one	objectlayer/gameobjects#usable	
+0x5f59d0	83			objectlayer	orchestration		Refreshes the open text when its record arrives	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a30	11			objectlayer	orchestration		Plays a text object's open state 2	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a40	11			objectlayer	orchestration		Plays a text object's close state 4	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f5a50	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the goober handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5a80	43			objectlayer	orchestration		Destroys the goober handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
+0x5f5ab0	341			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the transport handler and finds its TransportAnimation rows	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f5c10	33			objectlayer	primitive		Writes a transport's base position	verified	one	objectlayer/transports#the-transport-tick	
+0x5f5c40	45			objectlayer	primitive		Writes a transport's velocity: speed times heading	verified	one	objectlayer/transports#the-transport-tick	
+0x5f5c70	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f5c80	43			objectlayer	orchestration		Destroys the transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f5cb0	188			objectlayer	primitive		Tears a transport handler down: transport list, plane array and passengers	verified	one	objectlayer/transports#the-transports-path	
+0x5f5d70	34			objectlayer	orchestration		Creates a transport's entity when its record arrives and lists it	verified	one	objectlayer/transports#the-transports-path	
+0x5f5da0	41			objectlayer	orchestration		Reactivates a transport: animation reset, entity and transport list	verified	one	objectlayer/transports#the-transports-path	
+0x5f5dd0	233			objectlayer	primitive		Deactivates a transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
+0x5f5ec0	72			objectlayer	primitive		Returns the first TransportAnimation row of a game object's entry, or -1	verified	one	objectlayer/transports#the-transports-path	
+0x5f5f10	841			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a transport along its animation path and carries its passengers	verified	one	objectlayer/transports#the-transport-tick	
+0x5f6260	20			objectlayer	primitive		Returns the next TransportAnimation row index, wrapping	verified	one	objectlayer/transports#the-transports-path	
+0x5f6280	528			objectlayer	primitive	float * __thiscall (void *this, float *out, uint32_t now)	Returns a transport's path offset at a time, rotated by its quaternion, playing row animations	verified	one	objectlayer/transports#the-transports-path	
+0x5f6490	175			objectlayer	primitive		Boards a mover onto a transport, flagging it while the model is not loaded	verified	one	objectlayer/transports#passengers	
+0x5f6540	34			objectlayer	orchestration		Tests a point against a transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
+0x5f6570	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the camera handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6590	40			objectlayer	orchestration		Restores the base vtable of the camera handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f65c0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the duel flag handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f65f0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6600	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6610	43			objectlayer	orchestration		Destroys the duel flag handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6640	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing hole handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6660	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6670	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6680	40			objectlayer	orchestration		Restores the base vtable of the fishing hole handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f66b0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the fishing node handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f66e0	43			objectlayer	orchestration		Destroys the fishing node handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6710	73			objectlayer	orchestration		Decides whether a fishing node is interactable: only for the player channelling it	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6760	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the ritual handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6790	43			objectlayer	orchestration		Destroys the ritual handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f67c0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the mailbox handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f67f0	43			objectlayer	orchestration		Destroys the mailbox handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f6820	21			objectlayer	orchestration		Uses a mailbox: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6840	39			objectlayer	primitive		Returns a mailbox's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6870	11			objectlayer	orchestration		Sends a mailbox's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6880	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the auction house handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f68a0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f68b0	40			objectlayer	orchestration		Restores the base vtable of the auction house handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f68e0	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell caster handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6900	40			objectlayer	orchestration		Restores the base vtable of the spell caster handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6930	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the meeting stone handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6960	43			objectlayer	orchestration		Destroys the meeting stone handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6990	49			objectlayer	orchestration		Decides whether a meeting stone is interactable: not in the area a client global holds	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f69d0	308			objectlayer	primitive		Uses a meeting stone: refuses by party leader, size, level and raid, else hands the GUID on	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6b10	221			objectlayer	orchestration		Adds a meeting stone's area name and level range to its tooltip	verified	one	objectlayer/gameobjecttypes#fishing-nodes-and-meeting-stones	
+0x5f6bf0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag stand handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c20	43			objectlayer	orchestration		Destroys the flag stand handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c50	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the flag drop handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6c80	43			objectlayer	orchestration		Destroys the flag drop handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6cb0	44			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the minigame handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6ce0	43			objectlayer	orchestration		Destroys the minigame handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d10	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the capture point handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d40	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6d50	43			objectlayer	orchestration		Destroys the capture point handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6d80	42			objectlayer	primitive		Returns whether a capture point's highlight column is set	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6db0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the lottery kiosk handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6de0	43			objectlayer	orchestration		Destroys the lottery kiosk handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6e10	21			objectlayer	orchestration		Uses a lottery kiosk: passes its GUID to the interface	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e30	39			objectlayer	primitive		Returns a lottery kiosk's cursor: Mail when usable, else UnableMail	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e60	11			objectlayer	orchestration		Sends a lottery kiosk's custom animation 0 as its frame opens	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
+0x5f6e70	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the aura generator handler	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
+0x5f6ea0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6eb0	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
+0x5f6ec0	43			objectlayer	orchestration		Destroys the aura generator handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-21-to-30	
 0x5f6ef0	51	CGGameObject_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGGameObject_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
-0x5f6f30	1946			objectlayer	primitive		Runs GameObject_C.cpp code that calls SysMsgPrintf, SMemAlloc; not read here	inferred	none		
-0x5f7750	43			objectlayer	orchestration		Fills slot 0 of the game object vtable; its body is not read here	inferred	none		
-0x5f7780	287			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f78a0	107			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f7910	484			objectlayer	primitive		Fills slot 13 of the game object vtable; its body is not read here	inferred	none		
-0x5f7b00	279			objectlayer	primitive		Runs GameObject_C.cpp code that calls CStatus::~CStatus, HandleClose, TextureCreate; not read here	inferred	none		
-0x5f7c20	22			objectlayer	orchestration		Fills slot 15 of the game object vtable; its body is not read here	inferred	none		
-0x5f7c40	349			objectlayer	primitive		Runs GameObject_C.cpp code that calls ModelSetDoneCallback, ModelSetEventCallback, TranslateMatrix; not read here	inferred	none		
-0x5f7da0	66			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f7df0	66			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f7e40	63			objectlayer	orchestration		Fills slot 1 of the game object vtable; its body is not read here	inferred	none		
-0x5f7e80	74			objectlayer	orchestration		Fills slot 2 of the game object vtable; its body is not read here	inferred	none		
-0x5f7ed0	122			objectlayer	orchestration		Fills slot 3 of the game object vtable; its body is not read here	inferred	none		
-0x5f7f50	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
-0x5f7f60	39			objectlayer	unreached		Runs GameObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5f7f90	20			objectlayer	unreached		Runs GameObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5f7fb0	27			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f6f30	1946			objectlayer	primitive	CGGameObject_C * __thiscall (CGGameObject_C *this, uint32_t time, void *block)	Builds a game object: watcher lists, transform, fields from the update and its type handler	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f7750	43			objectlayer	orchestration		Destroys a game object and frees it on bit 0	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f7780	287			objectlayer	primitive		Tears a game object down: record request, handler, transport link and watcher lists	verified	one	objectlayer/gameobjects#the-game-object	
+0x5f78a0	107			objectlayer	orchestration		Hands an arrived game object record to the object its GUID names	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7910	484			objectlayer	primitive		Places a game object's loaded model: world matrix, bounds, world box, collision and art kit	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5f7b00	279			objectlayer	primitive	void __fastcall (CM2Model *model, uint32_t artKit)	Puts an art kit on a model: detaches points 0 to 3, then its textures and attached models	verified	one	objectlayer/gameobjecttypes#art-kits	
+0x5f7c20	22			objectlayer	orchestration		Runs the handler's slot 11 for the object's ground pass	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f7c40	349			objectlayer	primitive		Runs a game object's creation: transform, model callbacks, handler slot 23 and the record request	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7da0	66			objectlayer	orchestration		Passes a model event to the game object's handler slot 12	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f7df0	66			objectlayer	orchestration		Passes a model's done callback to the handler's slot 13 or 14 by its flag	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f7e40	63			objectlayer	orchestration		Deactivates a game object: the handler's slot 26, or cancels the record request, then the object's	verified	one	objectlayer/gameobjects#object-slots	
+0x5f7e80	74			objectlayer	orchestration		Reactivates a game object: the object's, then the handler's slot 25 and the model	verified	one	objectlayer/gameobjects#object-slots	
+0x5f7ed0	122			objectlayer	orchestration		Ends a game object's reactivation: the handler's slot 27, or requests the record	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f7f50	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7f60	39			objectlayer	unreached		Copies bytes into a game object's field section	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7f90	20			objectlayer	unreached		Maps an update level to a field section offset: 0 to 0, 5 to 0x18, others to -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f7fb0	27			objectlayer	orchestration		Stores a game object's record and calls the handler's slot 24	verified	one	objectlayer/gameobjects#the-game-object-record	
 0x5f7fd0	95	CGGameObject_C::ObjectReaction	idb	objectlayer	orchestration	uint32_t __thiscall (CGGameObject_C *this, CGUnit_C *other)	Returns its creator's reaction toward a unit when the creator is live, else its faction's, else 3	verified	one	objectlayer/reaction#corpses-and-game-objects	
-0x5f8030	82			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8090	69			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SysMsgPrintf; not read here	inferred	none		
-0x5f80e0	32			objectlayer	orchestration		Fills slot 10 of the game object vtable; its body is not read here	inferred	none		
-0x5f8100	20			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8120	23			objectlayer	unreached		Runs GameObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5f8140	11			objectlayer	unreached		Runs GameObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5f8150	35			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8180	69			objectlayer	orchestration		Returns a game object's Lock.dbc record, or null	inferred	none	spell/go#player-cast-tail	
-0x5f81d0	135			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8260	359			objectlayer	primitive		Returns whether a game object passes the pending spell's lock-opening effects	inferred	none	spell/targeting#testing-an-object-without-binding	
-0x5f83d0	515			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, FindInventoryItemByEntry; not	inferred	none		
-0x5f85e0	15			objectlayer	orchestration		Fills slot 26 of the game object vtable; its body is not read here	inferred	none		
-0x5f85f0	39			objectlayer	orchestration		Fills slot 20 of the game object vtable; its body is not read here	inferred	none		
-0x5f8620	15			objectlayer	orchestration		Fills slot 21 of the game object vtable; its body is not read here	inferred	none		
-0x5f8630	38			objectlayer	primitive		Fills slot 23 of the game object vtable; its body is not read here	inferred	none		
-0x5f8660	80			objectlayer	orchestration		Fills slot 24 of the game object vtable; its body is not read here	inferred	none		
-0x5f86b0	171			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, CGGameUI::DisplayError; not	inferred	none		
-0x5f8760	46			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8790	97			objectlayer	orchestration		Runs GameObject_C.cpp code that calls SStrPrintf; not read here	inferred	none		
-0x5f8800	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8810	16			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8820	156			objectlayer	orchestration		Registers or clears the handlers for 0xb3, 0x1df, 0x215; not read further here	inferred	none		
-0x5f88c0	104			objectlayer	orchestration		Handles server opcode 0x1df, as its registration names; its body is not read here	inferred	none		
-0x5f8930	92			objectlayer	primitive		Handles server opcode 0xb3, as its registration names; its body is not read here	inferred	none		
-0x5f8990	67			objectlayer	orchestration		Handles server opcode 0x215, as its registration names; its body is not read here	inferred	none		
-0x5f89e0	67			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f8a30	72			objectlayer	primitive		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f8a80	87			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f8ae0	57			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5f8b20	119			objectlayer	orchestration		Runs GameObject_C.cpp code that calls ClntObjMgrClearTypeMirrorHandler, ClientServices::ClearMessageHandler; not	inferred	none		
-0x5f8ba0	22			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8bc0	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f8030	82			objectlayer	primitive	void * __thiscall (CGGameObject_C *this, uint32_t guidLow, uint32_t guidHigh)	Creates a game object's map entity at its position and facing	verified	one	objectlayer/transports#map-objects	
+0x5f8090	69			objectlayer	orchestration		Returns the model path of a game object's display row, logging NOOBJECTFILENAME when missing	verified	one	objectlayer/gameobjects#object-slots	
+0x5f80e0	32			objectlayer	orchestration		Returns a game object's model path, none for transports and map objects	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8100	20			objectlayer	orchestration		Returns a game object's record name, or the empty string	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f8120	23			objectlayer	unreached		Returns a game object's type name	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f8140	11			objectlayer	unreached		Jumps through the handler's slot 16	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x5f8150	35			objectlayer	orchestration	uint32_t __thiscall (CGGameObject_C *this, uint32_t column)	Returns data column i of a game object's record, 0 without a record or past 23	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x5f8180	69			objectlayer	orchestration		Returns the Lock row the game object's open column names	verified	one	objectlayer/gameobjects#locks	
+0x5f81d0	135			objectlayer	primitive		Tests a lock slot's action against the game object's state and flags	verified	one	objectlayer/gameobjects#locks	
+0x5f8260	359			objectlayer	primitive		Tests whether a spell opens a game object's lock by skill or by the item it targets	verified	one	objectlayer/gameobjects#lock-actions-and-spell-targets	
+0x5f83d0	515			objectlayer	primitive		Finds how the active player opens a game object's lock: a spell with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
+0x5f85e0	15			objectlayer	orchestration		Returns the handler's slot 2 for fade in on appear	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f85f0	39			objectlayer	orchestration		Returns whether a game object collides, 0 for a door given flag 0x8000	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5f8620	15			objectlayer	orchestration		Answers the object's mouseover slot through the handler's slot 3	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f8630	38			objectlayer	primitive		Returns whether a game object's floatingTooltip column is set	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8660	80			objectlayer	orchestration		Interacts with a game object, storing the auto-loot choice first	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f86b0	171			objectlayer	orchestration		Uses a game object in range, else walks to it or shows the use error	verified	one	objectlayer/gameobjects#using-a-game-object	
+0x5f8760	46			objectlayer	primitive		Returns cursor 0x29 for an interactable object with a record cursor name, else the handler's cursor	verified	one	objectlayer/gameobjects#cursor	
+0x5f8790	97			objectlayer	orchestration		Formats the cursor file of a record's cursor name, with Unable when the object is not usable	verified	one	objectlayer/gameobjects#cursor	
+0x5f8800	11			objectlayer	orchestration		Asks the handler whether the object is interactable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f8810	16			objectlayer	orchestration		Asks the handler whether the object is usable, without error or range	verified	one	objectlayer/gameobjects#cursor	
+0x5f8820	156			objectlayer	orchestration		Registers the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f88c0	104			objectlayer	orchestration		Handles 0x1df: passes the game object's GUID to the interface	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8930	92			objectlayer	primitive		Handles 0xb3: sends a custom animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8990	67			objectlayer	orchestration		Handles 0x215: sends the despawn animation event to a game object	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f89e0	67			objectlayer	orchestration		Watches GAMEOBJECT_STATE: stores the state and notifies the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8a30	72			objectlayer	primitive		Watches GAMEOBJECT_FLAGS: passes the changed bits to the handler	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8a80	87			objectlayer	orchestration		Watches GAMEOBJECT_ARTKIT: puts the art kit on the loaded model	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8ae0	57			objectlayer	orchestration		Watches GAMEOBJECT_ANIMPROGRESS: calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8b20	119			objectlayer	orchestration		Clears the game object message handlers and field watchers	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8ba0	22			objectlayer	orchestration		Passes changed GAMEOBJECT_FLAGS bits to the handler's slot 8	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8bc0	11			objectlayer	orchestration		Calls the handler's slot 9	verified	one	objectlayer/gameobjects#watchers-and-messages	
 0x5f8bd0	41			objectlayer	orchestration	void __thiscall (void *go, uint32_t state)	Stores a game object's state at +0x27c and notifies its model when it changes	verified	one	spell/go#player-cast-tail	
 0x5f8c00	16			objectlayer	orchestration	void __thiscall (void *go)	Passes a game object's descriptor state dword to 0x5f8bd0	verified	one	spell/handlers#small-spell-handlers	
-0x5f8c10	19			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8c30	11			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8c40	14			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8c50	63			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8c90	18			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8cb0	60			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f8c10	19			objectlayer	orchestration		Stores GAMEOBJECT_ANIMPROGRESS	verified	one	objectlayer/gameobjecttypes#playing-a-state	
+0x5f8c30	11			objectlayer	orchestration		Calls the handler's slot 31 as the interface opens the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f8c40	14			objectlayer	orchestration		Calls the handler's slot 32 as the interface closes the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f8c50	63			objectlayer	orchestration		Plays an animation event on the loaded model, or keeps it until the model loads	verified	one	objectlayer/gameobjects#watchers-and-messages	
+0x5f8c90	18			objectlayer	orchestration		Hands a game object's world object to the light update	verified	one	objectlayer/gameobjects#object-slots	
+0x5f8cb0	60			objectlayer	primitive		Normalises a 2D vector in place, leaving one shorter than 2^-22	verified	one	objectlayer/transports#moving-the-ship	
 0x5f8cf0	34	ScaleVector3		objectlayer	primitive	float * __fastcall (float *out, const float *v, float s)	Writes s·v	verified	one	camera#unprojection	
-0x5f8d20	62			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8d60	57			objectlayer	orchestration		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8da0	25			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
-0x5f8dc0	463			objectlayer	primitive		Runs GameObject_C.cpp code not read here	inferred	none		
+0x5f8d20	62			objectlayer	orchestration		Stores nine floats	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f8d60	57			objectlayer	orchestration		Stores a 4x4 identity	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f8da0	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/transports#carrying-and-changing-legs	
+0x5f8dc0	463			objectlayer	primitive	float __thiscall (void *path, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	
 0x5f8f90	5	InitGameObjAProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f8fa0	19	InitGameObjAProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f8fc0	5	InitGameObjAProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -4907,19 +4907,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9090	19	InitGameObjASquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f90b0	5	InitGameObjAQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f90c0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f90c0	19	InitGameObjAQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f90e0	33			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
-0x5f9110	12			objectlayer	primitive		Runs its object file code not read here	inferred	none		
-0x5f9120	600			objectlayer	primitive		Runs its object file code that calls __ftol, SetSplinePath; not read here	inferred	none		
-0x5f9380	23			objectlayer	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x5f93a0	304			objectlayer	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x5f94d0	16			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x5f90e0	33			objectlayer	orchestration		Returns row i of a 36-byte store, or 0 out of range	verified	one	objectlayer/transports#the-ship-path	
+0x5f9110	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/transports#the-transports-path	
+0x5f9120	600			objectlayer	primitive	void __thiscall (void *path, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	
+0x5f9380	23			objectlayer	orchestration		Frees a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
+0x5f93a0	304			objectlayer	primitive		Resizes a ship path's legs, making new ones empty with a spline in mode 1	verified	one	objectlayer/transports#the-moving-transport	
+0x5f94d0	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/transports#the-moving-transport	
 0x5f94e0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f94f0	63			objectlayer	primitive		Runs its object file code not read here	inferred	none		
-0x5f9530	55			objectlayer	primitive		Runs its object file code not read here	inferred	none		
-0x5f9570	76			objectlayer	primitive		Runs its object file code not read here	inferred	none		
+0x5f94f0	63			objectlayer	primitive		Sets the count of a 12-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
+0x5f9530	55			objectlayer	primitive		Appends a point to a 12-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
+0x5f9570	76			objectlayer	primitive		Makes a fixed array over a buffer	verified	one	objectlayer/transports#the-ship-path	
 0x5f95c0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f95d0	54			objectlayer	primitive		Runs its object file code not read here	inferred	none		
-0x5f9610	41			objectlayer	primitive		Runs its object file code not read here	inferred	none		
+0x5f95d0	54			objectlayer	primitive		Sets the count of an 8-byte array, zeroing new entries	verified	one	objectlayer/transports#the-ship-path	
+0x5f9610	41			objectlayer	primitive		Appends a pair to an 8-byte array without a bound check	verified	one	objectlayer/transports#the-ship-path	
 0x5f9640	10	InitGameObjBCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5f9650, then jumps to 0x5f9670 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f9650	22	InitGameObjBCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x5f9670	12	InitGameObjBRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x5f9680 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -4960,42 +4960,42 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9990	19	InitGameObjBSquare16		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f99b0	5	InitGameObjBSquare17Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f99c0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f99c0	19	InitGameObjBSquare17		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f99e0	235			objectlayer	primitive		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f9ad0	314			objectlayer	primitive		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x5f9c10	254			objectlayer	primitive		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x5f9d10	124			objectlayer	primitive		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x5f9d90	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f9da0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/overview#small-bodies	
-0x5f9db0	5			objectlayer	orchestration		Jumps through slot 5 of its object's vtable	verified	one	objectlayer/overview#small-bodies	
-0x5f9dc0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9dd0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9de0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9df0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9e00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9e10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9e20	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9e30	20			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
-0x5f9e50	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5f9e60	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5f9e70	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9e80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9e90	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9ea0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9eb0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9ec0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5f9ed0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9ee0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9ef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9f00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f9f10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x5f9f20	40			objectlayer	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x5f9f50	96			objectlayer	primitive		Fills slot 5 of the game object vtable; its body is not read here	inferred	none		
-0x5f9fb0	27			objectlayer	orchestration		Fills slot 6 of the game object vtable; its body is not read here	inferred	none		
-0x5f9fd0	26			objectlayer	orchestration		Fills slot 31 of the game object vtable; its body is not read here	inferred	none		
-0x5f9ff0	18			objectlayer	orchestration		Fills slot 32 of the game object vtable; its body is not read here	inferred	none		
-0x5fa010	26			objectlayer	orchestration		Fills slot 19 of the game object vtable; its body is not read here	inferred	none		
-0x5fa030	22			objectlayer	orchestration		Fills slot 33 of the game object vtable; its body is not read here	inferred	none		
-0x5fa050	29			objectlayer	orchestration		Fills slot 25 of the game object vtable; its body is not read here	inferred	none		
+0x5f99e0	235			objectlayer	primitive		Grows a leg's stop array by a count	verified	one	objectlayer/transports#the-ship-path	
+0x5f9ad0	314			objectlayer	primitive		Reallocates the ship path's legs, copying each leg's spline and stops and freeing the old	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9c10	254			objectlayer	primitive		Copies a leg's spline: its point and length arrays	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9d10	124			objectlayer	primitive		Copies a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
+0x5f9d90	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9da0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9db0	5			objectlayer	orchestration		Jumps through slot 5 of its object's vtable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
+0x5f9dc0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9dd0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9de0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9df0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e20	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e30	20			objectlayer	orchestration		Writes a zero velocity	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e50	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e60	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e70	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9e80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9e90	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ea0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9eb0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ec0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ed0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ee0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9ef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f10	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5f9f20	40			objectlayer	orchestration		Destroys a base handler and frees it on bit 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
+0x5f9f50	96			objectlayer	primitive		Writes a game object's position through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9fb0	27			objectlayer	orchestration		Returns a game object's facing through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9fd0	26			objectlayer	orchestration		Writes a game object's velocity through its handler	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9ff0	18			objectlayer	orchestration		Returns the handler's path, or 0 without a handler	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
+0x5fa010	26			objectlayer	orchestration		Returns whether a game object collides or its handler says mouseover	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5fa030	22			objectlayer	orchestration		Tests a point against a game object through its handler's slot 21	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5fa050	29			objectlayer	orchestration		Copies a game object's world matrix	verified	one	objectlayer/gameobjects#world-transform-and-box	
 0x5fa070	5			objectlayer	orchestration		Jumps to 0x5f8100	verified	one	objectlayer/overview#small-bodies	
 0x5fa080	5	InitUnitCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5fa090, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5fa090	11	InitUnitCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
@@ -6336,17 +6336,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6219a0	19	InitEffectBSquare34		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6219c0	5	InitEffectBSquare35Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6219d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6219d0	19	InitEffectBSquare35		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x6219f0	22			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621a10	59			objectlayer	unreached		Runs its object file code that calls SStrCmpI; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621a50	10			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621a60	10			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621a70	23			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621a90	59			objectlayer	unreached		Runs its object file code that calls SStrCmpI; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621ad0	23			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621af0	14			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621b00	52			objectlayer	primitive		Runs its object file code not read here	inferred	none		
-0x621b40	14			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x621b50	3			objectlayer	unreached		Returns 0	verified	one	objectlayer/overview#small-bodies	
+0x6219f0	22			objectlayer	unreached		Returns the name of a semantic data id below 87	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a10	59			objectlayer	unreached		Returns the semantic data id of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a50	10			objectlayer	unreached		Returns the kind of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a60	10			objectlayer	unreached		Returns the boolean flag of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a70	23			objectlayer	unreached		Returns the name of a game object type below 31	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a90	59			objectlayer	unreached		Returns the game object type of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621ad0	23			objectlayer	unreached		Returns a game object type's data column count	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621af0	14			objectlayer	unreached		Returns a game object type's semantic id for a column	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621b00	52			objectlayer	primitive	int32_t __fastcall (uint32_t type, uint32_t id)	Returns the data column a type uses for a semantic id, or -1	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x621b40	14			objectlayer	unreached		Returns an entry of a game object type's second array	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621b50	3			objectlayer	unreached		Returns 0	verified	one	objectlayer/gameobjects#unreached-game-object-code	
 0x621b60	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x621b70	5	InitBagCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621b80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x621b80	11	InitBagCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	

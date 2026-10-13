@@ -3,6 +3,9 @@ BlizzardObject	324		spell	Holds an area shard emitter: link, model path, world o
 CBaseManaged	28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
 CCamera	368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
 CFrameStrataNode	284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
+CGContainer_C	2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/items#the-container
+CGGameObject_C	784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/gameobjects#the-game-object
+CGItem_C	1172	0x80ada8	objectlayer	Holds an item: the object, its field pointers, watcher lists, flags, cached record bytes and expiries	verified	one	objectlayer/items#the-item-object
 CGObject_C	308	0x803640	objectlayer	Holds an object the server described: its storage, pool handle, type, GUID key, hold count and flags	verified	one	objectlayer/classes#class-sizes-and-pools
 CGPlayer_C	11340	0x80af78	objectlayer	Holds a player other than the active one, whose heap block is 26648 bytes; the unit plus the player section	verified	one	objectlayer/classes#class-sizes-and-pools
 CGUnit_C	5120	0x80c4f8	objectlayer	Holds a unit: the object, the unit members with their field pointers, the unit fields and watch copy	verified	one	objectlayer/classes#class-sizes-and-pools

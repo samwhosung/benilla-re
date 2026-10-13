@@ -75,6 +75,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5ebc64	void *[11]	s_switch5ebc64		objectlayer	Holds the 11 case addresses of the switch in 0x5eb900	verified	one	objectlayer/overview#switch-tables
 0x5f3b40	void *[4]	s_switch5f3b40		objectlayer	Holds the 4 case addresses of the switch in 0x5f3930	verified	one	objectlayer/overview#switch-tables
 0x5f41e4	void *[12]	s_switch5f41e4		objectlayer	Holds the 12 case addresses of the switch in 0x5f4120	verified	one	objectlayer/overview#switch-tables
+0x5f4a04	uint8_t[165]	s_transportAnimDoneCases		objectlayer	Holds the case of each animation 0 to 0xa4 for the transport entity's done callback 0x5f49b0	verified	one	objectlayer/transports#map-objects
 0x5f76cc	void *[31]	s_switch5f76cc		objectlayer	Holds the 31 case addresses of the switch in 0x5f6f30	verified	one	objectlayer/overview#switch-tables
 0x5fc3c8	void *[2]	s_twoHandedCases		objectlayer	Holds the 2 case addresses of the switch in 0x5fc390	verified	one	objectlayer/unitanim#animation-sets
 0x5fc3d0	uint8_t[20]	s_twoHandedIndex		objectlayer	Maps weapon subclasses 1 to 20 to the cases of 0x5fc390's switch	verified	one	objectlayer/unitanim#animation-sets
@@ -254,6 +255,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
+0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x80928c	int32_t[8]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, −42000 to 42000	verified	one	objectlayer/playercombat#using-an-item
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
@@ -283,6 +285,42 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80b044	void *[4]	s_playerMemberVtableB		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c74	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80b054	float	s_corpseLootRangeSq		objectlayer	Holds 25.0, the squared distance beyond which a corpse loot walks up	verified	one	objectlayer/interaction#looting
 0x80b058	float	s_meleeReachBonus		objectlayer	Holds 4/3, added to the two combat reaches	verified	one	objectlayer/interaction#looting
+0x80b084	float	s_defaultUseRange		objectlayer	Holds 5.0, the use range a game object handler starts with	verified	one	objectlayer/gameobjects#building-the-type-handler
+0x80b0a0	float	s_chairSeatRange		objectlayer	Holds 3.0, the range a chair's use gives	verified	one	objectlayer/gameobjecttypes#chairs
+0x80b0e0	int32_t[8]	s_animEventStates		objectlayer	Holds the state of each animation event 0 to 7: -1, 0, 8, 9, 10, 11, 12, 0	verified	one	objectlayer/gameobjecttypes#animation-events
+0x80b100	void *[34]	s_gameObjectHandlerVtable		objectlayer	Holds the base game object handler vtable	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11
+0x80b188	void *[34]	s_staticHandlerVtable		objectlayer	Holds the vtable of the static handler for guard posts and unknown types	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80b210	void *[36]	s_animatedHandlerVtable		objectlayer	Holds the family A base vtable, stored only by the family A destructor 0x5f37c0	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b2a0	void *[36]	s_doorHandlerVtable		objectlayer	Holds the type 0 door handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b330	void *[36]	s_buttonHandlerVtable		objectlayer	Holds the type 1 button handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b3c0	void *[36]	s_chestHandlerVtable		objectlayer	Holds the type 3 chest handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b450	void *[36]	s_trapHandlerVtable		objectlayer	Holds the type 6 trap handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b4e0	void *[36]	s_areaDamageHandlerVtable		objectlayer	Holds the type 12 areaDamage handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80b570	void *[36]	s_questgiverHandlerVtable		objectlayer	Holds the type 2 questgiver handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b600	void *[34]	s_binderHandlerVtable		objectlayer	Holds the type 4 binder handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b688	void *[34]	s_genericHandlerVtable		objectlayer	Holds the type 5 generic handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b710	void *[34]	s_mapObjectHandlerVtable		objectlayer	Holds the type 14 mapObject handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80b798	void *[34]	s_moTransportHandlerVtable		objectlayer	Holds the type 15 moTransport handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80b820	void *[34]	s_chairHandlerVtable		objectlayer	Holds the type 7 chair handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b8a8	void *[36]	s_spellFocusHandlerVtable		objectlayer	Holds the type 8 spellFocus handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b938	void *[36]	s_textHandlerVtable		objectlayer	Holds the type 9 text handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80b9c8	void *[36]	s_gooberHandlerVtable		objectlayer	Holds the type 10 goober handler vtable	verified	one	objectlayer/gameobjects#handler-types-0-to-10
+0x80ba58	void *[34]	s_transportHandlerVtable		objectlayer	Holds the type 11 transport handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80bae0	void *[34]	s_cameraHandlerVtable		objectlayer	Holds the type 13 camera handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80bb68	void *[36]	s_duelFlagHandlerVtable		objectlayer	Holds the type 16 duelFlag handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80bbf8	void *[34]	s_fishingHoleHandlerVtable		objectlayer	Holds the type 25 fishingHole handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80bc80	void *[36]	s_fishingNodeHandlerVtable		objectlayer	Holds the type 17 fishingNode handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80bd10	void *[36]	s_ritualHandlerVtable		objectlayer	Holds the type 18 ritual handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80bda0	void *[36]	s_mailboxHandlerVtable		objectlayer	Holds the type 19 mailbox handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80be30	void *[34]	s_auctionHouseHandlerVtable		objectlayer	Holds the type 20 auctionHouse handler vtable	verified	one	objectlayer/gameobjects#handler-types-11-to-20
+0x80beb8	void *[34]	s_spellCasterHandlerVtable		objectlayer	Holds the type 22 spellCaster handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80bf40	void *[36]	s_meetingStoneHandlerVtable		objectlayer	Holds the type 23 meetingStone handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80bfd0	void *[36]	s_flagStandHandlerVtable		objectlayer	Holds the type 24 flagStand handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80c060	void *[36]	s_flagDropHandlerVtable		objectlayer	Holds the type 26 flagDrop handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80c0f0	void *[36]	s_minigameHandlerVtable		objectlayer	Holds the type 27 minigame handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80c180	void *[36]	s_capturePointHandlerVtable		objectlayer	Holds the type 29 capturePoint handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80c210	void *[36]	s_lotteryKioskHandlerVtable		objectlayer	Holds the type 28 lotteryKiosk handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
+0x80c2a0	void *[36]	s_auraGeneratorHandlerVtable		objectlayer	Holds the type 30 auraGenerator handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
 0x80c330	void *[34]	CGGameObject_C::vftable		objectlayer	Holds the game object vtable, 34 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
@@ -294,6 +332,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c738	float	s_mapCoordinateSpan		collision	Holds 34131.332 (0x47055355), the bound on 17066.666 minus a coordinate	verified	one	collision/mover#position-validity
 0x80c73c	float	s_collisionRadiusCap		collision	Holds 0.54071623 (0x3f0a6c61), the cap on half width over scale in 0x617460	verified	one	collision/mover#collision-size
 0x80c740	float	s_collisionRadiusCapInverse		collision	Holds 1.8493990 (0x3fecb91b), the reciprocal of 0x80c73c	verified	one	collision/mover#collision-size
+0x80c9fc	uint8_t[1392]	s_gameObjectDataNames		objectlayer	Holds 87 semantic data ids of 16 bytes: name, kind, boolean flag, next id	verified	one	objectlayer/gameobjects#the-game-object-record
+0x80d79c	uint8_t[620]	s_gameObjectTypeInfo		objectlayer	Holds 31 game object types of 20 bytes: name, column count, column ids, a second array, id + 1	verified	one	objectlayer/gameobjects#the-game-object-record
 0x80dfe0	float	s_volumeBevelNormalZ		collision	Holds 0.4756366 (0x3ef386a4), cos 61.6°, the vertical part of the volume bevel normals	verified	one	collision/contact#volume-planes
 0x80dfe4	float	s_volumeBevelNormalXY		collision	Holds 0.8796419 (0x3f613036), sin 61.6°, the horizontal part of the volume bevel normals	verified	one	collision/contact#volume-planes
 0x80dfe8	float	s_waterWalkSinkPitch		collision	Holds -0.6457718 (0xbf25514d, -37°), the pitch at or below which water walking stops holding the body	verified	one	collision/commands#facing-and-pitch-setters
@@ -576,6 +616,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x838f6c	uint32_t[5]	s_gameObjectWatchedFields		objectlayer	Holds the game object's watched field indices, 3, 8, 17, 18 and 20	verified	one	objectlayer/fields#watched-fields
 0x838f90	uint32_t[295]	s_playerWatchedFields		objectlayer	Holds the 295 player field indices every player watches	verified	one	objectlayer/fields#watched-fields
 0x839430	uint32_t[643]	s_activePlayerWatchedFields		objectlayer	Holds the 643 further player field indices only the active player watches	verified	one	objectlayer/fields#watched-fields
+0x83b880	uint8_t[320]	s_gameObjectFieldInfo		unassigned	Holds the 16 game object field descriptors of 20 bytes: name, index, count, type, flags	verified	one	objectlayer/gameobjects#the-game-object
 0x847ec0	char[49]	s_errNonScriptObject		ui	Holds the error of a method whose table holds no object	verified	one	ui/methods#finding-self
 0x847ef8	char[71]	s_errNonTable		ui	Holds the error of a method called on a value that is not a table	verified	one	ui/methods#finding-self
 0x84b648	char[6]	s_eventGlobalName		ui	Holds event, the global SignalEvent sets to the event name	verified	one	ui/script#signalling-an-event
@@ -593,6 +634,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85fedc	uint32_t[13]	s_activateTaxiErrors		objectlayer	Holds the errors for taxi activation results 0 to 12, 0 unused	verified	one	objectlayer/interaction#taxis
 0x85ff10	uint32_t	s_standStateEmoteMask		objectlayer	Holds 0x10b, the stand states a text emote may set	verified	one	objectlayer/interaction#text-emotes
 0x8603e4	char[15]	s_updateTicketFormat		objectlayer	Holds the format %d%s%f%f%f%d%d of UPDATE_TICKET	verified	one	objectlayer/playermessages#gm-tickets
+0x8607e4	uint32_t[13]	s_gameObjectStateAnims		objectlayer	Holds the animation of each family A state: 0x91, 0x93, 0x94, 0x95, 0x92, 0x96 to 0x9d	verified	one	objectlayer/gameobjecttypes#animation-states
+0x860818	char *[9]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 8, Closed to Despawn	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
@@ -871,12 +914,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
+0xc0d6a4	uint32_t[5]	s_taxiPathNodeStore		dbc	Holds the TaxiPathNode.dbc store: records and count	verified	one	objectlayer/transports#the-ship-path
 0xc0d6b8	uint32_t[5]	s_taxiNodesStore		dbc	Holds the TaxiNodes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#taxis
 0xc0d744	uint32_t[5]	s_spellVisualKitDb		dbc	Holds the SpellVisualKit.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/handlers#small-spell-handlers
 0xc0d758	uint32_t[5]	s_spellVisualEffectNameDb		dbc	Holds the SpellVisualEffectName.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/go#cast-visual-and-dest-effect
-0xc0d76c	uint32_t[5]	s_spellShapeshiftFormStore		dbc	Holds the SpellShapeshiftForm.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight
+0xc0d76c	uint32_t[5]	s_spellShapeshiftFormStore		dbc	Holds the SpellShapeshiftForm.dbc store	verified	one	objectlayer/items#using-an-item
 0xc0d780	uint32_t[5]	s_spellStore		dbc	Holds the Spell.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	spell/records#record-lookups
 0xc0d794	uint32_t[5]	s_spellRangeStore		dbc	Holds the SpellRange.dbc store	verified	one	spell/records#record-lookups
+0xc0d7d0	uint32_t[5]	s_spellItemEnchantmentStore		dbc	Holds the SpellItemEnchantment.dbc store	verified	one	objectlayer/items#bound-items
+0xc0d80c	uint32_t[5]	s_spellEffectCameraShakesStore		dbc	Holds the SpellEffectCameraShakes.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes
 0xc0d820	uint32_t[5]	s_spellDurationStore		dbc	Holds the SpellDuration.dbc store	verified	one	spell/records#record-lookups
 0xc0d870	uint32_t[5]	s_spellCastTimesStore		dbc	Holds the SpellCastTimes.dbc store	verified	one	spell/records#record-lookups
 0xc0d8fc	uint32_t[5]	s_skillTiersStore		dbc	Holds the SkillTiers.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#skill-costs-and-tiers
@@ -885,13 +932,21 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d94c	uint32_t[5]	s_skillLineAbilityStore		dbc	Holds the SkillLineAbility.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0d960	uint32_t[5]	s_skillCostsDataStore		dbc	Holds the SkillCostsData.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0da78	uint8_t[20]	s_nameGenStore		dbc	Holds the NameGen.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
+0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
 0xc0db90	uint32_t[2]	s_itemSubClassRows		dbc	Holds the ItemSubClass.dbc rows and their count, 0x74 bytes each	verified	one	objectlayer/playercombat#learning-a-spell
-0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playercombat#hand-weapons
+0xc0dbcc	uint32_t[5]	s_itemRandomPropertiesStore		dbc	Holds the ItemRandomProperties.dbc store	verified	one	objectlayer/items#item-names
+0xc0dbf4	uint32_t[5]	s_itemGroupSoundsStore		dbc	Holds the ItemGroupSounds.dbc store	verified	one	objectlayer/items#the-item-record
+0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store	verified	one	objectlayer/items#the-item-record
 0xc0dc30	uint32_t[5]	s_itemBagFamilyStore		dbc	Holds the ItemBagFamily.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/inventory#opening-and-wrapping-items
 0xc0dcd0	uint8_t[20]	s_gameTipsStore		dbc	Holds the GameTips.dbc store: records, count, id map, maximum id, loaded flag	inferred	none	
+0xc0dce4	uint32_t[5]	s_gameObjectDisplayInfoStore		dbc	Holds the GameObjectDisplayInfo.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes
+0xc0dcf8	uint32_t[5]	s_gameObjectArtKitStore		dbc	Holds the GameObjectArtKit.dbc store	verified	one	objectlayer/gameobjecttypes#art-kits
 0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0dd5c	uint8_t[20]	s_factionGroupStore		dbc	Holds the FactionGroup.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
+0xc0dde8	uint32_t[5]	s_durabilityQualityStore		dbc	Holds the DurabilityQuality.dbc store	verified	one	objectlayer/items#repair-cost
+0xc0ddfc	uint32_t[5]	s_durabilityCostsStore		dbc	Holds the DurabilityCosts.dbc store	verified	one	objectlayer/items#repair-cost
 0xc0deb0	uint8_t[20]	s_cinematicSequencesStore		dbc	Holds the CinematicSequences.dbc store	inferred	none	
 0xc0dec4	uint8_t[20]	s_cinematicCameraStore		dbc	Holds the CinematicCamera.dbc store	inferred	none	
 0xc0ded8	uint32_t[5]	s_chrRacesStore		dbc	Holds the ChrRaces.dbc store: records, count, id map by record +0x00, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
@@ -928,6 +983,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4becc	uint32_t	s_tradeInitiateFlag		objectlayer	Holds the flag the caller gave the trade request	verified	one	objectlayer/trade#trade-state
 0xc4bed0	uint64_t	s_tradeTarget		objectlayer	Holds the trade partner's GUID	verified	one	objectlayer/trade#trade-state
 0xc4bed8	int32_t[2]	s_tradeExtendedHeader		objectlayer	Holds the third header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
+0xc4c1d0	uint64_t	s_bindConfirmTargetGuid		objectlayer	Holds the target of an item use waiting for its bind confirmation	verified	one	objectlayer/items#item-use-gates
+0xc4c1f4	uint8_t[44]	s_inventoryIconCache		objectlayer	Holds the inventory icon hash table by display id	verified	one	objectlayer/items#inventory-icons
+0xc4c240	uint64_t	s_bindConfirmItemGuid		objectlayer	Holds the item whose use waits for its bind confirmation	verified	one	objectlayer/items#item-use-gates
 0xc4c25c	uint32_t	s_bindZone		objectlayer	Holds the bind point's zone	verified	one	objectlayer/interaction#the-bind-point
 0xc4c264	uint32_t	s_areaTriggerEnd		objectlayer	Holds the end row of the current map's area triggers	verified	one	objectlayer/players#area-triggers
 0xc4c270	uint32_t	s_attackErrorTime		objectlayer	Holds the time the attack error may next show	verified	one	objectlayer/players#attack-error-repeat
@@ -973,6 +1031,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d7b0	uint64_t	s_petUnlearnerGuid		objectlayer	Holds the trainer awaiting the pet unlearn confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
 0xc4d7b8	uint32_t	s_petUnlearnCost		objectlayer	Holds the pet unlearn's cost	verified	one	objectlayer/interaction#confirmation-dialogs
 0xc4d7c0	uint64_t	s_binderGuid		objectlayer	Holds the innkeeper awaiting the bind confirmation	verified	one	objectlayer/interaction#confirmation-dialogs
+0xc4d808	float	s_chairSeatRangeSq		objectlayer	Holds 9.0, the squared seat range, written at startup	verified	one	objectlayer/gameobjecttypes#chairs
+0xc4d840	uint8_t[16]	s_staticGameObjectHandler		objectlayer	Holds the handler that guard posts and unknown types share	verified	one	objectlayer/gameobjects#building-the-type-handler
 0xc4d888	int32_t	s_autoMoveMode		objectlayer	Holds the auto-move mode, 12 for none; 0x6033c0 and 0x60fb60 store 12, 0x611130 the mode	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d8a0	uint32_t	s_spellDamageColor		objectlayer	Holds 0xffffde00 from 0x5fa0b0, the gold of spell damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
