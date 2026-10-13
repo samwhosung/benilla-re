@@ -95,7 +95,7 @@ stops; the precast, ranged pose and spell effect are cleared.
 Addresses: `0x6018f0`, `0x601a58`, `0x601a68`, `0x601ccd`, `0x601e05`, `0x602130`, `0x6021c0`, `0x602e80`, `0x6187a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::monster_move_case1_near_gate_difftest`, `objectlayer::monster_move_direction_sincos_difftest`, `objectlayer::monster_move_case_delta_sub_difftest`, `objectlayer::monster_move_case_delta_sub_clone_difftest`, `objectlayer::monster_move_case2_coincident_gate_difftest`, `objectlayer::monster_move_case34_coincident_gate_difftest`, `objectlayer::monster_move_reflect_through_difftest`, `objectlayer::monster_move_arc_length_difftest`, `objectlayer::monster_move_speed_duration_difftest`, `objectlayer::move_event_packed_delta`, `objectlayer::anchor_region_a_difftest`, `objectlayer::anchor_region_b_difftest`, `objectlayer::anchor_region_c_difftest`, `objectlayer::anchor_region_d_difftest`, `objectlayer::anchor_region_e_difftest`, `objectlayer::anchor_region_f_difftest`
 
 The path buffer is `0x40a280((3·count + 12)·4)`, computed in 32 bits (`0x601a58` to `0x601a68`),
 and the loops at `0x601ccd` and `0x601e05` run to the count. A count of 0x15555552 or more wraps
@@ -106,6 +106,11 @@ the reference point. `0x6021c0` empties a one-point path within 1/36 yard of the
 against `0x80c450`) and otherwise prepends the unit's position or cuts the points it has passed.
 `0x602e80(guid)` sets the facing toward the object the GUID names through `0x47f220` and
 `0x6198e0`. Facing calls: `0x6188a0`, `0x618870`, `0x618840`.
+The tests run `0x601982` to `0x6019cf`, `0x601ab7` to `0x601ac0`, `0x601aca` to `0x601b1a`,
+`0x601b7e` to `0x601be2`, `0x601c1d` to `0x601c50`, `0x601d41` to `0x601d79`, `0x601e83` to
+`0x601eca`, `0x601eda` to `0x601f7e`, `0x601eda` to `0x601faf`, `0x602148` to `0x6021b5`, `0x6021da`
+to `0x60221e`, `0x602252` to `0x6022bb`, `0x602324` to `0x602342`, `0x60237b` to `0x6023ad`,
+`0x602426` to `0x6024c3` and `0x602426` to `0x60257b`.
 
 ## Relayed move events
 
@@ -195,7 +200,7 @@ target, averaging four samples at `+0xc9c`. `0x6084f0` wraps an angle into −π
 Addresses: `0x600cd0`, `0x600cb0`, `0x601020`, `0x601050`, `0x607eb0`, `0x6084f0`, `0x60a110`, `0x608560`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::wrap_angle_difftest`
 
 `0x600cd0` sets bits 0x1 and 0x2 of `+0xd58` for key and mouse turning on the active mover.
 `0x600cb0` and `0x607eb0` convert `+0xc98` and `+0xc94` to world facings through the transport.
@@ -271,7 +276,7 @@ the move.
 Addresses: `0x6106b0`, `0x610e40`, `0x6103d0`, `0x610520`, `0x610d50`, `0x610da0`, `0x60f940`, `0x60fa20`, `0x611400`, `0x6115e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::broadcast_wrap_angle_difftest`
 
 `0x610e40` returns the transport-local point for modes 4 and 10, nothing for 2 and 8, else the
 object `0xc4d980`, refusing a taxi rider and, outside modes 6 and 9, a dead unit; its distance
