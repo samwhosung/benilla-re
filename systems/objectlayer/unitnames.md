@@ -116,7 +116,8 @@ Test: none
 
 The reaction must top 1 (0x6061e0); `UNIT_NPC_FLAGS` bit 1 calls 0x5eb030 and bit 3 0x5eb170,
 which sends a message. The status handler 0x5dc9f0 reads a GUID and a u32 and calls `0x607440`
-only for a unit with flag 0x2.
+only for a unit with flag 0x2; the handler 0x5ecdd0 reads a GUID and a u8 and, for flag 0x8, calls
+`0x607480` with marker 4 (green) when the u8 is 0, else 0.
 `0x80c454` maps statuses 0 to 7 to markers 0, 3, 0, 2, 7, 1, 6, 6; `0x607440` reloads only when
 the marker changes. `0xc4d9d8` holds eight model and path pairs that `0x5fa430` fills
 (`TalkToMe.mdx` for 1, `TalkToMeQuestion_Grey` 2, `TalkToMeGrey` 3, `Green` 4, `Blue` 5,
