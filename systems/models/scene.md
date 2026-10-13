@@ -119,30 +119,84 @@ the head, clears its `+0x44` and `+0x48`, and calls `0x7192b0`.
 
 ## Element collection
 
-Each instance on the draw queue that is ready contributes one 64-byte element per visible batch,
-ribbon and particle emitter, and one for its custom draw. A batch's alpha is the instance alpha
-times its colour's animated alpha and its transparency weight; a batch with alpha ≤ 0 is skipped, and one with a NaN alpha is kept.
-An element goes to list 0 when its blend mode is 0 or 1 and its alpha is at least 0.99999, else
-to list 1 when the instance lies above the lighting record's clip plane and to list 2 when below.
+Each ready instance on the draw queue gives one 64-byte element per visible batch and ribbon and one
+for its custom draw, each on the emitter queue one per particle emitter. A batch's alpha is the
+instance alpha, times its colour's animated alpha when its colour index is in range, times its
+transparency weight when it has textures; alpha ≤ 0 skips it, a NaN does not. A batch, ribbon or
+emitter of blend 0 or 1 and alpha at least 0.99999 goes to list 0, as does an opaque custom draw;
+otherwise a batch goes to list 1 above the clip plane, list 2 below, possibly both; the rest to list
+1 if above, else 2.
 
 | kind | element |
 |---|---|
 | 0 | a batch |
-| 1 | a batch with flag 4, when the scene has a special callback |
-| 2 | an opaque batch of a batchable instance, flag 0x10, cache bit 0x20, no lights |
-| 3 | a ribbon emitter |
-| 4 | a particle emitter |
-| 5 | the instance's custom draw |
+| 1 | a batch with flag 4, when the scene has a special callback; translucent, list 1, or list 2 under a plane |
+| 2 | an opaque batch of a batchable instance, flag 0x10, cache bit 0x20, no lights: the grouped list |
+| 3 | a ribbon emitter whose visible byte is set, alpha the instance's times its animated alpha |
+| 4 | a particle emitter that still draws, of an instance with alpha above 0 |
+| 5 | the instance's custom draw, alpha 1.0 |
 
-Addresses: `0x707680`, `0x710450`, `0x808120`, `0x70da00`, `0x707b48`, `0x707b5c`
+Addresses: `0x707680`, `0x710450`, `0x808120`, `0x70da00`, `0x707b48`, `0x707b5c`, `0x707af0`, `0x707b12`, `0x707b26`, `0x707e31`, `0x7080cf`, `0x7080e5`, `0x708516`, `0x708530`, `0x7084cf`
 Confidence: verified
 Proof: one
 Test: none
 
-The ready test is `0x710450(model, 0, 0)`. The opaque test compares the blend word of the batch's
-material with 1 and the alpha with the float at `0x808120`. Kind 3 walks the shared header's
-`+0x134` ribbons with state stride 0xd0, kind 4 its `+0x13c` emitters with stride 0x16c; kind 5
-needs a draw callback at instance `+0x1b8` and goes to list 0 when `+0x1c0` is set.
+The ready test is `0x710450(model, 0, 0)`. The colour alpha is the colour state's `+0x3c`
+(`0x707af0`); the weight, read when unit `+0xe` is nonzero (`0x707b12`), is transparency state
+`+0xc` at the header's transparency lookup `+0xa8` entry for unit `+0x14` (`0x707b26`). The opaque
+test compares the material's blend word with 1 and the alpha with the float at `0x808120`. A kind 1
+element reads the lighting record's plane flag `+0x19c` (`0x707e31`). Kind 3 walks the shared
+header's `+0x134` ribbons with state stride 0xd0, tests the state's byte `+0xbc` (`0x7080cf`), and
+multiplies by state `+0x3c` when the record's `+0x4c` count is nonzero, clamping a negative alpha to
+0 (`0x7080e5`); its material is the record's first entry of `+0x20`. Kind 4 walks the emitter
+queue's `+0x13c` emitters with stride 0x16c and needs the state's `+0x164` (`0x708516`) and an alpha
+above 0 (`0x708530`); its material is the record's blend `+0x28`. An emitter is above unless its
+centre lies more than `r` below the plane (`0x7084cf`), whatever the cache's bit 2. Kind 5 needs a
+draw callback at instance `+0x1b8` and goes to list 0 when `+0x1c0` is set.
+
+## Element depth keys
+
+Each element carries two depth keys for the transparent order, `+0x14` and `+0x18`. The instance key
+`+0x84` is the squared length of its world matrix's translation row, computed each frame, or for an
+instance attached to a parent created without flag 1 the parent's key. A translucent batch sets
+`+0x18` to the squared length of its submesh's centre `+0x14` taken through the bone matrix of its
+centre bone `+0x12`, an opaque one to the instance key; `+0x14` is the instance key when depth fill
+applies to the instance and the batch is not kind 1, else `+0x18`. Ribbon, emitter and custom
+elements carry the instance key in both.
+
+Addresses: `0x7143b8`, `0x7143e2`, `0x707d6a`, `0x707d80`, `0x707d9d`, `0x707da8`, `0x707dbf`, `0x707dca`, `0x708184`, `0x7085c9`, `0x70830b`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7143c0` loads instance `+0x12c` to `+0x134` (row 3 of `+0xfc`) and stores `(x·x + y·y) + z·z` at
+`0x7143e2`; `0x7143ac` tests the parent's `+0x4` with 1 and copies its `+0x84` when clear. The batch
+key transforms submesh `+0x14` by bone matrix `+0x94[+0x12]` with `TransformPoint` (`0x707d80`) and
+sums the squares in the same order (`0x707d9d`), each sum at 53 bits and the result stored as a
+float. `0x707db1` tests the instance's depth fill and the kind 1 flag before `0x707dbf` or
+`0x707dca`.
+
+## Depth fill copies
+
+When depth fill applies to an instance, every translucent batch other than kind 1 whose material
+lacks flag 0x10 gets a second element: its `+0x18` becomes the largest float, and a copy with `+0x8`
+= 1 goes to the same lists. Depth fill applies when the cache's feature bit 1 is granted, the
+instance was created without flag 1, and its `+0x1c4` is set, which the constructor sets and no live
+code clears. The copy draws with colour writes off and blending off, keeping the alpha test of blend
+1 (`render`, `Material state`), and the transparent order puts it before every element of equal
+`+0x14`.
+
+Addresses: `0x707a3c`, `0x707a4e`, `0x707f89`, `0x707f9a`, `0x707fa7`, `0x707fb3`, `0x707ff0`, `0x707ff7`, `0x710da0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x707a3c` tests the cache's `+0x4` with 1, the instance's `+0x4` with 1 and `+0x1c4` (`0x707a4e`)
+into `[ebp-0x8]`. After the batch's list append, `0x707f89` needs that flag, `0x707f8f` a clear kind
+1 flag, `0x707f9a` the translucent flag and `0x707fa7` material bit 0x10 clear. `0x707fb3` stores
+0x7f7fffff in the element's `+0x18` before `rep movs` copies it (`0x707ff0`), so both carry it;
+`0x707ff7` sets the copy's `+0x8`. Its only setter, `0x710da0`, has no caller (`overview`, Unreached
+code).
 
 ## Plane classification
 

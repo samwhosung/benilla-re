@@ -60,6 +60,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		screencoord::sc_41ae70_scale_y
 0x41aed0	19	HandleClose	idb	base			Closes a handle	inferred	none	spell/visuals#chain-lifetime	
 0x41af10	20	CreateHandle		base			Returns a handle for an object, or 0 with error 0x57 for a null object	inferred	none	camera#lifetime	
+0x41af50	16	AddHandleRef		base		void * __fastcall (void *handle)	Adds a reference to a handle's object and returns the handle, or 0 for a null handle	verified	one	models/model#instance-arrays	
 0x41af70	8	CompareHandles		base			Returns the difference of two handles shifted right by 2	inferred	none	models/scene#element-sort-orders	
 0x41db50	13	SetThreadPropContext		base			Stores a value in the calling thread's property slot through 0x436db0	verified	one	core/loop#one-tick	
 0x41db90	27	PropGet	idb	base			Returns an entry of the calling thread's property array, read through TlsGetValue	inferred	none	core/loop#one-tick	
@@ -557,6 +558,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x449010	172	FreeTextureCaches		gx			Frees every entry of the CGxTexCache lists	inferred	none		
 0x449610	470	TextureCreateFromFile		gx			Loads a texture file as a handle tagged HTEXTURE	inferred	none		
 0x449d90	281	TextureCreate	idb	gx			Creates a texture from a file name	inferred	none	spell/visuals#chain-effect-creation	
+0x44acf0	82	GetTextureDeviceObject		gx		void * __fastcall (void *texture, uint32_t load, void *callback)	Returns a texture's device object, loading it first when asked; 0 for a null texture	verified	one	models/render#texture-stages	
 0x44cb20	29	ValidateStatusLevel		sysmsg			Returns 1 for a non-null text and a level below 4; otherwise sets error 0x57 and returns 0	verified	one	objectlayer/update#creating-an-object	
 0x44cb90	63	SysMsgVPrintf		sysmsg			Formats a message into 256 bytes with a va_list and passes it on with the first two arguments	inferred	none		
 0x44cbd0	44	SysMsgPrintf	idb	sysmsg			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
@@ -2482,6 +2484,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x575280	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\CharBaseInfo.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x5764f0	6			dbc		const char * __cdecl (void)	Returns the path DBFilesClient\ChrRaces.dbc	verified	one	spell/tables#startup-build-of-the-indexes	
 0x589ca0	11	QueryDevice		gx	host	uint32_t __cdecl (void)	Returns the graphics device's dword at +0x1fc through a tail call to 0x592120	verified	one	camera#orthographic-setup	
+0x589d80	61	SetDeviceLight		gx		void __fastcall (uint32_t index, const void *light, float x, float y, float z, uint32_t enabled)	Sets one of the device's four fixed lights and its enable flag; an index of 4 or more fails	verified	one	models/render#lighting-lanes	
 0x589e60	27	GxRsSet	idb	gx			Sets one of the device's render states, rejecting a state index of 0x46 or more	inferred	none		
 0x58a080	18	GxBufLock		gx		void * __fastcall (void *buffer)	Locks a buffer through the device's slot 0xa8 and returns its memory	inferred	none		
 0x58a0a0	27	GxBufUnlock		gx		void __fastcall (void *buffer, uint32_t count)	Unlocks a buffer through the device	inferred	none		
@@ -11433,7 +11436,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x70b330	28	M2DrawStateClearBlock		models	orchestration		Zeroes an eight-dword block of the draw state	verified	one	models/render#list-draw	
 0x70b350	14	M2DrawStateClearVector		models	orchestration		Zeroes a four-dword vector; the element constructor of the draw state's arrays	verified	one	models/render#list-draw	
 0x70b360	967	M2SceneDrawList		models	host		Sets the device for model drawing and draws a list of elements by kind, tracking the previous element	verified	one	models/render#list-draw	
-0x70b740	935	M2DrawSetTextures		models	primitive		Binds an element's textures, wrap modes and texture matrices to the device stages	verified	one	models/render#texture-stages	
+0x70b740	935	M2DrawSetTextures		models	primitive		Binds an element's textures, combines and texture coordinate sources to the device stages	verified	one	models/render#texture-stages	
 0x70baf0	1674	M2DrawSetLighting		models	primitive		Sets an element's lighting, lights, fog mode and colour, and its clip plane on the device	verified	one	models/render#lighting-and-fog	
 0x70c190	2232	M2DrawSetMaterial		models	primitive		Sets an element's blend, alpha test, cull, depth and material colours on the device	verified	one	models/render#material-state	
 0x70ca50	192	M2DrawBeginEmitter		models	primitive		Sets an emitter element's textures, lighting and material, and a view offset to the model	verified	one	models/render#ribbon-particle-and-custom-draws	
@@ -11520,12 +11523,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x710e50	101	CM2Model::GetReplaceableTexture		models	orchestration		Returns the texture bound to a replaceable texture id of an instance	verified	one	models/model#replaceable-textures	
 0x710ec0	438	CM2Model::SetReplaceableTexture		models	host		Binds a texture to every texture of an instance with a replaceable type, and to its emitters	verified	one	models/model#deferred-calls	
 0x711080	77	CM2Model::HasGeoset		models	unreached		Returns whether the selected view has a submesh with a geoset id; nothing reaches it	verified	one	models/overview#unreached-code	
-0x7110d0	352	CM2Model::SetGeosetRange		models	host		Shows or hides the submeshes whose geoset ids lie in a range, rebuilding batches on change	verified	one	models/model#deferred-calls	
-0x711230	1346	CM2Model::BuildBatches		models	primitive		Builds an instance's own batch table and index buffer from its visible submeshes	verified	one	models/model#deferred-calls	
-0x711780	87	M2BatchesMatch		models	orchestration		Returns whether two batches share colour, material, textures, transparency and bone count	inferred	none	models/model#geosets-and-own-batches	
+0x7110d0	352	CM2Model::SetGeosetRange		models	host		Shows or hides the submeshes whose geoset ids lie in a range, freeing the own batches on a change	verified	one	models/model#geoset-visibility	
+0x711230	1346	CM2Model::BuildBatches		models	primitive		Builds an instance's own batch table and index buffer from its visible submeshes	verified	one	models/model#own-batches	
+0x711780	87	M2BatchesMatch		models	orchestration		Returns whether two units share colour, material, textures, transparency, transform and first bone	verified	one	models/model#own-batches	
 0x7117e0	76	M2BatchArrayDeletingDestructorA		models	unreached		Frees an array or object by the deleting-destructor flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711830	76	M2BatchArrayDeletingDestructorB		models	unreached		Frees an array or object by the deleting-destructor flags; nothing reaches it	verified	one	models/overview#unreached-code	
-0x711880	215	CM2Model::FreeBatches		models	host		Frees an instance's own batch table and its vertex and index buffers	inferred	none	models/model#geosets-and-own-batches	
+0x711880	215	CM2Model::FreeBatches		models	host		Frees an instance's own batch table, its index buffer and its shader ids	verified	one	models/model#own-batches	
 0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	inferred	none		
 0x7119a0	122	CM2Model::CountVariations		models	unreached		Counts the variations of an animation id's sequence chain; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711a20	392	CM2Model::GetSequenceInfo		models	primitive		Fills a record with a resolved sequence's flags, length, speed, bounds and radius	inferred	none		
@@ -11683,12 +11686,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71d610	39	CM2Shared::ReadSync		models	host		Reads the whole file into the shared model's buffer, then finishes loading	verified	one	models/shared#loading	
 0x71d640	116	CM2Shared::FinishLoad		models	primitive		Fixes up the header, selects a view, marks the model loaded and initializes the queued instances	verified	one	models/shared#loading	
 0x71d6c0	1004	CM2Shared::InitializeView		models	primitive		Picks the richest view the bone palette fits, sets batch limits, shader ids and loads textures	verified	one	models/shared#view-selection	
-0x71dab0	459	CM2Shared::CreateIndexBuffer		models	primitive		Creates and fills a shared model's device index buffer from its view once	verified	one	models/render#batch-draw	
-0x71dc80	450	CM2Shared::CreateVertexBuffer		models	host		Creates and fills a shared model's device vertex buffer from its vertices once	verified	one	models/render#batch-draw	
+0x71dab0	459	CM2Shared::CreateIndexBuffer		models	primitive		Fills a shared model's device index buffer with its view's triangles for each instance copy	verified	one	models/shared#device-buffers	
+0x71dc80	450	CM2Shared::CreateVertexBuffer		models	host		Fills a shared model's device vertex buffer with its view's vertices for each instance copy	verified	one	models/shared#device-buffers	
 0x71de50	210	CM2Shared::GetVertexShaderId		models	primitive		Computes the vertex shader id of a batch from its bones, texture units and lighting	verified	one	models/shared#view-selection	
 0x71df30	98	CM2Shared::GetPixelShaderId		models	primitive		Computes the pixel shader id of a batch from its texture units' blend modes	verified	one	models/shared#view-selection	
-0x71dfa0	69	CM2Shared::CreateBuffers		models	primitive		Creates a shared model's device buffers when their contents changed	inferred	none	models/render#grouped-and-projected-draws	
-0x71dff0	93	CM2Shared::FreeBuffers		models	host		Frees a shared model's device index and vertex buffers	inferred	none	models/shared#device-buffers	
+0x71dfa0	69	CM2Shared::CreateBuffers		models	primitive		Raises a shared model's instance copies for a batched run and frees its buffers to be rebuilt	verified	one	models/shared#device-buffers	
+0x71dff0	93	CM2Shared::FreeBuffers		models	host		Frees a shared model's device index and vertex buffers	verified	one	models/shared#device-buffers	
 0x71e050	5	InitM2SharedInfinityThunk		models	orchestration		Jumps to 0x71e060; a static initializer	verified	one	models/overview#shared-header-constants	
 0x71e060	11	InitM2SharedInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x71e070	5	InitM2SharedTwoPiThunk		models	orchestration		Jumps to 0x71e080; a static initializer	verified	one	models/overview#shared-header-constants	
@@ -11709,7 +11712,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71e880	78	M2FixupMaterials		models	orchestration		Bounds-checks the 4-byte material array and turns its offset into a pointer	verified	one	models/shared#header-fixup	
 0x71e8d0	251	M2FixupAttachments		models	orchestration		Bounds-checks the 48-byte attachments and fixes up their visibility tracks	verified	one	models/shared#header-fixup	
 0x71e9d0	196	M2FixupEvents		models	orchestration		Bounds-checks the 44-byte events and fixes up their per-sequence time arrays	verified	one	models/shared#header-fixup	
-0x71eaa0	775	M2FixupLights		models	orchestration		Bounds-checks the 212-byte lights and fixes up their nine tracks	verified	one	models/shared#header-fixup	
+0x71eaa0	775	M2FixupLights		models	orchestration		Bounds-checks the 212-byte lights and fixes up their seven tracks	verified	one	models/shared#header-fixup	
 0x71edb0	400	M2FixupCameras		models	orchestration		Bounds-checks the 124-byte cameras and fixes up their spline tracks	verified	one	models/shared#header-fixup	
 0x71ef40	708	M2FixupRibbons		models	orchestration		Bounds-checks the 220-byte ribbon emitters and fixes up their arrays and tracks	verified	one	models/shared#header-fixup	
 0x71f210	1078	M2FixupParticles		models	orchestration		Bounds-checks the 504-byte particle emitters and fixes up their arrays and tracks	verified	one	models/shared#header-fixup	

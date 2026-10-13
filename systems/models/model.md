@@ -43,6 +43,39 @@ calls `0x71d430` on the shared model and stores it at `+0x30`, stores `+0x40 = s
 and for each child of the source creates `0x707400(child, 0)` and attaches it at child `+0x1d0`.
 `0x7103a0` decrements `+0x0` and at zero runs `0x70e170` and frees the instance.
 
+## Instance arrays
+
+Initialization allocates the instance's animated state from the header's counts; a failed allocation
+fails it. Each element array starts zeroed or with its states cleared, except the visibility words
+(`Geoset visibility`).
+
+| offset | array, per element |
+|---|---|
+| `+0x064`, `+0x06c` | one word per global sequence (its time), one word per sequence |
+| `+0x090`, `+0x094` | bone states (0x118, the bone's flags copied to `+0xf4`), bone matrices (64) |
+| `+0x098`, `+0x09c` | visibility words |
+| `+0x0a0`, `+0x0a8`, `+0x0ac` | colour (0x50), transparency (0x20) and texture frame (0x20) states |
+| `+0x0a4` | texture handles, each taken from the copy source or the shared model with a reference |
+| `+0x0b0`, `+0x0b4` | texture transform states (0x98), texture transform matrices (64) |
+| `+0x1c8`, `+0x1f0` | attachment visibility states (0x20), event states (0x20) |
+| `+0x200` | light states (0x170): a light at `+0x104` of the record's type, `+0x3c` and `+0x8c` 1.0 |
+| `+0x3c4` | camera states (0x84) with a camera at `+0x80` given the record's `+0x4`, `+0xc`, `+0x8` |
+| `+0x3c8`, `+0x3cc` | ribbon states (0xd0), ribbon emitters |
+| `+0x3d0`, `+0x3d4` | particle states (0x16c), particle emitters |
+
+Addresses: `0x70ebd0`, `0x70ec30`, `0x70ec7a`, `0x70ecde`, `0x70ed0d`, `0x70ed35`, `0x70ee9d`, `0x70eecd`, `0x70ef16`, `0x70ef7d`, `0x70efea`, `0x70f05f`, `0x70f07e`, `0x70f0e9`, `0x70f15a`, `0x70f1c9`, `0x70f22a`, `0x70f2e7`, `0x70f336`, `0x70f418`, `0x70f44b`, `0x70f927`, `0x70f95c`
+Confidence: verified
+Proof: one
+Test: none
+
+Each array is `SMemAlloc` of the header count times the element size, each with its own line, and a
+count dword before the bone, colour, texture transform, light, camera and ribbon state arrays.
+`0x70ed0d` copies bone record `+0x4` into state `+0xf4`. `0x70ef16` stores `0x41af50` of copy source
+`+0xa4[i]` or shared model `+0x13c[i]`, 0 for a null handle. The light loop calls `0x71b5f0` with
+the scene and `0x71b620` with the record's 16-bit `+0x0` (`0x70f22a`), stores 1.0 at `+0x3c` and
+`+0x8c` and 1 at byte `+0xec`. The camera loop creates the camera with `0x7ac930` and sets its
+properties 4, 3 and 2 from record `+0x4`, `+0xc` and `+0x8` (`0x70f336`).
+
 ## Deferred calls
 
 A call that changes animation state while the shared model is loading appends an 80-byte record:
@@ -108,36 +141,89 @@ Test: none
 `row1 × n`, and row 2 to `n`. The blend weight in `0x7106c0` reads the state from `0x711fe0`; its
 exact time arithmetic was not transcribed.
 
-## Geosets and own batches
+## Geoset visibility
 
-`SetGeosetRange(min, max, visible)` shows or hides every submesh of the selected view whose geoset
-id lies in the range, and rebuilds the instance's own batches when anything changed. The own batch
-table copies the visible submeshes' batches into an instance index buffer, merging neighbours whose
-colour, material, textures, transparency, texture transform and bones match.
+An instance holds one visibility word per submesh of the selected view at `+0x98` and, when the
+selected view is not view 0, one per submesh of view 0 at `+0x9c`; initialization fills both with 1,
+or copies the copy source's words. `SetGeosetRange(min, max, visible)` stores `visible` in each word
+whose submesh id, the unsigned 32-bit `+0x0`, lies in `[min, max]` and whose zero-ness differs; a
+change to `+0x98` frees the own batches. A batch is drawn only when the word at its texture unit's
+submesh index `+0x4` is nonzero. Besides its own deferred replay, `SetGeosetRange` is called only
+from the character component code, so any other model keeps every word at 1 and draws every submesh.
 
-Addresses: `0x7110d0`, `0x711230`, `0x711780`, `0x711880`, `0x719930`
-Confidence: inferred
-Proof: none
+Addresses: `0x70ebd0`, `0x70ed7f`, `0x70edb5`, `0x70edce`, `0x70edfe`, `0x7110d0`, `0x711106`, `0x711109`, `0x711135`, `0x7111aa`, `0x7111c7`, `0x707adb`, `0x7101ee`
+Confidence: verified
+Proof: one
 Test: none
 
-The visibility words live at `+0x98`, one per submesh. `0x711780` compares batch words `+0x8`,
-`+0xa`, `+0x10`, `+0x14`, `+0x16` and submesh `+0xe`.
+`0x70ed7f` stores 1 with `rep stos` over the selected view's `+0x18` words and `0x70edb5` copies
+copy source `+0x98` over them; `0x70edce` skips `+0x9c` when the selected view is view 0, else
+`0x70edfe` fills it. `0x7110d0` defers itself as kind 1 while unloaded; it reads submesh `+0x0`
+(`0x711106`), keeps it when neither `min > id` nor `id > max` (`ja`, `0x711109`), and writes the
+loop index, not the id (`0x711135`, `0x7111aa`); only the first loop sets the changed flag that
+calls `0x711880` (`0x7111c7`). The live element path tests `+0x98` (`0x707adb`); `0x711230` tests it
+while building. The census of `e8`/`e9` targets and stored dwords for `0x7110d0` finds five calls,
+`0x7101ee` in the replay and four in CharacterComponent.cpp's code, and no stored address.
+
+## Own batches
+
+`BuildBatches` gives an instance its own batch table when merging shrinks it: walking the selected
+view's texture units in order, it keeps each visible one and drops one that matches the last kept
+one in colour index, material, texture combination, transparency, texture transform and the
+submesh's first bone lookup. Only when some unit was dropped does it build the table, with its own
+index buffer and shader ids; otherwise the instance keeps none. Building first frees the old table
+and clears the instance's batchable flag `+0xb8`.
+
+Addresses: `0x711230`, `0x711293`, `0x71129b`, `0x711302`, `0x711323`, `0x711371`, `0x711780`, `0x711880`, `0x719930`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x711230` defers itself as kind 2 while unloaded, calls `0x711880` (`0x711293`) and stores 0 at
+`+0xb8` (`0x71129b`). Its counting pass tests visibility (`0x711302`) and calls `0x711780`
+(`0x711323`), which compares unit words `+0x8`, `+0xa`, `+0x10`, `+0x14`, `+0x16` and submesh
+`+0xe`; `0x711371` returns when the kept count is not below the visible count. The table is `+0x3ec`
+(24-byte units), `+0x3f4` (32-byte submeshes), the index buffer `+0x400`/`+0x404` and the shader ids
+`+0x408`/`+0x40c`; `0x711880` frees them all. The element path takes `+0x3ec` when `+0x404` is set.
+
+## Batchable flag
+
+An instance's batches can join a batched run (`scene`, kind 2) only while its flag `+0xb8` is set.
+Initialization sets it when the instance was created without flag 2, its shared model allows more
+than one instance per batched draw (`+0x160` above 1), and its copy source, if any, has it set.
+Building own batches and binding a replaceable texture clear it; nothing sets it again.
+
+Addresses: `0x7100b5`, `0x7100be`, `0x7100ce`, `0x7100e6`, `0x71129b`, `0x710ff1`, `0x707c11`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7100b5` tests `+0x4` with 2, `0x7100be` compares shared `+0x160` with 1 (`jbe`), `0x7100ce` reads
+the copy source's `+0xb8`, and `0x7100e6` stores the result. Of the stores to `+0xb8` in
+M2Model.cpp's code the fourth, `0x712423`, writes a bone state; `0x707c11` reads the flag on the
+element path.
 
 ## Replaceable textures
 
-`SetReplaceableTexture(type, texture)` binds the texture to every model texture of that
-replaceable type, to the ribbons and particle emitters that use one, and marks the textures not
-loaded when the new texture is not. `GetReplaceableTexture` returns the texture of an id through
-the header's replaceable lookup.
+`SetReplaceableTexture(type, texture)` binds the texture to every model texture of that replaceable
+type, to the ribbons, and to each particle emitter whose texture is of that type; it marks the
+textures not loaded when the new texture is not, and clears the batchable flag `+0xb8`.
+`GetReplaceableTexture` returns the texture of an id through the header's replaceable lookup.
+Callers bind only the types 1, 2, 6, 8, 11, 12, 13 and 14; a texture of any other type keeps the
+handle initialization gave it, from its file name or 0.
 
-Addresses: `0x710ec0`, `0x710e50`, `0x7b7950`, `0x7b4d20`
+Addresses: `0x710ec0`, `0x710e50`, `0x7b7950`, `0x7b4d20`, `0x710fa1`, `0x710ff1`
 Confidence: verified
 Proof: one
 Test: none
 
 The texture records are 16 bytes at header `+0x60` with the type at `+0x0`; each match closes
 `+0xa4[i]` and stores the new handle with a reference. Ribbons get `0x7b7950(ribbon, type,
-texture)`, emitters `0x7b4d20`. `0x710e50` looks the id up in header `+0x7c` with `0x710310`.
+texture)`; an emitter whose record's texture index `+0x16` names a texture of the type gets
+`0x7b4d20` with that texture (`0x710fa1`). `0x710ff1` stores 0 at `+0xb8`. `0x710e50` looks the id
+up in header `+0x7c` with `0x710310`. A census of `e8` calls to `0x710ec0` finds eleven and no
+stored address: the replay of deferred kind 0, and ten in other systems' code pushing 1, 8, 6, 1, 2,
+2, 2, 14 and, in two loops of three, 11 to 13.
 
 ## Attachments
 

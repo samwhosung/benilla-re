@@ -24,8 +24,9 @@ Roots: `0x71d5e0`, `0x71d610`
 | `+0x124`, `+0x128`, `+0x12c` | bucket links, name hash |
 | `+0x130`, `+0x134` | file data, file size |
 | `+0x138`, `+0x13c` | selected view, texture handles |
+| `+0x140` to `+0x14c` | device index buffer handles, device vertex buffer handles |
 | `+0x150`, `+0x154`, `+0x158` | per-batch vertex and pixel shader ids, copy of the view's submeshes |
-| `+0x15c`, `+0x160` | batching enabled, instances per batched draw |
+| `+0x15c`, `+0x160` | instance copies the device buffers hold, most instances one batched draw may take |
 
 Addresses: `0x71d2c0`, `0x71d330`, `0x71d430`, `0x71d480`
 Confidence: verified
@@ -107,12 +108,25 @@ bits 8 and 0x10 of the cache's texture settings, asynchronous when the load is.
 
 ## Device buffers
 
-The index buffer holds the view's triangle indices and the vertex buffer the file's vertices,
-each created once and refilled when the device loses them.
+The buffers hold `+0x15c` copies of the selected view, one per instance of a batched draw; a load
+sets it to 1, and drawing a batched run of `n` raises it to `n` rounded up to 16, at most `+0x160`,
+and frees the buffers to be rebuilt. Per copy the vertex buffer holds the vertices the view's lookup
+names, in lookup order, 48 bytes each, their bone index bytes replaced by the view's palette bytes
+plus `copy · bones`. Per submesh and copy the index buffer holds the submesh's triangle entries plus
+`copy · lookup count` with shader ids, else the copy's vertex offset less the submesh's first
+vertex; the submesh copy in `+0x158` gets its run's start.
 
-Addresses: `0x71dab0`, `0x71dc80`, `0x71dfa0`, `0x71dff0`
-Confidence: inferred
-Proof: none
+Addresses: `0x71dab0`, `0x71dc80`, `0x71dfa0`, `0x71dff0`, `0x71d7c8`, `0x71db97`, `0x71dbc9`, `0x71dc25`, `0x71dd90`, `0x71ddbd`
+Confidence: verified
+Proof: one
 Test: none
 
-The buffers are named `CM2Shared_idx` and `CM2Shared_vtx`. `0x71dff0` releases both.
+`0x71dfa0(n)`, called only at `0x70d3bf` in the batched run draw, grows `+0x15c` when it is below
+both `n` and `+0x160`: `(n + 15) & ~15`, capped, then `0x71dff0` frees `+0x144`, `+0x140`, `+0x14c`
+and `+0x148`. `0x71dab0` sizes `view+0x8 · +0x15c` words; per submesh it reads the start `+0x8` of
+the view's record and copies `+0xa` entries of view `+0xc` from there (`0x71dbc9`), each plus the
+base, which starts at 0 when `+0x150` is set and at `−copy+0x4` otherwise (`0x71db97`) and grows per
+copy by view `+0x0` or the copy's `+0x6`; `0x71dc25` stores the run start in the copy's `+0x8`.
+`0x71dc80` sizes `view+0x0 · +0x15c · 48` bytes, copies the vertex `view+0x4[p]` for each `p` in a
+submesh's range (`0x71dd90`) and stores `view+0x14[p] + copy · +0xc · 0x01010101` at `+0x10`
+(`0x71ddbd`). The buffers are named `CM2Shared_idx` and `CM2Shared_vtx`.
