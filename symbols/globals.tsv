@@ -919,7 +919,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d6b8	uint32_t[5]	s_taxiNodesStore		dbc	Holds the TaxiNodes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#taxis
 0xc0d744	uint32_t[5]	s_spellVisualKitDb		dbc	Holds the SpellVisualKit.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/handlers#small-spell-handlers
 0xc0d758	uint32_t[5]	s_spellVisualEffectNameDb		dbc	Holds the SpellVisualEffectName.dbc store: records, count, id map, max row, loaded flag	verified	one	spell/go#cast-visual-and-dest-effect
-0xc0d76c	uint32_t[5]	s_spellShapeshiftFormStore		dbc	Holds the SpellShapeshiftForm.dbc store	verified	one	objectlayer/items#using-an-item
+0xc0d76c	uint32_t[5]	s_spellShapeshiftFormStore		dbc	Holds the SpellShapeshiftForm.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playerfields#combo-points-form-and-far-sight
 0xc0d780	uint32_t[5]	s_spellStore		dbc	Holds the Spell.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	spell/records#record-lookups
 0xc0d794	uint32_t[5]	s_spellRangeStore		dbc	Holds the SpellRange.dbc store	verified	one	spell/records#record-lookups
 0xc0d7d0	uint32_t[5]	s_spellItemEnchantmentStore		dbc	Holds the SpellItemEnchantment.dbc store	verified	one	objectlayer/items#bound-items
@@ -937,7 +937,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0db90	uint32_t[2]	s_itemSubClassRows		dbc	Holds the ItemSubClass.dbc rows and their count, 0x74 bytes each	verified	one	objectlayer/playercombat#learning-a-spell
 0xc0dbcc	uint32_t[5]	s_itemRandomPropertiesStore		dbc	Holds the ItemRandomProperties.dbc store	verified	one	objectlayer/items#item-names
 0xc0dbf4	uint32_t[5]	s_itemGroupSoundsStore		dbc	Holds the ItemGroupSounds.dbc store	verified	one	objectlayer/items#the-item-record
-0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store	verified	one	objectlayer/items#the-item-record
+0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playercombat#hand-weapons
 0xc0dc30	uint32_t[5]	s_itemBagFamilyStore		dbc	Holds the ItemBagFamily.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/inventory#opening-and-wrapping-items
 0xc0dcd0	uint8_t[20]	s_gameTipsStore		dbc	Holds the GameTips.dbc store: records, count, id map, maximum id, loaded flag	inferred	none	
 0xc0dce4	uint32_t[5]	s_gameObjectDisplayInfoStore		dbc	Holds the GameObjectDisplayInfo.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes

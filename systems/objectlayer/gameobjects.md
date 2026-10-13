@@ -49,11 +49,12 @@ section, count, type, flags.
 
 The constructor switches on `GAMEOBJECT_TYPE_ID` from 0 to 30: each case allocates the type's
 handler and runs its constructor with the object. Type 21 and any type above 30 get a shared
-static handler and log `BADBASEGAMEOBJECT`. A failed allocation leaves no handler. Every handler
-starts with a vtable, the object at `+0x4`, an error at `+0x8` and a use range at `+0xc`, by
-default `ERR_USE_LOCKED` and 5.0 yards.
+static handler and log `BADBASEGAMEOBJECT`. A failed allocation leaves no handler. Every built
+handler starts with a vtable, the object at `+0x4`, an error at `+0x8` and a use range at `+0xc`,
+by default `ERR_USE_LOCKED` and 5.0 yards. The static handler has only its vtable; its `+0x4` to
+`+0xc` stay zero, unread because its slots 5 and 6 return 0.
 
-Addresses: `0x5f708f`, `0x5f7098`, `0x5f76cc`, `0x5f768d`, `0x5f76a0`, `0x5f2f50`, `0xc4d840`, `0x5f36d0`, `0x5f36e0`, `0x5f3730`, `0x80b100`, `0x80b188`, `0x80b084`
+Addresses: `0x5f708f`, `0x5f7098`, `0x5f76cc`, `0x5f768d`, `0x5f76a0`, `0x5f2f50`, `0xc4d840`, `0x5f36d0`, `0x5f36e0`, `0x5f3730`, `0x5f36f0`, `0x5f3700`, `0x80b100`, `0x80b188`, `0x80b084`
 Confidence: verified
 Proof: one
 Test: none
@@ -62,7 +63,8 @@ Test: none
 file and its size to `SMemAlloc`, calls the handler constructor and stores `eax` at `+0x210`; a
 null allocation jumps to `0x5f768d`, which stores 0. Entry 21 of the table is `0x5f76a0`: it stores
 `0xc4d840` and calls `SysMsgPrintf(1, 2, "BADBASEGAMEOBJECT|%d", type)`. The initializer `0x5f36e0`
-stores the vtable `0x80b188` there and its exit callback `0x5f3730` the base `0x80b100`.
+stores the vtable `0x80b188` there and nothing else, and its exit callback `0x5f3730` the base
+`0x80b100`; `0x80b188`'s slots 5 and 6 are `0x5f36f0` and `0x5f3700`, `xor al,al`.
 `0x5f2f50(go)` stores `0x80b100`, the object, `0xdb` at `+0x8` and `[0x80b084]` (5.0) at `+0xc`.
 
 ## Handler types 0 to 10
@@ -297,25 +299,29 @@ Test: none
 0x1a0. Unit flag 0x80000 with `0x5f5970` false (`notInCombat` set) gives 0x1a1; 0x80000000 with
 `0x5f59a0` false (a chest, or `noDamageImmune` set) 0x169. `GAMEOBJECT_FLAGS` bit 0x2 with
 `0x5f83d0` returning 1 gives `[handler+8]`. The range is `[handler+0xc]`, or the opening spell's
-maximum (`0x5f3328`); without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dy² + dz²)`
+maximum (`0x5f3328`) for the distance test only: the range handed back is always `[handler+0xc]`,
+written at `0x5f32f4` before the spell's; without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dy² + dz²)`
 against range², `test ah,5; jp`; farther gives 0xe1, a NaN passes.
 
 ## Using a game object
 
 For an interactable object, the object's slot 24 sets the player's auto-loot byte from its
-argument and interacts: when usable, the handler's slot 7 uses it; out of range, except a fishing node, the player walks
-to it; any other refusal shows its error. The default use casts the lock's opening spell with its
+argument and interacts: when usable, the handler's slot 7 uses it; out of range, except a fishing
+node, the player walks to the handler's range, never the opening spell's, and tries again on
+arrival; any other refusal shows its error. The default use casts the lock's opening spell with its
 item on the object, or, with no spell, sends 0xb1 with the object's GUID. A lock the player
 cannot open shows why.
 
-Addresses: `0x5f8660`, `0x5f86b0`, `0x5f86dc`, `0x5f86f6`, `0x5f873e`, `0x5f33e0`, `0x5f341a`, `0x5f343b`, `0x5f3448`, `0x5f35bb`, `0x5f35e4`, `0x610300`, `0x5df460`, `0x6e5a90`, `0x6e5b40`, `0x5ab630`
+Addresses: `0x5f8660`, `0x5f86b0`, `0x5f86dc`, `0x5f86f6`, `0x5f873e`, `0x5f33e0`, `0x5f341a`, `0x5f343b`, `0x5f3448`, `0x5f35bb`, `0x5f35e4`, `0x610300`, `0x5df460`, `0x6e5a90`, `0x6e5b40`, `0x5ab630`, `0x60faa4`
 Confidence: verified
 Proof: one
 Test: none
 
 Slot 24, `0x5f8660(modifier)`, returns unless slot 5 holds, then calls 0x5df460 with
 `modifier != 0` and `0x5f86b0`. `0x5f86f6`
-compares the error with 0xe1 and `0x5f873e` calls `CGUnit_C::WalkToGameObject(&guid, range)`.
+compares the error with 0xe1 and `0x5f873e` calls `CGUnit_C::WalkToGameObject(&guid, range)` with
+that handler range. The walk's arrival, `CGUnit_C::CompleteInteractMove`, calls `0x5f86b0` again at
+`0x60faa4`, without slot 5's test.
 `0x5f33e0` calls `0x5f83d0(&spell, &item, 0, 0, &index)`; unlocked, `CastSpellAsActivePlayer(spell,
 item, 0, 0)` and `BindSpellTargetObject`, or the 0xb1 packet (`0x5f35e4`). Locked: when the slot's
 action fails `0x5f81d0`, a chest in state 0 gives `ERR_CHEST_IN_USE`. Key type 1 gives

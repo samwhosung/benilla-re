@@ -275,5 +275,5 @@ Test: none
 
 0x1eb reads the item, slot, time and the owner GUID; a missing item goes to the named player or
 the active one through `0x5ebd40`, which links a 24-byte node to `+0x1cc8`. `0x5ebde0`, from the
-item's creation, calls `0x5d9cc0(slot, ms)` for each node of that GUID, unlinks it with `0x5f0e50`
+item's creation, calls `0x5d9cc0(slot, seconds)` for each node of that GUID, unlinks it with `0x5f0e50`
 and frees it.

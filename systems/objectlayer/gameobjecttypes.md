@@ -118,7 +118,8 @@ with old 0 or progress below 100 gives 4, else old 2 gives 7, else 1; new 2 (`0x
 slot 34 with 3, 4 and 7 with 1, 5 with 6; 1, 3, 6 replay; 0 and 8 to 11 call slot 10 with
 `(+0x27c, +0x27c)` unless a release is pending. `0x5f3c30`, after reactivation, picks 3 or 2, 1 or
 4, 6 or 5 from the state and progress. The states play the animations 0x91, 0x93, 0x94, 0x95,
-0x92, 0x96, 0x97, 0x98, 0x99 to 0x9c and 0x9d (`0x8607e4`); `0x860818` names nine.
+0x92, 0x96, 0x97, 0x98, 0x99 to 0x9c and 0x9d (`0x8607e4`); `0x860818` names states 0
+to 8, Closed to Despawn; states 9 to 12 read the null dwords at 0x86083c to 0x86084b.
 
 ## Playing a state
 

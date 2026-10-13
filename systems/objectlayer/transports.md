@@ -96,35 +96,60 @@ boarding with `0x614eb0`.
 
 ## The ship path
 
-When the record arrives the handler creates its entity and reads `accelRate` and `moveSpeed` as
-floats and `taxiPathID`. The nodes are the run of `TaxiPathNode` rows from the first with that
+On the record's arrival the handler creates its entity and reads `accelRate`, `moveSpeed` and
+`taxiPathID`. The nodes are the run of `TaxiPathNode` rows from the first with that
 path. A leg starts at the first node, at a node on another map and after a node with flag 0x1. A
 node with flag 0x2, not a leg's first, is a stop of its delay × 1000 ms. Each leg is timed, then
 laid end to end: its start is the total so far, its stops' times gain that start, and the total
-gains its travel time and the stop waits. The total is the period. The object joins the
-transport list and ticks once.
+gains its travel time and the last leg's stop waits (Path faults). The total is the
+period. The object joins the transport list and ticks once.
 
 Addresses: `0x5f4cc0`, `0x5f4f80`, `0x5f90e0`, `0x5f94f0`, `0x5f9530`, `0x5f9570`, `0x5f95d0`, `0x5f9610`, `0x5f99e0`, `0x6308b0`
 Confidence: verified
 Proof: one
 Test: none
 
-The columns are `0x621b00` ids 0x2b, 0x24 and 0x23, the first two through `fild` of a zero-extended
-qword. The rows of `0xc0d6a4` are 0x24 bytes: path `+4`, map `+0xc`, position `+0x10`, flags `+0x1c`, delay `+0x20`.
+The columns are `0x621b00` ids 0x2b, 0x24 and 0x23, the first two made floats through `fild` of a
+zero-extended qword. The rows of `0xc0d6a4` are 0x24 bytes: path `+4`, map `+0xc`, position `+0x10`, flags `+0x1c`, delay `+0x20`.
 `0x5f4dda`–`0x5f4de9` start a leg on no leg, a map change or the previous node's bit 0x1; `0x5f4e37`
 needs a non-zero point count for a stop. The node and stop arrays live on the stack, 0x3000 and
-0x2000 bytes: 1024 entries each, and the appends `0x5f9530` and `0x5f9610` check no bound, so a
-leg of more than 1024 nodes overruns the stack. The stop array is emptied only when a new leg
-starts (`0x5f4e32`), so the loop at `0x5f4eeb`–`0x5f4f01` adds the last leg's waits to every leg:
-a leg's share of the period is right only when its waits sum to the last leg's. Slot 27 (`0x5f4f80`) recreates the
-entity, clears `+0x5c`, sets `+0x54` to −1 and ticks.
+0x2000 bytes, 1024 entries each. Slot 27 (`0x5f4f80`) recreates the entity, clears `+0x5c`, sets
+`+0x54` to −1, rejoins the transport list (`0x5f4f97`) and ticks.
+
+## Path faults
+
+The path build has three faults. The install's `TaxiPathNode.dbc` (patch.MPQ, 288 paths) reaches
+none: no leg ends on a stop, and its eight two-leg paths have equal waits in both legs (60 and
+60 seconds, or none).
+
+| fault | effect |
+|---|---|
+| Every leg's end adds W, the waits of the last leg's stops, not W_k, its own | W > W_k: the ship sits at the leg's end playing 0xa3 for W − W_k ms; W < W_k: the next leg cuts the last W_k − W ms of this one |
+| A stop on a leg's last node: the stop table has n + 1 entries but the timing loop stops at it | entry n stays unwritten, gains the leg start and ends the last span; the stop's wait counts in W but not in the leg's entries; during it the ship clamps to the leg end playing 0xa2 or 0xa3 |
+| More than 1024 nodes in one leg | the appends overrun the stack arrays |
+
+Addresses: `0x5f4e32`, `0x5f4eeb`, `0x5f4f01`, `0x5f4f10`, `0x5f916e`, `0x5f91a1`, `0x5f519e`, `0x5f9530`, `0x5f9610`
+Confidence: verified
+Proof: one
+Test: none
+
+The stop array is emptied only when a new leg starts (`0x5f4e32`), and the post-loop sum at
+`0x5f4eeb`–`0x5f4f01` reads it for every leg. A leg's last entry holds its travel plus its own
+waits; past it and before the leg's end the tick runs span n with decelerates 0, whose distance
+passes the leg length, so the fraction clamps to 1. `0x5f916e` sizes the stops to n + 1;
+`0x5f91a1` leaves the loop at a stop on the last node, and the end span writes the entry at that
+index, never entry n, which keeps what the allocation left. `0x5f4f10` adds the leg start to each
+of the n + 1 entries; `0x5f519e` reads entry n's time as the last span's end, and that span runs
+with accelerates 1 and decelerates 0. The appends `0x5f9530` and `0x5f9610` check no bound. The
+scan follows the client: the run of rows from the path's first, split at a map change and after
+flag 0x1, a stop being flag 0x2 past a leg's first node.
 
 ## Leg timing
 
 A leg's spline runs through its nodes. Each span between stops, and the last to the leg's end,
 takes the time of a constant acceleration a to the speed v; a span with a stop at both ends
 speeds up and slows down, one at a leg's edge does only one. With ta = float((1/a)·v) and
-da = float((v·0.5)·ta):
+da = (v·0.5)·ta, each test compares da at 53 bits and each formula uses float(da):
 
 | span | time, s |
 |---|---|
@@ -144,8 +169,10 @@ Test: none
 `0x5f9120(points, stops, leg)` calls `SetSplinePath`, sizes the stops to n + 1 and zeros `+0x34`.
 Stop i's distance is 0x453300(spline, node), a cumulative length; seg is it less the last. A stop
 at the leg's last node ends the loop (`0x5f91a1`). `0x5f91db` picks the first span's form,
-`0x5f9205` the middle form; the end runs from `0x5f92b8` with seg = length − last. Branches test
-`ah & 5` and `jp`, so a NaN takes the square root. The x87 runs at 53 bits.
+`0x5f9205` the middle form; the end runs from `0x5f92b8` with seg = length − last. `fst` at
+`0x5f91d8` and `0x5f92f0` stores float(da) and keeps the 53-bit da on the stack, which the compares
+at `0x5f91dd`, `0x5f9205` (against seg·0.5) and `0x5f92f3` read; the formulas load the stored
+float. Branches test `ah & 5` and `jp`, so a NaN takes the square root. The x87 runs at 53 bits.
 
 ## Speed curve
 

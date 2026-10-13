@@ -4991,7 +4991,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9f20	40			objectlayer	orchestration		Destroys a base handler and frees it on bit 0	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
 0x5f9f50	96			objectlayer	primitive		Writes a game object's position through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f9fb0	27			objectlayer	orchestration		Returns a game object's facing through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
-0x5f9fd0	26			objectlayer	orchestration		Writes a game object's velocity through its handler	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
+0x5f9fd0	26			objectlayer	orchestration		Fills an out vector with a game object's velocity through its handler and returns it	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f9ff0	18			objectlayer	orchestration		Returns the handler's path, or 0 without a handler	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
 0x5fa010	26			objectlayer	orchestration		Returns whether a game object collides or its handler says mouseover	verified	one	objectlayer/gameobjects#world-transform-and-box	
 0x5fa030	22			objectlayer	orchestration		Tests a point against a game object through its handler's slot 21	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	

@@ -290,7 +290,9 @@ The mask is `test [eax*4+0x809200], 1 << slot`. The table holds, for inventory t
 The repair cost of a damaged item is the missing durability times a quality multiplier times a
 per-subclass cost, rounded half away from zero, at least 1. Only weapons (class 2, subclasses 0 to
 21) and armour (class 4, subclasses 0 to 8) cost anything; a wrapped item, one without maximum
-durability, or one at full durability costs 0.
+durability, or one at full durability costs 0. A `DurabilityCosts` row is 30 dwords: the id, 21
+weapon costs and 8 armour costs. So weapon subclass 21 reads armour column 0, and armour subclass 8
+reads past the row, the next row's id.
 
 Addresses: `0x5da330`, `0x5da3c5`, `0x5da42f`, `0x5da449`, `0x5da450`, `0x5da4ab`, `0x5da4d4`, `0xc0ddfc`, `0xc0dde8`
 Confidence: verified
@@ -302,7 +304,9 @@ The cost row is `DurabilityCosts` at the record's `+0x38` (`0x5da3c5`); armour r
 `DurabilityQuality` row number 2·quality + 1 (quality `+0x1c`, `0x5da450`), its records indexed
 directly. `0x5da4ab`: `fild` of maximum minus current durability, `fmul` the multiplier, `fimul`
 the cost; then ±0.5 by the sign test `test ah,0x41` (zero and NaN subtract) and `__ftol`.
-`0x5da4d4` replaces an unsigned result below 1 with 1.
+`0x5da4d4` replaces an unsigned result below 1 with 1. The loader 0x543e20 requires 30 columns
+(0x543ece) and 0x78-byte records (0x543f06); `cmp eax,0x15; ja` at `0x5da440` lets subclass 21 read
+`[row+0x58]`, and `cmp eax,8; ja` at `0x5da426` lets subclass 8 read `[row+0x78]`.
 
 ## The container
 
