@@ -68,15 +68,16 @@ friendly plates are switched on for its side; and when it is no friendly totem a
 flagged dead. Plates come from a free list and stay sorted by distance from the screen point
 (0.4, 0.3).
 
-Addresses: `0x60f600`, `0x60f6f3`, `0x60f7b8`, `0x60f7f0`, `0x6086e0`, `0x6087f0`, `0x608870`, `0x6089a0`, `0x608a10`, `0x608a90`, `0x608ce0`, `0x60f830`, `0x60f890`, `0x6054f0`, `0x605510`, `0x605530`, `0x605550`, `0x6122e0`, `0x604ef0`
+Addresses: `0x60f600`, `0x60f6f3`, `0x60f72f`, `0x60f750`, `0x60f757`, `0x60f75a`, `0x605570`, `0x60f7b8`, `0x60f7f0`, `0x6086e0`, `0x6087f0`, `0x608870`, `0x6089a0`, `0x608a10`, `0x608a90`, `0x608ce0`, `0x60f830`, `0x60f890`, `0x6054f0`, `0x605510`, `0x605530`, `0x605550`, `0x6122e0`, `0x604ef0`
 Confidence: verified
 Proof: one
 Test: none
 
 Friendly is cooperative and not attackable for a player, not attackable for others. At `0x60f6f3`
 bit 0x1 of `0xc4da34` admits enemies and bit 0x8 friends (`0x6054f0`, `0x605510`); a created,
-unsummoned unit with `UNIT_FIELD_FLAGS` bit 9 is skipped; a friend of creature type 11 or an enemy
-with dynamic flag 0x20 is too. `0x60f7b8` compares the squared distance with `0xc4d988` (20², from 0x5fa130).
+unsummoned unit with `UNIT_FIELD_FLAGS` bit 9 is skipped. A friend (`0x60f72f`, `0x60f731`) goes
+to `0x60f750`, which takes `0x605570`'s creature type; `0x60f757` compares it with 11, a totem,
+and `0x60f75a` skips it; an enemy with dynamic flag 0x20 is skipped too. `0x60f7b8` compares the squared distance with `0xc4d988` (20², from 0x5fa130).
 `0x60f7f0` projects the name position plus 2/3. `0x6086e0` takes a plate (`0x6087f0`: the free
 list `0xc4d918`, else a new 0x518-byte frame), drops the chat bubble, and re-sorts it on the
 list `0xc4d924` (`0x608870`, keyed by `0x6089a0` from `0xc4da50`) when it moves or bit 0x2 asks. `0x608a10` puts it
