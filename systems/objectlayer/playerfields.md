@@ -52,7 +52,7 @@ Test: none
 `0x5e2f1d` is `mov esi,0x120`; the loop adds 0x30 and stops at 0x570, calling `0x468240` with
 section 4, offset `esi` and callback `0x5e2810` at `0x5e2f3f`. `0x468240` searches the list of
 field `offset/4`, and the registrations sit on the lists of fields `0x118/4 + 12·i`, 70 and on,
-never 72 and on. `0x468490` walks 8 sections of 0x502 lists of 12 bytes from `0xb23318`
+never 72 and on. `0x468490` walks 8 sections of 0x502 lists of 12 bytes from `0xb23310`, reading each list's `+8`,
 (`0x4684a8` to `0x46852a`), unlinking and freeing each node. `0x5e2e60` also frees the
 guild-stamp, initial-spell, item-swap and weapon-spell arrays and clears the bind and tabard state.
 
