@@ -118,7 +118,8 @@ Test: none
 `0x6cf8bd` subtracts −cos(0.25π) from dz. `0x6cf8fd` calls `_CIacos` on dz' over the length;
 `0x6cf91f jne` keeps an angle at or below 0.25π, a NaN included. `0x6cf947` compares h with the
 double 1e-5. The products are `fimul` by cols (`0x6cf995`). `0x6cfa90` truncates with `__ftol`
-(`0x6cface`); u = cols reads the next row's first byte.
+(`0x6cface`); u = cols reads the next row's first byte, and v = cols, at dx = 0 with the angle at
+or above 0.25π, reads a row past the buffer.
 
 ## Cloud dome
 

@@ -10,15 +10,17 @@ Roots: `0x674620`, `0x677420`, `0x679140`, `0x677380`, `0x6790b0`, `0x67a520`, `
 ## Particle clock
 
 The particles run on a clock of 1024 ticks a second. Each world update adds the frame time to it
-as round(t·1024 − 0.5) ticks; particle times convert the same way, and back as ticks/1024. The
+as round(t·1024 − 0.5) ticks, ties to even, so an exact odd t·1024 comes out one tick low;
+particle times convert the same way, and back as ticks/1024. The
 frame's tick count is kept beside the clock.
 
-Addresses: `0x6745d0`, `0x674600`, `0x66fcc0`, `0x66fd26`, `0x66fd38`, `0x66fd33`, `0xc62970`, `0xc62974`, `0x7ffd68`, `0x8090d8`
+Addresses: `0x6745d0`, `0x6745e3`, `0x8680e8`, `0x674600`, `0x66fcc0`, `0x66fd26`, `0x66fd38`, `0x66fd33`, `0xc62970`, `0xc62974`, `0x7ffd68`, `0x8090d8`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6745d0(s)` multiplies by `[0x7ffd68]` (1024.0), subtracts 0.5 and `fistp`s, so a value at an
+`0x6745d0(s)` multiplies by `[0x7ffd68]` (1024.0), subtracts `[0x8680e8]` (0.5, `0x6745e3`) and
+`fistp`s, so a value at an
 exact half rounds to even. `0x674600` loads the ticks as a 64-bit integer and multiplies by
 `[0x8090d8]` (1/1024). `0x66fcc0` calls `0x6745d0` with its frame seconds (`0x66fd26`), adds the
 result to `0xc62970` (`0x66fd38`) and stores it in `0xc62974` (`0x66fd33`).
@@ -43,15 +45,15 @@ shader handles, and clears byte 0 when either fails (`0x6747fc`) or the setting 
 
 ## Particle packets
 
-A rain packet holds 6144 drops of 0x24 bytes: position, velocity, birth and death in seconds from
-the packet's fill time. After them come the count `+0x3600c`, the start tick `+0x36010`, the last
-tick `+0x36014`, the fill time `+0x36018` and the vertex buffer `+0x3602c`. A packet opens when
+A rain packet holds 6144 drops of 0x24 bytes: position, velocity, and birth and death in
+seconds of fill time. After them come the count `+0x3600c`, the start and last ticks `+0x36010` and
+`+0x36014`, the fill time `+0x36018` and the vertex buffer `+0x3602c`. A packet opens when
 the first drop of a new batch is due: its start tick is now plus the time 6144 drops take at the
 current rate. Every drop raises the last tick to the start plus its death plus the time its tail
 takes to fall 2 yards. The packet closes, baking its vertex buffer, when it is full, its fill time
-reaches 6144 divided by the rate's base, or now passes its start.
+reaches P·(1/6144) for the rate's base P (`rain-rates`), or now passes its start.
 
-Addresses: `0x6756a0`, `0x6758ac`, `0x6758ce`, `0x675944`, `0x675966`, `0x675976`, `0x67598c`, `0x675548`, `0x67554e`, `0x675568`, `0x675582`, `0x675686`, `0x675a6d`, `0x675a79`, `0x675a8c`, `0x675a97`, `0x675aad`, `0x6752b0`, `0x6753c0`, `0x80ffc8`
+Addresses: `0x6756a0`, `0x6758ac`, `0x6758ce`, `0x675944`, `0x675966`, `0x675976`, `0x67598c`, `0x675548`, `0x67554e`, `0x675568`, `0x675582`, `0x675686`, `0x675a6d`, `0x675a79`, `0x675a7f`, `0x675a8c`, `0x675a97`, `0x675aad`, `0x6752b0`, `0x6753c0`, `0x80ffc8`
 Confidence: verified
 Proof: one
 Test: none
@@ -60,15 +62,16 @@ Test: none
 (`0x6758ce`). The start tick is `0x6745d0([0x80ffc8]/rate)` plus now (`0x675944` to `0x67598c`).
 `0x675548` to `0x675582` take 2.0/vz from the death, convert and keep the larger. `0x675686` adds
 the frame seconds to the fill time. The close tests are `0x675a6d`, `0x675a79` against `+0xb4`
-and `0x675a8c`; `0x6752b0` writes three vertices a drop, each the position, velocity, corner
+and `0x675a8c`, the fill limit read at `0x675a7f`; `0x6752b0` writes three vertices a drop, each the position, velocity, corner
 index in the colour's top byte, birth and death.
 
 ## Emission budget
 
 An effect that is not stopping emits round(min(6144 − count, q) − 0.5) drops a frame, with
-q = min(frame seconds, 1/60)·rate, and only when q is above 1. Below 60 frames a second the
+q = min(frame seconds, 0.016667)·rate, and only when q is above 1. Below 60 frames a second the
 budget shrinks with the frame rate. Each drop's birth is the fill time plus a random fraction of
-the frame. The count rounds to even at a half, so a packet one short of full can stay there.
+the frame. The count rounds to even at a half, so a packet one short of full can stay there, and
+an exact odd min(6144 − count, q) comes out one low.
 
 Addresses: `0x675858`, `0x67585d`, `0x675863`, `0x675884`, `0x67588d`, `0x675a62`, `0x6754a0`, `0x6754cc`, `0x6754e9`, `0x6754ef`, `0x675505`, `0x67551c`, `0x675539`, `0x80ffcc`, `0x8015b8`, `0x8680e8`
 Confidence: verified
@@ -76,9 +79,9 @@ Proof: one
 Test: none
 
 `0x67585d` skips emission while byte `+0x1` is set. `0x675863` to `0x675884` take the smaller of
-the frame time and `[0x80ffcc]` times `+0xcc`; `0x67588d` compares with the double 1.0 and
+the frame time and `[0x80ffcc]` (0.016667, `0x3c88893b`) times `+0xcc`; `0x67588d` compares with the double 1.0 and
 `test ah,0x41`. `0x6754a0(packet, patter, q)` takes 6144 less the count as an integer
-(`0x6754cc`), keeps the smaller, subtracts 0.5 and `fistp`s (`0x6754ef`). Each drop draws a
+(`0x6754cc`), keeps the smaller, subtracts `[0x8680e8]` (0.5, `0x6754e9`) and `fistp`s (`0x6754ef`). Each drop draws a
 random float in [1, 2) from `s_clientRandom` (`0x675505`) for its birth (`0x675539`).
 
 ## Packet replay
@@ -103,17 +106,18 @@ The patter packets retire on their own last tick.
 ## Rain rates
 
 With x the grade the effect receives, rain emits K·P·x drops a second, P = 35000 with shaders and
-6500 without, K the density setting, and closes a packet at a fill time of P/6144 seconds: 5.70 s
-or 1.06 s. Its mist emits 2·max(x − 0.5, 0)·K·Q puffs a second, Q = 38 with shaders and 18
+6500 without, K the density setting, and closes a packet at a fill time of f32(P·(1/6144)) seconds,
+about 5.70 s or 1.06 s. Its mist emits 2·max(x − 0.5, 0)·K·Q puffs a second, Q = 38 with shaders and 18
 without, so the mist starts only above x = 0.5.
 
-Addresses: `0x6749e0`, `0x6749ec`, `0x674a0d`, `0x674a19`, `0x674a2f`, `0x674a62`, `0x67a980`, `0x80ffac`, `0x80ffa8`, `0x80ffa4`, `0x80ffa0`, `0x80ff9c`
+Addresses: `0x6749e0`, `0x6749ec`, `0x674a0d`, `0x674a13`, `0x674a19`, `0x675a7f`, `0x674a2f`, `0x674a62`, `0x67a980`, `0x80ffac`, `0x80ffa8`, `0x80ffa4`, `0x80ffa0`, `0x80ff9c`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x6749e0(x)` stores x in `+0xd0`, picks `[0x80ffac]` or `[0x80ffa8]` by byte 0 (`0x6749ec`),
-stores K·P·x in `+0xcc` (`0x674a0d`) and P·`[0x80ffa4]` (1/6144) in `+0xb4` (`0x674a19`). It takes
+stores K·P·x in `+0xcc` (`0x674a0d`) and P·`[0x80ffa4]` (1/6144, `0x674a13`) in `+0xb4`
+(`0x674a19`), which the close compares at `0x675a7f`. It takes
 x − 0.5 (`0x674a2f`), keeps it when above 0, doubles it, multiplies by K and Q and passes it to
 `0x67a980`, which stores the mist rate (`0x674a62`).
 
@@ -141,33 +145,38 @@ turn; `0x674f54` applies it to the position only. `0x674f82` scales `+0x50` by 1
 
 A drop is dead at birth, birth and death both 0, when the ground under its start is at or above
 it. Otherwise it lands where the segment from its start to start + (1 + k)·T·V meets the ground,
-k = 2, and its death is its birth plus the distance to that point over its speed. With the unit
-flag set or the transport faster than √2 the segment is not tested: k = 1 and the end is the
+k = 2, and its start is rewritten as hit − (|start − hit|/|V|)·V before its death is set to its birth
+plus the distance to that point over its speed. With the unit
+flag set or the transport's v² above 2 the segment is not tested: k = 1 and the end is the
 landing. A miss is dead at birth.
 
-Addresses: `0x675051`, `0x67505b`, `0x67505e`, `0x675069`, `0x675088`, `0x6750a6`, `0x675143`, `0x67515c`, `0x675174`, `0x67517b`, `0x675221`, `0x67524a`, `0x675254`, `0x67526b`
+Addresses: `0x675051`, `0x67505b`, `0x67505e`, `0x675069`, `0x675088`, `0x6750a1`, `0x6750a6`, `0x675143`, `0x67515c`, `0x675174`, `0x67517b`, `0x6751af`, `0x67520e`, `0x675221`, `0x67524a`, `0x675254`, `0x67526b`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x67505b` calls the grid's height slot at the start and `0x67505e` compares with its height.
-`0x675088` stores k = 2.0 and `0x6750a6` 1.0. The segment test is the grid's slot `+0x8`
+`0x675088` stores k = 2.0 and `0x6750a6` 1.0, after `test ah,0x41` (`0x6750a1`, `0x67515c`) on v²
+against 2.0, which counts a NaN as at most 2. The segment test is the grid's slot `+0x8`
 (`0x675174`), skipped by `0x675143` and `0x67515c`, which copy the end into the hit
-(`0x675254`). `0x675221` stores the birth and `0x67524a` the birth plus the hit distance over
-|V|. The grid's height is FLT_MAX outside it, which also kills the drop (`weather#ground-grid`).
+(`0x675254`). `0x6751af` to `0x67520e` form start − hit, f32(1/|V|), s = |start − hit|·(1/|V|) and hit − s·V,
+each a float, and store it as the start; `0x675221` stores the birth and `0x67524a` the birth
+plus the new distance times 1/|V|. The grid's height is FLT_MAX outside it, which also kills the drop (`weather#ground-grid`).
 
 ## Patter
 
-A live drop that lands with the unit flag clear and the transport slower than √2 leaves a patter,
+A live drop that lands with the unit flag clear and the transport at most √2 (v² ≤ 2, NaN included)
+leaves a patter,
 a splash at its landing point that lives 0.25 s from its death. The patters fill their own packets
 of 6144, opened with each drop packet and sharing its start tick.
 
-Addresses: `0x675588`, `0x675593`, `0x67559e`, `0x6755d3`, `0x675630`, `0x675280`, `0x675664`, `0x6759ae`, `0x675a48`, `0x8029b0`
+Addresses: `0x675588`, `0x675593`, `0x67559e`, `0x6755ce`, `0x6755d3`, `0x675630`, `0x675280`, `0x675664`, `0x6759ae`, `0x675a48`, `0x8029b0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x675588` compares birth and death; `0x675593` skips a dead drop. `0x675630` calls
+`0x675588` compares birth and death; `0x675593` skips a dead drop; `0x6755ce` tests v² with
+`test ah,0x41`. `0x675630` calls
 `0x675280(record, death, point)`, which stores the point and the times death and death +
 `[0x8029b0]`. `0x675664` keeps the patter packet's last tick. `0x6759ae` allocates 0x24030 bytes,
 6144 records of 0x18; `0x675a48` copies the drop packet's start tick.

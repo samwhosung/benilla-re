@@ -25476,13 +25476,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x68df70	589	CullDoodadDefs		terrain	primitive	void __fastcall (void *list, void *frustum)	Tests a list's doodads against the frustum and queues the visible ones	inferred	none		terrain::light_mid_y_difftest, terrain::doodad_plane_value_difftest, terrain::doodad_gate_difftest, terrain::doodad_color_normalize_difftest
 0x68e1c0	807	ResetDriftParticle		terrain	primitive	void __fastcall (void *cloud, void *particle)	Gives a drift particle a new random direction and speed	inferred	none		
 0x68e4f0	172	GetDriftVelocity		terrain	primitive	void __fastcall (void *cloud, float *out)	Returns the drift cloud's gust velocity by its mode	inferred	none		
-0x68e5a0	148	CreateDriftCloud		terrain	orchestration	void __fastcall (void *cloud)	Constructs the 4000-particle drift cloud	inferred	none		
+0x68e5a0	148	CreateDriftCloud		terrain	orchestration	void __fastcall (void *cloud)	Constructs the 4000-particle drift cloud	verified	one	terrain/liquid#drift-cloud	
 0x68e640	16	FreeDriftCloudTexture		terrain	host	void __fastcall (void *cloud)	Closes the drift cloud's texture	inferred	none		
 0x68e650	31	SetDriftCloudCount		terrain	primitive	void __thiscall (void *cloud, float count)	Stores the drift cloud's particle count, converted	inferred	none		
 0x68e670	16	SetDriftCloudParamA		terrain	orchestration	void __thiscall (void *cloud, uint32_t value)	Stores a drift cloud setting	inferred	none		
 0x68e680	16	SetDriftCloudParamB		terrain	orchestration	void __thiscall (void *cloud, uint32_t value)	Stores a drift cloud setting	inferred	none		
 0x68e690	136	SetDriftCloudTexture		terrain	host	void __thiscall (void *cloud, const char *path)	Replaces the drift cloud's texture	inferred	none		
-0x68e720	523	ScatterDriftCloud		terrain	primitive	void __thiscall (void *cloud, const float *centre)	Scatters the drift particles uniformly in a cube around a point	inferred	none		
+0x68e720	523	ScatterDriftCloud		terrain	primitive	void __thiscall (void *cloud, uint32_t mode)	Scatters the drift records in a cube of the box edge, sizes each s/2 + u·s at +0xc, and stores the mode	verified	one	terrain/liquid#drift-cloud	
 0x68e930	486	AdvectDriftCloud		terrain	primitive	void __fastcall (void *cloud, float dt)	Moves the drift particles and wraps them around the camera	inferred	none		
 0x68eb20	10	InitTerrainQuadCornersThunk		terrain	orchestration	void __cdecl (void)	Calls 0x68eb30, then jumps to 0x68ebb0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x68eb30	121	InitTerrainQuadCorners		terrain	orchestration	void __cdecl (void)	Stores four corner offsets of ±0.5 in x and y and 0 in z in a global	verified	one	terrain/statics#static-initializers	
@@ -25524,7 +25524,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6909c0	226	GrowArrayB		terrain	host	void __thiscall (void *array, uint32_t count, uint32_t exact)	Grows an array	inferred	none		
 0x690ab0	16	ClearFourDwordsD		terrain	orchestration	void __fastcall (void *p)	Zeroes four dwords	inferred	none		
 0x690ac0	23	FreeArrayD		terrain	host	void __fastcall (void *array)	Frees an array	inferred	none		
-0x690ae0	165	LerpColor		terrain	primitive	uint32_t __fastcall (uint32_t a, uint32_t b, uint32_t t)	Blends two colours channel by channel	inferred	none		terrain::color_lerp_i_difftest
+0x690ae0	165	LerpColor		terrain	primitive	void __thiscall (uint32_t *dst, uint32_t a, const uint32_t *src)	Blends two colours channel by channel	inferred	none		terrain::color_lerp_i_difftest
 0x690b90	31	RoundUpToMultipleE		terrain	primitive	uint32_t __fastcall (uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
 0x690bb0	133	GrowDwordArray		terrain	host	void __thiscall (void *array, uint32_t count)	Grows a dword array	inferred	none		
 0x690c40	57	ClampHashCapacityE		terrain	orchestration	uint32_t __fastcall (uint32_t n)	Returns a power-of-two capacity for n, at least 8	inferred	none		
@@ -28636,7 +28636,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d2d00	868	BlendAreaLights		lighting	primitive		Blends the area lights around the camera into the light table	verified	one	lighting/daynight#area-lights	
 0x6d3070	1	AreaLightNoop		lighting	orchestration		Returns at once	verified	one	lighting/overview#static-objects	
 0x6d3080	92			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
-0x6d30e0	1783	OverblendAreaLights		lighting	primitive		Blends the inner area lights over the outer ones by weight	verified	one	lighting/daynight#area-overblend	
+0x6d30e0	1783	OverblendAreaLight		lighting	primitive		Blends one area light's record into the base record by its weight w	verified	one	lighting/daynight#area-overblend	
 0x6d37e0	546	BuildLightColours		lighting	primitive		Builds the diffuse, ambient, window and HSV colours from the light table	verified	one	lighting/fog#light-colours	
 0x6d3a10	329	UpdateSunDirection		lighting	primitive		Sets the sun direction from the sun tracks at the time of day	verified	one	lighting/celestial#sun-direction	
 0x6d3b60	1	UpdateSunDirectionStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3a10 registers	verified	one	lighting/overview#static-objects	
@@ -28727,19 +28727,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d6100	90	ScaleFogDistances		lighting	primitive		Runs the fog distance conversion over every sixth LightFloatBand record at load	verified	one	lighting/tables#fog-distances-at-load	
 0x6d6160	16	FinishLightTables		lighting	orchestration		Converts the Light and fog band records once the tables load	verified	one	lighting/tables#light-positions-at-load	
 0x6d6170	366	BuildMapLightList		lighting	orchestration		Collects the map's Light records, with the fallback light, into the light list	verified	one	lighting/tables#per-map-light-list	
-0x6d62e0	256	EvalLightIntBand		lighting	primitive	uint32_t __fastcall (const void *band, uint32_t h)	Interpolates a LightIntBand colour at half-minute h	verified	one	lighting/daynight#colour-band-value	
+0x6d62e0	256	EvalLightIntBand		lighting	primitive	uint32_t * __fastcall (uint32_t *out, uint32_t h, const void *row)	Interpolates a LightIntBand row's colour at half-minute h into out and returns out	verified	one	lighting/daynight#colour-band-value	
 0x6d63e0	149	FindBandSegment		lighting	primitive		Finds the band keys around half-minute h and the fraction between them	verified	one	lighting/daynight#key-search	
 0x6d6480	74	EvalLightFloatBand		lighting	primitive		Interpolates a LightFloatBand value at half-minute h	verified	one	lighting/daynight#scalar-band-value	
 0x6d64d0	746	BuildLightRecord		lighting	orchestration		Fills a light record from a LightParams record at half-minute h	verified	one	lighting/daynight#light-record	
 0x6d67c0	710	BlendLightRecord		lighting	primitive		Blends a light record into another by a clamped weight	verified	one	lighting/daynight#record-blend	
 0x6d6a90	29	GetLightPosition		lighting	orchestration		Copies a Light record's position	verified	one	lighting/daynight#area-lights	
 0x6d6ab0	29	GetLightParamsRecord		lighting	orchestration		Returns a LightParams record by its light reference	verified	one	lighting/tables#band-references	
-0x6d6ad0	34	GetLightIntBand		lighting	orchestration		Returns LightIntBand record 18 times the LightParams id less 17, plus the band	verified	one	lighting/tables#band-references	
-0x6d6b00	34	GetLightFloatBand		lighting	orchestration		Returns LightFloatBand record 6 times the LightParams id less 5, plus the band	verified	one	lighting/tables#band-references	
+0x6d6ad0	34	GetLightIntBand		lighting	primitive		Returns LightIntBand record 18 times the LightParams id less 17, plus the band	verified	one	lighting/tables#band-references	
+0x6d6b00	34	GetLightFloatBand		lighting	primitive		Returns LightFloatBand record 6 times the LightParams id less 5, plus the band	verified	one	lighting/tables#band-references	
 0x6d6b30	57	LightListGrowStep		lighting	primitive		Returns the largest power of two at most a count, or 64 for 64 and more	verified	one	lighting/tables#per-map-light-list	
 0x6d6b70	31	RoundUpToMultipleL		lighting	primitive	uint32_t __stdcall (uint32_t n, uint32_t step)	Rounds a count up to a multiple of a step	verified	one	lighting/tables#per-map-light-list	
 0x6d6b90	133	ResizeLightList		lighting	host		Reallocates the light list's array, copying the entries when it moves	verified	one	lighting/tables#per-map-light-list	
-0x6d6c20	173	LerpColourCopy		lighting	primitive		Moves a packed colour toward another by a weight, the same bytes as the terrain's	verified	one	lighting/daynight#record-blend	
+0x6d6c20	173	LerpColourCopy		lighting	primitive	void __thiscall (uint32_t *dst, uint32_t a, const uint32_t *src)	Moves a packed colour toward another by a weight, the same bytes as the terrain's	verified	one	lighting/daynight#record-blend	
 0x6d6cd0	10			unassigned			Runs its object file code that calls 0x6d6ce0; not read here	inferred	none		
 0x6d6ce0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6d6d00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		

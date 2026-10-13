@@ -59,8 +59,9 @@ initializer `0x6d1ba0` calls it at `0x6d1bb5` with the map id in edx.
 
 ## Light positions at load
 
-At load the client converts every Light record not at the origin: it divides x, y, z and both
-radii by 36 and moves the point into world axes, x' = c − z/36, y' = c − x/36, z' = y/36, with
+At load the client converts every Light record not at the origin: it multiplies x, y, z and both
+radii by f32(1/36) (0x3ce38e39) and moves the point into world axes, x' = c − z·(1/36),
+y' = c − x·(1/36), z' = y·(1/36), with
 c = 17066.666 when the map is not one object and 0 when it is. A record at (0, 0, 0) keeps its file
 values, radii included.
 
@@ -79,8 +80,8 @@ moves y to `+0x10`; each store rounds to a float.
 
 ## Fog distances at load
 
-At load the client divides every key value of every sixth LightFloatBand record, counted by
-position in the file from 0, by 36: the records of scalar 0, the fog end, when the file holds the
+At load the client multiplies every key value of every sixth LightFloatBand record, counted by
+position in the file from 0, by f32(1/36) (0x3ce38e39): the records of scalar 0, the fog end, when the file holds the
 bands of each LightParams group in id order with no gap. A record with no keys is untouched.
 
 Addresses: `0x6d6100`, `0x6d6090`, `0x6d6118`, `0x6d6124`, `0x6d60a4`

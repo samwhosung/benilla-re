@@ -102,19 +102,19 @@ The density leg multiplies its span by 4 (`0x67bd3e`), stores `+0x14`, copies it
 
 Each frame the driver samples the player's motion, then takes the heading from the player's
 velocity when its horizontal speed is at least 1 and the unit flag is clear, else from the
-player's facing; the speed is the player's movement speed, or the transport's horizontal speed when
-the transport moves faster than √2. A pending type with live particles and smooth on fades the
+player's facing; the speed is the player's movement speed while the transport is at most √2 (v² ≤ 2, NaN
+included), else the transport's horizontal speed. A pending type with live particles and smooth on fades the
 old effect: the grade ramps toward min(target, 0.25) and each effect is told to stop. Otherwise
 the effects are torn down and the pending type is built. A grade or density still off its
 target ramps toward the full target.
 
-Addresses: `0x67be40`, `0x66ff06`, `0x67be4b`, `0x67bea6`, `0x67bebf`, `0x67bede`, `0x67bef0`, `0x67beff`, `0x67bf1b`, `0x67bf5a`, `0x67bf85`, `0x67bfa9`, `0x67bfb9`, `0x67bfde`, `0x67bfec`, `0x67c01b`, `0x67c052`, `0x67c085`, `0x67c0b8`, `0x67c0cf`, `0x67c0e3`, `0x67c102`, `0x67c138`, `0x67c13e`, `0x67c6e0`, `0x67ba50`, `0xc7b554`
+Addresses: `0x67be40`, `0x66ff06`, `0x67be4b`, `0x67bea6`, `0x67bebf`, `0x67bede`, `0x67bef0`, `0x67beff`, `0x67bf1b`, `0x67bf5a`, `0x67bf66`, `0x67bf85`, `0x67bfa9`, `0x67bfb9`, `0x67bfde`, `0x67bfec`, `0x67c01b`, `0x67c052`, `0x67c085`, `0x67c0b8`, `0x67c0cf`, `0x67c0e3`, `0x67c102`, `0x67c138`, `0x67c13e`, `0x67c6e0`, `0x67ba50`, `0xc7b554`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x67bede` is `atan2(vy, vx)`, plus `[0xc7b554]` (2π) below 0 (`0x67bef0`); `0x67beff` calls the
-facing slot. `0x67bf5a` compares the transport's squared speed with 2.0; `0x67bf85` reads
+facing slot. `0x67bf5a` compares the transport's squared speed with 2.0 and `0x67bf66` tests `ah,0x41`; `0x67bf85` reads
 `[[player+0x118]+0x84]`. `0x67c6e0` counts live particles. The fade sets bytes `+0x1` and `+0x58`
 of each effect (`0x67bfec`). Teardown `0x67ba50`; types 3, 2, 1 build sand `0x679140(40, 25)`,
 snow `0x677420(90, 60)` and rain `0x674620(130, 75)`; then `+0x18` = now, `+0x4` = `+0x8`,
@@ -126,15 +126,16 @@ The driver keeps two lists of position steps, the player's and the transport's, 
 the milliseconds since the last frame, newest last. First, walking a list from its oldest step,
 each step at or after the one where the running sum reaches 150 ms frees one step from the front.
 Then the frame's step is added, and each velocity is the summed step over (summed milliseconds +
-1)·0.001 seconds. When the player has no movement velocity and the transport is slower than √2,
-the player's velocity is zero at once.
+1)·0.001 seconds. When the player has no movement velocity and the transport is at most √2 (v² ≤ 2, NaN
+included), the player's velocity is zero at once.
 
-Addresses: `0x67c150`, `0x67c180`, `0x67c2b5`, `0x67c2cf`, `0x67c3c8`, `0x67c4a2`, `0x67d740`, `0x61eec0`, `0xc7b4a8`
+Addresses: `0x67c150`, `0x67c180`, `0x67c2b5`, `0x67c2cf`, `0x67c3c8`, `0x67c4a2`, `0x67c680`, `0x67d740`, `0x61eec0`, `0xc7b4a8`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x67c150` frees the head of a list for each step once the running sum reaches 0x96 (`0x67c180`);
+`0x67c680` tests the transport's v² against 2.0 with `test ah,0x41` before the zeroing. `0x67c150`
+frees the head of a list for each step once the running sum reaches 0x96 (`0x67c180`);
 the sum is not reduced. `0x67d740` with mode 2 links a new step before the terminator, at the end. The player's
 position comes from slot `+0x14`, the transport's when `[player+0x118]+0x38` holds a GUID
 (`0x67c2cf`). Transport steps go to the list at `+0x44` (`0x67c3c8`), the player's to `+0x38`
@@ -165,9 +166,10 @@ rest with `0x67c7b0`. How `0x67cb60` walks a segment is not read.
 Weather draws only when the frame's visibility byte is set. The map object frame clears it; the
 world sets it when the camera is outside every map object group, and the portal walk sets it on
 reaching a group whose flags hold 0x148, or 0x40000 with a set byte in its record. Each effect's
-update runs before the test, so particles keep falling unseen indoors.
+packet update runs before the test, so drops keep falling unseen indoors; the mist spawns and
+moves only in its draw, after the test, so it stops while unseen.
 
-Addresses: `0xca80c4`, `0x6b38c1`, `0x68111a`, `0x6811d4`, `0x6b42d0`, `0x6b42d9`, `0x6b42e0`, `0x6b42f4`, `0x67c720`, `0x677380`, `0x677388`, `0x6790b0`, `0x6790b8`, `0x67a520`, `0x67a528`
+Addresses: `0xca80c4`, `0x6b38c1`, `0x68111a`, `0x6811d4`, `0x6b42d0`, `0x6b42d9`, `0x6b42e0`, `0x6b42f4`, `0x67c720`, `0x677380`, `0x677388`, `0x6790b0`, `0x6790b8`, `0x67a520`, `0x67a528`, `0x67ae20`, `0x67b14d`, `0x67b24d`
 Confidence: verified
 Proof: one
 Test: none
@@ -175,7 +177,8 @@ Test: none
 `0x6b38c1` stores 0; `0x68111a` branches to `0x6811d4` when the camera's group claim is 0. The
 portal walk tests `[group+0x10]` with 0x148 (`0x6b42d0`) and 0x40000 (`0x6b42e0`). `0x67c720`
 returns until `+0x80` is set, then calls the three dispatchers; each runs its update first and
-returns at `0x677388`, `0x6790b8` or `0x67a528` when the byte is 0.
+returns at `0x677388`, `0x6790b8` or `0x67a528` when the byte is 0, before its tail call to
+`0x67ae20`, which accumulates the mist rate (`0x67b14d`) and spawns (`0x67b24d`).
 
 ## Weather reset
 

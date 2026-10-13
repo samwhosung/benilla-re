@@ -49,7 +49,7 @@ dwords lag one build.
 
 The scene fog is end = min(scalar band 0, far clip), start = scalar band 1 × end, and colour band 7,
 at state `+0x78`, `+0x74` and `+0x70`. A NaN band end takes the far clip. Scalar band 0 is already
-divided by 36 (`tables#fog-distances-at-load`); the start is a fraction of the end and can be
+multiplied by f32(1/36) (`tables#fog-distances-at-load`); the start is a fraction of the end and can be
 negative.
 
 Addresses: `0x6cee30`, `0x6cee3c`, `0x6cee47`, `0x6cee61`, `0x6cee6d`, `0x6cee76`, `0x6cee83`, `0xce9bd0`, `0xce9bd4`, `0xce9bd8`, `0xce9b94`

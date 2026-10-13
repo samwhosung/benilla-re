@@ -44,18 +44,20 @@ count at `+0`, `+4` and `+8` (`0x482bdb`, `0x482be2`, `0x482bf6`), and the weath
 
 ## Time of day to half-minutes
 
-Every band is evaluated at h = round(f32(t·2880) − 0.5), with t the time of day at state `+0x4`,
-the product rounded to a float and the rounding to nearest, ties to even. For t in [0, 1) h runs
-from 0 to 2880.
+The light table build evaluates its bands at h = round(f32(t·2880) − 0.5), with t the time of day
+at state `+0x4`, the product rounded to a float and the rounding to nearest, ties to even, so an
+exact odd product comes out one low. For t in [0, 1) h runs from 0 to 2880. Other callers pass
+their own h: glue evaluates LightParams 3, bands 0 and 1, at h = 0.
 
-Addresses: `0x6d2483`, `0x6d248f`, `0x6d2495`, `0x6d249b`, `0x6d24a1`, `0x811630`, `0x86f2c8`
+Addresses: `0x6d2483`, `0x6d248f`, `0x6d2495`, `0x6d249b`, `0x6d24a1`, `0x811630`, `0x86f2c8`, `0x4721f8`, `0x47220f`
 Confidence: verified
 Proof: one
 Test: none
 
 `fld [0xce9b64]`, `fmul [0x811630]` (2880.0) and `fstp` a float local (`0x6d2495`), then `fld`,
 `fsub [0x86f2c8]` (0.5) and `fistp` (`0x6d24a1`) under the client's control word. Each gather site
-repeats the same five instructions.
+repeats the same five instructions. Glue's `0x4721f8` and `0x47220f` call `0x6d62e0` with
+edx = 0 on the bands `0x6d6ad0` returns for LightParams record 3.
 
 ## Key search
 

@@ -148,3 +148,27 @@ Test: none
 `0x68cd50` puts the pair back into the arrays at `0xc81b80`; `0x68cc60` takes one;
 `0x68ca50` makes the pool's buffers named `CChunkLiquid_vtx` and `CChunkLiquid_idx`. The
 release's caller and its 5.0 test are `0x6afc06`.
+
+## Drift cloud
+
+The world builds one drift cloud, the motes in liquid, at start-up: 4000 records of 16 bytes, a camera-relative position and, at `+0xc`, its quad size. The scatter
+places every record uniformly in a cube of edge E around the camera, x, y and z from three draws
+of the client random generator (`random`), and sets the size to s/2 + u·s with u from a fourth
+step of the same generator, s the size base. At creation E is 30 and s 1/36. A change of the
+camera's liquid to water or ocean scatters, then sets s to 1/36, and to magma, then 1/9, so a
+scatter sizes by the previous base. The draw sizes each quad by `+0xc`.
+
+Addresses: `0x66f971`, `0x66f9a3`, `0x66f9a8`, `0x66f9af`, `0x68e5a0`, `0x68e650`, `0x68e657`, `0x68e670`, `0x68e720`, `0x68e729`, `0x68e75c`, `0x68e77d`, `0x68e7c6`, `0x68e8ea`, `0x68e8f8`, `0x68e902`, `0x68e91e`, `0x680b0d`, `0x680b1d`, `0x680b4c`, `0x680b5c`, `0x68efe0`, `0x68f249`, `0xc63180`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x66f971` allocates 0xfa40 bytes and `0x66f9af` constructs them with the size base 0x3ce38e39,
+the edge 30.0 and a texture path, storing the cloud in `0xc63180`. `0x68e5a0` zeroes the
+positions, sets the count through `0x68e650`, 1.0 times `[0x81038c]` (`0x68e657`), and scatters.
+`0x68e720` takes s/2 and 1.5·s (`0x68e729`) and E/2 (`0x68e75c`), calls `0x4531e0` three times
+(`0x68e77d`) for (u − 1)·E − E/2 per axis (`0x68e7c6`), advances the generator state inline and
+stores (u − 1)·s + s/2 at `+0xc` (`0x68e8ea` to `0x68e902`), then the mode, its argument & 3
+(`0x68e91e`). The liquid probe calls `0x68e720` at `0x680b0d` and `0x680b4c` before `0x68e670`
+with 1/36 (`0x680b1d`) or 1/9 (`0x680b5c`). The draw multiplies each corner offset by the record's
+`+0xc` (`0x68f249`).

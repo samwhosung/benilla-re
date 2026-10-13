@@ -81,7 +81,7 @@ register `ret` exit hooks the same way, as `0x6790a0` from `0x678960`. `0x6d6e10
 ## Unreached code
 
 Seven functions of the system have no live caller: the weather grid bounds query `0x67bd90`, the cloud
-cover setter `0x6d08e0`, the override light's tint setter `0x6d45f0`, the disc record accessor
+cover setter `0x6d08e0`, the override LightParams record setter `0x6d45f0` (`0xce9bac`), the disc record accessor
 `0x6d4600`, the override skybox setter `0x6d47f0`, and the light list reload `0x6d4c80` with the
 light-at-a-point query `0x6d4c90`. No `call` or `jmp` reaches them, no byte sequence `e8` or `e9`
 encodes a branch to one, and their addresses appear nowhere in the image as a dword.
