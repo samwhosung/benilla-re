@@ -645,10 +645,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x463a60	147	ObjectAllocNew		objectalloc			Takes a block from a pool and returns its handle	inferred	none	objectlayer/manager#allocating-and-reusing	
 0x463b00	46	ObjectFree	idb	objectalloc			Returns a block to its pool by handle	inferred	none	objectlayer/manager#allocating-and-reusing	
 0x463b30	51	ObjectAllocLock		objectalloc			Returns the memory of a pool block by handle	inferred	none	objectlayer/manager#allocating-and-reusing	
-0x464140	5	InitObjMgrDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x464150, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
-0x464150	15	InitObjMgrDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x464160	5	InitObjMgrQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x464170, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
-0x464170	19	InitObjMgrQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x464140	5	InitObjectAllocDouble1Thunk		objectalloc	orchestration	void __cdecl (void)	Jumps to 0x464150, a static initializer	verified	one	objectlayer/overview#object-files	
+0x464150	15	InitObjectAllocDouble1		objectalloc	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/overview#object-files	
+0x464160	5	InitObjectAllocQuotient1Thunk		objectalloc	orchestration	void __cdecl (void)	Jumps to 0x464170, a static initializer	verified	one	objectlayer/overview#object-files	
+0x464170	19	InitObjectAllocQuotient1		objectalloc	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/overview#object-files	
 0x464190	5	InitObjMgrCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4641a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x4641a0	11	InitObjMgrCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x4641b0	5	InitObjMgrOther1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4641c0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -3408,10 +3408,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c3d90	188	BuildOrthoMatrix		gxumath	primitive		Builds an orthographic projection matrix	inferred	none	camera#orthographic-setup	
 0x5c3e70	648	BuildLookAtMatrix		gxumath	primitive		Builds a view matrix from an eye, a target and an up vector	inferred	none	camera#view-and-projection	
 0x5c43b0	1404	BuildFrustumCorners		gxumath	primitive		Writes the eight world corners of the frustum of two matrices, clip-space z = -1 first	inferred	none	camera#unprojection	
-0x5d13d0	5	InitDouble17Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5d13e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5d13e0	15	InitDouble17		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
-0x5d13f0	5	InitQuotient20Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5d1400; a static initializer	verified	one	net/layout#static-initializers	
-0x5d1400	19	InitQuotient20		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5d13d0	5	InitFontGlyphTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d13e0; a static initializer	verified	one	net/layout#object-files	
+0x5d13e0	15	InitFontGlyphTwoPi		gx	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#object-files	
+0x5d13f0	5	InitFontGlyphInvTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d1400; a static initializer	verified	one	net/layout#object-files	
+0x5d1400	19	InitFontGlyphInvTwoPi		gx	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#object-files	
 0x5d1420	1558	Sha1Transform		net	primitive	void __fastcall (uint32_t *state, const uint8_t *block)	Runs the SHA-1 compression of one 64-byte block into five state words	inferred	none		
 0x5d1a40	49	Sha1Init		net	orchestration	void __thiscall (void *ctx)	Zeroes a SHA-1 context's bit count and loads the five initial state words	inferred	none		
 0x5d1a80	169	Sha1Update		net	primitive	void __thiscall (void *ctx, const void *data, uint32_t length)	Adds bytes to a SHA-1 context: grows the bit count, fills and compresses the buffer, compresses whole blocks in place	inferred	none		
