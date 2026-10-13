@@ -111,9 +111,12 @@ a function and has its body's size. It regenerates every table into a
 scratch directory and requires each byte for byte. It runs `cargo test --workspace` with
 `BENILLA_RE_REQUIRE_EXE=1`, and requires every test that a row's `test` or an entry's `Test` line
 names to appear as passed. It needs GNU objdump (above), Python 3, bash for `tools/disasm.sh`, a
-POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK. No crate exists yet
-([#4](https://github.com/samwhosung/benilla-re/issues/4)), so the test step runs only the
-xtask's own tests, and no row or entry names a test.
+POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK.
+
+The tests build the Unicorn emulator from source, which needs CMake and a C compiler:
+`brew install cmake` on macOS, `sudo apt install cmake build-essential` on Linux. Without the exe
+`cargo test --workspace` builds and runs them, and each test that needs the exe skips with one
+line; CI runs it that way.
 
 `cargo xtask cited <path to a benilla checkout>` lists every client address the benilla tree
 cites that has neither a row nor a mention in a doc here: a report, not a check.
@@ -147,20 +150,26 @@ finding can live in your system's doc and the row can link there.
 
 ## Adding a test
 
-No crate and no test harness exist yet: the reference crates and their tests come with
-[#4](https://github.com/samwhosung/benilla-re/issues/4). These are the rules a test follows. A
-test lives in `crates/<crate>/tests/` and runs the exe's own code in the Unicorn emulator beside a
-Rust reimplementation, comparing the results bit for bit. The first crate also adds `"crates/*"`
-to the workspace members in `Cargo.toml`.
+A system's reimplementation is a crate, `crates/<system>`, named after the system's doc
+(`objectlayer`, package `benilla-re-objectlayer`), with `publish = false` and the workspace's
+license, version and edition. Its tests live in `crates/<system>/tests/`, each a top-level
+function of its file, so it is named `<system>::test_fn`. A test runs the exe's own code through
+`benilla-re-difftest`, a dev-dependency, beside the crate's Rust reimplementation, and compares the
+results bit for bit. A function whose row is `unreached` gets neither.
 
-- Test the whole function where possible; a slice test names the instructions it covers.
+- Test the whole function where possible; a slice test names the instructions it covers, and the
+  entry's derivation says which.
 - Cover every regime the code distinguishes, with a deterministic probe at each threshold.
-- When the test passes against the exe, set the row's `test` to `crate::test_fn` and its `proof`
-  to `test`.
-- A test finds the exe at `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe`, and refuses any other
-  build. One that cannot find it prints that it skipped and returns, unless
+- When the test passes against the exe, set the row's `test` to `crate::test_fn` and the entry's
+  `Test` line. A test of the whole function raises a `verified` row's `proof` to `test`; an
+  `inferred` row stays inferred, since the test proves the transcription, not the prose.
+- `Wow::load()` finds the exe at `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe`, and refuses any other
+  build by its SHA-256. Without it a test prints one skip line and returns, unless
   `BENILLA_RE_REQUIRE_EXE` is set (to `1`): then it panics. `cargo xtask check --exe` sets it, so
-  a skip there fails the check and is never a pass.
+  a skip there fails the check and is never a pass. `data_dir()` finds the install the same way,
+  at `BENILLA_RE_WOW_DATA`, else `WoW/Data`.
+- A file from a client run or a third party is read with `fixture("BENILLA_RE_…")`, which skips
+  without it even under `BENILLA_RE_REQUIRE_EXE`; no row or entry names such a test.
 
 The emulator is `unicorn-engine` (GPL-2.0), used as a test dependency only; nothing that ships
 links it.

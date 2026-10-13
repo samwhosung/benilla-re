@@ -65,8 +65,9 @@ the commit message says what was wrong and where.
 
 A system is understood when its closure is (`systems/README.md`): every function its roots reach
 has a row with a class, every struct field its functions touch has a row, every branch is
-accounted for, and every primitive has a bit-exact test. No system meets this yet: no test exists
-until the reference crates are ported ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
+accounted for, and every primitive has a bit-exact test. No system meets this yet: tests cover a
+few primitives, and the rest come as the reference crates are ported
+([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 
 The closure is only as good as its roots, and a walk of direct calls misses code. Look for:
 
@@ -166,10 +167,10 @@ A claim that something never happens is a census, and a census earns its zero.
 
 ## The harness
 
-A bit-exact test runs the exe's own code in the Unicorn emulator beside the reimplementation. No
-crate, test or harness is in this repo yet: porting them is
-[#4](https://github.com/samwhosung/benilla-re/issues/4). The x87 setting below holds for every
-finding, and the rules after it are the ones each test follows.
+A bit-exact test runs the exe's own code in the Unicorn emulator beside the reimplementation. The
+harness is `crates/difftest`, and each system's crate under `crates/` holds a reimplementation and
+its tests (`CONTRIBUTING.md`, Adding a test). The x87 setting below holds for every finding, and
+the rules after it are the ones each test follows.
 
 The client runs the x87 at 53-bit precision, rounding to nearest, every exception masked: the
 control word `0x027F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and
@@ -194,5 +195,8 @@ assumes this control word unless it says otherwise.
   test that needs the exe and cannot find it panics instead of skipping. `cargo xtask check --exe`
   sets it and requires every test the table and the docs name to appear as passed, so a test
   that skipped, was ignored or did not run fails the check.
+- A file from a run of the real client, from the install or from a third party is never
+  committed. A test that needs one reads it from a `BENILLA_RE_*` variable and skips without it,
+  even with `BENILLA_RE_REQUIRE_EXE` set, so no row or entry names such a test.
 - A tool that shells out checks its exit code and carries a control on every run, so a broken
   invocation fails loudly instead of returning an empty answer.

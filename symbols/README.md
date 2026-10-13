@@ -118,7 +118,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
 | `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
-| `test` | The bit-exact test that runs this function against the exe: `crate::test_fn`, the function name of a test under `crates/<crate>/tests/`. Empty when there is none, as on every row: no crate exists until [#4](https://github.com/samwhosung/benilla-re/issues/4). |
+| `test` | The bit-exact tests that run this function against the exe, `crate::test_fn` separated by `, `: the function name of a test under `crates/<crate>/tests/`. A test of a slice is named too; only a test of the whole function raises a `verified` row's proof to `test`. Empty when there is none. |
 
 A function row's address is a function start (`../METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
@@ -140,7 +140,7 @@ Classes:
 - `primitive`: computes a value or state a reimplementation must reproduce bit for bit. Any
   arithmetic, bit manipulation or table lookup on values, beyond loading, storing, comparing and
   computing addresses, makes a function primitive, however thin. Every primitive in a closure
-  needs a bit-exact `test` before its system is complete; no primitive has one yet
+  needs a bit-exact `test` before its system is complete; most have none yet
   ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 - `orchestration`: calls other functions and moves values (loads, stores, compares, branches) and
   computes nothing of its own. Its contract is its call order and arguments, which its finding

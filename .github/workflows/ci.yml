@@ -1,7 +1,8 @@
 name: CI
 
-# The exe-free half of the check, on every pull request and every push to main. The exe half
-# (`cargo xtask check --exe`) needs a reader's own WoW.exe and runs where one is.
+# The exe-free half of the check, on every pull request and every push to main: the formats, the
+# lints, and the tests, which skip without an exe. The exe half (`cargo xtask check --exe`) needs a
+# reader's own WoW.exe and runs where one is.
 on:
   pull_request:
   push:
@@ -24,7 +25,9 @@ jobs:
         run: cargo fmt --all -- --check
       - name: Lint
         run: cargo clippy --workspace --all-targets -- -D warnings
-      - name: The check's own tests
-        run: cargo test --package xtask
+      # Builds the Unicorn emulator from source with the runner's CMake and C compiler. Without an
+      # exe each test that needs one skips with one line.
+      - name: Tests
+        run: cargo test --workspace
       - name: The check
         run: cargo xtask check

@@ -50,8 +50,9 @@ The functions through which anything outside the system enters it:
 The closure of a system is every function reachable from its roots by calls, tail jumps, vtable
 slots and stored addresses, stopping at functions another system owns. Every function in the
 closure has a row with a `class` (`../symbols/README.md`), and every `primitive` in it has a
-bit-exact test. That is the definition of a complete system, and no system meets it yet: the tests
-come with the reference crates ([#4](https://github.com/samwhosung/benilla-re/issues/4)). A
+bit-exact test. That is the definition of a complete system, and no system meets it yet: tests
+cover a few primitives, and the rest come as the reference crates are ported
+([#4](https://github.com/samwhosung/benilla-re/issues/4)). A
 function the system owns that nothing live reaches is of class `unreached`:
 it keeps a row with its one-line meaning and owes no test. The doc gives the unreached functions
 one short entry that lists their addresses and the census that shows nothing reaches them.
