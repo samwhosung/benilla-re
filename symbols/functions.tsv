@@ -631,7 +631,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	random::crandom_uint32_advance
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
-0x453420	94	EvaluateSplineTangent		spline		void __thiscall (void *spline, float u, float *out, uint32_t mode)	Writes the curve tangent at u clamped into [0, 1]	inferred	none	models/emission#spline-spawn	
+0x453420	96	EvaluateSplineTangent		spline		void __thiscall (void *spline, float u, float *out, uint32_t mode)	Writes the curve tangent at u clamped into [0, 1]	inferred	none	models/emission#spline-spawn	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
 0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
@@ -12643,7 +12643,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ba9f0	171	VectorsEqualFuzzy		models	unreached		Compares two vectors component by component; nothing reaches it	inferred	none	models/overview#object-files	
 0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	
 0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	
-0x7bcb40	284	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	
+0x7bcb40	140	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	
 0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	
 0x7bcf90	201	Determinant4		cmath		float __thiscall (const float *m)	Returns the determinant of a 4x4 matrix by cofactors	inferred	none	models/scene#segment-collision	
 0x7bd6c0	50	InvertMatrix4WithDeterminant		cmath		float * __thiscall (const float *m, float *out, float det)	Writes the inverse of a 4x4 matrix given its determinant	inferred	none	models/scene#segment-collision	
@@ -12660,7 +12660,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7be490	282	BuildAxisRotation		cmath			Builds a rotation matrix about an axis by an angle	inferred	none	collision/kinematics#spline-follower	
 0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		
 0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
-0x7c0120	75	Matrix3ToQuaternion		cmath		float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
+0x7c0120	77	Matrix3ToQuaternion		cmath		float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
 0x7c0190	293	MatrixToQuaternion		unassigned	primitive		Converts a 3x3 rotation matrix to a quaternion by the trace or the largest diagonal	inferred	none		cmath::matrix_quat_difftest
 0x7c02c0	85	QuaternionFromAxisAngle		unassigned	unreached		Builds a quaternion from an angle and an axis	inferred	none		
 0x7c0320	138	QuaternionToAxisAngle		unassigned	unreached		Writes a quaternion's angle and axis	inferred	none		
@@ -12679,7 +12679,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c1dd0	601	ClassifyPointAgainstBox		unassigned	unreached		Tests a point and radius against a box in one of four modes	inferred	none		
 0x7c2040	601	ClassifyCircleAgainstBox		unassigned	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none		cmath::sphere_aabb_difftest
 0x7c22b0	299	IntersectRayPlane		unassigned	primitive		Intersects a ray with a plane, writing the parameter and the point when their pointers are set	inferred	none		cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
-0x7c23e0	270	PointInPolygonProjected		cmath			Tests whether a point lies in a polygon projected along an axis	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
+0x7c23e0	272	PointInPolygonProjected		cmath			Tests whether a point lies in a polygon projected along an axis	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
 0x7c24f0	289	IsPointInIndexedPolygon16		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	inferred	none		
 0x7c2620	279	IsPointInIndexedPolygon32		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	inferred	none		
 0x7c2740	139	IntersectRayPolygonTriangle		unassigned	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	inferred	none		
@@ -12701,7 +12701,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c43d0	310	LineLineGap		unassigned	unreached		Returns the closest distance between two lines	inferred	none		
 0x7c4510	281	ClosestLineParameters		unassigned	unreached		Writes the parameters of the closest points of two lines	inferred	none		
 0x7c4630	145	PointLineDistance		unassigned	unreached		Returns the distance from a point to a line	inferred	none		
-0x7c46d0	264	PointSegmentDistanceSquared		cmath			Returns the squared distance from a point to a segment	inferred	none		cmath::seg_proj_difftest
+0x7c46d0	266	PointSegmentDistanceSquared		cmath			Returns the squared distance from a point to a segment	inferred	none		cmath::seg_proj_difftest
 0x7c47e0	5	InitGeometryTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c47f0	15	InitGeometryTwoPi		unassigned	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
 0x7c4800	5	InitGeometryInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	
