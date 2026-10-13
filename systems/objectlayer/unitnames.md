@@ -13,7 +13,7 @@ Roots: `0x609210`, `0x608f50`, `0x60f600`, `0x608ac0`, `0x607440`, `0x6128b0`, `
 `0x609210(realm)` names a unit. A player's name comes from the name cache, which queries the
 server on a miss; a pet's from the pet name cache, refreshed when `UNIT_FIELD_PET_NAME_TIMESTAMP`
 moves; a creature's from its creature record. A miss reads `UNKNOWNOBJECT`, or `Unknown Being`
-when that text is empty. Name and creature replies release the nameplate so it is rebuilt.
+(0x860fa4) when that text is empty. Name and creature replies release the nameplate so it is rebuilt.
 
 Addresses: `0x609210`, `0x60926b`, `0x6092d0`, `0x6094c0`, `0x5fb840`, `0x604600`, `0x604660`, `0x604aa0`, `0x612bf0`
 Confidence: verified

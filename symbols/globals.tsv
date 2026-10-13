@@ -91,8 +91,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x602114	void *[4]	s_switch602114		objectlayer	Holds the 4 case addresses of the switch in 0x6018f0	verified	one	objectlayer/overview#switch-tables
 0x602a2c	void *[9]	s_forcedMoveCases		objectlayer	Holds the 9 case addresses of the switch in 0x602780	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x602a50	uint8_t[36]	s_forcedMoveIndex		objectlayer	Maps opcodes 0xc7 to 0xea to the cases of 0x602780's switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x603270	void *[4]	s_smallCodeCases		objectlayer	Holds the 4 case addresses of the switch in 0x603250	verified	one	objectlayer/units#unreached-unit-code
 0x60b700	void *[2]	s_unarmedAnimCases		objectlayer	Holds the 2 case addresses of the switch in 0x60b6e0	verified	one	objectlayer/unitanim#animation-sets
 0x60b708	uint8_t[103]	s_unarmedAnimIndex		objectlayer	Maps animations 16 to 118 to the cases of 0x60b6e0's switch	verified	one	objectlayer/unitanim#animation-sets
+0x60d624	void *[2]	s_spellCastAnimTestCases		objectlayer	Holds the 2 case addresses of the switch in 0x60d600	verified	one	objectlayer/units#unreached-unit-code
+0x60d62c	uint8_t[53]	s_spellCastAnimTestIndex		objectlayer	Maps animations 2 to 54 to the cases of 0x60d600's switch	verified	one	objectlayer/units#unreached-unit-code
 0x60dbfc	void *[9]	s_kitCharProcJumpTable		objectlayer	Holds the 9 case addresses of the switch in 0x60d7c0	verified	one	objectlayer/overview#indexed-switch-tables
 0x60dc20	uint8_t[16]	s_kitCharProcIndexTable		objectlayer	Maps kit procedure kinds 0 to 15 to the cases of 0x60d7c0's switch	verified	one	spell/visuals#chain-effect-creation
 0x60e3fc	void *[3]	s_localMoveCases		objectlayer	Holds the 3 case addresses of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
@@ -843,6 +846,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	one	objectlayer/unitmovement#local-movement-commands
 0xc4d8c8	uint32_t	s_targetFlashColor		objectlayer	Holds the attacked target's selection colour, red from 0x5fa3f0 with a green byte 0x607ed0 sweeps	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d8cc	uint32_t	s_petMeleeDamageColor		objectlayer	Holds 0xffff8400 from 0x5fa0f0, the orange of a pet's melee damage numbers	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0xc4d8e4	void *[6]	s_environmentalDamageKits		objectlayer	Holds the visual kit of each EnvironmentalDamage type 0 to 5, filled by 0x6033c0 and played by 0x624f30	verified	one	objectlayer/units#start-up-and-shutdown
 0xc4d908	uint64_t	s_lastGreetedGuid		objectlayer	Holds the GUID of the unit last greeted by 0x60c270; 0x60c3b0 and 0x604ef0 clear it	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
 0xc4d910	float	s_autoMoveStopDistance		objectlayer	Holds the square root of the stop distance 0x611130 stores, read by the steering	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d918	uint32_t[3]	s_freeNamePlates		objectlayer	Holds the list of released nameplate frames: link offset, end link and first plate	verified	one	objectlayer/unitnames#nameplates
@@ -850,10 +854,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d934	uint32_t	s_partyPvpColor		objectlayer	Holds the light green 0x605960 gives a PvP-flagged party member	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d93c	float	s_autoMoveTurnSpeed		objectlayer	Holds the auto-move turn speed in radians, π from 0x611130, latched from a CVar by 0x6103d0	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d944	void *	s_combatDamageCVar		objectlayer	Holds the CombatDamage CVar record, read before any damage or miss number	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0xc4d948	void *	s_showFootprintParticlesCVar		objectlayer	Holds the showfootprintparticles CVar record 0x6033c0 registers	verified	one	objectlayer/units#start-up-and-shutdown
 0xc4d950	uint64_t	s_pendingUseGuid		objectlayer	Holds the game object an arrived mode 7 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d958	float	s_talkStopDistanceSq		objectlayer	Holds 2.7777777², the squared stop distance of mode 5, written by 0x60e6b0	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d95c	void *[5]	s_talkEmotes		objectlayer	Holds the Emotes.dbc rows of the talk, question, exclamation, shout and laugh emotes, set by 0x603a60	verified	one	objectlayer/unitanim#emotes
 0xc4d970	uint32_t	s_greetingCount		objectlayer	Holds the greeting step 0x623910 returned for the last greeted unit	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
+0xc4d974	void *	s_playerAnimCVar		objectlayer	Holds the PlayerAnim CVar record 0x603280 registers	verified	one	objectlayer/units#start-up-and-shutdown
 0xc4d978	uint32_t	s_unusedLightRedColor		objectlayer	Holds a light red 0x605960 builds and nothing reads	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d980	uint64_t	s_autoMoveTargetGuid		objectlayer	Holds the auto-move target object's GUID, cleared by 0x60fb60	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d988	float	s_namePlateRangeSq		objectlayer	Holds 20² = 400 from 0x5fa130, the squared distance from the camera's unit within which plates show	verified	one	objectlayer/unitnames#nameplates
@@ -870,6 +876,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d9d8	void *[16]	s_questMarkerModels		objectlayer	Holds eight pairs of a loaded marker model and its path, filled by 0x5fa430 and loaded by 0x603a00	verified	one	objectlayer/unitnames#quest-markers
 0xc4da20	uint64_t	s_pendingSpellTargetGuid		objectlayer	Holds the target an arrived mode 9 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da28	uint64_t	s_pendingTalkGuid		objectlayer	Holds the NPC an arrived mode 5 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da30	void *	s_targetAnimCVar		objectlayer	Holds the TargetAnim CVar record 0x603280 registers	verified	one	objectlayer/units#start-up-and-shutdown
 0xc4da34	uint32_t	s_namePlateFlags		objectlayer	Holds nameplate switches: 0x1 enemies, 0x8 friends, 0x2 re-sort every frame, 0x4 refresh the plate	verified	one	objectlayer/unitnames#nameplates
 0xc4da48	uint32_t	s_autoMoveInputFlags		objectlayer	Holds auto-move input bits; bit 0 is set while the auto-move itself drives the mover	verified	one	objectlayer/unitmovement#local-movement-commands
 0xc4da4c	uint32_t	s_friendlyPlayerColor		objectlayer	Holds the blue 0x605960 gives an unflagged player-controlled unit, or one that may attack the player only	verified	one	objectlayer/unitdisplay#selection-circle-and-colour

@@ -11,7 +11,9 @@ files run from `0x5d3f40` to `0x615710` and from `0x61b130` to `0x630780`, aroun
 Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x6384e0`, after the
 physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and
 `initializers` for the core, `classes` for the hierarchy, `reaction` for how units react to one
-another and `trade` for the trade window; the other object files have no topic of their own.
+another, `trade` for the trade window, and `units`, `unitmovement`, `unitanim`, `auras`,
+`unitdisplay`, `unitbody` and `unitnames` for Unit_C.cpp; the other object files have no topic of
+their own.
 
 Roots: `0x4651a0`, `0x4672f0`, `0x4674a0`, `0x468460`, `0x468550`
 

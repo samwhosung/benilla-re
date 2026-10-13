@@ -68,7 +68,7 @@ Test: none
 
 Dead or swimming (movement flags 0x200000), the body takes the display at once (`0x608075`).
 Strafing (0xc) aims at the display plus 90°, or 45° when also moving forward or back, the sign by
-strafe side and backward (`0x6080d6`). Moving (0x2003) snaps. Within 1e-5 bones 4 and 6 are reset
+strafe side and backward (`0x6080d6`). Moving (0x2003) snaps. Within 1e-5 (0x80c5c8) bones 4 and 6 are reset
 (0x711f10, `0x60814d`). Past π/2 the excess is taken at once; then, not strafing and not turning by
 keys (`+0xd58` bit 0x1), `0x6081c8` adds at most 8 times the turn rate `+0xa44` times the seconds since `+0xcb0`. With a body
 model, no mount and bone 4 (bit 0x80), `0x608293` turns bone 4 by half the rest, all of it while

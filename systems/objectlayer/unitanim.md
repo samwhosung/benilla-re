@@ -37,7 +37,7 @@ Test: none
 A resolver that does not claim returns `(mask & −2·bit) == 0`, so the chain also ends once no
 later bit is asked; the last tests its own bit. Moving (`0x5fd100`): swimming gives 42 Swim, 45 backward, 41 turning, 43 or
 44 strafing; a flying spline 135 Fly; backward 13; stealth (bit 1 of `UNIT_FIELD_BYTES_1` byte 3)
-119; a speed of 11 or more 143 Sprint; above twice the walk speed `+0xa30` 5 Run; else 4 Walk.
+119; a speed of 11 (0x80c484) or more 143 Sprint; above twice the walk speed `+0xa30` 5 Run; else 4 Walk.
 Stand states through `0x5fd658`: 1 gives 96 or, already sitting, 97; 3 gives 99 or 100; 4 to 6
 give 102 to 104; 7 gives 6 or 132; 8 gives 114 or 115; 0 after 1, 3 or 8 gives 98, 101 or 116.
 The ready animation `0x5fcdc0` maps the main-hand weapon subclass through `0x5fce14` into

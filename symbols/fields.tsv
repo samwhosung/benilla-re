@@ -66,7 +66,49 @@ CGPlayer_C	0x0e68	4	uint32_t *	m_playerFields	objectlayer	Points at field 188, t
 CGPlayer_C	0x0e6c	4	uint32_t *	m_playerWatchCopy	objectlayer	Points at the player section's watch copy, past the unit's 170, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
+CGUnit_C	0x0118	4	CMovement *	m_movementPtr	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object
+CGUnit_C	0x011c	2184	uint32_t[546]	m_watcherLists	objectlayer	Holds the 182 field watcher lists of 12 bytes that 0x5fad50 empties and 0x5fb5e0 unlinks	verified	one	objectlayer/units#the-unit-object
 CGUnit_C	0x09a8	352	CMovement	m_movement	objectlayer	Holds the unit's CMovement, built in place by the unit constructor 0x5fad50 through 0x616fa0	verified	one	collision/mover#construction
+CGUnit_C	0x0b18	4	uint32_t	m_soundRace	objectlayer	Holds +0x34 of the unit's ChrRaces row, written by 0x5fb880	verified	one	objectlayer/units#lifecycle
+CGUnit_C	0x0b1c	4	void *	m_speechSound	objectlayer	Holds the playing greeting or farewell sound, written by 0x60c270 and 0x60c3b0	verified	one	objectlayer/unitnames#greetings-and-unit-sounds
+CGUnit_C	0x0b2c	4	void *	m_questMarker	objectlayer	Holds the marker model hung over the head, written by 0x607480 and cleared by 0x6073f0	verified	one	objectlayer/unitnames#quest-markers
+CGUnit_C	0x0b30	4	void *	m_creatureRecord	objectlayer	Holds the creature cache record, written by 0x60afb0, 0x604600 and 0x604660	verified	one	objectlayer/unitnames#unit-names
+CGUnit_C	0x0b34	4	void *	m_displayRecord	objectlayer	Holds the CreatureDisplayInfo row, written by 0x60afb0	verified	one	objectlayer/unitdisplay#display-records
+CGUnit_C	0x0b38	4	void *	m_displayExtraRecord	objectlayer	Holds the CreatureDisplayInfoExtra row or null, written by 0x60afb0	verified	one	objectlayer/unitdisplay#display-records
+CGUnit_C	0x0b3c	4	void *	m_modelDataRecord	objectlayer	Holds the CreatureModelData row, written by 0x60afb0	verified	one	objectlayer/unitdisplay#display-records
+CGUnit_C	0x0b40	4	void *	m_soundDataRecord	objectlayer	Holds the CreatureSoundData row, written by 0x60afb0	verified	one	objectlayer/unitdisplay#display-records
+CGUnit_C	0x0b44	4	void *	m_mountSoundDataRecord	objectlayer	Holds the mount's CreatureSoundData row, written by 0x607a00 and cleared by 0x607ce0	verified	one	objectlayer/unitdisplay#mounts
+CGUnit_C	0x0b48	4	void *	m_bloodLevelsRecord	objectlayer	Holds the UnitBloodLevels row, written by 0x60afb0	verified	one	objectlayer/unitdisplay#display-records
+CGUnit_C	0x0b4c	4	void *	m_spellEffect	objectlayer	Holds the channel's spell effect, written by 0x612650 and released by 0x612630	verified	one	objectlayer/auras#channels
+CGUnit_C	0x0b58	192	uint32_t[48]	m_auraSpells	objectlayer	Holds the spell shown in each aura slot, written by 0x5ff350 and cleared by 0x5ff290	verified	one	objectlayer/auras#showing-an-auras-slot
+CGUnit_C	0x0c18	4	uint32_t	m_breathCheckTime	objectlayer	Holds the time of the next breath check, written by 0x607710	verified	one	objectlayer/unitbody#breath
+CGUnit_C	0x0c1c	4	uint32_t	m_lastStandState	objectlayer	Holds the stand state the animation last answered, written by 0x6127b0 and 0x5fd9e0	verified	one	objectlayer/units#stand-states
+CGUnit_C	0x0c20	32	uint32_t[8]	m_emoteQueue	objectlayer	Holds four delay and emote pairs, written by 0x60bbc0	verified	one	objectlayer/unitanim#emotes
+CGUnit_C	0x0c40	4	uint32_t	m_bleedTime	objectlayer	Holds the next bleed time, written by 0x60a260 and the constructor	verified	one	objectlayer/unitbody#low-health-and-bleeding
+CGUnit_C	0x0c48	8	uint64_t	m_attackTarget	objectlayer	Holds the attack target GUID, written by 0x5ff070 and cleared by 0x605860	verified	one	objectlayer/units#the-unit-object
+CGUnit_C	0x0c58	4	uint32_t	m_unitState	objectlayer	Holds state bits: 0x2 low health, 0x8 pending XP, 0x10 flash, 0x20 and 0x40 breath, 0x100 native display	verified	one	objectlayer/units#the-unit-object
+CGUnit_C	0x0c60	4	int32_t	m_liquidId	objectlayer	Holds the node's liquid id or -1, written by 0x5fa730	verified	one	objectlayer/unitbody#liquid-and-swimming
+CGUnit_C	0x0c78	4	uint32_t	m_nextRippleTime	objectlayer	Holds the time of the next water ripple, written by 0x5fa760	verified	one	objectlayer/unitbody#water-ripples-and-swimming
+CGUnit_C	0x0c7c	4	void *	m_nameDesc	objectlayer	Holds the name descriptor, written by 0x606fe0 and cleared by 0x607030	verified	one	objectlayer/unitnames#the-name-block
+CGUnit_C	0x0c80	12	uint32_t[3]	m_pendingXP	objectlayer	Holds an XP gain and its two arguments, written by 0x60a0c0	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+CGUnit_C	0x0c8c	4	uint32_t	m_precastSpell	objectlayer	Holds the precast spell id, written by 0x60d020 and cleared by 0x60d040	verified	one	objectlayer/units#caster-checks-for-a-spell
+CGUnit_C	0x0c90	4	uint32_t	m_tokenFlags	objectlayer	Holds the unit token flags, written by 0x60c520, 0x60c4a0 and 0x60c4f0	verified	one	objectlayer/units#reactions-tokens-and-groups
+CGUnit_C	0x0c94	4	float	m_bodyFacing	objectlayer	Holds the body facing, written by 0x607ed0, 0x5fbd60 and the constructor	verified	one	objectlayer/unitbody#body-turn-and-spine-twist
+CGUnit_C	0x0cb4	4	uint32_t	m_deathTime	objectlayer	Holds the time the unit was seen dead, written by 0x5fb880 and 0x5fbe00, cleared by 0x5fef70	verified	one	objectlayer/units#lifecycle
+CGUnit_C	0x0cb8	4	uint32_t	m_questStatus	objectlayer	Holds the quest giver status, written by 0x607440	verified	one	objectlayer/unitnames#quest-markers
+CGUnit_C	0x0cc0	4	uint32_t	m_mountFootprintTexture	objectlayer	Holds the mount model's footprint texture, written by 0x607a00	verified	one	objectlayer/unitdisplay#mounts
+CGUnit_C	0x0cc4	4	float	m_mountFootprintWidth	objectlayer	Holds the mount's footprint width over 36, written by 0x607a00	verified	one	objectlayer/unitdisplay#mounts
+CGUnit_C	0x0cc8	4	float	m_mountFootprintLength	objectlayer	Holds the mount's footprint length over 36, written by 0x607a00	verified	one	objectlayer/unitdisplay#mounts
+CGUnit_C	0x0ccc	4	uint32_t	m_componentPending	objectlayer	Holds 1 while the character component waits for the model, written by 0x60abe0 and 0x607da0	verified	one	objectlayer/unitdisplay#changing-the-display
+CGUnit_C	0x0cd0	4	uint32_t	m_portraitPending	objectlayer	Holds 1 while the portrait waits for the model, written by 0x60abe0 and 0x607da0	verified	one	objectlayer/unitdisplay#changing-the-display
+CGUnit_C	0x0cf0	4	float	m_selectionRadius	objectlayer	Holds the selection circle radius, written by 0x60aee0	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+CGUnit_C	0x0d24	4	void *	m_rangedModel	objectlayer	Holds the ranged weapon's model, written by 0x611e10	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
+CGUnit_C	0x0d30	4	void *	m_characterComponent	objectlayer	Holds the character component, written by 0x5fb200	verified	one	objectlayer/unitdisplay#changing-the-display
+CGUnit_C	0x0d34	8	void *[2]	m_weaponTrails	objectlayer	Holds each hand's weapon trail, written by 0x608d60	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
+CGUnit_C	0x0d54	4	uint32_t	m_transformSpell	objectlayer	Holds the shapeshift or transform spell, written by 0x5ff0c0 and cleared by 0x60abe0	verified	one	objectlayer/auras#showing-an-auras-slot
+CGUnit_C	0x0d5c	4	int32_t	m_keyBone	objectlayer	Holds the key bone 4, 6 or -1, written by 0x60ce70 and 0x60abe0	verified	one	objectlayer/unitdisplay#changing-the-display
+CGUnit_C	0x0e60	4	void *	m_namePlate	objectlayer	Holds the nameplate frame, written by 0x6086e0 and cleared by 0x608a10	verified	one	objectlayer/unitnames#nameplates
+CGUnit_C	0x0e64	4	void *	m_chatBubble	objectlayer	Holds the chat bubble, written by 0x608ac0 and cleared by 0x608c00	verified	one	objectlayer/unitnames#chat-bubbles
 CInputControl	0x0000	4	uint32_t	m_createTime	input	Holds the client clock when the object was built	inferred	none	input#input-state
 CInputControl	0x0004	4	uint32_t	m_held	input	Holds the held command bits; 0x1 and 0x2 are the two primary mouse commands	verified	one	input#mouse-commands
 CInputControl	0x0008	4	float	m_travelX	input	Holds the sum of scaled |dx| since the first primary press	verified	two	input#click-versus-drag

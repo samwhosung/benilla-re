@@ -58,7 +58,7 @@ spell's duration, 4 a precast loop. The kit's animation plays on the unit; each 
 an effect at its attachment; the world effect is placed at the position; then the character
 procedures, the sound and the camera shake run.
 
-Addresses: `0x60edf0`, `0x60f4f8`, `0x60ee77`, `0x60ef3d`, `0x60f011`, `0x60f106`, `0x60f35c`, `0x60f3c5`, `0x60f4bc`, `0x60f4e6`, `0x60ed40`, `0x60ed00`, `0x5ff170`, `0x5ff1d0`, `0x5ff270`, `0x5fbf50`
+Addresses: `0x60edf0`, `0x60f510`, `0x60f4f8`, `0x60ee77`, `0x60ef3d`, `0x60f011`, `0x60f106`, `0x60f35c`, `0x60f3c5`, `0x60f4bc`, `0x60f4e6`, `0x60ed40`, `0x60ed00`, `0x5ff170`, `0x5ff1d0`, `0x5ff270`, `0x5fbf50`
 Confidence: verified
 Proof: one
 Test: none
@@ -71,7 +71,7 @@ attachments: `+0xc` head 20, `+0x10` chest 34, `+0x14` base 19, `+0x18` and `+0x
 22, `+0x20` breath 17, `+0x24`, `+0x28` weapons 23, 24, `+0x2c` 25, through `0x60ed40`; `+0x30`
 at the position (`0x60f106`); `+0x34` sound (`0x60f4bc`); `+0x38` shake (`0x60f4e6`). A
 ranged spell (Attributes 0x2) draws the ranged weapon. The animation `+0x8` plays through
-`0x5fe2f0` (`0x60f3c5`), as a wound for 8 to 10.
+`0x5fe2f0` (`0x60f3c5`), as a wound for 8 to 10 (`0x60f510`).
 
 ## Kit character procedures
 
