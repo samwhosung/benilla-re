@@ -48,8 +48,9 @@ fn mt_margined(
 
     let det = (f(p[2]) * f(e1[2]) + f(p[1]) * f(e1[1])) + f(p[0]) * f(e1[0]);
 
-    // Go on for det ≤ −1e-6, det > 1e-6 or NaN.
-    if !(det <= -EPS_DET || det > EPS_DET || det.is_nan()) {
+    // Go on for det ≤ −1e-6, det ≥ 1e-6 or NaN: `test ah,0x41; jne` at `0x7c2d37`, then `test
+    // ah,5; jp` at `0x7c2d44`, which jumps on an equal compare too.
+    if !(det <= -EPS_DET || det >= EPS_DET || det.is_nan()) {
         return false;
     }
 

@@ -122,15 +122,21 @@ pub fn point_in_poly(query: &[f32; 3], verts: &[f32], n: usize, axis_idx: usize)
     inside
 }
 
-/// `0x7bf680`: the dominant axis, the index of the largest `|n_i|`, the earlier index on a tie or
-/// NaN. Not run against the exe.
+/// `0x7bf680`: the dominant axis, the index of the largest `|n_i|`. `|x|` is compared with `|y|`,
+/// then the larger with `|z|`, each by `test ah,0x41`, so a tie or a NaN goes to the later axis.
 pub fn dominant_axis(n: &[f32; 3]) -> usize {
     let ax = f(n[0]).abs();
     let ay = f(n[1]).abs();
     let az = f(n[2]).abs();
-    let (mut idx, max) = if ay > ax { (1usize, ay) } else { (0usize, ax) };
-    if az > max {
-        idx = 2;
+    if ax > ay {
+        if ax > az {
+            0
+        } else {
+            2
+        }
+    } else if ay > az {
+        1
+    } else {
+        2
     }
-    idx
 }
