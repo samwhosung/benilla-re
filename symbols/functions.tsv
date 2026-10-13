@@ -1641,6 +1641,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47a4a0	32	CountFaces		charactermodel			Returns the face count of a race and sex from the customization grid	inferred	none		
 0x47a4c0	13	CountFacialHairStyles		charactermodel			Returns the facial hair count of a race and sex from a dword table	inferred	none		
 0x47a610	584	SetCharacterComponentEmblem		charactermodel			Applies a guild tabard's five emblem values to a character component	inferred	none		
+0x47bee0	5	InitCorpseFieldsCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47bef0	11	InitCorpseFieldsCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x47bf60	6	ReadGuidAt		objectlayer	orchestration	uint64_t __thiscall (const uint64_t *this)	Returns the 64-bit value at its argument	verified	one	spell/records#range	
 0x47bf90	5	InitCorpseFieldsDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bfa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47bfa0	15	InitCorpseFieldsDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
@@ -2189,6 +2191,56 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47fc60	222			objectlayer	unreached		Runs its object file code that calls OsGetAsyncTimeMs; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fd40	340			objectlayer	unreached		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fea0	49			objectlayer	primitive		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
+0x47fee0	5	InitMirrorSquare19Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47fef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47fef0	19	InitMirrorSquare19		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x47ff10	5	InitMirrorSquare20Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ff20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47ff20	19	InitMirrorSquare20		objectlayer	primitive	void __cdecl (void)	Stores 11.111111² = 123.45678 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x47ff40	5	InitMirrorSquare21Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ff50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47ff50	19	InitMirrorSquare21		objectlayer	primitive	void __cdecl (void)	Stores 5.5555553² = 30.864195 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x47ff70	5	InitMirrorSquare22Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ff80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47ff80	19	InitMirrorSquare22		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x47ffa0	5	InitMirrorSquare23Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ffb0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47ffb0	19	InitMirrorSquare23		objectlayer	primitive	void __cdecl (void)	Stores 5² = 25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x47ffd0	5	InitMirrorSquare24Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ffe0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x47ffe0	19	InitMirrorSquare24		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480000	5	InitMirrorSquare25Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480010, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480010	19	InitMirrorSquare25		objectlayer	primitive	void __cdecl (void)	Stores 30² = 900 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480030	5	InitMirrorSquare26Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480040, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480040	19	InitMirrorSquare26		objectlayer	primitive	void __cdecl (void)	Stores 120² = 14400 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480060	5	InitMirrorSquare27Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480070, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480070	19	InitMirrorSquare27		objectlayer	primitive	void __cdecl (void)	Stores 20² = 400 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480090	5	InitMirrorSquare28Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4800a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4800a0	19	InitMirrorSquare28		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4800c0	5	InitMirrorSquare29Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4800d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4800d0	19	InitMirrorSquare29		objectlayer	primitive	void __cdecl (void)	Stores 0.5² = 0.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4800f0	5	InitMirrorSquare30Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480100, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480100	19	InitMirrorSquare30		objectlayer	primitive	void __cdecl (void)	Stores 3² = 9 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480120	5	InitMirrorSquare31Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480130, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480130	19	InitMirrorSquare31		objectlayer	primitive	void __cdecl (void)	Stores 100² = 10000 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480150	5	InitMirrorConst2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480160, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480160	11	InitMirrorConst2		objectlayer	orchestration	void __cdecl (void)	Stores 5 as a float in a global	verified	one	objectlayer/initializers#stored-constants	
+0x480170	5	InitMirrorSquare32Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480180, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480180	19	InitMirrorSquare32		objectlayer	primitive	void __cdecl (void)	Stores 50² = 2500 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4801a0	5	InitMirrorSquare33Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4801b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4801b0	19	InitMirrorSquare33		objectlayer	primitive	void __cdecl (void)	Stores 100² = 10000 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4801d0	5	InitMirrorSquare34Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4801e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4801e0	19	InitMirrorSquare34		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480200	5	InitMirrorSquare35Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480210, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480210	19	InitMirrorSquare35		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480230	5	InitMirrorProduct5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480240, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480240	19	InitMirrorProduct5		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480260	5	InitMirrorProduct6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480270, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480270	19	InitMirrorProduct6		objectlayer	primitive	void __cdecl (void)	Stores 0.58333331·−255 = −148.75 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480290	5	InitMirrorProduct7Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4802a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4802a0	19	InitMirrorProduct7		objectlayer	primitive	void __cdecl (void)	Stores 18·0.027777778 = 0.5 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4802c0	5	InitMirrorProduct8Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4802d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x4802d0	19	InitMirrorProduct8		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x4802f0	5	InitMirrorQuotient5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480300, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480300	19	InitMirrorQuotient5		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480320	5	InitMirrorSquare36Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480330, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480330	19	InitMirrorSquare36		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
+0x480350	5	InitMirrorQuotient6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x480360, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
+0x480360	19	InitMirrorQuotient6		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x480780	187			ui	orchestration		Returns whether the world pick admits an object of type unit, player, game object or corpse	inferred	none	spell/targeting#object-pick-filters	
 0x481050	318			ui	primitive		Returns the world pick mask, built from the flag word predicates while targeting	inferred	none	spell/targeting#flag-word-predicates	
 0x481790	338			ui	orchestration		Sets the world cursor from the pick result, the targeting cursor included	inferred	none	spell/targeting#the-targeting-cursor	
