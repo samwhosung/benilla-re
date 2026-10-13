@@ -33,7 +33,8 @@ no exe, no MPQ, no extracted file, no disassembly or decompiler dump (`dumps/` i
    instruction stream: the sweep restarts at every function row and every jump-table entry, and
    leaves the tables' bytes out. The script refuses any other build of the exe, uses the first
    GNU objdump with the PE target it finds, runs `cargo xtask listing` (Rust, as for the check
-   below), and prints the listing's SHA-256 so that you can see it is the same listing.
+   below), and prints the listing's size and SHA-256. The listing changes as rows are added, since
+   each row restarts the sweep; the instruction addresses findings cite do not.
 
    ```
    tools/disasm.sh

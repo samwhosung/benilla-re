@@ -10,10 +10,9 @@ set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/check-exe.sh"
 check_exe
 
-# The listing's expected SHA-256 under GNU binutils 2.46 and the symbol table of this commit; another
-# version may format a little differently, which is reported, not fatal. A row at a start the
-# sweep stepped over changes the listing, and the commit that adds it updates this.
-DISASM_SHA256=68f0a49391284b16aff57acd7580dd9d60d41f299b64de7db56a0dde5a56a43c
+# The listing has no fixed hash: it depends on the binutils version's formatting and on
+# symbols/, since every function row restarts the sweep. Its addresses are what findings cite, and
+# those do not change.
 
 find_objdump() {
   local c
@@ -39,7 +38,3 @@ mv "$OUT.tmp" "$OUT"
 
 sum=$(sha256_of "$OUT")
 echo "wrote dumps/disasm.txt: $(wc -l < "$OUT" | tr -d ' ') lines, SHA-256 $sum"
-if [ "$sum" != "$DISASM_SHA256" ]; then
-  echo "note: this differs from the reference listing ($DISASM_SHA256); another binutils version can" >&2
-  echo "      format differently. Citations are instruction addresses, which do not change." >&2
-fi
