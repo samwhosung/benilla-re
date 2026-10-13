@@ -86,7 +86,7 @@ The bound is `lea eax,[edi-0x304]; cmp eax,0x16`. The byte table holds 0 to 10 f
 ## Monster moves
 
 `0x6018f0(store, opcode)` reads the start point, the spline id and a type byte. Type 1 stops:
-the mover flushes and stops at the point. Types 2, 3 and 4 add a face point, a GUID or an angle.
+within 3 yards the mover flushes and stops at the point. Types 2, 3 and 4 add a face point, a GUID or an angle.
 Then come the spline flags, the duration and a u32 count of points. Flag 0x200 sends every point;
 otherwise the last point comes whole and the middle points as packed offsets. The path is anchored
 at the unit (`0x6021c0`), started (`0x6187a0`) and given its facing; the active mover's input
@@ -99,7 +99,8 @@ Test: none
 
 The path buffer is `0x40a280((3·count + 12)·4)`, computed in 32 bits (`0x601a58` to `0x601a68`),
 and the loops at `0x601ccd` and `0x601e05` run to the count. A count of 0x15555552 or more wraps
-the size, and the loops write points past the buffer. `0x602130` turns a u32 into x, y and z from
+the size, and the loops write points past the buffer. Type 1's 3 yards is a squared distance
+under 9 (0x80c5bc) before `0x618750`; farther, the stop point runs as a one-point path. `0x602130` turns a u32 into x, y and z from
 bits 0 to 10, 11 to 21 and 22 to 31, each sign-extended and times 0.25, and subtracts them from
 the reference point. `0x6021c0` empties a one-point path within 1/36 yard of the unit (squared
 against `0x80c450`) and otherwise prepends the unit's position or cuts the points it has passed.
@@ -273,8 +274,8 @@ Proof: one
 Test: none
 
 `0x610e40` returns the transport-local point for modes 4 and 10, nothing for 2 and 8, else the
-object `0xc4d980`, refusing a taxi rider and, outside modes 6 and 9, a dead unit; its distance is
-horizontal when not swimming. `0x6103d0` turns at `automoveturnspeedwide` (1200, used between 2π/3
+object `0xc4d980`, refusing a taxi rider and, outside modes 6 and 9, a dead unit; its distance
+drops the height near the target (next entry). `0x6103d0` turns at `automoveturnspeedwide` (1200, used between 2π/3
 and 4π/3 off) or `automoveturnspeednarrow` (800), in degrees, latched at `0xc4d93c`, and stops
 within 0.001. `0x610d50`
 compares squared distance with 0.002777778². `0x610da0` is `asin` of the normalized height. On
@@ -282,3 +283,28 @@ arrival `0x60f940` stores the GUID for mode 5 at `0xc4da28`, 6 at `0xc4da78`, 7 
 9 at `0xc4da20`, and `0x60fa20` hands each to `0x5f0130`, `0x5df2a0`, `0x5f86b0` or `0x5f05e0`.
 `0x611400` draws a pulsing box at mode 4 and 10 targets. `0x6115e0` moves the target point and
 facing with a transport.
+
+## Arrival, height and stalls
+
+Speed widens the arrival: a mover faster than 7 yards a second arrives that much farther out.
+Near the target the height stops counting unless the mover swims. A frame that brings the mover
+no closer, a target behind a drunk mover, a stall while walking forward, or a target straight
+above or below ends the walk. A walk along a heading (mode 8) first pitches a swimmer level, steep or straight.
+
+Addresses: `0x6106b0`, `0x6107e5`, `0x6108e6`, `0x610a7b`, `0x610aaa`, `0x610c63`, `0x610d32`, `0x610e40`, `0x610100`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x610e40` ignores height within 0.5 yard (0x80c4c8), or the stop distance in mode 10, times
+max(speed/7, 1) (0x80c4d0); `0x610aaa` scales the stop distance the same way, capped in modes 5
+and 10. `0x6107e5` stops when the distance to the target is not below the distance from the last
+frame's position (0xc4da84) while bit 1 of `0xc4da48`, set once the turn is done (`0x6108e6`),
+holds, outside modes 3 and 5. With a drunkenness argument above 0 and bit 1, `0x610a7b` stops when
+the target lies 160° to 220° off the facing (0x80c604, 0x80c600), and mode 3 drops bit 1 when a
+random fraction times it tops 0.07 (0x80c608). Mode 3 starts walking only beyond
+4.5·max(speed/7, 1) yards (3, 0x80c4c0, times 1.5). `0x610c63` stops a
+forward walk that moved less than 1/360 yard (0x80c4dc, through `0x610d50`) in modes with flag
+byte +8. `0x610d32` stops when the direction's height part tops cos 1° (0xc4d9d0, from 0x80c5f8).
+`0x610100` pitches a swimmer to ±π/2 when the height part of the heading is at least 0.86602
+(0x80c4d4), to its `asin` from 0.17364 (0x80c4d8), else to 0.

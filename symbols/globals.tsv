@@ -536,6 +536,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
+0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
 0x860a58	uint8_t[132]	s_autoMoveModes		objectlayer	Holds 11 auto-move mode rows of 12 bytes: enabled, a maximum squared distance, two flag bytes	verified	one	objectlayer/unitmovement#auto-move-modes
 0x860adc	uint32_t	s_precastStopModes		objectlayer	Holds 1, the auto-move mode mask 0x60fc50 tests before it stops an auto-move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0x8613e4	char[23]	s_playerMoveEventTag		collision	Holds the type name of CPlayerMoveEvent, the allocation tag of its nodes	verified	one	collision/events#event-node
@@ -833,24 +834,34 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4c28c	float	s_playerFileConstant		objectlayer	Holds a float a Player_C.cpp initializer computes, read by Player_C.cpp code	inferred	none	objectlayer/initializers#float-constants
 0xc4d888	int32_t	s_autoMoveMode		objectlayer	Holds the auto-move mode, 12 for none; 0x6033c0 and 0x60fb60 store 12, 0x611130 the mode	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0xc4d8a4	uint32_t[8]	s_reactionColors		objectlayer	Holds the selection colours by reaction 0 to 7 that 0x605960 builds: red, red, orange, yellow, then green	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	one	objectlayer/unitmovement#local-movement-commands
+0xc4d8c8	uint32_t	s_targetFlashColor		objectlayer	Holds the attacked target's selection colour, red from 0x5fa3f0 with a green byte 0x607ed0 sweeps	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d910	float	s_autoMoveStopDistance		objectlayer	Holds the square root of the stop distance 0x611130 stores, read by the steering	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d934	uint32_t	s_partyPvpColor		objectlayer	Holds the light green 0x605960 gives a PvP-flagged party member	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d93c	float	s_autoMoveTurnSpeed		objectlayer	Holds the auto-move turn speed in radians, π from 0x611130, latched from a CVar by 0x6103d0	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d950	uint64_t	s_pendingUseGuid		objectlayer	Holds the game object an arrived mode 7 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4d958	float	s_talkStopDistanceSq		objectlayer	Holds 2.7777777², the squared stop distance of mode 5, written by 0x60e6b0	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d95c	void *[5]	s_talkEmotes		objectlayer	Holds the Emotes.dbc rows of the talk, question, exclamation, shout and laugh emotes, set by 0x603a60	verified	one	objectlayer/unitanim#emotes
+0xc4d978	uint32_t	s_unusedLightRedColor		objectlayer	Holds a light red 0x605960 builds and nothing reads	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d980	uint64_t	s_autoMoveTargetGuid		objectlayer	Holds the auto-move target object's GUID, cleared by 0x60fb60	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d990	uint32_t	s_partyColor		objectlayer	Holds the light blue 0x605960 gives an unflagged party member	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d998	float	s_useStopDistance		objectlayer	Holds the mode 7 stop distance, 0x610300's argument times 0.9	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9a4	void *	s_autoInteractCVar		objectlayer	Holds the AutoInteract CVar record, registered "1" under locale index 1 and "0" otherwise	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d9a8	float	s_autoMoveFacing		objectlayer	Holds the auto-move facing 0x611130 stores, turned with a transport by 0x6115e0	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0xc4d9b0	float	s_pointStopDistanceSq		objectlayer	Holds 0.5² = 0.25, the squared stop distance of mode 4, written by 0x60e740	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d9b8	uint8_t	s_selectionColorsBuilt		objectlayer	Holds the five guard bits 0x605960 sets as it builds its colours once	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4d9c0	float	s_autoMoveStopDistanceSq		objectlayer	Holds the squared stop distance 0x611240 writes for 0x611130	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9c4	float	s_followStopDistanceSq		objectlayer	Holds 3² = 9, the squared stop distance of mode 3, written by 0x60e6e0	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4da20	uint64_t	s_pendingSpellTargetGuid		objectlayer	Holds the target an arrived mode 9 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da28	uint64_t	s_pendingTalkGuid		objectlayer	Holds the NPC an arrived mode 5 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da48	uint32_t	s_autoMoveInputFlags		objectlayer	Holds auto-move input bits; bit 0 is set while the auto-move itself drives the mover	verified	one	objectlayer/unitmovement#local-movement-commands
+0xc4da4c	uint32_t	s_friendlyPlayerColor		objectlayer	Holds the blue 0x605960 gives an unflagged player-controlled unit, or one that may attack the player only	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4da78	uint64_t	s_pendingLootGuid		objectlayer	Holds the corpse an arrived mode 6 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da80	uint32_t	s_deadUnitColor		objectlayer	Holds 0xff7f7f7f from 0x5fa160, the grey 0x605960 gives a dead unit that no player controls	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
+0xc4daa0	uint32_t	s_targetFlashTime		objectlayer	Holds the time 0x607ed0 last turned the target flash's sweep	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+0xc4daa4	uint32_t	s_targetFlashFalling		objectlayer	Holds the sweep direction 0x607ed0 flips every 500 ms	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4db88	uint32_t[3]	s_movementStaticList		collision	Holds the free list of move-event nodes, an intrusive list with link offset 0	verified	one	collision/overview#movementcpp-initializers
 0xc4e4b4	uint32_t[3]	s_movementCStaticList		collision	Holds an intrusive list head with link offset 0x208, empty at start-up	verified	one	collision/overview#movement_ccpp-initializers
 0xc4e52c	uint32_t[8]	s_facetList		collision	Holds the solid facet list: count +0x04, 52-byte facets at +0x08, their 64-bit ids at +0x18	verified	one	collision/overview#resolution-file-initializers

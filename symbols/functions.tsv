@@ -4918,7 +4918,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fad10	51	CGUnit_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
 0x5fad50	1137			objectlayer	primitive		Builds a unit, its CMovement at +0x9a8 through 0x616fa0 and -1 at +0xb08	inferred	none	collision/mover#construction	
 0x5fb1d0	43			objectlayer	orchestration		Fills slot 0 of the unit vtable; its body is not read here	inferred	none		
-0x5fb200	990			objectlayer	primitive		Runs Unit_C.cpp code that calls NewCharacterComponent, DeleteCharacterComponent, InitCharacterComponent; not read here	inferred	none		
+0x5fb200	990	CGUnit_C::BuildCharacterComponent		objectlayer	primitive		Builds the character component from the extra row or player bytes, then dresses its equipment and hands	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x5fb5e0	593			objectlayer	primitive		Runs Unit_C.cpp code that calls DeleteCharacterComponent, CMovement::~CMovement, SMemFree; not read here	inferred	none		
 0x5fb840	63			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x5fb880	721			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
@@ -4994,10 +4994,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ff580	626			objectlayer	primitive		Signals the interface event PET_ATTACK_START|PET_ATTACK_STOP; not read further here	inferred	none		
 0x5ff800	81			objectlayer	primitive		Runs Unit_C.cpp code that calls FireUsableEvents, IsActivePlayerUnit; not read here	inferred	none		
 0x5ff860	492			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrGetActivePlayer, SMemAlloc; not read here	inferred	none		
-0x5ffa50	178			objectlayer	orchestration		Runs Unit_C.cpp code that calls SMemAlloc; not read here	inferred	none		
+0x5ffa50	178	CGUnit_C::OnMountDisplayChanged		objectlayer	orchestration		Dismounts from an old mount and mounts a new one with the mount-up effect	verified	one	objectlayer/unitdisplay#mounts	
 0x5ffb10	190	CGUnit_C::OnSheatheEvent		objectlayer	orchestration		Moves a hand's weapon between hand and sheath at a model event and plays the sheathe sound	verified	one	objectlayer/unitanim#model-events	
 0x5ffbd0	1870	CGUnit_C::OnModelEvent		objectlayer	orchestration		Dispatches a model event by its four-character tag: footsteps, sounds, sheathe, missiles; logs unknown ones	verified	one	objectlayer/unitanim#model-events	
-0x600320	120			objectlayer	orchestration		Fills slot 10 of the unit vtable and others; its body is not read here	inferred	none		
+0x600320	120	CGUnit_C::GetModelPath		objectlayer	orchestration		Returns the display's model path (vtable slot 10), or Spells\ErrorCube.mdx after a log line	verified	one	objectlayer/unitdisplay#display-records	
 0x6003a0	57			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x6003e0	87			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
 0x600440	395			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, GetInputControl; not read here	inferred	none		
@@ -5123,16 +5123,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x605710	107	CGUnit_C::SetChannelTargets		objectlayer	orchestration		Stores a tracked channel object, fills the chain targets from a list, and refreshes the channel	verified	one	objectlayer/auras#channels	
 0x605780	216	FillUnitChainTargets		objectlayer	primitive		Fills a unit's chain target array at +0xd44 from a GUID list read from its end, skipping its own GUID	verified	one	objectlayer/auras#channels	
 0x605860	254			objectlayer	primitive		Cancels the cast with reason 0x65 when the unit is the pending cast's target	inferred	none	spell/cancel#who-cancels-a-cast	
-0x605960	1003			objectlayer	primitive		Fills slot 11 of the unit vtable and others; its body is not read here	inferred	none		
+0x605960	1003	CGUnit_C::GetSelectionColor		objectlayer	primitive		Picks the selection colour: target flash, attack, PvP and party for players' units, else dead grey or reaction	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
 0x605d50	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x605d60	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x605d70	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x605d80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x605d90	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x605da0	139			objectlayer	orchestration		Runs Unit_C.cpp code that calls AttachItemModel, SetCharacterModelOption; not read here	inferred	none		
-0x605e30	175			objectlayer	orchestration		Fills slot 38 of the unit vtable; its body is not read here	inferred	none		
-0x605ee0	47			objectlayer	orchestration		Fills slot 39 of the unit vtable; its body is not read here	inferred	none		
-0x605f10	20			objectlayer	orchestration		Fills slot 40 of the unit vtable; its body is not read here	inferred	none		
+0x605da0	139	CGUnit_C::VirtualComponentChanged	idb	objectlayer	orchestration		Hangs a virtual item slot's model at its model option or clears it, then rebuilds the hand's trail	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x605e30	175	CGUnit_C::GetVirtualItem	idb	objectlayer	orchestration		Returns a virtual item slot's info bytes, null without a display or for a weapon a disarm hides (slot 38)	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x605ee0	47	CGUnit_C::GetVirtualItemRecord		objectlayer	orchestration		Returns the ItemDisplayInfo row of a virtual item slot, or null (slot 39)	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x605f10	20	CGUnit_C::GetVirtualItemDisplay		objectlayer	orchestration		Returns a virtual item slot's display id field (slot 40)	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x605f30	52	IsDeadOrGhost		objectlayer	primitive		Returns 1 for a unit with health 0 or below or a player whose PLAYER_FLAGS has 0x10	verified	one	spell/checks#usability-predicate	
 0x605f70	22	CGUnit_C::IsCreatureTypeFlagSpiritWorld	idb	objectlayer	orchestration	bool __thiscall (CGUnit_C *this)	Returns whether the unit's creature record at +0xb30 has type flag 0x2; false with no record	verified	one	objectlayer/reaction#attacking	
 0x605f90	48			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
@@ -5178,11 +5178,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x607840	136	UnitModelEventCallback		objectlayer	orchestration		Finds the unit by GUID and passes a model event with a valid position to 0x5ffbd0	verified	one	objectlayer/unitanim#model-events	
 0x6078d0	68	UnitModelDoneCallback		objectlayer	orchestration		Finds the unit by GUID and passes the model and sequence to 0x5fc920	verified	one	objectlayer/unitanim#when-a-sequence-ends	
 0x607920	131	CGUnit_C::GetFootprintParams		objectlayer	primitive		Returns the footprint texture and scaled sizes of the mount, when ridden, or of the unit	verified	one	objectlayer/unitanim#model-events	
-0x6079b0	71			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x607a00	604			objectlayer	primitive		Runs Unit_C.cpp code that calls ApplyCreatureDisplay, GetActiveCamera, CreateModelFromPath; not read here	inferred	none		
-0x607c60	115			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x607ce0	181			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetActiveCamera, ModelPlayAnimation; not read here	inferred	none		
-0x607da0	256			objectlayer	orchestration		Fills slot 16 of the unit vtable; its body is not read here	inferred	none		
+0x6079b0	71	GetMountModelPath		objectlayer	unreached		Returns the mount display's model path, reading through null on a missing row; nothing reaches it	verified	one	objectlayer/unitdisplay#mounts	
+0x607a00	604	CGUnit_C::Mount		objectlayer	primitive		Loads the mount model, seats and scales the body on it, takes its footprints and sound data	verified	one	objectlayer/unitdisplay#mounts	
+0x607c60	115	CGUnit_C::GetMountSoundData		objectlayer	orchestration		Returns the mount display's CreatureSoundData row, else its model data's	verified	one	objectlayer/unitdisplay#mounts	
+0x607ce0	181	CGUnit_C::Dismount		objectlayer	orchestration		Detaches the body from the mount, clears the mount model and its sound data, re-picks the animation	verified	one	objectlayer/unitdisplay#mounts	
+0x607da0	256	CGUnit_C::OnModelUpdate		objectlayer	orchestration		Builds a pending character component once the model loads, refreshes the portrait, updates the component (slot 16)	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x607ea0	5			objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
 0x607eb0	19	CGUnit_C::GetWorldBodyFacing		objectlayer	orchestration		Returns the body facing +0xc94 converted to the world through the transport; slot 17 jumps here	verified	one	objectlayer/unitmovement#facing	
 0x607ed0	1565			objectlayer	primitive		Fills slot 14 of the unit vtable; its body is not read here	inferred	none		
@@ -5201,9 +5201,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x608c20	191			objectlayer	unreached		Runs Unit_C.cpp code that calls SplatVector3; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x608ce0	107			objectlayer	orchestration		Runs Unit_C.cpp code that calls LayoutPendingFrames; not read here	inferred	none		
 0x608d50	8	CGUnit_C::PlayMountSpecial		objectlayer	orchestration		Plays 94 MountSpecial; vtable slot 18	verified	one	objectlayer/unitanim#reactions-and-move-animations	
-0x608d60	110			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x608dd0	35			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x608e00	311			objectlayer	primitive		Fills slot 12 of the unit vtable and others; its body is not read here	inferred	none		
+0x608d60	110	CGUnit_C::RebuildWeaponTrail		objectlayer	orchestration		Releases a hand's weapon trail and makes one on its item model at the sheath attachment key	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x608dd0	35	RebuildBothWeaponTrails		objectlayer	unreached		Rebuilds both hands' weapon trails on the body model; nothing reaches it	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x608e00	311	CGUnit_C::DrawSelectionCircle		objectlayer	primitive		Draws the selection circle at the feet, radius +0xcf0 times scale, in slot 11's colour (slot 12)	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
 0x608f40	16			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x608f50	691			objectlayer	primitive		Runs Unit_C.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
 0x609210	337			objectlayer	primitive		Runs Unit_C.cpp code that calls DBCache::NameCache::GetRecord, FrameScript_GetText; not read here	inferred	none		
@@ -5214,26 +5214,26 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60a0c0	65			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60a110	332	CGUnit_C::BuildSwimTransform		objectlayer	primitive		Builds a swimming unit's model transform from its pitch, slot 17's facing, its scales and its position	verified	one	objectlayer/unitmovement#facing	
 0x60a260	296			objectlayer	primitive		Runs Unit_C.cpp code that calls NTempest::CRandom::uint32, MulHigh32; not read here	inferred	none		
-0x60a390	55			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetViolenceLevel; not read here	inferred	none		
+0x60a390	55	CGUnit_C::GetBloodRecord		objectlayer	orchestration		Returns the UnitBlood row the blood levels row names for the violence level, or null	verified	one	objectlayer/unitdisplay#display-records	
 0x60a3d0	827	CGUnit_C::LaunchSpellMissile		objectlayer	primitive		Launches one spell missile from the unit at a target or point and links it on the unit's list	verified	one	objectlayer/auras#missiles	
 0x60a710	42	IsBowCrossbowOrThrown		objectlayer	primitive		Returns whether an item info is a weapon of subclass 2, 16 or 18: bow, thrown or crossbow	verified	one	objectlayer/unitanim#animation-sets	
 0x60a740	161			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60a7f0	807			objectlayer	primitive		Runs Unit_C.cpp code that calls IsLoadingScreenUp, EndLoadingScreen, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x60ab20	123			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60aba0	62			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x60abe0	558			objectlayer	primitive		Runs Unit_C.cpp code that calls DeleteCharacterComponent, ApplyCreatureDisplay, GetActiveCamera; not read here	inferred	none		
-0x60ae10	200			objectlayer	orchestration		Runs Unit_C.cpp code that calls SysMsgPrintf; not read here	inferred	none		
-0x60aee0	207			objectlayer	primitive		Runs Unit_C.cpp code that calls SplatVector3; not read here	inferred	none		
-0x60afb0	540			objectlayer	primitive		Runs Unit_C.cpp code that calls SysMsgPrintf; not read here	inferred	none		
-0x60b1d0	147			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClientServices::Send; not read here	inferred	none		
+0x60abe0	558	CGUnit_C::OnDisplayChanged		objectlayer	primitive		Rebuilds the body model, textures, name, auras and mount when the display records change	verified	one	objectlayer/unitdisplay#changing-the-display	
+0x60ae10	200	CGUnit_C::DisplayRecordsChanged		objectlayer	orchestration		Returns 1 when DISPLAYID names other display, extra, model or sound records than the unit holds	verified	one	objectlayer/unitdisplay#display-records	
+0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
+0x60afb0	540	CGUnit_C::ResolveDisplayRecords		objectlayer	primitive		Resolves the display, extra, model, sound and blood records into +0xb34 to +0xb48, falling back to first rows	verified	one	objectlayer/unitdisplay#display-records	
+0x60b1d0	147	CGUnit_C::OnScaleChanged		objectlayer	orchestration		Resizes the mover for a new scale, sends opcode 0x29b when that fails, rescales the quest marker	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
 0x60b270	426			objectlayer	primitive	uint32_t __thiscall (void *unit, uint32_t flag)	Sizes a unit's mover from its model record and scale through 0x617460 and 0x6174b0	inferred	none	collision/mover#collision-size	
 0x60b420	322			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60b570	10	CGUnit_C::OnEmoteStateChanged		objectlayer	orchestration		Picks the base animation again when UNIT_NPC_EMOTESTATE changes	verified	one	objectlayer/unitanim#emotes	
 0x60b580	10			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x60b590	327			objectlayer	primitive		Runs Unit_C.cpp code that calls HandleClose2, ModelAttach; not read here	inferred	none		
+0x60b590	327	CGUnit_C::MoveHandItem		objectlayer	primitive		Moves a hand's item model between its hand and sheath attachments and opens or closes the hand	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x60b6e0	31	IsUnarmedAnimation		objectlayer	primitive		Returns 1 for animations 16, 20, 25, 117 and 118 through 0x60b708	verified	one	objectlayer/unitanim#animation-sets	
-0x60b770	651			objectlayer	primitive		Runs Unit_C.cpp code that calls AttachItemModel, HandleClose2, ModelAttach; not read here	inferred	none		
-0x60ba00	43			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
+0x60b770	651	CGUnit_C::AttachHandItem		objectlayer	primitive		Hangs a hand's item in the hand or its sheath by the sheathe state, skipping hidden or blocked off hands	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x60ba00	43	CGUnit_C::ReleaseWeaponTrail		objectlayer	orchestration		Releases one hand's weapon trail at +0xd34	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x60ba30	256	CGUnit_C::SetAmmoDisplay		objectlayer	orchestration		Swaps the ammo model +0xd28 for a display id, nocking it at attachment 35 while a bow is drawn	verified	one	objectlayer/auras#missiles	
 0x60bb30	74	CGUnit_C::RequestTalkEmote	idb	objectlayer	orchestration		Plays one of the five talk emotes unless the unit swims or sleeps	verified	one	objectlayer/unitanim#emotes	
 0x60bb80	22	CGUnit_C::SetEmoteQueueFromList		objectlayer	orchestration		Passes a list's two words to 0x60bbc0	verified	one	objectlayer/unitanim#emotes	
@@ -5247,14 +5247,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60bea0	970			objectlayer	primitive		Fills slot 24 of the unit vtable and others; its body is not read here	inferred	none		
 0x60c270	308			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, IsDeadOrGhost; not read here	inferred	none		
 0x60c3b0	203			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, IsDeadOrGhost; not read here	inferred	none		
-0x60c480	17			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
+0x60c480	17	CGUnit_C::GetSoundData		objectlayer	orchestration		Returns the mount's sound data +0xb44, else the unit's +0xb40	verified	one	objectlayer/unitdisplay#mounts	
 0x60c4a0	65			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60c4f0	37			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60c520	368			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, IsActivePlayerUnit; not read here	inferred	none		
-0x60c690	14			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x60c6a0	25			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x60c6c0	25			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x60c6e0	17			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
+0x60c690	14	CGUnit_C::HasDisplayExtra		objectlayer	orchestration		Returns whether the unit has a CreatureDisplayInfoExtra row at +0xb38	verified	one	objectlayer/unitdisplay#display-records	
+0x60c6a0	25	CGUnit_C::GetDisplayRace		objectlayer	orchestration		Returns the extra row's race, else UNIT_FIELD_BYTES_0 byte 0	verified	one	objectlayer/unitdisplay#display-records	
+0x60c6c0	25	CGUnit_C::GetDisplayGender		objectlayer	orchestration		Returns the extra row's gender, else UNIT_FIELD_BYTES_0 byte 2	verified	one	objectlayer/unitdisplay#display-records	
+0x60c6e0	17	CGUnit_C::GetBakedTextureName		objectlayer	orchestration		Returns the extra row's baked texture name +0x48, or null without one	verified	one	objectlayer/unitdisplay#display-records	
 0x60c700	10			objectlayer	unreached		Returns the dword at +0x10 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
 0x60c710	10			objectlayer	unreached		Returns the dword at +0x14 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
 0x60c720	10			objectlayer	unreached		Returns the dword at +0x18 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
@@ -5273,21 +5273,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60cd30	69	CGUnit_C::UpdateAlphaFade		objectlayer	orchestration		Ends a timed alpha fade, fading back to slot 27's alpha over its length	verified	one	objectlayer/auras#kit-character-procedures	
 0x60cd80	69			objectlayer	orchestration	uint32_t __thiscall (void *this, uint32_t spellId)	Returns a unit's level times 5, capped at the spell's maximum level times 5; slot 42	verified	one	spell/records#caster-level	
 0x60cdd0	153			objectlayer	primitive		Runs Unit_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x60ce70	431			objectlayer	primitive		Fills slot 13 of the unit vtable and others; its body is not read here	inferred	none		
+0x60ce70	431	CGUnit_C::OnModelLoaded		objectlayer	primitive		Sets a loaded model's transport frame, key bone and quest marker, checks a mount's attachment (slot 13)	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x60d020	26	UnitSetPrecastSpell		objectlayer	primitive		Stores a spell id at a unit's +0xc8c and sets 0x400 in +0xd58	inferred	none	spell/visuals#precast-visual-at-cast-start	
 0x60d040	213	UnitClearPrecastSpell		objectlayer	orchestration		Clears the precast spell +0xc8c and bit 0x400 when they match; optionally ends chains and effect	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
 0x60d120	33	CGUnit_C::ReleaseAlphaEffects		objectlayer	orchestration		Releases every effect on the alpha list +0xb50	verified	one	objectlayer/auras#kit-character-procedures	
 0x60d150	46	CGUnit_C::ReleaseAlphaEffectsOfSpell		objectlayer	orchestration		Releases the effects on +0xb50 whose spell is the given one	verified	one	objectlayer/auras#kit-character-procedures	
 0x60d180	55	CGUnit_C::RestoreAlpha		objectlayer	primitive		Fades to slot 27's alpha times the first +0xb50 effect's alpha over 1000 ms	verified	one	objectlayer/auras#kit-character-procedures	
 0x60d1c0	270	CGUnit_C::OnChannelSpellChanged		objectlayer	orchestration		Stops the old channel's kits, tints and slots, ends a tracking auto-move or starts the new visual	verified	one	objectlayer/auras#channels	
-0x60d2d0	27			objectlayer	primitive		Fills slot 27 of the unit vtable and others; its body is not read here	inferred	none		
+0x60d2d0	27	CGUnit_C::GetDisplayAlpha		objectlayer	primitive		Returns the display row's +0x14 over 255, or 1 without a row (vtable slot 27)	verified	one	objectlayer/unitdisplay#display-records	
 0x60d2f0	350	CGUnit_C::OnChannelObjectChanged		objectlayer	orchestration		Handles a channel object: a fishing node draws the pole and casts the bobber, a unit is faced	verified	one	objectlayer/auras#channels	
 0x60d450	278	UnitGetSpellVisual		objectlayer	primitive		Builds the visual a unit shows for a spell, filling a ranged spell's gaps from its weapon's visual	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
 0x60d570	5	InitUnitProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d580, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60d580	19	InitUnitProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60d5a0	5	InitUnitProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d5b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60d5b0	19	InitUnitProduct2		objectlayer	primitive	void __cdecl (void)	Stores 0.58333331·−255 = −148.75 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x60d5d0	42			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x60d5d0	42	CGUnit_C::ReleaseWeaponTrails		objectlayer	primitive		Releases both hands' weapon trails	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x60d600	33			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x60d670	233	CGUnit_C::GetSpellCastTime		objectlayer	primitive		Returns a spell's cast time for the unit: level-scaled base, the cast-speed field, 0x7fffffff for ranged	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
 0x60d760	5	InitUnitProduct3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d770, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -5315,7 +5315,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60e080	28	CGUnit_C::ToggleRunMode		objectlayer	orchestration		Passes the walk bit 0x100 of the movement flags to 0x60e060	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e0a0	857	ProcessLocalMoveEvent	idb	objectlayer	primitive	int __thiscall (void *unit, uint32_t time, uint32_t opcode, uint8_t send, float value, uint32_t counter)	Sends a movement opcode for a unit when send is nonzero, then runs the unit's reaction to it	inferred	none	collision/events#tags-and-wire-opcodes	
 0x60e480	159	CGUnit_C::AnimateMoveOpcode		objectlayer	orchestration		Plays the animation a movement opcode implies through 0x60e534: jump start, fall, or a re-pick	verified	one	objectlayer/unitanim#reactions-and-move-animations	
-0x60e550	48			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x60e550	48	CGUnit_C::PassToWeaponTrails		objectlayer	primitive		Passes two arguments to each hand's weapon trail at +0xd34	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x60e580	5	InitUnitOther6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e590, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60e590	216	InitAutoMoveModes		objectlayer	primitive	void __cdecl (void)	Fills rows 3 to 10 of the auto-move table 0x860a58: 900 for follow, 6400 for five modes, flag bytes	verified	one	objectlayer/unitmovement#auto-move-modes	
 0x60e670	5	InitUnitProduct5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e680, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -5339,7 +5339,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60e920	32	CGUnit_C::ReleaseCommand800000		objectlayer	orchestration		Releases input command bit 23 at a time through 0x515090	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e940	65	CGUnit_C::InputSetWorldFacing		objectlayer	orchestration		Sets the world facing through 0x60de00 while the input owns the mover, with bit 0 of 0xc4da48 set	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e990	87	CGUnit_C::OnMoveInput		objectlayer	orchestration		Stops an auto-move the input did not start and closes the active player's loot, each unless told not to	verified	one	objectlayer/unitmovement#local-movement-commands	
-0x60e9f0	61			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x60e9f0	61	CGUnit_C::IsShapeShifted	idb	objectlayer	primitive		Returns whether the form byte names a form without flag bit 0, faulting on a form with no row	verified	one	objectlayer/unitdisplay#shapeshift-forms	
 0x60ea30	56	CGUnit_C::PlayDeathAnimation		objectlayer	orchestration		Plays 1 Death, or 131 Drown when swimming, unless a death animation already plays	verified	one	objectlayer/unitanim#reactions-and-move-animations	
 0x60ea70	386	CGUnit_C::PlayWoundAnimation		objectlayer	primitive		Plays 10, 9 or 8 for a hit by critical and attack state, upper body when moving, unless suppressed	verified	one	objectlayer/unitanim#reactions-and-move-animations	
 0x60ec00	130	CGUnit_C::PlayParryAnimation		objectlayer	orchestration		Plays the parry for the main-hand weapon subclass through 0x60ec98: 21, 22, 23 or 20	verified	one	objectlayer/unitanim#reactions-and-move-animations	
@@ -5391,8 +5391,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x611a20	317	CGUnit_C::StartBothSheatheAnims		objectlayer	primitive		Plays 89 or 90 on bones 3 and 2 for both hands or the ranged item and sets bits 20 and 21 of +0xd58	verified	one	objectlayer/unitanim#drawing-and-sheathing	
 0x611b60	399	CGUnit_C::AnimateSheatheChange		objectlayer	primitive		Starts the sheathe animations from the old sheathe state toward the new one	verified	one	objectlayer/unitanim#drawing-and-sheathing	
 0x611cf0	276	CGUnit_C::SetSheatheState		objectlayer	primitive		Changes the sheathe state +0xd40, at once or animated; sends 0x1e0 for the active player	verified	one	objectlayer/unitanim#drawing-and-sheathing	
-0x611e10	468			objectlayer	primitive		Runs Unit_C.cpp code that calls UnequipCharacterSlot, AttachItemModel, IsActivePlayerUnit; not read here	inferred	none		
-0x611ff0	745			objectlayer	primitive		Runs Unit_C.cpp code that calls __ftol, ModelHasAttachment, ModelGetAttachmentPosition; not read here	inferred	none		
+0x611e10	468	CGUnit_C::RefreshRangedWeaponModel		objectlayer	primitive		Hangs the ranged weapon at option 17 into +0xd24, gives a bow its string, refits the outfit's ranged slot	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x611ff0	745	CGUnit_C::DrawBowstring		objectlayer	primitive		Draws a bow's string from $WTT to $WTB through the nocking point or the midpoint	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x6122e0	16			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x6122f0	5	InitUnitSquare7Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x612300, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x612300	19	InitUnitSquare7		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
