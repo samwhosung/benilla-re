@@ -11423,7 +11423,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x70a060	143	M2SceneCompareHits		models	primitive		Orders two hit candidates by near distance, then far distance, then index	verified	one	models/scene#segment-collision	
 0x70a0f0	312	M2SceneAddLightsForPoint		models	primitive		Adds a scene's global lights and the grid lights around a point to a lighting record	verified	one	models/lights#scene-light-grid	
 0x70a230	25	M2SceneSetSpecialCallback		models	orchestration		Stores the scene's special-batch draw callback and its argument	verified	one	models/scene#scene-object	
-0x70a250	36	M2SceneSetProjection		models	orchestration		Stores two scene values at +0x124 and +0x128 and copies them to two globals	inferred	none		
+0x70a250	36	M2SceneSetGroundCallback		models	orchestration	void __thiscall (M2Scene *this, void *callback, void *arg)	Stores the scene's ground height callback and its argument, and copies them to the globals the particle snap reads	verified	one	models/emission#spawn-space	
 0x70a280	376	M2SceneQueueCallback		models	primitive		Queues a model callback with five arguments for the end of the scene advance	verified	one	models/animation#update-and-events	
 0x70a400	409	M2SceneQueueEventCallback		models	primitive		Queues a model event callback with a position for the end of the scene advance	verified	one	models/animation#update-and-events	
 0x70a5a0	85	M2SceneCompareCallbacks		models	primitive		Orders queued callbacks by their time key, latest first, then by queue index	verified	one	models/scene#scene-advance	
@@ -12387,7 +12387,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b1e60	153	CParticleEmitter2::ShrinkStorage		models	primitive		Picks the smaller capacity for an emitter's particle and index arrays	inferred	none		
 0x7b1f00	509	CParticleEmitter2::ReserveStorage		models	orchestration		Resizes an emitter's particle records, live and free index arrays to a capacity	inferred	none		
 0x7b2100	50	CParticle2Construct		models	orchestration		Zeroes a particle record and sets its scale to 1.0	inferred	none		
-0x7b2140	109	CParticleEmitter2::SnapSpawnToGround		models	primitive		Moves a spawned particle onto the ground when the emitter asks for it	inferred	none	models/emission#spawn-space	
+0x7b2140	109	CParticleEmitter2::SnapSpawnToGround		models	primitive	void __thiscall (CParticleEmitter2 *this, void *particle)	Puts a particle at the ground height the scene callback answers plus its current size	verified	one	models/emission#spawn-space	
 0x7b21b0	98	Particle2ModelCopy		models	orchestration		Copies a model particle record and adds a reference to its model	inferred	none		
 0x7b2220	24	Particle2ModelRelease		models	orchestration		Releases the model a model particle record holds	inferred	none		
 0x7b2240	98	Particle2ModelAssign		models	orchestration		Assigns a model particle record from another, adding a reference to its model	inferred	none		

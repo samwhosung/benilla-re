@@ -190,16 +190,19 @@ the speed in the z slot (`0x7b95a4`).
 ## Spawn space
 
 Without flag 0x100 the new position goes through the emitter matrix and the velocity through it as
-a direction, so the particle lives in world space; with flag 0x20000 it then snaps to the ground.
-With flag 0x100 both stay in the emitter's space. Last, with flag 0x400, the emitter's velocity
-times `1 + S·variation` adds to the particle's velocity.
+a direction, so the particle lives in world space. With flag 0x20000 it then asks the scene's
+ground callback for the height below it and, when answered, sits at that height plus its current
+size. With flag 0x100 both stay in the emitter's space. Last, with flag 0x400, the emitter's
+velocity times `1 + S·variation` adds to the particle's velocity.
 
-Addresses: `0x7b8a9a`, `0x7b8b26`, `0x7b8b3d`, `0x7b9805`, `0x7bcb40`, `0x7bca80`, `0x7b2140`
+Addresses: `0x7b8a9a`, `0x7b8b26`, `0x7b8b3d`, `0x7b9805`, `0x7bcb40`, `0x7bca80`, `0x7b2140`, `0x70a250`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7b8aa0` tests `+0x1ac` bit 8; the clear branch calls `0x7bcb40` with w = 0 for the velocity and
-`0x7bca80` for the position, then `0x7b2140` under bit 17. `0x7b8b3d` tests bit 10 and adds
+`0x7bca80` for the position, then `0x7b2140` under bit 17: it calls the callback `0xcf5758` with
+`0xcf5750`, which `0x70a250` stores and the world sets to its ground probe (`0x66fa0b`), and adds
+the size from `0x7b9b10` to the height. `0x7b8b3d` tests bit 10 and adds
 `(S·+0x184 + 1)·+0x258` to the velocity. The sphere (`0x7b9016`) and spline (`0x7b9805`) share
 the block.

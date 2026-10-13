@@ -1084,6 +1084,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5740	float	s_cameraInvTwoPi2		camera	Holds 1/2π, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf5744	float	s_cameraTwoPi2		camera	Holds 2π, set at startup; read only by 0x7adf50	verified	one	camera#object-files-and-initializers
 0xcf5748	float	s_particleRegistryInfinity		models	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
+0xcf5750	void *	s_particleGroundCallbackArg		models	Holds the argument the particle ground callback receives	verified	one	models/emission#spawn-space
+0xcf5758	void *	s_particleGroundCallback		models	Holds the ground height callback the particle snap calls, the world's ground probe	verified	one	models/emission#spawn-space
 0xcf575c	void *	s_particleRegistry		models	Holds the particle emitter registry, created on first use	verified	one	models/particles#registries
 0xcf5760	void *	s_ribbonRegistry		models	Holds the ribbon emitter registry, created on first use	verified	one	models/particles#registries
 0xcf5878	float[3]	s_particleNormal		models	Holds the normal every particle vertex takes, the view image of world +z	verified	one	models/particles#particle-view-space

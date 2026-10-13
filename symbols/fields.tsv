@@ -579,6 +579,7 @@ M2Scene	0x0010	4	uint32_t	m_frame	models	Holds the frame counter the collect pas
 M2Scene	0x0020	4	CM2Model *	m_animateList	models	Holds the first instance of the animate list	verified	one	models/scene#scene-object
 M2Scene	0x009c	64	float[16]	m_view	models	Holds the view matrix, rebased to the frame origin	verified	one	models/scene#scene-object
 M2Scene	0x00dc	64	float[16]	m_sceneMatrix	models	Holds the matrix the scene derives from its view	verified	one	models/scene#scene-object
+M2Scene	0x0124	8	void *[2]	m_groundCallback	models	Holds the ground height callback and its argument	verified	one	models/emission#spawn-space
 M2Scene	0x014c	7200	uint32_t[1800]	m_shaderIdMemo	models	Holds the remapped vertex shader ids, -1 when not computed	verified	one	models/scene#scene-object
 M2Sequence	0x0004	8	uint32_t[2]	m_range	models	Holds the start and end in milliseconds	verified	one	models/records#sequence-record
 M2Sequence	0x0010	4	uint32_t	m_flags	models	Holds the flags, 1 playing once	verified	one	models/records#sequence-record
