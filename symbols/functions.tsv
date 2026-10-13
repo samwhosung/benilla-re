@@ -4025,13 +4025,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d9a80	11			objectlayer	primitive		Sets ITEM_FIELD_FLAGS bit 0x2	verified	one	objectlayer/items#item-slots	
 0x5d9a90	216			objectlayer	orchestration		Refreshes an item's enchantment display and its equipped visual	verified	one	objectlayer/items#item-field-watchers	
 0x5d9b70	142			objectlayer	unreached		Returns an item's visual: -1 with an ItemVisuals row, else its first enchantment's	verified	one	objectlayer/items#unreached-item-code	
-0x5d9c00	55			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t seconds)	Sets an item's expiry to now plus the given seconds, or clears it for 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9c00	55			objectlayer	primitive	void __thiscall (CGItem_C *this, int32_t seconds)	Sets an item's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c40	5	InitItemDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9c50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9c50	15	InitItemDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d9c60	40			objectlayer	primitive		Returns an item's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c90	5	InitItemQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9ca0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9ca0	19	InitItemQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d9cc0	63			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t slot, uint32_t seconds)	Sets an enchantment slot's expiry to now plus the given seconds, or clears it for 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9cc0	63			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t slot, int32_t seconds)	Sets an enchantment slot's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9d00	57			objectlayer	primitive		Returns an enchantment slot's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9d40	21			objectlayer	orchestration		Writes -1 and returns 1	verified	one	objectlayer/items#item-slots	
 0x5d9d60	164			objectlayer	orchestration		Sends opcode 0x107 with the item's GUID while the active player is alive	verified	one	objectlayer/items#item-slots	
