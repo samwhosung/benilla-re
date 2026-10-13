@@ -66,6 +66,7 @@ CGPlayer_C	0x0e68	4	uint32_t *	m_playerFields	objectlayer	Points at field 188, t
 CGPlayer_C	0x0e6c	4	uint32_t *	m_playerWatchCopy	objectlayer	Points at the player section's watch copy, past the unit's 170, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
+CGUnit_C	0x09a8	352	CMovement	m_movement	objectlayer	Holds the unit's CMovement, built in place by the unit constructor 0x5fad50 through 0x616fa0	verified	one	collision/mover#construction
 CInputControl	0x0000	4	uint32_t	m_createTime	input	Holds the client clock when the object was built	inferred	none	input#input-state
 CInputControl	0x0004	4	uint32_t	m_held	input	Holds the held command bits; 0x1 and 0x2 are the two primary mouse commands	verified	one	input#mouse-commands
 CInputControl	0x0008	4	float	m_travelX	input	Holds the sum of scaled |dx| since the first primary press	verified	two	input#click-versus-drag

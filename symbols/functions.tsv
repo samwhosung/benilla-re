@@ -7370,7 +7370,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x66fbe0	72	CWorld::LoadMap	idb	terrain	orchestration	void __fastcall (const char *name, uint32_t mapId)	Prepares the area of interest and loads the map through CMap::Load	inferred	none		
 0x66fc30	11	CWorld::IsMapLoading		terrain	orchestration	uint32_t __cdecl (void)	Returns whether a map load is in progress	inferred	none		
 0x66fc40	21	CWorld::UnloadMap		terrain	orchestration	void __cdecl (void)	Drains the fading models, unloads the map and clears the loaded flag	inferred	none		
-0x66fc60	1	WorldNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x66fc60	1	WorldNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x66fc70	13	CWorld::SetLoadProgressCallback		terrain	orchestration	void __fastcall (void *callback, void *arg)	Stores the map load's progress callback and its argument	inferred	none		
 0x66fc80	54	CWorld::UnloadAreas		terrain	orchestration	void __cdecl (void)	Prepares the area of interest and tail-calls the map unload	inferred	none		
 0x66fcc0	132	SetWorldTime		terrain	primitive		Stores the world time in milliseconds and the frame time in seconds for the world update	inferred	none	spell/visuals#shard-emission-rate	
@@ -7386,7 +7386,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x670240	5	CWorld::RenderFootprints		terrain	orchestration	void __cdecl (void)	Jumps to the footprint draw 0x69a3e0	inferred	none		
 0x670250	332	CWorld::GetAreaIdAt		terrain	orchestration	uint32_t __fastcall (const float *point, uint32_t *wmoArea)	Returns the area id at a point from the map objects under it or the terrain	inferred	none		
 0x6703a0	203	CWorld::GetAreaInfo		terrain	orchestration	uint32_t __fastcall (void *object, uint32_t *areaId)	Returns an object's map object area record or the terrain area id under it	inferred	none		
-0x670470	36	CWorld::IsInShadow		terrain	unreached	uint8_t __fastcall (const float *point)	Returns the chunk shadow bit under a point	inferred	none		
+0x670470	36	CWorld::IsInShadow		terrain	unreached	uint8_t __fastcall (const float *point)	Returns the chunk shadow bit under a point	inferred	none	terrain/overview#unreached-functions	
 0x6704a0	17	CWorld::IsIndoors		terrain	orchestration	uint32_t __fastcall (void *object)	Returns bit 0 of an entity's +0x90, or 0 for none	inferred	none		
 0x6704c0	18	CWorld::HasNoGroup		terrain	orchestration	uint32_t __fastcall (void *object)	Returns whether an entity's +0x94 is 0	inferred	none		
 0x6704e0	14	CWorld::GetEntityAreaId		terrain	orchestration	uint32_t __fastcall (void *object)	Returns an entity's area id through 0x69d830, or 0 for none	inferred	none		
@@ -7420,7 +7420,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x671740	140	CWorld::SetObjectFlags		terrain	orchestration	void __fastcall (void *object, uint32_t flags)	Writes a world object's flag bits into its +0x90	inferred	none		
 0x6717d0	689	SetWorldObjectBounds		terrain	primitive		Sets a world object's transform and bounding box	inferred	none	spell/visuals#emitter-initialization	
 0x671a90	5	CWorld::UpdateLightObject		terrain	orchestration	void __cdecl (void)	Jumps to the light state animator 0x69e770	inferred	none		
-0x671aa0	23	GetObjectBoxPointer		terrain	unreached	void * __fastcall (void *object)	Returns a world object's box pointer	inferred	none		
+0x671aa0	23	GetObjectBoxPointer		terrain	unreached	void * __fastcall (void *object)	Returns a world object's box pointer	inferred	none	terrain/overview#unreached-functions	
 0x671ac0	100	ReleaseWorldObject		terrain	orchestration		Releases a world object	inferred	none	spell/visuals#shard-model-start-and-end	
 0x671b30	391	CWorld::SetObjectTransport		terrain	primitive	void __fastcall (void *object, const void *transport)	Sets a world object's transport matrices	inferred	none		
 0x671cc0	1064	FlushLiquidFacets		terrain	primitive	void __fastcall (void *list, void *owner)	Turns the recorded liquid triangles into facet records with planes	inferred	none		
@@ -7438,14 +7438,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x672470	17	GetCameraLiquid		terrain	orchestration	uint32_t __fastcall (float *depth)	Returns the camera's liquid state and writes its depth	inferred	none		
 0x672490	40	AddSplashThunk		terrain	orchestration	void __fastcall (void *a, void *b, uint32_t c, uint32_t d, uint32_t e, uint32_t f, uint32_t g, uint32_t h, uint32_t i)	Forwards a splash to 0x68bda0	inferred	none		
 0x6724c0	69	GetSmoothedFrameRate		terrain	primitive	float __cdecl (void)	Returns the frame rate over the last 30 frame times, 1000 when their mean is below 0.001	inferred	none		
-0x672510	6	GetCameraValue		terrain	unreached	float __cdecl (void)	Returns the dword 0xc7cfdc	inferred	none		
-0x672520	6	GetVisibleChunkCount		terrain	unreached	uint32_t __cdecl (void)	Returns the visible chunk count 0xc7b6f8	inferred	none		
-0x672530	6	GetSceneCounter		terrain	unreached	uint32_t __cdecl (void)	Returns the dword 0xc7b600	inferred	none		
-0x672540	5	GetMapObjectCountThunk		terrain	unreached	uint32_t __cdecl (void)	Jumps to 0x6922d0	inferred	none		
-0x672550	6	GetSceneFrustum		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7d168	inferred	none		
-0x672560	6	GetSceneCamera		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7bc68	inferred	none		
+0x672510	6	GetCameraValue		terrain	unreached	float __cdecl (void)	Returns the dword 0xc7cfdc	inferred	none	terrain/overview#unreached-functions	
+0x672520	6	GetVisibleChunkCount		terrain	unreached	uint32_t __cdecl (void)	Returns the visible chunk count 0xc7b6f8	inferred	none	terrain/overview#unreached-functions	
+0x672530	6	GetSceneCounter		terrain	unreached	uint32_t __cdecl (void)	Returns the dword 0xc7b600	inferred	none	terrain/overview#unreached-functions	
+0x672540	5	GetMapObjectCountThunk		terrain	unreached	uint32_t __cdecl (void)	Jumps to 0x6922d0	inferred	none	terrain/overview#unreached-functions	
+0x672550	6	GetSceneFrustum		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7d168	inferred	none	terrain/overview#unreached-functions	
+0x672560	6	GetSceneCamera		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7bc68	inferred	none	terrain/overview#unreached-functions	
 0x672570	6	GetCameraPosition		terrain	orchestration	void * __cdecl (void)	Returns the address of the camera position 0xc7cf20	inferred	none		
-0x672580	6	GetCameraTarget		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7d118	inferred	none		
+0x672580	6	GetCameraTarget		terrain	unreached	void * __cdecl (void)	Returns the address 0xc7d118	inferred	none	terrain/overview#unreached-functions	
 0x672590	8	SetFogColorOverride		terrain	orchestration	void __fastcall (const uint32_t *color)	Stores a colour in the global 0xc6328c	inferred	none		
 0x6725a0	20	SetDetailDoodadDensity		terrain	orchestration	void __fastcall (uint32_t value)	Stores a detail doodad setting and refreshes the detail doodads when it changes	inferred	none		
 0x6725c0	15	SetWorldScalar		terrain	orchestration	void __stdcall (uint32_t value)	Stores a world setting	inferred	none		
@@ -7467,44 +7467,44 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x672df0	242	CWorld::FadeOutModel		terrain	orchestration	void __fastcall (void *object, void *model)	Schedules a model to fade out from the clock time	inferred	none		
 0x672ef0	344	CWorld::UpdateFadingModels		terrain	primitive	void __cdecl (void)	Sets each fading model's alpha by (3 - 2t)t² of its age and releases it when done	inferred	none		
 0x673050	66	ConsoleToggleDetailDoodads		terrain	orchestration	uint32_t __cdecl (void)	Toggles world flag bit 20, detail doodads, and prints the new state	inferred	none		
-0x6730a0	66	ConsoleToggleBspRender		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80000, BSP render	inferred	none		
-0x6730f0	57	ConsoleToggleTerrain		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x2, terrain	inferred	none		
-0x673130	57	ConsoleToggleTerrainDoodads		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1, terrain doodads	inferred	none		
-0x673170	66	ConsoleToggleDoodadBoxes		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 22, doodad box visuals	inferred	none		
-0x6731c0	63	ConsoleToggleDoodadCollision		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80, doodad collision visuals	inferred	none		
+0x6730a0	66	ConsoleToggleBspRender		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80000, BSP render	inferred	none	terrain/overview#unreached-functions	
+0x6730f0	57	ConsoleToggleTerrain		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x2, terrain	inferred	none	terrain/overview#unreached-functions	
+0x673130	57	ConsoleToggleTerrainDoodads		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1, terrain doodads	inferred	none	terrain/overview#unreached-functions	
+0x673170	66	ConsoleToggleDoodadBoxes		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 22, doodad box visuals	inferred	none	terrain/overview#unreached-functions	
+0x6731c0	63	ConsoleToggleDoodadCollision		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x80, doodad collision visuals	inferred	none	terrain/overview#unreached-functions	
 0x673200	73	ConsoleSetMaxLod		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads maxLOD from the arguments into 0x867964	inferred	none		
 0x673250	57	ConsoleToggleCulling		terrain	orchestration	uint32_t __cdecl (void)	Toggles world flag 0x20, terrain culling, and prints the new state	inferred	none		
 0x673290	197	ConsoleSetFogColor		terrain	primitive	uint32_t __fastcall (const char *cmd, const char *args)	Packs four floats from 0 to 1 into the colour override	inferred	none		
-0x673360	64	ConsoleToggleMapObjLighting		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x200, map object lighting	inferred	none		
-0x6733a0	64	ConsoleToggleMapObjTextures		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x800, map object textures	inferred	none		
-0x6733e0	66	ConsoleToggleCrappyBatches		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Toggles world flag 0x20000 and prints whether crappy batches are enabled	inferred	none		
-0x673430	64	ConsoleToggleMapObjects		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x100, map objects	inferred	none		
-0x673470	64	ConsoleTogglePortals		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000, portal display	inferred	none		
-0x6734b0	64	ConsoleTogglePortalVis		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Toggles world flag 0x2000 and prints whether portal visibility is enabled	inferred	none		
-0x6734f0	58	ConsoleSetWeather		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Reads a weather type and intensity as %d %f and hands them to the weather's setter	inferred	none		
-0x673530	57	ConsoleSetWeather2		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 2	inferred	none		
-0x673570	57	ConsoleSetWeather1		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 1	inferred	none		
-0x6735b0	57	ConsoleSetWeather3		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 3	inferred	none		
-0x6735f0	124	ConsoleShowWeather		terrain	unreached	uint32_t __cdecl (void)	Prints the weather state	inferred	none		
-0x673670	66	ConsoleToggleWater		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000000, water	inferred	none		
+0x673360	64	ConsoleToggleMapObjLighting		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x200, map object lighting	inferred	none	terrain/overview#unreached-functions	
+0x6733a0	64	ConsoleToggleMapObjTextures		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x800, map object textures	inferred	none	terrain/overview#unreached-functions	
+0x6733e0	66	ConsoleToggleCrappyBatches		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Toggles world flag 0x20000 and prints whether crappy batches are enabled	inferred	none	terrain/overview#unreached-functions	
+0x673430	64	ConsoleToggleMapObjects		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x100, map objects	inferred	none	terrain/overview#unreached-functions	
+0x673470	64	ConsoleTogglePortals		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000, portal display	inferred	none	terrain/overview#unreached-functions	
+0x6734b0	64	ConsoleTogglePortalVis		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Toggles world flag 0x2000 and prints whether portal visibility is enabled	inferred	none	terrain/overview#unreached-functions	
+0x6734f0	58	ConsoleSetWeather		terrain	unreached	uint32_t __fastcall (void *args, const char *text)	Reads a weather type and intensity as %d %f and hands them to the weather's setter	inferred	none	terrain/overview#unreached-functions	
+0x673530	57	ConsoleSetWeather2		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 2	inferred	none	terrain/overview#unreached-functions	
+0x673570	57	ConsoleSetWeather1		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 1	inferred	none	terrain/overview#unreached-functions	
+0x6735b0	57	ConsoleSetWeather3		terrain	unreached	uint32_t __fastcall (const char *cmd, const char *args)	Reads a value and passes it to the weather as setting 3	inferred	none	terrain/overview#unreached-functions	
+0x6735f0	124	ConsoleShowWeather		terrain	unreached	uint32_t __cdecl (void)	Prints the weather state	inferred	none	terrain/overview#unreached-functions	
+0x673670	66	ConsoleToggleWater		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag 0x1000000, water	inferred	none	terrain/overview#unreached-functions	
 0x6736c0	65	ConsoleSetWaterMaxLod		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads waterMaxLOD into 0x86a030, 4 or 0	inferred	none		
 0x673710	25	ConsoleSetWaterWaves		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads waterWaves into 0x86a034	inferred	none		
 0x673730	25	ConsoleSetWaterSpecular		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads waterSpecular into 0x86a038	inferred	none		
 0x673750	25	ConsoleSetWaterRipples		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads waterRipples into 0x86a03c	inferred	none		
 0x673770	66	ConsoleToggleParticulates		terrain	orchestration	uint32_t __cdecl (void)	Toggles world flag 0x2000000, liquid particulates, and prints the new state	inferred	none		
-0x6737c0	33	ConsoleFlushTextures		terrain	unreached	uint32_t __cdecl (void)	Calls two device texture functions	inferred	none		
-0x6737f0	45	SetWorldFlagsA		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none		
-0x673820	45	SetWorldFlagsB		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none		
-0x673850	180	ConsoleToggleZoneBoundary		terrain	unreached	uint32_t __cdecl (void)	Toggles a zone boundary display and sends its state to the server	inferred	none		
-0x673910	66	ConsoleToggleShowQuery		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 21, the facet query display	inferred	none		
-0x673960	58	ConsoleToggleDetailTest		terrain	unreached	uint32_t __cdecl (void)	Toggles the detail doodad debug test 0xc63194	inferred	none		
+0x6737c0	33	ConsoleFlushTextures		terrain	unreached	uint32_t __cdecl (void)	Calls two device texture functions	inferred	none	terrain/overview#unreached-functions	
+0x6737f0	45	SetWorldFlagsA		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
+0x673820	45	SetWorldFlagsB		terrain	unreached	void __fastcall (uint32_t mask, uint32_t on)	Sets or clears world flag bits	inferred	none	terrain/overview#unreached-functions	
+0x673850	180	ConsoleToggleZoneBoundary		terrain	unreached	uint32_t __cdecl (void)	Toggles a zone boundary display and sends its state to the server	inferred	none	terrain/overview#unreached-functions	
+0x673910	66	ConsoleToggleShowQuery		terrain	unreached	uint32_t __cdecl (void)	Toggles world flag bit 21, the facet query display	inferred	none	terrain/overview#unreached-functions	
+0x673960	58	ConsoleToggleDetailTest		terrain	unreached	uint32_t __cdecl (void)	Toggles the detail doodad debug test 0xc63194	inferred	none	terrain/overview#unreached-functions	
 0x6739a0	67	ConsoleSetAlphaRef		terrain	orchestration	uint32_t __fastcall (const char *cmd, const char *args)	Reads an alpha reference from 0 to 255	inferred	none		
-0x6739f0	60	ConsoleToggleGroupRender		terrain	unreached	uint32_t __cdecl (void)	Toggles rendering of only the current map object group	inferred	none		
+0x6739f0	60	ConsoleToggleGroupRender		terrain	unreached	uint32_t __cdecl (void)	Toggles rendering of only the current map object group	inferred	none	terrain/overview#unreached-functions	
 0x673a30	57	ConsoleToggleShadow		terrain	orchestration	uint32_t __cdecl (void)	Toggles world flag 0x40, terrain shadow, and prints the new state	inferred	none		
 0x673a70	66	ConsoleToggleLowDetail		terrain	orchestration	uint32_t __cdecl (void)	Toggles world flag 0x4000000, terrain low detail, and prints the new state	inferred	none		
 0x673ac0	58	ConsoleToggleSimpleDoodads		terrain	orchestration	uint32_t __cdecl (void)	Toggles the simple doodad flag 0xc7b2c4 and prints the new state	inferred	none		
-0x673b00	230	ConsoleDumpTextureStats		terrain	unreached	uint32_t __cdecl (void)	Writes the terrain texture memory statistics to a log file	inferred	none		
-0x673bf0	142	ConsoleOpenWorldLog		terrain	unreached	uint32_t __cdecl (void)	Opens a world log file	inferred	none		
+0x673b00	230	ConsoleDumpTextureStats		terrain	unreached	uint32_t __cdecl (void)	Writes the terrain texture memory statistics to a log file	inferred	none	terrain/overview#unreached-functions	
+0x673bf0	142	ConsoleOpenWorldLog		terrain	unreached	uint32_t __cdecl (void)	Opens a world log file	inferred	none	terrain/overview#unreached-functions	
 0x673c80	274	PushOwnerId		terrain	host	void __thiscall (void *array, const uint64_t *id)	Appends an 8-byte id to a growable array	inferred	none		
 0x673da0	60	UnlinkFadeNode		terrain	orchestration	void __fastcall (void *link)	Unlinks a node from its list and clears its link	inferred	none		
 0x673de0	5	InitTerrainSquare1Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x673df0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -7736,10 +7736,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x680270	34	InitTerrainListHead3		terrain	primitive	void __cdecl (void)	Makes a global list empty with link offset 0xf4: its head points at itself, marked by bit 0	verified	one	terrain/statics#static-initializers	
 0x6802a0	12	RegisterDestroyTerrainListHead3		terrain	orchestration	void __cdecl (void)	Registers 0x6802b0 with atexit	verified	one	terrain/statics#static-initializers	
 0x6802b0	184	DestroyTerrainListHead3		terrain	orchestration	void __cdecl (void)	Empties a global list at exit, once, freeing nothing	inferred	none		
-0x680370	1	SceneNoOpA		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
-0x680380	1	SceneNoOpB		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x680370	1	SceneNoOpA		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
+0x680380	1	SceneNoOpB		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x680390	614	DrainSceneLists		terrain	orchestration	void __cdecl (void)	Unlinks the frame's entries from the scene's draw lists	inferred	none		
-0x680600	1	SceneNoOpC		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x680600	1	SceneNoOpC		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x680610	474	InitSceneTables		terrain	primitive	void __cdecl (void)	Fills the scene's constant tables once at start-up	inferred	none		
 0x6807f0	50	FreeFrustumPool		terrain	host	void __cdecl (void)	Frees the pooled frusta	inferred	none		
 0x680830	235	AllocFrustum		terrain	host	void * __cdecl (void)	Takes a frustum from the pool or allocates and initialises one	inferred	none		
@@ -7757,12 +7757,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x681970	194	CChunkLiquid::BucketCentre		terrain	primitive	void __thiscall (CChunkLiquid *this, uint32_t slot, const float *centre)	Files a liquid's centre in a depth sub-bucket by its slot	inferred	none	terrain/cull#depth-buckets	
 0x681a40	269	BucketByDepthTail		terrain	primitive	void __fastcall (void *object, const float *point, float radius)	Appends an object to a depth bucket's tail and stores its signed depth	inferred	none	terrain/cull#depth-buckets	
 0x681b50	456	AddHorizonOccluder		terrain	primitive	void __fastcall (const float *vertices, const uint8_t *rows, uint32_t count, const float *position, uint32_t unused)	Raises the horizon columns under an occluder's projected edges to their lower y/z	verified	one	terrain/cull#horizon-buffer	
-0x681d20	425	AddHorizonQuad		terrain	unreached	void __fastcall (const float *corners)	Adds a quad's four corners to the horizon buffer	inferred	none		
-0x681ed0	329	StageSceneCamera		terrain	unreached	void __cdecl (void)	Copies the device view and projection and builds the frustum corners	inferred	none		
-0x682020	143	SceneUnusedWalk		terrain	unreached	void __cdecl (void)	Walks a list and calls a no-op on each entry	inferred	none		
+0x681d20	425	AddHorizonQuad		terrain	unreached	void __fastcall (const float *corners)	Adds a quad's four corners to the horizon buffer	inferred	none	terrain/overview#unreached-functions	
+0x681ed0	329	StageSceneCamera		terrain	unreached	void __cdecl (void)	Copies the device view and projection and builds the frustum corners	inferred	none	terrain/overview#unreached-functions	
+0x682020	143	SceneUnusedWalk		terrain	unreached	void __cdecl (void)	Walks a list and calls a no-op on each entry	inferred	none	terrain/overview#unreached-functions	
 0x6820b0	308	AppendUniquePointer		terrain	host	void __fastcall (void *array, void *value)	Appends a pointer to an array unless it is already there	inferred	none		
 0x6821f0	377	UpdateShowQuery		terrain	host	void __cdecl (void)	Traces a segment from the camera and prints the hit while world flag bit 21 is set	inferred	none		
-0x682370	1	SceneNoOpE		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x682370	1	SceneNoOpE		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x682380	264	PushFrustum		terrain	orchestration	void * __fastcall (const void *frustum)	Copies a frustum onto the frustum stack and returns the slot	inferred	none		
 0x682490	1141	BuildFrustumVolume		terrain	primitive	void __fastcall (void *out, const float *view)	Builds the camera frustum's corners and planes	inferred	none		
 0x682910	25	SetFrustumVolume		terrain	orchestration	void __fastcall (void *volume)	Forwards to 0x6865f0	inferred	none		
@@ -7799,7 +7799,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x685fe0	20	ResetHorizon		terrain	orchestration	void __cdecl (void)	Fills the 320-column horizon with -1000000	verified	one	terrain/cull#horizon-buffer	
 0x686000	379	TestHorizonSphere		terrain	primitive	uint8_t __fastcall (const float *centre, float radius)	Returns whether a sphere is hidden behind the horizon	inferred	none		
 0x686180	447	TestHorizonBox		terrain	primitive	uint32_t __fastcall (const float *box, uint32_t flags)	Returns 2 when a box lies below the horizon in every column it spans, else 0	verified	one	terrain/cull#horizon-box-test	
-0x686340	448	BuildProjectorVolume		terrain	unreached	void __fastcall (void *out, const float *eye, const float *target, float fov, float aspect, float near, float far)	Builds a convex volume from a look-at projection	inferred	none		
+0x686340	448	BuildProjectorVolume		terrain	unreached	void __fastcall (void *out, const float *eye, const float *target, float fov, float aspect, float near, float far)	Builds a convex volume from a look-at projection	inferred	none	terrain/overview#unreached-functions	
 0x686500	229	InitConvexVolume		terrain	orchestration	void __fastcall (void *volume, const float *corners)	Zeroes a convex volume, copies its eight corners and builds its planes	inferred	none		
 0x6865f0	67	SetConvexVolume		terrain	orchestration	void __fastcall (void *volume, const float *corners)	Copies eight corners and builds the volume's planes	inferred	none		
 0x686640	477	BuildConvexPlanes		terrain	primitive	void __fastcall (void *volume)	Builds a convex volume's six planes and box from its eight corners	inferred	none		
@@ -7807,11 +7807,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6868e0	89	TransformConvexVolume		terrain	host	void __fastcall (void *volume, const float *matrix)	Transforms a convex volume's corners and rebuilds its planes	inferred	none		
 0x686940	116	TestBoxPlanes		terrain	primitive	uint32_t __thiscall (const float *planes, const float *box)	Returns 0 when a box lies outside one of six planes by more than 0.019444443, else 3	verified	one	terrain/cull#frustum-box-test	
 0x6869c0	389	TestOrientedBoxPlanes		terrain	primitive	uint32_t __fastcall (const float *box, const float *matrix, const float *planes)	Tests an oriented box against six planes	inferred	none		
-0x686b50	47	TestSphereCopy		terrain	unreached	uint32_t __fastcall (const float *centre, float radius)	Copies a sphere and tests it against the frustum	inferred	none		
+0x686b50	47	TestSphereCopy		terrain	unreached	uint32_t __fastcall (const float *centre, float radius)	Copies a sphere and tests it against the frustum	inferred	none	terrain/overview#unreached-functions	
 0x686b80	79	TestSpherePlanes		terrain	primitive	uint32_t __fastcall (const float *centre, float radius)	Returns 0 when a sphere lies behind any of six planes by more than its radius and 3 otherwise	inferred	none		
-0x686bd0	78	TestPointPlanes		terrain	unreached	uint32_t __fastcall (const float *point)	Returns 3 when a point lies inside six planes within 0.019444443 and 0 otherwise	inferred	none		
+0x686bd0	78	TestPointPlanes		terrain	unreached	uint32_t __fastcall (const float *point)	Returns 3 when a point lies inside six planes within 0.019444443 and 0 otherwise	inferred	none	terrain/overview#unreached-functions	
 0x686c20	97	GetPlaneOutcode		terrain	primitive	uint32_t __fastcall (const float *planes, const float *point)	Returns six bits, one per plane a point lies behind by more than 0.019444443	inferred	none		
-0x686c90	131	TestSphereCameraPlanes		terrain	unreached	uint32_t __fastcall (const float *centre, float radius)	Tests a sphere against eight camera-relative planes	inferred	none		
+0x686c90	131	TestSphereCameraPlanes		terrain	unreached	uint32_t __fastcall (const float *centre, float radius)	Tests a sphere against eight camera-relative planes	inferred	none	terrain/overview#unreached-functions	
 0x686d20	139	GetUnitCubeOutcode		terrain	primitive	uint32_t __fastcall (const float *point, float *distances)	Returns a point's six distances to the unit cube's faces and their sign bits	inferred	none		
 0x686db0	693	ClipToUnitCube		terrain	primitive	uint32_t __fastcall (const float *in, uint32_t count, float *out)	Clips a polygon to the unit cube	inferred	none		
 0x687070	1	ClipNoOp		terrain	orchestration	void __cdecl (void)	Returns at once; an exit callback	inferred	none		
@@ -7968,13 +7968,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x68b3d0	28	InitTerrainZeroArray4		terrain	orchestration	void __cdecl (void)	Zeroes 4096 records of 8 bytes in a global array	verified	one	terrain/statics#static-initializers	
 0x68b3f0	12	RegisterDestroyTerrainZeroArray4		terrain	orchestration	void __cdecl (void)	Registers 0x68b400 with atexit	verified	one	terrain/statics#static-initializers	
 0x68b400	1	DestroyTerrainZeroArray4		terrain	orchestration	void __cdecl (void)	Returns at once; an exit function	inferred	none		
-0x68b410	485	StepWaveField		terrain	unreached	void __fastcall (void *field, float dt)	Advances a wave field's phases and synthesises its heights by FFT	inferred	none		
-0x68b600	648	FFT2D		terrain	unreached	void __fastcall (float *data, const uint32_t *dims)	Transforms complex data in place by radix-2 FFT	inferred	none		
-0x68b890	112	FillGridCoords		terrain	unreached	void __fastcall (int16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e)	Fills 16-bit grid coordinates at a step	inferred	none		
-0x68b900	129	FillGridCoordsDouble		terrain	unreached	void __fastcall (int16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e)	Fills 16-bit grid coordinates at a doubled step	inferred	none		
-0x68b990	221	EmitGridStrip		terrain	unreached	uint32_t __fastcall (uint16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d)	Emits a grid strip's indices with degenerate joins	inferred	none		
-0x68ba70	167	EmitGridStrips		terrain	unreached	uint32_t __fastcall (uint16_t *out, uint32_t a, uint32_t b)	Emits a grid's strips in two halves	inferred	none		
-0x68bb20	487	BuildWaveMesh		terrain	unreached	void __fastcall (void *field)	Builds a wave field's mesh	inferred	none		
+0x68b410	485	StepWaveField		terrain	unreached	void __fastcall (void *field, float dt)	Advances a wave field's phases and synthesises its heights by FFT	inferred	none	terrain/overview#unreached-functions	
+0x68b600	648	FFT2D		terrain	unreached	void __fastcall (float *data, const uint32_t *dims)	Transforms complex data in place by radix-2 FFT	inferred	none	terrain/overview#unreached-functions	
+0x68b890	112	FillGridCoords		terrain	unreached	void __fastcall (int16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e)	Fills 16-bit grid coordinates at a step	inferred	none	terrain/overview#unreached-functions	
+0x68b900	129	FillGridCoordsDouble		terrain	unreached	void __fastcall (int16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e)	Fills 16-bit grid coordinates at a doubled step	inferred	none	terrain/overview#unreached-functions	
+0x68b990	221	EmitGridStrip		terrain	unreached	uint32_t __fastcall (uint16_t *out, uint32_t a, uint32_t b, uint32_t c, uint32_t d)	Emits a grid strip's indices with degenerate joins	inferred	none	terrain/overview#unreached-functions	
+0x68ba70	167	EmitGridStrips		terrain	unreached	uint32_t __fastcall (uint16_t *out, uint32_t a, uint32_t b)	Emits a grid's strips in two halves	inferred	none	terrain/overview#unreached-functions	
+0x68bb20	487	BuildWaveMesh		terrain	unreached	void __fastcall (void *field)	Builds a wave field's mesh	inferred	none	terrain/overview#unreached-functions	
 0x68bd10	10	InitTerrainRecord1Thunk		terrain	orchestration	void __cdecl (void)	Calls 0x68bd20, then jumps to 0x68bd80; a static initializer	verified	one	terrain/statics#static-initializers	
 0x68bd20	83	InitTerrainRecord1		terrain	orchestration	void __cdecl (void)	Zeroes a global record and stores 1.0 in two of its fields	verified	one	terrain/statics#static-initializers	
 0x68bd80	12	RegisterDestroyTerrainRecord1		terrain	orchestration	void __cdecl (void)	Registers 0x68bd90 with atexit	verified	one	terrain/statics#static-initializers	
@@ -7982,10 +7982,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x68bda0	262	AddSplash		terrain	primitive	void __fastcall (const float *point, float a, float b, float c, float d, float e, float f)	Emits a splash ripple with a falloff scaled by its size	inferred	none		
 0x68beb0	5	InitTerrainQuotient9Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x68bec0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x68bec0	19	InitTerrainQuotient9		terrain	primitive	void __cdecl (void)	Stores 2.75 divided by 150 as a float in a global	verified	one	terrain/statics#static-initializers	
-0x68bee0	230	StepRadialWave		terrain	unreached	void __fastcall (void *wave, float dt)	Advances a radial wave's centre and phases	inferred	none		
-0x68bfd0	284	SampleWaveHeight		terrain	unreached	float __fastcall (void *wave, const float *point)	Samples a wave field's height bilinearly at a rotated point	inferred	none		
-0x68c0f0	280	InitRadialWave		terrain	unreached	void __fastcall (void *wave, const float *size, float a, float b)	Sizes a radial wave's grid	inferred	none		
-0x68c210	55	IsInsideRadius		terrain	unreached	uint8_t __fastcall (void *wave, const float *point)	Returns whether a point lies within a wave's radius on the ground	inferred	none		
+0x68bee0	230	StepRadialWave		terrain	unreached	void __fastcall (void *wave, float dt)	Advances a radial wave's centre and phases	inferred	none	terrain/overview#unreached-functions	
+0x68bfd0	284	SampleWaveHeight		terrain	unreached	float __fastcall (void *wave, const float *point)	Samples a wave field's height bilinearly at a rotated point	inferred	none	terrain/overview#unreached-functions	
+0x68c0f0	280	InitRadialWave		terrain	unreached	void __fastcall (void *wave, const float *size, float a, float b)	Sizes a radial wave's grid	inferred	none	terrain/overview#unreached-functions	
+0x68c210	55	IsInsideRadius		terrain	unreached	uint8_t __fastcall (void *wave, const float *point)	Returns whether a point lies within a wave's radius on the ground	inferred	none	terrain/overview#unreached-functions	
 0x68c250	559	GetLiquidColor		terrain	primitive	void __fastcall (uint32_t type, uint32_t *out)	Returns a liquid type's colour from the lighting, blended	inferred	none		
 0x68c480	62	LiquidColorCallback		terrain	orchestration	void __stdcall (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t *out)	Writes a liquid colour to its out argument; a callback	inferred	none		
 0x68c4c0	599	InitLiquidRamps		terrain	primitive	void __cdecl (void)	Makes the wave pool, the depth ramps A and B, the alpha table, the ramp textures and the ocean shader	verified	one	terrain/liquid#depth-ramps	
@@ -8039,7 +8039,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x68efb0	12	RegisterDestroyTerrainDriftConstants		terrain	orchestration	void __cdecl (void)	Registers 0x68efc0 with atexit	verified	one	terrain/statics#static-initializers	
 0x68efc0	21	DestroyTerrainDriftConstants		terrain	orchestration	void __cdecl (void)	Sets bit 0 of its guard byte once; an exit function	inferred	none		
 0x68efe0	1026	DrawDriftCloud		terrain	host	void __fastcall (void *cloud)	Draws the drift particles as billboards	inferred	none		
-0x68f3f0	5	DrawDriftCloudThunk		terrain	unreached	void __fastcall (void *cloud)	Jumps to 0x68efe0	inferred	none		
+0x68f3f0	5	DrawDriftCloudThunk		terrain	unreached	void __fastcall (void *cloud)	Jumps to 0x68efe0	inferred	none	terrain/overview#unreached-functions	
 0x68f400	10	InitTerrainZero20Thunk		terrain	orchestration	void __cdecl (void)	Calls 0x68f410, then jumps to 0x68f430; a static initializer	verified	one	terrain/statics#static-initializers	
 0x68f410	18	InitTerrainZero20		terrain	orchestration	void __cdecl (void)	Zeroes 3 dwords of a global	verified	one	terrain/statics#static-initializers	
 0x68f430	12	RegisterDestroyTerrainZero20		terrain	orchestration	void __cdecl (void)	Registers 0x68f440 with atexit	verified	one	terrain/statics#static-initializers	
@@ -8164,14 +8164,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x691a50	184	DestroyTerrainListHead10		terrain	orchestration	void __cdecl (void)	Empties a global list at exit, once, freeing nothing	inferred	none		
 0x691b10	1445	CMap::Initialize		terrain	orchestration	void __cdecl (void)	Initializes the map: terrain shaders, the map object pools and the subsystems' tables	inferred	none		
 0x6920c0	525	CMap::Destroy		terrain	orchestration	void __cdecl (void)	Frees the map's subsystems, buffers and pools	inferred	none		
-0x6922d0	36	CountMapObjects		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects	inferred	none		
-0x692300	1	MapNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
-0x692310	471	TallyMapMemory		terrain	unreached	void __cdecl (void)	Sums the chunk, liquid and object buffer sizes over the loaded areas	inferred	none		
+0x6922d0	36	CountMapObjects		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects	inferred	none	terrain/overview#unreached-functions	
+0x692300	1	MapNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
+0x692310	471	TallyMapMemory		terrain	unreached	void __cdecl (void)	Sums the chunk, liquid and object buffer sizes over the loaded areas	inferred	none	terrain/overview#unreached-functions	
 0x6924f0	64	FreeAllDetailDoodads		terrain	orchestration	void __cdecl (void)	Frees every loaded chunk's detail doodads	inferred	none		
 0x692530	66	ReleaseAllChunkBuffers		terrain	orchestration	void __cdecl (void)	Returns every chunk's vertex and index buffers to the pool	inferred	none		
 0x692580	93	ReleaseAllLiquidBuffers		terrain	orchestration	void __cdecl (void)	Returns every chunk liquid's buffers to the pool	inferred	none		
-0x6925e0	71	CountLoadedAreas		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects' groups	inferred	none		
-0x692630	70	CountLoadedObjects		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects	inferred	none		
+0x6925e0	71	CountLoadedAreas		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects' groups	inferred	none	terrain/overview#unreached-functions	
+0x692630	70	CountLoadedObjects		terrain	unreached	uint32_t __cdecl (void)	Counts the loaded map objects	inferred	none	terrain/overview#unreached-functions	
 0x692680	5	InitTerrainTwoPi5Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x692690; a static initializer	verified	one	terrain/statics#static-initializers	
 0x692690	15	InitTerrainTwoPi5		terrain	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	terrain/statics#static-initializers	
 0x6926a0	5	InitTerrainInvTwoPi5Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6926b0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -8294,7 +8294,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6944a0	692	CMap::LoadWdl		terrain	primitive	void __cdecl (void)	Reads the WDL's 545 heights per tile into low-detail tiles with their boxes and spheres	verified	one	terrain/files#wdl	
 0x694760	445	CMap::LoadWdt		terrain	orchestration	void __cdecl (void)	Reads the WDT's version, map header and tile table, and places a one-object map's object	verified	one	terrain/files#wdt	
 0x694920	70	CMap::Unload		terrain	host	void __cdecl (void)	Unloads the map: its areas, footprints, texture caches and state	inferred	none		
-0x694970	1	MapLoadNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x694970	1	MapLoadNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x694980	576	CreateEntityDoodadDef		terrain	orchestration	void * __fastcall (const char *path, const float *position, float scale)	Creates a doodad placement for a game object under the next negative unique id and loads its model	inferred	none		
 0x694bc0	713	PlaceDoodadDef		terrain	primitive	CMapDoodadDef * __fastcall (const char *name, const void *entry, const float *origin)	Makes or finds the doodad def of an MDDF entry and sets its position, scale and matrix	verified	one	terrain/files#doodad-placements	
 0x694e90	617	CreateGroupDoodadDef		terrain	orchestration	void * __fastcall (void *group, void *ref, uint32_t id)	Creates a doodad placement for a map object group's doodad and loads its model	inferred	none		
@@ -8457,7 +8457,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x698b30	51	CMapDoodadDef::PropagateBounds		terrain	orchestration	void __fastcall (void *def)	Propagates a def's bounds up its links	inferred	none		
 0x698b70	215	PropagateLinkBounds		terrain	primitive	void __fastcall (void *def, void *owner)	Grows an owner's box to cover a linked def's box	inferred	none		
 0x698c50	193	DrainPendingDoodads		terrain	orchestration	void __cdecl (void)	Finishes the doodads whose models have loaded: transform, shadow and bounds	inferred	none		
-0x698d20	256	CMapDoodadDef::SetMatrix		terrain	unreached	void __fastcall (void *def, const float *m)	Stores a doodad's matrix and rebuilds its box and links	inferred	none		
+0x698d20	256	CMapDoodadDef::SetMatrix		terrain	unreached	void __fastcall (void *def, const float *m)	Stores a doodad's matrix and rebuilds its box and links	inferred	none	terrain/overview#unreached-functions	
 0x698e20	291	CMapDoodadDef::SetPlacement		terrain	orchestration	void __fastcall (void *def, const float *position, float facing)	Places a doodad by position and facing and rebuilds its box	inferred	none		
 0x698f50	687	CMapObjDef::SetPlacement		terrain	orchestration	void __fastcall (void *def, const float *position, float facing)	Places a map object by position and facing and rebuilds its matrices and box	inferred	none		
 0x699200	5	InitTerrainTwoPi8Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x699210; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -8616,9 +8616,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69b120	157	GetAreaId		terrain	primitive	uint32_t __fastcall (const float *point)	Returns the MCNK area id of the chunk under a point, or 0	verified	one	terrain/queries#area-id	
 0x69b1c0	388	GetGroundEffect		terrain	primitive	uint8_t __fastcall (const float *point, uint32_t *effect)	Returns the ground effect of the dominant texture layer under a point	inferred	none		
 0x69b350	322	IsInChunkShadow		terrain	primitive	uint8_t __fastcall (const float *point)	Returns whether the shadow map bit under a point is set	verified	one	terrain/queries#shadow-test	
-0x69b4a0	120	FindMapObjectAt		terrain	unreached	void * __fastcall (const float *point)	Returns the map object whose interior holds a point	inferred	none		
+0x69b4a0	120	FindMapObjectAt		terrain	unreached	void * __fastcall (const float *point)	Returns the map object whose interior holds a point	inferred	none	terrain/overview#unreached-functions	
 0x69b520	176	GetMapObjectLiquid		terrain	orchestration	uint8_t __fastcall (const float *point, float *height, float *flow)	Reports a map object's liquid at a point	inferred	none		
-0x69b5d0	254	IsFishableLiquid		terrain	unreached	uint8_t __fastcall (const float *point)	Returns a tile's fishable flag under a point	inferred	none		
+0x69b5d0	254	IsFishableLiquid		terrain	unreached	uint8_t __fastcall (const float *point)	Returns a tile's fishable flag under a point	inferred	none	terrain/overview#unreached-functions	
 0x69b6d0	1012	GetLiquidStatus		terrain	primitive	uint8_t __fastcall (const float *point, uint32_t *type, float *height, float *flow, uint32_t *flag)	Reports the liquid a point is in: its type, height, flow and tile flag	verified	one	terrain/queries#liquid-status	
 0x69bad0	5	InitTerrainTwoPi10Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69bae0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69bae0	15	InitTerrainTwoPi10		terrain	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	terrain/statics#static-initializers	
@@ -8752,7 +8752,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69d8f0	133	GetEntityGroupRecord		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Returns the area record of an entity's map object group	inferred	none		
 0x69d980	143	GetEntityGroupFlagsRecord		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Returns two flags of an entity's map object group record	inferred	none		
 0x69da10	66	GetEntityGroupField		terrain	orchestration	uint32_t __fastcall (void *entity)	Returns a field of an entity's map object group	inferred	none		
-0x69da60	60	ClearEntityGroupField		terrain	unreached	uint32_t __fastcall (void *entity)	Zeroes an out field after finding an entity's group	inferred	none		
+0x69da60	60	ClearEntityGroupField		terrain	unreached	uint32_t __fastcall (void *entity)	Zeroes an out field after finding an entity's group	inferred	none	terrain/overview#unreached-functions	
 0x69daa0	140	GetEntityGroupLight		terrain	orchestration	uint32_t __fastcall (void *entity, void *a, void *b)	Returns an entity's map object group light	inferred	none		
 0x69db30	97	GetEntityGroupColorFields		terrain	orchestration	uint32_t __fastcall (void *entity, void *a, void *b)	Copies three fields of an entity's map object group	inferred	none		
 0x69dba0	140	GetEntityGroupBoxes		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Copies an entity's map object group boxes	inferred	none		
@@ -8874,8 +8874,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69fea0	184	DestroyTerrainListHead18		terrain	orchestration	void __cdecl (void)	Empties a global list at exit, once, freeing nothing	inferred	none		
 0x69ff60	219	AllocChunkLayer		terrain	host	CChunkLayer * __cdecl (void)	Pops a CChunkLayer from the free list or allocates one	inferred	none		
 0x6a0040	205	FreeChunkLayer		terrain	orchestration	void __fastcall (CChunkLayer *layer)	Returns a chunk layer to the free list	inferred	none		
-0x6a0110	222	AllocChunkTex		terrain	unreached	void * __cdecl (void)	Pops a CChunkTex from the free list or allocates one	inferred	none		
-0x6a01f0	205	FreeChunkTex		terrain	unreached	void __fastcall (void *tex)	Returns a chunk texture record to the free list	inferred	none		
+0x6a0110	222	AllocChunkTex		terrain	unreached	void * __cdecl (void)	Pops a CChunkTex from the free list or allocates one	inferred	none	terrain/overview#unreached-functions	
+0x6a01f0	205	FreeChunkTex		terrain	unreached	void __fastcall (void *tex)	Returns a chunk texture record to the free list	inferred	none	terrain/overview#unreached-functions	
 0x6a02c0	97	AllocMapObj		terrain	orchestration	void * __cdecl (void)	Takes a map object from its pool and constructs it	inferred	none		
 0x6a0330	102	FreeMapObj		terrain	orchestration	void __fastcall (void *object)	Destroys a map object and returns it to its pool	inferred	none		
 0x6a03a0	78	AllocMapObjGroup		terrain	orchestration	void * __cdecl (void)	Takes a map object group from its pool and constructs it	inferred	none		
@@ -8916,7 +8916,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a1410	189	DestroyMapObjDefList		terrain	host	void __fastcall (void *list)	Unlinks and frees every node of a map object def list	inferred	none		
 0x6a14d0	190	DeleteDoodadDefList		terrain	host	void * __thiscall (void *this, uint32_t flags)	Drains a doodad def list and frees it when bit 0 of the argument is set	inferred	none		
 0x6a1590	190	DeleteMapObjDefList		terrain	host	void * __thiscall (void *this, uint32_t flags)	Drains a map object def list and frees it when bit 0 of the argument is set	inferred	none		
-0x6a1650	41	GetChunkTexLink		terrain	unreached	void * __thiscall (void *list, int32_t offset)	Returns a list node's link by the list's link offset	inferred	none		
+0x6a1650	41	GetChunkTexLink		terrain	unreached	void * __thiscall (void *list, int32_t offset)	Returns a list node's link by the list's link offset	inferred	none	terrain/overview#unreached-functions	
 0x6a1680	41	GetChunkLayerLink		terrain	orchestration	void * __thiscall (void *list, int32_t offset)	Returns a list node's link by the list's link offset	inferred	none		
 0x6a16b0	41	GetSoundEmitterLink		terrain	orchestration	void * __thiscall (void *list, int32_t offset)	Returns a list node's link by the list's link offset	inferred	none		
 0x6a16e0	135	ClearDoodadDefList		terrain	host	void __fastcall (void *list)	Unlinks every doodad def list node and frees the bucket array	inferred	none		
@@ -9342,8 +9342,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a98e0	527	DrawPortalQuad		terrain	host	void __fastcall (void *portal, uint32_t color)	Builds and draws a debug quad for a portal	inferred	none		
 0x6a9af0	5	InitTerrainInfinity17Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6a9b00; a static initializer	verified	one	terrain/statics#static-initializers	
 0x6a9b00	11	InitTerrainInfinity17		terrain	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	terrain/statics#static-initializers	
-0x6a9b10	415	DrawPortalRect		terrain	unreached	void __fastcall (void *portal, uint32_t color)	Emits a debug rectangle for a portal	inferred	none		
-0x6a9cb0	1194	DrawDebugBox		terrain	unreached	void __fastcall (const float *box, uint32_t color)	Emits a debug wire box	inferred	none		
+0x6a9b10	415	DrawPortalRect		terrain	unreached	void __fastcall (void *portal, uint32_t color)	Emits a debug rectangle for a portal	inferred	none	terrain/overview#unreached-functions	
+0x6a9cb0	1194	DrawDebugBox		terrain	unreached	void __fastcall (const float *box, uint32_t color)	Emits a debug wire box	inferred	none	terrain/overview#unreached-functions	
 0x6aa160	139	TraceWorldPlanes		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, void *out, uint32_t mask)	Returns the planes a segment hits, from the map objects and the terrain	inferred	none	terrain/collide#other-world-queries	
 0x6aa1f0	494	TraceMapObjectPlanes		terrain	primitive	uint8_t __fastcall (const float *start, const float *end, void *out, uint32_t mask)	Returns the planes of the map object faces a segment hits	inferred	none		
 0x6aa3e0	533	TraceTerrainFirstHit		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, float *t, void *plane)	Walks a segment's cells for the terrain's first hit and rescales its fraction	inferred	none	terrain/trace#terrain-first-hit	
@@ -9371,9 +9371,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6acb40	46	IsVector3AllGreater		terrain	orchestration	uint8_t __fastcall (const float *a, const float *b)	Returns whether each component of a is greater than b's	inferred	none		
 0x6acb70	274	GrowColorVertices		terrain	host	void __thiscall (void *array, uint32_t count, uint32_t exact)	Grows a 16-byte coloured vertex array	inferred	none		
 0x6acc90	31	RoundUpToMultipleC		terrain	primitive	uint32_t __fastcall (uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
-0x6accb0	57	ClampHashCapacityD		terrain	unreached	uint32_t __fastcall (uint32_t n)	Returns a power-of-two capacity for n	inferred	none		
-0x6accf0	31	RoundUpToMultipleD		terrain	unreached	uint32_t __fastcall (uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
-0x6acd10	180	ResizeColorVertices		terrain	unreached	void __thiscall (void *array, uint32_t count)	Reallocates a 16-byte coloured vertex array	inferred	none		
+0x6accb0	57	ClampHashCapacityD		terrain	unreached	uint32_t __fastcall (uint32_t n)	Returns a power-of-two capacity for n	inferred	none	terrain/overview#unreached-functions	
+0x6accf0	31	RoundUpToMultipleD		terrain	unreached	uint32_t __fastcall (uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none	terrain/overview#unreached-functions	
+0x6acd10	180	ResizeColorVertices		terrain	unreached	void __thiscall (void *array, uint32_t count)	Reallocates a 16-byte coloured vertex array	inferred	none	terrain/overview#unreached-functions	
 0x6acdd0	14	SetColor		terrain	orchestration		Stores a colour dword into this	inferred	none	spell/visuals#chain-update-per-frame	
 0x6acde0	62	SetPlaneFromNormal		terrain	primitive	void __thiscall (float *plane, const float *normal, const float *point)	Copies a normal into a plane and sets d to minus its dot product with a point	inferred	none	terrain/collide#impassable-walls	
 0x6ace20	5	InitTerrainSquare289Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6ace30; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -9544,7 +9544,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6af1d0	604	CMapChunk::CMapChunk		terrain	orchestration	CMapChunk * __thiscall (CMapChunk *this)	Constructs a chunk on the shared base: zeroes its fields and makes its five lists	inferred	none		
 0x6af430	43	CMapChunk::DeletingDestructor		terrain	orchestration	CMapChunk * __thiscall (CMapChunk *this, uint32_t flags)	Destroys a chunk and frees it when bit 0 of the argument is set	inferred	none		
 0x6af460	255	CMapChunk::~CMapChunk		terrain	orchestration	void __thiscall (CMapChunk *this)	Empties a chunk's lists and runs the base destructor	inferred	none		
-0x6af560	136	CMapChunk::GetBoundsWithLiquid		terrain	unreached	void __thiscall (CMapChunk *this, float *box)	Writes the chunk's box grown by its liquids' heights	inferred	none		
+0x6af560	136	CMapChunk::GetBoundsWithLiquid		terrain	unreached	void __thiscall (CMapChunk *this, float *box)	Writes the chunk's box grown by its liquids' heights	inferred	none	terrain/overview#unreached-functions	
 0x6af5f0	366	CMapChunk::Load		terrain	orchestration	void __thiscall (CMapChunk *this, const void *record, uint32_t first)	Reads a chunk's MCNK header and builds its vertices, normals, liquid, layers, references and textures	verified	one	terrain/chunk#mcnk-header	
 0x6af760	163	CMapChunk::LoadLiquids		terrain	orchestration	void __thiscall (CMapChunk *this, uint32_t first)	Reads one MCLQ block per set liquid flag into the chunk's four liquid slots	verified	one	terrain/chunk#liquid-blocks	
 0x6af810	341	CMapChunk::LoadSoundEmitters		terrain	orchestration	void __thiscall (CMapChunk *this, uint32_t first)	Copies MCSE entries into emitter records only for the callback 0xca82c4, which is always null	verified	one	terrain/chunk#sound-emitters	
@@ -9554,7 +9554,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6afad0	803	CMapChunk::Update		terrain	primitive	void __thiscall (CMapChunk *this)	Sets a chunk's view depth and level, ages it, releases idle buffers and queues its points	verified	one	terrain/cull#chunk-level-and-idle-release	
 0x6afe00	268	CMapChunk::LinkLights		terrain	orchestration	void __thiscall (CMapChunk *this)	Links the map lights whose boxes overlap the chunk into its light list	inferred	none		
 0x6aff10	92	CMapChunk::LoadNormals		terrain	primitive	void __thiscall (CMapChunk *this)	Converts the 145 MCNR normals of three signed bytes to floats times 1/127	verified	one	terrain/chunk#chunk-normals	
-0x6aff70	1	ChunkNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x6aff70	1	ChunkNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x6aff80	170	CMapChunk::AddLayer		terrain	orchestration	void __thiscall (CMapChunk *this, void *area, const void *entry, const void *alphaBase)	Makes a texture layer from an MCLY entry and, on the fixed-function path, its alpha texture	verified	one	terrain/chunk#texture-layers	
 0x6b0030	104	CMapChunk::CreateShadowTexture		terrain	orchestration	void __thiscall (CMapChunk *this, const uint8_t *map)	Keeps the MCSH address and, on the fixed-function path, creates the chunk's shadow texture	verified	one	terrain/chunk#shadow-maps	
 0x6b00a0	71	CMapChunk::CreateCombinedTexture		terrain	orchestration	void __thiscall (CMapChunk *this)	Creates the shader path's texture packing the chunk's shadow and three layer alpha maps	verified	one	terrain/chunk#combined-chunk-texture	
@@ -9668,7 +9668,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b2320	132	GetDetailDoodadTransform		terrain	primitive	void __fastcall (float *out)	Builds the detail doodads' transform once and copies it out	inferred	none		
 0x6b23b0	1	DetailDoodadNoOp		terrain	orchestration	void __cdecl (void)	Returns at once; an exit callback	inferred	none		
 0x6b23c0	39	DetailDoodadTransformCallback		terrain	orchestration	void __stdcall (uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, float *out)	Writes the detail doodads' transform to its out argument; a callback	inferred	none		
-0x6b23f0	13	ClearThreeDwords		terrain	unreached	void __fastcall (void *p)	Zeroes three dwords	inferred	none		
+0x6b23f0	13	ClearThreeDwords		terrain	unreached	void __fastcall (void *p)	Zeroes three dwords	inferred	none	terrain/overview#unreached-functions	
 0x6b2400	22	InitDetailDoodadRecord		terrain	orchestration	void __thiscall (void *this, uint32_t value)	Zeroes two dwords of a record and stores a value in the first	inferred	none		
 0x6b2420	49	CloseDetailDoodadHandles		terrain	host	void __cdecl (void)	Closes the detail doodad models' two handles	inferred	none		
 0x6b2460	117	LoadDetailDoodadModel		terrain	host	uint8_t __fastcall (void *slot, const char *path)	Copies a ground effect doodad's path and creates its model	inferred	none		
@@ -9687,7 +9687,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b28e0	32	ReleaseDetailDoodadBatchBuffers		terrain	orchestration	void __fastcall (void *batch)	Releases a batch's four slots' buffer ranges	inferred	none		
 0x6b2900	28	HasDetailDoodadBuffers		terrain	orchestration	uint8_t __fastcall (void *batch)	Returns whether any of a batch's four slots holds a buffer range	inferred	none		
 0x6b2920	414	AddDetailDoodad		terrain	host	uint8_t __thiscall (void *batch, uint32_t effect, const float *position, float scale, float angle)	Adds a placement to the batch slot of its ground effect doodad, growing the slot	inferred	none		
-0x6b2ac0	25	HasDetailDoodadPlacements		terrain	unreached	uint8_t __fastcall (void *batch)	Returns whether any of a batch's four slots holds placements	inferred	none		
+0x6b2ac0	25	HasDetailDoodadPlacements		terrain	unreached	uint8_t __fastcall (void *batch)	Returns whether any of a batch's four slots holds placements	inferred	none	terrain/overview#unreached-functions	
 0x6b2ae0	152	BeginDetailDoodadPass		terrain	host	void __cdecl (void)	Sets the render states of the detail doodad pass	inferred	none		
 0x6b2b80	480	DrawDetailDoodadBatch		terrain	host	void __fastcall (void *batch, float depth)	Draws a batch's slots with a distance fade texture transform	inferred	none		
 0x6b2d60	208	UploadDetailDoodadSlot		terrain	host	uint8_t __fastcall (void *slot)	Fills a slot's buffer range from its placements when it has none	inferred	none		
@@ -9776,7 +9776,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b3860	21	DestroyTerrainArray2048		terrain	orchestration	void __cdecl (void)	Sets bit 0 of its guard byte once; an exit function	inferred	none		
 0x6b3880	13	SetPortalCullCallbacks		terrain	orchestration	void __fastcall (void *a, void *b)	Stores two callbacks for the map object visibility pass	inferred	none		
 0x6b3890	636	BeginMapObjectFrame		terrain	orchestration	void __cdecl (void)	Picks the frame's map object draw functions by the world flags and ages the group fades	inferred	none		
-0x6b3b10	3	MapObjectNoOp		terrain	unreached	void __stdcall (uint32_t, uint32_t)	Returns at once	inferred	none		
+0x6b3b10	3	MapObjectNoOp		terrain	unreached	void __stdcall (uint32_t, uint32_t)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x6b3b20	677	SeedInteriorVisibility		terrain	host	void __fastcall (void *def, void *group)	Floods the map object groups visible from a camera inside a group through their portals	inferred	none		
 0x6b3dd0	439	SeedExteriorVisibility		terrain	host	void __fastcall (void *def, void *frustum)	Marks the exterior groups of a map object the camera sees from outside	inferred	none		
 0x6b3f90	206	DrawMapObjectGroup		terrain	orchestration	void __thiscall (void *def, void *group, uint32_t pass)	Resolves a visible group, prepares its vertex colours and draws it	inferred	none		
@@ -9866,8 +9866,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b7500	650	CMapChunk::GetLiquidHeight		terrain	primitive	int32_t __fastcall (CMapChunk *chunk, const float *point, float u, float v, float *out)	Writes the bilinear liquid height at grid coordinates u from y and v from x, 0 for ocean; returns 0 without liquid	verified	one	terrain/queries#liquid-height	
 0x6b7790	892	TraceMapObjectFloor		terrain	primitive	uint8_t __fastcall (void *chunk, const float *point, float *height)	Casts a vertical ray at the map objects and doodads a chunk references and keeps the nearest floor	inferred	none		
 0x6b7b10	232	QueueDoodadsInBox		terrain	orchestration	void __fastcall (void *chunk, const float *box)	Links the chunk's doodads whose boxes overlap a box into the pending list once per query	inferred	none		
-0x6b7c00	261	GetMapObjectFloor		terrain	unreached	float __fastcall (const float *point, uint32_t flags)	Returns the map object floor under a point, −100000 when none	inferred	none		
-0x6b7d10	411	ProbeChunkMapObjectFloor		terrain	unreached	uint8_t __fastcall (void *chunk, const float *point, float *height)	Tests a vertical ray against the map objects a chunk references	inferred	none		
+0x6b7c00	261	GetMapObjectFloor		terrain	unreached	float __fastcall (const float *point, uint32_t flags)	Returns the map object floor under a point, −100000 when none	inferred	none	terrain/overview#unreached-functions	
+0x6b7d10	411	ProbeChunkMapObjectFloor		terrain	unreached	uint8_t __fastcall (void *chunk, const float *point, float *height)	Tests a vertical ray against the map objects a chunk references	inferred	none	terrain/overview#unreached-functions	
 0x6b7eb0	5	InitTerrainTwoPi22Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6b7ec0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x6b7ec0	15	InitTerrainTwoPi22		terrain	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	terrain/statics#static-initializers	
 0x6b7ed0	5	InitTerrainInvTwoPi22Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6b7ee0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -10068,7 +10068,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bd280	12	RegisterDestroyTerrainIdentity13		terrain	orchestration	void __cdecl (void)	Registers 0x6bd290 with atexit	verified	one	terrain/statics#static-initializers	
 0x6bd290	1	DestroyTerrainIdentity13		terrain	orchestration	void __cdecl (void)	Returns at once; an exit function	inferred	none		
 0x6bd2a0	396	DrawQueryCells		terrain	host	void __cdecl (void)	Draws the cells and vertices the last query recorded while world flag bit 21 is set	inferred	none		
-0x6bd430	1	LowDetailNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none		
+0x6bd430	1	LowDetailNoOp		terrain	unreached	void __cdecl (void)	Returns at once	inferred	none	terrain/overview#unreached-functions	
 0x6bd440	223	FVBBList::Init		terrain	host	void __thiscall (void *this, uint32_t format, uint32_t vertexSize, uint32_t blockSize, uint32_t blocks, uint32_t usage)	Creates a vertex buffer and seeds its list of free blocks	inferred	none		
 0x6bd520	117	FVBBList::Destroy		terrain	host	void __thiscall (void *this)	Frees a block list's blocks and its vertex buffer	inferred	none		
 0x6bd5a0	165	FVBBList::Acquire		terrain	host	void * __thiscall (void *this, uint32_t count)	Takes a block from the free list and locks it	inferred	none		
@@ -10077,9 +10077,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bd780	319	CMapAreaLow::Draw		terrain	orchestration	void __thiscall (CMapAreaLow *this)	Draws a low-detail tile, filling its buffers once	inferred	none	terrain/lod#low-detail-pass	
 0x6bd8c0	228	CMapAreaLow::FillVertices		terrain	primitive	void __fastcall (CMapAreaLow *area, void *buffer)	Fills the 545 low-detail vertices from the tile origin by repeated 33.333332 steps and the WDL heights	verified	one	terrain/lod#low-detail-mesh	
 0x6bd9b0	166	FillLowDetailIndices		terrain	primitive	void __fastcall (void *buffer)	Fills the low-detail index buffer with four triangles around each of 16x16 quad centres	verified	one	terrain/lod#low-detail-mesh	
-0x6bda60	971	DrawScreenOverlay		terrain	unreached	void __cdecl (void)	Sets up a full-screen overlay draw	inferred	none		
-0x6bde30	1	ScreenOverlayNoOp		terrain	unreached	void __cdecl (void)	Returns at once; an exit callback	inferred	none		
-0x6bde40	1029	WakeDoodadsInBox		terrain	unreached	void __fastcall (const float *box)	Enables again the faded doodads whose chunks a box covers	inferred	none		
+0x6bda60	971	DrawScreenOverlay		terrain	unreached	void __cdecl (void)	Sets up a full-screen overlay draw	inferred	none	terrain/overview#unreached-functions	
+0x6bde30	1	ScreenOverlayNoOp		terrain	unreached	void __cdecl (void)	Returns at once; an exit callback	inferred	none	terrain/overview#unreached-functions	
+0x6bde40	1029	WakeDoodadsInBox		terrain	unreached	void __fastcall (const float *box)	Enables again the faded doodads whose chunks a box covers	inferred	none	terrain/overview#unreached-functions	
 0x6be250	616	IntersectMapObjects		terrain	host	uint8_t __fastcall (const float *start, const float *end, float *t)	Returns the nearest intersection of a segment with the map objects' groups	inferred	none		
 0x6be4c0	5	InitTerrainSquare397Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6be4d0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x6be4d0	19	InitTerrainSquare397		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	
@@ -10222,7 +10222,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c0ae0	198	PlaceMapLight		terrain	orchestration	void __fastcall (CMapLight *light, uint32_t a)	Updates a map light's bounds and links it to the groups and chunks it reaches	inferred	none		
 0x6c0bb0	228	CMapLight::UpdateBounds		terrain	primitive	void __thiscall (CMapLight *this)	Sets a light's box and sphere from its position and its falloff, 5 when the falloff is zero	inferred	none		
 0x6c0ca0	15	CMapLight::Enable		terrain	orchestration	void __thiscall (CMapLight *this)	Sets flag 0x20 and enables its model light	inferred	none		
-0x6c0cb0	15	CMapLight::Disable		terrain	unreached	void __thiscall (CMapLight *this)	Clears a flag and updates its model light	inferred	none		
+0x6c0cb0	15	CMapLight::Disable		terrain	unreached	void __thiscall (CMapLight *this)	Clears a flag and updates its model light	inferred	none	terrain/overview#unreached-functions	
 0x6c0cc0	44	DrawMapEntity		terrain	orchestration	void __fastcall (void *pass, void *entity)	Calls an entity's first draw slot and, when it is nearer than the fog end, its second	inferred	none		
 0x6c0cf0	605	LinkLightToGroups		terrain	primitive	void __fastcall (CMapLight *light)	Links a map light to the map object groups its sphere reaches	inferred	none		
 0x6c0f50	397	LinkLightToChunks		terrain	primitive	void __fastcall (CMapLight *light)	Links a map light to the chunks its box covers and marks them dirty	inferred	none		
