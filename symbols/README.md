@@ -95,7 +95,7 @@ name at Ghidra's own `FUN_00514ae0`; imports for IDA and Binary Ninja are
 | `system` | The owning system: a lowercase word naming a doc under `../systems/`, a library, or a system without a doc (above). `unassigned` when the row's object file is not yet identified, or its owner is not; ownership is never guessed. |
 | `meaning` | One line starting with a verb: what the thing does or holds. |
 | `confidence` | `verified`: read at the bytes, the derivation recorded in `finding`. `inferred`: a lead, not settled. |
-| `proof` | For `verified`: `one` (one reading), `two` (two independent readings reconciled) or `test` (a bit-exact test against the exe passes). For `inferred`: `none`. |
+| `proof` | For `verified`: `one` (one reading) or `two` (two independent readings reconciled). For `inferred`: `none`. A test is not a proof; it has its own column. |
 | `finding` | Where the derivation is: a doc under `../systems/` without `.md`, `#`, and the entry's anchor, for example `random#state-advance`; `METHOD#the-harness` for the facts the harness rests on. The entry mentions the row's address. |
 
 Confidence and proof are separate on purpose: every row states both, so `verified` is never a
@@ -118,7 +118,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
 | `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
-| `test` | The bit-exact tests that run this function against the exe, `crate::test_fn` separated by `, `: the function name of a test under `crates/<crate>/tests/`. A test of a slice is named too; only a test of the whole function raises a `verified` row's proof to `test`. Empty when there is none. |
+| `test` | The bit-exact tests that run this function against the exe, whole or a slice, `crate::test_fn` separated by `, `: a top-level test function of a file under `crates/<crate>/tests/` (`../CONTRIBUTING.md`, Adding a test). Empty when there is none. |
 
 A function row's address is a function start (`../METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
@@ -203,8 +203,7 @@ does not name is written as its named base followed by its own fields.
 | `name` | 48 characters, the naming rule | applied to Ghidra as an identifier, and to the exports of [#7](https://github.com/samwhosung/benilla-re/issues/7) |
 | `signature` | 160 characters | one prototype, no commentary |
 | banned in `meaning` | `?`, `TODO`, `probably`, `maybe`, `seems`, `likely` | a guess is `inferred`, said in the confidence column |
-| `verified` | needs `one`, `two` or `test`, and a `finding` | provenance is the point of the label |
-| proof `test` | needs a `test` | the test is the proof |
+| `verified` | needs `one` or `two`, and a `finding` | provenance is the point of the label |
 | `inferred` | needs `none`; a `finding` is allowed | a finding can name what it did not settle |
 | `finding` | resolves to an entry that mentions the row's address | the row and its derivation stay linked |
 | `class` | set on every row of a system with a doc | a written system's closure is classified |

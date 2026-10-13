@@ -153,16 +153,18 @@ finding can live in your system's doc and the row can link there.
 A system's reimplementation is a crate, `crates/<system>`, named after the system's doc
 (`objectlayer`, package `benilla-re-objectlayer`), with `publish = false` and the workspace's
 license, version and edition. Its tests live in `crates/<system>/tests/`, each a top-level
-function of its file, so it is named `<system>::test_fn`. A test runs the exe's own code through
+function of its file. A test runs the exe's own code through
 `benilla-re-difftest`, a dev-dependency, beside the crate's Rust reimplementation, and compares the
 results bit for bit. A function whose row is `unreached` gets neither.
 
 - Test the whole function where possible; a slice test names the instructions it covers, and the
   entry's derivation says which.
 - Cover every regime the code distinguishes, with a deterministic probe at each threshold.
-- When the test passes against the exe, set the row's `test` to `crate::test_fn` and the entry's
-  `Test` line. A test of the whole function raises a `verified` row's `proof` to `test`; an
-  `inferred` row stays inferred, since the test proves the transcription, not the prose.
+- When the test passes against the exe, add it to the row's `test` column and the entry's `Test`
+  line as `crate::test_fn`: the crate's directory name and the function's name. That name only
+  reaches a test that is a top-level function of a file in `crates/<crate>/tests/`, never one
+  inside a module. The row's confidence and proof stay as the reading left them (`METHOD.md`,
+  Confidence and proof).
 - `Wow::load()` finds the exe at `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe`, and refuses any other
   build by its SHA-256. Without it a test prints one skip line and returns, unless
   `BENILLA_RE_REQUIRE_EXE` is set (to `1`): then it panics. `cargo xtask check --exe` sets it, so

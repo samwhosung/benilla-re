@@ -210,10 +210,11 @@ Test: `core::heap_key_le_matches_binary`, `core::heap_pop_min_matches_binary`, `
 
 `0x422970` subtracts the other node's `+0xc` from its own and returns `setle` (`0x422979`,
 `0x422980`); it is the only slot of the node vtable `0x801368`. In `0x421430` the right child is
-taken when `call [vtable]` on it returns 1 against the left (`0x4214ec`, `0x4214f2`), and the
-sift stops when the moving element compares not later than the child (`0x421506`). `0x421860`
-removes an element and re-inserts it after a key change, `0x421f40` removes at an index,
-`0x428ee0` inserts, and `0x421840` refreshes a node's owner and index.
+taken when `call [vtable]` on it returns 1 against the left (`0x4214ec`, `0x4214f2`), and the sift
+stops when the moving element compares not later than the child (`0x421506`). `0x421860` removes an
+element and re-inserts it after a key change, `0x421f40` removes at an index, `0x428ee0` inserts,
+and `0x421840` refreshes a node's owner and index. The tests run `0x422970`, `0x421430` and
+`0x421860` whole.
 
 ## Slots and threads
 

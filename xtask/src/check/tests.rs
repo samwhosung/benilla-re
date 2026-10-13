@@ -224,7 +224,7 @@ fn plants() -> Vec<Plant> {
         plant(
             "verified without a proof",
             edit(F, "verified\tone\tMETHOD#the-harness", "verified\tnone\tMETHOD#the-harness"),
-            &["symbols/functions.tsv:2: verified takes proof one or test or two"],
+            &["symbols/functions.tsv:2: verified takes proof one or two"],
         ),
         plant(
             "verified without a finding",
@@ -509,16 +509,16 @@ fn plants() -> Vec<Plant> {
             edit("README.md", "`0x500018`", "`0xe00000`"),
             &["README.md:4: 0xe00000 is not an address inside the image"],
         ),
-        // Proof by test, and anchors.
+        // A test is not a proof, and anchors.
         plant(
-            "a row proved by test without a test",
-            edit(F, "\tverified\ttest\tdemo#state-advance\tdemo::demo_advance\n", "\tverified\ttest\tdemo#state-advance\t\n"),
-            &["symbols/functions.tsv:4: proof test needs a test"],
+            "a row with proof test",
+            edit(F, "\tverified\tone\tdemo#state-advance\tdemo::demo_advance\n", "\tverified\ttest\tdemo#state-advance\tdemo::demo_advance\n"),
+            &["symbols/functions.tsv:4: verified takes proof one or two"],
         ),
         plant(
-            "an entry proved by test without a test",
-            edit(DOC, "Proof: test\nTest: `demo::demo_advance`", "Proof: test\nTest: none"),
-            &["systems/demo.md:21: Proof test needs a Test"],
+            "an entry with Proof test",
+            edit(DOC, "Proof: one\nTest: `demo::demo_advance`", "Proof: test\nTest: `demo::demo_advance`"),
+            &["systems/demo.md:20: verified takes Proof one or two"],
         ),
         plant(
             "two headings with one anchor",

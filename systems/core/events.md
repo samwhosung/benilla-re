@@ -26,9 +26,10 @@ Test: `core::event_dispatch_order_matches_binary`
 
 `0x424f00` allocates 0x18 bytes tagged `.?AUEvtHandler@@` (`0x424f30`) and stores the function at
 `+0x08`, the argument at `+0x0c`, the priority at `+0x10` and 0 at `+0x14` (`0x424f4d` to
-`0x424f59`). The constructor sets each head's link offset to 0 and its end link to point at
-itself, marked by bit 0 (`0x422d50`, `0x422160`). The call through `+0x08` is at `0x4246ad`, with
-`ecx` the payload and `edx` the argument.
+`0x424f59`). The constructor sets each head's link offset to 0 and its end link to point at itself,
+marked by bit 0 (`0x422d50`, `0x422160`). The call through `+0x08` is at `0x4246ad`, with `ecx` the
+payload and `edx` the argument. The test runs `0x422d50`, `0x424f00` and `0x4245b0` whole, with the
+handlers stubbed.
 
 ## Handler order
 
@@ -46,8 +47,8 @@ Test: `core::event_dispatch_order_matches_binary`
 The walk loads the record's priority and `fcomp`s the new one (`0x424f70`, `0x424f73`); `test
 ah,0x41; je` advances when neither C0 nor C3 is set, that is when the record is greater
 (`0x424f78`). Equal sets C3 and unordered sets all three, so both stop there, unless `+0x14` is
-nonzero (`0x424f7d`). The new record is linked before the stopping record, or before the end
-link (`0x424fcd` to `0x424fe9`).
+nonzero (`0x424f7d`). The new record is linked before the stopping record, or before the end link
+(`0x424fcd` to `0x424fe9`). The test runs `0x424f00` and `0x4245b0` whole.
 
 ## Dispatch
 
@@ -63,13 +64,15 @@ Confidence: verified
 Proof: two
 Test: `core::event_dispatch_order_matches_binary`, `core::demux_route_matches_binary`
 
-The dispatch is `fastcall(context, category)` with the payload pushed, `ret 4`. `0x424710` gets
-a pointer to the category (`0x4245d6`), and the list is chosen after it (`0x4245f8`). `0x4245e0`
-calls Storm's `SErrIsDisplayingError`, which reads the fatal-error flag. The walk keeps a cursor
-record on the stack with its skip flag set, linked after the end link and moved past each record
-before it is called (`0x424660` to `0x42469d`), so the record called may unlink itself and a new
-record stops on no cursor. `0x4246a0` skips a set flag; `0x4246b0` stops on zero. `0x425220`,
-`0x425290` and `0x425310` find a record's link, and `0x425250` and `0x425340` unlink one.
+The dispatch is `fastcall(context, category)` with the payload pushed, `ret 4`. `0x424710` gets a
+pointer to the category (`0x4245d6`), and the list is chosen after it (`0x4245f8`). `0x4245e0` calls
+Storm's `SErrIsDisplayingError`, which reads the fatal-error flag. The walk keeps a cursor record on
+the stack with its skip flag set, linked after the end link and moved past each record before it is
+called (`0x424660` to `0x42469d`), so the record called may unlink itself and a new record stops on
+no cursor. `0x4246a0` skips a set flag; `0x4246b0` stops on zero. `0x425220`, `0x425290` and
+`0x425310` find a record's link, and `0x425250` and `0x425340` unlink one.
+`core::event_dispatch_order_matches_binary` runs `0x4245b0` whole with `0x424710` stubbed, and
+`core::demux_route_matches_binary` runs `0x424710` whole.
 
 ## Registration calls
 
@@ -105,12 +108,13 @@ Confidence: verified
 Proof: two
 Test: `core::demux_route_matches_binary`
 
-`0x424710` indexes the byte map `0x424780` by `category − 2` (`ja` for anything outside 2 to
-0xe) into the table `0x424770`: 2 runs `0x424790`, 8 and 9 run `0x424810` with the payload's
-first dword, 0xb and 0xe run `0x424920`, the rest nothing. In `0x424810` every node with that key
-is unlinked and freed, remembering a find; for category 8 a find stores 0xa through the category
-pointer (`0x4248b3`), and a 12-byte node tagged `.?AUEvtKeyDown@@` is appended. The list is
-`+0x1c8` to `+0x1d0`, under the context lock. `0x424510` walks it for a match.
+`0x424710` indexes the byte map `0x424780` by `category − 2` (`ja` for anything outside 2 to 0xe)
+into the table `0x424770`: 2 runs `0x424790`, 8 and 9 run `0x424810` with the payload's first dword,
+0xb and 0xe run `0x424920`, the rest nothing. In `0x424810` every node with that key is unlinked and
+freed, remembering a find; for category 8 a find stores 0xa through the category pointer
+(`0x4248b3`), and a 12-byte node tagged `.?AUEvtKeyDown@@` is appended. The list is `+0x1c8` to
+`+0x1d0`, under the context lock. `0x424510` walks it for a match. The test runs `0x424710` whole
+with the three functions it routes to stubbed.
 
 ## Held buttons
 

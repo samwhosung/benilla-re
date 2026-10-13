@@ -1,6 +1,6 @@
 address	size	name	name_from	system	class	signature	meaning	confidence	proof	finding	test
 0x401000	33	_WinMain@16	idb	client		int __stdcall (void *instance)	Sets the x87 control word, then runs the client	verified	one	METHOD#the-harness	
 0x401100	20	__ftol	idb	crt	boundary		Converts st0 to an integer by truncation	verified	one	demo#state-advance	
-0x402000	64	CDemo::Advance		demo	primitive	uint32_t __thiscall (CDemo *this)	Adds the step to the counter and returns the sum	verified	test	demo#state-advance	demo::demo_advance
+0x402000	64	CDemo::Advance		demo	primitive	uint32_t __thiscall (CDemo *this)	Adds the step to the counter and returns the sum	verified	one	demo#state-advance	demo::demo_advance
 0x402040	16	CDemo::CDemo		demo	orchestration	void __thiscall (CDemo *this)	Stores the vtable and clears the counter	verified	two	demo#state-advance	
 0x402100	8	UnusedHelper		demo	unreached		Returns zero	inferred	none	demo#unreached-functions	

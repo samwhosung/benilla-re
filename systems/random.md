@@ -26,11 +26,12 @@ Confidence: verified
 Proof: two
 Test: `random::srand_seed_state_init`
 
-Four unsigned `div` by `0x2f`, `0x35`, `0x3b`, `0x3d` (`0x44ea92` to `0x44eac1`); the remainders
-are packed high byte first, the whole dword shifted left by 2 (`0x44eac8`) and stored at `+4`
+Four unsigned `div` by `0x2f`, `0x35`, `0x3b`, `0x3d` (`0x44ea92` to `0x44eac1`); the remainders are
+packed high byte first, the whole dword shifted left by 2 (`0x44eac8`) and stored at `+4`
 (`0x44eacb`); the seed is stored at `+0` (`0x44ea9b`). `ret 4`: `this` in `ecx`, the seed on the
 stack. No lane can exceed `0xf0`, so the shift loses nothing. The state's class name,
-`NTempest::CRndSeed`, is the community database's name for `0x44ea80`.
+`NTempest::CRndSeed`, is the community database's name for `0x44ea80`. The test runs `0x44ea80`
+whole.
 
 ## State advance
 
@@ -63,11 +64,11 @@ From a seeded state every lane is a multiple of 4, so each is a counter over dwo
 6 and 7 modulo the primes 47, 53, 59 and 61. The lanes repeat together every
 47·53·59·61 = 8,965,109 advances.
 
-`0x4531e0` has 83 call sites outside the library. A further 23 copies are inlined in other
-systems: a scan for the immediate `0x802700` outside the library finds 92 operands in groups
-of four, each group with the lane moduli and the byte-indexed form `[reg+0x802700]`.
-The control is the library itself, where the same scan finds the advance and the hashes. The
-hashes' `[4*reg+0x802700]` form occurs nowhere outside it.
+`0x4531e0` has 83 call sites outside the library. A further 23 copies are inlined in other systems:
+a scan for the immediate `0x802700` outside the library finds 92 operands in groups of four, each
+group with the lane moduli and the byte-indexed form `[reg+0x802700]`. The control is the library
+itself, where the same scan finds the advance and the hashes. The hashes' `[4*reg+0x802700]` form
+occurs nowhere outside it. The test runs `0x4531e0` whole.
 
 ## Unit vectors
 
@@ -89,7 +90,8 @@ and calls nothing. The angle: mantissa `and 0x7fffff`, `or 0x3f800000`, `fsub` 1
 (`0x44fe01` to `0x44fe14`). In `0x44fe20`, `z` comes from the sign test at `0x44fef6` and the
 radius from `fld z; fmul z; fsubr 1.0; fsqrt` (`0x450002` to `0x450010`). `z` is never 0 and
 can be −1 or 1. `rand_44fd00_gradient` runs only `0x44fdc8` to `0x44fe17`, so `0x44fd00`'s
-inlined advance has no test of its own. Each function has one caller outside the library.
+inlined advance has no test of its own; `rand_unit_vector_3d_diff` runs `0x44fe20` whole. Each
+function has one caller outside the library.
 
 ## Static initializers
 

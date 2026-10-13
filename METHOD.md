@@ -27,7 +27,7 @@ runs, and derives that one; a version it did not read is inferred.
 
 ## Confidence and proof
 
-Every claim, in a row or an entry, carries a confidence and a proof.
+Every claim, in a row or an entry, carries a confidence and a proof, and names its tests.
 
 - **verified**: read at the bytes, with the derivation recorded in a finding. A behaviour claim
   is verified only when the path from the bytes to the behaviour is complete; a verified byte
@@ -42,9 +42,12 @@ Proof says how strongly a verified claim is held:
   on the wire, what is saved to disk, maths many systems build on (time, coordinates, random
   numbers, matrices), the frame and event core, and a system's roots and boundaries. Until the
   second reading lands, such a claim stays at `one`.
-- **test**: a bit-exact test runs the exe's own code beside a reimplementation and passes. It
-  proves the transcription, not the prose: a direction, a unit, an order or a meaning the code
-  cannot express still rests on reading.
+
+A test is recorded on its own line, never as a proof: a row's `test` column and an entry's `Test`
+line name the bit-exact tests that run the exe's own code beside a reimplementation and pass, and
+the entry says whether a test runs the whole function or a slice of it. A test proves the
+transcription, not the prose: a direction, a unit, an order or a meaning the code cannot express
+still rests on reading, so a test raises neither the confidence nor the proof.
 
 Two readings are independent only when neither reader saw the other's work, its conclusions or
 any note derived from it, and each re-derives every load-bearing step from the bytes. The second

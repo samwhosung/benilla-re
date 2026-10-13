@@ -17,7 +17,7 @@ Roots: `0x402000`,
 
 Addresses: `0x402000`, `0x402040`, `0x500000`, `0x500014`
 Confidence: verified
-Proof: test
+Proof: one
 Test: `demo::demo_advance`
 
 The add is at `0x402010`, inside `0x402000`. The constructor `0x402040` stores the vtable

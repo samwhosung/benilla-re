@@ -447,9 +447,6 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
                 if !test.is_empty() && !test.split(", ").all(|t| TEST.is_match(t)) {
                     p.add(&place, format!("test '{test}' is not crate::test_fn"));
                 }
-                if row.get("proof") == "test" && test.is_empty() {
-                    p.add(&place, "proof test needs a test");
-                }
                 if row.get("signature").chars().count() > SIGNATURE {
                     p.add(&place, format!("signature is over {SIGNATURE} characters"));
                 }
@@ -929,7 +926,7 @@ fn check_common(
 /// The proofs a confidence takes, sorted.
 fn proofs(confidence: &str) -> Option<&'static [&'static str]> {
     match confidence {
-        "verified" => Some(&["one", "test", "two"]),
+        "verified" => Some(&["one", "two"]),
         "inferred" => Some(&["none"]),
         _ => None,
     }
@@ -1110,9 +1107,6 @@ fn check_doc(
                 format!("{confidence} takes Proof {}", allowed.join(" or ")),
             ),
             Some(_) => {}
-        }
-        if proof == "test" && test == "none" {
-            p.add(place(3), "Proof test needs a Test");
         }
         if test != "none" {
             if test.split(", ").all(|t| TEST_CITED.is_match(t)) {

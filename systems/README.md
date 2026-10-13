@@ -81,11 +81,12 @@ Test: none
 - **Addresses.** Every address that decides the claim: the functions, the globals, and the
   instruction addresses of deciding branches and stores. Each one resolves to a row: an exact
   address, or an instruction inside a function row's extent.
-- **Confidence** and **Proof** take the values of the table columns: `verified` with `one`,
-  `two` or `test`; `inferred` with `none`. The entry states its weakest load-bearing step; a row
+- **Confidence** and **Proof** take the values of the table columns: `verified` with `one` or
+  `two`; `inferred` with `none`. The entry states its weakest load-bearing step; a row
   linking here may carry less, never more.
-- **Test.** The bit-exact test that proves the transcription, `crate::test_fn`, or `none`.
-  When a test covers only part of a function, the derivation says which instructions.
+- **Test.** The bit-exact tests that run the entry's code against the exe, `crate::test_fn`
+  separated by `, `, or `none`. When a test covers only part of a function, the derivation says
+  which instructions.
 - **Derivation.** Instruction addresses, opcodes and constants, in the order that proves the
   claim. Quote at most a few instructions; never paste a listing. A census states its pattern,
   where it searched, its count and its control (`../METHOD.md`).
@@ -122,5 +123,4 @@ doc under `systems/` except this one.
 | first person | `we`, `our`, `I` | the claim is about the client, not the reader |
 | entry shape | the four lines `Addresses`, `Confidence`, `Proof`, `Test` with valid values | the table and the docs share one vocabulary |
 | addresses | every address in a system doc resolves to a row; one in a spec doc (`METHOD.md`, `CONTRIBUTING.md`, the READMEs) lies inside the image | a citation without a row cannot be looked up; a spec doc's addresses are examples and pointers |
-| `Proof: test` | needs a `Test` line other than `none` | the test is the proof |
 | anchors | no two headings in one doc share an anchor | a link must reach one entry |

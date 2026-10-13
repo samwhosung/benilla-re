@@ -70,7 +70,8 @@ so just above a multiple of 2π the truncated turn count can come out one short.
 happens at 13 turns: 81.68141 gives one float above 2π, −81.68141 gives −4.8·10⁻⁷, and the
 excursion grows with `|x|`. In `0x7acbc0` and `0x7acc40`, `fsincos` leaves the cosine in `st0`,
 and the first `fstp` writes `+0x20` (`0x7acc28`, `0x7acc8c`). The change test is
-`test ah,0x44; jnp` around the store. The cosine and sine test runs `0x7acc87` to `0x7acc90`.
+`test ah,0x44; jnp` around the store. `camera_normalize_2pi` runs `0x7abbe0` whole, and
+`camera_angle_cossin` runs `0x7acc87` to `0x7acc90`.
 
 ## Property updates
 
@@ -163,14 +164,15 @@ Proof: one
 Test: `camera::camera_frustum_split`
 
 The range test accepts 1.0: for `a = 1`, `fcomp` sets only C3, `test ah,0x41` leaves one bit, and
-`jp 0x7ad317` falls through (`0x7ad2f5`); a value above 1 or NaN gives error 0x57. `0x58b0b0`
-copies the top of the stack at device `+0x1ac8`, `0x58b090` the matrix at device `+0xf50`.
-`0x5c43b0` builds `c0` to `c3` from the clip-space corners `(−1,−1)`, `(−1,1)`, `(1,1)`, `(1,−1)`
-at z = −1 and `c4` to `c7` at z = +1; the camera's perspective puts the near plane at −1 (its
-depth term is `−2·near·far/(far − near)`, `0x8038dc`). The near point is stored at `0x7ad6a4`
-and the far point at `0x7ad7c4`. It has one call site. The vector work goes through `0x4078e0`
-(construct with one value), `0x4549a0` (set), `0x621160` (add), `0x4841f0` (subtract) and
-`0x5f8cf0` (scale), and the corner array is destroyed by `0x4044b0` with the empty `0x4621a0`.
+`jp 0x7ad317` falls through (`0x7ad2f5`); a value above 1 or NaN gives error 0x57. `0x58b0b0` copies
+the top of the stack at device `+0x1ac8`, `0x58b090` the matrix at device `+0xf50`. `0x5c43b0`
+builds `c0` to `c3` from the clip-space corners `(−1,−1)`, `(−1,1)`, `(1,1)`, `(1,−1)` at z = −1 and
+`c4` to `c7` at z = +1; the camera's perspective puts the near plane at −1 (its depth term is
+`−2·near·far/(far − near)`, `0x8038dc`). The near point is stored at `0x7ad6a4` and the far point at
+`0x7ad7c4`. It has one call site. The vector work goes through `0x4078e0` (construct with one
+value), `0x4549a0` (set), `0x621160` (add), `0x4841f0` (subtract) and `0x5f8cf0` (scale), and the
+corner array is destroyed by `0x4044b0` with the empty `0x4621a0`. The test runs `0x7ad2c0` whole
+with `0x5c43b0`, `0x58b090`, `0x58b0b0` and `0x4078e0` stubbed.
 
 ## Orthographic setup
 
@@ -190,8 +192,8 @@ Test: `camera::camera_ortho`
 from the matrix's x translation and adds `0.5·(r[2] − r[0])/(s[2] − s[0])` to its y
 (`0x7ad946` to `0x7ad976`), `s` being the four floats `0x58a250` writes. Both rectangle readers,
 this and `0x7ac640`, take x from `r[1]` and `r[3]`. It has four call sites. `0x589ca0` returns
-the device's dword at `+0x1fc` through a tail call to `0x592120`. The test runs the function
-with `0x589ca0` returning 0, and the shift as `0x7ad946` to `0x7ad979`.
+the device's dword at `+0x1fc` through a tail call to `0x592120`. The test runs `0x7ad7f0`
+whole with `0x589ca0` returning 0, and the shift as `0x7ad946` to `0x7ad979`.
 
 ## Particle density
 
@@ -207,7 +209,8 @@ Test: `camera::camera_clamp01`
 Two `fcomp`, each `test ah,5; jp`: the first falls through to the 0 store only for `x < 0`, the
 second to the `x` store only for `x < 1`. The option handlers `0x688fb0` and `0x689510` are
 registered with the names `particleDensity` (default `1.0`) and `spellEffectLevel` (default `2`),
-and are the only callers of `0x7adfb0` (three call sites). `0x7ae000` has two call sites.
+and are the only callers of `0x7adfb0` (three call sites). `0x7ae000` has two call sites. The test
+runs `0x7adfb0` whole.
 
 ## Object files and initializers
 
@@ -225,16 +228,16 @@ Confidence: verified
 Proof: one
 Test: `camera::camera_normalize_2pi`
 
-Each file includes the shared header, so its run opens with its +∞ (`systems/README`, Object
-files). Slot `0x82d978` holds `0x7abbc0`, which copies the +∞ at 0x81d7a0; `0x7ac5a0` doubles the π
-4 bytes on. `0x7ac5f0` copies the +∞ at 0x81d7a8, and `0x7adf20` and `0x7ac610` read the π at
-0x81d7ac. `0x7abbe0` reads `0xcf5730` and `0xcf5734`, which only the first file's initializers
-write. `0x7adf90` copies the +∞ at 0x81d80c, and the registry's 2π `0x7af1b0`, at slot `0x82d998`,
-doubles the π at 0x81d810, so the code between, `0x7adfb0` and `0x7ae000`, is the registry's. The
-class's file ends past its last initializer with `0x7adf70`, whose one caller is the class's
-`0x7acd2e`. The code below `0x7abbc0` allocates with the sound-file cache's tags. Only `0xcf5730`,
-`0xcf5734` and `0xcf5738` (read by `0x7ac930` and `0x7acf10`) are read; the other four are written
-and never read.
+Each file includes the shared header, so its run opens with its +∞ (`systems/README`, Object files).
+Slot `0x82d978` holds `0x7abbc0`, which copies the +∞ at 0x81d7a0; `0x7ac5a0` doubles the π 4 bytes
+on. `0x7ac5f0` copies the +∞ at 0x81d7a8, and `0x7adf20` and `0x7ac610` read the π at 0x81d7ac.
+`0x7abbe0` reads `0xcf5730` and `0xcf5734`, which only the first file's initializers write.
+`0x7adf90` copies the +∞ at 0x81d80c, and the registry's 2π `0x7af1b0`, at slot `0x82d998`, doubles
+the π at 0x81d810, so the code between, `0x7adfb0` and `0x7ae000`, is the registry's. The class's
+file ends past its last initializer with `0x7adf70`, whose one caller is the class's `0x7acd2e`. The
+code below `0x7abbc0` allocates with the sound-file cache's tags. Only `0xcf5730`, `0xcf5734` and
+`0xcf5738` (read by `0x7ac930` and `0x7acf10`) are read; the other four are written and never read.
+The test runs `0x7ac5b0` and `0x7ac5d0` whole.
 
 ## Unreached functions
 

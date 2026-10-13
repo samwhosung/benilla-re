@@ -52,9 +52,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419ac0	136	CDataStore::GetDataInSitu		base			Returns a pointer to the next n bytes in the store and advances the cursor past them	verified	one	objectlayer/movement#skipping-a-movement-block	
 0x419e30	150	CStatus::~CStatus		client			Destroys a status, freeing its lines	inferred	none		
 0x41a000	255	CStatus::Add		client			Adds a formatted line of a severity to a status	inferred	none		
-0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1), K1 = a·K2	verified	test	input#click-versus-drag	screencoord::sc_41ad10_set_scale
+0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1), K1 = a·K2	verified	one	input#click-versus-drag	screencoord::sc_41ad10_set_scale
 0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	inferred	none		
-0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	test	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
+0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
 0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	inferred	none		screencoord::sc_41ae40_unscale_x
 0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	inferred	none		screencoord::sc_41ae60_scale_x
 0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		screencoord::sc_41ae70_scale_y
@@ -142,11 +142,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x421080	336	AcquireSlot		core	orchestration	uint32_t __cdecl (void)	Returns the least-used slot index, creating its slot record when empty, and counts a user	inferred	none	core/loop#slots-and-threads	
 0x4211d0	404	ReleaseSlot		core	orchestration	void __fastcall (uint32_t slot)	Drops a slot user; at zero frees the slot and tears down each context left in it	verified	two	core/loop#the-loop	
 0x421370	185	RemoveContextLoad		core	orchestration	void __fastcall (uint32_t slot, EvtContext *context)	Takes a context's cost off its slot's load and recomputes the slot's average	verified	two	core/loop#start-and-stop	
-0x421430	303	PopDueContext		core	orchestration	EvtContext *__fastcall (uint32_t slot)	Removes and returns the root of a slot's heap, the context due soonest, or null	verified	test	core/loop#the-loop	core::heap_pop_min_matches_binary
+0x421430	303	PopDueContext		core	orchestration	EvtContext *__fastcall (uint32_t slot)	Removes and returns the root of a slot's heap, the context due soonest, or null	verified	two	core/loop#the-loop	core::heap_pop_min_matches_binary
 0x421560	12	GetSlotEvent		core	orchestration	void *__fastcall (uint32_t slot)	Returns the address of a slot's wake event, +0x20 of its record	verified	two	core/loop#the-loop	
 0x421570	708	RescheduleContext		core	orchestration	void __fastcall (uint32_t slot, EvtContext *context, uint32_t due, uint32_t cost)	Stores a context's next due time and cost and puts it back in a slot's heap	verified	two	core/loop#next-due-time	
 0x421840	25	UpdateHeapNodeIndex		core	orchestration	void __thiscall (void *heap, uint32_t index)	Stores the heap and the index in the node at an index	verified	one	core/loop#scheduler-heap	
-0x421860	365	ResiftHeapNode		core	orchestration	void __thiscall (void *node)	Removes a node from its heap and inserts it again after a key change	verified	test	core/loop#scheduler-heap	core::heap_resift_matches_binary
+0x421860	365	ResiftHeapNode		core	orchestration	void __thiscall (void *node)	Removes a node from its heap and inserts it again after a key change	verified	one	core/loop#scheduler-heap	core::heap_resift_matches_binary
 0x4219d0	597	InitScheduler		core	orchestration	void __fastcall (uint32_t threads, uint32_t polling)	Builds the slots for a power-of-two thread count, creates slot 0 and starts the extra loop threads	verified	two	core/loop#startup-and-shutdown	
 0x421c30	122	DeleteSlotArray		core	unreached		Destroys an array of slot locks and frees it	inferred	none	core/loop#unreached-functions	
 0x421cb0	580	DestroyScheduler		core	orchestration	void __cdecl (void)	Stops the loop threads and frees the slots, their locks and the thread array	verified	two	core/loop#startup-and-shutdown	
@@ -162,7 +162,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x422720	290	GrowHeapArrayTo		core	primitive		Grows a heap's pointer array to hold an index, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
 0x422850	266	ReserveHeapArray		core	primitive		Reserves a heap's pointer array to a count, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
 0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/loop#contexts	
-0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *node, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	test	core/loop#scheduler-heap	core::heap_key_le_matches_binary
+0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *node, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	one	core/loop#scheduler-heap	core::heap_key_le_matches_binary
 0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *heap, uint32_t nodeOffset)	Clears a heap header and stores its node offset	verified	two	core/loop#contexts	
 0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx, as 0x422960 does	verified	two	core/loop#contexts	
 0x4229c0	23	FreeThreadArrayStorage		core	orchestration		Frees an array's storage, tagged .PAVSThread@@	inferred	none	core/loop#slots-and-threads	
@@ -254,8 +254,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x424500	10	DestroyMessagePool		core	orchestration	void __cdecl (void)	Destroys the message pool 0x883f64	verified	one	core/loop#startup-and-shutdown	
 0x424510	114	IEvtQueueCheckSyncKeyState	idb	core	orchestration	uint32_t __fastcall (EvtContext *context, uint32_t key)	Returns 1 when a key code is on a context's held-key list	verified	two	core/events#held-keys-and-repeats	
 0x424590	29	IEvtQueueCheckSyncMouseState		core	unreached		Returns whether buttons are in a context's held-button mask	inferred	none	core/events#unreached-functions	
-0x4245b0	345	IEvtQueueDispatch	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t category, void *payload)	Updates the held state, then calls a category's handlers, highest priority first, until one returns 0	verified	test	core/events#dispatch	core::event_dispatch_order_matches_binary
-0x424710	95	UpdateSyncState	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t *category, void *payload)	Updates the held keys or buttons for categories 2, 8, 9, 0xb and 0xe	verified	test	core/events#dispatch	core::demux_route_matches_binary
+0x4245b0	345	IEvtQueueDispatch	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t category, void *payload)	Updates the held state, then calls a category's handlers, highest priority first, until one returns 0	verified	two	core/events#dispatch	core::event_dispatch_order_matches_binary
+0x424710	95	UpdateSyncState	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t *category, void *payload)	Updates the held keys or buttons for categories 2, 8, 9, 0xb and 0xe	verified	two	core/events#dispatch	core::demux_route_matches_binary
 0x424790	117	ResetSyncState	idb	core	orchestration	void __fastcall (EvtContext *context)	Clears the held-button mask and frees every held-key record	verified	two	core/events#held-keys-and-repeats	
 0x424810	262	UpdateSyncKeyState	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t key, uint32_t *category)	Removes a key from the held list; for a down, re-adds it and turns the category to 0xa if it was held	verified	two	core/events#held-keys-and-repeats	
 0x424920	42	UpdateSyncMouseState	idb	core	primitive	void __fastcall (EvtContext *context, uint32_t buttons, uint32_t down)	ORs buttons into the held-button mask, or clears them	verified	two	core/events#held-buttons	
@@ -266,7 +266,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x424c00	197	IEvtQueuePostMessage		core	unreached		Copies a payload into a new message and appends it to a context's queue	inferred	none	core/events#deferred-messages	
 0x424cd0	159	AllocMessage		core	unreached		Allocates a message with room for a payload from the pool or the heap	inferred	none	core/events#deferred-messages	
 0x424d70	400	IEvtQueuePostMessageEx		core	unreached		Appends a message to a context's queue with a priority	inferred	none	core/events#unreached-functions	
-0x424f00	244	IEvtQueueRegister	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t category, void *handler, void *argument, float priority)	Links a new handler record before the first unskipped record of priority not above its own	verified	test	core/events#handler-records	core::event_dispatch_order_matches_binary
+0x424f00	244	IEvtQueueRegister	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t category, void *handler, void *argument, float priority)	Links a new handler record before the first unskipped record of priority not above its own	verified	two	core/events#handler-records	core::event_dispatch_order_matches_binary
 0x425000	204	IEvtQueueUnregister	idb	core	orchestration	void __fastcall (EvtContext *context, uint32_t category, void *handler, void *argument, uint32_t flags)	Unlinks and frees every unskipped record whose category, handler and argument match per the flags	verified	two	core/events#registration-calls	
 0x4250d0	270	IEvtQueueRemoveHandlerSkip		core	unreached		Clears the skip flag of a category's records	inferred	none	core/events#unreached-functions	
 0x4251e0	5	EvtMessagePool::Destroy		core	orchestration		Jumps to 0x760090, the pool's teardown	verified	one	core/events#deferred-messages	
@@ -562,7 +562,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44cbd0	44	SysMsgPrintf	idb	sysmsg			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
 0x44cd40	15			sysmsg			Stores 0 in a global and tail-calls 0x44cd60	inferred	none		
 0x44cd60	1			sysmsg			Returns at once	inferred	none		
-0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	test	random#state-and-seeding	random::srand_seed_state_init
+0x44ea80	85	NTempest::CRndSeed::SetSeed	idb	random	primitive	void __thiscall (NTempest::CRndSeed *this, uint32_t seed)	Seeds a state: accumulator = seed, lane k = 4·(seed mod 61, 59, 53, 47) from byte 0 up	verified	two	random#state-and-seeding	random::srand_seed_state_init
 0x44eae0	5	InitRandomInfinityThunk		random	orchestration	void __cdecl (void)	Jumps to 0x44eaf0; a static initializer	verified	one	random#static-initializers	
 0x44eaf0	11	InitRandomInfinity		random	orchestration	void __cdecl (void)	Copies +inf into 0xb05d68	verified	one	random#static-initializers	
 0x44eb00	27	RandomSeedFromString		random	unreached	void __thiscall (NTempest::CRndSeed *this, const char *text)	Seeds a state with the hash of a C string (0x44eb20, then 0x44ea80)	inferred	none	random#unreached-functions	
@@ -592,7 +592,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44fc90	47	RandomFillGaussianScaledFloat		random	unreached	void __fastcall (float *out, uint32_t count, float mean, float sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb30 once per element	inferred	none	random#unreached-functions	
 0x44fcc0	55	RandomFillGaussianScaledDouble		random	unreached	void __fastcall (double *out, uint32_t count, double mean, double sigma, NTempest::CRndSeed *seed)	Fills an array by calling 0x44fb50 once per element	inferred	none	random#unreached-functions	
 0x44fd00	284	RandomUnitVector2		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (cos a, sin a), a = 2π·u from one inlined advance	verified	one	random#unit-vectors	random::rand_44fd00_gradient
-0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	test	random#unit-vectors	random::rand_unit_vector_3d_diff
+0x44fe20	547	RandomUnitVector3		random	primitive	void __fastcall (float *out, NTempest::CRndSeed *seed)	Writes (r cos a, r sin a, z), z signed-uniform and r = sqrt(1 - z²), from two inlined advances	verified	one	random#unit-vectors	random::rand_unit_vector_3d_diff
 0x450050	55	RandomFillUnitVector2		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 2D vectors from 0x44fd00	inferred	none	random#unreached-functions	
 0x450090	63	RandomFillUnitVector3		random	unreached	void __fastcall (float *out, uint32_t count, NTempest::CRndSeed *seed)	Fills an array of 3D vectors from 0x44fe20	inferred	none	random#unreached-functions	
 0x4500d0	25	RandomShuffleString		random	unreached	void __fastcall (char *text, NTempest::CRndSeed *seed)	Shuffles the bytes of a C string with 0x450100	inferred	none	random#unreached-functions	
@@ -626,7 +626,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531a0	15	InitRandomTwoPi		random	primitive	void __cdecl (void)	Stores π + π as a float in 0xb05d70	verified	one	random#static-initializers	
 0x4531b0	5	InitRandomInvTwoPiThunk		random	orchestration	void __cdecl (void)	Jumps to 0x4531c0; a static initializer	verified	one	random#static-initializers	
 0x4531c0	19	InitRandomInvTwoPi		random	primitive	void __cdecl (void)	Stores 1 / [0xb05d70] as a float in 0xb05d6c	verified	one	random#static-initializers	
-0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	test	random#state-advance	random::crandom_uint32_advance
+0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	random::crandom_uint32_advance
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
@@ -12202,7 +12202,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
 0x7abbc0	5	InitCameraPropertyInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7abbd0; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7abbd0	11	InitCameraPropertyInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf572c, which nothing reads	verified	one	camera#object-files-and-initializers	
-0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	test	camera#angle-properties	camera::camera_normalize_2pi
+0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	camera::camera_normalize_2pi
 0x7abc20	48	RegisterProperty		camera	orchestration	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags, uint8_t type)	Stores a property's type and flags, puts it in slot id, and on flag 0x01 adds it to the update list	verified	one	camera#property-updates	
 0x7abc50	26	RegisterPropertyType1		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 1	inferred	none	camera#unreached-functions	
 0x7abc70	26	RegisterPropertyType2		camera	unreached	void __thiscall (void *object, CBaseManaged *property, uint32_t id, uint8_t flags)	Calls 0x7abc20 with type 2	inferred	none	camera#unreached-functions	
@@ -12237,9 +12237,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ac550	26	AttachScalarProducer		camera	unreached	void __fastcall (void *object, uint32_t id, void *callback, void *context, float key)	Calls 0x7ac410 with type 6	inferred	none	camera#unreached-functions	
 0x7ac570	41	GetNextLink		camera	orchestration	void * __thiscall (void *link, int32_t link_offset)	Returns the link a node's link points at, or the list head marked by its low bit	verified	one	camera#lifetime	
 0x7ac5a0	5	InitCameraTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5b0; a static initializer	verified	one	camera#object-files-and-initializers	
-0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	test	camera#object-files-and-initializers	camera::camera_normalize_2pi
+0x7ac5b0	15	InitCameraTwoPi		camera	primitive	void __cdecl (void)	Stores π + π as a float in 0xcf5734	verified	one	camera#object-files-and-initializers	camera::camera_normalize_2pi
 0x7ac5c0	5	InitCameraInvTwoPiThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac5d0; a static initializer	verified	one	camera#object-files-and-initializers	
-0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	test	camera#object-files-and-initializers	camera::camera_normalize_2pi
+0x7ac5d0	19	InitCameraInvTwoPi		camera	primitive	void __cdecl (void)	Stores 1 / [0xcf5734] as a float in 0xcf5730	verified	one	camera#object-files-and-initializers	camera::camera_normalize_2pi
 0x7ac5f0	5	InitCameraInfinityThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac600; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7ac600	11	InitCameraInfinity		camera	orchestration	void __cdecl (void)	Copies +inf into 0xcf573c, which nothing reads	verified	one	camera#object-files-and-initializers	
 0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-files-and-initializers	
@@ -12262,8 +12262,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7acf10	672	CameraClone		camera	orchestration	void * __fastcall (const CCamera *source)	Allocates a camera, copies each property value from source through its slot 3, returns the handle	verified	one	camera#lifetime	
 0x7ad1b0	25	CBaseManaged::SetProducer		camera	orchestration	void __thiscall (CBaseManaged *this, void *callback, void *context, float key)	Stores a property's producer callback, its context and its ordering key	verified	one	camera#property-updates	
 0x7ad1d0	233	InitPropertySet		camera	orchestration	void * __thiscall (void *object, uint32_t slots)	Builds the camera base: empty update list, link offset 4, a slot array of the given size	verified	one	camera#lifetime	
-0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	test	camera#unprojection	camera::camera_frustum_split
-0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	test	camera#orthographic-setup	camera::camera_ortho
+0x7ad2c0	1328	UnprojectScreenPoint		camera	primitive	void __fastcall (float *near_point, float *far_point, float a, float b)	Maps a screen fraction (a, b) to near and far plane points through the device matrices	verified	one	camera#unprojection	camera::camera_frustum_split
+0x7ad7f0	589	SetupOrthoTransforms		camera	primitive	void __fastcall (const float *rect, const float *point, uint32_t unused)	Sets an orthographic projection over a rectangle, depth ±500, and a view offset by a point	verified	one	camera#orthographic-setup	camera::camera_ortho
 0x7ada40	32	CameraSetDeviceTransforms		camera	orchestration	void __fastcall (CCamera *camera, const float *rect, uint32_t unused)	Calls 0x7ac640, or raises error 0x57 for a null camera	verified	one	camera#view-and-projection	
 0x7ada60	31	CameraUpdateProperties		camera	unreached	void __fastcall (CCamera *camera, uint32_t arg)	Calls 0x7abdf0, or raises error 0x57 for a null camera	inferred	none	camera#unreached-functions	
 0x7ada80	52	InitScalarProperty		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this, const float *value)	Builds a scalar property holding a copy of value	verified	one	camera#lifetime	
@@ -12287,7 +12287,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7adf70	25	GetNodeLink		camera	orchestration	void * __thiscall (void *list, void *node)	Returns a node's link (the node plus the list's link offset), or the head for a null node	verified	one	camera#lifetime	
 0x7adf90	5	InitParticleRegistryInfinityThunk		models	orchestration	void __cdecl (void)	Jumps to 0x7adfa0; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7adfa0	11	InitParticleRegistryInfinity		models	orchestration	void __cdecl (void)	Copies +inf into 0xcf5748, which nothing reads	verified	one	camera#object-files-and-initializers	
-0x7adfb0	75	SetParticleDensity		models	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	test	camera#particle-density	camera::camera_clamp01
+0x7adfb0	75	SetParticleDensity		models	primitive	void __stdcall (float density)	Clamps to [0, 1] (NaN to 1) and stores in 0x87d5fc	verified	one	camera#particle-density	camera::camera_clamp01
 0x7ae000	7	GetParticleDensity		models	orchestration	float __cdecl (void)	Returns 0x87d5fc	verified	one	camera#particle-density	
 0x7ae010	382	ParticleRegistryGet		models	primitive		Returns the particle emitter registry, creating it and the 128-entry noise table on first use	verified	one	models/cache#noise-table	
 0x7ae190	58	ParticleRegistryDestroy		models	host		Releases the particle buffers, then destroys and frees the particle emitter registry	verified	one	models/cache#scene-creation-and-teardown	
