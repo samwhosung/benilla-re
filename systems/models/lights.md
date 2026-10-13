@@ -171,14 +171,15 @@ With `c_ch` the dot product of that direction with each channel's directional su
 directional colour sum, the light's colour `+0x60` is `1.25·c − 0.25·S` and `0.25·(S − c)` adds to
 the ambient sum.
 
-Addresses: `0x71c2f0`, `0x4549c0`, `0x80c5c8`, `0x8029b0`
+Addresses: `0x71c2f0`, `0x4549c0`, `0x80c5c8`, `0x8029b0`, `0x71c35e`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x71c334` compares the squared length with 1e-5 and takes the fallback on C0 or C3 (`test ah,
-0x41`); otherwise `0x4549c0` multiplies by `1/sqrt` when the length's magnitude exceeds
-2.384186e-7. `c` reads `+0x18`, `+0x24`, `+0x30`. The scales are 1.25 and 0.25 at `0x8029b0`.
+0x41`); otherwise `0x4549c0` multiplies by `1/length` when the length is at least 2.384186e-7 (`jnp`
+at `0x71c35e` skips on C0 alone); past the 1e-5 gate the length is above 0.003, so the skip is
+unreachable. `c` reads `+0x18`, `+0x24`, `+0x30`. The scales are 1.25 and 0.25 at `0x8029b0`.
 
 ## View-space lights
 

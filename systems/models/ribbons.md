@@ -75,33 +75,35 @@ vertices at `s·P0 + t·P1 + s·t·(T0 − T1)`, with `s = 1 − t`, `P0` and `P
 and current node, and `T0` and `T1` their tangents. The edge takes its age and, when committed,
 advances the head.
 
-Addresses: `0x7b6c30`, `0x7b6d96`, `0x7b6ec3`, `0x7b6ee7`
+Addresses: `0x7b6c30`, `0x7b6c50`, `0x7b6c6e`, `0x7b6d96`, `0x7b6ec3`, `0x7b6ee7`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7b6c30(age, t, commit)` builds `t·(P1 − s·T1)` and `s·(P0 + t·T0)` for the bottom from `+0xd0`,
 `+0xb8`, `+0xc4`, `+0xac` and stores the sum at `0x7b6d96`; the top repeats it with `+0xe8` and
-`+0xdc`. It stores the age in `+0xc` at the head and calls `0x7b6f00(head, commit)`.
+`+0xdc`. `s` exists in two precisions: the bottom's `s·T1` multiplies the unrounded `1 − t` left on
+the FPU stack (`fld st(0)` at `0x7b6c50` and `0x7b6c6e`), and every other `s` is its float copy at
+`ebp−4` or `ebp−8`. It stores the age in `+0xc` at the head and calls `0x7b6f00(head, commit)`.
 
 ## Ribbon update
 
 An update clamps `dt` into [0, L] and drops tail edges whose age plus `dt` exceeds `L`. A visible,
-started ribbon then accumulates `e = dt·rate + carry` and commits `floor(e)` edges at
-`t_j = (j − carry)/(e − carry)`, aged `−t_j·dt`, keeps `e − floor(e)` as the carry, and writes the
-head edge at `t = 1`, age 0. Every committed edge then moves `gravity·(2·age + dt)·dt` up in z,
-ages by `dt`, and takes `u = u0 + age·w/L`, `v` the cell's bottom and top.
+started ribbon then accumulates `e = dt·rate + carry` and commits `floor(e)` edges at `t_j = (j −
+carry)·r` with `r = 1/(e − carry)` rounded to a float, aged `−t_j·dt`, keeps `e − floor(e)` as the
+carry, and writes the head edge at `t = 1`, age 0. Every committed edge then moves `gravity·(2·age +
+dt)·dt` up in z, ages by `dt`, and takes `u = u0 + age·w/L`, `v` the cell's bottom and top.
 
-Addresses: `0x7b7e60`, `0x7b7e7d`, `0x7b7e98`, `0x7b7ee0`, `0x7b7f40`, `0x7b7f83`, `0x7b7ff6`, `0x7b8080`
+Addresses: `0x7b7e60`, `0x7b7e7d`, `0x7b7e98`, `0x7b7ee0`, `0x7b7f16`, `0x7b7f40`, `0x7b7f48`, `0x7b7f83`, `0x7b7ff6`, `0x7b8080`
 Confidence: verified
 Proof: one
 Test: none
 
 The clamp loads `+0xf8` and replaces `dt` by 0 when negative and by `L` when above it. Emission
-needs flags 4 and 1 and a zero second argument; `0x7b7f40` loops `ftol(floor(e − 1)) + 1` times
-and `0x7b7f83` floors for the carry. The aging loop adds `(2·age + dt)·dt·+0x164` to both z
-values (`+0x8`, `+0x1c`), then `dt` to the age, and stores `age·+0x5c·+0x58 + +0x70`. Flag 8 is
-set and 0x10 cleared at the end.
+needs flags 4 and 1 and a zero second argument; `0x7b7f40` loops `ftol(floor(e − 1)) + 1` times and
+`0x7b7f83` floors for the carry; `0x7b7f16` stores `r` as a float and `0x7b7f48` multiplies `j −
+carry` by it. The aging loop adds `(2·age + dt)·dt·+0x164` to both z values (`+0x8`, `+0x1c`), then
+`dt` to the age, and stores `age·+0x5c·+0x58 + +0x70`. Flag 8 is set and 0x10 cleared at the end.
 
 ## Ribbon texture cells
 
