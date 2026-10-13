@@ -17,7 +17,7 @@ pub fn assert_f32(binary: f32, ours: f32, ctx: &str) {
     );
 }
 
-/// One LCG step. Its low bits repeat quickly, so decisions use the high bits.
+/// One LCG step. Its low bits repeat quickly, so a choice uses the high bits.
 pub fn next(s: &mut u32) -> u32 {
     *s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
     *s
