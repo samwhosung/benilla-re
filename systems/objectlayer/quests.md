@@ -65,7 +65,7 @@ items into 6-entry arrays and four flags, all nonzero meaning completable. 0x18d
 choices (6) and rewards (4). None bounds its counts: a count past an array's entries writes on up
 the frame, and the emote block is sized from the count.
 
-Addresses: `0x5dbd50`, `0x5dc050`, `0x5dc1e0`, `0xbe0810`
+Addresses: `0x5dbd50`, `0x5dbea5`, `0x5dc050`, `0x5dc1e0`, `0xbe0810`
 Confidence: verified
 Proof: one
 Test: none
@@ -73,7 +73,9 @@ Test: none
 Each item is three i32 (id, count, display). `0x5dbd50` shows the text through `0x500bd0(1, …)`,
 `0x500dc0` and `0x500ef0`; a creature giver plays the emotes (`0x60bb80`). `0x5dc050` uses
 `0x500bd0(2, …)` and `0x501070`, `0x5dc1e0` `0x500bd0(3, …)` and `0x500ef0`. The emote block is
-`alloca((8·count + 3) & ~3)`, pairs written u32 to `+0`, i32 to `+4`.
+`alloca((8·count + 3) & ~3)` (`0x5dbea5`), pairs written u32 to `+0`, i32 to `+4`. The size wraps
+modulo 2^32 for a count of 2^29 or more, so such a count can get a block too small for it; a size
+above the 0x100000-byte stack reserve, from a count of about 131,000, faults in the probe.
 
 ## Quest completion
 
@@ -97,9 +99,9 @@ statuses when record `+0x4` is 0.
 ## Quest failure
 
 0x192 stores the reason in `0xc4d794` and, with the quest's record, shows
-`ERR_QUEST_FAILED_BAG_FULL_S` and `ERR_INV_FULL` for reasons 4 and 0x32, `ERR_QUEST_FAILED_MAX_COUNT_S`
-for 0x11, and otherwise `ERR_QUEST_FAILED_S` when the quest is not already done; then
-`0x501130(0, 0)`. A record still pending shows the same lines on arrival.
+`ERR_QUEST_FAILED_BAG_FULL_S` and `ERR_INV_FULL` for reasons 4 and 0x32,
+`ERR_QUEST_FAILED_MAX_COUNT_S` for 0x11, and otherwise `ERR_QUEST_FAILED_S` when the quest is not
+already done; then `0x501130(0, 0)`. A record still pending shows the same lines on arrival.
 
 Addresses: `0x5dc840`, `0x5dc920`, `0xc4d794`
 Confidence: verified
@@ -121,7 +123,7 @@ quest's own objective text gives `ERR_QUEST_ADD_FOUND_SII`, else an id with bit 
 object and shows the same error, else a creature `ERR_QUEST_ADD_KILL_SII`; then
 `QUEST_WATCH_UPDATE`.
 
-Addresses: `0x5e5ad0`, `0x5e5ea0`, `0x4df4b0`
+Addresses: `0x5e5ad0`, `0x5e5ea0`, `0x4df4b0`, `0x4df880`, `0x5e5db0`
 Confidence: verified
 Proof: one
 Test: none
@@ -129,15 +131,19 @@ Test: none
 The switch is value − 0x196 through `0x5e5ea0`. The texts are record `+0x129c` (objective),
 `+0x149c` (four ids) with texts at `+0x14dc + 0x100·i`; names come from the game-object cache
 `0xc0e318` or the creature cache `0xc0e354`, plural or singular by count, with no callback, so a
-miss shows nothing. `QUEST_WATCH_UPDATE` takes the log index `0x4df880(quest)`.
+miss shows nothing. `QUEST_WATCH_UPDATE` takes `0x4df880(quest)`: the 1-based position of the quest
+among the 40 16-byte entries at `0xbb71c0`, headers counted, skipping the entries whose `+8` header
+flag is set (`0x4de719`, in `0x4de510`), and 0 when the quest is absent. 0x199 never tests the quest
+record: for a quest whose record is not cached it reads `[0x149c]` at `0x5e5db0` and faults.
 
 ## Quest progress for items
 
 A bought item (0x1a4) or an added item (0x19a) checks each of the 20 log quests not done: a quest
 needing the item, among its four, shows `ERR_QUEST_ADD_ITEM_SII` with the item's name, the count
 held plus the new count capped at the need, and the need, then `QUEST_WATCH_UPDATE`; the first
-quest that needs it stops the walk. A held count already at the need shows nothing. A quest record
-not yet cached queues the pair and reports when it arrives.
+quest that needs it stops the walk, and so does an item whose record is not cached, silently. A
+held count already at the need shows nothing. A quest record not yet cached queues the pair and
+reports when it arrives.
 
 Addresses: `0x5dd060`, `0x5dd180`, `0x5dced0`, `0x622130`
 Confidence: verified
@@ -145,7 +151,8 @@ Proof: one
 Test: none
 
 `0x5dd060(record, item, count)` searches `+0x14bc` to `+0x14c8`, needs `+0x14cc + 4·i`, counts
-with `0x622130(inventory, item, 8)` and uses the item name `+8 + 4·plural`. The log is
+with `0x622130(inventory, item, 8)` and uses the item name `+8 + 4·plural`, the plural chosen by
+the need (`0x703cf0`). The log is
 `[+0xe68]+0x28`, 12 bytes per entry. `0x5dd180` is the callback; it frees the 8-byte pair.
 
 ## The quest log watcher

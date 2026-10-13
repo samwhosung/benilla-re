@@ -40,9 +40,10 @@ Test: none
 `0x5dd300` sets the count 0x12a for the list loop. `0x5dd456` (`neg; sbb; and 0x71`) writes the
 inventory count and `0x5dd467` the GUID array, `[+0xe68] + 0x4a8`, which is field 486,
 `PLAYER_FIELD_INV_SLOT_HEAD`. `0x5dd473` stores the vtable 0x80af78. `0x5dd496` loads the race's
-`ChrRaces` row `+0x1c` into `+0x9c`; a race byte outside the store leaves `eax` 0 and the `fld`
-reads address 0x1c and faults. The active-player loop runs `0x5dd4c0` to `0x5dd4df` over 0x2550
-bytes. `0x5dd2a0` points `+0xe68` at field 188 (`classes`).
+`ChrRaces` row `+0x1c` into `+0x9c`. A race with no row leaves `eax` 0 and the `fld` reads address
+0x1c and faults: an id above the maximum, and, since the loader zero-fills the id map (`0x542797`),
+race 0 and every hole. The active-player loop runs `0x5dd4c0` to `0x5dd4df` over 0x2550 bytes.
+`0x5dd2a0` points `+0xe68` at field 188 (`classes`).
 
 ## Destruction
 
@@ -198,8 +199,9 @@ Proof: one
 Test: none
 
 `0x5e3010` pairs `mov ecx,opcode` with `mov edx,handler` before `0x5ab650`; `0x5e8f20` clears the
-same 130, the last (0x328) by the tail `jmp` at `0x5e942f`. `0x5e2490` stores the first and third
-CVar pointers in `0xc4d3c4` and `0xc4d68c`. `0x5e22a0` cancels the timer through `0x401550`.
+same 130, the last (0x328) by the tail `jmp` at `0x5e942f`. `0x5e2490` discards the first CVar
+pointer and stores the second, `guildMemberNotify`, in `0xc4d3c4` (`0x5e24e5`) and the third in
+`0xc4d68c`. `0x5e22a0` cancels the timer through `0x401550`.
 
 ## Area triggers
 

@@ -37,6 +37,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40a2e0	45	__cinit	idb	crt	boundary	void __cdecl (void)	Runs the C and C++ static initializer tables through __initterm	verified	one	random#static-initializers	
 0x40a404	26	__initterm	idb	crt	boundary	void __cdecl (void (**begin)(void), void (**end)(void))	Calls every non-null pointer in [begin, end) in ascending order	verified	one	random#static-initializers	
 0x40acbb	103	__getptd	idb	crt	boundary		Returns the C runtime's per-thread data	inferred	none	random#the-c-runtime-rand	
+0x40de80	56	strncmp		crt	primitive		Compares at most n bytes of two strings, case-sensitive	verified	one	objectlayer/party#guild-events	
 0x40f92b	111	tolower		crt			Returns the lower-case form of a character in the C locale	inferred	none	models/cache#shared-model-lookup	
 0x4134e3	27			crt	boundary		Formats a broken-down time with a format string into a buffer	inferred	none	core/time#calendar-time	
 0x418070	82	CDataStore::PutInt8	idb	base			Appends one byte to a data store	verified	one	spell/cast#cast-request-packets	
@@ -2359,10 +2360,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d7d40	1733			ui	primitive		Rebuilds state for the open trainer after a talent modifier changes	inferred	none	spell/records#talent-modifier-tables	
 0x4db710	947			ui	primitive		Opens the taxi map with the flight master, the current node and the known nodes	inferred	none	objectlayer/interaction#taxis	
 0x4dc0f0	117			ui	primitive		Closes the taxi map for a started flight	inferred	none	objectlayer/interaction#taxis	
+0x4de510	913			ui	primitive		Rebuilds the quest log list, marking each header entry with +8 set to 1	inferred	none	objectlayer/quests#quest-updates	
 0x4df0e0	29	CloseQuestIfCurrent		ui	orchestration		Calls a ui function when a quest id is the one the quest window holds	verified	one	objectlayer/quests#the-quest-log-watcher	
 0x4df4b0	64			ui	primitive		Returns whether a quest is completed	inferred	none	objectlayer/quests#quest-updates	
 0x4df550	42			ui	primitive		Marks a timed quest failed	inferred	none	objectlayer/quests#quest-updates	
-0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based index of a quest among 40 log entries, or 0	verified	one	objectlayer/quests#quest-updates	
+0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based position of a quest among the 40 log entries, headers counted and skipped, or 0	verified	one	objectlayer/quests#quest-updates	
 0x4e1fa0	97			ui	primitive		Closes the taxi map	inferred	none	objectlayer/interaction#taxis	
 0x4e35b0	702			ui	primitive		Shows or closes an item's text window; not read here	inferred	none	objectlayer/playermessages#reading-items	
 0x4e4390	32	SetAuraDuration		ui	primitive		Stores now plus a duration for an aura slot below 0x30	verified	one	objectlayer/playermessages#notices	
@@ -4267,7 +4269,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e2110	389	AreaTriggerCheck		objectlayer	primitive		Arms itself again and sends CMSG_AREATRIGGER when the active player enters a trigger it was not in	verified	one	objectlayer/players#area-triggers	
 0x5e22a0	36	StopAreaTriggerCheck		objectlayer	orchestration	void __cdecl (void)	Kills the area-trigger timer when it is armed	verified	one	objectlayer/players#world-entry-and-exit	
 0x5e22d0	441	IsInsideAreaTrigger		objectlayer	primitive	uint32_t __fastcall (void *row, float *position)	Tests a point inside an AreaTrigger row's sphere, or strictly inside its rotated box when its radius is 0	verified	one	objectlayer/players#area-triggers	
-0x5e2490	101	RegisterPlayerCVars		objectlayer	orchestration	void __cdecl (void)	Registers CombatModeMaxDistance, guildMemberNotify and autoClearAFK and keeps two of the pointers	verified	one	objectlayer/players#world-entry-and-exit	
+0x5e2490	101	RegisterPlayerCVars		objectlayer	orchestration	void __cdecl (void)	Registers CombatModeMaxDistance, guildMemberNotify and autoClearAFK, keeping the last two pointers	verified	one	objectlayer/players#world-entry-and-exit	
 0x5e2500	15	PlayerDestroy		objectlayer	orchestration	void __cdecl (void)	Clears the player handlers, calls 0x62f870 and stops the area-trigger timer	verified	one	objectlayer/players#world-entry-and-exit	
 0x5e2510	321	AddPlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Clears player state and registers the type watchers on every player's visible items, flags and guild fields	verified	one	objectlayer/playerfields#watchers-on-every-player	
 0x5e2660	262	OnCharmOrSummonChanged		objectlayer	primitive		Refreshes the unit tokens of a player's charm and summon, releasing a gone one's token	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
@@ -4285,7 +4287,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e2ca0	264	BuildWeaponSkillSpells		objectlayer	primitive		Fills the weapon-subclass spell table 0xc4d730 and the effect-0x1a spell 0xc4d688 from Spell.dbc	verified	one	objectlayer/playercombat#weapon-skills	
 0x5e2db0	93	GetWeaponSubclassCount		objectlayer	primitive	uint32_t __cdecl (void)	Returns one past the highest ItemSubClass subclass of class 2, or 0 when there is none	verified	one	objectlayer/playercombat#weapon-skills	
 0x5e2e10	72	GetSingleBitIndex		objectlayer	primitive	uint32_t __fastcall (uint32_t mask, int32_t *index)	Returns whether a mask has at most one bit and stores that bit's index, −1 for an empty mask	verified	one	objectlayer/playercombat#weapon-skills	
-0x5e2e60	430	RemovePlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Frees the player tables and removes the type watchers, missing the 14 visible-item ones by an offset of 8	verified	one	objectlayer/playerfields#visible-item-watchers-outlive-world-exit	
+0x5e2e60	430	RemovePlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Frees the player tables and removes the type watchers, missing the 14 visible-item ones by an offset of 8	verified	one	objectlayer/playerfields#visible-item-watcher-removal	
 0x5e3010	2211	RegisterPlayerHandlers		objectlayer	orchestration	void __cdecl (void)	Registers the player code's 130 server message handlers	verified	one	objectlayer/playermessages#message-handlers	
 0x5e38c0	4661	HandlePlayerNotice		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads 43 small server notices and acts on each, returning 0 for an opcode it does not handle	verified	one	objectlayer/playermessages#the-notice-handler	
 0x5e4e70	188	OnRollerName		objectlayer	orchestration		Prints a dice roll once the roller's name arrives and frees the block it is given	verified	one	objectlayer/playermessages#dice-rolls	
@@ -7462,6 +7464,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x648460	373	SFile::Read	idb	storm	boundary		Reads bytes from an open archive file	inferred	none		
 0x6487b0	59	SFileGetFileName		storm			Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
 0x64a450	43	SStr::sub_64A450	idb	storm	boundary		Returns the last occurrence of a character in a string	inferred	none		
+0x64a480	56	SStrCmp		storm	orchestration		Compares two strings up to a length through strncmp	verified	one	objectlayer/party#guild-events	
 0x64a4c0	56	SStrCmpI	idb	storm			Compares two strings ignoring case up to a length	inferred	none	spell/cooldowns#spell-id-by-name	
 0x64a5a0	123	SStrCopy	idb	storm	boundary		Copies a string up to a length	inferred	none	collision/mover#initialisation-and-teardown	
 0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string	inferred	none		

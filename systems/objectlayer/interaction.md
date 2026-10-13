@@ -34,9 +34,9 @@ Test: none
 Each component of player minus unit position is stored as f32 before the x87 sum; the limit
 `0xc4c28c` holds 5.5555553² = 30.864195 (`InitGameObjSquare3`). `StartAutoMoveToObject(&guid, 5)`
 nonzero returns; a larger distance after that returns. The flags are `UNIT_NPC_FLAGS`
-(`[+0x110]+0x234`); the quest test `0x5df490` reads the status `+0xcb8`. The tabard sender `0x5e00e0`
-does nothing for the unit at `0xbdcee8` and shows error 0x130 while the display is not native. The
-talk emote is `CGUnit_C::RequestTalkEmote(0)` (`0x60bb30`).
+(`[+0x110]+0x234`); the quest test `0x5df490` reads the status `+0xcb8`. The tabard sender
+`0x5e00e0` does nothing for the unit at `0xbdcee8` and shows error 0x130 while the display is not
+native. The talk emote is `CGUnit_C::RequestTalkEmote(0)` (`0x60bb30`).
 
 ## Confirmation dialogs
 
@@ -168,13 +168,12 @@ attacking.
 
 ## Text emotes
 
-`0x5ef560(text, guid)` performs a text emote unless `UNIT_FIELD_FLAGS` has 0x1000000. The `Emotes` row it
-names must pass `0x47db40`; one marked for standing still is refused while moving with
-`ERR_NOEMOTEWHILERUNNING`; a sleeping player only takes stand-state emotes. A stand-state emote of
-a state in 0x10b changes the stand state; another plays its animation while the player moves
-plainly. It sends 0x104 with the text id, a number from the race and gender, and the target, 0
-for the player itself. 0x103 plays an emote on a unit that is not asleep or under mover flag
-0x200000.
+`0x5ef560(text, guid)` performs a text emote unless `UNIT_FIELD_FLAGS` has 0x1000000. The `Emotes`
+row it names must pass `0x47db40`; one marked for standing still is refused while moving with
+`ERR_NOEMOTEWHILERUNNING`; a sleeping player only takes stand-state emotes. A stand-state emote of a
+state in 0x10b changes the stand state; another plays its animation while the player moves plainly.
+It sends 0x104 with the text id, a number from the race and gender, and the target, 0 for the player
+itself. 0x103 plays an emote on a unit that is not asleep or under mover flag 0x200000.
 
 Addresses: `0x5ef560`, `0x5e66b0`, `0x85ff10`, `0xc0ddd4`
 Confidence: verified

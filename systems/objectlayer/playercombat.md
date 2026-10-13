@@ -30,17 +30,18 @@ row (`0xc0db90`, 0x74 bytes) whose class equals `+0xe8` and `1 << subclass` equa
 `+0x70` keys the node, whose `+0x18` takes the spell. The node byte `+0x14` takes byte 3 of the
 spell argument, 0 for every caller. All paths end in `0x4d7d40` and `0x4f2f10`. The argument `x`
 is unused. The getters: `0x5ea2c0` a skill line's array, `0x5ea330` a tab's (1 to 3), `0x5ea360`
-an effect slot (0 to 3), `0x5ea380` a proficiency's spell; `0x5eab70` whether `0xc4d770` is set.
+an effect slot (0 to 3), `0x5ea380` a proficiency's spell, though nothing reaches it; `0x5eab70`
+whether `0xc4d770` is set.
 The nodes are `TRADESKILLLINE` (0x28 bytes, `0x5f0ee0`, `0x5f0e90`, `0x5f0fa0`) and
 `PROFICIENCYSPELL` (0x1c, `0x5f10e0`, `0x5f1060`, `0x5f11a0`).
 
 ## Unlearning a spell
 
 `0x5e9fe0(spell, silent)` removes a spell from its skill line's node and from its tab's array,
-compacting each. A spell without Attributes 0x20 and with no tab above 0 shows `ERR_SPELL_UNLEARNED_S` unless
-`silent` or its Attributes byte has 0x80. Then it calls `0x4b2c50(spell, 0)` and `0x4e5e20(spell)`,
-without `silent` also `0x4d7d40` and `0x4f2f10`, clears `0xc4d770` when it held the spell, and
-calls `0x494df0` when `0x494e10()` returns it.
+compacting each. A spell without Attributes 0x20 and with no tab above 0 shows
+`ERR_SPELL_UNLEARNED_S` unless `silent` or its Attributes byte has 0x80. Then it calls
+`0x4b2c50(spell, 0)` and `0x4e5e20(spell)`, without `silent` also `0x4d7d40` and `0x4f2f10`, clears
+`0xc4d770` when it held the spell, and calls `0x494df0` when `0x494e10()` returns it.
 
 Addresses: `0x5e9fe0`, `0x5ea170`, `0x5ea292`
 Confidence: verified
@@ -92,21 +93,21 @@ compares the skill at `+0xac` with `+0xb0`.
 
 ## Weapon skills
 
-At world entry `0x5e2ca0` builds, from Spell.dbc, a table from weapon subclass to a spell, and
-the spell `0xc4d688`. It walks the spells from the last to the first; among those with Attributes
-0x40, the first with effect 0x1a becomes `0xc4d688`, and each with class 2 and a single subclass
-bit writes its id for that subclass, so the lowest id wins. `0x5ed9d0(hand)` gives a hand's weapon spell, the
-unarmed one (`0x53f8a0`) for no weapon. Slots 43 and 44 return the skill values of `0xc4d688`'s
-line and of a hand's weapon spell; `0x5edae0` the ranged weapon's.
+At world entry `0x5e2ca0` builds, from Spell.dbc, a table from weapon subclass to a spell, and the
+spell `0xc4d688`. It walks the spells from the last to the first; among those with Attributes 0x40,
+the first with effect 0x1a becomes `0xc4d688`, and each with class 2 and a single subclass bit
+writes its id for that subclass, so the lowest id wins. `0x5ed9d0(hand)` gives a hand's weapon
+spell, the unarmed one (`0x53f8a0`) for no weapon. Slots 43 and 44 return the skill values of
+`0xc4d688`'s line and of a hand's weapon spell; `0x5edae0` the ranged weapon's.
 
 Addresses: `0x5e2ca0`, `0x5e2db0`, `0x5e2e10`, `0xc4d730`, `0xc4d688`, `0x5ed9d0`, `0x5eda20`, `0x5eda80`, `0x5edae0`
 Confidence: verified
 Proof: one
 Test: none
 
-The table is `0xc4d730` (capacity, count `+4`, data `+8`), sized one past the highest subclass of class 2
-in `ItemSubClass` (`0x5e2db0`). `0x5e2e10(mask)` returns the single bit's index. A skill value is
-`0x5ea460` of the `SkillLineAbility` row of the spell whose spell field `+8` matches.
+The table is `0xc4d730` (capacity, count `+4`, data `+8`), sized one past the highest subclass of
+class 2 in `ItemSubClass` (`0x5e2db0`). `0x5e2e10(mask)` returns the single bit's index. A skill
+value is `0x5ea460` of the `SkillLineAbility` row of the spell whose spell field `+8` matches.
 
 ## Hand weapons
 
@@ -138,13 +139,13 @@ Confidence: verified
 Proof: one
 Test: none
 
-The record fields are `+0x3c` level, `+0x30` and `+0x34` the class and race masks, `+0x40` and `+0x44`
-the skill, `+0x48` the spell, `+0x4c` the rank against `PLAYER_FIELD_BYTES` byte 3, `+0x50` a bit of
-field 1225, and `+0x54` and `+0x58` the faction and rank, against `0x80928c`'s minimum standings
-−42000, −6000, −3000, 0, 3000, 9000, 21000, 42000. The proficiency mask is `0x5e1e70(class)`, the
-server's table `0xc4d4a0` for a class below 16; a mask of 0 passes. `0x5ea720(slot, guid)` refuses
-a non-empty bag for a slot outside 19 to 22 and 63 to 68, then asks the item's
-`0x5da1d0(slot, ranged)` with `ChrClasses` `+0x40` as the flag.
+The record fields are `+0x3c` level, `+0x30` and `+0x34` the class and race masks, `+0x40` and
+`+0x44` the skill, `+0x48` the spell, `+0x4c` the rank against `PLAYER_FIELD_BYTES` byte 3, `+0x50`
+a bit of field 1225, and `+0x54` and `+0x58` the faction and rank, against `0x80928c`'s minimum
+standings −42000, −6000, −3000, 0, 3000, 9000, 21000, 42000. The proficiency mask is
+`0x5e1e70(class)`, the server's table `0xc4d4a0` for a class below 16; a mask of 0 passes.
+`0x5ea720(slot, guid)` refuses a non-empty bag for a slot outside 19 to 22 and 63 to 68, then asks
+the item's `0x5da1d0(slot, ranged)` with `ChrClasses` `+0x40` as the flag.
 
 ## Cast time
 
@@ -248,16 +249,17 @@ Test: none
 
 `0x5e8700` tests hit flag 0x8. The marks are 0x80, 0x20, 0x800 and 0x40 into `0x4946b0(target,
 damage, school, marks)`, which passes `WOUND` to `0x494600`. Periodic calls `0x62d9a0(target,
-caster, spell, damage, school, absorbed, resisted)`, direct `0x62cd80` with blocked and the hit flags
-too. The debug byte reads two floats for hit flag 0x1 and two for 0x4 and passes them to
+caster, spell, damage, school, absorbed, resisted)`, direct `0x62cd80` with blocked and the hit
+flags too. The debug byte reads two floats for hit flag 0x1 and two for 0x4 and passes them to
 `0x630200`, which returns at once.
 
 ## Damage calculation log
 
-0x27c prints "DMG: '%s' attacks '%s' sourceType=%d, spell='%s'" with the two units' names ("Non-unit"
-and "Unknown Unit" when absent) and the spell's first-locale name or "None", then per entry a name
-of at most 30, an index and two floats: "val" prints "DMG: NOT VALIDATED: Old=%f, New=%f", an index
-below 36 prints its name from `0x85fc54` as "DMG: (%s) '%s'=%8.2f, total=%f", any other the number.
+0x27c prints "DMG: '%s' attacks '%s' sourceType=%d, spell='%s'" with the two units' names
+("Non-unit" and "Unknown Unit" when absent) and the spell's first-locale name or "None", then per
+entry a name of at most 30, an index and two floats: "val" prints "DMG: NOT VALIDATED: Old=%f,
+New=%f", an index below 36 prints its name from `0x85fc54` as "DMG: (%s) '%s'=%8.2f, total=%f", any
+other the number.
 
 Addresses: `0x5e8d30`, `0x85fc54`
 Confidence: verified

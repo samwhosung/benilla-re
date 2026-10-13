@@ -858,6 +858,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
 0xb71b48	uint64_t	s_lootOpenedGuid		ui	Holds a GUID whose presence makes an inventory failure signal LOOT_OPENED	inferred	none	objectlayer/playermessages#inventory-change-failures
 0xb72608	uint64_t	s_heldItemGuidB		ui	Holds an item GUID 0x622210 leaves locked	inferred	none	objectlayer/inventory#searching-the-inventory
+0xbb71c0	uint32_t[160]			ui	Holds the quest log list: 40 entries of 16 bytes, an id at +0 and a header flag at +8	verified	one	objectlayer/quests#quest-updates
 0xbc3f58	uint64_t	s_trainerWindowGuid		ui	Holds the trainer GUID a trainer list may also open for	inferred	none	objectlayer/inventory#trainers
 0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
 0xbdcee8	uint64_t	s_tabardVendorGuid		ui	Holds the GUID of the open tabard vendor	inferred	none	objectlayer/interaction#talking-to-an-npc
@@ -939,7 +940,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d2a0	uint32_t[4]	s_initialSpells		objectlayer	Holds the initial spell list: capacity, count, data and chunk	verified	one	objectlayer/playercombat#spell-book-messages
 0xc4d2b0	uint32_t[32]	s_greetingQuestIds		objectlayer	Holds a greeting's 32 quest ids	verified	one	objectlayer/quests#the-greeting-list
 0xc4d340	uint32_t[32]	s_greetingQuestIcons		objectlayer	Holds a greeting's 32 quest icons	verified	one	objectlayer/quests#the-greeting-list
-0xc4d3c4	void *	s_combatModeMaxDistanceCVar		objectlayer	Holds the CombatModeMaxDistance CVar	verified	one	objectlayer/players#world-entry-and-exit
+0xc4d3c4	void *	s_guildMemberNotifyCVar		objectlayer	Holds the guildMemberNotify CVar, whose +0x28 the guild sign-on and sign-off lines test	verified	one	objectlayer/players#world-entry-and-exit
 0xc4d3cc	uint32_t	s_areaTriggerTimer		objectlayer	Holds the area-trigger timer's handle	verified	one	objectlayer/players#area-triggers
 0xc4d3d0	uint32_t[50]	s_petitionCharters		objectlayer	Holds 10 charter offers of 20 bytes, which a longer list overruns	verified	one	objectlayer/party#petitions
 0xc4d498	uint64_t	s_vendorGuid		objectlayer	Holds the GUID of the vendor whose list is open	verified	one	objectlayer/inventory#vendors

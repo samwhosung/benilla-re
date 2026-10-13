@@ -141,23 +141,31 @@ Test: none
 
 ## Guild events
 
-0x92 (`0x5e7180`) reads a type and a u8 count of strings of at most 0x100 into three stack slots;
-the count is unbounded, and a fourth string runs over the frame up to the return address. Types 0
-to 8 show the promote, demote, MOTD, join, leave, remove, leader-is, leader-changed and disbanded
-messages with as many strings as were sent; 10 writes the second string as the name of the rank
-`atoi(first)` in the guild record, unchecked; 12 and 13 show a member signing on or off; 11 does
-nothing; any other `ERR_GUILD_INTERNAL`. Every type ends in `0x4d1160(1)`.
+0x92 (`0x5e7180`) reads a type, a u8 count and that many strings of at most 0x100 into three
+0x100-byte stack slots, unbounded, so a fourth string overruns the frame. Types 0, 1 and 3 to 8 show
+the promote, demote, join, leave, remove, leader-is, leader-changed and disbanded messages; 2, the
+MOTD, signals `GUILD_MOTD`; 10 renames the rank `atoi(first)` to the second string, unchecked; 12
+and 13 show a member signing on or off; 11 does nothing; 9 and any type above 13 show
+`ERR_GUILD_INTERNAL`. Every type ends in `0x4d1160(1)` except 12, 13 and a failed gate of 10.
 
-Addresses: `0x5e7180`, `0x5e74dc`, `0x64ac60`
+Addresses: `0x5e7180`, `0x5e74dc`, `0x5e74bf`, `0x5e74c9`, `0x5e73a9`, `0x5e744a`, `0x64ac60`, `0x64a480`, `0x40de80`
 Confidence: verified
 Proof: one
 Test: none
 
-The slots start at `ebp−0x318`, 0x100 each. The switch is `cmp 0xd` through `0x5e74dc`. The MOTD
-runs the profanity filter `0x4a1a60` when its CVar is on and signals `GUILD_MOTD`. The rank write is
-`SStrCopy(record + 0x64 + 64·atoi(s1), s2, 0x40)`. Sign-on (`ERR_FRIEND_ONLINE_SS`, the name twice)
-and sign-off (`ERR_FRIEND_OFFLINE_S`) each read a GUID and show only with `guildMemberNotify` on,
-for a name other than the active player's and a GUID not a friend's (`0x5ae810`).
+The type is read into `ebp−1`, which then serves as the string index; the count is `ebp−2`.
+String 4 starts at `ebp−0x18` and reaches `ebp+0xe7`, over the count and index bytes, the saved
+registers and the return address, and later strings go further. The messages take the first one,
+two or three strings for a count of 1 to 3 and none for any other count, then reach `0x4d1160(1)`
+at `0x5e74bf`; 12 and 13 return at `0x5e73a9` and `0x5e744a`, and the failed gates of 10, 12 and
+13 jump to `0x5e74c9`, past it. The
+switch is `cmp 0xd` through `0x5e74dc`. The MOTD runs the profanity filter `0x4a1a60` unless its
+CVar is registered and off, then signals `GUILD_MOTD` with the first string. The rank write needs
+the active player and its cached guild record, and is `SStrCopy(record + 0x64 + 64·atoi(s1), s2,
+0x40)`. Sign-on (`ERR_FRIEND_ONLINE_SS`, the name twice) and sign-off (`ERR_FRIEND_OFFLINE_S`) each
+read a GUID and show only with the active player present, the CVar `guildMemberNotify` on, the
+first string different from the active player's name by `SStrCmp` (`0x64a480`, through `strncmp`
+`0x40de80`, so case-sensitive), and the GUID not a friend's (`0x5ae810`).
 
 ## Guild tabards
 
@@ -198,7 +206,8 @@ Proof: one
 Test: none
 
 `0x5eee60` calls `0x4f3f60` and `0x4f40b0`. `0x5eeb80` zeroes 50 dwords at `0xc4d3d0` and opens the
-list (`0x4f4fb0`) for a unit with NPC flags 0x200 and 0x400. `0x5eee60` allocates `8n` and `4n` on
+list (`0x4f4fb0`) for a unit with NPC flags 0x200 and 0x400, and only with bit 0 of `0xc4d3e0`,
+the first entry's `+0x10`, set (`0x5eec42`). `0x5eee60` allocates `8n` and `4n` on
 the stack for the u8 count. The turn-in result: 0 `GUILD_REGISTRAR_CLOSED`, 2
 `ERR_PETITION_IN_GUILD`, 4 `ERR_PETITION_NOT_ENOUGH_SIGNATURES`, else "Petition error". `0x5ef2b0`
 searches the backpack and bags for an item with flag 0x2000 whose petition (cache `0xc0e0fc`) has

@@ -35,13 +35,16 @@ and registers 0x30 bytes with kind 1. The guild id refreshes the guild tag (`0x5
 `CGUnit_C::RefreshReaction`; bytes 2 and 3 call `0x491a00` with the GUID; a visible item calls
 `0x5dee30(offset, old)`; the flags call `0x5ee990(old)`.
 
-## Visible-item watchers outlive world exit
+## Visible-item watcher removal
 
 `0x5e2e60` removes the type watchers at world exit, but its visible-item loop starts at `+0x120`
-instead of `+0x118`, so it names fields no watcher is on and removes none of the 14. Each later
-world entry registers 14 more, and after n entries one visible-item change runs `0x5e2810` n times.
+instead of `+0x118`, so it names fields no watcher is on and removes none of the 14. The miss has
+no effect: `ClientDestroyGame` calls `0x5e2e60` at `0x401fd5` and then `ClntObjMgrReleaseWatchers`
+at `0x402043`, which frees every watcher on the 0x502 lists of all eight sections, the 14 among
+them. In the world each is registered once, by `0x5e2510` from `ClientInitializeGame` at
+`0x401648`, its one caller.
 
-Addresses: `0x5e2e60`, `0x5e2f1d`, `0x5e2f3f`, `0x468240`
+Addresses: `0x5e2e60`, `0x5e2f1d`, `0x5e2f3f`, `0x468240`, `0x468490`, `0x401fd5`, `0x402043`
 Confidence: verified
 Proof: one
 Test: none
@@ -49,9 +52,9 @@ Test: none
 `0x5e2f1d` is `mov esi,0x120`; the loop adds 0x30 and stops at 0x570, calling `0x468240` with
 section 4, offset `esi` and callback `0x5e2810` at `0x5e2f3f`. `0x468240` searches the list of
 field `offset/4`, and the registrations sit on the lists of fields `0x118/4 + 12·i`, 70 and on,
-never 72 and on. `ClientInitializeGame` calls `0x5e2510` at every world entry from the glue.
-`0x5e2e60` also frees the guild-stamp, initial-spell, item-swap and weapon-spell arrays and clears
-the bind and tabard state.
+never 72 and on. `0x468490` walks 8 sections of 0x502 lists of 12 bytes from `0xb23318`
+(`0x4684a8` to `0x46852a`), unlinking and freeing each node. `0x5e2e60` also frees the
+guild-stamp, initial-spell, item-swap and weapon-spell arrays and clears the bind and tabard state.
 
 ## Watchers on the active player
 
@@ -190,24 +193,26 @@ The two branches call `SetCurrentFfx` with the stored pointer; the tutorial is
 
 ## Drunk messages
 
-`PLAYER_BYTES_3` byte 1 is the drunk level, `min(b,100)·0.01` as f32. For the active player it
-signals `UNIT_LEVEL` for a target the player can attack, refreshes the name plates and passes the
-level to the camera. Then it tests the thresholds 0.01, 0.5 and 0.9 in that order:
-a rise across threshold k (`old < t ≤ new`) prints `DRUNK_MESSAGE_SELF%d` (`_OTHER%d` with the name)
-for k + 2 and skips threshold k + 1; a fall across it (`new < t ≤ old`) prints k + 1. A rise across
-two thresholds prints only the lower one's message; a fall across two prints both, the lower
-first. A NaN level crosses nothing.
+`PLAYER_BYTES_3` byte 1 is the drunk level, `min(b,100)·0.01` as f32. For the active player it also
+updates the target, name plates and camera. It tests the thresholds 0.01, 0.5 and 0.9 in that order,
+as k = 0, 1 and 2: a rise across threshold k (`old < t ≤ new`) prints `DRUNK_MESSAGE_SELF%d`
+(`_OTHER%d` with the name) for k + 2 and skips threshold k + 1; a fall across it (`new < t ≤ old`)
+prints k + 1. A rise across two thresholds prints only the lower one's message, and a rise across
+all three prints messages 2 and 4; a fall across two prints both, the lower first. A NaN level
+crosses nothing.
 
 Addresses: `0x5e2a90`, `0x80af68`, `0x5e2b6f`, `0x5e2b8b`, `0x5e2b9b`, `0x5e2bab`, `0x5e2bbf`, `0x5e2bd0`, `0x5e2c70`
 Confidence: verified
 Proof: one
 Test: none
 
-The thresholds are the floats at `0x80af68`, the index starts at 1 (`0x5e2b6f`). `0x5e2b8b` (`test
-ah,5; jp`) passes only C0 alone, `old < t`, then `0x5e2b9b` needs `new` not below; the falling test
-at `0x5e2bab` and `0x5e2bbf` is the mirror. A crossing with `new > old` (`0x5e2bd0`) adds one to the
-index and 4 to the table offset before printing; the loop end at `0x5e2c70` adds them again. The
-message goes through `0x49a870` as type 0xa; the camera call is `0x511250`.
+The active player's extra steps signal `UNIT_LEVEL` for a target the player can attack, refresh the
+name plates and pass the level to the camera. The thresholds are the floats at `0x80af68`, the index
+starts at 1 (`0x5e2b6f`). `0x5e2b8b` (`test ah,5; jp`) passes only C0 alone, `old < t`, then
+`0x5e2b9b` needs `new` not below; the falling test at `0x5e2bab` and `0x5e2bbf` is the mirror. A
+crossing with `new > old` (`0x5e2bd0`) adds one to the index and 4 to the table offset before
+printing; the loop end at `0x5e2c70` adds them again. The message goes through `0x49a870` as type
+0xa; the camera call is `0x511250`.
 
 ## Guild timestamps
 

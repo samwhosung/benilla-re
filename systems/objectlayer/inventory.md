@@ -9,9 +9,9 @@ Roots: `0x5e5910`, `0x5e5f10`, `0x5e6010`, `0x5e4f30`, `0x5e0c40`, `0x5e1480`, `
 
 ## The inventory
 
-The player's inventory at `+0x1d38` is a count, the GUID array (the player's `PLAYER_FIELD_INV_SLOT_HEAD`
-fields), the owner's GUID and a byte marking the player's own list. A container's list has the
-same shape. Bag_C.cpp walks and searches these lists.
+The player's inventory at `+0x1d38` is a count, the GUID array (the player's
+`PLAYER_FIELD_INV_SLOT_HEAD` fields), the owner's GUID and a byte marking the player's own list. A
+container's list has the same shape. Bag_C.cpp walks and searches these lists.
 
 | slots | holds | walk mask |
 |---|---|---|
@@ -82,17 +82,17 @@ Proof: one
 Test: none
 
 `cmp ecx,0x42; ja` takes the default, which returns 9; each case is `mov eax,id; ret`. The other
-results: 5 `ERR_BAG_IN_BAG`, 6 `ERR_TRADE_EQUIPPED_BAG`, 7 `ERR_AMMO_ONLY`, 13 `ERR_2HANDED_EQUIPPED`,
-14 `ERR_2HSKILLNOTFOUND`, 15 and 16 `ERR_WRONG_BAG_TYPE`, 17 `ERR_ITEM_MAX_COUNT`, 19 and 55
-`ERR_CANT_STACK`, 20 `ERR_NOT_EQUIPPABLE`, 21 `ERR_CANT_SWAP`, 22 `ERR_SLOT_EMPTY`, 23 and 54
-`ERR_ITEM_NOT_FOUND`, 24 `ERR_DROP_BOUND_ITEM`, 25 `ERR_OUT_OF_RANGE`, 26 `ERR_TOO_FEW_TO_SPLIT`, 27
-`ERR_SPLIT_FAILED`, 29 `ERR_NOT_ENOUGH_MONEY`, 30 `ERR_NOT_A_BAG`, 31 `ERR_DESTROY_NONEMPTY_BAG`, 32
-`ERR_NOT_OWNER`, 33 `ERR_ONLY_ONE_QUIVER`, 34 `ERR_NO_BANK_SLOT`, 35 `ERR_NO_BANK_HERE`, 36
-`ERR_ITEM_LOCKED`, 37 `ERR_GENERIC_STUNNED`, 38 `ERR_PLAYER_DEAD`, 39 `ERR_CLIENT_LOCKED_OUT`, 40
-`ERR_INTERNAL_BAG_ERROR`, 41 `ERR_ONLY_ONE_BOLT`, 42 `ERR_ONLY_ONE_AMMO`, 43 to 48 the six
-`ERR_CANT_WRAP_` errors (stackable, equipped, wrapped, bound, unique, bags), 49 `ERR_LOOT_GONE`, 52
-and 57 `ERR_VENDOR_SOLD_OUT`, 58 `ERR_OBJECT_IS_BUSY`, 59 `ERR_CANT_BE_DISENCHANTED`, 60
-`ERR_NOT_IN_COMBAT`, 61 `ERR_NOT_WHILE_DISARMED`.
+results: 5 `ERR_BAG_IN_BAG`, 6 `ERR_TRADE_EQUIPPED_BAG`, 7 `ERR_AMMO_ONLY`, 13
+`ERR_2HANDED_EQUIPPED`, 14 `ERR_2HSKILLNOTFOUND`, 15 and 16 `ERR_WRONG_BAG_TYPE`, 17
+`ERR_ITEM_MAX_COUNT`, 19 and 55 `ERR_CANT_STACK`, 20 `ERR_NOT_EQUIPPABLE`, 21 `ERR_CANT_SWAP`, 22
+`ERR_SLOT_EMPTY`, 23 and 54 `ERR_ITEM_NOT_FOUND`, 24 `ERR_DROP_BOUND_ITEM`, 25 `ERR_OUT_OF_RANGE`,
+26 `ERR_TOO_FEW_TO_SPLIT`, 27 `ERR_SPLIT_FAILED`, 29 `ERR_NOT_ENOUGH_MONEY`, 30 `ERR_NOT_A_BAG`, 31
+`ERR_DESTROY_NONEMPTY_BAG`, 32 `ERR_NOT_OWNER`, 33 `ERR_ONLY_ONE_QUIVER`, 34 `ERR_NO_BANK_SLOT`, 35
+`ERR_NO_BANK_HERE`, 36 `ERR_ITEM_LOCKED`, 37 `ERR_GENERIC_STUNNED`, 38 `ERR_PLAYER_DEAD`, 39
+`ERR_CLIENT_LOCKED_OUT`, 40 `ERR_INTERNAL_BAG_ERROR`, 41 `ERR_ONLY_ONE_BOLT`, 42
+`ERR_ONLY_ONE_AMMO`, 43 to 48 the six `ERR_CANT_WRAP_` errors (stackable, equipped, wrapped, bound,
+unique, bags), 49 `ERR_LOOT_GONE`, 52 and 57 `ERR_VENDOR_SOLD_OUT`, 58 `ERR_OBJECT_IS_BUSY`, 59
+`ERR_CANT_BE_DISENCHANTED`, 60 `ERR_NOT_IN_COMBAT`, 61 `ERR_NOT_WHILE_DISARMED`.
 
 ## Moving items
 
@@ -199,49 +199,56 @@ is skipped while shapeshifted or without the component `+0xd30`; a hide calls `0
 
 `0x5e5910` dispatches 0x19f, 0x1a1, 0x1a4 and 0x1a5 for the active player. 0x19f reads the vendor
 and a u8 count of 28-byte items into the 128-entry table at `0xc4c4a0`. A count above 128 writes
-on past it through the globals that follow, the vendor GUID among them, to 255 entries. A count
-of 0 reads a reason and prints one of five console lines. 0x1a4 stores an item's new stock and
+on past it through the globals that follow, to 255 entries, the initial-spell list header and
+the vendor GUID among them. A count of 0 reads a reason and prints one of five console lines;
+with reason 0 it also opens an empty window. 0x1a4 stores an item's new stock and
 reports quest progress; 0x1a5 zeroes a sold-out item's stock and shows the purchase error; 0x1a1
 shows the sale error and passes the item to `0x495420`.
 
-Addresses: `0x5e5910`, `0x5db980`, `0x5dbabd`, `0x5dced0`, `0x5dcd60`, `0x5dd1f0`, `0xc4c4a0`, `0xc4d498`
+Addresses: `0x5e5910`, `0x5db980`, `0x5db9c7`, `0x5dbabd`, `0x5dced0`, `0x5dcd60`, `0x5dd1f0`, `0xc4c4a0`, `0xc4d2a0`, `0xc4d498`
 Confidence: verified
 Proof: one
 Test: none
 
-The table runs from `0xc4c4a0` to 0xc4d2a0; entry 128 on reach `0xc4d498`, the vendor GUID. The loop
-at `0x5dbabd` compares with the count byte alone. The window opens through `0x4facf0(0xc4c4a0,
-count, guid)`. The reasons 0 to 4 switch through `0x5dbaf4` to five console lines: no inventory, a
-vendor that dislikes the player, too far away, a dead vendor, a dead shopper. 0x1a5's errors: 1 and
-7 `ERR_VENDOR_SOLD_OUT`, 2 `ERR_NOT_ENOUGH_MONEY`, 4 `ERR_VENDOR_HATES_YOU`, 5 `ERR_VENDOR_TOO_FAR`,
-6 none, 8 `ERR_ITEM_MAX_COUNT`, 11 and 12 the rank and reputation errors, others
-`ERR_ITEM_NOT_FOUND`. The senders are `0x5e1d50` (0x1a0), `0x5e1e90` (0x1a2) and `0x5e1f30` (0x1a3).
+The table runs from `0xc4c4a0` to 0xc4d2a0. Entry 128 lands on the initial-spell list header
+`0xc4d2a0`, and entry 146 (0xc4c4a0 + 28·146) is the first to reach the vendor GUID `0xc4d498`,
+which is stored before the loop (`0x5db9c7`). The loop at
+`0x5dbabd` compares with the count byte alone. The window opens through `0x4facf0(0xc4c4a0, count,
+guid)` with the GUID read off the message, for a count above 0 or a reason of 0. The reasons 0 to 4
+switch through `0x5dbaf4` to five console lines: no inventory, a vendor that dislikes the player,
+too far away, a dead vendor, a dead shopper. 0x1a5's errors: 1 and 7 `ERR_VENDOR_SOLD_OUT`, 2
+`ERR_NOT_ENOUGH_MONEY`, 4 `ERR_VENDOR_HATES_YOU`, 5 `ERR_VENDOR_TOO_FAR`, 6 none, 8
+`ERR_ITEM_MAX_COUNT`, 11 and 12 the rank and reputation errors, others `ERR_ITEM_NOT_FOUND`. The
+senders are `0x5e1d50` (0x1a0), `0x5e1e90` (0x1a2) and `0x5e1f30` (0x1a3).
 
 ## Trainers
 
-0x1b1 (`0x5dca60`) reads the trainer, a type and a u32 count, and sizes twelve stack arrays of
-the count or four times it; four times a count of 2^30 or more wraps, and the arrays it then
-writes are too small. Each spell is an id, a state, a cost, two i32, a level, a skill and value,
-and three i32. With the greeting it opens the trainer when the GUID is the one asked
-(`0xc4d788`) or `0xbc3f58`. 0x1b4 prints one of three console lines for results 0 to 2.
+0x1b1 (`0x5dca60`) reads the trainer, a type and a u32 count, and sizes twelve stack arrays, ten of
+four times the count and two of the count, 42 bytes a spell, all through the probe `0x40a280`. The
+image reserves 0x100000 bytes of stack, so a count above about 25,000 faults in the probe, long
+before four times the count wraps at 2^30. With the greeting it
+opens the trainer when the GUID is the one asked (`0xc4d788`) or `0xbc3f58`. 0x1b4 prints one of
+three console lines for results 0 to 2.
 
-Addresses: `0x5e5f10`, `0x5dca60`, `0xc4d788`, `0xbc3f58`
+Addresses: `0x5e5f10`, `0x5dca60`, `0x40a280`, `0xc4d788`, `0xbc3f58`
 Confidence: verified
 Proof: one
 Test: none
 
-The arrays come from `0x40a280` with `(4·count + 3) & ~3` or `(count + 3) & ~3`. The opening is
-`0x4d7440(&guid, type)` then `0x4d7560`. The results print "Trainer service %d unavailable",
-"Not enough money for trainer service %d", "Not enough skill points for trainer service %d".
+Each spell is an id, a state, a cost, two i32, a level, a skill and value, and three i32. The arrays
+come from `0x40a280` with `(4·count + 3) & ~3` or `(count + 3) & ~3`. At a count of 2^30 or more the
+four-times sizes wrap small, but the count-sized arrays still fault in the probe. The opening is
+`0x4d7440(&guid, type)` then `0x4d7560`. The results print "Trainer service %d unavailable", "Not
+enough money for trainer service %d", "Not enough skill points for trainer service %d".
 
 ## Loot
 
-`0x5e6010` dispatches 0x160 to 0x165 for the active player and 0x29e to 0x2a4 to LootRoll.cpp.
-0x160 reads the source and a type; type 0 shows the failure, others read the money and a count,
-capped at 16, of items, each with a slot byte placing it in the 16-entry table `0xc4d4e8`, unchecked:
-a slot above 15 writes past the table, up to slot 255. A response for another source, or a
-failure, releases it. 0x162 clears a slot, again unchecked; 0x161 ends the loot; 0x163 prints the
-money split.
+`0x5e6010` dispatches 0x160 to 0x165 for the active player and 0x29e to 0x2a4 to LootRoll.cpp. 0x160
+reads the source and a type; type 0 shows the failure, others read the money and a count, capped at
+16, of items, each with a slot byte placing it in the 16-entry table `0xc4d4e8`, unchecked: a slot
+above 15 writes past the table, up to slot 255. A response for another source, or a failure,
+releases it. 0x162 clears a slot, again unchecked; 0x161 ends the loot; 0x163 prints the money
+split.
 
 Addresses: `0x5e6010`, `0x5ea8c0`, `0x5eb900`, `0x5ec090`, `0x5ebeb0`, `0x5ebf20`, `0x5ec040`, `0x5ec030`, `0x5ebcf0`, `0x5ebc64`, `0xc4d4e8`
 Confidence: verified

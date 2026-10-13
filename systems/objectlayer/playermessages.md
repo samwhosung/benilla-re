@@ -11,7 +11,8 @@ Roots: `0x5e3010`, `0x5e38c0`, `0x5e7830`, `0x5e78f0`, `0x5e7990`, `0x5e7bc0`, `
 ## Message handlers
 
 `0x5e3010` registers 130 handlers at world entry and `0x5e8f20` clears them at exit. This topic
-has `0x5e38c0` (43 notices, 0x1b to 0x2fd), `0x5e6140` and `0x5e7830` to `0x5e7dd0`; the others:
+has `0x5e38c0` (43 notices, 0x1b to 0x2fd), `0x5e6140`, `0x5e7830` to `0x5e7dd0` and `0x5e8f10`
+(0x252); the others:
 
 | handler | opcodes | topic |
 |---|---|---|
@@ -26,7 +27,7 @@ has `0x5e38c0` (43 notices, 0x1b to 0x2fd), `0x5e6140` and `0x5e7830` to `0x5e7d
 | `0x5e5110` | party member stats 0x7e, 0x2f2 | `party` |
 | `0x5e66b0` to `0x5e7520` | emote, group and guild, one each | `party` |
 | `0x5e61c0` to `0x5e6680` | spells and action buttons | `playercombat` |
-| `0x5e7e00` to `0x5e8f10` | the spell combat log, 12 opcodes | `playercombat` |
+| `0x5e7e00` to `0x5e8d30` | the spell combat log, 11 opcodes | `playercombat` |
 
 Addresses: `0x5e3010`, `0x5e8f20`, `0x5e942f`, `0x5ab650`
 Confidence: verified
@@ -169,8 +170,8 @@ Each tutorial goes through `0x4b5390(id, 0)`. The sound is the active player's `
 0x1fb reads min, max, result and the roller's GUID, allocates a 12-byte block and asks the name
 cache. On a hit it prints `RANDOM_ROLL_RESULT` with the name, result, min and max and frees the
 block. On a miss it returns: the block stays unfilled and is never freed, and the callback it left
-receives the address of the handler's own stack slot, which it reads and passes to `SMemFree`
-once the name arrives.
+receives the address of the handler's own stack slot: once the name arrives it prints the three
+dwords it then finds there and passes that stack address itself to `SMemFree`.
 
 Addresses: `0x5e38c0`, `0x5e4e70`
 Confidence: verified
@@ -178,8 +179,8 @@ Proof: one
 Test: none
 
 The request passes `lea [ebp-8]`, the slot holding the block pointer, as the callback's argument;
-the callback `0x5e4e70` prints `[p+8]`, `[p]` and `[p+4]` and frees `p` after the handler's frame
-is gone.
+the callback `0x5e4e70` prints `[p+8]`, `[p]` and `[p+4]` and frees `p`, the stack address, after
+the handler's frame is gone.
 
 ## GM tickets
 
@@ -191,22 +192,23 @@ is gone.
 | 0x21b | i32 | `UPDATE_GM_STATUS` |
 | 0x328 | i32 s | 1 sends 0x211; 2 the no-ticket event; 3 `GMSURVEY_DISPLAY` |
 
-The no-ticket event pushes seven dwords (0, "", −1, −1, −1, 0, 0) for the format `%d%s%f%f%f%d%d`,
-which reads ten: its floats take the −1 pairs as NaN doubles and the rest runs past the arguments.
+The no-ticket event passes seven dwords (0, "", −1, −1, −1, 0, 0) to the format `%d%s%f%f%f%d%d`,
+which reads ten. The first float is `0xFFFFFFFFFFFFFFFF`, a NaN; the second `0x00000000FFFFFFFF`, a
+denormal; the third takes its high half, and both `%d` their values, from past the arguments.
 `0x5ef740(category, text)` sends 0x205 with the map, position, text and "Reserved for future use";
 category 2 adds the 60 chat lines, their ages and the compressed text. `0x5efac0` sends 0x207;
 `0x5efbb0` 0x211; `0x5efc20` 0x217.
 
-Addresses: `0x5e38c0`, `0x5e78f0`, `0x5e7945`, `0x5ef740`, `0x5efac0`, `0x5efbb0`, `0x5efc20`, `0x8603e4`
+Addresses: `0x5e38c0`, `0x5e78f0`, `0x5e7945`, `0x5e450c`, `0x704fe3`, `0x5ef740`, `0x5efac0`, `0x5efbb0`, `0x5efc20`, `0x8603e4`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5e7945` pushes `0, 0, −1, −1, −1, ""`, then 0, before the format `0x8603e4` and 0x18a. The
-`%f` of `FrameScript_SignalEvent2` takes 8 bytes. `0x5ef740` copies at most 0x7d0 characters, shows
-`ERR_TICKET_NO_TEXT` for none, and for category 2 gathers lines through `0x49a810`, `0x49a830` and
-`0x49a850` into a 0x1e000-byte block, counts them, then compresses into `n + n/1000 + 13` bytes
-of stack with `0x6605a0`.
+`0x5e7945` (0x328) and `0x5e450c` (0x212) push `0, 0, −1, −1, −1, ""`, then 0, before the format
+`0x8603e4` and 0x18a. A `%f` takes 8 bytes (`fld qword` at `0x704fe3`). `0x5ef740` copies at most
+0x7d0 characters, shows `ERR_TICKET_NO_TEXT` for none, and for category 2 gathers lines through
+`0x49a810`, `0x49a830` and `0x49a850` into a 0x1e000-byte block, counts them, then compresses into
+`n + n/1000 + 13` bytes of stack with `0x6605a0`.
 
 ## Mirror timers
 
@@ -241,12 +243,12 @@ The minutes come from `imul 0x88888889`, `sar 5` and the sign fix, then `idiv 60
 
 ## Resurrection and summoning
 
-0x15b reads the resurrecter's GUID, a name (length and bytes in place) and two bytes, keeps the
-GUID and bytes in `0xc4d760` to `0xc4d76c`, and shows the request (`0x48f3e0`) to a dead or ghost
-active player, with the name or, when it is empty, the cached one; a cache miss forgets the
-request. `0x5ded80(accept)` answers with 0x15c and clears the GUID. 0x252 calls `0x495850`. 0x2ab
-reads the summoner, a zone and a delay and shows them (`0x4963a0`) unless the active player is
-dead or a ghost.
+0x15b reads the resurrecter's GUID, a name (length and bytes in place) and two bytes, keeps the GUID
+and bytes in `0xc4d760` to `0xc4d76c`, and shows the request (`0x48f3e0`) to a dead or ghost active
+player, with the name or, when it is empty, the cached one; a cache miss forgets the request.
+`0x5ded80(accept)` answers with 0x15c and clears the GUID. 0x252 (`0x5e8f10`) calls `0x495850`,
+which signals `PLAYER_DEAD` for the active player. 0x2ab reads the summoner, a zone and a delay and
+shows them (`0x4963a0`) unless the active player is dead or a ghost.
 
 Addresses: `0x5e7bc0`, `0x5e7ca0`, `0x5ded50`, `0x5ded80`, `0x5e8f10`, `0x5e6140`, `0xc4d760`
 Confidence: verified
@@ -278,15 +280,16 @@ itself and the inventory index for a bag in slots 19 to 22.
 
 | opcode | handler | does |
 |---|---|---|
-| 0x127 | `0x5e7b70` | stores a u32 mask at `0xc4d4a0 + 4·class` for a u8 class, unchecked against its 16 slots |
+| 0x127 | `0x5e7b70` | stores a u32 mask at `0xc4d4a0 + 4·class` for a u8 class, unchecked against its 16 slots, and prints "Proficiency in item class %d set to %08x" to the console |
 | 0x2bc | `0x5e7d40` | `0x48f400` with the byte's truth |
 | 0x115 | `0x5e7d70` | reads a GUID and drops it |
 | 0x14e | `0x5e7dd0` | stops the melee attack (`0x5ecac0`) |
 
-Addresses: `0x5e7b70`, `0x5e7d40`, `0x5e7d70`, `0x5e7dd0`, `0xc4d4a0`
+Addresses: `0x5e7b70`, `0x5e7d40`, `0x5e7d70`, `0x5e7dd0`, `0xc4d4a0`, `0xc4d4e0`
 Confidence: verified
 Proof: one
 Test: none
 
 The opcodes are the registrations' in `0x5e3010`. `0x5e7b70` indexes with the byte as read;
-`0x5e2030` zeroes the 16 dwords at world entry.
+`0x5e2030` zeroes the 16 dwords at world entry. Class 16 writes `0xc4d4e0`, the bind point's
+valid flag, and higher classes the globals after it, up to class 255.
