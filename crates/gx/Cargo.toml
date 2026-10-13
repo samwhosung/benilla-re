@@ -1,0 +1,13 @@
+[package]
+name = "benilla-re-gx"
+description = "The lightning bolts of WoW.exe 1.12.1.5875, reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+benilla-re-random.workspace = true
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
