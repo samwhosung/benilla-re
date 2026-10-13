@@ -15,7 +15,9 @@ another, `trade` for the trade window, and `units`, `unitmovement`, `unitanim`, 
 `unitdisplay`, `unitbody` and `unitnames` for Unit_C.cpp, `players`, `playerfields`,
 `playermessages`, `quests`, `party`, `inventory`, `interaction` and `playercombat` for Player_C.cpp
 and Bag_C.cpp, `items` for Item_C.cpp and the container, and `gameobjects`, `gameobjecttypes` and
-`transports` for GameObject_C.cpp; the other object files have no topic of their own.
+`transports` for GameObject_C.cpp; `missiles`, `effects`, `unitcombat`, `sounds`, `combatlog`
+and `combatlogmessages` for the missile, effect, combat, sound and log files; the other object
+files have no topic of their own.
 
 Roots: `0x4651a0`, `0x4672f0`, `0x4674a0`, `0x468460`, `0x468550`
 
@@ -95,7 +97,7 @@ Test: none
 
 ## Indexed switch tables
 
-Six switches read a byte table first, which maps the switch value to a case of the dword table
+Seven switches read a byte table first, which maps the switch value to a case of the dword table
 just before it. The byte table's length is the bounds check plus one; the dword table has as many
 entries as the byte table's largest value plus one, which is also the gap between the two.
 
@@ -113,6 +115,49 @@ Test: none
 | `0x60ec98` → `0x60ec84` | 18 → 5 | `0x60ec00` | `cmp 0x11` |
 | `0x61d784` → `0x61d76c` | 11 → 6 | `0x61d720` | `dec`, `cmp 0xa` |
 | `0x62c320` → `0x62c318` | 58 → 2 | `0x62c2d0` | value − 0x32, `cmp 0x39` |
+
+## Sound and log switch tables
+
+UnitSound_C.cpp and the combat log carry more of the same tables: ten dword tables, among them
+the six that turn a relation class into a chat type, and eight indexed ones.
+
+Addresses: `0x623064`, `0x626c64`, `0x6274d0`, `0x6278a4`, `0x627db0`, `0x62959c`, `0x62a154`, `0x62a364`, `0x62a908`, `0x62b7f0`
+Confidence: verified
+Proof: one
+Test: none
+
+| table | entries | function | bound |
+|---|---|---|---|
+| `0x623064` | 13 | `0x623020` | `cmp 0xc` |
+| `0x626c64` | 10 | `0x626be0` | `cmp 9` |
+| `0x6274d0` | 10 | `0x6274a0` | `cmp 9` |
+| `0x6278a4` | 10 | `0x627820` | `cmp 9` |
+| `0x627db0` | 10 | `0x627d80` | `cmp 9` |
+| `0x62959c` | 4 | `0x6294b0` | `dec`, `cmp 3` |
+| `0x62a154` | 10 | `0x62a0d0` | `cmp 9` |
+| `0x62a364` | 10 | `0x62a2e0` | `cmp 9` |
+| `0x62a908` | 7 | `0x62a710` | the same value, `cmp 6` |
+| `0x62b7f0` | 4 | `0x62b7d0` | `cmp 3` |
+
+## Sound and log indexed switches
+
+The indexed tables of UnitSound_C.cpp, UnitCombat_C.cpp and the combat log follow the same shape.
+
+Addresses: `0x623b64`, `0x623b58`, `0x6247ac`, `0x624794`, `0x625b0c`, `0x625aec`, `0x626c98`, `0x626c8c`, `0x6271e4`, `0x6271d0`, `0x6278d8`, `0x6278cc`, `0x62a188`, `0x62a17c`, `0x62a398`, `0x62a38c`
+Confidence: verified
+Proof: one
+Test: none
+
+| bytes → cases | entries | function | bound |
+|---|---|---|---|
+| `0x623b64` → `0x623b58` | 10 → 3 | `0x623b10` | `cmp 9` |
+| `0x6247ac` → `0x624794` | 21 → 6 | `0x6246a0` | `cmp 0x14` |
+| `0x625b0c` → `0x625aec` | 186 → 8 | `0x6255b0` | value − 0x143, `cmp 0xb9` |
+| `0x626c98` → `0x626c8c` | 10 → 3 | `0x626be0` | `cmp 9` |
+| `0x6271e4` → `0x6271d0` | 87 → 5 | `0x626dd0` | value − 3, `cmp 0x56` |
+| `0x6278d8` → `0x6278cc` | 10 → 3 | `0x627820` | `cmp 9` |
+| `0x62a188` → `0x62a17c` | 10 → 3 | `0x62a0d0` | `cmp 9` |
+| `0x62a398` → `0x62a38c` | 10 → 3 | `0x62a2e0` | `cmp 9` |
 
 ## Unreached functions
 
