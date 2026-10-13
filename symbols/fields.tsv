@@ -160,6 +160,41 @@ CM2Shared	0x012c	4	uint32_t	m_hash	models	Holds the hash of the file name	verifi
 CM2Shared	0x0130	4	void *	m_data	models	Holds the file data with its offsets fixed up	verified	one	models/shared#shared-model-object
 CM2Shared	0x0134	4	uint32_t	m_size	models	Holds the file size	verified	one	models/shared#shared-model-object
 CM2Shared	0x0138	4	void *	m_view	models	Holds the selected view	verified	one	models/shared#shared-model-object
+CMapObj	0x0124	4	char *	m_textureNames	models	Holds the MOTX texture name strings	verified	one	models/wmo#material-textures
+CMapObj	0x0128	4	char *	m_groupNames	models	Holds the MOGN group name strings	verified	one	models/wmo#group-header
+CMapObj	0x0130	4	void *	m_groupInfo	models	Holds the MOGI group records, 32 bytes each: flags and box	verified	one	models/wmo#bounding-spheres-and-volume
+CMapObj	0x0134	4	float *	m_portalVertices	models	Holds the MOPV portal vertices	verified	one	models/wmo#portal-vertex-fade
+CMapObj	0x0138	4	void *	m_portals	models	Holds the MOPT portal records, 20 bytes each	verified	one	models/wmo#portal-vertex-fade
+CMapObj	0x013c	4	void *	m_portalRefs	models	Holds the MOPR portal references, 8 bytes each	verified	one	models/wmo#portal-vertex-fade
+CMapObj	0x015c	4	float *	m_volumePlanes	models	Holds the MCVP convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume
+CMapObj	0x0194	4	uint32_t	m_volumePlaneCount	models	Holds the number of convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume
+CMapObj	0x01a0	24	float[6]	m_bounds	models	Holds the bounding box	verified	one	models/wmo#bounding-spheres-and-volume
+CMapObj	0x01c0	4	void *	m_fileData	models	Holds the root file data	verified	one	models/wmo#root-file-chunks
+CMapObj	0x01c4	4	uint32_t	m_fileSize	models	Holds the root file size	verified	one	models/wmo#root-file-chunks
+CMapObj	0x01d4	1	uint8_t	m_loaded	models	Holds whether the root file is parsed	verified	one	models/wmo#queries
+CMapObj	0x01d8	4	void *	m_materials	models	Holds the MOMT material records, 64 bytes each, in the file data	verified	one	models/wmo#material-textures
+CMapObj	0x01dc	4	uint32_t	m_materialCount	models	Holds the number of materials	verified	one	models/wmo#material-textures
+CMapObj	0x01e4	4	uint32_t	m_groupLinkOffset	models	Holds the offset of the list node in a group, the head of the loaded group list	verified	one	models/wmo#group-header
+CMapObjGroup	0x0010	4	uint32_t	m_flags	models	Holds the group flags	verified	one	models/wmo#group-header
+CMapObjGroup	0x0014	24	float[6]	m_bounds	models	Holds the bounding box	verified	one	models/wmo#group-header
+CMapObjGroup	0x002c	4	uint32_t	m_firstPortalRef	models	Holds the first portal reference	verified	one	models/wmo#group-header
+CMapObjGroup	0x0030	4	uint32_t	m_portalRefCount	models	Holds the number of portal references	verified	one	models/wmo#group-header
+CMapObjGroup	0x0034	4	uint8_t[4]	m_fogs	models	Holds the fog indices	verified	one	models/wmo#group-header
+CMapObjGroup	0x0038	4	uint32_t	m_liquid	models	Holds the liquid word of the header	verified	one	models/wmo#group-header
+CMapObjGroup	0x003c	6	uint16_t[3]	m_batchCounts	models	Holds the three batch counts	verified	one	models/wmo#group-header
+CMapObjGroup	0x00bc	1	uint8_t	m_vertexFadeDone	models	Holds whether the portal vertex fade has run	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00c0	4	char *	m_name	models	Holds the group name	verified	one	models/wmo#group-header
+CMapObjGroup	0x00c4	4	uint16_t *	m_faces	models	Holds the MOPY face records	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00c8	4	uint16_t *	m_indices	models	Holds the MOVI indices	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00d0	4	float *	m_vertices	models	Holds the MOVT vertices	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x00dc	4	void *	m_batches	models	Holds the MOBA batches, 24 bytes each	verified	one	models/wmo#group-header
+CMapObjGroup	0x00f4	4	uint32_t *	m_colors	models	Holds the MOCV vertex colours	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x0124	4	uint32_t	m_faceCount	models	Holds the number of faces	verified	one	models/wmo#portal-vertex-fade
+CMapObjGroup	0x013c	4	uint32_t	m_batchCount	models	Holds the number of batches	verified	one	models/wmo#group-header
+CMapObjGroup	0x014c	4	uint32_t	m_groupId	models	Holds the group id of the header	verified	one	models/wmo#group-header
+CMapObjGroup	0x0150	4	void *	m_fileData	models	Holds the group file data	verified	one	models/wmo#group-header
+CMapObjGroup	0x0158	4	CMapObj *	m_mapObj	models	Holds the map object the group belongs to	verified	one	models/wmo#group-header
+CMapObjGroup	0x0164	1	uint8_t	m_parsed	models	Holds whether the group file is parsed	verified	one	models/wmo#group-header
 CMirrorHandler	0x0010	4	void *	m_callback	objectlayer	Holds the function called when the watched bytes change, written by 0x467f00	verified	one	objectlayer/fields#watcher-records
 CMirrorHandler	0x0014	4	uint32_t	m_argument	objectlayer	Holds the argument passed to the callback, written by 0x467f00	verified	one	objectlayer/fields#watcher-records
 CMirrorHandler	0x0018	4	uint32_t	m_countdown	objectlayer	Holds the field steps left before the record is checked, written by 0x465970 and 0x465570	verified	one	objectlayer/fields#when-a-watcher-runs

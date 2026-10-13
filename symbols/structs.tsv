@@ -10,6 +10,8 @@ CInputControl	28		input	Holds the world input state: held commands, travel sums,
 CLayoutFrame	116	0x81c400	ui	Holds a laid-out object's anchor points, dependents, flags, rectangle, size, scale and queue link	verified	one	ui/anchors#construction-and-the-xml-anchors
 CM2Model	1064		models	Holds a model instance: its scene, shared model, transforms, animation state and children	verified	one	models/model#instance-object
 CM2Shared	356		models	Holds a model file: its fixed-up data, view, textures, shader ids and buffers	verified	one	models/shared#shared-model-object
+CMapObj	2036		models	Holds a map object: its root file, chunk pointers and counts, bounds, load state and loaded groups	verified	one	models/wmo#root-file-chunks
+CMapObjGroup	368		models	Holds a map object group: its header fields, chunk pointers and counts, file data and parse state	verified	one	models/wmo#group-header
 CMirrorHandler	48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
 CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
 CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
