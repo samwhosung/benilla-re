@@ -11200,7 +11200,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f37f0	23	lua_pushnil	idb	lua			Pushes nil	inferred	none	spell/targeting#lua-targeting-functions	
 0x6f3810	43	lua_pushnumber	idb	lua			Pushes a number	inferred	none	spell/targeting#lua-targeting-functions	
 0x6f4940	55	luaL_error	idb	lua			Raises a Lua error with a formatted message	inferred	none	spell/targeting#lua-targeting-functions	
-0x701940	5	FrameScriptInitTwoPiThunk		ui	orchestration		Jumps to 0x701950; a static initializer	verified	one	ui/README#this-rounds-object-files	
+0x701940	5	FrameScriptInitTwoPiThunk		ui	orchestration		Jumps to 0x701950; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x701950	15	FrameScriptInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x701960	5	FrameScriptInitInvTwoPiThunk		ui	orchestration		Jumps to 0x701970; a static initializer	verified	one	ui/README#static-initializers	
 0x701970	19	FrameScriptInitInvTwoPi		ui	primitive		Stores 1 divided by a global set just before as a float in a global	verified	one	ui/README#static-initializers	
@@ -11283,8 +11283,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x705c70	33	MethodHashBuildBucket		ui	orchestration		Builds one empty bucket	inferred	none		
 0x705ca0	109	MethodHashReserveBuckets		ui	primitive		Grows the bucket array by a count, rounded to its quantum	inferred	none		
 0x705d10	12	MethodHashInitList		ui	orchestration		Makes an empty list header	inferred	none		
-0x705d20	264	BucketArraySetCount		ui	orchestration		Sets an array of 12-byte list heads to n: destroys those past n, then reallocates, moving the lists when it must	inferred	none	ui/README#this-rounds-object-files	
-0x705e30	5	ScriptFunctionsInitInfinityThunk		ui	orchestration		Jumps to 0x705e40; a static initializer	verified	one	ui/README#this-rounds-object-files	
+0x705d20	264	BucketArraySetCount		ui	orchestration		Sets an array of 12-byte list heads to n: destroys those past n, then reallocates, moving the lists when it must	inferred	none	ui/README#frame-core-object-files	
+0x705e30	5	ScriptFunctionsInitInfinityThunk		ui	orchestration		Jumps to 0x705e40; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x705e40	11	ScriptFunctionsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x705e50	5	ScriptFunctionsInitTwoPiThunk		ui	orchestration		Jumps to 0x705e60; a static initializer	verified	one	ui/README#static-initializers	
 0x705e60	15	ScriptFunctionsInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
@@ -11299,7 +11299,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x706040	102	Script::CreateFont	idb	ui	orchestration		Creates a font object of a name	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x7060b0	664	Script::CreateFrame	idb	ui	orchestration		Creates a frame of a type, name, parent and inherited template	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x706350	114	LoadFrameScriptFunctions		ui	orchestration		Registers the global script functions and the method tables of the frame types	inferred	none	ui/script#method-tables-of-the-frame-types	
-0x7063d0	108	UnloadFrameScriptFunctions		ui	orchestration		Unregisters what 0x706350 registers	inferred	none	ui/README#this-rounds-object-files	
+0x7063d0	108	UnloadFrameScriptFunctions		ui	orchestration		Unregisters what 0x706350 registers	inferred	none	ui/README#frame-core-object-files	
 0x706440	120	M2CacheConstruct		models	host		Zeroes the model cache, its 1021 shared-model buckets and its release list, and creates its two thread events	verified	one	models/cache#cache-object	
 0x7064c0	80	M2CacheDestruct		models	host		Logs a missing M2Destroy when the cache is still initialized, then closes the cache's thread and event handles	verified	one	models/cache#cache-object	
 0x706510	861	M2CacheInitialize		models	primitive		Grants the requested model features the device supports, starts the helper thread, loads the model shaders	verified	one	models/cache#feature-mask	
@@ -11730,7 +11730,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7626e0	11	InitSoftFloatHundredth		cmath		void __cdecl (void)	Stores 0x3c23d70a, 0.01, in its global; a static initializer	verified	one	spell/records#modifier-appliers	
 0x762be0	11	InitSoftFloatHalf		cmath		void __cdecl (void)	Stores 0x3f000000, 0.5, in its global; a static initializer	verified	one	spell/records#software-floats	
 0x762e20	15	InitSoftFloatOne		cmath		void __cdecl (void)	Stores the software float of 1 in its global; a static initializer	verified	one	spell/records#software-floats	
-0x764160	5	TopInitInfinityThunk		ui	orchestration		Jumps to 0x764170; a static initializer	verified	one	ui/README#this-rounds-object-files	
+0x764160	5	TopInitInfinityThunk		ui	orchestration		Jumps to 0x764170; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x764170	11	TopInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x764180	430	CSimpleTop::CSimpleTop	idb	ui	orchestration		Builds the top: layout base, strata records, input lists, key table, pass and input registrations	verified	one	ui/strata#strata-records-and-level-nodes	
 0x764330	33	CSimpleTop::OnPaint		ui	orchestration		Runs the top update pass with the elapsed time, then the draw pass; the callback the constructor registers	verified	one	ui/strata#the-update-pass	
@@ -11813,14 +11813,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x767040	5	TopInitSquareThunk		ui	orchestration		Jumps to 0x767050; a static initializer	verified	one	ui/README#static-initializers	
 0x767050	19	TopInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x767070	5	TopInitHalfTenthThunk		ui	orchestration		Jumps to 0x767080; a static initializer	verified	one	ui/README#static-initializers	
-0x767080	19	TopInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
+0x767080	19	TopInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x7670a0	10	LayoutInitQueueThunk		ui	orchestration		Calls 0x7670b0, then registers the queue's exit handler; a static initializer	verified	one	ui/anchors#construction-and-the-xml-anchors	
 0x7670b0	34	InitLayoutQueue		ui	orchestration		Makes the layout queue empty with link offset 0x6c	verified	one	ui/anchors#construction-and-the-xml-anchors	
 0x7670e0	12	RegisterDestroyLayoutQueue		ui	orchestration		Registers 0x7670f0 with _atexit	verified	one	ui/anchors#construction-and-the-xml-anchors	
 0x7670f0	165	DestroyLayoutQueue		ui	orchestration		Unlinks every queued frame and the queue's terminator at exit	verified	one	ui/anchors#construction-and-the-xml-anchors	
 0x7671a0	78	CLayoutFrame::GetPointX		ui	orchestration		Returns the first x a point of a list of point indices gives that is not +inf	verified	one	ui/anchors#edge-resolution-from-points	
 0x7671f0	78	CLayoutFrame::GetPointY		ui	orchestration		Returns the first y a point of a list of point indices gives that is not +inf	verified	one	ui/anchors#edge-resolution-from-points	
-0x767240	5	LayoutInitInfinityThunk		ui	orchestration		Jumps to 0x767250; a static initializer	verified	one	ui/README#this-rounds-object-files	
+0x767240	5	LayoutInitInfinityThunk		ui	orchestration		Jumps to 0x767250; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x767250	11	LayoutInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x767260	100	CLayoutFrame::GetCenterX		ui	primitive		Resolves the horizontal centre from points 1, 4, 7, else from left, right and width	verified	one	ui/anchors#edge-resolution-from-points	
 0x7672d0	141	CombineCenter		ui	primitive		Returns (near+far)·0.5, near+d·0.5 or far−d·0.5, or +inf, by which inputs are finite	verified	one	ui/anchors#edge-resolution-from-size	
@@ -11879,7 +11879,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x769030	5	LayoutInitSquareThunk		ui	orchestration		Jumps to 0x769040; a static initializer	verified	one	ui/README#static-initializers	
 0x769040	19	LayoutInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x769060	5	LayoutInitHalfTenthThunk		ui	orchestration		Jumps to 0x769070; a static initializer	verified	one	ui/README#static-initializers	
-0x769070	19	LayoutInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
+0x769070	19	LayoutInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x769090	715	CSimpleFrame::CSimpleFrame	idb	ui	orchestration		Builds a frame, joins the top's frame list and the parent, and makes it visible	verified	one	ui/frames#vtables-and-the-two-parts	
 0x769360	5	FrameInitInfinityThunk		ui	orchestration		Jumps to 0x769370; a static initializer	verified	one	ui/README#static-initializers	
 0x769370	11	FrameInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
@@ -11969,7 +11969,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c490	5	FrameInitSquareThunk		ui	orchestration		Jumps to 0x76c4a0; a static initializer	verified	one	ui/README#static-initializers	
 0x76c4a0	19	FrameInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x76c4c0	5	FrameInitHalfTenthThunk		ui	orchestration		Jumps to 0x76c4d0; a static initializer	verified	one	ui/README#static-initializers	
-0x76c4d0	19	FrameInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
+0x76c4d0	19	FrameInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x76c4f0	50	CScriptRegion::CScriptRegion		ui	orchestration		Builds the script object and layout parts and stores the region vtables	verified	one	ui/frames#vtables-and-the-two-parts	
 0x76c530	43	CScriptRegion::DeletingDestructor		ui	orchestration		Destroys a region and frees it when bit 0 of the argument is set	verified	one	ui/frames#destruction	
 0x76c560	67	CScriptRegion::~CScriptRegion		ui	orchestration		Releases the region's table and name and destroys its layout and script parts	verified	one	ui/frames#destruction	
@@ -11988,7 +11988,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c860	5	RegionInitSquareThunk		ui	orchestration		Jumps to 0x76c870; a static initializer	verified	one	ui/README#static-initializers	
 0x76c870	19	RegionInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x76c890	5	RegionInitHalfTenthThunk		ui	orchestration		Jumps to 0x76c8a0; a static initializer	verified	one	ui/README#static-initializers	
-0x76c8a0	19	RegionInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
+0x76c8a0	19	RegionInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x76c8e0	311	CSimpleModel::CSimpleModel		ui	orchestration		Constructs a model frame and stores its two vtables	inferred	none		
 0x76ca50	108	DestroyModelFrame		ui	orchestration		Destroys a model frame's members; the ModelFFX destructor calls it	inferred	none		
 0x76cce0	68	SimpleModelLoadFile		ui	orchestration		Loads a model file into a model frame's scene and hands the model to slot 36	inferred	none		
@@ -11999,7 +11999,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76d240	1078	SimpleModelDraw		ui	primitive		Draws a model frame's scene	inferred	none		
 0x76d680	368	SimpleModelLightCallback		ui	primitive		Lights a model frame's scene model; the callback the frame installs on its own model	inferred	none		
 0x773110	142	RegisterLayerCallback		ui	primitive		Adds a draw callback and its argument to a layer's list	inferred	none		
-0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/README#this-rounds-object-files	
+0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/README#frame-core-object-files	
 0x773700	256	Frame::IsFrameType	idb	ui	orchestration		Implements the Frame method IsFrameType, its pair in the table 0x878ec0	inferred	none		
 0x773800	5	FrameMethodsInitInfinityThunk		ui	orchestration		Jumps to 0x773810; a static initializer	verified	one	ui/README#static-initializers	
 0x773810	11	FrameMethodsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
@@ -12083,7 +12083,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x778620	5	FrameMethodsInitSquareThunk		ui	orchestration		Jumps to 0x778630; a static initializer	verified	one	ui/README#static-initializers	
 0x778630	19	FrameMethodsInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x778650	5	FrameMethodsInitHalfTenthThunk		ui	orchestration		Jumps to 0x778660; a static initializer	verified	one	ui/README#static-initializers	
-0x778660	19	FrameMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
+0x778660	19	FrameMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
 0x78dc60	21			ui	orchestration		Registers a table of three script functions	inferred	none		
 0x78dc80	10			ui	orchestration		Unregisters the table of three script functions	inferred	none		
 0x7a11d0	182	Region::GetObjectType	idb	ui	orchestration		Implements the Region method GetObjectType, its pair in the table 0x87c9b8	verified	one	ui/frames#the-region-type-id	
@@ -12121,8 +12121,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a2f10	5	RegionMethodsInitSquareThunk		ui	orchestration		Jumps to 0x7a2f20; a static initializer	verified	one	ui/README#static-initializers	
 0x7a2f20	19	RegionMethodsInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x7a2f40	5	RegionMethodsInitHalfTenthThunk		ui	orchestration		Jumps to 0x7a2f50; a static initializer	verified	one	ui/README#static-initializers	
-0x7a2f50	19	RegionMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#this-rounds-object-files	
-0x7a2f70	5	FramePointInitInfinityThunk		ui	orchestration		Jumps to 0x7a2f80; a static initializer	verified	one	ui/README#this-rounds-object-files	
+0x7a2f50	19	RegionMethodsInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#frame-core-object-files	
+0x7a2f70	5	FramePointInitInfinityThunk		ui	orchestration		Jumps to 0x7a2f80; a static initializer	verified	one	ui/README#frame-core-object-files	
 0x7a2f80	11	FramePointInitInfinity		ui	orchestration		Copies +inf into 0xcf550c, the undefined coordinate of the layout	verified	one	ui/README#static-initializers	
 0x7a2f90	194	RelativePointGetX		ui	primitive		Returns the x of a relative point: the relative frame's edge or centre plus the scaled offset	verified	one	ui/anchors#relative-point-coordinates	
 0x7a3070	194	RelativePointGetY		ui	primitive		Returns the y of a relative point: the relative frame's edge or centre plus the scaled offset	verified	one	ui/anchors#relative-point-coordinates	
@@ -12136,8 +12136,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a31d0	19	FramePointInitSquare		ui	primitive		Stores a constant squared as a float in a global	verified	one	ui/README#static-initializers	
 0x7a31f0	5	FramePointInitHalfTenthThunk		ui	orchestration		Jumps to 0x7a3200; a static initializer	verified	one	ui/README#static-initializers	
 0x7a3200	19	FramePointInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#static-initializers	
-0x7a3220	5	HyperlinkedFrameInitInfinityThunk		ui	orchestration		Jumps to 0x7a3230; the first static initializer of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#this-rounds-object-files	
-0x7a3230	11	HyperlinkedFrameInitInfinity		ui	orchestration		Copies +inf into a global of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#this-rounds-object-files	
+0x7a3220	5	HyperlinkedFrameInitInfinityThunk		ui	orchestration		Jumps to 0x7a3230; the first static initializer of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#frame-core-object-files	
+0x7a3230	11	HyperlinkedFrameInitInfinity		ui	orchestration		Copies +inf into a global of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#frame-core-object-files	
 0x7a5700	41	Sound::Stop	idb	sound			Stops a sound	inferred	none		
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
 0x7abbe0	61	NormalizeAngle		camera	primitive	float __stdcall (float angle)	Returns x - 2π·trunc(x/2π), plus 2π when x < 0, at 53-bit precision	verified	two	camera#angle-properties	
@@ -12743,7 +12743,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
 0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	
-0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none		
+0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none	ui/README#nameplate-frame-functions	
 0x7e4da0	5	SpellCastTargetsInitCopy1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4db0; a static initializer	verified	one	spell/layout#static-initializers	
 0x7e4db0	11	SpellCastTargetsInitCopy1		spell	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	spell/layout#static-initializers	
 0x7e4dc0	5	SpellCastTargetsInitDouble1Thunk		spell	orchestration	void __cdecl (void)	Jumps to 0x7e4dd0; a static initializer	verified	one	spell/layout#static-initializers	

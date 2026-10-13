@@ -345,13 +345,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c554	void *[8]	s_titleRegionVtable		ui	Holds the vtable of a title region	verified	one	ui/frames#vtables-and-the-two-parts
 0x81c580	void *[8]	CScriptRegion::vftable		ui	Holds the vtable of CScriptRegion	verified	one	ui/frames#vtables-and-the-two-parts
 0x81c5a0	void *[11]	s_scriptRegionLayoutVtable		ui	Holds the vtable of a CScriptRegion's layout part	verified	one	ui/frames#vtables-and-the-two-parts
-0x81d560	const float	s_regionMethodsInfinityConst		ui	Holds +inf, the region methods' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d564	const float	s_regionMethodsPiConst		ui	Holds pi, the region methods' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d568	const float	s_regionMethodsTenConst		ui	Holds 10.0, the region methods' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d56c	const float	s_framePointInfinityConst		ui	Holds +inf, the point getters' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d570	const float	s_framePointPiConst		ui	Holds pi, the point getters' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d574	const float	s_framePointTenConst		ui	Holds 10.0, the point getters' copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
-0x81d578	const float	s_hyperlinkedFrameInfinityConst		ui	Holds +inf, CSimpleHyperlinkedFrame.cpp's copy of the shared header's constant	verified	one	ui/README#this-rounds-object-files
+0x81d560	const float	s_regionMethodsInfinityConst		ui	Holds +inf, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d564	const float	s_regionMethodsPiConst		ui	Holds pi, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d568	const float	s_regionMethodsTenConst		ui	Holds 10.0, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d56c	const float	s_framePointInfinityConst		ui	Holds +inf, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d570	const float	s_framePointPiConst		ui	Holds pi, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d574	const float	s_framePointTenConst		ui	Holds 10.0, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
+0x81d578	const float	s_hyperlinkedFrameInfinityConst		ui	Holds +inf, CSimpleHyperlinkedFrame.cpp's copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d7b0	float	s_defaultDistance		camera	Holds 100.0, the default distance and eye x	verified	one	camera#properties
 0x81d7b4	float	s_defaultFarClip		camera	Holds 5000.0, the default far clip	verified	one	camera#properties
 0x81d7b8	float	s_defaultNearClip		camera	Holds 8.0, the default near clip	verified	one	camera#properties
@@ -547,7 +547,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8722d4	int32_t	s_scriptReference3		ui	Holds a registry reference the state's opening takes	inferred	none	ui/script#the-lua-state
 0x8722dc	char[8]	s_argName		ui	Holds arg and the digits of the argument global being set	verified	one	ui/script#running-a-handler
 0x872990	char[30]	s_eventObjectTag		ui	Holds the allocation tag of the event array, the type name of FrameScript_EventObject	verified	one	ui/script#the-event-table
-0x8729b0	char[60]	s_frameScriptPath		ui	Holds the source path of FrameScript.cpp	verified	one	ui/README#this-rounds-object-files
+0x8729b0	char[60]	s_frameScriptPath		ui	Holds the source path of FrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x8729ec	char[19]	s_frameScriptMetaName		ui	Holds __framescript_meta, the global holding the object metatable	verified	one	ui/script#the-script-object
 0x872a08	char[24]	s_listenerNodeTag		ui	Holds the allocation tag of a listener node, the type name of EVENTLISTENERNODE	verified	one	ui/script#registering-for-an-event
 0x872a28	char[6]	s_handlerNameFormat		ui	Holds %s:%s, the format of a compiled handler's name	verified	one	ui/script#compiling-a-script-element
@@ -562,15 +562,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8783a4	char[53]	s_simpleTopPath		ui	Holds the source path of CSimpleTop.cpp	verified	one	ui/input#input-lists
 0x8783e4	char[23]	s_strataNodeTag		ui	Holds .PAVCFrameStrataNode@@, the allocation tag of the level node arrays	verified	one	ui/strata#strata-records-and-level-nodes
 0x878440	char[33]	s_relativeFrameMissing		ui	Holds the error the XML anchors report for a relativeTo name that finds no frame	verified	one	ui/anchors#construction-and-the-xml-anchors
-0x878500	char[55]	s_layoutFramePath		ui	Holds the source path of CLayoutFrame.cpp	verified	one	ui/README#this-rounds-object-files
+0x878500	char[55]	s_layoutFramePath		ui	Holds the source path of CLayoutFrame.cpp	verified	one	ui/README#frame-core-object-files
 0x878540	char[29]	s_frameNodeTag		ui	Holds the allocation tag of a dependent node, the type name of CLayoutFrame's FRAMENODE	verified	one	ui/anchors#dependents
-0x8785b8	char[55]	s_simpleFramePath		ui	Holds the source path of CSimpleFrame.cpp	verified	one	ui/README#this-rounds-object-files
+0x8785b8	char[55]	s_simpleFramePath		ui	Holds the source path of CSimpleFrame.cpp	verified	one	ui/README#frame-core-object-files
 0x878870	char *	s_regionTypeName		ui	Points to Region, the type name of CScriptRegion	verified	one	ui/frames#vtables-and-the-two-parts
-0x878874	char[56]	s_scriptRegionPath		ui	Holds the source path of CScriptRegion.cpp	verified	one	ui/README#this-rounds-object-files
+0x878874	char[56]	s_scriptRegionPath		ui	Holds the source path of CScriptRegion.cpp	verified	one	ui/README#frame-core-object-files
 0x8788ac	char[4]	s_topName		ui	Holds Top, what $parent becomes when no ancestor is named	verified	one	ui/frames#names-and-lookup-by-name
 0x8788b0	char[8]	s_parentPrefix		ui	Holds $parent, the name prefix replaced by an ancestor's name	verified	one	ui/frames#names-and-lookup-by-name
 0x878ec0	uint32_t[136]	s_frameMethods		ui	Holds the 68 pairs of a name and a function of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
-0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#this-rounds-object-files
+0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x87c9b8	uint32_t[38]	s_regionMethods		ui	Holds the 19 pairs of a name and a function of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates

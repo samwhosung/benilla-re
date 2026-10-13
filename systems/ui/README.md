@@ -6,17 +6,17 @@ the widget types, and the game's own interface code that feeds them.
 The system owns two groups of object files. The engine side is `ENGINE\Source\Frame` (`CSimpleTop`
 to `CSimpleHyperlinkedFrame`, `0x764160` to 0x7a3a80), `ENGINE\SOURCE\FrameXML` (from 0x6ed930)
 and `ENGINE\SOURCE\FrameScript` (`0x701940` to `0x706430`); the Lua 5.0 core between them belongs
-to `lua`. The game side is `WoW\Source\Ui` (0x47f7d0 to 0x509ff0), the interface files of
+to `lua`. The game side is `WoW\Source\Ui` (0x480380 to 0x509ff0), the interface files of
 `WoW\Source\UIUtil` (`ScriptEvents.cpp` to `Tooltip.cpp`, 0x515880 to 0x536ea0), the LCD files
-(0x728b10 to 0x730ff0) and `NamePlateFrame.cpp` and `HealthBar.cpp`. In all, about 9,800
-functions. This round documents the frame and layout core in `frames`, `anchors`, `strata`,
-`visibility`, `input`, `script` and `methods`; the rest is planned below in rounds of about
-600 to 900 functions. None of the primitives here has a bit-exact test yet. Rows of the game-side
-files that other rounds filed under `gameui` and `worldframe` belong here and move with their round.
+(0x728b10 to 0x730ba0), `NamePlateFrame.cpp` (0x7cb0f0 to 0x7cc310) and `HealthBar.cpp` (0x7cc320
+to 0x7ccc80). In all, about 9,800 functions. The frame and layout core is documented in `frames`,
+`anchors`, `strata`, `visibility`, `input`, `script` and `methods`. The rest is not documented yet
+(`Not documented yet`); its rows are those other systems' findings cite. None of the primitives
+here has a bit-exact test yet.
 
 Roots: `0x764160`, `0x766800`, `0x766820`, `0x767040`, `0x767070`, `0x7670a0`, `0x767240`, `0x768f70`, `0x768f90`, `0x769030`, `0x769060`, `0x769360`, `0x76b2f0`, `0x76c130`, `0x76c150`, `0x76c490`, `0x76c4c0`, `0x76c7e0`, `0x76c800`, `0x76c820`, `0x76c860`, `0x76c890`, `0x773800`, `0x778300`, `0x7785d0`, `0x7785f0`, `0x778620`, `0x778650`, `0x701940`, `0x701960`, `0x701990`, `0x7019b0`, `0x705e30`, `0x705e50`, `0x705e70`, `0x705ea0`, `0x705ed0`, `0x7a17f0`, `0x7a2c10`, `0x7a2ec0`, `0x7a2ee0`, `0x7a2f10`, `0x7a2f40`, `0x7a2f70`
 
-## This round's object files
+## Frame core object files
 
 The frame and layout core is nine runs of code. The first six are bounded by the source paths
 their functions pass and by their initializer slots; the last three by their method tables, their
@@ -94,7 +94,7 @@ from `0x76a679`; `0x76c040` is slot 0x6c of `0x81c498`, the dword at 0x81c504.
 
 ## Unreached functions
 
-Nothing live reaches fifteen functions of this round: the event table's teardown `0x704060`, four
+Nothing live reaches fifteen functions of the frame core: the event table's teardown `0x704060`, four
 global helpers `0x7041a0`, `0x7041f0`, `0x7042a0` and `0x7043b0`, the varargs wrapper `0x704ef0`, a
 list link `0x764ce0`, a click raise `0x765010`, the absolute point setter `0x767b50` and the three
 slots of the vtable only it installs, `0x767bf0`, `0x767c00` and `0x767c10`, a sizing step
@@ -112,27 +112,51 @@ eleven of them; `0x768550`'s one call is `0x76a649`, inside `0x76a630`. The dwor
 `0x767b50`; `0x767be0`, its slot 3, is also slot 3 of the base `0x81c43c`, which live destructors
 install. Each function above ends
 in `ret` or `jmp`, so nothing falls through into them. The control is `0x7680e0`, with 45 calls.
-Every other function of the nine runs, apart from the base library this round leaves out, has a
+Every other function of the nine runs, apart from the base library of `FrameScript.cpp`, has a
 call, a jump, a stored address read by live code, or a slot of a vtable live code installs.
 
-## Later rounds
+## Nameplate frame functions
 
-The rest of the system, by run, in the order the rounds take it:
+Two rows of `NamePlateFrame.cpp` are read here for other systems. `0x7cba30` is slot 15 of the
+nameplate's vtable 0x81de50, the slot `CSimpleFrame::OnMouseMove` (`0x76b320`) fills in the base:
+while a spell targets and wants a location but not a unit, it answers 0; otherwise it calls the
+base. `0x7cba70`, which `0x6122e0` tail-calls with a unit's nameplate (the unit's `+0xe60`),
+stores 5000 at the nameplate's `+0x514` and sets the colour of the texture at `+0x4fc` to
+0xffff0000, opaque red.
 
-| round | files | functions |
-|---|---|---|
-| 2 | regions and drawing: `CSimpleModel`, the textures and batches of `CSimpleRender.cpp`, regions, backdrop, `CSimpleFont`, the texture, font string and font methods, `CSimpleHyperlinkedFrame` | about 600 |
-| 3 | widget types and their methods: button, edit box, check button, message frames, status bar, slider, scroll frame, HTML, colour select, movie frame | about 850 |
-| 4 | `FrameXML.cpp` and `XMLTree.cpp`, the base library of `FrameScript.cpp`, the LCD files | about 700 |
-| 5 | `WorldFrame.cpp`, `GameUI.cpp` | about 820 |
-| 6 | `ChatFrame.cpp`, `WorldMap.cpp`, `BattlefieldInfo.cpp`, `MailInfo.cpp`, `ChatBubbleFrame.cpp` | about 890 |
-| 7 | `SpellBookFrame.cpp` to `TradeFrame.cpp` | about 790 |
-| 8 | `LootFrame.cpp` to `GuildInfo.cpp` | about 860 |
-| 9 | `SkillInfo.cpp` to `ItemTextFrame.cpp` | about 900 |
-| 10 | `ActionBarFrame.cpp` to `PetitionInfo.cpp` | about 820 |
-| 11 | `CraftInfo.cpp` to `CharacterModelBase.cpp` | about 830 |
-| 12 | `QuestTextParser.cpp`, `ScriptEvents.cpp`, `AddOns.cpp` | about 590 |
-| 13 | `Cursor.cpp`, `PortraitButton.cpp`, `Tooltip.cpp`, `NamePlateFrame.cpp`, `HealthBar.cpp` | about 670 |
+Addresses: `0x7cba30`, `0x7cba70`, `0x76b320`, `0x6e48a0`, `0x6e6320`, `0x6e6180`, `0x6122e0`
+Confidence: inferred
+Proof: none
+Test: none
+
+The constructor stores the vtable at 0x7cb29a; its dword at 0x81de8c, slot 15, is `0x7cba30`, the
+only reference to it. `0x7cba30` calls `0x6e48a0`, `0x6e6320` and `0x6e6180` and returns 0 only when
+the first two answer nonzero and the third zero (`0x7cba51`); else it passes its argument to
+`0x76b320`. `0x6122e0` loads the unit's `+0xe60` and, when it is nonzero, jumps to `0x7cba70`
+(`0x6122ea`), the one reference to it. `0x7cba70` stores 0x1388 at `+0x514` (`0x7cba77`) and calls
+0x77f750 on `+0x4fc` with a pointer to 0xffff0000 (`0x7cba88`, `0x7cba8f`), the function that sets a texture's
+vertex colour. What the 5000 counts is not read here.
+
+## Not documented yet
+
+The rest of the system has no doc yet; issue
+[#3](https://github.com/samwhosung/benilla-re/issues/3) tracks it. These are its files in link
+order, with a census of their function starts:
+
+| files | functions |
+|---|---|
+| regions and drawing: `CSimpleModel`, the textures and batches of `CSimpleRender.cpp`, regions, backdrop, `CSimpleFont`, the texture, font string and font methods, `CSimpleHyperlinkedFrame` | about 600 |
+| widget types and their methods: button, edit box, check button, message frames, status bar, slider, scroll frame, HTML, colour select, movie frame | about 850 |
+| `FrameXML.cpp` and `XMLTree.cpp`, the base library of `FrameScript.cpp`, the LCD files | about 700 |
+| `WorldFrame.cpp`, `GameUI.cpp` | about 820 |
+| `ChatFrame.cpp`, `WorldMap.cpp`, `BattlefieldInfo.cpp`, `MailInfo.cpp`, `ChatBubbleFrame.cpp` | about 890 |
+| `SpellBookFrame.cpp` to `TradeFrame.cpp` | about 790 |
+| `LootFrame.cpp` to `GuildInfo.cpp` | about 860 |
+| `SkillInfo.cpp` to `ItemTextFrame.cpp` | about 900 |
+| `ActionBarFrame.cpp` to `PetitionInfo.cpp` | about 820 |
+| `CraftInfo.cpp` to `CharacterModelBase.cpp` | about 830 |
+| `QuestTextParser.cpp`, `ScriptEvents.cpp`, `AddOns.cpp` | about 590 |
+| `Cursor.cpp`, `PortraitButton.cpp`, `Tooltip.cpp`, `NamePlateFrame.cpp`, `HealthBar.cpp` | about 670 |
 
 Addresses: `0x76c8e0`, `0x6edb90`, `0x729dd0`, `0x496720`, `0x51ebe0`
 Confidence: inferred
@@ -142,6 +166,6 @@ Test: none
 The counts are a census of function starts per run: call targets, stored addresses and first
 instructions after padding, minus targets reached by fall-through or a jump table, counting the
 static initializers. The runs between known paths are bounded by their initializer sets and
-method tables; a round settles its own bounds at the bytes. The game-side files keep the link
-order; `UIUtil`'s `Camera.cpp` and `InputControl.cpp` lie between rounds 11 and 12 and are not
-part of this system.
+method tables, which a doc of each settles at the bytes. The game-side files keep the link order;
+`UIUtil`'s `Camera.cpp` and `InputControl.cpp` lie between `QuestTextParser.cpp` and
+`ScriptEvents.cpp` and are not part of this system: they are `uicamera` and `input`.

@@ -58,7 +58,7 @@ with the category before each `EventRegisterEx` (`0x41fca0`): `0x765df0`/1, `0x7
 through `EventUnregisterEx` (`0x41fd90`). The category meanings are those of `core/input`. The key
 and mouse handlers store the event's time, `+0xc` of a key payload and `+0x20` of a mouse payload,
 in `0xcf0bc8` (`0x765f34`, `0x765fec`, `0x766152`, `0x766291`, `0x7662fb`, `0x766461`,
-`0x76651f`); its 30 readers lie in the game-side files, which later rounds take.
+`0x76651f`); its 30 readers lie in the game-side files, which have no doc yet.
 
 ## Mouse move and the hover pick
 

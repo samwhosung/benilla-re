@@ -61,7 +61,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The listing was rebuilt from the exe so that it restarts after each switch table: a `jmp
+The listing restarts after each switch table: a `jmp
 [reg*4+table]` gives the table, read while its dwords point back into the function, and a
 `movzx` from a byte table before it gives the index table, bounded by the `cmp` before that. The
 bodies follow the rule of `symbols/README.md` over that listing. A candidate start that lies

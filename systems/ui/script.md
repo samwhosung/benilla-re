@@ -8,7 +8,7 @@ state in `0xceef74`. It holds the script object every frame and region begins wi
 event names and their listener lists, the functions that run a handler with `this`, `event` and
 `arg1` to `argN` set, the creation and reset of the state, and helpers the rest of the client uses
 to register functions and read or write globals. The same object file holds a base library of
-Lua functions (`setglobal` to `debugstack`, from 0x702770 to 0x703760), which this round does
+Lua functions (`setglobal` to `debugstack`, from 0x702770 to 0x703760), which this doc does
 not cover. The run `0x705e30` to `0x706430` after it registers the frame-type method tables and
 the global script functions `CreateFrame`, `CreateFont`, `GetNumFrames` and `EnumerateFrames`.
 

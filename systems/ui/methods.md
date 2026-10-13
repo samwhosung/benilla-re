@@ -84,7 +84,7 @@ Test: none
 
 Each of these calls the screen-coordinate pair `GetScaledScreenAspect` and `DivideByScreenScaleX`
 or `MultiplyByScreenScaleX` per value; the edge getters call `0x768310`, `0x7680e0` and
-`0x768320`. The exact conversion belongs to the screen-coordinate system and was not re-read here.
+`0x768320`. The exact conversion belongs to the screen-coordinate system and is not derived here.
 
 ## Region parent and anchor methods
 
