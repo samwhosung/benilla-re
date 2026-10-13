@@ -17,17 +17,10 @@ pub struct StartFalling {
 }
 
 /// `TransformPoint` (`0x7bca80`, `systems/collision/falling.md#frame-transform`), which the stretch
-/// calls: `M·v + T` per component in the order below, each stored as `f32`.
+/// calls: `M·v + T`, each component stored as `f32`.
 #[inline]
 pub fn affine_xform(m: &[f32; 16], v: &[f32; 3]) -> [f32; 3] {
-    let (vx, vy, vz) = (f(v[0]), f(v[1]), f(v[2]));
-
-    let ox = (((f(m[8]) * vz) + (f(m[4]) * vy)) + (f(m[0]) * vx)) + f(m[12]);
-
-    let oy = (((f(m[9]) * vz) + (f(m[1]) * vx)) + (f(m[5]) * vy)) + f(m[13]);
-
-    let oz = (((f(m[10]) * vz) + (f(m[2]) * vx)) + (f(m[6]) * vy)) + f(m[14]);
-    [ox as f32, oy as f32, oz as f32]
+    benilla_re_cmath::transform::transform_point(v, m)
 }
 
 /// `p = M·base + T`; the box from `p − (r, r, 0)` to `p + (r, r, h)` with `r` = `+0xb0` and `h` =
