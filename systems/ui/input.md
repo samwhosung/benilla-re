@@ -43,7 +43,7 @@ entry when visible; `0x76afa0` and `0x76afe0` do kinds 0 to 3.
 The top's handlers and the categories they are registered on, each with the top as argument and
 priority 1.0, are: 1 characters, 0x1b the input language, 8 key down, 9 key up, 0xa key repeat,
 0xc mouse move, 0xd relative mouse move, 0xb mouse down, 0xe mouse up, 0x10 wheel, 0x1c window
-size and 2 lost capture. A handler answers 0 when the interface took the input and 1 to let the
+size and 2 the window's activation change, on activation and deactivation alike. A handler answers 0 when the interface took the input and 1 to let the
 lower-priority handlers have it.
 
 Addresses: `0x765bf0`, `0x765bfa`, `0x765c11`, `0x765c28`, `0x765c3e`, `0x765c55`, `0x765c6c`, `0x765c82`, `0x765c99`, `0x765cb0`, `0x765cc6`, `0x765cdd`, `0x765cf4`, `0x765d10`, `0x81c378`, `0xcf0bc8`, `0x765f34`, `0x765fec`, `0x766152`, `0x766291`, `0x7662fb`, `0x766461`, `0x76651f`

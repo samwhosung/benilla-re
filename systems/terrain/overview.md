@@ -31,17 +31,17 @@ Confidence: verified
 Proof: one
 Test: none
 
-The addresses are each file's first and last function. The table from `0x827000` holds each
-file's initializers together. Each of the 30 runs, and the 8 other runs from `0x82bb98` to
-`0x82cce0`, opens with a body copying the file's own +∞ literal, then 2π and 1/2π, the π literal 4
-bytes after the ∞ one: `0x82bfd8` copies `0x810528` and `0x82bfdc` doubles `0x81052c` for the
-map load, after the BSP file's run `0x82bfb0` to `0x82bfd4`, whose own +∞ and π literals open
-its run. Every slot of a run lies in its file's code but `0x82c7cc`, the map render's
-`0x6b34c0`. A file ends where the next starts, except that the function just before the map
-object reader's +∞ thunk is that file's: only its code references it. Four names come from source
-paths passed to `SMemAlloc` and `SMemFree`: World.cpp (`0x867a50`), Map.cpp (`0x86a38c`),
-MapMem.cpp (`0x86a798`) and DetailDoodad.cpp (`0x86b608`). The gaps between the runs hold the
-weather, options, video, BSP, map object, map object group and map object reader files.
+The addresses are each file's first and last function. The table from `0x827000` holds each file's
+initializers together. Each of the 30 runs, and the 7 other files' runs among them from `0x82bb98`
+to `0x82ccdc`, opens with a body copying the file's own +∞ literal, then 2π and 1/2π, the π
+literal 4 bytes after the ∞ one: `0x82bfd8` copies `0x810528` and `0x82bfdc` doubles `0x81052c`
+for the map load, after the BSP file's run `0x82bfb0` to `0x82bfd4`, whose own +∞ and π literals
+open its run. Every slot of a run lies in its file's code but `0x82c7cc`, the map render's
+`0x6b34c0`. A file ends where the next starts, except that the function just before the map object
+reader's +∞ thunk is that file's: only its code references it. Four names come from source paths
+passed to `SMemAlloc` and `SMemFree`: World.cpp (`0x867a50`), Map.cpp (`0x86a38c`), MapMem.cpp
+(`0x86a798`) and DetailDoodad.cpp (`0x86b608`). Those 7 are the weather, options, video, BSP, map
+object, map object group and map object reader files, in that order.
 
 ## Unreached functions
 

@@ -11775,7 +11775,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x766420	208	CSimpleTop::OnMouseUp		ui	orchestration		Handles category 0xe: ends a move or size, or releases the pressed frame	verified	one	ui/input#the-handlers	
 0x7664f0	195	CSimpleTop::OnMouseWheel		ui	orchestration		Handles category 0x10: offers the wheel to hit frames of the wheel lists from stratum 8 down	verified	one	ui/input#the-handlers	
 0x7665c0	134	CSimpleTop::OnWindowSize		ui	orchestration		Handles category 0x1c: refreshes the fonts and every frame's regions, then the host's size callback	inferred	none	ui/input#the-handlers	
-0x766650	68	CSimpleTop::OnFocusLost		ui	orchestration		Handles category 2: calls a window-code function, then the host's callback at +0x1134	inferred	none	ui/input#the-handlers	
+0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	inferred	none	ui/input#the-handlers	
 0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal size to a whole number of screen pixels	inferred	none		
 0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical size to a whole number of screen pixels	inferred	none		
 0x766800	5	TopInitTwoPiThunk		ui	orchestration		Jumps to 0x766810; a static initializer	verified	one	ui/README#static-initializers	

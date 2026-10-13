@@ -192,7 +192,7 @@ queries with 0x30000 into `0xc4e564`. Per triangle `0x637330` writes the negated
 `+0x28` in place, and the normal is x' = (m00·x + m20·z) + m10·y. `0x63400a` stores −((n'.z·v0.z
 + n'.y·v0.y) + n'.x·v0.x). `0x6721b0` zeroes the counts at `+0x04` and `+0x14` and steps 0x34 through `+0x08` before it
 queries (`0x6721c7` to `0x6721e3`); the triangle layout is read here from these consumers, and
-the world search itself is not.
+the world search is terrain's ([world triangle query](../terrain/collide.md#world-triangle-query)).
 
 ## Free-move resolver
 
