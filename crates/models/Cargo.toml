@@ -1,0 +1,10 @@
+[package]
+name = "benilla-re-models"
+description = "The models of WoW.exe 1.12.1.5875 (M2 and WMO), reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
