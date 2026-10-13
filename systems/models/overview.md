@@ -4,13 +4,13 @@ The model system of the client: the M2 model format as the client loads it, the 
 its instances, their animation, lighting and drawing, the particle and ribbon emitters they carry,
 and the world model objects (`.wmo`) with their groups and BSP trees.
 
-The system owns seventeen object files, listed below; `0x827000`, the C runtime's initializer
-table, lists each one's static initializers in one run. The docs split by topic: `cache` (the
-model cache and its helper thread), `scene` (a scene's frame), `render` (the draw), `model` (the
-instance API), `animation`, `lights`, `shared` (the file and its fixup), `emission` and
-`particles`, `ribbons` and `wmo`. This doc holds the object files, their static initializers and the code nothing
-reaches. Other systems enter through the roots each topic doc lists, and through the static
-initializers below.
+The system owns seventeen object files, listed below; `0x827000`, the C runtime's initializer table,
+lists each one's static initializers in one run. The docs split by topic: `cache` (the model cache
+and its helper thread), `scene` (a scene's frame), `render` (the draw), `model` (the instance API),
+`animation`, `lights`, `shared` (the file and its fixup), `records` (its records), `emission` and
+`particles`, `ribbons` and `wmo`. This doc holds the object files, their static initializers and the
+code nothing reaches. Other systems enter through the roots each topic doc lists, and through the
+static initializers below.
 
 Roots: `0x692ba0`, `0x692bc0`, `0x692be0`, `0x692c10`, `0x692c40`, `0x692cc0`, `0x693bb0`, `0x693be0`, `0x693c10`, `0x693c40`, `0x693c70`, `0x6a2c70`, `0x6a2c90`, `0x6a2d70`, `0x6a2ef0`, `0x6a2f30`, `0x6a2f50`, `0x6a2f90`, `0x6a2fb0`, `0x6a3020`, `0x6a55d0`, `0x6a55f0`, `0x6a6270`, `0x6a62a0`, `0x6a62d0`, `0x6a6300`, `0x6a6330`, `0x6a6360`, `0x6a6390`, `0x6a63c0`, `0x6a63f0`, `0x6a6420`, `0x6a6450`, `0x6a6480`, `0x6a64b0`, `0x6a64e0`, `0x6a6500`, `0x6a6530`, `0x6a6560`, `0x6a6590`, `0x6a65c0`, `0x6a65f0`, `0x6a6620`, `0x6a6650`, `0x6a6680`, `0x6a66b0`, `0x6a66e0`, `0x6b83a0`, `0x6b83c0`, `0x6b8420`, `0x6b8540`, `0x6b85a0`, `0x6b86c0`, `0x6b8710`, `0x6bb120`, `0x6bb140`, `0x6bcb00`, `0x6bcb30`, `0x6bcb60`, `0x6bcb90`, `0x6bcbc0`, `0x6bcbf0`, `0x6bcc20`, `0x6bcc50`, `0x6bcc80`, `0x6bccb0`, `0x6bcce0`, `0x6bcd10`, `0x6bcd40`, `0x6bcd70`, `0x6bcd90`, `0x6bcdc0`, `0x6bcdf0`, `0x6bce20`, `0x6bcec0`, `0x6bcef0`, `0x6bcf20`, `0x6bcf50`, `0x6bcf80`, `0x6bcfb0`, `0x6bcfe0`, `0x6c3870`, `0x6c4730`, `0x6c4750`, `0x6c4780`, `0x6c47b0`, `0x6c47e0`, `0x6c4810`, `0x6c4840`, `0x6c4870`, `0x6c48a0`, `0x6c48d0`, `0x6c4900`, `0x6c4930`, `0x6c4960`, `0x6c4990`, `0x6c49c0`, `0x6c49f0`, `0x6c4a10`, `0x6c4a40`, `0x6c4a70`, `0x6c4aa0`, `0x6c4ad0`, `0x6c4b00`, `0x6c4b30`, `0x6c4b60`, `0x6c4b90`, `0x6c4bc0`, `0x6c4bf0`, `0x706d90`, `0x706dc0`, `0x706e40`, `0x706e60`, `0x706e80`, `0x706eb0`, `0x706ee0`, `0x706f10`, `0x706fe0`, `0x70b310`, `0x70d9b0`, `0x70d9d0`, `0x70dc00`, `0x70dc30`, `0x70dc60`, `0x70dd30`, `0x711bd0`, `0x714210`, `0x714230`, `0x7187e0`, `0x71b030`, `0x71b060`, `0x71cc40`, `0x71cc60`, `0x71cc80`, `0x71ccb0`, `0x71cce0`, `0x71e050`, `0x71e070`, `0x71e090`, `0x71f800`, `0x71f830`, `0x71f9f0`, `0x71fa10`, `0x71fa30`, `0x71fa60`, `0x71fa90`, `0x7adf90`, `0x7af1b0`, `0x7af1d0`, `0x7b0dd0`, `0x7b0df0`, `0x7b0e10`, `0x7b0e40`, `0x7b0e70`, `0x7b0ea0`, `0x7b0ee0`, `0x7b0ef0`, `0x7b0f50`, `0x7b0f80`, `0x7b1050`, `0x7b1070`, `0x7b10b0`, `0x7b6c10`, `0x7b8390`, `0x7b83b0`, `0x7b8750`, `0x7b9aa0`, `0x7b9ac0`, `0x7b9af0`, `0x7b9f00`, `0x7b9f20`, `0x7b9f50`, `0x7b9f70`, `0x7b9fa0`, `0x7ba860`, `0x7ba880`
 
