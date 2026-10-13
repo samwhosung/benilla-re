@@ -12,6 +12,8 @@ CM2Model	1064		models	Holds a model instance: its scene, shared model, transform
 CM2Shared	356		models	Holds a model file: its fixed-up data, view, textures, shader ids and buffers	verified	one	models/shared#shared-model-object
 CMirrorHandler	48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
 CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
+CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
+CParticleEmitter2	656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter
 CPlayerMoveEvent	80		collision	Holds one queued movement event: list link, time, tag, pose, status snapshot, payload and flags	verified	one	collision/events#event-node
 CScriptRegion	160	0x81c580	ui	Holds a script object part, a CLayoutFrame at +0x24, a name and a parent	verified	one	ui/frames#vtables-and-the-two-parts
 CSimpleFrame	788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, flags, scripts, regions, layers and children	verified	one	ui/frames#construction
@@ -31,11 +33,13 @@ M2Element	64		models	Holds one drawable of a scene frame: its kind, instance, ba
 M2Header	340		models	Holds an MD20 file header: magic, version and the count and offset of every array	verified	one	models/shared#header-fixup
 M2Light	108		models	Holds a light: type, position, direction, colours, attenuation and scene link	verified	one	models/lights#light-object
 M2Lighting	436		models	Holds the lights an instance draws with: nearest point lights, sums, harmonic terms, fog, clip plane	verified	one	models/lights#lighting-record
+M2ParticleRecord	504		models	Holds a particle emitter record of an MD20 file: flags, bone, tracks, gradients and motion terms	verified	one	models/emission#particle-record
 M2Scene	7532		models	Holds a scene: clock, model lists, light grid, elements, draw lists and queued callbacks	verified	one	models/scene#scene-object
 MovementGlobals	312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
 NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
 NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
+PlaneParticleEmitter	672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
 RACECLASSINFO	32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
 RealmCategory	28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
 RealmInfo	308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
@@ -47,5 +51,7 @@ SpellCastTimesRec	16		dbc	Holds one SpellCastTimes.dbc row: id, base, per-level 
 SpellDurationRec	16		dbc	Holds one SpellDuration.dbc row: id, duration, per-level duration and maximum in ms	inferred	none	spell/records#duration
 SpellRangeRec	88		dbc	Holds one SpellRange.dbc row: id, minimum and maximum range, flags and names	inferred	none	spell/records#range
 SpellRec	692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-lookups
+SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
+SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
 WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

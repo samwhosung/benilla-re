@@ -635,6 +635,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
 0x87d5fc	float	s_particleDensity		models	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density
+0x87d714	const float[16]	s_particleQuadCorners		models	Holds the four quad corners and their four texture corners	verified	one	models/particles#head-quads
 0x87d894	float	s_terminalVelocity		collision	Holds the fall speed cap, 60.148003 (0x4270978e); its one writer 0x7c6160 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x87d898	float	s_featherFallTerminalVelocity		collision	Holds the cap under flag 0x20000000, 7.0 (0x40e00000); its one writer 0x7c6180 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
@@ -1079,8 +1080,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5748	float	s_particleRegistryInfinity		models	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf575c	void *	s_particleRegistry		models	Holds the particle emitter registry, created on first use	verified	one	models/particles#registries
 0xcf5760	void *	s_ribbonRegistry		models	Holds the ribbon emitter registry, created on first use	verified	one	models/particles#registries
+0xcf5878	float[3]	s_particleNormal		models	Holds the normal every particle vertex takes, the view image of world +z	verified	one	models/particles#particle-view-space
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table
+0xcf5b68	float[16]	s_particleViewMatrix		models	Holds the matrix an emitter's draw takes particle positions into view space with	verified	one	models/particles#particle-view-space
 0xcf5ca4	float	s_geometryInvTwoPi		unassigned	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#object-files
 0xcf5ca8	float	s_geometryTwoPi		unassigned	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#object-files
 0xcf5cc0	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers

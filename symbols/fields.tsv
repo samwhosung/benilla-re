@@ -209,6 +209,46 @@ CMovement	0x0148	4	float	m_facingRateTime	collision	Holds the seconds to the que
 CMovement	0x014c	4	int32_t	m_correctionTime	collision	Holds the ms to the queue head at arming, read as int32, the divisor of the position blend; 0 when off	verified	one	collision/status#position-blend-arming
 CMovement	0x0150	12	void *[3]	m_events	collision	Holds the event queue header: link offset, last link, then the first CPlayerMoveEvent	verified	one	collision/events#insertion-in-time-order
 CMovement	0x015c	4	void *	m_unit	collision	Holds the unit that owns the mover, the constructor's fourth argument	verified	one	collision/mover#construction
+CParticle2	0x0000	12	float[3]	m_position	models	Holds the position, in world or emitter space	verified	one	models/particles#particle-life
+CParticle2	0x000c	1	uint8_t	m_gradient	models	Holds which gradient colours the particle, 1 past the midpoint	verified	one	models/particles#particle-life
+CParticle2	0x0010	12	float[3]	m_velocity	models	Holds the velocity	verified	one	models/emission#spawn-space
+CParticle2	0x001c	4	float	m_age	models	Holds the age in seconds	verified	one	models/particles#particle-life
+CParticleEmitter2	0x000c	4	uint32_t	m_columnShift	models	Holds log2 of the texture grid columns	verified	one	models/particles#head-quads
+CParticleEmitter2	0x0010	8	float[2]	m_cellSize	models	Holds the cell width and height in texture space	verified	one	models/particles#head-quads
+CParticleEmitter2	0x002c	8	NTempest::CRndSeed	m_random	models	Holds the random state spawns draw from	verified	one	models/emission#speed-and-birth
+CParticleEmitter2	0x005c	4	uint32_t *	m_live	models	Holds the live particle indices	verified	one	models/particles#particle-life
+CParticleEmitter2	0x0064	4	uint32_t	m_liveCount	models	Holds the number of live particles	verified	one	models/particles#particle-life
+CParticleEmitter2	0x0070	4	uint32_t *	m_free	models	Holds the free particle indices	verified	one	models/particles#particle-life
+CParticleEmitter2	0x007c	4	uint32_t	m_childCount	models	Holds the number of child emitters	verified	one	models/particles#child-emitters
+CParticleEmitter2	0x0080	4	CParticleEmitter2 **	m_children	models	Holds the child emitters each particle carries	verified	one	models/particles#child-emitters
+CParticleEmitter2	0x009c	4	uint32_t	m_vertsPerParticle	models	Holds 4 per head or tail, the vertices one particle writes	verified	one	models/particles#draw-order-and-batches
+CParticleEmitter2	0x00a0	4	uint32_t	m_indicesPerParticle	models	Holds 6 per head or tail, the indices one particle takes	verified	one	models/particles#draw-order-and-batches
+CParticleEmitter2	0x00ac	4	float	m_lifespan	models	Holds the particle lifespan in seconds	verified	one	models/particles#particle-life
+CParticleEmitter2	0x00b4	4	float	m_tailLength	models	Holds the tail length factor	verified	one	models/particles#tail-quads
+CParticleEmitter2	0x00bc	192	uint8_t[192]	m_gradients	models	Holds the two 0x60-byte gradients	verified	one	models/particles#gradients
+CParticleEmitter2	0x017c	4	float	m_speed	models	Holds the emission speed	verified	one	models/emission#speed-and-birth
+CParticleEmitter2	0x0180	4	float	m_gravity	models	Holds the gravity	verified	one	models/particles#particle-motion
+CParticleEmitter2	0x0184	4	float	m_speedVariation	models	Holds the speed variation	verified	one	models/emission#speed-and-birth
+CParticleEmitter2	0x0188	4	float	m_zSource	models	Holds the z source, 0 when under 0.001 in magnitude	verified	one	models/emission#plane-spawn
+CParticleEmitter2	0x018c	4	float	m_spin	models	Holds the spin in radians per second	verified	one	models/particles#head-quads
+CParticleEmitter2	0x0198	8	uint32_t[2]	m_grid	models	Holds the texture grid rows and columns	verified	one	models/particles#head-quads
+CParticleEmitter2	0x01a8	4	float	m_alpha	models	Holds the instance alpha the colours scale by	verified	one	models/emission#per-frame-parameters
+CParticleEmitter2	0x01ac	4	uint32_t	m_flags	models	Holds the emitter flags	verified	one	models/emission#record-flags
+CParticleEmitter2	0x01b0	4	float	m_twinkleSpeed	models	Holds the twinkle speed	verified	one	models/particles#twinkle
+CParticleEmitter2	0x01b4	4	float	m_twinkleVisible	models	Holds the fraction of particles twinkle leaves visible	verified	one	models/particles#twinkle
+CParticleEmitter2	0x01b8	12	float[3]	m_twinkleScale	models	Holds the twinkle scale minimum, maximum and range	verified	one	models/particles#twinkle
+CParticleEmitter2	0x01c4	4	float	m_inheritScale	models	Holds the scale of the velocity the emitter derives from its motion	verified	one	models/emission#record-to-emitter
+CParticleEmitter2	0x01c8	24	float[6]	m_modelRanges	models	Holds the model particle minimum and range for each axis	verified	one	models/emission#record-to-emitter
+CParticleEmitter2	0x01e0	4	float	m_drag	models	Holds the drag	verified	one	models/particles#particle-motion
+CParticleEmitter2	0x01e4	12	float[3]	m_wind	models	Holds the wind	verified	one	models/particles#particle-motion
+CParticleEmitter2	0x01f0	4	float	m_windTime	models	Holds the age under which wind applies	verified	one	models/particles#particle-motion
+CParticleEmitter2	0x01f4	8	float[2]	m_follow	models	Holds the follow mapping intercept and slope	verified	one	models/emission#record-to-emitter
+CParticleEmitter2	0x01fc	64	float[16]	m_matrix	models	Holds the emitter matrix, relative to the reference frame in world space	verified	one	models/particles#particle-view-space
+CParticleEmitter2	0x023c	12	float[3]	m_cameraPosition	models	Holds the camera position the draw translates by	verified	one	models/particles#particle-view-space
+CParticleEmitter2	0x0248	12	float[3]	m_lastPosition	models	Holds the emitter position of the previous update	verified	one	models/particles#child-emitters
+CParticleEmitter2	0x0258	12	float[3]	m_velocity	models	Holds the emitter velocity particles inherit	verified	one	models/emission#spawn-space
+CParticleEmitter2	0x0264	4	float	m_scale	models	Holds the length of the emitter matrix first row	verified	one	models/particles#particle-view-space
+CParticleEmitter2	0x0284	12	float[3]	m_flatAxis	models	Holds the emitter z axis in view space that flat quads turn about	verified	one	models/particles#head-quads
 CPlayerMoveEvent	0x0000	4	void *	m_linkPrev	collision	Holds the link to the previous node of the list the event is in	verified	one	collision/events#event-node
 CPlayerMoveEvent	0x0004	4	void *	m_linkNext	collision	Holds the next node, or the list's own link with bit 0 set at the end	verified	one	collision/events#event-node
 CPlayerMoveEvent	0x0008	4	uint32_t	m_time	collision	Holds the time the event takes effect, the queue's sort key, compared as a signed difference	verified	one	collision/events#event-node
@@ -485,6 +525,21 @@ M2Lighting	0x018c	4	float	m_fogScale	models	Holds 1/(fog end - fog start)	verifi
 M2Lighting	0x0190	12	float[3]	m_fogColor	models	Holds the fog colour	verified	one	models/lights#lighting-record
 M2Lighting	0x019c	4	uint32_t	m_hasClipPlane	models	Holds whether the record carries a clip plane	verified	one	models/lights#view-space-lights
 M2Lighting	0x01a0	16	float[4]	m_clipPlane	models	Holds the clip plane normal and distance	verified	one	models/lights#view-space-lights
+M2ParticleRecord	0x0004	4	uint32_t	m_flags	models	Holds the record flags	verified	one	models/emission#record-flags
+M2ParticleRecord	0x0008	12	float[3]	m_position	models	Holds the emitter position relative to its bone	verified	one	models/emission#particle-record
+M2ParticleRecord	0x0014	2	uint16_t	m_bone	models	Holds the bone the emitter rides	verified	one	models/emission#particle-record
+M2ParticleRecord	0x0016	2	uint16_t	m_texture	models	Holds the texture index	verified	one	models/emission#particle-record
+M2ParticleRecord	0x0028	2	uint16_t	m_blend	models	Holds the blend	verified	one	models/emission#record-flags
+M2ParticleRecord	0x002a	2	uint16_t	m_emitterType	models	Holds the emitter type: 1 plane, 2 sphere, 3 spline	verified	one	models/emission#particle-record
+M2ParticleRecord	0x002c	2	uint16_t	m_particleType	models	Holds 0 head, 1 tail, 2 both	verified	one	models/emission#particle-record
+M2ParticleRecord	0x0030	4	uint16_t[2]	m_grid	models	Holds the texture grid rows and columns	verified	one	models/emission#particle-record
+M2ParticleRecord	0x0034	280	uint8_t[280]	m_tracks	models	Holds the ten float tracks, speed through z source	verified	one	models/emission#particle-record
+M2ParticleRecord	0x014c	4	float	m_midpoint	models	Holds the gradient midpoint	verified	one	models/particles#gradients
+M2ParticleRecord	0x0150	12	uint32_t[3]	m_colors	models	Holds the three gradient colours	verified	one	models/particles#gradients
+M2ParticleRecord	0x015c	12	float[3]	m_scales	models	Holds the three gradient sizes	verified	one	models/particles#gradients
+M2ParticleRecord	0x0168	20	uint16_t[10]	m_cells	models	Holds the head and tail cell ranges and repeats of both gradients	verified	one	models/particles#gradients
+M2ParticleRecord	0x017c	4	float	m_tailLength	models	Holds the tail length factor	verified	one	models/emission#record-flags
+M2ParticleRecord	0x01dc	28	uint8_t[28]	m_enabledTrack	models	Holds the enabled byte track	verified	one	models/emission#particle-record
 M2Scene	0x0000	4	uint32_t	m_refCount	models	Holds the scene's reference count	verified	one	models/scene#scene-object
 M2Scene	0x0004	4	M2Cache *	m_cache	models	Holds the cache the scene belongs to	verified	one	models/scene#scene-object
 M2Scene	0x000c	4	uint32_t	m_time	models	Holds the scene clock in milliseconds	verified	one	models/scene#scene-object
@@ -516,6 +571,8 @@ ObjectManager	0x00c0	8	uint64_t	m_activePlayerGuid	objectlayer	Holds the active 
 ObjectManager	0x00cc	4	uint32_t	m_mapId	objectlayer	Holds the map id, written by 0x4685a0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d0	4	ClientConnection *	m_client	objectlayer	Holds the client connection the update handlers are registered on, written by 0x4685b0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d4	4	MovementGlobals *	m_movementGlobals	objectlayer	Holds the movement manager, written by 0x468600	verified	one	objectlayer/manager#accessors-and-enumeration
+PlaneParticleEmitter	0x0000	656	CParticleEmitter2	m_base	models	Holds the base emitter	verified	one	models/emission#plane-spawn
+PlaneParticleEmitter	0x0290	16	float[4]	m_shape	models	Holds area length, area width, polar and azimuth spreads	verified	one	models/emission#plane-spawn
 RACECLASSINFO	0x0000	4	uint32_t	m_hashVal	spell	Holds the hash, the skill line of the run	verified	one	spell/tables#startup-build-of-the-indexes
 RACECLASSINFO	0x0004	8	void *[2]	m_linkToSlot	spell	Holds the link in the node's slot list, offset 4	verified	one	spell/tables#hash-table-layout
 RACECLASSINFO	0x000c	8	void *[2]	m_linkToFull	spell	Holds the link in the table's node list, offset 0x0c	verified	one	spell/tables#hash-table-layout
@@ -599,6 +656,11 @@ SpellRec	0x0274	4	uint32_t	m_startRecoveryCategory	dbc	Holds the global cooldown
 SpellRec	0x0278	4	int32_t	m_startRecoveryTime	dbc	Holds the global cooldown time in ms, before op 21	verified	one	spell/records#global-cooldown-start
 SpellRec	0x0280	4	uint32_t	m_spellClassSet	dbc	Holds the spell family the modifier sums compare with the class's	verified	one	spell/records#modifier-sums
 SpellRec	0x0284	8	uint32_t[2]	m_spellClassMask	dbc	Holds the 64-bit family mask, low dword first, whose bits select modifier cells	verified	one	spell/records#modifier-sums
+SphereParticleEmitter	0x0000	656	CParticleEmitter2	m_base	models	Holds the base emitter	verified	one	models/emission#sphere-spawn
+SphereParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds minimum radius, maximum radius, their range, latitude and longitude spreads	verified	one	models/emission#sphere-spawn
+SplineParticleEmitter	0x0000	656	CParticleEmitter2	m_base	models	Holds the base emitter	verified	one	models/emission#spline-spawn
+SplineParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds base rate, start and end parameters, spread and offset	verified	one	models/emission#spline-spawn
+SplineParticleEmitter	0x02a4	4	uint32_t	m_spawnAtEnd	models	Holds 1 after the end parameter changes, until the next spawn	verified	one	models/emission#spline-spawn
 WowConnection	0x0010	4	uint32_t	m_state	net	Holds the socket state: 5 connected, 6 closed, 7 closing	verified	one	net/wire#sending
 WowConnection	0x001c	4	uint8_t *	m_recvBuffer	net	Holds the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0020	4	uint32_t	m_recvFill	net	Holds the count of bytes in the receive buffer	verified	one	net/wire#receive-loop

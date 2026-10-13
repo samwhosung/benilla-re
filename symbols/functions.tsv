@@ -631,6 +631,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	random::crandom_uint32_advance
 0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
 0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	
+0x453420	94	EvaluateSplineTangent		spline		void __thiscall (void *spline, float u, float *out, uint32_t mode)	Writes the curve tangent at u clamped into [0, 1]	inferred	none	models/emission#spline-spawn	
 0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
 0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	
 0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	
@@ -12380,12 +12381,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b1b80	229	CParticleEmitter2::~CParticleEmitter2		models	host		Releases a particle emitter's model, textures, children and particle arrays	inferred	none		
 0x7b1c70	1	CParticleEmitter2::NoOp		models	orchestration		Returns; called by the emitter destructor	inferred	none		
 0x7b1c80	61	CParticleEmitter2::SetModel		models	orchestration		Loads the model a particle emitter emits as particles	inferred	none		
-0x7b1cc0	270	ParticleRandom		models	primitive		Advances an emitter's random state and returns a float from the noise table in a range	inferred	none	models/cache#noise-table	
+0x7b1cc0	270	CParticleEmitter2::RollSpeed		models	primitive	float __thiscall (CParticleEmitter2 *this)	Returns the emission speed times one plus a signed uniform times the speed variation	verified	one	models/emission#speed-and-birth	
 0x7b1dd0	138	CParticleEmitter2::Preallocate		models	primitive		Reserves particle storage for the emitter's rate and lifespan, with 15 percent slack	inferred	none	models/particles#emitter-classes	
 0x7b1e60	153	CParticleEmitter2::ShrinkStorage		models	primitive		Picks the smaller capacity for an emitter's particle and index arrays	inferred	none		
 0x7b1f00	509	CParticleEmitter2::ReserveStorage		models	orchestration		Resizes an emitter's particle records, live and free index arrays to a capacity	inferred	none		
 0x7b2100	50	CParticle2Construct		models	orchestration		Zeroes a particle record and sets its scale to 1.0	inferred	none		
-0x7b2140	109	CParticleEmitter2::SnapSpawnToGround		models	primitive		Moves a spawned particle onto the ground when the emitter asks for it	inferred	none		
+0x7b2140	109	CParticleEmitter2::SnapSpawnToGround		models	primitive		Moves a spawned particle onto the ground when the emitter asks for it	inferred	none	models/emission#spawn-space	
 0x7b21b0	98	Particle2ModelCopy		models	orchestration		Copies a model particle record and adds a reference to its model	inferred	none		
 0x7b2220	24	Particle2ModelRelease		models	orchestration		Releases the model a model particle record holds	inferred	none		
 0x7b2240	98	Particle2ModelAssign		models	orchestration		Assigns a model particle record from another, adding a reference to its model	inferred	none		
@@ -12394,13 +12395,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b2680	597	CParticleEmitter2::IntegrateParticle		models	primitive		Moves a particle one step under wind, emitter motion, gravity and drag; returns 0 to kill it	verified	one	models/particles#particle-motion	
 0x7b28e0	223	CParticleEmitter2::IntegrateModelParticle		models	primitive		Moves a model particle one step and advances its spin quaternion	inferred	none		
 0x7b29c0	143	ParticleQuatMultiply		models	primitive		Multiplies two quaternions	inferred	none		
-0x7b2a50	2691	CParticleEmitter2::WriteQuads		models	primitive		Writes a particle's billboard or tail quads with colour, size and texture cell into a vertex buffer	inferred	none	models/particles#gradients-and-quads	
+0x7b2a50	2691	CParticleEmitter2::WriteQuads		models	primitive		Writes a particle's head and tail quads with colour, size and texture cell; returns 0 when twinkle hides it	verified	one	models/particles#head-quads	
 0x7b34e0	741	CParticleEmitter2::GetBounds		models	unreached		Computes the centre and radius bounding an emitter's particles and its children; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b37d0	470	ParticleSegmentRadii		models	unreached		Solves the radii of a segment's endpoints for the particle bounds; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b39b0	85	CParticleEmitter2::GetFrameOffset		models	unreached		Copies an emitter's frame matrix minus its origin; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b3a10	573	CParticleEmitter2::WriteAllQuads		models	primitive		Writes every particle's quads, in depth order when the emitter sorts	inferred	none	models/particles#gradients-and-quads	
-0x7b3c50	195	ParticleFillQuadIndices		models	host		Fills the shared particle index buffer with two triangles per quad	inferred	none		
-0x7b3d20	1978	CParticleEmitter2::Render		models	primitive		Sets device state and draws an emitter's particles from the shared buffers	inferred	none	models/particles#gradients-and-quads	
+0x7b3a10	573	CParticleEmitter2::WriteAllQuads		models	primitive		Writes every particle's quads, in depth order when the emitter sorts	verified	one	models/particles#draw-order-and-batches	
+0x7b3c50	195	ParticleFillQuadIndices		models	host		Fills a quad index buffer: 0x1000 single quads or 0xaaa head and tail pairs	verified	one	models/particles#draw-order-and-batches	
+0x7b3d20	1978	CParticleEmitter2::Render		models	primitive		Sets the particle view, draws an emitter's particles in view space and restores the view	verified	one	models/particles#particle-view-space	
 0x7b44e0	1	ParticleRenderStateNoOpA		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b44f0	1	ParticleRenderStateNoOpB		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
 0x7b4500	1	ParticleRenderStateNoOpC		models	orchestration		Returns; a render callback the particle draw passes	inferred	none		
@@ -12408,7 +12409,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b4840	760	CParticleEmitter2::DrawModelParticles		models	primitive		Places every model particle's model, in depth order when the emitter sorts	inferred	none	models/particles#update	
 0x7b4b40	77	CParticleEmitter2::RenderTree		models	orchestration		Renders an emitter and its child emitters	inferred	none	models/render#ribbon-particle-and-custom-draws	
 0x7b4b90	3	CParticleEmitter2::VirtualNoOp		models	orchestration		Returns, popping one argument; a vtable slot of every particle emitter	verified	one	models/particles#emitter-classes	
-0x7b4ba0	33	CParticleEmitter2::SetPreallocate		models	primitive		Stores the particle count an emitter reserves for	inferred	none		
+0x7b4ba0	33	CParticleEmitter2::SetEnabled		models	primitive	void __thiscall (CParticleEmitter2 *this, uint32_t enabled, uint32_t unused)	Copies bit 0 of its argument into the emitter's flag 1	verified	one	models/emission#per-frame-parameters	
 0x7b4bd0	31	CParticleEmitter2::SetFlag2		models	unreached		Sets or clears bit 1 of an emitter's flags; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b4bf0	46	CParticleEmitter2::SetEmissionRate		models	orchestration		Sets an emitter's emission rate, storing 0 for a rate that is not positive	verified	one	models/particles#emitter-classes	
 0x7b4c20	36	CParticleEmitter2::SetLifespan		models	orchestration		Sets an emitter's lifespan and marks its gradients for rebuilding when it changes	inferred	none		
@@ -12420,10 +12421,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b4cf0	40	CParticleEmitter2::SetFlagB		models	unreached		Sets bit 1 of an emitter's draw flags from a cleared argument; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b4d20	40	CParticleEmitter2::ReplaceTexture		models	orchestration		Replaces an emitter's texture handle	inferred	none	models/model#replaceable-textures	
 0x7b4d50	16	CParticleEmitter2::SetFloat1a4		models	unreached		Stores an emitter's float at +0x1a4; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b4d60	180	CParticleEmitter2::SetColorGradient		models	orchestration		Copies a colour and size gradient record into an emitter	inferred	none		
+0x7b4d60	180	CParticleEmitter2::SetColorGradient		models	orchestration		Copies a colour and size gradient record into an emitter	inferred	none	models/particles#gradients	
 0x7b4e20	164	ParticleGradientCopy		models	orchestration		Copies a 96-byte gradient record	inferred	none		
-0x7b4ed0	134	CParticleEmitter2::SetTextureGrid		models	primitive		Sets an emitter's texture cell grid, requiring power-of-two rows and columns	inferred	none		
-0x7b4f60	112	CParticleEmitter2::SetHeadTail		models	primitive		Sets whether an emitter draws particle heads, tails or both	inferred	none		
+0x7b4ed0	134	CParticleEmitter2::SetTextureGrid		models	primitive		Sets the texture grid when both sizes are powers of two: counts, column shift and cell sizes	verified	one	models/particles#head-quads	
+0x7b4f60	112	CParticleEmitter2::SetHeadTail		models	primitive		Sets the head and tail flags, tail length and age cap, and the vertex and index counts per particle	verified	one	models/emission#record-flags	
 0x7b4fd0	10	CParticleEmitter2::GetFlag1		models	unreached		Returns bit 0 of an emitter's flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b4fe0	12	CParticleEmitter2::GetFlag2		models	unreached		Returns bit 1 of an emitter's flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b4ff0	7	CParticleEmitter2::GetEmissionRate		models	unreached		Returns an emitter's emission rate; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -12436,20 +12437,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b5070	29	CParticleEmitter2::GetTextureGrid		models	unreached		Copies an emitter's texture cell grid size; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b5090	52	CParticleEmitter2::GetHeadTail		models	unreached		Returns an emitter's head and tail settings; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b50d0	137	CParticleEmitter2::SetPosition		models	unreached		Moves an emitter and its children to a position; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b5160	200	CParticleEmitter2::SetFrame		models	primitive		Sets an emitter's frame matrix and origin from a model matrix and the reference frame	inferred	none	models/particles#update	
+0x7b5160	200	CParticleEmitter2::SetFrame		models	primitive		Stores the camera position, the emitter matrix relative to the frame, and the matrix's scale	verified	one	models/particles#particle-view-space	
 0x7b5230	674	CParticleEmitter2::Update		models	primitive		Sets an emitter's frame and camera distance, derives its motion, then advances its particles	verified	one	models/animation#pushing-animated-state	
 0x7b54e0	104	ParticleMinVector		models	unreached		Stores the component-wise minimum of two vectors; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b5550	816	CParticleEmitter2::Spawn		models	primitive		Spawns an emitter's particles for a step from its rate, the density setting and the camera distance	verified	one	models/particles#spawn-count	
 0x7b5880	395	CParticleEmitter2::Advance		models	primitive		Advances an emitter by a time, in 0.1 s substeps for long steps	verified	one	models/particles#update	
-0x7b5a10	566	CParticleEmitter2::Step		models	primitive		Ages, moves and kills an emitter's particles for one step and spawns new ones	inferred	none	models/particles#substeps	
-0x7b5c50	8	CParticleEmitter2::RequestBurst		models	primitive		Sets the flag that spawns one burst of particles at the next step	inferred	none		
+0x7b5a10	566	CParticleEmitter2::Step		models	primitive		Ages, kills, moves and recolours an emitter's particles for one substep, then runs its child emitters	verified	one	models/particles#particle-life	
+0x7b5c50	8	CParticleEmitter2::RequestBurst		models	primitive		Sets the emitter's pending burst flag 0x20	verified	one	models/emission#per-frame-parameters	
 0x7b5c60	99	CParticleEmitter2::FlushSpawnQueue		models	unreached		Spawns an emitter's queued particles; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b5cd0	44	CParticleEmitter2::SetZSource		models	primitive		Sets an emitter's z source, storing 0 for a magnitude under 0.001	inferred	none		
-0x7b5d00	32	CParticleEmitter2::SetFlag10		models	primitive		Sets or clears bit 4 of an emitter's flags	inferred	none		
+0x7b5cd0	44	CParticleEmitter2::SetZSource		models	primitive		Stores the z source, or 0 when its magnitude is under 0.001	verified	one	models/emission#per-frame-parameters	
+0x7b5d00	32	CParticleEmitter2::SetSorted		models	primitive		Copies bit 0 of its argument into flag 0x10, the depth-ordered draw	verified	one	models/emission#record-flags	
 0x7b5d20	13	CParticleEmitter2::GetFlag10		models	unreached		Returns bit 4 of an emitter's flags; nothing reaches it	verified	one	models/overview#unreached-code	
-0x7b5d30	76	CParticleEmitter2::SetSpeedRemap		models	primitive		Stores the slope and offset of a linear remap from two points	inferred	none		
+0x7b5d30	76	CParticleEmitter2::SetFollowMapping		models	primitive		Stores the slope and intercept of the line through two speed and factor points	verified	one	models/emission#record-to-emitter	
 0x7b5d80	26	CParticleEmitter2::AddChild		models	orchestration		Appends a child emitter to an emitter	inferred	none		
-0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration		Loads the model whose emitters become an emitter's children	inferred	none		
+0x7b5da0	44	CParticleEmitter2::LoadChildModel		models	orchestration		Loads the model whose emitters become an emitter's children	inferred	none	models/particles#child-emitters	
 0x7b5dd0	106	CParticleEmitter2::OnChildModelLoaded		models	orchestration		Adopts a loaded child model's particle emitters as an emitter's children	inferred	none		
 0x7b5e40	6	EmitterAddRef		models	orchestration		Increments an emitter's reference count	inferred	none		
 0x7b5e50	13	EmitterRelease		models	orchestration		Decrements an emitter's reference count and destroys it through its vtable at zero	inferred	none	models/particles#registries	
@@ -12465,9 +12466,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b6270	57	ParticleIndexArrayQuantum		models	primitive		Returns the growth quantum of a particle index array for a count	inferred	none		
 0x7b62b0	31	ParticleIndexArrayRoundUp		models	primitive		Rounds a count up to a multiple of a quantum	inferred	none		
 0x7b62d0	196	Particle2ModelArrayRealloc		models	host		Reallocates a model particle record array, releasing the dropped records	inferred	none		
-0x7b63a0	157	ParticleDepthSortPush		models	orchestration		Inserts a particle and its depth into the sortable record heap	inferred	none		
+0x7b63a0	157	ParticleDepthSortPush		models	orchestration		Inserts a particle and its depth into the sortable record heap	inferred	none	models/particles#draw-order-and-batches	
 0x7b6440	83	ParticleDepthSortPopModel		models	orchestration		Removes the deepest model particle from the sortable record heap	inferred	none		
-0x7b64a0	81	ParticleDepthSortPop		models	orchestration		Removes the deepest particle from the sortable record heap	inferred	none		
+0x7b64a0	81	ParticleDepthSortPop		models	orchestration		Removes the deepest particle from the sortable record heap	inferred	none	models/particles#draw-order-and-batches	
 0x7b6500	996	CRibbonEmitter::Assign		models	unreached		Copies a ribbon emitter's settings, materials, textures and vertex arrays from another; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b68f0	154	CRibbonEmitter::CopyTextures		models	primitive		Copies a ribbon's texture handle array, adding a reference to each handle	inferred	none		
 0x7b6990	631	CRibbonEmitter::BuildNodeFrame		models	primitive		Builds the cross-section basis of a ribbon node from its motion	inferred	none	models/overview#object-files	
@@ -12523,44 +12524,44 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b87f0	43	PlaneEmitterDeletingDestructor		models	host		Destroys a plane emitter and frees it when asked; a vtable slot	inferred	none	models/particles#emitter-classes	
 0x7b8820	82	PlaneEmitterCopyConstruct		models	orchestration		Constructs a plane emitter as a copy of another	inferred	none		
 0x7b8880	11	PlaneEmitterDestruct		models	orchestration		Restores the plane vtable and destroys the base emitter	inferred	none		
-0x7b8890	817	PlaneEmitterSpawnParticle		models	primitive		Spawns a particle on a rectangle with a direction within the emitter's spread	inferred	none	models/overview#unreached-code	
+0x7b8890	817	PlaneEmitterSpawnParticle		models	primitive	void __thiscall (CParticleEmitter2 *this, void *particle, float dt, const float *matrix)	Spawns a particle on a rectangle with a cone or radial velocity	verified	one	models/emission#plane-spawn	
 0x7b8bd0	7	PlaneEmitterGetValue290		models	unreached		Returns a plane emitter's float at +0x290; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b8be0	7	PlaneEmitterGetValue294		models	unreached		Returns a plane emitter's float at +0x294; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b8bf0	7	PlaneEmitterGetValue298		models	unreached		Returns a plane emitter's float at +0x298; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b8c00	7	PlaneEmitterGetValue29c		models	unreached		Returns a plane emitter's float at +0x29c; nothing reaches it	verified	one	models/overview#unreached-code	
-0x7b8c10	16	PlaneEmitterSetValue290		models	orchestration		Stores a plane emitter's value at +0x290; a vtable slot	verified	one	models/particles#emitter-classes	
-0x7b8c20	16	PlaneEmitterSetValue294		models	orchestration		Stores a plane emitter's value at +0x294; a vtable slot	inferred	none		
-0x7b8c30	16	PlaneEmitterSetValue298		models	orchestration		Stores a plane emitter's value at +0x298; a vtable slot	inferred	none		
-0x7b8c40	16	PlaneEmitterSetValue29c		models	orchestration		Stores a plane emitter's value at +0x29c; a vtable slot	verified	one	models/particles#emitter-classes	
+0x7b8c10	16	PlaneEmitterSetLength		models	orchestration		Stores a plane emitter's area length	verified	one	models/emission#plane-spawn	
+0x7b8c20	16	PlaneEmitterSetWidth		models	orchestration		Stores a plane emitter's area width	inferred	none		
+0x7b8c30	16	PlaneEmitterSetVerticalRange		models	orchestration		Stores a plane emitter's polar spread	inferred	none		
+0x7b8c40	16	PlaneEmitterSetHorizontalRange		models	orchestration		Stores a plane emitter's azimuth spread	verified	one	models/emission#plane-spawn	
 0x7b8c50	51	SphereEmitterConstruct		models	orchestration		Constructs a sphere-shaped particle emitter: base emitter, zero radii and spread, its vtable	inferred	none	models/particles#emitter-classes	
 0x7b8c90	56	SphereEmitterClone		models	host		Allocates a sphere emitter copied from another; a vtable slot	inferred	none	models/particles#emitter-classes	
 0x7b8cd0	43	SphereEmitterDeletingDestructor		models	host		Destroys a sphere emitter and frees it when asked; a vtable slot	inferred	none	models/particles#emitter-classes	
 0x7b8d00	94	SphereEmitterCopyConstruct		models	orchestration		Constructs a sphere emitter as a copy of another	inferred	none		
 0x7b8d60	11	SphereEmitterDestruct		models	orchestration		Restores the sphere vtable and destroys the base emitter	inferred	none		
-0x7b8d70	966	SphereEmitterSpawnParticle		models	primitive		Spawns a particle in a spherical shell with a direction within the emitter's spread	inferred	none	models/particles#emitter-classes	
+0x7b8d70	966	SphereEmitterSpawnParticle		models	primitive	void __thiscall (CParticleEmitter2 *this, void *particle, float dt, const float *matrix)	Spawns a particle on a spherical shell with a radial, +z or outward velocity	verified	one	models/emission#sphere-spawn	
 0x7b9140	7	SphereEmitterGetRangeMin		models	unreached		Returns a sphere emitter's float at +0x290; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9150	7	SphereEmitterGetRangeMax		models	unreached		Returns a sphere emitter's float at +0x294; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9160	7	SphereEmitterGetValue29c		models	unreached		Returns a sphere emitter's float at +0x29c; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9170	7	SphereEmitterGetValue2a0		models	unreached		Returns a sphere emitter's float at +0x2a0; nothing reaches it	verified	one	models/overview#unreached-code	
-0x7b9180	31	SphereEmitterSetRangeMin		models	primitive		Stores +0x290 and the span +0x298 = +0x294 minus it; a vtable slot	inferred	none	models/particles#emitter-classes	
-0x7b91a0	31	SphereEmitterSetRangeMax		models	primitive		Stores +0x294 and the span +0x298 = it minus +0x290; a vtable slot	inferred	none		
-0x7b91c0	16	SphereEmitterSetValue29c		models	orchestration		Stores a sphere emitter's value at +0x29c; a vtable slot	inferred	none		
-0x7b91d0	16	SphereEmitterSetValue2a0		models	orchestration		Stores a sphere emitter's value at +0x2a0; a vtable slot	verified	one	models/particles#emitter-classes	
+0x7b9180	31	SphereEmitterSetMinRadius		models	primitive		Stores a sphere emitter's minimum radius and the radius range	verified	one	models/emission#sphere-spawn	
+0x7b91a0	31	SphereEmitterSetMaxRadius		models	primitive		Stores a sphere emitter's maximum radius and the radius range	verified	one	models/emission#sphere-spawn	
+0x7b91c0	16	SphereEmitterSetVerticalRange		models	orchestration		Stores a sphere emitter's latitude spread	verified	one	models/emission#sphere-spawn	
+0x7b91d0	16	SphereEmitterSetHorizontalRange		models	orchestration		Stores a sphere emitter's longitude spread	verified	one	models/emission#sphere-spawn	
 0x7b91e0	121	SplineEmitterConstruct		models	orchestration		Constructs a spline-shaped particle emitter with its spline object and vtables	inferred	none	models/particles#emitter-classes	
 0x7b9260	56	SplineEmitterClone		models	host		Allocates a spline emitter copied from another; a vtable slot	inferred	none	models/particles#emitter-classes	
 0x7b92a0	43	SplineEmitterDeletingDestructor		models	host		Destroys a spline emitter and frees it when asked; a vtable slot	inferred	none	models/particles#emitter-classes	
 0x7b92d0	471	SplineEmitterCopyConstruct		models	host		Constructs a spline emitter as a copy of another, copying its spline points	inferred	none		
 0x7b94b0	67	SplineEmitterDestruct		models	host		Frees a spline emitter's point arrays and destroys the base emitter	inferred	none		
-0x7b9500	1065	SplineEmitterSpawnParticle		models	primitive		Spawns a particle at a point along the emitter's spline	inferred	none	models/particles#emitter-classes	
+0x7b9500	1065	SplineEmitterSpawnParticle		models	primitive	void __thiscall (CParticleEmitter2 *this, void *particle, float dt, const float *matrix)	Spawns a particle along the emitter's spline with a velocity turned about its tangent	verified	one	models/emission#spline-spawn	
 0x7b9930	7	SplineEmitterGetValue294		models	unreached		Returns a spline emitter's float at +0x294; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9940	7	SplineEmitterGetRateScale		models	unreached		Returns a spline emitter's rate scale at +0x298; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9950	7	SplineEmitterGetValue29c		models	unreached		Returns a spline emitter's float at +0x29c; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b9960	7	SplineEmitterGetValue2a0		models	unreached		Returns a spline emitter's float at +0x2a0; nothing reaches it	verified	one	models/overview#unreached-code	
-0x7b9970	76	SplineEmitterSetValue294		models	orchestration		Stores a spline emitter's value at +0x294 clamped to [0, 1]; a vtable slot	inferred	none	models/particles#emitter-classes	
-0x7b99c0	113	SplineEmitterSetRateScale		models	primitive		Stores a rate scale clamped to [0, 1] and sets the rate to it times +0x290 on change; a vtable slot	inferred	none		
-0x7b9a40	16	SplineEmitterSetValue29c		models	orchestration		Stores a spline emitter's value at +0x29c; a vtable slot	inferred	none		
-0x7b9a50	16	SplineEmitterSetValue2a0		models	orchestration		Stores a spline emitter's value at +0x2a0; a vtable slot	verified	one	models/particles#emitter-classes	
-0x7b9a60	31	SplineEmitterSetBaseRate		models	primitive		Stores a base rate at +0x290 and sets the emission rate to it times +0x298	verified	one	models/particles#emitter-classes	
+0x7b9970	76	SplineEmitterSetStart		models	orchestration		Stores a spline emitter's start parameter clamped into [0, 1]	verified	one	models/emission#spline-spawn	
+0x7b99c0	113	SplineEmitterSetEnd		models	primitive		Stores a changed end parameter clamped into [0, 1], flags a spawn there and rescales the rate	verified	one	models/emission#spline-spawn	
+0x7b9a40	16	SplineEmitterSetSpread		models	orchestration		Stores a spline emitter's spread angle about the tangent	inferred	none		
+0x7b9a50	16	SplineEmitterSetOffset		models	orchestration		Stores a spline emitter's offset along the spawn direction	verified	one	models/particles#emitter-classes	
+0x7b9a60	31	SplineEmitterSetRate		models	primitive		Stores the base rate and the rate times the end parameter	verified	one	models/emission#spline-spawn	
 0x7b9a80	26	SplineEmitterSetPath		models	orchestration		Sets the points of a spline emitter's spline	inferred	none		
 0x7b9aa0	5	InitEmitterShapesTwoPiThunk		models	orchestration		Jumps to 0x7b9ab0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9ab0	15	InitEmitterShapesTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
@@ -12568,15 +12569,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b9ad0	19	InitEmitterShapesInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
 0x7b9af0	5	InitGradientInfinityThunk		models	orchestration		Jumps to 0x7b9b00; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9b00	11	InitGradientInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#object-files	
-0x7b9b10	338	ParticleGradientSample		models	primitive		Samples a particle's colour, size and texture cell over its life from a gradient record	inferred	none	models/overview#object-files	
+0x7b9b10	338	ParticleGradientSample		models	primitive	void __thiscall (const void *gradient, float age, float alpha, uint32_t *colour, uint32_t *head, uint32_t *tail, float *scale)	Samples a gradient at an age: colour with scaled alpha, head and tail cells, and size	verified	one	models/particles#gradients	
 0x7b9c70	92	ParticleGradientConstruct		models	orchestration		Constructs a gradient record with its defaults	inferred	none		
-0x7b9cd0	19	ParticleGradientSetMidpoint		models	orchestration		Sets a gradient record's normalized middle-key bounds	inferred	none		
-0x7b9cf0	67	ParticleGradientSetLifespan		models	primitive		Rebuilds a gradient record's slopes for a lifespan, clamping its spans to 0.001	inferred	none	models/particles#substeps	
-0x7b9d40	13	ParticleGradientSetRepeat		models	orchestration		Sets a gradient record's texture cell repeat count	inferred	none		
-0x7b9d50	70	ParticleGradientSetColors		models	orchestration		Sets a gradient record's three colour keys and their per-channel slopes	inferred	none	models/particles#gradients-and-quads	
-0x7b9da0	50	ParticleGradientSetHeadCells		models	orchestration		Sets a gradient record's head texture cell ramp	inferred	none		
-0x7b9de0	50	ParticleGradientSetTailCells		models	orchestration		Sets a gradient record's tail texture cell ramp	inferred	none		
-0x7b9e20	28	ParticleGradientSetScales		models	primitive		Sets a gradient record's size keys and their slope	inferred	none	models/particles#gradients-and-quads	
+0x7b9cd0	19	ParticleGradientSetMidpoint		models	orchestration		Stores a gradient's two midpoint fractions	verified	one	models/particles#gradients	
+0x7b9cf0	67	ParticleGradientSetLifespan		models	primitive		Sets a gradient's lifespan, at least 0.001, and derives its time span and reciprocal	verified	one	models/particles#gradients	
+0x7b9d40	13	ParticleGradientSetRepeat		models	orchestration		Stores a gradient's cell repeat count	verified	one	models/particles#gradients	
+0x7b9d50	70	ParticleGradientSetColors		models	orchestration		Stores a gradient's start and end colours and the four channel deltas	verified	one	models/particles#gradients	
+0x7b9da0	50	ParticleGradientSetHeadCells		models	orchestration		Stores a gradient's head cell range as a start and a signed count	verified	one	models/particles#gradients	
+0x7b9de0	50	ParticleGradientSetTailCells		models	orchestration		Stores a gradient's tail cell range as a start and a signed count	verified	one	models/particles#gradients	
+0x7b9e20	28	ParticleGradientSetScales		models	primitive		Stores a gradient's start size, end size and their difference	verified	one	models/particles#gradients	
 0x7b9e40	23	ParticleGradientGetMidpoint		models	unreached		Copies a gradient record's middle-key bounds; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b9e60	15	ParticleGradientGetRepeat		models	unreached		Returns a gradient record's repeat count; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b9e70	15	ParticleGradientGetValue5c		models	unreached		Returns a gradient record's value at +0x5c; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -12641,6 +12642,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ba9f0	171	VectorsEqualFuzzy		models	unreached		Compares two vectors component by component; nothing reaches it	inferred	none	models/overview#object-files	
 0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	
 0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	
+0x7bcb40	284	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	
 0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	
 0x7bd700	280	InvertRigidMatrix		cmath		void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
 0x7bd820	347	InvertAffineMatrix		cmath			Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	

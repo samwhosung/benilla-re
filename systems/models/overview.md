@@ -7,8 +7,8 @@ and the world model objects (`.wmo`) with their groups and BSP trees.
 The system owns seventeen object files, listed below; `0x827000`, the C runtime's initializer
 table, lists each one's static initializers in one run. The docs split by topic: `cache` (the
 model cache and its helper thread), `scene` (a scene's frame), `render` (the draw), `model` (the
-instance API), `animation`, `lights`, `shared` (the file and its fixup), `particles`, `ribbons`
-and `wmo`. This doc holds the object files, their static initializers and the code nothing
+instance API), `animation`, `lights`, `shared` (the file and its fixup), `emission` and
+`particles`, `ribbons` and `wmo`. This doc holds the object files, their static initializers and the code nothing
 reaches. Other systems enter through the roots each topic doc lists, and through the static
 initializers below.
 
