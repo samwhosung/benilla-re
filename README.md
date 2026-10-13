@@ -21,7 +21,7 @@ your own copy of 1.12.1.5875 and refuse any other build.
   [collision](systems/collision) (movement physics),
   [terrain](systems/terrain) (the world map, chunks, liquid, queries, cull and LOD),
   [models](systems/models) (M2 and WMO, the scene, rendering, animation, lights, particles),
-  [objectlayer](systems/objectlayer) (the update packet, objects, fields, reaction),
+  [objectlayer](systems/objectlayer) (the update packet, objects, fields, reaction, units),
   [spell](systems/spell), [glue](systems/glue) (the login and character screens),
   [ui](systems/ui) (the frame and layout core),
   [camera](systems/camera.md), [input](systems/input.md) and [random](systems/random.md).
