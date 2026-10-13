@@ -1471,9 +1471,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4180d0	85			base			Runs its object file code not read here	inferred	none		
 0x418130	85	CDataStore::PutUInt16		base			Appends two bytes to a data store	verified	one	spell/cast#cast-request-packets	
 0x418190	83	CDataStore::PutUInt32	idb	base			Appends four bytes to a data store	verified	one	spell/cast#cast-request-packets	
-0x4181f0	83			base			Runs its object file code not read here	inferred	none		
+0x4181f0	83			base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418250	83			base	unreached		Runs its object file code not read here	inferred	none		
-0x4182b0	83			base			Runs its object file code not read here	inferred	none		
+0x4182b0	83			base			Appends a dword to a data store	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418310	90			base	unreached		Runs its object file code not read here	inferred	none		
 0x418370	90	CDataStore::PutGuid	idb	base			Appends a 64-bit value, low dword first, to a data store	verified	one	spell/cast#cast-request-packets	
 0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	
@@ -1485,7 +1485,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4188b0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4189d0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418af0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x418c10	20			base			Runs its object file code that calls CDataStore::PutData; not read here	inferred	none		
+0x418c10	20			base			Appends a count of bytes to a data store through PutData	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418c30	120			base	unreached		Runs its object file code not read here	inferred	none		
 0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore *__thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
 0x418d30	123			base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
@@ -3978,8 +3978,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458ed0	62			sound			Runs its object file code that calls Sound::SetPosition, Sound::SetCutoffDistanceSquared, 0x7a5e80; not read here	inferred	none		
 0x458f10	36			sound			Runs its object file code that calls 0x45cdc0, 0x7a5bf0; not read here	inferred	none		
 0x458f40	11			sound			Runs its object file code not read here	inferred	none		
-0x458f50	7	___inc_tmpoff	idb	sound			Increments the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
-0x458f60	7			sound			Decrements the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
+0x458f50	7	SuppressInterfaceSounds		sound			Increments the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
+0x458f60	7	ResumeInterfaceSounds		sound			Decrements the interface sound suppression count	verified	one	ui/framexml#sound-while-loading	
 0x458f70	19			sound			Runs its object file code that calls 0x45cda0; not read here	inferred	none		
 0x458f90	32			sound			Runs its object file code that calls 0x45cf00; not read here	inferred	none		
 0x458fb0	260			sound			Runs its object file code that calls 0x4590c0, 0x45cfe0, 0x4590e0 and 5 more; not read here	inferred	none		
@@ -6920,7 +6920,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
 0x490770	115			ui	primitive		Runs GameUI.cpp code that calls SStrToFloat, 0x494550; not read here	inferred	none		
 0x4907f0	203			ui	primitive		Runs GameUI.cpp code that calls 0x64ac60, 0x494550, GxCapsScreenSize and 2 more; not read here	inferred	none		
-0x4908c0	441			ui	orchestration		Runs GameUI.cpp code that calls ___inc_tmpoff, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 50 more; not read here	inferred	none		
+0x4908c0	441			ui	orchestration		Runs GameUI.cpp code that calls SuppressInterfaceSounds, ClntObjMgrGetActivePlayer and 51 more; not read here	inferred	none		
 0x490a80	321			ui	primitive		Resets interface state on the player's release, among it the trade and loot windows	inferred	none	objectlayer/players#release-and-reactivation	
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
 0x490ce0	301			ui	primitive		Runs GameUI.cpp code that calls 0x4f5970, UnloadFrameScriptFunctions, 0x5368c0 and 51 more; not read here	inferred	none		
@@ -12716,7 +12716,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51d7d0	6	GetInterfaceVersion		ui	orchestration	int (void)	Returns 11200, the interface version add-ons are checked against	verified	one	ui/addons#whether-an-add-on-may-load	
 0x51d7e0	20			ui	unreached		Runs AddOns.cpp code that calls 0x51d800; not read here	inferred	none		
 0x51d800	257			ui	unreached		Runs AddOns.cpp code that calls SFile::Load, SStrTokenize, SStrLen and 3 more; not read here	inferred	none		
-0x51d910	352	WriteAddonInfo	idb	ui	primitive		Appends the add-on block to an auth session packet from the add-ons declaring Secure	verified	one	ui/addons#secure-add-ons	
+0x51d910	352	WriteAddonInfo	idb	ui	primitive		Appends the size and the zlib-compressed records of the add-ons declaring Secure to an auth packet	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x51da70	624	ReadAddOnInfoReply		ui	primitive		Applies the realm's add-on reply to each Secure add-on, then rebuilds the sorted name array	verified	one	ui/addons#secure-add-ons	
 0x51dce0	145	WriteAddOnKey		ui	primitive		Writes an add-on's key to its .pub file	verified	one	ui/addons#secure-add-ons	
 0x51dd80	90			ui	orchestration		Runs AddOns.cpp code that calls 0x42a460, 0x42a5d0, 0x42a4d0; not read here	inferred	none		
@@ -23863,7 +23863,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65abb0	58			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
 0x65abf0	41			storm	unreached		Runs its object file code that calls LockLog, UnlockLog; not read here	inferred	none		
 0x65ac20	191	SLogVWrite	idb	storm	boundary		Runs its object file code that calls LockLog, PrepareLog, OutputTime and 6 more; not read here	inferred	none		
-0x65ace0	22	SLogWrite	idb	storm	boundary		Runs its object file code that calls SLogVWrite; not read here	inferred	none		
+0x65ace0	22	SLogWrite	idb	storm	boundary	void __cdecl (HSLOG log, const char *format, ...)	Writes a formatted line to a log, handing its variadic arguments to 0x65ac20 as a list	verified	one	ui/framexml#building-the-game-interface	
 0x65ad00	9			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65ad10	25			storm	boundary		Runs its object file code not read here	inferred	none		
 0x65ad30	11	SInterlockedIncrement	idb	storm	boundary	int32_t __stdcall (int32_t *value)	Increments a dword atomically and returns the new value	inferred	none		
@@ -24050,8 +24050,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		
 0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662810	72			storm	boundary		Runs its object file code not read here	inferred	none		
-0x662860	100			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6628d0	26			storm	boundary		Runs its object file code that calls 0x662860; not read here	inferred	none		
+0x662860	100			storm	boundary		Computes a CRC-32 over a buffer, flag 1 starting at 0xffffffff and flag 4 inverting the result	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x6628d0	26			storm	boundary		Returns the CRC-32 of a buffer through 0x662860 with a start value and flags	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x6628f0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662900	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662910	127			storm	boundary		Runs its object file code that calls 0x662d50, SMemAlloc, 0x662d60 and 2 more; not read here	inferred	none		
@@ -29750,7 +29750,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f5490	383			lua	unreached		Runs its object file code that calls lua_gettop, 0x6f3840, _getc and 10 more; not read here	inferred	none		
 0x6f5610	56			lua	unreached		Runs its object file code that calls 0x740c97; not read here	inferred	none		
 0x6f5650	62			lua	unreached		Runs its object file code that calls lua_tostring, __errno, _strerror and 2 more; not read here	inferred	none		
-0x6f5690	67	luaL_loadbuffer		lua	boundary		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f5690	67	luaL_loadbuffer		lua	primitive		Loads a buffer as a chunk after dropping a leading UTF-8 byte order mark	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f56e0	32			lua	boundary		Runs its object file code not read here	inferred	none		
 0x6f5700	18			lua	unreached		Runs its object file code that calls 0x6f5490; not read here	inferred	none		
 0x6f5720	34			lua	unreached		Runs its object file code that calls lua_pcall, 0x6f5750; not read here	inferred	none		
@@ -29785,7 +29785,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f67b0	170			lua	unreached		Runs ldo.c code that calls 0x6fc870, 0x6f6050, 0x6f6470 and 1 more; not read here	inferred	none		
 0x6f6860	251			lua	unreached		Runs ldo.c code that calls 0x6fc870; not read here	inferred	none		
 0x6f6960	158			lua	boundary		Runs ldo.c code that calls 0x6f5db0, 0x6f9f60, 0x6f6680 and 1 more; not read here	inferred	none		
-0x6f6a00	115	luaD_protectedparser		lua	boundary		Parses a chunk under protection with the binary flag forced to 0	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
+0x6f6a00	115	luaD_protectedparser		lua	primitive		Parses a chunk under protection with the binary flag forced to 0	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6a80	134	f_parser		lua	boundary		Compiles a chunk as source, the undump unreached, and pushes its closure	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
 0x6f6b10	101			lua	unreached		Runs its object file code that calls 0x6f6b80, 0x6f7b20, 0x6f6c40 and 1 more; not read here	inferred	none		
 0x6f6b80	19			lua	boundary		Runs lstate.c code that calls luaM_irealloc; not read here	inferred	none		
@@ -29807,7 +29807,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f7210	66			lua	boundary		Runs its object file code that calls 0x6f7260; not read here	inferred	none		
 0x6f7260	109			lua	boundary		Runs lgc.c code that calls luaM_irealloc; not read here	inferred	none		
 0x6f72f0	65			lua	boundary		Runs lgc.c code that calls 0x6f7210; not read here	inferred	none		
-0x6f7340	41	luaC_collectgarbage	idb	lua	boundary		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
+0x6f7340	41	luaC_collectgarbage	idb	lua	primitive		Collects garbage when the state word +0x60 is nonzero, else returns	verified	one	ui/luastate#the-collector-switch	
 0x6f7370	107			lua	boundary		Runs lgc.c code that calls 0x6f9c50, luaM_irealloc; not read here	inferred	none		
 0x6f73e0	143			lua	boundary		Runs its object file code that calls 0x6f7ab0, 0x6f7510, 0x6f7a20 and 3 more; not read here	inferred	none		
 0x6f7470	38			lua	boundary		Runs its object file code that calls 0x6f74a0; not read here	inferred	none		
@@ -29921,10 +29921,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6fbbb0	190			lua	unreached		Runs its object file code that calls 0x6fbb90, 0x6fba10, 0x6fa150; not read here	inferred	none		
 0x6fbc70	171	lua_getinfo		lua	boundary		Fills a debug record with the fields its option letters ask for	verified	one	ui/luastate#debugstack	
 0x6fbd20	79			lua	boundary		Runs its object file code that calls 0x6f5c40; not read here	inferred	none		
-0x6fbd70	310	auxgetinfo		lua	boundary		Fills debug fields, naming an unnamed function by a global that holds it	verified	one	ui/luastate#function-names-from-globals	
+0x6fbd70	310	auxgetinfo		lua	primitive		Fills debug fields, naming an unnamed function by a global that holds it	verified	one	ui/luastate#function-names-from-globals	
 0x6fbef0	35			lua	boundary		Runs its object file code that calls 0x6fba10; not read here	inferred	none		
 0x6fbf20	99			lua	boundary		Runs its object file code that calls 0x6f5c40; not read here	inferred	none		
-0x6fbf90	103	FindGlobalFunctionName		lua	boundary		Returns the last string key of the globals hash part whose value is a function, or null	verified	one	ui/luastate#function-names-from-globals	
+0x6fbf90	103	FindGlobalFunctionName		lua	primitive		Returns the last string key of the globals hash part whose value equals the given function, or null	verified	one	ui/luastate#function-names-from-globals	
 0x6fc000	14			lua	boundary		Runs its object file code that calls 0x6fc010; not read here	inferred	none		
 0x6fc010	865			lua	boundary		Runs its object file code that calls 0x6fc3d0, 0x6fc430, 0x6fc400; not read here	inferred	none		
 0x6fc3d0	43			lua	boundary		Runs its object file code not read here	inferred	none		
@@ -30233,7 +30233,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x705f00	91	Script::GetNumFrames	idb	ui	orchestration		Returns the number of frames that exist	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x705f60	224	Script::EnumerateFrames	idb	ui	orchestration		Returns the frame after a given one, or the first	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x706040	102	Script::CreateFont	idb	ui	orchestration		Creates a font object of a name	inferred	none	ui/script#method-tables-of-the-frame-types	
-0x7060b0	664	Script::CreateFrame	idb	ui	orchestration		Creates a frame from Lua through a node of the type, name and template, parent from the argument	verified	one	ui/script#creating-a-frame-from-lua	
+0x7060b0	664	Script::CreateFrame	idb	ui	orchestration		Creates a frame from Lua by type, name and template, its parent from the argument or else the template chain	verified	one	ui/script#creating-a-frame-from-lua	
 0x706350	114	LoadFrameScriptFunctions		ui	orchestration		Registers the global script functions and the method tables of the frame types	inferred	none	ui/script#method-tables-of-the-frame-types	
 0x7063d0	108	UnloadFrameScriptFunctions		ui	orchestration		Unregisters what 0x706350 registers	inferred	none	ui/README#frame-core-object-files	
 0x706440	120	M2CacheConstruct		models	host		Zeroes the model cache, its 1021 shared-model buckets and its release list, and creates its two thread events	verified	one	models/cache#cache-object	

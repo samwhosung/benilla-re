@@ -1284,6 +1284,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8650b8	char[28]	s_textTripleBufferMustBe0Or1		console	Holds the string "TripleBuffer must be 0 or 1"	inferred	none	
 0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x866aa0	char[28]	s_textUU02u02u02u03u		storm	Holds the string "%u/%u %02u:%02u:%02u.%03u  "	inferred	none	
+0x866bd8	const uint32_t[256]	s_crc32Table		storm	Holds the CRC-32 table of the reflected polynomial 0xedb88320, 0x77073096 at index 1	verified	one	ui/addons#the-auth-packets-add-on-block
 0x867958	float	s_detailDoodadHorizon		terrain	Holds 70.0, the detail doodad distance	inferred	none	
 0x867960	float	s_lodDistance		terrain	Holds lodDist, 77 at start, the depth beyond which a chunk takes the far level	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867964	uint32_t	s_maxLod		terrain	Holds maxLOD, 3 at start, a near chunk's level	verified	one	terrain/cull#chunk-level-and-idle-release

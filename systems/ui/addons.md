@@ -27,13 +27,13 @@ Proof: one
 Test: none
 
 `0x46b084` tail-jumps to `0x51c740`, which resets (`0x51fa40`, `0x51c743`) and scans. `0x51c777`
-walks the archives through `0x401470`, whose adapter `0x4014f0` compares the prefix ignoring case (`0x4014fe`)
-over the lines of `(listfile)` read by `0x648fb0`; `0x51c78f` walks the folder through `0x42ad10`
-with `*`. `0x51c910` keeps a name whose text from its last `.` is `.toc` (`0x51c932`), cuts it at
-the first `\` or `/` and registers it (`0x51c986`). `0x51d7b0` requires the directory attribute
-0x10 (`0x51d7b4`) and a first character other than `.` (`0x51d7bc`). In `0x51c9b0` a name match
-returns at `0x51ca10`; the toc is read at `0x51ca62`, failure returning at `0x51ca69`; `0x51caf5`
-calls `0x521ad0` on `0xbe1b64` with 2, the tail append.
+walks the archives through `0x401470`, whose adapter `0x4014f0` compares the prefix ignoring case
+(`0x4014fe`) over the lines of `(listfile)` read by `0x648fb0`; `0x51c78f` walks the folder through
+`0x42ad10` with `*`. `0x51c910` keeps a name whose text from its last `.` is `.toc` (`0x51c932`),
+cuts it at the first `\` or `/` and registers it (`0x51c986`). `0x51d7b0` requires the directory
+attribute 0x10 (`0x51d7b4`) and a first character other than `.` (`0x51d7bc`). In `0x51c9b0` a name
+match returns at `0x51ca10`; the toc is read at `0x51ca62`, failure returning at `0x51ca69`;
+`0x51caf5` calls `0x521ad0` on `0xbe1b64` with 2, the tail append.
 
 ## Toc directives
 
@@ -60,23 +60,23 @@ Confidence: verified
 Proof: one
 Test: none
 
-In `0x51c9b0`, `0x51cc22` and `0x51cc2e` require `#` twice. The compares run in the table's order with the
-prefix's own length (`0x51cc69` onward); the lists tokenize with `" ,"` and append `SStrDupA`
-copies. `DefaultState` stores 1 for `enabled` (`0x51d204`) and `al`, 0, for `disabled`
-(`0x51d223`); `LoadOnDemand` and `Secure` store `setne` of `0x6f1b30`, true for a
-first character 1 to 9, `t`, `T`, `y` or `Y`, or for `on` or `enabled` ignoring case. The toc's BOM is skipped
-(`0x51ca75`) and `0x51cbf9` stores its count of non-`#` lines at `+0x34`. The constructor
-`0x520550` zeroes the record and stores 1 in `+0x24` and `+0x2b` (`0x5205b9`), so an add-on
-without `DefaultState` is enabled by default.
+In `0x51c9b0`, `0x51cc22` and `0x51cc2e` require `#` twice. The compares run in the table's order
+with the prefix's own length (`0x51cc69` onward); the lists tokenize with `" ,"` and append
+`SStrDupA` copies. `DefaultState` stores 1 for `enabled` (`0x51d204`) and `al`, 0, for `disabled`
+(`0x51d223`); `LoadOnDemand` and `Secure` store `setne` of `0x6f1b30`, true for a first character 1
+to 9, `t`, `T`, `y` or `Y`, or for `on` or `enabled` ignoring case. The toc's BOM is skipped
+(`0x51ca75`) and `0x51cbf9` stores its count of non-`#` lines at `+0x34`. The constructor `0x520550`
+zeroes the record and stores 1 in `+0x24` and `+0x2b` (`0x5205b9`), so an add-on without
+`DefaultState` is enabled by default.
 
 ## Add-on metadata
 
 Before the directives are read the record's `Title` is its folder name. A `Title`, `Notes`,
 `Author`, `Version` or `X-` line stores its value, after the colon and spaces, under its name up to
 the colon with trailing spaces removed; a later line of the same name replaces it. A name ending in
-`-` and a locale code (`enUS`, `koKR`, `frFR`, `deDE`, `zhCN`, `zhTW`, `esES`, `xxYY`) is kept, under
-the name before the dash, only when that code is the client's locale. `GetAddOnMetadata(addon, name)`
-answers a stored value, or nil.
+`-` and a locale code (`enUS`, `koKR`, `frFR`, `deDE`, `zhCN`, `zhTW`, `esES`, `xxYY`) is kept,
+under the name before the dash, only when that code is the client's locale. `GetAddOnMetadata(addon,
+name)` answers a stored value, or nil.
 
 Addresses: `0x51cbb3`, `0x51cbf3`, `0x51d3c6`, `0x51d580`, `0x51d5a0`, `0x51d5c2`, `0x51d5e1`, `0x51d600`, `0x51d79c`, `0x8558a4`, `0xc0e080`, `0x48e530`, `0x48e5b5`, `0x51e220`
 Confidence: verified
@@ -105,17 +105,17 @@ Test: none
 `0x51da70`'s tail `0x51dc30` zeroes `0xbe1b90`, walks the list, skips a record whose `+0x29` is set
 (`0x51dc4f`), appends `+0x14` (`0x51dcac`) and calls `_qsort` with `0x51deb0` (`0x51dcd1`).
 `0x51deb0` compares `0x51df20`'s `Title` for each name, or the name when 0, with `SStrCmpI`.
-`0x51da70` has one caller, `0x5b4282`, in the add-on reply's handler `0x5b4260`. `0x51def0` answers the count
-and `0x51df00` the name or 0 for an index not below it.
+`0x51da70` has one caller, `0x5b4282`, in the add-on reply's handler `0x5b4260`. `0x51def0` answers
+the count and `0x51df00` the name or 0 for an index not below it.
 
 ## Secure add-ons
 
-An add-on that declares `Secure` takes its key from `<Name>.pub` and its URL from `<Name>.url` in its
-folder, and is named to the realm server in the auth packet's add-on block. The server's reply, read for
-these add-ons in list order, can replace the key and URL, which the client then writes back to
-those files, and gives a state: 0 bans the add-on, 2 hides it from the list, and 1 or 2 has its toc
-checked against its signature. A good signature makes the add-on secure (`+0x24` 0) and stores the
-digest its files must hash to; a mismatched one marks it corrupt. Every other add-on stays
+An add-on that declares `Secure` takes its key from `<Name>.pub` and its URL from `<Name>.url` in
+its folder, and is named to the realm server in the auth packet's add-on block. The server's reply,
+read for these add-ons in list order, can replace the key and URL, which the client then writes back
+to those files, and gives a state: 0 bans the add-on, 2 hides it from the list, and 1 or 2 has its
+toc checked against its signature. A good signature makes the add-on secure (`+0x24` 0) and stores
+the digest its files must hash to; a mismatched one marks it corrupt. Every other add-on stays
 insecure (`+0x24` 1).
 
 Addresses: `0x51d3f4`, `0x51d3fd`, `0x51d404`, `0x51d910`, `0x51da70`, `0x51daa5`, `0x51dac4`, `0x51daee`, `0x51daf5`, `0x51db08`, `0x51db0d`, `0x51db34`, `0x51db6d`, `0x51db77`, `0x51db84`, `0x51dbeb`, `0x51dbfb`, `0x51dc04`, `0x51dc0a`, `0x51dce0`, `0x51dde0`, `0x6f10f0`
@@ -123,14 +123,38 @@ Confidence: verified
 Proof: one
 Test: none
 
-At registration `0x51d3f4` tests `+0x28` and calls `0x51d410` and `0x51d4c0`, which read the two files
-into `+0xc1` (0x101 bytes) and `+0x30`. `0x51d910` builds the block from the same records; its
-layout is not read here. `0x51da70` reads, per record with `+0x28` (`0x51daa5`), a state byte, a key
-flag (`0x51dac4`) and, when set, a byte and a 256-byte key (`0x51daee`) written by `0x51dce0`
+At registration `0x51d3f4` tests `+0x28` and calls `0x51d410` and `0x51d4c0`, which read the two
+files into `+0xc1` (0x101 bytes) and `+0x30`. `0x51d910` builds the block from the same records
+(next entry). `0x51da70` reads, per record with `+0x28` (`0x51daa5`), a state byte, a key flag
+(`0x51dac4`) and, when set, a byte and a 256-byte key (`0x51daee`) written by `0x51dce0`
 (`0x51daf5`), and a revision whose excess over `+0x20` sets `+0xc0` (`0x51db08`, `0x51db0d`); then a
 URL flag and string (`0x51db34`) written by `0x51dde0` (`0x51db6d`). It stores 1 in `+0x24`
-(`0x51db77`); state 2 sets `+0x29` (`0x51db84`), state 0 stores 2 (`0x51dc0a`); `0x6f10f0`'s 2
-sets `+0x2a` (`0x51dc04`) and 3 stores 0 (`0x51dbfb`), with the digest at `+0x1c2`.
+(`0x51db77`); state 2 sets `+0x29` (`0x51db84`), state 0 stores 2 (`0x51dc0a`); `0x6f10f0`'s 2 sets
+`+0x2a` (`0x51dc04`) and 3 stores 0 (`0x51dbfb`), with the digest at `+0x1c2`.
+
+## The auth packet's add-on block
+
+When the registry holds any add-on, the client appends to the auth packet a u32, the size of
+the block before compression, and then the block compressed with zlib at its default level. The
+block holds, for each add-on that declares `Secure`, in list order: the folder name as a
+NUL-terminated string; a byte, 1 when a key is held; a u32, the CRC-32 of the 256-byte key, or 0
+without one; and a u32, the CRC-32 of the URL's text, or 0 without a URL or for an empty one. An
+empty registry adds nothing; one with no `Secure` add-on adds the size 0 and an empty stream.
+
+Addresses: `0x51d910`, `0x51d917`, `0x51d924`, `0x51d961`, `0x51d96f`, `0x51d980`, `0x51d98d`, `0x51d99e`, `0x51d9ab`, `0x51d9b5`, `0x51d9ca`, `0x51d9d7`, `0x51da02`, `0x51da0f`, `0x51da20`, `0x51da33`, `0x51da3f`, `0x4181f0`, `0x4182b0`, `0x418c10`, `0x6628d0`, `0x662860`, `0x6605a0`, `0xbe1b64`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x51d917` reads the list head `0xbe1b6c` and `0x51d924` returns on an empty list before writing.
+The records go into a local store: per record with `+0x28` (`0x51d961`), `PutCString` of `+0x14`
+(`0x51d96f`), the byte `+0xc1` (`0x51d980`), and `0x4182b0` of `0x6628d0(+0xc2, 0x100, 0, 7)` when
+`+0xc1` is set (`0x51d98d`, `0x51d99e`, `0x51d9ab`), else 0; then a nonempty `+0x30` (`0x51d9b5`)
+gives `0x6628d0(url, SStrLen(url), 0, 7)` (`0x51d9ca`, `0x51d9d7`). `0x6628d0` calls `0x662860`,
+whose flags 1 and 4 start at 0xffffffff and invert the result over the table `0x866bd8`, standard
+CRC-32. The packet then gets the store's size (`0x4181f0`, `0x51da02`); `0x51da0f` takes the bytes,
+`0x51da20` allocates the size plus 0x20 on the stack, `0x6605a0` compresses with level −1
+(`0x51da33`) and `0x418c10` appends the result (`0x51da3f`).
 
 ## Whether an add-on may load
 
@@ -150,9 +174,9 @@ Codes go to the first out argument: 1 (miss), 2 when `0x51e470(name, character, 
 (`0x51e824`, `0x51e832`), 3 when `+0x24` is 2 (`0x51e841`), 4 when `+0x2a` is set (`0x51e85b`), 7
 when `+0x1c` differs from `0x51d7d0`'s 0x2bc0 and `0x51f180` reads the CVar nonzero (`0x51e889`), 6
 (`0x51e915`). A set `+0x2d` returns true at once (`0x51e812`); `0x51e8ae` sets it while each
-required dependency not yet loaded is checked recursively with the second out argument as its
-reason (`0x51e8d5`). `0x402c3b`, in `0x402ba0`, registers the CVar. `0x51e930` names codes from `0x85365c`, or
-`DEP_%s` with the second.
+required dependency not yet loaded is checked recursively with the second out argument as its reason
+(`0x51e8d5`). `0x402c3b`, in `0x402ba0`, registers the CVar. `0x51e930` names codes from `0x85365c`,
+or `DEP_%s` with the second.
 
 ## Loading an add-on
 
@@ -200,25 +224,27 @@ files then run before A's.
 
 Each character on the realm has a node of add-on names with an enabled flag, read from
 `WTF\Account\<account>\<realm>\<character>\AddOns.txt` or, when that is missing,
-`WTF\Account\<account>\AddOns.txt`, whose use marks the node to be written. A line is
-`Name: value`; a value of `disabled`, ignoring case, is 0 and anything else 1. A last line not
-followed by a line break is ignored. Writing rewrites each changed node's file as
-`Name: enabled` or `Name: disabled` with CR LF. The glue's roster builds the nodes, and the in-game
-`ResetDisabledAddOns` rereads the current character's.
+`WTF\Account\<account>\AddOns.txt`, whose use marks the node to be written. A line is `Name: value`;
+a value of `disabled`, ignoring case, is 0 and anything else 1. A last line survives only when two
+separators follow it, as CR LF does; one ending in a lone LF or CR is dropped. Writing rewrites each
+changed node's file as `Name: enabled` or `Name: disabled` with CR LF. The glue's roster builds the
+nodes, and the in-game `ResetDisabledAddOns` rereads the current character's. The glue's
+`SaveAddOns` also writes.
 
-Addresses: `0x51ebe0`, `0x51ebf9`, `0x51ec1a`, `0x51ecde`, `0x51ed1c`, `0x51ed49`, `0x51ed6a`, `0x51ed72`, `0x51edd3`, `0x51ee69`, `0x51ef20`, `0x51ef5e`, `0x51ef8a`, `0x51efb6`, `0x51f044`, `0x853928`, `0x853948`, `0x85392c`, `0x853968`, `0x4723c0`, `0x4724d2`, `0x48e837`
+Addresses: `0x51ebe0`, `0x51ebf9`, `0x51ec1a`, `0x51ecde`, `0x51ed1c`, `0x51ed49`, `0x51ed6a`, `0x51ed72`, `0x51edd3`, `0x51ee69`, `0x51ef20`, `0x51ef5e`, `0x51ef8a`, `0x51efb6`, `0x51f044`, `0x853928`, `0x853948`, `0x85392c`, `0x853968`, `0x64af66`, `0x46d990`, `0x4723c0`, `0x4724d2`, `0x48e837`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x51ebe0(character)` reloads every node for null (`0x51ec1a`), else finds or creates
-(`0x51ee69`) the node and clears it. `0x51ecde` formats `0x853948`; when it fails to read,
-`0x51ed1c` formats `0x85392c` and `0x51ed49` marks the node. `0x51ed6a` tokenizes at CR, LF and `"`
-and `0x51ed72` stops when the rest after the token is empty, before using it; `0x51edd3` compares
-with `disabled`. `0x51ef20` writes nodes marked (`0x51ef5e`) to `0x838708` plus `\AddOns.txt`
-(`0x51ef8a`, `0x51efb6`), each entry with `0x853968`, `%s: %s\r\n` (`0x51f044`). The roster's
-`0x4723c0` loads one node per character, after `0x4724d2` drops them all; `0x48e830` passes
-`0x5abdc0`'s name (`0x48e837`).
+`0x51ebe0(character)` reloads every node for null (`0x51ec1a`), else finds or creates (`0x51ee69`)
+the node and clears it. `0x51ecde` formats `0x853948`; when it fails to read, `0x51ed1c` formats
+`0x85392c` and `0x51ed49` marks the node. `0x51ed6a` tokenizes at CR, LF and `"` and `0x51ed72`
+stops when the rest after the token is empty, before using it; the tokenizer steps past exactly one
+separator (`0x64af66`); `0x51edd3` compares with `disabled`. `0x51ef20` writes nodes marked
+(`0x51ef5e`) to `0x838708` plus `\AddOns.txt` (`0x51ef8a`, `0x51efb6`), each entry with `0x853968`,
+`%s: %s\r\n` (`0x51f044`). The roster's `0x4723c0` loads one node per character, after `0x4724d2`
+drops them all; glue's `0x46d990` calls `0x51ef20`; `0x48e830` passes `0x5abdc0`'s name
+(`0x48e837`).
 
 ## Reading the enable state
 
@@ -238,10 +264,11 @@ Test: none
 For a named character `0x51e542` skips other nodes and the walk ends after its node. A hit adds its
 byte to the count of entries (`0x51e5ca`). With no entry and the flag (`0x51e5dc`), `0x51e5f0`
 recurses with null and 0: an answer of 1 tests `+0x2b` (`0x51e600`), 2 counts (`0x51e607`). With
-none counted `0x51e623` answers `+0x2b ? 2 : 0`; else `0x51e64b` computes `enabled < total ? 1 :
-2`. `0x51ea20` inserts a missing entry (`0x51eb62`), stores the flag and marks the node
-(`0x51ebb9`, `0x51ebbc`). `0x48e6fc` (in `0x48e690`) and `0x48e7cc` (in `0x48e760`) pass 2 and 0 with `0x5abdc0`'s name;
-`0x48e720` and `0x48e7f0` pass 2 (`0x48e730`) and 0 (`0x48e800`) for each index below `0x51def0`.
+none counted `0x51e623` answers `+0x2b ? 2 : 0`; else `0x51e64b` computes `enabled < total ? 1 : 2`.
+`0x51ea20` inserts a missing entry (`0x51eb62`), stores the flag and marks the node (`0x51ebb9`,
+`0x51ebbc`). `0x48e6fc` (in `0x48e690`) and `0x48e7cc` (in `0x48e760`) pass 2 and 0 with
+`0x5abdc0`'s name; `0x48e720` and `0x48e7f0` pass 2 (`0x48e730`) and 0 (`0x48e800`) for each index
+below `0x51def0`.
 
 ## The in-game add-on functions
 
@@ -265,8 +292,8 @@ pushes 1 or nil; else the usage (`0x48e8c7`). `GetAddOnInfo` pushes the name (`0
 `0x51e470` with flag 1 (`0x48e44b`), `0x51e6f0` (`0x48e46b`), `0x51e780` with `dl` 1 (`0x48e4a5`),
 `0x51e930` (`0x48e4e6`) and `0x51e980` (`0x48e4fd`), returning 7 (`0x48e50c`). `LoadAddOn` calls
 `0x51f240` with `dl` 1 (`0x48ea90`) and on failure `0x51e780` (`0x48eafe`), pushing `0x842ebc` when
-both codes are 0 (`0x48eb3a`). `GetAddOnDependencies` pushes `0x51e350`'s list `+0x48`. `0x48e350` pushes `0x51def0`'s count
-(`0x48e373`).
+both codes are 0 (`0x48eb3a`). `GetAddOnDependencies` pushes `0x51e350`'s list `+0x48`. `0x48e350`
+pushes `0x51def0`'s count (`0x48e373`).
 
 ## Saved variables, read
 
@@ -294,8 +321,9 @@ signals 0x1ae on every path.
 
 ## Saved variables, written
 
-The writes happen only in the interface's shutdown, after `PLAYER_LEAVING_WORLD` and
-`PLAYER_LOGOUT`: the flat file, then each loaded add-on's files, then `AddOns.txt`. For each loaded
+The saved-variables files are written only in the interface's shutdown, after
+`PLAYER_LEAVING_WORLD` and `PLAYER_LOGOUT`: the flat file, then each loaded add-on's files.
+`AddOns.txt` follows them there, and the glue's `SaveAddOns` writes it too. For each loaded
 add-on its account file and character file are rewritten from its declared names, an existing file
 first renamed to `.bak`, each name read from the globals with the context word 0; with no names the
 file is deleted. The realm-less character file is deleted. A written add-on is then marked not

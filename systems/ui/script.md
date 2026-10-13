@@ -238,16 +238,16 @@ number result (`0x703d6f`). `0x704cd0` passes the string, its length and the nam
 
 ## Creating a frame from Lua
 
-`CreateFrame(type, name, parent, inherits)` raises its usage unless `type` is a string or number
-and `parent` is absent, nil or a table. `name` and `inherits` are read as strings, a number
-becoming one and anything else counting as absent; a string `inherits` must name a template, else
-it raises `Couldn't find inherited node`. A `parent` table must hold a frame. The frame is created
-from a node of that type with those attributes and an empty `parent`, so a template's `parent` is
-never used; an unknown type raises. Messages of the load are discarded. `CreateTexture` and
-`CreateFontString` read `inherits` only when it is a string, the font string trying a font object
-first; their layer defaults to `ARTWORK`.
+`CreateFrame(type, name, parent, inherits)` raises its usage unless `type` is a string or number and
+`parent` is absent, nil or a table. `name` and `inherits` are read as strings, a number becoming one
+and anything else counting as absent; a string `inherits` must name a template, else it raises. The
+frame is created from a node of that type with those attributes. With a `parent` table the node also
+gets an empty `parent`, so the table is the parent; without one, it is the first `parent` the
+`inherits` chain gives. An unknown type raises. `CreateTexture` and `CreateFontString` read
+`inherits` only when it is a string, the font string trying a font object first; their layer
+defaults to `ARTWORK`.
 
-Addresses: `0x7060b0`, `0x7060d5`, `0x7060e9`, `0x70610f`, `0x706121`, `0x70613f`, `0x706158`, `0x7061ab`, `0x7061cb`, `0x7061dd`, `0x7061ed`, `0x706211`, `0x70623b`, `0x70628b`, `0x7062a0`, `0x7062af`, `0x773a20`, `0x773ae0`, `0x773b12`, `0x773c30`, `0x773d25`, `0x773d39`, `0x773d47`, `0x6f3690`, `0x6f7c80`
+Addresses: `0x7060b0`, `0x7060d5`, `0x7060e9`, `0x70610f`, `0x706121`, `0x70613f`, `0x706158`, `0x7061ab`, `0x7061cb`, `0x7061dd`, `0x7061ed`, `0x706211`, `0x706232`, `0x70623b`, `0x70628b`, `0x7062a0`, `0x7062af`, `0x773a20`, `0x773ae0`, `0x773b12`, `0x773c30`, `0x773d25`, `0x773d39`, `0x773d47`, `0x6f3690`, `0x6f7c80`
 Confidence: verified
 Proof: one
 Test: none
@@ -256,10 +256,11 @@ Test: none
 `lua_tostring` reads 1, 2 and 4 (`0x706121`, `0x70613f`); for a number it converts the slot in place
 (`0x6f7c80`), so `0x7061cb`'s later `lua_type(4) == 4` holds for it and `0x7061dd` looks it up,
 raising at `0x7061ed`. A table parent is tested at `0x7061ab`. `0x706211` builds the node, adding
-`parent` with `""` (`0x70623b`), which `0x6ee280` skips along with the template walk; `0x70628b`
-creates and `0x7062a0` raises on null; `0x7062af` destroys the status. `0x773ae0` stages 2;
-`0x773b12` and `0x773d25` compare `lua_type(4)` with 4; `0x773d39` tries `0x783870` before
-`0x773d47`.
+`parent` with `""` (`0x70623b`) only when a parent is given (`0x706232`, `test edi,edi; je`);
+without it `0x6ee280` walks `inherits` for a `parent` (`0x6ee390` to `0x6ee3c2`); `0x70628b` creates
+and `0x7062a0` raises on null; `0x7062af` destroys the status, discarding the load's messages.
+`0x773ae0` stages 2; `0x773b12` and `0x773d25` compare `lua_type(4)` with 4; `0x773d39` tries
+`0x783870` before `0x773d47`.
 
 ## Method tables of the frame types
 

@@ -16,14 +16,16 @@ Roots: `0x6edb90`, `0x6ede10`, `0x6ee280`, `0x6ee500`, `0x6ee6f0`, `0x6ee880`, `
 
 ## Building the game interface
 
-Among its steps, `CGGameUI::Initialize` runs, in this order: a fresh Lua state; the C functions; the 549 event names;
-the frame types of `GameUI.cpp`; `Logs\FrameXML.log` opened into a load status; the signature check
-of `FrameXML.toc`, as the glue's (`glue/manager`), quitting with code 10 unless it passes; an MD5
-over `FrameXML.toc`, every file it loads and `Bindings.xml`, checked against the signature's digest,
-quitting with 10 on a mismatch; the lookups of `UIParent` and `GameTooltip`; every addon that is not
-loaded on demand; the saved variables. Each status line is then written to the log.
+Among its steps, `CGGameUI::Initialize` runs, in this order: a fresh Lua state; the C functions; the
+549 event names; the frame types of `GameUI.cpp`; `Logs\FrameXML.log` opened into a load status; the
+signature check of `FrameXML.toc`, as the glue's (`glue/manager`), quitting with code 10 unless it
+passes; an MD5 over `FrameXML.toc`, every file it loads and `Bindings.xml`, checked against the
+signature's digest, quitting with 10 on a mismatch; the lookups of `UIParent` and `GameTooltip`;
+every addon that is not loaded on demand; the saved variables. Each status line is then written to
+the log as the log's format string, so a `%` in a line is read as a conversion: a fault of the
+client.
 
-Addresses: `0x48fbf0`, `0x48fe97`, `0x48fe9c`, `0x48feab`, `0x48feb5`, `0x48ff06`, `0x48ff4d`, `0x48ff57`, `0x48ff90`, `0x48ffed`, `0x490018`, `0x490026`, `0x490038`, `0x490043`, `0x49006a`, `0x490096`, `0x4900a3`, `0x4900b2`, `0x490187`, `0x4901a1`, `0x842ecc`, `0x842f7c`, `0x842f9c`, `0x6f10f0`, `0x401560`
+Addresses: `0x48fbf0`, `0x48fe97`, `0x48fe9c`, `0x48feab`, `0x48feb5`, `0x48ff06`, `0x48ff4d`, `0x48ff57`, `0x48ff90`, `0x48ffed`, `0x490018`, `0x490026`, `0x490038`, `0x490043`, `0x49006a`, `0x490096`, `0x4900a3`, `0x4900b2`, `0x490187`, `0x4901a1`, `0x65ace0`, `0x842ecc`, `0x842f7c`, `0x842f9c`, `0x6f10f0`, `0x401560`
 Confidence: verified
 Proof: one
 Test: none
@@ -35,16 +37,17 @@ to `0x48ff90`, `0x401560(10)`, and 3 goes on. `0x48ffed` runs `0x6edb90` with th
 `0x490018` loads `Bindings.xml` with it; `0x490026` finishes it and `0x490038` compares four dwords
 with the signature's, quitting at `0x490043`. `0x49006a` and `0x490096` look up `UIParent` and
 `GameTooltip` with `0x76c760`. `0x4900a3` calls `0x51f600`, `0x4900b2` `0x4913b0`. The loop at
-`0x490187` writes each status line with `SLogWrite` (`0x4901a1`).
+`0x490187` passes each status line as the format of `SLogWrite` (`0x4901a1`); `0x65ace0` is
+variadic and hands the list at `[ebp+0x10]` to `0x65ac20`.
 
 ## Running a toc
 
-`0x6edb90(toc, md5, status)` reads the toc whole, adds its bytes to the MD5, skips a leading
-`EF BB BF`, and splits the text at CR and LF, skipping empty lines and keeping at most 1,023 bytes of
-a line. Each line that does not begin with `#` is appended to
-the toc's directory, up to and including its last backslash, stripped of trailing spaces (not tabs),
-and loaded with `0x6ede10`. The result of each load is ignored, and a progress callback runs after
-each line. It answers 0 only when the toc does not open; then `Couldn't open %s` is reported.
+`0x6edb90(toc, md5, status)` reads the toc whole, adds its bytes to the MD5, skips a leading `EF BB
+BF`, and splits the text at CR and LF, skipping empty lines and keeping at most 1,023 bytes of a
+line. Each line that does not begin with `#` is appended to the toc's directory, up to and including
+its last backslash, stripped of trailing spaces (not tabs), and loaded with `0x6ede10`. The result
+of each load is ignored, and a progress callback runs after each line. It answers 0 only when the
+toc does not open; then `Couldn't open %s` is reported.
 
 Addresses: `0x6edb90`, `0x6edbe5`, `0x6edc28`, `0x6edc66`, `0x6edc71`, `0x6edcc6`, `0x6edcd9`, `0x6edd24`, `0x6edd51`, `0x6edd91`, `0x6eddf0`, `0x82edfc`, `0x6edb50`
 Confidence: verified
@@ -84,22 +87,25 @@ with it, `lua_pcall(1, 0, 0)` (`0x704b42`); otherwise it runs the chunk under th
 
 ## The elements of a file
 
-The root element's tag is not checked. Each child is one of: `Include`, whose `file` is appended to
-the including file's directory and loaded through `0x6ede10`, so `..` and `.lua` work there too;
+The root's tag is not checked. Each child is: `Include`, whose `file` is appended to
+the including file's directory and loaded through `0x6ede10`, so `..` and `.lua` work;
 `Script`, whose `file`, used as written when it holds a backslash and appended to the directory
 otherwise, runs as a Lua file with no collapse, and whose body, when not empty, then runs as the
-chunk `<path>:<Scripts>`; `Font`, which defines a named font; or a frame element, registered as a
+chunk `<path>:<Scripts>`; `Font`, a named font; or a frame element, registered as a
 template when its `virtual` is `true` and created otherwise. Nothing limits nesting or detects an
-include cycle.
+include cycle. An including path with no `\`, or a directory of 0x104 bytes or more, makes
+`Include` load a stale buffer, a fault of the client.
 
-Addresses: `0x6edf77`, `0x6edf9b`, `0x6edfbe`, `0x6edffb`, `0x6ee00d`, `0x6ee017`, `0x6ee03d`, `0x6ee070`, `0x6ee0bf`, `0x6ee0d4`, `0x6ee0ff`, `0x6ee10f`, `0x6ee127`, `0x6ee14c`, `0x6ee158`, `0x6ee162`, `0x6ee190`, `0x6ee1bd`, `0x6ee1c4`, `0x6ee1e1`, `0x6ee1e6`, `0x8710c0`, `0x8710b8`, `0x871084`, `0x87106c`, `0x871044`, `0x871074`, `0x87108c`, `0x87104c`, `0x871020`
+Addresses: `0x6edf77`, `0x6edf9b`, `0x6edfbe`, `0x6edfc5`, `0x6edfd2`, `0x6ee000`, `0x6edffb`, `0x6ee00d`, `0x6ee017`, `0x6ee03d`, `0x6ee070`, `0x6ee0bf`, `0x6ee0d4`, `0x6ee0ff`, `0x6ee10f`, `0x6ee127`, `0x6ee14c`, `0x6ee158`, `0x6ee162`, `0x6ee190`, `0x6ee1bd`, `0x6ee1c4`, `0x6ee1e1`, `0x6ee1e6`, `0x8710c0`, `0x8710b8`, `0x871084`, `0x87106c`, `0x871044`, `0x871074`, `0x87108c`, `0x87104c`, `0x871020`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x6edf77` takes the root's first child; each tag is compared ignoring case. `Include` without
 `file` reports `0x87108c`; with it, `0x6edfbe` finds the last `\` of the current path and
-`0x6edffb` appends before the recursion `0x6ee00d`. `Script`: `0x6ee070` tests `file` for `\`,
+`0x6edffb` appends before the recursion `0x6ee00d`. No `\` (`0x6edfc5`) or a directory of 0x104
+bytes or more (`0x6edfd2`) jumps straight to `0x6ee000`, which loads `[ebp-0x33c]`, written only
+by the arm it skips. `Script`: `0x6ee070` tests `file` for `\`,
 `0x6ee0bf` appends otherwise, `0x6ee0d4` runs the file, then `0x6ee0ff` formats `0x871074` and
 `0x6ee10f` runs the body. `Font` needs a `name` (`0x87104c` otherwise): `0x783870` then `0x783c30`.
 Any other tag: `virtual` equal to `true` and a `name` go to `0x6ee500` (`0x871020` without a name);

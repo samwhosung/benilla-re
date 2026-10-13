@@ -15,12 +15,12 @@ Roots: `0x7039e0`, `0x703b80`, `0x703ba0`, `0x703b40`, `0x7020b0`, `0x702770`, `
 
 ## Opening and replacing the state
 
-`0x7039e0` creates a state, stores it in `0xceef74` and sets it up (next entry). `0x703b80`
-replaces it: when a state exists, it closes it through `0x703ba0`, which destroys it and stores 0,
-and then opens a new one. The client opens the state once at start-up and replaces it when the
-game interface is built, when the game shuts down, and when the glue is built with a nonzero
-argument; it closes it without a replacement at exit. Every global, `_G` included, is lost at each
-replacement, so a logout to the character screen runs on a state opened twice in a row.
+`0x7039e0` creates a state, stores it in `0xceef74` and sets it up (next entry). `0x703b80` replaces
+it: when a state exists, it closes it through `0x703ba0`, which destroys it and stores 0, and then
+opens a new one. The client opens the state once at start-up and replaces it when the game interface
+is built, when the game shuts down, and when the glue is built with a nonzero argument; it closes it
+without a replacement at exit. Every global is lost at each replacement, so a logout to the
+character screen runs on a state opened twice in a row.
 
 Addresses: `0x7039e0`, `0x7039ed`, `0x703b80`, `0x703b8e`, `0x703ba0`, `0x703bab`, `0x402aee`, `0x403701`, `0x48fe97`, `0x491231`, `0x46a87b`, `0x6f6d20`, `0x6f6f80`, `0xceef74`
 Confidence: verified
@@ -51,13 +51,13 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x7039f2` calls `0x6f4400` with 0x100. `0x6f3920` pushes `0x7020b0` as a C closure (`0x703a2f`), stored under
-`__index` in the new table, which is stored under `0x8729ec`. `0x703a61` stores −1 in `0x8722cc`;
-`0x703a8c` stores `luaL_ref` of the closure `0x703b40`; `0x6f3a20` pushes a light userdata of
-`[0x8722d0]` (1), whose reference `0x703aa6` stores. The loop `0x703ab0` pushes each name and
-closure of `0x811e28` and sets it in the globals (`-10001`) until `cmp esi,0x120` (`0x703ae7`).
-`0x703af5` to `0x703b16` call the four openers, each `luaL_openlib` with its name and table.
-`0x703b26` runs `0x704cd0` on `[0x8722d8]` (1,310 bytes of Lua) with the name `0x872cbc`.
+`0x7039f2` calls `0x6f4400` with 0x100. `0x6f3920` pushes `0x7020b0` as a C closure (`0x703a2f`),
+stored under `__index` in the new table, which is stored under `0x8729ec`. `0x703a61` stores −1 in
+`0x8722cc`; `0x703a8c` stores `luaL_ref` of the closure `0x703b40`; `0x6f3a20` pushes a light
+userdata of `[0x8722d0]` (1), whose reference `0x703aa6` stores. The loop `0x703ab0` pushes each
+name and closure of `0x811e28` and sets it in the globals (`-10001`) until `cmp esi,0x120`
+(`0x703ae7`). `0x703af5` to `0x703b16` call the four openers, each `luaL_openlib` with its name and
+table. `0x703b26` runs `0x704cd0` on `[0x8722d8]` (1,310 bytes of Lua) with the name `0x872cbc`.
 
 ## The collector switch
 
@@ -79,16 +79,17 @@ no other code calls or stores `0x6f43c0` or `0x6f43d0`.
 
 ## The library scripts see
 
-The base table holds `setglobal`, `getglobal`, ten `debug` functions, `seterrorhandler`,
-`geterrorhandler`, `error`, `getmetatable`, `setmetatable`, `getfenv`, `setfenv`, `next`,
-`ipairs`, `pairs`, `type`, `tonumber`, `tostring`, `unpack`, `rawequal`, `rawget`, `rawset`,
-`assert`, `gcinfo`, `collectgarbage`, `loadstring`, `pcall`, `xpcall`, `date`, `time` and
-`debugstack`. There is no `print`, `dofile`, `loadfile`, `require`, `_G`, `_VERSION`, no `io`, `os`,
-`debug` or `coroutine` table. `debugload`, `debuginfo`, `debugprint`, `debugdump`, `debugbreak`
-and `debugtimestamp` return nothing and do nothing. `setglobal(name, v)` sets the global through
-`lua_settable`; `getglobal(name)` reads it through `lua_gettable`, so the globals' metatable applies.
-`math` adds `pi` and sets the global `__pow`; `bit` holds `bnot`, `band`, `bor`, `bxor`, `lshift`,
-`rshift`, `arshift` and `mod`.
+The base table holds `setglobal`, `getglobal`, eight `debug` functions, `seterrorhandler`,
+`geterrorhandler`, `error`, `getmetatable`, `setmetatable`, `getfenv`, `setfenv`, `next`, `ipairs`,
+`pairs`, `type`, `tonumber`, `tostring`, `unpack`, `rawequal`, `rawget`, `rawset`, `assert`,
+`gcinfo`, `collectgarbage`, `loadstring`, `pcall`, `xpcall`, `date`, `time` and `debugstack`, 36 in
+all. There is no `print`, `dofile`, `loadfile`, `require`, `_G`, `_VERSION`, no `io`, `os`, `debug`
+or `coroutine` table. `debugload`, `debuginfo`, `debugprint`, `debugdump`, `debugbreak` and
+`debugtimestamp` return nothing and do nothing; the other two are `debugprofilestart` and
+`debugprofilestop`. `setglobal(name, v)` sets the global to the top value through `lua_settable`, so
+`setglobal("x")` sets `x` to `"x"`; `getglobal(name)` reads it through `lua_gettable`, so the
+globals' metatable applies. `math` adds `pi` and sets the global `__pow`; `bit` holds `bnot`,
+`band`, `bor`, `bxor`, `lshift`, `rshift`, `arshift` and `mod`.
 
 Addresses: `0x811e28`, `0x822d88`, `0x822d40`, `0x822c60`, `0x822c18`, `0x702770`, `0x7027b0`, `0x7027e0`, `0x7027f0`, `0x702800`, `0x702810`, `0x702820`, `0x702830`, `0x7fb470`, `0x7fb492`, `0x7fb4c4`
 Confidence: verified
@@ -159,11 +160,11 @@ Proof: one
 Test: none
 
 `luaV_execute` (`0x6f8720`) dispatches 35 opcodes through `0x6f9870` (`0x6f87c6`); entry 30 is
-`0x6f94a2`, which compares the tag with 5, copies the slot up one place, interns `next`
-(`0x8719b0`, `0x6f94f5`) and reads it with `luaH_getstr` from the globals table `[L+0x48]`
-(`0x6f94ff`), with no metamethod. `0x6fa2a0` scans the array part from the key's index plus one
-below `[t+0x1c]`, then the nodes up to `1 << [t+7]`, stride 0x28, testing each value's tag. `0x6f7bd0`
-reads a metatable only for tags 5 and 7 and answers the nil object otherwise.
+`0x6f94a2`, which compares the tag with 5, copies the slot up one place, interns `next` (`0x8719b0`,
+`0x6f94f5`) and reads it with `luaH_getstr` from the globals table `[L+0x48]` (`0x6f94ff`), with no
+metamethod. `0x6fa2a0` scans the array part from the key's index plus one below `[t+0x1c]`, then the
+nodes up to `1 << [t+7]`, stride 0x28, testing each value's tag. `0x6f7bd0` reads a metatable only
+for tags 5 and 7 and answers the nil object otherwise.
 
 ## Function names from globals
 
@@ -179,20 +180,22 @@ Proof: one
 Test: none
 
 In `0x6fbd70`'s `n` case (`0x6fbdf8`) a null answer from `0x6fc460` leads to `0x6fbf90`
-(`0x6fbe11`), which walks `1 << [t+7]` nodes of `[L+0x48]` downward (`0x6fbfc6`), compares each value
-with `luaO_rawequalObj` (`0x6fbfcf`) and requires a string key (`0x6fbfd8`). A hit stores `global`
-(`0x864a48`) as the kind (`0x6fbe22`); a miss stores `""` (`0x6fbe2b`).
+(`0x6fbe11`), which walks `1 << [t+7]` nodes of `[L+0x48]` downward (`0x6fbfc6`), compares each
+value with `luaO_rawequalObj` (`0x6fbfcf`) and requires a string key (`0x6fbfd8`). A hit stores
+`global` (`0x864a48`) as the kind (`0x6fbe22`); a miss stores `""` (`0x6fbe2b`).
 
 ## The C function contract
 
 Every C function the client registers is `int __fastcall f(lua_State *L)` that answers its result
 count. Registering sets the global of the name to a closure with no upvalues. Before the VM calls
 any C function, `0x42a320` checks that its address lies in the exe's `.text` section and stops the
-client with `Invalid function pointer: %p` otherwise. Arguments are read by index: absent ones read
-as if nil. A `Usage:` failure calls `luaL_error`, which never returns: the error unwinds to the
-enclosing protected call.
+client with `Invalid function pointer: %p` otherwise. Arguments are read by index. An absent one has
+the type none, −1, not nil, so a function that tests the type against nil's 0 tells the two apart:
+glue's `GetAddOnEnableState` raises its usage for an absent first argument and accepts an explicit
+nil. A `Usage:` failure calls `luaL_error`, which never returns: the error unwinds to the enclosing
+protected call.
 
-Addresses: `0x704120`, `0x704160`, `0x490250`, `0x490276`, `0x83de68`, `0x6f6050`, `0x6f61a1`, `0x6f61a8`, `0x6f5de8`, `0x6f601b`, `0x42a320`, `0x42a380`, `0x884800`, `0x884c00`, `0x833124`, `0x6f4940`, `0x6f496f`, `0x6f4440`, `0x6fc780`, `0x6fc85c`, `0x6f5d80`
+Addresses: `0x704120`, `0x704160`, `0x490250`, `0x490276`, `0x83de68`, `0x6f6050`, `0x6f61a1`, `0x6f61a8`, `0x6f5de8`, `0x6f601b`, `0x42a320`, `0x42a380`, `0x884800`, `0x884c00`, `0x833124`, `0x6f4940`, `0x6f496f`, `0x6f4440`, `0x6fc780`, `0x6fc85c`, `0x6f5d80`, `0x6f3409`, `0x46d70d`, `0x46d726`
 Confidence: verified
 Proof: one
 Test: none
@@ -201,9 +204,12 @@ Test: none
 pushes nil instead. `0x490250` registers the frame types, six files' functions, the 216 pairs of
 `0x83de68` (`0x490276`), and 47 more files' functions. `luaD_precall` calls `0x42a320` on the
 function (`0x6f61a1`) and then `call edi` with `ecx` = L (`0x6f61a8`), as do `0x6f5de8` in
-`0x6f5db0` and `0x6f601b` in `0x6f5f80`. `0x42a380` finds `.text` in the image's section table and stores its start and end in
-`0x884800` and `0x884c00`. `0x6f4940` ends `lua_error` (`0x6f496f`); `0x6f4440` calls `0x6fc780`,
-whose exit is `jmp 0x6f5d80` (`0x6fc85c`), which `longjmp`s or calls the panic and `exit(1)`.
+`0x6f5db0` and `0x6f601b` in `0x6f5f80`. `0x42a380` finds `.text` in the image's section table and
+stores its start and end in `0x884800` and `0x884c00`. `0x6f4940` ends `lua_error` (`0x6f496f`);
+`0x6f4440` calls `0x6fc780`, whose exit is `jmp 0x6f5d80` (`0x6fc85c`), which `longjmp`s or calls
+the panic and `exit(1)`. `lua_type` answers −1 for an index past the top (`0x6f3409`); 42 call sites
+compare its answer with 0. `0x46d70d` tests argument 1 after `lua_isstring` fails and raises at
+`0x46d726` unless it is 0.
 
 ## Reading numeric arguments
 
@@ -230,8 +236,8 @@ and 4 (`0x6f7c32`). `0x6f34d0` mirrors those tests; `0x6f3510` compares `lua_typ
 
 ## The context word
 
-Each Lua value is 16 bytes: a type tag, a context word at `+0x4` (padding in stock Lua 5.0) and
-the value at `+0x8`. A new value takes the current context `0xceeac0`. Copying a value with a nonzero
+Each Lua value is 16 bytes: a type tag, a context word at `+0x4` (padding in stock Lua 5.0) and the
+value at `+0x8`. A new value takes the current context `0xceeac0`. Copying a value with a nonzero
 word makes that word current while the nesting count `0xceeac4` is above 0; copying one with a zero
 word gives it the current context. The per-frame update zeroes the count. A script slot runs under
 its word, `RunScript` under `[0x83de24]`, an add-on's files under its name or 0. Context 0 is the
@@ -244,26 +250,26 @@ Confidence: verified
 Proof: one
 Test: none
 
-`lua_newtable` (`0x6f3c90`) writes tag 5 and `[0xceeac0]` at `+0x4` (`0x6f3ca9`). The copy in `TFORPREP`
-(`0x6f94c8`) and in the error path (`0x6fc7c2`) is the pattern: test `[src+4]`, store it in
-`0xceeac0` when `0xceeac4` is nonzero, else store `0xceeac0` into `[dst+4]`. `0x48b980` saves the
+`lua_newtable` (`0x6f3c90`) writes tag 5 and `[0xceeac0]` at `+0x4` (`0x6f3ca9`). The copy in
+`TFORPREP` (`0x6f94c8`) and in the error path (`0x6fc7c2`) is the pattern: test `[src+4]`, store it
+in `0xceeac0` when `0xceeac4` is nonzero, else store `0xceeac0` into `[dst+4]`. `0x48b980` saves the
 context, increments the count and stores `[0x83de24]` (`0x48b9bb`), the empty string's address,
-around `0x704cd0`. `0x51f387` stores the addon's name pointer or 0 by its `+0x24`. `0x4884e0`
-raises `0x8421cc` for a nonzero context. `0x494a50` maps its argument through `0x494b54`
-(`0x494a84`): cases 0 and 11 reach `0x494ab8`, which under the guard `0xb4e3e4` signals 0x1af
-(`0x494add`) when the context equals `[0x83de24]` (`0x494ac6`), else 0x1b0 with `%s` (`0x494afb`),
-and returns 0. Event 0x1af is `MACRO_ACTION_FORBIDDEN` and 0x1b0 `ADDON_ACTION_FORBIDDEN` in the
-table `0x51ab30` builds. `0x495590` zeroes the count (`0x4955a2`).
+around `0x704cd0`. `0x51f387` stores the addon's name pointer or 0 by its `+0x24`. `0x4884e0` raises
+`0x8421cc` for a nonzero context. `0x494a50` maps its argument through `0x494b54` (`0x494a84`):
+cases 0 and 11 reach `0x494ab8`, which under the guard `0xb4e3e4` signals 0x1af (`0x494add`) when
+the context equals `[0x83de24]` (`0x494ac6`), else 0x1b0 with `%s` (`0x494afb`), and returns 0.
+Event 0x1af is `MACRO_ACTION_FORBIDDEN` and 0x1b0 `ADDON_ACTION_FORBIDDEN` in the table `0x51ab30`
+builds. `0x495590` zeroes the count (`0x4955a2`).
 
 ## debugstack
 
 `debugstack(start, head, tail)` answers the call stack as text, one line per level, each ending in a
-newline, with no header. `start` defaults to 1, the function that called `debugstack`; `head` to
-12; `tail` to 10. Each number is taken from the first argument while it is a number or numeric
-string, truncated, and removed. When arguments remain and the first is a string or number, they
-are joined in front of the text with no separator; when it is anything else, that value is
-returned and nothing is built. A start past the stack answers the joined arguments alone, `""` by
-default.
+newline, with no header. `start` defaults to 1, the function that called `debugstack`; `head` to 12;
+`tail` to 10. Each number is taken from the first argument while it is a number or numeric string,
+truncated, and removed. When arguments remain and the first is a string or number, they are joined
+in front of the text with no separator, and a later one that is neither raises in the join; when the
+first is anything else, nothing is built and the last argument is returned. A start past the stack
+answers the joined arguments alone, `""` by default.
 
 Addresses: `0x703760`, `0x703768`, `0x703771`, `0x703778`, `0x703782`, `0x7037a2`, `0x703809`, `0x70382d`, `0x70383f`, `0x703857`, `0x703863`, `0x703877`, `0x703889`, `0x7038cd`, `0x7038fa`, `0x7039c4`, `0x7039cc`, `0x70397a`, `0x6fbaa0`, `0x6fbc70`
 Confidence: verified
@@ -272,9 +278,9 @@ Test: none
 
 `0x703768` to `0x703778` set 1, 12 and 10. Each of the three slots tests `lua_isnumber(1)`
 (`0x703782`), converts with `0x40a2b0` and calls `lua_remove(1)` (`0x7037a2`). `0x703809` reads
-`lua_gettop`: 0 pushes `""`; otherwise `0x70382d` returns at once when `lua_isstring(1)` fails.
-Every concatenation takes the whole stack (`0x7039b0`), so all remaining arguments join. The loop
-and the line are the next entry.
+`lua_gettop`: 0 pushes `""`; otherwise `0x70382d` jumps to `0x7039b6` when `lua_isstring(1)` fails,
+which returns 1, the top of the stack. Every concatenation takes the whole stack (`0x7039b0`), so
+all remaining arguments join. The loop and the line are the next entry.
 
 ## debugstack's lines
 
