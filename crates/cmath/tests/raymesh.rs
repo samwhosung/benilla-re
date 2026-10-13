@@ -1,9 +1,9 @@
 //! `0x7c22b0` and `0x7c23e0` run whole against `ray_plane` and `point_in_poly`, apart and
-//! chained. The axis table `0x7c23e0` reads is zero in the image until the static initializer
+//! chained, and `DominantAxis` (`0x7bf680`) against `dominant_axis`. The axis table `0x7c23e0` reads is zero in the image until the static initializer
 //! `0x7c18d0` runs, so each test writes the six values it stores. A NaN result matches any NaN:
 //! the payload x87 carries through differs from the host's; the hit is compared exactly.
 
-use benilla_re_cmath::raymesh::{point_in_poly, ray_plane, Plane, Ray};
+use benilla_re_cmath::raymesh::{dominant_axis, point_in_poly, ray_plane, Plane, Ray};
 use benilla_re_difftest::{Emu, Wow};
 
 fn next(s: &mut u32) -> u32 {
@@ -460,4 +460,46 @@ fn raymesh_composed_difftest() {
         }
     }
     eprintln!("raymesh_composed: {asserts} bit-exact asserts, {hits} ray↔triangle hits");
+}
+
+/// `DominantAxis` (`0x7bf680`, ecx = the vector) whole: ties and NaN go to the later axis, since
+/// each compare is `test ah,0x41; jne`.
+#[test]
+fn dominant_axis_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    let v_va = emu.alloc(0x10);
+    let mut s = 0x7bf6_8000u32;
+    let run = |emu: &mut Emu, v: [f32; 3], what: &str| {
+        for (i, c) in v.iter().enumerate() {
+            emu.write_u32(v_va + 4 * i as u64, c.to_bits());
+        }
+        let got = emu.call(0x7bf680, v_va as u32, 0, &[]) as usize;
+        assert_eq!(got, dominant_axis(&v), "{what}: {v:?}");
+    };
+    let nan = f32::NAN;
+    for (v, what) in [
+        ([2.0, -2.0, 1.0], "x ties y"),
+        ([2.0, 1.0, -2.0], "x ties z"),
+        ([1.0, 2.0, 2.0], "y ties z"),
+        ([3.0, 3.0, 3.0], "all equal"),
+        ([0.0, -0.0, 0.0], "signed zeros"),
+        ([nan, 1.0, 0.5], "NaN x"),
+        ([2.0, nan, 1.0], "NaN y"),
+        ([2.0, 1.0, nan], "NaN z"),
+        ([3.0, 1.0, 2.0], "x"),
+        ([1.0, 3.0, 2.0], "y"),
+        ([1.0, 2.0, 3.0], "z"),
+    ] {
+        run(&mut emu, v, what);
+    }
+    for i in 0..4000 {
+        // small integers, so ties come often
+        let v = [0, 1, 2].map(|_| ((next(&mut s) >> 24) % 7) as f32 - 3.0);
+        run(&mut emu, v, &format!("fuzz{i}"));
+        let w = [fz8(&mut s), fz8(&mut s), fz8(&mut s)];
+        run(&mut emu, w, &format!("fuzz{i}"));
+    }
 }

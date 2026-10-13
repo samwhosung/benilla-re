@@ -1,6 +1,7 @@
 //! `0x7c29f0` and `IntersectRayTriangle` (`0x7c2c40`) run whole against `segment_tri_moller` and
 //! `segment_tri_moller_liquid`, over random rays and triangles, degenerate triangles, rays aimed
-//! at the centroid, four slacks, reordered indices and null outputs. The outputs start as a NaN
+//! at the centroid, four slacks, reordered indices and null outputs, then the determinant gate on
+//! its thresholds. The outputs start as a NaN
 //! sentinel and are compared only on a hit.
 
 use benilla_re_cmath::intersect::{segment_tri_moller, segment_tri_moller_liquid, Ray};
@@ -44,7 +45,11 @@ fn intersect_difftest() {
     let mut s = 0xc011_1de5u32;
     let mut checked = 0u32;
 
-    for case in 0..400u32 {
+    // The triangle (0,0,0), (1,0,0), (0,1,0) and a ray along z by d give det = −d exactly: d = ∓1e-6
+    // puts det on each threshold (`0x7c2d37`, `0x7c2d44`), half of it inside, and NaN goes on.
+    let e = 1e-6_f32;
+    let probes = [-e, e, -0.5 * e, 0.5 * e, f32::NAN];
+    for case in 0..400u32 + probes.len() as u32 {
         let mut ray = Ray {
             origin: [fz(&mut s), fz(&mut s), fz(&mut s)],
             dir: [fz(&mut s), fz(&mut s), fz(&mut s)],
@@ -62,6 +67,14 @@ fn intersect_difftest() {
             let c: [f32; 3] = core::array::from_fn(|i| (tri[0][i] + tri[1][i] + tri[2][i]) / 3.0);
             ray.dir = core::array::from_fn(|i| c[i] - ray.origin[i]);
         }
+        let probe = case >= 400;
+        if probe {
+            ray = Ray {
+                origin: [0.25, 0.25, 1.0],
+                dir: [0.0, 0.0, probes[(case - 400) as usize]],
+            };
+            tri = [[0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]];
+        }
         let eps = [0.002f32, 0.01, 0.0, 0.5][(case % 4) as usize];
         let want_t = case % 3 != 1;
         let want_uv = case % 5 != 2;
@@ -71,7 +84,11 @@ fn intersect_difftest() {
         for (i, v) in tri.iter().enumerate() {
             write_vec3(&mut emu, verts_va + (i as u64) * 12, v);
         }
-        let ord: [u16; 3] = if case % 7 == 0 { [2, 0, 1] } else { [0, 1, 2] };
+        let ord: [u16; 3] = if case % 7 == 0 && !probe {
+            [2, 0, 1]
+        } else {
+            [0, 1, 2]
+        };
         for (i, &ix) in ord.iter().enumerate() {
             emu.write(idx_va + (i as u64) * 2, &ix.to_le_bytes());
         }
