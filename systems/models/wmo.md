@@ -59,6 +59,48 @@ and `size·0xaaaaaaab >> 36` (24 bytes). It tests group `+0x10` with 0x48 and st
 the vertex count at `+0xec`, then calls `0x6c4530`. The index byte count `+0xf0` is twice `+0x12c`
 when `+0xcc` and a global flag are set, else twice `+0x128`.
 
+## Group header
+
+A group file is the version chunk and one `MOGP` chunk whose data opens with a 0x44-byte header;
+the geometry chunks start right after it. The header fields land in the group:
+
+| header | group | holds |
+|---|---|---|
+| `+0x00` | `+0xc0` | name, an offset into the root's `MOGN` turned into a pointer |
+| `+0x08` | `+0x10` | flags |
+| `+0x0c` | `+0x14` | bounding box, six floats |
+| `+0x24`, `+0x26` | `+0x2c`, `+0x30` | first portal reference and count, 16-bit |
+| `+0x28` to `+0x2c` | `+0x3c` to `+0x40` | three batch counts, 16-bit |
+| `+0x30`, `+0x34`, `+0x38` | `+0x34`, `+0x38`, `+0x14c` | fog indices, liquid word, group id |
+
+After the chunks, every batch resolves the textures of its material, the batch's byte `+0x17`.
+
+Addresses: `0x6c3f80`, `0x6c3fa6`, `0x6c3ff5`, `0x6c4053`, `0x6c4080`, `0x6c3db0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c3f80` advances the file pointer `+0x150` by 0x14 (version chunk and the `MOGP` header), reads
+the fields above with `rep movs` for the box, then `add eax, 0x44` and calls `0x6c40c0`. It first
+unlinks the group's node and links it again into the root's group list (`+0x1e4`, which holds the
+node's offset in the group), and last sets `+0x164` to 1 and `+0xbc` to 0. The loop at `0x6c4080` steps the batches by 0x18.
+
+## Material textures
+
+A material record is the file's 64-byte `MOMT` record, used in place. Its first texture is the
+`MOTX` string at offset `+0xc`, or `createcrappygreentexture.blp` when that string is empty; its
+second, at `+0x18`, is loaded only when its string is not empty. The handles go to `+0x38` and
+`+0x3c`, once: a material whose first handle is set is skipped.
+
+Addresses: `0x6c3db0`, `0x6c3d70`, `0x6c4c20`, `0x86c3c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c3db0(index)` takes record `+0x1d8 + 64·index`, returns at once when `+0x38` is non-zero, and
+calls `0x6c4c20` with `MOTX` (`+0x124`) plus the offset, or with the string at `0x86c3c0`; an empty
+second string stores 0 at `+0x3c`. `0x6c3d70` zeroes both handles of every material.
+
 ## Loading
 
 A map object is looked up by name in a cache and created on a miss; its root file is read,

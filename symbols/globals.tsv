@@ -590,6 +590,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86c2f4	uint32_t	s_meshKeyLevelShift		terrain	Holds 16, the key shift of a chunk's own level	verified	one	terrain/lod#chunk-mesh-selection
 0x86c2f8	uint32_t[4]	s_meshCapsShift		terrain	Holds the caps shifts of the four neighbours' levels: 0, 8, 16, 24	verified	one	terrain/lod#chunk-mesh-selection
 0x86c35c	char[3]	s_shaderTextureSuffix		terrain	Holds the string _s put before a texture's extension under the terrain shader	verified	one	terrain/files#texture-names
+0x86c3c0	const char[29]	s_defaultMapTextureName		models	Holds createcrappygreentexture.blp, the texture a material with an empty first name loads	verified	one	models/wmo#material-textures
 0x86f840	char[52]	s_raceClassInfoListTag		spell	Holds the allocation tag of the race-class slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth
 0x86f87c	char[53]	s_skillCostsInfoListTag		spell	Holds the allocation tag of the skill-cost slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth
 0x86f8bc	char[51]	s_skillLineRecListTag		spell	Holds the allocation tag of the ability slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth

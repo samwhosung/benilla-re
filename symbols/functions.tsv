@@ -10608,11 +10608,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c3a00	17	MapObjNextChunk		models	orchestration		Returns the chunk header at a cursor and advances the cursor by 8, without checking the tag	verified	one	models/wmo#root-file-chunks	
 0x6c3a20	56	MapObjFindChunk		models	orchestration		Returns the chunk header at a cursor when it lies inside the file and carries a tag, else 0	verified	one	models/wmo#root-file-chunks	
 0x6c3a60	770	CMapObj::ParseChunks		models	primitive		Points a map object at its root chunks in their fixed order and counts their records	verified	one	models/wmo#root-file-chunks	
-0x6c3d70	51	CMapObj::ClearMaterialTextures		models	orchestration		Clears the two runtime texture fields of every map object material	inferred	none		
-0x6c3db0	105	CMapObj::GetGroupTextures		models	orchestration		Creates a group's textures, using a placeholder for missing ones	inferred	none		
+0x6c3d70	51	CMapObj::ClearMaterialTextures		models	orchestration		Zeroes both texture handles of every material	verified	one	models/wmo#material-textures	
+0x6c3db0	105	CMapObj::LoadMaterialTextures		models	orchestration	void __thiscall (CMapObj *this, uint32_t material)	Loads a material's two textures once, the first falling back to a default name	verified	one	models/wmo#material-textures	
 0x6c3e20	298	CMapObj::LoadGroupFile		models	primitive		Opens a group file named after the map object and starts reading it	inferred	none	models/wmo#loading	
 0x6c3f50	42	CMapObj::OnGroupReadDone		models	host		Closes a group's read request and file, then parses the group	inferred	none	models/wmo#loading	
-0x6c3f80	311	CMapObj::ParseGroup		models	primitive		Links a group into its map object and parses its chunks	inferred	none	models/wmo#group-file-chunks	
+0x6c3f80	311	CMapObj::ParseGroup		models	primitive		Relinks a group, copies its MOGP header fields, parses its chunks and loads its batch materials	verified	one	models/wmo#group-header	
 0x6c40c0	282	CMapObjGroup::ParseChunks		models	primitive		Points a group at its required chunks in their fixed order, counts them and sets its strides	verified	one	models/wmo#group-file-chunks	
 0x6c41e0	94	CMapObjGroup::MarkOpaqueVertices		models	orchestration		Marks the vertices of a group's non-transparent faces in its colour alpha	inferred	none		
 0x6c4240	248	AaBspLeafDistance		models	primitive		Returns the nearest distance from a point to a BSP leaf's faces	inferred	none		
