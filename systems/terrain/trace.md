@@ -7,7 +7,7 @@ triangles, after the map objects have had their turn.
 The code is the map trace object file, `0x69c0d0` through `0x69d450`, the dispatcher
 `0x69bff0` in the query file, and the terrain-only first-hit trace in the collision gather file.
 The cell list the walk fills is the pointer `0xc962c8` with the count `0xc89f40`, pairs of
-(row, column) cells. The world's entry is `TraceWorldSegment` (`0x672170`).
+(column, row) cells, the column from y first. The world's entry is `TraceWorldSegment` (`0x672170`).
 
 Roots: none.
 
@@ -68,6 +68,9 @@ Test: `terrain::dda_axis_run_a`, `terrain::dda_axis_run_b`, `terrain::dda_step_y
 `fistp`; the runs `0x69c4e0` and `0x69c570` step ±1. `0x69c920` reads the hole word and the
 triangle tables and calls the ray-triangle test `0x7c2c40`. The steppers' exact minor-cell
 formula and the order of the corner cells are not derived here.
+Each pair is the y cell, then the x cell: in `0x69c4e0` the store at `0x69c505` writes the y cell
+before `0x69c51f` writes the x cell from `[ecx]`, and `0x69c570` does the same at `0x69c598` and
+`0x69c5b0`; `0x69c3f2` to `0x69c3fa` lay the ends out as x cell, y cell.
 
 ## Terrain first hit
 
