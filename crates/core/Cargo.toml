@@ -1,0 +1,10 @@
+[package]
+name = "benilla-re-core"
+description = "The main loop, event and input computations of WoW.exe 1.12.1.5875, reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true

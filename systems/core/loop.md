@@ -145,14 +145,15 @@ tick the difference counts from the start dispatch, which also stamps `+0x40`.
 Addresses: `0x420f70`, `0x420f9b`, `0x420faa`, `0x420fb6`, `0x420fc7`, `0x420fd5`, `0x801360`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::dt_seconds_matches_binary`
 
 `0x420f9b` reads the clock; `sub ecx,edi` takes `now − [+0x40]` (`0x420fa5`), `fild DWORD` loads it
 signed, and `fmul DWORD [0x801360]` multiplies by the float `0x3a83126f` at 53-bit precision. `fstp
 DWORD` (`0x420fc7`) rounds the product to a float, so the result is the 53-bit product rounded once,
 not `delta as f32 * 0.001f`; the clock value follows it (`0x420fd2`). The store of `now` to `+0x40`
 is at `0x420fb3`. The whole function returns early for run state 1 (`0x420f8a`, `0x420f99`), so a
-closing context gets no frame time and keeps its old `+0x40`.
+closing context gets no frame time and keeps its old `+0x40`. The test runs `0x420faa` to
+`0x420fca`.
 
 ## Start and stop
 
@@ -205,7 +206,7 @@ comparator.
 Addresses: `0x421430`, `0x422970`, `0x421860`, `0x421f40`, `0x421840`, `0x428ee0`, `0x801368`
 Confidence: verified
 Proof: one
-Test: none
+Test: `core::heap_key_le_matches_binary`, `core::heap_pop_min_matches_binary`, `core::heap_resift_matches_binary`
 
 `0x422970` subtracts the other node's `+0xc` from its own and returns `setle` (`0x422979`,
 `0x422980`); it is the only slot of the node vtable `0x801368`. In `0x421430` the right child is

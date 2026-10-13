@@ -22,7 +22,7 @@ of the context: the link offset 0, then the end link. The function is called as
 Addresses: `0x424f00`, `0x422d50`, `0x832de4`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::event_dispatch_order_matches_binary`
 
 `0x424f00` allocates 0x18 bytes tagged `.?AUEvtHandler@@` (`0x424f30`) and stores the function at
 `+0x08`, the argument at `+0x0c`, the priority at `+0x10` and 0 at `+0x14` (`0x424f4d` to
@@ -41,7 +41,7 @@ later handler from passing it.
 Addresses: `0x424f70`, `0x424f73`, `0x424f78`, `0x424f7d`, `0x424fcd`, `0x424fe9`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::event_dispatch_order_matches_binary`
 
 The walk loads the record's priority and `fcomp`s the new one (`0x424f70`, `0x424f73`); `test
 ah,0x41; je` advances when neither C0 nor C3 is set, that is when the record is greater
@@ -61,7 +61,7 @@ same walk. Nothing is called while a fatal error is being reported, or for a nul
 Addresses: `0x4245b0`, `0x424710`, `0x4245e0`, `0x424637`, `0x424660`, `0x4246a0`, `0x4246ad`, `0x4246b0`, `0x425220`, `0x425250`, `0x425290`, `0x425310`, `0x425340`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::event_dispatch_order_matches_binary`, `core::demux_route_matches_binary`
 
 The dispatch is `fastcall(context, category)` with the payload pushed, `ret 4`. `0x424710` gets
 a pointer to the category (`0x4245d6`), and the list is chosen after it (`0x4245f8`). `0x4245e0`
@@ -103,7 +103,7 @@ part.
 Addresses: `0x424710`, `0x424780`, `0x424770`, `0x424810`, `0x4248a5`, `0x4248b3`, `0x424790`, `0x41f8f0`, `0x424510`, `0x832dac`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::demux_route_matches_binary`
 
 `0x424710` indexes the byte map `0x424780` by `category − 2` (`ja` for anything outside 2 to
 0xe) into the table `0x424770`: 2 runs `0x424790`, 8 and 9 run `0x424810` with the payload's
@@ -158,7 +158,7 @@ dropped from the heap's top.
 Addresses: `0x4200a0`, `0x420170`, `0x4203e0`, `0x428b30`, `0x428510`, `0x428720`, `0x428820`, `0x428ee0`, `0x4290c0`, `0x832f2c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `core::evttimer_ticks_to_seconds_matches_binary`
 
 `0x428b30` reuses an id from the free list or takes the next (at least 1), allocates a 0x38-byte
 record, and stores `due = now + delay` at `+0x10` (`0x428c09`, `0x428c14`), the delay as
@@ -166,7 +166,7 @@ record, and stores `due = now + delay` at `+0x10` (`0x428c09`, `0x428c14`), the 
 functions at `+0x18` and `+0x20` and their arguments, then sift-inserts it in the heap at
 `+0x1f4`. `0x428510` reads the clock once (`0x42854e`), stops at a root with `due − now > 0`
 signed (`0x4285f2`), and calls with the lock released (`0x428659`). `0x420170` sets the second
-function form, called with two more arguments.
+function form, called with two more arguments. The test runs `0x428c4e` to `0x428c6e`.
 
 ## Observer classes
 

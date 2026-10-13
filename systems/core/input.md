@@ -152,14 +152,15 @@ difference would run it.
 Addresses: `0x423e20`, `0x423e40`, `0x423f7a`, `0x423f8d`, `0x423fa1`, `0x423fa6`, `0x423fa9`, `0x42cea0`, `0x883f48`, `0x883f4c`, `0x883f50`, `0x883f54`, `0x884e20`
 Confidence: verified
 Proof: two
-Test: none
+Test: `core::cursor_normalize_matches_binary`
 
 The clamp runs only when both `0x883f54 − 0x883f4c` and `0x883f50 − 0x883f48` are nonzero
 (`test ah,0x44; jnp`, `0x423e40`, `0x423e60`). Then `fild x; fidiv width; fstp DWORD`
 (`0x423f7f` to `0x423fa1`) and `fild y; fidiv height; fsubr 1.0; fstp DWORD` (`0x423fa3` to
 `0x423faf`), `d8 2d` giving `1.0 − st0`. x is not offset by the rectangle's left. The rectangle's
 writers are the static initializer `0x4238a0`, which zeroes it, and `0x424370`, reached only from
-the unreached `0x420740`. A zero width or height gives an infinity or NaN.
+the unreached `0x420740`. A zero width or height gives an infinity or NaN. The test runs
+`0x423f7f` to `0x423fb1`.
 
 ## Buttons and capture
 
