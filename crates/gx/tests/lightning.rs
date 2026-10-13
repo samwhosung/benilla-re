@@ -53,7 +53,7 @@ impl StripRng {
         self.0 = self.0.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
         self.0
     }
-    /// A finite f32 from the LCG HIGH bits (method.md §6), in a modest world-space range.
+    /// A finite f32 from the LCG's high bits, in a modest world-space range.
     fn f32_world(&mut self) -> f32 {
         let m = f64::from(self.next() >> 8) / f64::from(1u32 << 24);
         (m * 40.0 - 20.0) as f32
@@ -284,7 +284,7 @@ fn lightningrender_strip_difftest() {
     };
     let mut e = Emu::new(&wow);
 
-    // byte-verify the load-bearing live-vs-store sites and branch jccs (drift guards, method §5).
+    // The instructions the model depends on, read from the exe: the stores and the branches.
     assert_eq!(
         e.read(0x7b01b3, 2),
         vec![0xd9u8, 0xfa],

@@ -351,8 +351,8 @@ fn ribbon_segment_emit_difftest() {
             (make_emit_frame_const(), 0.0, 0.0, 64, 0), // t = 0 (w = 1)
             (make_emit_frame_const(), -0.5, 1.0, 64, 3), // t = 1 (w = 0)
             (make_emit_frame_const(), 0.25, 0.5, 10, 9), // index 9 +1 == cap 10 -> wrap to 0
-            (make_emit_frame_const(), 2.0, -1.5, 10, 0), // extrapolation; binary never clamps t
-            (make_emit_frame_const(), 0.5, 0.5, 4, 3),  // index 3 +1 == cap 4 -> wrap to 0
+            (make_emit_frame_const(), 2.0, -1.5, 10, 0), // t outside [0, 1]: 0x7b6c30 does not clamp it
+            (make_emit_frame_const(), 0.5, 0.5, 4, 3),   // index 3 +1 == cap 4 -> wrap to 0
         ];
         for i in 0..400u32 {
             let f = make_emit_frame(&mut s);
