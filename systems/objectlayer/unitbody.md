@@ -139,7 +139,8 @@ flag.
 
 ## Liquid and swimming
 
-After each mover step `0x5fac70` refreshes the liquid id and hands the depth to the swim decision.
+After each mover step `0x5fac70` refreshes the ground's terrain type and hands the depth to the
+swim decision.
 `0x60df70` and `0x60dff0` start and stop swimming: the active mover asks, others change at once
 or queue the change. Two tests read the depth: deeper than half the unit's height, and a point
 just under a surface.
@@ -149,7 +150,9 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5fa730` stores the node's liquid id at `+0xc60`, or −1. `0x5fac70` passes the surface minus
+`0x5fa730` stores at `+0xc60` the world entity's `+0xdc` through `0x6706d0`, or −1: the
+`TerrainType` id that `AttachEntityToGround` takes from the WMO face or the ground effect
+(`0x6a8bfb`), which the footstep, footprint and death-thud code index `TerrainType` with. `0x5fac70` passes the surface minus
 the z, or 0, and the liquid flag to 0x6030c0, then 0x613ef0(0). 0x6030c0 calls
 `0x60df70(time, force)` or `0x60dff0(time, force)`: the active mover requests the change through
 its `CMovement` (a start also sets tutorial flag 0x1b), others apply it at once when forced or

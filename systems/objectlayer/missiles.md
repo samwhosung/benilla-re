@@ -24,7 +24,7 @@ Roots: `0x61cbf0`, `0x61cc40`, `0x61cc70`, `0x61ccd0`, `0x61ce00`, `0x61ce40`, `
 | `+0x38` | the flags, below; `+0x3c` the target attachment, −1 for none |
 | `+0x40`, `+0x44` | the flight sound id and its playing sound |
 | `+0x48`, `+0x4c` | the outcome code and the code a reflection takes |
-| `+0x50`, `+0x74`, `+0x78` | the stuck expiry, the target's reaction time, the launch time |
+| `+0x50`, `+0x74`, `+0x78` | the stuck expiry, the target's reaction time, the time it was queued |
 | `+0x54` to `+0x6c` | the GUID array (capacity, count, data) and the reason array |
 | `+0x80`, `+0x84`, `+0x88` | the list link (the slot that points here, the next) and the pool handle |
 
@@ -43,7 +43,11 @@ set; the handle goes to `+0x88`. `0x61ccd0` runs `0x61cd70`, which closes the mo
 world object, unlinks, stops the sound with a 0.15 s fade, empties both arrays and frees them, and
 then returns the block. `0x61ce50(head)` unlinks (`0x61d1f0`) and pushes at the list head;
 `0x61ce40` is its stack-argument thunk. The launcher `0x60a3d0` stores the arrays (`+0x58`, `+0x5c`;
-`+0x68`, `+0x6c`), the sound id from its visual's `+0x28` (`0x60a516`) and flag 0x4 (`0x60a509`).
+`+0x68`, `+0x6c`), the sound id from its visual's `+0x28` (`0x60a516`) and flag 0x4 (`0x60a509`),
+then stores the time at `+0x78` (`0x60a6e1`) and links the missile on its caster's `+0xac`, the
+release queue it waits on until launch. `CGUnit_C::ReleaseMissiles` (`0x60c940`) launches every queued missile
+through `0x61ceb0`; the unit's model events call it on `$CSR`, `$CSL` or `$CST` (`0x600149`) and on
+`$BWR` (`0x600294`), and `0x60c9b0` calls it otherwise (`auras`, Missiles).
 `0x61e8f0`, at shutdown, frees every missile on both global lists.
 
 ## Launch and flight time
@@ -51,7 +55,7 @@ then returns the block. `0x61ce50(head)` unlinks (`0x61d1f0`) and pushes at the 
 `0x61ceb0(start)` launches a missile, and relaunches a reflected one: it sets the outcome flags,
 places the missile at `start`, moves it to the flying list, settles the target attachment and aims.
 For a positive speed it then fits the speed so that the flight ends on schedule: with `d` the
-distance to the destination, `t = d/speed − (now − launch)·0.001`; for `t > 0` the speed becomes
+distance and `q` the seconds spent in the caster's release queue, `t = d/speed − q`; for `t > 0` the speed becomes
 `min(d/t, 100)`, otherwise 100 with `t = 0`. A blocked or deflected missile at a unit makes the
 target play 24 ShieldBlock or 30 Dodge so that half the sequence has run at impact. The model plays
 144 InFlight, its loop stretched over `t`, or 0 Stand.
@@ -64,7 +68,9 @@ Test: none
 `0x61cee4`: a blocked missile takes attachment 0. `0x61cf13`: for a target unit the attachment is
 kept when the target's model has it, else 15, else 19, else −1; no target gives −1. The distance is
 `sqrt((dz² + dy²) + dx²)`, stored as a float (`0x61cfd7`); `0x61cfda` divides the unrounded
-distance by the speed. `0x61cffa` tests `t > 0` on the unrounded value. `0x61d0c3`: `100.0`
+distance by the speed, and `0x61cfdd` rounds `d/speed` to a float before the queue time,
+`(now − +0x78)·0.001` (`0x61cfe5`), is subtracted. `0x61cffa` tests `t > 0` on the unrounded difference, and `0x61d0c3` divides the stored
+float `d` by the stored float `t`. `0x61d0c3`: `100.0`
 (0x80c854) compared below the quotient keeps a NaN quotient and caps a larger one. `0x61d02e`: the
 lead is `ftol(t·1000)` minus half of `GetSequenceInfo(anim)` `+4`, the sequence length; a positive
 lead goes to `+0x74`, otherwise the unit plays the animation at once when it resolves to its own
@@ -111,7 +117,8 @@ plus `BuildAxisRotation(axis, angle)` applied to `V`. A target that is not a uni
 aimed at directly. `0x61d51c`: `0x61eec0` returns the mover's `+0x84` times its `+0x5c` direction;
 `speed² < |v|²` normalizes `v` (when `|v|` is at least 2^-22) and scales it to `s`; `0x61d589`
 halves it. `0x61d61e` gives up on a discriminant below 0 and `0x61d624` on `a²` below 1e-5. `t₁ = (−b − √D)·(0.5/a)`, `t₂ = (√D − b)·(0.5/a)`, each kept when above 0 and below the
-best so far, from `FLT_MAX`; `0x61d6ad` keeps the aim point while the best is still `FLT_MAX`.
+best so far, from `FLT_MAX`; `0x61d6ad` keeps the aim point while the best is still `FLT_MAX`. The lead point rounds `v·t` to a
+float in x and y before adding, while z adds the unrounded product (`0x61d6e5` to `0x61d702`).
 
 ## Flight each frame
 

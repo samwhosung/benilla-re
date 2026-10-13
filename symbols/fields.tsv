@@ -152,7 +152,7 @@ CGUnit_C	0x0c20	32	uint32_t[8]	m_emoteQueue	objectlayer	Holds four delay and emo
 CGUnit_C	0x0c40	4	uint32_t	m_bleedTime	objectlayer	Holds the next bleed time, written by 0x60a260 and the constructor	verified	one	objectlayer/unitbody#low-health-and-bleeding
 CGUnit_C	0x0c48	8	uint64_t	m_attackTarget	objectlayer	Holds the attack target GUID, written by 0x5ff070 and cleared by 0x605860	verified	one	objectlayer/units#the-unit-object
 CGUnit_C	0x0c58	4	uint32_t	m_unitState	objectlayer	Holds state bits: 0x2 low health, 0x8 pending XP, 0x10 flash, 0x20 and 0x40 breath, 0x100 native display	verified	one	objectlayer/units#the-unit-object
-CGUnit_C	0x0c60	4	int32_t	m_liquidId	objectlayer	Holds the node's liquid id or -1, written by 0x5fa730	verified	one	objectlayer/unitbody#liquid-and-swimming
+CGUnit_C	0x0c60	4	int32_t	m_terrainType	objectlayer	Holds the TerrainType id of the ground under the unit or -1, written by 0x5fa730	verified	one	objectlayer/unitbody#liquid-and-swimming
 CGUnit_C	0x0c78	4	uint32_t	m_nextRippleTime	objectlayer	Holds the time of the next water ripple, written by 0x5fa760	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 CGUnit_C	0x0c7c	4	void *	m_nameDesc	objectlayer	Holds the name descriptor, written by 0x606fe0 and cleared by 0x607030	verified	one	objectlayer/unitnames#the-name-block
 CGUnit_C	0x0c80	12	uint32_t[3]	m_pendingXP	objectlayer	Holds an XP gain and its two arguments, written by 0x60a0c0	verified	one	objectlayer/unitnames#damage-and-miss-numbers
@@ -287,7 +287,7 @@ CMissile	0x0048	4	uint32_t	m_outcome	objectlayer	Holds the outcome code	verified
 CMissile	0x004c	4	uint32_t	m_reflectOutcome	objectlayer	Holds the outcome code a reflection takes	verified	one	objectlayer/missiles#the-missile-object
 CMissile	0x0050	4	uint32_t	m_expiry	objectlayer	Holds the time a stuck or impact missile is freed	verified	one	objectlayer/missiles#the-missile-object
 CMissile	0x0074	4	uint32_t	m_reactionTime	objectlayer	Holds the time the target plays its block or dodge	verified	one	objectlayer/missiles#the-missile-object
-CMissile	0x0078	4	uint32_t	m_launchTime	objectlayer	Holds the launch time	verified	one	objectlayer/missiles#the-missile-object
+CMissile	0x0078	4	uint32_t	m_queueTime	objectlayer	Holds the time the launcher queued the missile on its caster	verified	one	objectlayer/missiles#the-missile-object
 CMissile	0x007c	4	void *	m_worldObject	objectlayer	Points at the world object that carries the model	verified	one	objectlayer/missiles#the-missile-object
 CMissile	0x0080	4	CMissile **	m_prevLink	objectlayer	Points at the slot that points at the missile	verified	one	objectlayer/missiles#the-missile-object
 CMissile	0x0084	4	CMissile *	m_next	objectlayer	Points at the next missile on its list	verified	one	objectlayer/missiles#the-missile-object

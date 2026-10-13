@@ -81,8 +81,9 @@ Test: none
 below 5. `0x6276dc` compares the name with `MANA_POINTS`, `RAGE_POINTS`, `FOCUS_POINTS` and
 `ENERGY_POINTS`. `0x627500` and `0x62ca00` call `0x627520` with 1 and 0; `0x627910` and `0x62dbf0`
 call `0x627930` with 1 and 0, the flag choosing the periodic chat types; `0x627520` raises its
-combat text only with the flag clear. `0x627930` takes the leech keys of `0x627c80` for a multiplier
-of at least the epsilon `0x8029d4`, else the drain keys of `0x627cd0`; `0x627c80` has no `SELFSELF` key,
+combat text only with the flag clear. `0x627930` takes the leech keys of `0x627c80` when the
+multiplier's absolute value (`fabs`, `0x6279fa`) is at least the epsilon `0x8029d4` or is NaN
+(`test ah,5; jp`), else the drain keys of `0x627cd0`; `0x627c80` has no `SELFSELF` key,
 so a self-leech writes nothing.
 
 ## Melee lines

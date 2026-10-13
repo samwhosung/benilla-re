@@ -20147,9 +20147,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fa6d0	36	IsActivePlayerUnit		objectlayer	orchestration	uint32_t __fastcall (void *unit)	Returns 1 when a unit's GUID is the active player's, else 0	verified	one	spell/failures#spell-failure-packets	
 0x5fa700	8	CGUnit_C::ClearLowHealth		objectlayer	primitive		Clears bit 0x2 of +0xc58, the low-health bit	verified	one	objectlayer/unitbody#low-health-and-bleeding	
 0x5fa710	18	CGUnit_C::SetLowHealth		objectlayer	primitive		Sets bit 0x2 of +0xc58 when the unit has a blood levels row	verified	one	objectlayer/unitbody#low-health-and-bleeding	
-0x5fa730	40	CGUnit_C::UpdateLiquidId		objectlayer	orchestration		Stores the node's liquid id at +0xc60, or -1 without one	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x5fa730	40	CGUnit_C::UpdateTerrainType		objectlayer	orchestration		Stores its world entity's ground TerrainType id at +0xc60, or -1 without one	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x5fa760	1282	CGUnit_C::EmitWaterRipple		objectlayer	primitive		Leaves a ripple in shallow liquid, along the motion when moving, and schedules the next at +0xc78	verified	one	objectlayer/unitbody#water-ripples-and-swimming	
-0x5fac70	146	CGUnit_C::OnMoverStepped		objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Refreshes the liquid id, hands the liquid depth to the swim decision, then places the object	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x5fac70	146	CGUnit_C::OnMoverStepped		objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Refreshes the ground terrain type, hands the liquid depth to the swim decision, then places the object	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x5fad10	51	CGUnit_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
 0x5fad50	1137	CGUnit_C::CGUnit_C		objectlayer	primitive		Builds a unit: the object, its CMovement at +0x9a8, 182 watcher lists, its members, vtable 0x80c4f8	verified	one	objectlayer/units#the-unit-object	
 0x5fb1d0	43	CGUnit_C::DeletingDestructor		objectlayer	orchestration		Destroys a unit and frees it when bit 0 of the argument is set (vtable slot 0)	verified	one	objectlayer/units#the-unit-object	
@@ -21620,7 +21620,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x623800	112	CGUnit_C::UpdateLoopSound		objectlayer	primitive		Keeps a living creature's loop sound playing, or stops it	verified	one	objectlayer/sounds#the-loop-sound	
 0x623870	122	GetWeaponSwingSize		objectlayer	orchestration		Stores a hand weapon's ItemSubClass swing size, or 0	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
 0x6238f0	29	CGUnit_C::GetArmourImpactKind		objectlayer	orchestration		Returns a unit's armour kind for impact sounds from its sound data (slot 36)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
-0x623910	161	CGUnit_C::NextGreetingSound		objectlayer	orchestration		Picks the next NPCSounds greeting of a creature from its click count	verified	one	objectlayer/sounds#splashes-and-greetings	
+0x623910	161	CGUnit_C::NextGreetingSound		objectlayer	primitive		Picks the next NPCSounds greeting of a creature from its click count	verified	one	objectlayer/sounds#splashes-and-greetings	
 0x6239c0	34	CGUnit_C::StopReactionSound		objectlayer	orchestration		Stops a unit's playing reaction sound when allowed	verified	one	objectlayer/sounds#creature-reactions	
 0x6239f0	68	CGUnit_C::PlayEmoteStateSound		objectlayer	orchestration		Plays a unit's emote state sound on $ESD for an Emotes row of kind 2	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
 0x623a40	185	CGUnit_C::PlayReaction		objectlayer	orchestration		Plays a creature's aggro, death or other reaction at attachment 17, replacing a lower one	verified	one	objectlayer/sounds#creature-reactions	
@@ -24568,7 +24568,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6705d0	88	CWorld::GetPlayerFog		terrain	orchestration	uint32_t __fastcall (void *a, void *b)	Queries the map object fog at the active player through 0x69de20	inferred	none		
 0x670630	96	CWorld::GetEntityLight		terrain	orchestration	uint32_t __fastcall (void *object, void *a, void *b)	Copies an entity's light fields when its +0x90 bit 5 is set	inferred	none		
 0x670690	57	CWorld::GetEntityLightFlags		terrain	orchestration	uint32_t __fastcall (void *object, void *out)	Returns bits 6 and 7 of an entity's +0x90	inferred	none		
-0x6706d0	29	CWorld::GetEntityLightIndex		terrain	orchestration	uint32_t __fastcall (void *object)	Returns an entity's +0xdc unless it is -1	inferred	none		
+0x6706d0	29	CWorld::GetEntityTerrainType		terrain	orchestration	uint32_t __fastcall (void *object)	Stores an entity's ground TerrainType id +0xdc and returns 1, or returns 0 for -1	verified	one	objectlayer/unitbody#liquid-and-swimming	
 0x6706f0	84	CWorld::IsEntityInLitGroup		terrain	orchestration	uint8_t __fastcall (void *object)	Returns 1 for a null object or one without bit 0 of +0x90, else bit 15 of its group's +0x10, 0 when no group	inferred	none		
 0x670750	97	ScaleColorByByte		terrain	primitive	uint32_t __fastcall (uint32_t color, uint32_t scale)	Scales each colour channel by a byte as (c·k + 0xff) >> 8	inferred	none		
 0x6707c0	328	CWorld::CreateMapEntity		terrain	orchestration	void * __fastcall (const char *name, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e, uint32_t f)	Creates a placed doodad or map object for a game object and positions it	inferred	none		

@@ -44,8 +44,8 @@ victim resolves sets bit 0x1 of `+0xc58` and turns `+0xcac` to the heading towar
 total damage and a byte count `n` of damage parts, each a school, a float, a damage, an absorb and a
 resist; then the victim state, two u32 and a blocked amount. Hit info 0x1 adds a u32, eight floats,
 five float pairs and a u32. A swing with no damage and a blocked amount becomes state 5. Nothing
-bounds `n`: the parts are arrays of five, and a sixth part on writes into the fields after them,
-from the 24th on past the record and the handler's frame.
+bounds `n`: the parts are arrays of five, and a sixth part on writes into the fields after them.
+The 24th part writes past the 0xec-byte record, and the 33rd reaches the handler's saved `ebp`.
 
 Addresses: `0x625c60`, `0x625c95`, `0x625cb1`, `0x625cf7`, `0x625d2f`, `0x625e20`, `0x6263a0`
 Confidence: verified
@@ -63,7 +63,8 @@ Test: none
 `0x625c95` reads the byte; the loop `0x625cb1` stores part `i` at `+0x18+4i`, `+0x54+4i` (a float),
 `+0x68+4i`, `+0x7c+4i` and `+0x90+4i`. The extras' pairs go to `+0x2c+4i` and `+0x40+4i`. `0x625e20`
 sets `+0xa4` to 5 when the victim resolves, `+0x14` is 0 and `+0xb0` is not. `0x6263a0` clears the
-record, setting the five schools to −1. The record sits at `[ebp-0x110]` in `0x6255b0`.
+record, setting the five schools to −1. The record sits at `[ebp-0x110]` in `0x6255b0`. Part `i` (from 0) writes as far as `+0x90+4i`: `i = 23` gives `+0xec`, the
+record's end, and `i = 32` gives `+0x110`, the saved `ebp`.
 
 ## Holding a swing
 
@@ -142,7 +143,10 @@ Test: none
 keeps 16 below 0 (`test ah,5; jnp`) and takes 15 otherwise, NaN included. Attachment 15 reads the
 row's `+0x4` or `+0x8`, 16 its `+0xc` or `+0x10`, by whether the flag is set. `0x625177` calls
 `CEffect::AddEffect(attachment, 0, 0, record, attacker, victim, 0, EffectDoneCallback)` and releases
-its reference (`effects`).
+its reference (`effects`). `0x60a390` (`unitdisplay`) has two callers, this and `0x60a260`, which
+only tests for a row; this one reads `+0x4` to `+0x10` (`0x6250fc`, `0x625105`), and the store's
+other readers are its load, set-up and teardown `0x53eb20`. The row's five strings `+0x14` to
+`+0x24`, the ground splat textures, are never read, and no creature or display flag gates the spurt.
 
 ## Combat model events
 

@@ -17,8 +17,11 @@ Roots: `0x626d00`, `0x629a90`, `0x626850`, `0x626630`, `0x6264e0`, `0x626890`, `
 
 `0x626850(type, format, …)` formats a line of at most 2,047 characters and adds it to the chat
 frames under a chat type, and to a file while flag 0xb4fdb8 is set; type 0x5e sends nothing.
-Every formatter takes its sentence from a global string; one that is missing or empty writes
-`Warning, string %s not found in stringfile.` under type 0x19 instead.
+Every formatter takes its sentence from a global string. In UnitCombatLog_C.cpp one that is missing
+or empty writes `Warning, string %s not found in stringfile.` under type 0x19 instead, but for
+two lines: the item durability line writes nothing, and the faction line warns only for a missing
+string. In UnitCombatLogXP_C.cpp only the rested XP line warns; the others pass the string on
+unchecked.
 
 Addresses: `0x626850`, `0x62685d`, `0x626876`, `0x626886`, `0x6269f0`, `0x804710`
 Confidence: verified
@@ -28,7 +31,9 @@ Test: none
 `0x62685d` returns for 0x5e. `0x626876` calls 0x64a8b0 into a 0x800-byte buffer with the variable
 arguments; `0x626886` passes the text and the type to 0x49b1b0, which adds it with six zero
 arguments through 0x49b0b0 and, when 0xb4fdb8 is set, writes it with `%s` to the file 0xb50544.
-`0x6269f0(name)` writes the warning for a nonempty name. The chat types are rows of `0x804710`,
+`0x6269f0(name)` writes the warning for a nonempty name. `0x637cd0`, `0x637da0` and `0x637f70` hand
+`FrameScript_GetText`'s result straight to `0x626850`; `0x637ac0` warns at `0x637bf9`. `0x6298a0` returns on either (`0x62995f`, `0x629968`);
+`0x62c5f0` tests only for null (`0x62c62b`) and passes an empty string to `0x626850`. The chat types are rows of `0x804710`,
 94 records of a 64-byte name and an RGB colour: 0x19 `COMBAT_MISC_INFO`, 0x1b to 0x2a the
 `COMBAT_*_HITS` and `_MISSES`, 0x2b and 0x2c the friendly and hostile deaths, 0x2d `COMBAT_XP_GAIN`,
 0x2e to 0x50 the `SPELL_*` families, 0x51 `COMBAT_HONOR_GAIN`, 0x55 `COMBAT_FACTION_CHANGE`.

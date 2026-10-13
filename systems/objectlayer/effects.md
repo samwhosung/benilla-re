@@ -92,6 +92,24 @@ when present into `+0x64` and its key bone −1 into `+0x68` (1.0 for an unloade
 flag 0x4. `0x6208e0(unit, record, attachment)` stops the unit's effects with the same record id at
 the same attachment, unless the attachment is −1.
 
+## No cap on effects
+
+Nothing bounds how many effects exist. Each creator resolves its unit, creates the model and
+links the effect with no count, distance or visibility test; the one thinning is the replace of an
+effect with the same record at the same attachment. How many particles an effect's emitters keep
+is the models' (`models/particles`), and the `spellEffectLevel` option writes the particle
+density (`camera`) rather than refusing effects.
+
+Addresses: `0x61fdd0`, `0x61fcf0`, `0x61fec0`, `0x61ffa0`, `0x620090`, `0x6201d0`, `0x620360`, `0x6208e0`
+Confidence: verified
+Proof: one
+Test: none
+
+The creators' only calls are `ClntObjMgrObjectPtr`, `StopUnitEffectsAt` (`0x6208e0`, from
+`0x61fdd0` and `0x61fcf0`), the scene and model calls, the sound calls of `0x61fec0`, the key-bone
+speed calls of `0x6201d0` and `CEffect::Link` (`0x620360`), which only unlinks and pushes at the
+head.
+
 ## Setting up once loaded
 
 An effect with a model is set up once, on the first frame its model is loaded. A planted effect
@@ -152,13 +170,15 @@ Proof: one
 Test: none
 
 `0x6203ee` sets 0x900 after linking on `0xc4dee4`. The test is `CM2Model::HasLiveParticles`,
-the model's `+0x3d8`, which `CM2Model::Animate` clears and then ORs, per emitter, with its
-emitting state `+0x160` (enabled and the instance visible) or `CParticleEmitter2::HasLiveParticles`
-(`0x717ecf`), a live count `+0x64` on the emitter or any child. `0x6203f9`: flag 0x4 restores the speeds of a
-live owner and refreshes its animation. The done, event and loaded callbacks are cleared and the
-model is made invisible; `StopEffectObjectChains` (`0x6208b0`) then stops the three chain beams of
+`+0x3d8`, which `CM2Model::Animate` rebuilds per emitter from its emitting state `+0x160` or
+`CParticleEmitter2::HasLiveParticles` (`0x717ecf`), a live count `+0x64` here or in a child. `0x6203f9`: flag 0x4 restores the speeds of a
+live owner and refreshes its animation. The callbacks are cleared, the model hidden;
+`StopEffectObjectChains` (`0x6208b0`) then stops the three chain beams of
 `+0x30` to `+0x38` (`spell/visuals`) and clears the slots. `0x620500` adds a reference only when the
-effect is not linked, which the link just made cannot be. `0x61f680` (from the world frame,
+effect is not linked. Between the link and it, only `0x5fd9e0` (`0x6204aa`) reaches a release by
+direct calls, through the sheathe, auto-move, input, melee start and precast end to `0x612630`, which releases the unit's `+0xb4c` effect. Only `0x612650`
+stores that effect, with flags 0, so it is never the flag-0x4 effect stopped here, and freeing it
+unlinks only itself; this effect stays linked and the increment does not run. `0x61f680` (from the world frame,
 0x48324e) also walks `0xc4dec8`, releasing effects past `+0x54`; nothing links an effect there: the
 address appears in the image only at `0x61f661`, `0x61f677` and `0x61f683`, all loads, against
 `0xc4dee4`'s push at `0x6203e3`. `0x61f640` releases both lists.

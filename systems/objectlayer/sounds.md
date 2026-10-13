@@ -137,8 +137,8 @@ Proof: one
 Test: none
 
 `0x6236e0` asks `CWorld::GetEntityLight` for the liquid at the unit; `0x62372a` returns when the
-surface minus z is above 2.0. `0x62373d` needs `0x625500` below 5 and `+0xc60`, read as a
-`TerrainType` id, a row whose `+0x10` is below the size's count; liquid takes the pair's `+4`. `0x6239f0(point)` reads `Emotes` by `UNIT_NPC_EMOTESTATE` and
+surface minus z is above 2.0. `0x62373d` needs `0x625500` below 5 and `+0xc60`, the
+ground's `TerrainType` id, a row whose `+0x10` is below the size's count; liquid takes the pair's `+4`. `0x6239f0(point)` reads `Emotes` by `UNIT_NPC_EMOTESTATE` and
 plays `+0x18` when `+0x10` is 2. `0x623c80(emote, x)` (0x49b4e9) needs the CVar and
 `ClassifyGuidForPlayer` 0 or 2, gets the voice from 0x459270 by display race and gender, and calls
 `0x623c10(voice, 0, x)`, which plays at attachment 17, attaches the sound to the unit and replaces
@@ -179,7 +179,7 @@ Test: none
 `0x6237c0` calls 0x4588d0 with `+0xb18`, the `ChrRaces` `+0x34` (`units`), from the swim start
 of 0x6030c0. `0x623910(count, sound, index)` reads the `NPCSounds` row of the display `+0xb34`
 `+0x2c`; without one it returns −1. `0x623947`: a count below 5 gives `+0x4` with index −1 and
-returns `count + 1`. `0x623967`: past that, `count − 5` below 0x458f70's number for `+0xc` gives
+returns `count + 1` (`0x62395f`). `0x623967`: past that, `count − 5` (`0x62396a`) below 0x458f70's number for `+0xc` gives
 `+0xc` at that index and `count + 1`; at or above it gives `+0x4` and 0. Its caller is the greeting
 (`unitnames`, Greetings and unit sounds).
 
