@@ -24,7 +24,7 @@ accumulator to the seed and each lane to four times the seed modulo a prime: byt
 Addresses: `0x44ea80`
 Confidence: verified
 Proof: two
-Test: `random::srand_seed_state_init`
+Test: `random::srand_seed_state_init`, `random::prng_difftest`
 
 Four unsigned `div` by `0x2f`, `0x35`, `0x3b`, `0x3d` (`0x44ea92` to `0x44eac1`); the remainders are
 packed high byte first, the whole dword shifted left by 2 (`0x44eac8`) and stored at `+4`
@@ -52,7 +52,7 @@ accumulator. With `T(n)` the dword at byte offset `n` of `0x802700`:
 Addresses: `0x4531e0`, `0x802700`
 Confidence: verified
 Proof: two
-Test: `random::crandom_uint32_advance`
+Test: `random::crandom_uint32_advance`, `random::prng_difftest`
 
 The steps are `sub` then a signed `test`/`jge` that skips the `add` of the modulus (`0x453215`,
 `0x453225`, `0x45323a`, `0x453259`): the modulus is added only when the subtraction goes negative,

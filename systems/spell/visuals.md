@@ -118,7 +118,7 @@ box to `(−r, −r, −r)` to `(r, r, r)` with centre `0.5·((−r) + r)` per a
 Addresses: `0x6eb930`, `0x6eb95e`, `0x6eb967`, `0x6eb981`, `0x81199c`, `0x6eb989`, `0x6eb98f`, `0x6eb99f`, `0x6eba20`, `0x6ebab8`, `0x670db0`, `0x6717d0`, `0x64a5a0`, `0x5f8cf0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::camera_set_difftest`
 
 `0x6eb95e` loads `0xcee9a8`; null goes to `0x6eb989` (`fld` the rate alone). `0x6eb967` reads
 `[record+0x28]`: 0 multiplies by 0.33 (`0x3ea8f5c3`), 1 by 0.66 (`0x3f28f5c3`, the constant `0x81199c` that `0x6eb981` multiplies by), at 53 bits;
@@ -128,6 +128,8 @@ Test: none
 row. `0x6eba2b` negates the radius and `0x6eba46` to `0x6eba78` add the radius back to each copy
 before `0x5f8cf0` scales by 0.5, so the centre is 0, or NaN for an infinite or NaN radius.
 `0x6ebab8` is `0x6717d0(+0x10c, matrix, box, centre, 1)`.
+
+`terrain::camera_set_difftest` runs six stretches from `0x6717da` to `0x6719f8`.
 
 ## Shard emission rate
 

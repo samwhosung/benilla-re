@@ -85,7 +85,7 @@ position; the centre is (min + max)/2 and the radius |max − centre|.
 Addresses: `0x6b0e50`, `0x699250`, `0x6b11f0`, `0x741760`, `0x80fee4`, `0x7ffab4`, `0x6b0f20`, `0x6b0fb1`, `0x6b101f`, `0x6b106c`, `0x6b112d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::vec3_min`, `terrain::vec3_max_inplace`, `terrain::mcvt_world_verts`
 
 Each product is `fild; fstp dword; fld; fmul [0x80fee4]` (33.333332, 0x42055555) then `fstp`, and
 o adds 17066.666 (0x46855555, `0x7ffab4`) to the negation and stores. `0x6b0f20` forms o(h) −
@@ -106,7 +106,7 @@ vertices' order, and stores each component as the float s·(1/127) at +0x170.
 Addresses: `0x6aff10`, `0x810c08`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::mcnr_normals_difftest`
 
 The loop runs 0x91 times with a stride of 3 bytes: `movsx`, `fild`, `fmul [0x810c08]` and
 `fstp dword` for each of the three bytes. The constant is 0x3c010204, 1/127 as a float, so each
@@ -148,7 +148,7 @@ values per 64-value row and the decoder copies column 62 into 63 and row 62 into
 Addresses: `0x6b0a60`, `0x6b0ac0`, `0x6b0b30`, `0x6b0bf0`, `0x6b0c80`, `0x6b02d0`, `0x6b1150`, `0x810ba4`, `0x810bac`, `0xca8398`, `0x6b0a6b`, `0x6b0bbf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::mcal_decode64`, `terrain::mcal_decode32`, `terrain::mcal_decode63`, `terrain::mcal_decode32_63`
 
 The fill callback `0x6b1150` acts only on request 1: it decodes through `0x6b02d0` into the
 scratch buffer `0xca8398` and returns a pitch of twice the width. `0x6b0a60` tests the flags'
@@ -169,7 +169,7 @@ for a clear bit and 0xffff for a set one, 64×64 with `shadowLevel` 0 and otherw
 Addresses: `0x6b0030`, `0x6b0051`, `0x6b0d00`, `0x6b0d30`, `0x6b0da0`, `0x6b02b0`, `0x6b1180`, `0x6aed20`, `0x810bb4`, `0x810bd4`, `0x86b590`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::mcsh_decode`, `terrain::mcsh_decode32`
 
 `0x6b0030` stores the map's address at +0x144, then, with neither shader flag set, creates the
 texture through `0x6aed20` with fill callback `0x6b1180`. That callback runs `0x6b02b0`, which
@@ -188,7 +188,7 @@ no map and 0 for a set bit. The size and the sample walks follow the alpha maps.
 Addresses: `0x6b00a0`, `0x6b11b0`, `0x6b02f0`, `0x6b0350`, `0x6b03d0`, `0x6b0510`, `0x6b0770`, `0x6b08d0`, `0x810bf4`, `0x6b043e`, `0x6b049b`, `0x6b04c1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::alpha_texel_64`, `terrain::alpha_texel_32_edge`, `terrain::alpha_texel_dup`, `terrain::alpha_texel_32`
 
 `0x6b02f0` gathers four alpha pointers, null unless the layer exists and has flags bit 8, and
 passes them with +0x144 to `0x6b0350`, which picks a packer as `0x6b0a60` picks a decoder. In

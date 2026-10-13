@@ -276,7 +276,7 @@ For triangle i of `0xc4e52c` with normal z = n.z, the slope limit s is cos 50° 
 Addresses: `0x6336c3`, `0x6336d3`, `0x633701`, `0x63364a`, `0x633671`, `0x633784`, `0x6337a5`, `0x633755`, `0x633463`, `0x633475`, `0x6334f9`, `0x633507`, `0x633526`, `0x633566`, `0x633595`, `0x632460`, `0x5fa550`
 Confidence: verified
 Proof: one
-Test: `collision::ground_slide_difftest`, `collision::point_in_tri_difftest`, `collision::walkable_hit_difftest`, `collision::flush_probes_difftest`, `collision::slope_classify_difftest`, `objectlayer::dot3_difftest`
+Test: `collision::ground_slide_difftest`, `collision::point_in_tri_difftest`, `collision::walkable_hit_difftest`, `collision::flush_probes_difftest`, `collision::slope_classify_difftest`, `objectlayer::dot3_difftest`, `terrain::plane_offset_negate_difftest`, `terrain::side_plane_d_negate_difftest`, `terrain::scene_dot_negate_difftest`, `terrain::wmo_plane_offset_negate_difftest`
 
 `0x6336c3`, `test ah,0x41; jp`, returns 0 for n.z > cos 50° and NaN; `0x6336d3` returns 1 for
 n.z ≥ 0; `0x633701` tests −n.z the same way. `0x63364a` passes the vertices, the index bytes

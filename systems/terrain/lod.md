@@ -42,7 +42,7 @@ tables and the level's batch descriptor from the static index lists at `0x86b540
 Addresses: `0x6aef50`, `0xcac860`, `0xcac3c8`, `0x86b540`, `0xca8308`, `0x802978`, `0x802998`, `0x6aef89`, `0x6af020`, `0x6af0af`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::chunk_mesh_tables`
 
 The coordinates accumulate exact steps of 0.125 (`0x802978`) from 0 and, for inner rows and
 columns, from 0.0625 (`0x802998`); `0x6aef89` multiplies by 8 before each store into
@@ -61,7 +61,7 @@ neighbour.
 Addresses: `0x6c51b0`, `0x6bee20`, `0x6bee90`, `0xcac3ac`, `0xcaf160`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::quad_hole_strip_indices`
 
 `0x6beb50` points `0xcac3ac` at `0xcaf160` before the call and hands the result to `0x6bee20`
 and `0x6bee90`, which fill the chunk's vertex and index buffers. The recursion and the caps'
@@ -79,7 +79,7 @@ four triangles around its inner vertex C: (C, v+1, v), (C, v+18, v+1), (C, v+17,
 Addresses: `0x6bd8c0`, `0x6bd9b0`, `0x810e20`, `0x6bd8fb`, `0x6bd901`, `0x6bd918`, `0x6bd936`, `0x6bd9c1`, `0x6bd9e4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::wdl_strip_indices`, `terrain::wdl_mesh_fill`
 
 `0x6bd8c0` loads X (+0x28) and Y (+0x2c) and keeps both on the stack; `0x6bd8fb` stores y and
 `0x6bd901` subtracts 33.333332 from it, `0x6bd918` from x after each row, so the values carry
@@ -97,7 +97,10 @@ tiles within three of the camera's, culls them with their own frustum and the ho
 Addresses: `0x683040`, `0x6bd780`, `0xc92078`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::scenewalk_arealow_far_project_difftest`, `terrain::scenewalk_camera_negate_difftest`
 
 `0x683040` reads the area index from `0xc63274` shifted by 4 and steps ±3; the per-tile cull and
 the projection it builds are not read here.
+
+`terrain::scenewalk_arealow_far_project_difftest` runs `0x6830c4` to `0x6830d9`;
+`terrain::scenewalk_camera_negate_difftest` runs `0x6831fc` to `0x683224`.

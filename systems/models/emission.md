@@ -208,7 +208,7 @@ velocity times `1 + S·variation` adds to the particle's velocity.
 Addresses: `0x7b8a9a`, `0x7b8b26`, `0x7b8b3d`, `0x7b9805`, `0x7bcb40`, `0x7bca80`, `0x7b2140`, `0x70a250`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::portal_screen_rect_difftest`
 
 `0x7b8aa0` tests `+0x1ac` bit 8; the clear branch calls `0x7bcb40` with w = 0 for the velocity and
 `0x7bca80` for the position, then `0x7b2140` under bit 17: it calls the callback `0xcf5758` with

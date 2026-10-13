@@ -42,7 +42,7 @@ inside [0, 34133.332) on both axes. It returns 0 when a step fails.
 Addresses: `0x6aa8b0`, `0x6aaab0`, `0x6aadc0`, `0x810ae4`, `0x86aa2c`, `0xc9a348`, `0xc89f20`, `0x6aa967`, `0x6aa98c`, `0x6aa9b4`, `0x6aaa66`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::aabb_query_negates_difftest`, `terrain::aabb_query_cell_indices_difftest`
 
 `ret 8`. The four differences 17066.666 − max.x, − max.y, − min.x and − min.y are stored; the
 first two must not be negative (`0x6aa967`, `test ah,5; jnp`, a NaN passing) and the others
@@ -50,6 +50,9 @@ below 34133.332 (`0x6aa98c`). From `0x6aa9b4` each is multiplied by 0.24 (`0x810
 less 0.5 (`0x86aa2c`) and `fistp`. Chunk rows run from the max x cell >> 3 to the min x cell >> 3,
 columns likewise from y; `0x6aaa66` passes column, row, the rectangle, the box, the list and the
 mask, and the result is the AND of the chunks'.
+
+`terrain::aabb_query_negates_difftest` runs `0x6aa930` to `0x6aa967`;
+`terrain::aabb_query_cell_indices_difftest` runs `0x6aa9b4` to `0x6aaa14`.
 
 ## Chunk facets
 
@@ -63,7 +66,7 @@ liquid slots' facets and the doodads' and entities' by the mask.
 Addresses: `0x6aadc0`, `0x6ab530`, `0x6ab4e0`, `0x6abc40`, `0x6abe60`, `0x810468`, `0x810438`, `0x8101b8`, `0x6aae2a`, `0x6aaed7`, `0x6aaf7c`, `0x6ab036`, `0x6ab1e0`, `0x6ab3f7`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::chunk_gather_aabb_difftest`, `terrain::chunk_gather_aabb_nonzero_origin_difftest`
 
 `ret 0x10`. `0x6aae2a` tests chunk +0xc bit 0x40 for the walls. The box's min adds the negated
 position inline and its max through `0x4841c0` (`0x6aaed7`). Terrain needs mask & 0xf00. Each of
@@ -102,7 +105,7 @@ x-max. A unit cannot walk out of the chunk across those sides.
 Addresses: `0x6ab530`, `0x6acde0`, `0x6aca50`, `0x6ab53d`, `0x6ab599`, `0x6ab5df`, `0x6ab70d`, `0x6ab86c`, `0x6ab9ba`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::plane_from_np_difftest`, `terrain::impassable_chunk_fence_difftest`
 
 `0x6ab53d` compares the box's min y with chunk +0x48 and builds the first wall when it is below,
 with normal (0, −1, 0) (`0x6ab5df`), height 32000 (0x46fa0000, `0x6ab599`) and the chunk's
@@ -118,10 +121,15 @@ trace (`trace`), the facet-plane query and the box hit test, each through a `Wor
 Addresses: `0x6ac060`, `0x6ac1e0`, `0x6ab4e0`, `0x6aa160`, `0x6ad2c0`, `0x6ad4e0`, `0x6ad610`, `0x6ad7e0`, `0x6adbf0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::aabb8_cell_indices_difftest`, `terrain::box_cell_indices_difftest`, `terrain::aabb_intersect_i`, `terrain::chunk_collect_aabb_difftest`, `terrain::chunk_collect_aabb_overflow_probe`, `terrain::chunk_gather_planes_difftest`, `terrain::facet_seg_gate_proceeds_difftest`, `terrain::chunk_box_translate_difftest`
 
 `0x6ac060` gathers the facets inside eight corners, per chunk through `0x6ac1e0` against six
 planes; `0x6aa160` returns the planes a segment hits, dispatching to the map objects and the
 terrain; `0x6ad2c0` dispatches the box test to the map objects and to `0x6ad4e0`, which tests
 each chunk through `0x6ad610` and `0x6ad7e0` with the rectangle clipped by `0x6adbf0`.
 `0x6ab4e0` gathers a liquid slot's facets through `0x68cec0`. These entries were not read through.
+
+`terrain::aabb8_cell_indices_difftest` runs `0x6ac0b2` to `0x6ac148`;
+`terrain::box_cell_indices_difftest` runs `0x6ad4e0` to `0x6ad586`;
+`terrain::facet_seg_gate_proceeds_difftest` runs `0x6aa160` to `0x6aa1a1`;
+`terrain::chunk_box_translate_difftest` runs `0x6ad676` to `0x6ad6b0`.

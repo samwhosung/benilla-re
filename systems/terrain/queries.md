@@ -34,7 +34,7 @@ adds the chunk's z. With SSE, which the client detects at start-up, n is normali
 Addresses: `0x6b72a0`, `0x672130`, `0x6720f0`, `0x4841f0`, `0x602630`, `0x8103f8`, `0x81047c`, `0x810480`, `0xc9e388`, `0x6920a7`, `0x6b72cc`, `0x6b7326`, `0x6b7358`, `0x6b737c`, `0x6b73fd`, `0x6b74e9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::vec3_cross_world`, `terrain::liquid_hit_flush_difftest`, `terrain::vec3_normalize_world`, `terrain::chunk_get_height`, `terrain::chunk_get_height_quadrants`
 
 V is outer vertex row·17 + column, C = V + 9; the hole bit is (column >> 1) + 4·(row >> 1) of
 +0x3c (`0x6b72cc`, `0x8103f8`). With p the point less the position, stored, test one is (V18.x − V.x)(V18.y − p.y) − (V18.y − V.y)(V18.x − p.x) ≤ 0 (`0x6b7326`, a NaN
@@ -59,7 +59,7 @@ the terrain starts at −100000. Off the map the indices wrap. The weather is it
 Addresses: `0x6b7070`, `0x6b72a0`, `0x6b7500`, `0x6b7790`, `0x6b7b10`, `0x7089b0`, `0x7099e0`, `0x810d2c`, `0x86b6c0`, `0x6b707a`, `0x6b7124`, `0x6b7159`, `0x6b7183`, `0x6b722b`, `0x6b7258`, `0x67c801`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::sphere_cell_indices_difftest`, `terrain::sphere_seg_prep_difftest`, `terrain::sphere_compose_z_difftest`
 
 `ret 4`. `0x6b707a` compares range with 0.01; a NaN passes. The cell coordinates use k = 0.24
 (`0x810d2c`, 0x3e75c28f), each product stored, and `0x86b6c0`, 0.5. `0x6b7124` returns the empty
@@ -70,6 +70,10 @@ and the model manager's `0x7089b0` and `0x7099e0`, whose contracts are not read 
 entry is inferred. A hit fraction t below 1.0 gives top − (range + range)·t (`0x6b722b`),
 stored, then replaced by the terrain height when that is greater; otherwise `0x6b7258` returns 0
 when the chunk height returned 0, and writes the terrain height and returns 1 when it did not.
+
+`terrain::sphere_cell_indices_difftest` runs `0x6b70c1` to `0x6b7100`;
+`terrain::sphere_seg_prep_difftest` runs `0x6b71a9` to `0x6b71c6`;
+`terrain::sphere_compose_z_difftest` runs `0x6b7225` to `0x6b7237`.
 
 ## Liquid height
 
@@ -82,7 +86,7 @@ bits, stored once. The masks wrap any u and v into the chunk.
 Addresses: `0x6b7500`, `0x6b7177`, `0x69be70`, `0x6b750f`, `0x6b752d`, `0x6b756c`, `0x6b758c`, `0x6b759e`, `0x6b75c4`, `0x6b75cb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_height_sample`, `terrain::vec3_dist2_difftest`
 
 `ret 0xc`. `0x6b7177` pushes the y coordinate last, so it is the first argument. The cells are
 `fistp` of the arguments less 0.5 (`0x6b750f`) and the fractions each argument less its unmasked
@@ -105,7 +109,7 @@ and returns 1, or returns 0.
 Addresses: `0x69b6d0`, `0x69b520`, `0x81073c`, `0x86a750`, `0x8029d0`, `0x69b6ec`, `0x69b7e6`, `0x69b80d`, `0x69b819`, `0x69ba23`, `0x69ba3e`, `0x69ba72`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_status_world`, `terrain::liquid_status_sound_zone`
 
 `ret 0xc`. `0x69b6ec` calls the map object query, which on a hit zeroes the flag and returns 1.
 The cells use k = 0.24 (`0x81073c`) and 0.5 (`0x86a750`). `0x69b7e6 shr eax,7` stores the flag
@@ -125,7 +129,7 @@ two, the difference being stored as a float before it is multiplied.
 Addresses: `0x69b120`, `0x810740`, `0x69b131`, `0x69b13f`, `0x69b15a`, `0x69b172`, `0x69b182`, `0x69b1b3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::area_id_lookup_difftest`
 
 `0x69b131` stores 17066.666 − x as a float; `0x69b13f` multiplies 17066.666 − y by 0.03
 (0x3cf5c28f, `0x810740`) before its store, and `0x69b15a` multiplies the stored x. Both take
@@ -143,10 +147,13 @@ MCNK shadow pointer whether or not the chunk has a shadow map.
 Addresses: `0x69b350`, `0x810744`, `0x7ffab0`, `0x69b37c`, `0x69b39c`, `0x69b42f`, `0x69b466`, `0x69b481`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::tile_index_conversion_difftest`
 
 Both differences are stored. `0x69b37c test ah,5; jnp` rejects a negative difference; a NaN
 passes, and `0x69b39c` rejects one not below 34133.332 (`0x7ffab0`), a NaN passing again. The
 chunk comes from k = 0.03. `0x69b42f` multiplies by 1.92 (0x3ff5c28f, `0x810744`); the pointer
 is +0xf1c (`0x69b466`), not the +0x144 a loaded shadow map sets, and `0x69b481` tests bit
 column & 7 of byte 8·row + column >> 3. The callers are doodad and light code (`entities`).
+
+`terrain::tile_index_conversion_difftest` runs `0x69b356` to `0x69b371`, `0x69b3c1` to `0x69b3f2`
+and `0x69b42f` to `0x69b466`.

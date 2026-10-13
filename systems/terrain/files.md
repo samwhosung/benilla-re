@@ -69,7 +69,7 @@ one rounding; the centre is half the sum and the radius the distance to the box'
 Addresses: `0x6944a0`, `0xc9a350`, `0xc92078`, `0x80654c`, `0x8105b0`, `0x694602`, `0x694648`, `0x694660`, `0x694699`, `0x694710`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::wdl_tile_geometry_difftest`
 
 A failed open returns. `0x694602 movsx` and `fild` convert each height; one `fcom` keeps the
 lowest in a local seeded with 3.4028235e38, and the x87 stack keeps the highest from
@@ -78,6 +78,8 @@ at +0x0c, +0x28 and as the box's x; Y (`0x694660`) multiplies by −33.333332 (`
 `0x694699` subtracts 533.33331 (`0x80654c`), storing the minimum and keeping the unrounded value
 for the centre sum; each centre coordinate is the sum times 0.5 stored once. The radius is one
 `fsqrt` (`0x694710`) of dz² + dy² + dx² at 53 bits, stored at +0x24. The heights are not scaled.
+
+`terrain::wdl_tile_geometry_difftest` runs a copy of `0x694648` to `0x69471b`.
 
 ## Tile load
 
@@ -89,7 +91,7 @@ and Y at +0x80, each one rounding. The file is `<dir>\<name>_<column>_<row>.adt`
 Addresses: `0x6c2720`, `0x6a05d0`, `0x6c1e70`, `0x6c274d`, `0x6c2760`, `0x6c2808`, `0x6c284a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::adt_area_origin_difftest`
 
 The format `%s\%s_%d_%d.adt` takes the directory, the name, ecx and edx in that order
 (`0x6c274d`). `0x6c2760 or edx,2` marks entry `[0xc89f50 + 8·(row·64 + column)]`. `0x6c2808`
@@ -196,7 +198,7 @@ index +0x00, the doodad set word +0x3a and the name set word +0x3c.
 Addresses: `0x695650`, `0x6a0db0`, `0x7bd820`, `0x7bd700`, `0x69569b`, `0x695754`, `0x695831`, `0x69585a`, `0x695923`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::placement_setup_difftest`
 
 The hash is `0xca7db4` with mask `0xca7dbc`, matching +0x7c (`0x69569b`). The matrix at +0x94 is
 built by the same calls as a doodad's, and `0x695831` inverts it into a 64-byte local copied to
@@ -205,3 +207,5 @@ built by the same calls as a doodad's, and `0x695831` inverts it into a 64-byte 
 sums are 53-bit, times 0.5, stored; the radius is `fsqrt` of dz² + dy² + dx² (`0x695923`),
 stored at +0x68. +0x114 holds the name index, +0x124 and +0x128 the two words; the map object models finds or
 loads by name is kept at +0x118. +0x90 takes the byte `0xc89f04`.
+
+`terrain::placement_setup_difftest` runs `0x6956e5` to `0x69578b` and `0x695854` to `0x695931`.

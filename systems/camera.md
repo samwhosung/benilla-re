@@ -185,7 +185,7 @@ from `0x58a250`. Its stack argument is unused.
 Addresses: `0x7ad7f0`, `0x5c3d90`, `0x7bdca0`, `0x7bdc40`, `0x589ca0`, `0x58a250`
 Confidence: verified
 Proof: one
-Test: `camera::camera_ortho`
+Test: `camera::camera_ortho`, `terrain::liquid_tex_matrix_difftest`
 
 `0x81d7bc` is 500.0, negated for the near side (`0x7ad8dd`). The Z flip is `0x7bdca0` with
 `(1, 1, −1)` (`0x7ad8fe` to `0x7ad913`). The shift subtracts `0.5·(r[3] − r[1])/(s[3] − s[1])`

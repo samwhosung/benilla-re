@@ -23,7 +23,7 @@ is below −0.019444443.
 Addresses: `0x686940`, `0x8101b4`, `0x68695a`, `0x686988`, `0x68698b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::aabb_frustum_pvertex`
 
 `ret 4`. `0x68695a shr eax,0x1f` picks the corner by the component's sign bit, so −0.0 takes the
 minimum. The sum is one 53-bit expression (`0x686988 fadd d`); `0x68698b` compares with
@@ -40,7 +40,7 @@ lower of the two ends' y/z.
 Addresses: `0x685fe0`, `0x681b50`, `0x6c15d0`, `0x681b79`, `0x681b90`, `0xc7b750`, `0xc7b700`, `0xc7cff4`, `0x810180`, `0x810170`, `0x86861c`, `0x681c0d`, `0x681c44`, `0x681c69`, `0x681ce6`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::horizon_insert`, `terrain::horizon_non_finite_probes`
 
 `0x685fe0` stores 0xc9742400 into 0x140 dwords. `0x681b79` (`test ah,5; jnp`) leaves only below
 −0.9 and `0x681b90` (`test ah,0x41; je`) only above 0.9, so equality and a NaN stay; the box test
@@ -62,7 +62,7 @@ column in that span, clamped, is at least its highest y/z.
 Addresses: `0x686180`, `0x6861a6`, `0x6861bd`, `0x868628`, `0x80fed4`, `0x68623f`, `0x686250`, `0x6862d4`, `0x6862f1`, `0x686316`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::horizon_box_test`, `terrain::horizon_non_finite_probes`
 
 The corner tables `0x868628`, `0x868648` and `0x868668` pick min or max per axis. `0x68623f`
 compares z with 50 (0x42480000); `0x686250` divides 1.0 by z and stores x/z and y/z. The span
@@ -101,7 +101,7 @@ freed after 5; and each liquid slot releases its buffers after 5 seconds of its 
 Addresses: `0x6afad0`, `0xc7bcb0`, `0x867960`, `0x867964`, `0x867968`, `0x6afb03`, `0x6afb1d`, `0x6afb42`, `0x6afb6b`, `0x6afbb4`, `0x6afc0c`, `0x6b2900`, `0x6b28e0`, `0x6b2030`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::plane_signed_dist_difftest`, `terrain::plane_lod_gate_ah_difftest`, `terrain::timer_accumulate_difftest`, `terrain::center_accumulate_difftest`, `terrain::center_half_difftest`
 
 The plane is `0xc7bcb0` to `0xc7bcbc`, the sum stored at +0x78 (`0x6afb03`). The level +0xb8
 loads `0x867964` and, when `0x6afb1d` finds the depth above `0x867960`, `0x867968`; the three
@@ -109,6 +109,12 @@ start at 3, 77.0 and 2 and are set by the console. The idle time +0xac adds `s_w
 with `fst` and is compared with 5.0 (`0x6afb42`) before `0x6afb6b` releases +0x14c and +0x150.
 The detail doodads +0xc0 are released by `0x6afbb4`. Liquid +0x30 is the slot's own timer;
 `0x6afc0c` releases it. The drawing pass resets the timers (`render`).
+
+`terrain::plane_signed_dist_difftest` runs `0x6afad6` to `0x6afb06`;
+`terrain::plane_lod_gate_ah_difftest` runs `0x6afad6` to `0x6afb28`;
+`terrain::timer_accumulate_difftest` runs `0x6afb36` to `0x6afb48` and `0x6afbdd` to `0x6afbf7`;
+`terrain::center_accumulate_difftest` runs `0x6afc7c` to `0x6afca6`; `terrain::center_half_difftest`
+runs `0x6afd3d` to `0x6afd72`.
 
 ## Depth buckets
 
@@ -118,12 +124,18 @@ the chunk step files points of interest into them for the object passes.
 Addresses: `0x6816f0`, `0x6817c0`, `0x6818b0`, `0x681970`, `0x681a40`, `0x6afca6`, `0x6afdda`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::depth_bucket_key_difftest`, `terrain::depth_bucket_v1_difftest`, `terrain::depth_bucket_v3_difftest`, `terrain::depth_bucket_v4_difftest`, `terrain::view_plane_bucket_difftest`
 
 The four insert functions share the 0.03 scale and differ in their lists: `0xc7bd58`,
 `0xc7bd4c`, the nine sub-buckets at `0xc7bd70` and the tail lists at `0xc7bda0`. `0x6afca6` and
 `0x6afdda` are the chunk step's calls for a chunk point and a liquid centre. The bucket's
 clamping is not read here.
+
+`terrain::depth_bucket_key_difftest` runs `0x6818b0` to `0x6818f3`;
+`terrain::depth_bucket_v1_difftest` runs `0x6816f0` to `0x681754`;
+`terrain::depth_bucket_v3_difftest` runs `0x681970` to `0x6819b4`;
+`terrain::depth_bucket_v4_difftest` runs `0x681a40` to `0x681ab2`;
+`terrain::view_plane_bucket_difftest` runs `0x6817c0` to `0x68183e`.
 
 ## Scene frame
 
@@ -134,8 +146,25 @@ far-band objects, terrain chunks, map objects, liquids, weather and the effects.
 Addresses: `0x681070`, `0x680bc0`, `0x682fa0`, `0x6841a0`, `0x684510`, `0x684840`, `0x6816d0`, `0x6813d0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `terrain::viewport_gate_difftest`, `terrain::chunk_cam_relative_delta_difftest`, `terrain::wmo_pass_negate_difftest`, `terrain::far_fsub1_difftest`, `terrain::far_fsub2_difftest`, `terrain::far_pass_negate_difftest`, `terrain::scene_dir_subtract_difftest`, `terrain::scene_dir_normalize_difftest`, `terrain::scene_dot_negate_difftest`, `terrain::scene_plane_gate_difftest`, `terrain::scene_plane_normalize_difftest`, `terrain::scene_corner_negate_difftest`, `terrain::render_near_bias_difftest`, `terrain::render_fog_dist_difftest`, `terrain::render_leg_fog_offset_difftest`, `terrain::render_pos_accumulate_difftest`, `terrain::cam_relative_delta_difftest`
 
 The order is read from the driver's calls; `0x684510` is the terrain chunk pass, `0x6816d0` the
 liquid phase (ocean, river, map object liquid, then the ripples) and `0x6813d0` the stage set-up
 that biases texture level of detail by +0.25. The passes' state is not read here.
+
+`terrain::viewport_gate_difftest` runs `0x682fa0` to `0x682fb0` and `0x682fb5` to `0x682fc3`;
+`terrain::chunk_cam_relative_delta_difftest` runs `0x684690` to `0x6846bb`;
+`terrain::wmo_pass_negate_difftest` runs `0x6849ff` to `0x684a4e`; `terrain::far_fsub1_difftest`
+runs `0x684253` to `0x684287`; `terrain::far_fsub2_difftest` runs `0x68434d` to `0x684367`;
+`terrain::far_pass_negate_difftest` runs `0x684373` to `0x6843d1`;
+`terrain::scene_dir_subtract_difftest` runs `0x680c01` to `0x680c22`;
+`terrain::scene_dir_normalize_difftest` runs `0x680c27` to `0x680cb1`;
+`terrain::scene_dot_negate_difftest` runs `0x680cb1` to `0x680cbe` and `0x680d2e` to `0x680d4a`;
+`terrain::scene_plane_gate_difftest` runs `0x680cc5` to `0x680cf3`;
+`terrain::scene_plane_normalize_difftest` runs `0x680cc5` to `0x680d19`;
+`terrain::scene_corner_negate_difftest` runs `0x680d7c` to `0x680da5` and `0x680ee3` to `0x680f0b`;
+`terrain::render_near_bias_difftest` runs `0x6810d8` to `0x6810ea`;
+`terrain::render_fog_dist_difftest` runs a copy of `0x6810f5` to `0x68111a`;
+`terrain::render_leg_fog_offset_difftest` runs `0x6811a0` to `0x6811af`;
+`terrain::render_pos_accumulate_difftest` runs `0x681310` to `0x68131c`;
+`terrain::cam_relative_delta_difftest` runs `0x68151b` to `0x681546`.

@@ -22,7 +22,7 @@ z, each a float.
 Addresses: `0x68d540`, `0x68d5ee`, `0x68d636`, `0x68d654`, `0x68d666`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_grid_verts`
 
 The chunk is the liquid's +0x1c. The steps repeat the terrain's: four `fild; fstp; fmul
 33.333332; fstp`, four negated sums with 17066.666 stored, the two differences (`0x68d5ee`)
@@ -40,7 +40,7 @@ ends, at a non-matching tile or the row's end, by repeating its last index.
 Addresses: `0x68d9b0`, `0x58a080`, `0x58a0a0`, `0x68da03`, `0x68da0e`, `0x68da41`, `0x68da66`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_strip_indices`
 
 `ret 4`. The buffer +0x404 is locked by `0x58a080` and unlocked by `0x58a0a0`. The tile byte is
 `[[this+0x10] + 8·row + column] & 0xf` against the argument (`0x68da03`). The first match of a
@@ -58,7 +58,7 @@ magma pass it is the vertex's first two words times 3/256.
 Addresses: `0x68d790`, `0x68d690`, `0x68d890`, `0xc81768`, `0xc7fcd8`, `0x810388`, `0x68d7d9`, `0x68d818`, `0x68d925`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::mclq_verts_a`, `terrain::mclq_verts_b`, `terrain::liquid_render_verts_fill`
 
 `0x68d790` takes `fild` of the row count times 0.25 once per row (`0x68d7d9`) and of the column
 times 0.25 per vertex, each stored. `0x68d818` loads the float the byte indexes in `0xc81768`;
@@ -79,7 +79,7 @@ liquid textures and loads the shader `ocean0_s`.
 Addresses: `0x68c4c0`, `0xc81184`, `0xc7fcd8`, `0xc81768`, `0xc7fbc0`, `0x81028c`, `0x810384`, `0x810380`, `0x81037c`, `0x810358`, `0x68c535`, `0x68c567`, `0x68c589`, `0x68c5c9`, `0x68c5d9`, `0x68c615`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::depth_ramps_difftest`, `terrain::glare_table_difftest`, `terrain::geom_rate_difftest`
 
 c is `0xc81184`, set at start-up to −21 × (−1/36). `0x68c535 fdivr` leaves 1/(c·255) on the stack
 for the whole loop. `0x68c567 fcom 1.0` keeps the product only below 1, a NaN taking 1.0. The
@@ -88,6 +88,9 @@ second value is st0 = i times 1/9 (`0x81028c`); `0x68c589 fcom` against 4.666666
 (0x3c820821), then t² = t·t, t³ = t²·t, t⁴ = t·t³ and t⁸ = t⁴·t⁴ (`0x68c5c9` to `0x68c5d9`), all
 on the stack, scales by 1.6, clamps to [0, 1], and `0x68c615` adds 512 to 255
 times it and stores a float, whose bits >> 14 give the byte.
+
+`terrain::depth_ramps_difftest` runs `0x68c51b` to `0x68c5b9`; `terrain::glare_table_difftest` runs
+`0x68c5c0` to `0x68c636`; `terrain::geom_rate_difftest` runs a copy of `0x68c65c`.
 
 ## Animated textures
 
@@ -100,13 +103,15 @@ milliseconds. The 30 frames load on first use from `XTextures\river\lake_a.%d.bl
 Addresses: `0x68aac0`, `0x8102b8`, `0x86a000`, `0xc811c0`, `0xc89da4`, `0x869ffc`, `0x68aadb`, `0x68aafc`, `0x68ab11`, `0x68ab3d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_anim_frame_difftest`
 
 The period is `__ftol` (`0x68aadb`) of `0x8102b8[type]` (1.25 for all eight) times 1000; the
 clock's remainder is a 64-bit `fild`, `fidiv` the period (`0x68aafc`), times 30, stored, less 0.5
 (`0x869ffc`), and `fistp` (`0x68ab11`) under the round-to-nearest control word. Frame k's name
 takes k + 1 (`0x68ab3d`). `0xc89da4[type]` is set once every frame has loaded; the handles are
 `0xc811c0[30·type + frame]`. Type 5's name pointer is null.
+
+`terrain::liquid_anim_frame_difftest` runs `0x68aacc` to `0x68ab14`.
 
 ## Liquid render passes
 
@@ -119,13 +124,16 @@ other type are never drawn by these passes.
 Addresses: `0x68de40`, `0x68dab0`, `0x68db90`, `0x68dca0`, `0x68cc60`, `0x68dac0`, `0x68db2a`, `0x68db7e`, `0x68dba2`, `0x68dc0a`, `0x68dcb0`, `0x68dd1a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::liquid_pass_anim_frame_difftest`, `terrain::liquid_lazy_init_scalar_difftest`
 
 `0x68de40` switches on its argument to `0x68db90`, `0x68dab0` and `0x68dca0`. The frame calls
 pass ecx = 4 (`0x68dba2`), 1 (`0x68dac0`) and 6 (`0x68dcb0`); the strip calls push 4
 (`0x68dc0a`), 1 (`0x68db2a`) and 6 (`0x68dd1a`), and store the count at +0x408. `0x68db7e` draws
 4 with the count and 0x50 as the last vertex. The three passes' callers are the scene passes
 (`cull`); what each pass sets in the device beyond the frame is not read here.
+
+`terrain::liquid_pass_anim_frame_difftest` runs `0x68dd26` to `0x68dd41`;
+`terrain::liquid_lazy_init_scalar_difftest` runs `0x68dea6` to `0x68deb7`.
 
 ## Liquid buffers
 

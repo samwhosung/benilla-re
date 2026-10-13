@@ -352,7 +352,7 @@ degenerate triangle. `0x6376a0` sets a plane to (0, 0, 1, 0).
 Addresses: `0x6372d0`, `0x637300`, `0x637330`, `0x637350`, `0x6373b0`, `0x637480`, `0x6374c1`, `0x63751c`, `0x6376a0`
 Confidence: verified
 Proof: one
-Test: `collision::resolve_toolkit_difftest`
+Test: `collision::resolve_toolkit_difftest`, `terrain::dda_cell_intersect_first_difftest`, `terrain::chunk_gather_aabb_difftest`, `collision::plane_from_tri_difftest`
 
 In `0x637350`, min tests are `test ah,1; jne` and max tests `test ah,0x41; jp`. In `0x6373b0`
 the ties and NaN take b in all six components. In `0x637480`, `0x6374c1` is `de e9`, `fsubp
