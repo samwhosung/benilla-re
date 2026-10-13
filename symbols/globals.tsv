@@ -992,6 +992,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca7de4	uint32_t	s_doodadDefHashMask		terrain	Holds the doodad placement hash table's mask	inferred	none	
 0xca7f00	uint32_t	s_groupFogFlag		terrain	Holds the flag the group liquid pass sets around its fog	inferred	none	
 0xca7f10	uint8_t[256]	s_groupLiquidRamp		terrain	Holds the map object liquid's depth to alpha ramp	inferred	none	
+0xca8064	uint8_t	s_keepMapObjVertexAlpha		models	Holds the switch that leaves the colour alphas of a group's opaque faces as read	inferred	none	models/wmo#portal-vertex-fade
 0xca8080	uint32_t	s_skyboxState		terrain	Holds the sky box state the map object frame publishes	inferred	none	
 0xca82c0	void *	s_soundEmitterCallbackB		terrain	Holds the second sound emitter callback, never set by live code	inferred	none	
 0xca82c4	void *	s_soundEmitterCreate		terrain	Holds the sound emitter callback; 0 at start, set only by the unreached 0x6723c0	verified	one	terrain/chunk#sound-emitters

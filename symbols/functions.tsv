@@ -10614,10 +10614,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c3f50	42	CMapObj::OnGroupReadDone		models	host		Closes a group's read request and file, then parses the group	inferred	none	models/wmo#loading	
 0x6c3f80	311	CMapObj::ParseGroup		models	primitive		Relinks a group, copies its MOGP header fields, parses its chunks and loads its batch materials	verified	one	models/wmo#group-header	
 0x6c40c0	282	CMapObjGroup::ParseChunks		models	primitive		Points a group at its required chunks in their fixed order, counts them and sets its strides	verified	one	models/wmo#group-file-chunks	
-0x6c41e0	94	CMapObjGroup::MarkOpaqueVertices		models	orchestration		Marks the vertices of a group's non-transparent faces in its colour alpha	inferred	none		
-0x6c4240	248	AaBspLeafDistance		models	primitive		Returns the nearest distance from a point to a BSP leaf's faces	inferred	none		
-0x6c4340	130	AaBspMinDistance		models	orchestration		Returns the nearest face distance over a set of BSP leaves	inferred	none		
-0x6c43d0	339	CMapObjGroup::FixVertexAlpha		models	primitive		Blends a group's vertex colour alpha by its distance to the portals	inferred	none		
+0x6c41e0	94	CMapObjGroup::MarkOpaqueVertices		models	orchestration		Sets alpha 0xff on the vertices of a group's faces whose flags lack bit 0	verified	one	models/wmo#portal-vertex-fade	
+0x6c4240	248	MapObjPortalPointDistance		models	primitive	float __thiscall (CMapObj *this, const float *point, const void *portal)	Returns 0 for a point near a portal's plane inside it, else its least distance to the portal's edges	verified	one	models/wmo#portal-vertex-fade	
+0x6c4340	130	MapObjPortalDistance		models	orchestration	float __thiscall (CMapObj *this, CMapObjGroup *group, const float *point)	Returns a point's least distance to the group's portals that lead to exterior groups	verified	one	models/wmo#portal-vertex-fade	
+0x6c43d0	339	CMapObjGroup::FixVertexAlpha		models	primitive	void __thiscall (CMapObj *this, CMapObjGroup *group)	Fades a group's interior vertex colours toward white and opaque by their distance to outside portals, once	verified	one	models/wmo#portal-vertex-fade	
 0x6c4530	509	CMapObjGroup::ParseOptionalChunks		models	primitive		Points a group at its optional chunks by its flags and builds its BSP, liquid and vertex arrays	inferred	none	models/wmo#group-file-chunks	
 0x6c4730	5	InitMapObjReadTwoPiThunk		models	orchestration		Jumps to 0x6c4740; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6c4740	15	InitMapObjReadTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
@@ -12658,6 +12658,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7be1e0	183	Matrix3Adjugate		cmath		float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
 0x7be2a0	121	InvertMatrix3		cmath		float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3
 0x7be490	282	BuildAxisRotation		cmath			Builds a rotation matrix about an axis by an angle	inferred	none	collision/kinematics#spline-follower	
+0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		
 0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
 0x7c0190	293	MatrixToQuaternion		unassigned	primitive		Converts a 3x3 rotation matrix to a quaternion by the trace or the largest diagonal	inferred	none		cmath::matrix_quat_difftest
 0x7c02c0	85	QuaternionFromAxisAngle		unassigned	unreached		Builds a quaternion from an angle and an axis	inferred	none		
@@ -12677,7 +12678,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c1dd0	601	ClassifyPointAgainstBox		unassigned	unreached		Tests a point and radius against a box in one of four modes	inferred	none		
 0x7c2040	601	ClassifyCircleAgainstBox		unassigned	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none		cmath::sphere_aabb_difftest
 0x7c22b0	299	IntersectRayPlane		unassigned	primitive		Intersects a ray with a plane, writing the parameter and the point when their pointers are set	inferred	none		cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
-0x7c23e0	272	IsPointInPolygon		unassigned	primitive		Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
+0x7c23e0	270	PointInPolygonProjected		cmath			Tests whether a point lies in a polygon projected along an axis	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
 0x7c24f0	289	IsPointInIndexedPolygon16		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	inferred	none		
 0x7c2620	279	IsPointInIndexedPolygon32		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	inferred	none		
 0x7c2740	139	IntersectRayPolygonTriangle		unassigned	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	inferred	none		
@@ -12699,7 +12700,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c43d0	310	LineLineGap		unassigned	unreached		Returns the closest distance between two lines	inferred	none		
 0x7c4510	281	ClosestLineParameters		unassigned	unreached		Writes the parameters of the closest points of two lines	inferred	none		
 0x7c4630	145	PointLineDistance		unassigned	unreached		Returns the distance from a point to a line	inferred	none		
-0x7c46d0	266	SegmentPointDistanceSquared		unassigned	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	inferred	none		cmath::seg_proj_difftest
+0x7c46d0	264	PointSegmentDistanceSquared		cmath			Returns the squared distance from a point to a segment	inferred	none		cmath::seg_proj_difftest
 0x7c47e0	5	InitGeometryTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c47f0	15	InitGeometryTwoPi		unassigned	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
 0x7c4800	5	InitGeometryInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	

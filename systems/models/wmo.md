@@ -172,6 +172,27 @@ Test: none
 bytes at `+0x15c` (the `MCVP` chunk), computes `((ny·py + nz·pz) + nx·px) + d` and returns 0 at the
 first plane where `test ah,0x41` finds neither C0 nor C3 (`0x6a49d7`).
 
+## Portal vertex fade
+
+When a group's `MOCV` colours are read, every vertex of a face whose `MOPY` flags lack bit 0 gets
+alpha 0xff, unless a global switch is set. On the group's first draw, each vertex up to the
+highest vertex of the batches its first batch count covers is faded toward the outside: `d` is its least distance to a portal
+of the group that leads to a group with flags 0x8 or 0x40. At `d = 0` the colour becomes
+0xffffffff; for `0 < d < 6.666667` with alpha 0, with `t = 1 − 0.15·d`, each of r, g, b becomes
+`c + (255 − c)·t` and alpha `255·t`, each byte taken as `(x + 512) >> 14`.
+
+Addresses: `0x6c41e0`, `0x6c4605`, `0x6c43d0`, `0x6c4340`, `0x6c4240`, `0x6c443e`, `0x6c4449`, `0x6c4468`, `0x6b3fb5`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c4605` calls `0x6c41e0` unless the byte at `0xca8064` is set. `0x6b3fb5` calls `0x6c43d0` while
+group `+0xbc` is 0; it sets `+0xbc` and loops vertices 0 through batch `+0x14` of batch
+`+0x3c − 1`. `0x6c4340` walks the group's `+0x30` portal references from `+0x2c`, testing the other
+group's record flags with 0x48. `0x6c4240` returns 0 when the squared plane distance is under
+1/36 and the point lies in the portal polygon, else the least edge distance. The constants are
+6.666667, 0.15 and 255.0.
+
 ## Vertex buffer pools
 
 The group file also holds the vertex buffer pools the world draws terrain and map objects from:
