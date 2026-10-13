@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """tables/dbc_stores.tsv: the client's database stores, one per DBC file.
 
-The client-DB load sequence from 0x540490 to 0x540f00 is a flat run of
+The client-DB load sequence from 0x540321 to 0x540f00 is a flat run of
 
     mov ecx, <store>; call <loader>
 
@@ -27,7 +27,7 @@ import sys
 
 from lib import Disasm, Image, addr, note, parse_args, write_table
 
-LOAD_SEQ = (0x540490, 0x540F00)
+LOAD_SEQ = (0x540321, 0x540F00)
 
 
 def main():
