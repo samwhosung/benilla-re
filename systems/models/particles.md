@@ -273,6 +273,28 @@ root first. `0x7b3c50` fills 0x1000 six-index quads or 0xaaa twelve-index pairs.
 divides 0x4000 by the vertices per particle and caps it at the live count. `0x7b2b46` swaps bytes
 0 and 2 when caps `+0x1c` is 1.
 
+## Model particles
+
+An emitter whose record names a model emits 0x40-byte particles that each carry a model instance.
+At birth the particle takes its orientation from the spawn matrix, scaled by `1/|row 0|` when row 0
+is not of unit length, and a spin vector of `min + U·range` on x and `(1 + U)·range` on y
+and z, each component's sign flipped at random under flag 0x8000; its instance is created on
+first need. Each step turns the orientation by `|ω|·dt` about `ω` when `|ω|` exceeds 1e-4, then
+moves the particle as any other. Each frame every particle's instance animates with the owner's
+view, colours and alpha and draws with the owner's lighting record.
+
+Addresses: `0x7b2420`, `0x7b24ca`, `0x7b2582`, `0x7b25dd`, `0x7b2648`, `0x7b28e0`, `0x7b29c0`, `0x719180`, `0x7191b2`, `0x7191be`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7b2420` calls slot 2 for the position, then builds the quaternion at `+0x20` with `0x7c0120`;
+`0x7b2582` stores `U·+0x1cc + +0x1c8`, `(U + 1)·+0x1d4` and `(U + 1)·+0x1dc` at `+0x30` (the
+`fsub 1.0; fadd 1.0` pair at `0x7b25a2`); the sign draws test bit 0 of three random words.
+`0x7b28e0` compares `|+0x30|` with 1e-4 and composes `(ω/|ω|·sin(h), cos(h))`, `h = |ω|·dt/2`,
+with `+0x20`. `0x7191b2` calls `Animate(scene +0x9c, +0x1a0, +0x1ac, +0x19c)` and `0x7191be`
+copies `+0x3b8`.
+
 ## Registries
 
 The particle registry, created on first use at `0xcf575c`, holds four arrays: live and free legacy

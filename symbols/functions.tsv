@@ -12392,9 +12392,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b2220	24	Particle2ModelRelease		models	orchestration		Releases the model a model particle record holds	inferred	none		
 0x7b2240	98	Particle2ModelAssign		models	orchestration		Assigns a model particle record from another, adding a reference to its model	inferred	none		
 0x7b22b0	357	CParticleEmitter2::InitParticle		models	primitive		Finishes a spawned particle: transform into the emitter's frame, random spin and noise offsets	inferred	none	models/particles#emitter-classes	
-0x7b2420	594	CParticleEmitter2::InitModelParticle		models	primitive		Finishes a spawned model particle: creates its model and gives it a random orientation	inferred	none	models/particles#emitter-classes	
+0x7b2420	594	CParticleEmitter2::InitModelParticle		models	primitive		Finishes a spawned model particle: orientation from the spawn matrix, random spin vector, model created on need	verified	one	models/particles#model-particles	
 0x7b2680	597	CParticleEmitter2::IntegrateParticle		models	primitive		Moves a particle one step under wind, emitter motion, gravity and drag; returns 0 to kill it	verified	one	models/particles#particle-motion	
-0x7b28e0	223	CParticleEmitter2::IntegrateModelParticle		models	primitive		Moves a model particle one step and advances its spin quaternion	inferred	none		
+0x7b28e0	223	CParticleEmitter2::IntegrateModelParticle		models	primitive		Turns a model particle by its spin over a step, then moves it as a particle	verified	one	models/particles#model-particles	
 0x7b29c0	143	ParticleQuatMultiply		models	primitive		Multiplies two quaternions	inferred	none		
 0x7b2a50	2691	CParticleEmitter2::WriteQuads		models	primitive		Writes a particle's head and tail quads with colour, size and texture cell; returns 0 when twinkle hides it	verified	one	models/particles#head-quads	
 0x7b34e0	741	CParticleEmitter2::GetBounds		models	unreached		Computes the centre and radius bounding an emitter's particles and its children; nothing reaches it	inferred	none	models/overview#unreached-code	
@@ -12660,6 +12660,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7be490	282	BuildAxisRotation		cmath			Builds a rotation matrix about an axis by an angle	inferred	none	collision/kinematics#spline-follower	
 0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		
 0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
+0x7c0120	75	Matrix3ToQuaternion		cmath		float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
 0x7c0190	293	MatrixToQuaternion		unassigned	primitive		Converts a 3x3 rotation matrix to a quaternion by the trace or the largest diagonal	inferred	none		cmath::matrix_quat_difftest
 0x7c02c0	85	QuaternionFromAxisAngle		unassigned	unreached		Builds a quaternion from an angle and an axis	inferred	none		
 0x7c0320	138	QuaternionToAxisAngle		unassigned	unreached		Writes a quaternion's angle and axis	inferred	none		
