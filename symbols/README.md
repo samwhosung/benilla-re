@@ -47,7 +47,9 @@ One convention, the client's own C++ style:
   bytes contradict is not used.
 
 A name is unique among functions and globals, and a field's name is unique within its struct.
-Exports use `FUN_00514ae0` for a function with no name.
+The one export is the Ghidra apply (`../tools/ghidra/setup.sh`), which leaves a function with no
+name at Ghidra's own `FUN_00514ae0`; imports for IDA and Binary Ninja are
+[#7](https://github.com/samwhosung/benilla-re/issues/7).
 
 ## Common columns
 
@@ -82,7 +84,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
 | `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
-| `test` | The bit-exact test that runs this function against the exe: `crate::test_fn`, the function name of a test under `crates/<crate>/tests/`. Empty when there is none. |
+| `test` | The bit-exact test that runs this function against the exe: `crate::test_fn`, the function name of a test under `crates/<crate>/tests/`. Empty when there is none, as on every row today: no crate exists until [#4](https://github.com/samwhosung/benilla-re/issues/4). |
 
 A function row's address is a function start (`../METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
@@ -104,7 +106,8 @@ Classes:
 - `primitive`: computes a value or state a reimplementation must reproduce bit for bit. Any
   arithmetic, bit manipulation or table lookup on values, beyond loading, storing, comparing and
   computing addresses, makes a function primitive, however thin. Every primitive in a closure
-  needs a bit-exact `test`.
+  needs a bit-exact `test` before its system is complete; no primitive has one yet
+  ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 - `orchestration`: calls other functions and moves values (loads, stores, compares, branches) and
   computes nothing of its own. Its contract is its call order and arguments, which its finding
   states.
@@ -163,7 +166,7 @@ does not name is written as its named base followed by its own fields.
 | columns | the headers above, in order, every row complete | parallel edits must merge |
 | sorting | byte order of the keys above | parallel edits must merge |
 | `meaning` | 120 characters, one line, verb first, no final period | a cell is a gloss; the finding holds the detail |
-| `name` | 48 characters, the naming rule | exported to Ghidra, IDA and Binary Ninja as an identifier |
+| `name` | 48 characters, the naming rule | applied to Ghidra as an identifier, and to the exports of [#7](https://github.com/samwhosung/benilla-re/issues/7) |
 | `signature` | 160 characters | one prototype, no commentary |
 | banned in `meaning` | `?`, `TODO`, `probably`, `maybe`, `seems`, `likely` | a guess is `inferred`, said in the confidence column |
 | `verified` | needs `one`, `two` or `test`, and a `finding` | provenance is the point of the label |

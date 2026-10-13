@@ -65,7 +65,8 @@ the commit message says what was wrong and where.
 
 A system is understood when its closure is (`systems/README.md`): every function its roots reach
 has a row with a class, every struct field its functions touch has a row, every branch is
-accounted for, and every primitive has a bit-exact test.
+accounted for, and every primitive has a bit-exact test. No system meets this yet: no test exists
+until the reference crates are ported ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 
 The closure is only as good as its roots, and a walk of direct calls misses code. Look for:
 
@@ -165,7 +166,10 @@ A claim that something never happens is a census, and a census earns its zero.
 
 ## The harness
 
-Bit-exact tests run the exe's own code in the Unicorn emulator beside the reimplementation.
+A bit-exact test runs the exe's own code in the Unicorn emulator beside the reimplementation. No
+crate, test or harness is in this repo yet: porting them is
+[#4](https://github.com/samwhosung/benilla-re/issues/4). The x87 setting below holds for every
+finding today, and the rules after it are the ones each test follows.
 
 The client runs the x87 at 53-bit precision, rounding to nearest, every exception masked: the
 control word `0x027F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and

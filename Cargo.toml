@@ -1,5 +1,7 @@
 [workspace]
 resolver = "2"
+# The reference crates go under `crates/`; add `"crates/*"` here with the first one, since cargo
+# refuses a glob that matches no directory.
 members = ["xtask"]
 
 [workspace.package]

@@ -6,8 +6,8 @@ its bytes and cited by address. It is the reference behind
 written for anyone else who needs to know what the client does: another client, a server, a
 client mod, a format reader.
 
-Bring your own client. Nothing here comes from a WoW install. The tools read `WoW/WoW.exe` and
-`WoW/Data` from your own copy of 1.12.1.5875 and refuse any other build.
+Bring your own client. Nothing here comes from a WoW install. The tools read `WoW/WoW.exe` from
+your own copy of 1.12.1.5875 and refuse any other build.
 
 ## What is here
 
@@ -35,10 +35,12 @@ Bring your own client. Nothing here comes from a WoW install. The tools read `Wo
 ## How to trust it
 
 [METHOD.md](METHOD.md) says what counts as evidence: the binary decides, every claim states its
-confidence and proof, a contradiction is settled at the bytes, and a system's functions are
-complete by construction. `cargo xtask check` holds the repo to it: the formats, every address a
-doc cites having a row, every row's finding naming its address; with `--exe`, every function's
-size against its body in the listing and every table against its generator.
+confidence and proof, and a contradiction is settled at the bytes. `cargo xtask check` holds the
+repo to it: the formats, every address a doc cites having a row, every row's finding naming its
+address, and every row of a written system having a class; with `--exe`, every function's size
+against its body in the listing and every table against its generator. It does not walk a
+system's closure, and the bit-exact tests that complete one are not ported yet
+([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 
 ## Contributing
 

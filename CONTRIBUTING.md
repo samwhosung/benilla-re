@@ -8,8 +8,8 @@ counts as evidence here. The formats are in `symbols/README.md` and `systems/REA
 Bring your own client. Nothing from the game is in this repo, and nothing from it may be added:
 no exe, no MPQ, no extracted file, no disassembly or decompiler dump (`dumps/` is ignored).
 
-1. Copy your `WoW.exe` from a 1.12.1 (build 5875) install to `WoW/WoW.exe` at the repo root,
-   and its `Data` folder to `WoW/Data`. `WoW/` is ignored by git.
+1. Copy your `WoW.exe` from a 1.12.1 (build 5875) install to `WoW/WoW.exe` at the repo root.
+   `WoW/` is ignored by git.
 2. Check it is the same build the findings were read from:
 
    | | |
@@ -110,7 +110,10 @@ it has no instruction (a row newer than the listing), and checks that every func
 a function and has its body's size. It regenerates every table into a
 scratch directory and requires each byte for byte. It runs `cargo test --workspace` with
 `BENILLA_RE_REQUIRE_EXE=1`, and requires every test that a row's `test` or an entry's `Test` line
-names to appear as passed. It needs what the scripts need, above, and Python 3.
+names to appear as passed. It needs GNU objdump (above), Python 3, bash for `tools/disasm.sh`, a
+POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK. No crate exists yet
+([#4](https://github.com/samwhosung/benilla-re/issues/4)), so the test step runs only the
+xtask's own tests, and no row or entry names a test.
 
 `cargo xtask cited <path to a benilla checkout>` lists every client address the benilla tree
 cites that has neither a row nor a mention in a doc here: a report, not a check.
@@ -144,8 +147,11 @@ finding can live in your system's doc and the row can link there.
 
 ## Adding a test
 
-Tests live in `crates/<crate>/tests/` and run the exe's own code in the Unicorn emulator beside a
-Rust reimplementation, comparing the results bit for bit.
+No crate and no test harness exist yet: the reference crates and their tests come with
+[#4](https://github.com/samwhosung/benilla-re/issues/4). These are the rules a test follows. A
+test lives in `crates/<crate>/tests/` and runs the exe's own code in the Unicorn emulator beside a
+Rust reimplementation, comparing the results bit for bit. The first crate also adds `"crates/*"`
+to the workspace members in `Cargo.toml`.
 
 - Test the whole function where possible; a slice test names the instructions it covers.
 - Cover every regime the code distinguishes, with a deterministic probe at each threshold.
