@@ -1,0 +1,17 @@
+[package]
+name = "benilla-re-terrain"
+description = "The terrain of WoW.exe 1.12.1.5875 (the map files, chunks, liquids, queries, traces and culling), reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+benilla-re-cmath.workspace = true
+benilla-re-collision.workspace = true
+benilla-re-objectlayer.workspace = true
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
+# Reads the ADT files out of the install's archives for the shadow-texel test.
+wow-mpq = "=0.6.4"

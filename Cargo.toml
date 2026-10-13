@@ -9,4 +9,6 @@ license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
 benilla-re-cmath = { path = "crates/cmath" }
+benilla-re-collision = { path = "crates/collision" }
 benilla-re-difftest = { path = "crates/difftest" }
+benilla-re-objectlayer = { path = "crates/objectlayer" }
