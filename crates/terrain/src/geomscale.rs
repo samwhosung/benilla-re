@@ -1,17 +1,14 @@
 //! The chunk window of a light, from `LinkLightToChunks` (`0x6c0f50`), and the portal planes
 //! `InitSceneTables` (`0x680610`) builds.
 
+use crate::x87::fistp;
+
 /// `[0x7ffab4]`: the map's half extent, 17066.666 (`0x46855555`).
 pub const WORLD_GRID_MAX: f32 = f32::from_bits(0x4685_5555);
 /// `[0x810ef0]`: 0.03 (`0x3cf5c28f`), units to chunks.
 pub const CHUNK_SCALE_RECIP: f32 = f32::from_bits(0x3cf5_c28f);
 /// `[0x86c33c]`: 0.5, subtracted before `fistp`.
 pub const CHUNK_WINDOW_BIAS: f32 = 0.5;
-
-/// `fistp` under the client's control word: round to nearest, ties to even.
-fn fistp_rne(v: f64) -> i32 {
-    v.round_ties_even() as i32
-}
 
 /// `fld; fsub [0x7ffab4]; fchs`: `−(c − 17066.666)` at 53 bits.
 fn world_to_tile_rel(coord: f32) -> f64 {
@@ -29,12 +26,12 @@ pub fn register_light_window(max_x: f32, min_x: f32, max_y: f32, min_y: f32) -> 
 
     let c1_live = world_to_tile_rel(max_x);
     let p1 = (scale * c1_live) as f32;
-    let i_maxx = fistp_rne(f64::from(p1) - bias);
+    let i_maxx = fistp(f64::from(p1) - bias);
 
     let map = |coord: f32| -> i32 {
         let tile_rel_f32 = world_to_tile_rel(coord) as f32;
         let prod = (scale * f64::from(tile_rel_f32)) as f32;
-        fistp_rne(f64::from(prod) - bias)
+        fistp(f64::from(prod) - bias)
     };
     let i_minx = map(min_x);
     let i_maxy = map(max_y);

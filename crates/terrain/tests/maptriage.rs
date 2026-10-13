@@ -6,7 +6,7 @@ use benilla_re_difftest::{Emu, RegisterX86, Wow};
 use benilla_re_terrain::maptriage::{
     dda_debug_negate3, fade_count_index, fade_time_gate, liquid_lazy_init_scalar, ripple_negate,
 };
-use common::next;
+use common::{assert_f32, next};
 
 /// A finite float from the high bits.
 fn f32_finite(s: &mut u32) -> f32 {
@@ -350,4 +350,76 @@ fn dda_debug_negate3_difftest() {
         "dda_debug_negate3: {checked} cases bit-exact vs WoW.exe @ 0x6bd2a0 \
          (slice 0x6bd2c4..0x6bd2fa; fchs@0x6bd2ca fchs@0x6bd2d9 fchs@0x6bd2ee)"
     );
+}
+
+/// `DrawQueryCells` (`0x6bd2a0`) from `0x6bd2c4` to `0x6bd2fa`: the camera at `0xc7cf20` written,
+/// the negation read from `[ebp-0xc]` up.
+#[test]
+fn debug_dda_negate_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let frame = e.alloc(0x100); // EBP frame: out at [ebp-0xc]/[ebp-0x8]/[ebp-0x4]; Z slice also
+                                // writes [ebp-0x50]/[ebp-0x4c] (in frame)
+    let ebp = frame + 0x80;
+    const DDA_X: u64 = 0x00c7_cf20;
+    const DDA_Y: u64 = 0x00c7_cf24;
+    const DDA_Z: u64 = 0x00c7_cf28;
+    const SLICE_ESP: u64 = 0x7008_0000;
+
+    // Each leg is its own REAL slice over `fld [DAT]; fchs; fstp dword`. The runtime input slots
+    // are the absolute .data VAs; we seed them per-case.
+    let run_case = |e: &mut Emu, v: [f32; 3], ctx: &str| {
+        e.write_u32(DDA_X, v[0].to_bits());
+        e.write_u32(DDA_Y, v[1].to_bits());
+        e.write_u32(DDA_Z, v[2].to_bits());
+        // junk-seed the out slots.
+        e.write_u32(ebp - 0xc, 0xdead_beef);
+        e.write_u32(ebp - 0x8, 0xdead_beef);
+        e.write_u32(ebp - 0x4, 0xdead_beef);
+
+        // X leg: run(0x6bd2c4, 0x6bd2d2). fld [0xc7cf20]; fchs@6bd2ca; lea eax; fstp
+        // [ebp-0xc]@6bd2cf.
+        e.set_reg(RegisterX86::ESP, SLICE_ESP);
+        e.set_reg(RegisterX86::EBP, ebp);
+        e.run(0x6bd2c4, 0x6bd2d2);
+        let bin_x = e.read_f32(ebp - 0xc);
+
+        // Y leg: run(0x6bd2d2, 0x6bd2e1). fld [0xc7cf24]; push eax; fchs@6bd2d9; lea ecx; fstp
+        // [ebp-0x8]@6bd2de. The `push eax` decrements ESP once — reset ESP first.
+        e.set_reg(RegisterX86::ESP, SLICE_ESP);
+        e.set_reg(RegisterX86::EBP, ebp);
+        e.run(0x6bd2d2, 0x6bd2e1);
+        let bin_y = e.read_f32(ebp - 0x8);
+
+        // Z leg: run(0x6bd2e1, 0x6bd2fa). fld [0xc7cf28]; mov [ebp-0x50],imm; fchs@6bd2ee; mov
+        // [ebp-0x4c],0; fstp [ebp-0x4]@6bd2f7.
+        e.set_reg(RegisterX86::ESP, SLICE_ESP);
+        e.set_reg(RegisterX86::EBP, ebp);
+        e.run(0x6bd2e1, 0x6bd2fa);
+        let bin_z = e.read_f32(ebp - 0x4);
+
+        let ours = benilla_re_terrain::maptriage::dda_debug_negate3(v);
+        assert_f32(bin_x, ours[0], &format!("{ctx} -X"));
+        assert_f32(bin_y, ours[1], &format!("{ctx} -Y"));
+        assert_f32(bin_z, ours[2], &format!("{ctx} -Z"));
+    };
+
+    // boundary probes: ±0 (negate flips sign bit, bit-distinct), ±1, exact magnitudes.
+    run_case(&mut e, [0.0, 0.0, 0.0], "dda v=0 → -0 each");
+    run_case(&mut e, [-0.0, -0.0, -0.0], "dda v=-0 → +0 each");
+    run_case(&mut e, [1.0, 2.0, 3.0], "dda (1,2,3) → (-1,-2,-3)");
+    run_case(&mut e, [-1.0, -2.0, -3.0], "dda (-1,-2,-3) → (1,2,3)");
+    run_case(&mut e, [12345.678, -9876.5, 0.001], "dda mixed");
+
+    let mut s = 0x6464_6100u32; // "dda\0"
+    for i in 0..6000u32 {
+        let v = [
+            f32::from_bits(next(&mut s)),
+            f32::from_bits(next(&mut s)),
+            f32::from_bits(next(&mut s)),
+        ];
+        run_case(&mut e, v, &format!("dda bits[{i}]"));
+    }
 }

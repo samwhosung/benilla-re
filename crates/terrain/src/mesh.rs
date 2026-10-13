@@ -10,32 +10,29 @@ const EIGHT: f64 = 8.0;
 /// `[0x801628]`: 2.0.
 const TWO: f64 = 2.0;
 
-/// `MinVector3` (`0x699250`): the per-component minimum; z and y take `b` when `b <= a`, x takes
-/// `a` when `a < b`.
+/// `MinVector3` (`0x699250`): the per-component minimum. z and y compare `b` with `a` by `fcompp`
+/// and `test ah,0x41`, taking `a` only when `b > a`; x compares `a` with `b` by `test ah,5`,
+/// taking `a` only when `a < b`. A tie or a NaN takes `b`.
 pub fn vec3_min(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
-    let z = if b[2] <= a[2] { b[2] } else { a[2] };
-    let y = if b[1] <= a[1] { b[1] } else { a[1] };
+    let z = if b[2] > a[2] { a[2] } else { b[2] };
+    let y = if b[1] > a[1] { a[1] } else { b[1] };
     let x = if a[0] < b[0] { a[0] } else { b[0] };
     [x, y, z]
 }
 
-/// `MaxVector3` (`0x6992c0`): the per-component maximum; z and y take `b` when `a <= b`, x takes
-/// `a` when `b < a`.
+/// `MaxVector3` (`0x6992c0`): the per-component maximum. z and y take `a` only when `b < a`
+/// (`fcompp`, `test ah,5`), x only when `a > b` (`test ah,0x41`); a tie or a NaN takes `b`.
 pub fn vec3_max(a: &[f32; 3], b: &[f32; 3]) -> [f32; 3] {
-    let z = if a[2] <= b[2] { b[2] } else { a[2] };
-    let y = if a[1] <= b[1] { b[1] } else { a[1] };
-    let x = if b[0] < a[0] { a[0] } else { b[0] };
+    let z = if b[2] < a[2] { a[2] } else { b[2] };
+    let y = if b[1] < a[1] { a[1] } else { b[1] };
+    let x = if a[0] > b[0] { a[0] } else { b[0] };
     [x, y, z]
 }
 
-/// `MaxVector3InPlace` (`0x6b11f0`): `dst[i] = src[i]` where `dst[i] <= src[i]`.
+/// `MaxVector3InPlace` (`0x6b11f0`): `MaxVector3` with `dst` as `a` and `src` as `b`, stored over
+/// `dst`; a tie or a NaN takes `src`.
 pub fn vec3_max_inplace(dst: &mut [f32; 3], src: &[f32; 3]) {
-    let z = if dst[2] <= src[2] { src[2] } else { dst[2] };
-    let y = if dst[1] <= src[1] { src[1] } else { dst[1] };
-    let x = if dst[0] <= src[0] { src[0] } else { dst[0] };
-    dst[0] = x;
-    dst[1] = y;
-    dst[2] = z;
+    *dst = vec3_max(dst, src);
 }
 
 /// The vertex step of chunk index `i`, with the stores of `0x6b0e50`'s head: `prod = f32(i·C)`,

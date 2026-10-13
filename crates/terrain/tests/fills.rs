@@ -562,3 +562,91 @@ fn aabb_intersect_i() {
         "aabb_intersect_i: {checked} merges bit-exact vs WoW.exe @ 0x6adbf0 (empty×{empty_seen})"
     );
 }
+
+/// `IntersectCellRects` (`0x6adbf0`) whole on chosen rectangles and signed integers over their
+/// ranges: `ecx` the output, `edx` the second rectangle, the first on the stack.
+#[test]
+fn aabb_intersect_i_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    let next = |s: &mut u32| {
+        *s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
+        *s
+    };
+
+    let out_va = emu.alloc(0x10);
+    let a_va = emu.alloc(0x10);
+    let b_va = emu.alloc(0x10);
+
+    let write_rect = |emu: &mut Emu, va: u64, r: [i32; 4]| {
+        for (i, v) in r.iter().enumerate() {
+            emu.write(va + (i * 4) as u64, &v.to_le_bytes());
+        }
+    };
+    let read_rect = |emu: &Emu, va: u64| -> [i32; 4] {
+        [
+            emu.read_u32(va) as i32,
+            emu.read_u32(va + 4) as i32,
+            emu.read_u32(va + 8) as i32,
+            emu.read_u32(va + 0xc) as i32,
+        ]
+    };
+
+    // (label, A, B). lo corners (idx 0,1) take max; hi corners (idx 2,3) take min.
+    let cases: &[(&str, [i32; 4], [i32; 4])] = &[
+        ("disjoint", [0, 0, 5, 5], [10, 10, 20, 20]),
+        ("overlap", [0, 0, 10, 10], [5, 5, 15, 15]),
+        ("a-inside-b", [3, 3, 7, 7], [0, 0, 10, 10]),
+        ("b-inside-a", [0, 0, 10, 10], [3, 3, 7, 7]),
+        ("equal", [2, 4, 6, 8], [2, 4, 6, 8]), // every compare is a tie
+        ("a-eq-lo", [5, 5, 9, 9], [5, 5, 20, 20]), // lo ties, hi differ
+        ("a-eq-hi", [1, 1, 8, 8], [4, 4, 8, 8]), // hi ties, lo differ
+        ("negatives", [-10, -10, -2, -2], [-8, -20, 0, -4]),
+        ("cross-sign", [-5, -5, 5, 5], [0, -10, 3, 10]),
+        (
+            "int-extremes",
+            [i32::MIN, 0, i32::MAX, 7],
+            [0, i32::MIN, 3, i32::MAX],
+        ),
+    ];
+
+    for (label, a, b) in cases.iter().copied() {
+        write_rect(&mut emu, a_va, a);
+        write_rect(&mut emu, b_va, b);
+        // __thiscall: ecx=out, edx=B, stack=[A]. ret 4.
+        emu.call(0x6adbf0, out_va as u32, b_va as u32, &[a_va as u32]);
+        let binary = read_rect(&emu, out_va);
+        let ours = benilla_re_terrain::fills::aabb_intersect_i(b, a);
+        assert_eq!(
+            binary, ours,
+            "aabb_intersect_i[{label}]: binary {binary:?} != ours {ours:?} (A={a:?} B={b:?})"
+        );
+    }
+
+    // Fuzz: signed ints across a range that produces ordered/equal/inverted corners.
+    let s = &mut 0x61_61_62_69u32; // 'aabi'
+    let ri = |s: &mut u32| -> i32 {
+        let v = next(s);
+        match (v >> 30) & 3 {
+            0 => (v % 40) as i32 - 20,        // small near-zero (frequent ties)
+            1 => v as i32,                    // full-range signed (incl. extremes)
+            2 => ((v >> 8) % 1000) as i32,    // moderate positive
+            _ => -(((v >> 8) % 1000) as i32), // moderate negative
+        }
+    };
+    for _ in 0..600 {
+        let a = [ri(s), ri(s), ri(s), ri(s)];
+        let b = [ri(s), ri(s), ri(s), ri(s)];
+        write_rect(&mut emu, a_va, a);
+        write_rect(&mut emu, b_va, b);
+        emu.call(0x6adbf0, out_va as u32, b_va as u32, &[a_va as u32]);
+        let binary = read_rect(&emu, out_va);
+        let ours = benilla_re_terrain::fills::aabb_intersect_i(b, a);
+        assert_eq!(
+            binary, ours,
+            "aabb_intersect_i fuzz: binary {binary:?} != ours {ours:?} (A={a:?} B={b:?})"
+        );
+    }
+}

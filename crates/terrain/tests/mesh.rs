@@ -5,7 +5,7 @@
 mod common;
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
-use common::assert_f32;
+use common::{assert_f32, Lcg};
 
 fn assert_slice(binary: &[f32], ours: &[f32], ctx: &str) {
     assert_eq!(binary.len(), ours.len());
@@ -37,6 +37,26 @@ fn synth_f32(n: usize, seed: u32, count: usize) -> Vec<Vec<f32>> {
         }
         v.push(m);
     }
+    v
+}
+
+/// Pairs with a quiet NaN in one vector or the other, component by component, and ties of 0 and
+/// −0: the cases where the compare's unordered or equal result picks the operand.
+fn nan_pairs() -> Vec<([f32; 3], [f32; 3])> {
+    let n = f32::NAN;
+    let mut v = Vec::new();
+    for k in 0..3 {
+        let mut a = [1.0f32, -2.0, 3.0];
+        let mut b = [-1.0f32, 2.0, -3.0];
+        a[k] = n;
+        v.push((a, b));
+        a[k] = 1.5;
+        b[k] = n;
+        v.push((a, b));
+    }
+    v.push(([n; 3], [n; 3]));
+    v.push(([0.0, -0.0, 0.0], [-0.0, 0.0, -0.0]));
+    v.push(([2.0; 3], [2.0; 3]));
     v
 }
 
@@ -113,6 +133,13 @@ fn vec3_min() {
         );
         checked += 1;
     }
+    for (av, bv) in nan_pairs() {
+        put_vec(&mut emu, a, &av);
+        put_vec(&mut emu, b, &bv);
+        emu.call(0x699250, dst as u32, a as u32, &[b as u32]);
+        let ours = benilla_re_terrain::vec3_min(&av, &bv);
+        assert_slice(&get3(&emu, dst), &ours, &format!("vec3_min {av:?} {bv:?}"));
+    }
     eprintln!("vec3_min: {checked} cases bit-exact vs WoW.exe @ 0x699250");
 }
 
@@ -138,6 +165,13 @@ fn vec3_max() {
             "vec3_max",
         );
         checked += 1;
+    }
+    for (av, bv) in nan_pairs() {
+        put_vec(&mut emu, a, &av);
+        put_vec(&mut emu, b, &bv);
+        emu.call(0x6992c0, dst as u32, a as u32, &[b as u32]);
+        let ours = benilla_re_terrain::vec3_max(&av, &bv);
+        assert_slice(&get3(&emu, dst), &ours, &format!("vec3_max {av:?} {bv:?}"));
     }
     eprintln!("vec3_max: {checked} cases bit-exact vs WoW.exe @ 0x6992c0");
 }
@@ -165,6 +199,18 @@ fn vec3_max_inplace() {
         benilla_re_terrain::vec3_max_inplace(&mut ours, bv);
         assert_slice(&get3(&emu, dst), &ours, "vec3_max_inplace");
         checked += 1;
+    }
+    for (av, bv) in nan_pairs() {
+        put_vec(&mut emu, b, &bv);
+        put_vec(&mut emu, dst, &av);
+        emu.call(0x6b11f0, dst as u32, 0, &[b as u32]);
+        let mut ours = av;
+        benilla_re_terrain::vec3_max_inplace(&mut ours, &bv);
+        assert_slice(
+            &get3(&emu, dst),
+            &ours,
+            &format!("vec3_max_inplace {av:?} {bv:?}"),
+        );
     }
     eprintln!("vec3_max_inplace: {checked} cases bit-exact vs WoW.exe @ 0x6b11f0");
 }
@@ -259,4 +305,111 @@ fn liquid_grid_verts() {
         checked += 1;
     }
     eprintln!("liquid_grid_verts: {checked} grids bit-exact vs WoW.exe @ 0x68d540");
+}
+
+/// `MaxVector3InPlace` (`0x6b11f0`) whole on chosen pairs, ties of 0 and −0, NaN and infinities in
+/// either vector, and fuzz with those mixed in.
+#[test]
+fn vec3_max_inplace_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+
+    let this_va = emu.alloc(0x10);
+    let other_va = emu.alloc(0x10);
+
+    let write_vec = |emu: &mut Emu, va: u64, v: [f32; 3]| {
+        for (i, c) in v.iter().enumerate() {
+            emu.write(va + (i * 4) as u64, &c.to_le_bytes());
+        }
+    };
+
+    let nan = f32::from_bits(0x7fc0_0000);
+    // (label, this, other)
+    let cases: &[(&str, [f32; 3], [f32; 3])] = &[
+        ("this-wins", [3.0, 4.0, 5.0], [1.0, 2.0, 3.0]),
+        ("other-wins", [1.0, 2.0, 3.0], [3.0, 4.0, 5.0]),
+        ("mixed", [3.0, 2.0, 9.0], [1.0, 8.0, 4.0]),
+        ("equal", [2.0, 2.0, 2.0], [2.0, 2.0, 2.0]), // every compare a tie -> `other` chosen
+        ("neg", [-5.0, -1.0, -9.0], [-2.0, -8.0, -3.0]),
+        ("pm-zero", [0.0, -0.0, 0.0], [-0.0, 0.0, -0.0]), // +0/-0 tie cases
+        ("nan-this", [nan, nan, nan], [1.0, 2.0, 3.0]),   // this is NaN -> unordered -> other
+        ("nan-other", [1.0, 2.0, 3.0], [nan, nan, nan]),  // other is NaN -> unordered -> other
+        (
+            "inf",
+            [f32::INFINITY, f32::NEG_INFINITY, 1.0],
+            [2.0, 3.0, f32::INFINITY],
+        ),
+    ];
+
+    for (label, this, other) in cases.iter().copied() {
+        write_vec(&mut emu, this_va, this);
+        write_vec(&mut emu, other_va, other);
+        // __thiscall: ecx=this, stack=[other]. ret 4. Result mutates `this` in place.
+        emu.call(0x6b11f0, this_va as u32, 0, &[other_va as u32]);
+        let binary = [
+            emu.read_f32(this_va),
+            emu.read_f32(this_va + 4),
+            emu.read_f32(this_va + 8),
+        ];
+        let mut ours = this;
+        benilla_re_terrain::vec3_max_inplace(&mut ours, &other);
+        for k in 0..3 {
+            assert_f32(
+                binary[k],
+                ours[k],
+                &format!("vec3_max_inplace[{label}] comp{k} this={this:?} other={other:?}"),
+            );
+        }
+    }
+
+    // Fuzz: mixed finite magnitudes plus occasional NaN/Inf/±0 injected per component so the
+    // unordered and tie branches are hit.
+    let mut lcg = Lcg(0x766d_6178); // 'vmax'
+    let special = |s: &mut Lcg| -> f32 {
+        // 1-in-6 a special value, else a finite fuzz; matched coords sometimes tie.
+        if (s.next() >> 8).is_multiple_of(6) {
+            match (s.next() >> 8) % 5 {
+                0 => f32::from_bits(0x7fc0_0000), // qNaN
+                1 => f32::INFINITY,
+                2 => f32::NEG_INFINITY,
+                3 => 0.0,
+                _ => -0.0,
+            }
+        } else {
+            s.f32_finite()
+        }
+    };
+    for _ in 0..500 {
+        // Occasionally force a component to be equal across the two vecs (tie branch).
+        let base = special(&mut lcg);
+        let this = [special(&mut lcg), special(&mut lcg), base];
+        let other = [
+            special(&mut lcg),
+            special(&mut lcg),
+            if (lcg.next() >> 8).is_multiple_of(3) {
+                base
+            } else {
+                special(&mut lcg)
+            },
+        ];
+        write_vec(&mut emu, this_va, this);
+        write_vec(&mut emu, other_va, other);
+        emu.call(0x6b11f0, this_va as u32, 0, &[other_va as u32]);
+        let binary = [
+            emu.read_f32(this_va),
+            emu.read_f32(this_va + 4),
+            emu.read_f32(this_va + 8),
+        ];
+        let mut ours = this;
+        benilla_re_terrain::vec3_max_inplace(&mut ours, &other);
+        for k in 0..3 {
+            assert_f32(
+                binary[k],
+                ours[k],
+                &format!("vec3_max_inplace fuzz comp{k} this={this:?} other={other:?}"),
+            );
+        }
+    }
 }
