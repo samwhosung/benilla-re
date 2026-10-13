@@ -11752,6 +11752,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f700	39	strrchr		crt			Returns the last occurrence of a character in a string	inferred	none	models/cache#shared-model-lookup	
 0x73f727	340	_qsort		crt			Sorts an array of elements with a comparison function	inferred	none		
 0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
+0x73fdf5	207	ceil		crt		double __cdecl (double x)	Returns the smallest integer not less than a double	inferred	none	models/ribbons#ribbon-ring	
 0x73ff3f	207	floor		crt			Returns the largest integer not greater than a double	inferred	none	models/particles#substeps	
 0x7400d8	13	_srand	idb	crt	orchestration	void __cdecl (unsigned int seed)	Stores the per-thread seed rand steps	verified	one	random#the-c-runtime-rand	
 0x7400e5	34	_rand	idb	crt	primitive	int __cdecl (void)	Steps the per-thread seed s = s·214013 + 2531011 and returns (s >> 16) & 0x7fff	verified	one	random#the-c-runtime-rand	random::msvc_rand_lcg_difftest
@@ -12471,34 +12472,34 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b64a0	81	ParticleDepthSortPop		models	orchestration		Removes the deepest particle from the sortable record heap	inferred	none	models/particles#draw-order-and-batches	
 0x7b6500	996	CRibbonEmitter::Assign		models	unreached		Copies a ribbon emitter's settings, materials, textures and vertex arrays from another; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b68f0	154	CRibbonEmitter::CopyTextures		models	primitive		Copies a ribbon's texture handle array, adding a reference to each handle	inferred	none		
-0x7b6990	631	CRibbonEmitter::BuildNodeFrame		models	primitive		Builds the cross-section basis of a ribbon node from its motion	inferred	none	models/overview#object-files	
+0x7b6990	631	CRibbonEmitter::BuildNodeFrame		models	primitive		Builds both nodes' edge ends from the heights and up axes, and their tangents from the forward axes	verified	one	models/ribbons#node-frame	
 0x7b6c10	5	InitRibbonInfinityThunk		models	orchestration		Jumps to 0x7b6c20; a static initializer	verified	one	models/overview#object-files	
 0x7b6c20	11	InitRibbonInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
-0x7b6c30	715	CRibbonEmitter::EmitSegment		models	primitive		Writes the vertex pair of a ribbon segment at its node	inferred	none	models/ribbons#ribbon-update	
-0x7b6f00	34	RibbonRingAdvance		models	orchestration		Advances a ring-buffer index by a step, wrapping at the capacity	inferred	none	models/ribbons#ribbon-update	
-0x7b6f30	86	CRibbonEmitter::SetTextureCell		models	primitive		Computes the texture coordinates of a ribbon's texture cell	inferred	none		
+0x7b6c30	715	CRibbonEmitter::EmitSegment		models	primitive	void __thiscall (CRibbonEmitter *this, float age, float t, uint32_t commit)	Writes the edge at t between the last and current node at the head, with its age, and commits it on request	verified	one	models/ribbons#edge-curve	
+0x7b6f00	34	RibbonRingAdvance		models	orchestration		Advances a ring index by a step and wraps it at the capacity	verified	one	models/ribbons#ribbon-ring	
+0x7b6f30	86	CRibbonEmitter::SetTextureCell		models	primitive		Computes the texture cell's u and v ranges from the slot, the grid and the rectangle	verified	one	models/ribbons#ribbon-texture-cells	
 0x7b6f90	44	CRibbonEmitter::CloseTextures		models	orchestration		Closes every texture handle of a ribbon	inferred	none		
 0x7b6fc0	165	CRibbonEmitter::~CRibbonEmitter		models	primitive		Closes a ribbon's textures and frees its materials, vertex and index arrays	inferred	none		
 0x7b7070	381	CRibbonEmitter::CRibbonEmitter		models	primitive		Constructs an empty ribbon emitter with reference count 1	inferred	none		
 0x7b71f0	400	CRibbonEmitter::CopyConstruct		models	unreached		Constructs a ribbon emitter as a copy of another; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b7380	29	CRibbonEmitter::Reassign		models	unreached		Closes a ribbon's textures and copies another ribbon into it; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b73a0	793	CRibbonEmitter::Initialize		models	primitive		Sizes a ribbon's vertex ring from its edges per second and lifespan, and sets materials and textures	inferred	none	models/ribbons#ribbon-update	
-0x7b76c0	356	CRibbonEmitter::SetFrame		models	primitive		Sets a ribbon's emitter matrix and its frame relative to the reference frame	inferred	none	models/ribbons#ribbon-parameters	
+0x7b73a0	793	CRibbonEmitter::Initialize		models	primitive	void __thiscall (CRibbonEmitter *this, float rate, float life, const uint32_t *rgba, void *m, void *ml, void *t, const float *rect, uint32_t r, uint32_t c)	Sizes the edge ring from rate and lifespan, sets the texture grid and defaults, and marks the ribbon initialized	verified	one	models/ribbons#ribbon-ring	
+0x7b76c0	356	CRibbonEmitter::SetFrame		models	primitive		Moves the current node into the last and takes the new node from the bone matrix; seeds both when not started	verified	one	models/ribbons#node-frame	
 0x7b7830	275	CRibbonEmitter::SetMaterials		models	unreached		Replaces a ribbon's materials and texture handles; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b7950	130	CRibbonEmitter::ReplaceTexture		models	orchestration		Replaces the ribbon textures whose replaceable type matches	inferred	none	models/model#replaceable-textures	
 0x7b79e0	74	CRibbonEmitter::SetMaterialFlag1		models	unreached		Sets or clears bit 0 of every ribbon material's flags; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b7a30	75	CRibbonEmitter::SetMaterialFlag2		models	unreached		Sets or clears bit 1 of every ribbon material's flags; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b7a80	142	CRibbonEmitter::SetColor		models	primitive		Packs a ribbon's colour into bytes, each component times 255 plus 0.5	inferred	none	models/ribbons#ribbon-parameters	
+0x7b7a80	142	CRibbonEmitter::SetColor		models	primitive		Packs three floats into the colour word and keeps its alpha byte	verified	one	models/ribbons#ribbon-parameters	
 0x7b7b10	37	CRibbonEmitter::SetAlpha		models	primitive		Packs a ribbon's alpha into a byte, times 255 plus 0.5	inferred	none	models/ribbons#ribbon-parameters	
-0x7b7b40	45	CRibbonEmitter::SetVisible		models	primitive		Sets or clears a ribbon's visible flag	inferred	none	models/ribbons#ribbon-parameters	
-0x7b7b70	29	CRibbonEmitter::SetTextureSlot		models	orchestration		Sets a ribbon's texture cell and recomputes its coordinates when it changes	inferred	none	models/ribbons#ribbon-parameters	
+0x7b7b40	45	CRibbonEmitter::SetVisible		models	primitive		Shows or hides the ribbon; hiding clears the started flag	verified	one	models/ribbons#node-frame	
+0x7b7b70	29	CRibbonEmitter::SetTextureSlot		models	orchestration		Sets the texture slot and recomputes the cell when it changes	verified	one	models/ribbons#ribbon-texture-cells	
 0x7b7b90	16	CRibbonEmitter::SetAbove		models	orchestration		Sets a ribbon's height above its node at +0x15c	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7ba0	16	CRibbonEmitter::SetBelow		models	orchestration		Sets a ribbon's height below its node at +0x160	inferred	none	models/ribbons#ribbon-parameters	
 0x7b7bb0	16	CRibbonEmitter::SetGravity		models	orchestration		Sets a ribbon's gravity at +0x164	inferred	none		
 0x7b7bc0	594	CRibbonEmitter::TransformVertices		models	primitive		Transforms a ribbon's vertices by a matrix	inferred	none		
 0x7b7e20	49	CRibbonEmitter::UpdateIfStarted		models	unreached		Updates a ribbon once its first frame has been placed; nothing reaches it	inferred	none	models/overview#unreached-code	
-0x7b7e60	593	CRibbonEmitter::Update		models	primitive		Ages a ribbon's edges, drops expired ones and emits new edges along its path	inferred	none	models/animation#pushing-animated-state	
-0x7b80c0	536	CRibbonEmitter::Render		models	primitive		Draws a ribbon's vertex ring as a triangle strip per material	inferred	none	models/render#ribbon-particle-and-custom-draws	
+0x7b7e60	593	CRibbonEmitter::Update		models	primitive	void __thiscall (CRibbonEmitter *this, float dt, uint32_t noEmit)	Ages out old edges, emits new ones along the node curve, writes the head edge and ages every edge	verified	one	models/ribbons#ribbon-update	
+0x7b80c0	536	CRibbonEmitter::Render		models	primitive		Draws the live edges as one indexed strip per material, with the frame offset and one colour	verified	one	models/ribbons#ribbon-draw	
 0x7b82e0	12	CRibbonEmitter::IsEmpty		models	unreached		Returns whether a ribbon has no live edges; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b82f0	5	CRibbonEmitter::AddRef		models	unreached		Increments a ribbon's reference count; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7b8300	29	CRibbonEmitter::Release		models	host		Decrements a ribbon's reference count, destroying and freeing it at zero	inferred	none		

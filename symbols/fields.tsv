@@ -266,6 +266,32 @@ CPlayerMoveEvent	0x0044	4	float	m_speedZ	collision	Holds the knockback vertical 
 CPlayerMoveEvent	0x0048	4	uint32_t	m_counter	collision	Holds the server change counter that the acknowledgement echoes	verified	one	collision/events#event-node
 CPlayerMoveEvent	0x004c	1	uint8_t	m_hasStatus	collision	Holds 1 when 0x617730 filled the snapshot fields, 0 from allocation	verified	one	collision/events#event-node
 CPlayerMoveEvent	0x004d	1	uint8_t	m_send	collision	Holds 1 when processing the event sends its opcode to the server	verified	one	collision/events#event-node
+CRibbonEmitter	0x0008	4	uint32_t	m_capacity	models	Holds the ring capacity in edges	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x000c	4	float *	m_ages	models	Holds each ring slot edge age	verified	one	models/ribbons#edge-curve
+CRibbonEmitter	0x0014	4	uint32_t	m_head	models	Holds the head slot, the uncommitted edge at the bone	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x0018	4	uint32_t	m_tail	models	Holds the oldest live slot	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x001c	4	float	m_carry	models	Holds the fraction of an edge carried to the next update	verified	one	models/ribbons#ribbon-update
+CRibbonEmitter	0x0020	12	float[3]	m_lastPosition	models	Holds the last node position	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0058	4	float	m_inverseLifespan	models	Holds 1 over the lifespan	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x005c	8	float[2]	m_cellSize	models	Holds the cell width in u and height in v	verified	one	models/ribbons#ribbon-texture-cells
+CRibbonEmitter	0x006c	16	float[4]	m_cell	models	Holds the cell v0, u0, v1 and u1	verified	one	models/ribbons#ribbon-texture-cells
+CRibbonEmitter	0x007c	12	float[3]	m_lastUp	models	Holds the last node up axis, matrix row 1	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0088	12	float[3]	m_up	models	Holds the current node up axis	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0094	12	float[3]	m_lastForward	models	Holds the last node forward axis, matrix row 2	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x00a0	12	float[3]	m_forward	models	Holds the current node forward axis	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x00ac	24	float[6]	m_tangents	models	Holds the last and current node tangents	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x00c4	48	float[12]	m_edgeEnds	models	Holds the last and current bottoms, then the last and current tops	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x00f4	4	float	m_rate	models	Holds the edges per second, rounded up	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x00f8	4	float	m_lifespan	models	Holds the lifespan, at least 0.25	verified	one	models/ribbons#ribbon-ring
+CRibbonEmitter	0x012c	4	uint32_t	m_color	models	Holds the colour word every vertex takes	verified	one	models/ribbons#ribbon-draw
+CRibbonEmitter	0x0130	16	float[4]	m_rect	models	Holds the texture rectangle	verified	one	models/ribbons#ribbon-texture-cells
+CRibbonEmitter	0x0140	8	uint32_t[2]	m_grid	models	Holds the texture grid rows and columns	verified	one	models/ribbons#ribbon-texture-cells
+CRibbonEmitter	0x0148	4	uint32_t	m_flags	models	Holds the flags: 1 started, 2 initialized, 4 visible, 8 updated	verified	one	models/ribbons#ribbon-update
+CRibbonEmitter	0x014c	12	float[3]	m_position	models	Holds the current node position	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0158	4	uint32_t	m_textureSlot	models	Holds the texture cell index	verified	one	models/ribbons#ribbon-texture-cells
+CRibbonEmitter	0x015c	4	float	m_above	models	Holds the height above the bone, 10 by default	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0160	4	float	m_below	models	Holds the depth below the bone, 10 by default	verified	one	models/ribbons#node-frame
+CRibbonEmitter	0x0164	4	float	m_gravity	models	Holds the gravity	verified	one	models/ribbons#ribbon-update
 CScriptRegion	0x0000	4	void **	__vfptr	ui	Holds the region's main vtable	verified	one	ui/frames#vtables-and-the-two-parts
 CScriptRegion	0x0004	4	uint32_t	m_tableHolders	ui	Counts the holders of the object's Lua table	verified	one	ui/script#the-script-object
 CScriptRegion	0x0008	4	int32_t	m_tableRef	ui	Holds the registry reference of the Lua table, -2 for none	verified	one	ui/script#the-script-object

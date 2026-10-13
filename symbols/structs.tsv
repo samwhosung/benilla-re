@@ -15,6 +15,7 @@ CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab
 CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
 CParticleEmitter2	656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter
 CPlayerMoveEvent	80		collision	Holds one queued movement event: list link, time, tag, pose, status snapshot, payload and flags	verified	one	collision/events#event-node
+CRibbonEmitter	360		models	Holds a ribbon emitter: its edge ring, node frames, texture cell, materials, colour and heights	verified	one	models/ribbons#ribbon-ring
 CScriptRegion	160	0x81c580	ui	Holds a script object part, a CLayoutFrame at +0x24, a name and a parent	verified	one	ui/frames#vtables-and-the-two-parts
 CSimpleFrame	788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, flags, scripts, regions, layers and children	verified	one	ui/frames#construction
 CSimpleModelFFX	988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
