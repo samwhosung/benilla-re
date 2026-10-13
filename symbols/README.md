@@ -154,6 +154,18 @@ plus zero (`lea ecx,[ecx+0x0]`).
 `cargo xtask check --exe` recomputes every size from `dumps/disasm.txt`, which restarts the decode
 at every row, every `call` target and every table's end.
 
+Twenty-four starts, all the C runtime's, can hold no row, since no size satisfies this rule
+(`cargo xtask census` lists them, and its test holds the list):
+
+- Another entry lies inside the extent, because hand-written routines share tails and branches:
+  `0x40b115`, `0x40bccf`, `0x40beee`, `0x40d510`, `0x73f962`, `0x7405bd`, `0x74177d`, `0x74183d`,
+  `0x744890`, `0x744aa0`, `0x744bd5`.
+- Code above falls through into the entry: the `__finally` blocks a function both calls and enters
+  from its unwind code (`0x40b9ff`, `0x40bb4d`, `0x40bc0d`, `0x40bc88`, `0x40bd95`, `0x40da4e`,
+  `0x40dad7`, `0x7470ad`), and the x87 routines' second entries (`0x74378a`, `0x743a3d`,
+  `0x743ae9`).
+- An instruction no path reaches lies inside the extent: `0x741b02`, `0x746a60`.
+
 Classes:
 
 - `primitive`: computes a value or state a reimplementation must reproduce bit for bit. Any
@@ -172,6 +184,9 @@ Classes:
   stores its address, except other unreached code, and no live code falls through into it. The
   row keeps its one-line meaning; it owes no test and its `test` is empty, and a port drops its
   transcription.
+
+A class on a row with no `finding` is the classifier's, from `cargo xtask census`; a reading
+replaces it.
 
 ## globals.tsv
 

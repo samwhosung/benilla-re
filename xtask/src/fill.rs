@@ -352,6 +352,11 @@ pub fn fill(
         {
             class = "boundary".to_string();
         }
+        // Outside a system with a doc, where nothing requires a class, the classifier's is left
+        // out; the census's `unreached` and a library's `boundary` stay.
+        if !documented.contains(&system) && class != "unreached" && class != "boundary" {
+            class.clear();
+        }
         let mut cells = vec![(system_at, system), (class_at, class)];
         let explicit = named.get(&a).map(|n| n.2.clone()).filter(|m| !m.is_empty());
         let meaning = match explicit {
