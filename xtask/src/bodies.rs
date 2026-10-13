@@ -4,7 +4,7 @@
 
 use crate::check::Problem;
 use regex::Regex;
-use std::collections::{BTreeMap, HashSet};
+use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 use std::path::Path;
@@ -12,16 +12,15 @@ use std::sync::LazyLock;
 
 macro_rules! pattern {
     ($name:ident, $source:expr) => {
-        static $name: LazyLock<Regex> =
+        pub(crate) static $name: LazyLock<Regex> =
             LazyLock::new(|| Regex::new($source).expect("a valid pattern"));
     };
 }
 
 pattern!(DIRECT, r"^(j[a-z]+|loop[a-z]*)\s+0x([0-9a-f]+)$");
-pattern!(TABLE, r"^jmp\s+DWORD PTR \[e[a-z]{2}\*4\+0x([0-9a-f]+)\]$");
 pattern!(
-    TABLE_READ,
-    r"(?:DWORD PTR \[e[a-z]{2}\*4|BYTE PTR \[e[a-z]{2})\+0x([0-9a-f]+)\]"
+    TABLE,
+    r"^jmp\s+DWORD PTR \[(e[a-z]{2})\*4\+0x([0-9a-f]+)\]$"
 );
 pattern!(
     LEA_FILLER,
@@ -30,13 +29,20 @@ pattern!(
 pattern!(MOV_FILLER, r"^mov (e[a-z]{2}),(e[a-z]{2})$");
 pattern!(IMMEDIATE, r"^(?:push|mov [^,]+,)\s*0x([0-9a-f]+)$");
 
-/// A switch's tables sit at the end of its function: code this close after one is data's
-/// neighbour, not fall-through.
-const TABLE_REACH: u32 = 0x400;
+/// A byte index table read, `movzx edx,BYTE PTR [eax+0x403494]`, with its index register.
+pub(crate) static BYTE_TABLE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^movzx\s+e[a-z]{2},BYTE PTR \[(e[a-z]{2})\+0x([0-9a-f]+)\]$")
+        .expect("a valid pattern")
+});
+pub(crate) static BOUND: LazyLock<Regex> =
+    LazyLock::new(|| Regex::new(r"^cmp\s+(e[a-z]{2}),0x([0-9a-f]+)$").expect("a valid pattern"));
+/// How far past its jump table a case can lie: hand-written code such as the C runtime's `memcpy`
+/// puts its cases after its tables.
+const TABLE_AFTER: u32 = 0x400;
 
 /// The listing: each instruction's address and its text, whitespace runs collapsed.
 pub struct Listing {
-    addresses: Vec<u32>,
+    pub(crate) addresses: Vec<u32>,
     ends: Vec<usize>,
     text: String,
 }
@@ -96,27 +102,27 @@ impl Listing {
         self.index(address).is_some()
     }
 
-    fn index(&self, address: u32) -> Option<usize> {
+    pub(crate) fn index(&self, address: u32) -> Option<usize> {
         self.addresses.binary_search(&address).ok()
     }
 
-    fn at(&self, index: usize) -> &str {
+    pub(crate) fn at(&self, index: usize) -> &str {
         let start = if index == 0 { 0 } else { self.ends[index - 1] };
         &self.text[start..self.ends[index]]
     }
 
-    fn get(&self, address: u32) -> Option<&str> {
+    pub(crate) fn get(&self, address: u32) -> Option<&str> {
         self.index(address).map(|i| self.at(i))
     }
 
     /// The first instruction after `address`.
-    fn following(&self, address: u32) -> Option<u32> {
+    pub(crate) fn following(&self, address: u32) -> Option<u32> {
         let i = self.addresses.partition_point(|&a| a <= address);
         self.addresses.get(i).copied()
     }
 
     /// The last instruction before `address`.
-    fn preceding(&self, address: u32) -> Option<u32> {
+    pub(crate) fn preceding(&self, address: u32) -> Option<u32> {
         let i = self.addresses.partition_point(|&a| a < address);
         i.checked_sub(1).map(|i| self.addresses[i])
     }
@@ -126,7 +132,9 @@ impl Listing {
 pub struct Image<'a> {
     bytes: &'a [u8],
     /// Each section's virtual address, raw size and file offset.
-    sections: Vec<(u32, u32, u32)>,
+    pub(crate) sections: Vec<(u32, u32, u32)>,
+    /// Each section's virtual size, in the order of `sections`.
+    virtual_sizes: Vec<u32>,
 }
 
 impl<'a> Image<'a> {
@@ -139,18 +147,24 @@ impl<'a> Image<'a> {
         let base = u32_at(pe + 52)?;
         let table = pe + 24 + optional;
         let mut sections = Vec::new();
+        let mut virtual_sizes = Vec::new();
         for i in 0..count {
             let header = table + 40 * i;
+            virtual_sizes.push(u32_at(header + 8)?);
             let address = u32_at(header + 12)?;
             let raw_size = u32_at(header + 16)?;
             let raw_offset = u32_at(header + 20)?;
             sections.push((base.wrapping_add(address), raw_size, raw_offset));
         }
-        Some(Image { bytes, sections })
+        Some(Image {
+            bytes,
+            sections,
+            virtual_sizes,
+        })
     }
 
     /// The file bytes at `address`, `length` of them, when one section holds them all.
-    fn read(&self, address: u32, length: u32) -> Option<&[u8]> {
+    pub(crate) fn read(&self, address: u32, length: u32) -> Option<&[u8]> {
         let (address, length) = (u64::from(address), u64::from(length));
         for &(start, size, offset) in &self.sections {
             let (start, size) = (u64::from(start), u64::from(size));
@@ -162,17 +176,27 @@ impl<'a> Image<'a> {
         None
     }
 
+    /// The end of the section that holds `address`, by its virtual size.
+    pub(crate) fn section_end(&self, address: u32) -> Option<u32> {
+        self.sections
+            .iter()
+            .zip(&self.virtual_sizes)
+            .map(|(&(start, _, _), &size)| (start, start.wrapping_add(size)))
+            .find(|&(start, end)| start <= address && address < end)
+            .map(|(_, end)| end)
+    }
+
     pub fn byte(&self, address: u32) -> Option<u8> {
         self.read(address, 1).map(|b| b[0])
     }
 
-    fn dword(&self, address: u32) -> Option<u32> {
+    pub(crate) fn dword(&self, address: u32) -> Option<u32> {
         Some(u32::from_le_bytes(self.read(address, 4)?.try_into().ok()?))
     }
 
     /// Every dword-aligned value in the sections other than the one holding `code` that lies in
     /// `[low, high]`: the code addresses the exe's data stores, such as exception handlers.
-    fn stored_addresses(&self, code: u32, low: u32, high: u32) -> HashSet<u32> {
+    pub(crate) fn stored_addresses(&self, code: u32, low: u32, high: u32) -> HashSet<u32> {
         let mut found = HashSet::new();
         for &(start, size, offset) in &self.sections {
             if start <= code && u64::from(code) < u64::from(start) + u64::from(size) {
@@ -194,11 +218,51 @@ impl<'a> Image<'a> {
 
     /// The entries of the jump table at `table` that a function entered at `entry` indexes: the
     /// dwords from `table` on while each is an address in `[entry, table)`, since the table
-    /// follows its function's code. `tools/ghidra/CreateFunctions.java` follows the same rule.
+    /// follows its function's code, or one past the table within `TABLE_AFTER`, where
+    /// hand-written code keeps its cases.
+    /// A jump table read from `base`, or, when hand-written code biases its index so that the
+    /// first dwords from `base` are never read (`jmp [eax*4+base]` with `eax` from 1, as the C
+    /// runtime's `memcpy` does), from the first of the next three dwords that is an entry: that
+    /// table's address and entries.
+    pub fn biased_table(&self, entry: u32, base: u32) -> (u32, Vec<u32>) {
+        for skip in 0..4 {
+            let table = base.wrapping_add(4 * skip);
+            let entries = self.table_entries(entry, table);
+            if !entries.is_empty() {
+                return (table, entries);
+            }
+        }
+        (base, Vec::new())
+    }
+
+    /// A jump table indexed by a register negated just before the jump (`neg ecx; jmp
+    /// [ecx*4+base]`, as the C runtime's `memmove` copies backward): the dwords from `base` down
+    /// while each is an entry, read as `table_entries` reads them. Its lowest address and its
+    /// entries in address order.
+    pub fn negated_table(&self, entry: u32, base: u32) -> (u32, Vec<u32>) {
+        let mut entries = Vec::new();
+        let mut at = base;
+        while let Some(value) = self.dword(at) {
+            let before = entry <= value && value < at;
+            let after = base + 4 <= value && value < base.saturating_add(TABLE_AFTER);
+            if !(before || after) {
+                break;
+            }
+            entries.push(value);
+            at = at.wrapping_sub(4);
+        }
+        entries.reverse();
+        (base - 4 * (entries.len() as u32).saturating_sub(1), entries)
+    }
+
     pub fn table_entries(&self, entry: u32, table: u32) -> Vec<u32> {
         let mut entries = Vec::new();
-        while let Some(value) = self.dword(table.wrapping_add(4 * entries.len() as u32)) {
-            if !(entry <= value && value < table) {
+        loop {
+            let at = table.wrapping_add(4 * entries.len() as u32);
+            let Some(value) = self.dword(at) else { break };
+            let before = entry <= value && value < table;
+            let after = at + 4 <= value && value < table.saturating_add(TABLE_AFTER);
+            if !(before || after) {
                 break;
             }
             entries.push(value);
@@ -207,15 +271,169 @@ impl<'a> Image<'a> {
     }
 }
 
+/// The functions that never return, read at their bodies. A `call` to one ends the path where
+/// padding or another function follows it, and the instruction after it is never reached by
+/// falling through.
+///
+/// - `__amsg_exit` `0x4099c8` calls through `0x82f264`, which holds `__exit` and which no
+///   instruction writes;
+/// - `_exit` `0x40a30d` and `__exit` `0x40a31e` call `_doexit` `0x40a34d` with its third argument
+///   0, the path that ends in `ExitProcess` (`0x40a3ea`);
+/// - `_longjmp` `0x742014` ends in `jmp DWORD PTR [edx+0x14]`, to the frame `setjmp` saved.
+///
+/// Besides these, a function whose body reaches no `ret`, no indirect `jmp` and no tail jump to a
+/// function that returns never returns either; so does a call through the import slot of
+/// `ExitProcess`, `ExitThread` or `FatalAppExitA`.
+pub const NO_RETURN: [u32; 4] = [0x4099c8, 0x40a30d, 0x40a31e, 0x742014];
+const NO_RETURN_IMPORTS: [&str; 3] = ["ExitProcess", "ExitThread", "FatalAppExitA"];
+
+pattern!(CALL_DIRECT, r"^call\s+0x([0-9a-f]+)$");
+pattern!(CALL_SLOT, r"^call\s+DWORD PTR ds:0x([0-9a-f]+)$");
+
+/// The functions and import slots a call to which never returns.
+#[derive(Clone, Default, Debug, PartialEq, Eq)]
+pub struct NoReturn {
+    pub functions: HashSet<u32>,
+    pub slots: HashSet<u32>,
+}
+
+impl NoReturn {
+    /// Whether `instruction` is a call that never returns.
+    pub fn ends(&self, instruction: &str) -> bool {
+        if !instruction.starts_with("call") {
+            return false;
+        }
+        if let Some(found) = CALL_DIRECT.captures(instruction) {
+            return u32::from_str_radix(&found[1], 16).is_ok_and(|t| self.functions.contains(&t));
+        }
+        CALL_SLOT
+            .captures(instruction)
+            .and_then(|f| u32::from_str_radix(&f[1], 16).ok())
+            .is_some_and(|s| self.slots.contains(&s))
+    }
+}
+
+/// The functions entered at `starts` that never return, with `NO_RETURN` and the import slots:
+/// repeated until no function is new, since each one found cuts its callers' paths.
+pub fn no_return(starts: &[u32], listing: &Listing, image: &Image) -> NoReturn {
+    let mut found = NoReturn {
+        functions: NO_RETURN.iter().copied().collect(),
+        slots: imports(image.bytes)
+            .into_iter()
+            .filter(|(_, (name, _))| NO_RETURN_IMPORTS.contains(&name.as_str()))
+            .map(|(slot, _)| slot)
+            .collect(),
+    };
+    let set: HashSet<u32> = starts.iter().copied().collect();
+    loop {
+        let walker = Walker {
+            listing,
+            image,
+            starts: set.clone(),
+            no_return: &found,
+        };
+        let mut more = Vec::new();
+        for &entry in starts {
+            if found.functions.contains(&entry) || !listing.contains(entry) {
+                continue;
+            }
+            let (reached, _) = walker.body(entry);
+            let returns = reached.iter().any(|&a| {
+                let text = listing.get(a).unwrap_or_default();
+                if text.starts_with("ret") {
+                    return true;
+                }
+                if text.starts_with("jmp") && !TABLE.is_match(text) {
+                    return match DIRECT.captures(text) {
+                        Some(f) => u32::from_str_radix(&f[2], 16).is_ok_and(|t| {
+                            t != entry && set.contains(&t) && !found.functions.contains(&t)
+                        }),
+                        None => true,
+                    };
+                }
+                false
+            });
+            if !returns {
+                more.push(entry);
+            }
+        }
+        if more.is_empty() {
+            return found;
+        }
+        found.functions.extend(more);
+    }
+}
+
+/// The import address table's slots: each slot's import name and its library.
+pub fn imports(bytes: &[u8]) -> HashMap<u32, (String, String)> {
+    let mut out = HashMap::new();
+    let u16_at = |o: usize| Some(u16::from_le_bytes(bytes.get(o..o + 2)?.try_into().ok()?));
+    let u32_at = |o: usize| Some(u32::from_le_bytes(bytes.get(o..o + 4)?.try_into().ok()?));
+    let Some(pe) = u32_at(0x3c).map(|p| p as usize) else {
+        return out;
+    };
+    let optional = pe + 24;
+    let (Some(base), Some(directory), Some(count), Some(size)) = (
+        u32_at(optional + 28),
+        u32_at(optional + 96 + 8),
+        u16_at(pe + 6),
+        u16_at(pe + 20),
+    ) else {
+        return out;
+    };
+    let table = optional + size as usize;
+    // An RVA's file offset, through the section table.
+    let offset = |rva: u32| -> Option<usize> {
+        (0..count as usize).find_map(|i| {
+            let h = table + 40 * i;
+            let (va, raw, at) = (u32_at(h + 12)?, u32_at(h + 16)?, u32_at(h + 20)?);
+            (va <= rva && rva < va + raw).then(|| (at + rva - va) as usize)
+        })
+    };
+    let string = |at: usize| -> Option<String> {
+        let end = at + bytes.get(at..)?.iter().position(|&b| b == 0)?;
+        String::from_utf8(bytes[at..end].to_vec()).ok()
+    };
+    let Some(mut descriptor) = offset(directory) else {
+        return out;
+    };
+    while let (Some(names), Some(dll), Some(slots)) = (
+        u32_at(descriptor),
+        u32_at(descriptor + 12),
+        u32_at(descriptor + 16),
+    ) {
+        if dll == 0 && slots == 0 {
+            break;
+        }
+        let library = offset(dll).and_then(string).unwrap_or_default();
+        let lookup = if names != 0 { names } else { slots };
+        for k in 0.. {
+            let Some(entry) = offset(lookup + 4 * k).and_then(u32_at) else {
+                break;
+            };
+            if entry == 0 {
+                break;
+            }
+            if entry & 0x8000_0000 == 0 {
+                if let Some(name) = offset(entry + 2).and_then(string) {
+                    out.insert(base + slots + 4 * k, (name, library.clone()));
+                }
+            }
+        }
+        descriptor += 20;
+    }
+    out
+}
+
 /// Never executed: `int3`, which pads between functions.
-fn is_trap(instruction: &str) -> bool {
+pub(crate) fn is_trap(instruction: &str) -> bool {
     instruction.starts_with("int3")
 }
 
 /// A no-op compilers emit to align code or data: `nop` in its one-byte and multi-byte forms,
 /// `xchg ax,ax`, a 32-bit `mov` of a register to itself (`mov edi,edi`), and `lea` of a
 /// register to itself plus zero (`lea ecx,[ecx+0x0]`, `lea esp,[esp+0x0]`).
-fn is_filler(instruction: &str) -> bool {
+pub(crate) fn is_filler(instruction: &str) -> bool {
     if instruction == "nop" || instruction.starts_with("nop ") || instruction == "xchg ax,ax" {
         return true;
     }
@@ -255,37 +473,45 @@ pub fn table_ranges(tables: &Tables) -> Vec<(u32, u32)> {
     ranges
 }
 
-fn in_ranges(ranges: &[(u32, u32)], address: u32) -> bool {
+pub(crate) fn in_ranges(ranges: &[(u32, u32)], address: u32) -> bool {
     let i = ranges.partition_point(|r| r.0 <= address);
     i > 0 && address < ranges[i - 1].1
 }
 
 /// Where the instruction at `address` ends: at the next instruction, or at a jump table that
-/// comes first, since the listing leaves a table's bytes out.
-fn end_of(listing: &Listing, ranges: &[(u32, u32)], address: u32) -> Option<u32> {
+/// comes first, since the listing leaves a table's bytes out. The last instruction ends where the
+/// image's section that holds it ends, `section_end`.
+pub(crate) fn end_of(
+    listing: &Listing,
+    ranges: &[(u32, u32)],
+    address: u32,
+    section_end: Option<u32>,
+) -> Option<u32> {
     let next = listing.following(address);
     let i = ranges.partition_point(|r| r.0 <= address);
     match (next, ranges.get(i).map(|r| r.0)) {
         (Some(next), Some(table)) => Some(next.min(table)),
-        (next, table) => next.or(table),
+        (Some(next), None) => Some(next),
+        (None, table) => section_end.filter(|&end| end > address).or(table),
     }
 }
 
 /// Walks bodies over a listing.
-struct Walker<'a> {
-    listing: &'a Listing,
-    image: &'a Image<'a>,
-    starts: HashSet<u32>,
+pub(crate) struct Walker<'a> {
+    pub(crate) listing: &'a Listing,
+    pub(crate) image: &'a Image<'a>,
+    pub(crate) starts: HashSet<u32>,
+    pub(crate) no_return: &'a NoReturn,
 }
 
 impl Walker<'_> {
     /// The instructions reached from `entry`, sorted, and the jump tables they index.
-    fn body(&self, entry: u32) -> (Vec<u32>, Tables) {
+    pub(crate) fn body(&self, entry: u32) -> (Vec<u32>, Tables) {
         self.walk(entry, vec![entry])
     }
 
     /// The instructions reached from `seeds` by the body walk of the function entered at `entry`.
-    fn walk(&self, entry: u32, seeds: Vec<u32>) -> (Vec<u32>, Tables) {
+    pub(crate) fn walk(&self, entry: u32, seeds: Vec<u32>) -> (Vec<u32>, Tables) {
         let (mut reached, mut tables, mut work) = (HashSet::new(), Tables::new(), seeds);
         while let Some(start) = work.pop() {
             let mut address = Some(start);
@@ -298,6 +524,18 @@ impl Walker<'_> {
                 }
                 if instruction.starts_with("ret") || is_trap(instruction) {
                     break;
+                }
+                // A call that never returns ends the path where padding or another function
+                // follows it; code the compiler put after it is still the function's.
+                if self.no_return.ends(instruction) {
+                    let next = self.listing.following(here);
+                    let after = next.and_then(|n| self.listing.get(n)).unwrap_or_default();
+                    if next.is_none_or(|n| self.starts.contains(&n))
+                        || is_trap(after)
+                        || is_filler(after)
+                    {
+                        break;
+                    }
                 }
                 if let Some(found) = DIRECT.captures(instruction) {
                     let Ok(target) = u32::from_str_radix(&found[2], 16) else {
@@ -312,8 +550,17 @@ impl Walker<'_> {
                     }
                     work.push(target);
                 } else if let Some(found) = TABLE.captures(instruction) {
-                    let table = u32::from_str_radix(&found[1], 16).unwrap_or(0);
-                    let entries = self.image.table_entries(entry, table);
+                    let base = u32::from_str_radix(&found[2], 16).unwrap_or(0);
+                    let negated = self
+                        .listing
+                        .preceding(here)
+                        .and_then(|p| self.listing.get(p))
+                        .is_some_and(|p| p == format!("neg {}", &found[1]));
+                    let (table, entries) = if negated {
+                        self.image.negated_table(entry, base)
+                    } else {
+                        self.image.biased_table(entry, base)
+                    };
                     work.extend(&entries);
                     tables.insert(table, entries);
                     break;
@@ -329,12 +576,63 @@ impl Walker<'_> {
     }
 }
 
+/// The exception filters and handlers of the C runtime's frames, each with its scope table. A
+/// frame opens `push 0xffffffff; push <scope table>; push <handler>; mov eax,fs:0x0`; the table's
+/// records are (enclosing level, filter or 0, handler), and both code addresses are the framing
+/// function's own code, entered by the handler through the table and never called.
+pub fn exception_code(listing: &Listing, image: &Image, text: (u32, u32)) -> BTreeMap<u32, u32> {
+    static PUSH: LazyLock<Regex> =
+        LazyLock::new(|| Regex::new(r"^push 0x([0-9a-f]+)$").expect("pattern"));
+    let code = |a: u32| (text.0..text.1).contains(&a);
+    let mut found = BTreeMap::new();
+    for i in 0..listing.len().saturating_sub(3) {
+        if listing.at(i) != "push 0xffffffff" || !listing.at(i + 3).ends_with("fs:0x0") {
+            continue;
+        }
+        let pushed = |k: usize| {
+            PUSH.captures(listing.at(i + k))
+                .and_then(|c| u32::from_str_radix(&c[1], 16).ok())
+        };
+        let (Some(table), Some(handler)) = (pushed(1), pushed(2)) else {
+            continue;
+        };
+        if code(table) || !code(handler) {
+            continue;
+        }
+        for record in 0u32.. {
+            let at = table + 12 * record;
+            let (Some(level), Some(filter), Some(handler)) =
+                (image.dword(at), image.dword(at + 4), image.dword(at + 8))
+            else {
+                break;
+            };
+            if !(level == u32::MAX || level < record)
+                || !(filter == 0 || code(filter))
+                || !code(handler)
+            {
+                break;
+            }
+            if filter != 0 {
+                found.insert(filter, table);
+            }
+            found.insert(handler, table);
+        }
+    }
+    found
+}
+
 /// The jump tables the bodies of the functions entered at `starts` index, walked over `listing`.
-pub fn jump_tables(starts: &[u32], listing: &Listing, image: &Image) -> Tables {
+pub fn jump_tables(
+    starts: &[u32],
+    listing: &Listing,
+    image: &Image,
+    no_return: &NoReturn,
+) -> Tables {
     let walker = Walker {
         listing,
         image,
         starts: starts.iter().copied().collect(),
+        no_return,
     };
     let mut tables = Tables::new();
     for &entry in starts {
@@ -343,6 +641,114 @@ pub fn jump_tables(starts: &[u32], listing: &Listing, image: &Image) -> Tables {
         }
     }
     tables
+}
+
+/// The byte index tables the bodies read: `movzx r,BYTE PTR [i+table]` after `cmp i,bound`
+/// within the twelve instructions before it, with no `call`, `jmp` or `ret` between, gives
+/// `bound + 1` bytes; with no bound, the table runs while its bytes index the jump table the
+/// next instruction reads. Returns the ranges and the reads with no bound.
+pub(crate) fn index_tables(
+    listing: &Listing,
+    image: &Image,
+    entry: u32,
+    reached: &[u32],
+) -> (Vec<(u32, u32)>, Vec<u32>) {
+    let (mut ranges, mut unbounded) = (Vec::new(), Vec::new());
+    for &address in reached {
+        let Some(instruction) = listing.get(address) else {
+            continue;
+        };
+        if !instruction.starts_with("movzx") {
+            continue;
+        }
+        let Some(found) = BYTE_TABLE.captures(instruction) else {
+            continue;
+        };
+        let Ok(table) = u32::from_str_radix(&found[2], 16) else {
+            continue;
+        };
+        // An index table sits in the code, after its function's jump table.
+        let (Some(&first), Some(&last)) = (listing.addresses.first(), listing.addresses.last())
+        else {
+            continue;
+        };
+        if !(first..=last).contains(&table) {
+            continue;
+        }
+        let register = &found[1];
+        let mut back = Some(address);
+        let mut bound = None;
+        for _ in 0..12 {
+            back = back.and_then(|b| listing.preceding(b));
+            let Some(b) = back else { break };
+            let text = listing.get(b).unwrap_or_default();
+            if let Some(cmp) = BOUND.captures(text) {
+                if &cmp[1] == register {
+                    bound = u32::from_str_radix(&cmp[2], 16).ok();
+                    break;
+                }
+            }
+            if text.starts_with("ret") || text.starts_with("jmp") || text.starts_with("call") {
+                break;
+            }
+        }
+        // With no bound, the table runs while its bytes index the jump table that follows.
+        let bound = bound.or_else(|| {
+            let next = listing.following(address)?;
+            let jump = TABLE.captures(listing.get(next)?)?;
+            let entries = image.table_entries(entry, u32::from_str_radix(&jump[2], 16).ok()?);
+            let mut n = 0;
+            while n < 256
+                && image
+                    .byte(table + n)
+                    .is_some_and(|b| (b as usize) < entries.len())
+            {
+                n += 1;
+            }
+            unbounded.push(address);
+            n.checked_sub(1)
+        });
+        if let Some(bound) = bound {
+            ranges.push((table, table + bound + 1));
+        }
+    }
+    (ranges, unbounded)
+}
+
+/// Sorted ranges, overlaps joined.
+pub(crate) fn join(mut ranges: Vec<(u32, u32)>) -> Vec<(u32, u32)> {
+    ranges.sort_unstable();
+    let mut out: Vec<(u32, u32)> = Vec::new();
+    for (start, end) in ranges {
+        match out.last_mut() {
+            Some(last) if start <= last.1 => last.1 = last.1.max(end),
+            _ => out.push((start, end)),
+        }
+    }
+    out
+}
+
+/// The byte index tables the bodies of the functions entered at `starts` read, as joined ranges.
+pub fn all_index_tables(
+    starts: &[u32],
+    listing: &Listing,
+    image: &Image,
+    no_return: &NoReturn,
+) -> Vec<(u32, u32)> {
+    let walker = Walker {
+        listing,
+        image,
+        starts: starts.iter().copied().collect(),
+        no_return,
+    };
+    let mut ranges = Vec::new();
+    for &entry in starts {
+        if listing.contains(entry) {
+            let (reached, _) = walker.body(entry);
+            ranges.extend(index_tables(listing, image, entry, &reached).0);
+        }
+    }
+    join(ranges)
 }
 
 /// A function row: its place in the table, its address and its size.
@@ -358,16 +764,9 @@ struct Context<'a> {
     jcc_targets: HashSet<u32>,
     /// Every address a direct branch or a jump table reaches.
     branch_targets: HashSet<u32>,
-    /// Jump and index tables inside the listing's range, sorted.
-    data: Vec<u32>,
 }
 
 impl Context<'_> {
-    fn after_table(&self, address: u32, entry: u32) -> bool {
-        let i = self.data.partition_point(|&d| d <= address);
-        i > 0 && entry.wrapping_sub(self.data[i - 1]) < TABLE_REACH
-    }
-
     /// Padding: an `int3`, or a no-op filler nothing branches to.
     fn padding(&self, address: u32) -> bool {
         let instruction = self.listing.get(address).unwrap_or_default();
@@ -383,10 +782,13 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
             message: "holds no instruction".to_string(),
         }];
     };
+    let addresses: Vec<u32> = rows.iter().map(|r| r.address).collect();
+    let no_return = no_return(&addresses, listing, image);
     let walker = Walker {
         listing,
         image,
-        starts: rows.iter().map(|r| r.address).collect(),
+        starts: addresses.iter().copied().collect(),
+        no_return: &no_return,
     };
     let bodies: Vec<Option<(Vec<u32>, Tables)>> = rows
         .iter()
@@ -401,10 +803,15 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
         merge_tables(&mut tables, found.clone());
     }
     // A table's bytes are data: an instruction the listing decodes from them is no evidence.
-    let ranges = table_ranges(&tables);
+    let mut ranges = table_ranges(&tables);
+    for (body, row) in bodies.iter().zip(rows) {
+        if let Some((reached, _)) = body {
+            ranges.extend(index_tables(listing, image, row.address, reached).0);
+        }
+    }
+    let ranges = join(ranges);
     let mut jcc_targets = HashSet::new();
     let mut branch_targets: HashSet<u32> = tables.values().flatten().copied().collect();
-    let mut data = HashSet::new();
     for i in 0..listing.len() {
         if in_ranges(&ranges, listing.addresses[i]) {
             continue;
@@ -420,18 +827,7 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
                 }
             }
         }
-        if instruction.contains("PTR [e") {
-            for found in TABLE_READ.captures_iter(instruction) {
-                if let Ok(table) = u32::from_str_radix(&found[1], 16) {
-                    if first <= table && table <= last {
-                        data.insert(table);
-                    }
-                }
-            }
-        }
     }
-    let mut data: Vec<u32> = data.into_iter().collect();
-    data.sort_unstable();
     // The code addresses stored as data or as an immediate operand: exception filters, handlers,
     // catch funclets and the continuations they return.
     let mut stored = image.stored_addresses(first, first, last);
@@ -448,9 +844,76 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
         listing,
         jcc_targets,
         branch_targets,
-        data,
     };
 
+    // Code in a row's extent reached only through a stored address is the function's own
+    // exception code; an address that has a row is another function's entry.
+    let exceptions: Vec<Vec<u32>> = rows
+        .iter()
+        .zip(&bodies)
+        .map(|(row, body)| {
+            let Some((reached, _)) = body else {
+                return Vec::new();
+            };
+            let end = u64::from(row.address) + u64::from(row.size);
+            let seeds: Vec<u32> = stored[stored.partition_point(|&a| a <= row.address)..]
+                .iter()
+                .copied()
+                .take_while(|&a| u64::from(a) < end)
+                .filter(|a| reached.binary_search(a).is_err() && !walker.starts.contains(a))
+                .collect();
+            walker.walk(row.address, seeds).0
+        })
+        .collect();
+    // The code some row's body or exception code reaches, and what the C runtime's scope tables
+    // enter.
+    let text = (first, image.section_end(first).unwrap_or(last + 1));
+    let handlers: Vec<u32> = exception_code(listing, image, text).into_keys().collect();
+    let covered: HashSet<u32> = bodies
+        .iter()
+        .flatten()
+        .flat_map(|(reached, _)| reached.iter().copied())
+        .chain(exceptions.iter().flatten().copied())
+        .chain(handlers.iter().flat_map(|&h| walker.walk(h, vec![h]).0))
+        .collect();
+    // Why each row's address is no entry: code above falls through into it, or a conditional
+    // jump lands on it.
+    let not_entry: Vec<Vec<String>> = rows
+        .iter()
+        .map(|row| {
+            let entry = row.address;
+            let mut why = Vec::new();
+            let mut before = listing.preceding(entry);
+            while let Some(b) = before.filter(|&b| context.padding(b)) {
+                before = listing.preceding(b);
+            }
+            if let Some(b) = before {
+                let instruction = listing.get(b).unwrap_or_default();
+                let ends = ["ret", "jmp", "int3"]
+                    .iter()
+                    .any(|e| instruction.starts_with(e))
+                    || no_return.ends(instruction);
+                // Bytes no body reaches are no code that falls through: data before the entry,
+                // such as a table the listing decodes.
+                if !ends && covered.contains(&b) && !in_ranges(&ranges, b) {
+                    why.push(format!(
+                        "reached by fall-through from {b:#x}, so code of the function above"
+                    ));
+                }
+            }
+            if context.jcc_targets.contains(&entry) {
+                why.push("a conditional jump lands on it".to_string());
+            }
+            why
+        })
+        .collect();
+    // The entries a body may not hold: rows that are entries by the test above.
+    let entries: HashSet<u32> = rows
+        .iter()
+        .zip(&not_entry)
+        .filter(|(_, why)| why.is_empty())
+        .map(|(row, _)| row.address)
+        .collect();
     let mut problems = Vec::new();
     let mut add = |row: &Function, message: String| {
         problems.push(Problem {
@@ -458,55 +921,42 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
             message,
         })
     };
-    for (row, body) in rows.iter().zip(&bodies) {
+    for (i, (row, body)) in rows.iter().zip(&bodies).enumerate() {
         let (entry, size) = (row.address, row.size);
         let Some((reached, tables)) = body else {
             add(row, "not an instruction start in the listing".to_string());
             continue;
         };
-        let mut before = listing.preceding(entry);
-        while let Some(b) = before.filter(|&b| context.padding(b)) {
-            before = listing.preceding(b);
-        }
-        if let Some(b) = before {
-            let instruction = listing.get(b).unwrap_or_default();
-            let ends = ["ret", "jmp", "int3"]
-                .iter()
-                .any(|e| instruction.starts_with(e));
-            if !ends && !context.after_table(b, entry) {
-                add(
-                    row,
-                    format!("reached by fall-through from {b:#x}, so code of the function above"),
-                );
-            }
-        }
-        if context.jcc_targets.contains(&entry) {
-            add(row, "a conditional jump lands on it".to_string());
+        for why in &not_entry[i] {
+            add(row, why.clone());
         }
         let last_reached = reached.last().copied().unwrap_or(entry);
-        match end_of(listing, &ranges, last_reached) {
+        match end_of(
+            listing,
+            &ranges,
+            last_reached,
+            image.section_end(last_reached),
+        ) {
             Some(end) if end - entry != size => {
                 add(row, format!("size {size}, body {}", end - entry));
             }
             Some(_) => {}
             None => add(row, "the body runs to the end of the listing".to_string()),
         }
-        // Code in the extent reached only through a stored address is the function's own
-        // exception code; an address that has a row is another function's entry.
-        let end = u64::from(entry) + u64::from(size);
-        let seeds: Vec<u32> = stored[stored.partition_point(|&a| a <= entry)..]
-            .iter()
-            .copied()
-            .take_while(|&a| u64::from(a) < end)
-            .filter(|a| reached.binary_search(a).is_err() && !walker.starts.contains(a))
-            .collect();
-        let (exception, _) = walker.walk(entry, seeds);
+        let exception = &exceptions[i];
         let own_tables = table_ranges(tables);
         let low = listing.addresses.partition_point(|&a| a < entry);
         let high = listing
             .addresses
             .partition_point(|&a| u64::from(a) < u64::from(entry) + u64::from(size));
         for &address in &listing.addresses[low..high] {
+            if address != entry && entries.contains(&address) {
+                add(
+                    row,
+                    format!("{address:#x}, another row's entry, lies inside the extent"),
+                );
+                break;
+            }
             if reached.binary_search(&address).is_ok()
                 || exception.binary_search(&address).is_ok()
                 || context.padding(address)
@@ -716,10 +1166,23 @@ WoW.exe:     file format pei-i386
             ),
             ["0x402000: 0x40200b lies inside the extent but outside the body"]
         );
+        // An instruction that is no filler and that no body reaches is data before the entry,
+        // not code falling through into it.
         let not_filler = FILLERS.replace("lea    esi,[esi+eiz*1+0x0]", "lea    esi,[edi+0x0]");
         assert_eq!(
             problems_in(&format!("{not_filler}{next}"), &rows),
-            ["0x402020: reached by fall-through from 0x402018, so code of the function above"]
+            Vec::<String>::new()
+        );
+        let reached = not_filler.replace("je     0x402010", "je     0x402018");
+        assert_eq!(
+            problems_in(
+                &format!("{reached}{next}"),
+                &[(0x402000, 32), (0x402020, 1)]
+            ),
+            [
+                "0x402000: 0x402010 lies inside the extent but outside the body",
+                "0x402020: reached by fall-through from 0x402018, so code of the function above"
+            ]
         );
         assert!(!is_filler("mov edi,esi"));
         assert!(!is_filler("lea ecx,[ecx+0x4]"));
@@ -807,7 +1270,7 @@ WoW.exe:     file format pei-i386
         // A stored address that has a row is another function's entry, not exception code.
         assert_eq!(
             problems_storing(&handlers, EXCEPTION, &[(0x403000, 20), (0x403003, 9)]),
-            ["0x403000: 0x403003 lies inside the extent but outside the body"]
+            ["0x403000: 0x403003, another row's entry, lies inside the extent"]
         );
     }
 

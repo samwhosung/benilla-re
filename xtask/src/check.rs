@@ -15,7 +15,7 @@ macro_rules! pattern {
     };
 }
 
-const LIBRARIES: [&str; 5] = ["crt", "storm", "lua", "zlib", "d3dx"];
+pub(crate) const LIBRARIES: [&str; 5] = ["crt", "storm", "lua", "zlib", "d3dx"];
 /// The section of `symbols/README.md` that names the systems whose doc is not written yet.
 const UNWRITTEN: &str = "## Systems without a doc";
 const CLASSES: [&str; 5] = [
@@ -955,6 +955,17 @@ fn check_name(row: &Row, rule: impl Fn(&str) -> bool, what: &str, p: &mut Proble
             format!("name '{name}' breaks the naming rule for {what}"),
         );
     }
+}
+
+/// Whether a function name passes the naming rule the check holds a row to: at most `NAME`
+/// characters, an identifier for library code or a community name, else a method or free name.
+pub(crate) fn valid_function_name(name: &str, library: bool) -> bool {
+    name.chars().count() <= NAME
+        && if library {
+            LIBRARY_NAME.is_match(name)
+        } else {
+            method_name(name) || FREE_NAME.is_match(name)
+        }
 }
 
 /// A method name: `Class::Method`, where only the class carries a `_X` suffix, or a constructor

@@ -3,8 +3,9 @@
 # (ignored by git).
 # Findings cite instruction addresses of this file: GNU objdump, Intel syntax, address and
 # instruction, no raw bytes. It follows the real instruction stream: objdump's sweep restarts at
-# every function row of symbols/functions.tsv and at every jump-table entry, and the jump tables'
-# bytes are left out (`cargo xtask listing`, xtask/src/listing.rs).
+# every function row of symbols/functions.tsv, at every call target and jump-table entry and after
+# every jump and byte index table, and the tables' bytes are left out (`cargo xtask listing`,
+# xtask/src/listing.rs).
 # Usage: tools/disasm.sh   (OBJDUMP=<path> to choose the binary)
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/check-exe.sh"

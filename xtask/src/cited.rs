@@ -186,7 +186,8 @@ fn char_literal_end(b: &[u8], i: usize) -> Option<usize> {
 }
 
 /// Prints the report for the benilla checkout at `benilla`.
-pub fn run(checked: &Checked, benilla: &Path) -> io::Result<()> {
+/// Prints the report and returns the addresses with neither a row nor a doc mention.
+pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
     let mut mentioned = HashSet::new();
     for text in checked
         .docs
@@ -231,6 +232,7 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<()> {
     }
 
     let (mut rows, mut docs_only, mut neither) = (0, 0, 0);
+    let mut missing = Vec::new();
     for (&address, (count, first)) in &cited {
         if checked.extents.contains(address) {
             rows += 1;
@@ -238,6 +240,7 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<()> {
             docs_only += 1;
         } else {
             neither += 1;
+            missing.push(address);
             println!("{address:#08x}  {count:>5}  {first}");
         }
     }
@@ -250,7 +253,7 @@ pub fn run(checked: &Checked, benilla: &Path) -> io::Result<()> {
         "dropped as not addresses: {} outside the image, {} in uppercase hex, {} in code",
         dropped.outside, dropped.uppercase, dropped.code
     );
-    Ok(())
+    Ok(missing)
 }
 
 #[cfg(test)]

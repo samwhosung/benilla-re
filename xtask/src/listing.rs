@@ -4,8 +4,9 @@
 //! A linear sweep of `.text` decodes the data inside code (a switch's jump table, say) as
 //! instructions, and can stay out of step with the real instruction stream after it, hiding the
 //! next function's entry inside a false instruction. So the decode restarts at every address the
-//! code is known to start at: every function row, every jump-table entry, and the end of every
-//! jump table, the tables being those the bodies index (`bodies::jump_tables`). A jump table's
+//! code is known to start at: every function row and `call` target, every jump-table entry, and
+//! the end of every jump table and byte index table, the tables being those the bodies of the rows
+//! and the `call` targets index (`bodies::jump_tables`, `bodies::all_index_tables`). A table's
 //! bytes are left out. The listing is GNU objdump's decode of each stretch between two such
 //! points, `--start-address` to `--stop-address`, in address order, under the sweep's header:
 //! where the sweep is already in step it is that stretch's decode, and objdump runs afresh only
@@ -168,9 +169,14 @@ pub fn build(
         .ok_or_else(|| io::Error::other("objdump printed no instruction"))?;
     let mut cache: HashMap<Stretch, Vec<Line>> = HashMap::new();
     let mut tables = Tables::new();
+    let mut index: Vec<(u32, u32)> = Vec::new();
+    // A `call` target is a function start whether or not a row holds it.
+    let mut entries: Vec<u32> = starts.to_vec();
     for _ in 0..ROUNDS {
-        let skipped = bodies::table_ranges(&tables);
-        let restarts = starts
+        let mut skipped = bodies::table_ranges(&tables);
+        skipped.extend(index.iter().copied());
+        let skipped = bodies::join(skipped);
+        let restarts = entries
             .iter()
             .copied()
             .chain(tables.values().flatten().copied());
@@ -189,12 +195,34 @@ pub fn build(
             |address| image.byte(address) == Some(0),
         )?;
         let listing = listing_of(&lines)?;
+        let mut called: Vec<u32> = starts.to_vec();
+        called.extend(
+            lines
+                .iter()
+                .filter_map(|l| l.text.split_once("call").map(|(_, rest)| rest.trim()))
+                .filter_map(|t| t.strip_prefix("0x"))
+                .filter_map(|t| u32::from_str_radix(t, 16).ok())
+                .filter(|&t| listing.contains(t)),
+        );
+        called.sort_unstable();
+        called.dedup();
         let mut grown = tables.clone();
-        bodies::merge_tables(&mut grown, bodies::jump_tables(starts, &listing, image));
-        if grown == tables {
+        let no_return = bodies::no_return(&called, &listing, image);
+        bodies::merge_tables(
+            &mut grown,
+            bodies::jump_tables(&called, &listing, image, &no_return),
+        );
+        let mut more = index.clone();
+        more.extend(bodies::all_index_tables(
+            &called, &listing, image, &no_return,
+        ));
+        let more = bodies::join(more);
+        if grown == tables && more == index && called == entries {
             return Ok((header, lines, tables, cache.len()));
         }
         tables = grown;
+        index = more;
+        entries = called;
     }
     Err(io::Error::other(format!(
         "the jump tables still grow after {ROUNDS} rounds"
