@@ -4907,8 +4907,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fa530	12	InitUnitRegisterExit8		objectlayer	orchestration	void __cdecl (void)	Registers 0x5fa540 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5fa540	1	InitUnitEmpty6		objectlayer	orchestration	void __cdecl (void)	Returns at once; the exit callback of an initializer with nothing to release	verified	one	objectlayer/initializers#exit-callbacks	
 0x5fa550	153	IsUnitPlayerDriven		objectlayer	primitive	uint8_t __thiscall (void *unit)	Returns 1 for a player type with no GUID at +0x10 and flag 1 clear, or through the unit its GUID names under 0x1000000	verified	one	collision/contact#collision-class-mask	
-0x5fa5f0	13			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x5fa600	193			objectlayer	primitive		Runs Unit_C.cpp code that calls GetActiveCamera, SetPlayerControl, IsActivePlayerUnit; not read here	inferred	none		
+0x5fa5f0	13	CGUnit_C::IsClientControlled		objectlayer	primitive		Returns bit 0x400 of the state word +0xc58, the client-control flag	verified	one	objectlayer/unitmovement#the-active-mover	
+0x5fa600	193	CGUnit_C::SetClientControl		objectlayer	primitive		Sets or clears bit 0x400 of +0xc58, re-picks the camera's mover and tells the interface for the active player	verified	one	objectlayer/unitmovement#the-active-mover	
 0x5fa6d0	36	IsActivePlayerUnit		objectlayer	orchestration	uint32_t __fastcall (void *unit)	Returns 1 when a unit's GUID is the active player's, else 0	verified	one	spell/failures#spell-failure-packets	
 0x5fa700	8			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x5fa710	18			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
@@ -5004,58 +5004,58 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6005d0	111			objectlayer	orchestration		Runs Unit_C.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x600640	51			objectlayer	orchestration		Runs Unit_C.cpp code that calls ModelPlayAnimation; not read here	inferred	none		
 0x600680	37			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x6006b0	45			objectlayer	orchestration		Runs Unit_C.cpp code that calls UnitPrecastEndB; not read here	inferred	none		
-0x6006e0	375			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, GetInputControl; not read here	inferred	none		
-0x600860	331			objectlayer	primitive		Runs Unit_C.cpp code that calls SplatVector3, CMovementStatus::Write, InitMovementStatus; not read here	inferred	none		
-0x6009b0	81			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x600a10	32			objectlayer	orchestration		Runs Unit_C.cpp code that calls SendMovementPacket, GetMovementStepTime; not read here	inferred	none		
+0x6006b0	45	CGUnit_C::ReleaseActiveMover		objectlayer	orchestration		Stops the unit's auto-move and clears the active mover GUID 0xc4da98	verified	one	objectlayer/unitmovement#the-active-mover	
+0x6006e0	375	SetActiveMover		objectlayer	primitive		Switches the active mover 0xc4da98: resets the old one, sends 0x2d1 or 0x26a, resets the new one	verified	one	objectlayer/unitmovement#the-active-mover	
+0x600860	331	CGUnit_C::WriteMovementPacket		objectlayer	primitive		Writes a movement message: opcode, GUID for relayed ones, a u32, the status and a float; falling sets bit 0x80	verified	one	objectlayer/unitmovement#movement-packets	
+0x6009b0	81	IsMoveOpcodeWithFloat		objectlayer	primitive		Returns 1 for the nine movement opcodes that carry a trailing float, 0xe3 to 0x2df	verified	one	objectlayer/unitmovement#movement-packets	
+0x600a10	32	CGUnit_C::SendMovementPacketNow		objectlayer	orchestration		Sends a movement opcode through 0x600a30 with the mover's step time	verified	one	objectlayer/unitmovement#movement-packets	
 0x600a30	219	SendMovementPacket		objectlayer	orchestration		Builds a movement packet for an opcode and sends it	inferred	none	collision/events#movement-key-tags	
 0x600b10	203	SendSplineDone		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t time, uint32_t splineId, float fraction)	Builds opcode 0x2c9 with a spline id and a float and sends it	inferred	none	collision/status#spline-completion	
 0x600be0	197	SendMoveTimeSkipped		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t skipped)	Sends opcode 0x2ce with the GUID and skipped for the active mover off a live spline and returns 1, else 0	verified	one	collision/mover#heartbeat-and-skipped-time	
-0x600cb0	19			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::TransportFacingToWorld; not read here	inferred	none		
-0x600cd0	841			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer; not read here	inferred	none		
-0x601020	45			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x601050	125			objectlayer	primitive	void __thiscall (void *unit, float angle)	Takes the facing change of a transport switch; not read here	inferred	none	collision/mover#transport-change	
+0x600cb0	19	CGUnit_C::GetWorldDisplayFacing		objectlayer	orchestration		Returns the display facing +0xc98 converted to the world through the transport	verified	one	objectlayer/unitmovement#facing	
+0x600cd0	841	CGUnit_C::UpdateDisplayFacing		objectlayer	primitive		Steers the display facing +0xc98: the mover's own, else toward the move or the target, a four-sample average	verified	one	objectlayer/unitmovement#facing	
+0x601020	45	CGUnit_C::ResetDisplayFacing		objectlayer	primitive		Sets the display facing +0xc98 from the mover and zeroes the samples +0xc9c to +0xca8	verified	one	objectlayer/unitmovement#facing	
+0x601050	125	CGUnit_C::RotateFacings		objectlayer	primitive	void __thiscall (void *unit, float angle)	Adds a transport's turn to the facings +0xc98 and +0xc94, wrapping each once into 0 to 2π	verified	one	objectlayer/unitmovement#facing	
 0x6010d0	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x6010e0	538	DispatchMoveSpeedOpcode		objectlayer	primitive		Sends opcodes 0xcd to 0xd8 to the own-relay or relay speed handler by the sender GUID	inferred	none	collision/handlers#speed-changes	
 0x601360	168	DispatchSplineSpeedOpcode		objectlayer	orchestration		Sends opcodes 0x2fe to 0x303 to the spline speed setters	inferred	none	collision/handlers#speed-changes	
-0x601420	240			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::SetRunModeDirect, CMovement::ApplySplineRoot, CMovement::Unroot; not read	inferred	none		
-0x601560	27			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::SkipStatusTime; not read here	inferred	none		
+0x601420	240	DispatchSplineMoveOpcode		objectlayer	orchestration		Runs the mover toggle for spline opcodes 0x304 to 0x31a through 0x601544, then re-picks the animation; 0 for others	verified	one	objectlayer/unitmovement#spline-toggles	
+0x601560	27	CGUnit_C::OnMoveTimeSkipped		objectlayer	orchestration		Passes a skipped time to the mover's 0x61ab90 and returns 1	verified	one	objectlayer/unitmovement#movement-message-handlers	
 0x601580	705	CGUnit_C::OnMoveEvent	idb	objectlayer	primitive		Sends a relayed movement opcode to its handler with the async clock and the parsed status	inferred	none	collision/handlers#facing-and-pitch	
-0x6018f0	2083			objectlayer	primitive		Runs Unit_C.cpp code that calls __alloca_probe, OsGetAsyncTimeMs, HeadingBetweenPoints; not read here	inferred	none		
-0x602130	140			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x6021c0	1124			objectlayer	primitive		Runs Unit_C.cpp code that calls SetVector3, DotVector3; not read here	inferred	none		
+0x6018f0	2083	CGUnit_C::OnMonsterMove		objectlayer	primitive		Reads a monster move: start, spline id, facing kind, flags, duration and points, and starts the path on the mover	verified	one	objectlayer/unitmovement#monster-moves	
+0x602130	140	UnpackSplineOffset		objectlayer	primitive		Subtracts a packed offset, three signed 11, 11 and 10-bit fields times 0.25, from a reference point	verified	one	objectlayer/unitmovement#monster-moves	
+0x6021c0	1124	AnchorSplinePath		objectlayer	primitive		Anchors a monster path at a position: empties a lone point within 1/36 yard, else prepends it or cuts passed points	inferred	none	objectlayer/unitmovement#monster-moves	
 0x602630	21	DotVector3		objectlayer	primitive	float __fastcall (const float *a, const float *b)	Returns (a.z·b.z + a.y·b.y) + a.x·b.x, unrounded	verified	one	collision/airborne#triangle-class-tests	
 0x602650	22			objectlayer	unreached		Passes its argument to 0x6188c0 on the unit's movement at +0x9a8; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
-0x602670	119			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueKnockBack; not read here	inferred	none		
-0x6026f0	110			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::ApplyKnockBack; not read here	inferred	none		
-0x602760	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnHover; not read here	inferred	none		
+0x602670	119	CGUnit_C::QueueKnockBack		objectlayer	orchestration		Reads a knockback's direction and two speeds and queues it on the mover through 0x617a30	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x6026f0	110	CGUnit_C::OnKnockBack	idb	objectlayer	orchestration		Reads a knockback's direction and two speeds and applies it on the mover through 0x617a60	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602760	26	CGUnit_C::OnHover		objectlayer	orchestration		Applies a relayed hover change on the mover through 0x61a6b0	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602780	682	DispatchForcedMoveOpcode		objectlayer	primitive		Sends the forced speed, root, water walk, feather fall and hover opcodes to their queue handlers	inferred	none	collision/handlers#speed-changes	
-0x602a80	30			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyMoveStart; not read here	inferred	none		
-0x602aa0	30			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyStrafeStart; not read here	inferred	none		
-0x602ac0	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyMoveStop; not read here	inferred	none		
-0x602ae0	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyStrafeStop; not read here	inferred	none		
-0x602b00	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyJump; not read here	inferred	none		
-0x602b20	54			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyTurnStart; not read here	inferred	none		
-0x602b60	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyTurnStop; not read here	inferred	none		
-0x602b80	54			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnStartPitch; not read here	inferred	none		
-0x602bc0	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnStopPitch; not read here	inferred	none		
-0x602be0	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnStartSwim; not read here	inferred	none		
-0x602c00	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnStopSwim; not read here	inferred	none		
-0x602c20	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnHeartbeat; not read here	inferred	none		
+0x602a80	30	CGUnit_C::OnMoveStart	idb	objectlayer	orchestration		Applies a relayed move start on the mover through 0x617520	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602aa0	30	CGUnit_C::OnStrafeStart	idb	objectlayer	orchestration		Applies a relayed strafe start on the mover through 0x6178e0	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602ac0	26	CGUnit_C::OnMoveStop	idb	objectlayer	orchestration		Applies a relayed move stop on the mover through 0x617b60	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602ae0	26	CGUnit_C::OnStrafeStop	idb	objectlayer	orchestration		Applies a relayed strafe stop on the mover through 0x617c10	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602b00	26	CGUnit_C::OnJump	idb	objectlayer	orchestration		Applies a relayed jump on the mover through 0x617970	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602b20	54	CGUnit_C::OnTurnStart	idb	objectlayer	orchestration		Applies a relayed turn start through 0x617cf0, refusing with 0 while the unit is stunned	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602b60	26	CGUnit_C::OnTurnStop	idb	objectlayer	orchestration		Applies a relayed turn stop on the mover through 0x617d80	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602b80	54	CGUnit_C::OnPitchStart	idb	objectlayer	orchestration		Applies a relayed pitch start through 0x61a290, refusing with 0 while the unit is stunned	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602bc0	26	CGUnit_C::OnPitchStop	idb	objectlayer	orchestration		Applies a relayed pitch stop on the mover through 0x61a320	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602be0	26	CGUnit_C::OnSwimStart	idb	objectlayer	orchestration		Applies a relayed swim start on the mover through 0x61a190	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602c00	26	CGUnit_C::OnSwimStop	idb	objectlayer	orchestration		Applies a relayed swim stop on the mover through 0x61a1f0	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602c20	26	CGUnit_C::OnMoveHeartBeat	idb	objectlayer	orchestration		Applies a relayed heartbeat on the mover through 0x61a750	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602c40	32			objectlayer	orchestration	void __thiscall (void *unit)	Passes 40 to a unit call when bit 0x4000 of +0x9e8 is set and a positive count is in its fields	inferred	none	collision/replay#replay-cases-0-to-19	
-0x602c60	104			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x602c60	104	CGUnit_C::UpdateLandingAnimation		objectlayer	primitive		Picks a landing's animation: re-picks the base, or plays 39 (JumpEnd) or 187 (JumpLandRun) by direction	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602cd0	41	SendOpcode2ca		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t time)	Sends opcode 0x2ca through 0x600a30 when byte +0xc58 has bit 7, else returns 0	inferred	none	collision/handlers#opcode-0x2ca-report	
 0x602d00	299			objectlayer	primitive		Handles a landing: reads the fall height from 0x7c60c0 and tests it against thresholds	inferred	none	collision/falling#fall-height-from-the-apex	
-0x602e30	30			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyRunMode; not read here	inferred	none		
+0x602e30	30	CGUnit_C::OnSetRunMode	idb	objectlayer	orchestration		Applies a relayed run or walk mode on the mover through 0x617e30	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602e50	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x602e60	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnSetGravity; not read here	inferred	none		
-0x602e80	103			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, HeadingBetweenPoints, CMovement::SetFacingNow; not read here	inferred	none		
-0x602ef0	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnSetFacing; not read here	inferred	none		
-0x602f10	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::OnSetPitch; not read here	inferred	none		
+0x602e60	26	CGUnit_C::OnToggleGravityCheat	idb	objectlayer	orchestration		Applies a relayed gravity toggle on the mover through 0x619c50	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602e80	103	CGUnit_C::FaceObject		objectlayer	orchestration		Sets the mover's facing toward the object a GUID names through 0x47f220 and 0x6198e0	verified	one	objectlayer/unitmovement#monster-moves	
+0x602ef0	26	CGUnit_C::OnSetFacing	idb	objectlayer	orchestration		Applies a relayed facing on the mover through 0x619910	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602f10	26	CGUnit_C::OnSetPitch	idb	objectlayer	orchestration		Applies a relayed pitch on the mover through 0x619960	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602f30	93			objectlayer	unreached		Flushes the unit's queue and places it through 0x618680; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
-0x602f90	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::ApplyTeleport; not read here	inferred	none		
-0x602fb0	268			objectlayer	orchestration		Runs Unit_C.cpp code that calls SplatVector3, ClntObjMgrGetC8, CMovementStatus::Read; not read here	inferred	none		
+0x602f90	26	CGUnit_C::OnTeleport	idb	objectlayer	orchestration		Applies a relayed teleport on the mover through 0x6186b0	verified	one	objectlayer/unitmovement#relayed-move-events	
+0x602fb0	268	CGUnit_C::OnForcedTeleport		objectlayer	orchestration		Reads a movement status: queues a teleport on the mover, or with the manager's +0xc8 set answers with opcode 0xc7	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x6030c0	321			objectlayer	primitive		Decides the swim start and stop from the liquid depth; skips the start while 0x7c5de0 returns 1	inferred	none	collision/falling#apex-time-and-rising-test	
 0x603210	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x603220	39			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
@@ -5064,17 +5064,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6033c0	1595			objectlayer	primitive		Registers or clears the handlers for 81 opcodes from 0xb5 to 0x325; not read further here	inferred	none		
 0x603a00	94			objectlayer	primitive		Runs Unit_C.cpp code that calls CreateModelFromPath, HandleClose2; not read here	inferred	none		
 0x603a60	119			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x603ae0	92			objectlayer	orchestration		Handles 6 server opcodes from 0xcd to 0xd8, as its registration names; its body is not read here	inferred	none		
-0x603b40	108			objectlayer	orchestration		Handles server opcode 0x319, as its registration names; its body is not read here	inferred	none		
-0x603bb0	92			objectlayer	orchestration		Handles 30 server opcodes from 0xb5 to 0x2b1, as its registration names; its body is not read here	inferred	none		
-0x603c10	102			objectlayer	orchestration		Handles 6 server opcodes from 0x2fe to 0x303, as its registration names; its body is not read here	inferred	none		
-0x603c80	87			objectlayer	orchestration		Handles 12 server opcodes from 0x304 to 0x31a, as its registration names; its body is not read here	inferred	none		
-0x603ce0	288			objectlayer	primitive		Handles server opcode 0x2fb, as its registration names; its body is not read here	inferred	none		
+0x603ae0	92	HandleMovementSetSpeedPacket	idb	objectlayer	orchestration		Handles opcodes 0xcd to 0xd8: finds the unit by packed GUID, passes time, opcode and store to 0x6010e0	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603b40	108	HandleMovementTimeSkippedPacket	idb	objectlayer	orchestration		Handles opcode 0x319: reads a packed GUID and a u32 and passes the u32 to 0x601560	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603bb0	92	OnUnitMoveEvent	idb	objectlayer	orchestration		Handles the 30 relayed move opcodes: finds the unit by packed GUID, passes time, opcode and store to 0x601580	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603c10	102	HandleSplineSetSpeedPacket	idb	objectlayer	orchestration		Handles opcodes 0x2fe to 0x303: reads a packed GUID and a speed, passes opcode and speed to 0x601360	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603c80	87	HandleSplineMovementPacket	idb	objectlayer	orchestration		Handles opcodes 0x304 to 0x31a: finds the unit by packed GUID and passes the opcode to 0x601420	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603ce0	288	HandleCompressedMovesPacket	idb	objectlayer	primitive		Handles 0x2fb: inflates the body into a stack buffer of its unchecked declared size, dispatches each u8-length message	verified	one	objectlayer/unitmovement#compressed-moves	
 0x603e00	74			objectlayer	primitive		Handles server opcode 0x261, as its registration names; its body is not read here	inferred	none		
 0x603e50	74			objectlayer	orchestration		Handles server opcode 0x29d, as its registration names; its body is not read here	inferred	none		
-0x603ea0	91			objectlayer	orchestration		Handles server opcode 0x159, as its registration names; its body is not read here	inferred	none		
-0x603f00	141			objectlayer	orchestration		Handles server opcodes 0xdd, 0x2ae, as its registration names; its body is not read here	inferred	none		
-0x603f90	89			objectlayer	orchestration		Handles 16 server opcodes from 0xc7 to 0x2de, as its registration names; its body is not read here	inferred	none		
+0x603ea0	91	HandleClientControlUpdatePacket	idb	objectlayer	orchestration		Handles opcode 0x159: reads a packed GUID and a byte and sets the unit's client control through 0x5fa600	verified	one	objectlayer/unitmovement#the-active-mover	
+0x603f00	141	OnMonsterMoveEvent	idb	objectlayer	orchestration		Handles 0xdd and 0x2ae: sets the transport, 0x2ae's second GUID or 0, then reads the move through 0x6018f0	verified	one	objectlayer/unitmovement#movement-message-handlers	
+0x603f90	89	OnForceMoveChange	idb	objectlayer	orchestration		Handles the 16 forced-change opcodes through 0x602780 by packed GUID; returns 1 even for an unknown unit	verified	one	objectlayer/unitmovement#movement-message-handlers	
 0x603ff0	102			objectlayer	orchestration		Handles server opcode 0x172, as its registration names; its body is not read here	inferred	none		
 0x604060	87			objectlayer	orchestration		Handles server opcode 0x13c, as its registration names; its body is not read here	inferred	none		
 0x6040c0	115			objectlayer	orchestration		Handles server opcode 0x324, as its registration names; its body is not read here	inferred	none		
@@ -5184,10 +5184,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x607ce0	181			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetActiveCamera, ModelPlayAnimation; not read here	inferred	none		
 0x607da0	256			objectlayer	orchestration		Fills slot 16 of the unit vtable; its body is not read here	inferred	none		
 0x607ea0	5			objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
-0x607eb0	19			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::TransportFacingToWorld; not read here	inferred	none		
+0x607eb0	19	CGUnit_C::GetWorldBodyFacing		objectlayer	orchestration		Returns the body facing +0xc94 converted to the world through the transport; slot 17 jumps here	verified	one	objectlayer/unitmovement#facing	
 0x607ed0	1565			objectlayer	primitive		Fills slot 14 of the unit vtable; its body is not read here	inferred	none		
-0x6084f0	99			objectlayer	primitive		Runs Unit_C.cpp code that calls __CIfmod; not read here	inferred	none		
-0x608560	212			objectlayer	orchestration		Fills slot 15 of the unit vtable and others; its body is not read here	inferred	none		
+0x6084f0	99	WrapAngleToPi		objectlayer	primitive		Wraps an angle into −π to π with fmod beyond either end	verified	one	objectlayer/unitmovement#facing	
+0x608560	212	CGUnit_C::PlaceModel		objectlayer	orchestration		Places a swimming unit's model with 0x60a110, others through the base slot 15	verified	one	objectlayer/unitmovement#facing	
 0x608640	145			objectlayer	primitive		Runs Unit_C.cpp code that calls ModelHasAttachment, ModelGetAttachmentPosition; not read here	inferred	none		
 0x6086e0	265			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x6087f0	127			objectlayer	primitive		Runs Unit_C.cpp code that calls SMemAlloc; not read here	inferred	none		
@@ -5212,7 +5212,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6094f0	2908	CheckCasterStateForSpell		objectlayer	primitive		Refuses a cast for the caster's state: cooldowns, power, crowd control and more, reporting through 0x6e1a00	inferred	none	spell/checks#crowd-control-use-in-the-validator	
 0x60a050	97			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x60a0c0	65			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x60a110	332			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x60a110	332	CGUnit_C::BuildSwimTransform		objectlayer	primitive		Builds a swimming unit's model transform from its pitch, slot 17's facing, its scales and its position	verified	one	objectlayer/unitmovement#facing	
 0x60a260	296			objectlayer	primitive		Runs Unit_C.cpp code that calls NTempest::CRandom::uint32, MulHigh32; not read here	inferred	none		
 0x60a390	55			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetViolenceLevel; not read here	inferred	none		
 0x60a3d0	827			objectlayer	primitive		Launches one spell missile from a unit	inferred	none	spell/go#missile-launch	
@@ -5297,27 +5297,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60d7c0	1083	PlayKitCharProcs		objectlayer	primitive		Runs a visual kit's four character procedures through a switch on their kinds	inferred	none	spell/visuals#chain-effect-creation	
 0x60dc30	5	InitUnitQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60dc40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60dc40	19	InitUnitQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x60dc60	39			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueMoveStart; not read here	inferred	none		
-0x60dc90	22			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::QueueMoveStop; not read here	inferred	none		
-0x60dcb0	39			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueStrafeStart; not read here	inferred	none		
-0x60dce0	22			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::QueueStrafeStop; not read here	inferred	none		
-0x60dd00	114			objectlayer	orchestration		Sends the channel cancel for a unit's channel spell with AttributesEx 0x4000	inferred	none	spell/cancel#channel-and-aura-cancels	
-0x60dd80	22			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::QueueTurnStop; not read here	inferred	none		
-0x60dda0	39			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueStartPitch; not read here	inferred	none		
-0x60ddd0	35			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueStopPitch; not read here	inferred	none		
-0x60de00	41			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::WorldFacingToTransport; not read here	inferred	none		
-0x60de30	63			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueueFacing; not read here	inferred	none		
-0x60de70	39			objectlayer	orchestration		Runs Unit_C.cpp code that calls CMovement::QueuePitch; not read here	inferred	none		
-0x60dea0	201			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClientServices::Send, IsActivePlayerUnit, CMovement::QueueJump; not read here	inferred	none		
+0x60dc60	39	CGUnit_C::MoveStart		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a move start on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dc90	22	CGUnit_C::MoveStop		objectlayer	orchestration		Queues a move stop on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dcb0	39	CGUnit_C::StrafeStart		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a strafe start on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dce0	22	CGUnit_C::StrafeStop		objectlayer	orchestration		Queues a strafe stop on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dd00	114	CGUnit_C::TurnStart		objectlayer	orchestration		Queues a turn start; an auto-moving unit first cancels a channel spell with AttributesEx 0x4000	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dd80	22	CGUnit_C::TurnStop		objectlayer	orchestration		Queues a turn stop on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dda0	39	CGUnit_C::PitchStart		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a pitch start on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60ddd0	35	CGUnit_C::PitchStop		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a pitch stop on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60de00	41	CGUnit_C::SetWorldFacing		objectlayer	orchestration		Converts a world facing to the transport's frame and sets it through 0x60de30	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60de30	63	CGUnit_C::SetFacing		objectlayer	orchestration		Queues a facing after 0x60e990(1,1) and stands a sleeping unit (stand state 3) up	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60de70	39	CGUnit_C::SetPitch		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a pitch on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60dea0	201	CGUnit_C::Jump		objectlayer	orchestration		Queues a jump, or when mounted and standing plays MountSpecial and sends 0x171 instead	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60df70	121			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::RequestStartSwim, CMovement::QueueStartSwim, CMovement::StartSwim; not	inferred	none		
 0x60dff0	109			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::RequestStopSwim, CMovement::QueueStopSwim, CMovement::StopSwim; not read here	inferred	none		
-0x60e060	26			objectlayer	primitive		Runs Unit_C.cpp code that calls CMovement::QueueRunMode; not read here	inferred	none		
-0x60e080	28			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
+0x60e060	26	CGUnit_C::SetRunMode		objectlayer	orchestration		Queues a run or walk mode on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e080	28	CGUnit_C::ToggleRunMode		objectlayer	orchestration		Passes the walk bit 0x100 of the movement flags to 0x60e060	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e0a0	857	ProcessLocalMoveEvent	idb	objectlayer	primitive	int __thiscall (void *unit, uint32_t time, uint32_t opcode, uint8_t send, float value, uint32_t counter)	Sends a movement opcode for a unit when send is nonzero, then runs the unit's reaction to it	inferred	none	collision/events#tags-and-wire-opcodes	
 0x60e480	159			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60e550	48			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60e580	5	InitUnitOther6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e590, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
-0x60e590	216	InitUnitSettingsTable		objectlayer	primitive	void __cdecl (void)	Fills a table of unit flags and distances: 30² first, then pairs of flags with 6400 or 0	inferred	none	objectlayer/initializers#other-initializers	
+0x60e590	216	InitAutoMoveModes		objectlayer	primitive	void __cdecl (void)	Fills rows 3 to 10 of the auto-move table 0x860a58: 900 for follow, 6400 for five modes, flag bytes	verified	one	objectlayer/unitmovement#auto-move-modes	
 0x60e670	5	InitUnitProduct5Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e680, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60e680	19	InitUnitProduct5		objectlayer	primitive	void __cdecl (void)	Stores 5.5555553·0.5 = 2.7777777 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60e6a0	5	InitUnitSquare2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e6b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -5330,15 +5330,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60e740	19	InitUnitSquare5		objectlayer	primitive	void __cdecl (void)	Stores 0.5² = 0.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60e760	5	InitUnitSquare6Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60e770, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60e770	19	InitUnitSquare6		objectlayer	primitive	void __cdecl (void)	Stores 0.5² = 0.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x60e790	85			objectlayer	primitive		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e7f0	97			objectlayer	primitive		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e860	32			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e880	32			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e8a0	65			objectlayer	primitive		Runs Unit_C.cpp code that calls GetInputControl; not read here	inferred	none		
-0x60e8f0	40			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e920	32			objectlayer	orchestration		Runs Unit_C.cpp code that calls GetInputControl, CInputControl::SetCommands; not read here	inferred	none		
-0x60e940	65			objectlayer	primitive		Runs Unit_C.cpp code that calls GetInputControl; not read here	inferred	none		
-0x60e990	87			objectlayer	orchestration		Runs Unit_C.cpp code that calls IsActivePlayerUnit, UnitPrecastEndB; not read here	inferred	none		
+0x60e790	85	CGUnit_C::AutoMoveStart		objectlayer	orchestration		Presses input command bit 20 and, while the input owns the mover, starts the move with bit 0 of 0xc4da48	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60e7f0	97	CGUnit_C::AutoMoveStop		objectlayer	orchestration		Releases input command bit 20 and, while the input owns the mover, stops the move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60e860	32	CGUnit_C::PressCommand200000		objectlayer	orchestration		Presses input command bit 21 at a time through 0x515090	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e880	32	CGUnit_C::ReleaseCommand200000		objectlayer	orchestration		Releases input command bit 21 at a time through 0x515090	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e8a0	65	CGUnit_C::InputSetPitch		objectlayer	orchestration		Sets the pitch through 0x60de70 while the input owns the mover, with bit 0 of 0xc4da48 set around it	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e8f0	40	CGUnit_C::PressCommand800000		objectlayer	orchestration		Stores a facing at 0xc4d8c4 and presses input command bit 23	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e920	32	CGUnit_C::ReleaseCommand800000		objectlayer	orchestration		Releases input command bit 23 at a time through 0x515090	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e940	65	CGUnit_C::InputSetWorldFacing		objectlayer	orchestration		Sets the world facing through 0x60de00 while the input owns the mover, with bit 0 of 0xc4da48 set	verified	one	objectlayer/unitmovement#local-movement-commands	
+0x60e990	87	CGUnit_C::OnMoveInput		objectlayer	orchestration		Stops an auto-move the input did not start and closes the active player's loot, each unless told not to	verified	one	objectlayer/unitmovement#local-movement-commands	
 0x60e9f0	61			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60ea30	56			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
 0x60ea70	386			objectlayer	primitive		Plays a wound reaction on a unit	inferred	none	spell/go#missile-and-impact-legs	
@@ -5356,31 +5356,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60f830	87			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
 0x60f890	81			objectlayer	orchestration		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x60f8f0	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
-0x60f900	62			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x60f940	186			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, UnitPrecastEndB; not read here	inferred	none		
-0x60fa20	318			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, IsActivePlayerUnit; not read here	inferred	none		
-0x60fb60	226	UnitPrecastEndB		objectlayer	orchestration		Acts on a unit with two flags; reached from 0x6ec350	inferred	none	spell/visuals#unreached-functions	
-0x60fc50	107	UnitPrecastEndA		objectlayer	primitive		Acts on the active player's unit; reached from 0x6ec350	inferred	none	spell/visuals#unreached-functions	
-0x60fcc0	459			objectlayer	primitive		Runs Unit_C.cpp code that calls _atexit, HeadingBetweenPoints, QueryWorldTriangles; not read here	inferred	none		
-0x60fe90	49			objectlayer	orchestration		Runs Unit_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x60fed0	436	UnitSetSpellTargetGuid		objectlayer	primitive		Acts on a unit with a target GUID when the unit is the active player	inferred	none	spell/visuals#precast-visual-at-cast-start	
-0x6100a0	85			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x610100	431			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, HeadingBetweenPoints, __CIasin; not read here	inferred	none		
-0x6102b0	73			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x610300	153			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x6103a0	42			objectlayer	orchestration		Runs Unit_C.cpp code not read here	inferred	none		
-0x6103d0	327			objectlayer	primitive		Runs Unit_C.cpp code that calls CVar::Lookup; not read here	inferred	none		
-0x610520	389			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x6106b0	1695			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, NTempest::CRandom::uint32, SetVector3; not read here	inferred	none		
-0x610d50	65			objectlayer	primitive		Runs Unit_C.cpp code not read here	inferred	none		
-0x610da0	154			objectlayer	primitive		Runs Unit_C.cpp code that calls __CIasin; not read here	inferred	none		
-0x610e40	593			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, CMovement::TransportToWorld, CMovement::GetCurrentSpeed; not	inferred	none		
-0x6110a0	139			objectlayer	primitive		Runs Unit_C.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x611130	260			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, UnitPrecastEndB, CMovement::TransportToWorld; not read here	inferred	none		
-0x611240	407			objectlayer	primitive		Runs Unit_C.cpp code that calls ClntObjMgrObjectPtr, Spell_C::GetMinMaxRange; not read here	inferred	none		
-0x611400	388			objectlayer	primitive		Runs Unit_C.cpp code that calls OsGetAsyncTimeMs, CMovement::TransportToWorld; not read here	inferred	none		
-0x611590	75	UnitPrecastTest		objectlayer	primitive		Tests a unit with a flag; reached from 0x6ec350	inferred	none	spell/visuals#unreached-functions	
-0x6115e0	128			objectlayer	primitive	void __thiscall (void *unit, const float *matrix, float angle)	Takes the transform and facing change of a transport switch; not read here	inferred	none	collision/mover#transport-change	
+0x60f900	62	CGUnit_C::CanAutoInteract		objectlayer	orchestration		Returns whether the unit is alive, the active mover and the AutoInteract CVar is on	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60f940	186	CGUnit_C::OnAutoMoveArrived		objectlayer	orchestration		Stores the target in the mode's pending slot and stops, or stops the walk, by 0x60f9fc	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x60fa20	318	CGUnit_C::CompleteInteractMove		objectlayer	orchestration		Hands a pending loot, game object, mode 9 or NPC target to its action and clears the slot	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x60fb60	226	CGUnit_C::StopAutoMove		objectlayer	orchestration		Ends an auto-move: optionally faces the target and releases the commands; mode 3 signals AUTOFOLLOW_END	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60fc50	107	CGUnit_C::EndPrecast		objectlayer	orchestration		Clears the precast bit 0x400, ends a ranged pose, releases the spell effect, stops a listed auto-move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60fcc0	459	CGUnit_C::WalkToAttack		objectlayer	primitive		Walks to a target's combat reach in mode 10, at least 5 yards, or faces it when already in reach	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60fe90	49	FreeApproachTriangleLists		objectlayer	orchestration		Frees the static triangle lists 0x60fcc0 fills, at exit	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60fed0	436	CGUnit_C::StartAutoMoveToObject		objectlayer	primitive		Starts an auto-move toward an object after the mode's checks; follow signals AUTOFOLLOW_BEGIN	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x6100a0	85	CGUnit_C::AutoFace		objectlayer	orchestration		Starts auto-move mode 2 with a facing when 0x60f900 allows	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x610100	431	CGUnit_C::WalkAlongHeading		objectlayer	primitive		Starts auto-move mode 8 toward a clicked point, pitching a swimmer toward it first	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x6102b0	73	CGUnit_C::WalkToPoint		objectlayer	orchestration		Starts auto-move mode 4 to a point when 0x60f900 allows	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x610300	153	CGUnit_C::WalkToGameObject		objectlayer	primitive		Starts auto-move mode 7 to a game object; its stop distance 0xc4d998 is the argument times 0.9	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x6103a0	42	CGUnit_C::IsAutoMoving		objectlayer	orchestration		Returns whether the unit is the active mover with an auto-move mode other than 12	verified	one	objectlayer/unitmovement#auto-move-modes	
+0x6103d0	327	CGUnit_C::AutoMoveTurnToward		objectlayer	primitive		Turns toward a facing at the wide or narrow CVar speed, at most a step; false within 0.001	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x610520	389	CGUnit_C::AutoMovePitchToward		objectlayer	primitive		Pitches a swimming auto-mover toward its point; returns whether it is within 0.3927 radians	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x6106b0	1695	CGUnit_C::UpdateAutoMove		objectlayer	primitive		Steers the active mover's auto-move each frame: turn, pitch, arrival by the stop distance, the mode's action	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x610d50	65	IsWithinArrivalDistance		objectlayer	primitive		Returns whether two points lie within 0.002777778 of each other, by squared distance	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x610da0	154	PitchTowardPoint		objectlayer	primitive		Returns the asin of the normalized height difference, or ±π/2 when the horizontal distance is tiny	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x610e40	593	CGUnit_C::GetAutoMoveTarget		objectlayer	primitive		Returns an auto-move's target point and squared distance, horizontal unless swimming, by mode	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x6110a0	139	CGUnit_C::CheckAutoMoveRange		objectlayer	primitive		Refuses a target past the mode row's maximum squared distance with message 0x126	verified	one	objectlayer/unitmovement#auto-move-modes	
+0x611130	260	CGUnit_C::StartAutoMove		objectlayer	primitive		Starts an auto-move: checks range and stop distance, stores mode, time, position, target, point and facing	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x611240	407	CGUnit_C::GetAutoMoveStopDistance		objectlayer	primitive		Writes a mode's squared stop distance: a global, the combat reaches or a spell range, by 0x6113d8	verified	one	objectlayer/unitmovement#auto-move-modes	
+0x611400	388	CGUnit_C::DrawAutoMoveTarget		objectlayer	primitive		Draws a pulsing box at a mode 4 or 10 target point, period 500 ms	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x611590	75	CGUnit_C::IsAutoMovingInModes		objectlayer	primitive		Returns whether the unit is the active mover in an auto-move mode whose bit is in the mask	verified	one	objectlayer/unitmovement#auto-move-modes	
+0x6115e0	128	CGUnit_C::OnAutoMoveTransportChange		objectlayer	primitive	void __thiscall (void *unit, const float *matrix, float angle)	Carries an auto-move's point (mode 4) or facing (modes 2 and 8) through a transport change	verified	one	objectlayer/unitmovement#steering-an-auto-move	
 0x611660	7			objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
 0x611670	36			objectlayer	unreached		Runs Unit_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x6116a0	61			objectlayer	unreached		Runs Unit_C.cpp code that calls ClntObjMgrGetActivePlayer; not read here	inferred	none	objectlayer/overview#unreached-functions	

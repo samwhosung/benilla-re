@@ -58,12 +58,29 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5fd530	uint8_t[18]	s_switchIndex5fd530		objectlayer	Maps the switch value of 0x5fd460 to its case in 0x5fd51c	verified	one	objectlayer/overview#indexed-switch-tables
 0x5fdd7c	void *[5]	s_switch5fdd7c		objectlayer	Holds the 5 case addresses of the switch in 0x5fdba0	verified	one	objectlayer/overview#indexed-switch-tables
 0x5fdd90	uint8_t[162]	s_switchIndex5fdd90		objectlayer	Maps the switch value of 0x5fdba0 to its case in 0x5fdd7c	verified	one	objectlayer/overview#indexed-switch-tables
+0x6012fc	void *[12]	s_ownSpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for the active mover, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60132c	void *[12]	s_relaySpeedOpcodeCases		objectlayer	Holds the 12 case addresses of 0x6010e0's switch for other units, opcodes 0xcd to 0xd8	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x601408	void *[6]	s_splineSpeedOpcodeCases		objectlayer	Holds the 6 case addresses of the switch in 0x601360, opcodes 0x2fe to 0x303	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x601510	void *[13]	s_splineToggleCases		objectlayer	Holds the 13 case addresses of the switch in 0x601420	verified	one	objectlayer/unitmovement#spline-toggles
+0x601544	uint8_t[23]	s_splineToggleIndex		objectlayer	Maps opcodes 0x304 to 0x31a to the cases of 0x601420's switch	verified	one	objectlayer/unitmovement#spline-toggles
+0x601844	void *[26]	s_relayedMoveCases		objectlayer	Holds the 26 case addresses of the switch in 0x601580	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x6018ac	uint8_t[61]	s_relayedMoveIndex		objectlayer	Maps opcodes 0xb5 to 0xf1 to the cases of 0x601580's switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x602114	void *[4]	s_switch602114		objectlayer	Holds the 4 case addresses of the switch in 0x6018f0	verified	one	objectlayer/overview#switch-tables
+0x602a2c	void *[9]	s_forcedMoveCases		objectlayer	Holds the 9 case addresses of the switch in 0x602780	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x602a50	uint8_t[36]	s_forcedMoveIndex		objectlayer	Maps opcodes 0xc7 to 0xea to the cases of 0x602780's switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60dbfc	void *[9]	s_kitCharProcJumpTable		objectlayer	Holds the 9 case addresses of the switch in 0x60d7c0	verified	one	objectlayer/overview#indexed-switch-tables
 0x60dc20	uint8_t[16]	s_kitCharProcIndexTable		objectlayer	Maps kit procedure kinds 0 to 15 to the cases of 0x60d7c0's switch	verified	one	spell/visuals#chain-effect-creation
+0x60e3fc	void *[3]	s_localMoveCases		objectlayer	Holds the 3 case addresses of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60e408	uint8_t[45]	s_localMoveIndex		objectlayer	Maps opcodes 0xb7 to 0xe3 to the cases of 0x60e0a0's first switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60e438	void *[4]	s_localMoveSendCases		objectlayer	Holds the 4 case addresses of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
+0x60e448	uint8_t[53]	s_localMoveSendIndex		objectlayer	Maps opcodes 0xb7 to 0xeb to the cases of 0x60e0a0's second switch	verified	one	objectlayer/unitmovement#movement-message-handlers
 0x60ec84	void *[5]	s_switch60ec84		objectlayer	Holds the 5 case addresses of the switch in 0x60ec00	verified	one	objectlayer/overview#indexed-switch-tables
 0x60ec98	uint8_t[18]	s_switchIndex60ec98		objectlayer	Maps the switch value of 0x60ec00 to its case in 0x60ec84	verified	one	objectlayer/overview#indexed-switch-tables
 0x60f4f8	void *[5]	s_unitSpellVisualKitJumpTable		objectlayer	Holds the 5 case addresses of the switch in 0x60edf0	verified	one	objectlayer/overview#switch-tables
+0x60f9fc	void *[7]	s_autoMoveArrivalCases		objectlayer	Holds the 7 case addresses of the switch in 0x60f940, modes 4 to 10	verified	one	objectlayer/unitmovement#auto-move-modes
+0x610084	void *[4]	s_autoMoveObjectCases		objectlayer	Holds the 4 case addresses of the switch in 0x60fed0	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0x610094	uint8_t[10]	s_autoMoveObjectIndex		objectlayer	Maps auto-move modes 0 to 9 to the cases of 0x60fed0's switch	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0x6113d8	void *[8]	s_stopDistanceCases		objectlayer	Holds the 8 case addresses of the switch in 0x611240, modes 3 to 10	verified	one	objectlayer/unitmovement#auto-move-modes
 0x612ca0	void *[6]	s_powerCostBaseJumpTable		objectlayer	Holds the 6 case addresses of the switch in 0x612c50	verified	one	objectlayer/overview#switch-tables
 0x613908	void *[8]	s_typeMaskJumpTable		objectlayer	Holds the cases of 0x613880 for type ids 0 to 7, each storing the type mask in field 2	verified	one	objectlayer/classes#type-id-and-mask
 0x616580	void *[39]	s_replayCases		collision	Holds the 39 case addresses of the event replay 0x615c30, for event types 0 to 38	verified	one	collision/replay#replay-cases-0-to-19
@@ -175,6 +192,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803934	void *[11]	s_simpleModelFfxInnerVftable		glue	Holds CSimpleModelFFX's second vtable, stored at +0x24; it differs from CSimpleModel's at slot 1	verified	one	glue/select#the-modelffx-frame
 0x803960	void *[40]	CSimpleModelFFX::vftable		glue	Holds CSimpleModelFFX's vtable; slots 12 and 17 are 0x46fa60 and 0x46fa90	verified	one	glue/select#the-modelffx-frame
 0x803a78	float	s_radiansToDegrees		glue	Holds the f32 57.29578 (0x42652ee1) that turns the select facing into degrees	verified	one	glue/select#facing-in-degrees
+0x804588	float	s_rangeStopFraction		objectlayer	Holds 0.9, the fraction of a range at which a mode 7 or 9 auto-move stops	verified	one	objectlayer/unitmovement#auto-move-modes
 0x80654c	float	s_tileSize		terrain	Holds 533.33331 (0x44055555), a tile's side in yards	verified	one	terrain/files#wdl
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
@@ -199,6 +217,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80b034	void *[4]	s_playerMemberVtableA		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c9c	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80b044	void *[4]	s_playerMemberVtableB		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c74	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80c330	void *[34]	CGGameObject_C::vftable		objectlayer	Holds the game object vtable, 34 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
 0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
@@ -490,6 +509,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
+0x860a58	uint8_t[132]	s_autoMoveModes		objectlayer	Holds 11 auto-move mode rows of 12 bytes: enabled, a maximum squared distance, two flag bytes	verified	one	objectlayer/unitmovement#auto-move-modes
+0x860adc	uint32_t	s_precastStopModes		objectlayer	Holds 1, the auto-move mode mask 0x60fc50 tests before it stops an auto-move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
 0x8613e4	char[23]	s_playerMoveEventTag		collision	Holds the type name of CPlayerMoveEvent, the allocation tag of its nodes	verified	one	collision/events#event-node
 0x8613fc	char[26]	s_invalidMoverText		collision	Holds "Mover at invalid position", the console line a NaN position prints	verified	one	collision/mover#local-player-step
 0x861418	char[62]	s_movementSourcePath		collision	Holds the source path of Movement.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
@@ -783,7 +804,25 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4bed0	uint64_t	s_tradeTarget		objectlayer	Holds the trade partner's GUID	verified	one	objectlayer/trade#trade-state
 0xc4bed8	int32_t[2]	s_tradeExtendedHeader		objectlayer	Holds the third header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
 0xc4c28c	float	s_playerFileConstant		objectlayer	Holds a float a Player_C.cpp initializer computes, read by Player_C.cpp code	inferred	none	objectlayer/initializers#float-constants
-0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves	inferred	none	collision/events#mode-toggle-tags
+0xc4d888	int32_t	s_autoMoveMode		objectlayer	Holds the auto-move mode, 12 for none; 0x6033c0 and 0x60fb60 store 12, 0x611130 the mode	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d890	float[3]	s_autoMoveTargetPoint		objectlayer	Holds the auto-move target point 0x611130 stores, transport-local	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0xc4d8c4	float	s_turnCommandFacing		objectlayer	Holds the facing 0x60e8f0 stores when it presses the turn command	verified	one	objectlayer/unitmovement#local-movement-commands
+0xc4d910	float	s_autoMoveStopDistance		objectlayer	Holds the square root of the stop distance 0x611130 stores, read by the steering	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d93c	float	s_autoMoveTurnSpeed		objectlayer	Holds the auto-move turn speed in radians, π from 0x611130, latched from a CVar by 0x6103d0	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d950	uint64_t	s_pendingUseGuid		objectlayer	Holds the game object an arrived mode 7 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d958	float	s_talkStopDistanceSq		objectlayer	Holds 2.7777777², the squared stop distance of mode 5, written by 0x60e6b0	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d980	uint64_t	s_autoMoveTargetGuid		objectlayer	Holds the auto-move target object's GUID, cleared by 0x60fb60	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4d998	float	s_useStopDistance		objectlayer	Holds the mode 7 stop distance, 0x610300's argument times 0.9	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d9a4	void *	s_autoInteractCVar		objectlayer	Holds the AutoInteract CVar record, registered "1" under locale index 1 and "0" otherwise	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0xc4d9a8	float	s_autoMoveFacing		objectlayer	Holds the auto-move facing 0x611130 stores, turned with a transport by 0x6115e0	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0xc4d9b0	float	s_pointStopDistanceSq		objectlayer	Holds 0.5² = 0.25, the squared stop distance of mode 4, written by 0x60e740	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d9c0	float	s_autoMoveStopDistanceSq		objectlayer	Holds the squared stop distance 0x611240 writes for 0x611130	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4d9c4	float	s_followStopDistanceSq		objectlayer	Holds 3² = 9, the squared stop distance of mode 3, written by 0x60e6e0	verified	one	objectlayer/unitmovement#auto-move-modes
+0xc4da20	uint64_t	s_pendingSpellTargetGuid		objectlayer	Holds the target an arrived mode 9 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da28	uint64_t	s_pendingTalkGuid		objectlayer	Holds the NPC an arrived mode 5 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da48	uint32_t	s_autoMoveInputFlags		objectlayer	Holds auto-move input bits; bit 0 is set while the auto-move itself drives the mover	verified	one	objectlayer/unitmovement#local-movement-commands
+0xc4da78	uint64_t	s_pendingLootGuid		objectlayer	Holds the corpse an arrived mode 6 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
+0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
 0xc4db88	uint32_t[3]	s_movementStaticList		collision	Holds the free list of move-event nodes, an intrusive list with link offset 0	verified	one	collision/overview#movementcpp-initializers
 0xc4e4b4	uint32_t[3]	s_movementCStaticList		collision	Holds an intrusive list head with link offset 0x208, empty at start-up	verified	one	collision/overview#movement_ccpp-initializers
 0xc4e52c	uint32_t[8]	s_facetList		collision	Holds the solid facet list: count +0x04, 52-byte facets at +0x08, their 64-bit ids at +0x18	verified	one	collision/overview#resolution-file-initializers
