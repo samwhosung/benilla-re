@@ -150,9 +150,11 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5fa730` stores at `+0xc60` the world entity's `+0xdc` through `0x6706d0`, or −1: the
-`TerrainType` id that `AttachEntityToGround` takes from the WMO face or the ground effect
-(`0x6a8bfb`), which the footstep, footprint and death-thud code index `TerrainType` with. `0x5fac70` passes the surface minus
+`0x5fa730`, and `CGUnit_C::PostInit` at `0x5fba95`, store at `+0xc60` the world entity's `+0xdc`
+through `0x6706d0`, or −1: the id `AttachEntityToGround` takes from the WMO face or the ground
+effect (`0x6a8bfb`). Its readers index the `TerrainType` store 0xc0d67c with it, through its id
+map 0xc0d684 (`0x5fc20f`, `0x623749`), or pass it on as the footstep and footprint terrain
+(`0x62341d`, `0x5fc06e`). `0x5fac70` passes the surface minus
 the z, or 0, and the liquid flag to 0x6030c0, then 0x613ef0(0). 0x6030c0 calls
 `0x60df70(time, force)` or `0x60dff0(time, force)`: the active mover requests the change through
 its `CMovement` (a start also sets tutorial flag 0x1b), others apply it at once when forced or

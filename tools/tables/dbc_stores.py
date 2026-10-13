@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
 """tables/dbc_stores.tsv: the client's database stores, one per DBC file.
 
-The client-DB load sequence from 0x540321 to 0x540f00 is a flat run of
+StaticDBLoadAll (0x53f8b0) first loads five stores inline, each block ending in
+
+    mov dword [<store> + 0x10], 1
+
+the store's loaded flag; such a store's loader is StaticDBLoadAll and its load site that store,
+and the block's file name comes from the first callee that names one. From 0x540321 to 0x540f00
+the sequence is a flat run of
 
     mov ecx, <store>; call <loader>
 
@@ -27,6 +33,7 @@ import sys
 
 from lib import Disasm, Image, addr, note, parse_args, write_table
 
+LOAD_ALL = 0x53F8B0
 LOAD_SEQ = (0x540321, 0x540F00)
 
 
@@ -62,6 +69,19 @@ def main():
         return None
 
     pairs, pend = [], None
+    block = []
+    lo = bisect.bisect_left(addrs, LOAD_ALL)
+    for a, _, mn, ops in dis.ins[lo:]:
+        if a >= LOAD_SEQ[0]:
+            break
+        if mn == 'call' and ops.startswith('0x'):
+            block.append(int(ops, 16))
+        elif mn == 'mov' and ops.startswith('DWORD PTR ds:0x') and ops.endswith(',0x1'):
+            flag = int(ops.split('ds:')[1].split(',')[0], 16)
+            name = next((n for n in map(filename_of, block) if n), None)
+            pairs.append((flag - 0x10, LOAD_ALL, a, name))
+            block = []
+
     lo = bisect.bisect_left(addrs, LOAD_SEQ[0])
     for a, _, mn, ops in dis.ins[lo:]:
         if a >= LOAD_SEQ[1]:
@@ -70,17 +90,17 @@ def main():
             pend = int(ops.split('0x')[1], 16)
         elif mn == 'call' and pend is not None:
             if ops.startswith('0x'):
-                pairs.append((pend, int(ops, 16), a))
+                pairs.append((pend, int(ops, 16), a, None))
             pend = None
         elif mn in ('call', 'jmp'):
             pend = None
 
     seen, rows, unnamed = set(), [], 0
-    for store, loader, site in pairs:
+    for store, loader, site, name in pairs:
         if store in seen:
             continue
         seen.add(store)
-        name = filename_of(loader)
+        name = name or filename_of(loader)
         unnamed += name is None
         rows.append((addr(store), addr(loader), addr(site), name or '?'))
     rows.sort()

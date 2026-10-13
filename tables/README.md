@@ -110,15 +110,15 @@ Every `CVar::Register 0x63db90` call (214 rows).
 
 ## dbc_stores.tsv
 
-The client's database stores, one per DBC file (144 rows). A store is 0x14 bytes: records `+0x00`,
+The client's database stores, one per DBC file (149 rows). A store is 0x14 bytes: records `+0x00`,
 count `+0x04`, id map `+0x08`, max row `+0x0c` (row count minus one, -1 until loaded), loaded flag
 `+0x10`. The id map is indexed by row, not by the id column.
 
 | column | meaning |
 |---|---|
 | `store` | The store's address. |
-| `loader` | The function the load sequence calls with the store as `this`. |
-| `load_site` | The `call` in that sequence. |
+| `loader` | The function the load sequence calls with the store as `this`; `StaticDBLoadAll` for the five stores it loads inline. |
+| `load_site` | The `call` in that sequence, or for an inline load the store to its loaded flag. |
 | `file` | The `DBFilesClient\...` path the loader reads. |
 
 ## dbc_schemas.tsv

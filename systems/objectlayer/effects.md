@@ -175,10 +175,12 @@ Test: none
 live owner and refreshes its animation. The callbacks are cleared, the model hidden;
 `StopEffectObjectChains` (`0x6208b0`) then stops the three chain beams of
 `+0x30` to `+0x38` (`spell/visuals`) and clears the slots. `0x620500` adds a reference only when the
-effect is not linked. Between the link and it, only `0x5fd9e0` (`0x6204aa`) reaches a release by
-direct calls, through the sheathe, auto-move, input, melee start and precast end to `0x612630`, which releases the unit's `+0xb4c` effect. Only `0x612650`
-stores that effect, with flags 0, so it is never the flag-0x4 effect stopped here, and freeing it
-unlinks only itself; this effect stays linked and the increment does not run. `0x61f680` (from the world frame,
+effect is not linked. Between the link and it, `0x5fd9e0` (`0x6204aa`) reaches by direct calls
+the releases of `0x5ff320` (list `+0xce0`), `0x60d150` (list `+0xb50`), `0x60d7c0`, `0x60ed40`,
+`0x60edf0` and `0x612630` (`+0xb4c`), and `0x614120`, which unlinks the unit's `+0xb4` list, but
+neither `0x61f680` nor `0x61f640`, the only walks of the dying list. Releasing a neighbour there
+only moves this effect's `+0x88` to another nonzero slot, so it stays linked and the increment
+does not run. `0x61f680` (from the world frame,
 0x48324e) also walks `0xc4dec8`, releasing effects past `+0x54`; nothing links an effect there: the
 address appears in the image only at `0x61f661`, `0x61f677` and `0x61f683`, all loads, against
 `0xc4dee4`'s push at `0x6203e3`. `0x61f640` releases both lists.

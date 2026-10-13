@@ -138,6 +138,11 @@ store	loader	load_site	file
 0xc0dfdc	0x540d40	0x54033a	DBFilesClient\BankBagSlotPrices.dbc
 0xc0dff0	0x540b00	0x540330	DBFilesClient\AuctionHouse.dbc
 0xc0e004	0x5408d0	0x540326	DBFilesClient\AttackAnimTypes.dbc
+0xc0e018	0x53f8b0	0x540317	DBFilesClient\AttackAnimKits.dbc
+0xc0e02c	0x53f8b0	0x540100	DBFilesClient\AreaTrigger.dbc
+0xc0e040	0x53f8b0	0x53fee8	DBFilesClient\AreaTable.dbc
+0xc0e054	0x53f8b0	0x53fcd7	DBFilesClient\AreaPOI.dbc
+0xc0e068	0x53f8b0	0x53fac0	DBFilesClient\AnimationData.dbc
 0xce9d60	0x549700	0x54059c	DBFilesClient\Light.dbc
 0xce9d74	0x5494d0	0x5405ba	DBFilesClient\LightParams.dbc
 0xce9d88	0x549030	0x5405a6	DBFilesClient\LightFloatBand.dbc
