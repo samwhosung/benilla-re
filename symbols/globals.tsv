@@ -160,7 +160,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7052b8	uint8_t[18]	s_handlerFormatIndex		ui	Holds the case of each letter from d to u for the argument runner	verified	one	ui/script#running-a-handler
 0x70b728	void *[6]	s_m2DrawKindTable		models	Holds the draw routine of each element kind, 0 to 5	verified	one	models/render#list-draw
 0x70c17c	void *[4]	s_m2FogModeTable		models	Holds the jump targets of fog modes 1 to 4	verified	one	models/render#lighting-and-fog
-0x7102d0	void *[6]	s_m2EmitterTypeTable		models	Holds the jump targets that build a particle emitter by its record's type	verified	one	models/particles#emitter-classes
+0x7102d0	void *[6]	s_m2ParticleBlendTable		models	Holds the jump targets that map a particle record's blend 1 to 6 to the emitter's blend mode	verified	one	models/emission#record-flags
 0x7102e8	void *[10]	s_m2DeferredCallTable		models	Holds the jump targets that replay deferred calls of kinds 0 to 9	verified	one	models/model#deferred-calls
 0x718788	void *[5]	s_m2BillboardTable		models	Holds the jump targets of the billboard cases	inferred	none	models/animation#billboards
 0x71879c	uint8_t[57]	s_m2BillboardIndex		models	Maps a bone's billboard flags minus 8 to a billboard case	inferred	none	models/animation#billboards
@@ -330,6 +330,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8108bc	const float	s_infinity14		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810918	void *	s_placementGroupVtable		terrain	Holds the placement group's virtual functions	inferred	none	
 0x810928	void *	CMapObjDef::vftable		terrain	Holds CMapObjDef's virtual functions	inferred	none	
+0x810998	void *	s_mapObjHashVtable		models	Holds the vtable the map object hash table carries	verified	one	models/overview#static-objects
 0x8109a8	const float	s_infinity15		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810a04	const float	s_infinity16		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810a74	void *	CMapDoodadDef::vftable		terrain	Holds CMapDoodadDef's virtual functions	inferred	none	
@@ -992,6 +993,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca7de4	uint32_t	s_doodadDefHashMask		terrain	Holds the doodad placement hash table's mask	inferred	none	
 0xca7f00	uint32_t	s_groupFogFlag		terrain	Holds the flag the group liquid pass sets around its fog	inferred	none	
 0xca7f10	uint8_t[256]	s_groupLiquidRamp		terrain	Holds the map object liquid's depth to alpha ramp	inferred	none	
+0xca8038	uint32_t[10]	s_mapObjHash		models	Holds the map object cache's hash table: vtable, link offset, list head and mask	verified	one	models/overview#static-objects
 0xca8064	uint8_t	s_keepMapObjVertexAlpha		models	Holds the switch that leaves the colour alphas of a group's opaque faces as read	inferred	none	models/wmo#portal-vertex-fade
 0xca8080	uint32_t	s_skyboxState		terrain	Holds the sky box state the map object frame publishes	inferred	none	
 0xca82c0	void *	s_soundEmitterCallbackB		terrain	Holds the second sound emitter callback, never set by live code	inferred	none	

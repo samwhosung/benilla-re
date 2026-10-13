@@ -11611,7 +11611,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x719930	389	CM2Model::FillIndexBuffer		models	primitive		Writes the index buffer of an instance's own batches from its visible submeshes	verified	one	models/render#batch-draw	
 0x719ac0	91	CM2Model::FillVerticesTwoTexCoords		models	host		Skins a submesh's vertices with two texture coordinate sets into a device buffer	verified	one	models/render#batch-draw	
 0x719b20	246	CM2Model::FillVertices		models	host		Skins a submesh's or a batch range's vertices into a device buffer	verified	one	models/render#batch-draw	
-0x719c20	2112	CM2Model::GetSkinnedBounds		models	primitive		Skins a submesh's vertices through a matrix and returns their bounding box	inferred	none	models/render#grouped-and-projected-draws	
+0x719c20	2112	CM2Model::GetSkinnedBounds		models	primitive		Skins a submesh's vertices through the scene matrix and returns their bounds and first three corners	verified	one	models/render#projected-bounds	
 0x71a460	696	M2SkinVerticesTwoTexCoords		models	primitive		Skins a submesh's vertices by up to four weighted bones, writing two texture coordinate sets	verified	one	models/render#software-skinning	
 0x71a720	700	M2SkinVertices		models	primitive		Skins a submesh's vertices by up to four weighted bones with x87 arithmetic	verified	one	models/render#software-skinning	
 0x71a9e0	590	M2SkinVerticesSse		models	primitive		Skins a submesh's vertices with SSE, or with the x87 routine when the buffer is not 16-byte aligned	verified	one	models/render#software-skinning	
@@ -12531,8 +12531,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b8bf0	7	PlaneEmitterGetValue298		models	unreached		Returns a plane emitter's float at +0x298; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b8c00	7	PlaneEmitterGetValue29c		models	unreached		Returns a plane emitter's float at +0x29c; nothing reaches it	verified	one	models/overview#unreached-code	
 0x7b8c10	16	PlaneEmitterSetLength		models	orchestration		Stores a plane emitter's area length	verified	one	models/emission#plane-spawn	
-0x7b8c20	16	PlaneEmitterSetWidth		models	orchestration		Stores a plane emitter's area width	inferred	none		
-0x7b8c30	16	PlaneEmitterSetVerticalRange		models	orchestration		Stores a plane emitter's polar spread	inferred	none		
+0x7b8c20	16	PlaneEmitterSetWidth		models	orchestration	void __thiscall (CParticleEmitter2 *this, float width)	Stores a plane emitter's area width at +0x294	verified	one	models/emission#plane-spawn	
+0x7b8c30	16	PlaneEmitterSetVerticalRange		models	orchestration	void __thiscall (CParticleEmitter2 *this, float vertical)	Stores a plane emitter's polar spread at +0x298	verified	one	models/emission#plane-spawn	
 0x7b8c40	16	PlaneEmitterSetHorizontalRange		models	orchestration		Stores a plane emitter's azimuth spread	verified	one	models/emission#plane-spawn	
 0x7b8c50	51	SphereEmitterConstruct		models	orchestration		Constructs a sphere-shaped particle emitter: base emitter, zero radii and spread, its vtable	inferred	none	models/particles#emitter-classes	
 0x7b8c90	56	SphereEmitterClone		models	host		Allocates a sphere emitter copied from another; a vtable slot	inferred	none	models/particles#emitter-classes	
@@ -12657,10 +12657,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7be0e0	63	Matrix3Determinant		cmath		float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
 0x7be1e0	183	Matrix3Adjugate		cmath		float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
 0x7be2a0	121	InvertMatrix3		cmath		float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3
-0x7be490	282	BuildAxisRotation		cmath			Builds a rotation matrix about an axis by an angle	inferred	none	collision/kinematics#spline-follower	
+0x7be490	282	BuildAxisRotation		cmath		float * __fastcall (float *out, const float *axis, float angle, uint8_t axisIsUnit)	Builds a rotation matrix about an axis by an angle, normalizing the axis unless told it is unit	verified	one	models/emission#spline-spawn	
 0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		
 0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
-0x7c0120	77	Matrix3ToQuaternion		cmath		float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
+0x7c0120	77	Matrix3ToQuaternion		unassigned	primitive	float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
 0x7c0190	293	MatrixToQuaternion		unassigned	primitive		Converts a 3x3 rotation matrix to a quaternion by the trace or the largest diagonal	inferred	none		cmath::matrix_quat_difftest
 0x7c02c0	85	QuaternionFromAxisAngle		unassigned	unreached		Builds a quaternion from an angle and an axis	inferred	none		
 0x7c0320	138	QuaternionToAxisAngle		unassigned	unreached		Writes a quaternion's angle and axis	inferred	none		
@@ -12679,12 +12679,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c1dd0	601	ClassifyPointAgainstBox		unassigned	unreached		Tests a point and radius against a box in one of four modes	inferred	none		
 0x7c2040	601	ClassifyCircleAgainstBox		unassigned	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none		cmath::sphere_aabb_difftest
 0x7c22b0	299	IntersectRayPlane		unassigned	primitive		Intersects a ray with a plane, writing the parameter and the point when their pointers are set	inferred	none		cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
-0x7c23e0	272	PointInPolygonProjected		cmath	primitive		Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
+0x7c23e0	272	PointInPolygonProjected		unassigned	primitive		Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest
 0x7c24f0	289	IsPointInIndexedPolygon16		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	inferred	none		
 0x7c2620	279	IsPointInIndexedPolygon32		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	inferred	none		
 0x7c2740	139	IntersectRayPolygonTriangle		unassigned	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	inferred	none		
 0x7c27d0	530	IntersectRayTriangleInline		unassigned	unreached		Intersects a ray with a triangle of three stored vertices, with a slack	inferred	none		
-0x7c29f0	581	IntersectRayTriangleIndexed		cmath		bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	models/scene#ray-triangle-test	cmath::intersect_difftest
+0x7c29f0	581	IntersectRayTriangleIndexed		unassigned	primitive	bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	models/scene#ray-triangle-test	cmath::intersect_difftest
 0x7c2c40	580	IntersectRayTriangle		cmath		uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle and returns its fraction	inferred	none		cmath::intersect_difftest
 0x7c2e90	525	IntersectRayTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle of three stored vertices	inferred	none		
 0x7c30a0	577	IntersectRayIndexedTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle by 16-bit vertex indices	inferred	none		
@@ -12701,7 +12701,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c43d0	310	LineLineGap		unassigned	unreached		Returns the closest distance between two lines	inferred	none		
 0x7c4510	281	ClosestLineParameters		unassigned	unreached		Writes the parameters of the closest points of two lines	inferred	none		
 0x7c4630	145	PointLineDistance		unassigned	unreached		Returns the distance from a point to a line	inferred	none		
-0x7c46d0	266	PointSegmentDistanceSquared		cmath	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	inferred	none		cmath::seg_proj_difftest
+0x7c46d0	266	PointSegmentDistanceSquared		unassigned	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	inferred	none		cmath::seg_proj_difftest
 0x7c47e0	5	InitGeometryTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c47f0	15	InitGeometryTwoPi		unassigned	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
 0x7c4800	5	InitGeometryInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	

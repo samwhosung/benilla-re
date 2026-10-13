@@ -167,6 +167,7 @@ CMapObj	0x0134	4	float *	m_portalVertices	models	Holds the MOPV portal vertices	
 CMapObj	0x0138	4	void *	m_portals	models	Holds the MOPT portal records, 20 bytes each	verified	one	models/wmo#portal-vertex-fade
 CMapObj	0x013c	4	void *	m_portalRefs	models	Holds the MOPR portal references, 8 bytes each	verified	one	models/wmo#portal-vertex-fade
 CMapObj	0x015c	4	float *	m_volumePlanes	models	Holds the MCVP convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume
+CMapObj	0x0168	4	uint32_t	m_groupCount	models	Holds the group count, the MOGI size over 32	verified	one	models/wmo#root-file-chunks
 CMapObj	0x0194	4	uint32_t	m_volumePlaneCount	models	Holds the number of convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume
 CMapObj	0x01a0	24	float[6]	m_bounds	models	Holds the bounding box	verified	one	models/wmo#bounding-spheres-and-volume
 CMapObj	0x01c0	4	void *	m_fileData	models	Holds the root file data	verified	one	models/wmo#root-file-chunks
@@ -175,6 +176,8 @@ CMapObj	0x01d4	1	uint8_t	m_loaded	models	Holds whether the root file is parsed	v
 CMapObj	0x01d8	4	void *	m_materials	models	Holds the MOMT material records, 64 bytes each, in the file data	verified	one	models/wmo#material-textures
 CMapObj	0x01dc	4	uint32_t	m_materialCount	models	Holds the number of materials	verified	one	models/wmo#material-textures
 CMapObj	0x01e4	4	uint32_t	m_groupLinkOffset	models	Holds the offset of the list node in a group, the head of the loaded group list	verified	one	models/wmo#group-header
+CMapObj	0x01f0	4	uint32_t	m_groupSlotCount	models	Holds the count of group pointers: 384 from the reset, the group count once parsed	verified	one	models/wmo#root-file-chunks
+CMapObj	0x01f4	1536	void *[384]	m_groups	models	Holds a group object per MOGI entry, allocated once parsed	verified	one	models/wmo#root-file-chunks
 CMapObjGroup	0x0010	4	uint32_t	m_flags	models	Holds the group flags	verified	one	models/wmo#group-header
 CMapObjGroup	0x0014	24	float[6]	m_bounds	models	Holds the bounding box	verified	one	models/wmo#group-header
 CMapObjGroup	0x002c	4	uint32_t	m_firstPortalRef	models	Holds the first portal reference	verified	one	models/wmo#group-header
