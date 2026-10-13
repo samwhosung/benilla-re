@@ -20,6 +20,11 @@ finding gives the full-precision value the instruction approximates, and a test 
 with the host's math library structurally rather than bit for bit. Everything else is
 deterministic, and the standard for it is exact.
 
+Some code picks its implementation at run time: D3DX's math routines jump through slots filled by
+CPU feature (x87, 3DNow or SSE versions), and the client itself chooses SSE paths by CPUID. A
+finding over such code names the selector and each version, says which one a current SSE CPU
+runs, and derives that one; a version it did not read is inferred.
+
 ## Confidence and proof
 
 Every claim, in a row or an entry, carries a confidence and a proof.
