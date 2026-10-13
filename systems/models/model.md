@@ -141,6 +141,26 @@ Test: none
 `row1 × n`, and row 2 to `n`. The blend weight in `0x7106c0` reads the state from `0x711fe0`; its
 exact time arithmetic was not transcribed.
 
+## Reference frame
+
+An instance can live in a moving frame, the world matrix of the transport its owner rides.
+`SetTransportFrame(m)` copies `m` into `+0x13c` and makes it the frame; a null `m` clears the
+frame. When a loaded instance gains a frame, its particles and ribbon vertices are moved into the
+frame's space by its inverse; when it loses one, they are moved back by the frame. Changing one
+frame for another moves nothing. Children with a resolved attachment take the same frame, an
+attached child copies its parent's on every animate, and the emitters receive it as their frame.
+
+Addresses: `0x718910`, `0x718870`, `0x718888`, `0x7188b9`, `0x7188d5`, `0x7187f0`, `0x7142bb`, `0x719147`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x718870(frame)` returns at once for an unloaded instance (`+0x10`). With a frame it stores it
+at `+0x17c` and, when `+0x17c` was null, passes `InvertAffineMatrix(frame)` to `0x7187f0`; with
+none it passes the old frame to `0x7187f0` and stores 0. `0x7187f0` calls `0x7b5e60` for every
+particle emitter and `0x7b7bc0` for every ribbon. The walk at `0x7188d5` recurses into children
+whose `+0x1d4` is not 0xffff. `0x719147` passes `+0x17c` to `0x7b5230`.
+
 ## Geoset visibility
 
 An instance holds one visibility word per submesh of the selected view at `+0x98` and, when the

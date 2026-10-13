@@ -141,7 +141,8 @@ CM2Model	0x0090	4	void *	m_boneStates	models	Holds the bone states, 0x118 bytes 
 CM2Model	0x0094	4	void *	m_boneMatrices	models	Holds the bone matrices, 64 bytes each	verified	one	models/model#instance-object
 CM2Model	0x00bc	64	float[16]	m_baseMatrix	models	Holds the instance's base matrix	verified	one	models/model#instance-object
 CM2Model	0x00fc	64	float[16]	m_worldMatrix	models	Holds the instance's world matrix	verified	one	models/model#instance-object
-CM2Model	0x013c	64	float[16]	m_transportMatrix	models	Holds the transport matrix the emitters use as their frame	verified	one	models/model#instance-object
+CM2Model	0x013c	64	float[16]	m_transportMatrix	models	Holds the copied transport matrix the reference frame points at	verified	one	models/model#reference-frame
+CM2Model	0x017c	4	float *	m_referenceFrame	models	Holds the reference frame, the transport matrix, or null	verified	one	models/model#reference-frame
 CM2Model	0x0180	4	float	m_alpha	models	Holds the instance alpha	verified	one	models/model#instance-object
 CM2Model	0x0184	12	float[3]	m_diffuse	models	Holds the diffuse colour multiplier	verified	one	models/model#instance-object
 CM2Model	0x0190	12	float[3]	m_emissive	models	Holds the emissive colour	verified	one	models/model#instance-object

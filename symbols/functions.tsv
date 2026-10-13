@@ -11602,9 +11602,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x714240	19	InitM2ModelInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
 0x714260	17703	CM2Model::Animate		models	primitive		Computes an instance's bone matrices and animated colours, textures, lights, emitters and children	verified	one	models/animation#sequence-time	
 0x7187e0	1	M2TextureCenterAtexit		models	orchestration		Returns; the exit hook of the texture transform centre constant	inferred	none		
-0x7187f0	116	CM2Model::TransformEmitters		models	orchestration		Transforms an instance's particles and ribbons by a matrix	inferred	none		
-0x718870	150	CM2Model::SetReferenceFrame		models	orchestration		Sets the frame an instance's emitters live in and re-expresses them, for it and its children	inferred	none		
-0x718910	77	CM2Model::SetTransportFrame		models	orchestration		Copies a transport matrix into an instance and makes it the emitters' frame	inferred	none		
+0x7187f0	116	CM2Model::TransformEmitters		models	orchestration	void __thiscall (CM2Model *this, const float *matrix)	Transforms every particle and ribbon vertex of an instance by a matrix	verified	one	models/model#reference-frame	
+0x718870	150	CM2Model::SetReferenceFrame		models	orchestration	void __thiscall (CM2Model *this, const float *frame)	Sets or clears a loaded instance's reference frame, moving its emitters into or out of it, then its children's	verified	one	models/model#reference-frame	
+0x718910	77	CM2Model::SetTransportFrame		models	orchestration	void __thiscall (CM2Model *this, const float *matrix)	Copies a transport matrix into the instance and makes it the reference frame, or clears the frame	verified	one	models/model#reference-frame	
 0x718960	2374	CM2Model::UpdateAfterAnimate		models	primitive		Pushes an instance's animated lights, cameras, ribbons and particles to their objects, then draws it	verified	one	models/animation#pushing-animated-state	
 0x7192b0	191	CM2Model::UpdateLighting		models	orchestration		Builds an instance's lighting record from the scene lights at its position and its lighting callback	verified	one	models/lights#instance-lighting	
 0x719370	1470	CM2Model::Update		models	primitive		Advances an instance's time and queues its animation-done and event callbacks for the frame	verified	one	models/animation#update-and-events	
