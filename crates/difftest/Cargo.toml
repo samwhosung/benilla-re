@@ -1,0 +1,14 @@
+[package]
+name = "benilla-re-difftest"
+description = "Runs WoW.exe's own code in the Unicorn emulator, to test a reimplementation bit for bit"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+# Unicorn is GPL-2.0. This crate is only ever a dev-dependency of the system crates, so nothing
+# that ships links it.
+[dependencies]
+unicorn-engine = "=2.1.5"
+object = "=0.39.1"
+sha2 = "0.10"
