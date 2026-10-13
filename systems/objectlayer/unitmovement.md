@@ -210,6 +210,7 @@ mode has a 12-byte row of `0x860a58`: enabled, a maximum squared distance, and t
 
 | mode | use | maximum | stop distance² |
 |---|---|---|---|
+| 0, 1 | keep facing the target or channel object | none | none |
 | 2 | face a direction | none | none |
 | 8 | walk along a heading | none | none |
 | 3 | follow (`AUTOFOLLOW_BEGIN`) | 900 | 9 |
