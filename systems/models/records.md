@@ -94,12 +94,14 @@ A sequence is 0x44 bytes.
 Addresses: `0x7128af`, `0x7128b3`, `0x714585`, `0x7124b9`, `0x712692`, `0x7126a0`, `0x7125f2`, `0x709bff`, `0x7124cf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::m2_set_bone_timed_difftest`
 
 Each read multiplies the index by 0x44. `0x7128b3` and `0x7128af` read `+0x4` and `+0x8`;
 `0x714585` tests `+0x10` bit 0; `0x7124b9` subtracts `+0x14` from the draw; `0x712692` and
 `0x7126a0` read `+0x18` and `+0x1c`; the blend reads `+0x20` (`0x7125f2`); `0x709bff` takes the box at `+0x24` with the radius
 `0x18` past it; `0x7124cf` follows `+0x40`.
+
+`m2_set_bone_timed_difftest` runs `0x7127f0` whole.
 
 ## Bone record
 

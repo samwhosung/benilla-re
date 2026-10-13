@@ -23,13 +23,16 @@ through its kind and copies the element's keys to the previous-element slots; a 
 Addresses: `0x708900`, `0x70b0e0`, `0x70b360`, `0x70b728`, `0x70cb30`, `0x70cf70`, `0x70d330`, `0x70d820`, `0x70d8b0`, `0x70d960`, `0x70b330`, `0x70b350`, `0x70dbf0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::decal_texgen_pack_difftest`, `models::unit_length_gate_difftest`
 
 `0x708900` calls `0x70b0e0` on the stack state, then `0x70b360(k, elements, list data, list
 count)` with the arrays at scene `+0x54 + 16k` and `+0x50 + 16k`, and again with `+0x44`/`+0x40`
 for `k = 0`. `0x70b360` stores the element at `+0x3300`, its kind at `+0x3308`, the instance at
 `+0x3310` and dispatches through the six-entry table `0x70b728`: kinds 0 to 5 go to `0x70cb30`,
 `0x70cf70`, `0x70d330`, `0x70d820`, `0x70d8b0` and `0x70d960`.
+
+Of `0x70cf70`, `decal_texgen_pack_difftest` runs `0x70d07e`–`0x70d2d0`; of `0x70d330`,
+`unit_length_gate_difftest` runs `0x70d717`–`0x70d761`.
 
 ## Texture stages
 
@@ -89,13 +92,16 @@ it as a user clip plane, negated for list 2.
 Addresses: `0x70baf0`, `0x811fa8`, `0x811fc4`, `0x70c17c`, `0x70bdeb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::batch_alpha_resolve_difftest`, `models::batch_clamp_pack_difftest`, `models::batch_negate4_difftest`
 
 The tables are `0x811fa8` (1, 1, 1, 1, 1, 0, 0) for lighting and `0x811fc4` (1, 1, 1, 2, 2, 3,
 4) for the fog mode, which `0x70bdeb` dispatches through `0x70c17c`. Mode 1 packs the colour at
 `+0x190`, each component 0 at or below 0, 255 at or above 1, else `ftol(x·255 + 0.5)`; modes 2, 3
 and 4 store 0, 0xffffff and 0x808080. With vertex shaders the fog constants are `−+0x18c` and
 `+0x188 · +0x18c`. The clip plane is lighting `+0x1a0`, its four floats negated when `k = 2`.
+
+Of `0x70baf0`, `batch_alpha_resolve_difftest` runs `0x70bdbb`–`0x70bde5`,
+`batch_clamp_pack_difftest` `0x70beb5`–`0x70bfaa`, `batch_negate4_difftest` `0x70c10f`–`0x70c14c`.
 
 ## Lighting lanes
 
@@ -142,7 +148,7 @@ the diffuse into the emissive and zeroes the diffuse.
 Addresses: `0x70c190`, `0x811fe0`, `0x70c20f`, `0x70c259`, `0x70c2bc`, `0x70c390`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::color_scale_difftest`, `models::normalize_residual_difftest`, `models::rgba_pack_value_difftest`, `models::scale_add_difftest`
 
 `0x70c1f1` compares the blend word with 1 for an element with `+0x8` set; `0x70c20f` reads
 `[ecx*4+0x811fe0]` with `ecx = 7k + blend`. The alpha reference multiplies element `+0x10` by 224.0
@@ -151,6 +157,10 @@ write test material bits 8 and 0x10 and instance `+0x4` bit 2. The normalize tes
 the bone matrix, subtracts 1.0, takes `fabs` and compares with 0.001 (`0x801360`); it is skipped
 when `+0x32f0` is set or the kind is 2 (`0x70c319`), and a kind above 2 tests instance `+0xfc`
 (`0x70c569`). The colour states pack each channel clamped to [0, 1] as `x·255 + 0.5`.
+
+Of `0x70c190`, `color_scale_difftest` runs `0x70c256`–`0x70c25f`, `normalize_residual_difftest`
+`0x70c36a`–`0x70c5a8`, `scale_add_difftest` `0x70c631`–`0x70c69c`, `rgba_pack_value_difftest`
+`0x70c77e`–`0x70ca07`.
 
 ## Material colours
 
@@ -165,7 +175,7 @@ previous element's commits nothing.
 Addresses: `0x70c3b7`, `0x70c4d3`, `0x70c60a`, `0x70c657`, `0x70c696`, `0x70c712`, `0x70c8ad`, `0x70c997`, `0x70c9ae`, `0x70ca20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::scale_add_difftest`
 
 `0x70c3b7` compares the kind with 2 and `jg 0x70c9ae`. `D` starts as instance `+0x1a0` and `E` as
 `+0x1ac` (`0x70c4d3`); blend 5 sets `D` = 0 and `E` = 1, blend 6 `E` = 0.5; others multiply `D` by
@@ -175,6 +185,8 @@ the colour state at unit `+0x8` when it is below header `+0x54` (`0x70c60a`); a 
 each channel and the alpha to [0, 1], packs `ftol(x·255 + 0.5)`, and sets state 1 (`0x70c8ad`) and
 state 2 with alpha byte 0 (`0x70c997`). Kinds above 2 pack `(a << 24) | 0xffffff` into state 1
 (`0x70ca20`), 0 into state 2 and 0.0 into state 4.
+
+Of `0x70c190`, `scale_add_difftest` runs `0x70c631`–`0x70c69c`.
 
 ## Batch draw
 
@@ -216,7 +228,7 @@ aligned.
 Addresses: `0x71a720`, `0x71a9e0`, `0x71a460`, `0xcf04c8`, `0x70dd70`, `0x8026c8`, `0x71aaa6`, `0x71aabc`, `0x71aba1`, `0x71abcd`, `0x429bfc`, `0x429c06`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::m2_vertex_skin_difftest`, `models::m2_vertex_transform_difftest`, `models::m2_vertex_transform_sse_difftest`
 
 The constructor `0x70dd70` stores `0x71a720` in `0xcf04c8` and replaces it with `0x71a9e0` when
 `OsGetCpuCapabilities()` has bits 2 and 4, which `0x429b90` sets from CPUID leaf 1 EDX bits 23
@@ -228,6 +240,9 @@ rows are scaled with `mulps` and added in weight order. The position starts as `
 entries of each 64-byte bone matrix. `0x71a460` writes 40-byte vertices with a second coordinate set
 on the x87 path.
 
+`m2_vertex_skin_difftest` runs `0x71a460` whole; `m2_vertex_transform_difftest` runs `0x71a720`
+whole; `m2_vertex_transform_sse_difftest` runs `0x71a9e0` whole.
+
 ## Ribbon, particle and custom draws
 
 A ribbon, particle or custom element sets its material state, offsets the view to the emitter's
@@ -238,13 +253,15 @@ its flag 8 is set, plus 0x10 when its blend is above 1.
 Addresses: `0x70ca50`, `0x70cb10`, `0x70d820`, `0x70d8b0`, `0x70d960`, `0x7b80c0`, `0x7b4b40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::model_matrix_translate_difftest`
 
 `0x70ca50` runs the texture, lighting and material setup, adds `R·offset` to the view's translation
 (`((m20·oz + m10·oy) + m00·ox) + m30` per column) and sets it. `0x70d820` draws
 `0x7b80c0(ribbon, reference frame)`, `0x70d8b0` draws `0x7b4b40(emitter, reference frame)` after
 building the material from the record's `+0x4` flags and `+0x28` blend, and `0x70d960` calls the
 instance's draw callback `+0x1b8`. `0x70cb10` ends each.
+
+Of `0x70ca50`, `model_matrix_translate_difftest` runs `0x70ca9b`–`0x70caef`.
 
 ## Grouped and projected draws
 
@@ -274,7 +291,7 @@ the scene matrix's last column is (0, 0, 0, 1).
 Addresses: `0x719c20`, `0x719c2d`, `0x719c5f`, `0x719dcb`, `0x719e04`, `0x719f45`, `0x719f59`, `0x71a00b`, `0x71a016`, `0x71a093`, `0x74a7c0`, `0x8026c8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::m2_decal_projection_difftest`
 
 `0x719c5f` seeds the 16 floats at `ebp−0x54` to identity before the loop. `0x719e04` scales the
 first weight byte by 1/255 unconditionally and the loop at `0x719e80` adds the next ones until a
@@ -285,3 +302,5 @@ zero, each times twelve entries of the bone matrix at model `+0x94` plus 64·ind
 bounds start at ±3.402823e38 and each compare skips on equal or NaN. The x sum stays unrounded on
 the FPU stack into its compares and the `+0x10c` subtraction (`0x71a016`); y and z go through
 floats. The three corners feed the code from `0x71a093`.
+
+`m2_decal_projection_difftest` runs `0x719c20` whole.

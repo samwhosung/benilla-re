@@ -46,7 +46,7 @@ and scale 0.75.
 Addresses: `0x7121a0`, `0x711bf0`, `0x710310`, `0x7126a8`, `0x7126f4`, `0x712701`, `0x71278f`, `0x712647`, `0x712682`, `0x7125c9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::anim_fade_difftest`, `models::keyframe_ratio_difftest`, `models::keyframe_timing_difftest`, `models::rate_reciprocal_difftest`
 
 The key bone maps through header `+0x3c`; −1 is bone 0. The variation chain follows sequence
 `+0x40`; a random draw subtracts each probability `+0x14` from `rand()`. Repeats are `min +
@@ -60,6 +60,10 @@ is above 0.5 or NaN), sets the fade end to `clock + blend time`, its rate to `1/
 scale to 1.0; a non-primary play sets them to `clock + (end − start)`, `1/(end − start)` (1.0 for
 an empty range) and 0.75 (`0x712647` to `0x712682`). The stop fade uses 150 ms and 1/150 (bits
 0x3bda740e).
+
+Of `0x7121a0`, `anim_fade_difftest` runs `0x712352`–`0x7125d4`, `rate_reciprocal_difftest`
+`0x71260c`–`0x712633`, `keyframe_timing_difftest` `0x7126d2`–`0x71279c`, `keyframe_ratio_difftest`
+`0x712718`–`0x712731`.
 
 ## Sequence time
 
@@ -133,7 +137,7 @@ a float for x and y but not for z, and multiplies by its parent.
 Addresses: `0x714260`, `0x714961`, `0x714a96`, `0x714ab9`, `0x714caf`, `0x7151b0`, `0x74b6b5`, `0x74a7c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::m2_decal_projection_difftest`
 
 The flags are bone record `+0x4` or'd with the runtime flags `+0xf4`. Flag 4's factor is `fdivrp`
 (`de f1`) at `0x714ab9`, `|parent row|²` over `|world row|²`, then `fsqrt`; the 1e-5 test is
@@ -143,6 +147,8 @@ dispatched routines (`Dispatched matrix math`), so the claim holds for the steps
 their results are not transcribed. Scale samples `+0x44` and scales the rows; translation samples
 `+0xc` and adds the pivot `+0x60`; `fsubr st,st(1)` at `0x7151b0` uses the unrounded z sum. Each
 track is sampled only when it has more keys than the first-update gate `+0x8c` allows.
+
+Of `0x74a7c0`, `m2_decal_projection_difftest` runs `0x74a7c0`.
 
 ## Dispatched matrix math
 
@@ -294,7 +300,7 @@ parent chain with a sequence. Attached children with a resolved, visible attachm
 Addresses: `0x719370`, `0x7193eb`, `0x719467`, `0x719484`, `0x7194bc`, `0x719503`, `0x71958c`, `0x7195fa`, `0x71965f`, `0x719685`, `0x7196a6`, `0x7196d9`, `0x719781`, `0x719909`, `0x70a280`, `0x70a400`, `0x714000`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::abs_int_scale_difftest`, `models::bone_emit_frame_difftest`
 
 A not-yet-loaded instance defers the call as kind 9; the pending time is `+0x88`. `0x7193eb` needs
 `+0x1f4` or `+0x70`. The comparisons are unsigned (`0x719467`, `0x719484`); sequence flag 1 keeps
@@ -307,6 +313,9 @@ is the first with `cursor ≤ time` (`0x719685`), `0x7196a6` wraps, and `0x7196d
 The callback gets the event's id `+0x0`, its data `+0x4`, its offset `+0xc` through its bone and the
 scene, and `ftol(|1/speed|·(local end − key))`. `0x719909` reads attachment state byte `+0xc`.
 
+Of `0x719370`, `bone_emit_frame_difftest` runs `0x71952c`–`0x719567`, `abs_int_scale_difftest`
+`0x719724`–`0x719861`.
+
 ## Pushing animated state
 
 After animating, `UpdateAfterAnimate` positions the instance's lights, sets its cameras' eye,
@@ -317,10 +326,18 @@ tracks with more than one key.
 Addresses: `0x718960`, `0x71b650`, `0x71b6a0`, `0x71b780`, `0x7b7e60`, `0x7b5230`, `0x7ac250`, `0x7ac3a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::camera_xform_difftest`, `models::count_scale_difftest`, `models::drift_block_difftest`, `models::eps_gate_difftest`, `models::field_scale_difftest`, `models::half_pi_difftest`, `models::light_translate_adds_difftest`, `models::m2_light_set_direction_difftest`, `models::particle_bone_xform_difftest`, `models::prologue_length_difftest`, `models::ribbon_bone_xform_difftest`, `models::trail_block_difftest`
 
 The elapsed time is `fild qword +0x88` times 0.001, then `+0x88` is zeroed. A point light is placed
 at its bone-transformed position, others along the negated third bone row. Cameras set property 7
 (eye), 8 (target) and 5 (roll). Each particle emitter gets `0x7b5230(dt, matrix, scene camera,
 reference frame)` with its bone matrix rotated by π/2 about z. The gate `+0x8c` becomes 1 at the
 end.
+
+Of `0x718960`, `camera_xform_difftest` runs `0x718a7e`–`0x718aed`, `light_translate_adds_difftest`
+`0x718b66`–`0x718c03`, `count_scale_difftest` `0x718c78`–`0x718c95`, `field_scale_difftest`
+`0x718cf0`–`0x718cfd`, `ribbon_bone_xform_difftest` `0x718d6d`–`0x718dd3`,
+`particle_bone_xform_difftest` `0x7190a9`–`0x71910f`, `half_pi_difftest` `0x719114`–`0x719142`;
+`m2_light_set_direction_difftest` runs `0x71b6a0` whole; of `0x7b5230`, `prologue_length_difftest`
+runs `0x7b523f`–`0x7b528f`, `eps_gate_difftest` `0x7b52d7`–`0x7b5300`, `drift_block_difftest`
+`0x7b530e`–`0x7b53cc`, `trail_block_difftest` `0x7b53ce`–`0x7b54cd`.

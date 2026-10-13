@@ -24,7 +24,7 @@ accumulator to the seed and each lane to four times the seed modulo a prime: byt
 Addresses: `0x44ea80`
 Confidence: verified
 Proof: two
-Test: `random::srand_seed_state_init`, `random::prng_difftest`
+Test: `random::srand_seed_state_init`, `random::prng_difftest`, `random::seeded_sequence_difftest`
 
 Four unsigned `div` by `0x2f`, `0x35`, `0x3b`, `0x3d` (`0x44ea92` to `0x44eac1`); the remainders are
 packed high byte first, the whole dword shifted left by 2 (`0x44eac8`) and stored at `+4`
@@ -32,6 +32,8 @@ packed high byte first, the whole dword shifted left by 2 (`0x44eac8`) and store
 stack. No lane can exceed `0xf0`, so the shift loses nothing. The state's class name,
 `NTempest::CRndSeed`, is the community database's name for `0x44ea80`. The test runs `0x44ea80`
 whole.
+
+`seeded_sequence_difftest` runs `0x44ea80` whole.
 
 ## State advance
 
@@ -52,7 +54,7 @@ accumulator. With `T(n)` the dword at byte offset `n` of `0x802700`:
 Addresses: `0x4531e0`, `0x802700`
 Confidence: verified
 Proof: two
-Test: `random::crandom_uint32_advance`, `random::prng_difftest`
+Test: `random::crandom_uint32_advance`, `random::prng_difftest`, `random::seeded_sequence_difftest`
 
 The steps are `sub` then a signed `test`/`jge` that skips the `add` of the modulus (`0x453215`,
 `0x453225`, `0x45323a`, `0x453259`): the modulus is added only when the subtraction goes negative,
@@ -70,6 +72,8 @@ group with the lane moduli and the byte-indexed form `[reg+0x802700]`. The contr
 itself, where the same scan finds the advance and the hashes. The hashes' `[4*reg+0x802700]` form
 occurs nowhere outside it. The test runs `0x4531e0` whole.
 
+`seeded_sequence_difftest` runs `0x4531e0` whole.
+
 ## Unit vectors
 
 `0x44fd00` advances a state once, takes the accumulator's low 23 bits as the mantissa of a float
@@ -82,7 +86,7 @@ the output pointer in `ecx` and the state in `edx`.
 Addresses: `0x44fd00`, `0x44fe20`
 Confidence: verified
 Proof: one
-Test: `random::rand_44fd00_gradient`, `random::rand_unit_vector_3d_diff`
+Test: `random::rand_44fd00_gradient`, `random::rand_unit_vector_3d_diff`, `random::unit_vector_3d_states_difftest`
 
 Each inlines the advance of `0x4531e0` (same steps, moduli and rotates), stores the state back,
 and calls nothing. The angle: mantissa `and 0x7fffff`, `or 0x3f800000`, `fsub` 1.0, `fmul` 2π
@@ -92,6 +96,8 @@ radius from `fld z; fmul z; fsubr 1.0; fsqrt` (`0x450002` to `0x450010`). `z` is
 can be −1 or 1. `rand_44fd00_gradient` runs only `0x44fdc8` to `0x44fe17`, so `0x44fd00`'s
 inlined advance has no test of its own; `rand_unit_vector_3d_diff` runs `0x44fe20` whole. Each
 function has one caller outside the library.
+
+`unit_vector_3d_states_difftest` runs `0x44fe20` whole.
 
 ## Static initializers
 

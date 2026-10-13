@@ -131,11 +131,16 @@ liquid grid of 4.1666665-yard tiles.
 Addresses: `0x6a37b0`, `0x6a3b10`, `0x6a3c20`, `0x6a3dc0`, `0x6b92b0`, `0x6bc370`, `0x6bc1c0`, `0x693d60`, `0x6b9f10`, `0x6b9a50`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `models::aabsp_box_query_difftest`, `models::bspdispatch_normalize_difftest`, `models::mliq_liquid_height_difftest`, `models::seg_face_cross_difftest`, `models::seg_face_dot_difftest`, `models::seg_normal_scale_difftest`, `models::wmo_mocv_barycentric_color_difftest`
 
 Each map object query guards on `+0x1d4` and each group through `0x6a4a00`. The segment walk is
-`BSP segment descent`; the box and volume walks, the leaf tests and the liquid grid, which scales
-by 1/4.1666665, were not transcribed.
+`BSP segment descent`; the liquid grid scales by 1/4.1666665.
+
+Of `0x6a37b0`, `seg_face_cross_difftest` runs `0x6a3920`–`0x6a39b8`, `seg_face_dot_difftest`
+`0x6a39bd`–`0x6a39f4`, `seg_normal_scale_difftest` `0x6a3a11`–`0x6a3a36`; of `0x6b92b0`,
+`bspdispatch_normalize_difftest` runs `0x6b9354`–`0x6b9388`; `wmo_mocv_barycentric_color_difftest`
+runs `0x6b9a50` whole; `mliq_liquid_height_difftest` runs `0x6b9f10` whole;
+`aabsp_box_query_difftest` runs `0x6bc1c0` whole.
 
 ## BSP segment descent
 
@@ -150,13 +155,19 @@ start's side first. A leaf tests its cached mesh, else each face.
 Addresses: `0x6bc370`, `0x6bc394`, `0x6bc3e9`, `0x6bc4c5`, `0x6bc4fc`, `0x6bc535`, `0x6bc56e`, `0x6b88e0`, `0x6bc700`, `0x810ccc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::aabsp_leaf_tscale_difftest`, `models::aabsp_segment_clip_difftest`, `models::aabsp_segment_split_difftest`, `models::wmobsp_leaf_tscale_difftest`
 
 `0x6bc3e9` masks the axis with 3 and compares `p − box.min` with −0.01 (`0x810ccc`) and
 `box.max − p` with 0.01. The child boxes copy the parent's with `min[axis]` or `max[axis]` set to
 the split. `0x6bc56e` computes `f0/(f0 − f1)` with `fdivr` and the midpoint `p0 + (p1 − p0)·t`;
 `f0 > 0` takes the positive child first. A leaf calls `0x6b88e0`, and on 0 `0x6bc700` for each of
 its `+0x6` face indices.
+
+Of `0x6b88e0`, `aabsp_segment_clip_difftest` runs `0x6b88e0`–`0x6b88f4`,
+`wmobsp_leaf_tscale_difftest` `0x6b8af8`–`0x6b8b2a`; `aabsp_segment_clip_difftest` runs `0x6bc370`
+whole; of `0x6bc370`, `aabsp_segment_split_difftest` runs `0x6bc56e`–`0x6bc5bc`; of `0x6bc700`,
+`aabsp_segment_clip_difftest` runs `0x6bc700`–`0x6bc719`, `aabsp_leaf_tscale_difftest`
+`0x6bc78d`–`0x6bc7bb`.
 
 ## Bounding spheres and volume
 
@@ -169,13 +180,16 @@ it is inside; an unloaded map object contains nothing.
 Addresses: `0x6a4310`, `0x6a44b0`, `0x6a4990`, `0x6a49d7`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::wmo_bounding_sphere_difftest`, `models::wmo_point_in_convex_volume_difftest`
 
 `0x6a4310` adds `+0x1ac` to `+0x1a0` and so on into a stored vector, multiplies by 0.5, and takes
 `sqrt` of the squared distance from the centre to `+0x1ac`. `0x6a44b0(out, index)` reads the
 32-byte record at `+0x130`, box at `+0x4` and `+0x10`. `0x6a4990` walks `+0x194` planes of 16
 bytes at `+0x15c` (the `MCVP` chunk), computes `((ny·py + nz·pz) + nx·px) + d` and returns 0 at the
 first plane where `test ah,0x41` finds neither C0 nor C3 (`0x6a49d7`).
+
+`wmo_bounding_sphere_difftest` runs `0x6a4310` whole; `wmo_bounding_sphere_difftest` runs `0x6a44b0`
+whole; `wmo_point_in_convex_volume_difftest` runs `0x6a4990` whole.
 
 ## Portal vertex fade
 
@@ -189,7 +203,7 @@ of the group that leads to a group with flags 0x8 or 0x40. At `d = 0` the colour
 Addresses: `0x6c41e0`, `0x6c4605`, `0x6c43d0`, `0x6c4340`, `0x6c4240`, `0x6c443e`, `0x6c4449`, `0x6c4468`, `0x6b3fb5`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::aabsp_nearest_dist_difftest`, `models::wmo_vertex_fog_blend_difftest`
 
 `0x6c4605` calls `0x6c41e0` unless the byte at `0xca8064` is set. `0x6b3fb5` calls `0x6c43d0` while
 group `+0xbc` is 0; it sets `+0xbc` and loops vertices 0 through batch `+0x14` of batch
@@ -197,6 +211,9 @@ group `+0xbc` is 0; it sets `+0xbc` and loops vertices 0 through batch `+0x14` o
 group's record flags with 0x48. `0x6c4240` returns 0 when the squared plane distance is under
 1/36 and the point lies in the portal polygon, else the least edge distance. The constants are
 6.666667, 0.15 and 255.0.
+
+`aabsp_nearest_dist_difftest` runs `0x6c4240` whole; of `0x6c4340`, `wmo_vertex_fog_blend_difftest`
+runs `0x6c4340`–`0x6c435a`; `wmo_vertex_fog_blend_difftest` runs `0x6c43d0` whole.
 
 ## Vertex buffer pools
 

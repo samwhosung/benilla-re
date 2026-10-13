@@ -85,7 +85,7 @@ position; the centre is (min + max)/2 and the radius |max − centre|.
 Addresses: `0x6b0e50`, `0x699250`, `0x6b11f0`, `0x741760`, `0x80fee4`, `0x7ffab4`, `0x6b0f20`, `0x6b0fb1`, `0x6b101f`, `0x6b106c`, `0x6b112d`
 Confidence: verified
 Proof: one
-Test: `terrain::vec3_min`, `terrain::vec3_max_inplace`, `terrain::mcvt_world_verts`
+Test: `terrain::vec3_min`, `terrain::vec3_max_inplace`, `terrain::mcvt_world_verts`, `terrain::vec3_max_inplace_difftest`
 
 Each product is `fild; fstp dword; fld; fmul [0x80fee4]` (33.333332, 0x42055555) then `fstp`, and
 o adds 17066.666 (0x46855555, `0x7ffab4`) to the negation and stores. `0x6b0f20` forms o(h) −
@@ -97,6 +97,8 @@ vertex. From `0x6b106c` the box min (+0x44) and max (+0x50) each add the positio
 centre +0x5c is each sum stored then halved, and the radius +0x68 is `_CIsqrt` (`0x6b112d`) of
 dx² + dy² + dz², the deltas stored, the sum at 53 bits then stored; `rep movs` copies the box to
 +0x94. Because sx depends on rounding at g, it is not always −4.1666665.
+
+`vec3_max_inplace_difftest` runs `0x6b11f0` whole.
 
 ## Chunk normals
 

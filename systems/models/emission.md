@@ -62,11 +62,14 @@ by the draw and the update.
 Addresses: `0x70ff27`, `0x70ff3f`, `0x70ff7d`, `0x70ffd7`, `0x70ffef`, `0x710029`, `0x7b5d30`, `0x710045`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::part_span_deltas_difftest`, `models::remap_fit_difftest`, `models::remap_gate_difftest`
 
 `0x70ff3f` stores `+0x188` at `+0x1b8` and `+0x18c − +0x188` at `+0x1c0`; the three model pairs
 store the minimum and `max − min` the same way. `0x7b5d30(s0, f0, s1, f1)` stores the slope `(f1 −
 f0)/(s1 − s0)` and `f0 − slope·s0`, or zero for both when `|s1 − s0| < 2.384186e-7`.
+
+Of `0x70ebd0`, `part_span_deltas_difftest` runs `0x70ff3f`–`0x710029`; `remap_fit_difftest` runs
+`0x7b5d30` whole; of `0x7b5d30`, `remap_gate_difftest` runs `0x7b5d33`–`0x7b5d48`.
 
 ## Record flags
 
@@ -111,7 +114,7 @@ matrix moved to the record position, times the scene matrix, turned by π/2 abou
 Addresses: `0x718ea0`, `0x718ed0`, `0x718f12`, `0x718f2d`, `0x718f56`, `0x719073`, `0x717eb0`, `0x7b4ba0`, `0x7b5c50`, `0x719142`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::half_pi_difftest`
 
 `0x717eb0` stores state `+0x160` = byte `+0x14c` and instance `+0x50`; `0x718f2d` passes it to
 `0x7b4ba0`, which copies bit 0 into flag 1, and `0x718f56` calls slot 10 with state `+0xcc` when
@@ -120,6 +123,8 @@ Test: none
 variation use `0x7b4c50` and `0x7b4c70`, the ranges slots 8 and 9, gravity, lifespan, area length
 and width slots 6 and 7, z source `0x7b5cd0`, which stores 0 when `|z| < 0.001`. `0x719142` calls
 `0x7bdd60` with half of 2π about (0, 0, 1).
+
+Of `0x718960`, `half_pi_difftest` runs `0x719114`–`0x719142`.
 
 ## Speed and birth
 
@@ -133,11 +138,17 @@ in (0, 1] when `w` is negative, else `x − 2` in [−1, 0).
 Addresses: `0x7b1cc0`, `0x7b88c4`, `0x7b8da4`, `0x7b9532`, `0x4531e0`, `0x801628`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::burst_velocity_difftest`, `models::emit_shape_plane_difftest`, `models::emit_shape_sphere_difftest`, `models::emit_shape_spline_difftest`, `models::emitter_speed_difftest`, `models::emitter_speed_states_difftest`
 
 `0x7b1cc0` inlines the state advance of `0x4531e0` on `+0x2c` and returns
 `(S·+0x184 + 1.0)·+0x17c`. The age store is `fmul [ebp+0xc]; fstp [edi+0x1c]` in each kernel; the
 burst call passes 0 (`particles#spawn-count`). `S` uses `fld 2.0; fsub x` on `jge` not taken.
+
+`burst_velocity_difftest`, `emit_shape_plane_difftest`, `emit_shape_sphere_difftest`,
+`emit_shape_spline_difftest`, `emitter_speed_difftest` and `emitter_speed_states_difftest` run
+`0x7b1cc0` whole; `burst_velocity_difftest` and `emit_shape_plane_difftest` run `0x7b8890` whole;
+`emit_shape_sphere_difftest` runs `0x7b8d70` whole; `emit_shape_spline_difftest` runs `0x7b9500`
+whole.
 
 ## Plane spawn
 
@@ -148,12 +159,14 @@ z source `z` its velocity is `speed·normalize(p − (0, 0, z))`; otherwise, wit
 Addresses: `0x7b8890`, `0x7b892b`, `0x7b8970`, `0x7b8a73`, `0x7b8c10`, `0x7b8c20`, `0x7b8c30`, `0x7b8c40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::burst_velocity_difftest`, `models::emit_shape_plane_difftest`
 
 Slots 6 to 9 store length `+0x290`, width `+0x294`, vertical `+0x298`, horizontal `+0x29c`. The
 second draw scales `+0x294`, the third `+0x290` (`0x7b892b`), each times 0.5. The z source is
 `+0x188`; the radial branch divides the speed by `sqrt` of the squared length with no zero test.
 `0x7b8a73` takes `fsin` and `fcos` of θ times the speed, then of φ.
+
+`burst_velocity_difftest` and `emit_shape_plane_difftest` run `0x7b8890` whole.
 
 ## Sphere spawn
 
@@ -165,13 +178,16 @@ unit direction itself.
 Addresses: `0x7b8d70`, `0x7b8dc7`, `0x7b8e5b`, `0x7b8ecc`, `0x7b8f7f`, `0x7b9180`, `0x7b91a0`, `0x7b91c0`, `0x7b91d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::emit_shape_sphere_difftest`, `models::sphere_set_max_difftest`, `models::sphere_set_mid_difftest`
 
 Slots 6 and 7 store the minimum `+0x290` and maximum `+0x294` and keep `+0x298 = max − min`; slots 8
 and 9 store `+0x29c` and `+0x2a0`. `0x7b8e5b` and `0x7b8e76` take `fsincos` of A and B. The
 direction is scaled by `R` into the position, and the chosen velocity by the speed roll at
 `0x7b8fe6`, unrounded: `0x7b8fee` multiplies by the roll still on the FPU stack, where the plane and
 the spline store it as a float first (`0x7b896d`, `0x7b95a4`).
+
+`emit_shape_sphere_difftest` runs `0x7b8d70` whole; `sphere_set_mid_difftest` runs `0x7b9180` whole;
+`sphere_set_max_difftest` runs `0x7b91a0` whole.
 
 ## Spline spawn
 
@@ -185,7 +201,7 @@ words as integers, so −0.0 counts as set.
 Addresses: `0x7b9500`, `0x7b9538`, `0x7b9598`, `0x7b963b`, `0x7b96f0`, `0x7b9737`, `0x7b9970`, `0x7b99c0`, `0x7b9a60`, `0x453390`, `0x453420`, `0x7be490`, `0x7b973f`, `0x7b9747`, `0x7b9a09`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::emit_shape_spline_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`, `models::spline_set_progress_difftest`, `models::spline_set_scale_difftest`
 
 Slot 6 clamps the start into [0, 1] at `+0x294`. Slot 7 clamps the end into [0, 1] (NaN to 1) and,
 when `|end − +0x298|` is at least 2.384186e-7, stores it at `+0x298`, sets `+0x2a4` and the rate
@@ -196,6 +212,10 @@ when its byte is 0, takes `fsincos` of the angle and returns `out` (`ret 8`). Th
 the spread `+0x29c` and the horizontal `+0x2a0` are tested with `test eax, eax`; the horizontal draw
 at `0x7b9747` runs only when `+0x2a0` is set (`0x7b973f`), so it shifts the random stream only then.
 The zero-spread branch leaves the speed in the z slot (`0x7b95a4`).
+
+`emit_shape_spline_difftest` runs `0x7b9500` whole; `spline_set_progress_difftest` runs `0x7b99c0`
+whole; of `0x7b9a60`, `spline_set_scale_difftest` runs `0x7b9a63`–`0x7b9a7c`;
+`particle_quad_expand_tiled_rotated_difftest` runs `0x7be490` whole.
 
 ## Spawn space
 
@@ -208,7 +228,7 @@ velocity times `1 + S·variation` adds to the particle's velocity.
 Addresses: `0x7b8a9a`, `0x7b8b26`, `0x7b8b3d`, `0x7b9805`, `0x7bcb40`, `0x7bca80`, `0x7b2140`, `0x70a250`
 Confidence: verified
 Proof: one
-Test: `terrain::portal_screen_rect_difftest`
+Test: `terrain::portal_screen_rect_difftest`, `models::burst_velocity_difftest`, `models::color_scale_apply_sum_difftest`, `models::emit_shape_plane_difftest`, `models::emit_shape_spline_difftest`, `models::particle_quad_expand_stretched_difftest`
 
 `0x7b8aa0` tests `+0x1ac` bit 8; the clear branch calls `0x7bcb40` with w = 0 for the velocity and
 `0x7bca80` for the position, then `0x7b2140` under bit 17: it calls the callback `0xcf5758` with
@@ -216,3 +236,8 @@ Test: `terrain::portal_screen_rect_difftest`
 the size from `0x7b9b10` to the height. `0x7b8b3d` tests bit 10 and adds
 `(S·+0x184 + 1)·+0x258` to the velocity. The sphere (`0x7b9016`) and spline (`0x7b9805`) share
 the block.
+
+Of `0x7b2140`, `color_scale_apply_sum_difftest` runs `0x7b219c`–`0x7b21aa`;
+`burst_velocity_difftest` and `emit_shape_plane_difftest` run `0x7b8890` whole;
+`emit_shape_spline_difftest` runs `0x7b9500` whole; `particle_quad_expand_stretched_difftest` runs
+`0x7bcb40` whole.

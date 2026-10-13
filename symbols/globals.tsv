@@ -2446,6 +2446,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf043c	float[3]	s_m2TextureCenter		models	Holds (0.5, 0.5, 0), the centre texture transforms rotate and scale about	verified	one	models/animation#texture-transforms
 0xcf04c4	uint8_t	s_m2TextureCenterGuard		models	Holds bit 1 once the texture transform centre is built	verified	one	models/animation#texture-transforms
 0xcf04c8	void *	s_m2SkinVertices		models	Holds the vertex skinning routine the CPU features select	verified	one	models/render#software-skinning
+0xcf04d0	float	s_m2LightLinkGridScale		models	Holds the scale from world units to a light grid cell when a light links into the grid	verified	one	models/lights#scene-light-grid
 0xcf06e4	uint32_t			ui	Holds a dword that LcdInitialize, LcdShutdown, UpdateKeyboardLcd read and write; not read here	inferred	none	
 0xcf0a3c	float	s_softFloatZero		cmath	Holds 0.0, set by 0x7625e0; the floor and ceil read it	verified	one	spell/records#software-floats
 0xcf0a40	float	s_softFloatOne		cmath	Holds 1.0, set by 0x762e20; the ceil reads it	verified	one	spell/records#software-floats

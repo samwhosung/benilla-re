@@ -98,7 +98,7 @@ to each record's time.
 Addresses: `0x70ebd0`, `0x7101c5`, `0x7102e8`, `0x70dd40`, `0x70dd50`, `0x710ec0`, `0x7110d0`, `0x711230`, `0x711f10`, `0x7121a0`, `0x7127f0`, `0x712910`, `0x712b00`, `0x713430`, `0x719370`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::bone_timed_value_difftest`, `models::m2_set_bone_timed_difftest`, `models::part_span_deltas_difftest`
 
 Each deferring function allocates the record with its own line number, runs `0x70dd40` on it, then
 stores the kind at `+0x0`, 0 at `+0x4`, scene `+0xc` at `+0x8` and its arguments from `+0xc`, and
@@ -106,6 +106,9 @@ links it through `+0x3c`. The replay at the end of `0x70ebd0` saves the scene cl
 record stores `+0x8` into scene `+0xc` and jumps through the ten-entry table `0x7102e8` at
 `0x7101c5`; after each call it runs `0x70dd50` and frees the record. The default animation is
 `PlayAnimation(−1, id, 0, 0, 1.0, 0, 1)` with the id from `0x711bf0`.
+
+Of `0x70ebd0`, `part_span_deltas_difftest` runs `0x70ff3f`–`0x710029`; `m2_set_bone_timed_difftest`
+runs `0x7127f0` whole; of `0x712910`, `bone_timed_value_difftest` runs `0x7129db`–`0x712a82`.
 
 ## Load state
 
@@ -135,11 +138,18 @@ one by the animation's progress.
 Addresses: `0x710650`, `0x7106c0`, `0x710a80`, `0x711fe0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `models::billboard_tangent_frame_difftest`, `models::m2_orthonormal_basis_difftest`, `models::query_attach_event_difftest`, `models::spline_complement_difftest`, `models::spline_param_fdiv_difftest`, `models::spline_param_fidiv_difftest`
 
-`0x710a80` sets row 1 to `n × row0` normalized when its length exceeds 2.384186e-7, row 0 to
-`row1 × n`, and row 2 to `n`. The blend weight in `0x7106c0` reads the state from `0x711fe0`; its
-exact time arithmetic was not transcribed.
+`0x710a80` sets row 1 to `n × row0` normalized unless its length is under 2.384186e-7 (`jnp` at
+`0x710b00`, so a NaN length normalizes), row 0 to `row1 × n`, and row 2 to `n`. The blend weight
+in `0x7106c0` reads the state from `0x711fe0`, whose frame is `__ftol((now − +0xa8)·+0xb0) +
++0xb8` of the entry (`0x71204d`).
+
+Of `0x7106c0`, `billboard_tangent_frame_difftest` runs `0x710769`–`0x7108ae`,
+`spline_param_fdiv_difftest` `0x710968`–`0x710983`, `spline_param_fidiv_difftest`
+`0x71098b`–`0x71099e`, `spline_complement_difftest` `0x7109db`–`0x710a1a`;
+`m2_orthonormal_basis_difftest` runs `0x710a80` whole; of `0x711fe0`, `query_attach_event_difftest`
+runs `0x712041`–`0x712089`.
 
 ## Reference frame
 
@@ -255,12 +265,14 @@ transforms the attachment's offset by its bone matrix and the scene matrix.
 Addresses: `0x712f70`, `0x713020`, `0x713070`, `0x7130a0`, `0x712cb0`, `0x712cf0`, `0x712d50`, `0x712de0`, `0x712f00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::attach_fold_712de0_difftest`
 
 Attachments are 48-byte records at header `+0x108`, counted at `+0x104`, with the bone at `+0x4` and the offset at
 `+0x8`, looked up through header `+0x10c`. `0x712f70` calls `0x710b90(0)` and stores `+0x1cc`,
 `+0x1d0`, `+0x1d4`, `+0x1d8 = 1`. `0x712de0` adds `R·offset` to the bone matrix's translation and
 multiplies by the scene matrix. `0x713020` unlinks, clears the parent and sets the id to −1.
+
+Of `0x712de0`, `attach_fold_712de0_difftest` runs `0x712e49`–`0x712eac`.
 
 ## Events
 
@@ -285,10 +297,12 @@ header `+0xcc`. `GetBoundingBox` and `GetCollisionBox` copy the six floats at `+
 Addresses: `0x713680`, `0x713640`, `0x713700`, `0x713740`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::bbox_center_difftest`
 
 `0x713680`: `fld +0xb4; fadd +0xc0` and `fld +0xc4; fadd +0xb8` stay on the stack, `fld +0xc8;
 fadd +0xbc; fstp` rounds, then each is multiplied by 0.5 and stored. The radius is `+0xcc`.
+
+Of `0x713680`, `bbox_center_difftest` runs `0x7136a0`–`0x7136fd`.
 
 ## Collision facets
 
@@ -299,10 +313,13 @@ triangle whose vertices do not share an outside side.
 Addresses: `0x7137c0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `models::shadow_normalize_axes_difftest`, `models::shadow_transform_normal_difftest`
 
 The caches are `+0x3e4` (vertices) and `+0x3e8` (outcodes), allocated on first use. The outcode
 bits are 1 and 2 for x, 4 and 8 for y, 0x10 and 0x20 for z.
+
+Of `0x7137c0`, `shadow_normalize_axes_difftest` runs `0x713996`–`0x713a5b`,
+`shadow_transform_normal_difftest` `0x713bbd`–`0x713c64`.
 
 ## Hit-test mode
 

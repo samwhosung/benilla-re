@@ -46,7 +46,7 @@ the spline's `0x7b9a60` stores its argument at `+0x290` and `+0xa8 = arg · +0x2
 
 `Update(dt, matrix, camera, frame)` stores the distance from the emitter's position to the camera
 in a global for the spawn rate, keeps the last position, sets the frame of the emitter and its
-children, and with `|dt| ≤ 2.384186e-7` only sets its flag 0x80. With flag 0x40000 it derives its
+children, and with `|dt| < 2.384186e-7` only sets its flag 0x80. With flag 0x40000 it derives its
 displacement this frame scaled by `clamp(|d|/dt · a + b, 0, 1)`. With flag 0x400 it accumulates
 time and, past 1/30 s, derives a velocity from its motion. It then advances, and places model
 particles.
@@ -54,12 +54,17 @@ particles.
 Addresses: `0x7b5230`, `0xcf58e8`, `0x7b5160`, `0x7b5880`, `0x7b4840`, `0x81d82c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::depth_dot_drawall_difftest`, `models::substep_count_bias_difftest`, `models::substep_floor_arg_difftest`, `models::substep_remainder_difftest`, `models::substep_tangent_difftest`
 
 The distance is `sqrt` of `Vector3LengthSquared(row3 − camera)`, stored as a float at `0xcf58e8`.
 The scale terms are `+0x1f8` and `+0x1f4`, the displacement `+0x26c`. The 1/30 threshold is the
 float at `0x81d82c`; the velocity at `+0x258` is `(pos − last)·(1/(acc/(1/30)))·+0x1c4`, or zero
 when `+0x64` is 0. `0x7b5880(dt, 0)` advances; flag 0x40 is set; `0x7b4840` runs when `+0x28` is 1.
+
+Of `0x7b4840`, `depth_dot_drawall_difftest` runs `0x7b4970`–`0x7b49a9`; of `0x7b5880`,
+`substep_floor_arg_difftest` runs `0x7b58f8`–`0x7b592d`, `substep_remainder_difftest`
+`0x7b590f`–`0x7b592d`, `substep_count_bias_difftest` `0x7b595f`–`0x7b59c3`,
+`substep_tangent_difftest` `0x7b598a`–`0x7b59c3`.
 
 ## Substeps
 
@@ -72,12 +77,14 @@ of the frame's displacement. Otherwise one step takes the whole displacement.
 Addresses: `0x7b5880`, `0x7b590f`, `0x7b5935`, `0x7b5a10`, `0x7b9cf0`, `0x81d828`, `0x73ff3f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::substep_remainder_difftest`
 
 0.1 is the float at `0x81d828`; `0x73ff3f` floors the doubles. `0x7b590f` computes `dt − 0.1·n`
 from the uncapped `n`, and the cap follows at `0x7b5935`. The count goes through `+ 512.0`
 and `>> 14` of the float's bits to an integer byte. The displacement for a substep is
 `+0x26c · (1/(n + 1))` into `+0x278`; `0x7b5a10(0.1, arg)` runs `n` times, then once with the rest.
+
+Of `0x7b5880`, `substep_remainder_difftest` runs `0x7b590f`–`0x7b592d`.
 
 ## Spawn count
 
@@ -90,7 +97,7 @@ current position.
 Addresses: `0x7b5550`, `0x7b566d`, `0x7b57d0`, `0x7ae000`, `0xcf58e8`, `0x4531e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::partspawndrv_count_subtract_difftest`, `models::partspawndrv_integrate_count_jepath_difftest`, `models::partspawndrv_integrate_count_r3path_difftest`, `models::partspawndrv_rel_delta_difftest`, `models::partspawndrv_t_scalar_difftest`, `models::partspawndrv_weighted_point_difftest`
 
 The distance factor uses 50.0 and 0.02, with `fcomp 0.25` and `fcomp 1.0` clamps. The burst flag is
 0x20 and is cleared after; the enabled test needs flags 1 and 2. `fst` at `0x7b566d` stores the
@@ -98,6 +105,12 @@ accumulator and keeps the sum on the stack for `fadd 0.5` and `__ftol` (`0x7b57d
 `+0x70`, pushes it on the live list `+0x5c`, sets the record's `+0xd` to 1 and calls slot 2 (or
 slot 1 for model particles). The random fraction is `asfloat((u & 0x7fffff) | 0x3f800000) − 1`
 from `0x4531e0` on the state at `+0x2c`.
+
+Of `0x7b5550`, `partspawndrv_t_scalar_difftest` runs `0x7b5556`–`0x7b55be`,
+`partspawndrv_integrate_count_r3path_difftest` `0x7b5644`–`0x7b56b6`,
+`partspawndrv_integrate_count_jepath_difftest` `0x7b5644`–`0x7b57d6`,
+`partspawndrv_rel_delta_difftest` `0x7b5676`–`0x7b56b6`, `partspawndrv_weighted_point_difftest`
+`0x7b56f3`–`0x7b5730`, `partspawndrv_count_subtract_difftest` `0x7b586e`–`0x7b587d`.
 
 ## Particle motion
 
@@ -111,12 +124,14 @@ origin.
 Addresses: `0x7b2680`, `0x81d86c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::particle_integrate_difftest`, `models::particle_spin_integrate_difftest`
 
 The wind is `+0x1e4` to `+0x1ec`, its time `+0x1f0`, gravity `+0x180`, drag `+0x1e0`. The z update
 is `fld dt; fmul g; fmul dt; fmul 0.5; fsubr z; fadd dt·vz`. The flush compares `fabs` with 1e-8
 (`0x81d86c`) for a nonzero component. Flag 0x800 returns 0 when `dx·x + dy·y + dz·z > 0` with the
 step and the new position; otherwise the step returns 1.
+
+`particle_integrate_difftest` and `particle_spin_integrate_difftest` run `0x7b2680` whole.
 
 ## Particle life
 
@@ -129,13 +144,15 @@ list and the last live index takes its place in the live list.
 Addresses: `0x7b5a10`, `0x7b5a2f`, `0x7b5a90`, `0x7b5aaa`, `0x7b5bd9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::particle_time_advance_difftest`
 
 `0x7b5a2f` calls slot 0 when flags 1 and 2 are set or flag 0x20 is, then `0x7b5550(dt, +0x1fc)`
 unless the second argument is set. The age is `fadd [+0x1c]; fst`, compared with `+0xac` under
 `test ah,5; jp`. The gradient test compares with `+0xf0`, the second time bound of gradient 0, and
 stores byte `+0xc` = 1 when neither C0 nor C3 is set. Death calls slot 3, pushes the index on
 `+0x70` and moves the last of `+0x5c` into the hole.
+
+Of `0x7b5a10`, `particle_time_advance_difftest` runs `0x7b5a8b`–`0x7b5aa4`.
 
 ## Child emitters
 
@@ -173,13 +190,22 @@ the instance alpha; the size `s0 + (s1 − s0)·f`; a cell `a + n·f`, or `a + n
 Addresses: `0x7b9b10`, `0x7b9cf0`, `0x7b9d50`, `0x7b9da0`, `0x7b9de0`, `0x7b9e20`, `0x7b9cd0`, `0x7b9d40`, `0x7b4d60`, `0x70fd4c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::cell_ramp_flipbook_oracle_difftest`, `models::cell_ramp_record_difftest`, `models::gradient_gate_difftest`, `models::gradient_range_difftest`, `models::gradient_record_difftest`, `models::gradient_repeat_leg_scope_difftest`, `models::particle_gradient_sample_difftest`, `models::particle_quad_expand_difftest`, `models::particle_quad_expand_rotated_difftest`, `models::particle_quad_expand_stretched_difftest`, `models::particle_quad_expand_tiled_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`
 
 `0x7b9cf0` replaces a lifespan under 0.001 with 0x3a83126f and stores `t0 = L·m0`, `t1 = L·m1`
 and `1/(t1 − t0)`; the record passes `(0, mid)` and `(mid, 1.0)`. `0x7b9b10` scales by 0.99
 and adds 0.005 (floats 0x3f7d70a4 and 0x3ba3d70a), takes byte deltas from `0x7b9d50`, multiplies the alpha
 byte by its second argument, and calls `__CIfmod` with 1.0 unless the repeat word is 0x3f800000.
 The colour word holds alpha in its top byte; `>> 14` shifts the float's bits.
+
+`cell_ramp_flipbook_oracle_difftest`, `gradient_repeat_leg_scope_difftest`,
+`particle_gradient_sample_difftest`, `particle_quad_expand_difftest`,
+`particle_quad_expand_rotated_difftest`, `particle_quad_expand_stretched_difftest`,
+`particle_quad_expand_tiled_difftest` and `particle_quad_expand_tiled_rotated_difftest` run
+`0x7b9b10` whole; `gradient_record_difftest` runs `0x7b9cf0` whole; of `0x7b9cf0`,
+`gradient_gate_difftest` runs `0x7b9cf3`–`0x7b9d01`; `cell_ramp_flipbook_oracle_difftest` and
+`cell_ramp_record_difftest` run `0x7b9da0` whole; `cell_ramp_record_difftest` runs `0x7b9de0` whole;
+`gradient_range_difftest` runs `0x7b9e20` whole.
 
 ## Twinkle
 
@@ -191,12 +217,16 @@ drawn. With a scale range its size is multiplied by `min + value·range`.
 Addresses: `0x7b2a5e`, `0x7b2a86`, `0x7b2aef`, `0x7b2b71`, `0xcf58f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::particle_quad_expand_difftest`, `models::particle_quad_expand_rotated_difftest`, `models::particle_quad_expand_stretched_difftest`, `models::particle_quad_expand_tiled_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`
 
 `0x7b2a86` multiplies `+0x1b0` by the age, clamps to 0 and 255 with `fcom`, and converts through
 `+ 512.0` and `>> 14`; it adds the particle pointer shifted right by 5 and masks with 0x7f. The
 draw test at `0x7b2aef` returns 0 when the value compares above `+0x1b4` (neither C0 nor C3). The
 scale is `value·+0x1c0 + +0x1b8` (`0x7b2b84`). The table is `cache#noise-table`.
+
+`particle_quad_expand_difftest`, `particle_quad_expand_rotated_difftest`,
+`particle_quad_expand_stretched_difftest`, `particle_quad_expand_tiled_difftest` and
+`particle_quad_expand_tiled_rotated_difftest` run `0x7b2a50` whole.
 
 ## Particle view space
 
@@ -208,13 +238,17 @@ and the view. Every vertex takes as normal the view image of world +z.
 Addresses: `0x7b3d20`, `0x7b3e41`, `0x7b3ef9`, `0x7b3f48`, `0x7b3fc7`, `0xcf5b68`, `0x7b5160`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::mat3x4_transform_difftest`, `models::render_negate_difftest`, `models::render_normalize_difftest`, `models::transform_basis_scale_difftest`
 
 `0x7b3e41` saves the view and sets identity; it is restored at `0x7b44cc`. The translation row
 holds `−+0x23c` to `−+0x244`, the camera position `SetFrame` copies. Each product uses
 `0x7bc6a0`, and the result is copied to `0xcf5b68`. The normal is row 2 of the saved view
 (`0x7b3fc7` into `0xcf5878`). `SetFrame` stores `matrix·inverse(frame)` at `+0x1fc` for a world
 space emitter with a frame, else the matrix, and the length of its first row at `+0x264`.
+
+Of `0x7b3d20`, `render_negate_difftest` runs `0x7b3e51`–`0x7b3ef9`, `mat3x4_transform_difftest`
+`0x7b41a3`–`0x7b4243`, `render_normalize_difftest` `0x7b426b`–`0x7b42a3`; of `0x7b5160`,
+`transform_basis_scale_difftest` runs `0x7b51f9`–`0x7b5225`.
 
 ## Head quads
 
@@ -228,7 +262,7 @@ axis. Flag 0x200 scales `s` by the emitter's scale.
 Addresses: `0x7b2a50`, `0x7b2bc3`, `0x7b2c1c`, `0x7b2d0c`, `0x7b2dda`, `0x7b2f5e`, `0x7b41a5`, `0x7b4249`, `0x7b4ed0`, `0x87d714`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::mat3x4_transform_difftest`, `models::particle_quad_expand_difftest`, `models::particle_quad_expand_rotated_difftest`, `models::particle_quad_expand_stretched_difftest`, `models::particle_quad_expand_tiled_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`, `models::tile_grid_recip_difftest`
 
 The corners are the float pairs from `0x87d714` and the texture corners from `0x87d734`. `0x7b4ed0`
 needs both grid sizes powers of two. The spin is `+0x18c·age`; the sign flip tests bit 5 of the
@@ -236,6 +270,12 @@ particle pointer (`0x7b2dea`); the plain turn adds `cx·s·cos − cy·s·sin` a
 `0x7b41a5` takes the flat corners (∓1, ±1, 0) through the 3×3 part of `+0x1fc` times the particle
 matrix (the particle matrix alone in emitter space); `0x7b4249` keeps its normalized z row as the
 axis for `0x7be490`.
+
+`particle_quad_expand_difftest`, `particle_quad_expand_rotated_difftest`,
+`particle_quad_expand_stretched_difftest`, `particle_quad_expand_tiled_difftest` and
+`particle_quad_expand_tiled_rotated_difftest` run `0x7b2a50` whole; of `0x7b3d20`,
+`mat3x4_transform_difftest` runs `0x7b41a3`–`0x7b4243`; of `0x7b4ed0`, `tile_grid_recip_difftest`
+runs `0x7b4ed6`–`0x7b4f53`.
 
 ## Tail quads
 
@@ -248,13 +288,17 @@ texture corners (0, 0) and (0, 1) at the particle, (1, 0) and (1, 1) at the tip.
 Addresses: `0x7b3041`, `0x7b30ae`, `0x7b30ce`, `0x7b310f`, `0x7b313c`, `0x7b33fa`, `0x7b4f60`, `0x7bcb40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::particle_quad_expand_difftest`, `models::particle_quad_expand_rotated_difftest`, `models::particle_quad_expand_stretched_difftest`, `models::particle_quad_expand_tiled_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`
 
 The tail uses the tail cell from the gradient and `+0xb4`; `0x7b30ae` replaces it by the age when
 it compares above it. `0x7bcb40` takes `−v` through `0xcf5b68` as a direction. The squared length
 of its x and y is compared with 0.0007716 (1/1296) and `test ah,1` takes the square path. The
 offsets are `a = T.x·s/L` and `b = T.y·s/L`: the corners are `(p.x − b, p.y + a)`,
 `(p.x + b, p.y − a)`, then the same about the tip.
+
+`particle_quad_expand_difftest`, `particle_quad_expand_rotated_difftest`,
+`particle_quad_expand_stretched_difftest`, `particle_quad_expand_tiled_difftest` and
+`particle_quad_expand_tiled_rotated_difftest` run `0x7b2a50` whole.
 
 ## Draw order and batches
 
@@ -267,13 +311,18 @@ while the texture has no device object. The colour bytes are swapped to the devi
 Addresses: `0x7b3a10`, `0x7b3a5b`, `0x7b3aa3`, `0x7b3c50`, `0x7b42a8`, `0x7b42cd`, `0x7b2b46`, `0x7b63a0`, `0x7b64a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::depth_dot_render_difftest`, `models::particle_quad_expand_difftest`, `models::particle_quad_expand_rotated_difftest`, `models::particle_quad_expand_stretched_difftest`, `models::particle_quad_expand_tiled_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`
 
 `0x7b3a5b` computes `x·m02 + y·m12 + z·m22 + m32` from `0xcf5b70`, `0xcf5b80`, `0xcf5b90` and
 `0xcf5ba0`, pushes it, and sifts up while the key is not below the parent; the pops take the
 root first. `0x7b3c50` fills 0x1000 six-index quads or 0xaaa twelve-index pairs. `0x7b42cd`
 divides 0x4000 by the vertices per particle and caps it at the live count. `0x7b2b46` swaps bytes
 0 and 2 when caps `+0x1c` is 1.
+
+`particle_quad_expand_difftest`, `particle_quad_expand_rotated_difftest`,
+`particle_quad_expand_stretched_difftest`, `particle_quad_expand_tiled_difftest` and
+`particle_quad_expand_tiled_rotated_difftest` run `0x7b2a50` whole; of `0x7b3a10`,
+`depth_dot_render_difftest` runs `0x7b3a5b`–`0x7b3aa3`.
 
 ## Model particles
 
@@ -288,7 +337,7 @@ view, colours and alpha and draws with the owner's lighting record.
 Addresses: `0x7b2420`, `0x7b24ca`, `0x7b2582`, `0x7b25dd`, `0x7b2648`, `0x7b28e0`, `0x7b29c0`, `0x719180`, `0x7191b2`, `0x7191be`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::partfinalize_normalize_basis9_difftest`, `models::partfinalize_normalize_quat4_difftest`, `models::partfinalize_spawn_random_axes_difftest`, `models::partfinalize_spawn_sign_flip_difftest`, `models::particle_spin_integrate_difftest`
 
 `0x7b2420` calls slot 2 for the position, then builds the quaternion at `+0x20` with `0x7c0120`;
 `0x7b2582` stores `U·+0x1cc + +0x1c8`, `(U + 1)·+0x1d4` and `(U + 1)·+0x1dc` at `+0x30` (the
@@ -296,6 +345,12 @@ Test: none
 `0x7b28e0` compares `|+0x30|` with 1e-4 and composes `(ω/|ω|·sin(h), cos(h))`, `h = |ω|·dt/2`,
 with `+0x20`. `0x7191b2` calls `Animate(scene +0x9c, +0x1a0, +0x1ac, +0x19c)` and `0x7191be`
 copies `+0x3b8`.
+
+Of `0x7b2420`, `partfinalize_normalize_basis9_difftest` runs `0x7b243e`–`0x7b24d3`,
+`partfinalize_normalize_quat4_difftest` `0x7b24d8`–`0x7b2545`,
+`partfinalize_spawn_random_axes_difftest` `0x7b257f`–`0x7b25e5`,
+`partfinalize_spawn_sign_flip_difftest` `0x7b2624`–`0x7b2650`; `particle_spin_integrate_difftest`
+runs `0x7b28e0` whole.
 
 ## Registries
 

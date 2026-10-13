@@ -52,13 +52,15 @@ bit 8 is granted; bit 0x20 is granted as requested. A second call logs
 Addresses: `0x706dd0`, `0x706510`, `0x706541`, `0x7065ab`, `0x7065b9`, `0x70661c`, `0x706684`, `0x7066a0`, `0x7066af`, `0x7066ce`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::noise_table_randf01_difftest`
 
 `0x706dd0` moves the mask from `ecx` into `0x706510`'s argument. The device record comes from
 `0x58a230`; its `+0x94` is compared with 1 and 2 at `0x7065ab` and `0x7065b9`, `+0x98` with 4 at
 `0x70661c`, `+0xbc` and `+0xc0` tested at `0x706684` and `0x7066a0`. Each grant is `and` with the
 requested mask and `or` into `+0x4`. The processor count is `0x429d20`'s result compared with 1 at
 `0x706546`. With bit 4 granted the function starts `0x706d10` as a thread named `Model2`.
+
+Of `0x706510`, `noise_table_randf01_difftest` runs `0x70680f`–`0x70684b`.
 
 ## Noise table
 
@@ -70,13 +72,15 @@ the same table the same way when it is created first.
 Addresses: `0xcf58f0`, `0x706510`, `0x7ae010`, `0x7ae13b`, `0x7ae161`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::noise_table_randf01_difftest`
 
 Both fills inline the generator advance of `0x4531e0` on a stack state seeded by `0x44ea80`: four
 table reads from `0x802700` with rotations, `xor` and an add into the first state word. The value
 is `and eax,0x7fffff; or eax,0x3f800000` (`0x7ae13b`), loaded as a float and reduced by
 `fsub 1.0` before `fstp [eax+0xcf58f0]` (`0x7ae161`), for byte offsets 0 to 0x1fc. The particle
 code reads the table through `0x7b1cc0`.
+
+Of `0x7ae010`, `noise_table_randf01_difftest` runs `0x7ae13b`–`0x7ae177`.
 
 ## Shared model lookup
 

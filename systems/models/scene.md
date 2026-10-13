@@ -92,12 +92,18 @@ result is not transcribed (`animation`, `Dispatched matrix math`).
 Addresses: `0x707680`, `0x707696`, `0x7076a2`, `0x7076f8`, `0x707722`, `0x70774c`, `0x707752`, `0x74ad38`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::negate_difftest`, `models::plane_dist_difftest`, `models::radius_difftest`, `models::scale_mul_d1_difftest`, `models::scale_mul_f_difftest`, `models::sum_of_squares_difftest`, `models::sum_of_squares_e_difftest`, `models::vec_add_difftest`, `models::view_rebase_difftest`
 
 `m[r][c]` is `+0x9c + 16r + 4c`. At `0x7076cb`: `fld +0xac; fmul p.y; fld +0xbc; fmul p.z; faddp;
 fld +0x9c; fmul p.x; faddp; fsubr +0xcc; fstp +0xcc`. The y row loads `+0xb0`·p.y, `+0xa0`·p.x,
 then `+0xc0`·p.z; the z row `+0xb4`, `+0xa4`, `+0xc4`. The memo reset at `0x7076a2` fills 0x708
 dwords with −1 and copies the mode to `+0x148`.
+
+Of `0x707680`, `view_rebase_difftest` runs `0x7076cb`–`0x707752`, `sum_of_squares_difftest`
+`0x7078e5`–`0x707944`, `vec_add_difftest` `0x707915`–`0x707944`, `radius_difftest`
+`0x707959`–`0x707971`, `plane_dist_difftest` `0x707981`–`0x7084db`, `negate_difftest`
+`0x7079c3`–`0x7079d1`, `scale_mul_d1_difftest` `0x707afc`–`0x707b17`, `sum_of_squares_e_difftest`
+`0x707d85`–`0x707da6`, `scale_mul_f_difftest` `0x7080e5`–`0x7080fc`.
 
 ## Animate pass
 
@@ -139,7 +145,7 @@ otherwise a batch goes to list 1 above the clip plane, list 2 below, possibly bo
 Addresses: `0x707680`, `0x710450`, `0x808120`, `0x70da00`, `0x707b48`, `0x707b5c`, `0x707af0`, `0x707b12`, `0x707b26`, `0x707e31`, `0x7080cf`, `0x7080e5`, `0x708516`, `0x708530`, `0x7084cf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::plane_dist_difftest`, `models::scale_mul_d1_difftest`, `models::scale_mul_f_difftest`
 
 The ready test is `0x710450(model, 0, 0)`. The colour alpha is the colour state's `+0x3c`
 (`0x707af0`); the weight, read when unit `+0xe` is nonzero (`0x707b12`), is transparency state
@@ -154,6 +160,9 @@ above 0 (`0x708530`); its material is the record's blend `+0x28`. An emitter is 
 centre lies more than `r` below the plane (`0x7084cf`), whatever the cache's bit 2. Kind 5 needs a
 draw callback at instance `+0x1b8` and goes to list 0 when `+0x1c0` is set.
 
+Of `0x707680`, `plane_dist_difftest` runs `0x707981`–`0x7084db`, `scale_mul_d1_difftest`
+`0x707afc`–`0x707b17`, `scale_mul_f_difftest` `0x7080e5`–`0x7080fc`.
+
 ## Element depth keys
 
 Each element carries two depth keys for the transparent order, `+0x14` and `+0x18`. The instance key
@@ -167,7 +176,7 @@ elements carry the instance key in both.
 Addresses: `0x7143b8`, `0x7143e2`, `0x707d6a`, `0x707d80`, `0x707d9d`, `0x707da8`, `0x707dbf`, `0x707dca`, `0x708184`, `0x7085c9`, `0x70830b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::sum_of_squares_e_difftest`
 
 `0x7143c0` loads instance `+0x12c` to `+0x134` (row 3 of `+0xfc`) and stores `(x·x + y·y) + z·z` at
 `0x7143e2`; `0x7143ac` tests the parent's `+0x4` with 1 and copies its `+0x84` when clear. The batch
@@ -175,6 +184,8 @@ key transforms submesh `+0x14` by bone matrix `+0x94[+0x12]` with `TransformPoin
 sums the squares in the same order (`0x707d9d`), each sum at 53 bits and the result stored as a
 float. `0x707db1` tests the instance's depth fill and the kind 1 flag before `0x707dbf` or
 `0x707dca`.
+
+Of `0x707680`, `sum_of_squares_e_difftest` runs `0x707d85`–`0x707da6`.
 
 ## Depth fill copies
 
@@ -210,7 +221,7 @@ above.
 Addresses: `0x707680`, `0x7079bf`, `0x7079ca`, `0x7079da`, `0x7079ed`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::negate_difftest`, `models::plane_dist_difftest`
 
 The centre is `0.5·(min + max)` of the header box at `+0xb4`/`+0xc0`, each sum rounded to a float,
 then `TransformPoint` by the instance matrix `+0xfc`. The dot product is `(x·x + y·y) + z·z` of
@@ -218,6 +229,9 @@ then `TransformPoint` by the instance matrix `+0xfc`. The dot product is `(x·x 
 with the plane at lighting `+0x1a0`. `0x7079bf` tests the cache's `+0x4` with 2; `fcompp` at
 `0x7079ca` clears "above" on C0, which a NaN sets, and `fcomp r` at `0x7079da` sets "below" when
 exactly one of C0 and C3 is set.
+
+Of `0x707680`, `plane_dist_difftest` runs `0x707981`–`0x7084db`, `negate_difftest`
+`0x7079c3`–`0x7079d1`.
 
 ## Batch grouping
 
@@ -292,7 +306,7 @@ units with flag 8, alpha 0 and, for mode 2, blends other than 0. With nothing hi
 Addresses: `0x7089c0`, `0x708bd9`, `0x708c11`, `0x708ff2`, `0x70902f`, `0x70903b`, `0x70905d`, `0x7090c2`, `0x709229`, `0x70998d`, `0x7089b0`, `0x713cb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::aabb_corner_sum_difftest`, `models::alpha_scale_difftest`, `models::hit_ray_setup_difftest`, `models::hit_sphere_difftest`, `models::hit_sphere_paths_difftest`, `models::hit_tbest_init_difftest`, `models::hit_world_distance_difftest`, `models::mat_x_dir_difftest`, `models::scale_t_dot_difftest`, `models::skin_accum_difftest`, `models::skin_first_difftest`, `models::tri_predicate_difftest`, `models::tri_predicate_paths_difftest`, `models::tworld_recover_difftest`
 
 `0x708bd9` compares instance `+0x40` with scene `+0x10`; `0x708c11` builds `+0xfc` from `+0xbc`
 and scene `+0x9c`. The candidate loop stops at the first near distance not below the best on the
@@ -300,6 +314,15 @@ first pass only (`0x708fa3`). `0x70902f` tests unit flag 8, `0x70903b` mode 2's 
 `0x70905d` the visibility words `+0x9c`, else `+0x98`; `0x7090c2` skips alpha 0. `0x709229` scales
 each bone weight byte by 1/255 for a weighted sum of bone matrices. `0x70998d` reruns with the
 full length when `retry` is set. The inline triangle test was not transcribed.
+
+Of `0x7089c0`, `hit_ray_setup_difftest` runs `0x708a17`–`0x708ab6`, `hit_sphere_difftest`
+`0x708a1a`–`0x709929`, `aabb_corner_sum_difftest` `0x708c4f`–`0x708cf8`, `hit_sphere_paths_difftest`
+`0x708d4c`–`0x708e96`, `scale_t_dot_difftest` `0x708eba`–`0x708f5d`, `hit_tbest_init_difftest`
+`0x708f5f`–`0x708f7c`, `alpha_scale_difftest` `0x709099`–`0x7090cd`, `skin_first_difftest`
+`0x709224`–`0x7092b4`, `skin_accum_difftest` `0x7092d0`–`0x7093a6`, `mat_x_dir_difftest`
+`0x7093c8`–`0x7094be`, `tworld_recover_difftest` `0x709445`–`0x7097f8`, `tri_predicate_difftest`
+`0x70951f`–`0x709929`, `tri_predicate_paths_difftest` `0x70951f`–`0x70996b`,
+`hit_world_distance_difftest` `0x7099c4`–`0x7099db`.
 
 ## Segment collision
 
@@ -315,7 +338,7 @@ the hit list.
 Addresses: `0x7099e0`, `0x709a00`, `0x709bc4`, `0x709da8`, `0x709e64`, `0x709ec1`, `0x709fc5`, `0x70a060`, `0x7c29f0`, `0x7bcf90`, `0x7bd6c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `models::half_scale_difftest`, `models::segment_ray_setup_difftest`, `models::segment_sphere_difftest`, `models::segment_sphere_paths_difftest`, `models::segment_tbest_init_difftest`, `models::segment_world_distance_difftest`, `models::tri_invray_difftest`, `models::tri_t_world_difftest`
 
 The sphere centre is half of box min plus max of sequence `+0x24` (index from bone state `+0xa4`),
 radius `+0x3c`, else header `+0xb4` and `+0xcc`; the radius scales by the length of base row 0.
@@ -323,6 +346,12 @@ radius `+0x3c`, else header `+0xb4` and `+0xcc`; the radius scales by the length
 index. `0x709ec1` skips modes other than 3; the segment goes into model space through the inverse
 base matrix and `0x7c29f0` tests the header's collision triangles (`+0xf0`, `+0xf8`) with
 tolerance 1e-6, keeping hits with t ≥ 0.
+
+Of `0x7099e0`, `segment_ray_setup_difftest` runs `0x709a38`–`0x709ad7`, `half_scale_difftest`
+`0x709c22`–`0x709cc0`, `segment_sphere_difftest` `0x709cf2`–`0x709e00`,
+`segment_sphere_paths_difftest` `0x709cf2`–`0x709e40`, `segment_tbest_init_difftest`
+`0x709e7e`–`0x709e90`, `tri_invray_difftest` `0x709f1a`–`0x709faa`, `tri_t_world_difftest`
+`0x709fde`–`0x709fef`, `segment_world_distance_difftest` `0x70a037`–`0x70a04f`.
 
 ## Ray triangle test
 

@@ -121,7 +121,7 @@ trace (`trace`), the facet-plane query and the box hit test, each through a `Wor
 Addresses: `0x6ac060`, `0x6ac1e0`, `0x6ab4e0`, `0x6aa160`, `0x6ad2c0`, `0x6ad4e0`, `0x6ad610`, `0x6ad7e0`, `0x6adbf0`
 Confidence: inferred
 Proof: none
-Test: `terrain::aabb8_cell_indices_difftest`, `terrain::box_cell_indices_difftest`, `terrain::aabb_intersect_i`, `terrain::chunk_collect_aabb_difftest`, `terrain::chunk_collect_aabb_overflow_probe`, `terrain::chunk_gather_planes_difftest`, `terrain::facet_seg_gate_proceeds_difftest`, `terrain::chunk_box_translate_difftest`
+Test: `terrain::aabb8_cell_indices_difftest`, `terrain::box_cell_indices_difftest`, `terrain::aabb_intersect_i`, `terrain::chunk_collect_aabb_difftest`, `terrain::chunk_collect_aabb_overflow_probe`, `terrain::chunk_gather_planes_difftest`, `terrain::facet_seg_gate_proceeds_difftest`, `terrain::chunk_box_translate_difftest`, `terrain::aabb_intersect_i_difftest`
 
 `0x6ac060` gathers the facets inside eight corners, per chunk through `0x6ac1e0` against six
 planes; `0x6aa160` returns the planes a segment hits, dispatching to the map objects and the
@@ -133,3 +133,5 @@ each chunk through `0x6ad610` and `0x6ad7e0` with the rectangle clipped by `0x6a
 `terrain::box_cell_indices_difftest` runs `0x6ad4e0` to `0x6ad586`;
 `terrain::facet_seg_gate_proceeds_difftest` runs `0x6aa160` to `0x6aa1a1`;
 `terrain::chunk_box_translate_difftest` runs `0x6ad676` to `0x6ad6b0`.
+
+`aabb_intersect_i_difftest` runs `0x6adbf0` whole.
