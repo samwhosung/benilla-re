@@ -150,7 +150,7 @@ plus the distance to that point over its speed. With the unit
 flag set or the transport's v² above 2 the segment is not tested: k = 1 and the end is the
 landing. A miss is dead at birth.
 
-Addresses: `0x675051`, `0x67505b`, `0x67505e`, `0x675069`, `0x675088`, `0x6750a1`, `0x6750a6`, `0x675143`, `0x67515c`, `0x675174`, `0x67517b`, `0x6751af`, `0x67520e`, `0x675221`, `0x67524a`, `0x675254`, `0x67526b`
+Addresses: `0x675051`, `0x67505b`, `0x67505e`, `0x675069`, `0x675088`, `0x6750a1`, `0x6750a6`, `0x675143`, `0x67515c`, `0x675174`, `0x67517b`, `0x6751af`, `0x6751c8`, `0x6751d0`, `0x67520e`, `0x675221`, `0x67524a`, `0x675254`, `0x67526b`
 Confidence: verified
 Proof: one
 Test: none
@@ -159,9 +159,10 @@ Test: none
 `0x675088` stores k = 2.0 and `0x6750a6` 1.0, after `test ah,0x41` (`0x6750a1`, `0x67515c`) on v²
 against 2.0, which counts a NaN as at most 2. The segment test is the grid's slot `+0x8`
 (`0x675174`), skipped by `0x675143` and `0x67515c`, which copy the end into the hit
-(`0x675254`). `0x6751af` to `0x67520e` form start − hit, f32(1/|V|), s = |start − hit|·(1/|V|) and hit − s·V,
-each a float, and store it as the start; `0x675221` stores the birth and `0x67524a` the birth
-plus the new distance times 1/|V|. The grid's height is FLT_MAX outside it, which also kills the drop (`weather#ground-grid`).
+(`0x675254`). `0x6751af` to `0x67520e` store start − hit and f32(1/|V|) as floats, keep s = |start − hit|·(1/|V|)
+on the x87 stack at 53 bits (`0x6751c8` to `0x6751d0`), and store hit − s·V as the start without
+storing s·V; `0x675221` stores the birth, and `0x67524a` stores the new distance times f32(1/|V|)
+plus the birth, computed at 53 bits. The grid's height is FLT_MAX outside it, which also kills the drop (`weather#ground-grid`).
 
 ## Patter
 
