@@ -260,3 +260,28 @@ Test: none
 `0x70cf70` calls `0x719c20` for the submesh bounds, subtracts 6.0 from the minimum z and adds it
 to the maximum, and calls scene `+0x11c`. The per-instance constant layout of `0x70d330` was not
 transcribed.
+
+## Projected bounds
+
+`0x719c20` returns 0 for a submesh of fewer than four vertices. Otherwise it skins each vertex as
+software skinning does, multiplies the blend matrix in place by the scene matrix `+0xdc`, and keeps
+the least and greatest of `((m00·x + m20·z) + m10·y) + m30` and its y and z columns. The first three
+also keep their position less the scene's `+0x10c` and their texture coordinates. The blend writes
+entries 0 to 2 of each row; the last entry of each row is seeded (0, 0, 0, 1) once and written only
+by the product, so each vertex's product reads the previous vertex's. It stays (0, 0, 0, 1) while
+the scene matrix's last column is (0, 0, 0, 1).
+
+Addresses: `0x719c20`, `0x719c2d`, `0x719c5f`, `0x719dcb`, `0x719e04`, `0x719f45`, `0x719f59`, `0x71a00b`, `0x71a016`, `0x71a093`, `0x74a7c0`, `0x8026c8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x719c5f` seeds the 16 floats at `ebp−0x54` to identity before the loop. `0x719e04` scales the
+first weight byte by 1/255 unconditionally and the loop at `0x719e80` adds the next ones until a
+zero, each times twelve entries of the bone matrix at model `+0x94` plus 64·index. `0x719f45` calls
+`0x74a7c0(B, B, scene + 0xdc)`. `0x719dcb` compares the weight word `+0xc` and the index word
+`+0x10` as integers with the previous vertex's, both starting at 0, and on a match skips to
+`0x719f59` with the matrix kept; a first vertex with both words 0 keeps the seeded identity. The
+bounds start at ±3.402823e38 and each compare skips on equal or NaN. The x sum stays unrounded on
+the FPU stack into its compares and the `+0x10c` subtraction (`0x71a016`); y and z go through
+floats. The three corners feed the code from `0x71a093`.

@@ -30,7 +30,7 @@ file and carries its tag.
 | `MOPR` | 8 bytes | `MODD` | 40 bytes |
 | `MFOG` | 48 bytes | `MCVP` | 16 bytes |
 
-Addresses: `0x6c3a60`, `0x6c3a00`, `0x6c3a20`, `0x6c3990`
+Addresses: `0x6c3a60`, `0x6c3a00`, `0x6c3a20`, `0x6c3990`, `0x6c3b2d`, `0x6c39d0`, `0x6a3496`
 Confidence: verified
 Proof: one
 Test: none
@@ -38,8 +38,10 @@ Test: none
 `0x6c3a60` starts at file `+0xc` (the data at map object `+0x1c0`) and calls `0x6c3a00` with each
 tag; `0x6c3a00` returns the cursor and adds 8, ignoring the tag, and the caller adds the chunk size.
 The counts are `size >> 6`, `size >> 5`, and multiplications by 0xaaaaaaab or 0xcccccccd followed by
-shifts, which divide by 12, 48, 20 and 40. `0x6c3a20` compares the cursor with `+0x1c0 +
-+0x1c4` and the tag with `MCVP`.
+shifts, which divide by 12, 48, 20 and 40. `0x6c3a20` compares the cursor with `+0x1c0 + +0x1c4` and
+the tag with `MCVP`. The `MOGI` count `size >> 5` goes to `+0x168` (`0x6c3b2d`); `0x6c3990` then
+stores it at `+0x1f0`, which the reset `0x6a3430` seeds to 384 (`0x6a3496`), and allocates a group
+object for each group into the pointers from `+0x1f4`, 384 of which end the 0x7f4-byte object.
 
 ## Group file chunks
 
