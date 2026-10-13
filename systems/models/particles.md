@@ -6,8 +6,8 @@ colour and size it over its life, and the quads it draws. A legacy emitter class
 that hold emitters outside a model are also here.
 
 The emitter, `CParticleEmitter2`, is about 0x2a0 bytes; its code runs from `0x7b0dd0` through
-`0x7b6990`, its plane, sphere and spline shapes from `0x7b8750` through `0x7b9b00`, the gradient
-records from `0x7b9b10` through `0x7b9f60`, and the legacy `CParticleEmitter` from `0x7b9f70`
+`0x7b6990`, its plane, sphere and spline shapes from `0x7b8750` through `0x7b9ad0`, the gradient
+records from `0x7b9af0` through `0x7b9f30`, and the legacy `CParticleEmitter` from `0x7b9f50`
 through `0x7ba9f0`. The registries are the object file at `0x7ae010` through `0x7af530`. A model
 creates one emitter per particle record of its header (`0x70ebd0`) and drives it each frame
 (`0x718960`).

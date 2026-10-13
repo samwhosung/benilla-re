@@ -1,6 +1,6 @@
 # collision: world
 
-Movement_C.cpp, `0x6307a0` through `0x6312a0`: the movement code that reaches other objects. It
+Movement_C.cpp, `0x6307a0` through `0x631270`: the movement code that reaches other objects. It
 keeps the movement globals with the object manager, a list of the transport game objects whose
 type handler moves them every frame, the transport's matrix and facing that the transforms and the
 resolvers read, the object a `CMovement` holds at +0xa4, and the notices the movement code sends

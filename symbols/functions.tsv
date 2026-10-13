@@ -9052,6 +9052,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a2c20	19	InitTerrainSquare252		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	
 0x6a2c40	5	InitTerrainQuotient29Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6a2c50; a static initializer	verified	one	terrain/statics#static-initializers	
 0x6a2c50	19	InitTerrainQuotient29		terrain	primitive	void __cdecl (void)	Stores 0.5 divided by 10 as a float in a global	verified	one	terrain/statics#static-initializers	
+0x6a2c70	5	InitMapObjInfinityThunk		models	orchestration		Jumps to 0x6a2c80; a static initializer	verified	one	models/overview#object-files	
+0x6a2c80	11	InitMapObjInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x6a2c90	10	InitMapObjStatic1		models	orchestration		Runs 0x6a2ca0, then registers an exit hook through 0x6a2d60; a static initializer	verified	one	models/overview#object-files	
 0x6a2ca0	190	InitMapObjPool		models	primitive		Initializes the map object pool's free list and vtable	inferred	none	models/overview#static-objects	
 0x6a2d60	12	InitMapObjStatic1Atexit		models	orchestration		Registers 0x6a2d70 with _atexit	verified	one	models/overview#static-objects	
@@ -9926,6 +9928,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b8350	19	InitTerrainSquare396		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	
 0x6b8370	5	InitTerrainQuotient45Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6b8380; a static initializer	verified	one	terrain/statics#static-initializers	
 0x6b8380	19	InitTerrainQuotient45		terrain	primitive	void __cdecl (void)	Stores 0.5 divided by 10 as a float in a global	verified	one	terrain/statics#static-initializers	
+0x6b83a0	5	InitMapObjGroupInfinityThunk		models	orchestration		Jumps to 0x6b83b0; a static initializer	verified	one	models/overview#object-files	
+0x6b83b0	11	InitMapObjGroupInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x6b83c0	10	InitMapObjGroupStatic1		models	orchestration		Runs 0x6b83d0, then registers an exit hook through 0x6b8410; a static initializer	verified	one	models/overview#object-files	
 0x6b83d0	61	InitMapObjGroupStatic1Body		models	primitive		Initializes a static object of the object file	inferred	none	models/overview#static-objects	
 0x6b8410	12	InitMapObjGroupStatic1Atexit		models	orchestration		Registers 0x6b8420 with _atexit	verified	one	models/overview#static-objects	
@@ -12500,8 +12504,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b9ab0	15	InitEmitterShapesTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x7b9ac0	5	InitEmitterShapesInvTwoPiThunk		models	orchestration		Jumps to 0x7b9ad0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9ad0	19	InitEmitterShapesInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
-0x7b9af0	5	InitEmitterShapesInfinity2Thunk		models	orchestration		Jumps to 0x7b9b00; a static initializer	verified	one	models/overview#shared-header-constants	
-0x7b9b00	11	InitEmitterShapesInfinity2		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#object-files	
+0x7b9af0	5	InitGradientInfinityThunk		models	orchestration		Jumps to 0x7b9b00; a static initializer	verified	one	models/overview#shared-header-constants	
+0x7b9b00	11	InitGradientInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#object-files	
 0x7b9b10	338	ParticleGradientSample		models	primitive		Samples a particle's colour, size and texture cell over its life from a gradient record	inferred	none	models/overview#object-files	
 0x7b9c70	92	ParticleGradientConstruct		models	orchestration		Constructs a gradient record with its defaults	inferred	none		
 0x7b9cd0	19	ParticleGradientSetMidpoint		models	orchestration		Sets a gradient record's normalized middle-key bounds	inferred	none		
@@ -12522,8 +12526,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7b9f10	15	InitGradientTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x7b9f20	5	InitGradientInvTwoPiThunk		models	orchestration		Jumps to 0x7b9f30; a static initializer	verified	one	models/overview#shared-header-constants	
 0x7b9f30	19	InitGradientInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
-0x7b9f50	5	InitGradientInfinityThunk		models	orchestration		Jumps to 0x7b9f60; a static initializer	verified	one	models/overview#shared-header-constants	
-0x7b9f60	11	InitGradientInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#object-files	
+0x7b9f50	5	InitLegacyParticleInfinityThunk		models	orchestration		Jumps to 0x7b9f60; a static initializer	verified	one	models/overview#shared-header-constants	
+0x7b9f60	11	InitLegacyParticleInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#object-files	
 0x7b9f70	10	InitLegacyParticleSeed		models	orchestration		Seeds the legacy particle random state and registers its exit hook; a static initializer	verified	one	models/overview#object-files	
 0x7b9f80	13	InitLegacyParticleSeedState		models	orchestration		Seeds the legacy particle object file's random state	verified	one	models/overview#static-objects	
 0x7b9f90	12	InitLegacyParticleSeedAtexit		models	orchestration		Registers the random state's empty exit hook with _atexit	verified	one	models/overview#static-objects	
