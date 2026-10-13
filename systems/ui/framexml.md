@@ -139,13 +139,13 @@ file's tree. `0x6ee6f0` answers the node or 0. `0x769820` reads `inherits`, look
 
 `0x6ee280(node, parent, status)` finds the factory by the element's tag, ignoring case; an unknown
 tag reports `Unknown frame type: %s`. The parent is the frame named by the node's `parent`, or by
-the first `parent` up its `inherits` chain; a name that finds no frame reports
-`Couldn't find frame parent: %s` and leaves the frame parentless; with no `parent` at all the
-argument is used. The factory constructs the frame under that parent, so the parent is attached
-before the frame is named. Then the node is applied in three steps: name and loading flag, the
-frame's load, and the finishing step that creates the child frames and runs `OnLoad`.
+the first `parent` up its `inherits` chain; a name that finds no frame reports `Couldn't find frame
+parent: %s` and leaves the frame parentless; with no `parent`, or an empty one on the node or a
+template up the chain, the argument is used. The factory constructs the frame under that parent,
+before it is named. Then the node is applied in three steps: name and loading flag, the frame's
+load, and the finishing step that creates the child frames and runs `OnLoad`.
 
-Addresses: `0x6ee280`, `0x6ee2eb`, `0x6ee32c`, `0x6ee356`, `0x6ee382`, `0x6ee390`, `0x6ee3a7`, `0x6ee3b9`, `0x6ee3c2`, `0x6ee3e8`, `0x6ee3ef`, `0x6ee3f4`, `0x6ee40b`, `0x6ee414`, `0x6ee4d6`, `0x6ee4e1`, `0x6ee4ea`, `0xcee9d8`, `0x871124`, `0x87111c`, `0x871110`, `0x8710f0`, `0x8710d0`
+Addresses: `0x6ee280`, `0x6ee2eb`, `0x6ee32c`, `0x6ee356`, `0x6ee382`, `0x6ee390`, `0x6ee3a7`, `0x6ee3b9`, `0x6ee3c2`, `0x6ee3c4`, `0x6ee3e8`, `0x6ee3ef`, `0x6ee3f4`, `0x6ee40b`, `0x6ee414`, `0x6ee4d6`, `0x6ee4e1`, `0x6ee4ea`, `0xcee9d8`, `0x871124`, `0x87111c`, `0x871110`, `0x8710f0`, `0x8710d0`
 Confidence: verified
 Proof: one
 Test: none
@@ -153,7 +153,8 @@ Test: none
 The tag is hashed (`0x6ee2eb`) into `0xcee9d8` and compared (`0x6ee32c`); a miss reports
 `0x871124` at `0x6ee356`. `0x6ee382` reads `parent`; when absent, the loop `0x6ee390` to
 `0x6ee3c2` reads `inherits`, looks it up (`0x6ee3a7`) and reads the template's `parent`
-(`0x6ee3b9`). A nonempty name goes to `0x76c760` (`0x6ee3e8`), whose answer is stored even when 0
+(`0x6ee3b9`). An empty one ends the walk and the argument is used (`0x6ee3c4`); a nonempty
+name goes to `0x76c760` (`0x6ee3e8`), whose answer is stored even when 0
 (`0x6ee3ef`), with `0x8710f0` reported. `0x6ee40b` calls the factory with the parent in `ecx`; a
 null result reports `0x8710d0` (`0x6ee414`). Slot 0x20 (`0x6ee4d6`), the layout part's slot 8
 (`0x6ee4e1`) and slot 0x24 (`0x6ee4ea`) follow.

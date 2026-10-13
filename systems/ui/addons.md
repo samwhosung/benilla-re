@@ -134,14 +134,15 @@ URL flag and string (`0x51db34`) written by `0x51dde0` (`0x51db6d`). It stores 1
 
 ## The auth packet's add-on block
 
-When the registry holds any add-on, the client appends to the auth packet a u32, the size of
-the block before compression, and then the block compressed with zlib at its default level. The
-block holds, for each add-on that declares `Secure`, in list order: the folder name as a
-NUL-terminated string; a byte, 1 when a key is held; a u32, the CRC-32 of the 256-byte key, or 0
-without one; and a u32, the CRC-32 of the URL's text, or 0 without a URL or for an empty one. An
-empty registry adds nothing; one with no `Secure` add-on adds the size 0 and an empty stream.
+With any add-on registered, the auth packet gets a u32, the size of the block before compression,
+and then the block compressed with zlib at its default level. The block holds, for each add-on that
+declares `Secure`, in list order: the folder name as a NUL-terminated string; a byte, the first of
+the 0x101-byte `.pub` file or the one the server's reply gives, 0 without either; a u32, the key's
+CRC-32 when that byte is nonzero, whatever its value, else 0; and a u32, the CRC-32 of the URL's
+text, or 0 for none or an empty one. An empty registry adds nothing; one with no `Secure` add-on
+adds the size 0 and an empty stream.
 
-Addresses: `0x51d910`, `0x51d917`, `0x51d924`, `0x51d961`, `0x51d96f`, `0x51d980`, `0x51d98d`, `0x51d99e`, `0x51d9ab`, `0x51d9b5`, `0x51d9ca`, `0x51d9d7`, `0x51da02`, `0x51da0f`, `0x51da20`, `0x51da33`, `0x51da3f`, `0x4181f0`, `0x4182b0`, `0x418c10`, `0x6628d0`, `0x662860`, `0x6605a0`, `0xbe1b64`
+Addresses: `0x51d910`, `0x51d917`, `0x51d924`, `0x51d961`, `0x51d96f`, `0x51d980`, `0x51d98d`, `0x51d99e`, `0x51d9ab`, `0x51d9b5`, `0x51d9ca`, `0x51d9d7`, `0x51d4a0`, `0x52060f`, `0x51da02`, `0x51da0f`, `0x51da20`, `0x51da33`, `0x51da3f`, `0x4181f0`, `0x4182b0`, `0x418c10`, `0x6628d0`, `0x662860`, `0x6605a0`, `0xbe1b64`
 Confidence: verified
 Proof: one
 Test: none
@@ -149,7 +150,8 @@ Test: none
 `0x51d917` reads the list head `0xbe1b6c` and `0x51d924` returns on an empty list before writing.
 The records go into a local store: per record with `+0x28` (`0x51d961`), `PutCString` of `+0x14`
 (`0x51d96f`), the byte `+0xc1` (`0x51d980`), and `0x4182b0` of `0x6628d0(+0xc2, 0x100, 0, 7)` when
-`+0xc1` is set (`0x51d98d`, `0x51d99e`, `0x51d9ab`), else 0; then a nonempty `+0x30` (`0x51d9b5`)
+`+0xc1` is nonzero (`0x51d98d`, `0x51d99e`, `0x51d9ab`), else 0. `0x51d4a0` stores the file's first
+byte there, and the constructor zeroes it (`0x52060f`); then a nonempty `+0x30` (`0x51d9b5`)
 gives `0x6628d0(url, SStrLen(url), 0, 7)` (`0x51d9ca`, `0x51d9d7`). `0x6628d0` calls `0x662860`,
 whose flags 1 and 4 start at 0xffffffff and invert the result over the table `0x866bd8`, standard
 CRC-32. The packet then gets the store's size (`0x4181f0`, `0x51da02`); `0x51da0f` takes the bytes,

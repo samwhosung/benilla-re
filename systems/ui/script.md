@@ -239,11 +239,11 @@ number result (`0x703d6f`). `0x704cd0` passes the string, its length and the nam
 ## Creating a frame from Lua
 
 `CreateFrame(type, name, parent, inherits)` raises its usage unless `type` is a string or number and
-`parent` is absent, nil or a table. `name` and `inherits` are read as strings, a number becoming one
-and anything else counting as absent; a string `inherits` must name a template, else it raises. The
-frame is created from a node of that type with those attributes. With a `parent` table the node also
-gets an empty `parent`, so the table is the parent; without one, it is the first `parent` the
-`inherits` chain gives. An unknown type raises. `CreateTexture` and `CreateFontString` read
+`parent` is absent, nil or a table. `name` and `inherits` are read as strings, a number becoming
+one, anything else absent; a string `inherits` must name a template, else it raises. The frame is
+created from a node of that type with those attributes. With a `parent` table the node also gets an
+empty `parent`, so the table is the parent; without one, it is the first `parent` the `inherits`
+chain gives, an empty one ending the walk with none. `CreateTexture` and `CreateFontString` read
 `inherits` only when it is a string, the font string trying a font object first; their layer
 defaults to `ARTWORK`.
 
@@ -258,9 +258,9 @@ Test: none
 raising at `0x7061ed`. A table parent is tested at `0x7061ab`. `0x706211` builds the node, adding
 `parent` with `""` (`0x70623b`) only when a parent is given (`0x706232`, `test edi,edi; je`);
 without it `0x6ee280` walks `inherits` for a `parent` (`0x6ee390` to `0x6ee3c2`); `0x70628b` creates
-and `0x7062a0` raises on null; `0x7062af` destroys the status, discarding the load's messages.
-`0x773ae0` stages 2; `0x773b12` and `0x773d25` compare `lua_type(4)` with 4; `0x773d39` tries
-`0x783870` before `0x773d47`.
+and `0x7062a0` raises on null, an unknown type; `0x7062af` destroys the status, discarding the
+load's messages. `0x773ae0` stages 2; `0x773b12` and `0x773d25` compare `lua_type(4)` with 4;
+`0x773d39` tries `0x783870` before `0x773d47`.
 
 ## Method tables of the frame types
 
