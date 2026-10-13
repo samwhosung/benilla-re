@@ -236,13 +236,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffab0	float	s_mapSize		terrain	Holds 34133.332, the map's side in yards	verified	one	terrain/queries#shadow-test
 0x7ffab4	float	s_mapHalfSize		terrain	Holds 17066.666 (0x46855555), the world coordinate of tile index 0's edge	verified	one	terrain/chunk#chunk-vertices
 0x7ffd34	const uint32_t			loadingscreen	Holds data whose address CreateLoadingScreen takes; not read here	inferred	none	
+0x7ffd68	const float	s_ticksPerSecond		unassigned	Holds 1024.0, the particle clock ticks per second	verified	one	lighting/precipitation#particle-clock
 0x7ffd6c	const float	s_float3e19999a		unassigned	Holds the float 0.15 (0x3e19999a)	inferred	none	
+0x7ffd70	const float	s_point35		unassigned	Holds 0.35	verified	one	lighting/fog#world-light-commit
 0x7ffd74	const float	s_zero		ui	Holds 0.0, against which the layout tests sizes and edges	verified	one	ui/anchors#edge-resolution-from-size
-0x7ffd7c	const float	s_float3f333333		unassigned	Holds the float 0.7 (0x3f333333)	inferred	none	
+0x7ffd7c	const float	s_point7		unassigned	Holds 0.7	verified	one	lighting/sky#sky-colours
 0x7ffd84	void *	s_splineCurveVtable		cmath	Holds the vtable stored at +0x2c of the movement spline object; its first slot reads a count minus 3	inferred	none	collision/world#spline-object
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
-0x8012cc	const float	s_float3f400000		unassigned	Holds the float 0.75 (0x3f400000)	inferred	none	
+0x8012cc	const float	s_threeQuarters		unassigned	Holds 0.75	verified	one	lighting/clouds#cloud-colours
 0x801354	float	s_defaultHandlerPriority		core	Holds 0.0, the priority 0x41fc90 registers with	verified	one	core/events#registration-calls
 0x801360	float	s_millisecondsToSeconds		core	Holds 0.001f (0x3a83126f), the frame time and timer factor	verified	one	core/loop#frame-time
 0x801364	void *[1]	EvtContext::vftable		core	Holds the context vtable: the deleting destructor 0x423240	verified	one	core/loop#start-and-stop
@@ -269,24 +271,28 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
 0x8022cc	const float	s_float447a0000		unassigned	Holds the float 1000 (0x447a0000)	inferred	none	
-0x8026bc	const float	s_float35800000		unassigned	Holds the float 0.0000009536743 (0x35800000)	inferred	none	
+0x8026bc	const float	s_twoPow20Inverse		unassigned	Holds 2^-20	verified	one	lighting/sky#sky-dome
 0x8026c8	float	s_oneOver255		models	Holds 1/255, the scale of a byte to a unit value	verified	one	models/render#software-skinning
 0x802700	uint32_t[64]	NTempest::gnoise32_	idb	random	Holds the 64 dwords the state advance and the hashes read	verified	two	random#state-advance
 0x802800	float[16]	s_noiseGradients		random	Holds -1 + 2k/15 for k = 0 to 15, the gradient components of the noise	inferred	none	random#unreached-functions
+0x80295c	const float	s_twoPiConst		unassigned	Holds 2π as a float	verified	one	lighting/daynight#recompute
 0x802978	float	s_oneEighth		terrain	Holds 0.125	verified	one	terrain/lod#chunk-mesh-tables
 0x80297c	const float	s_three		ui	Holds 3.0, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
 0x802998	float	s_oneSixteenth		terrain	Holds 0.0625	verified	one	terrain/lod#chunk-mesh-tables
 0x8029b0	const float	s_quarter		ui	Holds 0.25, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
 0x8029c8	const float	s_float3d4ccccd		unassigned	Holds the float 0.05 (0x3d4ccccd)	inferred	none	
-0x8029cc	const float	s_float44000000		unassigned	Holds the float 512 (0x44000000)	inferred	none	
+0x8029cc	const float	s_bytePackBias		unassigned	Holds 512.0, the bias that leaves a byte in a float's low mantissa bits	verified	one	lighting/daynight#colour-band-value
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
 0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
+0x803068	const float	s_minusHalf		unassigned	Holds −0.5	inferred	none	lighting/shadows#projected-decals
 0x80306c	float	s_four		objectlayer	Holds 4.0, the multiple of the melee reach an attack start allows	verified	one	objectlayer/playercombat#the-melee-attack
+0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
+0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
 0x803248	const uint32_t			sound	Holds a dword that SndInterfaceSetGlueMusic reads; not read here	inferred	none	
 0x80355c	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x803560	const uint32_t			unassigned	Holds a dword that LIQUIDINFO::StopSound reads; not read here	inferred	none	
-0x803568	const float	s_float3e2aaaab		unassigned	Holds the float 0.16666667 (0x3e2aaaab)	inferred	none	
+0x803568	const float	s_oneSixth		unassigned	Holds 1/6	verified	one	lighting/precipitation#rain-draw
 0x803600	void *	s_guidHashTableVtable		objectlayer	Holds the vtable the manager's two GUID hash tables carry	inferred	none	objectlayer/manager#manager-block
 0x803640	void *[31]	CGObject_C::vftable		objectlayer	Holds the base object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x803740	uint8_t[180]	s_authUrlKeys		glue	Holds five 36-byte rows of a status code and its URL key, AUTH_BANNED (28) to AUTH_PARENTAL_CONTROL (33)	verified	one	glue/flow#world-connect-failure
@@ -325,6 +331,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x805fb0	const uint32_t			ui	Holds a dword that Script::GetChatWindowMessages, Script::AddChatWindowMessages read; not read here	inferred	none	
 0x806458	const uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
+0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
+0x80653c	const float	s_oneTwentyEight		unassigned	Holds 128.0	verified	one	lighting/clouds#cloud-cover
 0x806544	const float	s_float37f5c290		ui	Holds the float 0.000029296876 (0x37f5c290)	inferred	none	
 0x806548	const float	s_float427a8000		ui	Holds the float 62.625 (0x427a8000)	inferred	none	
 0x80654c	float	s_tileSize		terrain	Holds 533.33331 (0x44055555), a tile's side in yards	verified	one	terrain/files#wdl
@@ -340,7 +348,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x807060	const uint32_t			ui	Holds a dword that Script::QueryAuctionItems, Script::GetAuctionItemClasses read; not read here	inferred	none	
 0x8070b0	const uint32_t			ui	Holds a dword that Script::QueryAuctionItems reads; not read here	inferred	none	
 0x8072a8	const uint32_t			ui	Holds a dword that Script::GetAuctionItemTimeLeft reads; not read here	inferred	none	
-0x80732c	const float	s_float41c00000		unassigned	Holds the float 24 (0x41c00000)	inferred	none	
+0x80732c	const float	s_twentyFour		unassigned	Holds 24.0	verified	one	lighting/precipitation#snow
 0x807330	const float	s_float41f00000At807330		unassigned	Holds the float 30 (0x41f00000)	inferred	none	
 0x807334	const float	s_float3d088889		unassigned	Holds the float 0.033333335 (0x3d088889)	inferred	none	
 0x807338	const float	s_float43b68000		ui	Holds the float 365 (0x43b68000)	inferred	none	
@@ -354,7 +362,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
 0x808220	const uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x808260	void *[40]	CGTabardModelFrame::vftable		ui	Holds the 40 virtual function slots of CGTabardModelFrame, which its constructor stores	inferred	none	
-0x808300	const float	s_float3ea8f5c3		unassigned	Holds the float 0.33 (0x3ea8f5c3)	inferred	none	
+0x808300	const float	s_point33		unassigned	Holds 0.33	verified	one	lighting/fog#light-colours
 0x8083a8	void *[40]	CGDressUpModelFrame::vftable		ui	Holds the 40 virtual function slots of CGDressUpModelFrame, which its constructor stores	inferred	none	
 0x8084f8	const char[4]	s_textXP		ui	Holds the string "@XP"	inferred	none	
 0x8087cc	const float	s_float3d19999a		ui	Holds the float 0.0375 (0x3d19999a)	inferred	none	
@@ -380,13 +388,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808a34	const float	s_float40555555		uicamera	Holds the float 3.3333333 (0x40555555)	inferred	none	
 0x808a38	const float	s_float3fd55555At808a38		uicamera	Holds the float 1.6666666 (0x3fd55555)	inferred	none	
 0x808a40	const float			uicamera	Holds the first float of a table its object file's code reads; not read here	inferred	none	
-0x808aac	const float	s_float3f7d70a4		unassigned	Holds the float 0.99 (0x3f7d70a4)	inferred	none	
+0x808aac	const float	s_point99		unassigned	Holds 0.99	verified	one	lighting/sky#sky-pass
 0x808ab0	const float	s_float3dc71c72		uicamera	Holds the float 0.097222224 (0x3dc71c72)	inferred	none	
 0x808ab4	const float	s_float40e38e39		uicamera	Holds the float 7.111111 (0x40e38e39)	inferred	none	
 0x808ab8	const float	s_float3e8e38e4		uicamera	Holds the float 0.2777778 (0x3e8e38e4)	inferred	none	
 0x808acc	const float	s_float3fc90fdb		unassigned	Holds the float 1.5707964 (0x3fc90fdb)	inferred	none	
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
+0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
 0x808e7c	const float	s_float40000000		ui	Holds the float 2 (0x40000000)	inferred	none	
 0x808e88	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
@@ -394,6 +403,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x80928c	int32_t[8]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, −42000 to 42000	verified	one	objectlayer/playercombat#using-an-item
+0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
 0x80a400	void *[11]			unassigned	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
@@ -404,6 +414,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a77c	void *[1]	s_serverLinkPendingVftable		net	Holds the vtable of ServerLink's pending requests, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
 0x80a7dc	void *[9]	ClientLink::vftable		net	Holds ClientLink's vtable: the connection callbacks, slot 7 the raw data hook	verified	one	net/login#logon-commands
+0x80a8b0	const float	s_oneOver65536		unassigned	Holds 1/65536	verified	one	lighting/celestial#celestial-bodies
 0x80a8ec	const uint32_t			font	Holds a dword its object file's code reads; not read here	inferred	none	
 0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	inferred	none	
 0x80aa80	void *[31]	s_dynamicObjectVtable		objectlayer	Holds the dynamic object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
@@ -468,9 +479,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
 0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
+0x80c5d0	const float	s_onePointTwoFive		unassigned	Holds 1.25	verified	one	lighting/celestial#static-tracks
 0x80c698	const float	s_float3a03126f		unassigned	Holds the float 0.0005 (0x3a03126f)	inferred	none	
 0x80c6a0	const double	s_double3f5d7dbf40000000		objectlayer	Holds the double 0.0017999999690800905 (0x3f5d7dbf40000000)	inferred	none	
 0x80c6a8	const float	s_float3eb6e48a		unassigned	Holds the float 0.35721236 (0x3eb6e48a)	inferred	none	
@@ -494,7 +508,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80dff8	const float	s_float3de38e39At80dff8		collision	Holds the float 0.11111111 (0x3de38e39)	inferred	none	
 0x80dffc	float	s_walkableNormalZ		collision	Holds 0.64278764 (0x3f248dbb), cos 50 degrees, the least normal z of a walkable surface for movement and facet queries	verified	one	collision/walking#slope-thresholds
 0x80e000	float	s_cos80		collision	Holds cos 80°, 0.1736482 (0x3e31d0d4), the slope limit when 0x5fa550 returns 0	verified	one	collision/walking#slope-thresholds
-0x80e004	const float	s_float3daaaaab		unassigned	Holds the float 0.083333336 (0x3daaaaab)	inferred	none	
+0x80e004	const float	s_oneTwelfth		unassigned	Holds 1/12	verified	one	lighting/celestial#body-objects
 0x80e008	float	s_tan50		collision	Holds tan 50°, 1.1917536 (0x3f988b62); the step probe reaches H times it	verified	one	collision/walking#slope-thresholds
 0x80e014	float	s_bevelNormalZ		collision	Holds -0.4756366 (0xbef386a4), the normal z of a bevel contact plane	verified	one	collision/walking#slope-thresholds
 0x80e01c	float	s_cos10		collision	Holds cos 10°, 0.9848077 (0x3f7c1c5c), the direction limit of the fall-away lookahead	verified	one	collision/walking#slope-thresholds
@@ -506,30 +520,49 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	inferred	none	
 0x80fe28	const float	s_infinity1		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x80febc	float	s_farBandStart		terrain	Holds 0.96, the depth range start of the far-band pass	inferred	none	
-0x80fec4	const float	s_float3ba3d70aAt80fec4		unassigned	Holds the float 0.005 (0x3ba3d70a)	inferred	none	
+0x80fec0	const float	s_skyDepthFar		unassigned	Holds 0.98, the far end of the sky's depth slice	verified	one	lighting/sky#sky-pass
+0x80fec4	const float	s_skyDepthSpan		unassigned	Holds 0.005, the sky depth slice's width	verified	one	lighting/celestial#glare-draw
 0x80fed4	float	s_horizonMinDepth		terrain	Holds 50, the depth below which a box corner makes the box visible	verified	one	terrain/cull#horizon-box-test
 0x80fed8	const float	s_float44424000		unassigned	Holds the float 777 (0x44424000)	inferred	none	
 0x80fee4	float	s_chunkSize		terrain	Holds 33.333332 (0x42055555), a chunk's side in yards	verified	one	terrain/chunk#chunk-vertices
-0x80ff6c	const float	s_float42700000		lighting	Holds the float 60 (0x42700000)	inferred	none	
-0x80ff74	const float	s_float40000000At80ff74		lighting	Holds the float 2 (0x40000000)	inferred	none	
-0x80ff78	const float	s_float3d4ccccdAt80ff78		lighting	Holds the float 0.05 (0x3d4ccccd)	inferred	none	
+0x80ff6c	const float	s_packetLifetimeLimit		lighting	Holds 60.0, the longest span a weather packet may have	verified	one	lighting/precipitation#packet-replay
+0x80ff70	const float	s_weatherNoHeight		lighting	Holds FLT_MAX, the empty ground grid cell	verified	one	lighting/weather#ground-grid
+0x80ff74	const float	s_rainTail		lighting	Holds 2.0, the rain tail length and patter time scale	verified	one	lighting/precipitation#rain-draw
+0x80ff78	const float	s_rainHalfWidth		lighting	Holds 0.05, the rain streak's half width	verified	one	lighting/precipitation#rain-draw
+0x80ff80	const float	s_weatherMaxLean		lighting	Holds 1.1344640, 65 degrees in radians, the box's largest lean	verified	one	lighting/precipitation#rain-drops
+0x80ff8c	const float	s_weatherCellsPerYard		lighting	Holds 0.96, the ground grid cells per yard	verified	one	lighting/weather#ground-grid
+0x80ff90	const float	s_weatherChunksPerYard		lighting	Holds 0.03, the ground grid chunks per yard	verified	one	lighting/weather#ground-grid
 0x80ff98	const float	s_float3f855555		unassigned	Holds the float 1.0416666 (0x3f855555)	inferred	none	
-0x80ff9c	const float	s_float41900000		lighting	Holds the float 18 (0x41900000)	inferred	none	
-0x80ffa0	const float	s_float42180000		lighting	Holds the float 38 (0x42180000)	inferred	none	
-0x80ffa8	const float	s_float45cb2000		lighting	Holds the float 6500 (0x45cb2000)	inferred	none	
-0x80ffac	const float	s_float4708b800		lighting	Holds the float 35000 (0x4708b800)	inferred	none	
-0x80ffb4	const float	s_float41e00000		lighting	Holds the float 28 (0x41e00000)	inferred	none	
-0x80ffbc	const float	s_float3fc8f5c3		lighting	Holds the float 1.57 (0x3fc8f5c3)	inferred	none	
-0x80ffc0	const float	s_float3d567750		lighting	Holds the float 0.05235988 (0x3d567750)	inferred	none	
-0x80ffc4	const float	s_float3e567750		lighting	Holds the float 0.20943952 (0x3e567750)	inferred	none	
-0x80ffc8	const float	s_float45c00000		lighting	Holds the float 6144 (0x45c00000)	inferred	none	
-0x80ffcc	const float	s_float3c88893b		lighting	Holds the float 0.016667 (0x3c88893b)	inferred	none	
-0x80ffd8	const float	s_float42400000		lighting	Holds the float 48 (0x42400000)	inferred	none	
-0x80ffdc	const float	s_float44a28000		lighting	Holds the float 1300 (0x44a28000)	inferred	none	
-0x80ffe0	const float	s_float465ac000		lighting	Holds the float 14000 (0x465ac000)	inferred	none	
-0x80fff4	const float	s_float40bde44f		lighting	Holds the float 5.9341197 (0x40bde44f)	inferred	none	
-0x810008	const float	s_float43480000		lighting	Holds the float 200 (0x43480000)	inferred	none	
-0x810018	const float	s_float3f555555At810018		unassigned	Holds the float 0.8333333 (0x3f555555)	inferred	none	
+0x80ff9c	const float	s_rainMistRateFixed		lighting	Holds 18.0, the rain mist rate without shaders	verified	one	lighting/precipitation#rain-rates
+0x80ffa0	const float	s_rainMistRateShader		lighting	Holds 38.0, the rain mist rate with shaders	verified	one	lighting/precipitation#rain-rates
+0x80ffa4	const float	s_oneOver6144		lighting	Holds 1/6144	verified	one	lighting/precipitation#rain-rates
+0x80ffa8	const float	s_rainRateFixed		lighting	Holds 6500.0, the rain drop rate without shaders	verified	one	lighting/precipitation#rain-rates
+0x80ffac	const float	s_rainRateShader		lighting	Holds 35000.0, the rain drop rate with shaders	verified	one	lighting/precipitation#rain-rates
+0x80ffb0	const float	s_oneEighteenth		lighting	Holds 1/18, the speed scale of the box's lean	verified	one	lighting/precipitation#rain-drops
+0x80ffb4	const float	s_rainBaseFall		lighting	Holds 28.0, the rain's base fall speed	verified	one	lighting/precipitation#rain-drops
+0x80ffb8	const float	s_rainBaseSpeed		lighting	Holds 9.49, the rain's base drift speed per grade	verified	one	lighting/precipitation#rain-drops
+0x80ffbc	const float	s_weatherBaseAngle		lighting	Holds 1.57, subtracted from each particle's angle	verified	one	lighting/precipitation#rain-drops
+0x80ffc0	const float	s_rainAngleBase		lighting	Holds 0.0523599, the rain's angle spread at grade 0	verified	one	lighting/precipitation#rain-drops
+0x80ffc4	const float	s_rainAngleGrade		lighting	Holds 0.2094395, the rain's angle spread per grade	verified	one	lighting/precipitation#rain-drops
+0x80ffc8	const float	s_packetCapacity		lighting	Holds 6144.0, a weather packet's capacity	verified	one	lighting/precipitation#particle-packets
+0x80ffcc	const float	s_weatherFrameCap		lighting	Holds 0.016667, the longest frame the emission budget counts	verified	one	lighting/precipitation#emission-budget
+0x80ffd8	const float	s_snowMistRateShader		lighting	Holds 48.0, the snow mist rate with shaders	verified	one	lighting/precipitation#snow
+0x80ffdc	const float	s_snowRateFixed		lighting	Holds 1300.0, the snow flake rate without shaders	verified	one	lighting/precipitation#snow
+0x80ffe0	const float	s_snowRateShader		lighting	Holds 14000.0, the snow flake rate with shaders	verified	one	lighting/precipitation#snow
+0x80ffe4	const float	s_snowLead		lighting	Holds 1.75, the snow's lead scale	verified	one	lighting/precipitation#snow
+0x80ffe8	const float	s_snowFallGrade		lighting	Holds 3.5, the snow's fall speed per grade	verified	one	lighting/precipitation#snow
+0x80ffec	const float	s_snowBaseSpeed		lighting	Holds 0.015, the snow's base drift speed	verified	one	lighting/precipitation#snow
+0x80fff0	const float	s_snowSpeedGrade		lighting	Holds 5.985, the snow's drift speed per grade	verified	one	lighting/precipitation#snow
+0x80fff4	const float	s_snowAngleGrade		lighting	Holds 5.9341197, the snow's angle spread loss per grade	verified	one	lighting/precipitation#snow
+0x810008	const float	s_weatherProbeDepth		lighting	Holds 200.0, the depth of the ground probe	verified	one	lighting/weather#ground-grid
+0x81000c	const float	s_sandRateFixed		lighting	Holds 6000.0, the sand grain rate without shaders	inferred	none	lighting/precipitation#sand
+0x810010	const float	s_sandRateShader		lighting	Holds 32000.0, the sand grain rate with shaders	inferred	none	lighting/precipitation#sand
+0x810018	const float	s_sandScaleBase		lighting	Holds 0.8333333, the sand grain's third term base	verified	one	lighting/celestial#static-tracks
+0x81001c	const float	s_sandBaseSpeed		lighting	Holds 18.666666, the sand grain's base speed	inferred	none	lighting/precipitation#sand
+0x810020	const float	s_sandAngleSpread		lighting	Holds 0.3490659, the sand's angle spread	inferred	none	lighting/precipitation#sand
+0x810024	const float	s_sandStartFraction		lighting	Holds 0.85, the near end of the sand's start along the box	inferred	none	lighting/precipitation#sand
+0x81002c	void *[1]	Mists::vftable		lighting	Holds the mist's one method, the puff placement	verified	one	lighting/overview#unreached-code
+0x810038	void *[6]	s_weatherGridMethods		lighting	Holds the ground grid's six methods: bounds, recentre, segment, height, cell size and delete	verified	one	lighting/weather#ground-grid
 0x810068	const float	s_infinity2		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x8100ec	const float	s_infinity3		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810170	float	s_horizonColumnScale		terrain	Holds 64, the horizon columns per unit of x/z	verified	one	terrain/cull#horizon-buffer
@@ -621,17 +654,38 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8112ac	const float	s_float3fc00000At8112ac		unassigned	Holds the float 1.5 (0x3fc00000)	inferred	none	
 0x8112dc	const float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
 0x811310	const float	s_float42fe0000		unassigned	Holds the float 127 (0x42fe0000)	inferred	none	
-0x811518	const float	s_float3f655555		unassigned	Holds the float 0.8958333 (0x3f655555)	inferred	none	
-0x811570	const float	s_float00000000At811570		unassigned	Holds the float 0 (0x00000000)	inferred	none	
-0x8115a0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0x8115b0	const float	s_float3e800000		unassigned	Holds the float 0.25 (0x3e800000)	inferred	none	
-0x8115b4	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0x8115bc	const float	s_float3d2aaaab		unassigned	Holds the float 0.041666668 (0x3d2aaaab)	inferred	none	
+0x811508	const float	s_piConst		lighting	Holds π as a float	verified	one	lighting/celestial#static-tracks
+0x811510	const float[7]	s_skyKeyTimes		lighting	Holds the day fractions 0.2291667, 0.5, 0.8958333, 0.9166667, 0.1666667, and 1.0 the track keys start from	verified	one	lighting/celestial#static-tracks
+0x81152c	const float[6]	s_skyRingAngles		lighting	Holds the sky dome's ring angles over π: 0, 0.17, 0.2, 0.23, 0.24, 0.25	verified	one	lighting/sky#sky-dome
+0x811548	const uint32_t[2]	s_cloudTextureSizes		lighting	Holds the cloud texture sizes 128 and 256 by SkyCloudLOD	verified	one	lighting/clouds#cloud-texture
+0x81155c	const uint32_t[2]	s_cloudTextureShifts		lighting	Holds the cloud texture row shifts 7 and 8 by SkyCloudLOD	verified	one	lighting/clouds#cloud-texture
+0x811570	const float[12]	s_cloudRingAngles		lighting	Holds the cloud dome's twelve ring angles over π, 0 to 0.25	verified	one	lighting/clouds#cloud-dome
+0x8115a0	const uint8_t[12]	s_cloudRingAlphas		lighting	Holds the cloud dome's ring alphas: 255 nine times, 128, 0, 0	verified	one	lighting/clouds#cloud-dome
+0x8115ac	const float	s_oneThirtySixth		lighting	Holds 1/36, 40 minutes of a day	verified	one	lighting/clouds#cloud-envelope
+0x8115b0	const float	s_interiorFogRate		lighting	Holds 0.25, the interior fog's crossfade rate per second	verified	one	lighting/fog#interior-fog
+0x8115b4	const float	s_cloudBandInterval		lighting	Holds 0.1, the seconds between cloud bands	verified	one	lighting/clouds#cloud-texture
+0x8115bc	const float	s_oneTwentyFourth		lighting	Holds 1/24, the sky dome's column step	verified	one	lighting/sky#sky-dome
+0x8115c4	void *[4]	s_skyboxTableMethods		lighting	Holds the skybox table's four methods	inferred	none	lighting/sky#skybox-table
+0x8115d4	void *[5]	s_sunGlareMethods		lighting	Holds the sun glare's method table	verified	one	lighting/celestial#body-objects
+0x8115e8	void *[5]	s_moonGlareMethods		lighting	Holds the moon glare's method table	verified	one	lighting/celestial#body-objects
+0x811600	const double	s_cloudHorizonEpsilon		lighting	Holds 1e-5, the horizontal length below which a cloud point maps to the centre	verified	one	lighting/clouds#cover-projection
+0x811608	const float	s_cloudGlowScale		lighting	Holds 192.0, the storm scale of the cloud light's height	verified	one	lighting/clouds#cloud-colours
+0x81160c	const float	s_oneEleventh		lighting	Holds 1/11, the cloud dome's ring texture step	verified	one	lighting/clouds#cloud-dome
 0x811610	float	s_int16ToUnit		models	Holds 1/32767, the scale of a 16-bit track value to a unit value	inferred	none	models/animation#element-tracks
-0x811628	const float	s_floatbd088889		unassigned	Holds the float -0.033333335 (0xbd088889)	inferred	none	
-0x81162c	const float	s_floatc1f00000		unassigned	Holds the float -30 (0xc1f00000)	inferred	none	
-0x811644	const float	s_float3f6aaaab		unassigned	Holds the float 0.9166667 (0x3f6aaaab)	inferred	none	
-0x811658	const double	s_double3f1a36e2eb1c432d		unassigned	Holds the double 0.0001 (0x3f1a36e2eb1c432d)	inferred	none	
+0x811614	const float	s_oneOverTwoPi		lighting	Holds 1/2π	verified	one	lighting/sky#sky-colours
+0x811618	const float	s_starAlphaScale		lighting	Holds 254.0, the star alpha scale	verified	one	lighting/celestial#stars
+0x811624	const float	s_oneThirtySecond		lighting	Holds 1/32 of a day, 45 minutes	verified	one	lighting/celestial#body-objects
+0x811628	const float	s_minusOneThirtieth		lighting	Holds −1/30	verified	one	lighting/daynight#underwater-tint
+0x81162c	const float	s_minusThirty		lighting	Holds −30.0	verified	one	lighting/daynight#underwater-tint
+0x811630	const float	s_halfMinutesPerDay		lighting	Holds 2880.0, the half-minutes in a day	verified	one	lighting/daynight#time-of-day-to-half-minutes
+0x811638	const float	s_angle110		lighting	Holds 0.6111111, 110 degrees over π	verified	one	lighting/celestial#static-tracks
+0x81163c	const float	s_angle127		lighting	Holds 0.7055556, 127 degrees over π	verified	one	lighting/celestial#static-tracks
+0x811644	const float	s_angle165		lighting	Holds 0.9166667, 165 degrees over π	verified	one	lighting/celestial#static-tracks
+0x811648	const float	s_angle35		lighting	Holds 0.1944444, 35 degrees over π	verified	one	lighting/celestial#static-tracks
+0x811650	const float	s_angle100		lighting	Holds 0.5555556, 100 degrees over π	verified	one	lighting/celestial#static-tracks
+0x811658	const double	s_dayNightEpsilon		lighting	Holds 1e-4	verified	one	lighting/daynight#recompute
+0x811668	const float	s_shadowPi		lighting	Holds π, the decal's turn before scaling	inferred	none	lighting/shadows#projected-decals
+0x811694	const float	s_shadowBiasScale		lighting	Holds 2^-15, the scale of the shadow depth bias	verified	one	lighting/shadows#shadow-settings
 0x8116cc	const float	s_float442d9c72		unassigned	Holds the float 694.44446 (0x442d9c72)	inferred	none	
 0x8116d0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x8116e8	const float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
@@ -1214,10 +1268,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x867964	uint32_t	s_maxLod		terrain	Holds maxLOD, 3 at start, a near chunk's level	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867968	uint32_t	s_farLod		terrain	Holds a far chunk's level, 2 at start	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867a50	char[51]	s_worldSourcePath		terrain	Holds the source path ending in World.cpp that the file passes to the allocator	verified	one	terrain/overview#object-files
-0x8680ec	float			lighting	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0x8680f0	float			lighting	Holds a float its object file's code reads; not read here	inferred	none	
-0x8680f4	uint32_t			lighting	Holds a dword its object file's code reads; not read here	inferred	none	
-0x8680f8	float			lighting	Holds a float its object file's code reads; not read here	inferred	none	
+0x8680e8	const float	s_roundHalf		lighting	Holds 0.5, subtracted before a rounding fistp	verified	one	lighting/precipitation#emission-budget
+0x8680ec	float	s_weatherScale		lighting	Holds the weather scale K, 0.66 until weatherDensity sets 0.1, 0.33, 0.66 or 1.0; written by 0x67b870	verified	one	lighting/weather#weather-settings
+0x8680f0	const float	s_rainLeanSpeed		lighting	Holds 30.0, the speed at which the rain leans most	verified	one	lighting/precipitation#rain-draw
+0x8680f4	const float	s_rainLeanDegrees		lighting	Holds 45.0, the rain's largest lean in degrees	verified	one	lighting/precipitation#rain-draw
+0x8680f8	const float	s_rainLead		lighting	Holds 1.75, the rain's lead scale of the player velocity	verified	one	lighting/precipitation#rain-drops
 0x868598	char[18]	s_textUseWeatherShaders		lighting	Holds the string "useWeatherShaders"	inferred	none	
 0x8685ac	char[15]	s_textWeatherDensity		lighting	Holds the string "weatherDensity"	inferred	none	
 0x868604	int32_t	s_zoneNameIdA		terrain	Holds a zone name id, −1 when none	inferred	none	
@@ -1273,8 +1328,21 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86f200	char[8]	s_textFfxGlow		ffxeffects	Holds the string "ffxGlow"	inferred	none	
 0x86f238	char[9]	s_textFfxDeath		ffxeffects	Holds the string "ffxDeath"	inferred	none	
 0x86f2ac	char[4]	s_textFfx		ffxeffects	Holds the string "ffx"	inferred	none	
-0x86f2d0	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0x86f3dc	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x86f2c8	const float	s_dayNightHalf		lighting	Holds 0.5	verified	one	lighting/daynight#time-of-day-to-half-minutes
+0x86f2d0	const uint8_t[256]	s_cloudPermutation		lighting	Holds the cloud noise's 256-entry permutation	inferred	none	lighting/clouds#cloud-noise
+0x86f3d8	const float	s_glareLookPower		lighting	Holds 10.0, the power of the glare's look factor	verified	one	lighting/celestial#glare-update
+0x86f3dc	const uint16_t[4]	s_cloudOctaveSteps		lighting	Holds the cloud noise's per-octave steps 16, 32, 64 and 128	inferred	none	lighting/clouds#cloud-noise
+0x86f410	const uint16_t[4]	s_discStripFull		lighting	Holds the disc strip 0, 1, 2, 3	verified	one	lighting/celestial#disc-draw
+0x86f418	const uint16_t[6]	s_discStripCut		lighting	Holds the cut disc strip 0, 1, 4, 5, 2, 3	verified	one	lighting/celestial#disc-draw
+0x86f478	const char[12]	s_skySunGlareName		lighting	Holds the console command name SkySunGlare	verified	one	lighting/celestial#sun-glare-toggle
+0x86f4b0	const char[18]	s_sunGlareOff		lighting	Holds the message SunGlare disabled	verified	one	lighting/celestial#sun-glare-toggle
+0x86f4c4	const char[46]	s_sunGlareOn		lighting	Holds the message that the sun glare is enabled	verified	one	lighting/celestial#sun-glare-toggle
+0x86f4f4	const char[22]	s_sunGlarePath		lighting	Holds the path Textures\sunGlare.blp	verified	one	lighting/celestial#body-objects
+0x86f50c	const char[23]	s_moonGlarePath		lighting	Holds the path Textures\moonGlare.blp	verified	one	lighting/celestial#body-objects
+0x86f524	const char[20]	s_moon02Path		lighting	Holds the path Textures\moon02.blp	verified	one	lighting/celestial#body-objects
+0x86f538	const char[18]	s_moonPath		lighting	Holds the path Textures\moon.blp	verified	one	lighting/celestial#body-objects
+0x86f54c	const char[23]	s_sunCenterPath		lighting	Holds the path Textures\sunCenter.blp	verified	one	lighting/celestial#body-objects
+0x86f5b4	uint32_t	s_shadowLod		lighting	Holds shadowLOD, 1 until the setting stores 0 or 1; written by 0x6d8450	verified	one	lighting/shadows#shadow-settings
 0x86f694	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x86f698	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x86f69c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -1444,6 +1512,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87d898	float	s_featherFallTerminalVelocity		collision	Holds the cap under flag 0x20000000, 7.0 (0x40e00000); its one writer 0x7c6180 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x87d9cc	float			unassigned	Holds a float its object file's code reads; not read here	inferred	none	
 0x87d9d0	float			ui	Holds a float its object file's code reads; not read here	inferred	none	
+0x881c70	const char[29]	s_starModelPath		lighting	Holds the path of the star model	verified	one	lighting/celestial#body-objects
 0x881fec	char[28]	s_textJunkAfterDocumentElement		unassigned	Holds the string "junk after document element"	inferred	none	
 0x882094	char[13]	s_textExpat1955		unassigned	Holds the string "expat_1.95.5"	inferred	none	
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
@@ -2118,7 +2187,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc52560	double			storm	Holds the first double of a table that SStrToFloat reads; not read here	inferred	none	
 0xc62510	float	s_worldFrameSeconds		terrain	Holds the frame time in seconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-emission-rate
 0xc62964	float	s_fogEnd		terrain	Holds the fog end distance the scene sets each frame	inferred	none	
-0xc62970	uint32_t			unassigned	Holds a dword that CWorld::Initialize, SetWorldTime, RenderWeatherParticles read and write; not read here	inferred	none	
+0xc62970	uint32_t	s_worldTicks		terrain	Holds the world clock in 1/1024 s ticks; 0x66fcc0 advances it	verified	one	lighting/precipitation#particle-clock
+0xc62974	uint32_t	s_worldFrameTicks		terrain	Holds the frame's tick count; written by 0x66fcc0	verified	one	lighting/precipitation#particle-clock
 0xc63180	void *	s_driftCloud		terrain	Holds the drift cloud	inferred	none	
 0xc63194	uint32_t	s_detailDoodadTest		terrain	Holds the detail doodad debug test switch	inferred	none	
 0xc6326c	uint32_t			unassigned	Holds a dword that ClientInitializeGame, LoadNewWorld, CGGameUI::HandlePacket read and write; not read here	inferred	none	
@@ -2132,7 +2202,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7b358	uint32_t[8]	s_walkableFacetList		terrain	Holds the private facet list the walkable-only query gathers into	verified	one	terrain/collide#world-triangle-query
 0xc7b480	uint32_t	s_worldScalarDerived		terrain	Holds a value the world scalar setter derives and nothing reads	inferred	none	
 0xc7b494	uint32_t	s_detailDoodadDensity		terrain	Holds the detail doodad density, the bound of the scatter loop	inferred	none	
-0xc7b588	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc7b4a8	uint32_t	s_weatherLastSampleMs		lighting	Holds the milliseconds of the last motion sample	verified	one	lighting/weather#player-motion
+0xc7b4e0	float	s_weatherInfinity		lighting	Holds +inf; written at start-up	verified	one	lighting/overview#shared-header-constants
+0xc7b554	float	s_weatherTwoPi		lighting	Holds 2π; written at start-up	verified	one	lighting/weather#weather-driver
+0xc7b584	uint8_t	s_weatherForced		lighting	Holds 1 once a forced weather type is set, which locks the weather	verified	one	lighting/weather#weather-settings
+0xc7b588	void *	s_useWeatherShadersVar		lighting	Holds the useWeatherShaders setting	verified	one	lighting/weather#weather-settings
 0xc7b600	uint32_t	s_sceneCounter		terrain	Holds the scene's frame counter	inferred	none	
 0xc7b66c	float	s_occluderNearDepth		terrain	Holds the view depth from which a chunk may occlude	verified	one	terrain/cull#chunk-visibility
 0xc7b6f8	uint32_t	s_visibleChunkCount		terrain	Counts the chunks the visibility pass keeps	verified	one	terrain/cull#chunk-visibility
@@ -2166,6 +2240,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7f2f4	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f2f8	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f314	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc7f31c	void *	s_occlusionVar		unassigned	Holds the occlusion setting	verified	one	lighting/celestial#glare-occlusion
 0xc7f330	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f348	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f350	uint32_t			unassigned	Holds a dword that CWorld::Initialize reads and writes; not read here	inferred	none	
@@ -2228,7 +2303,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca8064	uint8_t	s_keepMapObjVertexAlpha		models	Holds the switch that leaves the colour alphas of a group's opaque faces as read	inferred	none	models/wmo#portal-vertex-fade
 0xca8080	uint32_t	s_skyboxState		terrain	Holds the sky box state the map object frame publishes	inferred	none	
 0xca8098	float			models	Holds a float that CMapObj::FootprintCells reads and writes; not read here	inferred	none	
-0xca80c4	uint8_t			unassigned	Holds a byte that RenderWeatherEffectC, DrawWorldScene, BeginMapObjectFrame read and write; not read here	inferred	none	
+0xca80c4	uint8_t	s_weatherVisible		unassigned	Holds 1 when the frame shows weather: outdoors, or through a portal to an exterior group	verified	one	lighting/weather#weather-visibility
 0xca82c0	void *	s_soundEmitterCallbackB		terrain	Holds the second sound emitter callback, never set by live code	inferred	none	
 0xca82c4	void *	s_soundEmitterCreate		terrain	Holds the sound emitter callback; 0 at start, set only by the unreached 0x6723c0	verified	one	terrain/chunk#sound-emitters
 0xca8308	uint32_t[32]	s_chunkLevelBatches		terrain	Holds the four levels' static draw batches of 32 bytes	verified	one	terrain/lod#chunk-mesh-tables
@@ -2264,46 +2339,59 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8b5c	uint32_t			ffxeffects	Holds a dword that ConstructGlowEffect, ConstructDeathEffect, FFXInitialize read and write; not read here	inferred	none	
 0xce8b98	uint32_t			ffxeffects	Holds a dword that ConstructGlowEffect, ConstructDeathEffect, FFXInitialize read and write; not read here	inferred	none	
 0xce8bb4	uint32_t			unassigned	Holds a dword that FFXInitialize, BeginCurrentFfx, EndCurrentFfx read and write; not read here	inferred	none	
-0xce8c8c	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8cac	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8ccc	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8ce4	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8d0c	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8d24	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8d4c	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8d64	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce8dd8	float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
-0xce91d8	uint8_t			unassigned	Holds a byte its object file's code reads and writes; not read here	inferred	none	
-0xce92d8	float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
-0xce9718	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9720	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9724	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9768	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9794	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce97d0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce97d4	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9818	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9838	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce983c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce98a4	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0xce98e8	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xce9a34	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9a98	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9ab8	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9af8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9b2c	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9b94	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9ba0	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9bb0	uint32_t			unassigned	Holds a dword that ClearSpellScreenTint reads and writes; not read here	inferred	none	
-0xce9bb4	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9bdc	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce9c2c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0xce9c30	uint8_t			unassigned	Holds a byte its object file's code reads; not read here	inferred	none	
-0xce9c64	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9c70	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce9cd8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xcea60c	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xcea610	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xce8c8c	float[8]	s_moonSizeTrack		lighting	Holds the moons' size track, four keys	verified	one	lighting/celestial#celestial-bodies
+0xce8cac	float[8]	s_sunDiscSizeTrack		lighting	Holds the sun disc's size track, four keys	verified	one	lighting/celestial#celestial-bodies
+0xce8ccc	float[6]	s_moon02AzimuthTrack		lighting	Holds moon02's azimuth track, three keys	verified	one	lighting/celestial#static-tracks
+0xce8ce4	float[10]	s_moon02PolarTrack		lighting	Holds moon02's polar angle track, five keys	verified	one	lighting/celestial#static-tracks
+0xce8d0c	float[6]	s_whiteMoonAzimuthTrack		lighting	Holds the white moon's azimuth track, three keys	verified	one	lighting/celestial#celestial-bodies
+0xce8d24	float[10]	s_whiteMoonPolarTrack		lighting	Holds the white moon's polar angle track, five keys	verified	one	lighting/celestial#celestial-bodies
+0xce8d4c	float[6]	s_sunDiscAzimuthTrack		lighting	Holds the sun disc's azimuth track, three keys	verified	one	lighting/celestial#celestial-bodies
+0xce8d64	float[10]	s_sunDiscPolarTrack		lighting	Holds the sun disc's polar angle track, five keys	verified	one	lighting/celestial#celestial-bodies
+0xce8d90	float[8]	s_sunAzimuthTrack		lighting	Holds the sun direction's azimuth track, four keys	verified	one	lighting/celestial#static-tracks
+0xce8db0	float[8]	s_sunPolarTrack		lighting	Holds the sun direction's polar angle track, four keys	verified	one	lighting/celestial#static-tracks
+0xce8dd8	float[256]	s_cloudFade		lighting	Holds the cloud noise's fade table 0.5·(1 − cos(i·π/256))	inferred	none	lighting/clouds#cloud-noise
+0xce91d8	uint8_t[256]	s_cloudCoverCurve		lighting	Holds the cloud cover curve built at start-up	verified	one	lighting/clouds#cloud-cover
+0xce92d8	float[256]	s_cloudLattice		lighting	Holds the cloud noise's 256 random lattice values	inferred	none	lighting/clouds#cloud-noise
+0xce96d8	uint8_t[32]	s_stars		lighting	Holds the star object: model, position and alpha byte	verified	one	lighting/celestial#body-objects
+0xce96f8	uint8_t[176]	s_moonGlare		lighting	Holds the moon glare	verified	one	lighting/celestial#body-objects
+0xce97a8	uint8_t[176]	s_sunGlare		lighting	Holds the sun glare	verified	one	lighting/celestial#body-objects
+0xce9858	uint8_t[128]	s_discs		lighting	Holds four disc records of 32 bytes: the sun, the white moon, moon02 and one unused	verified	one	lighting/celestial#body-objects
+0xce98d8	uint32_t[4]	s_lightList		lighting	Holds the per-map light list: its count, capacity and array	verified	one	lighting/overview#static-objects
+0xce98e8	uint8_t[184]	s_clouds		lighting	Holds the cloud object: threshold, override, octaves, texture and buffers	verified	one	lighting/celestial#glare-occlusion
+0xce99a0	uint8_t[48]	s_skyDome		lighting	Holds the sky dome: its arrays and counts	verified	one	lighting/fog#dead-fog-modifiers
+0xce99d0	uint32_t	s_fogModifierColour		lighting	Holds the fog modifier colour, used only under a flag nothing sets	verified	one	lighting/clouds#cloud-dome
+0xce99f8	uint32_t	s_fogModifierFlags		lighting	Holds the fog modifier flags, which code only clears	verified	one	lighting/clouds#cloud-dome
+0xce99fc	uint8_t[40]	s_skyboxTable		lighting	Holds the skybox hash table, its bucket mask at +0x24	verified	one	lighting/tables#skybox-models
+0xce9a24	float[4]	s_nightTrack2		lighting	Holds the second night fraction track, two keys	verified	one	lighting/daynight#night-fraction
+0xce9a34	float[8]	s_nightTrack		lighting	Holds the first night fraction track, four keys	verified	one	lighting/daynight#night-fraction
+0xce9a58	float[16]	s_unusedSkyTrack		lighting	Holds a track of eight keys that nothing reads	verified	one	lighting/celestial#static-tracks
+0xce9a98	float[8]	s_starTrack		lighting	Holds the star track, four keys	verified	one	lighting/celestial#static-tracks
+0xce9ab8	float[16]	s_cloudEnvelopeTrack		lighting	Holds the cloud envelope track, eight keys	verified	one	lighting/clouds#cloud-colours
+0xce9af8	float[12]	s_skyWarpTrack		lighting	Holds the track that varies the sky around the dome, six keys	verified	one	lighting/overview#static-objects
+0xce9b2c	float[12]	s_skyGlowTrack		lighting	Holds the sky glow track, six keys	verified	one	lighting/overview#static-objects
+0xce9b60	uint8_t[424]	s_lightState		lighting	Holds the light state: clock, camera, weather, light table, outputs and skybox slots	verified	one	lighting/daynight#light-state
+0xce9d08	float	s_dayRamp		lighting	Holds the day ramp, which nothing reads	verified	one	lighting/celestial#day-ramp
+0xce9d0c	float	s_nightFraction		lighting	Holds the first night fraction	verified	one	lighting/celestial#day-ramp
+0xce9d10	float	s_nightFraction2		lighting	Holds the second night fraction	verified	one	lighting/daynight#night-fraction
+0xce9d18	uint32_t	s_skyCloudLod		lighting	Holds SkyCloudLOD clamped to 0 or 1	verified	one	lighting/clouds#cloud-texture
+0xce9d20	float[13]	s_deadSkyVectors		lighting	Holds π/2 three times, 1e-7, zeros and π less each; nothing reads them	verified	one	lighting/overview#static-objects
+0xce9d54	void *	s_skyboxScene		lighting	Holds the skybox model scene	verified	one	lighting/sky#sky-shutdown
+0xce9d58	uint32_t	s_skyboxSceneTime		lighting	Holds the skybox scene's last time in milliseconds	verified	one	lighting/tables#skybox-models
+0xce9d60	uint32_t[5]	s_lightStore		lighting	Holds the Light.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/overview#static-objects
+0xce9d74	uint32_t[5]	s_lightParamsStore		lighting	Holds the LightParams.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/tables#table-stores
+0xce9d88	uint32_t[5]	s_lightFloatBandStore		lighting	Holds the LightFloatBand.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/tables#table-stores
+0xce9d9c	uint32_t[5]	s_lightIntBandStore		lighting	Holds the LightIntBand.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/tables#table-stores
+0xce9db0	uint32_t[5]	s_lightSkyboxStore		lighting	Holds the LightSkybox.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/overview#static-objects
+0xce9dc8	float[3]	s_decalColour		lighting	Holds the decal colour vector, (0, 0, 1) at start-up	verified	one	lighting/overview#static-objects
+0xce9dd4	uint32_t[8]	s_decalLists		lighting	Holds the decal geometry lists and their growth steps	verified	one	lighting/overview#static-objects
+0xce9df4	void *	s_shadowGreyRamp		lighting	Holds the grey ramp texture	verified	one	lighting/shadows#shadow-settings
+0xce9df8	void *	s_shadowRamp		lighting	Holds the first ramp texture	verified	one	lighting/shadows#shadow-settings
+0xce9dfc	void *	s_shadowBlob		lighting	Holds the blob shadow texture	inferred	none	lighting/shadows#shadow-textures
+0xce9e0c	uint32_t[512]	s_shadowRampBuffer		lighting	Holds the ramp textures' 64 × 8 texel buffer	verified	one	lighting/overview#static-objects
+0xcea60c	float	s_shadowBoxUp		lighting	Holds 1.0, the blob shadow's upward stretch	inferred	none	lighting/shadows#blob-shadow
+0xcea610	float	s_shadowBoxDown		lighting	Holds 5/3, the blob shadow's downward stretch	inferred	none	lighting/shadows#blob-shadow
+0xcea614	float	s_shadowInfinity		lighting	Holds +inf; written at start-up	verified	one	lighting/overview#shared-header-constants
+0xcea620	float	s_shadowBias		lighting	Holds shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings
 0xcea7d4	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
 0xcea848	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
 0xceaa60	uint8_t			unassigned	Holds a byte its object file's code reads and writes; not read here	inferred	none	
@@ -2407,6 +2495,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5d00	float	s_movementTwoPi		collision	Holds 2π, written only by the static initializer 0x7c5dd0	verified	one	collision/kinematics#transport-space-transforms
 0xcf5d30	float	s_recordInfinity		unassigned	Holds +∞ from start-up	verified	one	collision/overview#object-files
 0xcf60d0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xcf61dc	float	s_skyDrawTenSquared		lighting	Holds 100.0; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts
 0xcf7700	uint8_t[96]	s_contextTableLocks		core	Holds the read-write locks of the context table's eight buckets	verified	one	core/loop#contexts

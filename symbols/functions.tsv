@@ -3788,7 +3788,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x454ba0	101			fastmath	unreached		Runs its object file code not read here	inferred	none		
 0x454c10	104			fastmath	unreached		Runs its object file code not read here	inferred	none		
 0x454c80	186	FastLog2		fastmath	unreached	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		
-0x454d40	196			fastmath			Runs its object file code that calls __ftol; not read here	inferred	none		
+0x454d40	196	FastPow2		fastmath			Returns 2 to a double power through a table and a polynomial	inferred	none		
 0x454e10	131			fastmath	unreached		Runs its object file code not read here	inferred	none		
 0x454ea0	152			fastmath	unreached		Runs its object file code not read here	inferred	none		
 0x454f40	140			fastmath			Runs its object file code not read here	inferred	none		
@@ -3833,7 +3833,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x456280	37			unassigned			Runs its object file code not read here	inferred	none		
 0x4562b0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x4562f0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456330	25			unassigned			Runs its object file code not read here	inferred	none		
+0x456330	25	RsqrtEstimate		cmath			Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	
 0x456350	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456370	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456380	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -6474,7 +6474,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x480780	187			ui	orchestration		Returns whether the world pick admits an object of type unit, player, game object or corpse	inferred	none	spell/targeting#object-pick-filters	
 0x4808d0	188			ui	unreached		Runs WorldFrame.cpp code that calls HandleClose2; not read here	inferred	none		
 0x480990	182			ui	primitive		Runs WorldFrame.cpp code that calls HandleClose2, SErrSetLastError; not read here	inferred	none		
-0x480a50	572			ui	primitive		Runs WorldFrame.cpp code that calls GetDeviceView, SetVector3, TransformPoint and 6 more; not read here	inferred	none		
+0x480a50	572			ui	orchestration		Runs a scene test the glare occlusion trace calls, not read here	inferred	none		
 0x480c90	112			ui	primitive		Runs WorldFrame.cpp code that calls 0x5f8800, OsGetAsyncTimeMs, CGUnit_C::IsLootable and 1 more; not read here	inferred	none		
 0x480d90	83			ui	orchestration		Runs WorldFrame.cpp code that calls CM2Model::SetHitTestMode, CM2Model::GetFirstChild and 2 more; not read here	inferred	none		
 0x480df0	600			ui	primitive		Runs WorldFrame.cpp code that calls TraceWorldSegment, 0x480a50, SetVector3 and 2 more; not read here	inferred	none		
@@ -6504,7 +6504,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x482740	394			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, SetVector3 and 8 more; not read here	inferred	none		
 0x4828d0	309			ui	orchestration		Sets the targeting cursor over a hovered object from 0x6e6460	inferred	none	spell/targeting#the-targeting-cursor	
 0x482aa0	34			ui	orchestration		Runs WorldFrame.cpp code that calls CSimpleFrame::OnMouseMove, GetInputControl; not read here	inferred	none		
-0x482ad0	316			ui	primitive		Runs WorldFrame.cpp code that calls GetLightState, OsGetAsyncTimeMs, ClntObjMgrGetActivePlayer and 4 more; not read here	inferred	none		
+0x482ad0	316	StampLightState		ui	primitive		Writes the frame's clock, player, camera, far clip and weather density into the light state	verified	one	lighting/daynight#light-state	
 0x482c10	132			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, SetShowOwnModel and 2 more; not read here	inferred	none		
 0x482ca0	42			ui	orchestration		Runs WorldFrame.cpp code that calls 0x480990; not read here	inferred	none		
 0x482cd0	107			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::Tick, 0x5f8c90; not read here	inferred	none		
@@ -6911,7 +6911,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f450	21	SignalGuildInviteRequest		ui	orchestration		Signals GUILD_INVITE_REQUEST with an inviter and a guild	verified	one	objectlayer/party#guild-notices	
 0x48f470	10			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
 0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Runs GameUI.cpp code that calls ClientServices::SetMessageHandler, CVar::Lookup, 0x63e030 and 34 more; not read here	inferred	none		
-0x48f690	1097	CGGameUI::HandlePacket	idb	ui	primitive		Runs GameUI.cpp code that calls CDataStore::GetInt32, CDataStore::GetGuid and 25 more; not read here	inferred	none		
+0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration		Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Runs GameUI.cpp code that calls ___inc_tmpoff, 0x496510, CVar::Register and 49 more; not read here	inferred	none		
 0x4901e0	98			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, _sscanf; not read here	inferred	none		
 0x490250	302			ui	primitive		Runs GameUI.cpp code that calls LoadFrameScriptFunctions, 0x5368a0, 0x4ef2f0 and 51 more; not read here	inferred	none		
@@ -7325,7 +7325,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a2a00	131			ui	orchestration		Runs ChatFrame.cpp code that calls SMemFree, 0x4a3a60, 0x4a4330; not read here	inferred	none		
 0x4a2a90	185			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4a2b50	189			ui	primitive		Runs its object file code that calls 0x4a3a60, 0x4a3ba0, SMemFree; not read here	inferred	none		
-0x4a2c10	35	NTempest::CImVector::Set	idb	ui	primitive		Runs its object file code not read here	inferred	none		
+0x4a2c10	35	NTempest::CImVector::Set	idb	ui	primitive		Packs four bytes into a colour, the first on top	inferred	none		
 0x4a2c40	91			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4a2ca0	198			ui	orchestration		Runs its object file code that calls 0x4a3090, SMemFree, 0x4a3d40; not read here	inferred	none		
 0x4a2d70	56			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -14065,7 +14065,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x53f4a0	18			unassigned			Runs its object file code not read here	inferred	none		
 0x53f4c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x53f4d0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x53f4f0	32	ClientDBInitialize	idb	unassigned			Runs its object file code that calls StaticDBLoadAll, CheckDamageClassConsistency and 3 more; not read here	inferred	none		
+0x53f4f0	32	ClientDBInitialize	idb	unassigned			Runs four table setups, then jumps to the light table conversion with cl = 1	verified	one	lighting/tables#light-positions-at-load	
 0x53f510	167	CheckDamageClassConsistency	idb	unassigned			Runs its object file code that calls ConsolePrintf, 0x554980, 0x5549a0; not read here	inferred	none		
 0x53f5c0	126	InitTerrainSoundTypeIDs	idb	unassigned			Runs its object file code that calls FreeUint32Array, ReallocUint32Array; not read here	inferred	none		
 0x53f640	277	InitWeaponSubclasses	idb	unassigned			Runs its object file code that calls 0x554ac0, LocateWeaponSubclass, 0x554a30; not read here	inferred	none		
@@ -14140,11 +14140,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x548990	554			unassigned			Runs its object file code that calls 0x57c8d0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
 0x548bc0	554			unassigned			Runs its object file code that calls 0x57ca20, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
 0x548df0	570			unassigned			Runs its object file code that calls 0x57cca0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
-0x549030	588			unassigned			Runs its object file code that calls 0x588d80, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
-0x549280	588			unassigned			Runs its object file code that calls 0x588ec0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
-0x5494d0	554			unassigned			Runs its object file code that calls 0x589000, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
-0x549700	570			unassigned			Runs its object file code that calls 0x5891f0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
-0x549940	547			unassigned			Runs its object file code that calls 0x5893c0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
+0x549030	588	LoadLightFloatBandStore		dbc			Loads LightFloatBand.dbc into its store as 136-byte records keyed by id	verified	one	lighting/tables#table-stores	
+0x549280	588	LoadLightIntBandStore		dbc			Loads LightIntBand.dbc into its store as 136-byte records keyed by id	verified	one	lighting/tables#table-stores	
+0x5494d0	554	LoadLightParamsStore		dbc			Loads LightParams.dbc into its store as 36-byte records keyed by id	verified	one	lighting/tables#table-stores	
+0x549700	570	LoadLightStore		dbc			Loads Light.dbc into its store as 48-byte records keyed by id	verified	one	lighting/tables#table-stores	
+0x549940	547	LoadLightSkyboxStore		dbc			Loads LightSkybox.dbc into its store as 8-byte records keyed by id	verified	one	lighting/tables#table-stores	
 0x549b70	570			unassigned			Runs its object file code that calls 0x57cfa0, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
 0x549db0	554			unassigned			Runs its object file code that calls 0x57d110, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
 0x549fe0	570			unassigned			Runs its object file code that calls 0x57d270, SFile::Open, SErrDisplayAppFatal2 and 6 more; not read here	inferred	none		
@@ -16269,7 +16269,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589000	6			dbc			Runs its object file code not read here	inferred	none		
 0x589010	3			dbc			Runs its object file code not read here	inferred	none		
 0x589020	1			dbc			Runs its object file code not read here	inferred	none		
-0x589030	327			dbc			Runs its object file code that calls SFile::Read, ConsoleWrite; not read here	inferred	none		
+0x589030	327	ReadLightParamsRecord		dbc			Reads one LightParams record from the file	inferred	none		
 0x589180	5			dbc			Runs its object file code not read here	inferred	none		
 0x589190	15			dbc			Runs its object file code not read here	inferred	none		
 0x5891a0	5			dbc			Runs its object file code not read here	inferred	none		
@@ -16279,7 +16279,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5891f0	6			dbc			Runs its object file code not read here	inferred	none		
 0x589200	3			dbc			Runs its object file code not read here	inferred	none		
 0x589210	1			dbc			Runs its object file code not read here	inferred	none		
-0x589220	294			dbc			Runs its object file code that calls SFile::Read, ConsoleWrite; not read here	inferred	none		
+0x589220	294	ReadLightRecord		dbc			Reads one Light record: eight 4-byte reads and one of 20	verified	one	lighting/tables#table-stores	
 0x589350	5			dbc			Runs its object file code not read here	inferred	none		
 0x589360	15			dbc			Runs its object file code not read here	inferred	none		
 0x589370	5			dbc			Runs its object file code not read here	inferred	none		
@@ -16389,15 +16389,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a350	30			gx			Runs its object file code that calls 0x58a750; not read here	inferred	none		
 0x58a370	1			gx			Runs its object file code not read here	inferred	none		
 0x58a380	66			gx			Runs its object file code that calls 0x58a830; not read here	inferred	none		
-0x58a3d0	886			gx			Runs its object file code that calls 0x589a90, 0x58a140, GxBufLock and 4 more; not read here	inferred	none		
-0x58a750	44			gx			Runs its object file code that calls 0x58a140, 0x58a0c0; not read here	inferred	none		
+0x58a3d0	886	SetDrawVertices		gx			Sets the vertex streams of the next draw: positions and the optional colours, normals and texture coordinates	inferred	none		
+0x58a750	44	SetDrawIndices		gx			Sets the index buffer of the next draw	inferred	none		
 0x58a780	8			gx	unreached		Runs its object file code that calls 0x58a790; not read here	inferred	none		
 0x58a790	24			gx			Runs its object file code that calls 0x592990; not read here	inferred	none		
 0x58a7b0	13			gx			Runs its object file code that calls 0x592a60; not read here	inferred	none		
 0x58a7c0	54			gx			Runs its object file code that calls 0x58a790, 0x58a7b0, 0x592aa0; not read here	inferred	none		
-0x58a800	13			gx			Runs its object file code that calls 0x592ad0; not read here	inferred	none		
+0x58a800	13	PassBufferToDevice		gx			Passes a buffer in ecx to the graphics device	inferred	none		
 0x58a810	30			gx			Runs its object file code not read here	inferred	none		
-0x58a830	12			gx			Runs its object file code that calls 0x58a810; not read here	inferred	none		
+0x58a830	12	DrawIndexed		gx			Draws a primitive run of the set vertices and indices	inferred	none		
 0x58a840	15			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58a850	14			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58a860	18			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -16409,7 +16409,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a920	26			gx			Runs its object file code not read here	inferred	none		
 0x58a940	19			gx			Runs its object file code that calls 0x592410; not read here	inferred	none		
 0x58a960	15			gx			Runs its object file code not read here	inferred	none		
-0x58a970	15			gx			Runs its object file code not read here	inferred	none		
+0x58a970	15	ClearDevice		gx			Clears the device buffers a mask names through the device's slot +0x6c	inferred	none		
 0x58a980	164	CGxTexFlags::CGxTexFlags	idb	gx			Runs its object file code that calls GxCapsGet; not read here	inferred	none		
 0x58aa30	185			gx			Runs its object file code that calls GxCapsGet, SErrSetLastError; not read here	inferred	none		
 0x58aaf0	28			gx	unreached		Runs its object file code that calls 0x58aa30; not read here	inferred	none		
@@ -16433,10 +16433,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58aed0	31			gx			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58aef0	60			gx	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58af30	39			gx			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x58af60	216			gx			Runs its object file code that calls SErrSetLastError, 0x592530; not read here	inferred	none		
+0x58af60	216	SetDeviceViewport		gx			Sets the device viewport and its depth range	inferred	none		
 0x58b040	15	SetDeviceProjection		gx	host	void __fastcall (const float *matrix)	Passes a matrix to device vtable slot +0x70	verified	one	camera#view-and-projection	
 0x58b050	15	SetDeviceView		gx	host	void __fastcall (const float *matrix)	Passes a matrix to device vtable slot +0x74	verified	one	camera#view-and-projection	
-0x58b060	36			gx			Runs its object file code that calls 0x592640; not read here	inferred	none		
+0x58b060	36	GetDeviceViewport		gx			Reads the device viewport and its depth range	inferred	none		
 0x58b090	13	GetDeviceProjection		gx	host	void __fastcall (float *out)	Copies the device matrix at +0xf50	verified	one	camera#unprojection	
 0x58b0a0	13			gx			Runs its object file code that calls 0x5926c0; not read here	inferred	none		
 0x58b0b0	13	GetDeviceView		gx	host	void __fastcall (float *out)	Copies the top of the device matrix stack at +0x1ac8	verified	one	camera#unprojection	
@@ -22858,7 +22858,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63f880	300	ParseCommand	idb	unassigned			Runs its object file code that calls sgetu8, SStrHashHT, SStrCmpI; not read here	inferred	none		
 0x63f9b0	6	ConsoleCommandHistoryDepth	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x63f9c0	23	ConsoleCommandHistory	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x63f9e0	352	ConsoleCommandRegister	idb	unassigned			Runs its object file code that calls SStrLen, SStrHashHT, SStrCmpI and 4 more; not read here	inferred	none		
+0x63f9e0	352	ConsoleCommandRegister	idb	console			Registers a console command with its handler, category and help	verified	one	lighting/celestial#sun-glare-toggle	
 0x63fb40	277			unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
 0x63fc60	326	ConsoleCommandComplete	idb	unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI, 0x6406a0 and 1 more; not read here	inferred	none		
 0x63fdb0	12	ConsoleCommandWriteHelp	idb	unassigned			Runs its object file code not read here	inferred	none		
@@ -24734,194 +24734,194 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6744c0	57	ClampHashCapacity		terrain	primitive	uint32_t __fastcall (uint32_t n)	Returns a power-of-two capacity for n	inferred	none		
 0x674500	31	RoundUpToMultipleG		terrain	primitive	uint32_t __fastcall (uint32_t value, uint32_t multiple)	Rounds a value up to a multiple	inferred	none		
 0x674520	57	ClampHashCapacity32		terrain	primitive	uint32_t __fastcall (uint32_t n)	Returns a power-of-two capacity for n, capped at 32	inferred	none		
-0x674560	5			lighting			Runs its object file code not read here	inferred	none		
-0x674570	11			lighting			Runs its object file code not read here	inferred	none		
-0x674580	5			lighting			Runs its object file code not read here	inferred	none		
-0x674590	15			lighting			Runs its object file code not read here	inferred	none		
-0x6745a0	5			lighting			Runs its object file code not read here	inferred	none		
-0x6745b0	19			lighting			Runs its object file code not read here	inferred	none		
-0x6745d0	37			lighting			Runs its object file code not read here	inferred	none		
-0x674600	29			lighting			Runs its object file code not read here	inferred	none		
-0x674620	526			lighting			Runs its object file code that calls SplatVector3, 0x67a5b0, 0x67e160 and 10 more; not read here	inferred	none		
-0x674830	420			lighting			Runs its object file code that calls HandleClose, GxShaderRelease, 0x67d6c0 and 12 more; not read here	inferred	none		
-0x6749e0	139			lighting			Runs its object file code that calls 0x67a980; not read here	inferred	none		
-0x674a70	294			lighting			Runs its object file code that calls 0x674ba0, 0x7be730; not read here	inferred	none		
-0x674ba0	78			lighting			Runs its object file code not read here	inferred	none		
-0x674bf0	86			lighting			Runs its object file code not read here	inferred	none		
-0x674c50	1577			lighting			Runs its object file code that calls NTempest::CRandom::uint32, SetVector3, 0x674ba0 and 4 more; not read here	inferred	none		
-0x675280	47			lighting			Runs its object file code not read here	inferred	none		
-0x6752b0	261			lighting			Runs its object file code that calls GxBufLock, GxCapsGet, GxBufUnlock; not read here	inferred	none		
-0x6753c0	213			lighting			Runs its object file code that calls GxBufLock, GxCapsGet, GxBufUnlock; not read here	inferred	none		
-0x6754a0	508			lighting			Runs its object file code that calls NTempest::CRandom::uint32, 0x674c50, 0x6745d0 and 1 more; not read here	inferred	none		
-0x6756a0	1055			lighting			Runs its object file code that calls 0x67db70, 0x674600, 0x4420b0 and 10 more; not read here	inferred	none		
-0x675ac0	1692			lighting			Runs its object file code that calls 0x589f40, GxRsSet, 0x589e30 and 15 more; not read here	inferred	none		
-0x676160	2158			lighting			Runs its object file code that calls 0x589f40, GxRsSet, 0x589e30 and 16 more; not read here	inferred	none		
-0x6769d0	1179			lighting			Runs its object file code that calls 0x589f40, GxRsSet, 0x58b3e0 and 16 more; not read here	inferred	none		
-0x676e70	1284			lighting			Runs its object file code that calls 0x589f40, GxRsSet, 0x58b3e0 and 18 more; not read here	inferred	none		
-0x677380	68			lighting			Runs its object file code that calls 0x6756a0, 0x676e70, 0x6769d0 and 2 more; not read here	inferred	none		
-0x6773d0	69			lighting			Runs its object file code that calls 0x67b700; not read here	inferred	none		
-0x677420	424			lighting			Runs its object file code that calls SplatVector3, 0x67a5b0, 0x67e180 and 9 more; not read here	inferred	none		
-0x6775d0	236			lighting			Runs its object file code that calls HandleClose, GxShaderRelease, 0x67dd30 and 6 more; not read here	inferred	none		
-0x6776c0	139			lighting			Runs its object file code that calls 0x67a980; not read here	inferred	none		
-0x677750	1516			lighting			Runs its object file code that calls NTempest::CRandom::uint32, SetVector3, 0x674ba0 and 4 more; not read here	inferred	none		
-0x677d40	164			lighting			Runs its object file code that calls GxBufLock, GxBufUnlock; not read here	inferred	none		
-0x677df0	502			lighting			Runs its object file code that calls 0x677750, 0x6745d0; not read here	inferred	none		
-0x677ff0	1558			lighting			Runs MapWeather.cpp code that calls 0x67dd30, GetCameraPosition, Vector3LengthSquared and 14 more; not read here	inferred	none		
-0x678610	838			lighting			Runs MapWeather.cpp code that calls 0x589f40, GxRsSet, GxCapsGet and 16 more; not read here	inferred	none		
-0x678960	1845			lighting			Runs MapWeather.cpp code that calls 0x589f40, GxRsSet, GetTextureDeviceObject and 17 more; not read here	inferred	none		
-0x6790a0	1			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x6790b0	54			lighting			Runs MapWeather.cpp code that calls 0x677ff0, 0x678610, 0x678960; not read here	inferred	none		
-0x6790f0	69			lighting			Runs MapWeather.cpp code that calls 0x67b700; not read here	inferred	none		
-0x679140	334			lighting			Runs MapWeather.cpp code that calls 0x67a5b0, 0x67e190, 0x67dde0 and 4 more; not read here	inferred	none		
-0x679290	232			lighting			Runs MapWeather.cpp code that calls GxShaderRelease, 0x67de10, 0x67d700 and 5 more; not read here	inferred	none		
-0x679380	103			lighting			Runs MapWeather.cpp code that calls 0x67a980; not read here	inferred	none		
-0x6793f0	1147			lighting			Runs MapWeather.cpp code that calls NTempest::CRandom::uint32, SetVector3, _atexit and 4 more; not read here	inferred	none		
-0x679870	1			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x679880	164			lighting			Runs MapWeather.cpp code that calls GxBufLock, GxBufUnlock; not read here	inferred	none		
-0x679930	459			lighting			Runs MapWeather.cpp code that calls 0x6793f0, 0x6745d0; not read here	inferred	none		
-0x679b00	843			lighting			Runs MapWeather.cpp code that calls 0x67de10, 0x674600, 0x4420b0 and 10 more; not read here	inferred	none		
-0x679e50	854			lighting			Runs MapWeather.cpp code that calls 0x589f40, GxRsSet, GetDeviceView and 13 more; not read here	inferred	none		
-0x67a1b0	869			lighting			Runs MapWeather.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 17 more; not read here	inferred	none		
-0x67a520	54	RenderWeatherEffectC		lighting		void __thiscall (void *effect)	Draws one weather effect	inferred	none		
-0x67a560	69			lighting			Runs MapWeather.cpp code that calls 0x67b700; not read here	inferred	none		
-0x67a5b0	440			lighting			Runs MapWeather.cpp code that calls 0x67d840, 0x67d880, SplatVector3 and 4 more; not read here	inferred	none		
-0x67a770	41			lighting			Runs MapWeather.cpp code that calls HandleClose, SMemFree; not read here	inferred	none		
-0x67a7a0	474			lighting			Runs MapWeather.cpp code that calls 0x674600, 0x67c760, __ftol and 1 more; not read here	inferred	none		
-0x67a980	13			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67a990	950			lighting			Runs MapWeather.cpp code that calls NTempest::CRandom::uint32, _atexit, RotateMatrix and 4 more; not read here	inferred	none		
-0x67ad50	1			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67ad60	37			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67ad90	61			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67add0	73			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67ae20	2262	RenderWeatherParticles		lighting		void __thiscall (void *particles)	Draws a weather effect's particles	inferred	none		
-0x67b700	60			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67b740	299			lighting			Runs MapWeather.cpp code that calls SMemAlloc, 0x67c900, CVar::Register and 2 more; not read here	inferred	none		
-0x67b870	118			lighting			Runs MapWeather.cpp code that calls 0x64ac60, ConsoleWriteA; not read here	inferred	none		
-0x67b900	335			lighting			Runs MapWeather.cpp code that calls 0x67ba50, 0x67d600, SMemFree and 1 more; not read here	inferred	none		
-0x67ba50	104			lighting			Runs MapWeather.cpp code that calls 0x674830, SMemFree, 0x6775d0 and 1 more; not read here	inferred	none		
-0x67bac0	47			lighting			Runs MapWeather.cpp code that calls 0x67ba50; not read here	inferred	none		
-0x67baf0	276			lighting			Runs MapWeather.cpp code that calls 0x67bc10, OsGetAsyncTimeMs; not read here	inferred	none		
-0x67bc10	41			lighting			Runs MapWeather.cpp code not read here	inferred	none		
-0x67bc40	33			lighting	unreached		Runs MapWeather.cpp code not read here	inferred	none		
-0x67bc70	276			lighting			Runs MapWeather.cpp code that calls OsGetAsyncTimeMs, 0x674ba0, 0x6749e0 and 4 more; not read here	inferred	none		
-0x67bd90	51			lighting	unreached		Runs MapWeather.cpp code that calls 0x67bc10; not read here	inferred	none		
-0x67bdd0	106			lighting			Runs MapWeather.cpp code that calls 0x67bc10; not read here	inferred	none		
-0x67be40	779			lighting			Runs MapWeather.cpp code that calls 0x67c150, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 9 more; not read here	inferred	none		
-0x67c150	1380			lighting			Runs MapWeather.cpp code that calls 0x67d720, 0x67d570, SMemFree and 8 more; not read here	inferred	none		
-0x67c6c0	1			lighting			Runs its object file code not read here	inferred	none		
-0x67c6d0	1			lighting			Runs its object file code not read here	inferred	none		
-0x67c6e0	58			lighting			Runs its object file code that calls 0x6773d0, 0x6790f0, 0x67a560; not read here	inferred	none		
-0x67c720	52	RenderWeatherEffects		lighting		void __thiscall (void *weather)	Draws the weather's three effects when weather is on	inferred	none		
-0x67c760	9			lighting			Runs its object file code not read here	inferred	none		
-0x67c770	50			lighting			Runs its object file code that calls 0x67c7b0; not read here	inferred	none		
-0x67c7b0	59			lighting			Runs its object file code not read here	inferred	none		
-0x67c7f0	48	GetWeatherGroundHeight		lighting		float __stdcall (const float *point)	Returns the surface height within 200 below a point, or its z less 200 when nothing is hit	inferred	none		
-0x67c820	218			lighting			Runs its object file code that calls GetWeatherGroundHeight; not read here	inferred	none		
-0x67c900	127			lighting			Runs its object file code that calls SMemAlloc, 0x67c770; not read here	inferred	none		
-0x67c980	43			lighting			Runs its object file code that calls 0x67c9b0, SMemFree; not read here	inferred	none		
-0x67c9b0	78			lighting			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x67ca00	133			lighting			Runs its object file code that calls floor, __ftol, 0x67c820; not read here	inferred	none		
-0x67ca90	204			lighting			Runs its object file code that calls GetWeatherGroundHeight; not read here	inferred	none		
-0x67cb60	752			lighting			Runs its object file code that calls floor, __ftol, 0x7c13c0 and 1 more; not read here	inferred	none		
-0x67ce50	393			lighting			Runs its object file code that calls floor, __ftol, 0x67c7b0; not read here	inferred	none		
-0x67cfe0	133			lighting			Runs its object file code not read here	inferred	none		
-0x67d070	5			lighting			Runs its object file code not read here	inferred	none		
-0x67d080	19			lighting			Runs its object file code not read here	inferred	none		
-0x67d0a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d0b0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d0d0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d0e0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d100	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d110	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d130	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d140	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d160	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d170	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d190	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d1a0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d1c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d1d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d1f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d200	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d220	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d230	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d250	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d260	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d280	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d290	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d2b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d2c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d2e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d2f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x67d300	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d310	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d330	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d340	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d360	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d370	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d390	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d3a0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d3c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d3d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d3f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d400	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d420	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d430	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d450	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d460	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d480	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d490	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d4b0	95			unassigned			Runs its object file code that calls 0x58a040, GxBufferRelease, 0x67df10 and 1 more; not read here	inferred	none		
-0x67d510	95			unassigned			Runs its object file code that calls 0x58a040, GxBufferRelease, 0x67dfd0 and 1 more; not read here	inferred	none		
-0x67d570	91			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x67d5d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d5f0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x67d600	60			unassigned			Runs its object file code not read here	inferred	none		
-0x67d640	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d650	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d670	5			unassigned			Runs its object file code not read here	inferred	none		
-0x67d680	19			unassigned			Runs its object file code not read here	inferred	none		
-0x67d6a0	17			unassigned			Runs its object file code not read here	inferred	none		
-0x67d6c0	17			unassigned			Runs its object file code not read here	inferred	none		
-0x67d6e0	17			unassigned			Runs its object file code not read here	inferred	none		
-0x67d700	17			unassigned			Runs its object file code not read here	inferred	none		
-0x67d720	17			unassigned			Runs its object file code not read here	inferred	none		
-0x67d740	171			unassigned			Runs its object file code not read here	inferred	none		
-0x67d7f0	40			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x67d820	29			unassigned			Runs its object file code not read here	inferred	none		
-0x67d840	57			unassigned			Runs its object file code not read here	inferred	none		
-0x67d880	325			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x67d9d0	41			unassigned			Runs its object file code not read here	inferred	none		
-0x67da00	84			unassigned			Runs its object file code that calls 0x58a040, GxBufferRelease; not read here	inferred	none		
-0x67da60	84			unassigned			Runs its object file code that calls 0x58a040, GxBufferRelease; not read here	inferred	none		
-0x67dac0	33			unassigned			Runs its object file code not read here	inferred	none		
-0x67daf0	128			unassigned			Runs its object file code not read here	inferred	none		
-0x67db70	171			unassigned			Runs its object file code not read here	inferred	none		
-0x67dc20	33			unassigned			Runs its object file code not read here	inferred	none		
-0x67dc50	171			unassigned			Runs its object file code not read here	inferred	none		
-0x67dd00	33			unassigned			Runs its object file code not read here	inferred	none		
-0x67dd30	171			unassigned			Runs its object file code not read here	inferred	none		
-0x67dde0	33			unassigned			Runs its object file code not read here	inferred	none		
-0x67de10	171			unassigned			Runs its object file code not read here	inferred	none		
-0x67dec0	71			unassigned			Runs its object file code not read here	inferred	none		
-0x67df10	41			unassigned			Runs its object file code not read here	inferred	none		
-0x67df40	60			unassigned			Runs its object file code not read here	inferred	none		
-0x67df80	71			unassigned			Runs its object file code not read here	inferred	none		
-0x67dfd0	41			unassigned			Runs its object file code not read here	inferred	none		
-0x67e000	60			unassigned			Runs its object file code not read here	inferred	none		
-0x67e040	71			unassigned			Runs its object file code not read here	inferred	none		
-0x67e090	60			unassigned			Runs its object file code not read here	inferred	none		
-0x67e0d0	71			unassigned			Runs its object file code not read here	inferred	none		
-0x67e120	60			unassigned			Runs its object file code not read here	inferred	none		
-0x67e160	12			unassigned			Runs its object file code not read here	inferred	none		
-0x67e170	12			unassigned			Runs its object file code not read here	inferred	none		
-0x67e180	12			unassigned			Runs its object file code not read here	inferred	none		
-0x67e190	12			unassigned			Runs its object file code not read here	inferred	none		
-0x67e1a0	137			unassigned			Runs its object file code that calls 0x58a160, 0x589f80; not read here	inferred	none		
-0x67e230	116			unassigned			Runs its object file code that calls 0x58a160, 0x589f80; not read here	inferred	none		
-0x67e2b0	134			unassigned			Runs its object file code that calls 0x58a160, 0x589f80; not read here	inferred	none		
-0x67e340	16			unassigned			Runs its object file code not read here	inferred	none		
-0x67e350	53			unassigned			Runs its object file code not read here	inferred	none		
+0x674560	5	InitWeatherInfinityThunk		lighting	orchestration		Jumps to 0x674570; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x674570	11	InitWeatherInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
+0x674580	5	InitWeatherTwoPiThunk		lighting	orchestration		Jumps to 0x674590; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x674590	15	InitWeatherTwoPi		lighting	primitive		Stores π + π as a float in the object file's 2π global	verified	one	lighting/overview#shared-header-constants	
+0x6745a0	5	InitWeatherInvTwoPiThunk		lighting	orchestration		Jumps to 0x6745b0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x6745b0	19	InitWeatherInvTwoPi		lighting	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	lighting/overview#shared-header-constants	
+0x6745d0	37	SecondsToWeatherTicks		lighting	primitive	int32_t __stdcall (float seconds)	Converts seconds to particle clock ticks: round(s·1024 − 0.5), ties to even	verified	one	lighting/precipitation#particle-clock	
+0x674600	29	WeatherTicksToSeconds		lighting	primitive		Converts a tick count in ecx to seconds as ticks/1024	verified	one	lighting/precipitation#particle-clock	
+0x674620	526	Rain::Rain		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the rain effect: its box, mist, packet lists, rate and the rain and patter shaders	verified	one	lighting/precipitation#effect-objects	
+0x674830	420	Rain::~Rain		lighting	host	void __thiscall (void *this)	Releases the rain effect's textures and shaders, frees both packet lists and its mist	verified	one	lighting/precipitation#effect-objects	
+0x6749e0	139	Rain::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the rain's drop rate K·P·x, its packet fill limit P/6144 and its mist rate	verified	one	lighting/precipitation#rain-rates	
+0x674a70	294	BuildRainTiltMatrix		lighting	primitive		Builds the matrix that leans the rain streaks by up to 45 degrees with the player's horizontal speed	verified	one	lighting/precipitation#rain-draw	
+0x674ba0	78	LerpClamped		lighting	primitive	float __stdcall (float from, float to, float t)	Interpolates from a to b with t clamped to [0, 1]	verified	one	lighting/weather#weather-ramps	
+0x674bf0	86	GetRainTailLength		lighting	primitive	float __stdcall (void)	Returns the rain tail length: 2.0 while the player is still, else 0	verified	one	lighting/precipitation#rain-draw	
+0x674c50	1577	Rain::SpawnDrop		lighting	primitive	void __thiscall (void *this, void *drop, float birth)	Seeds one rain drop: its velocity, its start on the box top, and its birth and death on the ground	verified	one	lighting/precipitation#rain-drops	
+0x675280	47	SetPatter		lighting	primitive	void __stdcall (void *patter, float time, const float *point)	Stores a patter's point and its times t and t + 0.25	verified	one	lighting/precipitation#patter	
+0x6752b0	261	BakeRainPacket		lighting	primitive	void __stdcall (void *packet)	Writes a closed drop packet's three vertices per drop into its vertex buffer	verified	one	lighting/precipitation#particle-packets	
+0x6753c0	213	BakePatterPacket		lighting	primitive	void __stdcall (void *packet)	Writes a closed patter packet's three vertices per patter into its vertex buffer	verified	one	lighting/precipitation#particle-packets	
+0x6754a0	508	Rain::EmitDrops		lighting	primitive	void __thiscall (void *this, void *packet, void *patter, float budget)	Emits round(min(6144 − count, budget) − 0.5) drops into the open packet and their patters	verified	one	lighting/precipitation#emission-budget	
+0x6756a0	1055	Rain::Update		lighting	primitive	void __thiscall (void *this)	Retires and discards rain packets, then opens, fills and closes the frame's packet	verified	one	lighting/precipitation#particle-packets	
+0x675ac0	1692	Rain::DrawPatterFixed		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	
+0x676160	2158	Rain::DrawDropsFixed		lighting	primitive	void __thiscall (void *this)	Draws the started drop packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	
+0x6769d0	1179	Rain::DrawPatterShader		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets through patter.bls as camera quads	verified	one	lighting/precipitation#rain-draw	
+0x676e70	1284	Rain::DrawDropsShader		lighting	primitive	void __thiscall (void *this)	Draws the started drop packets through rain.bls with the streak constants	verified	one	lighting/precipitation#rain-draw	
+0x677380	68	Rain::Render		lighting	orchestration	void __thiscall (void *this)	Updates the rain, then draws its drops, patters and mist when weather is visible	verified	one	lighting/precipitation#rain-draw	
+0x6773d0	69	Rain::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts rain packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
+0x677420	424	Snow::Snow		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the snow effect: its box, mist, packet list, rate and the snowpoint shader	verified	one	lighting/precipitation#effect-objects	
+0x6775d0	236	Snow::~Snow		lighting	host	void __thiscall (void *this)	Releases the snow effect's texture and shader, frees its packets and its mist	verified	one	lighting/precipitation#effect-objects	
+0x6776c0	139	Snow::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the snow's flake rate K·P·x, its packet fill limit and its mist rate	verified	one	lighting/precipitation#snow	
+0x677750	1516	Snow::SpawnFlake		lighting	primitive		Seeds one snow flake: its velocity, its start on the box top and its lead	verified	one	lighting/precipitation#snow	
+0x677d40	164	Snow::BakePacket		lighting	host		Writes a closed snow packet's flakes into its vertex buffer	inferred	none		
+0x677df0	502	Snow::EmitFlakes		lighting	primitive		Emits the frame's snow flakes into the open packet	inferred	none		
+0x677ff0	1558	Snow::Update		lighting	primitive	void __thiscall (void *this)	Retires snow packets, builds the lead vector, and opens, fills and closes the frame's packet	verified	one	lighting/precipitation#snow	
+0x678610	838	Snow::DrawShader		lighting	host	void __thiscall (void *this)	Draws the started snow packets as points through snowpoint.bls	verified	one	lighting/precipitation#snow	
+0x678960	1845	Snow::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started snow packets on the processor, without shaders	verified	one	lighting/precipitation#snow	
+0x6790a0	1	SnowDrawFixedStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x678960 registers	verified	one	lighting/overview#static-objects	
+0x6790b0	54	Snow::Render		lighting	orchestration	void __thiscall (void *this)	Updates the snow, then draws its flakes and mist when weather is visible	verified	one	lighting/weather#weather-visibility	
+0x6790f0	69	Snow::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts snow packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
+0x679140	334	Sand::Sand		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the sand effect: its box, mist, packet list, rate and the sand shader	verified	one	lighting/precipitation#effect-objects	
+0x679290	232	Sand::~Sand		lighting	host	void __thiscall (void *this)	Releases the sand effect's shader, frees its packets and its mist	verified	one	lighting/precipitation#effect-objects	
+0x679380	103	Sand::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the sand's grain rate K·P·x, its packet fill limit and its mist rate K·Q·x	inferred	none	lighting/precipitation#sand	
+0x6793f0	1147	Sand::SpawnGrain		lighting	primitive		Seeds one sand grain near the box's far end with a velocity turned by the heading	inferred	none	lighting/precipitation#sand	
+0x679870	1	SandSpawnGrainStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6793f0 registers	verified	one	lighting/overview#static-objects	
+0x679880	164	Sand::BakePacket		lighting	host		Writes a closed sand packet's grains into its vertex buffer	inferred	none		
+0x679930	459	Sand::EmitGrains		lighting	primitive		Emits the frame's sand grains into the open packet	inferred	none		
+0x679b00	843	Sand::Update		lighting	primitive	void __thiscall (void *this)	Retires sand packets, and opens, fills and closes the frame's packet	inferred	none	lighting/precipitation#sand	
+0x679e50	854	Sand::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets on the processor, without shaders	inferred	none	lighting/precipitation#sand	
+0x67a1b0	869	Sand::DrawShader		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets as points through sand.bls	inferred	none	lighting/precipitation#sand	
+0x67a520	54	Sand::Render		lighting	orchestration	void __thiscall (void *this)	Updates the sand, then draws its grains and mist when weather is visible	verified	one	lighting/weather#weather-visibility	
+0x67a560	69	Sand::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts sand packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
+0x67a5b0	440	Mists::Mists		lighting	primitive		Builds a mist: puff size, box, texture, direction, spread, speed, speed spread and 128 puffs	verified	one	lighting/precipitation#mist	
+0x67a770	41	Mists::~Mists		lighting	host		Releases a mist's texture and frees its puffs	inferred	none		
+0x67a7a0	474	Mists::SpawnPuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Spawns a puff, samples the ground along its path and cuts its life where the ground rises	inferred	none	lighting/precipitation#mist-ground	
+0x67a980	13	Mists::SetRate		lighting	orchestration	void __thiscall (void *this, float rate)	Stores a mist's puff rate	verified	one	lighting/precipitation#rain-rates	
+0x67a990	950	Mists::PlacePuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Places a puff: its velocity turned by the heading, its position, spin and life	verified	one	lighting/precipitation#mist	
+0x67ad50	1	MistsPlacePuffStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x67a990 registers	verified	one	lighting/overview#static-objects	
+0x67ad60	37	SetFadeRamp		lighting	primitive	void __thiscall (float *ramp, float a, float b)	Sets a ramp to (b − v)/(b − a)	verified	one	lighting/precipitation#mist	
+0x67ad90	61	EvalFadeRamp		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	
+0x67add0	73	EvalFadeRampInverse		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates one less a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	
+0x67ae20	2262	Mists::Render		lighting	primitive	void __thiscall (void *this)	Spawns, moves and fades a mist's puffs and draws them as quads in the fog colour	verified	one	lighting/precipitation#mist	
+0x67b700	60	Mists::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts the puffs with birth before now and death at or after now	verified	one	lighting/precipitation#effect-fade	
+0x67b740	299	BuildWeatherManager		lighting	primitive	void * __thiscall (void *this)	Builds the weather manager, its ground grid and settings, and applies a forced type	verified	one	lighting/weather#weather-manager	
+0x67b870	118	OnWeatherDensityChanged		lighting	host		Sets the weather scale K from weatherDensity 0 to 3 and asks the manager to ramp	verified	one	lighting/weather#weather-settings	
+0x67b900	335	DestroyWeatherManager		lighting	primitive	void __thiscall (void *this)	Tears the weather effects down, deletes the ground grid and frees the motion samples	verified	one	lighting/weather#weather-manager	
+0x67ba50	104	DestroyWeatherEffects		lighting	host	void __thiscall (void *this)	Destroys and frees the rain, snow and sand effects	verified	one	lighting/weather#weather-driver	
+0x67bac0	47	ResetWeather		lighting	orchestration	void __thiscall (void *this)	Clears the weather, its ramps and the pending type unless the weather is forced	verified	one	lighting/weather#weather-reset	
+0x67baf0	276	SetWeather		lighting	orchestration	void __thiscall (void *this, int32_t type, float grade, uint8_t smooth)	Sets the weather type and grade and restarts both ramps	verified	one	lighting/weather#weather-message	
+0x67bc10	41	GetWeatherType		lighting	orchestration	int32_t __thiscall (void *this)	Returns 1, 2 or 3 for a live rain, snow or sand effect, else 0	verified	one	lighting/weather#weather-manager	
+0x67bc40	33	WeatherUsesShaders		lighting	orchestration		Returns the live effect's shader byte for the weather console report	verified	one	lighting/weather#weather-settings	
+0x67bc70	276	RampWeather		lighting	primitive	void __thiscall (void *this, float from, float to)	Moves the grade and the density along their ramps and passes them on	verified	one	lighting/weather#weather-ramps	
+0x67bd90	51	GetWeatherGridBounds		lighting	unreached		Asks the ground grid for its bounds when an effect is live; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x67bdd0	106	GetWeatherBox		lighting	orchestration		Copies the live effect's box and reports whether one exists	verified	one	lighting/weather#weather-reset	
+0x67be40	779	UpdateWeather		lighting	primitive	void __thiscall (void *this)	Drives the weather each frame: motion, heading, speed, type changes and ramps	verified	one	lighting/weather#weather-driver	
+0x67c150	1380	SampleWeatherMotion		lighting	primitive	void __thiscall (void *this)	Keeps the player's and transport's position steps and averages them into velocities	verified	one	lighting/weather#player-motion	
+0x67c6c0	1	SampleWeatherMotionStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x67c150 registers	verified	one	lighting/overview#static-objects	
+0x67c6d0	1	SampleWeatherMotionStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x67c150 registers	verified	one	lighting/overview#static-objects	
+0x67c6e0	58	HasLiveWeather		lighting	orchestration	bool __thiscall (void *this)	Reports whether any effect still has live particles	verified	one	lighting/weather#weather-driver	
+0x67c720	52	RenderWeatherEffects		lighting	orchestration	void __thiscall (void *this)	Runs the live effects' update and draw once the driver has run	verified	one	lighting/weather#weather-visibility	
+0x67c760	9	GetWeatherGrid		lighting	orchestration	void * __fastcall (void)	Returns the weather manager's ground grid	verified	one	lighting/weather#weather-manager	
+0x67c770	50	BuildWeatherGridTile		lighting	orchestration		Builds a grid tile at no chunk and empties its cells	verified	one	lighting/weather#ground-grid	
+0x67c7b0	59	ResetWeatherGridTile		lighting	orchestration		Sets a grid tile's chunk and fills its 32 × 32 cells with FLT_MAX	verified	one	lighting/weather#ground-grid	
+0x67c7f0	48	GetWeatherGroundHeight		lighting	primitive	float __stdcall (float *point)	Returns the surface height within 200 below a point, or its height less 200	verified	one	lighting/weather#ground-grid	
+0x67c820	218	GetWeatherTileHeight		lighting	primitive		Returns a tile cell's height, filling it on first use, or FLT_MAX outside the tile	verified	one	lighting/weather#ground-grid	
+0x67c900	127	BuildWeatherGrid		lighting	host	void * __thiscall (void *this)	Builds the ground grid and its 25 tiles	verified	one	lighting/weather#ground-grid	
+0x67c980	43	DeleteWeatherGrid		lighting	host		Destroys the ground grid and frees it when asked	verified	one	lighting/weather#ground-grid	
+0x67c9b0	78	DestroyWeatherGrid		lighting	host		Frees the ground grid's 25 tiles	verified	one	lighting/weather#ground-grid	
+0x67ca00	133	GetWeatherGridHeight		lighting	primitive		Returns the grid height at a point, or FLT_MAX outside the grid	verified	one	lighting/weather#ground-grid	
+0x67ca90	204	GetWeatherCellHeight		lighting	primitive		Returns a grid cell's height by cell index, filling it on first use	verified	one	lighting/weather#ground-grid	
+0x67cb60	752	IntersectWeatherGrid		lighting	primitive		Tests a segment against the ground grid and returns the hit	verified	one	lighting/weather#ground-grid	
+0x67ce50	393	RecenterWeatherGrid		lighting	primitive		Recentres the grid on a point's chunk, keeping the tiles it still covers	verified	one	lighting/weather#ground-grid	
+0x67cfe0	133	GetWeatherGridExtent		lighting	orchestration		Returns the chunk range the grid's tiles cover	verified	one	lighting/weather#ground-grid	
+0x67d070	5	InitWeatherTenSquaredThunk		lighting	orchestration		Jumps to 0x67d080; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d080	19	InitWeatherTenSquared		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d0a0	5	InitWeatherTileUnitInvSquaredThunk		lighting	orchestration		Jumps to 0x67d0b0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d0b0	19	InitWeatherTileUnitInvSquared		lighting	primitive		Stores 11.11111 · 11.11111 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d0d0	5	InitWeatherHalfTileUnitInvSquaredThunk		lighting	orchestration		Jumps to 0x67d0e0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d0e0	19	InitWeatherHalfTileUnitInvSquared		lighting	primitive		Stores 5.555555 · 5.555555 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d100	5	InitWeatherTenSquared2Thunk		lighting	orchestration		Jumps to 0x67d110; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d110	19	InitWeatherTenSquared2		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d130	5	InitWeatherFiveSquaredThunk		lighting	orchestration		Jumps to 0x67d140; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d140	19	InitWeatherFiveSquared		lighting	primitive		Stores 5.0 · 5.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d160	5	InitWeatherTenSquared3Thunk		lighting	orchestration		Jumps to 0x67d170; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d170	19	InitWeatherTenSquared3		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d190	5	InitWeatherThirtySquaredThunk		lighting	orchestration		Jumps to 0x67d1a0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d1a0	19	InitWeatherThirtySquared		lighting	primitive		Stores 30.0 · 30.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d1c0	5	InitWeatherOneTwentySquaredThunk		lighting	orchestration		Jumps to 0x67d1d0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d1d0	19	InitWeatherOneTwentySquared		lighting	primitive		Stores 120.0 · 120.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d1f0	5	InitWeatherTwentySquaredThunk		lighting	orchestration		Jumps to 0x67d200; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d200	19	InitWeatherTwentySquared		lighting	primitive		Stores 20.0 · 20.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d220	5	InitWeatherTenSquared4Thunk		lighting	orchestration		Jumps to 0x67d230; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d230	19	InitWeatherTenSquared4		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d250	5	InitWeatherHalfSquaredThunk		lighting	orchestration		Jumps to 0x67d260; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d260	19	InitWeatherHalfSquared		lighting	primitive		Stores 0.5 · 0.5 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d280	5	InitWeatherThreeSquaredThunk		lighting	orchestration		Jumps to 0x67d290; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d290	19	InitWeatherThreeSquared		lighting	primitive		Stores 3.0 · 3.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d2b0	5	InitWeatherHundredSquaredThunk		lighting	orchestration		Jumps to 0x67d2c0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d2c0	19	InitWeatherHundredSquared		lighting	primitive		Stores 100.0 · 100.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d2e0	5	InitWeatherStoreFiveThunk		lighting	orchestration		Jumps to 0x67d2f0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d2f0	11	InitWeatherStoreFive		lighting	orchestration		Stores the float 5.0 in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d300	5	InitWeatherFiftySquaredThunk		lighting	orchestration		Jumps to 0x67d310; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d310	19	InitWeatherFiftySquared		lighting	primitive		Stores 50.0 · 50.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d330	5	InitWeatherHundredSquared2Thunk		lighting	orchestration		Jumps to 0x67d340; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d340	19	InitWeatherHundredSquared2		lighting	primitive		Stores 100.0 · 100.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d360	5	InitWeatherFortySquaredThunk		lighting	orchestration		Jumps to 0x67d370; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d370	19	InitWeatherFortySquared		lighting	primitive		Stores 40.0 · 40.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d390	5	InitWeatherOneHalfSquaredThunk		lighting	orchestration		Jumps to 0x67d3a0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d3a0	19	InitWeatherOneHalfSquared		lighting	primitive		Stores 1.5 · 1.5 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d3c0	5	InitWeatherNegTwentyOneOverThirtySixThunk		lighting	orchestration		Jumps to 0x67d3d0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d3d0	19	InitWeatherNegTwentyOneOverThirtySix		lighting	primitive		Stores -21.0 · -0.02777778 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d3f0	5	InitWeatherScaledNeg255Thunk		lighting	orchestration		Jumps to 0x67d400; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d400	19	InitWeatherScaledNeg255		lighting	primitive		Stores another of the object file's globals · -255.0 as a float	verified	one	lighting/overview#shared-header-constants	
+0x67d420	5	InitWeatherEighteenOverThirtySixThunk		lighting	orchestration		Jumps to 0x67d430; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d430	19	InitWeatherEighteenOverThirtySix		lighting	primitive		Stores 18.0 · 0.02777778 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d450	5	InitWeatherScaled256Thunk		lighting	orchestration		Jumps to 0x67d460; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d460	19	InitWeatherScaled256		lighting	primitive		Stores another of the object file's globals · 256.0 as a float	verified	one	lighting/overview#shared-header-constants	
+0x67d480	5	InitWeatherInvTileSizeThunk		lighting	orchestration		Jumps to 0x67d490; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d490	19	InitWeatherInvTileSize		lighting	primitive		Stores 1.0 / 4.166667 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d4b0	95			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67d510	95			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67d570	91			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67d5d0	19			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d5f0	1	MistPuffNoop		lighting	orchestration		Returns at once; the puff constructor the mist passes	verified	one	lighting/overview#static-objects	
+0x67d600	60			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67d640	5	InitWeatherTenSquared5Thunk		lighting	orchestration		Jumps to 0x67d650; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d650	19	InitWeatherTenSquared5		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d670	5	InitWeatherHalfTenthThunk		lighting	orchestration		Jumps to 0x67d680; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x67d680	19	InitWeatherHalfTenth		lighting	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x67d6a0	17			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d6c0	17			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d6e0	17			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d700	17			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d720	17			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67d740	171	LinkWeatherNode		lighting	primitive		Unlinks a node and links it after a given link in mode 1, else before it, by default at the list's end	verified	one	lighting/weather#player-motion	
+0x67d7f0	40			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67d820	29	GetWeatherCellSize		lighting	orchestration		Returns the grid cell size 1/0.96 and its inverse 0.96	verified	one	lighting/weather#ground-grid	
+0x67d840	57			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67d880	325			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67d9d0	41			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67da00	84			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67da60	84			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dac0	33			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67daf0	128			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67db70	171			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dc20	33			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dc50	171			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dd00	33			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dd30	171			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dde0	33			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67de10	171			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dec0	71			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67df10	41			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67df40	60			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67df80	71			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67dfd0	41			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e000	60			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e040	71			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e090	60			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e0d0	71			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e120	60			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e160	12			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e170	12			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e180	12			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e190	12			lighting	primitive		Runs the weather file's list template code, not read here	inferred	none		
+0x67e1a0	137			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67e230	116			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67e2b0	134			lighting	host		Runs the weather file's list template code, not read here	inferred	none		
+0x67e340	16			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
+0x67e350	53			lighting	orchestration		Runs the weather file's list template code, not read here	inferred	none		
 0x67e390	5	InitTerrainInfinity2Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x67e3a0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x67e3a0	11	InitTerrainInfinity2		terrain	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	terrain/statics#static-initializers	
 0x67e3b0	10	InitTerrainCountUnit2Thunk		terrain	orchestration	void __cdecl (void)	Calls 0x67e3c0, then jumps to 0x67e3e0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -28506,278 +28506,278 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cdcb0	371			ffxeffects			Runs its object file code that calls GxCapsGet, CGxTexFlags::CGxTexFlags, 0x6cdb10 and 6 more; not read here	inferred	none		
 0x6cde30	42			ffxeffects			Runs its object file code that calls _atoi, ConsoleWrite; not read here	inferred	none		
 0x6cde60	12	SetCurrentFfx		ffxeffects			Makes an effect the current full-screen effect and returns the previous one	inferred	none		
-0x6cde70	88			unassigned			Runs its object file code not read here	inferred	none		
-0x6cded0	79			unassigned			Runs its object file code not read here	inferred	none		
-0x6cdf20	38			unassigned			Runs its object file code not read here	inferred	none		
-0x6cdf50	10			unassigned			Runs its object file code that calls 0x6cdf60; not read here	inferred	none		
-0x6cdf60	287			unassigned			Runs its object file code that calls 0x404130, 0x6ce0e0; not read here	inferred	none		
-0x6ce080	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce090	67			unassigned			Runs its object file code that calls __ehvec_dtor; not read here	inferred	none		
-0x6ce0e0	37			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce110	10			unassigned			Runs its object file code that calls 0x6ce120; not read here	inferred	none		
-0x6ce120	163			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce1d0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce1e0	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce200	10			unassigned			Runs its object file code that calls 0x6ce210; not read here	inferred	none		
-0x6ce210	121			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce290	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce2a0	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce2c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce2d0	61			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce310	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce320	93			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce380	10			unassigned			Runs its object file code that calls 0x6ce390; not read here	inferred	none		
-0x6ce390	201			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce460	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce470	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce490	10			unassigned			Runs its object file code that calls 0x6ce4a0; not read here	inferred	none		
-0x6ce4a0	113			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce520	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce530	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce550	10			unassigned			Runs its object file code that calls 0x6ce560; not read here	inferred	none		
-0x6ce560	201			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce630	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce640	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce660	10			unassigned			Runs its object file code that calls 0x6ce670; not read here	inferred	none		
-0x6ce670	91			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce6d0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce6e0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce6f0	10			unassigned			Runs its object file code that calls 0x6ce700; not read here	inferred	none		
-0x6ce700	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce730	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce740	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce750	10			unassigned			Runs its object file code that calls 0x6ce760; not read here	inferred	none		
-0x6ce760	190			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce820	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce830	359			unassigned			Runs its object file code that calls 0x6d5490, 0x6d5450, 0x6d52b0 and 1 more; not read here	inferred	none		
-0x6ce9a0	10			unassigned			Runs its object file code that calls 0x6ce9b0; not read here	inferred	none		
-0x6ce9b0	13			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce9c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ce9d0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6ce9e0	10			unassigned			Runs its object file code that calls 0x6ce9f0; not read here	inferred	none		
-0x6ce9f0	48			unassigned			Runs its object file code not read here	inferred	none		
-0x6cea20	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cea30	73			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6cea80	10			unassigned			Runs its object file code that calls 0x6cea90; not read here	inferred	none		
-0x6cea90	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6ceaa0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ceab0	256			unassigned			Runs its object file code that calls SMemFree, 0x5966a0, FreeArrayB and 2 more; not read here	inferred	none		
-0x6cebb0	10			unassigned			Runs its object file code that calls 0x6cebc0; not read here	inferred	none		
-0x6cebc0	23			unassigned			Runs its object file code not read here	inferred	none		
-0x6cebe0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cebf0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6cec10	10			unassigned			Runs its object file code that calls 0x6cec20; not read here	inferred	none		
-0x6cec20	34			unassigned			Runs its object file code not read here	inferred	none		
-0x6cec50	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cec60	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6cec70	10			unassigned			Runs its object file code that calls 0x6cec80; not read here	inferred	none		
-0x6cec80	124			unassigned			Runs its object file code not read here	inferred	none		
-0x6ced00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6ced10	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6ced20	10			unassigned			Runs its object file code that calls 0x6ced30; not read here	inferred	none		
-0x6ced30	124			unassigned			Runs its object file code not read here	inferred	none		
-0x6cedb0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cedc0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6cedd0	10			unassigned			Runs its object file code that calls 0x6cede0; not read here	inferred	none		
-0x6cede0	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6cee10	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cee20	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6cee30	871			unassigned			Runs its object file code that calls 0x6cf310, CWorld::GetPlayerFog, GetCameraLiquid and 6 more; not read here	inferred	none		
-0x6cf1a0	225			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf290	128			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf310	30			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf330	10			unassigned			Runs its object file code that calls 0x6cf340; not read here	inferred	none		
-0x6cf340	121			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf3c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cf3d0	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf3f0	10			unassigned			Runs its object file code that calls 0x6cf400; not read here	inferred	none		
-0x6cf400	81			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf460	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6cf470	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf490	551			unassigned			Runs its object file code that calls 0x6cf6c0, __CIpow; not read here	inferred	none		
-0x6cf6c0	232			unassigned			Runs its object file code not read here	inferred	none		
-0x6cf7b0	26			unassigned			Runs its object file code that calls 0x6cfa90; not read here	inferred	none		
-0x6cf7d0	36			unassigned			Runs its object file code that calls 0x6cfa90; not read here	inferred	none		
-0x6cf800	104			unassigned			Runs its object file code that calls GetCameraLiquid; not read here	inferred	none		
-0x6cf870	330			unassigned			Runs its object file code that calls __CIacos; not read here	inferred	none		
-0x6cf9c0	200			unassigned			Runs its object file code that calls 0x454f40; not read here	inferred	none		
-0x6cfa90	109			unassigned			Runs its object file code that calls 0x6cf870, __ftol; not read here	inferred	none		
-0x6cfb00	1155			unassigned			Runs its object file code that calls 0x6cf9c0, 0x6cf870, 0x6cf6c0 and 1 more; not read here	inferred	none		
-0x6cff90	35			unassigned			Runs its object file code that calls 0x6cffc0; not read here	inferred	none		
-0x6cffc0	1392			unassigned			Runs its object file code that calls 0x6d0970, 0x6cfb00, GxTexUpdateRect; not read here	inferred	none		
-0x6d0530	858			unassigned			Runs its object file code that calls 0x596ff0, 0x5970f0, 0x503d10 and 1 more; not read here	inferred	none		
-0x6d0890	39			unassigned			Runs its object file code not read here	inferred	none		
-0x6d08c0	26			unassigned			Runs its object file code that calls GxTexDestroy; not read here	inferred	none		
-0x6d08e0	21			unassigned	unreached		Runs its object file code that calls 0x6d0970; not read here	inferred	none		
-0x6d0900	109			unassigned			Runs its object file code that calls __CIpow, __ftol; not read here	inferred	none		
-0x6d0970	59			unassigned			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x6d09b0	580			unassigned			Runs its object file code that calls GxTexDestroy, 0x595fa0, 0x5260c0 and 12 more; not read here	inferred	none		
-0x6d0c00	137			unassigned			Runs its object file code that calls 0x6d0c90; not read here	inferred	none		
-0x6d0c90	115			unassigned			Runs its object file code that calls _rand; not read here	inferred	none		
-0x6d0d10	569			unassigned			Runs its object file code that calls 0x596ff0, 0x503d10, 0x5971e0; not read here	inferred	none		
-0x6d0f50	1689			unassigned			Runs its object file code that calls 0x6cf6c0, LerpColor, 0x6d15f0 and 6 more; not read here	inferred	none		
-0x6d15f0	48			unassigned			Runs its object file code not read here	inferred	none		
-0x6d1620	232			unassigned			Runs its object file code that calls 0x7bbc80, 0x7bbd60; not read here	inferred	none		
-0x6d1710	560			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d1940	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d1950	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d1960	482			unassigned			Runs its object file code not read here	inferred	none		
-0x6d1b50	76			unassigned			Runs its object file code that calls 0x6cf6c0, __ftol; not read here	inferred	none		
-0x6d1ba0	446			unassigned			Runs its object file code that calls 0x6d6170, 0x6d0d10, 0x6d09b0 and 9 more; not read here	inferred	none		
-0x6d1d60	96			unassigned			Runs its object file code that calls 0x64ac60, 0x6d09b0, SStrPrintf and 1 more; not read here	inferred	none		
-0x6d1dc0	105			unassigned			Runs its object file code that calls _sscanf, ConsoleWrite; not read here	inferred	none		
-0x6d1e30	243			unassigned			Runs its object file code that calls 0x7e5000; not read here	inferred	none		
-0x6d1f30	243			unassigned			Runs its object file code that calls 0x7e5000; not read here	inferred	none		
-0x6d2030	106			unassigned			Runs its object file code that calls 0x7e5b10; not read here	inferred	none		
-0x6d20a0	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6d20b0	343			unassigned			Runs its object file code that calls HandleClose2, M2SceneRelease, 0x6d08c0 and 3 more; not read here	inferred	none		
-0x6d2210	65			unassigned			Runs its object file code that calls 0x6d4500, 0x6d2260, 0x6d3a10 and 1 more; not read here	inferred	none		
-0x6d2260	2710			unassigned			Runs its object file code that calls GetCameraLiquid, 0x6d64d0, 0x404130 and 13 more; not read here	inferred	none		
-0x6d2d00	868			unassigned			Runs its object file code that calls 0x6d5a70, 0x6d5ad0, 0x6d6a90 and 9 more; not read here	inferred	none		
-0x6d3070	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d3080	92			unassigned			Runs its object file code not read here	inferred	none		
-0x6d30e0	1783			unassigned			Runs its object file code that calls 0x6d15f0, NTempest::CImVector::Set; not read here	inferred	none		
-0x6d37e0	546			unassigned			Runs its object file code that calls 0x6d51e0, 0x7bbc80, 0x7bbd60; not read here	inferred	none		
-0x6d3a10	329			unassigned			Runs its object file code that calls _atexit, 0x6cf6c0; not read here	inferred	none		
-0x6d3b60	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d3b70	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d3b80	2289			unassigned			Runs its object file code that calls _atexit, 0x6cf6c0, floor; not read here	inferred	none		
-0x6d4480	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d4490	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44a0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44b0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44c0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44d0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44e0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d44f0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d4500	47			unassigned			Runs its object file code not read here	inferred	none		
-0x6d4530	142			unassigned			Runs its object file code that calls 0x6d4500, 0x6d2260, 0x6d3a10 and 2 more; not read here	inferred	none		
-0x6d45c0	45	SetSpellScreenTint		lighting			Stores a colour and the byte of 255 times a level used as the screen tint	inferred	none	spell/visuals#screen-tint	
-0x6d45f0	13			lighting	unreached		Runs its object file code not read here	inferred	none		
-0x6d4600	26			lighting	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x6d4620	7			lighting	orchestration		Stores its argument in a lighting global	verified	one	objectlayer/playerfields#ghost-state	
-0x6d4630	11	ClearSpellScreenTint		lighting	orchestration		Stores −1 in a lighting global	verified	one	objectlayer/playerfields#ghost-state	
-0x6d4640	421			lighting			Runs its object file code that calls SStrHashHT, SStrCmpI, 0x6d5820 and 8 more; not read here	inferred	none		
-0x6d47f0	26			lighting	unreached		Runs its object file code that calls 0x6d4640; not read here	inferred	none		
-0x6d4810	71			lighting			Runs its object file code that calls 0x6d4640; not read here	inferred	none		
-0x6d4860	35			lighting			Runs its object file code that calls 0x6cf6c0; not read here	inferred	none		
-0x6d4890	22			lighting			Runs its object file code that calls 0x6cf6c0; not read here	inferred	none		
-0x6d48b0	6	GetLightState		lighting			Returns the lighting system's current light state object	inferred	none		
-0x6d48c0	63			lighting			Runs its object file code that calls 0x6cf490, 0x7e57e0; not read here	inferred	none		
-0x6d4900	3			lighting	orchestration		Returns at once, dropping two stack arguments	verified	one	objectlayer/playerfields#ghost-state	
-0x6d4910	3			lighting			Runs its object file code not read here	inferred	none		
-0x6d4920	24			lighting			Runs its object file code not read here	inferred	none		
-0x6d4940	824			lighting			Runs its object file code that calls 0x58b060, 0x58af60, CM2Model::IsReady and 12 more; not read here	inferred	none		
-0x6d4c80	16			lighting	unreached		Runs its object file code not read here	inferred	none		
-0x6d4c90	272			lighting	unreached		Runs its object file code that calls 0x6d6ab0, 0x6d64d0, 0x6d2d00; not read here	inferred	none		
-0x6d4da0	106			lighting			Runs its object file code that calls SMemFree, 0x6d5450, 0x6d5570; not read here	inferred	none		
-0x6d4e10	182			lighting			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
-0x6d4ed0	189			lighting			Runs its object file code that calls 0x6d5450, 0x6d52b0, SMemFree; not read here	inferred	none		
-0x6d4f90	56			lighting			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d4fd0	56			lighting			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d5010	56			lighting			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d5050	56			lighting			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d5090	190			lighting			Runs its object file code that calls 0x6d5490, 0x6d5450, 0x6d53b0 and 1 more; not read here	inferred	none		
-0x6d5150	45			lighting			Runs its object file code that calls SortedHeapDestruct, SMemFree; not read here	inferred	none		
-0x6d5180	86			lighting			Runs its object file code not read here	inferred	none		
-0x6d51e0	143			lighting			Runs its object file code not read here	inferred	none		
-0x6d5270	37			lighting			Runs its object file code not read here	inferred	none		
-0x6d52a0	1			lighting			Runs its object file code not read here	inferred	none		
-0x6d52b0	136			lighting			Runs its object file code not read here	inferred	none		
-0x6d5340	108			lighting			Runs its object file code not read here	inferred	none		
-0x6d53b0	135			lighting			Runs its object file code that calls 0x6d5490, 0x6d5450, SMemFree; not read here	inferred	none		
-0x6d5440	16			lighting			Runs its object file code not read here	inferred	none		
-0x6d5450	60			lighting			Runs its object file code not read here	inferred	none		
-0x6d5490	25			lighting			Runs its object file code not read here	inferred	none		
-0x6d54b0	181			lighting			Runs its object file code not read here	inferred	none		
-0x6d5570	41			lighting			Runs its object file code not read here	inferred	none		
-0x6d55a0	483			lighting			Runs its object file code that calls 0x6d5790, 0x6d5810, 0x6d57c0 and 4 more; not read here	inferred	none		
-0x6d5790	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d57c0	77			lighting			Runs its object file code not read here	inferred	none		
-0x6d5810	12			lighting			Runs its object file code not read here	inferred	none		
-0x6d5820	316			lighting			Runs its object file code that calls 0x6d5960, 0x6d5450, 0x6d5570; not read here	inferred	none		
-0x6d5960	264			lighting			Runs its object file code that calls 0x6d57c0, 0x6d5450, SMemReAlloc and 3 more; not read here	inferred	none		
-0x6d5a70	83			lighting			Runs its object file code that calls 0x7bfce0; not read here	inferred	none		
-0x6d5ad0	157			lighting			Runs its object file code that calls 0x7bff20; not read here	inferred	none		
-0x6d5b70	83			lighting			Runs its object file code that calls 0x4100f0; not read here	inferred	none		
-0x6d5bd0	43			lighting			Runs its object file code that calls SortedHeapDestruct, SMemFree; not read here	inferred	none		
-0x6d5c00	10			lighting			Runs its object file code that calls 0x6d5c10; not read here	inferred	none		
-0x6d5c10	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d5c40	12			lighting			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d5c50	94			lighting			Runs its object file code that calls 0x5893e0, SMemFree; not read here	inferred	none		
-0x6d5cb0	10			lighting			Runs its object file code that calls 0x6d5cc0; not read here	inferred	none		
-0x6d5cc0	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d5cf0	12			lighting			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d5d00	104			lighting			Runs its object file code that calls 0x588ee0, SMemFree; not read here	inferred	none		
-0x6d5d70	10			lighting			Runs its object file code that calls 0x6d5d80; not read here	inferred	none		
-0x6d5d80	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d5db0	12			lighting			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d5dc0	104			lighting			Runs its object file code that calls 0x588da0, SMemFree; not read here	inferred	none		
-0x6d5e30	10			lighting			Runs its object file code that calls 0x6d5e40; not read here	inferred	none		
-0x6d5e40	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d5e70	12			lighting			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d5e80	101			lighting			Runs its object file code that calls 0x589020, SMemFree; not read here	inferred	none		
-0x6d5ef0	10			lighting			Runs its object file code that calls 0x6d5f00; not read here	inferred	none		
-0x6d5f00	33			lighting			Runs its object file code not read here	inferred	none		
-0x6d5f30	12			lighting			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d5f40	101			lighting			Runs its object file code that calls 0x589210, SMemFree; not read here	inferred	none		
-0x6d5fb0	219			lighting			Runs its object file code that calls CWorld::IsMapLoading; not read here	inferred	none		
-0x6d6090	41			lighting			Runs its object file code not read here	inferred	none		
-0x6d60c0	62			lighting			Runs its object file code that calls 0x6d5fb0; not read here	inferred	none		
-0x6d6100	90			lighting			Runs its object file code that calls 0x6d6090; not read here	inferred	none		
-0x6d6160	16			lighting			Runs its object file code that calls 0x6d60c0; not read here	inferred	none		
-0x6d6170	366			lighting			Runs its object file code that calls 0x6d6b30, 0x6d6b70, 0x6d6b90; not read here	inferred	none		
-0x6d62e0	256	EvalLightIntBand		lighting			Evaluates a LightIntBand row's colour at a time of day	inferred	none		
-0x6d63e0	149			lighting			Runs its object file code not read here	inferred	none		
-0x6d6480	74			lighting			Runs its object file code that calls 0x6d63e0; not read here	inferred	none		
-0x6d64d0	746			lighting			Runs its object file code that calls GetLightIntBand, EvalLightIntBand, 0x6d6b00 and 1 more; not read here	inferred	none		
-0x6d67c0	710			lighting			Runs its object file code that calls 0x6d6c20, LerpColor; not read here	inferred	none		
-0x6d6a90	29			lighting			Runs its object file code not read here	inferred	none		
-0x6d6ab0	29			lighting			Runs its object file code not read here	inferred	none		
-0x6d6ad0	34	GetLightIntBand		lighting			Returns LightIntBand row 18 times the LightParams id less 17 plus an index, or null	inferred	none		
-0x6d6b00	34			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6b30	57			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6b70	31			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6b90	133			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6d6c20	173			unassigned			Runs its object file code not read here	inferred	none		
+0x6cde70	88			ffxeffects			Runs FFXEffects code, not read here	inferred	none		
+0x6cded0	79			ffxeffects			Runs FFXEffects code, not read here	inferred	none		
+0x6cdf20	38			ffxeffects			Runs FFXEffects code, not read here	inferred	none		
+0x6cdf50	10	InitDayNightLightState		lighting	orchestration		Runs 0x6cdf60, then registers an exit hook through 0x6ce080; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cdf60	287	InitLightStateFields		lighting	orchestration		Zeroes the light state's clock and camera fields and builds its array of four	verified	one	lighting/overview#static-objects	
+0x6ce080	12	InitDayNightLightStateAtexit		lighting	orchestration		Registers 0x6ce090 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce090	67	DayNightLightStateExit		lighting	orchestration		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce0e0	37			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
+0x6ce110	10	InitDayNightSkyGlowTrack		lighting	orchestration		Runs 0x6ce120, then registers an exit hook through 0x6ce1d0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce120	163	BuildSkyGlowTrack		lighting	primitive		Stores the sky glow track's six keys at start-up	verified	one	lighting/sky#sky-colour-tracks	
+0x6ce1d0	12	InitDayNightSkyGlowTrackAtexit		lighting	orchestration		Registers 0x6ce1e0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce1e0	21	DayNightSkyGlowTrackExit		lighting	primitive		Clears guard bit 0x1 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce200	10	InitDayNightSkyWarpTrack		lighting	orchestration		Runs 0x6ce210, then registers an exit hook through 0x6ce290; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce210	121	BuildSkyWarpTrack		lighting	orchestration		Stores the six keys of the track that varies the sky around the dome, at start-up	verified	one	lighting/sky#sky-colour-tracks	
+0x6ce290	12	InitDayNightSkyWarpTrackAtexit		lighting	orchestration		Registers 0x6ce2a0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce2a0	21	DayNightSkyWarpTrackExit		lighting	primitive		Clears guard bit 0x2 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce2c0	5	InitDayNightDeadVectorsThunk		lighting	orchestration		Jumps to 0x6ce2d0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce2d0	61	InitDeadVectors		lighting	primitive		Stores π/2 three times, 1e-7 and two zeros in globals nothing reads	verified	one	lighting/overview#static-objects	
+0x6ce310	5	InitDayNightDeadVectors2Thunk		lighting	orchestration		Jumps to 0x6ce320; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce320	93	InitDeadVectors2		lighting	primitive		Stores π less each of those four and two zeros in globals nothing reads	verified	one	lighting/overview#static-objects	
+0x6ce380	10	InitDayNightCloudEnvelope		lighting	orchestration		Runs 0x6ce390, then registers an exit hook through 0x6ce460; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce390	201	BuildCloudEnvelopeTrack		lighting	primitive		Stores the cloud envelope's eight keys at start-up, the last four out of order	verified	one	lighting/clouds#cloud-envelope	
+0x6ce460	12	InitDayNightCloudEnvelopeAtexit		lighting	orchestration		Registers 0x6ce470 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce470	21	DayNightCloudEnvelopeExit		lighting	primitive		Clears guard bit 0x4 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce490	10	InitDayNightStarTrack		lighting	orchestration		Runs 0x6ce4a0, then registers an exit hook through 0x6ce520; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce4a0	113	BuildStarTrack		lighting	primitive		Stores the star track's four keys at start-up	verified	one	lighting/celestial#static-tracks	
+0x6ce520	12	InitDayNightStarTrackAtexit		lighting	orchestration		Registers 0x6ce530 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce530	21	DayNightStarTrackExit		lighting	primitive		Clears guard bit 0x8 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce550	10	InitDayNightUnusedTrack		lighting	orchestration		Runs 0x6ce560, then registers an exit hook through 0x6ce630; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce560	201	BuildUnusedSkyTrack		lighting	primitive		Stores the eight keys of a track nothing reads, at start-up	verified	one	lighting/celestial#static-tracks	
+0x6ce630	12	InitDayNightUnusedTrackAtexit		lighting	orchestration		Registers 0x6ce640 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce640	21	DayNightUnusedTrackExit		lighting	primitive		Clears guard bit 0x10 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6ce660	10	InitDayNightNightTrack		lighting	orchestration		Runs 0x6ce670, then registers an exit hook through 0x6ce6d0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce670	91	BuildNightTrack		lighting	primitive		Stores the first night fraction track's keys at start-up	verified	one	lighting/daynight#night-fraction	
+0x6ce6d0	12	InitDayNightNightTrackAtexit		lighting	orchestration		Registers 0x6ce6e0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce6e0	1	DayNightNightTrackExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6ce6f0	10	InitDayNightNightTrack2		lighting	orchestration		Runs 0x6ce700, then registers an exit hook through 0x6ce730; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce700	41	BuildNightTrack2		lighting	orchestration		Stores the second night fraction track's keys at start-up	verified	one	lighting/daynight#night-fraction	
+0x6ce730	12	InitDayNightNightTrack2Atexit		lighting	orchestration		Registers 0x6ce740 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce740	1	DayNightNightTrack2ExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6ce750	10	InitDayNightSkyboxTable		lighting	orchestration		Runs 0x6ce760, then registers an exit hook through 0x6ce820; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce760	190	InitSkyboxTable		lighting	primitive		Builds the skybox hash table at start-up	inferred	none	lighting/sky#skybox-table	
+0x6ce820	12	InitDayNightSkyboxTableAtexit		lighting	orchestration		Registers 0x6ce830 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce830	359	DestroySkyboxTable		lighting	primitive		Frees the skybox hash table's entries and buckets at exit	inferred	none	lighting/sky#skybox-table	
+0x6ce9a0	10	InitDayNightFogModifiers		lighting	orchestration		Runs 0x6ce9b0, then registers an exit hook through 0x6ce9c0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce9b0	13	ClearFogModifierValues		lighting	orchestration		Zeroes the two fog modifier values	verified	one	lighting/overview#static-objects	
+0x6ce9c0	12	InitDayNightFogModifiersAtexit		lighting	orchestration		Registers 0x6ce9d0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ce9d0	1	DayNightFogModifiersExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6ce9e0	10	InitDayNightSkyDome		lighting	orchestration		Runs 0x6ce9f0, then registers an exit hook through 0x6cea20; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ce9f0	48	ClearSkyDome		lighting	orchestration		Zeroes the sky dome object	verified	one	lighting/overview#static-objects	
+0x6cea20	12	InitDayNightSkyDomeAtexit		lighting	orchestration		Registers 0x6cea30 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cea30	73	DayNightSkyDomeExit		lighting	host		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
+0x6cea80	10	InitDayNightCloudObject		lighting	orchestration		Runs 0x6cea90, then registers an exit hook through 0x6ceaa0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cea90	10	InitCloudObject		lighting	orchestration		Sets the cloud object's noise octaves	verified	one	lighting/overview#static-objects	
+0x6ceaa0	12	InitDayNightCloudObjectAtexit		lighting	orchestration		Registers 0x6ceab0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ceab0	256	DayNightCloudObjectExit		lighting	host		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
+0x6cebb0	10	InitDayNightLightList		lighting	orchestration		Runs 0x6cebc0, then registers an exit hook through 0x6cebe0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cebc0	23	ClearLightList		lighting	orchestration		Zeroes the light list	verified	one	lighting/overview#static-objects	
+0x6cebe0	12	InitDayNightLightListAtexit		lighting	orchestration		Registers 0x6cebf0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cebf0	25	DayNightLightListExit		lighting	host		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
+0x6cec10	10	InitDayNightDiscRecords		lighting	orchestration		Runs 0x6cec20, then registers an exit hook through 0x6cec50; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cec20	34	ClearDiscRecords		lighting	orchestration		Zeroes the four disc records at start-up	verified	one	lighting/celestial#body-objects	
+0x6cec50	12	InitDayNightDiscRecordsAtexit		lighting	orchestration		Registers 0x6cec60 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cec60	1	DayNightDiscRecordsExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6cec70	10	InitDayNightSunGlare		lighting	orchestration		Runs 0x6cec80, then registers an exit hook through 0x6ced00; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cec80	124	InitSunGlare		lighting	orchestration		Zeroes the sun glare and stores its method table at start-up	verified	one	lighting/celestial#body-objects	
+0x6ced00	12	InitDayNightSunGlareAtexit		lighting	orchestration		Registers 0x6ced10 with _atexit	verified	one	lighting/overview#static-objects	
+0x6ced10	1	DayNightSunGlareExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6ced20	10	InitDayNightMoonGlare		lighting	orchestration		Runs 0x6ced30, then registers an exit hook through 0x6cedb0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6ced30	124	InitMoonGlare		lighting	orchestration		Zeroes the moon glare and stores its method table at start-up	verified	one	lighting/celestial#body-objects	
+0x6cedb0	12	InitDayNightMoonGlareAtexit		lighting	orchestration		Registers 0x6cedc0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cedc0	1	DayNightMoonGlareExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6cedd0	10	InitDayNightStarObject		lighting	orchestration		Runs 0x6cede0, then registers an exit hook through 0x6cee10; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cede0	41	InitStarObject		lighting	orchestration		Zeroes the star object at start-up	verified	one	lighting/celestial#body-objects	
+0x6cee10	12	InitDayNightStarObjectAtexit		lighting	orchestration		Registers 0x6cee20 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cee20	1	DayNightStarObjectExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6cee30	871	BuildSceneFog		lighting	primitive		Builds the scene fog and the interior-blended fog from the light table	verified	one	lighting/fog#scene-fog	
+0x6cf1a0	225	ApplyFogColourModifier		lighting	primitive		Tints the fog colour toward the modifier colour, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	
+0x6cf290	128	ScaleFogColourModifier		lighting	primitive		Scales each fog colour channel by the modifier, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	
+0x6cf310	30	InitFogRecords		lighting	orchestration		Fills two fog records of end, fraction and colour for the interior fog query	verified	one	lighting/fog#interior-fog	
+0x6cf330	10	InitDayNightGlareCorners		lighting	orchestration		Runs 0x6cf340, then registers an exit hook through 0x6cf3c0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cf340	121	BuildGlareCorners		lighting	orchestration		Stores the glare quad's four corners at start-up	verified	one	lighting/celestial#glare-draw	
+0x6cf3c0	12	InitDayNightGlareCornersAtexit		lighting	orchestration		Registers 0x6cf3d0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cf3d0	21	DayNightGlareCornersExit		lighting	primitive		Clears guard bit 0x1 of the glare quad's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6cf3f0	10	InitDayNightGlareUVs		lighting	orchestration		Runs 0x6cf400, then registers an exit hook through 0x6cf460; a static initializer	verified	one	lighting/overview#static-objects	
+0x6cf400	81	BuildGlareUVs		lighting	orchestration		Stores the glare quad's four texture coordinates at start-up	verified	one	lighting/celestial#glare-draw	
+0x6cf460	12	InitDayNightGlareUVsAtexit		lighting	orchestration		Registers 0x6cf470 with _atexit	verified	one	lighting/overview#static-objects	
+0x6cf470	21	DayNightGlareUVsExit		lighting	primitive		Clears guard bit 0x2 of the glare quad's flags; an exit hook	verified	one	lighting/overview#static-objects	
+0x6cf490	551	UpdateGlare		lighting	primitive	void __thiscall (void *this, float dt)	Moves a glare's envelope, scale and alpha toward its targets for the frame	verified	one	lighting/celestial#glare-update	
+0x6cf6c0	232	EvalSkyTrack		lighting	primitive	float __fastcall (const float *keys, uint32_t count, float phase)	Evaluates a key track at a phase of the day, interpolating cyclically	verified	one	lighting/celestial#tracks	
+0x6cf7b0	26	GetGlareCloudCover		lighting	primitive		Returns one less the cloud cover at a glare's position	verified	one	lighting/celestial#glare-occlusion	
+0x6cf7d0	36	GetGlareCoverEdge		lighting	primitive		Returns one less twice the cloud cover's distance from 0.5 at a glare	verified	one	lighting/celestial#glare-occlusion	
+0x6cf800	104	GetGlareDepthFactor		lighting	primitive		Returns the glare's depth occlusion from the scene depth test	verified	one	lighting/celestial#glare-occlusion	
+0x6cf870	330	ProjectToCloudTexture		lighting	primitive		Maps a point's direction from the eye to cloud texture coordinates	verified	one	lighting/clouds#cover-projection	
+0x6cf9c0	200	ProjectCloudLight		lighting	primitive		Projects the cloud light's direction onto the cloud sphere	verified	one	lighting/clouds#cloud-colours	
+0x6cfa90	109	SampleCloudCover		lighting	primitive		Returns the cloud cover byte at a point over 255, or 0 before the texture exists	verified	one	lighting/clouds#cover-projection	
+0x6cfb00	1155	ColourCloudBand		lighting	primitive		Colours a band of cloud texels from their cover, slope and the sun or moon	verified	one	lighting/clouds#cloud-colours	
+0x6cff90	35	RebuildCloudTexture		lighting	orchestration		Regenerates every row of the cloud texture at once	verified	one	lighting/clouds#cloud-texture	
+0x6cffc0	1392	UpdateCloudTexture		lighting	primitive		Builds the next band of cloud rows every 0.1 s: noise cover, colour and the device update	verified	one	lighting/clouds#cloud-texture	
+0x6d0530	858	BuildCloudDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the cloud dome's vertices, texture coordinates, ring alphas and indices	verified	one	lighting/clouds#cloud-dome	
+0x6d0890	39	AnswerCloudTextureLock		lighting	orchestration		Answers the device's texture request with the cloud buffer and its pitch	verified	one	lighting/clouds#cloud-texture	
+0x6d08c0	26	ReleaseCloudTexture		lighting	host		Releases the cloud texture	verified	one	lighting/sky#sky-shutdown	
+0x6d08e0	21	SetCloudCoverOverride		lighting	unreached		Stores a cloud cover override and recomputes the threshold; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d0900	109	BuildCloudCurve		lighting	primitive	void __thiscall (void *this, float gamma)	Builds the cloud cover curve 255 − 255·γ^x from the current threshold	verified	one	lighting/clouds#cloud-cover	
+0x6d0970	59	SetCloudCover		lighting	primitive	void __thiscall (void *this, float cover)	Stores the cloud threshold trunc((1 − c)·255), or the override's	verified	one	lighting/clouds#cloud-cover	
+0x6d09b0	580	CreateCloudTexture		lighting	primitive	void __thiscall (void *this, uint32_t lod, uint32_t rows)	Sizes the cloud texture by its level, fills it white and binds it to the device	verified	one	lighting/clouds#cloud-texture	
+0x6d0c00	137	InitCloudNoise		lighting	orchestration		Sets the cloud noise's four octaves	inferred	none	lighting/clouds#cloud-noise	
+0x6d0c90	115	BuildCloudNoiseTables		lighting	primitive		Fills the cloud noise lattice from rand and the fade table	inferred	none	lighting/clouds#cloud-noise	
+0x6d0d10	569	BuildSkyDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the sky dome's vertices and index strip at a radius	verified	one	lighting/sky#sky-dome	
+0x6d0f50	1689	ColourSkyDome		lighting	primitive		Colours the sky dome's vertices from the light table, the glow and the heading	verified	one	lighting/sky#sky-colours	
+0x6d15f0	48	LerpChannel		lighting	primitive	float __stdcall (float a, float b, float t)	Moves a toward b by t, subtracting when b is below a	verified	one	lighting/daynight#area-overblend	
+0x6d1620	232	ScaleColourValue		lighting	primitive		Scales a colour's HSV value by a factor and returns it with alpha 255	verified	one	lighting/daynight#underwater-tint	
+0x6d1710	560	BuildDiscQuad		lighting	primitive		Builds a disc's quad from its direction, size and the camera	verified	one	lighting/celestial#disc-draw	
+0x6d1940	1	BuildDiscQuadStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d1710 registers	verified	one	lighting/overview#static-objects	
+0x6d1950	1	BuildDiscQuadStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d1710 registers	verified	one	lighting/overview#static-objects	
+0x6d1960	482	UpdateDisc		lighting	primitive		Places a disc from its tracks and sets its alpha from its height	verified	one	lighting/celestial#disc-draw	
+0x6d1b50	76	UpdateStars		lighting	primitive		Places the stars at the eye and sets their alpha from the star track	verified	one	lighting/celestial#stars	
+0x6d1ba0	446	InitSky		lighting	orchestration		Builds the sky: the light state, the bodies, the dome, the clouds and the settings	verified	one	lighting/celestial#body-objects	
+0x6d1d60	96	OnSkyCloudLodChanged		lighting	host		Clamps SkyCloudLOD to 0 or 1 and rebuilds the cloud texture	verified	one	lighting/clouds#cloud-texture	
+0x6d1dc0	105	SkySunGlareCommand		lighting	orchestration		Turns the sun glare on or off from the console	verified	one	lighting/celestial#sun-glare-toggle	
+0x6d1e30	243	BuildSunGlare		lighting	primitive		Loads the sun glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	
+0x6d1f30	243	BuildMoonGlare		lighting	primitive		Loads the moon glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	
+0x6d2030	106	BuildDiscs		lighting	orchestration		Loads the sun, white moon and moon02 textures with their sizes	verified	one	lighting/celestial#body-objects	
+0x6d20a0	10	BuildStars		lighting	orchestration		Creates the star model in its own scene	verified	one	lighting/celestial#body-objects	
+0x6d20b0	343	ShutdownSky		lighting	primitive		Releases the skyboxes and their scene, and the first time the sky's textures and stars	verified	one	lighting/sky#sky-shutdown	
+0x6d2210	65	RecomputeLighting		lighting	orchestration		Rebuilds the light table, the sun and the bodies, and the clouds	verified	one	lighting/daynight#recompute	
+0x6d2260	2710	BuildLightTable		lighting	primitive		Builds the frame's light table from the area lights, the liquid and the override	verified	one	lighting/daynight#light-table-build	
+0x6d2d00	868	BlendAreaLights		lighting	primitive		Blends the area lights around the camera into the light table	verified	one	lighting/daynight#area-lights	
+0x6d3070	1	AreaLightNoop		lighting	orchestration		Returns at once	verified	one	lighting/overview#static-objects	
+0x6d3080	92			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
+0x6d30e0	1783	OverblendAreaLights		lighting	primitive		Blends the inner area lights over the outer ones by weight	verified	one	lighting/daynight#area-overblend	
+0x6d37e0	546	BuildLightColours		lighting	primitive		Builds the diffuse, ambient, window and HSV colours from the light table	verified	one	lighting/fog#light-colours	
+0x6d3a10	329	UpdateSunDirection		lighting	primitive		Sets the sun direction from the sun tracks at the time of day	verified	one	lighting/celestial#sun-direction	
+0x6d3b60	1	UpdateSunDirectionStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3a10 registers	verified	one	lighting/overview#static-objects	
+0x6d3b70	1	UpdateSunDirectionStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3a10 registers	verified	one	lighting/overview#static-objects	
+0x6d3b80	2289	UpdateCelestialBodies		lighting	primitive		Places the sun disc, the moons and the stars from their tracks	verified	one	lighting/celestial#celestial-bodies	
+0x6d4480	1	UpdateCelestialBodiesStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d4490	1	UpdateCelestialBodiesStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44a0	1	UpdateCelestialBodiesStaticExit3		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44b0	1	UpdateCelestialBodiesStaticExit4		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44c0	1	UpdateCelestialBodiesStaticExit5		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44d0	1	UpdateCelestialBodiesStaticExit6		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44e0	1	UpdateCelestialBodiesStaticExit7		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d44f0	1	UpdateCelestialBodiesStaticExit8		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
+0x6d4500	47	UpdateStormWeight		lighting	primitive		Sets the storm weight min(4·density, 1)	verified	one	lighting/daynight#storm-weight	
+0x6d4530	142	UpdateCameraHeading		lighting	primitive		Sets the camera heading in [0, 2π) from the forward vector	verified	one	lighting/daynight#recompute	
+0x6d45c0	45	SetSpellScreenTint		lighting	primitive	void __fastcall (uint32_t colour, float level)	Stores the screen tint colour and the byte of 255 times its level	verified	one	lighting/daynight#screen-tint	
+0x6d45f0	13	SetOverrideLightRecord		lighting	unreached		Stores an override LightParams record and recomputes; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d4600	26	GetDiscRecord		lighting	unreached		Returns disc record 0 to 2, or 0 with an error past 2; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d4620	7	SetOverrideLight		lighting	orchestration	void __fastcall (int32_t light)	Stores the override light reference	verified	one	lighting/daynight#override-light	
+0x6d4630	11	ClearOverrideLight		lighting	orchestration	void __fastcall (void)	Stores −1 in the override light reference	verified	one	lighting/daynight#override-light	
+0x6d4640	421	InternSkybox		lighting	primitive	void * __fastcall (const char *path)	Returns the skybox entry for a path, loading its model on first request	verified	one	lighting/tables#skybox-models	
+0x6d47f0	26	SetOverrideSkybox		lighting	unreached		Makes a path the override skybox at a weight; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d4810	71	SetSkyboxSlot		lighting	orchestration		Loads a skybox path into slot 0 to 2 at a weight, or clears it	verified	one	lighting/daynight#skybox-slots	
+0x6d4860	35	GetNightFraction		lighting	primitive		Evaluates the first night fraction track at the time of day plus an offset	verified	one	lighting/daynight#night-fraction	
+0x6d4890	22	GetNightFraction2		lighting	orchestration		Evaluates the second night fraction track at the time of day	verified	one	lighting/daynight#night-fraction	
+0x6d48b0	6	GetLightState		lighting	orchestration	void * __fastcall (void)	Returns the light state	verified	one	lighting/daynight#light-state	
+0x6d48c0	63	DrawGlares		lighting	orchestration		Updates and draws the sun glare, then the moon glare, when the sky is on	verified	one	lighting/celestial#glare-draw	
+0x6d4900	3			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
+0x6d4910	3	SetFogModifier		lighting	orchestration	void __stdcall (uint32_t a, uint32_t b)	Returns at once, dropping two stack arguments	verified	one	lighting/fog#dead-fog-modifiers	
+0x6d4920	24	ClearFogModifierBit		lighting	primitive		Clears one bit of the fog modifier flags	verified	one	lighting/fog#dead-fog-modifiers	
+0x6d4940	824	DrawSky		lighting	primitive		Draws the stars, discs, gradient and clouds in the far depth slice, then the skyboxes	verified	one	lighting/sky#sky-pass	
+0x6d4c80	16	ReloadLightList		lighting	unreached		Rebuilds the per-map light list for the current map; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d4c90	272	GetLightAtPoint		lighting	unreached		Builds a light record for a point, or a default record without lights; nothing calls it	verified	one	lighting/overview#unreached-code	
+0x6d4da0	106			lighting	host		Runs a skybox table method, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d4e10	182			lighting	primitive		Runs a skybox table method, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d4ed0	189			lighting	host		Runs a skybox table method, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d4f90	56			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d4fd0	56			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5010	56			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5050	56			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5090	190			lighting	host		Runs a skybox table method, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d5150	45			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5180	86			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d51e0	143	LerpColourBytes		lighting	primitive		Moves a colour's low three bytes toward another's by weight/256, copying at 255	verified	one	lighting/fog#light-colours	
+0x6d5270	37	PackColourBytes		lighting	primitive		Packs four bytes into a colour, the first on top	verified	one	lighting/sky#sky-colours	
+0x6d52a0	1	DayNightElementNoop		lighting	orchestration		Returns at once; the element destructor the light state array passes	verified	one	lighting/overview#static-objects	
+0x6d52b0	136			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5340	108			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d53b0	135			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5440	16			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5450	60			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5490	25			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
+0x6d54b0	181			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5570	41			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d55a0	483			lighting	primitive		Grows the skybox table's buckets, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d5790	33			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d57c0	77			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5810	12			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5820	316			lighting	primitive		Moves the skybox table's entries to new buckets, not read here	inferred	none	lighting/sky#skybox-table	
+0x6d5960	264			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5a70	83	InitAreaLightQueue		lighting	primitive		Builds the area light queue's array	verified	one	lighting/daynight#area-lights	
+0x6d5ad0	157	ReserveAreaLightQueue		lighting	primitive		Makes room for entries at the end of the area light queue, growing its array	verified	one	lighting/daynight#area-lights	
+0x6d5b70	83	PopAreaLightQueue		lighting	primitive		Drops the last entry of the area light queue	verified	one	lighting/daynight#area-lights	
+0x6d5bd0	43			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
+0x6d5c00	10	InitDayNightLightSkyboxStore		lighting	orchestration		Runs 0x6d5c10, then registers an exit hook through 0x6d5c40; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d5c10	33	InitLightSkyboxStore		lighting	orchestration		Clears the LightSkybox store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
+0x6d5c40	12	InitDayNightLightSkyboxStoreAtexit		lighting	orchestration		Registers 0x6d5c50 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d5c50	94	FreeLightSkyboxStore		lighting	host		Frees the LightSkybox store's paths, records and map at exit	verified	one	lighting/tables#table-stores	
+0x6d5cb0	10	InitDayNightLightIntBandStore		lighting	orchestration		Runs 0x6d5cc0, then registers an exit hook through 0x6d5cf0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d5cc0	33	InitLightIntBandStore		lighting	orchestration		Clears the LightIntBand store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
+0x6d5cf0	12	InitDayNightLightIntBandStoreAtexit		lighting	orchestration		Registers 0x6d5d00 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d5d00	104	DayNightLightIntBandStoreExit		lighting	host		Frees the LightIntBand store's records and map; an exit hook	verified	one	lighting/overview#static-objects	
+0x6d5d70	10	InitDayNightLightFloatBandStore		lighting	orchestration		Runs 0x6d5d80, then registers an exit hook through 0x6d5db0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d5d80	33	InitLightFloatBandStore		lighting	orchestration		Clears the LightFloatBand store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
+0x6d5db0	12	InitDayNightLightFloatBandStoreAtexit		lighting	orchestration		Registers 0x6d5dc0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d5dc0	104	DayNightLightFloatBandStoreExit		lighting	host		Frees the LightFloatBand store's records and map; an exit hook	verified	one	lighting/overview#static-objects	
+0x6d5e30	10	InitDayNightLightParamsStore		lighting	orchestration		Runs 0x6d5e40, then registers an exit hook through 0x6d5e70; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d5e40	33	InitLightParamsStore		lighting	orchestration		Clears the LightParams store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
+0x6d5e70	12	InitDayNightLightParamsStoreAtexit		lighting	orchestration		Registers 0x6d5e80 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d5e80	101	DayNightLightParamsStoreExit		lighting	host		Frees the LightParams store's records and map; an exit hook	verified	one	lighting/overview#static-objects	
+0x6d5ef0	10	InitDayNightLightStore		lighting	orchestration		Runs 0x6d5f00, then registers an exit hook through 0x6d5f30; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d5f00	33	InitLightStore		lighting	orchestration		Clears the Light store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
+0x6d5f30	12	InitDayNightLightStoreAtexit		lighting	orchestration		Registers 0x6d5f40 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d5f40	101	DayNightLightStoreExit		lighting	host		Frees the Light store's records and map; an exit hook	verified	one	lighting/overview#static-objects	
+0x6d5fb0	219	ScaleLightPosition		lighting	primitive		Converts a Light record's position and radii from file units at load	verified	one	lighting/tables#light-positions-at-load	
+0x6d6090	41	ScaleFogDistance		lighting	primitive		Divides a fog distance band's values by 36 at load	verified	one	lighting/tables#fog-distances-at-load	
+0x6d60c0	62	ScaleLightPositions		lighting	orchestration		Runs the Light position conversion over every record at load	verified	one	lighting/tables#light-positions-at-load	
+0x6d6100	90	ScaleFogDistances		lighting	primitive		Runs the fog distance conversion over every sixth LightFloatBand record at load	verified	one	lighting/tables#fog-distances-at-load	
+0x6d6160	16	FinishLightTables		lighting	orchestration		Converts the Light and fog band records once the tables load	verified	one	lighting/tables#light-positions-at-load	
+0x6d6170	366	BuildMapLightList		lighting	orchestration		Collects the map's Light records, with the fallback light, into the light list	verified	one	lighting/tables#per-map-light-list	
+0x6d62e0	256	EvalLightIntBand		lighting	primitive	uint32_t __fastcall (const void *band, uint32_t h)	Interpolates a LightIntBand colour at half-minute h	verified	one	lighting/daynight#colour-band-value	
+0x6d63e0	149	FindBandSegment		lighting	primitive		Finds the band keys around half-minute h and the fraction between them	verified	one	lighting/daynight#key-search	
+0x6d6480	74	EvalLightFloatBand		lighting	primitive		Interpolates a LightFloatBand value at half-minute h	verified	one	lighting/daynight#scalar-band-value	
+0x6d64d0	746	BuildLightRecord		lighting	orchestration		Fills a light record from a LightParams record at half-minute h	verified	one	lighting/daynight#light-record	
+0x6d67c0	710	BlendLightRecord		lighting	primitive		Blends a light record into another by a clamped weight	verified	one	lighting/daynight#record-blend	
+0x6d6a90	29	GetLightPosition		lighting	orchestration		Copies a Light record's position	verified	one	lighting/daynight#area-lights	
+0x6d6ab0	29	GetLightParamsRecord		lighting	orchestration		Returns a LightParams record by its light reference	verified	one	lighting/tables#band-references	
+0x6d6ad0	34	GetLightIntBand		lighting	orchestration		Returns LightIntBand record 18 times the LightParams id less 17, plus the band	verified	one	lighting/tables#band-references	
+0x6d6b00	34	GetLightFloatBand		lighting	orchestration		Returns LightFloatBand record 6 times the LightParams id less 5, plus the band	verified	one	lighting/tables#band-references	
+0x6d6b30	57	LightListGrowStep		lighting	primitive		Returns the largest power of two at most a count, or 64 for 64 and more	verified	one	lighting/tables#per-map-light-list	
+0x6d6b70	31	RoundUpToMultipleL		lighting	primitive	uint32_t __stdcall (uint32_t n, uint32_t step)	Rounds a count up to a multiple of a step	verified	one	lighting/tables#per-map-light-list	
+0x6d6b90	133	ResizeLightList		lighting	host		Reallocates the light list's array, copying the entries when it moves	verified	one	lighting/tables#per-map-light-list	
+0x6d6c20	173	LerpColourCopy		lighting	primitive		Moves a packed colour toward another by a weight, the same bytes as the terrain's	verified	one	lighting/daynight#record-blend	
 0x6d6cd0	10			unassigned			Runs its object file code that calls 0x6d6ce0; not read here	inferred	none		
 0x6d6ce0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6d6d00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6d6d10	14			unassigned			Runs its object file code not read here	inferred	none		
 0x6d6d20	179	GetGuildEmblem		client			Reads a guild's five emblem values from the guild cache, keeping a callback on a miss; returns 1 when found	inferred	none		
 0x6d6de0	6	GetGuildEmblemCost		client	orchestration		Returns 100000, the emblem's price in copper	verified	one	objectlayer/party#guild-tabards	
-0x6d6df0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6e00	11			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6e10	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6e20	33			unassigned			Runs its object file code that calls 0x6d6e50; not read here	inferred	none		
-0x6d6e50	16			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6e60	10			unassigned			Runs its object file code that calls 0x6d6e70; not read here	inferred	none		
-0x6d6e70	23			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6e90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d6ea0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6eb0	10			unassigned			Runs its object file code that calls 0x6d6ec0; not read here	inferred	none		
-0x6d6ec0	48			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6ef0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d6f00	49			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d6f40	10			unassigned			Runs its object file code that calls 0x6d6f50; not read here	inferred	none		
-0x6d6f50	31			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6f70	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d6f80	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6f90	6			unassigned			Runs its object file code not read here	inferred	none		
-0x6d6fa0	908			unassigned			Runs its object file code that calls 0x481900, AddVector3, ScaleVector3 and 5 more; not read here	inferred	none		
-0x6d7330	322			unassigned			Runs its object file code that calls 0x6d6fa0, 0x58b210, 0x6d7480 and 1 more; not read here	inferred	none		
-0x6d7480	725			unassigned			Runs its object file code that calls TestWorldBoxThunk, 0x589f40, 0x589ee0 and 15 more; not read here	inferred	none		
-0x6d7760	173			unassigned			Runs its object file code that calls 0x58a140, GxBufLock, GxBufUnlock and 1 more; not read here	inferred	none		
-0x6d7810	138			unassigned			Runs its object file code that calls 0x58a140, GxBufLock, GxBufUnlock and 1 more; not read here	inferred	none		
-0x6d78a0	79			unassigned			Runs its object file code that calls 0x58a140, GxBufLock, GxBufUnlock; not read here	inferred	none		
-0x6d78f0	38			unassigned			Runs its object file code that calls CM2Model::IsReady; not read here	inferred	none		
-0x6d7920	1866			unassigned			Runs its object file code that calls 0x513a40, SplatVector3, 0x4b1df0 and 24 more; not read here	inferred	none		
-0x6d8070	291			unassigned			Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate, 0x58aa30 and 2 more; not read here	inferred	none		
-0x6d81a0	294			unassigned			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x6d82d0	321			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8420	46			unassigned			Runs its object file code that calls HandleClose, GxTexDestroy; not read here	inferred	none		
-0x6d8450	212			unassigned			Runs its object file code that calls _sscanf, _sprintf, ConsoleWrite and 2 more; not read here	inferred	none		
-0x6d8530	146			unassigned			Runs its object file code that calls _sscanf, _sprintf, ConsoleWrite; not read here	inferred	none		
+0x6d6df0	5	InitShadowInfinityThunk		lighting	orchestration		Jumps to 0x6d6e00; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x6d6e00	11	InitShadowInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
+0x6d6e10	5	InitShadowShadowBoxRatiosThunk		lighting	orchestration		Jumps to 0x6d6e20; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d6e20	33	InitShadowBoxRatios		lighting	orchestration		Stores the blob shadow's box ratios 5/3 and 1 at start-up	inferred	none	lighting/shadows#blob-shadow	
+0x6d6e50	16	ThirdOf		lighting	primitive	float __stdcall (float x)	Returns x times 1/3	inferred	none	lighting/shadows#blob-shadow	
+0x6d6e60	10	InitShadowShadowRampBuffer		lighting	orchestration		Runs 0x6d6e70, then registers an exit hook through 0x6d6e90; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d6e70	23	ClearShadowRampBuffer		lighting	orchestration		Zeroes the ramp texture buffer and stores its size 0x200	verified	one	lighting/overview#static-objects	
+0x6d6e90	12	InitShadowShadowRampBufferAtexit		lighting	orchestration		Registers 0x6d6ea0 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d6ea0	1	ShadowShadowRampBufferExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6d6eb0	10	InitShadowDecalLists		lighting	orchestration		Runs 0x6d6ec0, then registers an exit hook through 0x6d6ef0; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d6ec0	48	ClearDecalLists		lighting	orchestration		Zeroes the decal geometry lists and sets their two growth steps to 0x100	verified	one	lighting/overview#static-objects	
+0x6d6ef0	12	InitShadowDecalListsAtexit		lighting	orchestration		Registers 0x6d6f00 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d6f00	49	ShadowDecalListsExit		lighting	host		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
+0x6d6f40	10	InitShadowDecalColour		lighting	orchestration		Runs 0x6d6f50, then registers an exit hook through 0x6d6f70; a static initializer	verified	one	lighting/overview#static-objects	
+0x6d6f50	31	InitDecalColour		lighting	orchestration		Stores the decal colour vector (0, 0, 1)	verified	one	lighting/overview#static-objects	
+0x6d6f70	12	InitShadowDecalColourAtexit		lighting	orchestration		Registers 0x6d6f80 with _atexit	verified	one	lighting/overview#static-objects	
+0x6d6f80	1	ShadowDecalColourExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
+0x6d6f90	6	GetFootprintRamp		lighting	orchestration	void * __fastcall (void)	Returns the first ramp texture	inferred	none	lighting/shadows#shadow-textures	
+0x6d6fa0	908	BuildDecalTransforms		lighting	primitive		Builds a decal box's texture transform and its height fade transform	inferred	none	lighting/shadows#projected-decals	
+0x6d7330	322	DrawDecal		lighting	host		Draws a texture projected over a box onto the world geometry	inferred	none	lighting/shadows#projected-decals	
+0x6d7480	725	DrawDecalBatches		lighting	primitive		Draws the collected world batches with a decal's texture transform	inferred	none	lighting/shadows#projected-decals	
+0x6d7760	173	WriteDecalVerticesColoured		lighting	host		Writes a batch's positions with the decal colour vector	inferred	none	lighting/shadows#projected-decals	
+0x6d7810	138	WriteDecalVertices		lighting	host		Writes a batch's positions with one packed colour	inferred	none	lighting/shadows#projected-decals	
+0x6d78a0	79	WriteDecalIndices		lighting	host		Writes a running index list for a batch	inferred	none	lighting/shadows#projected-decals	
+0x6d78f0	38	DrawBlobShadowIfOn		lighting	orchestration	void __thiscall (void *model)	Draws a model's blob shadow when it is loaded and shadowLOD is 1	inferred	none	lighting/shadows#blob-shadow	
+0x6d7920	1866	DrawBlobShadow		lighting	primitive	void __thiscall (void *model)	Projects the blob texture under a model from its bounds and scale	inferred	none	lighting/shadows#blob-shadow	
+0x6d8070	291	InitShadows		lighting	primitive	void __cdecl (void)	Loads the blob texture, builds the two ramp textures and registers the shadow settings	inferred	none	lighting/shadows#shadow-textures	
+0x6d81a0	294	FillShadowRamp		lighting	primitive		Fills the first ramp texture white with a computed alpha	inferred	none	lighting/shadows#shadow-textures	
+0x6d82d0	321	FillShadowGreyRamp		lighting	primitive		Fills the second ramp texture with the grey ramp across its columns	inferred	none	lighting/shadows#shadow-textures	
+0x6d8420	46	ShutdownShadows		lighting	host	void __cdecl (void)	Releases the blob and ramp textures	inferred	none	lighting/shadows#shadow-textures	
+0x6d8450	212	OnShadowLodChanged		lighting	host		Stores shadowLOD 0 or 1 and at 1 refills the ramp textures	verified	one	lighting/shadows#shadow-settings	
+0x6d8530	146	OnShadowBiasChanged		lighting	orchestration		Stores shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings	
 0x6d85d0	10			unassigned			Runs its object file code that calls 0x6d85e0; not read here	inferred	none		
 0x6d85e0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6d8600	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -31260,7 +31260,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x73f900	10	_fmod	idb	crt	unreached		Runs its object file code not read here	inferred	none		
 0x73f90a	10	__CIfmod	idb	crt			Computes fmod(st1, st0) through the intrinsic dispatcher 0x7436c0	inferred	none	collision/kinematics#facing-and-pitch-integration	
 0x73f914	30			crt	boundary		Runs its object file code that calls 0x74450c; not read here	inferred	none		
-0x73f940	25	__CIpow	idb	crt	boundary		Runs its object file code that calls one function; not read here	inferred	none		
+0x73f940	25	__CIpow	idb	crt	boundary		Raises st(1) to the power st(0), the C runtime's intrinsic pow	verified	one	lighting/celestial#glare-update	
 0x73fb35	40			crt	boundary		Runs its object file code not read here	inferred	none		
 0x73fb5d	52	_sscanf	idb	crt	boundary		Runs its object file code that calls _strlen, __input; not read here	inferred	none		
 0x73fb91	46	_isalpha	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
@@ -35686,10 +35686,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bbc40	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbc50	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbc60	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbc80	183			unassigned			Runs its object file code that calls DominantAxis, 0x7bf700; not read here	inferred	none		
+0x7bbc80	183	RgbToHsv		unassigned			Converts a colour's three channels in [0, 1] to hue, saturation and value	verified	one	lighting/daynight#underwater-tint	
 0x7bbd40	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbd50	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbd60	316			unassigned			Runs its object file code not read here	inferred	none		
+0x7bbd60	316	HsvToRgb		unassigned			Converts hue, saturation and value back to three channels in [0, 1]	verified	one	lighting/daynight#underwater-tint	
 0x7bbec0	95			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbf20	68			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbf70	118			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -37235,77 +37235,77 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7e4df0	19	SpellCastTargetsInitQuotient1		spell	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	spell/layout#static-initializers	
 0x7e4e10	192	WriteSpellCastTargets		spell	orchestration		Writes a cast target block: a 16-bit mask, then the guids, positions and text the mask names	verified	one	spell/cast#cast-request-packets	
 0x7e4ed0	187	ReadSpellCastTargets		spell	orchestration	void __fastcall (void *targets, void *msg)	Reads a spell target block: a mask, then guids, points and a string as its bits say	verified	one	spell/handlers#target-block	
-0x7e4f90	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e4fa0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7e4fb0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e4fc0	15			unassigned			Runs its object file code not read here	inferred	none		
-0x7e4fd0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e4fe0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e5000	150			unassigned			Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate, SysMsgAdd and 3 more; not read here	inferred	none		
-0x7e50a0	380			unassigned			Runs its object file code that calls GetLightState, SetVector3, TraceWorldSegment and 1 more; not read here	inferred	none		
-0x7e5220	1099			unassigned			Runs its object file code that calls 0x58af30, 0x589f40, GxRsSet and 19 more; not read here	inferred	none		
-0x7e5670	260			unassigned			Runs its object file code that calls 0x456280; not read here	inferred	none		
-0x7e5780	59			unassigned			Runs its object file code not read here	inferred	none		
-0x7e57c0	32			unassigned			Runs its object file code that calls HandleClose; not read here	inferred	none		
-0x7e57e0	812			unassigned			Runs its object file code that calls GetLightState, GetDeviceView, 0x7e5670 and 14 more; not read here	inferred	none		
-0x7e5b10	118			unassigned			Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate, SysMsgAdd and 1 more; not read here	inferred	none		
-0x7e5b90	726			unassigned			Runs its object file code that calls 0x6d1710, 0x6d1960, 0x589f40 and 17 more; not read here	inferred	none		
-0x7e5e70	13			unassigned			Runs its object file code not read here	inferred	none		
-0x7e5e80	246			unassigned			Runs its object file code that calls 0x58b200, 0x58b230, 0x58b260 and 7 more; not read here	inferred	none		
-0x7e5f80	363			unassigned			Runs its object file code that calls 0x58b200, 0x58b230, 0x58b260 and 8 more; not read here	inferred	none		
-0x7e60f0	37			unassigned			Runs its object file code that calls M2CreateScene, CreateModelFromPath, OsGetAsyncTimeMs; not read here	inferred	none		
-0x7e6120	152			unassigned			Runs its object file code that calls CM2Model::SetAnimated, CM2Model::SetVisible and 5 more; not read here	inferred	none		
-0x7e61c0	41			unassigned			Runs its object file code that calls HandleClose2, M2SceneRelease; not read here	inferred	none		
-0x7e61f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6200	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6220	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6230	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6250	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6260	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6280	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6290	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e62b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e62c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e62e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e62f0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6310	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6320	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6340	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6350	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6370	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6380	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e63a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e63b0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e63d0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e63e0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6400	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6410	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6430	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6440	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6460	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6470	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6480	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6490	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e64b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e64c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e64e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e64f0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6510	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6520	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6540	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6550	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6570	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6580	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e65a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e65b0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e65d0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e65e0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6600	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6610	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6630	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6640	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6660	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7e6670	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7e4f90	5	InitSkyDrawInfinityThunk		lighting	orchestration		Jumps to 0x7e4fa0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e4fa0	11	InitSkyDrawInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
+0x7e4fb0	5	InitSkyDrawTwoPiThunk		lighting	orchestration		Jumps to 0x7e4fc0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e4fc0	15	InitSkyDrawTwoPi		lighting	primitive		Stores π + π as a float in the object file's 2π global	verified	one	lighting/overview#shared-header-constants	
+0x7e4fd0	5	InitSkyDrawInvTwoPiThunk		lighting	orchestration		Jumps to 0x7e4fe0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e4fe0	19	InitSkyDrawInvTwoPi		lighting	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	lighting/overview#shared-header-constants	
+0x7e5000	150	LoadGlare		lighting	primitive		Loads a glare's texture and creates its occlusion query when the device has one	verified	one	lighting/celestial#body-objects	
+0x7e50a0	380	TraceGlareOcclusion		lighting	primitive		Traces the scene between the eye and a glare for occlusion	inferred	none	lighting/celestial#draw-occlusion	
+0x7e5220	1099	QueryGlareOcclusion		lighting	primitive		Draws a glare's occlusion query and reads its result	inferred	none	lighting/celestial#draw-occlusion	
+0x7e5670	260	BuildGlareBasis		lighting	primitive		Normalizes a direction and builds two axes perpendicular to it	verified	one	lighting/celestial#glare-draw	
+0x7e5780	59	GetGlareOcclusion		lighting	orchestration		Returns a glare's occlusion from its query or trace, or 0 with occlusion off	verified	one	lighting/celestial#glare-occlusion	
+0x7e57c0	32	ReleaseGlare		lighting	orchestration		Releases a glare's texture	verified	one	lighting/sky#sky-shutdown	
+0x7e57e0	812	DrawGlare		lighting	primitive		Draws a glare as an additive quad facing the eye	verified	one	lighting/celestial#glare-draw	
+0x7e5b10	118	LoadDisc		lighting	primitive		Loads a disc's texture and stores its base scale	verified	one	lighting/celestial#body-objects	
+0x7e5b90	726	DrawDisc		lighting	primitive		Draws a sun or moon disc	verified	one	lighting/celestial#disc-draw	
+0x7e5e70	13	ReleaseDisc		lighting	orchestration		Releases a disc's texture	verified	one	lighting/sky#sky-shutdown	
+0x7e5e80	246	DrawSkyGradient		lighting	host		Draws the sky dome with its vertex colours	verified	one	lighting/sky#gradient-draw	
+0x7e5f80	363	DrawClouds		lighting	primitive		Draws the cloud dome with the cloud texture	verified	one	lighting/clouds#cloud-dome	
+0x7e60f0	37	LoadStars		lighting	orchestration		Creates the star model in its own scene	verified	one	lighting/celestial#body-objects	
+0x7e6120	152	DrawStars		lighting	primitive		Draws the star model when its alpha byte is 2 or more	verified	one	lighting/celestial#stars	
+0x7e61c0	41	ReleaseStars		lighting	orchestration		Releases the star model	verified	one	lighting/celestial#stars	
+0x7e61f0	5	InitSkyDrawTenSquaredThunk		lighting	orchestration		Jumps to 0x7e6200; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6200	19	InitSkyDrawTenSquared		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6220	5	InitSkyDrawTileUnitInvSquaredThunk		lighting	orchestration		Jumps to 0x7e6230; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6230	19	InitSkyDrawTileUnitInvSquared		lighting	primitive		Stores 11.11111 · 11.11111 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6250	5	InitSkyDrawHalfTileUnitInvSquaredThunk		lighting	orchestration		Jumps to 0x7e6260; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6260	19	InitSkyDrawHalfTileUnitInvSquared		lighting	primitive		Stores 5.555555 · 5.555555 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6280	5	InitSkyDrawTenSquared2Thunk		lighting	orchestration		Jumps to 0x7e6290; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6290	19	InitSkyDrawTenSquared2		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e62b0	5	InitSkyDrawFiveSquaredThunk		lighting	orchestration		Jumps to 0x7e62c0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e62c0	19	InitSkyDrawFiveSquared		lighting	primitive		Stores 5.0 · 5.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e62e0	5	InitSkyDrawTenSquared3Thunk		lighting	orchestration		Jumps to 0x7e62f0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e62f0	19	InitSkyDrawTenSquared3		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6310	5	InitSkyDrawThirtySquaredThunk		lighting	orchestration		Jumps to 0x7e6320; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6320	19	InitSkyDrawThirtySquared		lighting	primitive		Stores 30.0 · 30.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6340	5	InitSkyDrawOneTwentySquaredThunk		lighting	orchestration		Jumps to 0x7e6350; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6350	19	InitSkyDrawOneTwentySquared		lighting	primitive		Stores 120.0 · 120.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6370	5	InitSkyDrawTwentySquaredThunk		lighting	orchestration		Jumps to 0x7e6380; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6380	19	InitSkyDrawTwentySquared		lighting	primitive		Stores 20.0 · 20.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e63a0	5	InitSkyDrawTenSquared4Thunk		lighting	orchestration		Jumps to 0x7e63b0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e63b0	19	InitSkyDrawTenSquared4		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e63d0	5	InitSkyDrawHalfSquaredThunk		lighting	orchestration		Jumps to 0x7e63e0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e63e0	19	InitSkyDrawHalfSquared		lighting	primitive		Stores 0.5 · 0.5 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6400	5	InitSkyDrawThreeSquaredThunk		lighting	orchestration		Jumps to 0x7e6410; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6410	19	InitSkyDrawThreeSquared		lighting	primitive		Stores 3.0 · 3.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6430	5	InitSkyDrawHundredSquaredThunk		lighting	orchestration		Jumps to 0x7e6440; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6440	19	InitSkyDrawHundredSquared		lighting	primitive		Stores 100.0 · 100.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6460	5	InitSkyDrawStoreFiveThunk		lighting	orchestration		Jumps to 0x7e6470; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6470	11	InitSkyDrawStoreFive		lighting	orchestration		Stores the float 5.0 in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6480	5	InitSkyDrawFiftySquaredThunk		lighting	orchestration		Jumps to 0x7e6490; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6490	19	InitSkyDrawFiftySquared		lighting	primitive		Stores 50.0 · 50.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e64b0	5	InitSkyDrawHundredSquared2Thunk		lighting	orchestration		Jumps to 0x7e64c0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e64c0	19	InitSkyDrawHundredSquared2		lighting	primitive		Stores 100.0 · 100.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e64e0	5	InitSkyDrawFortySquaredThunk		lighting	orchestration		Jumps to 0x7e64f0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e64f0	19	InitSkyDrawFortySquared		lighting	primitive		Stores 40.0 · 40.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6510	5	InitSkyDrawOneHalfSquaredThunk		lighting	orchestration		Jumps to 0x7e6520; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6520	19	InitSkyDrawOneHalfSquared		lighting	primitive		Stores 1.5 · 1.5 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6540	5	InitSkyDrawNegTwentyOneOverThirtySixThunk		lighting	orchestration		Jumps to 0x7e6550; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6550	19	InitSkyDrawNegTwentyOneOverThirtySix		lighting	primitive		Stores -21.0 · -0.02777778 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6570	5	InitSkyDrawScaledNeg255Thunk		lighting	orchestration		Jumps to 0x7e6580; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6580	19	InitSkyDrawScaledNeg255		lighting	primitive		Stores another of the object file's globals · -255.0 as a float	verified	one	lighting/overview#shared-header-constants	
+0x7e65a0	5	InitSkyDrawEighteenOverThirtySixThunk		lighting	orchestration		Jumps to 0x7e65b0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e65b0	19	InitSkyDrawEighteenOverThirtySix		lighting	primitive		Stores 18.0 · 0.02777778 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e65d0	5	InitSkyDrawScaled256Thunk		lighting	orchestration		Jumps to 0x7e65e0; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e65e0	19	InitSkyDrawScaled256		lighting	primitive		Stores another of the object file's globals · 256.0 as a float	verified	one	lighting/overview#shared-header-constants	
+0x7e6600	5	InitSkyDrawInvTileSizeThunk		lighting	orchestration		Jumps to 0x7e6610; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6610	19	InitSkyDrawInvTileSize		lighting	primitive		Stores 1.0 / 4.166667 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6630	5	InitSkyDrawTenSquared5Thunk		lighting	orchestration		Jumps to 0x7e6640; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6640	19	InitSkyDrawTenSquared5		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
+0x7e6660	5	InitSkyDrawHalfTenthThunk		lighting	orchestration		Jumps to 0x7e6670; a static initializer	verified	one	lighting/overview#shared-header-constants	
+0x7e6670	19	InitSkyDrawHalfTenth		lighting	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
 0x7e6690	21			unassigned			Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
 0x7e66b0	29			unassigned	unreached		Runs its object file code that calls 0x7e66d0; not read here	inferred	none		
 0x7e66d0	415			unassigned			Runs its object file code that calls _malloc, 0x7ed470, 0x7e6870 and 5 more; not read here	inferred	none		

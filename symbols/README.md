@@ -51,7 +51,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   `IGxuFontGlyph.cpp` and `Lightning.cpp`
 - `gxumath`: the Gxu matrix builders: perspective, orthographic, look-at and frustum corners
 - `image`: `tga.cpp` and `blp.cpp`, the TGA and BLP image readers
-- `lighting`: `MapWeather.cpp` and the day-night sky and light files, with the screen tint
 - `loadingscreen`: `LoadingScreen.cpp`
 - `minigame`: `Minigame_C.cpp`, the minigame object, and the board file linked after it (0x728b10
   to 0x728ef3): its +∞ initializer `0x728b10`, the shared header's constants and the board check
