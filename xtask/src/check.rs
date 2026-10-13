@@ -15,7 +15,9 @@ macro_rules! pattern {
     };
 }
 
-const LIBRARIES: [&str; 3] = ["crt", "storm", "lua"];
+const LIBRARIES: [&str; 5] = ["crt", "storm", "lua", "zlib", "d3dx"];
+/// The section of `symbols/README.md` that names the systems whose doc is not written yet.
+const UNWRITTEN: &str = "## Systems without a doc";
 const CLASSES: [&str; 5] = [
     "boundary",
     "host",
@@ -81,6 +83,7 @@ pattern!(FIRST_PERSON, r"\b(?:[Ww]e|[Oo]ur|I)\b");
 pattern!(CITED, r"`(0x[0-9a-f]{6})`");
 pattern!(BARE_ADDRESS, r"\b0x[0-9a-f]{6}\b");
 pattern!(ANY_HEADING, r"^#{1,6} (.+)$");
+pattern!(LISTED_SYSTEM, r"^- `([a-z][a-z0-9]*)`: \S");
 
 /// The image's virtual addresses: the base 0x400000 up to base plus `SizeOfImage` (0x906000).
 const IMAGE: std::ops::Range<u64> = 0x400000..0xd06000;
@@ -593,6 +596,13 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
         check_common(row, &anchors, None, &mut p);
     }
 
+    check_systems(
+        tree,
+        &written,
+        [&functions, &globals, &structs_rows, &fields],
+        &mut p,
+    )?;
+
     let extents = Extents::new(extents);
     let mut doc_tests = Vec::new();
     for doc in &docs {
@@ -781,6 +791,68 @@ fn type_size(ty: &str, structs: &HashMap<&str, &Row>) -> Option<u64> {
         _ => None,
     };
     base.or_else(|| structs.get(ty).and_then(|row| decimal(row.get("size"))))
+}
+
+/// Every row's system is a system with a doc, a library, `unassigned`, or a name listed in
+/// `symbols/README.md` as a system whose doc is not written yet; a listed name has no doc.
+fn check_systems(
+    tree: &dyn Tree,
+    written: &HashSet<&str>,
+    tables: [&Vec<Row>; 4],
+    p: &mut Problems,
+) -> io::Result<()> {
+    const README: &str = "symbols/README.md";
+    let mut listed: HashMap<String, usize> = HashMap::new();
+    if let Some(text) = read(tree, README, p)? {
+        let mut inside = false;
+        let mut found = false;
+        for (number, line) in text.split('\n').enumerate() {
+            if ANY_HEADING.is_match(line) {
+                inside = line == UNWRITTEN;
+                found |= inside;
+            } else if inside {
+                if let Some(name) = LISTED_SYSTEM.captures(line) {
+                    let name = name[1].to_string();
+                    let place = format!("{README}:{}", number + 1);
+                    if written.contains(name.as_str()) {
+                        p.add(&place, format!("{name} is listed but has a doc"));
+                    } else if LIBRARIES.contains(&name.as_str()) || name == "unassigned" {
+                        p.add(
+                            &place,
+                            format!("{name} is listed but is a library or unassigned"),
+                        );
+                    } else if listed.insert(name.clone(), number + 1).is_some() {
+                        p.add(&place, format!("{name} is listed twice"));
+                    }
+                }
+            }
+        }
+        if !found {
+            p.add(
+                format!("{README}:1"),
+                format!("has no \"{UNWRITTEN}\" section"),
+            );
+        }
+    }
+    for rows in tables {
+        for row in rows.iter() {
+            let system = row.get("system");
+            if SYSTEM.is_match(system)
+                && !written.contains(system)
+                && !LIBRARIES.contains(&system)
+                && system != "unassigned"
+                && !listed.contains_key(system)
+            {
+                p.add(
+                    row.place(),
+                    format!(
+                        "system '{system}' has no doc, is no library and is not listed in {README}"
+                    ),
+                );
+            }
+        }
+    }
+    Ok(())
 }
 
 fn check_common(

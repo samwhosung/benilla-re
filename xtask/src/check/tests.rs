@@ -194,6 +194,24 @@ fn plants() -> Vec<Plant> {
             &["symbols/globals.tsv:4: system 'Demo' is not a lowercase word"],
         ),
         plant(
+            "a system with no doc, no library and no listing",
+            edit(G, "s_step\t\tdemo", "s_step\t\tdemos"),
+            &["symbols/globals.tsv:4: system 'demos' has no doc, is no library and is not listed in symbols/README.md"],
+        ),
+        plant(
+            "a listed system that has a doc",
+            edit("symbols/README.md", "- `client`:", "- `demo`: the demo\n- `client`:"),
+            &["symbols/README.md:7: demo is listed but has a doc"],
+        ),
+        plant(
+            "the list of systems without a doc is missing",
+            edit("symbols/README.md", "## Systems without a doc", "## Other systems"),
+            &[
+                "symbols/README.md:1: has no \"## Systems without a doc\" section",
+                "symbols/functions.tsv:2: system 'client' has no doc, is no library and is not listed in symbols/README.md",
+            ],
+        ),
+        plant(
             "the confidence",
             edit(G, "the step\tinferred\tnone", "the step\tcertain\tnone"),
             &["symbols/globals.tsv:4: confidence 'certain' is not verified or inferred"],

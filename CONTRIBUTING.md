@@ -95,7 +95,7 @@ cargo xtask check
 It checks the symbol table and every Markdown file against the formats in `symbols/README.md`
 and `systems/README.md` (columns, sorting, names, classes, confidence and proof, the text limits,
 every `finding` resolving to an entry that mentions its row's address, every cited address
-having a row) and each table's header against `tables/README.md`. It prints one line per
+having a row, every row's system known) and each table's header against `tables/README.md`. It prints one line per
 problem, with its file and line, then a summary, and fails on any problem.
 
 With your exe, it checks the rest:
