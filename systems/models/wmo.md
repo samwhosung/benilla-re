@@ -30,7 +30,7 @@ file and carries its tag.
 | `MOPR` | 8 bytes | `MODD` | 40 bytes |
 | `MFOG` | 48 bytes | `MCVP` | 16 bytes |
 
-Addresses: `0x6c3a60`, `0x6c3a00`, `0x6c3a20`, `0x6c3990`, `0x6c3b2d`, `0x6c39d0`, `0x6a3496`
+Addresses: `0x6c3a60`, `0x6c3a00`, `0x6c3a20`, `0x6c3990`, `0x6c3b2d`, `0x6c39d0`, `0x6a3496`, `0x6c39e0`, `0x6a5650`
 Confidence: verified
 Proof: one
 Test: none
@@ -41,7 +41,10 @@ The counts are `size >> 6`, `size >> 5`, and multiplications by 0xaaaaaaab or 0x
 shifts, which divide by 12, 48, 20 and 40. `0x6c3a20` compares the cursor with `+0x1c0 + +0x1c4` and
 the tag with `MCVP`. The `MOGI` count `size >> 5` goes to `+0x168` (`0x6c3b2d`); `0x6c3990` then
 stores it at `+0x1f0`, which the reset `0x6a3430` seeds to 384 (`0x6a3496`), and allocates a group
-object for each group into the pointers from `+0x1f4`, 384 of which end the 0x7f4-byte object.
+object for each group into the pointers from `+0x1f4`, 384 of which end the 0x7f4 fixed bytes;
+`0x6a5650` allocates 0x7f4 plus the caller's extra bytes. The loop at `0x6c39e0` runs to the `MOGI`
+count with no cap at 384, so a file of more than 384 groups writes its pointers past the fixed part,
+into the extra bytes and beyond.
 
 ## Group file chunks
 

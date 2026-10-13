@@ -9187,7 +9187,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a55f0	5	InitMapObjInvTwoPiThunk		models	orchestration		Jumps to 0x6a5600; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6a5600	19	InitMapObjInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
 0x6a5620	34	CMapObj::DeletingDestructor		models	host		Destroys a cached map object and frees it when asked	inferred	none		
-0x6a5650	185	CMapObj::Create		models	primitive		Allocates and initializes a cached map object	inferred	none		
+0x6a5650	185	CMapObj::Create		models	primitive		Allocates 0x7f4 bytes plus the caller's extra for a map object and resets it	verified	one	models/wmo#root-file-chunks	
 0x6a5710	189	MapObjListDestruct		models	host		Unlinks and frees a map object list's nodes	inferred	none		
 0x6a57d0	190	MapObjListDeletingDestructor		models	host		Destroys a map object list and frees it when asked	inferred	none		
 0x6a5890	60	ListUnlink		models	primitive		Unlinks a node from an intrusive list	inferred	none		
