@@ -8,4 +8,5 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
+benilla-re-cmath = { path = "crates/cmath" }
 benilla-re-difftest = { path = "crates/difftest" }
