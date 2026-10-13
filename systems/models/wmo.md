@@ -128,8 +128,30 @@ Confidence: inferred
 Proof: none
 Test: none
 
-Each map object query guards on `+0x1d4` and each group through `0x6a4a00`. The BSP walks use
-±0.01 slabs; the liquid grid scales by 1/4.1666665. None of the arithmetic was transcribed.
+Each map object query guards on `+0x1d4` and each group through `0x6a4a00`. The segment walk is
+`BSP segment descent`; the box and volume walks, the leaf tests and the liquid grid, which scales
+by 1/4.1666665, were not transcribed.
+
+## BSP segment descent
+
+A group's BSP node is 16 bytes: a 16-bit flags word (0x4 leaf, low two bits the split axis), the
+negative and positive children (`+0x2`, `+0x4`, 0xffff for none), the face count `+0x6`, the first
+face reference `+0x8`, and the split distance `+0xc`. A segment descends with the node's box: it
+stops when both ends lie more than 0.01 beyond the box on the split axis; with `f0` and `f1` the
+ends' distances from the split, it visits both children whole when either is within 0.01, one
+child when both are beyond 0.01 on one side, and otherwise splits at `t = f0/(f0 − f1)`, the
+start's side first. A leaf tests its cached mesh, else each face.
+
+Addresses: `0x6bc370`, `0x6bc394`, `0x6bc3e9`, `0x6bc4c5`, `0x6bc4fc`, `0x6bc535`, `0x6bc56e`, `0x6b88e0`, `0x6bc700`, `0x810ccc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6bc3e9` masks the axis with 3 and compares `p − box.min` with −0.01 (`0x810ccc`) and
+`box.max − p` with 0.01. The child boxes copy the parent's with `min[axis]` or `max[axis]` set to
+the split. `0x6bc56e` computes `f0/(f0 − f1)` with `fdivr` and the midpoint `p0 + (p1 − p0)·t`;
+`f0 > 0` takes the positive child first. A leaf calls `0x6b88e0`, and on 0 `0x6bc700` for each of
+its `+0x6` face indices.
 
 ## Vertex buffer pools
 

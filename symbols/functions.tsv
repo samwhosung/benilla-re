@@ -10005,7 +10005,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b87f0	25	MapObjGroupFreePools		models	orchestration		Frees the group vertex buffer pools and the vertex array	inferred	none		
 0x6b8810	98	CMapObjGroup::CMapObjGroup		models	orchestration		Zeroes a group record, its BSP and liquid block and its lists	inferred	none		
 0x6b8880	86	CMapObjGroup::~CMapObjGroup		models	primitive		Frees a group's arrays and returns its list nodes to the free list	inferred	none		
-0x6b88e0	654	CMapObjGroup::IntersectLeaf		models	primitive		Intersects a segment with the welded faces of a BSP leaf	inferred	none		
+0x6b88e0	654	CMapObjGroup::IntersectLeaf		models	primitive		Intersects a segment with the welded faces of a BSP leaf	inferred	none	models/wmo#bsp-segment-descent	
 0x6b8b70	131	BoxContainsTriangle		models	primitive		Returns whether three points share an outside side of a box	inferred	none		
 0x6b8c00	72	TriangleBehindPlanes		models	primitive		Returns whether a triangle lies behind three planes	inferred	none		
 0x6b8c50	5	CMapObjGroup::ReturnFalse		models	orchestration		Returns 0, popping two arguments	inferred	none		
@@ -10060,8 +10060,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6bc170	22	ClearSixDwords		models	orchestration		Zeroes six dwords	inferred	none		
 0x6bc190	35	SegmentDirection		models	primitive		Stores a segment's end minus its start	inferred	none		
 0x6bc1c0	430	AaBspQueryBoxNode		models	primitive		Descends a group's BSP with a box, collecting the leaves it touches	inferred	none	models/wmo#queries	
-0x6bc370	903	AaBspIntersectSegmentNode		models	primitive		Clips a segment through a group's BSP and intersects the leaves it reaches	inferred	none	models/wmo#queries	
-0x6bc700	210	AaBspIntersectLeaf		models	primitive		Intersects a segment with a BSP leaf's faces, keeping the closest hit	inferred	none		
+0x6bc370	903	AaBspIntersectSegmentNode		models	primitive	void __thiscall (void *bsp, uint32_t node, const float *segment, const float *box)	Descends a group's BSP with a segment and its box, splitting at each node, and intersects the leaves reached	verified	one	models/wmo#bsp-segment-descent	
+0x6bc700	210	AaBspIntersectLeaf		models	primitive		Intersects a segment with a BSP leaf's faces, keeping the closest hit	inferred	none	models/wmo#bsp-segment-descent	
 0x6bc7e0	433	AaBspCollectBoxNode		models	primitive		Descends a group's BSP with a box, collecting the faces inside	inferred	none		
 0x6bc9a0	164	AaBspCollectLeafBox		models	primitive		Collects a BSP leaf's faces not behind a box's planes	inferred	none		
 0x6bca50	164	AaBspQueryLeafBox		models	primitive		Collects a BSP leaf's faces whose points a box contains	inferred	none		

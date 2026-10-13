@@ -347,6 +347,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x810c0c	const float	s_infinity20		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810c6c	const float	s_infinity21		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810cc0	float	s_groupLiquidCellSize		terrain	Holds 4.1666665, the map object liquid grid spacing	inferred	none	
+0x810ccc	const float	s_negPointZeroOne		unassigned	Holds -0.01, a pooled constant; the BSP segment descent uses it as its lower slab margin	verified	one	models/wmo#bsp-segment-descent
 0x810cd0	const float	s_infinity22		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810d2c	float	s_cellsPerYardHeight		terrain	Holds 0.24 (0x3e75c28f), cells per yard, for the surface height	verified	one	terrain/queries#surface-height
 0x810d98	const float	s_infinity23		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
