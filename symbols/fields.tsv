@@ -478,6 +478,21 @@ CSimpleFrame	0x01f8	4	uint32_t	m_dirtyLayers	ui	Holds a bit per own draw layer t
 CSimpleFrame	0x02f8	12	uint32_t[3]	m_children	ui	Holds the list of child frame nodes	verified	one	ui/visibility#parent-change
 CSimpleFrame	0x0304	8	uint32_t[2]	m_frameLink	ui	Holds the frame's link in the top's frame list	verified	one	ui/frames#construction
 CSimpleFrame	0x030c	8	uint32_t[2]	m_strataLink	ui	Holds the frame's link in a level node's list	verified	one	ui/strata#joining-and-leaving-a-level
+CSimpleModel	0x0314	4	M2Scene *	m_scene	ui	Points to the frame's own scene, created on first use	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x0318	4	CM2Model *	m_model	ui	Points to the model the frame shows, or null	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x031c	4	CCamera *	m_camera	ui	Points to the referenced camera the paint uses, or null for the orthographic leg	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x0320	4	uint32_t	m_pendingCamera	ui	Holds the camera index waiting to be applied, or -1 once a camera is settled	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x0324	108	M2Light	m_light	ui	Holds the frame's own light, disabled unless SetLight enables it	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x0390	12	float[3]	m_position	ui	Holds the SetPosition vector, scaled by the layout scale into the root matrix	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x039c	4	float	m_facing	ui	Holds the facing in radians, a rotation about +Z	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03a0	4	float	m_modelScale	ui	Holds the model scale, 1.0 by default	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03a4	4	uint32_t	m_fogFlags	ui	Holds the fog flags; bit 0 arms the fog	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03a8	4	uint32_t	m_fogColor	ui	Holds the fog colour as 0xAARRGGBB	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03ac	4	float	m_fogNear	ui	Holds the fog near distance	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03b0	4	float	m_fogFar	ui	Holds the fog far distance, 1.0 by default	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03b4	24	float[6]	m_boundingBox	ui	Holds the model's bounding box, minimum then maximum, copied when the model is ready	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03cc	8	uint32_t[2]	m_onUpdateModel	ui	Holds the OnUpdateModel script slot	verified	one	ui/modelview#model-frame-fields
+CSimpleModel	0x03d4	8	uint32_t[2]	m_onAnimFinished	ui	Holds the OnAnimFinished script slot	verified	one	ui/modelview#model-frame-fields
 CSimpleModelFFX	0x0000	4	void **	__vfptr	glue	Holds the vtable 0x803960	verified	one	glue/select#the-modelffx-frame
 CSimpleModelFFX	0x0024	4	void **	m_innerVfptr	glue	Holds the second vtable 0x803934	verified	one	glue/select#the-modelffx-frame
 CSimpleTop	0x0000	116	CLayoutFrame	m_layout	ui	Holds the top's own layout frame	verified	one	ui/strata#construction-and-teardown

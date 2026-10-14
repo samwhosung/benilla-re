@@ -25,6 +25,7 @@ CPlayerMoveEvent	80		collision	Holds one queued movement event: list link, time,
 CRibbonEmitter	360		models	Holds a ribbon emitter: its edge ring, node frames, texture cell, materials, colour and heights	verified	one	models/ribbons#ribbon-ring
 CScriptRegion	160	0x81c580	ui	Holds a script object part, a CLayoutFrame at +0x24, a name and a parent	verified	one	ui/frames#vtables-and-the-two-parts
 CSimpleFrame	788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, flags, scripts, regions, layers and children	verified	one	ui/frames#construction
+CSimpleModel	988	0x81c608	ui	Holds a Model frame: a CSimpleFrame, its scene, model, camera, light, position, facing, scale, fog and bounding box	verified	one	ui/modelview#model-frame-fields
 CSimpleModelFFX	988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
 CSimpleTop	4408	0x81c380	ui	Holds the interface root: strata records, input lists, key takers, hover, pressed and moving frames	verified	one	ui/strata#construction-and-teardown
 CharacterSelectionDisplay	288		glue	Holds one character-list record: the session character record in its first 0x110 bytes, then the select screen state	verified	one	glue/flow#enter-world

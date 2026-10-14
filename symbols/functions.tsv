@@ -1575,12 +1575,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	verified	one	glue/script#cursor-and-screen-size	
 0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
 0x41adb0	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ade0	37			screencoord			Runs its object file code not read here	inferred	none		
+0x41ade0	37	UnscaleScreenXY		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes x over 0x832a44 and y over 0x832a48 to whichever outputs are not null	verified	one	ui/modelview#viewport-and-clamp	
 0x41ae10	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
 0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae40_unscale_x
 0x41ae50	16			screencoord			Runs its object file code not read here	inferred	none		
 0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae60_scale_x
-0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		screencoord::sc_41ae70_scale_y
+0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	verified	one	ui/modelview#root-transform	screencoord::sc_41ae70_scale_y
 0x41ae80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41ae90	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41aea0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -6744,8 +6744,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b330	100	Script::GuildLeave	idb	ui	orchestration		Implements the Lua function GuildLeave	inferred	none		
 0x48b3a0	100	Script::GuildDisband	idb	ui	orchestration		Implements the Lua function GuildDisband	inferred	none		
 0x48b410	100	Script::GuildInfo	idb	ui	orchestration		Implements the Lua function GuildInfo	inferred	none		
-0x48b480	77			ui	primitive		Runs GameUI.cpp code that calls MultiplyByScreenScaleX, 0x494590, GetScaledScreenAspect and 2 more; not read here	inferred	none		
-0x48b4d0	77			ui	primitive		Runs GameUI.cpp code that calls NDCToDDCHeight, 0x494590, GetScaledScreenAspect and 2 more; not read here	inferred	none		
+0x48b480	77	GetUiScreenWidth		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen width in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	
+0x48b4d0	77	GetUiScreenHeight		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen height in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	
 0x48b520	127	Script::GetDamageBonusStat	idb	ui	primitive		Implements the Lua function GetDamageBonusStat	inferred	none		
 0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Implements the Lua function GetReleaseTimeRemaining	inferred	none		
 0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Implements the Lua function GetCorpseRecoveryDelay	inferred	none		
@@ -7459,7 +7459,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a7960	79			ui	orchestration		Runs WorldMap.cpp code that calls 0x492090, 0x4a7360; not read here	inferred	none		
 0x4a79b0	120			ui	orchestration		Runs WorldMap.cpp code that calls 0x4a7360; not read here	inferred	none		
 0x4a7a30	68			ui	unreached		Runs WorldMap.cpp code that calls 0x4a7360; not read here	inferred	none		
-0x4a7a80	148			ui	primitive		Runs WorldMap.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel, NDCToDDCHeight and 1 more; not read here	inferred	none		
+0x4a7a80	148			ui	primitive		Creates the world map arrow's model frame once and sets its scale to G48 times 5/3	verified	one	ui/modelview#model-scale-from-xml	
 0x4a7b20	87			ui	primitive		Runs WorldMap.cpp code not read here	inferred	none		
 0x4a7b80	148			ui	primitive		Runs WorldMap.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel, NDCToDDCHeight and 1 more; not read here	inferred	none		
 0x4a7c20	189			ui	orchestration		Runs WorldMap.cpp code that calls CM2Model::IsLoaded, 0x4a7b20, GetActiveCamera and 1 more; not read here	inferred	none		
@@ -11815,10 +11815,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x505830	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505840	43			ui	orchestration		Runs its object file code that calls 0x505870, SMemFree; not read here	inferred	none		
 0x505870	18			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x505890	266			ui	orchestration		Runs its object file code that calls SimpleModelSetCamera, CM2Model::GetBoundingSphere and 9 more; not read here	inferred	none		
+0x505890	266	CharacterModelBaseChooseCamera		ui	orchestration	void __thiscall ()	Installs a frozen copy of camera 1, or a fixed camera aimed at the bounding box centre	verified	one	ui/modelview#the-character-pane-camera	
 0x5059a0	208			ui	orchestration		Runs its object file code that calls UpdateCharacterComponent, SimpleModelGetScene and 9 more; not read here	inferred	none		
 0x505a70	189			ui	orchestration		Runs its object file code that calls SimpleModelGetScene, CreateModelFromPath and 4 more; not read here	inferred	none		
-0x505b30	27			ui	orchestration		Runs its object file code that calls 0x76ce00, 0x505890; not read here	inferred	none		
+0x505b30	27	CharacterModelBaseModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Runs the base ready step, then chooses the pane's camera	verified	one	ui/modelview#the-character-pane-camera	
 0x505b50	83			ui	orchestration		Runs CharacterModelBase.cpp code that calls ClntObjMgrObjectPtr, 0x5059a0; not read here	inferred	none		
 0x505bb0	159			ui	primitive		Runs CharacterModelBase.cpp code that calls CM2Model::IsLoaded, CM2Model::GetKeyBoneAnimId and 2 more; not read here	inferred	none		
 0x505c50	92			ui	orchestration		Runs CharacterModelBase.cpp code that calls 0x76d1a0, OsGetAsyncTimeMs and 2 more; not read here	inferred	none		
@@ -16409,7 +16409,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58a920	26			gx			Runs its object file code not read here	inferred	none		
 0x58a940	19			gx			Runs its object file code that calls 0x592410; not read here	inferred	none		
 0x58a960	15			gx			Runs its object file code not read here	inferred	none		
-0x58a970	15	ClearDevice		gx			Clears the device buffers a mask names through the device's slot +0x6c	inferred	none		
+0x58a970	15	ClearDevice		gx			Clears the device buffers a mask names through the device's slot +0x6c	verified	one	ui/modelview#clip-and-depth-clear	
 0x58a980	164	CGxTexFlags::CGxTexFlags	idb	gx			Runs its object file code that calls GxCapsGet; not read here	inferred	none		
 0x58aa30	185			gx			Runs its object file code that calls GxCapsGet, SErrSetLastError; not read here	inferred	none		
 0x58aaf0	28			gx	unreached		Runs its object file code that calls 0x58aa30; not read here	inferred	none		
@@ -16433,10 +16433,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58aed0	31			gx			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58aef0	60			gx	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x58af30	39			gx			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x58af60	216	SetDeviceViewport		gx			Sets the device viewport and its depth range	inferred	none		
+0x58af60	216	SetDeviceViewport		gx			Sets the device viewport and its depth range	verified	one	ui/modelview#viewport-and-clamp	
 0x58b040	15	SetDeviceProjection		gx	host	void __fastcall (const float *matrix)	Passes a matrix to device vtable slot +0x70	verified	one	camera#view-and-projection	
 0x58b050	15	SetDeviceView		gx	host	void __fastcall (const float *matrix)	Passes a matrix to device vtable slot +0x74	verified	one	camera#view-and-projection	
-0x58b060	36	GetDeviceViewport		gx			Reads the device viewport and its depth range	inferred	none		
+0x58b060	36	GetDeviceViewport		gx			Reads the device viewport and its depth range	verified	one	ui/modelview#the-paint	
 0x58b090	13	GetDeviceProjection		gx	host	void __fastcall (float *out)	Copies the device matrix at +0xf50	verified	one	camera#unprojection	
 0x58b0a0	13			gx			Runs its object file code that calls 0x5926c0; not read here	inferred	none		
 0x58b0b0	13	GetDeviceView		gx	host	void __fastcall (float *out)	Copies the top of the device matrix stack at +0x1ac8	verified	one	camera#unprojection	
@@ -16693,7 +16693,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592430	35			gx			Runs its object file code that calls 0x592460, 0x595cc0; not read here	inferred	none		
 0x592460	191			gx			Runs its object file code that calls 0x595d80, 0x595cf0, __ftol; not read here	inferred	none		
 0x592520	3			gx			Runs its object file code not read here	inferred	none		
-0x592530	167			gx			Runs its object file code not read here	inferred	none		
+0x592530	167	GxSetViewport		gx	orchestration	void __thiscall (float x0, float x1, float y0, float y1, float near, float far)	Stores the viewport fractions and sets the dirty flag when any differs	verified	one	ui/modelview#clip-and-depth-clear	
 0x5925e0	43			gx			Runs its object file code not read here	inferred	none		
 0x592610	47			gx			Runs its object file code that calls 0x591440; not read here	inferred	none		
 0x592640	73			gx			Runs its object file code not read here	inferred	none		
@@ -16985,14 +16985,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59b7f0	92			gx			Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x59b850	53			gx			Runs its object file code not read here	inferred	none		
 0x59b890	126			gx			Runs its object file code that calls 0x592640, 0x592530; not read here	inferred	none		
-0x59b910	242			gx			Runs its object file code that calls 0x59baa0, 0x59c730; not read here	inferred	none		
+0x59b910	242	GxClearGL		gx	host	void __thiscall (uint32_t mask)	Applies the viewport and scissor, then clears the colour and depth buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
 0x59ba10	89			gx			Runs its object file code that calls 0x592430, 0x592140, 0x59b890; not read here	inferred	none		
 0x59ba70	40			gx			Runs its object file code not read here	inferred	none		
 0x59baa0	1422			gx			Runs its object file code not read here	inferred	none		
 0x59c100	1213			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
 0x59c610	185			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
-0x59c6d0	84			gx			Runs its object file code that calls 0x594210, 0x59c820, 0x59c9f0 and 4 more; not read here	inferred	none		
-0x59c730	232			gx			Runs its object file code that calls 0x5922e0, __ftol; not read here	inferred	none		
+0x59c6d0	84	GxApplyDirtyStateGL		gx	host	void __thiscall ()	Applies the dirty device states through the GL applicators, the viewport among them	verified	one	ui/modelview#clip-and-depth-clear	
+0x59c730	232	GxApplyViewportGL		gx	host	void __thiscall ()	Passes the viewport as truncated pixels to glViewport and glScissor, and the depth range to glDepthRange	verified	one	ui/modelview#clip-and-depth-clear	
 0x59c820	461			gx			Runs its object file code that calls 0x5a0090; not read here	inferred	none		
 0x59c9f0	100			gx			Runs its object file code that calls 0x5935d0; not read here	inferred	none		
 0x59ca60	828			gx			Runs its object file code that calls MultiplyMatrix4, 0x5a0090, 0x59baa0 and 2 more; not read here	inferred	none		
@@ -17080,14 +17080,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a0f30	7			unassigned			Runs its object file code not read here	inferred	none		
 0x5a0f40	6			unassigned			Runs its object file code not read here	inferred	none		
 0x5a0f50	417			unassigned			Runs its object file code that calls 0x590630, 0x592b00, 0x5a1b20 and 1 more; not read here	inferred	none		
-0x5a1100	206			unassigned			Runs its object file code that calls 0x5922e0, __ftol; not read here	inferred	none		
+0x5a1100	206	GxApplyViewportD3D		unassigned	host	void __thiscall ()	Builds a D3DVIEWPORT9 from the viewport fractions and calls SetViewport	verified	one	ui/modelview#clip-and-depth-clear	
 0x5a11d0	629			unassigned			Runs its object file code that calls 0x5925e0; not read here	inferred	none		
 0x5a1450	40			unassigned			Runs its object file code that calls 0x592610; not read here	inferred	none		
 0x5a1480	96			unassigned			Runs its object file code not read here	inferred	none		
 0x5a14e0	416			unassigned			Runs its object file code that calls 0x589ee0, MultiplyMatrix4, 0x5938a0 and 1 more; not read here	inferred	none		
 0x5a1680	277			unassigned			Runs its object file code that calls 0x599900, 0x599790, 0x5a24a0 and 3 more; not read here	inferred	none		
 0x5a17a0	40			unassigned			Runs its object file code not read here	inferred	none		
-0x5a17d0	317			unassigned			Runs its object file code that calls 0x592520, __ftol, 0x5a1100; not read here	inferred	none		
+0x5a17d0	317	GxClearD3D		unassigned	host	void __thiscall (uint32_t mask)	Applies the viewport, then calls IDirect3DDevice9::Clear with no rectangles for the buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
 0x5a1910	287			unassigned			Runs its object file code that calls 0x592430, 0x5a17a0, OsSleep and 2 more; not read here	inferred	none		
 0x5a1a30	37			unassigned			Runs its object file code that calls 0x5922e0; not read here	inferred	none		
 0x5a1a60	180			unassigned			Runs its object file code that calls 0x592220, 0x5922e0, __ftol; not read here	inferred	none		
@@ -29611,7 +29611,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive		Reads a script argument as an integer flag: nil 0, a boolean 0 or 1, a number truncated, else by keyword or default	inferred	none		
 0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
-0x6f1eb0	486			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
+0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	
 0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
 0x6f23d0	601			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, __ftol; not read here	inferred	none		
 0x6f2630	182			ui	orchestration		Runs its object file code that calls 0x6f2cf0, 0x6f1a20, SStrCmpI and 1 more; not read here	inferred	none		
@@ -33410,25 +33410,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76ca50	108	DestroyModelFrame		ui	orchestration		Destroys a model frame's members; the ModelFFX destructor calls it	inferred	none		
 0x76cac0	440	CSimpleModel::LoadXML		ui	primitive		Loads a Model's frame node, then its file, scale, fog distances and fog colour	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x76cc80	92	CSimpleModel::GetScriptByName		ui	orchestration		Returns a Model's handler slot by name, adding OnUpdateModel and OnAnimFinished	verified	one	ui/xmltypes#handler-names-by-type	
-0x76cce0	68	SimpleModelLoadFile		ui	orchestration		Loads a model file into a model frame's scene and hands the model to slot 36	inferred	none		
-0x76cd30	144	SimpleModelSetModel		ui	primitive		Stores a model frame's scene model at +0x318 and installs its callbacks	inferred	none		
+0x76cce0	68	SimpleModelLoadFile		ui	orchestration	void __thiscall (const char *path)	Creates a model of a file in the frame's scene, hands it to slot 36 and drops its own reference	verified	one	ui/modelview#stale-camera-after-setmodel	
+0x76cd30	144	SimpleModelSetModel		ui	orchestration	void __thiscall (CM2Model *model)	Stores a model frame's scene model at +0x318 and installs its callbacks	verified	one	ui/modelview#stale-camera-after-setmodel	
 0x76cdc0	39			ui	orchestration		Runs its object file code that calls FrameScriptExecute; not read here	inferred	none		
 0x76cdf0	12			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x76ce00	126			ui	orchestration		Runs its object file code that calls CM2Model::SetAnimated, CM2Model::GetScene and 4 more; not read here	inferred	none		
-0x76ce80	60			ui	orchestration		Runs its object file code that calls AddHandleRef, HandleClose; not read here	inferred	none		
-0x76cec0	100	SimpleModelSetCamera		ui	orchestration		Selects a camera of a model frame's scene model by index	inferred	none		
+0x76ce00	126	SimpleModelModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Applies a pending camera index and copies the model's bounding box into the frame	verified	one	ui/modelview#choosing-the-camera	
+0x76ce80	60	SimpleModelInstallCamera		ui	orchestration	void __thiscall (CCamera *camera)	Replaces the frame's camera with a referenced one and sets the pending index to -1	verified	one	ui/modelview#choosing-the-camera	
+0x76cec0	100	SimpleModelSetCamera		ui	orchestration	void __thiscall (uint32_t index)	Installs camera number index of the model, or none past the count, or keeps the index until ready	verified	one	ui/modelview#choosing-the-camera	
 0x76cf30	27			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76cf50	41			ui	orchestration		Plays a sequence from its start at rate 1.0	verified	one	ui/model#sequences	
 0x76cf80	48			ui	orchestration		Plays a sequence from a time at rate 1.0	verified	one	ui/model#sequences	
 0x76cfb0	6			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x76cfc0	32	SimpleModelGetScene		ui	orchestration		Returns a model frame's M2 scene, creating it on first use	inferred	none		
+0x76cfc0	32	SimpleModelGetScene		ui	orchestration	CM2Scene * __thiscall ()	Returns a model frame's M2 scene, creating it on first use	verified	one	ui/modelview#model-frame-fields	
 0x76cfe0	152			ui	primitive		Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate, SysMsgAdd and 3 more; not read here	inferred	none		
-0x76d080	78			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, CM2Model::IsLoaded; not read here	inferred	none		
-0x76d0d0	78			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, CM2Model::IsLoaded; not read here	inferred	none		
+0x76d080	78	SimpleModelGeometryGetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the model's bounding box width when the authored width is 0.0	verified	one	ui/modelview#implicit-size	
+0x76d0d0	78	SimpleModelGeometryGetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or the model's bounding box height when the authored height is 0.0	verified	one	ui/modelview#implicit-size	
 0x76d120	58			ui	primitive		Runs its object file code that calls CSimpleFrame::SetAlpha, CM2Model::SetAlpha; not read here	inferred	none		
 0x76d160	56	SimpleModelRegisterLayer		ui	orchestration		Registers a model frame's layers, with its model draw for layer 2	inferred	none		
-0x76d1a0	159			ui	primitive		Runs its object file code that calls FrameScriptExecute, NDCToDDCHeight, CM2Model::SetBaseTransformTRS; not read here	inferred	none		
-0x76d240	1078	SimpleModelDraw		ui	primitive		Draws a model frame's scene	inferred	none		
+0x76d1a0	159	SimpleModelUpdateTransform		ui	primitive	void __thiscall ()	Runs OnUpdateModel, then rebuilds the model's root matrix from position, facing and scale	verified	one	ui/modelview#root-transform	
+0x76d240	1078	SimpleModelDraw		ui	primitive	void __thiscall ()	Draws a model frame's scene inside its own rectangle, viewport and depth clear	verified	one	ui/modelview#the-paint	
 0x76d680	368	SimpleModelLightCallback		ui	primitive		Lights a model frame's scene model; the callback the frame installs on its own model	inferred	none		
 0x76d7f0	125			ui	orchestration		Advances the model frame's scene clock by the truncated frame milliseconds	verified	one	ui/model#the-animation-clock	
 0x76d870	5			ui	orchestration		Runs its object file code not read here	inferred	none		
