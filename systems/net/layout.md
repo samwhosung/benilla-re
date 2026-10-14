@@ -92,12 +92,14 @@ cosine, `a + (b − a)·(1 − cos(π·t))/2`; it has 11 call sites outside net.
 Addresses: `0x5b71c0`, `0x5b71d0`, `0x5b7bb0`, `0x538140`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::cmath_cosine_smoothstep`
 
 `0x538140` is one such initializer: `inc` of `0xc2a3c4`, `cmp eax,1`, and `jmp 0x5b71c0` on equality.
 A scan for `call` and `jmp` to `0x5b71c0` finds 124. `0x5b7bb0` loads π, multiplies by `t`, takes
 `fcos`, subtracts it from 1 (`fsubr`, `d8 2d`) and halves the result, then multiplies by
 `b − a` (`fsub`, `d8 65`) and adds `a`; the arguments are `a`, `b`, `t`, `ret 0xc`.
+
+`cmath::cmath_cosine_smoothstep` runs `0x5b7bb0` whole.
 
 ## Unreached functions
 

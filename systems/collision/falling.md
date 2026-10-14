@@ -306,7 +306,7 @@ its path (through `0x7bca80`) and its facing at +0x14 the same way.
 Addresses: `0x7c6620`, `0x7c6520`, `0x7bcc60`, `0x7bca80`, `0x7c6656`, `0x7c666b`, `0x7c6752`, `0x7c6754`
 Confidence: verified
 Proof: one
-Test: `collision::frame_transform_facing_advance_a_difftest`, `collision::frame_transform_facing_advance_b_difftest`, `collision::frame_transform_transport_delta_affine_difftest`, `collision::frame_transform_matvec3_difftest`, `collision::frame_transform_normalize2_difftest`, `collision::tf_spline_facing_accumulate_difftest`, `terrain::liquid_hit_flush_difftest`, `terrain::horizon_insert`
+Test: `collision::frame_transform_facing_advance_a_difftest`, `collision::frame_transform_facing_advance_b_difftest`, `collision::frame_transform_transport_delta_affine_difftest`, `collision::frame_transform_matvec3_difftest`, `collision::frame_transform_normalize2_difftest`, `collision::tf_spline_facing_accumulate_difftest`, `terrain::liquid_hit_flush_difftest`, `terrain::horizon_insert`, `cmath::transform_point4`
 
 The wrap: `fadd`, `fcom` 2π, `test ah,0x41; jne` at `0x7c6656`, so only a sum above 2π takes
 `fsub` 2π; otherwise `fcom 0.0`, `test ah,5; jp` at `0x7c666b` adds 2π only below 0. 2π is the
@@ -321,6 +321,8 @@ only for less; `0x7c6754` `d8 3d` is `fdivr` 1.0, giving 1/len in `st0` at 53 bi
 12 bytes a point.
 The tests run `0x7c6645` to `0x7c6676`, `0x7c6676` to `0x7c66a7`, `0x7c66a7` to `0x7c66ca`,
 `0x7c66ca` to `0x7c671c`, `0x7c672d` to `0x7c676c` and `0x7c6540` to `0x7c6577`.
+
+`cmath::transform_point4` runs `0x7bca80` and `0x7bcc60` whole.
 
 ## Boarding and leaving transports
 

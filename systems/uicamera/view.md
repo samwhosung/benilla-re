@@ -74,7 +74,7 @@ it; the file path applies none.
 Addresses: `0x50de00`, `0x511f40`, `0x50ab50`, `0x7bf4b0`, `0x7bdfc0`, `0x5f8d20`, `0x8089d8`, `0x8089dc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::euler_to_mat3_f`
 
 `0x50de00(out, pivot, distance, offset)` calls the basis getter in vtable slot 1 (`0x50de20`), multiplies the
 distance by its three floats and subtracts them from the pivot (`0x50de3d`, `0x50de45`, `0x50de4e`), then adds the
@@ -83,6 +83,8 @@ offset. Slot 1 of the camera's vtable at 0x808a9c is `0x511f40`, which returns t
 and `Rx(roll)` and multiplies them in that order (`0x7bf5d2`, `0x7bf5de`), then hands the nine elements to
 `0x5f8d20` in the order that stores the transpose (`0x7bf5e3` to `0x7bf605`); the first row is column 0 of the
 product, `(cy cp, sy cp, -sp)`. The clamp constants are at `0x8089d8` and `0x8089dc`.
+
+`cmath::euler_to_mat3_f` runs `0x7bf4b0` whole.
 
 ## Lifetime
 

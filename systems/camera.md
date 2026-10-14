@@ -140,7 +140,7 @@ of view, the aspect `(r[3] − r[1]) / (r[2] − r[0])`, near and far; it scales
 Addresses: `0x7ada40`, `0x7ac640`, `0x5c3cc0`, `0x5c3e70`, `0x58b040`, `0x58b050`
 Confidence: verified
 Proof: one
-Test: `camera::camera_view_lookat`
+Test: `camera::camera_view_lookat`, `gxumath::perspective_difftest`, `gxumath::lookat_v1_difftest`
 
 The aspect is `fdivp st(1),st` (`de f9`, `0x7ac679`), `st(1)/st(0)`. In `0x5c3cc0`, `0x5c3d43`
 divides the angle by `√(aspect² + 1)` before `fmul 0.5` and `fptan`, and `0x5c3d5b`/`0x5c3d62`
@@ -149,6 +149,8 @@ store the two scales. It refuses a field of view outside `(0, π)`, a non-positi
 4/3, `θ` is 27°, a vertical field of 54°. Up reads `+0x16c·+0x144`, `−(+0x168·+0x144)` and
 `+0x140` (`0x7ac778` to `0x7ac7dc`). `0x58b040` and `0x58b050` pass the matrix to the device's
 vtable slots `+0x70` and `+0x74`. The test runs `0x7ac640` to `0x7ac7df`, with `0x5c3cc0` stubbed.
+
+`gxumath::perspective_difftest` runs `0x5c3cc0` whole and `gxumath::lookat_v1_difftest` runs `0x5c3e70` whole.
 
 ## Unprojection
 
@@ -161,7 +163,7 @@ not read a camera.
 Addresses: `0x7ad2c0`, `0x58b090`, `0x58b0b0`, `0x5c43b0`
 Confidence: verified
 Proof: one
-Test: `camera::camera_frustum_split`
+Test: `camera::camera_frustum_split`, `gxumath::frustum_corners_difftest`
 
 The range test accepts 1.0: for `a = 1`, `fcomp` sets only C3, `test ah,0x41` leaves one bit, and
 `jp 0x7ad317` falls through (`0x7ad2f5`); a value above 1 or NaN gives error 0x57. `0x58b0b0` copies
@@ -174,6 +176,8 @@ value), `0x4549a0` (set), `0x621160` (add), `0x4841f0` (subtract) and `0x5f8cf0`
 corner array is destroyed by `0x4044b0` with the empty `0x4621a0`. The test runs `0x7ad2c0` whole
 with `0x5c43b0`, `0x58b090`, `0x58b0b0` and `0x4078e0` stubbed.
 
+`gxumath::frustum_corners_difftest` runs `0x5c43b0` whole.
+
 ## Orthographic setup
 
 `0x7ad7f0` takes a rectangle `r` in `ecx` and a point `p` in `edx`. With `cx = (r[1] + r[3])/2`
@@ -185,7 +189,7 @@ from `0x58a250`. Its stack argument is unused.
 Addresses: `0x7ad7f0`, `0x5c3d90`, `0x7bdca0`, `0x7bdc40`, `0x589ca0`, `0x58a250`
 Confidence: verified
 Proof: one
-Test: `camera::camera_ortho`, `terrain::liquid_tex_matrix_difftest`
+Test: `camera::camera_ortho`, `terrain::liquid_tex_matrix_difftest`, `gxumath::ortho_difftest`, `cmath::mat34_scale3_rows`
 
 `0x81d7bc` is 500.0, negated for the near side (`0x7ad8dd`). The Z flip is `0x7bdca0` with
 `(1, 1, −1)` (`0x7ad8fe` to `0x7ad913`). The shift subtracts `0.5·(r[3] − r[1])/(s[3] − s[1])`
@@ -194,6 +198,8 @@ from the matrix's x translation and adds `0.5·(r[2] − r[0])/(s[2] − s[0])` 
 this and `0x7ac640`, take x from `r[1]` and `r[3]`. It has four call sites. `0x589ca0` returns
 the device's dword at `+0x1fc` through a tail call to `0x592120`. The test runs `0x7ad7f0`
 whole with `0x589ca0` returning 0, and the shift as `0x7ad946` to `0x7ad979`.
+
+`gxumath::ortho_difftest` runs `0x5c3d90` whole and `cmath::mat34_scale3_rows` runs `0x7bdca0` whole.
 
 ## Particle density
 

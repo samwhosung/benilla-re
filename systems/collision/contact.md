@@ -194,7 +194,7 @@ r = +0xb0 and H = +0xb4, in these steps. It returns 1 unless the solid query fai
 Addresses: `0x631e70`, `0x630ac0`, `0x7bcc60`, `0x637350`, `0x637300`, `0x6372d0`, `0x6373b0`, `0x6721b0`, `0x6315f0`, `0x6320a0`, `0x6320e0`, `0x6320fe`, `0x6721c7`, `0x6721e3`, `0x637330`, `0x597ad0`, `0x63214a`, `0x7bd820`, `0x7bd700`, `0x7bdc40`, `0xc4e5a0`, `0xc4e52c`, `0xc4e564`
 Confidence: verified
 Proof: one
-Test: `collision::static_overlap_difftest`, `collision::static_overlap_transport_difftest`
+Test: `collision::static_overlap_difftest`, `collision::static_overlap_transport_difftest`, `cmath::mat4_affine_invert`
 
 `ret 0xc`. M starts as the identity; `0x7bcc60` maps p in place and m becomes m·M by rows, x =
 (m.z·M[8] + m.y·M[4]) + m.x·M[0], each rounded to float; e is float(p + m). The containment test

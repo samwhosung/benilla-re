@@ -65,7 +65,7 @@ transport space to world and the other two map back.
 Addresses: `0x7c4930`, `0x7c4a00`, `0x7c4ae0`, `0x7c4b30`, `0x7c4b80`, `0x630ac0`, `0x630b70`, `0x7bca80`, `0x7bd820`, `0xcf5d00`, `0x7c5dd0`
 Confidence: verified
 Proof: one
-Test: `collision::tf_facing_to_transport_difftest`, `collision::tf_facing_from_transport_difftest`, `collision::tf_dir_to_transport_rotation_difftest`
+Test: `collision::tf_facing_to_transport_difftest`, `collision::tf_facing_from_transport_difftest`, `collision::tf_dir_to_transport_rotation_difftest`, `cmath::mat4_affine_invert_uscale`
 
 `0x7c4b4d` is `d8 6d 08`, `fsubr m32`: `f − F`. The wrap is `fcom 2π; test ah,0x41; jne` (taken
 for less, equal and NaN), then `fcom 0.0; test ah,5; jp` (falls into `fadd 2π` only for less).
@@ -78,6 +78,8 @@ object's vtable slot `+0x14` and rotates by its slot `+0x18`; that these slots a
 position and facing is inferred from the calls; `0x7bd820(…, 1.0)` is the rigid inverse of the
 contact topic's facet gather.
 The tests run `0x7c4c2e` to `0x7c4c7c`.
+
+`cmath::mat4_affine_invert_uscale` runs `0x7bd820` whole.
 
 ## Current speed selector
 

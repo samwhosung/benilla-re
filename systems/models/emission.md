@@ -201,7 +201,7 @@ words as integers, so −0.0 counts as set.
 Addresses: `0x7b9500`, `0x7b9538`, `0x7b9598`, `0x7b963b`, `0x7b96f0`, `0x7b9737`, `0x7b9970`, `0x7b99c0`, `0x7b9a60`, `0x453390`, `0x453420`, `0x7be490`, `0x7b973f`, `0x7b9747`, `0x7b9a09`
 Confidence: verified
 Proof: one
-Test: `models::emit_shape_spline_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`, `models::spline_set_progress_difftest`, `models::spline_set_scale_difftest`
+Test: `models::emit_shape_spline_difftest`, `models::particle_quad_expand_tiled_rotated_difftest`, `models::spline_set_progress_difftest`, `models::spline_set_scale_difftest`, `cmath::axis_angle_mat3`
 
 Slot 6 clamps the start into [0, 1] at `+0x294`. Slot 7 clamps the end into [0, 1] (NaN to 1) and,
 when `|end − +0x298|` is at least 2.384186e-7, stores it at `+0x298`, sets `+0x2a4` and the rate
@@ -217,6 +217,8 @@ The zero-spread branch leaves the speed in the z slot (`0x7b95a4`).
 whole; of `0x7b9a60`, `spline_set_scale_difftest` runs `0x7b9a63`–`0x7b9a7c`;
 `particle_quad_expand_tiled_rotated_difftest` runs `0x7be490` whole.
 
+`cmath::axis_angle_mat3` runs `0x7be490` whole.
+
 ## Spawn space
 
 Without flag 0x100 the new position goes through the emitter matrix and the velocity through it as
@@ -228,7 +230,7 @@ velocity times `1 + S·variation` adds to the particle's velocity.
 Addresses: `0x7b8a9a`, `0x7b8b26`, `0x7b8b3d`, `0x7b9805`, `0x7bcb40`, `0x7bca80`, `0x7b2140`, `0x70a250`
 Confidence: verified
 Proof: one
-Test: `terrain::portal_screen_rect_difftest`, `models::burst_velocity_difftest`, `models::color_scale_apply_sum_difftest`, `models::emit_shape_plane_difftest`, `models::emit_shape_spline_difftest`, `models::particle_quad_expand_stretched_difftest`
+Test: `terrain::portal_screen_rect_difftest`, `models::burst_velocity_difftest`, `models::color_scale_apply_sum_difftest`, `models::emit_shape_plane_difftest`, `models::emit_shape_spline_difftest`, `models::particle_quad_expand_stretched_difftest`, `cmath::transform_vec4`
 
 `0x7b8aa0` tests `+0x1ac` bit 8; the clear branch calls `0x7bcb40` with w = 0 for the velocity and
 `0x7bca80` for the position, then `0x7b2140` under bit 17: it calls the callback `0xcf5758` with
@@ -241,3 +243,5 @@ Of `0x7b2140`, `color_scale_apply_sum_difftest` runs `0x7b219c`–`0x7b21aa`;
 `burst_velocity_difftest` and `emit_shape_plane_difftest` run `0x7b8890` whole;
 `emit_shape_spline_difftest` runs `0x7b9500` whole; `particle_quad_expand_stretched_difftest` runs
 `0x7bcb40` whole.
+
+`cmath::transform_vec4` runs `0x7bcb40` whole.

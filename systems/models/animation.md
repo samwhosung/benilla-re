@@ -263,7 +263,7 @@ time.
 Addresses: `0x715f45`, `0x715fdb`, `0x716005`, `0x716010`, `0x716048`, `0x716052`, `0x7161e0`, `0x716216`, `0x716384`, `0xcf043c`, `0x7bdc40`, `0x7bdca0`, `0x7bddb0`, `0x7bc6a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::quat_mul4`
 
 The centre is built once under bit 1 of `0xcf04c4` (`0x715f45`). The gates are the time counts of
 the tracks at transform `+0x1c`, `+0x38` and `+0x0` (`0x715fdb`, `0x716052`, `0x716216`). `0x7bdc40`
@@ -272,6 +272,8 @@ adds `v·rows 0–2` to row 3 (`T(v)·M`), `0x7bdca0` scales rows 0 to 2 (`S·M`
 Interpolation word 0 copies the key's value (`0x71608d`); otherwise the scale and translation lerp,
 and blend toward the blend slot when bone 0's weight is nonzero and the track has no global
 sequence. The state is `+0xb0[i]` (0x98 bytes), the matrix `+0xb4[i]`.
+
+`cmath::quat_mul4` runs `0x7bddb0` whole.
 
 ## Ensure animated
 

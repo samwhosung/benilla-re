@@ -23,13 +23,15 @@ unclamped. Both then redraw and run `OnColorSelect`, on every call, changed or n
 Addresses: `0x78eae0`, `0x78ec7d`, `0x78ec83`, `0x78ec89`, `0x78ecec`, `0x78ecfa`, `0x78ed01`, `0x7bbf20`, `0x8026c8`, `0x78e920`, `0x78e9b2`, `0x78e9de`, `0x78e9f1`, `0x7bbc80`, `0x78b220`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::color_unpack_rgb`
 
 `0x78eae0` clamps arguments 2 to 4 with `test ah,5; jp` against 0.0 and 1.0 and argument 5 the same
 way, then multiplies each by 255.0, adds 0.5 and truncates with `0x40a2b0` (`0x78ec7d` to
 `0x78ec89`). `0x7bbf20` multiplies only bytes 0 to 2 by 1/255 as a float (`0x8026c8`), and
 `0x7bbc80` writes `+0x328` (`0x78ecfa`) before `0x78bae0` (`0x78ed01`). `0x78e920` reads three
 numbers (`0x78e9b2`) into `+0x328` (`0x78e9de`) and calls `0x78bae0` (`0x78e9f1`).
+
+`cmath::color_unpack_rgb` runs `0x7bbf20` whole.
 
 ## Reading the colour
 
@@ -44,7 +46,7 @@ as they are. A grey colour has no hue: converting one with saturation 0 stores t
 Addresses: `0x78bae0`, `0x78bb05`, `0x78bb36`, `0x78bb42`, `0x78bb62`, `0x78bb8f`, `0x7bbec0`, `0x7bbec8`, `0x7bbed4`, `0x7bbeda`, `0x7bbee0`, `0x78ed10`, `0x78edda`, `0x78ede6`, `0x78edfa`, `0x78ea00`, `0x7bbd60`, `0x8029cc`, `0x804578`, `0x7bbc80`, `0x7bbcbe`, `0x7bbccd`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::color_pack_rgb`
 
 `0x78bae0` redraws through `0x78bba0`, `0x78bc20` and `0x78bcf0`; with `+0x338` set (`0x78bb05`)
 it converts with `0x7bbd60` (`0x78bb36`), packs with `0x7bbec0` (`0x78bb42`), multiplies each byte
@@ -56,6 +58,8 @@ shifts the float's bits right by 14 (`0x7bbee0`). `0x7bbc80` stores the value, t
 saturation, compares it with 0.0 (`0x7bbcbe`) and for 0 writes −1.0 (0xbf800000) to the hue and
 returns (`0x7bbccd`). `0x78ed10` repeats the conversion (`0x78edda` to
 `0x78edfa`); `0x78ea00` pushes `+0x328` to `+0x330`.
+
+`cmath::color_pack_rgb` runs `0x7bbec0` whole.
 
 ## The thumbs
 

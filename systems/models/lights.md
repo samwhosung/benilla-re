@@ -190,7 +190,7 @@ the ambient sum.
 Addresses: `0x71c2f0`, `0x4549c0`, `0x80c5c8`, `0x8029b0`, `0x71c35e`
 Confidence: verified
 Proof: one
-Test: `models::camera_facing_basis_difftest`
+Test: `models::camera_facing_basis_difftest`, `spline::vec_div_scalar_diff`
 
 `0x71c334` compares the squared length with 1e-5 and takes the fallback on C0 or C3 (`test ah,
 0x41`); otherwise `0x4549c0` multiplies by `1/length` when the length is at least 2.384186e-7 (`jnp`
@@ -199,6 +199,8 @@ unreachable. `c` reads `+0x18`, `+0x24`, `+0x30`. The scales are 1.25 and 0.25 a
 
 `camera_facing_basis_difftest` runs `0x4549c0` whole; `camera_facing_basis_difftest` runs `0x71c2f0`
 whole.
+
+`spline::vec_div_scalar_diff` runs `0x4549c0` whole.
 
 ## View-space lights
 

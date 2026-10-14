@@ -338,7 +338,7 @@ the hit list.
 Addresses: `0x7099e0`, `0x709a00`, `0x709bc4`, `0x709da8`, `0x709e64`, `0x709ec1`, `0x709fc5`, `0x70a060`, `0x7c29f0`, `0x7bcf90`, `0x7bd6c0`
 Confidence: verified
 Proof: one
-Test: `models::half_scale_difftest`, `models::segment_ray_setup_difftest`, `models::segment_sphere_difftest`, `models::segment_sphere_paths_difftest`, `models::segment_tbest_init_difftest`, `models::segment_world_distance_difftest`, `models::tri_invray_difftest`, `models::tri_t_world_difftest`
+Test: `models::half_scale_difftest`, `models::segment_ray_setup_difftest`, `models::segment_sphere_difftest`, `models::segment_sphere_paths_difftest`, `models::segment_tbest_init_difftest`, `models::segment_world_distance_difftest`, `models::tri_invray_difftest`, `models::tri_t_world_difftest`, `cmath::det4`, `cmath::mat4_inverse_from_det`
 
 The sphere centre is half of box min plus max of sequence `+0x24` (index from bone state `+0xa4`),
 radius `+0x3c`, else header `+0xb4` and `+0xcc`; the radius scales by the length of base row 0.
@@ -352,6 +352,8 @@ Of `0x7099e0`, `segment_ray_setup_difftest` runs `0x709a38`–`0x709ad7`, `half_
 `segment_sphere_paths_difftest` `0x709cf2`–`0x709e40`, `segment_tbest_init_difftest`
 `0x709e7e`–`0x709e90`, `tri_invray_difftest` `0x709f1a`–`0x709faa`, `tri_t_world_difftest`
 `0x709fde`–`0x709fef`, `segment_world_distance_difftest` `0x70a037`–`0x70a04f`.
+
+`cmath::det4` runs `0x7bcf90` whole and `cmath::mat4_inverse_from_det` runs `0x7bd6c0` whole.
 
 ## Ray triangle test
 

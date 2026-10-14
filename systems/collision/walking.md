@@ -204,13 +204,15 @@ does not read `this`.
 Addresses: `0x635d80`, `0x635d98`, `0x635dbd`, `0x635de1`, `0x635e4c`, `0x635e5d`, `0x635e63`, `0x4549f0`, `0x454980`
 Confidence: verified
 Proof: one
-Test: `collision::walk_helpers_difftest`
+Test: `collision::walk_helpers_difftest`, `spline::vec2_len2_diff`, `spline::vec3_len2_diff`
 
 `0x635d98` (`test ah,5; jp`) passes `n.z ≥ 0` and NaN; `0x635dbd` (`test ah,0x41; jnp`) zeroes
 only for `−n.z > cos 50°`. `0x635de1` calls `0x454980`, `x² + y²` of the pair. `u.x` is stored
 as a float, `u.y` stays in the register. `0x635e5d` is `de f9`, `fdivp st(1),st`:
 `st(1) = st(1)/st0 = p/c`. `0x635e63` adds 0.001 (`0x3a83126f`). `0x4549f0` is the 3D
 counterpart, `x² + y² + z²`, which the step probe uses. `ret 0x10`.
+
+`spline::vec2_len2_diff` runs `0x454980` whole and `spline::vec3_len2_diff` runs `0x4549f0` whole.
 
 ## Step-up probe
 

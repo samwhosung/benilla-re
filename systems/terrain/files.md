@@ -175,7 +175,7 @@ about y by f+0x14 degrees and about x by f+0x1c degrees, then scaled.
 Addresses: `0x694bc0`, `0x6a07f0`, `0x695100`, `0x7bdc40`, `0x7bdd60`, `0x7bdd00`, `0x7ffaac`, `0x81052c`, `0x8090d8`, `0x694c08`, `0x694c97`, `0x694cda`, `0x694d4c`
 Confidence: verified
 Proof: one
-Test: `terrain::mddf_create_xform_difftest`
+Test: `terrain::mddf_create_xform_difftest`, `cmath::mat34_scale3`
 
 The lookup hashes the unique id with mask `0xca7de4` into `0xca7ddc` and returns a def whose +0xb4
 matches and whose +0xc8 is 0 (`0x694c08`). A new def stores the negated floats as floats and then
@@ -187,6 +187,8 @@ upper-left 3×3 by the scale, each product stored, and leaves the translation. T
 +0x50 and +0x5c; `0x695100` creates the model.
 
 Of `0x694bc0`, `mddf_create_xform_difftest` runs `0x694c8b`–`0x694d8c`.
+
+`cmath::mat34_scale3` runs `0x7bdd00` whole.
 
 ## Object placements
 
