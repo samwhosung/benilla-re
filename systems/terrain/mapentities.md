@@ -169,6 +169,52 @@ Test: none
 record's `+0xc4`; the face's word is at `+2 × index` and its high byte is the material
 (`0x6a26fc`, `+1`); the record is `[root + 0x1d8] + (material << 6)` and `0x6a270f` reads its `+0x20`.
 
+## Ground id outcomes
+
+`0x6a8a20` ends by storing a ground id at `+0xdc` of the entity, when `[+8] & 0x20` is set. The id
+starts at −1. A map object hit gives the face's terrain type (`0x6a26c0`), which is 0 (Dirt) for a
+material that carries 0: only −1 is the silent value. It stays −1 when the winning group has no
+face the material trace accepts or the group is not loaded. A terrain hit gives the dominant
+layer's terrain type, and −1 when `0x69b1c0` fails. `0x6706d0` hands on every id but −1. A unit
+copies it to `+0xc60`: `0x5fa730` falls back to −1 with no entity or no id, `0x5fba95` keeps the old
+value on failure.
+
+Addresses: `0x6a8b25`, `0x6a8b2a`, `0x6a8b87`, `0x6a8b89`, `0x6a8b9a`, `0x6a8bb7`, `0x6a8bc7`, `0x6a8bea`, `0x6a8bf1`, `0x6a8bfb`, `0x6706d0`, `0x6706dd`, `0x5fa730`, `0x5fa74c`, `0x5fba89`, `0x5fba95`, `0x5fc06e`, `0x5fc20f`, `0x62341d`, `0x623749`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6a8b25` seeds `[ebp-0xc]` with −1. A map object win runs `0x6a2600`; `0x6a8b89` skips
+`0x6a26c0` when it finds no face, and `0x6a26c0` itself returns −1 for a group that `0x6a4a00` does
+not give back (`force` 0), then `0x6a8b9a` stores the result with no check. The terrain win stores
+−1 at `0x6a8bea` when `0x69b1c0` returns 0. `0x6706dd` compares with −1 only. `0x5fba95` is reached
+only when `0x6706d0` returns 1, so there is no fallback store. Four places read `+0xc60`: the
+footprint terrain argument (`0x5fc06e`), the spray (`0x5fc20f`: negative or above the id bound
+`0xc0d688` ends it; the row's `+0xc` when `0x5fc350` returns nonzero, else `+0x8`), the footstep
+sound (`0x62341d`) and the death thud (`0x623749`, which indexes with the row's `+0x10`).
+
+## Face masks
+
+A face is a candidate for a trace when its flag byte has none of the mask bits set. The nearest-object
+probe `0x6a8840` passes mask 4 to `0x6b92b0`, which ORs in 0x80 and so rejects faces with 0x84.
+The material trace `0x6a2600` passes 0x20 to `0x6a3a40`, which builds mask 0x88. The bit 0x80 is a
+visited mark the leaf writes into the loaded face bytes and the query clears when it ends.
+
+Addresses: `0x6a896a`, `0x6a8994`, `0x6b930a`, `0x6b9313`, `0x6b9319`, `0x6bc710`, `0x6bc713`, `0x6bc716`, `0x6bc719`, `0x6bc73d`, `0x6bc740`, `0x6b9284`, `0x6b928a`, `0x6a2638`, `0x6a2649`, `0x6a3a4f`, `0x6a3a60`, `0x6a3a68`, `0x6a3a70`, `0x6a3ada`, `0x6a3a40`, `0x6a2600`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6a3a4f` starts at 0xee (0xc6 when the flag has 0x10); a flag with 0x20 clears 0x24
+(`0x6a3a60`), a flag without bit 6 clears 0x02 and one without bit 14 clears 0x40, which leaves 0x88
+for flag 0x20. `0x6a3a40` hands its edi to `0x6b92b0` as the last argument (`0x6a3ada`).
+In `0x6bc700` a face with any mask bit set jumps to the reject exit (`0x6bc719`); an accepted one is
+logged and has 0x80 ORed in (`0x6bc73d`), and `0x6b9284` clears the bit on each logged face. Read over the
+seven groups of `Snow_Inn.wmo` (23 260 faces): the mask 0x84 accepts 7 605 faces, 2 899 of which
+have material 255 and bit 0x08, past the 20-record material array; the mask 0x88 accepts 20 361 and
+none of them has material 255. The ground read therefore never reaches the missing bound check of
+`0x6a26c0` in that building, and the 20 materials of the root all carry terrain type 10 (None).
+
 ## Map object box test
 
 `0x6ad330` tests a box against the loaded map objects. For each map object not marked skipped

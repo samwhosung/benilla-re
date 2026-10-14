@@ -29,6 +29,26 @@ at `0xca0578`; the array is grown (`0x69aad0`) or its surplus records destroyed 
 and `0x699d11` creates the texture of a record with no handle through `0x449d90`. Rows run from the
 last to the first.
 
+## TerrainType rows
+
+The TerrainType store holds `DBFilesClient\TerrainType.dbc`, 11 rows of 6 fields: the id, the name,
+the spray ids for running (`+0x8`) and walking (`+0xc`), the sound id (`+0x10`) and the flags
+(`+0x14`, bit 0 leaves footprints). The ids are 0 Dirt, 1 Metallic, 2 Stone, 3 Snow, 4 Wood, 5
+Grass, 6 Leaves, 7 Sand, 8 Soggy, 9 DustyGrass and 10 None. Only Snow has spray ids (11 running, 12
+walking); the sound ids are 1 to 9 for ids 0 to 8, 6 for DustyGrass and 0 for None; Snow and Sand
+have the footprint flag.
+
+Addresses: `0xc0d67c`, `0xc0d684`, `0xc0d688`, `0x699eb6`, `0x458450`, `0x458480`
+Confidence: verified
+Proof: one
+Test: none
+
+The file is read from the install. The footstep lookup keys the sound id with the creature's
+footstep id into FootstepTerrainLookup (`sound/objects#footstep-table`), where terrain 0 is reached
+only from None. Kit 7 maps terrains 0 to 9 to dry sounds 560, 560, 564, 564, 563, 649, 562, 562, 560,
+562 and wet sounds 1054, 1055, 1063, 1057, 1058, 1059, 1060, 1069, 1062, 1059. A unit on a
+building floor made of None materials gets the generic footstep and no footprint.
+
 ## Footprint spawn
 
 `0x699e70` adds a footprint: texture record index (`ecx`), the size pair pointer (`edx`), then on
