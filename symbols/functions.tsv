@@ -8733,18 +8733,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4160	25			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4c4180	25			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4c41a0	105			ui	primitive		Runs its object file code that calls OsGetCachedUnixTime; not read here	inferred	none		
-0x4c4210	3	Script::CloseLottery	idb	ui	orchestration		Implements the Lua function CloseLottery	inferred	none		
-0x4c4220	100	Script::GetLastLotteryNumbers	idb	ui	orchestration		Implements the Lua function GetLastLotteryNumbers	inferred	none		
-0x4c4290	307	Script::SubmitNumbers	idb	ui	primitive		Implements the Lua function SubmitNumbers	inferred	none		
-0x4c43d0	38	Script::IsVendorActive	idb	ui	orchestration		Implements the Lua function IsVendorActive	inferred	none		
-0x4c4400	171	Script::BuyRandomPicks	idb	ui	orchestration		Implements the Lua function BuyRandomPicks	inferred	none		
-0x4c44b0	36	Script::GetNumLotteryPrizes	idb	ui	orchestration		Implements the Lua function GetNumLotteryPrizes	inferred	none		
-0x4c44e0	232	Script::GetLotteryPrizeInfo	idb	ui	orchestration		Implements the Lua function GetLotteryPrizeInfo	inferred	none		
-0x4c45d0	20	Script::GetJackpotAmount	idb	ui	orchestration		Implements the Lua function GetJackpotAmount	inferred	none		
-0x4c45f0	62	Script::GetMoneyPrizes	idb	ui	orchestration		Implements the Lua function GetMoneyPrizes	inferred	none		
-0x4c4630	46	Script::GetNextDrawTime	idb	ui	primitive		Implements the Lua function GetNextDrawTime	inferred	none		
-0x4c4660	36	Script::GetNumPastDrawResults	idb	ui	orchestration		Implements the Lua function GetNumPastDrawResults	inferred	none		
-0x4c4690	154	Script::GetPastDrawResult	idb	ui	primitive		Implements the Lua function GetPastDrawResult	inferred	none		
+0x4c4210	3	Script::CloseLottery	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Does nothing	verified	one	ui/lottery#buying	
+0x4c4220	100	Script::GetLastLotteryNumbers	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server for the last lottery numbers	verified	one	ui/lottery#buying	
+0x4c4290	307	Script::SubmitNumbers	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends four chosen lottery numbers as a bit mask	verified	one	ui/lottery#buying	
+0x4c43d0	38	Script::IsVendorActive	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the lottery vendor value once its deadline has passed	inferred	none	ui/lottery#prizes	
+0x4c4400	171	Script::BuyRandomPicks	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Buys a number of random lottery picks	verified	one	ui/lottery#buying	
+0x4c44b0	36	Script::GetNumLotteryPrizes	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of lottery prizes	inferred	none	ui/lottery#prizes	
+0x4c44e0	232	Script::GetLotteryPrizeInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name, icon, count, quality and usability of a lottery prize	inferred	none	ui/lottery#prizes	
+0x4c45d0	20	Script::GetJackpotAmount	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the lottery jackpot	inferred	none	ui/lottery#prizes	
+0x4c45f0	62	Script::GetMoneyPrizes	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the three lottery money prizes	inferred	none	ui/lottery#prizes	
+0x4c4630	46	Script::GetNextDrawTime	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds until the next lottery draw	inferred	none	ui/lottery#draws	
+0x4c4660	36	Script::GetNumPastDrawResults	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of past lottery draw records	inferred	none	ui/lottery#draws	
+0x4c4690	154	Script::GetPastDrawResult	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the numbers and age of a past lottery draw	inferred	none	ui/lottery#draws	
 0x4c4730	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4c4750	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c4770	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -8805,9 +8805,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4cf0	40	HandleMinigameStatePacket	idb	ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4c4d20	20			ui	orchestration		Runs its object file code that calls 0x728650; not read here	inferred	none		
 0x4c4d40	16			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c4d50	43	Script::GetMinigameType	idb	ui	orchestration		Implements the Lua function GetMinigameType	inferred	none		
-0x4c4d80	109	Script::MakeMinigameMove	idb	ui	primitive		Implements the Lua function MakeMinigameMove	inferred	none		
-0x4c4df0	21	Script::GetMinigameState	idb	ui	orchestration		Implements the Lua function GetMinigameState	inferred	none		
+0x4c4d50	43	Script::GetMinigameType	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the active minigame, or nil	verified	one	ui/lottery#the-minigame	
+0x4c4d80	109	Script::MakeMinigameMove	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Makes a move in the active minigame	verified	one	ui/lottery#the-minigame	
+0x4c4df0	21	Script::GetMinigameState	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the state of the active minigame	verified	one	ui/lottery#the-minigame	
 0x4c4e10	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4c4e30	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c4e50	5			ui	orchestration		Runs its object file code not read here	inferred	none		
