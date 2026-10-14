@@ -46,3 +46,12 @@ pub fn axis_angle_mat3(axis: &[f32; 3], angle: f32, normalized: bool) -> [f32; 9
         (f(az) * f(az) * f(omc) + f(cos)) as f32,
     ]
 }
+
+/// `0x7bdb00` (`ecx` = out, `edx` = the axis; the angle and whether the axis is unit; `ret 8`):
+/// `axis_angle_mat3` in the upper 3×3 of a 4×4 whose fourth row and column are `(0, 0, 0, 1)`.
+pub fn axis_angle_mat4(axis: &[f32; 3], angle: f32, normalized: bool) -> [f32; 16] {
+    let r = axis_angle_mat3(axis, angle, normalized);
+    [
+        r[0], r[1], r[2], 0.0, r[3], r[4], r[5], 0.0, r[6], r[7], r[8], 0.0, 0.0, 0.0, 0.0, 1.0,
+    ]
+}

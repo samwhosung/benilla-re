@@ -140,3 +140,23 @@ pub fn dominant_axis(n: &[f32; 3]) -> usize {
         2
     }
 }
+
+/// `0x7bf700`: the index of the smallest `|v_i|`. `|x|` is compared with `|y|` by `test ah,5` and
+/// `jp`, which falls through only when `|x| < |y|`: then `|x| < |z|` gives 0 and anything else
+/// (a tie, NaN) 2. Otherwise (a tie, `|x| > |y|` or NaN) `|z| < |y|` gives 2 and anything else 1.
+pub fn minor_axis(v: &[f32; 3]) -> usize {
+    let ax = f(v[0]).abs();
+    let ay = f(v[1]).abs();
+    let az = f(v[2]).abs();
+    if ax < ay {
+        if ax < az {
+            0
+        } else {
+            2
+        }
+    } else if az < ay {
+        2
+    } else {
+        1
+    }
+}
