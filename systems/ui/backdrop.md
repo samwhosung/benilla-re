@@ -86,7 +86,7 @@ reads `r`, `g`, `b` and `a` clamped to 0 to 1; a missing `r`, `g` or `b` is 0 an
 Addresses: `0x77e6c0`, `0x77e6ce`, `0x77e6da`, `0x77e6e9`, `0x77e709`, `0x77e73a`, `0x77e7d8`, `0x77e7fa`, `0x77e831`, `0x77e86e`, `0x77e87b`, `0x769c5f`, `0x769c71`, `0x769c7a`, `0x6f1d60`, `0x6f1d8c`, `0x6f1e6a`, `0x6f20a0`, `0x6f23d0`, `0x6f23e2`, `0x6f23f7`, `0x77f410`, `0x77f440`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_6f1_metric_scale_divide`, `ui::glue_6f1_color_pack`, `ui::glue_6f1_clamp_quantize_boundaries`
 
 `0x77e6c0` reads the three attributes with `0x6f2cf0` (`0x77e6ce`, `0x77e6da`, `0x77e6e9`), parses `tile` with `0x6f1b30` and
 sets the edge mask like the Lua path (`0x77e73a`). It compares each child name case-blind against `TileSize`,
@@ -95,6 +95,7 @@ sets the edge mask like the Lua path (`0x77e73a`). It compares each child name c
 Lua path (`0x77e7fa` to `0x77e80c`). `0x6f23d0` starts from 0, 0, 0 and 1.0 (`0x6f23e2` to `0x6f23f7`). The colours go to
 `0x77f410` and `0x77f440` at once. The frame loader allocates the object, runs `0x77e6c0` and installs it with `0x76a5d0`
 (`0x769c5f`, `0x769c71`, `0x769c7a`).
+`ui::glue_6f1_metric_scale_divide` runs the length conversion of `0x6f1d60` and `0x6f20a0`; `ui::glue_6f1_color_pack` and `ui::glue_6f1_clamp_quantize_boundaries` the colour pack of `0x6f23d0` and its clamp and quantise leaves at their boundaries.
 
 ## The pieces and their anchors
 

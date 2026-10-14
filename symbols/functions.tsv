@@ -6530,7 +6530,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x483e40	40			ui	unreached		Runs its object file code not read here	inferred	none		
 0x483e70	14	CGWorldFrame::EndMouselook		ui	primitive	void __thiscall (CGWorldFrame *this)	Clears the mouselook bit and shows the nameplates	verified	one	ui/mouseover#mouselook	
 0x483e80	90	CGWorldFrame::BeginMouselook		ui	primitive	void __thiscall (CGWorldFrame *this)	Sets the mouselook bit, hides the nameplates and clears the mouseover	verified	one	ui/mouseover#mouselook	
-0x483ee0	476			ui	primitive		Runs its object file code that calls TransformVector4, ScaleScreenDelta; not read here	inferred	none		ui::geo_483ee0
+0x483ee0	476			ui	primitive		Projects a world point to the frame's space and answers whether it lies inside the frame	verified	one	ui/worldframe#projecting-a-world-point	ui::geo_483ee0
 0x4840c0	8	SetWorldFrameFlag		ui	primitive		Sets bit 0 of the world frame flag word at +0x3f0	verified	one	ui/smartrect#per-frame-order	
 0x4840d0	74			ui	orchestration	void __thiscall ()	Releases the model at +8 through HandleClose2 and unlinks the node from its list	verified	one	ui/worldframe#destruction	
 0x484120	49			ui	unreached		Runs its object file code that calls HandleClose2, 0x484160; not read here	inferred	none		
@@ -6916,7 +6916,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4901e0	98	GetConfiguredAspect		ui	primitive	float __cdecl ()	Returns the gxResolution width over height when widescreen is on, else 4/3	verified	one	ui/uiscale#the-automatic-scale	ui::glue_4901e0_aspect_ratio
 0x490250	302	CGGameUI::RegisterScriptFunctions		ui	primitive		Registers the frame types, the game C functions of 0x83de68 and 53 files of functions as globals	verified	one	ui/luastate#the-c-function-contract	
 0x490380	596	LayoutCacheRead		ui	primitive	void __fastcall (void *unused, HANDLE file, void *unused2)	Parses the layout cache file into records and applies each to its frame	verified	one	ui/layoutcache#reading-a-record	
-0x4905e0	316			ui	primitive		Runs GameUI.cpp code that calls CSimpleFrame::SetFrameLevel, CLayoutFrame::ClearAllPointsThunk and 5 more; not read here	inferred	none		ui::glue_4905e0_device_position
+0x4905e0	316			ui	primitive		Applies a saved layout record to a frame, converting its device position and size	verified	one	ui/layoutcache#applying-a-record	ui::glue_4905e0_device_position
 0x490720	77	ValidateNearestDistance		ui	primitive	uint8_t __stdcall (const char *text, void *arg)	Accepts a nearest-target distance option from 1 to 50, else prints the range and refuses	verified	one	ui/targeting#collecting-the-candidates	
 0x490770	115	UiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies a new uiScale text to UIParent when useUiScale is on, capped for narrow windows	verified	one	ui/uiscale#applying-a-scale	ui::glue_490770_eps_gates
 0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	ui::glue_48fbf0_finite_diff, ui::glue_490770_eps_gates
@@ -6925,7 +6925,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
 0x490ce0	301	CGGameUI::UnregisterScriptFunctions		ui	orchestration	void __cdecl ()	Unregisters the frame types, the game C functions of 0x83de68 and 53 files of functions	verified	one	ui/scriptapi#unregistrars	
 0x490e10	75	LayoutCacheWrite		ui	orchestration	void __fastcall (void *unused, HANDLE file, CSimpleTop *top)	Writes a record for every frame of the top's list that passes the saved-frame test	verified	one	ui/layoutcache#which-frames-are-saved	
-0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		ui::glue_4c0_490e60_round_pos_legs
+0x490e60	799			ui	primitive		Saves one frame's position and size as a layout record, rounded to device units	verified	one	ui/layoutcache#which-frames-are-saved	ui::glue_4c0_490e60_round_pos_legs
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	orchestration		Runs the shutdown of every interface module in order, resets three CVars and clears 14 message handlers	verified	one	ui/gameui#game-shutdown	
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration	void __fastcall ()	Sets the reload byte 0xb4b3f4 when the protected-action gate allows tag 10	verified	one	ui/bindings#reloading-the-interface	
 0x4913a0	16	DrainWorldFadingModels		ui	orchestration		Drains the fading models of the world frame when one exists	verified	one	ui/gameui#cursor-and-camera	
@@ -7447,9 +7447,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6e80	15	InitDouble4a6e80		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4a6e90	5	InitQuotient4a6ea0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4a6ea0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4a6ea0	19	InitQuotient4a6ea0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4a6ec0	567			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		ui::geo_4a6ec0
+0x4a6ec0	567			ui	primitive		Returns the area id under a point of the displayed map, or 0	verified	one	ui/geometry#the-cell-of-a-point	ui::geo_4a6ec0
 0x4a7100	418	MapPointToWorld		ui	unreached		Converts a point of the selected map to a world position and map id, or answers 0	verified	one	ui/worldmap#unreached-map-teleport	
-0x4a72b0	104			ui	primitive		Runs its object file code that calls 0x4a7320; not read here	inferred	none		ui::geo_4a72b0
+0x4a72b0	104			ui	primitive		Maps a world position onto the world map view, with the vertical axis flipped	verified	one	ui/geometry#world-to-map	ui::geo_4a72b0
 0x4a7320	64	FindWorldMapContinent		ui	primitive		Returns the WorldMapContinent row for a map id, or 0	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7360	478	ProjectWorldPosition		ui	primitive		Normalises a world position to the displayed map for a map id	verified	one	ui/worldmap#unit-and-corpse-positions	ui::geo_4a7360
 0x4a7540	212	DrillMap		ui	primitive		Selects the continent or zone whose rectangle holds the cursor	verified	one	ui/worldmap#hover-and-click	
@@ -7815,20 +7815,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b0900	31	InitZero4b0900		ui	orchestration	void __cdecl (void)	Zeroes 3 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4b0920	12	InitZero4b0900Register		ui	orchestration	void __cdecl (void)	Registers 0x4b0930 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4b0930	1	InitZero4b0900Exit		ui	orchestration	void __cdecl (void)	Returns at once	verified	one	ui/initexits#exits-that-return	
-0x4b0940	610			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CSimpleFrame::CSimpleFrame, SMemAlloc, 0x77e5f0 and 11 more; not read here	inferred	none		ui::glue_4b0_4b0940_px_unit_idiom
+0x4b0940	610			ui	primitive		Builds a chat bubble frame for an empty bubble list	inferred	none	ui/chatbubble#the-bubble-lists	ui::glue_4b0_4b0940_px_unit_idiom
 0x4b0bb0	116	CGChatBubbleFrame::DeletingDestructor		ui	orchestration	void * __thiscall (uint32_t flags)	Unlinks a chat bubble from its list and frees it when flag bit 0 is set	verified	one	ui/chatbubble#the-bubble-lists	
-0x4b0c30	617			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CM2Model::IsLoaded, CWorld::IsEntityDrawn, 0x4b0ee0 and 5 more; not read here	inferred	none		ui::dist2_4b0c30
+0x4b0c30	617			ui	primitive		Decides a bubble's fate each frame: destroys it, starts its fade-out or keeps it	verified	one	ui/chatbubble#fades	ui::dist2_4b0c30
 0x4b0ea0	59	CGChatBubbleFrame::StartFadeIn		ui	primitive	void __thiscall ()	Starts a 250 ms fade in and shows the frame unless it is fading in or in its final fade out	verified	one	ui/chatbubble#fades	
 0x4b0ee0	70	CGChatBubbleFrame::StartFadeOut		ui	primitive	void __thiscall (bool final)	Starts a 250 ms fade out, marking it final when asked	verified	one	ui/chatbubble#fades	
 0x4b0f30	1	InitChatBubbles		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
 0x4b0f40	50	FreeBubblePool		ui	orchestration		Destroys and frees every bubble on the free list and clears the bubble flag byte	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b0f80	209	RetireAllBubbles		ui	orchestration	void __cdecl ()	Retires every live bubble: releases the speaker's bubble, or hides it and frees it when the speaker is gone	verified	one	ui/chatbubble#the-bubble-lists	
-0x4b1060	757			ui	primitive		Runs ChatBubbleFrame.cpp code that calls GetActiveCamera, 0x4b1de0, ClntObjMgrGetActivePlayer and 10 more; not read here	inferred	none		ui::dist2_4b1060
+0x4b1060	757			ui	primitive		Walks the bubble list each frame, hiding and freeing bubbles that fail the gates	inferred	none	ui/chatbubble#the-bubble-lists	ui::dist2_4b1060
 0x4b1360	251	InsertBubbleByDistance		ui	primitive	void __thiscall ()	Links a bubble into the live list before the first bubble that is nearer the camera	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b1460	58	PlaceChatBubbles		ui	orchestration	void __thiscall (void *worldFrame)	Places every live bubble on the screen, then lays out the pending frames	verified	one	ui/chatbubble#placing-the-bubble	
-0x4b14a0	231			ui	primitive		Runs ChatBubbleFrame.cpp code that calls ClntObjMgrObjectPtr, 0x483ee0, PixelAlignX and 2 more; not read here	inferred	none		ui::glue_4b0_4b14a0_move_gate
+0x4b14a0	231			ui	primitive		Projects a bubble's anchor and snaps its position to whole pixels	verified	one	ui/chatbubble#placing-the-bubble	ui::glue_4b0_4b14a0_move_gate
 0x4b1590	110	CGChatBubbleFrame::Release		ui	orchestration	void __thiscall ()	Hides a bubble and moves it to the free list	verified	one	ui/chatbubble#the-bubble-lists	
-0x4b1600	517			ui	primitive		Runs ChatBubbleFrame.cpp code that calls 0x7716f0, SStrChr, SStrCmp and 9 more; not read here	inferred	none		ui::glue_4b0_4b1600_hi_bound
+0x4b1600	517			ui	primitive		Spawns a bubble: strips the line, sizes its frame and starts its lifetime	inferred	none	ui/chatbubble#spawning-a-bubble	ui::glue_4b0_4b1600_hi_bound
 0x4b1810	91	ChatBubbleDuration		ui	primitive	uint32_t __fastcall (const char *text, bool isSelf)	Returns a bubble's lifetime in ms from the separator runs of its text	verified	one	ui/chatbubble#lifetime	
 0x4b1870	153	AcquireChatBubble		ui	orchestration	CGChatBubbleFrame * __thiscall (void *parent)	Takes a bubble from the free list or builds one, and links it on the live list	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b1910	5	InitDouble4b1920Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b1920, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10602,15 +10602,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eaa30	86	ProjectBlip		ui	primitive	void __thiscall (float player_a, float player_b, float radius, float entity_a, float entity_b, float width, float scale)	Writes a blip's disc position from its offset to the player over the zoom radius, with no rotation	verified	one	ui/minimapblips#the-north-up-disc	ui::geo_4eaa30
 0x4eaa90	629	ClassifyObjectDot		ui	primitive	uint32_t __fastcall (void *list, uint32_t guid_lo, uint32_t guid_hi)	Classifies an object into a dot cell, or skips it, and appends its dot	verified	one	ui/minimapblips#object-dots	ui::dist2_4eaa90
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ead90	113			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		ui::geo_4ead90, ui::geo_4eb910
+0x4ead90	113			ui	primitive		Writes the difference of a value and a table's pair to a float, doubling it, for the minimap	verified	one	ui/minimap#two-small-helpers	ui::geo_4ead90, ui::geo_4eb910
 0x4eae10	229	DrawOutdoorTile		ui	primitive	void __fastcall (void *record, uint32_t index, const uint32_t *colour)	Draws one outdoor tile record through its texture and the circular mask	verified	one	minimap/draw#outdoor-tile-draw	
-0x4eaf00	319	Minimap::ClipBlipRect		ui	primitive	void __thiscall (uint32_t index, float p, float q, float h, float u, float v)	Clips a square to a record of the rectangle table and builds its quad when the overlap has extent	verified	one	ui/minimap#blip-rectangle-clip	ui::glue_4ea_4eaf00_bbox_edges
+0x4eaf00	319			ui	primitive		Computes four edge values of a bounding box clamp from a base and a width	inferred	none	ui/minimap#two-small-helpers	ui::glue_4ea_4eaf00_bbox_edges
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
 0x4eb0c0	1983			ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnMouseMove, CLayoutFrame::GetRect and 5 more; not read here	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::glue_4eb0c0_range_and_light
 0x4eb880	46	CMinimap::OnLeave		ui	orchestration	void __thiscall (CMinimap *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	one	ui/mouse#enter-and-leave	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4eb910	639	Minimap::BuildBlipQuad		ui	primitive	void __thiscall (const float *clipped, uint32_t index, const float *pq, float h, const float *square, float u, float v)	Writes the four corners, doubled offsets and fractions of a clipped blip rectangle into the object	verified	one	ui/minimap#blip-quad-geometry	ui::geo_4eb910
+0x4eb910	639			ui	primitive		Builds the minimap quad from a four-float rectangle through 0x4ead90	inferred	none	ui/minimap#two-small-helpers	ui::geo_4eb910
 0x4ebb90	97			ui	orchestration		Calls the blip rectangle clip for 512 objects of 0xa4 bytes; the loop is read, the rest not	inferred	none	ui/minimap#blip-rectangle-clip	
 0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4ebc00_gradient
 0x4ebe50	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
@@ -12043,17 +12043,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x509450	141	SmartRectTeardown		ui	orchestration		Frees the claim worklist, the node pool and the arrays of claim lists 0 and 1; one caller, 0x481d7d	verified	one	ui/smartrect#freeing-the-lists	
 0x5094e0	29	SmartScreenRectClearAllGrids	idb	ui	primitive		Zeroes the counts of claim lists 0 and 1	verified	one	ui/smartrect#claim-lists	
 0x509500	26	ResetClaimList		ui	primitive	void __fastcall (int list)	Zeroes the count of a claim list of id 0 to 2, keeping its array	verified	one	ui/smartrect#claim-lists	
-0x509520	313			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, 0x509e20 and 2 more; not read here	inferred	none		ui::glue_509_509520_viewport_clamp
+0x509520	313			ui	primitive		Clamps a rectangle's seat on the viewport from its half extents	verified	one	ui/smartrect#the-combat-text-seat	ui::glue_509_509520_viewport_clamp
 0x509660	191	ClaimRect		ui	primitive	void __fastcall (int list, RECT *rect)	Appends a rectangle to a claim list, growing its array in steps	verified	one	ui/smartrect#claim-lists	
-0x509720	120			ui	primitive		Runs its object file code that calls 0x5097a0; not read here	inferred	none		ui::glue_509_509720_midpoint
+0x509720	120			ui	primitive		Solves a rectangle's centre and flags a change, taking a midpoint	verified	one	ui/smartrect#the-nameplate-seat	ui::glue_509_509720_midpoint
 0x5097a0	710	SearchRectPlacement		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT *rect)	Searches breadth first for the nearest free place for a rectangle, or answers it unchanged	verified	one	ui/smartrect#the-placement-search	
 0x509a70	136	RecycleWorklist		ui	primitive		Moves every worklist node onto the free pool	verified	one	ui/smartrect#the-placement-search	
 0x509b00	230	NewPlacementNode		ui	primitive		Takes a node from the pool or allocates 0x1c bytes, links it at the worklist head with strategy -1	verified	one	ui/smartrect#the-placement-search	
-0x509bf0	388			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight; not read here	inferred	none		ui::geo_509bf0
+0x509bf0	388			ui	primitive		Builds the flag word of the screen edges a rectangle crosses	verified	one	ui/smartrect#pushes-by-region	ui::geo_509bf0
 0x509d80	73	PickPushRegion		ui	primitive	int __fastcall (int flags)	Maps the four edge flags to the region 0 to 8 that picks the order of pushes	verified	one	ui/smartrect#pushes-by-region	
-0x509dd0	72			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, __ftol; not read here	inferred	none		ui::glue_509_509dd0_ratio_product
-0x509e20	154			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight; not read here	inferred	none		ui::geo_509e20
-0x509ec0	401			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, 0x509e20 and 4 more; not read here	inferred	none		ui::glue_509_509ec0_axis_resolve
+0x509dd0	72			ui	primitive		Returns the product of two cell counts, each a truncated ratio plus one	verified	one	ui/smartrect#the-placement-search	ui::glue_509_509dd0_ratio_product
+0x509e20	154			ui	primitive		Moves a rectangle onto the screen keeping its size, clamping top, bottom, left, right	verified	one	ui/smartrect#normalising-a-rectangle	ui::geo_509e20
+0x509ec0	401			ui	primitive		Solves one axis of a nameplate's seat and anchors it	verified	one	ui/smartrect#the-nameplate-seat	ui::glue_509_509ec0_axis_resolve
 0x50a060	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50a070	15			unassigned			Runs its object file code not read here	inferred	none		
 0x50a080	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -29611,10 +29611,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive	bool __stdcall (lua_State *L, int index, bool defaultValue)	Reads a script argument as a flag: nil 0, boolean itself, number truncated, string by first letter or keyword	verified	one	ui/actionuse#reading-a-script-flag	
-0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		ui::glue_6f1_metric_scale_divide
+0x6f1d60	328			ui	primitive		Converts a length attribute of an XML element and stores it, or a relative value unconverted	verified	one	ui/backdrop#the-xml-element	ui::glue_6f1_metric_scale_divide
 0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	ui::glue_6f1_metric_scale_divide
-0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		ui::glue_6f1_metric_scale_divide
-0x6f23d0	601			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, __ftol; not read here	inferred	none		ui::glue_6f1_clamp_quantize_boundaries, ui::glue_6f1_color_pack
+0x6f20a0	806			ui	primitive		Reads four length attributes of an XML element into out values	verified	one	ui/backdrop#the-xml-element	ui::glue_6f1_metric_scale_divide
+0x6f23d0	601			ui	primitive		Reads a colour element's four channels, clamping and quantising them	verified	one	ui/backdrop#the-xml-element	ui::glue_6f1_clamp_quantize_boundaries, ui::glue_6f1_color_pack
 0x6f2630	182	ParseGradientElement		ui	orchestration		Reads a gradient orientation and its minimum and maximum colours	verified	one	ui/texture#a-gradient-element	
 0x6f26f0	143	FrameXML::AddTextureElement		ui	orchestration	CSimpleTexture * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a texture region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
 0x6f2780	143	FrameXML::AddFontStringElement		ui	orchestration	CSimpleFontString * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a font string region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
@@ -33191,8 +33191,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7664f0	195	CSimpleTop::OnMouseWheel		ui	orchestration		Handles category 0x10: offers the wheel to hit frames of the wheel lists from stratum 8 down	verified	one	ui/input#the-handlers	
 0x7665c0	134	CSimpleTop::OnWindowSize		ui	orchestration		Handles category 0x1c: refreshes the fonts and every frame's regions, then the host's size callback	inferred	none	ui/input#the-handlers	
 0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	verified	one	ui/keyscripts#deactivating-the-window	
-0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal size to a whole number of screen pixels	inferred	none		ui::glue_765_7666a0_ratio_round_x
-0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical size to a whole number of screen pixels	inferred	none		ui::glue_765_766750_ratio_round_y
+0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal length up to whole device pixels	verified	one	ui/regions#pixel-alignment	ui::glue_765_7666a0_ratio_round_x
+0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical length up to whole device pixels	verified	one	ui/regions#pixel-alignment	ui::glue_765_766750_ratio_round_y
 0x766800	5	TopInitTwoPiThunk		ui	orchestration		Jumps to 0x766810; a static initializer	verified	one	ui/README#static-initializers	
 0x766810	15	TopInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x766820	5	TopInitInvTwoPiThunk		ui	orchestration		Jumps to 0x766830; a static initializer	verified	one	ui/README#static-initializers	
@@ -34690,20 +34690,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79a780	270	Texture::SetDrawLayer	idb	ui	primitive		Implements the Texture method SetDrawLayer	verified	one	ui/texture#draw-layer-and-blend-mode	
 0x79a890	188	Texture::GetBlendMode	idb	ui	primitive		Implements the Texture method GetBlendMode	verified	one	ui/texture#draw-layer-and-blend-mode	
 0x79a950	256	Texture::SetBlendMode	idb	ui	primitive		Implements the Texture method SetBlendMode	verified	one	ui/texture#draw-layer-and-blend-mode	
-0x79aa50	376	Texture::GetVertexColor	idb	ui	primitive		Implements the Texture method GetVertexColor	inferred	none		ui::luabind_79a_get_vertex_color, ui::luabind_79a_normalize_full_domain
-0x79abd0	594	Texture::SetVertexColor	idb	ui	primitive		Implements the Texture method SetVertexColor	inferred	none		ui::luabind_79a_set_vertex_color
-0x79ae30	806	Texture::SetGradient	idb	ui	primitive		Implements the Texture method SetGradient	inferred	none		ui::luabind_79a_set_gradient
+0x79aa50	376	Texture::GetVertexColor	idb	ui	primitive		Answers the texture's vertex colour as r, g, b, a, or white unless it holds one entry	verified	one	ui/texture#two-colour-stores	ui::luabind_79a_get_vertex_color, ui::luabind_79a_normalize_full_domain
+0x79abd0	594	Texture::SetVertexColor	idb	ui	primitive		Stores a clamped, packed vertex colour as the texture's only entry	verified	one	ui/texture#setting-a-vertex-colour	ui::luabind_79a_set_vertex_color
+0x79ae30	806	Texture::SetGradient	idb	ui	primitive		Gives the four corners two colours by orientation, with alpha 1	verified	one	ui/texture#gradients	ui::luabind_79a_set_gradient
 0x79b160	5	InitInfinity79b170Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x79b170, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x79b170	11	InitInfinity79b170		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Implements the Texture method SetGradientAlpha	inferred	none		ui::luabind_79a_pack_color_pair
-0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Implements the Texture method SetAlpha	inferred	none		ui::luabind_79a_set_alpha
+0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Gives the four corners two colours with alphas by orientation	verified	one	ui/texture#gradients	ui::luabind_79a_pack_color_pair
+0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Replaces the alpha of the vertex colour with the value times 255, truncated and unclamped	verified	one	ui/texture#setting-a-vertex-colour	ui::luabind_79a_set_alpha
 0x79b690	222	Texture::GetAlpha	idb	ui	primitive		Pushes the alpha byte of the texture's vertex colour times 1/255 as a double	verified	one	ui/framemethods#strata-level-and-texture-alpha	
 0x79b770	180	Texture::Show	idb	ui	primitive		Implements the Texture method Show	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79b830	180	Texture::Hide	idb	ui	primitive		Implements the Texture method Hide	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79b8f0	178	Texture::IsVisible	idb	ui	primitive		Implements the Texture method IsVisible	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79b9b0	178	Texture::IsShown	idb	ui	primitive		Implements the Texture method IsShown	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79ba70	205	Texture::GetTexture	idb	ui	primitive		Implements the Texture method GetTexture	verified	one	ui/texture#reading-the-image-and-the-coordinates	
-0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Implements the Texture method SetTexture	inferred	none		ui::luabind_79a_set_vertex_color
+0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Loads an image file, sets a solid fill from numbers or clears the image, answering 1 or nil	verified	one	ui/texture#settexture	ui::luabind_79a_set_vertex_color
 0x79bdf0	190	Texture::GetTexCoord	idb	ui	primitive		Implements the Texture method GetTexCoord	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79beb0	451	Texture::SetTexCoord	idb	ui	primitive		Stores four corner texture coordinates from 4 or 8 numbers	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79c080	159	Texture::SetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method SetTexCoordModifiesRect	verified	one	ui/texture#reading-the-image-and-the-coordinates	

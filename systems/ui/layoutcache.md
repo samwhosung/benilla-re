@@ -24,7 +24,7 @@ governs nothing but this file.
 Addresses: `0x490c79`, `0x490e10`, `0x490e24`, `0x490e60`, `0x490e72`, `0x490e7f`, `0x490e88`, `0x490e8e`, `0x490e97`, `0x76a3c0`, `0x49067e`, `0x490706`, `0x7652e5`, `0x776b36`, `0x776a50`, `0x776ad5`, `0x776b40`, `0x776bc5`, `0x5afed0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4c0_490e60_round_pos_legs`
 
 `0x490c79` hands `0x490e10` to `0x5afed0` for section 6, which opens the file for writing only while
 the section is not pending. `0x490e10` walks `[top+0xcc4]` by the link offset `[top+0xcbc]`, 0x304,
@@ -33,6 +33,7 @@ to `0x490e82`), `test ah,0x10` (`0x490e8e`) and `test ah,0x3` (`0x490e97`). Ever
 goes through `0x76a3c0`; its fourteen callers set `0x1000` at `0x49067e`, `0x490706`, `0x7652e5` and
 `0x776b36` only, and a census of loads of `+0xb4` followed by a test of that bit finds `0x490e88` and
 `0x776bc5` only.
+`ui::glue_4c0_490e60_round_pos_legs` runs the four position legs (`(v − Y) / div · 1024`, `/ 0.8`, a `0.5` bias, `__ftol`) natively across `0x41ad70` and `0x41ae40`.
 
 ## The text of a record
 
@@ -89,7 +90,7 @@ at once. A frame at the corner (0, 0) is therefore never moved, and any authored
 Addresses: `0x4905e0`, `0x4905f5`, `0x490600`, `0x490607`, `0x49061a`, `0x490670`, `0x49067e`, `0x490689`, `0x4906c7`, `0x4906fa`, `0x490706`, `0x490710`, `0x767ed0`, `0x767620`, `0x767c70`, `0x76a4f0`, `0x7683d0`, `0x7683f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4905e0_device_position`
 
 `0x4905e0` takes the frame in `ecx`, the level in `edx` and `X`, `Y`, `W`, `H` on the stack. It
 returns for a null frame (`0x4905e6`), calls `0x76a4f0(level, 1)` for a level of 0 or more, and
@@ -98,6 +99,7 @@ tests `+0xb4` bit `0x100` (`0x490600`). `0x767ed0` jumps to `0x767620`, which em
 dividing by `0x41ad70·1024` and `0x41ae60`. The size block tests bit `0x200` and calls the layout
 slots 5 and 6, `0x7683d0` and `0x7683f0`. `0x490710` calls `0x7680e0(1)` on every path that gets
 past the null test.
+`ui::glue_4905e0_device_position` runs the `fmul` by 1024.0 and `fdivr` of the device position as a copied-byte island; the body is shared by four byte-identical sites.
 
 ## Starting a drag
 

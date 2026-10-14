@@ -20,7 +20,7 @@ the active player. A bubble that is not drawn by the scene does not stop the spa
 Addresses: `0x608ac0`, `0x608ae5`, `0x608b0d`, `0x608b1d`, `0x608b2a`, `0x608b4b`, `0x608ba0`, `0x608bb4`, `0x608bbf`, `0x608be6`, `0x49acd9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4b0_4b1600_hi_bound`
 
 A line the spam filter catches returns before the bubble (`0x49ab23` to `0x49afd7`). The distance test is
 `0x608ba0 test ah,0x41; je`, which falls through on an unordered compare.
@@ -33,6 +33,7 @@ distance is above 400. `0x608bb4` releases the unit's old bubble first, so a new
 the new bubble is stored at `+0xe64` (`0x608bc7`) and built with the unit's GUID (`0x608be6`). The
 `0x608c00` release is also called by the bubble walk, the unit teardown (`0x5fb627`, `0x5fbbb0`) and
 the plate set-up (`0x608752`).
+`ui::glue_4b0_4b1600_hi_bound` runs `0x4b172c` to `0x4b1757` of `0x4b1600`: the pixel-to-unit conversion with k = 16, doubled, the upper bound of the clamp.
 
 ## Lifetime
 
@@ -67,7 +68,7 @@ frame. Neither reads the alpha the frame holds, so a fade-out that interrupts a 
 Addresses: `0x4b0ea0`, `0x4b0ee0`, `0x4b0c30`, `0x4b0d03`, `0x4b0d21`, `0x4b0d2e`, `0x4b0d3e`, `0x4b0d5b`, `0x4b0d78`, `0x4b0d80`, `0x4b0d88`, `0x4b0da7`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_4b0c30`
 
 `0x4b0ea0` returns when `+0x320` has bit 1 or 4 (`0x4b0ea9`); otherwise it clears bit 2, sets bit
 1, stamps `+0x33c`, writes `[+0xd0] = 1` and tail-jumps to the frame's show slot `+0x88`.
@@ -77,6 +78,7 @@ frame is not already fading out and `now − +0x338 > +0x340 + 250` (`0x4b0d21`,
 divides by 250 as a multiply by `0x10624dd3` and a shift by 4 (`0x4b0d61`). When a fade-out passes
 250 ms the update returns 0 for a final one (`0x4b0d82`), and otherwise clears bits 2 and 4,
 writes `[+0xd0] = 0` and calls the hide slot `+0x84` (`0x4b0d9f`).
+`ui::dist2_4b0c30` runs the float deltas of `0x4b0c30` and then the compare as two slices.
 
 ## The update gates
 
@@ -113,7 +115,7 @@ fade-in shows it and runs `OnShow`.
 Addresses: `0x4b1060`, `0x4b1360`, `0x4b13a0`, `0x4b1870`, `0x4b187e`, `0x4b1590`, `0x4b1198`, `0x4b11c0`, `0x4b12de`, `0x4b1309`, `0x4b17da`, `0x4b17f7`, `0x4b0f40`, `0x4b0f80`, `0x4b0940`, `0x4b0bb0`, `0xb6eff0`, `0xb6effc`, `0xb6f038`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4b0_4b0940_px_unit_idiom`, `ui::dist2_4b1060`
 
 `0x4b1060` compares the camera position (`0x4818f0` plus 8) with the cache `0xb6eff0` (valid when `0xb6effc` is set). For each bubble from the head `0xb6f038` it looks the speaker up by the GUID at `+0x348`; a miss
 hides the bubble and appends it to the free list (`0x4b1198`), otherwise `0x4b0c30` runs and a 0
@@ -205,7 +207,7 @@ edge is placed as computed.
 Addresses: `0x4b1460`, `0x4b14a0`, `0x4b14e4`, `0x4b14f2`, `0x4b14fb`, `0x4b1507`, `0x4b1525`, `0x4b153d`, `0x4b157a`, `0x483ee0`, `0x7666a0`, `0x766750`, `0x767c70`, `0x768ed0`, `0x48377b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4b0_4b14a0_move_gate`
 
 `0x4b1460`, called by the frame driver `0x483460` at `0x48377b`, runs `0x4b14a0` over the live list
 and tail-jumps to `0x768ed0`, the layout pass. `0x4b14a0` zeroes its point (`0x4b14e4`), projects
@@ -216,3 +218,4 @@ truncates (`0x40a2b0`) and returns `K · n / pixels`, so positive values round u
 `0x4b153d` call `SetPoint` only when `|Δx| ≥ 2^-22` or `|Δy| ≥ 2^-22` against the cached point
 `+0x324`, `+0x328`. The call pushes 1, y, x, 6, the world frame region `+0x24`, 7 on the text's layout part
 (`+0x31c` plus `0x24`). No term depends on time except the fades.
+`ui::glue_4b0_4b14a0_move_gate` runs the per-axis moved test of `0x4b14a0` (`fsub`, `fabs`, `fcomp` against the epsilon, `test ah,5`) through its branch outcome.

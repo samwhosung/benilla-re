@@ -186,8 +186,9 @@ unless it already is a whole number of pixels, and a negative length is truncate
 Addresses: `0x7666a0`, `0x7666b3`, `0x7666e0`, `0x7666f6`, `0x76670a`, `0x76671f`, `0x766725`, `0x766737`, `0x766750`, `0x7667ba`, `0x7667cf`, `0x7667e7`, `0x41ae40`, `0x41ae50`, `0x41ae60`, `0x41ae70`, `0x58a250`, `0x808120`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_765_7666a0_ratio_round_x`, `ui::glue_765_766750_ratio_round_y`
 
 `0x7666b3` compares the length with the float 2.38e-07 (`0x8029d4`). `0x7666e0` reads the viewport as four floats from the device (`0x58a250`) and takes right less left
 as the horizontal pixel count (`0x7666e8`); `0x766750` takes top less bottom (`0x766798`). `0x76670a` divides by the screen scale with `0x41ae40` (`0x7667ba` with `0x41ae50` for the vertical), `0x76671f`
 adds the float at `0x808120`, 0.99999, when the product is above zero, and `0x766725` truncates. `0x766737` multiplies by the scale again with `0x41ae60` (`0x7667e7` with `0x41ae70`).
+`ui::glue_765_7666a0_ratio_round_x` and `ui::glue_765_766750_ratio_round_y` run the arithmetic of `0x7666a0` and `0x766750` (two `fabs`, a `fsub`, `fmul`, `fadd` and `fdiv`) with the divisors 0.8 and 0.6.

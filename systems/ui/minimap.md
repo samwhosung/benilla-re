@@ -179,7 +179,7 @@ ninth is anchored the same way with offsets 0.001 and 0.001 (`0x3a83126f`, `0x4e
 Addresses: `0x4ef370`, `0x4ef37b`, `0x4ef389`, `0x4eb962`, `0x76b119`, `0x4ead90`, `0x4eadc5`, `0x4eaddd`, `0x4eadeb`, `0x4eadf0`, `0x4eb9fe`, `0xbc7810`
 Confidence: verified
 Proof: one
-Test: `ui::geo_4ead90`, `ui::geo_4eb910`
+Test: `ui::geo_4ead90`, `ui::geo_4eb910`, `ui::glue_4ea_4eaf00_bbox_edges`
 
 `0x4ef370` is a `__thiscall` that moves its arguments to `[ecx]`, `[ecx+4]`, `[ecx+8]` and `[ecx+0xc]` as plain dwords and returns `ecx` (`ret 0x10`,
 `0x4ef37b` to `0x4ef389`). Its callers are `0x4eb962`, which passes four differences of a rectangle and a point (`0x4eb93f` to `0x4eb95c`), and `0x76b119`.
@@ -213,6 +213,7 @@ Test: `ui::geo_4eb910`
 `0x4eb939` to `0x4eb962` store the four differences as floats through `0x4ef370` at `[ebp-0x1c]`. `0x4eb967` doubles `h` with a float store and divides 1.0 by it on the x87 stack, so `inv` keeps 53 bits; each fraction is the product, rounded to 53 bits on the stack, then stored as a float (`0x4eb97b` to `0x4eb9ce`, stored at `+0x50` to `+0x6c`). `0x4eba03` to `0x4eba60` copy the output of `0x4ead90` (called at `0x4eb9fe` with the clipped rectangle) to `+0x30`. `0x4ebace` forms `u·v` at 53 bits and stores it as a float. `s·x0f` and `s·x1f` multiply that float by the float fractions and store the product; `s − s·y1f` subtracts the 53-bit product from the float `s` and stores the result (`0x4ebaf9`, `fsubr` is `m32 − st0`); `X0` multiplies two unrounded 53-bit values (`0x4ebada`), which differs from `s·y0f`.
 
 `ui::geo_4ead90` runs `0x4ead90` whole on a seeded table entry, and `ui::geo_4eb910` runs `0x4eb910` whole with `0x4ead90` real.
+`ui::glue_4ea_4eaf00_bbox_edges` runs `0x4eaf24` to `0x4eaf4e` of `0x4eaf00`, the four edge values (two `fsub`, two `fadd`).
 
 ## Lua methods
 

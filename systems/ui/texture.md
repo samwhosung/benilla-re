@@ -22,11 +22,12 @@ vertex colour of two or more entries, a gradient, reads back white as well as an
 Addresses: `0x77f8c0`, `0x770300`, `0x77f8c8`, `0x77f900`, `0x77f903`, `0x77f750`, `0x7706e0`, `0x7706e3`, `0x7706eb`, `0x79aa50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_79a_get_vertex_color`, `ui::luabind_79a_normalize_full_domain`
 
 `0x77f8c0` copies the four bytes from the arrays when the colour count is 1 (`0x77f8c3`, `0x77f8c8`) and stores `0xffffffff` for any other count
 (`0x77f900`, `0x77f903`): none, or the four of a gradient. `0x770300` replaces the image handle with a referenced one, closing the old and marking the texture dirty. The emit `0x7706e0` tests the image handle alone (`0x7706e3`, `0x7706eb`), so a texture with neither a
 file nor a colour draws nothing, and a vertex colour alone never draws.
+`ui::luabind_79a_get_vertex_color` runs `0x79ab08` to `0x79abbd` of `0x79aa50` (the four pushes through a stubbed `0x6f3810`); `ui::luabind_79a_normalize_full_domain` the per-channel unpack over every byte value.
 
 ## A colour without a file
 
@@ -89,13 +90,14 @@ file also replaces the pixel-shader slot with the shader of index 0, which is no
 Addresses: `0x79bb40`, `0x79bbd5`, `0x79bd63`, `0x79bd82`, `0x79bd89`, `0x79bd93`, `0x79bda5`, `0x79bdc8`, `0x79bdd5`, `0x79bddc`, `0x770200`, `0x77020e`, `0x77021e`, `0x770225`, `0x77022b`, `0x770281`, `0x7702b8`, `0x7702c0`, `0x7702cb`, `0x7702dc`, `0x7702e7`, `0x44ac70`, `0x449d90`, `0x770620`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_79a_set_vertex_color`
 
 `0x79bb40` tests argument 2 with `0x6f34d0` (`0x79bbd5`): a number goes to `0x770360` (`0x79bd63`); a string calls `0x770200` with name, wrap 0,
 filter and shader 0 (`0x79bd89` to `0x79bda5`); anything else calls it with a null name (`0x79bdc8`, `0x79bdd5`). A result of 0
 returns nil (`0x79bddc`). The filter at `0x878cf0` is a `.data` default of 1: 39 absolute reads find no absolute writer, but writes through a register were not censused. `0x770200(name, wrap, filter, shader)` asks `0x44ac70` whether the held image has this file
 name and returns 1 if so (`0x77021e` to `0x770225`, `0x7702e7`), loads with `0x449d90` (`0x770281`), and stores the shader from `0x770620` at
 `+0x128` (`0x7702b8`, `0x7702c0`) before the handle (`0x7702dc`). A null or empty name skips the load and the shader store: it releases the old handle, stores a null one and answers 1 (`0x770218`, `0x77022f`, `0x770235` to `0x7702cb`).
+`ui::luabind_79a_set_vertex_color` also runs `0x79bbe9` to `0x79bd53` of `0x79bb40`, the solid-fill colour pack, whose bytes are identical to `0x79abd0`.
 
 ## SetTexture failure
 
@@ -120,7 +122,7 @@ store leaves one entry: `SetAlpha` gives flat white, and `SetVertexColor` withou
 Addresses: `0x79abd0`, `0x79ac81`, `0x79ad43`, `0x79ae0a`, `0x79ae17`, `0x77f750`, `0x77f766`, `0x77f77c`, `0x77f782`, `0x77f7b3`, `0x77f7bc`, `0x77f88a`, `0x77f8a7`, `0x79b580`, `0x79b627`, `0x79b638`, `0x79b649`, `0x79b64c`, `0x40a2b0`, `0x806498`, `0x7ffe58`, `0x7ffa24`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_79a_set_vertex_color`, `ui::luabind_79a_set_alpha`
 
 `0x79abd0` reads the current colour with `0x77f8c0` when alpha is absent (`0x79ac81`, `0x79ad43`), scales by 255.0 and adds 0.5
 (`0x7ffe58`, `0x7ffa24`), truncates with `0x40a2b0`, packs alpha in bits 24 to 31, and calls `0x77f750` (`0x79ae17`). `0x77f750(colour)`
@@ -128,6 +130,7 @@ returns when the count is 0 and the colour is white with alpha `0xfe` or more (`
 (`0x77f782` to `0x77f7b3`); otherwise it resizes both arrays to 1 (`0x77f7bc` onward, a gradient's four entries shrink to one), stores the alpha byte and the dword
 (`0x77f88a` to `0x77f89d`) and calls the region's slot 8 (`0x77f8a7`), which is `0x77fac0`. `0x79b580` reads the colour with `0x77f8c0` (`0x79b627`), multiplies the alpha by 255.0
 (`0x806498`), truncates (`0x79b638`), replaces byte 3 of the read-back colour (`0x79b649`) and calls `0x77f750` with it (`0x79b64c`).
+`ui::luabind_79a_set_vertex_color` runs `0x79ac86` to `0x79adfe` of `0x79abd0`, the colour pack; `ui::luabind_79a_set_alpha` runs `0x79b633` to `0x79b643` of `0x79b580` with `0x6f3620` patched to return the chosen double.
 
 ## The frame's alpha in the colour
 
@@ -232,12 +235,13 @@ record's stride is 4.
 Addresses: `0x79ae30`, `0x79aee4`, `0x79b119`, `0x79b180`, `0x79b233`, `0x79b53c`, `0x6f1a20`, `0x77f910`, `0x77f918`, `0x77f929`, `0x77f9b2`, `0x77f9c3`, `0x77f9c5`, `0x77fa2c`, `0x77fa21`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_79a_set_gradient`, `ui::luabind_79a_pack_color_pair`
 
 The bindings parse the orientation with `0x6f1a20` (`0x79aee4`, `0x79b233`) over the names `HORIZONTAL` (0) and `VERTICAL` (1), pack each colour as `×255 + 0.5`
 truncated, and call `0x77f910(orientation, min, max)` (`0x79b119`, `0x79b53c`). `0x77f910` makes both arrays four entries long unless the colour array already holds
 four (`0x77f918`, `0x77f929`) and, for orientation 0 (`0x77f9c3`), stores the minimum in entries 0 and 1 (vertices top left and bottom left) and the maximum in 2 and 3
 (`0x77f9c5` onward); for 1 (`0x77fa2c`) the minimum in entries 1 and 3 and the maximum in 0 and 2. It calls the region's alpha slot, `0x77fac0` (`0x77fa21`).
+`ui::luabind_79a_set_gradient` runs `0x79aef1` to `0x79b119` of `0x79ae30` and `ui::luabind_79a_pack_color_pair` `0x79b240` to `0x79b53c` of `0x79b180`, both colours packed through the clamp.
 
 ## Showing and hiding a texture
 

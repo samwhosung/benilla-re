@@ -62,7 +62,7 @@ or the search runs dry, it answers the rectangle it was given.
 Addresses: `0x5097a0`, `0x5097f0`, `0x5097f7`, `0x5097ff`, `0x509820`, `0x509836`, `0x50983f`, `0x509869`, `0x5098a8`, `0x5098ee`, `0x509916`, `0x509943`, `0x509a04`, `0x509a0c`, `0x509a25`, `0x509a3c`, `0x509a70`, `0x509b00`, `0x509dd0`, `0xbe0bf8`, `0xbe0bfc`, `0xbe0c38`, `0x8087e0`, `0x808870`, `0xbe0bf4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_509_509dd0_ratio_product`
 
 `0x5097a0(bucket, rect)` calls `0x509bf0` in clamp mode and `0x509d80` for the region and enqueues
 the clamped seed as a 28-byte node (`0x509b00`: a pooled or `SMemAlloc(0x1c)` node, strategy field −1) at the
@@ -72,6 +72,7 @@ skips the try when `0x509bf0` in test mode flags the node, calls `[0x808870 + 4�
 compares the four floats with the node's (`jp` at `0x509916`). Unchanged, it answers the candidate
 (`0x509a04`); changed, it enqueues it. The test `cmp eax,[…]` at `0x509874` never fires. `0x509a70`
 recycles the list onto the pool `0xbe0c38` on every exit.
+`ui::glue_509_509dd0_ratio_product` runs `0x509dd0` whole: the product of two truncated ratios plus one, with a probe just below and at an integer.
 
 ## Pushes by region
 
@@ -140,7 +141,7 @@ bottom left at the clamped centre and top. The claimed rectangle can differ from
 Addresses: `0x509ec0`, `0x509ed0`, `0x509eda`, `0x509f37`, `0x509f49`, `0x509f51`, `0x509f81`, `0x509fb2`, `0x50a010`, `0x50a01a`, `0x50a021`, `0x50a044`, `0x509e20`, `0x509720`, `0x608ce0`, `0x608d37`, `0x7ffa24`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_509_509720_midpoint`, `ui::glue_509_509ec0_axis_resolve`
 
 `0x509ec0(id, plate, root, point, flag)` reads the plate's width and height through layout slots 7 and
 8 (`0x509ed0`, `0x509eda`), builds `top = point.y`, `left = point.x − halfW`, `bottom = point.y − height`,
@@ -150,6 +151,7 @@ draws. `0x50a021` clears the points and `0x50a044` calls `0x767c70(1 or 4, root,
 a zero flag and CENTER for a nonzero one. `0x509720` returns the changed flag, the centre x
 `(left + right)/2` and the top y of the solved rectangle. The caller `0x608ce0` calls the seat only
 for a plate that passed its on-screen test.
+`ui::glue_509_509720_midpoint` runs `0x509772` to `0x50978a` of `0x509720` (the midpoint `fadd` and `fmul`); `ui::glue_509_509ec0_axis_resolve` runs five slices of `0x509ec0` covering its ten floating-point operations.
 
 ## Normalising a rectangle
 
@@ -180,7 +182,7 @@ each string with no option gate, and an off-screen string is destroyed by its ca
 Addresses: `0x509520`, `0x50952d`, `0x509558`, `0x50956f`, `0x50957e`, `0x5095a1`, `0x50964e`, `0x509645`, `0x6c7cc0`, `0x6c7ea3`, `0x6c7d96`, `0x6c7d9f`, `0x483ee0`
 Confidence: verified
 Proof: one
-Test: `ui::geo_483ee0`
+Test: `ui::geo_483ee0`, `ui::glue_509_509520_viewport_clamp`
 
 `0x509520(id, rect)` takes the half extents `|right − left|·0.5` and `|top − bottom|·0.5` and the
 height, normalises, calls `0x509720(…, id, …)`, clamps the solved centre x to `[halfW, K1 − halfW]` and
@@ -191,6 +193,7 @@ rectangle's centre back with `0x41ae40` and `0x41ae50`, so a string whose blocke
 desired place next frame.
 
 `ui::geo_483ee0` runs `0x483ee0` whole, with the matrix transform `0x7bcb40` stubbed to return a chosen clip vector.
+`ui::glue_509_509520_viewport_clamp` runs the four arithmetic slices of `0x509520` (the half extents `0x509529` to `0x509558` and the single subtractions and additions); the clamp routing between them is integer code and callees.
 
 ## Per frame order
 
