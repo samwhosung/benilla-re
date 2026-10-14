@@ -150,10 +150,9 @@ static initializer `0x5b8000` (table slot `0x82a9ac`, through the thunk `0x5b7ff
 
 A thread's `rand` state starts at 1: `__initptd` (`0x40aca8`) stores 1 at `+0x14` of the thread data, and only the
 main thread's is seeded, so another thread draws the default sequence. `MakeSocketPipe` (`0x5bcf90`) calls `rand` at
-`0x5bcfc5` and connects to `127.0.0.1` at port 40000 + `rand() % 10000`, then the next port on each failure, up
-to 64999.
+`0x5bcfc5` and picks the port 40000 + `rand() % 10000`. It binds a listening socket to `127.0.0.1` at that port (WSOCK32 ordinals 2 `bind` at `0x5bd010` and 13 `listen` at `0x5bd01e`). When `bind` fails, or `listen` fails and the socket is closed and reopened, it takes the next port (`0x5bd043`), up to 64999. Only after `listen` succeeds does it create a second socket and connect it to that port (`0x5bd077` to `0x5bd0da`).
 
-Addresses: `0x40aca8`, `0x5bcf90`, `0x5bcfc5`, `0x5bcb00`, `0x5bcb18`, `0x7400e5`
+Addresses: `0x40aca8`, `0x5bcf90`, `0x5bcfc5`, `0x5bd010`, `0x5bd01e`, `0x5bd043`, `0x5bd077`, `0x5bcb00`, `0x5bcb18`, `0x7400e5`
 Confidence: verified
 Proof: one
 Test: none

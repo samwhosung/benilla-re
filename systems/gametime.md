@@ -36,7 +36,7 @@ returns the day number, the seconds `mktime` gives for the date divided by 86,40
 
 `0x643a70` returns the time of day as a fraction. `x = (tick − [+0x38]) · 0.001f · [+0x2c] + [+0x3c]`,
 with the tick difference an unsigned 32-bit value; `x` loses 1440.0 while it exceeds 1440.0; the result
-is `x · (1/1440)` (`0x3a360b61`), in `[0, 1]`, not rounded to float, so exactly 1 at `x = 1440`.
+is `x · (1/1440)` (`0x3a360b61`) left in `st0`, not rounded. At `x = 1440` that is `1440 · f32(1/1440)` = 1.0000000242, so the value is in [0, 1] only once stored: both callers store it with `fstp DWORD` (`0x482be2`, `0x6c5f77`), which rounds it to 1.0f.
 
 Addresses: `0x643a70`, `0x42c010`, `0x801360`, `0x80e460`, `0x804480`
 Confidence: verified

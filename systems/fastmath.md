@@ -43,7 +43,7 @@ runs `0x454d40` whole over the range, the table edges and the overflow and under
 `e` is the exponent field minus 0x3ff, `m` the mantissa as a double in [1, 2), `i` its top six
 mantissa bits, `r = m·L[i] − 1.0`, `L[i] = 64/(64 + i)` at `0x802be0`. The result is
 `r·d + (e + K[i])`, `K[i] = log2((64 + i)/64)` at `0x802de0`, `d = (a + (c3 − r·c4))·r² + (c1 − r·c2)`,
-`a = (c5 − r·c6)·r²`, c1 to c6 the doubles from `0x802ff8`: `1/ln 2` divided by 1 to 6.
+`a = (c5 − r·c6)·r²`, c1 to c6 the doubles from `0x802ff8`: 1.442695040888937, 0.7213475204127876, 0.48089833404997356, 0.36067132973951144, 0.2883070248990067 and 0.22949900023246153. The first four are close to `1/(k·ln 2)`; c5 and c6 are not (0.288539 and 0.240449 for k = 5, 6).
 
 Addresses: `0x454c80`, `0x802be0`, `0x802de0`, `0x802ff0`, `0x802ff8`
 Confidence: verified
