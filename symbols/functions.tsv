@@ -6648,8 +6648,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489090	126	Script::SetDoodadAnim	idb	ui	orchestration		Implements the Lua function SetDoodadAnim	inferred	none		
 0x489110	36	Script::GetTexLodBias	idb	ui	orchestration		Implements the Lua function GetTexLodBias	inferred	none		
 0x489140	126	Script::SetTexLodBias	idb	ui	orchestration		Implements the Lua function SetTexLodBias	inferred	none		
-0x4891c0	42	Script::GetGamma	idb	ui	primitive		Implements the Lua function GetGamma	inferred	none		ui::luabind_488_get_gamma_basemip
-0x4891f0	132	Script::SetGamma	idb	ui	primitive		Implements the Lua function SetGamma	inferred	none		ui::luabind_488_set_gamma
+0x4891c0	42	Script::GetGamma	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1.0 minus the gamma option	verified	one	ui/videoverbs#gamma	
+0x4891f0	132	Script::SetGamma	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Stores 1.0 minus its argument in the gamma option, or raises the usage error	verified	one	ui/videoverbs#gamma	
 0x489280	42	Script::GetBaseMip	idb	ui	primitive		Implements the Lua function GetBaseMip	verified	one	cvar/options#mip-verbs	
 0x4892b0	127	Script::SetBaseMip	idb	ui	primitive		Implements the Lua function SetBaseMip	verified	one	cvar/options#mip-verbs	
 0x489330	3	Script::ToggleTris	idb	ui	orchestration		Implements the Lua function ToggleTris	inferred	none		
@@ -6761,25 +6761,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration		Implements the Lua function StopCinematic	inferred	none		
 0x48b980	119	Script::RunScript	idb	ui	primitive		Runs argument 1 as a chunk with the context word set to the RunScript word	verified	one	ui/luastate#the-context-word	
 0x48ba00	343	Script::CheckInteractDistance	idb	ui	primitive		Pushes 1 when the unit is within the range of the given index 1 to 4, else nil	verified	one	ui/distancegates#checkinteractdistance	ui::check_interact_dist2
-0x48bb60	10			ui	orchestration		Runs GameUI.cpp code that calls 0x48bb70; not read here	inferred	none		
-0x48bb70	23			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48bb90	12			ui	orchestration		Runs GameUI.cpp code that calls _atexit; not read here	inferred	none		
-0x48bba0	25			ui	orchestration		Runs GameUI.cpp code that calls SMemFree; not read here	inferred	none		
-0x48bbc0	10			ui	orchestration		Runs GameUI.cpp code that calls 0x48bbd0; not read here	inferred	none		
-0x48bbd0	23			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48bbf0	12			ui	orchestration		Runs GameUI.cpp code that calls _atexit; not read here	inferred	none		
-0x48bc00	25			ui	orchestration		Runs GameUI.cpp code that calls SMemFree; not read here	inferred	none		
-0x48bc20	98	Script::GetScreenResolutions	idb	ui	primitive		Implements the Lua function GetScreenResolutions	inferred	none		
-0x48bc90	628			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, 0x5899c0, 0x496d70 and 4 more; not read here	inferred	none		ui::luabind_48b_aspect_filter
-0x48bf10	182	Script::GetCurrentResolution	idb	ui	primitive		Implements the Lua function GetCurrentResolution	inferred	none		
-0x48bfd0	249	Script::SetScreenResolution	idb	ui	primitive		Implements the Lua function SetScreenResolution	inferred	none		
-0x48c0d0	355	Script::GetRefreshRates	idb	ui	primitive		Implements the Lua function GetRefreshRates	inferred	none		
-0x48c240	33			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x48bb60	10	InitResolutionListThunk		ui	orchestration	void __cdecl (void)	Calls 0x48bb70 and registers 0x48bba0 with _atexit; a static initializer	verified	one	ui/videoverbs#the-resolution-list	
+0x48bb70	23	InitResolutionList		ui	orchestration	void __cdecl (void)	Zeroes the four cells of the screen resolution list	verified	one	ui/videoverbs#the-resolution-list	
+0x48bb90	12	RegisterDestroyResolutionList		ui	orchestration	void __cdecl (void)	Registers 0x48bba0 with _atexit	verified	one	ui/videoverbs#the-resolution-list	
+0x48bba0	25	DestroyResolutionList		ui	orchestration	void __cdecl (void)	Frees the screen resolution list array when it exists	verified	one	ui/videoverbs#the-resolution-list	
+0x48bbc0	10	InitMultisampleListThunk		ui	orchestration	void __cdecl (void)	Calls 0x48bbd0 and registers 0x48bc00 with _atexit; a static initializer	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48bbd0	23	InitMultisampleList		ui	orchestration	void __cdecl (void)	Zeroes the four cells of the multisample format list	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48bbf0	12	RegisterDestroyMultisampleList		ui	orchestration	void __cdecl (void)	Registers 0x48bc00 with _atexit	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48bc00	25	DestroyMultisampleList		ui	orchestration	void __cdecl (void)	Frees the multisample format list array when it exists	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48bc20	98	Script::GetScreenResolutions	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns every entry of the resolution list as a WxH string	verified	one	ui/videoverbs#the-resolution-verbs	
+0x48bc90	628	BuildResolutionList		ui	primitive	void __cdecl (void)	Fills the resolution list once from the sorted display modes, or the four fixed sizes when none pass	verified	one	ui/videoverbs#the-resolution-list	
+0x48bf10	182	Script::GetCurrentResolution	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based list index of the gxResolution option, or 1 on a miss	verified	one	ui/videoverbs#the-resolution-verbs	
+0x48bfd0	249	Script::SetScreenResolution	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Writes the chosen list entry to gxResolution and runs gxRestart when it differs	verified	one	ui/videoverbs#choosing-a-resolution	
+0x48c0d0	355	Script::GetRefreshRates	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the sorted distinct refresh rates of the modes of a resolution list entry	verified	one	ui/videoverbs#the-refresh-rates	
+0x48c240	33	CompareRefreshRates		ui	primitive	int __cdecl (const int *a, const int *b)	Orders two refresh rates ascending for the qsort of GetRefreshRates	verified	one	ui/videoverbs#the-refresh-rates	
 0x48c270	232	Script::SetupFullscreenScale	idb	ui	primitive		Sets a frame's scale to the smaller of the scaled aspect and 1.0, raising a Lua error for a bad argument	verified	one	ui/uiscale#the-fullscreen-frame-scale	
-0x48c360	125	Script::GetMultisampleFormats	idb	ui	primitive		Implements the Lua function GetMultisampleFormats	inferred	none		
-0x48c3e0	406			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, SStrCmpI, CmdLineGetBool and 4 more; not read here	inferred	none		
-0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive		Implements the Lua function GetCurrentMultisampleFormat	inferred	none		
-0x48c640	361	Script::SetMultisampleFormat	idb	ui	primitive		Implements the Lua function SetMultisampleFormat	inferred	none		
+0x48c360	125	Script::GetMultisampleFormats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the colour bits, depth bits and samples of every multisample list entry	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48c3e0	406	BuildMultisampleList		ui	primitive	void __cdecl (void)	Fills the multisample list once with the distinct colour, depth and sample triples of the device formats	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based list index of the gx colour, depth and multisample options, or 1 on a miss	verified	one	ui/videoverbs#the-multisample-verbs	
+0x48c640	361	Script::SetMultisampleFormat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Writes the chosen multisample entry to its three options and runs gxRestart when it differs	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c7b0	264	Script::RandomRoll	idb	ui	orchestration		Implements the Lua function RandomRoll	inferred	none		
 0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration		Implements the Lua function OpeningCinematic	inferred	none		
 0x48c930	38	Script::InCinematic	idb	ui	orchestration		Implements the Lua function InCinematic	inferred	none		
@@ -6857,10 +6857,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d8b0	23			ui	orchestration		Runs GameUI.cpp code that calls lua_pushstring; not read here	inferred	none		
 0x48d8d0	130	Script::GetGMTicketCategories	idb	ui	primitive		Implements the Lua function GetGMTicketCategories	inferred	none		
 0x48d960	322	Script::DropItemOnUnit	idb	ui	primitive		Implements the Lua function DropItemOnUnit	verified	one	ui/cursor#dropping-an-item-on-a-unit	
-0x48dab0	18	Script::RestartGx	idb	ui	orchestration		Implements the Lua function RestartGx	inferred	none		
-0x48dad0	8	Script::RestoreVideoDefaults	idb	ui	orchestration		Implements the Lua function RestoreVideoDefaults	inferred	none		
+0x48dab0	18	Script::RestartGx	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs the console command gxRestart with history on	verified	one	ui/videoverbs#restarting-the-display	
+0x48dad0	8	Script::RestoreVideoDefaults	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs the hardware default installer 0x639a20	verified	one	ui/videoverbs#restoring-the-video-defaults	
 0x48dae0	88	Script::GetBindLocation	idb	ui	orchestration		Implements the Lua function GetBindLocation	inferred	none		
-0x48db40	249	Script::GetVideoCaps	idb	ui	orchestration		Implements the Lua function GetVideoCaps	inferred	none		
+0x48db40	249	Script::GetVideoCaps	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the seven display capability values: nil or 1, a number, or the raw field	verified	one	ui/videoverbs#the-capability-verbs	
 0x48dc40	85	Script::ConfirmTalentWipe	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the talent wipe for the remembered trainer and returns nothing	verified	one	ui/talents#character-points	
 0x48dca0	85	Script::ConfirmPetUnlearn	idb	ui	orchestration		Confirms the pet unlearn at the remembered trainer	verified	one	ui/popups#pet-unlearn	
 0x48dd00	84	Script::ConfirmBinder	idb	ui	orchestration		Implements the Lua function ConfirmBinder	inferred	none		
@@ -6970,7 +6970,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492ce0	68	WorldClickObject		ui	orchestration	void __fastcall (void *record)	Clears a preview payload, then selects or interacts with the clicked object	verified	one	ui/mouseover#payloads-on-the-world	
 0x492d30	318	WorldClickNothing		ui	primitive	void __fastcall (void *record)	Handles a click on nothing: clears or confirms the payload, walks, deselects	verified	one	ui/mouseover#the-nothing-leg	ui::glue_492_492d30_sqlen_edge
 0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *record)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/hover#world-hover-and-its-tooltip	
-0x492e90	218			ui	primitive		Runs GameUI.cpp code that calls 0x494550, 0x4901e0, CGGameUI::Reload and 2 more; not read here	inferred	none		ui::glue_492_492e90_fraction_clamp
+0x492e90	218	OnDisplaySizeChanged		ui	primitive	uint32_t __thiscall (void *size)	Applies the interface scale for a new window size, then signals DISPLAY_SIZE_CHANGED or reloads the interface	verified	one	ui/videoverbs#after-a-size-change	
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	ui::glue_492_492f70_recip_unit
 0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	one	ui/keyscripts#deactivating-the-window	
 0x493070	28	EnterWorldMouselook		ui	orchestration	void __cdecl (void)	Begins the world frame's mouselook and makes it the hovered frame	verified	one	ui/mouseover#mouselook	

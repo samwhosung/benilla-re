@@ -2495,6 +2495,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b3b0	float	s_reticleRadius		ui	Holds the half-extent of the area decal, 0 when out of range	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip
 0xb4b3c8	uint64_t	s_cursorItemContainerGuid		ui	Holds the GUID of the container the item payload came from	verified	one	ui/cursor#payload-kinds
+0xb4b3d0	uint32_t	s_resolutionListCapacity		ui	Holds the capacity of the screen resolution list, in entries	verified	one	ui/videoverbs#the-resolution-list
+0xb4b3d4	uint32_t	s_resolutionListCount		ui	Holds the number of entries in the screen resolution list; 0 until a resolution verb builds it	verified	one	ui/videoverbs#the-resolution-list
+0xb4b3d8	void *	s_resolutionListData		ui	Points to the screen resolution list, 8-byte width and height pairs	verified	one	ui/videoverbs#the-resolution-list
+0xb4b3dc	uint32_t	s_resolutionListQuantum		ui	Holds the growth quantum of the screen resolution list; 0 until it first grows	verified	one	ui/videoverbs#the-resolution-list
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption
 0xb4b3f4	uint8_t	s_reloadRequested		ui	Holds 1 from a permitted ReloadUI until the rebuilt interface clears it, 0 otherwise	verified	one	ui/bindings#reloading-the-interface
 0xb4b3f8	char *	s_zoneText		ui	Holds the zone name GetZoneText pushes, set by the zone commit	verified	one	ui/zonetext#the-commit-and-its-events
@@ -2505,8 +2509,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b41c	uint32_t	s_cursorPreviewEntry		ui	Holds the entry of the preview payload, nonzero for kinds 5, 7 and 9	verified	one	ui/cursor#payload-kinds
 0xb4b420	uint32_t	s_cursorPreviewIndex		ui	Holds the index of the preview payload, the vendor row for kind 5	verified	one	ui/cursor#payload-kinds
 0xb4b424	uint8_t	s_worldEntered		ui	Holds 1 from the enter cascade to the leave function, the once-per-world latch	verified	one	ui/worldenter#the-enter-cascade
-0xb4b440	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
-0xb4b444	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
+0xb4b43c	uint32_t	s_multisampleListCapacity		ui	Holds the capacity of the multisample format list, in entries	verified	one	ui/videoverbs#the-multisample-verbs
+0xb4b440	uint32_t	s_multisampleListCount		ui	Holds the number of entries in the multisample format list; 0 until a multisample verb builds it	verified	one	ui/videoverbs#the-multisample-verbs
+0xb4b444	void *	s_multisampleListData		ui	Points to the multisample format list, 12-byte colour bits, depth bits and samples triples	verified	one	ui/videoverbs#the-multisample-verbs
+0xb4b448	uint32_t	s_multisampleListQuantum		ui	Holds the growth quantum of the multisample format list; 0 until it first grows	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
 0xb4b498	uint32_t			ui	Holds a dword that CGGameUI::DisplayError reads and writes; not read here	inferred	none	
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
