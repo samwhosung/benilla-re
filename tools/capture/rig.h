@@ -10,6 +10,14 @@
 #include <windows.h>
 #include <stdio.h>
 
+/* For code the hook rig runs on the game's threads: no x87 or SSE register. */
+#define RIG_NO_FPU __attribute__((target("general-regs-only")))
+
+/* CGUnit_C +0x118 points at the unit's CMovement, built in place at +0x9a8
+ * (objectlayer/units#the-unit-object, collision/mover#construction). */
+#define RIG_UNIT_MOVEMENT_PTR 0x118
+#define RIG_UNIT_MOVEMENT 0x9a8
+
 /* The rig's name, used for its log file ("<name>.log"). Defined by each rig. */
 extern const char rig_name[];
 
@@ -27,15 +35,15 @@ FILE *rig_open(const char *file);
 double rig_ms(void);
 
 /* The raw counter, for code that must not touch the x87 (hook.c), and its conversion. */
-LONGLONG rig_ticks(void);
+RIG_NO_FPU LONGLONG rig_ticks(void);
 double rig_ticks_ms(LONGLONG ticks);
 
 /* An environment variable as an unsigned number (decimal or 0x hex), or fallback. */
 unsigned rig_env_uint(const char *name, unsigned fallback);
 
 /* Copies n bytes at addr; 0 when any of it is unreadable. Never faults. */
-int rig_read(UINT_PTR addr, void *out, SIZE_T n);
-DWORD rig_dword(UINT_PTR addr); /* 0 when unreadable */
+RIG_NO_FPU int rig_read(UINT_PTR addr, void *out, SIZE_T n);
+RIG_NO_FPU DWORD rig_dword(UINT_PTR addr); /* 0 when unreadable */
 float rig_float(UINT_PTR addr); /* 0 when unreadable */
 
 /* 1 when the image at 0x400000 is WoW.exe 1.12.1.5875, by its PE header; logs why not. */
@@ -52,6 +60,12 @@ typedef struct {
 } RigPlayer;
 
 /* 1 and fills *p when the client is in the world and its active player is in the live table. */
-int rig_find_player(RigPlayer *p);
+RIG_NO_FPU int rig_find_player(RigPlayer *p);
+
+/* 1 while *p, from rig_find_player, is still the active player: the manager's active GUID is
+ * p's, and the unit still holds that GUID at +0x30/+0x34 and that CMovement at +0x118. A released
+ * object keeps its GUID while it waits on a reuse list, so this catches a reuse or a new active
+ * player, not a release; looking the player up again (rig_find_player) catches that too. */
+RIG_NO_FPU int rig_player_current(const RigPlayer *p);
 
 #endif

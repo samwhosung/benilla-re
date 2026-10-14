@@ -5,7 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* ---- Client addresses. Each has a row in symbols/ and an entry that explains it. ---- */
+/* ---- Client addresses, each with the entry that explains it. symbols/ has rows for
+ * s_objectManager, ObjectManager +0x00 (m_liveObjects, whose meaning names the buckets at +0x1c
+ * and the mask at +0x24) and +0xc0, CGObject_C +0x30, and CGUnit_C +0x118 and +0x9a8.
+ * CGObject_C +0x18 has no row; objectlayer/manager names it in the walk and the insert. ---- */
 
 /* s_objectManager: the manager block, null outside the world
  * (objectlayer/manager#manager-block). */
@@ -22,8 +25,8 @@
 #define OBJ_GUID 0x30
 /* CGUnit_C +0x118 points at the unit's CMovement, which the constructor builds at +0x9a8
  * (objectlayer/units#the-unit-object, collision/mover#construction). */
-#define UNIT_MOVEMENT_PTR 0x118
-#define UNIT_MOVEMENT 0x9a8
+#define UNIT_MOVEMENT_PTR RIG_UNIT_MOVEMENT_PTR
+#define UNIT_MOVEMENT RIG_UNIT_MOVEMENT
 
 /* ---- The build. WoW.exe 1.12.1.5875 has no relocations and loads at 0x400000; its PE header is
  * at 0x110, with TimeDateStamp 0x4510b6db and SizeOfImage 0x906000. ---- */
@@ -38,14 +41,14 @@ static FILE *g_log;
 static LARGE_INTEGER g_freq, g_t0;
 static CRITICAL_SECTION g_log_lock;
 
-int rig_read(UINT_PTR addr, void *out, SIZE_T n) {
-    /* ReadProcessMemory on our own process returns FALSE where an access would fault, so a page
-     * the game frees while we read it costs a sample, not the process. */
+RIG_NO_FPU int rig_read(UINT_PTR addr, void *out, SIZE_T n) {
+    /* ReadProcessMemory on the rig's own process returns FALSE where an access would fault, so a
+     * page the game frees during the read costs a sample, not the process. */
     SIZE_T got = 0;
     return ReadProcessMemory(g_self, (LPCVOID)addr, out, n, &got) && got == n;
 }
 
-DWORD rig_dword(UINT_PTR addr) {
+RIG_NO_FPU DWORD rig_dword(UINT_PTR addr) {
     DWORD v = 0;
     rig_read(addr, &v, 4);
     return v;
@@ -57,7 +60,7 @@ float rig_float(UINT_PTR addr) {
     return v;
 }
 
-LONGLONG rig_ticks(void) {
+RIG_NO_FPU LONGLONG rig_ticks(void) {
     LARGE_INTEGER now;
     QueryPerformanceCounter(&now);
     return now.QuadPart;
@@ -152,7 +155,7 @@ int rig_text_bounds(UINT_PTR *start, UINT_PTR *end) {
     return 0;
 }
 
-int rig_find_player(RigPlayer *p) {
+RIG_NO_FPU int rig_find_player(RigPlayer *p) {
     UINT_PTR mgr = rig_dword(OBJECT_MANAGER);
     if (!mgr) return 0;
     DWORD lo = rig_dword(mgr + MGR_ACTIVE_GUID), hi = rig_dword(mgr + MGR_ACTIVE_GUID + 4);
@@ -165,8 +168,8 @@ int rig_find_player(RigPlayer *p) {
     UINT_PTR bucket = rig_dword(mgr + MGR_BUCKETS) + 12 * (lo & mask);
     DWORD link = rig_dword(bucket);
     UINT_PTR obj = rig_dword(bucket + 8);
-    /* The game thread changes the table while we walk it; a bound stops a walk a torn read sends
-     * around a loop. */
+    /* The game thread can change the table during the walk; a bound stops a walk a torn read
+     * sends around a loop. */
     for (int step = 0; step < 4096 && obj && !(obj & 1); step++) {
         if (rig_dword(obj + OBJ_HASH) == lo && rig_dword(obj + OBJ_GUID) == lo &&
             rig_dword(obj + OBJ_GUID + 4) == hi) {
@@ -181,6 +184,15 @@ int rig_find_player(RigPlayer *p) {
         obj = rig_dword(obj + link + 4);
     }
     return 0;
+}
+
+RIG_NO_FPU int rig_player_current(const RigPlayer *p) {
+    UINT_PTR mgr = rig_dword(OBJECT_MANAGER);
+    return mgr && rig_dword(mgr + MGR_ACTIVE_GUID) == p->guid_lo &&
+           rig_dword(mgr + MGR_ACTIVE_GUID + 4) == p->guid_hi &&
+           rig_dword(p->unit + OBJ_GUID) == p->guid_lo &&
+           rig_dword(p->unit + OBJ_GUID + 4) == p->guid_hi &&
+           rig_dword(p->unit + UNIT_MOVEMENT_PTR) == p->movement;
 }
 
 static DWORD WINAPI rig_thread(LPVOID arg) {
