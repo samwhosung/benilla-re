@@ -288,6 +288,30 @@ The loop at `0x7189e6` tests state `+0x100` and byte `+0xec`, reads the bone mat
 `+0x94 + 64·bone`, calls `0x71b650` or `0x71b6a0`, then `0x71b780(enabled)` with 0 when either
 gate fails, and stores scene `+0x10` into state `+0x108` (the light's `+0x4`).
 
+## Light emitting instances
+
+A model's lights belong to the scene it was attached to, stored at instance `+0x2c` by `0x70ea00`;
+`0x71b5f0` copies it into each light at load. The world scene is `0xc7b298`,
+made by `0x706e10` at `0x66f720`; the other six makers of scenes (the stars, the glue previews and
+three more) give separate grids. A unit body, a placed doodad, a game object display and a detail
+doodad are made in the world scene, and an attached item takes its wearer's scene, so they all emit
+into the grid the map gathers from. An instance emits only while it is on its scene's animate list; an
+attached item is reached by the recursion from its wearer instead.
+
+Addresses: `0x70ea00`, `0x70e00d`, `0x70ea0d`, `0x71b5f0`, `0x70f20f`, `0x70f21e`, `0x706e10`, `0x66f720`, `0x66f725`, `0x7e60f3`, `0x46c348`, `0x76cfcd`, `0x50ad1a`, `0x525227`, `0x6d47b7`, `0x613e33`, `0x613e43`, `0x695107`, `0x69510f`, `0x6b249e`, `0x6b24ad`, `0x4798da`, `0x4798e1`, `0x7105c0`, `0x707350`, `0x710b90`, `0x712f70`, `0x718960`, `0x672d20`, `0x684155`, `0x607e43`, `0xc7b298`
+Confidence: verified
+Proof: one
+Test: none
+
+The constructor zeroes `+0x2c` (`0x70e00d`) and `0x70ea0d` stores the scene; `0x71b5f0`, called only at
+`0x70f21e`, takes it from `[ebx+0x2c]` (`0x70f20f`). `0x706e10` has seven
+callers; `0xc7b298` is written once, at `0x66f725`. The unit body (`0x613e33`), the doodad node
+(`0x695107`) and the detail doodad (`0x6b249e`) load the world scene into `ecx` before `0x707350`, and
+the item path (`0x4798da`) asks the wearer for its scene with `0x7105c0` first. `0x710b90` links at
+`0x710ba1` and unlinks at `0x710bc2`; it has 31 call sites, among them the world node show and hide
+(`0x672d3a`, `0x672d57`) and the doodad drain (`0x684155`). `0x718960` tests only the load flag
+before its light loop.
+
 ## Instance lighting
 
 An instance draws with its parent's record when it has a parent created without flag 1, else with

@@ -90,11 +90,12 @@ Test: `terrain::clip_plane_negate_difftest`
 `0x6a8410` (a doodad def) and `0x69e4c0` (an entity) bake a map object group's vertex colour into the
 light. They trace down into the group (`0x6a4cc0`, or `0x6a4dc0` for a known face) and take the
 surface colour; `0x6a77e0` makes the directional `+0xa0` (largest channel raised to at least 0xa8) and
-the ambient (at most 0x60), at `+0x9c` for a def and the target `+0xf4` for an entity. The colour's
-alpha w is the sky weight: 255 copies the day light's colour, other nonzero w blends each channel
-toward `+0x174` and `+0x178` by w / 256. w is kept at `+0xa3` with `+0x90` bit 0x800.
+the ambient (at most 0x60), at `+0x9c` for a def and the target `+0xf4` for an entity. The sampler
+returns alpha 0xff always and a selector, bit 0 of the hit face's flag byte. With the selector set the
+day light's colours (`+0x174`, `+0x178`) replace both words, `+0xa3` becomes 0xff and `+0x90` bit 0x800
+is set; clear, the words stay and the bit is cleared. A sampler that fails leaves everything.
 
-Addresses: `0x6a8410`, `0x6a8420`, `0x6a8436`, `0x6a8475`, `0x6a84df`, `0x6a84e6`, `0x6a8517`, `0x6a8524`, `0x6a853f`, `0x6a8547`, `0x6a8574`, `0x6a85a8`, `0x6a85e8`, `0x6a860b`, `0x6a8647`, `0x6a8692`, `0x6a86a0`, `0x6a86b9`, `0x69e4c0`, `0x69e4e0`, `0x69e515`, `0x69e57d`, `0x69e5c2`, `0x69e5dd`, `0x69e5e2`, `0x69e61b`, `0x69e64b`, `0x69e6b3`, `0x69e6e5`, `0x69e745`, `0x69e758`, `0x6a77e0`, `0x6a4cc0`, `0x6a4dc0`, `0x69eb70`, `0x80308c`, `0x80c4e8`, `0x80fec8`
+Addresses: `0x6a8410`, `0x6b9a50`, `0x6b9c73`, `0x6b9d34`, `0x6a8420`, `0x6a8436`, `0x6a8475`, `0x6a84df`, `0x6a84e6`, `0x6a8517`, `0x6a8524`, `0x6a853f`, `0x6a8547`, `0x6a8574`, `0x6a85a8`, `0x6a85e8`, `0x6a860b`, `0x6a8647`, `0x6a8692`, `0x6a86a0`, `0x6a86b9`, `0x69e4c0`, `0x69e4e0`, `0x69e515`, `0x69e57d`, `0x69e5c2`, `0x69e5dd`, `0x69e5e2`, `0x69e61b`, `0x69e64b`, `0x69e6b3`, `0x69e6e5`, `0x69e745`, `0x69e758`, `0x6a77e0`, `0x6a4cc0`, `0x6a4dc0`, `0x69eb70`, `0x80308c`, `0x80c4e8`, `0x80fec8`
 Confidence: verified
 Proof: one
 Test: `terrain::cmapobj_skyocc_offsets_difftest`, `terrain::cmapobj_vert_offsets_difftest`, `terrain::wmo_mocv_normalize_alpha_difftest`
@@ -103,8 +104,9 @@ Test: `terrain::cmapobj_skyocc_offsets_difftest`, `terrain::cmapobj_vert_offsets
 (`0x80fec8`, `0x6a8475`); the entity's starts 1.0 above and ends 12.0 below (`0x80c4e8`,
 `0x69e515`). The pushes at `0x6a8524` to `0x6a853f` are `0x6a77e0`'s: source colour, directional
 output `+0xa0`, floor 0xa8, ambient output, cap 0x60 (entity `0x69e5c2` to `0x69e5dd`, output
-`+0xf4`). `0x6a8547` tests the sky flag; `0x6a8574` copies the RGB of the day colour for 255; the
-blend `(diff × w) >> 8 + cur` is `0x6a85a8` (and `0x69e64b`).
+`+0xf4`). `0x6a8547` tests the selector (`0x6b9d34 and dl,1` makes it; `0x6b9c73` stores the alpha 0xff); `0x6a8574`
+copies the RGB of the day colour for 255. The blend `(diff × w) >> 8 + cur` of `0x6a85a8` (and `0x69e64b`) is
+reached only for a w below 255, which the sampler never gives.
 
 ## Light colour packing
 

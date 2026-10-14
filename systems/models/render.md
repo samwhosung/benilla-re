@@ -188,6 +188,26 @@ state 2 with alpha byte 0 (`0x70c997`). Kinds above 2 pack `(a << 24) | 0xffffff
 
 Of `0x70c190`, `scale_add_difftest` runs `0x70c631`–`0x70c69c`.
 
+## Model specular
+
+A model draw sets no specular colour. Its material step writes the device colour states 1 (diffuse) and 2
+(emissive) and the shininess state 4 only, and the light's third colour, which the commit hands the
+device as the specular of light 0, is filled only by the directional branch of the light add, from a
+light of the model's own. The world light's apply adds to the ambient and the diffuse sums alone. The
+specular colour state 3 is set at twelve sites, all in the map code between `0x685080` and `0x6bfab1`.
+
+Addresses: `0x70c8ad`, `0x70c997`, `0x70ca20`, `0x71bf60`, `0x71c0ed`, `0x71c7a8`, `0x6a8050`, `0x6a7300`, `0x685080`, `0x68522f`, `0x6b50a4`, `0x6b50f8`, `0x6b55db`, `0x6b560f`, `0x6b6672`, `0x6b68b4`, `0x6bf307`, `0x6bf562`, `0x6bfa3f`, `0x6bfab1`, `0x589e00`
+Confidence: verified
+Proof: one
+Test: none
+
+The scan is every `call 0x589e00` with the nearest earlier `mov ecx,N` in eight instructions: N = 3 at the
+twelve map sites, N = 1 at `0x70c8ad` and `0x70ca20` and N = 2 at `0x70c997` in the model code (the
+control). `0x71bf60` has one caller in the image, `0x71c0ed`, which follows `0x71bc70` and `0x71bce0` for
+the light's `+0x30` and `+0x3c`; `0x71c7a8` passes `+0x6c` of the record as the third colour. The
+world light apply `0x6a8050` calls `0x71bc70`, `0x71bce0` and `0x71bf90`, and `0x6a7300` the same
+three.
+
 ## Batch draw
 
 A batch element binds its textures, lighting and material. With vertex shaders it loads the

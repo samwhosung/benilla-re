@@ -62,6 +62,28 @@ requested mask and `or` into `+0x4`. The processor count is `0x429d20`'s result 
 
 Of `0x706510`, `noise_table_randf01_difftest` runs `0x70680f`–`0x70684b`.
 
+## Feature request
+
+The start-up code `0x402840` registers the model system's console variables and builds the mask it passes to
+`0x706dd0` from their values: bit 1 `M2UseZFill`, 2 `M2UseClipPlanes`, 4 `M2UseThreads`, 8 `M2UseShaders`, 0x10
+`M2UsePixelShaders` and 0x20 `M2BatchDoodads`. All default to 1 but `M2UsePixelShaders`, which is 0, so
+pixel shaders are never requested at the defaults. With vertex shaders granted `0x706510` allocates
+0x708 four-byte slots at `+0x102c` and loads the file `shaders\vertex\Model2.bls` into them; with pixel shaders
+granted 0x20 slots at `+0x1030` and `shaders\pixel\Model2.bls`. The programs are files of the install, not of the exe.
+
+Addresses: `0x402880`, `0x4028a3`, `0x4028c6`, `0x4028e9`, `0x40290c`, `0x40292f`, `0x402952`, `0x402975`, `0x40297f`, `0x4029a2`, `0x4029b1`, `0x4029c1`, `0x4029d0`, `0x4029e0`, `0x706510`, `0x7065d3`, `0x7065e2`, `0x70660b`, `0x706612`, `0x70666e`, `0x706670`, `0x70667a`, `0x63db90`, `0x58b2e0`, `0x706dd0`
+Confidence: verified
+Proof: one
+Test: none
+
+Each `0x63db90` call registers one variable with its name, help and default string (the pushes before
+the call); the result of each is stored by the `mov ds:G,eax` before the next call (`0x40289e`,
+`0x4028c1`, `0x4028e4`, `0x402907`, `0x40292a`, `0x40294d`). `0x402984` onward read the record's value `+0x28`
+of each in turn and `or` its bit into `ecx` (`0x40298d`, `0x40299f`, `0x4029ae`, `0x4029be`, `0x4029cd`, `0x4029dd`)
+before the call at `0x4029e0`. The vertex slots are `0x1c20` bytes at `0x7065e2` (`0x70660b` pushes the path,
+count `0x708`), the pixel ones `0x80` bytes (`0x70666e`, `0x706670`, count `0x20`). The strings are at `0x8730ac`
+and `0x873090`.
+
 ## Noise table
 
 Initialization fills the 128 floats at `0xcf58f0` with uniform values in [0, 1): it seeds a

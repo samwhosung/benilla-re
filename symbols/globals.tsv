@@ -1873,6 +1873,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x872f60	char[69]	s_textUsageCreateFrameFrameTypeNameParent		ui	Holds the string "Usage: CreateFrame("frameType" [, "name"] [, parent] [, "template"])"	inferred	none	
 0x872fa8	char[37]	s_textCreateFrameUnknownFrameTypeS		ui	Holds the string "CreateFrame: Unknown frame type '%s'"	inferred	none	
 0x873070	char[32]	s_m2DestroyNeverCalled		models	Holds the message logged when the model cache dies initialized	verified	one	models/cache#cache-object
+0x873090	const char[25]	s_pathModel2PixelProgram		models	Holds the path of the model pixel program file shaders\pixel\Model2.bls	verified	one	models/cache#feature-request
+0x8730ac	const char[26]	s_pathModel2VertexProgram		models	Holds the path of the model vertex program file shaders\vertex\Model2.bls	verified	one	models/cache#feature-request
 0x873184	uint32_t[6]	s_m2KindPriority		models	Holds the transparent sort priority of each element kind	verified	one	models/scene#batch-grouping
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
 0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	

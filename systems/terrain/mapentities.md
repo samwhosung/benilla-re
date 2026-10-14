@@ -170,7 +170,7 @@ classifies the entity from that group (`0x6a87f0`), a terrain hit links the chun
 nothing. An entity with the bit takes `0x6a8c10`, a record for each group it touches. `0x69e770`
 re-places an entity only when its list is empty.
 
-Addresses: `0x6c3020`, `0x6c3045`, `0x6c3047`, `0x6c3051`, `0x6a0450`, `0x6a04f2`, `0x6a04f9`, `0x6a86d0`, `0x6a86f4`, `0x6a8714`, `0x6a8a20`, `0x6a8b2d`, `0x6a8b3a`, `0x6a8b47`, `0x6a8bcd`, `0x6a8bd6`, `0x6a92d0`, `0x6a91f0`, `0x6a87f0`, `0x6a8c10`, `0x69e770`, `0x69e906`, `0x69e90f`, `0x69e913`, `0x69e280`, `0x69e2a3`, `0x69e2af`
+Addresses: `0x6c3020`, `0x6c3045`, `0x6c3047`, `0x6c3051`, `0x6a0450`, `0x6a04f2`, `0x6a04f9`, `0x6a86d0`, `0x6a86f4`, `0x6a8714`, `0x6a8a20`, `0x6a8b2d`, `0x6a8b3a`, `0x6a8b47`, `0x6a8bcd`, `0x6a8bd6`, `0x6a92d0`, `0x6a91f0`, `0x6a87f0`, `0x6a8c10`, `0x69e770`, `0x69e906`, `0x69e90f`, `0x69e913`, `0x69e280`, `0x69e2a3`, `0x69e2af`, `0x6717d0`, `0x671822`, `0x671a6a`, `0x671a73`
 Confidence: verified
 Proof: one
 Test: none
@@ -181,7 +181,9 @@ inserts after the head's last record (`0x6a04f2`, `0x6a04f9`), so `+0x20` become
 `0x6a91f0` each have one caller (`0x6a8b3a`, `0x6a8bd6`) and call `0x6a0450` with the node as owner.
 `0x69e280` clears bits 2 and 4 of `+0xc` (`0x69e2a3`) and calls `0x6a86d0` (`0x69e2af`); `0x6a8b47`
 classifies from the object just linked, so the flag and the record come from one hit. `0x69e90f jne`
-skips `0x69e280` for a linked node.
+skips `0x69e280` for a linked node. `0x6717d0` stores the position and calls `0x69e280` (`0x671a73`) only when
+the squared step from the stored position is at least 0.001 (`0x671822`, `test ah,5; jp`, a NaN counts) or its
+force argument is set (`0x671a6a`).
 
 ## Entity fog lane
 
@@ -203,3 +205,24 @@ The scan for `or dword [reg+8],0x10` finds `0x6a1d7b` alone (the one other hit, 
 word). The target record is the per-(instance, group) one `0x685d70` stamps (`terrain/portals#group-submit`):
 `0x695960` makes one per group (`0x695986` to the constructor through `0x6a0ca0`, the group index stored at
 `0x695a5c`), and `0x685d70` finds it by that index.
+
+## Light node classes
+
+Two classes share the map light base. The entity node (vtable `0x810810`, `0x69d590`, 0x108 bytes) is
+the light of units, players, game objects, missiles and effects; the doodad def (`0x810a74`, `0x6a7d00`,
+0x198 bytes) is the light of placed doodads. They differ in slots 2 (`0x6a7300`, `0x6a8050`) and 4
+(`0x69e4c0`, `0x6a8410`), and on a def `+0xf8` is `m[2][3]` of the matrix at `+0xcc`, not a target. An entity node's sun
+scale `+0xa4` ramps at 3.3333 per second toward its target `+0xf8`: 2.5 lit, 0.5 shadowed, 1.0 interior. A def's
+is assigned: 1.0 at creation, 0.5 once if the pending drain finds it in shadow, never ramped.
+
+Addresses: `0x810810`, `0x810824`, `0x810a74`, `0x69d590`, `0x69d6b1`, `0x6a7d00`, `0x6a7eb0`, `0x69e4ad`, `0x69e496`, `0x69e4b3`, `0x698cae`, `0x69e770`, `0x69e880`, `0x671a90`, `0x60a97f`, `0x5f8c9a`, `0x6717d0`, `0x671a73`, `0x482cd0`, `0x6b01bb`, `0x695bb3`, `0x698c9c`, `0x810a64`, `0x810a68`, `0x6a7e0e`
+Confidence: verified
+Proof: one
+Test: `terrain::env_update_color_difftest`, `terrain::color_step_magnitude_difftest`, `terrain::intensity_ramp_difftest`
+
+The constructors store the base vtable `0x810824` and then their own (`0x69d6b1`, `0x6a7eb0`). The constant
+2.5 has one reader in the image, `0x69e4ad`; 0.5 has two, `0x69e496` and `0x698cae`. `0x6a7e0e` onward set the
+def's matrix diagonal at `+0xcc`, `+0xe0`, `+0xf4` and `+0x108`, so `+0xf8` lies in its third row. `0x69e280`
+has two entries, `0x671a73` and `0x69e913`; `0x69e770` has one, the thunk `0x671a90`, called at `0x60a97f` and
+`0x5f8c9a` by the animators `0x482cd0` dispatches by object type. `0x6717d0` has six callers, each loading the
+light pointer of a game object, unit, missile, effect or the zone record. A def's own gate is `0x698c9c` (interior bit).
