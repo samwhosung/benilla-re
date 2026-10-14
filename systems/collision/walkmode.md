@@ -90,8 +90,8 @@ Proof: one
 Test: none
 
 Relative `call`/`jmp` scan of `.text` for `0x7c71c0`: exactly the seven sites, and no stored
-address in any section (control: `0x5ed570` finds its vtable slot `0x80b01c`). In `0x5f0000` to
-`0x640000` and `0x7c4000` to `0x7c8000`, the only immediate `and` mask lacking bit 8 or `or` mask
+address in any section (control: `0x5ed570` finds its vtable slot `0x80b01c`). In the unit, movement and
+resolution code and the shared movement file, the only immediate `and` mask lacking bit 8 or `or` mask
 with it that acts on a `CMovement` flag word is `0x7c71d0` and `0x7c71d7`; `0x60b180` and
 `0x60b187` act on the unit word `+0xc58`. The whole-word stores to `[reg+0x40]` or `[reg+0x9e8]` there
 number 72; the ones that take the word from a message or reset it are `0x618dbe`, `0x618df3`,
