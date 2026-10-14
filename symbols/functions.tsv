@@ -7601,8 +7601,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ab9d0	622	Script::GetBattlefieldScore	idb	ui	primitive		Pushes nine values of a score row: name, counts, team, rank, race and class	verified	one	ui/battlefield#scores-and-stats	
 0x4abc40	67	Script::GetBattlefieldWinner	idb	ui	orchestration		Pushes the battleground winner once ended, else nil	verified	one	ui/battlefield#scores-and-stats	
 0x4abc90	52	Script::SetBattlefieldScoreFaction	idb	ui	orchestration		Sets the score team filter from an optional number and rebuilds the scores	verified	one	ui/battlefield#scores-and-stats	
-0x4abcd0	44	Script::GetNumBattlefieldStats	idb	ui	orchestration		Pushes the number of battleground stat columns	verified	one	ui/battlefield#scores-and-stats	
-0x4abd00	181	Script::GetBattlefieldStatInfo	idb	ui	primitive		Pushes the text, icon and tooltip of a battleground stat column	verified	one	ui/battlefield#scores-and-stats	
+0x4abcd0	44	Script::GetNumBattlefieldStats	idb	ui	orchestration		Pushes the number of battleground score board columns	verified	one	ui/worldstate#the-scoreboard-columns	
+0x4abd00	181	Script::GetBattlefieldStatInfo	idb	ui	primitive		Pushes the text, icon and tooltip of a score board column, or three nils	verified	one	ui/worldstate#the-scoreboard-columns	
 0x4abdc0	159	Script::GetBattlefieldStatData	idb	ui	primitive		Pushes one stat word of a score row	verified	one	ui/battlefield#scores-and-stats	
 0x4abe60	140	Script::LeaveBattlefield	idb	ui	primitive		Sends opcode 0x2e1 to leave the battleground once it has ended	verified	one	ui/battlefield#joining-and-leaving	
 0x4abef0	8	Script::RequestBattlefieldPositions	idb	ui	orchestration		Implements the Lua function RequestBattlefieldPositions	inferred	none		
@@ -8870,12 +8870,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c5560	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4c5590	21			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c55b0	155			ui	primitive		Runs its object file code that calls 0x4c6450, 0x4c6410, SMemFree; not read here	inferred	none		
-0x4c5650	137			ui	primitive		Runs its object file code that calls 0x4c6410, 0x4c56e0; not read here	inferred	none		
-0x4c56e0	299			ui	primitive		Runs its object file code that calls 0x4368c0; not read here	inferred	none		
+0x4c5650	137	ClearWorldStates		ui	orchestration		Frees every world state, stores the INIT map and zone filters and rebuilds the list	verified	one	ui/worldstate#the-packets	
+0x4c56e0	299	BuildWorldStateUiList		ui	orchestration		Rebuilds the list of WorldStateUI rows that match the last INIT map and zone	verified	one	ui/worldstate#the-list-builder	
 0x4c5810	91	GetWorldStateValue		ui	orchestration	uint32_t __fastcall (uint32_t id)	Returns the value stored for a world state id, or 0	verified	one	ui/minimapblips#placing-the-blips	
 0x4c5870	449	SetWorldState		ui	primitive		Stores a world state value for an id	inferred	none	ui/questtext#world-state-numbers	
-0x4c5a40	44	Script::GetNumWorldStateUI	idb	ui	orchestration		Implements the Lua function GetNumWorldStateUI	inferred	none		
-0x4c5a70	395	Script::GetWorldStateUIInfo	idb	ui	primitive		Implements the Lua function GetWorldStateUIInfo	inferred	none		
+0x4c5a40	44	GetNumWorldStateUI	idb	ui	primitive		Pushes the number of rows in the always-visible world state list	verified	one	ui/worldstate#the-two-functions	
+0x4c5a70	395	GetWorldStateUIInfo	idb	ui	primitive		Pushes the ten values of the index-th list row, or the number 0	verified	one	ui/worldstate#the-two-functions	
 0x4c5c00	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4c5c20	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c5c40	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11969,7 +11969,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x508180	277	ExpandGenderToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size)	Appends the male or female form of a dollar g token by the active player's gender	verified	one	ui/spelltokens#gendered-text	
 0x5082a0	247	ExpandPluralToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size, uint32_t key)	Appends the singular or plural form of a dollar l token by the plural index of the key	verified	one	ui/spelltokens#plural-text	
 0x5083a0	386	ExpandTargetTokens		ui	primitive		Copies text replacing each %T, %t, %N and %n with the target's name	verified	one	ui/chatsend#text-steps	
-0x508560	286			ui	primitive		Runs its object file code that calls SStrChr, SStrLen, SStrPack and 3 more; not read here	inferred	none		
+0x508560	286	ExpandWorldStateText		ui	primitive		Replaces each percent digits w token with the world state value as decimal text	verified	one	ui/worldstate#the-text-expander	
 0x508680	982	DrunkTransformText		ui	primitive		Writes the text a drunk player sends from the source, a strength and a capacity	inferred	none	ui/chatsend#text-steps	
 0x508ad0	24			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x508af0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
