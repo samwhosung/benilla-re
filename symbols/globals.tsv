@@ -1969,8 +1969,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
 0xb4e248	uint64_t	s_cursorItemGuid		ui	Holds the GUID of the item payload	verified	one	ui/cursor#payload-kinds
 0xb4e260	uint8_t			ui	Holds a byte that CGGameUI::Initialize reads and writes; not read here	inferred	none	
-0xb4e274	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb4e278	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb4e264	void *	s_cinematicSequenceRow		ui	Holds the CinematicSequences row being played	verified	one	uicamera/cinematic#starting-a-sequence
+0xb4e268	uint32_t	s_cinematicSequenceSound		ui	Holds the handle of the sequence's own sound	verified	one	uicamera/cinematic#starting-a-sequence
+0xb4e26c	uint32_t	s_cinematicShotIndex		ui	Holds the index of the playing shot in the sequence row	verified	one	uicamera/cinematic#stepping-and-ending
+0xb4e270	void *	s_cinematicShotRow		ui	Holds the CinematicCamera row of the playing shot	verified	one	uicamera/cinematic#playing-a-shot
+0xb4e274	uint32_t	s_cinematicNarration		ui	Holds the handle of the shot's own sound	verified	one	uicamera/cinematic#playing-a-shot
+0xb4e278	uint32_t	s_cinematicMusicPaused		ui	Holds 1 when the cinematic paused the music and must restore it	verified	one	uicamera/cinematic#starting-a-sequence
 0xb4e2ac	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xb4e2b0	void *	s_uiScaleOption		ui	Points to the uiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
@@ -1989,7 +1993,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e304	uint32_t	s_autoScaleWidth		ui	Holds the window width the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
 0xb4e308	uint32_t	s_autoScaleHeight		ui	Holds the window height the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
 0xb4e30c	float	s_configuredAspect		ui	Holds the aspect the interface last applied, 4/3 until set	verified	one	ui/uiscale#applying-a-scale
-0xb4e310	uint32_t			unassigned	Holds a dword that Script::InCinematic, CGGameUI::InitializeGame read and write; not read here	inferred	none	
+0xb4e310	uint32_t	s_inCinematic		ui	Holds 1 from the start of a cinematic to its end	verified	one	uicamera/cinematic#what-else-reads-the-cinematic-word
 0xb4e314	uint32_t	s_zoneId		ui	Holds the player's zone, read into party records and the binder dialog	inferred	none	objectlayer/party#the-party-member-record
 0xb4e318	uint32_t	s_subZoneId		ui	Holds the player's area, which the binder dialog prefers	inferred	none	objectlayer/interaction#confirmation-dialogs
 0xb4e328	uint32_t			ui	Holds a dword that Script::RetrieveCorpse reads and writes; not read here	inferred	none	

@@ -6892,15 +6892,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ebe0	104	Script::NoPlayTime	idb	ui	primitive		Implements the Lua function NoPlayTime	inferred	none		
 0x48ec50	56			ui	orchestration		Runs GameUI.cpp code that calls ClientServices::GetCurrent, lua_pushnumber; not read here	inferred	none		
 0x48ec90	58			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4841a0; not read here	inferred	none		
-0x48ecd0	149			ui	primitive		Plays a cinematic, reading EnableMusic and hiding the cursor	inferred	none	objectlayer/playermessages#notices	
+0x48ecd0	149			ui	primitive		Starts a cinematic sequence, hiding the cursor and scheduling its first shot	verified	one	uicamera/cinematic#starting-a-sequence	
 0x48ed70	91			ui	primitive		Runs GameUI.cpp code that calls 0x460410, SndInterfacePauseZoneMusic, SetCursorShown and 3 more; not read here	inferred	none		
-0x48edd0	32			ui	orchestration		Runs GameUI.cpp code that calls EndLoadingScreen, FrameScript_SignalEvent, 0x48edf0; not read here	inferred	none		
-0x48edf0	423			ui	primitive		Runs GameUI.cpp code that calls GetActiveCamera, 0x50c870, CM2Model::GetCamera and 11 more; not read here	inferred	none		
+0x48edd0	32			ui	orchestration		Signals CINEMATIC_START and plays the first shot, or ends the cinematic	verified	one	uicamera/cinematic#starting-a-sequence	
+0x48edf0	423			ui	primitive		Plays the shot in the shot row through the camera object	verified	one	uicamera/cinematic#playing-a-shot	
 0x48efa0	25			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48efc0	32			ui	orchestration		Runs GameUI.cpp code that calls 0x4c0d10; not read here	inferred	none		
-0x48efe0	99			ui	primitive		Runs GameUI.cpp code that calls Sound::Stop, 0x48edf0; not read here	inferred	none		
-0x48f050	34			ui	orchestration		Runs GameUI.cpp code that calls Sound::Stop, 0x4c0d10; not read here	inferred	none		
-0x48f080	377			ui	primitive		Runs GameUI.cpp code that calls GetActiveCamera, FrameScript_SignalEvent, ClntObjMgrObjectPtr and 13 more; not read here	inferred	none		
+0x48efc0	32			ui	orchestration		Schedules the next shot when a shot's animation finishes	verified	one	uicamera/cinematic#stepping-and-ending	
+0x48efe0	99			ui	primitive		Plays the next shot of the sequence, or ends the cinematic	verified	one	uicamera/cinematic#stepping-and-ending	
+0x48f050	34			ui	orchestration		Stops the narration and schedules the end of the cinematic	verified	one	uicamera/cinematic#stepping-and-ending	
+0x48f080	377			ui	primitive		Ends a cinematic, restoring the music, the cursor and the zone channels	verified	one	uicamera/cinematic#stepping-and-ending	
 0x48f200	396			ui	primitive		Ends the loot window, releasing the held loot and showing ERR_LOOT_NO_UI where it applies	inferred	none	objectlayer/players#death	
 0x48f390	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48f3a0	54			ui	primitive		Opens the loot window for an object, money and loot type	inferred	none	objectlayer/inventory#loot	
@@ -12233,11 +12233,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50c460	100	CCamera::~CCamera		uicamera	primitive	void __thiscall (CCamera *this)	Saves the camera's view, unregisters cameraClip and releases the camera's lists	verified	one	uicamera/view#lifetime	
 0x50c4d0	207	CCamera::SaveSettings		uicamera	primitive	void __thiscall (CCamera *this)	Writes the target distance and pitch to camera-settings.txt	verified	one	uicamera/view#the-settings-file	
 0x50c5a0	402	CCamera::LoadSettings		uicamera	primitive	void __thiscall (CCamera *this)	Reads the distance and pitch from camera-settings.txt into the current and target values	verified	one	uicamera/view#reading-the-file	
-0x50c740	280			uicamera	primitive		Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 9 more; not read here	inferred	none		
-0x50c860	11			uicamera	orchestration		Runs its object file code not read here	inferred	none		
-0x50c870	413			uicamera	primitive		Runs its object file code that calls 0x50ca50, 0x484700, 0x50ad10 and 9 more; not read here	inferred	none		
-0x50ca10	54			uicamera	orchestration		Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 1 more; not read here	inferred	none		
-0x50ca50	53			uicamera	primitive		Runs its object file code that calls HandleClose, HandleClose2; not read here	inferred	none		
+0x50c740	280	CCamera::ArmShot		uicamera	primitive	bool __thiscall (CCamera *this)	Starts the shot model, takes its camera and applies the first view	verified	one	uicamera/cinematic#arming-and-the-per-frame-step	
+0x50c860	11	CCamera::HasShotCamera		uicamera	orchestration	bool __thiscall (CCamera *this)	Returns whether a shot camera is armed	verified	one	uicamera/cinematic#arming-and-the-per-frame-step	
+0x50c870	413	CCamera::LoadShot		uicamera	primitive	bool __thiscall (CCamera *this, const char *path, const C3Vector *origin, float facing, void *callback, uint32_t a, uint32_t b)	Makes the shot model and installs its origin and facing matrix	verified	one	uicamera/cinematic#loading-a-shot	
+0x50ca10	54	CCamera::RestartShot		uicamera	orchestration	void __thiscall (CCamera *this)	Resets the scene clock and restarts the shot's animation	verified	one	uicamera/cinematic#playing-a-shot	
+0x50ca50	53	CCamera::ReleaseShot		uicamera	primitive	void __thiscall (CCamera *this)	Closes the shot camera and releases the shot model	verified	one	uicamera/cinematic#stepping-and-ending	
 0x50ca90	1593			uicamera	primitive		Runs its object file code that calls CM2Model::IsLoaded, CM2Model::HasAttachment and 12 more; not read here	inferred	none		
 0x50d0f0	546	CCamera::SetTarget		uicamera	orchestration	void __thiscall (CCamera *this, CGObject_C *target)	Switches the followed object, snapping its tilt and drunk bias, or frees the shakes for none	verified	one	uicamera/effects#where-a-shake-lands	
 0x50d320	98	CCamera::SetFovOverride		uicamera	primitive	void __thiscall (CCamera *this, int degrees)	Switches to first person with a given field of view, or restores the third person view	verified	one	uicamera/transitions#field-of-view	
@@ -12247,7 +12247,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50d500	32	CCamera::PushGroundPitch		uicamera	orchestration	void __thiscall (CCamera *this)	Raises the ground pitch counter and bakes the ground pitch into the pitch on the first	verified	one	uicamera/transitions#relative-and-absolute-frames	
 0x50d520	26	CCamera::PopGroundPitch		uicamera	primitive	void __thiscall (CCamera *this)	Lowers the ground pitch counter and takes the ground pitch off the pitch on the last	verified	one	uicamera/transitions#relative-and-absolute-frames	
 0x50d540	143			uicamera	unreached		Runs Camera.cpp code that calls 0x50a780; not read here	inferred	none		
-0x50d5d0	193			uicamera	primitive		Runs Camera.cpp code that calls 0x50a930; not read here	inferred	none		
+0x50d5d0	193	CCamera::SetLookAt		uicamera	primitive	void __thiscall (CCamera *this, const C3Vector *eye, const C3Vector *target, float roll)	Stores the eye and builds the view basis toward the target with the roll	verified	one	uicamera/cinematic#applying-the-view	
 0x50d6a0	40			uicamera	unreached		Runs Camera.cpp code that calls 0x50a780; not read here	inferred	none		
 0x50d6d0	70	CCamera::GetFov		uicamera	primitive	float __thiscall (CCamera *this)	Returns the base field of view plus the bias, kept from 0 to 179 degrees	verified	one	uicamera/transitions#field-of-view	
 0x50d720	97			uicamera	orchestration		Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
@@ -12262,7 +12262,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50e570	857	CCamera::SolveLimits		uicamera	primitive	uint32_t __thiscall (CCamera *this, float *pivot, float *distance, float *height, float *offset, float band)	Solves the distance and pivot height that clear the world	verified	one	uicamera/solver#the-solver	
 0x50e8d0	1914	CCamera::Update		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Updates the follow camera for a target: axes, angles, solver, eye, pull-in, fade	verified	one	uicamera/driver#the-per-frame-update	
 0x50f050	1			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
-0x50f060	254			uicamera	primitive		Runs Camera.cpp code that calls CM2Model::IsLoaded, 0x50c740, OsGetAsyncTimeMs and 7 more; not read here	inferred	none		
+0x50f060	254	CCamera::UpdateShot		uicamera	primitive	void __thiscall (CCamera *this)	Advances the shot and applies its eye, look-at and roll	verified	one	uicamera/cinematic#arming-and-the-per-frame-step	
 0x50f160	1444	CCamera::UpdateTransitions		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Eases the bob offsets and the seven channels toward their targets	verified	one	uicamera/transitions#the-ease	
 0x50f710	356	CCamera::MakeViewAngles		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, float *yaw, float *pitch, float *roll)	Makes the view yaw, pitch and roll from the offsets and the target's facing and builds the basis	verified	one	uicamera/driver#view-angles	
 0x50f880	101	CCamera::ArmPivotHeight		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Arms the pivot height transition from the swim, near or far value	inferred	none	uicamera/driver#pivot-height	
