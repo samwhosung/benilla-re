@@ -9612,7 +9612,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d6240	161			ui	orchestration		Runs its object file code that calls CGReputationInfo::FactionToIndex and 4 more; not read here	inferred	none		
 0x4d62f0	64			ui	orchestration		Runs its object file code that calls CGReputationInfo::FactionToIndex and 2 more; not read here	inferred	none		
 0x4d6330	55			ui	primitive		Runs its object file code that calls 0x4d5620, 0x62c5f0; not read here	inferred	none		
-0x4d6370	35			ui	primitive		Runs its object file code that calls CGReputationInfo::FactionToIndex; not read here	inferred	none		
+0x4d6370	35	GetFactionStanding		ui	primitive	int32_t __fastcall (uint32_t faction)	Returns the player's standing value with a faction, or 0	verified	one	ui/tooltipitemreq#the-reputation-line	
 0x4d63a0	93	CGReputationInfo::GetFactionStandingReaction	idb	ui	primitive	uint32_t __fastcall (uint32_t faction)	Returns the rank 0 to 7 of the player's standing with a faction, by thresholds from -6000 to 42000	verified	one	objectlayer/reaction#faction-toward-a-unit	
 0x4d6400	138			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4d6490	46	CGReputationInfo::GetForcedReaction	idb	ui	orchestration	bool __fastcall (uint32_t faction, uint32_t *rank)	Finds the faction in the forced-reaction pairs and stores its rank; false when absent	verified	one	objectlayer/reaction#faction-toward-a-unit	
@@ -11340,7 +11340,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fadf0	126			ui	primitive		Runs MerchantFrame.cpp code that calls 0x4931c0, FrameScript_SignalEvent, GetCursorAmmo and 3 more; not read here	inferred	none		
 0x4fae70	87			ui	primitive		Runs MerchantFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4faed0	96			ui	primitive		Runs MerchantFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x4faf30	145			ui	primitive		Runs MerchantFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
+0x4faf30	145	GetItemRepairCost		ui	primitive	int32_t __fastcall (void *item)	Returns an item's repair cost scaled by one minus the open merchant's discount	verified	one	ui/tooltipitemfoot#results-of-the-item-methods	
 0x4fafd0	234			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, _qsort; not read here	inferred	none		
 0x4fb0c0	47			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4fb0f0	43			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -12893,7 +12893,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523c10	6			ui	unreached		Runs its object file code not read here	inferred	none		
 0x523c20	20			ui	orchestration		Sets the current cursor index and refreshes the cursor when it changes	inferred	none	spell/cast#targeting-refusal-or-cursor	
 0x523c40	207			ui	orchestration		Runs its object file code that calls SStrCmpI, TextureCreateFromFile, 0x44ae00 and 4 more; not read here	inferred	none		
-0x523d10	6			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x523d10	6	GetDefaultCursor		ui	orchestration	uint32_t __cdecl (void)	Returns the default cursor index	verified	one	ui/tooltipitemfoot#the-sell-price	
 0x523d20	7			ui	orchestration		Stores the default cursor index	verified	one	spell/cast#targeting-refusal-or-cursor	
 0x523d30	11			ui	orchestration		Sets the shown cursor to the base cursor through 0x523c20	inferred	none	spell/targeting#the-targeting-cursor	
 0x523d40	55			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
@@ -13149,19 +13149,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529060	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529070	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529080	10			ui	orchestration		Runs its object file code that calls 0x529090; not read here	inferred	none		
-0x529090	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529090	11			ui	orchestration		Stores 0xff808080 in the gray skill colour	verified	one	ui/tooltipitemhead#the-skill-colours	
 0x5290a0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5290b0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5290c0	10			ui	orchestration		Runs its object file code that calls 0x5290d0; not read here	inferred	none		
-0x5290d0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x5290d0	11			ui	orchestration		Stores 0xff40c040 in the green skill colour	verified	one	ui/tooltipitemhead#the-skill-colours	
 0x5290e0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5290f0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529100	10			ui	orchestration		Runs its object file code that calls 0x529110; not read here	inferred	none		
-0x529110	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529110	11			ui	orchestration		Stores 0xffffff00 in the yellow skill colour	verified	one	ui/tooltipitemhead#the-skill-colours	
 0x529120	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529130	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529140	10			ui	orchestration		Runs its object file code that calls 0x529150; not read here	inferred	none		
-0x529150	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529150	11			ui	orchestration		Stores 0xffff8040 in the orange skill colour	verified	one	ui/tooltipitemhead#the-skill-colours	
 0x529160	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529170	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529180	10			ui	orchestration		Runs its object file code that calls 0x529190; not read here	inferred	none		
@@ -13169,10 +13169,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5291a0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5291b0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5291c0	10			ui	orchestration		Runs its object file code that calls 0x5291d0; not read here	inferred	none		
-0x5291d0	71			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x5291d0	71	InitItemQualityColours		ui	orchestration	void __cdecl ()	Stores the seven item quality colours, grey to cream	verified	one	ui/tooltipcontent#the-colours	
 0x529220	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529230	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x529240	357	CGTooltip::CGTooltip	idb	ui	orchestration		Runs its object file code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x529240	357	CGTooltip::CGTooltip	idb	ui	orchestration		Constructs a tooltip object: its frame base, line arrays and virtual table	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild	
 0x5293b0	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5293e0	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x529440	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -13184,7 +13184,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529940	243			ui	primitive		Runs Tooltip.cpp code that calls 0x536d10, 0x536c80, 0x536910 and 2 more; not read here	inferred	none		
 0x529a40	1152			ui	primitive		Runs Tooltip.cpp code that calls __ftol, ceil, FrameScript_GetText and 6 more; not read here	inferred	none		
 0x529ec0	222			ui	primitive		Runs Tooltip.cpp code that calls FrameScript_GetText, SStrCopy, GetSpellEffectPointsInt and 2 more; not read here	inferred	none		
-0x529fa0	54			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
+0x529fa0	54	SkillColorPointer		ui	primitive	uint32_t * __fastcall (int32_t required, int32_t value)	Returns the colour pointer of a skill value against its requirement: gray, green, yellow, orange or red	verified	one	ui/tooltipitemhead#the-skill-colours	
 0x529fe0	2613			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, GPartyInfo::GetRemoteStats and 26 more; not read here	inferred	none		
 0x52aa20	747			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, 0x77f410 and 10 more; not read here	inferred	none		
 0x52ad10	88			ui	primitive		Runs Tooltip.cpp code that calls 0x52aa20, 0x530640; not read here	inferred	none		
@@ -13197,9 +13197,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x52b040	85			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, 0x4f0f40, 0x5303b0; not read here	inferred	none		
 0x52b0a0	752			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 8 more; not read here	inferred	none		
 0x52b390	695			ui	primitive		Runs Tooltip.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 5 more; not read here	inferred	none		
-0x52b650	11946			ui	primitive		Runs Tooltip.cpp code that calls __alloca_probe, 0x530050, ClntObjMgrGetActivePlayer and 36 more; not read here	inferred	none		
-0x52e530	141			ui	orchestration		Runs Tooltip.cpp code that calls 0x52b650, 0x530640; not read here	inferred	none		
-0x52e5c0	76			ui	primitive		Runs Tooltip.cpp code not read here	inferred	none		
+0x52b650	11946	CGTooltip::BuildItem		ui	primitive	uint32_t __thiscall (int entry, uint64_t *rec, uint64_t *item, int nameOnly, int header, int valid, int rebuild, int ownLo, int ownHi)	Adds the lines of an item tooltip from its record and the tooltip's instance fields, returning 1 for a timed line	verified	one	ui/tooltipitem#the-builders-arguments	
+0x52e530	141	CGTooltip::OnCacheAnswer		ui	orchestration	void __stdcall (CGTooltip *tooltip, uint8_t found)	Rebuilds an item tooltip from its kept fields when a cache answers, then sizes it	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild	
+0x52e5c0	76	CompareSetBonuses		ui	primitive	int __cdecl (const uint8_t *a, const uint8_t *b)	Orders two item set bonus slots by the members they need, then by slot number	verified	one	ui/tooltipitemreq#set-bonus-lines	
 0x52e610	4531			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 26 more; not read here	inferred	none		
 0x52f820	83			ui	primitive		Runs Tooltip.cpp code that calls 0x52e610, 0x530640; not read here	inferred	none		
 0x52f880	247			ui	orchestration		Runs Tooltip.cpp code that calls 0x530050, 0x530380, 0x5075f0 and 1 more; not read here	inferred	none		
@@ -13235,7 +13235,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x531f00	197	GameTooltip::FadeOut	idb	ui	primitive		Implements the GameTooltip method FadeOut, its pair in the table 0x854198	verified	one	ui/tooltip#fading-out	
 0x531fd0	715	GameTooltip::SetHyperlink	idb	ui	primitive		Implements the GameTooltip method SetHyperlink, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x5322a0	1078	GameTooltip::SetAction	idb	ui	primitive		Implements the GameTooltip method SetAction, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
-0x5326e0	69			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
+0x5326e0	69	CGTooltip::ClearItemFields		ui	orchestration	void __thiscall (void *fields)	Zeroes the item instance fields at tooltip +0x3d0 and sets the charges to −1	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild	
 0x532730	485	GameTooltip::SetPetAction	idb	ui	primitive		Implements the GameTooltip method SetPetAction, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x532920	471	GameTooltip::SetShapeshift	idb	ui	primitive		Implements the GameTooltip method SetShapeshift, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x532b00	322	GameTooltip::SetPlayerBuff	idb	ui	primitive		Implements the GameTooltip method SetPlayerBuff, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
@@ -29609,7 +29609,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1a90	53			ui	orchestration		Reads font flags as substrings: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont	
 0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
-0x6f1c10	213	GetScriptFlagArg		ui	primitive		Reads a script argument as an integer flag: nil 0, a boolean 0 or 1, a number truncated, else by keyword or default	inferred	none		
+0x6f1c10	213	GetScriptFlagArg		ui	primitive		Reads a script argument as a flag: nil 0, a number truncated, a string by keyword, else the default	verified	one	ui/tooltipcontent#the-line-bindings	
 0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
 0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	
 0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
@@ -33560,12 +33560,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772810	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x772830	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetWidth; not read here	inferred	none		
 0x772860	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetHeight; not read here	inferred	none		
-0x772890	149			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, CLayoutFrame::GetWidth, 0x771ec0 and 3 more; not read here	inferred	none		
+0x772890	149			ui	primitive		Returns the unwrapped text width in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#sizing-the-tooltip	
 0x772930	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x772890, GetScaledScreenAspect and 1 more; not read here	inferred	none		
-0x7729b0	170			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, CLayoutFrame::GetWidth, 0x771ec0 and 2 more; not read here	inferred	none		
-0x772a60	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, 0x7729b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		
+0x7729b0	170			ui	primitive		Returns the text height in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#the-spacer-line	
+0x772a60	113			ui	primitive		Returns the larger of the text height and one device pixel	verified	one	ui/tooltipcontent#the-spacer-line	
 0x772ae0	119	MeasureRunWidth		ui	primitive	float __thiscall (const char *text, int32_t bytes)	Measures the width of a byte range of the label's text, escapes giving none	verified	one	ui/editboxmarkup#how-the-box-draws-and-measures	
-0x772b60	87			ui	primitive		Runs its object file code that calls 0x7727b0, 0x44db50; not read here	inferred	none		
+0x772b60	87			ui	primitive		Splits the text into wrapped pieces for a width and a piece count	verified	one	ui/tooltipcontent#sizing-the-tooltip	
 0x772bc0	101			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44d860; not read here	inferred	none		
 0x772c30	101	CountGlyphsFromRight		ui	primitive	int32_t __thiscall (float x)	Counts the glyphs that fit from the right edge of the line to a point	verified	one	ui/editboxmarkup#faults	
 0x772ca0	122			ui	primitive		Runs its object file code that calls CLayoutFrame::SetLayoutScale, 0x772790, SStrCopy and 3 more; not read here	inferred	none		
@@ -33876,7 +33876,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77f640	122			ui	orchestration		Runs its object file code that calls CScriptRegion::CScriptRegion, 0x77fd10; not read here	inferred	none		
 0x77f6c0	43			ui	orchestration		Runs its object file code that calls 0x77f6f0, SMemFree; not read here	inferred	none		
 0x77f6f0	85			ui	orchestration		Runs its object file code that calls 0x77fd10, SMemFree; not read here	inferred	none		
-0x77f750	355			ui	primitive		Runs its object file code that calls 0x59fc50, 0x667420, 0x5268b0 and 4 more; not read here	inferred	none		
+0x77f750	355			ui	primitive		Sets a FontString colour from a colour pointer, skipping a colour it already holds	verified	one	ui/tooltipcontent#the-line-arrays	
 0x77f8c0	77			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77f910	387			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0; not read here	inferred	none		
 0x77faa0	5			ui	orchestration		Runs its object file code not read here	inferred	none		

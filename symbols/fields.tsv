@@ -160,6 +160,26 @@ CGPlayer_C	0x1d40	8	uint64_t	m_inventoryOwner	objectlayer	Holds the player's GUI
 CGPlayer_C	0x1d48	1	uint8_t	m_inventoryOwn	objectlayer	Holds 1, the inventory's own-flag	verified	one	objectlayer/players#the-player-object
 CGPlayer_C	0x1d50	24	uint8_t[24]	m_handWeapons	objectlayer	Holds each hand's weapon record, 8 bytes apart: class, subclass and three more bytes	verified	one	objectlayer/playercombat#hand-weapons
 CGPlayer_C	0x1d68	4	uint32_t	m_localStandState	objectlayer	Holds the active player's local stand state	verified	one	objectlayer/players#the-player-object
+CGTooltip	0x031c	4	uint32_t	m_lineCount	ui	Holds the number of lines in use	verified	one	ui/tooltipcontent#the-line-arrays
+CGTooltip	0x0320	4	uint32_t	m_lineLimit	ui	Holds the number of lines the arrays hold	verified	one	ui/tooltipcontent#the-line-arrays
+CGTooltip	0x0380	8	uint32_t[2]	m_itemGuid	ui	Holds the item GUID the item builder was given, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x0398	4	uint32_t	m_itemEntry	ui	Holds the item entry of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x03a0	4	uint32_t	m_nameOnly	ui	Holds the nameOnly argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x03a4	4	uint32_t	m_equippedHeader	ui	Holds the equipped header argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x03a8	8	uint32_t[2]	m_setOwnerGuid	ui	Holds the GUID of the unit whose gear counts for an item set, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x03d0	28	uint32_t[7]	m_enchantIds	ui	Holds the seven enchantment ids an item without an object shows	verified	one	ui/tooltipenchant#enchantment-ids
+CGTooltip	0x0408	4	uint32_t	m_cooldownMs	ui	Holds the remaining cooldown of the item in milliseconds	verified	one	ui/tooltipitemreq#the-cooldown-line
+CGTooltip	0x040c	4	uint32_t	m_proposedEnchantSpell	ui	Holds the spell id of the enchantment proposed in a trade	verified	one	ui/tooltipenchant#proposed-enchantment
+CGTooltip	0x0410	8	uint32_t[2]	m_creatorGuid	ui	Holds the GUID of the item's creator, low then high	verified	one	ui/tooltipitemfoot#the-maker-line
+CGTooltip	0x0418	8	uint32_t[2]	m_giftCreatorGuid	ui	Holds the GUID of the player who wrapped the item, low then high	verified	one	ui/tooltipitemfoot#the-maker-line
+CGTooltip	0x0420	4	uint32_t	m_linkNumber4	ui	Holds the fourth item link number, which nothing reads	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x0424	4	int32_t	m_randomProperty	ui	Holds the random property id of the item	verified	one	ui/tooltipitemhead#name-and-header
+CGTooltip	0x0428	4	int32_t	m_charges	ui	Holds the item's charges, −1 when unset	verified	one	ui/tooltipitemreq#spell-lines
+CGTooltip	0x042c	4	uint32_t	m_wrapped	ui	Holds 1 for a wrapped item	verified	one	ui/tooltipitem#wrapped-gifts
+CGTooltip	0x0430	4	uint32_t	m_lockId	ui	Holds the lock id of the item	verified	one	ui/tooltipitemhead#the-lock-lines
+CGTooltip	0x0434	4	uint32_t	m_maxDurability	ui	Holds the maximum durability of the item, −1 when unset	verified	one	ui/tooltipenchant#durability
+CGTooltip	0x0438	4	uint32_t	m_durability	ui	Holds the current durability of the item	verified	one	ui/tooltipenchant#durability
+CGTooltip	0x0440	4	uint32_t	m_fieldsValid	ui	Holds 1 when the item fields from 0x3d0 are valid	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0118	4	CMovement *	m_movementPtr	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object

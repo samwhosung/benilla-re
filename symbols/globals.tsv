@@ -456,7 +456,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808e78	const float	s_tooltipHeightPad		ui	Holds 10.24, the tooltip's vertical padding at top and bottom	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e7c	const float	s_float40000000		ui	Holds 2.0, the seconds a GameTooltip takes to fade out	verified	one	ui/tooltip#fading-out
 0x808e80	const float	s_tooltipWrapWidth		ui	Holds 230.4, the widest a wrapped tooltip line gets	verified	one	ui/tooltipcontent#sizing-the-tooltip
-0x808e88	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x808e88	const uint32_t[37]	s_statOrder		ui	Holds the 37 stat types in display order: 4, 3, 7, 5, 6, 1, 0, 8, 9, 2, 10 and then 26 zeros	verified	one	ui/tooltipitemstats#stat-lines
+0x808f60	void *[36]	CGTooltip::vftable		ui	Holds the 36 virtual function slots of CGTooltip, which its constructor stores	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
@@ -1043,7 +1044,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x83a3c8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x83b880	uint8_t[320]	s_gameObjectFieldInfo		unassigned	Holds the 16 game object field descriptors of 20 bytes: name, index, count, type, flags	verified	one	objectlayer/gameobjects#the-game-object
 0x83dc2c	uint32_t	s_worldPickState		ui	Holds a state word the world frame's leave sets to 3; other code sets 0 and 1	inferred	none	ui/hover#world-hover-and-its-tooltip
-0x83ddb0	uint32_t			ui	Holds a dword that Script::GetItemInfo, Script::GetTradeSkillItemStats read; not read here	inferred	none	
+0x83ddb0	const char *[29]	s_invTypeKeys		ui	Holds the global string key of each inventory type, empty for type 0	verified	one	ui/tooltipitemhead#the-slot-and-type-line
 0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
 0x83de28	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x83de4c	uint32_t			ui	Holds a dword that CGGameUI::InitializeGame, CGGameUI::ShutdownGame read; not read here	inferred	none	
@@ -1108,7 +1109,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8445b4	char[15]	s_textPVPRANKDD		unassigned	Holds the string "PVP_RANK_%d_%d"	inferred	none	
 0x8445c8	char[7]	s_textDSAt8445c8		ui	Holds the string "%d. %s"	inferred	none	
 0x844608	char[21]	s_textSSSSSSDDSD		ui	Holds the string "%s%s%s%s%s%s%d%d%s%d"	inferred	none	
-0x84480c	uint16_t			unassigned	Holds a word that Script::GetAbandonQuestItems, Script::GetTradeSkillItemStats read; not read here	inferred	none	
+0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
 0x84506c	uint32_t			unassigned	Holds a dword that CGGameUI::HandlePacket, Script::GetCurrentMapContinent read and write; not read here	inferred	none	
@@ -1195,6 +1196,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84dd64	uint32_t			ui	Holds a dword that Script::SetTradeSkillInvSlotFilter, Script::GetTradeSkillInvSlotFilter read and write; not read here	inferred	none	
 0x84dd68	uint32_t			ui	Holds a dword that Script::CollapseTradeSkillSubClass, Script::ExpandTradeSkillSubClass read and write; not read here	inferred	none	
 0x84dd70	uint32_t			ui	Holds a dword that Script::GetTradeSkillInvSlots reads; not read here	inferred	none	
+0x84e32c	const char[12]	s_fmtPvpMedal		ui	Holds the format PVP_MEDAL%d that builds the key of a required medal	verified	one	ui/tooltipitemreq#spell-honor-rank-and-medal-lines
 0x84e338	char[15]	s_textITEMREQSKILL		ui	Holds the string "ITEM_REQ_SKILL"	inferred	none	
 0x84e3b4	char[19]	s_textITEMSPELLCHARGES		ui	Holds the string "ITEM_SPELL_CHARGES"	inferred	none	
 0x84e4cc	char[19]	s_textSPELLSCHOOLDCAP		ui	Holds the string "SPELL_SCHOOL%d_CAP"	inferred	none	
@@ -1283,13 +1285,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x854a40	char[27]	s_textTOOLTIPTALENTTIERPOINTS		ui	Holds the string "TOOLTIP_TALENT_TIER_POINTS"	inferred	none	
 0x854a5c	char[22]	s_textTOOLTIPTALENTPREREQ		ui	Holds the string "TOOLTIP_TALENT_PREREQ"	inferred	none	
 0x854a74	char[16]	s_textITEMUNSELLABLE		ui	Holds the string "ITEM_UNSELLABLE"	inferred	none	
+0x854ad4	const char[5]	s_fmtQuoted		ui	Holds the format "%s" that puts an item description in quotation marks	verified	one	ui/tooltipitemfoot#the-description
 0x854b14	char[5]	s_textSAt854b14		ui	Holds the string "  %s"	inferred	none	
 0x854b1c	char[14]	s_textITEMSETNAME		ui	Holds the string "ITEM_SET_NAME"	inferred	none	
-0x854b2c	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x854b2c	const char[3]	s_setSpacer		ui	Holds the blank line string, a space and a newline, that frames an item set	verified	one	ui/tooltipitemreq#item-set-lines
+0x854b30	const char[8]	s_fmtNameCount		ui	Holds the format %s (%d) of a reagent name with its count	verified	one	ui/tooltipitemreq#recipe-products
 0x854b8c	char[20]	s_textITEMREQREPUTATION		ui	Holds the string "ITEM_REQ_REPUTATION"	inferred	none	
 0x854bb4	char[14]	s_textITEMDURATION		ui	Holds the string "ITEM_DURATION"	inferred	none	
 0x854bc4	char[20]	s_textDURABILITYTEMPLATE		ui	Holds the string "DURABILITY_TEMPLATE"	inferred	none	
 0x854c4c	char[13]	s_textDPSTEMPLATE		ui	Holds the string "DPS_TEMPLATE"	inferred	none	
+0x854c5c	const char[8]	s_fmtSpeed		ui	Holds the format %s %.2f of a weapon's speed cell	verified	one	ui/tooltipitemstats#speed-and-damage-per-second
 0x854d7c	char[24]	s_textPETITIONNUMSIGNATURES		ui	Holds the string "PETITION_NUM_SIGNATURES"	inferred	none	
 0x854dd0	char[20]	s_textGUILDCHARTERTITLE		ui	Holds the string "GUILD_CHARTER_TITLE"	inferred	none	
 0x854e44	char[16]	s_textCHANCETODODGE		ui	Holds the string "CHANCE_TO_DODGE"	inferred	none	
@@ -1679,7 +1684,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882730	uint32_t	s_iniRegion		client	Holds the Region value read from the WoW Config section of Wow.ini, 0 by default	inferred	none	
 0x882734	uint32_t			client	Holds a dword that ClientInitializeGame, ClientDestroyGame read and write; not read here	inferred	none	
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
-0x882748	uint8_t			unassigned	Holds a byte that ClientRegisterConsoleCommands, CStatus::Add, ShowErrorText read; not read here	inferred	none	
+0x882748	const char[1]	s_emptyString		unassigned	Holds the empty string	verified	one	ui/tooltipcontent#localized-lines
 0x882be0	uint32_t	s_loadingScreen		loadingscreen	Holds the loading screen object, or null	inferred	none	
 0x882e04	uint32_t			loadingscreen	Holds a dword that EndLoadingScreen reads and writes; not read here	inferred	none	
 0x882e10	uint32_t			loadingscreen	Holds a dword that SetLoadingScreenTip, BeginLoadingScreen, EndLoadingScreen read and write; not read here	inferred	none	
@@ -2108,7 +2113,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdcfb8	uint32_t	s_currentCraftProfession		ui	Holds the profession the craft window shows; 0x4f6000 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
 0xbdcfc8	int32_t			ui	Holds an int32_t that Script::GetNumCrafts reads and writes; not read here	inferred	none	
 0xbdd038	uint64_t	s_bankerGuid		ui	Holds the GUID of the open banker, 0 when none	inferred	none	objectlayer/inventory#searching-the-inventory
-0xbddfa0	uint32_t			ui	Holds a dword that Script::PickupContainerItem, Script::UseContainerItem read and write; not read here	inferred	none	
+0xbddfa0	uint32_t[2]	s_merchantItems		ui	Holds the open merchant's item table pointer and count; both zero when no merchant is open	verified	one	ui/tooltipitemfoot#the-sell-price
 0xbde040	uint32_t	s_currentTradeSkillLine		ui	Holds the skill line the trade-skill window shows; 0x4fc910 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
 0xbde044	uint32_t			ui	Holds a dword that Script::GetTradeskillRepeatCount reads and writes; not read here	inferred	none	
 0xbde054	int32_t			ui	Holds an int32_t that Script::GetNumTradeSkills, Script::GetFirstTradeSkill read and write; not read here	inferred	none	
@@ -2154,16 +2159,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ce30	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0ce7c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0cea4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc0cf18	uint32_t	s_colorSkillYellow		ui	Holds the yellow 0xffffff00 of a skill within 25 to 49 of its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
+0xc0cf50	uint32_t	s_colorSkillGray		ui	Holds the gray 0xff808080 of a skill 100 or more above its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0cf60	uint32_t	s_tooltipWhite		ui	Holds the white colour 0xffffffff of an ordinary line	verified	one	ui/tooltipcontent#the-colours
 0xc0d368	uint32_t	s_tooltipCream		ui	Holds the pale cream 0xffffff97 of an owned set member	verified	one	ui/tooltipcontent#the-colours
 0xc0d390	uint32_t	s_tooltipRed		ui	Holds the red 0xffff2020 of a failed requirement	verified	one	ui/tooltipcontent#the-colours
 0xc0d398	uint32_t	s_tooltipPureRed		ui	Holds the pure red 0xffff0000	verified	one	ui/tooltipcontent#the-colours
+0xc0d3a4	uint32_t	s_colorSkillOrange		ui	Holds the orange 0xffff8040 of a skill 0 to 24 above its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0d3a8	uint32_t	s_tooltipRedLocked		ui	Holds the red 0xffff2020 of a locked line	verified	one	ui/tooltipcontent#the-colours
 0xc0d3ac	uint32_t	s_tooltipGreen		ui	Holds the green 0xff00ff00 of a trigger or learnable line	verified	one	ui/tooltipcontent#the-colours
 0xc0d3c4	uint32_t	s_tooltipGray		ui	Holds the gray 0xff808080 of an inactive line	verified	one	ui/tooltipcontent#the-colours
 0xc0d3c8	uint32_t[7]	s_qualityColors		ui	Holds the item quality colours from Poor to Artifact	verified	one	ui/tooltipcontent#the-colours
+0xc0d3e4	uint32_t	s_setSortRow		ui	Holds the item set row whose bonus slots the comparator 0x52e5c0 orders	verified	one	ui/tooltipitemreq#set-bonus-lines
 0xc0d3e8	uint32_t	s_tooltipGold		ui	Holds the gold colour 0xffffd200, the default name and description colour	verified	one	ui/tooltipcontent#the-colours
-0xc0d420	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc0d420	uint32_t	s_colorSkillGreen		ui	Holds the green 0xff40c040 of a skill 50 to 99 above its requirement and of a lock with a key	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
@@ -2200,24 +2209,28 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0da28	uint32_t			unassigned	Holds a dword that Script::GetPackageInfo, StaticDBLoadAll read and write; not read here	inferred	none	
 0xc0da2c	int32_t			unassigned	Holds an int32_t that Script::GetNumPackages, Script::GetPackageInfo read and write; not read here	inferred	none	
 0xc0da78	uint8_t[20]	s_nameGenStore		dbc	Holds the NameGen.dbc store: records, count, id index and maximum id	inferred	none	
-0xc0daa8	uint32_t			unassigned	Holds a dword that ClientInitializeGame, NewWorldHandler, HandleLoginVerifyWorldPacket read and write; not read here	inferred	none	
-0xc0daac	uint32_t	s_mapRecordCount		unassigned	Holds the bound of the Map.dbc row array at 0xc0daa8	inferred	none	collision/teleport#far-transfer-handlers
+0xc0daa8	uint32_t	s_mapIdMap		unassigned	Holds the Map.dbc rows by id, read by the tooltip's map line	verified	one	ui/tooltipitemhead#area-map-and-conjured-lines
+0xc0daac	uint32_t	s_mapMaxId		dbc	Holds the highest Map.dbc id	verified	one	ui/tooltipitemhead#area-map-and-conjured-lines
 0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
 0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
 0xc0db40	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex, StaticDBLoadAll read and write; not read here	inferred	none	
 0xc0db44	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex read and write; not read here	inferred	none	
 0xc0db48	uint32_t			unassigned	Holds a dword that Script::GetDefaultLanguage reads and writes; not read here	inferred	none	
 0xc0db90	uint32_t[2]	s_itemSubClassRows		dbc	Holds the ItemSubClass.dbc rows and their count, 0x74 bytes each	verified	one	objectlayer/playercombat#learning-a-spell
+0xc0dbc0	uint32_t	s_itemSetIdMap		dbc	Holds the ItemSet.dbc rows by id	verified	one	ui/tooltipitemreq#item-set-lines
+0xc0dbc4	uint32_t	s_itemSetMaxId		dbc	Holds the highest ItemSet.dbc id	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0dbcc	uint32_t[5]	s_itemRandomPropertiesStore		dbc	Holds the ItemRandomProperties.dbc store	verified	one	objectlayer/items#item-names
 0xc0dbf4	uint32_t[5]	s_itemGroupSoundsStore		dbc	Holds the ItemGroupSounds.dbc store	verified	one	objectlayer/items#the-item-record
 0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playercombat#hand-weapons
-0xc0dc24	uint32_t			unassigned	Holds a dword that Script::GetItemInfo, Script::GetAuctionItemClasses read and write; not read here	inferred	none	
-0xc0dc28	uint32_t			unassigned	Holds a dword that Script::GetItemInfo, Script::GetAuctionItemClasses read and write; not read here	inferred	none	
+0xc0dc24	uint32_t	s_itemClassIdMap		unassigned	Holds the ItemClass.dbc rows by row index	verified	one	ui/tooltipitemhead#the-slot-and-type-line
+0xc0dc28	uint32_t	s_itemClassMaxId		unassigned	Holds the last ItemClass.dbc row index, −1 before the table loads	verified	one	ui/tooltipitemhead#the-slot-and-type-line
 0xc0dc30	uint32_t[5]	s_itemBagFamilyStore		dbc	Holds the ItemBagFamily.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/inventory#opening-and-wrapping-items
 0xc0dcd0	uint8_t[20]	s_gameTipsStore		dbc	Holds the GameTips.dbc store: records, count, id map, maximum id, loaded flag	inferred	none	
 0xc0dce4	uint32_t[5]	s_gameObjectDisplayInfoStore		dbc	Holds the GameObjectDisplayInfo.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes
 0xc0dcf8	uint32_t[5]	s_gameObjectArtKitStore		dbc	Holds the GameObjectArtKit.dbc store	verified	one	objectlayer/gameobjecttypes#art-kits
 0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0dd50	uint32_t	s_factionIdMap		dbc	Holds the Faction.dbc rows by id	verified	one	ui/tooltipitemreq#the-reputation-line
+0xc0dd54	uint32_t	s_factionMaxId		dbc	Holds the highest Faction.dbc id	verified	one	ui/tooltipitemreq#the-reputation-line
 0xc0dd5c	uint8_t[20]	s_factionGroupStore		dbc	Holds the FactionGroup.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0dd78	uint32_t			unassigned	Holds a dword that Script::GetRestState, Script::GetXPExhaustion read and write; not read here	inferred	none	
 0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
@@ -2246,6 +2259,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e1ec	uint32_t	s_guildCache		dbcache	Holds the guild record cache	inferred	none	objectlayer/party#guild-tabards
 0xc0e228	uint32_t	s_nameCache		dbcache	Holds the player name cache	inferred	none	objectlayer/playermessages#resurrection-and-summoning
 0xc0e2a0	void *	s_itemStatsCache		dbcache	Holds the item record cache the loot roll code asks	verified	one	objectlayer/lootroll#starting-a-roll
+0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
 0xc27d80	uint32_t			net	Holds data whose address SetSelectedCharacterRecord, GetSelectedCharacterRecord take; not read here	inferred	none	
