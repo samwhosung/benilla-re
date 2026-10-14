@@ -12405,27 +12405,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x513bc0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x513bd0	376	Script::Jump		input	orchestration		Implements the Lua function Jump	inferred	none	spell/cancel#who-cancels-a-cast	
 0x513d50	140	Script::ToggleRun	idb	input	orchestration	int __cdecl (lua_State *L)	Implements the Lua function ToggleRun	verified	one	input#toggle-run	
-0x513de0	62	Script::ToggleAutoRun	idb	input	primitive		Implements the Lua function ToggleAutoRun	inferred	none		
-0x513e20	42	Script::MoveForwardStart	idb	input	orchestration		Implements the Lua function MoveForwardStart	inferred	none		
-0x513e50	42	Script::MoveForwardStop	idb	input	orchestration		Implements the Lua function MoveForwardStop	inferred	none		
-0x513e80	42	Script::MoveBackwardStart	idb	input	orchestration		Implements the Lua function MoveBackwardStart	inferred	none		
-0x513eb0	42	Script::MoveBackwardStop	idb	input	orchestration		Implements the Lua function MoveBackwardStop	inferred	none		
-0x513ee0	45	Script::TurnLeftStart	idb	input	orchestration		Implements the Lua function TurnLeftStart	inferred	none		
-0x513f10	45	Script::TurnLeftStop	idb	input	orchestration		Implements the Lua function TurnLeftStop	inferred	none		
-0x513f40	45	Script::TurnRightStart	idb	input	orchestration		Implements the Lua function TurnRightStart	inferred	none		
-0x513f70	45	Script::TurnRightStop	idb	input	orchestration		Implements the Lua function TurnRightStop	inferred	none		
-0x513fa0	42	Script::StrafeLeftStart	idb	input	orchestration		Implements the Lua function StrafeLeftStart	inferred	none		
-0x513fd0	42	Script::StrafeLeftStop	idb	input	orchestration		Implements the Lua function StrafeLeftStop	inferred	none		
-0x514000	45	Script::StrafeRightStart	idb	input	orchestration		Implements the Lua function StrafeRightStart	inferred	none		
-0x514030	45	Script::StrafeRightStop	idb	input	orchestration		Implements the Lua function StrafeRightStop	inferred	none		
-0x514060	45	Script::PitchUpStart	idb	input	orchestration		Implements the Lua function PitchUpStart	inferred	none		
-0x514090	45	Script::PitchUpStop	idb	input	orchestration		Implements the Lua function PitchUpStop	inferred	none		
-0x5140c0	45	Script::PitchDownStart	idb	input	orchestration		Implements the Lua function PitchDownStart	inferred	none		
-0x5140f0	45	Script::PitchDownStop	idb	input	orchestration		Implements the Lua function PitchDownStop	inferred	none		
+0x513de0	62	Script::ToggleAutoRun	idb	input	primitive		Toggles command bit 0x1000 (autorun) by inverting its current state	verified	one	input#the-commands	
+0x513e20	42	Script::MoveForwardStart	idb	input	orchestration		Presses command bit 0x10 (move forward), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513e50	42	Script::MoveForwardStop	idb	input	orchestration		Releases command bit 0x10 (move forward), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513e80	42	Script::MoveBackwardStart	idb	input	orchestration		Presses command bit 0x20 (move backward), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513eb0	42	Script::MoveBackwardStop	idb	input	orchestration		Releases command bit 0x20 (move backward), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513ee0	45	Script::TurnLeftStart	idb	input	orchestration		Presses command bit 0x100 (turn left), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513f10	45	Script::TurnLeftStop	idb	input	orchestration		Releases command bit 0x100 (turn left), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513f40	45	Script::TurnRightStart	idb	input	orchestration		Presses command bit 0x200 (turn right), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513f70	45	Script::TurnRightStop	idb	input	orchestration		Releases command bit 0x200 (turn right), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513fa0	42	Script::StrafeLeftStart	idb	input	orchestration		Presses command bit 0x40 (strafe left), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x513fd0	42	Script::StrafeLeftStop	idb	input	orchestration		Releases command bit 0x40 (strafe left), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x514000	45	Script::StrafeRightStart	idb	input	orchestration		Presses command bit 0x80 (strafe right), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x514030	45	Script::StrafeRightStop	idb	input	orchestration		Releases command bit 0x80 (strafe right), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x514060	45	Script::PitchUpStart	idb	input	orchestration		Presses command bit 0x400 (pitch up), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x514090	45	Script::PitchUpStop	idb	input	orchestration		Releases command bit 0x400 (pitch up), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x5140c0	45	Script::PitchDownStart	idb	input	orchestration		Presses command bit 0x800 (pitch down), when 0x494a50(0) allows	verified	one	input#the-commands	
+0x5140f0	45	Script::PitchDownStop	idb	input	orchestration		Releases command bit 0x800 (pitch down), when 0x494a50(0) allows	verified	one	input#the-commands	
 0x514120	54	Script::TurnOrActionStart	idb	input	orchestration		Arms click mode 2 and presses command bit 0x1, when 0x494a50(0) allows	verified	one	input#mouse-commands	
-0x514160	42	Script::TurnOrActionStop	idb	input	orchestration		Implements the Lua function TurnOrActionStop	inferred	none		
+0x514160	42	Script::TurnOrActionStop	idb	input	orchestration		Releases command bit 0x1 (mouse turn), when 0x494a50(0) allows	verified	one	input#the-commands	
 0x514190	54	Script::CameraOrSelectOrMoveStart	idb	input	orchestration		Arms click mode 1 and presses command bit 0x2, when 0x494a50(0) allows	verified	one	input#mouse-commands	
-0x5141d0	62	Script::CameraOrSelectOrMoveStop	idb	input	orchestration		Implements the Lua function CameraOrSelectOrMoveStop	inferred	none		
+0x5141d0	62	Script::CameraOrSelectOrMoveStop	idb	input	orchestration		Releases command bit 0x2 (mouse camera), when 0x494a50(0) allows	verified	one	input#the-commands	
 0x514210	43	Script::MouselookStart	idb	input	orchestration		Implements the Lua function MouselookStart	inferred	none		
 0x514240	43	Script::MouselookStop	idb	input	orchestration		Implements the Lua function MouselookStop	inferred	none		
 0x514270	47	Script::IsMouselooking	idb	input	orchestration		Implements the Lua function IsMouselooking	inferred	none		
@@ -12438,29 +12438,29 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5143e0	6	GetInputControl		input	orchestration	CInputControl * __cdecl (void)	Returns the CInputControl singleton from 0xbe1148	verified	one	input#input-state	
 0x5143f0	3			input	orchestration		Runs InputControl.cpp code not read here	inferred	none		
 0x514400	134	CInputControl::AccumulateMotion		input	primitive	void __thiscall (CInputControl *this, const void *message)	Adds |dx| and |dy| of a mouse message to the travel sums while any command is held	verified	one	input#click-versus-drag	
-0x514490	47			input	primitive		Runs InputControl.cpp code that calls OsGetAsyncTimeMs, 0x514640; not read here	inferred	none		
+0x514490	47	CInputControl::ApplyAfterRelease		input	orchestration		Clears movement bits and runs the tick when no primary command is held	verified	one	input#the-tick	
 0x5144c0	28	CInputControl::ReleaseAll		input	orchestration	void __thiscall (CInputControl *this)	Releases every held command at the current clock through 0x514b70	verified	one	input#click-versus-drag	
-0x5144e0	122			input	orchestration		Runs InputControl.cpp code that calls CGUnit_C::IsCurrentAnimationFlag80, IsActivePlayerUnit; not read here	inferred	none		
-0x514560	75			input	orchestration		Runs InputControl.cpp code that calls 0x5144e0; not read here	inferred	none		
-0x5145b0	47			input	primitive		Runs InputControl.cpp code that calls 0x5144e0; not read here	inferred	none		
-0x5145e0	61			input	primitive		Runs InputControl.cpp code that calls 0x5145b0; not read here	inferred	none		
+0x5144e0	122	CanControlUnit		input	primitive		Returns whether a unit can be driven: alive, not locked, not far-sighted	verified	one	input#may-it-move-may-it-turn	
+0x514560	75	MayTranslate		input	primitive		Returns whether the driven unit may move: controllable, not rooted, not dead-stood	verified	one	input#may-it-move-may-it-turn	
+0x5145b0	47	MayTurn		input	primitive		Returns whether the driven unit is not stunned: controllable and flag 0x40000 clear	verified	one	input#may-it-move-may-it-turn	
+0x5145e0	61	MayMouseTurn		input	primitive		Returns whether a mouse motion may turn the body: not stunned, mouse turn held, standing	verified	one	input#mouse-turning-and-the-camera	
 0x514620	8			input	primitive		Runs InputControl.cpp code not read here	inferred	none		
-0x514630	8			input	primitive		Runs InputControl.cpp code not read here	inferred	none		
-0x514640	458			input	primitive		Stops the input control's movement at a time	inferred	none	objectlayer/interaction#stand-state	
+0x514630	8	CInputControl::ClearAutoRunLatch		input	primitive		Clears command bit 0x1000 and the start latch 0x10000	verified	one	input#what-clears-autorun	
+0x514640	458	CInputControl::Tick		input	orchestration		Applies the command bits to the driven unit: moves, turns, pitches and stops, honouring root and stun	verified	one	input#the-tick	
 0x514810	38	CInputControl::ArmClick		input	orchestration	void __thiscall (CInputControl *this, uint32_t mode)	Stores the click mode unless a primary is held, and for a nonzero mode picks the object under the cursor	verified	one	input#mouse-commands	
 0x514840	660	CInputControl::PressCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t time)	Presses command bits; on the first primary, latches the time and zeroes the travel sums	verified	one	input#click-versus-drag	
 0x514ae0	85	CInputControl::IsDragRelease		input	primitive	uint32_t __thiscall (CInputControl *this, uint32_t release_time)	Returns 1 when a release is a drag: held 800 ms or more, or 200 ms or more with 8.0 of travel	verified	two	input#click-versus-drag	
 0x514b40	44	CInputControl::IsDragging		input	orchestration	uint32_t __thiscall (CInputControl *this)	Returns 1 when 0x514ae0 says drag at the current clock and the motion stamp is recent	verified	one	input#click-versus-drag	
 0x514b70	559	CInputControl::ReleaseCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t time, uint32_t extra)	Releases command bits; on the last primary, dispatches the armed click unless 0x514ae0 says drag	verified	one	input#click-versus-drag	
-0x514da0	221			input	primitive		Runs InputControl.cpp code that calls CGUnit_C::MoveStop, CGUnit_C::SendStandState, ClearAfk and 1 more; not read here	inferred	none		
-0x514e80	205			input	primitive		Runs InputControl.cpp code that calls CGUnit_C::StrafeStop, CGUnit_C::SendStandState, ClearAfk and 1 more; not read here	inferred	none		
-0x514f50	188			input	primitive		Runs InputControl.cpp code that calls CGUnit_C::TurnStop, CGUnit_C::SendStandState, ClearAfk and 1 more; not read here	inferred	none		
-0x515010	116			input	primitive		Runs InputControl.cpp code that calls CGUnit_C::PitchStart, CGUnit_C::PitchStop; not read here	inferred	none		
-0x515090	284	CInputControl::SetCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t press, uint32_t time, uint32_t extra)	Sends commands to 0x514840 when press is nonzero, else to 0x514b70	verified	one	input#mouse-commands	
-0x5151b0	153			input	primitive		Runs InputControl.cpp code that calls ClntObjMgrObjectPtr, GetActiveCamera; not read here	inferred	none		
-0x515250	137			input	orchestration		Runs InputControl.cpp code that calls ClntObjMgrObjectPtr, GetActiveCamera; not read here	inferred	none		
-0x5152e0	79			input	primitive		Runs InputControl.cpp code that calls 0x5151b0, ClntObjMgrObjectPtr, CGUnit_C::SetFacing; not read here	inferred	none		
-0x515330	84			input	primitive		Runs InputControl.cpp code that calls 0x515250, ClntObjMgrObjectPtr, CGUnit_C::SetPitch; not read here	inferred	none		
+0x514da0	221	CInputControl::EmitForwardAxis		input	primitive		Sums autorun, forward, mouse and backward into a signed axis and starts or stops the unit	verified	one	input#the-forward-axis	
+0x514e80	205	CInputControl::EmitStrafeAxis		input	primitive		Starts or stops strafing from the strafe bits and, with mouse turn held, the turn bits	inferred	none		
+0x514f50	188	CInputControl::EmitTurn		input	primitive		Starts or stops turning from the turn bits	verified	one	input#the-tick	
+0x515010	116	CInputControl::EmitPitch		input	primitive		Starts or stops pitching from the pitch bits while swimming	verified	one	input#the-tick	
+0x515090	284	CInputControl::SetCommands		input	orchestration	uint32_t __thiscall (CInputControl *this, uint32_t commands, uint32_t press, uint32_t time, uint32_t extra)	Sends commands to 0x514840 when press is nonzero, else to 0x514b70	verified	one	input#the-commands	
+0x5151b0	153	CInputControl::YawGate		input	primitive		Returns whether the body may take the camera yaw: alive, standing, mouse turn held	verified	one	input#mouse-turning-and-the-camera	
+0x515250	137	CInputControl::PitchGate		input	primitive		Returns whether the body may take the camera pitch: alive, standing, mouse turn held	verified	one	input#mouse-turning-and-the-camera	
+0x5152e0	79	CInputControl::HandOffFacing		input	primitive		Gives the camera facing to the body when the yaw gate holds, then clears bit 0x40000	verified	one	input#mouse-turning-and-the-camera	
+0x515330	84	CInputControl::HandOffPitch		input	primitive		Gives the camera pitch to the body when the pitch gate holds, then clears bit 0x80000	verified	one	input#mouse-turning-and-the-camera	
 0x515390	5			unassigned			Runs its object file code not read here	inferred	none		
 0x5153a0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x5153b0	5			unassigned			Runs its object file code not read here	inferred	none		
