@@ -585,6 +585,12 @@ CharacterSelectionDisplay	0x010a	1	uint8_t	m_newCharacter	glue	Holds 1 for a cha
 CharacterSelectionDisplay	0x0110	4	void *	m_component	glue	Holds the built character component, null until the select build makes it; the record destructor zeroes it	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0114	4	void *	m_petModel	glue	Holds the pet's model, null until built; the destructor releases it without clearing	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0118	1	uint8_t	m_rebuildModel	glue	Holds 1 for a new or entered record; the select screen clears it when it builds the model	inferred	none	glue/flow#enter-world
+ChatChannel	0x0000	4	uint32_t	m_number	ui	Holds the slot's 1-based position, 0 while the slot is free	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0004	128	char[128]	m_name	ui	Holds the channel's name, the composed zone name for a zone channel	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0084	16	uint32_t[4]	m_members	ui	Holds the header of the channel's member list	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0094	4	uint32_t	m_channelId	ui	Holds the ChatChannels id, 0 for a custom channel	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x0098	4	uint32_t	m_instance	ui	Holds the instance number from the join notice, not cleared when the slot is reused	verified	one	ui/chatchannels#joined-channel-slots
+ChatChannel	0x009c	4	uint32_t	m_state	ui	Holds 0 confirmed, 1 waiting, 2 renamed and waiting, 3 suspended	verified	one	ui/chatchannels#confirming-renaming-and-dropping
 ChatMessageGroup	0x0000	4	const char *	m_name	ui	Holds the group's name	verified	one	ui/chatwindows#message-groups-of-a-window
 ChatMessageGroup	0x0004	4	uint32_t	m_defaultOn	ui	Holds 1 when window 2 shows the group at start-up	verified	one	ui/chatwindows#window-start-up-state
 ChatMessageGroup	0x0008	4	uint32_t	m_addedVersion	ui	Holds the settings file version that added the group	verified	one	ui/chatwindows#settings-file-backfill

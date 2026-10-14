@@ -7157,7 +7157,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49a1d0	15			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a1e0	5			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a1f0	19			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49a210	1198			ui	primitive		Runs ChatFrame.cpp code that calls SStrPrintf, SStrCmpI, CDataStore::PutUInt32 and 10 more; not read here	inferred	none		
+0x49a210	1198	ZoneChannelRefresh		ui	primitive		Leaves, renames and joins the zone channels for the current zone, then the deferred joins and guild cascade	verified	one	ui/chatchannels#the-zone-walk	
 0x49a6c0	28			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a750	182			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a6c0, _sprintf, GetUnixTime; not read here	inferred	none		
 0x49a810	32	HasChatHistoryLine		ui	primitive		Returns whether line i of the 60-line chat history ring holds text	verified	one	objectlayer/playermessages#gm-tickets	
@@ -7172,19 +7172,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49b8b0	132			ui	primitive		Runs ChatFrame.cpp code that calls _isupper, _toupper, tolower; not read here	inferred	none		
 0x49b940	42			ui	orchestration		Runs ChatFrame.cpp code that calls 0x6c9c60, 0x6c9c30; not read here	inferred	none		
 0x49b970	10			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49b980	407			ui	primitive		Runs ChatFrame.cpp code that calls 0x49be90, CGGameUI::DisplayError, SStrCopy and 5 more; not read here	inferred	none		
-0x49bb20	171			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI, 0x49bd50; not read here	inferred	none		
-0x49bbd0	118			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49bc50	145			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI, SStrCopy; not read here	inferred	none		
-0x49bcf0	89			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49bd50	149			ui	primitive		Runs ChatFrame.cpp code that calls 0x4c56e0; not read here	inferred	none		
-0x49bdf0	95			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49be50	51			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49be90	83			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49bef0	63			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49bf30	65			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49bf80	1675	ChannelNotifyHandler	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetUInt8, CDataStore::GetCString, SStrCopy and 10 more; not read here	inferred	none		
-0x49c690	332	ClientChannelListHandler	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetCString, 0x49be90, CDataStore::GetUInt8 and 5 more; not read here	inferred	none		
+0x49b980	407	FindOrCreateChannelSlot		ui	primitive		Returns an existing slot of the name or fills a free or new slot in state 1 with the name and id	verified	one	ui/chatchannels#joined-channel-slots	
+0x49bb20	171	ConfirmChannelSlot		ui	primitive		Sets the first unconfirmed slot of the name to state 0, sets its zone mask bit and stores the instance	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
+0x49bbd0	118	DropChannelSlot		ui	primitive		Frees the slot of the name: number 0, name emptied, state 1	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
+0x49bc50	145	RenameChannelSlot		ui	primitive		Copies a new name over the slot of the old name and sets its state to 1, or 2 when it was not suspended	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
+0x49bcf0	89	SuspendChannelSlot		ui	primitive		Sets the state of the slot of the name to 3	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
+0x49bd50	149	UpdateDefenseChannelState		ui	primitive		Recomputes whether a confirmed zone defence channel is joined and fires UPDATE_WORLD_STATES on a change	verified	one	ui/chatchannels#defence-channel-state	
+0x49bdf0	95	FindConfirmedChannelNumber		ui	primitive		Returns the number of the state 0 slot of the name, 0 when none	verified	one	ui/chatchannels#finding-a-slot	
+0x49be50	51	GetChannelNameByNumber		ui	primitive		Returns the name of slot n when its number is n and its state is 0, else null	verified	one	ui/chatchannels#finding-a-slot	
+0x49be90	83	FindChannelByName		ui	primitive		Returns the slot of the name whatever its state, ignoring case	verified	one	ui/chatchannels#finding-a-slot	
+0x49bef0	63	FindChannelById		ui	primitive		Returns the first slot with the ChatChannels id	verified	one	ui/chatchannels#finding-a-slot	
+0x49bf30	65	FindChannelByNumber		ui	primitive		Returns slot n when its number is n and its state is 0, else null	verified	one	ui/chatchannels#finding-a-slot	
+0x49bf80	1675	ChannelNotifyHandler	idb	ui	primitive		Handles the channel notify message: reads the notice and name, picks a token and chat type, and shows the line	verified	one	ui/chatchannels#the-channel-notify-message	
+0x49c690	332	ClientChannelListHandler	idb	ui	primitive		Handles the channel list message: builds the member list text and shows it as channel list lines	inferred	none	ui/chatchannels#channel-list-message	
 0x49c7e0	766			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 6 more; not read here	inferred	none		
 0x49cae0	285	CGChat::QueueChatText	idb	ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc, SStrDupA, SStrCopy; not read here	inferred	none		
 0x49cc00	182			ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc, SStrDupA; not read here	inferred	none		
@@ -7204,16 +7204,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49e670	74	HandleUpdateLastInstancePacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, ClntObjMgrGetMapID, GetUnixTime and 1 more; not read here	inferred	none		
 0x49e6c0	32	HandleUpdateInstanceOwnershipPacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x495d50; not read here	inferred	none		
 0x49e6e0	406	HandleExpectedSpamRecordsPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x4a3cc0, 0x4a2ff0 and 6 more; not read here	inferred	none		
-0x49e880	25			ui	orchestration		Runs ChatFrame.cpp code that calls 0x64ac60; not read here	inferred	none		
+0x49e880	25	ParseChannelKey		ui	orchestration		Returns the name of the joined slot a decimal argument names, or the argument when it parses to 0	verified	one	ui/channelverbs#leavechannelbyname	
 0x49e8a0	108			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a870; not read here	inferred	none		
 0x49e910	122			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49e8a0; not read here	inferred	none		
 0x49e990	59			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49e9d0	147			ui	primitive		Runs ChatFrame.cpp code that calls SStrPrintf; not read here	inferred	none		
-0x49ea70	17			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49ea90	217			ui	primitive		Refreshes the chat channel state and signals UPDATE_CHAT_WINDOWS	inferred	none	objectlayer/players#arrival-in-the-world	
-0x49eb70	767			ui	primitive		Runs ChatFrame.cpp code that calls SStrCopy, SStrCmpI, SStrPrintf and 8 more; not read here	inferred	none		
-0x49ee70	708			ui	primitive		Runs ChatFrame.cpp code that calls 0x49e880, SStrCopy, SStrPrintf and 7 more; not read here	inferred	none		
-0x49f140	148			ui	primitive		Runs ChatFrame.cpp code that calls SStrCopy, SStrPrintf; not read here	inferred	none		
+0x49ea70	17	SetGuildRecruitmentLatch		ui	orchestration		Stores the recruitment mode and runs the cascade when it is 1	verified	one	ui/channelverbs#guild-recruitment-mode	
+0x49ea90	217	RunGuildRecruitmentCascade		ui	primitive		Leaves or joins the capital guild recruitment channel by the player's guild and area, or arms the retry	verified	one	ui/channelverbs#guild-recruitment-cascade	
+0x49eb70	767	JoinChannel		ui	primitive		Composes the wire name, registers the window entry and slot, and sends the join	verified	one	ui/channelverbs#the-join-body	
+0x49ee70	708	LeaveChannel		ui	primitive		Composes the wire name, strips window entries, sends the leave and clears the zone mask bit	verified	one	ui/channelverbs#leavechannelbyname	
+0x49f140	148	ComposeGuildRecruitmentNames		ui	primitive		Composes the guild recruitment shortcut and capital name once, from the city row and the flag 0x20000 row	verified	one	ui/channelverbs#guild-recruitment-cascade	
 0x49f1e0	1461	Script::SendChatMessage	idb	ui	primitive		Implements the Lua function SendChatMessage	inferred	none		
 0x49f7a0	246			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x49f8a0	125			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
@@ -7225,10 +7225,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49fe40	7	Script::LoggingChat	idb	ui	orchestration		Calls the logging setter for the chat log	verified	one	ui/chatwindows#chat-logging	
 0x49fe50	146	SetLoggingFlag		ui	orchestration		Sets or reads the chat or combat logging flag, opens the log, and pushes 1 or nil	verified	one	ui/chatwindows#chat-logging	
 0x49fef0	10	Script::LoggingCombat	idb	ui	orchestration		Calls the logging setter for the combat log	verified	one	ui/chatwindows#chat-logging	
-0x49ff00	254	Script::JoinChannelByName	idb	ui	primitive		Implements the Lua function JoinChannelByName	inferred	none		
-0x4a0000	62	Script::LeaveChannelByName	idb	ui	orchestration		Implements the Lua function LeaveChannelByName	inferred	none		
-0x4a0040	23	Script::GetGuildRecruitmentMode	idb	ui	orchestration		Implements the Lua function GetGuildRecruitmentMode	inferred	none		
-0x4a0060	100	Script::SetGuildRecruitmentMode	idb	ui	orchestration		Implements the Lua function SetGuildRecruitmentMode	inferred	none		
+0x49ff00	254	Script::JoinChannelByName	idb	ui	primitive		Joins a channel by name: returns its ChatChannels id and shortcut, or 0 and nil, and sends the join	verified	one	ui/channelverbs#joinchannelbyname	
+0x4a0000	62	Script::LeaveChannelByName	idb	ui	orchestration		Leaves a channel by name or slot number through the leave body and returns no values	verified	one	ui/channelverbs#leavechannelbyname	
+0x4a0040	23	Script::GetGuildRecruitmentMode	idb	ui	orchestration		Pushes the guild recruitment mode, 0 or 1	verified	one	ui/channelverbs#guild-recruitment-mode	
+0x4a0060	100	Script::SetGuildRecruitmentMode	idb	ui	orchestration		Sets the guild recruitment mode to 0 or 1, runs the cascade for 1, and fires UPDATE_CHAT_WINDOWS	verified	one	ui/channelverbs#guild-recruitment-mode	
 0x4a00d0	18	Script::ListChannelByName	idb	ui	orchestration		Implements the Lua function ListChannelByName	inferred	none		
 0x4a00f0	206			ui	orchestration		Runs ChatFrame.cpp code that calls lua_isstring, SStrPrintf, luaL_error and 5 more; not read here	inferred	none		
 0x4a01c0	268	Script::ListChannels	idb	ui	primitive		Implements the Lua function ListChannels	inferred	none		
@@ -7237,7 +7237,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a0490	18	Script::SetChannelOwner	idb	ui	orchestration		Implements the Lua function SetChannelOwner	inferred	none		
 0x4a04b0	259			ui	orchestration		Runs ChatFrame.cpp code that calls lua_isstring, lua_tostring, 0x49e880 and 5 more; not read here	inferred	none		
 0x4a05c0	18	Script::DisplayChannelOwner	idb	ui	orchestration		Implements the Lua function DisplayChannelOwner	inferred	none		
-0x4a05e0	201	Script::GetChannelName	idb	ui	orchestration		Implements the Lua function GetChannelName	inferred	none		
+0x4a05e0	201	Script::GetChannelName	idb	ui	orchestration		Pushes a channel slot's number, name and instance number, found by number or by name	verified	one	ui/channelverbs#getchannelname	
 0x4a06b0	18	Script::ChannelModerator	idb	ui	orchestration		Implements the Lua function ChannelModerator	inferred	none		
 0x4a06d0	18	Script::ChannelUnmoderator	idb	ui	orchestration		Implements the Lua function ChannelUnmoderator	inferred	none		
 0x4a06f0	18	Script::ChannelMute	idb	ui	orchestration		Implements the Lua function ChannelMute	inferred	none		
@@ -7248,9 +7248,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a0790	18	Script::ChannelUnban	idb	ui	orchestration		Implements the Lua function ChannelUnban	inferred	none		
 0x4a07b0	18	Script::ChannelToggleAnnouncements	idb	ui	orchestration		Implements the Lua function ChannelToggleAnnouncements	inferred	none		
 0x4a07d0	18	Script::ChannelModerate	idb	ui	orchestration		Implements the Lua function ChannelModerate	inferred	none		
-0x4a07f0	495	Script::ChangeChatColor	idb	ui	primitive		Implements the Lua function ChangeChatColor	inferred	none		
-0x4a09e0	152	Script::ResetChatColors	idb	ui	primitive		Implements the Lua function ResetChatColors	inferred	none		
-0x4a0a80	276	Script::GetChatTypeIndex	idb	ui	primitive		Implements the Lua function GetChatTypeIndex	inferred	none		
+0x4a07f0	495	Script::ChangeChatColor	idb	ui	primitive		Stores a chat type's colour from three unit values and fires UPDATE_CHAT_COLOR	verified	one	ui/chatcolors#changechatcolor	
+0x4a09e0	152	Script::ResetChatColors	idb	ui	primitive		Restores the 94 chat names and colours and gives each extra channel the CHANNEL colour	verified	one	ui/chatcolors#resetchatcolors	
+0x4a0a80	276	Script::GetChatTypeIndex	idb	ui	primitive		Pushes the one-based registry position of a chat type name, 0 when unknown	verified	one	ui/chatcolors#getchattypeindex	
 0x4a0ba0	381	Script::GetChatWindowInfo	idb	ui	primitive		Pushes a window's name, size, colour as floats, shown, locked and docked	verified	one	ui/chatwindows#reading-a-window	
 0x4a0d20	151	Script::GetChatWindowMessages	idb	ui	primitive		Pushes the name of each message group a window shows	verified	one	ui/chatwindows#message-groups-of-a-window	
 0x4a0dc0	185	Script::GetChatWindowChannels	idb	ui	primitive		Pushes the name and id of each channel a window shows	verified	one	ui/chatwindows#channels-of-a-window	

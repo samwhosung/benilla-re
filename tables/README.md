@@ -114,6 +114,19 @@ The 68 message groups a chat window can show (68 rows). A window keeps one flag 
 | `default_on` | `1` when the group is on in the second chat window of a new character. |
 | `added_in` | The settings-file version that added the group: `0`, `1` or `2`. |
 
+## channel_notices.tsv
+
+The 32 notices of the channel notify message, opcode `0x99` (32 rows). The message is a u8 notice,
+the channel name and the notice's own fields.
+
+| column | meaning |
+|---|---|
+| `notice` | The notice byte, `0` to `31`; a larger byte shows an empty system line. |
+| `arm` | The code that handles it. |
+| `token` | The text that becomes the event's first argument; `a|b` where the arm picks one by the channel's state. Empty for none. |
+| `chat_type` | The chat type of the line: `CHANNEL_JOIN`, `CHANNEL_LEAVE`, `CHANNEL_NOTICE` or `CHANNEL_NOTICE_USER`. Empty where the arm shows no line. |
+| `reads` | The fields the arm reads after the channel name, in order: `guid`, `u8`, `u32`, `cstring`. |
+
 ## cvars.tsv
 
 Every `CVar::Register 0x63db90` call (214 rows).

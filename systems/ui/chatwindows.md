@@ -258,7 +258,7 @@ After a parse or the defaults, the loader fires `UPDATE_CHAT_WINDOWS` (id 395, n
 channel colour, passing the name and red, green and blue as the byte times 1/255. The same colour
 event is fired by `ChangeChatColor` alone. The window start-up fires none.
 
-Addresses: `0xb4e500`, `0xb4e504`, `0xb4e518`, `0x4996b9`, `0x4996be`, `0x4996c3`, `0x4996ea`, `0x4997a6`, `0x499934`, `0x703e50`, `0x703f50`, `0x4a098b`
+Addresses: `0x4996b9`, `0x4996be`, `0x4996c3`, `0x4996ea`, `0x4997a6`, `0x499934`, `0x703e50`, `0x703f50`, `0x4a098b`
 Confidence: verified
 Proof: one
 Test: none
