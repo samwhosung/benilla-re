@@ -11121,7 +11121,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the craft window and returns no value	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the spell stored for the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
 0x4f6c90	23	Script::GetCraftButtonToken	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the button word of the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
-0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the skill line of the enchanting list	verified	one	tradeskill/craft#name-and-skill-line	
+0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the enchanting skill line; slot -1 reads below the first slot	verified	one	tradeskill/craft#name-and-skill-line	
 0x4f6e70	23	Script::GetNumCrafts	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the craft list	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f6e90	605	Script::GetCraftInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seven values of a craft row: name, rank text, difficulty, available count, cost and level	verified	one	tradeskill/craft#craft-rows	
 0x4f70f0	64	Script::SelectCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the craft row at an index	verified	one	tradeskill/craft#open-close-and-selection	
@@ -11428,7 +11428,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc790	210	FreeTradeSkillLists		ui	orchestration	void __cdecl (void)	Frees every row and header, both arrays and the open line, and zeroes the counts	verified	one	tradeskill/recipes#list-state	
 0x4fc870	25	CloseTradeSkillWindow		ui	orchestration	void __cdecl (void)	Stores 0 as the open line, clears the repeat latch and raises TRADE_SKILL_CLOSE	verified	one	tradeskill/recipes#open-close-and-selection	
 0x4fc890	71	CancelTradeSkillRequests		ui	primitive	void __cdecl (void)	Cancels the item request callback of every row by spell id and zeroes the pending count	verified	one	tradeskill/recipes#created-item	
-0x4fc8e0	41	OnPendingItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the list with flag 1 when the last pending item record arrives	verified	one	tradeskill/recipes#created-item	
+0x4fc8e0	41	OnPendingItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the list with flag 1 when the last pending item record arrives or the count is already 0	verified	one	tradeskill/recipes#created-item	
 0x4fc910	150	ToggleTradeSkill		ui	orchestration	void __fastcall (uint32_t skillLine)	Closes the window of the open skill line, or opens one for another and raises TRADE_SKILL_SHOW	verified	one	tradeskill/recipes#open-close-and-selection	
 0x4fc9b0	38	SelectTradeSkillRow		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of a row as the selection, or 0 for a header or a bad index	verified	one	tradeskill/recipes#open-close-and-selection	
 0x4fc9e0	54	FindSelectedTradeSkillRow		ui	primitive	int32_t __cdecl (void)	Returns the index of the row holding the selected spell id, or -1	verified	one	tradeskill/recipes#open-close-and-selection	
@@ -11442,7 +11442,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fd730	26	SetTradeSkillSlotMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the slot filter mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
 0x4fd750	26	SetTradeSkillCollapseMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the collapse mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
 0x4fd770	22	LatchTradeSkillRecast		ui	orchestration	void __fastcall (uint32_t spell, uint32_t count)	Stores the repeat spell and count and raises UPDATE_TRADESKILL_RECAST	verified	one	tradeskill/cast#repeat-latch	
-0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	spell/failures#reporter-inputs-and-first-effects	
+0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	tradeskill/cast#repeat-latch	
 0x4fd7b0	60	OnTradeSkillCastDone		ui	orchestration	void __fastcall (uint32_t spell)	Counts down the repeat and casts the spell again, or clears the latch	verified	one	tradeskill/cast#repeat-latch	
 0x4fd7f0	8	Script::CloseTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the profession window and returns no value	verified	one	tradeskill/recipes#open-close-and-selection	
 0x4fd800	23	Script::GetNumTradeSkills	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the profession list	verified	one	tradeskill/bindings#list-and-selection	
@@ -11453,7 +11453,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive		Implements the Lua function GetTradeSkillIcon	inferred	none		
 0x4fdc30	21	OnTradeSkillItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the trade skill window's list when an item template arrives	verified	one	ui/spellbook#recipe-icons	
 0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the least and greatest number of items a profession recipe makes	verified	one	tradeskill/bindings#row-values	
-0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the open skill line	verified	one	tradeskill/bindings#row-values	
+0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the open skill line; slot -1 reads below the first slot	verified	one	tradeskill/bindings#row-values	
 0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the tooltip lines of the item a profession recipe creates	verified	one	tradeskill/itemstats#entry-and-gates	
 0x4ff3c0	5	InitTradeSkillTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ff3d0, a static initializer	verified	one	tradeskill/overview#static-objects	
 0x4ff3d0	15	InitTradeSkillTwoPi		ui	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	tradeskill/overview#static-objects	
@@ -14432,7 +14432,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x55bc70	308			dbcache	unreached		Stores an arrived item record and calls each pending callback with its stored argument	inferred	none	spell/go#pending-item-cooldowns	
 0x55bdb0	471			dbcache	primitive		Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x55b630 and 5 more; not read here	inferred	none		
 0x55bf90	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x55b630; not read here	inferred	none		
-0x55c0c0	236			dbcache	primitive		Runs DBCache.cpp code that calls 0x55b630, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
+0x55c0c0	236	DBCache::CancelCallback		dbcache	primitive	void __thiscall (void *cache, uint32_t id, void *callback, void *arg)	Removes a callback from the pending record with that id	verified	one	tradeskill/recipes#created-item	
 0x55c1b0	185			dbcache	orchestration		Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
 0x55c270	1061	ItemCacheLoad		dbcache	orchestration	void __thiscall ()	Loads the Item cache from its file, or returns at once for a cache that is not saved	inferred	none		
 0x55c6a0	637			dbcache	unreached		Runs DBCache.cpp code that calls OsCreateDirectory, SStrPrintf, 0x42a460 and 8 more; not read here	inferred	none		

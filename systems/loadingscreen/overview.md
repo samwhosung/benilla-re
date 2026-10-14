@@ -31,7 +31,7 @@ The run in the initializer table `0x827000` is the slots `0x8271c0` to `0x827250
 the +∞, 2π and 1/2π thunks `0x4060d0`, `0x4060f0` and `0x406110`, which read the file's own copies
 of the header constants; the neighbouring slots' +∞ thunks, `0x4060b0` and `0x408fc0`, read other
 copies. The run is not in address order: from `0x8271cc` its slots point at thunks after the
-code (`0x408570` to `0x408ce0`), and the file's own statics fill `0x827220` to `0x827250`.
+code (`0x408570` to `0x408e70`, the last in slot `0x82721c`), and the file's own statics fill `0x827220` to `0x827250`.
 `0x407304` and `0x407e14` push the path for `0x468460`. The census lists every function of the
 range as live.
 

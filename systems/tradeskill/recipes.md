@@ -106,9 +106,9 @@ Test: none
 
 The created item of a row is `EffectItemType[0]` (`+0x19c` of the spell), whatever the effect. Its template comes from the item cache (`0x55ba30` with the requester spell id and the callback `0x4fc8e0`). A miss counts a pending request in `0xbde048`; the
 rows from it on keep only their spell id, difficulty and available count, and make no header. When the pass ends with requests pending, the build returns without a sort or an event. The callback rebuilds with a set flag when the pending count reaches 0 or is already 0. The cancel `0x4fc890` that
-starts a build passes the row's spell id as its key, while the requests carry the item id.
+starts a build passes the row's spell id as its key, while the requests carry the item id, so it cancels nothing (below).
 
-Addresses: `0x4fcd1e`, `0x4fcd3d`, `0x4fcd4d`, `0x4fcd58`, `0x4fcd5e`, `0x4fcd65`, `0x4fcf2d`, `0x4fcf34`, `0x4fc8e0`, `0x4fc890`, `0x4fc8b1`, `0x4fc8bc`, `0x4fc8cb`, `0x4fc780`, `0x490ae9`, `0x4fc913`, `0x55ba30`, `0x55c0c0`, `0x4fc8aa`, `0x4fc8ad`
+Addresses: `0x4fcd1e`, `0x4fcd3d`, `0x4fcd4d`, `0x4fcd58`, `0x4fcd5e`, `0x4fcd65`, `0x4fcf2d`, `0x4fcf34`, `0x4fc8e0`, `0x4fc890`, `0x4fc8b1`, `0x4fc8bc`, `0x4fc8cb`, `0x4fc8f1`, `0x4fc8fb`, `0x55c0d6`, `0x55c0f8`, `0x4fc780`, `0x490ae9`, `0x4fc913`, `0x55ba30`, `0x55c0c0`, `0x4fc8aa`, `0x4fc8ad`
 Confidence: verified
 Proof: one
 Test: none
@@ -116,6 +116,18 @@ Test: none
 `0x4fcd3d` loads the item id and `0x4fcd4d` calls the cache. A null result increments the pending count at `0x4fcd58`; `0x4fcd65` leaves the row's work when the count is not 0, and `0x4fcf34` leaves the build. `0x4fc8e0` returns when its ready byte is 0 (`0x4fc8e3`); otherwise it decrements a non-zero count and
 rebuilds with flag 1 when the count is 0. `0x4fc890` loops over the rows (`0x4fc8aa`), loads each spell id (`0x4fc8ad`), calls `0x55c0c0` with that id, the callback `0x4fc8e0` and 0 (`0x4fc8bc`), and zeroes the count (`0x4fc8cb`). It runs at the start of a build, at the start of a toggle (`0x4fc913`) and
 on leaving the world (`0x4fc780` from `0x490ae9`).
+
+## Cancelling the item requests
+
+The cancel `0x4fc890` removes nothing the build asked for. The cache's cancel `0x55c0c0` finds a record by the id it is given and drops the callback entry with the same callback and argument from that record. The requests are keyed by item id and `0x4fc890` passes spell ids, so the item callbacks stay registered. `0x4fc8cb` then zeroes the pending count, a record that arrives later finds the count 0 and rebuilds with flag 1, and a spell id equal to a pending item id would drop that entry's callback.
+
+Addresses: `0x4fc890`, `0x55c0c0`, `0x55c0d6`, `0x55c0f8`, `0x55c117`, `0x4fc8cb`, `0x4fc8f1`, `0x4fc8fb`, `0xc0e2a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x55c0c0` is a thiscall on the cache `0xc0e2a0` with the id, the callback and the argument pushed (`ret 0xc`). It hashes the id (`and eax,edi`, `0x55c0d6`) and walks the bucket for the record whose id equals it (`cmp [eax],edi`, `0x55c0f8`). A loaded record (byte `+0x201`, `0x55c117`) only gets `DBCache::CancelCallback ignored for id %016I64X` written; otherwise the matching entry of the list at `+0x1fc` is unlinked and freed. `0x4fc8f1` takes the count-0 branch to `0x4fc8fb`.
+
 
 ## Inventory slots
 

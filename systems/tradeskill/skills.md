@@ -93,9 +93,9 @@ Test: none
 
 ## Abandon
 
-`AbandonSkill` (`0x4d3ab0`) sends message `0x202` with the skill line of the row at the index. It removes nothing locally and checks no flag; a header row sends the skill line 0, and an index past the last row sends nothing.
+`AbandonSkill` (`0x4d3ab0`) sends message `0x202` with the skill line of the row at the index. It removes nothing locally and checks no flag; a header row sends the skill line 0, and an index of 0 or below (the unsigned compare `jae` at `0x4d3af7`) or past the last row sends nothing.
 
-Addresses: `0x4d3ab0`, `0x4d3af5`, `0x4d3b08`, `0x4d3b2f`, `0x4d3b35`, `0x4d3b40`, `0x418190`, `0x5ab630`
+Addresses: `0x4d3ab0`, `0x4d3af5`, `0x4d3af7`, `0x4d3b08`, `0x4d3b2f`, `0x4d3b35`, `0x4d3b40`, `0x418190`, `0x5ab630`
 Confidence: verified
 Proof: one
 Test: none
@@ -104,13 +104,13 @@ Test: none
 
 ## Skill points
 
-`AddSkillUp` (`0x4d3c30`) adds one point to a skill when the rank plus the points already chosen is below the maximum and the rank cost of the next rank fits in the points not yet spent; `RemoveSkillUp` (`0x4d3c70`) takes one back. `GetAdjustedSkillPoints` (`0x4d3cb0`) returns the player's skill points (`+0xe4c`) minus those chosen. `CancelSkillUps` (`0x4d3e30`) clears every choice.
-`AcceptSkillUps` (`0x4d3d40`) sends message `0x220`: a count, then the skill line and points of each visible row with points, and clears the choices. `BuySkillTier` (`0x4d3e50`) sends message `0x21f` with the skill line when the skill allows a step (flag bit `0x8`, or a step word of 0 with bit `0x4`) and the step value is nonzero and within the player's points.
+`AddSkillUp` (`0x4d3c30`) adds one point to a skill when the rank plus the points chosen is below the maximum and the next rank's cost fits in the points left; `RemoveSkillUp` (`0x4d3c70`) takes one back. `GetAdjustedSkillPoints` (`0x4d3cb0`) returns the points (`+0xe4c`) minus those chosen. `CancelSkillUps` (`0x4d3e30`) clears every choice.
+`AcceptSkillUps` (`0x4d3d40`) sends nothing when no points are chosen, and otherwise sends message `0x220`: a count, then the skill line and points of each visible row with points, and clears the choices. `BuySkillTier` (`0x4d3e50`) sends message `0x21f` with the skill line when the skill allows a step (flag bit `0x8`, or a step word of 0 with bit `0x4`) and the step value is nonzero and within the player's points.
 
-Addresses: `0x4d3c30`, `0x4d32d0`, `0x4d3409`, `0x4d3413`, `0x4d344b`, `0x4d345b`, `0x4d3c70`, `0x4d3480`, `0x4d357a`, `0x4d358a`, `0x4d358d`, `0x4d3cb0`, `0x4d3d0f`, `0x4d3d40`, `0x4d3d58`, `0x4d3da0`, `0x4d3dbe`, `0x4d3dcb`, `0x4d3de8`, `0x4d3df3`, `0x4d3df8`, `0x4d3e30`, `0x4d35b0`, `0x4d3e50`, `0x4d3f5f`, `0x4d3f76`, `0x4d3faf`, `0x4d3fbc`, `0x4d3fef`, `0x418190`, `0x4181f0`, `0x417dc0`, `0x5ab630`, `0x6de110`, `0x6de1c0`
+Addresses: `0x4d3c30`, `0x4d3d46`, `0x4d32d0`, `0x4d3409`, `0x4d3413`, `0x4d344b`, `0x4d345b`, `0x4d3c70`, `0x4d3480`, `0x4d357a`, `0x4d358a`, `0x4d358d`, `0x4d3cb0`, `0x4d3d0f`, `0x4d3d40`, `0x4d3d58`, `0x4d3da0`, `0x4d3dbe`, `0x4d3dcb`, `0x4d3de8`, `0x4d3df3`, `0x4d3df8`, `0x4d3e30`, `0x4d35b0`, `0x4d3e50`, `0x4d3f5f`, `0x4d3f76`, `0x4d3faf`, `0x4d3fbc`, `0x4d3fef`, `0x418190`, `0x4181f0`, `0x417dc0`, `0x5ab630`, `0x6de110`, `0x6de1c0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4d3409` loads the points chosen, `0x4d3413` asks `0x6de110` for the rank cost, `0x4d344b` tests the budget and `0x4d345b` raises the count. `0x4d3480` mirrors it: `0x4d357a` takes the cost of the current rank and `0x4d358a` and `0x4d358d` lower the count and the total. `0x4d3d0f` subtracts the total. `0x4d3d58` pushes `0x220`; the loop at `0x4d3da0` runs over the visible count and writes each pair (`0x4d3dbe`, `0x4d3dcb`),
+`0x4d3d46` to `0x4d3d50` return without sending or clearing when the chosen cost `0xb731d0` is 0. `0x4d3409` loads the points chosen, `0x4d3413` asks `0x6de110` for the rank cost, `0x4d344b` tests the budget and `0x4d345b` raises the count. `0x4d3480` mirrors it: `0x4d357a` takes the cost of the current rank and `0x4d358a` and `0x4d358d` lower the count and the total. `0x4d3d0f` subtracts the total. `0x4d3d58` pushes `0x220`; the loop at `0x4d3da0` runs over the visible count and writes each pair (`0x4d3dbe`, `0x4d3dcb`),
 so rows hidden by a collapsed category are not sent. `0x4d3de8` patches the count in place, `0x4d3df3` sends and `0x4d3df8` clears the choices through `0x4d35b0`. `0x4d3f5f` to `0x4d3f76` test the step flags and fetch the step value, `0x4d3faf` compares it with the points, `0x4d3fbc` pushes `0x21f` and `0x4d3fef` sends.

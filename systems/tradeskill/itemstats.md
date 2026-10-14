@@ -40,8 +40,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4fe176` to `0x4fe1b7` find the ItemSubClass row by class and subclass. `0x4fe1bc` tests for a bag and `0x4fe216` loads the slot count. `0x4fe248` fetches the proficiency mask of the class (`0x5e1e70`, 0 for a class from 16 up). With a nonzero mask lacking the subclass bit (`0x4fe25d`) the subclass line is red; a weapon (`0x4fe25f`) whose row has a proficiency bit in its second field (`0x4fe264`)
-gets a red class line instead, and a red subclass line only when that bit is missing too (`0x4fe281` marks the subclass red). `0x4fe28d` handles the projectile class and `0x4fe2f5` indexes the string table `0x83ddb0` by InventoryType. A weapon with no ItemSubClass row reads its second field through a null pointer at `0x4fe264`. The colour is chosen at `0x4fe39e`: a failed check loads the code `|cffff2020` (`0x84e4e0`) and `|r` (`0x844538`), and a passed one the empty string `0x882748`.
+`0x4fe176` to `0x4fe1b7` find the ItemSubClass row by class and subclass. `0x4fe1bc` tests for a bag and `0x4fe216` loads the slot count. `0x4fe248` fetches the proficiency mask of the class (`0x5e1e70`, 0 for a class from 16 up). With a nonzero mask lacking the subclass bit (`0x4fe25d`) the subclass line is red; a weapon (`0x4fe25f`) whose row has a proficiency bit in its field at `+8` (`0x4fe264`)
+gets a red class line instead, and a red subclass line only when that bit is missing too (`0x4fe281` marks the subclass red). `0x4fe28d` handles the projectile class and `0x4fe2f5` indexes the string table `0x83ddb0` by InventoryType. A weapon with no ItemSubClass row reads that field through a null pointer at `0x4fe264`, reached only when the class mask from `0x5e1e70` is nonzero and lacks the subclass bit (`0x4fe24d` to `0x4fe262`). The colour is chosen at `0x4fe39e`: a failed check loads the code `|cffff2020` (`0x84e4e0`) and `|r` (`0x844538`), and a passed one the empty string `0x882748`.
 
 ## Damage, armor and resistances
 

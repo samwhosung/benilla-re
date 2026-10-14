@@ -27,6 +27,7 @@ Proof: one
 Test: none
 
 `0x4f6c3b` asks the player for the spell stored for the open type and `0x4f6c5f` reads the spell's name. The table `0x84d0f4` holds `USE`, `TRAIN`, `DISGUISE` and `ENSCRIBE`. `0x4f6ce3` fails unless the type is 3; `0x4f6cf4` fetches the list, `0x4f6d14` finds the ability row of its first spell and `0x4f6d21` takes its skill line (`+4`). `0x4f6d52` finds the slot, `0x4f6d99` reads the rank word and `0x4f6da4` adds the permanent bonus; `0x4f6e08` and `0x4f6e17` do so for the maximum.
+A player with no slot for the line gives the slot -1 (`0x4f6d52`), which `0x4f6d99` and `0x4f6da4` do not test, so the rank and the bonus are read from the words 12 bytes below the first slot.
 `0x4f6e40` is the failure triple. `0x4f725c` reads the row's group field and `0x4f727e` the line's name.
 
 ## Craft rows
