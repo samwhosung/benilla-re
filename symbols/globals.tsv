@@ -77,6 +77,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5aa854	void *[11]	s_statusEventJumpTable		net	Holds the case addresses of the status reporter's first switch	inferred	none	net/layout#starts-the-listing-hides
 0x5aa880	void *[39]	s_statusEventJumpTable2		net	Holds the case addresses of the status reporter's second switch	inferred	none	net/layout#starts-the-listing-hides
 0x5aae08	void *[6]	s_charLoginFailedJumpTable		net	Holds the case addresses that map a character login failure byte to a status code	inferred	none	net/layout#starts-the-listing-hides
+0x5ace1c	void *[18]	s_friendResultJumpTable		net	Holds the case addresses of the friend status result switch	verified	one	net/friends#friend-status-result
 0x5adbd8	void *[7]	s_whoCompareJumpTable		net	Holds the who comparator's seven cases, one per sort key	inferred	none	
 0x5b1e2c	void *[16]	s_logonStateNameJumpTable		net	Holds the case addresses that pick a login state's log string	inferred	none	net/layout#starts-the-listing-hides
 0x5b2444	void *[3]	s_realmCharJumpTable		net	Holds the three case addresses of a realm name character switch	inferred	none	net/layout#starts-the-listing-hides
@@ -495,13 +496,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
 0x80a2a8	uint32_t[2]	s_cullModeByState		terrain	Holds the Direct3D cull modes 1 (none) and 2 (clockwise) by the culling state	verified	one	terrain/render#face-culling
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
-0x80a400	void *[11]			unassigned	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
+0x80a3f4	void *[14]	s_responseObjectVtable		net	Holds the slots of the response object the world connection notifies	verified	one	net/connection#response-object
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
 0x80a658	void *[23]	RealmConnection::vftable		net	Holds RealmConnection's vtable, six slots of it pure virtual	verified	one	net/dispatch#dispatch
 0x80a700	double	s_latencyScale		net	Holds -1/32768, the factor that scales rand() into the simulated delay	verified	one	net/wire#simulated-latency
 0x80a778	void *[1]	s_serverLinkTimerVftable		net	Holds the vtable of ServerLink's timer, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a77c	void *[1]	s_serverLinkPendingVftable		net	Holds the vtable of ServerLink's pending requests, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
+0x80a7a8	void *[2]	s_wdataStoreVtable		net	Holds the vtable of the data store the logon link writes its commands into	verified	one	net/connection#connect-and-realm-list
 0x80a7dc	void *[9]	ClientLink::vftable		net	Holds ClientLink's vtable: the connection callbacks, slot 7 the raw data hook	verified	one	net/login#logon-commands
 0x80a8ac	float	s_oneOver256		terrain	Holds 1/256, the scale of a magma coordinate	verified	one	terrain/groupdraw#group-liquid-mesh
 0x80a8b0	const float	s_oneOver65536		unassigned	Holds 1/65536	verified	one	lighting/celestial#celestial-bodies
@@ -1458,6 +1460,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85d5b0	char[5]	s_textI		net	Holds the string "(%i)"	inferred	none	
 0x85d684	char[24]	s_textLastRealmConnectedTo		net	Holds the string "Last realm connected to"	inferred	none	
 0x85d6bc	char[8]	s_textHttp		net	Holds the string "http://"	inferred	none	
+0x85d830	void *[38]	s_socialBindings		net	Holds the 19 name and function pairs of the friend, ignore and who script functions	verified	one	net/friends#friend-list-object
 0x85db88	char[23]	s_textUsgaeSortWhoType		net	Holds the string "Usgae: SortWho("type")"	inferred	none	
 0x85de74	char[17]	s_textMacrosCacheTxt		unassigned	Holds the string "macros-cache.txt"	inferred	none	
 0x85de88	char[17]	s_textMacrosLocalTxt		unassigned	Holds the string "macros-local.txt"	inferred	none	
@@ -2550,20 +2553,30 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
 0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
+0xc27d08	char[64]	s_logonAccountName		net	Holds the account name the logon authenticated with	verified	one	net/connection#status-text-and-names
 0xc27d80	uint32_t			net	Holds data whose address SetSelectedCharacterRecord, GetSelectedCharacterRecord take; not read here	inferred	none	
 0xc27d88	uint8_t			net	Holds a byte that GetSelectedCharacterName reads; not read here	inferred	none	
 0xc27e80	uint8_t			net	Holds a byte that GetSelectedCharacterRace reads; not read here	inferred	none	
 0xc27e81	uint8_t			net	Holds a byte that GetSelectedCharacterClass reads; not read here	inferred	none	
 0xc27e82	uint8_t			net	Holds a byte that GetSelectedCharacterSex reads; not read here	inferred	none	
+0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	one	net/connection#telemetry-record
 0xc27eb8	uint32_t			net	Holds data whose address ClientConnection::PollStatus takes; not read here	inferred	none	
 0xc27fb8	uint8_t[308]	s_selectedRealm		net	Holds the selected realm's 308-byte record; its address text is at +0x109	verified	one	net/session#connecting
 0xc28118	void *	s_realmList		net	Holds the realm list the realm selection searches	verified	one	net/session#connecting
+0xc2811c	uint8_t	s_logonRebuild		net	Holds the byte that makes the next logon destroy and rebuild the logon object	verified	one	net/connection#starting-the-logon
 0xc28120	uint32_t	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	inferred	none	
 0xc28128	ClientConnection *	s_clientConnection		net	Holds the session, the one live NetClient	verified	one	net/session#connecting
-0xc28134	uint8_t			net	Holds a byte that ClientServices::Destroy, SelectRealmByName, ConnectToSelectedRealm read and write; not read here	inferred	none	
-0xc28168	uint32_t			unassigned	Holds a dword that ClientChatHandler, ClientTextEmoteHandler, HandleMailListResultPacket read and write; not read here	inferred	none	
-0xc2817c	uint32_t			net	Holds a dword that Script::SortWho, CompareWhoResults, FriendList::Initialize read and write; not read here	inferred	none	
-0xc28180	uint32_t			net	Holds a dword that Script::SortWho, CompareWhoResults, FriendList::Initialize read and write; not read here	inferred	none	
+0xc2812c	void *	s_realmListCVar		net	Holds the handle of the realmList CVar once registered	verified	one	net/connection#realm-selection
+0xc28130	void *	s_realmNameCVar		net	Holds the handle of the realmName CVar once registered	verified	one	net/connection#realm-selection
+0xc28134	uint8_t	s_realmSelected		net	Holds the byte that says the selected-realm copy is valid	verified	one	net/connection#realm-selection
+0xc28135	uint8_t	s_telemetryPresent		net	Holds the byte set once telemetry.dat has been read	verified	one	net/connection#telemetry-record
+0xc28168	FriendList *	s_friendList		net	Holds the one FriendList object, created once at start-up	verified	one	net/friends#friend-list-object
+0xc2817c	uint32_t[14]	s_whoSortChain		net	Holds seven pairs of sort key and direction for the who results	verified	one	net/friends#who-sort-keys
+0xc281b8	WhoResult[50]	s_whoResults		net	Holds the 50 who result records of 160 bytes	verified	one	net/friends#who-list-reply
+0xc2a120	uint32_t	s_whoResultCount		net	Holds the number of who results kept, at most 50	verified	one	net/friends#who-list-reply
+0xc2a124	uint32_t	s_whoResultTotal		net	Holds the server total of the last who reply	verified	one	net/friends#who-list-reply
+0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/friends#who-list-reply
+0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/friends#who-list-reply
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
 0xc2a3b8	uint32_t	s_latencyMin		net	Holds the least simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency

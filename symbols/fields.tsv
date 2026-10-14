@@ -577,14 +577,23 @@ CharacterSelectionDisplay	0x010a	1	uint8_t	m_newCharacter	glue	Holds 1 for a cha
 CharacterSelectionDisplay	0x0110	4	void *	m_component	glue	Holds the built character component, null until the select build makes it; the record destructor zeroes it	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0114	4	void *	m_petModel	glue	Holds the pet's model, null until built; the destructor releases it without clearing	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0118	1	uint8_t	m_rebuildModel	glue	Holds 1 for a new or entered record; the select screen clears it when it builds the model	inferred	none	glue/flow#enter-world
+ClientConnection	0x1adc	4	void *	m_response	net	Holds the response object the connection notifies of replies	verified	one	net/connection#response-object
+ClientConnection	0x1ae4	4	uint32_t	m_characterCount	net	Holds the number of character records read from the last character list	verified	one	net/connection#character-list-packet
+ClientConnection	0x1ae8	4	void *	m_characters	net	Holds the array of 0x110-byte character records	verified	one	net/connection#character-list-packet
+ClientConnection	0x1af0	4	uint32_t	m_queuePosition	net	Holds the queue position the last wait-queue auth result carried	verified	one	net/connection#response-object
 ClientConnection	0x1af4	4	uint32_t	m_billingTimeRemaining	net	Holds the billing time remaining, read from the auth response by 0x5b41b0	inferred	none	glue/script#billing
 ClientConnection	0x1af8	4	uint32_t	m_billingTimeRested	net	Holds the billing rested time, read from the auth response by 0x5b41b0	inferred	none	glue/script#billing
 ClientConnection	0x1afc	1	uint8_t	m_billingFlags	net	Holds the billing flags byte, read from the auth response by 0x5b41b0	inferred	none	glue/script#billing
 ClientConnection	0x1b00	4	uint32_t	m_connected	net	Holds 1 while the world socket is connected: set on connect by 0x5aaa90, cleared on a drop	inferred	none	glue/script#server-name-and-connection
+ClientConnection	0x1b04	4	uint32_t	m_loginSent	net	Holds 1 from sending the player login until the world is left	verified	one	net/connection#character-login
 ClientConnection	0x1b08	4	uint32_t	m_statusDone	net	Holds 1 once the current operation's status is set	verified	one	net/session#session-status
 ClientConnection	0x1b0c	4	uint32_t	m_statusResult	net	Holds the status's result flag, 1 for success	verified	one	net/session#session-status
 ClientConnection	0x1b10	4	uint32_t	m_operation	net	Holds the operation the status belongs to	verified	one	net/session#session-status
 ClientConnection	0x1b14	4	uint32_t	m_statusCode	net	Holds the status code, an index into the 83 status names	verified	one	net/session#session-status
+ClientConnection	0x1b18	4	uint32_t	m_worldHandle	net	Holds the handle set when the world is entered, zero outside it	verified	one	net/connection#character-login
+ClientConnection	0x1b1c	1	uint8_t	m_quitAfterLogout	net	Holds the quit flag of the pending logout	verified	one	net/connection#logout
+ClientConnection	0x1b1d	1	uint8_t	m_logoutPending	net	Holds 1 while a logout is requested and not yet answered	verified	one	net/connection#logout
+ClientConnection	0x1b20	4	void *	m_cleanup	net	Holds the operation cleanup callback, run once	verified	one	net/connection#operations
 DictionaryRecord	0x0000	4	char[4]	m_key	glue	Holds up to three bytes of a lower-cased name window and a terminator	verified	one	glue/create#name-statistics
 DictionaryRecord	0x0004	4	int32_t	m_count	glue	Holds how many times the key was seen, at least 1	verified	one	glue/create#name-statistics
 EvtContext	0x0000	4	void **	__vfptr	core	Holds the vtable 0x801364	verified	one	core/loop#start-and-stop
@@ -613,6 +622,19 @@ EvtHandler	0x0008	4	void *	m_handler	core	Holds the function, called as fastcall
 EvtHandler	0x000c	4	void *	m_argument	core	Holds the argument passed in edx	verified	two	core/events#handler-records
 EvtHandler	0x0010	4	float	m_priority	core	Holds the priority; higher runs first	verified	two	core/events#handler-order
 EvtHandler	0x0014	4	uint32_t	m_skip	core	Holds nonzero for a record the dispatch and registration pass over	verified	two	core/events#handler-order
+FriendList	0x0000	1600	FriendSlot[50]	m_friends	net	Holds the 50 friend slots	verified	one	net/friends#friend-list-object
+FriendList	0x0640	4	uint32_t	m_pendingFriendNames	net	Holds the number of friend names not yet in the name cache	verified	one	net/friends#friend-list-object
+FriendList	0x0648	8	uint64_t	m_selectedFriend	net	Holds the guid of the selected friend	verified	one	net/friends#friend-list-object
+FriendList	0x0650	200	uint64_t[25]	m_ignores	net	Holds the 25 ignored guids	verified	one	net/friends#friend-list-object
+FriendList	0x0718	4	uint32_t	m_pendingIgnoreNames	net	Holds the number of ignore names not yet in the name cache	verified	one	net/friends#friend-list-object
+FriendList	0x0720	8	uint64_t	m_selectedIgnore	net	Holds the guid of the selected ignore	verified	one	net/friends#friend-list-object
+FriendSlot	0x0000	1	uint8_t	m_online	net	Holds 1 when the friend is online	verified	one	net/friends#friend-list-object
+FriendSlot	0x0001	1	uint8_t	m_status	net	Holds the status flags, 2 away and 4 busy	verified	one	net/friends#friend-list-object
+FriendSlot	0x0004	4	char *	m_name	net	Holds the heap copy of the friend name, or null	verified	one	net/friends#friend-list-object
+FriendSlot	0x0008	8	uint64_t	m_guid	net	Holds the friend guid, zero for an empty slot	verified	one	net/friends#friend-list-object
+FriendSlot	0x0010	4	uint32_t	m_level	net	Holds the friend level	verified	one	net/friends#friend-list-object
+FriendSlot	0x0014	4	uint32_t	m_class	net	Holds the friend class id	verified	one	net/friends#friend-list-object
+FriendSlot	0x0018	4	uint32_t	m_area	net	Holds the friend area id	verified	one	net/friends#friend-list-object
 ITEMCOOLDOWNHASHNODE	0x0000	4	uint32_t	m_hashVal	spell	Holds the key whose low bits pick the slot	verified	one	spell/cooldowns#item-cooldown-table-internals
 ITEMCOOLDOWNHASHNODE	0x0004	8	void *[2]	m_linkToSlot	spell	Holds the node's link in its slot list	verified	one	spell/cooldowns#item-cooldown-table
 ITEMCOOLDOWNHASHNODE	0x000c	8	void *[2]	m_linkToFull	spell	Holds the node's link in the table's node list	verified	one	spell/cooldowns#item-cooldown-table
@@ -1002,6 +1024,12 @@ SphereParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds minimum radius, ma
 SplineParticleEmitter	0x0000	656	CParticleEmitter2	m_base	models	Holds the base emitter	verified	one	models/emission#spline-spawn
 SplineParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds base rate, start and end parameters, spread and offset	verified	one	models/emission#spline-spawn
 SplineParticleEmitter	0x02a4	4	uint32_t	m_spawnAtEnd	models	Holds 1 after the end parameter changes, until the next spawn	verified	one	models/emission#spline-spawn
+WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/friends#who-list-reply
+WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/friends#who-list-reply
+WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/friends#who-list-reply
+WhoResult	0x0094	4	uint32_t	m_race	net	Holds the race id	verified	one	net/friends#who-list-reply
+WhoResult	0x0098	4	uint32_t	m_class	net	Holds the class id	verified	one	net/friends#who-list-reply
+WhoResult	0x009c	4	uint32_t	m_zone	net	Holds the area id	verified	one	net/friends#who-list-reply
 WowConnection	0x0010	4	uint32_t	m_state	net	Holds the socket state: 5 connected, 6 closed, 7 closing	verified	one	net/wire#sending
 WowConnection	0x001c	4	uint8_t *	m_recvBuffer	net	Holds the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0020	4	uint32_t	m_recvFill	net	Holds the count of bytes in the receive buffer	verified	one	net/wire#receive-loop
