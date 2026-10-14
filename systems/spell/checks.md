@@ -216,17 +216,17 @@ NaN distance or bound is in range. An implementation in `f64` reproduces it exac
 Addresses: `0x6e47b0`, `0x6e47c4`, `0x6e47ca`, `0x6e47d5`, `0x6e47e2`, `0x6e47ef`, `0x6e47f2`, `0x6e4814`, `0x6e4822`, `0x6e4825`, `0x6e4840`, `0x6e4849`, `0x6e3480`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_range_check_difftest`
 
-`0x6e47d5 call 0x6e3480` with `edx` the id and the stack `&[ebp+0xc]`, `&[ebp+8]`, target; the
-first compare uses `[ebp+0xc]`, and both callers map `far` 0 to 0x76, so it is the minimum.
-The positions are the three floats slot 5 (`call [edx+0x14]`) of each object writes to a local
-vector; the name is inferred from this use. `d8 26` and
-`d8 66 xx` are `fsub m32`, `st0 = caster − target`. `de cb` `fmulp st(3)` squares x, `d8 c9` and
-`de c3` add `dz²`, `d8 ca` and `de c3` add `dy²`. `fcompp` of `s` against `min²`, `test ah,5`,
-`jp` continues on C0 and C2 equal: clear (s ≥ min²) or both set (unordered). The second,
-`test ah,0x41; jne`, returns 1 on less, equal or unordered. Both products of two floats are exact
-in 53 bits.
+`0x6e47d5 call 0x6e3480` with `edx` the id and the stack `&[ebp+0xc]`, `&[ebp+8]`, target; the first
+compare uses `[ebp+0xc]`, and both callers map `far` 0 to 0x76, so it is the minimum. The positions
+are the three floats slot 5 (`call [edx+0x14]`) of each object writes to a local vector; the name is
+inferred from this use. `d8 26` and `d8 66 xx` are `fsub m32`, `st0 = caster − target`. `de cb` `fmulp
+st(3)` squares x, `d8 c9` and `de c3` add `dz²`, `d8 ca` and `de c3` add `dy²`. `fcompp` of `s`
+against `min²`, `test ah,5`, `jp` continues on C0 and C2 equal: clear (s ≥ min²) or both set
+(unordered). The second, `test ah,0x41; jne`, returns 1 on less, equal or unordered. Both products of
+two floats are exact in 53 bits. `spell_range_check_difftest` runs `0x6e47b0` whole, with `0x6e3480`
+replaced by a patch that writes the chosen window and both position calls stubbed.
 
 ## Crowd-control aura scans
 

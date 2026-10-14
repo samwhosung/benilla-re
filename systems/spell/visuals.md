@@ -1,6 +1,6 @@
 # spell: visuals
 
-Area shard emitters, chain beams, the screen tint, camera-shake groups and the precast kit.
+Area shard emitters, chain beams, the screen tint and the precast kit.
 
 `SpellVisuals.cpp` (`0x6eb650` to `0x6ed410`) draws the spell effects that are not a kit model on
 a unit: the shard emitters of ground spells (the image's `BlizzardObject`, spawning `Shard`s), the
@@ -71,14 +71,15 @@ tint; updates every emitter, destroying each whose update returns 0 and returnin
 Addresses: `0x6eca20`, `0x6ecb20`, `0x483460`, `0x870e20`, `0x6eca51`, `0x6eca83`, `0x6ecaa7`, `0x6ecac3`, `0x6ecace`, `0x6ecaf2`, `0x7b0a40`, `0x7b0a80`, `0x4818f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spellvisual_fade_clock_difftest`
 
 The calls are `0x48372c` and `0x48376a`. `0x6ecb20` is `0x7b0a80(0xcee948, 0x4818f0() + 8)`. In
-`0x6eca20` each node's next is read before its update; `0x6eca51` is `0x6ec460(now)`, and a zero
-`al` unlinks through `0x6ed410` and calls `0x6ed030` (`0x6eca83`). `0x6ecaa7` is `fild` of the
-signed difference, `fmul` 0.001 (`0x3a83126f`), `fstp` a float, passed to `0x7b0a40` at
-`0x6ecac3`. `0x6ecace` is `0x6ec870(now)` on `0xcee8d4`. `0x6ecaf2` is `0x6ebad0`; on zero,
-`0x6eb850` and `0x7604f0` on `0xcee928`.
+`0x6eca20` each node's next is read before its update; `0x6eca51` is `0x6ec460(now)`, and a zero `al`
+unlinks through `0x6ed410` and calls `0x6ed030` (`0x6eca83`). `0x6ecaa7` is `fild` of the signed
+difference, `fmul` 0.001 (`0x3a83126f`), `fstp` a float, passed to `0x7b0a40` at `0x6ecac3`.
+`0x6ecace` is `0x6ec870(now)` on `0xcee8d4`. `0x6ecaf2` is `0x6ebad0`; on zero, `0x6eb850` and
+`0x7604f0` on `0xcee928`. `spellvisual_fade_clock_difftest` runs a slice of `0x6eca20`, the seconds,
+`0x6eca8f` to `0x6ecab3`. The rest of the frame is not run.
 
 ## Area shard emitter creation
 
@@ -118,7 +119,7 @@ box to `(−r, −r, −r)` to `(r, r, r)` with centre `0.5·((−r) + r)` per a
 Addresses: `0x6eb930`, `0x6eb95e`, `0x6eb967`, `0x6eb981`, `0x81199c`, `0x6eb989`, `0x6eb98f`, `0x6eb99f`, `0x6eba20`, `0x6ebab8`, `0x670db0`, `0x6717d0`, `0x64a5a0`, `0x5f8cf0`
 Confidence: verified
 Proof: one
-Test: `terrain::camera_set_difftest`, `objectlayer::vector3_scale_add_difftest`
+Test: `terrain::camera_set_difftest`, `objectlayer::vector3_scale_add_difftest`, `spell::spellvisual_quality_scale_difftest`
 
 `0x6eb95e` loads `0xcee9a8`; null goes to `0x6eb989` (`fld` the rate alone). `0x6eb967` reads
 `[record+0x28]`: 0 multiplies by 0.33 (`0x3ea8f5c3`), 1 by 0.66 (`0x3f28f5c3`, the constant `0x81199c` that `0x6eb981` multiplies by), at 53 bits;
@@ -130,6 +131,8 @@ before `0x5f8cf0` scales by 0.5, so the centre is 0, or NaN for an infinite or N
 `0x6ebab8` is `0x6717d0(+0x10c, matrix, box, centre, 1)`.
 
 `terrain::camera_set_difftest` runs six stretches from `0x6717da` to `0x6719f8`.
+`spellvisual_quality_scale_difftest` runs a slice, `0x6eb95e` to `0x6eb995`, the rate scaling. The
+rest of the function is not run.
 
 ## Shard emission rate
 
@@ -140,15 +143,16 @@ before `0x5f8cf0` scales by 0.5, so the centre is 0, or NaN for an infinite or N
 Addresses: `0x6ebad0`, `0x6ebad6`, `0x6ebaee`, `0x6ebaf4`, `0x6ebafc`, `0x6ebdbb`, `0x6ebdc9`, `0x6ebdda`, `0x6ebde2`, `0x6ebde7`, `0xc62510`, `0x66fcc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spellvisual_emitter_difftest`
 
-`0x6ebad6` loads the float `0xc62510`, which `0x66fcc0` stores each world update, `fmul` the rate
-and `fadd` the accumulator at 53 bits; `0x6ebaee` is `fst` to `+0x120`, and `0x6ebaf4` compares
-the register, not the stored float, with 1.0: `test ah,1; jne` skips when C0 is set, below 1.0
-or unordered. The loop tail (`0x6ebdac` to `0x6ebdcc`) is `fld`, `fsub` 1.0, `fst` and the same
-compare. `0x6ebdda` compares the rate with 0.0: `test ah,0x44; jp` returns 1 unless only C3 is
-set. With a zero rate, `0x6ebde7` reads the shard list's first link `+0x140` and returns 0 when it
-is null or marked.
+`0x6ebad6` loads the float `0xc62510`, which `0x66fcc0` stores each world update, `fmul` the rate and
+`fadd` the accumulator at 53 bits; `0x6ebaee` is `fst` to `+0x120`, and `0x6ebaf4` compares the
+register, not the stored float, with 1.0: `test ah,1; jne` skips when C0 is set, below 1.0 or
+unordered. The loop tail (`0x6ebdac` to `0x6ebdcc`) is `fld`, `fsub` 1.0, `fst` and the same compare.
+`0x6ebdda` compares the rate with 0.0: `test ah,0x44; jp` returns 1 unless only C3 is set. With a zero
+rate, `0x6ebde7` reads the shard list's first link `+0x140` and returns 0 when it is null or marked.
+`spellvisual_emitter_difftest` runs `0x6ebad0` whole on inputs where the sum stays below 1.0, so no
+shard spawns. The spawn loop is not run.
 
 ## Shard placement
 
@@ -208,16 +212,17 @@ once for a null caster or targets, no targets, spell 0, no strands, or a chain i
 Addresses: `0x60d7c0`, `0x60da79`, `0x60db6d`, `0x6ecb90`, `0x6ecbd0`, `0x6ecc0e`, `0x6ecc2e`, `0x6ecc65`, `0x6ecc9b`, `0x6eccd1`, `0x6ecd30`, `0x6ecd6a`, `0x6ecd8b`, `0x6ecdaa`, `0x6ecdcc`, `0x60dc20`, `0x449d90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spellvisual_chain_duration_difftest`
 
-`0x60d7fc` maps kinds 0 and 12 through the byte table `0x60dc20` to `0x60da79`, which decodes
-`+0x6c`, `+0x5c` and `+0x4c` from `0x60db19` and passes the owner's `+0x30` slots with capacity 3.
-`0x6ecb90` reorders its arguments and calls `0x6ecbd0` unless the caster or count is 0. There,
-`0x6ecc0e` to `0x6ecc2e` bound the id against the `SpellChainEffects` store and test the record,
-`0x6ecc65` caps the strands at 3, `0x6ecc9b` is `SMemAlloc(0x50, …, −2, 8)` and `0x6eccd1` is
-`0x6ed360(node, 2, 0)`. `0x6ecd30` is `count·[rec+0x14] + now`; `0x6ecd6a` is `fild [rec+0x14]`,
-`fmul` 0.001. `0x6ecd8b` is `TextureCreate([rec+0x1c])`. The loop leaves when the slot index
-reaches the capacity (`0x6ecdcc`), so a capacity of 0 ends it after one strand.
+`0x60d7fc` maps kinds 0 and 12 through the byte table `0x60dc20` to `0x60da79`, which decodes `+0x6c`,
+`+0x5c` and `+0x4c` from `0x60db19` and passes the owner's `+0x30` slots with capacity 3. `0x6ecb90`
+reorders its arguments and calls `0x6ecbd0` unless the caster or count is 0. There, `0x6ecc0e` to
+`0x6ecc2e` bound the id against the `SpellChainEffects` store and test the record, `0x6ecc65` caps the
+strands at 3, `0x6ecc9b` is `SMemAlloc(0x50, …, −2, 8)` and `0x6eccd1` is `0x6ed360(node, 2, 0)`.
+`0x6ecd30` is `count·[rec+0x14] + now`; `0x6ecd6a` is `fild [rec+0x14]`, `fmul` 0.001. `0x6ecd8b` is
+`TextureCreate([rec+0x1c])`. The loop leaves when the slot index reaches the capacity (`0x6ecdcc`), so
+a capacity of 0 ends it after one strand. `spellvisual_chain_duration_difftest` runs a slice of
+`0x6ecbd0`, the life, `0x6ecd61` to `0x6ecd79`. The rest is not run.
 
 ## Chain hop table
 
@@ -276,15 +281,16 @@ never falls back to 0x22.
 Addresses: `0x6ec6f0`, `0x6ec6fb`, `0x6ec718`, `0x6ec73e`, `0x6ec758`, `0x6ec761`, `0x6ec780`, `0x6ec7b5`, `0x6ec7fe`, `0x6ec81a`, `0x860a18`, `0x7130e0`, `0x7131b0`, `0x712cb0`, `0x712d50`, `0x60d450`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spellvisual_attach_height_difftest`
 
 The model is `[unit+0xd8]`; `0x6ec6f0` tests it for null, `0x6ec780` does not. `0x6ec718` pushes
-`0x4c534324` (`$CSL`) to `0x7130e0` and `0x7131b0`. `0x6ec73e` is `fld +0x90`, `fmul +0xbc`,
-`fmul` 0.75 (`0x3f400000`), `fstp` a float (`0x6ec758`); vtable `+0x14` then writes the position
-and `0x6ec761` adds the float to its z. The id is bounded against the Spell store; `0x6ec7b5`
-pushes 0x22 to `0x712cb0` and `0x712d50`. `0x6ec7fe` picks the record through `0x60d450` for a
-unit and `0x6ec1e0` otherwise; `0x6ec81a` loads `[[record+0x24]·4 + 0x860a18]` with no bound. The
-table's twelfth dword is a pointer.
+`0x4c534324` (`$CSL`) to `0x7130e0` and `0x7131b0`. `0x6ec73e` is `fld +0x90`, `fmul +0xbc`, `fmul`
+0.75 (`0x3f400000`), `fstp` a float (`0x6ec758`); vtable `+0x14` then writes the position and
+`0x6ec761` adds the float to its z. The id is bounded against the Spell store; `0x6ec7b5` pushes 0x22
+to `0x712cb0` and `0x712d50`. `0x6ec7fe` picks the record through `0x60d450` for a unit and `0x6ec1e0`
+otherwise; `0x6ec81a` loads `[[record+0x24]·4 + 0x860a18]` with no bound. The table's twelfth dword is
+a pointer. `spellvisual_attach_height_difftest` runs `0x6ec6f0` whole on a model with an attachment
+manager and the `$CSL` event stubbed absent. The event branch is not run.
 
 ## Spell visual record choice
 
@@ -335,31 +341,16 @@ Nothing is passed while `t0 = t3`. `0x6d45c0` stores the colour and the low byte
 Addresses: `0x60da55`, `0x6ec910`, `0x6ec922`, `0x6ec94a`, `0x6ec870`, `0x6ec882`, `0x6ec89f`, `0x6ec8aa`, `0x6ec8de`, `0x6ec8e9`, `0x6ec8fe`, `0x6d45c0`, `0x597ac0`, `0x6e3340`, `0x40a2b0`, `0xcee8d4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spellvisual_timeline_difftest`, `spell::spellvisual_intensity_difftest`
 
-`0x60d7fc` maps kind 6 to `0x60da55`. `0x6ec922` is `0x6e3340(spellId, 0, 0)`; `0x6ec94a` is
-`fild` of `d` as an unsigned 64-bit integer, `fmul` the float fraction, `__ftol`. `0x6ec89f` is
-`fild` of `now − t0` zero-extended to 64 bits and `0x6ec8aa` `fidiv` the signed 32-bit `t1 − t0`;
-`0x6ec8de` is `d8 2d`, `fsubr`, so `1.0 − st0`. Each level is stored as a float. The compares
-are `jae`, `jb`, `jae` against `t1`, `t2`, `t3`. `0x597ac0` copies the colour into the argument.
-
-## Camera shake groups
-
-`0x6ecb40(groupId, position)` looks up a `SpellEffectCameraShakes` record and, for each of its
-three shake ids in order, skips a zero and otherwise calls `0x511d40(id, position)` on the world
-camera. An id outside the store or naming no record does nothing. The kit player `0x60edf0` and
-the effect object update `0x620be0` call it.
-
-Addresses: `0x6ecb40`, `0x6ecb4d`, `0x6ecb65`, `0x6ecb74`, `0x60edf0`, `0x620be0`, `0x511d40`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x6ecb4d` bounds `ecx` signed against the store; the loop runs three times from `record+4`
-(`0x6ecb65`), pushing the position and id before `0x4818f0` and calling `0x511d40` on its result
-(`0x6ecb74`). `0x60f4e6` in `0x60edf0` passes `[esi+0x38]` when positive, with the position from
-vtable `+0x14` or a supplied one; `0x620e11` in `0x620be0` passes `[[this+0x1c]+0x38]` when above
-0 and not -1, with `this+0x48`.
+`0x60d7fc` maps kind 6 to `0x60da55`. `0x6ec922` is `0x6e3340(spellId, 0, 0)`; `0x6ec94a` is `fild` of
+`d` as an unsigned 64-bit integer, `fmul` the float fraction, `__ftol`. `0x6ec89f` is `fild` of `now −
+t0` zero-extended to 64 bits and `0x6ec8aa` `fidiv` the signed 32-bit `t1 − t0`; `0x6ec8de` is `d8
+2d`, `fsubr`, so `1.0 − st0`. Each level is stored as a float. The compares are `jae`, `jb`, `jae`
+against `t1`, `t2`, `t3`. `0x597ac0` copies the colour into the argument.
+`spellvisual_timeline_difftest` runs `0x6ec910` whole with its calls of `0x6e3340` and the clock
+overwritten. `spellvisual_intensity_difftest` runs a slice of `0x6ec870`, the level, `0x6ec879` to
+`0x6ec8f1`.
 
 ## Precast visual at cast start
 

@@ -6,7 +6,7 @@ the camera hands back to a swimming player.
 
 This is `Camera.cpp`. The per-frame driver that calls them is `uicamera/driver`; the channels they ease through are
 `uicamera/transitions`; the CVars are `uicamera/cvars`. Which shake ids a spell or a footstep adds is
-`spell/visuals#camera-shake-groups`.
+`spell/shakes#camera-shake-groups`.
 
 Roots: `0x511d40` (add a shake), `0x511760` (shake walk), `0x511920` (bob), `0x50d900` (slope probe), `0x50dbc0` (tilt arming), `0x511250` (drunk view), `0x5103e0` (facing commit)
 

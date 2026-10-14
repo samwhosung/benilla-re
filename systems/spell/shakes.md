@@ -3,12 +3,30 @@
 The camera shake a spell visual kit plays: which node owns it, when it fires, and where it shakes from.
 
 A `SpellVisualKit` record names a camera shake group in its dword `+0x38`; `0x6ecb40` plays the group's
-shakes at a position (`visuals`, Camera shake groups). The kit player `0x60edf0` (`objectlayer`, Playing a visual
+shakes at a position (Camera shake groups). The kit player `0x60edf0` (`objectlayer`, Playing a visual
 kit) decides when and where. The one-time arm pass of the first effect node plays the shake from that node's
 position, and a kit that creates no node plays it from the tail. The producers are the kit player
 and the two `$SHK` animation event arms (`objectlayer`, dynamic objects and game objects).
 
 Roots: `0x6ecb40`
+
+## Camera shake groups
+
+`0x6ecb40(groupId, position)` looks up a `SpellEffectCameraShakes` record and, for each of its
+three shake ids in order, skips a zero and otherwise calls `0x511d40(id, position)` on the world
+camera. An id outside the store or naming no record does nothing. The kit player `0x60edf0` and
+the effect object update `0x620be0` call it.
+
+Addresses: `0x6ecb40`, `0x6ecb4d`, `0x6ecb65`, `0x6ecb74`, `0x60edf0`, `0x620be0`, `0x511d40`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6ecb4d` bounds `ecx` signed against the store; the loop runs three times from `record+4`
+(`0x6ecb65`), pushing the position and id before `0x4818f0` and calling `0x511d40` on its result
+(`0x6ecb74`). `0x60f4e6` in `0x60edf0` passes `[esi+0x38]` when positive, with the position from
+vtable `+0x14` or a supplied one; `0x620e11` in `0x620be0` passes `[[this+0x1c]+0x38]` when above
+0 and not -1, with `this+0x48`.
 
 ## Kit shake owner
 

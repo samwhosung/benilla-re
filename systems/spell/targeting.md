@@ -199,16 +199,17 @@ Both callers pass `dl` 1: the world hover, which shows cursor 2 (`Cast`) on 1 an
 Addresses: `0x6e6460`, `0x6e6544`, `0x6e668c`, `0x6e66e7`, `0x6e670f`, `0x6e67c8`, `0x6e67d1`, `0x6e67e4`, `0x6e67f4`, `0x5f8260`, `0x6e3480`, `0x4828d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_objs_dist_sq_difftest`
 
 The object is `0x468460` with type mask 1 on the guid, the caster with mask 8. The item arm
 (`0x6e66e7`) and the game-object arm (`0x6e670f`, `0x5f8260(object, 0xceac48, spell)`) fall into
-`0x6e668c` like the unit arms. Positions come from slot 5 (`+0x14`) of each object; with
-`dx = caster.x − object.x` and so on, at 53-bit precision, `d = (dz² + dx²) + dy²`, stored to a
-float (`0x6e67c8`). `0x6e67d1` calls `0x6e3480(caster, spell, &min, &max, object)`. Then `min·min`
-`fcomp d` with `test ah,0x41; jp` fails when greater or unordered (`0x6e67e4`), and `max·max`
-`fcomp d` with `test ah,1; jne` fails when less or unordered (`0x6e67f4`). The hover `0x4828d0`
-calls it with the hovered guid and passes 2 or 0x16 to `0x523c20`.
+`0x6e668c` like the unit arms. Positions come from slot 5 (`+0x14`) of each object; with `dx =
+caster.x − object.x` and so on, at 53-bit precision, `d = (dz² + dx²) + dy²`, stored to a float
+(`0x6e67c8`). `0x6e67d1` calls `0x6e3480(caster, spell, &min, &max, object)`. Then `min·min` `fcomp d`
+with `test ah,0x41; jp` fails when greater or unordered (`0x6e67e4`), and `max·max` `fcomp d` with
+`test ah,1; jne` fails when less or unordered (`0x6e67f4`). The hover `0x4828d0` calls it with the
+hovered guid and passes 2 or 0x16 to `0x523c20`. `spell_objs_dist_sq_difftest` runs a slice,
+`0x6e6797` to `0x6e67d1`, the squared distance. The arms and the range compare are not run.
 
 ## Location range test
 
@@ -220,13 +221,15 @@ rounded to a float; a NaN fails. The range comes from `0x6e3480` with no target 
 Addresses: `0x6e6810`, `0x6e681d`, `0x6e6872`, `0x6e68a7`, `0x6e68b0`, `0x6e68c3`, `0x6e68d3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_target_in_range_difftest`
 
-`0x6e681d` calls `0x6e6320` and returns its zero. The caster's position is its slot 5
-(`0x6e6872`); the three differences are `fsub` of the position from the caster. The squares
-are formed in the order x, z, y and summed `(dx² + dz²) + dy²`, stored to a float at `0x6e68a7`.
-`0x6e68b0` calls `0x6e3480` with the target pushed as 0 and `&min` last. The compares at
-`0x6e68c3` (`test ah,0x41; jp`) and `0x6e68d3` (`test ah,1; jne`) are those of `0x6e6460`.
+`0x6e681d` calls `0x6e6320` and returns its zero. The caster's position is its slot 5 (`0x6e6872`);
+the three differences are `fsub` of the position from the caster. The squares are formed in the order
+x, z, y and summed `(dx² + dz²) + dy²`, stored to a float at `0x6e68a7`. `0x6e68b0` calls `0x6e3480`
+with the target pushed as 0 and `&min` last. The compares at `0x6e68c3` (`test ah,0x41; jp`) and
+`0x6e68d3` (`test ah,1; jne`) are those of `0x6e6460`. `spell_target_in_range_difftest` runs
+`0x6e6810` whole with the flag word set for a location, the caster lookup stubbed and `0x6e3480`
+replaced by a patch that writes the window.
 
 ## Object pick filters
 
@@ -260,15 +263,16 @@ and the row's maximum are not read. With no caster it returns 0. The reticle `0x
 Addresses: `0x6e6350`, `0x6e63c7`, `0x6e63f0`, `0x6e641f`, `0x6e6426`, `0x6e643c`, `0x6e6450`, `0x4820f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_range_for_caster_difftest`
 
 `0x6e63c7` loads row `+4`, `fild` the caster's `+0x110` field `+0x70` and multiplies by row `+8`;
-`fadd st,st(1)` makes `level·perLevel + radius`, stored as a float at `0x6e63f0`. The second sum
-stays at 53-bit precision (`0x6e641f`). `0x6e6426` is `fld first; fcomp second; test ah,0x41;
-jne`: less, equal or unordered keeps the second, rounded by `fstp`. Both paths call
-`0x6e6bf0(record, &value, 6)`. The rows come from the `SpellRadius.dbc` store's id map, bounded by
-its max row. `0x4820f0` compares the radius with 20.0 (`test ah,5; jp`) and uses it only when
-below; out of range by `0x6e6810` it draws 0.
+`fadd st,st(1)` makes `level·perLevel + radius`, stored as a float at `0x6e63f0`. The second sum stays
+at 53-bit precision (`0x6e641f`). `0x6e6426` is `fld first; fcomp second; test ah,0x41; jne`: less,
+equal or unordered keeps the second, rounded by `fstp`. Both paths call `0x6e6bf0(record, &value, 6)`.
+The rows come from the `SpellRadius.dbc` store's id map, bounded by its max row. `0x4820f0` compares
+the radius with 20.0 (`test ah,5; jp`) and uses it only when below; out of range by `0x6e6810` it
+draws 0. `spell_range_for_caster_difftest` runs `0x6e6350` whole over a record with no modifier, so
+the final modifier leaves the value unchanged and the modified case is not run.
 
 ## The targeting cursor
 
@@ -303,16 +307,16 @@ and otherwise stops targeting.
 Addresses: `0xceca8c`, `0xceca90`, `0xcecad4`, `0x6e6970`, `0x6e6980`, `0x6e69b2`, `0x6e69d0`, `0x6e69e0`, `0x6e69ec`, `0x6e69f2`, `0x6e6a0b`, `0x492c20`, `0x4837b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_reticle_angle_difftest`
 
-`0x6e69b2` calls the caster's slot 6 (`+0x18`); `fst` stores it and returns `st0`. `0x6e69e0`
-is `fld facing; fadd 0x3fc90fdb; fst facing` (`0x6e69ec`), then `fcomp 0x40c90fdb; test ah,1; jne`
-(`0x6e69f2`): less or unordered keeps it; otherwise `fld facing; fsub 2π; fstp` (`0x6e6a0b`) from
-the rounded store. From 0 the presses give π/2, π, 0x4096cbe4, 0x40c90fdb (2π itself), then
-0x3fc90fdc. `0x492c20` calls `0x6e69e0` when `0x6e69d0` is set and
-`0x6e4900` otherwise. The reticle `0x4820f0` moves the model to the point with `0x6e6980` and
-`0x6e69d0`; `0x4837b0` draws it. Writers: the cast request sets the flag for effect 0x51 and the
-facing to 0 (`0x6e50c8`, `0x6e511d`, `0x6e50cf`).
+`0x6e69b2` calls the caster's slot 6 (`+0x18`); `fst` stores it and returns `st0`. `0x6e69e0` is `fld
+facing; fadd 0x3fc90fdb; fst facing` (`0x6e69ec`), then `fcomp 0x40c90fdb; test ah,1; jne`
+(`0x6e69f2`): less or unordered keeps it; otherwise `fld facing; fsub 2π; fstp` (`0x6e6a0b`) from the
+rounded store. From 0 the presses give π/2, π, 0x4096cbe4, 0x40c90fdb (2π itself), then 0x3fc90fdc.
+`0x492c20` calls `0x6e69e0` when `0x6e69d0` is set and `0x6e4900` otherwise. The reticle `0x4820f0`
+moves the model to the point with `0x6e6980` and `0x6e69d0`; `0x4837b0` draws it. Writers: the cast
+request sets the flag for effect 0x51 and the facing to 0 (`0x6e50c8`, `0x6e511d`, `0x6e50cf`).
+`spell_reticle_angle_difftest` runs `0x6e69e0` whole.
 
 ## Lua targeting functions
 

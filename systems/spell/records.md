@@ -110,14 +110,17 @@ Software floats, where `F` is its int-to-float.
 Addresses: `0x6e6af0`, `0x6e6b10`, `0x6e6b14`, `0x6e6bf0`, `0x6e6c0b`, `0x6e6c30`, `0xcf0b0c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_mod_float_difftest`, `spell::spell_range_for_caster_difftest`
 
 `0x6e6af0`: `add ecx,[ebp+8]`, `imul ecx,[ebp-4]` (`0x6e6b10`), then `0x51eb851f`, `sar edx,5` plus
 the sign bit (`0x6e6b14`). `0x6e6bf0`: `fild flat`, `fadd [value]`, `fimul pct`, `fmul [0x8029d0]`,
 `fstp` (`0x6e6c0b`). `0x6e6c30` pushes `0xcf0b0c` first, then makes `F(pct)` and `F(flat)` with
 `0x761260`, and calls `0x760e20(value, F(flat))`, `0x760be0(sum, F(pct))` and `0x760be0(product,
 0.01)`. `0xcf0b0c` holds `0x3c23d70a`, stored by the static initializer `0x7626e0`; it has no other
-writer. A NaN value passes through the float applier as NaN.
+writer. A NaN value passes through the float applier as NaN. `spell_mod_float_difftest` runs a slice
+of the float applier, `0x6e6c0b` to `0x6e6c1b`. `spell_range_for_caster_difftest` calls the float
+applier whole, but with no modifier, so it returns at the early exit. The integer and software
+appliers have no test.
 
 ## Software floats
 
@@ -158,13 +161,15 @@ unclamped.
 Addresses: `0x6e31b0`, `0x6e3254`, `0x6e3290`, `0x6e32ad`, `0x6e32c0`, `0x6e32d6`, `0x6e32e0`, `0x6e32f0`, `0x612c50`, `0x6e3300`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_power_cost_difftest`
 
-The player is found with type mask `0x10`; with `pet`, the pet as in Caster level. The percentage
-term is `imul`, then `0x51eb851f`, `sar 5` (`0x6e3290`). `0x6e32c0` to `0x6e32d6`: `fld K`,
-`fadd 1.0`, `fimul c`, `fstp` to single, `fld`, `fistp` at round-to-nearest-even. A NaN `K` stores
-`0x80000000`, which the clamp (`setle; dec; and`, `0x6e32e0`) makes 0. `0x6e3300` returns
-`(L − base)·[+0x8c] + [+0x88]`, the power per second, with no modifier; −1 without a record.
+The player is found with type mask `0x10`; with `pet`, the pet as in Caster level. The percentage term
+is `imul`, then `0x51eb851f`, `sar 5` (`0x6e3290`). `0x6e32c0` to `0x6e32d6`: `fld K`, `fadd 1.0`,
+`fimul c`, `fstp` to single, `fld`, `fistp` at round-to-nearest-even. A NaN `K` stores `0x80000000`,
+which the clamp (`setle; dec; and`, `0x6e32e0`) makes 0. `0x6e3300` returns `(L − base)·[+0x8c] +
+[+0x88]`, the power per second, with no modifier; −1 without a record. `spell_power_cost_difftest`
+runs a slice, `0x6e32c0` to `0x6e32d9`. The lookups, the percentage term, the clamp and the applier
+are not run.
 
 ## Cast time
 
@@ -177,14 +182,15 @@ NaN, `t = rint((float)(m·t))`. Finally, unless `allowNegative`, `t ≤ 0` gives
 Addresses: `0x6e3340`, `0x6e33b0`, `0x6e33be`, `0x6e33c3`, `0x6e3424`, `0x6e343a`, `0x6e3445`, `0x6e3456`, `0x6e3470`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_cast_time_difftest`
 
 The row's `+0x04`, `+0x08`, `+0x0c` are base, per level and minimum; `cmp eax,esi; jge` keeps the
-larger (`0x6e33b0`). `0x6e3432` to `0x6e3445`: `fsub 1.0`, `fabs`, `fcomp 2^-22` (`0x34800000`),
-`test ah,5; jnp` skips the multiply when C0 alone is set, so a NaN, which sets C0 and C2,
-multiplies. `fimul` runs at 53 bits, `fstp` rounds to single, `fistp` (`0x6e3456`) rounds to even;
-a NaN stores `0x80000000`. `t ≤ 0` jumps past the multiply (`0x6e3424`). The clamp is at
-`0x6e3468` to `0x6e3470`.
+larger (`0x6e33b0`). `0x6e3432` to `0x6e3445`: `fsub 1.0`, `fabs`, `fcomp 2^-22` (`0x34800000`), `test
+ah,5; jnp` skips the multiply when C0 alone is set, so a NaN, which sets C0 and C2, multiplies.
+`fimul` runs at 53 bits, `fstp` rounds to single, `fistp` (`0x6e3456`) rounds to even; a NaN stores
+`0x80000000`. `t ≤ 0` jumps past the multiply (`0x6e3424`). The clamp is at `0x6e3468` to `0x6e3470`.
+`spell_cast_time_difftest` runs a slice, `0x6e3426` to `0x6e3461`, for a positive time. The row
+arithmetic, the applier and the clamp are not run.
 
 ## Duration
 
@@ -214,15 +220,17 @@ caster)` to `max`, and to `min` unless `min == 0`.
 Addresses: `0x6e3480`, `0x6e34e1`, `0x6e34fb`, `0x6e3504`, `0x6e3545`, `0x6e3552`, `0x6e35a3`, `0x6e35bf`, `0x6e35ea`, `0x6e35ee`, `0x6e3605`, `0x6e3633`, `0x6e363e`, `0x47bf60`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_minmax_range_difftest`
 
 `0x6e34e1` to `0x6e34f9` keep the target in `esi` when `[[t+8]+8] >> 3 & 1`. `0x6e3504` loads
-`[0x8118d4]`, 100.0. The melee sum runs at 53 bits with `4/3` as `0x3faaaaab`; `fcom 5.0`,
-`test ah,0x41; je` (`0x6e35bf`) keeps the sum only when greater, so a NaN gives 5.0. `0x6e3552`
-fetches the `+0xc48` guid with `0x47bf60` and looks it up with mask 8 when no unit was passed.
-`0x6e35ee` tests bits 3 and 7 of the passed target; `0x6e3605` reads the second reach from the
-unit in `esi`, or the caster's again. `max + P` and `P + min` each round once to single. `0x6e3633`
-compares `min` with 0.0: `test ah,0x44; jnp` skips only on equal, so a NaN `min` takes `P`.
+`[0x8118d4]`, 100.0. The melee sum runs at 53 bits with `4/3` as `0x3faaaaab`; `fcom 5.0`, `test
+ah,0x41; je` (`0x6e35bf`) keeps the sum only when greater, so a NaN gives 5.0. `0x6e3552` fetches the
+`+0xc48` guid with `0x47bf60` and looks it up with mask 8 when no unit was passed. `0x6e35ee` tests
+bits 3 and 7 of the passed target; `0x6e3605` reads the second reach from the unit in `esi`, or the
+caster's again. `max + P` and `P + min` each round once to single. `0x6e3633` compares `min` with 0.0:
+`test ah,0x44; jnp` skips only on equal, so a NaN `min` takes `P`. `spell_minmax_range_difftest` runs
+`0x6e3480` whole with its op 5 applier call overwritten, over the next-swing case, a ranged row and a
+melee row with a unit target.
 
 ## Range bonuses and modifier
 
@@ -236,14 +244,18 @@ applier with op 5 on `max`. A missing range row skips to the item step with both
 Addresses: `0x6e3648`, `0x6e3658`, `0x6e366f`, `0x6e3683`, `0x6e369c`, `0x811914`, `0x6e36aa`, `0x6e36c1`, `0x6e3720`, `0x6e3729`, `0x6e3746`, `0x5fc350`, `0x55ba30`
 Confidence: verified
 Proof: one
-Test: `objectlayer::diff_cast_time_elapsed`
+Test: `objectlayer::diff_cast_time_elapsed`, `spell::spell_minmax_range_arms_difftest`
 
 `0x6e3658` tests `0x200d` on both units; `0x6e366f` and `0x6e367a` call `0x5fc350`, which returns 0
-when twice the unit's float at `+0xa30` is below the current speed `0x7c4c90` gives (`fcompp`,
-`test ah,1`), `CMovement::GetCurrentSpeed` (`collision/kinematics`). `0x6e369c` adds `0x402aaaab` (`0x811914`) at 53 bits and stores
-single. `0x6e36c1` is `cmp [edi+0x1d38],0x11; ja`, the guid at `[[edi+0x1d3c]+0x88]`; the item is
-found with mask 2, its record through `0x55ba30` with the entry at object field `+0x0c`.
-`0x6e3729`: `fld W`, `fmul 0.01f`, `fmul max`. Out-of-range row indices jump straight to `0x6e36aa`.
+when twice the unit's float at `+0xa30` is below the current speed `0x7c4c90` gives (`fcompp`, `test
+ah,1`), `CMovement::GetCurrentSpeed` (`collision/kinematics`). `0x6e369c` adds `0x402aaaab`
+(`0x811914`) at 53 bits and stores single. `0x6e36c1` is `cmp [edi+0x1d38],0x11; ja`, the guid at
+`[[edi+0x1d3c]+0x88]`; the item is found with mask 2, its record through `0x55ba30` with the entry at
+object field `+0x0c`. `0x6e3729`: `fld W`, `fmul 0.01f`, `fmul max`. Out-of-range row indices jump
+straight to `0x6e36aa`. `diff_cast_time_elapsed` runs `0x5fc350` on the path where `0x7c4c90` returns
+its constant. `spell_minmax_range_arms_difftest` runs two slices of `0x6e3480`, `0x6e3697` to
+`0x6e36a4` (the 8/3 add) and `0x6e3729` to `0x6e373c` (the item scale). The flag tests, the item
+lookup and the op 5 applier are not run.
 
 ## Effect classes
 
@@ -276,14 +288,16 @@ the rest software floats.
 Addresses: `0x6e3800`, `0x6e3839`, `0x6e384d`, `0x6e3854`, `0x6e3863`, `0x6e3889`, `0x6e38b4`, `0x6e38bb`, `0x6e3915`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_effect_amount_difftest`
 
 `0x6e3839` classifies the effect first (`+0xf4`, `+0x16c`). `0x6e384d` calls `0x6e3130` with `[esi]`
 and the `pet` argument. `0x6e3854` to `0x6e3861`: `jle` skips the subtraction, `jge` the floor.
-`0x6e3863` to `0x6e387d` form the minimum's integer; `0x6e38bb` to `0x6e38d9` the maximum's. Each
-side converts with `0x761260`, multiplies `real` (copied through `fld`/`fstp`, `0x6e3889`: bitwise, except that a signalling NaN comes out quiet, bit 22 set)
-by `F(n)` with `0x760be0`, and adds integer first, product second with `0x760e20` (`0x6e38b4`,
-`0x6e3915`).
+`0x6e3863` to `0x6e387d` form the minimum's integer; `0x6e38bb` to `0x6e38d9` the maximum's. Each side
+converts with `0x761260`, multiplies `real` (copied through `fld`/`fstp`, `0x6e3889`: bitwise, except
+that a signalling NaN comes out quiet, bit 22 set) by `F(n)` with `0x760be0`, and adds integer first,
+product second with `0x760e20` (`0x6e38b4`, `0x6e3915`). `spell_effect_amount_difftest` runs three
+slices: the level delta (`0x6e3854` to `0x6e3863`), the minimum's integer (`0x6e3863` to `0x6e3882`)
+and the maximum's (`0x6e38bb` to `0x6e38e3`). The software-float steps and the modifiers are not run.
 
 ## Effect amount modifiers and rounding
 
@@ -317,14 +331,15 @@ range.
 Addresses: `0x6e3760`, `0x6e3777`, `0x6e377f`, `0x6e3791`, `0x6e3797`, `0x6e37b9`, `0x86f94c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `spell::spell_minmax_radius_difftest`
 
 The pushes at `0x6e3763` to `0x6e3776` pass the caller's `level`, `pet` and `unmodified`, then the
-addresses of its own `pet` and `unmodified` slots as `&max` and `&min`, so the bounds come back
-in those slots. `0x6e377f` is `fcomp 0.0`, `test ah,1`: C0, set by less or unordered, takes the
-`+0.5` form. `fadd st,st` doubles exactly; `0x86f94c` is 0.5, a `.data` float that only these four
-instructions reference (dword scan of the image, control `0x6e2f70` found at its two pushes).
-`fistp` (`0x6e3797`) then `sar eax,1` (`0x6e37b9`).
+addresses of its own `pet` and `unmodified` slots as `&max` and `&min`, so the bounds come back in
+those slots. `0x6e377f` is `fcomp 0.0`, `test ah,1`: C0, set by less or unordered, takes the `+0.5`
+form. `fadd st,st` doubles exactly; `0x86f94c` is 0.5, a `.data` float that only these four
+instructions reference (dword scan of the image, control `0x6e2f70` found at its two pushes). `fistp`
+(`0x6e3797`) then `sar eax,1` (`0x6e37b9`). `spell_minmax_radius_difftest` runs `0x6e3760` whole with
+its call of `0x6e3800` overwritten, so the bounds enter as the two floats.
 
 ## Global cooldown start
 
