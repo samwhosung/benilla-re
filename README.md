@@ -49,8 +49,10 @@ your own copy of 1.12.1.5875 and refuse any other build.
   - `tools/event-args.py`: the `SignalEvent2` sites whose format reads more than the caller
     pushed.
   - `tools/idb-names.py`: the community names of `vmangos/idb`, for `cargo xtask census --fill`.
-  - `tools/capture/BenillaReCapture`: an addon that measures, in the running client, what the
-    emulator cannot (glyph widths, `math.random` draws), for the tests that read such a file.
+  - `tools/capture/`: what the running client measures where the emulator cannot reach: an addon
+    (`BenillaReCapture`: glyph widths, `math.random` draws) for the tests that read such a file,
+    and rigs inside the client's process that record the player's movement and a function's
+    calls.
 
 ## How to trust it
 
