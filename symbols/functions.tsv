@@ -7063,7 +7063,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party or raid record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
 0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the party or raid pet record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
 0x496440	37	GetCurrentSurveyId		ui	orchestration	int __cdecl (void)	Returns the survey id the current locale's survey row names	verified	one	ui/serviceverbs#gm-surveys	
-0x496470	49			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
+0x496470	49	GetSurveyQuestionId		ui	orchestration	int __fastcall (uint32_t index)	Returns the id of survey question 0 to 9, or 0 when out of range or no survey	verified	one	ui/serviceverbs#gm-surveys	
 0x4964b0	84	GetSurveyQuestionText		ui	orchestration	const char * __fastcall (uint32_t index)	Returns the text of survey question 1 to 10 in the current locale, or null	verified	one	ui/serviceverbs#gm-surveys	
 0x496510	88	ClearSurveyAnswers		ui	primitive		Frees the ten survey answers and the comment and zeroes the ten answer ranks	verified	one	ui/gameui#interface-state-helpers	
 0x496570	101	SetSurveyAnswer		ui	orchestration	void __fastcall (uint32_t question, uint8_t rank, const char *comment)	Stores the rank byte and a copy of the comment for a survey question	verified	one	ui/serviceverbs#gm-surveys	

@@ -33,8 +33,7 @@ at `0x7a05f9` asks the object for its name, `0x7a060d` passes it to the shared f
 The setters take red, green and blue as arguments 2 to 4 and an optional alpha as 5. Each channel is clamped to 0 to 1 (below 0
 gives 0; above 1 or not a number gives 1) and a missing alpha is 1. The three colour channels are rounded to a float; the alpha is
 not. Each channel is then multiplied by 255, increased by 0.5 and truncated, and the bytes are packed as `0xAARRGGBB`. A colour
-equal to the stored one with its change flag set changes nothing; otherwise it is stored, the group's change flags are set, the
-font stops following its `Font` object for that group, and the font is told.
+equal to the stored one with its change flag set skips only the store and the change flags; the font still stops following its `Font` object for that group and is told through slot `+0x14` either way.
 
 Addresses: `0x79f4d0`, `0x79f4e9`, `0x79f50c`, `0x79f5ce`, `0x79f5e8`, `0x79f5ef`, `0x79f5f5`, `0x79f65f`, `0x79f669`, `0x79f730`, `0x79f8ed`, `0x79d9c0`, `0x79db5d`, `0x79dd40`, `0x780ee0`, `0x781260`, `0x7815e0`, `0x7ffe58`, `0x7ffa24`
 Confidence: verified
@@ -44,7 +43,7 @@ Test: none
 `0x79f4e9` compares each argument with 0.0 and `0x79f4ff` with 1.0, using `test ah,5` and `jp`, so NaN takes the upper branch and stores 1.0
 (`0x79f511`); `fstp dword` (`0x79f50c`) rounds the three colour channels. The alpha is the live x87 value (`0x79f5db`). `0x79f5e8` multiplies by the float 255
 (`0x7ffe58`), `0x79f5ef` adds the float 0.5 (`0x7ffa24`) and `0x79f5f5` is `__ftol`. The bytes are assembled alpha first (`0x79f605`), then red, green and
-blue. `0x79f65f` stores at `+0x58` and sets 0x404 in `+0x38`; `0x79f669` clears bit 2 of `+0x2c`. The shadow setter `0x79f730` has the
+blue. `0x79f65f` stores at `+0x58` and sets 0x404 in `+0x38`; `0x79f65d` jumps over both to `0x79f669` for an unchanged colour, which clears bit 2 of `+0x2c` and calls the slot at `0x79f671`. The shadow setter `0x79f730` has the
 same shape with the colour at `+0x5c`, flags 0x808 and the inherit bit 8. `FontString` and the three `Button` pairs repeat it.
 
 ## Reading colours

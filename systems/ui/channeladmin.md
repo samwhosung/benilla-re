@@ -8,18 +8,16 @@ Roots: `0x4a00d0`, `0x4a01c0`, `0x4a02d0`, `0x4a03a0`, `0x4a0490`, `0x4a05c0`, `
 
 ## Commands naming a channel
 
-Twelve verbs pass a fixed message number and their argument strings to one of two helpers. The first argument is the channel,
+Fourteen verbs pass a fixed message number and their argument strings to one of two helpers. The first argument is the channel,
 a name or the number of a joined channel, turned into the channel's name by `ParseChannelKey`; a verb whose helper takes a second
 argument also needs it as a string. A missing or non-string argument raises `Usage: <Verb>("channel")` or
-`Usage: <Verb>("channel", "name")` with the verb's own name; a channel number with no joined channel sends nothing. Each
+`Usage: <Verb>("channel", "name")` with the verb's own name (`SetChannelPassword` raises `Usage: SetChannelPassword("name", "password")`, pushed at `0x4a046b`); a channel number with no joined channel sends nothing. Each
 verb sends its message with the channel and, for the two-argument ones, the second string, and returns no value.
 
 | verb | message | arguments |
 |---|---|---|
-| `ListChannelByName` | 0x9a | channel |
 | `SetChannelPassword` | 0x9c | channel, password |
 | `SetChannelOwner` | 0x9d | channel, name |
-| `DisplayChannelOwner` | 0x9e | channel |
 | `ChannelModerator` | 0x9f | channel, name |
 | `ChannelUnmoderator` | 0xa0 | channel, name |
 | `ChannelMute` | 0xa1 | channel, name |
@@ -29,7 +27,9 @@ verb sends its message with the channel and, for the two-argument ones, the seco
 | `ChannelBan` | 0xa5 | channel, name |
 | `ChannelUnban` | 0xa6 | channel, name |
 
-Addresses: `0x4a00d0`, `0x4a00f0`, `0x4a0114`, `0x4a014f`, `0x4a0188`, `0x4a03a0`, `0x4a03df`, `0x4a03f0`, `0x4a046b`, `0x4a0490`, `0x4a04b0`, `0x4a04cb`, `0x4a04e1`, `0x4a04f5`, `0x4a0527`, `0x4a0580`, `0x4a05c0`, `0x4a06b0`, `0x4a06d0`, `0x4a06f0`, `0x4a0710`, `0x4a0730`, `0x4a0750`, `0x4a0770`, `0x4a0790`, `0x4a07b0`, `0x4a07d0`, `0x49e880`, `0x5ab630`
+`ListChannelByName` (0x9a), `DisplayChannelOwner` (0x9e), `ChannelToggleAnnouncements` (0xa7) and `ChannelModerate` (0xa8) take the channel alone.
+
+Addresses: `0x4a00d0`, `0x4a00f0`, `0x4a0114`, `0x4a014f`, `0x4a0188`, `0x4a03a0`, `0x4a03df`, `0x4a03f0`, `0x4a046b`, `0x4a0490`, `0x4a04b0`, `0x4a04cb`, `0x4a04e1`, `0x4a04f5`, `0x4a0527`, `0x4a0580`, `0x4a05c0`, `0x4a06b0`, `0x4a06d0`, `0x4a06f0`, `0x4a0710`, `0x4a0730`, `0x4a0750`, `0x4a0770`, `0x4a0790`, `0x4a07b0`, `0x4a07b0`, `0x4a07d0`, `0x49e880`, `0x5ab630`
 Confidence: verified
 Proof: one
 Test: none

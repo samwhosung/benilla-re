@@ -85,10 +85,8 @@ the error is message 0xb8 (`0x489c0e`). `0x489e00` finds the mover by the GUID `
 
 `0x493aa0(name, typeMask, mode, exactOnly, maxDistance)` returns the GUID of the best unit for a typed name, or 0. Mode 0
 and 2 try the four party slots, then the raid, then every object; mode 1 tries only objects; mode 3 tries party and objects.
-A party or raid member is taken when its cached name equals the text without regard to case. Over objects a candidate must
-pass the type mask and the kind-1 filter below; its name then matches when it equals the text (the first such object within
-the distance ends the search) or, unless `exactOnly`, shares at least the first character: a longer shared prefix wins, and at
-equal length the nearer object.
+Party and raid members take the same compare as objects, so they match by prefix too. An object must
+pass the type mask and the filter, which receives the search's mode. An equal name nearer than the best distance so far ends the search. Otherwise, unless `exactOnly`, a unit counts by the prefix it shares with the text, at least one character: a longer prefix wins, and at equal length the nearer unit.
 
 Addresses: `0x493aa0`, `0x493b24`, `0x493b60`, `0x493b80`, `0x493b93`, `0x493b9d`, `0x493c2f`, `0x493c34`, `0x493c60`, `0x493c7f`, `0x493c8b`, `0x493cc0`, `0x493cf8`, `0x493d30`, `0x493d7c`, `0x493dae`, `0x493e0f`, `0x4e81a0`, `0x468380`, `0xc0e228`, `0xb713e0`, `0xb712a8`
 Confidence: verified
@@ -100,8 +98,7 @@ Test: none
 (`0x493b1a`), mode 3 skips the raid (`0x493b93`). `0x493c60` is the compare: an equal name (`SStrCmpI`) under the best
 distance (`fcomp` with `test ah,5`) stores the GUID and returns 0, which stops `0x468380`; else, with the exact flag clear
 (`+0xc`), the loop at `0x493cc0` upper-cases both strings and counts equal leading characters, and `0x493cf8` keeps the longer
-or, at equal length, the nearer. `0x493d30` is the object callback: it needs the type mask, applies `0x493e40` with kind 1
-for units and gets the name from the object's slot `+0x70` with the squared distance.
+or, at equal length, the nearer. Party and raid members are compared by cached name at the fixed distance 2.5e9 (`push 0x4f1502f9`, `0x493b74`). `0x493c8b` makes an equal name stop the search only when it is nearer than the best distance; a farther one falls to the prefix test with the full text as its length, so it loses to an earlier prefix match of equal length that is nearer. `0x493d30` is the object callback: it needs the type mask, applies `0x493e40` to units with the search's mode `[edi+4]` (`0x493da6`) and gets the name from the object's slot `+0x70` with the squared distance.
 
 ## Targeting by name
 

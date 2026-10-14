@@ -9,11 +9,11 @@ Roots: `0x515ea0`, `0x515ee0`, `0x515f10`, `0x516070`, `0x516460`, `0x516630`, `
 ## Time, console and files
 
 `GetTime()` returns the asynchronous millisecond clock in seconds. `GetGameTime()` returns the hour and then the minute of the game clock
-(`0xce8538`: the minute at `+0`, the hour at `+4`). `ConsoleExec(line)` runs a console line without a console
-(`ConsoleCommandExecute` with a zero flag) and raises `Usage: ConsoleExec("console_command")` for a non-string. `ReadFile`, `DeleteFile` and
+(`0xce8538`: the minute at `+0`, the hour at `+4`). `ConsoleExec(line)` runs a console line without recording it in the history
+(`ConsoleCommandExecute` with a zero history flag, `0x63ce38`; `console/screen#writing-and-executing`) and raises `Usage: ConsoleExec("console_command")` for a non-string. `ReadFile`, `DeleteFile` and
 `AppendToFile` take no argument and always raise `Access Denied`.
 
-Addresses: `0x515ea0`, `0x515ea9`, `0x515ebb`, `0x515ee0`, `0x515ee7`, `0x515ef4`, `0x515f10`, `0x515f43`, `0x515f50`, `0x515f56`, `0x515f70`, `0x515f90`, `0x42c010`, `0x63ce00`, `0xce8538`
+Addresses: `0x515ea0`, `0x515ea9`, `0x515ebb`, `0x515ee0`, `0x515ee7`, `0x515ef4`, `0x515f10`, `0x515f43`, `0x515f50`, `0x515f56`, `0x515f70`, `0x515f90`, `0x42c010`, `0x63ce00`, `0x63ce38`, `0xce8538`
 Confidence: verified
 Proof: one
 Test: `ui::luabind_515ea0_get_time`

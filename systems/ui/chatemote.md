@@ -114,15 +114,15 @@ skip that call.
 
 ## DoEmote
 
-`DoEmote(token [, target])` searches the `EmotesText` rows from the last to the first for a name equal to the token without regard
-to case; with a non-string or an unknown token it does nothing. The target is the current target unless the second argument is a
-nonempty string that does not begin with `%`: then it is the nearest player whose name matches, and no match leaves a zero target.
+`DoEmote(token [, target])` raises `Usage: DoEmote("emote"[, "target"])` for a non-string token. It searches the `EmotesText` rows from the last to the first for a name equal to the token without regard
+to case; an unknown token does nothing. The target is the current target unless the second argument is a
+nonempty string that does not begin with `%`: then it is the best player for that name by `ui/targeting#matching-a-name` (party members first, then the raid, then player objects, by name or shared prefix), and no match leaves a zero target.
 It calls `SendTextEmote` for the active player with the row and the target and makes no check of its own on the player's state.
 
-Addresses: `0x49fd30`, `0x49fd5c`, `0x49fd9b`, `0x49fdb4`, `0x49fdc5`, `0x49fdd4`, `0x49fde9`, `0x49fe16`, `0x5ef560`, `0x493aa0`
+Addresses: `0x49fd30`, `0x49fd5c`, `0x49fd9b`, `0x49fdb4`, `0x49fdc5`, `0x49fdd4`, `0x49fde9`, `0x49fe16`, `0x49fe24`, `0x5ef560`, `0x493aa0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x49fd5c` loads the row count and the loop at `0x49fd72` steps back through the 0x4c-byte rows (`0x49fd6f imul edi,edi,0x4c`); `0x49fd9b` compares the token with the name at `+4`. `0x49fdb4` loads the target GUID, `0x49fdd4` compares the first character of the second argument with `%` and `0x49fde9` calls `ClosestObjectMatch` with kind mask 0x10. `0x49fe16` calls `SendTextEmote`.
+`0x49fd5c` loads the row count and the loop at `0x49fd72` steps back through the 0x4c-byte rows (`0x49fd6f imul edi,edi,0x4c`); `0x49fd9b` compares the token with the name at `+4`. `0x49fdb4` loads the target GUID, `0x49fdd4` compares the first character of the second argument with `%` and `0x49fde9` calls `ClosestObjectMatch` with kind mask 0x10, mode 0, exact flag 0 and the largest float as the distance; `0x49fe24` pushes the usage text for a non-string token. `0x49fe16` calls `SendTextEmote`.
 

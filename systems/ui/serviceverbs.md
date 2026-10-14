@@ -31,10 +31,10 @@ records: the id at `+0` and the name by locale at `+4 + 4·locale` (`0x48d92c`);
 `GMSurveyQuestion(index)` returns the survey's question text for an index from 1 to 10, or nil. `GMSurveyAnswerSubmit(question,
 rank, comment)` stores an answer: it needs two numbers and a string, raises `Question limited from 1 to 10` for a question
 outside 1 to 10 and `Ranks limited from 0 to 5` for a rank above 5, and keeps the rank byte and the comment for the
-question. `GMSurveyCommentSubmit(comment)` keeps the final comment. `GMSurveySubmit()` sends message 0x32a built from the survey
-id, the answers and the comment, then frees them.
+question. `GMSurveyCommentSubmit(comment)` keeps the final comment. `GMSurveySubmit()` sends message 0x32a: the survey id, then for each
+question its id (a u32), and when that id is not 0 its rank byte and comment, stopping after the first id of 0, which is still written; last the final comment. It then frees the answers.
 
-Addresses: `0x48cc00`, `0x48cc34`, `0x48cc39`, `0x48cc40`, `0x48cd30`, `0x48cd9d`, `0x48cda7`, `0x48cdc6`, `0x48cef0`, `0x48cf21`, `0x48cf80`, `0x4964b0`, `0x496440`, `0x496570`, `0x4965e0`, `0x496630`, `0x49663a`, `0x496510`, `0xb4e380`, `0xb4b45c`, `0xb4e3a8`
+Addresses: `0x48cc00`, `0x48cc34`, `0x48cc39`, `0x48cc40`, `0x48cd30`, `0x48cd9d`, `0x48cda7`, `0x48cdc6`, `0x48cef0`, `0x48cf21`, `0x48cf80`, `0x4964b0`, `0x496440`, `0x496470`, `0x496570`, `0x4965e0`, `0x496630`, `0x49663a`, `0x496510`, `0xb4e380`, `0xb4b45c`, `0xb4e3a8`
 Confidence: verified
 Proof: one
 Test: none
@@ -42,7 +42,8 @@ Test: none
 `0x48cc34` and `0x48cc39` bound the index to 1 to 10. `0x4964b0` reaches the question text through a survey store keyed by
 `0x496440` (two stores deep) and the locale string at `+4 + 4·locale`. The answer rank bytes are at `0xb4b45c` and the ten
 comment strings at `0xb4e380`, the final comment at `0xb4e3a8`; `0x496570` replaces them with `SStrDupA` copies of non-empty
-text. `0x496630` writes 0x32a, the survey id, and per question a rank byte and a comment, then the final comment.
+text. `0x496470` returns the id of question `i` from the survey record (`+4 + 4·i`), 0 for an index of 10 or more or a missing survey.
+`0x496630` writes 0x32a and the survey id, then for each question calls `0x496470` (`0x496674`) and writes its result (`0x496686`); `0x49668b` leaves the loop on a 0 id, after the write. A nonzero id is followed by the rank byte (`0x49669b`) and the comment, an empty string for none (`0x4966b1`); the final comment follows (`0x4966c1`).
 
 ## Spirit healer, talent master and innkeeper
 
