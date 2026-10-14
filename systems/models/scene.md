@@ -105,6 +105,30 @@ Of `0x707680`, `view_rebase_difftest` runs `0x7076cb`–`0x707752`, `sum_of_squa
 `0x7079c3`–`0x7079d1`, `scale_mul_d1_difftest` `0x707afc`–`0x707b17`, `sum_of_squares_e_difftest`
 `0x707d85`–`0x707da6`, `scale_mul_f_difftest` `0x7080e5`–`0x7080fc`.
 
+## Scene origin
+
+The world scene `0xc7b298` is rebased on the camera position. The frame passes the address of the
+camera's `+0x8` triple to `0x707680`; every other caller passes a zero triple, so a model frame stays
+camera-local. The device view it reads has no translation: `0x50ab70` builds it with the eye at
+(0, 0, 0). The scene view is therefore the rotation with the translation row `−p·R`, each component one
+float store, and each instance's root matrix is its placement (the absolute map position in row 3)
+times that matrix through `0x74a7c0`. No double is stored on the path.
+
+Addresses: `0x483460`, `0x48367e`, `0x483684`, `0x483687`, `0x48368a`, `0x707680`, `0x7076c6`, `0x50ab70`, `0x50acc6`, `0x50acf2`, `0x50acfa`, `0x5c3e70`, `0x5c40eb`, `0x7bdc40`, `0x714260`, `0x707789`, `0x7077b6`, `0x71438d`, `0x71439b`, `0x74a7c0`, `0x754a66`, `0x59961c`, `0x599627`, `0x404100`, `0xc7b298`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x48367e` loads the camera from `[world frame + 0x65b8]` and `0x483684` adds 8. The other eleven
+callers (`0x46c4c6`, `0x50596a`, `0x50c7ad`, `0x50f0df`, `0x52557a`, `0x525640`, `0x6d4b4f`,
+`0x6d4c1a`, `0x76ce39`, `0x76d619`, `0x7e619b`) store zero floats before the call, or for
+`0x525640` and `0x76d619` earlier in the function (`0x525518`, `0x76d3da`). `0x50acc6` to `0x50acd4`
+zero the eye vector passed to `0x5c3e70` (`0x50acf2`), whose translation `−eye` goes through `0x7bdc40` (`0x5c40eb`). `0x714260` gets `&[scene + 0x9c]` (`0x707789`, call
+`0x7077b6`) and composes `0x74a7c0(out, placement, view)` (`0x71439b`). With the SSE2 body `0x754a66`
+each product of the translation row rounds to a float before the sums. The device is created with flags
+`0x22` or `0x52` (`0x59961c`, `0x599627`), both with the floating-point-preserve bit, so the control word
+set at `0x404100` holds; no instruction loads the SSE control register.
+
 ## Animate pass
 
 Every unattached instance on the animate list is animated with the view as its parent matrix,

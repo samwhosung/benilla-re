@@ -46,6 +46,23 @@ their squared length is above 0.0001 (`0x680cf3`). `0x680ede` calls the look-at 
 multiplies by `0xc7d280`, copying 16 floats to `0xc7b700` at `0x680f30`. The band plane of `depth-buckets` is h
 with its distance, and the view plane `0xc7bcb0` is f with distance −f·eye (`0x680cb1`, `0x680cb8`).
 
+## Camera origin
+
+The terrain, liquid, group and doodad passes subtract one stored camera position. `0x680bc0` copies the
+three dwords at its first argument to `0xc7cf20`, `0xc7cf24` and `0xc7cf28`; no other instruction stores to
+them directly but a zero at start-up. The world frame copies the camera's `+0x8` triple verbatim to a local and
+passes it through `0x66fd50`, so these globals equal the position the model scene is rebased on.
+
+Addresses: `0x680bc0`, `0x680bd0`, `0x680bd9`, `0x680be2`, `0x66fd50`, `0x66fe6a`, `0x482ea0`, `0x483099`, `0x48309f`, `0x4830b0`, `0x483294`, `0x483297`, `0xc7cf20`, `0xc7cf24`, `0xc7cf28`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x482ea0` reads the camera at `[world frame + 0x65b8]` (`0x483099`) and copies `+0x8` to `+0x10` as
+dwords (`0x4830a2` to `0x4830b0`); `0x483294` passes the copy in `ecx` to `0x66fd50`, which keeps it in
+`[ebp-8]` and hands it to `0x680bc0` at `0x66fe6a`. A pass subtracts the globals from an absolute
+float with `fsub` and stores a float, as the chunk pass does at `0x684693`.
+
 ## Frustum box test
 
 `0x686940(box)`, on six planes, returns 0 when the box is outside a plane and 3 otherwise. For

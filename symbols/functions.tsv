@@ -12123,7 +12123,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50a950	154			unassigned			Runs its object file code that calls 0x50a9f0; not read here	inferred	none		
 0x50a9f0	348			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x50ab50	27			unassigned			Runs its object file code that calls 0x7bf4b0; not read here	inferred	none		
-0x50ab70	406			unassigned			Runs its object file code that calls BuildPerspectiveMatrix, SetDeviceProjection and 2 more; not read here	inferred	none		
+0x50ab70	406			unassigned			Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	
 0x50ad10	23			unassigned			Runs its object file code that calls M2CreateScene; not read here	inferred	none		
 0x50ad30	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50ad40	15			unassigned			Runs its object file code not read here	inferred	none		
