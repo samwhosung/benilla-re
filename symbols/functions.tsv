@@ -7941,13 +7941,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b36f0	373	BookSpellAuraActive		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's active icon is nonzero and its aura is on the player or pet	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b3870	164	IsCastableAura		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether the spell is in the known-spell set or the pet list and avoids five aura effects	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x4b3920	40	IsInSpellList		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether a spell id is in a counted array of spell ids	verified	one	ui/tooltipbuff#auras-of-other-units	
-0x4b3950	192			ui	primitive		Runs its object file code that calls SStrCopy, SStr::sub_64A450, sgetu8 and 1 more; not read here	inferred	none		
-0x4b3a10	346			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x4b3950	192	SplitSpellNameAndResolve		ui	primitive	int __fastcall (const char *name, int *book)	Splits Name(Rank N) and returns the book slot of the spell it names	verified	one	ui/macros#name-to-spell	
+0x4b3a10	346	FindBookSpellSlot		ui	primitive	int __fastcall (const char *name, const char *rank, int *book)	Searches both books from the last slot down for a name and rank	verified	one	ui/macros#name-to-spell	
 0x4b3b70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b3b80	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4b3b90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b3ba0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4b3bc0	46			ui	orchestration		Runs its object file code that calls 0x4b3950; not read here	inferred	none		
+0x4b3bc0	46	ResolveSpellName		ui	orchestration	uint32_t __fastcall (const char *name, int *book)	Returns the spell id a name and rank text resolve to, 0 for none	verified	one	ui/macros#name-to-spell	
 0x4b3bf0	60			ui	unreached		Runs its object file code that calls 0x4b3a10; not read here	inferred	none		
 0x4b3c30	119	ParseSpellRank		ui	primitive	uint32_t __fastcall (const void *spellRec)	Returns the first run of digits of a spell's rank string, else its spell level	verified	one	ui/spellbook#book-order	
 0x4b3cb0	44	Script::GetNumSpellTabs	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of spell book tabs	verified	one	ui/spellbook#tabs	
@@ -7970,7 +7970,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a form bar entry's icon, name, active and castable values	verified	one	ui/petbar#form-info	
 0x4b4810	400	Script::CastShapeshiftForm	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Cancels or casts the form bar spell of an index	verified	one	ui/petbar#form-cooldown-and-cast	
 0x4b49a0	266	Script::GetShapeshiftFormCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a form bar spell's cooldown start and duration in seconds and its enable flag	verified	one	ui/petbar#form-cooldown-and-cast	
-0x4b4ab0	130	Script::CastSpellByName	idb	ui	orchestration		Implements the Lua function CastSpellByName	inferred	none		
+0x4b4ab0	130	Script::CastSpellByName	idb	ui	orchestration		Implements the Lua function CastSpellByName	verified	one	ui/macros#castspellbyname	
 0x4b4b40	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4b4b70	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4b4b90	23			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -10722,53 +10722,53 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4efda0	23			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4efdc0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4efdd0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4efe00	397			ui	primitive		Runs its object file code that calls SStrTokenize, SStrPrintf, FrameScript_GetText and 4 more; not read here	inferred	none		
-0x4eff90	23			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4effb0	219			ui	primitive		Runs UIMacros.cpp code that calls 0x4f2430, 0x4f1f00, SMemFree; not read here	inferred	none		
-0x4f0090	399			ui	primitive		Runs UIMacros.cpp code that calls 0x401470, 0x648990, SStrPrintf and 5 more; not read here	inferred	none		
-0x4f0220	303			ui	primitive		Runs its object file code that calls SStrLen, SStrCmpI, 0x64a420 and 2 more; not read here	inferred	none		
-0x4f0350	402			ui	primitive		Runs its object file code that calls SStrLen, SStrCmpI, SStrCopy and 4 more; not read here	inferred	none		
-0x4f04f0	237			ui	primitive		Runs its object file code that calls 0x64a420, SStrCmpI, SStrDupA and 1 more; not read here	inferred	none		
-0x4f05e0	27			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x4f0600	1129			ui	primitive		Runs its object file code that calls 0x42a670, __alloca_probe, 0x42a520 and 14 more; not read here	inferred	none		
-0x4f0a70	35			ui	orchestration		Runs its object file code that calls ReadAccountData; not read here	inferred	none		
-0x4f0aa0	447			ui	primitive		Runs its object file code that calls SStrPrintf, SStrTokenize, SStrPack and 2 more; not read here	inferred	none		
-0x4f0c60	54			ui	orchestration		Runs its object file code that calls WriteAccountData; not read here	inferred	none		
-0x4f0ca0	56			ui	orchestration		Runs its object file code that calls 0x4efe00; not read here	inferred	none		
-0x4f0ce0	76			ui	orchestration		Runs its object file code that calls 0x4efe00; not read here	inferred	none		
-0x4f0d30	218			ui	primitive		Runs its object file code that calls __alloca_probe, _qsort, FrameScript_SignalEvent; not read here	inferred	none		
-0x4f0e10	33			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x4f0e40	106			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f0eb0	16			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f0ec0	21			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f0ee0	91			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x4f0f40	84			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f0fa0	35			ui	primitive		Runs its object file code that calls 0x4f0ee0; not read here	inferred	none		
-0x4f0fd0	55			ui	primitive		Runs its object file code that calls 0x4f0f40, SStrPrintf; not read here	inferred	none		
-0x4f1010	613			ui	primitive		Runs its object file code that calls 0x4f2730, 0x4f2430, 0x4f1f00 and 6 more; not read here	inferred	none		
-0x4f1280	186			ui	primitive		Runs its object file code that calls SStrCopy, 0x4f1550, 0x4efe00 and 3 more; not read here	inferred	none		
-0x4f1340	281			ui	primitive		Runs its object file code that calls 0x4e5d10; not read here	inferred	none		
-0x4f1460	98			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f14d0	12			ui	unreached		Runs its object file code that calls 0x4f0ee0; not read here	inferred	none		
-0x4f14e0	111			ui	orchestration		Runs its object file code that calls SStrTokenize, FrameScript_SignalEvent2; not read here	inferred	none		
-0x4f1550	84			ui	primitive		Runs its object file code that calls SStrCopy, sgetu8; not read here	inferred	none		
-0x4f15b0	346	Script::CreateMacro	idb	ui	primitive		Implements the Lua function CreateMacro	inferred	none		
-0x4f1710	80	Script::GetNumMacros	idb	ui	orchestration		Implements the Lua function GetNumMacros	inferred	none		
-0x4f1760	238	Script::GetMacroInfo	idb	ui	orchestration		Implements the Lua function GetMacroInfo	inferred	none		
-0x4f1850	89	Script::DeleteMacro	idb	ui	orchestration		Implements the Lua function DeleteMacro	inferred	none		
-0x4f18b0	313	Script::EditMacro	idb	ui	primitive		Implements the Lua function EditMacro	inferred	none		
-0x4f19f0	64	Script::GetNumMacroIcons	idb	ui	orchestration		Implements the Lua function GetNumMacroIcons	inferred	none		
-0x4f1a30	171	Script::GetMacroIconInfo	idb	ui	primitive		Implements the Lua function GetMacroIconInfo	inferred	none		
-0x4f1ae0	75	Script::PickupMacro	idb	ui	orchestration		Implements the Lua function PickupMacro	inferred	none		
-0x4f1b30	91	Script::GetMacroIndexByName	idb	ui	primitive		Implements the Lua function GetMacroIndexByName	inferred	none		
-0x4f1b90	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f1bb0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4efe00	397	MACRONODE::DeriveBoundSpell		ui	primitive	void __thiscall (MACRONODE *this)	Derives the bound spell and book from the body's first cast line	verified	one	ui/macros#the-bound-spell	
+0x4eff90	23	InitMacroIdCounters		ui	orchestration	void __cdecl (void)	Sets each scope's last macro id to its base	verified	one	ui/macros#macro-records	
+0x4effb0	219	ClearMacros		ui	primitive	void __cdecl (void)	Frees every macro record and the icon list and zeroes the counts	verified	one	ui/macros#macro-records	
+0x4f0090	399	BuildMacroIconList		ui	primitive	void __cdecl (void)	Builds the sorted, deduplicated macro icon list from archives and folders	verified	one	ui/macros#macro-icons	
+0x4f0220	303	AddMacroIconFromListfile		ui	primitive		Adds a listfile line's basename when it names a Spell_ or Ability_ icon	verified	one	ui/macros#macro-icons	
+0x4f0350	402	AddMacroIconFromBasePath		ui	primitive		Adds a base-path file's basename when it names a Spell_ or Ability_ icon	verified	one	ui/macros#macro-icons	
+0x4f04f0	237	AddMacroIconFromWorkingDir		ui	primitive		Adds a working-directory icon file's basename, any name	verified	one	ui/macros#macro-icons	
+0x4f05e0	27	CompareMacroIconNames		ui	orchestration		Compares two icon basenames without case	verified	one	ui/macros#macro-icons	
+0x4f0600	1129	LoadMacroFiles		ui	primitive	void __fastcall (int localFile, int cacheFile, uint32_t scope)	Reads a scope's two macro files into records	verified	one	ui/macros#loading-macro-files	
+0x4f0a70	35	RegisterMacroFileReaders		ui	orchestration	void __cdecl (void)	Registers the macro file reader for the account and character scopes	verified	one	ui/macros#loading-macro-files	
+0x4f0aa0	447	SaveMacroFiles		ui	primitive	void __fastcall (int localFile, int cacheFile, uint32_t scope)	Writes a scope's records to its local and cache files	verified	one	ui/macros#macro-files	
+0x4f0c60	54	SaveMacrosIfDirty		ui	orchestration	void __cdecl (void)	Clears the save flag and writes both scopes when it was set	verified	one	ui/macros#macro-files	
+0x4f0ca0	56	DeriveAllBoundSpells		ui	orchestration	void __cdecl (void)	Derives the bound spell of every macro	verified	one	ui/macros#when-the-bound-spell-is-derived	
+0x4f0ce0	76	DeriveUnresolvedBoundSpells		ui	orchestration	void __cdecl (void)	Derives the bound spell of macros unresolved or in the pet book	verified	one	ui/macros#when-the-bound-spell-is-derived	
+0x4f0d30	218	RebuildMacroOrder		ui	primitive	void __cdecl (void)	Sorts each scope by name into the position table and signals UPDATE_MACROS	verified	one	ui/macros#macro-order	
+0x4f0e10	33	CompareMacroNames		ui	primitive		Compares two macro records' names without case	verified	one	ui/macros#macro-order	
+0x4f0e40	106	GetMacroByPosition		ui	primitive	MACRONODE *__fastcall (uint32_t position)	Returns the macro at a position, null for 36 and up or an empty entry	verified	one	ui/macros#macro-order	
+0x4f0eb0	16	GetMacroIdByPosition		ui	orchestration	uint32_t __fastcall (uint32_t position)	Returns the id at a position, 0 for 36 and up	verified	one	ui/macros#macro-order	
+0x4f0ec0	21	GetMacroPositionById		ui	primitive	int __fastcall (uint32_t id)	Returns the position holding an id, -1 for none	verified	one	ui/macros#macro-order	
+0x4f0ee0	91	FindMacroByName		ui	orchestration	MACRONODE *__fastcall (const char *name)	Returns the first macro in list order whose name matches without case	verified	one	ui/macros#macro-records	
+0x4f0f40	84	FindMacroById		ui	primitive	MACRONODE *__fastcall (uint32_t id)	Returns the macro with an id from the hash table, null for none	verified	one	ui/macros#macro-records	
+0x4f0fa0	35	GetMacroPositionByName		ui	primitive	int __fastcall (const char *name)	Returns the position of the first macro of a name, -1 for none	verified	one	ui/macros#macro-order	
+0x4f0fd0	55	FormatMacroIconPath		ui	primitive	void __fastcall (uint32_t id, char *dest, uint32_t size)	Formats the icon directory and a macro's basename into a buffer	verified	one	ui/macros#macro-order	
+0x4f1010	613	CreateMacroRecord		ui	primitive	uint32_t __fastcall (const char *name, const char *icon, const char *body, uint32_t local, uint32_t scope)	Creates a macro and returns its id, 0 when refused	verified	one	ui/macros#macro-records	
+0x4f1280	186	EditMacroRecord		ui	primitive	void __fastcall (uint32_t id, const char *name, const char *icon, const char *body, uint32_t local)	Replaces the given fields of a macro and sets its local flag	verified	one	ui/macros#editing-a-macro	
+0x4f1340	281	DeleteMacroRecord		ui	primitive	void __fastcall (uint32_t id)	Removes a macro, clears the action slots holding it and rebuilds the order	verified	one	ui/macros#macro-functions	
+0x4f1460	98	RunMacroById		ui	primitive	void __fastcall (uint32_t id)	Finds a macro by id and runs it	verified	one	ui/macros#running-a-macro	
+0x4f14d0	12	RunMacroByName		ui	unreached	void __fastcall (const char *name)	Finds a macro by name and runs it	verified	one	ui/macros#running-a-macro	
+0x4f14e0	111	RunMacro		ui	orchestration	void __fastcall (MACRONODE *macro)	Signals EXECUTE_CHAT_LINE once per nonempty body line	verified	one	ui/macros#running-a-macro	
+0x4f1550	84	SetMacroBody		ui	primitive	void __fastcall (MACRONODE *macro, const char *body)	Copies a body into a macro, cut to 256 characters	verified	one	ui/macros#macro-records	
+0x4f15b0	346	Script::CreateMacro	idb	ui	primitive		Implements the Lua function CreateMacro	verified	one	ui/macros#creating-a-macro	
+0x4f1710	80	Script::GetNumMacros	idb	ui	orchestration		Implements the Lua function GetNumMacros	verified	one	ui/macros#macro-functions	
+0x4f1760	238	Script::GetMacroInfo	idb	ui	orchestration		Implements the Lua function GetMacroInfo	verified	one	ui/macros#macro-functions	
+0x4f1850	89	Script::DeleteMacro	idb	ui	orchestration		Implements the Lua function DeleteMacro	verified	one	ui/macros#macro-functions	
+0x4f18b0	313	Script::EditMacro	idb	ui	primitive		Implements the Lua function EditMacro	verified	one	ui/macros#editing-a-macro	
+0x4f19f0	64	Script::GetNumMacroIcons	idb	ui	orchestration		Implements the Lua function GetNumMacroIcons	verified	one	ui/macros#macro-icons	
+0x4f1a30	171	Script::GetMacroIconInfo	idb	ui	primitive		Implements the Lua function GetMacroIconInfo	verified	one	ui/macros#macro-icons	
+0x4f1ae0	75	Script::PickupMacro	idb	ui	orchestration		Implements the Lua function PickupMacro	verified	one	ui/macros#macro-functions	
+0x4f1b30	91	Script::GetMacroIndexByName	idb	ui	primitive		Implements the Lua function GetMacroIndexByName	verified	one	ui/macros#macro-functions	
+0x4f1b90	30	RegisterMacroFunctions		ui	primitive	void __cdecl (void)	Registers the nine macro Lua functions	verified	one	ui/macros#macro-functions	
+0x4f1bb0	24	UnregisterMacroFunctions		ui	primitive	void __cdecl (void)	Unregisters the nine macro Lua functions	verified	one	ui/macros#macro-functions	
 0x4f1bd0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f1be0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4f1bf0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f1c00	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4f1c20	117			ui	orchestration		Runs its object file code that calls 0x4f2400, SMemFree; not read here	inferred	none		
-0x4f1ca0	214			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x4f1ca0	214	AllocMacroRecord		ui	primitive		Allocates a 0x56c-byte macro record with its text fields cleared	verified	one	ui/macros#macro-records	
 0x4f1d80	189			ui	primitive		Runs its object file code that calls 0x4f1f00, 0x4f1f40, SMemFree; not read here	inferred	none		
 0x4f1e40	190			ui	primitive		Runs its object file code that calls 0x4f2430, 0x4f1f00, 0x4f1fd0 and 1 more; not read here	inferred	none		
 0x4f1f00	60			ui	primitive		Runs its object file code not read here	inferred	none		

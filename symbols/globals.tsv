@@ -417,6 +417,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x807a48	const float	s_dotSize		ui	Holds 0.00625, the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0x807a4c	const float	s_float3c4ccccd		unassigned	Holds the float 0.0125 (0x3c4ccccd)	inferred	none	
 0x807a80	void *[36]	CGMinimapFrame::vftable		ui	Holds the 36 virtual function slots of CGMinimapFrame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
+0x807b8c	uint32_t[2]	s_macroIdBases		ui	Holds the first-id base of each scope, 0 and 0x1000000	verified	one	ui/macros#macro-records
 0x807e00	const char[5]	s_textNone		ui	Holds the string "none"	inferred	none	
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
 0x808220	const uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -1197,7 +1198,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84c6e4	char[20]	s_textTexturesMinimapMask		ui	Holds the string Textures\MinimapMask	verified	one	ui/minimap#minimap-textures
 0x84c768	char[44]	s_textInterfaceMinimapRotatingMinimapArrowMdx		ui	Holds the string "Interface\Minimap\Rotating-MinimapArrow.mdx"	inferred	none	
 0x84c7f0	char[10]	s_textUnnamed		ui	Holds the string "<unnamed>"	inferred	none	
-0x84c988	uint32_t			ui	Holds a dword that Script::GetMacroInfo, Script::GetMacroIconInfo read; not read here	inferred	none	
+0x84c988	const char *	s_macroIconDirectory		ui	Holds the pointer to the icon directory string macros prefix to a basename	verified	one	ui/macros#macro-order
 0x84ca64	char[17]	s_textInterfaceIcons		unassigned	Holds the string "Interface\Icons\"	inferred	none	
 0x84cab0	char[17]	s_textCastSpellByName		ui	Holds the string "CastSpellByName("	inferred	none	
 0x84cb60	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
@@ -2164,8 +2165,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdcbac	uint32_t	s_hoverIconMask		ui	Holds the bit mask of the landmark icons the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcbb0	uint32_t	s_hoverArrowMask		ui	Holds the bit mask of the rim arrows the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcbb4	uint32_t	s_hoverPartyMask		ui	Holds the bit mask of the party dots the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
-0xbdcc54	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbdcc60	uint32_t[36]	s_macroIdTable		unassigned	Holds the ids of the 36 macros, indexed by ordinal	verified	one	ui/actionbar#slot-to-spell
+0xbdcbec	uint32_t[2]	s_macroLastIds		ui	Holds the last macro id handed out in each scope	verified	one	ui/macros#macro-records
+0xbdcbf8	uint32_t	s_macrosDirty		ui	Holds 1 when the macros need saving	verified	one	ui/macros#macro-files
+0xbdcc00	uint32_t[2]	s_macroCounts		ui	Holds the number of macros in each scope	verified	one	ui/macros#macro-records
+0xbdcc1c	uint32_t	s_macroIconCount		ui	Holds the number of entries in the macro icon list	verified	one	ui/macros#macro-icons
+0xbdcc20	char **	s_macroIconNames		ui	Holds the macro icon basenames, sorted without case	verified	one	ui/macros#macro-icons
+0xbdcc44	void *	s_macroListHead		ui	Holds the first record of the list of all macros	verified	one	ui/macros#macro-records
+0xbdcc54	void *	s_macroBuckets		ui	Holds the bucket array of the macro hash table, keyed by id	verified	one	ui/macros#macro-records
+0xbdcc5c	uint32_t	s_macroBucketMask		ui	Holds the hash table's bucket mask; -1 while the table is empty	verified	one	ui/macros#macro-records
+0xbdcc60	uint32_t[36]	s_macroIdTable		ui	Holds the ids of the 36 macro positions, 18 per scope, each scope sorted by name	verified	one	ui/macros#macro-order
+0xbdcd04	uint32_t[2]	s_macroNonLocalCounts		ui	Holds the number of macros in each scope whose local flag is clear	verified	one	ui/macros#macro-records
 0xbdcd24	uint32_t	s_talentTabCount		ui	Holds the number of talent tabs of the player	verified	one	ui/tooltipspell#the-talent-lines
 0xbdcd28	void **	s_talentTabs		ui	Holds the array of the player's talent tab records	verified	one	ui/tooltipspell#the-talent-lines
 0xbdce1c	uint32_t			ui	Holds a dword that Script::SignPetition reads and writes; not read here	inferred	none	
