@@ -93,6 +93,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-charactermodel"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-cmath"
 version = "0.1.0"
 dependencies = [

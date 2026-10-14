@@ -5698,58 +5698,58 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4766d0	1			charactermodel			Runs CharacterComponent.cpp code not read here	inferred	none		
 0x4766e0	287			charactermodel			Runs CharacterComponent.cpp code that calls SMemFree, 0x44b110, 0x47ae00 and 1 more; not read here	inferred	none		
 0x476800	1			charactermodel			Runs its object file code not read here	inferred	none		
-0x476810	327			charactermodel			Runs its object file code that calls 0x47a900, 0x47a950; not read here	inferred	none		
+0x476810	327			charactermodel			Runs its object file code that calls 0x47a900, 0x47a950; not read here	inferred	none		charactermodel::region_base_table
 0x476960	340			charactermodel	unreached		Runs its object file code that calls 0x47a900, 0x47a950, InitCharacterComponent; not read here	inferred	none		
 0x476ac0	199			charactermodel			Runs its object file code that calls HandleClose, HandleClose2, 0x47a970 and 1 more; not read here	inferred	none		
 0x476b90	273	InitCharacterComponent		charactermodel			Sets a character component up from a create record	inferred	none		
 0x476cb0	356			charactermodel			Runs its object file code that calls HandleClose2, 0x47b000, HandleClose; not read here	inferred	none		
-0x476e20	135			charactermodel			Runs its object file code that calls SStrPrintf, 0x648a10, 0x47ae30; not read here	inferred	none		
+0x476e20	135			charactermodel			Runs its object file code that calls SStrPrintf, 0x648a10, 0x47ae30; not read here	inferred	none		charactermodel::cm_fanout_h_equip_filename
 0x476eb0	128			charactermodel			Runs its object file code that calls 0x47b150; not read here	inferred	none		
 0x476f30	315			charactermodel			Runs its object file code that calls 0x476e20, 0x47b150; not read here	inferred	none		
-0x477070	116			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		
-0x4770f0	121			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		
+0x477070	116			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		charactermodel::cm_oversized_base_skin_1024_is_a_crop_and_writes_past_the_table, charactermodel::cm_oversized_base_skin_fits_only_under_a_256_device_cap
+0x4770f0	121			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		charactermodel::cm_oversized_overlay_512x256_crops_and_reads_coverage_from_colour_rows, charactermodel::cm_oversized_control_stock_128x64_overlay_reads_its_own_alpha
 0x477170	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x4771b0	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x4771f0	32			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477210	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477280	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
+0x477210	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		charactermodel::region_select_face
+0x477280	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		charactermodel::region_select_hair
 0x4772f0	106			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x477360	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x4773a0	90			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x477400	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x477440	32			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
 0x477460	140			charactermodel			Runs its object file code that calls 0x477c80, 0x477db0, 0x477f20; not read here	inferred	none		
-0x4774f0	33			charactermodel			Runs its object file code not read here	inferred	none		
+0x4774f0	33			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::occupancy
 0x477520	817			charactermodel			Runs its object file code that calls 0x47a880, 0x47a8a0, CM2Model::SetGeosetRange and 1 more; not read here	inferred	none		
 0x477860	516	UpdateCharacterComponent		charactermodel			Updates a character component's model from its state; glue passes 1	inferred	none		
-0x477a70	60			charactermodel			Runs its object file code that calls 0x477b50; not read here	inferred	none		
+0x477a70	60			charactermodel			Runs its object file code that calls 0x477b50; not read here	inferred	none		charactermodel::cm_fanout_h_texture_layer_case1
 0x477ab0	160			charactermodel			Runs its object file code not read here	inferred	none		
 0x477b50	80			charactermodel			Runs its object file code that calls 0x4420b0, 0x476eb0, 0x476f30; not read here	inferred	none		
 0x477ba0	125			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		
-0x477c20	94			charactermodel			Runs its object file code not read here	inferred	none		
-0x477c80	299			charactermodel			Runs its object file code not read here	inferred	none		
-0x477db0	367			charactermodel			Runs its object file code not read here	inferred	none		
-0x477f20	572			charactermodel			Runs its object file code not read here	inferred	none		
-0x478160	182			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		
-0x478220	190			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		
-0x4782e0	258			charactermodel			Runs its object file code that calls 0x47b010, 0x477c20, 0x47ae30 and 1 more; not read here	inferred	none		
+0x477c20	94			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::charsec_predicate
+0x477c80	299			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_copy
+0x477db0	367			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_masked
+0x477f20	572			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_blend
+0x478160	182			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_base_skin_texid
+0x478220	190			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_face_texid
+0x4782e0	258			charactermodel			Runs its object file code that calls 0x47b010, 0x477c20, 0x47ae30 and 1 more; not read here	inferred	none		charactermodel::cm_fanout_g_region_layer_slot_off, charactermodel::cm_fanout_g_region_layer_dirty_mask
 0x4783f0	205	SetCharacterHairColor		charactermodel			Sets a character component's hair colour index	inferred	none		
 0x4784c0	119	SetCharacterHairStyle		charactermodel			Sets a character component's hair style index	inferred	none		
-0x478540	103			charactermodel			Runs its object file code not read here	inferred	none		
+0x478540	103			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::geoset_variation_count
 0x4785b0	163	SetCharacterFace		charactermodel			Sets a character component's face index	inferred	none		
-0x478660	214	SetCharacterFacialHair		charactermodel			Sets a character component's facial hair index	inferred	none		
-0x478740	66			charactermodel			Runs its object file code not read here	inferred	none		
+0x478660	214	SetCharacterFacialHair		charactermodel			Sets a character component's facial hair index	inferred	none		charactermodel::geoset_base_select
+0x478740	66			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::region_record_lookup
 0x478790	354	SetCharacterSkinColor		charactermodel			Sets a character component's skin colour index	inferred	none		
-0x478900	94			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		
-0x478960	318	UnequipCharacterSlot		charactermodel			Removes the item from one of a character component's 12 outfit slots	inferred	none		
+0x478900	94			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		charactermodel::cm_fanout_g_attach_cache_store
+0x478960	318	UnequipCharacterSlot		charactermodel			Removes the item from one of a character component's 12 outfit slots	inferred	none		charactermodel::cm_fanout_g_equip_slot_index, charactermodel::cm_fanout_g_equip_slot0_region
 0x478aa0	45			charactermodel			Runs its object file code that calls 0x478ad0; not read here	inferred	none		
-0x478ad0	256			charactermodel			Runs its object file code that calls 0x47a380, 0x4799a0, 0x479d10 and 2 more; not read here	inferred	none		
-0x478bd0	150			charactermodel	orchestration		Unequips one or several character model slots for an equipment slot; not read here	inferred	none	objectlayer/inventory#helm-and-cloak	
-0x478cb0	194	SetCharacterComponentItem		charactermodel			Puts an item display on one equipment slot of a character component	inferred	none		
+0x478ad0	256			charactermodel			Runs its object file code that calls 0x47a380, 0x4799a0, 0x479d10 and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_equip_item_slot_index, charactermodel::cm_fanout_g_equip_validity_index
+0x478bd0	150			charactermodel	orchestration		Unequips one or several character model slots for an equipment slot; not read here	inferred	none	objectlayer/inventory#helm-and-cloak	charactermodel::dispatch_478bd0
+0x478cb0	194	SetCharacterComponentItem		charactermodel			Puts an item display on one equipment slot of a character component	inferred	none		charactermodel::dispatch_478cb0
 0x478dc0	263			charactermodel	unreached		Runs its object file code not read here	inferred	none		
-0x478f20	150			charactermodel			Runs its object file code that calls UnequipCharacterSlot; not read here	inferred	none		
-0x479010	268	EquipCharacterDisplay		charactermodel			Equips an item display id in an inventory type's slot of a character component	inferred	none		
-0x479180	63			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		
+0x478f20	150			charactermodel			Runs its object file code that calls UnequipCharacterSlot; not read here	inferred	none		charactermodel::dispatch_478f20
+0x479010	268	EquipCharacterDisplay		charactermodel			Equips an item display id in an inventory type's slot of a character component	inferred	none		charactermodel::dispatch_479010
+0x479180	63			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		charactermodel::cm_fanout_h_region_layer_clear
 0x4791c0	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
 0x479210	116			charactermodel			Runs its object file code that calls 0x4774f0, 0x478900, 0x479180; not read here	inferred	none		
 0x479290	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
@@ -5758,33 +5758,33 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x479300	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
 0x479350	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
 0x4793a0	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x4793f0	300			charactermodel			Runs its object file code that calls 0x4774f0, 0x479180, 0x478900; not read here	inferred	none		
+0x4793f0	300			charactermodel			Runs its object file code that calls 0x4774f0, 0x479180, 0x478900; not read here	inferred	none		charactermodel::cm_fanout_c_boots_region_decision
 0x479520	81			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
 0x479580	209			charactermodel			Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate and 4 more; not read here	inferred	none		
-0x479660	67			charactermodel			Runs its object file code that calls CM2Model::PlayAnimation; not read here	inferred	none		
-0x4796b0	67			charactermodel			Runs its object file code that calls CM2Model::PlayAnimation; not read here	inferred	none		
+0x479660	67			charactermodel			Runs its object file code that calls CM2Model::PlayAnimation; not read here	inferred	none		charactermodel::cm_fanout_h_hand_grip_arm
+0x4796b0	67			charactermodel			Runs its object file code that calls CM2Model::PlayAnimation; not read here	inferred	none		charactermodel::cm_fanout_h_hand_grip_release
 0x479700	174			charactermodel			Runs its object file code that calls CM2Model::DetachChildren, CM2Model::GetScene and 3 more; not read here	inferred	none		
 0x4797b0	263	ApplyCreatureDisplay		charactermodel			Applies a CreatureDisplayInfo row's textures to a model, given its CreatureModelData row	inferred	none		
 0x4798c0	219			charactermodel			Runs its object file code that calls CM2Model::GetScene, CreateModelFromPath and 9 more; not read here	inferred	none		
-0x4799a0	409			charactermodel			Runs its object file code that calls strrchr, SStrPrintf, 0x4798c0; not read here	inferred	none		
+0x4799a0	409			charactermodel			Runs its object file code that calls strrchr, SStrPrintf, 0x4798c0; not read here	inferred	none		charactermodel::cm_fanout_h_helmet_geoset_flags, charactermodel::cm_fanout_h_helmet_head_gate
 0x479b40	257			charactermodel			Runs its object file code that calls CGxTexFlags::CGxTexFlags, SStrPrintf, TextureCreate and 3 more; not read here	inferred	none		
 0x479c50	186			charactermodel			Runs its object file code that calls SStrPrintf, 0x4798c0; not read here	inferred	none		
 0x479d10	359			charactermodel			Runs its object file code that calls SStrPrintf, 0x4798c0; not read here	inferred	none		
 0x479e80	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
 0x479ec0	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
 0x479f00	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
-0x479f40	294			charactermodel			Runs its object file code that calls SStrPrintf, CM2Model::GetScene, CreateModelFromPath and 7 more; not read here	inferred	none		
-0x47a070	54			charactermodel			Runs its object file code not read here	inferred	none		
-0x47a0c0	367	AttachItemModel		charactermodel			Hangs an item's model at a model's hand or shield attachment for an equipment slot	inferred	none		
+0x479f40	294			charactermodel			Runs its object file code that calls SStrPrintf, CM2Model::GetScene, CreateModelFromPath and 7 more; not read here	inferred	none		charactermodel::cm_fanout_c_weapon_attach_table
+0x47a070	54			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::attach_slot, charactermodel::cm_fanout_c_attach_slot
+0x47a0c0	367	AttachItemModel		charactermodel			Hangs an item's model at a model's hand or shield attachment for an equipment slot	inferred	none		charactermodel::cm_fanout_c_race_attach_pair
 0x47a230	223			charactermodel			Runs its object file code that calls CM2Model::DetachAt, CM2Model::SetEmissiveColor and 2 more; not read here	inferred	none		
-0x47a310	110	SetCharacterModelOption		charactermodel			Applies a numbered option to a character model; the outfit dress passes 15 and 16	inferred	none		
-0x47a380	82			charactermodel			Runs its object file code that calls 0x4796b0, CM2Model::IsLoaded, CM2Model::HasAttachment and 1 more; not read here	inferred	none		
-0x47a3e0	29	CountHairStyles		charactermodel			Returns the hair style count of a race and sex from the customization grid	inferred	none		
-0x47a400	55	CountHairColors		charactermodel			Returns the hair colour count of a race, sex and hair style, 0 for a style off the grid	inferred	none		
-0x47a440	34	CountSkinColors		charactermodel			Returns the skin colour count of a race and sex from the customization grid	inferred	none		
+0x47a310	110	SetCharacterModelOption		charactermodel			Applies a numbered option to a character model; the outfit dress passes 15 and 16	inferred	none		charactermodel::cm_fanout_c_shoulder_attach_pair
+0x47a380	82			charactermodel			Runs its object file code that calls 0x4796b0, CM2Model::IsLoaded, CM2Model::HasAttachment and 1 more; not read here	inferred	none		charactermodel::cm_fanout_c_attach_install_select
+0x47a3e0	29	CountHairStyles		charactermodel			Returns the hair style count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_a
+0x47a400	55	CountHairColors		charactermodel			Returns the hair colour count of a race, sex and hair style, 0 for a style off the grid	inferred	none		charactermodel::charsec_b
+0x47a440	34	CountSkinColors		charactermodel			Returns the skin colour count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_c
 0x47a470	33			charactermodel	unreached		Runs its object file code not read here	inferred	none		
-0x47a4a0	32	CountFaces		charactermodel			Returns the face count of a race and sex from the customization grid	inferred	none		
-0x47a4c0	13	CountFacialHairStyles		charactermodel			Returns the facial hair count of a race and sex from a dword table	inferred	none		
+0x47a4a0	32	CountFaces		charactermodel			Returns the face count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_e
+0x47a4c0	13	CountFacialHairStyles		charactermodel			Returns the facial hair count of a race and sex from a dword table	inferred	none		charactermodel::raceid_index
 0x47a4d0	65			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
 0x47a520	73			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
 0x47a570	73			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
@@ -5810,7 +5810,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47ad70	113			gx			Runs its object file code that calls HandleClose, 0x47b4f0, 0x47b6c0 and 1 more; not read here	inferred	none		
 0x47adf0	1			gx	unreached		Runs its object file code not read here	inferred	none		
 0x47ae00	35			gx			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x47ae30	453			gx			Runs its object file code that calls SStrHash, 0x47aca0, 0x47bab0 and 5 more; not read here	inferred	none		
+0x47ae30	453			gx			Runs its object file code that calls SStrHash, 0x47aca0, 0x47bab0 and 5 more; not read here	inferred	none		charactermodel::cm_fanout_h_hashtable_bucket
 0x47b000	14			gx			Runs its object file code not read here	inferred	none		
 0x47b010	162			gx			Runs its object file code not read here	inferred	none		
 0x47b0c0	20			gx	unreached		Runs its object file code not read here	inferred	none		
@@ -5827,17 +5827,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47b530	136			gx			Runs its object file code not read here	inferred	none		
 0x47b5c0	108			gx			Runs its object file code not read here	inferred	none		
 0x47b630	135			gx			Runs its object file code that calls 0x47b6f0, 0x47b4f0, SMemFree; not read here	inferred	none		
-0x47b6c0	41			gx			Runs its object file code not read here	inferred	none		
-0x47b6f0	25			gx			Runs its object file code not read here	inferred	none		
+0x47b6c0	41			gx			Runs its object file code not read here	inferred	none		charactermodel::tslink_reloc
+0x47b6f0	25			gx			Runs its object file code not read here	inferred	none		charactermodel::tslink_offset
 0x47b710	181			gx			Runs its object file code not read here	inferred	none		
-0x47b7d0	491			gx			Runs its object file code that calls 0x47baa0, 0x47b6f0, 0x47b4f0 and 4 more; not read here	inferred	none		
+0x47b7d0	491			gx			Runs its object file code that calls 0x47baa0, 0x47b6f0, 0x47b4f0 and 4 more; not read here	inferred	none		charactermodel::cm_fanout_h_hashtable_rehash
 0x47b9c0	33			gx			Runs its object file code not read here	inferred	none		
 0x47b9f0	176			gx			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x47baa0	12			gx			Runs its object file code not read here	inferred	none		
-0x47bab0	316			gx			Runs its object file code that calls 0x47bd80, 0x47b4f0, 0x47b6c0; not read here	inferred	none		
-0x47bbf0	319			gx			Runs its object file code that calls 0x47b530, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		
+0x47bab0	316			gx			Runs its object file code that calls 0x47bd80, 0x47b4f0, 0x47b6c0; not read here	inferred	none		charactermodel::ts_setcount_grow
+0x47bbf0	319			gx			Runs its object file code that calls 0x47b530, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		charactermodel::ts_add_n_size
 0x47bd30	77			gx			Runs its object file code not read here	inferred	none		
-0x47bd80	264			gx			Runs its object file code that calls 0x47bd30, 0x47b4f0, SMemReAlloc and 3 more; not read here	inferred	none		
+0x47bd80	264			gx			Runs its object file code that calls 0x47bd30, 0x47b4f0, SMemReAlloc and 3 more; not read here	inferred	none		charactermodel::ts_grow_bytesize
 0x47be90	5			gx			Runs its object file code not read here	inferred	none		
 0x47bea0	15			gx			Runs its object file code not read here	inferred	none		
 0x47beb0	5			unassigned			Runs its object file code not read here	inferred	none		
