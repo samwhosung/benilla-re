@@ -4228,6 +4228,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
 0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
 0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
+0xcf511c	uint32_t	s_divxInstanceCounter		ui	Counts the DivX decoder instances created for movie frames	verified	one	ui/movieframe#the-decoder
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates

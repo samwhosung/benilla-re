@@ -34296,7 +34296,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c020	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78c040	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c050	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x78c070	39			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x78c070	39			ui	primitive		Marks the movie finished when its audio stream ends	verified	one	ui/movieframe#audio	
 0x78c0a0	36			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78c0d0	179	CSimpleMovieFrame::CSimpleMovieFrame	idb	ui	orchestration		Constructs a MovieFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
 0x78c190	45			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34307,22 +34307,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78c270	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78c280	96			ui	orchestration		Runs its object file code that calls 0x78ced0, FrameScriptReleaseScript, SMemFree; not read here	inferred	none		
 0x78c2e0	124	CSimpleMovieFrame::GetScriptByName		ui	orchestration		Returns a MovieFrame's handler slot by name, adding its three movie handlers	verified	one	ui/xmltypes#handler-names-by-type	
-0x78c360	1080			ui	primitive		Runs CSimpleMovieFrame.cpp code that calls SStrPrintf, SFile::OpenEx, SFile::Read and 5 more; not read here	inferred	none		ui::glue_geom_78c360_aspect_ratio
-0x78c7a0	495			ui	host		Runs CSimpleMovieFrame.cpp code that calls SMemAlloc, CGxTexFlags::CGxTexFlags, 0x58aa30 and 1 more; not read here	inferred	none		
-0x78c990	158			ui	host		Runs CSimpleMovieFrame.cpp code that calls SMemFree, GxTexDestroy; not read here	inferred	none		
-0x78ca30	111			ui	orchestration		Runs CSimpleMovieFrame.cpp code that calls _FSOUND_Stream_Open@16 and 3 more; not read here	inferred	none		
-0x78caa0	81			ui	orchestration		Runs CSimpleMovieFrame.cpp code that calls _FSOUND_Stream_Stop@4, _FSOUND_Stream_Close@4, SMemFree; not read here	inferred	none		
-0x78cb00	668			ui	primitive		Runs CSimpleMovieFrame.cpp code that calls SStrPrintf, 0x6485f0, SStrTokenize and 6 more; not read here	inferred	none		
-0x78cda0	155			ui	primitive		Runs CSimpleMovieFrame.cpp code that calls FrameScriptExecute, SMemFree; not read here	inferred	none		
-0x78ce40	135			ui	orchestration		Runs its object file code that calls 0x78c360, 0x78c7a0, 0x78ca30 and 5 more; not read here	inferred	none		
-0x78ced0	85			ui	orchestration		Runs its object file code that calls 0x78c990, 0x78caa0, 0x78cda0 and 2 more; not read here	inferred	none		
-0x78cf30	624			ui	primitive		Runs its object file code that calls _FSOUND_Stream_GetTime@4, OsGetAsyncTimeMs, __ftol and 4 more; not read here	inferred	none		ui::glue_geom_78cf30_time_to_index
-0x78d1a0	924			ui	primitive		Runs its object file code that calls GetScaledScreenAspect, 0x58b060, 0x58af60 and 11 more; not read here	inferred	none		ui::glue_geom_78d1a0_quad_scale
+0x78c360	1080	ReadMovieAvi		ui	primitive		Reads the movie AVI file into the video and audio buffers	verified	one	ui/movieframe#the-file	
+0x78c7a0	495	StartMovieDecoder		ui	host		Creates the DivX decoder instance and the tile textures for a movie	verified	one	ui/movieframe#the-decoder	
+0x78c990	158	StopMovieDecoder		ui	primitive		Destroys the decoder instance, the output bitmap and the tile textures	verified	one	ui/movieframe#the-decoder	
+0x78ca30	111	StartMovieAudio		ui	primitive		Opens and plays the movie audio as a memory stream	verified	one	ui/movieframe#audio	
+0x78caa0	81	StopMovieAudio		ui	primitive		Stops the movie audio stream and frees its buffer	verified	one	ui/movieframe#audio	
+0x78cb00	668	LoadMovieSubtitles		ui	primitive		Reads the captions of a movie from its subtitle file	verified	one	ui/movieframe#subtitles	
+0x78cda0	155	ClearMovieCaptions		ui	primitive		Hides the current caption and frees the caption list	verified	one	ui/movieframe#starting-and-stopping	
+0x78ce40	135	StartMoviePlayback		ui	orchestration		Reads, decodes and starts a movie, returning whether all steps worked	verified	one	ui/movieframe#starting-and-stopping	
+0x78ced0	85	StopMoviePlayback		ui	orchestration		Ends a playing movie and runs OnMovieFinished	verified	one	ui/movieframe#starting-and-stopping	
+0x78cf30	624	AdvanceMovie		ui	primitive		Advances the movie clock, decodes the due frames and runs the caption handlers	verified	one	ui/movieframe#clock-and-frame-choice	
+0x78d1a0	924	DrawMovie		ui	primitive		Draws the tile textures of the movie as quads over the window	verified	one	ui/movieframe#drawing	
 0x78d540	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d550	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x78d560	237			ui	host		Runs its object file code that calls GxTexUpdateRect; not read here	inferred	none		
-0x78d650	46			ui	orchestration		Runs its object file code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
-0x78d680	42			ui	orchestration		Runs its object file code that calls 0x78cf30, 0x78d1a0; not read here	inferred	none		
+0x78d560	237	DecodeMovieFrame		ui	host		Decodes the next movie frame and copies its tiles to the textures when shown	verified	one	ui/movieframe#decoding-a-frame	
+0x78d650	46	RegisterMovieLayer		ui	orchestration		Registers a movie frame layer and its draw callback	verified	one	ui/movieframe#drawing	
+0x78d680	42	MovieLayerCallback		ui	orchestration		Advances and draws the movie of a frame when it is playing	verified	one	ui/movieframe#drawing	
 0x78d6b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d6c0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78d6d0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34332,9 +34332,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78d720	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x78d740	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d750	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x78d770	254	MovieFrame::StartMovie	idb	ui	primitive		Implements the MovieFrame method StartMovie	inferred	none		
-0x78d870	197	MovieFrame::StopMovie	idb	ui	primitive		Implements the MovieFrame method StopMovie	inferred	none		
-0x78d940	159	MovieFrame::EnableSubtitles	idb	ui	primitive		Implements the MovieFrame method EnableSubtitles	inferred	none		
+0x78d770	254	MovieFrame::StartMovie	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Starts playing a movie file and returns 1 when it started	verified	one	ui/movieframe#starting-and-stopping	
+0x78d870	197	MovieFrame::StopMovie	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Stops the movie of a frame	verified	one	ui/movieframe#starting-and-stopping	
+0x78d940	159	MovieFrame::EnableSubtitles	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets whether the movie shows its subtitles	verified	one	ui/movieframe#starting-and-stopping	
 0x78d9e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78d9f0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78da00	10			ui	orchestration		Runs its object file code that calls 0x78da10; not read here	inferred	none		
