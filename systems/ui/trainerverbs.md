@@ -42,28 +42,28 @@ Test: none
 nil. The line is record `+0x18` and the value `+0x1c`; both must be nonzero and the line in the store. The player's rank is found
 by scanning the 128 skill slots (12 bytes each at `+0x848` of the field block) for the line and adding the slot's bonus half to
 its rank. A row without the requirement or no player gives nil, 0, 1; an empty name gives nil, 0 and the flag.
-`GetTrainerServiceStepReq(row)` returns nil, nil for every row, because it starts from the spell id at record `+0x20`, always 0.
+`GetTrainerServiceStepReq(row)` returns nil and the number 1 for every row, because the spell id at record `+0x20` is always 0.
 
 Addresses: `0x4d9410`, `0x4d9495`, `0x4d94a0`, `0x4d94d6`, `0x4d950b`, `0x4d9517`, `0x4d9526`, `0x4d9558`, `0x4d9570`, `0x4d957c`, `0x4d95bc`, `0x4d95d9`, `0x4d9930`, `0x4d99b3`, `0x4d99b8`, `0x4d9afc`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4d9495` and `0x4d94a0` test the two fields for zero, `0x4d94d6` to `0x4d9524` scan the slots by line id (`cmp eax,0x600` ends it), `0x4d9558` loads the rank and `0x4d9563` the bonus, and `0x4d9570` compares the sum with the value. The default flag of 1 (`0x4d945a`) survives every early exit, so they push 1.0 at `0x4d95d9`. `0x4d99b3` loads `+0x20` and `0x4d99b8` jumps to the nil pushes at `0x4d9afc` when it is 0.
+`0x4d9495` and `0x4d94a0` test the two fields for zero, `0x4d94d6` to `0x4d9524` scan the slots by line id (`cmp eax,0x600` ends it), `0x4d9558` loads the rank and `0x4d9563` the bonus, and `0x4d9570` compares the sum with the value. The default flag of 1 (`0x4d945a`) survives every early exit, so they push 1.0 at `0x4d95d9`. `0x4d99b3` loads `+0x20` and `0x4d99b8` jumps to `0x4d9afc` when it is 0; that pushes a nil, then `0x4d9b09` pushes the double with high word `0x3ff00000` and low word the spell id 0, which is 1.0. The caller zeroes the source array (`0x5dcc11`), so the id is always 0; `edi`, 1 from `0x4d997a`, differs from it at `0x4d9b03`.
 
 ## Skill line name
 
 `GetTrainerServiceSkillLine(row)` returns the localized name of the skill line of the row's ability, found through the player's
 race and class and the skill line ability table: through the spell a learn effect (0x24 or 0x39) teaches, otherwise through the
 sent spell itself. It returns nil without a player or a match. A row with no learn effect and no ability row of its own falls
-through to a lookup that indexes the spell's trigger-spell array at -1.
+through to a lookup that indexes the spell's trigger-spell array at -1, which reads the third effect's misc value (`+0x1b0`).
 
 Addresses: `0x4d9160`, `0x4d91dc`, `0x4d91e6`, `0x4d91eb`, `0x4d91fb`, `0x4d9238`, `0x4d925f`, `0x4d9261`, `0x4d9292`, `0x4d92bb`, `0x6de040`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4d91b4` presets the effect index to -1 and `0x4d91fb` replaces it with the first effect found. `0x4d9238` calls `FindSkillLineAbility` (spell, race, class) on the sent spell when the index is -1 and `0x4d925f` takes the name when that finds a line. `0x4d9261` reads `[spell + index * 4 + 0x1b4]`, the trigger spell, which with -1 is the dword before the array. `0x4d92bb` reads the name at `+0xc` by locale.
+`0x4d91b4` presets the effect index to -1 and `0x4d91fb` replaces it with the first effect found. `0x4d9238` calls `FindSkillLineAbility` (spell, race, class) on the sent spell when the index is -1 and `0x4d925f` takes the name when that finds a line. `0x4d9261` reads `[spell + index * 4 + 0x1b4]`, the trigger spell, which with -1 is the dword before the array, `EffectMiscValue[2]` at `+0x1b0`. `0x4d92bb` reads the name at `+0xc` by locale.
 
 ## Icon
 

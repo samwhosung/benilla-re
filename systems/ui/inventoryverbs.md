@@ -72,7 +72,7 @@ Test: none
 ## Bag contents
 
 `GetContainerNumSlots(bag)` returns 16 for the backpack (0), 24 for the bank (-1), the slot count of the bag object for 1 to
-10, and 0 for anything else, the keyring included. `GetContainerItemInfo(bag, slot)` resolves the pair as `ui/bags` describes and,
+10, and 0 for anything else, the keyring included; with no active player it returns 0 for every bag (`0x4f95ab`). `GetContainerItemInfo(bag, slot)` resolves the pair as `ui/bags` describes and,
 for an item in it, returns the icon path, the stack count, 1 when it is locked (bit 0 of `+0x314`) else nil, the quality (the
 record's, or -1 for an inventory type of 0) and 1 when the item can be read (a page text from its virtual `+0x74` or an item text id
 at `+0x9c`) else nil. It returns nothing for an empty slot, as `GetContainerItemLink` does.

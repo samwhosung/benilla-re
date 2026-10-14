@@ -62,7 +62,7 @@ Test: none
 ## Audio
 
 `0x78ca30` opens the audio buffer as a memory stream (`FSOUND_Stream_Open`), sets an end callback and starts it. The callback `0x78c070` sets the finished flag when its stream is the frame's.
-`0x78caa0` stops and closes the stream and frees the audio buffer. If the stream cannot be opened or played the start fails.
+`0x78caa0` stops and closes the stream and frees the audio buffer. If the stream cannot be opened or played the movie runs without sound, because `StartMovie` ignores the result of this start (`0x78ce6f`).
 
 Addresses: `0x78ca30`, `0x78ca4a`, `0x78ca60`, `0x78ca71`, `0x78c070`, `0x78c081`, `0x78caa0`, `0x78caae`, `0x78cabf`
 Confidence: verified
@@ -87,7 +87,7 @@ Test: none
 ## Starting and stopping
 
 `StartMovie("name")` needs a string (`Usage: <frame>:StartMovie("filename")`). It runs the file reader, the decoder start, the audio start and the subtitle load, sets the playing flag at `+0x314`, and
-clears the display three times to black. It returns 1 on success and nil when any step fails. `StopMovie()` ends a playing movie: it destroys the decoder, the audio and the captions, clears the playing and finished flags and runs
+clears the display three times to black. It returns nil when the file reader or the decoder start fails and 1 otherwise: the audio start and the subtitle load results are ignored. `StopMovie()` ends a playing movie: it destroys the decoder, the audio and the captions, clears the playing and finished flags and runs
 `OnMovieFinished` (`+0x320`). The movie also ends by itself at the last frame or when the audio ends. `EnableSubtitles([flag])` stores the flag (true when absent) at `+0x31c`.
 
 Addresses: `0x78d770`, `0x78d842`, `0x78d820`, `0x78d870`, `0x78d92a`, `0x78d940`, `0x78d9ce`, `0x78d9d3`, `0x78ce40`, `0x78ce4b`, `0x78ce5d`, `0x78ce6f`, `0x78ce77`, `0x78ce81`, `0x78ced0`, `0x78cedd`, `0x78cee4`, `0x78ceeb`, `0x78cf1e`, `0x78cda0`, `0x78dc60`, `0x78dc80`, `0x87ab4c`
@@ -95,7 +95,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; the first two end the start on a zero answer. `0x78ce81` sets the playing flag and `0x78cea3` to `0x78ceb7` clear the device. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
+`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; only the first two end the start on a zero answer; the results of the audio start and the subtitle load are dropped and `0x78cebd` returns 1. `0x78ce81` sets the playing flag and `0x78cea3` to `0x78ceb7` clear the device. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
 
 ## Drawing
 

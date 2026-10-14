@@ -47,8 +47,8 @@ Test: none
 `GetNumQuestRewards()` and `GetNumQuestChoices()` count the leading records whose item id is nonzero, and `GetNumQuestItems()`
 counts the leading records whose required display id (not the item id) is nonzero, so a required item with display id 0 ends the
 count. `GetQuestItemInfo(type, index)` takes `"reward"`, `"choice"` or `"required"` and a 1-based index and returns the name,
-the icon path, the count, the quality and 1 when the player can use the item, else nil; an unknown type raises
-`Invalid quest item in GetQuestItemInfo("type", index)`. The index test is `ja 6` after the decrement, so index 7 is accepted and
+the icon path, the count, the quality and 1 when the player can use the item, else nil; a missing or wrongly typed argument, an unknown type and an index of 8 or more raise
+`Invalid quest item in GetQuestItemInfo("type", index)` (`0x501f98`, `0x501fac`, `0x502000`). The index test is `ja 6` after the decrement (`0x501719`), so index 7 is accepted and
 reads past the sixth record.
 
 Addresses: `0x5016a0`, `0x5016c0`, `0x5016e0`, `0x501700`, `0x501719`, `0x501734`, `0x50173f`, `0x50176d`, `0x50179d`, `0x5017de`, `0x5017fa`, `0x501844`, `0x50188d`, `0x501896`, `0x501ec0`, `0x501f00`, `0x501f40`, `0x501f80`, `0x501ffb`, `0x50207a`
@@ -63,7 +63,7 @@ Test: none
 
 When an item record arrives for the panel, `0x5018c0` signals QUEST_ITEM_UPDATE (305) provided its arrival flag is set and the
 record is cached. `GetQuestItemLink(type, index)` returns the item link of the same entries, built as the quest log link, or nil
-for an unknown type, an index above 6, a zero id or an uncached item; other arguments raise
+for an unknown type, an index of 8 or more, a zero id or an uncached item (the test is `ja 6` after the decrement at `0x501924`, so index 7 passes and reads past the sixth record); other arguments raise
 `Usage: GetQuestItemLink("type", index)`.
 
 Addresses: `0x5018c0`, `0x5018d6`, `0x5018de`, `0x5018f5`, `0x501903`, `0x501920`, `0x502090`, `0x5020fa`, `0x502114`, `0x502134`, `0x50214e`, `0x50217f`

@@ -141,8 +141,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`RandomRoll` needs both arguments as strings (`0x48c7c5`, `0x48c7d9`), so a single argument raises
-`Usage: RandomRoll("max") or RandomRoll("min", "max")`, and both zero returns without a message. `0x48c80b` to `0x48c82a` reject
+`RandomRoll` needs both arguments, each a string or a number (`0x6f3510` accepts Lua types 3 and 4; the tests are at `0x48c7c5`, `0x48c7d9`), so a single argument raises
+`Usage: RandomRoll("max") or RandomRoll("min", "max")` although that text offers the one-argument form, and both zero returns without a message. `0x48c80b` to `0x48c82a` reject
 a negative minimum, a maximum under the minimum and a maximum over 1000000. `0x48b947` reads the stand state byte at
 descriptor `+0x210`. `HasKey` calls `FindItemByBagFamily(9, 0x4f)` on the player's bag block (`+0x1d38`). `0x48b54c` reads the
 class byte at descriptor `+0x79`, indexes the store `0xc0def4` and pushes the record's dword at `+8` plus 1.

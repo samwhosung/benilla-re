@@ -9739,7 +9739,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d96b0	5	InitQuotient4d96c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d96c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4d96c0	19	InitQuotient4d96c0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4d96e0	579	Script::GetTrainerServiceAbilityReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a required ability's name and rank text and whether it is known	verified	one	ui/trainer#required-abilities	
-0x4d9930	513	Script::GetTrainerServiceStepReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the step requirement of a trainer service, always nil	verified	one	ui/trainerverbs#skill-requirement	
+0x4d9930	513	Script::GetTrainerServiceStepReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns nil and the number 1 for every trainer service	verified	one	ui/trainerverbs#skill-requirement	
 0x4d9b40	616	Script::GetTrainerServiceDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a trainer service	verified	one	ui/trainerverbs#description	
 0x4d9db0	19			ui	orchestration		Runs its object file code that calls 0x4d7d40; not read here	inferred	none		
 0x4d9dd0	148	Script::IsTrainerServiceSkillStep	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service teaches a skill step, else nil	verified	one	ui/trainerverbs#row-kind-tests	
