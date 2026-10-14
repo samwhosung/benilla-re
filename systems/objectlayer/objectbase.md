@@ -145,6 +145,33 @@ scale and `+0xa0` is 0. The head of the list `+0xb0` is freed while its time `+0
 passed (`0x614c36`); each remaining missile gets alpha `u³`, `u` = `(+0x50 − now)·0.0005`
 clamped to 0 to 1, through `SetAlpha`.
 
+## Decals in the frame
+
+Ground decals reach the world frame `0x483460` in a fixed order, drawn at once by the projector
+`0x6d7330` or by `0x69a3e0`: inside the scene call (`0x48361d`), each entity's selection ring or
+corpse marker, then the click-to-move marker, then (first list only) its blob shadow; then the
+footprints (`0x483654`); the model pass 0 (`0x4836a6`); the ground-target reticle on solid receivers
+(`0x4836c5`); the detail doodads, water and the two transparent passes; last the reticle on liquid
+receivers (`0x483727`). All unit and corpse decals precede footprints, models and water.
+
+Addresses: `0x483460`, `0x48361d`, `0x483654`, `0x4836a6`, `0x4836c5`, `0x483727`, `0x4837b0`, `0x6812c5`, `0x683dd0`, `0x683ea5`, `0x683ec3`, `0x614e12`, `0x6d7f2c`, `0x481540`, `0x4815d0`, `0x4815ff`, `0x48160c`, `0x48161d`, `0x607ed0`, `0x60800c`, `0x608013`, `0x60801e`, `0x6103a0`, `0x611400`, `0x614ada`, `0x6d7330`, `0x670240`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x483460` has one caller (`0x482e75`). Below the four early-outs to its epilogue (`0x4834aa` to `0x4834ef`) its row
+branches only on two flag gates of other calls, the reticle gates and the dry or submerged split.
+The scene's fifth drain `0x6812c5` is `0x683dd0`, which calls each entity's `[node+0xb4]`, `0x481540`,
+for both lists; it resolves the GUID, requires the object not released (`0x614ea0`) and slot `0x78`
+non-zero, then `0x4815d0` calls slot 16 (`0x4815ff`), the tick slot 14 (`0x48160c`) and tests the
+slot 16 result only at `0x48161d`, so a decal does not wait on the draw test. Slot 14 of a unit
+(`0x607ed0`) runs `0x614a90` (the ring through slot 12, `0x614ada`), then `0x611400` when
+`0x6103a0` holds (`0x608013`) and the auto-move mode is 4 or 10 (`0x611406`). The reticle leg
+`0x4837b0` runs at both sites under the gate `[0x83dc2c] < 2` and a non-zero `[0xb4b344 + 4·mode]`.
+A game object's slot 12 is `0x469f80`, so it has no ring. `0x481540` returns 1 on every path (`0x481591`,
+`0x4815c6`), so the shadow test at `0x683ea5` never skips. A unit's ring is drawn first with blend mode
+3 (`0x614e12`) and its shadow after it with mode 4 (`0x6d7f2c`).
+
 ## The scale change
 
 The watcher `0x614a00`, on base field 4 (`OBJECT_FIELD_SCALE_X`, offset 0x10, any object), calls

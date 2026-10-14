@@ -220,6 +220,30 @@ for `i` from 0 to 64 and `0x61f991` adds `sin(t·π)·(−0.5)` to z. The 65 ver
 with no texture coordinates, go to a locked buffer; `0x61f9ce` turns render state 0xe off through
 `GxRsSet`, and 0x58a810 draws them as 64 joined segments, primitive type 2. Slices: effect_beam_trail_difftest, effect_beam_trail_special_values_difftest `0x61f7ea`-`0x61f9ab`.
 
+## Effect model draw state
+
+An effect model draws like any model in the scene's lists. Of the effect object file, only the
+fishing line draw (`0x61f780`) calls the render state setter, the state save or a draw; no other
+effect function sets a state, a bias or a draw. The model lists begin each pass with the depth
+function (id 0x11), the depth bias (id 0), lighting and fog all 0 (`0x70b360`), and the per-batch
+material sets cull, depth test and depth write from the material flags alone (`models/render`). No
+function of the effect file calls a terrain query, so a base-attached effect rides its unit's
+origin and nothing in the effect code lifts it off a slope.
+
+Addresses: `0x61f780`, `0x61f9c2`, `0x61f9ce`, `0x61f9fb`, `0x70b360`, `0x70b3f6`, `0x70b406`, `0x707350`, `0x671380`, `0x6717d0`, `0x620cf3`, `0x620741`, `0x620dca`, `0x6d7330`
+Confidence: verified
+Proof: one
+Test: none
+
+The census is every call of `0x589e60`, `0x589f40`, `0x589f50`, `0x58a810` and `0x58a830` between
+`0x61f470` and `0x6210e0`: three sites, all in `0x61f780`. The callees of that range include no
+terrain query. Its five model creators call `0x707350` (`CreateModelFromPath`); `0x671380` and
+`0x6717d0` there create a planted effect's world object and set its bounds (`0x620cf3`,
+`0x620741`, `0x620dca`). The calls that set the depth bias (id 0) with a literal id, other than
+the list set-up's 0 (`0x70b406`), are in the console caret, the foam, the footprints, the query
+cells and the decal projector `0x6d7480`. `0x6d7330` has five callers (`0x48395a`, `0x5d7105`, `0x608f28`,
+`0x611575`, `0x6d8047`), none an effect, spell or missile function.
+
 ## Unreached effect code
 
 `0x620010` and `0x620100` link a bare effect with times; `0x620100` also sets a unit's `+0x94` and
