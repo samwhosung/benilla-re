@@ -753,6 +753,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e028	float	s_cos89		collision	Holds cos 89°, 0.0174524 (0x3c8ef859), the normal z the ground normal must exceed	verified	one	collision/walking#slope-thresholds
 0x80e128	char[32]	s_gxApiNames		console	Holds the API names OpenGL and Direct3D in two 16-byte slots	verified	one	console/display#display-callbacks
 0x80e148	const void *[13]	s_commandHandlers		console	Holds the handlers of the 13 console commands of the screen	verified	one	console/commands#screen-commands
+0x80e1d4	const char[8]			cvar	Holds the set command's token delimiters: space, comma, semicolon, tab, quote, CR, LF	verified	one	cvar/config#reading-the-file
 0x80e1dc	void *[4]	s_cvarTableVtable		cvar	Holds the four slots of the CVar table: free node, allocate node, deleting destructor, clear	verified	one	cvar/containers#records-and-virtual-slots
 0x80e268	void *[4]	s_commandTableVtable		console	Holds the four slots of the command table: free node, allocate node, deleting destructor, clear	verified	one	console/commands#command-records
 0x80e2c4	char[25]	s_keyWowClient		unassigned	Holds the registry key World of Warcraft\Client	verified	one	console/hardware#hardware-change-check

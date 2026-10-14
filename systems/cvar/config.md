@@ -26,18 +26,19 @@ directories. `0x63d440` looks for each `\` after the first character, copies the
 ## Reading the file
 
 `LoadFile(name)` loads the whole file by name and, when that fails, `WTF\<name>`; with neither it does nothing. A UTF-8 byte order mark is
-skipped. It splits the text at CR and LF; a line keeps its first 0x7f bytes and the rest of a longer line is dropped (the tokenizer `0x64ae50` stops storing at `0x64af4e` and skips to the delimiter). It runs each line that begins with `SET ` (case-blind) through the
-console's executor with the history flag off. Because the executor runs `set`, an unknown name becomes a script-hidden record (category 5) holding the
+skipped. It splits the text at CR and LF; a line keeps its first 0x7f bytes and the rest is dropped. It runs each line that begins with `SET ` (case-blind) through the
+console's executor with the history flag off. The `set` command keeps 0x40 bytes of the name and 0x100 of the value, and a quote inside a value ends it. Because the executor runs `set`, an unknown name becomes a script-hidden record (category 5) holding the
 file's value as its value and reset text; a later registration keeps that value (`registry#registering-a-setting`).
 
-Addresses: `0x63d820`, `0x63d83d`, `0x63d858`, `0x63d877`, `0x63d895`, `0x63d8a9`, `0x63d8c7`, `0x64ae50`, `0x64af4e`, `0x63d8da`, `0x63d8eb`, `0x63d900`, `0x648620`, `0x648700`, `0x63ce00`
+Addresses: `0x63d820`, `0x63d83d`, `0x63d858`, `0x63d877`, `0x63d895`, `0x63d8a9`, `0x63d8c7`, `0x64ae50`, `0x64af4e`, `0x63d8da`, `0x63d8eb`, `0x63d900`, `0x648620`, `0x648700`, `0x63ce00`, `0x63d51d`, `0x63d539`, `0x80e1d4`, `0x64aebf`, `0x64af1b`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63d83d` calls the file loader `0x648620`; `0x63d858` formats `WTF\%s` for the second try (`0x63d877`). `0x63d895` to `0x63d8a9` compare the first three bytes with
-`ef bb bf` and step past them. `0x63d8c7` tokenizes with the delimiters CR LF into a 0x80-byte buffer; `0x63d8da` compares four bytes with `SET `
+`ef bb bf` and step past them. `0x63d8c7` tokenizes with the delimiters CR LF into a 0x80-byte buffer, and the tokenizer `0x64ae50` stops storing at `0x64af4e` and skips to the delimiter; `0x63d8da` compares four bytes with `SET `
 using the case-blind compare; `0x63d8eb` calls the executor `0x63ce00` with a zero history flag. `0x63d900` frees the file (`0x648700`).
+The `set` handler tokenizes the name at `0x63d51d` and the value at `0x63d539` with the delimiters at `0x80e1d4` (space, comma, semicolon, tab, quote, CR, LF); the tokenizer opens a quoted span at `0x64aebf` and closes it at the next quote (`0x64af1b`).
 
 ## Writing the file
 
@@ -46,16 +47,16 @@ in list order whose bit 0 is set, it picks the latched text, else the value, els
 equals its default case-blind, and writes `SET <name> "<text>"` and a line feed for the rest. It returns 1 on success, and 0 when the file will not
 open or a write stores nothing.
 
-Addresses: `0x63d980`, `0x63d98e`, `0x63d9ad`, `0x63d9b6`, `0x63d9ce`, `0x63d9dd`, `0x63d9df`, `0x63d9eb`, `0x63da10`, `0x63da21`, `0x63da27`, `0x63da2e`, `0x63da35`, `0x63da4a`, `0x63da63`, `0x63d582`, `0x63da69`, `0x63da92`, `0x63da9a`, `0x63dac3`, `0x63dad3`, `0x42a460`, `0x42a5d0`, `0x42a4d0`, `0x46b6f6`, `0x490c50`, `0xc4edd8`
+Addresses: `0x63d980`, `0x63d98e`, `0x63d9ad`, `0x63d9b6`, `0x63d9ce`, `0x63d9dd`, `0x63d9df`, `0x63d9eb`, `0x63da10`, `0x63da21`, `0x63da27`, `0x63da2e`, `0x63da35`, `0x63da4a`, `0x63da63`, `0x64a865`, `0x63d582`, `0x63da69`, `0x63da92`, `0x63da9a`, `0x63dac3`, `0x63dad3`, `0x42a460`, `0x42a5d0`, `0x42a4d0`, `0x46b6f6`, `0x490c50`, `0xc4edd8`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x63d98e` returns 1 at once when `0xc4edd8` is clear; `0x63d9ad` clears it. `0x63d9b6` and `0x63d9ce` build `WTF\` plus the name; `0x63d9eb` opens it through `0x42a460` with write access.
 The loop `0x63da10` follows the list. `0x63da21` tests bit 0; `0x63da27`, `0x63da2e` and `0x63da35` choose the latched text, the value, then the default; `0x63da4a` compares with the
 default. `0x63da69` formats `SET %s "%s"` plus a line feed and `0x63da92` writes it with `0x42a5d0`; a write of 0 bytes (`0x63da9a`) closes the file (`0x63dac3`)
 and returns 0, and the end of the list returns 1 (`0x63dad3`). The callers are the interface shutdown `0x490c50`, the world entry `0x46b6f6` and the registry's shutdown.
-A name read from `Config.wtf` gets its record when its line is read (`0x63d582`, the `set` command), which happens before the game registers its own settings: the four start-up calls before it reach no `Register`. The saved file therefore keeps the order of the old file and appends the settings that were not in it. The line is formatted into 0x104 bytes (`0x63da63`), so a saved line longer than 0x7f bytes is cut when read back.
+A name read from `Config.wtf` gets its record when its line is read (`0x63d582`), before the game registers its settings. The saved file keeps the order of the old file and appends the settings that were not in it. The line is formatted into 0x104 bytes (`0x63da63`), so a saved line longer than 0x7f bytes is cut when read back, and the formatter keeps 259 characters (`0x64a865`): a longer line loses its closing quote and line feed, runs into the next record's line, and that record is lost on the next read.
 
 ## Shutdown
 
