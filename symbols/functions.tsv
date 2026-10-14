@@ -1497,7 +1497,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419030	128			base	unreached		Runs its object file code not read here	inferred	none		
 0x4190b0	128	CDataStore::GetGuid	idb	base		CDataStore *__thiscall (CDataStore *this, uint64_t *out)	Reads eight bytes at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
 0x419130	121	CDataStore::GetFloat	idb	base			Reads four bytes from a data store into a destination, a float by its community name	verified	one	spell/cast#small-spell-helpers	
-0x4191b0	300	CDataStore::GetCString	idb	base			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x4191b0	300	CDataStore::GetCString	idb	base		void * __thiscall (CDataStore *this, char *dest, uint32_t capacity)	Copies a C string out of the store to a capacity; a missing NUL or overrun empties it and poisons the cursor	verified	one	net/messages#data-store-strings-and-pointers	
 0x4192e0	288			base	unreached		Runs its object file code that calls SErrSetLastError, 0x41a930; not read here	inferred	none		
 0x419400	257	CDataStore::GetData		base			Copies a number of bytes out of the store into a buffer	inferred	none		
 0x419510	267			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
@@ -23059,9 +23059,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x642a10	162			base			Runs its object file code not read here	inferred	none		
 0x642ac0	21			base	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
 0x642ae0	80	WowTime::WowEncodeTime	idb	base			Runs its object file code not read here	inferred	none		
-0x642b30	211	WowTime::WowDecodeTime2	idb	base			Runs its object file code not read here	inferred	none		
+0x642b30	211	WowTime::WowDecodeTime2	idb	base			Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	one	net/messages#time-speed-packet	
 0x642c10	32			base			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
-0x642c30	30	WowTime::WowDecodeTime	idb	base			Runs its object file code that calls WowTime::WowDecodeTime2; not read here	inferred	none		
+0x642c30	30	WowTime::WowDecodeTime	idb	base			Decodes a packed date into a seven-field record by calling 0x642b30	verified	one	net/messages#time-speed-packet	
 0x642c50	38			base	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
 0x642c80	397			base			Runs its object file code that calls 0x642c10, SStrPrintf; not read here	inferred	none		
 0x642e10	118			base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
@@ -28193,7 +28193,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5d50	22			unassigned			Runs its object file code that calls 0x6435a0; not read here	inferred	none		
 0x6c5d70	108	ClientInitializeGameTime	idb	unassigned			Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
 0x6c5de0	150	ReceiveNewGameSpeed	idb	unassigned			Runs its object file code that calls CDataStore::GetFloat, ConsoleWriteA, 0x643820 and 2 more; not read here	inferred	none		
-0x6c5e80	193	ReceiveNewTimeSpeed	idb	unassigned			Runs its object file code that calls CDataStore::GetUInt32, CDataStore::GetFloat and 7 more; not read here	inferred	none		
+0x6c5e80	193	ReceiveNewTimeSpeed	idb	unassigned			Reads a packed date and a rate, passes them to the world clock and logs the speed change, or logs a malformed packet	verified	one	net/messages#time-speed-packet	
 0x6c5f50	177			unassigned			Runs its object file code that calls GetLightState, 0x6424c0, 0x643a70 and 5 more; not read here	inferred	none		
 0x6c6010	109	ReceiveGameTimeUpdate	idb	unassigned			Runs its object file code that calls CDataStore::GetUInt32, ConsoleWriteA and 2 more; not read here	inferred	none		
 0x6c6080	154	ReceiveServerTime	idb	unassigned			Runs its object file code that calls CDataStore::GetUInt32, ConsoleWriteA and 4 more; not read here	inferred	none		
