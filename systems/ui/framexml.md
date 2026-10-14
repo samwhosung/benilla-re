@@ -179,6 +179,22 @@ flag 0, `Button` with `0x6eeab0` through `MovieFrame` with `0x6ef000`; `0x495940
 `WorldFrame` (`0x4959d0`) with flag 1; `0x46a4fe` registers `ModelFFX` with 0. In `0x6ee280` a set
 flag (`0x6ee439`) unlinks the entry and frees it (`0x6ee4c8`).
 
+## The frame factories
+
+Each of the 13 factories that `FrameXML.cpp` registers allocates one object of a fixed size under that file's tag and runs the constructor of its class on it, answering the
+object or 0 when the allocation fails. The sizes and constructors are: `Button` 0x4dc (`0x7786a0`), `CheckButton` 0x4e8 (`0x785010`), `EditBox` 0x448 (`0x7799b0`),
+`Frame` 0x314 (`0x769090`), `MessageFrame` 0x378 (`0x785640`), `Model` 0x3dc (`0x76c8e0`), `ScrollFrame` 0x344 (`0x786a40`), `ScrollingMessageFrame` 0x3c4 (`0x787670`
+with the extra argument 8), `Slider` 0x338 (`0x789400`), `SimpleHTML` 0x374 (`0x789dd0`), `StatusBar` 0x334 (`0x782d80`), `ColorSelect` 0x340 (`0x78b220`) and `MovieFrame`
+0x3e0 (`0x78c0d0`).
+
+Addresses: `0x6eeab0`, `0x6eeadf`, `0x6eeaf8`, `0x6eeb30`, `0x6eeb5f`, `0x6eeb78`, `0x6eeba0`, `0x6eebcf`, `0x6eebe8`, `0x6eec10`, `0x6eec3f`, `0x6eec58`, `0x6eec80`, `0x6eecaf`, `0x6eecc8`, `0x6eecf0`, `0x6eed1f`, `0x6eed38`, `0x6eed60`, `0x6eed8f`, `0x6eeda8`, `0x6eedd0`, `0x6eedff`, `0x6eee1a`, `0x6eee40`, `0x6eee6f`, `0x6eee88`, `0x6eeeb0`, `0x6eeedf`, `0x6eeef8`, `0x6eef20`, `0x6eef4f`, `0x6eef68`, `0x6eef90`, `0x6eefbf`, `0x6eefd8`, `0x6ef000`, `0x6ef02f`, `0x6ef048`, `0x6462e0`
+Confidence: verified
+Proof: one
+Test: none
+
+Every factory is 109 bytes (111 for `ScrollingMessageFrame`) of the same shape: it pushes the size, the path `FrameXML.cpp` and a line number to `SMemAlloc` (`0x6462e0`), and on a nonzero answer calls the constructor with
+the object. The calls to `SMemAlloc` are at `0x6eeadf`, `0x6eeb5f`, `0x6eebcf`, `0x6eec3f`, `0x6eecaf`, `0x6eed1f`, `0x6eed8f`, `0x6eedff`, `0x6eee6f`, `0x6eeedf`, `0x6eef4f`, `0x6eefbf` and `0x6ef02f` in the order of the list.
+
 ## Child frames and names
 
 A frame's `Frames` element is loaded by its finishing step: first the children of the template it

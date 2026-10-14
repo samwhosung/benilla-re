@@ -29511,20 +29511,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eea60	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6eea80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6eea90	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Allocates and constructs a Button under a parent	verified	one	ui/framexml#frame-types	
+0x6eeab0	109	Create_SimpleButton	idb	ui	orchestration		Allocates a Button object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
 0x6eeb20	1			ui	orchestration		Runs FrameXML.cpp code not read here	inferred	none		
-0x6eeb30	109	Create_SimpleCheckButton	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleCheckbox::CSimpleCheckbox; not read here	inferred	none		
-0x6eeba0	109	Create_SimpleEditBox	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleEditBox::CSimpleEditBox; not read here	inferred	none		
-0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Allocates and constructs a Frame under a parent	verified	one	ui/framexml#frame-types	
-0x6eec80	109	Create_SimpleMessageFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleMessageFrame::CSimpleMessageFrame; not read here	inferred	none		
-0x6eecf0	109	Create_SimpleModel	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel; not read here	inferred	none		
-0x6eed60	109	Create_SimpleScrollFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleScrollFrame::CSimpleScrollFrame; not read here	inferred	none		
-0x6eedd0	111	Create_SimpleScrollingMessageFrame	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, 0x787670; not read here	inferred	none		
-0x6eee40	109	Create_SimpleSlider	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleSlider::CSimpleSlider; not read here	inferred	none		
-0x6eeeb0	109	Create_SimpleHTML	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleHTML::CSimpleHTML; not read here	inferred	none		
-0x6eef20	109	Create_SimpleStatusBar	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleStatusBar::CSimpleStatusBar; not read here	inferred	none		
-0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Runs FrameXML.cpp code that calls SMemAlloc, CSimpleColorSelect::CSimpleColorSelect; not read here	inferred	none		
-0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates and constructs a MovieFrame under a parent	verified	one	ui/framexml#frame-types	
+0x6eeb30	109	Create_SimpleCheckButton	idb	ui	orchestration		Allocates a CheckButton object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eeba0	109	Create_SimpleEditBox	idb	ui	orchestration		Allocates a EditBox object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eec10	109	Create_SimpleFrame	idb	ui	orchestration		Allocates a Frame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eec80	109	Create_SimpleMessageFrame	idb	ui	orchestration		Allocates a MessageFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eecf0	109	Create_SimpleModel	idb	ui	orchestration		Allocates a Model object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eed60	109	Create_SimpleScrollFrame	idb	ui	orchestration		Allocates a ScrollFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eedd0	111	Create_SimpleScrollingMessageFrame	idb	ui	orchestration		Allocates a ScrollingMessageFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eee40	109	Create_SimpleSlider	idb	ui	orchestration		Allocates a Slider object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eeeb0	109	Create_SimpleHTML	idb	ui	orchestration		Allocates a SimpleHTML object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eef20	109	Create_SimpleStatusBar	idb	ui	orchestration		Allocates a StatusBar object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Allocates a ColorSelect object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
+0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates a MovieFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
 0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	one	ui/framexml#frame-types	
 0x6ef160	37			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6ef190	180			ui	primitive		Runs its object file code not read here	inferred	none		
