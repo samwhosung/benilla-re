@@ -81,7 +81,7 @@ Proof: one
 Test: none
 
 The clamp is an `fcom` against 0.0 (`0x7ffd74`) and 1.0 (`0x7ff9d8`) with a `jp` on `test ah,5` after each
-(red of `AddLine`: `0x531720`, `0x531736`). An unordered compare sets C0 and C2, so `jp` is taken on both:
+(red of `AddLine`: `0x531720`, `0x531736`). An unordered compare sets C0, C2 and C3, so `jp` (taken when neither C0 nor C2 is set, and when both are) is taken on both tests:
 NaN is neither below 0 nor below 1. Every other component of the three bindings uses the same two tests.
 
 Index 1 is the tooltip, checked as a table with a widget and the class tag; a bad one raises through
