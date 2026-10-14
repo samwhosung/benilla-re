@@ -160,6 +160,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-gxumath"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-cmath",
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-image"
 version = "0.1.0"
 dependencies = [
