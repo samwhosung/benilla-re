@@ -449,7 +449,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
+0x808e6c	const float	s_tooltipLineGap		ui	Holds 2.0, the gap in FrameXML units between shown tooltip lines	verified	one	ui/tooltipcontent#sizing-the-tooltip
+0x808e70	const float	s_tooltipColumnGap		ui	Holds 38.4, the gap between a line's left and right texts	verified	one	ui/tooltipcontent#sizing-the-tooltip
+0x808e74	const float	s_tooltipWidthPad		ui	Holds 10.24, the tooltip's horizontal padding on each side	verified	one	ui/tooltipcontent#sizing-the-tooltip
+0x808e78	const float	s_tooltipHeightPad		ui	Holds 10.24, the tooltip's vertical padding at top and bottom	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e7c	const float	s_float40000000		ui	Holds 2.0, the seconds a GameTooltip takes to fade out	verified	one	ui/tooltip#fading-out
+0x808e80	const float	s_tooltipWrapWidth		ui	Holds 230.4, the widest a wrapped tooltip line gets	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e88	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
@@ -2145,15 +2150,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ce30	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0ce7c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0cea4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0cf60	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d368	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d390	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d398	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d3a8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d3ac	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d3c4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d3c8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d3e8	uint32_t			ui	Holds a dword that GameTooltip::AddLine, GameTooltip::AddDoubleLine, GameTooltip::SetText read and write; not read here	inferred	none	
+0xc0cf60	uint32_t	s_tooltipWhite		ui	Holds the white colour 0xffffffff of an ordinary line	verified	one	ui/tooltipcontent#the-colours
+0xc0d368	uint32_t	s_tooltipCream		ui	Holds the pale cream 0xffffff97 of an owned set member	verified	one	ui/tooltipcontent#the-colours
+0xc0d390	uint32_t	s_tooltipRed		ui	Holds the red 0xffff2020 of a failed requirement	verified	one	ui/tooltipcontent#the-colours
+0xc0d398	uint32_t	s_tooltipPureRed		ui	Holds the pure red 0xffff0000	verified	one	ui/tooltipcontent#the-colours
+0xc0d3a8	uint32_t	s_tooltipRedLocked		ui	Holds the red 0xffff2020 of a locked line	verified	one	ui/tooltipcontent#the-colours
+0xc0d3ac	uint32_t	s_tooltipGreen		ui	Holds the green 0xff00ff00 of a trigger or learnable line	verified	one	ui/tooltipcontent#the-colours
+0xc0d3c4	uint32_t	s_tooltipGray		ui	Holds the gray 0xff808080 of an inactive line	verified	one	ui/tooltipcontent#the-colours
+0xc0d3c8	uint32_t[7]	s_qualityColors		ui	Holds the item quality colours from Poor to Artifact	verified	one	ui/tooltipcontent#the-colours
+0xc0d3e8	uint32_t	s_tooltipGold		ui	Holds the gold colour 0xffffd200, the default name and description colour	verified	one	ui/tooltipcontent#the-colours
 0xc0d420	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
@@ -2401,6 +2406,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4eba1	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
 0xc52560	double			storm	Holds the first double of a table that SStrToFloat reads; not read here	inferred	none	
+0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
 0xc62510	float	s_worldFrameSeconds		terrain	Holds the frame time in seconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-emission-rate
 0xc62964	float	s_fogEnd		terrain	Holds the fog end distance the scene sets each frame	inferred	none	
 0xc62970	uint32_t	s_worldTicks		terrain	Holds the world clock in 1/1024 s ticks; 0x66fcc0 advances it	verified	one	lighting/precipitation#particle-clock

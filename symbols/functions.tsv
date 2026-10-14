@@ -13113,23 +13113,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x528e20	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528e30	14			ui	primitive		Runs its object file code not read here	inferred	none		
 0x528e40	10			ui	orchestration		Runs its object file code that calls 0x528e50; not read here	inferred	none		
-0x528e50	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528e50	11			ui	orchestration		Stores 0xffffd200 in the tooltip's gold colour	verified	one	ui/tooltipcontent#the-colours	
 0x528e60	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528e70	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528e80	10			ui	orchestration		Runs its object file code that calls 0x528e90; not read here	inferred	none		
-0x528e90	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528e90	11			ui	orchestration		Stores 0xffffffff in the tooltip's white colour	verified	one	ui/tooltipcontent#the-colours	
 0x528ea0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528eb0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528ec0	10			ui	orchestration		Runs its object file code that calls 0x528ed0; not read here	inferred	none		
-0x528ed0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528ed0	11			ui	orchestration		Stores 0xffff2020 in the tooltip's red colour	verified	one	ui/tooltipcontent#the-colours	
 0x528ee0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528ef0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528f00	10			ui	orchestration		Runs its object file code that calls 0x528f10; not read here	inferred	none		
-0x528f10	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528f10	11			ui	orchestration		Stores 0xff808080 in the tooltip's gray colour	verified	one	ui/tooltipcontent#the-colours	
 0x528f20	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528f30	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528f40	10			ui	orchestration		Runs its object file code that calls 0x528f50; not read here	inferred	none		
-0x528f50	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528f50	11			ui	orchestration		Stores 0xff00ff00 in the tooltip's green colour	verified	one	ui/tooltipcontent#the-colours	
 0x528f60	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528f70	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528f80	10			ui	orchestration		Runs its object file code that calls 0x528f90; not read here	inferred	none		
@@ -13137,7 +13137,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x528fa0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528fb0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x528fc0	10			ui	orchestration		Runs its object file code that calls 0x528fd0; not read here	inferred	none		
-0x528fd0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x528fd0	11			ui	orchestration		Stores 0xffff0000 in the tooltip's pure red colour	verified	one	ui/tooltipcontent#the-colours	
 0x528fe0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528ff0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529000	10			ui	orchestration		Runs its object file code that calls 0x529010; not read here	inferred	none		
@@ -13145,7 +13145,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529020	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529030	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529040	10			ui	orchestration		Runs its object file code that calls 0x529050; not read here	inferred	none		
-0x529050	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529050	11			ui	orchestration		Stores 0xffffff97 in the tooltip's cream colour	verified	one	ui/tooltipcontent#the-colours	
 0x529060	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529070	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529080	10			ui	orchestration		Runs its object file code that calls 0x529090; not read here	inferred	none		
@@ -13165,7 +13165,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529160	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529170	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529180	10			ui	orchestration		Runs its object file code that calls 0x529190; not read here	inferred	none		
-0x529190	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529190	11			ui	orchestration		Stores 0xffff2020 in the tooltip's locked red colour	verified	one	ui/tooltipcontent#the-colours	
 0x5291a0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5291b0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5291c0	10			ui	orchestration		Runs its object file code that calls 0x5291d0; not read here	inferred	none		
@@ -13188,8 +13188,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529fe0	2613			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, GPartyInfo::GetRemoteStats and 26 more; not read here	inferred	none		
 0x52aa20	747			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, 0x77f410 and 10 more; not read here	inferred	none		
 0x52ad10	88			ui	primitive		Runs Tooltip.cpp code that calls 0x52aa20, 0x530640; not read here	inferred	none		
-0x52ad70	26			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
-0x52ad90	26			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
+0x52ad70	26	QualityColorPointer		ui	primitive	uint32_t * __cdecl (uint32_t quality)	Returns the quality colour pointer, with the index clamped to 6	verified	one	ui/tooltipcontent#the-colours	
+0x52ad90	26	QualityColorEscape		ui	primitive	const char * __cdecl (uint32_t quality)	Returns the inline colour escape string of a quality	verified	one	ui/tooltipcontent#the-colours	
 0x52adb0	80			ui	orchestration		Formats an item link with its quality colour	inferred	none	objectlayer/quests#quest-completion	
 0x52ae00	238			ui	primitive		Runs Tooltip.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, 0x5d8bc0, 0x52adb0; not read here	inferred	none		
 0x52aef0	230			ui	orchestration		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, DBCache::NameCache::GetRecord and 3 more; not read here	inferred	none		
@@ -13204,19 +13204,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x52f820	83			ui	primitive		Runs Tooltip.cpp code that calls 0x52e610, 0x530640; not read here	inferred	none		
 0x52f880	247			ui	orchestration		Runs Tooltip.cpp code that calls 0x530050, 0x530380, 0x5075f0 and 1 more; not read here	inferred	none		
 0x52f980	203			ui	primitive		Runs Tooltip.cpp code that calls floor; not read here	inferred	none		
-0x52fa50	375			ui	primitive		Runs Tooltip.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
+0x52fa50	375	FormatDuration		ui	primitive	char * __thiscall (uint32_t ms, const char *prefix, const char *extra, uint32_t round_up)	Formats a duration in milliseconds as days, hours, minutes or seconds through a global string	verified	one	ui/tooltipcontent#durations	
 0x52fbd0	350			ui	primitive		Runs Tooltip.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
 0x52fd30	264			ui	primitive		Runs Tooltip.cpp code that calls GetUnitCreatureType, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
 0x52fe90	300			ui	orchestration		Anchors a tooltip to its owner by its mode	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
 0x52ffe0	97			ui	orchestration		Sets a tooltip's owner, mode and offsets and anchors it	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
-0x530050	543			ui	primitive		Runs Tooltip.cpp code that calls ClntObjMgrClearObjectMirrorHandler, GetScaledScreenAspect and 5 more; not read here	inferred	none		
+0x530050	543	GameTooltipClear		ui	orchestration	void __thiscall ()	Hides the status bar and every line, empties their texts and runs the cleared script	verified	one	ui/tooltipcontent#the-line-arrays	
 0x530270	271			ui	orchestration		Adds a line with a left and a right text while a slot is free and a text is nonempty	verified	one	ui/tooltip#lines	
-0x530380	34			ui	orchestration		Runs Tooltip.cpp code that calls 0x530270; not read here	inferred	none		
-0x5303b0	27			ui	orchestration		Adds a line with a left text	verified	one	ui/tooltip#lines	
+0x530380	34	GameTooltipAddGoldDoubleLine		ui	orchestration	void __thiscall (const char *left, const char *right, uint32_t wrap)	Adds a double line with both texts in gold	verified	one	ui/tooltipcontent#the-line-arrays	
+0x5303b0	27			ui	orchestration	void __thiscall (const char *text, uint32_t *colour, uint32_t wrap)	Adds a single left line in a given colour	verified	one	ui/tooltipcontent#the-line-arrays	
 0x5303d0	474			ui	unreached		Runs Tooltip.cpp code that calls GetScaledScreenAspect, MultiplyByScreenScaleX and 4 more; not read here	inferred	none		
 0x5305b0	113			ui	orchestration		Runs Tooltip.cpp code that calls SStrPrintf, 0x771d80, 0x530640; not read here	inferred	none		
 0x530630	16			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
-0x530640	1054			ui	primitive		Runs Tooltip.cpp code that calls GetScaledScreenAspect, MultiplyByScreenScaleX, 0x772890 and 6 more; not read here	inferred	none		
+0x530640	1054	GameTooltipSize		ui	primitive	void __thiscall ()	Sizes the plate from its lines, padding and wrap limit, then re-anchors it	verified	one	ui/tooltipcontent#sizing-the-tooltip	
 0x530a60	24	CGTooltip::HideEffective		ui	orchestration	void __thiscall ()	Gives the tooltip no owner, then runs the base effective hide	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
 0x530a80	82	CGTooltip::ShowEffective		ui	orchestration	void __thiscall ()	Shows the tooltip with an owner and a line, else hides it	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
 0x530ae0	56			ui	orchestration		Hides a cursor-anchored tooltip, or starts a 2-second fade	verified	one	ui/tooltip#fading-out	
