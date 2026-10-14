@@ -1,7 +1,8 @@
 # ui: Minimap, the widget
 
-The `Minimap` frame's Lua methods and what a click on it does. The map it draws, its blips and the
-zoom state live in `Minimap.cpp`, outside this system; this doc gives the call order into them.
+The `Minimap` frame's Lua methods, what a click on it does, the ping that follows, the zoom radius and the
+textures it loads. The blips, arrows and dots it draws are in `minimapblips`; the map tiles live in
+`Minimap.cpp`, outside this system.
 
 `CGMinimapFrame` (`MinimapFrame.cpp`, constructor `0x4edbc0`) is a frame with 10 methods of its own.
 
@@ -24,26 +25,117 @@ Test: none
 
 ## A click on the map
 
-`PingLocation(x, y)` turns a point given relative to the map's centre, in script units, into a
-world point: world X is the player's X plus `y` over the map's width times the zoom's radius, and
-world Y the player's Y minus `x` over the map's height times that radius. When a spell is waiting
-for a location, it casts there instead, at the ground found by a vertical trace from 100,000 down
-to −100,000, raised by 8. Otherwise, in a party or a raid, it sends message 0x1d5 with world X then
-world Y.
+`PingLocation(x, y)` turns a centre-relative point in script units into a world point. The first number
+is divided by the map's height and the second by its width, the reverse of the names: world X is the
+player's X plus `y` over the width times the zoom diameter, and world Y the player's Y minus `x` over the
+height times that. Without numbers it uses the player's position. A spell waiting for a location casts
+at the ground there (a trace from 100,000 to −100,000, raised by 8) and no ping is sent. Otherwise, in a
+party or raid it sends message 0x1d5 with X then Y, and in any case it applies the ping itself.
 
-Addresses: `0x4eeca0`, `0x4eecf3`, `0x4eedcc`, `0x4eedeb`, `0x4eedf7`, `0x4eee21`, `0x4eee31`, `0x4eee48`, `0x4eee67`, `0x4eee74`, `0x4eeeac`, `0x4eeeb3`, `0x4eeed6`, `0x4eeee9`, `0x4eef05`, `0x4eef15`, `0x4eef26`, `0x4eef31`, `0x4eef5b`, `0x4eef67`
+Addresses: `0x4eeca0`, `0x4eecf3`, `0x4eecf8`, `0x4eed0b`, `0x4eed1f`, `0x4eedcc`, `0x4eedeb`, `0x4eedf7`, `0x4eee21`, `0x4eee31`, `0x4eee48`, `0x4eee67`, `0x4eee74`, `0x4eeeac`, `0x4eeeb3`, `0x4eeed6`, `0x4eeee9`, `0x4eef05`, `0x4eef15`, `0x4eef26`, `0x4eef98`, `0x4eefb5`, `0x4eef31`, `0x4eef4f`, `0x4eef5b`, `0x4eef67`, `0x4eef72`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4eeca0` takes the radius from `0x6da9b0` (`0x4eecf3`), reads argument 2 and negates it
-(`0x4eedcc`, `0x4eedeb`) and argument 3 (`0x4eedf7`), converts both with `0x41ae60`, divides the
-second by the width (slot 0x1c, `0x4eee21`) and the first by the height (slot 0x20, `0x4eee31`),
-and adds the player's position (`0x4eee48`). With `0x6e48a0` and `0x6e6320` true (`0x4eee67`,
-`0x4eee74`) it traces from 100000.0 to −100000.0 (`0x4eeeac`, `0x4eeeb3`) with `0x672170`
-(`0x4eeed6`), adds 8.0 (`0x4eeee9`) and calls `0x6e60f0` (`0x4eef05`); else, with the
-party word 0xbc6f48 or 0xb713e0 set (`0x4eef15`, `0x4eef26`), it builds 0x1d5 (`0x4eef31`) and puts
-the two floats (`0x4eef5b`, `0x4eef67`).
+`0x4eecf3` takes the radius from `0x6da9b0` and `0x4eecf8` doubles it. If the active player object is
+missing nothing happens (`0x4eecdf`). Arguments 2 and 3 are read only when both are numbers (`0x4eed0b`,
+`0x4eed1f`); the offsets start at 0.0. The first is converted with `0x41ae60` and negated (`0x4eedeb`), the
+second is not (`0x4eedf7`); slot 0x1c, `GetWidth`, divides the second (`0x4eee21`) and slot 0x20,
+`GetHeight`, the first (`0x4eee31`); each is multiplied by the diameter and the player's position added
+(`0x4eee48`). With `0x6e48a0` and `0x6e6320` true (`0x4eee67`, `0x4eee74`) it traces from 100000.0 to
+−100000.0 (`0x4eeeac`, `0x4eeeb3`) with `0x672170` (`0x4eeed6`), adds 8.0 (`0x4eeee9`) and calls
+`0x6e60f0` (`0x4eef05`). Else with the party word `0xbc6f48` or the raid count `0xb713e0` set
+(`0x4eef15`, `0x4eef26`) it builds 0x1d5 (`0x4eef31`) with the two floats (`0x4eef5b`, `0x4eef67`) and
+sends it (`0x4eef72`). `0x4eef98` then calls `0x4ee330` with the player's GUID (`0x4eefb5`).
+
+## The ping
+
+One ping is kept, as a world point in two floats. The same routine applies a ping you click and one a
+party member sends, so the two are indistinguishable. It does nothing without the active player object.
+Otherwise it stores the point at once, resolves the pinger's unit token (`player`, `party` and the member's
+1-based number, or `raid` and the number; a GUID that matches none leaves `player`) and signals the event
+`MINIMAP_PING` with the token and two numbers: `−dy·k` and `dx·k`, where `dx` and `dy` are the point minus the
+player's position and `k` is 1 over the zoom diameter. Nothing limits the rate and nothing checks that the
+point lies inside the disc.
+
+Addresses: `0x4ee330`, `0x4ee341`, `0x4ee35e`, `0x4ee366`, `0x4ee373`, `0x4ee3b4`, `0x4ee3c2`, `0x4ee3f2`, `0x4ee412`, `0x4ee41b`, `0x4ee437`, `0x4ee456`, `0x4ee45b`, `0x4ee463`, `0x4ee473`, `0x4ee476`, `0x4ee48d`, `0x5e3573`, `0x5e38c0`, `0x5e4185`, `0x5e41bd`, `0x703f50`, `0x51b3ab`, `0xbc787c`, `0xbc7880`, `0x4e86d0`, `0x491920`, `0x491940`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4ee330(guid, point)` is `__fastcall`. The two stores (`0x4ee366`, `0x4ee373`) come before the token. The
+party scan counts with `0x4e86d0` and reads GUIDs with `0x491920` (`0x4ee3c2`), formatting `party%d`
+(`0x4ee412`); the raid scan reads the count at `0xb713e0` and uses `0x491940` and `raid%d`
+(`0x4ee41b`). `0x4ee437` calls slot 5 for the position. The event is 0x165, the entry the table write at
+`0x51b3ab` names `MINIMAP_PING`, with the format `%s%f%f` through `0x703f50` (`0x4ee48d`). The first number
+is rounded to a float (`0x4ee473`) before it is negated; the second stays a double (`0x4ee476`). The
+inbound handler for opcode 0x1d5 is registered at `0x5e3573` and reads the sender GUID then two floats
+(`0x5e4185`) before calling `0x4ee330` (`0x5e41bd`).
+
+## Reading the ping
+
+`GetPingPosition()` returns two numbers that it computes anew from the stored world point every call: `−dy·k`
+then `dx·k`, from the player's current position and the current zoom. The marker therefore stays on its
+world spot as the player moves, and a zoom change rescales it. With no player object it returns two zeros.
+Before any ping the stored point is (0, 0), which the function does not detect. Nothing in the client clears
+the stored point; its lifetime is the interface's own timer.
+
+Addresses: `0x4eefd0`, `0x4eeff6`, `0x4ef021`, `0x4ef038`, `0x4ef044`, `0x4ef05b`, `0x4ef063`, `0x4ef07b`, `0x4ea1f0`, `0xbc787c`, `0xbc7880`, `0x6f3810`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4eeff6` skips the zero pushes when the player exists. It reads `0xbc787c` (`0x4ef021`) and `0xbc7880`
+(`0x4ef038`), subtracts the player's position, doubles the radius from `0x6da9b0` (`0x4ef044`) and returns 2
+values pushed with `0x6f3810`. The second value is stored as a float (`0x4ef05b`) and the first stays a
+double (`0x4ef063`); `0x4ee330` rounds the other way. The cells `0xbc787c` and `0xbc7880` have six
+references in the image: two initial zero stores in a static initializer (`0x4ea1f0`), the two stores in
+`0x4ee330` and the two loads here.
+
+## The zoom radius
+
+The radius of the disc in yards is `0.5 · 33.333332 · {14, 12, 10, 8, 6, 4}[z]` outdoors, 233.3 yards down
+to 66.7, and `{150, 120, 90, 60, 40, 25}[z]` indoors, where `z` is 0 to 5. A byte the minimap update sets
+chooses between the tables. The two indices are the options `minimapZoom` and
+`minimapInsideZoom`, default 3, read when the blips are rebuilt for a world. `SetZoom` stores an index
+of 5 or more as 5, which includes a negative one, in the active index and its option. The ping, the blips
+and the dots all use this radius.
+
+Addresses: `0x6da9b0`, `0x6da9b6`, `0x6da9bf`, `0x6da9cf`, `0x6da9e9`, `0x6da9ef`, `0x6dab70`, `0x6da8e0`, `0x6da8fd`, `0x6da902`, `0x6da980`, `0x6da9a0`, `0x6d9013`, `0x6d9016`, `0x6d901f`, `0x6d902a`, `0x48fc6c`, `0x48fc88`, `0x86f698`, `0x86f69c`, `0x8116d0`, `0x8116e8`, `0x80fee4`, `0xceaa60`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6da9b6` reads the indoor byte `0xceaa60`: set loads `[0x8116e8 + 4·index]` of the indoor index at `0x86f69c`
+(`0x6da9bf`); clear loads the integer from `0x8116d0` at the outdoor index `0x86f698` as a 64-bit value,
+multiplies by 0.5 and by 33.333332 (`0x6da9e9`, `0x6da9ef`). `0x6dab70` is the same body for the draw. The tables
+are 6 entries each. `0x6da9a0` returns 6, `0x6da980` the active index. `0x6da8e0` picks the cell by the
+indoor byte, caps the argument with an unsigned compare against 5 (`0x6da8fd`, `0x6da902`) and writes it with
+`CVar::Set`. The options are registered at `0x48fc6c` and `0x48fc88`; `0x6d9016` and `0x6d901f` copy their
+integers into the two indices, then the event 0xcf (`MINIMAP_UPDATE_ZOOM`) is signalled (`0x6d902a`).
+`0xceaa60` has one writer, in the update `0x6d93a0`, which sets bit 0 of the dirty mask `0xcea8bc` and
+signals the same event when it changes.
+
+## Minimap textures
+
+The minimap loads its mask (`Textures\MinimapMask`), landmark icons (`Interface\Minimap\POIIcons`) and dot
+icons (`Interface\Minimap\ObjectIcons`) every time the world is entered, and releases them when it is left.
+`SetMaskTexture`, `SetIconTexture` and `SetBlipTexture` replace the three handles and release the old ones.
+The world entry loads before the interface is built, so a texture set by an add-on while it loads wins; one set
+later lasts to the next logout, and `ReloadUI` keeps it.
+
+Addresses: `0x4ed810`, `0x4ed874`, `0x4ed89d`, `0x4ed8c8`, `0x4edb70`, `0x4edb8a`, `0x4edb9f`, `0x4edbac`, `0x48f590`, `0x48f681`, `0x49118c`, `0x4ee5e9`, `0x4ee5af`, `0x4ee789`, `0x4ee929`, `0xbc7968`, `0xbc827c`, `0xbc822c`, `0x84c6e4`, `0x84c6c8`, `0x84c6a8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4ed810` has no guard flag: it loads the three names with `0x449d90` and stores the results at `0xbc7968`
+(`0x4ed874`), `0xbc827c` (`0x4ed89d`) and `0xbc822c` (`0x4ed8c8`), overwriting the old handles. Its caller
+runs at `0x48f590` in `CGGameUI::InitializeGame`, before the jump to the interface build `0x48fbf0`
+(`0x48f681`). `0x4edb70` releases each non-null handle through `0x41aed0` and zeroes it (`0x4edb8a`,
+`0x4edb9f`, `0x4edbac`), called from `ShutdownGame` (`0x49118c`). The three setters store at `0x4ee5e9`,
+`0x4ee789` and `0x4ee929` after releasing the old handle (`0x4ee5af`). The reload path does not reach either
+function.
 
 ## Lua methods
 

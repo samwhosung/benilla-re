@@ -402,8 +402,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80733c	const float	s_float3b338cfa		ui	Holds the float 0.002739726 (0x3b338cfa)	inferred	none	
 0x807520	const uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
 0x8076c0	const uint32_t			ui	Holds a dword that Script::GetQuestGreenRange reads; not read here	inferred	none	
+0x807a28	const float	s_arrowModelScale		ui	Holds 0.6, the model scale of the minimap's eight arrow frames	verified	one	ui/minimapblips#blip-sizes
 0x807a3c	const float	s_float3ba3d70a		unassigned	Holds the float 0.005 (0x3ba3d70a)	inferred	none	
 0x807a40	const float	s_float3eaaaaab		unassigned	Holds the float 0.33333334 (0x3eaaaaab)	inferred	none	
+0x807a44	const float	s_discSize		ui	Holds 0.11, the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
+0x807a48	const float	s_dotSize		ui	Holds 0.00625, the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0x807a4c	const float	s_float3c4ccccd		unassigned	Holds the float 0.0125 (0x3c4ccccd)	inferred	none	
 0x807e00	const char[5]	s_textNone		ui	Holds the string "none"	inferred	none	
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
@@ -1160,6 +1163,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
 0x84c538	uint32_t[20]	s_minimapMethods		ui	Holds the 10 pairs of a name and a function of the Minimap methods	verified	one	ui/minimap#lua-methods
+0x84c69c	char[11]	s_textGreyColorStart		ui	Holds the string |cffb0b0b0 that opens a grey tooltip run	verified	one	ui/minimapblips#dots-cadence-and-tooltip
+0x84c6a8	char[31]	s_textInterfaceMinimapObjectIcons		ui	Holds the string Interface\Minimap\ObjectIcons	verified	one	ui/minimap#minimap-textures
+0x84c6c8	char[27]	s_textInterfaceMinimapPOIIcons		ui	Holds the string Interface\Minimap\POIIcons	verified	one	ui/minimap#minimap-textures
+0x84c6e4	char[20]	s_textTexturesMinimapMask		ui	Holds the string Textures\MinimapMask	verified	one	ui/minimap#minimap-textures
 0x84c768	char[44]	s_textInterfaceMinimapRotatingMinimapArrowMdx		ui	Holds the string "Interface\Minimap\Rotating-MinimapArrow.mdx"	inferred	none	
 0x84c7f0	char[10]	s_textUnnamed		ui	Holds the string "<unnamed>"	inferred	none	
 0x84c988	uint32_t			ui	Holds a dword that Script::GetMacroInfo, Script::GetMacroIconInfo read; not read here	inferred	none	
@@ -1867,6 +1874,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b3b0	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption
 0xb4b3f4	uint8_t			ui	Holds a byte that CGGameUI::Initialize, CGGameUI::Reload read and write; not read here	inferred	none	
 0xb4b404	uint32_t			ui	Holds a dword that Script::GetRealZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
@@ -1988,6 +1996,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb711ec	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb71290	void *	s_bindings		ui	Holds the key binding object of 0xdc bytes that 0x4b6050 builds, whose +0xd8 is 1 while a binding runs	verified	one	ui/protected#input-event-flags
 0xb712a8	uint8_t			unassigned	Holds a byte that Script::UninviteFromRaid, CGGameUI::ClosestObjectMatch read and write; not read here	inferred	none	
+0xb713e0	uint32_t	s_raidMemberCount		ui	Holds the number of raid members, 0 outside a raid	verified	one	ui/minimap#a-click-on-the-map
 0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
 0xb713f4	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
 0xb71438	uint32_t			ui	Holds a dword that Script::GetPetActionInfo, Script::GetPetActionCooldown read and write; not read here	inferred	none	
@@ -2053,13 +2062,23 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc6390	uint32_t			ui	Holds a dword that GetActionSlotUsable reads and writes; not read here	inferred	none	
 0xbc6980	uint32_t			ui	Holds a dword that GetActionSlotUsable, Script::GetActionText, GameTooltip::SetAction read and write; not read here	inferred	none	
 0xbc6e98	uint8_t			ui	Holds a byte that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
+0xbc6f48	uint32_t[8]	s_partyMemberGuids		ui	Holds the GUIDs of the four other party members	verified	one	ui/minimapblips#party-and-pet-arrows
 0xbc70a0	uint32_t			ui	Holds a dword that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
 0xbc75fc	uint32_t			unassigned	Holds a dword that Script::SendChatMessage, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
+0xbc762c	float	s_iconHalfSize		ui	Holds half the landmark icon size in layout units	verified	one	ui/minimapblips#blip-sizes
+0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7658	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
+0xbc7660	uint8_t[400]	s_partyBlips		ui	Holds the five party and pet arrow records of 0x50 bytes	verified	one	ui/minimapblips#party-and-pet-arrows
 0xbc787c	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7880	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
+0xbc7968	void *	s_minimapMaskTexture		ui	Points to the mask texture handle the minimap draws through	verified	one	ui/minimap#minimap-textures
+0xbc7970	float	s_minimapDiscSize		ui	Holds the frozen disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc81e4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbc822c	void *	s_minimapBlipTexture		ui	Points to the dot icon texture handle	verified	one	ui/minimap#minimap-textures
+0xbc8274	float	s_discHalfSize		ui	Holds half the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
+0xbc827c	void *	s_minimapIconTexture		ui	Points to the landmark icon texture handle	verified	one	ui/minimap#minimap-textures
 0xbc82a8	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
+0xbc82b0	uint8_t[80]	s_dotCells		ui	Holds the five dot cell records of 16 bytes: capacity, count, array and growth	verified	one	ui/minimapblips#object-dots
 0xbc8300	uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
 0xbdcbac	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbdcc54	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -2586,9 +2605,21 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcea610	float	s_shadowBoxDown		lighting	Holds 5/3, the blob shadow's downward stretch	inferred	none	lighting/shadows#blob-shadow
 0xcea614	float	s_shadowInfinity		lighting	Holds +inf; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcea620	float	s_shadowBias		lighting	Holds shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings
-0xcea7d4	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xcea848	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
+0xcea650	float[3]	s_arrowBearings		minimap	Holds the bearings of the kept direction-arrow candidates	verified	one	ui/minimapblips#placing-the-blips
+0xcea65c	uint32_t[3]	s_arrowCandidateIndices		minimap	Holds the candidate indices of the kept direction arrows	verified	one	ui/minimapblips#placing-the-blips
+0xcea670	void **	s_inRangeBlips		minimap	Points to the in-range landmark records the icon loop draws	verified	one	ui/minimapblips#placing-the-blips
+0xcea684	uint32_t *	s_arrowCandidateFlags		minimap	Points to the per-candidate flags that mark a direction-arrow candidate	verified	one	ui/minimapblips#placing-the-blips
+0xcea690	uint32_t *	s_inRangeFlags		minimap	Points to the per-candidate flags that mark an in-range landmark	verified	one	ui/minimapblips#placing-the-blips
+0xcea69c	void **	s_blipCandidates		minimap	Points to the candidate record pointers: matching AreaPOI rows then the three static records	verified	one	ui/minimapblips#blip-candidates
+0xcea760	uint8_t[116]	s_staticBlipQuest		minimap	Holds static blip record 0, the selected quest's marker	verified	one	ui/minimapblips#blip-candidates
+0xcea7d4	uint8_t[116]	s_staticBlipGossip		minimap	Holds static blip record 1, the gossip marker	verified	one	ui/minimapblips#blip-candidates
+0xcea848	uint8_t[116]	s_staticBlipCorpse		minimap	Holds static blip record 2, the corpse marker	verified	one	ui/minimapblips#blip-candidates
+0xcea8bc	uint32_t	s_blipDirtyMask		minimap	Holds the dirty bits of the minimap update; bit 0 is set when the zoom table changes	verified	one	ui/minimap#the-zoom-radius
 0xceaa60	uint8_t			unassigned	Holds a byte its object file's code reads and writes; not read here	inferred	none	
+0xceaaa4	uint32_t	s_gossipBlipExpiry		minimap	Holds the Unix time at which the gossip marker expires, or 0	verified	one	ui/minimapblips#setting-a-static-blip
+0xceaaa8	uint32_t	s_blipCandidateCount		minimap	Holds the number of candidate records	verified	one	ui/minimapblips#blip-candidates
+0xceaaac	uint32_t	s_arrowCount		minimap	Holds the number of kept direction arrows, at most 3	verified	one	ui/minimapblips#placing-the-blips
+0xceaab0	uint32_t	s_arrowListDirty		minimap	Holds 1 when the arrow list must be rebuilt	verified	one	ui/minimapblips#setting-a-static-blip
 0xceab2c	uint8_t	s_skillLineRecAllocatorDestroyed		spell	Holds bit 0 once the ability node pool is freed at exit; default 0, written by 0x6e0870	verified	one	spell/tables#ability-node-pool
 0xceab3c	uint32_t[10]	s_raceClassInfoTable		spell	Holds the race-class index; zero by default, built by 0x6dd2c0 and filled by 0x6dda50	verified	one	spell/tables#hash-table-layout
 0xceab80	uint32_t[10]	s_skillCostsInfoTable		spell	Holds the skill-cost index; zero by default, built by 0x6dd510 and filled by 0x6dda50	verified	one	spell/tables#hash-table-layout

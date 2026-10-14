@@ -6946,7 +6946,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491a60	1145			ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x491ee0	103			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, 0x491a60; not read here	inferred	none		
 0x491f50	187			ui	primitive		Asks the server for the corpse position through MSG_CORPSE_QUERY	inferred	none	objectlayer/playerfields#player-flag-changes	
-0x492010	124			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x5ea700 and 1 more; not read here	inferred	none		
+0x492010	124	CacheCorpseLocation		ui	orchestration	void __fastcall (uint32_t map, float *position, uint32_t extra)	Caches the corpse's map and position and sets the corpse blip on that map, else clears it	verified	one	ui/minimapblips#setting-a-static-blip	
 0x492090	49			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4920d0	24			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4920f0	58			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
@@ -8872,7 +8872,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c55b0	155			ui	primitive		Runs its object file code that calls 0x4c6450, 0x4c6410, SMemFree; not read here	inferred	none		
 0x4c5650	137			ui	primitive		Runs its object file code that calls 0x4c6410, 0x4c56e0; not read here	inferred	none		
 0x4c56e0	299			ui	primitive		Runs its object file code that calls 0x4368c0; not read here	inferred	none		
-0x4c5810	91			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4c5810	91	GetWorldStateValue		ui	orchestration	uint32_t __fastcall (uint32_t id)	Returns the value stored for a world state id, or 0	verified	one	ui/minimapblips#placing-the-blips	
 0x4c5870	449			ui	primitive		Runs its object file code that calls 0x4c6890, 0x4c6530, 0x4c6880 and 4 more; not read here	inferred	none		
 0x4c5a40	44	Script::GetNumWorldStateUI	idb	ui	orchestration		Implements the Lua function GetNumWorldStateUI	inferred	none		
 0x4c5a70	395	Script::GetWorldStateUIInfo	idb	ui	primitive		Implements the Lua function GetWorldStateUIInfo	inferred	none		
@@ -10599,20 +10599,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ea9f0	28			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4eaa10	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4eaa20	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4eaa30	86			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4eaa90	629			ui	primitive		Runs MinimapFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 7 more; not read here	inferred	none		
+0x4eaa30	86	ProjectBlip		ui	primitive	void __thiscall (float player_a, float player_b, float radius, float entity_a, float entity_b, float width, float scale)	Writes a blip's disc position from its offset to the player over the zoom radius, with no rotation	verified	one	ui/minimapblips#the-north-up-disc	
+0x4eaa90	629	ClassifyObjectDot		ui	primitive	uint32_t __fastcall (void *list, uint32_t guid_lo, uint32_t guid_hi)	Classifies an object into a dot cell, or skips it, and appends its dot	verified	one	ui/minimapblips#object-dots	
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ead90	113			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4eae10	229			ui	orchestration		Runs MinimapFrame.cpp code that calls GetTextureDeviceObject, 0x589e80, GxRsSet and 3 more; not read here	inferred	none		
 0x4eaf00	319			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eb910; not read here	inferred	none		
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
-0x4eb0c0	1983			ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnMouseMove, CLayoutFrame::GetRect and 5 more; not read here	inferred	none		
+0x4eb0c0	1983	MinimapHoverTooltip		ui	primitive		Builds and shows the tooltip of the elements under the cursor	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	
 0x4eb880	46			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnLeave; not read here	inferred	none		
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4eb910	639			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4ef370, 0x4ead90; not read here	inferred	none		
 0x4ebb90	97			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eaf00; not read here	inferred	none		
-0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none		
+0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	
 0x4ebe50	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ebe60	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ebe70	45			ui	orchestration		Runs MinimapFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
@@ -10623,13 +10623,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ec440	1006			ui	primitive		Runs MinimapFrame.cpp code that calls GetDeviceProjection, BuildOrthoMatrix and 14 more; not read here	inferred	none		
 0x4ec830	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ec840	257			ui	primitive		Runs MinimapFrame.cpp code that calls 0x58b060, 0x589d30, 0x58af60 and 4 more; not read here	inferred	none		
-0x4ec950	3755			ui	primitive		Runs MinimapFrame.cpp code that calls GetActiveCamera, ClntObjMgrObjectPtr and 46 more; not read here	inferred	none		
+0x4ec950	3755	MinimapFrameRender		ui	primitive		Draws the minimap each frame: map, landmark icons, arrows, dots and the player arrow	inferred	none	ui/minimapblips#the-rim-arrows	
 0x4ed800	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ed810	434			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4ef7a0, CGxTexFlags::CGxTexFlags, TextureCreate and 1 more; not read here	inferred	none		
+0x4ed810	434	LoadMinimapTextures		ui	host	void __cdecl ()	Loads the mask, landmark icon and dot icon textures and builds the icon lattice	verified	one	ui/minimap#minimap-textures	
 0x4ed9d0	164			ui	orchestration		Runs MinimapFrame.cpp code that calls 0x5ea700, 0x6d8e10, GxCapsGet and 2 more; not read here	inferred	none		
 0x4eda80	239			ui	primitive		Runs MinimapFrame.cpp code that calls 0x6d92c0, HandleClose, GxTexDestroy and 2 more; not read here	inferred	none		
-0x4edb70	68			ui	orchestration		Runs MinimapFrame.cpp code that calls HandleClose; not read here	inferred	none		
-0x4edbc0	1085	CGMinimapFrame::CGMinimapFrame	idb	ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent and 5 more; not read here	inferred	none		
+0x4edb70	68	ReleaseMinimapTextures		ui	host	void __cdecl ()	Releases the three texture handles and zeroes them	verified	one	ui/minimap#minimap-textures	
+0x4edbc0	1085	CGMinimapFrame::CGMinimapFrame	idb	ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent and 5 more; not read here	inferred	none	ui/minimapblips#blip-sizes	
 0x4ee000	45			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ee030	89			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4ee090	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -10639,7 +10639,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ee170	230			ui	primitive		Runs its object file code that calls CreateModelFromPath, SimpleModelGetScene and 3 more; not read here	inferred	none		
 0x4ee260	77			ui	orchestration		Runs its object file code that calls CM2Model::IsLoaded, 0x4ee100; not read here	inferred	none		
 0x4ee2b0	126			ui	orchestration		Runs its object file code that calls CSimpleFrame::PostLoadXML, 0x6f2cf0, 0x4ee170 and 1 more; not read here	inferred	none		
-0x4ee330	364			ui	primitive		Shows a minimap ping from a party member's GUID at a point	inferred	none	objectlayer/playermessages#notices	
+0x4ee330	364	MinimapApplyPing		ui	primitive	void __fastcall (void *guid, float *point)	Stores a world point as the ping and signals MINIMAP_PING with the pinger's token and the offset over the zoom diameter	verified	one	ui/minimap#the-ping	
 0x4ee4a0	411	Minimap::SetMaskTexture	idb	ui	primitive		Implements the Minimap method SetMaskTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
 0x4ee640	411	Minimap::SetIconTexture	idb	ui	primitive		Implements the Minimap method SetIconTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
 0x4ee7e0	411	Minimap::SetBlipTexture	idb	ui	primitive		Implements the Minimap method SetBlipTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
@@ -10649,7 +10649,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eec20	50	Minimap::GetZoom	idb	ui	orchestration		Implements the Minimap method GetZoom, its pair in the table 0x84c538	verified	one	ui/minimap#zoom	
 0x4eec60	63	Minimap::SetZoom	idb	ui	orchestration		Implements the Minimap method SetZoom, its pair in the table 0x84c538	verified	one	ui/minimap#zoom	
 0x4eeca0	805	Script::PingLocation		ui	primitive		Implements the Minimap method PingLocation, its pair in the table 0x84c538	verified	one	ui/minimap#a-click-on-the-map	
-0x4eefd0	181	Minimap::GetPingPosition		ui	primitive		Implements the Minimap method GetPingPosition, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
+0x4eefd0	181	Minimap::GetPingPosition		ui	primitive		Implements the Minimap method GetPingPosition, its pair in the table 0x84c538	verified	one	ui/minimap#reading-the-ping	
 0x4ef090	10			ui	orchestration		Runs its object file code that calls 0x4ef0a0; not read here	inferred	none		
 0x4ef0a0	190			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4ef160	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -28778,118 +28778,118 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d8420	46	ShutdownShadows		lighting	host	void __cdecl (void)	Releases the blob and ramp textures	inferred	none	lighting/shadows#shadow-textures	
 0x6d8450	212	OnShadowLodChanged		lighting	host		Stores shadowLOD 0 or 1 and at 1 refills the ramp textures	verified	one	lighting/shadows#shadow-settings	
 0x6d8530	146	OnShadowBiasChanged		lighting	orchestration		Stores shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings	
-0x6d85d0	10			unassigned			Runs its object file code that calls 0x6d85e0; not read here	inferred	none		
-0x6d85e0	22			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8600	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8610	14			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8620	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8630	19			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8650	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8660	19			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8680	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8690	25			unassigned			Runs its object file code not read here	inferred	none		
-0x6d86b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6d86c0	25			unassigned			Runs its object file code not read here	inferred	none		
-0x6d86e0	10			unassigned			Runs its object file code that calls 0x6d86f0; not read here	inferred	none		
-0x6d86f0	31			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8710	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8720	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8730	10			unassigned			Runs its object file code that calls 0x6d8740; not read here	inferred	none		
-0x6d8740	13			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8750	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8760	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8770	10			unassigned			Runs its object file code that calls 0x6d8780; not read here	inferred	none		
-0x6d8780	13			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8790	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d87a0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d87b0	10			unassigned			Runs its object file code that calls 0x6d87c0; not read here	inferred	none		
-0x6d87c0	161			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8870	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8880	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8890	10			unassigned			Runs its object file code that calls 0x6d88a0; not read here	inferred	none		
-0x6d88a0	161			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8950	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8960	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8970	10			unassigned			Runs its object file code that calls 0x6d8980; not read here	inferred	none		
-0x6d8980	61			unassigned			Runs its object file code not read here	inferred	none		
-0x6d89c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d89d0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6d89e0	10			unassigned			Runs its object file code that calls 0x6d89f0; not read here	inferred	none		
-0x6d89f0	32			unassigned			Runs its object file code that calls 0x573ac0; not read here	inferred	none		
-0x6d8a10	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8a20	32			unassigned			Runs its object file code that calls 0x573ad0; not read here	inferred	none		
-0x6d8a40	10			unassigned			Runs its object file code that calls 0x6d8a50; not read here	inferred	none		
-0x6d8a50	18			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8a70	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8a80	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8aa0	10			unassigned			Runs its object file code that calls 0x6d8ab0; not read here	inferred	none		
-0x6d8ab0	18			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8ad0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ae0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8b00	10			unassigned			Runs its object file code that calls 0x6d8b10; not read here	inferred	none		
-0x6d8b10	18			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8b30	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8b40	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8b60	10			unassigned			Runs its object file code that calls 0x6d8b70; not read here	inferred	none		
-0x6d8b70	23			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8b90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ba0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8bc0	10			unassigned			Runs its object file code that calls 0x6d8bd0; not read here	inferred	none		
-0x6d8bd0	190			unassigned			Runs its object file code not read here	inferred	none		
-0x6d8c90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ca0	359			unassigned			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db400 and 1 more; not read here	inferred	none		
-0x6d8e10	560			unassigned			Runs its object file code that calls 0x6db590, 0x6db280, 0x4084b0 and 3 more; not read here	inferred	none		
-0x6d9040	629			unassigned			Runs its object file code that calls SStrPrintf, 0x6485f0, SStrTokenize and 13 more; not read here	inferred	none		
-0x6d92c0	215			unassigned			Runs its object file code that calls 0x6db5d0; not read here	inferred	none		
-0x6d93a0	1770			unassigned			Runs its object file code that calls OsGetCachedUnixTime, 0x4a67a0 and 18 more; not read here	inferred	none		
-0x6d9a90	884			unassigned			Runs its object file code that calls 0x6da9b0, 0x4c5810, 0x6db310 and 1 more; not read here	inferred	none		
-0x6d9e10	31			unassigned			Runs its object file code not read here	inferred	none		
-0x6d9e30	152			unassigned			Runs its object file code not read here	inferred	none		
-0x6d9ed0	633			unassigned			Runs its object file code that calls 0x6da150, SStrPrintf, SStrHashHT and 8 more; not read here	inferred	none		
-0x6da150	48			unassigned			Runs its object file code not read here	inferred	none		
-0x6da180	430			unassigned			Runs its object file code that calls CWorld::GetEntityGroupBox, RotateMatrix; not read here	inferred	none		
-0x6da330	69			unassigned			Runs its object file code that calls CWorld::GetEntityGroupName, SStrLen, SStrCopy and 1 more; not read here	inferred	none		
-0x6da380	445			unassigned			Runs its object file code that calls 0x6d9a90, 0x6da540, 0x6da5e0 and 1 more; not read here	inferred	none		
-0x6da540	97			unassigned			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x6da5b0	44			unassigned			Runs its object file code not read here	inferred	none		
-0x6da5e0	453			unassigned			Runs its object file code that calls HandleClose, 0x6da7b0, SysMsgPrintf and 3 more; not read here	inferred	none		
-0x6da7b0	294			unassigned			Runs its object file code that calls SStrPrintf, SStrHashHT, SStrCmpI and 1 more; not read here	inferred	none		
-0x6da8e0	158			unassigned			Runs its object file code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
-0x6da980	20			unassigned			Runs its object file code not read here	inferred	none		
-0x6da9a0	6			unassigned			Runs its object file code not read here	inferred	none		
-0x6da9b0	73			unassigned			Runs its object file code not read here	inferred	none		
-0x6daa00	23			unassigned			Runs its object file code not read here	inferred	none		
-0x6daa20	327			unassigned			Runs its object file code that calls 0x6db6f0, 0x6db730, 0x6db750 and 1 more; not read here	inferred	none		
-0x6dab70	73			unassigned			Runs its object file code not read here	inferred	none		
-0x6dabc0	78			unassigned			Runs its object file code not read here	inferred	none		
-0x6dac10	155			unassigned			Runs its object file code that calls SStrCopy, OsGetCachedUnixTime, 0x4a67a0 and 1 more; not read here	inferred	none		
-0x6dacb0	28			unassigned			Runs its object file code that calls 0x6dac10; not read here	inferred	none		
-0x6dacd0	47			unassigned			Runs its object file code that calls FrameScript_GetText, 0x6dac10; not read here	inferred	none		
-0x6dad00	6			unassigned			Runs its object file code not read here	inferred	none		
-0x6dad10	699			minimap			Runs Minimap.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4e81a0 and 6 more; not read here	inferred	none		
-0x6dafd0	106			unassigned			Runs its object file code that calls SMemFree, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
-0x6db040	182			unassigned			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
-0x6db100	189			unassigned			Runs its object file code that calls 0x6db5d0, 0x6db400, SMemFree; not read here	inferred	none		
-0x6db1c0	190			unassigned			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db500 and 1 more; not read here	inferred	none		
-0x6db280	133			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db310	226			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db400	136			unassigned			Runs its object file code not read here	inferred	none		
-0x6db490	108			unassigned			Runs its object file code not read here	inferred	none		
-0x6db500	135			unassigned			Runs its object file code that calls 0x6db610, 0x6db5d0, SMemFree; not read here	inferred	none		
-0x6db590	56			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6db5d0	60			unassigned			Runs its object file code not read here	inferred	none		
-0x6db610	25			unassigned			Runs its object file code not read here	inferred	none		
-0x6db630	181			unassigned			Runs its object file code not read here	inferred	none		
-0x6db6f0	57			unassigned			Runs its object file code not read here	inferred	none		
-0x6db730	31			unassigned			Runs its object file code not read here	inferred	none		
-0x6db750	146			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db7f0	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6db820	483			unassigned			Runs its object file code that calls 0x6dba10, 0x6dba90, 0x6dba40 and 4 more; not read here	inferred	none		
-0x6dba10	33			unassigned			Runs its object file code not read here	inferred	none		
-0x6dba40	77			unassigned			Runs its object file code not read here	inferred	none		
-0x6dba90	12			unassigned			Runs its object file code not read here	inferred	none		
-0x6dbaa0	316			unassigned			Runs its object file code that calls 0x6dbbe0, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
-0x6dbbe0	264			unassigned			Runs its object file code that calls 0x6dba40, 0x6db5d0, SMemReAlloc and 3 more; not read here	inferred	none		
+0x6d85d0	10			minimap			Runs its object file code that calls 0x6d85e0; not read here	inferred	none		
+0x6d85e0	22			minimap			Runs its object file code not read here	inferred	none		
+0x6d8600	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8610	14			minimap			Runs its object file code not read here	inferred	none		
+0x6d8620	5			minimap			Runs its object file code not read here	inferred	none		
+0x6d8630	19			minimap			Runs its object file code not read here	inferred	none		
+0x6d8650	5			minimap			Runs its object file code not read here	inferred	none		
+0x6d8660	19			minimap			Runs its object file code not read here	inferred	none		
+0x6d8680	5			minimap			Runs its object file code not read here	inferred	none		
+0x6d8690	25			minimap			Runs its object file code not read here	inferred	none		
+0x6d86b0	5			minimap			Runs its object file code not read here	inferred	none		
+0x6d86c0	25			minimap			Runs its object file code not read here	inferred	none		
+0x6d86e0	10			minimap			Runs its object file code that calls 0x6d86f0; not read here	inferred	none		
+0x6d86f0	31			minimap			Runs its object file code not read here	inferred	none		
+0x6d8710	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8720	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d8730	10			minimap			Runs its object file code that calls 0x6d8740; not read here	inferred	none		
+0x6d8740	13			minimap			Runs its object file code not read here	inferred	none		
+0x6d8750	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8760	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d8770	10			minimap			Runs its object file code that calls 0x6d8780; not read here	inferred	none		
+0x6d8780	13			minimap			Runs its object file code not read here	inferred	none		
+0x6d8790	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d87a0	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d87b0	10			minimap			Runs its object file code that calls 0x6d87c0; not read here	inferred	none		
+0x6d87c0	161			minimap			Runs its object file code not read here	inferred	none		
+0x6d8870	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8880	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d8890	10			minimap			Runs its object file code that calls 0x6d88a0; not read here	inferred	none		
+0x6d88a0	161			minimap			Runs its object file code not read here	inferred	none		
+0x6d8950	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8960	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d8970	10			minimap			Runs its object file code that calls 0x6d8980; not read here	inferred	none		
+0x6d8980	61			minimap			Runs its object file code not read here	inferred	none		
+0x6d89c0	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d89d0	1			minimap			Runs its object file code not read here	inferred	none		
+0x6d89e0	10			minimap			Runs its object file code that calls 0x6d89f0; not read here	inferred	none		
+0x6d89f0	32			minimap			Runs its object file code that calls 0x573ac0; not read here	inferred	none		
+0x6d8a10	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8a20	32			minimap			Runs its object file code that calls 0x573ad0; not read here	inferred	none		
+0x6d8a40	10			minimap			Runs its object file code that calls 0x6d8a50; not read here	inferred	none		
+0x6d8a50	18			minimap			Runs its object file code not read here	inferred	none		
+0x6d8a70	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8a80	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6d8aa0	10			minimap			Runs its object file code that calls 0x6d8ab0; not read here	inferred	none		
+0x6d8ab0	18			minimap			Runs its object file code not read here	inferred	none		
+0x6d8ad0	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8ae0	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6d8b00	10			minimap			Runs its object file code that calls 0x6d8b10; not read here	inferred	none		
+0x6d8b10	18			minimap			Runs its object file code not read here	inferred	none		
+0x6d8b30	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8b40	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6d8b60	10			minimap			Runs its object file code that calls 0x6d8b70; not read here	inferred	none		
+0x6d8b70	23			minimap			Runs its object file code not read here	inferred	none		
+0x6d8b90	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8ba0	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6d8bc0	10			minimap			Runs its object file code that calls 0x6d8bd0; not read here	inferred	none		
+0x6d8bd0	190			minimap			Runs its object file code not read here	inferred	none		
+0x6d8c90	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x6d8ca0	359			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db400 and 1 more; not read here	inferred	none		
+0x6d8e10	560	BuildBlipCandidates		minimap	orchestration	void __fastcall (uint32_t continent)	Collects the AreaPOI rows of a continent and the three static records into the candidate array	verified	one	ui/minimapblips#blip-candidates	
+0x6d9040	629			minimap			Runs its object file code that calls SStrPrintf, 0x6485f0, SStrTokenize and 13 more; not read here	inferred	none		
+0x6d92c0	215			minimap			Runs its object file code that calls 0x6db5d0; not read here	inferred	none		
+0x6d93a0	1770	UpdateMinimap		minimap	primitive		Runs the minimap's update, which expires and clears the gossip marker	inferred	none	ui/minimapblips#clearing-the-gossip-marker	
+0x6d9a90	884	PlaceBlips		minimap	primitive	void __cdecl ()	Splits the candidates into in-range icons and at most 3 ranked direction arrows with bearings	verified	one	ui/minimapblips#placing-the-blips	
+0x6d9e10	31			minimap			Runs its object file code not read here	inferred	none		
+0x6d9e30	152			minimap			Runs its object file code not read here	inferred	none		
+0x6d9ed0	633			minimap			Runs its object file code that calls 0x6da150, SStrPrintf, SStrHashHT and 8 more; not read here	inferred	none		
+0x6da150	48			minimap			Runs its object file code not read here	inferred	none		
+0x6da180	430			minimap			Runs its object file code that calls CWorld::GetEntityGroupBox, RotateMatrix; not read here	inferred	none		
+0x6da330	69			minimap			Runs its object file code that calls CWorld::GetEntityGroupName, SStrLen, SStrCopy and 1 more; not read here	inferred	none		
+0x6da380	445			minimap			Runs its object file code that calls 0x6d9a90, 0x6da540, 0x6da5e0 and 1 more; not read here	inferred	none		
+0x6da540	97			minimap			Runs its object file code that calls __ftol; not read here	inferred	none		
+0x6da5b0	44			minimap			Runs its object file code not read here	inferred	none		
+0x6da5e0	453			minimap			Runs its object file code that calls HandleClose, 0x6da7b0, SysMsgPrintf and 3 more; not read here	inferred	none		
+0x6da7b0	294			minimap			Runs its object file code that calls SStrPrintf, SStrHashHT, SStrCmpI and 1 more; not read here	inferred	none		
+0x6da8e0	158	SetZoomIndex		minimap	primitive	void __fastcall (uint32_t index)	Stores a zoom index of at most 5 in the active cell and its option	verified	one	ui/minimap#the-zoom-radius	
+0x6da980	20	GetZoomIndex		minimap	orchestration	uint32_t __cdecl ()	Returns the active zoom index, indoor or outdoor	verified	one	ui/minimap#the-zoom-radius	
+0x6da9a0	6	GetZoomLevelCount		minimap	orchestration	uint32_t __cdecl ()	Returns 6, the number of zoom levels	verified	one	ui/minimap#the-zoom-radius	
+0x6da9b0	73	GetZoomRadius		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards for the active index and indoor state	verified	one	ui/minimap#the-zoom-radius	
+0x6daa00	23			minimap			Runs its object file code not read here	inferred	none		
+0x6daa20	327	BuildArrowList		minimap	orchestration	uint32_t __fastcall (void *list)	Rebuilds the arrow records when dirty, else only refreshes their bearings, and reports a rebuild	verified	one	ui/minimapblips#the-arrow-list	
+0x6dab70	73	GetZoomRadiusDraw		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards, the body the draw uses	verified	one	ui/minimap#the-zoom-radius	
+0x6dabc0	78			minimap			Runs its object file code not read here	inferred	none		
+0x6dac10	155	SetStaticBlip		minimap	orchestration	void __fastcall (uint32_t slot, uint32_t flags, float x, float y, uint32_t icon, int32_t rank, const char *name)	Fills a static blip record, starts the gossip marker's lifetime and places the blips	verified	one	ui/minimapblips#setting-a-static-blip	
+0x6dacb0	28	SetQuestBlip		minimap	orchestration	void __fastcall (int32_t rank, const char *name, float x, float y)	Sets static blip 0, the selected quest's marker, with icon 5 and no flags	verified	one	ui/minimapblips#setting-a-static-blip	
+0x6dacd0	47	SetCorpseBlip		minimap	orchestration	void __stdcall (float x, float y)	Sets static blip 2, the corpse marker, with icon 7, flag 2 and rank -1	verified	one	ui/minimapblips#setting-a-static-blip	
+0x6dad00	6			minimap			Runs its object file code not read here	inferred	none		
+0x6dad10	699	PlacePartyBlips		minimap	primitive	void __fastcall (void *records)	Fills the five party and pet records with an arrow or in-range dot flag and a bearing	verified	one	ui/minimapblips#party-and-pet-arrows	
+0x6dafd0	106			minimap			Runs its object file code that calls SMemFree, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
+0x6db040	182			minimap			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x6db100	189			minimap			Runs its object file code that calls 0x6db5d0, 0x6db400, SMemFree; not read here	inferred	none		
+0x6db1c0	190			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db500 and 1 more; not read here	inferred	none		
+0x6db280	133			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x6db310	226			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x6db400	136			minimap			Runs its object file code not read here	inferred	none		
+0x6db490	108			minimap			Runs its object file code not read here	inferred	none		
+0x6db500	135			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, SMemFree; not read here	inferred	none		
+0x6db590	56			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6db5d0	60			minimap			Runs its object file code not read here	inferred	none		
+0x6db610	25			minimap			Runs its object file code not read here	inferred	none		
+0x6db630	181			minimap			Runs its object file code not read here	inferred	none		
+0x6db6f0	57			minimap			Runs its object file code not read here	inferred	none		
+0x6db730	31			minimap			Runs its object file code not read here	inferred	none		
+0x6db750	146			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x6db7f0	41			minimap			Runs its object file code not read here	inferred	none		
+0x6db820	483			minimap			Runs its object file code that calls 0x6dba10, 0x6dba90, 0x6dba40 and 4 more; not read here	inferred	none		
+0x6dba10	33			minimap			Runs its object file code not read here	inferred	none		
+0x6dba40	77			minimap			Runs its object file code not read here	inferred	none		
+0x6dba90	12			minimap			Runs its object file code not read here	inferred	none		
+0x6dbaa0	316			minimap			Runs its object file code that calls 0x6dbbe0, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
+0x6dbbe0	264			minimap			Runs its object file code that calls 0x6dba40, 0x6db5d0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x6dbcf0	616			unassigned			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutFloat, CDataStore::PutCString; not read here	inferred	none		
 0x6dbf60	536			unassigned			Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetFloat, CDataStore::GetCString; not read here	inferred	none		
 0x6dc180	98			unassigned			Runs its object file code that calls CDataStore::PutGuid, CDataStore::PutCString, 0x4181f0; not read here	inferred	none		
