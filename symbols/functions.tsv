@@ -7113,9 +7113,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x497860	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x497870	145			ui	primitive		Runs its object file code not read here	inferred	none		
 0x497910	10			ui	orchestration		Runs its object file code that calls 0x497920; not read here	inferred	none		
-0x497920	34			ui	primitive		Runs its object file code not read here	inferred	none		
+0x497920	34	InitPendingTextEmotes		ui	primitive		Initialises the empty list of pending text emotes	verified	one	ui/chatemote#the-pending-list	
 0x497950	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x497960	145			ui	primitive		Runs its object file code not read here	inferred	none		
+0x497960	145	ClearPendingTextEmotes		ui	primitive		Unlinks every pending text emote node at exit	verified	one	ui/chatemote#the-pending-list	
 0x497a00	10			ui	orchestration		Runs its object file code that calls 0x497a10; not read here	inferred	none		
 0x497a10	23			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x497a30	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -7166,7 +7166,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49a870	1904	AddChatLine		ui	primitive		Shows one chat line: rewrites, filters and decorates it, fires its event, bubbles it and logs it	verified	one	ui/chatevents#the-chat-line-function	
 0x49b0b0	250	FireChatEvent		ui	orchestration		Fires the CHAT_MSG event of a type with the ten arguments of a line	verified	one	ui/chatevents#the-ten-event-arguments	
 0x49b1b0	66			ui	orchestration		Runs ChatFrame.cpp code that calls SErrSetLastError, 0x49b0b0, SLogWrite; not read here	inferred	none		
-0x49b200	761			ui	primitive		Runs ChatFrame.cpp code that calls SErrSetLastError, ClntObjMgrGetActivePlayer and 8 more; not read here	inferred	none		
+0x49b200	761	ComposeTextEmote		ui	orchestration	void __fastcall ComposeTextEmote(uint64_t *performer, int32_t textId, const char *targetName, uint32_t emoteNum)	Picks the template of a text emote and shows its sentence as an event line	verified	one	ui/chatemote#the-sentence-column	
 0x49b500	81			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49b560	837	RewriteInLanguage		ui	primitive		Rewrites each word the skill does not cover into a same-length word of the language, in the source's case	verified	one	ui/chatlanguage#when-a-line-is-rewritten	
 0x49b8b0	132	AppendCasedWord		ui	primitive		Appends a substitute to the output with each character's case taken from the source word	verified	one	ui/chatlanguage#stamping-the-case	
@@ -7187,13 +7187,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49c690	332	ClientChannelListHandler	idb	ui	primitive		Handles the channel list message: builds the member list text and shows it as channel list lines	inferred	none	ui/chatchannels#channel-list-message	
 0x49c7e0	766			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 6 more; not read here	inferred	none		
 0x49cae0	285	CGChat::QueueChatText	idb	ui	primitive		Queues a chat line with its fields for later display	verified	one	ui/chatevents#pending-lines	
-0x49cc00	182			ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc, SStrDupA; not read here	inferred	none		
+0x49cc00	182	QueuePendingTextEmote		ui	primitive	void __fastcall QueuePendingTextEmote(uint64_t *performer, int32_t textId, const char *targetName, int32_t held, uint32_t emoteNum)	Appends a text emote waiting for its performer's name to the pending list	verified	one	ui/chatemote#the-pending-list	
 0x49ccc0	1029			ui	primitive		Shows queued lines whose sender's name has arrived, re-queueing while the display latch is set	verified	one	ui/chatevents#pending-lines	
-0x49d0d0	349			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49b200, SMemFree and 1 more; not read here	inferred	none		
+0x49d0d0	349	TextEmoteNameArrived		ui	orchestration	void __fastcall TextEmoteNameArrived(void *unused, uint64_t *performer)	Composes or holds the queued text emotes of a performer whose name arrived	verified	one	ui/chatemote#the-pending-list	
 0x49d230	634			ui	primitive		Shows every queued chat line when the display latch clears	verified	one	ui/chatevents#the-display-latch	
 0x49d4b0	171	SendIgnoredResponse	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::PutUInt32, CDataStore::PutGuid, ClientServices::Send; not read here	inferred	none		
 0x49d560	1662	ClientChatHandler	idb	ui	primitive		Handles the chat message: reads the type, language, names, text and tag, then queues or shows the line	verified	one	ui/chatevents#the-chat-message	
-0x49dbe0	223	ClientTextEmoteHandler	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetGuid, CDataStore::GetInt32 and 6 more; not read here	inferred	none		
+0x49dbe0	223	ClientTextEmoteHandler	idb	ui	orchestration	int32_t ClientTextEmoteHandler(uint32_t opcode, CDataStore *msg)	Reads the text emote message and composes it, or queues it until the name is known	verified	one	ui/chatemote#the-message	
 0x49dcc0	368	HandleZoneUnderAttackPacket	idb	ui	primitive		Handles zone under attack: shows the area's attack text on the zone's defence channels	verified	one	ui/chatserver#zone-under-attack	
 0x49de30	329	HandleDefenseMessagePacket	idb	ui	primitive		Handles the defence message: shows the packet's text on the zone's defence channels	verified	one	ui/chatserver#defence-message	
 0x49df80	226	HandleServerMessagePacket	idb	ui	orchestration		Handles the server message: formats a ServerMessages row with the string and shows it as a system line	verified	one	ui/chatserver#server-message	

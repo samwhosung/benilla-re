@@ -2179,6 +2179,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4fddc	char **	s_deferredJoins		ui	Points at the deferred-join list of channel name strings	verified	one	ui/chatwindows#settings-file-lines
 0xb4fe00	uint32_t	s_joinedChannelCount		ui	Holds the number of joined-channel slots, each 0xa0 bytes	verified	one	ui/chatchannels#joined-channel-slots
 0xb4fe04	ChatChannel *	s_joinedChannels		ui	Points at the array of joined-channel slots	verified	one	ui/chatchannels#joined-channel-slots
+0xb4fe0c	uint32_t[3]	s_pendingTextEmotes		ui	Holds the list of text emotes waiting for a performer name	verified	one	ui/chatemote#the-pending-list
 0xb4fe50	ChatWindow[10]	s_chatWindows		ui	Holds the ten chat window records	verified	one	ui/chatwindows#window-records
 0xb50440	char[128]	s_guildRecruitmentShortcut		ui	Holds the guild recruitment channel's shortcut, written once by the name composer	verified	one	ui/channelverbs#guild-recruitment-cascade
 0xb504c0	char[128]	s_guildRecruitmentName		ui	Holds the guild recruitment channel's composed capital name, written once by the name composer	verified	one	ui/channelverbs#guild-recruitment-cascade
@@ -2569,6 +2570,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dd54	uint32_t	s_factionMaxId		dbc	Holds the highest Faction.dbc id	verified	one	ui/tooltipitemreq#the-reputation-line
 0xc0dd5c	uint8_t[20]	s_factionGroupStore		dbc	Holds the FactionGroup.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0dd78	uint32_t			unassigned	Holds a dword that Script::GetRestState, Script::GetXPExhaustion read and write; not read here	inferred	none	
+0xc0dd98	uint32_t[5]	s_emotesTextStore		dbc	Holds the EmotesText.dbc store: records, count, id map, maximum id and loaded flag	verified	one	ui/chatemote#the-sentence-column
+0xc0ddc0	uint32_t[5]	s_emotesTextDataStore		dbc	Holds the EmotesTextData.dbc store: records, count, id map, maximum id and loaded flag	verified	one	ui/chatemote#the-template-fallback
 0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
 0xc0dde8	uint32_t[5]	s_durabilityQualityStore		dbc	Holds the DurabilityQuality.dbc store	verified	one	objectlayer/items#repair-cost
 0xc0ddfc	uint32_t[5]	s_durabilityCostsStore		dbc	Holds the DurabilityCosts.dbc store	verified	one	objectlayer/items#repair-cost

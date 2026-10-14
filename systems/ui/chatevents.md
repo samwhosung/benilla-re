@@ -67,8 +67,9 @@ call is `0x49dbcb`. The addon test of the language is downstream of all of these
 ## The display latch
 
 `0x8435fc` holds 1 from start-up until the world-enter code has run, and again while the interface is
-torn down for a world change; with it set, chat lines and text emotes are queued and the two defence
-broadcasts of `chatserver` are queued. The world-enter code sets it to 0 and runs the queue.
+torn down for a world change; with it set, chat lines and the two defence broadcasts of `chatserver` are
+queued, and the world-enter code sets it to 0 and runs that queue. A text emote received under the latch is
+queued apart and never shown (`chatemote#the-pending-list`).
 
 Addresses: `0x8435fc`, `0x498a10`, `0x490a9e`, `0x4989c0`, `0x4989fd`, `0x498a03`, `0x490974`, `0x49d230`, `0x49ccc0`, `0x49ce3c`, `0x49d165`, `0x49d239`, `0x49dc7f`, `0x49577a`
 Confidence: verified
