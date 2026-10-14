@@ -261,6 +261,25 @@ epilogue (`0x4938fd`) without storing the selection or sending a message. Five f
 a shift of 25: `0x6066f0` (assist, `0x606706`), `0x6067f0` (interact, `0x606835`), `0x606980` (attack,
 `0x6069fa`), `0x60be60` and the plate gate `0x60f600` (`0x60f622`).
 
+## A refusal that arrives
+
+When the server sets bit 25 on a unit that is already the target, the target stays: its ring, frame and target of target
+remain, and the selection pair is not written. The mouseover goes on the next hover pass, the nameplate at the next update
+of the unit and the overhead name when it is next asked, so the unit stays selected while it cannot be re-selected,
+hovered, given a plate or named.
+
+Addresses: `0x6042ec`, `0x6044b0`, `0x5ff580`, `0x4828d0`, `0x482982`, `0x60f600`, `0x607ef9`, `0x60706a`, `0x6070a0`, `0x6070a8`, `0x492890`, `0x7cb869`, `0x7cb8bf`
+Confidence: verified
+Proof: one
+Test: none
+
+The only watch on `UNIT_FIELD_FLAGS` for units is `0x6042ec` (offset 0xa0, handler `0x6044b0`), which calls `0x5ff580`; that
+function holds no test of bit 25 and no call of the setter or the teardown. `0x60f600` has two callers, the unit update
+`0x607ef9` and the reaction refresh `0x60706a`, so it runs every tick. `0x6070a0` has one caller, `0x6c6ee2`. The plate's own
+enter and leave handlers publish the mouseover through `0x492890` (`0x7cb869`, `0x7cb8bf`) without the slot 21 test, so the
+plate gate is what keeps the tooltip away. The census of `shr r32,0x19` is 12 instructions: the five readers above and seven that are
+four MD5 constants and three reads of another record's flags; no byte test of `+0xa3` by 2 exists.
+
 ## Player-driven units
 
 `0x5fa550` says whether a unit acts under its own control: a player that no one has charmed, or a

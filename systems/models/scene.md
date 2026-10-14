@@ -319,25 +319,29 @@ digits 6 to 0. `0x70b040` returns the id unchanged unless `+0x148 & 0x18`, reads
 ## Ray hits
 
 `0x7089c0(p0, p1, &f, retry)` finds the nearest triangle of the hit-test instances on the segment
-within `f`, writes its fraction and returns the instance's user value, else 0; short
-input returns 0 as in `Segment collision`, and every call empties the hit list. Candidates are
+within `f`, writes its fraction and returns the instance's user value, else 0. Candidates are
 that entry's spheres placed by the world matrix, which an unanimated mode 3 instance without a
 parent rebuilds; other unanimated instances are skipped. Mode 3 tests the collision triangles.
 Modes 1 and 2 skin each visible submesh of view 0 on the CPU and test its triangles, skipping
 units with flag 8, alpha 0 and, for mode 2, blends other than 0. With nothing hit and
-`retry` set, a second pass covers the whole segment.
+`retry` set, a second pass covers the whole segment with fattened meshes, and a higher priority
+beats a nearer hit.
 
-Addresses: `0x7089c0`, `0x708bd9`, `0x708c11`, `0x708ff2`, `0x70902f`, `0x70903b`, `0x70905d`, `0x7090c2`, `0x709229`, `0x70998d`, `0x7089b0`, `0x713cb0`
+Addresses: `0x7089c0`, `0x708bd9`, `0x708c11`, `0x708ff2`, `0x70902f`, `0x70903b`, `0x70905d`, `0x7090c2`, `0x709229`, `0x70998d`, `0x7093bd`, `0x70942d`, `0x708fc3`, `0x70960c`, `0x7089b0`, `0x713cb0`
 Confidence: verified
 Proof: one
 Test: `models::aabb_corner_sum_difftest`, `models::alpha_scale_difftest`, `models::hit_ray_setup_difftest`, `models::hit_sphere_difftest`, `models::hit_sphere_paths_difftest`, `models::hit_tbest_init_difftest`, `models::hit_world_distance_difftest`, `models::mat_x_dir_difftest`, `models::scale_t_dot_difftest`, `models::skin_accum_difftest`, `models::skin_first_difftest`, `models::tri_predicate_difftest`, `models::tri_predicate_paths_difftest`, `models::tworld_recover_difftest`
 
-`0x708bd9` compares instance `+0x40` with scene `+0x10`; `0x708c11` builds `+0xfc` from `+0xbc`
+Short input returns 0 as in `Segment collision`, and every call empties the hit list. `0x708bd9` compares instance `+0x40` with scene `+0x10`; `0x708c11` builds `+0xfc` from `+0xbc`
 and scene `+0x9c`. The candidate loop stops at the first near distance not below the best on the
 first pass only (`0x708fa3`). `0x70902f` tests unit flag 8, `0x70903b` mode 2's blend word,
 `0x70905d` the visibility words `+0x9c`, else `+0x98`; `0x7090c2` skips alpha 0. `0x709229` scales
 each bone weight byte by 1/255 for a weighted sum of bone matrices. `0x70998d` reruns with the
-full length when `retry` is set. The inline triangle test was not transcribed.
+full length when `retry` is set. The pass counter `[ebp-0x48]` is 1 in the second pass: `0x7093bd`
+adds the vertex normal (`+0x14` to `+0x1c`), turned by the rotation rows of the blended matrix and
+unscaled, to the skinned position (`0x70942d` to `0x709442`); `0x708fc3` skips a candidate of lower
+priority than the best hit and takes a higher one, and `0x70960c` does the same per triangle, an equal
+priority needing the nearer hit. The inline triangle test was not transcribed.
 
 Of `0x7089c0`, `hit_ray_setup_difftest` runs `0x708a17`–`0x708ab6`, `hit_sphere_difftest`
 `0x708a1a`–`0x709929`, `aabb_corner_sum_difftest` `0x708c4f`–`0x708cf8`, `hit_sphere_paths_difftest`
