@@ -127,7 +127,7 @@ That the bit tested by `0x630a80` is the game object's transport flag is inferre
 `0x6309f0(guid, transport)`: when the active camera follows the object guid, it hands the camera
 the new transport GUID through `0x511da0`, which turns the camera by the old transport's facing and
 back by the new one's when they differ. `0x630bd0(arg, guid)`: when the active camera follows the
-object guid, it makes two calls into the world and object layers with arg in ecx, not read here.
+object guid, it reloads the world through `0x66fc80` and `0x615020` (`collision/teleport#forced-position-reload`).
 The active camera is `0x4818f0`'s return; the GUID it follows is its +0x88.
 
 Addresses: `0x6309f0`, `0x630bd0`, `0x4818f0`, `0x511da0`, `0x6309fe`, `0x630a18`, `0x630be1`

@@ -3,8 +3,8 @@
 The routines of the Tempest math library that test a ray, a point or a box against a box, a cone,
 a plane or a triangle. Vectors are three floats; a ray is an origin followed by a direction (`+0` and
 `+0xc`); a box is its minimum then its maximum (`+0` and `+0xc`). A routine that answers yes or no
-returns a byte. None of the routines here has a caller or a stored address (a relative-call scan and
-the census of stored addresses), so each is a routine of the library and not of the engine.
+returns a byte. No routine here has a stored address, and none has a caller that code reaches (a relative-call scan and
+the census of stored addresses): `0x6dc900` is called only from `0x6b99fa`, inside the unreached `0x6b9950`.
 
 Roots: none
 
@@ -91,7 +91,7 @@ Test: none
 `r` is stored at `0x6dc906` to `0x6dc922` as `edx − ecx`, `a` and `c` at `[ebp-8]` and `[ebp-4]` (`0x6dc93d`, `0x6dc95e`), `b` at
 `[ebp-0xc]`, `d` and `e` over the argument slots `[ebp+0xc]` and `[ebp+8]`, and `f` stays on `st0`. `0x6dc9d2 fabs` takes the
 determinant's magnitude. `0x6dc9fb fcomp [det]` and `0x6dca09 test ah,0x41; jp 0x6dcb59` send `S + T > det` away from the near side. The
-interior leg `0x6dcb0d` takes `1/det` and stores `s` as a float (`0x6dcb1b`) while `t` stays at 53 bits. Corner legs add `2d` or `2e` to `f` before `a` or `c`. Every leg ends at `0x6dcd73 fabs`. The function is not called.
+interior leg `0x6dcb0d` takes `1/det` and stores `s` as a float (`0x6dcb1b`) while `t` stays at 53 bits. Corner legs add `2d` or `2e` to `f` before `a` or `c`. Every leg ends at `0x6dcd73 fabs`. Its one caller, `0x6b99fa`, is in the unreached `0x6b9950`, so nothing reaches it.
 
 ## Point to triangle edges
 
@@ -145,10 +145,9 @@ overlap and a NaN does not separate. A separation returns 0 at once; passing all
 
 ## Ray and cone
 
-`0x7c3390(outT, outPoint)` intersects the ray in `ecx` (origin at `+0`, direction `D` at `+0xc`) with the cone in `edx`: apex `C` at `+0`, unit axis `U` at
-`+0x10`, cap length `H` at `+0x1c` and the cosine of the half angle `k` at `+0x20`. With `W = L + t·D` and `L = origin − C`, the surface is
+`0x7c3390(outT, outPoint)` intersects the ray in `ecx` (origin `+0`, direction `D` `+0xc`) with the cone in `edx`: apex `C` `+0`, unit axis `U` `+0x10`, cap length `H` `+0x1c`, `k` `+0x20` (half-angle cosine). With `W = L + t·D` and `L = origin − C`, the surface is
 `(W·U)² = k²·|W|²`, a quadratic `A·t² + 2B·t + Cc = 0` with `A = (D·U)² − k²|D|²`, `B = (D·U)(L·U) − k²(L·D)` and
-`Cc = (L·U)² − k²|L|²`. The hit point `P` must have `(P − C)·U` above 0 and, for a non-zero `H`, below `H`.
+`Cc = (L·U)² − k²|L|²`. The hit point `P` must have `(P − C)·U` above 0 and, for a non-zero `H`, below `H`, except in the degenerate leg, which returns 1 at the origin untested.
 
 Addresses: `0x7c3390`, `0x7c3444`, `0x7c3455`, `0x7c3477`, `0x7c3496`, `0x7c34ac`, `0x7c34e8`, `0x7c3505`, `0x7c3526`, `0x7c35b5`, `0x7c365d`, `0x7c3673`, `0x7c36e6`, `0x7c36f8`, `0x7c3737`, `0x7c3751`, `0x5f8cf0`, `0x621160`, `0x80e2e4`, `0x7ffa24`
 Confidence: verified
@@ -159,7 +158,7 @@ Test: none
 computes `t1 = (−B − √disc)/A` and `t2 = (√disc − A)/A`; the second subtracts `A`, not `B` (`0x7c3507 fsub [ebp-4]`). It reports `t1` when `t1 ≥ 0`
 else FLT_MAX, replaced by `t2` when `t2` is non-negative and smaller, and the point is `origin + t·D`. The single root reports `t = B/A` and the linear leg
 `t = 0.5·Cc/B` (`0x7ffa24`) for `|B| ≥ 1e-6`; both place the point at `origin − t·D`. With `|B|` below the bound the leg returns 0, or for `|Cc|` below it
-reports `t = 0` at the origin. `0x7c36e6` forms `(P − C)·U` and requires it above 0 and, for a non-zero `H`, below `H`.
+reports `t = 0` at the origin and returns 1 at `0x7c3751` without the `(P − C)·U` test. `0x7c36e6` forms `(P − C)·U` and requires it above 0 and, for a non-zero `H`, below `H`.
 The helpers `0x5f8cf0` and `0x621160` scale and add vectors.
 
 ## Point in a cone

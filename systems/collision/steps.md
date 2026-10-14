@@ -96,26 +96,35 @@ count. `0x636635` loads `fld [edi]; fsub [0x80e014]; fabs` and `0x63664a` bails 
 2^-20 or more. A caller that classifies the manifold instead of the record sees `n.z` = −0.4756366 on every
 step and refuses it against cos 50°.
 
+## Probe sweep order
+
+The step probe's reach does not depend on the frame's travel: `ebx = max(H·1.1917536, r + 1/720)`, with `H` from `0x617430` and `r` the mover's `+0xb0`; a tie or NaN takes `r + 1/720`.
+A face with `n.z` in [0, cos 50°] first runs the heading sweep, Phase A (`0x63622d`), along `(−n.x, −n.y)/|n_h|` for `ebx`. That heading is kept only when the sweep re-hits the same face with an
+exactly equal normal; a miss or another face restores the caller's heading, and any other `n.z` skips the sweep. The lift, Phase B (`0x6362cb`), rises by `H` and writes the achieved rise over the
+normal slot. The forward sweep, Phase C, runs along the kept heading for `ebx`.
+
+Addresses: `0x636100`, `0x636144`, `0x636147`, `0x63614f`, `0x636163`, `0x636168`, `0x63616e`, `0x636176`, `0x63618a`, `0x636190`, `0x636196`, `0x6361b2`, `0x6361ee`, `0x6361fb`, `0x63622d`, `0x636257`, `0x63627b`, `0x63627d`, `0x6362cb`, `0x6362dd`, `0x636311`, `0x636327`, `0x63633a`, `0x617430`, `0x80dfec`, `0x80e008`, `0x80dffc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x636147 fld [esi+0xb0]; fadd [0x80dfec]` stores `r + 1/720` at `[ebp-4]`; `0x636168 fmul [0x80e008]` forms `H·1.1917536` and `0x63616e fcomp [ebp-4]` with `test ah,0x41; jne 0x63618a` keeps the stored value for a tie or NaN.
+`0x636196 fcomp [0x80dffc]` with `jp 0x63628b` skips Phase A for `n.z` above cos 50° or NaN, and `0x6361b2 test ah,1; jne` for a negative one. The exact-equality tests `0x636257` to `0x63627b` are three
+`fcomp` with `test ah,0x44; jp 0x63627d`. `0x636327 push ebx` is the forward sweep's distance; the lift's `0x6362c4` sweep pushes `H`. The probe's by-value normal is its `[ebp+0xc]` to `[ebp+0x14]`.
+
 ## Step-off bound
 
-A fall after a ledge is elected by the reach `L`; a steep contact inside `L` is walked only when
-the step probe allows it. The probe lifts by up to H (the step-up pop's ceiling), sweeps
-`max(H·tan 50°, r + 1/720)` square into the face along `−n_h`, and down-sweeps by the lift plus
-0.01; a clear or walkable result allows the step. A kerb whose remaining drop is under H lands on
-its top, returns 2 and does not fall. A long steep slope leaves the sweep blocked; the lookahead
-then tests a free fall against the uphill heading, and a downhill drift refuses it. Which result a
-slope gives at a given pitch is not settled.
+A fall after a ledge is elected by the reach `L`; a steep contact inside `L` is walked only when the step probe allows it. The probe down-sweeps by the lift plus 0.01 after its forward
+sweep; a clear or walkable result allows the step. A kerb whose remaining drop is under H lands on its top, returns 2 and does not fall. A long steep slope leaves the sweep blocked; the
+lookahead then tests a free fall against the uphill heading, and a downhill drift refuses it. Which result a slope gives at a given pitch is not settled.
 
-Addresses: `0x636100`, `0x6361bb`, `0x63620c`, `0x63628d`, `0x636290`, `0x636311`, `0x6364f7`, `0x6364fd`, `0x63651f`, `0x636524`, `0x635f80`, `0x6360d4`, `0x80e008`, `0x8029d0`, `0x80e01c`
+Addresses: `0x636100`, `0x63628d`, `0x636290`, `0x6364f7`, `0x6364fd`, `0x63651f`, `0x636524`, `0x635f80`, `0x6360d4`, `0x8029d0`, `0x80e01c`
 Confidence: inferred
 Proof: none
 Test: none
 
-The probe's by-value normal is its `[ebp+0xc]` to `[ebp+0x14]`, and Phase B passes `&[ebp+0x14]` as
-the sweep's out slot (`0x63628d lea eax,[ebp+0x14]`), so the slot holds the lift when the down sweep runs
-(`0x63651f fld [ebp+0x14]; fadd 0.01`), plus each reproject rise added at `0x6364fa`. Phase A
-points the working heading `(−n.x, −n.y)/|n_h|`, the uphill side of an up-facing normal
-(`0x6361ee`, `0x6361fb`). The worked kerb and slope cases compose these branches and are not traced
+Phase B passes `&[ebp+0x14]` as the sweep's out slot (`0x63628d lea eax,[ebp+0x14]`), so the slot holds the lift when the down sweep runs
+(`0x63651f fld [ebp+0x14]; fadd 0.01`), plus each reproject rise added at `0x6364fa`. The worked kerb and slope cases compose these branches and are not traced
 against geometry.
 
 ## Walk position writes
@@ -150,13 +159,14 @@ settle clears it only after the reach is sized, unless a walkable hit of the slo
 and the frame ends where the down sweep first rests on geometry: back on the ground it left, on
 the obstacle's top, or in a fall.
 
-Addresses: `0x636dcd`, `0x636dd2`, `0x636dd7`, `0x636dda`, `0x636de0`, `0x636de9`, `0x636df7`, `0x636dfc`, `0x636e00`, `0x636944`, `0x636d90`, `0x636edf`, `0x636bbf`, `0x6368a3`
+Addresses: `0x632f3a`, `0x632f53`, `0x636dcd`, `0x636dd2`, `0x636dd7`, `0x636dda`, `0x636de0`, `0x636de9`, `0x636df7`, `0x636dfc`, `0x636e00`, `0x636944`, `0x636d90`, `0x636edf`, `0x636bbf`, `0x6368a3`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x636dcd` has one predecessor, the miss arm `0x636944`, so `d` is the full requested length of the
-last segment; the flags are read at `0x636dcd` and tested at `0x636dd2` and `0x636df7`. At 60 frames
+last segment, except that the sweep writes 0 for a distance below 1/720 (`0x632f3a` to `0x632f53`), so a last
+segment shorter than 1/720 gives a reach of exactly 1/36; the flags are read at `0x636dcd` and tested at `0x636dd2` and `0x636df7`. At 60 frames
 a second and 7 yards a second the reach without bits is 0.2435410 yards (`d` = 0.1166667). The
 frame's height is `entry z + rise − achieved down`, with `rise ≤ H`: a down sweep that finds
 nothing drops the whole reach and falls; one that finds the original ground leaves the net rise 0.

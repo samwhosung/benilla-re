@@ -1,11 +1,12 @@
 # cmath: intersections
 
-The intersection and distance routines of the Tempest math library in the geometry file, `0x7bf680`
+The intersection and distance routines of the Tempest math library in the object files of `0x7bf680`
 through `0x7c4800`. Boxes, cones and triangles against rays, points and boxes are in `cmath/solids`. Vectors
 are three floats and a ray is an origin followed by a direction (`+0` and `+0xc`). A routine returns a byte
 (0 or 1) and writes what it found through optional pointers. Eight of the routines here are called by live
 code (`0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `0x7c2c40`, `0x7c46d0`); the
-rest have no caller and no stored address (a relative-call scan and the census of stored addresses).
+rest have no stored address and no caller that code reaches (a relative-call scan and the census of stored addresses). Their callers are other routines of the same kind:
+`0x7c4150` is called from `0x7c3ebf` in the unreached `0x7c3e30`, `0x7c4510` from `0x7c442c` in the unreached `0x7c43d0`, and `0x7c42f0` from `0x68c17e` in the unreached `0x68c0f0`.
 
 Roots: `0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `0x7c2c40`, `0x7c46d0`
 
@@ -222,9 +223,9 @@ algebra of the parameters in `0x7c4510` is not traced.
 ## Rotation of an angle
 
 `0x7c42f0(angle)` writes the 2×2 rotation `[[cos, sin], [−sin, cos]]` of an angle to the four floats at `ecx`, each of cosine and sine rounded to a
-float and the negated sine an exact negation. It is not called.
+float and the negated sine an exact negation. Its one caller, `0x68c17e`, is in the unreached `0x68c0f0`, so nothing reaches it.
 
-Addresses: `0x7c42f0`, `0x7c430b`, `0x7c430d`, `0x7c430f`
+Addresses: `0x7c42f0`, `0x68c17e`, `0x68c0f0`, `0x7c430b`, `0x7c430d`, `0x7c430f`
 Confidence: verified
 Proof: one
 Test: none
@@ -234,16 +235,16 @@ output stores are the cosine, the sine, `fchs` of the sine and the cosine again.
 
 ## Static constants
 
-The geometry file keeps four sets of its own copies of 2π, 1/2π and +infinity, each stored by a start-up initializer, and nothing reads the copies in
-this stretch. `0x7c1860` stores π + π at `0xcf5c6c`, `0x7c1880` the reciprocal at `0xcf5c68` and `0x7c18b0` infinity at `0xcf5c70`; `0x7c42b0` and `0x7c42d0` store
-2π and 1/2π at `0xcf5c78` and `0xcf5c74`; `0x7c4350`, `0x7c4370`, `0x7c4390` and `0x7c43c0` store infinity, 2π, 1/2π and infinity at `0xcf5c94`,
-`0xcf5c9c`, `0xcf5c98` and `0xcf5ca0`. The fourth set, at `0xcf5ca8` and `0xcf5ca4`, is in `collision/overview#object-files`.
+The span `0x7bc090` to `0x7c4810` holds twelve object files. The C runtime's initializer run `0x82da20` to `0x82dab0` opens each with its +∞, followed by its 2π and 1/2π, at `0x7bc090`, `0x7be0c0`,
+`0x7bf6e0`, `0x7bf840`, `0x7bfa30`, `0x7bfb20`, `0x7c0170`, `0x7c13a0`, `0x7c1570`, `0x7c18a0`, `0x7c4340` and `0x7c43b0`. The first stores at `0xcf5c04`, and each next file's three
+constants follow from `0xcf5c10`, `0xcf5c1c`, `0xcf5c28`, `0xcf5c34`, `0xcf5c40`, `0xcf5c4c`, `0xcf5c58`, `0xcf5c64`, `0xcf5c70`, `0xcf5c94` and `0xcf5ca0`; the twelfth file's 2π and 1/2π
+are in `collision/overview#object-files`. Nothing else in the listing refers to any of the copies.
 
-Addresses: `0x7c1850`, `0x7c1860`, `0x7c1870`, `0x7c1880`, `0x7c18a0`, `0x7c18b0`, `0x7c42a0`, `0x7c42b0`, `0x7c42c0`, `0x7c42d0`, `0x7c4340`, `0x7c4350`, `0x7c4360`, `0x7c4370`, `0x7c4380`, `0x7c4390`, `0x7c43b0`, `0x7c43c0`, `0xcf5c68`, `0xcf5c6c`, `0xcf5c70`, `0xcf5c74`, `0xcf5c78`, `0xcf5c94`, `0xcf5c98`, `0xcf5c9c`, `0xcf5ca0`
+Addresses: `0x7bc090`, `0x7bc0a0`, `0x7bdf00`, `0x7bdf10`, `0x7bdf20`, `0x7bdf30`, `0x7be0c0`, `0x7be0d0`, `0x7bf630`, `0x7bf640`, `0x7bf650`, `0x7bf660`, `0x7bf6e0`, `0x7bf6f0`, `0x7bf760`, `0x7bf770`, `0x7bf780`, `0x7bf790`, `0x7bf840`, `0x7bf850`, `0x7bf980`, `0x7bf990`, `0x7bf9a0`, `0x7bf9b0`, `0x7bfa30`, `0x7bfa40`, `0x7bfa50`, `0x7bfa60`, `0x7bfa70`, `0x7bfa80`, `0x7bfb20`, `0x7bfb30`, `0x7c00a0`, `0x7c00b0`, `0x7c00c0`, `0x7c00d0`, `0x7c0170`, `0x7c0180`, `0x7c12d0`, `0x7c12e0`, `0x7c12f0`, `0x7c1300`, `0x7c13a0`, `0x7c13b0`, `0x7c1400`, `0x7c1410`, `0x7c1420`, `0x7c1430`, `0x7c1570`, `0x7c1580`, `0x7c1850`, `0x7c1860`, `0x7c1870`, `0x7c1880`, `0x7c18a0`, `0x7c18b0`, `0x7c42a0`, `0x7c42b0`, `0x7c42c0`, `0x7c42d0`, `0x7c4340`, `0x7c4350`, `0x7c4360`, `0x7c4370`, `0x7c4380`, `0x7c4390`, `0x7c43b0`, `0x7c43c0`, `0xcf5c04`, `0xcf5c08`, `0xcf5c0c`, `0xcf5c10`, `0xcf5c14`, `0xcf5c18`, `0xcf5c1c`, `0xcf5c20`, `0xcf5c24`, `0xcf5c28`, `0xcf5c2c`, `0xcf5c30`, `0xcf5c34`, `0xcf5c38`, `0xcf5c3c`, `0xcf5c40`, `0xcf5c44`, `0xcf5c48`, `0xcf5c4c`, `0xcf5c50`, `0xcf5c54`, `0xcf5c58`, `0xcf5c5c`, `0xcf5c60`, `0xcf5c64`, `0xcf5c68`, `0xcf5c6c`, `0xcf5c70`, `0xcf5c74`, `0xcf5c78`, `0xcf5c94`, `0xcf5c98`, `0xcf5c9c`, `0xcf5ca0`
 Confidence: verified
 Proof: one
 Test: none
 
-Each initializer is behind a five-byte jump (`0x7c1850`, `0x7c1870`, `0x7c18a0`, `0x7c42a0`, `0x7c42c0`, `0x7c4340`, `0x7c4360`, `0x7c4380`, `0x7c43b0`). The 2π stores
-are `fld [π]; fadd st,st; fstp` from a float π in the read-only data, and the reciprocals are `fld 1.0; fdiv` of the 2π copy; the infinity stores copy a float from the read-only data with `mov`.
-A search of the listing for each of the nine addresses finds only the store, and for the 2π copies the divide.
+Every run entry is a five-byte jump to a body ten bytes on. The +∞ bodies are `mov eax,[+∞]; mov [dest],eax`; the 2π bodies are `fld [π]; fadd st,st; fstp [dest]`, and the 1/2π bodies `fld 1.0; fdiv [2π]; fstp [dest]`.
+The slots before the run, `0x82da18` and `0x82da1c`, are the 2π and 1/2π of the file below it. The tenth file's run also holds `0x7c18c0`, the polygon axis initializer. The +∞ at `0x7c43c0` opens the twelfth file, not the
+eleventh, whose 2π and 1/2π are `0x7c4360` and `0x7c4380`. A raw search of the image for each of the 36 copies' addresses finds the same references as the listing.

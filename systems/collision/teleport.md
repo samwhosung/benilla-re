@@ -119,21 +119,17 @@ air follow only if the fall outlives the 500 ms deadline, which the echo itself 
 
 ## Forced position reload
 
-A forced position op that moves the mover more than 30 yards, when the mover is the unit the world
-view is anchored to, reloads the destination's terrain synchronously before the frame goes on. After the
-snap `0x617e90` calls `0x630bd0` when `d² > 900`, with the mover's GUID; `0x630bd0` compares it with
-the world view's GUID (`+0x88`, `+0x8c` of `0x4818f0`) and then calls `0x66fc80`, which recentres the
-streaming windows and runs `0x694920`: it clears the loaded areas, updates the map once with the
-synchronous-open flag `0x86a2d0` set and waits for every read, then `0x615020` re-places the type-1
-objects. No loading screen is raised. Four other ops reach
-`0x617e90` by the same node shape and share the reload.
+A forced position op that moves the mover more than 30 yards, when the mover is the unit the world view is anchored to, reloads the destination's terrain synchronously before the frame
+goes on. After the snap `0x617e90` calls `0x630bd0` when `d² > 900`, with the mover's GUID; `0x630bd0` compares it with the world view's GUID (`+0x88`, `+0x8c` of `0x4818f0`) and calls `0x66fc80`,
+which recentres the streaming windows and runs `0x694920`. That frees the map objects, footprints and texture caches, updates the map once through `0x698390` with the synchronous-open flag
+`0x86a2d0` set and waits for every read. `0x615020` then calls `0x613ef0(object, 1)` on every object. No loading screen is raised.
 
-Addresses: `0x617e90`, `0x617ec1`, `0x617ee5`, `0x617eeb`, `0x617ef1`, `0x617efe`, `0x617f00`, `0x617f14`, `0x617f92`, `0x617fa2`, `0x630bd0`, `0x630bd6`, `0x630bdb`, `0x630bf3`, `0x630bf8`, `0x66fc80`, `0x694920`, `0x69493d`, `0x694947`, `0x69494c`, `0x694951`, `0x86a2d0`, `0x615020`, `0x6184f8`, `0x6186a1`, `0x6186ee`, `0x61870c`, `0x80c730`
+Addresses: `0x617e90`, `0x617ec1`, `0x617ee5`, `0x617eeb`, `0x617ef1`, `0x617efe`, `0x617f00`, `0x617f14`, `0x617f92`, `0x617fa2`, `0x630bd0`, `0x630bd6`, `0x630bdb`, `0x630bf3`, `0x630bf8`, `0x66fc80`, `0x694920`, `0x69493d`, `0x694947`, `0x69494c`, `0x694951`, `0x86a2d0`, `0x615020`, `0x615030`, `0x613ef0`, `0x6a3160`, `0x699d50`, `0x449010`, `0x698390`, `0x6184f8`, `0x6186a1`, `0x6186ee`, `0x61870c`, `0x80c730`
 Confidence: verified
 Proof: one
 Test: `collision::facing_pos_gate_difftest`
 
-`0x80c730` is 30.0; `fmul` of it by itself gives 900 and `fcompp; test ah,5; jp 0x617f07` falls
+Four other ops reach `0x617e90` by the same node shape and share the reload. `0x80c730` is 30.0; `fmul` of it by itself gives 900 and `fcompp; test ah,5; jp 0x617f07` falls
 through to `mov ebx,1` only for `d² > 900`. `0x617f92 test ebx,ebx; je 0x617fa7` guards the call. The
 relative-call scan finds five callers of `0x617e90` (`0x6164ff`, `0x6184f8`, `0x6186a1`, `0x6186ee`,
 `0x61870c`) and one of `0x630bd0` (`0x617fa2`). `0x694920` sets `[0x86a2d0]` to 1 at `0x69493d`, calls `0x698390` and the wait-all loop, clears it at

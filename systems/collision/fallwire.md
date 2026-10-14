@@ -14,10 +14,10 @@ sites seed 0.0 everywhere but the jump and the packet apply. The walk resolver's
 (`0x6367df`), its settle (`0x637124`), the restored fall lookahead (`0x635ff7`) and the fall gate
 `0x7c61c0` (`0x7c61e4`, which serves the near-teleport arrival and the active-mover switch) push 0.
 The jump `0x7c6230` pushes -7.955547 (-9.096748 swimming). The packet apply `0x6179c0` pushes the
-fourth float of the message. The jump returns 0 without a fall while hovering, on a live spline, or
-with root or falling set.
+fourth float of the message. The jump returns 0 without a fall while hovering when its argument is nonzero (`0x7c6236`), on a live spline, or
+with root or falling set. The fall gate `0x7c61c0` has no hover test.
 
-Addresses: `0x7c61f0`, `0x7c61c0`, `0x7c61e4`, `0x7c6230`, `0x7c625c`, `0x7c627a`, `0x6367df`, `0x637124`, `0x635ff7`, `0x6179dd`, `0x6179c0`
+Addresses: `0x7c61f0`, `0x7c61c0`, `0x7c61e4`, `0x7c6230`, `0x7c625c`, `0x7c627a`, `0x7c6236`, `0x6367df`, `0x637124`, `0x635ff7`, `0x6179dd`, `0x6179c0`
 Confidence: verified
 Proof: one
 Test: none
@@ -29,18 +29,19 @@ test ah,0x30` (root 0x1000 or falling 0x2000), plus the hover and spline tests b
 
 ## Fall start silence
 
-A fall that no jump command started puts nothing on the wire at its start. The state-change
-broadcaster elects a send from `(flags ^ old) & 0xf` only: `0x61a99d test al,0xf; je 0x61a9eb` sends
-nothing when only the falling bit changed, since 0x2000 lies in `ah`. The only send of `0xbb` is the
-jump arm of the drain after a taken-off jump. The begin-fall command of the queue, tag 6, which would
-send a heartbeat `0xee`, is queued by `0x617ac0` for three callers only: two transport-leaving
-ticks (`0x5f5059`, `0x5f5e79`) and the apply of a received status (`0x61944f`). A walk-off and an
-arrival call `0x7c61f0` directly and never reach it.
+A fall that no jump command started puts nothing on the wire at its start. The state-change broadcaster elects a send from `(flags ^ old) & 0xf` and sends nothing when only the falling bit
+changed, since 0x2000 lies in `ah`. One leg, `0x61a954` to `0x61a996`, sends `0xee` whenever its fifth argument is set, for the active mover with no spline or a finished one; `0x634260`
+sets it when the transport GUID changed during the step (`0x63423d`). The only send of `0xbb` is the jump arm of the drain after a taken-off jump.
 
-Addresses: `0x61a99b`, `0x61a99d`, `0x61a99f`, `0x61a9eb`, `0x615ed1`, `0x615e17`, `0x615e19`, `0x615e2d`, `0x615e32`, `0x617ac0`, `0x617ad3`, `0x617ad5`, `0x617aed`, `0x5f5059`, `0x5f5e79`, `0x61944f`, `0x61a820`, `0x619f00`, `0x6164d1`, `0x619b11`, `0x619bd6`, `0x634260`
+Addresses: `0x61a954`, `0x61a996`, `0x63423d`, `0x61a99b`, `0x61a99d`, `0x61a99f`, `0x61a9eb`, `0x615ed1`, `0x615e17`, `0x615e19`, `0x615e2d`, `0x615e32`, `0x617ac0`, `0x617ad3`, `0x617ad5`, `0x617aed`, `0x5f5059`, `0x5f5e79`, `0x61944f`, `0x61a820`, `0x619f00`, `0x6164d1`, `0x619b11`, `0x619bd6`, `0x634260`
 Confidence: verified
 Proof: one
 Test: none
+
+`0x61a99d test al,0xf; je 0x61a9eb` is the nibble test. The begin-fall command of the queue, tag 6, which would
+send a heartbeat `0xee`, is queued by `0x617ac0` for three callers only: two transport-leaving
+ticks (`0x5f5059`, `0x5f5e79`) and the apply of a received status (`0x61944f`). A walk-off and an
+arrival call `0x7c61f0` directly and never reach it.
 
 Relative-call scans: `0x617ac0` has the three callers; `0x61a820` has four (`0x6164d1`, `0x619b11`,
 `0x619bd6`, `0x634260`). Tag 6 is the entry at `0x615e17` of the drain's table: `0x7c61c0`, then a
