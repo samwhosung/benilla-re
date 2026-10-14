@@ -73,6 +73,95 @@ Test: none
 the deferrals when `+0xd4` is set, loads the child frames, runs `+0x118` (`OnLoad`) and then
 `+0x130` when `+0xd4` is set and `+0x114` is still 0.
 
+## Walking a show or hide
+
+Neither walk copies a list. Each reads the next link of the current node after the call on it, so a
+handler that hides or unlinks a later sibling changes what is visited, and one that frees the
+current node breaks the walk. The visible flag is written before the walk, so a handler already
+sees the new state, a `Show` of a frame already visible answers 1 and runs nothing, and a `Hide` from
+a sibling's `OnShow` clears that later sibling's shown flag, which makes its own show refuse. The
+region walks reach no script. Called on the same frame mid-walk, the opposite verb runs its whole body.
+
+Addresses: `0x76ae10`, `0x76ae1d`, `0x76ae35`, `0x76ae43`, `0x76ae7b`, `0x76aea0`, `0x76aeac`, `0x76aeb1`, `0x76aed5`, `0x76aedb`, `0x76aef5`, `0x76ad50`, `0x76ad5b`, `0x76ad93`, `0x76adbf`, `0x76adc4`, `0x76adee`, `0x76adf4`, `0x76adfd`, `0x77fc60`, `0x77fcb0`, `0x77fcf9`, `0x76a860`, `0x76a910`, `0x768060`, `0x775810`, `0x7758b1`, `0x7758bb`
+Confidence: verified
+Proof: one
+Test: none
+
+The region loop is `call 0x77fcb0` then `mov ebx,[ebx+4]` (`0x76aeac`, `0x76aeb1`), and the child loop is the
+virtual call at `0x76aed5` then `mov ebx,[ebx+4]` (`0x76aedb`), with the head re-read from
+`[esi+0x1b8]` and `[esi+0x300]` and the terminator tested at each step. `0x77fcb0` registers a region
+when its shown byte `+0xc4` is set, its parent is visible and it is not yet registered (`0x77fcbd` to `0x77fcd5`), and
+`0x77fc60` removes it; each calls `0x768060`, `0x76a860` or `0x76a910` and nothing else. The gates return
+0 for a frame that is not shown (`0x76ae1d`) or whose parent is not visible (`0x76ae35`). A visible
+frame is the only one `0x76ae43` lets pass. The Lua `Hide` clears `+0xd0` (`0x7758b1`) before the virtual call.
+
+## When the handlers run
+
+`OnShow` and `OnHide` run to completion inside the `Show` or `Hide` call, at the transition of the
+effective visibility, descendants first in child order and the frame's own last; a call that changes
+nothing runs nothing. This holds for every frame class: 27 vtables hold the transitions, 23 verbatim
+and four through wrappers that release a model or refuse an ownerless tooltip, and no class queues
+a notify. The same holds for a `Show` or `Hide` that code issues inside the per-frame pass: the tooltip's
+fade-out hide, the minimap's hover tooltip and the chat bubbles. Nested calls stop at 200 levels
+of the Lua C stack, with the message `C stack overflow`, and at 225 with an error status.
+
+Addresses: `0x775750`, `0x7757f1`, `0x7757fb`, `0x76b260`, `0x76b290`, `0x76b27b`, `0x76b2ab`, `0x76a3b3`, `0x6f65a0`, `0x6f65ae`, `0x6f65bf`, `0x6f65c9`, `0x6f65d6`, `0x530a60`, `0x530a80`, `0x530b20`, `0x530be9`, `0x4eb0c0`, `0x4eb880`, `0x4b1180`, `0x4b1186`, `0x505ce0`, `0x505d00`, `0x46fa60`, `0x77a750`, `0x77a780`, `0x788440`, `0x7791e0`, `0x789c90`, `0x78bd60`
+Confidence: verified
+Proof: one
+Test: none
+
+A dword census of `0x76ad50` and `0x76ae10` finds 23 `.rdata` slots each, always adjacent, and the
+wrappers `0x505ce0`, `0x505d00`, `0x530a60` and `0x530a80` tail-jump into them (`0x505cf0`, `0x505d44`,
+`0x505d5e`, `0x530a73`, `0x530ab5`). The notify slots `0x76b260` and `0x76b290` fire only at
+`0x76b27b`, `0x76b2ab` and the post-load `0x76a3b3`. The overrides add work around the base: the edit box fires
+Lua `OnShow` before autofocus and `OnHide` before clearing focus, the message scroll frame fires it first, and
+the button, slider and colour select clear state before Lua runs. `0x6f65a0` increments the call depth and
+compares with `0xc8` (raising `C stack overflow`) and `0xe1` (the throw of status 5). The pass calls a hide
+at `0x530be9` (tooltip), `0x4eb0c0` and `0x4eb880` (minimap) and `0x4b1186` (chat bubble).
+
+## A second show after load
+
+A frame that its own `OnLoad` or a child's makes visible after the load flag is cleared gets an
+`OnShow` from that show and a second from the load's end, which fires whenever the frame is visible
+then; a hide during the load is dropped, while one after the flag is cleared fires `OnHide`. A
+scroll frame builds its scroll child inside its own load, so script runs while the scroll frame's
+flag is still set and its own show and hide fire nothing.
+
+Addresses: `0x76a2f0`, `0x76a2ff`, `0x76a36f`, `0x76a387`, `0x76a38c`, `0x76a396`, `0x76a3a6`, `0x76a3b3`, `0x769770`, `0x7697c2`, `0x786bc0`, `0x786bf4`, `0x6ee280`, `0x6ee4d6`, `0x6ee4ea`
+Confidence: verified
+Proof: one
+Test: none
+
+`+0x114` has three writers: the constructor, `0x7697c2` (1) and `0x76a2ff` (0); `0x6ee280` runs the
+pre-load, the load and the post-load in sequence. After clearing, `0x76a2f0` builds the children
+(`0x76a36f`), fires `OnLoad` (`0x76a387`) and then `OnShow` when `+0xd4` (`0x76a38c`), the slot
+(`0x76a396`) and a clear `+0x114` (`0x76a3a6`) hold; nothing reads `+0x138` there. `0x786bc0` loads the
+base then builds the `ScrollChild` through `0x6ee280` (`0x786bf4`).
+
+## Reparenting by script
+
+`SetParent` takes nil, a frame name or a frame table. Nil leaves the frame with no parent, a string or
+number names a global frame (no `$parent` expansion), a table must hold a frame, and a missing
+argument raises `Couldn't find region named`. A parent that is the frame or one of its descendants
+raises `Would create a loop parenting to %s`. The change is slot 0x14, which no class overrides, so it
+is `0x76ab10`: the same parent does nothing; otherwise a visible frame is hidden before and shown after,
+and the frame takes the new parent's stratum, level plus one and scale, or 3, 0 and 1.0 for nil.
+The frame's existing children keep their levels.
+
+Addresses: `0x7a1550`, `0x7a15e5`, `0x7a15ee`, `0x7a1606`, `0x7a1637`, `0x7a167c`, `0x7a177f`, `0x7a1781`, `0x7a1785`, `0x7a1794`, `0x7a17dc`, `0x76ab10`, `0x76ab20`, `0x76ab65`, `0x76aba3`, `0x76a470`, `0x76a4f0`, `0x76a554`, `0x76c760`, `0x774560`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7a1550` tests the type of argument 2: 0 calls `[vtable+0x14](0)` (`0x7a15ee`); string or number calls
+`0x76c760` with the Frame id `[0xcf0c10]` (`0x7a1637`); a table reads element 0 with `lua_rawgeti`
+and checks the id (`0x7a16ea`). The loop guard walks the candidate's `+0x9c` chain against the
+frame (`0x7a1781` to `0x7a178d`) and raises (`0x7a17dc`) rather than returning. A census of the dword `0x76ab10` in the
+image finds it at offset 0x14 of 27 frame-family vtables, each stored by a constructor. `0x76ab20` returns for an
+unchanged parent; `0x76a470` returns for an unchanged stratum and otherwise recurses into every child with the new value; `0x76a4f0`
+is called with propagate 0 (`0x76ab65`, `0x76aba3`), so `0x76a554` skips the children. A child created at level 1
+under a parent that moved to level 5 stays at 1, below its parent.
+
 ## Alpha
 
 A frame's alpha is a byte at `+0xc8`, 255 at construction. Setting it stores the byte and, when

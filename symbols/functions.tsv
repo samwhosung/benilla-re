@@ -33883,8 +33883,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77faa0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fab0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fac0	405			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0 and 1 more; not read here	inferred	none		
-0x77fc60	70			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetDeferResize, CSimpleFrame::RemoveRegionFromLayer; not read here	inferred	none		
-0x77fcb0	90			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetDeferResize, CSimpleFrame::AddRegionToLayer; not read here	inferred	none		
+0x77fc60	70	CScriptRegion::Unregister		ui	orchestration		Takes a registered region out of its parent's draw layer list and defers its layout	verified	one	ui/visibility#walking-a-show-or-hide	
+0x77fcb0	90	CScriptRegion::Register		ui	orchestration		Links a shown, unregistered region into its visible parent's draw layer list	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fd10	218			ui	primitive		Runs its object file code that calls CLayoutFrame::SetDeferResize, 0x77fc60 and 2 more; not read here	inferred	none		
 0x77fdf0	29			ui	orchestration		Runs its object file code that calls CSimpleFrame::NotifyLayerChanged; not read here	inferred	none		
 0x77fe10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34826,7 +34826,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a1290	256	Region::IsObjectType	idb	ui	orchestration		Implements the Region method IsObjectType, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a1390	205	Region::GetName	idb	ui	orchestration		Implements the Region method GetName, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
 0x7a1460	225	Region::GetParent	idb	ui	orchestration		Implements the Region method GetParent, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
-0x7a1550	669	Region::SetParent	idb	ui	orchestration		Implements the Region method SetParent, its pair in the table 0x87c9b8	inferred	none	ui/methods#region-parent-and-anchor-methods	
+0x7a1550	669	Region::SetParent	idb	ui	orchestration		Implements the Region method SetParent: nil, a frame name or a frame table, refusing a loop, through slot 0x14	verified	one	ui/visibility#reparenting-by-script	
 0x7a17f0	5	RegionMethodsInitInfinityThunk		ui	orchestration		Jumps to 0x7a1800; a static initializer	verified	one	ui/README#static-initializers	
 0x7a1800	11	RegionMethodsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
 0x7a1810	364	Region::GetCenter	idb	ui	orchestration		Implements the Region method GetCenter, its pair in the table 0x87c9b8	inferred	none	ui/methods#coordinates-the-methods-convert	

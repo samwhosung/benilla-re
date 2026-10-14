@@ -121,6 +121,46 @@ right`. `0x76a3c0(0x10, found)` stores the bit (`0x7651a3`). Then `test [edi+0xb
 Lua `Raise` path is `0x76a5b0`, `push 1; push ecx`; `Lower` is `0x76a5c0` to `0x7652a0`, `xor
 eax,eax; ret 4`.
 
+## What raises a frame
+
+A frame is raised by the script call `Raise`, by being shown when it is toplevel, by a mouse press
+on a frame (the pressed frame, else the hovered one), by the start of a move or size, and, without the
+overlap check, when the rectangle of the frame being moved or sized changes. Each acts on the
+frame's nearest toplevel self or ancestor. Setting the toplevel flag raises nothing, a raise never
+changes the stratum, and `Lower` does nothing.
+
+Addresses: `0x76a5b0`, `0x76a5c0`, `0x7652a0`, `0x775a50`, `0x775b0a`, `0x775b20`, `0x775b61`, `0x775b3d`, `0x76aeec`, `0x766392`, `0x7652d7`, `0x764a4c`, `0x775440`, `0x76a3c0`, `0x765010`, `0x7650f0`
+Confidence: verified
+Proof: one
+Test: none
+
+A census of `call` and `jmp` to `0x76a5b0` finds `0x7652d7` (the start of a move or size), `0x766392`
+(the mouse press, before `OnMouseDown` and the capture), `0x76aeec` (a show, after the children and
+before `OnShow`, when bit 1 of `+0xb4` is set) and the binder's `0x775b0a`; to `0x7650f0` itself,
+`0x764a4c` (without the check), `0x76a5b9` and the unreached `0x7650d6`. `0x76a5b0` is `push 1; push ecx; mov
+ecx,[ecx+0xa0]; call 0x7650f0`, `0x76a5c0` ends in `0x7652a0`, which is `xor eax,eax; ret 4`. `Frame:SetToplevel`
+passes mask 1 to `0x76a3c0` (`0x7754d8`), which only sets or clears bits. `0x7650f0` never stores `+0xc0`. Mouse release
+holds no raise.
+
+## Unknown strata names
+
+An XML `frameStrata` whose value is not one of the eight names is reported and skipped: the frame
+keeps the stratum it had, loads on, and the status gets a severity 1 message `Frame %s: Unknown
+frame strata: %s`. An empty or missing attribute is skipped silently. The script call
+`SetFrameStrata` with such a name raises `%s:SetFrameStrata(): Unknown frame strata: %s`, and with
+no string argument `Usage: %s:SetFrameStrata(level)`.
+
+Addresses: `0x6f17d0`, `0x769820`, `0x769945`, `0x76994c`, `0x769953`, `0x769957`, `0x769961`, `0x769971`, `0x769978`, `0x7699a4`, `0x7699ad`, `0x774360`, `0x7743f0`, `0x77440b`, `0x774412`, `0x77441a`, `0x77444f`, `0x774456`, `0x76a470`, `0x6f4940`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6f17d0` is called only from `0x769961` and `0x77440b` and stores the index only on a hit. In the
+loader a miss at `0x769968` pushes the frame's name (or `<unnamed>`), the value and the format
+and calls slot 3 of the status object `[ebp+0xc]` (`0x7699a4`) with severity 1, then falls into the
+`frameLevel` read at `0x7699ad`, where the hit path also lands; `0x76a470` is called only at
+`0x769971`. The binder reaches `luaL_error` (`0x6f4940`), which does not return (`luastate`).
+
 ## Level compaction
 
 Compacting a stratum walks its levels up from 0 to the in-use count. A level is occupied when its
