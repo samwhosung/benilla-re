@@ -10315,76 +10315,76 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e4f10	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e4f30	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e4f40	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e4f50	58			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e4f90	10			ui	orchestration		Runs its object file code that calls RefreshActionBarUsable; not read here	inferred	none		
+0x4e4f50	58	ResetActionBarState		ui	orchestration	void __cdecl ()	Zeroes the 120 slot words, item counts, usable and no-power flags and the bonus bar offset	verified	one	ui/actionbar#action-slots	
+0x4e4f90	10	RefreshActionBarOnEnterWorld		ui	orchestration	void __cdecl ()	Refreshes the usable flags, then jumps to the bonus bar offset update	verified	one	ui/actionbar#refreshing-the-flags	
 0x4e4fa0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e4fb0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e4fc0	98			ui	orchestration		Refreshes the shapeshift bar for the active player	inferred	none	objectlayer/playerfields#combo-points-form-and-far-sight	
-0x4e5030	29			ui	primitive		Runs its object file code that calls 0x4f0ec0; not read here	inferred	none		
-0x4e5050	480	GetActionSlotUsable		ui	primitive		Computes an action slot's usable and no-power pair, through 0x6e3d60 for a spell	inferred	none	spell/checks#usability-callers-and-events	
-0x4e5230	29			ui	orchestration		Runs ActionBarFrame.cpp code not read here	inferred	none		
-0x4e5250	177			ui	primitive		Runs ActionBarFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x4e5310	132			ui	primitive		Runs ActionBarFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4e53a0	513			ui	primitive		Runs ActionBarFrame.cpp code that calls GetCastItemGuidPtr, ClntObjMgrObjectPtr, 0x4e59b0 and 6 more; not read here	inferred	none		
-0x4e55b0	59			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5a50, GetAutoRepeatSpell; not read here	inferred	none		
-0x4e55f0	250			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5a50, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4e56f0	212	GetActionSlotInRange		ui	orchestration		Computes an action slot's range answer through the range pre-check 0x6e4440	inferred	none	spell/checks#range-pre-check	
-0x4e5810	164			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5a50, ClntObjMgrGetActivePlayer and 2 more; not read here	inferred	none		
-0x4e58c0	10	CGActionBar::ShowGrid	idb	ui	orchestration		Runs ActionBarFrame.cpp code not read here	inferred	none		
-0x4e58d0	10	CGActionBar::HideGrid	idb	ui	orchestration		Runs ActionBarFrame.cpp code not read here	inferred	none		
-0x4e58e0	201			ui	primitive		Runs ActionBarFrame.cpp code that calls GetActionSlotUsable, CDataStore::PutUInt32 and 3 more; not read here	inferred	none		
-0x4e59b0	70			ui	orchestration		Runs ActionBarFrame.cpp code that calls 0x4e5a50; not read here	inferred	none		
-0x4e5a00	73			ui	orchestration		Runs ActionBarFrame.cpp code that calls 0x4e5a50; not read here	inferred	none		
-0x4e5a50	130			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5030; not read here	inferred	none		
-0x4e5ae0	158			ui	primitive		Runs ActionBarFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
-0x4e5b80	19			ui	orchestration		Runs ActionBarFrame.cpp code that calls 0x4e5c70; not read here	inferred	none		
-0x4e5ba0	70			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4f0f40; not read here	inferred	none		
-0x4e5bf0	10			ui	orchestration		Signals event 214 through 0x703e50	verified	one	spell/targeting#the-binds-range-test	
-0x4e5c00	92	RefreshActionBarUsable		ui	orchestration		Recomputes the 120 action slots' usable pairs and signals ACTIONBAR_UPDATE_USABLE on a change	verified	one	spell/checks#usability-callers-and-events	
-0x4e5c60	10	FireActionBarCooldownEvent		ui	orchestration		Signals ACTIONBAR_UPDATE_COOLDOWN	verified	one	spell/cooldowns#cooldown-events-fired	
-0x4e5c70	80			ui	primitive		Refreshes the action slots of an item	inferred	none	objectlayer/inventory#visible-equipment	
-0x4e5cc0	76			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e58e0; not read here	inferred	none		
-0x4e5d10	72			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5db0; not read here	inferred	none		
-0x4e5d60	79			ui	primitive		Sets an action slot's value and refreshes it	inferred	none	objectlayer/players#arrival-in-the-world	
-0x4e5db0	33			ui	orchestration		Runs ActionBarFrame.cpp code that calls 0x4e58e0; not read here	inferred	none		
-0x4e5de0	60			ui	primitive		Runs ActionBarFrame.cpp code that calls 0x4e5a50, 0x4e58e0; not read here	inferred	none		
-0x4e5e20	49			ui	primitive		Removes a spell from the action slots; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
-0x4e5e60	119			ui	primitive		Replaces a spell's action slots with its new rank	inferred	none	objectlayer/playercombat#spell-book-messages	
-0x4e5ee0	585			ui	primitive		Runs ActionBarFrame.cpp code that calls GetCursorSpell, 0x494c60, GetCursorAmmo and 17 more; not read here	inferred	none		
-0x4e6130	424			ui	primitive		Runs ActionBarFrame.cpp code that calls GetCursorSpell, 0x494c60, GetCursorAmmo and 8 more; not read here	inferred	none		
-0x4e62e0	1414			ui	primitive		Runs ActionBarFrame.cpp code that calls CheckActivePlayer, GetCursorSpell, GetCursorAmmo and 14 more; not read here	inferred	none		
-0x4e6870	279			ui	orchestration		Runs ActionBarFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x4e6990	184			ui	orchestration		Runs ActionBarFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 4 more; not read here	inferred	none		
-0x4e6a50	530			ui	primitive		Runs its object file code that calls ClientDBStringLookup, 0x4e59b0, 0x4e6870 and 9 more; not read here	inferred	none		
-0x4e6c70	43			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e6ca0	118			ui	primitive		Runs its object file code that calls GetItemCooldown, 0x4e5a50, GetSpellCooldown; not read here	inferred	none		
-0x4e6d20	175			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x4e6dd0	53			ui	primitive		Runs its object file code that calls 0x4e5030; not read here	inferred	none		
-0x4e6e10	92	Script::GetActionTexture	idb	ui	primitive		Implements the Lua function GetActionTexture	inferred	none		
-0x4e6e70	96	Script::GetActionCount	idb	ui	primitive		Implements the Lua function GetActionCount	inferred	none		
-0x4e6ed0	188	Script::GetActionCooldown	idb	ui	primitive		Implements the Lua function GetActionCooldown	inferred	none		
-0x4e6f90	186	Script::GetActionAutocast	idb	ui	primitive		Implements the Lua function GetActionAutocast	inferred	none		
-0x4e7050	128	Script::GetActionText	idb	ui	primitive		Implements the Lua function GetActionText	inferred	none		
-0x4e70d0	97	Script::HasAction	idb	ui	primitive		Implements the Lua function HasAction	inferred	none		
-0x4e7140	99	Script::UseAction	idb	ui	primitive		Implements the Lua function UseAction	inferred	none		
+0x4e4fc0	98	UpdateBonusActionBar		ui	orchestration	void __cdecl ()	Sets the bonus bar offset from the player's form record and signals UPDATE_BONUS_ACTIONBAR	verified	one	ui/actionuse#bonus-bar-offset	
+0x4e5030	29	ActionSlotMacroExists		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a macro word's id is in the macro id table	verified	one	ui/actionbar#slot-to-spell	
+0x4e5050	480	GetActionSlotUsable		ui	primitive	bool __fastcall (uint32_t slot, uint32_t *noPower)	Computes an action slot's usable flag and no-power flag	verified	one	ui/actionbar#usable-and-no-power	
+0x4e5230	29	GetCachedActionUsable		ui	orchestration	bool __fastcall (uint32_t slot, uint32_t *noPower)	Returns a slot's cached usable flag and stores its cached no-power flag	verified	one	ui/actionbar#usable-and-no-power	
+0x4e5250	177	ActionSlotIsConsumable		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether an item slot is ammo, thrown or has an on-use spell with negative charges	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e5310	132	ActionSlotIsEquipped		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether the item of an item slot is in the equipment slots	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e53a0	513	ActionSlotIsCurrent		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot's item, attack, spell, trade skill or form is the current one	verified	one	ui/actionbar#checked-state	
+0x4e55b0	59	ActionSlotIsAutoRepeat		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot's book-0 spell is the auto-repeat spell	verified	one	ui/actionbar#repeat-and-attack-tests	
+0x4e55f0	250	ActionSlotAuraActive		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a spell's active icon is nonzero and its own aura is on the player or pet	verified	one	ui/actionbar#active-icon-test	
+0x4e56f0	212	GetActionSlotInRange		ui	primitive	bool __fastcall (uint32_t slot, uint32_t *inRange)	Computes a slot's range answer through the range pre-check 0x6e4440	verified	one	ui/actionbar#range	
+0x4e5810	164	ActionSlotHasRange		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot's spell has a nonzero minimum or maximum range	verified	one	ui/actionbar#range	
+0x4e58c0	10	CGActionBar::ShowGrid	idb	ui	orchestration	void __cdecl ()	Signals ACTIONBAR_SHOWGRID	verified	one	ui/actionbar#action-bar-events	
+0x4e58d0	10	CGActionBar::HideGrid	idb	ui	orchestration	void __cdecl ()	Signals ACTIONBAR_HIDEGRID	verified	one	ui/actionbar#action-bar-events	
+0x4e58e0	201	NotifyActionSlotChanged		ui	orchestration	void __fastcall (uint32_t slot, bool send, bool quiet)	Recomputes a slot's flags, optionally sends CMSG_SET_ACTION_BUTTON and signals ACTIONBAR_SLOT_CHANGED	verified	one	ui/actionbar#slot-changed	
+0x4e59b0	70	ActionSlotIsAttack		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot's spell has the attack effect as its first effect	verified	one	ui/actionbar#repeat-and-attack-tests	
+0x4e5a00	73	ActionSlotIsRangedRepeat		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot's spell uses the ranged slot and auto-repeats	verified	one	ui/actionbar#repeat-and-attack-tests	
+0x4e5a50	130	GetActionSlotSpell		ui	primitive	int32_t __fastcall (uint32_t slot, uint32_t *book)	Returns the spell a slot stands for and which book it comes from	verified	one	ui/actionbar#slot-to-spell	
+0x4e5ae0	158	GetItemSlotOnUseSpell		ui	primitive	int32_t __fastcall (uint32_t slot)	Returns the first on-use spell of an item slot's template, or 0	verified	one	ui/actionbar#slot-to-spell	
+0x4e5b80	19	OnActionItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Recounts an item's action slots when its template arrives	verified	one	ui/actionbar#item-records-arriving	
+0x4e5ba0	70	GetMacroSlotSpell		ui	primitive	int32_t __fastcall (uint32_t slot, uint32_t *book)	Returns a macro slot's cached spell and book selector, or 0 without the record	verified	one	ui/actionbar#slot-to-spell	
+0x4e5bf0	10	FireActionBarStateEvent		ui	orchestration	void __cdecl ()	Signals ACTIONBAR_UPDATE_STATE	verified	one	ui/actionbar#action-bar-events	
+0x4e5c00	92	RefreshActionBarUsable		ui	primitive	void __cdecl ()	Recomputes the 120 slots' flags and signals ACTIONBAR_UPDATE_USABLE when any changed	verified	one	ui/actionbar#refreshing-the-flags	
+0x4e5c60	10	FireActionBarCooldownEvent		ui	orchestration	void __cdecl ()	Signals ACTIONBAR_UPDATE_COOLDOWN	verified	one	ui/actionbar#action-bar-events	
+0x4e5c70	80	RecountItemActionSlots		ui	primitive	void __fastcall (uint32_t entry)	Recounts an item entry and notifies every item slot holding it	verified	one	ui/actionbar#item-records-arriving	
+0x4e5cc0	76	NotifyMacroSlots		ui	primitive	void __fastcall (uint32_t macroId)	Notifies every slot holding a macro id without sending	verified	one	ui/actionbar#replacing-slots	
+0x4e5d10	72	ClearMacroSlots		ui	primitive	void __fastcall (uint32_t macroId)	Clears every slot holding a macro id	verified	one	ui/actionbar#replacing-slots	
+0x4e5d60	79	SetActionSlot		ui	primitive	void __fastcall (uint32_t slot, uint32_t word, bool send, bool quiet)	Stores a slot word, recounts an item word and notifies	verified	one	ui/actionbar#writing-a-slot	
+0x4e5db0	33	ClearActionSlot		ui	primitive	void __fastcall (uint32_t slot)	Stores 0 in a slot and notifies with a send	verified	one	ui/actionbar#writing-a-slot	
+0x4e5de0	60	NotifySpellSlots		ui	primitive	void __fastcall (uint32_t spellId)	Notifies every player-book slot standing for a spell without sending	verified	one	ui/actionbar#replacing-slots	
+0x4e5e20	49	ClearSpellSlots		ui	primitive	void __fastcall (uint32_t spellId)	Clears every slot standing for a spell	verified	one	ui/actionbar#replacing-slots	
+0x4e5e60	119	ReplaceActionSpell		ui	primitive	void __fastcall (uint32_t oldId, uint32_t newId)	Replaces a spell in the slots standing for it and in macro records	verified	one	ui/actionbar#replacing-slots	
+0x4e5ee0	585	UseActionSlot		ui	primitive	void __fastcall (uint32_t slot, bool placeFromCursor, bool onSelf)	Places, runs, casts, equips or uses what a slot holds	verified	one	ui/actionuse#using-an-action	
+0x4e6130	424	PickupActionSlot		ui	primitive	void __fastcall (uint32_t slot)	Puts a slot's content on the cursor and clears the slot	verified	one	ui/actionuse#picking-up-an-action	
+0x4e62e0	1414	PlaceOnActionSlot		ui	primitive	void __fastcall (uint32_t slot)	Stores the cursor's spell, item or macro in a slot, returning the old content to the cursor	verified	one	ui/actionuse#placing-an-action	
+0x4e6870	279	GetAttackIconPath		ui	primitive	const char * __cdecl ()	Returns the icon of the player's form or main-hand weapon, or Spell-Reset	verified	one	ui/actionbar#attack-and-ranged-icons	
+0x4e6990	184	GetRangedIconPath		ui	primitive	const char * __cdecl ()	Returns the icon of the equipped ranged weapon, or null	verified	one	ui/actionbar#attack-and-ranged-icons	
+0x4e6a50	530	GetActionSlotTexture		ui	primitive	const char * __fastcall (uint32_t slot)	Returns the icon path of an action slot, or null	verified	one	ui/actionbar#action-icon	
+0x4e6c70	43	GetActionSlotCount		ui	orchestration	uint32_t __fastcall (uint32_t slot)	Returns an item slot's cached count, else 0	verified	one	ui/actionbar#item-slot-counts	
+0x4e6ca0	118	GetActionSlotCooldown		ui	orchestration	void __fastcall (uint32_t slot, int32_t *start, int32_t *duration, uint32_t *enable)	Reads an item slot's or spell slot's cooldown triple	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e6d20	175	CountItemForAction		ui	primitive	uint32_t __fastcall (uint32_t entry)	Counts an item's stacks or charges in the player's inventory	verified	one	ui/actionbar#item-slot-counts	
+0x4e6dd0	53	ActionSlotHasContent		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a slot holds a word, a macro word needing its macro to exist	verified	one	ui/actionbar#action-slots	
+0x4e6e10	92	Script::GetActionTexture	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon path of an action slot, or nil	verified	one	ui/actionbar#action-icon	
+0x4e6e70	96	Script::GetActionCount	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns an item slot's cached count	verified	one	ui/actionbar#item-slot-counts	
+0x4e6ed0	188	Script::GetActionCooldown	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns an action's cooldown start and duration in seconds, and its enable flag	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e6f90	186	Script::GetActionAutocast	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the pet autocast allowed and enabled flags of an action's spell, as 1 or nil	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e7050	128	Script::GetActionText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns a macro slot's macro name, else nil	verified	one	ui/actionbar#action-slots	
+0x4e70d0	97	Script::HasAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot has content, else nil	verified	one	ui/actionbar#action-slots	
+0x4e7140	99	Script::UseAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Reads a slot, cursor flag and self flag and uses the action	verified	one	ui/actionuse#using-an-action	
 0x4e71b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e71c0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e71d0	64	Script::PickupAction	idb	ui	primitive		Implements the Lua function PickupAction	inferred	none		
+0x4e71d0	64	Script::PickupAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Picks up the action of a slot	verified	one	ui/actionuse#picking-up-an-action	
 0x4e7210	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e7220	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e7240	64	Script::PlaceAction	idb	ui	primitive		Implements the Lua function PlaceAction	inferred	none		
-0x4e7280	97	Script::IsAttackAction	idb	ui	primitive		Implements the Lua function IsAttackAction	inferred	none		
-0x4e72f0	97	Script::IsCurrentAction	idb	ui	primitive		Implements the Lua function IsCurrentAction	inferred	none		
-0x4e7360	97	Script::IsAutoRepeatAction	idb	ui	primitive		Implements the Lua function IsAutoRepeatAction	inferred	none		
-0x4e73d0	148	Script::IsUsableAction	idb	ui	primitive		Implements the Lua function IsUsableAction	inferred	none		
-0x4e7470	97	Script::IsConsumableAction	idb	ui	primitive		Implements the Lua function IsConsumableAction	inferred	none		
-0x4e74e0	97	Script::IsEquippedAction	idb	ui	primitive		Implements the Lua function IsEquippedAction	inferred	none		
-0x4e7550	127	Script::IsActionInRange	idb	ui	primitive		Implements the Lua function IsActionInRange	inferred	none		
-0x4e75d0	79	Script::ActionHasRange	idb	ui	primitive		Implements the Lua function ActionHasRange	inferred	none		
-0x4e7620	44	Script::GetBonusBarOffset	idb	ui	orchestration		Implements the Lua function GetBonusBarOffset	inferred	none		
-0x4e7650	13	Script::ChangeActionBarPage	idb	ui	orchestration		Implements the Lua function ChangeActionBarPage	inferred	none		
-0x4e7660	116	Script::GetActionBarToggles	idb	ui	primitive		Implements the Lua function GetActionBarToggles	inferred	none		
-0x4e76e0	155	Script::SetActionBarToggles	idb	ui	primitive		Implements the Lua function SetActionBarToggles	inferred	none		
+0x4e7240	64	Script::PlaceAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Places the cursor's payload on a slot	verified	one	ui/actionuse#placing-an-action	
+0x4e7280	97	Script::IsAttackAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot is an attack action, else nil	verified	one	ui/actionbar#repeat-and-attack-tests	
+0x4e72f0	97	Script::IsCurrentAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot is the current one, else nil	verified	one	ui/actionbar#checked-state	
+0x4e7360	97	Script::IsAutoRepeatAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot is the auto-repeat spell, else nil	verified	one	ui/actionbar#repeat-and-attack-tests	
+0x4e73d0	148	Script::IsUsableAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the cached usable and no-power flags of an action slot, each 1 or nil	verified	one	ui/actionbar#usable-and-no-power	
+0x4e7470	97	Script::IsConsumableAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot is consumable, else nil	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e74e0	97	Script::IsEquippedAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot's item is equipped, else nil	verified	one	ui/actionbar#cooldown-and-flags	
+0x4e7550	127	Script::IsActionInRange	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns an action slot's range answer as nil, 0 or 1	verified	one	ui/actionbar#range	
+0x4e75d0	79	Script::ActionHasRange	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when an action slot's spell has a range, else nil	verified	one	ui/actionbar#range	
+0x4e7620	44	Script::GetBonusBarOffset	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the bonus bar offset	verified	one	ui/actionuse#bonus-bar-offset	
+0x4e7650	13	Script::ChangeActionBarPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Signals ACTIONBAR_PAGE_CHANGED and returns nothing	verified	one	ui/actionbar#action-bar-events	
+0x4e7660	116	Script::GetActionBarToggles	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns four 1-or-nil values from the active player's bar toggle byte	verified	one	ui/actionuse#bar-toggles	
+0x4e76e0	155	Script::SetActionBarToggles	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends CMSG_SET_ACTIONBAR_TOGGLES built from four flag arguments	verified	one	ui/actionuse#bar-toggles	
 0x4e7780	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e77b0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e77d0	10			ui	orchestration		Runs its object file code that calls 0x4e77e0; not read here	inferred	none		
@@ -12608,7 +12608,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Implements the Lua function SetPortraitTexture	inferred	none		
 0x51a100	21			ui	orchestration		Runs its object file code that calls RefreshPortrait; not read here	inferred	none		
 0x51a120	100	Script::HasFullControl	idb	ui	orchestration		Implements the Lua function HasFullControl	inferred	none		
-0x51a190	232	Script::GetComboPoints	idb	ui	orchestration		Implements the Lua function GetComboPoints	inferred	none		
+0x51a190	232	Script::GetComboPoints	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the combo points of a rogue or druid on its combo target, else 0	verified	one	ui/actionuse#combo-points	
 0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Implements the Lua function UnitCreatureType	inferred	none		
 0x51a310	130	Script::UnitCreatureFamily	idb	ui	orchestration		Implements the Lua function UnitCreatureFamily	inferred	none		
 0x51a3a0	268	Script::GetResSicknessDuration	idb	ui	primitive		Implements the Lua function GetResSicknessDuration	inferred	none		
@@ -29609,7 +29609,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1a90	53			ui	orchestration		Reads font flags as substrings: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont	
 0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
-0x6f1c10	213	GetScriptFlagArg		ui	primitive		Reads a script argument as a flag: nil 0, a number truncated, a string by keyword, else the default	verified	one	ui/tooltipcontent#the-line-bindings	
+0x6f1c10	213	GetScriptFlagArg		ui	primitive	bool __stdcall (lua_State *L, int index, bool defaultValue)	Reads a script argument as a flag: nil 0, boolean itself, number truncated, string by first letter or keyword	verified	one	ui/actionuse#reading-a-script-flag	
 0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
 0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	
 0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		

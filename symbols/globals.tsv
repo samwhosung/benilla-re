@@ -1185,6 +1185,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84b8f8	char[9]	s_textPetition		ui	Holds the string "petition"	inferred	none	
 0x84bc3c	char[3]			ui	Holds the string " |"	inferred	none	
 0x84bcc0	char[40]	s_textUsageGetPlayerBuffTimeLeftBuffIndex		ui	Holds the string "Usage: GetPlayerBuffTimeLeft(buffIndex)"	inferred	none	
+0x84bd10	luaL_reg[21]	s_actionFunctions		unassigned	Pairs the 21 action bar Lua names with their functions	verified	one	ui/actionbar#action-slots
 0x84bf58	char[30]	s_textInterfaceButtonsSpellReset		ui	Holds the string "Interface\Buttons\Spell-Reset"	inferred	none	
 0x84bff4	char[27]	s_textUsageGetActionTextSlot		ui	Holds the string "Usage: GetActionText(slot)"	inferred	none	
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
@@ -2124,8 +2125,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc5f68	uint32_t			ui	Holds a dword that SetAuraDuration reads and writes; not read here	inferred	none	
 0xbc6040	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
 0xbc6378	uint32_t			ui	Holds a dword that Script::GetTrackingTexture, Script::CancelTrackingBuff read and write; not read here	inferred	none	
-0xbc6390	uint32_t			ui	Holds a dword that GetActionSlotUsable reads and writes; not read here	inferred	none	
-0xbc6980	uint32_t			ui	Holds a dword that GetActionSlotUsable, Script::GetActionText, GameTooltip::SetAction read and write; not read here	inferred	none	
+0xbc6390	uint32_t[120]	s_actionItemCounts		ui	Holds each item slot's cached stack count or charges	verified	one	ui/actionbar#item-slot-counts
+0xbc6578	char[260]	s_rangedIconPath		unassigned	Holds the ranged weapon icon path of the ranged helper	verified	one	ui/actionbar#attack-and-ranged-icons
+0xbc6698	char[260]	s_attackIconPath		unassigned	Holds the weapon icon path of the attack helper	verified	one	ui/actionbar#attack-and-ranged-icons
+0xbc67a0	uint32_t[120]	s_actionNoPower		unassigned	Holds each slot's cached no-power flag	verified	one	ui/actionbar#usable-and-no-power
+0xbc6980	uint32_t[120]	s_actionSlots		ui	Holds the 120 action slot words, the kind in the top nibble	verified	one	ui/actionbar#action-slots
+0xbc6b60	uint32_t[120]	s_actionUsable		unassigned	Holds each slot's cached usable flag	verified	one	ui/actionbar#usable-and-no-power
+0xbc6d4c	const char *	s_iconDirectory		unassigned	Holds the icon directory string, fetched once	verified	one	ui/actionbar#action-icon
+0xbc6d58	char[260]	s_actionIconPath		unassigned	Holds the icon path GetActionTexture formats for an item or macro slot	verified	one	ui/actionbar#action-icon
+0xbc6e5c	uint8_t	s_actionIconInitFlags		unassigned	Holds a byte whose bit 0 marks the icon directory as fetched	verified	one	ui/actionbar#action-icon
+0xbc6e88	uint32_t	s_bonusBarOffset		unassigned	Holds the bonus bar offset of the player's form; 0 at load and with no form record	verified	one	ui/actionuse#bonus-bar-offset
 0xbc6e98	uint8_t			ui	Holds a byte that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
 0xbc6f48	uint32_t[8]	s_partyMemberGuids		ui	Holds the GUIDs of the four other party members	verified	one	ui/minimapblips#party-and-pet-arrows
 0xbc70a0	uint32_t			ui	Holds a dword that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
@@ -2150,6 +2159,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdcbb0	uint32_t	s_hoverArrowMask		ui	Holds the bit mask of the rim arrows the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcbb4	uint32_t	s_hoverPartyMask		ui	Holds the bit mask of the party dots the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcc54	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbdcc60	uint32_t[36]	s_macroIdTable		unassigned	Holds the ids of the 36 macros, indexed by ordinal	verified	one	ui/actionbar#slot-to-spell
 0xbdcd24	uint32_t	s_talentTabCount		ui	Holds the number of talent tabs of the player	verified	one	ui/tooltipspell#the-talent-lines
 0xbdcd28	void **	s_talentTabs		ui	Holds the array of the player's talent tab records	verified	one	ui/tooltipspell#the-talent-lines
 0xbdce1c	uint32_t			ui	Holds a dword that Script::SignPetition reads and writes; not read here	inferred	none	
