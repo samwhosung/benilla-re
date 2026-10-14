@@ -6926,7 +6926,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490ce0	301	CGGameUI::UnregisterScriptFunctions		ui	orchestration	void __cdecl ()	Unregisters the frame types, the game C functions of 0x83de68 and 53 files of functions	verified	one	ui/scriptapi#unregistrars	
 0x490e10	75	LayoutCacheWrite		ui	orchestration	void __fastcall (void *unused, HANDLE file, CSimpleTop *top)	Writes a record for every frame of the top's list that passes the saved-frame test	verified	one	ui/layoutcache#which-frames-are-saved	
 0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		ui::glue_4c0_490e60_round_pos_legs
-0x491180	505	CGGameUI::ShutdownGame	idb	ui	primitive		Runs GameUI.cpp code that calls 0x490bd0, 0x524b70, 0x4edb70 and 37 more; not read here	inferred	none		
+0x491180	505	CGGameUI::ShutdownGame	idb	ui	orchestration		Runs the shutdown of every interface module in order, resets three CVars and clears 14 message handlers	verified	one	ui/gameui#game-shutdown	
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration	void __fastcall ()	Sets the reload byte 0xb4b3f4 when the protected-action gate allows tag 10	verified	one	ui/bindings#reloading-the-interface	
 0x4913a0	16			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4913b0	451	LoadFlatSavedVariables		ui	primitive		Sets string and float globals from the flat SavedVariables.lua lines and signals VARIABLES_LOADED	verified	one	ui/addons#saved-variables-read	
@@ -7436,7 +7436,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6430	37			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
 0x4a6460	36			ui	orchestration		Runs its object file code that calls 0x4a67a0; not read here	inferred	none		
 0x4a6490	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
-0x4a64b0	240			ui	primitive		Runs its object file code that calls 0x4088f0, 0x4a9210, SMemFree; not read here	inferred	none		
+0x4a64b0	240	ShutdownWorldMap		ui	orchestration		Releases the continent records and the landmark, overlay and orphan lists and zeroes the map arrows	verified	one	ui/gameui#start-up-display-and-chat	
 0x4a65a0	60			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a65e0	106			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a6650	331	SelectCurrentZone		ui	orchestration		Selects the map, continent and zone of the active player, or an orphan map, or the world	verified	one	ui/worldmap#the-resolver	
@@ -7820,8 +7820,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b0c30	617			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CM2Model::IsLoaded, CWorld::IsEntityDrawn, 0x4b0ee0 and 5 more; not read here	inferred	none		ui::dist2_4b0c30
 0x4b0ea0	59	CGChatBubbleFrame::StartFadeIn		ui	primitive	void __thiscall ()	Starts a 250 ms fade in and shows the frame unless it is fading in or in its final fade out	verified	one	ui/chatbubble#fades	
 0x4b0ee0	70	CGChatBubbleFrame::StartFadeOut		ui	primitive	void __thiscall (bool final)	Starts a 250 ms fade out, marking it final when asked	verified	one	ui/chatbubble#fades	
-0x4b0f30	1			ui	orchestration		Runs ChatBubbleFrame.cpp code not read here	inferred	none		
-0x4b0f40	50	FreeBubblePool		ui	orchestration	void __cdecl ()	Destroys every bubble on the free list and clears the pool flag	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b0f30	1	InitChatBubbles		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
+0x4b0f40	50	ShutdownChatBubbles		ui	orchestration		Destroys and frees every chat bubble frame and clears the bubble flag byte	verified	one	ui/gameui#start-up-display-and-chat	
 0x4b0f80	209	RetireAllBubbles		ui	orchestration	void __cdecl ()	Retires every live bubble: releases the speaker's bubble, or hides it and frees it when the speaker is gone	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b1060	757			ui	primitive		Runs ChatBubbleFrame.cpp code that calls GetActiveCamera, 0x4b1de0, ClntObjMgrGetActivePlayer and 10 more; not read here	inferred	none		ui::dist2_4b1060
 0x4b1360	251	InsertBubbleByDistance		ui	primitive	void __thiscall ()	Links a bubble into the live list before the first bubble that is nearer the camera	verified	one	ui/chatbubble#the-bubble-lists	
@@ -7916,8 +7916,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b2160	23	InitZero4b2160		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4b2180	12	InitZero4b2160Register		ui	orchestration	void __cdecl (void)	Registers 0x4b2190 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4b2190	47	InitZero4b2160Exit		ui	primitive	void __cdecl (void)	Frees the CombatFeedbackSpell block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4b21c0	288			ui	primitive		Runs its object file code that calls FreeUint32Array, ReallocUint32Array, 0x4088f0 and 4 more; not read here	inferred	none		
-0x4b22e0	188			ui	primitive		Runs its object file code that calls SMemFree, FreeUint32Array; not read here	inferred	none		
+0x4b21c0	288	InitSpellBook		ui	orchestration		Sizes the known-spell bit array and the indexed spell array from two global counts, then calls 0x4b23a0 and 0x4b2f70	verified	one	ui/gameui#start-up-display-and-chat	
+0x4b22e0	188	ShutdownSpellBook		ui	orchestration		Frees the book tabs and their array, the known-spell bit array and the indexed spells and zeroes the counts	verified	one	ui/gameui#start-up-display-and-chat	
 0x4b23a0	333			ui	primitive		Runs its object file code that calls SMemFree, 0x4b4b90, 0x4088f0; not read here	inferred	none		
 0x4b24f0	130	GetSpellTabPosition		ui	primitive	uint32_t __fastcall (uint32_t spellId)	Returns the position of a spell's tab in the tab list, or the tab count when absent	verified	one	ui/spellbook#tabs	
 0x4b2580	46	CountBookSpellsBeforeTab		ui	primitive	uint32_t __fastcall (uint32_t tab)	Sums the spell counts of the tabs before a tab, 0 for tab 0 or a tab past the count	verified	one	ui/spellbook#tabs	
@@ -8243,7 +8243,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ba140	111			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrGetActivePlayer, DBCache::NameCache::GetRecord; not read here	inferred	none		
 0x4ba1b0	8			ui	orchestration		Runs RaidInfo.cpp code that calls 0x4bad90; not read here	inferred	none		
 0x4ba1c0	1			ui	orchestration		Runs RaidInfo.cpp code not read here	inferred	none		
-0x4ba1d0	71			ui	primitive		Runs RaidInfo.cpp code that calls ClientServices::ClearMessageHandler, SMemFree; not read here	inferred	none		
+0x4ba1d0	71	ShutdownRaid		ui	orchestration		Clears the handlers for opcodes 0x321 and 0x322 and frees the 40 raid roster records	verified	one	ui/gameui#start-up-services-and-events	
 0x4ba220	313	HandleRaidTargetUpdatePacket	idb	ui	primitive		Reads the raid target message into the icon table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
 0x4ba360	495	HandleRaidReadyCheckPacket	idb	ui	primitive		Handles a ready check message: the leader stores an answer, a member starts the check	verified	one	ui/raid#answering-a-ready-check	
 0x4ba550	150			ui	primitive		Leaves the raid roster, clears the raid target table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
@@ -8337,10 +8337,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bc630	23	InitZero4bc630		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4bc650	12	InitZero4bc630Register		ui	orchestration	void __cdecl (void)	Registers 0x4bc660 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4bc660	47	InitZero4bc630Exit		ui	primitive	void __cdecl (void)	Frees the PetAction block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4bc690	93	CGPetInfo::InitializeGame	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
+0x4bc690	93	CGPetInfo::InitializeGame	idb	ui	orchestration		Zeroes the pet bar GUID and expiry and registers the handlers for opcodes 0x179, 0x17a, 0x2c6 and 0x2af	verified	one	ui/gameui#start-up-world-and-quests	
 0x4bc6f0	161			ui	primitive		Runs its object file code that calls 0x4bc7e0, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
 0x4bc7a0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4bc7b0	40			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4bc7b0	40	ClearPetHandlers		ui	orchestration		Clears the handlers for opcodes 0x179, 0x17a, 0x2c6 and 0x2af	verified	one	ui/gameui#start-up-world-and-quests	
 0x4bc7e0	321	SetPetGuid		ui	primitive	void __fastcall (uint32_t duration, uint64_t guid)	Stores the pet guid and expiry tick, signals UNIT_PET on a change, and always PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
 0x4bc930	7	SetPetModeState		ui	orchestration	void __fastcall (uint32_t state)	Stores the whole pet mode word	verified	one	ui/petbar#pet-state	
 0x4bc940	27	SetPetReaction		ui	primitive	void __fastcall (uint32_t reaction)	Replaces the reaction byte of the pet mode word and signals PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
@@ -8618,10 +8618,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c1bb0	21			ui	orchestration	void __fastcall ()	Registers the LootButton method table with its one method SetSlot	verified	one	ui/loot#the-row-widget	
 0x4c1bd0	10	UnregisterLootButtonMethods		ui	orchestration	void __cdecl ()	Unregisters the 1 LootButton method that 0x4c1bb0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x4c1be0	60			ui	orchestration	void *__thiscall (lua_State *L)	Looks up a LootButton Lua method, else falls back to the button's lookup	verified	one	ui/loot#the-row-widget	
-0x4c1c20	13			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c1c20	13	ClearLootOpened		ui	orchestration		Zeroes the opened loot GUID	verified	one	ui/gameui#start-up-display-and-chat	
 0x4c1c30	5	InitDouble4c1c40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c1c40, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c1c40	15	InitDouble4c1c40		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
-0x4c1c50	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c1c50	1	ShutdownLoot		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
 0x4c1c60	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1c70	5	InitQuotient4c1c80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c1c80, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c1c80	19	InitQuotient4c1c80		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
@@ -8719,12 +8719,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c3ce0	19	InitQuotient4c3ce0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4c3d00	5	InitInfinity4c3d10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c3d10, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c3d10	11	InitInfinity4c3d10		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4c3d20	35	InitLotteryHandlers	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
+0x4c3d20	35	InitLotteryHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3d50	260	HandleLotteryQueryResultPacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetInt32, OsGetCachedUnixTime, FrameScript_SignalEvent; not read here	inferred	none		
 0x4c3e60	5	HandleLotteryResultPacket	idb	ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c3e70	13			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c3e80	7			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c3e90	20			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4c3e90	20	ClearLotteryHandlers		ui	orchestration		Clears the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3eb0	132			ui	unreached		Runs its object file code that calls 0x4930d0, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
 0x4c3f40	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c3f50	394			ui	primitive		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SStrCopy and 6 more; not read here	inferred	none		
@@ -8797,10 +8797,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4ba0	19	InitQuotient4c4ba0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4c4bc0	5	InitInfinity4c4bd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4bd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c4bd0	11	InitInfinity4c4bd0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4c4be0	35	InitMiniGameHandlers	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
+0x4c4be0	35	InitMiniGameHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x2f6 and 0x2f7	verified	one	ui/gameui#start-up-services-and-events	
 0x4c4c10	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c4c20	35			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4c4c50	20			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4c4c50	20	ClearMiniGameHandlers		ui	orchestration		Clears the handlers for opcodes 0x2f6 and 0x2f7	verified	one	ui/gameui#start-up-services-and-events	
 0x4c4c70	128	HandleMinigameSetupPacket	idb	ui	orchestration		Runs its object file code that calls CDataStore::GetGuid, CDataStore::GetUInt8, SMemFree and 3 more; not read here	inferred	none		
 0x4c4cf0	40	HandleMinigameStatePacket	idb	ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4c4d20	20			ui	orchestration		Runs its object file code that calls 0x728650; not read here	inferred	none		
@@ -8868,8 +8868,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c5530	23	InitZero4c5530		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4c5550	12	InitZero4c5530Register		ui	orchestration	void __cdecl (void)	Registers 0x4c5560 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4c5560	47	InitZero4c5530Exit		ui	primitive	void __cdecl (void)	Frees the int block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4c5590	21			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c55b0	155			ui	primitive		Runs its object file code that calls 0x4c6450, 0x4c6410, SMemFree; not read here	inferred	none		
+0x4c5590	21	InitWorldState		ui	orchestration		Stores -1 and 0 in two world state globals	verified	one	ui/gameui#start-up-services-and-events	
+0x4c55b0	155	ShutdownWorldState		ui	orchestration		Unlinks every world state node, empties its bucket lists, frees the UI list array and zeroes its counts	verified	one	ui/gameui#start-up-services-and-events	
 0x4c5650	137	ClearWorldStates		ui	orchestration		Frees every world state, stores the INIT map and zone filters and rebuilds the list	verified	one	ui/worldstate#the-packets	
 0x4c56e0	299	BuildWorldStateUiList		ui	orchestration		Rebuilds the list of WorldStateUI rows that match the last INIT map and zone	verified	one	ui/worldstate#the-list-builder	
 0x4c5810	91	GetWorldStateValue		ui	orchestration	uint32_t __fastcall (uint32_t id)	Returns the value stored for a world state id, or 0	verified	one	ui/minimapblips#placing-the-blips	
@@ -9118,10 +9118,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4caa40	19	InitQuotient4caa40		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4caa60	5	InitInfinity4caa70Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4caa70, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4caa70	11	InitInfinity4caa70		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4caa80	35	InitStableHandlers	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
+0x4caa80	35	InitStableHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x26f and 0x273	verified	one	ui/gameui#start-up-services-and-events	
 0x4caab0	42	ResetStable		ui	orchestration	void __cdecl ()	Zeroes the stable master, counts, selection and summoned record at world entry	verified	one	ui/stable#stable-state	
 0x4caae0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4caaf0	20			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4caaf0	20	ClearStableHandlers		ui	orchestration		Clears the handlers for opcodes 0x26f and 0x273	verified	one	ui/gameui#start-up-services-and-events	
 0x4cab10	413	HandleListStabledPetsPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads the stable master and pet records, keeps the stabled ones in the array and signals PET_STABLE_SHOW	verified	one	ui/stable#the-list-message	
 0x4cacb0	232	HandleStableResultPacket	idb	ui	primitive	uint32_t __stdcall (int, CDataStore *store)	Reads a stable result code: shows the money error, asks for the list again or signals PET_STABLE_UPDATE	verified	one	ui/stable#the-result-message	
 0x4cadc0	70	SetStableMaster		ui	orchestration	void __stdcall (uint64_t guid)	Stores the stable master GUID and makes it the interaction target on a change, then clears the selection	verified	one	ui/stable#the-list-message	
@@ -9426,7 +9426,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d2a70	12	InitZero4d2a50Register		ui	orchestration	void __cdecl (void)	Registers 0x4d2a80 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4d2a80	47	InitZero4d2a50Exit		ui	primitive	void __cdecl (void)	Frees the SkillTypeInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4d2ab0	326	AllocateSkillList		ui	primitive		Allocates the skill list rows and category headers and clears the list state	verified	one	ui/skillverbs#building-the-list	
-0x4d2c00	132	FreeSkillLists		ui	orchestration	void __cdecl (void)	Frees every skill row and category record	verified	one	tradeskill/skills#list-state	
+0x4d2c00	132	ShutdownSkills		ui	orchestration		Frees the skill row and header records and clears their pointers	verified	one	ui/gameui#start-up-world-and-quests	
 0x4d2c90	5	RebuildSkillListThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d2cb0, which rebuilds the skill list	verified	one	tradeskill/skills#rebuilding-the-list	
 0x4d2ca0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d2cb0	531	RebuildSkillList		ui	primitive		Rebuilds the skills list from the player's skill slots and sorts it	verified	one	ui/skillverbs#building-the-list	
@@ -9691,8 +9691,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d72e0	23	InitZero4d72e0		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4d7300	12	InitZero4d72e0Register		ui	orchestration	void __cdecl (void)	Registers 0x4d7310 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4d7310	47	InitZero4d72e0Exit		ui	primitive	void __cdecl (void)	Frees the TrainerSkillLineInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4d7340	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d7350	130			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4d7340	1	InitTrainer		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-world-and-quests	
+0x4d7350	130	ShutdownTrainer		ui	orchestration		Frees the trainer service and group records and zeroes both counts	verified	one	ui/gameui#start-up-world-and-quests	
 0x4d73e0	28	ResetTrainer		ui	orchestration	void __cdecl ()	Zeroes the trainer GUID, selection and total length at world exit	verified	one	ui/trainer#trainer-state	
 0x4d7400	50			ui	orchestration		Runs its object file code that calls 0x4d7440; not read here	inferred	none		
 0x4d7440	172	SetTrainer		ui	orchestration	void __fastcall (uint64_t *guid, uint32_t type)	Opens the trainer window for a GUID and type, or closes it for GUID 0 and signals TRAINER_CLOSED	verified	one	ui/trainer#trainer-state	
@@ -9948,9 +9948,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4de350	19	InitQuotient4de350		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4de370	5	InitInfinity4de380Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4de380, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4de380	11	InitInfinity4de380		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4de390	102			ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
+0x4de390	102	InitQuestLog		ui	orchestration		Zeroes the quest log rows, watch ids and counters and registers the handler for opcode 0x1cf	verified	one	ui/gameui#start-up-world-and-quests	
 0x4de400	32	HandleQueryTimeResponse	idb	ui	orchestration		Reads the server time and passes it to the clock setter	verified	one	ui/questtimers#the-time-sync	
-0x4de420	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4de420	10	ClearQuestLogHandler		ui	orchestration		Clears the handler for opcode 0x1cf	verified	one	ui/gameui#start-up-world-and-quests	
 0x4de430	148	InitQuestLogForWorld		ui	orchestration		Zeroes the pending count, registers the quest slot watcher, sends CMSG_QUERY_TIME and rebuilds the list	verified	one	ui/questtimers#the-time-sync	
 0x4de4d0	18			ui	orchestration		Runs its object file code that calls 0x4de510; not read here	inferred	none		
 0x4de4f0	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
@@ -10076,8 +10076,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1eb0	19	InitQuotient4e1eb0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4e1ed0	5	InitInfinity4e1ee0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e1ee0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e1ee0	11	InitInfinity4e1ee0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4e1ef0	52	InitGossipHandlers	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4e1f30	30			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4e1ef0	52	InitGossipHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x17d, 0x17e and 0x224	verified	one	ui/gameui#start-up-world-and-quests	
+0x4e1f30	30	ClearGossipHandlers		ui	orchestration		Clears the handlers for opcodes 0x17d, 0x17e and 0x224	verified	one	ui/gameui#start-up-world-and-quests	
 0x4e1f50	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e1f60	53			ui	orchestration		Runs its object file code that calls 0x4e1fa0, 0x4e26a0; not read here	inferred	none		
 0x4e1fa0	97	SetGossipTarget		ui	orchestration	void __fastcall (uint64_t *guid)	Sets the gossip target and range, or clears it and signals GOSSIP_CLOSED for a zero GUID	verified	one	ui/taxiroute#new-flight-path	
@@ -10168,8 +10168,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e3110	23	InitZero4e3110		ui	orchestration	void __cdecl (void)	Zeroes 4 consecutive dwords	verified	one	ui/initstores#zero-fills	
 0x4e3130	12	InitZero4e3110Register		ui	orchestration	void __cdecl (void)	Registers 0x4e3140 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4e3140	47	InitZero4e3110Exit		ui	primitive	void __cdecl (void)	Frees the int block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
-0x4e3170	118			ui	orchestration		Runs its object file code that calls RoundUpToChunk, 0x4368c0; not read here	inferred	none		
-0x4e31f0	55			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4e3170	118	InitItemText		ui	orchestration		Zeroes the item text GUID, id and page, sizes the page id array to two entries and empties the buffer	verified	one	ui/gameui#start-up-display-and-chat	
+0x4e31f0	55	ShutdownItemText		ui	orchestration		Frees the item text page id array and zeroes its counts	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e3230	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e3240	50	CloseItemTextImpl		ui	orchestration		Closes the item text window	verified	one	ui/itemtext#opening-and-closing	
 0x4e3280	46	ItemTextRecordArrived		ui	orchestration		Reopens the item text window when a cached record arrives for the open object	verified	one	ui/itemtext#opening-and-closing	
@@ -10244,7 +10244,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e4090	12	InitRecords4e4070Register		ui	orchestration	void __cdecl (void)	Registers 0x4e40a0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4e40a0	21	InitRecords4e4070Exit		ui	orchestration	void __cdecl (void)	Sets one bit of a guard byte and does nothing else	verified	one	ui/initexits#exits-that-mark	
 0x4e40c0	48	ResetBuffCache		ui	primitive		Empties all 48 buff records and zeroes the 48 expiry words	verified	one	ui/auradisplay#the-duration-packet	
-0x4e40f0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4e40f0	1	ShutdownBuffs		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e4100	51	WatchPlayerAuras		ui	orchestration		Watches the player's aura fields, builds the cache once and clears the tracking word	verified	one	ui/auradisplay#the-players-buff-cache	
 0x4e4140	13	OnPlayerAurasChanged		ui	orchestration		Rebuilds the buff cache and answers 1 to the field watcher	verified	one	ui/auradisplay#the-players-buff-cache	
 0x4e4150	30	UnwatchPlayerAuras		ui	orchestration		Removes the watcher on the player's aura fields	verified	one	ui/auradisplay#the-players-buff-cache	
@@ -10318,7 +10318,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e4f50	58	ResetActionBarState		ui	orchestration	void __cdecl ()	Zeroes the 120 slot words, item counts, usable and no-power flags and the bonus bar offset	verified	one	ui/actionbar#action-slots	
 0x4e4f90	10	RefreshActionBarOnEnterWorld		ui	orchestration	void __cdecl ()	Refreshes the usable flags, then jumps to the bonus bar offset update	verified	one	ui/actionbar#refreshing-the-flags	
 0x4e4fa0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e4fb0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4e4fb0	1	ShutdownActionBar		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e4fc0	98	UpdateBonusActionBar		ui	orchestration	void __cdecl ()	Sets the bonus bar offset from the player's form record and signals UPDATE_BONUS_ACTIONBAR	verified	one	ui/actionuse#bonus-bar-offset	
 0x4e5030	29	ActionSlotMacroExists		ui	primitive	bool __fastcall (uint32_t slot)	Answers whether a macro word's id is in the macro id table	verified	one	ui/actionbar#slot-to-spell	
 0x4e5050	480	GetActionSlotUsable		ui	primitive	bool __fastcall (uint32_t slot, uint32_t *noPower)	Computes an action slot's usable flag and no-power flag	verified	one	ui/actionbar#usable-and-no-power	
@@ -10441,7 +10441,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration		Runs PartyFrame.cpp code that calls CDataStore::GetInt32, FrameScript_GetText, SStrCopy and 2 more; not read here	inferred	none		
 0x4e7f00	10			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e89c0; not read here	inferred	none		
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
-0x4e7f20	70			ui	primitive		Runs PartyFrame.cpp code that calls SMemFree, ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4e7f20	70	ShutdownParty		ui	orchestration		Frees the 50 looking-for-group result records and clears the handlers for opcodes 0x1ff, 0x329 and 0x2cb	verified	one	ui/gameui#start-up-display-and-chat	
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4e7fc0	210			ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
@@ -10836,7 +10836,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f2bd0	47	InitZero4f2ba0Exit		ui	primitive	void __cdecl (void)	Frees the TalentTabInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4f2c00	580	BuildTalentTabs		ui	primitive	void __cdecl ()	Builds the player's talent tabs from TalentTab.dbc in file order and links each tab's run of Talent.dbc rows	verified	one	ui/talents#talent-tabs	
 0x4f2e50	66	TalentMasksAccept		ui	primitive	uint32_t __fastcall (uint32_t race, uint32_t class, uint32_t raceMask, uint32_t classMask)	Says whether a race mask and a class mask accept the player's race and class, 0 accepting all	verified	one	ui/talents#talent-tabs	
-0x4f2ea0	102			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4f2ea0	102	ShutdownTalents		ui	orchestration		Frees the talent tab records and their array and zeroes the talent counters	verified	one	ui/gameui#start-up-services-and-events	
 0x4f2f10	249			ui	primitive		Refreshes the spell book from the known spells	inferred	none	objectlayer/playercombat#learning-a-spell	
 0x4f3010	44	Script::GetNumTalentTabs	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of the player's talent tabs	verified	one	ui/talents#talent-tabs	
 0x4f3040	286	Script::GetTalentTabInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a tab's name, icon, points spent and background, or nil, nil, 0, nil	verified	one	ui/talents#talent-tabs	
@@ -11105,7 +11105,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f5ea0	12	InitZero4f5e80Register		ui	orchestration	void __cdecl (void)	Registers 0x4f5eb0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4f5eb0	47	InitZero4f5e80Exit		ui	primitive	void __cdecl (void)	Frees the CraftSkillLineInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4f5ee0	28			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f5f00	216			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4f5f00	216	ShutdownCraft		ui	orchestration		Frees the craft and craft skill line records and both arrays and zeroes the craft state	verified	one	ui/gameui#start-up-services-and-events	
 0x4f5fe0	20	CloseCraftWindow		ui	orchestration		Clears the craft window type and signals CRAFT_CLOSE	verified	one	ui/craftverbs#window-state	
 0x4f6000	69			ui	orchestration		Toggles the craft window: closes it with CRAFT_CLOSE for the current profession, else opens it with CRAFT_SHOW	inferred	none	spell/cast#cast-attempt-refusals	
 0x4f6050	38	SelectCraftRow		ui	orchestration		Stores the spell id of a craft row as the selection, or 0 for a header	verified	one	ui/craftverbs#selection-and-names	
@@ -11425,7 +11425,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc720	47	InitZero4fc6f0Exit		ui	primitive	void __cdecl (void)	Frees the TradeSkillSubClassInfo pointer block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4fc750	33	ResetTradeSkillState		ui	orchestration	void __cdecl (void)	Zeroes the selection, the row and header counts, the last built line and the repeat spell	verified	one	tradeskill/recipes#list-state	
 0x4fc780	5	CancelTradeSkillRequestsThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc890, which cancels the pending item requests	verified	one	tradeskill/recipes#created-item	
-0x4fc790	210	FreeTradeSkillLists		ui	orchestration	void __cdecl (void)	Frees every row and header, both arrays and the open line, and zeroes the counts	verified	one	tradeskill/recipes#list-state	
+0x4fc790	210	ShutdownTradeSkill		ui	orchestration		Frees the trade skill row and header records and both arrays and zeroes the counts	verified	one	ui/gameui#start-up-services-and-events	
 0x4fc870	25	CloseTradeSkillWindow		ui	orchestration		Clears the profession window line and the recast and signals TRADE_SKILL_CLOSE	verified	one	ui/tradeskill#opening-and-closing	
 0x4fc890	71	CancelTradeSkillItemWaits		ui	primitive		Cancels the pending created item requests of the profession list	verified	one	ui/tradeskill#building-the-list	
 0x4fc8e0	41	TradeSkillItemArrived		ui	orchestration		Rebuilds the profession list when the last awaited item record arrives	verified	one	ui/tradeskill#building-the-list	
@@ -12973,7 +12973,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x524920	190	InitHashTable524920		ui	primitive	void __cdecl (void)	Builds an empty hash table in a global: link offset 0xc, a self-linked head, no buckets and a mask of -1	verified	one	ui/initstores#hash-tables	
 0x5249e0	12	InitHashTable524920Register		ui	orchestration	void __cdecl (void)	Registers 0x5249f0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x5249f0	359	InitHashTable524920Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x524920 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
-0x524b60	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x524b60	1	InitPortraits		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
 0x524b70	341	ClearPortraitCaches		ui	orchestration		Empties the portrait hash tables and frees the pending and spare nodes	verified	one	ui/portraits#clearing-the-caches	
 0x524cd0	308	DrainPortraitList		ui	primitive	void __cdecl ()	Fires UNIT_PORTRAIT_UPDATE and UNIT_MODEL_CHANGED for each pending unit whose portrait is ready	verified	one	ui/paperdoll#draining-the-pending-list	
 0x524e10	321	MarkPortraitDirty		ui	orchestration		Queues a GUID for the portrait events and marks its cached portrait dirty	verified	one	ui/portraits#marking-and-draining	
