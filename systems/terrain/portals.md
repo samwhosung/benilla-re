@@ -130,17 +130,16 @@ Confidence: verified
 Proof: one
 Test: `terrain::portal_plane_dot_difftest`, `terrain::portal_rect_extent_difftest`, `terrain::portal_ndc_to_screen_difftest`
 
-A portal reference is 8 bytes: portal index, other group and a signed side (`0x13c` table from the
+A portal reference is 8 bytes: portal index, other group, a signed side (`0x13c` table from the
 group's `+0x2c`, count `+0x30`); the portal record is 20 bytes: first vertex, vertex count, normal
 and offset. The state of a portal is 0x1c bytes at `0xcb005c` (flags word, the rectangle at `+0x4`
 to `+0x10`, the pass of its projection at `+0x14` and of its window at `+0x18`). `0x6b4277` to
 `0x6b42b8` set the fog flag `0xca7f00` to 1 when the light state's claim (`+0x98` a model, `+0xa0`
 group indices) names the interior group, else 0. The eye test (`0x6b43cd` to `0x6b4403`) is
-dot(eye, n) + d negated for a negative side; the portal is skipped below 0. The window clamps the
-portal rectangle by `0x6b4409` to `0x6b44b1`. A group with flag 0x8 reached in the inside leg for
-the first time this pass records a window of (v + 1) × 0.5 and the reach `0x6b4680`
-(`0x6b4521` to `0x6b45ab`), with no bound on the 16 records. The recursion pushes a volume built by
-`0x682930`, walks with depth + 1 and pops (`0x6b4610` to `0x6b4643`).
+dot(eye, n) + d, negated for a negative side; below 0 the portal is skipped. The window clamps the
+portal rectangle by `0x6b4409` to `0x6b44b1`. A portal whose other group has flag 0x8, met in the inside leg, records a window of (v + 1) × 0.5 and the reach
+`0x6b4680` (`0x6b4521` to `0x6b45ab`) once a pass: the portal state's `+0x18` is compared with the pass stamp
+(`0x6b4502`) and stored after (`0x6b45b7`), once per portal, not per group, with no bound on 16 records. The recursion pushes a volume from `0x682930`, walks with depth + 1 and pops (`0x6b4610` to `0x6b4643`).
 
 ## Portal reach
 

@@ -202,7 +202,7 @@ Test: none
 `0x68cec0` skips a tile only for the hole nibble 0xf and for a vertical band outside the box, and
 emits the two triangles (0, 9, 10) and (0, 10, 1) of each whole tile (`collide`). The position
 copy in `0x68d690` and `0x68d790` is three dword moves per vertex. The seven functions named above
-write no state 8 (every state setter in them was read to its return). The water draws depth tested
+set no state 8: none passes id 8 to a state setter. The water draws depth tested
 against the terrain, which is drawn first and writes depth, so the visible waterline is where the
 terrain meets the liquid plane; the draw order is `liquidpass` and `scene`.
 

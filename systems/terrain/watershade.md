@@ -121,17 +121,17 @@ in colour and in alpha (`0x6b6420` reads `0xc9607c` nowhere). No liquid draw set
 ## River stage 2
 
 The river pass carries a third texture stage that never runs: its branch at `0x685251` tests the
-handle `0xc800ec`, which no code loads, so the branch to `0x685440` is always taken. The skipped code
+handle `0xc800ec`, which nothing sets, so the branch to `0x685440` is always taken. The skipped code
 would bind the sky gradient texture on stage 2, texture generation mode 4, the stage-2 texture
 matrix and a program in `0xc800ec`. The only ocean program name in the executable is
 `Shaders\Pixel\ocean0_s.bls`.
 
-Addresses: `0x6851b0`, `0x685244`, `0x685251`, `0x685257`, `0x685440`, `0x68543e`, `0x685285`, `0x685546`, `0x68c7e9`, `0x68c7f8`, `0x68c6f8`, `0x68c707`, `0x58b310`, `0xc800ec`, `0xc7fbb8`
+Addresses: `0x6851b0`, `0x685244`, `0x685251`, `0x685257`, `0x685440`, `0x68543e`, `0x685285`, `0x685546`, `0x68c7e9`, `0x68c7f8`, `0x68dc39`, `0x694262`, `0x68c6f8`, `0x68c707`, `0x58b310`, `0xc800ec`, `0xc7fbb8`
 Confidence: verified
 Proof: one
 Test: none
 
-Every reference to `0xc800ec` is a read (`0x685244`, `0x685285`, `0x685546`), a release (`0x68c7e9`) or
+Every reference to `0xc800ec` is a read (`0x685244`, `0x685285`, `0x685546`, `0x68dc39`, `0x694262`), a release (`0x68c7e9`) or
 the zeroing store at `0x68c7f8`; the load of `0xc81b7c` at `0x68c6f8` and `0x68c707` is the control.
 The skipped block binds `0xc7fbb8` to state 0x19, sets state 0x31 to 4 and state 0x39 to 1.
 

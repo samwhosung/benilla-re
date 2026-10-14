@@ -176,17 +176,17 @@ Proof: one
 Test: none
 
 The area index is the `fistp` of the scaled value less 0.5, shifted by 7 and masked by 0x3f
-(`0x68af8f`); the loops run from index − 1 to index + 1, clamped (`0x68afa1` to `0x68afcb`) over the
-table `0xc96318`. `0x68b075` tests the area box (`0x7c2040`, mode 3) from its origin `+0x7c`,
-`+0x80` and the size `0x810284`. In `0x68b0d0` the chunk coordinates are the position times 0.03
-(`0x8102a4`), `fistp` and masked by 0xf (`0x68b109`, `0x68b121`); the half-width is `ceil` of
-radius × 0.24 (`0x810354`, `0x68b13f`). The chunk table is the area's `+0x278`; the slots are the
-chunk's four pointers from `+0x118` (`0x68b1e4`). A cell's nibble is `[slot + 0x10][row × 8 +
-column] & 0xf` (`0x68b21f`); `0x68b231` stores 1 in the type's found dword. The corner is the
-chunk origin `+0x6c`, `+0x70` less row and column times 4.1666665 (`0x810290`), z
-`([slot + 8] + [slot + 4]) × 0.5` (`0x68b25e`). `0x68b29d` (`test ah,5; jp`) replaces the
-stored distance only for a smaller one; NaN never does. The radius never filters cells, and a
-nibble above 11 would write past the caller's 12-entry arrays.
+(`0x68af8f`); the loops run from index − 1 to index + 1, clamped (`0x68afa1`), over `0xc96318`.
+`0x68b075` tests the area box (`0x7c2040`) from `+0x7c`, `+0x80` and the size `0x810284`. In
+`0x68b0d0` a chunk coordinate is ((17066.666 − p) × 0.03 − 0.5) (`0x8102a4`, `0x869ffc`), `fistp` and masked by
+0xf (`0x68b109`, `0x68b121`); the half-width is `ceil` of radius × 0.24 (`0x810354`, `0x68b13f`). The chunk
+table is the area's `+0x278`; the slots are the chunk's four pointers at `+0x118` (`0x68b1e4`). A cell's
+nibble is `[slot + 0x10][row × 8 + column] & 0xf` (`0x68b21f`); `0x68b231` stores 1 in the type's found
+dword. The corner is the chunk origin `+0x6c`, `+0x70` less row and column times 4.1666665 (`0x810290`), z
+`([slot + 8] + [slot + 4]) × 0.5` (`0x68b25e`). `0x68b29d` (`test ah,5; jp`) replaces the stored distance
+only for a smaller one, NaN never. The radius never filters cells. A nibble above 11 writes past the
+caller's 12-entry arrays; `0x6723f0` keeps distances in its local at `ebp − 0x34`, so nibbles 12, 13 and 14
+index its indoor counter, saved `ebp` and return address.
 
 ## Map object liquid at a point
 

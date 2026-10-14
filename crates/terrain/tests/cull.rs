@@ -398,6 +398,60 @@ fn portal_screen_rect_difftest() {
         }
         checked += 1;
     }
+    // The threshold: a portal in the plane x = 0, so n = (±1, 0, 0) and |d| = |ex|; the eye in
+    // its y and z inside the quad. ex = 0.01f is on the plane (`<=`), one ulp up is not, one down is.
+    {
+        let quad: [[f32; 3]; 4] = [
+            [0.0, -1.0, 1.0],
+            [0.0, 1.0, 1.0],
+            [0.0, 1.0, 2.0],
+            [0.0, -1.0, 2.0],
+        ];
+        for (i, v) in quad.iter().enumerate() {
+            for (c, &f) in v.iter().enumerate() {
+                emu.write_u32(vert_pool + (i * 3 + c) as u64 * 4, f.to_bits());
+            }
+        }
+        emu.write_u32(portal_desc, (quad.len() as u32) << 16);
+        let eps = 0.01f32;
+        for (ex, on) in [
+            (f32::from_bits(eps.to_bits() - 1), true),
+            (eps, true),
+            (f32::from_bits(eps.to_bits() + 1), false),
+        ] {
+            let eye = [ex, 0.0f32, 1.5];
+            for (i, &f) in eye.iter().enumerate() {
+                emu.write_u32(EYE_VA + i as u64 * 4, f.to_bits());
+            }
+            for i in 0..8 {
+                emu.write_u32(out + i * 4, 0);
+            }
+            emu.call(0x6b46f0, owner as u32, 0, &[portal_desc as u32, out as u32]);
+            let bin_rect = [
+                emu.read_f32(out + 8),
+                emu.read_f32(out + 4),
+                emu.read_f32(out + 0x10),
+                emu.read_f32(out + 0xc),
+            ];
+            let ours = portal_screen_rect(&quad, &view_proj, &guard, &eye, 0);
+            assert_eq!(
+                bin_rect == [-1.0, -1.0, 1.0, 1.0],
+                on,
+                "threshold ex bits {:#x}: binary",
+                ex.to_bits()
+            );
+            assert_eq!(
+                ours.rect == [-1.0, -1.0, 1.0, 1.0],
+                on,
+                "threshold ex bits {:#x}: ours",
+                ex.to_bits()
+            );
+            for (c, (b, o)) in bin_rect.iter().zip(ours.rect.iter()).enumerate() {
+                assert_f32(*b, *o, &format!("threshold {:#x} rect[{c}]", ex.to_bits()));
+            }
+            checked += 1;
+        }
+    }
     // the eye back at the origin for the random cases
     for (i, &f) in eye_pos.iter().enumerate() {
         emu.write_u32(EYE_VA + i as u64 * 4, f.to_bits());

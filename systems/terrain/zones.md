@@ -27,8 +27,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-The leaf id must be 0 to the table count and its row non-null (`0x67e56c` to `0x67e577`). A
-parent above the count or below 0 sends `0x67e591` to `xor ebx,ebx; mov edx,[ebx]`, a read of
+The leaf id must be 0 to the highest id (`0xc0e04c`, `jg` at `0x67e566`) and its row non-null (`0x67e56c` to
+`0x67e577`). A parent above the highest id or below 0 sends `0x67e591` to `xor ebx,ebx; mov edx,[ebx]`, a read of
 address 0, and a null row in range does the same: the client faults on such data. `0x67e5c4`
 tests the indoor bit from `0x6704a0`: set calls `0x67e670` (`0x67e5dc`), clear calls `0x67e7f0`
 (`0x67e5fb`); a 0 result ends the function. An empty text is passed as null. `0x67e645` calls `0x494780` with the zone id, the
@@ -102,13 +102,14 @@ the locale name or the empty string. `0x69d87e` and `0x69d9e5` pass −1 for the
 ## Entity area id
 
 `0x6703a0` returns 1 and writes an area id for an entity, or returns 0. With the map-is-one-object
-flag set it is the map record's field at `+0x4c`, failing when that is 0; the map record is read
-with no range check. Otherwise a null entity fails. The first node of the entity's list decides: a group def (flags `+0x8` bit
+flag set it is the map record's field at `+0x4c`, failing when that is 0. The record is the
+map table `0xc0daa8` entry for the loaded map id, checked against the highest id (`0x6703ba`, `0x6703bc`); out
+of range, or null, the read is of address 0x4c. Otherwise a null entity fails. The entity's first node decides: a group def (flags `+0x8` bit
 0x10) gives its WMOAreaTable row's AreaTable id when that is nonzero; a def with flags bit 0x4 gives
 its `+0x16c` field; anything else, and a zero id, gives the terrain area id `0x69b120` at the
 entity position `+0x24`.
 
-Addresses: `0x6703a0`, `0x6703a4`, `0x6703d1`, `0x6703de`, `0x6703fb`, `0x67042b`, `0x670437`, `0x670453`, `0x670458`, `0x67043e`, `0x69b120`, `0x6704a0`
+Addresses: `0x6703a0`, `0x6703a4`, `0x6703d1`, `0x6703de`, `0x6703fb`, `0x67042b`, `0x670437`, `0x670453`, `0x670458`, `0x67043e`, `0x69b120`, `0x6704a0`, `0x6703ba`, `0x6703bc`, `0x670400`, `0x670405`, `0x670409`, `0x67040b`, `0x67040d`, `0xc0daa8`, `0xc0daac`, `0x86a2cc`
 Confidence: verified
 Proof: one
 Test: none
@@ -116,7 +117,8 @@ Test: none
 `0x6703a4` tests the flag; `0x6703d1` loads `[record + 0x4c]` from the table at map id (the
 map record base is 0 for an id out of range, reading address `0x4c`). `0x6703fb` tests bit 0x10 of the
 def's flags; `0x67042b` looks up with group id −1; `0x670437` takes `+0x28` and tests it;
-`0x670453` tests bit 0x4 and `0x670458` loads `+0x16c`.
+`0x670453` tests bit 0x4 and `0x670458` loads `+0x16c`. For a group def, `0x670400` loads the def's `+0x20`;
+when that is 0 or has bit 0 set (`0x670405`, `0x670409`), `0x67040b` zeroes the pointer and `0x67040d` reads address 8.
 
 ## Breath flag
 

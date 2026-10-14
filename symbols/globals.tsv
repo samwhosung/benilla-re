@@ -2673,7 +2673,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc6326c	uint32_t			unassigned	Holds a dword that ClientInitializeGame, LoadNewWorld, CGGameUI::HandlePacket read and write; not read here	inferred	none	
 0xc63274	uint32_t[4]	s_outerWindow		terrain	Holds the outer window in chunk indices: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#area-unload
 0xc63284	uint32_t	s_shadowLevel		terrain	Holds the shadowLevel option: exactly 1 sizes chunk textures 32x32, any nonzero value decodes 32x32 data	verified	one	terrain/chunk#alpha-maps
-0xc6328c	uint32_t	s_shadowColor		terrain	Holds the shadow colour of the shadow pass and the shadow query, default 0xffffffff	verified	one	terrain/render#chunk-layers-in-multipass
+0xc6328c	uint32_t	s_shadowColor		terrain	Holds the shadow colour of the shadow pass and query; the world frame rewrites it from the light state each frame	verified	one	terrain/render#chunk-layers-in-multipass
 0xc63298	uint16_t[49152]	s_batchIndices		terrain	Holds the pool of 0xc000 batch indices	verified	one	terrain/collide#triangle-batches
 0xc7b298	void *	s_modelManager		terrain	Holds the object 0x707350 creates models on	inferred	none	spell/visuals#shard-model-start-and-end
 0xc7b2a0	float	s_worldClockSeconds		terrain	Holds the world clock in seconds that ripple lifetimes count against	verified	one	terrain/waterfx#ripple-emission

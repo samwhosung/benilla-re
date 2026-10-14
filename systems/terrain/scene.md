@@ -137,7 +137,7 @@ tests the byte at `+0xc` for its sign (`0x683929`) and passes edx = 0x10 to the 
 
 `0x682ef0` returns 0 when a sphere (centre `ecx`, radius on the stack) lies inside the six
 planes of the active frustum volume and 1 when it does not. `0x682f60` does the same for an
-oriented box through `0x6869c0`. `0x686b80` is the plane test: 0 when the centre is behind a
+oriented box through `0x6869c0`; it takes the box (ecx), its 3 by 3 basis (edx) and a position (stack, `ret 4`). `0x686b80` is the plane test: 0 when the centre is behind a
 plane by more than the radius, else 3. `0x686000` returns 2 when the sphere is hidden behind the
 horizon and 0 otherwise.
 

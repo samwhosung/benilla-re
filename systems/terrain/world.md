@@ -14,7 +14,7 @@ to 0x80, `maxLOD` to 3 and the far chunk level to 2, squares the detail doodad h
 the map initializer, builds the drift cloud and the weather manager, hands two callbacks to the
 model scene and registers 13 console commands.
 
-Addresses: `0x66f6c0`, `0x66f6cb`, `0x66f8ae`, `0x66f8b8`, `0x66f971`, `0x66f9af`, `0x66f9dc`, `0x66f9f5`, `0x66fa06`, `0x680610`, `0x691b10`, `0x706e10`, `0x70a230`, `0x70a250`, `0x63f9e0`, `0x58ab10`, `0x6729f0`
+Addresses: `0x66f6c0`, `0x66f6cb`, `0x66f8ae`, `0x66f8b8`, `0x66f971`, `0x66f9af`, `0x66f9dc`, `0x66f9f5`, `0x66fa06`, `0x680610`, `0x691b10`, `0x706e10`, `0x70a230`, `0x70a250`, `0x63f9e0`, `0x58ab10`, `0x6729f0`, `0x66fff3`, `0x672590`, `0x673290`
 Confidence: verified
 Proof: one
 Test: none
@@ -28,7 +28,8 @@ commands, in registration order, are `showDetailDoodads`, `maxLOD`, `showCull`, 
 `waterMaxLOD`, `waterWaves`, `waterSpecular`, `waterRipples`, `waterParticulates`, `showShadow`,
 `showLowDetail`, `showSimpleDoodads` and `detailDoodadAlpha`; `setShadow` runs the shadow colour
 setter `0x673290`, which reads four floats from 0 to 1 (a NaN passes) and packs them first float
-in the top byte. The option table of 64 dwords, all −1, goes to `0x58ab10` with the query
+in the top byte. The world frame writes the shadow colour back from the light state's `+0x194` (`0x66fff3` through
+`0x672590`), so a `setShadow` value lasts one frame. The option table of 64 dwords, all −1, goes to `0x58ab10` with the query
 `0x6729f0`.
 
 ## Map load
@@ -221,7 +222,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`ret 8`. `0x672417` tests `+0x90` bit 0. Indoors `0x67242f` stores 0x270f as the counter and
+`ret 8`. The distances are a local of 12 dwords at `ebp − 0x34`, the 0x270f counter at `ebp − 4` just above it. `0x672417` tests `+0x90` bit 0. Indoors `0x67242f` stores 0x270f as the counter and
 `0x69dd70` calls `0x68ac70` per group; `0x67243b` skips the terrain search when the counter is 2 or
 more. `0x69dd70` visits each group node of the entity and passes the group's key, its model's
 liquid data and the entity position through the model's matrix.
