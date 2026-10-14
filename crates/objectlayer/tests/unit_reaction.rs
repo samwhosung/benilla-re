@@ -307,7 +307,7 @@ fn unit_reaction_reputation_branch_is_gated() {
     );
     e.write_u32(FORCED_COUNT, 0);
 
-    // The contested guard: template flag 0x1000 with player flag 0x100. Row 1577's flags are
+    // The contested guard: template flag 0x1000 with player flag 0x100. The flags of row 1577 are
     // 0x21, so both halves are set, and only both fire it.
     let ft_table = e.read_u32(FT_TABLE_PTR) as u64;
     let row1577 = e.read_u32(ft_table + 1577 * 4) as u64;
