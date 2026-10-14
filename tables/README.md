@@ -202,3 +202,16 @@ error.
 | `fn` | The C function. |
 | `checked` | The checked arguments, `,`-separated: `1:string` for `lua_isstring` (a number passes) and `1:number` for `lua_isnumber`, by Lua stack index. Empty for none. |
 | `usage` | Every `Usage:` string the function pushes for its error, `\|`-separated. Empty for none. |
+
+## tutorial_triggers.tsv
+
+Every place the client fires or acknowledges a tutorial (58 rows). `../tools/tables/tutorial_triggers.py`
+opens with the contract. A tutorial has a number from 0 to 49; the interface sees it plus one.
+
+| column | meaning |
+|---|---|
+| `site` | The call or tail jump. |
+| `fn` | The function that holds it. |
+| `verb` | `fire` for `0x4b5390` (set the fire-once bit and signal `TUTORIAL_TRIGGER`), `ack` for `0x4b54c0` (set both bits and tell the server). |
+| `tutorials` | The numbers that reach the site, `\|`-separated; `?` where the walk cannot name one (a table read or a parameter). |
+| `delay_ms` | For `fire`, the delay that reaches the site: 0 fires now; empty for `ack`. |

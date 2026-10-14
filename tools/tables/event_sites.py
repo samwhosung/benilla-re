@@ -87,8 +87,9 @@ def src(ops):
     return ops.split(',', 1)[1].strip() if ',' in ops else ''
 
 
-def resolve(cfg, site_i, kind, maxdepth=400):
-    """-> (set of ints, list of (address, reason) unresolved)."""
+def resolve(cfg, site_i, kind, maxdepth=400, reg='ecx'):
+    """-> (set of ints, list of (address, reason) unresolved). For kind SignalEvent the walk tracks
+    `reg`, ecx by default."""
     ins = cfg.ins
     vals, bad = set(), []
     work, seen = [], set()
@@ -103,7 +104,7 @@ def resolve(cfg, site_i, kind, maxdepth=400):
         for p in ps:
             work.append((p, trk, add, d + 1, pend))
 
-    push_preds(site_i, 'ecx' if kind == 'SignalEvent' else 'push', 0, 0, None)
+    push_preds(site_i, reg if kind == 'SignalEvent' else 'push', 0, 0, None)
     while work:
         i, trk, add, d, pend = work.pop()
         key = (i, trk, add, pend)

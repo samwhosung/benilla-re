@@ -8036,22 +8036,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b5240	34			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4b5270	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4b5280	173			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4b5330	70	CGTutorial::InitializeGame	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4b5380	15			ui	orchestration		Runs its object file code that calls 0x4b58e0; not read here	inferred	none		
-0x4b5390	300			ui	primitive		Sets a bit of a flag set when the set exists and the bit is clear	inferred	none	spell/failures#player-unit-cleanup	
-0x4b54c0	248			ui	primitive		Sets a tutorial flag and tells the server with CMSG_TUTORIAL_FLAG	inferred	none	ui/chatsend#text-steps	
-0x4b55c0	153			ui	orchestration		Runs its object file code that calls 0x4b58e0, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4b5660	146			ui	orchestration		Runs its object file code that calls CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4b5700	234	CGTutorial::OnTutorialFlags	idb	ui	primitive		Runs its object file code that calls CDataStore::GetDataInSitu, 0x4594f0, ReallocUint32Array and 1 more; not read here	inferred	none		
-0x4b57f0	80			ui	primitive		Runs its object file code that calls 0x401520; not read here	inferred	none		
-0x4b5840	159			ui	primitive		Runs its object file code that calls OsGetAsyncTimeMs, SndInterfacePlayInterfaceSound and 4 more; not read here	inferred	none		
-0x4b58e0	116			ui	orchestration		Runs its object file code that calls KillGameTimer, 0x4b5eb0, SMemFree; not read here	inferred	none		
-0x4b5960	69	Script::TutorialsEnabled	idb	ui	primitive		Implements the Lua function TutorialsEnabled	inferred	none		
-0x4b59b0	71	Script::FlagTutorial	idb	ui	primitive		Implements the Lua function FlagTutorial	inferred	none		
-0x4b5a00	8	Script::ClearTutorials	idb	ui	orchestration		Implements the Lua function ClearTutorials	inferred	none		
-0x4b5a10	8	Script::ResetTutorials	idb	ui	orchestration		Implements the Lua function ResetTutorials	inferred	none		
-0x4b5a20	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4b5a40	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4b5330	70	InitTutorials	idb	ui	orchestration		Zeroes both tutorial bit sets and registers the SMSG_TUTORIAL_FLAGS handler	verified	one	ui/tutorials#bring-up-and-teardown	
+0x4b5380	15	ShutdownTutorials		ui	orchestration		Cancels and frees the delayed tutorial prompts and removes the SMSG_TUTORIAL_FLAGS handler	verified	one	ui/tutorials#bring-up-and-teardown	
+0x4b5390	300	FireTutorial		ui	primitive		Sets a tutorial's fire-once bit and signals TUTORIAL_TRIGGER now or after a delay	verified	one	ui/tutorials#the-tutorial-trigger	
+0x4b54c0	248	AcknowledgeTutorial		ui	primitive		Sets a tutorial in both sets, drops its delayed prompt and sends CMSG_TUTORIAL_FLAG	verified	one	ui/tutorials#acknowledging-a-tutorial	
+0x4b55c0	153	ClearAllTutorials		ui	orchestration		Cancels the delayed prompts, fills both sets with ones and sends the clear message	verified	one	ui/tutorials#the-lua-functions	
+0x4b5660	146	ResetAllTutorials		ui	orchestration		Fills both sets with zeros and sends the reset message	verified	one	ui/tutorials#the-lua-functions	
+0x4b5700	234	CGTutorial::OnTutorialFlags	idb	ui	primitive		Copies the server's tutorial flag bytes into both bit sets	verified	one	ui/tutorials#the-servers-flags	
+0x4b57f0	80	ArmTutorialTimer		ui	primitive		Arms the game timer for the nearest deadline among the delayed tutorial prompts	verified	one	ui/tutorials#the-delayed-trigger	
+0x4b5840	159	ProcessTutorialTimers		ui	primitive		Plays the sound and signals TUTORIAL_TRIGGER for every delayed prompt whose deadline came	verified	one	ui/tutorials#the-delayed-trigger	
+0x4b58e0	116	FlushTutorialTimers		ui	orchestration		Kills the game timer and frees every delayed tutorial prompt	verified	one	ui/tutorials#bring-up-and-teardown	
+0x4b5960	69	Script::TutorialsEnabled	idb	ui	primitive		Pushes 1 when any byte of the acknowledged set is not 0xFF, else nil	verified	one	ui/tutorials#the-lua-functions	
+0x4b59b0	71	Script::FlagTutorial	idb	ui	primitive		Acknowledges the tutorial with the given 1-based number, ignoring one out of range	verified	one	ui/tutorials#the-lua-functions	
+0x4b5a00	8	Script::ClearTutorials	idb	ui	orchestration		Runs ClearAllTutorials and returns no value	verified	one	ui/tutorials#the-lua-functions	
+0x4b5a10	8	Script::ResetTutorials	idb	ui	orchestration		Runs ResetAllTutorials and returns no value	verified	one	ui/tutorials#the-lua-functions	
+0x4b5a20	30	RegisterTutorialFunctions		ui	orchestration		Registers the four tutorial Lua functions	verified	one	ui/tutorials#the-lua-functions	
+0x4b5a40	24	UnregisterTutorialFunctions		ui	orchestration		Removes the four tutorial Lua functions	verified	one	ui/tutorials#the-lua-functions	
 0x4b5a60	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b5a70	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4b5a80	5			ui	orchestration		Runs its object file code not read here	inferred	none		

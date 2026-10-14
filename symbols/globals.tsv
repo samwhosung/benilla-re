@@ -2291,9 +2291,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
 0xb71170	uint32_t	s_bookTabCount		unassigned	Holds the number of tabs in the book	verified	one	ui/spellbook#spell-book-lists
 0xb71174	uint32_t	s_petBookSpellCount		ui	Holds the number of spells in the pet's book	verified	one	ui/spellbook#spell-book-lists
-0xb711b8	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
-0xb711e4	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
-0xb711ec	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
+0xb71178	uint32_t[3]	s_tutorialTimers		ui	Holds the list of delayed tutorial prompts, each a node with a number and a deadline	verified	one	ui/tutorials#the-delayed-trigger
+0xb711b8	uint32_t	s_tutorialFiredBits		ui	Holds the bit count of the fire-once tutorial set, 0 until the server sends it	verified	one	ui/tutorials#the-two-bit-sets
+0xb711bc	uint32_t[3]	s_tutorialFired		ui	Holds capacity, dword count and data of the fire-once tutorial set	verified	one	ui/tutorials#the-two-bit-sets
+0xb711d8	uint32_t	s_tutorialTimerHandle		ui	Holds the handle of the game timer that runs ProcessTutorialTimers, 0 when none	verified	one	ui/tutorials#the-delayed-trigger
+0xb711e4	uint32_t	s_tutorialAckedBits		ui	Holds the bit count of the acknowledged tutorial set, 0 until the server sends it	verified	one	ui/tutorials#the-two-bit-sets
+0xb711e8	uint32_t[3]	s_tutorialAcked		ui	Holds capacity, dword count and data of the acknowledged tutorial set	verified	one	ui/tutorials#the-two-bit-sets
 0xb71290	void *	s_bindings		ui	Holds the key binding object of 0xdc bytes that 0x4b6050 builds, whose +0xd8 is 1 while a binding runs	verified	one	ui/protected#input-event-flags
 0xb712a8	void *[40]	s_raidRoster		ui	Holds the pointers to the 40 raid roster records of 0x160 bytes	verified	one	ui/raid#the-roster-record
 0xb71368	uint64_t[8]	s_raidTargetGuids		ui	Holds the GUID of the unit carrying each of the eight raid target icons	verified	one	ui/raid#the-raid-target-table
