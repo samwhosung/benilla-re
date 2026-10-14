@@ -485,9 +485,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8062e0	const uint32_t[94]	s_chatTypeEvents		ui	Holds the event id each of the 94 chat types fires	verified	one	ui/chatevents#the-ten-event-arguments
 0x806458	char[8]	s_maskCharacters		ui	Holds the mask characters !@#$%^&*	verified	one	ui/chatfilter#masking
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
+0x806524	const float	s_mapInvVerticalSpan		ui	Holds 1/41.75, the divisor that turns the vertical world span of a map into 0 to 1	verified	one	ui/geometry#the-rectangle-of-a-continent
+0x806528	const float	s_mapInvHorizontalSpan		ui	Holds 1/62.625, the divisor that turns the horizontal world span of a map into 0 to 1	verified	one	ui/geometry#the-rectangle-of-a-continent
+0x80652c	const float	s_mapVerticalOrigin		ui	Holds 20.875, the vertical offset of a continent rectangle before its scale	verified	one	ui/geometry#the-rectangle-of-a-continent
+0x806530	const float	s_mapHorizontalOrigin		ui	Holds 31.3125, the horizontal offset of a continent rectangle before its scale	verified	one	ui/geometry#the-rectangle-of-a-continent
 0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
 0x80653c	const float	s_oneTwentyEight		unassigned	Holds 128.0	verified	one	lighting/clouds#cloud-cover
-0x806540	float	s_minusHalfByte		ffxeffects	Holds -128.0, the lower clamp of the signed wave map byte	verified	one	ffxeffects/passes#wave-map-table
+0x806540	const float	s_mapNegCells		ui	Holds -128.0, the multiplier that gives the row of an area bitmap cell	verified	one	ui/geometry#the-cell-of-a-point
 0x806544	const float	s_float37f5c290		ui	Holds the float 0.000029296876 (0x37f5c290)	inferred	none	
 0x806548	const float	s_float427a8000		ui	Holds the float 62.625 (0x427a8000)	inferred	none	
 0x80654c	float	s_tileSize		terrain	Holds 533.33331 (0x44055555), a tile's side in yards	verified	one	terrain/files#wdl

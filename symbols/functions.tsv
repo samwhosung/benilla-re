@@ -7431,7 +7431,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a5ca0	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a5cc0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4a5cd0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4a5d00	1668	BuildMapLists		ui	orchestration		Builds the continent records, their sorted zone ids and the orphan area ids from WorldMapArea	verified	one	ui/worldmap#the-lists	
+0x4a5d00	1668	BuildMapLists		ui	orchestration		Builds the continent records, their sorted zone ids and the orphan area ids from WorldMapArea	verified	one	ui/geometry#the-continent-record	
 0x4a6390	154	CompareZoneNames		ui	primitive		Compares two WorldMapArea ids by the name of their area	verified	one	ui/worldmap#the-lists	
 0x4a6430	37			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
 0x4a6460	36			ui	orchestration		Runs its object file code that calls 0x4a67a0; not read here	inferred	none		
@@ -7447,9 +7447,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6e80	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a6e90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a6ea0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a6ec0	567			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x4a7100	418			ui	unreached		Runs its object file code not read here	inferred	none		
-0x4a72b0	104			ui	primitive		Runs its object file code that calls 0x4a7320; not read here	inferred	none		
+0x4a6ec0	567	AreaIdAtMapPoint		ui	primitive		Answers the WorldMapArea id of the grid cell under a point of the displayed map, or 0	verified	one	ui/geometry#the-cell-of-a-point	
+0x4a7100	418	MapPointToWorld		ui	unreached		Turns a point of the displayed map into a world position and map id	verified	one	ui/geometry#click-to-world	
+0x4a72b0	104	WorldToMapPoint		ui	primitive		Puts a world position on the world view as a horizontal result and one minus a vertical one	verified	one	ui/geometry#world-to-map	
 0x4a7320	64	FindWorldMapContinent		ui	primitive		Returns the WorldMapContinent row for a map id, or 0	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7360	478	ProjectWorldPosition		ui	primitive		Normalises a world position to the displayed map for a map id	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7540	212	DrillMap		ui	primitive		Selects the continent or zone whose rectangle holds the cursor	verified	one	ui/worldmap#hover-and-click	
