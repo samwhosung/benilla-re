@@ -65,14 +65,14 @@ answer is 0.0. The image is loaded on demand.
 Addresses: `0x770720`, `0x770790`, `0x770729`, `0x77072e`, `0x770736`, `0x770739`, `0x77073b`, `0x77074e`, `0x770778`, `0x44b3b0`, `0x44b3c1`, `0x44b3ee`, `0x44b3fd`, `0x6f1eb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_unit_convert_1024`
 
 `0x770720` calls the plain getter, compares with 0.0 by `fcom; test ah,0x44; jp`, which falls through
 on equal only, loads the image object `[this+0xa8]` (the texture's `+0xcc`) and calls `0x44b3b0` with the load
 flag set and a null height out-pointer. The texel width is converted as `0x6f1eb0` does: divided by
 `[0x832a4c]·1024` and multiplied by `K1`. `0x44b3b0` loads the image when `[+0x120]` is 0 and the flag is set
 (`0x44b3c1` to `0x44b3e5`), then stores `+0x144` and `+0x148` through the non-null out-pointers. `0x770790` is
-the height twin with `+0x54` and `+0x148`.
+the height twin with `+0x54` and `+0x148`. `ui::glue_unit_convert_1024` runs the `fmul` by 1024.0 and `fdivr` of the unit conversion as a copied-byte island of the family (`0x770720`, `0x770790`, `0x770f40`).
 
 ## A font string's size
 
@@ -83,14 +83,14 @@ fixes the opposite edge of a font string.
 Addresses: `0x772930`, `0x772a60`, `0x772890`, `0x7729b0`, `0x772937`, `0x77294a`, `0x772957`, `0x772971`, `0x77297a`, `0x772983`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_set_scaled_chain`
 
 `0x772930` stores the plain width, tests it against 0.0 and, when equal, calls `0x772890` for the
 measured width (`0x77294f`). The floor is `1.0 / ([0x832a4c]·1024)` times `K1` (`0x772957` to
 `0x77296c`). `fcomp` of the floor with the candidate and `test ah,5; jp` return the floor when the
 floor is at least the candidate or either is NaN, the candidate otherwise. `0x772a60` repeats it with
 `0x768410` and `0x7729b0`. `0x772890` returns the cached `+0xfc` when it is nonzero, else measures the text with the font
-`+0xe0` and divides by the scale `+0x7c`; it is 0.0 without a font or text.
+`+0xe0` and divides by the scale `+0x7c`; it is 0.0 without a font or text. `ui::textglue_set_scaled_chain` runs the floor of `0x772930` and `0x772a60`: the `fmul`/`fdivr` bytes of `0x77295c` and `0x772963` as a copied-byte island, then `0x41ae60`.
 
 ## The implicit anchor
 

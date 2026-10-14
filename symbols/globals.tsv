@@ -331,6 +331,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x718788	void *[5]	s_m2BillboardTable		models	Holds the jump targets of the billboard cases	verified	one	animation/billboards#billboard-cases
 0x71879c	uint8_t[57]	s_m2BillboardIndex		models	Maps a bone's billboard flags minus 8 to a billboard case	verified	one	animation/billboards#billboard-cases
 0x768c44	void *[9]	s_dragGripArms		ui	Holds the nine grip arms of 0x768710, one per anchor point	verified	one	ui/resizebounds#the-drag
+0x771bf4	const void *[2]	s_latinVowelArms		ui	Holds the two arms of the vowel test 0x771b60, a vowel and the Latin-1 range test	verified	one	ui/fonttext#french-escape-and-digit-groups
+0x771bfc	const uint8_t[53]	s_latinVowelArmIndex		ui	Maps a character from A to U to an arm of the vowel test, 0 for each ASCII vowel	verified	one	ui/fonttext#french-escape-and-digit-groups
 0x77ac1c	void *[4]	s_cases77abb0		ui	Holds the arms that map a classified language to the edit box's language index	verified	one	ui/inputlanguage#the-language-index
 0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
@@ -1060,6 +1062,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c5d8	void *[11]	CSimpleModel::Layout::vftable		ui	Holds the geometry vtable of CSimpleModel, which its constructor stores at +0x24; slots 7 and 8 size the frame	verified	one	ui/modelview#model-frame-fields
 0x81c608	void *[35]	CSimpleModel::vftable		ui	Holds the 35 virtual function slots of CSimpleModel, which its constructor stores	inferred	none	
 0x81c6b4	const float	s_colourByteScale		unassigned	Holds 0.00392156 as a float, the byte to unit scale of the Lua colour getters	verified	one	ui/fontmethods#reading-colours
+0x81c6c4	const uint8_t[10]	s_koreanDigitFinal		ui	Holds, per digit 0 to 9, whether its reading ends in a consonant, which the |1 escape reads	verified	one	ui/fonttext#korean-escape
+0x81c6d0	const uint8_t[26]	s_koreanLetterFinal		ui	Holds, per letter a to z, whether its reading ends in a consonant, which the |1 escape reads	verified	one	ui/fonttext#korean-escape
 0x81c6ec	void *[11]	s_simpleTextureLayoutVtable		ui	Holds the vtable of a texture's layout part; its width, height and callback slots are the texture's own	verified	one	ui/regions#the-layout-vtable
 0x81c718	void *[13]	CSimpleTexture::vftable		ui	Holds the vtable of CSimpleTexture	verified	one	ui/regions#the-layout-vtable
 0x81c74c	void *[11]	s_simpleFontStringLayoutVtable		ui	Holds the vtable of a font string's layout part; its width, height and callback slots are the font string's own	verified	one	ui/regions#the-layout-vtable
@@ -2120,6 +2124,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x878b44	char[23]	s_textInvalidModelFileS		ui	Holds the string "Invalid model file: %s"	inferred	none	
 0x878c00	char[122]	s_textUsageSSetLightEnabledOmniDirXDirYDirZ		ui	Holds a string that opens "Usage: %s:SetLight(enabled[, omni, dirX, dirY, dirZ, ambIntensity[, ambR, ambG, ambB], dir…"	verified	one	ui/modelanim#setlight-and-getlight
 0x878cf0	uint32_t			ui	Holds a dword that Script::SetPortraitTexture, Texture::SetTexture read; not read here	inferred	none	
+0x878d70	char[56]	s_pathCSimpleRenderCpp		ui	Holds the source path of CSimpleRender.cpp, passed to the allocator as the file	verified	one	ui/fonttext#creating-and-freeing-a-string
+0x878e7c	char[28]	s_typeCSimpleBatchedTexture		ui	Holds the RTTI name of the batched quad record, passed to the allocator as its tag	verified	one	ui/draworder#batch-construction
 0x878ec0	uint32_t[136]	s_frameMethods		ui	Holds the 68 pairs of a name and a function of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x879544	char[54]	s_textSCreateTextureCouldnTFindInheritedNodeS		ui	Holds the string "%s:CreateTexture(): Couldn't find inherited node "%s""	inferred	none	
@@ -4271,8 +4277,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf0c3c	uint32_t	s_regionTypeId		ui	Holds the script type id of Region, assigned on first use	verified	one	ui/frames#the-region-type-id
 0xcf0c5c	uint32_t	s_modelTypeId		ui	Holds the model frame type id, assigned from a counter on first use	inferred	none	
 0xcf0cc0	char[4096]	s_fontStringFitBuffer		ui	Holds the text a FontString shortens with ... to fit its box	verified	one	ui/fontstring#size-and-fitting
+0xcf1cc4	uint32_t	s_fontStringCount		ui	Holds the number of live font strings, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#creating-and-freeing-a-string
+0xcf1cc8	char[4096]	s_grammarOutput		ui	Holds the text the grammar escape and digit group passes return	verified	one	ui/fonttext#korean-escape
+0xcf2cd0	uint16_t[4096]	s_grammarWork		ui	Holds the UTF-16 text the grammar escape passes build before converting it back	verified	one	ui/fonttext#korean-escape
 0xcf4cd0	void *[2]	s_uiPixelShaders		ui	Holds the two pixel shaders of the interface, slot 0 empty and slot 1 the desaturate shader	verified	one	ui/texture#desaturating
 0xcf4cdc	uint32_t			ui	Holds a dword that Script::SetPortraitToTexture, Script::SetLootPortrait read and write; not read here	inferred	none	
+0xcf4d10	uint32_t[5]	s_simpleRegionPool		ui	Holds the block pool a deleted font string returns to	verified	one	ui/fonttext#creating-and-freeing-a-string
 0xcf4d24	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf4d88	uint32_t	s_buttonTypeId		ui	Holds the script type id of Button, assigned on first use	verified	one	ui/button#construction-and-the-type

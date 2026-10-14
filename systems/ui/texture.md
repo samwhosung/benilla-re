@@ -264,12 +264,16 @@ recomputes the vertices from the resolved rectangle.
 Addresses: `0x79ba70`, `0x79bafe`, `0x79bb0c`, `0x7703a0`, `0x44b410`, `0x64a450`, `0x79bdf0`, `0x79be86`, `0x79bead`, `0x79beb0`, `0x79bf58`, `0x79bff9`, `0x79c065`, `0x770410`, `0x7704c0`, `0x770462`, `0x770498`, `0x79c080`, `0x79c113`, `0x79c120`, `0x44a9ae`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_770570_lerp`
 
 `0x7703a0` takes the image's name (`0x44b410`, the handle's `+0x0c`) into a 0x104-byte buffer and cuts it at the last dot (`0x64a450`, `0x7703ce`), and `0x79ba70` pushes it
 (`0x79bb0c`); the solid fill's name is written at `0x44a9ae`. `0x79bdf0` pushes eight numbers (`0x79be86`, `0x79bead`). `0x79beb0` reads the argument count with `lua_gettop` (`0x79bf58`): eight
 numbers go straight to `0x7704c0` (`0x79bff9`) and four become `(minY, minX, maxY, maxX)` for `0x770410` (`0x79c065`), which makes the four pairs. `0x7704c0` copies eight floats to `+0x104` and,
 with `+0x124` set, calls `0x768320`, `0x770570` and `0x7705b0` on the resolved rectangle (`0x770462` to `0x770498`). `SetTexCoordModifiesRect` stores its flag at `+0x124` (`0x79c113`).
+
+`0x770570(rect)` takes the rectangle as (bottom, left, top, right): `right = left + (right − left) · |URx − ULx|` and `top = bottom + (top − bottom) · |LLy − ULy|`,
+with the coordinates at `+0x104`, `+0x108`, `+0x110` and `+0x114` (`0x770570` to `0x7705a9`); `0x7705b0` then writes the four vertices from it.
+`ui::glue_770570_lerp` runs the whole of `0x770570`.
 
 ## Desaturating
 

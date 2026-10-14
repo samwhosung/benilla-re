@@ -33512,71 +33512,71 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7703f0	29	CSimpleTexture::SetBlendMode		ui	orchestration		Stores the blend mode and marks the texture dirty	verified	one	ui/texture#the-quad-record	
 0x770410	165	CSimpleTexture::SetTexCoordRect		ui	orchestration		Sets the four corners of the coordinates from a rectangle	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x7704c0	166	StoreTextureCorners		ui	orchestration		Stores eight floats as the four corners and relays out a rect-modifying texture	verified	one	ui/taxiframe#route-line-textures	
-0x770570	64			ui	primitive		Runs its object file code not read here	inferred	none		ui::glue_770570_lerp
+0x770570	64	CSimpleTexture::ScaleRectToTexCoords		ui	primitive	void __thiscall (float *rect)	Shrinks a rectangle (bottom, left, top, right) to the texture coordinate spans |URx-ULx| and |LLy-ULy|	verified	one	ui/texture#reading-the-image-and-the-coordinates	ui::glue_770570_lerp
 0x7705b0	106	CSimpleTexture::SetVertices		ui	primitive	void __thiscall (float *rect)	Writes the four vertex positions (left top), (left bottom), (right top), (right bottom) with z zero	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x770620	36	GetUiPixelShader		ui	orchestration		Answers the interface pixel shader at an index when it is usable, else 0	verified	one	ui/texture#desaturating	
 0x770650	29	CSimpleTexture::SetPixelShader		ui	orchestration		Stores the pixel-shader slot and marks the texture dirty	verified	one	ui/texture#desaturating	
 0x770670	98	CSimpleTexture::OnFrameSizeChanged		ui	orchestration	void __thiscall (float *oldRect)	Lays out dependents, applies the texture coordinate rule to the rectangle and writes the four vertices	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x7706e0	26	CSimpleTexture::Emit		ui	orchestration	void __thiscall (void *batch)	Appends the texture to a layer batch when it has an image	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x770700	24	CSimpleTexture::GetDeviceTexture		ui	orchestration		Answers the device texture of the image handle, or 0	verified	one	ui/texture#the-quad-record	
-0x770720	98			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x44b3b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		ui::glue_unit_convert_1024
-0x770790	99			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, 0x44b3b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		ui::glue_unit_convert_1024
+0x770720	98	CSimpleTexture::GetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or for 0.0 the image width in texels as interface units	verified	one	ui/regions#a-textures-size	ui::glue_unit_convert_1024
+0x770790	99	CSimpleTexture::GetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or for 0.0 the image height in texels as interface units	verified	one	ui/regions#a-textures-size	ui::glue_unit_convert_1024
 0x770800	265			ui	orchestration		Applies a font's changed font, justify, colour, shadow and spacing to a FontString under its masks	verified	one	ui/fontstring#following-a-font	
-0x770910	434			ui	primitive		Runs its object file code that calls 0x41e4c0, SStrCmpI, TextBlockGenerateFont and 2 more; not read here	inferred	none		ui::glue_settled_eps
-0x770ad0	396			ui	primitive		Runs its object file code that calls 0x41e4c0, SStrCmpI, TextBlockGenerateFont and 2 more; not read here	inferred	none		ui::glue_settled_eps
-0x770c60	193			ui	primitive		Runs its object file code not read here	inferred	none		
+0x770910	434	FontBlockMergeMasked		ui	primitive	void __thiscall (FontBlock *dest, uint32_t mask)	Copies the set, masked groups of a font block into another block where they differ	verified	one	ui/fonttext#merging-font-blocks	ui::glue_settled_eps
+0x770ad0	396	FontBlockMerge		ui	primitive	FontBlock * __thiscall (FontBlock *source)	Copies the set groups of a font block into this one where they differ and returns it	verified	one	ui/fonttext#merging-font-blocks	ui::glue_settled_eps
+0x770c60	193	LinkFontFollower		ui	orchestration	void __thiscall (CSimpleFont *font)	Moves a follower to another font's list and applies all five style groups to it at once	verified	one	ui/fontstring#following-a-font	
 0x770d30	226	CSimpleFontString::CSimpleFontString		ui	orchestration		Builds a FontString with CENTER and MIDDLE justify and the one-to-one size bit	verified	one	ui/fontstring#construction	
-0x770e20	43			ui	orchestration		Runs its object file code that calls 0x770e50, CDataAllocator::PutData; not read here	inferred	none		
-0x770e50	177			ui	primitive		Runs CSimpleRender.cpp code that calls SMemFree, 0x7714f0, UnlockScriptObject and 1 more; not read here	inferred	none		
-0x770f10	41			ui	orchestration		Runs CSimpleRender.cpp code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
+0x770e20	43	CSimpleFontString::DeletingDestructor		ui	orchestration	void * __thiscall (uint32_t free_flag)	Runs the font string destructor body and returns the object to its pool when bit 0 is set	verified	one	ui/fonttext#creating-and-freeing-a-string	
+0x770e50	177	CSimpleFontString::~CSimpleFontString		ui	orchestration	void __thiscall ()	Frees the text, drops the font, unlinks the font part and ends in the region destructor	verified	one	ui/fonttext#creating-and-freeing-a-string	
+0x770f10	41	ReadRegionNameAttribute		ui	orchestration	void __thiscall (XMLNode *node, CScriptRegion *region)	Sets the region's name to the node's name attribute when it is nonempty	verified	one	ui/fonttext#creating-and-freeing-a-string	
 0x770f40	1329	CSimpleFontString::LoadXML		ui	primitive		Loads a font string's layout node, template, hidden, text, limits, font, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	ui::glue_unit_convert_1024
 0x771480	110	CSimpleFontString::AnchorToParent		ui	orchestration	void __thiscall (void *node, void *status)	Pins a parented font string with no anchor point to its parent by its horizontal justification	verified	one	ui/regions#the-implicit-anchor	
-0x7714f0	266			ui	primitive		Runs CSimpleRender.cpp code that calls 0x772790, SStrCmpI, 0x772810 and 3 more; not read here	inferred	none		ui::glue_7714f0_scale_mul, ui::glue_settled_eps
+0x7714f0	266	CSimpleFontString::SetFont		ui	orchestration	uint32_t __thiscall (const char *name, float height, uint32_t flags, uint8_t force)	Builds and installs the font of a name, height and flags unless unchanged, and relays the text out	verified	one	ui/fonttext#font-string-members	ui::glue_7714f0_scale_mul, ui::glue_settled_eps
 0x771600	121	CSimpleFontString::SetTextHeight		ui	orchestration		Sets a different text height and clears the one-to-one size bit	verified	one	ui/fontstring#size-and-fitting	ui::glue_settled_eps
-0x771680	102			ui	orchestration		Runs CSimpleRender.cpp code that calls SMemAlloc, SMemFree; not read here	inferred	none		
+0x771680	102	CSimpleFontString::SetFixedLength		ui	orchestration	void __thiscall (uint32_t length)	Sets the fixed text size and allocates an empty text buffer of that size plus one	verified	one	ui/fonttext#creating-and-freeing-a-string	
 0x7716f0	114			ui	orchestration		Rewrites the |1 and |2 grammar escapes of a text	verified	one	ui/fontstring#setting-the-text	
-0x771770	310			ui	primitive		Runs CSimpleRender.cpp code that calls __alloca_probe, SUniConvertUTF8to16, 0x7718b0 and 1 more; not read here	inferred	none		
-0x7718b0	229			ui	primitive		Runs CSimpleRender.cpp code that calls tolower; not read here	inferred	none		
-0x7719a0	445			ui	primitive		Runs CSimpleRender.cpp code that calls __alloca_probe, SUniConvertUTF8to16, 0x771b60 and 1 more; not read here	inferred	none		
-0x771b60	145			ui	primitive		Runs CSimpleRender.cpp code not read here	inferred	none		
+0x771770	310	ExpandKoreanParticles		ui	primitive	char * __fastcall (const char *text)	Rewrites each |1first;second; in a UTF-8 text to the part its preceding sound selects	verified	one	ui/fonttext#korean-escape	
+0x7718b0	229	SelectKoreanParticle		ui	primitive	const uint16_t * __fastcall (const uint16_t *out, int32_t index, const uint16_t *first, const uint16_t *second)	Picks the first or second part of a particle by the last sounded character before the index	verified	one	ui/fonttext#korean-escape	
+0x7719a0	445	ExpandFrenchArticles		ui	primitive	char * __fastcall (const char *text)	Rewrites each |2 article to de la, du, l', d' or de according to the word after it	verified	one	ui/fonttext#french-escape-and-digit-groups	
+0x771b60	145	IsLatinVowel		ui	primitive	uint8_t __fastcall (uint16_t ch)	Answers whether a character is an ASCII vowel or a Latin-1 accented vowel letter	verified	one	ui/fonttext#french-escape-and-digit-groups	
 0x771c40	7	SetEuropeanNumberFlag		ui	orchestration	void __fastcall (uint32_t flag)	Stores the European number formatting switch	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
-0x771c50	302			ui	primitive		Runs CSimpleRender.cpp code not read here	inferred	none		
+0x771c50	302	SwapNumberSeparators		ui	primitive	char * __fastcall (const char *text)	Writes the text with the dots and commas of each single-dot number swapped	verified	one	ui/fonttext#french-escape-and-digit-groups	
 0x771d80	312	CSimpleFontString::SetText		ui	orchestration		Sets a FontString's text, expanding the grammar escapes when asked, and lays it out again	verified	one	ui/fontstring#setting-the-text	
 0x771ec0	575			ui	primitive		Fits a FontString's text to a box, appending ... while backing off one character at a time	verified	one	ui/fontstring#size-and-fitting	ui::textglue_add_reload, ui::textglue_linecount_scale, ui::textglue_scale_mul, ui::textglue_settled_poseps
-0x772100	119			ui	primitive		Runs its object file code that calls 0x44d600; not read here	inferred	none		ui::textglue_scale_offset
+0x772100	119	CSimpleFontString::SetTextOffset		ui	primitive	void __thiscall (float x, float y)	Stores the text offset and moves a built string to it times the layout scale from the rectangle corner	verified	one	ui/fonttext#text-offset-and-spacing	ui::textglue_scale_offset
 0x772180	189			ui	primitive		Draws a FontString's colour and, with a shadow, its shadow pass at the scaled offset	verified	one	ui/fontstring#shadow	ui::textglue_scale_mul
-0x772240	88			ui	primitive		Runs its object file code that calls 0x7724a0; not read here	inferred	none		ui::textglue_settled_eps
+0x772240	88	CSimpleFontString::SetSpacing		ui	primitive	void __thiscall (float spacing)	Clamps a negative spacing to 0, stores a changed one and rebuilds the string	verified	one	ui/fonttext#text-offset-and-spacing	ui::textglue_settled_eps
 0x7722a0	231			ui	primitive		Sets the shadow bit and passes the shadow colour and offset to the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x772390	38			ui	primitive		Clears the shadow bit and tells the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x7723c0	41			ui	orchestration		Stores a changed shadow colour and refreshes the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x7723f0	109			ui	orchestration		Stores a changed shadow offset and sets or clears the shadow bit by whether it is zero	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
-0x772460	57			ui	orchestration		Runs its object file code that calls 0x44dc40; not read here	inferred	none		
-0x7724a0	667			ui	primitive		Runs its object file code that calls HandleClose, 0x771ec0, CLayoutFrame::GetWidth and 7 more; not read here	inferred	none		ui::textglue_recip_span_pair, ui::textglue_scale_offset_7724a0, ui::textglue_settled_poseps
+0x772460	57	CSimpleFontString::SetAlphaGradient		ui	orchestration	uint8_t __thiscall (uint32_t start, uint32_t length)	Stores the alpha gradient pair and answers whether the built string takes it	verified	one	ui/fonttext#text-offset-and-spacing	
+0x7724a0	667	CSimpleFontString::RebuildString		ui	primitive	void __thiscall ()	Closes and rebuilds the engine string from the fitted text, offset, size, spacing, shadow and gradient	verified	one	ui/fonttext#building-the-string	ui::textglue_recip_span_pair, ui::textglue_scale_offset_7724a0, ui::textglue_settled_poseps
 0x772740	5	InitDouble772750Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x772750, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x772750	15	InitDouble772750		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x772760	5	InitQuotient772770Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x772770, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x772770	19	InitQuotient772770		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x772790	18			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7727b0	90			ui	primitive		Runs its object file code that calls TextBlockGetFontPtr, GxuFontGetOneToOneHeight, ScaleScreenDelta; not read here	inferred	none		ui::textglue_div_scale
-0x772810	18			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x772830	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetWidth; not read here	inferred	none		
-0x772860	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetHeight; not read here	inferred	none		
+0x772790	18	CSimpleFontString::GetFontPath		ui	orchestration	const char * __thiscall ()	Returns the path of the engine font, or 0 without one	verified	one	ui/fonttext#font-string-members	
+0x7727b0	90	CSimpleFontString::GetTextHeight		ui	primitive	float __thiscall (uint8_t scaled)	Returns the text height, or for the one-to-one size with scaled set the font's height over the layout scale	verified	one	ui/fonttext#text-size-reads	ui::textglue_div_scale
+0x772810	18	CSimpleFontString::GetFontFlags		ui	orchestration	uint32_t __thiscall ()	Returns the flags of the engine font, or 0 without one	verified	one	ui/fonttext#font-string-members	
+0x772830	34	CSimpleFontString::SetWidth		ui	orchestration	void __thiscall (float width)	Sets the layout width and zeroes the layout part's measures	verified	one	ui/fonttext#layout-slots-of-a-font-string	
+0x772860	34	CSimpleFontString::SetHeight		ui	orchestration	void __thiscall (float height)	Sets the layout height and zeroes the layout part's measures	verified	one	ui/fonttext#layout-slots-of-a-font-string	
 0x772890	149			ui	primitive		Returns the unwrapped text width in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#sizing-the-tooltip	
-0x772930	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x772890, GetScaledScreenAspect and 1 more; not read here	inferred	none		ui::textglue_set_scaled_chain
+0x772930	113	CSimpleFontString::GetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the text width, floored at one interface unit	verified	one	ui/regions#a-font-strings-size	ui::textglue_set_scaled_chain
 0x7729b0	170			ui	primitive		Returns the text height in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#the-spacer-line	ui::textglue_scale_mul
 0x772a60	113	CSimpleFontString::GetHeight		ui	primitive	float __thiscall ()	Returns the authored or measured text height, at least one interface unit	verified	one	ui/regions#a-font-strings-size	
 0x772ae0	119	MeasureRunWidth		ui	primitive	float __thiscall (const char *text, int32_t bytes)	Measures the width of a byte range of the label's text, escapes giving none	verified	one	ui/editboxmarkup#how-the-box-draws-and-measures	ui::textglue_scale_mul
 0x772b60	87			ui	primitive		Splits the text into wrapped pieces for a width and a piece count	verified	one	ui/tooltipcontent#sizing-the-tooltip	ui::textglue_scale_mul
-0x772bc0	101			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44d860; not read here	inferred	none		ui::textglue_scale_mul
+0x772bc0	101	CSimpleFontString::MeasureText		ui	primitive	float __thiscall (const char *text, uint32_t length, float height)	Returns the font engine's width of a text at a height times the layout scale, 0 without a font	verified	one	ui/fonttext#text-size-reads	ui::textglue_scale_mul
 0x772c30	101	CountGlyphsFromRight		ui	primitive	int32_t __thiscall (float x)	Counts the glyphs that fit from the right edge of the line to a point	verified	one	ui/editboxmarkup#faults	ui::textglue_scale_mul
-0x772ca0	122			ui	primitive		Runs its object file code that calls CLayoutFrame::SetLayoutScale, 0x772790, SStrCopy and 3 more; not read here	inferred	none		
-0x772d20	24			ui	orchestration		Runs its object file code that calls CLayoutFrame::Resize; not read here	inferred	none		
-0x772d40	191			ui	primitive		Runs its object file code that calls CLayoutFrame::OnFrameSizeChanged, 0x44d600, 0x772e00 and 2 more; not read here	inferred	none		ui::textglue_rect_axis2_settled, ui::textglue_rect_axis_settled, ui::textglue_rect_pos_transform, ui::textglue_settled_poseps
+0x772ca0	122	CSimpleFontString::SetLayoutScale		ui	orchestration	uint32_t __thiscall (float scale, uint32_t force)	Sets the layout scale and reloads the font at the stored height when it was accepted	verified	one	ui/fonttext#layout-slots-of-a-font-string	
+0x772d20	24	CSimpleFontString::InvalidateText		ui	orchestration	void __thiscall ()	Zeroes the text measures and queues a layout with Resize(0)	verified	one	ui/fonttext#layout-slots-of-a-font-string	
+0x772d40	191	CSimpleFontString::OnFrameSizeChanged		ui	primitive	void __thiscall (float *rect)	Rebuilds the text when the rectangle's size changed, else moves it and notifies the layer on an off-screen change	verified	one	ui/fonttext#font-string-rectangle-callback	ui::textglue_rect_axis2_settled, ui::textglue_rect_axis_settled, ui::textglue_rect_pos_transform, ui::textglue_settled_poseps
 0x772e00	72	RectWhollyOffScreen		ui	primitive	bool __thiscall (float *rect)	Answers 1 for a rectangle with its top or right below 0 or its bottom or left above 1.0	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x772e50	41	CSimpleFontString::Emit		ui	orchestration		Appends the font string to a layer batch when it has a font and text	verified	one	ui/draworder#what-a-batch-drains	
-0x772e80	55			ui	primitive		Runs its object file code not read here	inferred	none		
+0x772e80	55	BatchInit		ui	orchestration	void __thiscall ()	Zeroes a layer batch, empties its quad array and callback list and stores its vtable	verified	one	ui/draworder#batch-construction	
 0x772ec0	43	DeletingDestructor772ec0		ui	orchestration		Destroys the object through 0x772ef0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x772ef0	213			ui	primitive		Runs its object file code that calls 0x7731d0, 0x773370, SMemFree; not read here	inferred	none		
+0x772ef0	213	BatchDestroy		ui	orchestration	void __thiscall ()	Empties a layer batch, unlinks its callback list and frees its quad records	verified	one	ui/draworder#batch-construction	
 0x772fd0	164	CSimpleTexture::AppendQuad		ui	primitive	void __thiscall (void *batch)	Appends a 0x1c-byte quad record of the texture's image, vertices, texcoords, blend, colours and shader	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773080	130	CSimpleFontString::AppendToBatch		ui	orchestration	void __thiscall (void *batch)	Appends the text to a batch when its rectangle is valid and not wholly off screen	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773110	142	BatchAddCallback		ui	primitive		Adds a draw callback and its context to a batch, drained after the quads and the text	verified	one	ui/draworder#what-a-batch-drains	
@@ -33584,19 +33584,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7731c0	15	CompareQuadHandles		ui	primitive	int __cdecl (int *a, int *b)	Returns the first dword of one quad record minus that of the other, the texture handles	verified	one	ui/draworder#layer-batches	
 0x7731d0	104	BatchBegin		ui	orchestration		Empties a batch: zeroes the quad count, frees the text sub-batch and releases the callback list	verified	one	ui/draworder#layer-batches	
 0x773240	60	Unlink773240		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x773280	231			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x773280	231	QuadArrayReserve		ui	primitive	void __thiscall (uint32_t extra, uint32_t round)	Grows the batch's quad array to hold extra more records, rounded to its step when asked	verified	one	ui/draworder#batch-construction	
 0x773370	41	NextLink773370		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x7733a0	8	LayoutThunk7733a0		ui	primitive		Moves this back by 0x24 and jumps to 0x770e20	verified	one	ui/containers#layout-thunks	
-0x7733b0	11			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7733b0	11	FontPartDeletingDestructor		ui	orchestration	void * __thiscall (uint32_t free_flag)	Moves from the font part back to the font string and jumps to its deleting destructor	verified	one	ui/fonttext#font-part-and-region-slots	
 0x7733c0	8	LayoutThunk7733c0		ui	primitive		Moves this back by 0x24 and jumps to 0x76fd10	verified	one	ui/containers#layout-thunks	
-0x7733d0	30			ui	orchestration		Runs its object file code that calls 0x77fd10; not read here	inferred	none		
-0x7733f0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7733d0	30	ScriptRegionSetParentKeepLayer		ui	orchestration	void __thiscall (CSimpleFrame *parent)	Moves the region to a new parent with its own layer and sublevel	verified	one	ui/fonttext#font-part-and-region-slots	
+0x7733f0	1			ui	orchestration	void __thiscall ()	Returns without doing anything	verified	one	ui/fonttext#font-part-and-region-slots	
 0x773400	37	IsTypeId2773400		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x773430	67	TextureIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is Texture or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x773480	6	TextureGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name Texture	verified	one	ui/widgettype#type-chains	
-0x773490	110			ui	primitive		Runs its object file code that calls 0x770c60, SMemFree; not read here	inferred	none		
-0x773500	39			ui	orchestration		Runs its object file code that calls 0x7724a0; not read here	inferred	none		
-0x773530	26			ui	primitive		Runs its object file code that calls 0x770800; not read here	inferred	none		
+0x773490	110	CSimpleFont::DeletingDestructor		ui	orchestration	void * __thiscall (uint32_t free_flag)	Detaches a Font object from its font, unlinks its node and frees it when bit 0 of the flag is set	verified	one	ui/fonttext#font-part-and-region-slots	
+0x773500	39	CSimpleFontString::SetJustifyWord		ui	orchestration	void __thiscall (uint32_t word)	Stores a changed justify word at +0x120 and rebuilds the built string	verified	one	ui/fonttext#text-offset-and-spacing	
+0x773530	26	CSimpleFontString::OnFontChanged		ui	orchestration	void __thiscall (FontBlock *block)	Applies a font block to the string under the string's inherit mask	verified	one	ui/fonttext#font-part-and-region-slots	
 0x773550	37	IsTypeId2773550		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x773580	67	FontStringIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is FontString or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x7735d0	6	FontStringGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name FontString	verified	one	ui/widgettype#type-chains	

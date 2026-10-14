@@ -78,6 +78,22 @@ with the comparator `0x7731c0`, which subtracts the first dwords. `0x765a01` onw
 batch with a nonzero count (`0x765a47`). `0x7657d0` submits the level's batches from `[node+0x118]`
 (`0x7658c6`) with `0x76fb00`, levels ascending.
 
+## Batch construction
+
+A layer batch is 0x30 bytes. `0x772e80` constructs one: it zeroes the counts and the array, makes `+0x20` an empty callback list (its
+head points at itself, `+0x24` holds that address tagged with bit 0) and stores the vtable `0x81c7ac`, whose slot 0 is `0x772ec0`. The quad
+array is four dwords at `+0x8`: capacity, count `+0xc`, records `+0x10` and a growth step `+0x14`. `0x773280(extra, round)` grows it to hold
+`extra` more records, and `0x772ef0` destroys a batch: it empties it with `0x7731d0`, unlinks the callback list head and frees the records.
+
+Addresses: `0x772e80`, `0x772eaa`, `0x772ea1`, `0x772ec0`, `0x772ef0`, `0x772efb`, `0x772fbf`, `0x772fd0`, `0x773002`, `0x773280`, `0x7732a8`, `0x7732ec`, `0x7732ff`, `0x773314`, `0x773346`, `0x77335b`, `0x7731d0`, `0x81c7ac`, `0x878e7c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x772fd0` calls `0x773280(extra, 1)` when the count plus one passes the capacity (`0x773002`). `0x773280` returns at once when the new size does not exceed `[this]` (`0x773294`); with a nonzero second argument it rounds the size up to a multiple of the step, which is 9 once the size is 9 or more, else the largest power of two not above it. The step test is `cmp esi,9` (`0x7732a8`); `0x7732b2` to
+`0x7732bd` clear the lowest set bit until one remains; the division by the step is `0x7732db` and the size is raised by `step − remainder`. The record size is `imul 0x1c` (`0x7732ec`); the realloc is `0x7732ff`, the fallback
+allocation `0x773314`, the copy `rep movs` of 7 dwords per record (`0x773346`) and the old block freed at `0x77335b`.
+
 ## What a batch drains
 
 A batch holds three arrays and drains them in this order: first the quads of every texture in it,
