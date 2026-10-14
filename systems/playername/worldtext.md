@@ -22,7 +22,7 @@ Test: `playername::pn_worldtext_anchor_lift`
 `0x6c7840` compares the record's GUID with the two dwords at `+0x88`, `+0x8c` of the camera
 (`+0x65b8` of the world frame `0xb4b2bc`) and calls `0x50d390`, which loads the float at `+0xec` and
 compares it with 1.8315 (`0x3fea6e99`). `0x468570` returns the manager's `+0xc8` dword. With
-no gate it forwards the three stack arguments to `0x6c73f0`. That function scans `+0x20` to
+no gate it forwards the category (`edx` on entry, pushed at `0x6c788a`) and the three stack arguments to `0x6c73f0`. That function scans `+0x20` to
 `+0x2c` for the first zero (`0x6c7400`), stops when none is, resolves the unit with `0x468460`
 (`0x6c742a`), fetches the name position (`0x608640`) and subtracts the float at `0x807a40` from z. `0x6c8570`
 then builds the text and its pointer is stored in the slot (`0x6c7461`).
@@ -125,9 +125,10 @@ at `0x8112dc` (stride 16: start, end, low, high; rows (0, 0.1, 0.1, 2.0), (0.1, 
 the size at `+0x2c` and rebuilds the string only when it changed. Alpha: `0x6c82e0` starts at
 255 and 127. Below fade-in end they are `ftol(255·t)` capped at 255 and `ftol(127·t)` capped at
 127. From the fade-out start, `s = (e − start) / (duration − start)` (0 when equal) gives
-`ftol(255 − clamp(255·s, 0, 255))` and `ftol(255 − clamp(127·s, 0, 127))`: the shadow alpha
-steps from 127 to 255 there and falls to 128. The bytes go to `+0x23` and, shifted to the top
-byte, to `0x5c27a0` with the offsets `0xce8804` (0.002 each, `0x3b03126f`).
+`ftol(255 − clamp(255·s, 0, 255))` and `ftol(255 − clamp(127·s, 0, 127))`: the shadow value
+steps from 127 to 255 there and falls to 128. The first byte goes to `+0x23` and `0x5c2750` (`0x6c844f`); the second goes to `0x5c27a0` with the offsets
+`0xce8804` (0.002 each). `0x5cd65e` to `0x5cd667` stores min(shadow, text alpha), so in the fade-out
+the stored shadow alpha equals the text alpha and falls from 255 to 0.
 
 ## Placing a text
 
@@ -135,7 +136,7 @@ The draw `0x6c7cc0` ends a text whose age reaches its duration, applies the size
 projects the anchor to the screen and clamps the text rectangle inside the viewport. A world
 point that does not project releases the text.
 
-Addresses: `0x6c7cc0`, `0x6c7cf7`, `0x6c7d0a`, `0x6c7d24`, `0x6c7d58`, `0x6c7d96`, `0x6c7da8`, `0x6c7dae`, `0x6c7dc0`, `0x6c7e7b`, `0x6c7eab`, `0x6c7ed5`, `0x6c7eff`, `0x832a44`, `0x832a48`
+Addresses: `0x6c7cc0`, `0x6c7cf7`, `0x6c7d0a`, `0x6c7d24`, `0x6c7d58`, `0x6c7d96`, `0x6c7da8`, `0x6c7dae`, `0x6c7dc0`, `0x6c7e7b`, `0x6c7ea3`, `0x509520`, `0x6c7eab`, `0x6c7ed5`, `0x6c7eff`, `0x832a44`, `0x832a48`
 Confidence: verified
 Proof: one
 Test: `playername::pn_label_clip_quad`, `playername::pn_label_clip_quad_world_z`
@@ -147,7 +148,8 @@ With `e = now − [+0x24]` and `d` the category duration, `0x6c7cc0` returns 0 w
 caller releases the text. Then, in f32 stores, `x = sx + rect[1]`, `y = sy + rect[0]` and the half extents
 `cx = [+0x0c]`, `cy = [+0x10]` bound the centre: `x` into `[cx, W − cx]` and `y` into
 `[cy, H − cy]`, where `W` and `H` are `0x41ae60(1.0)` and `0x41ae70(1.0)` (the floats at
-`0x832a44` and `0x832a48`; defaults 0.8 and 0.6). The anchor stored at `+0x30` is
+`0x832a44` and `0x832a48`; defaults 0.8 and 0.6). The rectangle {y + cy, x − cx, y − cy, x + cx} is then passed to `0x509520` (`0x6c7ea3`, `ecx = 1`,
+`edx` the rectangle), and the anchor is computed from the rectangle as it leaves that call. The anchor stored at `+0x30` is
 `((right + left)·0.5)/W − cx` for x and `((bottom + top)·0.5)/H` for y, with z 0, and
 `0x5c2770` moves the string there.
 

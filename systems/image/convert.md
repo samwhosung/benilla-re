@@ -205,7 +205,10 @@ Proof: one
 Test: `image::image_palconv_fs_rgb444`, `image::image_palconv_fs_rgb555`, `image::image_palconv_fs_rgb565_a2`
 
 The alpha plane follows the indices. For 4444 the depth 4 nibble goes to bits 12 to 15 and depth 8
-takes its top nibble; depth 1 indexes the table `0x85c8c4` by the bit value, a two-entry table that
-is not meant for it, so the read runs on into the Bayer tables after it. For 1555 the top
+takes its top nibble; depth 1 indexes the table `0x85c8c4` by the masked bit, not shifted down (`and edx,eax`,
+`0x5a9553`: 1, 2, 4 … 128), a two-entry table that is not meant for it. Bit 0 reads `0xf000`;
+bits 1 to 4 read the words 5, 6, 3, 7 of the format-class table `0x85c8c8`; bits 5 and 6 read
+the Bayer tables (the words 4 and 2, at the table's offsets 64 and 128); bit 7 reads the word at
+offset 256, `0xf00f`. For 1555 the top
 bit of each alpha is ORed into bit 15. `0x5a9a80` writes its plane at `dst + 2 · count`, four
 pixels per byte, with masks `0x85c9b0`, shifts `0x85c9b4` and nibble shifts `0x85c9c8`.

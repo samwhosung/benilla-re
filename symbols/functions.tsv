@@ -18654,7 +18654,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5cfc50	43	AtlasPage::Upload		font	orchestration	void __fastcall (void *page)	Uploads a dirty atlas page to its texture and clears the dirty byte	verified	one	font/api#drawing-a-batch	
 0x5cfc80	5	InitFontRasterTwoPiThunk		font	orchestration		Jumps to 0x5cfc90; a static initializer	verified	one	font/overview#object-files	
 0x5cfc90	15	InitFontRasterTwoPi		font	primitive	void __cdecl (void)	Stores π + π as a float in 0xc4ba70	verified	one	font/overview#object-files	
-0x5cfca0	33			font	primitive		Runs its object file code not read here	inferred	none		
+0x5cfca0	33	AtlasRow::InitList		font	primitive	void __fastcall (void *row)	Empties the cell list at +4 of a page row and stores the link offset 0x18 at +0	verified	one	font/glyphs#pages-and-cells	
 0x5cfcd0	5	InitFontRasterInvTwoPiThunk		font	orchestration		Jumps to 0x5cfce0; a static initializer	verified	one	font/overview#object-files	
 0x5cfce0	19	InitFontRasterInvTwoPi		font	primitive	void __cdecl (void)	Stores 1 / 2π as a float in 0xc4ba48	verified	one	font/overview#object-files	
 0x5cfd00	177			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -28264,7 +28264,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c77d0	29	DestroyPlayerNameDesc		playername	orchestration	void __thiscall (void)	Destroys a name record and returns it to its pool	verified	one	playername/plates#name-record-layout	
 0x6c77f0	9	PlayerNameMarkColorDirty		playername	orchestration	void __thiscall (void)	Sets the refetch-colour flag of a name record	verified	one	playername/plates#name-record-layout	
 0x6c7800	53	PlayerNameMarkAllColorDirty		playername	orchestration	void __cdecl (void)	Sets the refetch-colour flag of every name record	verified	one	playername/plates#name-record-layout	
-0x6c7840	88	SubmitWorldText		playername	orchestration	void __thiscall (const char *text, uint32_t category, const uint32_t *color, const uint32_t *icon)	Adds a world text over a unit unless the camera or manager gate holds	verified	one	playername/worldtext#submitting-a-text	
+0x6c7840	88	SubmitWorldText		playername	orchestration	void __fastcall (void *desc, uint32_t category, const char *text, const uint32_t *color, const uint32_t *icon)	Adds a world text over a unit unless the camera or manager gate holds	verified	one	playername/worldtext#submitting-a-text	
 0x6c78a0	7	PlayerNameNextFrame		playername	primitive	void __cdecl (void)	Increments the frame tick	verified	one	playername/plates#per-frame-work	
 0x6c78b0	58	PlayerNameReleaseStale		playername	orchestration	void __cdecl (void)	Releases the world texts of every record not updated this frame	verified	one	playername/plates#per-frame-work	
 0x6c78f0	9	PlayerNameMarkRebuild		playername	orchestration	void __thiscall (void)	Sets the rebuild-text flag of a name record	verified	one	playername/plates#name-record-layout	
@@ -28300,7 +28300,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c8520	79	WorldTextShutdown		playername	orchestration	void __cdecl (void)	Releases the damage font, the text pool, the batch and the badge textures	verified	one	playername/worldtext#damage-text-font	
 0x6c8570	223	WORLDTEXTSTRING::Create		playername	orchestration	WORLDTEXTSTRING * __cdecl (uint32_t category, const float *position, const char *text, const uint32_t *color, const uint32_t *icon)	Takes a text record from its pool and fills it	verified	one	playername/worldtext#text-record	
 0x6c8650	61	WORLDTEXTSTRING::DeletingDestructor		playername	orchestration	void __thiscall (uint32_t flags)	Destroys the string and frees the record when bit 0 of flags is set	verified	one	playername/worldtext#text-record	
-0x6c8690	8	WORLDTEXTSTRING::SetIcon		playername	unreached	void __thiscall (uint32_t value)	Stores a rank icon value at +0x7c	verified	one	playername/overview#unreached-functions	
+0x6c8690	8	WORLDTEXTSTRING::SetIcon		playername	unreached	void __fastcall (void *text, uint32_t value)	Stores a rank icon value at +0x7c	verified	one	playername/overview#unreached-functions	
 0x6c86a0	26	WORLDTEXTSTRING::Release		playername	orchestration	void __thiscall (void)	Destroys a text through its vtable and returns it to its pool	verified	one	playername/worldtext#text-record	
 0x6c86c0	14	WORLDTEXTSTRING::DrawIfSet		playername	orchestration	bool __fastcall (WORLDTEXTSTRING *text, uint32_t now)	Draws a text when it is not null	verified	one	playername/worldtext#text-record	
 0x6c86d0	10	WORLDTEXTSTRING::QueueIconIfSet		playername	orchestration	void __fastcall (WORLDTEXTSTRING *text)	Queues a text's icon when it is not null	verified	one	playername/worldtext#text-record	

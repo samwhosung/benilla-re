@@ -36,7 +36,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-Each file's run starts with its +∞ copy and ends with its 2π and 1/2π thunks; the extra slots are
+Each file's run starts with its +∞ copy, then its 2π and 1/2π thunks (for `GxuFontUtil.cpp` the
+slots `0x82aa44`, `0x82aa48`, `0x82aa4c`); the slots after them (`0x82aa50` to `0x82aa58`) are
 its static objects. The gxumath file keeps its own trio; the next trio `0xc2b980`, `0xc2b9ac`, `0xc2b984` to `GxuFontUtil.cpp`, and the
 trios `0xc2b9c0`, `0xc2b9cc`, `0xc2b9c4`; `0xc2b9e0`, `0xc2b9e8`, `0xc2b9e4`; `0xc2b9ec`, `0xc2ba08`,
 `0xc2b9f4`; `0xc2ba40`, `0xc4ba70`, `0xc4ba48`; the trio of the face file to the next

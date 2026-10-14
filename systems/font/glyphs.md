@@ -51,9 +51,10 @@ three tables, and the bodies of the bucket, list and growth functions, are not r
 
 A page is cut into rows of the font's cell size and each row is a list of cells. `0x5cf360` sets
 how many rows a page has: `256 / cellSize` (an unguarded `div`), with 256 free pixels in each row. `0x5cf5a0` tries
-each row in turn to find a free span for a glyph through `0x5c81b0`.
+each row in turn to find a free span for a glyph through `0x5c81b0`. `0x5cfca0` (`0x5cf491`) constructs
+each 16-byte row in `0x5cf360`: its list at `+4` is made empty (`0x5cfcb2`) and `0x18` is stored at `+0` (`0x5cfcb7`).
 
-Addresses: `0x5cf360`, `0x5cf5a0`, `0x5cf5b7`, `0x5cf5cb`, `0x5cf5f0`, `0x5c8010`, `0x5c8030`, `0x5c7f80`, `0xc2ba48`
+Addresses: `0x5cf360`, `0x5cf491`, `0x5cfca0`, `0x5cf5a0`, `0x5cf5b7`, `0x5cf5cb`, `0x5cf5f0`, `0x5c8010`, `0x5c8030`, `0x5c7f80`, `0xc2ba48`
 Confidence: verified
 Proof: one
 Test: `font::texcache_set_cellsize_difftest`, `font::atlas_texel_addr_difftest`, `font::glyph_uv_rect_difftest`, `font::cell_free_after_difftest`, `font::cell_free_before_difftest`

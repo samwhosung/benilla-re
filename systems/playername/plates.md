@@ -60,7 +60,7 @@ The plate update of a record resolves the unit, shows or hides the name block by
 rule, sizes it by height above the feet, rebuilds the text when bit 0 is set, positions it and
 draws it. Its scale is 0.2 for a height `d` of 4 or less and `d / 4 · 1.5 · 0.2` above that.
 
-Addresses: `0x6c6e90`, `0x6c6ed5`, `0x6c6ee2`, `0x6c6f10`, `0x6c6f3c`, `0x6c6fd5`, `0x6c6fea`, `0x6c7003`, `0x6c703f`, `0x6c7063`, `0x6c7071`, `0xce8720`, `0xce8734`, `0xce8738`
+Addresses: `0x6c6e90`, `0x6c6ed5`, `0x6c6ee2`, `0x6c6f10`, `0x6c6f25`, `0x6c6f3c`, `0x6c6fd5`, `0x6c6fea`, `0x6c7003`, `0x6c703f`, `0x6c7063`, `0x6c7071`, `0xce8720`, `0xce8734`, `0xce8738`
 Confidence: verified
 Proof: one
 Test: `playername::pn_plate_render`, `playername::pn_plate_render_text_width_scale`, `playername::pn_plate_render_screen_y_accumulate`
@@ -69,7 +69,7 @@ Test: `playername::pn_plate_render`, `playername::pn_plate_render_text_width_sca
 asks `0x6070a0` whether the name shows for the mask `0xce8720`, and takes the unit's name
 position (`0x608640`) and the position of the unit's virtual slot `+0x14`. `d` is the first z
 minus the second's `+8`; the scale is 0.2 (`0x3e4ccccd`), or `d/4.0·1.5·0.2` when `d > 4.0`
-(`0x6c6f10` to `0x6c6f3c`, an f32 store). With bit 1 set the unit's slot `+0x2c` writes the colour
+(`0x6c6f10` to `0x6c6f3c`, an f32 store). A NaN height gives 0.2 (`test ah,0x41`, `0x6c6f25`). With bit 1 set the unit's slot `+0x2c` writes the colour
 into `+0x0c`. With bit 0 set the text is destroyed and rebuilt: `0x608f50` fills a 0x400-byte
 buffer and returns the line count, `+0x30` becomes count·scale (`0x6c6fea`), and `0x5c1c30`
 creates the string at size `scale` in a 100000.0 by 100000.0 box with flags `0xc8` and justification 2
