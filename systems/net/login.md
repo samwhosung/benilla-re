@@ -247,7 +247,7 @@ Test: none
 
 ## Reconnect proof
 
-The reconnect proof is `0x03`, `R1 = MD5(account ‖ unix time as a dword)` (16 bytes), `R2 = SHA-1(account ‖ R1 ‖ seed ‖ K)` (20, `K` the kept 40-byte key), `R3 = SHA-1(R1 ‖ C)` (20, with `C` 20 zero bytes on a reconnect), the count of key records, and the key records, 32 bytes each: each is the hash `0x5bba80` of `R1` (16 bytes) and the seed at `+0x1dc` (16 bytes) (`0x5bbe43` to `0x5bbe59`), where the logon proof hashes `A` (32) and `+0x1dc` (32) (`0x5bbc20` to `0x5bbc3c`). No security byte follows the records (`0x5bbe78` falls into `0x5bbe7c`).
+The reconnect proof is `0x03`, `R1 = MD5(account ‖ unix time as a dword)` (16 bytes), `R2 = SHA-1(account ‖ R1 ‖ seed ‖ K)` (20, `K` the kept 40-byte key), `R3 = SHA-1(R1 ‖ C)` (20, with `C` 20 zero bytes on a reconnect), the count of key records, and the key records, 30 bytes from each 32-byte source: its u16 at `+0` (`0x5bbe10`), its u32 at `+4` (`0x5bbe23`), its 4 bytes at `+8` (`0x5bbe38`), and the 20-byte hash `0x5bba80` of the record with `R1` (16 bytes) and the seed at `+0x1dc` (16 bytes) (`0x5bbe43` to `0x5bbe6a`). No security byte follows them (`0x5bbe7a` to `0x5bbe8b`).
 
 Addresses: `0x5bbad0`, `0x5bbcb7`, `0x5bbd06`, `0x5bbd24`, `0x5bbd7c`, `0x5bbd92`, `0x5bbdc6`, `0x4294c0`
 Confidence: verified
