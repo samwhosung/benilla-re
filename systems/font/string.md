@@ -113,6 +113,17 @@ bit 0 or 0. The height is `lineHeight`, or `sizeMetric` when raw. The corners ar
 H)` with z `originZ`; the UVs are copied per column and row, with `+1/512` added to bottom and left and
 `−1/512` to top and right when raw (`0xc2b9f8`, `0xc2ba00`); the colour word is stored in all four vertices.
 
+## Baseline row of a line
+
+The row of the screen where the baseline of a line falls follows from the anchor, the line ladder, the quad corners and the cell's top padding. With the quad scale 1 and no gap term it is the same row for plain text and for a normal outline, and one row higher for a thick outline.
+
+Addresses: `0x5cdf70`, `0x73ff3f`, `0x5cdc55`, `0x5cdd08`, `0x5c6fa0`, `0x5ccbe0`, `0x5ce481`, `0x5cea7e`, `0x5cf237`
+Confidence: verified
+Proof: one
+Test: none
+
+The anchor y is `floor(H · y)` (`0x73ff3f`, the floor control word); the anchor is added to every quad in the main pass (`font/glyphs#main-pass-pen`). Line `k` (from 0) has the origin y `−r − k · (r + wrapPx)` with `r = ScreenToPixelHeight(raw, −clamped)`, which is `−round(H · clamped)` (`0x5cdc55`; `0x5c6fa0` rounds half away from zero and has no cap) and `wrapPx` as in the line layout above; the step is the `lineStep` of `0x5cdd08`. A quad's top is `origin + gap · scale − pad + lineHeight` with `lineHeight = sizeMetric + 2 · pad`, and `pad` is 0 for a plain font, 1 for a normal outline (flag bit 0) and 2 for a thick one (flag bit 3). The bake puts the first ink row at cell row `top_pad` for a plain glyph (`0x5cf237`) and at `top_pad + 1` for an outlined one (the grid offset `0x202` bytes, one row and one column, at `0x5ce481` and `0x5cea7e`). The ink top is therefore `origin + sizeMetric − top_pad` for plain and normal, and one row higher for thick, whose quad top rises by 2 over the plain top while the ink sits at the same cell row as for a normal outline.
+
 ## String defaults
 
 `0x5cda00` clears a new string and sets its defaults: the size `+0x18` and the clamped size `+0x1c` to `0x3ca3d70a` (0.02), the main colour `+0x2c` to `0xffffffff`, the shadow colour `+0x30` to `0xff000000`, the shadow offsets `+0x34` and `+0x38` to `0x3aa3d70a` and `0xbaa3d70a` (±0.00125) and the flags `+0x5c` to 0. The shadow flag is clear, so the default offset draws nothing until `0x5cd650` sets a shadow.
@@ -122,7 +133,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5cd8b2` calls `0x5cda00`. The offsets are fractions of the viewport height and width, converted by `0x5c6fa0` and `0x5c7010` when the shadow is drawn. `0x5cd66f` and `0x5cd67b` store the two offsets from the argument of `0x5cd650`, and `0x5cd678` sets flag bit 0.
+`0x5cd8b2` calls `0x5cda00`. The offsets are fractions of the viewport: the x (`+0x34`) goes through `0x5c7010` (width, `0x5c878b`) and the y (`+0x38`) through `0x5c6fa0` (height, `0x5c8783`) when the shadow is drawn. `0x5cd66f` and `0x5cd67b` store the two offsets from the argument of `0x5cd650`, and `0x5cd678` sets flag bit 0.
 
 ## Hyperlink regions and selection
 
