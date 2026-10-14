@@ -2191,7 +2191,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdcfc0	uint32_t	s_craftCount		ui	Holds the number of entries in the craft window	verified	one	ui/tooltipbuff#craft-spells
 0xbdcfc8	int32_t			ui	Holds an int32_t that Script::GetNumCrafts reads and writes; not read here	inferred	none	
 0xbdd038	uint64_t	s_bankerGuid		ui	Holds the GUID of the open banker, 0 when none	inferred	none	objectlayer/inventory#searching-the-inventory
+0xbdd118	uint8_t[128][28]	s_merchantRows		ui	Holds the open vendor's item rows, slot number first and item entry next	verified	one	ui/merchantcursor#grabbing-a-merchant-row
+0xbddf24	uint32_t[12]	s_buybackSlots		ui	Holds the inventory slot of each buy-back item	verified	one	ui/merchantcursor#merchant-sell-cursors
 0xbddfa0	uint32_t[2]	s_merchantItems		ui	Holds the open merchant's item table pointer and count; both zero when no merchant is open	verified	one	ui/tooltipitemfoot#the-sell-price
+0xbddfa8	uint32_t	s_merchantItemCount		ui	Holds the number of rows of the open vendor	verified	one	ui/merchantcursor#grabbing-a-merchant-row
+0xbddfac	uint32_t	s_buybackCount		ui	Holds the number of items the vendor will buy back	verified	one	ui/merchantcursor#merchant-sell-cursors
 0xbde040	uint32_t	s_currentTradeSkillLine		ui	Holds the skill line the trade-skill window shows; 0x4fc910 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
 0xbde044	uint32_t			ui	Holds a dword that Script::GetTradeskillRepeatCount reads and writes; not read here	inferred	none	
 0xbde054	int32_t			ui	Holds an int32_t that Script::GetNumTradeSkills, Script::GetFirstTradeSkill read and write; not read here	inferred	none	

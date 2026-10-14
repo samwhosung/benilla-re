@@ -8985,7 +8985,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c8f70	45	Script::PutItemInBackpack	idb	ui	orchestration		Implements the Lua function PutItemInBackpack	inferred	none		
 0x4c8fa0	69	Script::PickupBagFromSlot	idb	ui	orchestration		Implements the Lua function PickupBagFromSlot	inferred	none		
 0x4c8ff0	191	Script::CursorCanGoInSlot	idb	ui	orchestration		Implements the Lua function CursorCanGoInSlot	inferred	none		
-0x4c90b0	157	Script::ShowInventorySellCursor	idb	ui	orchestration		Implements the Lua function ShowInventorySellCursor	inferred	none		
+0x4c90b0	157	Script::ShowInventorySellCursor	idb	ui	orchestration		Implements the Lua function ShowInventorySellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4c9150	468	Script::SetInventoryPortaitTexture	idb	ui	primitive		Implements the Lua function SetInventoryPortaitTexture	inferred	none		
 0x4c9330	307	Script::GetGuildInfo	idb	ui	primitive		Implements the Lua function GetGuildInfo	inferred	none		
 0x4c9470	26			ui	orchestration		Runs PaperDollInfoFrame.cpp code that calls 0x515e50; not read here	inferred	none		
@@ -11276,7 +11276,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f9b30	1085	Script::PickupContainerItem		ui	primitive		Passes a container item to 0x495d60 while the flag word wants an item	inferred	none	spell/targeting#flag-word-predicates	
 0x4f9f70	358	Script::SplitContainerItem	idb	ui	primitive		Implements the Lua function SplitContainerItem	inferred	none		
 0x4fa0e0	889	Script::UseContainerItem	idb	ui	primitive		Implements the Lua function UseContainerItem	inferred	none		
-0x4fa460	142	Script::ShowContainerSellCursor	idb	ui	orchestration		Implements the Lua function ShowContainerSellCursor	inferred	none		
+0x4fa460	142	Script::ShowContainerSellCursor	idb	ui	orchestration		Implements the Lua function ShowContainerSellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4fa4f0	374	Script::SetBagPortaitTexture	idb	ui	primitive		Implements the Lua function SetBagPortaitTexture	inferred	none		
 0x4fa670	290	Script::GetBagName	idb	ui	primitive		Implements the Lua function GetBagName	inferred	none		
 0x4fa7a0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
@@ -11334,10 +11334,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fac50	72			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
 0x4faca0	23			ui	orchestration		Runs its object file code that calls 0x4fafd0, FrameScript_SignalEvent; not read here	inferred	none		
 0x4facc0	35			ui	orchestration		Runs its object file code that calls 0x4fadf0, ClntObjMgrGetActivePlayer and 1 more; not read here	inferred	none		
-0x4facf0	174			ui	primitive		Opens the merchant window for a vendor's list and signals MERCHANT_SHOW; not read here	inferred	none	objectlayer/inventory#vendors	
+0x4facf0	174	OpenMerchantWindow		ui	primitive	void __fastcall (void *rows, uint32_t count, uint64_t vendorGuid)	Replaces the vendor's rows and GUID and signals MERCHANT_SHOW, leaving the cursor	verified	one	ui/merchantcursor#client-faults	
 0x4fada0	8			ui	orchestration		Runs its object file code that calls 0x4fb0f0; not read here	inferred	none		
-0x4fadb0	62			ui	primitive		Runs MerchantFrame.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4fadf0	126			ui	primitive		Runs MerchantFrame.cpp code that calls 0x4931c0, FrameScript_SignalEvent, GetCursorAmmo and 3 more; not read here	inferred	none		
+0x4fadb0	62	MerchantCanRepair		ui	primitive	uint32_t __cdecl (void)	Returns 1 when the open vendor's NPC flags have the repair bit	verified	one	ui/merchantcursor#the-repair-cursor	
+0x4fadf0	126	CloseMerchantWindow		ui	primitive	void __cdecl (void)	Closes the vendor session, signals MERCHANT_CLOSED and drops a vendor payload	verified	one	ui/merchantcursor#merchant-close	
 0x4fae70	87			ui	primitive		Runs MerchantFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4faed0	96			ui	primitive		Runs MerchantFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none		
 0x4faf30	145	GetItemRepairCost		ui	primitive	int32_t __fastcall (void *item)	Returns an item's repair cost scaled by one minus the open merchant's discount	verified	one	ui/tooltipitemfoot#results-of-the-item-methods	
@@ -11351,15 +11351,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fb570	13			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4fb580	239	Script::GetMerchantItemLink	idb	ui	primitive		Implements the Lua function GetMerchantItemLink	inferred	none		
 0x4fb670	228	Script::GetMerchantItemMaxStack	idb	ui	primitive		Implements the Lua function GetMerchantItemMaxStack	inferred	none		
-0x4fb760	240	Script::PickupMerchantItem	idb	ui	primitive		Implements the Lua function PickupMerchantItem	inferred	none		
+0x4fb760	240	Script::PickupMerchantItem	idb	ui	primitive		Implements the Lua function PickupMerchantItem	verified	one	ui/merchantcursor#picking-up-a-merchant-item	
 0x4fb850	247	Script::BuyMerchantItem	idb	ui	primitive		Implements the Lua function BuyMerchantItem	inferred	none		
 0x4fb950	295	Script::BuybackItem	idb	ui	primitive		Implements the Lua function BuybackItem	inferred	none		
-0x4fba80	45	Script::CanMerchantRepair	idb	ui	orchestration		Implements the Lua function CanMerchantRepair	inferred	none		
-0x4fbab0	244	Script::ShowMerchantSellCursor	idb	ui	primitive		Implements the Lua function ShowMerchantSellCursor	inferred	none		
-0x4fbbb0	272	Script::ShowBuybackSellCursor	idb	ui	primitive		Implements the Lua function ShowBuybackSellCursor	inferred	none		
-0x4fbcc0	53	Script::ShowRepairCursor	idb	ui	orchestration		Implements the Lua function ShowRepairCursor	inferred	none		
-0x4fbd00	33	Script::HideRepairCursor	idb	ui	orchestration		Implements the Lua function HideRepairCursor	inferred	none		
-0x4fbd30	46	Script::InRepairMode	idb	ui	orchestration		Implements the Lua function InRepairMode	inferred	none		
+0x4fba80	45	Script::CanMerchantRepair	idb	ui	orchestration		Implements the Lua function CanMerchantRepair	verified	one	ui/merchantcursor#the-repair-cursor	
+0x4fbab0	244	Script::ShowMerchantSellCursor	idb	ui	primitive		Implements the Lua function ShowMerchantSellCursor	verified	one	ui/merchantcursor#merchant-sell-cursors	
+0x4fbbb0	272	Script::ShowBuybackSellCursor	idb	ui	primitive		Implements the Lua function ShowBuybackSellCursor	verified	one	ui/merchantcursor#merchant-sell-cursors	
+0x4fbcc0	53	Script::ShowRepairCursor	idb	ui	orchestration		Implements the Lua function ShowRepairCursor	verified	one	ui/merchantcursor#the-repair-cursor	
+0x4fbd00	33	Script::HideRepairCursor	idb	ui	orchestration		Implements the Lua function HideRepairCursor	verified	one	ui/merchantcursor#the-repair-cursor	
+0x4fbd30	46	Script::InRepairMode	idb	ui	orchestration		Implements the Lua function InRepairMode	verified	one	ui/merchantcursor#the-repair-cursor	
 0x4fbd60	638	Script::GetRepairAllCost	idb	ui	primitive		Implements the Lua function GetRepairAllCost	inferred	none		
 0x4fbfe0	371	Script::RepairAllItems	idb	ui	primitive		Implements the Lua function RepairAllItems	inferred	none		
 0x4fc160	76	Script::GetNumBuybackItems	idb	ui	primitive		Implements the Lua function GetNumBuybackItems	inferred	none		
