@@ -18414,7 +18414,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c4390	5	InitGxuInfinityThunk		gxumath	orchestration		Jumps to 0x5c43a0; a static initializer	verified	one	gxumath#object-file-and-initializers	
 0x5c43a0	11	InitGxuInfinity		gxumath	orchestration		Copies +inf into 0xc2b850, the no-hit distance of the ray tests	verified	one	gxumath#object-file-and-initializers	
 0x5c43b0	1404	BuildFrustumCorners		gxumath	primitive	void __fastcall (const float *view, const float *proj, float *corners)	Writes the eight world-space corners of the frustum of a view and a projection matrix	verified	one	gxumath#frustum-corners	gxumath::frustum_corners_difftest
-0x5c4930	820	BuildFrustumPlanes		gxumath	unreached	void __fastcall (const float *m, float *planes)	Writes the six normalized clip-volume planes of a matrix from its rows	verified	one	gxumath#frustum-planes-and-box	
+0x5c4930	820	BuildFrustumPlanes		gxumath	unreached	void __fastcall (const float *m, float *planes)	Writes the six normalized clip-volume planes of a matrix from its columns	verified	one	gxumath#frustum-planes-and-box	
 0x5c4c70	246	FrustumBounds		gxumath	unreached	void __fastcall (const float *view, const float *proj, float *min, float *max)	Writes the minimum and maximum of the eight frustum corners of a view and a projection	verified	one	gxumath#frustum-planes-and-box	
 0x5c4d70	433	ProjectPointsForDecal		gxumath	unreached	void __fastcall (uint32_t count, const float *in, float *out)	Maps points through the device matrix to window fractions scaled by the window rectangle	verified	one	gxumath#viewport-projection-for-decals	
 0x5c4f30	701	ProjectPointsToWindow		gxumath	primitive	uint32_t __fastcall (uint32_t count, const float *in, float *out)	Maps world points to window coordinates through the device matrices; returns 0 where clip w is near 0	verified	one	gxumath#world-points-to-the-screen	gxumath::unproject_difftest
@@ -18440,8 +18440,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c6560	43	ScaleVector4		gxumath	unreached	void __thiscall (float s)	Multiplies four floats at ecx by a float	verified	one	gxumath#vector-helpers	
 0x5c6590	40	NegateVector4		gxumath	unreached	float * __thiscall (float *out)	Stores the four floats at ecx negated through a pointer	verified	one	gxumath#vector-helpers	
 0x5c65c0	45	SubtractVector4		gxumath	unreached	float * __fastcall (float *out, const float *a, const float *b)	Stores the difference of two vectors of four floats	verified	one	gxumath#vector-helpers	
-0x5c65f0	33	CopyMatrixRow2		gxumath	unreached	float * __thiscall (float *out)	Copies elements 2, 6, 10 and 14 of a matrix to the pointer on the stack	verified	one	gxumath#vector-helpers	
-0x5c6620	33	CopyMatrixRow3		gxumath	unreached	float * __thiscall (float *out)	Copies elements 3, 7, 11 and 15 of a matrix to the pointer on the stack	verified	one	gxumath#vector-helpers	
+0x5c65f0	33	CopyMatrixColumn2		gxumath	unreached	float * __thiscall (float *out)	Copies elements 2, 6, 10 and 14 of a matrix, its third column, to the pointer on the stack	verified	one	gxumath#vector-helpers	
+0x5c6620	33	CopyMatrixColumn3		gxumath	unreached	float * __thiscall (float *out)	Copies elements 3, 7, 11 and 15 of a matrix, its fourth column, to the pointer on the stack	verified	one	gxumath#vector-helpers	
 0x5c6650	5	InitGxuInfinity2Thunk		gxumath	orchestration		Jumps to 0x5c6660; a static initializer	verified	one	gxumath#object-file-and-initializers	
 0x5c6660	11	InitGxuInfinity2		gxumath	orchestration		Copies +inf into 0xc2b980, which nothing reads	verified	one	gxumath#object-file-and-initializers	
 0x5c6670	10	InitFontRegistryThunk		font	orchestration		Calls 0x5c6680 and registers 0x5c66c0 with _atexit; a static initializer	verified	one	font/overview#static-objects	
@@ -35238,8 +35238,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ac610	5	InitDefaultFovThunk		camera	orchestration	void __cdecl (void)	Jumps to 0x7ac620; a static initializer	verified	one	camera#object-files-and-initializers	
 0x7ac620	19	InitDefaultFov		camera	primitive	void __cdecl (void)	Stores π·0.5 as a float in 0xcf5738, the default field of view	verified	one	camera#object-files-and-initializers	
 0x7ac640	449	CCamera::SetDeviceTransforms		camera	primitive	void __thiscall (CCamera *this, const float *rect, uint32_t unused)	Sets the device projection from fov, rect aspect, near and far, and the view from target - eye, roll and yaw	verified	one	camera#view-and-projection	camera::camera_view_lookat
-0x7ac810	140	CCamera::ComputeEye		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes target - distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
-0x7ac8a0	134	CCamera::ComputeTarget		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes eye + distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	inferred	none	camera#unreached-functions	
+0x7ac810	140	CCamera::ComputeEye		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes target - distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	verified	one	camera#eye-and-target-placement	
+0x7ac8a0	134	CCamera::ComputeTarget		camera	unreached	void __fastcall (const CCamera *camera, float *out)	Writes eye + distance·(cos pitch cos yaw, cos pitch sin yaw, sin pitch)	verified	one	camera#eye-and-target-placement	
 0x7ac930	472	CameraCreate		camera	orchestration	void * __cdecl (void)	Allocates a camera with default properties and returns its handle	verified	one	camera#lifetime	
 0x7acb10	32	CBaseManaged::CBaseManaged		camera	orchestration	CBaseManaged * __thiscall (CBaseManaged *this)	Clears a property's header and sets the base property vtable	verified	one	camera#lifetime	
 0x7acb30	3	CBaseManaged::Evaluate		camera	orchestration	void __thiscall (CBaseManaged *this, uint32_t arg)	Returns; slot 1 of the base property vtable	verified	one	camera#property-updates	

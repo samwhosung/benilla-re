@@ -5,8 +5,9 @@ frustum and screen-projection code beside them, and picking, decal and image rou
 nothing in this build calls.
 
 It is one object file, `0x5c3cc0` through `0x5c6660`, with the C runtime's initializer slots
-`0x82aa38` to `0x82aa44`. A matrix is 16 floats, column-major: element (row r, column c) is float
-`4c + r`, and a point is a column. The file calls `cmath` for the 4×4 determinant, inverse,
+`0x82aa38` to `0x82aa44`. A matrix is 16 floats, row-major: element (row r, column c) is float `4r + c`,
+and a point is a row vector the matrix multiplies on the right, so `0x7bcb40` gives `x·m0 + y·m4 +
+z·m8 + w·m12` first. The file calls `cmath` for the 4×4 determinant, inverse,
 product, vector transform and translation, `spline` for the three-vector constructor `0x4549a0`,
 and `gx` for the device getters. A failed argument check calls `0x64e850` with 0x57, which leaves
 the output alone.
@@ -59,7 +60,7 @@ writes a view matrix. With `f = normalize(target − eye)`, `s = normalize(f × 
 `m0 m4 m8 = s`, `m1 m5 m9 = u`, `m2 m6 m10 = f`, `m3 m7 m11 = 0`, `m15 = 1`. `m12 m13 m14` is the
 eye negated through `0x7bdc40`, `(−e.z·m8 + −e.y·m4 + −e.x·m0) + 0` for `m12`. It fails when `|target
 − eye|²` or `|up|²` is under 0.01. `0x5c4100`, which has no caller, uses `s' = up × f` and `u' = f
-× s'`: its first row is negated and the rest is the same.
+× s'`: its column `s` is negated (`m0 m4 m8` and `m12`) and the rest is the same.
 
 Addresses: `0x5c3e70`, `0x5c4100`, `0x7bdc40`, `0x5c3efd`, `0x5c3f25`, `0x5c3f53`, `0x5c3f71`, `0x5c3fe6`, `0x5c4059`, `0x5c40eb`
 Confidence: verified
@@ -102,7 +103,7 @@ interpolates the corners.
 
 `0x5c4f30` (`ecx` a count, `edx` the points, the output on the stack, `ret 4`) maps world points
 to window coordinates and returns 1, or 0 at the first point whose clip `|w'|` is under 0.001. `M`
-is `0x7bc6a0` of the device's projection (stack 8) and `0x58b0c0`'s matrix; `(x', y', z', w')` is
+is `0x7bc6a0` of the top of the device's matrix stack 8 and the matrix `0x58b0c0` gives; `(x', y', z', w')` is
 `(x, y, z, 1)` through `0x7bcb40`; `iw = 1/w'`; `r` is the four floats of `0x58a240`. Then `out.x =
 (x'·iw + 1)·0.5·(r3 − r1) + r1`, `out.y = (y'·iw + 1)·0.5·(r2 − r0) + r2` and `out.z = ((z'·iw +
 1)·0.5·zs − zn) + zn`, with `zn` and `zs` the last two scalars of `0x58b060`. Earlier points keep
@@ -113,7 +114,7 @@ Confidence: verified
 Proof: one
 Test: `gxumath::unproject_difftest`
 
-`0x58b280` with 8 copies the top of the device's projection stack (`0x5928e0`); `0x58b0c0` returns
+`0x58b280` with 8 copies the top of the device's matrix stack 8 (`0x5928e0`); `0x58b0c0` returns
 the product of two device matrices, the stack top at `+0x1ac8` and the matrix at `+0xf50`. `0x5c5145`
 to `0x5c5152`: `fabs; fcomp [0x801360]` (the float 0.001) `; test ah,5; jnp 0x5c51e2` returns 0
 only for `|w'|` below it, NaN passing. The extents are `[ebp-4] − [ebp-0xc]` and `[ebp-8] − [ebp-0x10]`
@@ -305,7 +306,7 @@ size case. The callers push `0x5c5350` after the sizes 8 and 8 (`0x44a929`, `0x4
 `0x5c6540` stores four floats at `ecx` (`ret 0x10`). `0x5c6560` multiplies the four floats at `ecx`
 by a float. `0x5c6590` stores them negated through the pointer on the stack. `0x5c65c0` stores `a − b`
 of two vectors of four, `a` in `edx` and `b` on the stack. `0x5c65f0` and `0x5c6620` copy a matrix's
-row 2 (`+0x8`, `+0x18`, `+0x28`, `+0x38`) and row 3 (`+0xc`, `+0x1c`, `+0x2c`, `+0x3c`) to the
+column 2 (`+0x8`, `+0x18`, `+0x28`, `+0x38`) and column 3 (`+0xc`, `+0x1c`, `+0x2c`, `+0x3c`) to the
 stack pointer. The plane extraction uses all of them; `0x5c6540` is also called from the world and
 scene code.
 
@@ -320,8 +321,8 @@ test runs `0x5c6540`.
 
 ## Frustum planes and box
 
-`0x5c4930` (`ecx` a matrix, `edx` six planes of four floats) writes `R0 − R3`, `−R0 − R3`, `R1 −
-R3`, `−R1 − R3`, `R2 − R3`, `−R2 − R3` for the matrix's rows, each a float, then scales each plane's four
+`0x5c4930` (`ecx` a matrix, `edx` six planes of four floats) writes `C0 − C3`, `−C0 − C3`, `C1 −
+C3`, `−C1 − C3`, `C2 − C3`, `−C2 − C3` for the matrix's columns, each a float, then scales each plane's four
 floats by `RN24(1/√(a² + b² + c²))`. `0x5c54f0` (`ecx` a point, `edx` the planes, a margin on
 the stack) returns 1 when `py·ply + px·plx + pz·plz + plw − margin` is at most 0 for all six, NaN
 passing. `0x5c4c70` (`ecx` view, `edx` projection; minimum and maximum outputs on the stack, `ret 8`)
@@ -332,7 +333,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5c494f` to `0x5c4c1f` build the rows with `0x5c6540`, `0x5c6620` and `0x5c65f0` and the planes with
+`0x5c494f` to `0x5c4c1f` build the columns with `0x5c6540`, `0x5c6620` and `0x5c65f0` and the planes with
 `0x5c65c0` and `0x5c6590`. The loop at `0x5c4c27` runs six times, sums `x² + y² + z²` unrounded
 (`0x5c4c42` is `fsqrt`), takes `fdivr 1.0`, stores a float (`0x5c4c50`) and calls `0x5c6560`.
 `0x5c5539` `test ah,0x41; je` leaves for `(d − margin) > 0` only. The box tests `c <= min` with

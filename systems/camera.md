@@ -245,10 +245,29 @@ code below `0x7abbc0` allocates with the sound-file cache's tags. Only `0xcf5730
 `0xcf5738` (read by `0x7ac930` and `0x7acf10`) are read; the other four are written and never read.
 The test runs `0x7ac5b0` and `0x7ac5d0` whole.
 
+## Eye and target placement
+
+`0x7ac810` and `0x7ac8a0` (`ecx` the camera, `edx` a three-float output) place one end of the
+camera's line of sight from the other: the eye as `target − d·v` and the target as `eye + d·v`,
+with `d` the distance (`+0x8c`) and `v = (cos pitch·cos yaw, cos pitch·sin yaw, sin pitch)` from the
+cached cosines and sines of pitch (`+0xf0`, `+0xf4`) and yaw (`+0x168`, `+0x16c`). A null camera or
+output raises error 0x57. Nothing calls either.
+
+Addresses: `0x7ac810`, `0x7ac8a0`, `0x7ac829`, `0x7ac8b9`, `0x7ac85b`, `0x7ac873`, `0x7ac87b`, `0x7ac884`, `0x7ac83e`, `0x7ac856`, `0x7ac85e`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7ac829` loads the yaw cosine, multiplies by the pitch cosine and negates it (`0x7ac83e`); the x
+product with `d` is stored as a float (`0x7ac85e`) before the target is added, the y product stays
+at 53 bits for its add, and the z term is the float sine (`0x7ac856`) times `d`. `0x7ac8b9` is the
+same without the negations, adding the eye (`+0x3c` to `+0x44`) in the order x, y, z. Negating
+before the multiply gives the same bits as subtracting after it. The census in the next entry
+finds no `call`, `jmp` or stored address for either.
+
 ## Unreached functions
 
-Nothing live reaches these functions: `0x7ac810` and `0x7ac8a0`, which place the eye or the
-target from the angles and the distance; the update pass `0x7abdf0` and its wrapper `0x7ada60`;
+Nothing live reaches these functions: `0x7ac810` and `0x7ac8a0` (previous entry); the update pass `0x7abdf0` and its wrapper `0x7ada60`;
 `0x7ac410`, which attaches a producer, and its seven type wrappers; and the accessors for
 property types the camera never registers. Their rows, of class `unreached`, keep a one-line
 meaning each, marked `inferred` because no derivation of it is kept.
