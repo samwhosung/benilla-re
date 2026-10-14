@@ -138,6 +138,19 @@ Test: none
 `0x8089a8` (0.0). `0x50edd9` calls `0x50de00` with the pivot, the distance and the offset and `0x50edeb` stores the eye at `+0x8`. The target's
 position slot (vtable `+0x14`) of a unit is `0x5f1f10`, which copies the movement object's position.
 
+## Where each channel enters
+
+The ground pitch `+0x108` is added to the pitch before the 89 degree clamp and the basis is built from the sum, so it moves the eye as well as the view. The bob and the shake are
+added to the eye as world offsets. The solver sweeps along the basis and the eye is stored at `+0x08` to `+0x10`. Only then does the pivot bias `+0x104`, when 0.001 or more
+in size, rotate the basis about (0, 1, 0), so it turns the view and not the eye. In first person the forward vector then takes its horizontal part from the yaw and keeps its height.
+
+Addresses: `0x50f710`, `0x50ab50`, `0x50ed59`, `0x50de00`, `0x7be730`, `0x50a780`, `0x50e8d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50f810` to `0x50f818` add `+0x108` when `+0xa8` is 0 or less, `0x50f826` to `0x50f85b` clamp and `0x50f866` calls `0x50ab50`, which builds the basis. `0x50eb0f` to `0x50eb3b` add the bob to the offset. `0x50ed59` is the solver, `0x50eddb` the eye placement and `0x50ede0` to `0x50edf0` store the eye. `0x50ee32` to `0x50ee45` skip a bias under 0.001 (0x801360); `0x50ee58` calls `0x7be730` with the basis `+0x14`, the bias, the axis at `0xbe0f20` (set to (0, 1, 0) on first use at `0x50ee06` to `0x50ee20`) and a flag of 1. `0x50efd0` to `0x50effc` store the cosine and sine of the yaw in the first two words of the forward row; `0x50f003` calls `0x50a780`.
+
 ## Pull-in and the glide back
 
 The near and far solver (`0x50e570`) gives a distance and a height that clear walls and ceilings. When the live

@@ -2228,6 +2228,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0e6c	void *	s_cvarCameraDistanceMax		uicamera	Holds the CVar record of cameraDistanceMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
 0xbe0e70	void *[42]	s_cvarCameraSmooth		uicamera	Holds the CVar records cameraSmooth<style><state><Delay or Factor>	verified	one	uicamera/cvars#smoothing-cvars
 0xbe0f1c	void *	s_cvarCameraCustomViewSmoothing		uicamera	Holds the CVar record of cameraCustomViewSmoothing	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0f20	float[3]	s_pivotBiasAxis		uicamera	Holds the axis (0, 1, 0) the pivot bias rotates the basis about	verified	one	uicamera/driver#where-each-channel-enters
 0xbe0f2c	void *	s_cvarCameraSurfaceFinalPitch		uicamera	Holds the CVar record of cameraSurfaceFinalPitch	verified	one	uicamera/cvars#final-pitch-and-band-cvars
 0xbe0f30	void *	s_cvarCameraPivotDXMax		uicamera	Holds the CVar record of cameraPivotDXMax	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe0f44	void *	s_cvarCameraPitchSmoothMin		uicamera	Holds the CVar record of cameraPitchSmoothMin	verified	one	uicamera/cvars#final-pitch-and-band-cvars

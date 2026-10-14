@@ -48,8 +48,7 @@ sweep, `0x50e861` the clip; `0x50e871` to `0x50e8a4` back off; `0x50e8a9` limits
 
 ## The boom sweep
 
-A sweep from the pivot, raised by the solved height, against the view direction shortens the distance, and a
-clip of the eye box (`0x50de90`) can shorten it again. After a hit the distance backs off 1/9 yard; it is never
+A sweep from the pivot, raised by the solved height, against the view direction shortens the distance, and the near box clip (below) can shorten it again. After a hit the distance backs off 1/9 yard; it is never
 below 0 or above the live distance. The answer is a mask: 0x20000 when the vertical probe hit and 0x10000 when
 the sweep did.
 
@@ -60,6 +59,18 @@ Test: none
 
 `0x50e778` to `0x50e793` start the boom at the pivot plus the clamped height; `0x50e816` is the sweep and `0x50e861` the clip; `0x50e871`
 to `0x50e8a4` back off; `0x50e8a9` limits the distance to the live value. The solver has one caller, `0x50ed59`.
+
+## The near box clip
+
+`0x50de90(&distance, trialEye, flags)` shortens the orbit distance so the near end of the view volume clears geometry. When the distance is within 0.001 of the near clip it sets the distance to 0 and answers 1. Otherwise it builds the view and the projection for the trial eye, takes the eight corners of the volume between the near plane and the trial distance, collects the world polygons that overlap that box
+and, for the polygons that clip it, finds the largest depth along the box. It reduces the distance by that depth times the distance beyond the near clip, never below 0, and answers 1 when any polygon clipped.
+
+Addresses: `0x50de90`, `0x5c3e70`, `0x5c3cc0`, `0x5c43b0`, `0x686500`, `0x672390`, `0x687080`, `0x686db0`
+Confidence: inferred
+Proof: none
+Test: none
+
+`0x50dea3` to `0x50debe` take the near case. `0x50deef` and `0x50defa` read the camera's vtable slots 3 and 1. `0x50e099` builds the look-at, `0x50e0b7` and `0x50e0c3` the projection (`uicamera/transitions#field-of-view`), `0x50e0db` the corners. `0x50e21d` makes the box, `0x50e28e` and `0x50e2e9` query and test the world with the flags, `0x50e434` clips each polygon, and `0x50e482` to `0x50e49c` shorten the distance. The depth variable and the clip routine were read for their flow, not decoded.
 
 ## The water bands
 
@@ -84,8 +95,7 @@ sets the submerged bit. In the solver `0x50e638` to `0x50e65d` build the surface
 When the camera passes from the submerged band to the surface band the pitch is set to the CVar
 `cameraSurfaceFinalPitch`, 5 degrees by default, and from the surface band to the submerged band to
 `cameraSubmergeFinalPitch`, also 5. The pitch goes in directly in mouselook and otherwise through the pitch
-transition. Nothing is done unless `cameraWaterCollision` is nonzero. Compared with the bands of the frame before:
-
+transition. Nothing is done unless `cameraWaterCollision` is nonzero.
 Addresses: `0x50ecae`, `0x50eb35`, `0x50eb3f`, `0x50ecd0`, `0x50eced`, `0x50ed18`, `0x50ed34`, `0x512830`
 Confidence: verified
 Proof: one
