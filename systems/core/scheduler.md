@@ -39,7 +39,7 @@ the current context set as the loop does, then `0x420e60` (`0x42133d`).
 
 ## Polling mode
 
-`0x883f0c` is the polling flag, stored by `0x4219d0` from its second argument. the application init `0x402350` passes 0 (`0x4027f1`)
+`0x883f0c` is the polling flag, stored by `0x4219d0` from its second argument. The application init `0x402350` passes 0 (`0x4027f1`)
 and nothing else writes it. Set, the loop sleeps through `0x43f050` instead of on the slot's event,
 100 ms when no context is due, and takes the timeout result without waiting; `0x422030` sets only
 the shutdown event; and `0x421cb0` starts one helper thread per processor at `0x421f00` while it
