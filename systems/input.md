@@ -194,3 +194,39 @@ Proof: one
 Test: none
 
 Writer 2 tests the mask being set, not the key: strafe, turn and mouse presses miss it. The bit `0x1000` is pushed by one call to `0x515090` only, in `ToggleAutoRun`. The press helper returns early when the bit is already set, so key autorepeat does nothing.
+
+## What a press latches
+
+The first primary command to go down (`0x514840` with no primary held before and bit 0x1 or 0x2 now) zeroes the two travel sums, stores the press time at `+0x14` and enters the camera's freelook (`0x50f930`, a jump to `0x50fe30`). A second primary pressed while the first is held does none of this.
+The world pick under the cursor is made once, at the press, by `0x514810` (its only caller `0x51482d`), and the release replays it; nothing re-picks on a move or on the release, and no cursor position is stored. A press of any command bits other than the held primary channel alone clears the armed click mode (`0x514ac1`).
+
+Addresses: `0x514840`, `0x5148f4`, `0x514905`, `0x514910`, `0x514919`, `0x51491f`, `0x514ab4`, `0x514ac1`, `0x514810`, `0x514822`, `0x51482d`, `0x481f00`, `0x50f930`, `0x50fe30`
+Confidence: verified
+Proof: one
+Test: none
+
+The pick result is held in the world frame (`+0x350`, `+0x358`, `+0x35c`). The chord clear means that holding both mouse buttons, or pressing a movement key while one is down, leaves the release without a click.
+
+## Orbit and mouselook
+
+The camera orbit of a held mouse button and mouselook are the same state, bit 0 of the camera's `+0x90` word. It is entered by `0x50fe30` from the press, and by the toggle `0x50f910` (the `ToggleMouseMove` binding), and left by `0x50fdd0`, called from the release through `0x50f940` and from the toggle. Entry has no motion threshold. `MouselookStart` and `MouselookStop` (`0x514210`, `0x514240`)
+press and release command bit 0x1 with click mode 0, so they arm no click. `IsMouselooking()` (`0x514270`) pushes 1 when command bit 0x1 is held, else nil: the channel, not the camera's bit.
+
+Addresses: `0x50f930`, `0x50f940`, `0x50f910`, `0x50fe30`, `0x50fdd0`, `0x514210`, `0x514240`, `0x514270`, `0x514c48`, `0x50b5a7`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50f940(arg)` leaves the freelook, then sets bit 0x20 of the camera word when its argument is nonzero and clears it otherwise; every mouse command passes 0 but `CameraOrSelectOrMoveStop`, which computes it with `0x6f1c10`. Freelook can be entered by channel 2 alone, so the channel and the camera bit are correlated and not equal.
+
+## A click and an orbit together
+
+The orbit starts at the press and the select is decided at the release from the latched pick, so one gesture can do both. With `t` the release interval: under 200 ms the release always clicks, however far the mouse swept; from 200 to 799 ms it clicks while both travel sums stay under 8.0; from 800 ms it never does. A right-button release that clicks interacts with the picked object,
+which can stand a sitting player (`StartAttack` `0x5ecb70` reaches `0x5ed430(0)`, and `0x611130` calls `0x60be30(0)`).
+
+Addresses: `0x514ae0`, `0x514af3`, `0x514b24`, `0x514b2a`, `0x514b2e`, `0x514b70`, `0x514d4b`, `0x514d79`, `0x481f60`, `0x60be30`, `0x5ecb70`
+Confidence: verified
+Proof: one
+Test: none
+
+The clock is the input record's stamp (`0xcf0bc8`), set by the input ring enqueue and read in milliseconds; the press and release use the same one. The regime table repeats `Click versus drag` and adds that motion past 8.0 in under 200 ms still clicks.
