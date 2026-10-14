@@ -6505,9 +6505,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4828d0	309	CGWorldFrame::ClassifyHoveredObject		ui	orchestration	void __thiscall (CGWorldFrame *this, void *pick, int x, int y)	Sets the cursor mode for the picked object and publishes it as the mouseover	verified	one	ui/worldcursor#classifying-a-hovered-object	
 0x482aa0	34			ui	orchestration		Overrides the probe of the world frame, calling the base probe	verified	one	ui/mouse#what-the-pointer-is-tested-against	
 0x482ad0	316	StampLightState		ui	primitive		Writes the frame's clock, player, camera, far clip and weather density into the light state	verified	one	lighting/daynight#light-state	
-0x482c10	132			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, SetShowOwnModel and 2 more; not read here	inferred	none		
-0x482ca0	42			ui	orchestration		Runs WorldFrame.cpp code that calls 0x480990; not read here	inferred	none		
-0x482cd0	107			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::Tick, 0x5f8c90; not read here	inferred	none		
+0x482c10	132	ApplySelfFade		ui	primitive		Sets the own-model flag from the fade alpha when the camera follows the active player and sets the model alpha	verified	one	ui/worldpick#the-local-player-as-a-target	
+0x482ca0	42	ResetPickLists		ui	orchestration		Empties both pick lists and ticks every unit and game object	verified	one	ui/worldpick#the-candidate-list	
+0x482cd0	107	TickWorldObject		ui	primitive		Ticks a unit or a game object of the object manager's enumeration	verified	one	ui/worldpick#the-candidate-list	
 0x482d40	45	CGWorldFrame::EmitLayer		ui	orchestration	void __thiscall (void *batch, int layer)	Emits the frame's regions and, for layer 0, registers the world render callback	verified	one	ui/worldframe#drawing-the-world	
 0x482d70	292	CGWorldFrame::RenderCallback		ui	orchestration	void __thiscall ()	Pushes identity matrices, runs the world driver, scene render and combat text, and pops them	verified	one	ui/worldframe#drawing-the-world	
 0x482ea0	1184	CGWorldFrame::OnRender		ui	orchestration	void __thiscall (CGWorldFrame *this)	Applies the idle law at the head of the world frame's render callback, then runs its per-frame work	verified	one	ui/idle#the-idle-law	
@@ -6588,9 +6588,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x484740	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x484750	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x484770	8			ui	primitive		Subtracts 0x24 from this and jumps to the destructor, the layout part thunk	verified	one	ui/worldframe#overrides	
-0x484780	37			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4847b0	67	FrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is Frame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
-0x484800	6	FrameGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name Frame	verified	one	ui/widgettype#type-chains	
+0x484780	37	CSimpleFrame::IsA		ui	orchestration	bool __thiscall (uint32_t typeId)	Returns whether a type id is the Frame or Region id	verified	one	ui/taxiframe#frame-identity	
+0x4847b0	67	CSimpleFrame::IsObjectType		ui	orchestration	bool __thiscall (const char *name)	Returns whether a name is Frame or Region, ignoring case	verified	one	ui/taxiframe#frame-identity	
+0x484800	6	CSimpleFrame::GetObjectType		ui	orchestration	const char *__thiscall ()	Returns the name Frame	verified	one	ui/taxiframe#frame-identity	
 0x484810	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x484820	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x484830	5			ui	orchestration		Runs its object file code not read here	inferred	none		
