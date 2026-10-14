@@ -10479,10 +10479,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e95d0	214	Script::GetLookingForGroup	idb	ui	primitive		Pushes the names of the three slots and the comment	verified	one	ui/lfg#getlookingforgroup	
 0x4e96b0	171	Script::SetLookingForGroup	idb	ui	primitive		Stores up to three type and entry pairs and a comment and sends them when changed	verified	one	ui/lfg#setlookingforgroup	
 0x4e9760	272	Script::LFGQuery	idb	ui	primitive		Sends the looking-for-group inquiry of a type and an entry	verified	one	ui/lfg#the-results	
-0x4e9870	80	Script::GetNumLFGResults	idb	ui	orchestration		Implements the Lua function GetNumLFGResults	inferred	none		
-0x4e98c0	432	Script::GetLFGResults	idb	ui	primitive		Implements the Lua function GetLFGResults	inferred	none		
-0x4e9a70	48	Script::GetLFGTypes	idb	ui	primitive		Implements the Lua function GetLFGTypes	inferred	none		
-0x4e9aa0	306	Script::GetLFGTypeEntries	idb	ui	primitive		Implements the Lua function GetLFGTypeEntries	inferred	none		
+0x4e9870	80	Script::GetNumLFGResults	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of looking-for-group results and the server total	verified	one	ui/lfg#reading-results	
+0x4e98c0	432	Script::GetLFGResults	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, level, class, slot entries and comment of a looking-for-group result	verified	one	ui/lfg#reading-results	
+0x4e9a70	48	Script::GetLFGTypes	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the five looking-for-group type names	verified	one	ui/lfg#reading-the-lists	
+0x4e9aa0	306	Script::GetLFGTypeEntries	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the entry names of a looking-for-group type	verified	one	ui/lfg#reading-the-lists	
 0x4e9be0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e9c10	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e9c30	5			ui	orchestration		Runs its object file code not read here	inferred	none		

@@ -113,3 +113,33 @@ The record is 0x44 bytes of name and numbers then the 0x80-byte comment: `0x44 +
 the ChrClasses table. Before it overwrites the list, the handler walks the old records while queries are outstanding
 and calls `0x563280(entry, 0x4e8f60, 0)` on the quest cache for each type 3 slot, then zeroes the counter. The callback thunk `0x4e8f60` jumps to `0x4e8d30`,
 which decrements the counter and signals event 532 at zero. Event 389 (`UPDATE_LFG`) has no fire site (`tables/event_sites.tsv`). `0x4e7c70` registers opcodes 0x329 and 0x2cb beside 0x1ff.
+
+## Reading results
+
+`GetNumLFGResults()` returns the number of stored results (`0xbc7618`) and the server's total (`0xbc761c`). `GetLFGResults(i)`
+returns seven values for result `i`: the player name, the level (`+0x30`), the class name (the ChrClasses row of `+0x34`, empty
+for none), the three slot entries and the comment (`+0x44`). A slot entry is nil when the type byte of its word is 0, the quest
+title for type 3 and the dungeon name otherwise, each empty when it cannot be resolved. A number past the list gives
+nil, 0, nil, nil, nil, nil, nil. A non-number raises `Usage: GetLFGResults(index)`.
+
+Addresses: `0x4e9870`, `0x4e98c0`, `0x4e9936`, `0x4e994f`, `0x4e9983`, `0x4e9990`, `0x4e99c2`, `0x4e9a1b`, `0x4e9a33`, `0xc0def4`, `0xc0db34`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4e9936` pushes the name and `0x4e994a` the level. `0x4e9952` to `0x4e9975` resolve the class through the store at `0xc0def4` and read its name at `+0x14` by locale. `0x4e9983` starts the three slot words at `+0x38`; `0x4e9990` tests the type byte (`movsx` of the top byte) and `0x4e99a5` masks the entry to 24 bits. `0x4e99c2` asks the quest cache and `0x4e99f4` reads the dungeon name at `+0x4`. `0x4e9a1b` pushes the comment.
+
+## Reading the lists
+
+`GetLFGTypes()` pushes the five literal type names `Dungeon`, `Raid`, `Quest`, `Zone` and `Battleground` for types 1 to 5 and returns 5.
+`GetLFGTypeEntries(type)` pushes, for each entry of the type's list in order, the dungeon name, or the quest title for type 3 (empty while the
+quest is not cached), and returns their number. A type of 6 or more, or a type with no entries, returns 0. A non-number raises
+`Usage: GetLFGTypeEntries(type)`.
+
+Addresses: `0x4e9a70`, `0x4e9a83`, `0x4e9aa0`, `0x4e9af5`, `0x4e9b04`, `0x4e9b21`, `0x4e9b50`, `0x4e9b72`, `0x4e9b85`, `0x4e9ba4`, `0x4e9bc6`, `0xbc6f18`, `0xbc6f90`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4e9a83` loops over the table at 0x84c154 from the second entry. `0x4e9af5` bounds the type by 6, `0x4e9b04` loads the entry count and `0x4e9b21` the list. `0x4e9b72` looks the quest up at `+0x9c` and `0x4e9ba4` reads the dungeon name.
+
