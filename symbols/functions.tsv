@@ -7433,9 +7433,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a5cd0	47	InitZero4a5ca0Exit		ui	primitive	void __cdecl (void)	Frees the int block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4a5d00	1668	BuildMapLists		ui	orchestration		Builds the continent records, their sorted zone ids and the orphan area ids from WorldMapArea	verified	one	ui/worldmap#the-lists	ui::glue_geom_4a5d00_poi_transform
 0x4a6390	154	CompareZoneNames		ui	primitive		Compares two WorldMapArea ids by the name of their area	verified	one	ui/worldmap#the-lists	
-0x4a6430	37			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x4a6460	36			ui	orchestration		Runs its object file code that calls 0x4a67a0; not read here	inferred	none		
-0x4a6490	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
+0x4a6430	37	ArmExploredWatcher		ui	orchestration		Watches the active player's 256 explored bytes at +0xe6c with the handler 0x4a6460	verified	one	ui/worldmap#the-explored-bits-watcher	
+0x4a6460	36	OnExploredBitsChanged		ui	orchestration		Selects the map again with the current continent and its direct area or zone, and returns 1	verified	one	ui/worldmap#the-explored-bits-watcher	
+0x4a6490	30	ClearExploredWatcher		ui	orchestration		Removes the watcher on the explored bytes	verified	one	ui/worldmap#the-explored-bits-watcher	
 0x4a64b0	240	ShutdownWorldMap		ui	orchestration		Releases the continent records and the landmark, overlay and orphan lists and zeroes the map arrows	verified	one	ui/gameui#start-up-display-and-chat	
 0x4a65a0	60			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a65e0	106			ui	primitive		Runs its object file code not read here	inferred	none		

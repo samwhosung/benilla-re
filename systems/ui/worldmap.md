@@ -134,3 +134,15 @@ Proof: one
 Test: none
 
 `0x4a8949` reads the continent (truncated), `0x4a895c` the third argument and `0x4a896b` the second as floats, and `0x4a8986` calls `ProjectWorldPosition`; `0x4a89ac` returns 2.
+
+## The explored bits watcher
+
+`EnterWorldUI` arms a watcher on the active player's explored bits, the 256 bytes at `+0xe6c` of the player block (section 4), through `0x4a6430`, and `LeaveWorldUI` removes it through `0x4a6490`. When the bytes change, the watcher `0x4a6460` selects the map again with the current selection: the direct area when one is set, else the zone, under the current continent.
+
+Addresses: `0x4a6430`, `0x4a6460`, `0x4a6490`, `0x4908c0`, `0x490a80`, `0x467e70`, `0x467fb0`, `0x4a67a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4a6430` is `ClntObjMgrSetObjectMirrorHandler(4, 0xe6c, active player, 0x100, 0x4a6460, 0, 0)` and `0x4a6490` the matching clear. The watcher loads the direct area at 0x845074, uses the zone at 0x845070 when it is -1, loads the continent at 0x84506c and calls `0x4a67a0`; `ret 0x10` drops its four arguments, which it ignores.
+
