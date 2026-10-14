@@ -138,6 +138,17 @@ Test: none
 `0x8089a8` (0.0). `0x50edd9` calls `0x50de00` with the pivot, the distance and the offset and `0x50edeb` stores the eye at `+0x8`. The target's
 position slot (vtable `+0x14`) of a unit is `0x5f1f10`, which copies the movement object's position.
 
+## Placing the eye
+
+`0x50de00(out, pivot, distance, offset)` gives `pivot - distance * forward + offset` per axis, with mixed rounding. The x product stays at register precision and the x difference is stored as a float before the offset is added. The y difference stays at register precision. The z product is stored as a float and the z difference stays at register precision. Each sum with the offset is stored as a float.
+
+Addresses: `0x50de00`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50de20` fetches the forward vector through the vtable. `0x50de37` stores the z product, `0x50de3f` the x difference, and `0x50de56`, `0x50de61` and `0x50de71` the three sums.
+
 ## Where each channel enters
 
 The ground pitch `+0x108` is added to the pitch before the 89 degree clamp and the basis is built from the sum, so it moves the eye as well as the view. The bob and the shake are
@@ -226,5 +237,5 @@ Test: none
 `0x50b5d6` bounds the argument to 1 to 5 and `0x50b5e5` makes it zero-based. `0x512e90` formats `Camera view %s` (0x8500a0) with the view's name and stores the view in
 `cameraView` through `0x63df50` (`0x512f17`); `0x512f2e` to `0x512f99` copy the live values to the targets and clear the transitions. Its blend style,
 the third word, is 1 for a timed blend and 2 for an instant one; the arms at `0x513175` and `0x513024` were read, not traced to the end.
-`0x50f990` writes the distance, pitch and yaw CVars with `%f` (`0x835160`) after converting pitch and yaw to degrees. `0x50fa60` flips between the views
-1 to 3, a back-and-forth cycle the Lua commands do not reach.
+`0x50f990` writes the distance, pitch and yaw CVars with `%f` (`0x835160`) after converting pitch and yaw to degrees. `0x50fa60` adds a direction (`+0x24c`, 1 or -1) to the current view; a result of 5 or more sets view 3 and a result below 0 sets view 1, each
+reversing the direction, and then it sets the view like `0x512e90`. It steps through views 0 to 4 and bounces to 3 at the top and to 1 at the bottom. No Lua command reaches it.

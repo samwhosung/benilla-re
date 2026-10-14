@@ -144,17 +144,17 @@ both arguments 1, `0x4fbce3` sets the base cursor and `0x4fbced` the shown one.
 
 ## Client faults
 
-Dropping a kind 5 payload on a bag slot or a bag button reads the row at the stored index without bounding it when
-the index is out of range, because a fresh vendor list can shorten the table without clearing the cursor. The
+Dropping a kind 5 payload on a bag slot or a bag button looks the row up with the stored index bounded against the row count, but an index out of range gives a null row and the
+lookup is used anyway. A fresh vendor list can shorten the table without clearing the cursor. The
 bag and keyring path and the bag button path then read the entry from address 4. The toggle test of
 `PickupMerchantItem` compares the preview entry without testing the kind, so a held action bar item or ammo with the
 same entry as the row clears the cursor instead of picking up the row.
 
-Addresses: `0x4f9f30`, `0x4f9f35`, `0x4c7e9a`, `0x4c7ea5`, `0x4fb811`, `0x4facf0`
+Addresses: `0x4f9f1c`, `0x4f9f24`, `0x4f9f30`, `0x4f9f35`, `0x4c7e9a`, `0x4c7ea5`, `0x4fb811`, `0x4facf0`
 Confidence: inferred
 Proof: none
 Test: none
 
-`0x4f9f30 xor eax,eax` is the out-of-range branch of the row lookup and `0x4f9f35` reads `[eax+4]`; `0x4c7e9a` and `0x4c7ea5`
+`0x4f9f1c` and `0x4f9f24` bound the index; `0x4f9f30 xor eax,eax` is the out-of-range branch of the row lookup and `0x4f9f35` reads `[eax+4]`; `0x4c7e9a` and `0x4c7ea5`
 have the same pair. `0x4c78fd`'s paper-doll path bails to its exit instead (`0x4c791d`, `0x4c7925`). `0x495170` reads the entry
 without the kind. `0x4facf0` replaces the rows and the count and calls no clear.

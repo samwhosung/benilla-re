@@ -55,18 +55,18 @@ the two stack arguments become the send and quiet flags of `0x4e58e0`. The arriv
 `0x4e5e60(old, new)` runs when the server supercedes a spell. Each spell-kind slot whose spell is
 `old` is cleared and set to `new`, each with a send, so it costs two packets; a macro slot that
 resolved to `old` gets `new` in its record's cached spell (`+0x564`). `0x4e5e20(id)` clears every slot
-for the spell `id` and runs when a spell is unlearned. `0x4e5de0(id)` notifies, without sending, every
-player-book slot for the spell; the aura add and remove handlers call it so the icons repaint.
-`0x4e5cc0(id)` notifies, and `0x4e5d10(id)` clears, every slot holding a macro id.
+whose resolved spell (`0x4e5a50`) is `id` and runs when a spell is unlearned. That is the spell slots, the macro slots whose
+bound spell is `id` and the item slots whose on-use spell is `id`; each clear sends a word of 0. `0x4e5de0(id)` notifies, without sending, every
+player-book slot for the spell, so the aura handlers repaint icons. `0x4e5cc0(id)` notifies, and `0x4e5d10(id)` clears, every slot holding a macro id.
 
-Addresses: `0x4e5e60`, `0x4e5e93`, `0x4e5ea0`, `0x4e5ec4`, `0x5e6330`, `0x5e6356`, `0x4e5e20`, `0x5ea253`, `0x4e5de0`, `0x61237e`, `0x612440`, `0x4e5cc0`, `0x4e5d10`, `0x4f1329`, `0x4f1449`
+Addresses: `0x4e5a50`, `0x4e5db0`, `0x4e5e60`, `0x4e5e93`, `0x4e5ea0`, `0x4e5ec4`, `0x5e6330`, `0x5e6356`, `0x4e5e20`, `0x5ea253`, `0x4e5de0`, `0x61237e`, `0x612440`, `0x4e5cc0`, `0x4e5d10`, `0x4f1329`, `0x4f1449`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4e5e60` clears at `0x4e5e93` and sets at `0x4e5ea0` with the pushes 0 and 1; the macro branch stores
 `edi` at `0x4e5ec4`. Its one caller is the superceded-spell message handler `0x5e6330` (`0x5e6356`),
-which reads the old id and then the new as two u16. `0x4e5e20` has one caller, spell unlearning
+which reads the old id and then the new as two u16. `0x4e5e20` matches each of the 120 slots with `0x4e5a50` (`0x4e5e35`, `0x4e5e3a`) and clears a match with `0x4e5db0` (`0x4e5e40`), which stores 0 and sends it through `0x4e58e0`. It has one caller, spell unlearning
 (`0x5ea253`); `0x4e5de0` has two, the aura handlers (`0x61237e`, `0x612440`); `0x4e5cc0` and
 `0x4e5d10` are called from macro code (`0x4f1329`, `0x4f1449`).
 

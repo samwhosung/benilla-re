@@ -176,7 +176,7 @@ Proof: one
 Test: none
 
 The point goes through `CMovement::WorldToTransport` and `WalkToPoint`. Objects come from
-`0x494c80`; the clear is `0x493540(0, 0)` while `[0xb4e2b8]` and its `+0x28` are set.
+`0x494c80`; the clear is `0x493540(0, 0)` only when the CVar `deselectOnClick` is nonzero (its record is `[0xb4e2b8]`, the value at `+0x28`).
 
 ## Taxis
 

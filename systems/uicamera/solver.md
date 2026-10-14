@@ -32,15 +32,14 @@ means none (`0x511aa6`).
 world. Both start from the larger of target and live values: the distance from `+0x198` and `+0xec`, the height
 from `+0x1c8` and `+0xfc`. The trace mask is 0x100171, plus 0xf0000 when `cameraWaterCollision` is set; the same
 register enables the water bands below. A vertical probe upward from the pivot plus a base height of 5/6 yard
-(more in the surface band) shortens the height, which is then clamped between that base and a cap.
+(more in the surface band) shortens the height, which is then clamped between that base and a cap. The cap is normally the live height `+0xfc`. A height within 2^-20 of the near clip skips the probe and the band limits.
 
 Addresses: `0x50e570`, `0x50e5ec`, `0x50e629`, `0x50e6f6`, `0x8089cc`, `0x808a04`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x50e57a` to `0x50e5cc` take the larger of each pair; `0x50e5e3` compares height minus the near clip with 9.5e-7 and skips the probes when it is
-smaller. `0x50e5ec` to `0x50e61a` build the trace mask (`neg esi; sbb esi,esi; and esi,0xf0000; add esi,0x100171`). `0x50e687` raises the
+`0x50e57a` to `0x50e5cc` take the larger of each pair; `0x50e5e3` compares height minus the near clip with 9.5e-7; `0x50e623` jumps to the clamp at `0x50e754` when it is not greater, past the probe and the band limits (`0x50e629` to `0x50e684`). `0x50e607` stores the live height as the cap `[ebp-0xc]`. `0x50e5ec` to `0x50e61a` build the trace mask (`neg esi; sbb esi,esi; and esi,0xf0000; add esi,0x100171`). `0x50e687` raises the
 probe start by the base `[ebp-4]` (5/6, `0x8089cc`), `0x50e690` takes the height minus the base and `0x50e695` raises it to at least 1/9 (`0x808a04`).
 `0x50e6f6` is the vertical probe; a hit scales the length, and `0x50e717` to `0x50e743` back it off by 1/9 when it was shortened. `0x50e756` to
 `0x50e776` clamp the height to the base and the cap. `0x50e778` to `0x50e793` start the boom at the pivot plus the clamped height; `0x50e816` is the
@@ -50,19 +49,19 @@ sweep, `0x50e861` the clip; `0x50e871` to `0x50e8a4` back off; `0x50e8a9` limits
 
 A sweep from the pivot, raised by the solved height, against the view direction shortens the distance, and the near box clip (below) can shorten it again. After a hit the distance backs off 1/9 yard; it is never
 below 0 or above the live distance. The answer is a mask: 0x20000 when the vertical probe hit and 0x10000 when
-the sweep did.
+the sweep did or the clip did.
 
 Addresses: `0x50e816`, `0x50e861`, `0x672170`, `0x50de90`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x50e778` to `0x50e793` start the boom at the pivot plus the clamped height; `0x50e816` is the sweep and `0x50e861` the clip; `0x50e871`
+`0x50e778` to `0x50e793` start the boom at the pivot plus the clamped height; `0x50e816` is the sweep (it sets 0x10000 at `0x50e82f`) and `0x50e861` the clip (it sets 0x10000 at `0x50e86a`); `0x50e871`
 to `0x50e8a4` back off; `0x50e8a9` limits the distance to the live value. The solver has one caller, `0x50ed59`.
 
 ## The near box clip
 
-`0x50de90(&distance, trialEye, flags)` shortens the orbit distance so the near end of the view volume clears geometry. When the distance is within 0.001 of the near clip it sets the distance to 0 and answers 1. Otherwise it builds the view and the projection for the trial eye, takes the eight corners of the volume between the near plane and the trial distance, collects the world polygons that overlap that box
+`0x50de90(&distance, trialEye, flags)` shortens the orbit distance so the near end of the view volume clears geometry. When the distance is below the near clip plus 0.001 it sets the distance to 0 and answers 1; a distance far under the near clip takes the same exit. Otherwise it builds the view and the projection for the trial eye, takes the eight corners of the volume between the near plane and the trial distance, collects the world polygons that overlap that box
 and, for the polygons that clip it, finds the largest depth along the box. It reduces the distance by that depth times the distance beyond the near clip, never below 0, and answers 1 when any polygon clipped.
 
 Addresses: `0x50de90`, `0x5c3e70`, `0x5c3cc0`, `0x5c43b0`, `0x686500`, `0x672390`, `0x687080`, `0x686db0`
@@ -70,7 +69,7 @@ Confidence: inferred
 Proof: none
 Test: none
 
-`0x50dea3` to `0x50debe` take the near case. `0x50deef` and `0x50defa` read the camera's vtable slots 3 and 1. `0x50e099` builds the look-at, `0x50e0b7` and `0x50e0c3` the projection (`uicamera/transitions#field-of-view`), `0x50e0db` the corners. `0x50e21d` makes the box, `0x50e28e` and `0x50e2e9` query and test the world with the flags, `0x50e434` clips each polygon, and `0x50e482` to `0x50e49c` shorten the distance. The depth variable and the clip routine were read for their flow, not decoded.
+`0x50dea3` to `0x50debe` take the near case: `0x50deb4` jumps on above or equal, so the test is one-sided. `0x50deef` and `0x50defa` read the camera's vtable slots 3 and 1. `0x50e099` builds the look-at, `0x50e0b7` and `0x50e0c3` the projection (`uicamera/transitions#field-of-view`), `0x50e0db` the corners. `0x50e21d` makes the box, `0x50e28e` and `0x50e2e9` query and test the world with the flags, `0x50e434` clips each polygon, and `0x50e482` to `0x50e49c` shorten the distance. The depth variable and the clip routine were read for their flow, not decoded.
 
 ## The water bands
 
@@ -96,6 +95,7 @@ When the camera passes from the submerged band to the surface band the pitch is 
 `cameraSurfaceFinalPitch`, 5 degrees by default, and from the surface band to the submerged band to
 `cameraSubmergeFinalPitch`, also 5. The pitch goes in directly in mouselook and otherwise through the pitch
 transition. Nothing is done unless `cameraWaterCollision` is nonzero.
+
 Addresses: `0x50ecae`, `0x50eb35`, `0x50eb3f`, `0x50ecd0`, `0x50eced`, `0x50ed18`, `0x50ed34`, `0x512830`
 Confidence: verified
 Proof: one

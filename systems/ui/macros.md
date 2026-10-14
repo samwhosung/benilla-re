@@ -96,7 +96,7 @@ a name given is the full-scope error.
 
 ## Editing a macro
 
-`EditMacro(index, name, iconIndex, body, local)` does nothing without the kind 7 check. It maps the index to an
+`EditMacro(index, name, iconIndex, body, local)` raises `Usage: EditMacro(index, name, icon, body, local)` unless argument 1 is a number, and does nothing without the kind 7 check. It maps the index to an
 id and sets the fields that are given: a string name, a number icon index (an entry of the icon list), a string
 body. It always replaces the local flag with the fifth argument, a script flag that is false when absent. The
 bound spell is derived again and the macro's action slots are redrawn. It returns the macro's index; an index with no
@@ -107,7 +107,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4f18b0` maps the index with `0x4f0eb0` and calls `0x4f1280(id, name, icon, body, local)`, then returns the
+`0x4f18b0` tests argument 1 with `0x6f34d0` (`0x4f18be`) and raises the usage text at 0x84cc44 (`0x4f18c7`), then maps the index with `0x4f0eb0` and calls `0x4f1280(id, name, icon, body, local)`, then returns the
 position from `0x4f0ec0` plus 1. The worker copies each given field, stores the local flag, re-derives the bound
 spell, sets the save flag, rebuilds the order, redraws each slot that holds the id with `0x4e5cc0` and refreshes
 the usable flags with `0x4e5c00`.
@@ -235,9 +235,9 @@ body line from the tokenizer with CRLF, then `END` with CRLF.
 
 ## Loading macro files
 
-The reader takes a header only as `MACRO`, a nonzero id and a name. It skips a scope that already has 18
+The reader takes a header only as `MACRO` in any case, a nonzero id and a name. It skips a scope that already has 18
 macros, adds the scope's base to an id below it, skips an id that exists, and ends a block at a line `END`
-(any case). Body lines are kept with `\n` between them and cut to 256 characters. A loaded macro always has the
+(any case). Each body line is followed by `\n`, the last too, so a loaded body ends in `\n`; the body is cut to 256 characters. A loaded macro always has the
 local flag clear, so a macro read from `macros-local.txt` is written back to `macros-cache.txt`. The load ends by
 rebuilding the order and deriving every bound spell.
 
@@ -249,7 +249,7 @@ Test: none
 `0x4f0a70` registers the reader `0x4f0600` for the same two kinds through `0x5afe50`, which runs it at once or
 when the account data is ready. The reader tokenizes lines on `\r\n`, the header on a space, then on space, `"`, CR
 and LF (quote-aware), keeps the largest id seen as the scope's last id, and copies the name (0x40) and the icon
-(0x100). Its only store to `+0x20` is 0 (`0x4f095c`).
+(0x100). Its only store to `+0x20` is 0 (`0x4f095c`). The header compare at `0x4f06d7` is a case-insensitive string compare; `0x4f0a15` appends each kept line and `0x4f0a2b` a `\n` (0x835144) to the body buffer.
 
 ## Macro icons
 

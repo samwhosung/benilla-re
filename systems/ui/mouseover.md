@@ -200,19 +200,19 @@ Test: none
 ## The nothing leg
 
 The nothing leg notes whether any payload is held. Action 4 clears the payload. Action 1 asks to confirm destroying
-an item payload that has a source container, and otherwise clears the payload. The target is deselected only when
-no payload was held on entry. With no payload held, a click whose press and release points are not identical, by
+an item payload that has a source container, and otherwise clears the payload. The target is deselected only for the left button (action 1), when
+no payload was held on entry and the CVar `deselectOnClick` (default 1) is nonzero. With no payload held, a click whose press and release points are not identical, by
 the active mover being able to auto-interact (`objectlayer/unitmovement`), starts a walk along the heading for
 the right button (`0x610100`) and clears nothing. The identity test compares the squared distance with the constant
 at `0x7ffd74`, which is 0.0.
 
-Addresses: `0x492d30`, `0x60f900`, `0x610100`, `0x7ffd74`, `0xc4da98`
+Addresses: `0x492d30`, `0x60f900`, `0x610100`, `0x7ffd74`, `0xc4da98`, `0xb4e2b8`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x492d3f` notes the payload, `0x492ddf` and `0x492e04` clear, `0x492e31` asks to confirm and `0x492e5d` deselects, guarded by the
-note at `0x492e45`. `0x492da2` is the compare and `0x492daa jnp` skips the walk for identical points; `0x492db5` calls `0x60f900` on
+left-button test at `0x492e1b`, the note at `0x492e45` and the CVar record `0xb4e2b8` with its value at `+0x28` (`0x492e49` to `0x492e55`). `0x48fd00` to `0x48fd17` register `deselectOnClick` and store its record there. `0x492da2` is the compare and `0x492daa jnp` skips the walk for identical points; `0x492db5` calls `0x60f900` on
 the mover, the player found for the GUID at `0xc4da98`, and `0x492dca` calls `0x610100` with the difference vector.
 
 ## Selecting by click

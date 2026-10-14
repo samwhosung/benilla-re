@@ -36,7 +36,7 @@ named at `0x490013`. `0x6f1b30` is the first-letter bool parse of `ui/actionuse#
 
 Nine Lua functions come from the table at 0x846c88. `GetNumBindings` returns the count of displayed
 commands. `GetBinding(index)` returns the command name at that ordinal, then every key bound to it; hidden
-rows have no ordinal. `GetBindingKey(command)` returns every key of a command, none when it has none.
+rows have no ordinal. `GetBindingKey(command)` returns every key of a command, none when it has none, except after a rebind to the same command (see Setting a binding).
 `GetBindingAction(key)` returns the command bound to exactly that key and the empty string, not nil, when
 none: it has no modifier fallback. `RunBinding(command[, "up"])` runs the command by name as a press unless
 the second argument equals `up`, and returns nothing.
@@ -54,7 +54,7 @@ Each raises its usage text for a bad argument.
 ## Binding sets
 
 `GetCurrentBindingSet` returns the number at `+0xd0` of the manager. The live set is 3. `LoadBindings(set)`
-for a set below 3 copies that set into the live set; `SaveBindings(set)` for set 1 or 2 stores the number at
+for a set below 3, negative ones included, copies that set into the live set; `SaveBindings(set)` for set 1 or 2 stores the number at
 `+0xd0` and copies the live set into it, and into set 2 as well when the set is 1; any other argument raises
 its usage text. A copy marks its target in the bit mask at `+0xd4` and, for the live set, signals
 `UPDATE_BINDINGS` (386).
@@ -64,9 +64,42 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4b8232 cmp eax,3` bounds the load. `0x4b6310(from, to)` copies set `from` to set `to`: `0x4b8220` pushes
+`0x4b8232 cmp eax,3` bounds the load, but `0x4b8235 jl` is signed, so a negative set passes and `0x4b6310` indexes the set table before its start (a client fault). `0x4b6310(from, to)` copies set `from` to set `to`: `0x4b8220` pushes
 `(set, 3)` and `0x4b8260` pushes `(3, set)`. `0x4b8275` and `0x4b827d` accept 1 and 2, `0x4b829d` stores the set
 and `0x4b82ad` mirrors set 1 into 2. The copy sets bit `to` of `+0xd4` and signals when `to` is 3.
+
+## Binding files
+
+Bindings are read from three files. Set 0 is read from the archive file `WTF\DefaultBindings.wtf`; set 1 from `bindings-cache.wtf` under the account folder and set 2 from `bindings-cache.wtf` under the character folder, the account-data kinds 2 and 3. Each file is text with one line per key, `bind <key> <command>`, ended by a carriage return and line feed. Loading empties the set, then takes each line whose first five characters are `bind ` (any case), reads the key up to the next space (31 characters at most) and the rest of the line as the command, and stores them through the same routine as `SetBinding`, so a key the validator refuses is dropped. A line is cut to 127 characters.
+
+Addresses: `0x4b62b0`, `0x4b6240`, `0x4b6140`, `0x4b7490`, `0x5afe50`, `0x648620`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4b62b0` loads the default file with `0x648620` (`0x4b62c7`) and parses it into set 0 (`0x4b62d5`), then registers the reader `0x4b6240` for kinds 2 and 3 with the set numbers 1 and 2 (`0x4b62e5` to `0x4b6300`, `0x5afe50`). `0x4b6240` reads the cache file, the handle in `edx`, into a stack buffer and calls `0x4b6140(set, text)`. `0x4b6161` and `0x4b6168` to `0x4b6178` empty the set. `0x4b61c7` and `0x4b61d7` take a line of 0x80 bytes up to a carriage return or line feed; `0x4b61de` compares its first five bytes with `bind ` (0x846e3c); `0x4b61fc` takes the key, 0x20 bytes up to a space, and `0x4b6221` calls `0x4b7490`.
+
+## Choosing the sets
+
+After the character file is read, the current set is 2 when set 2 has any key, else 1. An empty set 1 is filled from set 0 and an empty set 2 from set 1, and the live set becomes a copy of set 2. The dirty mask is cleared before the last copy, so only the live set stays marked.
+
+Addresses: `0x4b64b0`, `0x4b6240`, `0x4b6310`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4b629a` runs `0x4b64b0` after set 2 is read. `0x4b64cb` stores the current set, `0x4b64e2` copies set 0 to 1, `0x4b64fb` set 1 to 2 and `0x4b6510` set 2 to the live set; `0x4b6506` zeroes the mask before the last copy.
+
+## Writing binding files
+
+The files are written once, when the interface shuts down, by the only caller of `0x4b65e0`. The dirty mask at `+0xd4` of the manager says what changed: bit 1 (set 1) writes both files, bit 2 (set 2) the character file alone. Each file is opened for writing, which empties it, and the writer puts `bind <key> <command>` plus carriage return and line feed for every key of the set, in the order of the set's key list. The account file gets set 1. The character file gets set 2 only when the current set is 2, so after the account set is saved it is left empty. A section marked pending is skipped.
+
+Addresses: `0x4b65e0`, `0x4b65b0`, `0x4b6520`, `0x5afed0`, `0x5aff40`, `0x490bd0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x490c64` in `0x490bd0` is the only call of `0x4b65e0`. `0x4b65e5` loads the mask; `0x4b65ed` tests bit 1 and `0x4b6600`, `0x4b6611` call `0x5afed0` for kind 2 with the set number 1 and kind 3 with 2; `0x4b6617` to `0x4b662a` test bit 2 and write kind 3 alone. `0x4b65b0` ignores a cache handle of -1, then writes set 1 always (`0x4b65bb`) and set 2 only when it equals the current set (`0x4b65c6`). `0x4b6520` formats `bind %s %s` plus carriage return and line feed (0x846e5c) from the key at `+0x14` and the command at `+0x1c` of each node and writes the text with `0x42a5d0`. `0x5afed0` skips a pending section and writes otherwise, then calls `0x5aff40`.
 
 ## Chord names
 
@@ -198,6 +231,13 @@ Test: none
 from Lua), `0x4b762c` (the validator refused), `0x4b77fb` and `0x4b7889` (success). The alias text goes through a
 one-byte buffer in zeroed data (`0x4b7616`). Nothing touches the table before the validator (`0x4b761d`).
 `0x494a50` with kind 8 returns 1 on every path.
+
+Client fault: a key bound again to the command it already has is left on a duplicate index. Each key of a command
+holds an index, and `GetBindingKey` and `GetBinding` read indices 0, 1, 2 and so on until one has no key. `0x4b7786`
+calls `0x4b7ed0`, which lowers by 1 the index of every other key of the old command that is above this key's index,
+and only then does `0x4b77a5` compare the old and new command names and `0x4b77ac` return because they match. The key
+keeps its own index. Rebinding a key that is not the last of its command therefore leaves two keys on one index, and
+both functions return one key too few.
 
 ## Valid key strings
 

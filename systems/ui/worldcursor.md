@@ -64,8 +64,9 @@ the right-click leg returning a repair base cursor to Point (`ui/mouse`).
 
 ## SetCursor
 
-`SetCursor(name)` takes a string, or nil to reset. Called with no argument it raises `Usage: SetCursor("cursor"
-or nil)`, as it does for a value that is not a string. Eight names, compared without case, give a mode:
+`SetCursor(name)` takes a string, a number or nil to reset. A number converts to its text (`0x6f3690` through
+`0x6f7c80`) and is then a name like any other, so `SetCursor(5)` loads a custom cursor named `5`. Called with no argument,
+or with a value of another type, it raises `Usage: SetCursor("cursor" or nil)`. Eight names, compared without case, give a mode:
 `POINT_CURSOR` 1, `CAST_CURSOR` 2, `BUY_CURSOR` 3, `ATTACK_CURSOR` 4, and the same names with `_ERROR_CURSOR`
 for 21, 22, 23 and 24. Any other name is a custom cursor. A mode, or a custom cursor that loads, returns the
 number 1; a custom cursor that fails to load returns nil. Nil sets the base mode with `0x523d30` and returns
@@ -77,7 +78,7 @@ Proof: one
 Test: none
 
 `0x4894a6` builds the eight-pair table on the stack. `0x48950f` takes the type of argument 1 and sends a type
-tag of 0 to the reset at `0x489518`; an absent argument has type -1, so it reaches `0x48952c`, which takes the string,
+tag of 0 to the reset at `0x489518`; an absent argument has type -1, so it reaches `0x48952c`, which takes the string (`0x6f3690` converts a number at `0x6f36b4`),
 finds none and raises the usage error (`0x489537`). `0x489550` walks the pairs, `0x489593` sets the mode, `0x48956c` calls the
 custom loader and `0x48959c` pushes nil on failure.
 
