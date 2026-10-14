@@ -14,6 +14,56 @@ read by no other code. Every thunk the table points at is a root; the roots belo
 
 Roots: `0x464190`, `0x47bee0`, `0x47c480`, `0x47c9c0`, `0x47cef0`, `0x47d4d0`, `0x47daa0`, `0x47e070`, `0x47e5b0`, `0x47eaf0`, `0x47f7d0`, `0x5d3f40`, `0x5d50e0`, `0x5d6200`, `0x5d79d0`, `0x5d7f40`, `0x5db700`, `0x5f2f30`, `0x5fa080`, `0x613ad0`, `0x61b130`, `0x61ce90`, `0x61ef10`, `0x61f760`, `0x621680`, `0x621b70`, `0x6220d0`, `0x623000`, `0x624350`, `0x626430`, `0x62ed00`, `0x62f300`, `0x62fbf0`, `0x630240`, `0x637df0`
 
+## File names
+
+The table gives the file of every slot: a run opens with its file's +∞ thunk and holds the file's
+initializers up to the next +∞ thunk. The file's own code lies between its thunks: `0x47c480` is
+the +∞ of the corpse field file, its 2π thunk is `0x47c4d0`, and the functions `0x47c4a0` and
+`0x47c4b0` between them are the file's. Names are `Init<File><Kind><n>` for a body and
+`Init<File><Kind><n>Thunk` for its thunk (`symbols/README`). The kinds are `Copy` for the +∞ copy,
+`Double`, `Quotient`, `Square`, `Product`, `Const`, `CountUnit` and `Other`; `<n>` counts the file's
+bodies of the kind in table order.
+
+Addresses: `0x47c480`, `0x47c4a0`, `0x47c4b0`, `0x47c4d0`
+Confidence: verified
+Proof: one
+Test: none
+
+## Field file names
+
+The field files and the manager, by their +∞ thunk: `ObjMgr` `0x464190`, `Guid` `0x47bee0` (the
+64-bit copy helpers), `CorpseFields` `0x47c480`, `DynObjFields` `0x47c9c0`, `GameObjFields`
+`0x47cef0`, `PlayerFields` `0x47d4d0`, `UnitFields` `0x47daa0`, `ContainerFields` `0x47e070`,
+`ItemFields` `0x47e5b0`, `ObjectFields` `0x47eaf0` and `Mirror` `0x47f7d0` (the watcher tables).
+
+Addresses: `0x464190`, `0x47bee0`, `0x47c480`, `0x47c9c0`, `0x47cef0`, `0x47d4d0`, `0x47daa0`, `0x47e070`, `0x47e5b0`, `0x47eaf0`, `0x47f7d0`
+Confidence: verified
+Proof: one
+Test: none
+
+## Object file names
+
+The object files in link order: `Trade` `0x5d3f40`, `DynObj` `0x5d50e0`, `Corpse` `0x5d6200`,
+`Container` `0x5d79d0`, `Item` `0x5d7f40`, `Player` `0x5db700`, `GameObj` `0x5f2f30`, `Unit`
+`0x5fa080`, `Object` `0x613ad0`, `LootRoll` `0x61b130`, `Missile` `0x61ce90`, `MissileB` `0x61ef10`,
+`Effect` `0x61f760`, `EffectB` `0x621680`, `GameObjTables` `0x621b70`, `Bag` `0x6220d0`.
+
+Addresses: `0x5d3f40`, `0x5d50e0`, `0x5d6200`, `0x5d79d0`, `0x5d7f40`, `0x5db700`, `0x5f2f30`, `0x5fa080`, `0x613ad0`, `0x61b130`, `0x61ce90`, `0x61ef10`, `0x61f760`, `0x621680`, `0x621b70`, `0x6220d0`
+Confidence: verified
+Proof: one
+Test: none
+
+The rest, to the log files: `UnitSound` `0x623000`, `UnitCombat` `0x624350`, `CombatLog` `0x626430`,
+`CombatLogC` `0x62ed00`, `PlayerSound` `0x62f300`, `ResistLog` `0x62fbf0`, `CombatLogD` `0x630240`
+and `CombatLogXp` `0x637df0`. `MissileB`, `EffectB`, `CombatLogC` and `CombatLogD` have no source
+path; they take the name of the file before them and a letter. `GameObjTables` is the small file
+with the game object type tables (`gameobjects`).
+
+Addresses: `0x623000`, `0x624350`, `0x626430`, `0x62ed00`, `0x62f300`, `0x62fbf0`, `0x630240`, `0x637df0`
+Confidence: verified
+Proof: one
+Test: none
+
 ## Initializer thunks
 
 Each of these is the target of one slot of the C runtime's initializer table. A `jmp` thunk jumps

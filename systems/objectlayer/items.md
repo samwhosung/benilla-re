@@ -7,7 +7,7 @@ built on the item. The player's inventory, bags and the server messages about it
 
 Item_C.cpp's code passes its source path from `0x5d8300` to `0x5da7b0`; its file runs from the
 storage setter `0x5d81b0` to the hash table code ending at `0x5db250`. The container class,
-`0x5d76f0` to `0x5d79b0`, sits before the item file's first initializers and passes no path. Item
+`0x5d76f0` to `0x5d79b0`, is a file of its own with its initializers from `0x5d79d0`, before the item file's from `0x5d7f40`, and passes no path. Item
 fields are named by the client's own field table: `ITEM_FIELD_OWNER` is field 6 and
 `ITEM_FIELD_MAXDURABILITY` field 47; `[item+0x114]` points at field 6, so `+0x3c` is
 `ITEM_FIELD_FLAGS` (field 21).

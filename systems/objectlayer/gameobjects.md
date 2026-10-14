@@ -6,9 +6,10 @@ and how the player interacts with it: whether it highlights, the cursor, whether
 using it, locks included. The handlers' slots, animation and per-type behaviour are
 [gameobjecttypes](gameobjecttypes.md); transports are [transports](transports.md).
 
-GameObject_C.cpp's code passes its source path from `0x5f2f80` to `0x5f8ae0`. Before it lie its
-initializers and class template code the file instantiates (`0x5f1630` to `0x5f2e20`); after it
-come more initializers and the ship path code (`transports`). The type and data-column tables
+GameObject_C.cpp's code passes its source path from `0x5f2f80` to `0x5f8ae0`. Before it lie the
+class template code the file instantiates (`0x5f1630` to `0x5f2e20`) and its +∞ initializer
+`0x5f2f30`; after it come more initializers and the ship path code (`transports`). The initializers
+`0x5f1290` to `0x5f1600` before the template code are Player_C.cpp's. The type and data-column tables
 live in a small file after Effect_C.cpp, `0x6219f0` to `0x621b60`. `[go+0x110]` points at field 6:
 `+0x20` is `GAMEOBJECT_STATE`, `+0x3c` `GAMEOBJECT_TYPE_ID`, by the client's own field table
 `0x83b880`.

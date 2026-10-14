@@ -53,6 +53,12 @@ One convention, the client's own C++ style:
 - **Free functions.** A PascalCase name that says what the function does to its inputs:
   `RandomSeedFromString`, `NormalizeAngle`. This covers methods of a class the image does not
   name.
+- **Static initializers.** `Init<File><Kind><n>` for the body and `Init<File><Kind><n>Thunk` for
+  the thunk the initializer table points at. `<File>` is the object file whose run in the table
+  holds the slot: a run opens with the file's +∞ copy (`systems/README`, Object files), so the +∞
+  thunk belongs to the file it opens, not to the file before. `<Kind>` is the constant or object
+  the body stores (`Copy` or `Infinity`, `Double`, `Quotient`, `Square`, `Product`, `Const`) and `<n>`
+  counts the file's bodies of that kind in table order.
 - **Data.** `s_` and camelCase for a global (`s_particleDensity`); `Class::vftable` for the vtable
   of a named class.
 - **Fields.** `m_` and camelCase (`m_pressTime`); `__vfptr` for a vtable pointer.

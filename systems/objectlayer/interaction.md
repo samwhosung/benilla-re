@@ -32,7 +32,7 @@ Proof: one
 Test: `objectlayer::p3_dist2_f32deltas_5f0130`, `objectlayer::p3_in_range_gate_5f0130`
 
 Each component of player minus unit position is stored as f32 before the x87 sum; the limit
-`0xc4c28c` holds 5.5555553² = 30.864195 (`InitGameObjSquare3`). `StartAutoMoveToObject(&guid, 5)`
+`0xc4c28c` holds 5.5555553² = 30.864195 (`InitPlayerSquare4`, a Player_C.cpp initializer). `StartAutoMoveToObject(&guid, 5)`
 nonzero returns; a larger distance after that returns. The flags are `UNIT_NPC_FLAGS`
 (`[+0x110]+0x234`); the quest test `0x5df490` reads the status `+0xcb8`. The tabard sender
 `0x5e00e0` does nothing for the unit at `0xbdcee8` and shows error 0x130 while the display is not
