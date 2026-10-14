@@ -86,6 +86,28 @@ stores it and yields kind 4 (`0x42ca0a` to `0x42cad7`). `PeekMessageA` without r
 flag, is 0 and `0x429d60()` is nonzero. `0x423920` calls the pump until it yields nothing,
 passing each record to `0x4239a0`.
 
+## Message filter and idle sleep
+
+Two settings of the pump are fixed in this build. The message filter `0x42e3d0` returns 0 at once
+while its enable word `0x884e9c` is 0, and the only writer of that word, `0x42e3a0`, has no caller,
+so the filter never consumes a message. An inactive window sleeps 0 ms per pump call: the sleep is
+enabled by `0x832f70`, which holds 1, and lasts `0x884c08` ms, which holds 0, and their setters
+`0x429d70` and `0x429d90` have no caller.
+
+Addresses: `0x42e3d0`, `0x42e3a0`, `0x884e9c`, `0x429d50`, `0x429d60`, `0x429d70`, `0x429d80`, `0x429d90`, `0x832f70`, `0x884c08`, `0x42e510`, `0x42fe90`, `0x435c30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x42e3d6` tests `0x884e9c`, `0x42e3e9` to `0x42e3eb` return 0. A search of the disassembly for
+`0x884e9c` finds the store at `0x42e3a0` and reads only; a scan for `e8`/`e9` and dwords finds no
+reference to `0x42e3a0`, `0x429d70` or `0x429d90`, with `0x420c00` as the control. `0x429d60` and
+`0x429d80` read the two words, `0x429d50` is `Sleep`. An enabled filter would offer the
+message to `TranslateAcceleratorA` (`0x42e46f`) and to the filter list (`0x42e4aa`, `0x430160`), through
+`0x42e510` (`GetPropA` of the window property `OsGuiPointer`) and `0x42fe90` (`GetParent`).
+`0x435c30(0)` is the game window the pump asks about (`0x42ca12`): 0 returns it, 1
+`GetActiveWindow`, 2 `GetForegroundWindow`.
+
 ## Kinds to categories
 
 `0x4239a0` switches on the kind. Most kinds dispatch one category to the context's handlers; kinds 0
@@ -227,6 +249,27 @@ byte map `0x42dafc` into the table `0x42da60`, whose cases store constants: 8 â†
 0 and `cmp eax,0xff; jg` refuse it (`0x42da42` to `0x42da4b`). A refused key queues nothing
 (`0x42d228`).
 
+## Key messages and Alt F4
+
+A translated key queues kind 7 for `WM_KEYDOWN` and `WM_SYSKEYDOWN` and kind 8 for the releases, its
+second value the low word of `lParam`, the repeat count. After queuing key code 0x303 (F4) the
+procedure asks `0x436010(2)`, whether the Alt key is down. When it is, the message goes on to the
+window hook or `DefWindowProcA`, so Alt+F4 reaches the system close command, which queues kind 5
+(`Window messages`); otherwise the procedure returns 0. `0x436010` takes 0 for Control, 1 for Shift
+and 2 for Alt and returns 1 when the high nibble of `GetKeyState` is nonzero.
+
+Addresses: `0x42d21e`, `0x42d230`, `0x42d25c`, `0x42d261`, `0x42d26f`, `0x42d35c`, `0x436010`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x42d230` to `0x42d249` set `ecx` to 1 for messages 0x100 and 0x104 and 0 otherwise, and `neg;
+sbb; add 8` (`0x42d24f` to `0x42d259`) turns that into 7 or 8 before `0x42d780` (`0x42d25c`). The
+`cmp [ebp+8],0x303` is at `0x42d261`, the call at `0x42d26f`, the branch to `0x42d35c` (hook, then
+`DefWindowProcA`) at `0x42d276`, and `xor eax,eax` for the other case at `0x42d27e`. `0x436010`
+maps its argument to the virtual keys 0x11, 0x10 and 0x12 (`0x43604e`, `0x436036`, `0x43601e`),
+masks the state with 0xf000 and returns `neg; sbb; neg` of it.
+
 ## Character codes
 
 A character from 0x80 is converted through a table chosen by the system code page: 1250, 1251,
@@ -284,18 +327,32 @@ Num Lock key-down through `SendInput` when the state differs. `0x42cd60` returns
 
 ## Window frame
 
-Non-client button messages drag or size the window by hand: a press on the caption or a border
-captures the mouse and moves the window as it moves; a release on the minimize, maximize or close
-box minimizes, toggles maximized, or posts `WM_QUIT`.
+The window procedure drags and sizes the frame. A press on the caption (hit test 2) or an
+edge or corner (10 to 17) records the hit test, the window rectangle and the cursor point, sets
+focus and captures the mouse. Moves under capture shift the rectangle by the cursor delta: the
+caption moves the window; an edge or corner changes the sides it names, after `WM_SIZING`. The
+release applies the last delta and ends capture. A press on the minimize (8), maximize (9) or close
+(20) box acts on a release with the same hit test: minimize, toggle maximized, quit. A double click
+does the same, toggles maximized on the caption, and quits on the system menu (3).
 
-Addresses: `0x42df90`, `0x42e000`, `0x42e0a0`, `0x42de10`, `0x42de60`, `0x42dea0`, `0x884e60`, `0x884e64`
-Confidence: inferred
-Proof: none
+Addresses: `0x42df90`, `0x42e000`, `0x42e0a0`, `0x42de10`, `0x42de60`, `0x42dea0`, `0x42d04e`, `0x42d067`, `0x42d039`, `0x42d2d1`, `0x42d4e5`, `0x42e074`, `0x884e0c`, `0x884e54`, `0x884e60`, `0x884e64`, `0x884e68`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x42df90` starts a drag for hit tests 2 and 0xa to 0x11, `0x42de10` moves through `0x42de60` or
-sizes through `0x42dea0` with `MoveWindow`, and `0x42e000` ends it. The hit-test tables were not
-read.
+Messages 0xa1, 0xa2 and 0xa3 reach `0x42d04e`, `0x42d067` and `0x42d039` through the byte map
+`0x42d5e0`, and call `0x42df90`, `0x42e0a0` and `0x42e000` with the hit test in `edx`.
+`0x42df90` clears the release flag `0x884e68`, stores the hit test in `0x884e60`, and for hit 2 or
+10 to 17 calls `SetFocus`, stores `GetWindowRect` at `0x884e0c`, the point from `lParam` (signed
+words) at `0x884e54`, calls `SetCapture` and sets `0x884e64`; otherwise it clears `0x884e64`. While
+`0x884e64` is set, `WM_MOUSEMOVE` (`0x42d2d1`) and `WM_LBUTTONUP` (`0x42d4e5`) convert the point
+with `ClientToScreen` and call `0x42de10` and `0x42e0a0`. `0x42de10` calls `0x42de60`
+(`MoveWindow` at the rectangle plus the delta) for hit 2 and `0x42dea0` otherwise. `0x42dea0` adds
+the delta to the left side for hits 10, 13 and 16, the right for 11, 14 and 17, the top for 12 to
+14 and the bottom for 15 to 17 (byte maps `0x42df64`, tables `0x42df58`, `0x42df6c`), sends message
+0x214 with `hit - 9` and the rectangle, and calls `MoveWindow`. `0x42e0a0` skips when `0x884e68` is
+set, acts when the hit test matches `0x884e60` (maps `0x42e188`, `0x42e170`), releases capture and
+clears the flag. `0x42e000` sets the flag first (`0x42e00d`), then acts by the map `0x42e084`.
 
 ## Static initializers
 

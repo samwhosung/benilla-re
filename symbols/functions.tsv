@@ -2154,11 +2154,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x429d00	11			os			Runs its object file code not read here	inferred	none		
 0x429d10	16	OsGetCpuCapabilities		os			Returns the processor capability word through 0x429b90	verified	one	core/time#multi-core-gate	
 0x429d20	46	OsGetProcessorCount		os			Returns the number of processors	inferred	none	models/cache#feature-mask	
-0x429d50	8	OsSleep	idb	os			Sleeps for a number of milliseconds	inferred	none	core/input#the-pump	
-0x429d60	6	OsGetIdleSleepEnabled		os			Returns the flag that lets the pump sleep while the window is inactive	inferred	none	core/input#the-pump	
-0x429d70	7			os	unreached		Runs its object file code not read here	inferred	none		
-0x429d80	6	OsGetIdleSleepTime		os			Returns the time the pump sleeps while the window is inactive	inferred	none	core/input#the-pump	
-0x429d90	7			os	unreached		Runs its object file code not read here	inferred	none		
+0x429d50	8	OsSleep	idb	os			Sleeps for ecx milliseconds with Sleep	verified	one	core/input#message-filter-and-idle-sleep	
+0x429d60	6	OsGetIdleSleepEnabled		os			Returns the word that lets the pump sleep while the window is inactive; it holds 1	verified	one	core/input#message-filter-and-idle-sleep	
+0x429d70	7	OsSetIdleSleepEnabled		os	unreached		Stores ecx in the word that lets the inactive pump sleep; nothing calls it	verified	one	core/input#message-filter-and-idle-sleep	
+0x429d80	6	OsGetIdleSleepTime		os			Returns the time in milliseconds the inactive pump sleeps; it holds 0	verified	one	core/input#message-filter-and-idle-sleep	
+0x429d90	7	OsSetIdleSleepTime		os	unreached		Stores ecx in the inactive pump sleep time; nothing calls it	verified	one	core/input#message-filter-and-idle-sleep	
 0x429dc8	1			os	unreached		Runs its object file code not read here	inferred	none		
 0x429dd0	309			os	unreached		Runs its object file code not read here	inferred	none		
 0x429f10	38			os	unreached		Runs its object file code that calls 0x429dd0, SStrCopy; not read here	inferred	none		
@@ -2311,12 +2311,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42dc00	189	GetMouseMessageButton		core	primitive		Writes the button bit of a mouse button message; returns 0 for other messages	verified	two	core/input#window-messages	
 0x42dd00	137	EnqueueMouseButtonRecord		core	host		Queues a button record with the cursor's client position, or the saved one in relative mode	verified	two	core/input#window-messages	
 0x42dd90	114	OnMouseButtonUp		core	host		Removes a button from the mask, releases capture at the last, and queues kind 0xd	verified	two	core/input#window-messages	
-0x42de10	79	OnWindowDragMove		core	orchestration		Moves or sizes the window by the offset of the cursor from the drag start	inferred	none	core/input#window-frame	
-0x42de60	54	MoveWindowBy		core	host		Moves the window by an offset with MoveWindow	inferred	none	core/input#window-frame	
-0x42dea0	183	SizeWindowBy		core	host		Sizes the window by an offset from the dragged edge with MoveWindow	inferred	none	core/input#window-frame	
-0x42df90	104	OnNonClientButtonDown		core	host		Starts a window drag for the caption and border hit tests, capturing the mouse	inferred	none	core/input#window-frame	
-0x42e000	114	OnNonClientDoubleClick		core	host		Ends a window drag on a non-client double click and runs the box under the cursor	inferred	none	core/input#window-frame	
-0x42e0a0	206	OnNonClientButtonUp		core	host		Ends a window drag on a non-client button release and runs the minimize, maximize or close box	inferred	none	core/input#window-frame	
+0x42de10	79	OnFrameMouseMove		core	host		Moves or sizes the window by the cursor offset from the press point while a drag is on	verified	one	core/input#window-frame	
+0x42de60	54	MoveWindowBy		core	host		Moves the window to its press-time rectangle plus an offset, keeping its size	verified	one	core/input#window-frame	
+0x42dea0	183	SizeWindowBy		core	host		Adds an offset to the sides a hit test names, sends WM_SIZING and moves the window to the result	verified	one	core/input#window-frame	
+0x42df90	104	OnNonClientButtonDown		core	host		Records a frame press and, on the caption or an edge, takes focus and captures the mouse	verified	one	core/input#window-frame	
+0x42e000	114	OnNonClientDoubleClick		core	host		Toggles maximized, minimizes or posts quit for a frame double click, by hit test	verified	one	core/input#window-frame	
+0x42e0a0	206	OnNonClientButtonUp		core	host		Applies the last frame drag or acts on a box release when its hit test matches the press	verified	one	core/input#window-frame	
 0x42e1a0	5	InitInputTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42e1b0; a static initializer	verified	one	core/input#static-initializers	
 0x42e1b0	15	InitInputTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/input#static-initializers	
 0x42e1c0	5	InitInputInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42e1d0; a static initializer	verified	one	core/input#static-initializers	
@@ -2338,11 +2338,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42e320	28			os	unreached		Runs its object file code not read here	inferred	none		
 0x42e340	44			os	unreached		Runs its object file code that calls SetWindowMessageHook; not read here	inferred	none		
 0x42e370	34			os	unreached		Runs its object file code that calls SetWindowMessageHook; not read here	inferred	none		
-0x42e3a0	7			os	unreached		Runs its object file code not read here	inferred	none		
+0x42e3a0	7	OsGuiEnableFilter		os	unreached		Stores ecx in the message filter enable word 0x884e9c; nothing calls it	verified	one	core/input#message-filter-and-idle-sleep	
 0x42e3b0	13			os	unreached		Runs its object file code not read here	inferred	none		
 0x42e3c0	13			os	unreached		Runs its object file code not read here	inferred	none		
-0x42e3d0	305	OsGuiFilterMessage		os			Lets accelerators and dialogs consume a message before it is dispatched	inferred	none	core/input#the-pump	
-0x42e510	14			os			Runs its object file code not read here	inferred	none		
+0x42e3d0	305	OsGuiFilterMessage		os	host		Offers a message to accelerator and dialog filters; returns 0 at once while 0x884e9c is 0	verified	one	core/input#message-filter-and-idle-sleep	
+0x42e510	14	GetGuiPointerProp		os			Returns the window property OsGuiPointer of the window in ecx	verified	one	core/input#message-filter-and-idle-sleep	
 0x42e520	64			os	unreached		Runs its object file code that calls 0x42e560, 0x42ff40; not read here	inferred	none		
 0x42e560	25			os	unreached		Runs its object file code not read here	inferred	none		
 0x42e580	7			os	unreached		Runs its object file code not read here	inferred	none		
@@ -2386,7 +2386,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42fcc0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42fcd0	138			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42fe90, 0x42fd60 and 1 more; not read here	inferred	none		
 0x42fd60	293			os	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x42fe90	11			os			Runs its object file code not read here	inferred	none		
+0x42fe90	11	GetWindowParentOf		os			Returns the parent window of the window handle stored at +4 of ecx	verified	one	core/input#message-filter-and-idle-sleep	
 0x42fea0	26			os	unreached		Runs its object file code that calls 0x42fec0; not read here	inferred	none		
 0x42fec0	117			os	unreached		Runs its object file code not read here	inferred	none		
 0x42ff40	35			os	unreached		Runs its object file code not read here	inferred	none		
@@ -2740,7 +2740,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x435be0	35			os	unreached		Runs its object file code not read here	inferred	none		
 0x435c10	9			os	unreached		Runs its object file code not read here	inferred	none		
 0x435c20	8			os	unreached		Runs its object file code not read here	inferred	none		
-0x435c30	32	OsGuiGetWindow	idb	os			Runs its object file code not read here	inferred	none		
+0x435c30	32	OsGuiGetWindow	idb	os			Returns the game window for 0, the active window for 1, the foreground window for 2, else 0	verified	one	core/input#message-filter-and-idle-sleep	
 0x435c50	7			os			Runs its object file code not read here	inferred	none		
 0x435c60	59			os	unreached		Runs its object file code not read here	inferred	none		
 0x435ca0	39			os	unreached		Runs its object file code not read here	inferred	none		
@@ -2752,7 +2752,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x435ea0	80			os	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
 0x435ef0	9			os			Runs its object file code not read here	inferred	none		
 0x435f00	246	ShowErrorText		os			Shows a text with a caption to the player	inferred	none		
-0x436010	86			unassigned			Runs its object file code not read here	inferred	none		
+0x436010	86	OsGetModifierDown		unassigned			Returns 1 when the Control (0), Shift (1) or Alt (2) key is down by GetKeyState, else 0	verified	one	core/input#key-messages-and-alt-f4	
 0x436070	22			unassigned	unreached		Runs its object file code that calls 0x42e830; not read here	inferred	none		
 0x436090	88			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x4360f0	49			unassigned	unreached		Runs its object file code that calls 0x42f3b0; not read here	inferred	none		

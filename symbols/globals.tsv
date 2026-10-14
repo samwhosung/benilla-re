@@ -12,6 +12,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x42dafc	uint8_t[138]	s_virtualKeyIndex		core	Holds the case index of the virtual key translation for keys 8 to 0x91	verified	one	core/input#key-codes
 0x42dce0	void *[4]	s_mouseButtonCases		core	Holds the case addresses of the mouse button mapping 0x42dc00 for messages 0x204 to 0x20c	verified	one	core/input#buttons-and-capture
 0x42dcf0	uint8_t[9]	s_mouseButtonIndex		core	Holds the case index of 0x42dc00 for messages 0x204 to 0x20c: right 4, middle 2, X 8 or 0x10	verified	one	core/input#buttons-and-capture
+0x42df58	void *[3]	s_frameSideCases		core	Holds the case addresses of the left and right side changes of the frame size 0x42dea0	verified	one	core/input#window-frame
+0x42df64	uint8_t[8]	s_frameSideIndex		core	Holds the case index of 0x42dea0's side change for hit tests 10 to 17	verified	one	core/input#window-frame
+0x42df6c	void *[6]	s_frameEdgeCases		core	Holds the case addresses of the top and bottom changes of the frame size for hit tests 12 to 17	verified	one	core/input#window-frame
+0x42e074	void *[4]	s_frameDoubleClickCases		core	Holds the case addresses of the frame double click 0x42e000	verified	one	core/input#window-frame
+0x42e084	uint8_t[19]	s_frameDoubleClickIndex		core	Holds the case index of 0x42e000 for hit tests 2 to 20	verified	one	core/input#window-frame
+0x42e170	void *[6]	s_frameReleaseCases		core	Holds the case addresses of the frame release 0x42e0a0	verified	one	core/input#window-frame
+0x42e188	uint8_t[19]	s_frameReleaseIndex		core	Holds the case index of 0x42e0a0 for hit tests 2 to 20	verified	one	core/input#window-frame
 0x464e98	void *[7]	s_watcherFreeJumpTable		objectlayer	Holds the cases of 0x464c40 for type ids 1 to 7, each walking its sections' watcher lists	verified	one	objectlayer/manager#releasing-an-object
 0x465314	void *[6]	s_updateNotifyJumpTable		objectlayer	Holds the notify pass's six cases for block types 0 to 5	verified	one	objectlayer/update#block-types
 0x4656b4	void *[8]	s_sectionOffsetJumpTable		objectlayer	Holds the cases of 0x465690, one per section, returning each section's byte offset	verified	one	objectlayer/fields#field-counts-and-sections
@@ -982,6 +989,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
 0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
 0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	one	core/events#timers
+0x832f70	uint32_t	s_idleSleepEnabled		os	Holds 1, the word that lets the pump sleep while the window is inactive	verified	one	core/input#message-filter-and-idle-sleep
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
 0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
@@ -1874,6 +1882,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884060	uint64_t	s_maxCpuTicksPerSecond		core	Holds the largest counter rate the calibration has stored	verified	one	core/time#processor-frequency
 0x884800	uint32_t	s_textSectionStart		os	Holds the start address of the exe .text section, 0 until 0x42a380 runs	verified	one	ui/luastate#the-c-function-contract
 0x884c00	uint32_t	s_textSectionEnd		os	Holds the end address of the exe .text section, 0 until 0x42a380 runs	verified	one	ui/luastate#the-c-function-contract
+0x884c08	uint32_t	s_idleSleepTime		os	Holds 0, the milliseconds the inactive pump sleeps	verified	one	core/input#message-filter-and-idle-sleep
 0x884c70	uint64_t	s_cpuMaxHz		core	Holds the processor's maximum frequency in hertz from CallNtPowerInformation	verified	one	core/time#processor-frequency
 0x884c78	void *	s_timeManager		core	Holds the time manager while it lives	verified	one	core/time#time-manager-lifetime
 0x884c80	uint32_t	s_clockMode		core	Holds the clock counter: 0 GetTickCount, 1 the time-stamp counter	verified	one	core/time#the-millisecond-clock
@@ -1882,6 +1891,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884cb4	uint32_t	s_mouseSpeed		core	Holds the Windows mouse speed applied while the window is active	verified	one	core/input#mouse-speed-and-num-lock
 0x884cc0	uint32_t[80]	s_inputRing		core	Holds the 16 input records of five dwords: kind, three values, time	verified	one	core/input#the-ring
 0x884e08	uint16_t	s_savedNumLock		core	Holds GetAsyncKeyState(VK_NUMLOCK) at startup	verified	one	core/input#mouse-speed-and-num-lock
+0x884e0c	int32_t[4]	s_frameRect		core	Holds the window rectangle at the frame press: left, top, right, bottom	verified	one	core/input#window-frame
 0x884e1c	uint32_t	s_capturedButtons		core	Holds the buttons held while the window captures the mouse	verified	one	core/input#buttons-and-capture
 0x884e20	int32_t[4]	s_clientRect		core	Holds the cached client rectangle: left, top, right, bottom	verified	one	core/input#cursor-coordinates
 0x884e30	uint32_t	s_releasingCapture		core	Holds 1 while the client releases capture itself	verified	one	core/input#buttons-and-capture
@@ -1891,10 +1901,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884e40	uint32_t	s_pendingSizeCheck		core	Holds the size message's lParam until the pump checks the client size	verified	one	core/input#the-pump
 0x884e44	int32_t[2]	s_lastCursorPoint		core	Holds the cursor's last client position	verified	one	core/input#mouse-modes
 0x884e50	uint32_t	s_inputRingWrite		core	Holds the ring's write index	verified	one	core/input#the-ring
+0x884e54	int32_t[2]	s_framePressPoint		core	Holds the cursor point of the frame press	verified	one	core/input#window-frame
 0x884e5c	uint32_t	s_relativeMouse		core	Holds 1 in relative mouse mode	verified	one	core/input#mouse-modes
-0x884e60	uint32_t	s_dragHitTest		core	Holds the hit test of the frame drag in progress	inferred	none	core/input#window-frame
-0x884e64	uint32_t	s_dragging		core	Holds 1 while the frame is dragged	inferred	none	core/input#window-frame
+0x884e60	uint32_t	s_dragHitTest		core	Holds the hit test of the frame drag in progress	verified	one	core/input#window-frame
+0x884e64	uint32_t	s_dragging		core	Holds 1 while the frame is dragged	verified	one	core/input#window-frame
+0x884e68	uint32_t	s_frameReleaseDone		core	Holds 1 after a frame double click until the next release is skipped	verified	one	core/input#window-frame
 0x884e6c	void *	s_windowMessageHook		core	Holds the hook the window procedure passes other messages to	verified	one	core/input#window-messages
+0x884e9c	uint32_t	s_guiFilterEnabled		os	Holds 0, the word that enables the message filter 0x42e3d0	verified	one	core/input#message-filter-and-idle-sleep
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t			gx	Holds a dword that TextureCreate reads and writes; not read here	inferred	none	
 0xb05d68	float	s_randomInfinity		random	Holds +inf, set at startup; nothing reads it	verified	one	random#static-initializers
