@@ -6510,7 +6510,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x482cd0	107			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::Tick, 0x5f8c90; not read here	inferred	none		
 0x482d40	45			ui	orchestration		Runs WorldFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
 0x482d70	292			ui	orchestration		Runs WorldFrame.cpp code that calls GetDeviceProjection, GetDeviceView, 0x482ea0 and 4 more; not read here	inferred	none		
-0x482ea0	1184			ui	primitive		Runs WorldFrame.cpp code that calls OsGetAsyncTimeMs, ClientServices::GetCurrent and 33 more; not read here	inferred	none		
+0x482ea0	1184	CGWorldFrame::OnRender		ui	orchestration	void __thiscall (CGWorldFrame *this)	Applies the idle law at the head of the world frame's render callback, then runs its per-frame work	verified	one	ui/idle#the-idle-law	
 0x483340	235			ui	primitive		Resolves a GUID to a game object, asks its collision candidacy by class, and returns its model and box	verified	one	terrain/entities#entity-gather	
 0x483430	32			ui	primitive		Runs its object file code not read here	inferred	none		
 0x483450	1			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -6518,11 +6518,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4837b0	442			ui	primitive		Draws the placement preview model 0xceca8c	inferred	none	spell/targeting#placement-model-and-rotation	
 0x483970	410			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnFrameSizeChanged, MultiplyByScreenScaleX and 2 more; not read here	inferred	none		
 0x483b10	94	WorldFrameOnLeave		ui	orchestration	void __thiscall (uint32_t removal)	Runs the base leave, publishes a cleared world mouseover, resets the cursor	verified	one	ui/hover#world-hover-and-its-tooltip	
-0x483b70	94			ui	primitive		Runs its object file code that calls CSimpleFrame::OnKeyDown, 0x4b66b0, 0x4b7990; not read here	inferred	none		
-0x483bd0	112			ui	primitive		Runs its object file code that calls CSimpleFrame::OnKeyUp, 0x4b66b0, 0x4b7990; not read here	inferred	none		
-0x483c40	104			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnMouseDown, 0x492c20, 0x4b6aa0 and 1 more; not read here	inferred	none		
-0x483cb0	104			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnMouseUp, 0x492c80, 0x4b6aa0 and 1 more; not read here	inferred	none		
-0x483d20	121			ui	primitive		Runs its object file code that calls CSimpleFrame::OnMouseWheel, 0x4b6aa0, 0x4b7990; not read here	inferred	none		
+0x483b70	94	CGWorldFrame::OnKeyDown		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *keyEvent)	Builds the chord of a key press into its latch slot and runs its binding	verified	one	ui/keybindings#key-press-and-release	
+0x483bd0	112	CGWorldFrame::OnKeyUp		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *keyEvent)	Replays the chord latched at the key press as a release and clears the slot	verified	one	ui/keybindings#key-press-and-release	
+0x483c40	104	CGWorldFrame::OnMouseDown		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *mouseEvent)	Runs the binding of a mouse button press unless a frame or mouse look takes it	verified	one	ui/keybindings#key-press-and-release	
+0x483cb0	104	CGWorldFrame::OnMouseUp		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *mouseEvent)	Runs the binding of a mouse button release built from the modifiers held now	verified	one	ui/keybindings#key-press-and-release	
+0x483d20	121	CGWorldFrame::OnMouseWheel		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *wheelEvent)	Runs the binding of a wheel notch as a press and a release	verified	one	ui/keybindings#key-press-and-release	
 0x483da0	45			ui	unreached		Runs its object file code not read here	inferred	none		
 0x483dd0	53			ui	unreached		Runs its object file code that calls 0x6424c0; not read here	inferred	none		
 0x483e10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -8117,36 +8117,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b6140	246			ui	primitive		Runs UIBindings.cpp code that calls 0x4b88c0, SStrTokenize, SStrCmpI and 1 more; not read here	inferred	none		
 0x4b6240	107			ui	primitive		Runs UIBindings.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 2 more; not read here	inferred	none		
 0x4b62b0	89			ui	orchestration		Runs UIBindings.cpp code that calls SFile::Load, 0x4b6140, 0x648700 and 1 more; not read here	inferred	none		
-0x4b6310	409			ui	primitive		Runs UIBindings.cpp code that calls CheckActivePlayer, 0x4b8f70, SStrHashHT and 7 more; not read here	inferred	none		
+0x4b6310	409	CopyBindingSet		ui	primitive	void __thiscall (CBindings *this, int from, int to)	Copies one binding set into another, marks it, and signals UPDATE_BINDINGS for the live set	verified	one	ui/keybindings#binding-sets	
 0x4b64b0	103			ui	primitive		Runs UIBindings.cpp code that calls 0x4b6310; not read here	inferred	none		
 0x4b6520	144			ui	orchestration		Runs UIBindings.cpp code that calls SStrPrintf, SStrLen, 0x42a5d0; not read here	inferred	none		
 0x4b65b0	41			ui	orchestration		Runs UIBindings.cpp code that calls 0x4b6520; not read here	inferred	none		
 0x4b65e0	80			ui	primitive		Runs UIBindings.cpp code that calls WriteAccountData; not read here	inferred	none		
-0x4b6630	114			ui	primitive		Runs UIBindings.cpp code that calls SStrLen, SStrCopy; not read here	inferred	none		
-0x4b66b0	638			ui	primitive		Runs UIBindings.cpp code that calls 0x4b6630, 0x41abb0, SStrPrintf and 2 more; not read here	inferred	none		
-0x4b6aa0	392			ui	primitive		Runs UIBindings.cpp code that calls 0x4b6630, SStrCopy, SStrPrintf; not read here	inferred	none		
+0x4b6630	114	AppendModifierPrefixes		ui	primitive	void __fastcall (uint32_t mask, char **cursor, int *remaining)	Appends ALT-, CTRL- and SHIFT- to a chord string for the held modifiers	verified	one	ui/keybindings#chord-names	
+0x4b66b0	638	BuildKeyChord		ui	primitive	bool __fastcall (void *keyEvent, char *dst, int size)	Builds the chord string of a key event, or fails for an unnamed or oversized one	verified	one	ui/keybindings#key-names	
+0x4b6aa0	392	BuildMouseChord		ui	primitive	bool __fastcall (void *mouseEvent, char *dst, int size)	Builds the chord string of a mouse button or wheel event	verified	one	ui/keybindings#mouse-names	
 0x4b6c50	311			ui	primitive		Runs UIBindings.cpp code that calls 0x4b98a0, 0x4b8900, 0x4b9b20 and 2 more; not read here	inferred	none		
 0x4b6d90	474			ui	primitive		Runs UIBindings.cpp code that calls 0x4b9260, 0x4b8900, 0x4b9340 and 7 more; not read here	inferred	none		
-0x4b6f70	1297			ui	primitive		Runs UIBindings.cpp code that calls SFile::Load, 0x661dd0, 0x6f2a30 and 15 more; not read here	inferred	none		
-0x4b7490	1020			ui	primitive		Runs UIBindings.cpp code that calls CheckActivePlayer, SStrCmpI, 0x4b7890 and 10 more; not read here	inferred	none		
-0x4b7890	251			ui	primitive		Runs its object file code that calls SStrCmp, sgetu8; not read here	inferred	none		
-0x4b7990	444			ui	primitive		Finds a key binding by command name and runs it with the executing flag set and the Lua context zeroed	verified	one	ui/protected#input-event-flags	
-0x4b7b50	304			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI, FrameScript::GetContext and 5 more; not read here	inferred	none		
+0x4b6f70	1297	LoadBindingsXml		ui	primitive	void __cdecl ()	Reads Bindings.xml into the command table, skipping debug and non-Windows nodes	verified	one	ui/keybindings#bindingsxml	
+0x4b7490	1020	SetKeyBinding		ui	primitive	bool __thiscall (CBindings *this, int set, const char *key, const char *action)	Normalizes a key's alias, validates it, then binds or unbinds it in a set	verified	one	ui/keybindings#setting-a-binding	
+0x4b7890	251	IsValidBindingKey		ui	primitive	bool __fastcall (const char *key)	Answers whether a key string is bindable	verified	one	ui/keybindings#valid-key-strings	
+0x4b7990	444	ExecuteBinding		ui	primitive	bool __thiscall (CBindings *this, const char *chord, bool isDown)	Finds the command of a chord with one modifier fallback and runs it	verified	one	ui/keybindings#dispatch	
+0x4b7b50	304	RunBindingCommand		ui	primitive	bool __thiscall (CBindings *this, const char *name, bool isDown)	Runs a command's script for a press, or for a release when it has runOnUp	verified	one	ui/keybindings#running-a-command	
 0x4b7c80	72			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b7cd0	79			ui	unreached		Runs its object file code not read here	inferred	none		
 0x4b7d20	118			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4b7da0	172			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
 0x4b7e50	119			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4b7ed0	110			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x4b7f40	24	Script::GetNumBindings	idb	ui	orchestration		Implements the Lua function GetNumBindings	inferred	none		
-0x4b7f60	153	Script::GetBinding	idb	ui	primitive		Implements the Lua function GetBinding	inferred	none		
-0x4b8000	149	Script::SetBinding	idb	ui	orchestration		Implements the Lua function SetBinding	inferred	none		
-0x4b80a0	118	Script::GetBindingKey	idb	ui	primitive		Implements the Lua function GetBindingKey	inferred	none		
-0x4b8120	88	Script::GetBindingAction	idb	ui	orchestration		Implements the Lua function GetBindingAction	inferred	none		
-0x4b8180	125	Script::RunBinding	idb	ui	orchestration		Implements the Lua function RunBinding	inferred	none		
-0x4b8200	28	Script::GetCurrentBindingSet	idb	ui	orchestration		Implements the Lua function GetCurrentBindingSet	inferred	none		
-0x4b8220	59	Script::LoadBindings	idb	ui	orchestration		Implements the Lua function LoadBindings	inferred	none		
-0x4b8260	92	Script::SaveBindings	idb	ui	orchestration		Implements the Lua function SaveBindings	inferred	none		
+0x4b7f40	24	Script::GetNumBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of displayed binding commands	verified	one	ui/keybindings#binding-functions	
+0x4b7f60	153	Script::GetBinding	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a command's name and every key bound to it	verified	one	ui/keybindings#binding-functions	
+0x4b8000	149	Script::SetBinding	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Binds a key to a command in the live set; 1 on success, nil on refusal	verified	one	ui/keybindings#setting-a-binding	
+0x4b80a0	118	Script::GetBindingKey	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns every key bound to a command	verified	one	ui/keybindings#binding-functions	
+0x4b8120	88	Script::GetBindingAction	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the command bound to a key, or the empty string	verified	one	ui/keybindings#binding-functions	
+0x4b8180	125	Script::RunBinding	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs a command by name as a press or a release	verified	one	ui/keybindings#binding-functions	
+0x4b8200	28	Script::GetCurrentBindingSet	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the current binding set number	verified	one	ui/keybindings#binding-sets	
+0x4b8220	59	Script::LoadBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Copies binding set 0 to 2 into the live set	verified	one	ui/keybindings#binding-sets	
+0x4b8260	92	Script::SaveBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stores the live set into set 1 or 2 and makes it current	verified	one	ui/keybindings#binding-sets	
 0x4b82c0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4b82e0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4b8300	5			ui	orchestration		Runs its object file code not read here	inferred	none		
