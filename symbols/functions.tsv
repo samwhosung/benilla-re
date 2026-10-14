@@ -6888,9 +6888,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48e840	153	Script::IsAddOnLoadOnDemand	idb	ui	primitive		Returns 1 when an add-on by index or name declares LoadOnDemand, else nil	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48e8e0	153	Script::IsAddOnLoaded	idb	ui	primitive		Returns 1 when an add-on by index or name is loaded, else nil	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48e980	487	Script::LoadAddOn		ui	orchestration		Loads an add-on on demand and returns 1, or nil and the reason	verified	one	ui/addons#the-in-game-add-on-functions	
-0x48eb70	104	Script::PartialPlayTime	idb	ui	primitive		Implements the Lua function PartialPlayTime	inferred	none		
-0x48ebe0	104	Script::NoPlayTime	idb	ui	primitive		Implements the Lua function NoPlayTime	inferred	none		
-0x48ec50	56			ui	orchestration		Runs GameUI.cpp code that calls ClientServices::GetCurrent, lua_pushnumber; not read here	inferred	none		
+0x48eb70	104	Script::PartialPlayTime	idb	ui	primitive		Pushes 1 when the player's flags have bit 12 set, else nil	verified	one	ui/billing#partial-play-and-no-play	
+0x48ebe0	104	Script::NoPlayTime	idb	ui	primitive		Pushes 1 when the player's flags have bit 13 set, else nil	verified	one	ui/billing#partial-play-and-no-play	
+0x48ec50	56	GetBillingTimeRested		ui	orchestration		Pushes the billing rest time of the session as one unsigned number	verified	one	ui/billing#the-rest-time	
 0x48ec90	58			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4841a0; not read here	inferred	none		
 0x48ecd0	149			ui	primitive		Starts a cinematic sequence, hiding the cursor and scheduling its first shot	verified	one	uicamera/cinematic#starting-a-sequence	
 0x48ed70	91			ui	primitive		Runs GameUI.cpp code that calls 0x460410, SndInterfacePauseZoneMusic, SetCursorShown and 3 more; not read here	inferred	none		
@@ -6910,7 +6910,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f440	10			ui	orchestration		Signals the cancelled group invitation	inferred	none	objectlayer/party#group-notices	
 0x48f450	21	SignalGuildInviteRequest		ui	orchestration		Signals GUILD_INVITE_REQUEST with an inviter and a guild	verified	one	objectlayer/party#guild-notices	
 0x48f470	10			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
-0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Runs GameUI.cpp code that calls ClientServices::SetMessageHandler, CVar::Lookup, 0x63e030 and 34 more; not read here	inferred	none		
+0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Registers the game handlers and arms the billing warning timer	verified	one	ui/billing#the-warning-timer	
 0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration		Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	
 0x4901e0	98	GetConfiguredAspect		ui	primitive	float __cdecl ()	Returns the gxResolution width over height when widescreen is on, else 4/3	verified	one	ui/uiscale#the-automatic-scale	

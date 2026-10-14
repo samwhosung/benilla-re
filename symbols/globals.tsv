@@ -2161,6 +2161,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e350	uint32_t	s_summonDeadline		ui	Holds the clock value at which the summon request expires, 0 when unset	verified	one	ui/summon#the-request
 0xb4e354	int32_t	s_summonZone		ui	Holds the AreaTable id of the summon's destination	verified	one	ui/summon#the-request
 0xb4e358	uint64_t	s_summonerGuid		ui	Holds the GUID of the player who summoned, 0 before the first request	verified	one	ui/summon#the-request
+0xb4e360	uint32_t	s_playTimeWarnDeadline		ui	Holds the clock value at which the remaining billing time ends, 0 when not armed	verified	one	ui/billing#the-warning-timer
+0xb4e364	uint32_t	s_playTimeWarnA		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
+0xb4e368	uint32_t	s_playTimeWarnB		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
 0xb4e370	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e374	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e378	uint32_t			unassigned	Holds a dword that ClntObjMgrCreate, Script::IsInInstance read and write; not read here	inferred	none	
