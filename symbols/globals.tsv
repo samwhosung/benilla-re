@@ -91,6 +91,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5075b4	uint8_t[54]	s_serverTokenIndexes		ui	Maps a token letter from B to w to its arm	verified	one	ui/questtext#the-tokens
 0x5080e0	void *[22]	s_tokenArms		ui	Holds the 22 arms of the description token switch of 0x507710	verified	one	ui/spelltokens#the-token-syntax
 0x508138	uint8_t[58]	s_caseIndexes507710		ui	Holds the 58 case indexes of the switch in 0x507710	inferred	none	
+0x5092e8	void *[4]	s_overlapDepthCases		ui	Holds the four case addresses of the overlap test that compute the depth for a push direction	verified	one	ui/smartrect#pushes-and-the-overlap-test
 0x51bc84	void *[5]	s_unitWatchLengthArms		ui	Holds the five case addresses that set a unit field watcher's length	verified	one	ui/unittokens#unit-field-events
 0x51bc98	uint8_t[175]	s_unitWatchLengthSelector		ui	Holds a byte per unit field index that selects the watcher length arm	verified	one	ui/unittokens#unit-field-events
 0x52e4fc	void *[13]	s_cases52b650		ui	Holds the 13 case addresses of the switch in 0x52b650	inferred	none	
@@ -533,6 +534,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8084f8	void *[40]	CGCharacterModelBase::vftable		ui	Holds the 40 virtual function slots of CGCharacterModelBase, which its constructor stores	verified	one	ui/playermodel#pane-classes
 0x808610	void *[11]	s_taxiRouteFrameLayoutVtable		ui	Holds the vtable of the route frame's layout part: the plain one's with one slot replaced	verified	one	ui/taxiframe#overridden-slots
 0x808640	void *[36]	CGTaxiRouteFrame::vftable		ui	Holds the vtable of the route frame: the plain frame's with three slots replaced	verified	one	ui/taxiframe#overridden-slots
+0x8086d4	const float	s_smartRectPi		ui	Holds π as a float, doubled by the initializer of 2π	verified	one	ui/smartrect#static-initializers
+0x80871c	const float	s_smartRectHalfDivisor		ui	Holds the constant that 0.5 is divided by in an initializer, and which another initializer squares	verified	one	ui/smartrect#static-initializers
+0x808748	const float	s_smartRectInfinitySource		ui	Holds +inf as a float, copied by the +inf initializer	verified	one	ui/smartrect#static-initializers
 0x8087cc	const float	s_float3d19999a		ui	Holds the float 0.0375 (0x3d19999a)	inferred	none	
 0x8087d0	const float	s_float3c99999a		ui	Holds the float 0.01875 (0x3c99999a)	inferred	none	
 0x8087d4	const float	s_float00000000		ui	Holds the float 0 (0x00000000)	inferred	none	
@@ -2841,8 +2845,37 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0a9c	uint32_t[4]	s_taxiRouteFrameLines		ui	Holds the route frame's line array: capacity, count, buffer and grow step, zero in every write	verified	one	ui/taxiframe#module-state
 0xbe0b14	void *	s_taxiRouteFrame		ui	Holds the last constructed route frame, cleared by its destructor and never read	verified	one	ui/taxiframe#module-state
+0xbe0b18	float	s_smartRectSquare18		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b1c	float	s_smartRectSquare1c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b20	float	s_smartRectSquare20		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b24	float	s_smartRectHalfOver		ui	Holds 0.5 over a constant, set by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b2c	float	s_smartRectSquare2c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b34	float	s_smartRectSquare34		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b38	float	s_smartRectInvTwoPi		ui	Holds 1/2π, set by the object file's static initializer	verified	one	ui/smartrect#static-initializers
+0xbe0b3c	float	s_smartRectSquare3c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b40	float	s_smartRectFive		ui	Holds the immediate 5.0 set by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b44	float	s_smartRectSquare44		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b48	float	s_smartRectSquare48		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b4c	float	s_smartRectSquare4c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b50	float	s_smartRectSquare50		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b54	float	s_smartRectSquare54		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b60	float	s_smartRectSquare60		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b64	float	s_smartRectSquare64		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b68	float	s_smartRectTwoPi		ui	Holds 2π, set by the object file's static initializer	verified	one	ui/smartrect#static-initializers
+0xbe0b6c	float	s_smartRectSquare6c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b70	float	s_smartRectSquare70		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b74	float	s_smartRectSquare74		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b78	float	s_smartRectSquare78		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
+0xbe0b7c	float	s_smartRectSquare7c		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
 0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
 0xbe0b84	uint32_t	s_tokenPluralKey		ui	Holds the number the last counted token printed, the key of a plural token	verified	one	ui/spelltokens#the-plural-key
+0xbe0b8c	uint32_t[12]	s_claimLists		ui	Holds three claim lists of 16 bytes: capacity, count, rectangle array and growth step	verified	one	ui/smartrect#claim-lists
+0xbe0bbc	float	s_smartRectInfinity		ui	Holds +inf, set by the object file's static initializer	verified	one	ui/smartrect#static-initializers
+0xbe0bf4	int32_t	s_worklistContext		ui	Holds the placement worklist's context word, 0 after its initializer	verified	one	ui/smartrect#the-placement-search
+0xbe0bf8	void *	s_worklistHead		ui	Holds the head link of the placement worklist, where children are enqueued	verified	one	ui/smartrect#the-placement-search
+0xbe0bfc	void *	s_worklistTail		ui	Holds the tail link of the placement worklist, from which the next node is taken	verified	one	ui/smartrect#the-placement-search
+0xbe0c18	void *	s_showSmartRectsCVar		ui	Holds the handle of the showsmartrects CVar, which nothing reads	verified	one	ui/smartrect#per-frame-order
+0xbe0c38	void *	s_nodePool		ui	Holds the head of the pool of placement nodes that are free for reuse	verified	one	ui/smartrect#the-placement-search
 0xbe0cc0	void *	s_cvarFarclip		uicamera	Holds the CVar record of farclip	verified	one	uicamera/solver#the-per-frame-outer-call
 0xbe0cd0	void *	s_cvarCameraDive		uicamera	Holds the CVar record of cameraDive	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe0cd4	void *	s_cvarCameraHeightSmoothSpeed		uicamera	Holds the CVar record of cameraHeightSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars

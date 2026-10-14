@@ -11972,88 +11972,88 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x508560	286	ExpandWorldStateText		ui	primitive		Replaces each percent digits w token with the world state value as decimal text	verified	one	ui/worldstate#the-text-expander	
 0x508680	982	DrunkTransformText		ui	primitive		Writes the text a drunk player sends from the source, a strength and a capacity	inferred	none	ui/chatsend#text-steps	
 0x508ad0	24			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508af0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508b00	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508b10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508b20	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508b40	10			ui	orchestration		Runs its object file code that calls 0x508b50; not read here	inferred	none		
-0x508b50	22			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508b70	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x508b80	14			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508b90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508ba0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508bc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508bd0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508bf0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508c00	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508c20	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508c30	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508c50	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508c60	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508c80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508c90	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508cb0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508cc0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508ce0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508cf0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508d10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508d20	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508d40	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508d50	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508d70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508d80	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508da0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508db0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508dd0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508de0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508e00	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508e10	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508e20	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508e30	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508e50	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508e60	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508e80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508e90	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508eb0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508ec0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508ee0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508ef0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508f10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508f20	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508f40	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508f50	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x508f60	10			ui	orchestration		Runs its object file code that calls 0x508f70; not read here	inferred	none		
-0x508f70	34			ui	primitive		Runs its object file code not read here	inferred	none		
-0x508fa0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x508fb0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x508fe0	10			ui	orchestration		Runs its object file code that calls 0x508ff0; not read here	inferred	none		
-0x508ff0	34			ui	primitive		Runs its object file code not read here	inferred	none		
-0x509020	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x509030	145			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5090d0	10			ui	orchestration		Runs its object file code that calls 0x5090e0; not read here	inferred	none		
-0x5090e0	34			ui	primitive		Runs its object file code not read here	inferred	none		
-0x509110	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x509120	145			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5091c0	81			ui	primitive		Runs its object file code that calls 0x509220; not read here	inferred	none		
-0x509220	197			ui	primitive		Runs its object file code not read here	inferred	none		
-0x509300	81			ui	primitive		Runs its object file code that calls 0x509220; not read here	inferred	none		
-0x509360	81			ui	primitive		Runs its object file code that calls 0x509220; not read here	inferred	none		
-0x5093c0	81			ui	primitive		Runs its object file code that calls 0x509220; not read here	inferred	none		
-0x509420	36			ui	orchestration		Runs its object file code that calls CVar::Register; not read here	inferred	none		
-0x509450	141			ui	primitive		Runs its object file code that calls 0x50a0b0, SMemFree, 0x50a120; not read here	inferred	none		
-0x5094e0	29	SmartScreenRectClearAllGrids	idb	ui	primitive		Runs its object file code not read here	inferred	none		
-0x509500	26			ui	primitive		Runs its object file code not read here	inferred	none		
-0x509520	313			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, 0x509e20 and 2 more; not read here	inferred	none		
-0x509660	191			ui	primitive		Runs its object file code that calls 0x50a160; not read here	inferred	none		
-0x509720	120			ui	primitive		Runs its object file code that calls 0x5097a0; not read here	inferred	none		
-0x5097a0	710			ui	primitive		Runs its object file code that calls 0x509bf0, 0x509d80, 0x509b00 and 3 more; not read here	inferred	none		
-0x509a70	136			ui	primitive		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x509b00	230			ui	primitive		Runs its object file code that calls 0x50a0f0, SMemAlloc, 0x50a120; not read here	inferred	none		
-0x509bf0	388			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight; not read here	inferred	none		
-0x509d80	73			ui	primitive		Runs its object file code not read here	inferred	none		
-0x509dd0	72			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, __ftol; not read here	inferred	none		
-0x509e20	154			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight; not read here	inferred	none		
-0x509ec0	401			ui	primitive		Runs its object file code that calls MultiplyByScreenScaleX, NDCToDDCHeight, 0x509e20 and 4 more; not read here	inferred	none		
+0x508af0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508b00	15			ui	primitive		Stores twice the float at 0x8086d4, 2π, in 0xbe0b68	verified	one	ui/smartrect#static-initializers	
+0x508b10	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508b20	19			ui	primitive		Stores 1.0 over the float at 0xbe0b68 in 0xbe0b38	verified	one	ui/smartrect#static-initializers	
+0x508b40	10			ui	orchestration		Calls the use counter and jumps to the exit registration	verified	one	ui/smartrect#static-initializers	
+0x508b50	22			ui	primitive		Counts a use of the object file's static data and jumps to an empty function on the first	verified	one	ui/smartrect#static-initializers	
+0x508b70	12			ui	orchestration		Registers the use count-down 0x508b80 with _atexit	verified	one	ui/smartrect#static-initializers	
+0x508b80	14			ui	primitive		Counts a use down and jumps to an empty function on the last	verified	one	ui/smartrect#static-initializers	
+0x508b90	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508ba0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508bc0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508bd0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508bf0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508c00	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508c20	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508c30	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508c50	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508c60	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508c80	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508c90	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508cb0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508cc0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508ce0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508cf0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508d10	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508d20	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508d40	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508d50	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508d70	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508d80	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508da0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508db0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508dd0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508de0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508e00	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508e10	11			ui	orchestration		Stores the float 5.0 in 0xbe0b40	verified	one	ui/smartrect#static-initializers	
+0x508e20	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508e30	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508e50	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508e60	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508e80	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508e90	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508eb0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508ec0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508ee0	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508ef0	19			ui	primitive		Squares a tuning constant into a global of the placement file that nothing reads	verified	one	ui/smartrect#static-initializers	
+0x508f10	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508f20	19			ui	primitive		Stores 0.5 over the float at 0x80871c in 0xbe0b24	verified	one	ui/smartrect#static-initializers	
+0x508f40	5			ui	orchestration		Jumps to the body of a static initializer of the placement object file	verified	one	ui/smartrect#static-initializers	
+0x508f50	11			ui	orchestration		Copies the float +inf at 0x808748 to 0xbe0bbc	verified	one	ui/smartrect#static-initializers	
+0x508f60	10			ui	orchestration		Calls the claim list zeroing and jumps to its exit registration	verified	one	ui/smartrect#static-initializers	
+0x508f70	34			ui	primitive		Zeroes the first two claim lists	verified	one	ui/smartrect#static-initializers	
+0x508fa0	12			ui	orchestration		Registers the claim list teardown 0x508fb0 with _atexit	verified	one	ui/smartrect#static-initializers	
+0x508fb0	47			ui	primitive		Frees the arrays of the first two claim lists	verified	one	ui/smartrect#static-initializers	
+0x508fe0	10			ui	orchestration		Calls the worklist initializer and jumps to its exit registration	verified	one	ui/smartrect#static-initializers	
+0x508ff0	34			ui	primitive		Makes the placement worklist empty with a zero context	verified	one	ui/smartrect#static-initializers	
+0x509020	12			ui	orchestration		Registers the worklist teardown 0x509030 with _atexit	verified	one	ui/smartrect#static-initializers	
+0x509030	145			ui	primitive		Moves the worklist nodes onto the pool and frees the pool at exit	verified	one	ui/smartrect#static-initializers	
+0x5090d0	10			ui	orchestration		Calls the node pool initializer and jumps to its exit registration	verified	one	ui/smartrect#static-initializers	
+0x5090e0	34			ui	primitive		Makes the placement node pool empty	verified	one	ui/smartrect#static-initializers	
+0x509110	12			ui	orchestration		Registers the node pool teardown 0x509120 with _atexit	verified	one	ui/smartrect#static-initializers	
+0x509120	145			ui	primitive		Moves the pooled nodes onto the worklist and frees them at exit	verified	one	ui/smartrect#static-initializers	
+0x5091c0	81	PushRectUp		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle up until it rests on the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
+0x509220	197	FindOverlapDepth		ui	primitive	bool __fastcall (int list, RECT *rect, int direction, float *depth)	Finds the first claimed rectangle that strictly overlaps and stores the depth to push in a direction	verified	one	ui/smartrect#pushes-and-the-overlap-test	
+0x509300	81	PushRectLeft		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle left until it rests against the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
+0x509360	81	PushRectRight		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle right until it rests against the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
+0x5093c0	81	PushRectDown		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle down until it rests under the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
+0x509420	36	RegisterShowSmartRects		ui	orchestration		Registers the showsmartrects CVar, whose handle nothing reads	verified	one	ui/smartrect#per-frame-order	
+0x509450	141	SmartRectTeardown		ui	orchestration		Frees the claim list arrays and the worklist nodes at world frame shutdown	inferred	none	ui/smartrect#claim-lists	
+0x5094e0	29	SmartScreenRectClearAllGrids	idb	ui	primitive		Zeroes the counts of claim lists 0 and 1	verified	one	ui/smartrect#claim-lists	
+0x509500	26	ResetClaimList		ui	primitive	void __fastcall (int list)	Zeroes the count of a claim list of id 0 to 2, keeping its array	verified	one	ui/smartrect#claim-lists	
+0x509520	313	SeatCombatText		ui	primitive	void __fastcall (int list, RECT *rect)	Moves a combat text rectangle off the claimed ones, clamps it on screen and claims it	verified	one	ui/smartrect#the-combat-text-seat	
+0x509660	191	ClaimRect		ui	primitive	void __fastcall (int list, RECT *rect)	Appends a rectangle to a claim list, growing its array in steps	verified	one	ui/smartrect#claim-lists	
+0x509720	120	ResolveRectPlacement		ui	primitive	void __fastcall (float *center, int list, RECT *rect, bool *changed)	Runs the placement search and answers the changed flag, the centre x and the top y	verified	one	ui/smartrect#the-nameplate-seat	
+0x5097a0	710	SearchRectPlacement		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT *rect)	Searches breadth first for the nearest free place for a rectangle, or answers it unchanged	verified	one	ui/smartrect#the-placement-search	
+0x509a70	136	RecycleWorklist		ui	primitive		Moves every worklist node onto the free pool	verified	one	ui/smartrect#the-placement-search	
+0x509b00	230	NewPlacementNode		ui	primitive		Takes a node from the pool or allocates 0x1c bytes, links it at the worklist head with strategy -1	verified	one	ui/smartrect#the-placement-search	
+0x509bf0	388	ClassifyScreenEdges		ui	primitive	int __fastcall (RECT *out, int mode, RECT rect)	Flags the screen edges a rectangle crosses and, in clamp mode, moves it back inside	verified	one	ui/smartrect#pushes-by-region	
+0x509d80	73	PickPushRegion		ui	primitive	int __fastcall (int flags)	Maps the four edge flags to the region 0 to 8 that picks the order of pushes	verified	one	ui/smartrect#pushes-by-region	
+0x509dd0	72	PlacementTryLimit		ui	primitive	int __fastcall (RECT *rect)	Returns how many candidates to try, the screen tiled by rectangles of this size	verified	one	ui/smartrect#the-placement-search	
+0x509e20	154	NormalizeRectOnScreen		ui	primitive	void __fastcall (RECT *rect)	Moves a rectangle wholly inside the screen keeping its size, top then bottom then left then right	verified	one	ui/smartrect#the-nameplate-seat	
+0x509ec0	401	SeatNameplate		ui	primitive	void __fastcall (int list, CSimpleFrame *plate, CLayoutFrame *root, float *point, int center)	Moves a nameplate's rectangle off the claimed ones, clamps and claims it, and anchors the plate there	verified	one	ui/smartrect#the-nameplate-seat	
 0x50a060	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50a070	15			unassigned			Runs its object file code not read here	inferred	none		
 0x50a080	5			unassigned			Runs its object file code not read here	inferred	none		
