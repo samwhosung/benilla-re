@@ -144,7 +144,7 @@ a to z to upper case and maps `/` to `\`.
 `0x4b7b50(name, isDown)` finds the command by name in the second table (without case) and returns 0 for an
 unknown name. A press always runs it. A release runs it only if the command has `runOnUp`, and otherwise does
 nothing and returns 0. A run sets the global `keystate` to `down` or `up`, runs the command's compiled script
-as client code, clears `keystate` and returns 1. The decision belongs to the command, not to the key or the
+as client code, clears `keystate` and returns 1. Whether it runs on release belongs to the command, not to the key or the
 event, and applies equally to keys, mouse buttons and the wheel.
 
 Addresses: `0x4b7b50`, `0x4b7bed`, `0x4b7bf1`, `0x4b7bf4`, `0x4b7c01`, `0x4b7c08`, `0x4b7c14`, `0x4b7c3b`, `0x4b7c47`, `0x4b7c6d`, `0x4b7c77`, `0x704cf0`, `0x7040d0`

@@ -198,7 +198,7 @@ key of 0 and `0x4b305e` +1 for a second key of 0. `0x4b310c` and `0x4b3115` are 
 `IsCurrentCast` (`0x4b4370`) pushes 1 or nil from `0x4b3600(slot, book)`, a smaller test than the action
 bar's. A slot of no spell is false. A spell whose first effect is 47 is true when its misc value
 (`+0x1a8`), if nonzero, equals the open craft profession, else when the open trade-skill line equals the
-line of its skill ability (taken from the open recipe session if there is one). Any spell with a
+line of its skill ability (taken from the open recipe record if there is one). Any spell with a
 shapeshift aura effect (aura 36) is true when that effect's misc value equals the player's form byte.
 There are no casting, targeting, item or attack arms.
 
