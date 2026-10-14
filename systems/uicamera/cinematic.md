@@ -35,9 +35,11 @@ world to prepare that area with `0x66fc80`. It then restarts the camera's scene 
 Addresses: `0x48edf0`, `0x50c870`, `0x50ca10`, `0x66fc80`, `0x458a40`, `0x4c1280`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_48edf0`
 
 `0x48edfe` loads the shot row from `0xb4e270` and `0x48ee55` calls `0x50c870`. `0x48ee82` and `0x48ee8e` read the eye (property 7) of camera 0 of the model; `0x48eeb5` to `0x48eec1` compare the squared distance with 30 squared (0x804554), and `0x48eed3` calls `0x66fc80` when it is larger. `0x48eee9` calls `0x50ca10`; `0x48ef2e` plays the shot sound with `0x458a40`. `0x48ef43` calls `0x4c1280` with a duration of 0.25 (0x804550).
+
+`ui::dist2_48edf0` runs the slice `0x48ee93` to `0x48eec7`, the distance test.
 
 ## Stepping and ending
 
@@ -48,9 +50,11 @@ over 30 yards from it, releases the shot, stops the sounds, restores the music, 
 Addresses: `0x48efc0`, `0x48efe0`, `0x48f050`, `0x48f080`, `0x50ca50`, `0x49a210`, `0x490a80`, `0x48c930`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_48f080`
 
 `0x48efc0` acts only when its second argument is 0 (`0x48efc6`). `0x48f007` stores the new index at `0xb4e26c`, `0x48f004` stops at 8 and `0x48f00e` indexes `+0x08` by it. `0x48f08e` signals 0x173. `0x48f0b7` resolves the camera's target (`+0x88`) with the object mask 1; `0x48f0f6` compares with 30 squared (0x804558) and `0x48f118` calls `0x66fc80`. `0x48f11f` releases the shot. `0x48f183` clears the word. `0x48f1bd` to `0x48f1d0` call `0x49a210` unless bit 20 of the player's flags is set. `0x490b69` to `0x490bbb`, in the leave-world path `0x490a80`, do the same teardown when the word is set. `Script::InCinematic` (`0x48c930`) returns 1 while the word is set and nil otherwise.
+
+`ui::dist2_48f080` runs the slice `0x48f0cf` to `0x48f102`, the distance test.
 
 ## What else reads the cinematic word
 
@@ -93,9 +97,11 @@ Test: none
 Addresses: `0x50d5d0`, `0x50a930`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_50d5d0`
 
 `0x50d5df` to `0x50d5f0` subtract the eye from the target, `0x50d609` takes the length and `0x50d60f` compares it with 2^-22 (0x8029d4). `0x50d651` takes the sine and cosine of the roll and `0x50d65c` to `0x50d66a` copy the eye. `0x50d685` calls `0x50a930`. The twin `0x50d540`, which has no roll, has no caller.
+
+`ui::cam_50d5d0` runs `0x50d5d0` whole, with the basis builder `0x50a930` stubbed; the test reads the direction and the roll from its arguments.
 
 ## What the shot leaves alone
 

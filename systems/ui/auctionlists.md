@@ -89,13 +89,15 @@ lookups are done.
 Addresses: `0x4cfc00`, `0x4cd850`, `0x4cdc70`, `0x4cdd60`, `0x4cd8b0`, `0x4cdcd0`, `0x4cddc0`, `0x4cd8e0`, `0x4cdd00`, `0x4cddf0`, `0x4cd940`, `0x4cd926`, `0x4cd92f`, `0x4cd866`, `0x4cd87f`, `0x4cd8c2`, `0x73f727`, `0x4cfd90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4cd940`
 
 `0x4cfc4b` to `0x4cfd19` hold the eight string tests and `0x4cfd22` onward the type tests that call the three drivers.
 Each driver searches the stack (`0x4cd852`), toggles with `sete` (`0x4cd876`) at slot 0 or shifts with the loop `0x4cd887`
 to `0x4cd895`, stores the column and flag (`0x4cd899`, `0x4cd89f`) and falls into the sort tail. The adapters
 compare the pointers' records slot by slot (`0x4cd8f0` to `0x4cd91d`) with `0x4cd940(a, b, mode)` and negate when
 `[slot+4]` is nonzero. Ties on all eight keys return 0, and `qsort` does not promise to keep their order.
+
+Bit-exact coverage: `ui::sortcmp_4cd940` covers `0x4cd940` to `0x4cdb4f`, `0x4cdb5c` to `0x4cdc42` of `0x4cd940`.
 
 ## Sort columns
 
@@ -109,13 +111,15 @@ reversed = 0.
 Addresses: `0x4cd940`, `0x4cd96e`, `0x4cdc48`, `0x4cda54`, `0x4cd9e1`, `0x4cdb81`, `0x4cdad4`, `0x4cdaf2`, `0x4cdb10`, `0x4cd975`, `0x4cdbc0`, `0x4cdc23`, `0x4cdc31`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4cd940`
 
 The jump table `0x4cdc48` maps the modes 0 to 7 to `0x4cda54`, `0x4cd9e1`, `0x4cdb81`, `0x4cdad4`, `0x4cdaf2`, `0x4cdb10`,
 `0x4cd975` and `0x4cdbc0`. The idioms: level `setge` (+1 when a > b), quality `setl` (+1 when a < b), bid `setge`,
 duration `sbb; and -2; inc` (-1 when a < b), buyout `sbb; and 2; dec` (+1 when a < b), status `setl`. The name arm calls
 `0x64a4c0` on the template `+8` strings; the seller arm resolves both GUIDs in the name cache (`0xc0e228`) and
 returns -1 when only b is unknown (`0x4cdc23`) and 1 when only a is (`0x4cdc31`).
+
+Bit-exact coverage: `ui::sortcmp_4cd940` covers `0x4cd940` to `0x4cdb4f`, `0x4cdb5c` to `0x4cdc42` of `0x4cd940`.
 
 ## Reversed flag
 
@@ -272,9 +276,11 @@ is sent. With no player the error shows at once (`0x4d0301`); with a player that
 Addresses: `0x4d0260`, `0x4d0279`, `0x4d02c5`, `0x4d02dc`, `0x4d0338`, `0x4d033b`, `0x4d0346`, `0x4d034a`, `0x4d0360`, `0x4d03a6`, `0x807024`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4d0260_cancel_auction_min_increment`
 
 `0x4d0279 push 0x84963c` is the only use of that text, which reads `Usage: SetSelectedAuctionItem(index)`. `0x4d02c5 jae` bounds
 the index against `0xb72624`; `0x4d02dc cmp [edi+0x40],esi` tests for a bid; `0x4d0338 fild qword` and `0x4d033b fmul dword
 [0x807024]` (0.05) feed `__ftol`, and `0x4d0346 cmp ebx,eax; jae` compares the money (`[[player+0xe68]+0xf70]`). The bid
 increment is a different quantity, `rec+0x2c`, and is not used here.
+
+Bit-exact coverage: `ui::luabind_4d0260_cancel_auction_min_increment` covers `0x4d0338` to `0x4d0341` of `0x4d0260`.

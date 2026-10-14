@@ -39,7 +39,7 @@ or the step once a range is set, applies the current value again.
 Addresses: `0x789930`, `0x78993e`, `0x789947`, `0x789962`, `0x789977`, `0x78999c`, `0x7899c9`, `0x7899ce`, `0x7899e5`, `0x7899fa`, `0x789a06`, `0x789a16`, `0x789a1e`, `0x789a44`, `0x7898f0`, `0x789905`, `0x789913`, `0x789927`, `0x789a60`, `0x789a91`, `0x835160`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7898f0_span`, `ui::glue_789930_set_value`, `ui::glue_789a60_range_plus_min`, `ui::glue_789a60_step_write_requantizes_and_fires`
 
 `0x789930` returns without bit 2 (`0x78993e`). It takes the larger of the minimum and the value
 (`0x789947`), then the maximum `+0x318 + +0x31c` when below the result (`0x789962`, `0x789977`).
@@ -60,7 +60,7 @@ the thumb's `TOP` down from the slider's `TOP` by the fraction of the height les
 Addresses: `0x789aa0`, `0x789ab6`, `0x789ac6`, `0x789ad4`, `0x789af2`, `0x789b0e`, `0x789b2a`, `0x789b3e`, `0x789b52`, `0x789b75`, `0x789b7f`, `0x789b8a`, `0x789b8f`, `0x8029d4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_789aa0_thumb_offset`
 
 `0x789aa0` (slot 14) requires bits 1, 2 and 4 and `+0x328` (`0x789ab6` to `0x789ad4`). It compares
 `|span|` with 2^−22 at `0x8029d4` (`0x789af2`) and divides `value − min` by the span (`0x789b0e`).
@@ -80,7 +80,7 @@ release or a hide ends the drag.
 Addresses: `0x789ca0`, `0x789cb2`, `0x789cbc`, `0x789cc2`, `0x789ba0`, `0x789ba6`, `0x789bf5`, `0x789bfe`, `0x789c24`, `0x789c47`, `0x789c4c`, `0x789c55`, `0x789c5d`, `0x789cd0`, `0x789cd3`, `0x789c90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_789ba0_cursor_value`
 
 `0x789ca0` (slot 26) sets bit 8 (`0x789cb2`), calls slot 0x3c with the event (`0x789cbc`) and then
 `0x76bf70` (`0x789cc2`). `0x789ba0` (slot 15), with bit 8 and a thumb, takes `x − (left + thumb
@@ -100,7 +100,7 @@ empty range.
 Addresses: `0x783270`, `0x783276`, `0x78327e`, `0x78328e`, `0x7832a5`, `0x7832af`, `0x7832bc`, `0x7832d0`, `0x7832dc`, `0x7832e2`, `0x7832fd`, `0x78332f`, `0x783342`, `0x783371`, `0x783380`, `0x783394`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_767_783380_guarded_fraction`
 
 `0x783270` compares `a` with `b` and keeps `a` when not above (`0x783276`, `0x78327e`), stores `b`
 at `+0x31c` (`0x78328e`) and, with bit 4 (`0x7832a5`), clears it (`0x7832af`) and calls slot 0x90,
@@ -134,9 +134,11 @@ registered by `0x7900a0`. Each type then asks the `Frame` methods.
 Addresses: `0x87b260`, `0x790e80`, `0x790eb0`, `0x87b010`, `0x7900a0`, `0x7900d0`, `0x7901c0`, `0x7902b0`, `0x7904c0`, `0x790580`, `0x7906e0`, `0x7907a0`, `0x7908c0`, `0x790980`, `0x790a70`, `0x790b30`, `0x78f1d0`, `0x78f290`, `0x78f3f0`, `0x78f4b0`, `0x78f5d0`, `0x78f690`, `0x78f780`, `0x78f870`, `0x78fab0`, `0x78fc20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_78eae0_setcolor_78fc20_setstatus_quantize`, `ui::luabind_78fab0_get_status_bar_color`, `ui::minmax_max_value`
 
 The tables are pairs from `GetThumbTexture` (`0x7901c0`) to `SetValueStep` (`0x790b30`), and from
 `GetOrientation` (`0x78f1d0`) to `SetStatusBarColor` (`0x78fc20`); the registrars call `0x701d80`
 with 0xa. `0x790eb0` and `0x7900d0`, slot 2, look in the type's hash and then call `0x778590`.
 `SetOrientation` (`0x790580`) parses its name with `0x6f1a20` and calls `0x7898c0`.
+
+Bit-exact coverage: `ui::luabind_78eae0_setcolor_78fc20_setstatus_quantize` covers 4 ranges from `0x78fdbd` to `0x78fe17` of `0x78fc20`; `ui::luabind_78fab0_get_status_bar_color` covers `0x78fb74` to `0x78fbd6` of `0x78fab0`; `ui::minmax_max_value` covers `0x790778` to `0x79078c` of `0x7906e0`.

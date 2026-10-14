@@ -40,7 +40,7 @@ a second, so 90 is 22.5 degrees a second, and is clamped to plus or minus 89 deg
 Addresses: `0x5112d0`, `0x50fd40`, `0x50fd90`, `0x50b4a0`, `0x50b4b0`, `0x50b4d0`, `0x50b4e0`, `0x50b500`, `0xbe0fbc`, `0xbe1094`, `0xbe0f78`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_5112d0`
 
 `0x5112d0` loops over the axes (`0x511327`), testing bit 2i of `+0x128` (active) and bit 2i+1 (stopping), with start times at
 `+0x12c`, end times at `+0x144` and queued ends at `+0x15c`. The branches by axis are in a table: axis 0 at `0x5113d3` (target
@@ -49,6 +49,8 @@ Test: none
 (`+0xec`, `+0xf0`, `+0xf4`) are copied at `0x511422`, `0x51152f`, `0x5115d6` unless the glide bits 0x4000000, 0x1000000, 0x2000000 are set.
 `0x50fd40(axis, start, extra)` sets the active bit and the start time, and the queued end when `extra` is nonzero;
 `0x50fd90(axis, end)` sets the stopping bit and the end time. `0x50b4a0` (axis 0) and `0x50b500` (axis 1) set the axis number and reach `0x50b4b0`, `0x50b4d0` with `0x50b4e0`, which call the two with the time `0xcf0bc8`.
+
+`ui::cam_5112d0` runs `0x5112d0` whole with every queued end 0, so `0x50fd90` is not called.
 
 ## Maximum distance and the wheel
 
@@ -60,7 +62,7 @@ opposite axis is stopped first, and a notch that arrives while the axis still ru
 Addresses: `0x50b400`, `0x50b450`, `0x50fc60`, `0x50fcd0`, `0x4818f0`, `0xbe0e6c`, `0xbe0fe0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_unit_convert_ftol`
 
 `0x5112d6` and `0x5112ee` multiply the factor `0xbe0fe0` by the maximum `0xbe0e6c`; `0x5112f2` to `0x511318` clamp to the constants 0.0 and 50.0
 (`0x8089a8`, `0x8089a4`). `0x50b42d` stores the default 1.0; `0x50fc6c` divides by the speed and `0x50fc73` multiplies by 1000, `0x50fc79` truncates.
@@ -77,7 +79,7 @@ pitch is the live pitch (`+0xf4`) plus the ground pitch (`+0x108`) when `+0xa8` 
 Addresses: `0x50f710`, `0x600cd0`, `0x611660`, `0x50d810`, `0x455b30`, `0x50ab50`, `0x50b6a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_flip_yaw_difftest`, `ui::glue_50f710_adds`, `ui::glue_50f710_deadband`
 
 `0x50f720` to `0x50f736` copy `+0xf0`, `+0xf4`, `+0xf8` to the outputs. `0x50f7a1` and `0x50f7a6` take the facing at `[unit+0xc98]` (type mask bit 3), else slot
 0x18 (`0x50f7f8`); `0x50f7b4` compares the target GUID with the active mover `0xc4da98`; `0x50f7d3` calls `0x50d810`. `0x50f7de` adds `+0x100`;
@@ -94,7 +96,7 @@ A positive pitch step looks down (`uicamera/view#pitch-units-and-sign`). The cal
 Addresses: `0x50fee0`, `0x5102b0`, `0x510120`, `0x50d720`, `0x41ade0`, `0x41ad80`, `0x766f70`, `0x514400`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50fee0_rates`, `ui::glue_50fee0_rest`
 
 `0x50fef0` to `0x50ff1b` read the speeds from `0xbe0f78` and `0xbe1094`. `0x50ff2d` calls `0x41ade0`, which divides by the words 0x832a44 and 0x832a48 that `0x41ad80` multiplied by. `0x50ff49` multiplies `dx` by 0x808ac4 and `0x50ff67` `dy` by 0x808ac0, after the degree to radian factor 0x7ffaac. `0x50ff4f` and `0x50ff74` set the pitch sign from `mouseInvertPitch` (`0xbe1040`), `0x50ff86` and `0x50ff8f` the yaw sign from `mouseInvertYaw` (`0xbe1084`). `0x5100ef` to `0x5100fd` shift the yaw with `0x5102b0` and `0x510102` calls `0x50d720`, which clamps the pitch to plus or minus 89 degrees and wraps the yaw and flip bias with `0x455b30`.
 
@@ -105,7 +107,7 @@ While the pivot test `0x510690` holds (`cameraPivot` on, no move or strafe key, 
 Addresses: `0x50fee0`, `0x510690`, `0x512a50`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::glue_50fee0_rates`, `ui::glue_50fee0_rest`
 
 `0x50ffbb` calls `0x510690`. `0x50ffc8` to `0x50ffe7` test mode bit 27 and `|+0x104| > 0.001` (0x801360). `0x50ffee` to `0x51000e` test the two step sizes against `0xbe0cec` and `0xbe0f30`. `0x510020` to `0x51002c` add the step to the bias. `0x51009a` arms the bias back to 0 through `0x512a50(0, 0, 1.0, now)`; `0x5100c3` stores the bias as its own target and clears the armed bit. The cases were read, not run.
 
@@ -118,9 +120,11 @@ up to 15 degrees (0.2618) the facing moves by 0.09 toward it; beyond that by 0.2
 Addresses: `0x50d810`, `0x50f710`, `0xbe1074`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_50d810`, `ui::glue_50f710_adds`, `ui::glue_50f710_deadband`
 
 `0x50f752` to `0x50f786` compare the unit's position with `+0x174` to `+0x17c` and form the moved flag. `0x50f7b4` compares the target GUID with the active mover `0xc4da98`; `0x50f7d3` calls `0x50d810`; `0x50f7d8` stores the result. `0x50d813` to `0x50d82b` test the CVar and the flag; `0x50d833` forms the error; `0x50d839` to `0x50d867` wrap it with π (0x80891c) and 2π; `0x50d86f` compares with 0x808a2c and `0x50d8cc` with 0x808a28; `0x50d898` adds to the last facing.
+
+`ui::cam_50d810` runs `0x50d810` whole and compares its `st0` result.
 
 ## The pivot and the eye
 
@@ -145,9 +149,11 @@ position slot (vtable `+0x14`) of a unit is `0x5f1f10`, which copies the movemen
 Addresses: `0x50de00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_50de00`
 
 `0x50de20` fetches the forward vector through the vtable. `0x50de37` stores the z product, `0x50de3f` the x difference, and `0x50de56`, `0x50de61` and `0x50de71` the three sums.
+
+`ui::cam_50de00` runs `0x50de00` whole, with the forward-row getter in the vtable replaced by an island.
 
 ## Where each channel enters
 
@@ -158,7 +164,7 @@ in size, rotate the basis about (0, 1, 0), so it turns the view and not the eye.
 Addresses: `0x50f710`, `0x50ab50`, `0x50ed59`, `0x50de00`, `0x7be730`, `0x50a780`, `0x50e8d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue4fd_50e8d0_distance_fade_ratio`, `ui::glue4fd_50e8d0_fade_alpha_ratio`, `ui::glue4fd_50e8d0_field_abs`, `ui::glue4fd_50e8d0_local8_preadd`, `ui::glue4fd_50e8d0_look_rate`, `ui::glue4fd_50e8d0_mood_fade`, `ui::glue4fd_50e8d0_overshoot_recenter`, `ui::glue4fd_50e8d0_overshoot_recenter_pitch`, `ui::glue4fd_50e8d0_pitch_accumulate`, `ui::glue4fd_50e8d0_shake_sincos`, `ui::glue4fd_50e8d0_view_compose`, `ui::glue_50f710_adds`, `ui::glue_50f710_deadband`
 
 `0x50f810` to `0x50f818` add `+0x108` when `+0xa8` is 0 or less, `0x50f826` to `0x50f85b` clamp and `0x50f866` calls `0x50ab50`, which builds the basis. `0x50eb0f` to `0x50eb3b` add the bob to the offset. `0x50ed59` is the solver, `0x50eddb` the eye placement and `0x50ede0` to `0x50edf0` store the eye. `0x50ee32` to `0x50ee45` skip a bias under 0.001 (0x801360); `0x50ee58` calls `0x7be730` with the basis `+0x14`, the bias, the axis at `0xbe0f20` (set to (0, 1, 0) on first use at `0x50ee06` to `0x50ee20`) and a flag of 1. `0x50efd0` to `0x50effc` store the cosine and sine of the yaw in the first two words of the forward row; `0x50f003` calls `0x50a780`.
 
@@ -171,9 +177,11 @@ Setting a target stores its transport.
 Addresses: `0x511da0`, `0x511e90`, `0x511f40`, `0x511fe0`, `0x512080`, `0x50d0f0`, `0x5102b0`, `0x50f710`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_511fe0`, `ui::cam_512080`, `ui::glue_511_511da0_neg`
 
 `0x511dbd` to `0x511dc3` return on an unchanged GUID. `0x511dcd` to `0x511dff` shift the yaw by the old facing; `0x511e08` stores the GUID; `0x511e20` to `0x511e45` shift it back by the new one, negated. `0x511e7f` calls `0x50f710`. The transport is resolved with the game object mask 0x20 and its facing read through the virtual slot at `+0x18` (`0x511dea`, `0x511f09`). `0x511e90` builds the rotation (`0x7be730` about (0, 0, 1)) and copies the nine words to its output; `0x511f4c` returns the plain row for a null GUID. `0x50d25a` passes the target's transport to `0x511da0`.
+
+`ui::cam_511fe0` and `ui::cam_512080` run `0x511fe0` and `0x512080` whole in the same way.
 
 ## Pull-in and the glide back
 
@@ -217,7 +225,7 @@ preset for a swimmer, else the near one when the target distance is under 1.8315
 Addresses: `0x50ca90`, `0x50f880`, `0x5126b0`, `0x50d0f0`, `0x50e8d0`, `0x712cb0`, `0x712cf0`, `0x713700`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50c_accum_a1_fold`, `ui::glue_50c_accum_a2_fold`, `ui::glue_50c_accum_xy`, `ui::glue_50c_accum_z`, `ui::glue_50c_clamp_box_extent`, `ui::glue_50c_parallax_combine`, `ui::glue_50c_parallax_tail`, `ui::glue_50c_scale_ce44`, `ui::glue_50c_scale_component`, `ui::glue_50c_scale_scalar`
 
 `0x50cab2` takes the mount model `+0xdc` before the body model `+0xd8` for the loaded test, and `0x50cb46` reloads the body for the base height; `0x50cae0` sets mode bit 2 and the presets `+0x11c`, `+0x120`, `+0x124` are rebuilt. `0x50cb24` reads the descriptor scale; `S` also takes `+0x94` and `+0x9c` (mounted) or `+0x98`. The stand state picks an animation id by the jump table `0x50cb60`: 0x61, 0x64, 0x66, 0x67, 0x68, 6 or 0x73, else 0; `cameraHeightIgnoreStandState` (`0xbe0cf4`) clears it and a mount display forces 0x5b. `0x50cbc7` to `0x50cc03` form the base. `0x50cfc4` gives a non-unit 0.99 of its box centre height or twice `S`. `0x50cfa7` to `0x50d092` clamp with 5/6 (0x8089cc) and 15 (0x8089c8). `0x50d0a1` calls the arm; `0x50f89e` tests swimming (0x200000) and `0x50f8b5` compares `+0x198` with 0x8089b0. `0x50e900` retries `0x50ca90` each frame while mode bit 2 is clear, and the update waits.
 
@@ -232,7 +240,7 @@ the view's slot and its CVars (pitch and yaw in degrees); `ResetView(n)` restore
 Addresses: `0x512e90`, `0x50b5b0`, `0x50b600`, `0x50b640`, `0x50b680`, `0x50b690`, `0x50fa30`, `0x50f990`, `0x50fae0`, `0x50faa0`, `0x50fac0`, `0x50fa60`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::glue_50f990_rad2deg`, `ui::glue_512_512e90_pitch_and_guards`, `ui::glue_deg2rad_gated`
 
 `0x50b5d6` bounds the argument to 1 to 5 and `0x50b5e5` makes it zero-based. `0x512e90` formats `Camera view %s` (0x8500a0) with the view's name and stores the view in
 `cameraView` through `0x63df50` (`0x512f17`); `0x512f2e` to `0x512f99` copy the live values to the targets and clear the transitions. Its blend style,

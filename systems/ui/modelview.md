@@ -72,7 +72,7 @@ is called. The pending index is not re-armed, so the model-ready hook skips the 
 Addresses: `0x76cd30`, `0x76cce0`, `0x76d950`, `0x76db20`, `0x76ce00`, `0x76ce44`, `0x76ce47`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76cd30_byte_to_unit`
 
 `SetModel` reaches `0x76cd30` through slot 37 (`0x76cce0`) and slot 36; `ClearModel` calls the same slot
 with null. `0x76cd30` takes a reference on the new model (`0x710390`), releases the old one
@@ -158,7 +158,7 @@ the three saved states.
 Addresses: `0x76d240`, `0x76d24c`, `0x76d27d`, `0x76d3a7`, `0x76d3b2`, `0x76d3cd`, `0x76d404`, `0x76d42d`, `0x76d448`, `0x76d5d7`, `0x76d5e1`, `0x76d5ea`, `0x76d5f0`, `0x76d603`, `0x76d619`, `0x76d629`, `0x76d639`, `0x76d644`, `0x76d64f`, `0x76d66c`, `0x768320`, `0x7ada40`, `0x7ad7f0`, `0x58b090`, `0x58b0b0`, `0x58b060`, `0x58af60`, `0x58a970`, `0x708900`, `0x710450`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d240_change_detect_and_scale`
 
 `0x76d27d` reads the resolved rectangle `{bottom, left, top, right}` through `0x768320`, which fails
 until the layout has resolved. The saves are `0x76d3a7`, `0x76d3b2` and `0x76d3cd`. A camera at `+0x31c`
@@ -221,7 +221,7 @@ The first act of the transform step is to run the frame's `OnUpdateModel` handle
 Addresses: `0x76d1a0`, `0x76d1a9`, `0x76d1bc`, `0x76d1c6`, `0x76d1cb`, `0x76d1d1`, `0x76d1dd`, `0x76d1fe`, `0x76d205`, `0x76d235`, `0x710650`, `0x41ae70`, `0x80655c`, `0x702690`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d1a0_scale`
 
 `0x41ae70(1.0)` returns G48 (`0x76d1c6`); `0x76d1cb` multiplies by the float 1.6666666 (`0x3fd55555`),
 `0x76d1d1` loads `+0x3a0` and `0x76d1dd` multiplies by `+0x7c`. The position is `+0x7c` times the three
@@ -241,7 +241,7 @@ sign flip in the chain negates Z.
 Addresses: `0x6f1eb0`, `0x6f1ee3`, `0x6f1eeb`, `0x6f1ef0`, `0x6f1efd`, `0x7a1e00`, `0x41ad70`, `0x41ae40`, `0x41ae60`, `0x764284`, `0x7ad913`, `0x7bdca0`, `0x48b4d0`, `0x48b480`, `0x7ffd68`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_6f1_metric_scale_divide`, `ui::luabind_48b_screen_getters`
 
 A FrameXML size N becomes `N / (0.75a · 1024)` times the x scale G44 (`0x6f1eeb` to `0x6f1efd`), which is
 `N / (768·√(a²+1))` layout units; `Frame:GetWidth` (`0x7a1e00`) is the inverse. The screen root's
@@ -249,6 +249,8 @@ rectangle is G44 by G48 layout units (`0x764284`). A layout unit is therefore `7
 and the ortho maps one model unit to one layout unit after the root scale: `s · 768·√(a²+1)` = `768 · 5/3 ·
 modelScale · layoutScale`. `GetScreenHeight` (`0x48b4d0`) composes the same two scales and returns
 `768 / uiScale` at every aspect. `0x7bdca0(M, (1, 1, −1))` scales rows 0 to 2 only.
+
+Bit-exact coverage: `ui::luabind_48b_screen_getters` covers `0x48b485` to `0x48b4be` of `0x48b480`; `ui::luabind_48b_screen_getters` covers `0x48b4d5` to `0x48b50e` of `0x48b4d0`.
 
 ## Implicit size
 
@@ -261,7 +263,7 @@ modelScale` of the rectangle it implies, anchored at the bottom-left: exactly 1.
 Addresses: `0x76d080`, `0x76d0d0`, `0x76d08c`, `0x76d097`, `0x76d09a`, `0x76d0a6`, `0x76d0b5`, `0x76d0bb`, `0x76ce00`, `0x76ce57`, `0x76ce69`, `0x713640`, `0x713661`, `0x7103d0`, `0x768420`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d080_field_diff`
 
 The geometry vtable overrides slots 7 and 8 with `0x76d080` and `0x76d0d0`. `0x768420` gives the
 authored width; `fcom` with 0 and `test ah,0x44; jp` fall through only on equality (`0x76d097`,

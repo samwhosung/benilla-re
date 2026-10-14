@@ -110,7 +110,7 @@ in use, its children following. `Lower` does nothing.
 Addresses: `0x7650f0`, `0x7650fb`, `0x765113`, `0x76513e`, `0x765150`, `0x765191`, `0x765221`, `0x76524d`, `0x765254`, `0x7651a3`, `0x7651ac`, `0x7651be`, `0x7651d8`, `0x7651dd`, `0x7652a0`, `0x76a5b0`, `0x76a5c0`, `0x767010`, `0x766c70`, `0x766bc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::overlap_autoraise`, `ui::is_descendant`
 
 `0x7650f0` walks `+0x9c` until `test [edi+0xb4],0x1` (`0x765113`). With the check (`0x76513e`) it
 calls `0x7680e0(1)` when not valid or pending (`0x765150`), scans levels from `+0xc4` to the
@@ -120,6 +120,8 @@ right`. `0x76a3c0(0x10, found)` stores the bit (`0x7651a3`). Then `test [edi+0xb
 (`0x7651ac`) gates `0x764eb0` and `0x76a4f0(record+0x8, 1)` (`0x7651d8`) and `+0x1100 = 1`. The
 Lua `Raise` path is `0x76a5b0`, `push 1; push ecx`; `Lower` is `0x76a5c0` to `0x7652a0`, `xor
 eax,eax; ret 4`.
+
+`ui::overlap_autoraise` runs `0x7650f0` whole, with `0x764eb0` and `0x76a4f0` stubbed, and `ui::is_descendant` runs `0x767010` whole.
 
 ## What raises a frame
 
@@ -175,7 +177,7 @@ O compacts to O, O, E, O with the count 4. A trailing empty run is dropped from 
 Addresses: `0x764eb0`, `0x764eed`, `0x764efb`, `0x764f18`, `0x764f20`, `0x764f41`, `0x764f71`, `0x764fb6`, `0x764fd3`, `0x764fd8`, `0x764fe3`, `0x764f62`, `0x764ff1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::level_compact`, `ui::level_compact_ignores_visibility`, `ui::level_compact_leaves_interior_gaps`
 
 `0x764eb0` loops over levels below the record's `+0x8`; a node's frame list is non-empty when its
 first link `[node+0x14]` is a pointer (`0x764eed`). Otherwise it walks the top's frame list
@@ -187,6 +189,8 @@ restores the index from `ebp−0x8` (`0x764fd3`) and jumps past its `inc edi` to
 (`0x764fe3`). The count ends
 as the start of a trailing run (`0x764f62`) or as reduced.
 
+The three tests run `0x764eb0` whole with the real `0x76a4f0`, whose changes to the levels the walk then reads.
+
 ## Stratum and level setters
 
 Setting a frame's stratum or level takes a visible frame out of its level, stores the value and
@@ -197,7 +201,7 @@ parent takes the parent's stratum and the parent's level plus one.
 Addresses: `0x76a470`, `0x76a481`, `0x76a498`, `0x76a4a5`, `0x76a4b6`, `0x76a4dd`, `0x76a4f0`, `0x76a4fd`, `0x76a50f`, `0x76a53b`, `0x76a582`, `0x76a595`, `0x76ab10`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::set_frame_strata`, `ui::set_frame_level`
 
 `0x76a470` returns when equal (`0x76a481`); with `+0xd4` set it calls `0x764920(frame, 1)` and
 `0x764780(frame, 1)` on the top `+0xa0` around the store at `0x76a4a5`, then calls itself on each
@@ -206,6 +210,8 @@ child of `+0x300` (`0x76a4dd`). `0x76a4f0` clamps with `jge` (`0x76a4fd`), keeps
 `0x76a4f0(child level + difference, 1)` for each child whose `+0xc0` equals its own (`0x76a582`).
 `0x76ab10` calls `0x76a470(parent+0xc0)` and `0x76a4f0(parent+0xc4 + 1, 0)`, or 3 and 0 for no
 parent.
+
+`ui::set_frame_strata` and `ui::set_frame_level` run `0x76a470` and `0x76a4f0` whole on a synthesized frame tree, with `0x764920` and `0x764780` stubbed to log the frame.
 
 ## The update pass
 
@@ -219,7 +225,7 @@ drained again, and a pending hover pick is made from the last mouse position.
 Addresses: `0x764330`, `0x764340`, `0x765650`, `0x765660`, `0x7656b6`, `0x7656ba`, `0x765707`, `0x765710`, `0x765713`, `0x76572d`, `0x765757`, `0x765799`, `0x7657a1`, `0x7657b4`, `0x7657be`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::render_traverse_order`
 
 The constructor calls 0x442800 with `ecx` 0, `edx` 4, then 1.0, 0, `0x764330` and the address of
 `+0x74` pushed (`0x764220` to `0x764264`); `0x764330` calls `0x765650(elapsed)` and `0x7657d0`.
@@ -228,6 +234,8 @@ The constructor calls 0x442800 with `ecx` 0, `edx` 4, then 1.0, 0, `0x764330` an
 [edx+0x38]` (`0x765710`). The splice moves the first list onto the second when they differ
 (`0x765727`), with error 0x57 on a malformed list (`0x76572d`). `0x7657b4` clears `+0x1100` and
 calls `0x7660d0` with `+0x1104` (`0x7657be`).
+
+`ui::render_traverse_order` runs `0x765650` whole with each frame's update slot stubbed to log the frame, and reads the order.
 
 ## The draw pass
 

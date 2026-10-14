@@ -47,7 +47,7 @@ and for 1 `CORPSE_IN_RANGE` when the cached map ids are equal, else `CORPSE_IN_I
 Addresses: `0x492130`, `0x492136`, `0x492169`, `0x492188`, `0x492196`, `0x4921a2`, `0x4921b0`, `0x4920f0`, `0x4920f6`, `0x492100`, `0x49211a`, `0x492124`, `0x4818c5`, `0x481790`, `0x48d060`, `0x48d070`, `0x48d076`, `0x48d07c`, `0xb4e2ac`, `0xb4e324`, `0x8044cc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_492_492130_sqdist_radius`
 
 `0xb4e2ac` is 1600.0: the static initialiser `0x48d070` squares the 40.0 at `0x8044cc`, so the radius is 40 yards and the compare is `fcomp` then `test ah,0x41; jp` (equal counts as in range). One threshold serves both directions, so there is no hysteresis. Without a cached corpse (`0xb4e31c` below 0) or a player the range is 0.
 

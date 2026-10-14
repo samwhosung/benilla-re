@@ -23,7 +23,7 @@ named, an unknown name raising `Unknown language`.
 Addresses: `0x49f1e0`, `0x49f208`, `0x49f219`, `0x49f223`, `0x49f230`, `0x49f237`, `0x49f27f`, `0x49f285`, `0x49f28d`, `0x49f29e`, `0x49f2a1`, `0x49f2aa`, `0x49f2d3`, `0x49f2e1`, `0x49f7a0`, `0x49f861`, `0x49f876`, `0x49f8a0`, `0x5ec890`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_49f1e0_percent_byte`
 
 The type table is built on the stack by `0x49f7a0` (`0x49f7af` to `0x49f85a`), walked 13 times with
 `0x64a4c0` (`cmp esi,0xd`, `0x49f876`). The empty-text test is `0x49f28d` to `0x49f2a1`. Argument 1 is checked
@@ -80,7 +80,7 @@ escape check runs, and a final gate decides whether the player may send at all.
 Addresses: `0x49f592`, `0x49f597`, `0x49f5a3`, `0x49f5df`, `0x49f5f7`, `0x49f5fc`, `0x49f604`, `0x49f60f`, `0x49f614`, `0x49f61a`, `0x49f627`, `0x49f648`, `0x49f656`, `0x49f65b`, `0x49f661`, `0x49f6aa`, `0x49f6af`, `0x4b54c0`, `0x605f30`, `0x5083a0`, `0x508680`, `0x494a50`, `0x8029d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue4fd_508680_garble_noise_minus_one`, `ui::glue4fd_508680_garble_threshold_quarter`
 
 The dead test is `0x605f30` (health at most 0, or ghost) and the allowed list is the compare chain `0x49f5a3`
 to `0x49f5da`. `0x4b54c0(0x16)` sets tutorial flag 0x16. `0x5083a0(text, buf, 0x100)` is the `%` expander of

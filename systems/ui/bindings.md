@@ -18,7 +18,7 @@ at its end (`0x49565b`): if it is set, it tears the interface down (`0x490bd0`) 
 Addresses: `0x4884d0`, `0x491380`, `0x494a50`, `0x495590`, `0x49565b`, `0x495664`, `0x495669`, `0x490bd0`, `0x48fbf0`, `0x490124`, `0x49138e`, `0xb4b3f4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_480_495590_tick_scale`
 
 The byte `0xb4b3f4` has three references in the image: the clear `0x490124`, the set `0x49138e` and the test `0x49565b`.
 `0x491380` is `mov ecx,0xa; call 0x494a50; test eax,eax; je` before the store. `0x494a50` maps tag 10 through

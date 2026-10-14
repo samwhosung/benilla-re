@@ -102,7 +102,7 @@ nothing is left. The result is built once per change, in one 4,096-byte buffer.
 Addresses: `0x771600`, `0x771611`, `0x771627`, `0x771ec0`, `0x771ee4`, `0x771efb`, `0x771f0f`, `0x771f19`, `0x771f31`, `0x771f5c`, `0x771f9e`, `0x772034`, `0x772039`, `0x772041`, `0x772059`, `0x772064`, `0x772086`, `0x7720de`, `0x800188`, `0xcf0cc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_settled_eps`, `ui::textglue_add_reload`, `ui::textglue_linecount_scale`, `ui::textglue_scale_mul`, `ui::textglue_settled_poseps`
 
 `0x771600` returns when `|h − +0xe4|` is below 2^−22 (`0x771611`), else clears 0x200 (`0x771627`).
 `0x771ec0(w, h)` returns the text unless there is a font and text (`0x771ee4`), `w > 0`
@@ -113,6 +113,8 @@ line (`0x771f9e`). `0x44d960` returns the bytes that fit (`0x772034`); fewer tha
 continuation bytes (`0x772064`), appends `"..."` from `0x800188` (`0x772086`) and loops while
 the fit is below the prefix plus 3 (`0x7720de`).
 
+Bit-exact coverage: `ui::textglue_add_reload` covers `0x771f45` to `0x771f50` of `0x771ec0`; `ui::textglue_linecount_scale` covers `0x771f5c` to `0x771f6b` of `0x771ec0`; `ui::textglue_scale_mul` covers `0x771ff4` to `0x772034` of `0x771ec0`; `ui::textglue_settled_poseps` covers `0x771f88` to `0x771f97`, `0x771fd0` to `0x771fdf` of `0x771ec0`.
+
 ## Shadow
 
 A string with bit 0x100 draws a second time in its shadow colour, at its shadow offset times its
@@ -122,13 +124,15 @@ layout scale. The shadow's alpha is the shadow colour's alpha times the parent f
 Addresses: `0x772180`, `0x77218d`, `0x7721be`, `0x7721c9`, `0x7721e0`, `0x7721f4`, `0x7721fc`, `0x77221a`, `0x772231`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_scale_mul`
 
 `0x772180` (slot 8) calls `0x77fac0` and, with a built string, `0x44d650` for the main colour
 (`0x7721be`). With `+0x120 & 0x100` (`0x7721c9`) it multiplies `+0x108` and `+0x10c` by `+0x7c`
 (`0x7721e0`, `0x77221a`), multiplies the parent `+0x9c`'s alpha byte `+0xc8` by `+0x107`
 (`0x7721f4`) and divides by 255 with the multiplier 0x80808081 (`0x7721fc`), and passes the colour
 and offset to `0x44d3b0` (`0x772231`).
+
+Bit-exact coverage: `ui::textglue_scale_mul` covers `0x7721e0` to `0x772223` of `0x772180`.
 
 ## Following a font
 
@@ -163,13 +167,15 @@ and it returns the number 1.
 Addresses: `0x79f210`, `0x79f225`, `0x79f276`, `0x79f29e`, `0x79f2ce`, `0x79f2ec`, `0x79f2ff`, `0x79f30a`, `0x79f342`, `0x79f34e`, `0x79f363`, `0x6f1a90`, `0x811b10`, `0x64b540`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::set_scaled_changed_spilled_79f210`
 
 `0x79f210` requires a string and a number (`0x79f225`), converts the height with `0x41ae60`
 (`0x79f276`), reads the flags with `0x6f1a90` (`0x79f29e`), which ORs the bit of each name in
 `0x811b10` that `0x64b540` finds in the string. Equal file (`0x79f2ce`), height and flags
 (`0x79f2ec`) skip the load; a height not above 0 pushes nil (`0x79f2ff`); `0x44d040` builds the font
 (`0x79f30a`), and slot 0x14 notifies (`0x79f342`) before 1.0 is pushed (`0x79f34e`).
+
+Bit-exact coverage: `ui::set_scaled_changed_spilled_79f210` covers `0x79f264` to `0x79f287`, `0x79f2d7` to `0x79f2ea` of `0x79f210`.
 
 ## Lua methods
 
@@ -181,7 +187,7 @@ then asks the `Region` methods (`methods`).
 Addresses: `0x87c1d8`, `0x79edf0`, `0x87c7c8`, `0x7a10d0`, `0x87c128`, `0x79c5f0`, `0x79c660`, `0x79c720`, `0x79c830`, `0x79ca90`, `0x79cb70`, `0x79cc80`, `0x79cdb0`, `0x79ce70`, `0x79cf30`, `0x79cff0`, `0x79d0b0`, `0x79d1a0`, `0x79d400`, `0x79d4f0`, `0x79d690`, `0x79d760`, `0x79d840`, `0x79d9c0`, `0x79dbe0`, `0x79dd40`, `0x79df60`, `0x79e070`, `0x79e1d0`, `0x79e2b0`, `0x79e3c0`, `0x79e510`, `0x79e5f0`, `0x79e6b0`, `0x79e7f0`, `0x79e8b0`, `0x79e9f0`, `0x79ead0`, `0x79fda0`, `0x79fe60`, `0x79ff60`, `0x7a0030`, `0x7a00f0`, `0x7a01b0`, `0x7a0270`, `0x7a0330`, `0x7a03f0`, `0x7a04b0`, `0x7a0570`, `0x7a0630`, `0x7a06f0`, `0x7a07b0`, `0x7a0870`, `0x7a0930`, `0x7a09f0`, `0x7a0ab0`, `0x7a0b70`, `0x7a0c30`, `0x7a0cf0`, `0x7a0db0`, `0x79ef10`, `0x79f090`, `0x79f0e0`, `0x79f3b0`, `0x79f420`, `0x79f4a0`, `0x79f4d0`, `0x79f680`, `0x79f730`, `0x79f910`, `0x79f9c0`, `0x79fad0`, `0x79fb40`, `0x79fbe0`, `0x79fc20`, `0x79fcb0`, `0x79fce0`, `0x79fd70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::color_byte_79f420`, `ui::get_scaled_79d400`, `ui::get_scaled_79e510`, `ui::get_scaled_79f3b0`, `ui::get_scaled_79fbe0`, `ui::get_scaled_pair_79df60`, `ui::get_scaled_pair_79fad0`, `ui::get_scaled_slice`, `ui::luabind_79c830_set_vertex_color_quantize`, `ui::luabind_79ca90_get_vertex_color`, `ui::luabind_79cb70_set_alpha`, `ui::normalize_byte_79f4a0`, `ui::normalize_channel_full_domain`, `ui::pack_color_79d9c0`, `ui::pack_color_79dd40`, `ui::pack_color_79f4d0`, `ui::pack_color_79f730`, `ui::set_scaled_79e2b0`, `ui::set_scaled_changed_79fb40`, `ui::set_scaled_pair_79e070`, `ui::set_scaled_pair_79f9c0`, `ui::set_scaled_slice`, `ui::set_spacing_guarded_79e3c0`, `ui::unpack_color_79d840`, `ui::unpack_color_79dbe0`, `ui::unpack_color_79f680`, `ui::unpack_color_79f910`
 
 The tables are pairs of a name and a function: `FontString` from `GetDrawLayer` (`0x79c660`) to
 `CanNonSpaceWrap` (`0x79ead0`), `Font` from `GetObjectType` (`0x79fda0`) to `GetJustifyV`
@@ -189,3 +195,5 @@ The tables are pairs of a name and a function: `FontString` from `GetDrawLayer` 
 with 0x20, 0x16 and 0x16. Each `Font` setter or getter calls one shared function, `SetFontObject`
 `0x79ef10` to `GetJustifyV` `0x79fd70`, which `EditBox`'s font methods call too. No table holds
 `GetStringHeight`: the image has no such string, against one `GetStringWidth`.
+
+The `ui::` tests cover slices of these functions; each test header names its instructions.

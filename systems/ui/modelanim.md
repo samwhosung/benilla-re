@@ -98,7 +98,7 @@ pushes `alpha/255` of the frame's byte at `+0xc8` to the model when the model is
 Addresses: `0x76d120`, `0x76d12a`, `0x76d139`, `0x76d147`, `0x76cd5e`, `0x76cd77`, `0x710cb0`, `0x8026c8`, `0x76a690`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76cd30_byte_to_unit`
 
 `0x76d120` calls the base `SetAlpha` (`0x76a690`) and, with a model, passes `movzx [frame+0xc8]` times
 1/255 (`0x8026c8`) to `0x710cb0` (`0x76d139` to `0x76d150`). `SetModel` does the same at `0x76cd5e` to
@@ -140,7 +140,7 @@ clamped to [0, 1]. `GetLight` returns 7, 10 or 13 values.
 Addresses: `0x76e1e0`, `0x76e290`, `0x76e2a3`, `0x76e2cb`, `0x76e2d2`, `0x76e2df`, `0x76e3b9`, `0x76e3fc`, `0x76e408`, `0x76e474`, `0x76e533`, `0x76e538`, `0x76e59f`, `0x76e777`, `0x76cf30`, `0x76f900`, `0x76e7d0`, `0x76e91f`, `0x76e953`, `0x878c00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_767_76f900_color_pack`, `ui::luabind_76e1e0_set_light`
 
 Index 2 must be a number or the usage string `0x878c00` is raised through `luaL_error` (`0x76e295`).
 `0x71b4a0` builds the local light (`0x76e2a3`); the enabled flag is `neg; sbb; neg` of the truncated
@@ -150,6 +150,8 @@ destroys the local light (`0x71b610`) and returns 0 values (`0x76e2d2`, `0x76e2d
 11 after a full colour and 8 otherwise (`0x76e538`), and the second intensity is read at `edi` (`0x76e59f`).
 `0x76cf30` copies 0x1b dwords to `+0x324` (`0x76e777`). `GetLight` pushes `1.0, r, g, b` for each colour
 with a component above 0 and a single 0 otherwise (`0x76e91f` to `0x76e953`).
+
+Bit-exact coverage: `ui::luabind_76e1e0_set_light` covers 4 ranges from `0x76e41f` to `0x76e777` of `0x76e1e0`.
 
 ## Fog
 
@@ -163,7 +165,7 @@ fog. The fog applies per material: a material marked unfogged ignores it, and th
 Addresses: `0x76ee60`, `0x76ef28`, `0x76effc`, `0x76f059`, `0x76f062`, `0x76f1e0`, `0x76f282`, `0x76f390`, `0x76f432`, `0x76f540`, `0x76f5c5`, `0x76f2d0`, `0x76f480`, `0x76cbbb`, `0x76cbd2`, `0x76cc0a`, `0x76cc4b`, `0x76cc51`, `0x76d680`, `0x76d6a7`, `0x76d7c1`, `0x71c110`, `0x70baf0`, `0x70bb24`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_76ee60_setfog_76e1e0_setlight_quantize`
 
 `0x76ee60` reads the components at indices 2 to 4 and alpha at 5, each through `fcom 0.0` and `fcom 1.0`
 with `test ah,5; jp` (`0x76ef28` to `0x76eff3`), packs them (`0x76effc`) and ors bit 0 into `+0x3a4`
@@ -175,6 +177,8 @@ through `0x6f23d0` at `+0x384` with bit 0 of `+0x380` (`0x76cc4b`, `0x76cc51`). 
 quantises each colour byte as `trunc(v·255 + 0.5)` clamped, and calls `0x71c110(collector, colour,
 near, far)`; the batch step turns fog on for a lit material only if the collector's range reciprocal
 `+0x18c` is positive (`0x70bb24`, `models/render#lighting-and-fog`).
+
+Bit-exact coverage: `ui::luabind_76ee60_setfog_76e1e0_setlight_quantize` covers 4 ranges from `0x76eff6` to `0x76f050` of `0x76ee60`.
 
 ## Texture transform sense
 

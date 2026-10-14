@@ -110,7 +110,7 @@ takes the else branches. The products 1.5π and 0.5π use π as the float `0x404
 Addresses: `0x47f220`, `0x47f22a`, `0x47f238`, `0x47f243`, `0x47f245`, `0x47f272`, `0x47f287`, `0x47f2a7`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_47f220`
 
 `0x47f22a` stores `dx` as a float; `dy` stays in `st0`. `fcomp` of `|dx|` with `0x34800000`
 (2^−22) at `0x47f238`, then `test ah,0x5; jp` (`0x47f243`): less gives C0 alone, odd parity, no
@@ -118,3 +118,5 @@ jump; greater, equal or unordered jump. `0x47f245` compares `dy` with 0 the same
 returns `1.5·π`, else `0.5·π`. `0x47f272` repeats the test on `|dy|`; less compares `b.x` with
 `a.x` (`0x47f287`), less returning π, else 0. Otherwise `fld dx; fpatan` (`0x47f2a7`), `st1/st0`
 with `st1 = dy`. The result returns in `st0`; `ecx` is `a` and `edx` is `b`.
+
+`ui::geo_47f220` runs `0x47f220` whole and compares its `st0` result.

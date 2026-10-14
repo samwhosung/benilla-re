@@ -26,7 +26,7 @@ pick is asked for.
 Addresses: `0x764aa0`, `0x764aac`, `0x764ab2`, `0x764aba`, `0x764ac3`, `0x764b2d`, `0x764b84`, `0x764b8d`, `0x764ba0`, `0x766d90`, `0x766e80`, `0x766ec0`, `0x766ee0`, `0x76af00`, `0x76af50`, `0x76afa0`, `0x76afe0`, `0x8783a4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::input_hittest_index_insert`
 
 `0x764aa0(frame, kind, keep, level)` computes `lea eax,[eax+eax*8]` (`0x764ab2`) and `imul
 edx,edx,0x1c` into `0xd10` (`0x764ac3`); a level of −1 means the frame's `+0xc4`. The entry is
@@ -37,6 +37,8 @@ spare slots, frees the entry and, with `keep` 0, clears the frame from the 0x30e
 for kind 1, or from `+0x80` and `+0x7c` for kind 2, calling slot 0x50 with 1 unless the frame's
 `+0xac` is 3. `0x76af00` and `0x76af50` set or clear one bit of `+0xcc` and enter or remove the
 entry when visible; `0x76afa0` and `0x76afe0` do kinds 0 to 3.
+
+`ui::input_hittest_index_insert` runs `0x764aa0` whole, with the node allocation `0x6462e0` replaced by a bump allocator, and reads the list back.
 
 ## The handlers
 
@@ -141,7 +143,7 @@ and contains nothing without such an ancestor.
 Addresses: `0x76b020`, `0x76b116`, `0x76b119`, `0x76b121`, `0x76b151`, `0x76b175`, `0x76b17d`, `0x76b195`, `0x76b1b0`, `0x76b1e0`, `0x76b220`, `0x76b580`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::apply_rect_screen`, `ui::point_in_rect`
 
 `0x76b020` tests bit 0 of `+0x60`, the layout flags, then `+0xb4` bit 0x2000; the plain case
 compares x with `+0xdc` and `+0xe4`, y with `+0xd8` and `+0xe0`. A lower edge fails on
@@ -154,6 +156,8 @@ compares at `0x76b121` to `0x76b151` read the intersection. `0x76b580`, the fram
 callback, stores `+0xd8 = bottom + inset_b·s`, `+0xdc = left + inset_l·s`,
 `+0xe0 = top − inset_t·s`, `+0xe4 = right − inset_r·s` with `s` at `+0x7c`; `0x76b1b0` stores the
 insets left `+0xec`, right `+0xf4`, top `+0xf0`, bottom `+0xe8`.
+
+`ui::apply_rect_screen` runs `0x76b580` whole, and `ui::point_in_rect` runs `0x76b020` whole on a synthesized frame, its parent and its grandparent.
 
 ## Moving and sizing
 
@@ -168,7 +172,7 @@ resizable (0x200); sizing picks the corner or edge by which third of the frame h
 Addresses: `0x7652b0`, `0x7652c6`, `0x7652d7`, `0x7652e5`, `0x7652f3`, `0x7652fc`, `0x765320`, `0x765490`, `0x7654a3`, `0x76550f`, `0x76554c`, `0x765558`, `0x7655b0`, `0x765640`, `0x766fe0`, `0x8029b0`, `0x80297c`, `0x765332`, `0x765464`, `0x766346`, `0x7663c7`, `0x77681d`, `0x776819`, `0x77697c`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::geo_765320`
 
 `0x7652b0` calls `0x768430` on the frame's layout part, raises it (`0x7652d7`), sets bit 0x1000
 (`0x7652e5`) and stores `+0xd00`, `+0xcfc`, `+0xd0c`, `+0xd04`, `+0xd08` (`0x7652f3` to
@@ -181,6 +185,8 @@ the ancestor `0x766fe0` returns. `0x765320` compares the cursor with the rectang
 (`0x8029b0`) and 3.0 (`0x80297c`) of its extents. The point numbers and the layout effect of
 `0x768430`, `0x768550` and `0x768710` were not traced to the end. `0x765640` clears `+0xcfc` and
 `+0xd00`.
+
+`ui::geo_765320` runs `0x765320` whole, with `0x768310`, `0x7680e0`, `0x768320` and `0x7652b0` stubbed; the test reads the rectangle it supplies and the grip passed to `0x7652b0`.
 
 ## Mouse focus from the game
 

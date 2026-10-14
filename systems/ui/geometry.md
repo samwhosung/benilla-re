@@ -77,7 +77,7 @@ grid. A direct area, the world view and a missing row give 0.
 Addresses: `0x4a6ec0`, `0x4a6ec7`, `0x4a6ed6`, `0x4a6f05`, `0x4a6f0e`, `0x4a6f1f`, `0x4a6f31`, `0x4a6fbc`, `0x4a6fd1`, `0x4a6ff6`, `0x4a7005`, `0x4a7020`, `0x4a70b8`, `0x4a70c6`, `0x4a70cc`, `0x4a70d6`, `0x4a70dc`, `0x4a70e0`, `0x84506c`, `0x845070`, `0x845074`, `0x806544`, `0x80653c`, `0x806540`, `0xc0d5bc`, `0xc0d5c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4a6ec0`
 
 `0x4a6ec7` reads the continent word; a value below 0 takes the direct-area word (`0x4a6f00`), otherwise a zone of 0 or more
 takes the child at that index (`0x4a6eed`) and a zone below 0 the continent's own id (`0x4a6efa`). The id must lie in 0 to the maximum of the index
@@ -85,6 +85,8 @@ at `0xc0d5bc` (`0x4a6f1f`). `0x4a6f0e` returns 0 for a continent of −2. The tw
 `0x4a7005` multiplies `(1 − u)·extent + lo` by 2.9296876e-05, the float at `0x806544`, and subtracts it from 0.5; `0x4a7020` does the same
 for `v` with the other pair. `0x4a70b8` multiplies the second by −128.0 (`0x806540`) and `0x4a70c6` the first by 128.0 (`0x80653c`),
 both truncated; the index is the column plus 128 times the row plus 0x4009 times the continent's index (`0x4a70cc` to `0x4a70dc`) into the record array, and the cell is read at `+0x14` (`0x4a70e0`).
+
+`ui::geo_4a6ec0` runs `0x4a6ec0` whole on seeded map state.
 
 ## Click to world
 
@@ -115,9 +117,11 @@ closes only when `s` is 1, or when `f6` is 0 on the horizontal axis and `f7` is 
 Addresses: `0x4a72b0`, `0x4a72b6`, `0x4a72c9`, `0x4a72d8`, `0x4a72de`, `0x4a72e6`, `0x4a72f5`, `0x4a72fb`, `0x4a7303`, `0x4a7305`, `0x4a730e`, `0x4a7320`, `0x4a7360`, `0x4a7393`, `0x4a73b3`, `0x4a73d1`, `0x4a73d5`, `0x806554`, `0x806558`, `0x7ff9d8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4a72b0`, `ui::geo_4a7360`
 
 `0x4a7320` finds the `WorldMapContinent` row of the map id in `ecx` (`0x4a7352`). `0x4a72b0` scales `f7` by 1/41.75 (`0x806524`) and adds 0.5 (`0x4a72c9`, `0x4a72cf`), takes `a` times 4.491e-05 (`0x806558`)
 times `s` (`0x4a72d8`, `0x4a72de`) away (`0x4a72e1`), does the same for the horizontal pair with 2.994e-05 (`0x806554`, `0x4a72f5`), stores the horizontal result (`0x4a7303`) and
 `1.0 − vertical` (`0x4a7305`, `0x4a730e`). The world leg of `0x4a7360` (`0x4a7393`) stores the horizontal result at `0x4a73b3`, the vertical one at `0x4a73d1`, and returns
 0 in `al` (`0x4a73d5`).
+
+`ui::geo_4a72b0` and `ui::geo_4a7360` run `0x4a72b0` and `0x4a7360` whole on seeded map state.

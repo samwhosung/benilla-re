@@ -81,7 +81,7 @@ alone, never by the font.
 Addresses: `0x78adb0`, `0x78add6`, `0x78ade1`, `0x78adf0`, `0x78adfe`, `0x78ae0c`, `0x78ae19`, `0x78ae23`, `0x78ae29`, `0x78ae36`, `0x78ae3f`, `0x78ae54`, `0x78ae68`, `0x78ae75`, `0x78aea1`, `0x78aea9`, `0x78aebb`, `0x78aec0`, `0x78aec4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_788_78adb0_negate`
 
 `0x78adb0(text, element, align)` builds the string with `0x770d30(this, 2, 1)` (`0x78add6`) and
 calls `0x767c70` (`0x78ae0c`) with point 0 to the frame's point 0 when `+0x348` is 0 (`0x78adfe`),
@@ -102,7 +102,7 @@ block down by its height. An image never becomes the block the next one hangs fr
 Addresses: `0x78ab40`, `0x78ab60`, `0x78ab7b`, `0x78ab85`, `0x78abad`, `0x78abe5`, `0x78ac25`, `0x78acbb`, `0x78ace3`, `0x78acfa`, `0x78ad02`, `0x78ad0c`, `0x78ad12`, `0x78ad15`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_78ab40_unit_convert_and_subtract`
 
 `0x78ab40` sets its float byte when `0x6f1990` gives 1 or 4 (`0x78ab7b`, `0x78ab85`), converts
 `width` and `height` with `0x64aaa0` and `0x41ae60` (`0x78abad`, `0x78abe5`), and builds the

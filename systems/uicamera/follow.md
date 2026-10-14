@@ -20,7 +20,7 @@ armed, the transitions play out by themselves.
 Addresses: `0x510960`, `0x5111f0`, `0x511040`, `0x5111d0`, `0x5111b0`, `0x514840`, `0x514b70`, `0x5143e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_510960_arith`
 
 `0x511205` and `0x51122a` are the two edge tests on mode bit 12 (`test ah,0x10`); `0x5111d0` sets the bit and raises the absolute frame, `0x5111b0` clears them.
 The input handlers call `0x511040` with the external-movement bits `MF & 0xf00000` (`0x51497c`, `0x514c5e`), which sets or clears the Track bit 8 of the mode
@@ -37,7 +37,7 @@ highest state wins, in the order Fear, Turn, Strafe, Move, Track, Stop, Idle. Wi
 Addresses: `0x510960`, `0x510976`, `0x510a6f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_510960_arith`
 
 `0x51097c` tests Fear (value 0x40), `0x51099d` to `0x5109ad` Turn (0x20), `0x5109b3` to `0x5109ce` Strafe (0x10), `0x5109d4` to `0x5109e5` Move (8), `0x5109ec` Track (4), `0x5109f7` Stop (2)
 and `0x510a00` to `0x510a23` Idle (1). `0x510a2e` keeps seven bits and returns if none is set. `0x510a6f` to `0x510a84` scan from bit 6 down and take the first set bit. The
@@ -87,7 +87,7 @@ default, the target not in mouselook and not swimming. Distance smoothing never 
 Addresses: `0x510940`, `0x50fc30`, `0x50fbc0`, `0x510850`, `0x510760`, `0x510750`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50fbc0_settled`
 
 `0x510940` returns 0 for mode bit 5 (0x20) and otherwise `0x50fc30(view)`, which reads `cameraCustomViewSmoothing` at `0xbe0f1c` and else `0x50fbc0(view)`. `0x50fbc0` parses the
 three default strings of the view (`0x84f488`, pitch and yaw times π/180 per the flag table 0x84f474) and compares each slot value with 0.001 (`0x50fbfc`).

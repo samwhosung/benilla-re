@@ -167,7 +167,7 @@ it runs `OnChar` with the inserted text, and `OnSpacePressed` once when the text
 Addresses: `0x77bee0`, `0x77bef6`, `0x77bf0d`, `0x77bf23`, `0x77bf41`, `0x77bf6a`, `0x77c01c`, `0x77c022`, `0x77c033`, `0x77c03e`, `0x77c066`, `0x77c08d`, `0x77c0d0`, `0x77c101`, `0x77c13c`, `0x77c153`, `0x77c186`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_insert_refusal_range`
 
 `0x77bee0(text, word, scripts, compose)` refuses when the cursor's byte class is negative and
 `0x77bd30` finds no nonnegative one (`0x77bf0d`); `0x77bf23` deletes the selection; `0x77bf41`
@@ -177,6 +177,8 @@ end while the length exceeds it (`0x77c066`); with `+0x340` nonzero (`0x77c08d`)
 letters exceed it (`0x77c0d0`). It stores the word at `+0x320` when that is 0 (`0x77c101`). With
 `scripts` it runs slot `+0x180` with `"%s"` (`0x77c13c`) and `+0x408` at the first space
 (`0x77c153`, `0x77c186`).
+
+Bit-exact coverage: `ui::editbox_markup_insert_refusal_range` covers `0x77bee0` to `0x77bf0d`, `0x77c1b8` to `0x77c1be` of `0x77bee0`.
 
 ## A negative letter limit hangs
 
@@ -188,13 +190,15 @@ returns early, since the texts are equal.
 Addresses: `0x77c08d`, `0x77c0d0`, `0x77c0e9`, `0x77c280`, `0x77c2a9`, `0x77bb30`, `0x77bbd7`, `0x799110`, `0x7991f2`, `0x77be4b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_has_no_inline_texture_escape`, `ui::editbox_markup_reachable_cursor_indices`, `ui::editbox_markup_step_consumes_whole_characters`, `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class`
 
 `0x77c08d` skips only a limit of 0. The loop calls `0x77c280(−1)` and `0x77bc80` and repeats on
 `jg` (`0x77c0e9`). At cursor 0, `0x77bb30` with −1 returns 0 at `0x77bbd7` (`cmp ecx,edi; jbe`),
 so `0x77c510` deletes nothing. `SetMaxLetters` (`0x799110`) stores the truncated number as given
 (`0x7991f2`). `0x77be00` returns when `0x64a480` finds the texts equal (`0x77be4b`), before
 inserting.
+
+Bit-exact coverage: `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77bb30`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers `0x77bb30` to `0x77bbc9` of `0x77bb30`.
 
 ## Setting and reading text
 
@@ -249,7 +253,7 @@ without `OnTextChanged`.
 Addresses: `0x77a790`, `0x77a7a1`, `0x77d3e0`, `0x77d3f2`, `0x77d433`, `0x77d447`, `0x77d45e`, `0x77d475`, `0x77d498`, `0x77d4d0`, `0x77d863`, `0x77d872`, `0x77d88e`, `0x77d8ad`, `0x77da80`, `0x77de1b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_77a_77a790_fill_accumulate`
 
 `0x77a790` (slot 14) calls `0x76b2c0` then `0x77d3e0` (`0x77a7a1`). `0x77d3e0` keeps bit 1 of
 `+0x31c` in `edi` before it sets bit 1 for a cursor outside `[+0x348, +0x348 + +0x34c]`
@@ -289,7 +293,7 @@ has the focus or not, and losing the focus leaves the selection.
 Addresses: `0x77cca0`, `0x77ccaf`, `0x77ccbe`, `0x77c70b`, `0x77d950`, `0x77de70`, `0x798870`, `0x798951`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_77de70`
 
 `0x77cca0` clamps the start to the length (`0x77ccaf`), the end likewise, and takes the length for
 an end below the start (`0x77ccbe`). `0x77c70b` zeroes both ends without Shift. Neither `0x77d950`
@@ -326,7 +330,7 @@ right, top, bottom)` stores the insets and lays out again.
 Addresses: `0x77a4a0`, `0x77a4b3`, `0x77a509`, `0x77a517`, `0x77a599`, `0x77a5a7`, `0x77a5e2`, `0x77a58f`, `0x77a63f`, `0x77a6e0`, `0x77b8c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_77a_77b8c0_fill_edges`
 
 `0x77a4a0` sets or clears bit 2 (`0x77a4b3`), clears bits 3 to 5 of the label's inherit mask
 `+0x124` on both arms (`0x77a509`, `0x77a599`), and sets `+0x120`'s vertical bits to 8 (`0x77a517`)
@@ -343,7 +347,7 @@ cursor.
 Addresses: `0x87bb68`, `0x799ab0`, `0x799ae0`, `0x797090`, `0x797150`, `0x797210`, `0x7972d0`, `0x797390`, `0x797450`, `0x797510`, `0x7975d0`, `0x797690`, `0x797750`, `0x797810`, `0x7978d0`, `0x797990`, `0x797a50`, `0x797b10`, `0x797bd0`, `0x797c90`, `0x797d40`, `0x797e00`, `0x797eb0`, `0x797f70`, `0x798020`, `0x7980e0`, `0x798190`, `0x798250`, `0x798340`, `0x798400`, `0x7984c0`, `0x7985c0`, `0x798690`, `0x798790`, `0x798870`, `0x798960`, `0x798a60`, `0x798c30`, `0x798d90`, `0x798e60`, `0x798f30`, `0x799040`, `0x799110`, `0x799200`, `0x7992c0`, `0x799390`, `0x799450`, `0x799550`, `0x799610`, `0x7996e0`, `0x799790`, `0x77a650`, `0x77a680`, `0x77a6b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_798a60_set_text_insets`, `ui::luabind_798c30_get_text_insets`
 
 The table holds 48 pairs from `SetFontObject` (`0x797090`) to `GetAltArrowKeyMode` (`0x799790`);
 `0x799ab0` calls `0x701d80` with 0x30. `0x799ae0` (slot 2) looks in the `EditBox` hash, then calls
@@ -351,3 +355,5 @@ The table holds 48 pairs from `SetFontObject` (`0x797090`) to `GetAltArrowKeyMod
 `SetFocus` and `ClearFocus` call `0x77e3d0` and `0x77e410`; `SetNumeric`, `SetPassword` and
 `SetAltArrowKeyMode` set bits 4, 8 and 0x10 through `0x77a650`, `0x77a680` and `0x77a6b0`. No method
 calls `0x77e360`, the cursor setter.
+
+Bit-exact coverage: `ui::luabind_798a60_set_text_insets` covers 4 ranges from `0x798b49` to `0x798bd9` of `0x798a60`; `ui::luabind_798c30_get_text_insets` covers 4 ranges from `0x798cea` to `0x798d68` of `0x798c30`.

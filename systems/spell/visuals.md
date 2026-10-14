@@ -71,7 +71,7 @@ tint; updates every emitter, destroying each whose update returns 0 and returnin
 Addresses: `0x6eca20`, `0x6ecb20`, `0x483460`, `0x870e20`, `0x6eca51`, `0x6eca83`, `0x6ecaa7`, `0x6ecac3`, `0x6ecace`, `0x6ecaf2`, `0x7b0a40`, `0x7b0a80`, `0x4818f0`
 Confidence: verified
 Proof: one
-Test: `spell::spellvisual_fade_clock_difftest`
+Test: `spell::spellvisual_fade_clock_difftest`, `ui::textglue_482_affine_combine`, `ui::textglue_482_cmp_ge`, `ui::textglue_482_delta_is_zero`, `ui::textglue_482_negate`, `ui::textglue_482_unit_convert`
 
 The calls are `0x48372c` and `0x48376a`. `0x6ecb20` is `0x7b0a80(0xcee948, 0x4818f0() + 8)`. In
 `0x6eca20` each node's next is read before its update; `0x6eca51` is `0x6ec460(now)`, and a zero `al`

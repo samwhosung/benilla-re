@@ -108,7 +108,7 @@ the point is inside the frame, edges included, and writes the point unless the d
 Addresses: `0x483ee0`, `0x483efa`, `0x483f4d`, `0x483f6f`, `0x483f7a`, `0x483f89`, `0x483fe0`, `0x484029`, `0x48402e`, `0x484065`, `0x484075`, `0x484086`, `0x484093`, `0x4840a3`, `0x483970`, `0x483982`, `0x483a67`, `0x483a86`, `0x7bcb40`, `0x41ad80`, `0x41ade0`, `0x76b580`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_483ee0`, `ui::apply_rect_screen`
 
 `0x483ee0` builds `(p − camera position, 0)` from the camera at `[this+0x65b8]+8`, transforms it with `0x7bcb40`
 and the matrix at `this+0x3b0`, and returns 0 when `[camera+0x38]` is above the clip z (`0x483f7a`), without
@@ -117,6 +117,8 @@ writing the output. It multiplies by `1/w`, adds 1, multiplies by 0.5 (`0x7ffa24
 `0x483970` runs the base callback `0x76b580`, copies the resolved rectangle to `+0x390`, clamps it to the screen and
 stores it divided by `K1` and `K2` with `0x41ade0` (`0x483a67`, `0x483a86`), clamped to 0..1. The range test
 (`0x484075` to `0x4840a3`) writes the point first (`0x484065`).
+
+`ui::geo_483ee0` runs `0x483ee0` whole, with the matrix transform `0x7bcb40` stubbed to return a chosen clip vector, and `ui::apply_rect_screen` runs `0x76b580` whole.
 
 ## Turning the interface off
 

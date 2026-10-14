@@ -38,7 +38,7 @@ scale. With `UIParent` absent nothing is set.
 Addresses: `0x490770`, `0x490778`, `0x49077f`, `0x490787`, `0x49078f`, `0x49079b`, `0x4907a6`, `0x4907b7`, `0x4907c7`, `0x4907f0`, `0x4907fa`, `0x490801`, `0x490812`, `0x49086a`, `0x4908ad`, `0x494550`, `0x494556`, `0x494563`, `0x49456a`, `0x49457a`, `0x49457f`, `0x76ac10`, `0x768ed0`, `0xb4b44c`, `0xb4e30c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_48fbf0_finite_diff`, `ui::glue_490770_eps_gates`
 
 `0x490770` returns without applying when `useUiScale`'s integer (`+0x28`) is 0 (`0x490781`). Otherwise it
 converts the new text (`0x64aaa0`), multiplies the cached aspect `[0xb4e30c]` by 3 (`0x49079b`) and
@@ -81,7 +81,7 @@ The result is 0.9 at 1920×1080 and 2560×1440 and 0.96 at 1280×800.
 Addresses: `0x492f70`, `0x492f8c`, `0x492fa1`, `0x492fb4`, `0x492fbc`, `0x492fc7`, `0x492fd3`, `0x492fe9`, `0x493005`, `0x493012`, `0x49301d`, `0x493028`, `0x49303a`, `0x4901e0`, `0x491380`, `0x804588`, `0x80458c`, `0x801360`, `0xb4e304`, `0xb4e308`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4901e0_aspect_ratio`, `ui::glue_492_492f70_recip_unit`
 
 `0x492f70(force, width, height)` returns early when `force` is 0 and the width and height equal the
 cached pair at `0xb4e304`/`0xb4e308` (`0x492f8c` to `0x492f99`), else stores them (`0x492fa1`). The scale
@@ -101,9 +101,11 @@ is `768·a / uiScale`.
 Addresses: `0x494590`, `0x494595`, `0x494599`, `0x49459d`, `0x48b480`, `0x48b4d0`, `0x490065`, `0x49006a`, `0x490077`, `0x76c760`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_48b_screen_getters`
 
 `0x494590` loads `UIParent`'s `+0x7c` (`0x494599`) and falls back to 1.0 (`0x49459d`). `UIParent` is
 the frame `0x76c760` finds by the name `UIParent` (`0x490065`, `0x49006a`) and `0x490077` stores. The
 screen functions divide G48 (width: G44) by the reader and multiply by `0.75a · 1024`, then divide by G44
 (`modelview#model-unit-to-pixel`).
+
+Bit-exact coverage: `ui::luabind_48b_screen_getters` covers the whole of `0x494590`.

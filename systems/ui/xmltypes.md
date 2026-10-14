@@ -168,7 +168,7 @@ fonts, then the same font items from `font` to `Shadow`.
 Addresses: `0x76fe20`, `0x76fe2e`, `0x76fe66`, `0x770179`, `0x770f40`, `0x770f4e`, `0x771410`, `0x783c30`, `0x783c3e`, `0x783d38`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_783c30_fontheight_spacing`, `ui::glue_unit_convert_1024`
 
 The names are the strings `0x76fe20`, `0x770f40` and `0x783c30` pass to `0x6f2cf0`, `0x6f2c50` and
 `SStrCmpI`, in the order given: `0x76fe2e` to `0x770179` for `Texture`, `0x770f4e` to the `Offset`

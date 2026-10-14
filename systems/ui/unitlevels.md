@@ -18,10 +18,12 @@ With no object held the answer is the level word at `+0x12` of the party or raid
 Addresses: `0x517fc0`, `0x51801a`, `0x518045`, `0x51805a`, `0x51807b`, `0x51807f`, `0x518084`, `0x5180aa`, `0x5180dd`, `0x5180ea`, `0x518110`, `0x518113`, `0x51811c`, `0x51813e`, `0x496400`, `0x605620`, `0x606980`, `0x6061e0`, `0x808bf4`, `0x8029d0`, `0x7ffa24`, `0x40a2b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_517fc0_unit_level`
 
 The reduction is `trunc(min(drunk, 100) * 5.0 * 0.01 + 0.5)` (`0x5180c8` to `0x5180dd`). The drunk byte is `PLAYER_BYTES_3` byte 1 (`[player+0xe68]+0x1d`). A level of 0 or less is returned as it is. Rule 1 runs before rule 3 and rule 2 on
 its own is independent of the player, so a world boss reads -1 with no active player. No test reads the unit's health, and no branch handles a pet.
+
+Bit-exact coverage: `ui::luabind_517fc0_unit_level` covers `0x5180c8` to `0x5180dd` of `0x517fc0`.
 
 ## The level on a plate
 
@@ -31,7 +33,7 @@ It has no -1 leg, so the plate shows the real level where the Lua function pushe
 Addresses: `0x7cbce0`, `0x7cbd27`, `0x7cbd36`, `0x8029c8`, `0x7cbb7a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7cbce0_percent_round`
 
 The two functions form the product in a different order, `(drunk * 5.0) * 0.01` against `drunk * 0.05`. At the client's 53-bit precision the first gives 0.4999999888 for a drunkenness of 10 where the second gives 0.5000000074, so after adding 0.5 and truncating
 the reduction is 0 against 1; the same holds at 30, 50, 70 and 90, and the two agree at every other value from 0 to 100 (0 to 5 levels). Under a 24-bit precision control both products round to the same single.

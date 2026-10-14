@@ -34,7 +34,7 @@ each CVar accepts.
 Addresses: `0x50b6f0`, `0x50b330`, `0x50b310`, `0x50b380`, `0x50b3c0`, `0x50bfc0`, `0x50bfe0`, `0x50c000`, `0x50c040`, `0x50c060`, `0xbe1084`, `0xbe1040`, `0xbe10c0`, `0xbe1064`, `0xbe10c8`, `0xbe0cf8`, `0xbe0fbc`, `0xbe0f78`, `0xbe1094`, `0xbe10bc`, `0xbe10b0`, `0xbe0e68`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_rad2deg_difftest`
 
 `0x50b6f0` calls `CVar::Register` (`0x63db90`) with the name in `ecx` and the default string, the check and the category 5
 pushed; the record comes back in `eax` and is stored by the first `mov` to memory after the call (`0x50b748`
@@ -209,7 +209,7 @@ forward, backward or strafe bit set, the camera pitch is 0 or less, and it retur
 Addresses: `0x5105a0`, `0x5105e0`, `0x510690`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_cvar_gate_seams`
 
 Each test checks the object's type mask for bit 3 (`shr ecx,3; test cl,1`), so a player passes as well as a unit. `0x5105b8` and
 `0x51061a` read `cameraTerrainTilt` and `cameraBobbing` at `+0x28`; `0x5105ea` compares the distance at `+0xec` with the constant 0x8089ac
@@ -228,7 +228,7 @@ and otherwise the view-customised test of `uicamera/follow`.
 Addresses: `0x5106f0`, `0x5107f0`, `0x510750`, `0x510760`, `0x510850`, `0x510940`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_eps_predicates`
 
 `0x5106f0` and `0x5107f0` sum the three floats and compare the absolute value with 0.001 (`0x510707`, `0x5107fb`). `0x510760` is
 the pitch band (`0x5107b1`, `0x5107cb`) and `0x510850` the yaw band; `0x510750` is `xor eax,eax; ret`.

@@ -191,9 +191,11 @@ once; the first resolution of the frame's rectangle does.
 Addresses: `0x76b580`, `0x76b5db`, `0x76b5eb`, `0x76b5f6`, `0x76b611`, `0x76b613`, `0x76b61e`, `0x8029d4`, `0x769c7a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::apply_rect_screen`
 
 `0x76b580` subtracts the stored rectangle's width from the argument's (`0x76b5db` to `0x76b5e7`), takes the absolute value
 and compares it with the float at `0x8029d4` (`0x76b5eb`); an equal or larger difference goes to the update, and so does the
 height (`0x76b602` to `0x76b611`). At `0x76b613` it reads the backdrop at `+0x1ac` of the frame's layout owner and, when set, calls
 `0x77f0c0` with the current rectangle (`0x76b61e`).
+
+`ui::apply_rect_screen` runs `0x76b580` whole, with the size-changed callback stubbed, and reads whether the size change fires it.

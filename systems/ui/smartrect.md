@@ -94,7 +94,7 @@ beyond an edge the pushes that do not go further out.
 Addresses: `0x509bf0`, `0x509c01`, `0x509c0e`, `0x509c16`, `0x509c26`, `0x509c78`, `0x509c8d`, `0x509c9d`, `0x509cb0`, `0x509ceb`, `0x509d80`, `0x509d82`, `0x509d86`, `0x509d9d`, `0x509dae`, `0x509dbf`, `0x8087cc`, `0x8087d0`, `0x8087d4`, `0x8087d8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_509bf0`
 
 `0x509bf0` builds the flag word: 1 when the left edge is below 0.0, 2 when the right edge is above
 `K1 − 0.0`, 8 when the bottom is below 0.01875 (`0x8087d0`) and 4 when the top is above `K2 − 0.0375`
@@ -103,6 +103,8 @@ takes precedence over the bottom, the left over the right. `0x509d80` is a prior
 with bit 4, else 6 with bit 8, else 4; else bit 4 gives 7 with bit 2, else 2; else bit 2 gives 5 with
 bit 8, else 3; else bit 8 gives 1, else 0. A dominant bit hides the lower ones, so flags 3, 11, 12 and
 14 give regions 4, 6, 2 and 7.
+
+`ui::geo_509bf0` runs `0x509bf0` whole, with the extent functions `0x41ae60` and `0x41ae70` replaced by `fld` islands.
 
 ## Pushes and the overlap test
 
@@ -158,13 +160,15 @@ one at the right clamp (right `K1`). A NaN edge clamps nothing.
 Addresses: `0x509e20`, `0x509e51`, `0x509e55`, `0x509e5a`, `0x509e6b`, `0x509e73`, `0x509e83`, `0x509e8b`, `0x509e9c`, `0x509ea1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_509e20`
 
 `0x509e20` takes `h = top − bottom` and `w = right − left` (`0x509e29` to `0x509e3c`) and `K1`, `K2` from `0x41ae60` and `0x41ae70` with 1.0. The top clamp
 compares `K2` with the top and, when the top is above or equal to it (`fcom`, `test ah,0x41; jp`, which falls through only when exactly one of C0 and C3 is set), stores top `K2` and bottom `K2 − h` (`0x509e51` to `0x509e5f`). The bottom clamp, a compare with 0.0 and `test ah,5`, acts only on a
 negative bottom and stores bottom 0 and top `h` (`0x509e6b` to `0x509e7e`), so after a rectangle taller than the screen it undoes the top clamp. The left clamp
 stores left 0 and right `w` (`0x509e83` to `0x509e96`); the right clamp acts when the right is above `K1`, stores right `K1` and left `K1 − w`
 (`0x509e9c` to `0x509eb2`) and wins for a wider rectangle. Each compare with a NaN takes its skip branch.
+
+`ui::geo_509e20` runs `0x509e20` whole, with the extent functions replaced in the same way.
 
 ## The combat text seat
 
@@ -176,7 +180,7 @@ each string with no option gate, and an off-screen string is destroyed by its ca
 Addresses: `0x509520`, `0x50952d`, `0x509558`, `0x50956f`, `0x50957e`, `0x5095a1`, `0x50964e`, `0x509645`, `0x6c7cc0`, `0x6c7ea3`, `0x6c7d96`, `0x6c7d9f`, `0x483ee0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_483ee0`
 
 `0x509520(id, rect)` takes the half extents `|right − left|·0.5` and `|top − bottom|·0.5` and the
 height, normalises, calls `0x509720(…, id, …)`, clamps the solved centre x to `[halfW, K1 − halfW]` and
@@ -185,6 +189,8 @@ claims it with `0x509660` (`0x50964e`), writing the rectangle back to the caller
 `0x6c7cc0`, which returns before it when the projection `0x483ee0` fails (`0x6c7d9f`). The caller turns the returned
 rectangle's centre back with `0x41ae40` and `0x41ae50`, so a string whose blocker has gone returns to its
 desired place next frame.
+
+`ui::geo_483ee0` runs `0x483ee0` whole, with the matrix transform `0x7bcb40` stubbed to return a chosen clip vector.
 
 ## Per frame order
 

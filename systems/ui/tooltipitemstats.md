@@ -33,7 +33,7 @@ every later one the `PLUS_` key.
 Addresses: `0x52c22b`, `0x52c234`, `0x52c245`, `0x52c253`, `0x52c261`, `0x52c263`, `0x52c269`, `0x52c27d`, `0x52c27f`, `0x52c285`, `0x52c290`, `0x52c298`, `0x52c2a0`, `0x52c2a6`, `0x52c2bd`, `0x52c2cb`, `0x52c2e5`, `0x52c2ed`, `0x52c2f7`, `0x52c305`, `0x52c35a`, `0x52c35f`, `0x52c3ae`, `0x52c3c0`, `0x52c3ce`, `0x52c3fc`, `0x52c402`, `0x52c407`, `0x52c44a`, `0x52c44f`, `0x52c473`, `0x52c517`, `0x52c521`, `0x52c537`, `0x52c547`, `0x808120`, `0x7ffd74`, `0x40a2b0`, `0x530270`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_52b_accumulate`, `ui::textglue_52b_bias_round_pair`, `ui::textglue_52b_half_quantize`
 
 The loop runs five times with a cursor from `record+0xcc` (`0x52c22b`, `0x52c245`); minimum, maximum and
 school are read at the cursor minus 0x14, at the cursor and at the cursor plus 0x14 (`0x52c253`,
@@ -59,7 +59,7 @@ a line adds nothing to the sum. Ammunition shows neither. There is no guard for 
 Addresses: `0x52c48f`, `0x52c494`, `0x52c49c`, `0x52c4a3`, `0x52c4bf`, `0x52c4ce`, `0x52c4de`, `0x52c4f3`, `0x52c51c`, `0x52c528`, `0x52c52b`, `0x52c531`, `0x52c54d`, `0x52c552`, `0x52c55a`, `0x52c561`, `0x52c580`, `0x52c595`, `0x52c59b`, `0x52c5c1`, `0x854c5c`, `0x7ffa24`, `0x801360`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_52b_accumulate`, `ui::textglue_52b_final_divide`, `ui::textglue_52b_scale_001`
 
 `0x52c494` and `0x52c49c` jump to `0x52c4f3`, which stores an empty string in the right cell, unless
 the first-line flag is set and the class is 2. The delay is `fild [rec+0x110]` times the float `0x801360`
@@ -67,6 +67,8 @@ the first-line flag is set and the class is 2. The delay is `fild [rec+0x110]` t
 `(max + min) * 0.5` of the floats after the line is added (`0x52c51c` to `0x52c534`). The DPS test needs a
 cleared first-line flag (`0x52c552`) and class 2 (`0x52c55a`); the quotient is `fdivr` of the
 accumulator by the delay (`0x52c59b`) and the line is added with white and wrap 0 (`0x52c5c1`).
+
+Bit-exact coverage: `ui::textglue_52b_accumulate` covers `0x52c51c` to `0x52c547` of `0x52b650`; `ui::textglue_52b_final_divide` covers `0x52c57d` to `0x52c5a8` of `0x52b650`; `ui::textglue_52b_scale_001` covers `0x52c4bf` to `0x52c4e9` of `0x52b650`.
 
 ## Armor and block
 

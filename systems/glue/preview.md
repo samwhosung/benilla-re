@@ -58,7 +58,7 @@ collector is cleared each frame. A material with render-flag bit 0x02 is exempt 
 Addresses: `0x76d680`, `0x76d68a`, `0x76d7c1`, `0x71c110`, `0x70bb24`, `0x70bb2f`, `0x70bb3d`, `0x70bb46`, `0x71bc30`, `0x472144`, `0x76ee60`, `0x76f1e0`, `0x76f390`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d680_color_pack`
 
 `0x76d680` tests the frame's fog bit (`+0x3a4`) and calls `0x71c110` with the colour and `+0x3ac`,
 `+0x3b0`, which stores near, far and `1/(far − near)` at collector `+0x184` to `+0x18c`. At draw
@@ -77,7 +77,7 @@ bracket has just bound when `gxMultisample` is 1.
 Addresses: `0x76d240`, `0x76d5d7`, `0x76d5dc`, `0x76d5e1`, `0x58a970`, `0x59b910`, `0x59b9bd`, `0x59b9c6`, `0x591b34`, `0x5a17d0`, `0x6cd944`, `0x6cd958`, `0x6cd973`, `0x6cd978`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d240_change_detect_and_scale`
 
 `0x76d5dc mov ecx,2; call 0x58a970` is the one clear in the draw; `0x58a970` calls device slot
 `+0x6c`. In `0x59b910` `test al,1` sets `0x4000` and `test al,2` sets `0x100`. The colour is

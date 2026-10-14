@@ -52,7 +52,7 @@ with mask `1 << point`, and lays itself out when the flag is set. The unreached 
 Addresses: `0x767c70`, `0x767c7f`, `0x767cb6`, `0x767ccb`, `0x767d29`, `0x767d49`, `0x767b50`, `0x767bab`, `0x81c42c`, `0x81c43c`, `0x81c44c`, `0x767be0`, `0x767bf0`, `0x767c00`, `0x767d70`, `0x767c10`, `0x767c40`, `0x767d80`, `0x8029d4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_767_767c70_anchor_change_detect`
 
 The equality test is `fld [edi+0x4]; fsub [ebp+0x14]; fabs; fcomp [0x8029d4]` with `test ah,0x5;
 jp` at `0x767cb6` and again for y at `0x767ccb`; `0x8029d4` holds 0x34800000, 2⁻²². The vtables:
@@ -73,7 +73,7 @@ so that its left (for x) or bottom (for y) is 0.
 Addresses: `0x7a2f90`, `0x7a3070`, `0x7a2fb8`, `0x7a2fc0`, `0x768060`, `0x7680bf`, `0x7a2fcc`, `0x7a2fda`, `0x7a2ffc`, `0x7a3003`, `0x7a300a`, `0x7a301a`, `0x7a3035`, `0x7a3045`, `0x7a3054`, `0x7a3060`, `0x7a3134`, `0x7a3140`, `0xcf550c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::anchor_resolve_x`, `ui::anchor_resolve_y`
 
 `0x7a2f90` tests flag 2 of the relative frame's `+0x3c` and calls `0x768060(0)` (`0x7a2fb8`,
 `0x7a2fc0`), which clears the flag (`0x7680bf`) and calls `0x7680e0(1)` only when flag 4 is set;
@@ -83,6 +83,8 @@ it reads its rectangle with `0x768320` (`0x7a2fcc`) and returns `[0xcf550c]` on 
 into the jump table `0x7a3054`; the cases compute `fld [ebp+8]; fmul [esi+4]; fadd left`, `(right
 + left)·0.5 + s·x` and `s·x + right`. `0x7a3070` uses `0x7a3140` (0,0,0,1,1,1,2,2,2) and `+0x8`.
 `s` is the argument the edge resolvers push, the anchoring frame's `+0x58` (`0x7671bf`).
+
+`ui::anchor_resolve_x` and `ui::anchor_resolve_y` run `0x7a2f90` and `0x7a3070` whole and compare their `st0` results.
 
 ## Edge resolution from points
 
@@ -95,7 +97,7 @@ vertical centre 3, 4, 5. A NaN from a point counts as found. Each resolver sets 
 Addresses: `0x7671a0`, `0x7671f0`, `0x7673d0`, `0x767540`, `0x7674d0`, `0x7675b0`, `0x767260`, `0x767360`, `0x81c3b8`, `0x81c3c4`, `0x81c3d0`, `0x81c3dc`, `0x81c3e8`, `0x81c3f4`, `0x7671ca`, `0x7671d5`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_767_span`, `ui::layout_composed_resolve`
 
 `0x7671a0` loops over a list of point indices, calls slot 4 (x) of each present point with
 `[edi+0x58]` and returns the first result for which `fcomp [0xcf550c]; test ah,0x44; jp` jumps
@@ -106,6 +108,8 @@ each, are `0x81c3d0` {0,3,6} for left (`0x7673d0`, bit 1), `0x81c3e8` {2,5,8} fo
 `0x81c3c4` {3,4,5} for the vertical centre (`0x767360`, bit 0x20). Each tests its bit first
 (`test al,0x1` at `0x7673d6`), returns `[0xcf550c]` when set, and clears it on the way out
 (`0x767430`).
+
+`ui::layout_767_span` runs the span operations of the six edge resolvers, from the `fmul` to the `fstp`, as copies of the exe's own bytes asserted equal to the source. `ui::layout_composed_resolve` runs the six resolvers and the point scans for real, through `0x767a20`.
 
 ## Edge resolution from size
 
@@ -120,7 +124,7 @@ Otherwise the result is +∞.
 Addresses: `0x767440`, `0x7672d0`, `0x767333`, `0x76748b`, `0x76749d`, `0x767409`, `0x76740c`, `0x767412`, `0x767417`, `0x767422`, `0x76742b`, `0x767299`, `0x7672b9`, `0x7ffa24`, `0x7ffd74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_combine_edge`, `ui::layout_combine_center`
 
 Left (`0x7673d0`): `call [eax+0x1c]; fmul [esi+0x58]; fchs` pushes `−d`, then right and the centre,
 then calls `0x767440(centre, right, −d)`. `0x767440(a, b, c)`: if `b ≠ +∞` and `c ≠ 0`, `b + c`
@@ -130,6 +134,8 @@ bottom passes top with `−d`. `0x7672d0(near, far, d)`: `(near + far)·0.5`, `d
 `far − d·0.5` by `fsubr` at `0x76734c`, after `far ≠ +∞` and `d ≠ 0` (`0x767333`). Equality with +∞
 and with 0.0 (`0x7ffd74`) is `test ah,0x44; jnp`, which jumps on equal only, so NaN takes the
 not-equal side. 0.5 is `0x7ffa24`. The arguments pass as floats; results return in `st0` at 53 bits.
+
+`ui::layout_combine_edge` and `ui::layout_combine_center` run `0x767440` and `0x7672d0` whole and compare their `st0` results.
 
 ## Rectangle calculation and screen clamp
 
@@ -142,7 +148,7 @@ screen height (`0x41ae70(1.0)`) shifts both y edges down.
 Addresses: `0x767a20`, `0x767a28`, `0x767a46`, `0x767a60`, `0x767a7b`, `0x767a99`, `0x767aa8`, `0x767ac8`, `0x767ae5`, `0x767aef`, `0x767b14`, `0x767b1e`, `0x41ae60`, `0x41ae70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_assemble_rect`, `ui::layout_composed_resolve`
 
 `0x767a20` stores each edge with `fst` into the output (`+0x4`, `+0x0`, `+0xc`, `+0x8`) and
 returns 0 when `fcomp [0xcf550c]; test ah,0x44; jnp` finds +∞. The clamp tests `[edi+0x3c]` bit
@@ -150,6 +156,8 @@ returns 0 when `fcomp [0xcf550c]; test ah,0x44; jnp` finds +∞. The clamp tests
 `right − left` replaces right and left becomes 0 (`0x767ab8`). For the far side, `fcom
 [esi+0xc]` with the screen width in `st0` skips when the width is not below right; else left
 becomes `left − (right − width)` and right becomes the width (`0x767af9` to `0x767b04`).
+
+`ui::layout_assemble_rect` runs `0x767a20` with the four edge resolvers and the two extent functions replaced by `fld` islands. `ui::layout_composed_resolve` runs it whole over a synthesized frame and anchor graph.
 
 ## Resolving and the changed callback
 
@@ -162,7 +170,7 @@ clear. `CLayoutFrame`'s own slot 0 lays out every dependent.
 Addresses: `0x768d20`, `0x768d49`, `0x768d55`, `0x768d63`, `0x768d6e`, `0x768dc2`, `0x768df4`, `0x768e0e`, `0x768e14`, `0x80c5c8`, `0x768cf0`, `0x81c400`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_recompute`
 
 `0x768d20` calls `0x767a20` on a zeroed local (`0x768d49`); `and ecx,0xfffffffe; or ecx,0x8`
 (`0x768d55`). On success `and ecx,0xfffffff3` (`0x768d63`); the four `fabs; fcomp [0x80c5c8]`
@@ -170,6 +178,8 @@ tests (0x3727c5ac, 10⁻⁵) compare left, right, bottom, top with `+0x44`, `+0x
 The old rectangle is copied to a local, the new stored, `or ecx,0x1` (`0x768df4`), and `call
 [eax]` (`0x768e0e`) is slot 0, `0x768cf0` in `0x81c400`, which calls `0x7680e0(0)` on the frame of
 each node of `+0x34`.
+
+`ui::layout_recompute` runs `0x768d20` whole, with `0x767a20` and slot 0 replaced by stubs.
 
 ## Dependents
 
@@ -261,7 +271,7 @@ out.
 Addresses: `0x7683d0`, `0x7683f0`, `0x768360`, `0x768366`, `0x768373`, `0x76838f`, `0x7683a5`, `0x7683c3`, `0x768410`, `0x768420`, `0x768320`, `0x768c70`, `0x768c8f`, `0x768ca9`, `0x768cc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_767_768360_rsub_change_detect`
 
 `0x7683d0` and `0x7683f0` store the argument, `and edx,0xfffffff7` and call `0x7680e0(0)`.
 `0x768360` returns 0 after `SErrSetLastError(0x57)` when `fcomp 0.0` is equal (`0x768366`); the

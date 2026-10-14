@@ -120,7 +120,7 @@ are 0, 0 and 0.0, and for a non-player they are 0, 0 and 1.0.
 Addresses: `0x518c20`, `0x518c72`, `0x518cce`, `0x518d06`, `0x518d0f`, `0x518d47`, `0x518d50`, `0x518d7a`, `0x518d9e`, `0x518dbc`, `0x518dd2`, `0x518deb`, `0x518910`, `0x518977`, `0x5189a3`, `0x5189e1`, `0x5189ec`, `0x518a21`, `0x518a3b`, `0x518a77`, `0x518ac0`, `0x518af7`, `0x518b0e`, `0x518b1d`, `0x518b33`, `0x518b3a`, `0x5f0d60`, `0x7ffd74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_518910_unit_ranged_damage`
 
 An absent unit gives seven zeros (six for the ranged function). The positive and negative bonuses are `fild` of a
 `mov`ed word and the percent is `fld dword` straight off the descriptor, so one function types two adjacent arrays as
@@ -128,6 +128,8 @@ integers and the third as a float. The ranged school: `0x5f0d60(unit, 0x11)` ret
 is fetched from the item cache and the first of five damage lines whose float at `+0xb8` is above 0 gives the school
 at `+0xe0` (else school 0); the three values are read at `base + school*4`. A non-player answers the percent with the
 literal 1.0 (`0x518dd2`, `0x518b33`) and a player that is not the local one with the zero constant.
+
+Bit-exact coverage: `ui::luabind_518910_unit_ranged_damage` covers `0x518987` to `0x518998`, `0x518a23` to `0x518a2e` of `0x518910`.
 
 ## Attack speed
 
@@ -139,11 +141,13 @@ class 2), and nil otherwise.
 Addresses: `0x518e50`, `0x518ea0`, `0x518eb0`, `0x518ed7`, `0x518f09`, `0x518f14`, `0x518f19`, `0x518f24`, `0x518f34`, `0x518f4b`, `0x518f55`, `0x518f60`, `0x5d9f30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_518e50_unit_attack_speed`
 
 The scale constant is the float 0.001 at `0x801360`; `fild qword` reads the 32-bit field zero-extended. The slot test
 is `cmp [esi+0x1d38],0x10; ja`, then the item GUID at `[[unit+0x1d3c]+0x80]` resolves through `0x468460` with the item
 mask; `0x5d9f30` returns the item class from the item cache.
+
+Bit-exact coverage: `ui::luabind_518e50_unit_attack_speed` covers `0x518eb0` to `0x518ec1`, `0x518f34` to `0x518f45` of `0x518e50`.
 
 ## Attack power
 
@@ -157,7 +161,7 @@ the unit family gets the real answer; a missing unit or non-unit gets zeros.
 Addresses: `0x518f80`, `0x518fe2`, `0x518fe8`, `0x518fee`, `0x518ff4`, `0x518ffa`, `0x519019`, `0x519051`, `0x519088`, `0x5190c0`, `0x7ff9d8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::unit_attack_power`, `ui::unit_ranged_attack_power`
 
 The sequence is `fld m; fadd 1.0; fimul x` at 53-bit precision, `fstp` to a single, then `fistp` (ties to even)
 (`0x518fe2` to `0x518ffa`).
@@ -166,6 +170,8 @@ Each block is `fld [m]; fadd 1.0; fimul x; fstp dword; fld dword; fistp dword; f
 product is stored as a single float before the rounding to an integer by `fistp` under round-to-nearest. The mods are
 loaded with `movsx` from `+0x280` and `+0x282` (`0x519019`, `0x519051`). The ranged function repeats this over the
 three ranged fields.
+
+`ui::unit_attack_power` and `ui::unit_ranged_attack_power` run `0x518f80` and `0x5190c0` whole, with the type guard `0x6f3510`, the argument fetch `0x6f3690` and the unit resolve `0x515940` stubbed and `lua_pushnumber` captured.
 
 ## Defense and weapon skills
 

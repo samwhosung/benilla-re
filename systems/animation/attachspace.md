@@ -17,12 +17,14 @@ callers pass a zero vector, since a model frame's camera is its own origin. Twel
 Addresses: `0x707680`, `0x48368a`, `0x46c4c6`, `0x50596a`, `0x50c7ad`, `0x50f0df`, `0x52557a`, `0x525640`, `0x6d4b4f`, `0x6d4c1a`, `0x76ce39`, `0x76d619`, `0x7e619b`, `0x58b0b0`, `0x482b11`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_tick_scale`
 
 `0x48367e mov eax,[edi+0x65b8]; add eax,8; push eax` precedes the call, and `0x482b11` copies the same three dwords into the frame's
 camera field. Nine sites build a vec3 of three zero dwords on their frame and push it (`0x46c4b1`, `0x50594e`, `0x50c791`, `0x50f0c3`,
 `0x52555c`, `0x6d4b3a`, `0x6d4c05`, `0x76ce1d`, `0x7e6186`). `0x525640` and `0x76d619` push a vector filled elsewhere in their frames.
 `0x707690` and `0x7076c6` read the device's matrix through `0x58b0b0`, which copies 16 dwords of the stack entry `[dev+0x1ac0]`.
+
+Bit-exact coverage: `ui::textglue_482_tick_scale` covers `0x482b08` to `0x482b36` of `0x482ad0`.
 
 ## Eye-space palette
 

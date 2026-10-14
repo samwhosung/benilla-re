@@ -163,11 +163,13 @@ handle in `0xbe2c60`, and call `0x523840`.
 Addresses: `0x523820`, `0x523840`, `0x5239d0`, `0x523a30`, `0x523a70`, `0x523b30`, `0xbe2c48`, `0xbe2c60`, `0xbe1c28`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_523840`
 
 An item or preview icon is `Interface\Icons\` plus its basename. `0x5238a4` and `0x5238ac` test both texture sizes against 0x40. The box filter at `0x5238e1` sums four texels per
 channel with a rounding term of 2. `0x523820` frees the handle when the payload is cleared. `0x523a70` builds the
 path from `StringLookups` row 3 (`0x53f810`) and `0x5d8af0` with the format `%s%s%s`.
+
+`ui::geo_523840` runs `0x523840` whole, with the texture calls `0x44ae00`, `0x44b3b0`, `0x41aed0` and `0x523790` stubbed.
 
 ## Sending the picture
 

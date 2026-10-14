@@ -139,7 +139,7 @@ point that does not project releases the text.
 Addresses: `0x6c7cc0`, `0x6c7cf7`, `0x6c7d0a`, `0x6c7d24`, `0x6c7d58`, `0x6c7d96`, `0x6c7da8`, `0x6c7dae`, `0x6c7dc0`, `0x6c7e7b`, `0x6c7ea3`, `0x509520`, `0x6c7eab`, `0x6c7ed5`, `0x6c7eff`, `0x832a44`, `0x832a48`
 Confidence: verified
 Proof: one
-Test: `playername::pn_label_clip_quad`, `playername::pn_label_clip_quad_world_z`
+Test: `playername::pn_label_clip_quad`, `playername::pn_label_clip_quad_world_z`, `ui::glue_509_509520_viewport_clamp`
 
 With `e = now − [+0x24]` and `d` the category duration, `0x6c7cc0` returns 0 when `e ≥ d`
 (`0x6c7ce3`). It calls the size `0x6c80b0`; with no string it returns 1 there. Otherwise it calls the alpha

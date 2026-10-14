@@ -32,9 +32,11 @@ tints the model: green at alpha 0x40 in range, red out of range.
 Addresses: `0x4837b0`, `0x6d7330`, `0x6e6970`, `0x670cf0`, `0xb4b344`, `0xb4b3a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_corner_build`
 
 `0x4837ba` fetches the placement model; `0x4837e9` positions the tint with the model's own box and `0x483811` and `0x48381a` pick the colour 0x4000ff00 or 0x40ff0000 by the state. `0x483841` to `0x483858` take the radius or the default 0x3fb1c71c. `0x48387e` to `0x4838ed` build the two corners with the position and 2 (0x801628). `0x4838f0` to `0x483917` set render states 0xe, 0x12 and 7. `0x483922` indexes the texture table `0xb4b344` by the state and `0x483940` binds the texture at stage 0x17. `0x48395a` calls the projector with colour 0xffffffff.
+
+Bit-exact coverage: `ui::textglue_482_corner_build` covers `0x48387e` to `0x4838f0` of `0x4837b0`.
 
 ## The decal passes
 

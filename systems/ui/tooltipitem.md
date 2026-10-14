@@ -32,7 +32,7 @@ that depends on a running time was emitted, else 0, and the methods hand it to L
 Addresses: `0x52b650`, `0x52b671`, `0x52b67e`, `0x52b683`, `0x52b69e`, `0x52b6a5`, `0x52b6af`, `0x52b722`, `0x52b72b`, `0x52b730`, `0x52b763`, `0x52b777`, `0x52b874`, `0x52bfa6`, `0x52ca82`, `0x52ce0d`, `0x52e140`, `0x52e4b5`, `0x52e4ba`, `0x52e4c4`, `0x468460`, `0x55ba30`, `0x530050`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_52b_accumulate`, `ui::textglue_52b_bias_round_pair`, `ui::textglue_52b_final_divide`, `ui::textglue_52b_half_quantize`, `ui::textglue_52b_scale_001`
 
 `0x52b671` reads p7; zero calls `0x530050` (`0x52b67e`). `0x468460(0x10, …)` of the active player
 (`0x52b699`) failing stores 0 at `+0xd0` and calls slot 0x84 (`0x52b6a5`, `0x52b6af`); a missing record
@@ -40,6 +40,8 @@ does the same only when p7 is zero (`0x52b730`). The return value lives in `[ebp
 `0x52b763` and set to 1 at `0x52bfa6` (a lock line), `0x52ca82` (a timed enchant), `0x52ce0d`
 (the item's duration) and `0x52e140` (a cooldown). The tail stores 1 at `+0xd0` and calls slot 0x88
 (`0x52e4ba`, `0x52e4c4`). `0x52b874` adds the p7 newline.
+
+Bit-exact coverage: `ui::textglue_52b_accumulate` covers `0x52c51c` to `0x52c547` of `0x52b650`; `ui::textglue_52b_bias_round_pair` covers `0x52c250` to `0x52c285` of `0x52b650`; `ui::textglue_52b_final_divide` covers `0x52c57d` to `0x52c5a8` of `0x52b650`; `ui::textglue_52b_half_quantize` covers `0x52c2ed` to `0x52c305`, `0x52c3b6` to `0x52c3ce` of `0x52b650`; `ui::textglue_52b_scale_001` covers `0x52c4bf` to `0x52c4e9` of `0x52b650`.
 
 ## Fields kept for a rebuild
 
@@ -103,7 +105,7 @@ and ends before the description. It is kept in `+0x3a0`, so a rebuild stays trim
 Addresses: `0x532ee0`, `0x532f94`, `0x532fa9`, `0x532faf`, `0x533020`, `0x533027`, `0x53302a`, `0x53303a`, `0x53303f`, `0x533047`, `0x53304a`, `0x53304c`, `0x533106`, `0x533267`, `0x5332ad`, `0x53340a`, `0x52b8b3`, `0x52bac3`, `0x52c225`, `0x52e14c`, `0x6f4940`, `0x802970`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_512_532ee0_setinventoryitem_slot`
 
 Of the 31 calls of the builder, 27 push a literal or register zero for p4, `0x52e5a7` forwards `+0x3a0`, and
 `0x533267`, `0x5332ad` and `0x53340a` push the local at `[ebp-0x10]`. That local is seeded 0 at

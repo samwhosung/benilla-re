@@ -85,7 +85,7 @@ time first; 7 the public note. Equal members compare 0.
 Addresses: `0x4d0d50`, `0x4d0d60`, `0x4d0d69`, `0x4d0d77`, `0x4d0db4`, `0x4d0f44`, `0x4d0e4e`, `0x4d0dcd`, `0x4d0dbb`, `0x4d0e67`, `0x4d0ded`, `0x4d0efd`, `0x4d0ebd`, `0x4d0edf`, `0x4d0f19`, `0x4d0f36`, `0x73f727`, `0x64a4c0`, `0xb72680`, `0xc0def4`, `0xc0e048`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4d0d50`
 
 `0x4d0d60` skips the online pre-gate when `0xb73124` is set. The jump table `0x4d0f44` holds the eight keys; key 5
 points at `0x4d0efd`, the loop's own continue. The rank compare `cmp ecx,eax` / `sbb eax,eax` returns -1 when
@@ -95,6 +95,8 @@ unordered values all give +1, so equal members never compare 0 there. The zone n
 `[AreaTable row + 0x2c + 4*locale]` (`0x4d0eac`) and the class name `[ChrClasses row + 0x14 + 4*locale]`
 (`0x4d0e3a`); an id that is negative or past the store's maximum gives no row. The notes are read through
 `0x4d09b0`.
+
+Bit-exact coverage: `ui::sortcmp_4d0d50` covers 6 ranges from `0x4d0d50` to `0x4d0f43` of `0x4d0d50`.
 
 ## Changing the order
 
@@ -149,12 +151,14 @@ index out of range, and raises `Usage: SetGuildRosterSelection(index)` without a
 Addresses: `0x4d14a0`, `0x4d14fd`, `0x4d1508`, `0x4d1514`, `0x4d1521`, `0x4d1529`, `0x4d153c`, `0x4d1544`, `0x4d1584`, `0x4d158a`, `0x4d1590`, `0x4d1820`, `0x4d1890`, `0x4d1030`, `0xb73128`, `0x40a2b0`, `0x80733c`, `0x807338`, `0x807334`, `0x807330`, `0x80732c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4d14a0_guild_last_online`
 
 The constants are the floats 1/365 (`0x3b338cfa`), 365.0, 1/30 (`0x3d088889`), 30.0 and 24.0. Every truncation
 is `__ftol`, toward zero. The remainder after the months is stored to a 4-byte slot (`0x4d1544`), which narrows it to
 a float, and both the days and the hours are taken from that narrowed value; the other steps stay on the x87 stack.
 `0x4d1030` searches the array for the stored GUID and returns the 0-based index or -1; the binding adds 1.
+
+Bit-exact coverage: `ui::luabind_4d14a0_guild_last_online` covers `0x4d1508` to `0x4d15a3` of `0x4d14a0`.
 
 ## Notes and text
 

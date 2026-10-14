@@ -270,12 +270,14 @@ flag set, so the builder takes its suffix path and does not print the random enc
 Addresses: `0x533470`, `0x533541`, `0x533551`, `0x533556`, `0x53355b`, `0x533573`, `0x53359c`, `0x5335af`, `0x5335b7`, `0x5335ba`, `0x5335c5`, `0x5335d0`, `0x5335d9`, `0x5335df`, `0x5335ef`, `0x4c22a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_533470_set_loot_item`
 
 `0x533541` subtracts 1.0 and `0x533547` truncates. `0x533551` calls the entry getter and `0x53355b jle` leaves. The two
 `rep stos` of seven dwords (`0x533573`, `0x53357d`) clear the block from `tooltip+0x3d0`; `0x53359c` stores -1 at `+0x428`;
 `0x5335b7` and `0x5335bf` store the row's link number (`+0x420`) and random property (`+0x424`). The builder arguments are the
 entry, `&0xb71b48`, `&{0, 0}`, 0, 0, 1 for the block flag (`0x5335c5 push 1`) and zeros.
+
+Bit-exact coverage: `ui::luabind_533470_set_loot_item` covers `0x53353c` to `0x533547` of `0x533470`.
 
 ## Auto-loot
 

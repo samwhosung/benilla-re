@@ -62,7 +62,7 @@ is compared at those two arms only, so the unit's own model events (`0x5ffbd0`) 
 Addresses: `0x511d40`, `0x5d592b`, `0x5f3fc2`, `0x5fc0ae`, `0x625c56`, `0x6ecb74`, `0x6ecb40`, `0x60f4e6`, `0x620e11`, `0x5d58e9`, `0x5f3f40`, `0x5ffbd0`, `0x5fbf70`, `0x625c30`, `0x5d58c0`, `0x5f3e20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_511_511d40_scale_recip36`
 
 The scan of the listing for `call 0x511d40` finds five sites (`0x5d592b`, `0x5f3fc2`, `0x5fc0ae`, `0x625c56`,
 `0x6ecb74`); for `call 0x6ecb40` two (`0x60f4e6`, `0x620e11`). The dword scans of the image for `0x511d40`,

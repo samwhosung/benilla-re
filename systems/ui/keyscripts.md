@@ -30,7 +30,7 @@ character lists the same way. Another channel, walked like characters, reaches o
 Addresses: `0x765f10`, `0x765f56`, `0x765f61`, `0x765f70`, `0x765f7a`, `0x765f96`, `0x765fa2`, `0x765fb4`, `0x765fd0`, `0x765fde`, `0x765ff2`, `0x766025`, `0x766028`, `0x76603c`, `0x766048`, `0x76605b`, `0x766070`, `0x76607b`, `0x7660b8`, `0x765df0`, `0x765e80`, `0x764aa0`, `0x764ac3`, `0x46ff80`, `0x46ff90`, `0x765bf0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::input_hittest_index_insert`
 
 `0x765f10` starts at `root+0xf20` and subtracts 0x1c before each use, so the records are strata 8 to 0, and
 a record is `root + 0xd10 + (stratum + 9·kind)·0x1c` (`0x764ac3`); it stores the cursor before the call, calls `[vt+0x60]` and on
@@ -41,6 +41,8 @@ frame it answers 1, except for code `0x212`, which has no key down and is offere
 with a frame in the slot leaves it set and the slot is the last taker of the code. On that null leg for code `0x212` the walk `0x765f10` may first store a frame at
 `0x765fa2`, and `0x76605b` then clears it. The slots `0x46ff80` and `0x46ff90` of the base are `xor eax,eax; ret 4`.
 Four instructions address the slot, `0x765fa2`, `0x765fde`, `0x76605b` and `0x76607b`.
+
+`ui::input_hittest_index_insert` runs `0x764aa0` whole.
 
 ## The test a frame makes
 

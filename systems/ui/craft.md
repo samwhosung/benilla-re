@@ -52,9 +52,12 @@ header count becomes 0, so no header shows and the buckets, names and levels dec
 Addresses: `0x4f675b`, `0x4f6765`, `0x4f6785`, `0x4f6756`, `0x4f6920`, `0x4f67a0`, `0x4f6984`, `0x4f69cc`, `0x4f69e5`, `0x4f6a34`, `0x4f6a52`, `0x4f6a5b`, `0x4f6a65`, `0x4f6ac0`, `0x4f6b1e`, `0x4f65fb`, `0x4f6602`, `0x4f6630`, `0x64a4c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::listorder_craft_beast_training_e2e`, `ui::sortcmp_4f67a0`, `ui::sortcmp_4f6920`
 
 `0x4f6a57 test eax,eax; jne` reaches the level key only when the name compare gives 0. The level key never returns 0 for equal
 levels, which is harmless for the shipped spells. `0x4f65fb cmp ecx,1; jne` followed by the store of 0 at `0x4f6602` is the
 single-group suppression. The three comparators contain three calls in total, all to the case-insensitive compare, and no
 read of the rank text (`+0x204`).
+
+`ui::listorder_craft_beast_training_e2e` runs `0x4f6630` whole on a synthesized list, with the real `qsort`, comparator and collator, and reads the sorted rows.
+Bit-exact coverage: `ui::sortcmp_4f67a0` covers `0x4f67a0` to `0x4f67ef`, `0x4f67f3` to `0x4f691c` of `0x4f67a0`; `ui::sortcmp_4f6920` covers `0x4f6920` to `0x4f696f`, `0x4f6973` to `0x4f6abc` of `0x4f6920`.

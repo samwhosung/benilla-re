@@ -40,7 +40,7 @@ millisecond.
 Addresses: `0x76d7f0`, `0x76d7fa`, `0x76d843`, `0x76d846`, `0x76d854`, `0x76d85c`, `0x76d863`, `0x8022cc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76d7f0_unit_convert`
 
 `0x76d7f0`, slot 14, calls `0x76b2c0` (`0x76d7fa`), multiplies the frame time by 1000.0 at
 `0x8022cc` (`0x76d846`), truncates with `0x40a2b0` (`0x76d854`), and passes the result to
@@ -74,10 +74,12 @@ seq, −1, 0, 1.0, 0, 1)` on `+0x318` (`0x76cf70`). `0x76dfc0` reads two numbers
 Addresses: `0x878948`, `0x76f840`, `0x76f870`, `0x84f1fc`, `0x506230`, `0x506260`, `0x84f190`, `0x5050a0`, `0x5050d0`, `0x84ee40`, `0x503ba0`, `0x503bd0`, `0x76d950`, `0x76da50`, `0x76db20`, `0x76dc00`, `0x76dce0`, `0x76ddd0`, `0x76dec0`, `0x76dfc0`, `0x76e0e0`, `0x76e1e0`, `0x76e7d0`, `0x76ea40`, `0x76eb20`, `0x76ebe0`, `0x76eca0`, `0x76ed70`, `0x76ee60`, `0x76f080`, `0x76f1e0`, `0x76f2d0`, `0x76f390`, `0x76f480`, `0x76f540`, `0x505d70`, `0x505e40`, `0x505f00`, `0x504c00`, `0x504cd0`, `0x504d90`, `0x502b10`, `0x502bd0`, `0x502ca0`, `0x502dc0`, `0x502ea0`, `0x502f80`, `0x503070`, `0x503160`, `0x503540`, `0x503910`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_76e1e0_set_light`, `ui::luabind_76ee60_setfog_76e1e0_setlight_quantize`, `ui::luabind_76f080_get_fog_color`
 
 The tables are pairs of a name and a function: `Model` from `SetModel` (`0x76d950`) to `ClearFog`
 (`0x76f540`), `TabardModel` from `InitializeTabardColors` (`0x502b10`) to `CanSaveTabardNow`
 (`0x503910`). The registrars call `0x701d80` with 0x17, 3, 3 and 0xa. Slot 2 of each looks in its
 own hash: `0x5050d0` and `0x503bd0` then call `0x506260`, which calls `0x76f870`, which calls
 `0x778590`.
+
+Bit-exact coverage: `ui::luabind_76e1e0_set_light` covers 4 ranges from `0x76e41f` to `0x76e777` of `0x76e1e0`; `ui::luabind_76ee60_setfog_76e1e0_setlight_quantize` covers `0x76e6ba` to `0x76e6c6`, `0x76e6ce` to `0x76e701` of `0x76e1e0`; `ui::luabind_76ee60_setfog_76e1e0_setlight_quantize` covers 4 ranges from `0x76eff6` to `0x76f050` of `0x76ee60`; `ui::luabind_76f080_get_fog_color` covers 4 ranges from `0x76f143` to `0x76f1c9` of `0x76f080`.

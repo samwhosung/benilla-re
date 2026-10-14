@@ -47,7 +47,7 @@ below fail; so do `J K W Y j k w y [ \ ] ^ _` and the backquote.
 Addresses: `0x507710`, `0x507720`, `0x507722`, `0x507734`, `0x50773a`, `0x507752`, `0x50776a`, `0x50777c`, `0x507784`, `0x50778a`, `0x5077a6`, `0x5077ae`, `0x5077d5`, `0x5077db`, `0x5077e2`, `0x5077e8`, `0x5077ff`, `0x507805`, `0x50780c`, `0x507817`, `0x50782f`, `0x50783a`, `0x507843`, `0x50784c`, `0x507850`, `0x507856`, `0x50785f`, `0x507866`, `0x5080ae`, `0x5080c1`, `0x5080d4`, `0x508138`, `0x5080e0`, `0x64ac60`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue4fd_507710_ceil_frac`, `ui::glue4fd_507710_f_case_quantize`, `ui::glue4fd_507710_f_case_scale`, `ui::glue4fd_507710_mos_prescale`, `ui::glue4fd_507710_mos_round_half`, `ui::glue4fd_507710_mos_snap`, `ui::glue4fd_507710_ot_per_tick`, `ui::glue4fd_507710_recip_scale`
 
 The scale is read at `0x507720` to `0x507796`: `/` or `*`, a `;` found by `SStrChr`, at most eight characters
 converted by `0x64ac60`, a result of 0 ignored, `/` storing the reciprocal against the float 1.0 at
@@ -104,7 +104,7 @@ point, or `HOME_INN`.
 Addresses: `0x507dde`, `0x507de3`, `0x507ded`, `0x507df2`, `0x507cbb`, `0x507ccb`, `0x507cce`, `0x507ceb`, `0x507d00`, `0x507d06`, `0x507d19`, `0x507d1f`, `0x507d32`, `0x507d37`, `0x507d5b`, `0x507d78`, `0x507d86`, `0x507d9a`, `0x507da8`, `0x507db8`, `0x507e3c`, `0x507e42`, `0x507e4b`, `0x507e5c`, `0x507e61`, `0x507f07`, `0x507f1e`, `0x507f2b`, `0x507f3a`, `0x6e31b0`, `0x6e3300`, `0x6ea000`, `0x52f980`, `0x52fa50`, `0x52fbd0`, `0x5ed420`, `0xc0d79c`, `0xc0d7a0`, `0xc0e048`, `0xc0e04c`, `0x842cf4`, `0x84f310`, `0x84f330`, `0x84f340`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::time_band_remainder`, `ui::time_band_select`
 
 `$c` calls `0x6e31b0` (`0x507de3`) and `$p` `0x6e3300` (`0x507df2`). `$d` asks `0x6ea000(spell, pet, unmodified)`
 (`0x507ccb`); a result of 0 or less takes the until-cancelled text (`0x507d32`). Otherwise the milliseconds go

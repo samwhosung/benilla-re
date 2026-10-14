@@ -20,13 +20,15 @@ use the same scale.
 Addresses: `0x767680`, `0x7676b5`, `0x7676b8`, `0x7676bb`, `0x7676be`, `0x776020`, `0x7760fd`, `0x776102`, `0x776109`, `0x77610f`, `0x776138`, `0x776149`, `0x77614e`, `0x776151`, `0x776154`, `0x7763d1`, `0x7763d4`, `0x775f20`, `0x41ad70`, `0x41ae60`, `0x7ffd68`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_775_set_resize`
 
 The layout constructor zeroes the four words (`0x7676b5` to `0x7676be`, at layout `+0x5c` to `+0x68`). `0x776020` converts
 argument 2 (`0x7760fd` to `0x77610f`, `0x41ae60`) and argument 3 (`0x776126` to `0x776138`); it stores the height of the
 pair at the first word of the pair (`0x776149`) and the width at the second (`0x77614e`), and rewrites the other
 pair with its old values (`0x776151`, `0x776154`). `0x7762a0` stores the maximum pair the same way (`0x7763d1`,
 `0x7763d4`). The multiplier `0x7ffd68` is 1024.
+
+Bit-exact coverage: `ui::luabind_775_set_resize` covers `0x7760fd` to `0x77611e`, `0x776126` to `0x77615f` of `0x776020`; `ui::luabind_775_set_resize` covers `0x77637d` to `0x77639e`, `0x7763a6` to `0x7763df` of `0x7762a0`.
 
 ## The Lua methods
 
@@ -41,7 +43,7 @@ sized by a drag.
 Addresses: `0x776020`, `0x7762a0`, `0x775f20`, `0x7761a0`, `0x7760d1`, `0x7760e5`, `0x776351`, `0x776365`, `0x776160`, `0x776012`, `0x776292`, `0x6f34d0`, `0x8797b8`, `0x8797e4`, `0x84c7f0`, `0x879000`, `0x879008`, `0x879010`, `0x879018`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_775_get_resize`
 
 The four entries are the pairs at `0x879000` to `0x879018` of the frame method table. Each setter tests
 arguments 2 and 3 with `lua_isnumber` (`0x6f34d0`; `0x7760d1`, `0x7760e5`, `0x776351`, `0x776365`), which accepts a
@@ -49,6 +51,8 @@ string that converts; failure jumps to the cold block (`0x776160`) that names th
 table or `<unnamed>` (`0x84c7f0`) and raises the usage string (`0x8797b8`, `0x8797e4`). The getters push two
 values and return 2 (`0x776012`, `0x776292`). After the stores each setter does nothing else (`0x776157`
 to `0x77615f`).
+
+Bit-exact coverage: `ui::luabind_775_get_resize` covers `0x775fc8` to `0x77600b` of `0x775f20`; `ui::luabind_775_get_resize` covers `0x776248` to `0x77628b` of `0x7761a0`.
 
 ## The XML element
 
@@ -61,7 +65,7 @@ class reads first.
 Addresses: `0x769820`, `0x769baa`, `0x769bb2`, `0x769bb8`, `0x769bc1`, `0x769bc8`, `0x769bd4`, `0x769bea`, `0x769bef`, `0x769c0c`, `0x769c11`, `0x769c1a`, `0x769c1f`, `0x769c25`, `0x769c28`, `0x769c2b`, `0x6f2c50`, `0x6f1eb0`, `0x87859c`, `0x878590`, `0x8785a8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue769_769820_set_alpha_quantize`
 
 The child loop compares each tag with `ResizeBounds` (`0x769bb2`, `0x769bb8`). The four locals are zeroed
 (`0x769bc8` to `0x769bd1`); `0x6f2c50` fetches `minResize` (`0x87859c`, `0x769bd4`) and `maxResize` (`0x878590`,
@@ -79,13 +83,15 @@ bounded.
 Addresses: `0x7655b0`, `0x7655d9`, `0x7655e9`, `0x76560b`, `0x76a660`, `0x76a679`, `0x768710`, `0x76898a`, `0x768430`, `0x7660d0`, `0x76616c`, `0x766193`, `0x776830`, `0x7768bb`, `0x7652b0`, `0x768c44`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_768710`, `ui::glue_765_7655b0_deltas_recenter`, `ui::glue_765_768430_edge_rect`
 
 `0x7655b0` returns without a nonzero cursor difference (`0x7655d9`, `0x7655e9`) and with no frame in `+0xcfc`,
 else calls `0x76a660` (`0x76560b`), which calls `0x768710(screen root, dx, dy, grip)` (`0x76a679`). The
 grip is the anchor point id 0 to 8, handled through the table at `0x768c44`; an id above 8 skips to the
 tail (`0x768974`). Every arm but the centre ends in `0x768430(…)` with the new size and the delta (`0x76898a`).
 `StartSizing` refuses a frame whose resizable flag (`+0xb4` bit 9) is clear (`0x7768bb`).
+
+`ui::geo_768710` runs `0x768710` whole, with the two size getters replaced by `fld` islands and `0x768430` and `0x7680e0` stubbed to log their arguments.
 
 ## The clamp
 

@@ -35,7 +35,7 @@ party or raid it sends message 0x1d5 with X then Y, and in any case it applies t
 Addresses: `0x4eeca0`, `0x4eecf3`, `0x4eecf8`, `0x4eed0b`, `0x4eed1f`, `0x4eedcc`, `0x4eede6`, `0x4eedeb`, `0x4eedf7`, `0x4eee11`, `0x4eee1c`, `0x4eee21`, `0x4eee31`, `0x4eee48`, `0x4eee67`, `0x4eee74`, `0x4eeeac`, `0x4eeeb3`, `0x4eeed6`, `0x4eeee9`, `0x4eef05`, `0x4eef15`, `0x4eef26`, `0x4eef98`, `0x4eefb5`, `0x4eef31`, `0x4eef4f`, `0x4eef5b`, `0x4eef67`, `0x4eef72`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4ea_4eeca0_ping_projection`
 
 `0x4eecf3` takes the radius from `0x6da9b0` and `0x4eecf8` doubles it. If the active player object is
 missing nothing happens (`0x4eecdf`). Arguments 2 and 3 are read only when both are numbers (`0x4eed0b`,
@@ -61,7 +61,7 @@ point lies inside the disc.
 Addresses: `0x4ee330`, `0x4ee341`, `0x4ee35e`, `0x4ee366`, `0x4ee373`, `0x4ee3b4`, `0x4ee3c2`, `0x4ee3f2`, `0x4ee412`, `0x4ee41b`, `0x4ee437`, `0x4ee456`, `0x4ee45b`, `0x4ee463`, `0x4ee473`, `0x4ee476`, `0x4ee48d`, `0x5e3573`, `0x5e38c0`, `0x5e4185`, `0x5e41bd`, `0x703f50`, `0x51b3ab`, `0xbc787c`, `0xbc7880`, `0x4e86d0`, `0x491920`, `0x491940`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4ea_4ee330_scale`
 
 `0x4ee330(guid, point)` is `__fastcall`. The two stores (`0x4ee366`, `0x4ee373`) come before the token. The
 party scan counts with `0x4e86d0` and reads GUIDs with `0x491920` (`0x4ee3c2`), formatting `party%d`
@@ -83,7 +83,7 @@ the stored point; its lifetime is the interface's own timer.
 Addresses: `0x4eefd0`, `0x4eeff6`, `0x4ef021`, `0x4ef038`, `0x4ef044`, `0x4ef05b`, `0x4ef063`, `0x4ef07b`, `0x4ea1f0`, `0xbc787c`, `0xbc7880`, `0x6f3810`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::ping_position`
 
 `0x4eeff6` skips the zero pushes when the player exists. It reads `0xbc787c` (`0x4ef021`) and `0xbc7880`
 (`0x4ef038`), subtracts the player's position, doubles the radius from `0x6da9b0` (`0x4ef044`) and returns 2
@@ -91,6 +91,8 @@ values pushed with `0x6f3810`. The second value is stored as a float (`0x4ef05b`
 double (`0x4ef063`); `0x4ee330` rounds the other way. The cells `0xbc787c` and `0xbc7880` have six
 references in the image: two initial zero stores in a static initializer (`0x4ea1f0`), the two stores in
 `0x4ee330` and the two loads here.
+
+`ui::ping_position` runs `0x4eefd0` whole, with the object lookups `0x468550` and `0x468460` and the zoom radius `0x6da9b0` replaced and `lua_pushnumber` captured.
 
 ## The zoom radius
 
@@ -128,7 +130,7 @@ later lasts to the next logout, and `ReloadUI` keeps it.
 Addresses: `0x4ed810`, `0x4ed874`, `0x4ed89d`, `0x4ed8c8`, `0x4edb70`, `0x4edb8a`, `0x4edb9f`, `0x4edbac`, `0x48f590`, `0x48f681`, `0x49118c`, `0x4ee5e9`, `0x4ee5af`, `0x4ee789`, `0x4ee929`, `0xbc7968`, `0xbc827c`, `0xbc822c`, `0x84c6e4`, `0x84c6c8`, `0x84c6a8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4ed810`
 
 `0x4ed810` has no guard flag: it loads the three names with `0x449d90` and stores the results at `0xbc7968`
 (`0x4ed874`), `0xbc827c` (`0x4ed89d`) and `0xbc822c` (`0x4ed8c8`), overwriting the old handles. Its caller
@@ -137,6 +139,8 @@ runs at `0x48f590` in `CGGameUI::InitializeGame`, before the jump to the interfa
 `0x4edb9f`, `0x4edbac`), called from `ShutdownGame` (`0x49118c`). The three setters store at `0x4ee5e9`,
 `0x4ee789` and `0x4ee929` after releasing the old handle (`0x4ee5af`). The reload path does not reach either
 function.
+
+`ui::geo_4ed810` runs `0x4ed810` whole, with the texture and mesh calls stubbed, and compares both tables it fills.
 
 ## The engine children
 
@@ -175,7 +179,7 @@ ninth is anchored the same way with offsets 0.001 and 0.001 (`0x3a83126f`, `0x4e
 Addresses: `0x4ef370`, `0x4ef37b`, `0x4ef389`, `0x4eb962`, `0x76b119`, `0x4ead90`, `0x4eadc5`, `0x4eaddd`, `0x4eadeb`, `0x4eadf0`, `0x4eb9fe`, `0xbc7810`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4ead90`, `ui::geo_4eb910`
 
 `0x4ef370` is a `__thiscall` that moves its arguments to `[ecx]`, `[ecx+4]`, `[ecx+8]` and `[ecx+0xc]` as plain dwords and returns `ecx` (`ret 0x10`,
 `0x4ef37b` to `0x4ef389`). Its callers are `0x4eb962`, which passes four differences of a rectangle and a point (`0x4eb93f` to `0x4eb95c`), and `0x76b119`.
@@ -185,6 +189,8 @@ Test: none
 are doubled there and rounded once to float on the store (`0x4eadeb`, `0x4eadf0`). The two orders differ only below the float normal range, since
 doubling is exact otherwise. Its one caller is `0x4eb9fe` in `0x4eb910`, which copies a four-float rectangle from `[ebp+8]` as the last four
 arguments. What fills the records, and the rest of `0x4eb910` and `0x4eaf00`, were not read.
+
+`ui::geo_4ead90` runs `0x4ead90` whole on a seeded table entry, and `ui::geo_4eb910` runs `0x4eb910` whole with `0x4ead90` real.
 
 ## Lua methods
 

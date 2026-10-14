@@ -62,7 +62,7 @@ The camera is the model's own camera 0 (`0x713540`), built with `0x7ada40` over 
 Addresses: `0x524f60`, `0x525193`, `0x5251b2`, `0x5251d3`, `0x525227`, `0x525244`, `0x52525f`, `0x52526a`, `0x525285`, `0x5253d0`, `0x5253db`, `0x5253f6`, `0x52542b`, `0x525433`, `0x525446`, `0x5255a4`, `0x5255d6`, `0x5255f2`, `0x525600`, `0x52560a`, `0x525645`, `0x52564e`, `0x52575b`, `0x525760`, `0x52576f`, `0x525798`, `0x52580a`, `0x525823`, `0x525828`, `0x52584b`, `0x58a250`, `0x41ade0`, `0x41ae60`, `0x41ae70`, `0x58af60`, `0x589cf0`, `0x5258a0`, `0x449bf0`, `0x525b10`, `0x808de4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_512_524f60_scale_ratios`
 
 In the code's order, with float stores: `p = G44 * (64 / W)`, `q = G48 - (G48 / H) * 64` and `D = (p - 0) / (G48 - q)` (`0x5251b7` to `0x525430`). Each x87 operation rounds once, to the client's 53-bit precision, and each store to 24 bits. `0x58a250` reads the live window rect `{top, left, bottom, right}` (device slot `+0x60`), W is `rect[3] - rect[1]`, H is `rect[2] - rect[0]`, and G44 and G48 are the scale globals `0x832a44` and `0x832a48` (`0x41ad10`), whose ratio is the configured aspect. D is 1 within a few ulps, not exactly 1.0,
 so the projection aspect is too (`camera#view-and-projection`): the half-angle is `fov / (2 * sqrt(2))` and a sphere lands nearly round. The viewport fractions are `(0, 64/W)` by `(1 - 64/H, 1)` after `0x41ade0` divides by G44 and G48, a 64 by 64 pixel box, read back from (0, 0), no render target.

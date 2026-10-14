@@ -35,12 +35,14 @@ group hides its header, and collapsing keeps it. The rows stay in the array behi
 Addresses: `0x4d8410`, `0x4d8414`, `0x4d8429`, `0x4d8431`, `0x4d8447`, `0x4d8452`, `0x4d846f`, `0x4d84ac`, `0x4d84ba`, `0x4d84c6`, `0x4d8508`, `0x4d8528`, `0x4d8535`, `0x4d853d`, `0x4d8541`, `0x4d8546`, `0x4d8549`, `0x73f727`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::listorder_trainer_filter_hides_header_e2e`, `ui::listorder_trainer_mounts_e2e`, `ui::listorder_trainer_tradeskill_e2e`, `ui::listorder_trainer_tradeskill_filter_e2e`
 
 A header's `+0x1c` is set when some state `s` has its bit in the state filter and a nonzero counter `hdr[+4+4s]`; its `+0x20` is
 the collapsed flag from the expanded mask. The row test at `0x4d8528` has no header exemption; the exemption at `0x4d853d` guards
 only the collapse test. The counters are built with the list and re-counted by `0x4d7d40`. The sort runs over the whole
 array, with the visible flag as its first key.
+
+Each test runs `0x4d8410` whole on a synthesized list, with the real `qsort`, comparators and collator, and reads the sorted rows; the two tradeskill tests also run the group-key slice `0x4d7781` to `0x4d7807`.
 
 ## Row order
 
@@ -54,12 +56,14 @@ key. Headers sort by `0x4d7c30` (the key) for type 2, else `0x4d7b90`.
 Addresses: `0x4d8561`, `0x4d85c0`, `0x4d85ce`, `0x4d85ef`, `0x4d86a0`, `0x4d86c6`, `0x4d86e9`, `0x4d86fe`, `0x4d8760`, `0x4d876f`, `0x4d878b`, `0x4d87d9`, `0x4d87e3`, `0x4d87f8`, `0x4d8850`, `0x4d885b`, `0x4d88eb`, `0x4d88f1`, `0x4d894e`, `0x4d79eb`, `0x4d7b90`, `0x4d7bab`, `0x4d7bb5`, `0x4d7c12`, `0x4d7c30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4d85c0`, `ui::sortcmp_4d8760`, `ui::sortcmp_4d8850`
 
 Name compares are `0x64a480` for rows and `0x64a4c0` (case-insensitive) for header names. In the class comparator group
 position is the index in the header array, which is name-sorted; the tradeskill comparator compares the raw key. The header
 comparator `0x4d7b90` puts group -1 first, then headers with `+0x24` zero (a flag set when a group's rows all have a
 nonzero point cost), then the skill line's display name. Type 3 (pet) uses the class comparators.
+
+Bit-exact coverage: `ui::sortcmp_4d85c0` covers 5 ranges from `0x4d85c0` to `0x4d8758` of `0x4d85c0`; `ui::sortcmp_4d8760` covers `0x4d8760` to `0x4d87b7`, `0x4d87bb` to `0x4d87c6`, `0x4d87ca` to `0x4d884f` of `0x4d8760`; `ui::sortcmp_4d8850` covers `0x4d8850` to `0x4d88a8`, `0x4d88ac` to `0x4d88bd`, `0x4d88c1` to `0x4d89a3` of `0x4d8850`.
 
 ## State
 

@@ -115,7 +115,7 @@ land in an unspecified order.
 Addresses: `0x4de8f0`, `0x4de904`, `0x4de913`, `0x4de91f`, `0x4dea31`, `0x4dea44`, `0x4dea50`, `0x4dea63`, `0x4deac0`, `0x4deb1a`, `0x4deb41`, `0x4dec77`, `0x4dec8a`, `0x4deca0`, `0x4decb3`, `0x4decd1`, `0x4decd9`, `0x4decdc`, `0x4decfb`, `0x64a4c0`, `0x73f727`, `0xc0d9b0`, `0xc0e048`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4de8f0`, `ui::sortcmp_4deac0`
 
 The group comparator `0x4de8f0` returns -1 for a first id of 0 (`or eax,-1`) and 1 for a second id of 0, and copies each name
 into 0x100 bytes from `QuestSort` (the id map of the store `0xc0d9b0`, name at `+4 + 4*locale`) or AreaTable (`+0x2c +
@@ -124,6 +124,8 @@ case-insensitive `strnicmp`, `0x4dea44`). The row comparator reads the quest tem
 query): key 1 `0x4dec77` (collapsed quests +1), key 2 the header ordinal (`0x4dec8a`), key 3 headers first, key 4
 level `setge` with `lea eax,[eax+eax-1]` (`levelA > levelB` gives +1, so ascending), key 5 the title at
 `[rec+0x9c]`. The sort is `0x73f727(0xbb71c0, count, 0x10, 0x4deac0)`.
+
+Bit-exact coverage: `ui::sortcmp_4de8f0` covers the whole of `0x4de8f0`; `ui::sortcmp_4deac0` covers 7 ranges from `0x4deac0` to `0x4ded2d` of `0x4deac0`.
 
 ## Visible rows
 

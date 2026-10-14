@@ -66,7 +66,7 @@ tutorial flag 0x22. With no slot or no texture the slot count is 0 and the GUID 
 Addresses: `0x4db710`, `0x4db716`, `0x4db73a`, `0x4db754`, `0x4db78e`, `0x4db7a0`, `0x4dba39`, `0x4dba42`, `0x4dba4b`, `0x4dba5c`, `0x4dba63`, `0x4dba82`, `0x4dba96`, `0x4dbaa2`, `0x4dbab0`, `0xc0d5a0`, `0x4dc010`, `0x4dc5c0`, `0x4930d0`, `0x4b5390`, `0x703e50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_4db710_bound_diff`, `ui::glue_geom_4db710_bounds_norm`
 
 The nearest node is looked up with the id bound of `TaxiNodes`, and an id without a row stores null. When
 `WorldMapContinent` has rows, the next step reads the row's continent (`0x4db7ec`) without a null test, so a nearest node
@@ -100,12 +100,14 @@ in the slot. The route points use the same numerators with each axis over its ow
 Addresses: `0x4dbb10`, `0x4dbb33`, `0x4dbb4b`, `0x4dbbb2`, `0x4db6d0`, `0x44ac70`, `0x449d90`, `0x4dc890`, `0x4dc3b0`, `0x4dc370`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4dc890`
 
 `0x4dbb33` formats into a 0x104-byte buffer. `0x44ac70` compares the held texture's name at `+0xc` with the new name
 through `0x449590` and `0x64a4c0`, ignoring the extension. The slot position is the stores `0x4db978` and `0x4db995`
 (the divisors are `highest x - lowest x` for u, `highest y - lowest y` for v). `0x4dc890` divides u by the y span and v
 by the x span. `0x4dc3b0` copies u and v out.
+
+`ui::geo_4dc890` runs `0x4dc890` whole.
 
 ## Node types
 

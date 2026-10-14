@@ -1,0 +1,85 @@
+//! The interface's computations, reimplemented from `WoW.exe` and tested against it
+//! (`systems/ui/`, `systems/uicamera/`).
+//!
+//! The x87 runs at 53-bit precision, so an operation rounds to `f64` and an `fstp dword` store to
+//! `f32`: an `f64` operation with a final `as f32`.
+
+#![forbid(unsafe_code)]
+
+pub mod anchors;
+pub mod camera_arm_view;
+pub mod camera_cvars;
+pub mod camera_driver;
+pub mod camera_effects;
+pub mod camera_fov_pitch;
+pub mod camera_pivot;
+pub mod camera_shake_transitions;
+pub mod camera_solver;
+pub mod camera_transitions;
+pub mod camera_update;
+pub mod camera_view;
+pub mod camera_view_input;
+pub mod clip_rect;
+pub mod color;
+pub mod colorselect_wheel;
+pub mod cursor_picture;
+pub mod distance_gates;
+pub mod editbox_caret;
+pub mod editbox_measure;
+pub mod fare_range;
+pub mod font_xml;
+pub mod fontstring;
+pub mod fontstring_layout;
+pub mod fontstring_xml;
+pub mod frame_methods;
+pub mod frame_rect_change;
+pub mod frame_xml_load;
+pub mod framexml_attrs;
+pub mod framexml_units;
+pub mod gossip_pick;
+pub mod heading;
+pub mod hit_test;
+pub mod hyperlink;
+pub mod input_motion;
+pub mod layout_scale;
+pub mod list_sort;
+pub mod list_sort_cmp;
+pub mod minimap_blips;
+pub mod minimap_frame;
+pub mod minimap_geometry;
+pub mod minimap_ping;
+pub mod movieframe;
+pub mod moving_sizing;
+pub mod nameplates;
+pub mod resize_bounds;
+pub mod screen_rect;
+pub mod screen_size;
+pub mod scrollframe_layout;
+pub mod scrollframe_scroll;
+pub mod simplemodel;
+pub mod slider;
+pub mod spellbook;
+pub mod strata;
+pub mod taxi_map;
+pub mod time_values;
+pub mod toc_loader;
+pub mod tooltip;
+pub mod tooltip_layout;
+pub mod ui_scale;
+pub mod uiscale;
+pub mod unit_stats;
+pub mod unit_values;
+pub mod vector3_ops;
+pub mod video_settings;
+pub mod view_matrices;
+pub mod visibility;
+pub mod world_frame;
+pub mod world_interaction;
+pub mod worldmap_arrow;
+pub mod worldmap_highlight;
+pub mod worldmap_overlay;
+pub mod worldmap_poi;
+pub mod worldmap_projection;
+pub mod worldmap_scale;
+pub mod worldmap_selection;
+pub mod worldpick;

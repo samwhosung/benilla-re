@@ -60,13 +60,15 @@ or negative, which is discarded silently. Nothing else is written and no event o
 Addresses: `0x4a14f0`, `0x4a15d0`, `0x4a1470`, `0x4a1569`, `0x4a157b`, `0x4a1598`, `0x4a15ae`, `0x4a1617`, `0x4a1628`, `0x4a14b7`, `0x4a14bc`, `0x4a14c6`, `0x40a2b0`, `0x806498`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::chat_scale_byte`, `ui::chat_scale_product`
 
 Each argument is read with `lua_tonumber` (`0x6f3620`), multiplied by the double 255 (`0x806498`,
 `fmul` at `0x4a1569` and `0x4a1617`) and truncated by `0x40a2b0` (`fnstcw`, `or ah,0x0c`, `fistp`);
 `mov byte` takes `al`. `0x4a14bc` is `test eax,eax; jle`, so size 0 or less skips the store at
 `0x4a14c6`. No compare against 0 or 1 exists in any of the three bodies. Nothing reads the bytes
 except the getter and the settings writer, which treat them as already 0 to 255.
+
+Bit-exact coverage: `ui::chat_scale_byte` covers `0x4a1569` to `0x4a156f` of `0x4a14f0`; `ui::chat_scale_product` covers `0x4a1569` to `0x4a156f` of `0x4a14f0`; `ui::chat_scale_product` covers `0x4a1617` to `0x4a161d` of `0x4a15d0`.
 
 ## Locked, docked, shown and name
 
@@ -95,12 +97,14 @@ as the size plus 2^32.
 Addresses: `0x4a0ba0`, `0x4a0bf3`, `0x4a0c00`, `0x4a0c20`, `0x4a0c32`, `0x4a0c40`, `0x4a0c60`, `0x4a0c80`, `0x8026c8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4a0ba0_chat_window_info`
 
 `mov eax,9` sets the count. The size is `mov [ebp-8],eax; mov dword [ebp-4],0; fild qword`, a 64-bit load
 with a zero high dword (`0x4a0c00`). Each colour is `movzx`, `fild`, `fmul dword [0x8026c8]`, the float
 nearest 1/255 (`0x3b808081`). The getter and the three colour setters give the byte order of the
 record: the setter writes red to `+0x8a`, the getter reads red from there.
+
+Bit-exact coverage: `ui::luabind_4a0ba0_chat_window_info` covers 4 ranges from `0x4a0c2f` to `0x4a0c9b` of `0x4a0ba0`.
 
 ## Message groups of a window
 
@@ -183,7 +187,7 @@ empties the deferred-join list and clears every window's 68 flag bytes. Line 1 i
 Addresses: `0x498a60`, `0x498a78`, `0x498a89`, `0x498aaf`, `0x498b8d`, `0x498bc4`, `0x498c0b`, `0x498c30`, `0x498cf4`, `0x498d13`, `0x498d17`, `0x498d83`, `0x498e35`, `0x498eb4`, `0x498ebc`, `0x499a64`, `0x49ea70`, `0x64ae50`, `0x64ac60`, `0x64a4c0`, `0xb4fdd4`, `0xb4fdd8`, `0xb4fddc`, `0xb6e5e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_480_498a60_color_channel`
 
 Reads go through the tokenizer `0x64ae50` with the delimiters carriage return and line feed for lines and
 space, carriage return and line feed for words, so blank lines never reach the state machine and a
@@ -261,11 +265,13 @@ event is fired by `ChangeChatColor` alone. The window start-up fires none.
 Addresses: `0x4996b9`, `0x4996be`, `0x4996c3`, `0x4996ea`, `0x4997a6`, `0x499934`, `0x703e50`, `0x703f50`, `0x4a098b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4a07f0_change_chat_color`
 
 `mov ecx,0x18b; call 0x703e50` and a loop over the registry from `0xb4e518` with count 0x5e (no name test) calling
 `0x703f50` with id 0xe2. The extra entries follow in the same loop form. The six sites are the two paths'
 pairs of calls to each dispatcher plus the extra-entry loops.
+
+Bit-exact coverage: `ui::luabind_4a07f0_change_chat_color` covers 4 ranges from `0x4a0864` to `0x4a098b` of `0x4a07f0`.
 
 ## Chat logging
 

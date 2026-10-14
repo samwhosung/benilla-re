@@ -150,7 +150,7 @@ registers only a completion callback.
 Addresses: `0x76cd30`, `0x76cd8a`, `0x76cd9b`, `0x76cdac`, `0x7133a0`, `0x7133a9`, `0x70e0a0`, `0x70dd70`, `0x719370`, `0x719524`, `0x719526`, `0x607831`, `0x5059a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_76cd30_byte_to_unit`
 
 The model's event callback is at `+0x1f4`; `0x70dd70` initialises it to 0 (`0x70e0a0`) and only
 `0x7133a0` (`0x7133a9`) stores it. `0x719370` skips the event scan of a track when it is null
@@ -169,7 +169,7 @@ when there is no camera.
 Addresses: `0x503c10`, `0x503c1e`, `0x503c23`, `0x503c2b`, `0x503c6e`, `0x503c7f`, `0x503c9c`, `0x503ca5`, `0x711a20`, `0x7ac250`, `0x808300`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_503_503c10_offset_scale2`
 
 `0x503c10` calls `0x505b30` (`0x503c1e`), then reads `+0x31c` (`0x503c23`) and returns when it is null
 (`0x503c2b`). `0x711a20(0, 0, &info)` fills the sequence record whose bounds are at `info + 0xc`: the

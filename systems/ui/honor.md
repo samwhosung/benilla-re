@@ -113,12 +113,14 @@ reply, with no player lookup. Neither clamps. The product is not the byte over 2
 Addresses: `0x51aa90`, `0x51aabc`, `0x51aace`, `0x51ab00`, `0x51ab04`, `0x51ab14`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_51aa90_get_pvp_rank_progress`, `ui::luabind_51ab00_get_inspect_pvp_rank_progress`
 
 Both bodies run `fild` of the byte, `fmul` by the float constant (`0x51aace`, `0x51ab14`) and push the result as
 a double. The constant is the float `0x3b808081`, which is not exactly 1/255, so a division gives different results for
 all but byte 0. `GetInspectPVPRankProgress` reads the cell `0xb71f84` (`0x51ab04`), 0 until a reply arrives and the old
 value after the target changes until the next reply (`ui/honorinspect#inspect-honor-slot`).
+
+Bit-exact coverage: `ui::luabind_51aa90_get_pvp_rank_progress` covers `0x51aac6` to `0x51aad7` of `0x51aa90`; `ui::luabind_51ab00_get_inspect_pvp_rank_progress` covers `0x51aace` to `0x51aad7` of `0x51aa90`; `ui::luabind_51ab00_get_inspect_pvp_rank_progress` covers `0x51ab0e` to `0x51ab1d` of `0x51ab00`.
 
 ## PvP name
 

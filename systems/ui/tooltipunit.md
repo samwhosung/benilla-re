@@ -22,7 +22,7 @@ With none of the three it hides the tooltip and returns. Otherwise it stores the
 Addresses: `0x529fe0`, `0x52a003`, `0x52a021`, `0x52a02b`, `0x52a036`, `0x52a042`, `0x52a04e`, `0x52a056`, `0x52a058`, `0x52a070`, `0x52a079`, `0x52aa02`, `0x52aa12`, `0x496400`, `0x496420`, `0x4e8820`, `0x4e8860`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_512_529fe0_percent_quantize`
 
 `0x52a021` calls `0x468460` with mask 8 on the GUID; `0x496400` (`0x52a02b`) returns the party member record
 (`0x4e8820`, 0x148 bytes each from `0xbc70b0`) and `0x496420` (`0x52a036`) the record at `+0x80` of the member

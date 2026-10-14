@@ -129,7 +129,7 @@ and re-sequenced only when the list was rebuilt.
 Addresses: `0x4ec950`, `0x4ed2e0`, `0x4ed2e2`, `0x4ed308`, `0x4ed335`, `0x4ed344`, `0x4ed349`, `0x4ed353`, `0x4ed35a`, `0x4ed360`, `0x4ed36c`, `0x4ed36f`, `0x4ed37b`, `0x4ed404`, `0x4ed452`, `0x4ed4f7`, `0x76cf50`, `0x76a4f0`, `0x4ee1a3`, `0x4ede48`, `0x4edee0`, `0xbc8300`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4ec950_rotate`, `ui::glue_4ec950_scale_loop`, `ui::glue_4ec950_unproject`
 
 `0x4ed353` compares the record's `+0x48` with 2 and, equal, pushes 0xa7 for `0x76cf50(SetSequence)`
 (`0x4ed35a`, `0x4ed360`); otherwise `setne cl` against −2 and `lea ecx,[ecx+ecx+0xa6]` give 0xa6 for −2 and
@@ -174,7 +174,7 @@ three dimensions, or the player itself, is omitted.
 Addresses: `0x4eaa90`, `0x4eaa9e`, `0x4eaaaf`, `0x4eab0d`, `0x4eab1c`, `0x4eab28`, `0x4eab2b`, `0x4eab43`, `0x4eab49`, `0x4eab56`, `0x4eab59`, `0x4eab72`, `0x4eab7e`, `0x4eab8a`, `0x4eab96`, `0x4eabe5`, `0x4eabfd`, `0x4eac0d`, `0x4eac1e`, `0x4eac24`, `0x4eac31`, `0x4eac3a`, `0x4eac48`, `0x4eac55`, `0x5ed210`, `0x5ed2b0`, `0x670540`, `0x4ec950`, `0x4ed6a8`, `0x4ed6b0`, `0xbc82b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_4eaa90`
 
 The callback `0x4eaa90` returns 1 on every skip, so enumeration continues. It rejects the player's own GUID
 (`0x4eaa9e` to `0x4eaaaf`) and a 3-D squared distance above the range squared (`fcompp`, `test ah,5; jnp`,
@@ -188,6 +188,8 @@ sets the subzone colour flag, and a non-null stored subzone must equal the objec
 `0x4eab8a`). The record is `category·16 + 0xbc82b0` (`0x4eab96`). The dispatch is `0x4ed6a8`, the party
 append `0x4ed6b0`.
 
+`ui::dist2_4eaa90` runs the slice `0x4eaae5` to `0x4eab15`, the distance test.
+
 ## Dots, cadence and tooltip
 
 Dot positions are computed when the classifier runs, about once a second, and drawn unchanged every frame
@@ -199,7 +201,7 @@ the cursor is over, named from the object or the name cache.
 Addresses: `0x4ed573`, `0x4ed588`, `0x4ed6a8`, `0x4ed7b7`, `0x4ebc00`, `0x4ed1ae`, `0x4ed12a`, `0x4ed25f`, `0x4eb0c0`, `0x4eb19f`, `0x4eb30b`, `0x4eb31a`, `0x4eb33c`, `0x4eb587`, `0x4eb7bb`, `0x4eb7cf`, `0x4eb856`, `0x4eb869`, `0x530380`, `0x52ffe0`, `0x55f080`, `0x84c69c`, `0xb4b3c4`, `0xc0e228`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4ebc00_gradient`
 
 The rebuild block, including the classifier dispatch (`0x4ed6a8`), sits behind the throttle at `0x4ed573`:
 it is skipped while less than 1000 ms (`0x4ed588`) have passed since the last run;
@@ -223,7 +225,7 @@ model scale is `base`.
 Addresses: `0x4edbc0`, `0x4edc42`, `0x4edc47`, `0x4edc4d`, `0x4edc5f`, `0x4edc6f`, `0x4edc7b`, `0x4edc9a`, `0x4edca9`, `0x4edcaf`, `0x4edcbb`, `0x4edcc1`, `0x4edcd3`, `0x4edce5`, `0x4edeb2`, `0x4edeba`, `0x4edfec`, `0x807a4c`, `0x807a48`, `0x807a44`, `0x807a28`, `0xbc7658`, `0xbc82a8`, `0xbc7970`, `0xbc762c`, `0xbc7630`, `0xbc8274`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4edbc0_unit_scale_spread`
 
 `0x4edc42` is `0x41ae70(1.0)` and `0x4edc47` multiplies by 5/3. The products with `0x807a4c` (0.0125), `0x807a48`
 (0.00625) and `0x807a44` (0.11) are stored at `0xbc7658` (`0x4edc6f`), `0xbc82a8` (`0x4edc9a`) and
@@ -243,9 +245,11 @@ rim position.
 Addresses: `0x4eaa30`, `0x6d9dd1`, `0x6daf7f`, `0x4ed452`, `0x4ed4f7`, `0x4ed17a`, `0x47f220`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4eaa30`
 
 `0x4eaa30` is the whole projection, 86 bytes with no angle: `out.x = k − (k/R)·dB`, `out.y = k + (k/R)·dA`
 with `dA = A_entity − A_player`, `dB = B_entity − B_player`, `k = width·scale·0.5`. The two `atan2` sites are
 `0x6d9dd1` and `0x6daf7f`, the two `fsincos` `0x4ed452` and `0x4ed4f7`. The width is the frame's geometry
 getter (`0x4ed17a`, slot 0x1c).
+
+`ui::geo_4eaa30` runs `0x4eaa30` whole.

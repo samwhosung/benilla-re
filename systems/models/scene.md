@@ -71,13 +71,15 @@ the queue emptied.
 Addresses: `0x7074b0`, `0x707490`, `0x719370`, `0x71f860`, `0x70a5a0`, `0x70a280`, `0x70a400`, `0x483659`, `0x483679`, `0x76d846`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_unit_convert`
 
 The world frame computes `dt` as `ftol(f32[ui+0x3f4] · 1000.0 + 0.5)` (`0x483659` to `0x483679`), rounding to the nearest millisecond; the model frame path truncates (`ui/model`, `0x76d846`). A delta that converts to a whole millisecond less a rounding error comes back one short on the truncating path and exact on the world path; how many do depends on the x87 precision the frame runs at. The sort fills an index array with 0 to n−1 and calls `0x71f860` with the comparator `0x70a5a0`,
 which returns −1 when record i's `+0x24` is greater (unsigned), 1 when smaller, then compares the
 indices. Records are 0x30 bytes at `+0x84`; their kind is `+0x0`, the function `+0x4`, the
 instance `+0x8`. `0x70a280` and `0x70a400` add a reference to the instance when they queue it, and
 cap the queue at 0x10000 records.
+
+Bit-exact coverage: `ui::textglue_482_unit_convert` covers `0x483659` to `0x483671` of `0x483460`.
 
 ## View rebase
 
@@ -117,7 +119,7 @@ times that matrix through `0x74a7c0`. No double is stored on the path.
 Addresses: `0x483460`, `0x48367e`, `0x483684`, `0x483687`, `0x48368a`, `0x707680`, `0x7076c6`, `0x50ab70`, `0x50acc6`, `0x50acf2`, `0x50acfa`, `0x5c3e70`, `0x5c40eb`, `0x7bdc40`, `0x714260`, `0x707789`, `0x7077b6`, `0x71438d`, `0x71439b`, `0x74a7c0`, `0x754a66`, `0x59961c`, `0x599627`, `0x404100`, `0xc7b298`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50a_50ab70_proj_aspect`
 
 `0x48367e` loads the camera from `[world frame + 0x65b8]` and `0x483684` adds 8. The other eleven
 callers (`0x46c4c6`, `0x50596a`, `0x50c7ad`, `0x50f0df`, `0x52557a`, `0x525640`, `0x6d4b4f`,

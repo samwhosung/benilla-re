@@ -130,7 +130,7 @@ the range is replaced by `(10 + 4)^2 = 196` (14 yards), so a shared quest has a 
 Addresses: `0x493230`, `0x49324e`, `0x493254`, `0x493276`, `0x493298`, `0x4932a0`, `0x4932b3`, `0x4932f2`, `0x493303`, `0x493305`, `0x493310`, `0x4933bf`, `0x4933d3`, `0x4818c0`, `0x481790`, `0x4930d0`, `0x493126`, `0x493156`, `0x49315e`, `0x493171`, `0xb4e2c0`, `0xb4e2d0`, `0x8044b0`, `0x80306c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_493230`, `ui::glue_492_4930d0_threshold_fold`
 
 `0x4930d0(guid, range2)` stores the range at `0x493126` and, when bit 4 of the object's type is set
 (`0x493156`), overwrites it with `[0x8044b0] + [0x80306c]` (10.0 and 4.0) squared (`0x493171`). The check
@@ -139,6 +139,8 @@ returns early for a range of 0 or less (`fcomp` against 0.0, `0x493254`), closes
 (`test ah,0x41; jne`, `0x493303`). It is called once per frame from `0x4818c0` in `0x481790`. A quest giver's range is
 (50/9)^2 = 30.864195, 5.5555553 yards. The walk-away path calls `0x501130` directly, so it never reopens
 a gossip menu.
+
+`ui::dist2_493230` runs the slice `0x4932d2` to `0x4932fc`, the distance test.
 
 ## IsUnitOnQuest
 

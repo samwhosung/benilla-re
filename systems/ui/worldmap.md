@@ -12,9 +12,11 @@ Three words hold the selection: the continent `0x84506c`, the zone `0x845070` an
 Addresses: `0x4a67a0`, `0x4a67a6`, `0x4a67ac`, `0x4a67b2`, `0x4a67ba`, `0x4a67c1`, `0x4a67d4`, `0x4a67dd`, `0x4a67e4`, `0x4a67ea`, `0x84506c`, `0x845070`, `0x845074`, `0xb6e664`, `0xb6e668`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::worldmap_set_map_head`, `ui::glue_4a6_4a67a0_near_zero_gate`
 
 The two-word model of a continent and a zone cannot express a direct area; the third word is the row id. The rest of `0x4a67a0` rebuilds the landmark and overlay lists and ends by signalling `WORLD_MAP_UPDATE` (event 365, `0x4a6ce4`). A rebuild without a move passes `(continent, direct area if it is set, else zone)`, as the five callers at `0x48f9f6`, `0x4a6460`, `0x6d93d8`, `0x6d9a17` and `0x6dac72` do.
+
+`ui::worldmap_set_map_head` runs `0x4a67a0` from its entry to `0x4a67ef` and reads the three cells.
 
 ## The lists
 
@@ -24,7 +26,7 @@ matches no continent; their ids are kept in file order, unsorted, in the array a
 Addresses: `0x4a5d00`, `0x4a5d31`, `0x4a5eae`, `0x4a5ebb`, `0x4a5ef2`, `0x4a5efe`, `0x4a6390`, `0x4a6130`, `0x4a6157`, `0x4a615c`, `0x4a6170`, `0x4a6190`, `0x4a61c3`, `0x4a61ff`, `0x4a6232`, `0x4a623f`, `0x4a6262`, `0xb6e608`, `0xb6e60c`, `0xb6e610`, `0xc0d5b4`, `0xc0d5b8`, `0xc0d5bc`, `0xc0d5c0`, `0x48f5d1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_4a5d00_poi_transform`
 
 `0x4a5d00` has one caller, `0x48f5d1`. Its orphan passes test the area id before the continent scan, a test the data never fails because every area-id-0 row is a continent. `0x4a6262` resets the direct area word to -1.
 
@@ -48,10 +50,12 @@ The orphan row id is taken from the same id index every reader uses, so it passe
 Addresses: `0x4a7e30`, `0x4a7e3a`, `0x4a7e48`, `0x4a7e69`, `0x4a6cf0`, `0x4a6d50`, `0x4a7ed0`, `0x4a7f00`, `0x4a7ce0`, `0x4a65a0`, `0x4a7d10`, `0x4a7d57`, `0x4a7d5a`, `0x4a65e0`, `0x4a7db0`, `0x4a7def`, `0x4a7e0f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::worldmap_selected_area_name`, `ui::worldmap_getmapinfo_pot_round`, `ui::glue_4a6_4a6d50_aspect_ftol`
 
 `0x4a6cf0` returns the name of the selected row (field 3 of `WorldMapArea`), from the direct area word when the continent is below 0. `0x4a6d50` returns the texture height as `ftol(H * 1002.0 / W)` of the matching `WorldMapContinent` row's tile counts, or the rectangle ratio when a zone is selected, and 0 when no row matches or W or H is 0.
 The round-up keeps the high part of the height and rounds its low byte to a power of two. `GetCurrentMapAreaID` does not exist in this build.
+
+`ui::worldmap_selected_area_name` runs `0x4a6cf0` whole, and `ui::worldmap_getmapinfo_pot_round` runs `0x4a7e69` to `0x4a7e9a` of `0x4a7e30`, the round-up.
 
 ## Hover and click
 
@@ -61,9 +65,11 @@ The round-up keeps the high part of the height and rounds its low byte to a powe
 Addresses: `0x4a7f30`, `0x4a7f7d`, `0x4a7540`, `0x4a754b`, `0x4a755a`, `0x4a75ba`, `0x4a75d1`, `0x4a75e8`, `0x4a7608`, `0x4a7fa0`, `0x4a7620`, `0x4a762a`, `0x4a7639`, `0x4a769b`, `0x4a76ab`, `0x4a76b3`, `0x4a76d7`, `0x4a6ec0`, `0x4a6f0e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4a6ec0`, `ui::worldmap_highlight`
 
 `ProcessMapClick` raises `Usage: ProcessMapClick(x, y)` for a non-number. It never reads the zone word, so a click on a zone map uses the zone's rectangle on the continent's cell grid and can open a neighbouring zone. `0x4a6ec0` refuses the direct area (`0x4a6f0e`). The cell grid is `geometry`'s continent bitmap; its construction is not in this doc.
+
+`ui::geo_4a6ec0` runs `0x4a6ec0` whole on seeded map state. `ui::worldmap_highlight` runs the slices `0x4a8041` to the branch at `0x4a80cb` or `0x4a80ea`, `0x4a82ed` to `0x4a833c`, `0x4a8319` to `0x4a833c`, `0x4a833c` to `0x4a83ac`, `0x4a83b9` to `0x4a858e`, `0x4a84a0` to `0x4a84c4` and `0x4a850b` to `0x4a858e` of `0x4a7fa0`.
 
 ## The landmarks
 
@@ -96,9 +102,11 @@ The bit test needs the object to be the active player (`0x468550`), so other pla
 Addresses: `0x4a89d0`, `0x4a8a00`, `0x4a8a48`, `0x4a8a62`, `0x4a8abe`, `0x4a8b53`, `0x4a6ad9`, `0x4a6adc`, `0x4a6ae2`, `0x4a6ae8`, `0x4a6af0`, `0x4a6afa`, `0x4a6b00`, `0x4a6b47`, `0x4a6b6e`, `0x4a6b74`, `0x4a6b87`, `0x4a6b8e`, `0x4a6c1c`, `0x4a6c27`, `0x4a6cb0`, `0x4a6cc1`, `0x4a6cdf`, `0xb6e628`, `0xb6e62c`, `0xb6e630`, `0xb6e6b4`, `0xc0d58c`, `0xc0d590`, `0xc0d594`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::worldmap_overlay_map_level_gate`, `ui::worldmap_overlay_reveal_gate`
 
 A row is kept when its map-area word (`+0x4`) equals the displayed row id and one of its four area slots (`+0x8`) passes the exploration test; at most one append per row. The displayed row id is the direct area, the continent's own row, or the zone's row. The path is the displayed row's name and the overlay's texture name `+0x20`; a missing row falls back to the `World` folder.
+
+`ui::worldmap_overlay_reveal_gate` runs `0x4a6b6b` to `0x4a6cc4` of `0x4a67a0`, and `ui::worldmap_overlay_map_level_gate` runs `0x4a6ad9` to `0x4a6cdf`, on seeded stores.
 
 ## Unit and corpse positions
 
@@ -108,7 +116,9 @@ A row is kept when its map-area word (`+0x4`) equals the displayed row id and on
 Addresses: `0x4a7360`, `0x4a737f`, `0x4a738e`, `0x4a7393`, `0x4a73de`, `0x4a73f9`, `0x4a7437`, `0x4a7474`, `0x4a74bb`, `0x4a74e5`, `0x4a750e`, `0x4a7320`, `0x4a7870`, `0x4a78ec`, `0x4a78fd`, `0x4a7906`, `0x4a790c`, `0x4a794b`, `0x4a8610`, `0x4a8698`, `0x4a86d0`, `0x4a86df`, `0x4a7960`, `0x4a79a4`, `0x492090`, `0x496400`, `0xc0d5a0`, `0xc0d5a4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4a7360`
 
 The axes are swapped: `u` follows world Y and `v` world X. `0x4a7870` takes the position of the unit object when it is a player and projects it under the active player's map id; with no object it reads the group record `0x496400` finds unless its status has bit 0x20, with the zone word at `+0x14` giving the map id through `AreaTable` and the signed words at `+0x16` and `+0x18` giving x and y.
 A unit in another map, or a map different from the displayed continent's, gives 0 and 0. `GetPlayerMapPosition` raises `Usage: GetPlayerMapPosition("player")` for a non-string.
+
+`ui::geo_4a7360` runs `0x4a7360` whole on seeded map state.

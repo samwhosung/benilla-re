@@ -316,12 +316,14 @@ by the frame time to a floor of 0 and signals once on reaching it.
 Addresses: `0x4acb10`, `0x4acb87`, `0x4acbdc`, `0x4adde0`, `0x4adde9`, `0x4ade1f`, `0x4ade25`, `0x4ad5f0`, `0x4ad5f6`, `0x4ad620`, `0x4ad642`, `0x4ad65d`, `0x4ad679`, `0x4ad69f`, `0x4ade60`, `0x4ade8c`, `0x4ade96`, `0x4afea0`, `0x4818d0`, `0x4909f6`, `0x845eac`, `0x8029d4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4a8_4ad620_set_value`, `ui::glue_4a8_4ade60_step_value`, `ui::frameapi_fpleaf_fabs_cmp`
 
 The init `0x4acb10` runs once per world entry from `0x4909f6`; it requests every stationery item from the cache and
 then queries the mail time (`0x4acbdc`). The step `0x4ade60` is called with the frame time from `0x4818d0`; its guard
 `0x4ade69` to `0x4ade74` rejects values that are not above 0, so it fires exactly once. The epsilon at `0x8029d4` is
 `0x34800000`. Nothing on the inbox path clears the value: taking mail does not.
+
+Bit-exact coverage: `ui::frameapi_fpleaf_fabs_cmp` covers `0x4afea0` to `0x4afeb3` of `0x4afea0`.
 
 ## Mail Lua functions
 
@@ -334,6 +336,8 @@ it. The inbox functions are `GetInboxNumItems`, `GetInboxHeaderInfo`, `GetInboxT
 Addresses: `0x4afee0`, `0x4aff10`, `0x4aded0`, `0x4aeab0`, `0x4aeb90`, `0x4aebc0`, `0x4af110`, `0x4af360`, `0x4af5d0`, `0x4af7d0`, `0x4af8e0`, `0x4afa60`, `0x4afba0`, `0x4afcd0`, `0x4afe00`, `0x4afea0`, `0x704120`, `0x704160`, `0x49034b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::frameapi_fpleaf_fabs_cmp`
 
 The pairs start at `0x845eb0`. The only caller of the registrar is `0x49034b`; `0x4afee9` calls `0x704120` once per pair.
+
+Bit-exact coverage: `ui::frameapi_fpleaf_fabs_cmp` covers `0x4afea0` to `0x4afeb3` of `0x4afea0`.

@@ -54,7 +54,7 @@ one. The box's own class array is built with no flag, so it always reads `|n` as
 Addresses: `0x44d670`, `0x44d6a4`, `0x44d6a9`, `0x44d6d0`, `0x44d6d8`, `0x44d6e0`, `0x44d6ea`, `0x44d6f3`, `0x44d6fc`, `0x5c2825`, `0x5c2835`, `0x5c283f`, `0x770dd3`, `0x77a4a0`, `0x77a552`, `0x77a5e2`, `0x77ba90`, `0x77bad9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_class_array`, `ui::editbox_markup_has_no_inline_texture_escape`, `ui::editbox_markup_insert_refusal_range`, `ui::editbox_markup_reachable_cursor_indices`, `ui::editbox_markup_step_consumes_whole_characters`, `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class`
 
 `0x44d670` maps the font string flags to the decoder's (`0x44d6a9` to `0x44d6fc`): `0x2000` to `0x100` (`0x44d6e0`),
 `0x4000` to `0x200` (`0x44d6ea`), `0x8000` to `0x400` (`0x44d6f3`), `0x0080` to `0x800` (`0x44d6fc`). The decoder
@@ -62,6 +62,8 @@ masks them at `0x5c2825` to `0x5c283f`. The font string constructor sets the fla
 and no instruction in the font string or edit box code ors in `0x2000`, `0x8000` or `0x0080`. `SetMultiLine`
 clears `0x4000` for a multi-line box (`0x77a552`) and sets it for a single-line one (`0x77a5e2`). `0x77bad9`
 pushes a flag word of 0.
+
+Bit-exact coverage: `ui::editbox_markup_class_array` covers the whole of `0x77ba90`; `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_insert_refusal_range` covers the whole of `0x77ba90`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77ba90`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers the whole of `0x77ba90`.
 
 ## The class array
 
@@ -74,13 +76,15 @@ last byte is 0.
 Addresses: `0x77ba90`, `0x77ba98`, `0x77bab5`, `0x77bac8`, `0x77bad0`, `0x77bae2`, `0x77bae7`, `0x77baec`, `0x77baf3`, `0x77bafc`, `0x77bb01`, `0x77bb0f`, `0x77bb19`, `0x77bb1e`, `0x77c022`, `0x77c670`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_class_array`, `ui::editbox_markup_has_no_inline_texture_escape`, `ui::editbox_markup_insert_refusal_range`, `ui::editbox_markup_reachable_cursor_indices`, `ui::editbox_markup_step_consumes_whole_characters`, `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class`
 
 `0x77ba90` zeroes four times `+0x344` bytes (`0x77baa2` to `0x77bac8`), then decodes token after token
 (`0x77bae2`). A class of 4 ors in the sticky bit (`0x77baec`); the dword is the length masked to 16 bits, the
 class shifted left 16 and the sticky bit (`0x77baf3` to `0x77bb03`), stored at the first byte (`0x77bb0f`). A class of
 5 clears the sticky bit after the store (`0x77bb19`, `0x77bb1e`). The rebuild is called at the tail of an insert
 (`0x77c022`); `0x77c670` stores the zero for the terminator after a deletion.
+
+Bit-exact coverage: `ui::editbox_markup_class_array` covers the whole of `0x77ba90`; `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_insert_refusal_range` covers the whole of `0x77ba90`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77ba90`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers the whole of `0x77ba90`.
 
 ## Boundaries and letters
 
@@ -109,7 +113,7 @@ visible character. A password box masks every raw byte with `*`, so a link's who
 Addresses: `0x77d4d0`, `0x77d52e`, `0x77d807`, `0x77d81e`, `0x77d822`, `0x77d8ee`, `0x77d8f3`, `0x77d93c`, `0x77da80`, `0x77dcde`, `0x77dcf1`, `0x772ae0`, `0x5c6940`, `0x5c6a13`, `0x5c6a29`, `0x5c6b70`, `0x5c6bb5`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_77d4d0`, `ui::textglue_scale_mul`
 
 `0x77d807` scans the window for `|` (skipping `||`): a `|c` first needs nothing (`0x77d81e`); a `|r` first
 (`0x77d822`) walks back for the `|c`, copies exactly ten bytes of it in front of the window (`0x77d8f3`) and sets
@@ -117,6 +121,8 @@ the composite text (`0x77d93c`). The caret uses `0x772ae0(line start pointer, by
 `0x5c6940`, whose per-token loop spends a byte budget and adds width only for classes 3 and 6 (`0x5c6a13` to
 `0x5c6a2f`). `0x5c6b70` skips to the next class 6 or 2 for kerning (`0x5c6bb5`). The password fill is
 `0x2a2a2a2a` (`0x77d52e`).
+
+Bit-exact coverage: `ui::textglue_scale_mul` covers `0x772b29` to `0x772b39` of `0x772ae0`.
 
 ## Steps
 
@@ -129,7 +135,7 @@ is a whole UTF-8 character, never part of one. A backward step mirrors the forwa
 Addresses: `0x77bb30`, `0x77bb42`, `0x77bb47`, `0x77bb52`, `0x77bb56`, `0x77bb60`, `0x77bb7d`, `0x77bb84`, `0x77bb89`, `0x77bb8b`, `0x77bb8f`, `0x77bb93`, `0x77bb98`, `0x77bbad`, `0x77bbb2`, `0x77bbcc`, `0x77bbe2`, `0x77bc13`, `0x77bc18`, `0x77bc24`, `0x77bc28`, `0x77bc59`, `0x77bc78`, `0x41aab0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_has_no_inline_texture_escape`, `ui::editbox_markup_reachable_cursor_indices`, `ui::editbox_markup_step_consumes_whole_characters`, `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class`
 
 The forward loop at `0x77bb60` adds the token's length (`0x77bb7d`) and keeps going for class 0 (`0x77bb84`) and
 class 4 (`0x77bb89`); then `atomic` clear ends the step (`0x77bb8b`), bit 31 clear ends it (`0x77bb8f`), and a link
@@ -138,6 +144,8 @@ token that is not class 5 keeps going (`0x77bb93`). The post loop (`0x77bb98`) a
 `0x77bc18`), crosses a link back to its class-4 start with `atomic` (`0x77bc24`, `0x77bc28`), then back over leading
 colour and link tokens (`0x77bc59`). `0x41aab0` decodes up to six UTF-8 bytes; the lengths are the class
 array's. The token length is read as the step's advance, so no step lands inside a character.
+
+Bit-exact coverage: `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77bb30`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers `0x77bb30` to `0x77bbc9` of `0x77bb30`.
 
 ## Where a step is atomic
 
@@ -158,7 +166,7 @@ mouse can put the cursor between the characters of a link's name. No path can pu
 Addresses: `0x77c6b0`, `0x77c6d2`, `0x77c72c`, `0x77c280`, `0x77c2a3`, `0x77c3f0`, `0x77c310`, `0x77c8c0`, `0x77c7a0`, `0x77c980`, `0x77c9f0`, `0x77d0d0`, `0x77d295`, `0x77d2f6`, `0x77cb20`, `0x77cba4`, `0x77cbcf`, `0x77d4d0`, `0x77d320`, `0x77d733`, `0x77ac60`, `0x77ac8d`, `0x77a860`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_77d0d0_case2`, `ui::glue_77d0d0_clamp`, `ui::glue_77d0d0_head`, `ui::glue_77d0d0_tail_cases`
 
 The sites that push 1 for `atomic` are `0x77c6d2` and `0x77c2a3` (the others reach them through
 `0x77c6b0` and `0x77c280`); the sites that push 0 are `0x77d295`, `0x77d2f6`, `0x77cba4`, `0x77cbcf`, `0x77d733`, `0x77d34e`,
@@ -197,10 +205,12 @@ right edge and converts them from the line start, so markup or multibyte text gi
 Addresses: `0x77bb56`, `0x77bb60`, `0x77bb98`, `0x77c750`, `0x77c75c`, `0x77ba90`, `0x77a5e2`, `0x77d27f`, `0x77d292`, `0x77d2a6`, `0x772c30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::editbox_markup_class_array`, `ui::editbox_markup_has_no_inline_texture_escape`, `ui::editbox_markup_insert_refusal_range`, `ui::editbox_markup_reachable_cursor_indices`, `ui::editbox_markup_step_consumes_whole_characters`, `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class`, `ui::textglue_scale_mul`
 
 The outer test `0x77bb56` is passed once per step; the inner loop re-enters at `0x77bb60`. A trailing `|r` or `|h` is
 safe because the post loop (`0x77bb98`) ends on the terminator. `0x77c750` tests only that the cursor is below
 the length (`0x77c75c`) before the step. The skew comes from the class array being built with no flags
 (`0x77bad9`) while `0x77a5e2` turns the font string's `|n` off. The right-justified case converts at
 `0x77d27f` to `0x77d2a6`.
+
+Bit-exact coverage: `ui::editbox_markup_class_array` covers the whole of `0x77ba90`; `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_has_no_inline_texture_escape` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_insert_refusal_range` covers the whole of `0x77ba90`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77ba90`; `ui::editbox_markup_reachable_cursor_indices` covers the whole of `0x77bb30`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77ba90` to `0x77baea`, `0x77baf3` to `0x77bb1c`, `0x77bb25` to `0x77bb2f` of `0x77ba90`; `ui::editbox_markup_step_consumes_whole_characters` covers `0x77bb30` to `0x77bb91`, `0x77bb98` to `0x77bbb5`, `0x77bbbe` to `0x77bbc9` of `0x77bb30`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers the whole of `0x77ba90`; `ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class` covers `0x77bb30` to `0x77bbc9` of `0x77bb30`; `ui::textglue_scale_mul` covers `0x772c62` to `0x772c76` of `0x772c30`.

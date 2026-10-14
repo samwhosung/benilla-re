@@ -22,7 +22,7 @@ included, selects the player's.
 Addresses: `0xb700f0`, `0xb6f098`, `0xb7116c`, `0xb71174`, `0xb71160`, `0xb71170`, `0xb710fc`, `0x4b3ec0`, `0x4b3ef8`, `0x4b3efd`, `0x4b3f0c`, `0x4b3f27`, `0x4b3f35`, `0x64a4c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4b0_4b3ec0_index_ftol`
 
 `0x4b3ec0(L, &index, &book)` fails (returns 0) unless argument 1 is a number or numeric string
 (`0x6f34d0`) and argument 2 is a string or number (`0x6f3510`); a missing book type fails. The index is
@@ -184,7 +184,7 @@ signals only.
 Addresses: `0x4b2fd0`, `0x4b3040`, `0x4b30c0`, `0x4b3c30`, `0x4b43e0`, `0x73f727`, `0x64a480`, `0x4b3051`, `0x4b305e`, `0x4b310c`, `0x4b3143`, `0x4b3164`, `0x4b3179`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4b30c0`
 
 `0x4b2fe2` and `0x4b2ff6` push the comparators for `qsort` (`0x73f727`) of 4-byte elements; the pet sort is
 at `0x4b3015`; `0x4b302a` loads 0x104 and tail-jumps to the signal. `0x4b3053` returns -1 for a first
@@ -192,6 +192,8 @@ key of 0 and `0x4b305e` +1 for a second key of 0. `0x4b310c` and `0x4b3115` are 
 `0x4b3143` the name compare, `0x4b3164 cmp eax,ebx` the numeric ranks (`0x4b3166 jbe`, `0x4b3171 sbb`),
 `0x4b3179` the rank strings. `0x4b3c30` loops over the rank string with the digit test `0x6c9c30`
 (`n = 10n + digit`) and falls back to `[rec+0x74]` at `0x4b3c94`.
+
+Bit-exact coverage: `ui::sortcmp_4b30c0` covers `0x4b30c0` to `0x4b30e2`, `0x4b30e6` to `0x4b30f6`, `0x4b30fa` to `0x4b31a3` of `0x4b30c0`.
 
 ## Who signals SPELLS_CHANGED
 
@@ -238,12 +240,14 @@ pet token of the player's class record (`+0x10`), or `PET` without a player.
 Addresses: `0x4b40a0`, `0x4b4180`, `0x4b4240`, `0x4b44e0`, `0x4b43f0`, `0x4b4410`, `0x4b4490`, `0x4b4291`, `0x4bccb0`, `0x4bd160`, `0x6e2ea0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4b40a0_get_spell_cooldown`
 
 `0x4b4125` and `0x4b4144` multiply by 0.001; the third value is pushed unscaled (`0x4b4166`). `0x4b41da` calls
 `0x4bd160` for a pet-book spell and `0x4b41e7`, `0x4b420c` shift bits 31 and 30. `0x4b4291` calls
 `0x4bccb0` for a pet-book spell with a nonzero id. `0x4b4553 test [rec+0x18],0x40`. `0x4b4416` reads
 the pet count; a class id past the class table makes `HasPetSpells` read address 0x10 (`0x4b4490`).
+
+Bit-exact coverage: `ui::luabind_4b40a0_get_spell_cooldown` covers `0x4b411d` to `0x4b412e`, `0x4b413c` to `0x4b414d` of `0x4b40a0`.
 
 ## Picking up a book spell
 

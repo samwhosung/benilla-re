@@ -283,7 +283,7 @@ or `|max|` range from `0x6e3480` exceeds 2.384e-07.
 Addresses: `0x4e56f0`, `0x4e7550`, `0x4e75d0`, `0x4e5810`, `0x4e5880`, `0x4e5765`, `0x4e5770`, `0x4e5780`, `0x4e579c`, `0x6e3480`, `0x6e4440`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4dc_4e5810_near_zero_pair`
 
 `0x4e5765 call 0x6e4440` with three zero arguments; a 0 result stores 0 and returns 1 (`0x4e5770`).
 `0x4e5780` loads the first implicit target `[rec+0x148]`, `0x4e5795` jumps through a 2-case table
@@ -303,12 +303,14 @@ of the pet's spell flags as 1 or nil.
 Addresses: `0x4e6ed0`, `0x4e6ca0`, `0x4e6f26`, `0x4e6f45`, `0x4e5250`, `0x4e52b9`, `0x4e5310`, `0x4e5380`, `0x4e6f90`, `0x4e6fd1`, `0x4bd160`, `0x6e2ed0`, `0x6e2ea0`, `0x622270`, `0x4e7470`, `0x4e74e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4e6ed0_get_action_cooldown`
 
 The cooldown binding multiplies by the double 0.001 at `0x4e6f26` and `0x4e6f45` and pushes the third
 value without it. `0x4e52b9` loads `[rec+0x2c]` and compares 0x18 and 0x19; the charge test reads
 `[rec+0x144 + 4i]` of each on-use spell. `0x4e5380 call 0x622270` pushes the entry and mode 1
 (equipment). `0x4e6fd1` passes the spell id to `0x4bd160`. `0x4e7470` and `0x4e74e0` push 1 or nil.
+
+Bit-exact coverage: `ui::luabind_4e6ed0_get_action_cooldown` covers `0x4e6f1e` to `0x4e6f2f`, `0x4e6f3d` to `0x4e6f4e` of `0x4e6ed0`.
 
 ## Action icon
 

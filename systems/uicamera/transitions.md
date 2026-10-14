@@ -29,7 +29,7 @@ CVar its setter divides by.
 Addresses: `0x50f160`, `0x5b7bb0`, `0x512120`, `0x5126b0`, `0x512c70`, `0x512dc0`, `0x512830`, `0x512980`, `0x512a50`, `0x512ba0`, `0x512490`, `0x5125e0`, `0x512270`, `0x5123c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50f160_change_detect`, `ui::glue_50f160_rate_frac`
 
 The speed CVar of each setter is read at `0x5121ca` (distance), `0x51274e` (height), `0x512d75` (yaw), `0x512935` (pitch), `0x512b55` (pivot bias),
 `0x512595` (ground pitch) and `0x512375` (field of view). Each pair of angle setters is an outer and an inner function.
@@ -45,7 +45,7 @@ target set to the live value and its times set to 0. The yaw channel is skipped 
 Addresses: `0x50f160`, `0x5b7bb0`, `0x40a2b0`, `0x50d720`, `0x50d900`, `0x50dbc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50f160_change_detect`, `ui::glue_50f160_rate_frac`
 
 The consumer ends with the pitch clamp `0x50d720` and the terrain tilt kernels `0x50d900` and `0x50dbc0` (`uicamera/effects`). The seven blocks sit at `0x50f20b` (field of view), `0x50f2b8` (distance), `0x50f36a` (height), `0x50f417` (ground pitch), `0x50f4c4` (pivot bias), `0x50f576`
 (pitch) and `0x50f623` (yaw, skipped by the test of mode bit 0 at `0x50f629`). Each compares target and live against `0x8029d4` (2^-22). The ease is `0x5b7bb0(from,
@@ -63,12 +63,14 @@ factor gives a duration of 0, and the value arrives at the next frame.
 Addresses: `0x512270`, `0x5123c0`, `0x512200`, `0x512120`, `0x5126b0`, `0x512790`, `0x512c70`, `0x512dc0`, `0x512830`, `0x512980`, `0x512a50`, `0x512ba0`, `0x512490`, `0x5125e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_512270`, `ui::cam_5123c0`, `ui::cam_512490`, `ui::cam_5125e0`, `ui::cam_512830`, `ui::cam_512980`, `ui::cam_512a50`, `ui::cam_512ba0`, `ui::cam_512c70`, `ui::cam_512dc0`, `ui::glue_511_512120_body`, `ui::glue_511_512120_quartet`, `ui::glue_511_commit_if_moved`
 
 `0x5122de` stores the wrapped live value; `0x51230a` to `0x51232c` are the repeat test against the memo words `+0x228`, `+0x234`, `+0x230`; `0x51235f` is the
 "already there" return. `0x512387` multiplies the delay by -1000 (0x801448) and truncates; `0x51239e` subtracts that from `now`; `0x5123a1` to `0x5123a9` form the
 duration. The inner `0x5123c0(target, duration, start)` wraps the live value again (`0x5123d5` to `0x512426`), stores the start value, target, start time and duration
 (`0x51244f` to `0x512471`) and sets the flag.
+
+Each setter runs whole under `ui::cam_` and its address, with the pointer chain to its speed CVar built in memory.
 
 ## Relative and absolute frames
 
@@ -81,12 +83,14 @@ lowers them when it ends; the external-move flag of `uicamera/follow` raises the
 Addresses: `0x50d3b0`, `0x50d440`, `0x50d500`, `0x50d520`, `0x5102b0`, `0x510120`, `0x50fe30`, `0x50fdd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_510120`, `ui::cam_5102b0`, `ui::glue_50d440_neg_push`
 
 `0x50d3b7` to `0x50d3c2` raise `+0xa4` and test it against 0; `0x50d40d` and `0x50d425` call the yaw integrator `0x5102b0` with the facing (`[unit+0xc98]` for a unit, else slot
 0x18). `0x50d447` lowers it and `0x50d4aa` to `0x50d4db` pass the facing negated. `0x50d500` and `0x50d520` do the same for `+0xa8` with the terrain
 pitch `+0x108` and the pitch integrator `0x510120`. `0x50fe72` and `0x50fe79` call `0x50d3b0` and `0x50d500` when mouselook begins; `0x50fde6` and `0x50fdeb` call
 `0x50d440` and `0x50d520` when it ends.
+
+`ui::cam_510120` and `ui::cam_5102b0` run `0x510120` and `0x5102b0` whole on the camera object's words.
 
 ## Field of view
 
@@ -98,7 +102,7 @@ bit set the bias counts as 0.
 Addresses: `0x50d6d0`, `0x50d320`, `0x512e90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50d320_deg2rad_set`, `ui::glue_50d6d0_pitch_clamp`
 
 `0x50d6d0` loads 0 when bit 3 is set (`0x50d6d9`), else `+0x10c`, adds `+0x40`, and clamps to the constants 0.0 (0x8089bc) and 3.1241393 (0x8089b8, 179 degrees).
 `0x50d331` calls `0x512e90` with view 0 and blend 2, `0x50d33f` sets bit 3 and `0x50d34e` stores the angle; `0x50d360` to `0x50d378` do the reverse.
@@ -112,7 +116,7 @@ the same cosine. Starting to bob sets mode bit 9 and the start time.
 Addresses: `0x511110`, `0x5110f0`, `0x511170`, `0x7bf680`, `0xbe10bc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_511_511110_abs_div`
 
 `0x5110f0` sets bit 0x200 and stores the time at `+0x238`. `0x511110` clears the bit, copies the offsets to `+0x240` to `+0x248`, divides the largest by the CVar into `+0x23c` and
 stores the time. `0x511170(flag)` calls the first on a rising flag and the second on a falling one. `0x50f16b` to `0x50f1c4` ease the offsets from the copies.

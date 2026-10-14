@@ -30,7 +30,7 @@ the cooldown line, else 0.
 Addresses: `0x52e610`, `0x52e62c`, `0x52e63a`, `0x52e655`, `0x52e661`, `0x52e66d`, `0x52e687`, `0x52e69f`, `0x52e6b4`, `0x52e6c1`, `0x52e6c6`, `0x52e6cc`, `0x52f7a1`, `0x52f7af`, `0x52f7b5`, `0x52f7c0`, `0x52f589`, `0x52f59e`, `0x52f5a4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_512_52e610_timer_ratios`
 
 `0x52e62c` reads p7; zero calls `0x530050` (`0x52e63a`). The record is `[0xc0d788][p1]` bounded by `0xc0d78c`
 (`0x52e687`, `0x52e695`). A fresh build stores the spell id at `+0x39c` and zeroes `+0x3b0` (`0x52e6c6`,

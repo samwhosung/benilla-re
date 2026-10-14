@@ -156,7 +156,7 @@ A dead player therefore still orbits the camera and cannot turn the body.
 Addresses: `0x514400`, `0x514446`, `0x51446f`, `0x514474`, `0x514479`, `0x5145e0`, `0x5145eb`, `0x5145fa`, `0x51460c`, `0x5103e0`, `0x5152e0`, `0x515330`, `0x5151b0`, `0x5151e1`, `0x5151e6`, `0x515250`, `0x51527e`, `0x515283`, `0x50fee0`, `0x60de30`, `0x60de70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_503_514400_abs_accumulate`
 
 The stand state is slot `+0xa4` of the unit, which for the active player returns the predicted value. Nine call sites reach the facing and pitch setters `0x60de30` and `0x60de70`, and each sits behind a health test.
 

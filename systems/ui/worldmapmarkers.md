@@ -12,7 +12,7 @@ Both raise `Usage: CreateWorldMapArrowFrame(parent)` (and the mini form) for a n
 Addresses: `0x4a8bb0`, `0x4a8bb9`, `0x4a8bd0`, `0x4a8c1d`, `0x4a8c3e`, `0x4a8c60`, `0x4a7a80`, `0x4a7a8a`, `0x4a7aa5`, `0x4a7ab1`, `0x4a7ac8`, `0x4a7ad3`, `0x4a7ad8`, `0x4a7b80`, `0x76c8e0`, `0x80655c`, `0xb6e6b8`, `0xb6e6bc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4a6_4a7a80_4a7b20_4a7b80_fmul_scales`
 
 The scale is stored at `+0x3a0` of the model (`0x4a7ae3`) and the constant at `0x80655c` is 5/3. The frame base constructor shows the new frame; this family does not hide it. The caches are cleared by the interface shutdown (`0x490c44`) and the world-leave path (`0x4a64be`).
 
@@ -24,7 +24,7 @@ The scale is stored at `+0x3a0` of the model (`0x4a7ae3`) and the constant at `0
 Addresses: `0x4a8d10`, `0x4a7c20`, `0x4a7c29`, `0x4a7c33`, `0x4a7c46`, `0x4a7c77`, `0x4a7c99`, `0x4a7cb1`, `0x4a7cba`, `0x4a7b20`, `0x4a7b32`, `0x4a7b42`, `0x4a9120`, `0x4a9132`, `0x4a913f`, `0x4a9149`, `0x4a9155`, `0x4a915f`, `0x4a9170`, `0x4818f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4a6_4a7a80_4a7b20_4a7b80_fmul_scales`
 
 `0x4a7c20` looks up the object at the camera's followed GUID (`+0x88`, `+0x8c`) with type mask 1 and takes its facing from slot `+0x18`. `0x6f1c10` coerces the argument. The centring needs the model's size, which is its bounding box, so it takes effect once the model file is resident.
 
@@ -36,7 +36,7 @@ A relative point that is not a string defaults to the point, and offsets that ar
 Addresses: `0x4a8d20`, `0x4a8d3c`, `0x4a8d81`, `0x4a8da1`, `0x4a8dbe`, `0x4a8df8`, `0x4a8e2c`, `0x4a8e51`, `0x4a8e98`, `0x4a8ea0`, `0x4a8eb2`, `0x4a8f20`, `0x767c70`, `0x6f1840`, `0x41ad70`, `0x41ae60`, `0x7ffd68`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4a8d20_arrow_scale_divide`, `ui::luabind_4a8f20_mini_arrow_scale_divide`
 
 With no arrow the function does nothing. The mini form `0x4a8f20` is identical on `0xb6e6bc`. The offset conversion is the inverse of the size getters (`nameplates#size-and-anchors`).
 

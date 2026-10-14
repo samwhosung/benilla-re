@@ -32,7 +32,7 @@ other systems write or the table build reads; offsets are from `0xce9b60`.
 Addresses: `0x6d48b0`, `0xce9b60`, `0x482ad0`, `0x482aed`, `0x482af0`, `0x482b0e`, `0x482b27`, `0x482b86`, `0x482bc9`, `0x482bdb`, `0x482be2`, `0x482bf6`, `0x482c02`, `0x6d1ba0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_normalize3`, `ui::textglue_482_sq_len3_482200`, `ui::textglue_482_tick_scale`
 
 `0x482ad0(dt)`, called once per rendered world frame, takes the state from `0x6d48b0` and stores
 the frame time at `+0x3c` (`0x482aed`), the camera's `+0x3c` at `+0x34` (`0x482af0`), the
@@ -41,6 +41,8 @@ millisecond clock times 0.001 at `+0x38` (`0x482b0e`), the camera's `+0x8` at `+
 position at `+0xc` when there is one (`0x482bc9`), the game clock's word, time of day and day
 count at `+0`, `+4` and `+8` (`0x482bdb`, `0x482be2`, `0x482bf6`), and the weather manager's
 `+0x14` at `+0x40` (`0x482c02`). `0x6d1ba0` zeroes the block and sets `+0x50` to −1.
+
+Bit-exact coverage: `ui::textglue_482_normalize3` covers `0x482b57` to `0x482b89` of `0x482ad0`; `ui::textglue_482_sq_len3_482200` covers `0x482b57` to `0x482b89` of `0x482ad0`; `ui::textglue_482_tick_scale` covers `0x482b08` to `0x482b36` of `0x482ad0`.
 
 ## Time of day to half-minutes
 

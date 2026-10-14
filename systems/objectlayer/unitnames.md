@@ -184,7 +184,7 @@ tick creates it afresh. The anchor is the name anchor raised by 2/3 in world z.
 Addresses: `0x60f600`, `0x60f773`, `0x60f77a`, `0x60f740`, `0x60f7f0`, `0x60f808`, `0x608a10`, `0x483ee0`, `0x483f7a`, `0x484065`, `0x484075`, `0x484086`, `0x484093`, `0x4840a3`, `0x4840a8`, `0x80abfc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_483ee0`
 
 `0x60f7f0` calls `0x608640`, adds the float at `0x80abfc` (0.6667) and returns the verdict of
 `0x483ee0`, which `0x60f773` tests; a failure jumps to `0x60f740`, the pool return `0x608a10`,
@@ -192,6 +192,8 @@ which clears `+0xe60`. `0x483ee0` fails when the clip depth is below the camera'
 (`0x483f7a`) without writing the point, and when the mapped point leaves the viewport, edges
 included (`0x484075` to `0x4840a3`), after writing it (`0x484065`). The projection test runs before
 the 20-yard test.
+
+`ui::geo_483ee0` runs `0x483ee0` whole, with the matrix transform `0x7bcb40` stubbed to return a chosen clip vector.
 
 ## Seating the plates
 

@@ -81,7 +81,7 @@ unless a logout is pending.
 Addresses: `0x482ea0`, `0x482ebe`, `0x482ec3`, `0x482ecd`, `0x482ed8`, `0x482ede`, `0x482ee5`, `0x482ef5`, `0x482f09`, `0x482f1a`, `0x482f2f`, `0x482f39`, `0x482f58`, `0x482f68`, `0x482f76`, `0x482f80`, `0x482f84`, `0x482f8b`, `0x482f91`, `0x482f99`, `0x482fab`, `0x482fb4`, `0x482fba`, `0x5ed430`, `0x5eb740`, `0x6103a0`, `0x5ab000`, `0x5ab0d0`, `0x703bf0`, `0x49a870`, `0xb6e5cc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_add3`, `ui::textglue_482_mul_add`
 
 `0x482ecd lea ecx,[eax-0x493e0]` (300000) sets no flags; `0x482ed3 test ecx,ecx; jl 0x482fbf` leaves. `eax` still holds the
 elapsed time at `0x482ede add eax,0xffe488c0` (minus 1800000), so `0x482ee5 jl 0x482f39` runs the 5 to 30 minute
@@ -90,3 +90,5 @@ of the away leg; only `0x482f58`, no player, skips both. The sit is `0x5ed430(1)
 `0x482fb4` the mirror before `0x5eb740(0)`. Past 30 minutes `0x482ef5` leaves when `0x5ab0d0` says a logout
 is pending; otherwise `IDLE_MESSAGE` is looked up (`0x703bf0`) and shown as system chat type 10 (`0x49a870`)
 and `0x5ab000(0, 0)` sends opcode 0x4b and sets the pending byte, so the next frames leave at `0x482ef5`.
+
+Bit-exact coverage: `ui::textglue_482_add3` covers `0x4830be` to `0x4830e3` of `0x482ea0`; `ui::textglue_482_mul_add` covers `0x4831d0` to `0x4831ee` of `0x482ea0`.

@@ -24,7 +24,7 @@ when it was visible already.
 Addresses: `0x76ae10`, `0x76ae13`, `0x76ae23`, `0x76ae2d`, `0x76ae3b`, `0x76ae49`, `0x76ae58`, `0x76ae6c`, `0x76ae7b`, `0x76ae85`, `0x76aeac`, `0x76aed5`, `0x76aee0`, `0x76aeec`, `0x76aef5`, `0x775750`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::effective_visible_show`
 
 `0x76ae10` tests `+0xd0` (`0x76ae13`) and the parent `+0x9c`'s `+0xd4` (`0x76ae23`, `0x76ae2d`),
 then `+0xd4` (`0x76ae3b`); with `+0x114` clear it calls `0x768060(0)` on the frame's layout part
@@ -33,6 +33,8 @@ and on `+0xa8` (`0x76ae58`, `0x76ae6c`). It stores 1 at `+0xd4` (`0x76ae7b`), ca
 0x88 of each child of `+0x300` (`0x76aed5`), `0x76a5b0` when bit 1 of `+0xb4` is set
 (`0x76aee0`), and slot 0x30 (`0x76aef5`). The Lua `Show` (`0x775750`) stores 1 at `+0xd0` and
 calls slot 0x88.
+
+`ui::effective_visible_show` runs `0x76ae10` whole, with `0x764780` and `OnShow` stubbed and empty child lists.
 
 ## Hiding a frame
 
@@ -44,13 +46,15 @@ returns when the parent is shown again. The Lua `Hide` clears shown first.
 Addresses: `0x76ad50`, `0x76ad53`, `0x76ad61`, `0x76ad70`, `0x76ad84`, `0x76ad93`, `0x76ad9d`, `0x76adbf`, `0x76adee`, `0x76adfd`, `0x775810`, `0x7758b1`, `0x7758bb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::effective_visible_hide`
 
 `0x76ad50` tests `+0xd4` (`0x76ad53`); with `+0x114` clear it calls `0x768060(1)` on its layout
 part and `+0xa8` (`0x76ad70`, `0x76ad84`); it stores 0 at `+0xd4` (`0x76ad93`), calls
 `0x764920(frame, 0)` (`0x76ad9d`), 0x77fc60 for each region (`0x76adbf`), slot 0x84 of each
 child (`0x76adee`) and slot 0x34 (`0x76adfd`). The Lua `Hide` stores 0 at `+0xd0` (`0x7758b1`)
 and calls slot 0x84 (`0x7758bb`).
+
+`ui::effective_visible_hide` runs `0x76ad50` whole, with `0x764920` and `OnHide` stubbed and empty child lists.
 
 ## Show and hide scripts
 
@@ -170,7 +174,7 @@ number to 0 to 1, NaN going to 1, multiplies by 255 and truncates.
 Addresses: `0x76a690`, `0x76a69a`, `0x76a6a2`, `0x76a6d0`, `0x76a702`, `0x774e90`, `0x774f32`, `0x774f49`, `0x774f5e`, `0x774f66`, `0x774f6e`, `0x7ffe58`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::set_alpha_scaled`, `ui::set_alpha_value`
 
 `0x76a690` compares the byte with `+0xc8` and returns when equal (`0x76a69a`), stores it
 (`0x76a6a2`), calls slot 0x20 of each region with 0 (`0x76a6d0`) and slot 0x28, itself in
@@ -178,6 +182,8 @@ Test: none
 `fcom 0.0; test ah,0x5; jp` replaces a value below 0 with 0.0 (`0x774f32`), `fcom 1.0; test
 ah,0x5; jnp` keeps a value below 1 and replaces the rest, NaN included, with 1.0 (`0x774f49`),
 then `fmul [0x7ffe58]` (255.0) and `__ftol` (`0x774f5e`, `0x774f66`) before slot 0x28.
+
+Bit-exact coverage: `ui::set_alpha_scaled` covers `0x774f32` to `0x774f66` of `0x774e90`; `ui::set_alpha_value` covers `0x774f32` to `0x774f66` of `0x774e90`.
 
 ## Scale
 
@@ -190,7 +196,7 @@ scale of each region, and as the parent scale of each child.
 Addresses: `0x76ac10`, `0x76ac1a`, `0x76ac3b`, `0x76ac44`, `0x76ac50`, `0x76ac7b`, `0x76ac90`, `0x76ac97`, `0x76aca2`, `0x76aca8`, `0x76acad`, `0x76acd5`, `0x76ad06`, `0x76ad31`, `0x775140`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::effective_scale`, `ui::glue769_76ac50_setter_delta_abs`, `ui::glue_767_76ac10_rsub_change_detect`
 
 `0x76ac10` compares the new scale with `+0xb8` (`0x76ac1a`), stores it (`0x76ac3b`) and calls slot
 0x8c, `0x76ac90`, with the force byte (`0x76ac44`); `0x76ac50` does the same with `+0xbc`.
@@ -198,6 +204,8 @@ Test: none
 it with the layout scale `+0x7c` (`0x76acad`), calls `0x768360(scale, force)` (`0x76acd5`), slot
 0x10 of each region's layout part (`0x76ad06`) and `0x76ac50(scale, force)` for each child
 (`0x76ad31`). The Lua `SetScale` refuses a scale that is not above 0.
+
+`ui::effective_scale` runs `0x76ac90` whole, with the layout scale setter `0x768360` stubbed and empty child lists.
 
 ## Parent change
 

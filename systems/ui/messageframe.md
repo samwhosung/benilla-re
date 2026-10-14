@@ -42,7 +42,7 @@ is argument 3. An absent or non-number id is 0, and `UpdateColorByID` ignores id
 Addresses: `0x792900`, `0x79299c`, `0x7929be`, `0x7929c7`, `0x7929da`, `0x792a1b`, `0x792a2d`, `0x792ac0`, `0x792ac6`, `0x792acc`, `0x792add`, `0x792b13`, `0x792b39`, `0x792b48`, `0x7929b7`, `0x792b7c`, `0x788250`, `0x788259`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_792_color_quantize`
 
 `0x792900` requires `0x6f3510` on argument 2 and a nonempty string (`0x79299c` to `0x7929c7`), then
 `0x6f34d0` on 3, 4 and 5 (`0x7929da`). Each value is compared with 0.0 and then 1.0, `test ah,5;
@@ -50,6 +50,8 @@ jp` (`0x792a1b`, `0x792a2d`), multiplied by 255.0, added 0.5 and truncated by `0
 (`0x792ac0` to `0x792acc`); `or edi,0xffffff00` sets the alpha (`0x792add`). The id is read at 6
 (`0x792b13`) or, after `[[+0x35c]+0x58]` (`0x792b39`), at 3 (`0x792b48`), else stays the 0 of
 `0x7929b7`. `0x788250` returns for id 0 (`0x788259`).
+
+Bit-exact coverage: `ui::luabind_792_color_quantize` covers `0x792ac0` to `0x792acc`, `0x792ad4` to `0x792b06` of `0x792900`.
 
 ## The ring of lines
 
@@ -78,7 +80,7 @@ Scrolled up, the clock stops.
 Addresses: `0x788460`, `0x788471`, `0x788480`, `0x78848c`, `0x78849b`, `0x7884bb`, `0x7884d4`, `0x7884e5`, `0x7884f9`, `0x788513`, `0x788521`, `0x788525`, `0x78852b`, `0x788547`, `0x78854d`, `0x788553`, `0x788558`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_788_788460_alpha_step`
 
 `0x788460` (slot 14) calls `0x76b2c0`, then requires `+0x360` (`0x788480`), `+0x354` (`0x78848c`)
 and `+0x34c > 0` (`0x78849b`). A record with `+0x8` clear is skipped (`0x7884bb`). A nonzero `+0xc`
@@ -98,7 +100,7 @@ The mouse plays no part.
 Addresses: `0x788b80`, `0x788baf`, `0x788bb3`, `0x788bc0`, `0x788bc9`, `0x788bdb`, `0x788af0`, `0x788aff`, `0x788b09`, `0x788610`, `0x788626`, `0x78863e`, `0x788650`, `0x788666`, `0x788700`, `0x788739`, `0x788750`, `0x7888be`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_788750_acc_and_sum`, `ui::glue_geom_788750_bounds_ratios`
 
 `0x788b80` sets each shown record's alpha to 0xff (`0x788baf`), `+0x8` to 1 (`0x788bb3`), copies
 `+0x364` and `+0x368` into it (`0x788bc0`, `0x788bc9`) and shows its node (`0x788bdb`).
@@ -147,13 +149,15 @@ the frame's fade time like the scrolling frame's.
 Addresses: `0x795590`, `0x795625`, `0x79564b`, `0x795658`, `0x795752`, `0x795769`, `0x795825`, `0x785d00`, `0x786200`, `0x786214`, `0x78625a`, `0x78635e`, `0x786376`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_786200_alpha`, `ui::luabind_792_color_quantize`
 
 `0x795590` returns for a missing or empty text (`0x795625` to `0x79564b`), starts the colour at
 0xffffffff (`0x795658`) and the alpha at 1.0 (`0x795752`), reads argument 6 (`0x795769`) and
 calls slot 0x90, `0x785d00`, with the text and colour (`0x795825`). `0x786200` (slot 14) places the
 `+0x35c` queued lines through `0x7863b0` (`0x78625a`) and fades with `+0x350` (`0x78635e`) into
 byte `+0xb` (`0x786376`).
+
+Bit-exact coverage: `ui::luabind_792_color_quantize` covers 4 ranges from `0x79579f` to `0x795808` of `0x795590`.
 
 ## Lua methods
 
@@ -164,10 +168,12 @@ methods call the shared font functions (`fontstring`, Lua methods) on the frame'
 Addresses: `0x87b5c0`, `0x794190`, `0x7941c0`, `0x87b960`, `0x795b70`, `0x795ba0`, `0x791d00`, `0x791dc0`, `0x791e80`, `0x791f40`, `0x792000`, `0x7920c0`, `0x792180`, `0x792240`, `0x792300`, `0x7923c0`, `0x792480`, `0x792540`, `0x792600`, `0x7926c0`, `0x792780`, `0x792840`, `0x792900`, `0x792b90`, `0x792c60`, `0x792d30`, `0x792e00`, `0x792ed0`, `0x792fa0`, `0x793070`, `0x793130`, `0x7931f0`, `0x7932b0`, `0x7934d0`, `0x793590`, `0x793650`, `0x793720`, `0x7937e0`, `0x7938a0`, `0x7939a0`, `0x793a40`, `0x793b00`, `0x793bf0`, `0x793cb0`, `0x793da0`, `0x793e60`, `0x7942b0`, `0x794370`, `0x794450`, `0x794510`, `0x7945d0`, `0x794690`, `0x794750`, `0x794810`, `0x7948d0`, `0x794990`, `0x794a50`, `0x794b10`, `0x794bd0`, `0x794c90`, `0x794d50`, `0x794e10`, `0x794ed0`, `0x794ff0`, `0x7950d0`, `0x795170`, `0x795230`, `0x795320`, `0x7953e0`, `0x7954d0`, `0x795590`, `0x795840`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_792_color_quantize`
 
 The tables are pairs of a name and a function: from `SetFontObject` (`0x791d00`) to `Clear`
 (`0x793e60`), and from `SetFontObject` (`0x7942b0`) to `Clear` (`0x795840`). The registrars call
 `0x701d80` with 0x28 and 0x1a. `0x7941c0` and `0x795ba0`, slot 2 of each vtable, look in the type's
 hash and then call `0x778590`. The scroll methods call `0x788610`, `0x788650`, `0x7885b0`,
 `0x7885e0`, `0x788690`, `0x7886d0` and `0x788700`.
+
+Bit-exact coverage: `ui::luabind_792_color_quantize` covers `0x793464` to `0x793470`, `0x793478` to `0x7934aa` of `0x7932b0`.

@@ -24,7 +24,7 @@ An object hit returns 2 with its GUID at `out+0` and its point and distance; a t
 Addresses: `0x481190`, `0x4812c1`, `0x4812c8`, `0x481321`, `0x481335`, `0x48134c`, `0x481351`, `0x481377`, `0x480df0`, `0x480df9`, `0x480e19`, `0x480e20`, `0x480e3d`, `0x480e7b`, `0x480e92`, `0x480eb4`, `0x480ebf`, `0x480ec5`, `0x480f67`, `0x480f8b`, `0x481026`, `0x672170`, `0x480a50`, `0x481f00`, `0x481f47`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_480_480a50_480df0_dist_scale`, `ui::glue_geom_480_480df0_normalize`
 
 `test ah,5` after the `fcomp` at `0x480eb7` leaves the terrain branch only for a terrain distance strictly less than the object's. The pick runs at the press only (`input#what-a-press-latches`). A result of 2 stores the GUID in the world frame's hover cache (`+0x348`); any lower result clears it and releases the frame's second node list (`0x480990` at `0x481362`).
 A hit point is the ray origin plus the origin-to-far vector scaled to the distance (`0x4841c0`).
@@ -61,7 +61,7 @@ Test: none
 Addresses: `0x480a50`, `0x480b7f`, `0x480bac`, `0x480bfe`, `0x480c11`, `0x480c2e`, `0x480780`, `0x4807b2`, `0x4807ba`, `0x4807c8`, `0x4807de`, `0x4807f4`, `0x480816`, `0x480850`, `0x48083c`, `0x480c90`, `0x480d10`, `0x480d00`, `0x480d90`, `0x480da1`, `0x7089b0`, `0x7089c0`, `0x5f8800`, `0x6003a0`, `0x5d6e20`, `0x713cb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_480_480a50_480df0_dist_scale`, `ui::glue_geom_480_480a50_coord_delta`
 
 `0x480d90` calls `SetHitTestMode` with mode 1, the node as the user value and a value from `0x480c90`: 1 for an interactable game object, 3 for a living unit, 2 for a lootable dead unit or corpse, else 0, and −1 for the object picked last. The type byte table at `0x480850` maps unit, player, game object and corpse to four cases of the jump table `0x48083c`; the fifth entry refuses. `0x480c90` uses the table `0x480d10` over the type less 9: unit and player, game object, corpse. The ray returns the node of the nearest triangle and the pick takes the GUID from it. `0x7e51fe` is a second caller of `0x480a50`, the glare test (`lighting/celestial`).
 
@@ -85,9 +85,11 @@ At first person the alpha is 0, so the player has no node and is not pickable.
 Addresses: `0x5ec8f0`, `0x5ec91a`, `0x5ec923`, `0x5ec8c0`, `0x5ec8e0`, `0x482c10`, `0x482c3a`, `0x482c41`, `0x482c88`, `0x50f8fd`, `0x405220`, `0x405229`, `0x404a1d`, `0x5e2058`, `0xc4d74c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_bool_inv255`
 
 `0xc4d74c` has three writers: a store of 1 at `0x5e2058`, the toggle `0x5ec8c0` (the console command `showplayer`, `0x405220`, registered at `0x404a1d`) and the setter `0x5ec8e0`, called from `0x482c41`. `0x482c10` runs every time the camera applies the self fade (`0x50f8fd`; `uicamera/driver#the-self-fade`). The same alpha, over 255, is the model's alpha (`0x482c88`). The relation tests of `0x480610` still apply to the player.
+
+Bit-exact coverage: `ui::textglue_482_bool_inv255` covers `0x482c7f` to `0x482c88` of `0x482c10`.
 
 ## The hover while targeting
 

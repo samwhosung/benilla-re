@@ -77,7 +77,7 @@ having text it logs `Missing gossip text!` and closes the window (`GOSSIP_CLOSED
 Addresses: `0x4e2010`, `0x4e2068`, `0x4e2089`, `0x4e20b1`, `0x4e20c1`, `0x4e20fb`, `0x4e2110`, `0x4e2126`, `0x4e2151`, `0x4e2159`, `0x4e215c`, `0x4e216e`, `0x4e217d`, `0x4e225f`, `0x4e2274`, `0x4e229a`, `0x4e22b0`, `0x4e22d0`, `0x55d530`, `0x55d53d`, `0x4531e0`, `0x882664`, `0xc0e264`, `0xbbb678`, `0x7ffd74`, `0x801628`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4c0_4e2010_weighted_pick`
 
 The column is the second for gender 1 and otherwise the first; for an object it is the second only when
 entry 0's first column is empty. The NPC text record holds eight probabilities at `+0`, eight text pairs of two pointers from `+0x20` and eight

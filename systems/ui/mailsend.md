@@ -114,13 +114,15 @@ arrived and on `GetNumStationeries()` when none is awaited; that function return
 Addresses: `0x4ac980`, `0x4ac9d2`, `0x4aca2a`, `0x4acb10`, `0x4acba8`, `0x4acbc3`, `0x4acbd7`, `0x4acbf0`, `0x4ad970`, `0x4ad9fc`, `0x4ada5a`, `0x4ada7d`, `0x4ada90`, `0x4adaed`, `0x4adb7b`, `0x4adba6`, `0x4ae1f0`, `0x622270`, `0x73f727`, `0xb6ee28`, `0xb6ee2c`, `0xb6ee30`, `0xb6efb0`, `0xb6efbc`, `0xc0d708`, `0xc0d70c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4ada90`
 
 An entry is 0x18 bytes: the id at +0, the item id at +4, the always bit at +8 (`0x4aca2d`) and the carried item's GUID
 at +0x10. `0x4ac980` is called once, from the game init at `0x48f5ef`. The counter `0xb6efbc` counts items still being
 fetched: `0x4acbc3` raises it per miss, `0x4acbf0` lowers it per arrival and refreshes at zero. The comparator
 `0x4ada90` returns -1 or 1 by the first differing key; the list is sorted by `0x73f727` with a four-byte element.
 The carried test `0x4ad9fc` passes the player's item list (`player+0x1d38`) to `0x622270`.
+
+Bit-exact coverage: `ui::sortcmp_4ada90` covers the whole of `0x4ada90`.
 
 ## Stationery lookups
 

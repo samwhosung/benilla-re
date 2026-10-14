@@ -75,13 +75,15 @@ computed. The call does not clear the tooltip when it returns nil.
 Addresses: `0x536080`, `0x536138`, `0x536141`, `0x536161`, `0x536166`, `0x536173`, `0x53617b`, `0x536189`, `0x5361c9`, `0x5361ee`, `0x5361f5`, `0x53620e`, `0x536287`, `0x5362d4`, `0x5362d9`, `0x52b650`, `0x52e530`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_536080_set_merchant_compare_item`
 
 `0x536166` subtracts 1.0 and `0x53616c` truncates: a 0-based merchant index, valid when 0 to the item
 count `0xbddfa8` minus 1 (signed) and a vendor is set. The row is `0xbdd118 + 0x1c * index` and its entry (`+4`) must be
 nonzero. `0x5361ee` asks the item cache with `0x52e530`, so an uncached item returns nil on the first hover and the
 query goes out. The builder call at `0x5362d4` passes the equipped item's entry, the player and item GUIDs, 0, 1 and
 zeros; `0x5362d9` pushes 1.0.
+
+Bit-exact coverage: `ui::luabind_536080_set_merchant_compare_item` covers `0x536161` to `0x53616c` of `0x536080`.
 
 ## Which equipped item
 
@@ -146,7 +148,7 @@ percent gives 14: 13.5 ties to even.
 Addresses: `0x4faf30`, `0x4faf3f`, `0x4faf8a`, `0x4faf8f`, `0x4faf95`, `0x4faf9a`, `0x4fafa9`, `0x4fafaf`, `0x4fafb5`, `0x612b80`, `0x5da330`, `0x7ff9d8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4faf30_one_minus_and_count_scale`
 
 `0x4faf70` loads the vendor with the unit mask 8 at the stored GUID, and `0x4faf81` and `0x4faf85` skip the discount
 unless both the player and the vendor resolve. `0x7ff9d8` is the float 1.0. The discount's own reading belongs to

@@ -19,7 +19,7 @@ counts go to the six words at `0xbc6f18`, each list is sorted by `0x4e8b20`, and
 Addresses: `0x4e7c70`, `0x4e7d19`, `0x4e7e17`, `0x4e89c0`, `0x4e89f2`, `0x4e8a62`, `0x4e8a6c`, `0x4e8add`, `0x4e8b0e`, `0x4e8b20`, `0x4e8be0`, `0x4e8c5b`, `0x4e8c70`, `0x4e8c80`, `0xbc6f18`, `0xbc6f90`, `0xbc7624`, `0xc0db2c`, `0xc0db34`, `0xc0db38`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4e8b20`, `ui::sortcmp_4e8c80`
 
 `0x4e89c0` stores the player's level in `0xbc7624` and counts into the word at `0xbc6f18 + 4*type`. The type 3 count is
 written by `0x4e8be0` instead (`0x4e8c5b`): it collects the nonzero quest ids of the 20 log slots, `[[player+0xe68] + 0x28 + 12*i]`, sorts them
@@ -27,6 +27,8 @@ with `0x4e8c80` and tail-jumps to the event signal (event 531, `0x4e8c70`). The 
 that exist before missing ones, rows whose level range holds the player's level before the others, then orders by the
 locale name, case-insensitive. The quest comparator `0x4e8c80` puts quests whose title is cached before the rest, then orders
 by title (`+0x9c` of the cached record). `0x4e7e1e` zeroes the six counts.
+
+Bit-exact coverage: `ui::sortcmp_4e8b20` covers `0x4e8b20` to `0x4e8b40`, `0x4e8b44` to `0x4e8b54`, `0x4e8b58` to `0x4e8bd3` of `0x4e8b20`; `ui::sortcmp_4e8c80` covers the whole of `0x4e8c80`.
 
 ## SetLookingForGroup
 

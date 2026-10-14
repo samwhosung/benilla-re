@@ -52,10 +52,12 @@ The width is 128 and the height 32 at 4:3, and 156.6 by 39.2 at 16:9. Each seat 
 Addresses: `0x7cb6d0`, `0x7cb737`, `0x7cb744`, `0x7a1e00`, `0x7a2030`, `0x7a1ef4`, `0x41ad10`, `0x41ad70`, `0x41ae40`, `0x509ec0`, `0x50a021`, `0x50a044`, `0x608ce0`, `0x768420`, `0x768410`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7cb6d0_scale6`, `ui::luabind_7a1_get_width_height`
 
 `0x7a1e00` pushes `0x41ad70() * 1024 * stored` divided by `0x832a44` (`0x41ae40`), with `0x41ad70` the aspect times 0.75 and `0x832a44` the aspect over `sqrt(a * a + 1)` (`0x41ad10`); the height has the same conversion. `0x509ec0` ends with `0x767ed0` (clear all points) and `0x767c70` with point 1 (`TOP`), the world frame and point 6.
 The bind sets the bar's `BOTTOMLEFT` point, the level's `CENTER` point and the glow's all-points again for each unit. The seat runs again only when a plate is created or one's point moves (`objectlayer/unitnames#seating-the-plates`). The raid icon and skull are anchored to the border and the level text.
+
+Bit-exact coverage: `ui::luabind_7a1_get_width_height` covers `0x7a1ee6` to `0x7a1f0e` of `0x7a1e00`.
 
 ## Scripts and mouse
 
@@ -64,7 +66,7 @@ The plate fires every script an addon sets, and the engine sets none. The overri
 Addresses: `0x7cb950`, `0x7cba17`, `0x7cb850`, `0x7cb8a5`, `0x7cb8b0`, `0x7cb8ff`, `0x7cb910`, `0x7cb92a`, `0x7cb936`, `0x7cb637`, `0x779730`, `0x7792d0`, `0x76af00`, `0x778771`, `0x7cba30`, `0x76b320`, `0x6e48a0`, `0x6e6320`, `0x6e6180`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7cb950_scale1000`
 
 The plate registers `LeftButtonUp` and `RightButtonUp` (`0x7cb630` stores 0x500), so `OnClick` fires on the release only (`button#registerforclicks-and-click`). The button base enables the mouse (`0x778771`, kind 2); the plate's hit test `0x7cba30` answers 0 while the pending spell wants a location and not a unit.
 
@@ -76,7 +78,7 @@ when it reaches 0 or less, sets the name to yellow while the glow is shown (hove
 Addresses: `0x7cb6d0`, `0x7cb70c`, `0x7cba70`, `0x7cba77`, `0x7cba88`, `0x7cb950`, `0x7cb958`, `0x7cb96b`, `0x7cb97c`, `0x7cb9d7`, `0x7cb9f5`, `0x7cb9f9`, `0x7cba0e`, `0xb4e2d8`, `0x6122e0`, `0x609210`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7cb6d0_scale6`
 
 A negative timer is idle: the bind stores 0, so the first update after a bind leaves the timer negative and resets the name colour. The step is `ftol(elapsed * 1000.0)`. The unit lookup uses mask 8 and a missing unit gives 0x7f. `0x6122e0` flashes the plate of a unit that is hit (`objectlayer/unitnames`).
 
@@ -87,7 +89,7 @@ A negative timer is idle: the bind stores 0, so the first update after a bind le
 Addresses: `0x7cbb40`, `0x7cbb7a`, `0x7cbb84`, `0x7cbbc0`, `0x7cbbcc`, `0x7cbc24`, `0x7cbc27`, `0x7cbc29`, `0x7cbc97`, `0x7cbcba`, `0x7cb82f`, `0x7cbd50`, `0x7cbce0`, `0x5f0700`, `0x605620`, `0x6061e0`, `0x7cbe20`, `0x4bb190`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_7cbe20_quarter_split`
 
 Hiding a part is `[part+0xc4] = 0` and `0x77fc60`; showing is `[part+0xc4] = 1` and `0x77fcb0`. The skull rule is the `jg` at `0x7cbc29` on P against L - 10; the trivial-unit test at `0x7cbbcc` ahead of it selects the same outcome, level and no skull. `0x7cbe20(index)` hides the raid icon for an index of 8 or more and otherwise crops the 4 by 2 atlas: column `index & 3`, row `index >> 2`, each cell a quarter wide and a quarter high.
 The bind passes it the slot `0x4bb190` finds for the unit's GUID (`0x7cb82f`).

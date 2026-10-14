@@ -209,7 +209,7 @@ at `0x7ffd74`, which is 0.0.
 Addresses: `0x492d30`, `0x60f900`, `0x610100`, `0x7ffd74`, `0xc4da98`, `0xb4e2b8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_492_492d30_sqlen_edge`
 
 `0x492d3f` notes the payload, `0x492ddf` and `0x492e04` clear, `0x492e31` asks to confirm and `0x492e5d` deselects, guarded by the
 left-button test at `0x492e1b`, the note at `0x492e45` and the CVar record `0xb4e2b8` with its value at `+0x28` (`0x492e49` to `0x492e55`). `0x48fd00` to `0x48fd17` register `deselectOnClick` and store its record there. `0x492da2` is the compare and `0x492daa jnp` skips the walk for identical points; `0x492db5` calls `0x60f900` on

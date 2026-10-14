@@ -149,13 +149,15 @@ player is compared with 30.864 (5.5556 squared; equal counts as in range). If th
 Addresses: `0x482200`, `0x5ee5a0`, `0x606980`, `0x606880`, `0x5df490`, `0x605f30`, `0xb4b32c`, `0x482231`, `0x4822c8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_normalize3`, `ui::textglue_482_sq_len3_482200`, `ui::textglue_482_square_cmp`
 
 `0x482231` tests the latch. `0x482253` refuses a unit with health 0 or less, `0x48225d` a missing possessed unit, `0x48226a`
 a dead one and `0x482280` a mounted one (its field at `+0x1fc` above 0); `0x4822a8` is the attack test and `0x4822b5` the
 mode. `0x4822e7` forms the difference of the two positions and `0x482307` stores the sum of squares. `0x482320`
 compares it with `0xb4b32c` (the square of 5.5556, set at `0x48439c`), and `0x482334` makes the unable flag
 `ebx`. Each mode is `ebx` turned into 0 or 20 (`neg`, `sbb`, `and 0x14`) plus the base.
+
+Bit-exact coverage: `ui::textglue_482_normalize3` covers `0x4822f7` to `0x482310` of `0x482200`; `ui::textglue_482_sq_len3_482200` covers `0x4822f7` to `0x482310` of `0x482200`; `ui::textglue_482_square_cmp` covers `0x4825d5` to `0x4825e6` of `0x482200`.
 
 ## NPC flag cursors
 
@@ -224,11 +226,13 @@ for 0, and a custom cursor for 41 (`objectlayer/gameobjects#cursor`).
 Addresses: `0x482740`, `0x5d6e20`, `0x6067d0`, `0x4826e0`, `0x5f8760`, `0x5f8790`, `0xb700e8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_sq_len3_482740`, `ui::textglue_482_square_cmp`, `ui::textglue_482_sub3`
 
 `0x4827ca` calls the lootable test, `0x4827d7` `CanLootNow`, `0x482838` the skin branch with the corpse flag test (`0x482844`,
 bit 5 of `[corpse+0x110]+0x74`) and `0x482855` the assist test. `0x4826f0` calls `0x5f8760`; `0x482702` tests for 0x29
 and `0x482715` builds the name with `0x5f8790` before `0x482720` loads it.
+
+Bit-exact coverage: `ui::textglue_482_sq_len3_482740` covers `0x4827af` to `0x4827ca` of `0x482740`; `ui::textglue_482_square_cmp` covers `0x482878` to `0x482885` of `0x482740`; `ui::textglue_482_sub3` covers `0x482789` to `0x4827aa` of `0x482740`.
 
 ## Mounted and lootable
 

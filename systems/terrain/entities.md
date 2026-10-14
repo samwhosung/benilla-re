@@ -19,13 +19,15 @@ terrain and map objects, and tags each new facet with the object's GUID in the o
 Addresses: `0x6abe60`, `0x6abe7b`, `0x6abe82`, `0x6abeaa`, `0x6abeb1`, `0x6abf0b`, `0x6abf79`, `0x6abfb0`, `0x6abfc8`, `0x6ac037`, `0x6ac045`, `0x7137c0`, `0xc91f54`, `0x483340`, `0x483244`, `0x483249`, `0x670da0`, `0x483364`, `0x48337b`, `0x483386`, `0x483392`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_482_gated_triple`
 
 `0x483244 mov ecx,0x483340; call 0x670da0` is the only writer of `0xc91f54` (`0x670da0` is `mov
 [0xc91f54],ecx; ret`). `0x6abe7b test [ebp+0xc],0xf00000; je` guards the leg, `0x6abeaa test [esi+0x90],4`
 selects records whose owner is a game object. `0x483364 call 0x468460` uses `ecx` 1 (any object), `0x48337b
 call [edx+0x50]` passes the class word, and `0x483386` to `0x483392` test the type mask bit `0x20`. The
 owner fill is `0x6ac037` (count) and `0x6ac045` (the GUID dwords).
+
+Bit-exact coverage: `ui::textglue_482_gated_triple` covers `0x4833dc` to `0x4833f1` of `0x483340`.
 
 ## Facet owner ids
 

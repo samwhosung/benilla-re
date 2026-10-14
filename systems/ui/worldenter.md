@@ -40,7 +40,7 @@ run, once at login and again after a reload, never after a world transfer.
 Addresses: `0x48fbf0`, `0x49011d`, `0x49094b`, `0x49095e`, `0xb4e260`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_48fbf0_finite_diff`
 
 An image scan for the dword `0xb4e260` finds exactly three references: the store of 1 at `0x49011d`, the read
 at `0x49094b` and the store of 0 at `0x49095e`.

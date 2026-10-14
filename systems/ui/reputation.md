@@ -36,12 +36,14 @@ byte is the only source of flags.
 Addresses: `0xc0dd48`, `0xc0dd50`, `0xc0dd54`, `0x4d54a7`, `0x4d54f4`, `0x4d5500`, `0x4d5536`, `0x4d5b35`, `0x4d5b5d`, `0x4d5e19`, `0x4d6565`, `0x4d6576`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4d5dc0`
 
 The stride is `imul edx,edx,0x94` (`0x4d54a7`). The loop of `0x4d5430` reads `[esi-0x10]` (race mask), `[esi]` (class mask)
 and `[esi+0x10]` (base) from `esi = row + 0x18` stepping 4 (`0x4d54f4`, `0x4d5500`, `0x4d5536`). The team is read at
 `0x4d5b35` and `0x4d5b5d`, the name at `0x4d5e19` and `0x4d6565`, the description at `0x4d6576`. No memory operand in the file
 names the displacements of the flag columns.
+
+Bit-exact coverage: `ui::sortcmp_4d5dc0` covers `0x4d5dc0` to `0x4d5e07`, `0x4d5e0b` to `0x4d5e6d` of `0x4d5dc0`.
 
 ## Standing and rank
 
@@ -155,10 +157,12 @@ child after everything, the header row before its children, then children by nam
 Addresses: `0x4d5c40`, `0x4d5c72`, `0x4d5c8e`, `0x4d5c9c`, `0x4d5cc9`, `0x4d5ce0`, `0x4d5d36`, `0x4d5d68`, `0x4d5d86`, `0x4d5da3`, `0x4d5dab`, `0x4d5dc0`, `0x4d5e34`, `0x4d5e42`, `0x4d5e60`, `0x4d5e70`, `0x4d5ef4`, `0x4d5f02`, `0x4d5f10`, `0x4d5f70`, `0x4d5f81`, `0x73f727`, `0xb73764`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4d5dc0`, `ui::sortcmp_4d5e70`
 
 The entry position is written after the header sort (`0x4d5d36` follows `0x4d5cc9`), so the primary row key is the sorted
 position. A collapsed child is a non-header with a position below 32 whose mask bit is clear (`0x4d5d49` to `0x4d5d68`);
 the comparator `0x4d5f02` gives such a child +1 against anything that is not. Larger raw keys come first because
 `0x4d5e34 setl; lea eax,[eax+eax-1]` returns +1 when a is less. Equal positions between a header and a child test
 the header bit (`0x4d5f81`). Sorting reorders and recounts only; the entry count is untouched.
+
+Bit-exact coverage: `ui::sortcmp_4d5dc0` covers `0x4d5dc0` to `0x4d5e07`, `0x4d5e0b` to `0x4d5e6d` of `0x4d5dc0`; `ui::sortcmp_4d5e70` covers `0x4d5e70` to `0x4d5f3d`, `0x4d5f41` to `0x4d5f4f`, `0x4d5f53` to `0x4d5f90` of `0x4d5e70`.

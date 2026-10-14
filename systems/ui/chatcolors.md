@@ -37,7 +37,7 @@ the name given and the three stored bytes times 1/255 as numbers. It returns no 
 Addresses: `0x4a07f0`, `0x4a0805`, `0x4a0864`, `0x4a086a`, `0x4a08c1`, `0x4a08e7`, `0x4a08f9`, `0x4a0922`, `0x4a099c`, `0x4a09a7`, `0x4a093d`, `0x4a095a`, `0x4a098b`, `0x806498`, `0x8026c8`, `0x703f50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4a07f0_change_chat_color`
 
 The four type tests are `lua_isstring` and three `lua_isnumber` (`0x4a0803` to `0x4a0841`), all
 jumping to `0x4a09ca`, which pushes `0x844d28` and calls `luaL_error` (`0x6f4940`). The string is
@@ -46,6 +46,8 @@ The fixed-entry match writes `+0x40`, `+0x41`, `+0x42` and sets a local flag (`0
 writes its entry and jumps to the fire (`0x4a099c` to `0x4a093f`) without the flag. The event is id
 0xe2 with the format `%s%f%f%f` (`0x4a098b`); the floats are `fild` of each byte times `0x8026c8`
 (1/255).
+
+Bit-exact coverage: `ui::luabind_4a07f0_change_chat_color` covers 4 ranges from `0x4a0864` to `0x4a098b` of `0x4a07f0`.
 
 ## GetChatTypeIndex
 

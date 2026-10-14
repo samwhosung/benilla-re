@@ -324,10 +324,12 @@ texture or nil.
 Addresses: `0x879d00`, `0x782c60`, `0x782c90`, `0x87bf74`, `0x79a5a0`, `0x79a5d0`, `0x77fef0`, `0x77ffd0`, `0x7800b0`, `0x780180`, `0x780270`, `0x780400`, `0x7804c0`, `0x780580`, `0x780640`, `0x780700`, `0x7807c0`, `0x780880`, `0x7809a0`, `0x780a60`, `0x780c30`, `0x780d20`, `0x780e10`, `0x780ee0`, `0x781100`, `0x781260`, `0x781480`, `0x7815e0`, `0x781800`, `0x781960`, `0x781bb0`, `0x781cc0`, `0x781cd0`, `0x781ce0`, `0x781cf0`, `0x781d00`, `0x781f40`, `0x782030`, `0x782180`, `0x782290`, `0x782390`, `0x782490`, `0x7826c0`, `0x782840`, `0x782920`, `0x799bf0`, `0x799ca0`, `0x799d60`, `0x799e50`, `0x79a050`, `0x79a140`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_782_getters`, `ui::luabind_782_set_pushed_text_offset`, `ui::normalize_channel_full_domain_781100`, `ui::pack_setdisabledtextcolor_781260`, `ui::pack_sethighlighttextcolor_7815e0`, `ui::pack_settextcolor_780ee0`, `ui::unpack_getdisabledtextcolor_781480`, `ui::unpack_gethighlighttextcolor_781800`, `ui::unpack_gettextcolor_781100`
 
 The tables are read as pairs of a name and a function, 39 from `Enable` (`0x77fef0`) to
 `UnlockHighlight` (`0x782920`) and 6 from `SetChecked` (`0x799bf0`) to `SetDisabledCheckedTexture`
 (`0x79a140`). `0x782c60` and `0x79a5a0` call `0x701d80` with counts 0x27 and 6 and the hashes
 0xcf4e14 and 0xcf53b4. `0x782c90` (slot 2) looks a name up in the `Button` hash, then calls
 `0x778590`; `0x79a5d0` looks in the `CheckButton` hash, then calls `0x782c90`.
+
+Bit-exact coverage: `ui::luabind_782_getters` covers `0x782237` to `0x78227a` of `0x782180`; `ui::luabind_782_getters` covers `0x782354` to `0x782373` of `0x782290`; `ui::luabind_782_getters` covers `0x782454` to `0x782473` of `0x782390`; `ui::luabind_782_set_pushed_text_offset` covers `0x7820eb` to `0x78210c`, `0x782114` to `0x782147` of `0x782030`; `ui::normalize_channel_full_domain_781100` covers `0x7811a8` to `0x781249` of `0x781100`; `ui::pack_setdisabledtextcolor_781260` covers `0x7812eb` to `0x7813f8`, `0x7813fd` to `0x78146b` of `0x781260`; `ui::pack_sethighlighttextcolor_7815e0` covers `0x78166b` to `0x781778`, `0x78177d` to `0x7817eb` of `0x7815e0`; `ui::pack_settextcolor_780ee0` covers `0x780f6b` to `0x781078`, `0x78107d` to `0x7810eb` of `0x780ee0`; `ui::unpack_getdisabledtextcolor_781480` covers `0x781528` to `0x7815c9` of `0x781480`; `ui::unpack_gethighlighttextcolor_781800` covers `0x7818a8` to `0x781949` of `0x781800`; `ui::unpack_gettextcolor_781100` covers `0x7811a8` to `0x781249` of `0x781100`.

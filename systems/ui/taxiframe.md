@@ -87,7 +87,7 @@ the same eight floats at `+0x104` to `+0x120` of the texture.
 Addresses: `0x79beb0`, `0x79bf58`, `0x79bf61`, `0x79bf6a`, `0x79bfb3`, `0x79bff9`, `0x79c007`, `0x79c065`, `0x7704c0`, `0x770410`, `0x770570`, `0x7705b0`, `0x79c080`, `0x79c113`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_770570_lerp`
 
 The argument count is `lua_gettop` less 1 (`0x79bf58`, `0x79bf5d`); 4 takes `0x79c007`, 8 takes `0x79bfb3`. The eight-number path
 stores arguments 2 to 9 in order (`0x79bfd0` to `0x79bff0`) and calls `0x7704c0` (`0x79bff9`). The four-number path builds

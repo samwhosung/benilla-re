@@ -43,7 +43,7 @@ two tables also replace slots 4, 5 and 6.
 Addresses: `0x81c400`, `0x81c46c`, `0x81c718`, `0x81c778`, `0x81c6ec`, `0x81c74c`, `0x81cec4`, `0x81c5d8`, `0x81c8b4`, `0x81c8bc`, `0x81c8dc`, `0x768420`, `0x768410`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `0x76d080`, `0x76d0d0`, `0x770670`, `0x772d40`, `0x76c700`, `0x76c6e0`, `0x46ff60`, `0x7671a0`, `0x767573`, `0x767579`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_composed_resolve`
 
 Slot 0 is the callback `0x76b580` in most tables, and slots 7 and 8 are the plain frame's `0x768420` and `0x768410` or a class's own. The font string's tables store `0x772ca0`, `0x772830` and `0x772860` in slots 4 to 6. Slot 2 is `0x769820` in the plain frames, `0x76cac0` in the model tables, and `0x7788c0`, `0x782ef0`, `0x767800` or `0x770f40` in others. The edge resolvers read the size with `mov eax,[esi]; call [eax+0x1c]` (`0x767573`, `0x767579`) and
 `[eax+0x20]`. Of the 34 vtables stored at `+0x24` by a constructor (a census of `mov [reg+0x24], 0x8xxxxx`),
@@ -53,6 +53,8 @@ the width and height slots differ from the plain pair in the texture's `0x81c6ec
 one-slot `0x81c8dc` at `+0x314` follows it), and
 `0x81c7a4` is the font object's base table: three slots followed by floats (`0x7f800000`, `0x40490fdb`,
 `0x41200000`, repeated). Slot 9 is `0x46ff60`, `xor eax,eax; ret`.
+
+`ui::layout_composed_resolve` runs the real edge resolvers through `0x767a20`, with the geometry vtable `0x81c400` in place.
 
 ## A texture's size
 
@@ -142,7 +144,7 @@ edges.
 Addresses: `0x768d20`, `0x768d55`, `0x768d58`, `0x7680e0`, `0x7680ee`, `0x768140`, `0x76815f`, `0x768ed0`, `0x76fc6e`, `0x7705b0`, `0x770670`, `0x7706e0`, `0x772fd0`, `0x773080`, `0x7730b0`, `0x7730b5`, `0x7730bc`, `0x772e00`, `0x768320`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_recompute`
 
 `0x768d20` on failure clears flag 1, sets flag 8 and returns before the callback (`anchors`). The
 texture's callback `0x770670` calls `0x768cf0`, adjusts the rectangle by the texture coordinates
@@ -154,6 +156,8 @@ string's `0x773080` calls `0x768320`, which answers 0 while flag 1 is clear (`0x
 `0x772e00`, which answers 1 for a rectangle with its top or right below 0 or its bottom or left above
 1.0, and the record is not appended. `0x7680e0` tests flag 8 only on its resolve-now leg (`0x7680ee`); the
 queue leg `0x768140` never reads it, so a model's ready hook that lays out with 0 (`0x76ce6b`) retries.
+
+`ui::layout_recompute` runs `0x768d20` whole with `0x767a20` stubbed to fail or to succeed, and reads the flags and the stored rectangle.
 
 ## Pixel alignment
 

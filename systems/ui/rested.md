@@ -50,13 +50,15 @@ pool counts as 0.
 Addresses: `0x48d3f0`, `0x48d41c`, `0x48d41e`, `0x48d427`, `0x48d42c`, `0x48d43b`, `0x48d441`, `0x48d446`, `0x48d448`, `0x48d451`, `0x48d462`, `0x48d468`, `0x48d474`, `0x48d47e`, `0x48d484`, `0x48d49b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_48d3f0_xp_exhaustion`
 
 The row is `index[1]` (`0x48d42c`), taken when the highest id is at least 1 and 0 otherwise; the multiply `fmul [edx+8]`
 (`0x48d484`) reads it without a null test. The rest byte test is `dec eax; jne` (`0x48d445`, `0x48d446`), so only the value 1
 reaches the arithmetic. The pool is widened to a quadword with a zero upper dword (`0x48d474` to `0x48d47e`), so it is unsigned, then
 multiplied by the float factor. The GUID guard compares the object's GUID words with a fresh active-player GUID
 (`0x48d451` to `0x48d45c`) and sets the pool to 0 on a mismatch.
+
+Bit-exact coverage: `ui::luabind_48d3f0_xp_exhaustion` covers `0x48d47e` to `0x48d48a` of `0x48d3f0`.
 
 ## Resting flag
 

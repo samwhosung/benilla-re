@@ -96,12 +96,14 @@ position (three floats) as the anchor of the walk-away check, zeros without a pl
 Addresses: `0x4aa6c0`, `0x4aa6d2`, `0x4aa6de`, `0x4aa6e9`, `0x4aa70e`, `0x4aa71c`, `0x4aa72d`, `0x4aa731`, `0x4aa75c`, `0x4aa7bf`, `0x4aa7d1`, `0x4aa7ff`, `0x4aa804`, `0xb6e870`, `0xb6e874`, `0xb6e878`, `0xb6eba4`, `0xb6eba8`, `0xb6ebac`, `0x4aa090`, `0x4818d5`, `0xb6e854`, `0x4ac54e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_4aa090`
 
 `BATTLEFIELDS_CLOSED` is fired by `0x4aa090`, called once from a world tick (`0x4818d5`): it proceeds when the squared
 distance from the stored anchor exceeds `0xb6e854`, which the static initialiser `0x4ac54e` sets to the square of the
 float 5.5555553; it zeroes the anchor before the signal. A list with no battlemaster stores GUID 0 and later joins use the other opcode
 (`Joining and leaving`).
+
+`ui::dist2_4aa090` runs the slices `0x4aa096` to `0x4aa0c8` (the guard) and `0x4aa0fb` to `0x4aa12f` (the distance), after running the initializer `0x4ac540` that sets the threshold.
 
 ## The status message
 

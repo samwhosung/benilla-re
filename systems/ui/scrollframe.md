@@ -23,7 +23,7 @@ on the way in and its inverse on the way out (`glue/script`, Cursor and screen s
 Addresses: `0x786db0`, `0x786dc2`, `0x786dcd`, `0x786dd2`, `0x786dd8`, `0x786e1a`, `0x786d30`, `0x786d52`, `0x786d9a`, `0x787100`, `0x787110`, `0x787136`, `0x7912f0`, `0x791400`, `0x7914a9`, `0x7914bb`, `0x791530`, `0x791610`, `0x41ad70`, `0x41ae40`, `0x41ae60`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_786d30_display`, `ui::luabind_791_setters`
 
 `0x786db0` compares `|v − +0x328|` with 2^−22 (`0x786dc2`) and returns below it (`0x786dcd`); it
 stores `v` (`0x786dd2`), calls `0x787100` (`0x786dd8`) and runs `+0x334` with `"%f"` of the value
@@ -33,6 +33,8 @@ converted through `0x41ae40` (`0x786e1a`). `0x786d30` does the same with `+0x324
 (`0x41ad70`) times 1024.0 and multiply by `K1` (`0x41ae60`) before passing it (`0x7914a9` to
 `0x7914bb`); the getters `0x791530` and `0x791610` multiply the field by `A` times 1024.0 and
 divide by `K1` (`0x41ae40`), as the scripts' argument does.
+
+Bit-exact coverage: `ui::luabind_791_setters` covers `0x791399` to `0x7913b9` of `0x7912f0`; `ui::luabind_791_setters` covers `0x7914a9` to `0x7914c9` of `0x791400`.
 
 ## The scroll range
 
@@ -47,7 +49,7 @@ by the frame's scale. When either range changed, `OnScrollRangeChanged` runs wit
 Addresses: `0x787140`, `0x787158`, `0x787184`, `0x7871a0`, `0x7871a5`, `0x786e30`, `0x786e5d`, `0x786e64`, `0x786e79`, `0x786e84`, `0x786e8f`, `0x786e9f`, `0x786eaa`, `0x786ed1`, `0x786ede`, `0x786ef2`, `0x786f56`, `0x786f80`, `0x786fb0`, `0x78703b`, `0x7870e0`, `0x7870ec`, `0x786d16`, `0x787205`, `0x7871f0`, `0x7918b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_786e30_product`, `ui::glue_786e30_scale`, `ui::glue_786e30_settled`, `ui::glue_787140_rect_delta`
 
 `0x787140` (slot 14) acts when `+0x314` is set (`0x787158`), passes the frame's width and height
 (`0x7871a0`) and clears the flag (`0x7871a5`). `0x786e30` seeds the left and bottom at 3.4·10^38
@@ -91,8 +93,10 @@ methods.
 Addresses: `0x87b3c0`, `0x791bc0`, `0x791bf0`, `0x790fa0`, `0x791200`, `0x7912f0`, `0x791400`, `0x791530`, `0x791610`, `0x7916f0`, `0x7917d0`, `0x7918b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_791_getters`
 
 The table holds pairs from `SetScrollChild` (`0x790fa0`) to `UpdateScrollChildRect` (`0x7918b0`);
 `0x791bc0` calls `0x701d80` with 9. `0x791bf0`, slot 2, looks in the `ScrollFrame` hash and then
 calls `0x778590`. `UpdateScrollChildRect` stores 1 in the frame's `+0x314`.
+
+Bit-exact coverage: `ui::luabind_791_getters` covers `0x7915dc` to `0x7915fb` of `0x791530`; `ui::luabind_791_getters` covers `0x7916bc` to `0x7916db` of `0x791610`; `ui::luabind_791_getters` covers `0x79179c` to `0x7917bb` of `0x7916f0`; `ui::luabind_791_getters` covers `0x79187c` to `0x79189b` of `0x7917d0`.

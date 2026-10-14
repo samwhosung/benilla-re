@@ -36,7 +36,7 @@ and relaxes every node `to` has a direct path to. Fares and hops do not count.
 Addresses: `0x4dc010`, `0x4dc039`, `0x4dc06f`, `0x4dc082`, `0x4dc08a`, `0x4dc090`, `0x4dc0b1`, `0x4dc0c6`, `0x4dc0cf`, `0x4dbce0`, `0x4dbe01`, `0x4dbe06`, `0x4dbe20`, `0x4dbe2b`, `0x4dbe58`, `0x4dbe9e`, `0x4dbf24`, `0x4dbf3d`, `0x4dbbd0`, `0x4dbbf2`, `0x4dbc02`, `0x4dbc5d`, `0x4dbc68`, `0x4dbcbb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::geo_4dbbd0`, `ui::glue_geom_4dbce0_cost_add`
 
 The relaxation is depth first and ends because a replacement needs a strictly smaller length (`0x4dbe2b jp` rejects an
 equal or unordered one). The length call `0x4dbe01` passes `to` first and `from` second, so the table read at `0x4dbbf2`
@@ -44,6 +44,8 @@ is the path from the new node back to the old one, while the price comes from th
 (`0x4dc0c6`). The read has no null test: `0x4dbc02` loads the row's id. A pair with only the forward row faults the client.
 The length sums the straight-line distance between consecutive points of the run (`0x4dbcbb fsqrt`); a path with no run
 gives the constant 99999997952 (`0x4dbc5d`).
+
+`ui::geo_4dbbd0` runs `0x4dbbd0` whole, with the table lookups and the hash probe seeded in `.bss` so that it reaches chosen points.
 
 ## Faction filter
 
@@ -72,7 +74,7 @@ GUID or neither source, the fare is 0. `TaxiNodeCost(slot)` raises `Invalid taxi
 Addresses: `0x4dc3d0`, `0x4dc3f1`, `0x4dc41c`, `0x4dc44f`, `0x4dc45d`, `0x4dc462`, `0x4dc47b`, `0x4dc480`, `0x4dc488`, `0x4dc495`, `0x4dc4ad`, `0x4dc4bd`, `0x4dc4ca`, `0x612b80`, `0x4dcc20`, `0x4dcc63`, `0x4dcc67`, `0x4dcc7c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_4dc_4dc3d0_fade_step`
 
 The discount is left on the FPU stack by `0x612b80`; `fsubr` with the constant 1.0 (`0x4dc462`) leaves the factor, `fild`
 loads the price (`0x4dc47b` for a direct path, `0x4dc4ad` for the sum) and the product is stored as a float

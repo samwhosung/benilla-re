@@ -90,7 +90,7 @@ duration times 0.001 and the enable flag for a spell slot (types 1 to 5) from th
 Addresses: `0x4be0e0`, `0x4be121`, `0x4be125`, `0x4be135`, `0x4be14c`, `0x4be670`, `0x4be697`, `0x6116e0`, `0x4bdfa0`, `0x4bdff4`, `0x4be013`, `0x4be01e`, `0x4be03c`, `0x4be04a`, `0x4be088`, `0x6e2ea0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4bdfa0_get_pet_action_cooldown`
 
 `0x4be121` to `0x4be14c` are the five conditions, the result pushed as a boolean with `0x6f39f0`.
 `0x6116e0` is true at once for a pet with the player type bit; otherwise the pet number must be nonzero,
@@ -98,6 +98,8 @@ the player's charm guid (its summon guid when none) must be the pet, and the pla
 `0x4bdff4`, `0x4be013`, `0x4be01e` gate the cooldown on index, nonempty slot and type 1 to 5;
 `0x4be03c` calls `0x6e2ea0(spell, 1, ...)`; the two scaled pushes multiply by the double 0.001 and the
 third is unscaled. The three outputs start at 0, so every skipped case returns zeros.
+
+Bit-exact coverage: `ui::luabind_4bdfa0_get_pet_action_cooldown` covers `0x4be04a` to `0x4be05b`, `0x4be069` to `0x4be07a` of `0x4bdfa0`.
 
 ## The pet spell message
 
@@ -261,13 +263,15 @@ and bucket 0, a failed gate or no row gives `100.0, 0.0` (nil as the bucket when
 Addresses: `0x4be700`, `0x4be790`, `0x4be840`, `0x4be900`, `0x4be947`, `0x4be97c`, `0x4be998`, `0x4be9ae`, `0x4be9e0`, `0x6116e0`, `0x605600`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4be900_pet_happiness`
 
 All four resolve the pet from the cached guid and gate on `0x6116e0`. `GetPetHappiness`:
 `0x4be947 call 0x605600` gives the personality id, `0x4be96c` the fallback row, `0x4be97c` the threshold loop
 over `rec+0x28`, `rec+0x2c`, `rec+0x30`; the pushes `0x4be998` (bucket), `0x4be9ae` (damage entry at
 `rec+4i+0x30`, times the constant 100.0) and the rate at `rec+4i+0x3c`; `0x4be9e0` is the failure
 return. The failure of `GetPetLoyalty` is one nil; of the other two, numbers.
+
+Bit-exact coverage: `ui::luabind_4be900_pet_happiness` covers `0x4be9ae` to `0x4be9be` of `0x4be900`.
 
 ## Abandon and rename
 
@@ -343,12 +347,14 @@ The cast is `0x6e5a90` on the player.
 Addresses: `0x4b49a0`, `0x4b4810`, `0x4b48c6`, `0x4b48d4`, `0x4b4912`, `0x4b4930`, `0x4b4939`, `0x4b495f`, `0x4b4963`, `0x4b4969`, `0x4b497c`, `0x4b498a`, `0x6e5a90`, `0x6e7040`, `0xc0d774`, `0xc0d778`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4b49a0_get_shapeshift_form_cooldown`
 
 `0x4b4930` loads the form number; `0x4b4939 je 0x4b48d4` sends a zero number to the aura toggle,
 `0x4b495f` compares the form byte, `0x4b4963 test [form+0x2c],2` is the no-op guard and `0x4b4969` the
 cancel. The aura toggle: `0x4b48d4` requires an active icon, the scan with the nibble test at
 `0x4b4912`, and the cancel at `0x4b497c`; the guard is unreachable from it. `0x4b498a` is the cast.
+
+Bit-exact coverage: `ui::luabind_4b49a0_get_shapeshift_form_cooldown` covers `0x4b49b4` to `0x4b49bf`, `0x4b4a27` to `0x4b4a38`, `0x4b4a46` to `0x4b4a57` of `0x4b49a0`.
 
 ## Other pet functions
 

@@ -51,10 +51,12 @@ Test: none
 Addresses: `0x4e4740`, `0x4e47b7`, `0x4e47e4`, `0x4e48b0`, `0x4e48f8`, `0x4e4917`, `0x4e4800`, `0x4e485b`, `0x4e4879`, `0x4e4880`, `0x4e4930`, `0x4e496f`, `0x4e4986`, `0x4e4450`, `0xc0d7e4`, `0xc0d7ec`, `0xc0d7f0`, `0xc0d83c`, `0xc0d840`, `0x801608`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4e4930_buff_time_left`
 
 `GetPlayerBuffApplications` raises `Usage: GetPlayerBuffTimeLeft(buffIndex)`, the usage text of its neighbour (`0x4e48c5`). Column 11 is the one string column of `SpellDispelType` outside the eight locale names (`tables/dbc_schemas.tsv`), so the string does not change with the locale.
 `0x4e4450(position)` is the expiry in `0xbc5f68` less the current time in milliseconds, 0 once past or for an empty record.
+
+Bit-exact coverage: `ui::luabind_4e4930_buff_time_left` covers `0x4e497e` to `0x4e498f` of `0x4e4930`.
 
 ## The until-cancelled flag
 

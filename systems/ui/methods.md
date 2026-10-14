@@ -80,11 +80,13 @@ and 0x18.
 Addresses: `0x7a1810`, `0x7a1980`, `0x7a1aa0`, `0x7a1bc0`, `0x7a1ce0`, `0x7a1e00`, `0x7a1f20`, `0x7a2030`, `0x7a2150`, `0x775bf0`, `0x775d50`, `0x776020`, `0x7762a0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::luabind_775_get_hit_rect_insets`, `ui::luabind_775_set_hit_rect_insets`, `ui::luabind_7a1_get_center`, `ui::luabind_7a1_get_width_height`, `ui::luabind_7a1_getters`, `ui::luabind_7a1_setters`
 
 Each of these calls the screen-coordinate pair `GetScaledScreenAspect` and `DivideByScreenScaleX`
 or `MultiplyByScreenScaleX` per value; the edge getters call `0x768310`, `0x7680e0` and
 `0x768320`. The exact conversion belongs to the screen-coordinate system and is not derived here.
+
+Bit-exact coverage: `ui::luabind_775_get_hit_rect_insets` covers `0x775caa` to `0x775d35` of `0x775bf0`; `ui::luabind_775_set_hit_rect_insets` covers 4 ranges from `0x775e3b` to `0x775ee2` of `0x775d50`; `ui::luabind_7a1_get_center` covers `0x7a18e8` to `0x7a1918`, `0x7a1923` to `0x7a1953` of `0x7a1810`; `ui::luabind_7a1_get_width_height` covers `0x7a1ee6` to `0x7a1f0e` of `0x7a1e00`; `ui::luabind_7a1_get_width_height` covers `0x7a2116` to `0x7a213e` of `0x7a2030`; `ui::luabind_7a1_getters` covers `0x7a1a54` to `0x7a1a78` of `0x7a1980`; `ui::luabind_7a1_getters` covers `0x7a1b74` to `0x7a1b98` of `0x7a1aa0`; `ui::luabind_7a1_getters` covers `0x7a1c94` to `0x7a1cb8` of `0x7a1bc0`; `ui::luabind_7a1_getters` covers `0x7a1db4` to `0x7a1dd8` of `0x7a1ce0`; `ui::luabind_7a1_setters` covers `0x7a1fce` to `0x7a1feb` of `0x7a1f20`; `ui::luabind_7a1_setters` covers `0x7a21fe` to `0x7a221b` of `0x7a2150`.
 
 ## Region parent and anchor methods
 
@@ -97,10 +99,12 @@ relative region. `ClearAllPoints` clears every point.
 Addresses: `0x7a1550`, `0x7a2540`, `0x7a2940`, `0x7a2b70`, `0x767ed0`, `0x7a2340`, `0x7a2260`, `0x7a1460`, `0x7a1390`, `0x7a1290`, `0x7a11d0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::luabind_7a1_get_point`, `ui::luabind_7a1_setters`
 
 The refusals are the error strings each formats: `Would create a loop parenting to %s`, `Unknown
 region point`, `Couldn't find region named '%s'`, `trying to anchor to itself` and `%s is dependent
 on this`; the dependency test is `0x768010` and the setters `0x767c70` through slot 0x28 and
 `0x767db0`. `0x7a2b70` calls `0x767ed0`, a `jmp` to `0x767620`. The argument shapes are from the
 usage strings.
+
+Bit-exact coverage: `ui::luabind_7a1_get_point` covers `0x7a2483` to `0x7a24c6`, `0x7a24e7` to `0x7a252a` of `0x7a2340`; `ui::luabind_7a1_setters` covers `0x7a28a6` to `0x7a28c4`, `0x7a28cc` to `0x7a28ff` of `0x7a2540`.

@@ -21,7 +21,7 @@ list at `+0x25c`.
 Addresses: `0x511d40`, `0x511c60`, `0xc0dfc8`, `0x540f70`, `0x574cd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_511_511d40_scale_recip36`
 
 The table store is loaded by `0x540f70` from the name `0x574cd0` returns (`DBFilesClient\CameraShakes.dbc`); `0xc0dfc8` holds the rows, `0xc0dfd0` the id index and `0xc0dfd4` the highest id. `0x511d4a` accepts an id equal
 to the highest id. `0x511d78` multiplies the amplitude by 1/36 (0x7ff9d0). `0x511c60` allocates 0x34 zeroed bytes
@@ -39,7 +39,7 @@ the older record on a tie; the others add nothing that frame. Each winner is eva
 Addresses: `0x511760`, `0x600cb0`, `0x513a00`, `0x646430`, `0x42c010`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_511_511760_rate_accumulate`
 
 `0x511785` reads the clock and `0x5117aa` resolves the followed GUID with the unit mask 8. `0x5117ba` takes the facing from `0x600cb0`. `0x5117d1` to `0x5117e9` zero the three best-amplitude, best-time and best-record slots. `0x511816` to `0x511822` form the
 time as an unsigned difference; `0x51182d` keeps the record while the time is below the duration, else `0x511834` unlinks it and `0x511860` frees it. The axis is not range checked (`0x5118a8`).
@@ -56,11 +56,13 @@ adds nothing.
 Addresses: `0x511610`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_511610`
 
 `0x511613` to `0x51162a` form `a` with 2π (0x80295c). `0x51162f` to `0x511650` multiply by the exponential: `fldl2e` scales the exponent by log2(e), so `f2xm1` and `fscale` give `e^-(t*k)`. `0x511653` switches on the axis; `0x511677` adds π/2 (0x808acc). `0x511692` and `0x5116af` are `fsincos`, which leaves the cosine in `st(0)` and stores it
 first; `0x5116b5` to `0x5116cb` add `a cos` and `a sin` to x and y, and `0x51166a` adds `a` to z.
 Every store pops, so each intermediate rounds to a float.
+
+`ui::cam_511610` runs `0x511610` whole.
 
 ## Distance falloff
 
@@ -72,10 +74,12 @@ distance, and it answers 1. The base is the float 0.7 widened to a double, 0.699
 Addresses: `0x5116e0`, `0x73f940`, `0xbe103c`, `0xbe1060`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_5116e0`
 
 `0xbe103c` and `0xbe1060` hold 9.0 squared and 80.0 squared, stored by the static initialisers `0x50b2c0` and `0x50b2f0` from 0x808a0c and 0x808a10; the 80.0 passed as the sixth argument is not read. `0x51171a` and `0x51172d` branch on `test ah,0x41`, so a distance of exactly 80 or exactly 9
 takes the cheaper branch. `0x511746` calls the power routine with the exponent on top; the pow base is the double at 0x808ad0.
+
+`ui::dist2_5116e0` runs `0x5116e0` whole for the return and the scale, and the slice `0x5116e9` to `0x51170c` for the stored squared distance.
 
 ## Where a shake lands
 
@@ -88,7 +92,7 @@ unlinks them without freeing any.
 Addresses: `0x50e8d0`, `0x50d0f0`, `0x50c460`, `0x50de00`, `0x511d40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue4fd_50e8d0_distance_fade_ratio`, `ui::glue4fd_50e8d0_fade_alpha_ratio`, `ui::glue4fd_50e8d0_field_abs`, `ui::glue4fd_50e8d0_local8_preadd`, `ui::glue4fd_50e8d0_look_rate`, `ui::glue4fd_50e8d0_mood_fade`, `ui::glue4fd_50e8d0_overshoot_recenter`, `ui::glue4fd_50e8d0_overshoot_recenter_pitch`, `ui::glue4fd_50e8d0_pitch_accumulate`, `ui::glue4fd_50e8d0_shake_sincos`, `ui::glue4fd_50e8d0_view_compose`
 
 `0x50ea72` to `0x50ea80` zero the offset. `0x50ea87` and `0x50ea8b` skip the block when the spline flag test of `0x50e957` to `0x50e96f` (a spline not finished, flag 0x200) or the swimming flag `0x50e98b` holds. `0x50eafc` is the only call of `0x511760`; `0x50eb0f` to `0x50eb3b` add the bob. `0x50edcc` places the eye through `0x50de00` with the offset added to
 each component. The null-target arm of `0x50d0f0` (`0x50d2ac` to `0x50d310`) frees the list; `0x50c48f` to `0x50c4aa` in the destructor only call the unlink.
@@ -104,11 +108,13 @@ and the vertical sway is `cameraBobbingUDAmplitude / 36 * sin(2π * 2r * t)`. Th
 Addresses: `0x511920`, `0x7c4c90`, `0x5105e0`, `0x511170`, `0x5110f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_511920`
 
 `0x511951` resolves the followed unit with the unit mask; `0x511959` calls the gate and a false gate writes nothing. `0x5119a6` calls the speed routine with 0; `0x5119ab` divides by 7.2 (0x808a08). The clamp branches at `0x5119b1` to `0x5119d3` raise a ratio below 0.5 (0x8089a0) and lower one above 1.5 (0x80899c); a speed of 0 gives 0.5 and the bob halves instead of stopping. `0x5119e8` subtracts
 the start time `+0x238` and `0x511a01` scales by 0.001. The phase is the product `r * t`, so a speed change jumps the phase. `0x511a56` doubles the rate for the vertical term.
 The bob starts and stops on the edge of the movement commands: `uicamera/transitions#bob-decay`.
+
+`ui::cam_511920` runs `0x511920` whole, with the unit lookup `0x468460` and the gate `0x5105e0` replaced so that both pass, and the speed `0x7c4c90` and the clock `0x42c010` replaced by chosen values.
 
 ## Starting and stopping the bob
 
@@ -132,10 +138,12 @@ key it reaches; uphill gives a negative angle. The result is clamped to plus or 
 Addresses: `0x50d900`, `0x5105a0`, `0x672170`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_50d900`
 
 `0x50d94f` to `0x50d956` throttle on the stamp `+0x188`. `0x50d97e` adds 5/3 (0x808a38) to the foot height, `0x50d9bd` scales the facing vector by 10/3 (0x808a34), and `0x50da3d` and `0x50dac2` are the two traces with the mask 0x151. A miss leaves the end point prefilled in the output, so a forward miss reaches the full 10/3 and a downward miss gives
 a depth of 64/9 (0x808ab4) and the maximum tilt. `0x50da42` to `0x50da5d` back off by 0x808ab8 (5/18). `0x50dad9` adds 5/3 back. `0x50db06` selects the sign, and `0x50db20` to `0x50db46` scan the table at 0x808a40 from index 9 down, 8 bytes a row, key then angle in radians; the keys are 0, 0.09, 0.18, 0.27, 0.36, 0.47, 0.58, 0.70, 0.84 and 1.0. `0x50db71` to `0x50dbaa` clamp to plus or minus 0.349066 (0x8089c0). The clamp equals the angle of index 4, so the angles from 25 degrees up are never stored.
+
+`ui::cam_50d900` runs `0x50d900` whole, with the ray `0x672170` replaced: first as a miss, then as chosen hit points.
 
 ## Arming the tilt
 
@@ -148,7 +156,7 @@ eases with `0x512490`, and the duration is kept from `factor * cameraTerrainTilt
 Addresses: `0x50dbc0`, `0x512490`, `0x50f160`, `0x50d0f0`, `0x512e90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50dbc0_step_clamp`
 
 `0x50dbe9` reads the style. The state tests: `0x50dc06` Taxi (7) when bit 20 of the player flags `[unit+0x110]+0xa0` is set; `0x50dc21` Swim (6) for movement flag 0x200000; `0x50dc2d` Fall (0) for flag 0x2000; `0x50dc4e` Jump (3) after the same flag test failed, so it never runs; `0x50dc60` Track (8) for mode bit 8; `0x50dc6c` Fear (1) for mode bit 12; `0x50dc78` Move (4) for
 flags 0x3; `0x50dc84` Strafe (5) for 0xc; `0x50dc8b` Turn (9) for 0x30; else Idle (2). `0x50dc98` to `0x50dca1` index the record `(state + 10 * style) * 12` of the table `0xbe0d00`, which is not bounded for a style of 3. The record holds absorb, delay and factor handles. `0x50f6f6` calls it each frame with snap 0, `0x50d1c0` and `0x513167` call it with a snap on a target change and after a view is set.
@@ -164,7 +172,7 @@ this bias to its base and keeps the sum between 0 and 179 degrees.
 Addresses: `0x511250`, `0x50d0f0`, `0x512270`, `0x50d6d0`, `0x5e2a90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_50d0f0_percent_scale`, `ui::glue_511_511250_scale`
 
 `0x511253` to `0x51126a` form the target, `0x51126d` branches on the second argument and `0x511298` stores. `0x5112a7` reads the clock for the eased path. `0x50d1de` to `0x50d1fc` in `0x50d0f0` compute the fraction and `0x50d209` calls the setter, immediate when the camera is fresh or its target changed (`0x50d17f` to `0x50d19c`). The object layer calls it when the drunk field changes (`0x5e2b54`, `objectlayer/playerfields#drunk-messages`). The speed CVar `cameraFoVSmoothSpeed` is 0.5 degrees a second by default, so
 the full swing takes minutes.
@@ -179,7 +187,7 @@ pitch setters with the clock. In a water band with `cameraDive` set and a sober 
 Addresses: `0x5103e0`, `0x5152e0`, `0x515330`, `0x5143e0`, `0x514400`, `0x514840`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_503_515330_negate`, `ui::glue_5103e0_arith`
 
 The mouse-motion handler `0x514400` calls `0x50fee0`, then `0x5103e0` through the gate `0x5145e0` (`0x51447b`); the press of both mouse buttons calls it from `0x514966`. `0x5103fb` and `0x51040c` store the yaw and set bit 14 (0x4000). `0x510412` to `0x510447` clamp to plus or minus 1.5533431 (0x8089dc, 0x8089d8). `0x510471` skips the replacement in the Track state; `0x5104a5` to `0x5104ce` skip it for a drunk player. `0x5104ed` and `0x5104f3` convert the two CVars from degrees. `0x510582` sets the facing and `0x51058e` the pitch.
 
@@ -193,6 +201,6 @@ mouselook command (bit 0) is up, the surface band (with `cameraSubmergePitch` ab
 Addresses: `0x50e8d0`, `0x6103a0`, `0x515330`, `0x5143e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue4fd_50e8d0_distance_fade_ratio`, `ui::glue4fd_50e8d0_fade_alpha_ratio`, `ui::glue4fd_50e8d0_field_abs`, `ui::glue4fd_50e8d0_local8_preadd`, `ui::glue4fd_50e8d0_look_rate`, `ui::glue4fd_50e8d0_mood_fade`, `ui::glue4fd_50e8d0_overshoot_recenter`, `ui::glue4fd_50e8d0_overshoot_recenter_pitch`, `ui::glue4fd_50e8d0_pitch_accumulate`, `ui::glue4fd_50e8d0_shake_sincos`, `ui::glue4fd_50e8d0_view_compose`
 
 `0x50e9a9` stores the swim pitch `[movement+0x20]` and `0x50e94c` the auto-move result. `0x50eb62` skips unless swimming. `0x50eb7d` to `0x50eba7` skip for a drunk player. `0x50ebb5` to `0x50ebd2` test the bands and `cameraDive`. `0x50ebdd` skips a swim pitch under 2^-22. `0x50ebf1` skips when command bits 0x400 or 0x800 are held and `0x50ebfa` for an auto-moving unit. `0x50ec05` to `0x50ec97` are the window tests, and `0x50ec9d` calls the pitch setter with 0.

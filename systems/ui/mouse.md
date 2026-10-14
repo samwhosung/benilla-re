@@ -40,7 +40,7 @@ pick. `IsMouseEnabled()` reads bit 2 and nothing else and returns the number 1 o
 Addresses: `0x769820`, `0x777070`, `0x777130`, `0x7772b0`, `0x76af00`, `0x76af50`, `0x6f1c10`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue769_769820_set_alpha_quantize`
 
 `0x769ab1` skips the enable for a false attribute and no `0x76af50` call exists on that path. `0x7770f5` passes
 default 1 to `0x6f1c10`; `0x77710d` enables with kind 2, `0x77711a` disables. `0x7771bb` and `0x77733b` shift the mask
@@ -75,11 +75,15 @@ or `OnMouseUp`.
 Addresses: `0x7660d0`, `0x76b320`, `0x76b020`, `0x482aa0`, `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80`, `0x7cba30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::dist2_76b320`, `ui::point_in_rect`
 
 `0x7660d0` calls slot 0x3c at `0x766207`. The base slot is `0x76b320`; the six overrides are the world frame's
 `0x482aa0`, the minimap's `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80` and the nameplate's `0x7cba30`, each of which
 calls `0x76b320`. `0x76b020` reads `+0x60` bit 0 and the rectangle at `+0xd8` to `+0xe4` only.
+
+`ui::dist2_76b320` runs the slice `0x76b34c` to `0x76b370` after running the initializer `0x76b300` that sets the threshold.
+
+`ui::point_in_rect` runs `0x76b020` whole.
 
 ## Mouse release
 
@@ -229,8 +233,10 @@ it beyond the frame.
 Addresses: `0x76b1b0`, `0x76b580`, `0x775bf0`, `0x775d50`, `0x41ae40`, `0x41ae60`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::apply_rect_screen`
 
 `0x76b1b0` stores left `+0xec`, right `+0xf4`, top `+0xf0`, bottom `+0xe8`; `0x76b580` adds each inset times the effective scale
 (`ui/input#hit-test`). `0x775bf0` converts with `0x41ae40` and `0x775d50` with `0x41ae60`; the argument checks and the
 order were not read here beyond those calls.
+
+`ui::apply_rect_screen` runs `0x76b580` whole.

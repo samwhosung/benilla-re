@@ -62,12 +62,14 @@ list. Nothing is freed, so the pool grows to the most links shown together.
 Addresses: `0x7a3880`, `0x7a3883`, `0x7a3891`, `0x7a389f`, `0x7a38ab`, `0x7a38b6`, `0x7a3350`, `0x7a3371`, `0x7a3410`, `0x7a3415`, `0x7a3441`, `0x7a3457`, `0x7a346b`, `0x7a3472`, `0x7a347c`, `0x7a348b`, `0x7a3920`, `0x7a392f`, `0x7a3939`, `0x6462e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_7a3350_geometry`
 
 The allocation is `0x6462e0(0x4ec, "CSimpleHyperlinkedFrame.cpp", 0x7e, 0)`, not zero filled, so the constructor
 sets everything. Configure reallocates `+0x4dc` and `+0x4e0` to the span's lengths plus 1 and copies them,
 then `ClearAllPoints` (`0x767ed0`), `SetPoint` (`0x767c70`), width and height, each the span extent divided by the
 button's scale `[+0x7c]`, and ends with `[this+0xd0] = 1` and the show slot `+0x88`.
+
+Bit-exact coverage: `ui::luabind_7a3350_geometry` covers `0x7a341a` to `0x7a346b` of `0x7a3350`.
 
 ## What fills the pool
 

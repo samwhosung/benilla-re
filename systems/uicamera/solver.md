@@ -37,13 +37,15 @@ register enables the water bands below. A vertical probe upward from the pivot p
 Addresses: `0x50e570`, `0x50e5ec`, `0x50e629`, `0x50e6f6`, `0x8089cc`, `0x808a04`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cam_50e570`
 
 `0x50e57a` to `0x50e5cc` take the larger of each pair; `0x50e5e3` compares height minus the near clip with 9.5e-7; `0x50e623` jumps to the clamp at `0x50e754` when it is not greater, past the probe and the band limits (`0x50e629` to `0x50e684`). `0x50e607` stores the live height as the cap `[ebp-0xc]`. `0x50e5ec` to `0x50e61a` build the trace mask (`neg esi; sbb esi,esi; and esi,0xf0000; add esi,0x100171`). `0x50e687` raises the
 probe start by the base `[ebp-4]` (5/6, `0x8089cc`), `0x50e690` takes the height minus the base and `0x50e695` raises it to at least 1/9 (`0x808a04`).
 `0x50e6f6` is the vertical probe; a hit scales the length, and `0x50e717` to `0x50e743` back it off by 1/9 when it was shortened. `0x50e756` to
 `0x50e776` clamp the height to the base and the cap. `0x50e778` to `0x50e793` start the boom at the pivot plus the clamped height; `0x50e816` is the
 sweep, `0x50e861` the clip; `0x50e871` to `0x50e8a4` back off; `0x50e8a9` limits the distance to the live value. The solver has one caller, `0x50ed59`.
+
+`ui::cam_50e570` runs `0x50e570` whole with `0x50de00` and `0x50de90` real, and the two ray queries `0x672170` and the sweep `0x686db0` replaced.
 
 ## The boom sweep
 
@@ -67,9 +69,11 @@ and, for the polygons that clip it, finds the largest depth along the box. It re
 Addresses: `0x50de90`, `0x5c3e70`, `0x5c3cc0`, `0x5c43b0`, `0x686500`, `0x672390`, `0x687080`, `0x686db0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `ui::cam_50de90`
 
 `0x50dea3` to `0x50debe` take the near case: `0x50deb4` jumps on above or equal, so the test is one-sided. `0x50deef` and `0x50defa` read the camera's vtable slots 3 and 1. `0x50e099` builds the look-at, `0x50e0b7` and `0x50e0c3` the projection (`uicamera/transitions#field-of-view`), `0x50e0db` the corners. `0x50e21d` makes the box, `0x50e28e` and `0x50e2e9` query and test the world with the flags, `0x50e434` clips each polygon, and `0x50e482` to `0x50e49c` shorten the distance. The depth variable and the clip routine were read for their flow, not decoded.
+
+`ui::cam_50de90` runs `0x50de90` whole, with its collision and matrix callees stubbed and the swept query `0x686db0` replaced by an island that writes a chosen contact list.
 
 ## The water bands
 
@@ -83,7 +87,7 @@ the cap is `d - 5/6`, at least 5/6.
 Addresses: `0x511ad0`, `0x670630`, `0x8089d0`, `0x8089d4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_511_511ad0_residual`
 
 `0x511ae3` clears both bits (`and ecx,0xffcfffff`). `0x511b39` calls the liquid query `0x670630`; `0x511b5b` forms `d` against the unit's z. `0x511b61` compares with
 `+0x1c8`: below it goes to the surface band at `0x511ba4`. `0x511b76` compares the excess with `0x8089d0` (2/9) and `0x511b83` with `0x8089d4` (5/9); `0x511b90`

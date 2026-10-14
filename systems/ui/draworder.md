@@ -23,7 +23,7 @@ tail. A frame is linked at the head of its level. Every list in these docs uses 
 Addresses: `0x7668c0`, `0x7668d3`, `0x76691e`, `0x76691f`, `0x766921`, `0x766937`, `0x766880`, `0x7669a0`, `0x766aa0`, `0x764780`, `0x7648b3`, `0x7648c9`, `0x76a4b6`, `0x76a54c`, `0x76ae85`, `0x76ae10`, `0x76a470`, `0x76a4f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::set_frame_strata`, `ui::set_frame_level`
 
 `0x7668c0(list, object, mode, reference)` first unlinks the object, then loads the reference's link
 or `ecx+4` (`0x766918`), and `dec esi; je 0x766937` takes the before-path for mode 1 only. `0x764780`
@@ -31,6 +31,8 @@ inserts into list B with mode 2 and reference 0 (`0x7648c9`) and, while the upda
 into list A by an inline head insert (`0x7648b3`). Its three callers are `0x76a4b6`, `0x76a54c` and `0x76ae85`: a
 stratum change, a level change that changes the level, and a show. A frame's links are `+0x30c`
 (next) and `+0x310` (previous), zeroed by the constructor.
+
+`ui::set_frame_strata` and `ui::set_frame_level` run `0x76a470` and `0x76a4f0` whole, with the strata join `0x764780` and leave `0x764920` stubbed to log the frame.
 
 ## Update and draw walk
 
@@ -42,7 +44,7 @@ of list B after the level.
 Addresses: `0x765650`, `0x7656e5`, `0x7656eb`, `0x7656f7`, `0x765707`, `0x765710`, `0x76572d`, `0x76573e`, `0x765920`, `0x7659bb`, `0x7659d9`, `0x7659ed`, `0x7659f5`, `0x764920`, `0x76498f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::render_traverse_order`
 
 `0x765650` loads `[node+0x14]`, list B's last link, reads the next frame from `[frame+0x310]` into
 the node's cursor `+0x18` before calling slot 0x38 (`0x765707` to `0x765710`), and the removal `0x764920`
@@ -51,6 +53,8 @@ of B and empties A. `0x765920` loads the same `[node+0x14]` (`0x7659bb`) and ste
 Linking at the head and walking from the tail make the order by link time, oldest first: every show,
 stratum change and level change that changes the level relinks a frame, so the key is the time of
 the last link, not creation.
+
+`ui::render_traverse_order` runs `0x765650` whole, with each frame's update slot stubbed to log the frame, and reads the order.
 
 ## Layer batches
 

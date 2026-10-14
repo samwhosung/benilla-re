@@ -31,7 +31,7 @@ Roots: `0x52e610`
 Addresses: `0x52e610`, `0x52eb23`, `0x52ed56`, `0x52f2ae`, `0x52f3a1`, `0x52eeb4`, `0x52f10a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_512_52e610_timer_ratios`
 
 Each offset is read at the line that uses it: `+0xe8` at `0x52eeb4`, `+0xec` at `0x52eec5`, `+0x2c` at `0x52f10a`,
 `+0x2a8` at `0x52f2ae`, `+0xa0` at `0x52ed56`, `+0xa8` at `0x52f3a1`, and `+0xf4` at `0x52eb23`. The store

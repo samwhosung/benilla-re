@@ -30,7 +30,7 @@ point of the tooltip set to a point of the owner, offset by x and y:
 Addresses: `0x5310d0`, `0x53120d`, `0x53123a`, `0x531333`, `0x531379`, `0x5313b2`, `0x5313cf`, `0x52ffe0`, `0x52ffe6`, `0x52fff4`, `0x53000c`, `0x530031`, `0x530037`, `0x52fe90`, `0x52fead`, `0x52febd`, `0x52fec2`, `0x52fed6`, `0x52ff12`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_530_setters`
 
 `0x5310d0` stages mode 0 (`0x53120d`) and compares the name with the nine strings in turn
 (`0x53123a` to `0x531333`); arguments 4 and 5 go through `0x41ae60` (`0x531379`, `0x5313b2`).
@@ -38,6 +38,8 @@ Test: none
 (`0x53000c`) and, with an owner, the mode (`0x530031`), then `0x52fe90(1)` (`0x530037`). That
 returns for mode 8 (`0x52fead`), clears the points (`0x52fec2`) and, for modes 0 to 5, jumps through
 the table at 0x52ffbc (`0x52fed6`) to `0x767c70(point, owner, owner point, x, y, 1)` (`0x52ff12`).
+
+Bit-exact coverage: `ui::luabind_530_setters` covers `0x531367` to `0x531388`, `0x5313a0` to `0x5313cf` of `0x5310d0`.
 
 ## Anchoring again
 
@@ -66,7 +68,7 @@ position, divided by the tooltip's scale; `SetOwner`'s offsets play no part.
 Addresses: `0x530b20`, `0x530b2d`, `0x530b32`, `0x530b4f`, `0x530b63`, `0x530b6b`, `0x530b97`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::cursor_fade_530b20`
 
 `0x530b20` (slot 14) calls `0x76b2c0` (`0x530b2d`) and, with `+0x318` equal to 6 (`0x530b32`),
 reads the top's `+0x1118` and `+0x111c` (`0x530b4f`), converts them with `0x41ad80` (`0x530b63`),
@@ -80,12 +82,14 @@ is nonempty: `AddLine("")` adds nothing. A line with a right text never wraps.
 Addresses: `0x531630`, `0x53182b`, `0x5303b0`, `0x5303c2`, `0x530270`, `0x53027d`, `0x530284`, `0x530291`, `0x5302a9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_530_add_line`
 
 `AddLine` (`0x531630`) calls `0x5303b0` (`0x53182b`), which calls `0x530270(left, 0, …)`
 (`0x5303c2`). `0x530270` zeroes the wrap argument when the right text is nonempty (`0x53027d`,
 `0x530284`), returns when `+0x31c` equals `+0x320` (`0x530291`) and when both texts are empty
 (`0x5302a9`).
+
+Bit-exact coverage: `ui::luabind_530_add_line` covers `0x531709` to `0x53181a` of `0x531630`.
 
 ## Fading out
 
@@ -112,7 +116,9 @@ that when below (`0x530c18`), and passes `trunc(· 255)` to slot 0x28 (`0x530c2c
 Addresses: `0x854198`, `0x5368a0`, `0x530c40`, `0x530e50`, `0x530f10`, `0x530fe0`, `0x5310d0`, `0x5313e0`, `0x531560`, `0x531630`, `0x531840`, `0x531b90`, `0x531e30`, `0x531f00`, `0x531fd0`, `0x5322a0`, `0x532730`, `0x532920`, `0x532b00`, `0x532c50`, `0x532d10`, `0x532ee0`, `0x533470`, `0x533610`, `0x533760`, `0x5338b0`, `0x533ac0`, `0x533cd0`, `0x533e90`, `0x534080`, `0x5341e0`, `0x534410`, `0x534620`, `0x5349b0`, `0x534ac0`, `0x534e30`, `0x535170`, `0x5353b0`, `0x5354c0`, `0x535700`, `0x535810`, `0x535ad0`, `0x535bb0`, `0x535c60`, `0x535d70`, `0x536080`, `0x536300`, `0x5364a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_530_add_double_line`, `ui::luabind_530_set_text`, `ui::luabind_530_setters`, `ui::luabind_532d10_set_spell`, `ui::luabind_533470_set_loot_item`, `ui::luabind_534080_set_merchant_item`, `ui::luabind_5341e0_set_trade_player_item`, `ui::luabind_534410_set_trade_target_item`
 
 The table is 46 pairs of a name and a function, `AddFontStrings` (`0x530c40`) to `SetLootRollItem`
 (`0x5364a0`); `0x5368a0` calls `0x701d80` with 0x2e and the hash 0xc0cf20.
+
+Bit-exact coverage: `ui::luabind_530_add_double_line` covers `0x531927` to `0x531b69` of `0x531840`; `ui::luabind_530_set_text` covers `0x531c5e` to `0x531d64`, `0x531d69` to `0x531ddc` of `0x531b90`; `ui::luabind_530_setters` covers `0x530fa8` to `0x530fc5` of `0x530f10`; `ui::luabind_532d10_set_spell` covers `0x532dd4` to `0x532ddf` of `0x532d10`; `ui::luabind_533470_set_loot_item` covers `0x53353c` to `0x533547` of `0x533470`; `ui::luabind_534080_set_merchant_item` covers `0x534154` to `0x53415f` of `0x534080`; `ui::luabind_5341e0_set_trade_player_item` covers `0x5342ac` to `0x5342b7` of `0x5341e0`; `ui::luabind_534410_set_trade_target_item` covers `0x5344dc` to `0x5344e7` of `0x534410`.

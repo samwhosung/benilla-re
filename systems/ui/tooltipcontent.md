@@ -158,7 +158,7 @@ on. A font string never reads back a height below one interface unit.
 Addresses: `0x52dd5e`, `0x52dd68`, `0x52dfb9`, `0x52dfc3`, `0x854b2c`, `0x5c2070`, `0x5c20d6`, `0x5c2810`, `0x5c2896`, `0x5c7470`, `0x5c7659`, `0x5c7752`, `0x5c7260`, `0x5c2116`, `0x772a60`, `0x7729b0`, `0x771e87`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::textglue_scale_mul`
 
 `0x854b2c` holds `20 0a 00`. The classifier `0x5c2810` makes a line feed a hard break of length 1
 (`0x5c2896`); the line counter `0x5c2070` increments at `0x5c2116` once per step. The wrapping stepper
@@ -166,6 +166,8 @@ Test: none
 and returns a line end one past the newline (`0x5c7752`), so the text ends and counts as one line. The height
 of N lines is `N·size + (N−1)·snapped spacing`, with the spacing zero by default. `0x772a60` returns the
 larger of the declared or measured height and one interface unit (`regions`).
+
+Bit-exact coverage: `ui::textglue_scale_mul` covers `0x772a0d` to `0x772a20` of `0x7729b0`.
 
 ## Sizing the tooltip
 
@@ -178,7 +180,7 @@ texts are then anchored at the widest line's width. All lengths are FrameXML uni
 Addresses: `0x530640`, `0x530649`, `0x530665`, `0x5306cf`, `0x5306f8`, `0x53071a`, `0x530790`, `0x5307bd`, `0x5307cb`, `0x530837`, `0x5308a8`, `0x5308ef`, `0x53094f`, `0x530983`, `0x530995`, `0x5309c4`, `0x5309e4`, `0x5309f4`, `0x530a0c`, `0x530a2e`, `0x530a39`, `0x530a3c`, `0x530a49`, `0x530a52`, `0x808e6c`, `0x808e70`, `0x808e74`, `0x808e78`, `0x808e80`, `0x772890`, `0x772b60`, `0x772ae0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::layout_pass_530640`, `ui::textglue_scale_mul`
 
 `0x530640` returns without an owner (`0x530649`). The first loop starts from the minimum width `+0x3c0`
 converted to layout units (`0x530665`), and for each unwrapped shown line adds the left width, the right
@@ -192,6 +194,8 @@ adds `0x808e6c` (2.0) for every shown line after the first (`0x530995`) and each
 (10.24, `0x5309e4`, `0x530a0c`); width is `2·pad + [+0x3bc] + widest` (`0x5309f4`) and the plate is sized by
 slots 0x14 and 0x18 (`0x530a2e`, `0x530a39`). Anchor mode 6 is not re-anchored (`0x530a3c`); the others
 are, with `0x52fe90(0)` (`0x530a49`), and the layout is invalidated (`0x530a52`).
+
+Bit-exact coverage: `ui::textglue_scale_mul` covers `0x772b81` to `0x772b98` of `0x772b60`.
 
 ## Appending text
 
