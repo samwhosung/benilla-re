@@ -48,7 +48,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4803b0` is `fld [a]; fmul [b]; fstp [g]; ret`. The 0.5833333 × -255 body reads, as its first operand, the global that the -21 × -0.027777778 body stored (`0x4803e0` from `0xb4b354`), and the 0.5 × 256 body the one that the 18 × 0.027777778 body stored (`0x480440` from `0xb4b2c4`), so those operands are stored floats and not constants of the data section.
+`0x4803b0` is `fld [a]; fmul [b]; fstp [g]; ret`. The 0.5833333 × -255 body reads, as its first operand, the global that the -21 × -0.027777778 body stored (`0x4803e0` from 0xb4b354), and the 0.5 × 256 body the one that the 18 × 0.027777778 body stored (`0x480440` from 0xb4b2c4), so those operands are stored floats and not constants of the data section.
 
 ## Quotients
 

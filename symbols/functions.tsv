@@ -4273,7 +4273,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x45ec10	176	SheatheListDeletingDtor		sound	primitive		Unlinks a list's links and head and, with bit 0 of its argument, frees the list	verified	one	sound/overview#lists-and-growable-arrays	
 0x45ecc0	12	ResetSheatheListHead		sound	primitive		Links a list's head to itself	verified	one	sound/overview#lists-and-growable-arrays	
 0x45ecd0	316	SetSheatheBucketCount		sound	primitive		Sets a bucket array's count, growing it by granularity and building or unlinking lists	verified	one	sound/overview#lists-and-growable-arrays	
-0x45ee10	483	AddUiSoundName		sound	primitive		Adds a UI sound name node for a hash and keeps a copy of the name	verified	one	sound/entries#interface-sound-names	
+0x45ee10	483	GrowUiSoundTable		sound	primitive		Doubles the UI sound table's buckets and rehashes when the run counter passes 13	verified	one	sound/entries#interface-sound-names	
 0x45f000	33	ConstructUiSoundList		sound	primitive		Builds an empty explicit list with offset 0xdddddddd and its head linked to itself	verified	one	sound/overview#lists-and-growable-arrays	
 0x45f030	12	ResetUiSoundListHead		sound	primitive		Links a list's head to itself	verified	one	sound/overview#lists-and-growable-arrays	
 0x45f040	491	RehashStringTable		sound	primitive		Resizes the string table buckets to a count and relinks every node by hash and mask	verified	one	sound/overview#hash-tables	
@@ -7095,7 +7095,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x497130	57	Quantum21497130		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 21, else 21	verified	one	ui/containers#arrays	
 0x497170	146			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x497210	41	NextLink497210		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
-0x497240	483	GrowOnLongChain497240		ui	primitive		Doubles a table's buckets and rehashes when a bucket walks more than 13 nodes, up to mask 0x1fff	verified	one	ui/containers#hash-tables	
+0x497240	483	GrowOnLongChain497240		ui	primitive		Doubles a table's buckets and rehashes when the run counter passes 13, below mask 0x1fff	verified	one	ui/containers#hash-tables	
 0x497430	33	InitList497430		ui	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	ui/containers#lists	
 0x497460	77	ClearBucket497460		ui	primitive		Unlinks every node of a bucket list	verified	one	ui/containers#lists	
 0x4974b0	12	InitEndLink4974b0		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
@@ -29560,8 +29560,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f0230	181	Relink6f0230		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
 0x6f02f0	25	LinkOrEnd6f02f0		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x6f0310	181	Relink6f0310		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
-0x6f03d0	139	ShouldGrow6f03d0		ui	primitive		Counts a bucket's chain and grows the table when it passes 13	verified	one	ui/containers#hash-tables	
-0x6f0460	139	ShouldGrow6f0460		ui	primitive		Counts a bucket's chain and grows the table when it passes 13	verified	one	ui/containers#hash-tables	
+0x6f03d0	139	ShouldGrow6f03d0		ui	primitive		Adds a bucket chain walk to the run counter and grows the table past 13	verified	one	ui/containers#hash-tables	
+0x6f0460	139	ShouldGrow6f0460		ui	primitive		Adds a bucket chain walk to the run counter and grows the table past 13	verified	one	ui/containers#hash-tables	
 0x6f04f0	562			ui	primitive		Runs its object file code that calls 0x6f07e0, 0x6f0210, 0x6efd80 and 4 more; not read here	inferred	none		
 0x6f0730	33	InitUnsetList6f0730		ui	primitive		Makes an empty list with the unset link offset 0xdddddddd	verified	one	ui/containers#lists	
 0x6f0760	43	DeletingDestructor6f0760		ui	orchestration		Destroys the object through 0x6ef9f0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	

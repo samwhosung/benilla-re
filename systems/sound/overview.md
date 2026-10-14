@@ -97,7 +97,7 @@ The vtables are `0x803148` (footstep), `0x8032c4` (UI sound), `0x8032d4` (sheath
 (string entry), each `{free node, new node, deleting destructor, destroy}`. The table holds the
 list's link offset at `+4`, its head at `+8`, the counter at `+0x10`, the buckets at `+0x14`
 (capacity, count, data, granularity) and the mask at `+0x24`. The adds are `0x459730`, `0x45dfd0`
-and `0x45e570` (`0x45ee10` is the UI table's); the bucket is `hash & mask` (`0x4597bc`) and the
+and `0x45e570`; the UI table's growth is `0x45ee10`; the bucket is `hash & mask` (`0x4597bc`) and the
 growth `0x45981f` passes `2·mask + 2` to the rehash `0x459fc0`, `0x45e9f0` or `0x45f040`.
 `0x459630`, `0x45da70` and `0x45ded0` empty a table, unlinking each node and, unless the argument
 is set, freeing it through slot 0. `0x45d150` builds the string table on the stack of `0x45c080`,

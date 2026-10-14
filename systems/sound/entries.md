@@ -176,14 +176,14 @@ record layout is FMOD's channel reverb properties; the record array grows throug
 the row's name, with the row's id as the value; a later row of the same name replaces the id.
 `0x458030` looks names up here (`interface#interface-sounds-by-name`).
 
-Addresses: `0x45c2c0`, `0x45c306`, `0x45c31d`, `0x45c35e`, `0x45c3e9`, `0x45c464`, `0xb06bfc`
+Addresses: `0x45c2c0`, `0x45c306`, `0x45c31d`, `0x45c35e`, `0x45c3e9`, `0x45c416`, `0x45c464`, `0xb06bfc`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x45c306` tests row `+4` (type) against 2. The table at `0xb06bfc` is a hash table of 0x1c-byte
-nodes (`overview#hash-tables`); a found node gets the id at `0x45c464`, a new one is made
-by `0x45ee10` and keeps a copy of the name.
+nodes (`overview#hash-tables`); a found node gets the id at `0x45c464`. For a new name `0x45ee10` first grows the buckets when the chain is long
+(`0x45c3e9`), then the table's new-node slot (`+4` of its vtable, `0x45c416`) makes the node, which keeps a copy of the name.
 
 ## Loading and unloading
 

@@ -1,6 +1,6 @@
 # ui: list, table and array helpers
 
-The ui object files instantiate the client's list, hash table and array templates for their own types, and the compiler repeats each template function once for every instance. The rows here are byte clones, once their addresses are masked (`tools/clones.py`), of rows read in other systems, so each does what its clone does with its own lists, tables and arrays. 550 rows in nine groups. The types they serve are named by the tag strings the free calls pass, such as `.?AUSAVEDVARIABLE@@`.
+The ui object files instantiate the client's list, hash table and array templates for their own types, and the compiler repeats each template function once for every instance. The rows here are byte clones, once their addresses are masked (`tools/clones.py`), of rows read in other systems (three clusters: in other ui docs), so each does what its clone does with its own lists, tables and arrays. 550 rows in ten groups. The types they serve are named by the tag strings the free calls pass, such as `.?AUSAVEDVARIABLE@@`.
 
 Roots: `0x4846c0`, `0x495b70`, `0x484690`, `0x497710`, `0x496be0`, `0x4969e0`
 
@@ -23,7 +23,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The shapes are the clones of `0x4237a0`, `0x420980`, `0x422f90`, `0x427bf0`, `0x4278d0`, `0x5be040`, each read in another system. A row's own list is the one its caller names; the function reads only the link it is given, so the rows differ only in the addresses they mask.
+The shapes are the clones of `0x4237a0` (core), `0x420980` (core), `0x422f90` (core), `0x459ac0` (sound), `0x45e770` (sound), `0x67d740` (lighting), `0x422d80` (core), each a verified row read in its own system. A row's own list is the one its caller names; the function reads only the link it is given, so the rows differ only in the addresses they mask.
 
 ## Lists
 
@@ -45,7 +45,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x423530`, `0x427d30`, `0x427fa0`, `0x427f70`, `0x422d50`, `0x45e300`.
+The clones are `0x423530` (core), `0x45a520` (sound), `0x45a1e0` (sound), `0x45a1b0` (sound), `0x422d50` (core), `0x45e300` (sound), `0x422f80` (core), `0x408a30` (loadingscreen).
 
 ## Hash tables
 
@@ -59,18 +59,18 @@ The clones are `0x423530`, `0x427d30`, `0x427fa0`, `0x427f70`, `0x422d50`, `0x45
 | FreeBuckets | 17 | Empties a table's bucket lists and frees the bucket array |
 | ResizeBuckets | 14 | Sets a bucket array's count, rounding the capacity to its quantum below 21 elements |
 | GrowBuckets | 10 | Grows a bucket array by a count, rounding the capacity to its quantum |
-| GrowOnLongChain | 8 | Doubles a table's buckets and rehashes when a bucket walks more than 13 nodes, up to mask 0x1fff |
+| GrowOnLongChain | 8 | Doubles a table's buckets and rehashes when the run counter passes 13 on a chain walk, below mask 0x1fff |
 | RehashTable | 7 | Moves a hash table's nodes into a resized bucket array |
 | ClearTable | 7 | Unlinks every node of a table and, unless its argument is set, frees each |
 | InitTable | 4 | Builds an empty hash table with mask -1 |
-| ShouldGrow | 2 | Counts a bucket's chain and grows the table when it passes 13 |
+| ShouldGrow | 2 | Adds a bucket's chain walk to the run counter and grows the table when it passes 13 |
 
 Addresses: `0x4969e0`, `0x496b20`, `0x496ce0`, `0x497240`, `0x4974c0`, `0x497600`, `0x4a2730`, `0x4a2940`, `0x4a2b50`, `0x4a2db0`, `0x4a2e70`, `0x4a2f30`, `0x4a3460`, `0x4a3770`, `0x4a3840`, `0x4a39d0`, `0x4a3aa0`, `0x4a3c30`, `0x4a4530`, `0x4a4810`, `0x4a4b90`, `0x4a4de0`, `0x4a4f70`, `0x4a50b0`, `0x4a5390`, `0x4a54d0`, `0x4a55e0`, `0x4a57d0`, `0x4a58e0`, `0x4b8490`, `0x4b8680`, `0x4b8740`, `0x4b8800`, `0x4b89f0`, `0x4b8ee0`, `0x4b8f70`, `0x4b9170`, `0x4b9660`, `0x4b98b0`, `0x4b9b30`, `0x4b9c70`, `0x4b9e10`, `0x4b9f20`, `0x4c35d0`, `0x4c3690`, `0x4c37e0`, `0x4c5dd0`, `0x4c5e90`, `0x4c5fe0`, `0x4c65b0`, `0x4c6890`, `0x4c69d0`, `0x4c6b10`, `0x4dd0f0`, `0x4dd1d0`, `0x4dd7a0`, `0x4ddca0`, `0x4ddf80`, `0x4de0c0`, `0x4de200`, `0x4f1d80`, `0x4f1e40`, `0x4f1fd0`, `0x4f2450`, `0x4f2730`, `0x4f2870`, `0x4f2a00`, `0x51fdd0`, `0x51ffe0`, `0x520490`, `0x5206a0`, `0x520760`, `0x520820`, `0x5208e0`, `0x5209a0`, `0x520ae0`, `0x520e30`, `0x520f00`, `0x521100`, `0x521220`, `0x521c90`, `0x521ef0`, `0x5223b0`, `0x5228c0`, `0x522cc0`, `0x522e00`, `0x522f40`, `0x523080`, `0x5231c0`, `0x5232d0`, `0x523440`, `0x5261c0`, `0x5263c0`, `0x5265b0`, `0x526670`, `0x526730`, `0x5267f0`, `0x526ce0`, `0x526f80`, `0x5271f0`, `0x527540`, `0x527820`, `0x527990`, `0x527c70`, `0x527dc0`, `0x527f00`, `0x528470`, `0x528580`, `0x528690`, `0x5287d0`, `0x6ef190`, `0x6ef5b0`, `0x6ef670`, `0x6ef900`, `0x6f03d0`, `0x6f0460`, `0x6f0eb0`, `0x6f0fc0`, `0x7843d0`, `0x7844e0`, `0x7846a0`, `0x784a50`, `0x784e70`
 Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x427810`, `0x4282e0`, `0x427990`, `0x427ca0`, `0x428060`, `0x4281a0`. The table in `0x4969e0` empties its main list, then each bucket list, frees the bucket array and sets the mask to -1; the growth function `0x497240` tests the mask against 0x1fff, doubles the buckets when a bucket walks more than 13 nodes and reports whether it grew.
+The clones are `0x459430` (sound), `0x45a570` (sound), `0x459530` (sound), `0x459940` (sound), `0x45a2a0` (sound), `0x45a3e0` (sound), `0x63e9f0` (cvar), `0x459630` (sound), `0x459fc0` (sound), `0x45d150` (sound). The table in `0x4969e0` empties its main list, then each bucket list, frees the bucket array and sets the mask to -1; the growth function `0x497240` refuses at a mask of 0x1fff or more, then keeps a counter at `+0x10` that persists between calls: each call takes 3 off it (to 0 at the least, `0x497257` to `0x497267`), each node walked adds 1 (`0x4972a4`), and a count above 13 (`0x4972a7`) doubles the buckets and returns 1. A table can therefore grow on a short chain. `ShouldGrow` (`0x6f03d0`, `0x6f0460`, the same bytes once addresses are masked) does the same with the call to `0x6f04f0` for the doubling.
 
 ## Hash table nodes
 
@@ -88,7 +88,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x459730`, `0x5f1060`, `0x45d020`, `0x45d090`. A node is linked into the bucket list its hash selects and into the main list; the free functions unlink both links.
+The clones are `0x459730` (sound), `0x45d020` (sound), `0x5f1060` (objectlayer), `0x45d090` (sound). A node is linked into the bucket list its hash selects and into the main list; the free functions unlink both links.
 
 ## Arrays
 
@@ -112,7 +112,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x423050`, `0x423030`, `0x422b50`, `0x469d60`, `0x5f24e0`, `0x422ff0`. `0x496f80` rounds with a divide and remainder; the quantum functions test the count against 0x15 or 0x40, clear the lowest set bit until one bit is left, and store the cap at this+0xc for larger counts.
+The clones are `0x423030` (core), `0x423050` (core), `0x422b50` (core), `0x469d60` (objectlayer), `0x5f24e0` (objectlayer), `0x422ff0` (core), `0x475680` (glue), `0x422850` (core), `0x6c8eb0` (playername), `0x45e880` (sound). `0x496f80` rounds with a divide and remainder; the quantum functions test the count against 0x15 or 0x40, clear the lowest set bit until one bit is left, and store the cap at this+0xc for larger counts.
 
 ## Deleting destructors
 
@@ -130,7 +130,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x4254a0`, `0x4594f0`, `0x426190`, `0x423670`. The layout thunks of `Layout thunks` jump to the destructors of the first group; `0x4a2d70` and its clones first free a block at this+8.
+The clones are `0x4482b0` (gx), `0x4594f0` (sound), `0x426190` (core), `0x423670` (core). The layout thunks of `Layout thunks` jump to the destructors of the first group; `0x4a2d70` and its clones first free a block at this+8.
 
 ## Block frees
 
@@ -148,7 +148,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x4229c0`, `0x427720`, `0x420b40`, `0x4e31f0`. The first group tests a pointer field and frees it with the tag of its element type; the second clears a record through a call and frees the record.
+The clones are `0x4229c0` (core), `0x63e2b0` (cvar), `0x420b40` (core) and, read in `ui/gameui`, `0x4e31f0`. The first group tests a pointer field and frees it with the tag of its element type; the second clears a record through a call and frees the record.
 
 ## Layout thunks
 
@@ -163,7 +163,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x470080`. The targets are the destructors of `Deleting destructors`; `ui/frames` (Vtables and the two parts) describes the layout part.
+The clones are `0x470080` (glue). The targets are the destructors of `Deleting destructors`; `ui/frames` (Vtables and the two parts) describes the layout part.
 
 ## Type tests
 
@@ -179,7 +179,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x46ffa0`, `0x484780`. `0x4ee000` compares with the id of its own class and with the frame and region type ids (`ui/frames`).
+The clones are `0x46ffa0` (glue) and, read in `ui/taxiframe`, `0x484780`. `0x4ee000` compares with the id of its own class and with the frame and region type ids (`ui/frames`).
 
 ## Method lookups
 
@@ -194,4 +194,4 @@ Confidence: verified
 Proof: one
 Test: none
 
-The clones are `0x4c1be0`. The hash tables are those registered by `ui/scriptapi` (Method table unregistrars).
+The clones are `0x4c1be0`, read in `ui/loot`. The hash tables are those registered by `ui/scriptapi` (Method table unregistrars).
