@@ -56,11 +56,11 @@ function.
 ## Look-at matrices
 
 `0x5c3e70` (`ecx` the eye, `edx` the target; the up vector and the output on the stack; `ret 8`)
-writes a view matrix. With `f = normalize(target − eye)`, `s = normalize(f × up)` and `u = s × f`,
-columns 0, 1 and 2 are `s`, `u` and `f` (`m0 m4 m8 = s`, `m1 m5 m9 = u`, `m2 m6 m10 = f`), `m3 m7 m11 = 0`,
-`m15 = 1`, and `m12 m13 m14` is the eye negated through `0x7bdc40`: `m12 = (−e.z·m8 + −e.y·m4 +
-−e.x·m0) + 0`. It fails when `|target − eye|²` or `|up|²` is under 0.01. `0x5c4100`, which no code
-calls, uses `s' = up × f` and `u' = f × s'`, which negates column 0 and `m12`.
+writes a view matrix. With `f = normalize(target − eye)`, `s = normalize(f × up)` and `u = s × f`:
+`m0 m4 m8` is `s`, `m1 m5 m9` is `u`, `m2 m6 m10` is `f`, `m3 m7 m11` are 0 and `m15` is 1. `m12 m13
+m14` is the eye negated through `0x7bdc40`; `m12 = (−e.z·m8 + −e.y·m4 + −e.x·m0) + 0`. It fails when
+`|target − eye|²` or `|up|²` is under 0.01. `0x5c4100`, which no code calls, uses `s' = up × f` and
+`u' = f × s'`, which negates `m0 m4 m8` and `m12`.
 
 Addresses: `0x5c3e70`, `0x5c4100`, `0x7bdc40`, `0x5c3efd`, `0x5c3f25`, `0x5c3f53`, `0x5c3f71`, `0x5c3fe6`, `0x5c4059`, `0x5c40eb`
 Confidence: verified
