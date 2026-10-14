@@ -1240,6 +1240,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84f4f4	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f5e8	uint32_t			uicamera	Holds data whose address its object file's code takes; not read here	inferred	none	
 0x84f620	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84f788	const char *	s_cameraSettingsFileName		uicamera	Holds the pointer to the camera settings file name	verified	one	uicamera/view#the-settings-file
 0x84f7a0	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f848	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84fad4	char[4]	s_text00		unassigned	Holds the string "0.0"	inferred	none	
@@ -2209,25 +2210,57 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
 0xbe0b84	uint32_t	s_tokenPluralKey		ui	Holds the number the last counted token printed, the key of a plural token	verified	one	ui/spelltokens#the-plural-key
-0xbe0cec	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0cf8	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0e70	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0f30	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0fc0	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0fc8	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe0fd4	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1038	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1050	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1054	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe105c	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1064	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1070	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe0cd0	void *	s_cvarCameraDive		uicamera	Holds the CVar record of cameraDive	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0cd4	void *	s_cvarCameraHeightSmoothSpeed		uicamera	Holds the CVar record of cameraHeightSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe0ce4	void *	s_cvarCameraPitchSmoothSpeed		uicamera	Holds the CVar record of cameraPitchSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe0cec	void *	s_cvarCameraPivotDYMin		uicamera	Holds the CVar record of cameraPivotDYMin	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0cf4	void *	s_cvarCameraHeightIgnoreStandState		uicamera	Holds the CVar record of cameraHeightIgnoreStandState	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0cf8	void *	s_cvarCameraBobbingFrequency		uicamera	Holds the CVar record of cameraBobbingFrequency	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe0d00	void *[90]	s_cvarCameraTerrainTiltStyles		uicamera	Holds the CVar records cameraTerrainTilt<style><state><Absorb, Delay or Factor>	verified	one	uicamera/cvars#smoothing-cvars
+0xbe0e68	void *	s_cvarCameraView		uicamera	Holds the CVar record of cameraView	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe0e6c	void *	s_cvarCameraDistanceMax		uicamera	Holds the CVar record of cameraDistanceMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0e70	void *[42]	s_cvarCameraSmooth		uicamera	Holds the CVar records cameraSmooth<style><state><Delay or Factor>	verified	one	uicamera/cvars#smoothing-cvars
+0xbe0f1c	void *	s_cvarCameraCustomViewSmoothing		uicamera	Holds the CVar record of cameraCustomViewSmoothing	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0f2c	void *	s_cvarCameraSurfaceFinalPitch		uicamera	Holds the CVar record of cameraSurfaceFinalPitch	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0f30	void *	s_cvarCameraPivotDXMax		uicamera	Holds the CVar record of cameraPivotDXMax	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0f44	void *	s_cvarCameraPitchSmoothMin		uicamera	Holds the CVar record of cameraPitchSmoothMin	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0f48	void *	s_cvarCameraPitchSmoothMax		uicamera	Holds the CVar record of cameraPitchSmoothMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0f4c	void *	s_cvarCameraSurfacePitch		uicamera	Holds the CVar record of cameraSurfacePitch	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0f78	void *	s_cvarCameraPitchMoveSpeed		uicamera	Holds the CVar record of cameraPitchMoveSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe0f7c	void *[15]	s_cvarCameraViews		uicamera	Holds the CVar records of the five saved views, three per view in the order distance, pitch, yaw	verified	one	uicamera/cvars#saved-view-cvars
+0xbe0fb8	void *	s_cvarCameraYawSmoothMin		uicamera	Holds the CVar record of cameraYawSmoothMin	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0fbc	void *	s_cvarCameraDistanceMoveSpeed		uicamera	Holds the CVar record of cameraDistanceMoveSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe0fc0	void *	s_cvarCameraGroundSmoothSpeed		uicamera	Holds the CVar record of cameraGroundSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe0fc4	void *	s_cvarCameraSmoothPitch		uicamera	Holds the CVar record of cameraSmoothPitch	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe0fc8	void *	s_cvarCameraTargetSmoothSpeed		uicamera	Holds the CVar record of cameraTargetSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe0fcc	void *	s_cvarCameraYawSmoothMax		uicamera	Holds the CVar record of cameraYawSmoothMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0fd4	void *	s_cvarCameraTerrainTilt		uicamera	Holds the CVar record of cameraTerrainTilt	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0fd8	void *	s_cvarCameraSubmergePitch		uicamera	Holds the CVar record of cameraSubmergePitch	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe0fdc	void *	s_cvarCameraSubmergeFinalPitch		uicamera	Holds the CVar record of cameraSubmergeFinalPitch	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0fe0	void *	s_cvarCameraDistanceMaxFactor		uicamera	Holds the CVar record of cameraDistanceMaxFactor	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe0fe8	void *[18]	s_cvarCameraSmoothViewData		uicamera	Holds the CVar records cameraSmoothViewData<style><axis><Delay or Factor>	verified	one	uicamera/cvars#smoothing-cvars
+0xbe1038	void *	s_cvarCameraSmoothTimeMax		uicamera	Holds the CVar record of cameraSmoothTimeMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe1040	void *	s_cvarMouseInvertPitch		uicamera	Holds the CVar record of mouseInvertPitch	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe104c	void *	s_cvarCameraSmoothYaw		uicamera	Holds the CVar record of cameraSmoothYaw	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe1050	void *	s_cvarCameraTerrainTiltTimeMin		uicamera	Holds the CVar record of cameraTerrainTiltTimeMin	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe1054	void *	s_cvarCameraTerrainTiltTimeMax		uicamera	Holds the CVar record of cameraTerrainTiltTimeMax	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe105c	void *	s_cvarCameraSmoothTimeMin		uicamera	Holds the CVar record of cameraSmoothTimeMin	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe1064	void *	s_cvarCameraBobbingLRAmplitude		uicamera	Holds the CVar record of cameraBobbingLRAmplitude	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe1068	void *	s_cvarCameraFoVSmoothSpeed		uicamera	Holds the CVar record of cameraFoVSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe106c	void *	s_cvarCameraDistanceSmoothSpeed		uicamera	Holds the CVar record of cameraDistanceSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe1070	void *	s_cvarCameraYawSmoothSpeed		uicamera	Holds the CVar record of cameraYawSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe1074	void *	s_cvarCamerasmooth		uicamera	Holds the CVar record of camerasmooth	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1078	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe1088	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe10a4	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe10bc	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe10c0	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbe10c8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe1084	void *	s_cvarMouseInvertYaw		uicamera	Holds the CVar record of mouseInvertYaw	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe1088	void *	s_cvarCameraWaterCollision		uicamera	Holds the CVar record of cameraWaterCollision	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe1094	void *	s_cvarCameraYawMoveSpeed		uicamera	Holds the CVar record of cameraYawMoveSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe1098	void *	s_cvarCameraSmoothStyle		uicamera	Holds the CVar record of cameraSmoothStyle	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe10a4	void *	s_cvarCameraPivot		uicamera	Holds the CVar record of cameraPivot	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
+0xbe10b0	void *	s_cvarCameraViewBlendStyle		uicamera	Holds the CVar record of cameraViewBlendStyle	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe10bc	void *	s_cvarCameraBobbingSmoothSpeed		uicamera	Holds the CVar record of cameraBobbingSmoothSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe10c0	void *	s_cvarCameraBobbing		uicamera	Holds the CVar record of cameraBobbing	verified	one	uicamera/cvars#input-and-bobbing-cvars
+0xbe10c4	void *	s_cvarCameraSmoothTrackingStyle		uicamera	Holds the CVar record of cameraSmoothTrackingStyle	verified	one	uicamera/cvars#smoothing-speed-cvars
+0xbe10c8	void *	s_cvarCameraBobbingUDAmplitude		uicamera	Holds the CVar record of cameraBobbingUDAmplitude	verified	one	uicamera/cvars#input-and-bobbing-cvars
 0xbe1148	CInputControl *	s_inputControl		input	Holds the CInputControl singleton	verified	one	input#input-state
 0xbe1198	const char *	s_eventNames		ui	Holds the first event name pointer; the names follow in event order and index 0x150 is UPDATE_MOUSEOVER_UNIT	verified	one	ui/tooltipobject#the-publisher
 0xbe160c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	

@@ -12183,172 +12183,172 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50b230	27			unassigned			Runs its object file code not read here	inferred	none		
 0x50b250	27			unassigned			Runs its object file code not read here	inferred	none		
 0x50b270	27			unassigned			Runs its object file code not read here	inferred	none		
-0x50b290	5			uicamera			Runs its object file code not read here	inferred	none		
-0x50b2a0	11			uicamera			Runs its object file code not read here	inferred	none		
-0x50b2b0	5			uicamera			Runs its object file code not read here	inferred	none		
-0x50b2c0	19			uicamera			Runs its object file code not read here	inferred	none		
-0x50b2e0	5			uicamera			Runs its object file code not read here	inferred	none		
-0x50b2f0	19			uicamera			Runs its object file code not read here	inferred	none		
-0x50b310	28			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50b330	74	ValidateIsInRange	idb	uicamera			Runs its object file code that calls SStrToFloat, ConsoleWriteA; not read here	inferred	none		
-0x50b380	49			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50b3c0	49			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50b400	77	Script::CameraZoomIn	idb	uicamera			Implements the Lua function CameraZoomIn	inferred	none		
-0x50b450	77	Script::CameraZoomOut	idb	uicamera			Implements the Lua function CameraZoomOut	inferred	none		
-0x50b4a0	7	Script::MoveViewInStart	idb	uicamera			Implements the Lua function MoveViewInStart	inferred	none		
-0x50b4b0	24			uicamera			Runs its object file code that calls GetActiveCamera, 0x50fd40; not read here	inferred	none		
-0x50b4d0	7	Script::MoveViewInStop	idb	uicamera			Implements the Lua function MoveViewInStop	inferred	none		
-0x50b4e0	22			uicamera			Runs its object file code that calls GetActiveCamera, 0x50fd90; not read here	inferred	none		
-0x50b500	10	Script::MoveViewOutStart	idb	uicamera			Implements the Lua function MoveViewOutStart	inferred	none		
-0x50b510	10	Script::MoveViewOutStop	idb	uicamera			Implements the Lua function MoveViewOutStop	inferred	none		
-0x50b520	10	Script::MoveViewRightStart	idb	uicamera			Implements the Lua function MoveViewRightStart	inferred	none		
-0x50b530	10	Script::MoveViewRightStop	idb	uicamera			Implements the Lua function MoveViewRightStop	inferred	none		
-0x50b540	10	Script::MoveViewLeftStart	idb	uicamera			Implements the Lua function MoveViewLeftStart	inferred	none		
-0x50b550	10	Script::MoveViewLeftStop	idb	uicamera			Implements the Lua function MoveViewLeftStop	inferred	none		
-0x50b560	10	Script::MoveViewUpStart	idb	uicamera			Implements the Lua function MoveViewUpStart	inferred	none		
-0x50b570	10	Script::MoveViewUpStop	idb	uicamera			Implements the Lua function MoveViewUpStop	inferred	none		
-0x50b580	10	Script::MoveViewDownStart	idb	uicamera			Implements the Lua function MoveViewDownStart	inferred	none		
-0x50b590	10	Script::MoveViewDownStop	idb	uicamera			Implements the Lua function MoveViewDownStop	inferred	none		
-0x50b5a0	15	Script::ToggleMouseMove	idb	uicamera			Implements the Lua function ToggleMouseMove	inferred	none		
-0x50b5b0	71	Script::SetView	idb	uicamera			Implements the Lua function SetView	inferred	none		
-0x50b600	61	Script::SaveView	idb	uicamera			Implements the Lua function SaveView	inferred	none		
-0x50b640	61	Script::ResetView	idb	uicamera			Implements the Lua function ResetView	inferred	none		
-0x50b680	15	Script::NextView	idb	uicamera			Implements the Lua function NextView	inferred	none		
-0x50b690	15	Script::PrevView	idb	uicamera			Implements the Lua function PrevView	inferred	none		
-0x50b6a0	69	Script::FlipCameraYaw	idb	uicamera			Implements the Lua function FlipCameraYaw	inferred	none		
-0x50b6f0	2245			uicamera			Runs its object file code that calls CVar::Lookup, CVar::Register, SStrPack; not read here	inferred	none		
-0x50bfc0	22			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50bfe0	28			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50c000	49			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50c040	28			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50c060	22			uicamera			Runs its object file code that calls ValidateIsInRange; not read here	inferred	none		
-0x50c080	33			uicamera			Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x50c0b0	27			uicamera			Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
-0x50c0d0	1			uicamera			Runs its object file code not read here	inferred	none		
-0x50c0e0	813			uicamera			Runs its object file code that calls 0x50a720, OsGetAsyncTimeMs, SStrToFloat and 4 more; not read here	inferred	none		
-0x50c410	5			uicamera			Runs its object file code not read here	inferred	none		
-0x50c420	15			uicamera			Runs its object file code not read here	inferred	none		
-0x50c430	5			uicamera			Runs its object file code not read here	inferred	none		
-0x50c440	19			uicamera			Runs its object file code not read here	inferred	none		
-0x50c460	100			uicamera			Runs its object file code that calls 0x50ca50, 0x63fb40, 0x50c4d0 and 1 more; not read here	inferred	none		
-0x50c4d0	207			uicamera			Runs its object file code that calls OpenAccountDataFile, SStrPrintf, SStrLen and 2 more; not read here	inferred	none		
-0x50c5a0	402			uicamera			Runs its object file code that calls OpenAccountDataFile, 0x42a670, __alloca_probe and 5 more; not read here	inferred	none		
-0x50c740	280			uicamera			Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 9 more; not read here	inferred	none		
-0x50c860	11			uicamera			Runs its object file code not read here	inferred	none		
-0x50c870	413			uicamera			Runs its object file code that calls 0x50ca50, 0x484700, 0x50ad10 and 9 more; not read here	inferred	none		
-0x50ca10	54			uicamera			Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 1 more; not read here	inferred	none		
-0x50ca50	53			uicamera			Runs its object file code that calls HandleClose, HandleClose2; not read here	inferred	none		
-0x50ca90	1593			uicamera			Runs its object file code that calls CM2Model::IsLoaded, CM2Model::HasAttachment and 12 more; not read here	inferred	none		
-0x50d0f0	546			uicamera			Runs its object file code that calls 0x50f8f0, OsGetAsyncTimeMs, 0x50d900 and 8 more; not read here	inferred	none		
-0x50d320	98			uicamera			Runs its object file code that calls 0x512e90; not read here	inferred	none		
-0x50d390	28			uicamera			Runs its object file code not read here	inferred	none		
-0x50d3b0	129			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5102b0; not read here	inferred	none		
-0x50d440	186			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5102b0; not read here	inferred	none		
-0x50d500	32			uicamera			Runs Camera.cpp code that calls 0x510120; not read here	inferred	none		
-0x50d520	26			uicamera			Runs Camera.cpp code that calls 0x510120; not read here	inferred	none		
+0x50b290	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50b2a0	11			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50b2b0	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50b2c0	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50b2e0	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50b2f0	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50b310	28	CheckDistanceRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a distance from 0 to 50	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50b330	74	CheckCVarRange	idb	uicamera	orchestration	bool __fastcall (const char *value, float low, float high)	Accepts a CVar value inside a range inclusive at both ends, else prints the range	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50b380	49	CheckPitchRange		uicamera	primitive	bool __stdcall (const char *value)	Accepts a pitch of plus or minus 89 degrees	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50b3c0	49	CheckYawRange		uicamera	primitive	bool __stdcall (const char *value)	Accepts a yaw from 0 to 360 degrees	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50b400	77	Script::CameraZoomIn	idb	uicamera	orchestration		Implements the Lua function CameraZoomIn	inferred	none		
+0x50b450	77	Script::CameraZoomOut	idb	uicamera	orchestration		Implements the Lua function CameraZoomOut	inferred	none		
+0x50b4a0	7	Script::MoveViewInStart	idb	uicamera	orchestration		Implements the Lua function MoveViewInStart	inferred	none		
+0x50b4b0	24			uicamera	orchestration		Runs its object file code that calls GetActiveCamera, 0x50fd40; not read here	inferred	none		
+0x50b4d0	7	Script::MoveViewInStop	idb	uicamera	orchestration		Implements the Lua function MoveViewInStop	inferred	none		
+0x50b4e0	22			uicamera	orchestration		Runs its object file code that calls GetActiveCamera, 0x50fd90; not read here	inferred	none		
+0x50b500	10	Script::MoveViewOutStart	idb	uicamera	orchestration		Implements the Lua function MoveViewOutStart	inferred	none		
+0x50b510	10	Script::MoveViewOutStop	idb	uicamera	orchestration		Implements the Lua function MoveViewOutStop	inferred	none		
+0x50b520	10	Script::MoveViewRightStart	idb	uicamera	orchestration		Implements the Lua function MoveViewRightStart	inferred	none		
+0x50b530	10	Script::MoveViewRightStop	idb	uicamera	orchestration		Implements the Lua function MoveViewRightStop	inferred	none		
+0x50b540	10	Script::MoveViewLeftStart	idb	uicamera	orchestration		Implements the Lua function MoveViewLeftStart	inferred	none		
+0x50b550	10	Script::MoveViewLeftStop	idb	uicamera	orchestration		Implements the Lua function MoveViewLeftStop	inferred	none		
+0x50b560	10	Script::MoveViewUpStart	idb	uicamera	orchestration		Implements the Lua function MoveViewUpStart	inferred	none		
+0x50b570	10	Script::MoveViewUpStop	idb	uicamera	orchestration		Implements the Lua function MoveViewUpStop	inferred	none		
+0x50b580	10	Script::MoveViewDownStart	idb	uicamera	orchestration		Implements the Lua function MoveViewDownStart	inferred	none		
+0x50b590	10	Script::MoveViewDownStop	idb	uicamera	orchestration		Implements the Lua function MoveViewDownStop	inferred	none		
+0x50b5a0	15	Script::ToggleMouseMove	idb	uicamera	orchestration		Implements the Lua function ToggleMouseMove	inferred	none		
+0x50b5b0	71	Script::SetView	idb	uicamera	primitive		Implements the Lua function SetView	inferred	none		
+0x50b600	61	Script::SaveView	idb	uicamera	primitive		Implements the Lua function SaveView	inferred	none		
+0x50b640	61	Script::ResetView	idb	uicamera	primitive		Implements the Lua function ResetView	inferred	none		
+0x50b680	15	Script::NextView	idb	uicamera	orchestration		Implements the Lua function NextView	inferred	none		
+0x50b690	15	Script::PrevView	idb	uicamera	orchestration		Implements the Lua function PrevView	inferred	none		
+0x50b6a0	69	Script::FlipCameraYaw	idb	uicamera	primitive		Implements the Lua function FlipCameraYaw	inferred	none		
+0x50b6f0	2245	RegisterCameraCVars		uicamera	primitive	void __cdecl (void)	Registers the camera CVars and builds the generated families	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50bfc0	22	CheckViewRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a view number from 0 to 4	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50bfe0	28	CheckTimeRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a time from 0.001 to 300	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50c000	49	CheckAngleRateRange		uicamera	primitive	bool __stdcall (const char *value)	Accepts a rate from 0.1 to 360 degrees	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50c040	28	CheckDistanceRateRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a rate from 1/360 to 50	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50c060	22	CheckSmoothStyleRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a style from 0 to 3	verified	one	uicamera/cvars#input-and-bobbing-cvars	
+0x50c080	33			uicamera	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
+0x50c0b0	27			uicamera	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x50c0d0	1			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50c0e0	813	CCamera::CCamera		uicamera	primitive	CCamera *__thiscall (CCamera *this)	Constructs the camera, sets its starting view, loads its saved view and registers cameraClip	verified	one	uicamera/view#the-starting-view	
+0x50c410	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50c420	15			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50c430	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50c440	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50c460	100	CCamera::~CCamera		uicamera	primitive	void __thiscall (CCamera *this)	Saves the camera's view, unregisters cameraClip and releases the camera's lists	verified	one	uicamera/view#lifetime	
+0x50c4d0	207	CCamera::SaveSettings		uicamera	primitive	void __thiscall (CCamera *this)	Writes the target distance and pitch to camera-settings.txt	verified	one	uicamera/view#the-settings-file	
+0x50c5a0	402	CCamera::LoadSettings		uicamera	primitive	void __thiscall (CCamera *this)	Reads the distance and pitch from camera-settings.txt into the current and target values	verified	one	uicamera/view#reading-the-file	
+0x50c740	280			uicamera	primitive		Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 9 more; not read here	inferred	none		
+0x50c860	11			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50c870	413			uicamera	primitive		Runs its object file code that calls 0x50ca50, 0x484700, 0x50ad10 and 9 more; not read here	inferred	none		
+0x50ca10	54			uicamera	orchestration		Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 1 more; not read here	inferred	none		
+0x50ca50	53			uicamera	primitive		Runs its object file code that calls HandleClose, HandleClose2; not read here	inferred	none		
+0x50ca90	1593			uicamera	primitive		Runs its object file code that calls CM2Model::IsLoaded, CM2Model::HasAttachment and 12 more; not read here	inferred	none		
+0x50d0f0	546			uicamera	orchestration		Runs its object file code that calls 0x50f8f0, OsGetAsyncTimeMs, 0x50d900 and 8 more; not read here	inferred	none		
+0x50d320	98			uicamera	primitive		Runs its object file code that calls 0x512e90; not read here	inferred	none		
+0x50d390	28			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x50d3b0	129			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5102b0; not read here	inferred	none		
+0x50d440	186			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5102b0; not read here	inferred	none		
+0x50d500	32			uicamera	orchestration		Runs Camera.cpp code that calls 0x510120; not read here	inferred	none		
+0x50d520	26			uicamera	primitive		Runs Camera.cpp code that calls 0x510120; not read here	inferred	none		
 0x50d540	143			uicamera	unreached		Runs Camera.cpp code that calls 0x50a780; not read here	inferred	none		
-0x50d5d0	193			uicamera			Runs Camera.cpp code that calls 0x50a930; not read here	inferred	none		
+0x50d5d0	193			uicamera	primitive		Runs Camera.cpp code that calls 0x50a930; not read here	inferred	none		
 0x50d6a0	40			uicamera	unreached		Runs Camera.cpp code that calls 0x50a780; not read here	inferred	none		
-0x50d6d0	70			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50d720	97			uicamera			Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
+0x50d6d0	70			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50d720	97			uicamera	orchestration		Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
 0x50d790	115			uicamera	unreached		Runs Camera.cpp code not read here	inferred	none		
-0x50d810	227			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50d900	697			uicamera			Runs Camera.cpp code that calls 0x5105a0, TraceWorldSegment; not read here	inferred	none		
-0x50dbc0	508			uicamera			Runs Camera.cpp code that calls 0x512490; not read here	inferred	none		
-0x50ddc0	50			uicamera			Runs Camera.cpp code that calls 0x64ac60; not read here	inferred	none		
-0x50de00	131			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50de90	1685			uicamera			Runs Camera.cpp code that calls SplatVector3, SetVector3, BuildLookAtMatrix and 14 more; not read here	inferred	none		
-0x50e530	49			uicamera			Runs Camera.cpp code that calls SMemFree; not read here	inferred	none		
-0x50e570	857			uicamera			Runs Camera.cpp code that calls TraceWorldSegment, 0x50de00, 0x50de90; not read here	inferred	none		
-0x50e8d0	1914			uicamera			Runs Camera.cpp code that calls SErrSetLastError, 0x50ca90, CGUnit_C::IsAutoMoving and 23 more; not read here	inferred	none		
-0x50f050	1			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50f060	254			uicamera			Runs Camera.cpp code that calls CM2Model::IsLoaded, 0x50c740, OsGetAsyncTimeMs and 7 more; not read here	inferred	none		
-0x50f160	1444			uicamera			Runs Camera.cpp code that calls 0x5106f0, CosineInterpolate, 0x50d720 and 2 more; not read here	inferred	none		
-0x50f710	356			uicamera			Runs Camera.cpp code that calls CGUnit_C::UpdateDisplayFacing, 0x50d810, 0x455b30 and 1 more; not read here	inferred	none		
-0x50f880	101			uicamera			Runs Camera.cpp code that calls 0x5126b0; not read here	inferred	none		
-0x50f8f0	22			uicamera			Runs Camera.cpp code that calls 0x482c10; not read here	inferred	none		
-0x50f910	22			uicamera			Runs Camera.cpp code that calls 0x50f940; not read here	inferred	none		
-0x50f930	5			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50f940	79			uicamera			Runs Camera.cpp code that calls 0x50fdd0; not read here	inferred	none		
-0x50f990	149			uicamera			Runs Camera.cpp code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
-0x50fa30	37			uicamera			Runs Camera.cpp code that calls 0x50f990; not read here	inferred	none		
+0x50d810	227			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50d900	697			uicamera	primitive		Runs Camera.cpp code that calls 0x5105a0, TraceWorldSegment; not read here	inferred	none		
+0x50dbc0	508			uicamera	primitive		Runs Camera.cpp code that calls 0x512490; not read here	inferred	none		
+0x50ddc0	50	CameraClipCommand		uicamera	orchestration	uint32_t __stdcall (const char *argument)	Stores the number given, or flips the stored flag, in a word nothing reads	verified	one	uicamera/cvars#cameraclip	
+0x50de00	131	CCamera::PlaceEye		uicamera	primitive	void __thiscall (CCamera *this, float *out, float *pivot, float distance, float *offset)	Places the eye at the pivot minus the distance along the forward vector plus an offset	verified	one	uicamera/view#pitch-units-and-sign	
+0x50de90	1685			uicamera	primitive		Runs Camera.cpp code that calls SplatVector3, SetVector3, BuildLookAtMatrix and 14 more; not read here	inferred	none		
+0x50e530	49			uicamera	orchestration		Runs Camera.cpp code that calls SMemFree; not read here	inferred	none		
+0x50e570	857			uicamera	primitive		Runs Camera.cpp code that calls TraceWorldSegment, 0x50de00, 0x50de90; not read here	inferred	none		
+0x50e8d0	1914			uicamera	primitive		Runs Camera.cpp code that calls SErrSetLastError, 0x50ca90, CGUnit_C::IsAutoMoving and 23 more; not read here	inferred	none		
+0x50f050	1			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
+0x50f060	254			uicamera	primitive		Runs Camera.cpp code that calls CM2Model::IsLoaded, 0x50c740, OsGetAsyncTimeMs and 7 more; not read here	inferred	none		
+0x50f160	1444			uicamera	primitive		Runs Camera.cpp code that calls 0x5106f0, CosineInterpolate, 0x50d720 and 2 more; not read here	inferred	none		
+0x50f710	356			uicamera	primitive		Runs Camera.cpp code that calls CGUnit_C::UpdateDisplayFacing, 0x50d810, 0x455b30 and 1 more; not read here	inferred	none		
+0x50f880	101			uicamera	primitive		Runs Camera.cpp code that calls 0x5126b0; not read here	inferred	none		
+0x50f8f0	22			uicamera	orchestration		Runs Camera.cpp code that calls 0x482c10; not read here	inferred	none		
+0x50f910	22			uicamera	orchestration		Runs Camera.cpp code that calls 0x50f940; not read here	inferred	none		
+0x50f930	5			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
+0x50f940	79			uicamera	primitive		Runs Camera.cpp code that calls 0x50fdd0; not read here	inferred	none		
+0x50f990	149			uicamera	primitive		Runs Camera.cpp code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
+0x50fa30	37			uicamera	orchestration		Runs Camera.cpp code that calls 0x50f990; not read here	inferred	none		
 0x50fa60	59			uicamera	unreached		Runs Camera.cpp code that calls 0x512e90; not read here	inferred	none		
-0x50faa0	29			uicamera			Runs Camera.cpp code that calls 0x512e90; not read here	inferred	none		
-0x50fac0	28			uicamera			Runs Camera.cpp code that calls 0x512e90; not read here	inferred	none		
-0x50fae0	153			uicamera			Runs Camera.cpp code that calls 0x50fae0, SStrToFloat, 0x512e90; not read here	inferred	none		
-0x50fb80	63			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50fbc0	108			uicamera			Runs Camera.cpp code that calls SStrToFloat; not read here	inferred	none		
-0x50fc30	43			uicamera			Runs Camera.cpp code that calls 0x50fbc0; not read here	inferred	none		
-0x50fc60	106			uicamera			Runs Camera.cpp code that calls __ftol, 0x50fd90, 0x50fd40; not read here	inferred	none		
-0x50fcd0	106			uicamera			Runs Camera.cpp code that calls __ftol, 0x50fd90, 0x50fd40; not read here	inferred	none		
-0x50fd40	80			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50fd90	56			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x50fdd0	84	CameraLeaveFreelook		uicamera		void __thiscall (Camera *this)	Shows the cursor, leaves relative mouse mode and ends the world frame's mouselook	verified	one	ui/mouseover#mouselook	
-0x50fe30	171	CameraEnterFreelook		uicamera		void __thiscall (Camera *this)	Hides the cursor, switches to relative mouse mode and begins the world frame's mouselook	verified	one	ui/mouseover#mouselook	
-0x50fee0	561			uicamera			Runs Camera.cpp code that calls 0x41ade0, ClntObjMgrObjectPtr, 0x510690 and 5 more; not read here	inferred	none		
-0x510120	395			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x5102b0	294			uicamera			Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
-0x5103e0	442			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, OsGetAsyncTimeMs, GetInputControl and 2 more; not read here	inferred	none		
-0x5105a0	50			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x5105e0	166			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x510690	91			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x5106f0	89			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5105e0; not read here	inferred	none		
-0x510750	3			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x510760	140			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5107f0	92			uicamera			Runs Camera.cpp code that calls 0x511010, ClntObjMgrObjectPtr, 0x510690; not read here	inferred	none		
-0x510850	232			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::UpdateDisplayFacing, 0x611660; not read here	inferred	none		
-0x510940	31			uicamera			Runs Camera.cpp code that calls 0x50fc30; not read here	inferred	none		
-0x510960	1640			uicamera			Runs Camera.cpp code that calls 0x510940, OsGetAsyncTimeMs, 0x510750 and 11 more; not read here	inferred	none		
-0x510fd0	54			uicamera			Runs Camera.cpp code that calls 0x60f8f0; not read here	inferred	none		
-0x511010	43			uicamera			Runs Camera.cpp code that calls 0x60f8f0; not read here	inferred	none		
-0x511040	161			uicamera			Runs Camera.cpp code that calls 0x510fd0, 0x50d3b0, 0x50d440 and 2 more; not read here	inferred	none		
-0x5110f0	26			uicamera			Runs Camera.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x511110	93			uicamera			Runs Camera.cpp code that calls DominantAxis, OsGetAsyncTimeMs; not read here	inferred	none		
-0x511170	58			uicamera			Runs Camera.cpp code that calls 0x5110f0, 0x511110; not read here	inferred	none		
-0x5111b0	20			uicamera			Runs Camera.cpp code that calls 0x50d440; not read here	inferred	none		
-0x5111d0	32			uicamera			Runs Camera.cpp code that calls 0x50d3b0; not read here	inferred	none		
-0x5111f0	87			uicamera			Runs Camera.cpp code that calls 0x5111d0, GetInputControl, 0x510960 and 1 more; not read here	inferred	none		
+0x50faa0	29			uicamera	primitive		Runs Camera.cpp code that calls 0x512e90; not read here	inferred	none		
+0x50fac0	28			uicamera	primitive		Runs Camera.cpp code that calls 0x512e90; not read here	inferred	none		
+0x50fae0	153			uicamera	primitive		Runs Camera.cpp code that calls 0x50fae0, SStrToFloat, 0x512e90; not read here	inferred	none		
+0x50fb80	63			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50fbc0	108			uicamera	primitive		Runs Camera.cpp code that calls SStrToFloat; not read here	inferred	none		
+0x50fc30	43			uicamera	primitive		Runs Camera.cpp code that calls 0x50fbc0; not read here	inferred	none		
+0x50fc60	106			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x50fd90, 0x50fd40; not read here	inferred	none		
+0x50fcd0	106			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x50fd90, 0x50fd40; not read here	inferred	none		
+0x50fd40	80			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50fd90	56			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50fdd0	84	CameraLeaveFreelook		uicamera	primitive	void __thiscall (Camera *this)	Shows the cursor, leaves relative mouse mode and ends the world frame's mouselook	verified	one	ui/mouseover#mouselook	
+0x50fe30	171	CameraEnterFreelook		uicamera	primitive	void __thiscall (Camera *this)	Hides the cursor, switches to relative mouse mode and begins the world frame's mouselook	verified	one	ui/mouseover#mouselook	
+0x50fee0	561			uicamera	primitive		Runs Camera.cpp code that calls 0x41ade0, ClntObjMgrObjectPtr, 0x510690 and 5 more; not read here	inferred	none		
+0x510120	395			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x5102b0	294			uicamera	primitive		Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
+0x5103e0	442			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, OsGetAsyncTimeMs, GetInputControl and 2 more; not read here	inferred	none		
+0x5105a0	50	TerrainTiltEnabled		uicamera	primitive	bool __stdcall (CGUnit_C *unit)	Returns whether the unit is a unit or player and cameraTerrainTilt is set	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
+0x5105e0	166	BobbingActive		uicamera	primitive	uint32_t __thiscall (Camera *this, CGUnit_C *unit)	Returns the camera's bobbing bit when the unit may bob and the camera is near	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
+0x510690	91	PivotBiasAllowed		uicamera	primitive	uint32_t __thiscall (Camera *this, CGUnit_C *unit)	Returns the camera's pivot bits when the unit stands and the pitch is level or up	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
+0x5106f0	89	BobbingNeedsClear		uicamera	primitive	bool __thiscall (Camera *this)	Returns whether the bob offsets are nonzero while bobbing is not active	verified	one	uicamera/cvars#clear-and-band-tests	
+0x510750	3	DistanceNeedsMove		uicamera	orchestration	bool __thiscall (Camera *this)	Returns 0	verified	one	uicamera/cvars#clear-and-band-tests	
+0x510760	140	PitchNeedsMove		uicamera	orchestration	bool __thiscall (Camera *this, float low, float high)	Returns whether pitch smoothing is on and the pitch is outside the band	verified	one	uicamera/cvars#clear-and-band-tests	
+0x5107f0	92	PivotBiasNeedsClear		uicamera	primitive	bool __thiscall (Camera *this)	Returns whether the pivot bias is nonzero while the pivot test is false	verified	one	uicamera/cvars#clear-and-band-tests	
+0x510850	232	YawNeedsMove		uicamera	primitive	bool __thiscall (Camera *this, float low, float high)	Returns whether yaw smoothing is on and the yaw is outside the band or off the facing	verified	one	uicamera/cvars#clear-and-band-tests	
+0x510940	31	AutoReturnAllowed		uicamera	primitive	bool __thiscall (Camera *this)	Returns 0 when the camera's bit 5 is set, else whether the view is uncustomised or customised smoothing is on	verified	one	uicamera/cvars#clear-and-band-tests	
+0x510960	1640			uicamera	primitive		Runs Camera.cpp code that calls 0x510940, OsGetAsyncTimeMs, 0x510750 and 11 more; not read here	inferred	none		
+0x510fd0	54			uicamera	primitive		Runs Camera.cpp code that calls 0x60f8f0; not read here	inferred	none		
+0x511010	43			uicamera	primitive		Runs Camera.cpp code that calls 0x60f8f0; not read here	inferred	none		
+0x511040	161			uicamera	primitive		Runs Camera.cpp code that calls 0x510fd0, 0x50d3b0, 0x50d440 and 2 more; not read here	inferred	none		
+0x5110f0	26			uicamera	primitive		Runs Camera.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x511110	93			uicamera	primitive		Runs Camera.cpp code that calls DominantAxis, OsGetAsyncTimeMs; not read here	inferred	none		
+0x511170	58			uicamera	orchestration		Runs Camera.cpp code that calls 0x5110f0, 0x511110; not read here	inferred	none		
+0x5111b0	20			uicamera	primitive		Runs Camera.cpp code that calls 0x50d440; not read here	inferred	none		
+0x5111d0	32			uicamera	primitive		Runs Camera.cpp code that calls 0x50d3b0; not read here	inferred	none		
+0x5111f0	87			uicamera	orchestration		Runs Camera.cpp code that calls 0x5111d0, GetInputControl, 0x510960 and 1 more; not read here	inferred	none		
 0x511250	116			unassigned	primitive		Sets the camera's drunk level	inferred	none	objectlayer/playerfields#drunk-messages	
-0x5112d0	803			uicamera			Runs Camera.cpp code that calls 0x50fd90; not read here	inferred	none		
-0x511610	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x5116e0	123			uicamera			Runs Camera.cpp code that calls __CIpow; not read here	inferred	none		
-0x511760	443			uicamera			Runs Camera.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
-0x511920	337			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5105e0, CMovement::GetCurrentSpeed and 1 more; not read here	inferred	none		
-0x511a80	65			uicamera			Runs Camera.cpp code that calls GetCameraLiquid, 0x458650; not read here	inferred	none		
+0x5112d0	803			uicamera	primitive		Runs Camera.cpp code that calls 0x50fd90; not read here	inferred	none		
+0x511610	194			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
+0x5116e0	123			uicamera	primitive		Runs Camera.cpp code that calls __CIpow; not read here	inferred	none		
+0x511760	443			uicamera	primitive		Runs Camera.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
+0x511920	337			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5105e0, CMovement::GetCurrentSpeed and 1 more; not read here	inferred	none		
+0x511a80	65			uicamera	primitive		Runs Camera.cpp code that calls GetCameraLiquid, 0x458650; not read here	inferred	none		
 0x511ad0	237	UpdateCameraWaterBits		uicamera			Sets the camera's water depth bits from a unit's depth in liquid and returns the depth	verified	one	objectlayer/swim#camera-water-bits	
-0x511bc0	130			uicamera			Runs Camera.cpp code that calls OsGetAsyncTimeMs, 0x50f060, 0x511a80 and 2 more; not read here	inferred	none		
-0x511c50	16			uicamera			Runs Camera.cpp code that calls 0x50ab70; not read here	inferred	none		
-0x511c60	209			uicamera			Runs Camera.cpp code that calls SMemAlloc, OsGetAsyncTimeMs; not read here	inferred	none		
-0x511d40	81	CameraAddShake		uicamera			Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
-0x511da0	237	SetCameraTransport		uicamera		void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
-0x511e90	174			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x7be730; not read here	inferred	none		
-0x511f40	155			uicamera			Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
-0x511fe0	155			uicamera			Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
-0x512080	155			uicamera			Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
-0x512120	218			uicamera			Runs Camera.cpp code that calls __ftol, 0x512200; not read here	inferred	none		
-0x512200	98			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512270	329			uicamera			Runs Camera.cpp code that calls __ftol, 0x5123c0; not read here	inferred	none		
-0x5123c0	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512490	329			uicamera			Runs Camera.cpp code that calls __ftol, 0x5125e0; not read here	inferred	none		
-0x5125e0	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x5126b0	218			uicamera			Runs Camera.cpp code that calls __ftol, 0x512790; not read here	inferred	none		
-0x512790	147			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512830	329			uicamera			Runs Camera.cpp code that calls __ftol, 0x512980; not read here	inferred	none		
-0x512980	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512a50	329			uicamera			Runs Camera.cpp code that calls __ftol, 0x512ba0; not read here	inferred	none		
-0x512ba0	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512c70	329			uicamera			Runs Camera.cpp code that calls __ftol, 0x512dc0; not read here	inferred	none		
-0x512dc0	194			uicamera			Runs Camera.cpp code not read here	inferred	none		
-0x512e90	1111			uicamera			Runs Camera.cpp code that calls SysMsgPrintf, OsGetAsyncTimeMs, SStrPrintf and 9 more; not read here	inferred	none		
-0x5132f0	34			uicamera			Runs its object file code not read here	inferred	none		
-0x513320	16			uicamera			Runs its object file code not read here	inferred	none		
-0x513330	290			uicamera			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x513460	16			uicamera			Runs its object file code not read here	inferred	none		
-0x513470	248			uicamera			Runs its object file code that calls 0x5138b0, 0x7bf7b0; not read here	inferred	none		
-0x513570	60			uicamera			Runs its object file code not read here	inferred	none		
-0x5135b0	1			uicamera			Runs its object file code not read here	inferred	none		
-0x5135c0	5			uicamera			Runs its object file code not read here	inferred	none		
-0x5135d0	19			uicamera			Runs its object file code not read here	inferred	none		
+0x511bc0	130			uicamera	orchestration		Runs Camera.cpp code that calls OsGetAsyncTimeMs, 0x50f060, 0x511a80 and 2 more; not read here	inferred	none		
+0x511c50	16			uicamera	orchestration		Runs Camera.cpp code that calls 0x50ab70; not read here	inferred	none		
+0x511c60	209			uicamera	primitive		Runs Camera.cpp code that calls SMemAlloc, OsGetAsyncTimeMs; not read here	inferred	none		
+0x511d40	81	CameraAddShake		uicamera	primitive		Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
+0x511da0	237	SetCameraTransport		uicamera	primitive	void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
+0x511e90	174			uicamera	orchestration		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x7be730; not read here	inferred	none		
+0x511f40	155	CCamera::GetForward		uicamera	primitive	void __thiscall (CCamera *this, float *out)	Returns the first row of the camera's basis	verified	one	uicamera/view#pitch-units-and-sign	
+0x511fe0	155			uicamera	primitive		Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
+0x512080	155			uicamera	primitive		Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
+0x512120	218			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x512200; not read here	inferred	none		
+0x512200	98			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512270	329			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x5123c0; not read here	inferred	none		
+0x5123c0	194			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512490	329			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x5125e0; not read here	inferred	none		
+0x5125e0	194			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x5126b0	218			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x512790; not read here	inferred	none		
+0x512790	147			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512830	329			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x512980; not read here	inferred	none		
+0x512980	194			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512a50	329			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x512ba0; not read here	inferred	none		
+0x512ba0	194			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512c70	329			uicamera	primitive		Runs Camera.cpp code that calls __ftol, 0x512dc0; not read here	inferred	none		
+0x512dc0	194			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512e90	1111			uicamera	primitive		Runs Camera.cpp code that calls SysMsgPrintf, OsGetAsyncTimeMs, SStrPrintf and 9 more; not read here	inferred	none		
+0x5132f0	34			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x513320	16			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x513330	290			uicamera	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x513460	16			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x513470	248			uicamera	primitive		Runs its object file code that calls 0x5138b0, 0x7bf7b0; not read here	inferred	none		
+0x513570	60			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x5135b0	1			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x5135c0	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
+0x5135d0	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
 0x5135f0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x513600	19			unassigned			Runs its object file code not read here	inferred	none		
 0x513620	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -35772,7 +35772,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf030	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf1b0	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf330	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf4b0	374			cmath	primitive		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
+0x7bf4b0	374	BuildYawPitchRollBasis		cmath		void __thiscall (float *dest, float yaw, float pitch, float roll)	Builds the transpose of Rz(yaw), Ry(pitch), Rx(roll) multiplied in that order	verified	one	uicamera/view#pitch-units-and-sign	
 0x7bf630	5			cmath	orchestration		Jumps to 0x7bf640, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf640	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c18	verified	one	cmath/geometry#static-constants	
 0x7bf650	5			cmath	orchestration		Jumps to 0x7bf660, a static initializer of its file	verified	one	cmath/geometry#static-constants	

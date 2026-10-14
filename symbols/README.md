@@ -62,7 +62,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `screencoord`: the screen aspect and scale helpers
 - `spline`: the movement spline file
 - `sysmsg`: `SysMessage.cpp`, the system message printers
-- `uicamera`: `UIUtil\Camera.cpp`, the player's world camera
 - `warden`: `WardenClient.cpp`, the client of the server's Warden modules
 
 ## Names
