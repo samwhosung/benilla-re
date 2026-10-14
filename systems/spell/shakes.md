@@ -34,6 +34,23 @@ the extra position `[ebx+0x14]`, else the unit's position (vtable `+0x14`). The 
 the flag 0x1000 test at `0x60f3d4`) goes through `0x61ffa0`, which ors 0x800 in (`0x61fffd`), so the arm pass
 skips it.
 
+## Shake producers
+
+The camera's add-shake `0x511d40` has five callers: the footstep (`0x5fbf70`), the unit shake (`0x625c30`), the
+two `$SHK` event arms (`0x5d58c0` for dynamic objects, `0x5f3e20` for game objects) and the group player
+`0x6ecb40`. The group player has two callers, the kit player (tail) and the effect's arm pass. The tag `$SHK`
+is compared at those two arms only, so the unit's own model events (`0x5ffbd0`) play no shake.
+
+Addresses: `0x511d40`, `0x5d592b`, `0x5f3fc2`, `0x5fc0ae`, `0x625c56`, `0x6ecb74`, `0x6ecb40`, `0x60f4e6`, `0x620e11`, `0x5d58e9`, `0x5f3f40`, `0x5ffbd0`, `0x5fbf70`, `0x625c30`, `0x5d58c0`, `0x5f3e20`
+Confidence: verified
+Proof: one
+Test: none
+
+The scan of the listing for `call 0x511d40` finds five sites (`0x5d592b`, `0x5f3fc2`, `0x5fc0ae`, `0x625c56`,
+`0x6ecb74`); for `call 0x6ecb40` two (`0x60f4e6`, `0x620e11`). The dword scans of the image for `0x511d40`,
+`0x6ecb40` and `0x5d58c0` find nothing; the control is `0x5f3e20`, which the scan finds in the data. The tag's
+dword `0x4b485324` occurs as an immediate at `0x5d58e9` and `0x5f3f40` only.
+
 ## Kit shake position fault
 
 When the first node of a kit is bone-attached, its shake plays at the world origin. The node's position
