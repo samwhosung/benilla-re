@@ -677,6 +677,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c210	void *[36]	s_lotteryKioskHandlerVtable		objectlayer	Holds the type 28 lotteryKiosk handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
 0x80c2a0	void *[36]	s_auraGeneratorHandlerVtable		objectlayer	Holds the type 30 auraGenerator handler vtable	verified	one	objectlayer/gameobjects#handler-types-21-to-30
 0x80c330	void *[34]	CGGameObject_C::vftable		objectlayer	Holds the game object vtable, 34 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x80c408	const float	s_facingSendDeadBand		objectlayer	Holds 0.1, the change in facing or pitch that sends a set-facing or set-pitch message	verified	one	objectlayer/moveemitter#facing-and-pitch-throttle
 0x80c414	const float	s_float41500000		objectlayer	Holds the float 13 (0x41500000)	inferred	none	
 0x80c418	const float	s_float428c0000		objectlayer	Holds the float 70 (0x428c0000)	inferred	none	
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
@@ -2316,10 +2317,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42720	void *	s_componentPool		charactermodel	Holds the character component pool record: the pool and a constructed flag byte	verified	one	charactermodel/component#pool-and-statics
 0xb42724	uint8_t	s_compositing		charactermodel	Holds 1 while the group handlers of a composite run	verified	one	charactermodel/component#target-callback
 0xb42764	uint32_t	s_textureCacheLoadCount		gx	Counts texture cache load attempts; cleared by 0x47b1f0	verified	one	gx/textures#texture-cache
+0xb4b2b4	uint32_t *	s_soundListenerAtCharacter		ui	Holds the SoundListenerAtCharacter variable record, stored by the world frame constructor	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
+0xb4b334	float[3]	s_listenerUp		ui	Holds the listener up vector (0, 0, 1), stored on the first listener update	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
+0xb4b36c	uint8_t	s_listenerUpInit		ui	Holds bit 0 set once the up vector is stored	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b3a0	float[3]	s_reticlePosition		ui	Holds the picked ground position the reticle is drawn at	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3b0	float	s_reticleRadius		ui	Holds the half-extent of the area decal, 0 when out of range	verified	one	ui/groundreticle#the-reticle-state

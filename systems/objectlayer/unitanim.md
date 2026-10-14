@@ -45,6 +45,20 @@ The ready animation `0x5fcdc0` maps the main-hand weapon subclass through `0x5fc
 `0x5fd830` is 41 swimming, 120 stealthed, 193 Hover when flying, else 0 Stand. `0x5fce30` allows
 a shuffle while turning, not flying, and not in an emote, cast or ranged animation.
 
+## The mover and the pick
+
+No resolver reads the active mover, so a possessed creature picks its animation from its own movement
+flags `+0x9e8`, exactly as the player's body does.
+
+Addresses: `0x5fcff0`, `0x5fe300`, `0x5fd8b0`, `0x5fd100`, `0x6103a0`, `0x468550`, `0xc4da98`, `0xc4da9c`, `0xb41414`
+Confidence: verified
+Proof: one
+Test: none
+
+The span `0x5fcff0` to `0x5fe300` holds no reference to `0xc4da98`, `0xc4da9c`, `0xb41414`,
+`0x6103a0` or `0x468550`. The same patterns find 79 references to the mover words, 50 to
+`0xb41414`, 14 calls of `0x6103a0` and 845 of `0x468550` in the whole image.
+
 ## The airborne hold
 
 A falling unit keeps its animation: the selector returns the keep-current value 208 (0xd0) and

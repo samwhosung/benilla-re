@@ -30,6 +30,25 @@ above `0xe5` the compare chain `0x60e0f1` to `0x60e137` sends `0xe7`, `0xe9`, `0
 teleport acknowledgement with `0x418190`, `0x418370`, `0x4181f0` and `0x4182b0`, sends it
 (`0x5ab630`), sets bit 0x80 of the unit word `+0xc58` and re-arms the deadline (`0x615b80`).
 
+## Facing and pitch throttle
+
+`0x60e0a0` drops a `MSG_MOVE_SET_FACING` (0xda) or `MSG_MOVE_SET_PITCH` (0xdb) unless the mover's facing
+differs by at least 0.1 from the facing last sent or, while it swims, its pitch differs by at least
+0.1 from the pitch last sent. An unordered difference sends. Every message built through `0x600a30`
+first copies the facing to `+0xc70` of the unit and, while swimming, the pitch to `+0xc74`, whether
+the message is sent or not.
+
+Addresses: `0x60e0a0`, `0x60e1da`, `0x60e1e2`, `0x60e1f0`, `0x60e1f3`, `0x60e1fb`, `0x60e208`, `0x60e20a`, `0x60e211`, `0x60e21a`, `0x60e228`, `0x60e22f`, `0x60e235`, `0x600a30`, `0x600a5d`, `0x600a60`, `0x600a6f`, `0x600a72`, `0x80c408`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60e1da` and `0x60e1e2` select the opcodes 0xda and 0xdb. `0x60e1f0` loads the movement facing
+`+0x1c` and subtracts `+0xc70`; `fabs`, then `fcompp` against 0.1 (`0x80c408`) and `test ah,0x41`
+send at `0x60e235` when 0.1 is not above the difference (`0x60e208`). Otherwise a mover without
+swimming (0x200000, `0x60e20a`) skips the send; a swimmer repeats the test for the pitch `+0x20`
+against `+0xc74` (`0x60e217` to `0x60e22f`). `0x600a5d` stores before the call to `0x600860`.
+
 ## Emitter tail
 
 After the send, every call reaches `0x60e300`, which acts only for the active mover (the unit's

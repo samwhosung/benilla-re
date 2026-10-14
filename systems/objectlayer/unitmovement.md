@@ -193,6 +193,23 @@ The GUID test is `0x7ccc10(op)` and the u32 test `0x7ccb90(op)`; the status goes
 mover's init and write calls. `0x6009b0` returns 1 for 0xe3, 0xe5, 0xe7, 0xf6, 0x2cf, 0x2d0,
 0x2db, 0x2dd and 0x2df. `0x600a10(op)` calls `0x600a30(op, step, 0, 0)`.
 
+## Who may send a report
+
+`0x600860` builds a report that carries no GUID, which is every opcode but the acknowledgements and
+0x2d1, only for the active mover. A unit with an unfinished server spline sends only 0xca, 0xcb,
+0x2d8 and 0x2d9. Opcodes that carry a GUID skip both tests.
+
+Addresses: `0x600860`, `0x600880`, `0x600882`, `0x600963`, `0x600969`, `0x600971`, `0x600973`, `0x60097b`, `0x600984`, `0x600989`, `0x600994`, `0x60099a`, `0x6009a0`, `0x6008af`, `0x7ccc10`, `0x7cccb0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x600882 je 0x600963` takes the no-GUID path. `0x600969` loads the spline object `+0xa4` of the
+movement object; with one whose `+0x18` lacks bit 4 (not finished), `0x7cccb0` must say the opcode is
+one of the four (0xca to 0xcb, 0x2d8 to 0x2d9), else `0x600982` returns 0. `0x600989` and `0x600994`
+compare the unit's GUID with the mover `0xc4da98`, `0xc4da9c`; a mismatch returns 0 (`0x6009a0`), a
+match builds the message (`0x6008af`).
+
 ## The active mover
 
 The active mover is the GUID at `0xc4da98`. `0x6006e0(guid)` switches it: the old mover's

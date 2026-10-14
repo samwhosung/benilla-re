@@ -295,6 +295,8 @@ returns 0. With bit 24 (possessed) set (`0x5fa582`) it takes the charmer GUID at
 `+0x20`, resolves it with mask 8 (`0x5fa599`), returns 0 for no unit and otherwise asks `0x5fa550` of
 that unit. Without bit 24 (`0x5fa5c7`) the unit must be a player with no charmer GUID and bit 0 of
 the flags clear; the result is then 1 (`0x5fa5e2`), else 0. Stunned is not among the bits it tests.
+A creature possessed by a free player therefore returns 1, one possessed by a feared player 0, and
+a creature the server lets the player drive without flag 24 returns 0.
 
 ## Melee attack
 
