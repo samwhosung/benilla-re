@@ -778,6 +778,15 @@ fn ffx_glow_wave_lut_difftest() {
     for _ in 0..4000 {
         sines.push(f64::from(frand(&mut s, -1.0, 1.0)));
     }
+    // NaN fails both clamp tests and reaches `__ftol`, whose indefinite has the low dword 0; the
+    // infinities and values past the range are clamped before it.
+    sines.extend([
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e300,
+        -1.0e300,
+    ]);
     for sine in sines {
         let bin_a = s8(&mut emu, sine);
         assert_f64(bin_a, sine * 128.0, &format!("s8 mul {sine}"));
@@ -789,9 +798,12 @@ fn ffx_glow_wave_lut_difftest() {
             } else {
                 bin_a
             };
-            ((c as i32) & 0xff) as u8
+            (benilla_re_cmath::x87::ftol(c) & 0xff) as u8
         };
         assert_eq!(byte_a, ffx_glow_lut_s8(sine), "s8 byte {sine}");
+        if sine.is_nan() {
+            assert_eq!(byte_a, 0, "NaN reaches __ftol and gives the low dword 0");
+        }
 
         let bin_b = u8i(&mut emu, sine);
         assert_f64(
@@ -807,12 +819,12 @@ fn ffx_glow_wave_lut_difftest() {
             } else {
                 bin_b
             };
-            ((c as i32) & 0xff) as u8
+            (benilla_re_cmath::x87::ftol(c) & 0xff) as u8
         };
         assert_eq!(byte_b, ffx_glow_lut_u8(sine), "u8 byte {sine}");
     }
     eprintln!(
-        "ffx_glow_wave_lut: 4008 sine cases, multiply islands bit-exact against the exe (0x6cbea0); \
+        "ffx_glow_wave_lut: 4013 sine cases, multiply islands bit-exact against the exe (0x6cbea0); \
          clamp and ftol by transcription; fsin not compared"
     );
 }

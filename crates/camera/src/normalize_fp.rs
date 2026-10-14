@@ -21,11 +21,14 @@
 //!
 //! `jp` falls through only for `x < 0` (C0 alone, odd parity); `x > 0`, `x == 0` (C3) and NaN (all
 //! three) take it. `__ftol` (`0x40a2b0`) sets truncation, `fistp`s a 64-bit integer and returns the
-//! low dword; NaN, the infinities and anything past 32 bits give `0x80000000`. The globals are set
+//! low dword; past 32 bits that is the low 32 bits of the integer, and NaN, the infinities and anything
+//! past 64 bits give 0. The globals are set
 //! by the static initializers `0x7ac5b0` (`0xcf5734` = π + π, `0x40c90fdb`) and `0x7ac5d0`
 //! (`0xcf5730` = 1/2π, `0x3e22f983`). The chain is `f64`; the caller's store rounds to `f32`.
 
 #![allow(clippy::excessive_precision)]
+
+use benilla_re_cmath::x87::ftol;
 
 /// `[0xcf5730]`: 1/2π as `f32`.
 const RECIP_TWO_PI: f32 = f32::from_bits(0x3e22_f983);
@@ -51,15 +54,4 @@ pub fn normalize_2pi(x: f32) -> f32 {
 
     // fsubr [ebp+8]
     (f64::from(x) - r) as f32
-}
-
-/// `__ftol` (`0x40a2b0`): truncation toward zero, the low dword; `0x80000000` outside `i32`.
-#[inline]
-fn ftol(q: f64) -> i32 {
-    // [-2^31, 2^31) truncates; NaN, the infinities and the rest give the indefinite integer.
-    if (-2_147_483_648.0..2_147_483_648.0).contains(&q) {
-        q as i32
-    } else {
-        i32::MIN
-    }
 }

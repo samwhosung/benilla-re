@@ -3,17 +3,7 @@
 //! slot's fade, and the smoothstep weight (`systems/animation/clock.md`).
 
 use super::{BoneState, SeqRecord, NONE32};
-
-/// `__ftol` (`0x40a2b0`): truncate the 53-bit value toward zero to i32; out-of-range produces
-/// the x87 integer indefinite (i32::MIN), as the hardware `fistp` would.
-fn ftol(x: f64) -> i32 {
-    let t = x.trunc();
-    if (-2_147_483_648.0..=2_147_483_647.0).contains(&t) {
-        t as i32
-    } else {
-        i32::MIN
-    }
-}
+use benilla_re_cmath::x87::ftol;
 
 /// One slot's time, primary or blend, from its sequence record, cursors, speed and offset
 /// (`systems/animation/clock.md#clock-legs`, `#loop-and-clamp-legs`). `dur` is the scene clock

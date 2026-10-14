@@ -1,18 +1,9 @@
 //! The cost, cast time and range scaling of a spell, and the integer rounding of the effect radii.
 
+use benilla_re_cmath::x87::fistp;
+
 /// The float 0.5 at `0x86f94c`, which the radius rounding adds or subtracts.
 pub const HALF: f32 = f32::from_bits(0x3f00_0000);
-
-/// `fistp dword`: the nearest integer, ties to even, or the integer indefinite `0x80000000` for
-/// NaN and for a value outside the `i32` range.
-fn fistp(x: f64) -> i32 {
-    let r = x.round_ties_even();
-    if r.is_nan() || !(-2147483648.0..2147483648.0).contains(&r) {
-        i32::MIN
-    } else {
-        r as i32
-    }
-}
 
 /// The integer bounds `GetSpellEffectPointsInt` (`0x6e3760`) returns for the two float bounds
 /// `GetSpellEffectPoints` gives, `radius_a` stored first (`[ebp+0x18]`) and `radius_b`

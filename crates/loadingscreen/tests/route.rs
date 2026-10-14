@@ -23,9 +23,25 @@ fn route_tessellate_segs_difftest() {
     let frame = e.alloc(0x100);
     let ebp = frame + 0x80;
     let mut s: u32 = 0x4075_0001;
-    for i in 0..6000u32 {
+    // Arc lengths whose product with 66.6667 is NaN, infinite, past `i32` or past `i64`: `__ftol`
+    // returns the low dword of its qword, 0 for the indefinite, and the max raises it to 1.
+    const WIDE: [f32; 9] = [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        1.0e8,
+        1.0e17,
+        -1.0e8,
+        6.4e7,
+    ];
+    for i in 0..6000u32 + WIDE.len() as u32 {
         // arc length >= 0, in a range that keeps arclen * 66.6667 in i32
-        let arclen = (f64::from(next(&mut s) >> 8) / f64::from(1u32 << 24) * 4000.0) as f32;
+        let mut arclen = (f64::from(next(&mut s) >> 8) / f64::from(1u32 << 24) * 4000.0) as f32;
+        if let Some(&a) = WIDE.get((i as usize).wrapping_sub(6000)) {
+            arclen = a;
+        }
         e.write_u32(ebp - 0x54, arclen.to_bits());
         e.set_reg(RegisterX86::EBX, 1);
         e.set_reg(RegisterX86::EBP, ebp);

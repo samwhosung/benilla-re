@@ -166,7 +166,8 @@ fn channel_volume_mix() {
     d.put_f32(0x87cef8, music);
     d.put_f32(0x87cefc, ambience);
     d.put_f32(0x87cef4, sound);
-    // Values for v and the gain, kept inside the range `__ftol` represents.
+    // Values for v and the gain, including NaN, the infinities, and products past `i32` and `i64`,
+    // where `__ftol` returns the low dword of its qword, 0 for the indefinite.
     let vals: Vec<f32> = {
         let mut v = vec![
             0.0f32,
@@ -178,6 +179,11 @@ fn channel_volume_mix() {
             2.0,
             f32::NAN,
             f32::INFINITY,
+            f32::NEG_INFINITY,
+            1.0e10,
+            1.0e30,
+            -1.0e30,
+            f32::MAX,
         ];
         for i in 0..=64 {
             v.push(i as f32 / 64.0);

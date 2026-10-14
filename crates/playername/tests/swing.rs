@@ -55,6 +55,10 @@ fn pn_swing_step_count() {
 
     let mut total = 0u32;
 
+    // The `__ftol` input is `elapsed · (1/300) · segcount` from an `i32` and a byte, at most about
+    // 1.8e9 in magnitude, and the caller reads only its low byte, so no NaN or out-of-range
+    // input reaches it; the `i32` extremes below are the widest.
+
     // Deterministic boundary probes.
     // The __ftol truncation pivot: elapsed·(1/300)·segcount landing exactly on an integer N, and
     // N±1ms either side; the al==1 clamp edge (product in [0,1) -> al=0 -> clamp 1); the al-byte

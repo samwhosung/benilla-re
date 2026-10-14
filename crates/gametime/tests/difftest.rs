@@ -110,6 +110,10 @@ fn gametime_6435a0_minute_accum() {
         );
         total += 1;
     }
+    // The conversion runs for a result of at least 1 with a nonzero pending count, and the loop after
+    // it takes 1.0 off the result per pass. A result past `i32` takes billions of passes (or never
+    // ends, once the `f32` is too large for the subtraction to change it), so no probe reaches
+    // the conversion with such an input; NaN skips it, as `result >= 1` fails.
     let mut st = 0x6435_a000u32;
     for _ in 0..5000 {
         // A small result, so the reduction loop stays short.

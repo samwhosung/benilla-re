@@ -102,6 +102,14 @@ fn exp2_diff() {
         1026.0,
         1100.0,
         1e300,
+        // Past `i32` (`__ftol` keeps the low dword of its qword), NaN and the infinities (the
+        // indefinite, whose low dword is 0).
+        3.0e9,
+        -3.0e9,
+        1.0e10,
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
         // Underflow: n <= 0 from x <= -1023 gives 0.0.
         -1022.0,
         -1022.9999,

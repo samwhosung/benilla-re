@@ -173,17 +173,11 @@ fn viewport_matches_binary() {
         s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
         s
     };
-    // realistic device scales (screen/pixel dims) + a fuzz; params are NDC-ish [-1.5, 1.5].
-    // products stay well inside i32 (|p|·scale ≤ ~1.5·4096), matching __ftol's low-32 (no saturation).
+    // realistic device scales (screen/pixel dims) + a fuzz; params are NDC-ish [-1.5, 1.5]. Then
+    // NaN, the infinities and products past `i32` and `i64`, where `__ftol` returns the low dword
+    // of its qword, 0 for the indefinite.
     let mut checked = 0u64;
-    for _ in 0..25_000 {
-        let px = f(next(), -1.5, 1.5);
-        let py = f(next(), -1.5, 1.5);
-        let sx0 = f(next(), 0.0, 4096.0);
-        let sx1 = f(next(), 0.0, 4096.0);
-        let sy0 = f(next(), 0.0, 4096.0);
-        let sy1 = f(next(), 0.0, 4096.0);
-
+    let mut run = |emu: &mut Emu, px: f32, py: f32, sx0: f32, sx1: f32, sy0: f32, sy1: f32| {
         emu.write_u32(dev + 0xf38, sx0.to_bits());
         emu.write_u32(dev + 0xf3c, sx1.to_bits());
         emu.write_u32(dev + 0xf40, sy0.to_bits());
@@ -205,6 +199,32 @@ fn viewport_matches_binary() {
             "viewport(px={px}, py={py}, sx0={sx0}, sx1={sx1}, sy0={sy0}, sy1={sy1})"
         );
         checked += 1;
+    };
+    for _ in 0..25_000 {
+        let px = f(next(), -1.5, 1.5);
+        let py = f(next(), -1.5, 1.5);
+        let sx0 = f(next(), 0.0, 4096.0);
+        let sx1 = f(next(), 0.0, 4096.0);
+        let sy0 = f(next(), 0.0, 4096.0);
+        let sy1 = f(next(), 0.0, 4096.0);
+        run(&mut emu, px, py, sx0, sx1, sy0, sy1);
+    }
+    for bad in [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        3.0e9,
+        -3.0e9,
+        4_294_967_296.0,
+        1.0e19,
+    ] {
+        run(&mut emu, bad, 0.5, 800.0, 1600.0, 600.0, 1200.0);
+        run(&mut emu, 0.5, bad, 800.0, 1600.0, 600.0, 1200.0);
+        run(&mut emu, 0.5, 0.5, bad, 1600.0, bad, 1200.0);
+        run(&mut emu, 0.5, 0.5, 800.0, bad, 600.0, bad);
+        run(&mut emu, 1.5, -1.5, 3.0e9, bad, 3.0e9, bad);
     }
     eprintln!("viewport: {checked} rects bit-exact vs WoW.exe @ 0x59c730");
 }
@@ -303,9 +323,8 @@ fn check_aspect_fit(addr: u64, name: &str, ours_fn: fn([i32; 4], f32) -> [i32; 4
 
 /// (rect, scale) cases for the aspect-fit family: explicit edge rects × aspect-ratio scales (incl. the
 /// `scale == 0` guard and negative scales) + a 20k LCG fuzz with coords in ±30k and scales in
-/// `[0.02, 50)`. Extents ≤ ~100k over scales ≥ 0.02 keep every `trunc(ext/scale)`/`trunc(ext·scale)`
-/// well inside `i32` (no `__ftol` saturation, so `as i32` matches the exe's low-32 `eax`). NaN is
-/// not a real device scale (and `fcomp`-vs-`as i32` would diverge on it), so it is excluded.
+/// `[0.02, 50)`, then scales that make the quotient or product NaN, infinite, past `i32` or past
+/// `i64`, where `__ftol` returns the low dword of its qword, 0 for the indefinite.
 fn aspect_fit_cases() -> Vec<([i32; 4], f32)> {
     let scales = [
         0.0f32,
@@ -344,6 +363,24 @@ fn aspect_fit_cases() -> Vec<([i32; 4], f32)> {
         st = st.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
         st
     };
+    // Scales that make the extent's quotient or product NaN, infinite, past `i32` or past `i64`.
+    for &rect in &rects {
+        for s in [
+            f32::NAN,
+            f32::INFINITY,
+            f32::NEG_INFINITY,
+            1.0e-30,
+            -1.0e-30,
+            1.0e-12,
+            1.0e30,
+            -1.0e30,
+            1.0e8,
+            1.0e17,
+            1.0e-7,
+        ] {
+            cases.push((rect, s));
+        }
+    }
     let c = |n: u32| (n >> 8) as i32 % 60_000 - 30_000;
     for _ in 0..20_000 {
         let rect = [c(next()), c(next()), c(next()), c(next())];
@@ -407,6 +444,9 @@ fn gamma_ramp_matches_binary() {
         s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
         gammas.push(0.05 + (s >> 8) as f32 / (1u32 << 24) as f32 * 4.95);
     }
+    // For a positive exponent `pow(i/255, gamma)` lies in `[0, 1]`, so the `__ftol` input never
+    // passes 65535. A negative or NaN exponent sends the exe's `pow` (`0x73f940`) down an error path
+    // that faults in the emulator, so no probe reaches `__ftol` with an out-of-range input.
 
     let mut checked = 0u64;
     for g in gammas {

@@ -13,7 +13,7 @@ const SEG_DENSITY: f32 = f32::from_bits(0x4285_5556);
 /// `fld`, `fmul` rounds to `f64`; `__ftol` truncates toward zero.
 pub fn route_tessellate_segs(arclen: f32) -> i32 {
     let prod = arclen as f64 * SEG_DENSITY as f64;
-    (prod as i32).max(1)
+    benilla_re_cmath::x87::ftol(prod).max(1)
 }
 
 /// The endpoint quads of `0x407900` (`__fastcall (a ecx, b edx)`).

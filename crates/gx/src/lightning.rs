@@ -4,6 +4,7 @@
 //! The x87 runs at 53-bit precision, so an operation rounds to `f64` and an `fstp dword` store to
 //! `f32`: an `f64` operation with a final `as f32`.
 
+use benilla_re_cmath::x87::ftol;
 use benilla_re_random::crandom_uint32;
 
 /// 0.0 (`0x7ffd74`).
@@ -21,17 +22,6 @@ pub const BLEND_REF_W: f64 = 0.25;
 pub const BLEND_OLD_W: f64 = 0.75;
 /// The global `CRandom` the bolt's points draw from.
 pub const LIGHTNING_PRNG_VA: u32 = 0x00cf_57b0;
-
-/// `__ftol` (`0x40a2b0`): towards zero, the low dword; NaN, an infinity or a value outside `i64`
-/// gives 0.
-fn ftol(v: f64) -> i32 {
-    let t = v.trunc();
-    if (-9_223_372_036_854_775_808.0_f64..9_223_372_036_854_775_808.0_f64).contains(&t) {
-        t as i64 as i32
-    } else {
-        0
-    }
-}
 
 /// A bolt's ends `+0x0`, `+0xc`, its spacing `+0x18` and its amplitude `+0x24`.
 #[derive(Clone, Copy, Debug, Default)]

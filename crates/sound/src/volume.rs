@@ -43,17 +43,10 @@ pub fn sfx_master_volume(v: f32) -> u32 {
     volume_curve(clamp_unit(v))
 }
 
-/// `__ftol` (`0x40a2b0`): truncation toward zero to a 64-bit integer, low 32 bits returned. An
-/// unrepresentable value (overflow, infinity, NaN) gives the integer indefinite `0x8000000000000000`,
-/// whose low 32 bits are 0.
+/// `__ftol` (`0x40a2b0`): the low 32 bits of the truncated 64-bit integer; NaN, an infinity and a
+/// value past `i64` give 0.
 fn ftol(x: f64) -> u32 {
-    let t = x.trunc();
-    let i = if (-9_223_372_036_854_775_808.0..9_223_372_036_854_775_808.0).contains(&t) {
-        t as i64
-    } else {
-        i64::MIN
-    };
-    i as u32
+    benilla_re_cmath::x87::ftol(x) as u32
 }
 
 /// The fade rate `Sound::FadeIn` (`0x7a5730`) stores at `+0x48` on its audible path: `level` clamped

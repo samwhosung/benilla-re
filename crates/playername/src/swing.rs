@@ -54,7 +54,7 @@ fn recip_300() -> f64 {
 /// `0x40a2b0` `__ftol`: truncate the (PC_53 f64) accumulator toward zero into an `i32`.
 #[inline]
 fn ftol(p: f64) -> i32 {
-    p.trunc() as i64 as i32
+    benilla_re_cmath::x87::ftol(p)
 }
 
 /// `0x6c6560` swing step-count: the per-frame emit cadence.

@@ -161,7 +161,7 @@ pub fn screen_y_accumulate(screen_y: f32, add: f32) -> f32 {
 /// like `-5 = 0xfffffffb` re-widens as the unsigned `4294967291`, not `-5`).
 #[inline]
 fn ftol_u32(v: f64) -> u32 {
-    v.trunc() as i64 as u32 // fistp qword (chop), keep low dword as raw bits
+    benilla_re_cmath::x87::ftol(v) as u32 // fistp qword (chop), keep low dword as raw bits
 }
 
 /// `0x73ff3f` — the CRT `floor` (round toward −∞), returning the floored integer as a `float`.

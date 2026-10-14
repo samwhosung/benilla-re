@@ -65,14 +65,14 @@ pub fn color_modulate(packed: u32, scalar: f32) -> [f32; 4] {
 /// ```
 ///
 /// Each edge rounds on its own before the subtraction, so `width` is not `trunc(px*(sx1 - sx0))`. The
-/// domain is products within `i32`, the pixel range; the subtraction is the exe's 32-bit `sub`, hence
-/// `wrapping_sub`.
+/// subtraction is the exe's 32-bit `sub`, hence `wrapping_sub`; a product past `i64` gives 0, as `__ftol`
+/// does.
 #[must_use]
 pub fn viewport(px: f32, py: f32, sx0: f32, sx1: f32, sy0: f32, sy1: f32) -> [i32; 4] {
-    let x0 = (f64::from(px) * f64::from(sx0)) as i32; // trunc(px·[esi+0xf38])
-    let x1 = (f64::from(px) * f64::from(sx1)) as i32; // trunc(px·[esi+0xf3c])
-    let y0 = (f64::from(py) * f64::from(sy0)) as i32; // trunc(py·[esi+0xf40])
-    let y1 = (f64::from(py) * f64::from(sy1)) as i32; // trunc(py·[esi+0xf44])
+    let x0 = benilla_re_cmath::x87::ftol(f64::from(px) * f64::from(sx0)); // trunc(px·[esi+0xf38])
+    let x1 = benilla_re_cmath::x87::ftol(f64::from(px) * f64::from(sx1)); // trunc(px·[esi+0xf3c])
+    let y0 = benilla_re_cmath::x87::ftol(f64::from(py) * f64::from(sy0)); // trunc(py·[esi+0xf40])
+    let y1 = benilla_re_cmath::x87::ftol(f64::from(py) * f64::from(sy1)); // trunc(py·[esi+0xf44])
     [x0, y0, x1.wrapping_sub(x0), y1.wrapping_sub(y0)] // glViewport(edi, ebx, ecx, eax)
 }
 
@@ -99,7 +99,7 @@ pub fn aspect_fit_min_x(r: [i32; 4], scale: f32) -> [i32; 4] {
     let mut o = r;
     if scale != 0.0 {
         let ext = r[3].wrapping_sub(r[1]); // fC − f4 (32-bit sub)
-        let q = (f64::from(ext) / f64::from(scale)) as i32; // fild; fdiv [0xc0ef60] @53-bit; __ftol trunc
+        let q = benilla_re_cmath::x87::ftol(f64::from(ext) / f64::from(scale)); // fild; fdiv [0xc0ef60] @53-bit; __ftol trunc
         o[0] = r[2].wrapping_sub(q); // f8 − q
     }
     o
@@ -112,7 +112,7 @@ pub fn aspect_fit_max_x(r: [i32; 4], scale: f32) -> [i32; 4] {
     let mut o = r;
     if scale != 0.0 {
         let ext = r[3].wrapping_sub(r[1]); // fC − f4
-        let q = (f64::from(ext) / f64::from(scale)) as i32; // fild; fdiv [0xc0ef60] @53-bit; __ftol trunc
+        let q = benilla_re_cmath::x87::ftol(f64::from(ext) / f64::from(scale)); // fild; fdiv [0xc0ef60] @53-bit; __ftol trunc
         o[2] = r[0].wrapping_add(q); // f0 + q
     }
     o
@@ -125,7 +125,7 @@ pub fn aspect_fit_min_y(r: [i32; 4], scale: f32) -> [i32; 4] {
     let mut o = r;
     if scale != 0.0 {
         let ext = r[2].wrapping_sub(r[0]); // f8 − f0
-        let q = (f64::from(ext) * f64::from(scale)) as i32; // fild; fmul [0xc0ef60] @53-bit; __ftol trunc
+        let q = benilla_re_cmath::x87::ftol(f64::from(ext) * f64::from(scale)); // fild; fmul [0xc0ef60] @53-bit; __ftol trunc
         o[1] = r[3].wrapping_sub(q); // fC − q
     }
     o
@@ -138,7 +138,7 @@ pub fn aspect_fit_max_y(r: [i32; 4], scale: f32) -> [i32; 4] {
     let mut o = r;
     if scale != 0.0 {
         let ext = r[2].wrapping_sub(r[0]); // f8 − f0
-        let q = (f64::from(ext) * f64::from(scale)) as i32; // fild; fmul [0xc0ef60] @53-bit; __ftol trunc
+        let q = benilla_re_cmath::x87::ftol(f64::from(ext) * f64::from(scale)); // fild; fmul [0xc0ef60] @53-bit; __ftol trunc
         o[3] = r[1].wrapping_add(q); // f4 + q
     }
     o
@@ -166,7 +166,7 @@ pub fn gamma_ramp(gamma: f32) -> [u16; 768] {
         let base = f64::from(i as i32) * f64::from(INV_255); // fild qword; fmul 1/255 at 53-bit
         let curve = base.powf(f64::from(gamma)); // pow(base, gamma), `0x73f940` (x87 fyl2x/f2xm1)
         let scaled = curve * f64::from(SCALE); // fmul 65535 at 53-bit
-        let word = (scaled as i64) as u16; // __ftol truncates toward zero; device keeps `ax`
+        let word = benilla_re_cmath::x87::ftol(scaled) as u16; // __ftol truncates toward zero; device keeps `ax`
         ramp[i as usize] = word; // Red   [base + 2i]
         ramp[256 + i as usize] = word; // Green [base + 0x200 + 2i]
         ramp[512 + i as usize] = word; // Blue  [base + 0x400 + 2i]

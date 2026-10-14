@@ -24,12 +24,26 @@ fn minimap_update_snap_difftest() {
     let ebp = frame + 0x80;
 
     let mut s: u32 = 0x6d95_0001;
-    for i in 0..6000u32 {
-        let p = [
+    // NaN, the infinities and positions whose tile index passes `i32`: the `fistp` stores
+    // `0x80000000`.
+    const WIDE: [[f32; 3]; 7] = [
+        [f32::NAN, 5.0, 1.0],
+        [5.0, f32::NAN, 1.0],
+        [f32::INFINITY, f32::NEG_INFINITY, 1.0],
+        [1.0e30, -1.0e30, 1.0],
+        [-1.0e12, 1.0e12, 1.0],
+        [1.0e10, 100.0, 1.0],
+        [100.0, -1.0e10, 1.0],
+    ];
+    for i in 0..6000u32 + WIDE.len() as u32 {
+        let mut p = [
             fuzz(&mut s, 17000.0),
             fuzz(&mut s, 17000.0),
             fuzz(&mut s, 1000.0),
         ];
+        if let Some(&x) = WIDE.get((i as usize).wrapping_sub(6000)) {
+            p = x;
+        }
         let zoom_l = (next(&mut s) >> 8) % 6;
         e.write_u32(player, p[0].to_bits());
         e.write_u32(player + 4, p[1].to_bits());

@@ -48,9 +48,24 @@ fn world_to_tile_difftest() {
     let out = e.alloc(0x10);
     let world = e.alloc(0x10);
     let mut s: u32 = 0x6da4_0001;
-    for i in 0..6000u32 {
+    // NaN, the infinities and coordinates whose tile index passes `i32` and `i64`: `__ftol` returns
+    // the low dword of its qword, 0 for the indefinite.
+    const WIDE: [[f32; 2]; 8] = [
+        [f32::NAN, 5.0],
+        [5.0, f32::NAN],
+        [f32::INFINITY, f32::NEG_INFINITY],
+        [1.0e30, -1.0e30],
+        [-1.0e12, 1.0e12],
+        [1.0e13, -1.0e13],
+        [4.0e12, 2.0e18],
+        [1.0e19, 1.0e19],
+    ];
+    for i in 0..6000u32 + WIDE.len() as u32 {
         // Full map range incl. negative; high bits → wide coverage of the floor-branch.
-        let w = [fuzz(&mut s, 40000.0), fuzz(&mut s, 40000.0)];
+        let mut w = [fuzz(&mut s, 40000.0), fuzz(&mut s, 40000.0)];
+        if let Some(&x) = WIDE.get((i as usize).wrapping_sub(6000)) {
+            w = x;
+        }
         e.write_u32(world, w[0].to_bits());
         e.write_u32(world + 4, w[1].to_bits());
         e.write(out, &[0u8; 8]);

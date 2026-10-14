@@ -95,7 +95,8 @@ pub fn spellvisual_timeline(
     now: u32,
     fraction: f32,
 ) -> [u32; 5] {
-    let offset = (f64::from(cast_time as u32) * f64::from(fraction)) as i64 as u32;
+    let offset =
+        benilla_re_cmath::x87::ftol(f64::from(cast_time as u32) * f64::from(fraction)) as u32;
     let ct = cast_time as u32;
     [
         spell_id_field,

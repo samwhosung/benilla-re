@@ -72,11 +72,21 @@ fn camera_normalize_2pi() {
         f32::NAN,
         f32::INFINITY,
         f32::NEG_INFINITY,
-        // x/2π near and past ±2^31
+        // x/2π near and past ±2^31, where `__ftol` keeps the low dword, and past ±2^63, where it
+        // returns 0
         2.0e9,
         -2.0e9,
         1.0e10,
         -1.0e10,
+        1.6e10,
+        -1.6e10,
+        3.0e10,
+        1.0e19,
+        1.0e20,
+        -1.0e20,
+        1.0e30,
+        f32::MAX,
+        f32::MIN,
     ];
 
     let mut count = 0u64;
@@ -91,7 +101,7 @@ fn camera_normalize_2pi() {
                 0 => fuzz(&mut s, 7.0),   // about one turn
                 1 => fuzz(&mut s, 100.0), // a few turns
                 2 => fuzz(&mut s, 1.0e5), // many turns
-                _ => fuzz(&mut s, 1.0e8), // very many, inside i32
+                _ => fuzz(&mut s, 1.0e8), // very many
             }
         };
 

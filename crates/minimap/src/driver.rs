@@ -37,9 +37,9 @@ pub fn minimap_update_snap(player: [f32; 3], zoom_locked: u32) -> SnapWindow {
     let inv_full = 1.0_f64 / chunk_w as f64; // st0, full f64
     let inv_f32 = inv_full as f32; // fst dword [ebp-0x10]
     let py_term = (inv_full * player[1] as f64) as f32; // py path: full-precision inv
-    let ny = ((py_term as f64) - K as f64).round_ties_even() as i32;
+    let ny = benilla_re_cmath::x87::fistp((py_term as f64) - K as f64);
     let px_term = (inv_f32 as f64 * player[0] as f64) as f32; // px path: f32-rounded inv
-    let nx = ((px_term as f64) - K as f64).round_ties_even() as i32;
+    let nx = benilla_re_cmath::x87::fistp((px_term as f64) - K as f64);
     let mnx = (nx as f64 * chunk_w as f64) as f32;
     let mny = (ny as f64 * chunk_w as f64) as f32;
     let h = chunk_w as f64 * HALF as f64; // chunkW·0.5, kept in f64

@@ -32,7 +32,7 @@ pub fn exp2(x: f64, t: &Exp2Tables) -> f64 {
 
     // fld x; fadd [0x803058]; fld st(0); call __ftol (truncates); dec.
     let s = x + t.bias;
-    let n = (s.trunc() as i64 as i32).wrapping_sub(1); // __ftol's int64, low dword in eax
+    let n = benilla_re_cmath::x87::ftol(s).wrapping_sub(1); // __ftol's int64, low dword in eax
 
     // [ebp+8] = (int64)n; fild; fsubr st,st(1); fstp [ebp+8].
     let frac = s - f64::from(n);

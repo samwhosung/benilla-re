@@ -386,6 +386,36 @@ fn pn_matrix_scale() {
         (
             0.0, 0.0, 1000.0, 1000.0, 1.9999, 1.9999, 1.9999, 1.9999, true,
         ),
+        // NaN, infinite and past-`i32` extents: `__ftol` keeps the low dword of its qword (0 for the
+        // indefinite), and `fild qword` re-widens it unsigned.
+        (0.0, 0.0, f32::NAN, f32::NAN, 1.0, 1.0, 1.0, 1.0, true),
+        (0.0, f32::NAN, 800.0, 600.0, 1.0, 1.0, 1.0, 1.0, true),
+        (
+            0.0,
+            0.0,
+            f32::INFINITY,
+            f32::NEG_INFINITY,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            true,
+        ),
+        (0.0, 0.0, 1.0e30, -1.0e30, 1.0, 1.0, 1.0, 1.0, false),
+        (0.0, 0.0, 3.0e9, 5.0e9, 1.0, 1.0, 1.0, 1.0, true),
+        (0.0, 0.0, -3.0e9, -5.0e9, 1.0, 1.0, 1.0, 1.0, true),
+        (
+            0.0,
+            0.0,
+            4_294_967_296.0,
+            8_589_934_592.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            true,
+        ),
+        (0.0, 0.0, 1.0e19, -1.0e19, 1.0, 1.0, 1.0, 1.0, true),
     ];
     let mut total = 0u32;
     for &(l, t, r, b, sl, sr, sb, st, hp) in cases {

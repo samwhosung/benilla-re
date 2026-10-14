@@ -40,12 +40,11 @@ pub struct Category {
 
 /// `0x40a2b0` `__ftol`: truncate-toward-zero to a 64-bit int (RC=11 via `or ah,0xc`; `fistp qword`),
 /// returning the low dword. The binary uses only the low 32 bits (`eax`); we model the truncated value
-/// modulo 2^32. On x87 an out-of-`i64`-range operand yields the "indefinite" `0x8000…0000`, but
-/// every call site here has already clamped its operand into `[0,255]`-ish before the relevant byte
-/// compare, so the low dword is the truncated magnitude.
+/// modulo 2^32. NaN, an infinity and a value past `i64` give the indefinite `0x8000…0000`, whose low
+/// dword is 0.
 #[inline]
 fn ftol(v: f64) -> u32 {
-    (v.trunc() as i64) as u32
+    benilla_re_cmath::x87::ftol(v) as u32
 }
 
 /// `0x6c8070` **pn_interp_param** — the rising-text vertical offset for one elapsed-ms sample.

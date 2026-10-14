@@ -316,6 +316,69 @@ fn pn_time_alpha_fade() {
             total += 1;
         }
     }
+    // Rows whose fade-in quotient `elapsed/dur` is NaN, infinite, negative or past `i32` once
+    // multiplied by 255: `__ftol` keeps the low dword of its qword, 0 for the indefinite. The
+    // fade-out side clamps its product to `[0, 255]` first, so only a NaN reaches its `__ftol`
+    // out of range, through a zero or negative duration.
+    let wide_rows = [
+        Category {
+            rise_span: 1.0,
+            fade_in_end_ms: 100,
+            fade_out_start_ms: 1000,
+            duration_ms: 0,
+            value_lo: 0.0,
+            value_hi: 1.0,
+        },
+        Category {
+            rise_span: 1.0,
+            fade_in_end_ms: 0x7fff_ffff,
+            fade_out_start_ms: 0x7fff_ffff,
+            duration_ms: 1,
+            value_lo: 0.0,
+            value_hi: 1.0,
+        },
+        Category {
+            rise_span: 1.0,
+            fade_in_end_ms: 100,
+            fade_out_start_ms: 1000,
+            duration_ms: -1,
+            value_lo: 0.0,
+            value_hi: 1.0,
+        },
+        Category {
+            rise_span: 1.0,
+            fade_in_end_ms: 100,
+            fade_out_start_ms: 1000,
+            duration_ms: 1000,
+            value_lo: 0.0,
+            value_hi: 1.0,
+        },
+    ];
+    for c in &wide_rows {
+        write_cat(&mut emu, 0, c);
+        for e in [
+            0u32,
+            1,
+            50,
+            99,
+            100,
+            1000,
+            5000,
+            0x0100_0000,
+            0x4000_0000,
+            0x7fff_fffe,
+        ] {
+            let (ga, gc) = run(&mut emu, 0, e);
+            let want = time_alpha_fade(e, c);
+            assert_eq!(
+                (ga, gc),
+                (want.alpha, want.color),
+                "alpha_fade wide dur={} in_end={} elapsed={e}",
+                c.duration_ms,
+                c.fade_in_end_ms
+            );
+        }
+    }
     eprintln!(
         "pn_time_alpha_fade: {total} bit-exact (fade-in/mid/out; 2x __ftol; clamps 0/127/255)"
     );

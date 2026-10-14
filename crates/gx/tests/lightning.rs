@@ -199,6 +199,10 @@ fn lightning_segment_subdivide_difftest() {
     let mut lcg = BoltRng(0x119b_017e);
     let mut nbig = 0u32;
 
+    // `__ftol` of `len/spacing + 2` leaves the segment count less one in `eax`, and the interior
+    // loop stops when its counter, which starts at 1, equals `eax`. An `eax` of 0 or below (NaN, an
+    // infinity, a value past `i64`, a negative quotient) runs the counter through all 2^32 values,
+    // and one past `i32` sizes the point array in billions, so no bolt is run with such an input.
     for _ in 0..120u32 {
         // a bolt whose length / spacing lands n in a small range. Keep endpoints modest.
         let p0 = [

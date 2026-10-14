@@ -35,5 +35,5 @@ fn floor_axis(w: f32) -> i32 {
     if t < 0.0 {
         t -= 1.0;
     }
-    t as i32 // __ftol: truncate toward zero
+    benilla_re_cmath::x87::ftol(t) // __ftol: truncate toward zero
 }

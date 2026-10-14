@@ -1815,7 +1815,19 @@ fn m2_animate_difftest() {
     // `{0, 2000, flags 0}`) with a span above 0. The earlier cases put the blend on a clamped
     // record, so here the primary is on the clamped record 1 and the blend on record 0, with a
     // wide window and varied speeds.
-    for case in 0..4u32 {
+    // The cases after the first four set the primary and blend speeds to NaN, an infinity, and
+    // values whose product with the window passes `i32` and `i64`: `__ftol` returns the low dword
+    // of its qword, 0 for the indefinite.
+    const SPEEDS: [f32; 7] = [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        4.0e6,
+        -4.0e6,
+    ];
+    for case in 0..4u32 + SPEEDS.len() as u32 {
         let mut m = base_model(&mut s, 3);
         m.first_update_gate = 1;
         let stime = m.scene_clock;
@@ -1829,6 +1841,11 @@ fn m2_animate_difftest() {
             blk.blend_lo = 5 + 50 * case;
             blk.blend_hi = 1900;
             blk.blend_rate = 1.0 + 0.25 * case as f32;
+            if let Some(&speed) = SPEEDS.get((case as usize).wrapping_sub(4)) {
+                blk.blend_lo = 5;
+                blk.blend_rate = speed;
+                blk.rate = speed;
+            }
             blk.blend_bias = 0;
             blk.trans_end = stime + 500;
             blk.inv_duration = 0.0008;

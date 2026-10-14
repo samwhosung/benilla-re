@@ -490,6 +490,8 @@ fn fall_integrator_difftest() {
                 ("floor", 1, i, d, h, r)
             }
         };
+        // `dt_ms` is an integer, so the `__ftol` on `dt_ms · 0.001 · 1000` is always in range:
+        // NaN and out-of-range inputs reach only the drop-time conversion (`resolve_fall_land`).
         let dt_ms = 5 + (next(&mut s) % 200) as i32;
         *tally.entry(label).or_insert(0) += 1;
         let eax = run_integrator(
@@ -631,6 +633,8 @@ fn fall_integrator_freefly_damage_difftest() {
             basis: htri([st.pos[0], st.pos[1], st.pos[2] - 1.0]),
         }];
         let rows = vec![[1.0, 2.0], [0.0, 0.0]];
+        // `dt_ms` is an integer, so the `__ftol` on `dt_ms · 0.001 · 1000` is always in range:
+        // NaN and out-of-range inputs reach only the drop-time conversion (`resolve_fall_land`).
         let dt_ms = 5 + (next(&mut s) % 200) as i32;
         run_integrator(
             &mut emu,
@@ -683,7 +687,10 @@ fn resolve_fall_land_difftest() {
     let mut reject = 0u32;
     let mut flag_exit = 0u32;
 
-    for case in 0..200u32 {
+    // Drop heights that make the time in milliseconds NaN, past `i32` and past `i64`, where
+    // `__ftol` returns a low dword or 0.
+    const DROPS: [f32; 6] = [f32::NAN, f32::INFINITY, 1.0e16, 1.0e30, 1.0e38, f32::MAX];
+    for case in 0..200u32 + DROPS.len() as u32 {
         let mut st = IntegState {
             flags: if case % 7 == 0 { 0 } else { 0x2000 },
             f58: (next(&mut s) % 400) as i32,
@@ -699,7 +706,10 @@ fn resolve_fall_land_difftest() {
         };
         st.pos = [fz(&mut s), fz(&mut s), fz(&mut s)];
         st.f7c = st.pos[2] + fz(&mut s).abs() * 2.0;
-        let drop_h = fz(&mut s).abs() * 0.8 + 0.05;
+        let mut drop_h = fz(&mut s).abs() * 0.8 + 0.05;
+        if let Some(&d) = DROPS.get((case as usize).wrapping_sub(200)) {
+            drop_h = d;
+        }
         let hits = vec![HitRecord {
             normal: [0.0, 0.0, 1.0],
             d: fz(&mut s),

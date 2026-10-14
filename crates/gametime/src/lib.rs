@@ -37,7 +37,7 @@ pub fn minute_accum(dt: f32, scale: f32, accum: f32, pending: i32) -> f32 {
     let mut result = (f64::from(dt) * f64::from(scale) + f64::from(accum)) as f32;
     let mut e = pending;
     if e != 0 && f64::from(result) >= 1.0 {
-        let t = f64::from(result).trunc() as i32; // __ftol truncates; result >= 1, so t >= 1
+        let t = benilla_re_cmath::x87::ftol(f64::from(result)); // __ftol truncates; result >= 1, so t >= 1
         let clamped = if (e as u32) >= (t as u32) { t } else { e }; // cmp edi,t; jae
         e -= clamped;
         let _ = e; // the new [+0x34], not returned

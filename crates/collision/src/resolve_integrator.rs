@@ -42,7 +42,7 @@ const COS10: f32 = f32::from_bits(0x3f7c_1c5c);
 /// truncation and returns its low dword.
 fn ftol_round(x: f64) -> i32 {
     let biased = if x > 0.0 { x + f(HALF) } else { x - f(HALF) };
-    biased.trunc() as i64 as i32
+    benilla_re_cmath::x87::ftol(biased)
 }
 
 /// The mover fields `0x635600` reads and writes.

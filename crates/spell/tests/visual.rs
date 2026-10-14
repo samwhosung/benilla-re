@@ -247,15 +247,31 @@ fn spellvisual_timeline_difftest() {
     e.write(TL_GETTICK_CALL, &mov_eax_abs(now_slot));
 
     let mut s: u32 = 0x6ec9_0001;
-    for i in 0..8000u32 {
+    // Fractions whose product with the cast time is NaN, infinite, past `i32` or past `i64`:
+    // `__ftol` returns the low dword of its qword, 0 for the indefinite.
+    const WIDE: [f32; 9] = [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        1.0e5,
+        -1.0e5,
+        4.0e4,
+        1.0e15,
+    ];
+    for i in 0..8000u32 + WIDE.len() as u32 {
         let spell_id_field = next(&mut s);
-        let cast_time = ((next(&mut s) >> 12) % 120_001) as i32; // 0 to 120000 ms
+        let mut cast_time = ((next(&mut s) >> 12) % 120_001) as i32; // 0 to 120000 ms
         let now = next(&mut s);
-        let fraction = match (next(&mut s) >> 8) % 3 {
+        let mut fraction = match (next(&mut s) >> 8) % 3 {
             0 => fuzz_unit(&mut s, 1.0),
             1 => fuzz_unit(&mut s, 1.5),
             _ => 0.0f32,
         };
+        if let Some(&f) = WIDE.get((i as usize).wrapping_sub(8000)) {
+            (cast_time, fraction) = (120_000, f);
+        }
         e.write_u32(ptr, spell_id_field);
         e.write_u32(ct_slot, cast_time as u32);
         e.write_u32(now_slot, now);

@@ -24,6 +24,20 @@ const G_SELECT: u64 = 0x00c4_ec3c;
 const G_BAND_TOP: u64 = 0x0086_4570;
 const G_BAND_BOTTOM: u64 = 0x0086_4568;
 
+/// `(line_metric, font_size, mouse_y)` for which the line index `(lineMetric − (1 − mouseY)) /
+/// fontSize` is NaN, infinite or past `i32` and `i64`, so `_ftol` returns the low dword of its
+/// qword, 0 for the indefinite.
+const WIDE_INDEX: [(f32, f32, f32); 8] = [
+    (0.5, 0.02, f32::NAN),
+    (0.5, f32::NAN, 0.7),
+    (0.5, 0.0, 0.7),
+    (0.5, 1.0e-30, 0.7),
+    (0.5, 1.0e-12, 0.7),
+    (0.5, 1.0e-8, 0.7),
+    (0.5, -1.0e-30, 0.7),
+    (f32::INFINITY, 0.02, 0.7),
+];
+
 #[test]
 fn mouse_down_drag_difftest() {
     let Some(wow) = Wow::load() else {
@@ -40,12 +54,15 @@ fn mouse_down_drag_difftest() {
     let param = e.alloc(0x20);
 
     let mut s: u32 = 0x0d0_0d001u32;
-    for i in 0..6000u32 {
-        let line_metric = fuzz_unit(&mut s, 0.8) + 0.1;
-        let font_size = fuzz_unit(&mut s, 0.04) + 0.01;
+    for i in 0..6000u32 + WIDE_INDEX.len() as u32 {
+        let mut line_metric = fuzz_unit(&mut s, 0.8) + 0.1;
+        let mut font_size = fuzz_unit(&mut s, 0.04) + 0.01;
         // fVar2 = 1.0 − mouseY spans [-0.1, lineMetric·1.3] → off-region / thumb / select coverage.
         let fvar2_target = fuzz_unit(&mut s, line_metric * 1.3 + 0.1) - 0.1;
-        let mouse_y = 1.0 - fvar2_target;
+        let mut mouse_y = 1.0 - fvar2_target;
+        if let Some(&(lm, fs, my)) = WIDE_INDEX.get((i as usize).wrapping_sub(6000)) {
+            (line_metric, font_size, mouse_y) = (lm, fs, my);
+        }
         let drag_x = next(&mut s);
         e.write_u32(param + 0x18, mouse_y.to_bits());
         e.write_u32(param + 0x14, drag_x);
@@ -152,11 +169,15 @@ fn line_at_mouse_difftest() {
     let frame = region + 0x100; // ebp; the mouseY arg sits at [ebp+0x8], _ftol pushes below esp
 
     let mut s: u32 = 0x1a30_0001;
-    for i in 0..6000u32 {
-        // mouseY ∈ [0,1] (device Y); lineMetric ∈ [0,1.2]; fontSize ∈ [0.01,0.05] (keeps idx in range)
-        let mouse_y = fuzz_unit(&mut s, 1.0);
-        let line_metric = fuzz_unit(&mut s, 1.2);
-        let font_size = fuzz_unit(&mut s, 0.04) + 0.01;
+    for i in 0..6000u32 + WIDE_INDEX.len() as u32 {
+        // mouseY ∈ [0,1] (device Y); lineMetric ∈ [0,1.2]; fontSize ∈ [0.01,0.05], then the
+        // wide-index probes
+        let mut mouse_y = fuzz_unit(&mut s, 1.0);
+        let mut line_metric = fuzz_unit(&mut s, 1.2);
+        let mut font_size = fuzz_unit(&mut s, 0.04) + 0.01;
+        if let Some(&(lm, fs, my)) = WIDE_INDEX.get((i as usize).wrapping_sub(6000)) {
+            (line_metric, font_size, mouse_y) = (lm, fs, my);
+        }
         e.write_u32(frame + 0x8, mouse_y.to_bits()); // [ebp+0x8] = mouseY arg
         e.write_u32(g::LINE_METRIC, line_metric.to_bits());
         e.write_u32(g::FONT_SIZE, font_size.to_bits());

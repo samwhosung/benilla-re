@@ -35,7 +35,7 @@ pub fn mouse_down_drag(line_metric: f32, font_size: f32, mouse_y: f32) -> MouseD
     }
     let a = (lm - fs * f64::from(BASELINE_FACTOR)) - fs; // lineMetric − fontSize·0.75 − fontSize
     let b = (lm - fvar2) / fs - 1.0;
-    let idx = b as i32; // _ftol truncate toward zero
+    let idx = benilla_re_cmath::x87::ftol(b); // _ftol truncate toward zero
     let c = a - f64::from(idx) * fs;
     let band_top = 1.0 - c; // kept unrounded in st0 across the fst
     MouseDown::Select {
@@ -78,5 +78,5 @@ pub fn line_at_mouse_index(mouse_y: f32, line_metric: f32, font_size: f32) -> i3
     // fld 1.0; fsub mouseY → 1.0 − mouseY ; fsubr lineMetric → lineMetric − (1.0 − mouseY)
     let inner = f64::from(line_metric) - (1.0_f64 - f64::from(mouse_y));
     let q = inner / f64::from(font_size); // fdiv fontSize
-    q as i32 // _ftol: truncate toward zero
+    benilla_re_cmath::x87::ftol(q) // _ftol: truncate toward zero
 }

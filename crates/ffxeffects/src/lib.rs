@@ -197,7 +197,7 @@ pub fn ffx_glow_lut_s8(sine: f64) -> u8 {
     } else {
         v
     };
-    ((c as i32) & 0xff) as u8 // __ftol = truncate toward zero, stored as a byte
+    (benilla_re_cmath::x87::ftol(c) & 0xff) as u8 // __ftol = truncate toward zero, stored as a byte
 }
 
 /// One unsigned-byte entry of the glow-wave table generator `0x6cbea0`, on the path taken when
@@ -215,5 +215,5 @@ pub fn ffx_glow_lut_u8(sine: f64) -> u8 {
     } else {
         v
     };
-    ((c as i32) & 0xff) as u8
+    (benilla_re_cmath::x87::ftol(c) & 0xff) as u8
 }
