@@ -361,21 +361,22 @@ ignoring the result. `0x46c236` passes the map in `ecx`, the floats on the stack
 
 `0x46c2c0` (race in `cl`, position in `edx`) looks the race up in `ChrRaces.dbc`, its
 `CinematicSequenceID` (`+0x40`) in `CinematicSequences.dbc`, and that sequence's first camera
-(`+0x08`) in `CinematicCamera.dbc`; a miss returns 0. It loads the camera's model (`+0x04`), places
-it at the origin `+0x0c`..`+0x14` turned about z by the facing `+0x18`, and writes the model
-camera's vector property 7 into the position, returning 1. Property 7 is taken to be the camera's
-position at the cinematic's start, so the world loads where it opens.
+(`+0x08`) in `CinematicCamera.dbc`; a miss returns 0 and leaves the position. It loads the camera's model
+(`+0x04`) and waits for it, places it at the origin `+0x0c`..`+0x14` turned about z by the facing `+0x18`,
+and writes camera 0's eye, vector property 7, over the position, returning 1. The world loads where the
+race's intro cinematic opens. `enterworld` holds the entry conditions.
 
-Addresses: `0x46c2c0`, `0x46c2d5`, `0x46c2f8`, `0x46c320`, `0x46c357`, `0x46c3e6`, `0x46c40d`, `0x46c4cf`, `0x46c4fa`, `0xc0ded8`, `0xc0deb0`, `0xc0dec4`
-Confidence: inferred
-Proof: none
+Addresses: `0x46c2c0`, `0x46c2d5`, `0x46c2f8`, `0x46c320`, `0x46c357`, `0x46c36c`, `0x46c3e6`, `0x46c40d`, `0x46c4cf`, `0x46c4fa`, `0xc0ded8`, `0xc0deb0`, `0xc0dec4`
+Confidence: verified
+Proof: one
 Test: none
 
 Each lookup bounds the id by the store's maximum id `+0x0c` and reads the id map `+0x08`: `ChrRaces`
 `0xc0ded8` (`0x46c2d5`), `CinematicSequences` `0xc0deb0` (`0x46c2f8`), `CinematicCamera` `0xc0dec4`
-(`0x46c320`); the loader `0x5425a0` maps by the id column. `0x46c357` calls `0x707350` with `+0x04`;
-`0x46c3e6` translates an identity matrix by `+0x0c`..`+0x14`; `0x46c40d` rotates it by `+0x18` about
-(0, 0, 1). `0x46c4cf` calls `0x713590`; `0x46c4fa` calls `0x7abf80` with 7. Model calls unread.
+(`0x46c320`); the loader `0x5425a0` maps by the id column. `0x46c357` calls `0x707350` with `+0x04` and
+`0x46c36c` `0x7103d0(model, 1, 0)`, which waits for the read. `0x46c3e6` translates an identity
+matrix by `+0x0c`..`+0x14`; `0x46c40d` rotates it by `+0x18` about (0, 0, 1). `0x46c4cf` calls
+`0x713590` for camera 0 and `0x46c4fa` `0x7abf80` with 7, the eye.
 
 ## Disconnect handler
 

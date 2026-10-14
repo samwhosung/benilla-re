@@ -35,6 +35,27 @@ at `+0x30` (`0x63da43`, `0x63da51`); the flag test at `0x63da21` always passes b
 roster is in wire order: `0x5aabe0` walks it forward at stride `0x110`, and the glue's only `qsort`
 calls are the realm sort `0x46e777` and the name generator `0x4753fb`.
 
+## Selection after create and delete
+
+After a character is created, the last roster entry is selected; after one is deleted, the remembered
+index is. A create reports `SELECT_LAST_CHARACTER` (12) and then asks for `charselect`; the script
+only sets a flag, the roster refresh restores the remembered index, and the next
+`CHARACTER_LIST_UPDATE` makes `UpdateCharacterList` consume the flag and select the last entry, so
+the flag wins. A delete fires `SELECT_FIRST_CHARACTER` (13), which selects entry 1 at once, but the
+frame then requests the roster again (`0x46c1a7`), and the restore of the remembered index replaces
+that selection.
+
+Addresses: `0x46c12e`, `0x46c133`, `0x46c138`, `0x46c19d`, `0x46c1a2`, `0x46c1a7`, `0x46b880`, `0x472556`, `0x472563`, `0x472568`, `0x47256d`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x46c133` fires 12 (`mov ecx,0xc`) and `0x46c13d` calls `0x46b840` with `charselect`; `0x46c1a2`
+fires 13. `CharacterSelect.lua` sets `selectLast` in the event handler and `UpdateCharacterList` reads it
+after the roster is rebuilt: the flag selects the last entry, otherwise the stored `selectedIndex`
+(1 when 0 or past the count). `0x472563` calls `0x472740` with the CVar's value, then `0x47256d` fires
+`CHARACTER_LIST_UPDATE`.
+
 ## Glue event id space
 
 The glue screen's 26 event ids are an array of names stored by `0x46cc60` at `0xb41e70`, four
@@ -155,7 +176,10 @@ argument) gates the rebuild (`0x402062`), the stack argument the state-9 store (
 picks `charselect` or the other screen (`0x402089`): the logout and refusal pass 1, the disconnect
 handler `0x46c5f8` passes 0. The refusal result byte 1 to 6 maps to status `0x3e`, `0x3f`, `0x40`,
 `0x42`, `0x43`, `0x44` and any other to `0x41` (`0x5aae08`). `0x46b880` returns at once in state 9.
-`CMSG_PLAYER_LOGIN` has one builder, `0x5b4700`, reached only from `0x5aae20` in phase 2.
+The only `0x418190` calls with an immediate opcode 0x3d (`CMSG_PLAYER_LOGIN`) and 0x37 (`CMSG_CHAR_ENUM`) are
+in `0x5b4700` (`0x5b472b`, caller `0x5aae53` in `0x5aae20`, whose caller is `0x46c272`) and `0x5b4690`
+(`0x5b46bb`, reached by a jump from `0x5aabd4`); 266 of the 733 calls take their opcode from a register or a
+field and are not read here.
 
 ## Character name check
 
