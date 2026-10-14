@@ -129,6 +129,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-dbcache"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-difftest"
 version = "0.1.0"
 dependencies = [

@@ -14639,7 +14639,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x569ba0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bb0	3			dbcache	unreached		Runs DBCache.cpp code not read here	inferred	none		
 0x569bc0	308			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, 0x56e210, 0x556690 and 2 more; not read here	inferred	none		
-0x569d00	476			dbcache			Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x569550 and 5 more; not read here	inferred	none		
+0x569d00	476			dbcache			Runs DBCache.cpp code that calls CDataStore::GetUInt8, CDataStore::GetInt32, 0x569550 and 5 more; not read here	inferred	none		dbcache::dbcache_item_text
 0x569ee0	293			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550; not read here	inferred	none		
 0x56a010	236			dbcache	unreached		Runs DBCache.cpp code that calls 0x569550, ConsolePrintf, 0x556690 and 2 more; not read here	inferred	none		
 0x56a100	185			dbcache			Runs DBCache.cpp code that calls 0x556df0, SMemFree; not read here	inferred	none		
@@ -22058,7 +22058,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62f210	19	InitCombatLogCSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62f230	5	InitCombatLogCSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f240, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62f240	19	InitCombatLogCSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62f260	147	CGuildRecord::Read		objectlayer	primitive	void __thiscall (void *record, CDataStore *stream)	Reads a guild record: id, name, ten rank names and five emblem values	verified	one	objectlayer/party#the-guild-record	
+0x62f260	147	CGuildRecord::Read		objectlayer	primitive	void __thiscall (void *record, CDataStore *stream)	Reads a guild record: id, name, ten rank names and five emblem values	verified	one	objectlayer/party#the-guild-record	dbcache::dbcache_guild
 0x62f300	5	InitPlayerSoundCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f310, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62f310	11	InitPlayerSoundCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x62f320	5	InitPlayerSoundDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f330, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -28891,11 +28891,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dbaa0	316			minimap			Runs its object file code that calls 0x6dbbe0, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
 0x6dbbe0	264			minimap			Runs its object file code that calls 0x6dba40, 0x6db5d0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x6dbcf0	616			unassigned			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutFloat, CDataStore::PutCString; not read here	inferred	none		
-0x6dbf60	536			unassigned			Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetFloat, CDataStore::GetCString; not read here	inferred	none		
+0x6dbf60	536			unassigned			Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetFloat, CDataStore::GetCString; not read here	inferred	none		dbcache::dbcache_quest
 0x6dc180	98			unassigned			Runs its object file code that calls CDataStore::PutGuid, CDataStore::PutCString, 0x4181f0; not read here	inferred	none		
-0x6dc1f0	98			unassigned			Runs its object file code that calls CDataStore::GetGuid, CDataStore::GetCString, CDataStore::GetUInt32; not read here	inferred	none		
+0x6dc1f0	98			unassigned			Runs its object file code that calls CDataStore::GetGuid, CDataStore::GetCString, CDataStore::GetUInt32; not read here	inferred	none		dbcache::dbcache_name
 0x6dc260	46			unassigned			Runs its object file code that calls 0x4181f0, CDataStore::PutCString; not read here	inferred	none		
-0x6dc290	48			unassigned			Runs its object file code that calls CDataStore::GetUInt32, CDataStore::GetCString; not read here	inferred	none		
+0x6dc290	48			unassigned			Runs its object file code that calls CDataStore::GetUInt32, CDataStore::GetCString; not read here	inferred	none		dbcache::dbcache_pet_name
 0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Returns 1 when two 2D segments cross, else writes where their lines meet	verified	one	cmath/solids#segments-in-the-plane	
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
@@ -36079,7 +36079,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
 0x7c78f0	308			unassigned	primitive		Writes a petition record to a data store	inferred	none	objectlayer/party#group-and-guild-messages-sent	
-0x7c7a30	313			unassigned			Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetGuid and 3 more; not read here	inferred	none		
+0x7c7a30	313			unassigned			Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetGuid and 3 more; not read here	inferred	none		dbcache::dbcache_petition
 0x7c7b70	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7c7b80	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7c7b90	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -36137,7 +36137,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8060	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8070	11			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8080	160			dbcache			Runs its object file code that calls CDataStore::PutCString, CDataStore::PutUInt32, CDataStore::PutInt8; not read here	inferred	none		
-0x7c8120	265			dbcache			Runs CreatureStats.cpp code that calls CDataStore::GetCString, SStrDupA, CDataStore::GetInt32 and 1 more; not read here	inferred	none		
+0x7c8120	265			dbcache			Runs CreatureStats.cpp code that calls CDataStore::GetCString, SStrDupA, CDataStore::GetInt32 and 1 more; not read here	inferred	none		dbcache::dbcache_creature
 0x7c8230	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8240	15			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8250	5			dbcache			Runs its object file code not read here	inferred	none		
@@ -36195,7 +36195,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8720	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8730	11			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8740	119			dbcache			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString; not read here	inferred	none		
-0x7c87c0	205			dbcache			Runs GameObjectStats.cpp code that calls CDataStore::GetInt32, CDataStore::GetCString, SStrDupA; not read here	inferred	none		
+0x7c87c0	205			dbcache			Runs GameObjectStats.cpp code that calls CDataStore::GetInt32, CDataStore::GetCString, SStrDupA; not read here	inferred	none		dbcache::dbcache_gameobject
 0x7c8890	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c88a0	15			dbcache			Runs its object file code not read here	inferred	none		
 0x7c88b0	5			dbcache			Runs its object file code not read here	inferred	none		
@@ -36253,7 +36253,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8d80	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8d90	11			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8da0	18			dbcache			Runs its object file code that calls CDataStore::PutCString; not read here	inferred	none		
-0x7c8dc0	60			dbcache			Runs ItemName.cpp code that calls CDataStore::GetCString, SStrDupA; not read here	inferred	none		
+0x7c8dc0	60			dbcache			Runs ItemName.cpp code that calls CDataStore::GetCString, SStrDupA; not read here	inferred	none		dbcache::dbcache_item_name
 0x7c8e00	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8e10	15			dbcache			Runs its object file code not read here	inferred	none		
 0x7c8e20	5			dbcache			Runs its object file code not read here	inferred	none		
@@ -36311,7 +36311,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c92f0	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c9300	11			dbcache			Runs its object file code not read here	inferred	none		
 0x7c9310	813			dbcache			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString, CDataStore::PutFloat; not read here	inferred	none		
-0x7c9640	897			dbcache			Runs ItemStats.cpp code that calls CDataStore::GetInt32, CDataStore::GetCString, SStrDupA and 1 more; not read here	inferred	none		
+0x7c9640	897			dbcache			Runs ItemStats.cpp code that calls CDataStore::GetInt32, CDataStore::GetCString, SStrDupA and 1 more; not read here	inferred	none		dbcache::dbcache_itemstats
 0x7c99d0	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c99e0	15			dbcache			Runs its object file code not read here	inferred	none		
 0x7c99f0	5			dbcache			Runs its object file code not read here	inferred	none		
@@ -36369,7 +36369,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c9ec0	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7c9ed0	11			dbcache			Runs its object file code not read here	inferred	none		
 0x7c9ee0	192			dbcache			Runs its object file code that calls CDataStore::PutFloat, CDataStore::PutCString, CDataStore::PutUInt32; not read here	inferred	none		
-0x7c9fa0	308			dbcache			Runs NPCText.cpp code that calls CDataStore::GetFloat, CDataStore::GetCString, SMemFree and 2 more; not read here	inferred	none		
+0x7c9fa0	308			dbcache			Runs NPCText.cpp code that calls CDataStore::GetFloat, CDataStore::GetCString, SMemFree and 2 more; not read here	inferred	none		dbcache::dbcache_npctext
 0x7ca0e0	5			dbcache			Runs its object file code not read here	inferred	none		
 0x7ca0f0	15			dbcache			Runs its object file code not read here	inferred	none		
 0x7ca100	5			dbcache			Runs its object file code not read here	inferred	none		
@@ -36484,7 +36484,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cab80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cab90	11			unassigned			Runs its object file code not read here	inferred	none		
 0x7caba0	38			unassigned			Runs its object file code that calls CDataStore::PutCString, CDataStore::PutUInt32; not read here	inferred	none		
-0x7cabd0	43			unassigned			Runs its object file code that calls CDataStore::GetCString, CDataStore::GetInt32; not read here	inferred	none		
+0x7cabd0	43			unassigned			Runs its object file code that calls CDataStore::GetCString, CDataStore::GetInt32; not read here	inferred	none		dbcache::dbcache_page_text
 0x7cac00	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cac10	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7cac20	5			unassigned			Runs its object file code not read here	inferred	none		
