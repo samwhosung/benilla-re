@@ -77,35 +77,34 @@ Test: `ui::cam_50de90`
 
 ## The water bands
 
-`0x511ad0(unit)` classes where the water surface lies against the pivot target and sets one of two mode bits, 0x100000
-(surface) or 0x200000 (submerged); both are cleared first. With `d` the height of the liquid surface above the unit's
-position and `H` the target pivot height (`+0x1c8`): `d` below `H + 2/9` is the surface band, `d` from there up to `H + 5/9`
-is the submerged band, and above that is neither. A unit with no liquid under it gets neither. It returns `d`, or 0.
-In the surface band the solver's base height becomes `d + 2/9` and its cap at least that; in the submerged band
-the cap is `d - 5/6`, at least 5/6.
+`0x511ad0(unit)` clears both mode bits, then sets at most one from `d`, the height of the liquid surface above the unit's
+position, and `H`, the target pivot height (`+0x1c8`). `d` below `H + 2/9` sets the surface bit 0x100000; `d - H` from 2/9 up to but not
+including 5/9 sets the submerged bit 0x200000; exactly 5/9, more, or a depth that is not a number sets neither. No unit, or no liquid
+at the unit, returns 0.0 with neither bit; otherwise it returns `d`. It reads no earlier band state, so the band follows the depth
+on every frame with no hysteresis. What each band does to the solver's limits is `uicamera/waterbands#pivot-height-by-band`.
 
-Addresses: `0x511ad0`, `0x670630`, `0x8089d0`, `0x8089d4`
+Addresses: `0x511ad0`, `0x511ae3`, `0x511aeb`, `0x511b42`, `0x511b61`, `0x511b6c`, `0x511b76`, `0x511b81`, `0x511b83`, `0x511b8e`, `0x511b90`, `0x511ba4`, `0x670630`, `0x8089d0`, `0x8089d4`
 Confidence: verified
 Proof: one
 Test: `ui::glue_511_511ad0_residual`
 
 `0x511ae3` clears both bits (`and ecx,0xffcfffff`). `0x511b39` calls the liquid query `0x670630`; `0x511b5b` forms `d` against the unit's z. `0x511b61` compares with
 `+0x1c8`: below it goes to the surface band at `0x511ba4`. `0x511b76` compares the excess with `0x8089d0` (2/9) and `0x511b83` with `0x8089d4` (5/9); `0x511b90`
-sets the submerged bit. In the solver `0x50e638` to `0x50e65d` build the surface limits and `0x50e666` to `0x50e684` the submerged cap from `[ebp+0x18]`, the argument that holds `d`.
+sets the submerged bit. After each `fcom` the code tests `ah` against 5 (C0 and C2) and `jnp` is taken for C0 alone, so `0x511b6c` branches to the surface store only for `d < H`, `0x511b81` only for an excess below 2/9, and `0x511b8e` skips the submerged store for 5/9 or more and for unordered. The submerged store falls into the epilogue, not into the surface store, so the bits are never set together.
 
 ## Crossing the surface
 
-When the camera passes from the submerged band to the surface band the pitch is set to the CVar
-`cameraSurfaceFinalPitch`, 5 degrees by default, and from the surface band to the submerged band to
-`cameraSubmergeFinalPitch`, also 5. The pitch goes in directly in mouselook and otherwise through the pitch
-transition. Nothing is done unless `cameraWaterCollision` is nonzero.
+Only the two edges between the bands arm the pitch: from the submerged band to the surface band the pitch goes to the CVar
+`cameraSurfaceFinalPitch`, 5 degrees by default, and from the surface band to the submerged band to `cameraSubmergeFinalPitch`,
+also 5, each in degrees times π/180 with no sign change. Moving into or out of neither band, or staying in a band, arms nothing,
+and a pitch of exactly 0 is refused. In mouselook the pitch goes in directly; otherwise `0x512830` arms the pitch transition with delay 0 and factor 1.0.
+Nothing is done unless `cameraWaterCollision` is nonzero. The repeat check is `uicamera/waterbands#repeated-crossings`.
 
-Addresses: `0x50ecae`, `0x50eb35`, `0x50eb3f`, `0x50ecd0`, `0x50eced`, `0x50ed18`, `0x50ed34`, `0x512830`
+Addresses: `0x50ecae`, `0x50eb14`, `0x50eb35`, `0x50eb3f`, `0x50eb45`, `0x50ecbb`, `0x50ecd0`, `0x50eced`, `0x50ed09`, `0x50ed18`, `0x50ed34`, `0x50ed39`, `0x512830`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x50eb35` saves the previous submerged bit and `0x50eb3f` the previous surface bit before `0x50eb45` classes the new bands. `0x50ecae` tests the CVar. `0x50ecc2` and
-`0x50ecc8` select the surface pitch when the previous frame was submerged and the new one surface; `0x50ecdb` to `0x50ecf2` the submerged one in the opposite case.
-`0x50ecfb` converts to radians; a zero pitch is skipped (`0x50ed0c`). `0x50ed18` and `0x50ed1e` store it in `+0xf4` and `+0x1e0` in mouselook, `0x50ed34` calls the
-pitch setter `0x512830` otherwise.
+`0x50eb14` copies the flag word before `0x50eb45` classes the new bands; `0x50eb35` and `0x50eb3f` keep its submerged and surface bits. `0x50ecae` tests the CVar and leaves for `0x50ed39` when it is zero. `0x50ecbb` to `0x50ecce` select the surface pitch when the previous frame was submerged and the new one surface; `0x50ecdb` to `0x50eceb` the submerged one in the opposite case.
+`0x50ecfb` converts to radians; `0x50ed09` masks C3 and C2 after comparing with 0.0 and `jnp` skips a zero pitch (`0x50ed0c`). `0x50ed18` and `0x50ed1e` store it in `+0xf4` and `+0x1e0` in mouselook, `0x50ed34` calls the
+pitch setter `0x512830` otherwise. `0x50ed39` clears 0x30000, the sweep result bits, not the band bits.

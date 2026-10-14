@@ -1,30 +1,12 @@
 # uicamera: the water bands
 
 How the surface and submerged bands choose the pivot height, where that height steps, what the eased height does after a
-drop, which band changes arm a pitch, and how the water switch reaches the world trace. The classifier's inputs are in
+drop, how a repeated crossing is absorbed, and how the water switch reaches the world trace. The band classifier and the pitch a crossing arms are `uicamera/solver` ("The water bands", "Crossing the surface"). The classifier's inputs are in
 `objectlayer/swim` and the solver's frame in `uicamera/solver`; the frame order is `uicamera/driver`. In the entries `d` is
 the liquid surface height above the unit's position, `T` the target pivot height at `+0x1c8`, `L` the live pivot height at
 `+0xfc` and `M` the larger of the two.
 
 Roots: `0x511ad0`, `0x50e570`, `0x50e8d0`, `0x512830`, `0x50ca90`
-
-## Band edges
-
-`0x511ad0` clears both band bits first and sets at most one. A `d` below `T + 2/9` sets the surface bit
-0x100000 (an early test catches `d` below `T`); `d - T` from 2/9 up to but not including 5/9 sets the submerged bit 0x200000. A `d - T` of exactly 2/9 is submerged,
-exactly 5/9 is neither, and a depth that is not a number is neither. No unit, or no liquid at the unit, returns 0.0 with
-neither bit. Otherwise it returns `d`. It reads no earlier band state, so the band follows the depth on every frame with no
-hysteresis.
-
-Addresses: `0x511ad0`, `0x511ae3`, `0x511aeb`, `0x511af3`, `0x511b42`, `0x511b61`, `0x511b6c`, `0x511b76`, `0x511b81`, `0x511b83`, `0x511b8e`, `0x511b90`, `0x511ba4`, `0x8089d0`, `0x8089d4`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x511aeb` stores the cleared word before the unit test at `0x511ae9`. After `fcom` the code tests `ah` against 5 (C0 and C2): `jnp` is taken for
-C0 alone, which is below, and not taken for equal, above or unordered. So `0x511b6c` branches to the surface store only for `d < T`, `0x511b81` only for a
-difference below 2/9, and `0x511b8e` skips the submerged store for a difference of 5/9 or more and for unordered. The submerged store at `0x511b90`
-falls into the epilogue, not into the surface store at `0x511ba4`, so the two bits are never set together.
 
 ## Pivot height by band
 
@@ -111,23 +93,6 @@ Test: none
 `0x50cc43` and `0x50cc4f` ask `0x711960` for sequence 0 and 0x2a; `0x50cc59` and `0x50cc61` skip the block when either is missing. `0x50cccf` and `0x50ccde` fill two records with
 `0x711a20`, whose six bounds floats land at record `+0xc`, so `+0x20` is the maximum z. `0x50cce3` and `0x50ccec` scale the two by `S` at `[ebp-4]`, and `0x50ccf6`
 subtracts their difference from `+0x124`. `0x50f880` picks `+0x124` for a swimmer.
-
-## Crossing a band
-
-A change between the bands arms the pitch only for the two edges between them: from submerged to surface it aims at
-`cameraSurfaceFinalPitch` and from surface to submerged at `cameraSubmergeFinalPitch`, each in degrees times π/180 with no sign
-change. Moving into or out of the neither band, and staying in a band, arm nothing. A pitch of exactly 0 is refused. With
-mouselook held (bit 0 of the flag word) both the live pitch `+0xf4` and its target `+0x1e0` are set at once; otherwise `0x512830`
-arms the pitch transition with delay 0 and factor 1.0.
-
-Addresses: `0x50eb14`, `0x50eb30`, `0x50eb35`, `0x50eb3f`, `0x50eb45`, `0x50ecae`, `0x50ecbb`, `0x50ecd0`, `0x50eced`, `0x50ecf5`, `0x50ed09`, `0x50ed0e`, `0x50ed18`, `0x50ed1e`, `0x50ed34`, `0x50ed39`, `0x7ffaac`, `0xbe1088`, `0xbe0f2c`, `0xbe0fdc`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x50eb14` copies the flag word before `0x50eb45` classifies, and `0x50eb35` and `0x50eb3f` keep its submerged and surface bits. `0x50ecae` leaves for `0x50ed39` when the
-switch is zero. `0x50ecbb` to `0x50ecce` pick the surface pitch for previous submerged and now surface; `0x50ecdb` to `0x50eceb` the submerge pitch for the opposite pair. `0x50ed09` masks C3 and C2 after
-comparing with 0.0, and `jnp` leaves for an equal value only. `0x50ed39` clears 0x30000, the sweep result bits, not the band bits.
 
 ## Repeated crossings
 
