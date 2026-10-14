@@ -56,6 +56,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
 0x492ab8	void *[4]	s_hoverKindArms		ui	Holds the four arms of the mouseover kind switch of 0x492890	verified	one	ui/tooltipobject#the-publisher
 0x492ac8	uint8_t[121]	s_hoverKindMap		ui	Maps an object type mask minus 9 to an arm of the mouseover kind switch	verified	one	ui/tooltipobject#the-publisher
+0x493f50	void *[4]	s_targetKindCases		ui	Holds the four case addresses of the targeting kind filter 0x493e40	verified	one	ui/targeting#the-candidate-filter
 0x494b48	void *[3]	s_protectedGateArms		ui	Holds the three arm addresses of the action gate 0x494a50: refuse, flags test, continue	verified	one	ui/protected#protected-action-gate
 0x494b54	uint8_t[12]	s_protectedGateTagArm		ui	Holds the arm index of each action gate tag 0 to 11	verified	one	ui/protected#protected-action-gate
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
@@ -462,6 +463,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804478	const float	s_float41a00000		unassigned	Holds the float 20 (0x41a00000)	inferred	none	
 0x80447c	const float	s_float42da67ae		unassigned	Holds the float 109.2025 (0x42da67ae)	inferred	none	
 0x804480	float	s_oneOver1440		unassigned	Holds 1/1440, the factor from game minutes to a fraction of a day	verified	one	gametime#day-phase
+0x804488	float	s_piCopyTargeting		unassigned	Holds pi (0x40490fdb), read by the nearby-unit collector	verified	one	ui/targeting#collecting-the-candidates
 0x80448c	const float	s_float41200000		ui	Holds the float 10 (0x41200000)	inferred	none	
 0x804490	const float	s_float4131c71c		ui	Holds the float 11.111111 (0x4131c71c)	inferred	none	
 0x804498	const float	s_float41200000At804498		ui	Holds the float 10 (0x41200000)	inferred	none	
@@ -2509,6 +2511,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b41c	uint32_t	s_cursorPreviewEntry		ui	Holds the entry of the preview payload, nonzero for kinds 5, 7 and 9	verified	one	ui/cursor#payload-kinds
 0xb4b420	uint32_t	s_cursorPreviewIndex		ui	Holds the index of the preview payload, the vendor row for kind 5	verified	one	ui/cursor#payload-kinds
 0xb4b424	uint8_t	s_worldEntered		ui	Holds 1 from the enter cascade to the leave function, the once-per-world latch	verified	one	ui/worldenter#the-enter-cascade
+0xb4b428	uint32_t	s_nearbyCapacity		ui	Holds the capacity of the nearby list, in 16-byte records	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4b42c	uint32_t	s_nearbyCount		ui	Holds the number of records in the nearby list	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4b430	void *	s_nearbyData		ui	Points to the nearby list: GUID, squared distance and in-front flag per record	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4b434	uint32_t	s_nearbyQuantum		ui	Holds the growth quantum of the nearby list; 0 until it first grows	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4b43c	uint32_t	s_multisampleListCapacity		ui	Holds the capacity of the multisample format list, in entries	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b440	uint32_t	s_multisampleListCount		ui	Holds the number of entries in the multisample format list; 0 until a multisample verb builds it	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b444	void *	s_multisampleListData		ui	Points to the multisample format list, 12-byte colour bits, depth bits and samples triples	verified	one	ui/videoverbs#the-multisample-verbs
@@ -2518,7 +2524,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4c0f0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4d8ec	uint32_t	s_cursorPreviewDisplayId		ui	Holds the display id of the preview payload	verified	one	ui/cursor#payload-kinds
-0xb4d8f8	uint32_t			ui	Holds a dword that Script::AssistUnit, Script::AssistByName, CGGameUI::Initialize read and write; not read here	inferred	none	
+0xb4d8f4	float	s_frontConeAngle		ui	Holds pi over 6, the half angle of the front cone, set on first use	verified	one	ui/targeting#collecting-the-candidates
+0xb4d8f8	void *	s_cvarAssistAttack		ui	Points to the assistAttack record, default 0	verified	one	ui/targeting#assist-and-follow
+0xb4d8fc	void *	s_cvarTargetNearestDistanceRadius		ui	Points to the targetNearestDistanceRadius record, default 10	verified	one	ui/targeting#collecting-the-candidates
 0xb4d900	uint32_t	s_cursorType		ui	Holds the kind of payload the cursor holds, 0 for none	verified	one	ui/cursor#payload-kinds
 0xb4d904	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4d90c	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
@@ -2536,10 +2544,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e270	void *	s_cinematicShotRow		ui	Holds the CinematicCamera row of the playing shot	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e274	uint32_t	s_cinematicNarration		ui	Holds the handle of the shot's own sound	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e278	uint32_t	s_cinematicMusicPaused		ui	Holds 1 when the cinematic paused the music and must restore it	verified	one	uicamera/cinematic#starting-a-sequence
+0xb4e27c	uint8_t	s_frontConeReady		ui	Holds bit 1 once s_frontConeAngle is set	verified	one	ui/targeting#collecting-the-candidates
 0xb4e280	char *	s_subZoneText		ui	Holds the subzone name GetSubZoneText pushes, set by the zone commit	verified	one	ui/zonetext#the-commit-and-its-events
 0xb4e284	float[3]	s_corpsePosition		ui	Holds the cached corpse position x, y and z	verified	one	ui/deathui#the-corpse-location
 0xb4e29c	float	s_interactRange2Squared		ui	Holds 11.11 squared, the range of CheckInteractDistance index 2	verified	one	ui/distancegates#thresholds
 0xb4e2a0	float	s_interactRange4Squared		ui	Holds 30 squared, the range of CheckInteractDistance index 4	verified	one	ui/distancegates#thresholds
+0xb4e2a8	void *	s_cvarTargetNearestDistance		ui	Points to the targetNearestDistance record, default 41	verified	one	ui/targeting#collecting-the-candidates
 0xb4e2ac	float	s_corpseRangeSquared		ui	Holds 1600.0, the squared range of the corpse range events	verified	one	ui/deathui#corpse-range-events
 0xb4e2b0	void *	s_uiScaleOption		ui	Points to the uiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
@@ -2548,9 +2558,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e2c0	float	s_interactRangeSquared		ui	Holds the squared leash of the open interaction, 196.0 for a player and the opener's range otherwise	verified	one	ui/questshare#the-offer-leash
 0xb4e2c8	uint64_t	s_mouseoverGuid		ui	Holds the GUID of the published mouseover object, 0 for none	verified	one	ui/mouseover#publishing-the-mouseover
 0xb4e2d0	uint64_t	s_interactionTargetGuid		ui	Holds the GUID of the unit the interaction windows belong to	inferred	none	objectlayer/interaction#talking-to-an-npc
-0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
-0xb4e2e0	uint32_t			ui	Holds a dword that Script::TargetLastTarget reads and writes; not read here	inferred	none	
-0xb4e2e8	uint32_t			unassigned	Holds a dword that Script::TargetLastEnemy reads and writes; not read here	inferred	none	
+0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	verified	one	ui/targeting#setting-the-target
+0xb4e2e0	uint64_t	s_lastTargetGuid		ui	Holds the previous target GUID, which TargetLastTarget selects	verified	one	ui/targeting#setting-the-target
+0xb4e2e8	uint64_t	s_lastEnemyGuid		ui	Holds the last attackable target GUID, which TargetLastEnemy selects	verified	one	ui/targeting#setting-the-target
 0xb4e2f0	uint32_t	s_cursorMoney		ui	Holds the copper amount of the money payload	verified	one	ui/cursormoney#the-money-payload
 0xb4e2f4	uint32_t	s_cursorSpell		ui	Holds the spell id of the spell payload	verified	one	ui/cursor#payload-kinds
 0xb4e2f8	uint32_t	s_cursorPetAction		ui	Holds the action word of the pet action payload	verified	one	ui/cursor#payload-kinds
@@ -2584,6 +2594,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e374	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e378	uint32_t			unassigned	Holds a dword that ClntObjMgrCreate, Script::IsInInstance read and write; not read here	inferred	none	
 0xb4e37c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb4e3ac	uint32_t	s_nearestCursor		ui	Holds the index of the nearby list entry last selected	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4e3b0	uint32_t	s_nearestBuiltAt		ui	Holds the millisecond time the nearby list was built; 0 forces a rebuild	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4e3b4	uint32_t	s_nearestUsedAt		ui	Holds the millisecond time of the last nearby selection	verified	one	ui/targeting#cycling-through-nearby-units
+0xb4e3b8	uint32_t	s_nearestKind		ui	Holds the kind, 1 to 4, the nearby list was built for	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3c0	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
 0xb4e3c4	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
 0xb4e3c8	uint32_t	s_scriptCvarCount		ui	Holds the number of CVars RegisterCVar has registered; the 31st is refused	verified	one	ui/cvarverbs#writing-cvars-from-lua

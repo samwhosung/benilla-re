@@ -6678,23 +6678,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4897b0	311	Script::DeleteCursorItem	idb	ui	primitive		Implements the Lua function DeleteCursorItem	verified	one	ui/cursor#delete_item_confirm	
 0x4898f0	101	Script::EquipPendingItem	idb	ui	orchestration		Implements the Lua function EquipPendingItem	inferred	none		
 0x489960	101	Script::CancelPendingEquip	idb	ui	orchestration		Implements the Lua function CancelPendingEquip	inferred	none		
-0x4899d0	109	Script::TargetUnit	idb	ui	orchestration		Implements the Lua function TargetUnit	inferred	none		
-0x489a40	59	CGGameUI::Target	idb	ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::IsRaidMemberOrPet, 0x493540; not read here	inferred	none		
-0x489a80	27	Script::TargetNearestEnemy	idb	ui	orchestration		Implements the Lua function TargetNearestEnemy	inferred	none		
-0x489aa0	27	Script::TargetNearestFriend	idb	ui	orchestration		Implements the Lua function TargetNearestFriend	inferred	none		
-0x489ac0	27	Script::TargetNearestPartyMember	idb	ui	orchestration		Implements the Lua function TargetNearestPartyMember	inferred	none		
-0x489ae0	27	Script::TargetNearestRaidMember	idb	ui	orchestration		Implements the Lua function TargetNearestRaidMember	inferred	none		
-0x489b00	56	Script::TargetLastTarget	idb	ui	primitive		Implements the Lua function TargetLastTarget	inferred	none		
-0x489b40	13	Script::TargetLastEnemy	idb	ui	orchestration		Implements the Lua function TargetLastEnemy	inferred	none		
-0x489b50	45	Script::AttackTarget	idb	ui	orchestration		Implements the Lua function AttackTarget	inferred	none		
-0x489b80	183	Script::AssistUnit	idb	ui	primitive		Implements the Lua function AssistUnit	inferred	none		
-0x489c40	276	Script::AssistByName	idb	ui	primitive		Implements the Lua function AssistByName	inferred	none		
-0x489d60	148	Script::TargetByName	idb	ui	primitive		Implements the Lua function TargetByName	inferred	none		
-0x489e00	192	Script::FollowUnit	idb	ui	orchestration		Implements the Lua function FollowUnit	inferred	none		
-0x489ec0	302	Script::FollowByName	idb	ui	orchestration		Implements the Lua function FollowByName	inferred	none		
-0x489ff0	74	Script::ClearTarget	idb	ui	primitive		Implements the Lua function ClearTarget	inferred	none		
+0x4899d0	109	Script::TargetUnit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the unit a token names	verified	one	ui/targeting#target-by-token	
+0x489a40	59	CGGameUI::Target	idb	ui	orchestration	void __thiscall (const uint64_t *guid)	Selects a GUID when its unit object exists or it names a raid member or pet	verified	one	ui/targeting#target-by-token	
+0x489a80	27	Script::TargetNearestEnemy	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the next nearby enemy	verified	one	ui/targeting#cycling-through-nearby-units	
+0x489aa0	27	Script::TargetNearestFriend	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the next nearby friend	verified	one	ui/targeting#cycling-through-nearby-units	
+0x489ac0	27	Script::TargetNearestPartyMember	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the next nearby party member	verified	one	ui/targeting#cycling-through-nearby-units	
+0x489ae0	27	Script::TargetNearestRaidMember	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the next nearby raid member	verified	one	ui/targeting#cycling-through-nearby-units	
+0x489b00	56	Script::TargetLastTarget	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the last target, or clears the target when there is none	verified	one	ui/targeting#target-by-token	
+0x489b40	13	Script::TargetLastEnemy	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the last attackable target	verified	one	ui/targeting#target-by-token	
+0x489b50	45	Script::AttackTarget	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Starts the active player attacking	verified	one	ui/targeting#target-by-token	
+0x489b80	183	Script::AssistUnit	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the target of a unit and attacks it when assistAttack is set	verified	one	ui/targeting#assist-and-follow	
+0x489c40	276	Script::AssistByName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Assists the best matching player, or the current target for an empty name	verified	one	ui/targeting#targeting-by-name	
+0x489d60	148	Script::TargetByName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the best unit matching a name	verified	one	ui/targeting#targeting-by-name	
+0x489e00	192	Script::FollowUnit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Starts the follow auto-move toward the unit a token names	verified	one	ui/targeting#assist-and-follow	
+0x489ec0	302	Script::FollowByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Follows the best matching player, or the current target for an empty name	verified	one	ui/targeting#targeting-by-name	
+0x489ff0	74	Script::ClearTarget	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Clears the target and returns 1 when there was one, else nil	verified	one	ui/targeting#target-by-token	
 0x48a040	43	Script::AutoEquipCursorItem	idb	ui	orchestration		Implements the Lua function AutoEquipCursorItem	verified	one	ui/cursor#cursor-functions	
-0x48a070	41	Script::ToggleSheath	idb	ui	orchestration		Implements the Lua function ToggleSheath	inferred	none		
+0x48a070	41	Script::ToggleSheath	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Toggles the player's weapon sheath	verified	one	ui/targeting#assist-and-follow	
 0x48a0a0	26	Script::GetZoneText	idb	ui	orchestration		Pushes the zone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
 0x48a0c0	26	Script::GetRealZoneText	idb	ui	orchestration		Pushes the zone name before the map object override, or the empty string	verified	one	ui/zonetext#the-text-functions	
 0x48a0e0	26	Script::GetSubZoneText	idb	ui	orchestration		Pushes the subzone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
@@ -6917,7 +6917,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490250	302	CGGameUI::RegisterScriptFunctions		ui	primitive		Registers the frame types, the game C functions of 0x83de68 and 53 files of functions as globals	verified	one	ui/luastate#the-c-function-contract	
 0x490380	596	LayoutCacheRead		ui	primitive	void __fastcall (void *unused, HANDLE file, void *unused2)	Parses the layout cache file into records and applies each to its frame	verified	one	ui/layoutcache#reading-a-record	
 0x4905e0	316			ui	primitive		Runs GameUI.cpp code that calls CSimpleFrame::SetFrameLevel, CLayoutFrame::ClearAllPointsThunk and 5 more; not read here	inferred	none		ui::glue_4905e0_device_position
-0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
+0x490720	77	ValidateNearestDistance		ui	primitive	uint8_t __stdcall (const char *text, void *arg)	Accepts a nearest-target distance option from 1 to 50, else prints the range and refuses	verified	one	ui/targeting#collecting-the-candidates	
 0x490770	115	UiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies a new uiScale text to UIParent when useUiScale is on, capped for narrow windows	verified	one	ui/uiscale#applying-a-scale	ui::glue_490770_eps_gates
 0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	ui::glue_48fbf0_finite_diff, ui::glue_490770_eps_gates
 0x4908c0	441	EnterWorldUI		ui	orchestration		Fires PLAYER_LOGIN when armed and PLAYER_ENTERING_WORLD, releases chat and rebuilds the interface state	verified	one	ui/worldenter#the-enter-cascade	
@@ -6980,15 +6980,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4931c0	104			ui	primitive		Sets or clears the unit the interaction windows belong to	inferred	none	objectlayer/players#death	
 0x493230	224	CheckInteractionLeash		ui	primitive		Closes the open interaction when its object is released, gone or farther than the squared range	verified	one	ui/questshare#the-offer-leash	ui::dist2_493230
 0x493310	557			ui	primitive		Clears the interaction unit and closes the window that belongs to it	inferred	none		
-0x493540	966			ui	primitive		Selects the unit of a guid as the player's target	inferred	none	spell/handlers#spell-start	
-0x493910	398			ui	primitive		Releases a GUID's unit tokens and interface state; not read here	inferred	none	objectlayer/party#the-group-list	
-0x493aa0	443	CGGameUI::ClosestObjectMatch	idb	ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4e81a0 and 3 more; not read here	inferred	none		
-0x493c60	208			ui	primitive		Runs GameUI.cpp code that calls SStrCmpI, _toupper; not read here	inferred	none		
-0x493d30	265			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, 0x493e40 and 1 more; not read here	inferred	none		ui::dist2_493d30
-0x493e40	270			ui	primitive		Runs GameUI.cpp code that calls IsDeadOrGhost, CGUnit_C::CanAttack, CGUnit_C::CanAssist_Unit and 2 more; not read here	inferred	none		
-0x493f60	671			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
-0x494200	580			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, 0x493e40, HeadingBetweenPoints and 5 more; not read here	inferred	none		ui::dist2_494200
-0x494450	74			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x493540	966	CGGameUI::SelectTarget		ui	primitive	void __stdcall (uint64_t guid)	Selects, or with GUID 0 clears, the player's target and sends CMSG_SET_SELECTION	verified	one	ui/targeting#setting-the-target	
+0x493910	398	CGGameUI::ReleaseTarget		ui	primitive	void __stdcall (uint32_t sendSelection, uint64_t guid)	Releases the old target: loot window, light, token flag, melee attack, and the selection message on a clear	verified	one	ui/targeting#releasing-the-old-target	
+0x493aa0	443	CGGameUI::ClosestObjectMatch	idb	ui	primitive	uint64_t __fastcall (const char *name, uint32_t typeMask, uint32_t mode, uint32_t exactOnly, float maxDistance)	Returns the GUID of the party member, raid member or nearby object that best matches a name	verified	one	ui/targeting#matching-a-name	
+0x493c60	208	CGGameUI::ConsiderNameMatch		ui	primitive	uint32_t __thiscall (void *search, const uint64_t *guid, const char *name, float distance)	Scores one named candidate against the search, keeping an equal name or a longer shared prefix	verified	one	ui/targeting#matching-a-name	
+0x493d30	265	CGGameUI::OfferNameMatch		ui	primitive	uint32_t __fastcall (void *search, uint64_t guid)	Offers one object to the name search when its type and kind filter pass	verified	one	ui/targeting#matching-a-name	
+0x493e40	270	CGGameUI::TargetKindAccepts		ui	primitive	uint32_t __fastcall (CGUnit_C *player, CGUnit_C *unit, uint32_t kind)	Answers whether a unit suits a targeting kind: enemy, friend, party member or raid member	verified	one	ui/targeting#the-candidate-filter	
+0x493f60	671	CGGameUI::TargetNearest		ui	primitive	void __fastcall (uint32_t reverse, uint32_t kind)	Selects the next unit of a kind from the sorted nearby list, rebuilding it when stale	verified	one	ui/targeting#cycling-through-nearby-units	
+0x494200	580	CGGameUI::CollectNearbyUnit		ui	primitive	uint32_t __thiscall (CGUnit_C *player, uint64_t guid)	Adds a unit to the nearby list when its kind, distance, cone and creature type pass	verified	one	ui/targeting#collecting-the-candidates	
+0x494450	74	CompareNearbyUnits		ui	primitive	int __cdecl (const void *a, const void *b)	Orders two nearby records: in-front first, then ascending squared distance	verified	one	ui/targeting#collecting-the-candidates	
 0x4944a0	168	CanReadUnitInventory		ui	primitive	bool __fastcall (CGUnit_C *unit)	Tells whether a player unit is the active player or a cooperative player within 10 yards	verified	one	ui/inventory#item-counts	ui::dist2_4944a0
 0x494550	56	SetUiParentScale		ui	orchestration	void __stdcall (float scale)	Raises a scale to at least 0.64, sets it on UIParent with force and drains the layout queue	verified	one	ui/uiscale#applying-a-scale	
 0x494590	20	GetUiParentScale		ui	orchestration	float __cdecl ()	Returns UIParent's effective scale, or 1.0 without UIParent	verified	one	ui/uiscale#reading-the-scale	ui::luabind_48b_screen_getters
