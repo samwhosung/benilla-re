@@ -40,7 +40,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `dbcache`: `DBCache.cpp`, the WDB caches of creature, item, name and quest records, and the
   record files `CreatureStats.cpp`, `GameObjectStats.cpp`, `ItemName.cpp`, `ItemStats.cpp` and
   `NPCText.cpp`
-- `fastmath`: the fast logarithm after the spline file
 - `ffxeffects`: `FFXEffects.cpp`, the full-screen glow and death effects
 - `gxumath`: the Gxu matrix builders: perspective, orthographic, look-at and frustum corners
 - `loadingscreen`: `LoadingScreen.cpp`
