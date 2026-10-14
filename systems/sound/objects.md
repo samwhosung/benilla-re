@@ -131,16 +131,18 @@ keep 1, noCategory 1, bus 0, id, pos, −1, 1.0)`. `0x459120` reuses the last em
 The first server sound to fill an empty registry records the current SoundVolume and starts a ramp.
 Each frame the registry drops ended or cut-off sounds; while any remains the Sound factor ramps
 linearly from the recorded volume `V` to `V · 0.5` over 500 ms, and when the last one goes it ramps
-back from `V · 0.5` to the SoundVolume CVar over 3000 ms. Changes to SoundVolume are ignored while a
-slot is held or a ramp runs; the ramp's end applies the CVar.
+back from `V · 0.5` to the SoundVolume CVar over 3000 ms. Each ramp's end applies its target: `V ·
+0.5` for the ramp down, the CVar for the return. Changes to SoundVolume are ignored while a slot is
+held or a ramp runs, so only the return ramp picks them up.
 
-Addresses: `0x457960`, `0x457970`, `0x45798c`, `0x4579ba`, `0x4579d6`, `0x4579f7`, `0x457a0d`, `0x457a22`, `0x457a37`, `0x457a50`, `0x457a80`, `0x457a92`, `0x457aa4`, `0x457ac4`, `0x45908c`, `0x45909f`, `0x457430`, `0xb05f34`, `0xb05f88`, `0xb05fc0`, `0x7ffa24`
+Addresses: `0x457960`, `0x457970`, `0x45798c`, `0x457999`, `0x4579cb`, `0x4579e6`, `0x4579ba`, `0x4579d6`, `0x4579f7`, `0x457a0d`, `0x457a22`, `0x457a37`, `0x457a50`, `0x457a80`, `0x457a92`, `0x457aa4`, `0x457ac4`, `0x45908c`, `0x45909f`, `0x457430`, `0xb05f34`, `0xb05f88`, `0xb05fc0`, `0x7ffa24`
 Confidence: verified
 Proof: one
 Test: none
 
-The ramp start is `[0xb05fc0]` (`0x45909f`), or 1 when the clock reads 0. `0x457960(now)` returns
-the frame the registry empties after storing `now`; past the duration (`jle`) it applies the target
+The down ramp's start is the clock stored in `[0xb05fc0]` (`0x45909f`). `0x457960(now)` starts the
+return ramp on the frame the registry empties, storing `now`, or 1 when `now` is 0 (`0x457999`);
+past the duration (`jle`) it applies the target (`V · 0.5` at `0x4579cb`, the CVar at `0x4579e6`)
 and clears the start. The value is `start + (T − start) · (e / d)` with `e / d` from `fild`/`fidiv`
 in the register. `[0x7ffa24]` is 0.5. `0x457430` returns true for a non-null slot or a running ramp.
 At world teardown `0x457cc0` destroys every slot's sound and frees the registry.

@@ -3982,8 +3982,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458f60	7	ResumeInterfaceSounds		sound	primitive		Lowers the interface sound suppression count	verified	one	sound/interface#interface-sounds-by-name	
 0x458f70	19	GetSoundDefFileCount		sound	orchestration		Returns a sound id's file count, or 0	verified	one	sound/entries#definition-queries	
 0x458f90	32	PlaySoundAtPositionKept		sound	orchestration		Plays a sound id at a position on bus 0 and keeps its record	verified	one	sound/entries#playing-at-a-position	
-0x458fb0	260	PlayServerObjectSound		sound	orchestration		Plays the server's object sound at a unit, registering a looped one that follows it	verified	one	sound/objects#server-object-sounds	
-0x4590c0	24	IsSoundDefOneShot		sound	orchestration		Returns whether a definition's flag 0x2 is clear	verified	one	sound/objects#server-object-sounds	
+0x458fb0	260	PlayServerObjectSound		sound	orchestration		Plays the server's object sound at a unit, registering a 3D one that follows it	verified	one	sound/objects#server-object-sounds	
+0x4590c0	24	IsServerSoundRegistered		sound	orchestration		Returns whether a definition's flag 0x2 is clear, so a server sound takes the registered path	verified	one	sound/objects#server-object-sounds	
 0x4590e0	61	FindServerSoundSlot		sound	primitive		Returns whether a unit's GUID holds a server sound slot	verified	one	sound/objects#server-object-sounds	
 0x459120	198	AddServerSoundSlot		sound	primitive		Fills the last empty server sound slot, or grows the slot array, with a sound and GUID	verified	one	sound/objects#server-object-sounds	
 0x4591f0	54	HasServerSound		sound	orchestration		Returns whether a unit holds a server sound slot	verified	one	sound/objects#server-object-sounds	

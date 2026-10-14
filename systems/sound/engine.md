@@ -125,9 +125,11 @@ The tests at `0x7a529c` (flags & 2), `[0x87cf00] > 0` and `[0xcf55b0] | [0xcf560
 `0x7a5450` and `0x7a5490` run `Sound::DupeCheckFailed` first. `0x7a5620(bus, name, flags, count,
 held)` and `0x7a5680` hand a count of 1 to the one-shot opener; otherwise they call `0x7a54d0` with
 `count − 1` (`dec eax`), `0x7a5680` opening held and unpausing when its last byte is 0. With count 1
-`0x7a5680` passes that byte as the flags and drops the caller's (`0x7a56a6`); every caller passes 0.
-`[0xcf5600]` is read five times and written nowhere: no instruction stores to it and no dword in
-the image holds its address (control: `0xcf55b0`, two stores in `0x7a4860`).
+`0x7a5680` passes that byte as the flags and drops the caller's (`0x7a56a6`); every caller passes
+count 0, so the dropped flags never matter.
+`[0xcf5600]` is read five times and written nowhere: no instruction stores to it, and no dword in
+the image holds its address outside the five readers' operands (`0x7a52c9`, `0x7a53a1`,
+`0x7a5509`, `0x7a55f6`, `0x7a68ed`) (control: `0xcf55b0`, two stores in `0x7a4860`).
 
 ## Bus caps and duplicates
 
@@ -174,7 +176,8 @@ ftol(c · v · g · 255.0))` with `g` the distance gain `+0x78` and `c` the Musi
 0x2, else AmbienceVolume for 0x8, else none for 0x10, else SoundVolume. The product is in the x87
 register and `__ftol` truncates. `Sound::SetVolume(level)` passes `level · (1/255)`.
 `Sound::UpdateVolume` reapplies `+0x74`, or level 0 for a sound on the fade list. `0x7a5d70` reads
-a level back as the low byte of the float `v · 255 + 512.5`, which rounds and wraps above 1.0.
+a level back as the low byte of the float `v · 255 + 512.5`: it rounds, wraps once `v · 255 ≥ 255.5`
+(`v ≥ 1.00196`), and holds only while `v · 255 + 512.5 < 1024`.
 
 Addresses: `0x7a5dc0`, `0x7a5ded`, `0x7a5dfc`, `0x7a5e0b`, `0x7a5e1d`, `0x7a5e26`, `0x7a5da0`, `0x7a59e0`, `0x7a5d70`, `0x87cef4`, `0x87cef8`, `0x87cefc`, `0x7ffe58`
 Confidence: verified
@@ -283,21 +286,23 @@ Test: none
 ## Distance cutoff
 
 `Sound::SetCutoffDistanceSquared(c)` stores the distance `c` (not its square) for a 3D sound: 0
-removes the sound from the cutoff list; otherwise it joins it, and a looped sound already beyond
-`c` of the listener is paused under reason 3 and flagged cut off. Each frame, a listed sound beyond
-`c` is skipped if cut off, suspended and flagged if looped, left playing if flagged 0x4, and
-released otherwise. Within `c` its distance gain is `1 − min(max(d − 0.9c, 0), k) / k` with
-`k = c · 0.10000002`, recomputed until it first comes inside `0.9c`; a cut-off sound coming back is
-unpaused and resumed, restarting its stream.
+removes the sound from the cutoff list; otherwise it joins it, and a looped sound at or beyond `c`
+of the listener, or at a NaN distance, is paused under reason 3 and flagged cut off. Each frame, a
+listed sound strictly beyond `c` is skipped if cut off, suspended if looped, left playing if
+flagged 0x4, and released otherwise. In range its distance gain is `1 − min(max(d − 0.9c, 0), k) / k` with
+`k = c · 0.10000002`: recomputed every frame between `0.9c` and `c`, and once on entering `0.9c`,
+which leaving re-arms. A cut-off sound coming back resumes, restarting its stream.
 
-Addresses: `0x7a5ca0`, `0x7a5cca`, `0x7a5d1a`, `0x7a5d32`, `0x7a5000`, `0x7a5071`, `0x7a507e`, `0x7a508e`, `0x7a50ac`, `0x7a50d2`, `0x7a50e6`, `0x7a5102`, `0x7a510e`, `0x7a515d`, `0x7a516f`, `0x7a5196`, `0x7a6240`, `0x7a62b0`, `0x804588`, `0x81d728`
+Addresses: `0x7a5ca0`, `0x7a5cca`, `0x7a5d14`, `0x7a506e`, `0x7a5d1a`, `0x7a5d32`, `0x7a5000`, `0x7a5071`, `0x7a507e`, `0x7a508e`, `0x7a50ac`, `0x7a50d2`, `0x7a50e6`, `0x7a50f2`, `0x7a5102`, `0x7a510e`, `0x7a515d`, `0x7a516f`, `0x7a5196`, `0x7a6240`, `0x7a62b0`, `0x804588`, `0x81d728`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x7a5cca` `jnp` takes `c == 0` only. The out-of-range tests compare `d²` (summed in the register,
-stored as a float) with `c·c` in the register, `test ah,0x41`: equality counts as out of range in
-both places. `0x804588` is 0.9 and `0x81d728` 0.10000002. `de f1` at `0x7a515d` is `fdivrp`
+`0x7a5cca` `jnp` takes `c == 0` only. The pump stores `d²` as a float and compares it with `c·c` in
+the register (`0x7a506e`, `fld d²; fcompp`, `test ah,0x41; jne`): only `d² > c²` is out of range.
+The setter keeps `d²` in the register (`0x7a5d14`, `fld c; fmul c; fcompp`, `test ah,0x41; je`):
+only `c² > d²` is in range, so equality and NaN count as out. The `0.9c` test at `0x7a50f2` sets the
+near flag (`0x7a6930`); `0x7a6960` skips the gain while it is set. `0x804588` is 0.9 and `0x81d728` 0.10000002. `de f1` at `0x7a515d` is `fdivrp`
 computing `v / k`; the store at `0x7a516f` happens only when the value differs from `+0x78`, which
 sets the reapply flag. A cutoff of 0 is never listed, so its sound is never cut.
 
