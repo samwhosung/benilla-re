@@ -80,12 +80,12 @@ an item is cleared without a packet; one without the bits is kept.
 Addresses: `0x6e6f30`, `0x6e6f59`, `0x6e6f68`, `0x6e6f9d`, `0x6e6faa`, `0x6e6fd9`, `0x6e6fe8`, `0x6e6ff3`, `0x6e701a`, `0x5ecac0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::lowhp_warn_5ecac0_difftest`
 
 The only reference is the tail jump at `0x5ecb63`, the end of `0x5ecac0`. `0x6e6f59` and
 `0x6e6f9d` test 0x404; `0x6e6faa` ORs the saved guid's halves and skips the send when nonzero.
 `0x6e6fd9` puts `0x12f`, `0x6e6fe8` the saved spell, `0x6e6ff3` sends. `0x6e701a` to `0x6e7026`
-zero `0xcecaa8` and `0xcecb20` on both paths.
+zero `0xcecaa8` and `0xcecb20` on both paths. Slices: lowhp_warn_5ecac0_difftest `0x5ecac0`-`0x5ecb63`.
 
 ## Auto-repeat stop
 

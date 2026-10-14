@@ -260,12 +260,12 @@ arrives, through the object's world matrix.
 Addresses: `0x5f5670`, `0x5f56c4`, `0x5f571a`, `0x5f5760`, `0x47cf60`, `0xc4d808`, `0x80b0a0`, `0x7bca80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_interact_range`, `objectlayer::ot_transport_segment_offset0_difftest`, `objectlayer::ot_transport_segment_local_y_difftest`
 
 `0x5f5670` runs `0x5f3130`, sets the range to 3.0 (`0x80b0a0`), and from the last seat down
 compares `(dz² + dx²) + dy²` with 9.0 at `0xc4d808` (`0x5f571a`): below succeeds. `0x5f5760` calls
 `0x47cf60(matrix, count, +0x10)`, which starts at `y = −((count − 1.0)·0.5)`, a float, and for each
-seat stores `TransformPoint(matrix, (0, y, 0))`, then `y += 1.0`. The handler keeps five seats.
+seat stores `TransformPoint(matrix, (0, y, 0))`, then `y += 1.0`. The handler keeps five seats. Slices: diff_interact_range `0x5f56fa`-`0x5f5724`; ot_transport_segment_offset0_difftest `0x47cf66`-`0x47cfa2`; ot_transport_segment_local_y_difftest `0x47cf66`-`0x47cfe3`.
 
 ## Fishing nodes and meeting stones
 

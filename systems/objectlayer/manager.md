@@ -128,7 +128,7 @@ block it points to at `+0x1c68`.
 Addresses: `0x466e00`, `0x466e0c`, `0x466e2b`, `0x466e3f`, `0x466e55`, `0x466efb`, `0x466f2e`, `0x466f6c`, `0x466f80`, `0x466fa4`, `0x467040`, `0x466de0`, `0x47d540`, `0x463a60`, `0x463b00`, `0x463b30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::player_dynfield_base_difftest`
 
 `0x466e00(type, lo, hi)` compares the GUID with `0x468550` (`0x466e0c`): equal allocates
 `0x2550 + 4·0x47d540() + 0x3178` bytes (`0x466e2b` to `0x466e3f`; `0x467040` returns 0x2550), and

@@ -58,7 +58,7 @@ address, and a disassembly from the address decodes a normal function.
 Addresses: `0x465330`, `0x465970`, `0x4660a0`, `0x466af0`, `0x468240`, `0x5e1e70`, `0x5e59b0`, `0x5e5eb0`, `0x5e6140`, `0x5ebc90`, `0x5fd680`, `0x5fee80`, `0x601420`, `0x60dc30`, `0x60f510`, `0x6100a0`, `0x6142e0`, `0x61d790`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_proximity_smoothstep`
 
 The functions of the runs were found by sweeping each run from its first byte: decode from a start,
 walk the body by the rule in `symbols/README.md`, skip its jump and index tables and padding, and

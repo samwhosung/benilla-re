@@ -128,7 +128,7 @@ Slots 34 to 36 are PlayerSound_C.cpp's.
 Addresses: `0x80af78`, `0x5ec950`, `0x5ec8f0`, `0x5ec9e0`, `0x5eca40`, `0x5eca80`, `0x5ec430`, `0x5ec240`, `0x5ec350`, `0x5ec380`, `0x5ed570`, `0x5ea690`, `0x5eda20`, `0x5eda80`, `0x5ee150`, `0x5f1f70`, `0x5f1f80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::player_cast_time_difftest`, `objectlayer::player_cast_time_special_values_difftest`
 
 Read from the dwords of `0x80af78`. `0x5ec8f0` returns 0 while `+0xccc` and `+0x1d20` are both set;
 otherwise it runs `CGUnit_C::OnModelUpdate` and, for the active player, returns its result only
@@ -214,11 +214,11 @@ axis. Any other row is a sphere, inside unless `r² < d²`.
 Addresses: `0x5e2080`, `0x5e2110`, `0x5e22d0`, `0xc4d6ac`, `0xc4c264`, `0xc4c498`, `0xc4d73c`, `0xc4d3cc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::area_trigger_kind_5e22d0_difftest`, `objectlayer::area_trigger_sphere_5e22d0_difftest`
 
 `0x5e2080(map)` finds the map's first and end rows in the store `0xc0e02c` (0x28-byte rows sorted by
 `+4`), keeps them in `0xc4d6ac` and `0xc4c264`, the map in `0xc4c498`, clears the current trigger
 `0xc4d73c`, and arms `0x5e2110` through `0x401520(100)`. `0x5e2110` re-arms itself, needs health
 above 0, reloads on a map change, keeps the current trigger while `0x5e22d0` holds, else takes the
 first row that holds. `0x5e22d0` builds the box transform with `0x7bdc40`, `RotateMatrix` and the
-inverse `0x7bd700`; a NaN fails the box and passes the sphere.
+inverse `0x7bd700`; a NaN fails the box and passes the sphere. Slices: area_trigger_kind_5e22d0_difftest `0x5e22ea`-`0x5e22f5`; area_trigger_sphere_5e22d0_difftest `0x5e22fa`-`0x5e2331`.

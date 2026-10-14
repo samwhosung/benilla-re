@@ -24,7 +24,7 @@ the container's and 0x2f0 for the player's. Another player has only the first 48
 Addresses: `0x465a80`, `0x4656e0`, `0x465748`, `0x465760`, `0x465690`, `0x4656b4`, `0xb4143c`, `0x464260`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::updateblock_stride_difftest`, `objectlayer::descriptor_section_difftest`, `objectlayer::updatefield_count_difftest`
 
 `0x4656e0(object, section)` maps the type mask minus 3 through the byte table `0x465760` to the
 jump table `0x465748`: masks 3 and 7 go 0 → 1 → 2; 9 and 0x19 go 0 → 3 → 4; 0x21 gives 0 → 5,
@@ -43,7 +43,7 @@ it, times 4. The player's table has a part only the active player watches.
 Addresses: `0x47f2b0`, `0x47f2c0`, `0x47e5d0`, `0x47e5e0`, `0x47e090`, `0x47e0a0`, `0x47db10`, `0x47db20`, `0x47d540`, `0x47d550`, `0x47d560`, `0x47d000`, `0x47d010`, `0x47c9e0`, `0x47c9f0`, `0x47c4a0`, `0x47c4b0`, `0x466830`, `0x838f50`, `0x838f6c`, `0x838f90`, `0x839430`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::player_dynfield_base_difftest`, `objectlayer::field_dynamic_offset_difftest`
 
 `0x47f2b0` returns 3; `0x47e5d0` adds 0x20, `0x47e090` 0x48 to that, `0x47db10` adds 0xa7 to 3,
 `0x47d540` 0x3aa and `0x47d550` 0x127 to the unit's, `0x47d000` adds 5, `0x47c9e0` jumps to
@@ -84,7 +84,7 @@ matching removal. Item and corpse code are among the callers of the type registr
 Addresses: `0x468070`, `0x4680c0`, `0x468098`, `0x4680aa`, `0x468240`, `0x467e70`, `0x467e86`, `0x467ebe`, `0x467edd`, `0x467fb0`, `0x465850`, `0x46594c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::updatefield_addr_difftest`
 
 `0x468070(section, offset, length, callback, argument, kind)` gets the copy offset from `0x4680c0` and
 calls `0x467f00` on `0xb23310 + 12·(1282·section + offset/4)` (`0x468098` to `0x4680aa`);
@@ -106,7 +106,7 @@ in the copy, and the registered argument. Unchanged ranges call nothing.
 Addresses: `0x466590`, `0x466679`, `0x466686`, `0x4667a0`, `0x466816`, `0x465330`, `0x465429`, `0x46544a`, `0x465463`, `0x4654a4`, `0x465970`, `0x465a61`, `0x4657e0`, `0x465570`, `0x4655bb`, `0x4655c7`, `0x4655dc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::apply_update_fields_difftest`
 
 `0x466679` splices a field's lists into a pending list with `0x465970`, which sets each record's
 countdown `+0x18` to the dwords its range spans, `(length + (offset & 3) + 3) >> 2` (`0x465a61`);

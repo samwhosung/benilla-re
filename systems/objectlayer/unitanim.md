@@ -32,7 +32,7 @@ animation, else the idle one. `0x5fd9e0` plays the result when the model is load
 Addresses: `0x5fd8b0`, `0x5fd9e0`, `0x5fcff0`, `0x5fd050`, `0x5fd100`, `0x5fd260`, `0x5fd2e0`, `0x5fd360`, `0x5fd3f0`, `0x5fd460`, `0x5fd550`, `0x5fd770`, `0x5fd830`, `0x5fd658`, `0x5fcdc0`, `0x5fce04`, `0x5fce14`, `0x5fce30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::uh_fall_timer_anim_difftest`
 
 A resolver that does not claim returns `(mask & −2·bit) == 0`, so the chain also ends once no
 later bit is asked; the last tests its own bit. Moving (`0x5fd100`): swimming gives 42 Swim, 45 backward, 41 turning, 43 or
@@ -132,7 +132,7 @@ and `$TRD` play foley; `$SHL` and `$SHR` move a weapon between hand and sheath; 
 Addresses: `0x5ffbd0`, `0x607840`, `0x5fbf70`, `0x607920`, `0x5ffb10`, `0x5fc310`, `0x6002eb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::weapon_attach_offset_difftest`, `objectlayer::diff_transform_scale_copy`, `objectlayer::uh_placement_dist2_difftest`, `objectlayer::uh_placement_inner_range_difftest`, `objectlayer::uh_placement_ground_z_difftest`, `objectlayer::uh_placement_height_gate_difftest`
 
 The tags are dwords compared in a binary search from `0x5ffbec`; the miss path is `0x6002eb`.
 `0x5fbf70` skips a hovering, stealthed or ghost unit and one farther than 50 yards from the camera
@@ -142,7 +142,7 @@ sprays. The print's sizes come from `0x607920`: the mount's `+0xcc0` and scaled 
 `+0xcc8` when mounted, else `+0xc5c`, `+0xc64`, `+0xc68`, which `0x5fc310` copies from the
 `CreatureModelData` row. `0x5ffb10(hand, bit)` takes the hand's item and the sheathe state
 before or after the change by `+0xd58`, re-attaches the weapon and plays the sheathe sound
-0x458530. `0x607840` drops events whose position is not a number.
+0x458530. `0x607840` drops events whose position is not a number. Slices: uh_placement_dist2_difftest `0x5fbfdb`-`0x5fc015`; uh_placement_inner_range_difftest `0x5fc0b3`-`0x5fc0c1`; uh_placement_ground_z_difftest `0x5fc157`-`0x5fc197`; uh_placement_height_gate_difftest `0x5fc157`-`0x5fc172`.
 
 ## Emotes
 

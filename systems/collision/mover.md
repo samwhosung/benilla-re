@@ -328,14 +328,14 @@ for a NaN `d`; `+0xb0` to `fl(w · s · 0.5)`; `+0xb4` to `fl(h · s)`; then cal
 Addresses: `0x6174b0`, `0x617501`, `0x617460`, `0x631670`, `0x80c73c`, `0x80c740`, `0x60b270`, `0x617430`, `0x5fa550`
 Confidence: verified
 Proof: one
-Test: `collision::param_set_difftest`, `collision::turn_clamp_difftest`
+Test: `collision::param_set_difftest`, `collision::turn_clamp_difftest`, `objectlayer::box_dim_pf_even_difftest`
 
 `0x6174b6` loads 1.0 first; `fabs; fcomp 2⁻²²; test ah,5; jnp` keeps it below the bound, else
 `fld s; fdiv d`. `0x617501` stores `+0xb4`. `0x617484 fcomp [ebp+0x10]; test ah,0x41; jne`
 compares with `s`; the clamp is `0x61748e`. The pushes before `0x6174a2` put `b` first. `0x60b270`
 passes a model record's `+0x38` and `+0x3c` as `w` and `h`, the larger of the unit's scale and a
 display value as `s` (`0x60b315 fcomp [ebx+0x10]; test ah,5; jp`) and that value as `d`; it calls
-`0x617460` at `0x60b3b7` and skips `0x6174b0` (`0x60b3e4`) when that returns nonzero.
+`0x617460` at `0x60b3b7` and skips `0x6174b0` (`0x60b3e4`) when that returns nonzero. Slices: box_dim_pf_even_difftest `0x60b325`-`0x60b332`.
 
 ## Transport change
 

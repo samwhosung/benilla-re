@@ -66,14 +66,14 @@ default, and `CombatLogRangeCreature`, 30. Both comparisons are strict, and NaN 
 Addresses: `0x626630`, `0x626698`, `0x626705`, `0x626716`, `0x62674d`, `0x6267c7`, `0x6267e5`, `0x626810`, `0x8629e0`, `0x626d00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_two_endpoint_b`, `objectlayer::diff_two_endpoint_dist2`
 
 `0x626630` returns false when the target or the active player does not resolve (`0x626698`,
 `0x626705`); it also returns the two objects and the units among them. `0x62674d`: a missing source
 measures from the target. `0x6267c7 test ah,5; jnp` passes on `d² < r²` against the source's range,
 `0x6267e5` the same against the target's. `0x626810(class)` reads `0x8629e0`: eight-byte rows of a
 CVar name and its default; a null name gives 100000.0, an empty one or a class outside 0 to 9 gives
-0.0, a CVar its float `+0x24`. `0x626d00` registers the seven, then `CombatDeathLogRange` (60).
+0.0, a CVar its float `+0x24`. `0x626d00` registers the seven, then `CombatDeathLogRange` (60). Slices: diff_two_endpoint_b `0x62679c`-`0x6267e3`; diff_two_endpoint_dist2 `0x62679c`-`0x6267df`.
 
 ## The one-sided range test
 
@@ -85,7 +85,7 @@ and both of its callers pass 0. The other thirteen lookups are dropped.
 Addresses: `0x62b000`, `0x62b03f`, `0x62b0b0`, `0x62b0be`, `0x62c160`, `0x62c1a6`, `0x628010`, `0x628055`, `0x627de0`, `0x628ff0`, `0x62aac0`, `0x62b1b0`, `0x62b480`, `0x62b800`, `0x62c360`, `0x62cbe0`, `0x62d480`, `0x62d800`, `0x62d8d0`, `0x62d9f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_range_gate_visible`, `objectlayer::range_gate_clone_twins`, `objectlayer::diff_range_gate_dist2`, `objectlayer::diff_combat_gate_copied_twin`, `objectlayer::diff_combat_gate_dist2`
 
 In `0x62b000`, `0x62b03f` calls `CVar::Lookup` and the next instruction overwrites `ecx`; `eax` is
 not read. `0x62b0b0` loads `range·range` and `fcompp` against `d²`; `0x62b0be test ah,0x41; jne`
@@ -93,7 +93,7 @@ skips on `r² ≤ d²` and on NaN. The census is every dword equal to the name 0
 registration and fifteen lookups. `0x62c1a6` keeps the CVar's float `+0x24`; `0x628055` does only
 for a nonzero byte argument, and its callers `0x627de0` and `0x62dc10` push 0. `0x627de0`,
 `0x628ff0`, `0x62aac0`, `0x62b1b0`, `0x62b480`, `0x62b800`, `0x62c360`, `0x62cbe0`, `0x62d480`,
-`0x62d800`, `0x62d8d0` and `0x62d9f0` follow `0x62b000`'s pattern.
+`0x62d800`, `0x62d8d0` and `0x62d9f0` follow `0x62b000`'s pattern. Slices: diff_range_gate_visible `0x627f0c`-`0x627f38`; range_gate_clone_twins `0x627f0c`-`0x627f38` `0x629083`-`0x6290af` `0x62b090`-`0x62b0bc`; diff_range_gate_dist2 `0x627f0c`-`0x627f2f` `0x629083`-`0x6290a6` `0x62b090`-`0x62b0b3`; diff_combat_gate_copied_twin `0x62c434`-`0x62c47a`; diff_combat_gate_dist2 `0x62c434`-`0x62c473`.
 
 ## The chat type
 

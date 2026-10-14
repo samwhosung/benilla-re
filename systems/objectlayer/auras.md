@@ -84,7 +84,7 @@ creature whose type flags have 0x40.
 Addresses: `0x60d7c0`, `0x60dbfc`, `0x60dc20`, `0x60d80a`, `0x60d840`, `0x60d8df`, `0x60d972`, `0x60d9e8`, `0x60da55`, `0x60da79`, `0x60db7e`, `0x60caa0`, `0x60caf0`, `0x60cb50`, `0x60cbf0`, `0x60cd30`, `0x60d120`, `0x60d150`, `0x60d180`, `0x5ff2f0`, `0x5ff320`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::recompute_render_alpha_difftest`, `objectlayer::color_fade_t_difftest`, `objectlayer::fade_model_rgb_difftest`, `objectlayer::u5_duration_field_difftest`
 
 The switch is `0x60dc20` into `0x60dbfc`. Kind 8 (`0x60d80a`) stores `p0 | p3 << 24` at `+0xd1c`
 and `p2` at `+0xd20`. Kind 1 (`0x60d840`) replaces the spell's effect on the list `+0xce0` with
@@ -94,7 +94,7 @@ kind 14 (`0x60d972`) puts an alpha `p0` effect on `+0xb50` when 0 ≤ `p0` < 1 a
 6 calls `0x6ec910`; kinds 0 and 12 call `0x6ecb90` with the channel target or the chain targets
 `+0xd4c`. `0x60cb50` sets the model tint from `0x60cbf0`'s pulse or the first `+0xce0` colour.
 `0x60cbf0` holds the colour, then blends it out over `+0xd00` ms. `0x60cd30` ends a fade.
-`0x60d120`, `0x60d150`, `0x5ff2f0`, `0x5ff320` release the alpha and tint effects.
+`0x60d120`, `0x60d150`, `0x5ff2f0`, `0x5ff320` release the alpha and tint effects. Slices: color_fade_t_difftest `0x60cc42`-`0x60cc65`; u5_duration_field_difftest `0x60d9e8`-`0x60d9ff`.
 
 ## Channels
 
@@ -130,7 +130,7 @@ weapon's own visual. `0x60d040(spell, end, stop)` clears the precast spell `+0xc
 Addresses: `0x60d450`, `0x60d040`, `0x60d020`, `0x60fc50`, `0x60d670`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::anim_timer_rate_difftest`
 
 `0x60d450` calls `0x6ec1e0`, then for Attributes 0x2 reads slot 40 of hand 2, its
 `ItemDisplayInfo` `+0x28` and that `SpellVisual`, copying its `+0x4`, `+0x8`, `+0xc`, `+0x18`
@@ -139,7 +139,7 @@ only when `+0xc8c` holds the spell; with `stop` it ends a tracking channel's aut
 `0x60d670` (slot 45) is a cast time: the `SpellCastTimes` base plus per-level times (slot 42's
 level over 5 less the spell level `+0x70`), at least the minimum; times `UNIT_MOD_CAST_SPEED`
 (field 145) unless Attributes has 0x30 or it is 1; 0x7fffffff for Attributes 0x2; 0 if not
-positive.
+positive. Slices: anim_timer_rate_difftest `0x60d70b`-`0x60d738`.
 
 ## Missiles
 

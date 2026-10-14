@@ -71,7 +71,7 @@ flagged dead. Plates come from a free list and stay sorted by distance from the 
 Addresses: `0x60f600`, `0x60f6f3`, `0x60f72f`, `0x60f750`, `0x60f757`, `0x60f75a`, `0x605570`, `0x60f7b8`, `0x60f7f0`, `0x6086e0`, `0x6087f0`, `0x608870`, `0x6089a0`, `0x608a10`, `0x608a90`, `0x608ce0`, `0x60f830`, `0x60f890`, `0x6054f0`, `0x605510`, `0x605530`, `0x605550`, `0x6122e0`, `0x604ef0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::dist2_to_anchor_difftest`, `objectlayer::follow_anchor_lift_difftest`, `objectlayer::nameplate_pos_changed_difftest`, `objectlayer::follow_dist_proceed_difftest`
 
 Friendly is cooperative and not attackable for a player, not attackable for others. At `0x60f6f3`
 bit 0x1 of `0xc4da34` admits enemies and bit 0x8 friends (`0x6054f0`, `0x605510`); a created,
@@ -84,7 +84,7 @@ list `0xc4d924` (`0x608870`, keyed by `0x6089a0` from `0xc4da50`) when it moves 
 back. `0x608ce0` lays them out, `0x60f830` shows or hides them, `0x60f890` releases all.
 `0x605530` and `0x605550` set bits 0x2 and 0x4. `0x6122e0` flashes a plate red for 5 seconds
 (0x7cba70); `0x608a90` sets its icon from 0x4bb190. `0x604ef0` frees the pool and clears
-`0xc4d908`.
+`0xc4d908`. Slices: follow_dist_proceed_difftest `0x60f798`-`0x60f7c2`.
 
 ## Chat bubbles
 
@@ -95,12 +95,12 @@ within 20 yards. A new bubble replaces the old one.
 Addresses: `0x608ac0`, `0x608b94`, `0x608c00`, `0x608c20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::bubble_in_range_difftest`
 
 `0x608b94` compares the squared distance with 400 (0x806798). The colour comes from 0x49e990 by
 kind; the bubble is made by 0x4b1870 on the world frame 0xb4b2bc and filled by 0x4b1600 with the
 GUID, text and colour into `+0xe64`. `0x608c00` releases it. `0x608c20`, which nothing reaches,
-returns the position raised by animation 0's height plus 0.7.
+returns the position raised by animation 0's height plus 0.7. Slices: bubble_in_range_difftest `0x608b74`-`0x608ba5`.
 
 ## Quest markers
 
@@ -113,7 +113,7 @@ holds open.
 Addresses: `0x607380`, `0x6073f0`, `0x607440`, `0x607480`, `0x6074c0`, `0x607570`, `0x6076c0`, `0x603a00`, `0x5fa430`, `0x60b420`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::glow_inv_len_difftest`
 
 The reaction must top 1 (0x6061e0); `UNIT_NPC_FLAGS` bit 1 calls 0x5eb030 and bit 3 0x5eb170,
 which sends a message. The status handler 0x5dc9f0 reads a GUID and a u32 and calls `0x607440`
@@ -163,7 +163,7 @@ display's `NPCSounds` row. Three server messages play unit sounds.
 Addresses: `0x60c270`, `0x60c32b`, `0x60c3b0`, `0x6056e0`, `0x604060`, `0x6040c0`, `0x604140`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::pet_dismiss_pos_lift_difftest`
 
 Both skip players. Reactions must reach 3 both ways (0x6061e0). At `0x60c32b` a GUID other than
 `0xc4d908` zeroes the count `0xc4d970`; 0x623910 picks a sound from the count, 0x458f90 plays it
@@ -172,4 +172,4 @@ plays `+0x4` of the `NPCSounds` row (0xc0da6c, by display `+0x2c`) when `first` 
 `+0x8`. Opcode 0x13c (`0x604060`: GUID, u32) passes the u32 to `0x6056e0`: 0 calls slot 34 with
 8, 2 calls 0x623a40(0). Opcode 0x324 (`0x6040c0`: GUID, u32 0 or 1) calls 0x623a40(1 or 2).
 Opcode 0x325 (`0x604140`: u32 model data id, x, y, z) plays the `+0x74` sound of that model's
-`CreatureSoundData` row one yard above the point.
+`CreatureSoundData` row one yard above the point. Slices: pet_dismiss_pos_lift_difftest `0x6041cb`-`0x6041dc`.

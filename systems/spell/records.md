@@ -236,7 +236,7 @@ applier with op 5 on `max`. A missing range row skips to the item step with both
 Addresses: `0x6e3648`, `0x6e3658`, `0x6e366f`, `0x6e3683`, `0x6e369c`, `0x811914`, `0x6e36aa`, `0x6e36c1`, `0x6e3720`, `0x6e3729`, `0x6e3746`, `0x5fc350`, `0x55ba30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_cast_time_elapsed`
 
 `0x6e3658` tests `0x200d` on both units; `0x6e366f` and `0x6e367a` call `0x5fc350`, which returns 0
 when twice the unit's float at `+0xa30` is below the current speed `0x7c4c90` gives (`fcompp`,

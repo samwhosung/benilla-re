@@ -50,7 +50,7 @@ Bag_C.cpp's searches over an inventory list:
 Addresses: `0x622420`, `0x622515`, `0x62252e`, `0x6223f0`, `0x6222b0`, `0x622130`, `0x622180`, `0x622270`, `0x6222e0`, `0x6223a0`, `0x6221e0`, `0x6225d0`, `0x6228a0`, `0x622910`, `0x6229d0`, `0xbdd038`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f2_durability_percent_difftest`
 
 `0x622515` tests mask 0x20 and `0x62251a` the charges `[+0x114]+0x28`; a zero-charge item that is no
 bag (slot 4 null) or with mask 0x10 is skipped (`0x62252e`). The callbacks are `0x622160` (stack
@@ -58,7 +58,7 @@ counts), `0x6221b0` (charges), `0x622210` (the lock bit), `0x6222a0` (entry), `0
 `0x6223d0` (bag family). `0x6228a0` tests the banker GUID `0xbdd038` for slots 39 to 68. `0x622910`
 skips 0 to 18, 39 to 112 of the player's list and recurses into bags; a container's list counts
 every empty slot. `0x6229d0` skips items with `ITEM_FIELD_FLAGS` bit 0x8, divides with `fidiv` and
-multiplies by 100.0 before `__ftol`, and returns 0 for a zero max.
+multiplies by 100.0 before `__ftol`, and returns 0 for a zero max. Slices: f2_durability_percent_difftest `0x622a35`-`0x622a46`.
 
 ## Inventory results
 

@@ -176,7 +176,7 @@ constructor run with the time and the movement block; it then joins the manager'
 Addresses: `0x4660a0`, `0x46612d`, `0x46613c`, `0x46614c`, `0x466350`, `0x46638c`, `0x466498`, `0x466582`, `0x466265`, `0x466279`, `0x46628e`, `0x466320`, `0x46629f`, `0x4662c7`, `0x466e00`, `0x466c70`, `0x613880`, `0x466a20`, `0x466bc0`, `0x44cb20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::zero_descriptor_block_difftest`
 
 `0x46612d` calls `0x464530`; found, `0x46613c` calls `0x466350` and, when the lookup reactivated
 it, slot 2 (`0x46614c`). `0x46638c` tests bit 3 of the type mask (a unit); `0x466498` passes the
@@ -199,7 +199,7 @@ stays in the packet, out of step with the reader.
 Addresses: `0x466590`, `0x4665a7`, `0x4665c4`, `0x4665d5`, `0x466606`, `0x465a80`, `0x4666bb`, `0x4666e3`, `0x465550`, `0x465bb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::apply_update_fields_difftest`, `objectlayer::updatemask_test_bit_difftest`, `objectlayer::updatefield_count_difftest`
 
 `0x4665a7` reads `n` and `0x4665c4` the words into a local array; `cmp edi,0x29` at `0x4665d5`
 zero-fills up to 41 (`Mask words past 41`). `0x466606` gets the count from `0x465a80`, which maps the type mask
@@ -219,7 +219,7 @@ follow through that word's value.
 Addresses: `0x466590`, `0x4665a4`, `0x4665b5`, `0x4665c0`, `0x4665d1`, `0x4666e0`, `0x465bb0`, `0x465bc0`, `0x465bd1`, `0x465bd7`, `0x465330`, `0x465395`, `0x4653b4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::apply_update_fields_difftest`
 
 `0x466590` reserves `0xc4` bytes, saves the store at `[ebp-0x1c]` (`0x4665a4`) and reads the words
 from `[ebp-0xc4]` (`0x4665b5`), so 41 fit below `[ebp-0x20]`; the loop's one bound is `cmp edi,ecx`
@@ -239,7 +239,7 @@ manager does not know, live or released, is skipped.
 Addresses: `0x467160`, `0x4671e2`, `0x46720f`, `0x46721f`, `0x4666f0`, `0x466a00`, `0x6142e0`, `0x46664b`, `0x466686`, `0x4666cf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::apply_update_fields_difftest`
 
 `0x467160` reads the GUID, applies the top-nibble test and looks the object up with `0x464530`
 (`0x4671e2`); none skips with `0x465bb0`. `0x46720f` calls `0x466590(object, store, guid, 0, 0)`,

@@ -63,7 +63,7 @@ target play 24 ShieldBlock or 30 Dodge so that half the sequence has run at impa
 Addresses: `0x61ceb0`, `0x61cee4`, `0x61cf13`, `0x61cfae`, `0x61cfda`, `0x61cffa`, `0x61d0c3`, `0x61d02e`, `0x61d0b0`, `0x61d10e`, `0x61d18e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::missile_traveltime_difftest`, `objectlayer::missile_traveltime_special_values_difftest`
 
 `0x61cee4`: a blocked missile takes attachment 0. `0x61cf13`: for a target unit the attachment is
 kept when the target's model has it, else 15, else 19, else −1; no target gives −1. The distance is
@@ -76,7 +76,7 @@ lead is `ftol(t·1000)` minus half of `GetSequenceInfo(anim)` `+4`, the sequence
 lead goes to `+0x74`, otherwise the unit plays the animation at once when it resolves to its own
 sequence (`+0x34` nonzero, `0x61d0e8`). `0x61d0fa`: a `t` of exactly 0 plays Stand. `0x61d18e`:
 for a sequence with flag 0x1 the speed is `length·0.001/t`, else 1.0, through
-`CM2Model::PlayAnimation(-1, 144, 0, 0, speed, 1, 1)`.
+`CM2Model::PlayAnimation(-1, 144, 0, 0, speed, 1, 1)`. Slices: missile_traveltime_difftest, missile_traveltime_special_values_difftest `0x61cf9a`-`0x61d0e3`.
 
 ## Outcome flags
 
@@ -106,19 +106,19 @@ it aims at the point itself.
 Addresses: `0x61d230`, `0x61d2c1`, `0x61d33a`, `0x61d36b`, `0x61d39f`, `0x61d3d5`, `0x61d41b`, `0x61d4cc`, `0x61d51c`, `0x61d589`, `0x61d5ef`, `0x61d61e`, `0x61d63b`, `0x61d6ad`, `0x61eec0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::missile_scale_vec_difftest`, `objectlayer::missile_target_intercept_difftest`, `objectlayer::missile_target_intercept_special_values_difftest`, `objectlayer::missile_target_intercept_curved_difftest`, `objectlayer::missile_target_intercept_curved_special_values_difftest`
 
 The target resolves with mask 1. `0x61d2c1` multiplies by 0.75 (0x8012cc). Missed: `d` = aim −
 position; `|d|` below 2^-22, or a unit `z` within 2^-22 of 1, returns unchanged. `0x61d36b`: the
 path `V = u·(|d| + s·0.5)`. `0x61d39f`: the axis `(−dx·dz, −dy·dz, dx² + dy²)`. `0x61d3d5`: a
 `CRandom::uint32` draw `r` gives `f` in [1, 2) from its low 23 bits, then `2 − f` for `r < 0` and
 `f − 2` otherwise; `0x61d41b` takes `sin(f·π/2)·0.0523599` (π/60). The destination is position
-plus `BuildAxisRotation(axis, angle)` applied to `V`. A target that is not a unit (`0x61d4cc`) is
+plus `BuildAxisRotation(axis, angle)` applied to `V`. A non-unit target (`0x61d4cc`) is
 aimed at directly. `0x61d51c`: `0x61eec0` returns the mover's `+0x84` times its `+0x5c` direction;
-`speed² < |v|²` normalizes `v` (when `|v|` is at least 2^-22) and scales it to `s`; `0x61d589`
+`speed² < |v|²` normalizes `v` (for `|v|` ≥ 2^-22) and scales it to `s`; `0x61d589`
 halves it. `0x61d61e` gives up on a discriminant below 0 and `0x61d624` on `a²` below 1e-5. `t₁ = (−b − √D)·(0.5/a)`, `t₂ = (√D − b)·(0.5/a)`, each kept when above 0 and below the
 best so far, from `FLT_MAX`; `0x61d6ad` keeps the aim point while the best is still `FLT_MAX`. The lead point rounds `v·t` to a
-float in x and y before adding, while z adds the unrounded product (`0x61d6e5` to `0x61d702`).
+float in x and y before adding, while z adds the unrounded product (`0x61d6e5` to `0x61d702`). Slices run `0x61d2da`-`0x61d716`.
 
 ## Flight each frame
 
@@ -132,7 +132,7 @@ its up axis in the vertical plane.
 Addresses: `0x61ce00`, `0x61e2a0`, `0x61e2b9`, `0x61e2e9`, `0x61e30c`, `0x61e3e8`, `0x61e3f7`, `0x61e45c`, `0x61e4e0`, `0x61e56b`, `0x61e655`, `0x61e753`, `0x61e78f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::missile_advance_difftest`, `objectlayer::missile_advance_special_values_difftest`
 
 The world-object callback 0x4814c0, which `0x61e2a0` installs (`0x61e661`), calls `0x61ce00` with
 the float at `[0xb4b2bc]+0x3f4` and its visibility argument. `0x61e2b9 test ah,0x44; jnp` returns at
@@ -141,7 +141,7 @@ once only for a speed equal to 0. `0x61e2e9`: a live target is one that resolves
 |d|²`, so a NaN keeps flying. `0x61e4e0`: the side axis is `(−uy, ux, 0)`; at or below 1e-5
 squared (`0x61e56b`) the axes become (0, 0, 1), (1, 0, 0) and (0, 1, 0); otherwise up is `u × s`.
 `0x61e655` creates the world object once through `CWorld::CreateLightObjectB`, with the model's
-box. `0x61e753` moves the sound with velocity `u·speed`; `0x61e78f` starts it once from `+0x40`.
+box. `0x61e753` moves the sound with velocity `u·speed`; `0x61e78f` starts it once from `+0x40`. Slices: missile_advance_difftest, missile_advance_special_values_difftest `0x61e2ac`-`0x61e4de`.
 
 ## Fading out
 
@@ -152,7 +152,7 @@ with `a` the remaining distance over `r`, clamped to [0, 1].
 Addresses: `0x61d790`, `0x61d7b9`, `0x61d7e5`, `0x61d7f7`, `0x61d81d`, `0x61d843`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_proximity_smoothstep`
 
 `0x61d7b9` picks 0.5 for flag 0x8, else 0.7 (0x80c85c). `0x61d7e5` acts only when the squared
 distance is below `r²`; equal, larger or NaN leave the alpha alone. `0x61d7f7` sets alpha 0 below 0,
@@ -226,7 +226,7 @@ speed with 198 Deflect; a reflection turns it back at its caster. A miss frees i
 Addresses: `0x61dd50`, `0x61dd75`, `0x61dd85`, `0x61ddd1`, `0x61ddf7`, `0x61de53`, `0x61de61`, `0x61df00`, `0x61df13`, `0x61df9a`, `0x61e050`, `0x61e109`, `0x61e15f`, `0x61e17b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::b3_deflect_length`, `objectlayer::b3_deflect_gates`, `objectlayer::b3_deflect_gates_special_values`, `objectlayer::b3_deflect_random_angle`, `objectlayer::b3_deflect_transform_and_move`, `objectlayer::b3_deflect_full`
 
 `0x61dd75` skips the report without a target, `0x61dd85` once 0x100 is set; `0x61ddd1` writes the
 line with `+0x48` even without a record. `0x61ddf7` tests 0x58; the Dodge plays when the unit's
@@ -236,7 +236,7 @@ freed when `|v|` or `||v| − |vz||` is below 2^-22; two draws give angles `f·�
 aiming; `w` is `(vy, −vx, 0)` turned about `v` by the first, and `v` is turned about `w` by the
 second (`0x61e050`). `0x61e109` halves the speed and sets the destination `0.7·speed` along `v`;
 `0x61e15f` swaps 0x40 for 0x8. `0x61e17b`: a reflection copies the caster GUID over the target,
-clears 0x180, takes `+0x4c` as its code (0 sets the hit flag) and relaunches from its position.
+clears 0x180, takes `+0x4c` as its code (0 sets the hit flag) and relaunches from its position. Slices: b3_deflect_length `0x61df13`-`0x61df48`; b3_deflect_gates, b3_deflect_gates_special_values `0x61df13`-`0x61df70`; b3_deflect_random_angle `0x61df9a`-`0x61dfe2`; b3_deflect_transform_and_move `0x61e0a2`-`0x61e158`; b3_deflect_full `0x61df13`-`0x61e158`.
 
 ## Stuck missiles
 
@@ -248,7 +248,7 @@ model by model, once no emitter of the model is still emitting or holds a live p
 Addresses: `0x61e7c0`, `0x61e7da`, `0x61e806`, `0x61e830`, `0x61e84c`, `0x61e88a`, `0x61e8c7`, `0x61e930`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_arrival_scale`
 
 `0x61e7da` returns 0 when the unit's model lacks `+0x3c`. The insertion walks `+0xb0` from its
 head while `node+0x50 − expiry` is negative (`0x61e806`). `0x61e84c` attaches the model; the world
@@ -256,4 +256,4 @@ object is released. The pose is `inverse(attachment matrix, scale)·base` (`0x61
 `+0x94`·`+0x90` times the mount's `+0x9c` or the unit's `+0x98`. Flag 0x2 is set. Object slot 14,
 `0x614a90`, frees the head of `+0xb0` while `now − expiry` is not negative; `0x61e930`, from the
 world frame, frees each impact-list missile with no model or `CM2Model::HasLiveParticles` false
-(`effects`, Stopping and draining).
+(`effects`, Stopping and draining). Slices: diff_arrival_scale `0x61e882`-`0x61e8a5`.

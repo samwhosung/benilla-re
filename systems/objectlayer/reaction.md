@@ -27,7 +27,7 @@ decide.
 Addresses: `0x6061e0`, `0x606205`, `0x606217`, `0x60622f`, `0x60625d`, `0x60626b`, `0x606296`, `0x6062b0`, `0x4918d0`, `0x4e7f70`, `0x6062dd`, `0x606313`, `0x60631c`, `0x60632c`, `0x60634f`, `0x60635f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::unit_reaction_league_of_arathor_emissary`, `objectlayer::unit_reaction_tracks_the_reputation_ladder`, `objectlayer::unit_reaction_reputation_branch_is_gated`, `objectlayer::unit_reaction_player_to_npc_is_atwar_not_rank`, `objectlayer::unit_reaction_persuaded_bump_and_clamp`, `objectlayer::unit_reaction_self_is_friendly`
 
 `0x606200` compares the two pointers and returns 4. `0x606217` and `0x60622f` test bit 3 of
 `[[A+0x110]+0xa0]` and of B's. `0x606170` gives each controlling player; a zero one jumps to
@@ -49,7 +49,7 @@ Only when B's faction has no slot, or A is not the player's, do the templates de
 Addresses: `0x606372`, `0x60638c`, `0x6063a4`, `0x6063b2`, `0x6063e0`, `0x6063e9`, `0x606400`, `0x60640c`, `0x606411`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::unit_reaction_league_of_arathor_emissary`, `objectlayer::unit_reaction_tracks_the_reputation_ladder`, `objectlayer::unit_reaction_reputation_branch_is_gated`, `objectlayer::unit_reaction_player_to_npc_is_atwar_not_rank`, `objectlayer::unit_reaction_persuaded_bump_and_clamp`, `objectlayer::unit_reaction_self_is_friendly`
 
 `0x606372` needs bit 3 on A and `0x606170(A)` equal to `0x468550` (`0x6063a4`). B's template id
 `[[B+0x110]+0x74]` indexes `0xc0dd3c` (`0x6063b2` to `0x6063d3`); `0x4d6490(faction)` at
@@ -69,7 +69,7 @@ template and caps the result at 6; when A is persuaded by B (field 18 holds B's 
 Addresses: `0x606530`, `0x4d63a0`, `0x4d6490`, `0x4d61b0`, `0x606576`, `0x606588`, `0x6065b0`, `0x6065be`, `0x6065d2`, `0x6065e6`, `0x6065fe`, `0x606609`, `0x606615`, `0x606627`, `0x606426`, `0x606432`, `0x606439`, `0x606449`, `0x606464`, `0x606497`, `0x6064a0`, `0x6064aa`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::unit_reaction_league_of_arathor_emissary`, `objectlayer::unit_reaction_tracks_the_reputation_ladder`, `objectlayer::unit_reaction_reputation_branch_is_gated`, `objectlayer::unit_reaction_player_to_npc_is_atwar_not_rank`, `objectlayer::unit_reaction_persuaded_bump_and_clamp`, `objectlayer::unit_reaction_self_is_friendly`
 
 `0x606576` and `0x60657f` test both rows. `0x606588` tests B's bit 3, `0x6065b0` compares B's
 controlling player with `0x468550`. `0x6065be` tests `[row+0x8]` for `0x1000` and `0x6065d2` bit
@@ -92,7 +92,7 @@ zero.
 Addresses: `0x606640`, `0x606649`, `0x606662`, `0x606679`, `0x606693`, `0x6066aa`, `0x6066c6`, `0x6066df`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::faction_template_reaction_truth_table`, `objectlayer::faction_template_reaction_list_mechanics`, `objectlayer::faction_template_reaction_fuzz`, `objectlayer::unit_reaction_league_of_arathor_emissary`
 
 `0x606649` tests `[A+0x14] & [B+0xc]`, the loop at `0x606662` compares `[A+0x18..]` with
 `[B+0x4]`, `0x606679` tests `[A+0x10] & [B+0xc]`, the loop at `0x606693` walks `[A+0x28..]`,

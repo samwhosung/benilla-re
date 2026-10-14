@@ -157,7 +157,7 @@ is skipped when it is less than 2^−22 from 1.
 Addresses: `0x5ee150`, `0x5ee1fb`, `0x5ee221`, `0x5ee24c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::player_cast_time_difftest`, `objectlayer::player_cast_time_special_values_difftest`
 
 `0x5ee1fb` calls `ApplySpellModifierInt(row, &t, 10)`. `0x5ee221` compares `|m − 1|` with
 `s_layoutEpsilon` (2^−22) with `test ah,5; jnp` and skips on less only; the product is stored f32
@@ -177,12 +177,12 @@ that starts with the target at or beyond four times the melee reach.
 Addresses: `0x5ecb70`, `0x5ecac0`, `0x5ea800`, `0x624370`, `0x80b058`, `0x80a1e8`, `0x80306c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::reach_gate_5ea800_difftest`, `objectlayer::lowhp_warn_5ecac0_difftest`
 
 The start needs `UNIT_FIELD_FLAGS` without 0x20000, `s_playerHasControl`, and a target with health
 or dynamic flag 0x20. It sends when `+0xc54` is set or neither `+0xc48` nor `+0xc50` is, storing the
 GUID in `+0xc48`; a cast with `+0x54` bit 0x8 returns before. The reach is `max(r_player + r_target
-+ 4/3, 5) · 4` from `UNIT_FIELD_COMBATREACH`; `test ah,0x41; jp` stops on `r² ≤ d²` and keeps NaN.
++ 4/3, 5) · 4` from `UNIT_FIELD_COMBATREACH`; `test ah,0x41; jp` stops on `r² ≤ d²` and keeps NaN. Slices: lowhp_warn_5ecac0_difftest `0x5ecac0`-`0x5ecb63`.
 
 ## Sheathing
 

@@ -319,7 +319,7 @@ gets `0x5ecac0`, and an in-flight spell equal to it is popped.
 Addresses: `0x6e5877`, `0x6e5889`, `0x6e5898`, `0x6e58a2`, `0x6e58bd`, `0x6e58c2`, `0x6e58f3`, `0x6e58fb`, `0x6e591c`, `0x6e5922`, `0x6e5930`, `0x6e593b`, `0x6e5947`, `0x6e594c`, `0x6e5952`, `0x6e5957`, `0x6e5972`, `0x6e5976`, `0x6e5989`, `0xceac30`, `0x611cf0`, `0x5ecac0`, `0x6e2de0`, `0x6ec220`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::lowhp_warn_5ecac0_difftest`
 
 `0x6e58c2` reads unit field `+0x10`, else `+0x18`, and `0x6e58f3` sets `edx` 1 only when it equals the
 active player; `0x6e58fb` is `0x6e2de0(spell, edx)` (`cooldowns`). `0x6e591c test [edi+0x20],0x20`,
@@ -327,7 +327,7 @@ active player; `0x6e58fb` is `0x6e2de0(spell, edx)` (`cooldowns`). `0x6e591c tes
 loads the event id `0x1b3`, `0x6e594c` stores the spell and `0x6e5952` signals. `0x6e5957` to `0x6e5972` compare the caster's guid with
 the active player; `0x6e5976` calls `0x5ecac0`, which sends `CMSG_ATTACKSTOP` when attacking and
 ends in `0x6e6f30`. The pop is `0x6e4ad0(0, 0)` (`0x6e58bd`, `0x6e5989`). The attempt sets
-`0xcecaa4` only for an active-player caster, so the first pop serves a pet's cast.
+`0xcecaa4` only for an active-player caster, so the first pop serves a pet's cast. Slices: lowhp_warn_5ecac0_difftest `0x5ecac0`-`0x5ecb63`.
 
 ## Cast entries
 

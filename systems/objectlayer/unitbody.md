@@ -19,7 +19,7 @@ sway to the auto-move or to the facing and pitch.
 Addresses: `0x60a7f0`, `0x60a814`, `0x60a8dc`, `0x60a93e`, `0x60a9bc`, `0x60aa0e`, `0x60aab7`, `0x60ab0a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::u5_mount_level_fraction_difftest`
 
 `0x60a814` calls `0x60c9b0` when missiles hang on `+0xac` 2000 ms after `+0xa8`. With a loaded
 model each of the sounds `+0xb1c`, `+0xb20`, `+0xb28` stops when 0x7a5870 returns true or
@@ -31,7 +31,7 @@ is `min(+0x1d of the player block, 100)/100` and the sway `0x60ab20(time, drunke
 auto-moving, both go to `0x6106b0` (`0x60aa0e`). Otherwise, with drunkenness above 0, moving
 (flags 0xf) and input ready, `0x60aab7` sets the facing to facing plus sway wrapped into 0 to 2π
 (skipped while turning unless 0x5151b0 allows it); a swimmer (0x200000) not pitching by keys
-(0xc0) gets pitch + 4·sway, clamped to ±π/2 (`0x60ab0a`).
+(0xc0) gets pitch + 4·sway, clamped to ±π/2 (`0x60ab0a`). Slices: u5_mount_level_fraction_difftest `0x60a9bc`-`0x60a9de`.
 
 ## The per-frame update
 
@@ -64,7 +64,7 @@ remaining gap, 45° each at most. An idle turning body plays the shuffle animati
 Addresses: `0x608075`, `0x6080d6`, `0x60814d`, `0x6081c8`, `0x608293`, `0x608351`, `0x6083e6`, `0x6084d3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::u4_lean_smooth_difftest`
 
 Dead or swimming (movement flags 0x200000), the body takes the display at once (`0x608075`).
 Strafing (0xc) aims at the display plus 90°, or 45° when also moving forward or back, the sign by
@@ -76,7 +76,7 @@ auto-moving, at most π/4; with bone 6 (bit 0x100) `0x608351` turns it by what r
 π/4. At `0x6083e6` bits 0x800 and 0x1000 clear; a unit not moving, falling, swimming or looting,
 standing, with no slot 41 state, sets 0x800 or 0x1000 by the turn's sign; `0x6084d3` re-picks the
 animation through `0x5fce30` when the wanted shuffle, 11 for left and 12 for right, or none,
-differs from the playing one.
+differs from the playing one. Slices: u4_lean_smooth_difftest `0x60809a`-`0x6080f6`.
 
 ## Low health and bleeding
 
@@ -104,7 +104,7 @@ bit 0. The model event `$BTH` turns them into a breath effect: drunk, bubbles or
 Addresses: `0x607710`, `0x60777b`, `0x6077b8`, `0x5fffad`, `0x5fffe7`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::attack_range_in_difftest`
 
 `0x607710` clears 0x60, queries the liquid at the node (0x670630), and compares the surface minus
 the position's z with 5 (0x80c44c) plus the height `+0x90`·`+0xbc` (`0x60777b`). Else
@@ -148,7 +148,7 @@ just under a surface.
 Addresses: `0x5fac70`, `0x5fa730`, `0x60df70`, `0x60dff0`, `0x605650`, `0x60a740`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_negate_z`, `objectlayer::occlusion_z_gate_difftest`, `objectlayer::u4_airborne_reach_gate_difftest`
 
 `0x5fa730`, and `CGUnit_C::PostInit` at `0x5fba95`, store at `+0xc60` the world entity's `+0xdc`
 through `0x6706d0`, or −1: the id `AttachEntityToGround` takes from the WMO face or the ground
@@ -159,7 +159,7 @@ the z, or 0, and the liquid flag to 0x6030c0, then 0x613ef0(0). 0x6030c0 calls
 `0x60df70(time, force)` or `0x60dff0(time, force)`: the active mover requests the change through
 its `CMovement` (a start also sets tutorial flag 0x1b), others apply it at once when forced or
 when a spline without flag 0x4 runs, else queue it. `0x605650` returns whether the depth tops half
-`+0xa5c`; `0x60a740(point)` whether a liquid surface lies 0.01 below to 2/3 yard above the point.
+`+0xa5c`; `0x60a740(point)` whether a liquid surface lies 0.01 below to 2/3 yard above the point. Slices: diff_negate_z `0x5facd4`-`0x5facdd`; occlusion_z_gate_difftest `0x60a7a3`-`0x60a7c7`; u4_airborne_reach_gate_difftest `0x6056ac`-`0x6056ca`.
 
 ## Drunk sway
 
@@ -169,7 +169,7 @@ mean of three cosines at slow, unrelated rates. `0x60aba0` clamps a pitch to ±�
 Addresses: `0x60ab20`, `0x60aba0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::cosine_pulse_difftest`
 
 With `t = time · (π/180) · drunkenness`, the sway is `drunkenness · 0.0130900 · (cos 0.093t +
 cos 0.154t + cos 0.195t) · 0.333333`, the factors at 0x80c5e0, 0x80c5dc, 0x80c5d8 and 0x80c5d4

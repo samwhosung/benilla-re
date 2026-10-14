@@ -73,7 +73,7 @@ the player raises `MANA`, `RAGE`, `FOCUS` or `ENERGY` by the power's name.
 Addresses: `0x628100`, `0x6283b0`, `0x628346`, `0x627240`, `0x627440`, `0x6273b2`, `0x627406`, `0x627520`, `0x627500`, `0x6277c0`, `0x6278f0`, `0x6276dc`, `0x627930`, `0x627910`, `0x627cd0`, `0x627c80`, `0x62dbf0`, `0x62ca00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f3_powerleech_display_amount_difftest`
 
 `0x628346`, for a target of class 0: a resisted amount above 0 raises `RESIST`, else an absorbed one
 `ABSORB`, else `DAMAGE` with the amount. `0x6273b2`: the `SpellDuration` row of `+0x78` gives `min(base + perLevel·level, max)` by
@@ -84,7 +84,7 @@ call `0x627930` with 1 and 0, the flag choosing the periodic chat types; `0x6275
 combat text only with the flag clear. `0x627930` takes the leech keys of `0x627c80` when the
 multiplier's absolute value (`fabs`, `0x6279fa`) is at least the epsilon `0x8029d4` or is NaN
 (`test ah,5; jp`), else the drain keys of `0x627cd0`; `0x627c80` has no `SELFSELF` key,
-so a self-leech writes nothing.
+so a self-leech writes nothing. Slices: f3_powerleech_display_amount_difftest `0x627a8f`-`0x627ace`.
 
 ## Melee lines
 
@@ -144,12 +144,12 @@ durability losses on one item or all, `SPELLDURABILITYDAMAGE…` and `…ALL…`
 Addresses: `0x62ca20`, `0x62cb90`, `0x62c140`, `0x62de60`, `0x62e000`, `0x62d240`, `0x62d3e0`, `0x62cbe0`, `0x626a10`, `0x626b90`, `0x62e050`, `0x62e140`, `0x62e190`, `0x62e310`, `0x62d9a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_combat_gate_twins`, `objectlayer::diff_combat_gate_dist2`
 
 `0x62c140(class)` gives 0x3f for 0 and 1 (the player or its pet), else 0x40. `0x62cb90`,
 `0x62e000`, `0x62e140`, `0x62e310` and `0x626b90` have no `SELFSELF` key. `0x62e050` waits for the
 item through `0x6298a0`. `0x62d9a0` passes a periodic hit to `0x628100` while the CVar is on.
-Combat texts: `DAMAGE_SHIELD`, `SPLIT_DAMAGE`, `SPELL_IMMUNE`, `INTERRUPT`.
+Combat texts: `DAMAGE_SHIELD`, `SPLIT_DAMAGE`, `SPELL_IMMUNE`, `INTERRUPT`. Slices: diff_combat_gate_twins `0x62ccb7`-`0x62cce3`; diff_combat_gate_dist2 `0x62ccb7`-`0x62ccda`.
 
 ## Heals
 
@@ -176,14 +176,14 @@ opened lock, `OPEN_LOCK_…`; `0x62e360` a dismissed pet.
 Addresses: `0x62ace0`, `0x62ad70`, `0x62ad90`, `0x62aff0`, `0x62adc0`, `0x62af30`, `0x62af90`, `0x62b000`, `0x62b1b0`, `0x62b2a6`, `0x62b460`, `0x62b32a`, `0x62d9f0`, `0x62dc10`, `0x62e360`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::range_gate_clone_twins`, `objectlayer::diff_range_gate_dist2`, `objectlayer::diff_combat_gate_twins`, `objectlayer::diff_combat_gate_dist2`
 
 `0x62ad70` finds effect 36 and `0x62ad90` 33 or 59 among `+0xf4`; `0x62aff0` returns bit 4 of
 Attributes. `0x62b2a6` drops the active player's casts; `0x62b460` drops a cast time of 0 from the
 unit's `GetSpellCastTime`; `0x62b32a`: a caster of class 0 to 3 needs a spell with an aura effect
 (`SpellHasAuraEffect`). Combat texts: `SPELL_CAST` for a cast at the player or its own untargeted cast, `EXTRA_ATTACKS`
 for the player's. `0x62dc10` names a game object from `s_gameObjectCache` or an item from the item
-cache. `0x62e360` writes `SPELLDISMISSPET…` under 0x19.
+cache. `0x62e360` writes `SPELLDISMISSPET…` under 0x19. Slices: range_gate_clone_twins `0x62b090`-`0x62b0bc`; diff_range_gate_dist2 `0x62b090`-`0x62b0b3`; diff_combat_gate_twins `0x62dada`-`0x62db06`; diff_combat_gate_dist2 `0x62dada`-`0x62dafd`.
 
 ## Auras
 
@@ -197,11 +197,11 @@ are the periodic ones; a loss goes to `SPELL_AURA_GONE_SELF`, `_PARTY` or `_OTHE
 Addresses: `0x62b480`, `0x62b7d0`, `0x62b7f0`, `0x62b800`, `0x62b96d`, `0x62d480`, `0x62d630`, `0x62d7a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f3_combat_log_in_range_difftest`, `objectlayer::diff_combat_gate_twins`, `objectlayer::diff_combat_gate_dist2`
 
 `0x62b7d0(class)` gives 0x41 for 0 and 1 and 0x42 for 2 and 3 through `0x62b7f0`, else 0x43.
 `0x62b480` takes harmful or helpful from its caller's byte; `0x62b800` needs the spell's `+0x9c`
-above 1 and calls aura slots 32 to 47 harmful (`0x62b96d`).
+above 1 and calls aura slots 32 to 47 harmful (`0x62b96d`). Slices: f3_combat_log_in_range_difftest `0x62b5ad`-`0x62b5d9`; diff_combat_gate_twins `0x62d55b`-`0x62d587`; diff_combat_gate_dist2 `0x62d55b`-`0x62d57e`.
 
 ## Items, pets and reputation
 
@@ -214,12 +214,12 @@ a pet's happiness drain, `SPELLHAPPINESSDRAIN…`, under 0x19; `0x62d440` a loya
 Addresses: `0x629690`, `0x629760`, `0x62d800`, `0x62d8d0`, `0x627de0`, `0x62d440`, `0x62c5f0`, `0x62c670`, `0x62c733`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_combat_defer_visible`
 
 `0x62d800` and `0x62d8d0` run the one-sided test and call `0x629760` and `0x629610`, which wait for
 the item. `0x627de0` divides the drain by `GetPowerDisplayDivisor(4)`. `0x62c670` reads the
 faction's row in the client's locale and the standing's `FACTION_STANDING_LABEL%d` through
-`CGUnit_C::GetGenderedText`, and adds the line under type 10 through 0x49a870 (`0x62c733`).
+`CGUnit_C::GetGenderedText`, and adds the line under type 10 through 0x49a870 (`0x62c733`). Slices: diff_combat_defer_visible `0x62d957`-`0x62d983` `0x62d887`-`0x62d8b3`.
 
 ## Deaths and the environment
 
@@ -251,7 +251,7 @@ address and put the XP in the bonus.
 Addresses: `0x637e30`, `0x637ec0`, `0x637ac0`, `0x637cd0`, `0x637da0`, `0x637f70`, `0x637f90`, `0x637a80`, `0x864330`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::xpgain_rest_gate_difftest`
 
 `0x637ec0`: the player's own GUID writes `COMBATLOG_XPLOSS_FIRSTPERSON_UNNAMED` with the negated XP
 (`0x637f70`); a victim with kind 0 calls `CGUnit_C::SetPendingXP`; else `0x637f90` writes and
@@ -259,4 +259,4 @@ Test: none
 fields) with a multiplier other than 0 and 1 selects `0x864330`'s key; the base `ftol(xp/mult)`
 equal, below or above the received picks the plain, `_GROUP` or `_RAID` form. `0x637da0`: after
 `ebx` holds the unnamed format, `GetText(…UNNAMED_GROUP)` is pushed as the first argument of
-`You gain %d experience. (+%d group bonus)`, ahead of the XP and the difference.
+`You gain %d experience. (+%d group bonus)`, ahead of the XP and the difference. Slices: xpgain_rest_gate_difftest `0x637b3e`-`0x637b7b`.

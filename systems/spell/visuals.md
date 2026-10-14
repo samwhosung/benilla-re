@@ -95,7 +95,7 @@ the rate to 0.0 and clears its handle.
 Addresses: `0x5d55c0`, `0x5d5640`, `0x5d5665`, `0x5d5690`, `0x5d5700`, `0x6ece30`, `0x6ecef4`, `0x6ecf20`, `0x870e24`, `0x760450`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::dy_dynobj_light_bias_difftest`
 
 `0x5d5640` scans the kinds at `+0x3c` for 9; `0x5d5665` adds 512.0 to the float at `+0x4c` and
 `0x5d567a` shifts its bits; `+0x5c` and the radius are pushed raw; `ecx` is the vtable `+0x14`
@@ -104,7 +104,7 @@ position. The result goes to `+0x198`, which `0x5d5713` hands to `0x6ecf20`. In 
 dword of `+0x00` to `+0x138` but the path, `+0x11c` and `+0x124`, and make `+0x138` an empty list;
 `0x6ecee2` to `0x6ecf03` link at the tail; `0x6ecef4` loads `[type·4 + 0x870e24]` with no bound.
 The seven dwords point at the seven strings after them. `edx` is not read. `0x6ecf20` stores 0 at
-`[[ecx]+0x124]` and at `[ecx]`.
+`[[ecx]+0x124]` and at `[ecx]`. Slices: dy_dynobj_light_bias_difftest `0x5d5650`-`0x5d5673`.
 
 ## Emitter initialization
 
@@ -118,7 +118,7 @@ box to `(−r, −r, −r)` to `(r, r, r)` with centre `0.5·((−r) + r)` per a
 Addresses: `0x6eb930`, `0x6eb95e`, `0x6eb967`, `0x6eb981`, `0x81199c`, `0x6eb989`, `0x6eb98f`, `0x6eb99f`, `0x6eba20`, `0x6ebab8`, `0x670db0`, `0x6717d0`, `0x64a5a0`, `0x5f8cf0`
 Confidence: verified
 Proof: one
-Test: `terrain::camera_set_difftest`
+Test: `terrain::camera_set_difftest`, `objectlayer::vector3_scale_add_difftest`
 
 `0x6eb95e` loads `0xcee9a8`; null goes to `0x6eb989` (`fld` the rate alone). `0x6eb967` reads
 `[record+0x28]`: 0 multiplies by 0.33 (`0x3ea8f5c3`), 1 by 0.66 (`0x3f28f5c3`, the constant `0x81199c` that `0x6eb981` multiplies by), at 53 bits;

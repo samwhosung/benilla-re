@@ -164,7 +164,7 @@ the whole leg and wait 0.
 Addresses: `0x5f9120`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::leg_time_difftest`, `objectlayer::leg_time_special_values_difftest`
 
 `0x5f9120(points, stops, leg)` calls `SetSplinePath`, sizes the stops to n + 1 and zeros `+0x34`.
 Stop i's distance is 0x453300(spline, node), a cumulative length; seg is it less the last. A stop
@@ -172,7 +172,7 @@ at the leg's last node ends the loop (`0x5f91a1`). `0x5f91db` picks the first sp
 `0x5f9205` the middle form; the end runs from `0x5f92b8` with seg = length − last. `fst` at
 `0x5f91d8` and `0x5f92f0` stores float(da) and keeps the 53-bit da on the stack, which the compares
 at `0x5f91dd`, `0x5f9205` (against seg·0.5) and `0x5f92f3` read; the formulas load the stored
-float. Branches test `ah & 5` and `jp`, so a NaN takes the square root. The x87 runs at 53 bits.
+float. Branches test `ah & 5` and `jp`, so a NaN takes the square root. The x87 runs at 53 bits. Slices: leg_time_difftest, leg_time_special_values_difftest `0x5f91af`-`0x5f924f` `0x5f92b8`-`0x5f9335`.
 
 ## Speed curve
 
@@ -191,7 +191,7 @@ ta = v / a; r = min(T, ta), and min(T·0.5, ta) for both; d = t − (T − r).
 Addresses: `0x5f8dc0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::transport_speed_easing_difftest`, `objectlayer::transport_speed_easing_special_values_difftest`
 
 v is `[ecx+0x18]`, a `[ecx+0x20]`. Both ends store ta and T − r as floats (`0x5f8ddf`, `0x5f8dff`);
 the one-ended forms keep them at 53 bits. A NaN comparison picks ta for r, and `test ah,0x41` /
@@ -210,14 +210,14 @@ the position, facing and entity move, and a changed animation plays once the ent
 Addresses: `0x5f50a0`, `0x5f8cb0`, `0x5f8d60`, `0x453480`, `0x468580`, `0x6709a0`, `0x670950`, `0x670a30`, `0x6709f0`, `0x801360`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_normalize_vec2`, `objectlayer::g3_transport_ms_scale`, `objectlayer::g3_transport_leg_fraction`, `objectlayer::g3_transport_heading`, `objectlayer::g3_transport_heading_angle`
 
 `0x5f50e1` divides unsigned. A span's T is stop j's time less the span start and t the elapsed
 part, each `fild` of a zero-extended qword times `[0x801360]`, stored as floats; the curve gets
 accelerates = j ≠ 0 and decelerates = j ≠ count − 1. `0x5f8cb0` leaves a vector shorter than
 2^-22 alone, else scales by 1/len. `fpatan` takes the y, x pair at `0x5f528e`. The map test is
 `0x5f5274`; it stores the leg in `+0x58`. Readiness sets the done callback `0x5f49b0` once and
-the byte `+0x5c`.
+the byte `+0x5c`. Slices: g3_transport_ms_scale `0x5f51b7`-`0x5f51ee`; g3_transport_leg_fraction `0x5f51ee`-`0x5f5230`; g3_transport_heading `0x5f5251`-`0x5f528e`; g3_transport_heading_angle `0x5f5251`-`0x5f52ae`.
 
 ## Carrying and changing legs
 
@@ -230,7 +230,7 @@ and unloads the map around the camera's unit.
 Addresses: `0x5f8da0`, `0x7bdc40`, `0x7bdd60`, `0x7c6510`, `0x613ef0`, `0x718910`, `0x66fc70`, `0x66fc80`, `0x615020`, `0x407e80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::world_model_scale_difftest`
 
 The frame starts at identity; `RotateMatrix` takes the axis (0, 0, 1). The passengers are walked through `0x5f8da0`, a link getter. The unit is
 `ClntObjMgrObjectPtr([mover+0x30], 8)`; `0x613ef0(unit, 0)` runs before `SetTransportFrame` on
@@ -251,7 +251,7 @@ rotation quaternion. A's animation plays when it changes.
 Addresses: `0x5f5ab0`, `0x5f5ec0`, `0x5f6260`, `0x5f6280`, `0x5f8d20`, `0x5f5c80`, `0x5f5cb0`, `0x5f5d70`, `0x5f5da0`, `0x5f9110`, `0x80ba58`, `0xc0d654`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::gameobject_path_eval_difftest`, `objectlayer::gameobject_path_eval_large_times_difftest`
 
 The constructor makes the passenger list through `0x5f9110`. Rows are 0x1c bytes: entry `+4`, time `+8`, position `+0xc`, animation `+0x18`. `0x5f5ec0` stops
 at the first entry above the object's: the store is taken as sorted. With no row the constructor
@@ -275,10 +275,10 @@ move.
 Addresses: `0x5f5f10`, `0x5f5c10`, `0x5f5c40`, `0x6343b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_scale_vec3`, `objectlayer::g3_move_pos_add`, `objectlayer::g3_move_delta_sub`, `objectlayer::g3_move_dist2_gate`, `objectlayer::g3_move_normalize`, `objectlayer::g3_move_leg_speed`
 
 The squared length is (dy² + dz²) + dx², stored as a float and compared by magnitude at
 `0x5f5fb3`. The distance is float(sqrt) and the heading each delta times 1/distance, stored.
 `0x5f61ba` divides the distance by float(elapsed)·0.001 at 53 bits. The frame is L of the base and
 the object slot 6 facing; its translation row takes the new position after the sweeps. Slot 17
-(`0x5f5c10`) returns the base.
+(`0x5f5c10`) returns the base. Slices: g3_move_pos_add `0x5f5f47`-`0x5f5f69`; g3_move_delta_sub `0x5f5f6e`-`0x5f5f93`; g3_move_dist2_gate `0x5f5f98`-`0x5f5fbb`; g3_move_normalize `0x5f60f2`-`0x5f612d`; g3_move_leg_speed `0x5f61ac`-`0x5f61c0`.

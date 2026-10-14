@@ -200,14 +200,14 @@ target, averaging four samples at `+0xc9c`. `0x6084f0` wraps an angle into −π
 Addresses: `0x600cd0`, `0x600cb0`, `0x601020`, `0x601050`, `0x607eb0`, `0x6084f0`, `0x60a110`, `0x608560`
 Confidence: verified
 Proof: one
-Test: `objectlayer::wrap_angle_difftest`
+Test: `objectlayer::wrap_angle_difftest`, `objectlayer::angle_wrap_pi_difftest`, `objectlayer::swing_transform_args_difftest`, `objectlayer::u4_facing_delta_difftest`, `objectlayer::u4_facing_dead_band_difftest`, `objectlayer::u4_facing_wrap_pi_delta_difftest`, `objectlayer::u4_facing_box_apply_difftest`
 
 `0x600cd0` sets bits 0x1 and 0x2 of `+0xd58` for key and mouse turning on the active mover.
 `0x600cb0` and `0x607eb0` convert `+0xc98` and `+0xc94` to world facings through the transport.
 `0x601020` resets `+0xc98` from the mover's facing and zeroes `+0xc9c` to `+0xca8`; `0x601050`
 adds a transport's turn to both facings, wrapping each once into 0 to 2π. `0x6084f0` uses
 `fmod` past ±π. `0x608560` (slot 15) places a swimming unit's model with the pitched transform
-`0x60a110`: scale `[+0x94]·[+0x90]` times the mount's `+0x9c` or the unit's `+0x98`.
+`0x60a110`: scale `[+0x94]·[+0x90]` times the mount's `+0x9c` or the unit's `+0x98`. Slices: u4_facing_delta_difftest `0x600ea5`-`0x600eb3`; u4_facing_dead_band_difftest `0x600ea5`-`0x600ec0`; u4_facing_wrap_pi_delta_difftest `0x600eda`-`0x600f0e`; u4_facing_box_apply_difftest `0x600f7b`-`0x601013`.
 
 ## Auto-move modes
 
@@ -229,7 +229,7 @@ mode has a 12-byte row of `0x860a58`: enabled, a maximum squared distance, and t
 Addresses: `0x860a58`, `0x60e590`, `0x611240`, `0x6113d8`, `0x611310`, `0x61132c`, `0x6111ab`, `0x6110a0`, `0x6103a0`, `0x611590`, `0x60f9fc`, `0xc4d888`, `0xc4d9c0`, `0xc4d910`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::move_cast_radius_difftest`, `objectlayer::cast_goal_reach_difftest`, `objectlayer::u5_in_range_dist2_difftest`, `objectlayer::u5_in_range_gates_difftest`
 
 `0x60e590` writes rows 3 to 10 at start-up: 900 at `0x860a80`, 6400 at rows 5, 6, 7, 9 and 10,
 the `+8` byte 1 and `+9` set only on row 8; row 3's enabled byte is the file's. `0x611240(mode,
@@ -240,7 +240,7 @@ of the spell in 0xb700e4 times `0x804588` (0.9), squared. `0x611130` keeps the v
 `0xc4d9c0` and its square root at `0xc4d910` (`0x6111ab`), so modes 6 and 10, whose value
 `0x611310` and `0x61132c` store unsquared, stop at the root of the reach, not at the reach. `0x6110a0` refuses a target past the
 row's maximum with message 0x126, `ERR_AUTOFOLLOW_TOO_FAR`. `0x6103a0` is the active mover with a
-mode set; `0x611590(mask)` tests `1 << mode`.
+mode set; `0x611590(mask)` tests `1 << mode`. Slices: move_cast_radius_difftest `0x6111a3`-`0x61120b`; u5_in_range_dist2_difftest `0x6110ba`-`0x61110a`.
 
 ## Starting and ending auto-move
 
@@ -253,7 +253,7 @@ the move, turn and pitch commands, and the mode returns to 12.
 Addresses: `0x611130`, `0x60fed0`, `0x610094`, `0x610084`, `0x60fb60`, `0x60fc50`, `0x60fcc0`, `0x6100a0`, `0x610100`, `0x6102b0`, `0x610300`, `0x60fe90`, `0x60e790`, `0x60e7f0`, `0x60f900`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::interact_arrival_scale_difftest`, `objectlayer::move_cast_radius_difftest`, `objectlayer::cast_reach_floor_difftest`, `objectlayer::cast_in_range_difftest`, `objectlayer::cast_plane_z_difftest`, `objectlayer::cast_aim_normalize_difftest`, `objectlayer::cast_aim_key_difftest`, `objectlayer::cast_aim_endpoint_difftest`
 
 `0x60fed0` maps modes 0, 1, 5 to "any unit", 3 to follow, 6 and 9 to "a corpse or a dead unit",
 the rest to refusal, through `0x610094` and `0x610084`. Follow needs a cooperative player and a
@@ -264,7 +264,7 @@ is out, releases the spell effect and stops an auto-move whose mode is in `0x860
 need `0x60f900`: a live active mover and the `AutoInteract` CVar (`0xc4d9a4`) on. `0x60fcc0`
 walks to attack in mode 10, or faces (`0x6100a0`, mode 2) within reach. `0x610100` (mode 8) pitches a swimmer toward
 the clicked point first. `0x6102b0` is mode 4, `0x610300` mode 7. `0x60e790` and `0x60e7f0` press and
-release command 0x100000 and start or stop the move.
+release command 0x100000 and start or stop the move. Slices: interact_arrival_scale_difftest `0x610376`-`0x610389`; move_cast_radius_difftest `0x6111a3`-`0x61120b`; cast_reach_floor_difftest `0x60fcdc`-`0x60fd1b`; cast_in_range_difftest `0x60fd2f`-`0x60fd5c`; cast_plane_z_difftest `0x60fe37`-`0x60fe54`; cast_aim_normalize_difftest `0x610161`-`0x6101b9`; cast_aim_key_difftest `0x610161`-`0x6101c3`; cast_aim_endpoint_difftest `0x61023b`-`0x61025d`.
 
 ## Steering an auto-move
 
@@ -276,7 +276,7 @@ the move.
 Addresses: `0x6106b0`, `0x610e40`, `0x6103d0`, `0x610520`, `0x610d50`, `0x610da0`, `0x60f940`, `0x60fa20`, `0x611400`, `0x6115e0`
 Confidence: verified
 Proof: one
-Test: `objectlayer::broadcast_wrap_angle_difftest`
+Test: `objectlayer::broadcast_wrap_angle_difftest`, `objectlayer::dist2_within_threshold_difftest`, `objectlayer::vec_to_facing_difftest`, `objectlayer::facing_interp_difftest`, `objectlayer::pitch_interp_difftest`, `objectlayer::move_dist_squares_difftest`, `objectlayer::move_goal_radius_difftest`, `objectlayer::click_ring_pulse_difftest`, `objectlayer::click_ring_corner_difftest`, `objectlayer::b2_arrival_test_difftest`, `objectlayer::b2_delta_time_difftest`, `objectlayer::b2_heading_add_difftest`, `objectlayer::b2_turn_step_difftest`, `objectlayer::b2_rng_jitter_gate_difftest`, `objectlayer::b2_heading_add_field_difftest`, `objectlayer::b2_turn_step_pi_difftest`, `objectlayer::b2_facing_error_difftest`, `objectlayer::b2_speed_from_timer_difftest`, `objectlayer::b2_range_gate_square_difftest`, `objectlayer::b2_anim_time_speed_difftest`, `objectlayer::b2_arrival_cos_threshold_difftest`, `objectlayer::b2_normalize_zdot_difftest`
 
 `0x610e40` returns the transport-local point for modes 4 and 10, nothing for 2 and 8, else the
 object `0xc4d980`, refusing a taxi rider and, outside modes 6 and 9, a dead unit; its distance
@@ -287,7 +287,7 @@ compares squared distance with 0.002777778². `0x610da0` is `asin` of the normal
 arrival `0x60f940` stores the GUID for mode 5 at `0xc4da28`, 6 at `0xc4da78`, 7 at `0xc4d950`,
 9 at `0xc4da20`, and `0x60fa20` hands each to `0x5f0130`, `0x5df2a0`, `0x5f86b0` or `0x5f05e0`.
 `0x611400` draws a pulsing box at mode 4 and 10 targets. `0x6115e0` moves the target point and
-facing with a transport.
+facing with a transport. Slices: move_dist_squares_difftest `0x610f7a`-`0x610fb6`; move_goal_radius_difftest `0x610fb6`-`0x611003`; click_ring_pulse_difftest `0x61143b`-`0x61146f`; click_ring_corner_difftest `0x611429`-`0x611549`; b2_arrival_test_difftest `0x61075b`-`0x6107db`; b2_delta_time_difftest `0x61080f`-`0x610823`; b2_heading_add_difftest `0x610872`-`0x61087f`; b2_turn_step_difftest `0x61088a`-`0x610897`; b2_rng_jitter_gate_difftest `0x610915`-`0x610929`; b2_heading_add_field_difftest `0x6109ae`-`0x6109b7`; b2_turn_step_pi_difftest `0x6109ba`-`0x6109cb`; b2_facing_error_difftest `0x610a48`-`0x610a56`; b2_speed_from_timer_difftest `0x610aa2`-`0x610aee`; b2_range_gate_square_difftest `0x610b07`-`0x610b0e`; b2_anim_time_speed_difftest `0x610bd7`-`0x610c1f`; b2_arrival_cos_threshold_difftest `0x610c85`-`0x610c9a`; b2_normalize_zdot_difftest `0x610cb0`-`0x610d28`.
 
 ## Arrival, height and stalls
 
@@ -299,7 +299,7 @@ above or below ends the walk. A walk along a heading (mode 8) first pitches a sw
 Addresses: `0x6106b0`, `0x6107e5`, `0x6108e6`, `0x610a7b`, `0x610aaa`, `0x610c63`, `0x610d32`, `0x610e40`, `0x610100`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::b2_speed_from_timer_difftest`
 
 `0x610e40` ignores height within 0.5 yard (0x80c4c8), or the stop distance in mode 10, times
 max(speed/7, 1) (0x80c4d0); `0x610aaa` scales the stop distance the same way, capped in modes 5
@@ -312,4 +312,4 @@ random fraction times it tops 0.07 (0x80c608). Mode 3 starts walking only beyond
 forward walk that moved less than 1/360 yard (0x80c4dc, through `0x610d50`) in modes with flag
 byte +8. `0x610d32` stops when the direction's height part tops cos 1° (0xc4d9d0, from 0x80c5f8).
 `0x610100` pitches a swimmer to ±π/2 when the height part of the heading is at least 0.86602
-(0x80c4d4), to its `asin` from 0.17364 (0x80c4d8), else to 0.
+(0x80c4d4), to its `asin` from 0.17364 (0x80c4d8), else to 0. Slices: b2_speed_from_timer_difftest `0x610aa2`-`0x610aee`.

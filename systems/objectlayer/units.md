@@ -21,7 +21,7 @@ Vtable slots 0 to 3 are the deleting destructor, release, reactivation and the p
 Addresses: `0x5fad50`, `0x5fb131`, `0x5fb14b`, `0x5fb1d0`, `0x5fb5e0`, `0x5ff070`, `0x5ff030`, `0x5fefc0`, `0x5fefe0`, `0x5ff000`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::uh_low_hp_gate_difftest`
 
 The constructor sets `+0xb08` and `+0xc5c`, `+0xc60` to −1, the footprint sizes to 10/36, `+0xc6c`
 to 1, `+0xc70` to −10, `+0xc74` to `FLT_MAX`, the body facing to the mover's, `+0xccc` and `+0xcd0`
@@ -33,7 +33,7 @@ around the low-health test at `0x5fb14b` (health under 20% of `UNIT_FIELD_MAXHEA
 releases marker, plate, bubble, name, component, trails, effects, missiles and models, clears the
 active mover and its mode 12, cancels the two name queries, frees the chain array, destroys the
 `CMovement` and unlinks the watcher lists. `0x5fb1d0` frees on bit 0. `0x5fefc0`, `0x5fefe0` and
-`0x5ff000` read the running spline at `+0xa4c`: its points, `+0x20` and `+0x24` as floats.
+`0x5ff000` read the running spline at `+0xa4c`: its points, `+0x20` and `+0x24` as floats. Slices: uh_low_hp_gate_difftest `0x5fb14b`-`0x5fb15c`.
 
 ## Lifecycle
 
@@ -46,7 +46,7 @@ name and facings when it returns; slot 3 refreshes what an update may have chang
 Addresses: `0x5fb880`, `0x5fb93d`, `0x5fba5d`, `0x5fbb60`, `0x5fbd60`, `0x5fbe00`, `0x5fbe80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_low_health_ratio`
 
 At `0x5fb93d` a dead creature deeper than 0.75 of its collision height in liquid, with
 `UNIT_FIELD_FLAGS` bit 3, 11 or 15, starts swimming. `+0xb18` takes `+0x34` of the `ChrRaces` row
@@ -58,7 +58,7 @@ fades the sounds `+0xb1c` and `+0xb20` and hands the world node to `0x5fbe80`, w
 once when the character component is not ready and otherwise places and fades it (0x672df0).
 `0x5fbd60` (slot 2) resets both facings, rechecks low health and clears `+0xd58` bits 0x400 and
 0x2000. `0x5fbe00` (slot 3) refreshes sounds, auras, channel, animation, display, marker, tokens
-and breath, and gives a newly dead unit its death time and sparkle.
+and breath, and gives a newly dead unit its death time and sparkle. Slices: diff_low_health_ratio `0x5fbd8f`-`0x5fbda6`.
 
 ## Start-up and shutdown
 
@@ -298,7 +298,7 @@ higher rank. `0x612b80` gives a vendor's discount.
 Addresses: `0x60c740`, `0x60c7c0`, `0x60c840`, `0x60c8d0`, `0x60c920`, `0x612b40`, `0x612b80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::vendor_price_discount_difftest`
 
 `0x60c740` tests the bit at 0xb710fc up to the highest id, or the 1024 entries at 0xb6f098.
 `0x60c7c0` takes the `CreatureFamily` row's two skill lines (`+0x14`, `+0x18`) for a creature,

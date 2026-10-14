@@ -29,14 +29,14 @@ flag that matches picks the service. After any send the player plays the talk em
 Addresses: `0x5f0130`, `0xc4c28c`, `0xb4e2d0`, `0x5df490`, `0x5df4d0`, `0x5df550`, `0x5df5d0`, `0x5df680`, `0x5dffe0`, `0x5e0060`, `0x5e00e0`, `0x5e01a0`, `0x5e0220`, `0x5e02a0`, `0x5ed020`, `0x60bb30`, `0x5df950`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::p3_dist2_f32deltas_5f0130`, `objectlayer::p3_in_range_gate_5f0130`
 
 Each component of player minus unit position is stored as f32 before the x87 sum; the limit
 `0xc4c28c` holds 5.5555553² = 30.864195 (`InitGameObjSquare3`). `StartAutoMoveToObject(&guid, 5)`
 nonzero returns; a larger distance after that returns. The flags are `UNIT_NPC_FLAGS`
 (`[+0x110]+0x234`); the quest test `0x5df490` reads the status `+0xcb8`. The tabard sender
 `0x5e00e0` does nothing for the unit at `0xbdcee8` and shows error 0x130 while the display is not
-native. The talk emote is `CGUnit_C::RequestTalkEmote(0)` (`0x60bb30`).
+native. The talk emote is `CGUnit_C::RequestTalkEmote(0)` (`0x60bb30`). Slices: p3_dist2_f32deltas_5f0130 `0x5f01b9`-`0x5f0200`; p3_in_range_gate_5f0130 `0x5f0202`-`0x5f020d` `0x5f0238`-`0x5f0243`.
 
 ## Confirmation dialogs
 
@@ -57,13 +57,13 @@ experience; the talent and pet dialogs remember the cost, show it, and on accept
 Addresses: `0x5df730`, `0x5df980`, `0x5dfba0`, `0x5dfdc0`, `0x5df8c0`, `0x5dfb10`, `0x5dfd30`, `0x5dff50`, `0xc4d798`, `0xc4d7a0`, `0xc4d7b0`, `0xc4d7c0`, `0x80ae90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::range_gate_5df8c0_difftest`, `objectlayer::range_gate_clone_family_difftest`, `objectlayer::range_gate_5df730_difftest`, `objectlayer::skill_rank_scale_5df730_difftest`, `objectlayer::range_gate_5df980_clone_family_difftest`
 
 The experience is `__ftol(PLAYER_NEXT_LEVEL_XP · 0.05)` (`0x80ae90`), 0 for a player not active.
 The accept paths test range inline in full x87 against `0xc4c28c`, where NaN passes; the range
 tests `0x5df8c0`, `0x5dfb10`, `0x5dfd30` and `0x5dff50` that the interface calls use
 `test ah,0x41; jp`, where NaN fails. The money is `PLAYER_FIELD_COINAGE`, compared unsigned. The
-binder's area is `[0xb4e318]`, else `[0xb4e314]`, in the `AreaTable` store.
+binder's area is `[0xb4e318]`, else `[0xb4e314]`, in the `AreaTable` store. Slices: range_gate_5df730_difftest `0x5df7a1`-`0x5df7d2`; skill_rank_scale_5df730_difftest `0x5df81e`-`0x5df82c`; range_gate_5df980_clone_family_difftest `0x5df7a1`-`0x5df7d2` `0x5df9dc`-`0x5dfa0d` `0x5dfbfc`-`0x5dfc2d`.
 
 ## Looting
 
@@ -77,14 +77,14 @@ beyond 5 yards (25 squared).
 Addresses: `0x5ec110`, `0x5df2a0`, `0x5df130`, `0x5df460`, `0x80b058`, `0x80a1e8`, `0x80b054`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::loot_range_5df130_difftest`, `objectlayer::interact_reach_5df2a0_difftest`, `objectlayer::p3_interact_reach_sq_5ec110`, `objectlayer::p3_interact_in_range_5ec110`
 
 `0x5ec110` takes `!CanAutoInteract`; the reach is stored f32, squared, and compared with the full
 x87 distance by `test ah,0x41; jnp`, so equal passes and NaN fails. It then needs `+0x1d28` zero,
 not `IsDeadOrGhost`, mover flags without 0x2000, `UNIT_FIELD_FLAGS` without 0x40000, and
 `IsClientControlled`. `0x5df2a0` needs `IsLootable` and mover flags `& 0x20ff` zero; it walks with
 mode 6 only when `r² < d²`. `0x5df460(byte)` sets the auto-loot byte `+0x1d30` and, with a held
-GUID, calls `0x4c1fa0(0)`. `0x5ed5f0` holds a GUID as the loot target and plays animation 0x32.
+GUID, calls `0x4c1fa0(0)`. `0x5ed5f0` holds a GUID as the loot target and plays animation 0x32. Slices: loot_range_5df130_difftest `0x5df1a0`-`0x5df1d4`; interact_reach_5df2a0_difftest `0x5df301`-`0x5df389`; p3_interact_reach_sq_5ec110 `0x5ec142`-`0x5ec17e`; p3_interact_in_range_5ec110 `0x5ec196`-`0x5ec1c1`.
 
 ## Interacting through a spell
 
@@ -96,11 +96,11 @@ maximum it casts at once; out of range it walks up when `walk` is set, else cast
 Addresses: `0x5f05e0`, `0xb700e4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::p3_attack_range_gate_5f05e0`
 
 The range is `Spell_C::GetMinMaxRange`; the components of object minus player go through
 `SetVector3` as f32 and are squared in x87; `max² > d²` casts (`CastSpellAsActivePlayer`). The walk
-is `StartAutoMoveToObject(&guid, 9)`.
+is `StartAutoMoveToObject(&guid, 9)`. Slices: p3_attack_range_gate_5f05e0 `0x5f0656`-`0x5f069c`.
 
 ## World clicks
 

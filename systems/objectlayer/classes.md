@@ -100,7 +100,7 @@ The base vtable's first eleven slots, what the base body does, and the role its 
 Addresses: `0x46a090`, `0x6145e0`, `0x614640`, `0x614e80`, `0x469ed0`, `0x469ee0`, `0x469f00`, `0x469f10`, `0x469f20`, `0x469f40`, `0x469f50`, `0x613e2a`, `0x613e3d`, `0x613f82`, `0x613fb0`, `0x614ce2`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::world_model_scale_difftest`
 
 The bodies are as listed (`0x469f10` is `mov eax,[ecx+8]; fld [eax+0x10]`). The roles of 5, 6
 and 8 come from `0x613ef0` and `0x614cd0`: slot 5 fills the translation (`0x613f82`), slot 6

@@ -297,7 +297,7 @@ reads past the row, the next row's id.
 Addresses: `0x5da330`, `0x5da3c5`, `0x5da42f`, `0x5da449`, `0x5da450`, `0x5da4ab`, `0x5da4d4`, `0xc0ddfc`, `0xc0dde8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::item_randprop_delta_difftest`
 
 The cost row is `DurabilityCosts` at the record's `+0x38` (`0x5da3c5`); armour reads `+0x58 +
 4·subclass`, weapons `+0x4 + 4·subclass`. The multiplier is the float at `+0x4` of
@@ -306,7 +306,7 @@ directly. `0x5da4ab`: `fild` of maximum minus current durability, `fmul` the mul
 the cost; then ±0.5 by the sign test `test ah,0x41` (zero and NaN subtract) and `__ftol`.
 `0x5da4d4` replaces an unsigned result below 1 with 1. The loader 0x543e20 requires 30 columns
 (0x543ece) and 0x78-byte records (0x543f06); `cmp eax,0x15; ja` at `0x5da440` lets subclass 21 read
-`[row+0x58]`, and `cmp eax,8; ja` at `0x5da426` lets subclass 8 read `[row+0x78]`.
+`[row+0x58]`, and `cmp eax,8; ja` at `0x5da426` lets subclass 8 read `[row+0x78]`. Slices: item_randprop_delta_difftest `0x5da4ab`-`0x5da4d4`.
 
 ## The container
 

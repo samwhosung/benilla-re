@@ -132,7 +132,7 @@ included), the player's velocity is zero at once.
 Addresses: `0x67c150`, `0x67c180`, `0x67c2b5`, `0x67c2cf`, `0x67c3c8`, `0x67c4a2`, `0x67c680`, `0x67d740`, `0x61eec0`, `0xc7b4a8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::missile_scale_vec_difftest`
 
 `0x67c680` tests the transport's v² against 2.0 with `test ah,0x41` before the zeroing. `0x67c150`
 frees the head of a list for each step once the running sum reaches 0x96 (`0x67c180`);

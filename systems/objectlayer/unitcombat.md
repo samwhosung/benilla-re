@@ -136,7 +136,7 @@ out of sight, the back one at 16 when it is behind; hit info 0x2000 takes each s
 Addresses: `0x625010`, `0x62502e`, `0x6250b6`, `0x6250d9`, `0x6250e3`, `0x625177`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_blood_spurt_front_back`, `objectlayer::diff_blood_spurt_front_back_diff_rounding`, `objectlayer::diff_blood_spurt_dot`
 
 `0x62502e` is `CGUnit_C::GetBloodRecord`. With `f` the victim's `CGUnit_C::GetWorldBodyFacing` and
 `d` the attacker minus the victim in x and y, `0x6250b6` takes `cos f·dx + sin f·dy`; `0x6250d9`
@@ -146,7 +146,7 @@ row's `+0x4` or `+0x8`, 16 its `+0xc` or `+0x10`, by whether the flag is set. `0
 its reference (`effects`). `0x60a390` (`unitdisplay`) has two callers, this and `0x60a260`, which
 only tests for a row; this one reads `+0x4` to `+0x10` (`0x6250fc`, `0x625105`), and the store's
 other readers are its load, set-up and teardown `0x53eb20`. The row's five strings `+0x14` to
-`+0x24`, the ground splat textures, are never read, and no creature or display flag gates the spurt.
+`+0x24`, the ground splat textures, are never read, and no creature or display flag gates the spurt. Slices: diff_blood_spurt_front_back, diff_blood_spurt_front_back_diff_rounding `0x6250b6`-`0x6250d7`; diff_blood_spurt_dot `0x6250b6`-`0x6250d2`.
 
 ## Combat model events
 
@@ -183,13 +183,13 @@ animation does; the ammo model is attached at 35 unless the weapon is a gun or c
 Addresses: `0x624cc0`, `0x624d1f`, `0x624d5d`, `0x624d75`, `0x624e12`, `0x624b27`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::castbar_anim_speed_difftest`
 
 `0x624cc0` needs `+0xd24` loaded with animation 0xa0 and a loaded body. `0x624d1f` reads key bone
 4's state when `+0xd5c` is 4 and it plays, else key bone −1. `0x624d5d` returns for a nonzero
 `+0x18`. `0x624d75`: the time left is `end − ftol(t/speed) − start` from the state; when positive,
 `0x624e12` plays 0xa0 at speed `length/left`, `fild` of the length over `fidiv` of the time.
-`0x624b27` reads the ranged item info, `+0x98(2, 0)`: subclass 3 or 18 keeps the ammo `+0xd28` off.
+`0x624b27` reads the ranged item info, `+0x98(2, 0)`: subclass 3 or 18 keeps the ammo `+0xd28` off. Slices: castbar_anim_speed_difftest `0x624d75`-`0x624e26`.
 
 ## Environmental damage and death
 

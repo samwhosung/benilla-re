@@ -122,7 +122,7 @@ plays once at the effect or, with flag 0x1, loops on the object.
 Addresses: `0x620be0`, `0x620c05`, `0x620c35`, `0x620c86`, `0x620df5`, `0x620e16`, `0x620e43`, `0x620f5f`, `0x62102e`, `0x621039`, `0x620a90`, `0x620930`, `0x6209f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_vec3_mag2`, `objectlayer::f2_attach_scale_div_difftest`
 
 `0x620c05` sets 0x800. `0x620c35` takes the target, else the owner. `0x620c86`: flag 0x2 places
 the model by `0x620a90(owner)`, `Translate(+0x48)·Rotate(facing)·Scale(scale)`, from vtable `+0x18` and
@@ -134,7 +134,7 @@ bounding-sphere radius; the effect's own size uses its radius, then 1.0 (`0x620f
 from the creators' arguments and constants; no constant with bit 0x200 appears in the creators or
 in their callers 0x60edf0, 0x60ed40, 0x60d7c0, 0x625010, 0x5fbf70 and 0x6e7a70. `0x62102e`:
 the sound is kit `+0x34`, skipped for flag 0x400. `0x620930` checks each matrix for NaN entries and
-an empty first row, and `0x6209f0` formats `*** trouble in facing` into a buffer it then drops.
+an empty first row, and `0x6209f0` formats `*** trouble in facing` into a buffer it then drops. Slices: diff_vec3_mag2 `0x62096e`-`0x62099b`; f2_attach_scale_div_difftest `0x620f21`-`0x620fe7`.
 
 ## The frame tick
 
@@ -146,7 +146,7 @@ planted effect's world-object callback also shows the model when its start time 
 Addresses: `0x620580`, `0x620592`, `0x6205a5`, `0x62066c`, `0x62075c`, `0x620834`, `0x620884`, `0x620520`, `0x608046`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f2_effect_track_reresolve_difftest`
 
 `CGUnit_C::Update` calls `0x620580` for each effect on `+0xb4` (`0x608046`). `0x620592 test ah,9`
 runs `0x620be0` when neither 0x100 nor 0x800 is set. `0x6205a5`: 0x4000 rebuilds the matrix at the
@@ -154,7 +154,7 @@ owner's position and applies it with new bounds only when its translation moved 
 squared (`0x62066c`), else restores `+0x48`. `0x62075c`: 0x4 with `now − end > 0` restores each
 nonzero saved speed and calls `CGUnit_C::UpdateBaseAnimation(-1)`. `0x620834` handles `+0x5c`,
 which only the unreached `0x620100` sets. `0x620520` (from 0x481510) makes the model animated and
-visible unless 0x100 once `now − start > 0`, clears the start, and stops the effect at its end.
+visible unless 0x100 once `now − start > 0`, clears the start, and stops the effect at its end. Slices: f2_effect_track_reresolve_difftest `0x620641`-`0x620676`.
 
 ## Stopping and draining
 
@@ -208,7 +208,7 @@ point half the bobber's height above it, sagging by `0.5·sin(πt)` yards at `t`
 Addresses: `0x620300`, `0x61f780`, `0x61f7ea`, `0x61f82e`, `0x61f90e`, `0x61f941`, `0x61f991`, `0x61f9ce`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::effect_beam_trail_difftest`, `objectlayer::effect_beam_trail_special_values_difftest`
 
 `0x620300` stores `CM2Model::FindChild(1)` with a reference at `+0x04`, sets its draw callback to
 `0x61f780` with the effect, and stores the owner and bobber GUIDs. `0x61f780` needs the model to
@@ -218,7 +218,7 @@ model passes are 0 at or below 0, 255 at or above 1, else `ftol(c·255 + 0.5)`, 
 device with caps `+0x1c` of 1 swaps the byte order (`0x61f90e`). `0x61f941` steps `i/64` (0.015625)
 for `i` from 0 to 64 and `0x61f991` adds `sin(t·π)·(−0.5)` to z. The 65 vertices, 0x10 bytes each
 with no texture coordinates, go to a locked buffer; `0x61f9ce` turns render state 0xe off through
-`GxRsSet`, and 0x58a810 draws them as 64 joined segments, primitive type 2.
+`GxRsSet`, and 0x58a810 draws them as 64 joined segments, primitive type 2. Slices: effect_beam_trail_difftest, effect_beam_trail_special_values_difftest `0x61f7ea`-`0x61f9ab`.
 
 ## Unreached effect code
 

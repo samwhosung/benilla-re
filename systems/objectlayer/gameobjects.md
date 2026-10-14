@@ -119,11 +119,11 @@ store `0x80b100`; each frees on bit 0.
 Addresses: `0x5f5ab0`, `0x5f44f0`, `0x5f6570`, `0x5f4860`, `0x5f4ab0`, `0x5f65c0`, `0x5f66b0`, `0x5f6760`, `0x5f67c0`, `0x5f6880`, `0x80ba58`, `0x80b4e0`, `0x80bae0`, `0x80b710`, `0x80b798`, `0x80bb68`, `0x80bc80`, `0x80bd10`, `0x80bda0`, `0x80be30`, `0x5f5c80`, `0x5f4520`, `0x5f6590`, `0x5f48d0`, `0x5f4b90`, `0x5f6610`, `0x5f66e0`, `0x5f6790`, `0x5f67f0`, `0x5f68b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::g3_transport_ctor_add`
 
 The transport constructors run the map object's `0x5f4860` first, which stores `0x80b710`, and
 store their own vtable over it (`0x5f5b1a`, `0x5f4b0a`). The area damage constructor zeros `+0xc`;
-the fishing node stores `[0x80b0b0]`.
+the fishing node stores `[0x80b0b0]`. Slices: g3_transport_ctor_add `0x5f5bce`-`0x5f5bf4`.
 
 ## Handler types 21 to 30
 
@@ -182,7 +182,7 @@ model plays.
 Addresses: `0x5f7910`, `0x5f7962`, `0x5f7979`, `0x5f798b`, `0x5f79ad`, `0x5f7a2b`, `0x5f7a60`, `0x5f7a6d`, `0x5f7aac`, `0x5f7ac0`, `0x5f7acd`, `0x5f7add`, `0x5fa050`, `0x5f85f0`, `0x5fa010`, `0x7bdc40`, `0x7bddb0`, `0x7bdd00`, `0x6717d0`, `0x710620`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::go_animate_bounds_difftest`
 
 `0x5f7910(model)` resets `+0x218`, calls `TranslateMatrix` with slot 5's point, `RotateMatrixByQuaternion`
 with `fields+0x10` and `ScaleMatrix` with slot 7; the model's bounding box goes to `+0xc0` and its
@@ -191,7 +191,7 @@ matrix, the box and its centre, `(min + max)·0.5`. `0x5f7a60` calls 0x6dc540(ma
 The non-empty test compares min with max per axis, `fcomp` with `test ah,5; jp` (a NaN fails).
 Then `0x5f7b00(model, GAMEOBJECT_ARTKIT)`, the handler's slot 30, `0x5f8c50(+0x280)` and
 `CM2Model::SetUserData(1)`. Slot 25 (`0x5fa050`) copies `+0x218`; slot 20 (`0x5f85f0`) returns
-`+0x284`, but 0 for a door given flag 0x8000; slot 19 (`0x5fa010`) is `+0x284` or slot 21.
+`+0x284`, but 0 for a door given flag 0x8000; slot 19 (`0x5fa010`) is `+0x284` or slot 21. Slices: go_animate_bounds_difftest `0x5f79ad`-`0x5f7a01`.
 
 ## Object slots
 
@@ -292,7 +292,7 @@ or distance past the range.
 Addresses: `0x5f3130`, `0x5f315f`, `0x5f316e`, `0x5f31a2`, `0x5f31b2`, `0x5f31df`, `0x5f3231`, `0x5f326c`, `0x5f32a6`, `0x5f32e5`, `0x5f3328`, `0x5f3346`, `0x5f3392`, `0x5f5970`, `0x5f59a0`, `0x47cff0`, `0x605f30`, `0x6e3480`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::go_canuse_dist2_difftest`
 
 `0x5f3130(error, range)`: `IsDeadOrGhost` gives 0x7e; `0xb4b3e4` 0 gives 0x7f. No lock: a positive
 `UNIT_FIELD_MOUNTDISPLAYID` with `0x47cff0` false (type not 19) gives 0x19f; a form without bit 0x8
@@ -301,7 +301,7 @@ Test: none
 `0x5f83d0` returning 1 gives `[handler+8]`. The range is `[handler+0xc]`, or the opening spell's
 maximum (`0x5f3328`) for the distance test only: the range handed back is always `[handler+0xc]`,
 written at `0x5f32f4` before the spell's; without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dy² + dz²)`
-against range², `test ah,5; jp`; farther gives 0xe1, a NaN passes.
+against range², `test ah,5; jp`; farther gives 0xe1, a NaN passes. Slices: go_canuse_dist2_difftest `0x5f3346`-`0x5f3377`.
 
 ## Using a game object
 

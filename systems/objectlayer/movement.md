@@ -36,7 +36,7 @@ pitch when absent and leaves the falling and elevation fields as they were.
 Addresses: `0x47eba0`, `0x47ebab`, `0x47ebb3`, `0x47ebe6`, `0x47ebf5`, `0x47ec2c`, `0x47ec34`, `0x47ec4a`, `0x47ec53`, `0x47ec5b`, `0x47ec8e`, `0x47ecb0`, `0x4190b0`, `0x418fb0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::movement_block_encode_difftest`
 
 `0x47eba0(ecx store, edx status)` reads the flags into `+0x10` (`0x47ebab`), the time into `+0x00`
 (`0x47ebb3`), then floats into `+0x24` to `+0x30`. `test [esi+0x10],0x2000000` (`0x47ebe6`) gates
@@ -70,7 +70,7 @@ client stores the spline's start as the clock now minus the elapsed time.
 Addresses: `0x47f050`, `0x47f05c`, `0x47f0a3`, `0x47f0ba`, `0x47f0bf`, `0x47f0e8`, `0x47f0f9`, `0x47f10d`, `0x47f11a`, `0x47f128`, `0x47f148`, `0x47f161`, `0x47f16e`, `0x47f179`, `0x453360`, `0x42c010`, `0x418e30`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::movement_block_decode_difftest`
 
 `0x47f05c` calls `0x47eba0`; six `0x419130` reads fill `+0x50` to `+0x64`. `0x47f0a3` tests
 0x400000 in the status flags; `esi` becomes `+0x68`. `0x47f0ba` reads the spline flags into
@@ -89,7 +89,7 @@ the times and id, then the node count and `12·(count + 1)` bytes.
 Addresses: `0x47ede0`, `0x47edea`, `0x47edf9`, `0x47edfe`, `0x47ee11`, `0x47ee48`, `0x47ee5e`, `0x47eb10`, `0x47eb2d`, `0x47eb6a`, `0x419ac0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::movement_block_skip_difftest`, `objectlayer::movement_info_size_difftest`
 
 `0x47eb10` reads the status flags and advances by `0x14`, or `0x2c` with 0x2000000, plus 4 with
 0x200000, plus 4 for the fall time, plus `0x10` with `0x2000`, plus 4 with 0x4000000

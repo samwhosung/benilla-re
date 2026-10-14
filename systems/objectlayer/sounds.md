@@ -49,7 +49,7 @@ holds. The player's slot 34 uses 36, 31 and 41 in 101 and raises the sound two y
 Addresses: `0x623490`, `0x623520`, `0x8626d4`, `0x623290`, `0x623020`, `0x623064`, `0x623b10`, `0x623b58`, `0x623b64`, `0x623b70`, `0x62f880`, `0x62f940`, `0x86424c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_sound_z_bias`
 
 `0x623520` advances the client random state in line, the steps of `CRandom::uint32` (`random`),
 then takes `MulHigh32(r, 101)` and passes when it is at most `0x8626d4[kind]` (70, 100, 60, 100,
@@ -58,7 +58,7 @@ restarts it. `0x623020` reads the row by the 13 cases of `0x623064`; kind 6 and 
 give 0. The class passed to 0x458890 is `0x623b10(kind)`: kinds 0 and 1 give 5, or 11 when the
 creature record's flags `+0x14` have 0x20 (`0x623b70`); 2, 3 and 9 give 7, or 12; the rest 0
 (bytes `0x623b64` into `0x623b58`). The player's `0x62f940` uses `0x86424c` (35, 100, 30, …) and
-gives the active player class 8 for kinds 2, 3 and 9.
+gives the active player class 8 for kinds 2, 3 and 9. Slices: diff_sound_z_bias `0x62f90a`-`0x62f923`.
 
 ## Foley and the alert
 
@@ -69,12 +69,12 @@ plays kind 5 on any unit but the active player.
 Addresses: `0x6232c0`, `0x623440`, `0x6230a0`, `0x6236b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f2_sound_pos_z_bias_difftest`
 
 `0x6232c0` compares the tag as a dword in a search tree: `$FD1` to `$FD9` pass 0 to 8 to
 `0x623440`, whose `0x6230a0(row, i)` returns `+0x38 + 4i` for `i` below 4 and 0 otherwise; the
 sound plays through `PlaySoundAtArgs` at the position plus 2.0 in z. `$FDX` calls `0x6236b0`, which
-calls slot 34 with kind 5, not forced, unless the unit is the active player.
+calls slot 34 with kind 5, not forced, unless the unit is the active player. Slices: f2_sound_pos_z_bias_difftest `0x62346a`-`0x623482`.
 
 ## Footsteps
 
@@ -102,13 +102,13 @@ ground's terrain type, to 0x458380 (sound, point).
 Addresses: `0x623a40`, `0x623a59`, `0x623a66`, `0x623afc`, `0x623b90`, `0x6239c0`, `0x862708`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::f2_sound_attach_z_bias_difftest`, `objectlayer::f2_get_attachment_point_difftest`
 
 `0x623a40` needs its own sound data `+0xb40` and 0x4591f0 false (`0x623a59`). `0x623a66`: with `+0xb20` playing
 (0x7a5810) and the kind not above `+0xb24` it returns; else it stores the kind, stops `+0xb20`, and
 plays through 0x459230 into `+0xb20`, by the five cases of `0x623afc`. `0x623b90(out, attachment)`
 returns the attachment's position, or for a model without it the unit's position raised by
-`0x862708[attachment]` for ids 0 to 36.
+`0x862708[attachment]` for ids 0 to 36. Slices: f2_sound_attach_z_bias_difftest `0x623bdf`-`0x623bec`.
 
 ## The loop sound
 
@@ -134,7 +134,7 @@ with `EmoteSounds` on.
 Addresses: `0x6236e0`, `0x62372a`, `0x62373d`, `0x6239f0`, `0x623c80`, `0x623cc2`, `0x623c10`, `0x623d10`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::diff_land_height`
 
 `0x6236e0` asks `CWorld::GetEntityLight` for the liquid at the unit; `0x62372a` returns when the
 surface minus z is above 2.0. `0x62373d` needs `0x625500` below 5 and `+0xc60`, the
@@ -142,7 +142,7 @@ ground's `TerrainType` id, a row whose `+0x10` is below the size's count; liquid
 plays `+0x18` when `+0x10` is 2. `0x623c80(emote, x)` (0x49b4e9) needs the CVar and
 `ClassifyGuidForPlayer` 0 or 2, gets the voice from 0x459270 by display race and gender, and calls
 `0x623c10(voice, 0, x)`, which plays at attachment 17, attaches the sound to the unit and replaces
-`+0xb28`; with its second argument set it also needs `EmoteSounds`. `0x623d10` plays `0xc4e0c8`.
+`+0xb28`; with its second argument set it also needs `EmoteSounds`. `0x623d10` plays `0xc4e0c8`. Slices: diff_land_height `0x62372a`-`0x623738`.
 
 ## Weapon and armour sounds
 

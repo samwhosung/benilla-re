@@ -20,7 +20,7 @@ falls back to the table's first row. The model path (vtable slot 10) falls back 
 Addresses: `0x60afb0`, `0x60b131`, `0x60ae10`, `0x600320`, `0x60d2d0`, `0x5fc310`, `0x60c690`, `0x60c6a0`, `0x60c6c0`, `0x60c6e0`, `0x60a390`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::base_render_alpha_difftest`, `objectlayer::diff_transform_scale_copy`
 
 The rows come from the index tables 0xc0de90 (display), 0xc0dea4 (extra, by display `+0xc`),
 0xc0de68 (model, `+0x4`), 0xc0de54 (sound, display `+0x8` else model `+0x34`) and 0xc0d634
@@ -71,7 +71,7 @@ mount's, and takes the mount's footprints and sound data. `0x607ce0` reverses it
 Addresses: `0x5ffa50`, `0x607a00`, `0x607ce0`, `0x607c60`, `0x60c480`, `0x6079b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::unit_mount_scale_difftest`
 
 `0x607a00` needs both the display row (0xc0de90) and its model data (0xc0de68), stores the
 display's `+0x10` scale at `+0x9c`, hands the model to `0x613d80`, copies the model data's
@@ -82,7 +82,7 @@ display's `+0x8` sound row, else the model data's `+0x34`; `0x60c480` returns `+
 `+0xb40`. `0x607ce0` detaches, clears the mount model, plays animation 0 on the body, sizes the
 selection from the body, clears `+0xb44` and resets the camera. `0x5ffa50` also refreshes the unit
 sounds, the quest marker and the name. `0x6079b0`, which nothing reaches, returns the mount's model
-path and reads through a null row when the display or model is missing.
+path and reads through a null row when the display or model is missing. Slices: unit_mount_scale_difftest `0x607ae0`-`0x607b8c`.
 
 ## Selection circle and colour
 
@@ -94,7 +94,7 @@ units by attack, PvP and party; for others grey when dead, else by reaction towa
 Addresses: `0x608e00`, `0x60aee0`, `0x605960`, `0x607f60`, `0x60b1d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::shadow_quad_difftest`, `objectlayer::camera_model_scale_difftest`
 
 Colours are built once (guard bits in `0xc4d9b8`) as ARGB: reactions 0 to 7 at `0xc4d8a4` red,
 red, orange 0xffff8000, yellow, then green; `0xc4da4c` blue (0x60, 0x60, 0xff), `0xc4d990` light
@@ -106,7 +106,7 @@ health, else the reaction (0x6061e0) colour. At `0x607f60` slot 14 sets bit 0x10
 the player's target while the player attacks something and may attack it; `0x605960` then
 returns `0xc4d8c8`, red whose green byte slot 14 sweeps 0 to 128 and back every 500 ms
 (`0xc4daa0`, `0xc4daa4`). The radius is √(½·√(dx² + dy²)) of animation 0's bounds or the model's,
-1.2 when flat. `0x60b1d0(old)` resizes the mover (0x60b270); a 0 result sends opcode 0x29b, no body.
+1.2 when flat. `0x60b1d0(old)` resizes the mover (0x60b270); a 0 result sends opcode 0x29b, no body. Slices: shadow_quad_difftest `0x608e14`-`0x608e6a`; camera_model_scale_difftest `0x60af4f`-`0x60afac`.
 
 ## Hand items and weapons
 
@@ -119,7 +119,7 @@ main-hand weapon. Each hand keeps a weapon trail.
 Addresses: `0x605da0`, `0x605ddb`, `0x605e0f`, `0x605e30`, `0x605ee0`, `0x605f10`, `0x60b770`, `0x60b590`, `0x611e10`, `0x611ff0`, `0x608d60`, `0x60ba00`, `0x60d5d0`, `0x60e550`, `0x608dd0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::u5_trail_color_byte_difftest`, `objectlayer::u5_trail_midpoint_difftest`
 
 Info bytes: 0 class, 1 subclass, 3 inventory type, 4 sheath type. `0x605e30(slot, raw)` is null
 without a display (`0x605f10`); unless raw, with `UNIT_FIELD_FLAGS` bit 21, slot 0 is null when it holds a weapon, and slot 1 when it holds one and slot 0 does not.
@@ -132,7 +132,7 @@ model between the hand attachment (1; 2, or 0 for a shield; 1 or 2 for ranged) a
 one (0x47a070), opening or closing the hand.
 `0x611e10` uses option 17, keeps the model at `+0xd24`, gives a bow `0x611ff0` (a line from `$WTT`
 to `$WTB`) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
-`WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both.
+`WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both. Slices run `0x612044`-`0x612116` and `0x612221`-`0x612269`.
 
 ## Shapeshift forms
 
