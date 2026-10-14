@@ -12529,31 +12529,31 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515970	725	Script::GetGUIDFromName	idb	ui	primitive	uint64_t __fastcall GetGUIDFromName(const char *token)	Returns the GUID a unit token names, 0 for none, and raises for an unknown token	verified	one	ui/unittokens#the-unit-token	
 0x515c50	505	ListUnitTokens		ui	primitive	char **__fastcall ListUnitTokens(const uint64_t *guid, int32_t *count)	Lists the tokens that name a GUID in a fixed order into seven global buffers	verified	one	ui/unittokens#the-tokens-of-a-guid	
 0x515e50	65	SignalUnitEvent		ui	primitive	void __fastcall SignalUnitEvent(const uint64_t *guid, int32_t eventId)	Signals an event once per token that names a GUID, with the token as arg1	verified	one	ui/unittokens#the-tokens-of-a-guid	
-0x515ea0	61	Script::GetTime	idb	ui	primitive		Implements the Lua function GetTime	inferred	none		ui::luabind_515ea0_get_time
-0x515ee0	46	Script::GetGameTime	idb	ui	orchestration		Implements the Lua function GetGameTime	inferred	none		
-0x515f10	60	Script::ConsoleExec	idb	ui	orchestration		Implements the Lua function ConsoleExec	inferred	none		
-0x515f50	17	Script::ReadFile	idb	ui	orchestration		Implements the Lua function ReadFile	inferred	none		
-0x515f70	17	Script::DeleteFile	idb	ui	orchestration		Implements the Lua function DeleteFile	inferred	none		
-0x515f90	17	Script::AppendToFile	idb	ui	orchestration		Implements the Lua function AppendToFile	inferred	none		
+0x515ea0	61	Script::GetTime	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the clock in seconds	verified	one	ui/unitverbs#time-console-and-files	
+0x515ee0	46	Script::GetGameTime	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the hour and minute of the game clock	verified	one	ui/unitverbs#time-console-and-files	
+0x515f10	60	Script::ConsoleExec	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs a console line	verified	one	ui/unitverbs#time-console-and-files	
+0x515f50	17	Script::ReadFile	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Refuses file reads with Access Denied	verified	one	ui/unitverbs#time-console-and-files	
+0x515f70	17	Script::DeleteFile	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Refuses file deletes with Access Denied	verified	one	ui/unitverbs#time-console-and-files	
+0x515f90	17	Script::AppendToFile	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Refuses file appends with Access Denied	verified	one	ui/unitverbs#time-console-and-files	
 0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Pushes 1 for a selectable held unit or a roster member, else nil	verified	one	ui/unitinfo#unitexists	
 0x516030	57	Script::UnitIsVisible	idb	ui	orchestration		Pushes 1 when the token names a held unit object, else nil	verified	one	ui/unitinfo#unitisvisible	
-0x516070	222	Script::UnitIsUnit	idb	ui	primitive		Implements the Lua function UnitIsUnit	inferred	none		
+0x516070	222	Script::UnitIsUnit	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when two unit tokens name the same unit	verified	one	ui/unitverbs#same-unit-and-membership	
 0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Pushes 1 for a player object or a party or raid member by GUID, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
 0x5161c0	79	Script::UnitIsCorpse	idb	ui	orchestration		Pushes 1 when the GUID has a corpse object, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
 0x516210	123	Script::UnitIsPartyLeader	idb	ui	orchestration		Pushes 1 for a unit that is a group leader by its player flag or the leader GUID, else nil	verified	one	ui/party#unitispartyleader	
-0x516290	83	Script::UnitInParty	idb	ui	orchestration		Implements the Lua function UnitInParty	inferred	none		
-0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInParty	inferred	none		
+0x516290	83	Script::UnitInParty	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit is in the player party	verified	one	ui/unitverbs#same-unit-and-membership	
+0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit or its owner is in the player party	verified	one	ui/unitverbs#same-unit-and-membership	
 0x516350	83	Script::UnitInRaid	idb	ui	orchestration		Pushes 1 when a unit is a raid member, else nil	verified	one	ui/raid#group-leader-and-membership	
-0x5163b0	83	Script::UnitPlayerOrPetInRaid	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInRaid	inferred	none		
+0x5163b0	83	Script::UnitPlayerOrPetInRaid	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit or its owner is in the player raid	verified	one	ui/unitverbs#same-unit-and-membership	
 0x516410	79	Script::UnitPlayerControlled	idb	ui	primitive		Pushes 1 when UNIT_FIELD_FLAGS bit 3 is set, else nil	verified	one	ui/unitinfo#flag-predicates	
-0x516460	214	Script::UnitIsPVP	idb	ui	primitive		Implements the Lua function UnitIsPVP	inferred	none		
-0x516540	227	Script::UnitIsPVPFreeForAll	idb	ui	primitive		Implements the Lua function UnitIsPVPFreeForAll	inferred	none		
-0x516630	429	Script::UnitFactionGroup	idb	ui	primitive		Implements the Lua function UnitFactionGroup	inferred	none		
-0x5167e0	164	Script::UnitReaction	idb	ui	primitive		Implements the Lua function UnitReaction	inferred	none		
-0x516890	150	Script::UnitIsEnemy	idb	ui	orchestration		Implements the Lua function UnitIsEnemy	inferred	none		
+0x516460	214	Script::UnitIsPVP	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit is flagged for PVP	verified	one	ui/unitverbs#pvp-flags	
+0x516540	227	Script::UnitIsPVPFreeForAll	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit is flagged free for all PVP	verified	one	ui/unitverbs#pvp-flags	
+0x516630	429	Script::UnitFactionGroup	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the faction group token and name of a unit	verified	one	ui/unitverbs#faction-and-reaction	
+0x5167e0	164	Script::UnitReaction	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the reaction of one unit towards another plus 1	verified	one	ui/unittokens#what-the-functions-push	
+0x516890	150	Script::UnitIsEnemy	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when one unit is hostile to another	verified	one	ui/unitverbs#faction-and-reaction	
 0x516930	307	Script::UnitIsFriend	idb	ui	orchestration		Pushes 1 when two units are friends by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x516a70	306	Script::UnitCanCooperate	idb	ui	orchestration		Pushes 1 when two units can cooperate by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
-0x516bb0	149	Script::UnitCanAssist	idb	ui	orchestration		Implements the Lua function UnitCanAssist	inferred	none		
+0x516bb0	149	Script::UnitCanAssist	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when one unit can assist another	verified	one	ui/unitverbs#faction-and-reaction	
 0x516c50	149	Script::UnitCanAttack	idb	ui	orchestration		Pushes 1 when both units resolve and the first can attack the second, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
 0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Pushes 1 when UNIT_FIELD_CHARMEDBY is nonzero, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x516d40	79	Script::UnitIsPlusMob	idb	ui	primitive		Pushes 1 when UNIT_FIELD_FLAGS bit 6 is set, else nil	verified	one	ui/unitinfo#flag-predicates	
@@ -12561,20 +12561,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516de0	82	Script::IsInGuild	idb	ui	orchestration		Pushes 1 when the player has a guild id, else nil	verified	one	ui/guild#rank-rights	
 0x516e40	89	Script::IsGuildLeader	idb	ui	orchestration		Pushes 1 when the player's guild rank is 0, else nil	verified	one	ui/guild#rank-rights	
 0x516ea0	86	Script::IsResting	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns 1 when the active player is resting, else nil	verified	one	ui/rested#resting-flag	
-0x516f00	82	Script::GetDodgeChance	idb	ui	orchestration		Implements the Lua function GetDodgeChance	inferred	none		
-0x516f60	82	Script::GetBlockChance	idb	ui	orchestration		Implements the Lua function GetBlockChance	inferred	none		
-0x516fc0	82	Script::GetParryChance	idb	ui	orchestration		Implements the Lua function GetParryChance	inferred	none		
+0x516f00	82	Script::GetDodgeChance	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the dodge chance of the player	verified	one	ui/unitverbs#player-numbers	
+0x516f60	82	Script::GetBlockChance	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the block chance of the player	verified	one	ui/unitverbs#player-numbers	
+0x516fc0	82	Script::GetParryChance	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the parry chance of the player	verified	one	ui/unitverbs#player-numbers	
 0x517020	618	Script::UnitName	idb	ui	primitive		Pushes a unit's name and realm; for the string player it pushes the selected character's name and nil	verified	one	ui/unitplayer#the-four-readers	
 0x517290	21			ui	orchestration		Runs ScriptEvents.cpp code that calls 0x491a00; not read here	inferred	none		
 0x5172b0	157	Script::UnitPVPName	idb	ui	primitive	int __fastcall (lua_State *L)	Returns a unit's name with its honor title, or nil for a missing object	verified	one	ui/honor#pvp-name	
-0x517350	181	Script::UnitXP	idb	ui	primitive		Implements the Lua function UnitXP	inferred	none		
-0x517410	181	Script::UnitXPMax	idb	ui	primitive		Implements the Lua function UnitXPMax	inferred	none		
+0x517350	181	Script::UnitXP	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the experience of the active player	verified	one	ui/unitverbs#player-numbers	
+0x517410	181	Script::UnitXPMax	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the experience the active player needs for the next level	verified	one	ui/unitverbs#player-numbers	
 0x5174d0	215	Script::UnitHealth	idb	ui	primitive		Pushes a unit's health from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
 0x5175b0	182	Script::UnitHealthMax	idb	ui	orchestration		Pushes a unit's maximum health from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
 0x517670	360	Script::UnitMana	idb	ui	primitive		Pushes a unit's power from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
 0x5177e0	344	Script::UnitManaMax	idb	ui	primitive		Pushes a unit's maximum power from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
 0x517940	245	Script::UnitPowerType	idb	ui	orchestration		Pushes a unit's power type from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
-0x517a40	113	Script::UnitOnTaxi	idb	ui	primitive		Implements the Lua function UnitOnTaxi	inferred	none		
+0x517a40	113	Script::UnitOnTaxi	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a unit is on a taxi, else nil	verified	one	ui/unitverbs#player-numbers	
 0x517ac0	204	Script::UnitIsDead	idb	ui	primitive		Pushes 1 when a unit is dead, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517b90	209	Script::UnitIsGhost	idb	ui	primitive		Pushes 1 when a unit is a ghost, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517c70	215	Script::UnitIsDeadOrGhost	idb	ui	primitive		Pushes 1 when a unit is dead or a ghost, else nil	verified	one	ui/party#reading-a-member-without-its-object	
@@ -12582,7 +12582,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x517e10	113	Script::UnitAffectingCombat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the unit's UNIT_FIELD_FLAGS has bit 19 set, else nil	verified	one	ui/bindings#unit-combat-flag	
 0x517e90	290	Script::UnitSex	idb	ui	orchestration		Pushes the sex number of a unit; for the string player it reads the selected character's sex byte	verified	one	ui/unitplayer#the-four-readers	
 0x517fc0	404	Script::UnitLevel	idb	ui	primitive		Pushes the level of a unit: -1 for far hostile or world boss, drunk reduction, roster level	verified	one	ui/unitlevels#unitlevel	ui::luabind_517fc0_unit_level
-0x518160	145	Script::GetMoney	idb	ui	orchestration		Implements the Lua function GetMoney	inferred	none		
+0x518160	145	Script::GetMoney	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the money of the active player	verified	one	ui/unitverbs#player-numbers	
 0x518200	323	Script::UnitRace	idb	ui	orchestration		Pushes the localised race name and file token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
 0x518350	323	Script::UnitClass	idb	ui	orchestration		Pushes the localised class name and upper-case token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
 0x5184a0	345	Script::UnitResistance	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a unit's resistance base, value and buffs, raising on an index outside 0 to 6	verified	one	ui/unitstats#resistances-and-armor	
@@ -12596,7 +12596,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5190c0	308	Script::UnitRangedAttackPower	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a unit's ranged attack power and its two mods, each scaled by the multiplier and rounded	verified	one	ui/unitstats#attack-power	ui::unit_ranged_attack_power
 0x519200	210	Script::UnitDefense	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a unit's defense skill and modifier for the player or a unit the player owns	verified	one	ui/unitstats#defense-and-weapon-skills	
 0x5192e0	306	Script::UnitArmor	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a unit's armor base, effective value, armor and buffs from the armor school resistance	verified	one	ui/unitstats#resistances-and-armor	
-0x519420	217	Script::UnitCharacterPoints	idb	ui	primitive		Implements the Lua function UnitCharacterPoints	inferred	none		
+0x519420	217	Script::UnitCharacterPoints	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the two character point counters of the active player	verified	one	ui/unitverbs#player-numbers	
 0x519500	862	Script::UnitBuff	idb	ui	primitive		Pushes a unit's index-th buff icon and stack count, gated by who may see buffs	verified	one	ui/auradisplay#unitbuff-and-unitdebuff	
 0x519860	134	IsAuraDisplayable		ui	primitive		Returns whether a spell's aura shows: attribute bits, category bit and no tracking effect	verified	one	ui/auradisplay#the-per-slot-display-test	
 0x5198f0	928	Script::UnitDebuff	idb	ui	primitive		Pushes a unit's index-th debuff icon, stack count and dispel type	verified	one	ui/auradisplay#unitbuff-and-unitdebuff	
@@ -12607,7 +12607,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x519e50	149	Script::UnitHasRelicSlot	idb	ui	primitive		Pushes 1 for a player whose class row has a relic slot, else nil	verified	one	ui/unitinfo#unithasrelicslot	
 0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Clears a texture widget and binds the unit's portrait: a bake, a cached bake or a stand-in	verified	one	ui/portraits#setportraittexture	
 0x51a100	21	OnPortraitNameArrived		ui	orchestration		Marks the portrait dirty when the name cache answers	verified	one	ui/portraits#setportraittexture	
-0x51a120	100	Script::HasFullControl	idb	ui	orchestration		Implements the Lua function HasFullControl	inferred	none		
+0x51a120	100	Script::HasFullControl	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the player is alive and has control, else nil	verified	one	ui/unitverbs#player-numbers	
 0x51a190	232	Script::GetComboPoints	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the combo points of a rogue or druid on its combo target, else 0	verified	one	ui/actionuse#combo-points	
 0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Pushes the localised creature type name of a unit, or nil	verified	one	ui/unitinfo#the-creature-type	
 0x51a310	130	Script::UnitCreatureFamily	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the localized creature family name of a unit, or nil	verified	one	ui/unitstats#creature-family	
