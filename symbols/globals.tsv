@@ -2892,7 +2892,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbbbe90	uint8_t[16][2060]	s_gossipOptions		ui	Holds the 16 gossip option slots: text, server index, coded byte and icon	verified	one	ui/gossip#the-gossip-message
 0xbc3f58	uint64_t	s_gossipGuid		ui	Holds the GUID of the NPC whose gossip window is open, 0 for none	verified	one	ui/taxiroute#new-flight-path
 0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
-0xbc3fd0	uint32_t			ui	Holds a dword that Script::ItemTextHasNextPage reads and writes; not read here	inferred	none	
+0xbc3fbc	uint32_t	s_itemTextSingleId		ui	Holds the item text id of the open object, or 0 for page text	verified	one	ui/itemtext#what-is-kept
+0xbc3fc4	uint32_t	s_itemTextPage		ui	Holds the zero-based page shown in the item text window	verified	one	ui/itemtext#what-is-kept
+0xbc3fd0	uint32_t *	s_itemTextPageIds		ui	Points to the page text ids of the open object, one per page	verified	one	ui/itemtext#what-is-kept
+0xbc3fe8	char[8000]	s_itemTextBuffer		ui	Holds the text of the current page of the item text window	verified	one	ui/itemtext#what-is-kept
 0xbc5f68	uint32_t[48]	s_auraExpiry		ui	Holds each aura slot's expiry time in milliseconds, 0 for none	verified	one	ui/auradisplay#the-duration-packet
 0xbc6040	uint8_t[768]	s_buffCache		ui	Holds the 48 sixteen-byte buff records of the active player	verified	one	ui/auradisplay#the-players-buff-cache
 0xbc6378	uint32_t	s_trackingSpell		ui	Holds the spell id of the last tracking aura the cache rebuild met	verified	one	ui/auradisplay#rebuilding-the-cache
@@ -3002,20 +3005,25 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbde068	char[512]	s_questGreetingText		ui	Holds the quest giver's greeting	verified	one	ui/gossip#quest-greetings
 0xbde288	char[1024]	s_questDetailText		ui	Holds the quest details text	verified	one	ui/gossip#quest-greetings
 0xbde690	uint8_t[32][76]	s_activeQuests		ui	Holds the quest giver's active quests: id, level and title	verified	one	ui/questgiver#the-two-pools
+0xbdf020	uint32_t[54]	s_questPanelItems		ui	Holds six 36-byte records of reward, choice and required item triples	verified	one	ui/questpanel#item-records
 0xbdf0f8	char[1024]	s_questProgressText		ui	Holds the quest progress text	verified	one	ui/gossip#quest-greetings
 0xbdf500	char[1024]	s_questObjectiveText		ui	Holds the quest objective text, empty when the source is	verified	one	ui/gossip#quest-greetings
 0xbdf900	char[88]	s_questTitleText		ui	Holds the quest title text	verified	one	ui/gossip#quest-greetings
 0xbdf958	char[1024]	s_questRewardText		ui	Holds the quest reward text	verified	one	ui/gossip#quest-greetings
 0xbdfe60	uint8_t[32][76]	s_availableQuests		ui	Holds the quest giver's available quests: id, level, title and one-click flag	verified	one	ui/questgiver#the-two-pools
 0xbe0810	uint64_t	s_questFrameGuid		ui	Holds a GUID whose presence turns a player's shared quest details into a busy answer	inferred	none	objectlayer/quests#details-request-and-reward
-0xbe0818	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe0818	uint32_t	s_questPanelKind		ui	Holds the kind of the open quest panel: 0 greeting, 1 details, 2 progress, 3 reward	verified	one	ui/questpanel#panel-state
+0xbe081c	uint32_t	s_questPanelQuestId		ui	Holds the id of the quest the open panel shows	verified	one	ui/questpanel#panel-state
+0xbe0820	uint32_t	s_questPanelCompletable		ui	Holds the completable flag of the last quest request	verified	one	ui/questpanel#item-records
 0xbe0824	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0828	uint32_t	s_chosenRewardItem		ui	Holds the reward item chosen on the quest frame	inferred	none	objectlayer/quests#quest-completion
+0xbe082c	int32_t	s_questRewardMoney		ui	Holds the money the open quest panel rewards	verified	one	ui/questpanel#item-records
 0xbe0830	uint32_t	s_questRewardSpell		ui	Holds the reward spell id of the last quest details or offer reward packet, never cleared	verified	one	ui/questrewardspell#reward-spell-source
 0xbe0834	uint32_t	s_availableQuestCount		ui	Holds the number of rows in the available quest pool	verified	one	ui/questgiver#the-two-pools
 0xbe0838	uint32_t	s_activeQuestCount		ui	Holds the number of rows in the active quest pool	verified	one	ui/questgiver#the-two-pools
+0xbe083c	int32_t	s_questWantedMoney		ui	Holds the money the open quest panel asks the player to hand over	verified	one	ui/questpanel#item-records
 0xbe0840	uint32_t	s_pendingQuestConfirm		ui	Holds the quest id of the last quest confirmation request, never cleared	verified	one	ui/questshare#the-confirmation-request
-0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe0844	uint32_t	s_questPanelActed		ui	Holds 1 once the open quest panel has sent its answer	verified	one	ui/questpanel#panel-state
 0xbe0a9c	uint32_t[4]	s_taxiRouteFrameLines		ui	Holds the route frame's line array: capacity, count, buffer and grow step, zero in every write	verified	one	ui/taxiframe#module-state
 0xbe0b14	void *	s_taxiRouteFrame		ui	Holds the last constructed route frame, cleared by its destructor and never read	verified	one	ui/taxiframe#module-state
 0xbe0b18	float	s_smartRectSquare18		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers

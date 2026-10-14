@@ -10094,14 +10094,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e26e0	274	HandleGossipMessagePacket	idb	ui	primitive		Handles the gossip message: latches the target, reads options and quests, builds the greeting	verified	one	ui/gossip#the-gossip-message	
 0x4e2800	55	HandleGossipCompletePacket	idb	ui	orchestration		Runs its object file code that calls 0x4e1fa0; not read here	inferred	none		
 0x4e2840	123	HandleGossipPoiPacket	idb	ui	orchestration		Reads a point of interest and stores it in the second static blip	verified	one	ui/gossip#the-gossip-point-of-interest	
-0x4e28c0	16	Script::GetGossipText	idb	ui	orchestration		Implements the Lua function GetGossipText	inferred	none		
+0x4e28c0	16	Script::GetGossipText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the gossip text	verified	one	ui/questpanel#gossip-rows	
 0x4e28d0	93	Script::GetGossipOptions	idb	ui	primitive		Pushes the text and type name of each gossip option in slot order	verified	one	ui/gossip#the-icon-names	
-0x4e2930	115	Script::GetGossipAvailableQuests	idb	ui	primitive		Implements the Lua function GetGossipAvailableQuests	inferred	none		
-0x4e29b0	115	Script::GetGossipActiveQuests	idb	ui	primitive		Implements the Lua function GetGossipActiveQuests	inferred	none		
+0x4e2930	115	Script::GetGossipAvailableQuests	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the title and level of each available gossip quest row	verified	one	ui/questgiver#the-split-on-gossip	
+0x4e29b0	115	Script::GetGossipActiveQuests	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the title and level of each active gossip quest row	verified	one	ui/questgiver#the-split-on-gossip	
 0x4e2a30	104	Script::SelectGossipOption	idb	ui	primitive		Selects a gossip option by its 1-based number and optional code	verified	one	ui/gossip#selecting-an-option	
-0x4e2aa0	64	Script::SelectGossipAvailableQuest	idb	ui	orchestration		Implements the Lua function SelectGossipAvailableQuest	inferred	none		
-0x4e2ae0	64	Script::SelectGossipActiveQuest	idb	ui	orchestration		Implements the Lua function SelectGossipActiveQuest	inferred	none		
-0x4e2b20	50	Script::CloseGossip	idb	ui	orchestration		Implements the Lua function CloseGossip	inferred	none		
+0x4e2aa0	64	Script::SelectGossipAvailableQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the available gossip quest row of a number	verified	one	ui/questpanel#gossip-rows	
+0x4e2ae0	64	Script::SelectGossipActiveQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the active gossip quest row of a number	verified	one	ui/questpanel#gossip-rows	
+0x4e2b20	50	Script::CloseGossip	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the gossip dialog	verified	one	ui/questpanel#gossip-rows	
 0x4e2b60	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e2b80	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e2ba0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -10171,22 +10171,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e3170	118			ui	orchestration		Runs its object file code that calls RoundUpToChunk, 0x4368c0; not read here	inferred	none		
 0x4e31f0	55			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4e3230	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e3240	50			ui	orchestration		Runs its object file code that calls 0x4e32e0; not read here	inferred	none		
-0x4e3280	46			ui	orchestration		Runs its object file code that calls 0x4e32e0; not read here	inferred	none		
-0x4e32b0	46			ui	orchestration		Runs its object file code that calls 0x4e32e0; not read here	inferred	none		
-0x4e32e0	713			ui	primitive		Runs ItemTextFrame.cpp code that calls 0x4931c0, FrameScript_SignalEvent, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
-0x4e35b0	702			ui	primitive		Shows or closes an item's text window; not read here	inferred	none	objectlayer/playermessages#reading-items	
-0x4e3870	53			ui	primitive		Runs ItemTextFrame.cpp code not read here	inferred	none		
-0x4e38b0	64			ui	primitive		Runs ItemTextFrame.cpp code not read here	inferred	none		
-0x4e38f0	69	Script::ItemTextGetItem	idb	ui	orchestration		Implements the Lua function ItemTextGetItem	inferred	none		
-0x4e3940	174	Script::ItemTextGetCreator	idb	ui	primitive		Implements the Lua function ItemTextGetCreator	inferred	none		
+0x4e3240	50	CloseItemTextImpl		ui	orchestration		Closes the item text window	verified	one	ui/itemtext#opening-and-closing	
+0x4e3280	46	ItemTextRecordArrived		ui	orchestration		Reopens the item text window when a cached record arrives for the open object	verified	one	ui/itemtext#opening-and-closing	
+0x4e32b0	46	ItemTextCreatorArrived		ui	orchestration		Reopens the item text window when a creator name arrives for the open object	verified	one	ui/itemtext#opening-and-closing	
+0x4e32e0	713	SetItemTextObject		ui	primitive		Opens the item text window for an object, or closes it for a zero or open GUID	verified	one	ui/itemtext#opening-and-closing	
+0x4e35b0	702	ShowItemTextPage		ui	primitive		Expands, translates and shows the current page of the open item text	verified	one	ui/itemtext#showing-a-page	
+0x4e3870	53	ItemTextPreviousPage		ui	primitive		Moves the item text window back one page and shows it	verified	one	ui/itemtext#moving-between-pages	
+0x4e38b0	64	ItemTextAdvancePage		ui	primitive		Moves the item text window forward one page and shows it	verified	one	ui/itemtext#moving-between-pages	
+0x4e38f0	69	Script::ItemTextGetItem	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the open item text object, or nil	verified	one	ui/itemtext#the-source-of-the-text	
+0x4e3940	174	Script::ItemTextGetCreator	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the creator name of the open item, or nil	verified	one	ui/itemtext#the-source-of-the-text	
 0x4e39f0	212	Script::ItemTextGetMaterial	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the page material name of the open item text's source object, or nil	verified	one	ui/questmaterial#quest-background-material	
-0x4e3ad0	45	Script::ItemTextGetPage	idb	ui	primitive		Implements the Lua function ItemTextGetPage	inferred	none		
-0x4e3b00	16	Script::ItemTextGetText	idb	ui	orchestration		Implements the Lua function ItemTextGetText	inferred	none		
-0x4e3b10	59	Script::ItemTextHasNextPage	idb	ui	orchestration		Implements the Lua function ItemTextHasNextPage	inferred	none		
-0x4e3b50	8	Script::ItemTextPrevPage	idb	ui	orchestration		Implements the Lua function ItemTextPrevPage	inferred	none		
-0x4e3b60	8	Script::ItemTextNextPage	idb	ui	orchestration		Implements the Lua function ItemTextNextPage	inferred	none		
-0x4e3b70	52	Script::CloseItemText	idb	ui	orchestration		Implements the Lua function CloseItemText	inferred	none		
+0x4e3ad0	45	Script::ItemTextGetPage	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the one-based page of the open item text	verified	one	ui/itemtext#moving-between-pages	
+0x4e3b00	16	Script::ItemTextGetText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the text of the current item text page	verified	one	ui/itemtext#moving-between-pages	
+0x4e3b10	59	Script::ItemTextHasNextPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the open item text has a next page, else nil	verified	one	ui/itemtext#moving-between-pages	
+0x4e3b50	8	Script::ItemTextPrevPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows the previous page of the open item text	verified	one	ui/itemtext#moving-between-pages	
+0x4e3b60	8	Script::ItemTextNextPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows the next page of the open item text	verified	one	ui/itemtext#moving-between-pages	
+0x4e3b70	52	Script::CloseItemText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the item text window	verified	one	ui/itemtext#the-source-of-the-text	
 0x4e3bb0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e3bd0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e3bf0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11546,52 +11546,52 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x500ef0	376			ui	primitive		Copies a quest's title and rewards for the quest window and signals QUEST_COMPLETE	inferred	none	objectlayer/quests#details-request-and-reward	
 0x501070	187			ui	primitive		Copies a quest's title and required items and signals QUEST_PROGRESS	inferred	none	objectlayer/quests#details-request-and-reward	
 0x501130	241	ReportQuestDeclined		ui	primitive		Sends the decline result to a sharing player, clears the dialog source and fires QUEST_FINISHED	verified	one	ui/questshare#what-the-client-answers-itself	
-0x501230	107			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x501230	107	IsQuestPanelCompletable		ui	primitive		Returns whether the request is completable and the player carries every required item	verified	one	ui/questpanel#completing-and-choosing	
 0x5012a0	127	SelectAvailableQuestImpl		ui	primitive		Sends a query or a complete for an available row, once, and sets the acted latch	verified	one	ui/questgiver#clicking-a-row	
 0x501320	86	SelectActiveQuestImpl		ui	primitive		Sends a complete for an active row, once, and sets the acted latch	verified	one	ui/questgiver#clicking-a-row	
 0x501380	101	AcceptQuestImpl		ui	orchestration		Sends CMSG_QUESTGIVER_ACCEPT_QUEST for the open offer and closes the panel	verified	one	ui/questshare#accepting-and-declining	
 0x5013f0	361	DeclineQuestImpl		ui	primitive		Declines the open offer: reopens the giver's list, reports to a sharer or interacts with an object	verified	one	ui/questshare#accepting-and-declining	
-0x501560	79			ui	orchestration		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x5015b0	159			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x5016c0 and 1 more; not read here	inferred	none		
+0x501560	79	RequestQuestReward		ui	orchestration		Sends the request for the reward of a progress panel, once	verified	one	ui/questpanel#completing-and-choosing	
+0x5015b0	159	ChooseQuestReward		ui	primitive		Sends the reward choice of a reward panel, once, returning 0 for a choice out of range	verified	one	ui/questpanel#completing-and-choosing	
 0x501650	5			ui	orchestration		Runs QuestFrame.cpp code not read here	inferred	none		
 0x501660	15			ui	primitive		Runs QuestFrame.cpp code not read here	inferred	none		
 0x501670	5			ui	orchestration		Runs QuestFrame.cpp code not read here	inferred	none		
 0x501680	19			ui	primitive		Runs QuestFrame.cpp code not read here	inferred	none		
-0x5016a0	27			ui	primitive		Runs QuestFrame.cpp code not read here	inferred	none		
-0x5016c0	27			ui	primitive		Runs QuestFrame.cpp code not read here	inferred	none		
-0x5016e0	27			ui	primitive		Runs QuestFrame.cpp code not read here	inferred	none		
-0x501700	436			ui	primitive		Runs QuestFrame.cpp code that calls SStrCmpI, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 7 more; not read here	inferred	none		
-0x5018c0	81			ui	orchestration		Runs QuestFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 1 more; not read here	inferred	none		
-0x501920	115			ui	orchestration		Runs QuestFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
+0x5016a0	27	CountQuestRewardItems		ui	primitive		Counts the leading reward records with an item id	verified	one	ui/questpanel#counting-and-describing-items	
+0x5016c0	27	CountQuestChoiceItems		ui	primitive		Counts the leading choice records with an item id	verified	one	ui/questpanel#counting-and-describing-items	
+0x5016e0	27	CountQuestRequiredItems		ui	primitive		Counts the leading required records with a display id	verified	one	ui/questpanel#counting-and-describing-items	
+0x501700	436	GetQuestItemFields		ui	primitive		Returns the name, icon, count, quality and usability of a reward, choice or required item	verified	one	ui/questpanel#counting-and-describing-items	
+0x5018c0	81	QuestItemArrived		ui	orchestration		Signals QUEST_ITEM_UPDATE when an item record arrives for the quest panel	verified	one	ui/questpanel#item-arrival-and-links	
+0x501920	115	GetQuestItemId		ui	primitive		Returns the item id of a reward, choice or required record	verified	one	ui/questpanel#item-arrival-and-links	
 0x5019a0	112	HandleQuestConfirmRequest		ui	orchestration		Stores the pending quest id and fires QUEST_ACCEPT_CONFIRM with the sender's name and the title	verified	one	ui/questshare#the-confirmation-request	
-0x501a10	15	Script::CloseQuest	idb	ui	orchestration		Implements the Lua function CloseQuest	inferred	none		
-0x501a20	16	Script::GetTitleText	idb	ui	orchestration		Implements the Lua function GetTitleText	inferred	none		
-0x501a30	16	Script::GetGreetingText	idb	ui	orchestration		Implements the Lua function GetGreetingText	inferred	none		
-0x501a40	16	Script::GetQuestText	idb	ui	orchestration		Implements the Lua function GetQuestText	inferred	none		
-0x501a50	16	Script::GetObjectiveText	idb	ui	orchestration		Implements the Lua function GetObjectiveText	inferred	none		
-0x501a60	16	Script::GetProgressText	idb	ui	orchestration		Implements the Lua function GetProgressText	inferred	none		
-0x501a70	16	Script::GetRewardText	idb	ui	orchestration		Implements the Lua function GetRewardText	inferred	none		
+0x501a10	15	Script::CloseQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the open quest dialog and closes it	verified	one	ui/questpanel#money-and-the-title	
+0x501a20	16	Script::GetTitleText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the title text of the open quest dialog	verified	one	ui/questpanel#money-and-the-title	
+0x501a30	16	Script::GetGreetingText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the greeting text of the open quest dialog	verified	one	ui/gossip#quest-greetings	
+0x501a40	16	Script::GetQuestText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the quest details text of the open quest dialog	verified	one	ui/gossip#quest-greetings	
+0x501a50	16	Script::GetObjectiveText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the objective text of the open quest dialog	verified	one	ui/questpanel#money-and-the-title	
+0x501a60	16	Script::GetProgressText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the progress text of the open quest dialog	verified	one	ui/gossip#quest-greetings	
+0x501a70	16	Script::GetRewardText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the reward text of the open quest dialog	verified	one	ui/gossip#quest-greetings	
 0x501a80	23	Script::GetNumAvailableQuests	idb	ui	orchestration		Pushes the number of available quests	verified	one	ui/questgiver#the-lua-functions	
 0x501aa0	23	Script::GetNumActiveQuests	idb	ui	orchestration		Pushes the number of active quests	verified	one	ui/questgiver#the-lua-functions	
-0x501ac0	105	Script::GetAvailableTitle	idb	ui	primitive		Implements the Lua function GetAvailableTitle	inferred	none		
-0x501b30	105	Script::GetActiveTitle	idb	ui	primitive		Implements the Lua function GetActiveTitle	inferred	none		
-0x501ba0	117	Script::GetAvailableLevel	idb	ui	primitive		Implements the Lua function GetAvailableLevel	inferred	none		
-0x501c20	117	Script::GetActiveLevel	idb	ui	primitive		Implements the Lua function GetActiveLevel	inferred	none		
+0x501ac0	105	Script::GetAvailableTitle	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the title of an available quest row, or nil	verified	one	ui/questpanel#money-and-the-title	
+0x501b30	105	Script::GetActiveTitle	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the title of an active quest row, or nil	verified	one	ui/questpanel#money-and-the-title	
+0x501ba0	117	Script::GetAvailableLevel	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the level of an available quest row, or 0	verified	one	ui/questpanel#money-and-the-title	
+0x501c20	117	Script::GetActiveLevel	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the level of an active quest row, or 0	verified	one	ui/questpanel#money-and-the-title	
 0x501ca0	64	Script::SelectAvailableQuest	idb	ui	orchestration		Selects an available quest by its 1-based row	verified	one	ui/questgiver#clicking-a-row	
 0x501ce0	64	Script::SelectActiveQuest	idb	ui	orchestration		Selects an active quest by its 1-based row	verified	one	ui/questgiver#clicking-a-row	
-0x501d20	8	Script::AcceptQuest	idb	ui	orchestration		Implements the Lua function AcceptQuest	inferred	none		
-0x501d30	8	Script::DeclineQuest	idb	ui	orchestration		Implements the Lua function DeclineQuest	inferred	none		
-0x501d40	45	Script::IsQuestCompletable	idb	ui	orchestration		Implements the Lua function IsQuestCompletable	inferred	none		
-0x501d70	8	Script::CompleteQuest	idb	ui	orchestration		Implements the Lua function CompleteQuest	inferred	none		
-0x501d80	71	Script::GetQuestReward	idb	ui	primitive		Implements the Lua function GetQuestReward	inferred	none		
-0x501dd0	23	Script::GetRewardMoney	idb	ui	orchestration		Implements the Lua function GetRewardMoney	inferred	none		
+0x501d20	8	Script::AcceptQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the open quest offer	verified	one	ui/questshare#accepting-and-declining	
+0x501d30	8	Script::DeclineQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the open quest offer	verified	one	ui/questshare#accepting-and-declining	
+0x501d40	45	Script::IsQuestCompletable	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the quest request can be completed, else nil	verified	one	ui/questpanel#completing-and-choosing	
+0x501d70	8	Script::CompleteQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Requests the reward of the open progress panel	verified	one	ui/questpanel#completing-and-choosing	
+0x501d80	71	Script::GetQuestReward	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Chooses a reward and completes the quest of the open reward panel	verified	one	ui/questpanel#completing-and-choosing	
+0x501dd0	23	Script::GetRewardMoney	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the money reward of the open quest dialog	verified	one	ui/questpanel#money-and-the-title	
 0x501df0	162	Script::GetRewardSpell	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon, name and trade skill flag of the last offered reward spell	verified	one	ui/questrewardspell#reward-spell-values	
-0x501ea0	23	Script::GetQuestMoneyToGet	idb	ui	orchestration		Implements the Lua function GetQuestMoneyToGet	inferred	none		
-0x501ec0	50	Script::GetNumQuestRewards	idb	ui	orchestration		Implements the Lua function GetNumQuestRewards	inferred	none		
-0x501f00	50	Script::GetNumQuestChoices	idb	ui	orchestration		Implements the Lua function GetNumQuestChoices	inferred	none		
-0x501f40	50	Script::GetNumQuestItems	idb	ui	orchestration		Implements the Lua function GetNumQuestItems	inferred	none		
-0x501f80	271	Script::GetQuestItemInfo	idb	ui	primitive		Implements the Lua function GetQuestItemInfo	inferred	none		
-0x502090	264	Script::GetQuestItemLink	idb	ui	primitive		Implements the Lua function GetQuestItemLink	inferred	none		
+0x501ea0	23	Script::GetQuestMoneyToGet	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the money the open quest dialog asks for	verified	one	ui/questpanel#money-and-the-title	
+0x501ec0	50	Script::GetNumQuestRewards	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of fixed reward items of the open quest dialog	verified	one	ui/questpanel#counting-and-describing-items	
+0x501f00	50	Script::GetNumQuestChoices	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of reward choices of the open quest dialog	verified	one	ui/questpanel#counting-and-describing-items	
+0x501f40	50	Script::GetNumQuestItems	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of required items of the open quest dialog	verified	one	ui/questpanel#counting-and-describing-items	
+0x501f80	271	Script::GetQuestItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, count, quality and usability of a quest dialog item	verified	one	ui/questpanel#counting-and-describing-items	
+0x502090	264	Script::GetQuestItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of a quest dialog item, or nil	verified	one	ui/questpanel#item-arrival-and-links	
 0x5021a0	16	Script::QuestChooseRewardError	idb	ui	orchestration	int __fastcall (lua_State *L)	Shows the must-choose reward error and returns nothing	verified	one	ui/questmaterial#reward-error	
 0x5021b0	114	Script::ConfirmAcceptQuest	idb	ui	orchestration		Sends CMSG_QUEST_CONFIRM_ACCEPT with the pending quest id	verified	one	ui/questshare#the-confirmation-request	
 0x502230	212	Script::GetQuestBackgroundMaterial	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the page material name of the open quest dialog's source object, or nil	verified	one	ui/questmaterial#quest-background-material	
