@@ -171,7 +171,7 @@ current one or is −1.
 ## Mounted routing
 
 A mounted unit sends a request in the mount set (`0x5fec80`, 33 ids) to the mount model's working state. A request outside that set
-but in the upper-body set goes to the key bone's working state. In both cases bone 0's working state becomes Mount (91), variation −1,
+but in the upper-body set goes to the key bone's working state. In every case bone 0's working state becomes Mount (91), variation −1,
 offset 0, speed 1.0, blend 0, unless bone 0 already plays 91, and the rest of the routing is skipped.
 
 Addresses: `0x5fe7b5`, `0x5fe7bd`, `0x5fe7c1`, `0x5fe7d8`, `0x5fe7dd`, `0x5fe7ea`, `0x5fe7fe`, `0x5fe803`, `0x5fe809`, `0x5fe810`, `0x5fe816`, `0x5fe82f`, `0x5fe940`, `0x5fec80`, `0x5fed90`
@@ -252,3 +252,21 @@ The handler gets `(model, keyBone, id, reason, overshoot)`; `0x5fc9fc` tests the
 unit tests state bit 0x200000 or 0x100000 and, when it is clear, calls the sheathe helper `0x611960` or `0x6118a0`; a nonzero result
 holds the bone. `0x719370` sets the latch (`0x7194bc`) before it queues the callback with reason 0 (`0x7194f5 push 0`) through
 `0x70a280` (`0x7194fe`).
+
+## Variation cycle
+
+A unit's base animation draws a new variation each time its window ends. The window end sets the bone's latch and queues the
+callback (`Sequence end`), which for bone 0 picks the base animation again; the pick calls `PlayAnimation` with variation −1, and the
+finished track reads as id −1 (`Track states`), so `PlayTrack` does not dedup an id equal to the finished one. `PlayTrack` leaves
+the variation −1 except in the cases that set it to 0, the head variation: an attack target, a channel or precast, or a combat, cast
+or ready current animation, for Stand and the ready stances. A window is `span · repeats` wide, so a looping sequence plays its
+repeat count before the draw.
+
+Addresses: `0x7194a4`, `0x7194bc`, `0x7194fe`, `0x607800`, `0x6078d0`, `0x5fcad7`, `0x5fcb2b`, `0x5fc3f0`, `0x5fe697`, `0x5fe2f0`, `0x5fdc28`, `0x5fdcab`, `0x5fdcf2`
+Confidence: verified
+Proof: one
+Test: none
+
+The watchdog test is `0x71949e mov eax,[edi+0xac]; cmp eax,[ebp-4]` against the clamped end, and it does not read the sequence flag.
+`0x5fe697 mov [ebp-0x74],0xffffffff` is the request's variation. `0x607800` installs `0x6078d0` on the body model, with the unit's
+GUID. The follow-on pick `0x5fc3f0` is `unitanim#when-a-sequence-ends`.

@@ -64,7 +64,7 @@ Test: none
 `0x7124d4 cmp cx,0xffff` ends the chain. On the exhausted chain `edi` still holds the head. The ordinal of the
 chosen record is stored for the bone's requested variation `+0xfc`. `0x7126a8 cdq; and edx,0x7fff; add; sar 15` is the
 divide, `0x7126c3 sete al` and `0x7126cd add edi,eax` the 0-to-1 fix. The draw is `_rand`, whose seed
-`random` gives.
+`random` gives; its range 0 to 0x7fff keeps the quotient below `max − min`, so the count is below `max` before the 1.
 
 ## Play window
 
