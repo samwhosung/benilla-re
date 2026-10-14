@@ -2257,10 +2257,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb711e4	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb711ec	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb71290	void *	s_bindings		ui	Holds the key binding object of 0xdc bytes that 0x4b6050 builds, whose +0xd8 is 1 while a binding runs	verified	one	ui/protected#input-event-flags
-0xb712a8	uint8_t			unassigned	Holds a byte that Script::UninviteFromRaid, CGGameUI::ClosestObjectMatch read and write; not read here	inferred	none	
+0xb712a8	void *[40]	s_raidRoster		ui	Holds the pointers to the 40 raid roster records of 0x160 bytes	verified	one	ui/raid#the-roster-record
+0xb71368	uint64_t[8]	s_raidTargetGuids		ui	Holds the GUID of the unit carrying each of the eight raid target icons	verified	one	ui/raid#the-raid-target-table
 0xb713e0	uint32_t	s_raidMemberCount		ui	Holds the number of raid members, 0 outside a raid	verified	one	ui/minimap#a-click-on-the-map
 0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
-0xb713f4	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
+0xb713f4	uint32_t	s_readyCheckDeadline		ui	Holds the clock value at which the running ready check ends, 0 when none	verified	one	ui/raid#starting-a-ready-check
 0xb71438	uint32_t[10]	s_petBar		ui	Holds the ten pet bar slot words	verified	one	ui/petbar#pet-state
 0xb71468	uint32_t	s_petModeState		ui	Holds the pet mode word: reaction byte, command byte and server bit 27	verified	one	ui/petbar#pet-state
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet

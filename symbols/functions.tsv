@@ -8239,46 +8239,46 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ba070	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4ba090	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ba0a0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4ba0b0	136	CGRaidInfo::InitializeGame	idb	ui	primitive		Runs RaidInfo.cpp code that calls ClientServices::SetMessageHandler, SMemAlloc; not read here	inferred	none		
+0x4ba0b0	136	CGRaidInfo::InitializeGame	idb	ui	primitive		Registers the raid target and ready check handlers, clears the target table and allocates the 40 roster records	verified	one	ui/raid#the-roster-record	
 0x4ba140	111			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrGetActivePlayer, DBCache::NameCache::GetRecord; not read here	inferred	none		
 0x4ba1b0	8			ui	orchestration		Runs RaidInfo.cpp code that calls 0x4bad90; not read here	inferred	none		
 0x4ba1c0	1			ui	orchestration		Runs RaidInfo.cpp code not read here	inferred	none		
 0x4ba1d0	71			ui	primitive		Runs RaidInfo.cpp code that calls ClientServices::ClearMessageHandler, SMemFree; not read here	inferred	none		
-0x4ba220	313	HandleRaidTargetUpdatePacket	idb	ui	primitive		Runs RaidInfo.cpp code that calls CDataStore::GetUInt8, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x4ba360	495	HandleRaidReadyCheckPacket	idb	ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrGetActivePlayer, CDataStore::GetGuid and 9 more; not read here	inferred	none		
-0x4ba550	150			ui	primitive		Leaves the raid, shows ERR_RAID_YOU_LEFT and signals RAID_ROSTER_UPDATE	inferred	none	objectlayer/party#the-group-list	
+0x4ba220	313	HandleRaidTargetUpdatePacket	idb	ui	primitive		Reads the raid target message into the icon table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
+0x4ba360	495	HandleRaidReadyCheckPacket	idb	ui	primitive		Handles a ready check message: the leader stores an answer, a member starts the check	verified	one	ui/raid#answering-a-ready-check	
+0x4ba550	150			ui	primitive		Leaves the raid roster, clears the raid target table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
 0x4ba5f0	1754			ui	primitive		Rebuilds the raid roster from member GUIDs, flags and online bytes	inferred	none	objectlayer/party#the-group-list	
 0x4bacd0	91			ui	orchestration		Runs RaidInfo.cpp code that calls DBCache::NameCache::GetRecord, CGGameUI::DisplayError; not read here	inferred	none		
 0x4bad30	91			ui	orchestration		Runs RaidInfo.cpp code that calls DBCache::NameCache::GetRecord, CGGameUI::DisplayError; not read here	inferred	none		
 0x4bad90	38			ui	primitive		Runs RaidInfo.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
 0x4bae90	65			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
-0x4baee0	72			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
+0x4baee0	72	IsRaidMember		ui	primitive	int32_t __fastcall IsRaidMember(const uint64_t *guid)	Returns 1 when a GUID is on the raid roster, 0 for a zero GUID	verified	one	ui/raid#group-leader-and-membership	
 0x4baf30	151			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4bafd0	164	CGRaidInfo::IsMemberOrPet	idb	ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4bb080	106	IsRaidLeaderOrAssistant		ui	primitive		Returns whether a GUID is a raid member of rank above 0 or the group leader	verified	one	ui/chatsend#group-and-channel-checks	
 0x4bb0f0	60			ui	primitive		Returns the raid member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
 0x4bb130	82			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
-0x4bb190	54			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
-0x4bb1d0	288			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrGetActivePlayer, 0x4bb2f0, CGGameUI::DisplayError and 5 more; not read here	inferred	none		
-0x4bb2f0	28			ui	primitive		Runs RaidInfo.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x4bb310	408			ui	primitive		Runs RaidInfo.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrGetActivePlayer and 6 more; not read here	inferred	none		
-0x4bb4b0	127	Script::GetRaidTargetIndex	idb	ui	primitive		Implements the Lua function GetRaidTargetIndex	inferred	none		
-0x4bb530	44	Script::GetNumRaidMembers	idb	ui	orchestration		Implements the Lua function GetNumRaidMembers	inferred	none		
-0x4bb560	696	Script::GetRaidRosterInfo	idb	ui	primitive		Implements the Lua function GetRaidRosterInfo	inferred	none		
+0x4bb190	54	FindRaidTargetSlot		ui	primitive	int32_t __stdcall FindRaidTargetSlot(uint64_t guid)	Returns the raid target slot a GUID holds, or 8	verified	one	ui/raid#the-raid-target-table	
+0x4bb1d0	288	StartReadyCheck		ui	primitive		Marks the members unanswered, sends opcode 0x322 and starts the 30 second ready check	verified	one	ui/raid#starting-a-ready-check	
+0x4bb2f0	28	GetReadyCheckMsLeft		ui	primitive		Returns the milliseconds left of the running ready check, 0 when none	verified	one	ui/raid#starting-a-ready-check	
+0x4bb310	408	ShowReadyCheckSummary		ui	primitive		Ends the expired ready check and shows the members who did not answer	verified	one	ui/raid#ending-a-ready-check	
+0x4bb4b0	127	Script::GetRaidTargetIndex	idb	ui	primitive		Pushes the 1-based raid target icon of a unit, or nil	verified	one	ui/raid#the-raid-target-table	
+0x4bb530	44	Script::GetNumRaidMembers	idb	ui	orchestration		Pushes the raid member count	verified	one	ui/raid#group-leader-and-membership	
+0x4bb560	696	Script::GetRaidRosterInfo	idb	ui	primitive		Pushes nine values describing a raid roster member	verified	one	ui/raid#getraidrosterinfo	
 0x4bb820	105	Script::SetRaidRosterSelection	idb	ui	primitive		Implements the Lua function SetRaidRosterSelection	inferred	none		
 0x4bb890	42	Script::GetRaidRosterSelection	idb	ui	primitive		Implements the Lua function GetRaidRosterSelection	inferred	none		
-0x4bb8c0	69	Script::IsRaidLeader	idb	ui	orchestration		Implements the Lua function IsRaidLeader	inferred	none		
+0x4bb8c0	69	Script::IsRaidLeader	idb	ui	orchestration		Pushes 1 when the player is the group leader, else nil	verified	one	ui/raid#group-leader-and-membership	
 0x4bb910	122	Script::IsRaidOfficer	idb	ui	primitive		Implements the Lua function IsRaidOfficer	inferred	none		
 0x4bb990	363	Script::SetRaidSubgroup	idb	ui	primitive		Implements the Lua function SetRaidSubgroup	inferred	none		
 0x4bbb00	394	Script::SwapRaidSubgroup	idb	ui	primitive		Implements the Lua function SwapRaidSubgroup	inferred	none		
 0x4bbc90	137	Script::ConvertToRaid	idb	ui	primitive		Implements the Lua function ConvertToRaid	inferred	none		
 0x4bbd20	201	Script::PromoteToAssistant	idb	ui	primitive		Implements the Lua function PromoteToAssistant	inferred	none		
 0x4bbdf0	200	Script::DemoteAssistant	idb	ui	primitive		Implements the Lua function DemoteAssistant	inferred	none		
-0x4bbec0	445	Script::SetRaidTarget	idb	ui	primitive		Implements the Lua function SetRaidTarget	inferred	none		
-0x4bc080	8	Script::DoReadyCheck	idb	ui	orchestration		Implements the Lua function DoReadyCheck	inferred	none		
-0x4bc090	138	Script::ConfirmReadyCheck	idb	ui	orchestration		Implements the Lua function ConfirmReadyCheck	inferred	none		
-0x4bc120	8	Script::CheckReadyCheckTime	idb	ui	orchestration		Implements the Lua function CheckReadyCheckTime	inferred	none		
+0x4bbec0	445	Script::SetRaidTarget	idb	ui	primitive		Sends opcode 0x321 to set or clear the raid target icon of a unit	verified	one	ui/raid#setting-a-raid-target	
+0x4bc080	8	Script::DoReadyCheck	idb	ui	orchestration		Starts a ready check	verified	one	ui/raid#starting-a-ready-check	
+0x4bc090	138	Script::ConfirmReadyCheck	idb	ui	orchestration		Sends the player's ready check answer while a check is running	verified	one	ui/raid#answering-a-ready-check	
+0x4bc120	8	Script::CheckReadyCheckTime	idb	ui	orchestration		Ends the ready check and lists the unanswered members once its time has passed	verified	one	ui/raid#starting-a-ready-check	
 0x4bc130	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4bc160	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4bc180	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -12543,7 +12543,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516210	123	Script::UnitIsPartyLeader	idb	ui	orchestration		Implements the Lua function UnitIsPartyLeader	inferred	none		
 0x516290	83	Script::UnitInParty	idb	ui	orchestration		Implements the Lua function UnitInParty	inferred	none		
 0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInParty	inferred	none		
-0x516350	83	Script::UnitInRaid	idb	ui	orchestration		Implements the Lua function UnitInRaid	inferred	none		
+0x516350	83	Script::UnitInRaid	idb	ui	orchestration		Pushes 1 when a unit is a raid member, else nil	verified	one	ui/raid#group-leader-and-membership	
 0x5163b0	83	Script::UnitPlayerOrPetInRaid	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInRaid	inferred	none		
 0x516410	79	Script::UnitPlayerControlled	idb	ui	primitive		Implements the Lua function UnitPlayerControlled	inferred	none		
 0x516460	214	Script::UnitIsPVP	idb	ui	primitive		Implements the Lua function UnitIsPVP	inferred	none		
