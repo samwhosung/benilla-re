@@ -82,7 +82,7 @@ fn build_body_island(emu: &mut Emu, live: f64, body: &[u8], qword: bool) -> (u64
 /// `0x6769d0` from `0x676c37` to `0x676cb6`: exact, signed, zero, NaN and infinite rows, and a
 /// fuzz.
 #[test]
-fn snow_scroll_matrix_difftest() {
+fn rain_patter_matrix_difftest() {
     let Some(wow) = Wow::load() else {
         return;
     };

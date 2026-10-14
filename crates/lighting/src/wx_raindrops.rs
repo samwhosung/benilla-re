@@ -29,21 +29,21 @@ fn nar(x: f64) -> f32 {
 
 /// The values one drop stores to its frame and vertex buffer between `0x676478` and `0x676932`.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct FlakeQuad {
-    /// `delta = flakePos − cam` → `[ebp-0x58/-0x54/-0x50]`.
+pub struct DropQuad {
+    /// `delta = dropPos − cam` → `[ebp-0x58/-0x54/-0x50]`.
     pub delta: [f32; 3],
     /// `span = min(t, f3edge) − f2edge` (the LIVE-st0 corner scale; observed narrowed for the
     /// diff).
     pub span: f32,
-    /// `span2 = min(t, tmp) − f2edge` → `[ebp-0x4]` (`tmp = −(wind/flake0) + f3edge`).
+    /// `span2 = min(t, tmp) − f2edge` → `[ebp-0x4]` (`tmp = −(wind/drop0) + f3edge`).
     pub span2: f32,
-    /// `vertexA = span·flakeV + delta` → `[ebp-0x48/-0x44/-0x40]`.
+    /// `vertexA = span·dropV + delta` → `[ebp-0x48/-0x44/-0x40]`.
     pub vertex_a: [f32; 3],
-    /// `vertexB = span2·flakeV + delta` → `[ebp-0x114/-0x110/-0x10c]`.
+    /// `vertexB = span2·dropV + delta` → `[ebp-0x114/-0x110/-0x10c]`.
     pub vertex_b: [f32; 3],
     /// `nA = normalize(−vertexA)` (in place at `[ebp-0x24/-0x20/-0x1c]`).
     pub n_a: [f32; 3],
-    /// `nF = normalize(−flakeV)` (in place at `[ebp-0x14/-0x10/-0xc]`).
+    /// `nF = normalize(−dropV)` (in place at `[ebp-0x14/-0x10/-0xc]`).
     pub n_f: [f32; 3],
     /// `cr = normalize(nF × nA)` (in place at `[ebp-0x30/-0x2c/-0x28]`).
     pub cr: [f32; 3],
@@ -60,34 +60,34 @@ pub struct FlakeQuad {
     pub finalv: [f32; 3],
 }
 
-/// `0x676160` from `0x676478` to `0x676932`: the quad of one drop. `delta = flake_pos - cam` is
-/// stored. With `tmp = -(wind / flake_v.z) + f3edge` stored, the drop is skipped (`emit` false)
+/// `0x676160` from `0x676478` to `0x676932`: the quad of one drop. `delta = drop_pos - cam` is
+/// stored. With `tmp = -(wind / drop_v.z) + f3edge` stored, the drop is skipped (`emit` false)
 /// when `t < f2edge` (`fcomp; test ah,5; jnp`) or `t > tmp` (`test ah,0x41; je`); NaN draws it. The
 /// span is `min(t, f3edge) - f2edge` wide (`fcomp; test ah,5; jp` takes `t` only when `t < f3edge`)
-/// and `span2` is the same with `tmp`, stored. Vertex A is `span * flake_v + delta` with each
+/// and `span2` is the same with `tmp`, stored. Vertex A is `span * drop_v + delta` with each
 /// product stored, vertex B the same with `span2`. The normals are `normalize(-A)` and
-/// `normalize(-flake_v)` (each component stored after the multiply by the wide `1 / sqrt((x² + z²) +
+/// `normalize(-drop_v)` (each component stored after the multiply by the wide `1 / sqrt((x² + z²) +
 /// y²)`, so a zero vector gives NaN), and `cr = normalize(nF x nA)`. The corners are `cr * -0.05 +
 /// A` and `cr * 0.05 + A`, `proj = 2 * nF`, and each row of `mat` dotted with `proj` as `(z + y) +
 /// x` is added to B.
 #[allow(clippy::neg_cmp_op_on_partial_ord, clippy::too_many_arguments)]
-pub fn snow_flake_quad(
-    flake_pos: [f32; 3],
-    flake_v: [f32; 3],
+pub fn rain_drop_quad(
+    drop_pos: [f32; 3],
+    drop_v: [f32; 3],
     f2edge: f32,
     f3edge: f32,
     cam: [f32; 3],
     wind: f32,
     t: f32,
     mat: [[f32; 3]; 3],
-) -> (bool, FlakeQuad) {
+) -> (bool, DropQuad) {
     let delta = [
-        nar(f(flake_pos[0]) - f(cam[0])),
-        nar(f(flake_pos[1]) - f(cam[1])),
-        nar(f(flake_pos[2]) - f(cam[2])),
+        nar(f(drop_pos[0]) - f(cam[0])),
+        nar(f(drop_pos[1]) - f(cam[1])),
+        nar(f(drop_pos[2]) - f(cam[2])),
     ];
 
-    let tmp = nar(-(f(wind) / f(flake_v[2])) + f(f3edge));
+    let tmp = nar(-(f(wind) / f(drop_v[2])) + f(f3edge));
     let emit_lo = !(t < f2edge);
     let emit_hi = !(t > tmp);
     let emit = emit_lo && emit_hi;
@@ -100,7 +100,7 @@ pub fn snow_flake_quad(
     if !emit {
         return (
             false,
-            FlakeQuad {
+            DropQuad {
                 delta,
                 span,
                 span2,
@@ -119,9 +119,9 @@ pub fn snow_flake_quad(
     }
 
     let sv = [
-        nar(span_live * f(flake_v[0])),
-        nar(span_live * f(flake_v[1])),
-        nar(span_live * f(flake_v[2])),
+        nar(span_live * f(drop_v[0])),
+        nar(span_live * f(drop_v[1])),
+        nar(span_live * f(drop_v[2])),
     ];
     let vertex_a = [
         nar(f(sv[0]) + f(delta[0])),
@@ -130,9 +130,9 @@ pub fn snow_flake_quad(
     ];
 
     let sv2 = [
-        nar(f(span2) * f(flake_v[0])),
-        nar(f(span2) * f(flake_v[1])),
-        nar(f(span2) * f(flake_v[2])),
+        nar(f(span2) * f(drop_v[0])),
+        nar(f(span2) * f(drop_v[1])),
+        nar(f(span2) * f(drop_v[2])),
     ];
     let vertex_b = [
         nar(f(sv2[0]) + f(delta[0])),
@@ -147,11 +147,7 @@ pub fn snow_flake_quad(
     ];
     let n_a = normalize_inplace(neg_a);
 
-    let neg_f = [
-        nar(-f(flake_v[0])),
-        nar(-f(flake_v[1])),
-        nar(-f(flake_v[2])),
-    ];
+    let neg_f = [nar(-f(drop_v[0])), nar(-f(drop_v[1])), nar(-f(drop_v[2]))];
     let n_f = normalize_inplace(neg_f);
 
     let cross = [
@@ -204,7 +200,7 @@ pub fn snow_flake_quad(
 
     (
         true,
-        FlakeQuad {
+        DropQuad {
             delta,
             span,
             span2,

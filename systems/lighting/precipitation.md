@@ -98,7 +98,7 @@ packet at once and, while the density is at most 0.25, drops every packet that h
 Addresses: `0x6756b0`, `0x6756da`, `0x675717`, `0x67574a`, `0x67575a`, `0x675790`, `0x675795`, `0x6757db`, `0x6772f5`, `0x6772fd`, `0x67637d`, `0x80ff6c`
 Confidence: verified
 Proof: one
-Test: `lighting::snow_flake_quad_difftest`, `lighting::wl_update_dt_accum`, `lighting::wl_update_interval_div`
+Test: `lighting::rain_drop_quad_difftest`, `lighting::wl_update_dt_accum`, `lighting::wl_update_interval_div`
 
 `0x6756da` clears `+0xb0` when byte `+0x1` is set. `0x675717` retires when now is above the last
 tick; `0x67574a` tests the manager's density against 0.25 and `0x67575a` now against the start.
@@ -203,7 +203,7 @@ texture. Without shaders the processor builds both each frame.
 Addresses: `0x676e70`, `0x676e99`, `0x676eec`, `0x6772dc`, `0x677333`, `0x67735b`, `0x674a70`, `0x674bf0`, `0x6769d0`, `0x676160`, `0x675ac0`, `0x6763a0`, `0x677380`, `0x8680f0`, `0x8680f4`, `0x80ff78`, `0x80ff74`, `0x80e004`, `0x803568`
 Confidence: verified
 Proof: one
-Test: `lighting::snow_flake_quad_difftest`, `lighting::snow_scroll_matrix_difftest`, `lighting::weather_wind_tilt_difftest`, `lighting::wind_speed_gate_difftest`, `lighting::wx_rainrender_basis_difftest`, `lighting::wx_rainrender_quad_difftest`
+Test: `lighting::rain_drop_quad_difftest`, `lighting::rain_patter_matrix_difftest`, `lighting::weather_wind_tilt_difftest`, `lighting::wind_speed_gate_difftest`, `lighting::wx_rainrender_basis_difftest`, `lighting::wx_rainrender_quad_difftest`
 
 `0x676e99` sets state 7 to 5. The constants are `c_motionBlurRotateMtx` from `0x674a70`,
 `c_tailLength` from `0x674bf0`, `vtxCoordsY` ∓`[0x80ff78]` and 0, `vtxCoordsZ` 0, 0 and

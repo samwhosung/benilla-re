@@ -6,7 +6,7 @@
 mod common;
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
-use benilla_re_lighting::wx_snowdraw::{snow_flake_quad, FlakeQuad};
+use benilla_re_lighting::wx_raindrops::{rain_drop_quad, DropQuad};
 use common::next;
 
 /// Compare two f32 bit for bit, any two NaN equal.
@@ -42,22 +42,22 @@ fn fuzz(s: &mut u32) -> f32 {
 /// and over the whole bit space, with the identity and random texture transforms.
 #[test]
 #[allow(clippy::too_many_lines)]
-fn snow_flake_quad_difftest() {
+fn rain_drop_quad_difftest() {
     let Some(wow) = Wow::load() else {
         return;
     };
     let mut emu = Emu::new(&wow);
     let frame = emu.alloc(0x400) + 0x200;
     let esp_top = frame + 0x140;
-    let flake = emu.alloc(0x80) + 0x40;
+    let drop_rec = emu.alloc(0x80) + 0x40;
     let vbuf = emu.alloc(0x400) + 0x80;
 
     let mut s = 0x5744_4e53_u32;
     let mut emits = 0u32;
 
     let run = |emu: &mut Emu,
-               flake_pos: [f32; 3],
-               flake_v: [f32; 3],
+               drop_pos: [f32; 3],
+               drop_v: [f32; 3],
                f2edge: f32,
                f3edge: f32,
                cam: [f32; 3],
@@ -82,14 +82,14 @@ fn snow_flake_quad_difftest() {
         emu.write_u32(frame - 0x78, mat[2][1].to_bits());
         emu.write_u32(frame - 0x74, mat[2][2].to_bits());
 
-        emu.write_u32(flake - 0x14, flake_pos[0].to_bits());
-        emu.write_u32(flake - 0x10, flake_pos[1].to_bits());
-        emu.write_u32(flake - 0xc, flake_pos[2].to_bits());
-        emu.write_u32(flake - 0x8, flake_v[0].to_bits());
-        emu.write_u32(flake - 0x4, flake_v[1].to_bits());
-        emu.write_u32(flake, flake_v[2].to_bits());
-        emu.write_u32(flake + 0x8, f2edge.to_bits());
-        emu.write_u32(flake + 0xc, f3edge.to_bits());
+        emu.write_u32(drop_rec - 0x14, drop_pos[0].to_bits());
+        emu.write_u32(drop_rec - 0x10, drop_pos[1].to_bits());
+        emu.write_u32(drop_rec - 0xc, drop_pos[2].to_bits());
+        emu.write_u32(drop_rec - 0x8, drop_v[0].to_bits());
+        emu.write_u32(drop_rec - 0x4, drop_v[1].to_bits());
+        emu.write_u32(drop_rec, drop_v[2].to_bits());
+        emu.write_u32(drop_rec + 0x8, f2edge.to_bits());
+        emu.write_u32(drop_rec + 0xc, f3edge.to_bits());
 
         for off in [
             0x48u64, 0x44, 0x40, 0x114, 0x110, 0x10c, 0x24, 0x20, 0x1c, 0x14, 0x10, 0xc, 0x30,
@@ -104,12 +104,12 @@ fn snow_flake_quad_difftest() {
 
         emu.set_reg(RegisterX86::EBP, frame);
         emu.set_reg(RegisterX86::ESP, esp_top);
-        emu.set_reg(RegisterX86::EDI, flake);
+        emu.set_reg(RegisterX86::EDI, drop_rec);
         emu.set_reg(RegisterX86::ESI, vbuf);
         emu.set_reg(RegisterX86::EBX, vbuf + 0xc);
         emu.run(0x676410, 0x676932);
 
-        let (emit, ours) = snow_flake_quad(flake_pos, flake_v, f2edge, f3edge, cam, wind, t, mat);
+        let (emit, ours) = rain_drop_quad(drop_pos, drop_v, f2edge, f3edge, cam, wind, t, mat);
 
         let bin_delta = [
             emu.read_f32(frame - 0x58),
@@ -127,7 +127,7 @@ fn snow_flake_quad_difftest() {
         );
         if emit {
             *emits += 1;
-            let binary = FlakeQuad {
+            let binary = DropQuad {
                 delta: bin_delta,
                 span: ours.span,
                 span2: emu.read_f32(frame - 0x4),
