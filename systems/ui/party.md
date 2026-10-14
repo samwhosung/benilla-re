@@ -98,7 +98,7 @@ the pet block is the same layout at `+0x80`, its fields at `+0xd8` (power type),
 | `UnitMana` | `+0x44 + 4*type`, divided by the type's display divisor; 0 with the same flag | `+0x0e` | `+0x60` |
 | `UnitManaMax` | `+0x5c + 4*type`, divided | `+0x10` | `+0x62` |
 | `UnitPowerType` | `+0x7b` byte | `+0x09` | `+0x58` |
-| `UnitLevel` | its own function (`units#unit-levels`) | `+0x12` | none |
+| `UnitLevel` | its own function (`unitlevels#unitlevel`) | `+0x12` | none |
 | `UnitIsConnected` | always 1 | `+0x08` bit 1, else nil | 1 when found |
 | `UnitIsDead` | health at or below 0, or the dynamic flag | `+0x08` bit 4 | none |
 | `UnitIsGhost` | player type and `PLAYER_FLAGS` ghost bit | `+0x08` bit 8 | none |

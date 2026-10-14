@@ -446,7 +446,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x807338	const float	s_float43b68000		ui	Holds the float 365 (0x43b68000)	inferred	none	
 0x80733c	const float	s_float3b338cfa		ui	Holds the float 0.002739726 (0x3b338cfa)	inferred	none	
 0x807520	const uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x8076c0	const uint32_t			ui	Holds a dword that Script::GetQuestGreenRange reads; not read here	inferred	none	
+0x8076c0	uint32_t[20]	s_questGrayGaps		ui	Holds the gray-range gap by the player's level divided by 5, read by GetQuestGreenRange	verified	one	ui/unitlevels#the-gray-range
 0x807a28	const float	s_arrowModelScale		ui	Holds 0.6, the model scale of the minimap's eight arrow frames	verified	one	ui/minimapblips#blip-sizes
 0x807a3c	const float	s_float3ba3d70a		unassigned	Holds the float 0.005 (0x3ba3d70a)	inferred	none	
 0x807a40	const float	s_float3eaaaaab		unassigned	Holds the float 0.33333334 (0x3eaaaaab)	inferred	none	
@@ -493,6 +493,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808acc	const float	s_float3fc90fdb		unassigned	Holds the float 1.5707964 (0x3fc90fdb)	inferred	none	
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
+0x808bf4	float	s_five		ui	Holds 5.0, the factor of the drunk level reduction	verified	one	ui/unitlevels#unitlevel
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
 0x808e6c	const float	s_tooltipLineGap		ui	Holds 2.0, the gap in FrameXML units between shown tooltip lines	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e70	const float	s_tooltipColumnGap		ui	Holds 38.4, the gap between a line's left and right texts	verified	one	ui/tooltipcontent#sizing-the-tooltip
@@ -958,7 +959,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81da6c	float	s_halfInvGravity		collision	Holds 1/(2g), 0.025918681 (0x3cd4536a)	verified	one	collision/falling#arc-fields-and-constants
 0x81da70	float	s_risingSpeedLimit		collision	Holds -2^-22 (0xb4800000), below which 0x7c60c0 counts a launch as rising	verified	one	collision/falling#fall-height-from-the-apex
 0x81da74	float	s_yardsPerMeter		collision	Holds 1.0936 (0x3f8bfb16), the factor the terminal velocity setters apply	verified	one	collision/falling#unreached-functions
-0x81dda8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x81dda8	uint32_t[20]	s_difficultyGrayGaps		ui	Holds the gray-range gap by the player's level divided by 5, read by the difficulty colour	verified	one	ui/unitlevels#the-gray-range
 0x81de50	void *[40]	s_namePlateVtable		ui	Holds the 40 virtual function slots of the nameplate frame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
@@ -3321,6 +3322,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5d00	float	s_movementTwoPi		collision	Holds 2π, written only by the static initializer 0x7c5dd0	verified	one	collision/kinematics#transport-space-transforms
 0xcf5d30	float	s_recordInfinity		unassigned	Holds +∞ from start-up	verified	one	collision/overview#object-files
 0xcf60d0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xcf60ec	uint32_t[5]	s_difficultyColors		ui	Holds the ARGB words red, orange, yellow, green and gray of the difficulty colour	verified	one	ui/unitlevels#the-difficulty-colour
+0xcf6100	uint8_t	s_difficultyColorsReady		ui	Holds bit 0, set once the five difficulty colours are written	verified	one	ui/unitlevels#the-difficulty-colour
 0xcf61dc	float	s_skyDrawTenSquared		lighting	Holds 100.0; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts

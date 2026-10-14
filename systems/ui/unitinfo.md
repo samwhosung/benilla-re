@@ -129,3 +129,15 @@ Test: none
 spell table with the subclass byte (`objectlayer/playercombat#weapon-skills`) and finds the skill line through `0x6de040`. `0x5ea460` answers 0 and 0 unless the object is the active player. Its first
 value is the skill block's value word (`+0x84c + 0xc*i` of the player block `+0xe68`) plus the permanent bonus word (`+0x852`) when the value is above 0; its second the signed temporary word (`+0x850`). Nothing
 clamps. `fild` pushes both as doubles.
+
+## Player, corpse and attack tests
+
+`UnitIsPlayer(unit)` pushes 1 when the token's GUID has an object of type mask 0x10 (a player) or is a party or raid member by GUID (`0x4918e0`, members only, not pets), else nil; a party member out of range is a player to it.
+`UnitIsCorpse(unit)` pushes 1 when the GUID has a corpse object (type mask 0x80), which a dead unit does not have. `UnitCanAttack(unit, other)` pushes 1 when both tokens resolve to unit objects (mask 8) and `0x606980(unit, other)` holds.
+
+Addresses: `0x516150`, `0x516181`, `0x51618d`, `0x4918e0`, `0x5161c0`, `0x5161e5`, `0x516c50`, `0x516ca5`, `0x606980`
+Confidence: verified
+Proof: one
+Test: none
+
+The first two take no `Usage:` check; `UnitCanAttack` raises `Usage: UnitCanAttack("unit", "otherUnit")` unless both arguments are strings. A missing or unresolved unit on either side gives nil.

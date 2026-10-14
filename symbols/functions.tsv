@@ -10022,7 +10022,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e15f0	320	Script::GetQuestIndexForTimer	idb	ui	primitive		Pushes the 1-based list index of the n-th running timed quest, or nil	verified	one	ui/questtimers#getquestindexfortimer	
 0x4e1730	69	Script::CollapseQuestHeader	idb	ui	primitive		Implements the Lua function CollapseQuestHeader	inferred	none		
 0x4e1780	66	Script::ExpandQuestHeader	idb	ui	primitive		Implements the Lua function ExpandQuestHeader	inferred	none		
-0x4e17d0	137	Script::GetQuestGreenRange	idb	ui	primitive		Implements the Lua function GetQuestGreenRange	inferred	none		
+0x4e17d0	137	Script::GetQuestGreenRange	idb	ui	primitive		Pushes the gray-range gap for the active player's level, 0 with no player	verified	one	ui/unitlevels#the-gray-range	
 0x4e1860	44	Script::GetNumQuestWatches	idb	ui	orchestration		Implements the Lua function GetNumQuestWatches	inferred	none		
 0x4e1890	150	Script::IsQuestWatched	idb	ui	primitive		Implements the Lua function IsQuestWatched	inferred	none		
 0x4e1930	64	Script::AddQuestWatch	idb	ui	orchestration		Implements the Lua function AddQuestWatch	inferred	none		
@@ -12538,8 +12538,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Pushes 1 for a selectable held unit or a roster member, else nil	verified	one	ui/unitinfo#unitexists	
 0x516030	57	Script::UnitIsVisible	idb	ui	orchestration		Pushes 1 when the token names a held unit object, else nil	verified	one	ui/unitinfo#unitisvisible	
 0x516070	222	Script::UnitIsUnit	idb	ui	primitive		Implements the Lua function UnitIsUnit	inferred	none		
-0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Implements the Lua function UnitIsPlayer	inferred	none		
-0x5161c0	79	Script::UnitIsCorpse	idb	ui	orchestration		Implements the Lua function UnitIsCorpse	inferred	none		
+0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Pushes 1 for a player object or a party or raid member by GUID, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
+0x5161c0	79	Script::UnitIsCorpse	idb	ui	orchestration		Pushes 1 when the GUID has a corpse object, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
 0x516210	123	Script::UnitIsPartyLeader	idb	ui	orchestration		Pushes 1 for a unit that is a group leader by its player flag or the leader GUID, else nil	verified	one	ui/party#unitispartyleader	
 0x516290	83	Script::UnitInParty	idb	ui	orchestration		Implements the Lua function UnitInParty	inferred	none		
 0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInParty	inferred	none		
@@ -12554,7 +12554,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516930	307	Script::UnitIsFriend	idb	ui	orchestration		Pushes 1 when two units are friends by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x516a70	306	Script::UnitCanCooperate	idb	ui	orchestration		Pushes 1 when two units can cooperate by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x516bb0	149	Script::UnitCanAssist	idb	ui	orchestration		Implements the Lua function UnitCanAssist	inferred	none		
-0x516c50	149	Script::UnitCanAttack	idb	ui	orchestration		Implements the Lua function UnitCanAttack	inferred	none		
+0x516c50	149	Script::UnitCanAttack	idb	ui	orchestration		Pushes 1 when both units resolve and the first can attack the second, else nil	verified	one	ui/unitinfo#player-corpse-and-attack-tests	
 0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Pushes 1 when UNIT_FIELD_CHARMEDBY is nonzero, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x516d40	79	Script::UnitIsPlusMob	idb	ui	primitive		Pushes 1 when UNIT_FIELD_FLAGS bit 6 is set, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x516d90	72	Script::UnitClassification	idb	ui	orchestration		Pushes the classification word for the creature rank, normal for no unit	verified	one	ui/unitinfo#classification	
@@ -12581,7 +12581,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x517d50	188	Script::UnitIsConnected	idb	ui	orchestration		Pushes 1 when a unit is connected, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517e10	113	Script::UnitAffectingCombat	idb	ui	primitive		Implements the Lua function UnitAffectingCombat	inferred	none		
 0x517e90	290	Script::UnitSex	idb	ui	orchestration		Pushes the sex number of a unit; for the string player it reads the selected character's sex byte	verified	one	ui/unitplayer#the-four-readers	
-0x517fc0	404	Script::UnitLevel	idb	ui	primitive		Implements the Lua function UnitLevel	inferred	none		
+0x517fc0	404	Script::UnitLevel	idb	ui	primitive		Pushes the level of a unit: -1 for far hostile or world boss, drunk reduction, roster level	verified	one	ui/unitlevels#unitlevel	
 0x518160	145	Script::GetMoney	idb	ui	orchestration		Implements the Lua function GetMoney	inferred	none		
 0x518200	323	Script::UnitRace	idb	ui	orchestration		Pushes the localised race name and file token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
 0x518350	323	Script::UnitClass	idb	ui	orchestration		Pushes the localised class name and upper-case token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
@@ -12602,7 +12602,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5198f0	928	Script::UnitDebuff	idb	ui	primitive		Implements the Lua function UnitDebuff	inferred	none		
 0x519c90	108	Script::UnitIsTapped	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x4 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
 0x519d00	108	Script::UnitIsTappedByPlayer	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x8 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
-0x519d70	104	Script::UnitIsTrivial	idb	ui	orchestration		Implements the Lua function UnitIsTrivial	inferred	none		
+0x519d70	104	Script::UnitIsTrivial	idb	ui	orchestration		Implements the Lua function UnitIsTrivial	inferred	none	ui/unitlevels#trivial-units	
 0x519de0	104	Script::UnitIsCivilian	idb	ui	orchestration		Pushes 1 when the unit is a civilian, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x519e50	149	Script::UnitHasRelicSlot	idb	ui	primitive		Pushes 1 for a player whose class row has a relic slot, else nil	verified	one	ui/unitinfo#unithasrelicslot	
 0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Implements the Lua function SetPortraitTexture	inferred	none		
@@ -36573,8 +36573,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none	ui/README#nameplate-frame-functions	
 0x7cbaa0	155			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x7cbb40	408			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x7cbce0 and 9 more; not read here	inferred	none		
-0x7cbce0	111			ui	primitive		Runs its object file code that calls CGUnit_C::CanAttack, __ftol; not read here	inferred	none		
-0x7cbd50	186			ui	primitive		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7cbce0	111	DisplayedLevel		ui	primitive		Returns a unit's level less the drunk reduction when the player can attack it, at least 1	verified	one	ui/unitlevels#the-level-on-a-plate	
+0x7cbd50	186	DifficultyColor		ui	primitive		Returns the address of the ARGB word for a unit level against a player level	verified	one	ui/unitlevels#the-difficulty-colour	
 0x7cbe10	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cbe20	156			ui	primitive		Runs its object file code that calls 0x77fc60, 0x770410, 0x77fcb0; not read here	inferred	none		
 0x7cbec0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
