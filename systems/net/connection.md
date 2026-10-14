@@ -8,7 +8,7 @@ Roots: `0x5aab20`, `0x5aaba0`, `0x5aabb0`, `0x5aabe0`, `0x5aac50`, `0x5aae20`, `
 
 ## Operations
 
-`0x5aa400(op, code, callback)` begins an operation: it stores the callback at `+0x1b20`, the operation at `+0x1b10` and the code at `+0x1b14`, clears the done flag `+0x1b08` and logs "Initiating". The operations are 0 `COP_NONE`, 1 `COP_INIT`, 2 `COP_CONNECT`, 3 `COP_AUTHENTICATE`, 4 `COP_CREATE_ACCOUNT`, 5 `COP_CREATE_CHARACTER`, 6 `COP_GET_CHARACTERS`, 7 `COP_DELETE_CHARACTER`, 8 `COP_LOGIN_CHARACTER`, 9 `COP_GET_REALMS` and 10 `COP_WAIT_QUEUE`. `0x5aaa50(code)` fails the operation: `0x5aa920(0, code)`. The completions of the character operations call `0x5aa920(flag, code)` with the reply byte as the code and a flag that is 1 when the byte is the operation's success code.
+`0x5aa400(op, code, callback)` begins an operation: it stores the callback at `+0x1b20`, the operation at `+0x1b10` and the code at `+0x1b14`, clears the done flag `+0x1b08` and logs "Initiating". The operations are 0 `COP_NONE`, 1 `COP_INIT`, 2 `COP_CONNECT`, 3 `COP_AUTHENTICATE`, 4 `COP_CREATE_ACCOUNT`, 5 `COP_CREATE_CHARACTER`, 6 `COP_GET_CHARACTERS`, 7 `COP_DELETE_CHARACTER`, 8 `COP_LOGIN_CHARACTER`, 9 `COP_GET_REALMS` and 10 `COP_WAIT_QUEUE`. `0x5aaa50(code)` fails the operation: `0x5aa920(0, code)`. The completions of the character operations call `0x5aa920(flag, code)`; three of them pass the reply byte as the code (see below), and the others pass constants.
 
 | begin | operation | code at begin | success code |
 |---|---|---|---|
@@ -25,7 +25,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5aa400` is `mov [ecx+0x1b20],eax`, `mov [ecx+0x1b10],edx`, `mov [ecx+0x1b14],eax`, `mov [ecx+0x1b08],0`, then `0x5aa440` with 1. The operation names are the strings `0x5aa440` selects through the jump table `0x5aa854`; the code names are `0x85cae8`. `0x5aaba0` ignores its four stack arguments (`ret 0x10`). `0x5aac30` and `0x5ab0e0` each compare the reply byte with `0x2e` and `0x39` (`cmp al,0x2e`, `cmp al,0x39`; `sete`) and call `0x5aa920(flag, byte)`; `0x5ab300` calls it with (1, `0x2b`) or (0, `0x2c`). A reply byte outside the code table is stored as it is; `GetStatus` prints its number (`session`). Of the 16 call sites of `0x5aa920`, found by a scan of `call` and `jmp` (the same scan finds the 4 of `0x5ab1a0`), exactly three pass a server byte as the code: `0x5aab90`, `0x5aac43` and `0x5ab0f3`.
+`0x5aa400` is `mov [ecx+0x1b20],eax`, `mov [ecx+0x1b10],edx`, `mov [ecx+0x1b14],eax`, `mov [ecx+0x1b08],0`, then `0x5aa440` with 1. The operation names are the strings `0x5aa440` selects through the jump table `0x5aa854`; the code names are `0x85cae8`. `0x5aaba0` ignores its four stack arguments (`ret 0x10`). `0x5aac30` and `0x5ab0e0` respectively compare the reply byte with `0x2e` and `0x39` (`cmp al,0x2e`, `cmp al,0x39`; `sete`) and call `0x5aa920(flag, byte)`; `0x5ab300` calls it with (1, `0x2b`) or (0, `0x2c`). A reply byte outside the code table is stored as it is; `GetStatus` prints its number (`session`). Of the 16 call sites of `0x5aa920`, found by a scan of `call` and `jmp` (the same scan finds the 4 of `0x5ab1a0`), exactly three pass a server byte as the code: `0x5aab90`, `0x5aac43` and `0x5ab0f3`.
 
 ## Without a link
 

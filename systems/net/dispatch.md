@@ -5,7 +5,7 @@ How a received world packet reaches the function that handles its opcode.
 The `NetClient` (`NetClient.cpp`) holds two tables of 828 entries, a handler and a context per
 opcode. Code anywhere in the client fills them through `NetClient::SetMessageHandler`
 (`0x537a60`), mostly by way of `ClientServices::SetMessageHandler` (`0x5ab650`), which addresses
-the one live client; `tables/opcodes.tsv` lists all 387 registrations. Packets arrive on the
+the one live client; `tables/opcodes.tsv` lists all 387 registrations. Packets arrive on
 a network worker thread (`threads`), which copies each into a node of the `NETEVENTQUEUE` (`NetInternal.cpp`)
 instead of handling it. The main thread drains the queue from an event handler and the
 dispatcher `0x537aa0` calls each packet's handler. The realm connection registers one handler,

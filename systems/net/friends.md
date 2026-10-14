@@ -66,9 +66,9 @@ Test: none
 
 ## Friend requests
 
-`AddFriend(name)` (`0x5ae670`) marks tutorial 21 seen and sends `CMSG_ADD_FRIEND` (`0x69`) with the name through `0x5ab630`. `ShowFriends` (`0x5ad340`) sends `CMSG_FRIEND_LIST` (`0x66`) with no body.
+The Lua `AddFriend` (`0x5ad290`, the call at `0x5ad2c6`) calls `FriendList::AddFriend(name)` (`0x5ae670`), which marks tutorial 21 seen and sends `CMSG_ADD_FRIEND` (`0x69`) with the name through `0x5ab630`. `ShowFriends` (`0x5ad340`) sends `CMSG_FRIEND_LIST` (`0x66`) with no body.
 
-Addresses: `0x5ae670`, `0x5ad340`, `0x4b54c0`, `0x5ab630`
+Addresses: `0x5ad290`, `0x5ae670`, `0x5ad340`, `0x4b54c0`, `0x5ab630`
 Confidence: verified
 Proof: one
 Test: none
@@ -99,14 +99,14 @@ Test: none
 
 ## Who query packet
 
-A token that begins with a digit is a level range: the number is the minimum and the maximum, a `-` after it sets the maximum to 100, and a number after that dash replaces it. A token that begins with `-` is a range from 0 only when a digit follows. Levels are not clamped; the defaults are 0 and 100. Any other token is a search term, up to four; the scan stops after the fourth. The packet is `CMSG_WHO` (`0x62`): minimum, maximum, name and guild C strings, race mask, class mask, the zone count (0 to 10) with the zone ids, then the term count with the C strings.
+A token that begins with a digit is a level range: the number is the minimum and the maximum, a `-` after it sets the maximum to 100, and a number after that dash replaces it. A token that begins with `-` is a range from 0 only when a digit follows. Levels are not clamped; the defaults are 0 and 100. Any other token is a search term, up to four; the scan stops after the fourth. The packet is `CMSG_WHO` (`0x62`): minimum, maximum, name and guild C strings, race mask, class mask, the zone count (0 to 10) with the zone ids, then the term count with the C strings
 
 Addresses: `0x5aebb0`, `0x5aef7d`, `0x5aefc4`, `0x5aefd9`, `0x5af02d`, `0x5af0a4`, `0x5af168`, `0x5ab630`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5aebd7` and `0x5aebda` store the defaults 0 and `0x64`. At `0x5aef7d` `iswdigit` on the first character selects the range; `0x64ac60` converts it to both values; the loop at `0x5aefa5` skips digits, and `0x5aefc4` stores 100 after a dash. `0x5aefd9` tests a digit with `_isdigit`; a token that starts with `-` and passes reaches `0x5aeff2` and the maximum, otherwise `0x5af015` keeps it as a term. A digit-start token is a range even when text follows its digits. Terms are 128-byte slots; `0x5af02d` `cmp eax,4; jae` ends the scan. The packet is built at `0x5af0a4` and sent at `0x5af168`.
+The minimum, maximum, masks, zone count, each zone id and the term count are all u32: 4-byte puts through `0x418190` and `0x4181f0` (`0x5af0c3` to `0x5af141`). `0x5aebd7` and `0x5aebda` store the defaults 0 and `0x64`. At `0x5aef7d` `iswdigit` on the first character selects the range; `0x64ac60` converts it to both values; the loop at `0x5aefa5` skips digits, and `0x5aefc4` stores 100 after a dash. `0x5aefd9` tests a digit with `_isdigit`; a token that starts with `-` and passes reaches `0x5aeff2` and the maximum, otherwise `0x5af015` keeps it as a term. A digit-start token is a range even when text follows its digits. Terms are 128-byte slots; `0x5af02d` `cmp eax,4; jae` ends the scan. The packet is built at `0x5af0a4` and sent at `0x5af168`.
 
 ## Who list reply
 

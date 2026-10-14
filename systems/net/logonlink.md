@@ -41,14 +41,14 @@ Test: none
 
 ## File transfer
 
-The logon server can offer a file to download: `0x30` is a name length byte, the name, a u64 size and a 16-byte digest; `0x31` is a u16 length and that many data bytes. The client replies `0x32` to accept from the start, `0x33` and a u64 offset to resume, or `0x34` to cancel. A name length of `0x103` or more is read as 3, so only three name bytes are consumed and the rest of the packet is parsed as the next command.
+The logon server can offer a file to download: `0x30` is a name length byte, the name, a u64 size and a 16-byte digest; `0x31` is a u16 length and that many data bytes. The client replies `0x32` to accept from the start, `0x33` and a u64 offset to resume, or `0x34` to cancel. The name length is one byte, so the test of it against `0x103` never fires; the 272-byte name buffer holds the 255 name bytes at most and the NUL.
 
 Addresses: `0x5baf70`, `0x5bb050`, `0x5bbf20`, `0x5bc050`, `0x5b2050`, `0x5bafc4`, `0x5bafcc`, `0x5bafdf`, `0x5bb039`, `0x5bb0cb`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5baf70` waits for 1 byte and then for `n + 0x18` (`0x5bafae`), compares `n` with `0x103` (`0x5bafc4`) and sets `bl` to 3 for a larger one (`0x5bafcc`), reads the name with `0x419400` into a 272-byte buffer and terminates it (`0x5bafdf`, `0x5baff0`), the size with `0x4190b0`, borrows the 16 digest bytes with `0x419ac0`, returns 1 past the end, and calls the owner's slot 9 with the name, the size and the digest (`0x5bb039`), returning 2. `0x5bb050` reads the length (`0x418db0`), waits for it, borrows the bytes and calls slot 12 with the pointer and length (`0x5bb0cb`). `0x5bbf20(accept, offset)` puts `0x34` for accept 0, `0x32` for a zero offset and `0x33` with `0x418370` otherwise; `0x5bc050` puts `0x34`; `0x5b2050` sends through the link.
+`0x5baf70` waits for 1 byte and then for `n + 0x18` (`0x5bafae`), compares `n` (a zero-extended byte, `0x5bafa7`) with `0x103` (`0x5bafc4`), a test that never passes because `n` is at most 255, so the `mov bl,3` at `0x5bafcc` is dead; it reads the name with `0x419400` into a 272-byte buffer and terminates it (`0x5bafdf`, `0x5baff0`), the size with `0x4190b0`, borrows the 16 digest bytes with `0x419ac0`, returns 1 past the end, and calls the owner's slot 9 with the name, the size and the digest (`0x5bb039`), returning 2. `0x5bb050` reads the length (`0x418db0`), waits for it, borrows the bytes and calls slot 12 with the pointer and length (`0x5bb0cb`). `0x5bbf20(accept, offset)` puts `0x34` for accept 0, `0x32` for a zero offset and `0x33` with `0x418370` otherwise; `0x5bc050` puts `0x34`; `0x5b2050` sends through the link.
 
 ## Logon checksum
 

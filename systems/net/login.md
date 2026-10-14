@@ -243,11 +243,11 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5b2134` tests the logon object's `+0xc` and calls `0x5bb6d0` with the account and the key (`+0xd`, `+0x54`), which enters state 3, upper-cases the account into `+0x19c`, copies the key to `+0x1fc` and sends. `0x5bae00` needs 17 bytes before it starts, reads the result byte (`0x5bae2d`; non-zero returns 1) and two borrowed 16-byte slices (`0x5bae4e`, `0x5bae5b`), returns 1 when the cursor passed the end (`0x5bae66`), copies the first to `+0x1dc`, sets state 5 (`0x5bae94`) and calls the owner's slot 5 with the second (`0x5baea9`). `0x5baec0` stores state 2 and calls slot 11 with the result for a non-zero byte (`0x5baf0b`, `0x5baf15` to `0x5baf19`), else state 6 and slot 11 with `+0x1fc` and 40 (`0x5baf3c`).
+`0x5b2134` tests the logon object's `+0xc` and calls `0x5bb6d0` with the account and the key (`+0xd`, `+0x54`), which enters state 3, upper-cases the account into `+0x19c`, copies the key to `+0x1fc` and sends. `0x5bae00` waits for 17 bytes (`0x5bae0d`) but reads 33 (the result byte and two 16-byte slices), so a reply that arrives split after 17 bytes is taken as malformed (`0x5bae66`) instead of waited for; it reads the result byte (`0x5bae2d`; non-zero returns 1) and two borrowed 16-byte slices (`0x5bae4e`, `0x5bae5b`), returns 1 when the cursor passed the end (`0x5bae66`), copies the first to `+0x1dc`, sets state 5 (`0x5bae94`) and calls the owner's slot 5 with the second (`0x5baea9`). `0x5baec0` stores state 2 and calls slot 11 with the result for a non-zero byte (`0x5baf0b`, `0x5baf15` to `0x5baf19`), else state 6 and slot 11 with `+0x1fc` and 40 (`0x5baf3c`).
 
 ## Reconnect proof
 
-The reconnect proof is `0x03`, `R1 = MD5(account ‖ unix time as a dword)` (16 bytes), `R2 = SHA-1(account ‖ R1 ‖ seed ‖ K)` (20, `K` the kept 40-byte key), `R3 = SHA-1(R1 ‖ C)` (20, with `C` 20 zero bytes on a reconnect), the count of key records, and the records of the logon proof.
+The reconnect proof is `0x03`, `R1 = MD5(account ‖ unix time as a dword)` (16 bytes), `R2 = SHA-1(account ‖ R1 ‖ seed ‖ K)` (20, `K` the kept 40-byte key), `R3 = SHA-1(R1 ‖ C)` (20, with `C` 20 zero bytes on a reconnect), the count of key records, and the key records, 32 bytes each: each is the hash `0x5bba80` of `R1` (16 bytes) and the seed at `+0x1dc` (16 bytes) (`0x5bbe43` to `0x5bbe59`), where the logon proof hashes `A` (32) and `+0x1dc` (32) (`0x5bbc20` to `0x5bbc3c`). No security byte follows the records (`0x5bbe78` falls into `0x5bbe7c`).
 
 Addresses: `0x5bbad0`, `0x5bbcb7`, `0x5bbd06`, `0x5bbd24`, `0x5bbd7c`, `0x5bbd92`, `0x5bbdc6`, `0x4294c0`
 Confidence: verified

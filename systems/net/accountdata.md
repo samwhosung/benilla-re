@@ -81,7 +81,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x5afbec` puts `0x20a` and `0x5afc13` the section number; `0x5afc2f` stores 1 in the pending byte. `0x5afae0` reads the file with `0x42a520`, `0x5afb55` is the compress call with level 1 (`push 1`), and the packet is `0x5afb5c` (`0x20b`), the section (`0x418190`), the size (`0x4182b0`) and the bytes (`0x418c10`). `0x5afc72` and `0x5afc7d` read the section and size; `0x5afc98` borrows the rest of the packet; `0x5afca8` is `__alloca_probe` on the size; `0x5afcbc` calls `0x660740` and nothing tests its result; `0x5afd01` clears the pending byte of the section number, which is not range-checked.
+The upload allocates the file size twice on the stack (`0x5afb1e`, `0x5afb45`), caps the compress output at the input size (`0x5afb42`) and tests neither the compress result nor the read count. `0x5afbec` puts `0x20a` and `0x5afc13` the section number; `0x5afc2f` stores 1 in the pending byte. `0x5afae0` reads the file with `0x42a520`, `0x5afb55` is the compress call with level 1 (`push 1`), and the packet is `0x5afb5c` (`0x20b`), the section (`0x418190`), the size (`0x4182b0`) and the bytes (`0x418c10`). `0x5afc72` and `0x5afc7d` read the section and size; `0x5afc98` borrows the rest of the packet; `0x5afca8` is `__alloca_probe` on the size; `0x5afcbc` calls `0x660740` and nothing tests its result; `0x5afd01` clears the pending byte of the section number, which is not range-checked.
 
 ## Section reads and writes
 
