@@ -33217,7 +33217,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x766d10	56	DeleteInputList		ui	host		Frees an input list's array and the list when asked	verified	one	ui/strata#construction-and-teardown	
 0x766d50	56	DeleteStrataNodeArray		ui	host		Frees a level node array's data and the array when asked	verified	one	ui/strata#construction-and-teardown	
 0x766d90	226	ReserveInputList		ui	primitive		Grows an input list's capacity by a count, rounded to its quantum	verified	one	ui/input#input-lists	
-0x766e80	57	ChooseInputListQuantum		ui	primitive		Returns the grow quantum for a count: its lowest set bit below 64, else 64	verified	one	ui/input#input-lists	
+0x766e80	57	ChooseInputListQuantum		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 64, else 64	verified	one	ui/input#input-lists	
 0x766ec0	31	RoundCountToQuantum		ui	primitive		Rounds a count up to a multiple of a quantum	verified	one	ui/input#input-lists	
 0x766ee0	133	SetInputListCapacity		ui	orchestration		Reallocates an input list's array to a capacity, copying when it must move	verified	one	ui/input#input-lists	
 0x766f70	78	UiCopyMouseEvent		ui	orchestration		Copies a mouse payload into an interface event and scales its position through 0x41ad80	verified	one	ui/input#mouse-move-and-the-hover-pick	
