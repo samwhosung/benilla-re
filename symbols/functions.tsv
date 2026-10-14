@@ -6702,28 +6702,28 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48a120	135	Script::InitiateTrade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends a trade request for a unit token unless the player is dead, showing ERR_PLAYER_DEAD	verified	one	ui/trade#starting-a-trade	
 0x48a1b0	348	Script::CanInspect	idb	ui	primitive		Pushes 1 when the unit can be inspected, else nil, with an error for an absent unit	verified	one	ui/distancegates#caninspect	ui::caninspect_dist2
 0x48a310	148	Script::NotifyInspect	idb	ui	orchestration	int __fastcall (lua_State *L)	Sends the inspect request for a unit token through the active player	verified	one	ui/honorinspect#inspect-target	
-0x48a3b0	109	Script::InviteToParty	idb	ui	primitive		Implements the Lua function InviteToParty	inferred	none		
-0x48a420	237	Script::InviteByName	idb	ui	orchestration		Implements the Lua function InviteByName	inferred	none		
-0x48a510	109	Script::UninviteFromParty	idb	ui	primitive		Implements the Lua function UninviteFromParty	inferred	none		
-0x48a580	138	Script::UninviteFromRaid	idb	ui	primitive		Implements the Lua function UninviteFromRaid	inferred	none		
-0x48a610	157	Script::UninviteByName	idb	ui	orchestration		Implements the Lua function UninviteByName	inferred	none		
-0x48a6b0	100	Script::ResetInstances	idb	ui	orchestration		Implements the Lua function ResetInstances	inferred	none		
-0x48a720	45	Script::CanShowResetInstances	idb	ui	orchestration		Implements the Lua function CanShowResetInstances	inferred	none		
-0x48a750	97	Script::IsInInstance	idb	ui	orchestration		Implements the Lua function IsInInstance	inferred	none		
-0x48a7c0	109	Script::PromoteToPartyLeader	idb	ui	primitive		Implements the Lua function PromoteToPartyLeader	inferred	none		
-0x48a830	194	Script::PromoteByName	idb	ui	primitive		Implements the Lua function PromoteByName	inferred	none		
-0x48a900	100	Script::RequestTimePlayed	idb	ui	orchestration		Implements the Lua function RequestTimePlayed	inferred	none		
-0x48a970	41	Script::RepopMe	idb	ui	orchestration		Implements the Lua function RepopMe	inferred	none		
-0x48a9a0	43	Script::AcceptResurrect	idb	ui	orchestration		Implements the Lua function AcceptResurrect	inferred	none		
-0x48a9d0	43	Script::DeclineResurrect	idb	ui	orchestration		Implements the Lua function DeclineResurrect	inferred	none		
+0x48a3b0	109	Script::InviteToParty	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Invites the player a unit token names to the group	verified	one	ui/groupverbs#inviting-and-removing-by-token	
+0x48a420	237	Script::InviteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a group invite by name, or shows ERR_INVITE_SELF for the player's own name	verified	one	ui/groupverbs#inviting-and-removing-by-name	
+0x48a510	109	Script::UninviteFromParty	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Removes the player a unit token names from the group	verified	one	ui/groupverbs#inviting-and-removing-by-token	
+0x48a580	138	Script::UninviteFromRaid	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Removes the raid roster member at an index from the group	verified	one	ui/groupverbs#inviting-and-removing-by-token	
+0x48a610	157	Script::UninviteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a group uninvite by name	verified	one	ui/groupverbs#inviting-and-removing-by-name	
+0x48a6b0	100	Script::ResetInstances	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the instance reset request	verified	one	ui/groupverbs#instances	
+0x48a720	45	Script::CanShowResetInstances	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when instances can be reset, else nil	verified	one	ui/groupverbs#instances	
+0x48a750	97	Script::IsInInstance	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns whether the current map is an instance and its type name	verified	one	ui/groupverbs#instances	
+0x48a7c0	109	Script::PromoteToPartyLeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Makes the player a unit token names the party leader	verified	one	ui/groupverbs#inviting-and-removing-by-token	
+0x48a830	194	Script::PromoteByName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends a party leader change for the best player matching a name	verified	one	ui/groupverbs#inviting-and-removing-by-name	
+0x48a900	100	Script::RequestTimePlayed	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the played time request	verified	one	ui/groupverbs#small-sends	
+0x48a970	41	Script::RepopMe	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server to release the dead player to a graveyard	verified	one	ui/groupverbs#answering-invitations	
+0x48a9a0	43	Script::AcceptResurrect	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the pending resurrection	verified	one	ui/groupverbs#answering-invitations	
+0x48a9d0	43	Script::DeclineResurrect	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the pending resurrection	verified	one	ui/groupverbs#answering-invitations	
 0x48aa00	38	Script::ResurrectHasSickness	idb	ui	orchestration		Pushes 1 when the resurrect offer carries sickness, else nil	verified	one	ui/deathui#the-resurrection-offer	
 0x48aa30	38	Script::ResurrectHasTimer	idb	ui	orchestration		Pushes 1 when the resurrect offer carries a timer, else nil	verified	one	ui/deathui#the-resurrection-offer	
 0x48aa60	8	Script::BeginTrade	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends CMSG_BEGIN_TRADE and returns nothing	verified	one	ui/trade#starting-a-trade	
 0x48aa70	8	Script::CancelTrade	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends CMSG_CANCEL_TRADE and returns nothing	verified	one	ui/trade#starting-a-trade	
-0x48aa80	41	Script::AcceptGroup	idb	ui	orchestration		Implements the Lua function AcceptGroup	inferred	none		
-0x48aab0	41	Script::DeclineGroup	idb	ui	orchestration		Implements the Lua function DeclineGroup	inferred	none		
-0x48aae0	41	Script::AcceptGuild	idb	ui	orchestration		Implements the Lua function AcceptGuild	inferred	none		
-0x48ab10	41	Script::DeclineGuild	idb	ui	orchestration		Implements the Lua function DeclineGuild	inferred	none		
+0x48aa80	41	Script::AcceptGroup	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the pending group invitation	verified	one	ui/groupverbs#answering-invitations	
+0x48aab0	41	Script::DeclineGroup	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the pending group invitation	verified	one	ui/groupverbs#answering-invitations	
+0x48aae0	41	Script::AcceptGuild	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the pending guild invitation	verified	one	ui/groupverbs#answering-invitations	
+0x48ab10	41	Script::DeclineGuild	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the pending guild invitation	verified	one	ui/groupverbs#answering-invitations	
 0x48ab40	15	Script::CancelLogout	idb	ui	orchestration		Cancels a pending logout	verified	one	ui/popups#logout-and-quit	
 0x48ab50	15	Script::ForceLogout	idb	ui	orchestration		Sends a forced logout request that ignores the pending latch	verified	one	ui/popups#logout-and-quit	
 0x48ab60	10	Script::ForceQuit	idb	ui	orchestration		Posts the close event of the current context with quit code 0 and sends nothing	verified	one	ui/popups#logout-and-quit	
@@ -6734,19 +6734,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ac70	8	Script::ResetCursor	idb	ui	orchestration		Implements the Lua function ResetCursor	verified	one	ui/worldcursor#setting-the-mode	
 0x48ac80	228	Script::HasSoulstone	idb	ui	orchestration		Pushes the self-resurrection spell or item name while dead, else nil	verified	one	ui/deathui#soulstone-and-self-resurrection	
 0x48ad70	285	Script::UseSoulstone		ui	orchestration		Sends the self-resurrection packet, or uses a self-resurrect item	verified	one	ui/deathui#soulstone-and-self-resurrection	
-0x48ae90	88	Script::HasKey	idb	ui	orchestration		Implements the Lua function HasKey	inferred	none		
-0x48aef0	184	Script::GuildInviteByName	idb	ui	orchestration		Implements the Lua function GuildInviteByName	inferred	none		
-0x48afb0	160	Script::GuildUninviteByName	idb	ui	orchestration		Implements the Lua function GuildUninviteByName	inferred	none		
-0x48b050	160	Script::GuildPromoteByName	idb	ui	orchestration		Implements the Lua function GuildPromoteByName	inferred	none		
-0x48b0f0	160	Script::GuildDemoteByName	idb	ui	orchestration		Implements the Lua function GuildDemoteByName	inferred	none		
-0x48b190	212	Script::GuildSetLeaderByName	idb	ui	orchestration		Implements the Lua function GuildSetLeaderByName	inferred	none		
-0x48b270	180	Script::GuildSetMOTD	idb	ui	orchestration		Implements the Lua function GuildSetMOTD	inferred	none		
-0x48b330	100	Script::GuildLeave	idb	ui	orchestration		Implements the Lua function GuildLeave	inferred	none		
-0x48b3a0	100	Script::GuildDisband	idb	ui	orchestration		Implements the Lua function GuildDisband	inferred	none		
-0x48b410	100	Script::GuildInfo	idb	ui	orchestration		Implements the Lua function GuildInfo	inferred	none		
+0x48ae90	88	Script::HasKey	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the player carries a key, else nil	verified	one	ui/groupverbs#small-sends	
+0x48aef0	184	Script::GuildInviteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a guild invite for a name, or shows message 0x132 for an empty one	verified	one	ui/groupverbs#guild-verbs	
+0x48afb0	160	Script::GuildUninviteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a guild member removal for a name	verified	one	ui/groupverbs#guild-verbs	
+0x48b050	160	Script::GuildPromoteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a guild promotion for a name	verified	one	ui/groupverbs#guild-verbs	
+0x48b0f0	160	Script::GuildDemoteByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a guild demotion for a name	verified	one	ui/groupverbs#guild-verbs	
+0x48b190	212	Script::GuildSetLeaderByName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends a guild leader change, with no name for empty or target	verified	one	ui/groupverbs#guild-verbs	
+0x48b270	180	Script::GuildSetMOTD	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the guild message of the day	verified	one	ui/groupverbs#guild-verbs	
+0x48b330	100	Script::GuildLeave	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the guild leave request	verified	one	ui/groupverbs#guild-verbs	
+0x48b3a0	100	Script::GuildDisband	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the guild disband request	verified	one	ui/groupverbs#guild-verbs	
+0x48b410	100	Script::GuildInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the guild information request	verified	one	ui/groupverbs#guild-verbs	
 0x48b480	77	GetUiScreenWidth		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen width in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	ui::luabind_48b_screen_getters
 0x48b4d0	77	GetUiScreenHeight		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen height in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	ui::luabind_48b_screen_getters
-0x48b520	127	Script::GetDamageBonusStat	idb	ui	primitive		Implements the Lua function GetDamageBonusStat	inferred	none		
+0x48b520	127	Script::GetDamageBonusStat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the class record dword plus 1, or 0	verified	one	ui/groupverbs#small-sends	
 0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Pushes the seconds until release, -1 for a map without a timer	verified	one	ui/deathui#the-release-timer	
 0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Pushes the whole seconds until the corpse can be reclaimed	verified	one	ui/deathui#the-reclaim-delay	
 0x48b620	62	Script::GetInstanceBootTimeRemaining	idb	ui	primitive		Pushes the whole seconds left of the instance boot countdown, 0 when idle	verified	one	ui/popups#the-instance-boot-countdown	
@@ -6757,8 +6757,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
 0x48b820	135			ui	primitive		Runs GameUI.cpp code that calls ScaleScreenDelta, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		ui::luabind_48b_cursor_position
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
-0x48b920	69	Script::SitOrStand	idb	ui	orchestration		Implements the Lua function SitOrStand	inferred	none		
-0x48b970	10	Script::StopCinematic	idb	ui	orchestration		Implements the Lua function StopCinematic	inferred	none		
+0x48b920	69	Script::SitOrStand	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server to sit, or to stand when the player is not standing	verified	one	ui/groupverbs#small-sends	
+0x48b970	10	Script::StopCinematic	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stops the cinematic narration	verified	one	ui/groupverbs#small-sends	
 0x48b980	119	Script::RunScript	idb	ui	primitive		Runs argument 1 as a chunk with the context word set to the RunScript word	verified	one	ui/luastate#the-context-word	
 0x48ba00	343	Script::CheckInteractDistance	idb	ui	primitive		Pushes 1 when the unit is within the range of the given index 1 to 4, else nil	verified	one	ui/distancegates#checkinteractdistance	ui::check_interact_dist2
 0x48bb60	10	InitResolutionListThunk		ui	orchestration	void __cdecl (void)	Calls 0x48bb70 and registers 0x48bba0 with _atexit; a static initializer	verified	one	ui/videoverbs#the-resolution-list	
@@ -6780,9 +6780,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48c3e0	406	BuildMultisampleList		ui	primitive	void __cdecl (void)	Fills the multisample list once with the distinct colour, depth and sample triples of the device formats	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based list index of the gx colour, depth and multisample options, or 1 on a miss	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c640	361	Script::SetMultisampleFormat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Writes the chosen multisample entry to its three options and runs gxRestart when it differs	verified	one	ui/videoverbs#the-multisample-verbs	
-0x48c7b0	264	Script::RandomRoll	idb	ui	orchestration		Implements the Lua function RandomRoll	inferred	none		
-0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration		Implements the Lua function OpeningCinematic	inferred	none		
-0x48c930	38	Script::InCinematic	idb	ui	orchestration		Implements the Lua function InCinematic	inferred	none		
+0x48c7b0	264	Script::RandomRoll	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends a random roll request for a range up to 1000000	verified	one	ui/groupverbs#small-sends	
+0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the cinematic completion message	verified	one	ui/groupverbs#small-sends	
+0x48c930	38	Script::InCinematic	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 while a cinematic plays, else nil	verified	one	ui/groupverbs#small-sends	
 0x48c960	18	Script::IsWindowsClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number 1	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c980	11	Script::IsMacClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c990	11	Script::IsLinuxClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
@@ -6851,7 +6851,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d4c0	17	Script::GMRequestPlayerInfo	idb	ui	orchestration		Implements the Lua function GMRequestPlayerInfo	inferred	none		
 0x48d4e0	88	Script::GetCoinIcon	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon path a copper amount shows	verified	one	ui/cursormoney#coin-icons	
 0x48d540	437	Script::GetZonePVPInfo	idb	ui	primitive		Pushes the zone PvP type, its faction name and whether the leaf is an arena	verified	one	ui/zonetext#getzonepvpinfo	
-0x48d700	100	Script::TogglePVP	idb	ui	orchestration		Implements the Lua function TogglePVP	inferred	none		
+0x48d700	100	Script::TogglePVP	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the PvP toggle	verified	one	ui/groupverbs#small-sends	
 0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration		Implements the Lua function ConfirmBindOnUse	inferred	none		
 0x48d780	290	Script::SetPortraitToTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a texture, named by a global or given as a table, to the circular portrait of a path	verified	one	ui/portraittextures#portrait-by-name	
 0x48d8b0	23	GameScriptGetLocale		ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the current locale's name	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
@@ -7044,10 +7044,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495c00	40	CGDressUpModelFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGDressUpModelFrame::CGDressUpModelFrame; not read here	inferred	none		
 0x495c30	40	CGTabardModelFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGTabardModelFrame::CGTabardModelFrame; not read here	inferred	none		
 0x495c60	40	CGTooltip::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGTooltip::CGTooltip; not read here	inferred	none		
-0x495c90	102			ui	primitive		Runs GameUI.cpp code that calls GetUnixTime; not read here	inferred	none		
-0x495d00	13			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x495d10	64			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x495d50	7			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x495c90	102	CanResetInstances		ui	primitive	uint32_t __cdecl (void)	Answers whether the ownership flag, the current map and the last instance map allow a reset	verified	one	ui/groupverbs#instances	
+0x495d00	13	ClearLastInstance		ui	orchestration	void __cdecl (void)	Forgets the last instance map and its time	verified	one	ui/groupverbs#instances	
+0x495d10	64	RecordMapChange		ui	primitive	void __stdcall (uint32_t now, uint32_t map)	Records the map change, keeping the left instance map and the time	verified	one	ui/groupverbs#instances	
+0x495d50	7	SetInstanceOwnership		ui	orchestration	void __fastcall (uint32_t flag)	Stores the instance ownership flag	verified	one	ui/groupverbs#instances	
 0x495d60	1026	ValidateSpellItemTarget		ui	primitive	void __fastcall (int suppress, uint32_t guidLow, uint32_t guidHigh)	Checks a clicked item against the pending spell's enchant and prospecting effects, then binds it with 0x6e5b40	verified	one	spell/itemtarget#item-click-validator	
 0x496170	204	CheckTradeEnchantClash		ui	primitive		Signals TRADE_REPLACE_ENCHANT when the pending enchant would replace one, else applies it	verified	one	ui/popups#the-trade-enchant-clash	
 0x496240	7	SetRestStart		ui	orchestration		Stores its argument as the rest start time	verified	one	objectlayer/playermessages#error-notices	
@@ -7266,9 +7266,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a16b0	118	Script::SetChatWindowDocked	idb	ui	primitive		Stores a window's dock number, 0 when not a number	verified	one	ui/chatwindows#locked-docked-shown-and-name	
 0x4a1730	93	Script::SetChatWindowShown	idb	ui	primitive		Stores a window's shown flag, default 1	verified	one	ui/chatwindows#locked-docked-shown-and-name	
 0x4a1790	178	Script::EnumerateServerChannels	idb	ui	primitive		Pushes the shortcuts of the ChatChannels rows that apply in the current zone	verified	one	ui/chatwindows#enumerating-server-channels	
-0x4a1850	155	Script::RequestRaidInfo	idb	ui	orchestration		Implements the Lua function RequestRaidInfo	inferred	none		
-0x4a18f0	44	Script::GetNumSavedInstances	idb	ui	orchestration		Implements the Lua function GetNumSavedInstances	inferred	none		
-0x4a1920	235	Script::GetSavedInstanceInfo	idb	ui	primitive		Implements the Lua function GetSavedInstanceInfo	inferred	none		
+0x4a1850	155	Script::RequestRaidInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the raid information request	verified	one	ui/groupverbs#instances	
+0x4a18f0	44	Script::GetNumSavedInstances	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of saved instances	verified	one	ui/groupverbs#instances	
+0x4a1920	235	Script::GetSavedInstanceInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, reset value and extent of a saved instance	verified	one	ui/groupverbs#instances	
 0x4a1a10	33	RegisterChatScriptFunctions		ui	primitive		Registers the 50 Lua functions of the table at 0x843618	verified	one	ui/chatwindows#chat-script-functions	
 0x4a1a40	27			ui	primitive		Runs ChatFrame.cpp code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4a1a60	564	MaskProfanity		ui	primitive		Overwrites each match of a profanity pattern with the next mask characters and returns whether any matched	verified	one	ui/chatfilter#masking	
@@ -8266,15 +8266,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bb4b0	127	Script::GetRaidTargetIndex	idb	ui	primitive		Pushes the 1-based raid target icon of a unit, or nil	verified	one	ui/raid#the-raid-target-table	
 0x4bb530	44	Script::GetNumRaidMembers	idb	ui	orchestration		Pushes the raid member count	verified	one	ui/raid#group-leader-and-membership	
 0x4bb560	696	Script::GetRaidRosterInfo	idb	ui	primitive		Pushes nine values describing a raid roster member	verified	one	ui/raid#getraidrosterinfo	
-0x4bb820	105	Script::SetRaidRosterSelection	idb	ui	primitive		Implements the Lua function SetRaidRosterSelection	inferred	none		
-0x4bb890	42	Script::GetRaidRosterSelection	idb	ui	primitive		Implements the Lua function GetRaidRosterSelection	inferred	none		
+0x4bb820	105	Script::SetRaidRosterSelection	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the raid roster member at an index, or none	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bb890	42	Script::GetRaidRosterSelection	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based roster index of the selected raid member	verified	one	ui/groupverbs#the-raid-roster-verbs	
 0x4bb8c0	69	Script::IsRaidLeader	idb	ui	orchestration		Pushes 1 when the player is the group leader, else nil	verified	one	ui/raid#group-leader-and-membership	
-0x4bb910	122	Script::IsRaidOfficer	idb	ui	primitive		Implements the Lua function IsRaidOfficer	inferred	none		
-0x4bb990	363	Script::SetRaidSubgroup	idb	ui	primitive		Implements the Lua function SetRaidSubgroup	inferred	none		
-0x4bbb00	394	Script::SwapRaidSubgroup	idb	ui	primitive		Implements the Lua function SwapRaidSubgroup	inferred	none		
-0x4bbc90	137	Script::ConvertToRaid	idb	ui	primitive		Implements the Lua function ConvertToRaid	inferred	none		
-0x4bbd20	201	Script::PromoteToAssistant	idb	ui	primitive		Implements the Lua function PromoteToAssistant	inferred	none		
-0x4bbdf0	200	Script::DemoteAssistant	idb	ui	primitive		Implements the Lua function DemoteAssistant	inferred	none		
+0x4bb910	122	Script::IsRaidOfficer	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the player holds a raid rank above 0, else nil	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bb990	363	Script::SetRaidSubgroup	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Moves a roster member to a subgroup 1 to 8 by name	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bbb00	394	Script::SwapRaidSubgroup	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Swaps two roster members between their subgroups by name	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bbc90	137	Script::ConvertToRaid	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Converts the player's party to a raid when they lead it	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bbd20	201	Script::PromoteToAssistant	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Makes the best matching player a raid assistant	verified	one	ui/groupverbs#the-raid-roster-verbs	
+0x4bbdf0	200	Script::DemoteAssistant	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Removes the assistant rank from the best matching player	verified	one	ui/groupverbs#the-raid-roster-verbs	
 0x4bbec0	445	Script::SetRaidTarget	idb	ui	primitive		Sends opcode 0x321 to set or clear the raid target icon of a unit	verified	one	ui/raid#setting-a-raid-target	
 0x4bc080	8	Script::DoReadyCheck	idb	ui	orchestration		Starts a ready check	verified	one	ui/raid#starting-a-ready-check	
 0x4bc090	138	Script::ConfirmReadyCheck	idb	ui	orchestration		Sends the player's ready check answer while a check is running	verified	one	ui/raid#answering-a-ready-check	
@@ -10471,7 +10471,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e9090	102	Script::GetPartyMember	idb	ui	primitive		Pushes 1 when party slot n (1 to 4) holds a member, else nil	verified	one	ui/party#tables-and-the-party-functions	
 0x4e9100	36	Script::GetPartyLeaderIndex	idb	ui	primitive		Pushes the 1-based party slot of the leader, 0 for the player	verified	one	ui/party#the-group-leader	
 0x4e9130	76	Script::IsPartyLeader	idb	ui	primitive		Pushes 1 when the player is the nonzero group leader, else nil	verified	one	ui/party#the-group-leader	
-0x4e9180	41	Script::LeaveParty	idb	ui	orchestration		Implements the Lua function LeaveParty	inferred	none		
+0x4e9180	41	Script::LeaveParty	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Leaves the group	verified	one	ui/groupverbs#answering-invitations	
 0x4e91b0	207	Script::GetLootMethod	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the loot method name and the master looter's party index, or nil	verified	one	ui/masterloot#reading-the-loot-settings	
 0x4e92a0	574	Script::SetLootMethod	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Checks the group, leader, method name and master looter, then sends CMSG_LOOT_METHOD	verified	one	ui/masterloot#setting-the-loot-method	
 0x4e94e0	23	Script::GetLootThreshold	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the stored loot threshold as a number	verified	one	ui/masterloot#reading-the-loot-settings	
