@@ -33343,7 +33343,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b220	58	CSimpleFrame::GetHitRect		ui	orchestration		Copies the hit rectangle and answers whether the layout is valid	verified	one	ui/input#hit-test	
 0x76b260	33	CSimpleFrame::OnFrameShow		ui	orchestration		Runs the OnShow script unless the frame is loading; slot 0x30	verified	one	ui/visibility#show-and-hide-scripts	
 0x76b290	33	CSimpleFrame::OnFrameHide		ui	orchestration		Runs the OnHide script unless the frame is loading; slot 0x34	verified	one	ui/visibility#show-and-hide-scripts	
-0x76b2c0	47	CSimpleFrame::OnFrameUpdate		ui	orchestration		Runs the OnUpdate script with the elapsed time; slot 0x38	inferred	none		
+0x76b2c0	47	CSimpleFrame::OnFrameUpdate		ui	orchestration		Runs the OnUpdate script with the elapsed time	verified	one	ui/tooltip#following-the-cursor	
 0x76b2f0	5	FrameInitDragThresholdThunk		ui	orchestration		Jumps to 0x76b300; a static initializer	verified	one	ui/README#static-initializers	
 0x76b300	19	FrameInitDragThreshold		ui	primitive		Stores 0.01 squared in 0xcf0c14, the squared drag-start distance	verified	one	ui/README#static-initializers	
 0x76b320	125	CSimpleFrame::OnMouseMove		ui	primitive		Starts a drag past the threshold and answers the hit test; slot 0x3c	inferred	none		

@@ -39,6 +39,25 @@ Test: none
 returns for mode 8 (`0x52fead`), clears the points (`0x52fec2`) and, for modes 0 to 5, jumps through
 the table at 0x52ffbc (`0x52fed6`) to `0x767c70(point, owner, owner point, x, y, 1)` (`0x52ff12`).
 
+## Anchoring again
+
+`0x52fe90(clear)` applies the anchor of the owner and mode. It does nothing without an owner or in mode 8.
+It clears the tooltip's points unless `clear` is 0 and the mode is 7, so a tooltip whose points a script set
+by hand keeps them when its size changes. Modes 0 to 5 then set the one point of the table; modes 6 and 7 set
+none (mode 6 is placed on every update). `SetOwner` first resets the fade state and the alpha, and stores
+mode 7 before it looks at the owner, so an absent owner leaves the mode at 7 and anchors nothing.
+
+Addresses: `0x52fe90`, `0x52fe96`, `0x52fe9e`, `0x52fea4`, `0x52feaa`, `0x52feb6`, `0x52feba`, `0x52febd`, `0x52fec2`, `0x52fec7`, `0x52fed0`, `0x52fed6`, `0x52ffe0`, `0x52fff4`, `0x530002`, `0x53000c`, `0x530012`, `0x530028`, `0x530037`, `0x530a49`, `0x767ed0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x52fe9e` and `0x52fead` leave for a null owner and mode 8. `0x52feb6 test ecx,ecx; jne 0x52febf` clears for a
+nonzero argument; for 0 `0x52feba cmp eax,0x7; je 0x52fec7` skips `0x767ed0` (`0x52fec2`). The jump table is
+reached only for modes up to 5 (`0x52fed0`, `0x52fed6`). `0x52ffe0` sets the alpha 255 (`0x52fff4`), clears
+`+0x3b4` (`0x530002`), stores the owner (`0x53000c`) and mode 7 (`0x530012`) and, with an owner, the given mode
+and the call with 1 (`0x530028`, `0x530037`). The size pass calls it with 0 (`0x530a49`).
+
 ## Following the cursor
 
 In mode 6, each update sets the tooltip's `BOTTOM` to the screen's `BOTTOMLEFT` at the last mouse

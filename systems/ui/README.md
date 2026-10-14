@@ -14,7 +14,7 @@ documented in `frames`, `anchors`, `strata`, `visibility`, `input`, `script` and
 state, its library and the C function contract in `luastate`; loading the interface from toc and
 XML files in `framexml` and `xmltypes`; add-ons and saved variables in `addons`; the widget types
 in `button`, `editbox`, `fontstring`, `messageframe`, `simplehtml`, `slider`, `scrollframe`,
-`colorselect`, `model`, `tooltip` and `minimap`, by behaviour, not function by function. The rest is not documented yet (`Not documented yet`); its rows are those other systems' findings cite.
+`colorselect`, `model`, `tooltip`, `minimap`, `hover` and `resizebounds`, by behaviour. The rest is not documented yet (`Not documented yet`); its rows are those other systems' findings cite.
 None of the primitives here has a bit-exact test yet.
 
 Roots: `0x764160`, `0x766800`, `0x766820`, `0x767040`, `0x767070`, `0x7670a0`, `0x767240`, `0x768f70`, `0x768f90`, `0x769030`, `0x769060`, `0x769360`, `0x76b2f0`, `0x76c130`, `0x76c150`, `0x76c490`, `0x76c4c0`, `0x76c7e0`, `0x76c800`, `0x76c820`, `0x76c860`, `0x76c890`, `0x773800`, `0x778300`, `0x7785d0`, `0x7785f0`, `0x778620`, `0x778650`, `0x701940`, `0x701960`, `0x701990`, `0x7019b0`, `0x705e30`, `0x705e50`, `0x705e70`, `0x705ea0`, `0x705ed0`, `0x7a17f0`, `0x7a2c10`, `0x7a2ec0`, `0x7a2ee0`, `0x7a2f10`, `0x7a2f40`, `0x7a2f70`
