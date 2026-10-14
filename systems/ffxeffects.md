@@ -60,7 +60,7 @@ The passes are allocated by `0x6462e0` at `0x3c` bytes (Box4, Gauss4, Glow), `0x
 `0x40` (death) and `0x34` (combiner). `0x6cc375` appends a second Glow instead of the GlowWave only
 when `0xce89f8` is nonzero and `caps+0x5c` is nonzero. `0x6cc5a0` returns the CVar's integer `+0x28`
 nonzero ANDed with slot 1 of each pass in the chosen list; `0x6cc630` renders them in order. The
-test is the liquid state against 0xf alone, so every state but 0xf selects list B. `0x6cc6de` and
+test is the liquid state against 0xf alone, so water, ocean, magma and slime (`terrain/camstate`) all select list B. The death effect has one list and none of the nine callers of `0x672470` is in its code, so a ghost gets neither the warp nor the blur floor. `0x6cc6de` and
 `0x6cc73e` compare `caps+0x98` with 5 and with −1.
 
 ## Start and shutdown
@@ -171,11 +171,10 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x6cd3d1` calls `0x58b090` with `ecx = 0xce8a48`; `0x6cd477` calls `0x58b0b0` with `0xce8a08`.
 `0x6cd465` calls `0x5c3d90` with `l = 0`, `r` the `fild [esi+0xc]` float, `b = 0`, `t` the `fild
 [esi+0x10]` float, `n = −1.0`, `f = 1.0`. The five `0x589e60` calls set states 0x14, 0xe, 0x10, 0x12
 and 0xf to 0. `0x6cd554` to `0x6cd573` push `w/allocW` and `h/allocH` through `fidiv` and call
-`0x58af60`. The index table `0x86f260` holds the words 0, 3, 1, 2.
+`0x58af60`.
 
 ## Full-screen quad
 
@@ -191,7 +190,7 @@ Confidence: verified
 Proof: one
 Test: `ffxeffects::ffx_fullscreen_quad_difftest`, `ffxeffects::ffx_transform_quad_verts_difftest`
 
-`0x6cd750` (`ecx` the positions, `edx` the offsets, then the colour, a UV table of 4 pairs and a scale pair) builds a 4-vertex buffer: position, colour and four UV sets `uv·scale + offset`. `0x6cd5a2` calls `0x589ca0`; `0x6cd5ae` and `0x6cd5bc` subtract and add 0.5; the multisample flip
+`0x6cd750` (`ecx` the positions, `edx` the offsets, then the colour, a UV table of 4 pairs and a scale pair) builds a 4-vertex buffer: position, colour and four UV sets `uv·scale + offset`. `0x6cd5a2` calls `0x589ca0`, which returns the device word `+0x1fc`: 1 from the Direct3D device's constructor (`0x598d09`), 0 from the OpenGL one (`0x58deed`), 2 from the base's (`0x591af3`). `0x6cd5ae` and `0x6cd5bc` subtract and add 0.5; the multisample flip
 is `0x6cd5d5` to `0x6cd5f8`, where the float at `0x86f268` is 1.0. `1/allocW` is kept at 53 bits
 (`0x6cd6ab`) and `1/allocH` is stored as a float (`0x6cd6ba`), so `U` and `hu` use the first and `V`
 and `hv` the second. The eight UV floats go out in the order `hu, V, hu, hv, U, hv, U, V`
@@ -245,6 +244,25 @@ multiplies by the float 2.55, `0x6cb155` adds 512. The unsigned compare `cmp al,
 takes the larger of the byte and 84. `0x6cb192` to `0x6cb19c` shift the bytes into `w:z:z:z`. The test
 runs the packing instructions.
 
+## Drunk byte readers
+
+Fifteen places read the inebriation byte `[player+0xe68]+0x1d`, each cutting it to 100: the two glow
+passes, the chat text builder (`0x49f614`), the camera drift (`0x50d1de`, `0x50eb7d`, `0x5104a5`), the
+displayed level of an attackable unit (`0x51809a`, `0x7cbcf9`), the unit tooltip (`0x52a391`), the drunk
+notices (`0x5e2ac3`), an effect kind (`0x60001a`) and the mover's wobble (`0x60a9bc`). Only the glow passes
+reach the post-process. The displayed level is `max(1, level − ⌊min(drunk, 100)·0.05 + 0.5⌋)`.
+
+Addresses: `0x6cb12e`, `0x6cb592`, `0x49f614`, `0x50d1de`, `0x50eb7d`, `0x5104a5`, `0x51809a`, `0x5180b3`, `0x52a391`, `0x5e2ac3`, `0x60001a`, `0x60a9bc`, `0x7cbcf9`, `0x7cbce0`, `0x517fc0`, `0x606980`, `0x508680`, `0x8029c8`, `0x8029d0`, `0x808bf4`, `0x80c488`
+Confidence: verified
+Proof: one
+Test: none
+
+A scan finds a load of `+0xe68` followed within three instructions by a byte read at `+0x1d` 14 times;
+`0x6cb592` adds `0xe68` instead. `0x60001a` multiplies the byte by 0.01 (`0x8029d0`) and takes effect kind 7
+from 0.5 (`0x80c488`); `0x49f651` passes that fraction to `0x508680`. `0x7cbce0(player, unit)` needs the
+unit's level (`[[unit+0x110]+0x70]`) above 0, a nonzero byte and `0x606980` true, then clamps at 1
+(`0x7cbd3d`); `UnitLevel` (`0x517fc0`) does the same at `0x5180b3` with the byte times 5.0 (`0x808bf4`) then 0.01.
+
 ## Glow wave pass
 
 The GlowWave pass (`0x6cb310`, ctor `0x6cb1f0`) is the Glow pass under water with a displacement map
@@ -291,7 +309,7 @@ allocation at line 619 with the source path `0x86f1c4`), mode 1 `0x6cbeee` (`shl
 transcendental, whose result the host's `sin` approximates. The compares are against −128.0
 (`0x806540`) and 127.0 (`0x811310`), then `__ftol` truncates. The unsigned packer (`0x6cc03a`) is
 `fmul 0.5; fadd 0.5; fmul 255.0`. The descriptor `0xce89a0` has 128 at `+4` to `+0x10` and `1/128` at
-`+0x14` and `+0x18` (`0x6cbd3a` to `0x6cbd7b`). The test runs the pack slice with the sine given.
+`+0x14` and `+0x18` (`0x6cbd3a` to `0x6cbd7b`). The test runs the pack slice with the sine given. `0x6cbd27` to `0x6cbd66` push 1 for the filter and both wraps, 0 for the next three flags, 1 for the anisotropy and 0 for the last; `0x58a980` packs them into bits 0 to 2, 3, 4, 5 to 7, 9 to 13 and 8, the anisotropy cut to `caps+0xac`, so the sampler is linear and repeats in both axes (`0x219`). The one reader of the map is `0x6cc1ae`.
 
 ## Death passes
 
@@ -329,8 +347,7 @@ Test: none
 `0x6cc968` compares with 0x40 and stores 0x40 at `+0xc`; `0x6cc976` to `0x6cc97d` clears the lowest
 set bit until one remains; `0x6cc999` is `div ecx` and `0x6cc9a1` adds `quantum − remainder`.
 `0x6cc9c1` calls the reallocator `0x646320`, `0x6cc9d6` the allocator when the reallocation fails,
-and the loop at `0x6cc9f4` copies the pointers. The effect constructors call `0x6cc940` with `(1, 1)`
-before each append.
+and the loop at `0x6cc9f4` copies the pointers.
 
 ## Static initializers
 

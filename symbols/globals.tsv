@@ -551,7 +551,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808acc	const float	s_float3fc90fdb		unassigned	Holds the float 1.5707964 (0x3fc90fdb)	inferred	none	
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
-0x808bf4	float	s_five		ui	Holds 5.0, the factor of the drunk level reduction	verified	one	ui/unitlevels#unitlevel
+0x808bf4	const float	s_drunkLevelScale		ffxeffects	Holds 5.0, the levels a full drunk byte takes off the level UnitLevel shows	verified	one	ffxeffects#drunk-byte-readers
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
 0x808e6c	const float	s_tooltipLineGap		ui	Holds 2.0, the gap in FrameXML units between shown tooltip lines	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e70	const float	s_tooltipColumnGap		ui	Holds 38.4, the gap between a line's left and right texts	verified	one	ui/tooltipcontent#sizing-the-tooltip
@@ -681,6 +681,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
 0x80c484	const float	s_sprintSpeedThreshold		objectlayer	Holds 11.0, the speed from which the moving animation is Sprint	verified	one	collision/walkmode#moving-animation-choice
+0x80c488	const float	s_drunkEffectThreshold		ffxeffects	Holds 0.5, the drunk fraction from which an effect kind of 0x60001a changes	verified	one	ffxeffects#drunk-byte-readers
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization

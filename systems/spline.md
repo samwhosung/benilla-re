@@ -32,7 +32,7 @@ pure-call stub `0x40a2d7` in slots 0 to 6.
 | `+0x18` to `+0x24` | segment length list: capacity, count, data, growth quantum |
 | `+0x28` | mode: 0 straight chords, else cubic |
 
-Addresses: `0x7ffd84`, `0x81d90c`, `0x7ffdbc`, `0x4543d0`, `0x4543e0`, `0x454420`, `0x454460`, `0x4544a0`, `0x454510`, `0x454580`, `0x454770`, `0x454820`, `0x453e70`, `0x453e90`, `0x453ad0`, `0x453a90`, `0x453b50`, `0x453b10`, `0x453b90`, `0x453ee0`, `0x4534f0`, `0x453570`, `0x469bc0`, `0x630c40`, `0x4077e5`, `0x5f9439`, `0x5f9b9f`, `0x7b9220`, `0x7b9320`, `0x4088dc`, `0x5f9cfe`
+Addresses: `0x7ffd84`, `0x81d90c`, `0x7ffdbc`, `0x4543d0`, `0x4543e0`, `0x454420`, `0x454460`, `0x4544a0`, `0x454510`, `0x454580`, `0x454770`, `0x454820`, `0x453e70`, `0x453e90`, `0x453ad0`, `0x453a90`, `0x453b50`, `0x453b10`, `0x453b90`, `0x453ee0`, `0x4534f0`, `0x453570`, `0x469bc0`, `0x630c40`, `0x4077e5`, `0x5f9439`, `0x5f9b9f`, `0x7b9220`, `0x7b9320`, `0x4088dc`, `0x5f9cfe`, `0x7c6a50`, `0x7c6a8f`, `0x7c567a`, `0x7c55a0`
 Confidence: verified
 Proof: one
 Test: none
@@ -42,7 +42,10 @@ The Catmull-Rom vtable is stored at `0x4077e5` (a local curve with mode 1), `0x4
 curve at record `+0x2c` and store 1 into the mode at record `+0x54` (`0x469bea`, `0x630c7d`). The
 Bezier vtable is stored at offset `0x2a8` of two emitter objects (`0x7b9220`, `0x7b9320`). Two base
 constructors store the base vtable (`0x4088dc`, `0x5f9cfe`). Slot 8 of the Catmull-Rom vtable is
-`0x454820`; the base and the Bezier curve hold `0x453570`, which returns 0.
+`0x454820`; the base and the Bezier curve hold `0x453570`, which returns 0. The spline start `0x7c6a50`
+stores the mode again (`0x7c6a8f` to `0x7c6a9d`): 1 when the spline flags have 0x200, else 0. A
+flying spline so takes the cubic and a ground one the chord. The creature follow asks the record's curve
+for a point at `0x7c567a` and a frame at `0x7c55a0`, both with mode 1.
 
 ## Dispatch and clamps
 
