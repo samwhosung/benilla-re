@@ -35772,7 +35772,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf030	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf1b0	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf330	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf4b0	374	BuildYawPitchRollBasis		cmath		void __thiscall (float *dest, float yaw, float pitch, float roll)	Builds the transpose of Rz(yaw), Ry(pitch), Rx(roll) multiplied in that order	verified	one	uicamera/view#pitch-units-and-sign	
+0x7bf4b0	374	BuildYawPitchRollBasis		cmath	primitive	void __thiscall (float *dest, float yaw, float pitch, float roll)	Builds the transpose of Rz(yaw), Ry(pitch), Rx(roll) multiplied in that order	verified	one	uicamera/view#pitch-units-and-sign	
 0x7bf630	5			cmath	orchestration		Jumps to 0x7bf640, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf640	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c18	verified	one	cmath/geometry#static-constants	
 0x7bf650	5			cmath	orchestration		Jumps to 0x7bf660, a static initializer of its file	verified	one	cmath/geometry#static-constants	
