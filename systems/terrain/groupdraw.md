@@ -195,6 +195,51 @@ Each end is `f32(v × 255 + 512)` shifted right 14 and truncated to a byte (`0x6
 `(a × 256 + i × (b − a)) >> 8` (`0x6b6bb5` to `0x6b6bbc`, with b − a as a signed 24-bit step).
 The frame's group liquid pass builds it before drawing (`liquidpass`).
 
+## Group light gather
+
+Before it draws a group, `0x684840` builds a lighting record at the def group's sphere (`0x71bc30(0,
+def + 0x5c)`: centre and radius `+0x68`) and gathers the scene lights for it (`0x70a0f0`): the global
+lights and the cells of the scene grid the sphere covers, widened by half a cell each way. The def's
+virtual slots follow, fog (`0x6c31e0`) and light (`0x6a1f90`, which adds the world light block
+`0xc89ef0 + 0x7c` and the lights of the def's own list `+0xc8`); then `0x71c730(0xc7cf20, 1)` commits
+the record and the group draws. A group's surfaces so take the three nearest scene point lights, diffuse
+only, with the attenuation 0, 0.7 and 0.03, on top of the world light.
+
+Addresses: `0x684bfa`, `0x684c06`, `0x684c0b`, `0x684c18`, `0x684c28`, `0x684c36`, `0x684c46`, `0x684c63`, `0x71bc30`, `0x70a0f0`, `0x71bf90`, `0x71c730`, `0x6a1f90`, `0x6c31e0`, `0xc7b298`, `0xc89ef0`, `0x810918`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6b3f90` has one caller, `0x684c63`, and its address is stored nowhere, so every group draw follows
+this sequence. `0x71bc30` zeroes the 0x1b4-byte record and stores the argument 0 and the four
+floats at `def + 0x5c`. `0x70a0f0` takes the cell window from centre ± radius times the grid
+constant less and plus 0.5 (`0x70a131`, `0x70a155`) over the 64 × 64 grid, and `0x71bf90` keeps the
+four nearest point lights. The vtable `0x810918` holds `0x6c31e0` and `0x6a1f90` in slots 1 and 2;
+the calls are `0x684c28` and `0x684c36`. The light slot clears bit 0 of the def's `+0xc` (`0x6a1f97`)
+and passes the world block to `0x71bf90` (`0x6a1faa`). Between `0x684c46` and `0x684c63` no light changes; the interior
+drawer touches light 0 only, for window materials (`0x71b7c0`) and the overlay (`0x589de0`), and the exterior drawer none.
+
+## Interior batch states
+
+For each batch `0x6b5190` sets, before the sections split, fog `!(flags & 2)`, culling `!(flags & 4)`, the
+clamp bits of the stage texture from 0x40 and 0x80 and the emissive colour (colour state 2) to the
+material's `+0x14` when flag 0x10 is set, else 0. It never tests flag 1: whether a batch is lit
+follows from its section alone, where the exterior drawer lights a batch unless flag 1. Both drawers
+walk their batches in file order with no sort, the exterior one over the first `+0x40`, and neither
+sets state 8, 0x10 or 0x11; depth write (0x12) changes only around the additive overlay.
+
+Addresses: `0x6b52a6`, `0x6b52ba`, `0x6b52c4`, `0x6b52c9`, `0x6b52e3`, `0x6b52f7`, `0x6b53e3`, `0x6b562a`, `0x6b5636`, `0x6b563b`, `0x6b565b`, `0x6b5660`, `0x6b5777`, `0x6b4fab`, `0x6b4fdc`, `0x6b5012`, `0x6b5117`, `0x589e00`, `0x589e60`
+Confidence: verified
+Proof: one
+Test: none
+
+The flag word is read from `[esi]` at `0x6b529d`, `0x6b52b0`, `0x6b53e3` and `0x6b53f7` for fog, culling
+and clamp, and tested for 0x10 (`0x6b52c4`) and 0x20 (`0x6b52f7`, `0x6b56a2`); no other read of
+`[esi]` exists in the function. `0x6b52e3 mov ecx,2` is the colour setter `0x589e00`. The state ids
+set in the exterior drawer are 0xe, 0xf, 0x14, 2 and 7; in the interior one 0xd, 0xf, 0x14, 2, 0xe,
+7 and 0x12, the last at `0x6b563b` (0) and `0x6b5660` (1). Both loops advance the batch pointer by 0x18 only
+(`0x6b5117`, `0x6b5777`), and the blend is the material's word `+0x8` as it stands (`0x6b5012`).
+
 ## Floor under a segment
 
 `0x6be250(start, end, fraction, object out, ids out)` finds the nearest map object floor under a

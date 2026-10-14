@@ -262,7 +262,9 @@ copy: 0x200 and 0x800 each take a chunk of 16-bit entries, 0x1 the BSP chunks, 0
 recursion read the group. The mask of `0x6a4e00` is its first argument, the literal 0x2000 its sole
 caller pushes (`0x69b570`). A scan of `0x680000` to `0x6c5000` for `test`, `and` and `bt` with an
 immediate above 0x10000 on the flags finds exactly `0x6b42e0` and `0x6c46a6`; the scan sees no mask
-held in a register.
+held in a register. Nothing tests bit 0x8000: from `0x66f000` to `0x6c5000` the only immediates 0x8000 are
+`or` stores (`0x670df1`, `0x671052`, `0x6713c2`, `0x688a5a`) and one compare (`0x68b5cc`), and the image has no
+`test ah,0x80`, `test byte [reg+0x11],0x80` or `bt reg,0xf` (`test ah,0x41` finds 1218 for control).
 
 ## Portal crossing
 
@@ -327,3 +329,24 @@ of the flags. `0x6ba035` masks the nibble with 3 and `0x6ba04e` jumps through `0
 `0x6ba0d9`. `0x6ba085` adds 0.01 (`0x8029d0`) to the surface for `fcomp` against z, rejecting with `test
 ah,0x41; jne` unless the sum is above z; `0x6ba109` compares the surface itself. Both store the
 unbiased surface and `edx` (the masked nibble) as the type, so the water tile 4 reports 0.
+
+## Material texture request
+
+`0x6c4c20(name)` makes a material's texture with the flags word `0x58a980(3, 1, 1, 0, 0, 0, aniso, 0)`
+(filter mode 3, repeat in both axes, `aniso` the map's `0xc6297c`) and calls the texture creator
+`0x449d90` with its force argument 1, so the creator replaces the filter mode and the anisotropy
+with its two globals. The group draws change only the wrap bits afterwards: per batch bit 3 of the
+stage's flags is the complement of material flag 0x40 and bit 4 of 0x80, so a set flag clamps.
+Nothing else in the group draws sets the filter, the anisotropy or the alpha reference.
+
+Addresses: `0x6c4c20`, `0x6c4c26`, `0x6c4c48`, `0x6c4c65`, `0x6c4c6f`, `0x6c4c77`, `0x58a980`, `0x449d90`, `0x449ae0`, `0xc6297c`, `0x6b503e`, `0x6b5066`, `0x6b53e3`, `0x6b540b`, `0x58ade0`, `0x58ad30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c4c26` loads the anisotropy and `0x6c4c48` pushes the filter mode, the last argument on the stack
+and so the first parameter of the packer; `0x6c4c6f push 1` is the creator's force argument and
+`0x6c4c77` its call. `0x6b503e` to `0x6b5066` (exterior) and `0x6b53e3` to `0x6b540b` (interior) read
+the stage flags (`0x58ade0`), compute `(~flags >> 3)` into bits 3 and 4 and write them back with
+`0x58ad30`; the materials' words are `[esi]`. The reference alpha comes only from the blend state
+(`groupdraw#interior-batch-states`).

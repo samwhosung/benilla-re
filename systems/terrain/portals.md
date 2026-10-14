@@ -276,7 +276,7 @@ visit takes a 0xfc-byte record from the pool, copies the frustum volume on top o
 it and links it into the node's list (`+0x9c`). Then it runs the doodad def drain (`0x6838f0`) when
 the world flags hold 0x400081 and the entity drain (`0x6834e0`).
 
-Addresses: `0x685d70`, `0x685dad`, `0x685dc1`, `0x685dc9`, `0x685dcf`, `0x685dd6`, `0x685edb`, `0x685f17`, `0x685f1d`, `0x685f24`, `0x685f30`, `0x685f45`, `0x685f76`, `0x685f79`, `0x685f85`, `0x685f8b`, `0x685f92`, `0x685f9a`, `0x685faa`, `0x685faf`, `0x685fc1`, `0x685fcb`, `0x680830`, `0x682eb0`, `0x6882f0`, `0x6872a0`, `0x6b3f90`, `0x684c63`, `0xc7caf0`, `0xc7caf4`, `0xca7f00`, `0x6b4306`, `0x6b4198`
+Addresses: `0x685d70`, `0x685dad`, `0x685dc1`, `0x685dc9`, `0x685dcf`, `0x685dd6`, `0x685edb`, `0x685f17`, `0x685f1d`, `0x685f24`, `0x685f30`, `0x685f45`, `0x685f76`, `0x685f79`, `0x685f85`, `0x685f8b`, `0x685f92`, `0x685f9a`, `0x685faa`, `0x685faf`, `0x685fc1`, `0x685fcb`, `0x680830`, `0x682eb0`, `0x6882f0`, `0x6872a0`, `0x6b3f90`, `0x684c63`, `0xc7caf0`, `0xc7caf4`, `0xca7f00`, `0x6b4306`, `0x6b4198`, `0x685f50`, `0x685f55`, `0x685f66`, `0x687520`, `0xc7cafc`, `0x684cd0`, `0x684e21`
 Confidence: verified
 Proof: one
 Test: none
@@ -287,7 +287,9 @@ unlinks a linked node (`0x685f2b`) and relinks it at the head (`0x685f30` to `0x
 takes `0x685dcf`: the same record and copy, no list link and no scalar stores. `0x6b3f90` draws once for each
 record of that list (`groupdraw#group-draw`), so a group walked through three windows draws three
 times, each under its own volume. `0x6b4160` and the walk reach the callback through the slot
-`0xcde5b0`.
+`0xcde5b0`. A first visit of a group with flag 0x1000, while world flag 0x1000000 is set, also adds the
+node to the liquid list `0xc7cafc` (`0x685f66`); the liquid pass unlinks each node as it draws it
+(`0x684e21`), so a liquid draws only in a frame its group was visited.
 
 ## Interior fog gate
 

@@ -121,6 +121,51 @@ fields 0, 0.7 and 0.03. `0x695d1d` and `0x695d8c` scale the entry's two colours 
 into the light's `+0x3c` and `+0x48`. `0x695e01` places an interior group's light and `0x695e08`
 another's; `0x695e8a` ORs bit 4 into the group's flags.
 
+## Group def creation
+
+`0x695960(root, instance)` makes a def group for each group of a placed map object. Each def group is
+allocated (`0x6a0ca0`), given a link node targeting the instance (`0x6a0450`) and linked into the
+instance's list (`+0x134`, link offset `+0x130`). Its sphere at `+0x5c` (centre) and `+0x68` (radius) is
+the group's (`0x6a44b0`) with the centre moved to the world by the instance matrix `+0x94`; its world
+box at `+0x44` is the group's box moved by the same matrix. It stores the group index at `+0x7c` and
+the instance's word `+0x150` at `+0x88`, clears `+0xc` and sets its light class from the group's
+flags in the root's group record: bit 4 with 0x48, else bit 2.
+
+Addresses: `0x695960`, `0x695986`, `0x69598f`, `0x695999`, `0x6959d3`, `0x6959ea`, `0x6959f1`, `0x695a1f`, `0x695a36`, `0x695a45`, `0x695a54`, `0x695a5c`, `0x695a65`, `0x695a6e`, `0x695a74`, `0x695a79`, `0x695a7d`, `0x695a83`, `0x6a0ca0`, `0x6a0450`, `0x6a44b0`, `0x6a45b0`, `0x6a4640`, `0x6dc540`, `0x7bcc60`
+Confidence: verified
+Proof: one
+Test: none
+
+`ret 0`, `ecx` the root and `edx` the instance, looping the root's group count `+0x168`. `0x695a1f`
+calls `0x6a44b0(rec+0x5c, index)` and `0x695a36` `0x7bcc60` with `+0x94`; `0x695a45` takes the box
+(`0x6a45b0`) and `0x695a54` moves it into `rec+0x44`. `0x6a4640` returns the first dword of the group
+record, and `0x695a79 test al,0x48` picks `or [rec+0xc],4` (`0x695a83`) or `,2` (`0x695a7d`).
+`0x685d70` finds the def group by `+0x7c` (`portals#group-submit`), and the sphere is the query the
+group draw's light gather uses (`groupdraw#group-light-gather`).
+
+## Map light record
+
+A map object's `MOLT` record is 0x30 bytes: type `+0x0`, two flags `+0x2` and `+0x3`, colour bytes
+`+0x4` to `+0x6`, position `+0x8`, intensity `+0x14`, a quaternion `+0x18` that nothing reads, and the
+attenuation start `+0x28` and end `+0x2c`. Only type 0 makes a light. With flag `+0x2` the light's
+`+0x3c` triple is the bytes `+0x6`, `+0x5`, `+0x4` over 255 times the intensity, and with flag `+0x3`
+the triple at `+0x48` is the same. The light's falloff in the scene grid is the constants 0, 0.7 and
+0.03 (`+0x54`, `+0x58`, `+0x5c`) whatever the start and end say; those only set its own range triple.
+
+Addresses: `0x695c00`, `0x695c2f`, `0x695c3d`, `0x695c6a`, `0x695c93`, `0x695cb1`, `0x695cc1`, `0x695cdc`, `0x695cfe`, `0x695d03`, `0x695d0a`, `0x695d11`, `0x695d18`, `0x695d1f`, `0x695d2e`, `0x695d87`, `0x695d8e`, `0x698f50`, `0x699110`, `0x699120`, `0x699146`, `0x71b650`, `0x6c3c5d`, `0x801360`, `0x801620`, `0x8026c8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x695c00` and `0x698f50` both walk the group's references (`+0xe4`, count `+0x140`) over the root's
+records (`+0x148`) and call `0x71b650`. `0x6c3c5d` stores the record pointer at the root's `+0x148` and
+the count at `+0x180` (size over 0x30).
+In `0x695c00`, `0x695c3d` skips a nonzero type, `0x695d18` and `0x695d87` test the two flags, and the
+three colour bytes are read at `0x695d1f`, `0x695d23` and `0x695d27`, each times 1/255 (`0x8026c8`) and the intensity
+(`0x695d2e`); the light's own range is formed from `0x28` and `0x2c` (`0x695c93`), a gap under 0.001
+getting 0.1 added to the end. `0x695d03`, `0x695d0a` and `0x695d11` store 0, `0x3f333333` and
+`0x3cf5c28f`. `0x698f50` reads the same records at `0x699120` and registers them at `0x699146`.
+
 ## Pending doodads
 
 `0x698c50` finishes the doodad defs whose models have loaded. For each def in the pending list
