@@ -2736,10 +2736,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet
 0xb714a8	uint32_t	s_petExpiryTick		ui	Holds the tick when the pet's possession ends, 0 for none	verified	one	ui/petbar#pet-state
 0xb714b0	uint32_t	s_petAttackLatch		ui	Holds 1 while the pet attack command is active, 0 at load	verified	one	ui/petbar#pet-state
-0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
-0xb715a0	uint32_t			ui	Holds a dword that TradeInfoSetTargetItems, Script::GetTradeTargetItemLink read and write; not read here	inferred	none	
+0xb714b8	uint32_t[7]	s_targetTradeSuffixIds		ui	Holds the random suffix ids of the partner's seven trade slot items	verified	one	ui/tradelootverbs#describing-a-trade-slot
+0xb714f4	uint32_t[6]	s_targetTradeEntries		ui	Holds the item entries of the partner's first six trade slots, 0 for empty	verified	one	ui/tradelootverbs#describing-a-trade-slot
+0xb7150c	uint32_t	s_targetTradeSlot7Entry		ui	Holds the item entry of the partner's seventh trade slot, which the trade will not carry out	verified	one	ui/tradelootverbs#describing-a-trade-slot
+0xb715a0	uint32_t[7]	s_targetTradeUniqueIds		ui	Holds the unique ids of the partner's seven trade slot items	verified	one	ui/tradelootverbs#trade-links-and-money
+0xb715c0	uint32_t[6]	s_targetTradeEnchantIds		ui	Holds the permanent enchant ids of the partner's first six trade slot items	verified	one	ui/tradelootverbs#trade-links-and-money
 0xb715d8	uint32_t	s_targetTradeEnchantId		ui	Holds the enchantment id of the item in the target's seventh trade slot	verified	one	ui/popups#the-trade-enchant-clash
 0xb716d0	uint64_t[7]	s_tradeOfferGuids		ui	Holds the GUIDs of the items the player has offered, one per trade slot	verified	one	ui/trade#a-refused-offer-slot
+0xb71708	uint32_t[7]	s_targetTradeCounts		ui	Holds the item counts of the partner's seven trade slots	verified	one	ui/tradelootverbs#describing-a-trade-slot
 0xb71728	uint64_t	s_tradeWindowPartner		ui	Holds the GUID of the player the open trade window belongs to, 0 for none	verified	one	ui/trade#opening-and-closing-the-window
 0xb71730	uint32_t[2]	s_tradeAccepted		ui	Holds the accept flags of the trade: the player's, then the partner's	verified	one	ui/trade#accept-flags
 0xb71740	uint32_t	s_tradeOwnMoney		ui	Holds the copper the player has put into the trade window	verified	one	ui/trade#a-refused-offer-slot

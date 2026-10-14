@@ -8473,17 +8473,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bfd20	77			ui	primitive		Runs TradeFrame.cpp code not read here	inferred	none		
 0x4bfd70	65	CGTradeInfo::GetGameError	idb	ui	primitive	uint32_t __fastcall (uint32_t inventoryResult, uint32_t sideByte)	Maps a trade refusal result and wire byte to a message id	verified	one	ui/trade#inventory-refusals	
 0x4bfdc0	33	Script::CloseTrade	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Signals PLAYER_TRADE_MONEY unless the trade completed, then closes the trade window	verified	one	ui/trade#opening-and-closing-the-window	
-0x4bfdf0	644	Script::ClickTradeButton	idb	ui	primitive		Implements the Lua function ClickTradeButton	inferred	none		
+0x4bfdf0	644	Script::ClickTradeButton	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Adds cursor money to the offer or puts the cursor item in a trade slot	verified	one	ui/tradelootverbs#clicking-a-trade-slot	
 0x4c0080	102	Script::ClickTargetTradeButton	idb	ui	primitive		Clicks a slot of the target's trade window; slot 7 checks the enchant clash	verified	one	ui/popups#the-trade-enchant-clash	
-0x4c00f0	582	Script::GetTradeTargetItemInfo	idb	ui	primitive		Implements the Lua function GetTradeTargetItemInfo	inferred	none		
+0x4c00f0	582	Script::GetTradeTargetItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the partner's trade slot item: name, icon, count, quality, usable and enchant	verified	one	ui/tradelootverbs#describing-a-trade-slot	
 0x4c0340	24			ui	orchestration		Runs TradeFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
-0x4c0360	238	Script::GetTradeTargetItemLink	idb	ui	primitive		Implements the Lua function GetTradeTargetItemLink	inferred	none		
-0x4c0450	508	Script::GetTradePlayerItemInfo	idb	ui	primitive		Implements the Lua function GetTradePlayerItemInfo	inferred	none		
-0x4c0650	129	Script::GetTradePlayerItemLink	idb	ui	primitive		Implements the Lua function GetTradePlayerItemLink	inferred	none		
+0x4c0360	238	Script::GetTradeTargetItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the partner's trade slot item link	verified	one	ui/tradelootverbs#trade-links-and-money	
+0x4c0450	508	Script::GetTradePlayerItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the player's own trade slot item: name, icon, count, quality and enchant	verified	one	ui/tradelootverbs#describing-a-trade-slot	
+0x4c0650	129	Script::GetTradePlayerItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the player's own trade slot item link	verified	one	ui/tradelootverbs#trade-links-and-money	
 0x4c06e0	13	Script::AcceptTrade	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sets the player's accept flag and returns nothing	verified	one	ui/trade#accept-flags	
 0x4c06f0	10	Script::CancelTradeAccept	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Clears the player's accept flag and returns nothing	verified	one	ui/trade#accept-flags	
-0x4c0700	67	Script::GetPlayerTradeMoney	idb	ui	primitive		Implements the Lua function GetPlayerTradeMoney	inferred	none		
-0x4c0750	50	Script::GetTargetTradeMoney	idb	ui	orchestration		Implements the Lua function GetTargetTradeMoney	inferred	none		
+0x4c0700	67	Script::GetPlayerTradeMoney	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the player's money offer, 0 with no trade window	verified	one	ui/tradelootverbs#trade-links-and-money	
+0x4c0750	50	Script::GetTargetTradeMoney	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the partner's money offer	verified	one	ui/tradelootverbs#trade-links-and-money	
 0x4c0790	85	Script::PickupTradeMoney	idb	ui	orchestration		Implements the Lua function PickupTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
 0x4c07f0	34	Script::AddTradeMoney	idb	ui	orchestration		Implements the Lua function AddTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
 0x4c0820	63	Script::SetTradeMoney	idb	ui	orchestration		Implements the Lua function SetTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
@@ -8657,11 +8657,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c2f10	146	Script::GetMasterLootCandidate	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name of the master loot candidate at a 1-based index, or nil when empty or not yet cached	verified	one	ui/masterloot#candidates	
 0x4c2fb0	24	MasterLootNameArrived		ui	orchestration	void __stdcall (uint32_t, uint8_t ok)	Signals UPDATE_MASTER_LOOT_LIST when a candidate name lookup succeeded	verified	one	ui/masterloot#the-master-loot-events	
 0x4c2fd0	117	Script::GiveMasterLoot	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Gives a loot slot to the candidate at an index through 0x4c2940, doing nothing for an empty candidate	verified	one	ui/masterloot#giving-the-item	
-0x4c3050	402	Script::GetLootRollItemInfo	idb	ui	orchestration		Implements the Lua function GetLootRollItemInfo	inferred	none		
-0x4c31f0	215	Script::GetLootRollItemLink	idb	ui	orchestration		Implements the Lua function GetLootRollItemLink	inferred	none		
-0x4c32d0	145	Script::GetLootRollTimeLeft	idb	ui	primitive		Implements the Lua function GetLootRollTimeLeft	inferred	none		
-0x4c3370	104	Script::RollOnLoot	idb	ui	orchestration		Implements the Lua function RollOnLoot	inferred	none		
-0x4c33e0	104	Script::ConfirmLootRoll	idb	ui	orchestration		Implements the Lua function ConfirmLootRoll	inferred	none		
+0x4c3050	402	Script::GetLootRollItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the icon, name, 1, quality and bind-on-pickup flag of a loot roll item	verified	one	ui/tradelootverbs#loot-rolls	
+0x4c31f0	215	Script::GetLootRollItemLink	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the item link of a loot roll	verified	one	ui/tradelootverbs#loot-rolls	
+0x4c32d0	145	Script::GetLootRollTimeLeft	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the milliseconds left to a loot roll, 0 for an unknown roll	verified	one	ui/tradelootverbs#loot-rolls	
+0x4c3370	104	Script::RollOnLoot	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Votes on a loot roll without confirming	verified	one	ui/tradelootverbs#loot-rolls	
+0x4c33e0	104	Script::ConfirmLootRoll	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Votes on a loot roll with the bind confirmation answered	verified	one	ui/tradelootverbs#loot-rolls	
 0x4c3450	33	RegisterLootFunctions		ui	primitive	void __fastcall ()	Registers the 16 loot Lua functions from the table 0x847cf0	verified	one	ui/loot#loot-functions	
 0x4c3480	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c34a0	106			ui	orchestration		Runs its object file code that calls SMemFree, 0x4c3c10, 0x4c3c50; not read here	inferred	none		
