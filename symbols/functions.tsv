@@ -18831,27 +18831,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d50e0	5	InitDynObjCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d50f0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d50f0	11	InitDynObjCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d5100	51	CGDynamicObject_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGDynamicObject_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
-0x5d5140	159			objectlayer	primitive		Runs DynamicObject_C.cpp code not read here	inferred	none		
-0x5d51e0	43			objectlayer	orchestration		Fills slot 0 of the dynamic object vtable; its body is not read here	inferred	none		
-0x5d5210	192			objectlayer	primitive		Runs DynamicObject_C.cpp code that calls DynamicObjectStopAreaKit; not read here	inferred	none		
+0x5d5140	159	CGDynamicObject_C::CGDynamicObject_C		objectlayer	primitive	void * __thiscall (void *fields, void *movement)	Builds a dynamic object: lists, members, vtable, and the create message's position and facing	verified	one	objectlayer/dynamicobjects#members-and-fields	
+0x5d51e0	43	CGDynamicObject_C::DeletingDestructor		objectlayer	orchestration	void * __thiscall (uint32_t flags)	Destroys the dynamic object and frees it when bit 0 is set	verified	one	objectlayer/dynamicobjects#members-and-fields	
+0x5d5210	192	CGDynamicObject_C::~CGDynamicObject_C		objectlayer	orchestration	void __thiscall ()	Stops the area kit, empties the watcher lists and runs the base destructor	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d52d0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5d52e0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5d52f0	294			objectlayer	primitive		Fills slot 13 of the dynamic object vtable; its body is not read here	inferred	none		objectlayer::dy_dynobj_visual_scale_difftest, objectlayer::dy_dynobj_visual_scale_gates_difftest
-0x5d5420	283			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, DynamicObjectStartAreaKit;	inferred	none		
-0x5d5540	59			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d5580	50			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x5d52f0	294	CGDynamicObject_C::ModelLoaded		objectlayer	primitive	void __thiscall (void *model)	Records which animations the model has, sets the radius scale and plays animation 158 when it is the only one	verified	one	objectlayer/dynamicobjects#the-loaded-model	objectlayer::dy_dynobj_visual_scale_difftest, objectlayer::dy_dynobj_visual_scale_gates_difftest
+0x5d5420	283	CGDynamicObject_C::OnCreate		objectlayer	orchestration	void __thiscall (uint32_t time, void *movement, uint32_t flag)	Shows the object, sets the model callbacks, starts the area kit and the caster's far sight	verified	one	objectlayer/dynamicobjects#creation	
+0x5d5540	59	OnDynamicObjectModelEvent		objectlayer	orchestration		Resolves the dynamic object of a model event and plays its sound or shake	verified	one	objectlayer/dynamicobjects#model-events-and-looping	
+0x5d5580	50	OnDynamicObjectAnimationDone		objectlayer	orchestration		Restarts the dynamic object's looping animation when a sequence ends naturally	verified	one	objectlayer/dynamicobjects#model-events-and-looping	
 0x5d55c0	263	DynamicObjectStartAreaKit		objectlayer	primitive		Starts a dynamic object's spell kit: the kind-9 emitter through 0x6ece30 and the kit sound	inferred	none	spell/visuals#area-shard-emitter-creation	objectlayer::dy_dynobj_light_bias_difftest
-0x5d56d0	35			objectlayer	orchestration		Runs DynamicObject_C.cpp code not read here	inferred	none		
+0x5d56d0	35	CGDynamicObject_C::StopSound		objectlayer	orchestration	void __thiscall ()	Stops the kit's looping sound with a 3.0 fade and clears the handle	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d5700	32	DynamicObjectStopAreaKit		objectlayer	orchestration		Stops a dynamic object's emitter through 0x6ecf20 and tail-calls its sound stop	inferred	none	spell/visuals#area-shard-emitter-creation	
-0x5d5720	16			objectlayer	orchestration		Fills slot 1 of the dynamic object vtable; its body is not read here	inferred	none		
-0x5d5730	43			objectlayer	orchestration		Fills slot 2 of the dynamic object vtable; its body is not read here	inferred	none		
+0x5d5720	16	CGDynamicObject_C::Deactivate		objectlayer	orchestration	void __thiscall ()	Deactivates the object and stops its area kit	verified	one	objectlayer/dynamicobjects#creation	
+0x5d5730	43	CGDynamicObject_C::Reactivate		objectlayer	orchestration	void __thiscall ()	Reactivates the object, makes its node if a model exists and starts the area kit	verified	one	objectlayer/dynamicobjects#creation	
 0x5d5760	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x5d5770	39			objectlayer	unreached		Runs DynamicObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d57a0	20			objectlayer	unreached		Runs DynamicObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d57c0	197			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls SysMsgPrintf, GetSpellVisualRecord; not read here	inferred	none		
-0x5d5890	45			objectlayer	orchestration		Fills slot 10 of the dynamic object vtable; its body is not read here	inferred	none		
-0x5d58c0	144			objectlayer	primitive		Runs DynamicObject_C.cpp code that calls SysMsgPrintf, PlaySoundAtArgs, GetActiveCamera; not read here	inferred	none		
-0x5d5950	113			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ModelPlayAnimation; not read here	inferred	none		
+0x5d57c0	197	GetDynamicObjectEffectName		objectlayer	primitive	void * __thiscall ()	Finds the SpellVisualEffectName row of the object's spell, printing why it cannot	verified	one	objectlayer/dynamicobjects#the-model	
+0x5d5890	45	CGDynamicObject_C::GetModelPath		objectlayer	primitive	const char * __thiscall ()	Returns the model path of the object's effect-name row, or 0	verified	one	objectlayer/dynamicobjects#the-model	
+0x5d58c0	144	DynamicObjectModelEvent		objectlayer	primitive		Plays the $SND sound or the $SHK camera shakes of a model event	verified	one	objectlayer/dynamicobjects#model-events-and-looping	
+0x5d5950	113	CGDynamicObject_C::Loop		objectlayer	orchestration	void __thiscall ()	Plays animation 158 if the model has it, else animation 0	verified	one	objectlayer/dynamicobjects#model-events-and-looping	
 0x5d59d0	5	InitCorpseDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d59e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d59e0	15	InitCorpseDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d59f0	5	InitCorpseQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d5a00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -18910,7 +18910,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5ec0	19	InitCorpseSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d5ee0	5	InitCorpseSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d5ef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d5ef0	19	InitCorpseSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d5f10	41			objectlayer	primitive		Fills slot 5 of the dynamic object vtable; its body is not read here	inferred	none		
+0x5d5f10	41	CGDynamicObject_C::GetPosition		objectlayer	primitive	float * __thiscall (float *out)	Copies the object's position field into the output	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d5f40	10			objectlayer	orchestration		Returns the float at +0x20 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
 0x5d5f50	7			objectlayer	orchestration		Returns the float at +0x194 of its object	verified	one	objectlayer/overview#small-bodies	
 0x5d5f60	53	RegisterCorpseWatchers		objectlayer	orchestration	void __cdecl ()	Puts the flags and dynamic flags watchers on every corpse	verified	one	objectlayer/corpses#field-watchers	
