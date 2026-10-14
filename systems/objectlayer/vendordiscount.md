@@ -9,8 +9,8 @@ Roots: `0x612b80`
 
 `0x612b80(vendor, player)` is the sum of three terms: 0.1 when the vendor's reaction toward the player is 5 or
 more; 0.05 when the vendor has the PvP flag and the player's honor rank byte is 6 or more; 0.05 more when that
-byte is 8 or more. The sum is left on the FPU stack unrounded, so the values are 0, 0.05, 0.1, 0.15 and 0.2 with
-0.15 not a float.
+byte is 8 or more. The sum is left on the FPU stack unrounded, so the values are 0, 0.05, 0.1, 0.15 and 0.2. At 53-bit x87 precision 0.15 is not a float;
+at 24-bit precision the sum rounds to a float.
 
 Addresses: `0x612b80`, `0x612b86`, `0x612b89`, `0x612b8a`, `0x612b8c`, `0x612b93`, `0x612b98`, `0x612b9b`, `0x612b9d`, `0x612ba5`, `0x612ba8`, `0x612bae`, `0x612bba`, `0x612bbc`, `0x612bc2`, `0x612bc7`, `0x612bc9`, `0x612bcb`, `0x612bcf`, `0x612bd5`, `0x612bd7`, `0x612bdd`, `0x612be2`, `0x801620`, `0x8029c8`
 Confidence: verified

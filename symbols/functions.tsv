@@ -24569,7 +24569,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6705d0	88	CWorld::GetPlayerFog		terrain	orchestration	uint32_t __fastcall (void *a, void *b)	Queries the map object fog at the active player through 0x69de20	inferred	none		
 0x670630	96	CWorld::GetEntityLight		terrain	orchestration	uint32_t __fastcall (void *object, void *a, void *b)	Copies an entity's cached light fields to its outputs when +0x90 bit 5 is set	verified	one	terrain/world#entity-queries	
 0x670690	57	CWorld::GetEntityLightFlags		terrain	orchestration	uint32_t __fastcall (void *object, void *out)	Returns bits 6 and 7 of an entity's +0x90	inferred	none		
-0x6706d0	29	CWorld::GetEntityTerrainType		terrain	orchestration	uint32_t __fastcall (void *object)	Stores an entity's ground TerrainType id +0xdc and returns 1, or returns 0 for -1	verified	one	terrain/mapentities#ground-id-outcomes	
+0x6706d0	29	CWorld::GetEntityTerrainType		terrain	orchestration	uint32_t __fastcall (void *object, uint32_t *out)	Stores an entity's TerrainType id +0xdc through edx and returns 1; returns 0 for -1 or a null object	verified	one	terrain/mapentities#ground-id-outcomes	
 0x6706f0	84	CWorld::IsEntityInLitGroup		terrain	orchestration	uint8_t __fastcall (void *object)	Returns 1 for a null object or one without bit 0 of +0x90, else bit 15 of its group's +0x10, 0 when no group	inferred	none		
 0x670750	97	ScaleColorByByte		terrain	primitive	uint32_t __fastcall (uint32_t color, uint32_t scale)	Scales each colour channel by a byte as (c·k + 0xff) >> 8	inferred	none		
 0x6707c0	328	CWorld::CreateMapEntity		terrain	orchestration	void * __fastcall (const char *name, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e, uint32_t f)	Creates a placed doodad or map object for a game object and positions it	inferred	none		
@@ -36080,7 +36080,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
 0x7c78f0	308			unassigned	primitive		Writes a petition record to a data store	inferred	none	objectlayer/party#group-and-guild-messages-sent	
-0x7c7a30	313	PetitionRead		unassigned		void __thiscall (CDataStore *stream)	Reads a petition record: strings, dwords and a counted run of 64-byte strings	verified	one	dbcache#names-and-petitions	dbcache::dbcache_petition
+0x7c7a30	313	ReadPetitionRecord		unassigned	primitive	void __thiscall (void *record, CDataStore *store)	Reads a petition record from a data store, copying its strings with no capacity	verified	one	objectlayer/party#reading-a-petition-record	dbcache::dbcache_petition
 0x7c7b70	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7c7b80	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7c7b90	5			unassigned			Runs its object file code not read here	inferred	none		

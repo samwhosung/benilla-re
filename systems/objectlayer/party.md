@@ -247,6 +247,24 @@ searches the backpack and bags for an item with flag 0x2000 whose petition (cach
 `+0x1110` bit 0, sends 0x1c4 with its GUID, or shows `ERR_NO_GUILD_CHARTER`; a record still pending
 retries through the callback `0x5ef520`.
 
+## Reading a petition record
+
+`0x7c7a30` reads a petition record (the record in `ecx`, the store on the stack) in the order `0x7c78f0` writes it: a u32 at `+0`, a GUID at `+8`,
+the title into `+0x10` and the text into `+0x110`, eleven values from `+0x1110` to `+0x1138` (the one at `+0x1130` 16-bit),
+the choice count at `+0x13bc`, then that many choices from `+0x113c`, 0x40 bytes apart. Every string is copied with
+the capacity `0x7fffffff`, so a title, text or choice longer than its field runs into the next, and the loop has no cap
+at ten: an eleventh choice lands on the count, which the loop reads again each pass, a client fault. Three readers call it
+(`0x555598`, `0x568306`, `0x568973`).
+
+Addresses: `0x7c7a30`, `0x7c7a4e`, `0x7c7a5e`, `0x7c7aea`, `0x7c7b19`, `0x7c7b33`, `0x7c7b43`, `0x7c7b4d`, `0x7c78f0`, `0x555598`, `0x568306`, `0x568973`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c7a4e` and `0x7c7a5e` push `0x7fffffff` for the title and the text, and `0x7c7b33` for each choice; `0x7c7aea`
+calls `0x418d30` for the 16-bit value. The loop tests `[record+0x13bc]` before the first pass (`0x7c7b19`) and after
+each (`0x7c7b43`, `0x7c7b4d`), stepping the destination by 0x40.
+
 ## Petition answers
 
 Another player's decline (0x1c2, `0x5ef0e0`) shows `ERR_PETITION_DECLINED_S` only when the decliner's name is already

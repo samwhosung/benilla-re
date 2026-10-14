@@ -86,7 +86,7 @@ The message id indexes the table at `0xb4b498` (20 bytes each) to the string `ER
 A seated unit stands, through `0x60be30(0)` or `0x5ed430(0)`, at the sites below. Each tests only for
 a nonzero stand state, so sitting (1), the chair (2) and sleeping (3) behave the same.
 
-Addresses: `0x513d1f`, `0x514e0c`, `0x514ef4`, `0x514f6d`, `0x514fb3`, `0x6020d6`, `0x60ad98`, `0x60de65`, `0x60e14b`, `0x61121b`, `0x5ecc9b`, `0x514da0`, `0x514e80`, `0x514f50`, `0x6018f0`, `0x60abe0`, `0x611130`, `0x60f5b0`
+Addresses: `0x513d1f`, `0x514e0c`, `0x514ef4`, `0x514fb3`, `0x6020d6`, `0x60ad98`, `0x60de65`, `0x60e14b`, `0x61121b`, `0x5ecc9b`, `0x514da0`, `0x514e80`, `0x514f50`, `0x6018f0`, `0x60abe0`, `0x611130`, `0x60f5b0`
 Confidence: verified
 Proof: one
 Test: none

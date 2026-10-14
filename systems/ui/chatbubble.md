@@ -11,16 +11,19 @@ Roots: `0x4b1060`, `0x4b1460`, `0x4b0f80`, `0x4b0f40`, `0x4b1600`, `0x4b1870`, `
 ## Spawning a bubble
 
 `0x608ac0(kind, text)` is called once in the image, by the chat line function (`0x49acd9`), when
-the line's speaker resolves to a unit of the client. A unit gets a bubble when, in order: it has no
+a line that passes `ui/chatfilter` has a speaker that resolves to a unit of the client. A unit gets a bubble when, in order: it has no
 nameplate (`+0xe60` is 0), the text is non-empty, it has a scene node (`+0xe0`), the CVar is on
 (`ChatBubblesParty` for kind 1, `ChatBubbles` for every other kind; defaults 0 and 1), the active
-player resolves, and the squared distance to the active player is at most 400. The speaker may be
+player resolves, and the squared distance to the active player is at most 400 or NaN. The speaker may be
 the active player. A bubble that is not drawn by the scene does not stop the spawn.
 
 Addresses: `0x608ac0`, `0x608ae5`, `0x608b0d`, `0x608b1d`, `0x608b2a`, `0x608b4b`, `0x608ba0`, `0x608bb4`, `0x608bbf`, `0x608be6`, `0x49acd9`
 Confidence: verified
 Proof: one
 Test: none
+
+A line the spam filter catches returns before the bubble (`0x49ab23` to `0x49afd7`). The distance test is
+`0x608ba0 test ah,0x41; je`, which falls through on an unordered compare.
 
 `0x608ac0` makes nine calls: the CVar lookup `0x63de30`, the active player and its lookup, two
 position slots, the colour `0x49e990`, the release `0x608c00` and the build `0x4b1870` then

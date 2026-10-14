@@ -197,7 +197,7 @@ mover's init and write calls. `0x6009b0` returns 1 for 0xe3, 0xe5, 0xe7, 0xf6, 0
 
 `0x600860` builds a report that carries no GUID, which is every opcode but the acknowledgements and
 0x2d1, only for the active mover. A unit with an unfinished server spline sends only 0xca, 0xcb,
-0x2d8 and 0x2d9. Opcodes that carry a GUID skip both tests.
+0x2d8 and 0x2d9. Opcodes that carry a GUID skip both tests. The opcode is already written (`0x600874`) when the gate refuses.
 
 Addresses: `0x600860`, `0x600880`, `0x600882`, `0x600963`, `0x600969`, `0x600971`, `0x600973`, `0x60097b`, `0x600984`, `0x600989`, `0x600994`, `0x60099a`, `0x6009a0`, `0x6008af`, `0x7ccc10`, `0x7cccb0`
 Confidence: verified

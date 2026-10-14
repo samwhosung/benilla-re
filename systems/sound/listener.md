@@ -13,7 +13,7 @@ the GUID `0xc4da98`, `0xc4da9c` with type mask 8, else the active player (mask 0
 unit's position with its height raised by the product of its `+0x90` and `+0xbc`. The forward vector is
 the cosine and sine of the unit's facing with z 0, the up vector is (0, 0, 1) and the velocity is null.
 The update is skipped when neither unit resolves. The `SoundListenerAtCharacter` variable at `0xb4b2b4`
-being 0, or a shot camera being armed, sends the update to the camera branch instead.
+being 0 (`0x48311f`), or a shot camera being armed, sends the update to the camera branch instead.
 
 Addresses: `0x482ea0`, `0x48310b`, `0x483118`, `0x483125`, `0x483130`, `0x48314c`, `0x483157`, `0x483168`, `0x48317c`, `0x4831bb`, `0x4831cd`, `0x4831d0`, `0x4831d6`, `0x4831e4`, `0x483216`, `0x483218`, `0x483430`, `0x50c860`, `0x7a5eb0`, `0x481960`, `0x481bba`, `0xb4b2b4`, `0xb4b334`, `0xb4b36c`
 Confidence: verified

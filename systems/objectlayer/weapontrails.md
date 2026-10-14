@@ -28,8 +28,8 @@ Its four reads are `0x60d92e`, `0x60da24`, `0x60da5d` and `0x60db35`, each insid
 above by the jump table `0x60dbfc` and the byte map `0x60dc20` (kind 0 and 12 share `0x60da79`).
 Neither caller of `0x60d7c0` (`0x60edf0`, `0x612a30`) nor any function that names the kit store
 `0xc0d74c` reads `+0x5c` to `+0x68` of a kit, except the second kit walker `0x4727f0`, which
-advances `esi` by 0x4c and reads only the kind and column 0. The record file was read through the
-archive chain: 1772 rows of 35 fields; kind 8 sits in the four kind fields at `+0x3c`.
+advances `esi` by 0x4c and reads only the kind and column 0. The record file has
+1772 rows of 35 fields; kind 8 sits in the four kind fields at `+0x3c`.
 
 ## The arm latch
 
@@ -58,8 +58,8 @@ trail objects (`0x5fbc99`).
 A pending arm waits for the next `PlayAnimation`, whatever animation that is and whenever it comes:
 a kit that arms without playing, a channel start that arms and returns, and a run of arms before
 any play all leave it pending, and the last arm wins. `PlayAnimation` has 40 call sites and
-`0x5fd9e0`, which picks the base animation and calls it, has 38 and one caller of its own
-(`0x5fd8b0`); one of the 38 is the per-frame update `0x607ed0` (`0x6084e0`), which re-picks the
+`0x5fd9e0`, which picks the base animation and calls it, has 38; `0x5fd9e0` itself calls the
+picker `0x5fd8b0` (`0x5fda03`), its only call site; one of the 38 is the per-frame update `0x607ed0` (`0x6084e0`), which re-picks the
 base animation when a turning unit may shuffle.
 
 Addresses: `0x60edf0`, `0x60f35c`, `0x60f366`, `0x60f383`, `0x60f3c5`, `0x612a30`, `0x612b18`, `0x612b1d`, `0x5fd9e0`, `0x5fda20`, `0x6084e0`

@@ -19,7 +19,8 @@ Proof: one
 Test: none
 
 `0x6c6920` counts up `0xce86d4`, takes an object from `0xce86d8`, stores the model at `+4` and
-adds a reference (`0x710390`); `0x6c6970` counts down, runs `0x6c6710` and frees the object.
+adds a reference (`0x710390`). A failed allocation skips the zeroing (`0x6c6946`) but not the store, so
+`0x6c6957` writes through a null pointer, a client fault; `0x6c6970` counts down, runs `0x6c6710` and frees the object.
 `0x6c6710` clears the model's draw callback (`0x710db0` with a null callback), releases the
 model (`0x7103a0`) and frees the swing record. `0x6c69c0` forwards to `0x6c6750` only when both the colour pointer and the lifetime are
 non-null. `0x6c6750` reuses the object's swing record, zeroing both counters, or takes a new one

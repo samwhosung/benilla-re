@@ -238,7 +238,7 @@ Test: none
 The census is every call of `0x589e60`, `0x589f40`, `0x589f50`, `0x58a810` and `0x58a830` between
 `0x61f470` and `0x6210e0`: three sites, all in `0x61f780`. The callees of that range include no
 terrain query. Its five model creators call `0x707350` (`CreateModelFromPath`); `0x671380` and
-`0x6717d0` there create a planted effect's world object and set its bounds (`0x620cf3`,
+`0x6717d0` there create a planted effect's light map entity (`0x6a0930`, not a model) and set its bounds (`0x620cf3`,
 `0x620741`, `0x620dca`). The calls that set the depth bias (id 0) with a literal id, other than
 the list set-up's 0 (`0x70b406`), are in the console caret, the foam, the footprints, the query
 cells and the decal projector `0x6d7480`. `0x6d7330` has five callers (`0x48395a`, `0x5d7105`, `0x608f28`,
