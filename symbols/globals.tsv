@@ -2335,11 +2335,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc6d58	char[260]	s_actionIconPath		unassigned	Holds the icon path GetActionTexture formats for an item or macro slot	verified	one	ui/actionbar#action-icon
 0xbc6e5c	uint8_t	s_actionIconInitFlags		unassigned	Holds a byte whose bit 0 marks the icon directory as fetched	verified	one	ui/actionbar#action-icon
 0xbc6e88	uint32_t	s_bonusBarOffset		unassigned	Holds the bonus bar offset of the player's form; 0 at load and with no form record	verified	one	ui/actionuse#bonus-bar-offset
-0xbc6e98	uint8_t			ui	Holds a byte that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
+0xbc6e98	char[128]	s_lfgComment		ui	Holds the looking-for-group comment	verified	one	ui/lfg#the-slots-packet
+0xbc6f18	uint32_t[6]	s_lfgTypeCounts		ui	Holds the count of eligible entries of each of the six looking-for-group types	verified	one	ui/lfg#the-type-lists
 0xbc6f48	uint32_t[8]	s_partyMemberGuids		ui	Holds the GUIDs of the four other party members	verified	one	ui/minimapblips#party-and-pet-arrows
-0xbc70a0	uint32_t			ui	Holds a dword that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
+0xbc6f90	uint32_t[18]	s_lfgTypeLists		ui	Holds six dynamic arrays of LfgDungeons ids, one per type, 12 bytes each	verified	one	ui/lfg#the-type-lists
+0xbc6fd8	void *[50]	s_lfgResults		ui	Holds the pointers to the 50 result records of 0xc4 bytes	verified	one	ui/lfg#the-results
+0xbc70a0	uint32_t[3]	s_lfgSlots		ui	Holds the three looking-for-group slot words, always 0 after SetLookingForGroup	verified	one	ui/lfg#the-slots-packet
 0xbc70b0	uint8_t[1312]	s_partyMembers		ui	Holds the four party member records of 0x148 bytes each	verified	one	ui/tooltipunit#who-the-builder-describes
 0xbc75f8	uint64_t	s_groupLeaderGuid		ui	Holds the GUID of the party or raid leader	verified	one	ui/chatsend#group-and-channel-checks
+0xbc7618	uint32_t	s_lfgResultCount		ui	Holds the number of results in the last looking-for-group list, at most 50	verified	one	ui/lfg#the-results
+0xbc761c	uint32_t	s_lfgResultTotal		ui	Holds the second count of the last looking-for-group list message	verified	one	ui/lfg#the-results
+0xbc7620	uint32_t	s_lfgPendingTitles		ui	Holds the number of quest title queries the result list waits for	verified	one	ui/lfg#the-results
+0xbc7624	int32_t	s_lfgPlayerLevel		ui	Holds the player's level as read by the last type recount	verified	one	ui/lfg#the-type-lists
 0xbc762c	float	s_iconHalfSize		ui	Holds half the landmark icon size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7658	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
@@ -2548,6 +2555,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0daac	uint32_t	s_mapMaxId		dbc	Holds the highest Map.dbc id	verified	one	ui/tooltipitemhead#area-map-and-conjured-lines
 0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
 0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
+0xc0db2c	uint32_t[5]	s_lfgDungeonsStore		dbc	Holds the LfgDungeons.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/lfg#the-type-lists
 0xc0db40	uint32_t[5]	s_languagesStore		dbc	Holds the Languages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
 0xc0db54	uint32_t[5]	s_languageWordsStore		dbc	Holds the LanguageWords.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
 0xc0db70	uint32_t	s_itemVisualsIdMap		dbc	Holds the ItemVisuals.dbc rows by id	verified	one	charactermodel/equipment#item-models

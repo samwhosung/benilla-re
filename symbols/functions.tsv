@@ -10437,7 +10437,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7c00	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e7c20	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4e7c30	63			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4e7c70	494	CGPartyInfo::InitializeGame	idb	ui	primitive		Runs PartyFrame.cpp code that calls SMemAlloc, 0x4084b0, 0x4368c0 and 1 more; not read here	inferred	none		
+0x4e7c70	494	CGPartyInfo::InitializeGame	idb	ui	primitive		Clears party and looking-for-group state, groups LfgDungeons ids by type and registers opcodes 0x1ff, 0x329, 0x2cb	verified	one	ui/lfg#the-type-lists	
 0x4e7e60	155	HandleInstanceSaveCreatedPacket	idb	ui	orchestration		Runs PartyFrame.cpp code that calls CDataStore::GetInt32, FrameScript_GetText, SStrCopy and 2 more; not read here	inferred	none		
 0x4e7f00	10			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e89c0; not read here	inferred	none		
 0x4e7f10	1			ui	orchestration		Runs PartyFrame.cpp code not read here	inferred	none		
@@ -10456,15 +10456,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e86f0	282			ui	primitive		Stores the loot method, master and threshold and shows the changes	inferred	none	objectlayer/party#the-group-list	
 0x4e8820	61			ui	primitive		Returns the party member record of a GUID, or 0 through the four GUIDs at 0xbc6f48	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x4e8860	86	FindPartyPetRecord		ui	primitive	void * __thiscall (const uint64_t *guid)	Returns the pet part at +0x80 of the online party member record whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
-0x4e88c0	247			ui	primitive		Runs PartyFrame.cpp code that calls SStrCmp, SStrCopy, CDataStore::PutUInt32 and 2 more; not read here	inferred	none		
-0x4e89c0	346			ui	primitive		Rebuilds the looking-for-group types for the active player; not read here	inferred	none	objectlayer/quests#quest-giver-status-refresh	
-0x4e8b20	180			ui	orchestration		Runs PartyFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x4e8be0	150			ui	primitive		Rebuilds the sorted quest log for the active player	inferred	none	objectlayer/quests#the-quest-log-watcher	
-0x4e8c80	164			ui	primitive		Runs PartyFrame.cpp code that calls 0x562a40, SStrCmpI; not read here	inferred	none		
-0x4e8d30	28			ui	primitive		Runs PartyFrame.cpp code not read here	inferred	none		
+0x4e88c0	247	SendLookingForGroupSlots		ui	primitive	void __fastcall SendLookingForGroupSlots(const uint32_t *slots, const char *comment)	Stores changed slots and a changed comment and sends opcode 0x200	verified	one	ui/lfg#the-slots-packet	
+0x4e89c0	346	RecountLfgTypes		ui	primitive		Counts and sorts the eligible LfgDungeons entries per type and signals UPDATE_LFG_TYPES	verified	one	ui/lfg#the-type-lists	
+0x4e8b20	180	CompareLfgEntries		ui	orchestration		Orders two LfgDungeons ids: existing rows, then rows fitting the player's level, then by name	verified	one	ui/lfg#the-type-lists	
+0x4e8be0	150	RebuildLfgQuestList		ui	primitive		Collects the quest ids of the log into the type 3 list, sorts it and signals UPDATE_LFG_TYPES	verified	one	ui/lfg#the-type-lists	
+0x4e8c80	164	CompareLfgQuests		ui	primitive		Orders two quest ids: cached titles first, then by title	verified	one	ui/lfg#the-type-lists	
+0x4e8d30	28	OnLfgQuestTitle		ui	primitive		Counts down the outstanding quest title queries and signals UPDATE_LFG_LIST at zero	verified	one	ui/lfg#the-results	
 0x4e8d50	103			ui	unreached		Runs PartyFrame.cpp code that calls SStrPrintf, FrameScript_GetText, CGGameUI::DisplayError; not read here	inferred	none		
-0x4e8dc0	410	HandleLookingForGroupPacket	idb	ui	primitive		Runs PartyFrame.cpp code that calls 0x563280, CDataStore::GetUInt32, CDataStore::GetCString and 4 more; not read here	inferred	none		
-0x4e8f60	8			ui	orchestration		Runs PartyFrame.cpp code that calls 0x4e8d30; not read here	inferred	none		
+0x4e8dc0	410	HandleLookingForGroupPacket	idb	ui	primitive		Reads the looking-for-group result list into the 50 records and signals UPDATE_LFG_LIST	verified	one	ui/lfg#the-results	
+0x4e8f60	8	OnLfgQuestTitleThunk		ui	orchestration		Forwards a quest title answer to OnLfgQuestTitle	verified	one	ui/lfg#the-results	
 0x4e8f70	44	HandleSetDungeonDifficultyPacket	idb	ui	orchestration		Runs PartyFrame.cpp code that calls CDataStore::GetUInt8, CGGameUI::DisplayError; not read here	inferred	none		
 0x4e8fa0	170			ui	primitive		Runs PartyFrame.cpp code that calls CountPartyMembers, 0x4e81a0, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4e9050	50	Script::GetNumPartyMembers	idb	ui	orchestration		Implements the Lua function GetNumPartyMembers	inferred	none		
@@ -10476,9 +10476,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e92a0	574	Script::SetLootMethod	idb	ui	primitive		Implements the Lua function SetLootMethod	inferred	none		
 0x4e94e0	23	Script::GetLootThreshold	idb	ui	orchestration		Implements the Lua function GetLootThreshold	inferred	none		
 0x4e9500	205	Script::SetLootThreshold	idb	ui	primitive		Implements the Lua function SetLootThreshold	inferred	none		
-0x4e95d0	214	Script::GetLookingForGroup	idb	ui	primitive		Implements the Lua function GetLookingForGroup	inferred	none		
-0x4e96b0	171	Script::SetLookingForGroup	idb	ui	primitive		Implements the Lua function SetLookingForGroup	inferred	none		
-0x4e9760	272	Script::LFGQuery	idb	ui	primitive		Implements the Lua function LFGQuery	inferred	none		
+0x4e95d0	214	Script::GetLookingForGroup	idb	ui	primitive		Pushes the names of the three slots and the comment	verified	one	ui/lfg#getlookingforgroup	
+0x4e96b0	171	Script::SetLookingForGroup	idb	ui	primitive		Stores up to three type and entry pairs and a comment and sends them when changed	verified	one	ui/lfg#setlookingforgroup	
+0x4e9760	272	Script::LFGQuery	idb	ui	primitive		Sends the looking-for-group inquiry of a type and an entry	verified	one	ui/lfg#the-results	
 0x4e9870	80	Script::GetNumLFGResults	idb	ui	orchestration		Implements the Lua function GetNumLFGResults	inferred	none		
 0x4e98c0	432	Script::GetLFGResults	idb	ui	primitive		Implements the Lua function GetLFGResults	inferred	none		
 0x4e9a70	48	Script::GetLFGTypes	idb	ui	primitive		Implements the Lua function GetLFGTypes	inferred	none		
