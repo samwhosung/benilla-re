@@ -70,7 +70,7 @@ and `0x4b82ad` mirrors set 1 into 2. The copy sets bit `to` of `+0xd4` and signa
 
 ## Binding files
 
-Bindings are read from three files. Set 0 is read from the archive file `WTF\DefaultBindings.wtf`; set 1 from `bindings-cache.wtf` under the account folder and set 2 from `bindings-cache.wtf` under the character folder, the account-data kinds 2 and 3. Each file is text with one line per key, `bind <key> <command>`, ended by a carriage return and line feed. Loading empties the set, then takes each line whose first five characters are `bind ` (any case), reads the key up to the next space (31 characters at most) and the rest of the line as the command, and stores them through the same routine as `SetBinding`, so a key the validator refuses is dropped. A line is cut to 127 characters.
+Bindings are read from three files. Set 0 is read from `WTF\DefaultBindings.wtf`; set 1 from `bindings-cache.wtf` under the account folder and set 2 from `bindings-cache.wtf` under the character folder, the account-data kinds 2 and 3. Each file is text with one line per key, `bind <key> <command>`, ended by a carriage return and line feed. Loading empties the set, then takes each line whose first five characters are `bind ` (any case), reads the key up to the next space (31 characters at most) and the rest of the line as the command, and stores them through the same routine as `SetBinding`, so a key the validator refuses is dropped. A line is cut to 127 characters.
 
 Addresses: `0x4b62b0`, `0x4b6240`, `0x4b6140`, `0x4b7490`, `0x5afe50`, `0x648620`
 Confidence: verified
@@ -92,14 +92,14 @@ Test: none
 
 ## Writing binding files
 
-The files are written once, when the interface shuts down, by the only caller of `0x4b65e0`. The dirty mask at `+0xd4` of the manager says what changed: bit 1 (set 1) writes both files, bit 2 (set 2) the character file alone. Each file is opened for writing, which empties it, and the writer puts `bind <key> <command>` plus carriage return and line feed for every key of the set, in the order of the set's key list. The account file gets set 1. The character file gets set 2 only when the current set is 2, so after the account set is saved it is left empty. A section marked pending is skipped.
+The files are written when the interface shuts down, at game shutdown or from a flag-gated site in the frame update. The dirty mask at `+0xd4` of the manager says what changed: bit 1 (set 1) writes both files, bit 2 (set 2) the character file alone. Each file is opened for writing, which empties it, and the writer puts `bind <key> <command>` plus carriage return and line feed for every key of the set, in the order of the set's key list. The account file gets set 1. The character file gets set 2 only when the current set is 2, so after the account set is saved it is left empty. A section marked pending is skipped.
 
-Addresses: `0x4b65e0`, `0x4b65b0`, `0x4b6520`, `0x5afed0`, `0x5aff40`, `0x490bd0`
+Addresses: `0x4b65e0`, `0x4b65b0`, `0x4b6520`, `0x5afed0`, `0x5aff40`, `0x490bd0`, `0x491182`, `0x495664`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x490c64` in `0x490bd0` is the only call of `0x4b65e0`. `0x4b65e5` loads the mask; `0x4b65ed` tests bit 1 and `0x4b6600`, `0x4b6611` call `0x5afed0` for kind 2 with the set number 1 and kind 3 with 2; `0x4b6617` to `0x4b662a` test bit 2 and write kind 3 alone. `0x4b65b0` ignores a cache handle of -1, then writes set 1 always (`0x4b65bb`) and set 2 only when it equals the current set (`0x4b65c6`). `0x4b6520` formats `bind %s %s` plus carriage return and line feed (0x846e5c) from the key at `+0x14` and the command at `+0x1c` of each node and writes the text with `0x42a5d0`. `0x5afed0` skips a pending section and writes otherwise, then calls `0x5aff40`.
+`0x490c64` in `0x490bd0` is the only call of `0x4b65e0`; `0x490bd0` is called at `0x491182` and `0x495664`. `0x4b65e5` loads the mask; `0x4b65ed` tests bit 1 and `0x4b6600`, `0x4b6611` call `0x5afed0` for kind 2 with the set number 1 and kind 3 with 2; `0x4b6617` to `0x4b662a` test bit 2 and write kind 3 alone. `0x4b65b0` ignores a cache handle of -1, then writes set 1 always (`0x4b65bb`) and set 2 only when it equals the current set (`0x4b65c6`). `0x4b6520` formats `bind %s %s` plus carriage return and line feed (0x846e5c) from the key at `+0x14` and the command at `+0x1c` of each node and writes the text with `0x42a5d0`. `0x5afed0` skips a pending section and writes otherwise, then calls `0x5aff40`.
 
 ## Chord names
 

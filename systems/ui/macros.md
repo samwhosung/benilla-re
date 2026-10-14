@@ -96,7 +96,7 @@ a name given is the full-scope error.
 
 ## Editing a macro
 
-`EditMacro(index, name, iconIndex, body, local)` raises `Usage: EditMacro(index, name, icon, body, local)` unless argument 1 is a number, and does nothing without the kind 7 check. It maps the index to an
+`EditMacro(index, name, iconIndex, body, local)` raises `Usage: EditMacro(index, name, icon, body, local)` unless argument 1 is a number or a numeric string (`0x6f34d0`), and does nothing without the kind 7 check. It maps the index to an
 id and sets the fields that are given: a string name, a number icon index (an entry of the icon list), a string
 body. It always replaces the local flag with the fifth argument, a script flag that is false when absent. The
 bound spell is derived again and the macro's action slots are redrawn. It returns the macro's index; an index with no
