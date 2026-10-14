@@ -3,9 +3,9 @@
 //! `(r % 32767) · (1/32767)`, the reciprocal stored at `0x822d38` (a multiply, which can differ
 //! from a divide in the last bit); `math.random(1, 1e6)` is `1 + floor(unit·1e6)`.
 //!
-//! The draws come from an addon run in the client, as a SavedVariables file with a
-//! `["random"]` table of seeds and their draws, named by `BENILLA_RE_MATH_RANDOM_CAPTURE`. The test
-//! skips without it.
+//! The draws come from the addon `tools/capture/BenillaReCapture` run in the client, as a
+//! SavedVariables file with a `["random"]` table of seeds and their draws, named by
+//! `BENILLA_RE_MATH_RANDOM_CAPTURE`. The test skips without it.
 
 #![allow(clippy::float_cmp)]
 

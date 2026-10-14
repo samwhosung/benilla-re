@@ -1,0 +1,5 @@
+## Interface: 11200
+## Title: BenillaReCapture
+## Notes: Measures glyph widths, math.random draws and the global names in the running client; type /brecapture.
+## SavedVariables: BenillaReCaptureDB
+BenillaReCapture.lua

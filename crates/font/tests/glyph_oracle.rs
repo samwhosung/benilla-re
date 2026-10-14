@@ -5,8 +5,8 @@
 //! step-base metric (`CharCodeDesc+0x4c`) and the raw kern, is the one stubbed boundary the emulator
 //! cannot reach. This test validates the composition those functions build against the real client's
 //! own `FontString:GetStringWidth` output, captured in the running client (the half the emulator
-//! cannot reach): a SavedVariables file written by a capture addon, read from the path in
-//! `BENILLA_RE_GLYPH_CAPTURE`.
+//! cannot reach): a SavedVariables file written by the addon `tools/capture/BenillaReCapture`, read
+//! from the path in `BENILLA_RE_GLYPH_CAPTURE`.
 //!
 //! The check is structural and not circular (not libm against libm): the string-width path lays a run
 //! out as a per-glyph step `char_advance(cur)` (`glyph_width_scaled` plus the integer advance) plus
