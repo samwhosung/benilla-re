@@ -6485,7 +6485,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481510	40			ui	orchestration		Runs WorldFrame.cpp code that calls 0x620520; not read here	inferred	none		
 0x481540	144			ui	orchestration		Renders one object by GUID for a pass: draws it, or clears its model visible flag	verified	one	terrain/scene#object-election	
 0x4815d0	419	AddPickCandidate		ui	orchestration		Asks an object to update its model and adds a node for it to the candidate list when it renders	verified	one	ui/worldpick#the-candidate-list	
-0x481780	16			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
+0x481780	16	Clear2481780		ui	orchestration		Zeroes two dwords at this and returns this	verified	one	ui/containers#lists	
 0x481790	338	CGWorldFrame::OnUpdate		ui	orchestration	void __thiscall (CGWorldFrame *this, uint32_t time)	Picks under the pointer and sets the cursor mode when the world is the mouse focus	verified	one	ui/worldcursor#the-world-update	
 0x4818f0	12	GetActiveCamera		ui	orchestration	void * __cdecl (void)	Returns the camera object whose +0x88 holds the GUID it follows	inferred	none	collision/world#camera-notices	
 0x481900	31			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
@@ -6538,7 +6538,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4841a0	22			ui	orchestration		Runs its object file code that calls 0x50d0f0; not read here	inferred	none		
 0x4841c0	36	AddVector3InPlace		ui	primitive	void __thiscall (float *this, const float *v)	Adds a vector to this one component by component, each sum stored	inferred	none		ui::glue_481_4841c0_vec_add
 0x4841f0	36	SubtractVector3		ui	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes a - b	verified	one	camera#unprojection	models::aabsp_segment_clip_difftest, models::aabsp_segment_split_difftest, ui::glue_481_4841f0_vec_sub
-0x484220	171			ui	primitive		Runs its object file code not read here	inferred	none		
+0x484220	171	LinkNode484220		ui	primitive		Unlinks a node and links it after another for where 1, else before it; a null neighbour means the head	verified	one	ui/containers#links	
 0x4842d0	10	InitCount4842e0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4842e0, then jumps to 0x484300 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4842e0	22	InitCount4842e0		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x484300	12	InitCount4842e0Register		ui	orchestration	void __cdecl (void)	Registers 0x484310 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -7071,7 +7071,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496630	227	SendSurvey		ui	primitive	void __cdecl (void)	Sends the survey id, the ten answers and the comment, then clears them	verified	one	ui/serviceverbs#gm-surveys	
 0x496720	357	CGGameUI::DisplayError	idb	ui	orchestration	void __cdecl (uint32_t id, ...)	Formats a catalogue message with its arguments, copies the text to 0xb4da40 and shows it by the message kind	verified	one	spell/failures#display-log-and-events	
 0x4968a0	6	GetLastDisplayedMessage		ui	orchestration	const char *__cdecl (void)	Returns 0xb4da40, the text DisplayError last formatted	verified	one	spell/failures#display-log-and-events	
-0x4968b0	106			ui	orchestration		Runs its object file code that calls SMemFree, 0x496e60, 0x497210; not read here	inferred	none		
+0x4968b0	106	FreeNode4968b0		ui	orchestration		Frees a node, its buffer and its links	verified	one	ui/containers#hash-table-nodes	
 0x496920	182			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4969e0	189	EmptyTable4969e0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x496aa0	5	InitSquare496ab0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x496ab0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -7083,7 +7083,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496be0	136	ClearList496be0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x496c70	108	SetLinkOffset496c70		ui	primitive		Sets a list's link offset, unlinking every node first when it differs	verified	one	ui/containers#lists	
 0x496ce0	135	FreeBuckets496ce0		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
-0x496d70	240			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x496d70	240	ReserveArray496d70		ui	primitive		Grows an array to hold more entries, rounding up to its quantum on request	verified	one	ui/containers#arrays	
 0x496e60	60	Unlink496e60		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x496ea0	25	LinkOrEnd496ea0		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x496ec0	181	Relink496ec0		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
@@ -7273,7 +7273,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a1a40	27	UnregisterChatFunctions		ui	orchestration	void __cdecl ()	Unregisters the 50 chat Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4a1a60	564	MaskProfanity		ui	primitive		Overwrites each match of a profanity pattern with the next mask characters and returns whether any matched	verified	one	ui/chatfilter#masking	
 0x4a1ca0	911	MatchSpam		ui	primitive		Returns whether the text matches a spam pattern of the spam list or the server's list, leaving it unchanged	verified	one	ui/chatfilter#the-spam-predicate	
-0x4a2030	266			ui	primitive		Runs ChatFrame.cpp code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x4a2030	266	SetArrayCount4a2030		ui	primitive		Sets an array's count, growing its capacity to a quantum multiple when it must	verified	one	ui/containers#arrays	
 0x4a2140	10	InitCount4a2150Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4a2150, then jumps to 0x4a2170 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4a2150	22	InitCount4a2150		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4a2170	12	InitCount4a2150Register		ui	orchestration	void __cdecl (void)	Registers 0x4a2180 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -7315,7 +7315,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a24b0	5	InitSquare4a24c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4a24c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4a24c0	19	InitSquare4a24c0		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
 0x4a24e0	23	FreeField4a24e0		ui	orchestration		Frees the block that the dword at this+0x8 points at, tagged ChatColorInfo, when it is not null	verified	one	ui/containers#block-frees	
-0x4a2500	266			ui	primitive		Runs ChatFrame.cpp code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x4a2500	266	SetArrayCount4a2500		ui	primitive		Sets an array's count, growing its capacity to a quantum multiple when it must	verified	one	ui/containers#arrays	
 0x4a2610	65			ui	orchestration		Runs ChatFrame.cpp code that calls SMemFree, 0x4a40d0; not read here	inferred	none		
 0x4a2660	197			ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x4a2730	189	EmptyTable4a2730		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
@@ -7326,7 +7326,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a2a90	185			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4a2b50	189	EmptyTable4a2b50		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x4a2c10	35	NTempest::CImVector::Set	idb	ui	primitive		Packs four bytes into a colour dword, the first byte on top	verified	one	ui/chatwindows#window-records	models::light_clamp_pack_difftest
-0x4a2c40	91			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4a2c40	91	DeleteRecord4a2c40		ui	primitive		Unlinks a record and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4a2ca0	198			ui	orchestration		Runs its object file code that calls 0x4a3090, SMemFree, 0x4a3d40; not read here	inferred	none		
 0x4a2d70	56	FreeArrayAndSelf4a2d70		ui	orchestration		Frees an array's data and the array when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4a2db0	190	DestroyTable4a2db0		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
@@ -7341,7 +7341,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a3280	226	GrowArrayBy4a3280		ui	primitive		Raises an array's capacity for count + add, rounding on request, and leaves the count	verified	one	ui/containers#arrays	
 0x4a3370	235			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4a3460	255	ClearTable4a3460		ui	primitive		Unlinks every node of a table and, unless its argument is set, frees each	verified	one	ui/containers#hash-tables	
-0x4a3560	372			ui	primitive		Runs its object file code that calls 0x4a4810, 0x4a4200, 0x4a40d0 and 2 more; not read here	inferred	none		
+0x4a3560	372	AddNode4a3560		ui	primitive		Adds a node for a hash to a table, growing the buckets after a long chain walk	verified	one	ui/containers#hash-table-nodes	
 0x4a36e0	136	ClearList4a36e0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x4a3770	135	FreeBuckets4a3770		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
 0x4a3800	60	Unlink4a3800		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
@@ -7359,7 +7359,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a3d20	19	InitQuotient4a3d20		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4a3d40	41	NextLink4a3d40		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x4a3d70	60	Unlink4a3d70		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x4a3db0	57			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4a3db0	57	Quantum84a3db0		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 8, else 8	verified	one	ui/containers#arrays	
 0x4a3df0	31	RoundUp4a3df0		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
 0x4a3e10	420			ui	primitive		Runs its object file code that calls 0x4a4040, 0x4a3fc0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x4a3fc0	128			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -7561,7 +7561,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a9d30	118	ShutdownBattlefieldInfo		ui	primitive		Unregisters the seven battleground handlers and frees the score blocks	verified	one	ui/battlefield#caches-and-lifecycle	
 0x4a9db0	307	ResetBattlefieldInfo		ui	primitive		Releases the name queries, clears the battleground scalars and sends opcode 0x2d3	verified	one	ui/battlefield#caches-and-lifecycle	
 0x4a9ef0	8	OnBattlefieldNameArrived		ui	orchestration		Counts down the unknown score names and rebuilds the score list at zero	verified	one	ui/battlefield#names-and-the-score-order	
-0x4a9f00	55			ui	orchestration		Runs BattlefieldInfo.cpp code that calls SMemFree; not read here	inferred	none		
+0x4a9f00	55	FreeGlobalArray4a9f00		ui	orchestration		Frees the block that a global points at, tagged int, and zeroes the three dwords of its array header	verified	one	ui/containers#block-frees	
 0x4a9f40	6	GetBattlefieldInstanceCount		ui	orchestration		Returns the number of listed battleground instances	verified	one	ui/battlefield#caches-and-lifecycle	
 0x4a9f50	9	GetBattlefieldInstanceIdAt		ui	orchestration		Returns the instance id at an index of the battleground list	verified	one	ui/battlefield#caches-and-lifecycle	
 0x4a9f60	293	SendBattlefieldJoin		ui	primitive	void __fastcall SendBattlefieldJoin(uint32_t listIndex, int32_t asGroup)	Checks the group size and sends opcode 0x2ee or 0x23e with map, instance and group flag	verified	one	ui/battlefield#joining-and-leaving	
@@ -8057,7 +8057,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b5a80	5	InitQuotient4b5a90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b5a90, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4b5a90	19	InitQuotient4b5a90		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4b5ab0	60	Unlink4b5ab0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x4b5af0	17			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4b5af0	17	EndOrNode4b5af0		ui	orchestration		Returns its argument, or the list's end link for 0	verified	one	ui/containers#links	
 0x4b5b10	10	InitCount4b5b20Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4b5b20, then jumps to 0x4b5b40 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4b5b20	22	InitCount4b5b20		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4b5b40	12	InitCount4b5b20Register		ui	orchestration	void __cdecl (void)	Registers 0x4b5b50 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -8664,8 +8664,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c33e0	104	Script::ConfirmLootRoll	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Votes on a loot roll with the bind confirmation answered	verified	one	ui/tradelootverbs#loot-rolls	
 0x4c3450	33	RegisterLootFunctions		ui	primitive	void __fastcall ()	Registers the 16 loot Lua functions from the table 0x847cf0	verified	one	ui/loot#loot-functions	
 0x4c3480	27	UnregisterLootFunctions		ui	orchestration	void __cdecl ()	Unregisters the 16 loot Lua functions	verified	one	ui/scriptapi#unregistrars	
-0x4c34a0	106			ui	orchestration		Runs its object file code that calls SMemFree, 0x4c3c10, 0x4c3c50; not read here	inferred	none		
-0x4c3510	182			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x4c34a0	106	FreeNode4c34a0		ui	orchestration		Frees a node, its buffer and its links	verified	one	ui/containers#hash-table-nodes	
+0x4c3510	182	NewNode4c3510		ui	primitive		Allocates a zeroed node and links it into a bucket list	verified	one	ui/containers#hash-table-nodes	
 0x4c35d0	189	EmptyTable4c35d0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x4c3690	190	DestroyTable4c3690		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
 0x4c3750	136	ClearList4c3750		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
@@ -8882,7 +8882,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c5c50	15	InitDouble4c5c50		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c5c60	5	InitQuotient4c5c70Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c5c70, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c5c70	19	InitQuotient4c5c70		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4c5c90	117			ui	orchestration		Runs its object file code that calls 0x4c6580, SMemFree; not read here	inferred	none		
+0x4c5c90	117	DeleteNode4c5c90		ui	orchestration		Unlinks a node from its lists and frees it	verified	one	ui/containers#hash-table-nodes	
 0x4c5d10	179			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4c5dd0	189	EmptyTable4c5dd0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x4c5e90	190	DestroyTable4c5e90		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
@@ -9873,7 +9873,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dcf70	15	InitDouble4dcf70		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4dcf80	5	InitQuotient4dcf90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4dcf90, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4dcf90	19	InitQuotient4dcf90		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4dcfb0	117			ui	orchestration		Runs its object file code that calls 0x4ddc70, SMemFree; not read here	inferred	none		
+0x4dcfb0	117	DeleteNode4dcfb0		ui	orchestration		Unlinks a node from its lists and frees it	verified	one	ui/containers#hash-table-nodes	
 0x4dd030	179			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4dd0f0	189	EmptyTable4dd0f0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x4dd1b0	23	FreeField4dd1b0		ui	unreached		Frees the block that the dword at this+0x8 points at, tagged TAXILINE, when it is not null	verified	one	ui/containers#block-frees	
@@ -9925,7 +9925,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dd6f0	19	InitSquare4dd6f0		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
 0x4dd710	136	ClearList4dd710		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x4dd7a0	135	FreeBuckets4dd7a0		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
-0x4dd830	240			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x4dd830	240	ReserveArray4dd830		ui	primitive		Grows an array to hold more entries, rounding up to its quantum on request	verified	one	ui/containers#arrays	
 0x4dd920	232			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4dda10	60	Unlink4dda10		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x4dda50	25	LinkOrEnd4dda50		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
@@ -10705,7 +10705,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ef7a0	33	InitList4ef7a0		ui	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	ui/containers#lists	
 0x4ef7d0	132	BlendColor		ui	primitive	void __fastcall (uint32_t *colour, uint32_t t, const uint32_t *source)	Moves each colour channel toward a source colour by t over 256 and keeps the alpha	verified	one	minimap/draw#draw-tint	
 0x4ef860	348			ui	primitive		Runs its object file code that calls __ehvec_dtor, SMemReAlloc, SMemAlloc and 1 more; not read here	inferred	none		
-0x4ef9c0	57			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4ef9c0	57	GrowChunk4ef9c0		ui	primitive		Returns the growth step for a count	verified	one	ui/containers#arrays	
 0x4efa00	154			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4efaa0	5	InitSquare4efab0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4efab0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4efab0	19	InitSquare4efab0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
@@ -10767,7 +10767,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f1be0	15	InitDouble4f1be0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f1bf0	5	InitQuotient4f1c00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f1c00, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f1c00	19	InitQuotient4f1c00		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x4f1c20	117			ui	orchestration		Runs its object file code that calls 0x4f2400, SMemFree; not read here	inferred	none		
+0x4f1c20	117	DeleteNode4f1c20		ui	orchestration		Unlinks a node from its lists and frees it	verified	one	ui/containers#hash-table-nodes	
 0x4f1ca0	214	AllocMacroRecord		ui	primitive		Allocates a 0x56c-byte macro record with its text fields cleared	verified	one	ui/macros#macro-records	
 0x4f1d80	189	EmptyTable4f1d80		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x4f1e40	190	DestroyTable4f1e40		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
@@ -10903,7 +10903,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f3de0	12	InitZero4f3dc0Register		ui	orchestration	void __cdecl (void)	Registers 0x4f3df0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4f3df0	47	InitZero4f3dc0Exit		ui	primitive	void __cdecl (void)	Frees the PetitionSignerInfo block that a global points at, at most once	verified	one	ui/initexits#exit-frees	
 0x4f3e20	139			ui	primitive		Runs its object file code that calls 0x4f4e60; not read here	inferred	none		
-0x4f3eb0	55			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4f3eb0	55	FreeGlobalArray4f3eb0		ui	orchestration		Frees the block that a global points at, tagged PetitionSignerInfo, and zeroes the three dwords of its array header	verified	one	ui/containers#block-frees	
 0x4f3ef0	91	ResetPetitionSigners		ui	primitive	void __cdecl ()	Zeroes the signature count and the pending-name counter	verified	one	ui/petition#petition-state	
 0x4f3f50	8			ui	orchestration		Runs its object file code that calls 0x4f4320; not read here	inferred	none		
 0x4f3f60	299			ui	primitive		Keeps a petition's id and GUID for the signature window, declining an earlier one	inferred	none	objectlayer/party#petitions	
@@ -11662,9 +11662,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x503070	228	TabardModel::GetLowerEmblemFileName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the lower emblem texture path of the current design	verified	one	ui/tabard#tabard-file-names	
 0x503160	904	TabardModel::GetUpperEmblemTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Fills a Texture widget with the upper emblem's alpha as a white mask and returns nothing	verified	one	ui/tabard#emblem-textures	
 0x5034f0	35			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x503520	25			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x503520	25	FreeGlobal503520		ui	orchestration		Frees the block that a global points at, tagged NTempest::CImVector, when it is not null	verified	one	ui/containers#block-frees	
 0x503540	938	TabardModel::GetLowerEmblemTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Fills a Texture widget with the lower emblem's alpha as a white mask and returns nothing	verified	one	ui/tabard#emblem-textures	
-0x5038f0	25			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x5038f0	25	FreeGlobal5038f0		ui	orchestration		Frees the block that a global points at, tagged NTempest::CImVector, when it is not null	verified	one	ui/containers#block-frees	
 0x503910	45	TabardModel::CanSaveTabardNow	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a guild record is cached and no save is pending, else nil	verified	one	ui/tabard#saving	
 0x503940	10	InitHashTable503950Thunk		ui	orchestration	void __cdecl (void)	Calls 0x503950, then jumps to 0x503a10 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x503950	190	InitHashTable503950		ui	primitive	void __cdecl (void)	Builds an empty hash table in a global: link offset 0xc, a self-linked head, no buckets and a mask of -1	verified	one	ui/initstores#hash-tables	
@@ -12751,9 +12751,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51fa40	257	ResetAddOnRegistry		ui	primitive		Frees the add-on registry, the sorted names and the enable state nodes	verified	one	ui/addons#finding-add-ons	
 0x51fb50	156	MoveAsideLooseInterface		ui	orchestration		Moves the loose GlueXML and FrameXML folders and Blizzard add-on folders aside to .old names	verified	one	ui/addonfiles#loose-interface-folders	
 0x51fbf0	167	MoveAsideBlizzardAddOn		ui	orchestration		Moves a Blizzard add-on folder that holds its own .toc aside to a .old name and notes it	verified	one	ui/addonfiles#loose-interface-folders	
-0x51fca0	106			ui	orchestration		Runs AddOns.cpp code that calls SMemFree, 0x521580, 0x521ec0; not read here	inferred	none		
-0x51fd10	182			ui	primitive		Runs AddOns.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x51fdd0	180			ui	primitive		Runs AddOns.cpp code not read here	inferred	none		
+0x51fca0	106	FreeNode51fca0		ui	orchestration		Frees a node, its buffer and its links	verified	one	ui/containers#hash-table-nodes	
+0x51fd10	182	NewNode51fd10		ui	primitive		Allocates a zeroed node and links it into a bucket list	verified	one	ui/containers#hash-table-nodes	
+0x51fdd0	180	InitTable51fdd0		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x51fe90	330			ui	primitive		Runs AddOns.cpp code that calls 0x521740, 0x521580, 0x521000 and 1 more; not read here	inferred	none		
 0x51ffe0	189	EmptyTable51ffe0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x5200a0	34	FreeRecord5200a0		ui	orchestration		Clears the record its argument points at through 0x5200d0 and frees it	verified	one	ui/containers#block-frees	
@@ -12764,9 +12764,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x520490	189	EmptyTable520490		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x520550	279			ui	primitive		Allocates an add-on record zeroed with security 1 and DefaultState 1	verified	one	ui/addons#toc-directives	
 0x520670	9			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x520680	16			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x520690	16			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5206a0	180			ui	primitive		Runs its object file code not read here	inferred	none		
+0x520680	16	Clear4520680		ui	orchestration		Zeroes four dwords at this and returns this	verified	one	ui/containers#lists	
+0x520690	16	Clear4520690		ui	orchestration		Zeroes four dwords at this and returns this	verified	one	ui/containers#lists	
+0x5206a0	180	InitTable5206a0		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x520760	189	EmptyTable520760		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x520820	190	DestroyTable520820		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
 0x5208e0	190	DestroyTable5208e0		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
@@ -12785,7 +12785,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x521100	135	FreeBuckets521100		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
 0x521190	136	ClearList521190		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x521220	135	FreeBuckets521220		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
-0x5212b0	171			ui	primitive		Runs its object file code not read here	inferred	none		
+0x5212b0	171	LinkNode5212b0		ui	primitive		Unlinks a node and links it after another for where 1, else before it; a null neighbour means the head	verified	one	ui/containers#links	
 0x521360	41	NextLink521360		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x521390	41	NextLink521390		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x5213c0	133	SetArrayCapacity5213c0		ui	primitive		Sets an array's capacity exactly, keeping the smaller of capacity and count when it must move	verified	one	ui/containers#arrays	
@@ -12793,7 +12793,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x521470	181	Relink521470		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
 0x521530	77	ClearBucket521530		ui	primitive		Unlinks every node of a bucket list	verified	one	ui/containers#lists	
 0x521580	60	Unlink521580		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x5215c0	372			ui	primitive		Runs its object file code that calls 0x522cc0, 0x521740, 0x521580 and 2 more; not read here	inferred	none		
+0x5215c0	372	AddNode5215c0		ui	primitive		Adds a node for a hash to a table, growing the buckets after a long chain walk	verified	one	ui/containers#hash-table-nodes	
 0x521740	25	LinkOrEnd521740		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x521760	181	Relink521760		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
 0x521820	5	InitSquare521830Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x521830, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -13010,10 +13010,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x526a20	41	NextLink526a20		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x526a50	60	Unlink526a50		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x526a90	60	Unlink526a90		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x526ad0	372			ui	primitive		Runs its object file code that calls 0x527820, 0x5272b0, 0x526a90 and 2 more; not read here	inferred	none		
+0x526ad0	372	AddNode526ad0		ui	primitive		Adds a node for a hash to a table, growing the buckets after a long chain walk	verified	one	ui/containers#hash-table-nodes	
 0x526c50	136	ClearList526c50		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x526ce0	135	FreeBuckets526ce0		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
-0x526d70	372			ui	primitive		Runs its object file code that calls 0x527c70, 0x527360, 0x527320 and 2 more; not read here	inferred	none		
+0x526d70	372	AddNode526d70		ui	primitive		Adds a node for a hash to a table, growing the buckets after a long chain walk	verified	one	ui/containers#hash-table-nodes	
 0x526ef0	136	ClearList526ef0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x526f80	135	FreeBuckets526f80		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
 0x527010	333			ui	primitive		Runs its object file code that calls 0x528300, 0x5274f0, 0x527db0 and 5 more; not read here	inferred	none		
@@ -29527,14 +29527,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates a MovieFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
 0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	one	ui/framexml#frame-types	
 0x6ef160	37			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x6ef190	180			ui	primitive		Runs its object file code not read here	inferred	none		
+0x6ef190	180	InitTable6ef190		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef250	34	FreeRecord6ef250		ui	orchestration		Clears the record its argument points at through 0x6ef280 and frees it	verified	one	ui/containers#block-frees	
 0x6ef280	225			ui	primitive		Runs its object file code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
 0x6ef370	148			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6ef410	25			ui	orchestration		Runs its object file code that calls 0x6eff00; not read here	inferred	none		
 0x6ef430	373			ui	primitive		Runs its object file code that calls 0x6f0210, 0x6efd80, 0x6efe00 and 1 more; not read here	inferred	none		
 0x6ef5b0	189	EmptyTable6ef5b0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
-0x6ef670	180			ui	primitive		Runs its object file code not read here	inferred	none		
+0x6ef670	180	InitTable6ef670		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef730	34	FreeRecord6ef730		ui	orchestration		Clears the record its argument points at through 0x6efce0 and frees it	verified	one	ui/containers#block-frees	
 0x6ef760	25			ui	orchestration		Runs its object file code that calls 0x6f00f0; not read here	inferred	none		
 0x6ef780	373			ui	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, 0x6efff0 and 1 more; not read here	inferred	none		
@@ -29560,8 +29560,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f0230	181	Relink6f0230		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
 0x6f02f0	25	LinkOrEnd6f02f0		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x6f0310	181	Relink6f0310		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
-0x6f03d0	139			ui	primitive		Runs its object file code that calls 0x6f04f0; not read here	inferred	none		
-0x6f0460	139			ui	primitive		Runs its object file code that calls 0x6f0960; not read here	inferred	none		
+0x6f03d0	139	ShouldGrow6f03d0		ui	primitive		Counts a bucket's chain and grows the table when it passes 13	verified	one	ui/containers#hash-tables	
+0x6f0460	139	ShouldGrow6f0460		ui	primitive		Counts a bucket's chain and grows the table when it passes 13	verified	one	ui/containers#hash-tables	
 0x6f04f0	562			ui	primitive		Runs its object file code that calls 0x6f07e0, 0x6f0210, 0x6efd80 and 4 more; not read here	inferred	none		
 0x6f0730	33	InitUnsetList6f0730		ui	primitive		Makes an empty list with the unset link offset 0xdddddddd	verified	one	ui/containers#lists	
 0x6f0760	43	DeletingDestructor6f0760		ui	orchestration		Destroys the object through 0x6ef9f0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
@@ -30794,7 +30794,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x72b8d0	30			ui	primitive		Runs its object file code not read here	inferred	none		
 0x72b8f0	89			ui	orchestration		Runs its object file code that calls ObjectAllocNew; not read here	inferred	none		
 0x72b950	60	Unlink72b950		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x72b990	16			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x72b990	16	Clear272b990		ui	orchestration		Zeroes two dwords at this and returns this	verified	one	ui/containers#lists	
 0x72b9a0	412			ui	primitive		Runs its object file code that calls 0x72c130, 0x72b9a0, 0x72c030 and 1 more; not read here	inferred	none		
 0x72bb40	346			ui	primitive		Runs its object file code that calls 0x72bce0, SMemReAlloc, SMemAlloc and 1 more; not read here	inferred	none		
 0x72bca0	60	Unlink72bca0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
@@ -33372,7 +33372,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c2e0	57	CSimpleFrame::SetHighlightLocked		ui	orchestration		Stores +0xf8 and switches layer 4 on, or off unless hovered	inferred	none	ui/frames#frame-fields	
 0x76c320	60	UnlinkRegionLink		ui	orchestration		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x76c360	60	UnlinkChildLink		ui	orchestration		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x76c3a0	17	GetRegionLinkOrTerminator		ui	orchestration		Returns a link, or the list's terminator for null	inferred	none		
+0x76c3a0	17	GetRegionLinkOrTerminator		ui	orchestration		Returns its argument, or the list's end link for 0	verified	one	ui/containers#links	
 0x76c3c0	25	GetRegionLink		ui	orchestration		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x76c3e0	41	GetPreviousRegionLink		ui	orchestration		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x76c410	8	CSimpleFrame::LayoutDeletingDestructorThunk		ui	orchestration		Moves this back by 0x24 to the frame and runs its deleting destructor	verified	one	ui/frames#vtables-and-the-two-parts	
@@ -33591,13 +33591,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7733c0	8	LayoutThunk7733c0		ui	primitive		Moves this back by 0x24 and jumps to 0x76fd10	verified	one	ui/containers#layout-thunks	
 0x7733d0	30			ui	orchestration		Runs its object file code that calls 0x77fd10; not read here	inferred	none		
 0x7733f0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x773400	37			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x773400	37	IsTypeId2773400		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x773430	67	TextureIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is Texture or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x773480	6	TextureGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name Texture	verified	one	ui/widgettype#type-chains	
 0x773490	110			ui	primitive		Runs its object file code that calls 0x770c60, SMemFree; not read here	inferred	none		
 0x773500	39			ui	orchestration		Runs its object file code that calls 0x7724a0; not read here	inferred	none		
 0x773530	26			ui	primitive		Runs its object file code that calls 0x770800; not read here	inferred	none		
-0x773550	37			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x773550	37	IsTypeId2773550		ui	orchestration		Answers 1 for two type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x773580	67	FontStringIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is FontString or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x7735d0	6	FontStringGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name FontString	verified	one	ui/widgettype#type-chains	
 0x7735e0	5	InitSquare7735f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7735f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -33721,7 +33721,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779490	78	CSimpleButton::OnEnter		ui	orchestration		Runs the frame's enter and the label refresh only when enabled, then the C++ listener	verified	one	ui/button#entering-and-leaving	
 0x7794e0	88	CSimpleButton::OnLeave		ui	orchestration		Runs the frame's leave and the label refresh only when enabled, then the C++ listener	verified	one	ui/button#entering-and-leaving	
 0x779540	177	CSimpleButton::RunClick		ui	orchestration		Runs the C++ listener and OnClick with the button's name, on an enabled button	verified	one	ui/button#running-a-click	
-0x779620	40			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x779620	40	RestoreBase779620		ui	orchestration		Restores the base vtable and frees the object when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x779650	177	CSimpleButton::RunDoubleClick		ui	orchestration		Runs the C++ listener and OnDoubleClick with the button's name, on an enabled button	verified	one	ui/button#double-click	
 0x779730	16	CSimpleButton::RegisterForClicks		ui	orchestration		Stores the click mask	verified	one	ui/button#registerforclicks-and-click	
 0x779740	25			ui	unreached		Runs its object file code not read here	inferred	none		
@@ -33734,7 +33734,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7798c0	5	InitQuotient7798d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7798d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7798d0	19	InitQuotient7798d0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x7798f0	8	LayoutThunk7798f0		ui	primitive		Moves this back by 0x24 to the object and jumps to its deleting destructor 0x778820	verified	one	ui/containers#layout-thunks	
-0x779900	40			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x779900	40	RestoreBase779900		ui	orchestration		Restores the base vtable and frees the object when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x779930	5	InitSquare779940Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x779940, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x779940	19	InitSquare779940		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x779960	5	InitQuotient779970Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x779970, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -34182,7 +34182,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x789020	60	Unlink789020		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x789060	291			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, 0x788e90 and 1 more; not read here	inferred	none		
 0x789190	12	InitEndLink789190		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
-0x7891a0	57			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7891a0	57	GrowChunk7891a0		ui	primitive		Returns the growth step for a count	verified	one	ui/containers#arrays	
 0x7891e0	31	RoundUp7891e0		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
 0x789200	268			ui	primitive		Runs its object file code that calls SMemFree, SMemReAlloc, SMemAlloc; not read here	inferred	none		
 0x789310	8	LayoutThunk789310		ui	primitive		Moves this back by 0x24 to the object and jumps to its deleting destructor 0x7879b0	verified	one	ui/containers#layout-thunks	
@@ -34271,7 +34271,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b530	78			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
 0x78b580	478			ui	primitive		Replaces the colour wheel texture, deleting the old; a texture gets the wheel image, built once, nil leaves none	verified	one	ui/colorselect#a-missing-wheel-faults	ui::geo_78b580
 0x78b760	35			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x78b790	25			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x78b790	25	FreeGlobal78b790		ui	orchestration		Frees the block that a global points at, tagged NTempest::CImVector, when it is not null	verified	one	ui/containers#block-frees	
 0x78b7b0	156			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 1 more; not read here	inferred	none		
 0x78b850	73			ui	orchestration		Runs its object file code that calls 0x77fd10, CLayoutFrame::ClearAllPointsThunk, 0x78bc20; not read here	inferred	none		
 0x78b8a0	188			ui	orchestration		Runs its object file code that calls CGxTexFlags::CGxTexFlags, 0x449bf0, 0x770300 and 4 more; not read here	inferred	none		
