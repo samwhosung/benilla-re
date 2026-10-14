@@ -96,6 +96,25 @@ with TYPEMASK_PLAYER (`shr ecx,4; test cl,1`) or health above 0 (`0x5fb8a8`, `0x
 liquid, compares `depth` with `h·0.75` (`fcompp`, `test ah,0x41`) and applies the same gate before
 `0x61a130`.
 
+## One swim pitch
+
+A swimmer's pitch is the single float `CMovement+0x20`. The velocity basis copies it to `+0x54` (the vertical part is `sin`
+of it), the body is posed by it while swimming and moving forward or back, and the packet carries it unchanged while
+swimming, so no leveled shown pitch is kept apart from a raw aimed one. Four sources write it: the pitch keys (integrated,
+clamped to ±π/2), the camera (the negated camera pitch, set at once through the pitch queue), the click-to-move setter
+`0x610100`, and the path sampler, which sets `asin` of the path direction's z. Nothing at the surface changes it. The swim animations' playback rate divides the flag-scalar speed, not the pitch.
+
+Addresses: `0x7c5cd0`, `0x7c5cf9`, `0x7c4fb9`, `0x515330`, `0x51536b`, `0x60de70`, `0x7c6f70`, `0x7c6f91`, `0x610100`, `0x7c55ee`, `0x60a11a`, `0x608572`, `0x60857d`, `0x600a66`, `0x600a6f`, `0x600a72`, `0x5fe53c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c5cd0` stores `+0x20` into `+0x54` (`0x7c5ce9`, `0x7c5cfb`) and rebuilds the basis. `0x515330` loads its pitch argument,
+negates it (`fchs`, `0x51536b`) and queues it through `0x60de70`; the clamp to 1.5533431 rad (89°, `0x8089d8`) is in the camera
+code (`uicamera/effects`). `0x7c6f70` ends in the direct store (`0x7c6f91`). The pose reads `+0x20` at `0x60a11a` and is
+reached only with 0x200000 and a direction bit 1 or 2 (`0x608572`, `0x60857d`). The packet builder stores `+0x20` at
+`+0xc74` under 0x200000 (`0x600a66` to `0x600a72`). `0x5fe53c` calls `0x7c4c90(0)` for the rate numerator.
+
 ## Camera water bits
 
 `0x511ad0(unit)` is a camera method with the same shape as the swim decision and no part in it. It clears bits 0x100000 and 0x200000 of the camera's flags at `+0x90`, takes the unit's
