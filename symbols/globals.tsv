@@ -3305,6 +3305,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ed38	void *	s_gxDevice		gx	Holds the global graphics device the facade calls	verified	one	gx/device#backend-selection-and-creation
 0xc0ef70	float[3]	s_defaultPointAttenuation		gx	Holds the default point attenuation (1, 0, 0), set by an initializer and used as id 66's default	verified	one	gx/renderstate#point-state
 0xc0f22c	uint32_t	s_defaultTextureColour		gx	Holds 0xff00ff00, the colour of the Direct3D device's default 8 by 8 texture	verified	one	gx/device#direct3d-device-start
+0xc0f23c	uint32_t	s_pixelFormatArbFlag		gx	Holds 1 when WGL_ARB_pixel_format is listed	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f254	uint32_t	s_vertexProgramFlag		gx	Holds 1 when GL_NV_vertex_program is listed	verified	one	gx/device#opengl-initial-state
 0xc0f2a0	uint32_t	s_pointSpriteFlag		gx	Holds 1 when the GL version is 2.0 or later or GL_ARB_point_sprite is listed	verified	one	gx/device#opengl-initial-state
 0xc0f2ac	uint32_t	s_multisampleFlag		gx	Holds 1 when GL_ARB_multisample is listed	verified	one	gx/device#opengl-pixel-format-choice

@@ -27,7 +27,7 @@ for types 0 to 3 (`0x4f6c90`).
 ## Craft rows
 
 A craft row is 16 bytes: the spell id (-1 for a header), the group key (the skill line of the spell's ability), the count
-available and a difficulty bucket from 0 to 5. A header is 12 bytes: the group key, its member count and a visibility word.
+available and a difficulty bucket from 0 to 5. A header is 12 bytes: the group key, its member count and a collapse word.
 The bucket is the string `GetCraftInfo` returns as the craft type: none, optimal, medium, easy, trivial, used. The window
 shows the sent name and rank of the row's own spell.
 
@@ -37,9 +37,8 @@ Proof: one
 Test: none
 
 The record sizes are the allocation sizes `push 0x10` (`0x4f6146`, `0x4f650e`) and `push 0xc`. The bucket is set to 0 at
-`0x4f61dd`, to 1 to 4 by the difficulty ladder (`0x4f6222` to `0x4f6267`) and to 5 when the pet already knows the ability
-(`0x4f6360`, `0x4f63cc`); the strings come from the table at `0x807e00`, 32 bytes apiece (`0x4f6fbc`). A header is visible when
-its bit is clear in the collapse mask `0x84d0f0`, which opening sets to all ones.
+`0x4f61dd`, to 1 to 4 by the difficulty ladder (`0x4f6222` to `0x4f6267`) and, for a row still at 0 whose spell has a learn effect (36), to 5 when the taught spell is already known: by the active player when the effect is not aimed at the pet (`0x4f6360`), by the pet, or a higher rank of it, when it is (`0x4f63cc`); the strings come from the table at `0x807e00`, 32 bytes apiece (`0x4f6fbc`). A header's word at `+8` is 1 when
+its bit is clear in the collapse mask `0x84d0f0` (the group is collapsed) and 0 when it is set (`0x4f6650` to `0x4f666d`); opening sets the mask to all ones.
 
 ## Craft order
 

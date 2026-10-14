@@ -17006,7 +17006,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59d120	529	CGxDeviceOpenGl::ApplyTexCoordMode		gx	primitive	void __thiscall (uint32_t stage, uint32_t mode)	Sets a stage's coordinate generation flags and texture matrix for mode 0 to 6	verified	one	gx/renderstate#opengl-coordinate-modes	gx::matrix_reorient_matches_binary
 0x59d350	1606	CGxDeviceOpenGl::ApplyRenderState		gx	orchestration	void __thiscall (uint32_t id)	Applies one render state through OpenGL calls by the jump table 0x59d998	verified	one	gx/renderstate#render-state-ids	gx::color_norm_at_0x59d350_matches_binary
 0x59da70	43			gx	host		Runs its object file code that calls 0x59dcf0, 0x59daa0; not read here	inferred	none		
-0x59daa0	560			gx	host		Runs its object file code that calls 0x595e70; not read here	inferred	none		
+0x59daa0	560			gx	host		Chooses a GDI pixel format for a format record; returns 0 for a sample count above 1	inferred	none		
 0x59dcf0	871	CGxDeviceOpenGl::ChoosePixelFormat		gx	host	uint32_t __fastcall (void *dc, const void *format)	Builds the pixel format attribute list, chooses a format, checks it against the request and sets it	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e070	27	CGxDeviceOpenGl::GetPixelFormatAttrib		gx	orchestration	uint32_t __fastcall (void *dc, uint32_t format, uint32_t attrib, uint32_t *value)	Queries one pixel format attribute through the ARB entry point	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e090	22			gx	host		Runs its object file code not read here	inferred	none		
@@ -17085,7 +17085,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a11d0	629	CGxDeviceD3d::SetProjection		gx	host	void __thiscall (const float *matrix)	Stores a projection matrix, rescales it by element 11, remaps its depth terms and sets it as the projection transform	verified	one	gx/draw#projection-matrix	
 0x5a1450	40	CGxDeviceD3d::SetView		gx	orchestration	void __thiscall (const float *matrix)	Records a view matrix and sets it as the Direct3D view transform	verified	one	gx/draw#projection-matrix	
 0x5a1480	96			gx	primitive		Runs its object file code not read here	inferred	none		
-0x5a14e0	416			gx	primitive		Runs its object file code that calls 0x589ee0, MultiplyMatrix4, 0x5938a0 and 1 more; not read here	inferred	none		
+0x5a14e0	416			gx	primitive		Sets the Direct3D texture transform and transform flags of a stage from the state 0x37 plus the stage	inferred	none		
 0x5a1680	277	CGxDeviceD3d::BeginFrame		gx	host	void __thiscall (uint32_t mask)	Resets a lost device, clears with the mask when capability bit 6 is set and begins the scene	verified	one	gx/device#direct3d-present	
 0x5a17a0	40	CGxDeviceD3d::EndScene		gx	host	void __thiscall ()	Ends the scene when one is begun and clears the flag	verified	one	gx/device#direct3d-present	
 0x5a17d0	317	CGxDeviceD3d::Clear		unassigned	host	void __thiscall (uint32_t mask)	Clears the target and depth buffers the mask names with the device clear colour after applying the viewport	verified	one	gx/device#direct3d-clear-and-viewport	

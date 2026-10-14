@@ -79,19 +79,19 @@ The jump tables are `0x5a34dc` and `0x5a3460` (Direct3D), `0x59da24` and `0x59d9
 | ids | state |
 |---|---|
 | `0x2f` to `0x36` | texture coordinate mode 0 to 6 of the stage |
-| `0x37` to `0x3e` | nothing: both applicators return |
+| `0x37` to `0x3e` | texture transform kind of stage 0 to 7: no case in the applicators; the Direct3D stage update reads it |
 | `0x3f`, `0x40` | pixel program object; vertex program object |
 | `0x41` | point size |
 | `0x42` | point attenuation, three floats |
 | `0x43`, `0x44` | point size minimum and maximum |
 | `0x45` | point sprites on |
 
-Addresses: `0x5a2f00`, `0x59d350`, `0x5a2b40`, `0x59d120`, `0x5a0570`, `0x59e310`
+Addresses: `0x5a2f00`, `0x59d350`, `0x5a2b40`, `0x59d120`, `0x5a0570`, `0x59e310`, `0x5a14f1`, `0x5a14e0`, `0x5a1ea8`
 Confidence: verified
 Proof: one
 Test: none
 
-Ids `0x2f` to `0x36` call `0x5a2b40(stage, mode)` and `0x59d120`, ids `0x3f` and `0x40` the shader binders, ids `0x41` to `0x45` the point calls; ids `0x37` to `0x3e` reach the common return `0x5a3458` and `0x59d98d`.
+Ids `0x2f` to `0x36` call `0x5a2b40(stage, mode)` and `0x59d120`, ids `0x3f` and `0x40` the shader binders, ids `0x41` to `0x45` the point calls; ids `0x37` to `0x3e` reach the common return `0x5a3458` and `0x59d98d`. The Direct3D device reads the value of `0x37` plus the stage at `0x5a14f1`, in the stage's transform update `0x5a14e0` (called from `0x5a1ea8`), which sets the stage's transform with `SetTransform` and its transform flags.
 
 ## Programs
 
