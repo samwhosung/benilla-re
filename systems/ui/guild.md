@@ -252,7 +252,7 @@ rank dword, a rights dword and the string.
 
 `GetGuildInfo(unit)` returns the guild name, the rank name and the rank number of a unit that is a player with a
 guild, and `nil, nil, 0` for any other unit, an unresolved token or a guild not yet cached. The unit comes from the
-unit token grammar (`units#the-unit-token`); a token no prefix matches raises
+unit token grammar (`unittokens#the-unit-token`); a token no prefix matches raises
 `Unknown unit name: %s`. A missing argument raises `Usage: GetGuildInfo("unit")`.
 
 Addresses: `0x4c9330`, `0x4c9382`, `0x4c9394`, `0x4c93a3`, `0x4c93ca`, `0x4c93e4`, `0x4c9402`, `0x4c943c`, `0x4c9470`, `0x515940`

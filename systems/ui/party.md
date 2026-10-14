@@ -43,7 +43,7 @@ Test: none
 
 `UnitIsPartyLeader(unit)` has no usage check. It resolves the token, then answers 1 when the unit's player object (type mask 0x10) has `PLAYER_FLAGS` bit 0x1
 set, or when the token's GUID equals the leader cell; else nil. One value on both returning paths, and the number 1, never a boolean. A token no prefix
-matches raises `Unknown unit name: %s` (`units#the-unit-token`); a missing or non-string argument gives GUID 0, so with no group, where the cell is 0 too,
+matches raises `Unknown unit name: %s` (`unittokens#the-unit-token`); a missing or non-string argument gives GUID 0, so with no group, where the cell is 0 too,
 it answers 1.
 
 Addresses: `0x516210`, `0x51621a`, `0x516221`, `0x51623b`, `0x51624a`, `0x516250`, `0x516258`, `0x516260`, `0x516266`, `0x516274`, `0x51627d`

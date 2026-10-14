@@ -6936,10 +6936,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4918e0	32	IsPartyOrRaidMember		ui	orchestration		Returns 1 for a GUID in the party or the raid	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
 0x491900	32	CGGameUI::IsRaidMemberOrPet	idb	ui	orchestration		Runs GameUI.cpp code that calls CGPartyInfo::IsMemberOrPet, CGRaidInfo::IsMemberOrPet; not read here	inferred	none		
-0x491920	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x491930	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x491940	30			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x491960	98			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x491920	5	GetPartyGuidForToken		ui	orchestration		Returns the GUID of a party slot from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
+0x491930	5	GetPartyPetGuidForToken		ui	orchestration		Returns the pet GUID of a party slot from a 0-based index with no bound	verified	one	ui/unittokens#indexed-tokens	
+0x491940	30	GetRaidGuidForToken		ui	orchestration		Returns the GUID of a raid roster entry from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
+0x491960	98	GetRaidPetGuidForToken		ui	primitive		Returns the pet GUID of a raid roster entry from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4919d0	40	RefreshTooltipForUnit		ui	orchestration	void __fastcall (uint64_t *guid)	Rebuilds the tooltip when it still shows the unit the GUID names	verified	one	ui/mouseover#the-tooltip-stays-put	
 0x491a00	65			ui	orchestration		Marks the name of a GUID's unit dirty	inferred	none	objectlayer/playerfields#watchers-on-every-player	
 0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	objectlayer/party#guild-tabards	
@@ -10445,8 +10445,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e7f70	71	CGPartyInfo::IsMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Returns 1 for a nonzero GUID that is the active player's or one of the four party members', else 0	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4e7fc0	210			ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4e81a0	43			ui	orchestration		Runs PartyFrame.cpp code that calls 0x467d00; not read here	inferred	none		
-0x4e81d0	116			ui	primitive		Runs PartyFrame.cpp code that calls 0x467d00, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4e81a0	43	GetPartyMemberGuid		ui	orchestration		Returns the GUID of party slot 0 to 3, 0 with no object manager or out of range	verified	one	ui/unittokens#indexed-tokens	
+0x4e81d0	116	GetPartyMemberPetGuid		ui	primitive		Returns the pet GUID of a party slot from its member or its record, with no index bound	verified	one	ui/unittokens#indexed-tokens	
 0x4e8250	124	SetGroupLeader		ui	primitive	void __stdcall SetGroupLeader(uint64_t guid)	Stores the group leader GUID, finds its party slot and signals PARTY_LEADER_CHANGED	verified	one	ui/party#the-group-leader	
 0x4e82d0	437	AddPartyMember		ui	primitive	void __stdcall AddPartyMember(uint64_t guid) /* ecx = online, edx = old record */	Stores a party member's GUID and record, tags its object and asks for its stats and name	verified	one	ui/party#a-members-record	
 0x4e8490	13	OnPartyMemberName		ui	orchestration		Signals PARTY_MEMBERS_CHANGED when a party member's name arrives	verified	one	ui/party#a-members-record	
@@ -12525,10 +12525,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515900	22			ui	primitive		Runs its object file code not read here	inferred	none		
 0x515920	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x515930	14			ui	primitive		Runs its object file code not read here	inferred	none		
-0x515940	34			ui	orchestration		Returns the unit a unit token names through 0x515970 and 0x468460, or null	inferred	none	spell/targeting#lua-targeting-functions	
-0x515970	725	Script::GetGUIDFromName	idb	ui	primitive		Returns the guid a unit token names	inferred	none	spell/targeting#lua-targeting-functions	
-0x515c50	505			ui	primitive		Runs ScriptEvents.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, SStrCopy and 5 more; not read here	inferred	none		
-0x515e50	65			ui	primitive		Signals a unit event for each unit token of a GUID	inferred	none	objectlayer/party#party-member-events	
+0x515940	34	GetUnitFromToken		ui	orchestration	CGUnit_C *__fastcall GetUnitFromToken(const char *token)	Returns the unit object a token names, null for none	verified	one	ui/unittokens#indexed-tokens	
+0x515970	725	Script::GetGUIDFromName	idb	ui	primitive	uint64_t __fastcall GetGUIDFromName(const char *token)	Returns the GUID a unit token names, 0 for none, and raises for an unknown token	verified	one	ui/unittokens#the-unit-token	
+0x515c50	505	ListUnitTokens		ui	primitive	char **__fastcall ListUnitTokens(const uint64_t *guid, int32_t *count)	Lists the tokens that name a GUID in a fixed order into seven global buffers	verified	one	ui/unittokens#the-tokens-of-a-guid	
+0x515e50	65	SignalUnitEvent		ui	primitive	void __fastcall SignalUnitEvent(const uint64_t *guid, int32_t eventId)	Signals an event once per token that names a GUID, with the token as arg1	verified	one	ui/unittokens#the-tokens-of-a-guid	
 0x515ea0	61	Script::GetTime	idb	ui	primitive		Implements the Lua function GetTime	inferred	none		
 0x515ee0	46	Script::GetGameTime	idb	ui	orchestration		Implements the Lua function GetGameTime	inferred	none		
 0x515f10	60	Script::ConsoleExec	idb	ui	orchestration		Implements the Lua function ConsoleExec	inferred	none		
@@ -12626,11 +12626,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51bb40	24	UnloadGameScriptFunctions		ui	orchestration		Unregisters the six shared script functions	inferred	none		
 0x51bb60	38			ui	primitive		Runs its object file code that calls LoadGameScriptFunctions, FrameScriptRegisterFunction; not read here	inferred	none		
 0x51bb90	32			ui	primitive		Runs its object file code that calls UnloadGameScriptFunctions, FrameScript_UnregisterFunction; not read here	inferred	none		
-0x51bbb0	209			ui	primitive		Runs its object file code that calls ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x51bd50	25			ui	primitive		Runs its object file code that calls 0x515e50; not read here	inferred	none		
-0x51bd70	25			ui	orchestration		Runs its object file code that calls 0x515e50; not read here	inferred	none		
-0x51bd90	25			ui	orchestration		Runs its object file code that calls 0x515e50; not read here	inferred	none		
-0x51bdb0	134			ui	primitive		Runs its object file code that calls ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
+0x51bbb0	209	WatchUnitFields		ui	primitive		Registers a watcher for every named unit field of a unit, and two for a player	verified	one	ui/unittokens#unit-field-events	
+0x51bd50	25	OnUnitFieldChanged		ui	primitive		Signals the event numbered offset / 4 for every token of the changed unit	verified	one	ui/unittokens#unit-field-events	
+0x51bd70	25	OnPlayerBlockChangedA		ui	orchestration		Signals event 0xba for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
+0x51bd90	25	OnPlayerBlockChangedB		ui	orchestration		Signals event 0x20a for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
+0x51bdb0	134	UnwatchUnitFields		ui	primitive		Removes the watchers WatchUnitFields registered on a unit	verified	one	ui/unittokens#unit-field-events	
 0x51be40	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x51be50	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x51be70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -29680,7 +29680,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f38c0	46			lua	boundary		Runs its object file code that calls luaC_collectgarbage, luaO_pushvfstring; not read here	inferred	none		
 0x6f38f0	42	lua_pushfstring	idb	lua	boundary		Runs its object file code that calls luaC_collectgarbage, luaO_pushvfstring; not read here	inferred	none		
 0x6f3920	193	lua_pushcclosure		lua	boundary		Pushes a C closure of a function with upvalues	verified	one	ui/luastate#what-a-new-state-holds	
-0x6f39f0	37			lua	boundary		Runs its object file code not read here	inferred	none		
+0x6f39f0	37	lua_pushboolean		lua	boundary		Pushes a Lua boolean, called from seven places and no unit function	verified	one	ui/unittokens#what-the-functions-push	
 0x6f3a20	28	lua_pushlightuserdata		lua	boundary		Pushes a light userdata stamped with the current context word	verified	one	ui/luastate#what-a-new-state-holds	
 0x6f3a40	187	lua_gettable	idb	lua	boundary		Runs its object file code that calls 0x6f7cf0; not read here	inferred	none		
 0x6f3b00	182			lua	boundary		Runs its object file code that calls 0x6fa7a0; not read here	inferred	none		

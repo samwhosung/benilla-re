@@ -30,7 +30,7 @@ shifted by 0x10. A member present before a list keeps its `+0x158` word; a new m
 `IsRaidLeader()` takes no argument and pushes 1 when the group leader cell `0xbc75f8` is the active player's GUID, else nil. The cell is the
 same one `IsPartyLeader` reads, so a party leader is a raid leader to this function. `UnitInRaid(unit)` pushes the number 1, not an index,
 when the unit's GUID is a roster member's, else nil; a recognised token that names nothing, an empty
-argument and a non-string give nil, and a token no prefix matches raises (`units#the-unit-token`). `GetNumRaidMembers()` pushes `0xb713e0`.
+argument and a non-string give nil, and a token no prefix matches raises (`unittokens#the-unit-token`). `GetNumRaidMembers()` pushes `0xb713e0`.
 
 Addresses: `0x4bb8c0`, `0x4bb8c2`, `0x4bb8c9`, `0x4bb8d1`, `0x4bb8de`, `0x4bb8f5`, `0x516350`, `0x516365`, `0x516373`, `0x4baee0`, `0x4baee9`, `0x4bafd0`, `0x4bb530`, `0xbc75f8`
 Confidence: verified

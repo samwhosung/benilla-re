@@ -77,6 +77,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5075b4	uint8_t[54]	s_serverTokenIndexes		ui	Maps a token letter from B to w to its arm	verified	one	ui/questtext#the-tokens
 0x5080e0	void *[22]	s_tokenArms		ui	Holds the 22 arms of the description token switch of 0x507710	verified	one	ui/spelltokens#the-token-syntax
 0x508138	uint8_t[58]	s_caseIndexes507710		ui	Holds the 58 case indexes of the switch in 0x507710	inferred	none	
+0x51bc84	void *[5]	s_unitWatchLengthArms		ui	Holds the five case addresses that set a unit field watcher's length	verified	one	ui/unittokens#unit-field-events
+0x51bc98	uint8_t[175]	s_unitWatchLengthSelector		ui	Holds a byte per unit field index that selects the watcher length arm	verified	one	ui/unittokens#unit-field-events
 0x52e4fc	void *[13]	s_cases52b650		ui	Holds the 13 case addresses of the switch in 0x52b650	inferred	none	
 0x52f7c4	void *[5]	s_cases52e610		ui	Holds the 5 case addresses of the switch in 0x52e610	inferred	none	
 0x52f7d8	uint8_t[59]	s_chanceEffectMap		ui	Maps the first effect minus 20 to an arm of the chance line switch	verified	one	ui/tooltipspellreq#the-chance-lines
@@ -1362,6 +1364,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8500b8	void *[52]	s_bindingCommands		input	Pairs the 26 movement and mouse binding commands' names with their handlers	verified	one	input#mouse-commands
 0x850340	char[53]	s_inputControlSourcePath		input	Holds the source path the object file asserts with, ending InputControl.cpp	verified	one	input#input-state
 0x850378	char[51]	s_inputControlTag		input	Holds the path ending InputControl.h, the allocation tag of CInputControl	verified	one	input#input-state
+0x8503d8	char *[7]	s_unitTokenBuffers		ui	Holds the seven pointers to the buffers that receive the tokens naming a GUID	verified	one	ui/unittokens#the-tokens-of-a-guid
 0x8503f4	uint32_t			ui	Holds a dword that LoadGameScriptFunctions, UnloadGameScriptFunctions read; not read here	inferred	none	
 0x850424	uint32_t			ui	Holds a dword that Script::UnitClassification reads; not read here	inferred	none	
 0x850438	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
