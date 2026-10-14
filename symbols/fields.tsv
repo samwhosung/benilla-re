@@ -1015,6 +1015,11 @@ SPELLHISTORY	0x0020	4	uint32_t	m_categoryTime	spell	Holds the category recovery'
 SPELLHISTORY	0x0024	1	uint8_t	m_onHold	spell	Holds 1 while the record waits for the server to start it	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x0028	4	int32_t	m_gcdCategory	spell	Holds the global-cooldown category the record blocks	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x002c	4	uint32_t	m_gcdTime	spell	Holds the global cooldown's length in milliseconds	verified	one	spell/cooldowns#history-record-layout
+SelectedCharacterRecord	0x0008	56	char[56]	m_name	ui	Holds the character's name, empty before the first copy	verified	one	ui/unitplayer#the-selected-character-record
+SelectedCharacterRecord	0x0100	1	uint8_t	m_race	ui	Holds the ChrRaces id	verified	one	ui/unitplayer#the-selected-character-record
+SelectedCharacterRecord	0x0101	1	uint8_t	m_class	ui	Holds the ChrClasses id	verified	one	ui/unitplayer#the-selected-character-record
+SelectedCharacterRecord	0x0102	1	uint8_t	m_sex	ui	Holds the sex byte that indexes the UnitSex table	verified	one	ui/unitplayer#the-selected-character-record
+SelectedCharacterRecord	0x0108	1	uint8_t	m_level	ui	Holds the level byte that no function reads	verified	one	ui/unitplayer#the-selected-character-record
 Shard	0x0000	8	void *[2]	m_link	spell	Holds the shard's link in its emitter's shard list	verified	one	spell/visuals#shard-model-start-and-end
 Shard	0x0008	12	float[3]	m_position	spell	Holds the shard position the second trace writes	verified	one	spell/visuals#shard-placement
 Shard	0x0014	4	void *	m_model	spell	Holds the shard's model	verified	one	spell/visuals#shard-model-start-and-end

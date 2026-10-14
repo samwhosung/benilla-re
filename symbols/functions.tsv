@@ -6935,7 +6935,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491730	411	SaveFlatSavedVariables		ui	primitive		Writes the names RegisterForSave collected to the flat SavedVariables.lua, keeping a .bak	verified	one	ui/addons#saved-variables-written	
 0x4918d0	5	CGGameUI::IsPartyMember	idb	ui	orchestration	int __thiscall (const uint64_t *guid)	Jumps to 0x4e7f70, the party membership test for a GUID	verified	one	objectlayer/reaction#unit-toward-unit	
 0x4918e0	32	IsPartyOrRaidMember		ui	orchestration		Returns 1 for a GUID in the party or the raid	verified	one	objectlayer/playerfields#charm-and-summon-tokens	
-0x491900	32	CGGameUI::IsRaidMemberOrPet	idb	ui	orchestration		Runs GameUI.cpp code that calls CGPartyInfo::IsMemberOrPet, CGRaidInfo::IsMemberOrPet; not read here	inferred	none		
+0x491900	32	IsRaidMemberOrPet	idb	ui	primitive		Returns 1 when a GUID is a party or raid member or pet, 0 for a zero GUID	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x491920	5	GetPartyGuidForToken		ui	orchestration		Returns the GUID of a party slot from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
 0x491930	5	GetPartyPetGuidForToken		ui	orchestration		Returns the pet GUID of a party slot from a 0-based index with no bound	verified	one	ui/unittokens#indexed-tokens	
 0x491940	30	GetRaidGuidForToken		ui	orchestration		Returns the GUID of a raid roster entry from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
@@ -12535,7 +12535,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515f50	17	Script::ReadFile	idb	ui	orchestration		Implements the Lua function ReadFile	inferred	none		
 0x515f70	17	Script::DeleteFile	idb	ui	orchestration		Implements the Lua function DeleteFile	inferred	none		
 0x515f90	17	Script::AppendToFile	idb	ui	orchestration		Implements the Lua function AppendToFile	inferred	none		
-0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Implements the Lua function UnitExists	inferred	none		
+0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Pushes 1 for a selectable held unit or a roster member, else nil	verified	one	ui/unitplayer#what-else-answers-in-the-window	
 0x516030	57	Script::UnitIsVisible	idb	ui	orchestration		Implements the Lua function UnitIsVisible	inferred	none		
 0x516070	222	Script::UnitIsUnit	idb	ui	primitive		Implements the Lua function UnitIsUnit	inferred	none		
 0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Implements the Lua function UnitIsPlayer	inferred	none		
@@ -12551,8 +12551,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516630	429	Script::UnitFactionGroup	idb	ui	primitive		Implements the Lua function UnitFactionGroup	inferred	none		
 0x5167e0	164	Script::UnitReaction	idb	ui	primitive		Implements the Lua function UnitReaction	inferred	none		
 0x516890	150	Script::UnitIsEnemy	idb	ui	orchestration		Implements the Lua function UnitIsEnemy	inferred	none		
-0x516930	307	Script::UnitIsFriend	idb	ui	orchestration		Implements the Lua function UnitIsFriend	inferred	none		
-0x516a70	306	Script::UnitCanCooperate	idb	ui	orchestration		Implements the Lua function UnitCanCooperate	inferred	none		
+0x516930	307	Script::UnitIsFriend	idb	ui	orchestration		Pushes 1 when two units are friends by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
+0x516a70	306	Script::UnitCanCooperate	idb	ui	orchestration		Pushes 1 when two units can cooperate by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x516bb0	149	Script::UnitCanAssist	idb	ui	orchestration		Implements the Lua function UnitCanAssist	inferred	none		
 0x516c50	149	Script::UnitCanAttack	idb	ui	orchestration		Implements the Lua function UnitCanAttack	inferred	none		
 0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Implements the Lua function UnitIsCharmed	inferred	none		
@@ -12564,7 +12564,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516f00	82	Script::GetDodgeChance	idb	ui	orchestration		Implements the Lua function GetDodgeChance	inferred	none		
 0x516f60	82	Script::GetBlockChance	idb	ui	orchestration		Implements the Lua function GetBlockChance	inferred	none		
 0x516fc0	82	Script::GetParryChance	idb	ui	orchestration		Implements the Lua function GetParryChance	inferred	none		
-0x517020	618	Script::UnitName	idb	ui	primitive		Implements the Lua function UnitName	inferred	none		
+0x517020	618	Script::UnitName	idb	ui	primitive		Pushes a unit's name and realm; for the string player it pushes the selected character's name and nil	verified	one	ui/unitplayer#the-four-readers	
 0x517290	21			ui	orchestration		Runs ScriptEvents.cpp code that calls 0x491a00; not read here	inferred	none		
 0x5172b0	157	Script::UnitPVPName	idb	ui	primitive		Implements the Lua function UnitPVPName	inferred	none		
 0x517350	181	Script::UnitXP	idb	ui	primitive		Implements the Lua function UnitXP	inferred	none		
@@ -12580,11 +12580,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x517c70	215	Script::UnitIsDeadOrGhost	idb	ui	primitive		Pushes 1 when a unit is dead or a ghost, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517d50	188	Script::UnitIsConnected	idb	ui	orchestration		Pushes 1 when a unit is connected, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517e10	113	Script::UnitAffectingCombat	idb	ui	primitive		Implements the Lua function UnitAffectingCombat	inferred	none		
-0x517e90	290	Script::UnitSex	idb	ui	orchestration		Implements the Lua function UnitSex	inferred	none		
+0x517e90	290	Script::UnitSex	idb	ui	orchestration		Pushes the sex number of a unit; for the string player it reads the selected character's sex byte	verified	one	ui/unitplayer#the-four-readers	
 0x517fc0	404	Script::UnitLevel	idb	ui	primitive		Implements the Lua function UnitLevel	inferred	none		
 0x518160	145	Script::GetMoney	idb	ui	orchestration		Implements the Lua function GetMoney	inferred	none		
-0x518200	323	Script::UnitRace	idb	ui	orchestration		Implements the Lua function UnitRace	inferred	none		
-0x518350	323	Script::UnitClass	idb	ui	orchestration		Implements the Lua function UnitClass	inferred	none		
+0x518200	323	Script::UnitRace	idb	ui	orchestration		Pushes the localised race name and file token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
+0x518350	323	Script::UnitClass	idb	ui	orchestration		Pushes the localised class name and upper-case token of a unit, or two nils	verified	one	ui/unitplayer#race-and-class-of-other-units	
 0x5184a0	345	Script::UnitResistance	idb	ui	primitive		Implements the Lua function UnitResistance	inferred	none		
 0x518600	516	Script::UnitStat	idb	ui	primitive		Implements the Lua function UnitStat	inferred	none		
 0x518810	248	Script::UnitAttackBothHands	idb	ui	primitive		Implements the Lua function UnitAttackBothHands	inferred	none		

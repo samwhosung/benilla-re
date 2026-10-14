@@ -2651,11 +2651,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
 0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
 0xc27d08	char[64]	s_logonAccountName		net	Holds the account name the logon authenticated with	verified	one	net/connection#status-text-and-names
-0xc27d80	uint32_t			net	Holds data whose address SetSelectedCharacterRecord, GetSelectedCharacterRecord take; not read here	inferred	none	
-0xc27d88	uint8_t			net	Holds a byte that GetSelectedCharacterName reads; not read here	inferred	none	
-0xc27e80	uint8_t			net	Holds a byte that GetSelectedCharacterRace reads; not read here	inferred	none	
-0xc27e81	uint8_t			net	Holds a byte that GetSelectedCharacterClass reads; not read here	inferred	none	
-0xc27e82	uint8_t			net	Holds a byte that GetSelectedCharacterSex reads; not read here	inferred	none	
+0xc27d80	SelectedCharacterRecord	s_selectedCharacter		net	Holds the selected character's list entry from the last EnterWorld, empty before it	verified	one	ui/unitplayer#the-selected-character-record
 0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	one	net/connection#telemetry-record
 0xc27eb8	uint32_t			net	Holds data whose address ClientConnection::PollStatus takes; not read here	inferred	none	
 0xc27fb8	uint8_t[308]	s_selectedRealm		net	Holds the selected realm's 308-byte record; its address text is at +0x109	verified	one	net/session#connecting

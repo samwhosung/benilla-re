@@ -74,6 +74,7 @@ SKILLCOSTSINFO	32		spell	Holds a skill-cost index node: cost-set id, two links, 
 SKILLLINEREC	28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race
 SOUNDDEFINITION	152		sound	Holds a SoundEntries row's sound definition: ten file slots, volume, flags, distances, weights and picks	verified	one	sound/entries#sound-definitions
 SPELLHISTORY	48		spell	Holds one spell-history record: link, spell, item, three timers and a held flag	verified	one	spell/cooldowns#history-record-layout
+SelectedCharacterRecord	272		ui	Holds the character list entry copied when the player enters the world: name, race, class, sex and level	verified	one	ui/unitplayer#the-selected-character-record
 Shard	32		spell	Holds one shard: link, position, model, start time and started flag	verified	one	spell/visuals#shard-model-start-and-end
 Sound	144		sound	Holds a playing stream: six list links, channel, stream, flags, fade, position, GUID, volume, bus and pauses	verified	one	sound/engine#the-sound-object
 SpellCastTimesRec	16		dbc	Holds one SpellCastTimes.dbc row: id, base, per-level and minimum cast time in ms	inferred	none	spell/records#cast-time
