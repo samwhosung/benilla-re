@@ -28,7 +28,7 @@ Confidence: verified
 Proof: one
 Test: `ui::input_hittest_index_insert`
 
-`0x764aa0(frame, kind, keep, level)` computes `lea eax,[eax+eax*8]` (`0x764ab2`) and `imul
+`0x766e80(count)` is called on a list record: below 64 it clears low bits until one is left and returns that power of two (1 for 0); from 64 it stores 64 at the record's `+0xc` (`0x766ea9`) and returns 64. `0x764aa0(frame, kind, keep, level)` computes `lea eax,[eax+eax*8]` (`0x764ab2`) and `imul
 edx,edx,0x1c` into `0xd10` (`0x764ac3`); a level of −1 means the frame's `+0xc4`. The entry is
 `SMemAlloc(8)` under `CSimpleTop.cpp`; the scan stops at the first entry whose level is below the
 new one (`cmp ebx,[edi+0x4]`, `0x764b2d`); kind 2 with `keep` 0 stores 1 at `+0x1100`

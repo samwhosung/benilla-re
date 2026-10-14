@@ -134,14 +134,14 @@ A factory is `push esi; push 0; push line; push header; push size; mov esi,ecx; 
 
 ## Cursor and camera
 
-`GetCursorPosition()` (`0x48b820`) pushes two numbers: the scaled cursor position from the top frame's two dwords at +0x1118 and +0x111c, each multiplied by the scaled aspect and 1024 and divided by the screen scale. `0x48ec90(guid)` sets the world frame's camera target to the object of a GUID, the active player's when the GUID is zero; `0x4841a0` is the camera call. `0x4913a0` drains the world's fading models when a world frame exists, through the jump `0x483e10`.
+`GetCursorPosition()` (`0x48b820`) pushes two numbers from the top frame's dwords x and y at +0x1118 and +0x111c: `768·a·x` and `768·y`, with `a` the screen aspect. `0x48ec90(guid)` sets the world frame's camera target to the object of a GUID, the active player's when the GUID is zero; `0x4841a0` is the camera call. `0x4913a0` drains the world's fading models when a world frame exists, through the jump `0x483e10`.
 
 Addresses: `0x48b820`, `0x41ad80`, `0x41ad70`, `0x41ae40`, `0x48ec90`, `0x4841a0`, `0x4913a0`, `0x483e10`, `0x672c40`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x48b820` is the `ScaleScreenDelta` of the two dwords, then `GetScaledScreenAspect` times 1024.0 (`0x7ffd68`) times the delta and `DivideByScreenScaleX` for each axis. `0x4913a0` is reached from the console video verb (`ui/videoverbs`).
+`0x48b820` is the `ScaleScreenDelta` of the two dwords (x by `K1`, y by `K2`, each stored as a float; `K1 = a·K2` and `K2 = 1/√(a²+1)`, `0x41ad10`), then for each axis `GetScaledScreenAspect` (`0.75a`) times 1024.0 (`0x7ffd68`) times the scaled dword, rounded to a float and divided by `K1` (`DivideByScreenScaleX`, `0x41ae40`) for both axes. `0x4913a0` is reached from the console video verb (`ui/videoverbs`).
 
 ## Interface state helpers
 

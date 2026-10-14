@@ -6755,7 +6755,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b710	3	OnSummonerNameArrived		ui	orchestration		Does nothing when the summoner's name arrives	verified	one	ui/summon#the-lua-functions	
 0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration		Pushes the name of the summon's zone, or the empty string	verified	one	ui/summon#the-lua-functions	
 0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
-0x48b820	135	GetCursorPositionLua		ui	primitive		Pushes the scaled cursor x and y, each times the scaled aspect and 1024 divided by the screen scale	verified	one	ui/gameui#cursor-and-camera	
+0x48b820	135	GetCursorPositionLua		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the cursor x and y in interface units, 768·a·x and 768·y for the top frame dwords x and y	verified	one	ui/gameui#cursor-and-camera	
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server to sit, or to stand when the player is not standing	verified	one	ui/groupverbs#small-sends	
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stops the cinematic narration	verified	one	ui/groupverbs#small-sends	
@@ -33217,7 +33217,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x766d10	56	DeleteInputList		ui	host		Frees an input list's array and the list when asked	verified	one	ui/strata#construction-and-teardown	
 0x766d50	56	DeleteStrataNodeArray		ui	host		Frees a level node array's data and the array when asked	verified	one	ui/strata#construction-and-teardown	
 0x766d90	226	ReserveInputList		ui	primitive		Grows an input list's capacity by a count, rounded to its quantum	verified	one	ui/input#input-lists	
-0x766e80	57	ChooseInputListQuantum		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 64, else 64	verified	one	ui/input#input-lists	
+0x766e80	57	ChooseInputListQuantum		ui	primitive	uint32_t __thiscall (void *list, uint32_t count)	Returns the grow quantum for a count: its largest power of two below 64 (1 for 0), else 64, which it also stores at +0xc	verified	one	ui/input#input-lists	
 0x766ec0	31	RoundCountToQuantum		ui	primitive		Rounds a count up to a multiple of a quantum	verified	one	ui/input#input-lists	
 0x766ee0	133	SetInputListCapacity		ui	orchestration		Reallocates an input list's array to a capacity, copying when it must move	verified	one	ui/input#input-lists	
 0x766f70	78	UiCopyMouseEvent		ui	orchestration		Copies a mouse payload into an interface event and scales its position through 0x41ad80	verified	one	ui/input#mouse-move-and-the-hover-pick	
@@ -34735,7 +34735,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79d760	211	FontString::SetText	idb	ui	primitive		Implements the FontString method SetText, its pair in the table 0x87c1d8	verified	one	ui/fontstring#setting-the-text	
 0x79d840	376	FontString::GetTextColor	idb	ui	primitive		Returns the text colour of a font string, rounding green, blue and alpha to a float	verified	one	ui/fontmethods#reading-colours	
 0x79d9c0	544	FontString::SetTextColor	idb	ui	primitive		Sets the text colour of a font string from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
-0x79dbe0	345	FontString::GetShadowColor	idb	ui	primitive		Returns the red, green, blue and alpha of the shadow colour of a font string	verified	one	ui/fontmethods#reading-colours	
+0x79dbe0	345	FontString::GetShadowColor	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the red, green, blue and alpha of the shadow colour of a font string	verified	one	ui/fontmethods#reading-colours	
 0x79dd40	544	FontString::SetShadowColor	idb	ui	primitive		Sets the shadow colour of a font string from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
 0x79df60	267	FontString::GetShadowOffset	idb	ui	primitive		Implements the FontString method GetShadowOffset, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::get_scaled_pair_79df60
 0x79e070	338	FontString::SetShadowOffset	idb	ui	primitive		Sets the shadow offset of a font string and its shadow bit from two numbers	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
