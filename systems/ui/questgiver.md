@@ -40,7 +40,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`rowCount` is never clamped to 32: the loop at `0x5dbb4b` compares signed against the byte, so more than 32 rows overrun the staging arrays at `0xc4d2b0`, `0xc4d340` and `0xc4d6b0`, the pools (`0x500e40` and `0x500e90` have no cap) and the 0x800-byte title buffer at `ebp-0xa14`; around row 40 the writes reach the saved frame, a client fault.
+`rowCount` is never clamped to 32: the loop compares its counter with the zero-extended byte (`0x5dbc46` to `0x5dbc4d`), so more than 32 rows overrun the staging arrays at `0xc4d2b0`, `0xc4d340` and `0xc4d6b0`, the pools (`0x500e40` and `0x500e90` have no cap) and the 0x800-byte title buffer at `ebp-0xa14`; around row 40 the writes reach the saved frame, a client fault.
 
 The row reads fill three 32-dword staging arrays, ids at `0xc4d2b0`, icons at `0xc4d340` and levels at
 `0xc4d6b0`, each cleared with `rep stosd` and `ecx = 0x20`; the title goes to a stack buffer advanced by 0x40. The test is

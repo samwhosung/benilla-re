@@ -303,5 +303,5 @@ The argument is a `%d` of 1 (`0x835154` holds the format). `PLAYER_GUILD_UPDATE`
 a player's guild rank, with no argument (`0x5e27b0`); a change of a player's guild id, through `0x5e08e0`, which
 signals `TABARD_CANSAVE_CHANGED` and broadcasts the event with one unit token per token that names the player
 (`0x515e50`); and the cache callback of `GetGuildInfo`. `GUILD_INVITE_REQUEST` is signalled by `0x48f450` with
-the inviter and the guild name. The signal wrapper `0x48f470` for `GUILD_INVITE_CANCEL` (`mov ecx,0x11b; jmp 0x703e50`, like `0x48f450`) has no caller and no stored
+the inviter and the guild name. The signal wrapper `0x48f470` for `GUILD_INVITE_CANCEL` (`mov ecx,0x11b; jmp 0x703e50`, like `0x48f440`) has no caller and no stored
 address: a census of the image finds 0 `call`, 0 `jmp` and 0 address hits for it (the control `0x48f450` has 1 `call`), so the event never fires.

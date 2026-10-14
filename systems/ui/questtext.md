@@ -43,7 +43,7 @@ Test: none
 The dispatch is `c - 'B'` against 0x35, the byte table `0x5075b4` and nine jump entries `0x507590`; the arms are
 `B 0x50752f`, `C 0x5071bb`, `E 0x507544`, `G 0x507400`, `N 0x50710b`, `R 0x507132`, `T 0x507247`, `W 0x507537`. `0x507119` is the
 refusal (`xor al,al; ret 8`), `0x507575` the success tail, which steps the cursor over the letter. The digit buffer is a 20-byte stack
-slot filled with `SStrCopy` of the digit count plus one, so a digit run of 12 or more overwrites the live size and destination words (`[ebp-8]` and `[ebp-4]`, reloaded after the copy at `0x50734e` and `0x5074e3`) and a run of 20 or more overwrites the saved frame. `B`
+slot filled with `SStrCopy` of the digit count plus one, so a digit run of 12 or more overwrites the live size word `[ebp-8]` and one of 16 or more the destination word `[ebp-4]` (both reloaded after the copy, at `0x50734e` and `0x5074e3`); a run of 20 or more overwrites the saved frame. `B`
 writes the single byte `0x0a`. The lower-casing is `_strlwr` (`0x741446`) over the whole string.
 
 ## Name, race and class
