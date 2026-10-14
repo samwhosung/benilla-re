@@ -2210,6 +2210,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
 0xbe0b84	uint32_t	s_tokenPluralKey		ui	Holds the number the last counted token printed, the key of a plural token	verified	one	ui/spelltokens#the-plural-key
+0xbe0cc0	void *	s_cvarFarclip		uicamera	Holds the CVar record of farclip	verified	one	uicamera/solver#the-per-frame-outer-call
 0xbe0cd0	void *	s_cvarCameraDive		uicamera	Holds the CVar record of cameraDive	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe0cd4	void *	s_cvarCameraHeightSmoothSpeed		uicamera	Holds the CVar record of cameraHeightSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe0ce4	void *	s_cvarCameraPitchSmoothSpeed		uicamera	Holds the CVar record of cameraPitchSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
