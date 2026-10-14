@@ -185,3 +185,14 @@ Proof: one
 Test: none
 
 `0x5bca78` stores 1 in a local; `0x5bca7f` is `call [0x7ff6f8]` with the socket (`[arg+4]`), level 6, option 1, that local and length 4. The import is WSOCK32 ordinal 21, `setsockopt`. `0x5bca87` calls `0x5bcad0`, the one-byte send that wakes `select` (`Sending`). `0x5bd6e0` calls `0x5bca60` at `0x5bd77a` after it appends the connection to the list.
+
+## Connecting
+
+`WowConnection::Connect` closes any old socket, creates one, sets it non-blocking, lists the connection for the select loop, enters state 2 and calls `connect`. A result below zero that is not `WSAEWOULDBLOCK` removes the connection from the list, closes the socket and sets state 8, and nothing is reported to the owner. Otherwise the socket's write or exception event runs `CompleteConnect`, which reads `SO_ERROR`: a non-zero error closes the socket, sets state 6 and calls the owner's slot 3, the connect failure; zero sets state 5, stores the peer and local addresses (`+0x78`, `+0x88`) and calls the owner's slot 2, connected. No timer ends a dial: the 5,000 ms the logon link passes is never read.
+
+Addresses: `0x5b6c80`, `0x5b6d42`, `0x5b6d4c`, `0x5b6d75`, `0x5b60a0`, `0x5b60c6`, `0x5b6137`, `0x5b6140`, `0x5b61ac`, `0x5b6e20`, `0x5bc293`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5b6cdc` pushes `FIONBIO` (`0x8004667e`) for `ioctlsocket` and `0x5b6cfb` the port for `htons`; `0x5b6d1d` calls `0x5bd6e0` unless the connection is listed (`+0xc4`); `0x5b6d2d` sets state 2. `0x5b6d3c` is `connect`; `0x5b6d4c` compares `WSAGetLastError` with `0x2733` and `0x5b6d75` stores state 8. `0x5b60c6` is `getsockopt` with level `0xffff` and option `0x1007`; a non-zero value reaches `0x5b6137`, the call of slot 3 (`[ebx+0xc]`), after state 6 (`0x5b60f4`). Zero stores state 5 (`0x5b613c`), calls WSOCK32 ordinal 5, `getpeername`, into `+0x78` and ordinal 6, `getsockname`, into `+0x88` (`0x5b6174`, `0x5b6190`), and calls slot 2 (`0x5b61ac`). `0x5b6e20` reads its first two arguments and returns; its third, `0x1388` pushed at `0x5bc293`, is not read.

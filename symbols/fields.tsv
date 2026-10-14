@@ -1062,6 +1062,8 @@ WowConnection	0x0010	4	uint32_t	m_state	net	Holds the socket state: 5 connected,
 WowConnection	0x001c	4	uint8_t *	m_recvBuffer	net	Holds the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0020	4	uint32_t	m_recvFill	net	Holds the count of bytes in the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0024	4	uint32_t	m_recvCapacity	net	Holds the receive buffer's size, grown by 1024	verified	one	net/wire#receive-loop
+WowConnection	0x0078	16	uint8_t[16]	m_peerAddress	net	Holds the peer socket address read when the connection comes up	verified	one	net/wire#connecting
+WowConnection	0x0088	16	uint8_t[16]	m_localAddress	net	Holds the local socket address read when the connection comes up	verified	one	net/wire#connecting
 WowConnection	0x0120	1	uint8_t	m_cipherArmed	net	Holds 1 while the header cipher is armed	verified	one	net/wire#header-cipher
 WowConnection	0x0121	1	uint8_t	m_sendIndex	net	Holds the send key index, 0 to 39	verified	one	net/wire#header-cipher
 WowConnection	0x0122	1	uint8_t	m_sendFeedback	net	Holds the last ciphertext byte sent	verified	one	net/wire#header-cipher

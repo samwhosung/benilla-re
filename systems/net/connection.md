@@ -20,12 +20,12 @@ Roots: `0x5aab20`, `0x5aaba0`, `0x5aabb0`, `0x5aabe0`, `0x5aac50`, `0x5aae20`, `
 | `0x5aae20` | 8 | `0x3c` `CHAR_LOGIN_IN_PROGRESS` | `0x3d` |
 | `0x5ab840` | 9 | `0x22` `REALM_LIST_IN_PROGRESS` | `0x23` |
 
-Addresses: `0x5aa400`, `0x5aa440`, `0x5aa920`, `0x5aaa50`, `0x5aaba0`, `0x5aab80`, `0x5aac30`, `0x5ab0e0`, `0x5ab300`, `0x5aa854`, `0x85cae8`
+Addresses: `0x5aa400`, `0x5aa440`, `0x5aa920`, `0x5aaa50`, `0x5aaba0`, `0x5aab80`, `0x5aac30`, `0x5ab0e0`, `0x5ab300`, `0x5aa854`, `0x85cae8`, `0x5aab90`, `0x5aac43`, `0x5ab0f3`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5aa400` is `mov [ecx+0x1b20],eax`, `mov [ecx+0x1b10],edx`, `mov [ecx+0x1b14],eax`, `mov [ecx+0x1b08],0`, then `0x5aa440` with 1. The operation names are the strings `0x5aa440` selects through the jump table `0x5aa854`; the code names are `0x85cae8`. `0x5aaba0` ignores its four stack arguments (`ret 0x10`). `0x5aac30` and `0x5ab0e0` each compare the reply byte with `0x2e` and `0x39` (`cmp al,0x2e`, `cmp al,0x39`; `sete`) and call `0x5aa920(flag, byte)`; `0x5ab300` calls it with (1, `0x2b`) or (0, `0x2c`). A reply byte outside the code table is stored as it is; `GetStatus` prints its number (`session`).
+`0x5aa400` is `mov [ecx+0x1b20],eax`, `mov [ecx+0x1b10],edx`, `mov [ecx+0x1b14],eax`, `mov [ecx+0x1b08],0`, then `0x5aa440` with 1. The operation names are the strings `0x5aa440` selects through the jump table `0x5aa854`; the code names are `0x85cae8`. `0x5aaba0` ignores its four stack arguments (`ret 0x10`). `0x5aac30` and `0x5ab0e0` each compare the reply byte with `0x2e` and `0x39` (`cmp al,0x2e`, `cmp al,0x39`; `sete`) and call `0x5aa920(flag, byte)`; `0x5ab300` calls it with (1, `0x2b`) or (0, `0x2c`). A reply byte outside the code table is stored as it is; `GetStatus` prints its number (`session`). Of the 16 call sites of `0x5aa920`, found by a scan of `call` and `jmp` (the same scan finds the 4 of `0x5ab1a0`), exactly three pass a server byte as the code: `0x5aab90`, `0x5aac43` and `0x5ab0f3`.
 
 ## Without a link
 
