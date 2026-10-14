@@ -148,8 +148,8 @@ Every `CVar::Register 0x63db90` call (214 rows).
 ## dbc_stores.tsv
 
 The client's database stores, one per DBC file (149 rows). A store is 0x14 bytes: records `+0x00`,
-count `+0x04`, id map `+0x08`, max row `+0x0c` (row count minus one, -1 until loaded), loaded flag
-`+0x10`. The id map is indexed by row, not by the id column.
+count `+0x04`, id map `+0x08`, largest id `+0x0c` (the largest first-column value, -1 until loaded),
+loaded flag `+0x10`. The id map is indexed by the first column of each record.
 
 | column | meaning |
 |---|---|

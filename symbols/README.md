@@ -36,7 +36,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   async loads, the violence level, the guild emblem, HTTP fetches
 - `console`: `ConsoleClient.cpp`, the console screen and its output
 - `cvar`: `ConsoleVar.cpp`, the CVar registry and the config file, and the world's options file
-- `dbc`: the DBC stores: the `WowClientDB` loaders, the per-table stores and their record layouts
 - `dbcache`: `DBCache.cpp`, the WDB caches of creature, item, name and quest records, and the
   record files `CreatureStats.cpp`, `GameObjectStats.cpp`, `ItemName.cpp`, `ItemStats.cpp` and
   `NPCText.cpp`
