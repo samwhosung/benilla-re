@@ -2056,6 +2056,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb700f0	uint32_t[1024]	s_spellBook		ui	Holds the spell id of each player spellbook entry	verified	one	ui/tooltipspell#who-passes-what
 0xb710fc	uint32_t *	s_knownSpellBits		unassigned	Points at the bitset of every known spell id	verified	one	ui/spellbook#spell-book-lists
 0xb71100	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb71104	uint32_t	s_formSpellCount		unassigned	Holds the number of spells on the form bar	verified	one	ui/petbar#form-list
+0xb71108	uint32_t *	s_formSpells		unassigned	Points at the form bar's sorted spell ids	verified	one	ui/petbar#form-list
 0xb71130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71160	void **	s_bookTabs		unassigned	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
 0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
@@ -2069,11 +2071,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb713e0	uint32_t	s_raidMemberCount		ui	Holds the number of raid members, 0 outside a raid	verified	one	ui/minimap#a-click-on-the-map
 0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
 0xb713f4	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
-0xb71438	uint32_t			ui	Holds a dword that Script::GetPetActionInfo, Script::GetPetActionCooldown read and write; not read here	inferred	none	
-0xb71468	uint32_t			ui	Holds a dword that Script::GetPetActionInfo reads and writes; not read here	inferred	none	
+0xb71438	uint32_t[10]	s_petBar		ui	Holds the ten pet bar slot words	verified	one	ui/petbar#pet-state
+0xb71468	uint32_t	s_petModeState		ui	Holds the pet mode word: reaction byte, command byte and server bit 27	verified	one	ui/petbar#pet-state
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet
-0xb714a8	uint32_t			ui	Holds a dword that CGPetInfo::InitializeGame, Script::GetPetTimeRemaining read and write; not read here	inferred	none	
-0xb714b0	uint32_t			ui	Holds a dword that Script::GetPetActionInfo, Script::IsPetAttackActive read and write; not read here	inferred	none	
+0xb714a8	uint32_t	s_petExpiryTick		ui	Holds the tick when the pet's possession ends, 0 for none	verified	one	ui/petbar#pet-state
+0xb714b0	uint32_t	s_petAttackLatch		ui	Holds 1 while the pet attack command is active, 0 at load	verified	one	ui/petbar#pet-state
 0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
 0xb715a0	uint32_t			ui	Holds a dword that TradeInfoSetTargetItems, Script::GetTradeTargetItemLink read and write; not read here	inferred	none	
 0xb716d0	uint32_t			ui	Holds a dword that CGTradeInfo::SetTradePartner, TradeInfoClearPlayerItem read and write; not read here	inferred	none	

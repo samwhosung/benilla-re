@@ -232,25 +232,46 @@ Test: none
 `0x4bccb0` for a pet-book spell with a nonzero id. `0x4b4553 test [rec+0x18],0x40`. `0x4b4416` reads
 the pet count; a class id past the class table makes `HasPetSpells` read address 0x10 (`0x4b4490`).
 
-## Casting a book spell
+## Picking up a book spell
 
-`PickupSpell` (`0x4b42a0`) runs `0x4b3260(slot, book)` and `CastSpell` (`0x4b42f0`, its third argument
-the self flag) runs `0x4b3300`. `0x4b3260` puts the slot's spell on the cursor (`0x494d20`, or `0x494e20`
-with the pet action record for the pet book), or drops a held copy of the same spell back with a sound.
-`0x4b3300` handles a spell already on the cursor through `0x4b3260`; casts an effect-47 spell
-directly; cancels a toggle whose aura is up (`0x4b36f0`); stops targeting when the spell awaits a
-target; otherwise casts with `0x6e5a90`, and sends `CMSG_PET_CAST_SPELL` for the pet book.
+`PickupSpell` (`0x4b42a0`) runs `0x4b3260(slot, book)`. It clears the cursor first. If the cursor held the
+same spell it plays `igSpellBookSpellIconDrop`; if it held another spell, or the slot holds no spell,
+it stops there. Otherwise the slot's spell goes onto the cursor, as a spell (`0x494d20`) or, for the
+pet book, as a pet action (`0x494e20` of the pet spell record from `0x4bd160`), with the sound
+`igSpellBookSpellIconPickup`.
 
-Addresses: `0x4b42a0`, `0x4b42f0`, `0x4b3260`, `0x4b3300`, `0x4b36f0`, `0x494d20`, `0x494e20`, `0x6e5a90`, `0x6e7040`, `0x6e48e0`, `0x6e4900`
-Confidence: inferred
-Proof: none
+Addresses: `0x4b42a0`, `0x4b3260`, `0x4b3285`, `0x4b3293`, `0x4b3298`, `0x4b32aa`, `0x4b32b6`, `0x4b32bd`, `0x4b32ca`, `0x4b32e5`, `0x4b32f5`, `0x494d20`, `0x494e20`, `0x494e10`, `0x495190`, `0x4bd160`
+Confidence: verified
+Proof: one
 Test: none
 
-These functions are read for their call order and not for every arm. `0x4b3285 call 0x494e10` loads the
-cursor spell; `0x4b32ca` calls `0x494d20` and `0x4b32bd` `0x494e20`; the sounds are the two names at
-0x8468b8 and 0x8468d4. `0x4b337c` tests effect 47 and `0x4b338d` casts it with `0x6e5a90`;
-`0x4b33aa` calls `0x4b36f0` and `0x4b3466` `0x6e7040`; `0x4b3474` compares the targeting spell
-(`0x6e48e0`) and `0x4b347d` stops it; `0x4b35ee` is the cast.
+`0x4b3285 call 0x494e10` reads the cursor spell and `0x4b3293 call 0x495190` clears the cursor with both
+flags 1. `0x4b3298 cmp esi,edi` is the same-spell test (the drop sound at `0x4b32e5`); `0x4b32aa jg`
+leaves when the cursor held another spell; `0x4b32b6` takes the pet-book branch; `0x4b32ca` and
+`0x4b32bd` are the two pickups; `0x4b32f5` plays the pickup sound.
+
+## Casting a book spell
+
+`CastSpell` (`0x4b42f0`) runs `0x4b3300(slot, book, target)`; the target is the current target, or the
+player when the self flag is set. A spell on the cursor goes to `0x4b3260` instead. The slot's spell is
+cast directly when its first effect is 47. If its aura toggle is up (`0x4b36f0`, the active icon test on
+the player or pet) the aura is cancelled (`0x6e7040`; `CMSG_PET_CANCEL_AURA` 619 for the pet). If it
+is the spell awaiting a target, targeting stops. A spell with a shapeshift aura whose form is the
+current one cancels the form, or does nothing when the form record's flag `+0x2c & 2` is set. Else
+it casts: `0x6e5a90`, or sends `CMSG_PET_ACTION` for the pet book.
+
+Addresses: `0x4b42f0`, `0x4b4326`, `0x4b432d`, `0x4b3300`, `0x4b3310`, `0x4b337c`, `0x4b338d`, `0x4b33aa`, `0x4b33ec`, `0x4b3464`, `0x4b3466`, `0x4b3474`, `0x4b347d`, `0x4b3497`, `0x4b35cf`, `0x4b35da`, `0x4b34ce`, `0x4b3510`, `0x4b35ee`, `0x4b36f0`, `0x6e5a90`, `0x6e7040`, `0x6e48e0`, `0x6e4900`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4b4326` and `0x4b432d` load the current target and, when argument 3 is true, the player (`0x4b433c`
+calls `0x6f1c10`). `0x4b3310` loads the cursor spell. `0x4b337c cmp [rec+0xf4],0x2f` then `0x4b338d`
+casts. `0x4b33aa call 0x4b36f0`; a true result goes to `0x4b3464` (cancel, player book) or builds
+`push 0x26b` at `0x4b33ec` (pet book). `0x4b3474` compares the targeting spell, `0x4b347d` stops it.
+`0x4b3497` scans the three aura names for 0x24; `0x4b35cf test [form+0x2c],2` and the cancel at
+`0x4b35da`. `0x4b34ce push 0x175` opens `CMSG_PET_ACTION`: pet guid, `spell & 0xffff | 0x1000000` (`0x4b3510`),
+target guid. `0x4b35ee` is the player cast. `0x4b36f0` is the book twin of `ui/actionbar#active-icon-test`.
 
 ## Trainer icons
 

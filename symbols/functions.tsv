@@ -7922,7 +7922,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b24f0	130	GetSpellTabPosition		ui	primitive	uint32_t __fastcall (uint32_t spellId)	Returns the position of a spell's tab in the tab list, or the tab count when absent	verified	one	ui/spellbook#tabs	
 0x4b2580	46	CountBookSpellsBeforeTab		ui	primitive	uint32_t __fastcall (uint32_t tab)	Sums the spell counts of the tabs before a tab, 0 for tab 0 or a tab past the count	verified	one	ui/spellbook#tabs	
 0x4b25b0	1535	AddSpellToBook		ui	primitive	void __fastcall (uint32_t spellId, bool live, uint32_t oldId)	Marks a spell known, prints its learn line and enters it in its tab of the book	verified	one	ui/spellbook#adding-a-spell	
-0x4b2bb0	152			ui	primitive		Runs SpellBookFrame.cpp code not read here	inferred	none		
+0x4b2bb0	152	CompareFormSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two form bar spells by their stance bar order word, -1 last, then by id	verified	one	ui/petbar#form-list	
 0x4b2c50	760			ui	primitive		Removes a spell from the spell book's display list; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
 0x4b2f50	32	ReplaceSpellInBook		ui	orchestration		Calls 0x4b2c50(old, 1) and then 0x4b25b0(new, 1, old)	verified	one	objectlayer/playercombat#spell-book-messages	
 0x4b2f70	22			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
@@ -7933,12 +7933,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
 0x4b3250	15			ui	orchestration		Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
-0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	verified	one	ui/spellbook#picking-up-a-book-spell	
 0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
 0x4b32f0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b3300	764	CastBookSpell		ui	primitive	void __fastcall (uint32_t index, bool pet, uint64_t target)	Casts a book spell, toggles it off, stops targeting for it or swaps the held spell	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b3300	764	CastBookSpell		ui	primitive	void __fastcall (uint32_t index, bool pet, uint64_t target)	Casts a book spell, toggles it off, stops targeting for it or swaps the held spell	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b3600	235	IsBookSpellCurrent		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's trade skill or form is the current one	verified	one	ui/spellbook#checked-spells	
-0x4b36f0	373			ui	primitive		Runs SpellBookFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4b36f0	373	BookSpellAuraActive		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's active icon is nonzero and its aura is on the player or pet	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b3870	164	IsCastableAura		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether the spell is in the known-spell set or the pet list and avoids five aura effects	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x4b3920	40	IsInSpellList		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether a spell id is in a counted array of spell ids	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x4b3950	192			ui	primitive		Runs its object file code that calls SStrCopy, SStr::sub_64A450, sgetu8 and 1 more; not read here	inferred	none		
@@ -7959,17 +7959,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b40a0	214	Script::GetSpellCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a book spell's cooldown start and duration in seconds and its enable flag	verified	one	ui/spellbook#book-spell-functions	
 0x4b4180	191	Script::GetSpellAutocast	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet autocast allowed and enabled flags of a book spell, as 1 or nil	verified	one	ui/spellbook#book-spell-functions	
 0x4b4240	93	Script::ToggleSpellAutocast	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Toggles the autocast of a pet-book spell	verified	one	ui/spellbook#book-spell-functions	
-0x4b42a0	71	Script::PickupSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Picks up a book spell onto the cursor	inferred	none	ui/spellbook#casting-a-book-spell	
-0x4b42f0	116	Script::CastSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Casts a book spell, on the player when the self flag is set	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b42a0	71	Script::PickupSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Picks up a book spell onto the cursor	verified	one	ui/spellbook#picking-up-a-book-spell	
+0x4b42f0	116	Script::CastSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Casts a book spell, on the player when the self flag is set	verified	one	ui/spellbook#casting-a-book-spell	
 0x4b4370	107	Script::IsCurrentCast	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a book spell is the current trade skill or form, else nil	verified	one	ui/spellbook#checked-spells	
 0x4b43e0	12	Script::UpdateSpells	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Signals SPELLS_CHANGED without sorting	verified	one	ui/spellbook#book-order	
 0x4b43f0	18	Script::PlayerHasSpells	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1	verified	one	ui/spellbook#book-spell-functions	
 0x4b4410	194	Script::HasPetSpells	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet spell count and the class's pet token, or nil, nil	verified	one	ui/spellbook#book-spell-functions	
 0x4b44e0	162	Script::IsSpellPassive	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a book spell is passive, else nil	verified	one	ui/spellbook#book-spell-functions	
-0x4b4590	44	Script::GetNumShapeshiftForms	idb	ui	orchestration		Implements the Lua function GetNumShapeshiftForms	inferred	none		
-0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive		Returns a form-bar entry's icon, name, active and castable values to Lua	inferred	none	spell/checks#usability-callers-and-events	
-0x4b4810	400	Script::CastShapeshiftForm	idb	ui	primitive		Implements the Lua function CastShapeshiftForm	inferred	none		
-0x4b49a0	266	Script::GetShapeshiftFormCooldown	idb	ui	primitive		Implements the Lua function GetShapeshiftFormCooldown	inferred	none		
+0x4b4590	44	Script::GetNumShapeshiftForms	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of form bar spells	verified	one	ui/petbar#form-list	
+0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a form bar entry's icon, name, active and castable values	verified	one	ui/petbar#form-info	
+0x4b4810	400	Script::CastShapeshiftForm	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Cancels or casts the form bar spell of an index	verified	one	ui/petbar#form-cooldown-and-cast	
+0x4b49a0	266	Script::GetShapeshiftFormCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a form bar spell's cooldown start and duration in seconds and its enable flag	verified	one	ui/petbar#form-cooldown-and-cast	
 0x4b4ab0	130	Script::CastSpellByName	idb	ui	orchestration		Implements the Lua function CastSpellByName	inferred	none		
 0x4b4b40	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4b4b70	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
@@ -8341,69 +8341,69 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bc6f0	161			ui	primitive		Runs its object file code that calls 0x4bc7e0, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
 0x4bc7a0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4bc7b0	40			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
-0x4bc7e0	321			ui	primitive		Runs PetInfo.cpp code that calls OsGetAsyncTimeMs, FrameScript_SignalEvent2 and 5 more; not read here	inferred	none		
-0x4bc930	7			ui	orchestration		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bc940	27			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bc960	30			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bc980	22			ui	orchestration		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bc9a0	514			ui	primitive		Runs PetInfo.cpp code that calls CheckActivePlayer, 0x4bcf70, CDataStore::PutUInt32 and 4 more; not read here	inferred	none		
-0x4bcbb0	254			ui	primitive		Runs PetInfo.cpp code that calls CheckActivePlayer, 0x4bcf70, 0x4bd190 and 5 more; not read here	inferred	none		
-0x4bccb0	327			ui	primitive		Runs PetInfo.cpp code that calls CheckActivePlayer, 0x4bcf70, 0x4bd160 and 5 more; not read here	inferred	none		
-0x4bce00	73			ui	primitive		Runs PetInfo.cpp code that calls 0x4bc9a0, 0x494e20; not read here	inferred	none		
-0x4bce50	11			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bce60	11			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bce70	10			ui	orchestration		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bce80	10	CGPetInfo::HideGrid	idb	ui	orchestration		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bce90	10	FirePetBarCooldownEvent		ui	orchestration	void __cdecl (void)	Signals PET_BAR_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
-0x4bcea0	195			ui	primitive		Runs PetInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4bcf70	312			ui	primitive		Runs PetInfo.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
+0x4bc7e0	321	SetPetGuid		ui	primitive	void __fastcall (uint32_t duration, uint64_t guid)	Stores the pet guid and expiry tick, signals UNIT_PET on a change, and always PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
+0x4bc930	7	SetPetModeState		ui	orchestration	void __fastcall (uint32_t state)	Stores the whole pet mode word	verified	one	ui/petbar#pet-state	
+0x4bc940	27	SetPetReaction		ui	primitive	void __fastcall (uint32_t reaction)	Replaces the reaction byte of the pet mode word and signals PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
+0x4bc960	30	SetPetCommand		ui	primitive	void __fastcall (uint32_t command)	Replaces the command byte of the pet mode word and signals PET_BAR_UPDATE	verified	one	ui/petbar#pet-state	
+0x4bc980	22	ClearPetBar		ui	orchestration	void __cdecl ()	Zeroes the ten pet bar slots and the raw pet spell count	verified	one	ui/petbar#pet-state	
+0x4bc9a0	514	SetPetBarSlot		ui	primitive	bool __fastcall (uint32_t slot, uint32_t *word, bool send)	Stores a dropped word in a pet slot, relocating a duplicate or displaced token, and sends the change	verified	one	ui/petbar#picking-up-and-dropping-pet-actions	
+0x4bcbb0	254	TogglePetSlotAutocast		ui	primitive	void __fastcall (uint32_t slot)	Flips the autocast bit of a pet slot, stores it, sends it and signals PET_BAR_UPDATE	verified	one	ui/petbar#pet-autocast	
+0x4bccb0	327	SendSpellAutocast		ui	primitive	void __fastcall (uint32_t spellId, bool enable)	Sends the autocast state of a pet-book spell	verified	one	ui/petbar#pet-autocast	
+0x4bce00	73	DropOnPetBar		ui	orchestration	void __fastcall (uint32_t *payload, uint32_t slot)	Drops a pet action payload on a slot and puts a displaced word back on the cursor	verified	one	ui/petbar#picking-up-and-dropping-pet-actions	
+0x4bce50	11	GetPetReactionToken		ui	primitive	char * __fastcall (uint32_t index)	Returns the 32-byte token string of a reaction without a bound	verified	one	ui/petbar#getpetactioninfo	
+0x4bce60	11	GetPetCommandToken		ui	primitive	char * __fastcall (uint32_t index)	Returns the 32-byte token string of a command without a bound	verified	one	ui/petbar#getpetactioninfo	
+0x4bce70	10	CGPetInfo::ShowGrid		ui	orchestration	void __cdecl ()	Signals PET_BAR_SHOWGRID	verified	one	ui/petbar#pet-events	
+0x4bce80	10	CGPetInfo::HideGrid	idb	ui	orchestration	void __cdecl ()	Signals PET_BAR_HIDEGRID	verified	one	ui/petbar#pet-events	
+0x4bce90	10	FirePetBarCooldownEvent		ui	orchestration	void __cdecl ()	Signals PET_BAR_UPDATE_COOLDOWN	verified	one	ui/petbar#pet-events	
+0x4bcea0	195	PetSpellAuraActive		ui	primitive	bool __fastcall (uint32_t spellId)	Answers whether a spell has an active icon and its aura is on the pet	verified	one	ui/petbar#getpetactioninfo	
+0x4bcf70	312	CanUsePetBar		ui	primitive	bool __cdecl ()	Answers whether the player controls the pet well enough to use its bar	verified	one	ui/petbar#the-pet-gate	
 0x4bd0b0	159			ui	primitive		Runs PetInfo.cpp code that calls 0x4befd0; not read here	inferred	none		
 0x4bd150	12			ui	orchestration		Runs PetInfo.cpp code not read here	inferred	none		
 0x4bd160	44			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bd190	64			ui	primitive		Runs PetInfo.cpp code not read here	inferred	none		
-0x4bd1d0	765			ui	primitive		Handles a pet bar action press; calls 0x6e2de0 with pet 1 for a spell	inferred	none	spell/records#global-cooldown-start	
-0x4bd4f0	58			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd530	58			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd570	58			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd5b0	58			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd5f0	58			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd630	25			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0; not read here	inferred	none		
-0x4bd650	144			ui	orchestration		Runs PetInfo.cpp code that calls CDataStore::PutUInt32, CDataStore::PutGuid and 2 more; not read here	inferred	none		
-0x4bd6e0	81			ui	orchestration		Runs PetInfo.cpp code that calls 0x4bd1d0, FrameScript_SignalEvent2; not read here	inferred	none		
-0x4bd740	244			ui	primitive		Runs PetInfo.cpp code that calls CheckActivePlayer, CDataStore::PutUInt32, CDataStore::PutGuid and 1 more; not read here	inferred	none		
-0x4bd840	324			ui	orchestration		Runs PetInfo.cpp code that calls ClntObjMgrObjectPtr, CGGameUI::DisplayError and 6 more; not read here	inferred	none		
-0x4bd990	381	OnPetSpells	idb	ui	primitive		Runs PetInfo.cpp code that calls 0x4bc980, ClearPetSpellHistory, CDataStore::GetGuid and 17 more; not read here	inferred	none		
-0x4bdb10	84	HandlePetModePacket	idb	ui	orchestration		Runs PetInfo.cpp code that calls CDataStore::GetGuid, CDataStore::GetUInt32, 0x4bc930 and 1 more; not read here	inferred	none		
-0x4bdb70	120	HandlePetActionFeedbackPacket	idb	ui	primitive		Runs PetInfo.cpp code that calls CDataStore::GetUInt8, CGGameUI::DisplayError; not read here	inferred	none		
-0x4bdc00	21	HandlePetBrokenPacket	idb	ui	orchestration		Runs PetInfo.cpp code that calls CGGameUI::DisplayError; not read here	inferred	none		
-0x4bdc20	42	Script::PetHasActionBar	idb	ui	primitive		Implements the Lua function PetHasActionBar	inferred	none		
-0x4bdc50	810	Script::GetPetActionInfo	idb	ui	primitive		Implements the Lua function GetPetActionInfo	inferred	none		
-0x4bdfa0	259	Script::GetPetActionCooldown	idb	ui	primitive		Implements the Lua function GetPetActionCooldown	inferred	none		
-0x4be0b0	45	Script::GetPetActionsUsable	idb	ui	orchestration		Implements the Lua function GetPetActionsUsable	inferred	none		
-0x4be0e0	152	Script::IsPetAttackActive	idb	ui	primitive		Implements the Lua function IsPetAttackActive	inferred	none		
-0x4be180	268	Script::PickupPetAction	idb	ui	primitive		Implements the Lua function PickupPetAction	inferred	none		
-0x4be290	149	Script::TogglePetAutocast	idb	ui	primitive		Implements the Lua function TogglePetAutocast	inferred	none		
-0x4be330	283	Script::CastPetAction	idb	ui	primitive		Implements the Lua function CastPetAction	inferred	none		
-0x4be450	8	Script::PetPassiveMode	idb	ui	orchestration		Implements the Lua function PetPassiveMode	inferred	none		
-0x4be460	8	Script::PetDefensiveMode	idb	ui	orchestration		Implements the Lua function PetDefensiveMode	inferred	none		
-0x4be470	8	Script::PetAggressiveMode	idb	ui	orchestration		Implements the Lua function PetAggressiveMode	inferred	none		
-0x4be480	8	Script::PetWait	idb	ui	orchestration		Implements the Lua function PetWait	inferred	none		
-0x4be490	8	Script::PetFollow	idb	ui	orchestration		Implements the Lua function PetFollow	inferred	none		
-0x4be4a0	13	Script::PetAttack	idb	ui	orchestration		Implements the Lua function PetAttack	inferred	none		
-0x4be4b0	8	Script::PetStopAttack	idb	ui	orchestration		Implements the Lua function PetStopAttack	inferred	none		
-0x4be4c0	8	Script::PetAbandon	idb	ui	orchestration		Implements the Lua function PetAbandon	inferred	none		
-0x4be4d0	8	Script::PetDismiss	idb	ui	orchestration		Implements the Lua function PetDismiss	inferred	none		
-0x4be4e0	20	Script::PetRename	idb	ui	orchestration		Implements the Lua function PetRename	inferred	none		
-0x4be500	114	Script::PetCanBeAbandoned	idb	ui	orchestration		Implements the Lua function PetCanBeAbandoned	inferred	none		
-0x4be580	114	Script::PetCanBeRenamed	idb	ui	orchestration		Implements the Lua function PetCanBeRenamed	inferred	none		
-0x4be600	97	Script::GetPetTimeRemaining	idb	ui	primitive		Implements the Lua function GetPetTimeRemaining	inferred	none		
-0x4be670	141	Script::HasPetUI	idb	ui	primitive		Implements the Lua function HasPetUI	inferred	none		
-0x4be700	134	Script::GetPetLoyalty	idb	ui	orchestration		Implements the Lua function GetPetLoyalty	inferred	none		
-0x4be790	166	Script::GetPetTrainingPoints	idb	ui	orchestration		Implements the Lua function GetPetTrainingPoints	inferred	none		
-0x4be840	180	Script::GetPetExperience	idb	ui	orchestration		Implements the Lua function GetPetExperience	inferred	none		
-0x4be900	268	Script::GetPetHappiness	idb	ui	primitive		Implements the Lua function GetPetHappiness	inferred	none		
-0x4bea10	243	Script::GetPetFoodTypes	idb	ui	primitive		Implements the Lua function GetPetFoodTypes	inferred	none		
-0x4beb10	119	Script::GetPetIcon	idb	ui	orchestration		Implements the Lua function GetPetIcon	inferred	none		
+0x4bd190	64	SyncPetSlotToSpellArray		ui	primitive	void __fastcall (uint32_t *slot)	Writes a type 1 slot word, flags included, into the matching raw pet spell	verified	one	ui/petbar#pet-autocast	
+0x4bd1d0	765	PressPetAction		ui	primitive	void __fastcall (uint32_t *word, uint64_t *target)	Carries out a pet bar click: mode bytes, aura cancel, cast, attack latch and CMSG_PET_ACTION	verified	one	ui/petbar#pressing-a-pet-action	
+0x4bd4f0	58	PressPetPassive		ui	orchestration	void __cdecl ()	Presses the pet action word 0x06000000 with a zero target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd530	58	PressPetDefensive		ui	orchestration	void __cdecl ()	Presses the pet action word 0x06000001 with a zero target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd570	58	PressPetAggressive		ui	orchestration	void __cdecl ()	Presses the pet action word 0x06000002 with a zero target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd5b0	58	PressPetWait		ui	orchestration	void __cdecl ()	Presses the pet action word 0x07000000 with a zero target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd5f0	58	PressPetFollow		ui	orchestration	void __cdecl ()	Presses the pet action word 0x07000001 with a zero target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd630	25	PressPetAttack		ui	orchestration	void __fastcall (uint64_t *target)	Presses the pet action word 0x07000002 with the given target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd650	144	SendPetStopAttack		ui	primitive	void __cdecl ()	Sends CMSG_PET_STOP_ATTACK, clears the attack latch and signals PET_BAR_UPDATE, when the latch is set	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd6e0	81	PressPetDismiss		ui	orchestration	void __cdecl ()	Presses the pet action word 0x07000003 and signals PET_DISMISS_START with 10000	verified	one	ui/petbar#pet-commands-from-lua	
+0x4bd740	244	SendPetAbandon		ui	primitive	void __cdecl ()	Sends CMSG_PET_ABANDON and, with the stable window open, the stable list request	verified	one	ui/petbar#abandon-and-rename	
+0x4bd840	324	SendPetRename		ui	orchestration	void __fastcall (const char *name)	Checks the pet and name, then sends CMSG_PET_RENAME with the name cut to 79 bytes	verified	one	ui/petbar#abandon-and-rename	
+0x4bd990	381	OnPetSpells	idb	ui	primitive	uint32_t __stdcall (uint32_t time, void *packet)	Reads SMSG_PET_SPELLS into the pet bar, pet book and pet cooldowns	verified	one	ui/petbar#the-pet-spell-message	
+0x4bdb10	84	HandlePetModePacket	idb	ui	orchestration	uint32_t __stdcall (uint32_t time, void *packet)	Stores the mode word of SMSG_PET_MODE when it names the cached pet	verified	one	ui/petbar#pet-mode-and-feedback-messages	
+0x4bdb70	120	HandlePetActionFeedbackPacket	idb	ui	orchestration	uint32_t __stdcall (uint32_t time, void *packet)	Shows the error message chosen by the one byte of opcode 0x2c6	verified	one	ui/petbar#pet-mode-and-feedback-messages	
+0x4bdc00	21	HandlePetBrokenPacket	idb	ui	orchestration	uint32_t __stdcall (uint32_t time, void *packet)	Shows error message 419 for opcode 0x2af	verified	one	ui/petbar#pet-mode-and-feedback-messages	
+0x4bdc20	42	Script::PetHasActionBar	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the pet guid is nonzero, else nil	verified	one	ui/petbar#the-pet-gate	
+0x4bdc50	810	Script::GetPetActionInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank, icon, token, active and autocast values of a pet bar slot	verified	one	ui/petbar#getpetactioninfo	
+0x4bdfa0	259	Script::GetPetActionCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a pet spell slot's cooldown start and duration in seconds and its enable flag	verified	one	ui/petbar#pet-predicates-and-cooldowns	
+0x4be0b0	45	Script::GetPetActionsUsable	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the pet bar may be used, else nil	verified	one	ui/petbar#the-pet-gate	
+0x4be0e0	152	Script::IsPetAttackActive	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a boolean: the slot is the attack command and the attack latch is set	verified	one	ui/petbar#pet-predicates-and-cooldowns	
+0x4be180	268	Script::PickupPetAction	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Drops a held pet action on a slot, or picks the slot's action up	verified	one	ui/petbar#picking-up-and-dropping-pet-actions	
+0x4be290	149	Script::TogglePetAutocast	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Drops a held pet action on a slot, or toggles the slot's autocast	verified	one	ui/petbar#pet-autocast	
+0x4be330	283	Script::CastPetAction	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Drops a held pet action on a slot, or presses the slot	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be450	8	Script::PetPassiveMode	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the passive reaction	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be460	8	Script::PetDefensiveMode	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the defensive reaction	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be470	8	Script::PetAggressiveMode	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the aggressive reaction	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be480	8	Script::PetWait	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the wait command	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be490	8	Script::PetFollow	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the follow command	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be4a0	13	Script::PetAttack	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the attack command on the current target	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be4b0	8	Script::PetStopAttack	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stops the pet attack when the latch is set	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be4c0	8	Script::PetAbandon	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the pet abandon message	verified	one	ui/petbar#abandon-and-rename	
+0x4be4d0	8	Script::PetDismiss	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Presses the dismiss command and signals PET_DISMISS_START	verified	one	ui/petbar#pet-commands-from-lua	
+0x4be4e0	20	Script::PetRename	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the pet rename message for the first argument	verified	one	ui/petbar#abandon-and-rename	
+0x4be500	114	Script::PetCanBeAbandoned	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the player's pet may be abandoned, else nil	verified	one	ui/petbar#abandon-and-rename	
+0x4be580	114	Script::PetCanBeRenamed	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the player's pet may be renamed, else nil	verified	one	ui/petbar#abandon-and-rename	
+0x4be600	97	Script::GetPetTimeRemaining	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the milliseconds left of the pet's expiry tick, or nil	verified	one	ui/petbar#other-pet-functions	
+0x4be670	141	Script::HasPetUI	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether the pet has a UI and whether it passes the hunter pet test	verified	one	ui/petbar#pet-predicates-and-cooldowns	
+0x4be700	134	Script::GetPetLoyalty	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the loyalty level string of the pet, or nil	verified	one	ui/petbar#pet-stats	
+0x4be790	166	Script::GetPetTrainingPoints	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet's total and spent training points	verified	one	ui/petbar#pet-stats	
+0x4be840	180	Script::GetPetExperience	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet's current and next experience	verified	one	ui/petbar#pet-stats	
+0x4be900	268	Script::GetPetHappiness	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet's happiness bucket, damage percent and loyalty rate	verified	one	ui/petbar#pet-stats	
+0x4bea10	243	Script::GetPetFoodTypes	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the names of the food types the pet's family eats	verified	one	ui/petbar#other-pet-functions	
+0x4beb10	119	Script::GetPetIcon	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon string of the pet's creature family, or nil	verified	one	ui/petbar#other-pet-functions	
 0x4beb90	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4bebc0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4bebe0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
