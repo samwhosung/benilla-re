@@ -6497,7 +6497,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481ef0	16			ui	unreached		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481f00	87	PickObjectUnderCursor		ui	orchestration		Picks the world object under the cursor for the armed click	inferred	none	input#mouse-commands	
 0x481f60	301	DispatchWorldClick		ui	orchestration		Runs world click action 1 or 4 on the object picked at the press	inferred	none	input#click-versus-drag	
-0x482090	94			ui	orchestration		Runs WorldFrame.cpp code that calls 0x492e70; not read here	inferred	none		
+0x482090	94	WorldFramePublishPick		ui	orchestration	void __thiscall (uint32_t lo, uint32_t hi)	Publishes a changed world pick before it stores it	verified	one	ui/hover#world-hover-and-its-tooltip	
 0x4820f0	264			ui	orchestration		Places the area reticle and the targeting cursor over a picked position	inferred	none	spell/targeting#the-targeting-cursor	
 0x482200	1241			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 14 more; not read here	inferred	none		
 0x4826e0	90			ui	orchestration		Runs WorldFrame.cpp code that calls 0x5f8760, 0x523c20, 0x5f8790 and 2 more; not read here	inferred	none		
@@ -6517,7 +6517,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x483460	839	RenderWorldFrame		ui	primitive		Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	
 0x4837b0	442			ui	primitive		Draws the placement preview model 0xceca8c	inferred	none	spell/targeting#placement-model-and-rotation	
 0x483970	410			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnFrameSizeChanged, MultiplyByScreenScaleX and 2 more; not read here	inferred	none		
-0x483b10	94			ui	primitive		Runs its object file code that calls CSimpleFrame::OnLeave, 0x492e70, 0x523d30; not read here	inferred	none		
+0x483b10	94	WorldFrameOnLeave		ui	orchestration	void __thiscall (uint32_t removal)	Runs the base leave, publishes a cleared world mouseover, resets the cursor	verified	one	ui/hover#world-hover-and-its-tooltip	
 0x483b70	94			ui	primitive		Runs its object file code that calls CSimpleFrame::OnKeyDown, 0x4b66b0, 0x4b7990; not read here	inferred	none		
 0x483bd0	112			ui	primitive		Runs its object file code that calls CSimpleFrame::OnKeyUp, 0x4b66b0, 0x4b7990; not read here	inferred	none		
 0x483c40	104			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnMouseDown, 0x492c20, 0x4b6aa0 and 1 more; not read here	inferred	none		
@@ -6961,7 +6961,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492580	76			ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x4925d0	591			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 11 more; not read here	inferred	none		
 0x492820	112			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x493540 and 1 more; not read here	inferred	none		
-0x492890	552			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x530ae0 and 10 more; not read here	inferred	none		
+0x492890	552	PublishWorldMouseover		ui	orchestration	void __cdecl (uint32_t new_lo, uint32_t new_hi, uint32_t prev_lo, uint32_t prev_hi)	Fades the game tooltip when a mouseover ends and re-owns it to UIParent	verified	one	ui/hover#world-hover-and-its-tooltip	
 0x492b50	163			ui	primitive		Runs GameUI.cpp code that calls IsWrappingItem, 0x495190; not read here	inferred	none		
 0x492c00	31			ui	orchestration		Runs GameUI.cpp code that calls GetInputControl, CInputControl::AccumulateMotion; not read here	inferred	none		
 0x492c20	90			ui	orchestration		Rotates the placement or stops targeting for a world input whose +0x14 is 4	inferred	none	spell/targeting#placement-model-and-rotation	
@@ -6969,11 +6969,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492c90	73			ui	orchestration		Runs GameUI.cpp code that calls 0x495190, 0x492580, 0x493540; not read here	inferred	none		
 0x492ce0	68			ui	orchestration		Runs GameUI.cpp code that calls 0x495190, 0x4925d0, 0x492820; not read here	inferred	none		
 0x492d30	318			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::CanAutoInteract and 4 more; not read here	inferred	none		
-0x492e70	21			ui	orchestration		Runs GameUI.cpp code that calls 0x492890; not read here	inferred	none		
+0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *record)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/hover#world-hover-and-its-tooltip	
 0x492e90	218			ui	primitive		Runs GameUI.cpp code that calls 0x494550, 0x4901e0, CGGameUI::Reload and 2 more; not read here	inferred	none		
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	
 0x493050	19			ui	orchestration		Runs GameUI.cpp code that calls GetInputControl, 0x514490; not read here	inferred	none		
-0x493070	28			ui	orchestration		Runs GameUI.cpp code that calls 0x483e80, CSimpleTop::SetMouseFocus; not read here	inferred	none		
+0x493070	28			ui	orchestration		Runs GameUI.cpp code that calls 0x483e80, CSimpleTop::SetMouseFocus; not read here	verified	one	ui/hover#freelook-and-the-removal	
 0x493090	27			ui	orchestration		Runs GameUI.cpp code that calls 0x483e70; not read here	inferred	none		
 0x4930b0	29			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4930d0	233			ui	primitive		Runs GameUI.cpp code that calls 0x4931c0, ClntObjMgrObjectPtr, CGUnit_C::PlayNPCSound and 2 more; not read here	inferred	none		
@@ -10607,7 +10607,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eaf00	319			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eb910; not read here	inferred	none		
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
 0x4eb0c0	1983	MinimapHoverTooltip		ui	primitive		Builds and shows the tooltip of the elements under the cursor	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	
-0x4eb880	46			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnLeave; not read here	inferred	none		
+0x4eb880	46	MinimapOnLeave		ui	orchestration	void __thiscall (uint32_t removal)	Hides the game tooltip, then runs the base leave	verified	one	ui/hover#nameplate-and-minimap-notifies	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4eb910	639			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4ef370, 0x4ead90; not read here	inferred	none		
@@ -13217,8 +13217,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5305b0	113			ui	orchestration		Runs Tooltip.cpp code that calls SStrPrintf, 0x771d80, 0x530640; not read here	inferred	none		
 0x530630	16			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
 0x530640	1054			ui	primitive		Runs Tooltip.cpp code that calls GetScaledScreenAspect, MultiplyByScreenScaleX, 0x772890 and 6 more; not read here	inferred	none		
-0x530a60	24			ui	orchestration		Runs Tooltip.cpp code that calls 0x52ffe0; not read here	inferred	none		
-0x530a80	82			ui	orchestration		Runs Tooltip.cpp code that calls 0x530640; not read here	inferred	none		
+0x530a60	24	CGTooltip::HideEffective		ui	orchestration	void __thiscall ()	Gives the tooltip no owner, then runs the base effective hide	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
+0x530a80	82	CGTooltip::ShowEffective		ui	orchestration	void __thiscall ()	Shows the tooltip with an owner and a line, else hides it	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
 0x530ae0	56			ui	orchestration		Hides a cursor-anchored tooltip, or starts a 2-second fade	verified	one	ui/tooltip#fading-out	
 0x530b20	279			ui	primitive		Keeps a cursor-anchored tooltip at the cursor and fades a fading one	verified	one	ui/tooltip#following-the-cursor	
 0x530c40	527	GameTooltip::AddFontStrings	idb	ui	primitive		Implements the GameTooltip method AddFontStrings, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
@@ -33353,8 +33353,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b550	42	CSimpleFrame::RefreshRegions		ui	orchestration		Calls slot 0x24 of each region	inferred	none		
 0x76b580	212	CSimpleFrame::OnFrameSizeChanged		ui	primitive		Lays out dependents, computes the hit rectangle and runs the size callback on a size change	verified	one	ui/input#hit-test	
 0x76b660	54	CSimpleFrame::OnSizeChanged		ui	orchestration		Runs the OnSizeChanged script with the width and height	inferred	none		
-0x76b6a0	76	CSimpleFrame::OnEnter		ui	orchestration		Shows the +0xa4 frame, switches layer 4 on and runs OnEnter	inferred	none		
-0x76b6f0	109	CSimpleFrame::OnLeave		ui	orchestration		Hides the +0xa4 frame, switches layer 4 off, may end a drag and runs OnLeave	inferred	none		
+0x76b6a0	76	CSimpleFrame::OnEnter		ui	orchestration		Shows the +0xa4 frame, switches layer 4 on and runs OnEnter	verified	one	ui/hover#entering-and-leaving	
+0x76b6f0	109	CSimpleFrame::OnLeave		ui	orchestration		Hides the +0xa4 frame, switches layer 4 off, may end a drag and runs OnLeave	verified	one	ui/hover#entering-and-leaving	
 0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as text when visible	inferred	none		
 0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Runs OnKeyDown with the key's name when visible	inferred	none		
 0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Runs OnKeyUp with the key's name when visible	inferred	none		
@@ -36564,8 +36564,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cb250	1015			ui	primitive		Runs NamePlateFrame.cpp code that calls CSimpleButton::CSimpleButton, GetBlockPoolData and 17 more; not read here	inferred	none		
 0x7cb650	116			ui	primitive		Runs NamePlateFrame.cpp code that calls 0x778850, SMemFree; not read here	inferred	none		
 0x7cb6d0	373			ui	primitive		Runs NamePlateFrame.cpp code that calls 0x77f750, CGUnit_C::GetUnitName, 0x771d80 and 7 more; not read here	inferred	none		
-0x7cb850	95			ui	orchestration		Runs NamePlateFrame.cpp code that calls 0x492890, 0x77fcb0, 0x77f750 and 1 more; not read here	inferred	none		
-0x7cb8b0	91			ui	orchestration		Runs NamePlateFrame.cpp code that calls 0x492890, 0x77fc60, 0x77f750 and 1 more; not read here	inferred	none		
+0x7cb850	95	NamePlateOnEnter		ui	orchestration	void __thiscall ()	Publishes the plate's unit as the world mouseover, lights the plate and runs the button enter	verified	one	ui/hover#nameplate-and-minimap-notifies	
+0x7cb8b0	91	NamePlateOnLeave		ui	orchestration	void __thiscall (uint32_t removal)	Publishes no world mouseover, dims the plate and runs the button leave	verified	one	ui/hover#nameplate-and-minimap-notifies	
 0x7cb910	49			ui	orchestration		Runs NamePlateFrame.cpp code that calls 0x4949f0, 0x779540; not read here	inferred	none		
 0x7cb950	212			ui	primitive		Runs NamePlateFrame.cpp code that calls __ftol, 0x77f750, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	

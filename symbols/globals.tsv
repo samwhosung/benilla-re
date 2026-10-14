@@ -373,6 +373,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804588	float	s_rangeStopFraction		objectlayer	Holds 0.9, the fraction of a range at which a mode 7 or 9 auto-move stops	verified	one	objectlayer/unitmovement#auto-move-modes
 0x80458c	const float	s_float768		ui	Holds 768.0, the interface height the automatic scale divides by	verified	one	ui/uiscale#the-automatic-scale
 0x804594	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
+0x8045c0	void *[40]	s_guiButtonVtable		ui	Holds the 40 virtual function slots of a CSimpleButton subclass the game interface creates	verified	one	ui/hover#the-notifies-by-class
 0x8046d8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
 0x805fb0	const uint32_t			ui	Holds a dword that Script::GetChatWindowMessages, Script::AddChatWindowMessages read; not read here	inferred	none	
@@ -408,6 +409,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x807a44	const float	s_discSize		ui	Holds 0.11, the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0x807a48	const float	s_dotSize		ui	Holds 0.00625, the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0x807a4c	const float	s_float3c4ccccd		unassigned	Holds the float 0.0125 (0x3c4ccccd)	inferred	none	
+0x807a80	void *[36]	CGMinimapFrame::vftable		ui	Holds the 36 virtual function slots of CGMinimapFrame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x807e00	const char[5]	s_textNone		ui	Holds the string "none"	inferred	none	
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
 0x808220	const uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -806,6 +808,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c910	void *[36]			ui	Holds 36 function addresses that CSimpleEditBox::CSimpleEditBox stores; not read here	inferred	none	
 0x81c9b0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x81c9c8	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
+0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
 0x81cc30	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
 0x81cca0	void *[23]			unassigned	Holds 23 function addresses its object file's code stores; not read here	inferred	none	
@@ -851,6 +854,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81da70	float	s_risingSpeedLimit		collision	Holds -2^-22 (0xb4800000), below which 0x7c60c0 counts a launch as rising	verified	one	collision/falling#fall-height-from-the-apex
 0x81da74	float	s_yardsPerMeter		collision	Holds 1.0936 (0x3f8bfb16), the factor the terminal velocity setters apply	verified	one	collision/falling#unreached-functions
 0x81dda8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x81de50	void *[40]	s_namePlateVtable		ui	Holds the 40 virtual function slots of the nameplate frame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
 0x822d40	luaL_reg[9]	tab_funcs		lua	Pairs the table library names concat to remove with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
@@ -1032,6 +1036,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x839430	uint32_t[643]	s_activePlayerWatchedFields		objectlayer	Holds the 643 further player field indices only the active player watches	verified	one	objectlayer/fields#watched-fields
 0x83a3c8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x83b880	uint8_t[320]	s_gameObjectFieldInfo		unassigned	Holds the 16 game object field descriptors of 20 bytes: name, index, count, type, flags	verified	one	objectlayer/gameobjects#the-game-object
+0x83dc2c	uint32_t	s_worldPickState		ui	Holds a state word the world frame's leave sets to 3; other code sets 0 and 1	inferred	none	ui/hover#world-hover-and-its-tooltip
 0x83ddb0	uint32_t			ui	Holds a dword that Script::GetItemInfo, Script::GetTradeSkillItemStats read; not read here	inferred	none	
 0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
 0x83de28	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1870,6 +1875,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42264	uint8_t	s_deletePatchAfterList		glue	Holds 1 when prepatch.lst asked to delete wow-patch.mpq; cleared by 0x4749f0, set by 0x474830	verified	one	glue/downloads#applying-the-patch
 0xb42424	uint32_t			charactermodel	Holds a dword that UnequipCharacterSlot reads and writes; not read here	inferred	none	
 0xb42450	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb4b2bc	void *	s_worldFrame		ui	Points to the world frame	verified	one	ui/hover#freelook-and-the-removal
 0xb4b32c	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
@@ -2073,14 +2079,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc7880	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7968	void *	s_minimapMaskTexture		ui	Points to the mask texture handle the minimap draws through	verified	one	ui/minimap#minimap-textures
 0xbc7970	float	s_minimapDiscSize		ui	Holds the frozen disc size in layout units	verified	one	ui/minimapblips#blip-sizes
-0xbc81e4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbc81e4	uint32_t[5]	s_hoverDotMasks		ui	Holds the bit masks of the dots of each cell the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbc822c	void *	s_minimapBlipTexture		ui	Points to the dot icon texture handle	verified	one	ui/minimap#minimap-textures
 0xbc8274	float	s_discHalfSize		ui	Holds half the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc827c	void *	s_minimapIconTexture		ui	Points to the landmark icon texture handle	verified	one	ui/minimap#minimap-textures
 0xbc82a8	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
 0xbc82b0	uint8_t[80]	s_dotCells		ui	Holds the five dot cell records of 16 bytes: capacity, count, array and growth	verified	one	ui/minimapblips#object-dots
 0xbc8300	uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
-0xbdcbac	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbdcbac	uint32_t	s_hoverIconMask		ui	Holds the bit mask of the landmark icons the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
+0xbdcbb0	uint32_t	s_hoverArrowMask		ui	Holds the bit mask of the rim arrows the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
+0xbdcbb4	uint32_t	s_hoverPartyMask		ui	Holds the bit mask of the party dots the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcc54	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbdce1c	uint32_t			ui	Holds a dword that Script::SignPetition reads and writes; not read here	inferred	none	
 0xbdce20	uint32_t			ui	Holds a dword that Script::GetNumPetitionNames, Script::GetPetitionNameInfo read and write; not read here	inferred	none	
