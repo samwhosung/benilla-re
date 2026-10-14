@@ -10636,9 +10636,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ee0a0	43			ui	orchestration		Runs its object file code that calls 0x4ee0d0, SMemFree; not read here	inferred	none		
 0x4ee0d0	36			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ee100	104			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ee170	230			ui	primitive		Runs its object file code that calls CreateModelFromPath, SimpleModelGetScene and 3 more; not read here	inferred	none		
-0x4ee260	77			ui	orchestration		Runs its object file code that calls CM2Model::IsLoaded, 0x4ee100; not read here	inferred	none		
-0x4ee2b0	126			ui	orchestration		Runs its object file code that calls CSimpleFrame::PostLoadXML, 0x6f2cf0, 0x4ee170 and 1 more; not read here	inferred	none		
+0x4ee170	230	CGMinimapFrame::LoadArrowModel		ui	primitive		Creates a model from a file and sets it on the eight arrow children, or answers 0 when it does not load	verified	one	ui/minimap#the-engine-children	
+0x4ee260	77	CGMinimapFrame::LoadPlayerModel		ui	orchestration		Sets a model file on the player arrow child	verified	one	ui/minimap#the-engine-children	
+0x4ee2b0	126	CGMinimapFrame::PostLoadXML		ui	orchestration		Reads the arrow and player model attributes with their defaults and loads both	verified	one	ui/minimap#the-engine-children	
 0x4ee330	364	MinimapApplyPing		ui	primitive	void __fastcall (void *guid, float *point)	Stores a world point as the ping and signals MINIMAP_PING with the pinger's token and the offset over the zoom diameter	verified	one	ui/minimap#the-ping	
 0x4ee4a0	411	Minimap::SetMaskTexture	idb	ui	primitive		Implements the Minimap method SetMaskTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
 0x4ee640	411	Minimap::SetIconTexture	idb	ui	primitive		Implements the Minimap method SetIconTexture, its pair in the table 0x84c538	verified	one	ui/minimap#lua-methods	
@@ -33320,13 +33320,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a690	128	CSimpleFrame::SetAlpha		ui	orchestration		Stores the alpha byte and, on a change, refreshes the regions and gives every child the same byte	verified	one	ui/visibility#alpha	
 0x76a710	27	CSimpleFrame::EnableDrawLayer		ui	orchestration		Switches a draw layer on and marks it dirty	inferred	none		
 0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	inferred	none		
-0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Adds a region node to the frame's region list	inferred	none	ui/frames#frame-fields	
-0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	inferred	none	ui/frames#frame-fields	
+0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Appends a region node at the tail of the frame's region list	verified	one	ui/frames#child-and-region-lists	
+0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	verified	one	ui/frames#what-the-region-list-holds	
 0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and links it at the head of a draw layer's list, marking the layer dirty	verified	one	ui/draworder#regions-within-a-frame	
 0x76a910	113	CSimpleFrame::RemoveRegionFromLayer		ui	orchestration		Removes a region from a draw layer's list, marking the layer dirty	inferred	none	ui/frames#frame-fields	
 0x76a990	63	CSimpleFrame::NotifyLayerChanged		ui	orchestration		Marks a draw layer dirty in the frame's own mask or its level node	verified	one	ui/strata#dirty-marks	
 0x76a9d0	78	CSimpleFrame::NotifyAllLayersChanged		ui	unreached		Marks all five draw layers dirty; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x76aa20	142	CSimpleFrame::AddChild		ui	orchestration		Adds a child frame node to the frame's children	verified	one	ui/visibility#parent-change	
+0x76aa20	142	CSimpleFrame::AddChild		ui	orchestration		Adds a child frame node to the frame's children	verified	one	ui/frames#child-and-region-lists	
 0x76aab0	96	CSimpleFrame::RemoveChild		ui	orchestration		Frees the child node of a frame	verified	one	ui/visibility#parent-change	
 0x76ab10	249	CSimpleFrame::SetParent		ui	orchestration		Moves a frame under a new parent, taking its stratum, level plus one and scale	verified	one	ui/visibility#parent-change	
 0x76ac10	62	SetFrameScale		ui	primitive		Stores the frame's own scale and recomputes the effective scale	verified	one	ui/visibility#scale	
@@ -33612,10 +33612,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	inferred	none		
 0x773a20	520	Frame::CreateTexture	idb	ui	orchestration		Creates a texture of the frame with a name, layer and template, the template only from a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773c30	558	Frame::CreateFontString	idb	ui	orchestration		Creates a font string of the frame, inheriting a font object or else a template named by a string	verified	one	ui/script#creating-a-frame-from-lua	
-0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration		Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	inferred	none		
-0x773f60	288	Frame::GetRegions	idb	ui	orchestration		Implements the Frame method GetRegions, its pair in the table 0x878ec0	inferred	none		
-0x774080	242	Frame::GetNumChildren	idb	ui	orchestration		Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	inferred	none		
-0x774180	288	Frame::GetChildren	idb	ui	orchestration		Implements the Frame method GetChildren, its pair in the table 0x878ec0	inferred	none		
+0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration		Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
+0x773f60	288	Frame::GetRegions	idb	ui	orchestration		Implements the Frame method GetRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
+0x774080	242	Frame::GetNumChildren	idb	ui	orchestration		Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
+0x774180	288	Frame::GetChildren	idb	ui	orchestration		Implements the Frame method GetChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
 0x7742a0	188	Frame::GetFrameStrata	idb	ui	orchestration		Implements the Frame method GetFrameStrata, its pair in the table 0x878ec0	inferred	none		
 0x774360	310	Frame::SetFrameStrata	idb	ui	orchestration		Implements the Frame method SetFrameStrata, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x7744a0	187	Frame::GetFrameLevel	idb	ui	orchestration		Implements the Frame method GetFrameLevel, its pair in the table 0x878ec0	inferred	none		
@@ -33885,7 +33885,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77fac0	405			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0 and 1 more; not read here	inferred	none		
 0x77fc60	70	CScriptRegion::Unregister		ui	orchestration		Takes a registered region out of its parent's draw layer list and defers its layout	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fcb0	90	CScriptRegion::Register		ui	orchestration		Links a shown, unregistered region into its visible parent's draw layer list	verified	one	ui/visibility#walking-a-show-or-hide	
-0x77fd10	218			ui	primitive		Runs its object file code that calls CLayoutFrame::SetDeferResize, 0x77fc60 and 2 more; not read here	inferred	none		
+0x77fd10	218	CScriptRegion::SetRegionParent		ui	primitive		Moves a region to a new parent and draw layer, linking it into the new parent's region list	verified	one	ui/frames#what-the-region-list-holds	
 0x77fdf0	29			ui	orchestration		Runs its object file code that calls CSimpleFrame::NotifyLayerChanged; not read here	inferred	none		
 0x77fe10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fe20	15			ui	primitive		Runs its object file code not read here	inferred	none		

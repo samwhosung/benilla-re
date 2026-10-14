@@ -94,6 +94,64 @@ resizable, 0x1000 being moved, 0x2000 in a tree that draws itself and 0x4000 the
 `0x76a7f0` add and remove a region node (`.?AUREGIONNODE@@`) of `+0x1b4`; `0x76a860` and `0x76a910`
 those of a layer list. `0x76c2e0` stores `+0xf8` and switches layer 4 on or off with it.
 
+## Child and region lists
+
+A frame keeps its child frames and its regions in two lists of the same shape, headers at `+0x2fc` and `+0x1b4`,
+and appends to the tail, so a walk from the head visits them in creation order. A list node is 12 bytes: the previous
+link, the next link and the object. A link's low bit marks the end of the list, so an empty list holds a tagged
+pointer to its own header, never 0. Attaching a frame to the parent it already has changes nothing and does not
+move it to the end.
+
+Addresses: `0x769216`, `0x76921c`, `0x769221`, `0x76922c`, `0x7692bc`, `0x7692c7`, `0x76a750`, `0x76a7c6`, `0x76a7d4`, `0x76a7d7`, `0x76aa20`, `0x76abdb`, `0x77fd6e`, `0x76ab10`, `0x76ab20`
+Confidence: verified
+Proof: one
+Test: none
+
+The constructor stores the header's own address in its tail slot and the same address or 1 in the head slot
+(`0x769221`, `0x769223`, `0x76922c`; `0x7692c2`, `0x7692c4`, `0x7692c7`). `0x76a750` loads the tail (`0x76a7c6`),
+points the new node's previous link at it and its next link at the tail's old next (`0x76a7cc`, `0x76a7d1`), links
+the tail forward (`0x76a7d4`) and becomes the tail (`0x76a7d7`); with an empty list the tail is the header and its
+next slot is the head. `0x76aa20` does the same for children. Each has one call site, `0x77fd6e` and `0x76abdb`.
+
+## Reading the lists from Lua
+
+`GetNumChildren` and `GetNumRegions` return one number, 0 for an empty list. `GetChildren` and `GetRegions`
+return one value per entry, not a table, so a frame with none returns no value. The result is the whole list in
+list order: hidden children and regions are counted and returned, and nothing in the four methods tests
+visibility, alpha, layer, strata, level, type or name. `GetRegions` reads the one flat list, not the lists by draw
+layer, so its order is creation order and not BACKGROUND to HIGHLIGHT.
+
+Addresses: `0x773e60`, `0x773f05`, `0x773f20`, `0x773f43`, `0x773f60`, `0x774080`, `0x774125`, `0x774180`, `0x774018`, `0x77402d`, `0x774032`, `0x77404f`, `0x774056`, `0x77405a`, `0x77406a`, `0x701bd0`, `0x6f3810`, `0x6f2f30`, `0x6f3bc0`, `0x878ec0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x773e60` and `0x774080` count the list in a loop with two tests, the tag bit and null (`0x773f20` to `0x773f2c`),
+and push the count with `lua_pushnumber` (`0x773f43`), returning 1. `0x773f60` and `0x774180` count first,
+reserve that many stack slots with `lua_checkstack` (`0x77402d`), then walk again, and for each object make its Lua
+table if it has none (`0x701bd0`, `0x77405a`) and push it with `lua_rawgeti` from the registry (`0x77406a`); the return
+value is the count (`0x774078`). The four are entries of the method table `0x878ec0`. The `xor eax,eax` after each
+argument error call is not reached, as the error unwinds.
+
+## What the region list holds
+
+A region is in its parent's list from the moment it is attached and leaves it when it is detached. The title
+region of a frame is never in the list: it is a bare object whose parent setter stores the parent and nothing else,
+so `GetRegions` does not return it and `GetNumRegions` does not count it. A button's label and state textures are in
+the list. A region detached with `SetParent(nil)` is removed. Hiding a frame or region changes no list.
+
+Addresses: `0x77fd10`, `0x77fd2d`, `0x77fd47`, `0x77fd55`, `0x77fd69`, `0x77fd6e`, `0x76a7f0`, `0x76c430`, `0x81c554`, `0x7739df`, `0x769b79`, `0x778d20`, `0x778d49`, `0x778fd0`, `0x779017`, `0x779110`, `0x779139`, `0x76ad50`, `0x76ada2`, `0x76adc9`, `0x7733e5`, `0x769e74`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x77fd10(parent, layer, show)` is the one gateway: it detaches the region from its old parent through slot 0x0b
+(`0x77fd55`, which runs `0x76a7f0`), stores the new parent (`0x77fd5d`) and links through `0x76a750` only when the new
+parent is not null (`0x77fd69`, `0x77fd6e`). The title region is built by the Lua method (`0x7739df`) and the XML
+element (`0x769b79`) as an object of vtable `0x81c554`, whose slot 5 is `0x76c430` (`0x76c436` stores `+0x9c`), and
+neither path reaches `0x77fd10`. The label setter `0x778d20` and the state texture setters `0x778fd0` and `0x779110` call
+`0x77fd10` (`0x778d49`, `0x779017`, `0x779139`). `0x76ad50` walks both lists read-only, and a hidden region keeps its node.
+
 ## Construction
 
 The constructor builds the `CScriptRegion`, zeroes the frame fields, sets shown to 1, the state to

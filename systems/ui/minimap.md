@@ -138,6 +138,28 @@ runs at `0x48f590` in `CGGameUI::InitializeGame`, before the jump to the interfa
 `0x4ee789` and `0x4ee929` after releasing the old handle (`0x4ee5af`). The reload path does not reach either
 function.
 
+## The engine children
+
+The minimap's constructor makes nine model frames with the minimap as their parent before its XML children exist,
+so the first nine entries of `GetChildren()` are these, in the order they are made, and the XML children follow in
+declaration order. Five are kept in a group at `+0x320`, three at `+0x314` and one at `+0x338`; the ninth is the
+player arrow. `minimapArrowModel` names the model of the eight in the two groups and `minimapPlayerModel` the model
+of the ninth alone. A missing attribute takes `Interface\Minimap\Rotating-MinimapArrow.mdx` and
+`Interface\Minimap\MinimapArrow.mdx`, and a model that does not load logs `Invalid minimapArrowModel in Minimap.xml`
+or `Invalid minimapPlayerModel in Minimap.xml`.
+
+Addresses: `0x4edbc0`, `0x4ede4e`, `0x4ede66`, `0x4ede72`, `0x4edef5`, `0x4edefb`, `0x4edf1f`, `0x4edfa2`, `0x4edfae`, `0x76c8e0`, `0x4ee170`, `0x4ee1b7`, `0x4ee204`, `0x4ee260`, `0x4ee269`, `0x4ee2b0`, `0x4ee2c5`, `0x4ee2d5`, `0x4ee2f6`, `0x4ee306`, `0x707350`, `0x6f2cf0`
+Confidence: verified
+Proof: one
+Test: none
+
+The constructor runs `0x6462e0` with the size 0x3dc and `MinimapFrame.cpp` at three sites (`0x4ede66`, loop count 5 at
+`0x4ede4e`; the three-loop from `0x4edefb`; `0x4edfa2`), each followed by the model frame constructor `0x76c8e0` with
+the minimap as parent (`0x4ede72`, `0x4edf1f`, `0x4edfae`). `0x4ee2b0` reads each attribute with `0x6f2cf0` (`0x4ee2cc`,
+`0x4ee2fd`) and falls back to the default string (`0x4ee2d5`, `0x4ee306`). `0x4ee170` creates a model from the file with
+`0x707350` and loops over the five and the three (`0x4ee1b7`, `0x4ee204`); `0x4ee260` sets the file on the single child
+at `+0x338` (`0x4ee269`).
+
 ## Lua methods
 
 `Minimap` has 10 methods at `0x84c538`, registered by `0x4ef2f0`: `SetMaskTexture`,
