@@ -405,6 +405,8 @@ fn range_gate_5df980_clone_family_difftest() {
     }
 }
 
+/// The skill is an `i32` and the scale 0.05, so the `__ftol` input is at most about 1.1e8 in
+/// magnitude and never NaN or out of range; the `i32` extremes are among the cases.
 #[test]
 fn skill_rank_scale_5df730_difftest() {
     let Some(wow) = Wow::load() else { return };

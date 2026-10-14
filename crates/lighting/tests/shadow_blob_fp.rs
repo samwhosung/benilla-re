@@ -1,7 +1,8 @@
 //! `FillShadowRamp` (`0x6d81a0`) and `FillShadowGreyRamp` (`0x6d82d0`) whole, against
 //! `shadow_ramp_pixel` and `shadow_ramp_gray_pixel`: each fills the ramp buffer at `0xce9e0c`,
 //! which the test reads back and compares pixel for pixel. A width of 1 divides 0 by 0 and runs the
-//! NaN path of every threshold compare.
+//! NaN path of every threshold compare. The darkness is 0 for NaN and otherwise within 0 to 1, so
+//! the `__ftol` of its product with 255 never sees NaN or an out-of-range value.
 
 use benilla_re_difftest::{Emu, Wow};
 use benilla_re_lighting::shadow_blob_fp::shadow_ramp_pixel;

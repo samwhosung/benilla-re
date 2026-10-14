@@ -374,6 +374,8 @@ fn u4_airborne_reach_gate_difftest() {
 
 const INVERT_FLAG: u64 = 0xc4daa4;
 
+/// The count is an `i32` and the factors 0.002 and 128.0, so the `__ftol` input is at most about
+/// 5.5e8 in magnitude and never NaN or out of range.
 #[test]
 fn u4_spin_cast_byte_difftest() {
     let Some(wow) = Wow::load() else {

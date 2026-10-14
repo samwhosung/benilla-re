@@ -1,51 +1,6 @@
 //! The x87 conversions the object layer stores through.
 
-/// `__ftol` (`0x40a2b0`): `fistp qword` towards zero and the low dword; NaN, an infinity or a value
-/// outside `i64` stores the indefinite `0x8000000000000000`, whose low dword is 0.
-#[inline]
-pub fn ftol(v: f64) -> i32 {
-    let t = v.trunc();
-    if (-9_223_372_036_854_775_808.0_f64..9_223_372_036_854_775_808.0_f64).contains(&t) {
-        t as i64 as i32
-    } else {
-        0
-    }
-}
-
-/// `fistp dword` under the client's control word: round to nearest, ties to even; NaN, an infinity
-/// or a value outside `i32` stores the integer indefinite `0x80000000`.
-#[inline]
-pub fn fistp(v: f64) -> i32 {
-    let r = v.round_ties_even();
-    if (-2_147_483_648.0_f64..2_147_483_648.0_f64).contains(&r) {
-        r as i32
-    } else {
-        i32::MIN
-    }
-}
-
-/// `fistp qword` under the client's control word: round to nearest, ties to even; NaN, an infinity
-/// or a value outside `i64` stores the indefinite `0x8000000000000000`.
-#[inline]
-pub fn fistp64(v: f64) -> i64 {
-    let r = v.round_ties_even();
-    if (-9_223_372_036_854_775_808.0_f64..9_223_372_036_854_775_808.0_f64).contains(&r) {
-        r as i64
-    } else {
-        i64::MIN
-    }
-}
-
-/// `fistp qword` with the control word set to truncate, as `__ftol` does: the full 64-bit result.
-#[inline]
-pub fn ftol64(v: f64) -> i64 {
-    let t = v.trunc();
-    if (-9_223_372_036_854_775_808.0_f64..9_223_372_036_854_775_808.0_f64).contains(&t) {
-        t as i64
-    } else {
-        i64::MIN
-    }
-}
+pub use benilla_re_cmath::x87::{fistp, fistp64, ftol, ftol64};
 
 /// `fcomp; fnstsw ax; test ah,0x41; jne`: true when `a <= b` or the operands are unordered (the C0,
 /// C2 or C3 flag is set), false only when `a > b`.

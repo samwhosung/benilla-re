@@ -199,6 +199,31 @@ fn mist_grid_sample_difftest() {
         );
     }
     run(&mut emu, (3, 3), true, -0.0, -0.0, 6.0, "negative zero");
+
+    // Coordinates whose tile index passes `i32` and `i64`: `__ftol` keeps the low dword of its
+    // qword, which is 0 past `i64` and the low 32 bits of the index in between. A grid origin at
+    // that value puts the point in the window. NaN and the infinities do not reach `__ftol`: the C
+    // runtime's `floor` (`0x73ff3f`) takes its error path first, which the emulator does not map.
+    let wide: [(f32, f32); 6] = [
+        (1.0e30, -1.0e30),
+        (1.43e11, 5.0),
+        (5.0, -1.43e11),
+        (-1.0e12, 1.0e12),
+        (1.0e19, 4.0e12),
+        (3.0e38, -3.0e38),
+    ];
+    for &(wx, wy) in &wide {
+        let ty_scaled = (f64::from(TILE_SCALE_SAMPLE) * f64::from(wy)) as f32;
+        let low = |v: f64| benilla_re_cmath::x87::ftol(v.floor());
+        let fx = low(f64::from(TILE_SCALE_SAMPLE) * f64::from(wx));
+        let fy = low(f64::from(ty_scaled));
+        for origin in [(0, 0), (fx.wrapping_sub(2), fy.wrapping_sub(1))] {
+            if origin.0.unsigned_abs() > 1 << 24 || origin.1.unsigned_abs() > 1 << 24 {
+                continue;
+            }
+            run(&mut emu, origin, true, wx, wy, 6.0, "wide world coordinate");
+        }
+    }
 }
 
 /// `0x67c820` whole on one tile, 800 cases: the points left of or below the tile (rejected), the
@@ -353,8 +378,8 @@ fn mist_cell_world_difftest() {
 /// to the end (cells empty), a crossing in the interior (cells random, so the marched point is
 /// compared), an endpoint outside the 160 by 160 grid, fractional negative endpoints (floor, not
 /// truncation) and the y values where the product stored as f32 floors differently from the wide
-/// one. A NaN or infinite endpoint is not run: `floor` (`0x73ff3f`) faults in the emulator on its
-/// error path.
+/// one, and finite endpoints past the cell range. A NaN or infinite endpoint is not run: `floor`
+/// (`0x73ff3f`) faults in the emulator on its error path.
 #[test]
 fn mist_grid_raymarch_difftest() {
     let Some(wow) = Wow::load() else {
@@ -489,6 +514,25 @@ fn mist_grid_raymarch_difftest() {
     }
     let base = mk(&mut s);
     run(&mut emu, base, base, 2, "zero length");
+    // Finite endpoints whose cell passes `i32` and `i64`: `__ftol` keeps the low dword of its
+    // qword, 0 past `i64`, so a segment between two such points is one cell outside the grid.
+    for (a, b) in [
+        ((1.0e30f32, 1.0e30f32), (-1.0e30f32, 3.0e30f32)),
+        ((3.0e38, -3.0e38), (1.0e19, 1.0e25)),
+        ((1.0e30, 5.0), (1.0e31, 5.0)),
+    ] {
+        let p0 = Vec3 {
+            x: a.0,
+            y: a.1,
+            z: 10.0,
+        };
+        let p1 = Vec3 {
+            x: b.0,
+            y: b.1,
+            z: 20.0,
+        };
+        run(&mut emu, p0, p1, 2, "endpoints past the cell range");
+    }
     assert!(
         hits > 0 && ends > 0 && left > 0 && interior > 50,
         "hit, end, left and interior walks all ran: {hits} {ends} {left} {interior}"

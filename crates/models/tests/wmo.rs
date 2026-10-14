@@ -185,6 +185,32 @@ fn wmo_mocv_barycentric_color_difftest() {
         }
     }
 
+    // Points whose weights are NaN, infinite, past `i32` or past `i64` once scaled by 256: the
+    // `fistp` stores `0x80000000`.
+    let tri = [[0.0f32, 0.0, 1.0], [4.0, 0.0, 2.0], [0.0, 4.0, 3.0]];
+    for (k, p) in [
+        [f32::NAN, 1.0, 1.0],
+        [1.0, f32::NAN, 1.0],
+        [f32::INFINITY, 1.0, 1.0],
+        [1.0, f32::NEG_INFINITY, 1.0],
+        [1.0e10, 1.0, 1.0],
+        [1.0, -1.0e10, 1.0],
+        [1.0e30, 1.0e30, 1.0],
+        [-3.0e38, 3.0e38, 1.0],
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        run(
+            &mut emu,
+            tri,
+            p,
+            [0x00ff_0000, 0x0000_ff00, 0x0000_00ff],
+            1,
+            &format!("wide point {k}"),
+        );
+    }
+
     let mut rng = Lcg(0x6d6f_6376);
     let mut axis_hits = [0u32; 3];
     for i in 0..1200u32 {
