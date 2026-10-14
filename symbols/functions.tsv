@@ -7194,9 +7194,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49d4b0	171	SendIgnoredResponse	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::PutUInt32, CDataStore::PutGuid, ClientServices::Send; not read here	inferred	none		
 0x49d560	1662	ClientChatHandler	idb	ui	primitive		Handles the chat message: reads the type, language, names, text and tag, then queues or shows the line	verified	one	ui/chatevents#the-chat-message	
 0x49dbe0	223	ClientTextEmoteHandler	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetGuid, CDataStore::GetInt32 and 6 more; not read here	inferred	none		
-0x49dcc0	368	HandleZoneUnderAttackPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, FrameScript_GetText, SStrPrintf and 2 more; not read here	inferred	none		
-0x49de30	329	HandleDefenseMessagePacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt32 and 3 more; not read here	inferred	none		
-0x49df80	226	HandleServerMessagePacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, CDataStore::GetCString, SStrPrintf and 2 more; not read here	inferred	none		
+0x49dcc0	368	HandleZoneUnderAttackPacket	idb	ui	primitive		Handles zone under attack: shows the area's attack text on the zone's defence channels	verified	one	ui/chatserver#zone-under-attack	
+0x49de30	329	HandleDefenseMessagePacket	idb	ui	primitive		Handles the defence message: shows the packet's text on the zone's defence channels	verified	one	ui/chatserver#defence-message	
+0x49df80	226	HandleServerMessagePacket	idb	ui	orchestration		Handles the server message: formats a ServerMessages row with the string and shows it as a system line	verified	one	ui/chatserver#server-message	
 0x49e070	329	HandleRaidInstanceInfoPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetUInt32, FrameScript_GetText, 0x4a3370 and 4 more; not read here	inferred	none		
 0x49e1c0	667	HandleRaidInstanceMessagePacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
 0x49e470	200	HandleInstanceResetPacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls 0x495d00, CDataStore::GetInt32, SStrCopy and 3 more; not read here	inferred	none		
@@ -30175,7 +30175,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x703b80	20	ResetFrameScript		ui	orchestration		Closes the Lua state when one exists and tail-jumps to 0x7039e0 to open a new one	verified	one	ui/luastate#opening-and-replacing-the-state	
 0x703ba0	22	FrameScriptDestroy		ui	orchestration		Destroys the Lua state and stores 0 in 0xceef74	verified	one	ui/luastate#opening-and-replacing-the-state	
 0x703bc0	42	FrameScriptCollectGarbage		ui	orchestration		Forces a full collection with the collector switch on, leaving it on when its argument is nonzero	verified	one	ui/luastate#the-collector-switch	
-0x703bf0	245	FrameScript_GetText	idb	ui	orchestration		Returns a global string, or GetText of it with a gender and count, or an empty string	verified	one	ui/script#text-counts-and-running-code	
+0x703bf0	245	FrameScript_GetText	idb	ui	orchestration		Returns the global string of a key, or the empty string when it is missing	verified	one	ui/chatserver#the-text-lookup	
 0x703cf0	148	FrameScriptGetPluralIndex		ui	orchestration	int __fastcall (int count)	Calls the Lua GetPluralIndex with a count and returns its truncated result minus one, or 0	verified	one	ui/script#text-counts-and-running-code	
 0x703d90	178	SetScriptEventTable		ui	orchestration		Replaces the event table with copies of a list of names	verified	one	ui/script#the-event-table	
 0x703e50	246	FrameScript_SignalEvent	idb	ui	orchestration		Runs OnEvent of every listener of an event with the global event set to its name	verified	one	ui/script#signalling-an-event	

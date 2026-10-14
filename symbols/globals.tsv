@@ -1697,7 +1697,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x872c98	char[18]	s_textInFunctionS		ui	Holds the string " in function `%s'"	inferred	none	
 0x872cb4	char[5]	s_debugstackElision		ui	Holds ... and a newline, the line debugstack writes for elided levels	verified	one	ui/luastate#debugstacks-lines
 0x872cbc	char[11]	s_compatChunkName		ui	Holds compat.lua	verified	one	ui/luastate#what-a-new-state-holds
-0x872cc8	char[8]	s_getTextName		ui	Holds GetText	verified	one	ui/script#text-counts-and-running-code
+0x872cc8	char[8]	s_getTextName		ui	Holds GetText	verified	one	ui/chatserver#the-text-lookup
 0x872cd0	char[15]	s_getPluralIndexName		ui	Holds GetPluralIndex	verified	one	ui/script#text-counts-and-running-code
 0x872ce0	char[4]	s_assignText		ui	Holds " = ", written between a saved name and its value	verified	one	ui/addons#the-saved-variables-format
 0x872e50	char[17]	s_textErrorLoadingS		ui	Holds the string "Error loading %s"	inferred	none	
@@ -2497,7 +2497,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d924	uint32_t[5]	s_skillLineStore		dbc	Holds the SkillLine.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#skill-costs-and-tiers
 0xc0d94c	uint32_t[5]	s_skillLineAbilityStore		dbc	Holds the SkillLineAbility.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0d960	uint32_t[5]	s_skillCostsDataStore		dbc	Holds the SkillCostsData.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
-0xc0d990	uint32_t			unassigned	Holds a dword that HandleServerMessagePacket reads and writes; not read here	inferred	none	
+0xc0d988	uint32_t[5]	s_serverMessagesStore		dbc	Holds the ServerMessages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatserver#server-message
 0xc0d9a4	uint32_t			unassigned	Holds a dword that PlaySpellSchoolSound reads and writes; not read here	inferred	none	
 0xc0d9cc	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0d9d0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
