@@ -90,7 +90,7 @@ Test: none
 The offsets are those the constructor initializes and the functions of this chunk read and write;
 each field's meaning is taken from the writers named in the entry that uses it. `0x76a3c0` sets or
 clears bits of `+0xb4`; the bits read here are 1 toplevel, 0x10 overlapped, 0x100 movable, 0x200
-resizable, 0x1000 being moved, 0x2000 draws itself and 0x4000 drawn by its parent. `0x76a750` and
+resizable, 0x1000 being moved, 0x2000 in a tree that draws itself and 0x4000 the root of one (`draworder`). `0x76a750` and
 `0x76a7f0` add and remove a region node (`.?AUREGIONNODE@@`) of `+0x1b4`; `0x76a860` and `0x76a910`
 those of a layer list. `0x76c2e0` stores `+0xf8` and switches layer 4 on or off with it.
 

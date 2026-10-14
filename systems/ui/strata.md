@@ -62,8 +62,8 @@ tagged `.PAVCFrameStrataNode@@`.
 
 A frame joins its stratum when it becomes visible and leaves when it is hidden or its stratum or
 level changes. Joining creates the level nodes up to its level, raises the in-use count to cover
-it, and appends the frame to the level's frame list, or to the side list while the update pass is
-on that level. Unless the frame draws itself (flag 0x2000 of `+0xb4`) every draw layer of the
+it, and links the frame at the head of the level's frame list, or of the side list while the update
+pass is on that level (`draworder`). Unless the frame draws itself (flag 0x2000 of `+0xb4`) every draw layer of the
 level is marked dirty. The record's levels-dirty flag is set, draw-dirty when a layer is, and the
 frame's input kinds join their lists.
 
@@ -169,7 +169,7 @@ parent.
 
 The pass function `0x764330` takes the elapsed time and runs the update, then the draw. The update
 first deletes the objects on the top's deletion list and drains the layout queue. Then for each
-stratum from 0 to 8, each level from 0 up and each frame of the level in list order, it calls the
+stratum from 0 to 8, each level from 0 up and each frame of the level from the oldest link to the newest, it calls the
 frame's update slot 0x38 with the elapsed time, moving the cursor ahead so the frame may leave.
 Frames that joined the level during the walk are then appended to its list. The layout queue is
 drained again, and a pending hover pick is made from the last mouse position.
@@ -193,7 +193,7 @@ The draw pass sets an orthographic projection over the screen, then for each str
 when its levels are dirty, it recomputes the overlap bit 0x10 of every toplevel frame in it; when
 its draw is dirty, it rebuilds the batches of each level whose layer mask is set; and it draws the
 batches of each level from the lowest. A rebuilt batch gathers, for its draw layer, the regions of
-every frame in the level that does not draw itself, in list order.
+every frame in the level that does not draw itself, from the oldest link to the newest (`draworder`).
 
 Addresses: `0x7657d0`, `0x7657f1`, `0x765847`, `0x765851`, `0x765896`, `0x7658e2`, `0x765920`, `0x765a90`
 Confidence: verified

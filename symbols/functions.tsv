@@ -29597,8 +29597,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1820	31	GetFrameStrataName		ui	primitive		Returns the name of a stratum index from 0x8119f8, or UNKNOWN	verified	one	ui/strata#strata-and-their-names	
 0x6f1840	69	ParseAnchorPoint		ui	primitive		Finds an anchor point name in 0x811a38, ignoring case, and writes its index	verified	one	ui/anchors#point-slots-and-point-names	
 0x6f1890	31	GetAnchorPointName		ui	primitive		Returns the name of an anchor point index from 0x811a38, or UNKNOWN	verified	one	ui/anchors#point-slots-and-point-names	
-0x6f18b0	69			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x6f1900	31			ui	primitive		Runs its object file code not read here	inferred	none		
+0x6f18b0	69	DrawLayerNameToId		ui	primitive	bool __fastcall (const char *name, int *id)	Looks a draw layer name up ignoring case and stores its index 0 to 4	verified	one	ui/draworder#regions-within-a-frame	
+0x6f1900	31	DrawLayerIdToName		ui	primitive	const char * __fastcall (int id)	Returns the name of a draw layer index, or UNKNOWN	verified	one	ui/draworder#regions-within-a-frame	
 0x6f1920	69			ui	primitive		Looks a blend mode name up, ignoring case, in the five value and name pairs at 0x811aa8	verified	one	ui/button#checked-textures	
 0x6f1970	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f1990	69			ui	orchestration		Maps a justify name, ignoring case, to its bit	verified	one	ui/fontstring#justify	
@@ -33322,7 +33322,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	inferred	none		
 0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Adds a region node to the frame's region list	inferred	none	ui/frames#frame-fields	
 0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	inferred	none	ui/frames#frame-fields	
-0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and adds it to a draw layer's list, marking the layer dirty	inferred	none	ui/frames#frame-fields	
+0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and links it at the head of a draw layer's list, marking the layer dirty	verified	one	ui/draworder#regions-within-a-frame	
 0x76a910	113	CSimpleFrame::RemoveRegionFromLayer		ui	orchestration		Removes a region from a draw layer's list, marking the layer dirty	inferred	none	ui/frames#frame-fields	
 0x76a990	63	CSimpleFrame::NotifyLayerChanged		ui	orchestration		Marks a draw layer dirty in the frame's own mask or its level node	verified	one	ui/strata#dirty-marks	
 0x76a9d0	78	CSimpleFrame::NotifyAllLayersChanged		ui	unreached		Marks all five draw layers dirty; nothing reaches it	verified	one	ui/README#unreached-functions	
@@ -33348,8 +33348,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b2f0	5	FrameInitDragThresholdThunk		ui	orchestration		Jumps to 0x76b300; a static initializer	verified	one	ui/README#static-initializers	
 0x76b300	19	FrameInitDragThreshold		ui	primitive		Stores 0.01 squared in 0xcf0c14, the squared drag-start distance	verified	one	ui/README#static-initializers	
 0x76b320	125	CSimpleFrame::OnMouseMove		ui	primitive		Starts a drag past the threshold and answers the hit test; slot 0x3c	verified	one	ui/mouse#what-the-pointer-is-tested-against	
-0x76b3a0	79	SimpleFrameRegisterLayer		ui	orchestration		Adds the regions of one enabled draw layer to a batch	inferred	none		
-0x76b3f0	306	CSimpleFrame::OnFrameRender		ui	orchestration		Rebuilds and draws a self-drawing frame's own batches, then its children	inferred	none		
+0x76b3a0	79	CSimpleFrame::EmitLayer		ui	orchestration		Walks the regions of one enabled draw layer from the last link and calls each one to emit into a batch	verified	one	ui/draworder#regions-within-a-frame	
+0x76b3f0	306	CSimpleFrame::OnFrameRender		ui	orchestration		Rebuilds a self-drawing frame's own five batches, submits them and draws its children that do not hold 0x4000	verified	one	ui/draworder#frames-that-draw-themselves	
 0x76b530	25	CSimpleFrame::MarkLayerDirty		ui	orchestration		Sets a bit of the frame's own dirty-layer mask +0x1f8	verified	one	ui/visibility#parent-change	
 0x76b550	42	CSimpleFrame::RefreshRegions		ui	orchestration		Calls slot 0x24 of each region	inferred	none		
 0x76b580	212	CSimpleFrame::OnFrameSizeChanged		ui	primitive		Lays out dependents, computes the hit rectangle and runs the size callback on a size change	verified	one	ui/input#hit-test	
@@ -33494,7 +33494,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fab0	31			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76fad0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x76fae0	21			ui	primitive		Runs its object file code not read here	inferred	none		
-0x76fb00	317			ui	host		Draws a batch's quads, then its strings, then its callbacks	verified	one	ui/model#where-the-scene-draws	
+0x76fb00	317	DrawBatch		ui	host		Draws a batch: its sorted quads, then its text sub-batch, then its render callbacks	verified	one	ui/draworder#what-a-batch-drains	
 0x76fc40	193			ui	primitive		Runs its object file code that calls 0x77f640, 0x770410; not read here	inferred	none		
 0x76fd10	43			ui	orchestration		Runs its object file code that calls 0x76fd40, CDataAllocator::PutData; not read here	inferred	none		
 0x76fd40	59			ui	primitive		Runs its object file code that calls HandleClose, UnlockScriptObject; not read here	inferred	none		
@@ -33573,16 +33573,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772d20	24			ui	orchestration		Runs its object file code that calls CLayoutFrame::Resize; not read here	inferred	none		
 0x772d40	191			ui	primitive		Runs its object file code that calls CLayoutFrame::OnFrameSizeChanged, 0x44d600, 0x772e00 and 2 more; not read here	inferred	none		
 0x772e00	72	RectWhollyOffScreen		ui	primitive	bool __thiscall (float *rect)	Answers 1 for a rectangle with its top or right below 0 or its bottom or left above 1.0	verified	one	ui/regions#a-region-that-does-not-resolve	
-0x772e50	41			ui	orchestration		Runs its object file code that calls 0x773080; not read here	inferred	none		
+0x772e50	41	CSimpleFontString::Emit		ui	orchestration		Appends the font string to a layer batch when it has a font and text	verified	one	ui/draworder#what-a-batch-drains	
 0x772e80	55			ui	primitive		Runs its object file code not read here	inferred	none		
 0x772ec0	43			ui	orchestration		Runs its object file code that calls 0x772ef0, SMemFree; not read here	inferred	none		
 0x772ef0	213			ui	primitive		Runs its object file code that calls 0x7731d0, 0x773370, SMemFree; not read here	inferred	none		
 0x772fd0	164	CSimpleTexture::AppendQuad		ui	primitive	void __thiscall (void *batch)	Appends a 0x1c-byte quad record of the texture's image, vertices, texcoords, blend, colours and shader	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773080	130	CSimpleFontString::AppendToBatch		ui	orchestration	void __thiscall (void *batch)	Appends the text to a batch when its rectangle is valid and not wholly off screen	verified	one	ui/regions#a-region-that-does-not-resolve	
-0x773110	142	RegisterLayerCallback		ui	primitive		Adds a draw callback and its argument to a layer's list	inferred	none		
-0x7731a0	29			ui	orchestration		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x7731c0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x7731d0	104			ui	orchestration		Runs its object file code that calls 0x5c1f70, 0x773240, 0x773370 and 1 more; not read here	inferred	none		
+0x773110	142	BatchAddCallback		ui	primitive		Adds a draw callback and its context to a batch, drained after the quads and the text	verified	one	ui/draworder#what-a-batch-drains	
+0x7731a0	29	BatchSortQuads		ui	orchestration		Sorts the quad records of a batch by texture handle with qsort	verified	one	ui/draworder#layer-batches	
+0x7731c0	15	CompareQuadHandles		ui	primitive	int __cdecl (int *a, int *b)	Returns the first dword of one quad record minus that of the other, the texture handles	verified	one	ui/draworder#layer-batches	
+0x7731d0	104	BatchBegin		ui	orchestration		Empties a batch: zeroes the quad count, frees the text sub-batch and releases the callback list	verified	one	ui/draworder#layer-batches	
 0x773240	60			ui	primitive		Runs its object file code not read here	inferred	none		
 0x773280	231			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x773370	41			ui	primitive		Runs its object file code not read here	inferred	none		

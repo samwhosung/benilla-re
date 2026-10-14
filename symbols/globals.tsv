@@ -990,8 +990,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81199c	float	s_shardRateScaleLevel1		spell	Holds 0.66, the shard rate scale at spellEffectLevel 1	verified	one	spell/visuals#emitter-initialization
 0x8119f8	uint32_t[16]	s_frameStrataNames		ui	Holds eight pairs of a stratum index and its name, BACKGROUND 1 to TOOLTIP 8	verified	one	ui/strata#strata-and-their-names
 0x811a38	uint32_t[18]	s_anchorPointNames		ui	Holds nine pairs of an anchor point index and its name	verified	one	ui/anchors#point-slots-and-point-names
-0x811a80	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x811a84	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x811a80	uint32_t[10]	s_drawLayerNames		ui	Holds five pairs of a draw layer index and its name, BACKGROUND 0 to HIGHLIGHT 4	verified	one	ui/draworder#regions-within-a-frame
 0x811aa8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811ad0	const uint32_t[12]	s_justifyNames		ui	Holds six pairs of a justify bit and its name, LEFT 1 to BOTTOM 0x20	verified	one	ui/fontstring#justify
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
