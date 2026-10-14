@@ -101,7 +101,7 @@ Callers: `0x6c5ee9` and `0x6c617b` with `force = 1`.
 `0x6436c0(time, force)` compares the sent time with the clock's. The sent time gets the same offsets as above.
 `d = ((sentDay − day)·1440 + sentMinuteOfDay − minuteOfDay) mod 1440`, signed with the dividend. Without `force`
 and with `d <= 0` the clock takes the sent time, `+0x34` grows by `−d` and the clock advances `−d` minutes (back
-to where it was), so the next `−d` minutes of frame time are skipped. Otherwise a `d > 0` advances the clock `d`
+to the minute it showed), so the next `−d` minutes of frame time are skipped. Otherwise a `d > 0` advances the clock `d`
 minutes, then the clock takes the sent time.
 
 Addresses: `0x6436c0`, `0x6c606b`, `0x643ad0`

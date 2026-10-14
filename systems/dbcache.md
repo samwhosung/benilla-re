@@ -41,7 +41,7 @@ last two pushes (`0x5567cc`); the wow cache writes `0x6ca120()` as its version. 
 Four caches are never read from or written to disk: names (`0xc0e228`, `namecache.wdb`, tag `MANW`, opcode `0x50`), guilds
 (`0xc0e1ec`, `DLGW`, `0x54`), pet names (`0xc0e138`, `MNPW`, `0x52`) and petitions (`0xc0e0fc`, `NTPW`, `0x1c6`). Their
 constructors get 0 for the persist byte, which is `+0x39`; the load and the save each return at once when it is 0. When the
-game interface is initialized, every cache whose `+0x39` is 0 is cleared, so its records last one session.
+game interface is initialized, every cache whose `+0x39` is 0 is cleared, so its records last until the interface is next initialized.
 
 Addresses: `0x554cd0`, `0x55e6a0`, `0x55ec70`, `0x55fa50`, `0x555740`, `0x560400`, `0x48f480`, `0x48f586`
 Confidence: verified

@@ -50,7 +50,7 @@ and `0x8510006c` and `0x85100083` go to `SErrDisplayAppFatal2` (`0x403b6f`). The
 ## base.MPQ and the speech setting
 
 `Data\base.MPQ` is opened at priority `0x64`, `telemetry.dat` read from it, and the archive closed again, all before
-`0x403740` runs, so a file only in `base.MPQ` is not found for the rest of the session. The CVar
+`0x403740` runs, so a file only in `base.MPQ` is not found for the rest of the run. The CVar
 `disableOptionalSpeech` (default `0`) is registered right after the mount; when its value is not 0 at start-up the
 `speech2.MPQ` mount is closed. The setting is read once.
 
@@ -85,7 +85,7 @@ stores `+0x170` and has no `e8`, `e9` or dword reference in the image; the contr
 
 `0x6549a0` walks the list from its head. In each archive it probes the hash table (`format.md#hash-lookup`); a
 hit ends the walk, and only a miss goes on to the next archive. So a name resolves to the highest priority archive
-that has it: every patch beats every base archive, a later patch beats an earlier one, and `speech2.MPQ` and its
+that has it: every patch beats every base archive, a patch that sorts after another beats it, and `speech2.MPQ` and its
 children beat the patches. A speech2 child probes its parent patch for the name prefixed `speech2\`. A hit on a
 block whose flags carry `0x02000000` ends the walk with result 3 and error 2: the file is not found, and a lower
 archive's copy is not used.
