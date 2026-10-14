@@ -851,6 +851,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d828	float	s_particleSubstep		models	Holds 0.1, the particle substep in seconds	verified	one	models/particles#substeps
 0x81d82c	float	s_particleVelocityPeriod		models	Holds 1/30, the period over which an emitter derives its velocity	verified	one	models/particles#update
 0x81d83c	void *[11]	CParticleEmitter2::vftable		models	Holds the base particle emitter's virtual functions	verified	one	models/particles#emitter-classes
+0x81d868	const float	s_particlePoolFactor		models	Holds 1.15, the slack factor of an emitter's particle pool	verified	one	ui/modelview#particles-in-a-model-frame
 0x81d86c	float	s_particleVelocityEpsilon		models	Holds 1e-8, under which a particle velocity component becomes 0	verified	one	models/particles#particle-motion
 0x81d878	const float	s_ribbonMinLifespan		models	Holds 0.25, the shortest lifespan a ribbon keeps	verified	one	models/ribbons#ribbon-ring
 0x81d888	void *[11]	s_planeEmitterVftable		models	Holds the plane emitter's virtual functions	verified	one	models/particles#emitter-classes

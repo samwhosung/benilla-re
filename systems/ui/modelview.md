@@ -297,9 +297,11 @@ A particle in a model frame is drawn in eye space: the emitter installs an ident
 half-extent is added to the transformed position, so a particle's on-screen size is `2 · half · 768·√(a²+1)`
 FrameXML units and carries neither the model scale nor the frame scale, unlike the geometry. The
 half-extent takes the emitter's scale only under runtime flag 0x200. The emitters' distance density
-factor is 1 for every model frame, and `particleDensity` applies as in the world.
+factor is 1 for every model frame, and `particleDensity` applies as in the world. The emitters receive seconds: the
+milliseconds the frame added are drained from the model at its next update and multiplied by 0.001, and each
+emitter's pool holds `trunc(lifespan · rate · 1.15)` particles.
 
-Addresses: `0x7b2a50`, `0x7b2ba3`, `0x7b2ba6`, `0x7b2bab`, `0x7b2bb4`, `0x7b3d20`, `0x7b3e41`, `0x7b5160`, `0x7b5219`, `0x7b55a3`, `0x7b55a8`, `0x7b55b5`, `0x70fb4a`, `0x707680`, `0x707752`
+Addresses: `0x7b2a50`, `0x7b2ba3`, `0x7b2ba6`, `0x7b2bab`, `0x7b2bb4`, `0x7b3d20`, `0x7b3e41`, `0x7b5160`, `0x7b5219`, `0x7b55a3`, `0x7b55a8`, `0x7b55b5`, `0x70fb4a`, `0x707680`, `0x707752`, `0x7193dd`, `0x718c67`, `0x718c89`, `0x801360`, `0x7b1dd0`, `0x7b1de5`, `0x81d868`
 Confidence: verified
 Proof: one
 Test: none
@@ -310,4 +312,4 @@ are added after `0x7bca80` has moved the position. Every reader of `+0x264` that
 the same bit. The density factor is `clamp(1 − (dist − 50)·0.02, 0.25, 1)` of the distance from the
 emitter to `scene + 0x10c`, the translation of the inverse view; with the view `translate(−w/2, −h/2,
 0)` of the orthographic leg (the eye argument is 0) that point is the rectangle's centre, within a
-fraction of a layout unit of every emitter, so the factor is 1 (`models#spawn-count`).
+fraction of a layout unit of every emitter, so the factor is 1 (`models#spawn-count`). `0x7193dd` adds the milliseconds to the model's counter at `+0x88`; `0x718c67` to `0x718c92` zero the counter and store the count times `0x801360` as the step in seconds, which is the step `0x7b5550` receives. `0x7b1dd0` multiplies lifespan, rate and `0x81d868` (1.15) and truncates (`0x7b1de5`); a spawn stops when the free list is empty.
