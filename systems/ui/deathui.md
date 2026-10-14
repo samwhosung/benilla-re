@@ -41,7 +41,7 @@ Test: none
 
 ## Corpse range events
 
-Each frame the world frame update calls `0x492130` (`0x4818c5`, in the unconditional tail of `0x481790`). With a cached corpse and the active player it takes the squared 3D distance from the player to the cached position and compares it with `0xb4e2ac`; inside or equal is range 1. `0x4920f0(state)` signals only on a change: `CORPSE_OUT_OF_RANGE` for 0,
+Each frame the world frame update calls `0x492130` (`0x4818c5`, in the unconditional tail of `0x481790`). With a cached corpse and the active player it takes the squared 3D distance from the player to the cached position, summed as `(dz² + dx²) + dy²` (`0x492188` to `0x492194`), and compares it with `0xb4e2ac`; inside or equal is range 1. `0x4920f0(state)` signals only on a change: `CORPSE_OUT_OF_RANGE` for 0,
 and for 1 `CORPSE_IN_RANGE` when the cached map ids are equal, else `CORPSE_IN_INSTANCE`.
 
 Addresses: `0x492130`, `0x492136`, `0x492169`, `0x492188`, `0x492196`, `0x4921a2`, `0x4921b0`, `0x4920f0`, `0x4920f6`, `0x492100`, `0x49211a`, `0x492124`, `0x4818c5`, `0x481790`, `0x48d060`, `0x48d070`, `0x48d076`, `0x48d07c`, `0xb4e2ac`, `0xb4e324`, `0x8044cc`
@@ -53,7 +53,7 @@ Test: none
 
 ## RetrieveCorpse
 
-`RetrieveCorpse()` sends opcode 0x1d2 with the corpse GUID at `0xb4e328`, a packed GUID, and pushes nothing. It tests no distance, no delay, no ghost bit and not even a zero GUID; the gates are in the interface and in the server.
+`RetrieveCorpse()` sends opcode 0x1d2 with the corpse GUID at `0xb4e328`, the 8-byte GUID, low dword first (`0x418370` stores two raw dwords at `0x4183b4` and `0x4183ba`, then `add [esi+0x10],8`), and pushes nothing. It tests no distance, no delay, no ghost bit and not even a zero GUID; the gates are in the interface and in the server.
 
 Addresses: `0x48d260`, `0x48d269`, `0x48d28b`, `0x48d290`, `0x48d2a0`, `0x48d2ab`, `0xb4e328`, `0xb4e32c`, `0x4920d0`
 Confidence: verified
@@ -99,7 +99,7 @@ The values are left from the last offer and are not cleared by the functions.
 
 ## Resurrection sickness
 
-`GetResSicknessDuration()` pushes the length of the sickness as text, or nil. The spell is the active player's race row (`ChrRaces`, `+0x30`), or 15007 with no row. The length is the spell's `SpellDuration` base (`+4`) plus the per-level word (`+8`) times `UNIT_FIELD_LEVEL`, at most the maximum (`+0xc`), passed through the spell modifiers (`0x6e6af0`). Below 1000 milliseconds, or with a missing row, the answer is nil;
+`GetResSicknessDuration()` pushes the length of the sickness as text, or nil. The spell is the active player's race row (`ChrRaces`, `+0x30`), or 15007 with no row; with no player the spell is 15007 at level 0 (`je` at `0x51a3d1`). The length is the spell's `SpellDuration` base (`+4`) plus the per-level word (`+8`) times `UNIT_FIELD_LEVEL`, at most the maximum (`+0xc`), passed through the spell modifiers (`0x6e6af0`). Below 1000 milliseconds, or with a missing row, the answer is nil;
 otherwise it is formatted by `0x52fa50` with the `GENERIC` key.
 
 Addresses: `0x51a3a0`, `0x51a3cc`, `0x51a3d9`, `0x51a3fd`, `0x51a408`, `0x51a420`, `0x51a43c`, `0x51a459`, `0x51a461`, `0x51a46c`, `0x51a47d`, `0x6e6af0`, `0x52fa50`, `0xc0dee0`, `0xc0dee4`, `0xc0d828`, `0xc0d82c`

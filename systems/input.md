@@ -173,15 +173,14 @@ The delta word is the xor of the old and new flags. The rest of the function is 
 
 ## The forward axis
 
-`0x514da0` adds up the forward direction: autorun (0x1000) +1, MoveForward (0x10) +1, the mouse turn and mouse camera commands both held (0x1 and 0x2) +1, MoveBackward (0x20) -1. A nonzero total starts movement forward (positive) or backward (negative) through `0x60dc60`; a zero total with the latch bit 0x10000 set stops movement and clears the latch.
-Starting sets the latch, stands the unit up if it sits (`0x60be30`) and clears away-from-keyboard for a player (`0x5eb830`). A positive total is silent when the latch is set and the unit is not moving backward.
+`0x514da0` adds up the forward direction: autorun (0x1000) +1, MoveForward (0x10) +1, the mouse turn and mouse camera commands both held (0x1 and 0x2) +1, MoveBackward (0x20) -1. A nonzero total starts movement forward (positive) or backward (negative) through `0x60dc60`; a zero total with the latch bit 0x10000 set stops movement and clears the latch. A start sets the latch.
 
 Addresses: `0x514da0`, `0x514dac`, `0x514db7`, `0x514dbc`, `0x514dc5`, `0x514dcc`, `0x514dce`, `0x514de0`, `0x514de8`, `0x514dfe`, `0x514e0c`, `0x514e23`, `0x514e38`, `0x514e47`, `0x514e69`, `0x514e73`, `0x60dc60`, `0x60dc90`, `0x60be30`, `0x5eb830`
 Confidence: verified
 Proof: one
 Test: none
 
-The latch is bit 16 of the input word and records that a start was sent; it is not a key. Holding S and then toggling autorun gives a total of 0 and stops the unit while S stays down; pressing S while autorun is on removes autorun first (below) and reverses.
+The stand-up (`0x60be30`, at `0x514e0c`) and the away-from-keyboard clear for a player (`0x5eb830`, at `0x514e23`) run on every tick with a nonzero total, before the latch test at `0x514e34`, not only on a start. A positive total is silent when the latch is set and the unit is not moving backward. A negative total is also silent when the latch is set and movement flag 0x1 is clear (`0x514e60`). The latch is bit 16 of the input word and records that a start was sent; it is not a key. Holding S and then toggling autorun gives a total of 0 and stops the unit while S stays down; pressing S while autorun is on removes autorun first (below) and reverses.
 
 ## What clears autorun
 

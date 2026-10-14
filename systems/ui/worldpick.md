@@ -56,7 +56,7 @@ Test: none
 ## The candidate filters
 
 `0x480a50` walks the list and runs `0x480780(node, flags)` on each node. A node that passes is registered as a hit-test instance (`0x480d90`, for the model and its children) and the scene ray (`0x7089c0`) then returns the nearest hit's node.
-`0x480780` admits a unit with flag 0x8 and a player with 0x10, and sends both to `0x480610`. It admits a game object with 0x4 and a corpse with 0x40, each also needing `0x6e62e0` or `0x6e6260` while a spell awaits a target. Every other type is refused.
+`0x480780` admits a unit with flag 0x8 and a player with 0x10, and sends both to `0x480610`. It admits a game object with 0x4 and a corpse with 0x40, each also needing `0x6e62e0` or `0x6e6260` respectively while a spell awaits a target. Every other type is refused.
 
 Addresses: `0x480a50`, `0x480b7f`, `0x480bac`, `0x480bfe`, `0x480c11`, `0x480c2e`, `0x480780`, `0x4807b2`, `0x4807ba`, `0x4807c8`, `0x4807de`, `0x4807f4`, `0x480816`, `0x480850`, `0x48083c`, `0x480c90`, `0x480d10`, `0x480d00`, `0x480d90`, `0x480da1`, `0x7089b0`, `0x7089c0`, `0x5f8800`, `0x6003a0`, `0x5d6e20`, `0x713cb0`
 Confidence: verified

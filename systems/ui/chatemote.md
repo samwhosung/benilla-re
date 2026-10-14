@@ -33,8 +33,8 @@ The cache query at `0x49dc59` passes the performer GUID, a pointer to it and the
 the target name (`SStrDupA`), `+0x18` the held flag, `+0x1c` the number. When the performer's name arrives the
 cache calls `0x49d0d0` with the GUID: each node with flag 0 and that GUID is looked up again. A missing record
 frees the node and shows nothing. A record with the latch set marks the node held (flag 1). A record without the
-latch runs the composer with the node's fields and frees the node. A held node is never shown: nothing walks the
-list but this callback, which skips flag 1.
+latch runs the composer with the node's fields and frees the node. A held node is never shown: nothing else
+composes from the list (the exit routine `0x497960` is not a composer); this callback skips flag 1.
 
 Addresses: `0x49cc00`, `0x49cc17`, `0x49cc99`, `0x49d0d0`, `0x49d126`, `0x49d165`, `0x49d176`, `0x49d18f`, `0x49d1db`, `0x497920`, `0x497960`, `0xb4fe0c`, `0x8435fc`
 Confidence: verified

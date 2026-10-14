@@ -35,9 +35,9 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x84c150` is -1 at start-up, -1 after a leader that is not one of the four, the slot index for a party member, and 0 for the player. `0x4e84a0` leaves it 0 with no group, and the
+`0x84c150` is -1 at start-up, -1 after a leader that is not one of the four, the slot index for a party member. The player is never in the four slots, so the cell is -1 and `GetPartyLeaderIndex()` pushes 0 for the player. `0x4e84a0` leaves it 0 with no group, and the
 `0x4e8250(0, 0)` that follows it in the uninvite and disband handlers returns before its -1 store because the cell is already 0, so
-`GetPartyLeaderIndex()` answers 1 (not 0) for a player in no group. `0x4e8250` signals event 219 on both of its non-returning paths; the early return fires none.
+`GetPartyLeaderIndex()` answers 1 (not 0) for a player in no group, but only after a group list, uninvite or disband has run `0x4e84a0`; before that it answers 0 (`0x4e7c9f`). `0x4e8250` signals event 219 on both of its non-returning paths; the early return fires none.
 
 ## UnitIsPartyLeader
 

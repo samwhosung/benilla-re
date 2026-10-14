@@ -105,7 +105,7 @@ Test: none
 
 An offline member who never answered does not hold the check open but is listed as away: the summary tests only `+0x158`. The scan also runs at the end of the group list
 handler (`0x4bacb9`), so a pending member who leaves or goes offline ends the check at the next roster message. The list buffer is 0x200 bytes joined with `SStrPack`.
-`0x4ba4b6` leaves the scan early only when a pending online member and the leader's own record have both been seen, to the plain return `0x4ba53f`.
+`0x4ba4b6` leaves the scan early only when a pending online member and the answering member's record (the second flag, `[ebp-2]`, set at `0x4ba417`) have both been seen, to the plain return `0x4ba53f`.
 
 ## Setting a raid target
 

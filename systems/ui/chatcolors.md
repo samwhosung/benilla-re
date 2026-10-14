@@ -28,8 +28,8 @@ array to 10 if it was smaller (`0x498446` to `0x49845f`); `0x498483` formats the
 
 ## ChangeChatColor
 
-`ChangeChatColor(name, r, g, b)` needs a string and three numbers (otherwise it returns with no value
-and no error). Each colour is `int(255.0 * x)` truncated, with no clamp; the low byte is stored. The name
+`ChangeChatColor(name, r, g, b)` needs a string and three numbers (otherwise it raises the usage
+error). Each colour is `int(255.0 * x)` truncated, with no clamp; the low byte is stored. The name
 is matched without case against the 94 registry names and then against the extra names, and both
 matches are written when both exist. If any entry matched, the function fires `UPDATE_CHAT_COLOR` with
 the name given and the three stored bytes times 1/255 as numbers. It returns no values.
@@ -40,7 +40,8 @@ Proof: one
 Test: none
 
 The four type tests are `lua_isstring` and three `lua_isnumber` (`0x4a0803` to `0x4a0841`), all
-jumping to the silent exit `0x4a09ca`. Each `fmul qword [0x806498]` (255.0) is followed by `0x40a2b0`.
+jumping to `0x4a09ca`, which pushes `0x844d28` and calls `luaL_error` (`0x6f4940`). The string is
+`Usage(ChangeChatColor(chatType, r, g, b)`, malformed in the exe. Each `fmul qword [0x806498]` (255.0) is followed by `0x40a2b0`.
 The fixed-entry match writes `+0x40`, `+0x41`, `+0x42` and sets a local flag (`0x4a08f9`); an extra match
 writes its entry and jumps to the fire (`0x4a099c` to `0x4a093f`) without the flag. The event is id
 0xe2 with the format `%s%f%f%f` (`0x4a098b`); the floats are `fild` of each byte times `0x8026c8`

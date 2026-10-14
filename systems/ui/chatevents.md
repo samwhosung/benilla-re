@@ -33,7 +33,7 @@ length. The tag byte is read at `0x49d6f2`. The handler is registered by `0x4986
 ## The chat tag
 
 The tag byte becomes a token for the interface: 1 is `AFK`, 2 is `DND`, 3 is `GM` and anything else is
-empty. A line from an ignored player is dropped unless its tag is 3 (GM); an ignored whisper instead sends the
+empty. A line from an ignored player is dropped unless its tag is 3 (GM) on the default path; the monster path (`0x49daa5`) and type 89 (`0x49d678`) drop an ignored sender whatever the tag. An ignored whisper instead sends the
 ignored reply to the server.
 
 Addresses: `0x49d6f7`, `0x49d6fe`, `0x49d70b`, `0x49d718`, `0x49d72d`, `0x49d736`, `0x49d73c`, `0x49d740`, `0x49d74e`, `0x49d4b0`, `0x5ae5a0`, `0xc28168`
@@ -107,7 +107,7 @@ speaker is a unit the client has, `0x608ac0(type, text)` (`0x49acd9`). Fifty cal
 with `%s%s%s%s%s%s%d%d%s%d`: the text, the sender, the language's name, the channel name with its number, the
 second name of a two-name notice, the tag token, the channel's ChatChannels id, its slot number, its stored
 name and its instance number; the last four are zero, zero, empty and zero without a joined channel.
-A type of 94 or more fires nothing. The event of a type is `tables/chat_types.tsv`; type 89 has an id with
+A type of 94 or more fires nothing; the test is `cmp edx,0x5e; jge`, which is signed, so a negative type is not rejected (callers pass small positive types). The event of a type is `tables/chat_types.tsv`; type 89 has an id with
 no name.
 
 Addresses: `0x49b0b0`, `0x49b0b6`, `0x49b0bf`, `0x49b0c5`, `0x49b0f4`, `0x49b10c`, `0x49b113`, `0x49b115`, `0x49b11b`, `0x49b11e`, `0x49b12f`, `0x49b146`, `0x49b162`, `0x49b16e`, `0x49b189`, `0x49b18c`, `0x49b193`, `0x49b199`, `0x8062e0`, `0x703f50`, `0x49b1b0`, `0x49b1ce`, `0x49b495`

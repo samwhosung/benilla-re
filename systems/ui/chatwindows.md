@@ -160,7 +160,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-Each line is `_snprintf` into a 0x100 buffer and written by `0x42a5d0`, which calls `WriteFile`. The
+Blank lines: `VERSION %d\n\n`, `ADDEDVERSION %d\n\n`, `%s %s\n\n` (option line), `ZONECHANNELS %d\n\n` and `END\n\n` each end in one, as does `SHOWN`. Each line is `_snprintf` into a 0x100 buffer and written by `0x42a5d0`, which calls `WriteFile`. The
 registration `0x498a40` installs `0x499a80` as the saver of cache-file kind 7 and clears `0xb6e5c4`, which only the channel join and leave set and no instruction reads; the window setters mark nothing and the file is rewritten whole. The header option line is
 the string at `0x843614` followed by `AUTO` when `0x843608` is 1, else `STANDARD`. The header `CHANNELS`
 lists the joined-channel slots (array `0xb4fe04`, count `0xb4fe00`, stride 0xa0) with a number, state 0

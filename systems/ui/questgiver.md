@@ -40,6 +40,8 @@ Confidence: verified
 Proof: one
 Test: none
 
+`rowCount` is never clamped to 32: the loop at `0x5dbb4b` compares signed against the byte, so more than 32 rows overrun the staging arrays at `0xc4d2b0`, `0xc4d340` and `0xc4d6b0`, the pools (`0x500e40` and `0x500e90` have no cap) and the 0x800-byte title buffer at `ebp-0xa14`; around row 40 the writes reach the saved frame, a client fault.
+
 The row reads fill three 32-dword staging arrays, ids at `0xc4d2b0`, icons at `0xc4d340` and levels at
 `0xc4d6b0`, each cleared with `rep stosd` and `ecx = 0x20`; the title goes to a stack buffer advanced by 0x40. The test is
 `cmp ebx,3; je` and `cmp ebx,4; je` to the active append (`0x5dbc00` to `0x5dbc08`), then `test ebx,ebx; sete cl` for the one-click flag.
@@ -51,8 +53,7 @@ player has not taken arrives with icon 4 and so lands in the active pool.
 `SelectAvailableQuest(n)` and `SelectActiveQuest(n)` take a 1-based row. The available one sends
 `CMSG_QUESTGIVER_QUERY_QUEST` (opcode 0x186) for a normal row and `CMSG_QUESTGIVER_COMPLETE_QUEST` (0x18a) for a
 one-click row; the active one always sends 0x18a. Each sends the dialog's source guid and the quest id, then sets the
-acted latch `0xbe0844`, and does nothing while it is set. The row bound is `cmp esi,count; ja`, so the index
-equal to the count is accepted.
+acted latch `0xbe0844`, and does nothing while it is set. The row bound is `cmp esi,count; ja`, so the index is decremented before the compare and the 1-based row count+1 is accepted, reading one row past the pool.
 
 Addresses: `0x501ca0`, `0x501cc4`, `0x501ce0`, `0x501d04`, `0x5012a0`, `0x5012a8`, `0x5012b1`, `0x5012ba`, `0x5012db`, `0x5012e3`, `0x501320`, `0x5eab80`, `0x5eab89`, `0x5eaca0`, `0x5eaca9`, `0xbe0810`, `0xbe0844`
 Confidence: verified

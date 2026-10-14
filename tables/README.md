@@ -200,7 +200,7 @@ error.
 |---|---|
 | `name` | The Lua name, in table order. |
 | `fn` | The C function. |
-| `checked` | The checked arguments, `,`-separated: `1:string` for `lua_isstring` (a number passes) and `1:number` for `lua_isnumber`, by Lua stack index. Empty for none. |
+| `checked` | The checked arguments, `,`-separated: `1:string` for `lua_isstring` (a number passes) and `1:number` for `lua_isnumber`, by Lua stack index. Empty for none. The table does not tell a probe from a check: `GetPVPRankInfo`'s `2:string` is a probe (`0x51a97c`, `0x51a998`) whose result is tested, and it never raises. |
 | `usage` | Every `Usage:` string the function pushes for its error, `\|`-separated. Empty for none. |
 
 ## tutorial_triggers.tsv

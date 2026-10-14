@@ -50,7 +50,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-A count above 40 writes past the guid array into the globals after it and past the position array: a client fault. The handler is registered at `0x4a9c84`; the position request is sent at most once per 5000 milliseconds while a battleground slot is active (`battlefield#positions`). No function here signals an event.
+A count above 40 writes past the guid array into the globals after it and past the position array: a client fault. The handler is registered at `0x4a9c84`; the position request is sent at most once per 5000 milliseconds while a battleground slot is active (`battlefield#joining-and-leaving`). No function here signals an event.
 
 ## Teammate positions
 

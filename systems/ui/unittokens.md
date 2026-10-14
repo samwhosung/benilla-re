@@ -57,7 +57,7 @@ ends at `0x515c14` with the push of the format and `0x515c1a`, the raise.
 ## Argument checks
 
 `tables/unit_gates.tsv` lists, for the 83 unit functions, the arguments each checks and its `Usage:` string. 53 check: a failed check is a raise before any lookup, so a nil or missing
-unit raises. `lua_isstring` accepts a number, so a numeric unit passes the check and raises in the resolver. The other 30 take no check: 17 take no unit token at all,
+unit raises, with one exception: `GetPVPRankInfo`'s argument 2 is a probe, not a check (`0x51a97c`, `0x51a998`): its result is tested and it never raises. `lua_isstring` accepts a number, so a numeric unit passes the check and raises in the resolver. The other 30 take no check: 17 take no unit token at all,
 and 13 take a token and answer quietly for a missing one (`UnitExists`, `UnitIsVisible`, `UnitIsPlayer`, `UnitIsCorpse`, `UnitIsPartyLeader`, `UnitInParty`,
 `UnitPlayerOrPetInParty`, `UnitInRaid`, `UnitPlayerOrPetInRaid`, `UnitPlayerControlled`, `UnitIsCharmed`, `UnitIsPlusMob`, `UnitClassification`).
 

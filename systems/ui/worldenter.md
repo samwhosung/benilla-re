@@ -24,6 +24,8 @@ Confidence: verified
 Proof: one
 Test: none
 
+The end of the cascade: a dead player gets `0x5e0ae0` first (`0x490a38`); the second `0x4b5390` call is tutorial 0 (`0x490a4f`); `0x458f60` follows, pairing with `0x458f50` at `0x4908d5`; and during a cinematic `0x4c0d10(0x48edd0, ...)` runs at `0x490a73`.
+
 The guard is `mov al,[0xb4b424]; test al,al; jne 0x490a78` (`0x4908c0`, `0x4908c7`) and the set is `0x4908ce`. The
 login arm reads `0xb4e260` (`0x49094b`): `je 0x490965` skips `PLAYER_LOGIN` when it is 0, and `0x49095e` disarms it.
 `PLAYER_ENTERING_WORLD` follows at `0x49096a` on both paths. The 38 calls run from `0x49096f` to `0x490a28`. The

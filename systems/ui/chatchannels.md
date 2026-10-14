@@ -232,7 +232,7 @@ take 0x13 from `mov edi,0x13`, those that enter at `0x49c4e4` keep 0x12. The sha
 resolves the first GUID's name through the name cache into the sender, and the second one's into the
 fifth argument; `0x49c595` to `0x49c5b0` push the ten arguments. Notice 2 fires a second line, the topic, at
 `0x49c5f8` with the same type when `[ebp+0xf] == 2` and the topic string is not empty. The drop flag is
-set by notices 3, 4, 26 and 27 and consumed after the event.
+set by notices 3 (YOU_LEFT only), 4, 5, 26 and 27 (notice 5, NOT_MEMBER, jumps to `0x49c461`, and `0x49c46d` stores `[ebp-0xc]=1`) and consumed after the event.
 
 ## Channel list message
 

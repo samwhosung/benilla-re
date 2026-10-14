@@ -6909,7 +6909,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f420	20			ui	orchestration		Signals the group invitation with a name	inferred	none	objectlayer/party#group-notices	
 0x48f440	10			ui	orchestration		Signals the cancelled group invitation	inferred	none	objectlayer/party#group-notices	
 0x48f450	21	SignalGuildInviteRequest		ui	orchestration		Signals GUILD_INVITE_REQUEST with an inviter and a guild	verified	one	objectlayer/party#guild-notices	
-0x48f470	10			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
+0x48f470	10	SignalGuildInviteCancel		ui	orchestration		Signals GUILD_INVITE_CANCEL; no caller and no stored address	verified	one	ui/guild#roster-events	
 0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Registers the game handlers and arms the billing warning timer	verified	one	ui/billing#the-warning-timer	
 0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration		Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	
@@ -10090,7 +10090,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e2580	46	CountGossipActiveQuests		ui	primitive		Counts the gossip quest rows whose icon is 3 or 4	verified	one	ui/questgiver#the-split-on-gossip	
 0x4e25b0	73			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e2600	156			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4e26a0	51	ResetGossipOptions		ui	primitive		Sets the index of all 16 gossip option slots to -1	verified	one	ui/gossip#the-gossip-message	
+0x4e26a0	51	ResetGossipOptions		ui	primitive		Sets the index of all 16 gossip option slots to -1 and zeroes the 32 quest ids	verified	one	ui/gossip#the-gossip-message	
 0x4e26e0	274	HandleGossipMessagePacket	idb	ui	primitive		Handles the gossip message: latches the target, reads options and quests, builds the greeting	verified	one	ui/gossip#the-gossip-message	
 0x4e2800	55	HandleGossipCompletePacket	idb	ui	orchestration		Runs its object file code that calls 0x4e1fa0; not read here	inferred	none		
 0x4e2840	123	HandleGossipPoiPacket	idb	ui	orchestration		Reads a point of interest and stores it in the second static blip	verified	one	ui/gossip#the-gossip-point-of-interest	
@@ -17410,9 +17410,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5abd90	19	SetSelectedCharacterRecord		net	orchestration	void __fastcall (const void *record)	Copies a 0x110-byte character record into the selected-character record	verified	one	net/connection#status-text-and-names	
 0x5abdb0	6	GetSelectedCharacterRecord		net	unreached	void * __cdecl (void)	Returns the selected-character record	inferred	none	net/layout#unreached-functions	
 0x5abdc0	15	GetSelectedCharacterName		net	orchestration	const char * __cdecl (void)	Returns the selected character name at record +0x08, or null when it is empty	verified	one	net/connection#status-text-and-names	
-0x5abdd0	6	GetSelectedCharacterRace		net	orchestration	uint8_t __cdecl (void)	Returns the selected character race byte at record +0x100	inferred	none		
-0x5abde0	6	GetSelectedCharacterClass		net	orchestration	uint8_t __cdecl (void)	Returns the selected character class byte at record +0x101	inferred	none		
-0x5abdf0	6	GetSelectedCharacterSex		net	orchestration	uint8_t __cdecl (void)	Returns the selected character sex byte at record +0x102	inferred	none		
+0x5abdd0	6	GetSelectedCharacterRace		net	orchestration	uint8_t __cdecl (void)	Returns the selected character race byte at record +0x100	verified	one	ui/unitplayer#the-selected-character-record	
+0x5abde0	6	GetSelectedCharacterClass		net	orchestration	uint8_t __cdecl (void)	Returns the selected character class byte at record +0x101	verified	one	ui/unitplayer#the-selected-character-record	
+0x5abdf0	6	GetSelectedCharacterSex		net	orchestration	uint8_t __cdecl (void)	Returns the selected character sex byte at record +0x102	verified	one	ui/unitplayer#the-selected-character-record	
 0x5abe00	6	GetSelectedCharacterLevel		net	unreached	uint8_t __cdecl (void)	Returns the selected character level byte at record +0x108	inferred	none	net/layout#unreached-functions	
 0x5abe10	1928	SendBugReport		net	unreached	uint8_t __fastcall (uint32_t type, const char *text, const char *extra)	Sends opcode 0x1ca with a type, the text followed by a system and character report, and a second string	inferred	none	net/layout#unreached-functions	
 0x5ac5a0	5	InitCopy4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac5b0; a static initializer	verified	one	net/layout#static-initializers	
@@ -36573,7 +36573,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cba70	40	CGNamePlateFrame::Flash		ui	orchestration	void __thiscall (void *frame)	Starts a 5000 ms flash and sets the name colour to red	verified	one	ui/nameplates#name-flash-and-dim	
 0x7cbaa0	155	CGNamePlateFrame::SetBarColor		ui	orchestration		Sets the bar colour from the unit's reaction toward the player and its type	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cbb40	408	CGNamePlateFrame::UpdateLevel		ui	orchestration		Shows the level text or the skull for the unit and colours the level by difficulty	verified	one	ui/nameplates#level-text-and-skull	
-0x7cbce0	111	DisplayedLevel		ui	primitive		Returns a unit's level less the drunk reduction when the player can attack it, at least 1	verified	one	ui/unitlevels#the-level-on-a-plate	
+0x7cbce0	111	DisplayedLevel		ui	primitive		Returns a unit's level less the drunk reduction when the player can attack it, at least 1 for a positive level	verified	one	ui/unitlevels#the-level-on-a-plate	
 0x7cbd50	186	DifficultyColor		ui	primitive		Returns the address of the ARGB word for a unit level against a player level	verified	one	ui/unitlevels#the-difficulty-colour	
 0x7cbe10	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cbe20	156	CGNamePlateFrame::SetRaidIcon		ui	orchestration		Crops the raid icon texture to a cell of the 4 by 2 atlas, or hides it for 8 or more	verified	one	ui/nameplates#level-text-and-skull	

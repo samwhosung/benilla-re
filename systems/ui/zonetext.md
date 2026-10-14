@@ -67,7 +67,7 @@ Each function pushes one value and takes no argument. `0x494970` updates the min
 ## GetZonePVPInfo
 
 `GetZonePVPInfo()` always pushes three values. The third is 1 when the leaf area's flags (`+0x10`) have bit 0x80, else nil, computed before any bail. The first two are nil unless the gate is open: the world-entry word `0x88272c` is nonzero or the zone row's flags have bit 0x10, and there is an active player. With the gate open the first is `friendly` when the player's faction template friend mask (`+0x10`) meets the zone's faction group mask (`+0x50`),
-else `hostile` when its enemy mask (`+0x14`) does, else `contested`; the second is the name of the first `FactionGroup` row whose mask bit is in the zone mask, or the empty string.
+else `hostile` when its enemy mask (`+0x14`) does, else `contested`; the second is the name of the first `FactionGroup` row whose mask bit is in the zone mask and which also has a nonempty localised name (`0x48d671`), or the empty string.
 
 Addresses: `0x48d540`, `0x48d575`, `0x48d57a`, `0x48d5b4`, `0x48d5c2`, `0x48d5cc`, `0x48d5f9`, `0x48d604`, `0x48d607`, `0x48d613`, `0x48d629`, `0x48d65e`, `0x48d66d`, `0x48d697`, `0x48d6b5`, `0x88272c`, `0xc0dd3c`, `0xc0dd40`, `0xc0dd5c`, `0xc0dd60`, `0xc0e080`
 Confidence: verified

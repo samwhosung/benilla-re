@@ -64,8 +64,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`D = (G44 / G48) * (H / W)`: `0x58a250` reads the live window rect `{top, left, bottom, right}` (device slot `+0x60`), W is `rect[3] - rect[1]` and H `rect[2] - rect[0]`, and G44 and G48 are the screen scale globals `0x832a44` and `0x832a48` (`0x41ad10`), whose ratio is the configured aspect. D is 1 whenever the window has the configured aspect,
-so the projection aspect is 1 (`camera#view-and-projection`): the half-angle is `fov / (2 * sqrt(2))` and a sphere lands as a circle. The viewport fractions are `(0, 64/W)` by `(1 - 64/H, 1)` after `0x41ade0` divides by G44 and G48, a 64 by 64 pixel box. The readback rectangle is (0, 0, 64, 64) and the bake binds no render target.
+In the code's order, with float stores: `p = G44 * (64 / W)`, `q = G48 - (G48 / H) * 64` and `D = (p - 0) / (G48 - q)` (`0x5251b7` to `0x525430`). Each x87 operation rounds once, to the client's 53-bit precision, and each store to 24 bits. `0x58a250` reads the live window rect `{top, left, bottom, right}` (device slot `+0x60`), W is `rect[3] - rect[1]`, H is `rect[2] - rect[0]`, and G44 and G48 are the scale globals `0x832a44` and `0x832a48` (`0x41ad10`), whose ratio is the configured aspect. D is 1 within a few ulps, not exactly 1.0,
+so the projection aspect is too (`camera#view-and-projection`): the half-angle is `fov / (2 * sqrt(2))` and a sphere lands nearly round. The viewport fractions are `(0, 64/W)` by `(1 - 64/H, 1)` after `0x41ade0` divides by G44 and G48, a 64 by 64 pixel box, read back from (0, 0), no render target.
 After the readback the device is cleared again and the mask `0x5258a0(64)` is copied byte by byte into the alpha byte of each texel, which makes the round shape; the texture is created once per entry by `0x449bf0` and updated in place afterwards.
 
 ## Stand-in portraits

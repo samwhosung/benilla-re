@@ -33,7 +33,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The two functions form the product in a different order, `(drunk * 5.0) * 0.01` against `drunk * 0.05`. At 64-bit precision the first gives 0.4999999888 for a drunkenness of 10 where the second gives 0.5000000074, so after adding 0.5 and truncating
+The two functions form the product in a different order, `(drunk * 5.0) * 0.01` against `drunk * 0.05`. At the client's 53-bit precision the first gives 0.4999999888 for a drunkenness of 10 where the second gives 0.5000000074, so after adding 0.5 and truncating
 the reduction is 0 against 1; the same holds at 30, 50, 70 and 90, and the two agree at every other value from 0 to 100 (0 to 5 levels). Under a 24-bit precision control both products round to the same single.
 
 ## The gray range
@@ -70,4 +70,4 @@ Confidence: verified
 Proof: one
 Test: none
 
-The table index is 12 for an unsigned index of 20 or more (`0x7cbdc0`, `jae`). The comparisons are signed on d (`jl`).
+The gap is 12 for an unsigned index of 20 or more (`0x7cbdc0`, `jae`). The comparisons are signed on d (`jl`).

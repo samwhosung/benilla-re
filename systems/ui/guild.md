@@ -122,7 +122,7 @@ count. `GetGuildRosterInfo(index)` is 1-based and returns ten values: name, rank
 zone name, public note, officer note, 1 or nil for online, and the status text for do-not-disturb or away or the empty
 string. Any index below 1 or past the full count, a missing member, an unknown player or guild, or a guild record
 not yet cached returns `nil, nil, 0, 0, nil, nil, nil, nil, nil, ""`. A missing argument raises
-`Usage: GetGuildRosterInfo(index)`.
+`Usage: GetGuildRosterInfo(index)`. The rank name is copied with no size limit (`0x7fffffff`) into the stack buffer at `ebp-0x48` (`0x4d12f3`).
 
 Addresses: `0x4d1190`, `0x4d11a5`, `0x4d1200`, `0x4d1222`, `0x4d1291`, `0x4d12bb`, `0x4d12e2`, `0x4d1339`, `0x4d1361`, `0x4d1397`, `0x4d13c5`, `0x4d1412`, `0x4d146c`, `0x4d1480`, `0xc0e1ec`
 Confidence: verified
@@ -303,5 +303,5 @@ The argument is a `%d` of 1 (`0x835154` holds the format). `PLAYER_GUILD_UPDATE`
 a player's guild rank, with no argument (`0x5e27b0`); a change of a player's guild id, through `0x5e08e0`, which
 signals `TABARD_CANSAVE_CHANGED` and broadcasts the event with one unit token per token that names the player
 (`0x515e50`); and the cache callback of `GetGuildInfo`. `GUILD_INVITE_REQUEST` is signalled by `0x48f450` with
-the inviter and the guild name. The signal wrapper `0x48f470` for `GUILD_INVITE_CANCEL` has no caller and no stored
-address: the event never fires.
+the inviter and the guild name. The signal wrapper `0x48f470` for `GUILD_INVITE_CANCEL` (`mov ecx,0x11b; jmp 0x703e50`, like `0x48f450`) has no caller and no stored
+address: a census of the image finds 0 `call`, 0 `jmp` and 0 address hits for it (the control `0x48f450` has 1 `call`), so the event never fires.

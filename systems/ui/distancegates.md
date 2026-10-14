@@ -6,7 +6,7 @@ Roots: `0x4944a0`, `0x48a1b0`, `0x48ba00`, `0x4923b0`, `0x4924c0`, `0x492130`
 
 ## The kernel
 
-Every gate loads two positions through slot `+0x14` of the object (a `C3Vector` getter), subtracts them, squares each difference, sums the three squares and compares the sum with a squared threshold, in x87 registers. The differences, squares and sum keep the 80-bit extended value, so the result is the exact double of the float differences.
+Every gate loads two positions through slot `+0x14` of the object (a `C3Vector` getter), subtracts them, squares each difference, sums the three squares and compares the sum with a squared threshold, in x87 registers. The client runs the x87 at 53-bit precision (control word 0x027F), not 80-bit extended: the squares of the float differences are exact and each add rounds.
 The compare is `fcomp` or `fcompp` followed by `fnstsw` and a mask of `ah`: `test ah,0x41` with `je` is the gate for greater than, and `test ah,5` with `jp` or `jnp` separates less than and unordered from the rest. The order of the three squares differs from site to site.
 
 Addresses: `0x4944a0`, `0x4944f5`, `0x494502`, `0x494505`, `0x494525`, `0x494531`, `0x494536`, `0x48bafd`, `0x48bb0a`, `0x48bb0f`, `0x4923b0`, `0x492130`, `0x492196`, `0x4924c0`, `0x494200`, `0x4942a4`, `0x5116e0`, `0x511709`

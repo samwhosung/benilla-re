@@ -117,7 +117,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-Any status but 3 zeroes `0xb6ebb8` and `0xb6ebbc` whatever the slot, and resets `0x8457cc` to -1 when it equals the slot.
+A zero map id also clears the position count `0xb6ebdc` (`0x4aaae6`), and status 2 with d = 0 stores a deadline of 0. Any status but 3 zeroes `0xb6ebb8` and `0xb6ebbc` whatever the slot, and resets `0x8457cc` to -1 when it equals the slot.
 Any status but 2 zeroes `+0x14`, any but 1 zeroes `+0x18` and `+0x1c`. The stat columns are a run of consecutive `WorldStateUI` rows
 (0x9c bytes each, store `0xc0d564`) starting at the first row whose map word (`+4`) equals the slot's map or -1 and whose type
 (`+0x60`) is 2, collected into `0xb6e6ec` with the count `0xb6ebd8`. All paths but the abort signal
@@ -140,7 +140,7 @@ Test: none
 
 `0x4aa5a0(f)` accepts -1, 0 and 1 and ignores any other value; it stores the filter and runs `0x4aa200`. The rebuild uses the
 inline team lookup without the null-row guards of `0x5efe00`: a missing race or faction template row dereferences zero.
-A row count of 80 or more walks past the 80-pointer array. The array is sorted, never compacted, so
+A row count of more than 80 walks past the 80-pointer array. The array is sorted, never compacted, so
 the filtered count is the number of rows at the front only when the sort puts them there.
 
 ## The comparator
@@ -164,8 +164,8 @@ equal go to the keys; teams different return `setne dl; lea edx,[edx+edx-1]` on 
 index past the filtered count returns a real row of another team. It returns nine values on every path: the name
 (`Name-Realm` with a realm), kills, honorable kills, deaths, honor, team, rank, race and class names (nil when unresolved),
 and `nil, 0, 0, 0, 0, 0, 0, nil, nil` for a missing row or name. `GetBattlefieldWinner()` is the winner, nil until ended.
-`GetBattlefieldStatInfo(index)` gives a column's text, icon and tooltip, three nils for a negative id; an index past the
-count reads row 0. `GetBattlefieldStatData(row, stat)` returns the stat word, 0 outside the row, and reads one word past the
+`GetBattlefieldStatInfo(index)` gives a column's text, icon and tooltip, three nils for a negative id and for an index past the
+count. `GetBattlefieldStatData(row, stat)` returns the stat word, 0 outside the row, and reads one word past the
 block for stat 9.
 
 Addresses: `0x4ab9a0`, `0x4ab9d0`, `0x4aba04`, `0x4abbd9`, `0x4abc40`, `0x4abc90`, `0x4abcd0`, `0x4abd00`, `0x4abd41`, `0x4abdc0`, `0x4abe52`, `0xb6ebc0`, `0xb6e6ec`, `0xc0d56c`
@@ -173,7 +173,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`SetBattlefieldScoreFaction([f])` reads an optional number (-1 otherwise, never an error) and runs `0x4aa5a0`. The stat
+An index past the count makes `GetBattlefieldStatInfo` look up id 0, which the id index holds as null (`0x4abd41` sets `eax` to 0): three nils, as in `worldstate`. `SetBattlefieldScoreFaction([f])` reads an optional number (-1 otherwise, never an error) and runs `0x4aa5a0`. The stat
 getter admits `stat - 1` up to 8 (`cmp eax,8; ja`) while the block holds eight words at `+0x20` to `+0x3c`.
 The stat trio's store is `WorldStateUI.dbc` (39 fields, 0x9c-byte rows).
 

@@ -97,4 +97,4 @@ Confidence: verified
 Proof: one
 Test: none
 
-Every world entry fires 41 and then 0 (`0x490a48`, `0x490a51`). The level message `0x5e38c0` fires 22 at level 3, 13 and 2 at 4, 38 at 5, 21 and 37 at 7, 32 at 8 and 12 at 10. One site (`0x5de542`) takes its number from a table. `unitinfo`, `meetingstone`, `battlefield`, `questtitle`, `spellbook` and `worldenter` give the condition at each of their sites.
+Every world entry fires 41 and then 0 (`0x490a48`, `0x490a51`). The level message `0x5e38c0` fires 22 at level 3 or above, 13 and 2 at 4 or above, 38 at 5 or above, 21 and 37 at 7 or above, 32 at 8 or above and 12 at 10 or above. Each test is `cmp eax,N; jl` (`0x5e4086` to `0x5e4105`), so a jump of several levels fires every lower number too. One site (`0x5de542`) takes its number from a table. `unitinfo`, `meetingstone`, `battlefield`, `questtitle`, `spellbook` and `worldenter` give the condition at each of their sites.

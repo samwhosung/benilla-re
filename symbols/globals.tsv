@@ -1245,6 +1245,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
+0x844d28	char[41]	s_textUsageChangeChatColor		ui	Holds the string "Usage(ChangeChatColor(chatType, r, g, b)", the usage error of ChangeChatColor	verified	one	ui/chatcolors#changechatcolor
 0x84506c	int32_t	s_mapContinent		unassigned	Holds the selected continent index, -1 for the world view, -2 for a direct area	verified	one	ui/worldmap#the-selection
 0x845070	int32_t	s_mapZone		unassigned	Holds the selected zone index within the continent, -1 for none	verified	one	ui/worldmap#the-selection
 0x845074	int32_t	s_mapDirectArea		unassigned	Holds the WorldMapArea row id of the selected instance map, -1 for none	verified	one	ui/worldmap#the-selection

@@ -26,7 +26,7 @@ Test: none
 The handler is registered by the block at `0x4e1f12` for opcode 0x17d. The count clamp is `cmp eax,0x10; jb`,
 unsigned, so any count of 16 or more, a huge one too, becomes 15 (`0x4e2722`). The option store is 16 slots of
 0x80c bytes at `0xbbbe90`: text at `+0`, the index at `+0x800`, the coded byte at `+0x804` and the icon dword at `+0x808`.
-`0x4e26a0` resets only the 16 index words to -1, so a stale slot keeps its text. The quest store is 32
+`0x4e26a0` resets the 16 index words to -1 and zeroes the 32 quest ids (`0x4e26c0`), so a stale option slot keeps its text. The quest store is 32
 rows of 0x20c bytes at `0xbb74c0`: id at `+0`, level at `+4`, icon at `+8`, title at `+0xc`. The quest loop tests
 only `jle` on its count (`0x4e2795`), so more than 32 rows write past the array.
 
