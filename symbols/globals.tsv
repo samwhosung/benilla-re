@@ -1101,9 +1101,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82ee00	char[2]			unassigned	Holds the string " "	inferred	none	
 0x82ef08	char[6]	s_textSS		unassigned	Holds the string "%s %s"	inferred	none	
 0x82f00c	uint32_t			unassigned	Holds a dword that BeginLoadingScreen reads and writes; not read here	inferred	none	
-0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	input#click-versus-drag
-0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	input#click-versus-drag
-0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	glue/script#cursor-and-screen-size
+0x832a40	float	s_screenAspect		screencoord	Holds the display aspect stored by 0x41ad10; 1.3333334 in the file	verified	one	screencoord#screen-scale-state
+0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
+0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
+0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	screencoord#screen-scale-state
 0x832cc0	int32_t	s_schedulerCallGuard		core	Holds -1 plus the number of scheduler calls in flight	verified	one	core/scheduler#load-accounting
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records

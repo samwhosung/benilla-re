@@ -1570,17 +1570,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41acd0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x41acf0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41ad00	11			unassigned			Runs its object file code not read here	inferred	none		
-0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1) and K1 = a·K2 with K2 unrounded	verified	one	input#click-versus-drag	screencoord::sc_41ad10_set_scale
-0x41ad60	7			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	verified	one	glue/script#cursor-and-screen-size	
-0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
-0x41adb0	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ade0	37	UnscaleScreenXY		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes x over 0x832a44 and y over 0x832a48 to whichever outputs are not null	verified	one	ui/modelview#viewport-and-clamp	
-0x41ae10	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae40_unscale_x
-0x41ae50	16			screencoord			Runs its object file code not read here	inferred	none		
-0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae60_scale_x
-0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	verified	one	ui/modelview#root-transform	screencoord::sc_41ae70_scale_y
+0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1) and K1 = a·K2 with K2 unrounded	verified	one	screencoord#screen-scale-state	screencoord::sc_41ad10_set_scale
+0x41ad60	7	GetStoredScreenAspect		screencoord	unreached	float __cdecl (void)	Returns the aspect stored at 0x832a40 in st0	verified	one	screencoord#unreached-code	
+0x41ad70	7	GetScaledScreenAspect		screencoord	orchestration	float __cdecl (void)	Returns the float at 0x832a4c, the aspect times 0.75, in st0	verified	one	screencoord#screen-scale-state	
+0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ad80_scale_xy
+0x41adb0	47	ScaleScreenRect		screencoord	unreached	void __fastcall (const float *in, float *out)	Writes a rectangle of four floats scaled by 0x832a44 for x and 0x832a48 for y	verified	one	screencoord#unreached-code	
+0x41ade0	37	UnscaleScreenXY		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes x over 0x832a44 and y over 0x832a48 to whichever outputs are not null	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ade0_unscale_xy
+0x41ae10	47	UnscaleScreenRect		screencoord	unreached	void __fastcall (const float *in, float *out)	Writes a rectangle of four floats divided by 0x832a44 for x and 0x832a48 for y	verified	one	screencoord#unreached-code	
+0x41ae40	16	DivideByScreenScaleX		screencoord	primitive	float __stdcall (float x)	Returns a float argument divided by the float at 0x832a44, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae40_unscale_x
+0x41ae50	16	DivideByScreenScaleY		screencoord	primitive	float __stdcall (float y)	Returns a float argument divided by the float at 0x832a48, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae50_unscale_y
+0x41ae60	16	MultiplyByScreenScaleX		screencoord	primitive	float __stdcall (float x)	Returns the float at 0x832a44 times a float argument, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae60_scale_x
+0x41ae70	16	NDCToDDCHeight		screencoord	primitive	float __stdcall (float y)	Returns the float at 0x832a48 times a float argument, in st0	verified	one	screencoord#scaling-and-unscaling	screencoord::sc_41ae70_scale_y
 0x41ae80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41ae90	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41aea0	5			unassigned			Runs its object file code not read here	inferred	none		
