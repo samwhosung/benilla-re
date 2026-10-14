@@ -3706,81 +3706,81 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4531b0	5	InitRandomInvTwoPiThunk		random	orchestration	void __cdecl (void)	Jumps to 0x4531c0; a static initializer	verified	one	random#static-initializers	
 0x4531c0	19	InitRandomInvTwoPi		random	primitive	void __cdecl (void)	Stores 1 / [0xb05d70] as a float in 0xb05d6c	verified	one	random#static-initializers	
 0x4531e0	211	NTempest::CRandom::uint32	idb	random	primitive	uint32_t __fastcall (NTempest::CRndSeed *seed)	Advances a state: steps its four lanes, adds the XOR of four rotated table dwords to the accumulator, returns it	verified	two	random#state-advance	random::crandom_uint32_advance, random::prng_difftest, gx::lightning_segment_subdivide_difftest, models::burst_velocity_difftest, models::emit_shape_plane_difftest, models::emit_shape_sphere_difftest, models::emit_shape_spline_difftest, random::seeded_sequence_difftest
-0x4532c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4532d0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x4532e0	25			unassigned			Runs its object file code not read here	inferred	none		
-0x453300	46			unassigned			Runs its object file code not read here	inferred	none		spline::knot_sum_nm1_diff
-0x453330	45			unassigned	unreached		Runs its object file code that calls 0x4532e0; not read here	inferred	none		
-0x453360	33	SetSplinePath		spline		void __thiscall (void *path, uint32_t a, uint32_t b)	Calls the path object's vtable slot +0x1c with its two arguments, then a second path function	verified	one	collision/commands#spline-commands	
-0x453390	142	EvaluateSplinePoint		spline			Writes the curve point at u	inferred	none	collision/kinematics#spline-follower	models::emit_shape_spline_difftest
-0x453420	96	EvaluateSplineTangent		spline		void __thiscall (void *spline, float u, float *out, uint32_t mode)	Writes the curve tangent at u clamped into [0, 1]	inferred	none	models/emission#spline-spawn	
-0x453480	74	EvaluateSplineFrame		spline			Clamps u to [0, 1] and has the curve fill a frame at u through its vtable slot 0x18	inferred	none	collision/kinematics#spline-follower	
-0x4534d0	24			spline	unreached		Runs its object file code not read here	inferred	none		
-0x4534f0	114			spline			Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x453570	5			spline			Runs its object file code not read here	inferred	none		
-0x453580	145	EvaluateCubicPoint		spline	primitive		Sums four control points weighted by the basis polynomials at t	verified	one	ui/taxiroute#flight-curve	
-0x453620	32	EvaluateBasisPolynomial		spline	primitive		Evaluates a polynomial of given degree at t by Horner's rule	verified	one	ui/taxiroute#flight-curve	
-0x453640	131			spline			Runs its object file code that calls 0x453620; not read here	inferred	none		spline::eval_point_quad_diff
-0x4536d0	131			spline	unreached		Runs its object file code that calls 0x453620; not read here	inferred	none		
-0x453760	209			spline			Runs its object file code that calls 0x453580; not read here	inferred	none		spline::arc_length_diff
-0x453840	124			spline			Runs its object file code not read here	inferred	none		spline::seg_locate_diff
-0x4538c0	84			spline			Runs its object file code not read here	inferred	none		spline::fixed_quantize_diff
-0x453920	33			spline			Runs its object file code not read here	inferred	none		spline::knot_sum_n_diff
-0x453950	10			spline			Runs its object file code that calls 0x453960; not read here	inferred	none		
-0x453960	161			spline			Runs its object file code not read here	inferred	none		
-0x453a10	12			spline			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x453a20	1			spline			Runs its object file code not read here	inferred	none		
-0x453a30	35			spline			Runs its object file code that calls 0x4538c0; not read here	inferred	none		
-0x453a60	40			spline			Runs its object file code that calls 0x453840; not read here	inferred	none		
-0x453a90	52			spline			Runs its object file code that calls 0x453a30, 0x453e30; not read here	inferred	none		
-0x453ad0	52			spline			Runs its object file code that calls 0x453a60, 0x453e30; not read here	inferred	none		
-0x453b10	52			spline			Runs its object file code that calls 0x453a30, 0x453cd0; not read here	inferred	none		
-0x453b50	52			spline			Runs its object file code that calls 0x453a60, 0x453cd0; not read here	inferred	none		
-0x453b90	306			spline			Runs its object file code that calls 0x453a60, 0x453e30, 0x453cd0; not read here	inferred	none		spline::frenet_frame_diff
-0x453cd0	333			spline			Runs its object file code that calls _atexit, 0x453640; not read here	inferred	none		
-0x453e20	1			spline			Runs its object file code not read here	inferred	none		
-0x453e30	32			spline			Runs its object file code that calls 0x453580; not read here	inferred	none		
-0x453e50	24			spline			Runs its object file code that calls 0x453760; not read here	inferred	none		
-0x453e70	17			spline			Runs its object file code that calls 0x453920; not read here	inferred	none		
-0x453e90	66			spline			Runs its object file code that calls 0x453e50; not read here	inferred	none		
-0x453ee0	168			spline			Runs its object file code that calls 0x4548a0, 0x4534f0; not read here	inferred	none		
-0x453f90	10			spline			Runs its object file code that calls 0x453fa0; not read here	inferred	none		
-0x453fa0	161			spline			Runs its object file code not read here	inferred	none		
-0x454050	12			spline			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x454060	1			spline			Runs its object file code not read here	inferred	none		
-0x454070	10			spline			Runs its object file code that calls 0x454080; not read here	inferred	none		
-0x454080	121			spline			Runs its object file code not read here	inferred	none		
-0x454100	12			spline			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x454110	1			spline			Runs its object file code not read here	inferred	none		
-0x454120	10			spline			Runs its object file code that calls 0x454130; not read here	inferred	none		
-0x454130	81			spline			Runs its object file code not read here	inferred	none		
-0x454190	12			spline			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4541a0	1			spline			Runs its object file code not read here	inferred	none		
-0x4541b0	147	EvaluateCurvePosition		spline	primitive		Returns the point of a segment at t, linear for mode 0 and cubic otherwise	verified	one	ui/taxiroute#flight-curve	
-0x454250	163			spline			Runs its object file code that calls 0x453640; not read here	inferred	none		
-0x454300	29			spline	unreached		Runs its object file code that calls 0x4536d0; not read here	inferred	none		
-0x454320	94			spline			Runs its object file code that calls 0x453760; not read here	inferred	none		spline::seg_length_diff
-0x454380	36			spline			Runs its object file code that calls 0x453840; not read here	inferred	none		
-0x4543b0	31			spline			Runs its object file code that calls 0x4538c0; not read here	inferred	none		
-0x4543d0	13			spline			Runs its object file code that calls 0x453920; not read here	inferred	none		
-0x4543e0	56			spline			Runs its object file code that calls 0x454320; not read here	inferred	none		
-0x454420	52			spline			Runs its object file code that calls 0x454380, 0x4541b0; not read here	inferred	none		
-0x454460	52			spline			Runs its object file code that calls 0x4543b0, 0x4541b0; not read here	inferred	none		
-0x4544a0	108			spline			Runs its object file code that calls 0x454380, 0x454250; not read here	inferred	none		
-0x454510	108			spline			Runs its object file code that calls 0x4543b0, 0x454250; not read here	inferred	none		
-0x454580	488			spline			Runs its object file code that calls 0x454380, 0x4541b0, SetVector3 and 4 more; not read here	inferred	none		spline::frame_builder_linear_diff, spline::frame_builder_spline_diff
-0x454770	175			spline			Runs its object file code that calls 0x4548a0, 0x4534f0; not read here	inferred	none		
-0x454820	127			spline			Runs its object file code that calls 0x454380; not read here	inferred	none		
-0x4548a0	133			spline			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x454930	5			spline			Runs its object file code not read here	inferred	none		
-0x454940	15			spline			Runs its object file code not read here	inferred	none		
-0x454950	5			spline			Runs its object file code not read here	inferred	none		
-0x454960	19			spline			Runs its object file code not read here	inferred	none		
-0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	spline::vec2_len2_diff
-0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::aabsp_segment_clip_difftest, models::aabsp_segment_split_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::cmapobj_seg_hit_difftest, models::emit_shape_plane_difftest, models::emit_shape_sphere_difftest, models::emit_shape_spline_difftest, models::mliq_ray_normalize_difftest, models::portal_seg_normalize_difftest, models::ribbon_frame_build_difftest, models::ribbon_segment_emit_difftest, models::wmo_bounding_sphere_difftest
-0x4549c0	38	DivideVector3		spline		float * __thiscall (float *this, float divisor)	Multiplies a 3D vector by the reciprocal of a divisor	verified	one	models/lights#dominant-light	models::camera_facing_basis_difftest, spline::vec_div_scalar_diff
-0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	animation::m2_animate_difftest, gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::billboard_tangent_frame_difftest, models::bspdispatch_normalize_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::emit_shape_plane_difftest, models::emit_shape_spline_difftest, models::prologue_length_difftest, models::render_normalize_difftest, models::ribbon_frame_build_difftest, models::seg_normalize_difftest, models::shadow_normalize_axes_difftest, spline::vec3_len2_diff
-0x454a10	117			unassigned			Runs its object file code not read here	inferred	none		spline::isqrt_diff
+0x4532c0	5	InitSplineInfinityThunk		spline	orchestration		Jumps to 0x4532d0; a static initializer	verified	one	spline#object-file-and-initializers	
+0x4532d0	11	InitSplineInfinity		spline	orchestration		Copies +inf into a global nothing reads	verified	one	spline#object-file-and-initializers	
+0x4532e0	25	RefreshSplineLength		spline	orchestration	void __thiscall (void *curve)	Rebuilds the segment lengths and stores the total at +4 when the curve has more than 3 points	verified	one	spline#dispatch-and-clamps	
+0x453300	46	SumSegmentLengthsMinusOne		spline	primitive	float __thiscall (void *curve, uint32_t k)	Returns the sum of the first k - 1 stored segment lengths	verified	one	spline#arc-length-and-parameter	spline::knot_sum_nm1_diff
+0x453330	45	SetSplineControlPoint		spline	unreached	void __thiscall (void *curve, uint32_t i, const float *v)	Stores a vector over control point i and refreshes the length	verified	one	spline#control-point-storage	
+0x453360	33	SetSplinePath		spline	orchestration	void __thiscall (void *curve, const float *points, uint32_t count)	Sets the control points through vtable slot 7, then refreshes the length	verified	one	spline#dispatch-and-clamps	
+0x453390	142	EvaluateSplinePoint		spline	orchestration	void __thiscall (void *curve, float t, float *out, uint32_t mode)	Writes the first or last control point at the ends, else the point from slot 2 or 3	verified	one	spline#dispatch-and-clamps	
+0x453420	96	EvaluateSplineTangent		spline	orchestration	void __thiscall (void *curve, float t, float *out, uint32_t mode)	Clamps t into [0, 1] and has slot 4 or 5 write the tangent	verified	one	spline#dispatch-and-clamps	
+0x453480	74	EvaluateSplineFrame		spline	orchestration	void __thiscall (void *curve, float t, float *frame, uint32_t mode)	Clamps t into [0, 1] and, for mode 1, has slot 6 write the frame	verified	one	spline#dispatch-and-clamps	
+0x4534d0	24	ExtractSplinePoints		spline	unreached	void __thiscall (void *curve, float t, float *out, uint32_t max)	Forwards its three arguments to vtable slot 8	verified	one	spline#unreached-code	
+0x4534f0	114	SetSplineControlPoints		spline	host	void __thiscall (void *curve, const float *points, uint32_t n)	Resizes the control point array to n points and copies them in	verified	one	spline#control-point-storage	
+0x453570	5	ExtractNoSplinePoints		spline	orchestration	uint32_t __thiscall (void *curve, float t, float *out, uint32_t max)	Returns 0 without extracting; slot 8 of the base and Bezier curves	verified	one	spline#curve-objects	
+0x453580	145	EvaluateCubicPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a cubic basis at t	verified	one	spline#point-and-derivative-kernels	spline::eval_point_cubic_diff
+0x453620	32	SplineBasisWeight		spline	primitive	double __fastcall (uint32_t degree, const float *row, float t)	Returns the Horner polynomial of a coefficient row at t	verified	one	spline#point-and-derivative-kernels	spline::basis_weight_diff
+0x453640	131	EvaluateQuadraticPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a quadratic basis at t	verified	one	spline#point-and-derivative-kernels	spline::eval_point_quad_diff
+0x4536d0	131	EvaluateLinearPoint		spline	unreached	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a linear basis at t	verified	one	spline#unreached-code	
+0x453760	209	SplineSegmentArcLength		spline	primitive	double __thiscall (void *curve, uint32_t seg, const float *table)	Returns the length of a segment as 20 chords	verified	one	spline#arc-length-and-parameter	spline::arc_length_diff
+0x453840	124	LocateSplineSegmentByLength		spline	primitive	void __thiscall (void *curve, float t, const float *table, uint32_t n, uint32_t *index, float *frac)	Finds the segment and local parameter of t along the stored lengths	verified	one	spline#arc-length-and-parameter	spline::seg_locate_diff
+0x4538c0	84	LocateSplineSegmentUniform		spline	primitive	void __stdcall (float t, uint32_t n, uint32_t *index, float *frac)	Splits [0, 1] into n equal parts and returns the part and local parameter of t	verified	one	spline#arc-length-and-parameter	spline::fixed_quantize_diff
+0x453920	33	SumSegmentLengths		spline	primitive	float __thiscall (void *curve, uint32_t k)	Returns the sum of the first k stored segment lengths	verified	one	spline#arc-length-and-parameter	spline::knot_sum_n_diff
+0x453950	10	InitBezierBasisThunk		spline	orchestration		Calls 0x453960 and 0x453a10; a static initializer	verified	one	spline#basis-tables	
+0x453960	161	InitBezierBasis		spline	orchestration		Stores the Bezier basis into 0xb05e58	verified	one	spline#basis-tables	
+0x453a10	12	RegisterBezierBasisExit		spline	orchestration		Registers the empty exit stub 0x453a20 with _atexit	verified	one	spline#basis-tables	
+0x453a20	1	BezierBasisExit		spline	orchestration		Returns; the exit stub of the Bezier basis	verified	one	spline#basis-tables	
+0x453a30	35	LocateBezierUniform		spline	primitive	void __thiscall (void *curve, float t, uint32_t *index, float *frac)	Locates t among the floor(count / 3) Bezier segments uniformly	verified	one	spline#bezier-segments	
+0x453a60	40	LocateBezierByLength		spline	primitive	void __thiscall (void *curve, float t, uint32_t *index, float *frac)	Locates t among the floor(count / 3) Bezier segments by stored length	verified	one	spline#bezier-segments	
+0x453a90	52	BezierPointUniform		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Bezier point at a uniform parameter; slot 3	verified	one	spline#bezier-segments	
+0x453ad0	52	BezierPointByLength		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Bezier point at an arc-length parameter; slot 2	verified	one	spline#bezier-segments	
+0x453b10	52	BezierTangentUniform		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Bezier tangent at a uniform parameter; slot 5	verified	one	spline#bezier-segments	
+0x453b50	52	BezierTangentByLength		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Bezier tangent at an arc-length parameter; slot 4	verified	one	spline#bezier-segments	
+0x453b90	306	BezierFrame		spline	primitive	void __thiscall (void *curve, float t, float *frame)	Writes the point, tangent, normal and binormal at an arc-length parameter; slot 6	verified	one	spline#frames	spline::frenet_frame_diff
+0x453cd0	333	EvaluateBezierDerivative		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the derivative of a Bezier segment, filling its basis on first use	verified	one	spline#bezier-segments	
+0x453e20	1	BezierDerivativeBasisExit		spline	orchestration		Returns; the exit stub of the Bezier derivative basis	verified	one	spline#bezier-segments	
+0x453e30	32	EvaluateBezierPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the point of Bezier segment seg at f	verified	one	spline#bezier-segments	
+0x453e50	24	BezierSegmentLength		spline	primitive	double __thiscall (void *curve, uint32_t seg)	Returns the arc length of Bezier segment seg	verified	one	spline#bezier-segments	
+0x453e70	17	BezierTotalLength		spline	primitive	float __thiscall (void *curve)	Returns the sum of the stored Bezier segment lengths; slot 0	verified	one	spline#bezier-segments	
+0x453e90	66	RebuildBezierLengths		spline	primitive	void __thiscall (void *curve)	Stores the arc length of each Bezier segment; slot 1	verified	one	spline#bezier-segments	
+0x453ee0	168	SetBezierControlPoints		spline	primitive	void __thiscall (void *curve, const float *points, uint32_t n)	Grows the length list to floor(n / 3) and stores 3 * floor(n / 3) + 1 points; slot 7	verified	one	spline#control-point-storage	
+0x453f90	10	InitCatmullRomBasisThunk		spline	orchestration		Calls 0x453fa0 and 0x454050; a static initializer	verified	one	spline#basis-tables	
+0x453fa0	161	InitCatmullRomBasis		spline	orchestration		Stores the Catmull-Rom basis into 0xb05e10	verified	one	spline#basis-tables	
+0x454050	12	RegisterCatmullRomBasisExit		spline	orchestration		Registers the empty exit stub 0x454060 with _atexit	verified	one	spline#basis-tables	
+0x454060	1	CatmullRomBasisExit		spline	orchestration		Returns; the exit stub of the Catmull-Rom basis	verified	one	spline#basis-tables	
+0x454070	10	InitCatmullRomDerivativeBasisThunk		spline	orchestration		Calls 0x454080 and 0x454100; a static initializer	verified	one	spline#basis-tables	
+0x454080	121	InitCatmullRomDerivativeBasis		spline	orchestration		Stores the Catmull-Rom derivative basis into 0xb05dd8	verified	one	spline#basis-tables	
+0x454100	12	RegisterCatmullRomDerivativeBasisExit		spline	orchestration		Registers the empty exit stub 0x454110 with _atexit	verified	one	spline#basis-tables	
+0x454110	1	CatmullRomDerivativeBasisExit		spline	orchestration		Returns; the exit stub of the Catmull-Rom derivative basis	verified	one	spline#basis-tables	
+0x454120	10	InitCatmullRomSecondDerivativeBasisThunk		spline	orchestration		Calls 0x454130 and 0x454190; a static initializer	verified	one	spline#basis-tables	
+0x454130	81	InitCatmullRomSecondDerivativeBasis		spline	orchestration		Stores the Catmull-Rom second derivative basis into 0xb05db4	verified	one	spline#basis-tables	
+0x454190	12	RegisterCatmullRomSecondDerivativeBasisExit		spline	orchestration		Registers the empty exit stub 0x4541a0 with _atexit	verified	one	spline#basis-tables	
+0x4541a0	1	CatmullRomSecondDerivativeBasisExit		spline	orchestration		Returns; the exit stub of the Catmull-Rom second derivative basis	verified	one	spline#basis-tables	
+0x4541b0	147	EvaluateCatmullRomPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the point of Catmull-Rom segment seg at f: the chord in mode 0, else the cubic	verified	one	spline#catmull-rom-segments	spline::linear_pos_diff
+0x454250	163	EvaluateCatmullRomDerivative		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the derivative of Catmull-Rom segment seg at f	verified	one	spline#catmull-rom-segments	
+0x454300	29	EvaluateCatmullRomSecondDerivative		spline	unreached	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the second derivative of Catmull-Rom segment seg at f	verified	one	spline#unreached-code	
+0x454320	94	CatmullRomSegmentLength		spline	primitive	double __thiscall (void *curve, uint32_t seg)	Returns the chord length of segment seg in mode 0, else its arc length	verified	one	spline#catmull-rom-segments	spline::seg_length_diff
+0x454380	36	LocateCatmullRomByLength		spline	primitive	void __thiscall (void *curve, float t, uint32_t *index, float *frac)	Locates t among the count - 3 Catmull-Rom segments by stored length	verified	one	spline#catmull-rom-segments	
+0x4543b0	31	LocateCatmullRomUniform		spline	primitive	void __thiscall (void *curve, float t, uint32_t *index, float *frac)	Locates t among the count - 3 Catmull-Rom segments uniformly	verified	one	spline#catmull-rom-segments	
+0x4543d0	13	CatmullRomTotalLength		spline	primitive	float __thiscall (void *curve)	Returns the sum of the stored Catmull-Rom segment lengths; slot 0	verified	one	spline#catmull-rom-segments	
+0x4543e0	56	RebuildCatmullRomLengths		spline	primitive	void __thiscall (void *curve)	Stores the length of each Catmull-Rom segment; slot 1	verified	one	spline#catmull-rom-segments	
+0x454420	52	CatmullRomPointByLength		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Catmull-Rom point at an arc-length parameter; slot 2	verified	one	spline#catmull-rom-segments	
+0x454460	52	CatmullRomPointUniform		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Writes the Catmull-Rom point at a uniform parameter; slot 3	verified	one	spline#catmull-rom-segments	
+0x4544a0	108	CatmullRomTangentByLength		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Clamps t and writes the Catmull-Rom tangent at an arc-length parameter; slot 4	verified	one	spline#catmull-rom-segments	
+0x454510	108	CatmullRomTangentUniform		spline	orchestration	void __thiscall (void *curve, float t, float *out)	Clamps t and writes the Catmull-Rom tangent at a uniform parameter; slot 5	verified	one	spline#catmull-rom-segments	
+0x454580	488	CatmullRomFrame		spline	primitive	void __thiscall (void *curve, float t, float *frame)	Writes the tangent, normal, binormal and point at an arc-length parameter; slot 6	verified	one	spline#frames	spline::frame_builder_linear_diff, spline::frame_builder_spline_diff
+0x454770	175	SetCatmullRomControlPoints		spline	primitive	void __thiscall (void *curve, const float *points, uint32_t n)	Grows the length list to n - 3 and stores n points; slot 7	verified	one	spline#control-point-storage	
+0x454820	127	ExtractCatmullRomPoints		spline	primitive	uint32_t __thiscall (void *curve, float t, float *out, uint32_t max)	Copies up to max control points from the segment at t on; slot 8	verified	one	spline#control-point-storage	
+0x4548a0	133	ResizeFloatList		spline	host	void __thiscall (void *list, uint32_t cap)	Reallocates a float list to cap entries keeping the first min(cap, count)	verified	one	spline#control-point-storage	
+0x454930	5	InitSplineTwoPiThunk		spline	orchestration		Jumps to 0x454940; a static initializer	verified	one	spline#object-file-and-initializers	
+0x454940	15	InitSplineTwoPi		spline	primitive		Stores the float pi plus pi into a global	verified	one	spline#object-file-and-initializers	
+0x454950	5	InitSplineInvTwoPiThunk		spline	orchestration		Jumps to 0x454960; a static initializer	verified	one	spline#object-file-and-initializers	
+0x454960	19	InitSplineInvTwoPi		spline	primitive		Stores 1 over the 2 pi global as a float	verified	one	spline#object-file-and-initializers	
+0x454980	20	Vector2LengthSquared		spline	primitive	float __thiscall (const float *v)	Returns x*x + y*y of a 2D vector	verified	one	spline#vector-leaves	spline::vec2_len2_diff
+0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	spline#vector-leaves	
+0x4549c0	38	DivideVector3		spline	primitive	float * __thiscall (float *this, float divisor)	Multiplies a 3D vector by the reciprocal of a divisor	verified	one	spline#vector-leaves	spline::vec_div_scalar_diff
+0x4549f0	31	Vector3LengthSquared		spline	primitive	float __thiscall (const float *v)	Returns x*x + y*y + z*z of a 3D vector	verified	one	spline#vector-leaves	spline::vec3_len2_diff
+0x454a10	117	IntegerSquareRoot		spline	primitive	uint32_t __fastcall (uint32_t n)	Returns the floor of the square root of n	verified	one	spline#integer-square-root	spline::isqrt_diff
 0x454a90	5	InitFastmathInfinityThunk		fastmath	orchestration	void __cdecl ()	Jumps to the +inf initializer of the fast maths file	verified	one	fastmath#static-initializers	
 0x454aa0	11	InitFastmathInfinity		fastmath	orchestration	void __cdecl ()	Copies the float +inf into 0xb05e98	verified	one	fastmath#static-initializers	
 0x454ab0	120	FastArctan		fastmath	unreached	float __stdcall (float x, float halfPi)	Returns a polynomial arctangent of x, folding |x| above 1 through the second argument	inferred	none	fastmath#unreached-functions	

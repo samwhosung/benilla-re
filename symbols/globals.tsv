@@ -350,7 +350,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffd70	const float	s_point35		unassigned	Holds 0.35	verified	one	lighting/fog#world-light-commit
 0x7ffd74	const float	s_zero		ui	Holds 0.0, against which the layout tests sizes and edges	verified	one	ui/anchors#edge-resolution-from-size
 0x7ffd7c	const float	s_point7		unassigned	Holds 0.7	verified	one	lighting/sky#sky-colours
-0x7ffd84	void *	s_splineCurveVtable		cmath	Holds the vtable stored at +0x2c of the movement spline object; its first slot reads a count minus 3	inferred	none	collision/world#spline-object
+0x7ffd84	void *[9]	s_catmullRomCurveVtable		spline	Holds the Catmull-Rom curve vtable stored at +0x2c of the movement spline object	verified	one	spline#curve-objects
+0x7ffdbc	void *[9]	s_curveBaseVtable		spline	Holds the base curve vtable: the pure-call stub in slots 0 to 6, then 0x4534f0 and 0x453570	verified	one	spline#curve-objects
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
 0x80108c	uint32_t[52]	s_commandLineOptions		unassigned	Holds 13 command-line option records of id, name, 0 and flags: d3d is id 0, opengl id 5	verified	one	gx/device#backend-selection-and-creation
@@ -400,7 +401,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x802990	float	s_six		terrain	Holds 6.0	verified	one	terrain/waterfx#ripple-emission
 0x802998	float	s_oneSixteenth		terrain	Holds 0.0625	verified	one	terrain/lod#chunk-mesh-tables
 0x8029b0	const float	s_quarter		ui	Holds 0.25, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
-0x8029c8	const float	s_float3d4ccccd		unassigned	Holds the float 0.05 (0x3d4ccccd)	inferred	none	
+0x8029c0	const float	s_positiveInfinity		spline	Holds +inf, the value the file's +inf initializer copies	verified	one	spline#object-file-and-initializers
+0x8029c4	const float	s_splinePi		spline	Holds the float pi, which the file's 2 pi initializer doubles	verified	one	spline#object-file-and-initializers
+0x8029c8	const float	s_splineChordStep		spline	Holds 0.05, the parameter step of the 20 chords of a segment length	verified	one	spline#arc-length-and-parameter
 0x8029cc	const float	s_bytePackBias		unassigned	Holds 512.0, the bias that leaves a byte in a float's low mantissa bits	verified	one	lighting/daynight#colour-band-value
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
 0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
@@ -1062,6 +1065,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d888	void *[11]	s_planeEmitterVftable		models	Holds the plane emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d8b4	void *[11]	s_sphereEmitterVftable		models	Holds the sphere emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d8e0	void *[11]	s_splineEmitterVftable		models	Holds the spline emitter's virtual functions	verified	one	models/particles#emitter-classes
+0x81d90c	void *[9]	s_bezierCurveVtable		spline	Holds the Bezier curve vtable: its length, point, tangent, frame and control point routines	verified	one	spline#curve-objects
 0x81d994	const uint32_t[3]	s_nextAxis		cmath	Holds 1, 2, 0, the next axis of each axis for the matrix to quaternion conversion	verified	one	cmath/quaternions#matrix-to-quaternion
 0x81d9a0	const float	s_quaternionEpsilon		cmath	Holds 2^-21, the sine bound under which the quaternion functions copy	verified	one	cmath/quaternions#exponential-and-logarithm
 0x81d9bc	const float	s_rayTriangleNegEpsilon		cmath	Holds -1e-6, the lower determinant bound of the ray triangle test	verified	one	models/scene#ray-triangle-test
@@ -1114,6 +1118,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82ee00	char[2]			unassigned	Holds the string " "	inferred	none	
 0x82ef08	char[6]	s_textSS		unassigned	Holds the string "%s %s"	inferred	none	
 0x82f00c	uint32_t			unassigned	Holds a dword that BeginLoadingScreen reads and writes; not read here	inferred	none	
+0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
+0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x832a40	float	s_screenAspect		screencoord	Holds the display aspect stored by 0x41ad10; 1.3333334 in the file	verified	one	screencoord#screen-scale-state
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
@@ -2168,7 +2174,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05d70	float	s_randomTwoPi		random	Holds 2π, set at startup; read only by unreached noise	verified	one	random#static-initializers
 0xb05d74	float	s_gaussianSpareFloat		random	Holds the spare deviate of 0x44f9b0, 0 when empty; one for every state	inferred	none	random#unreached-functions
 0xb05d78	double	s_gaussianSpareDouble		random	Holds the spare deviate of 0x44fa70, 0 when empty; one for every state	inferred	none	random#unreached-functions
-0xb05e10	float[16]	s_catmullRomBasis		spline	Holds the four basis polynomials of the cubic curve, four coefficients each	verified	one	ui/taxiroute#flight-curve
+0xb05d80	float[12]	s_bezierDerivativeBasis		spline	Holds the Bezier derivative basis: four rows of three, set by the first 0x453cd0	verified	one	spline#basis-tables
+0xb05db0	float	s_splineInfinity		spline	Holds +inf, set at startup; nothing reads it	verified	one	spline#object-file-and-initializers
+0xb05db4	float[8]	s_catmullRomSecondDerivativeBasis		spline	Holds the Catmull-Rom second derivative basis: four rows of two, set at startup	verified	one	spline#basis-tables
+0xb05dd4	float	s_splineInvTwoPi		spline	Holds 1/2 pi, set at startup; nothing reads it	verified	one	spline#object-file-and-initializers
+0xb05dd8	float[12]	s_catmullRomDerivativeBasis		spline	Holds the Catmull-Rom derivative basis: four rows of three, set at startup	verified	one	spline#basis-tables
+0xb05e08	uint8_t	s_bezierDerivativeBasisInit		spline	Holds the bit that 0x453cd0 sets when it has filled 0xb05d80	verified	one	spline#bezier-segments
+0xb05e10	float[16]	s_catmullRomBasis		spline	Holds the Catmull-Rom basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
+0xb05e50	float	s_splineTwoPi		spline	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	spline#object-file-and-initializers
+0xb05e58	float[16]	s_bezierBasis		spline	Holds the Bezier basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
 0xb05e98	float	s_fastmathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#static-initializers
 0xb05e9c	float	s_fastmathInvTwoPi		fastmath	Holds 1/(2π), set at startup; nothing reads it	verified	one	fastmath#static-initializers
 0xb05ea0	float	s_fastmathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/(2π) initializer	verified	one	fastmath#static-initializers
