@@ -174,3 +174,14 @@ addresses as little-endian dwords finds six and two occurrences, all inside the 
 that read them (`0x5b553c`, `0x5b5545`, `0x5b555a`, `0x5b567f`, `0x5b5b50`, `0x5b63e0`,
 `0x5b68f8`); none is a store. The control is the same scan for `0xc0d45c`, which finds the
 instruction at `0x5379c6` that adds to it.
+
+## Disabling Nagle
+
+When a connection is added to the network thread's select list, `WowConnectionNet::PlatformAdd` sets `TCP_NODELAY` on its socket, then wakes the select loop so it watches the new socket. The packets the client sends are therefore not held back to fill a segment.
+
+Addresses: `0x5bca60`, `0x5bd6e0`, `0x5bd77a`, `0x5bca7f`, `0x5bca87`, `0x5bcad0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5bca78` stores 1 in a local; `0x5bca7f` is `call [0x7ff6f8]` with the socket (`[arg+4]`), level 6, option 1, that local and length 4. The import is WSOCK32 ordinal 21, `setsockopt`. `0x5bca87` calls `0x5bcad0`, the one-byte send that wakes `select` (`Sending`). `0x5bd6e0` calls `0x5bca60` at `0x5bd77a` after it appends the connection to the list.

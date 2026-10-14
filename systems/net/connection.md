@@ -180,3 +180,14 @@ Proof: one
 Test: none
 
 `0x5aa2d6` zeroes 8 dwords at `0xc27e90`; `0x5aa2f2` is the archive open, `0x5aa31f` the file open; `0x5aa32f` `cmp [ebp-4],esi` requires a read length of `0x1c`; `0x5aa334` to `0x5aa350` copy 7 dwords, set `0xc28135` and the word `0x14`. `0x5ab9b4` loads `0xc28135`. `0x5abab4` to `0x5abac7` store the count, the first dword 1 and `rep movs` 8 dwords from `0xc27e90`. The byte and the record have no other writer.
+
+## Sending a packet
+
+`ClientServices::Send` (`0x5ab630`), the one send entry of the rest of the client, takes the packet's data store in `ecx` and sends it on the current connection through `NetClient::Send` (`wire`, Sending); with no current connection it does nothing and the caller still owns the store.
+
+Addresses: `0x5ab630`, `0x5ab490`, `0x5379a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ab630` calls `0x5ab490` and returns when the result is null (`0x5ab635`, `0x5ab637`); otherwise it pushes the store, calls `0x5ab490` again to load `ecx`, and calls `0x5379a0` (`0x5ab641`).
