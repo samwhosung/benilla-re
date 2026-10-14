@@ -2972,7 +2972,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7658	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
 0xbc7660	uint8_t[400]	s_partyBlips		ui	Holds the five party and pet arrow records of 0x50 bytes	verified	one	ui/minimapblips#party-and-pet-arrows
-0xbc7810	float[2]	s_rectOriginPair		ui	Holds the first pair of floats of a table of 24-byte records that 0x4ead90 indexes; its extent was not read	verified	one	ui/minimap#two-small-helpers
+0xbc7810	float[24]	s_rectOriginPair		ui	Holds a table of four 24-byte records that start with x min, y min, x max and y max; the last two floats are unread	verified	one	ui/minimap#blip-rectangle-clip
 0xbc787c	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7880	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7938	float[12]	s_blitQuad		ui	Holds the four corners (-1,-1), (-1,1), (1,1) and (1,-1) of the interior blit quad	verified	one	minimap/draw#blit-quad-and-offset

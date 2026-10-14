@@ -10604,14 +10604,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ead90	113			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		ui::geo_4ead90, ui::geo_4eb910
 0x4eae10	229	DrawOutdoorTile		ui	primitive	void __fastcall (void *record, uint32_t index, const uint32_t *colour)	Draws one outdoor tile record through its texture and the circular mask	verified	one	minimap/draw#outdoor-tile-draw	
-0x4eaf00	319			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eb910; not read here	inferred	none		ui::glue_4ea_4eaf00_bbox_edges
+0x4eaf00	319	Minimap::ClipBlipRect		ui	primitive	void __thiscall (uint32_t index, float p, float q, float h, float u, float v)	Clips a square to a record of the rectangle table and builds its quad when the overlap has extent	verified	one	ui/minimap#blip-rectangle-clip	
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
 0x4eb0c0	1983			ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnMouseMove, CLayoutFrame::GetRect and 5 more; not read here	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::glue_4eb0c0_range_and_light
 0x4eb880	46	CMinimap::OnLeave		ui	orchestration	void __thiscall (CMinimap *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	one	ui/mouse#enter-and-leave	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4eb910	639			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4ef370, 0x4ead90; not read here	inferred	none		ui::geo_4eb910
-0x4ebb90	97			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eaf00; not read here	inferred	none		
+0x4eb910	639	Minimap::BuildBlipQuad		ui	primitive	void __thiscall (const float *clipped, uint32_t index, const float *pq, const float *square, float h, float u, float v)	Writes the four corners, doubled offsets and fractions of a clipped blip rectangle into the object	verified	one	ui/minimap#blip-quad-geometry	
+0x4ebb90	97			ui	orchestration		Calls the blip rectangle clip for 512 objects of 0xa4 bytes; the loop is read, the rest not	inferred	none	ui/minimap#blip-rectangle-clip	
 0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4ebc00_gradient
 0x4ebe50	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ebe60	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
