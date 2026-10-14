@@ -90,14 +90,16 @@ children beat the patches. A speech2 child probes its parent patch for the name 
 block whose flags carry `0x02000000` ends the walk with result 3 and error 2: the file is not found, and a lower
 archive's copy is not used.
 
-Addresses: `0x6549a0`, `0x654cff`, `0x656690`, `0x654aea`
+Addresses: `0x6549a0`, `0x654cff`, `0x656690`, `0x654aea`, `0x654b7d`, `0x654d3a`, `0x654d53`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x654aa4` loads the head, `0x654ce7` the next record. A hit reads the in-memory bit `+0xb & 1` (`0x654cff` to
 `0x654d0a`), which `format.md#hash-and-block-tables` sets for deleted blocks, and returns 3 (`0x654d5c`) with
-`SErrSetLastError(2)` (`0x654d63`); the file open `0x656690` fails on 0 and 3 (`0x6566f1` to `0x656700`). Otherwise
+`SErrSetLastError(2)` (`0x654d63`); the file open `0x656690` fails on 0 and 3 (`0x6566f1` to `0x656700`). A name the archives do not hold can still resolve to a loose disk file: when flag bits 0 or 1 are set and the
+archive has no `+0x144` set, `0x654b59` to `0x654b76` probe the disk path with `0x654dd0`, and a hit (`0x654b7d`) copies the path to
+the caller's buffer (`0x654d3a` to `0x654d4e`) and returns 2 (`0x654d53`). Otherwise
 `0x653140` fetches the block, and a clear `0x80000000` gives error `0x3ee` (`0x654d20` to `0x654d33`). The child's
 parent and prefix are `+0x174` and `+0x178` (`0x654aea`, `0x654b03`); the joiner is `0x833184`.
 

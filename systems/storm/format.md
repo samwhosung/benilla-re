@@ -49,7 +49,7 @@ down. A block index at or above the block count (`0x655f97`) fails the open with
 
 `table` below is Storm's crypt table, `0x500` dwords built at the first use: from the seed 1,048,577, twice per entry
 `seed = (seed·125 + 3) mod 2,796,203`; the entry is the first value's low 16 bits shifted up, OR the second's, which
-is the next seed. Five groups of 256 entries, `0x1400` bytes.
+is the next seed. Five groups of 256 entries, `0x1400` bytes. The fill is entry-major: for `i` = 0 to 255, for `g` = 0 to 4, `table[g·256 + i]` takes the next pair, so one seed run feeds the five groups' entry `i` in turn.
 
 Addresses: `0x654f60`, `0xc53fbc`
 Confidence: verified
@@ -57,7 +57,7 @@ Proof: one
 Test: none
 
 `0x654f85` seeds the generator; `0x654faa` to `0x654fb7` multiplies by `0x7d` (125), adds 3 and divides by the modulus
-(`div`); `0x654fdd` to `0x654fe8` packs the two values; `0x654fbe` steps the group by `0x400` bytes, and the allocation
+(`div`); `0x654fdd` to `0x654fe8` packs the two values; `0x654fbe` steps the group by `0x400` bytes (the store `0x654feb` is `[edi + table − 0x400]`, five times per entry, `0x654fa3` counting with `ebx` = 5; the outer index `[ebp-4]` runs 0 to `0x3fc` by 4, `0x654ff7` to `0x654fff`), and the allocation
 is `0x1400` bytes (`0x654f80`).
 
 ## Name hash
