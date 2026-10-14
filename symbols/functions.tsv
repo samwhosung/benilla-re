@@ -6695,10 +6695,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489ff0	74	Script::ClearTarget	idb	ui	primitive		Implements the Lua function ClearTarget	inferred	none		
 0x48a040	43	Script::AutoEquipCursorItem	idb	ui	orchestration		Implements the Lua function AutoEquipCursorItem	verified	one	ui/cursor#cursor-functions	
 0x48a070	41	Script::ToggleSheath	idb	ui	orchestration		Implements the Lua function ToggleSheath	inferred	none		
-0x48a0a0	26	Script::GetZoneText	idb	ui	orchestration		Implements the Lua function GetZoneText	inferred	none		
-0x48a0c0	26	Script::GetRealZoneText	idb	ui	orchestration		Implements the Lua function GetRealZoneText	inferred	none		
-0x48a0e0	26	Script::GetSubZoneText	idb	ui	orchestration		Implements the Lua function GetSubZoneText	inferred	none		
-0x48a100	26	Script::GetMinimapZoneText	idb	ui	orchestration		Implements the Lua function GetMinimapZoneText	inferred	none		
+0x48a0a0	26	Script::GetZoneText	idb	ui	orchestration		Pushes the zone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
+0x48a0c0	26	Script::GetRealZoneText	idb	ui	orchestration		Pushes the zone name before the map object override, or the empty string	verified	one	ui/zonetext#the-text-functions	
+0x48a0e0	26	Script::GetSubZoneText	idb	ui	orchestration		Pushes the subzone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
+0x48a100	26	Script::GetMinimapZoneText	idb	ui	orchestration		Pushes the minimap zone name, or the empty string	verified	one	ui/zonetext#the-text-functions	
 0x48a120	135	Script::InitiateTrade	idb	ui	primitive		Implements the Lua function InitiateTrade	inferred	none		
 0x48a1b0	348	Script::CanInspect	idb	ui	primitive		Pushes 1 when the unit can be inspected, else nil, with an error for an absent unit	verified	one	ui/distancegates#caninspect	
 0x48a310	148	Script::NotifyInspect	idb	ui	orchestration		Implements the Lua function NotifyInspect	inferred	none		
@@ -6850,7 +6850,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d4b0	11	Script::GetTimeToWellRested	idb	ui	orchestration		Implements the Lua function GetTimeToWellRested	inferred	none		
 0x48d4c0	17	Script::GMRequestPlayerInfo	idb	ui	orchestration		Implements the Lua function GMRequestPlayerInfo	inferred	none		
 0x48d4e0	88	Script::GetCoinIcon	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon path a copper amount shows	verified	one	ui/cursormoney#coin-icons	
-0x48d540	437	Script::GetZonePVPInfo	idb	ui	primitive		Implements the Lua function GetZonePVPInfo	inferred	none		
+0x48d540	437	Script::GetZonePVPInfo	idb	ui	primitive		Pushes the zone PvP type, its faction name and whether the leaf is an arena	verified	one	ui/zonetext#getzonepvpinfo	
 0x48d700	100	Script::TogglePVP	idb	ui	orchestration		Implements the Lua function TogglePVP	inferred	none		
 0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration		Implements the Lua function ConfirmBindOnUse	inferred	none		
 0x48d780	290	Script::SetPortraitToTexture	idb	ui	primitive		Implements the Lua function SetPortraitToTexture	inferred	none		
@@ -7000,8 +7000,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494720	28			ui	orchestration		Passes a miss reason below 12, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
 0x494740	33	SignalUnitCombatHeal		ui	primitive		Signals UNIT_COMBAT with HEAL and the critical mark 0x80 when its byte is set	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x494770	3	SignalUnitCombatEnergize		ui	orchestration		Returns at once, dropping its stack argument	verified	one	objectlayer/playercombat#spell-combat-log-messages	
-0x494780	491			ui	primitive		Runs GameUI.cpp code that calls 0x4a6650, SStrCmpI, SMemFree and 6 more; not read here	inferred	none		
-0x494970	126			ui	orchestration		Runs GameUI.cpp code that calls SStrCmpI, SMemFree, SStrDupA; not read here	inferred	none		
+0x494780	491	UpdateZoneText		ui	orchestration		Commits the zone and area ids and name caches and signals the zone event	verified	one	ui/zonetext#the-commit-and-its-events	
+0x494970	126	UpdateMinimapZoneText		ui	orchestration		Replaces the minimap zone text and signals MINIMAP_ZONE_CHANGED when it changed	verified	one	ui/zonetext#the-text-functions	
 0x4949f0	83	ClickObjectByAction		ui	orchestration	void __stdcall (uint32_t action, uint64_t guid)	Selects for action 1 and interacts for action 4	verified	one	ui/mouseover#interacting-by-click	
 0x494a50	247	CheckActivePlayer		ui	orchestration		Answers whether an action of a kind may run; kinds 0 and 11 refuse a nonzero context and signal	verified	one	ui/protected#protected-action-gate	
 0x494b60	256	CGGameUI::SetCursorItem	idb	ui	primitive	void __fastcall (uint32_t slot, uint32_t unlock, uint64_t guid, uint64_t containerGuid, uint32_t count)	Puts an item on the cursor, first clearing what it held	verified	one	ui/cursor#item-and-preview-setters	

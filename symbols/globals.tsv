@@ -1869,7 +1869,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8826d8	uint32_t	s_readScanning		cvar	Points at the readScanning option's record	inferred	none	
 0x882704	uint32_t			client	Holds a dword that ClientRegisterConsoleCommands reads and writes; not read here	inferred	none	
 0x882720	uint32_t	s_readTos		cvar	Points at the readTOS option's record	inferred	none	
-0x88272c	uint32_t			unassigned	Holds a dword that ClientInitializeGame, Script::GetZonePVPInfo read and write; not read here	inferred	none	
+0x88272c	uint32_t	s_pvpRealmGate		unassigned	Holds 1 when the selected realm type allows player killing, set at world entry	verified	one	ui/zonetext#the-realm-gate
 0x882730	uint32_t	s_iniRegion		client	Holds the Region value read from the WoW Config section of Wow.ini, 0 by default	inferred	none	
 0x882734	uint32_t			client	Holds a dword that ClientInitializeGame, ClientDestroyGame read and write; not read here	inferred	none	
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
@@ -2108,8 +2108,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b3c8	uint64_t	s_cursorItemContainerGuid		ui	Holds the GUID of the container the item payload came from	verified	one	ui/cursor#payload-kinds
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption
 0xb4b3f4	uint8_t			ui	Holds a byte that CGGameUI::Initialize, CGGameUI::Reload read and write; not read here	inferred	none	
+0xb4b3f8	char *	s_zoneText		ui	Holds the zone name GetZoneText pushes, set by the zone commit	verified	one	ui/zonetext#the-commit-and-its-events
 0xb4b400	uint32_t	s_cursorItemSourceSlot		ui	Holds the slot the item payload came from	verified	one	ui/cursor#payload-kinds
-0xb4b404	uint32_t			ui	Holds a dword that Script::GetRealZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
+0xb4b404	char *	s_realZoneText		ui	Holds the zone name before the map object override that GetRealZoneText pushes	verified	one	ui/zonetext#the-commit-and-its-events
 0xb4b40c	uint32_t	s_cursorItemSplitCount		ui	Holds the split count of the item payload, 0 for a whole stack	verified	one	ui/cursor#payload-kinds
 0xb4b410	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4b41c	uint32_t	s_cursorPreviewEntry		ui	Holds the entry of the preview payload, nonzero for kinds 5, 7 and 9	verified	one	ui/cursor#payload-kinds
@@ -2129,7 +2130,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4d918	float			ui	Holds a float that Script::CanInspect, Script::CheckInteractDistance read and write; not read here	inferred	none	
 0xb4d920	char[260]	s_coinIconPath		ui	Holds the coin icon path GetCoinIcon returns	verified	one	ui/cursormoney#coin-icons
 0xb4da24	uint32_t	s_cursorGridShown		ui	Holds 1 when a pick-up showed the action or pet bar grid	verified	one	ui/cursor#payload-kinds
-0xb4da28	uint32_t			ui	Holds a dword that Script::GetMinimapZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
+0xb4da28	char *	s_minimapZoneText		ui	Holds the subzone-else-zone name GetMinimapZoneText pushes	verified	one	ui/zonetext#the-text-functions
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
 0xb4e248	uint64_t	s_cursorItemGuid		ui	Holds the GUID of the item payload	verified	one	ui/cursor#payload-kinds
 0xb4e258	float	s_interactRange3Squared		ui	Holds 10 squared, the range of CheckInteractDistance index 3	verified	one	ui/distancegates#thresholds
@@ -2140,6 +2141,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e270	void *	s_cinematicShotRow		ui	Holds the CinematicCamera row of the playing shot	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e274	uint32_t	s_cinematicNarration		ui	Holds the handle of the shot's own sound	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e278	uint32_t	s_cinematicMusicPaused		ui	Holds 1 when the cinematic paused the music and must restore it	verified	one	uicamera/cinematic#starting-a-sequence
+0xb4e280	char *	s_subZoneText		ui	Holds the subzone name GetSubZoneText pushes, set by the zone commit	verified	one	ui/zonetext#the-commit-and-its-events
 0xb4e284	float[3]	s_corpsePosition		ui	Holds the cached corpse position x, y and z	verified	one	ui/deathui#the-corpse-location
 0xb4e29c	float	s_interactRange2Squared		ui	Holds 11.11 squared, the range of CheckInteractDistance index 2	verified	one	ui/distancegates#thresholds
 0xb4e2a0	float	s_interactRange4Squared		ui	Holds 30 squared, the range of CheckInteractDistance index 4	verified	one	ui/distancegates#thresholds
