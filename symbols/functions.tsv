@@ -7214,10 +7214,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49eb70	767	JoinChannel		ui	primitive		Composes the wire name, registers the window entry and slot, and sends the join	verified	one	ui/channelverbs#the-join-body	
 0x49ee70	708	LeaveChannel		ui	primitive		Composes the wire name, strips window entries, sends the leave and clears the zone mask bit	verified	one	ui/channelverbs#leavechannelbyname	
 0x49f140	148	ComposeGuildRecruitmentNames		ui	primitive		Composes the guild recruitment shortcut and capital name once, from the city row and the flag 0x20000 row	verified	one	ui/channelverbs#guild-recruitment-cascade	
-0x49f1e0	1461	Script::SendChatMessage	idb	ui	primitive		Implements the Lua function SendChatMessage	inferred	none		
-0x49f7a0	246			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49f8a0	125			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x49f920	522	Script::SendAddonMessage	idb	ui	primitive		Implements the Lua function SendAddonMessage	inferred	none		
+0x49f1e0	1461	Script::SendChatMessage	idb	ui	primitive		Sends a chat line: checks the type, group and channel, runs the text steps and writes opcode 0x95	verified	one	ui/chatsend#arguments-of-sendchatmessage	
+0x49f7a0	246	ResolveChatTypeName		ui	primitive		Returns whether a chat type name matches one of 13 names and stores its type number	verified	one	ui/chatsend#arguments-of-sendchatmessage	
+0x49f8a0	125	ResolveLanguageName		ui	primitive		Returns whether a name matches a Languages row and stores its id	verified	one	ui/chatsend#arguments-of-sendchatmessage	
+0x49f920	522	Script::SendAddonMessage	idb	ui	primitive		Sends an addon message as prefix, tab and message with the language 0xffffffff after the escape check	verified	one	ui/chatsend#sendaddonmessage	
 0x49fb30	172	Script::GetNumLaguages	idb	ui	primitive		Pushes the number of languages the active player understands	verified	one	ui/chatlanguage#language-functions	
 0x49fbe0	236	Script::GetLanguageByIndex	idb	ui	primitive		Pushes the name of the n-th language the active player understands	verified	one	ui/chatlanguage#language-functions	
 0x49fcd0	94	Script::GetDefaultLanguage	idb	ui	orchestration		Pushes the name of the default language of the player's race	verified	one	ui/chatlanguage#language-functions	
@@ -8039,7 +8039,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b5330	70	CGTutorial::InitializeGame	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
 0x4b5380	15			ui	orchestration		Runs its object file code that calls 0x4b58e0; not read here	inferred	none		
 0x4b5390	300			ui	primitive		Sets a bit of a flag set when the set exists and the bit is clear	inferred	none	spell/failures#player-unit-cleanup	
-0x4b54c0	248			ui	primitive		Sets a tutorial flag and tells the server with CMSG_TUTORIAL_FLAG; not read here	inferred	none	objectlayer/party#group-and-guild-messages-sent	
+0x4b54c0	248			ui	primitive		Sets a tutorial flag and tells the server with CMSG_TUTORIAL_FLAG	inferred	none	ui/chatsend#text-steps	
 0x4b55c0	153			ui	orchestration		Runs its object file code that calls 0x4b58e0, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
 0x4b5660	146			ui	orchestration		Runs its object file code that calls CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
 0x4b5700	234	CGTutorial::OnTutorialFlags	idb	ui	primitive		Runs its object file code that calls CDataStore::GetDataInSitu, 0x4594f0, ReallocUint32Array and 1 more; not read here	inferred	none		
@@ -8256,7 +8256,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4baee0	72			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
 0x4baf30	151			ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4bafd0	164	CGRaidInfo::IsMemberOrPet	idb	ui	primitive		Runs RaidInfo.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4bb080	106			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
+0x4bb080	106	IsRaidLeaderOrAssistant		ui	primitive		Returns whether a GUID is a raid member of rank above 0 or the group leader	verified	one	ui/chatsend#group-and-channel-checks	
 0x4bb0f0	60			ui	primitive		Returns the raid member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
 0x4bb130	82			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
 0x4bb190	54			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
@@ -11968,9 +11968,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x507710	2511	ExpandSpellToken		ui	primitive	uint32_t __thiscall (void *spell, uint32_t level, uint32_t stack, uint32_t pet, uint32_t unmodified)	Expands the token at the text cursor into the buffer and returns 0 when it cannot	verified	one	ui/spelltokens#the-token-syntax	
 0x508180	277	ExpandGenderToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size)	Appends the male or female form of a dollar g token by the active player's gender	verified	one	ui/spelltokens#gendered-text	
 0x5082a0	247	ExpandPluralToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size, uint32_t key)	Appends the singular or plural form of a dollar l token by the plural index of the key	verified	one	ui/spelltokens#plural-text	
-0x5083a0	386			ui	primitive		Runs QuestTextParser.cpp code that calls SStrChr, SStrLen, SStrPack and 4 more; not read here	inferred	none		
+0x5083a0	386	ExpandTargetTokens		ui	primitive		Copies text replacing each %T, %t, %N and %n with the target's name	verified	one	ui/chatsend#text-steps	
 0x508560	286			ui	primitive		Runs its object file code that calls SStrChr, SStrLen, SStrPack and 3 more; not read here	inferred	none		
-0x508680	982			ui	primitive		Runs its object file code that calls 0x64b4a0, SStrCopy, 0x508ad0 and 5 more; not read here	inferred	none		
+0x508680	982	DrunkTransformText		ui	primitive		Writes the text a drunk player sends from the source, a strength and a capacity	inferred	none	ui/chatsend#text-steps	
 0x508ad0	24			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x508af0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x508b00	15			ui	primitive		Runs its object file code not read here	inferred	none		

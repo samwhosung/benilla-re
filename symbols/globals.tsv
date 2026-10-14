@@ -2315,7 +2315,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc6f48	uint32_t[8]	s_partyMemberGuids		ui	Holds the GUIDs of the four other party members	verified	one	ui/minimapblips#party-and-pet-arrows
 0xbc70a0	uint32_t			ui	Holds a dword that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
 0xbc70b0	uint8_t[1312]	s_partyMembers		ui	Holds the four party member records of 0x148 bytes each	verified	one	ui/tooltipunit#who-the-builder-describes
-0xbc75fc	uint32_t			unassigned	Holds a dword that Script::SendChatMessage, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
+0xbc75f8	uint64_t	s_groupLeaderGuid		ui	Holds the GUID of the party or raid leader	verified	one	ui/chatsend#group-and-channel-checks
 0xbc762c	float	s_iconHalfSize		ui	Holds half the landmark icon size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7658	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
