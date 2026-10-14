@@ -58,6 +58,24 @@ references: two writes in the request (`0x6e4fd3`, `0x6e4fdc`: 1 for an active-p
 item, else 0) and the read at `0x6e58a2` that gates the send's pop, so the player's own cast is not
 popped by its send.
 
+## Cast over a queued strike
+
+A cast started over a queued strike pushes the strike into the saved slot and takes the in-flight slot. The
+pop restores the strike and leaves the saved copy in place, so a second abort restores it again. The server's
+cast result for the new spell finds the saved slot unmatched, restores the strike by the abort and keeps the
+saved copy; the strike's own result clears the saved slot first when it is saved, or pops when it is in flight.
+
+Addresses: `0x6e4ad0`, `0x6e4ad5`, `0x6e4adf`, `0x6e4af8`, `0x6e4b2c`, `0x6e4b3d`, `0x6e49d6`, `0x6e73ee`, `0x6e73f6`, `0x6e7408`, `0x6e741a`, `0xcecaa8`, `0xcecb20`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6e4ad5 cmp eax,ecx; je` ends a push of the in-flight spell. The push (`0x6e4adf` to `0x6e4af8`) copies the
+in-flight id and item guid into `0xcecaa8` and `0xcecb20` and stores the new id; the pop (`0x6e4b2c` to
+`0x6e4b3d`) loads them back and stores nothing in the saved slot. The pop is the abort's tail (`0x6e49d6`).
+`0x6e73ee` compares the result's spell with `0xcecaa8` and `0x6e73f6` zeroes the slot and its guid;
+`0x6e7408` compares with the in-flight id and `0x6e741a` aborts with `cl` and `dl` 0, after the saved-slot test.
+
 ## Routes into the auto-repeat
 
 The auto-repeat spell id `0xceac30` is written in three places: the send's auto-repeat arm (`cast`, After the
