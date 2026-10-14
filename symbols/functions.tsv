@@ -6874,7 +6874,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48df30	8	Script::CancelAreaSpiritHeal	idb	ui	orchestration		Cancels the spirit healer resurrection aura	verified	one	ui/popups#the-area-spirit-healer	
 0x48df40	71	Script::GetMouseFocus	idb	ui	orchestration		Implements the Lua function GetMouseFocus	inferred	none		
 0x48df90	24	Script::GetRealmName	idb	ui	orchestration		Implements the Lua function GetRealmName	inferred	none		
-0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Implements the Lua function GetItemQualityColor	inferred	none		
+0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Returns the red, green and blue of a quality as fractions and its colour escape string	verified	one	ui/tooltipcontent#reading-a-quality-colour	
 0x48e070	726	Script::GetItemInfo	idb	ui	primitive		Implements the Lua function GetItemInfo	inferred	none		
 0x48e350	50			ui	orchestration		Returns the count of the sorted add-on names	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48e390	412			ui	primitive		Returns an add-on's name, title, notes, enabled, loadable, reason and security	verified	one	ui/addons#the-in-game-add-on-functions	

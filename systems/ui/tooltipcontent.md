@@ -66,6 +66,21 @@ an index of 7 or more, negatives included, takes entry 1, white. `0x52ad70` retu
 dword at `0xc0d3c8` + 4·index, and `0x52ad90` returns the matching inline escape string for chat text from
 the table at `0x854124`.
 
+
+## Reading a quality colour
+
+`GetItemQualityColor(quality)` returns four values for the quality's table entry: the red, green and blue bytes of its colour over 255, and the colour escape
+string of the same index. The argument must be a number, truncated toward zero; a quality of 7 or more, or below 0, gives the white entry. Anything else raises
+`Usage: GetItemQualityColor(index)`.
+
+Addresses: `0x48dfb0`, `0x48dfbc`, `0x48dfc5`, `0x48dfe3`, `0x48dfe8`, `0x48dff1`, `0x48dff8`, `0x48e007`, `0x48e015`, `0x48e032`, `0x48e050`, `0x48e059`, `0x52ad70`, `0x52ad90`, `0x804578`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x48dfbc` tests argument 1 with `lua_isnumber` and raises the usage message (`0x48dfc5`); `0x48dfe8` truncates with `__ftol`. `0x48dff1` takes the entry's address from `0x52ad70` and `0x48dff8`, `0x48e015` and `0x48e032` read its bytes
+2, 1 and 0 as red, green and blue; each is multiplied by the double 1/255 at `0x804578` (`0x48e007`) and pushed with `lua_pushnumber`. `0x48e050` gets the escape string from `0x52ad90` and pushes it; the binding returns 4.
+
 ## The line bindings
 
 `AddLine(text, r, g, b, wrap)`, `AddDoubleLine(left, right, rL, gL, bL, rR, gR, bR, wrap)` and
