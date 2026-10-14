@@ -1,0 +1,12 @@
+[package]
+name = "benilla-re-dbc"
+description = "The WDBC client database container of WoW.exe 1.12.1.5875, read and checked against the install's tables"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
+# The fixture tests read the install's tables through the client's archive mount.
+benilla-re-storm.workspace = true

@@ -129,6 +129,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-dbc"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+ "benilla-re-storm",
+]
+
+[[package]]
 name = "benilla-re-dbcache"
 version = "0.1.0"
 dependencies = [
@@ -146,6 +154,13 @@ dependencies = [
 
 [[package]]
 name = "benilla-re-fastmath"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
+name = "benilla-re-ffxeffects"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",
@@ -263,6 +278,14 @@ name = "benilla-re-spline"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",
+]
+
+[[package]]
+name = "benilla-re-storm"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+ "wow-mpq",
 ]
 
 [[package]]
