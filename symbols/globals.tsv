@@ -2695,7 +2695,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table
 0xcf5b68	float[16]	s_particleViewMatrix		models	Holds the matrix an emitter's draw takes particle positions into view space with	verified	one	models/particles#particle-view-space
+0xcf5c68	float	s_geometryInvTwoPi2		cmath	Holds 1/2π, 0.15915494, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c6c	float	s_geometryTwoPi2		cmath	Holds 2π, 6.2831855, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c70	float	s_geometryInfinity2		cmath	Holds +infinity from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c74	float	s_geometryInvTwoPi3		cmath	Holds 1/2π, 0.15915494, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c78	float	s_geometryTwoPi3		cmath	Holds 2π, 6.2831855, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
 0xcf5c7c	uint32_t[6]	s_polygonAxisPairs		cmath	Holds the two kept axes of each dropped axis for the polygon test, set by 0x7c18d0	verified	one	cmath/geometry#point-in-polygon
+0xcf5c94	float	s_geometryInfinity3		cmath	Holds +infinity from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c98	float	s_geometryInvTwoPi4		cmath	Holds 1/2π, 0.15915494, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5c9c	float	s_geometryTwoPi4		cmath	Holds 2π, 6.2831855, from start-up, read by nothing	verified	one	cmath/geometry#static-constants
+0xcf5ca0	float	s_geometryInfinity4		cmath	Holds +infinity from start-up, read by nothing	verified	one	cmath/geometry#static-constants
 0xcf5ca4	float	s_geometryInvTwoPi		unassigned	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#object-files
 0xcf5ca8	float	s_geometryTwoPi		unassigned	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#object-files
 0xcf5cc0	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers

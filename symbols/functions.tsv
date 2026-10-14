@@ -28896,7 +28896,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc1f0	98			unassigned			Runs its object file code that calls CDataStore::GetGuid, CDataStore::GetCString, CDataStore::GetUInt32; not read here	inferred	none		
 0x6dc260	46			unassigned			Runs its object file code that calls 0x4181f0, CDataStore::PutCString; not read here	inferred	none		
 0x6dc290	48			unassigned			Runs its object file code that calls CDataStore::GetUInt32, CDataStore::GetCString; not read here	inferred	none		
-0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Intersects two 2D segments, writing the line intersection when they do not cross	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Returns 1 when two 2D segments cross, else writes where their lines meet	verified	one	cmath/solids#segments-in-the-plane	
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3f0	114			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
@@ -28904,9 +28904,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc4e0	81			unassigned	unreached		Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc540	81			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		lighting::ray_box_clip_difftest
-0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x6dc900	1147	SegmentSegmentDistanceSquared		unassigned	unreached		Returns the squared distance between two segments, each given by a point and a direction	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	verified	one	cmath/solids#sphere-and-box	
+0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	verified	one	cmath/solids#box-and-plane	
+0x6dc900	1147	PointTriangleDistanceSquared		unassigned	unreached		Returns the squared distance from a point to a triangle given by a vertex and two edge vectors	verified	one	cmath/solids#point-to-triangle	
 0x6dcd80	10			unassigned	unreached		Runs its object file code that calls 0x6dc5a0; not read here	inferred	none		
 0x6dcd90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dcda0	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -35865,57 +35865,57 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c1570	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c1580	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c1590	279			cmath	unreached		Runs its object file code that calls SetVector3, MaxVector3; not read here	inferred	none		
-0x7c16b0	403			cmath	unreached		Runs its object file code that calls SplatVector3, SetVector3; not read here	inferred	none		
-0x7c1850	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c1860	15			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c1870	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c1880	19			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c18a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c18b0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c16b0	403	BoundsOfIndexedPoints		cmath	unreached		Writes the bounds of the points an index list names	verified	one	cmath/geometry#dominant-axis-and-bounds	
+0x7c1850	5			cmath	orchestration		Jumps to 0x7c1860, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c1860	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c6c	verified	one	cmath/geometry#static-constants	
+0x7c1870	5			cmath	orchestration		Jumps to 0x7c1880, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c1880	19			cmath	primitive		Stores 1/2π from the 2π at 0xcf5c6c, at 0xcf5c68	verified	one	cmath/geometry#static-constants	
+0x7c18a0	5			cmath	orchestration		Jumps to 0x7c18b0, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c18b0	11			cmath	orchestration		Stores +infinity at 0xcf5c70	verified	one	cmath/geometry#static-constants	
 0x7c18c0	10			cmath	orchestration		Calls 0x7c18d0, a static initializer	verified	one	cmath/geometry#point-in-polygon	
 0x7c18d0	45	InitPolygonAxisPairs		cmath	orchestration		Stores the kept axis pairs of the point in polygon test	verified	one	cmath/geometry#point-in-polygon	
 0x7c1900	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7c1910	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c1920	451	ClipSegmentToBox		cmath	unreached		Clips a segment against a box, writing the entry parameter and point	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c1920	451	IntersectRayBox		cmath	unreached		Finds where a ray enters a box, writing the parameter and the point	verified	one	cmath/solids#ray-and-box	
 0x7c1af0	321	IntersectRaySphere		cmath	unreached		Intersects a ray with a sphere, the near root outside and the exit root inside	verified	one	cmath/geometry#ray-and-sphere	
-0x7c1c40	390	IntersectRaySphereAlgebraic		cmath	unreached		Intersects a ray with a sphere by the quadratic, the near root only	inferred	none	cmath/geometry#ray-and-sphere	
+0x7c1c40	390	IntersectRaySphereAlgebraic		cmath	unreached		Intersects a ray with a sphere by the quadratic, the near root only, scaled back by the direction length	verified	one	cmath/geometry#ray-and-sphere-by-the-quadratic	
 0x7c1dd0	601	ClassifyPointAgainstBox		cmath	unreached		Tests a point and radius against a box in one of four modes	inferred	none	cmath/geometry#circle-and-point-against-a-box	
-0x7c2040	601	ClassifyCircleAgainstBox		cmath	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none	cmath/geometry#circle-and-point-against-a-box	cmath::sphere_aabb_difftest
+0x7c2040	601	ClassifyCircleAgainstBox		cmath	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	verified	one	cmath/geometry#circle-and-point-against-a-box	cmath::sphere_aabb_difftest
 0x7c22b0	299	IntersectRayPlane		cmath	primitive	uint8_t __thiscall (const float *ray, const float *plane, float *outT, float *outPoint, float eps)	Intersects a ray with a plane, writing the parameter and the point when their pointers are set	verified	one	cmath/geometry#ray-and-plane	cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
 0x7c23e0	272	PointInPolygonProjected		cmath	primitive	uint8_t __thiscall (const float *point, const float *verts, uint32_t n, uint32_t axis)	Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	verified	one	cmath/geometry#point-in-polygon	cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest
 0x7c24f0	289	IsPointInIndexedPolygon16		cmath	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	verified	one	cmath/geometry#point-in-polygon	
 0x7c2620	279	IsPointInIndexedPolygon32		cmath	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	verified	one	cmath/geometry#point-in-polygon	
 0x7c2740	139	IntersectRayPolygonTriangle		cmath	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	verified	one	cmath/geometry#point-in-polygon	
-0x7c27d0	530	IntersectRayTriangleInline		cmath	unreached		Intersects a ray with a triangle of three stored vertices, with a slack	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
+0x7c27d0	530	IntersectRayTriangleInline		cmath	unreached		Intersects a ray with a triangle of three stored vertices, both faces, with a slack	verified	one	cmath/geometry#other-triangle-rays	
 0x7c29f0	581	IntersectRayTriangleIndexed		cmath	primitive	bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	cmath/geometry#ray-and-triangle	cmath::intersect_difftest
 0x7c2c40	580	IntersectRayTriangle		cmath	primitive	uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle by 32-bit vertex indices, as 0x7c29f0	verified	one	cmath/geometry#ray-and-triangle	cmath::intersect_difftest, terrain::dda_cell_intersect_difftest, terrain::dda_cell_intersect_first_difftest
-0x7c2e90	525	IntersectRayTriangleFront		cmath	unreached		Intersects a ray with the front of a triangle of three stored vertices	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
-0x7c30a0	577	IntersectRayIndexedTriangleFront		cmath	unreached		Intersects a ray with the front of a triangle by 16-bit vertex indices	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
-0x7c32f0	147	IsPointInCone		cmath	unreached		Returns 1 when a point lies within a capped cone along an axis	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c3390	1000	SweepSphereAgainstCapsule		cmath	unreached		Returns the time a moving sphere meets a capsule's axis	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c3780	1160	DoBoxesOverlap		cmath	unreached		Returns 1 when two oriented boxes overlap on all fifteen separating axes	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c3c10	272	DoSegmentsCross2D		cmath	unreached		Returns 1 when two 2D segments cross	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c3d20	264	IntersectSegments2DPoint		cmath	unreached		Intersects two 2D segments, writing the intersection point	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c3e30	510	DoTrianglesOverlap		cmath	unreached		Returns 1 when two triangles overlap	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4030	90	DoesSegmentCrossTriangle2D		cmath	unreached		Returns 1 when a 2D segment crosses an edge of a triangle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4090	185	IsPointInTriangle2D		cmath	unreached		Returns 1 when a 2D point lies inside a triangle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4150	328	DoCoplanarTrianglesOverlap		cmath	unreached		Returns 1 when two coplanar triangles overlap	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c42a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c42b0	15			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c42c0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c42d0	19			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c42f0	66	BuildRotationMatrix2		cmath	unreached		Writes the 2x2 rotation [[cos, sin], [-sin, cos]] of an angle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4340	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c4350	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c4360	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c4370	15			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c4380	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c4390	19			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7c43b0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c43c0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c43d0	310	LineLineGap		cmath	unreached		Returns the closest distance between two lines	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4510	281	ClosestLineParameters		cmath	unreached		Writes the parameters of the closest points of two lines	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
-0x7c4630	145	PointLineDistance		cmath	unreached		Returns the distance from a point to a line	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c2e90	525	IntersectRayTriangleFront		cmath	unreached		Intersects a ray with one face of a triangle of three stored vertices, dividing last	verified	one	cmath/geometry#other-triangle-rays	
+0x7c30a0	577	IntersectRayIndexedTriangleFront		cmath	unreached		Intersects a ray with one face of a triangle by three 16-bit vertex indices, dividing last	verified	one	cmath/geometry#other-triangle-rays	
+0x7c32f0	147	IsPointInCone		cmath	unreached		Returns 1 when a point lies in a double cone from an apex along an axis, within a cap	verified	one	cmath/solids#point-in-a-cone	
+0x7c3390	1000	IntersectRayCone		cmath	unreached		Finds where a ray meets a cone, writing the parameter and the point	verified	one	cmath/solids#ray-and-cone	
+0x7c3780	1160	DoBoxesOverlap		cmath	unreached		Returns 1 when two oriented boxes overlap on all fifteen separating axes	verified	one	cmath/solids#box-against-box	
+0x7c3c10	272	DoSegmentsCross2D		cmath	unreached		Returns 1 when two 2D segments cross	inferred	none	cmath/geometry#triangles-in-the-plane	
+0x7c3d20	264	IntersectSegments2DPoint		cmath	unreached		Writes where two 2D lines meet and returns 1 when the segments cross	verified	one	cmath/solids#segments-in-the-plane	
+0x7c3e30	510	DoTrianglesOverlap		cmath	unreached		Returns 1 when two triangles overlap	inferred	none	cmath/geometry#triangles-in-the-plane	
+0x7c4030	90	DoesSegmentCrossTriangle2D		cmath	unreached		Returns 1 when a 2D segment crosses an edge of a triangle	inferred	none	cmath/geometry#triangles-in-the-plane	
+0x7c4090	185	IsPointInTriangle2D		cmath	unreached		Returns 1 when a 2D point lies inside a triangle	inferred	none	cmath/geometry#triangles-in-the-plane	
+0x7c4150	328	DoCoplanarTrianglesOverlap		cmath	unreached		Returns 1 when two coplanar triangles overlap	inferred	none	cmath/geometry#triangles-in-the-plane	
+0x7c42a0	5			cmath	orchestration		Jumps to 0x7c42b0, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c42b0	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c78	verified	one	cmath/geometry#static-constants	
+0x7c42c0	5			cmath	orchestration		Jumps to 0x7c42d0, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c42d0	19			cmath	primitive		Stores 1/2π from the 2π at 0xcf5c78, at 0xcf5c74	verified	one	cmath/geometry#static-constants	
+0x7c42f0	66	BuildRotationMatrix2		cmath	unreached		Writes the 2x2 rotation [[cos, sin], [-sin, cos]] of an angle	verified	one	cmath/geometry#rotation-of-an-angle	
+0x7c4340	5			cmath	orchestration		Jumps to 0x7c4350, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c4350	11			cmath	orchestration		Stores +infinity at 0xcf5c94	verified	one	cmath/geometry#static-constants	
+0x7c4360	5			cmath	orchestration		Jumps to 0x7c4370, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c4370	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c9c	verified	one	cmath/geometry#static-constants	
+0x7c4380	5			cmath	orchestration		Jumps to 0x7c4390, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c4390	19			cmath	primitive		Stores 1/2π from the 2π at 0xcf5c9c, at 0xcf5c98	verified	one	cmath/geometry#static-constants	
+0x7c43b0	5			cmath	orchestration		Jumps to 0x7c43c0, a static initializer of the file	verified	one	cmath/geometry#static-constants	
+0x7c43c0	11			cmath	orchestration		Stores +infinity at 0xcf5ca0	verified	one	cmath/geometry#static-constants	
+0x7c43d0	310	SegmentLineDistance		cmath	unreached		Returns the distance between the line through a segment and a line given by an origin and a direction	inferred	none	cmath/geometry#lines	
+0x7c4510	281	ClosestLineParameters		cmath	unreached		Writes the parameters of the closest points of two lines	inferred	none	cmath/geometry#lines	
+0x7c4630	145	PointLineDistance		cmath	unreached		Returns the distance from a point to a line	inferred	none	cmath/geometry#lines	
 0x7c46d0	266	PointSegmentDistanceSquared		cmath	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	verified	one	cmath/geometry#point-to-segment	cmath::seg_proj_difftest, models::aabsp_nearest_dist_difftest
 0x7c47e0	5	InitGeometryTwoPiThunk		cmath	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c47f0	15	InitGeometryTwoPi		cmath	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	

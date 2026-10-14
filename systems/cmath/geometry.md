@@ -1,12 +1,11 @@
 # cmath: intersections
 
 The intersection and distance routines of the Tempest math library in the geometry file, `0x7bf680`
-through `0x7c4800`, and a second small file at `0x6dc2c0`. Vectors are three floats and a ray is an
-origin followed by a direction (`+0` and `+0xc`). A routine returns a byte (0 or 1) and writes what it
-found through optional pointers. Eight of the routines here are called by live code
-(`0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `0x7c2c40`, `0x7c46d0`); the rest have
-no caller and no stored address (a relative-call scan and the census of stored addresses). None has a
-bit-exact test yet.
+through `0x7c4800`. Boxes, cones and triangles against rays, points and boxes are in `cmath/solids`. Vectors
+are three floats and a ray is an origin followed by a direction (`+0` and `+0xc`). A routine returns a byte
+(0 or 1) and writes what it found through optional pointers. Eight of the routines here are called by live
+code (`0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `0x7c2c40`, `0x7c46d0`); the
+rest have no caller and no stored address (a relative-call scan and the census of stored addresses).
 
 Roots: `0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `0x7c2c40`, `0x7c46d0`
 
@@ -16,17 +15,20 @@ Roots: `0x7bf680`, `0x7c1450`, `0x7c2040`, `0x7c22b0`, `0x7c23e0`, `0x7c29f0`, `
 `|x|` is strictly greater than both `|y|` and `|z|`; otherwise 1 when `|y|` is strictly greater than
 `|z|`, else 2, so a tie goes to the later axis. `0x7c1450(n, points)` writes the bounds of `n` points
 (stride 12) to the six floats at `ecx`, minimum then maximum; for `n` of 0 all six are 0. It starts
-from the first point and folds each next one with a per-axis compare, the maximum through `0x6992c0`.
+from the first point and folds each next one with a per-axis compare, the maximum through `0x6992c0`. `0x7c16b0` does the same for the points an
+index list names.
 
-Addresses: `0x7bf680`, `0x7bf69a`, `0x7bf69f`, `0x7bf6a2`, `0x7bf6a4`, `0x7bf6ac`, `0x7bf6b4`, `0x7bf6b9`, `0x7bf6c1`, `0x7bf6c6`, `0x7bf6c8`, `0x7c1450`, `0x7c145e`, `0x7c1463`, `0x7c14b6`, `0x7c1513`, `0x7c1531`, `0x7c1560`, `0x6992c0`, `0x4549a0`
+Addresses: `0x7bf680`, `0x7bf69a`, `0x7bf69f`, `0x7bf6a2`, `0x7bf6a4`, `0x7bf6ac`, `0x7bf6b4`, `0x7bf6b9`, `0x7bf6c1`, `0x7bf6c6`, `0x7bf6c8`, `0x7c1450`, `0x7c145e`, `0x7c1463`, `0x7c14b6`, `0x7c1513`, `0x7c1531`, `0x7c1560`, `0x7c16b0`, `0x7c173f`, `0x7c1759`, `0x7c1770`, `0x7c1839`, `0x6992c0`, `0x4549a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::dominant_axis_difftest`
 
 `0x7bf69a fcom [ebp-4]` compares `|x|` with `|y|`, `test ah,0x41; jne 0x7bf6b4` takes `|x|` at most `|y|` or NaN to
 the second test; the first test's `fcomp [ebp-8]` with `jne 0x7bf6c8` returns 2 for `|x|` at most `|z|`.
 At `0x7bf6b9` the compare of `|y|` with `|z|` and `mov eax,1; je 0x7bf6cd` return 1 only for `|y|` greater. The
-bounds routine's loop runs `n − 1` times over the points from the second (`0x7c14b3 lea ebx,[eax-1]`).
+bounds routine's loop runs `n − 1` times over the points from the second (`0x7c14b3 lea ebx,[eax-1]`). `0x7c16b0(vertices)` takes the output box in `ecx` and the
+index list in `edx` (a pointer at `+0xc`, a count at `+0x1c`, 32-bit indices); it stores zeros for an empty list, otherwise seeds from the first index and folds the rest with
+the same compares (`0x7c173f`, `0x7c1759`, `0x7c1770`), and copies six dwords out at `0x7c1839`.
 
 ## Ray and plane
 
@@ -40,7 +42,7 @@ Both outputs are optional; with both null a non-parallel ray reports a hit.
 Addresses: `0x7c22b0`, `0x7c22cb`, `0x7c22d0`, `0x7c22db`, `0x7c22f4`, `0x7c22f6`, `0x7c22fe`, `0x7c2338`, `0x7c2344`, `0x7c2360`, `0x7c2367`, `0x7c236f`, `0x7c2373`, `0x7c237b`, `0x7c2384`, `0x7c238d`, `0x7c23a1`, `0x7c23b5`, `0x811658`, `0x7ffd74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::ray_plane_difftest`, `cmath::raymesh_composed_difftest`
 
 `0x7c22d0 fcomp qword [0x811658]; test ah,5; jp 0x7c2338` goes to the non-parallel leg for `|D|` at least
 1e-4 (even parity covers greater, equal and NaN). In the parallel leg `0x7c22f6 fcomp [ebp+0x10]` with `jp
@@ -61,7 +63,7 @@ to the current, with `side(V) = V.A ≥ Q.A` (false for NaN): a change of side c
 Addresses: `0x7c23e0`, `0x7c23e9`, `0x7c2409`, `0x7c241c`, `0x7c2443`, `0x7c2448`, `0x7c245e`, `0x7c2499`, `0x7c24a0`, `0x7c24ab`, `0x7c24ed`, `0xcf5c7c`, `0xcf5c80`, `0x7c18d0`, `0x7c18c0`, `0x7c24f0`, `0x7c2620`, `0x7c2740`, `0x7c2773`, `0x7c277e`, `0x7c278c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::point_in_poly_difftest`, `cmath::raymesh_composed_difftest`
 
 `0x7c24f0` and `0x7c2620` are the same test over 16-bit and 32-bit index lists. `0x7c2740` intersects a
 ray with a facet record (plane, then three vertices at `+0x10`): `0x7c22b0`, then `0x7bf680` of the
@@ -85,30 +87,33 @@ range-checked. `0x7c2c40` is the same for 32-bit indices.
 Addresses: `0x7c29f0`, `0x7c2a48`, `0x7c2a81`, `0x7c2ac1`, `0x7c2ada`, `0x7c2adc`, `0x7c2ae7`, `0x7c2ae9`, `0x7c2af4`, `0x7c2b03`, `0x7c2b0c`, `0x7c2b55`, `0x7c2b58`, `0x7c2b5b`, `0x7c2b63`, `0x7c2b68`, `0x7c2b70`, `0x7c2bcb`, `0x7c2bce`, `0x7c2bd6`, `0x7c2be2`, `0x7c2bea`, `0x7c2bf0`, `0x7c2c10`, `0x7c2c2c`, `0x7c2c40`, `0x81d9bc`, `0x80e2e4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::intersect_difftest`
 
 `0x7c2adc fcom [0x81d9bc]` (−1e-6) with `test ah,0x41; jne 0x7c2b03` continues for `det` at most −1e-6 or NaN,
 then `0x7c2ae9 fcom [0x80e2e4]` (+1e-6) with `test ah,5; jp 0x7c2b03` continues for `det` at least 1e-6;
 anything else returns 0. `u` is stored as a float at `0x7c2b58 fst`, with the unrounded value compared first
 (`0x7c2b5b`, bound `[ebp-8] = −slack`) and the stored float second (`0x7c2b68`, `[ebp-0xc] = 1 + slack`). `v` is compared once, unrounded
 (`0x7c2bcb`, `0x7c2bd6`), and `u + v` adds the stored `v` to the stored `u` (`0x7c2bdf`). The twin `0x7c2c40` differs by `mov` against
-`movzx` and the index strides.
+`movzx` and the index strides. Callers pass the slack: 0.002 (`0x6b8acf`, `0x6bc764`), 1e-6 (`0x709fc5`), 0.01 (`0x69cbca`, `0x69ccc0`, `0x6baf51`) and 0 (`0x6aa81d`).
 
-## Other triangle and polygon rays
+## Other triangle rays
 
-`0x7c27d0`, `0x7c2e90` and `0x7c30a0` are further ray and triangle routines. `0x7c27d0` takes three stored vertices in
-the argument and a slack, with the same `±1e-6` determinant band; `0x7c2e90` takes one-sided
-vertices and divides last, and `0x7c30a0` is its 16-bit indexed form. `0x7c2e90` has the determinant constant
-`+1e-6` and 0.0. None is called.
+`0x7c27d0(outT, outUV, slack)` is `0x7c29f0` for a triangle of three stored vertices (nine floats at `edx`) with the
+same two-sided band of `±1e-6`; it takes the reciprocal of `det` before the bounds. `0x7c2e90(outT, outUV)` takes the same
+triangle and one face: it misses for `det < 1e-6`, tests the numerators `u·det` and `v·det` (`u ≥ 0`, `v ≥ 0`, `u + v ≤ det`) before it
+divides, and divides once, only for an output. `0x7c30a0(indices, outT, outUV)` is `0x7c2e90` with the triangle given by
+three 16-bit indices into the vertex array in `edx`. None has a caller.
 
-Addresses: `0x7c27d0`, `0x7c2e90`, `0x7c30a0`, `0x4549a0`, `0x80e2e4`, `0x81d9bc`, `0x7ff9d8`
-Confidence: inferred
-Proof: none
+Addresses: `0x7c27d0`, `0x7c2894`, `0x7c28a1`, `0x7c28ba`, `0x7c2909`, `0x7c2916`, `0x7c297c`, `0x7c2990`, `0x7c29d5`, `0x7c2e90`, `0x7c2f43`, `0x7c2f93`, `0x7c2fa7`, `0x7c3037`, `0x7c3041`, `0x7c30a0`, `0x7c317b`, `0x4549a0`, `0x80e2e4`, `0x81d9bc`, `0x7ffd74`
+Confidence: verified
+Proof: one
 Test: none
 
-The three are read only at their skeleton: the stack arguments (`ret 0xc`, `ret 8`, `ret 0xc`), the calls to
-`0x4549a0` and the constants above. Their algorithms are the same family as `0x7c29f0` by the shape of the
-calls, which is not verified instruction by instruction.
+`0x7c27d0` forms `−slack` at `[ebp-0xc]` and `1 + slack` at `[ebp-0x10]`, and `0x7c2894 fcom [0x81d9bc]` with `0x7c28a1 fcom [0x80e2e4]` repeat the
+band of `0x7c29f0`; `u` and `v` are scaled by the reciprocal (`0x7c28ba fdiv`) and compared at `0x7c2909`, `0x7c2916`, `0x7c297c` and `0x7c2990`, and `t` is `(e2·q)·inv`
+without a range check. In `0x7c2e90`, `0x7c2f43 fcomp [0x80e2e4]; test ah,5; jnp 0x7c3093` misses below the bound, `0x7c2f93` and `0x7c2fa7` bound `u·det`, the
+equivalent for `v` follows `0x7c3014`, and with both outputs null `0x7c3037` returns 1 with no divide. `0x7c30a0` differs in the index loads and
+`ret 0xc`; its determinant test is `0x7c317b`.
 
 ## Ray and sphere
 
@@ -118,35 +123,50 @@ calls, which is not verified instruction by instruction.
 for an origin outside the sphere (`L² > r²`), `t = tca + thc` inside or on it. The point is `origin + t·dir`
 with every term rounded to a float.
 
-Addresses: `0x7c1af0`, `0x7c1b3d`, `0x7c1b56`, `0x7c1b6b`, `0x7c1b70`, `0x7c1b75`, `0x7c1b7d`, `0x7c1b93`, `0x7c1b96`, `0x7c1b9e`, `0x7c1bb8`, `0x7c1bbd`, `0x7c1bc5`, `0x7c1bd2`, `0x7c1c26`, `0x7c1c40`, `0x4549f0`, `0x80306c`
-Confidence: inferred
-Proof: none
+Addresses: `0x7c1af0`, `0x7c1b3d`, `0x7c1b56`, `0x7c1b6b`, `0x7c1b70`, `0x7c1b75`, `0x7c1b7d`, `0x7c1b93`, `0x7c1b96`, `0x7c1b9e`, `0x7c1bb8`, `0x7c1bbd`, `0x7c1bc5`, `0x7c1bd2`, `0x7c1c26`, `0x4549f0`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x7c1c40` takes the same arguments; it normalizes the direction itself (`√` of its square and a
-reciprocal), solves the quadratic with the literal 4.0, and rescales `t`. The first routine's instructions are read: `0x7c1b6b fcomp 0.0; test ah,5; jp` continues for `tca` at least 0 or NaN,
+`0x7c1b6b fcomp 0.0; test ah,5; jp` continues for `tca` at least 0 or NaN,
 `0x7c1b7a test ah,0x41; jne` continues for `L² ≤ r²`, and `0x7c1bc5 jne 0x7c1bd2` takes `t = tca + thc` for
-`L² ≤ r²`. The second is read at its skeleton (calls `0x4549f0` and `0x4549a0`, the constants 4.0, 1.0 and 0.0,
-`ret 8`); the description of its scale and quadratic is the family's, not traced.
+`L² ≤ r²`. The function is not called.
+
+## Ray and sphere by the quadratic
+
+`0x7c1c40(outT, outPoint)` takes the same arguments with the ray in `ecx` and the sphere in `edx`. It normalizes
+the direction (`nD=dir/|dir|`) and forms `L=origin−centre`, `A=nD·nD`, `B=2(L·nD)`, `c=L·L−r²` and `disc=B²−4Ac`,
+and returns 0 for `disc<0`. The root is `t=(−B−√disc)/(2A)`, the near root even for an origin inside the sphere, and
+`−B/(2A)` for `disc=0`. `t` is multiplied by `1/|dir|` and written to `outT`, and the point is `origin+t·dir` with the
+original direction. A null `outT` returns 1 after the test.
+
+Addresses: `0x7c1c40`, `0x7c1c58`, `0x7c1c65`, `0x7c1c8e`, `0x7c1cb4`, `0x7c1ced`, `0x7c1cf0`, `0x7c1d06`, `0x7c1d12`, `0x7c1d2f`, `0x7c1d31`, `0x7c1d41`, `0x7c1d4d`, `0x7c1d66`, `0x7c1d7a`, `0x4549f0`, `0x4549a0`, `0x80306c`, `0x7ffd74`, `0x7ff9d8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c1c58 call 0x4549f0` is the self dot of the direction and `0x7c1c65` stores `1/|dir|` at `[ebp-8]`. `B` is stored as a float at
+`0x7c1ced fst [ebp-4]` and `0x7c1cf0 fmul [ebp-4]` multiplies the unrounded `B` by that float for `B²`. `0x7c1d06 fmul [0x80306c]` is the 4.0. The tangent
+test reads the stored float of `disc` (`0x7c1d31 fcomp 0.0; test ah,0x44; jp 0x7c1d4d`), so a positive `disc` that rounds to 0 takes the
+tangent leg. `0x7c1d66` multiplies the stored `t` by `[ebp-8]`. The function is not called.
 
 ## Circle and point against a box
 
-`0x7c2040(mode)` tests the circle or sphere in `edx` (centre x and y at `+0` and `+4`, radius at `+0xc`) against the
-box in `ecx` (minimum at `+0`, maximum at `+0xc`) on the first two axes, returning a byte. `r²` is the
-radius squared and rounded. With the per-axis squared distance `near` to the box (0 inside the slab, the
-squared distance to the nearer face outside), mode 3 is true when `near ≤ r²`; mode 2 is true when `near ≤ r²`
-and `r² ≤ far`, where `far` sums the larger of the two squared face distances. Modes 0 and 1 add a hit
-flag. A mode above 3 returns 0. The routine is called with mode 3.
+`0x7c2040(mode)` tests the circle or sphere in `edx` (centre x and y at `+0` and `+4`, radius at `+0xc`) against the box in `ecx` on the
+first two axes and returns a byte, with `r²` the rounded squared radius. Per axis `dmin` and `dmax` are the squared distances to the two faces;
+`near` sums `dmin` for a centre below the minimum and `dmax` above the maximum, and `far` sums the larger of the two. Mode 3 is true when
+`near≤r²`, and mode 2 when also `r²≤far`. Mode 1 needs `near≤r²` and a hit flag, mode 0 the flag, `near≤r²` and `r²≤far`. A mode above 3 returns 0.
 
-Addresses: `0x7c2040`, `0x7c2046`, `0x7c2057`, `0x7c2061`, `0x7c2067`, `0x7c206e`, `0x7c211e`, `0x7c21ab`, `0x7c21e1`, `0x7c2213`, `0x7c2229`, `0x7c223a`, `0x7c2250`, `0x7c2259`, `0x7c2280`, `0x7c2288`, `0x7c229c`, `0x7c1dd0`, `0x68af10`
-Confidence: inferred
-Proof: none
-Test: none
+Addresses: `0x7c2040`, `0x7c2046`, `0x7c2057`, `0x7c2061`, `0x7c2067`, `0x7c206e`, `0x7c211e`, `0x7c21ab`, `0x7c21e1`, `0x7c2213`, `0x7c2229`, `0x7c223a`, `0x7c2250`, `0x7c2259`, `0x7c2280`, `0x7c2288`, `0x7c229c`, `0x68af10`
+Confidence: verified
+Proof: one
+Test: `cmath::sphere_aabb_difftest`
 
-`0x7c1dd0` is a twin: a normalized diff differs only in the prologue and the jump table. Modes 2 and 3 are read: `0x7c2250 fld [edx]; fcomp [edx+ecx]` against the minimum, `jp` past it for a centre at least the minimum,
-then the maximum test at `0x7c2263`, two passes of `add edx,4`, and the final `fcomp [ebp-4]` at `0x7c2280` with
-`jp 0x7c21a0` returning 0 for `near > r²` and NaN. The jump table `0x7c229c` holds `0x7c206e`, `0x7c211e`, `0x7c21ab`
-and `0x7c223a`; modes 0 and 1 are read only for their frame. `0x68af10` is the caller with mode 3.
+The flag is set by an outside axis in both modes. For a centre between the faces, mode 0 sets it when the smaller of `dmin` and `dmax` is at most
+`r²`, and mode 1 when the distance to a face is at most the radius itself (`0x7c216d fcomp [ebp-8]`, the unsquared `r`). Mode 0 stores `dmax` as a
+float (`0x7c2099 fstp [ebp+8]`) and keeps `dmin` at 53 bits. The jump table `0x7c229c` holds `0x7c206e`, `0x7c211e`, `0x7c21ab` and `0x7c223a`, and all four
+legs end in `fcomp` with `test ah,0x41; jp`, so equality passes and NaN fails (`0x7c2288 jp 0x7c21a0`). The caller `0x68af10` uses mode 3.
+`0x7c1dd0` is a twin: a normalized diff differs only in the prologue and the jump table.
 
 ## Point to segment
 
@@ -158,34 +178,72 @@ and `d = (q − a)·ab`: `t = 0` for `d ≤ 0`, `t = 1` for `d` above `|ab|²`, 
 Addresses: `0x7c46d0`, `0x7c4711`, `0x7c4735`, `0x7c4740`, `0x7c4742`, `0x7c4760`, `0x7c4763`, `0x7c476a`, `0x7c476e`, `0x7c4789`, `0x7c47b8`, `0x7c47be`, `0x7c47d7`, `0x6c4300`, `0x7ffd74`, `0x7ff9d8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::seg_proj_difftest`
 
 `0x7c4735 fcomp 0.0; test ah,0x41; jp 0x7c474a` goes on for `d` above 0 and NaN; the fall-through loads 0.0 for `t`.
 `0x7c4760 fld [ebp-4]; fcomp st(1)` with `jne 0x7c4789` takes the interior for `d ≤ |ab|²` and NaN, and the
 fall-through loads 1.0 for the far end. The interior divides with `fdivr [ebp-4]`. The x component of the
 difference stays at 53 bits while y and z subtract rounded products. The squared distance is left on the x87 stack. The caller `0x6c4300` takes its square root.
 
-## Distances, sweeps and overlaps
+## Triangles in the plane
 
-`0x7c1920` clips a segment against a box (`ret 8`, `0.0`).
-`0x7c32f0` tests a point against a cone: the offset from an apex on the axis at `+0x10`, the squared projection
-against the squared offset scaled by a squared factor at `+0x20`, and a cap at `+0x1c` (0 means none).
-`0x7c3390` sweeps a sphere against a capsule axis through `0x5f8cf0` (scale) and `0x621160` (add), with the
-`1e-6` bands and 0.5; `0x7c3780` is the box-box overlap on fifteen axes with no epsilon; `0x7c3c10`, `0x7c3d20`
-`0x7c3e30`, `0x7c4030`, `0x7c4090` and `0x7c4150` are 2D segment and triangle tests; `0x7c42f0` writes the
-2×2 rotation `[[cos, sin], [−sin, cos]]` of an angle. `0x7c43d0`, `0x7c4510` and `0x7c4630` are line and
-line gaps. 
-Addresses: `0x7c1920`, `0x7c32f0`, `0x7c3390`, `0x7c3780`, `0x7c3c10`, `0x7c3d20`, `0x7c3e30`, `0x7c4030`, `0x7c4090`, `0x7c4150`, `0x7c42f0`, `0x7c43d0`, `0x7c4510`, `0x7c4630`, `0x6dc2c0`, `0x6dc7a0`, `0x6dc810`, `0x6dc900`, `0x5f8cf0`, `0x621160`, `0x8101b8`
+`0x7c3e30` takes two plane records with three vertices each (normal at `+0`, constant at `+0xc`, vertices at `+0x10`, `+0x1c` and `+0x28`) and
+answers whether the triangles overlap. It classes the three vertices of the record in `edx` against the plane of the one in `ecx` (bounds at
+`0x8029d0` and `0x810ccc`), and when all three lie in the plane calls `0x7c4150`. `0x7c4150` projects both triangles onto the two axes other than
+the dominant axis of the first normal (a tie goes to the later axis) and returns 1 when an edge of one meets the other (`0x7c4030`) or a vertex of one lies in the other (`0x7c4090`).
+
+Addresses: `0x7c3e30`, `0x7c3e55`, `0x7c3e60`, `0x7c3ebf`, `0x7c3f52`, `0x7c3ffd`, `0x7c401d`, `0x7c4150`, `0x7c4156`, `0x7c420d`, `0x7c426d`, `0x7c428a`, `0x7c4030`, `0x7c4040`, `0x7c3c10`, `0x7c4090`, `0x7c40fa`, `0x602630`, `0x8029d0`, `0x810ccc`, `0x802970`
 Confidence: inferred
 Proof: none
 Test: none
 
-The second file has `0x6dc7a0` (sphere against a box, true for squared distance at most `r²`),
-`0x6dc810` (a box against a plane, 0 straddling or within 0.01944 of it, 1 in front, 2 behind) and
-`0x6dc900` (squared distance between two segments given as a point and a direction each), and `0x6dc2c0`.
+`0x7c3e55 call 0x602630` forms the signed distance with `0x7c3e5d fadd [eax+0xc]`, and the compares at `0x7c3e60` and the class counts at `[ebp-0x44]` to
+`[ebp-0x3c]` decide the route. The edge intersections between the triangle edges and the plane (`0x7c3ee8` to `0x7c3f4a`) and the choice of kept axes (`0x7c3f52`)
+feed the calls at `0x7c3ffd` and `0x7c401d`. `0x7c4030` tests a segment against the three edges of a triangle with `0x7c3c10` (read as four cross products and sign compares, not traced to its algebra), and
+`0x7c4090` is the point in triangle test with a tolerance in a double at `0x802970`.
 
-These are read at their skeletons: frames, stack arguments, calls, constants and a few compares. `0x7c32f0` is read
-through its first compare. `0x6dc810` selects per axis the near and far vertex by the plane normal's sign
-(`0x6dc83c fcomp 0.0; test ah,1`) and compares the two signed distances by sign bit and against `0x8101b8`. `0x6dc7a0`
-clamps the centre to the box on three axes (`0x6dc7c2` to `0x6dc7ee`). The remaining algorithms are named by the
-rows and are not traced here.
+## Lines
+
+`0x7c4630(flag)` returns the distance from the point in `edx` to the line through the origin at `+0` and the direction at `+0xc` of the record in
+`ecx`, as the length of `(q − origin) × dir`, divided by `|dir|` when the flag byte is 0. `0x7c4510` finds the closest points of two lines given
+by an origin and a direction each: it writes the parameter on each line to two output pointers, and 0 for both when the squared cross product
+of the directions is below 0.001 (the float at `0x801360`). `0x7c43d0` uses it for the distance between a segment (endpoints at `+0` and `+0xc`) and a line.
+
+Addresses: `0x7c4630`, `0x7c463b`, `0x7c4687`, `0x7c4689`, `0x7c4510`, `0x7c455a`, `0x7c460c`, `0x7c43d0`, `0x7c442c`, `0x7c44f6`, `0x7c44fb`, `0x801360`, `0x4841f0`, `0x621160`
+Confidence: inferred
+Proof: none
+Test: none
+
+`0x7c4689 jne 0x7c46bb` skips the division by `|dir|` for a non-zero flag, and `0x7c4687 fsqrt` is the length of the cross product. `0x7c455a fcomp [0x801360]` with
+`jnp 0x7c460c` sends a squared cross product below the bound to the zero outputs. `0x7c43d0` passes the segment's difference and the second record's
+origin and direction to `0x7c4510`, forms both closest points (`0x4841f0`, `0x621160`) and returns the length of their difference (`0x7c44fb fsqrt`). The
+algebra of the parameters in `0x7c4510` is not traced.
+
+## Rotation of an angle
+
+`0x7c42f0(angle)` writes the 2×2 rotation `[[cos, sin], [−sin, cos]]` of an angle to the four floats at `ecx`, each of cosine and sine rounded to a
+float and the negated sine an exact negation. It is not called.
+
+Addresses: `0x7c42f0`, `0x7c430b`, `0x7c430d`, `0x7c430f`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7c430b fsincos` leaves the cosine on top; `0x7c430d fstp [eax]` stores the cosine at `[ebp-8]` and `0x7c430f fstp [edx]` the sine at `[ebp-4]`. The four
+output stores are the cosine, the sine, `fchs` of the sine and the cosine again.
+
+## Static constants
+
+The geometry file keeps four sets of its own copies of 2π, 1/2π and +infinity, each stored by a start-up initializer, and nothing reads the copies in
+this stretch. `0x7c1860` stores π + π at `0xcf5c6c`, `0x7c1880` the reciprocal at `0xcf5c68` and `0x7c18b0` infinity at `0xcf5c70`; `0x7c42b0` and `0x7c42d0` store
+2π and 1/2π at `0xcf5c78` and `0xcf5c74`; `0x7c4350`, `0x7c4370`, `0x7c4390` and `0x7c43c0` store infinity, 2π, 1/2π and infinity at `0xcf5c94`,
+`0xcf5c9c`, `0xcf5c98` and `0xcf5ca0`. The fourth set, at `0xcf5ca8` and `0xcf5ca4`, is in `collision/overview#object-files`.
+
+Addresses: `0x7c1850`, `0x7c1860`, `0x7c1870`, `0x7c1880`, `0x7c18a0`, `0x7c18b0`, `0x7c42a0`, `0x7c42b0`, `0x7c42c0`, `0x7c42d0`, `0x7c4340`, `0x7c4350`, `0x7c4360`, `0x7c4370`, `0x7c4380`, `0x7c4390`, `0x7c43b0`, `0x7c43c0`, `0xcf5c68`, `0xcf5c6c`, `0xcf5c70`, `0xcf5c74`, `0xcf5c78`, `0xcf5c94`, `0xcf5c98`, `0xcf5c9c`, `0xcf5ca0`
+Confidence: verified
+Proof: one
+Test: none
+
+Each initializer is behind a five-byte jump (`0x7c1850`, `0x7c1870`, `0x7c18a0`, `0x7c42a0`, `0x7c42c0`, `0x7c4340`, `0x7c4360`, `0x7c4380`, `0x7c43b0`). The 2π stores
+are `fld [π]; fadd st,st; fstp` from a float π in the read-only data, and the reciprocals are `fld 1.0; fdiv` of the 2π copy; the infinity stores copy a float from the read-only data with `mov`.
+A search of the listing for each of the nine addresses finds only the store, and for the 2π copies the divide.

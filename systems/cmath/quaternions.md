@@ -3,7 +3,7 @@
 The quaternion functions of the Tempest math library, in `0x7c0120` through `0x7c1370`. A
 quaternion is four floats `(x, y, z, w)`; a function that returns one writes it through a pointer.
 Only the matrix conversion is called by live code; the rest are in the binary and reached by
-nothing, and each entry says which. None of the primitives here has a bit-exact test yet.
+nothing, and each entry says which.
 
 Roots: `0x7c0120`, `0x7c0190`
 
@@ -20,7 +20,7 @@ diagonal entry, the later index winning only when strictly greater, `j = next[i]
 Addresses: `0x7c0120`, `0x7c0190`, `0x7c019d`, `0x7c01a2`, `0x7c01ad`, `0x7c01b5`, `0x7c01f0`, `0x7c0210`, `0x7c021f`, `0x7c0226`, `0x7c024d`, `0x7c0253`, `0x7ffa24`, `0x7ffd74`, `0x7ff9d8`, `0x81d994`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::matrix_quat_difftest`
 
 `0x7c0197` to `0x7c019f` form the trace as `(m[4] + m[0]) + m[8]`; `0x7c01a2 fcom 0.0; test ah,0x41; jne
 0x7c01f0` sends a trace of 0 or less, and NaN, to the diagonal leg. The diagonal leg compares `m11` with `m00`

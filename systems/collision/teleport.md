@@ -69,7 +69,7 @@ Test: none
 `0x603007 jne 0x603036` sends a nonzero `+0xc8` straight to the echo, which builds `0xc7`, the
 GUID, the counter and the time without applying the position. The only store to `+0xc8` in the manager's
 code is the constructor's zero (`0x4650e7`); the other 45 stores to a `+0xc8` operand in the image lie in
-other classes' code and were not traced one by one, so a writer through another base is not
+other classes' code and are not traced one by one, so a writer through another base is not
 excluded. The queued node carries no flags (`0x6164db` reads `+0x4c` for a transport GUID only), the
 apply restarts a fall (`collision/fallwire`), and no stop packet is sent by the chain. Heartbeats in the
 air follow only if the fall outlives the 500 ms deadline, which the echo itself re-arms.
