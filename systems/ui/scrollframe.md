@@ -52,7 +52,7 @@ Test: none
 `0x787140` (slot 14) acts when `+0x314` is set (`0x787158`), passes the frame's width and height
 (`0x7871a0`) and clears the flag (`0x7871a5`). `0x786e30` seeds the left and bottom at 3.4·10^38
 and the right and top at 0 (`0x786e5d`, `0x786e64`), joins through `0x786f80` (`0x786e79`),
-which reads its own rectangle with `0x768320` (`0x786fb0`), each region with `+0xc4` set
+which reads its own rectangle with `0x768320` (`0x786fb0`) and no shown test, each region with `+0xc4` set
 (`0x78703b`) and calls itself for each child frame with `+0xd0` set (`0x7870e0`, `0x7870ec`),
 subtracts the width (`0x786e84`), raises a negative to 0 (`0x786e8f`) and multiplies by `1/+0x7c`
 (`0x786e9f`, `0x786eaa`), likewise the height (`0x786ed1`). Unless both moved less than 2^−22
