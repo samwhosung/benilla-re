@@ -4,6 +4,7 @@ CBaseManaged	28	0x81d7f0	camera	Holds a property's header: vtable, update-list l
 CCamera	368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
 CEffect	144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
 CFrameStrataNode	284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
+CGCharacterModelBase	1016	0x8084f8	ui	Holds a character pane: a CSimpleModel, the unit GUID, the turn latch and deadline and the display record	verified	one	ui/playermodel#pane-fields
 CGContainer_C	2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/classes#class-sizes-and-pools
 CGGameObject_C	784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/classes#class-sizes-and-pools
 CGItem_C	1172	0x80ada8	objectlayer	Holds an item: the object, its field pointers, watcher lists, flags, cached record bytes and expiries	verified	one	objectlayer/classes#class-sizes-and-pools

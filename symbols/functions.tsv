@@ -6913,13 +6913,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48f480	518	CGGameUI::InitializeGame	idb	ui	primitive		Runs GameUI.cpp code that calls ClientServices::SetMessageHandler, CVar::Lookup, 0x63e030 and 34 more; not read here	inferred	none		
 0x48f690	1097	CGGameUI::HandlePacket	idb	ui	orchestration		Handles opcodes 0x2c2, 0x2c3, 0x2d2, 0x2e4 and 0x2f4 by a switch; 0x2f4, the weather, goes to 0x67baf0	verified	one	lighting/weather#weather-message	
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	
-0x4901e0	98			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, _sscanf; not read here	inferred	none		
+0x4901e0	98	GetConfiguredAspect		ui	primitive	float __cdecl ()	Returns the gxResolution width over height when widescreen is on, else 4/3	verified	one	ui/uiscale#the-automatic-scale	
 0x490250	302	CGGameUI::RegisterScriptFunctions		ui	primitive		Registers the frame types, the game C functions of 0x83de68 and 53 files of functions as globals	verified	one	ui/luastate#the-c-function-contract	
 0x490380	596			ui	primitive		Runs GameUI.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 6 more; not read here	inferred	none		
 0x4905e0	316			ui	primitive		Runs GameUI.cpp code that calls CSimpleFrame::SetFrameLevel, CLayoutFrame::ClearAllPointsThunk and 5 more; not read here	inferred	none		
 0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
-0x490770	115			ui	primitive		Runs GameUI.cpp code that calls SStrToFloat, 0x494550; not read here	inferred	none		
-0x4907f0	203			ui	primitive		Runs GameUI.cpp code that calls 0x64ac60, 0x494550, GxCapsScreenSize and 2 more; not read here	inferred	none		
+0x490770	115	UiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies a new uiScale text to UIParent when useUiScale is on, capped for narrow windows	verified	one	ui/uiscale#applying-a-scale	
+0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	
 0x4908c0	441			ui	orchestration		Runs GameUI.cpp code that calls SuppressInterfaceSounds, ClntObjMgrGetActivePlayer and 51 more; not read here	inferred	none		
 0x490a80	321			ui	primitive		Resets interface state on the player's release, among it the trade and loot windows	inferred	none	objectlayer/players#release-and-reactivation	
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
@@ -6971,7 +6971,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492d30	318			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::CanAutoInteract and 4 more; not read here	inferred	none		
 0x492e70	21			ui	orchestration		Runs GameUI.cpp code that calls 0x492890; not read here	inferred	none		
 0x492e90	218			ui	primitive		Runs GameUI.cpp code that calls 0x494550, 0x4901e0, CGGameUI::Reload and 2 more; not read here	inferred	none		
-0x492f70	223			ui	primitive		Runs GameUI.cpp code that calls 0x4901e0, 0x494550, CGGameUI::Reload; not read here	inferred	none		
+0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	
 0x493050	19			ui	orchestration		Runs GameUI.cpp code that calls GetInputControl, 0x514490; not read here	inferred	none		
 0x493070	28			ui	orchestration		Runs GameUI.cpp code that calls 0x483e80, CSimpleTop::SetMouseFocus; not read here	inferred	none		
 0x493090	27			ui	orchestration		Runs GameUI.cpp code that calls 0x483e70; not read here	inferred	none		
@@ -6990,8 +6990,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494200	580			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, 0x493e40, HeadingBetweenPoints and 5 more; not read here	inferred	none		
 0x494450	74			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4944a0	168			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, CGUnit_C::CanCooperate; not read here	inferred	none		
-0x494550	56			ui	orchestration		Runs GameUI.cpp code that calls SetFrameScale, LayoutPendingFrames; not read here	inferred	none		
-0x494590	20			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x494550	56	SetUiParentScale		ui	orchestration	void __stdcall (float scale)	Raises a scale to at least 0.64, sets it on UIParent with force and drains the layout queue	verified	one	ui/uiscale#applying-a-scale	
+0x494590	20	GetUiParentScale		ui	orchestration	float __cdecl ()	Returns UIParent's effective scale, or 1.0 without UIParent	verified	one	ui/uiscale#reading-the-scale	
 0x4945b0	35	CGGameUI::AddErrorMessage	idb	ui	primitive		Runs GameUI.cpp code that calls FrameScript_SignalEvent2; not read here	inferred	none		
 0x4945e0	18			ui	orchestration		Runs GameUI.cpp code that calls 0x614550; not read here	inferred	none		
 0x494600	164	SignalUnitCombat		ui	primitive		Signals UNIT_COMBAT for each unit token of a GUID with an action, a hit word, an amount and a school	verified	one	objectlayer/playercombat#spell-combat-log-messages	
@@ -11643,7 +11643,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x502740	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x502760	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x502770	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x502780	35	CGTabardModelFrame::CGTabardModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	inferred	none		
+0x502780	35	CGTabardModelFrame::CGTabardModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	verified	one	ui/playermodel#pane-classes	
 0x5027b0	61			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5027f0	132			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x502880	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11673,7 +11673,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x503ba0	21			ui	orchestration		Adds the 10 TabardModel methods of 0x84ee40 to their method hash	verified	one	ui/model#lua-methods	
 0x503bc0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x503bd0	60			ui	orchestration		Pushes a method from the TabardModel hash, else through the PlayerModel lookup	verified	one	ui/model#lua-methods	
-0x503c10	162			ui	primitive		Runs its object file code that calls 0x505b30, SplatVector3, 0x4b1df0 and 2 more; not read here	inferred	none		
+0x503c10	162	TabardModelModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Runs the pane's ready step, then moves the camera target to a point of animation 0's bounds	verified	one	ui/playermodel#tabard-camera-target	
 0x503cc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x503cd0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x503ce0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11726,14 +11726,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x504190	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x5041b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5041c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5041d0	45	CGDressUpModelFrame::CGDressUpModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	inferred	none		
+0x5041d0	45	CGDressUpModelFrame::CGDressUpModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	verified	one	ui/playermodel#pane-classes	
 0x504200	61			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x504240	132			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x5042d0	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5042e0	43			ui	orchestration		Runs its object file code that calls 0x504310, SMemFree; not read here	inferred	none		
 0x504310	49			ui	orchestration		Runs its object file code that calls DeleteCharacterComponent; not read here	inferred	none		
 0x504350	274			ui	orchestration		Runs DressUpModelFrame.cpp code that calls SimpleModelSetModel, DeleteCharacterComponent and 4 more; not read here	inferred	none		
-0x504470	27			ui	orchestration		Runs DressUpModelFrame.cpp code that calls 0x505c50, UpdateCharacterComponent; not read here	inferred	none		
+0x504470	27	DressUpModelUpdateTransform		ui	orchestration	void __thiscall ()	Runs the pane's per-paint step, then a call on the object at +0x3f8	verified	one	ui/playermodel#pane-classes	
 0x504490	168			ui	primitive		Runs DressUpModelFrame.cpp code that calls UnequipCharacterSlot, SetCharacterModelOption; not read here	inferred	none		
 0x504540	1538			ui	primitive		Runs DressUpModelFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 11 more; not read here	inferred	none		
 0x504ba0	23			ui	orchestration		Runs its object file code that calls 0x504540; not read here	inferred	none		
@@ -11809,22 +11809,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x505630	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x505650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505660	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x505680	249	CGCharacterModelBase::CGCharacterModelBase	idb	ui	orchestration		Runs its object file code that calls CSimpleModel::CSimpleModel, M2LightSetType and 2 more; not read here	inferred	none		
+0x505680	249	CGCharacterModelBase::CGCharacterModelBase	idb	ui	orchestration		Runs its object file code that calls CSimpleModel::CSimpleModel, M2LightSetType and 2 more; not read here	verified	one	ui/modelanim#the-frames-light	
 0x505780	53			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5057c0	110			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x505830	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505840	43			ui	orchestration		Runs its object file code that calls 0x505870, SMemFree; not read here	inferred	none		
 0x505870	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505890	266	CharacterModelBaseChooseCamera		ui	orchestration	void __thiscall ()	Installs a frozen copy of camera 1, or a fixed camera aimed at the bounding box centre	verified	one	ui/modelview#the-character-pane-camera	
-0x5059a0	208			ui	orchestration		Runs its object file code that calls UpdateCharacterComponent, SimpleModelGetScene and 9 more; not read here	inferred	none		
-0x505a70	189			ui	orchestration		Runs its object file code that calls SimpleModelGetScene, CreateModelFromPath and 4 more; not read here	inferred	none		
+0x5059a0	208	CGCharacterModelBase::AttachUnitModel		ui	orchestration	void __thiscall (CGUnit_C *unit)	Shows a duplicate of the unit's model with Stand armed, the completion callback and the hand grips	verified	one	ui/playermodel#the-pane-model	
+0x505a70	189	CGCharacterModelBase::AttachDisplayModel		ui	orchestration	void __thiscall (void *display)	Creates the model of a creature display record in the pane's scene and arms Stand	verified	one	ui/playermodel#the-pane-model	
 0x505b30	27	CharacterModelBaseModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Runs the base ready step, then chooses the pane's camera	verified	one	ui/modelview#the-character-pane-camera	
-0x505b50	83			ui	orchestration		Runs CharacterModelBase.cpp code that calls ClntObjMgrObjectPtr, 0x5059a0; not read here	inferred	none		
-0x505bb0	159			ui	primitive		Runs CharacterModelBase.cpp code that calls CM2Model::IsLoaded, CM2Model::GetKeyBoneAnimId and 2 more; not read here	inferred	none		
-0x505c50	92			ui	orchestration		Runs CharacterModelBase.cpp code that calls 0x76d1a0, OsGetAsyncTimeMs and 2 more; not read here	inferred	none		
-0x505cb0	48			ui	orchestration		Runs CharacterModelBase.cpp code that calls 0x505a70; not read here	inferred	none		
-0x505ce0	21			ui	orchestration		Runs CharacterModelBase.cpp code not read here	inferred	none		
-0x505d00	99			ui	primitive		Runs CharacterModelBase.cpp code that calls ClntObjMgrObjectPtr, 0x5059a0, 0x505a70; not read here	inferred	none		
+0x505b50	83	CGCharacterModelBase::SetUnitGuid		ui	orchestration	void __thiscall (uint32_t guid_lo, uint32_t guid_hi)	Stores the GUID, clears the display record and, if the frame is visible, builds the model copy	verified	one	ui/playermodel#pane-fields	
+0x505bb0	159	CGCharacterModelBase::TurnTo		ui	primitive	void __thiscall (float angle)	Plays a shuffle toward the angle, latches the turn, sets the deadline and stores the facing	verified	one	ui/playermodel#turning-the-model	
+0x505c50	92	CGCharacterModelBase::UpdateTransform		ui	primitive	void __thiscall ()	Rebuilds the root transform, then arms Stand once a turn has ended, and clears the latch	verified	one	ui/playermodel#the-turn-timer	
+0x505cb0	48	CGCharacterModelBase::SetDisplay		ui	orchestration	void __thiscall (void *display)	Clears the GUID, stores a creature display record and, if the frame is visible, builds the model	verified	one	ui/playermodel#pane-fields	
+0x505ce0	21	CGCharacterModelBase::OnHide		ui	orchestration	void __thiscall ()	Clears the pane's model, then runs the base hide step	verified	one	ui/playermodel#the-pane-model	
+0x505d00	99	CGCharacterModelBase::OnShow		ui	orchestration	void __thiscall ()	Builds the pane's model from the unit or display record when not yet visible, then runs the base show step	verified	one	ui/playermodel#the-pane-model	
 0x505d70	206	PlayerModel::SetUnit	idb	ui	primitive		Implements the PlayerModel method SetUnit, its pair in the table 0x84f1fc	verified	one	ui/model#lua-methods	
 0x505e40	190	PlayerModel::RefreshUnit	idb	ui	primitive		Implements the PlayerModel method RefreshUnit, its pair in the table 0x84f1fc	verified	one	ui/model#lua-methods	
 0x505f00	201	PlayerModel::SetRotation	idb	ui	primitive		Implements the PlayerModel method SetRotation, its pair in the table 0x84f1fc	verified	one	ui/model#lua-methods	
@@ -11835,7 +11835,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x506230	21			ui	orchestration		Adds the 3 PlayerModel methods of 0x84f1fc to their method hash	verified	one	ui/model#lua-methods	
 0x506250	10			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x506260	60			ui	orchestration		Pushes a method from the PlayerModel hash, else through the Model lookup	verified	one	ui/model#lua-methods	
-0x5062a0	77			ui	orchestration		Runs its object file code that calls CM2Model::PlayAnimation; not read here	inferred	none		
+0x5062a0	77	CGCharacterModelBase::OnAnimDone		ui	orchestration	void __fastcall (CM2Model *model, uint32_t key_bone, uint32_t anim_id, uint32_t mode, uint32_t overshoot, CGCharacterModelBase *frame, uint32_t guid_hi)	Arms Stand when a whole-body track completes, or stops the track on another key bone	verified	one	ui/playermodel#stand-is-the-resting-state	
 0x5062f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x506300	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x506310	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -30398,7 +30398,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7117e0	76	M2BatchArrayDeletingDestructorA		models	unreached		Frees an array or object by the deleting-destructor flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711830	76	M2BatchArrayDeletingDestructorB		models	unreached		Frees an array or object by the deleting-destructor flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711880	215	CM2Model::FreeBatches		models	host		Frees an instance's own batch table, its index buffer and its shader ids	verified	one	models/model#own-batches	
-0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	inferred	none		
+0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	verified	one	ui/modelanim#the-idle-sequence	
 0x7119a0	122	CM2Model::CountVariations		models	unreached		Counts the variations of an animation id's sequence chain; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711a20	392	CM2Model::GetSequenceInfo		models	primitive		Fills a record with a resolved sequence's flags, length, speed, bounds and radius	inferred	none		models::attach_world_transform_difftest
 0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	inferred	none		
@@ -30412,7 +30412,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711ec0	78	CM2Model::GetKeyBoneFlags		models	unreached		Returns a key bone's runtime flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711f10	201	CM2Model::SetKeyBoneFlags		models	primitive		Writes a key bone's runtime flags under a mask, or defers the call	verified	one	models/model#deferred-calls	
 0x711fe0	172	CM2Model::GetKeyBoneAnimState		models	primitive		Copies a key bone's animation id, variation, time, speed and timing stamps	inferred	none	models/model#base-transform	models::query_attach_event_difftest
-0x712090	78	CM2Model::GetKeyBoneAnimId		models	orchestration		Returns the animation id playing on a key bone	inferred	none		
+0x712090	78	CM2Model::GetKeyBoneAnimId		models	orchestration		Returns the animation id playing on a key bone	verified	one	ui/playermodel#turning-the-model	
 0x7120e0	108	CM2Model::GetKeyBoneAnimTime		models	unreached		Returns the sequence time of a key bone's animation; nothing reaches it	verified	one	models/overview#unreached-code	
 0x712150	78	CM2Model::GetKeyBoneAnimSpeed		models	orchestration		Returns the speed of a key bone's animation	inferred	none		
 0x7121a0	1607	CM2Model::PlayAnimation		models	primitive		Starts or stops an animation on a key bone, with variation, repeats, speed and a blend from the last	verified	one	models/animation#playing-an-animation	models::anim_fade_difftest, models::keyframe_ratio_difftest, models::keyframe_timing_difftest, models::rate_reciprocal_difftest
@@ -33412,24 +33412,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76cc80	92	CSimpleModel::GetScriptByName		ui	orchestration		Returns a Model's handler slot by name, adding OnUpdateModel and OnAnimFinished	verified	one	ui/xmltypes#handler-names-by-type	
 0x76cce0	68	SimpleModelLoadFile		ui	orchestration	void __thiscall (const char *path)	Creates a model of a file in the frame's scene, hands it to slot 36 and drops its own reference	verified	one	ui/modelview#stale-camera-after-setmodel	
 0x76cd30	144	SimpleModelSetModel		ui	orchestration	void __thiscall (CM2Model *model)	Stores a model frame's scene model at +0x318 and installs its callbacks	verified	one	ui/modelview#stale-camera-after-setmodel	
-0x76cdc0	39			ui	orchestration		Runs its object file code that calls FrameScriptExecute; not read here	inferred	none		
+0x76cdc0	39	SimpleModelDoneCallback		ui	orchestration	void __fastcall (CM2Model *model, uint32_t key_bone, uint32_t anim_id, uint32_t mode, uint32_t overshoot, CSimpleModel *frame, uint32_t guid_hi)	Runs the frame's OnAnimFinished handler when a track completes with mode 0	verified	one	ui/modelanim#completion-and-onanimfinished	
 0x76cdf0	12			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76ce00	126	SimpleModelModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Applies a pending camera index and copies the model's bounding box into the frame	verified	one	ui/modelview#choosing-the-camera	
 0x76ce80	60	SimpleModelInstallCamera		ui	orchestration	void __thiscall (CCamera *camera)	Replaces the frame's camera with a referenced one and sets the pending index to -1	verified	one	ui/modelview#choosing-the-camera	
 0x76cec0	100	SimpleModelSetCamera		ui	orchestration	void __thiscall (uint32_t index)	Installs camera number index of the model, or none past the count, or keeps the index until ready	verified	one	ui/modelview#choosing-the-camera	
-0x76cf30	27			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x76cf30	27	SimpleModelSetLight		ui	orchestration	void __thiscall (M2Light *light)	Copies a light over the frame's own light	verified	one	ui/modelanim#setlight-and-getlight	
 0x76cf50	41			ui	orchestration		Plays a sequence from its start at rate 1.0	verified	one	ui/model#sequences	
 0x76cf80	48			ui	orchestration		Plays a sequence from a time at rate 1.0	verified	one	ui/model#sequences	
-0x76cfb0	6			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x76cfb0	6	SimpleModelAdvanceTime		ui	orchestration	uint32_t __thiscall ()	Returns 1 and does nothing else; the whole of AdvanceTime past its receiver checks	verified	one	ui/modelanim#advancetime-and-replaceicontexture	
 0x76cfc0	32	SimpleModelGetScene		ui	orchestration	CM2Scene * __thiscall ()	Returns a model frame's M2 scene, creating it on first use	verified	one	ui/modelview#model-frame-fields	
-0x76cfe0	152			ui	primitive		Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate, SysMsgAdd and 3 more; not read here	inferred	none		
+0x76cfe0	152	SimpleModelReplaceTexture		ui	orchestration	void __thiscall (uint32_t type, const char *name)	Loads a texture by name and swaps it into the model's textures of a type, if the frame has a model	verified	one	ui/modelanim#advancetime-and-replaceicontexture	
 0x76d080	78	SimpleModelGeometryGetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the model's bounding box width when the authored width is 0.0	verified	one	ui/modelview#implicit-size	
 0x76d0d0	78	SimpleModelGeometryGetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or the model's bounding box height when the authored height is 0.0	verified	one	ui/modelview#implicit-size	
-0x76d120	58			ui	primitive		Runs its object file code that calls CSimpleFrame::SetAlpha, CM2Model::SetAlpha; not read here	inferred	none		
+0x76d120	58	SimpleModelSetAlpha		ui	primitive	void __thiscall (uint32_t alpha)	Sets the frame's alpha, then passes the frame's own alpha over 255 to the model	verified	one	ui/modelanim#frame-alpha	
 0x76d160	56	SimpleModelRegisterLayer		ui	orchestration		Registers a model frame's layers, with its model draw for layer 2	inferred	none		
 0x76d1a0	159	SimpleModelUpdateTransform		ui	primitive	void __thiscall ()	Runs OnUpdateModel, then rebuilds the model's root matrix from position, facing and scale	verified	one	ui/modelview#root-transform	
 0x76d240	1078	SimpleModelDraw		ui	primitive	void __thiscall ()	Draws a model frame's scene inside its own rectangle, viewport and depth clear	verified	one	ui/modelview#the-paint	
-0x76d680	368	SimpleModelLightCallback		ui	primitive		Lights a model frame's scene model; the callback the frame installs on its own model	inferred	none		
+0x76d680	368	SimpleModelLightCallback		ui	primitive		Stages the frame's fog and, when enabled, its light into the scene model's light collector	verified	one	ui/modelanim#fog	
 0x76d7f0	125			ui	orchestration		Advances the model frame's scene clock by the truncated frame milliseconds	verified	one	ui/model#the-animation-clock	
 0x76d870	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76d880	15			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -33476,7 +33476,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76f8c0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x76f8d0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76f8e0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x76f900	118			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		
+0x76f900	118	PackColorFromFloats		ui	primitive	void __thiscall (float a, float r, float g, float b)	Packs four floats into 0xAARRGGBB at the this pointer, each as trunc(c·255 + 0.5)	verified	one	ui/modelanim#setlight-and-getlight	
 0x76f980	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76f990	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x76f9b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		

@@ -371,6 +371,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804580	const float	s_float3f8ccccd		ui	Holds the float 1.1 (0x3f8ccccd)	inferred	none	
 0x804584	const float	s_float3f23d70a		ui	Holds the float 0.64 (0x3f23d70a)	inferred	none	
 0x804588	float	s_rangeStopFraction		objectlayer	Holds 0.9, the fraction of a range at which a mode 7 or 9 auto-move stops	verified	one	objectlayer/unitmovement#auto-move-modes
+0x80458c	const float	s_float768		ui	Holds 768.0, the interface height the automatic scale divides by	verified	one	ui/uiscale#the-automatic-scale
 0x804594	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
 0x8046d8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
@@ -410,7 +411,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808260	void *[40]	CGTabardModelFrame::vftable		ui	Holds the 40 virtual function slots of CGTabardModelFrame, which its constructor stores	inferred	none	
 0x808300	const float	s_point33		unassigned	Holds 0.33	verified	one	lighting/fog#light-colours
 0x8083a8	void *[40]	CGDressUpModelFrame::vftable		ui	Holds the 40 virtual function slots of CGDressUpModelFrame, which its constructor stores	inferred	none	
-0x8084f8	const char[4]	s_textXP		ui	Holds the string "@XP"	inferred	none	
+0x8084cc	void *[11]	CGCharacterModelBase::Layout::vftable		ui	Holds the geometry vtable of CGCharacterModelBase, which its constructor stores at +0x24	verified	one	ui/playermodel#pane-classes
+0x8084f8	void *[40]	CGCharacterModelBase::vftable		ui	Holds the 40 virtual function slots of CGCharacterModelBase, which its constructor stores	verified	one	ui/playermodel#pane-classes
 0x8087cc	const float	s_float3d19999a		ui	Holds the float 0.0375 (0x3d19999a)	inferred	none	
 0x8087d0	const float	s_float3c99999a		ui	Holds the float 0.01875 (0x3c99999a)	inferred	none	
 0x8087d4	const float	s_float00000000		ui	Holds the float 0 (0x00000000)	inferred	none	
@@ -1079,6 +1081,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x843068	char[2]	s_text2		unassigned	Holds the string "2"	inferred	none	
 0x8430a0	char[13]	s_textShowLootSpam		ui	Holds the string "showLootSpam"	inferred	none	
 0x8430c0	char[11]	s_textUseUiScale		ui	Holds the string "useUiScale"	inferred	none	
+0x8430cc	char[8]	s_textUiScale		ui	Holds the string uiScale	verified	one	ui/uiscale#the-two-options
 0x8432cc	char[5]	s_textDS		unassigned	Holds the string "%d%s"	inferred	none	
 0x843414	char[11]	s_textLootButton		ui	Holds the string "LootButton"	inferred	none	
 0x8435fc	uint32_t			ui	Holds a dword that ClientChatHandler, ClientTextEmoteHandler, HandleZoneUnderAttackPacket read and write; not read here	inferred	none	
@@ -1375,7 +1378,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86861c	float	s_horizonHalf		terrain	Holds 0.5, taken off a horizon column before rounding	verified	one	terrain/cull#horizon-buffer
 0x868620	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x868628	uint32_t[24]	s_boxCornerAxes		terrain	Holds which bound, min or max, each of a box's eight corners takes per axis	verified	one	terrain/cull#horizon-box-test
-0x8686a8	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x8686a8	char *[208]	s_animationNames		unassigned	Holds the names of the animation ids 0 to 207, from Stand to GuideArrowBirth	verified	one	ui/playermodel#turning-the-model
 0x869324	char[17]	s_textSpellEffectLevel		unassigned	Holds the string "spellEffectLevel"	inferred	none	
 0x869560	char[13]	s_textPixelShaders		cvar	Holds the string "pixelShaders"	inferred	none	
 0x8695d8	char[9]	s_textSpecular		cvar	Holds the string "specular"	inferred	none	
@@ -1537,7 +1540,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8788b0	char[8]	s_parentPrefix		ui	Holds $parent, the name prefix replaced by an ancestor's name	verified	one	ui/frames#names-and-lookup-by-name
 0x878948	uint32_t[46]	s_modelMethods		ui	Holds the 23 pairs of a name and a function of the Model methods	verified	one	ui/model#lua-methods
 0x878b44	char[23]	s_textInvalidModelFileS		ui	Holds the string "Invalid model file: %s"	inferred	none	
-0x878c00	char[122]	s_textUsageSSetLightEnabledOmniDirXDirYDirZ		ui	Holds a string that opens "Usage: %s:SetLight(enabled[, omni, dirX, dirY, dirZ, ambIntensity[, ambR, ambG, ambB], dir…"	inferred	none	
+0x878c00	char[122]	s_textUsageSSetLightEnabledOmniDirXDirYDirZ		ui	Holds a string that opens "Usage: %s:SetLight(enabled[, omni, dirX, dirY, dirZ, ambIntensity[, ambR, ambG, ambB], dir…"	verified	one	ui/modelanim#setlight-and-getlight
 0x878cf0	uint32_t			ui	Holds a dword that Script::SetPortraitTexture, Texture::SetTexture read; not read here	inferred	none	
 0x878ec0	uint32_t[136]	s_frameMethods		ui	Holds the 68 pairs of a name and a function of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0x879504	char[61]	s_simpleFrameScriptPath		ui	Holds the source path of CSimpleFrameScript.cpp	verified	one	ui/README#frame-core-object-files
@@ -1873,6 +1876,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b420	uint32_t			ui	Holds a dword that CGGameUI::SetCursorVirtualItem, CGGameUI::GetCursorVirtualItem read and write; not read here	inferred	none	
 0xb4b440	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
 0xb4b444	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
+0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
 0xb4b498	uint32_t			ui	Holds a dword that CGGameUI::DisplayError reads and writes; not read here	inferred	none	
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4c0f0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -1890,6 +1894,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e274	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e278	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e2ac	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xb4e2b0	void *	s_uiScaleOption		ui	Points to the uiScale option's record	verified	one	ui/uiscale#the-two-options
+0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b8	void *	s_shownTarget		ui	Holds a target record whose +0x28 a world click tests before clearing the target	inferred	none	objectlayer/interaction#world-clicks
 0xb4e2bc	void *	s_showLootSpamVar		ui	Holds the showLootSpam variable, whose value gates the roll lines and picks the winner line	verified	one	objectlayer/lootroll#the-roll-announcement
 0xb4e2c8	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName reads and writes; not read here	inferred	none	
@@ -1903,8 +1909,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e2f8	uint32_t			ui	Holds a dword that Script::PickupPetAction, Script::TogglePetAutocast read and write; not read here	inferred	none	
 0xb4e2fc	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e300	uint32_t			ui	Holds a dword that Script::ClickStablePet reads and writes; not read here	inferred	none	
-0xb4e304	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
-0xb4e308	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
+0xb4e304	uint32_t	s_autoScaleWidth		ui	Holds the window width the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
+0xb4e308	uint32_t	s_autoScaleHeight		ui	Holds the window height the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
+0xb4e30c	float	s_configuredAspect		ui	Holds the aspect the interface last applied, 4/3 until set	verified	one	ui/uiscale#applying-a-scale
 0xb4e310	uint32_t			unassigned	Holds a dword that Script::InCinematic, CGGameUI::InitializeGame read and write; not read here	inferred	none	
 0xb4e314	uint32_t	s_zoneId		ui	Holds the player's zone, read into party records and the binder dialog	inferred	none	objectlayer/party#the-party-member-record
 0xb4e318	uint32_t	s_subZoneId		ui	Holds the player's area, which the binder dialog prefers	inferred	none	objectlayer/interaction#confirmation-dialogs

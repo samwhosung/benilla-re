@@ -71,6 +71,10 @@ CFrameStrataNode	0x0018	4	CSimpleFrame *	m_cursor	ui	Holds the next frame the up
 CFrameStrataNode	0x001c	240	uint8_t[240]	m_batches	ui	Holds five draw batches of 0x30 bytes, one per layer	verified	one	ui/strata#the-draw-pass
 CFrameStrataNode	0x010c	4	uint32_t	m_dirtyLayers	ui	Holds a bit per draw layer to rebuild	verified	one	ui/strata#dirty-marks
 CFrameStrataNode	0x0110	12	uint32_t[3]	m_drawBatches	ui	Holds the list of batches the draw pass draws	verified	one	ui/strata#the-draw-pass
+CGCharacterModelBase	0x03e0	8	uint32_t[2]	m_unitGuid	ui	Holds the GUID of the unit the pane shows, low then high	verified	one	ui/playermodel#pane-fields
+CGCharacterModelBase	0x03e8	4	uint32_t	m_turning	ui	Holds 1 from a rotation until the next paint clears it	verified	one	ui/playermodel#pane-fields
+CGCharacterModelBase	0x03ec	4	uint32_t	m_turnDeadline	ui	Holds the millisecond tick after which Stand is armed, or 0	verified	one	ui/playermodel#pane-fields
+CGCharacterModelBase	0x03f0	4	void *	m_displayRecord	ui	Holds the creature display record the pane shows when it has no unit	verified	one	ui/playermodel#pane-fields
 CGContainer_C	0x0348	4	uint32_t *	m_containerFields	objectlayer	Holds the address of field 48, CONTAINER_FIELD_NUM_SLOTS, written by 0x5d76f0	verified	one	objectlayer/items#the-container
 CGContainer_C	0x034c	4	uint32_t *	m_containerWatchCopy	objectlayer	Holds the address of the container part of the watch copy, written by 0x5d76f0	verified	one	objectlayer/items#the-container
 CGContainer_C	0x0350	888	uint8_t[888]	m_containerWatchers	objectlayer	Holds the 74 container field watcher lists, 12 bytes each	verified	one	objectlayer/items#the-container

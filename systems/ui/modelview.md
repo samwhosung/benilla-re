@@ -83,7 +83,8 @@ object lives only on the frame's own reference and no scene republishes it.
 
 ## The character pane camera
 
-A `PlayerModel`, `DressUpModel` or `TabardModel` replaces the camera when its model is ready. It tries
+A `PlayerModel`, `DressUpModel` or `TabardModel` replaces the camera when its model is ready (a
+`TabardModel` then moves the target, `playermodel#tabard-camera-target`). It tries
 raw camera 1; if the model has one, it installs a frozen copy of it, made after the frame's facing is
 set to 0 and one evaluation pass has run. Otherwise it builds a fixed camera: eye (5.5555558, 0, 2.4166667),
 target the model's bounding-box centre, field of view 0.5, near clip 0.027777778, and the default far
