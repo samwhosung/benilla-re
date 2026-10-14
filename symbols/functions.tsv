@@ -33604,12 +33604,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7735f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x773610	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x773620	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/framestate#frame-type	
-0x773700	256	Frame::IsFrameType	idb	ui	orchestration		Implements the Frame method IsFrameType, its pair in the table 0x878ec0	verified	one	ui/framestate#frame-type	
+0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/README#frame-core-object-files	
+0x773700	256	Frame::IsFrameType	idb	ui	orchestration		Implements the Frame method IsFrameType, its pair in the table 0x878ec0	inferred	none		
 0x773800	5	FrameMethodsInitInfinityThunk		ui	orchestration		Jumps to 0x773810; a static initializer	verified	one	ui/README#static-initializers	
 0x773810	11	FrameMethodsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
-0x773820	225	Frame::GetTitleRegion	idb	ui	orchestration		Implements the Frame method GetTitleRegion, its pair in the table 0x878ec0	verified	one	ui/framestate#the-title-region	
-0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	verified	one	ui/framestate#the-title-region	
+0x773820	225	Frame::GetTitleRegion	idb	ui	orchestration		Implements the Frame method GetTitleRegion, its pair in the table 0x878ec0	inferred	none		
+0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	inferred	none		
 0x773a20	520	Frame::CreateTexture	idb	ui	orchestration		Creates a texture of the frame with a name, layer and template, the template only from a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773c30	558	Frame::CreateFontString	idb	ui	orchestration		Creates a font string of the frame, inheriting a font object or else a template named by a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration		Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
@@ -33632,10 +33632,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x774fc0	184	Frame::GetEffectiveScale	idb	ui	orchestration		Implements the Frame method GetEffectiveScale, its pair in the table 0x878ec0	inferred	none		
 0x775080	187	Frame::GetScale	idb	ui	orchestration		Implements the Frame method GetScale, its pair in the table 0x878ec0	inferred	none		
 0x775140	320	Frame::SetScale	idb	ui	orchestration		Implements the Frame method SetScale, its pair in the table 0x878ec0	verified	one	ui/visibility#scale	
-0x775280	187	Frame::GetID	idb	ui	orchestration		Implements the Frame method GetID, its pair in the table 0x878ec0	verified	one	ui/framestate#the-id	
-0x775340	241	Frame::SetID	idb	ui	orchestration		Implements the Frame method SetID, its pair in the table 0x878ec0	verified	one	ui/framestate#the-id	
-0x775440	163	Frame::SetToplevel	idb	ui	orchestration		Implements the Frame method SetToplevel, its pair in the table 0x878ec0	verified	one	ui/framestate#the-toplevel-flag	
-0x7754f0	177	Frame::IsToplevel	idb	ui	orchestration		Implements the Frame method IsToplevel, its pair in the table 0x878ec0	verified	one	ui/framestate#the-toplevel-flag	
+0x775280	187	Frame::GetID	idb	ui	orchestration		Implements the Frame method GetID, its pair in the table 0x878ec0	inferred	none		
+0x775340	241	Frame::SetID	idb	ui	orchestration		Implements the Frame method SetID, its pair in the table 0x878ec0	inferred	none		
+0x775440	163	Frame::SetToplevel	idb	ui	orchestration		Implements the Frame method SetToplevel, its pair in the table 0x878ec0	inferred	none		
+0x7754f0	177	Frame::IsToplevel	idb	ui	orchestration		Implements the Frame method IsToplevel, its pair in the table 0x878ec0	inferred	none		
 0x7755b0	202	Frame::EnableDrawLayer	idb	ui	orchestration		Implements the Frame method EnableDrawLayer, its pair in the table 0x878ec0	verified	one	ui/framestate#draw-layers	
 0x775680	202	Frame::DisableDrawLayer	idb	ui	orchestration		Implements the Frame method DisableDrawLayer, its pair in the table 0x878ec0	verified	one	ui/framestate#draw-layers	
 0x775750	183	Frame::Show	idb	ui	orchestration		Implements the Frame method Show, its pair in the table 0x878ec0	verified	one	ui/visibility#showing-a-frame	
@@ -33650,20 +33650,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x776020	369	Frame::SetMinResize	idb	ui	orchestration		Implements the Frame method SetMinResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
 0x7761a0	252	Frame::GetMaxResize	idb	ui	orchestration		Implements the Frame method GetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-lua-methods	
 0x7762a0	369	Frame::SetMaxResize	idb	ui	orchestration		Implements the Frame method SetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
-0x776420	166	Frame::SetMovable	idb	ui	orchestration		Implements the Frame method SetMovable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x7764d0	179	Frame::IsMovable		ui	orchestration		Implements the Frame method IsMovable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776590	166	Frame::SetResizable	idb	ui	orchestration		Implements the Frame method SetResizable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776640	179	Frame::IsResizable	idb	ui	orchestration		Implements the Frame method IsResizable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776700	303	Frame::StartMoving	idb	ui	orchestration		Implements the Frame method StartMoving, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776990	184	Frame::StopMovingOrSizing	idb	ui	orchestration		Implements the Frame method StopMovingOrSizing, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
-0x776a50	240	Frame::SetUserPlaced	idb	ui	orchestration		Implements the Frame method SetUserPlaced, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
-0x776b40	179	Frame::IsUserPlaced	idb	ui	orchestration		Implements the Frame method IsUserPlaced, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
-0x776c00	162	Frame::SetClampedToScreen	idb	ui	orchestration		Implements the Frame method SetClampedToScreen, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
-0x776cb0	174	Frame::IsClampedToScreen	idb	ui	orchestration		Implements the Frame method IsClampedToScreen, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
-0x776d60	338	Frame::RegisterForDrag	idb	ui	orchestration		Implements the Frame method RegisterForDrag, its pair in the table 0x878ec0	verified	one	ui/framestate#the-drag-buttons	
-0x776ec0	201	Frame::EnableKeyboard	idb	ui	orchestration		Implements the Frame method EnableKeyboard, its pair in the table 0x878ec0	verified	one	ui/framestate#the-keyboard	
-0x776f90	218	Frame::IsKeyboardEnabled	idb	ui	orchestration		Implements the Frame method IsKeyboardEnabled, its pair in the table 0x878ec0	verified	one	ui/framestate#the-keyboard	
+0x776420	166	Frame::SetMovable	idb	ui	orchestration		Implements the Frame method SetMovable, its pair in the table 0x878ec0	inferred	none		
+0x7764d0	179	Frame::IsMovable		ui	orchestration		Implements the Frame method IsMovable, its pair in the table 0x878ec0	inferred	none		
+0x776590	166	Frame::SetResizable	idb	ui	orchestration		Implements the Frame method SetResizable, its pair in the table 0x878ec0	inferred	none		
+0x776640	179	Frame::IsResizable	idb	ui	orchestration		Implements the Frame method IsResizable, its pair in the table 0x878ec0	inferred	none		
+0x776700	303	Frame::StartMoving	idb	ui	orchestration		Implements the Frame method StartMoving, its pair in the table 0x878ec0	inferred	none		
+0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	verified	one	ui/framestate#starting-a-size	
+0x776990	184	Frame::StopMovingOrSizing	idb	ui	orchestration		Implements the Frame method StopMovingOrSizing, its pair in the table 0x878ec0	inferred	none		
+0x776a50	240	Frame::SetUserPlaced	idb	ui	orchestration		Implements the Frame method SetUserPlaced, its pair in the table 0x878ec0	inferred	none		
+0x776b40	179	Frame::IsUserPlaced	idb	ui	orchestration		Implements the Frame method IsUserPlaced, its pair in the table 0x878ec0	inferred	none		
+0x776c00	162	Frame::SetClampedToScreen	idb	ui	orchestration		Implements the Frame method SetClampedToScreen, its pair in the table 0x878ec0	inferred	none		
+0x776cb0	174	Frame::IsClampedToScreen	idb	ui	orchestration		Implements the Frame method IsClampedToScreen, its pair in the table 0x878ec0	inferred	none		
+0x776d60	338	Frame::RegisterForDrag	idb	ui	orchestration		Implements the Frame method RegisterForDrag, its pair in the table 0x878ec0	inferred	none		
+0x776ec0	201	Frame::EnableKeyboard	idb	ui	orchestration		Implements the Frame method EnableKeyboard, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
+0x776f90	218	Frame::IsKeyboardEnabled	idb	ui	orchestration		Implements the Frame method IsKeyboardEnabled, its pair in the table 0x878ec0	inferred	none		
 0x777070	181	Frame::EnableMouse	idb	ui	orchestration		Implements the Frame method EnableMouse, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration		Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
 0x7771f0	181	Frame::EnableMouseWheel	idb	ui	orchestration		Implements the Frame method EnableMouseWheel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
