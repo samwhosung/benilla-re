@@ -20701,38 +20701,38 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6135c0	5	InitObjectSquare17Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6135d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6135d0	19	InitObjectSquare17		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6135f0	23	FreeUint64Array		objectlayer	orchestration		Frees a uint64 array's data when present, tagged ._K	inferred	none	spell/visuals#chain-lifetime	
-0x613610	60			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
+0x613610	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613650	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x613660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x613670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x613680	33			objectlayer	orchestration		Fills slot 43 of the unit vtable; its body is not read here	inferred	none		
 0x6136b0	33			objectlayer	orchestration		Fills slot 44 of the unit vtable; its body is not read here	inferred	none		
-0x6136e0	41			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x613710	60			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x613750	144			objectlayer	primitive		Runs Object_C.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x6137e0	41			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x613810	60			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x613850	41			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
+0x6136e0	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613710	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613750	144			objectlayer	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	objectlayer/objectbase#constructor-and-members	
+0x6137e0	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613810	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613850	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613880	133	CGObject_C::SetType		objectlayer	orchestration	void __thiscall (CGObject_C *this, uint32_t type)	Stores the type id at +0x14 and, for ids 0 to 7, the type mask in field 2	verified	one	objectlayer/classes#type-id-and-mask	
 0x613930	77			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x613980	19	CGObject_C::SetStorage		objectlayer	orchestration	void __thiscall (CGObject_C *this, uint32_t *fields, uint32_t *copy)	Stores the field array pointer at +0x8 and the watch copy pointer at +0xc	verified	one	objectlayer/classes#field-storage	
-0x6139a0	292			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
+0x6139a0	292	CGObject_C::CGObject_C		objectlayer	primitive	void * __thiscall (void *fields, void *copy)	Zeroes the base members, stores the base vtable and links the object into the manager	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613ad0	5	InitObjectCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x613ae0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x613ae0	11	InitObjectCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x613af0	78			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x613b40	429			objectlayer	primitive		Runs Object_C.cpp code that calls HandleClose2, ModelSetDoneCallback, ModelSetEventCallback; not read here	inferred	none		
-0x613cf0	121			objectlayer	orchestration		Runs Object_C.cpp code that calls HandleClose2; not read here	inferred	none		
-0x613d70	13			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x613d80	132			objectlayer	orchestration		Runs Object_C.cpp code that calls HandleClose2; not read here	inferred	none		
-0x613e10	217			objectlayer	primitive		Runs Object_C.cpp code that calls SysMsgPrintf, ClntObjMgrGetC8, CreateWorldCallbackObject; not read here	inferred	none		
-0x613ef0	430			objectlayer	primitive		Runs Object_C.cpp code that calls SetVector3, ScaleVector3, SetWorldObjectBounds; not read here	inferred	none		objectlayer::world_model_scale_difftest, objectlayer::world_bounds_sum_difftest
-0x6140a0	30			objectlayer	orchestration		Runs Object_C.cpp code that calls ReleaseWorldObject; not read here	inferred	none		
-0x6140c0	33			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x6140f0	33			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x614120	43			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
+0x613af0	78	CGObject_C::Show		objectlayer	orchestration	void __thiscall ()	Marks the object created and fades it in over 2000 ms to slot 27's alpha	verified	one	objectlayer/objectbase#showing-an-object	
+0x613b40	429	CGObject_C::~CGObject_C		objectlayer	orchestration	void __thiscall ()	Releases the node, models, missiles, effects and watcher lists and unlinks from the manager	verified	one	objectlayer/objectbase#destruction	
+0x613cf0	121	CGObject_C::SetModel		objectlayer	orchestration	void __thiscall (void *model)	Swaps the body model, releasing the old one and telling the node	verified	one	objectlayer/objectbase#models-and-the-node	
+0x613d70	13	CGObject_C::ModelLoaded		objectlayer	orchestration	void __fastcall (void *model, void *object)	Calls the object's slot 13 once a model has loaded	verified	one	objectlayer/objectbase#models-and-the-node	
+0x613d80	132	CGObject_C::SetModel2		objectlayer	orchestration	void __thiscall (void *model)	Swaps the overriding model at +0xdc, refreshing the bounds when it is cleared	verified	one	objectlayer/objectbase#models-and-the-node	
+0x613e10	217	CGObject_C::CreateNode		objectlayer	orchestration	void __thiscall ()	Loads the slot 10 model if none and creates the world node of kind 0, 2 or 11	verified	one	objectlayer/objectbase#models-and-the-node	
+0x613ef0	430	CGObject_C::UpdateNode		objectlayer	primitive	void __thiscall (int flag)	Rebuilds the node's matrix from position, facing and scale and sets its bounds	verified	one	objectlayer/objectbase#the-node-transform	objectlayer::world_model_scale_difftest, objectlayer::world_bounds_sum_difftest
+0x6140a0	30	CGObject_C::ReleaseNode		objectlayer	orchestration	void __thiscall ()	Releases the world node and clears the member	verified	one	objectlayer/objectbase#destruction	
+0x6140c0	33	CGObject_C::FreeCastMissiles		objectlayer	orchestration	void __thiscall ()	Frees every missile on the list at +0xac	verified	one	objectlayer/objectbase#destruction	
+0x6140f0	33	CGObject_C::FreeStuckMissiles		objectlayer	orchestration	void __thiscall ()	Frees every missile on the list at +0xb0	verified	one	objectlayer/objectbase#destruction	
+0x614120	43	CGObject_C::ReleaseEffects		objectlayer	orchestration	void __thiscall ()	Unlinks and releases every effect on the list at +0xb4	verified	one	objectlayer/objectbase#destruction	
 0x614150	154			objectlayer	orchestration		Stops a unit's visual kits of a spell, by spell id	inferred	none	spell/failures#player-unit-cleanup	
-0x6141f0	22			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x614210	181			objectlayer	orchestration		Runs Object_C.cpp code that calls GetSpellVisualRecord; not read here	inferred	none		
+0x6141f0	22			objectlayer	orchestration		Stops the effect passed when the second argument is 0	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
+0x614210	181	CGObject_C::StopKitEffects		objectlayer	orchestration	void __thiscall (int visual, int kind)	Stops the effects on the object made from the chosen kit of a SpellVisual row	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
 0x6142e0	24	CGObject_C::SetUpdateField		objectlayer	orchestration	uint32_t __thiscall (CGObject_C *this, uint32_t index, uint32_t value)	Stores a value in field index of the field array, unchecked, and returns 1	verified	one	objectlayer/classes#field-storage	
 0x614300	36			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x614330	3			objectlayer	unreached		Returns 0	verified	one	objectlayer/overview#small-bodies	
@@ -20744,37 +20744,37 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x614470	25			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x614490	25			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x6144b0	61			objectlayer	unreached		Runs Object_C.cpp code that calls SysMsgPrintf; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x6144f0	88			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x614550	138			objectlayer	primitive		Runs Object_C.cpp code that calls GetLightState; not read here	inferred	none		objectlayer::decal_rgb_difftest
-0x6145e0	88			objectlayer	primitive		Fills slot 1 of the object vtable; its body is not read here	inferred	none		
-0x614640	117			objectlayer	primitive		Fills slot 2 of the object vtable and others; its body is not read here	inferred	none		
-0x6146c0	13			objectlayer	primitive		Fills slot 16 of the object vtable and others; its body is not read here	inferred	none		
-0x6146d0	283			objectlayer	primitive		Runs Object_C.cpp code that calls __ftol, CStatus::~CStatus, HandleClose; not read here	inferred	none		
-0x6147f0	483			objectlayer	primitive		Runs Object_C.cpp code that calls _atexit, __ftol, SMemFree; not read here	inferred	none		
-0x6149e0	25			objectlayer	orchestration		Runs Object_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x614a00	57			objectlayer	orchestration		Runs Object_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x614a40	70			objectlayer	orchestration		Runs Object_C.cpp code that calls HandleClose, ClntObjMgrClearTypeMirrorHandler; not read here	inferred	none		
+0x6144f0	88	CGObject_C::ClearLight		objectlayer	primitive	void __thiscall (int bit)	Clears a highlight bit and blacks the emissive colour when none is left	verified	one	objectlayer/objectbase#highlight-light-bits	
+0x614550	138	CGObject_C::SetLight		objectlayer	primitive	void __thiscall (int bit)	Sets a highlight bit and gives the model the light state's emissive colour	verified	one	objectlayer/objectbase#highlight-light-bits	objectlayer::decal_rgb_difftest
+0x6145e0	88	CGObject_C::Deactivate		objectlayer	orchestration	void __thiscall ()	Hands the node to a fade-out, clears the light bits and fade and marks the object released	verified	one	objectlayer/objectbase#showing-an-object	
+0x614640	117	CGObject_C::Reactivate		objectlayer	orchestration	void __thiscall ()	Clears the released bit, restores the scale, restarts the fade and recreates the node	verified	one	objectlayer/objectbase#showing-an-object	
+0x6146c0	13	CGObject_C::IsDrawable		objectlayer	primitive	uint32_t __thiscall (uint32_t pass)	Returns bit 0 of its argument	verified	one	objectlayer/objectbase#ground-conform	
+0x6146d0	283	InitializeSelectionCircle		objectlayer	orchestration	void __cdecl ()	Registers ObjectSelectionCircle, makes the ramp and blp textures and watches the scale field	verified	one	objectlayer/objectbase#selection-circle-textures	
+0x6147f0	483	SelectionRampCallback		objectlayer	primitive		Sizes, fills with the alpha ramp and frees the 64 by 8 selection ramp texture's buffer	verified	one	objectlayer/objectbase#selection-circle-textures	
+0x6149e0	25	FreeSelectionRampBuffer		objectlayer	orchestration	void __cdecl ()	Frees the ramp texture's buffer at exit	verified	one	objectlayer/objectbase#selection-circle-textures	
+0x614a00	57	OnObjectScaleChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Starts the scale ease of the object whose scale field changed	verified	one	objectlayer/objectbase#the-scale-change	
+0x614a40	70	ShutdownSelectionCircle		objectlayer	orchestration	void __cdecl ()	Destroys the ramp and blp textures and removes the scale watcher	verified	one	objectlayer/objectbase#the-scale-change	
 0x614a90	572			objectlayer	primitive		Fills slot 14 of the object vtable and others; its body is not read here	inferred	none		objectlayer::obj_anim_interp_difftest
 0x614cd0	298			objectlayer	primitive		Fills slot 15 of the object vtable and others; its body is not read here	inferred	none		objectlayer::f3_render_smooth_active_difftest, objectlayer::f3_render_smooth_delta_difftest, objectlayer::f3_render_smooth_lerp_difftest, objectlayer::f3_render_amp_product_difftest
-0x614e00	116			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
+0x614e00	116	SetSelectionCircleState		objectlayer	orchestration	void __cdecl ()	Sets the circle's render state and binds the blp and ramp textures	verified	one	objectlayer/objectbase#selection-circle-textures	
 0x614e80	8			objectlayer	primitive		Fills slot 3 of the object vtable and others; its body is not read here	inferred	none		
-0x614e90	10			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x614ea0	10			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x614eb0	58			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x614ef0	10			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
+0x614e90	10	CGObject_C::IsCreated		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x4 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
+0x614ea0	10	CGObject_C::IsReleased		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x1 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
+0x614eb0	58	CGObject_C::IsModelLoaded		objectlayer	primitive	uint32_t __thiscall ()	Returns 1 when the current model has loaded	verified	one	objectlayer/objectbase#models-and-the-node	
+0x614ef0	10	CGObject_C::IsReactivating		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x2 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
 0x614f00	15	CGObject_C::IsHeld		objectlayer	primitive	uint32_t __thiscall (CGObject_C *this)	Returns 1 when the object's hold count +0xe8 is nonzero	verified	one	objectlayer/manager#releasing-an-object	
 0x614f10	42	CGObject_C::SetHold		objectlayer	primitive	void __thiscall (CGObject_C *this, uint32_t take)	Increments the hold count +0xe8 for a nonzero argument, else decrements it when nonzero	verified	one	objectlayer/manager#holding-an-object	
-0x614f40	10			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
+0x614f40	10	CGObject_C::IsReleasePending		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x10 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
 0x614f50	42	CGObject_C::SetReleasePending		objectlayer	primitive	void __thiscall (CGObject_C *this, uint32_t pending)	Sets or clears bit 0x10 of +0xe4, the release-pending flag	verified	one	objectlayer/manager#releasing-an-object	
-0x614f80	86			objectlayer	orchestration		Runs Object_C.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x614f80	86	CGObject_C::FadeTo		objectlayer	primitive	void __thiscall (float alpha, uint32_t ms)	Starts an alpha fade to a target over a number of milliseconds	verified	one	objectlayer/objectbase#the-alpha-fade	
 0x614fe0	58			objectlayer	orchestration		Fills slot 30 of the object vtable and others; its body is not read here	inferred	none		
-0x615020	12			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
-0x615030	53			objectlayer	orchestration		Runs Object_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x615070	139			objectlayer	primitive		Runs Object_C.cpp code that calls HeadingBetweenPoints, RotateMatrix; not read here	inferred	none		objectlayer::negate_facing_615070_difftest
-0x615100	79			objectlayer	orchestration		Runs Object_C.cpp code that calls OsGetAsyncTimeMs, GetActiveCamera; not read here	inferred	none		
-0x615150	81			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		objectlayer::bounds_z_extent_difftest
+0x615020	12	RefreshAllNodes		objectlayer	orchestration	void __cdecl ()	Enumerates every object into 0x615030	verified	one	objectlayer/objectbase#the-node-transform	
+0x615030	53	RefreshNodeCallback		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi)	Rebuilds one object's node with flag 1 and continues the enumeration	verified	one	objectlayer/objectbase#the-node-transform	
+0x615070	139	BuildYawMatrix		objectlayer	primitive	void __stdcall (float *matrix, float *point)	Fills an identity matrix rotated about Z by the camera's heading to a point	verified	one	objectlayer/objectbase#ground-conform	objectlayer::negate_facing_615070_difftest
+0x615100	79	CGObject_C::StartScaleEase		objectlayer	orchestration	void __thiscall (float old)	Starts the scale ease from the previous value and tells the interface if the camera follows the object	verified	one	objectlayer/objectbase#the-scale-change	
+0x615150	81	CGObject_C::RefreshBounds		objectlayer	primitive	void __thiscall ()	Copies the model's bounding box, stores its height and rebuilds the node	verified	one	objectlayer/objectbase#models-and-the-node	objectlayer::bounds_z_extent_difftest
 0x6151b0	33			objectlayer	orchestration		Fills slot 13 of the object vtable and others; its body is not read here	inferred	none		
-0x6151e0	16			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
+0x6151e0	16	CGObject_C::SetAlpha		objectlayer	primitive	void __stdcall (float alpha)	Stores the master alpha at +0x100	verified	one	objectlayer/objectbase#the-alpha-fade	
 0x6151f0	5	InitObjectBTwoPiThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615200, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
 0x615200	15	InitObjectBTwoPi		objectlayer	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	objectlayer/initializers#float-constants	
 0x615210	5	InitObjectBInvTwoPiThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615220, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	

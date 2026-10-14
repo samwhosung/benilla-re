@@ -107,9 +107,36 @@ CGObject_C	0x0008	4	uint32_t *	m_fields	objectlayer	Holds the field array, writt
 CGObject_C	0x000c	4	uint32_t *	m_watchCopy	objectlayer	Holds the copy array of the watched fields, written by 0x613980	verified	one	objectlayer/classes#field-storage
 CGObject_C	0x0010	4	uint32_t	m_poolHandle	objectlayer	Holds the handle of the pool block the object came from, written by 0x466e00	verified	one	objectlayer/manager#allocating-and-reusing
 CGObject_C	0x0014	4	uint32_t	m_typeId	objectlayer	Holds the type id 0 to 7, written by 0x613880	verified	one	objectlayer/classes#type-id-and-mask
+CGObject_C	0x001c	8	void *[2]	m_liveBucketLink	objectlayer	Links the object into its bucket of the manager's live table	verified	one	objectlayer/objectbase#constructor-and-members
+CGObject_C	0x0024	8	void *[2]	m_liveListLink	objectlayer	Links the object into the live table's iteration list	verified	one	objectlayer/objectbase#constructor-and-members
 CGObject_C	0x0030	8	uint64_t	m_guidKey	objectlayer	Holds the GUID the manager's tables key the object by, written on each table insert	verified	one	objectlayer/manager#finding-an-object
+CGObject_C	0x0038	8	void *[2]	m_objectListLink	objectlayer	Links the object into the manager's object list or a reuse list	verified	one	objectlayer/objectbase#constructor-and-members
+CGObject_C	0x0040	8	void *[2]	m_reactivatedLink	objectlayer	Links the object into the manager's reactivated list at +0xb0	verified	one	objectlayer/objectbase#constructor-and-members
+CGObject_C	0x0048	72	uint32_t[18]	m_watcherLists	objectlayer	Holds the six field watcher lists of 12 bytes, one per base field	verified	one	objectlayer/objectbase#constructor-and-members
+CGObject_C	0x0090	4	float	m_scale	objectlayer	Holds the current scale, eased to the scale field over 2000 ms	verified	one	objectlayer/objectbase#the-frame-update
+CGObject_C	0x0094	4	float	m_scaleFactor	objectlayer	Holds a factor of the node scale, 1.0	verified	one	objectlayer/objectbase#the-node-transform
+CGObject_C	0x0098	4	float	m_bodyScaleFactor	objectlayer	Holds the node scale factor used with the body model, 1.0	verified	one	objectlayer/objectbase#the-node-transform
+CGObject_C	0x009c	4	float	m_overrideScaleFactor	objectlayer	Holds the node scale factor used with the overriding model, 1.0	verified	one	objectlayer/objectbase#the-node-transform
+CGObject_C	0x00a0	4	uint32_t	m_scaleEaseStart	objectlayer	Holds the time a scale ease started, 0 when none runs	verified	one	objectlayer/objectbase#the-scale-change
+CGObject_C	0x00a4	4	float	m_scaleEaseFrom	objectlayer	Holds the scale the ease started from	verified	one	objectlayer/objectbase#the-scale-change
+CGObject_C	0x00ac	4	void *	m_castMissiles	objectlayer	Holds the head of the missiles waiting for release	verified	one	objectlayer/objectbase#destruction
+CGObject_C	0x00b0	4	void *	m_stuckMissiles	objectlayer	Holds the head of the missiles stuck in the object	verified	one	objectlayer/objectbase#the-frame-update
+CGObject_C	0x00b4	4	void *	m_effects	objectlayer	Holds the head of the object's spell effects	verified	one	objectlayer/objectbase#destruction
+CGObject_C	0x00b8	4	uint32_t	m_lightBits	objectlayer	Holds the highlight bits, bit 0 target and bit 1 mouse-over	verified	one	objectlayer/objectbase#highlight-light-bits
+CGObject_C	0x00bc	4	float	m_height	objectlayer	Holds the body model's height, 1.0 before it loads	verified	one	objectlayer/objectbase#models-and-the-node
+CGObject_C	0x00c0	24	float[6]	m_bounds	objectlayer	Holds the body model's bounding box	verified	one	objectlayer/objectbase#models-and-the-node
+CGObject_C	0x00d8	4	void *	m_model	objectlayer	Holds the body model	verified	one	objectlayer/objectbase#models-and-the-node
+CGObject_C	0x00dc	4	void *	m_overrideModel	objectlayer	Holds the overriding model, which every user takes first	verified	one	objectlayer/objectbase#models-and-the-node
+CGObject_C	0x00e0	4	void *	m_node	objectlayer	Holds the world node	verified	one	objectlayer/objectbase#models-and-the-node
 CGObject_C	0x00e4	4	uint32_t	m_objectFlags	objectlayer	Holds object flags; 0x614f50 sets and clears bit 0x10, release pending	verified	one	objectlayer/manager#releasing-an-object
 CGObject_C	0x00e8	4	uint32_t	m_holdCount	objectlayer	Holds the count of holds that keep the object from release, stepped by 0x614f10	verified	one	objectlayer/manager#holding-an-object
+CGObject_C	0x00ec	4	uint32_t	m_fadeStart	objectlayer	Holds the time the alpha fade started	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x00f0	4	uint32_t	m_fadeMs	objectlayer	Holds the fade's length in milliseconds, 0 when none runs	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x00f4	4	float	m_fadeAlpha	objectlayer	Holds the current fade alpha	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x00f8	4	float	m_fadeFrom	objectlayer	Holds the alpha the fade started from	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x00fc	4	float	m_fadeTo	objectlayer	Holds the alpha the fade runs to	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x0100	4	float	m_alpha	objectlayer	Holds the master alpha the fade is multiplied by, 1.0	verified	one	objectlayer/objectbase#the-alpha-fade
+CGObject_C	0x0104	12	float[3]	m_upVector	objectlayer	Holds the smoothed ground normal the model is conformed to	verified	one	objectlayer/objectbase#ground-conform
 CGPlayer_C	0x0e68	4	uint32_t *	m_playerFields	objectlayer	Points at field 188, the player section, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
 CGPlayer_C	0x0e6c	4	uint32_t *	m_playerWatchCopy	objectlayer	Points at the player section's watch copy, past the unit's 170, written by 0x5dd2a0	verified	one	objectlayer/classes#field-storage
 CGPlayer_C	0x0e70	3576	uint32_t[894]	m_playerWatcherLists	objectlayer	Holds the 298 player field watcher lists of 12 bytes that the constructor empties	verified	one	objectlayer/players#the-player-object

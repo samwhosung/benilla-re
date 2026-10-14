@@ -2314,6 +2314,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
 0xc4daa0	uint32_t	s_targetFlashTime		objectlayer	Holds the time 0x607ed0 last turned the target flash's sweep	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4daa4	uint32_t	s_targetFlashRising		objectlayer	Holds the sweep direction 0x607ed0 flips every 500 ms; nonzero sweeps the green byte up	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+0xc4dac4	uint32_t	s_selectionTexture		objectlayer	Holds the handle of Textures\UnitSelectTexture.blp, the selection circle's disc	verified	one	objectlayer/objectbase#selection-circle-textures
+0xc4dae4	uint32_t *	s_selectionRampBuffer		objectlayer	Holds the dword buffer the ramp callback fills	verified	one	objectlayer/objectbase#selection-circle-textures
+0xc4daf8	void *	s_selectionCircleVar		objectlayer	Holds the ObjectSelectionCircle variable, 1 by default, which gates drawing the circle	verified	one	objectlayer/objectbase#selection-circle-textures
+0xc4dafc	uint32_t	s_selectionRamp		objectlayer	Holds the handle of the generated 64 by 8 ramp texture that fades the circle	verified	one	objectlayer/objectbase#selection-circle-textures
 0xc4db88	uint32_t[3]	s_movementStaticList		collision	Holds the free list of move-event nodes, an intrusive list with link offset 0	verified	one	collision/overview#movementcpp-initializers
 0xc4dc38	uint32_t			objectlayer	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc4de28	CMissile *	s_flyingMissiles		objectlayer	Heads the list of missiles in flight	verified	one	objectlayer/missiles#the-missile-object
