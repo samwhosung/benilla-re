@@ -2291,15 +2291,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb73a10	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb73a18	uint32_t			ui	Holds a dword that Script::GetNumTrainerServices reads and writes; not read here	inferred	none	
 0xbb4a80	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbb70a0	uint32_t			ui	Holds a dword that Script::IsQuestWatched, Script::GetQuestIndexForWatch read and write; not read here	inferred	none	
-0xbb71c0	uint32_t[160]			ui	Holds the quest log list: 40 entries of 16 bytes, an id at +0 and a header flag at +8	verified	one	objectlayer/quests#quest-updates
-0xbb7478	uint32_t			ui	Holds a dword that Script::GetNumQuestLogEntries, Script::GetQuestLogTitle read and write; not read here	inferred	none	
-0xbb7480	uint32_t			ui	Holds a dword that CloseQuestIfCurrent, Script::SetAbandonQuest read and write; not read here	inferred	none	
+0xbb7040	uint32_t[20]	s_questHeaderIds		ui	Holds the zone or sort ids of the list's headers, sorted by name	verified	one	ui/questlog#the-display-list
+0xbb70a0	uint32_t[5]	s_questWatchIds		ui	Holds the ids of up to five watched quests	verified	one	ui/questlog#quest-watches
+0xbb71c0	uint32_t[160]	s_questLogRows		ui	Holds the quest log list: 40 rows of 16 bytes, id, slot, header flag and expiry latch	verified	one	ui/questlog#the-display-list
+0xbb7478	uint32_t	s_questLogRowCount		ui	Holds the number of rows in the quest log list, headers included	verified	one	ui/questlog#the-display-list
+0xbb747c	uint32_t	s_questHeaderCount		ui	Holds the number of header ids in the list	verified	one	ui/questlog#the-display-list
+0xbb7480	uint32_t	s_selectedQuestId		ui	Holds the id of the quest selected in the quest log	verified	one	ui/questlog#the-selection
 0xbb7484	uint32_t			ui	Holds a dword that Script::SetAbandonQuest, Script::GetAbandonQuestName read and write; not read here	inferred	none	
-0xbb748c	uint32_t			ui	Holds a dword that Script::GetQuestLogTitle reads and writes; not read here	inferred	none	
-0xbb7490	uint32_t			ui	Holds a dword that Script::GetNumQuestLogEntries reads and writes; not read here	inferred	none	
-0xbb7498	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xbb749c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbb7488	uint32_t	s_questWatchCount		ui	Holds the number of watched quests	verified	one	ui/questlog#quest-watches
+0xbb748c	uint32_t	s_questHeaderExpanded		ui	Holds a bit per header, set while the header is expanded	verified	one	ui/questlog#the-collapse-state
+0xbb7490	uint32_t	s_questVisibleRows		ui	Holds the number of rows shown, the row count minus quests under collapsed headers	verified	one	ui/questlog#visible-rows
+0xbb7494	int32_t	s_questClockOffset		ui	Holds the local clock minus the server's at the last sync, 0 until synced	verified	one	ui/questtimers#the-clock
+0xbb7498	uint32_t	s_questTemplatesPending		ui	Holds the number of quest templates asked for and not yet arrived	verified	one	ui/questlog#the-rebuild
+0xbb749c	uint32_t	s_queryTimeDeadline		ui	Holds the local time after which the next time query may be sent, 0 while one is in flight	verified	one	ui/questtimers#the-time-sync
 0xbbb670	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbc3f58	uint64_t	s_trainerWindowGuid		ui	Holds the trainer GUID a trainer list may also open for	inferred	none	objectlayer/inventory#trainers
 0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
@@ -2505,8 +2509,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d960	uint32_t[5]	s_skillCostsDataStore		dbc	Holds the SkillCostsData.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0d988	uint32_t[5]	s_serverMessagesStore		dbc	Holds the ServerMessages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatserver#server-message
 0xc0d9a4	uint32_t			unassigned	Holds a dword that PlaySpellSchoolSound reads and writes; not read here	inferred	none	
-0xc0d9cc	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0d9d0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc0d9b0	uint32_t[5]	s_questSortStore		dbc	Holds the QuestSort.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/questlog#the-order-of-the-rows
+0xc0d9c4	uint32_t[5]	s_questInfoStore		dbc	Holds the QuestInfo.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/questtitle#the-tag
 0xc0d9e0	uint32_t			unassigned	Holds a dword that Script::GetPetHappiness reads and writes; not read here	inferred	none	
 0xc0d9e4	uint32_t			unassigned	Holds a dword that Script::GetPetHappiness reads and writes; not read here	inferred	none	
 0xc0d9f4	uint32_t			unassigned	Holds a dword that Script::GetPetLoyalty, Script::GetStablePetInfo read and write; not read here	inferred	none	

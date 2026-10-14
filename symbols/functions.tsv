@@ -2125,7 +2125,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x429510	37	OsCompareFileTime		core	unreached		Compares two file times	inferred	none	core/time#unreached-functions	
 0x429540	38	OsFileTimeAddSeconds		core	unreached		Adds edx · 10^7 to the file time at ecx, raising error 0x57 for a null pointer	inferred	none	core/time#unreached-functions	
 0x429570	9	OsGetTickCount		core	unreached		Returns GetTickCount	inferred	none	core/time#unreached-functions	
-0x429580	126	OsGetCachedUnixTime		core	orchestration	uint32_t __cdecl (void)	Returns time(NULL), cached for 500 ms of GetTickCount	verified	one	core/time#calendar-time	
+0x429580	126	GetWallClockSeconds		core	orchestration	uint32_t __cdecl (void)	Returns the local machine time in whole seconds, resampled at most every 500 ms	verified	one	ui/questtimers#the-clock	
 0x429600	8	OsGetSystemTime		core	unreached		Writes the system time	inferred	none	core/time#unreached-functions	
 0x429610	8	OsGetLocalTime		core	unreached		Writes the local time	inferred	none	core/time#unreached-functions	
 0x429620	83	OsCompareSystemTime		core	unreached		Compares two system times field by field	inferred	none	core/time#unreached-functions	
@@ -9949,45 +9949,45 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4de370	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4de380	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4de390	102			ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4de400	32	OnQueryTimeResponse	idb	ui	orchestration		Runs its object file code that calls CDataStore::GetInt32, 0x4deef0; not read here	inferred	none		
+0x4de400	32	HandleQueryTimeResponse	idb	ui	orchestration		Reads the server time and passes it to the clock setter	verified	one	ui/questtimers#the-time-sync	
 0x4de420	10			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4de430	148			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer and 4 more; not read here	inferred	none		
+0x4de430	148	InitQuestLogForWorld		ui	orchestration		Zeroes the pending count, registers the quest slot watcher, sends CMSG_QUERY_TIME and rebuilds the list	verified	one	ui/questtimers#the-time-sync	
 0x4de4d0	18			ui	orchestration		Runs its object file code that calls 0x4de510; not read here	inferred	none		
 0x4de4f0	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
-0x4de510	913			ui	primitive		Rebuilds the quest log list, marking each header entry with +8 set to 1	inferred	none	objectlayer/quests#quest-updates	
-0x4de8b0	59			ui	primitive		Runs its object file code that calls ConsoleWrite, 0x4de510; not read here	inferred	none		
-0x4de8f0	350			ui	primitive		Runs its object file code that calls SStrCopy, SStrCmpI; not read here	inferred	none		
-0x4dea50	112			ui	primitive		Runs its object file code that calls _qsort, 0x4dee60; not read here	inferred	none		
-0x4deac0	622			ui	primitive		Runs its object file code that calls 0x562a40, SStrCmpI; not read here	inferred	none		
+0x4de510	913	RebuildQuestLog		ui	primitive		Rebuilds the quest log list from the player's quests and cached templates, sorts it and fires QUEST_LOG_UPDATE	verified	one	ui/questlog#the-rebuild	
+0x4de8b0	59	OnQuestTemplateArrived		ui	primitive		Counts an arrived quest template down and rebuilds the list when it was the last	verified	one	ui/questlog#when-the-templates-arrive	
+0x4de8f0	350	CompareQuestHeaderIds		ui	primitive		Orders two header ids by collated name, an id of 0 first	verified	one	ui/questlog#the-order-of-the-rows	
+0x4dea50	112	SortQuestLog		ui	primitive		Sorts the list rows and counts the rows not under a collapsed header	verified	one	ui/questlog#visible-rows	
+0x4deac0	622	CompareQuestLogRows		ui	primitive		Orders two rows: collapsed quests last, then group, header, level, then title	verified	one	ui/questlog#the-order-of-the-rows	
 0x4ded30	172			ui	primitive		Runs its object file code that calls 0x4dea50; not read here	inferred	none		
-0x4dede0	24			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4dee00	83			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4dee60	136			ui	primitive		Runs its object file code that calls 0x562a40; not read here	inferred	none		
-0x4deef0	53			ui	primitive		Runs its object file code that calls OsGetCachedUnixTime; not read here	inferred	none		
-0x4def30	58			ui	primitive		Runs its object file code that calls CloseQuestIfCurrent; not read here	inferred	none		
+0x4dede0	24	AddQuestWatchId		ui	primitive		Appends a quest id to the watch list unless five are watched	verified	one	ui/questlog#quest-watches	
+0x4dee00	83	RemoveQuestWatchId		ui	primitive		Removes a quest id from the watch list, moving the rest down	verified	one	ui/questlog#quest-watches	
+0x4dee60	136	GetQuestHeaderOrdinal		ui	primitive		Returns a row's position in the header id array, or -1	verified	one	ui/questlog#visible-rows	
+0x4deef0	53	SetQuestClockOffset		ui	primitive		Stores the local minus server time as the clock offset, arms the hourly deadline and fires QUEST_LOG_UPDATE	verified	one	ui/questtimers#the-clock	
+0x4def30	58	SelectQuestRow		ui	primitive		Stores the quest id of a non-header row as the selection	verified	one	ui/questlog#the-selection	
 0x4def70	111			ui	orchestration		Runs its object file code that calls 0x562a40, 0x6dacb0; not read here	inferred	none		
 0x4defe0	35			ui	orchestration		Runs its object file code that calls ConsoleWrite, 0x4def70; not read here	inferred	none		
-0x4df010	61			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4df010	61	GetSelectedQuestRow		ui	primitive		Returns the index of the selected quest's row, or -1	verified	one	ui/questlog#the-selection	
 0x4df050	22			ui	primitive		Runs its object file code that calls 0x4df010; not read here	inferred	none		
 0x4df070	108			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x4df0e0	29	CloseQuestIfCurrent		ui	orchestration		Calls a ui function when a quest id is the one the quest window holds	verified	one	objectlayer/quests#the-quest-log-watcher	
 0x4df100	75			ui	unreached		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4df150	35			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4df180	239			ui	primitive		Runs its object file code that calls 0x562a40; not read here	inferred	none		
-0x4df270	40			ui	orchestration		Runs its object file code that calls ConsoleWrite, FrameScript_SignalEvent; not read here	inferred	none		
-0x4df2a0	152			ui	primitive		Runs its object file code that calls 0x562a40; not read here	inferred	none		
-0x4df340	117			ui	primitive		Runs its object file code that calls 0x562a40; not read here	inferred	none		
+0x4df150	35	GetQuestIdOfRow		ui	primitive		Returns the quest id of an in-range row that is not a header, else 0	verified	one	ui/questlog#the-display-list	
+0x4df180	239	GetQuestRowTitle		ui	primitive		Returns a row's quest title or header name, or null	verified	one	ui/questtitle#title-and-level	
+0x4df270	40	OnQuestTemplateForRow		ui	orchestration		Fires QUEST_LOG_UPDATE when a row's quest template arrives, or logs a failure	verified	one	ui/questtitle#title-and-level	
+0x4df2a0	152	GetQuestRowTag		ui	primitive		Returns the QuestInfo name for a quest row's type, or null	verified	one	ui/questtitle#the-tag	
+0x4df340	117	GetQuestRowLevel		ui	primitive		Returns a quest row's level from its template, 0 for a header or a miss	verified	one	ui/questtitle#title-and-level	
 0x4df3c0	175			ui	orchestration		Runs its object file code that calls 0x562a40, SStrCmpI; not read here	inferred	none		
 0x4df470	12			ui	orchestration		Runs its object file code that calls 0x4df010; not read here	inferred	none		
-0x4df480	40			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4df480	40	IsQuestExpiryLatched		ui	primitive		Returns whether a row's expiry latch is set	verified	one	ui/questtimers#getquesttimers	
 0x4df4b0	64			ui	primitive		Returns whether a quest is completed	inferred	none	objectlayer/quests#quest-updates	
-0x4df4f0	81			ui	primitive		Runs its object file code that calls 0x4df580, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x4df4f0	81	LatchQuestExpiry		ui	primitive		Sets a row's expiry latch unless its quest can be turned in, calls 0x5eb070 and returns 1; else returns 0	verified	one	ui/questtimers#getquesttimers	
 0x4df550	42			ui	primitive		Marks a timed quest failed	inferred	none	objectlayer/quests#quest-updates	
 0x4df580	560			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x562a40 and 4 more; not read here	inferred	none		
 0x4df7b0	194			ui	primitive		Runs its object file code that calls 0x562a40, FrameScript_SignalEvent and 3 more; not read here	inferred	none		
 0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based position of a quest among the 40 log entries, headers counted and skipped, or 0	verified	one	objectlayer/quests#quest-updates	
 0x4df8b0	127	Script::GetNumQuestLogEntries	idb	ui	primitive		Implements the Lua function GetNumQuestLogEntries	inferred	none		
-0x4df930	422	Script::GetQuestLogTitle	idb	ui	primitive		Implements the Lua function GetQuestLogTitle	inferred	none		
+0x4df930	422	Script::GetQuestLogTitle	idb	ui	primitive		Pushes a list row's title, level, tag, isHeader, isCollapsed and isComplete	verified	one	ui/questtitle#the-six-returns	
 0x4dfae0	64	Script::SelectQuestLogEntry	idb	ui	orchestration		Implements the Lua function SelectQuestLogEntry	inferred	none		
 0x4dfb20	42	Script::GetQuestLogSelection	idb	ui	primitive		Implements the Lua function GetQuestLogSelection	inferred	none		
 0x4dfb50	13	Script::SetAbandonQuest	idb	ui	orchestration		Implements the Lua function SetAbandonQuest	inferred	none		
@@ -10005,7 +10005,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e0860	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e0870	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e0880	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e08a0	183	Script::GetQuestLogTimeLeft	idb	ui	primitive		Implements the Lua function GetQuestLogTimeLeft	inferred	none		
+0x4e08a0	183	Script::GetQuestLogTimeLeft	idb	ui	primitive		Pushes the time left of the selected quest's slot, clamped to 0, or nil	verified	one	ui/questtimers#getquestlogtimeleft	
 0x4e0960	120	Script::IsCurrentQuestFailed	idb	ui	orchestration		Implements the Lua function IsCurrentQuestFailed	inferred	none		
 0x4e09e0	137	Script::GetNumQuestLogRewards	idb	ui	primitive		Implements the Lua function GetNumQuestLogRewards	inferred	none		
 0x4e0a70	135	Script::GetNumQuestLogChoices	idb	ui	primitive		Implements the Lua function GetNumQuestLogChoices	inferred	none		
@@ -10017,9 +10017,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1220	137	Script::GetQuestLogRequiredMoney	idb	ui	primitive		Implements the Lua function GetQuestLogRequiredMoney	inferred	none		
 0x4e12b0	129	Script::GetQuestLogPushable	idb	ui	orchestration		Implements the Lua function GetQuestLogPushable	inferred	none		
 0x4e1340	135	Script::QuestLogPushQuest	idb	ui	primitive		Implements the Lua function QuestLogPushQuest	inferred	none		
-0x4e13d0	421	Script::GetQuestTimers	idb	ui	primitive		Implements the Lua function GetQuestTimers	inferred	none		
+0x4e13d0	421	Script::GetQuestTimers	idb	ui	primitive		Pushes the time left of each running timed quest in list order	verified	one	ui/questtimers#getquesttimers	
 0x4e1580	111			ui	primitive		Runs its object file code that calls ConsoleWrite, 0x562a40, CGGameUI::DisplayError; not read here	inferred	none		
-0x4e15f0	320	Script::GetQuestIndexForTimer	idb	ui	primitive		Implements the Lua function GetQuestIndexForTimer	inferred	none		
+0x4e15f0	320	Script::GetQuestIndexForTimer	idb	ui	primitive		Pushes the 1-based list index of the n-th running timed quest, or nil	verified	one	ui/questtimers#getquestindexfortimer	
 0x4e1730	69	Script::CollapseQuestHeader	idb	ui	primitive		Implements the Lua function CollapseQuestHeader	inferred	none		
 0x4e1780	66	Script::ExpandQuestHeader	idb	ui	primitive		Implements the Lua function ExpandQuestHeader	inferred	none		
 0x4e17d0	137	Script::GetQuestGreenRange	idb	ui	primitive		Implements the Lua function GetQuestGreenRange	inferred	none		
