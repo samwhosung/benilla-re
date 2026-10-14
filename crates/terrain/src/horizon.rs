@@ -33,19 +33,7 @@ const COL_MAX: i32 = 0x13f;
 /// A column from the stored `f32(64·x)`: `fistp(p − 0.5) + 0xa0`, wrapping.
 #[inline]
 fn col_of(sx_times_64: f32) -> i32 {
-    fistp32(f64::from(sx_times_64) - f64::from(HALF)).wrapping_add(COL_BIAS)
-}
-
-/// `fistp dword`: round to nearest, ties to even; NaN, an infinity or a value outside `i32` stores
-/// `0x80000000`.
-#[inline]
-fn fistp32(v: f64) -> i32 {
-    let r = v.round_ties_even();
-    if r.is_nan() || r >= 2_147_483_648.0 || r < -2_147_483_648.0 {
-        i32::MIN
-    } else {
-        r as i32
-    }
+    crate::x87::fistp(f64::from(sx_times_64) - f64::from(HALF)).wrapping_add(COL_BIAS)
 }
 
 /// A gate `fcomp gate; test ah,5; jnp` fails only below the gate (C0 alone); equal, above and NaN
@@ -260,5 +248,5 @@ pub fn horizon_box_test(
 /// The span's last column, the same rounding plus 0xa1.
 #[inline]
 fn col_of_a1(sx_times_64: f32) -> i32 {
-    fistp32(f64::from(sx_times_64) - f64::from(HALF)).wrapping_add(COL_BIAS + 1)
+    crate::x87::fistp(f64::from(sx_times_64) - f64::from(HALF)).wrapping_add(COL_BIAS + 1)
 }

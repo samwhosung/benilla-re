@@ -60,7 +60,7 @@ pub fn color_lerp_i(dst: u32, t: u32, src: u32) -> u32 {
 pub fn fade_to_i(fade: f32) -> i32 {
     let scaled = (f64::from(fade) * f64::from(MUL_255)) as f32;
     let biased = f64::from(scaled) - f64::from(SUB_FADE);
-    round_ties_even_i32(biased)
+    crate::x87::fistp(biased)
 }
 
 /// One colour of `ScaleSelfLitMaterials` (`0x6b4090`): each of the three bytes times `i`, shifted right
@@ -134,10 +134,10 @@ pub trait AreaWorld {
 /// + (iy >> 4 & 0x3f)` and the chunk `(ix & 0xf)·16 + (iy & 0xf)`.
 pub fn area_id_lookup(world: &dyn AreaWorld, x: f32, y: f32) -> u32 {
     let sy = (-(f64::from(y) - f64::from(C_POS)) * f64::from(S_SCALE)) as f32;
-    let iy = round_ties_even_i32(f64::from(sy) - f64::from(H_HALF));
+    let iy = crate::x87::fistp(f64::from(sy) - f64::from(H_HALF));
     let nx = (-(f64::from(x) - f64::from(C_POS))) as f32;
     let sx = (f64::from(S_SCALE) * f64::from(nx)) as f32;
-    let ix = round_ties_even_i32(f64::from(sx) - f64::from(H_HALF));
+    let ix = crate::x87::fistp(f64::from(sx) - f64::from(H_HALF));
 
     let grid_index = (((ix >> 4) & 0x3f) * 0x40 + ((iy >> 4) & 0x3f)) as usize;
     let tile = world.tile_ptr(grid_index);
@@ -150,9 +150,4 @@ pub fn area_id_lookup(world: &dyn AreaWorld, x: f32, y: f32) -> u32 {
         return 0;
     }
     world.area_id(chunk)
-}
-
-/// `fistp` under the client's control word: round to nearest, ties to even.
-fn round_ties_even_i32(v: f64) -> i32 {
-    v.round_ties_even() as i32
 }

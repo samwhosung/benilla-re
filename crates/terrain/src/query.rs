@@ -103,8 +103,8 @@ pub fn liquid_height_sample(
 ) -> Option<f32> {
     let rx = f64::from(x) - 0.5;
     let ry = f64::from(y) - 0.5;
-    let ix = rx.round_ties_even() as i32;
-    let iy = ry.round_ties_even() as i32;
+    let ix = crate::x87::fistp(rx);
+    let iy = crate::x87::fistp(ry);
     let fx = (f64::from(x) - f64::from(ix as f32)) as f32;
     let fy = (f64::from(y) - f64::from(iy as f32)) as f32;
     let cx = (ix & 7) as usize;
@@ -214,8 +214,8 @@ pub fn liquid_status<'a>(
     let mut out = LiquidStatusOut::default();
     let wxs = (-(f64::from(pos[1]) - f64::from(MAP_CENTER)) * f64::from(CELL_SCALE)) as f32;
     let wys = (-(f64::from(pos[0]) - f64::from(MAP_CENTER)) * f64::from(CELL_SCALE)) as f32;
-    let u3 = (f64::from(wxs) - 0.5).round_ties_even() as i32;
-    let u4 = (f64::from(wys) - 0.5).round_ties_even() as i32;
+    let u3 = crate::x87::fistp(f64::from(wxs) - 0.5);
+    let u4 = crate::x87::fistp(f64::from(wys) - 0.5);
     let area_idx = (((u4 >> 7) & 0x3f) * 0x40 + ((u3 >> 7) & 0x3f)) as usize;
     let chunk_idx = (((u4 >> 3) & 0xf) * 0x10 + ((u3 >> 3) & 0xf)) as usize;
     let Some(slots) = lookup(area_idx, chunk_idx) else {
@@ -293,8 +293,8 @@ pub fn ground_effect_lookup<'a>(
     if !(wx >= 0.0 && wy >= 0.0 && wx < BOUND && wy < BOUND) {
         return None;
     }
-    let u7 = (f64::from(CELL_SCALE) * f64::from(wx) - 0.5).round_ties_even() as i32;
-    let u5 = (f64::from(CELL_SCALE) * f64::from(wy) - 0.5).round_ties_even() as i32;
+    let u7 = crate::x87::fistp(f64::from(CELL_SCALE) * f64::from(wx) - 0.5);
+    let u5 = crate::x87::fistp(f64::from(CELL_SCALE) * f64::from(wy) - 0.5);
     let area_idx = (((u5 >> 7) & 0x3f) * 0x40 + ((u7 >> 7) & 0x3f)) as usize;
     let chunk_idx = (((u5 >> 3) & 0xf) * 0x10 + ((u7 >> 3) & 0xf)) as usize;
     let ch = chunk(area_idx, chunk_idx)?;

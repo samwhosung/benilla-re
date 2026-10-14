@@ -196,7 +196,23 @@ fn color_fade_modulate_difftest() {
         s
     };
     let fades = [
-        0.0f32, 0.5, 1.0, 0.25, 0.999, 1.5, -0.3, 0.0019607, 0.9999, 2.0,
+        0.0f32,
+        0.5,
+        1.0,
+        0.25,
+        0.999,
+        1.5,
+        -0.3,
+        0.0019607,
+        0.9999,
+        2.0,
+        // NaN, the infinities and products past `i32`: the `fistp` stores `0x80000000`.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        1.0e10,
     ];
     let counts = [0u32, 1, 4, 8];
     let mut checked = 0u32;
@@ -375,6 +391,13 @@ fn area_id_lookup_difftest() {
         (533.33, 533.33),
         (1000.0, 25000.0),
         (16000.0, 18000.0),
+        // NaN, the infinities and coordinates past `i32` cells: the `fistp` stores `0x80000000`.
+        (f32::NAN, 17066.0),
+        (17066.0, f32::NAN),
+        (f32::INFINITY, f32::NEG_INFINITY),
+        (f32::NEG_INFINITY, 1.0e30),
+        (1.0e30, -1.0e30),
+        (1.0e12, 1.0e12),
     ];
     for _ in 0..60 {
         let x = (next() % 34133) as f32 + (next() % 1000) as f32 * 0.001;

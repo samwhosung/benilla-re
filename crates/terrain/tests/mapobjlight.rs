@@ -280,7 +280,8 @@ fn interior_light_rotate_difftest() {
 }
 
 /// `0x6a77e0` whole with the third argument 0, so the colour branch is not taken: every colour
-/// byte against limits around it, and both outputs read back.
+/// byte against limits around it, and both outputs read back. The `fistp` input is `limit·255/max`
+/// with both bytes, between 0 and 255, so no NaN or out-of-range value reaches it.
 #[test]
 fn wmo_mocv_normalize_alpha_difftest() {
     let Some(wow) = Wow::load() else {

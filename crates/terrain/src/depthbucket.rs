@@ -34,7 +34,7 @@ fn quantize_key(dist: f64) -> BucketKey {
     let m = (BUCKET_FACTOR as f64) * dist;
     let mf = m as f32;
     let v = (mf as f64) - BUCKET_BIAS;
-    v.round_ties_even() as i32
+    crate::x87::fistp(v)
 }
 
 /// `BucketByDepth` (`0x6816f0`): the key of `dist − radius`, the point and radius from `+0x5c` to

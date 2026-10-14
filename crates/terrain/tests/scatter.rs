@@ -260,12 +260,25 @@ fn nearest_liquid_difftest() {
     let dist2 = emu.alloc(0x40);
     let mut checked = 0u32;
     let mut any_flag = 0u32;
-    for _ in 0..40u32 {
-        let p = [
+    // Positions whose chunk index is NaN, infinite or past `i32`: the `fistp` stores `0x80000000`,
+    // which the `& 0xf` takes to chunk 0.
+    const WIDE: [[f32; 2]; 6] = [
+        [f32::NAN, 16500.0],
+        [16500.0, f32::NAN],
+        [f32::INFINITY, f32::NEG_INFINITY],
+        [1.0e30, -1.0e30],
+        [1.0e11, 16500.0],
+        [16500.0, -1.0e11],
+    ];
+    for case in 0..40u32 + WIDE.len() as u32 {
+        let mut p = [
             (rng.next() % 1066) as f32 + 16000.0,
             (rng.next() % 1066) as f32 + 16000.0,
             rng.f32_finite() % 50.0,
         ];
+        if let Some(w) = WIDE.get((case as usize).wrapping_sub(40)) {
+            (p[0], p[1]) = (w[0], w[1]);
+        }
         let rad = (rng.next() % 200) as f32 + 1.0;
         emu.write_u32(pos, p[0].to_bits());
         emu.write_u32(pos + 4, p[1].to_bits());

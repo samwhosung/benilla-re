@@ -408,6 +408,21 @@ fn camera_window_difftest() {
         1000.0,
         "chunk-idx tie probe (prod~1.0)",
     );
+    // NaN, the infinities and centres whose chunk index passes `i32`: the `fistp` stores
+    // `0x80000000`.
+    for (c, ctx) in [
+        ([f32::NAN, 0.0, 0.0], "chunk idx x NaN"),
+        ([0.0, f32::NAN, 0.0], "chunk idx y NaN"),
+        ([f32::INFINITY, f32::NEG_INFINITY, 0.0], "chunk idx inf"),
+        ([1.0e30, -1.0e30, 0.0], "chunk idx 1e30"),
+        ([-1.0e11, 1.0e11, 0.0], "chunk idx 1e11"),
+    ] {
+        case(&mut e, c, 1000.0, ctx);
+    }
+    assert_eq!(
+        window_chunk_indices([f32::NAN, 1.0e30, 0.0]),
+        (i32::MIN, i32::MIN)
+    );
 
     let mut checked = 0u32;
     for i in 0..2500u32 {

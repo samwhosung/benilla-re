@@ -206,7 +206,17 @@ fn liquid_height_sample() {
         s
     };
     let mut checked = 0u32;
-    for case in 0..200u32 {
+    // NaN, the infinities and coordinates past `i32`: the `fistp` stores `0x80000000`, and the
+    // cell is the one that gives (`ix & 7`) 0.
+    const BAD_XY: [(f32, f32); 6] = [
+        (f32::NAN, 3.2),
+        (3.2, f32::NAN),
+        (f32::INFINITY, f32::NEG_INFINITY),
+        (1.0e30, -1.0e30),
+        (3.0e9, 5.0),
+        (5.0, -3.0e9),
+    ];
+    for case in 0..200u32 + BAD_XY.len() as u32 {
         let present = case % 8 != 7;
         emu.write_u32(chunk + 0x118, if present { slot as u32 } else { 0 });
         emu.write_u32(chunk + 0x11c, 0);
@@ -226,8 +236,11 @@ fn liquid_height_sample() {
         for (i, &h) in heights.iter().enumerate() {
             emu.write_u32(mclq + i as u64 * 8 + 4, h.to_bits());
         }
-        let x = ((next() % 850) as f32) * 0.01; // 0..8.5
-        let y = ((next() % 850) as f32) * 0.01;
+        let mut x = ((next() % 850) as f32) * 0.01; // 0..8.5
+        let mut y = ((next() % 850) as f32) * 0.01;
+        if let Some(&(bx, by)) = BAD_XY.get((case as usize).wrapping_sub(200)) {
+            (x, y) = (bx, by);
+        }
         let pz = 1e9f32; // above any height: the flow branch never runs
         emu.write_u32(point + 8, pz.to_bits());
         emu.write_u32(out, 0xdead_beef);
@@ -261,7 +274,7 @@ fn liquid_height_sample() {
                         h.to_bits()
                     );
                     let rx = f64::from(x) - 0.5;
-                    eprintln!("  ix(re)={} rx={rx:?}", rx.round_ties_even() as i32);
+                    eprintln!("  ix(re)={} rx={rx:?}", benilla_re_cmath::x87::fistp(rx));
                 }
                 assert_f32(got, h, "liquid_height_sample");
             }
@@ -296,18 +309,31 @@ fn liquid_status_world() {
         s
     };
     let mut checked = 0u32;
-    for case in 0..250u32 {
+    // NaN, the infinities and positions past `i32` cells: the `fistp` stores `0x80000000`, which
+    // selects table entry 0 and chunk 0.
+    const BAD_POS: [(f32, f32); 6] = [
+        (f32::NAN, 5.0),
+        (5.0, f32::NAN),
+        (f32::INFINITY, f32::NEG_INFINITY),
+        (1.0e30, -1.0e30),
+        (1.0e11, 5.0),
+        (5.0, -1.0e11),
+    ];
+    for case in 0..250u32 + BAD_POS.len() as u32 {
         // a position near tile (32, 32), so the indices stay in range
-        let px = ((next() % 2000) as f32) * 0.1 - 100.0; // ±100 about the centre
-        let py = ((next() % 2000) as f32) * 0.1 - 100.0;
+        let mut px = ((next() % 2000) as f32) * 0.1 - 100.0; // ±100 about the centre
+        let mut py = ((next() % 2000) as f32) * 0.1 - 100.0;
+        if let Some(&(bx, by)) = BAD_POS.get((case as usize).wrapping_sub(250)) {
+            (px, py) = (bx, by);
+        }
         let pz = ((next() % 400) as f32) * 0.5 - 100.0;
         // the table indices the function computes, to place the test's world
         let wxs = (-(f64::from(py) - f64::from(benilla_re_terrain::MAP_CENTER))
             * f64::from(benilla_re_terrain::CELL_SCALE)) as f32;
         let wys = (-(f64::from(px) - f64::from(benilla_re_terrain::MAP_CENTER))
             * f64::from(benilla_re_terrain::CELL_SCALE)) as f32;
-        let u3 = (f64::from(wxs) - 0.5).round_ties_even() as i32;
-        let u4 = (f64::from(wys) - 0.5).round_ties_even() as i32;
+        let u3 = benilla_re_cmath::x87::fistp(f64::from(wxs) - 0.5);
+        let u4 = benilla_re_cmath::x87::fistp(f64::from(wys) - 0.5);
         let area_idx = (((u4 >> 7) & 0x3f) * 0x40 + ((u3 >> 7) & 0x3f)) as u64;
         let chunk_idx = (((u4 >> 3) & 0xf) * 0x10 + ((u3 >> 3) & 0xf)) as u64;
         // clear the area table entries earlier cases set
@@ -373,11 +399,12 @@ fn liquid_status_world() {
         let expect_u32 = |o: Option<u32>| o.unwrap_or(SENT);
         assert_eq!(emu.read_u32(g_out), expect_u32(ours.fishable), "fishable");
         assert_eq!(emu.read_u32(t_out), expect_u32(ours.liquid_type), "type");
-        assert_eq!(
-            emu.read_u32(h_out),
-            ours.height.map_or(SENT, f32::to_bits),
-            "height (case {case})"
-        );
+        // A NaN height compares as NaN: the x87 makes the negative default NaN and the host's sign
+        // differs.
+        match ours.height {
+            Some(h) => assert_f32(emu.read_f32(h_out), h, &format!("height (case {case})")),
+            None => assert_eq!(emu.read_u32(h_out), SENT, "height (case {case})"),
+        }
         let f = ours.flow.unwrap_or([f32::from_bits(SENT); 3]);
         for (i, &fv) in f.iter().enumerate() {
             assert_eq!(
@@ -422,8 +449,8 @@ fn liquid_status_sound_zone() {
         * f64::from(benilla_re_terrain::CELL_SCALE)) as f32;
     let wys = (-(f64::from(px) - f64::from(benilla_re_terrain::MAP_CENTER))
         * f64::from(benilla_re_terrain::CELL_SCALE)) as f32;
-    let u3 = (f64::from(wxs) - 0.5).round_ties_even() as i32;
-    let u4 = (f64::from(wys) - 0.5).round_ties_even() as i32;
+    let u3 = benilla_re_cmath::x87::fistp(f64::from(wxs) - 0.5);
+    let u4 = benilla_re_cmath::x87::fistp(f64::from(wys) - 0.5);
     let area_idx = (((u4 >> 7) & 0x3f) * 0x40 + ((u3 >> 7) & 0x3f)) as u64;
     let chunk_idx = (((u4 >> 3) & 0xf) * 0x10 + ((u3 >> 3) & 0xf)) as u64;
     let (cx, cy) = ((u3 & 7) as usize, (u4 & 7) as usize);
@@ -581,15 +608,31 @@ fn ground_effect_lookup() {
         s
     };
     let mut checked = 0u32;
-    for case in 0..250u32 {
-        let px = ((next() % 2000) as f32) * 0.1 - 100.0;
-        let py = ((next() % 2000) as f32) * 0.1 - 100.0;
+    // The conversion cannot see NaN or a far position: the range test before it
+    // (`wx >= 0 && wy >= 0 && wx < 34133.332`) fails for NaN and for every value past the map, and
+    // the lookup misses. These positions run to show the guard.
+    const BAD_POS: [(f32, f32); 6] = [
+        (f32::NAN, 5.0),
+        (5.0, f32::NAN),
+        (f32::INFINITY, f32::NEG_INFINITY),
+        (1.0e30, -1.0e30),
+        (1.0e11, 5.0),
+        (5.0, -1.0e11),
+    ];
+    for case in 0..250u32 + BAD_POS.len() as u32 {
+        let mut px = ((next() % 2000) as f32) * 0.1 - 100.0;
+        let mut py = ((next() % 2000) as f32) * 0.1 - 100.0;
+        if let Some(&(bx, by)) = BAD_POS.get((case as usize).wrapping_sub(250)) {
+            (px, py) = (bx, by);
+        }
         let wx = (-(f64::from(py) - f64::from(benilla_re_terrain::MAP_CENTER))) as f32;
-        let u7 = (f64::from(benilla_re_terrain::CELL_SCALE) * f64::from(wx) - 0.5).round_ties_even()
-            as i32;
+        let u7 = benilla_re_cmath::x87::fistp(
+            f64::from(benilla_re_terrain::CELL_SCALE) * f64::from(wx) - 0.5,
+        );
         let wy = (-(f64::from(px) - f64::from(benilla_re_terrain::MAP_CENTER))) as f32;
-        let u5 = (f64::from(benilla_re_terrain::CELL_SCALE) * f64::from(wy) - 0.5).round_ties_even()
-            as i32;
+        let u5 = benilla_re_cmath::x87::fistp(
+            f64::from(benilla_re_terrain::CELL_SCALE) * f64::from(wy) - 0.5,
+        );
         let area_idx = (((u5 >> 7) & 0x3f) * 0x40 + ((u7 >> 7) & 0x3f)) as u64;
         let chunk_idx = (((u5 >> 3) & 0xf) * 0x10 + ((u7 >> 3) & 0xf)) as u64;
         emu.write_u32(0xc96318 + area_idx * 4, area as u32);

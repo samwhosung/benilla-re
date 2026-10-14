@@ -78,6 +78,28 @@ fn register_light_window_difftest() {
         run_case(&mut e, coord, coord, coord, coord, &format!("rlw rne[{k}]"));
     }
 
+    // NaN, the infinities and coordinates whose chunk index passes `i32`: the `fistp` stores
+    // `0x80000000`.
+    let wide = [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        1.0e11,
+        -1.0e11,
+    ];
+    for &w in &wide {
+        run_case(&mut e, w, 100.0, 200.0, 300.0, &format!("rlw max_x {w}"));
+        run_case(&mut e, 100.0, w, 200.0, 300.0, &format!("rlw min_x {w}"));
+        run_case(&mut e, 100.0, 100.0, w, 300.0, &format!("rlw max_y {w}"));
+        run_case(&mut e, 100.0, 100.0, 200.0, w, &format!("rlw min_y {w}"));
+    }
+    assert_eq!(
+        register_light_window(f32::NAN, 1.0e30, f32::INFINITY, -1.0e30),
+        [i32::MIN; 4]
+    );
+
     let mut s = 0x6c0f_5050u32;
     for i in 0..3000u32 {
         // coordinates over the map, min at most max

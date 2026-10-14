@@ -625,6 +625,19 @@ fn footprint_alpha_difftest() {
         "alpha frac just-above-0.5",
     );
     run_case(&mut e, 0.002, "alpha frac tiny"); // 0.51 − 0.5 rounds to 0
+                                                // NaN, the infinities and fractions past `i32`: the `fistp` stores `0x80000000`, which the
+                                                // clamp keeps.
+    for (frac, ctx) in [
+        (f32::NAN, "alpha frac NaN"),
+        (f32::INFINITY, "alpha frac +inf"),
+        (f32::NEG_INFINITY, "alpha frac -inf"),
+        (1.0e30, "alpha frac 1e30"),
+        (-1.0e30, "alpha frac -1e30"),
+        (1.0e8, "alpha frac 1e8"),
+    ] {
+        run_case(&mut e, frac, ctx);
+    }
+    assert_eq!(footprint_alpha(f64::NAN), i32::MIN);
     let mut s = 0x69a4_7474u32;
     for i in 0..4000u32 {
         let frac = frand(&mut s, 0.0, 1.0);

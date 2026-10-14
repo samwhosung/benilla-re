@@ -139,7 +139,7 @@ fn classify(a: (f32, f32), b: (f32, f32)) -> (i32, i32, i32, i32, f32, f32) {
     let q = |w: f32| -> (f32, i32) {
         let r = (-(f64::from(w) - RECENTER)) as f32;
         let sc = (CELL_SCALE * f64::from(r)) as f32;
-        let cell = (f64::from(sc) - 0.5).round_ties_even() as i32;
+        let cell = benilla_re_cmath::x87::fistp(f64::from(sc) - 0.5);
         (r, cell)
     };
     let (ya_r, ya_c) = q(a.1);
@@ -604,4 +604,124 @@ fn dda_step_xmajor() {
     }
     eprintln!("dda_step_xmajor: {y_end} walks bit-exact vs 0x69c600 (corners={y_corner})");
     assert!(y_end > 0 && y_corner > 0, "y-major branch/corner gap");
+}
+
+/// Segments whose two ends quantize to the same cell, so the walk lists one cell: NaN, the
+/// infinities and coordinates past `i32` cells all give the integer indefinite `0x80000000` from
+/// the `fistp` at each end. A segment with one such end and one finite end would walk billions of
+/// cells and overrun the exe's list, so none is probed.
+const SAME_CELL: [((f32, f32), (f32, f32)); 5] = [
+    ((f32::NAN, f32::NAN), (f32::NAN, f32::NAN)),
+    (
+        (f32::INFINITY, f32::INFINITY),
+        (f32::NEG_INFINITY, f32::INFINITY),
+    ),
+    ((1.0e30, -1.0e30), (1.0e30, 1.0e30)),
+    ((f32::NAN, 5.0e11), (f32::INFINITY, 5.0e11)),
+    ((1.0e12, f32::NAN), (-1.0e12, f32::NAN)),
+];
+
+#[test]
+fn ray_dda_non_finite_ends() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut emu = Emu::new(&wow);
+    emu.set_reg(RegisterX86::FPCW, 0x027F);
+    emu.stub(0x69c920, 0, 3);
+    emu.stub(0x6aa600, 0, 2);
+    let pa = emu.alloc(0x10);
+    let pb = emu.alloc(0x10);
+    let arg = emu.alloc(0x10);
+    let seg = emu.alloc(0x20);
+    let t_io = emu.alloc(8);
+    let buf = emu.alloc(0x40000);
+    emu.write_u32(CELL_PTR, buf as u32);
+    for (n, &(a, b)) in SAME_CELL.iter().enumerate() {
+        // 0x69c320
+        emu.write_u32(pa, a.0.to_bits());
+        emu.write_u32(pa + 4, a.1.to_bits());
+        emu.write_u32(pb, b.0.to_bits());
+        emu.write_u32(pb + 4, b.1.to_bits());
+        emu.write_u32(CELL_CNT, 0xdead_beef);
+        emu.call(0x69c320, pa as u32, pb as u32, &[arg as u32; 3]);
+        let bin = read_cell_list(&emu);
+        let mut ours = CellList::default();
+        let mut t = 1.0e30f32;
+        ray_dda_map(
+            &[a.0, a.1, 0.0],
+            &[b.0, b.1, 0.0],
+            &mut t,
+            &mut ours,
+            &mut MissIntersector,
+        );
+        assert_cells(&bin, &ours, &format!("ray_dda_map non-finite {n}"));
+        assert_eq!(ours.pairs().len(), 1, "one cell listed, case {n}");
+
+        // 0x6aa3e0
+        let seg6 = [a.0, a.1, 0.0, b.0, b.1, 0.0];
+        for (i, &f) in seg6.iter().enumerate() {
+            emu.write_u32(seg + i as u64 * 4, f.to_bits());
+        }
+        emu.write_u32(t_io, 1.5f32.to_bits());
+        emu.write_u32(CELL_CNT, 0xdead_beef);
+        emu.call(0x6aa3e0, seg as u32, t_io as u32, &[arg as u32; 2]);
+        let bin = read_cell_list(&emu);
+        let mut ours = CellList::default();
+        let mut t = 1.5f32;
+        ray_dda_chunk(&seg6, &mut t, &mut ours, &mut MissIntersector);
+        assert_cells(&bin, &ours, &format!("ray_dda_chunk non-finite {n}"));
+    }
+}
+
+/// The two line walks over a short cell run with slopes that are NaN, infinite or far past `i32`
+/// cells, so the `fistp` inside each loop stores `0x80000000`: `(p1, p2)` as `(c0, c1)` pairs.
+#[test]
+fn dda_step_non_finite_slope() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut env = major_axis_env(&wow);
+    let cases: [((f32, f32), (f32, f32)); 6] = [
+        ((1.0, 1.0), (2.0, 1.0e30)),
+        ((1.0, 1.0), (2.0, f32::NAN)),
+        ((1.0, 1.0), (1.0, 5.0)),
+        ((1.0, 1.0), (f32::NAN, 2.0)),
+        ((1.0, 1.0), (f32::INFINITY, 2.0)),
+        ((1.0e30, 1.0), (-1.0e30, 5.0)),
+    ];
+    for (n, &(p1, p2)) in cases.iter().enumerate() {
+        let c = MajorCase {
+            pf1: StepFloats { c0: p1.0, c1: p1.1 },
+            pf2: StepFloats { c0: p2.0, c1: p2.1 },
+            seg: CellSeg {
+                xa: 3,
+                ya: 10,
+                xb: 5,
+                yb: 12,
+            },
+            ya_c: 10,
+            xa_c: 3,
+            yb_c: 12,
+            xb_c: 5,
+            abs_dy: 0.0,
+            abs_dx: 0.0,
+        };
+        write_major(&mut env, &c);
+        reset_cell_list(&mut env.emu);
+        env.emu
+            .call(0x69c780, env.p1 as u32, env.p2 as u32, &[env.pseg as u32]);
+        let bin = read_cell_list(&env.emu);
+        let mut ours = CellList::default();
+        benilla_re_terrain::dda::dda_step_ymajor(&c.pf1, &c.pf2, &c.seg, &mut ours);
+        assert_cells(&bin, &ours, &format!("ymajor non-finite {n}"));
+
+        reset_cell_list(&mut env.emu);
+        env.emu
+            .call(0x69c600, env.p1 as u32, env.p2 as u32, &[env.pseg as u32]);
+        let bin = read_cell_list(&env.emu);
+        let mut ours = CellList::default();
+        benilla_re_terrain::dda::dda_step_xmajor(&c.pf1, &c.pf2, &c.seg, &mut ours);
+        assert_cells(&bin, &ours, &format!("xmajor non-finite {n}"));
+    }
 }

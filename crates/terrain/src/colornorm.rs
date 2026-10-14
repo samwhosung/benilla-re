@@ -84,13 +84,8 @@ pub fn footprint_gate_scales(ah: u8) -> bool {
 /// and `fstp` before the subtraction.
 pub fn footprint_alpha(frac: f64) -> i32 {
     let s = (frac * f64::from(COLOR_SCALE)) as f32;
-    let a = round_nearest_even(f64::from(s) - f64::from(HALF_86A704));
+    let a = crate::x87::fistp(f64::from(s) - f64::from(HALF_86A704));
     a.min(0x7f)
-}
-
-/// `fistp` under the client's control word: round to nearest, ties to even.
-fn round_nearest_even(x: f64) -> i32 {
-    x.round_ties_even() as i32
 }
 
 /// `0x69a53f`: `f32([ecx+0x24]·0.00048828870)`.

@@ -431,6 +431,14 @@ fn color_step_magnitude_difftest() {
     case(&mut e, 0.016_f32, "dt 0.016");
     case(&mut e, 0.1_f32, "dt 0.1");
     case(&mut e, -0.05_f32, "negative dt");
+    // NaN, the infinities, and products past `i32` and past `i64`: `__ftol` returns the low dword
+    // of its qword, 0 for the indefinite.
+    case(&mut e, f32::NAN, "dt NaN");
+    case(&mut e, f32::INFINITY, "dt +inf");
+    case(&mut e, f32::NEG_INFINITY, "dt -inf");
+    case(&mut e, 1.0e10, "product past i32");
+    case(&mut e, 1.0e17, "product past i64");
+    assert_eq!(color_step_magnitude(f32::NAN), 1);
     for i in 0..3000u32 {
         let dt = if i % 5 == 0 {
             frand_bits(&mut s)

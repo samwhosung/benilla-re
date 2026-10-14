@@ -22,6 +22,16 @@ const F32_003: f32 = f32::from_bits(0x3cf5_c28f);
 
 const F32_001: f32 = f32::from_bits(0x3c23_d70a);
 
+/// Plane offsets that NaN, overflow or exceed `i32` once scaled by 0.03.
+const NON_FINITE_OFFSETS: [f32; 6] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e11,
+];
+
 /// Writes the four coefficients, points EDX at `vec_ptr`, makes a frame at `frame_top`, runs the
 /// stretch and returns the `fistp` result at `[ebp-8]`.
 fn run_bucket(emu: &mut Emu, vec_ptr: u64, frame_top: u64, coef: [f32; 4]) -> i32 {
@@ -104,6 +114,28 @@ fn depth_bucket_key_difftest() {
         );
         checked += 1;
     }
+
+    // NaN, the infinities and offsets far past `i32` reach the `fistp`, which stores the integer
+    // indefinite `0x80000000` where Rust's `as` would saturate or give 0.
+    for &c3 in &NON_FINITE_OFFSETS {
+        let coef = [0.0f32, 0.0, 0.0, c3];
+        let point = [1.5f32, -2.0, 3.0];
+        for (i, &f) in point.iter().enumerate() {
+            emu.write_u32(vec_ptr + i as u64 * 4, f.to_bits());
+        }
+        let bkey = run_bucket(&mut emu, vec_ptr, frame_top, coef);
+        let okey = depth_bucket_key(point, coef);
+        assert_eq!(bkey, okey, "bucket-key c3={c3}: binary={bkey} ours={okey}");
+        checked += 1;
+    }
+    assert_eq!(
+        depth_bucket_key([0.0; 3], [0.0, 0.0, 0.0, f32::NAN]),
+        i32::MIN
+    );
+    assert_eq!(
+        depth_bucket_key([0.0; 3], [0.0, 0.0, 0.0, 1.0e30]),
+        i32::MIN
+    );
 
     for _ in 0..3000u32 {
         // coefficients near 1, points over the map, so the depth sweeps the buckets

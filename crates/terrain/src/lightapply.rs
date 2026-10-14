@@ -85,7 +85,7 @@ pub fn area_ambient_color(bytes: [u8; 3]) -> [f32; 3] {
 /// `[0xc62510]`.
 pub fn color_step_magnitude(dt: f32) -> i32 {
     let prod = 2.0_f64 * f64::from(dt) * 255.0_f64;
-    let step = prod as i64 as i32;
+    let step = crate::x87::ftol(prod);
     step.max(1)
 }
 

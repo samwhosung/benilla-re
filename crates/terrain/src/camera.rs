@@ -5,37 +5,6 @@
 //! `0x6717d0` keeps a length in the register after an `fst dword` (no pop): the test after it uses
 //! the 53-bit value, and the reciprocal reloads the stored `f32`.
 
-/// `fistp dword` under the client's control word: round to nearest, ties to even; an infinity, a
-/// NaN or a value outside `i32` stores the integer indefinite `0x80000000`.
-fn fistp_rne(x: f64) -> i32 {
-    if !x.is_finite() {
-        return i32::MIN;
-    }
-    let r = round_half_even(x);
-    if (-2_147_483_648.0_f64..=2_147_483_647.0_f64).contains(&r) {
-        r as i32
-    } else {
-        i32::MIN
-    }
-}
-
-/// Rounds to the nearest integer, ties to even.
-fn round_half_even(x: f64) -> f64 {
-    let floor = x.floor();
-    let diff = x - floor;
-    match diff.partial_cmp(&0.5) {
-        Some(std::cmp::Ordering::Less) => floor,
-        Some(std::cmp::Ordering::Greater) => floor + 1.0,
-        _ => {
-            if (floor as i64) % 2 == 0 {
-                floor
-            } else {
-                floor + 1.0
-            }
-        }
-    }
-}
-
 /// `[0x801360]`: 0.001 (`0x3a83126f`), the least squared move.
 pub const MOVE_EPS2: f32 = f32::from_bits(0x3a83_126f);
 
@@ -171,9 +140,9 @@ pub fn window_farclip_box_live(center: [f32; 3], farclip: f32) -> ([f32; 3], [f3
 pub fn window_chunk_indices(center: [f32; 3]) -> (i32, i32) {
     let neg_x = -(f64::from(center[0]) - f64::from(MAP_CENTER));
     let prod_x = (neg_x * f64::from(CHUNK_SCALE)) as f32;
-    let idx_x = fistp_rne(f64::from(prod_x) - f64::from(CHUNK_BIAS));
+    let idx_x = crate::x87::fistp(f64::from(prod_x) - f64::from(CHUNK_BIAS));
     let neg_y = (-(f64::from(center[1]) - f64::from(MAP_CENTER))) as f32;
     let prod_y = (f64::from(CHUNK_SCALE) * f64::from(neg_y)) as f32;
-    let idx_y = fistp_rne(f64::from(prod_y) - f64::from(CHUNK_BIAS));
+    let idx_y = crate::x87::fistp(f64::from(prod_y) - f64::from(CHUNK_BIAS));
     (idx_x, idx_y)
 }

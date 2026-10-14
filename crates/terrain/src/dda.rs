@@ -160,7 +160,7 @@ pub fn dda_step_xmajor(p1: &StepFloats, p2: &StepFloats, seg: &CellSeg, list: &m
         loop {
             let scaled =
                 ((f64::from(r) * f64::from(m) + f64::from(b)) * f64::from(CELL_X024)) as f32;
-            let new_col = (f64::from(scaled) - f64::from(HALF)).round_ties_even() as i32;
+            let new_col = crate::x87::fistp(f64::from(scaled) - f64::from(HALF));
 
             if new_col != col {
                 list.push(y);
@@ -210,7 +210,7 @@ pub fn dda_step_ymajor(p1: &StepFloats, p2: &StepFloats, seg: &CellSeg, list: &m
         loop {
             let scaled =
                 (((f64::from(r) - f64::from(b)) * f64::from(inv)) * f64::from(CELL_X024)) as f32;
-            let new_row = (f64::from(scaled) - f64::from(HALF)).round_ties_even() as i32;
+            let new_row = crate::x87::fistp(f64::from(scaled) - f64::from(HALF));
 
             if new_row != row {
                 list.push(new_row);
@@ -238,9 +238,9 @@ fn recenter_quantize(wx: f32, wy: f32) -> (f32, f32, i32, i32) {
     let yr = (-(f64::from(wy) - f64::from(RECENTER))) as f32;
     let xr = (-(f64::from(wx) - f64::from(RECENTER))) as f32;
     let y_scaled = (f64::from(CELL_X024) * f64::from(yr)) as f32;
-    let y_cell = (f64::from(y_scaled) - f64::from(HALF)).round_ties_even() as i32;
+    let y_cell = crate::x87::fistp(f64::from(y_scaled) - f64::from(HALF));
     let x_scaled = (f64::from(CELL_X024) * f64::from(xr)) as f32;
-    let x_cell = (f64::from(x_scaled) - f64::from(HALF)).round_ties_even() as i32;
+    let x_cell = crate::x87::fistp(f64::from(x_scaled) - f64::from(HALF));
     (yr, xr, y_cell, x_cell)
 }
 

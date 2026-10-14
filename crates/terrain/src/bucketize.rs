@@ -25,7 +25,7 @@ pub fn depth_bucket_key(point: [f32; 3], coef: [f32; 4]) -> i32 {
     let m = (BUCKET_FACTOR as f64) * dist;
     let mf = m as f32;
     let v = (mf as f64) - (BUCKET_BIAS as f64);
-    v.round_ties_even() as i32
+    crate::x87::fistp(v)
 }
 
 /// The condition codes `fcomp` sets, as `fnstsw` puts them in AH.

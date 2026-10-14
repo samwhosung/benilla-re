@@ -55,6 +55,17 @@ fn write_this_vec(emu: &mut Emu, this: u64, point: [f32; 3], radius: f32) {
     emu.write_u32(this + 0x68, radius.to_bits());
 }
 
+/// Plane offsets that NaN, overflow or exceed `i32` once scaled by 0.03: the `fistp` stores the
+/// integer indefinite `0x80000000`.
+const NON_FINITE_OFFSETS: [f32; 6] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e11,
+];
+
 /// A plane offset for which `f32(0.03·dist)` is the integer `k`, so `k − 0.5` is a tie: the other
 /// coefficients and the point are 0.
 fn boundary_c3(k: f64) -> f32 {
@@ -109,6 +120,18 @@ fn depth_bucket_v1_difftest() {
         );
         checked += 1;
     }
+
+    for &c3 in &NON_FINITE_OFFSETS {
+        let coef = [0.0f32, 0.0, 0.0, c3];
+        let point = [1.5f32, -2.0, 3.0];
+        let bkey = run_v1(&mut emu, point, 0.0, coef);
+        let okey = depth_bucket_v1(point, 0.0, coef);
+        assert_eq!(bkey, okey, "v1 c3={c3}: binary={bkey} ours={okey}");
+    }
+    assert_eq!(
+        depth_bucket_v1([0.0; 3], 0.0, [0.0, 0.0, 0.0, f32::NAN]),
+        i32::MIN
+    );
 
     let mut s: u32 = 0x1357_9bdf;
     for _ in 0..3000u32 {
@@ -188,6 +211,14 @@ fn depth_bucket_v3_difftest() {
         let okey = depth_bucket_v3(point, coef);
         assert_eq!(bkey, okey, "v3 BOUNDARY K={k}: binary={bkey} ours={okey}");
         checked += 1;
+    }
+
+    for &c3 in &NON_FINITE_OFFSETS {
+        let coef = [0.0f32, 0.0, 0.0, c3];
+        let point = [2.5f32, 4.0, -1.0];
+        let bkey = run_v3(&mut emu, point, coef);
+        let okey = depth_bucket_v3(point, coef);
+        assert_eq!(bkey, okey, "v3 c3={c3}: binary={bkey} ours={okey}");
     }
 
     let mut s: u32 = 0x2468_ace0;
@@ -286,6 +317,15 @@ fn depth_bucket_v4_difftest() {
             osd.to_bits()
         );
         checked += 1;
+    }
+
+    for &c3 in &NON_FINITE_OFFSETS {
+        let coef = [0.0f32, 0.0, 0.0, c3];
+        let cam = [0.5f32, -0.25, 0.125, 3.0];
+        let point = [1.5f32, -2.0, 3.0];
+        let (_, bkey) = run_v4(&mut emu, point, 0.0, cam, coef);
+        let (_, okey) = depth_bucket_v4(point, 0.0, cam, coef);
+        assert_eq!(bkey, okey, "v4 c3={c3}: key binary={bkey} ours={okey}");
     }
 
     let mut s: u32 = 0x0f1e_2d3c;
@@ -408,6 +448,15 @@ fn view_plane_bucket_difftest() {
             osd.to_bits()
         );
         checked += 1;
+    }
+
+    for &c3 in &NON_FINITE_OFFSETS {
+        let coef = [0.0f32, 0.0, 0.0, c3];
+        let cam = [0.5f32, -0.25, 0.125, 3.0];
+        let point = [1.5f32, -2.0, 3.0];
+        let (_, bkey) = run_vp(&mut emu, point, 0.0, cam, coef);
+        let (_, okey) = view_plane_bucket(point, 0.0, cam, coef);
+        assert_eq!(bkey, okey, "vp c3={c3}: key binary={bkey} ours={okey}");
     }
 
     let mut s: u32 = 0x7c0d_e5a1;
