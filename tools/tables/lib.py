@@ -1,4 +1,5 @@
-"""Shared helpers for the table generators: the exe check, a PE reader, the disassembly reader.
+"""Shared helpers for the table generators and the tools beside them: the exe check, a PE reader,
+the disassembly reader and the function rows.
 
 Standard library only. Every generator takes the same options:
 
@@ -11,6 +12,8 @@ The exe must be build 5875, by the size and SHA-256 in tools/exe.env. Another bu
 """
 
 import argparse
+import bisect
+import csv
 import hashlib
 import struct
 import sys
@@ -87,6 +90,35 @@ class Image:
         if not all(32 <= c < 127 or c == 9 for c in s):
             return None
         return s.decode('ascii')
+
+    def section_of(self, va):
+        """The name of the section that holds va, or None."""
+        for name, (lo, hi, _) in self.sections.items():
+            if lo <= va < hi:
+                return name
+        return None
+
+    def import_ranges(self):
+        """The import directory's own tables as [lo, hi) address ranges: the descriptors and each
+        library's name table and address table. Their dwords are relative addresses of import
+        names, which can read as code addresses but never point at code."""
+        pe = struct.unpack_from('<I', self.data, 0x3C)[0]
+        rva = struct.unpack_from('<I', self.data, pe + 24 + 96 + 8)[0]
+        out = []
+        d = self.base + rva
+        while True:
+            names, _, _, _, thunks = struct.unpack_from('<IIIII', self.mem, d - self.base)
+            if not names and not thunks:
+                out.append((self.base + rva, d + 20))
+                break
+            for t in (names, thunks):
+                if t:
+                    e = self.base + t
+                    while self.u32(e):
+                        e += 4
+                    out.append((self.base + t, e + 4))
+            d += 20
+        return sorted(out)
 
     def call_sites(self, target, kinds=(0xE8, 0xE9)):
         """Every direct call (e8) or jmp (e9) rel32 in .text whose target is `target`."""
@@ -193,6 +225,39 @@ class Disasm:
             a, mn, ops = raw[k]
             self.extra[a] = (a, raw[k + 1][0] - a, mn, ops)
         return bool(raw)
+
+
+class Functions:
+    """The rows of symbols/functions.tsv in address order, each a dict of its columns with
+    `address` and `size` as integers. A row's extent is [address, address + size)."""
+
+    def __init__(self, path=None):
+        path = path or ROOT / 'symbols' / 'functions.tsv'
+        with open(path, newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE)
+            self.rows = []
+            for r in reader:
+                r['address'] = int(r['address'], 16)
+                r['size'] = int(r['size'] or 0)
+                self.rows.append(r)
+        self.rows.sort(key=lambda r: r['address'])
+        self.starts = [r['address'] for r in self.rows]
+        self.at = {r['address']: r for r in self.rows}
+
+    def holding(self, va):
+        """The row whose extent holds va, or None."""
+        i = bisect.bisect_right(self.starts, va) - 1
+        if i >= 0 and va < self.rows[i]['address'] + self.rows[i]['size']:
+            return self.rows[i]
+        return None
+
+    @staticmethod
+    def label(row):
+        """A row as a reader names it: its address, its name where it has one, and its system."""
+        if row is None:
+            return 'no function row'
+        name = (' ' + row['name']) if row['name'] else ''
+        return '%s%s (%s)' % (addr(row['address']), name, row['system'])
 
 
 def parse_args(doc, disasm=False, extra=None):
