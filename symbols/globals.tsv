@@ -2520,6 +2520,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b444	void *	s_multisampleListData		ui	Points to the multisample format list, 12-byte colour bits, depth bits and samples triples	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b448	uint32_t	s_multisampleListQuantum		ui	Holds the growth quantum of the multisample format list; 0 until it first grows	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
+0xb4b45c	uint8_t[10]	s_surveyAnswerRank		ui	Holds the rank kept for each of the ten survey questions	verified	one	ui/serviceverbs#gm-surveys
 0xb4b498	uint32_t			ui	Holds a dword that CGGameUI::DisplayError reads and writes; not read here	inferred	none	
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4c0f0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -2594,12 +2595,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e374	uint32_t	s_lastInstanceMapId		ui	Holds the id of the last type-1 map the player left	verified	one	ui/groupverbs#instances
 0xb4e378	uint32_t	s_currentMapId		ui	Holds the id of the map the player is on, set on each map change	verified	one	ui/groupverbs#instances
 0xb4e37c	uint32_t	s_instanceOwnershipFlag		ui	Holds the instance ownership word the server last sent	verified	one	ui/groupverbs#instances
+0xb4e380	char *[10]	s_surveyAnswerText		ui	Holds the comment text kept for each of the ten survey questions	verified	one	ui/serviceverbs#gm-surveys
+0xb4e3a8	char *	s_surveyComment		ui	Holds the final survey comment text	verified	one	ui/serviceverbs#gm-surveys
 0xb4e3ac	uint32_t	s_nearestCursor		ui	Holds the index of the nearby list entry last selected	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3b0	uint32_t	s_nearestBuiltAt		ui	Holds the millisecond time the nearby list was built; 0 forces a rebuild	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3b4	uint32_t	s_nearestUsedAt		ui	Holds the millisecond time of the last nearby selection	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3b8	uint32_t	s_nearestKind		ui	Holds the kind, 1 to 4, the nearby list was built for	verified	one	ui/targeting#cycling-through-nearby-units
-0xb4e3c0	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
-0xb4e3c4	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
+0xb4e3c0	uint64_t	s_pendingEnchantItemGuid		ui	Holds the GUID of the item an enchant waits to bind	verified	one	ui/serviceverbs#helm-cloak-and-enchants
 0xb4e3c8	uint32_t	s_scriptCvarCount		ui	Holds the number of CVars RegisterCVar has registered; the 31st is refused	verified	one	ui/cvarverbs#writing-cvars-from-lua
 0xb4e3cc	float[4]	s_interactRangesSquared		ui	Holds the squared ranges of CheckInteractDistance indices 1 to 4, copied at the first call	verified	one	ui/distancegates#thresholds
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	

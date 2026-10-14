@@ -6786,21 +6786,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48c960	18	Script::IsWindowsClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number 1	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c980	11	Script::IsMacClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c990	11	Script::IsLinuxClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
-0x48c9a0	41	Script::GetGMTicket	idb	ui	orchestration		Implements the Lua function GetGMTicket	inferred	none		
-0x48c9d0	130	Script::NewGMTicket	idb	ui	orchestration		Implements the Lua function NewGMTicket	inferred	none		
-0x48ca60	130	Script::UpdateGMTicket	idb	ui	orchestration		Implements the Lua function UpdateGMTicket	inferred	none		
+0x48c9a0	41	Script::GetGMTicket	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server for the player's GM ticket	verified	one	ui/serviceverbs#gm-tickets	
+0x48c9d0	130	Script::NewGMTicket	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Creates a GM ticket of a type with a text	verified	one	ui/serviceverbs#gm-tickets	
+0x48ca60	130	Script::UpdateGMTicket	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Updates the GM ticket text	verified	one	ui/serviceverbs#gm-tickets	
 0x48caf0	10			ui	orchestration		Runs GameUI.cpp code that calls 0x48cb00; not read here	inferred	none		
 0x48cb00	22			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cb20	12			ui	orchestration		Runs GameUI.cpp code that calls _atexit; not read here	inferred	none		
 0x48cb30	14			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cb40	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cb50	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48cb70	41	Script::DeleteGMTicket	idb	ui	orchestration		Implements the Lua function DeleteGMTicket	inferred	none		
+0x48cb70	41	Script::DeleteGMTicket	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Deletes the player's GM ticket	verified	one	ui/serviceverbs#gm-tickets	
 0x48cba0	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cbb0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cbd0	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cbe0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48cc00	103	Script::GMSurveyQuestion	idb	ui	orchestration		Implements the Lua function GMSurveyQuestion	inferred	none		
+0x48cc00	103	Script::GMSurveyQuestion	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the survey question text for an index 1 to 10, or nil	verified	one	ui/serviceverbs#gm-surveys	
 0x48cc70	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cc80	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		ui::dist2_4944a0
 0x48cca0	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -6809,7 +6809,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48cce0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cd00	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cd10	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48cd30	201	Script::GMSurveyAnswerSubmit	idb	ui	orchestration		Implements the Lua function GMSurveyAnswerSubmit	inferred	none		
+0x48cd30	201	Script::GMSurveyAnswerSubmit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Keeps the rank and comment for a survey question 1 to 10	verified	one	ui/serviceverbs#gm-surveys	
 0x48ce00	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48ce10	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48ce30	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -6820,62 +6820,62 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48cea0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cec0	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48ced0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48cef0	58	Script::GMSurveyCommentSubmit	idb	ui	orchestration		Implements the Lua function GMSurveyCommentSubmit	inferred	none		
+0x48cef0	58	Script::GMSurveyCommentSubmit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Keeps the final survey comment	verified	one	ui/serviceverbs#gm-surveys	
 0x48cf30	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cf40	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48cf60	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cf70	11			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48cf80	8	Script::GMSurveySubmit	idb	ui	orchestration		Implements the Lua function GMSurveySubmit	inferred	none		
+0x48cf80	8	Script::GMSurveySubmit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the survey answers	verified	one	ui/serviceverbs#gm-surveys	
 0x48cf90	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48cfa0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48cfc0	100	Script::GetGMStatus	idb	ui	orchestration		Implements the Lua function GetGMStatus	inferred	none		
+0x48cfc0	100	Script::GetGMStatus	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the GM system status request	verified	one	ui/serviceverbs#gm-tickets	
 0x48d030	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48d040	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48d060	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48d070	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x48d090	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x48d0a0	19			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x48d0c0	84	Script::AcceptXPLoss	idb	ui	orchestration		Implements the Lua function AcceptXPLoss	inferred	none		
-0x48d120	80	Script::CheckSpiritHealerDist	idb	ui	orchestration		Implements the Lua function CheckSpiritHealerDist	inferred	none		
-0x48d170	80	Script::CheckTalentMasterDist	idb	ui	orchestration		Implements the Lua function CheckTalentMasterDist	inferred	none		
+0x48d0c0	84	Script::AcceptXPLoss	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the spirit healer's experience loss	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
+0x48d120	80	Script::CheckSpiritHealerDist	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the spirit healer is in range, else nil	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
+0x48d170	80	Script::CheckTalentMasterDist	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the talent master is in range, else nil	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
 0x48d1c0	80	Script::CheckPetUntrainerDist	idb	ui	orchestration		Pushes 1 when the remembered pet trainer is in interaction range, else nil	verified	one	ui/popups#pet-unlearn	
-0x48d210	80	Script::CheckBinderDist	idb	ui	orchestration		Implements the Lua function CheckBinderDist	inferred	none		
+0x48d210	80	Script::CheckBinderDist	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the innkeeper is in range, else nil	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
 0x48d260	121	Script::RetrieveCorpse	idb	ui	orchestration		Sends the reclaim packet with the cached corpse GUID	verified	one	ui/deathui#retrievecorpse	
-0x48d2e0	26	Script::BindEnchant	idb	ui	orchestration		Implements the Lua function BindEnchant	inferred	none		
-0x48d300	47	Script::ReplaceEnchant	idb	ui	orchestration		Implements the Lua function ReplaceEnchant	inferred	none		
+0x48d2e0	26	Script::BindEnchant	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Validates the pending item enchant target with the bind confirmation off	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
+0x48d300	47	Script::ReplaceEnchant	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Binds the held item to the pending spell target	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
 0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Calls 0x6e6900 and returns no Lua results	verified	one	spell/targeting#binding-the-trade-slot	
 0x48d340	13	Script::NotWhileDeadError	idb	ui	orchestration		Shows ERR_PLAYER_DEAD and pushes nothing	verified	one	ui/deathui#notwhiledeaderror	
 0x48d350	155	Script::GetRestState	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the rest state's row id, localized name and factor, or three nils	verified	one	ui/rested#rest-state	
 0x48d3f0	189	Script::GetXPExhaustion	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the rested experience pool times the first row's factor, or nil	verified	one	ui/rested#experience-bonus	ui::luabind_48d3f0_xp_exhaustion
 0x48d4b0	11	Script::GetTimeToWellRested	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns nil	verified	one	ui/rested#time-to-well-rested	
-0x48d4c0	17	Script::GMRequestPlayerInfo	idb	ui	orchestration		Implements the Lua function GMRequestPlayerInfo	inferred	none		
+0x48d4c0	17	Script::GMRequestPlayerInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Raises Access Denied	verified	one	ui/serviceverbs#gm-tickets	
 0x48d4e0	88	Script::GetCoinIcon	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon path a copper amount shows	verified	one	ui/cursormoney#coin-icons	
 0x48d540	437	Script::GetZonePVPInfo	idb	ui	primitive		Pushes the zone PvP type, its faction name and whether the leaf is an arena	verified	one	ui/zonetext#getzonepvpinfo	
 0x48d700	100	Script::TogglePVP	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the PvP toggle	verified	one	ui/groupverbs#small-sends	
-0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration		Implements the Lua function ConfirmBindOnUse	inferred	none		
+0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Confirms the use of the held bind-on-use item	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
 0x48d780	290	Script::SetPortraitToTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a texture, named by a global or given as a table, to the circular portrait of a path	verified	one	ui/portraittextures#portrait-by-name	
 0x48d8b0	23	GameScriptGetLocale		ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the current locale's name	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
-0x48d8d0	130	Script::GetGMTicketCategories	idb	ui	primitive		Implements the Lua function GetGMTicketCategories	inferred	none		
+0x48d8d0	130	Script::GetGMTicketCategories	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the id and locale name of every GM ticket category	verified	one	ui/serviceverbs#gm-tickets	
 0x48d960	322	Script::DropItemOnUnit	idb	ui	primitive		Implements the Lua function DropItemOnUnit	verified	one	ui/cursor#dropping-an-item-on-a-unit	
 0x48dab0	18	Script::RestartGx	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs the console command gxRestart with history on	verified	one	ui/videoverbs#restarting-the-display	
 0x48dad0	8	Script::RestoreVideoDefaults	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs the hardware default installer 0x639a20	verified	one	ui/videoverbs#restoring-the-video-defaults	
-0x48dae0	88	Script::GetBindLocation	idb	ui	orchestration		Implements the Lua function GetBindLocation	inferred	none		
+0x48dae0	88	Script::GetBindLocation	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the bind point's area, or the HOME_INN text	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
 0x48db40	249	Script::GetVideoCaps	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the seven display capability values: nil or 1, a number, or the raw field	verified	one	ui/videoverbs#the-capability-verbs	
 0x48dc40	85	Script::ConfirmTalentWipe	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the talent wipe for the remembered trainer and returns nothing	verified	one	ui/talents#character-points	
 0x48dca0	85	Script::ConfirmPetUnlearn	idb	ui	orchestration		Confirms the pet unlearn at the remembered trainer	verified	one	ui/popups#pet-unlearn	
-0x48dd00	84	Script::ConfirmBinder	idb	ui	orchestration		Implements the Lua function ConfirmBinder	inferred	none		
-0x48dd60	88	Script::ShowingHelm	idb	ui	primitive		Implements the Lua function ShowingHelm	inferred	none		
-0x48ddc0	88	Script::ShowingCloak	idb	ui	primitive		Implements the Lua function ShowingCloak	inferred	none		
-0x48de20	77	Script::ShowHelm	idb	ui	orchestration		Implements the Lua function ShowHelm	inferred	none		
-0x48de70	77	Script::ShowCloak	idb	ui	orchestration		Implements the Lua function ShowCloak	inferred	none		
+0x48dd00	84	Script::ConfirmBinder	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Confirms binding at the innkeeper	verified	one	ui/serviceverbs#spirit-healer-talent-master-and-innkeeper	
+0x48dd60	88	Script::ShowingHelm	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the player's helm is shown, else nil	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
+0x48ddc0	88	Script::ShowingCloak	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the player's cloak is shown, else nil	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
+0x48de20	77	Script::ShowHelm	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows or hides the player's helm	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
+0x48de70	77	Script::ShowCloak	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows or hides the player's cloak	verified	one	ui/serviceverbs#helm-cloak-and-enchants	
 0x48dec0	22	Script::SetEuropeanNumbers	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stores its flag, true when absent, as the number formatting switch	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x48dee0	60	Script::GetAreaSpiritHealerTime	idb	ui	primitive		Pushes the whole seconds left until the spirit healer resurrects the player	verified	one	ui/popups#the-area-spirit-healer	
 0x48df20	8	Script::AcceptAreaSpiritHeal	idb	ui	orchestration		Sends the accept request for the spirit healer in range	verified	one	ui/popups#the-area-spirit-healer	
 0x48df30	8	Script::CancelAreaSpiritHeal	idb	ui	orchestration		Cancels the spirit healer resurrection aura	verified	one	ui/popups#the-area-spirit-healer	
 0x48df40	71	Script::GetMouseFocus	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the frame the top frame holds under the mouse, or nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x48df90	24	Script::GetRealmName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the realm CVar's text	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
-0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Implements the Lua function GetItemQualityColor	inferred	none		ui::luabind_48dfb0_quality_color
-0x48e070	726	Script::GetItemInfo	idb	ui	primitive		Implements the Lua function GetItemInfo	inferred	none		
+0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the red, green and blue and the colour escape of an item quality	verified	one	ui/serviceverbs#item-quality-colours	
+0x48e070	726	Script::GetItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, link text, quality, level, class, subclass, stack, slot and icon of an item	verified	one	ui/serviceverbs#item-information	
 0x48e350	50			ui	orchestration		Returns the count of the sorted add-on names	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48e390	412			ui	primitive		Returns an add-on's name, title, notes, enabled, loadable, reason and security	verified	one	ui/addons#the-in-game-add-on-functions	
 0x48e530	174	Script::GetAddOnMetadata	idb	ui	primitive		Returns an add-on's metadata value of a name, or nil	verified	one	ui/addons#add-on-metadata	
@@ -7062,13 +7062,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4963e0	32	GetSummonMsLeft		ui	primitive		Returns the milliseconds left to answer the summon, 0 when unset or past	verified	one	ui/summon#the-lua-functions	
 0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party or raid record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
 0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the party or raid pet record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
-0x496440	37			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x496440	37	GetCurrentSurveyId		ui	orchestration	int __cdecl (void)	Returns the survey id the current locale's survey row names	verified	one	ui/serviceverbs#gm-surveys	
 0x496470	49			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
-0x4964b0	84			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
+0x4964b0	84	GetSurveyQuestionText		ui	orchestration	const char * __fastcall (uint32_t index)	Returns the text of survey question 1 to 10 in the current locale, or null	verified	one	ui/serviceverbs#gm-surveys	
 0x496510	88			ui	primitive		Runs GameUI.cpp code that calls SMemFree; not read here	inferred	none		
-0x496570	101			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, SStrDupA; not read here	inferred	none		
-0x4965e0	72			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, SStrDupA; not read here	inferred	none		
-0x496630	227			ui	primitive		Runs its object file code that calls CDataStore::PutUInt32, 0x496440, 0x496470 and 4 more; not read here	inferred	none		
+0x496570	101	SetSurveyAnswer		ui	orchestration	void __fastcall (uint32_t question, uint8_t rank, const char *comment)	Stores the rank byte and a copy of the comment for a survey question	verified	one	ui/serviceverbs#gm-surveys	
+0x4965e0	72	SetSurveyComment		ui	orchestration	void __fastcall (const char *comment)	Stores a copy of the final survey comment	verified	one	ui/serviceverbs#gm-surveys	
+0x496630	227	SendSurvey		ui	primitive	void __cdecl (void)	Sends the survey id, the ten answers and the comment, then clears them	verified	one	ui/serviceverbs#gm-surveys	
 0x496720	357	CGGameUI::DisplayError	idb	ui	orchestration	void __cdecl (uint32_t id, ...)	Formats a catalogue message with its arguments, copies the text to 0xb4da40 and shows it by the message kind	verified	one	spell/failures#display-log-and-events	
 0x4968a0	6	GetLastDisplayedMessage		ui	orchestration	const char *__cdecl (void)	Returns 0xb4da40, the text DisplayError last formatted	verified	one	spell/failures#display-log-and-events	
 0x4968b0	106			ui	orchestration		Runs its object file code that calls SMemFree, 0x496e60, 0x497210; not read here	inferred	none		
