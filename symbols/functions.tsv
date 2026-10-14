@@ -116,7 +116,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x404080	3			client			Runs its object file code not read here	inferred	none		
 0x404090	1			client			Runs its object file code not read here	inferred	none		
 0x4040a0	84			client			Runs its object file code that calls 0x42b240, SStr::sub_64A450, SRegSaveString; not read here	inferred	none		
-0x404100	33	_WinMain@16	idb	client		int __stdcall (void *instance, void *previous, char *command_line, int show)	Sets the x87 control word to 0x027F through 0x409bf2 and 0x409c06, then runs the client	verified	one	METHOD#the-harness	
+0x404100	33	_WinMain@16	idb	client		int __stdcall (void *instance, void *previous, char *command_line, int show)	Sets the x87 control word to 0x023F through 0x409bf2 and 0x409c06, then runs the client	verified	one	METHOD#the-harness	
 0x404130	38			client			Runs its object file code not read here	inferred	none		
 0x404160	5			client			Runs its object file code not read here	inferred	none		
 0x404170	19			client			Runs its object file code not read here	inferred	none		
@@ -12123,7 +12123,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50a950	154			unassigned			Runs its object file code that calls 0x50a9f0; not read here	inferred	none		
 0x50a9f0	348			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x50ab50	27			unassigned			Runs its object file code that calls 0x7bf4b0; not read here	inferred	none		
-0x50ab70	406			unassigned			Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	
+0x50ab70	406			models	orchestration		Sets the device projection and a view that looks from the origin along the camera forward with its up	verified	one	models/scene#scene-origin	
 0x50ad10	23			unassigned			Runs its object file code that calls M2CreateScene; not read here	inferred	none		
 0x50ad30	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50ad40	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -25149,7 +25149,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6855a0	288	DrawMagmaPass		terrain	host	void __cdecl (void)	Draws the magma liquid slots with culling, lighting and blending off	verified	one	terrain/liquidpass#liquid-draw-passes	terrain::chunk_liquid_pass2_offset_difftest
 0x6856c0	965	CullExteriorMapObjects		terrain	primitive	void __fastcall (void *list)	Culls the map objects seen from outside and seeds their visible groups	inferred	none	terrain/scene#exterior-map-objects	terrain::wmo_corner_ray_negate_difftest, terrain::wmo_dir_len2_gate_difftest, terrain::wmo_dir_normalize_difftest, terrain::wmo_plane_offset_negate_difftest
 0x685a90	722	CullInteriorMapObject		terrain	primitive	void __cdecl (void)	Prepares the portal flood for the map object holding the camera and runs the interior seed	verified	one	terrain/portals#camera-inside-a-map-object	terrain::corner_ray_negate_difftest, terrain::dir_len2_gate_difftest, terrain::dir_normalize_difftest, terrain::plane_offset_negate_difftest
-0x685d70	617	AttachMapObjectFrustum		terrain	orchestration	void __fastcall (void *def, void *group)	Gives a visible map object a frustum slot and links it to the frame	inferred	none	terrain/scene#exterior-map-objects	
+0x685d70	617	AddGroupToFrame		terrain	orchestration	void __fastcall (uint32_t group_index, void *instance)	Submits a map object group of an instance for the frame, linking it once and recording each visit	verified	one	terrain/portals#group-submit	
 0x685fe0	20	ResetHorizon		terrain	orchestration	void __cdecl (void)	Fills the 320-column horizon with -1000000	verified	one	terrain/cull#horizon-buffer	
 0x686000	379	TestHorizonSphere		terrain	primitive	uint8_t __fastcall (const float *centre, float radius)	Returns 2 when a sphere is hidden behind the horizon, else 0	verified	one	terrain/scene#sphere-and-box-tests	terrain::horizon_span_test, terrain::horizon_non_finite_probes
 0x686180	447	TestHorizonBox		terrain	primitive	uint32_t __fastcall (const float *box, uint32_t flags)	Returns 2 when a box lies below the horizon in every column it spans, else 0	verified	one	terrain/cull#horizon-box-test	terrain::horizon_box_test, terrain::horizon_non_finite_probes
@@ -25760,7 +25760,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6953d0	1	MapLoadNoOpB		terrain	orchestration	void __cdecl (void)	Returns at once, a console callback	verified	one	terrain/world#world-thunks	
 0x6953e0	610	CreateEntityMapObjDef		terrain	orchestration	void * __fastcall (const char *path, const float *position, const float *rotation)	Creates a map object placement for a game object under the next negative unique id	inferred	none		
 0x695650	769	PlaceMapObjDef		terrain	primitive	CMapObjDef * __fastcall (const char *name, const void *entry, const float *origin)	Makes or finds the object def of an MODF entry and sets its matrices, box and sphere	verified	one	terrain/files#object-placements	terrain::placement_setup_difftest
-0x695960	317	CreateGroupDefs		terrain	host	void __fastcall (void *def, void *group)	Makes a def group for each group of a placed map object with its world sphere, box and light class	verified	one	terrain/doodads#group-def-creation	
+0x695960	317	CreateGroupDefs		terrain	host	void __fastcall (void *root, void *instance)	Makes a def group for each group of a placed map object with its world sphere, box and light class	verified	one	terrain/doodads#group-def-creation	
 0x695aa0	341	CreateGroupDoodads		terrain	orchestration	void __fastcall (void *def, void *group)	Makes the defs of a map object group's doodads in its set and sets their light flags	inferred	none	terrain/doodads#group-doodads	
 0x695c00	660	CreateGroupLights		terrain	host	void __fastcall (void *def, void *group)	Makes the map lights of a group's type 0 light entries and links them to the group	inferred	none	terrain/doodads#group-lights	terrain::detail_slope_recip_difftest, terrain::detail_color_scale_g1_difftest, terrain::detail_color_scale_g2_difftest
 0x695ea0	5	InitTerrainTwoPi6Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x695eb0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -26213,10 +26213,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69dba0	140	GetEntityGroupBoxes		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Copies an entity's map object group boxes	inferred	none		
 0x69dc30	311	GetEntityInteriorLight		terrain	primitive	void __fastcall (void *entity, void *out)	Rotates the interior light of an entity's group into the world	inferred	none		terrain::interior_light_rotate_difftest
 0x69dd70	165	ForEachChunkDef		terrain	orchestration	uint32_t __fastcall (void *chunk, void *a, void *b, void *c)	Runs the group liquid search over each of an indoor entity's map object groups	verified	one	terrain/world#nearest-liquid	
-0x69de20	917	GetCameraInteriorFog		terrain	primitive	uint32_t __fastcall (void *a, void *b)	Fills the fog record of the map object holding the camera from its MFOG records, nearest weighing most	verified	one	terrain/lights#camera-interior-fog	terrain::light_distance_difftest
+0x69de20	917	GetCameraInteriorFog		terrain	primitive	uint32_t __thiscall (void *record, void *instance, uint8_t byte, void *container)	Fills the fog record of the map object holding the camera from its MFOG records, nearest weighing most	verified	one	terrain/lights#camera-interior-fog	terrain::light_distance_difftest
 0x69e1c0	95	LightFalloff		terrain	primitive	float __fastcall (void *light, float distance)	Returns 1 below a range's start and falls linearly to 0 at its end	verified	one	terrain/lights#point-lights	terrain::wmo_molt_attenuation_difftest
 0x69e220	20	DestroyFogQueue		terrain	orchestration	void __cdecl (void)	Calls the fog queue's destructor at exit, as a tail call	inferred	none		
-0x69e240	55	CopyFogSubrecords		terrain	orchestration	void __fastcall (void *dst, const void *src)	Copies two 12-byte fog sub-records	verified	one	terrain/lights#camera-interior-fog	
+0x69e240	55	CopyFogSubrecords		terrain	orchestration	void __thiscall (void *dst, const void *src)	Copies two 12-byte fog sub-records	verified	one	terrain/lights#camera-interior-fog	
 0x69e280	574	UpdateMapEntityEnvironment		terrain	primitive	void __thiscall (void *this)	Recomputes an entity's indoors, liquid and shadow state and its light targets	verified	one	terrain/mapentities#entity-environment	terrain::env_update_color_difftest
 0x69e4c0	683	BakeMapEntityGroupLight		terrain	primitive	void __thiscall (void *this, void *a, void *b, void *c)	Bakes a map object group's vertex colour into an entity's directional light and ambient target	verified	one	terrain/lights#interior-light-bake	terrain::cmapobj_vert_offsets_difftest
 0x69e770	429	AnimateMapEntityLight		terrain	primitive	void __thiscall (void *this)	Steps an entity's ambient bytes and intensity toward their targets by the frame time	verified	one	terrain/mapentities#entity-light-ramp	terrain::color_step_magnitude_difftest, terrain::intensity_ramp_difftest
@@ -26230,7 +26230,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69e9e0	83	FogQ::FogQ		terrain	orchestration	void * __fastcall (void *a, void *b, void *c, void *d)	Allocates a fog queue entry and copies its fields	inferred	none		
 0x69ea40	157	PushFogEntry		terrain	host	void __thiscall (void *array, const void *entry)	Appends an 8-byte entry to a growable array	inferred	none		
 0x69eae0	43	FogQEntry::DeletingDestructor		terrain	orchestration	void * __thiscall (void *this, uint32_t flags)	Destroys a fog queue entry and frees it when bit 0 of the argument is set	inferred	none		
-0x69eb10	81	RemoveHeapEntries		terrain	orchestration	void __fastcall (void *entry, const void *source)	Removes a run of 8-byte entries from a growable array by moving the tail down	verified	one	terrain/lights#fog-record-blend	
+0x69eb10	81	RemoveHeapEntries		terrain	orchestration	uint8_t __thiscall (void *array, uint32_t index, uint32_t count)	Removes a run of 8-byte entries from a growable array by moving the tail down	verified	one	terrain/lights#fog-record-blend	
 0x69eb70	26	CopyColorRgb		terrain	orchestration	void __fastcall (uint32_t *dst, uint32_t color)	Copies a colour's red, green and blue, keeping the alpha	inferred	none		
 0x69eb90	5	InitTerrainSquare199Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69eba0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69eba0	19	InitTerrainSquare199		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	

@@ -13,11 +13,10 @@ Roots: `0x6717d0`, `0x6a86d0`, `0x6a8a20`, `0x6a8c10`, `0x6a8ed0`, `0x69e4c0`
 
 `0x6717d0(matrix, local box, point, force)` stores the node's state from the object's world matrix. The
 position `+0x24` is the matrix translation; the scale `+0x30` is the length of its first row. The world
-box `+0x44` and `+0x50` is the exact box of the local box under the matrix, the centre `+0x5c` its midpoint and
-`+0x68` the distance from the centre to the maximum corner. A local box with any minimum above its maximum, or
+box `+0x44`/`+0x50` is the local box under the matrix, with centre `+0x5c` and radius `+0x68` to the maximum corner. A local box with any minimum above its maximum, or
 a NaN, collapses box and centre onto the position and the radius to 0. `+0xa8` is the matrix applied to the
 point argument. The node is relit (`0x69e280`) when the position moved by a squared step of 0.001 or more, or the
-force argument is set.
+force argument is set; a NaN step relights too (`0x67182d`).
 
 Addresses: `0x6717d0`, `0x6717e3`, `0x671822`, `0x671842`, `0x671873`, `0x6718f7`, `0x671933`, `0x67193d`, `0x671973`, `0x671981`, `0x671989`, `0x6719b9`, `0x6719cc`, `0x6719f5`, `0x6719fa`, `0x671a3a`, `0x671a48`, `0x671a63`, `0x671a73`, `0x6dc540`, `0x6dc470`, `0x621160`, `0x7bca80`, `0x7ffa24`
 Confidence: verified

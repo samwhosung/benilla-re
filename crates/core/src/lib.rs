@@ -2,7 +2,7 @@
 //! (`systems/core/`): the scheduler heap, the frame time, the order handlers run in, the input
 //! routing, the cursor fractions and the timer delay.
 //!
-//! The x87 runs at 53-bit precision: `WinMain` (`0x404100`) sets the control word `0x027F`
+//! The x87 runs at 53-bit precision: `WinMain` (`0x404100`) sets the control word `0x023F`
 //! (`METHOD.md#the-harness`), so each operation rounds to `f64` and an `fstp dword` to `f32`.
 
 #![forbid(unsafe_code)]

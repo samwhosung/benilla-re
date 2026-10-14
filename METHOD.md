@@ -176,14 +176,18 @@ its tests (`CONTRIBUTING.md`, Adding a test). The x87 setting below holds for ev
 the rules after it are the ones each test follows.
 
 The client runs the x87 at 53-bit precision, rounding to nearest, every exception masked: the
-control word `0x027F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and
-then `__control87(0x9001F, 0xFFFFFFFF)` (`0x409c06`, at `0x40410c`). `0x5995c0` creates the
+control word `0x023F`. `WinMain` (`0x404100`) starts by calling `__clearfp` (`0x409bf2`) and
+then `__control87(0x9001F, 0xFFFFFFFF)` (`0x409c06`, at `0x40410c`): `0x409d0e` turns the five
+exception bits into the mask bits `0x3D` (`0x409d1b` to `0x409d38`), adds `0x2` for the denormal
+bit (`0x409d42`) and `0x200` for 53-bit precision (`0x409d4d`, `0x409d83`), leaves rounding at
+nearest, and `0x409c33` loads the result with `fldcw`. `0x5995c0` creates the
 Direct3D 9 device with the flags `0x22` or `0x52` (`0x599614` to `0x59961c`), both of which
 include `D3DCREATE_FPU_PRESERVE`, so the device never lowers the precision. Every finding and test
 assumes this control word unless it says otherwise.
 
 - Each test reads the reader's own `WoW.exe` and refuses any other build by its hash.
-- The emulator pins the x87 control word to `0x027F` and `MXCSR` at entry and checks them after,
+- The emulator pins the x87 control word to `0x027F` and `MXCSR` at entry and checks them after (`0x027F`
+  differs from the client's `0x023F` only in reserved bit 6, which changes no result),
   starts with an empty x87 stack and cleared XMM registers, and stops a runaway by instruction
   count, not by time. An unmapped access names its address, the instruction and the kind of access.
 - A stub stands in for a call the test does not run; it is identified by the callee's body and

@@ -53,7 +53,7 @@ it converts with `0x7bbd60` (`0x78bb36`), packs with `0x7bbec0` (`0x78bb42`), mu
 by 1/255 as a double (`0x78bb62`) and runs the slot with `"%f%f%f"` (`0x78bb8f`). `0x7bbec0`
 writes 0xff to byte 3 (`0x7bbec8`), adds 512.0 (`0x8029cc`) to each `v·255` (`0x7bbed4`), stores
 the sum with `fstp dword` (`0x7bbeda`), which rounds it to a 24-bit significand, an ulp of 2^−14
-between 512 and 1024, to nearest under the C runtime's default control word 0x027F (the path has no `fldcw`), and
+between 512 and 1024, to nearest under the client's control word 0x023F (the path has no `fldcw`), and
 shifts the float's bits right by 14 (`0x7bbee0`). `0x7bbc80` stores the value, then the
 saturation, compares it with 0.0 (`0x7bbcbe`) and for 0 writes −1.0 (0xbf800000) to the hue and
 returns (`0x7bbccd`). `0x78ed10` repeats the conversion (`0x78edda` to

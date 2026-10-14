@@ -343,7 +343,7 @@ impl<'a> Emu<'a> {
             .expect("map stack");
         uc.mem_map(SCRATCH_BASE, SCRATCH_SIZE, Prot::ALL)
             .expect("map scratch");
-        // The client's x87 control word, 0x027F: WinMain (0x404100) calls
+        // The client's x87 control word is 0x023F; 0x027F differs only in reserved bit 6. WinMain (0x404100) calls
         // __control87(0x9001F, 0xFFFFFFFF), 53-bit precision (METHOD.md#the-harness).
         uc.reg_write(RegisterX86::FPCW, 0x027F)
             .expect("set FPCW=PC_53");

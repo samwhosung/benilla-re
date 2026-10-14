@@ -319,7 +319,7 @@ point moved into its space, and their unit direction and plane offset stored as 
 sets the group callback `0x685d70` through `0x6b3880`, seeds its exterior groups with `0x6b3dd0`,
 and unlinks the def from the band. `0x685d70` runs per group: it links the group to the frame's
 group list with a copy of the current frustum volume, and culls the group's doodad defs
-(`0x6838f0`, when world flags hold 0x400081) and entities (`0x6834e0`).
+(`0x6838f0`, when any bit of 0x400081 is set in the world flags) and entities (`0x6834e0`).
 
 Addresses: `0x6856c0`, `0x68583a`, `0x68584e`, `0x685926`, `0x685a15`, `0x685a29`, `0x685a3c`, `0x685a4f`, `0x6b3880`, `0x6b3dd0`, `0x685d70`, `0x685dc1`, `0x685f17`, `0x685faf`, `0x685fc1`, `0x685fcb`, `0x6838f0`, `0x6834e0`
 Confidence: inferred
@@ -329,6 +329,6 @@ Test: `terrain::wmo_corner_ray_negate_difftest`, `terrain::wmo_dir_len2_gate_dif
 The two tests are `0x68583a` (frustum) and `0x68584e` (horizon, edx = 1). `0x685926` moves the
 camera and `0xc7d118` through the def's matrix at `+0xd4`; `0x685a15` takes their dot product with
 the direction. `0x685a29` stores the callback and `0x685a3c` seeds. In `0x685d70` the group is found
-in the def's list by its index (`ecx`, `+0x7c`); `0x685dc1` branches on an existing frustum slot
-(`+0xd0`); `0x685faf` tests `0xc7b2a4` against 0x400081 before `0x685fc1` and `0x685fcb`. The
-frustum slot copy is not read here.
+in the def's list by its index (`ecx`, `+0x7c`); `0x685dc1` branches on the group node's list link
+(`+0xd0`, the second word of the group-list link at offset `0xcc`, set at `0x67f1ce`); `0x685faf` tests
+any bit of `0xc7b2a4` against 0x400081 before `0x685fc1` and `0x685fcb` (`terrain/portals#group-submit`).

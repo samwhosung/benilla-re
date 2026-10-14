@@ -85,7 +85,7 @@ The collect pass increments the frame counter and clears the shader id memo when
 changed. It reads the device view into `+0x9c` and moves its translation so the view is relative to
 the origin `p` the caller passes: `m30 −= (m10·py + m20·pz) + m00·px`, `m31 −= (m11·py + m01·px)
 + m21·pz`, `m32 −= (m12·py + m02·px) + m22·pz`, each sum at the FPU's 53-bit precision (control
-word 0x027F) and each result rounded to a float. It then sets the scene matrix `+0xdc` with the
+word 0x023F) and each result rounded to a float. It then sets the scene matrix `+0xdc` with the
 dispatched routine `0x74ad38(+0xdc, 0, view)`, which has a matrix inverse's arguments and whose
 result is not transcribed (`animation`, `Dispatched matrix math`).
 

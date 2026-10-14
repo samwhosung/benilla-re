@@ -110,7 +110,7 @@ Proof: one
 Test: `models::m2_light_aggregate_dist_difftest`
 
 `0x71bfdf` squares the z difference, adds the y square, then the x square, at the FPU's 53-bit
-precision (control word 0x027F), and the sum stays on the stack until `fstp` into `+0x170`.
+precision (control word 0x023F), and the sum stays on the stack until `fstp` into `+0x170`.
 Insertion sifts up past the parent at `(i − 1) >> 1` unless `fcom` at `0x71c009` sets exactly one
 of C0 and C3 (smaller or equal); replacement at `0x71c04f` needs C0 alone; the sift down takes the
 first child when it is strictly larger, else the second, and moves it up while `fcom` at `0x71c08e`
