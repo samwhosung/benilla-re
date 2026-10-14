@@ -214,6 +214,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x62c320	uint8_t[58]	s_switchIndex62c320		objectlayer	Maps the switch value of 0x62c2d0 to its case in 0x62c318	verified	one	objectlayer/overview#indexed-switch-tables
 0x63679c	void *[4]	s_bevelCountCases		collision	Holds the case addresses of 0x636610 for one to four planes	verified	one	collision/walking#bevel-contact-direction
 0x67b8e8	void *[4]	s_cases67b870		lighting	Holds the 4 case addresses of the switch in 0x67b870	inferred	none	
+0x680ba4	uint32_t[4]	s_cameraLiquidCases		terrain	Holds the case addresses of the liquid type switch, indexed by the type's low two bits	verified	one	terrain/camstate#camera-environment
+0x68a738	uint8_t[15]	s_liquidMeshCases		terrain	Holds the case a template of n picks, indexed by n minus 1: 0 for n = 1, 1 for 3, 7 and 15, else 2	verified	one	terrain/liquid#liquid-mesh-templates
+0x6b63fc	uint32_t[3]	s_groupLiquidArms		terrain	Holds the three draw arms of a group's liquid: water, magma and none	verified	one	terrain/groupdraw#group-liquid
+0x6b6408	uint8_t[9]	s_groupLiquidArmByType		terrain	Holds the draw arm of each liquid type 0 to 8: 0 water, 1 magma, 2 none	verified	one	terrain/groupdraw#group-liquid
+0x6ba16c	uint8_t[4]	s_groupLiquidTypeArms		models	Holds the dispatch arm of each liquid type 0 to 3 of a group's liquid query: 0, 2, 1, 1	verified	one	terrain/camstate#camera-liquid-state
 0x6e225c	void *[3]	s_castFailureCleanupJumpTable		spell	Holds the failure reporter's three cleanup cases for reasons 0x2f to 0x7c	verified	one	spell/failures#player-unit-cleanup
 0x6e2268	uint8_t[78]	s_castFailureCleanupIndexTable		spell	Maps reasons 0x2f to 0x7c to their cleanup case in the failure reporter	verified	one	spell/failures#player-unit-cleanup
 0x6e22b8	void *[13]	s_castFailureArmJumpTable		spell	Holds the failure reporter's 13 text-filling cases for reasons 2 to 0x90	verified	one	spell/failures#record-name-arms
@@ -319,10 +324,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8026c8	float	s_oneOver255		models	Holds 1/255, the scale of a byte to a unit value	verified	one	models/render#software-skinning
 0x802700	uint32_t[64]	NTempest::gnoise32_	idb	random	Holds the 64 dwords the state advance and the hashes read	verified	two	random#state-advance
 0x802800	float[16]	s_noiseGradients		random	Holds -1 + 2k/15 for k = 0 to 15, the gradient components of the noise	inferred	none	random#unreached-functions
+0x802940	double	s_two		terrain	Holds 2.0, whose root scales the guard planes	verified	one	terrain/portals#portal-polygon-clip
 0x80295c	const float	s_twoPiConst		unassigned	Holds 2π as a float	verified	one	lighting/daynight#recompute
 0x802970	const double	s_zeroDouble		unassigned	Holds 0.0	verified	one	ui/luastate#reading-numeric-arguments
 0x802978	float	s_oneEighth		terrain	Holds 0.125	verified	one	terrain/lod#chunk-mesh-tables
 0x80297c	const float	s_three		ui	Holds 3.0, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
+0x802990	float	s_six		terrain	Holds 6.0	verified	one	terrain/waterfx#ripple-emission
 0x802998	float	s_oneSixteenth		terrain	Holds 0.0625	verified	one	terrain/lod#chunk-mesh-tables
 0x8029b0	const float	s_quarter		ui	Holds 0.25, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
 0x8029c8	const float	s_float3d4ccccd		unassigned	Holds the float 0.05 (0x3d4ccccd)	inferred	none	
@@ -396,7 +403,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x806558	const float	s_float383c5df1		ui	Holds the float 0.000044910183 (0x383c5df1)	inferred	none	
 0x80655c	const float	s_float3fd55555		unassigned	Holds the float 1.6666666 (0x3fd55555)	inferred	none	
 0x806574	const float	s_float40b1c71cAt806574		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
-0x80679c	const float	s_float3e4ccccd		unassigned	Holds the float 0.2 (0x3e4ccccd)	inferred	none	
+0x80679c	const float	s_float3e4ccccd		unassigned	Holds the float 0.2 (0x3e4ccccd)	verified	one	terrain/liquid#wave-field
 0x806b10	const float	s_float42c80000		unassigned	Holds the float 100 (0x42c80000)	inferred	none	
 0x806eb8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x807028	const uint32_t			ui	Holds a dword that Script::StartAuction reads; not read here	inferred	none	
@@ -472,8 +479,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
 0x80928c	int32_t[8]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, −42000 to 42000	verified	one	objectlayer/playercombat#using-an-item
+0x809c00	uint32_t[52]	s_vertexFormats		terrain	Holds the 13 vertex formats: descriptor pointer, element count, stride and usage mask	verified	one	terrain/render#vertex-formats
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
+0x80a2a8	uint32_t[2]	s_cullModeByState		terrain	Holds the Direct3D cull modes 1 (none) and 2 (clockwise) by the culling state	verified	one	terrain/render#face-culling
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
 0x80a400	void *[11]			unassigned	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
@@ -483,9 +492,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a77c	void *[1]	s_serverLinkPendingVftable		net	Holds the vtable of ServerLink's pending requests, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
 0x80a7dc	void *[9]	ClientLink::vftable		net	Holds ClientLink's vtable: the connection callbacks, slot 7 the raw data hook	verified	one	net/login#logon-commands
+0x80a8ac	float	s_oneOver256		terrain	Holds 1/256, the scale of a magma coordinate	verified	one	terrain/groupdraw#group-liquid-mesh
 0x80a8b0	const float	s_oneOver65536		unassigned	Holds 1/65536	verified	one	lighting/celestial#celestial-bodies
 0x80a8ec	const uint32_t			font	Holds a dword its object file's code reads; not read here	inferred	none	
-0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	inferred	none	
+0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	verified	one	terrain/liquid#wave-field
 0x80aa80	void *[31]	s_dynamicObjectVtable		objectlayer	Holds the dynamic object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ab80	void *[31]	CGCorpse_C::vftable		objectlayer	Holds the corpse vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80abfc	const float	s_float3f2aaaab		unassigned	Holds the float 0.6666667 (0x3f2aaaab)	inferred	none	
@@ -551,6 +561,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization
+0x80c4f4	float	s_smallEpsilon		terrain	Holds 0.0001, the least squared length a direction is normalized from and a hit compare margin	verified	one	terrain/portals#camera-inside-a-map-object
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c5bc	const float	s_stopNearSquared		collision	Holds 9.0, the squared distance under which a stop-form move flushes at its point	verified	one	collision/ride#monster-move-body
 0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
@@ -596,8 +607,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80febc	float	s_farBandStart		terrain	Holds 0.96, the depth range start of the far-band pass	inferred	none	
 0x80fec0	const float	s_skyDepthFar		unassigned	Holds 0.98, the far end of the sky's depth slice	verified	one	lighting/sky#sky-pass
 0x80fec4	const float	s_skyDepthSpan		unassigned	Holds 0.005, the sky depth slice's width	verified	one	lighting/celestial#glare-draw
-0x80fed4	float	s_horizonMinDepth		terrain	Holds 50, the depth below which a box corner makes the box visible	verified	one	terrain/cull#horizon-box-test
+0x80fec8	float	s_cameraDownRayLength		terrain	Holds 1760.0, the length of the camera's down-ray in yards	verified	one	terrain/camstate#camera-down-ray
+0x80fed0	float	s_lodDistMax		terrain	Holds 250.0, the largest lodDist the console accepts	verified	one	terrain/lod#chunk-levels
+0x80fed4	float	s_lodDistMin		terrain	Holds 50.0, the smallest lodDist the console accepts	verified	one	terrain/lod#chunk-levels
 0x80fed8	const float	s_float44424000		unassigned	Holds the float 777 (0x44424000)	inferred	none	
+0x80fedc	float	s_float42a00000		terrain	Holds the float 80, the least texture detail distance	verified	one	terrain/world#distance-settings
 0x80fee4	float	s_chunkSize		terrain	Holds 33.333332 (0x42055555), a chunk's side in yards	verified	one	terrain/chunk#chunk-vertices
 0x80ff6c	const float	s_packetLifetimeLimit		lighting	Holds 60.0, the longest span a weather packet may have	verified	one	lighting/precipitation#packet-replay
 0x80ff70	const float	s_weatherNoHeight		lighting	Holds FLT_MAX, the empty ground grid cell	verified	one	lighting/weather#ground-grid
@@ -640,24 +654,43 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x810068	const float	s_infinity2		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x8100ec	const float	s_infinity3		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810170	float	s_horizonColumnScale		terrain	Holds 64, the horizon columns per unit of x/z	verified	one	terrain/cull#horizon-buffer
+0x810174	float	s_bandScale		terrain	Holds 0.03, the depth bands per yard	verified	one	terrain/cull#depth-buckets
+0x810178	float	s_entityAnimateRadiusSq		terrain	Holds 10.0, the squared distance within which a culled entity still animates	verified	one	terrain/scene#entity-cull
+0x81017c	float	s_doodadDefAnimateRadiusSq		terrain	Holds 10.0, the squared distance within which a culled doodad def still animates	verified	one	terrain/scene#doodad-def-cull
 0x810180	float	s_horizonNearZ		terrain	Holds 2.7777777 (0x4031c71c), the least depth of an occluder edge's ends	verified	one	terrain/cull#horizon-buffer
-0x810188	float	s_doodadBandStartA		terrain	Holds 0.5, a doodad distance band's start	inferred	none	
-0x81018c	float	s_doodadBandStartB		terrain	Holds 2.5, a doodad distance band's start	inferred	none	
-0x810190	float	s_doodadBandStartC		terrain	Holds 7.0, a doodad distance band's start	inferred	none	
-0x810194	float	s_doodadBandRange		terrain	Holds 10.0, a doodad distance band's range	inferred	none	
-0x8101a0	float	s_doodadBandEnd		terrain	Holds 50.0, a doodad distance band's end	inferred	none	
+0x810188	float	s_doodadFadeRadiusSmall		terrain	Holds 0.5, the largest radius of the first doodad fade band	verified	one	terrain/scene#doodad-def-draw
+0x81018c	float	s_doodadFadeRadiusMedium		terrain	Holds 2.5, the largest radius of the second doodad fade band	verified	one	terrain/scene#doodad-def-draw
+0x810190	float	s_doodadFadeRadiusLarge		terrain	Holds 7.0, the largest radius that fades; a larger doodad never does	verified	one	terrain/scene#doodad-def-draw
+0x810194	float	s_doodadFadeRangeSmall		terrain	Holds 10.0, the first band's fade length in yards	verified	one	terrain/scene#doodad-def-draw
+0x810198	float	s_doodadFadeRangeMedium		terrain	Holds 25.0, the second band's fade length in yards	verified	one	terrain/scene#doodad-def-draw
+0x81019c	float	s_doodadFadeRangeLarge		terrain	Holds 50.0, the third band's fade length and the far clip margin	verified	one	terrain/scene#doodad-def-draw
+0x8101a0	float	s_doodadFadeEndSmall		terrain	Holds 50.0, the distance at which the first band is fully faded	verified	one	terrain/scene#doodad-def-draw
+0x8101a4	float	s_doodadFadeEndMedium		terrain	Holds 125.0, the distance at which the second band is fully faded	verified	one	terrain/scene#doodad-def-draw
+0x8101a8	float	s_doodadFadeEndLarge		terrain	Holds 200.0, the third band's end and the far clip below which it moves in	verified	one	terrain/scene#doodad-def-draw
 0x8101b0	float	s_farBandMargin		terrain	Holds 33.0, taken from the far clip for the far-band near plane	inferred	none	
 0x8101b4	float	s_frustumEpsilon		terrain	Holds -0.019444443 (0xbc9f49f4), the margin a frustum plane allows	verified	one	terrain/cull#frustum-box-test
 0x8101b8	float	s_gatherEpsilon		terrain	Holds 0.019444443 (0x3c9f49f4), the margin a facet gather grows its box by	verified	one	terrain/collide#chunk-facets
-0x81021c	const float	s_float43310000		cvar	Holds the float 177 (0x43310000)	inferred	none	
+0x81021c	const float	s_float43310000		cvar	Holds the float 177, the least farclip	verified	one	terrain/world#distance-settings
+0x810224	float	s_float45040000		terrain	Holds the float 2112, the greatest horizon far clip	verified	one	terrain/world#distance-settings
+0x810228	float	s_float44040000		terrain	Holds the float 528 added to the far clip for the least horizon far clip	verified	one	terrain/world#distance-settings
 0x810234	const float	s_infinity4		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x81023c	float	s_swatchWidthScale		terrain	Holds 0.125, the factor of 64 that gives a swatch's width of 8	verified	one	terrain/watershade#swatch-refresh
+0x810284	float	s_areaSize		terrain	Holds 533.3333, an area's side in yards	verified	one	terrain/liquidpass#nearest-liquid-cells
 0x81028c	float	s_oneNinth		terrain	Holds 1/9 as the float 0x3de38e39	verified	one	terrain/liquid#depth-ramps
+0x810290	float	s_liquidCellSize		terrain	Holds 4.1666665, a liquid cell's side in yards	verified	one	terrain/liquidpass#nearest-liquid-cells
+0x8102a0	float	s_areaCellsPerYard		terrain	Holds 0.24, cells per yard, for the area index of the liquid search	verified	one	terrain/liquidpass#nearest-liquid-cells
+0x8102a4	float	s_liquidChunksPerYard		terrain	Holds 0.03, chunks per yard, for the chunk index of the liquid search	verified	one	terrain/liquidpass#nearest-liquid-cells
 0x8102b8	float[8]	s_liquidFramePeriod		terrain	Holds each liquid type's frame period, 1.25 s for all eight	verified	one	terrain/liquid#animated-textures
 0x8102e8	float	s_waterShininess		terrain	Holds 6.0, the water pass's specular power	inferred	none	
 0x8102ec	float	s_liquidColorScale		terrain	Holds 0.9, the scale of the liquid colour bytes	inferred	none	
+0x8102f0	float	s_waveCellWidth		terrain	Holds 8.333333, the width of a wave field cell in yards	verified	one	terrain/liquid#wave-field
+0x810304	uint32_t[6]	s_liquidCellTriangles		terrain	Holds a liquid cell's two triangles as grid offsets: 0, 9, 10 and 0, 10, 1	verified	one	terrain/collide#triangle-batches
 0x810334	float	s_driftAtlasPitch		terrain	Holds 51/256, the drift cloud atlas cell pitch	inferred	none	
 0x810348	float[2]	s_rippleRates		terrain	Holds the ripple rates, 0.4 first	inferred	none	
+0x810350	float	s_liquidCellStep		terrain	Holds -4.1666665, the width of a liquid cell negated	verified	one	terrain/liquid#liquid-mesh-templates
+0x810354	float	s_radiusToChunks		terrain	Holds 0.24, the factor from a search radius in yards to chunks	verified	one	terrain/liquidpass#nearest-liquid-cells
 0x810358	float	s_liquidAlphaGain		terrain	Holds 1.6	verified	one	terrain/liquid#depth-ramps
+0x810374	float	s_wavePhaseBRate		terrain	Holds 0.92, the second wave phase's rate	verified	one	terrain/liquid#wave-field
 0x81037c	float	s_oneSixtyThird		terrain	Holds 1/63 as the float 0x3c820821	verified	one	terrain/liquid#depth-ramps
 0x810380	float	s_riverRampSlope		terrain	Holds 0.21428572	verified	one	terrain/liquid#depth-ramps
 0x810384	float	s_riverRampLimit		terrain	Holds 4.6666665	verified	one	terrain/liquid#depth-ramps
@@ -665,11 +698,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81038c	float	s_driftPopulation		terrain	Holds 4000.0, the drift cloud's particle count	inferred	none	
 0x810390	float	s_rippleDepthBiasScale		terrain	Holds the scale of the ripple pass's depth bias, about 1/1024	inferred	none	
 0x810398	const float	s_infinity5		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x8103f4	uint16_t	s_lowDetailIndexCount		terrain	Holds 3072, the index count of a low-detail tile	verified	one	terrain/lod#low-detail-tile-draw
 0x8103f8	uint32_t[16]	s_holeBit		terrain	Holds 1 << k for k from 0 to 15, the hole bits of a chunk's 4x4 quads	verified	one	terrain/queries#chunk-height
 0x810438	uint32_t[12]	s_cellFacetTriangles		terrain	Holds a cell's four facet triangles: (17, 9, 0), (9, 1, 0), (9, 17, 18), (9, 18, 1)	verified	one	terrain/collide#chunk-facets
 0x810468	uint32_t[5]	s_cellOutcodeVertices		terrain	Holds the five vertex offsets of a cell: 0, 9, 17, 1, 18	verified	one	terrain/collide#chunk-facets
 0x81047c	uint32_t[8]	s_cellTriangleVertices		terrain	Holds the vertex offsets of a cell's four triangles: (17, 0), (0, 1), (18, 17), (1, 18)	verified	one	terrain/queries#chunk-height
 0x81049c	float	s_traceZero		terrain	Holds 0.0	inferred	none	
+0x8104b4	uint16_t[8]	s_cellLayerMask		terrain	Holds 3 << 2 × column, the two-bit layer index of a cell's column in a row word	verified	one	terrain/detail#detail-doodad-scatter
+0x8104e4	uint16_t[8]	s_cellColumnBit		terrain	Holds 1 << column, the bit of a cell's column in a row byte	verified	one	terrain/detail#detail-doodad-scatter
 0x810528	const float	s_infinity6		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x81052c	float	s_pi		terrain	Holds pi (0x40490fdb)	verified	one	terrain/files#doodad-placements
 0x8105b0	float	s_negChunkSize		terrain	Holds -33.333332 (0xc2055555)	verified	one	terrain/files#wdl
@@ -677,6 +713,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x810614	const float	s_infinity8		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810678	float	s_yardsPerCell		terrain	Holds 4.1666665	inferred	none	
 0x81067c	const float	s_infinity9		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x8106d8	float	s_footprintBiasScale		terrain	Holds 1/2048, the factor of the depth bias option for footprints	verified	one	terrain/footprints#fade-and-draw
+0x8106dc	float	s_footprintFadePerMs		terrain	Holds 1/6000, a footprint's fade per millisecond	verified	one	terrain/footprints#fade-and-draw
 0x8106e0	const float	s_infinity10		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x81073c	float	s_cellsPerYard		terrain	Holds 0.24 (0x3e75c28f), cells per yard	verified	one	terrain/queries#liquid-status
 0x810740	float	s_chunksPerYard		terrain	Holds 0.03 (0x3cf5c28f), chunks per yard	verified	one	terrain/queries#area-id
@@ -686,16 +724,21 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8107a8	const float	s_infinity12		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810804	float	s_entityAmbientRate		terrain	Holds 2.0, the rate an entity's ambient word moves per second	inferred	none	
 0x810808	float	s_entityShadeRate		terrain	Holds 3.3333333, the rate an entity's shade moves per second	inferred	none	
-0x810810	void *	s_mapEntityVtable		terrain	Holds the map entity's virtual functions	inferred	none	
+0x810810	void *	s_mapEntityVtable		terrain	Holds the map entity's virtual functions	verified	one	terrain/overview#map-pools
+0x810824	void *[6]	s_mapDefBaseVtable		terrain	Holds the base table of the map entity and doodad def, its fifth slot a runtime stub	verified	one	terrain/overview#map-pools
 0x810840	const float	s_infinity13		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x81089c	void *	s_mapHashTableVtable		terrain	Holds the vtable of the map's hash tables	inferred	none	
 0x8108bc	const float	s_infinity14		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
-0x810918	void *	s_placementGroupVtable		terrain	Holds the placement group's virtual functions	inferred	none	
-0x810928	void *	CMapObjDef::vftable		terrain	Holds CMapObjDef's virtual functions	inferred	none	
+0x810918	void *	s_placementGroupVtable		terrain	Holds the placement group's virtual functions	verified	one	terrain/overview#map-pools
+0x810928	void *	CMapObjDef::vftable		terrain	Holds CMapObjDef's virtual functions	verified	one	terrain/overview#map-pools
+0x810994	float	s_groupShininess		terrain	Holds 14.0, the shininess of a specular map object batch	verified	one	terrain/groupdraw#exterior-group-batches
 0x810998	void *	s_mapObjHashVtable		models	Holds the vtable the map object hash table carries	verified	one	models/overview#static-objects
 0x8109a8	const float	s_infinity15		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810a04	const float	s_infinity16		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
-0x810a74	void *	CMapDoodadDef::vftable		terrain	Holds CMapDoodadDef's virtual functions	inferred	none	
+0x810a64	float	s_shadowedIntensity		terrain	Holds 0.5, an entity light's intensity target in shadow	verified	one	terrain/mapentities#entity-environment
+0x810a68	float	s_litIntensity		terrain	Holds 2.5, an entity light's intensity target in the open	verified	one	terrain/mapentities#entity-environment
+0x810a70	float	s_pointLightLift		terrain	Holds 1.1666666, added to the point's height for a map point light's distance	verified	one	terrain/lights#point-lights
+0x810a74	void *	CMapDoodadDef::vftable		terrain	Holds CMapDoodadDef's virtual functions	verified	one	terrain/overview#map-pools
 0x810a88	const float	s_infinity17		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810ae4	float	s_gatherCellsPerYard		terrain	Holds 0.24 (0x3e75c28f), cells per yard, for the facet gather	verified	one	terrain/collide#terrain-gather
 0x810ae8	const float	s_infinity18		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
@@ -705,24 +748,37 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x810bb4	uint32_t[8]	s_shadowBitMask		terrain	Holds the masks 1 << k for k from 0 to 7	verified	one	terrain/chunk#shadow-maps
 0x810bd4	uint32_t[8]	s_shadowBitShift		terrain	Holds the right shifts 0 to 7 that bring a shadow bit to bit 0	verified	one	terrain/chunk#shadow-maps
 0x810bf4	uint8_t[2]	s_combinedShadowValue		terrain	Holds 0xff for a clear shadow bit and 0x00 for a set one	verified	one	terrain/chunk#combined-chunk-texture
-0x810bf8	void *[4]	CMapChunk::vftable		terrain	Holds CMapChunk's virtual functions	inferred	none	
+0x810bf8	void *[4]	CMapChunk::vftable		terrain	Holds CMapChunk's virtual functions	verified	one	terrain/overview#map-pools
 0x810c08	float	s_normalScale		terrain	Holds 1/127 (0x3c010204), the scale of an MCNR normal byte	verified	one	terrain/chunk#chunk-normals
 0x810c0c	const float	s_infinity20		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x810c10	float	s_piDetail		terrain	Holds pi, the detail doodad matrix's rotation base	verified	one	terrain/detail#detail-doodad-draw
+0x810c68	float	s_detailTranslateScale		terrain	Holds -0.75, the factor of the detail doodad distance in the ramp's translation	verified	one	terrain/detail#detail-doodad-draw
 0x810c6c	const float	s_infinity21		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810cc0	float	s_groupLiquidCellSize		terrain	Holds 4.1666665, the map object liquid grid spacing	inferred	none	
+0x810cc8	float	s_groupBufferLifetime		terrain	Holds 30.0, the seconds a group's buffer block lives after its last bind	verified	one	terrain/groupdraw#batch-buffers-and-cull
 0x810ccc	const float	s_negPointZeroOne		unassigned	Holds -0.01, a pooled constant; the BSP segment descent uses it as its lower slab margin	verified	one	models/wmo#bsp-segment-descent
 0x810cd0	const float	s_infinity22		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810d2c	float	s_cellsPerYardHeight		terrain	Holds 0.24 (0x3e75c28f), cells per yard, for the surface height	verified	one	terrain/queries#surface-height
 0x810d98	const float	s_infinity23		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810e20	float	s_halfChunkSize		terrain	Holds 16.666666 (0x41855555), half a chunk	verified	one	terrain/lod#low-detail-mesh
 0x810e24	const float	s_infinity24		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x810e80	float	s_shadowTexelsPerYardTuft		terrain	Holds 1.92, shadow map texels per yard for the tuft shadow test	verified	one	terrain/detail#detail-doodad-tuft
+0x810e84	float	s_tuftHalfCell		terrain	Holds 2.0833333, half a cell; the tuft offset's scale	verified	one	terrain/detail#detail-doodad-tuft
+0x810e88	float	s_terrainShininess		terrain	Holds 20.0, the shininess of the specular terrain program	verified	one	terrain/render#chunk-layers-in-multipass
+0x810e8c	float	s_alphaStageScale		terrain	Holds -0.125, the extra scale of the alpha map's texture matrix	verified	one	terrain/render#chunk-layers-in-multipass
+0x810e90	float	s_tuftCellCentre		terrain	Holds 2.0833333, the offset that centres a tuft's range in its cell	verified	one	terrain/detail#detail-doodad-tuft
 0x810e94	const float	s_infinity25		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x810ef4	void *[4]	CMapLight::vftable		terrain	Holds CMapLight's virtual functions	verified	one	terrain/overview#map-pools
 0x810f04	const float	s_infinity26		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x810f80	const float	s_infinity27		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x810fdc	void *[4]	CMapArea::vftable		terrain	Holds CMapArea's virtual functions	verified	one	terrain/overview#map-pools
 0x810fec	const float	s_infinity28		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x811048	const float	s_infinity29		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
 0x811110	const float	s_float40d55555		unassigned	Holds the float 6.6666665 (0x40d55555)	inferred	none	
 0x811114	const float	s_infinity30		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x8111cc	int32_t[12]	s_quadChildColumn		terrain	Holds the column offsets of a quadtree node's four children at depth 0 to 2	verified	one	terrain/lod#chunk-index-building
+0x8111fc	int32_t[12]	s_quadChildRow		terrain	Holds the row offsets of a quadtree node's four children at depth 0 to 2	verified	one	terrain/lod#chunk-index-building
+0x81122c	uint32_t[8]	s_levelSpans		terrain	Holds each level's row span 136, 68, 34, 17 and column span 8, 4, 2, 1 in flat vertices	verified	one	terrain/lod#chunk-index-leaves
 0x811278	const float	s_float3b5a740e		unassigned	Holds the float 0.0033333334 (0x3b5a740e)	inferred	none	
 0x8112a8	const float	s_float40800000		unassigned	Holds the float 4 (0x40800000)	inferred	none	
 0x8112ac	const float	s_float3fc00000At8112ac		unassigned	Holds the float 1.5 (0x3fc00000)	inferred	none	
@@ -1363,8 +1419,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85ad20	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
 0x85c1f8	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
 0x85c224	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
-0x85c250	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
-0x85c2fc	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x85c250	uint32_t[66]	s_stagePresets		terrain	Holds the six texture stage combine presets of 0x2c bytes	verified	one	terrain/watershade#stage-combine-presets
+0x85c7d8	uint32_t[15]	s_filterModes		terrain	Holds the Direct3D magnify, minify and mip filters of each texture filter index	verified	one	terrain/render#texture-detail-bias
 0x85cae8	char *[83]	s_errorCodeTokens	idb	net	Holds the 83 status code names, RESPONSE_SUCCESS to CHAR_NAME_SUCCESS, the localization keys	verified	one	net/session#session-status
 0x85cc34	uint32_t			net	Holds a dword that IsAllowedLaunchUrl reads; not read here	inferred	none	
 0x85d5b0	char[5]	s_textI		net	Holds the string "(%i)"	inferred	none	
@@ -1430,7 +1486,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x866aa0	char[28]	s_textUU02u02u02u03u		storm	Holds the string "%u/%u %02u:%02u:%02u.%03u  "	inferred	none	
 0x866bd8	const uint32_t[256]	s_crc32Table		storm	Holds the CRC-32 table of the reflected polynomial 0xedb88320, 0x77073096 at index 1	verified	one	ui/addons#the-auth-packets-add-on-block
+0x867918	float[16]	s_liquidScrollDirections		terrain	Holds the eight (x, y) steps the liquid texture offsets add each frame, the compass directions	verified	one	terrain/world#world-frame
 0x867958	float	s_detailDoodadHorizon		terrain	Holds 70.0, the detail doodad distance	inferred	none	
+0x86795c	float	s_textureLodDistance		terrain	Holds the texture detail distance setting nothing reads	verified	one	terrain/world#distance-settings
 0x867960	float	s_lodDistance		terrain	Holds lodDist, 77 at start, the depth beyond which a chunk takes the far level	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867964	uint32_t	s_maxLod		terrain	Holds maxLOD, 3 at start, a near chunk's level	verified	one	terrain/cull#chunk-level-and-idle-release
 0x867968	uint32_t	s_farLod		terrain	Holds a far chunk's level, 2 at start	verified	one	terrain/cull#chunk-level-and-idle-release
@@ -1463,24 +1521,38 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86a034	uint32_t	s_waterWaves		terrain	Holds the waterWaves setting	inferred	none	
 0x86a038	uint32_t	s_waterSpecular		terrain	Holds the waterSpecular setting	inferred	none	
 0x86a03c	uint32_t	s_waterRipples		terrain	Holds the waterRipples setting	inferred	none	
+0x86a040	uint32_t[5]	s_liquidMeshSizes		terrain	Holds 0, 1, 3, 7 and 15, the n of the five liquid mesh templates	verified	one	terrain/liquid#liquid-mesh-templates
+0x86a090	uint32_t[2]	s_waveGridDims		terrain	Holds the grid dimensions 64 and 64 the wave FFT takes	verified	one	terrain/liquid#wave-field
 0x86a098	float	s_magmaDriftSpeed		terrain	Holds −0.02, the magma drift particles' sink speed	inferred	none	
 0x86a0a0	uint32_t[4]	s_driftAtlasCells		terrain	Holds the first atlas cell of each drift mode	inferred	none	
+0x86a120	void *[2]	s_rippleTextureNames		terrain	Holds the paths of the splash ring and wake textures	verified	one	terrain/waterfx#ripple-pool
+0x86a214	char[27]	s_pathOcean0S		terrain	Holds the path Shaders\Pixel\ocean0_s.bls of the water program	verified	one	terrain/watershade#water-pixel
 0x86a2cc	uint32_t	s_mapId		terrain	Holds the loaded map's id, written by CMap::Load	verified	one	terrain/files#map-load
 0x86a2d0	uint32_t	s_mapLoading		terrain	Holds 1 while CMap::Load runs, making tile reads synchronous; 0 otherwise	verified	one	terrain/files#map-load
 0x86a38c	char[49]	s_mapSourcePath		terrain	Holds the source path ending in Map.cpp that the file passes to the allocator	verified	one	terrain/overview#object-files
 0x86a750	float	s_halfCell		terrain	Holds 0.5, taken off a grid coordinate before rounding	verified	one	terrain/queries#liquid-status
 0x86a758	float	s_traceHalfCell		terrain	Holds 0.5, taken off a cell coordinate before rounding	verified	one	terrain/trace#terrain-walk
 0x86a798	char[52]	s_mapMemSourcePath		terrain	Holds the source path ending in MapMem.cpp that the file passes to the allocator	verified	one	terrain/overview#object-files
+0x86aa24	float	s_lightScaleBias		terrain	Holds 0.5, taken off a scale before rounding	verified	one	terrain/lights#light-colour-packing
 0x86aa2c	float	s_gatherHalfCell		terrain	Holds 0.5, taken off a cell coordinate before rounding	verified	one	terrain/collide#terrain-gather
 0x86b540	uint32_t[8]	s_chunkLevelLists		terrain	Holds the four levels' vertex lists: a count word and a pointer to word pairs	verified	one	terrain/lod#chunk-mesh-tables
+0x86b560	uint32_t[8]	s_chunkLevelIndexLists		terrain	Holds the four levels' index lists the mesh tables read: a count word and a pointer	verified	one	terrain/lod#level-meshes
+0x86b580	uint32_t[4]	s_quadrantCornerVertex		terrain	Holds the chunk vertex 0, 8, 136 or 144 that files the chunk in a depth band by the camera quadrant	verified	one	terrain/cull#chunk-points
 0x86b590	uint16_t[2]	s_shadowTexel		terrain	Holds the shadow texels 0x0000 for a clear bit and 0xffff for a set one	verified	one	terrain/chunk#shadow-maps
 0x86b608	char[58]	s_detailDoodadSourcePath		terrain	Holds the source path ending in DetailDoodad.cpp that the file passes to the allocator	verified	one	terrain/overview#object-files
 0x86b6b8	uint32_t	s_portalDepthCapDefault		terrain	Holds 10, the portal recursion cap a static initializer copies	inferred	none	
 0x86b6c0	float	s_halfHeight		terrain	Holds 0.5, taken off a cell coordinate before rounding	verified	one	terrain/queries#surface-height
-0x86c2e0	uint32_t	s_meshKeyNeighbourMask		terrain	Holds 0xfff0ffff, the key bits other than the level's that force a chunk's own mesh	verified	one	terrain/lod#chunk-mesh-selection
+0x86b820	uint16_t[82]	s_level2VertexPairs		terrain	Holds the 41 chunk vertex and buffer slot pairs of the level 2 mesh	verified	one	terrain/lod#level-meshes
+0x86b8c8	uint16_t[192]	s_level2Indices		terrain	Holds the 192 indices of the level 2 mesh, 64 triangles	verified	one	terrain/lod#level-meshes
+0x86ba48	uint16_t[290]	s_level3VertexPairs		terrain	Holds the 145 chunk vertex and buffer slot pairs of the level 3 mesh	verified	one	terrain/lod#level-meshes
+0x86bc90	uint16_t[768]	s_level3Indices		terrain	Holds the 768 indices of the level 3 mesh, 256 triangles	verified	one	terrain/lod#level-meshes
+0x86c290	uint32_t[8]	s_levelVertexLists		terrain	Holds the vertex list of each chunk level 0 to 3: a 16-bit count and a pointer to pairs of chunk vertex and buffer slot	verified	one	terrain/lod#level-meshes
+0x86c2b0	uint32_t[8]	s_levelIndexLists		terrain	Holds the index list of each chunk level 0 to 3: a count and a pointer to 16-bit indices	verified	one	terrain/lod#level-meshes
+0x86c2e0	uint32_t	s_meshKeyNeighbourMask		terrain	Holds 0xfff0ffff, the key bits other than the level's that force a chunk's own mesh	verified	one	terrain/lod#chunk-mesh-rebuild
 0x86c2e4	uint32_t[4]	s_meshKeyNeighbourShift		terrain	Holds the key shifts of the four neighbours' levels: 0, 4, 8, 12	verified	one	terrain/lod#chunk-mesh-selection
 0x86c2f4	uint32_t	s_meshKeyLevelShift		terrain	Holds 16, the key shift of a chunk's own level	verified	one	terrain/lod#chunk-mesh-selection
 0x86c2f8	uint32_t[4]	s_meshCapsShift		terrain	Holds the caps shifts of the four neighbours' levels: 0, 8, 16, 24	verified	one	terrain/lod#chunk-mesh-selection
+0x86c318	float[8]	s_layerSpeedDivisors		terrain	Holds the divisors 64, 48, 32, 16, 8, 4, 2, 1 an animated layer's scroll is scaled by	verified	one	terrain/render#chunk-layer-states
 0x86c35c	char[3]	s_shaderTextureSuffix		terrain	Holds the string _s put before a texture's extension under the terrain shader	verified	one	terrain/files#texture-names
 0x86c3c0	const char[29]	s_defaultMapTextureName		models	Holds createcrappygreentexture.blp, the texture a material with an empty first name loads	verified	one	models/wmo#material-textures
 0x86c3f8	uint32_t			unassigned	Holds a dword that ViolenceLevelsInitialize, OnViolenceLevelChanged read; not read here	inferred	none	
@@ -2260,7 +2332,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe106c	void *	s_cvarCameraDistanceSmoothSpeed		uicamera	Holds the CVar record of cameraDistanceSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1070	void *	s_cvarCameraYawSmoothSpeed		uicamera	Holds the CVar record of cameraYawSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1074	void *	s_cvarCamerasmooth		uicamera	Holds the CVar record of camerasmooth	verified	one	uicamera/cvars#smoothing-speed-cvars
-0xbe1078	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe1078	void *	s_cvarNearclip		uicamera	Holds the CVar record of nearclip	verified	one	terrain/world#distance-settings
 0xbe1084	void *	s_cvarMouseInvertYaw		uicamera	Holds the CVar record of mouseInvertYaw	verified	one	uicamera/cvars#input-and-bobbing-cvars
 0xbe1088	void *	s_cvarCameraWaterCollision		uicamera	Holds the CVar record of cameraWaterCollision	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe1094	void *	s_cvarCameraYawMoveSpeed		uicamera	Holds the CVar record of cameraYawMoveSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars
@@ -2309,6 +2381,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
 0xc0d5bc	uint32_t			unassigned	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	
 0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
+0xc0d67c	uint32_t[5]	s_terrainTypeStore		terrain	Holds the TerrainType.dbc store: rows, count, the table by id at +0x8 and the id bound at +0xc	verified	one	terrain/footprints#footprint-spawn
 0xc0d6a4	uint32_t[5]	s_taxiPathNodeStore		dbc	Holds the TaxiPathNode.dbc store: records and count	verified	one	objectlayer/transports#the-ship-path
 0xc0d6b8	uint32_t[5]	s_taxiNodesStore		dbc	Holds the TaxiNodes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#taxis
 0xc0d6d4	uint32_t	s_talentTabIdMap		dbc	Holds the TalentTab.dbc rows by id	verified	one	ui/tooltipspell#the-talent-lines
@@ -2371,6 +2444,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dcd0	uint8_t[20]	s_gameTipsStore		dbc	Holds the GameTips.dbc store: records, count, id map, maximum id, loaded flag	inferred	none	
 0xc0dce4	uint32_t[5]	s_gameObjectDisplayInfoStore		dbc	Holds the GameObjectDisplayInfo.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes
 0xc0dcf8	uint32_t[5]	s_gameObjectArtKitStore		dbc	Holds the GameObjectArtKit.dbc store	verified	one	objectlayer/gameobjecttypes#art-kits
+0xc0dd20	uint32_t[5]	s_footprintTexturesStore		terrain	Holds the FootprintTextures.dbc store: rows of id and name, their count and the id bound	verified	one	terrain/footprints#texture-table
 0xc0dd34	uint8_t[20]	s_factionTemplateStore		dbc	Holds the FactionTemplate.dbc store: records, count, id index and maximum id	inferred	none	
 0xc0dd50	uint32_t	s_factionIdMap		dbc	Holds the Faction.dbc rows by id	verified	one	ui/tooltipitemreq#the-reputation-line
 0xc0dd54	uint32_t	s_factionMaxId		dbc	Holds the highest Faction.dbc id	verified	one	ui/tooltipitemreq#the-reputation-line
@@ -2411,6 +2485,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
+0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
+0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
 0xc27d80	uint32_t			net	Holds data whose address SetSelectedCharacterRecord, GetSelectedCharacterRecord take; not read here	inferred	none	
 0xc27d88	uint8_t			net	Holds a byte that GetSelectedCharacterName reads; not read here	inferred	none	
 0xc27e80	uint8_t			net	Holds a byte that GetSelectedCharacterRace reads; not read here	inferred	none	
@@ -2574,23 +2650,46 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
 0xc52560	double			storm	Holds the first double of a table that SStrToFloat reads; not read here	inferred	none	
 0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
+0xc5a470	uint32_t	s_worldMode		terrain	Holds the world mode read from an option object at start-up	inferred	none	
+0xc5a474	uint32_t	s_batchCount		terrain	Holds the count of batch headers in use	verified	one	terrain/collide#triangle-batches
+0xc5a480	float[32]	s_layerScrollOffsets		terrain	Holds eight 16-byte records of two scroll offsets, a zero and a pad, for animated chunk layers	verified	one	terrain/world#world-frame
 0xc62510	float	s_worldFrameSeconds		terrain	Holds the frame time in seconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-emission-rate
+0xc62520	float[6]	s_nearBox		terrain	Holds the box around the position of half-size 150: minimum x, y, z then maximum	verified	one	terrain/mapupdate#map-object-update
+0xc62550	uint8_t[992]	s_triangleBatches		terrain	Holds the 31 triangle batch headers of 0x20 bytes the world queries fill	verified	one	terrain/collide#triangle-batches
+0xc62954	uint32_t	s_lightSnap		terrain	Holds 1 after a forced reload so the light update snaps instead of blending, cleared each frame	verified	one	terrain/mapupdate#forced-reload
 0xc62964	float	s_fogEnd		terrain	Holds the fog end distance the scene sets each frame	inferred	none	
 0xc62970	uint32_t	s_worldTicks		terrain	Holds the world clock in 1/1024 s ticks; 0x66fcc0 advances it	verified	one	lighting/precipitation#particle-clock
 0xc62974	uint32_t	s_worldFrameTicks		terrain	Holds the frame's tick count; written by 0x66fcc0	verified	one	lighting/precipitation#particle-clock
+0xc62978	uint32_t	s_mapAnisotropyLog2		terrain	Holds the floor log2 of the map anisotropy	verified	one	terrain/render#texture-detail-bias
+0xc6297c	uint32_t	s_mapAnisotropy		terrain	Holds the anisotropy the map textures are made with	verified	one	terrain/render#texture-detail-bias
+0xc62980	uint8_t[1984]	s_batchMatrices		terrain	Holds the 31 batch matrices of 0x40 bytes	verified	one	terrain/collide#triangle-batches
 0xc63180	void *	s_driftCloud		terrain	Holds the drift cloud	inferred	none	
+0xc63190	uint32_t	s_batchMatrixCount		terrain	Holds the count of batch matrices in use	verified	one	terrain/collide#triangle-batches
 0xc63194	uint32_t	s_detailDoodadTest		terrain	Holds the detail doodad debug test switch	inferred	none	
+0xc6319c	void *	s_shadowBaseTexture		terrain	Holds the texture the shadow pass binds on stage 0	verified	one	terrain/render#chunk-layers-in-multipass
+0xc63240	float[6]	s_farBox		terrain	Holds the box around the position of half-size the far clip: minimum x, y, z then maximum	verified	one	terrain/mapupdate#map-object-update
+0xc63258	uint32_t	s_batchOverflow		terrain	Holds bit 0 set when a query ran out of batch headers, matrices or indices	verified	one	terrain/collide#triangle-batches
+0xc6325c	uint32_t	s_teleportFlag		terrain	Holds 1 when the new area window shares no more than an edge index with the previous one	verified	one	terrain/mapupdate#map-update-order
 0xc6326c	uint32_t			unassigned	Holds a dword that ClientInitializeGame, LoadNewWorld, CGGameUI::HandlePacket read and write; not read here	inferred	none	
-0xc63274	uint32_t	s_cameraArea		terrain	Holds the camera's area and chunk index the low-detail pass steps from	inferred	none	
+0xc63274	uint32_t[4]	s_outerWindow		terrain	Holds the outer window in chunk indices: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#area-unload
 0xc63284	uint32_t	s_shadowLevel		terrain	Holds the shadowLevel option: exactly 1 sizes chunk textures 32x32, any nonzero value decodes 32x32 data	verified	one	terrain/chunk#alpha-maps
-0xc6328c	uint32_t	s_fogColorOverride		terrain	Holds the fog colour override	inferred	none	
+0xc6328c	uint32_t	s_shadowColor		terrain	Holds the shadow colour of the shadow pass and the shadow query, default 0xffffffff	verified	one	terrain/render#chunk-layers-in-multipass
+0xc63298	uint16_t[49152]	s_batchIndices		terrain	Holds the pool of 0xc000 batch indices	verified	one	terrain/collide#triangle-batches
 0xc7b298	void *	s_modelManager		terrain	Holds the object 0x707350 creates models on	inferred	none	spell/visuals#shard-model-start-and-end
+0xc7b2a0	float	s_worldClockSeconds		terrain	Holds the world clock in seconds that ripple lifetimes count against	verified	one	terrain/waterfx#ripple-emission
 0xc7b2a4	uint32_t	s_worldFlags		terrain	Holds the world's enable flags the console and options set; bit 0x40 lets chunks load shadow maps	verified	one	terrain/chunk#mcnk-header
+0xc7b2a8	uint32_t[4]	s_innerWindow		terrain	Holds the inner window in chunk indices: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#tile-load-pass
 0xc7b2c0	uint32_t	s_worldTimeMs		terrain	Holds the world time in milliseconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-model-start-and-end
 0xc7b2c4	uint32_t	s_simpleDoodads		terrain	Holds the simple doodad switch	inferred	none	
+0xc7b2c8	uint32_t	s_frameCounter		terrain	Holds the world frame counter, incremented once a frame	verified	one	terrain/world#world-frame
+0xc7b2e4	uint32_t[4]	s_reloadWindow		terrain	Holds the outer window copied for the forced reload: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#forced-reload
+0xc7b2fc	uint32_t	s_alphaRef		terrain	Holds the alpha reference of the detail doodad draw, 128 at start-up	verified	one	terrain/world#detail-doodad-and-alpha-settings
 0xc7b358	uint32_t[8]	s_walkableFacetList		terrain	Holds the private facet list the walkable-only query gathers into	verified	one	terrain/collide#world-triangle-query
+0xc7b378	uint32_t	s_batchIndexCursor		terrain	Holds the next free slot of the batch index pool	verified	one	terrain/collide#triangle-batches
 0xc7b480	uint32_t	s_worldScalarDerived		terrain	Holds a value the world scalar setter derives and nothing reads	inferred	none	
 0xc7b494	uint32_t	s_detailDoodadDensity		terrain	Holds the detail doodad density, the bound of the scatter loop	inferred	none	
+0xc7b498	float	s_farClip		terrain	Holds the far clip distance the world setter stored	verified	one	terrain/world#distance-settings
+0xc7b49c	float	s_horizonFarClip		terrain	Holds the far plane of the low-detail tiles' projection	verified	one	terrain/world#distance-settings
 0xc7b4a8	uint32_t	s_weatherLastSampleMs		lighting	Holds the milliseconds of the last motion sample	verified	one	lighting/weather#player-motion
 0xc7b4e0	float	s_weatherInfinity		lighting	Holds +inf; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xc7b554	float	s_weatherTwoPi		lighting	Holds 2π; written at start-up	verified	one	lighting/weather#weather-driver
@@ -2600,8 +2699,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7b66c	float	s_occluderNearDepth		terrain	Holds the view depth from which a chunk may occlude	verified	one	terrain/cull#chunk-visibility
 0xc7b6f8	uint32_t	s_visibleChunkCount		terrain	Counts the chunks the visibility pass keeps	verified	one	terrain/cull#chunk-visibility
 0xc7b700	float[16]	s_horizonView		terrain	Holds the view matrix the horizon steps project through	verified	one	terrain/cull#horizon-buffer
+0xc7b744	uint32_t	s_drawnEntityCount		terrain	Counts the entities and their second-list entries the frame drained	verified	one	terrain/scene#entity-draw
 0xc7b748	uint32_t	s_cameraEyeGroup		terrain	Holds the camera eye's map object group claim	inferred	none	
 0xc7b750	float[320]	s_horizon		terrain	Holds the horizon: per screen column the highest view y/z an occluder reached	verified	one	terrain/cull#horizon-buffer
+0xc7bc60	float	s_cameraLiquidDepth		terrain	Holds the camera probe's liquid height less its z, 0 when dry	verified	one	terrain/camstate#camera-environment
 0xc7bc68	uint8_t	s_sceneCamera		terrain	Begins the scene's camera record	inferred	none	
 0xc7bcb0	float[4]	s_cameraDepthPlane		terrain	Holds the camera's view plane, whose distance is a chunk's depth	verified	one	terrain/cull#chunk-level-and-idle-release
 0xc7bcd8	float[12]	s_cameraCornerRays		terrain	Holds the camera's corner rays	inferred	none	
@@ -2610,24 +2711,40 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7bd58	void *	s_depthBucketsA		terrain	Holds a list head of the depth buckets	inferred	none	
 0xc7bd70	void *	s_depthSubBuckets		terrain	Holds the nine sub-bucket lists	inferred	none	
 0xc7bda0	void *	s_depthTailBuckets		terrain	Holds the depth buckets' tail lists	inferred	none	
+0xc7cacc	uint32_t[3]	s_farBandTileList		terrain	Holds the list header of the low-detail tiles to draw: link offset 0x8c0, tail, head	verified	one	terrain/lod#low-detail-tile-walk
 0xc7cad8	uint32_t[3]	s_chunkDrawList		terrain	Holds the frame's chunk draw list	verified	one	terrain/cull#chunk-visibility
+0xc7cae4	uint32_t[3]	s_doodadDefDrawList		terrain	Holds the doodad def draw list: the link offset, the tail and the head	verified	one	terrain/scene#doodad-def-cull
+0xc7caf0	uint32_t[3]	s_mapObjectDrawList		terrain	Holds the draw list of the map object groups the frame reached: link offset, tail and head	verified	one	terrain/groupdraw#map-object-pass
+0xc7cafc	uint32_t[3]	s_groupLiquidList		terrain	Holds the group liquid draw list: the link offset, the tail and the head	verified	one	terrain/liquidpass#group-liquid-pass
+0xc7cb08	uint32_t[3]	s_entityDrawList		terrain	Holds the entity draw list: the link offset, the tail and the head	verified	one	terrain/scene#entity-cull
+0xc7cb14	uint32_t[9]	s_liquidLayerLists		terrain	Holds the draw lists of liquid layers 0, 1 and 2, each a link offset, a tail and a head	verified	one	terrain/liquidpass#liquid-draw-passes
+0xc7cb44	uint32_t[3]	s_entityCulledList		terrain	Holds the second entity list: the link offset, the tail and the head	verified	one	terrain/scene#entity-cull
 0xc7cb50	uint32_t[3]	s_occluderChunks		terrain	Holds the frame's occluder candidate chunks	verified	one	terrain/cull#chunk-visibility
+0xc7cb5c	float[6]	s_frustumBox		terrain	Holds the min then max corner of the box around the frame's eight frustum corners	verified	one	terrain/cull#frame-frustum-box
 0xc7cb7c	uint8_t	s_portalWindows		terrain	Begins the scene's portal window records	inferred	none	
+0xc7cd80	uint32_t[2]	s_claimedGroupList		terrain	Holds the capacity and the count of the pointer array the camera down-ray appends the claimed model and group to	inferred	none	
 0xc7cd88	uint32_t	s_cameraGroupSet		terrain	Holds the group set the camera stands in	inferred	none	
 0xc7cf20	float[3]	s_cameraPosition		terrain	Holds the camera position the scene captured for the frame	inferred	none	
+0xc7cfb8	float[4]	s_bandPlane		terrain	Holds the plane of the camera's horizontal facing whose distance picks a depth band	verified	one	terrain/cull#depth-buckets
 0xc7cfdc	uint32_t	s_cameraValue		terrain	Holds a camera value the world returns to callers	inferred	none	
-0xc7cff4	float	s_cameraForwardZ		terrain	Holds the camera's forward z; the horizon steps need it strictly between -0.9 and 0.9	verified	one	terrain/cull#horizon-buffer
-0xc7d0dc	float[15]	s_portalGuardPlanes		terrain	Holds the guard planes portal polygons are clipped to, from the second float of four 16-byte records	inferred	none	
+0xc7cfe0	uint32_t	s_frustumDepth		terrain	Holds the index of the frustum volume the cull tests use	verified	one	terrain/scene#sphere-and-box-tests
+0xc7cfec	float[2]	s_cameraForwardXY		terrain	Holds the x and y of the unit vector from the camera position to its target	verified	one	terrain/cull#horizon-view
+0xc7cff4	float	s_cameraForwardZ		terrain	Holds the camera forward vector's z; the horizon steps need it from -0.9 to 0.9	verified	one	terrain/cull#horizon-buffer
+0xc7d0d8	float[16]	s_portalGuardPlanes		terrain	Holds the four guard planes of the screen square, each as a, b, c over x, y, w and a pad word	verified	one	terrain/portals#portal-polygon-clip
 0xc7d118	float[3]	s_cameraTarget		terrain	Holds the camera target point	inferred	none	
 0xc7d168	uint8_t	s_sceneFrustum		terrain	Begins the scene's frustum record	inferred	none	
 0xc7d278	float	s_occluderFarDepth		terrain	Holds the view depth below which a chunk may occlude	verified	one	terrain/cull#chunk-visibility
+0xc7d280	float[16]	s_projectionMatrix		terrain	Holds the projection matrix the scene captured for the frame	inferred	none	
+0xc7d308	uint8_t[252]	s_frustumStack		terrain	Holds the first frustum volume of 0xfc bytes; the stack continues past it	verified	one	terrain/scene#sphere-and-box-tests
 0xc7f288	uint32_t	s_cameraLiquidState		terrain	Holds the camera's liquid state, 0xf when dry	inferred	none	
+0xc7f294	uint32_t	s_cameraQuadrant		terrain	Holds 2 when the camera target's x is below the eye's, plus 1 when its y is	verified	one	terrain/cull#chunk-points
 0xc7f2a4	uint32_t			unassigned	Holds a dword that CWorld::Initialize reads and writes; not read here	inferred	none	
 0xc7f2cc	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f2e4	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f2f0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f2f4	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f2f8	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc7f300	void *	s_footstepBiasCVar		terrain	Holds the footstepBias console variable record: the unit footstep depth bias, default 0.125	verified	one	terrain/footprints#fade-and-draw
 0xc7f314	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f31c	void *	s_occlusionVar		unassigned	Holds the occlusion setting	verified	one	lighting/celestial#glare-occlusion
 0xc7f330	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -2636,24 +2753,40 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7f354	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f360	uint32_t			unassigned	Holds a dword that BeginCurrentFfx, EndCurrentFfx read and write; not read here	inferred	none	
 0xc7f3b0	uint32_t	s_rippleSlotSelf		terrain	Holds the next ripple slot of the local player's partition	inferred	none	
+0xc7f3b8	uint32_t[512]	s_swatchPixels		terrain	Holds the pixels the swatch callback writes	verified	one	terrain/liquidpass#liquid-swatch-textures
 0xc7fbb8	void *	s_skyGlareTexture		terrain	Holds the sky glare texture the water pass binds	inferred	none	
 0xc7fbc0	uint32_t[64]	s_liquidAlphaRamp		terrain	Holds floor(255·min(1, 1.6·(i/63)^8)) in each dword's top byte	verified	one	terrain/liquid#depth-ramps
 0xc7fcd8	float[256]	s_liquidRampB		terrain	Holds the ocean ramp min(1, i/255) as the 53-bit product of i and 0.58333331 by its reciprocal	verified	one	terrain/liquid#depth-ramps
 0xc800ec	void *	s_oceanShaderTexture		terrain	Holds a texture the river pass reads and nothing sets	inferred	none	
+0xc800f4	float[12]	s_driftQuadCorners		terrain	Holds the four corner offsets of a drift quad, three floats each: (-0.5, 0.5, 0) first	verified	one	terrain/waterfx#drift-draw
+0xc80978	uint32_t[512]	s_skyGradientPixels		terrain	Holds the pixels the sky gradient callback writes	inferred	none	
 0xc8117c	uint8_t	s_liquidDirtyA		terrain	Holds a liquid dirty flag the frame clears	inferred	none	
+0xc81180	float	s_wavePhaseB		terrain	Holds the second wave phase, advancing 0.92 a second	verified	one	terrain/liquid#wave-field
 0xc81184	float	s_liquidRampScale		terrain	Holds 0.58333331, the float product of -21 and -1/36 a static initializer stores	verified	one	terrain/liquid#depth-ramps
 0xc811c0	void *[240]	s_liquidFrames		terrain	Holds the 30 frame textures of each liquid type	verified	one	terrain/liquid#animated-textures
 0xc81768	float[256]	s_liquidRampA		terrain	Holds the river ramp: (i/9)·0.21428572, or 1.0 above i/9 = 4.6666665	verified	one	terrain/liquid#depth-ramps
 0xc81b70	uint8_t	s_liquidDirtyB		terrain	Holds a liquid dirty flag the frame clears	inferred	none	
+0xc81b7c	void *	s_waterProgram		terrain	Holds the pixel program the fancy-water leg binds	inferred	none	
 0xc81b80	void *[4]	s_liquidBufferPool		terrain	Holds the arrays of free liquid vertex and index buffers	inferred	none	
+0xc81b90	void *	s_oceanSwatch		terrain	Holds the ocean swatch texture	verified	one	terrain/liquidpass#liquid-swatch-textures
+0xc81b98	float[104]	s_driftAtlasUv		terrain	Holds 26 rows of four texture coordinates, two rows to a drift cell	verified	one	terrain/waterfx#drift-draw
+0xc81d44	float	s_wavePhaseA		terrain	Holds the first wave phase, advancing 0.2 a second	verified	one	terrain/liquid#wave-field
 0xc81d48	uint32_t	s_rippleSlotOthers		terrain	Holds the next ripple slot of the other units' partition	inferred	none	
+0xc81d4c	uint32_t	s_liquidMeshCapacity		terrain	Holds the capacity of the liquid mesh template array	verified	one	terrain/liquid#liquid-mesh-templates
+0xc81d50	uint32_t	s_liquidMeshCount		terrain	Holds 5 once the liquid mesh templates are made, else 0	verified	one	terrain/liquid#liquid-mesh-templates
+0xc81d60	float[8192]	s_waveGrid		terrain	Holds the 64 by 64 complex grid the wave field step fills and transforms	verified	one	terrain/liquid#wave-field
+0xc89d68	void *	s_riverSwatch		terrain	Holds the river swatch texture	verified	one	terrain/liquidpass#liquid-swatch-textures
 0xc89d8c	float	s_waveStepScale		terrain	Holds a constant the unreached wave step reads	inferred	none	
 0xc89da4	uint8_t[8]	s_liquidFramesLoaded		terrain	Holds 1 for a liquid type once all 30 of its frames have loaded	verified	one	terrain/liquid#animated-textures
+0xc89db8	uint32_t	s_rippleMode		terrain	Holds the ripple emission mode: 0 immediate, 1 queued	verified	one	terrain/waterfx#ripple-emission
 0xc89ef0	void *	s_globalMapLight		terrain	Holds the light object the map creates for the sun	inferred	none	
+0xc89ef8	void *	s_terrainProgram		terrain	Holds the terrainp pixel program	verified	one	terrain/watershade#pixel-program-gates
 0xc89f04	uint8_t	s_mapObjDefByte		terrain	Holds the byte a map object placement copies to +0x90	inferred	none	
+0xc89f1c	void *	s_terrainSpecProgram		terrain	Holds the terrainp_s pixel program	verified	one	terrain/watershade#pixel-program-gates
 0xc89f20	uint32_t	s_mapQueryId		terrain	Counts map queries; objects remember the last id that visited them	verified	one	terrain/collide#terrain-gather
 0xc89f40	uint32_t	s_traceCellCount		terrain	Counts the cells a segment walk listed	verified	one	terrain/trace#terrain-walk
 0xc89f44	uint8_t	s_terrainShaderFlagA		terrain	Holds 1 when a terrain shader set is in use, which selects the combined chunk texture	verified	one	terrain/chunk#mcnk-header
+0xc89f4c	uint32_t	s_terrainSpecConstantRegister		terrain	Holds the register of the layer constants in the specular terrain program	verified	one	terrain/render#chunk-layer-states
 0xc89f50	uint32_t[8192]	s_wdtTiles		terrain	Holds the WDT's 64x64 tile entries of two dwords: flags and the pending ADT read	verified	one	terrain/files#wdt
 0xc91f54	void *	s_entityFacetCallback		terrain	Holds the callback 0x483340 that resolves an entity record to a game object model and box	verified	one	terrain/entities#entity-gather
 0xc91f78	char[256]	s_mapDirectory		terrain	Holds the map's directory, World\Maps\ and the map name	verified	one	terrain/files#map-load
@@ -2662,14 +2795,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc96088	void *[5]	s_terrainShadersB		terrain	Holds the second set of terrain pixel shaders by layer count	inferred	none	
 0xc960a0	char[256]	s_wdtPath		terrain	Holds the WDT's path, the directory, a backslash, the name and .wdt	verified	one	terrain/files#map-load
 0xc961a0	char[256]	s_mapName		terrain	Holds the loaded map's name	verified	one	terrain/files#map-load
+0xc962a0	void *	s_terrainUnlitProgram		terrain	Holds the terrainp_u pixel program	verified	one	terrain/watershade#pixel-program-gates
 0xc962c8	int32_t *	s_traceCells		terrain	Points at the (row, column) cell pairs a segment walk lists	verified	one	terrain/trace#terrain-walk
 0xc962cc	void *[5]	s_terrainShadersA		terrain	Holds the terrain pixel shaders by layer count	inferred	none	
 0xc962e8	void *	s_mapLoadProgress		terrain	Holds the map load's progress callback	inferred	none	
+0xc962f0	uint32_t	s_terrainConstantRegister		terrain	Holds the register of the layer constants in the terrain program	verified	one	terrain/render#chunk-layer-states
+0xc96304	uint8_t	s_groupStripMode		terrain	Holds world flag 0x10000 as read at map load: groups draw their alternate index set as strips	verified	one	terrain/groupdraw#batch-buffers-and-cull
 0xc96314	uint32_t	s_wdtVersion		terrain	Holds the WDT's version dword	verified	one	terrain/files#wdt
 0xc96318	void *[4096]	s_areaTable		terrain	Holds the loaded area of each tile, index row·64 + column	verified	one	terrain/files#tile-file-header
+0xc9a318	void *	s_lowDetailIndexBuffer		terrain	Holds the index buffer every low-detail tile shares	verified	one	terrain/lod#low-detail-tile-draw
 0xc9a31c	uint8_t	s_terrainShaderFlag		terrain	Holds 1 when the terrain pixel shaders are in use: combined chunk textures and _s textures	verified	one	terrain/files#texture-names
 0xc9a320	int32_t	s_nextObjectUniqueId		terrain	Holds the unique id the next one-object map's placement takes, counting down	verified	one	terrain/files#wdt
 0xc9a324	uint8_t	s_fancyWater		terrain	Holds the fancy water switch	inferred	none	
+0xc9a340	uint8_t	s_pixelShadersOn		terrain	Holds bit 28 of the world flags: the pixelShaders option	verified	one	terrain/watershade#pixel-program-gates
+0xc9a344	void *	s_terrainUnlitSpecProgram		terrain	Holds the terrainp_us pixel program	verified	one	terrain/watershade#pixel-program-gates
 0xc9a348	uint32_t	s_gatherQueryId		terrain	Counts facet gathers	verified	one	terrain/collide#terrain-gather
 0xc9a350	uint32_t[4096]	s_wdlOffsets		terrain	Holds the WDL's per-tile file offsets	verified	one	terrain/files#wdl
 0xc9e350	void *	s_globalMapObjDefs		terrain	Holds the list of the WDT's global map object placements	inferred	none	
@@ -2678,22 +2817,54 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc9e388	uint32_t	s_useSse		terrain	Holds 1 when the processor has SSE, set at map start-up	verified	one	terrain/queries#chunk-height
 0xca03e4	void *	s_bspNodeCache		models	Holds the BSP node cache, null unless the console enables it	inferred	none	models/collisionquery#box-descent-and-face-test
 0xca03e8	uint32_t	s_aaBspLeafCacheVictim		models	Holds the counter whose low three bits pick the leaf cache slot to replace	verified	one	models/overview#object-files
-0xca05f0	uint8_t	s_footprintPools		terrain	Begins the footprint ring pools	inferred	none	
+0xca0570	uint32_t	s_footprintPlayerCursor		terrain	Holds the next slot of the 64 footprint slots the active player's steps use	verified	one	terrain/footprints#footprint-spawn
+0xca0574	uint32_t[4]	s_footprintTextures		terrain	Holds the footprint texture records: capacity, count, data and granule	verified	one	terrain/footprints#texture-table
+0xca0598	uint32_t	s_footprintGeneralCursor		terrain	Holds the next slot of the 512 footprint slots other units' steps use, 0x40 to 0x23f	verified	one	terrain/footprints#footprint-spawn
+0xca05a0	float[3]	s_footprintNormal		terrain	Holds (0, 0, 1), the normal of every footprint vertex	verified	one	terrain/footprints#fade-and-draw
+0xca05b0	uint32_t[3]	s_footprintTriangles		terrain	Holds the ground triangle list a footprint gathers: capacity, count and data	verified	one	terrain/footprints#footprint-spawn
+0xca05f0	uint8_t	s_footprintPools		terrain	Begins the 576 footprint slots, 0x34 bytes each	verified	one	terrain/footprints#footprint-spawn
 0xca7d70	void *	s_sceneDefList		terrain	Holds the scene's placement list	inferred	none	
 0xca7d98	void *	s_globalMapObjList		terrain	Holds the global map object list	inferred	none	
+0xca7d9c	uint32_t[3]	s_mapObjectListLink		terrain	Holds the global map object list's link offset, tail and head	verified	one	terrain/liquidpass#map-object-liquid-at-a-point
 0xca7db4	void *	s_mapObjDefHash		terrain	Holds the map object placement hash table's buckets	inferred	none	
 0xca7dbc	uint32_t	s_mapObjDefHashMask		terrain	Holds the map object placement hash table's mask	inferred	none	
 0xca7ddc	void *	s_doodadDefHash		terrain	Holds the doodad placement hash table's buckets	inferred	none	
 0xca7de4	uint32_t	s_doodadDefHashMask		terrain	Holds the doodad placement hash table's mask	inferred	none	
+0xca7e18	void *	s_areaPool		terrain	Holds the pool of WAREA records	verified	one	terrain/overview#map-pools
+0xca7e1c	void *	s_chunkPool		terrain	Holds the pool of WCHUNK records	verified	one	terrain/overview#map-pools
+0xca7e20	void *	s_doodadDefPool		terrain	Holds the pool of WDOODADDEF records	verified	one	terrain/overview#map-pools
+0xca7e24	void *	s_mapEntityPool		terrain	Holds the pool of WENTITY records	verified	one	terrain/overview#map-pools
+0xca7e28	void *	s_mapObjectGroupPool		terrain	Holds the pool of WMAPOBJDEFGROUP records	verified	one	terrain/overview#map-pools
+0xca7e2c	void *	s_mapObjectDefPool		terrain	Holds the pool of WMAPOBJDEF records	verified	one	terrain/overview#map-pools
+0xca7e30	void *	s_chunkLiquidPool		terrain	Holds the pool of WCHUNKLIQUID records	verified	one	terrain/overview#map-pools
+0xca7e34	void *	s_soundEmitterPool		terrain	Holds the pool of WSOUNDEMITTER records	verified	one	terrain/overview#map-pools
+0xca7eb8	void *	s_extWaterProgram		terrain	Holds the MapObjExtWater0 pixel program	verified	one	terrain/groupdraw#group-liquid-mesh
 0xca7ebc	float			models	Holds a float that CMapObj::FootprintCells, InitMapObjEighteenOverThirtySix read and write; not read here	inferred	none	
+0xca7ecc	uint32_t	s_mapObjLightLod		terrain	Holds the mapObjLightLOD console value 0 to 2; 1 adds the specular pass of interior batches	verified	one	terrain/groupdraw#interior-group-batches
+0xca7ed8	void *	s_metalProgram		terrain	Holds the MapObjMetal pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca7edc	float[3]	s_portalCameraPoint		terrain	Holds the camera position in the space of the map object the portal flood runs in	verified	one	terrain/portals#camera-inside-a-map-object
+0xca7ee8	void *	s_transDiffuseProgram		terrain	Holds the MapObjTransDiffuse pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca7ef0	float[4]	s_portalViewPlane		terrain	Holds the plane through the camera across the view axis: unit normal then offset	verified	one	terrain/portals#camera-inside-a-map-object
 0xca7f00	uint32_t	s_groupFogFlag		terrain	Holds the flag the group liquid pass sets around its fog	inferred	none	
 0xca7f10	uint8_t[256]	s_groupLiquidRamp		terrain	Holds the map object liquid's depth to alpha ramp	inferred	none	
+0xca8010	void *	s_transSpecularProgram		terrain	Holds the MapObjTransSpecular pixel program	verified	one	terrain/groupdraw#interior-group-batches
 0xca8014	uint32_t			unassigned	Holds a dword that MapObjLoadShaders, SeedInteriorVisibility, SeedExteriorVisibility read and write; not read here	inferred	none	
+0xca8018	float[3]	s_portalTargetPoint		terrain	Holds the camera target in the space of the map object the portal flood runs in	verified	one	terrain/portals#camera-inside-a-map-object
+0xca802c	void *	s_portalMapObject		terrain	Holds the map object instance the interior flood last ran for	verified	one	terrain/portals#camera-inside-a-map-object
+0xca8030	void *	s_envProgram		terrain	Holds the MapObjEnv pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca8034	void *	s_overbrightProgram		terrain	Holds the MapObjOverbright pixel program	verified	one	terrain/groupdraw#interior-group-batches
 0xca8038	uint32_t[10]	s_mapObjHash		models	Holds the map object cache's hash table: vtable, link offset, list head and mask	verified	one	models/overview#static-objects
 0xca8064	uint8_t	s_keepMapObjVertexAlpha		models	Holds the switch that leaves the colour alphas of a group's opaque faces as read	inferred	none	models/wmo#portal-vertex-fade
+0xca8065	uint8_t	s_transProgramsOn		terrain	Holds 1 when both transparency pixel programs of the map objects are available	verified	one	terrain/groupdraw#interior-group-batches
 0xca8080	uint32_t	s_skyboxState		terrain	Holds the sky box state the map object frame publishes	inferred	none	
+0xca8088	void *	s_envMetalProgram		terrain	Holds the MapObjEnvMetal pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca808c	uint8_t	s_metalProgramsOn		terrain	Holds 1 when pixel shaders and specular are on and the MapObjMetal program is available	verified	one	terrain/watershade#pixel-program-gates
 0xca8098	float			models	Holds a float that CMapObj::FootprintCells reads and writes; not read here	inferred	none	
+0xca809c	uint8_t	s_mapObjOverbrightOn		terrain	Holds the mapObjOverbright console variable, default on	verified	one	terrain/watershade#pixel-program-gates
+0xca80b8	void *	s_specularProgram		terrain	Holds the MapObjSpecular pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca80bd	uint8_t	s_specularProgramsOn		terrain	Holds 1 when the map object pixel programs the group draw uses are available	verified	one	terrain/groupdraw#interior-group-batches
 0xca80c4	uint8_t	s_weatherVisible		unassigned	Holds 1 when the frame shows weather: outdoors, or through a portal to an exterior group	verified	one	lighting/weather#weather-visibility
+0xca816c	float[3]	s_globalLightDirection		terrain	Holds the direction of the global map light entities and doodads are lit from	verified	one	terrain/lights#entity-lighting
 0xca82c0	void *	s_soundEmitterCallbackB		terrain	Holds the second sound emitter callback, never set by live code	inferred	none	
 0xca82c4	void *	s_soundEmitterCreate		terrain	Holds the sound emitter callback; 0 at start, set only by the unreached 0x6723c0	verified	one	terrain/chunk#sound-emitters
 0xca8308	uint32_t[32]	s_chunkLevelBatches		terrain	Holds the four levels' static draw batches of 32 bytes	verified	one	terrain/lod#chunk-mesh-tables
@@ -2703,14 +2874,37 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcac3c8	float[290]	s_chunkUnitTexCoords		terrain	Holds each chunk vertex's texture coordinate in [0, 1]	verified	one	terrain/lod#chunk-mesh-tables
 0xcac860	float[290]	s_chunkTexCoords		terrain	Holds each chunk vertex's texture coordinate scaled to [0, 8]	verified	one	terrain/lod#chunk-mesh-tables
 0xcaf160	uint16_t	s_chunkIndexScratch		terrain	Begins the scratch index list the chunk index builder fills	inferred	none	
+0xcaf79c	void *	s_detailRamp		terrain	Holds the detail doodad fade ramp texture	verified	one	terrain/detail#detail-doodad-draw
+0xcb0034	uint32_t	s_detailDoodadRebuild		terrain	Holds 1 when the detail doodad buffers must be rebuilt	verified	one	terrain/detail#detail-doodad-tables
 0xcb004c	uint32_t	s_portalDepthCap		terrain	Holds the portal recursion cap	inferred	none	
+0xcb005c	uint8_t[57344]	s_portalStates		terrain	Holds the 2048 portal states of 0x1c bytes: flags, screen rectangle and the two pass numbers	verified	one	terrain/portals#portal-walk
+0xcbe070	float[16]	s_deviceViewProjection		terrain	Holds the device matrix the portal flood reads, the view and projection	verified	one	terrain/portals#interior-seed
+0xcbe0b0	uint32_t[16]	s_clipVertexClasses		terrain	Holds the class of each polygon vertex against the plane being clipped: 0 on, 1 inside, 2 outside	verified	one	terrain/portals#portal-polygon-clip
+0xcbe0f0	float[16]	s_clipVertexDistances		terrain	Holds the distance of each polygon vertex to the plane being clipped	verified	one	terrain/portals#portal-polygon-clip
+0xcbe138	float[48]	s_clipBufferA		terrain	Holds one of the two buffers of 16 vertices the portal polygon clip alternates	verified	one	terrain/portals#portal-polygon-clip
+0xcbe1f8	float[48]	s_clipBufferB		terrain	Holds the other buffer of 16 vertices the portal polygon clip alternates	verified	one	terrain/portals#portal-polygon-clip
+0xcbe2d8	float[16]	s_portalObjectToClip		terrain	Holds the map object to clip space matrix the portal vertices go through	verified	one	terrain/portals#interior-seed
 0xcbe320	uint32_t	s_portalWindowCount		terrain	Holds the count of the portal flood's windows	inferred	none	
 0xcbe324	uint8_t	s_portalWindowList		terrain	Begins the portal flood's window list	inferred	none	
+0xcbe468	float[16]	s_portalWorldMatrix		terrain	Holds the world matrix slot 8 read for the portal flood	verified	one	terrain/portals#interior-seed
+0xcbe4b4	void *	s_interiorGroupDrawer		terrain	Holds the function that draws the batches of an interior group, set each frame	verified	one	terrain/portals#map-object-frame
+0xcbe4b8	uint32_t	s_interiorDrawerAdjust		terrain	Holds the offset added to the model for the interior group drawer, always 0	verified	one	terrain/groupdraw#group-draw
+0xcbe4c0	float[48]	s_portalPolygon		terrain	Holds the 12 clip-space vertices of the portal being projected	verified	one	terrain/portals#portal-projection
+0xcbe580	void *	s_exteriorGroupDrawer		terrain	Holds the function that draws the batches of an exterior group, set each frame	verified	one	terrain/portals#map-object-frame
+0xcbe584	uint32_t	s_exteriorDrawerAdjust		terrain	Holds the offset added to the model for the exterior group drawer, always 0	verified	one	terrain/groupdraw#group-draw
 0xcde5ac	uint32_t	s_portalInsideLeg		terrain	Holds 1 while the inside visibility pass runs	inferred	none	
+0xcde5b0	void *	s_portalCallback		terrain	Holds the function the portal flood calls for each group it reaches	verified	one	terrain/portals#camera-inside-a-map-object
+0xcde5b4	void *	s_portalCallbackObject		terrain	Holds the map object the portal flood's callback is given	verified	one	terrain/portals#camera-inside-a-map-object
 0xcde648	uint16_t[8192]	s_wmoKeptFaces		models	Holds the indices of the faces a WMO box query kept, in order	verified	one	models/collisionquery#box-descent-and-face-test
+0xce2660	uint8_t[60]	s_groupIndexPool		terrain	Holds the pool the map object groups' index buffer blocks come from	inferred	none	
+0xce269c	uint32_t	s_liquidGroupParity		terrain	Holds the depth parity of the first liquid group, then the flag the group liquid draw reads	verified	one	terrain/portals#group-callback
+0xce26ac	uint8_t[52]	s_groupVertexPool		terrain	Holds the pool the map object groups' vertex buffer blocks come from	inferred	none	
 0xce26e0	uint32_t	s_wmoVisitedCount		models	Holds the count of entries in the visited-face stack 0xce26e8	verified	one	models/collisionquery#box-descent-and-face-test
 0xce26e8	uint16_t[8192]	s_wmoVisitedFaces		models	Holds the face indices a WMO box query has marked visited, to clear their visited bit	verified	one	models/collisionquery#box-descent-and-face-test
+0xce66e8	uint32_t	s_liquidGroupSeen		terrain	Holds 1 once the portal flood has met a group with liquid	verified	one	terrain/portals#group-callback
 0xce66fc	uint32_t	s_wmoKeptCount		models	Holds the count of entries in the kept-face array 0xcde648	verified	one	models/collisionquery#box-descent-and-face-test
+0xce78f8	uint32_t[512]	s_scatterPicks		terrain	Holds the scatter's picked cells, column then row, eight bytes each	verified	one	terrain/detail#detail-doodad-scatter
+0xce8128	float[16]	s_layerChannelSelectors		terrain	Holds the four layer constants: zero, then one in the red, green and blue channel	verified	one	terrain/render#chunk-layer-states
 0xce8270	uint8_t[24]	s_areaReadLock		terrain	Holds the critical section around ADT reads and parses	inferred	none	terrain/files#tile-file-read
 0xce8534	int32_t	s_violenceLevel		client	Holds the violenceLevel CVar value; written by 0x6c5af0	inferred	none	spell/visuals#spell-visual-record-choice
 0xce8538	int32_t			unassigned	Holds an int32_t that SndInterfaceWorldInitialize, Script::GetGameTime, IsDaytime read; not read here	inferred	none	

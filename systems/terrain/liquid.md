@@ -186,3 +186,62 @@ Test: `terrain::weather_toroidal_advect_difftest`
 The liquid probe tests the bit (`0x680afa`, `0x680b39`), calls `0x68e720` at `0x680b0d` and
 `0x680b4c` before `0x68e670` with 1/36 (`0x680b1d`) or 1/9 (`0x680b5c`), and for slime stores 0 in
 `+0xfa14` (`0x680b75`). `0x68e930` calls `0x68e720` with the stored mode `+0xfa24` at `0x68e9da`.
+
+## Shore edge
+
+A terrain liquid surface ends in a hard edge along the whole cells the tile bytes mark. Nothing in
+the client softens it: the fills copy the vertex positions unchanged, write no distance to the
+shore, a constant normal and the two texture coordinates, and no pass sets the alpha test (state
+8). A slot is submitted once a frame, by one of the two entries of `0x6816d0`.
+
+Addresses: `0x68d690`, `0x68d790`, `0x68cec0`, `0x68df70`, `0x68de40`, `0x6816d0`, `0x685010`, `0x6851b0`, `0x68db90`, `0x68dab0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x68cec0` skips a tile only for the hole nibble 0xf and for a vertical band outside the box, and
+emits the two triangles (0, 9, 10) and (0, 10, 1) of each whole tile (`collide`). The position
+copy in `0x68d690` and `0x68d790` is three dword moves per vertex. The seven functions named above
+write no state 8 (every state setter in them was read to its return). The water draws depth tested
+against the terrain, which is drawn first and writes depth, so the visible waterline is where the
+terrain meets the liquid plane; the draw order is `liquidpass` and `scene`.
+
+## Liquid mesh templates
+
+The first area constructed makes five liquid mesh templates once (`0x68a750`, from `0x6c1d77`), 0x44 bytes each, for
+n = 0, 1, 3, 7 and 15 (the table at `0x86a040`). A template of n has (n + 2)² vertices on a grid of n + 1 cells
+a side. A vertex has a texture coordinate u/(n + 1), v/(n + 1) and a position of −4.1666665 times it. Rows run
+alternately up and down from u = 0, so the vertex list is a serpentine. The 16-bit index list holds
+(n + 1)(n + 2)·2 + 2 entries. Nothing in the image reads the templates after they are made.
+
+Addresses: `0x68a750`, `0x68a400`, `0x68a260`, `0x6c1d77`, `0x68a806`, `0x68a816`, `0x68a67a`, `0x68a687`, `0x68a68e`, `0x68a703`, `0x68a70e`, `0x86a040`, `0x810350`, `0xc81d4c`
+Confidence: verified
+Proof: one
+Test: `terrain::liquid_lod_mesh_difftest`
+
+`0x68a750` returns at once when `0xc81d50` is not zero, then fills the five records, passing each n from `0x86a040` to
+`0x68a400` (`0x68a816`). Positions are at +0x8 and texture coordinates at +0x18, as two floats each; the index
+list is at +0x28. `0x68a67a` subtracts 1 from n and jumps through the byte table at `0x68a738` to one of three cases: for n = 1
+(`0x68a68e`) it stores the strip {1, 0}, {5, 6}, {7, 6}, {3, 8} at +0x3c with count 4; for n = 3, 7 and 15 (`0x68a703`) it calls
+`0x68a260` with (n + 1)/2, n + 2 and n + 1 to fill the strip; for n = 0 it stores 0 at +0x30.
+The grid step is `0x810350`, −4.1666665.
+
+## Wave field
+
+The client carries a wave field it never runs. A step advances two phases, by 0.2 and by 0.92 times the frame
+time, clears a 64 by 64 grid of complex floats, puts eight sine and cosine terms of the phases in fixed cells, takes the
+inverse FFT of the grid and scales every float by 1/64. A sample rotates a point into the field's axes, returns 0
+outside its half extents and otherwise blends four heights bilinearly at 1/8.3333 of a yard a cell.
+
+Addresses: `0x68b410`, `0x68b600`, `0x68bfd0`, `0x68b5bb`, `0x68b5d1`, `0x68c0e3`, `0xc81d44`, `0xc81180`, `0xc81d60`, `0x86a090`, `0x80679c`, `0x810374`, `0x80a92c`, `0x8102f0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x68b410` adds dt × `0x80679c` (0.2) to `0xc81d44` and dt × `0x810374` (0.92) to `0xc81180`, and
+zeroes 0x2000 dwords at `0xc81d60`. `0x68b5bb` calls the FFT `0x68b600` on the grid with the dimensions `0x86a090`
+(64, 64), two dimensions and the sign −1.0; the loop to `0x8000` bytes (`0x68b5d1`) multiplies each float by
+`0x80a92c` (0.015625). The FFT is the usual radix-2 over each dimension with bit-reversal swaps and a
+sine recurrence for the twiddle. `0x68bfd0` takes the point less the centre, rotates it by the 2 by 2 matrix at `+0x1c`
+to `+0x28`, fails (`0x68c0e3`) unless each axis lies within the half extents at `+0x8` and `+0xc`, and scales
+the result by 1 / `0x8102f0` (8.333333).

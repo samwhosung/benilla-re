@@ -153,7 +153,7 @@ Both differences are stored. `0x69b37c test ah,5; jnp` rejects a negative differ
 passes, and `0x69b39c` rejects one not below 34133.332 (`0x7ffab0`), a NaN passing again. The
 chunk comes from k = 0.03. `0x69b42f` multiplies by 1.92 (0x3ff5c28f, `0x810744`); the pointer
 is +0xf1c (`0x69b466`), not the +0x144 a loaded shadow map sets, and `0x69b481` tests bit
-column & 7 of byte 8·row + column >> 3. The callers are doodad and light code (`entities`).
+column & 7 of byte 8·row + column >> 3. The callers are doodad and light code (`mapentities`).
 
 `terrain::tile_index_conversion_difftest` runs `0x69b356` to `0x69b371`, `0x69b3c1` to `0x69b3f2`
 and `0x69b42f` to `0x69b466`.

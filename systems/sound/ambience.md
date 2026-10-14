@@ -22,8 +22,8 @@ Test: none
 `0x4609b0` walks SoundEntries rows from the last and keeps the ids of the two names. `0x460bd0`
 tests `[0x835a48] > 0`, then `[0x835a44] > 0`, then the weather sound with `[0xb06d44]` clear, and
 reads row `+4 + 4·night`. `0x460c50` stores the row pointer (0 for an id out of range) and the
-flag, then refreshes with a fade. The callers pass 1 at `0x67e7d4` (`ResolveZoneText`) and 0 at
-`0x67e919` (`ReportZoneChange`).
+flag, then refreshes with a fade. The callers pass 1 at `0x67e7d4` (`UpdateIndoorArea`) and 0 at
+`0x67e919` (`UpdateOutdoorArea`).
 
 ## Zone ambience changes
 

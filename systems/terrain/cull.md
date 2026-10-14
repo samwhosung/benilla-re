@@ -13,6 +13,39 @@ in [−0.9, 0.9], both ends included; a NaN passes.
 
 Roots: none.
 
+## Culling toggle
+
+World flag 0x20 gates the horizon buffer, the horizon tests and the chunk occluder routing. It starts set and the
+`showCull` command flips it, printing "Terrain culling disabled." or "Terrain culling enabled.". With it clear every
+horizon test reports visible.
+
+Addresses: `0x673250`, `0x673259`, `0x673265`, `0x67327c`, `0xc7b2a4`, `0x66f6cb`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x673257` tests bit 0x20 of `0xc7b2a4`; set, `0x673265` clears it with `and 0xffffffdf`, else `0x67327c` ors it
+in. Both legs print through `0x63cb50` and return 1. `0x66f6cb` ors 0x7100b73 into the word, which has the bit.
+
+## Horizon view
+
+Once a frame `0x680bc0` builds the matrix `0xc7b700` the horizon steps project through. The forward vector
+f is the camera target less its position, normalised into `0xc7cfec` to `0xc7cff4`. When the squared length of f's x and y is above 0.0001
+(`0x680e50`; a smaller, equal or NaN value takes identity), the matrix is the view looking from the origin along h = (f.x, f.y) normalised with up (0, 0, 1), then translated by
+the negated camera position, then multiplied by the device projection `0xc7d280`. A point so projected is seen by a level camera at the
+eye with the real lens, and its z is the distance along the heading.
+
+Addresses: `0x680bc0`, `0x680e50`, `0x680e7a`, `0x680ede`, `0x680f0b`, `0x680f1e`, `0x680f48`, `0x680c4d`, `0x680cc5`, `0x680d19`, `0x5c3e70`, `0x7bdc40`, `0x7bc6a0`, `0xc7b700`, `0xc7d280`, `0xc7cfec`, `0xc7cff4`, `0xc7cf20`, `0x80c4f4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x680c4d` to `0x680c9e` divide f by its length. `0x680cc5` to `0x680d19` form h from f's x and y, normalising when
+their squared length is above 0.0001 (`0x680cf3`). `0x680ede` calls the look-at builder `0x5c3e70` with the eye
+(0, 0, 0), target h and up (0, 0, 1); `0x680f0b` translates by the negated eye `0xc7cf20`, and `0x680f1e`
+multiplies by `0xc7d280`, copying 16 floats to `0xc7b700` at `0x680f30`. The band plane of `depth-buckets` is h
+with its distance, and the view plane `0xc7bcb0` is f with distance −f·eye (`0x680cb1`, `0x680cb8`).
+
 ## Frustum box test
 
 `0x686940(box)`, on six planes, returns 0 when the box is outside a plane and 3 otherwise. For
@@ -116,20 +149,62 @@ The detail doodads +0xc0 are released by `0x6afbb4`. Liquid +0x30 is the slot's 
 `terrain::center_accumulate_difftest` runs `0x6afc7c` to `0x6afca6`; `terrain::center_half_difftest`
 runs `0x6afd3d` to `0x6afd72`.
 
+## Frame frustum box
+
+Once a frame the scene captures the box around its frustum: the minimum and maximum corner of the eight
+frustum corners, six floats at `0xc7cb5c` (min x, y, z, then max x, y, z). The chunk step, the map object
+update and the liquid slots admit only what meets it.
+
+Addresses: `0x680bc0`, `0x680e3c`, `0x680e4b`, `0x680e60`, `0x7c1450`, `0x5c43b0`, `0xc7bcd8`, `0xc7cb5c`, `0x6992c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x680e3c` fills the corners at `0xc7bcd8`; `0x680e4b` calls `0x7c1450` with them and the count 8
+pushed at `0x680e41`, and `0x680e60` copies the result with `rep movsd`. `0x7c1450` returns six zeros for a
+count of 0, else starts from the first point and folds the rest, the minimum per axis kept with
+`fcompp` and the maximum through `0x6992c0`.
+
+## Chunk points
+
+After the level and idle step, `0x6afad0` files what a chunk holds, if the chunk's box meets the
+frame box (`0xc7cb5c`). The chunk goes to its band by one of its corner vertices: the index 0, 8, 0x88 or
+0x90 of the outer grid, chosen by two bits that tell which way the camera target lies from the eye. A
+detail doodad def and each liquid slot whose box meets the frame box are filed by their own sphere or
+box centre.
+
+Addresses: `0x6afad0`, `0x6afc1b`, `0x6afc2f`, `0x6afc43`, `0x6afc5f`, `0x6afc6c`, `0x6afca6`, `0x6afccc`, `0x6afce7`, `0x6afd38`, `0x6afd72`, `0x6afdda`, `0x699330`, `0x68df40`, `0x86b580`, `0xc7f294`, `0xc7d118`, `0xc7cf20`, `0x681026`, `0x68102c`, `0x681040`, `0x681059`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6afc1b` to `0x6afc51` skip the chunk when its min exceeds the frame box's max on an axis (a NaN skips
+too), and `0x699330` skips it when its max (+0x50) is below the frame box's min. `0xc7f294` is 2 when the
+target's x is below the eye's and plus 1 when its y is (`0x681026` to `0x681059`); `0x86b580[q]` picks the
+vertex, which `0x6afc7c` to `0x6afca3` offsets by the chunk origin (+0x6c to +0x74) before `0x6afca6`.
+`0x6afccc` files a detail doodad def whose byte +0xc has bit 7 and whose +0x88 or +0x174 is not zero
+(`0x6afce7`). For each of the four liquid slots, `0x68df40` fills the box (the chunk's with the slot's heights as z); the centre is half the sum, the same
+box test applies (`0x6afd72` to `0x6afdc2`), and `0x6afdda` files it with the slot index.
+
 ## Depth buckets
 
-The scene sorts what it draws into 32 depth buckets by floor((view depth − radius)·0.03), and
-the chunk step files points of interest into them for the object passes.
+The scene files what it draws into 32 depth bands of 33.33 yards, nearest first. The band is
+round-to-nearest of (depth · 0.03 − 0.5), the depth the signed distance along the camera's horizontal
+facing, less the radius for a sphere. A negative value is band 0, and a band of 32 or more is not filed at
+all. Each band holds a list per kind, and a node leaves its old list before it joins the tail of the new one.
 
-Addresses: `0x6816f0`, `0x6817c0`, `0x6818b0`, `0x681970`, `0x681a40`, `0x6afca6`, `0x6afdda`
-Confidence: inferred
-Proof: none
+Addresses: `0x6816f0`, `0x6817c0`, `0x6818b0`, `0x681970`, `0x681a40`, `0x6afca6`, `0x6afdda`, `0xc7bd40`, `0xc7cfb8`, `0x810174`, `0x86861c`, `0x67f100`, `0x67f560`, `0x6818f6`, `0x681901`
+Confidence: verified
+Proof: one
 Test: `terrain::depth_bucket_key_difftest`, `terrain::depth_bucket_v1_difftest`, `terrain::depth_bucket_v3_difftest`, `terrain::depth_bucket_v4_difftest`, `terrain::view_plane_bucket_difftest`
 
-The four insert functions share the 0.03 scale and differ in their lists: `0xc7bd58`,
-`0xc7bd4c`, the nine sub-buckets at `0xc7bd70` and the tail lists at `0xc7bda0`. `0x6afca6` and
-`0x6afdda` are the chunk step's calls for a chunk point and a liquid centre. The bucket's
-clamping is not read here.
+`0x67f100` makes 32 records of 0x6c bytes at `0xc7bd40`, each by `0x67f560`. `0x6818b0` files a chunk from
+a point, `0x6816f0` a doodad def from its sphere, `0x6817c0` a map object def, `0x681970` a liquid slot from
+its centre and `0x681a40` an entity; `0x6afca6` and `0x6afdda` are the chunk step's calls. The last
+three lists sit at +0x24, +0x30 + 12 × slot and +0x60. The band plane `0xc7cfb8` is the forward
+direction with z zeroed, renormalised when its squared length exceeds 0.0001; d is −n·eye. The scale
+`0x810174` is 0.03 and `0x86861c` 0.5. `0x6818f6` and `0x681901` clamp and skip. `0x6817c0` and
+`0x681a40` also store the depth less the radius on the view plane `0xc7bcb0` at +0x78.
 
 `terrain::depth_bucket_key_difftest` runs `0x6818b0` to `0x6818f3`;
 `terrain::depth_bucket_v1_difftest` runs `0x6816f0` to `0x681754`;

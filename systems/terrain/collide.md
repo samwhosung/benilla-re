@@ -97,21 +97,85 @@ takes `rsqrtss`; each `fst` from `0x6ab34f` stores r·n while keeping it, and `0
 
 ## Impassable walls
 
-For an impassable chunk (MCNK flag bit 1), `0x6ab530` adds, for each side of the chunk's box the
-query box crosses, two facets of a vertical wall 32,000 yards high along that side, facing out:
-y-min when the box's min y is below the chunk's, y-max when its max y is above, then x-min and
-x-max. A unit cannot walk out of the chunk across those sides.
+A chunk whose header flag bit 1 is set (`0x40` in the runtime word +0xc, written once at `0x6af677`)
+fences itself. For each side the query box crosses, `0x6ab530` adds a vertical quad of two facets
+along the chunk's own box. Min and max are chunk +0x44 to +0x4c and +0x50 to +0x58 (x, y, z); the
+quad rises 32000.0 from the chunk's lowest height `C.minZ`. The walls ignore the query's class mask, the
+flag is read once per chunk, and the chunk's own triangles are gathered as for any chunk.
 
-Addresses: `0x6ab530`, `0x6acde0`, `0x6aca50`, `0x6ab53d`, `0x6ab599`, `0x6ab5df`, `0x6ab70d`, `0x6ab86c`, `0x6ab9ba`
-Confidence: inferred
-Proof: none
+| side | test (strict) | start p | edge e | normal |
+|---|---|---|---|---|
+| y-min | Q.min1 < C.min1 | (C.min0, C.min1, C.minZ) | (+W, 0, 0) | (0, −1, 0) |
+| y-max | Q.max1 > C.max1 | (C.max0, C.max1, C.minZ) | (−W, 0, 0) | (0, 1, 0) |
+| x-min | Q.min0 < C.min0 | (C.min0, C.max1, C.minZ) | (0, −D, 0) | (−1, 0, 0) |
+| x-max | Q.max0 > C.max0 | (C.max0, C.min1, C.minZ) | (0, +D, 0) | (1, 0, 0) |
+
+Addresses: `0x6ab530`, `0x6aba30`, `0x6acde0`, `0x6aca50`, `0x6ab53d`, `0x6ab599`, `0x6ab5df`, `0x6ab70d`, `0x6ab86c`, `0x6ab9ba`, `0x6aae2a`, `0x6af677`, `0x6aadc0`
+Confidence: verified
+Proof: one
 Test: `terrain::plane_from_np_difftest`, `terrain::impassable_chunk_fence_difftest`
 
-`0x6ab53d` compares the box's min y with chunk +0x48 and builds the first wall when it is below,
-with normal (0, −1, 0) (`0x6ab5df`), height 32000 (0x46fa0000, `0x6ab599`) and the chunk's
-x extent; `0x6ab70d`, `0x6ab86c` and `0x6ab9ba` test the other three sides, whose normals are
-(0, 1, 0), (−1, 0, 0) and (1, 0, 0). `0x6acde0` sets d = −n·p. The wall's corner and the
-rounding of its far vertices are not read here.
+W and D are the chunk's x and y extents. The tests are `fcomp` then `test ah,5` with `jp` (min sides, strictly
+less) and `test ah,0x41` with `jne` (max sides, strictly greater); the query's z is never read. With
+u = (0, 0, 32000.0) (`0x46fa0000`, stored at `0x6ab599`) the facets are (p, p+e, p+e+u) and (p, p+e+u, p+u):
+vertices at +0x10, +0x1c and +0x28 of the 52-byte record, normal at +0, `d = −n·p` (`0x6acde0`). The
+x-max side goes through `0x6aba30`; each facet is appended with `0x6aca50`. `0x6aae2a` runs only for a chunk found in the tile table at
+`0xc96318`, before the cell loop, so a flag covers the whole chunk. `0x6ab530` reads one stack argument
+(the collector, `ret 8`); the mask in the other is unread. The walls' normals point away from the chunk.
+`0x6aadc0` is called only by the world box query `0x6aa8b0`, which only the box gather `0x6721b0` calls (from `0x5d6ab0`, `0x60fe25`,
+`0x63172f`, `0x6320b1`, `0x6320e0`, `0x633b46`, `0x633e90`, `0x63451f` and `0x699ee1`), so segment queries never see a wall.
+
+## Triangle batches
+
+The liquid and map object queries record the triangles they hit as batches in one shared table, and
+`0x671cc0` turns them into facets. A batch header is 0x20 bytes at
+`0xc62550` (at most 31 per query, the count at `0xc5a474`): `+0x0` the matrix, `+0x4` the vertex
+array (12-byte vertices), `+0xc` the index triples (16 bits), `+0x14` the index count, `+0x16`
+the triangle count, `+0x18` and `+0x1a` the lowest and highest index. The map object
+trace keeps the face words of its hit at the first header's `+0x10`. Matrices are 0x40 bytes at
+`0xc62980` (31), indices come from a pool of 0xc000 at `0xc63298`; a full table sets bit 0 of
+`0xc63258` and the batch is dropped.
+
+Addresses: `0x68cec0`, `0x68d029`, `0x68d053`, `0x68d06f`, `0x68d0c7`, `0x68d107`, `0x68d10f`, `0x68d127`, `0x68d153`, `0x68d168`, `0x68d194`, `0x68cf45`, `0x68d015`, `0x6aac6c`, `0x810304`, `0x8101b8`, `0x68d032`, `0xc62550`, `0xc62560`, `0xc62980`, `0xc63298`, `0xc63258`, `0xc63190`, `0xc5a474`, `0xc7b378`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x68cec0`, the liquid slot's gather, is one producer. For each cell of a rectangle of the slot's
+9 × 9 grid whose type nibble is not 0xf it takes the triangles (v, v+9, v+10) and (v, v+10, v+1)
+of the table at `0x810304`, v being 9 × column + row, and drops a triangle whose three vertices are
+all below or all above the box in z, with the margin `0x8101b8` (`0x68cf45`, `0x68d015`). The first
+kept triangle takes the next header (`0x68d029`) unless the count plus 1 reaches 0x20, zeroed
+with the lowest index 0xffff (`0x68d053`), and the next matrix (`0xc63190`): an identity with the
+translation `[liquid + 0x1c] + 0x6c` (`0x68d0c7`). The vertex array is the slot's, at `liquid + 0x34`.
+The pool takes 6 indices per cell of the rectangle at cursor `0xc7b378`, only below 0xc000
+(`0x68d10f`). Each index is stored with the cell's base added (`0x68d153`), the bounds widen
+(`0x68d168`) and `0x68d194` counts the triangle. The map object gather zeroes the counters, flag
+included, before it runs (`0x6aac6c`).
+
+## Batch flush
+
+`0x671cc0(list, owner)` (`ecx` unused, owner two words on the stack) appends one facet per triangle
+of every batch to the list, in batch order. The vertices are the batch's, moved by its matrix. The
+normal is (v1 − v0) × (v2 − v0) normalized, d = −n·v0. Every new facet gets the owner pair, and the
+list's owner array is grown and counted to match.
+
+Addresses: `0x671cc0`, `0x671cd0`, `0x671d16`, `0x671d53`, `0x671dd6`, `0x671e5a`, `0x671e94`, `0x671fd7`, `0x672000`, `0x672012`, `0x67202b`, `0x672034`, `0x672076`, `0x6720d0`, `0x6aaca3`, `0x6ab521`, `0x6ac851`, `0x6ac9af`, `0x6bbcf8`, `0x6bbd58`, `0x6742d0`, `0x7bca80`, `0x4841f0`, `0x672130`, `0x6720f0`, `0x602630`, `0xc9e388`
+Confidence: verified
+Proof: one
+Test: `terrain::liquid_hit_flush_difftest`
+
+Callers are the map object facet gather, the liquid slot gathers, the volume gathers and the group
+liquid segment query. `0x671cd0` tests `0xc9e388` (the SSE flag): with it, `0x671e5a` scales the
+cross product by `rsqrtss` of its squared length, the 12-bit estimate of the reciprocal root,
+so the unit normal is only that accurate; without it `0x672012` crosses (`0x672130`), normalizes
+exactly with `fsqrt` and a divide (`0x6720f0`) and takes the dot (`0x602630`). `0x671d16` makes room
+for a facet (`0x6742d0`) and the vertex positions are written at `+0x10`, `+0x1c` and `+0x28`.
+The plane is stored as n at `+0x0` and d at `+0xc`. After the loops `0x672076` compares the list's new
+count with the old: when it grew past the owner array's count and capacity, the array is resized
+to a multiple of its granule, its count is set, and `0x6720d0` stores the two owner words in each new
+slot, 8 bytes each. The cross product is the first vector `v1 − v0` crossed with `v2 − v0`
+(`0x4841f0` subtracts; its second pushed argument is the second vector).
 
 ## Other world queries
 

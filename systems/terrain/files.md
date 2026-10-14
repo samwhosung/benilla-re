@@ -197,7 +197,7 @@ o.z + f+0x24) and max (o.x − f+0x28, o.y − f+0x20, o.z + f+0x30), the negati
 x and y bounds. The centre is (min + max)·0.5 and the radius |max − centre|. It keeps the name
 index +0x00, the doodad set word +0x3a and the name set word +0x3c.
 
-Addresses: `0x695650`, `0x6a0db0`, `0x7bd820`, `0x7bd700`, `0x69569b`, `0x695754`, `0x695831`, `0x69585a`, `0x695923`
+Addresses: `0x695650`, `0x6a0db0`, `0x7bd820`, `0x7bd700`, `0x69569b`, `0x695753`, `0x695831`, `0x69585a`, `0x695923`
 Confidence: verified
 Proof: one
 Test: `terrain::placement_setup_difftest`
