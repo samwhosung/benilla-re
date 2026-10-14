@@ -8723,10 +8723,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c3d50	260	HandleLotteryQueryResultPacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetInt32, OsGetCachedUnixTime, FrameScript_SignalEvent; not read here	inferred	none		
 0x4c3e60	5	HandleLotteryResultPacket	idb	ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c3e70	13			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c3e80	7			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c3e80	7	CloseLootWindowThunk		ui	orchestration		Loads 1 into cl and jumps to the loot window close 0x4c3f40	verified	one	ui/gameui#interaction-close	
 0x4c3e90	20	ClearLotteryHandlers		ui	orchestration		Clears the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3eb0	132			ui	unreached		Runs its object file code that calls 0x4930d0, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4c3f40	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c3f40	1	CloseLootWindow		ui	orchestration		Returns at once	verified	one	ui/gameui#interaction-close	
 0x4c3f50	394			ui	primitive		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SStrCopy and 6 more; not read here	inferred	none		
 0x4c40e0	81			ui	orchestration		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 1 more; not read here	inferred	none		
 0x4c4140	32			ui	orchestration		Runs its object file code that calls OsGetCachedUnixTime; not read here	inferred	none		

@@ -106,12 +106,12 @@ Trade skill, craft and talents have no initializer in the start-up list; their l
 
 `0x493310` is the one closer of the interaction target, the unit the player is talking to (the dword pair at 0xb4e2d0). It clears the target, compares its GUID in turn with the GUID each window stored and closes the first that matches: trade partner, item text, gossip, quest frame, merchant, taxi master, trainer, banker, guild registrar, tabard vendor, mailbox, auctioneer, stable master and loot. It then looks the object up and calls `0x5f8c40`, which runs slot 32 of the object's handler as the interface closes its frame (`objectlayer/gameobjecttypes`).
 
-Addresses: `0x493310`, `0x4bf4e0`, `0x4e32e0`, `0x4e1fa0`, `0x501130`, `0x4fadf0`, `0x4dc0f0`, `0x4d7440`, `0x4f84d0`, `0x4f5010`, `0x4f58a0`, `0x4acd50`, `0x4cd5f0`, `0x4cae10`, `0x4c3f40`, `0x5f8c40`
+Addresses: `0x493310`, `0x4c3e80`, `0x4bf4e0`, `0x4e32e0`, `0x4e1fa0`, `0x501130`, `0x4fadf0`, `0x4dc0f0`, `0x4d7440`, `0x4f84d0`, `0x4f5010`, `0x4f58a0`, `0x4acd50`, `0x4cd5f0`, `0x4cae10`, `0x4c3f40`, `0x5f8c40`
 Confidence: verified
 Proof: one
 Test: none
 
-Each test is `cmp stored,esi; jne next; cmp stored+4,edi; jne next` against the target GUID in `esi` and `edi`. The trade partner is closed by `CGTradeInfo::SetTradePartner` with a zero GUID, the item text, gossip and trainer windows by setting their object to zero, and the quest frame by reporting the quest declined. The loot close `0x4c3f40` is a lone `ret`; a stable master is closed twice, as `ui/stable` describes.
+Each test is `cmp stored,esi; jne next; cmp stored+4,edi; jne next` against the target GUID in `esi` and `edi`. The trade partner is closed by `CGTradeInfo::SetTradePartner` with a zero GUID, the item text, gossip and trainer windows by setting their object to zero, and the quest frame by reporting the quest declined. The loot close `0x4c3f40` is a lone `ret`, and `LeaveWorldUI` reaches it through `0x4c3e80`, which loads 1 into `cl` and jumps there; a stable master is closed twice, as `ui/stable` describes.
 
 ## Frame factories
 
