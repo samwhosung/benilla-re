@@ -3001,7 +3001,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceabec	uint32_t[10]	s_skillLineRecTable		spell	Holds the ability index; zero by default, built by 0x6dd760 and filled through 0x6ddbe0	verified	one	spell/tables#hash-table-layout
 0xceac30	uint32_t	s_autoRepeatSpellId		spell	Holds the auto-repeat spell id; 0 at load, written by 0x6e54f0, 0x6ea080 and 0x6e7150	verified	one	spell/cast#after-the-send
 0xceac34	void *	s_autoSelfCastCVar		spell	Holds the autoSelfCast CVar record 0x6e7150 registers, default "0"; the arm reads its +0x28	verified	one	spell/cast#arm-candidates
-0xceac48	uint8_t[256]	s_pendingCast		spell	Holds the pending cast: item or caster guid, caster guid +0x08, spell +0x10, mask +0x14, targets, text +0x70	verified	one	spell/cast#the-pending-cast-record
+0xceac48	PendingSpellCast	s_pendingCast		spell	Holds the pending cast: item or caster guid, caster guid +0x08, spell +0x10, mask +0x14, targets, text +0x70	verified	one	spell/cast#the-pending-cast-record
 0xcead5c	uint32_t	s_lastSentSpellId		spell	Holds the spell the last request sent; 0 at load, zeroed by 0x6e4b60 and set by 0x6e54f0	verified	one	spell/cast#cast-attempt-commit
 0xcead60	int32_t[1856]	s_spellModFlat		spell	Holds the flat talent modifiers by family bit and op; zeroed by 0x6e7150, written by 0x6e9950	verified	one	spell/records#talent-modifier-tables
 0xceca60	uint32_t[10]	s_itemCooldownTable		spell	Holds the item-cooldown hash table: vtable, node list, counter, slot array, mask; built by 0x6e0e00	verified	one	spell/cooldowns#item-cooldown-table

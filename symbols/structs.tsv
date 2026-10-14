@@ -56,6 +56,7 @@ NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data
 NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
 PROFICIENCYSPELL	28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
+PendingSpellCast	256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields
 PlaneParticleEmitter	672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
 PlayerPendingItemExpiration	24		objectlayer	Holds an enchantment time waiting for its item: list link, item GUID, slot and time	verified	one	objectlayer/inventory#item-timers
 RACECLASSINFO	32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
