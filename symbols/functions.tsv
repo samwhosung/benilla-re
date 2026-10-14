@@ -7048,7 +7048,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495d00	13			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x495d10	64			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x495d50	7			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x495d60	1026			ui	primitive		Checks an item against the pending spell's enchant effects, then binds it through 0x6e5b40	inferred	none	spell/targeting#flag-word-predicates	
+0x495d60	1026	ValidateSpellItemTarget		ui	primitive	void __fastcall (int suppress, uint32_t guidLow, uint32_t guidHigh)	Checks a clicked item against the pending spell's enchant and prospecting effects, then binds it with 0x6e5b40	verified	one	spell/itemtarget#item-click-validator	
 0x496170	204			ui	orchestration		Binds the trade slot through 0x6e6900 unless the spell would replace the slot's enchantment	inferred	none	spell/targeting#binding-the-trade-slot	
 0x496240	7	SetRestStart		ui	orchestration		Stores its argument as the rest start time	verified	one	objectlayer/playermessages#error-notices	
 0x496250	36	ArmReleaseTimer		ui	primitive		Stores now plus a delay as the release time, or 1 for a zero delay, and clears its flag	verified	one	objectlayer/players#death	
