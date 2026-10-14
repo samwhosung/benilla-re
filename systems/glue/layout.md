@@ -40,7 +40,7 @@ files one for one; the files named above are the ones the paths name. The eight 
 (0x46a0c0 to 0x46a210, slots 0x827994 to 0x8279b0, followed by three slots for 0x4641b0, 0x464250
 and 0x4642c0 before glue's first) store 10², 0.5/10, products with ±1/36, −255 and 256, 1/4.16667 and the
 count, into globals only they read; the five at 0x475b70 are +inf, 2π, 1/2π, 10² and 0.5/10, and the
-first function after them allocates with the component path.
+initializers and helpers (0x475c40 to 0x475f30) come next, and the component path is first pushed at 0x476030, in 0x476020.
 
 ## Static initializers
 

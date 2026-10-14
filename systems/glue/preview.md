@@ -70,7 +70,7 @@ material's blend mode (`0x70bb46`). `0x472144` replaces `0x76d680` on the select
 
 The frame's draw clears only the depth buffer. `0x76d240` sets the aspect-fit viewport (`0x76d5d7`)
 and calls `GxClear(2)` (`0x76d5e1`); the OpenGL clear maps flag bit 0 to the colour buffer and bit 1
-to the depth buffer. The device's clear colour is opaque black, stored by its constructor. The only colour clear
+to the depth buffer. The OpenGL device's clear colour is opaque black, stored by its constructor; the Direct3D clear `0x5a17d0` swaps in a sine-cycled colour when `[dev+0x269c]&0x100` is clear (`0x5a17f6` to `0x5a189e`), and maps its flags the same way (`0x5a18a6` to `0x5a18b3`), so the depth-only clear stands. The only colour clear
 in the frame's draw path is the effect bracket's, `0x6cd978`, which clears the offscreen target the
 bracket has just bound when `gxMultisample` is 1.
 

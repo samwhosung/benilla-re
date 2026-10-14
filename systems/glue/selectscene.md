@@ -76,7 +76,10 @@ Test: `glue::lua_deg2rad_difftest`, `glue::lua_rad2deg_difftest`
 `0x7bdb67 fld` of the angle feeds `0x7bdb6a fsincos`; the matrix entries are stored at `0x7bdbce` to
 `0x7bdc2e`, with the axis normalisation skipped by the caller's flag. `0x710650` has three callers:
 `0x470abc`, `0x473179` and the widget's own `0x76d235`. The only other local-matrix writer in the
-screen is `0x472f94`, the pet's scale. The dereference of `+0x110` has no null test.
+screen is `0x472f94`, the pet's scale. The dereference of `+0x110` has no null test (`0x47311e` reads `[ecx+0x38]` with `ecx` the loaded
+`+0x110`), so the call faults when the build counter `0xb42178` is nonzero and the selected record's
+build left at the failed `CreatureModelData` lookup (`0x472a8a`), which leaves `+0x110` zero, and a
+`SetCharSelectFacing` call (`0x4736a9`) follows.
 `lua_rad2deg_difftest` runs the getters `0x471910` and `0x473650` up to `lua_pushnumber`; `lua_deg2rad_difftest`
 runs the setters `0x471930` and `0x473670` from `lua_tonumber` to the store. `0x4730e0` and the matrix are not run.
 
@@ -177,7 +180,9 @@ receives the record. `0x472a44` and `0x472a49` detach after the index test (`0x4
 `0x472971`); `0x7130a0` walks the scene's child list and releases each child whose `+0x1d0` equals
 the id and `0x713020` unlinks it and releases it through `0x7103a0`, which `0x71300d` (`0x710390`)
 balanced at the attach. `0x473700` releases `+0x114` but zeroes only `+0x110`. `0x473ad0`'s fallback path copies whole
-records and destroys the source's models. Of the 23 shipped `CreatureFamily` rows, 22 have levels 1 and 60; row 28 has levels
+records and releases each source (`0x473b83`), but its one caller (`0x47236b`, the roster growth) runs
+while the records are still as the append built them, `+0x110` and `+0x114` zero, so the release
+frees nothing. Of the 23 shipped `CreatureFamily` rows, 22 have levels 1 and 60; row 28 has levels
 0 and 0, so its scale is NaN.
 
 ## Pet textures
@@ -205,12 +210,14 @@ scales at `+0x04` and `+0x0c` and the levels at `+0x08` and `+0x10`.
 
 The body and the pet start with identical calls, `0x7121a0(-1, 0, -1, 0, 1.0, 1, 1)`: the whole
 model, animation 0, a random variation, from the start, blended and persistent. No argument loops.
-Both models register `0x473090` through `0x711bb0` as the sequence-completion callback, and on a
-completion it replays animation 0 with a fresh random variation, so a pet idles by chaining Stand
-variations. A variation plays once: the shipped Wolf and Imp chains have replay range (0, 0), and
+Both models register `0x473090` through `0x711bb0` as the sequence-completion callback. On a
+completion (reason 0) it branches on the channel in `edx`: −1 or 0x1a replays animation 0 on the
+whole model with a fresh random variation (`0x47309a`, `0x47309f`), so a pet idles by chaining Stand
+variations; any other channel gets `0x7121a0(edx, −1, −1, 0, 1.0, 1, 1)` unless the animation is 15
+(`0x4730a4`), which does nothing. A variation plays once: the shipped Wolf and Imp chains have replay range (0, 0), and
 the variation probabilities sum to 32767.
 
-Addresses: `0x472bda`, `0x472eea`, `0x472b87`, `0x472e99`, `0x473090`, `0x711bb0`, `0x7121a0`, `0x7122c1`, `0x719494`, `0x7194fd`, `0x70a280`, `0x7194f5`
+Addresses: `0x472bda`, `0x472eea`, `0x472b87`, `0x472e99`, `0x473090`, `0x47309a`, `0x47309f`, `0x4730a4`, `0x711bb0`, `0x7121a0`, `0x7122c1`, `0x719494`, `0x7194fd`, `0x70a280`, `0x7194f5`
 Confidence: verified
 Proof: one
 Test: none
