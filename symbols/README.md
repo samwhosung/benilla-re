@@ -37,7 +37,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `console`: `ConsoleClient.cpp`, the console screen and its output
 - `cvar`: `ConsoleVar.cpp`, the CVar registry and the config file, and the world's options file
 - `ffxeffects`: `FFXEffects.cpp`, the full-screen glow and death effects
-- `gxumath`: the Gxu matrix builders: perspective, orthographic, look-at and frustum corners
 - `loadingscreen`: `LoadingScreen.cpp`
 - `minimap`: `Minimap.cpp` in `Game\GameClient`
 - `objectalloc`: `ObjectAlloc.cpp`, the object heaps

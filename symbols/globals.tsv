@@ -438,7 +438,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803808	void *[6]	s_loginListenerVftable		net	Holds the vtable of the session's login listener, whose slot 4 takes the session key	inferred	none	net/session#session-key
 0x803820	void *[6]	s_loginListenerBaseVftable		glue	Holds the login listener base's slots: 0x46cc00, 0x46cbe0, 0x46cbf0 and three pure-call stubs	verified	one	glue/script#login-listener-base-and-destructors
 0x8038d8	float	s_realmLoadSpreadScale		glue	Holds 0.6, the factor of the population standard deviation in the load band's spread	verified	one	glue/realms#population-statistics
-0x8038dc	float	s_perspectiveDepthFactor		gxumath	Holds -2.0, the factor of near·far in the perspective depth term	verified	one	camera#unprojection
+0x8038dc	float	s_perspectiveDepthFactor		gxumath	Holds -2.0, the factor of near·far in the perspective depth term	verified	one	gxumath#perspective-matrix
 0x803934	void *[11]	s_simpleModelFfxInnerVftable		glue	Holds CSimpleModelFFX's second vtable, stored at +0x24; it differs from CSimpleModel's at slot 1	verified	one	glue/select#the-modelffx-frame
 0x803960	void *[40]	CSimpleModelFFX::vftable		glue	Holds CSimpleModelFFX's vtable; slots 12 and 17 are 0x46fa60 and 0x46fa90	verified	one	glue/select#the-modelffx-frame
 0x803a78	float	s_radiansToDegrees		glue	Holds the f32 57.29578 (0x42652ee1) that turns the select facing into degrees	verified	one	glue/select#facing-in-degrees
@@ -3151,8 +3151,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2b82c	float[4]	s_viewportCache		font	Holds the last viewport rectangle seen	verified	one	font/metrics#viewport-size
 0xc2b840	uint32_t[3]	s_batchFreeList		font	Holds the free list of batches: count, head and tail	verified	one	font/overview#static-objects
 0xc2b84c	uint32_t	s_frameTimeIndex		font	Holds the next slot of the frame time ring	verified	one	font/api#frame-rate-bar
+0xc2b850	float	s_noHitDistance		gxumath	Holds +inf, the distance the ray tests store before a hit; written by 0x5c43a0	verified	one	gxumath#object-file-and-initializers
+0xc2b854	uint8_t	s_pickBufferFlags		gxumath	Holds bit 0 set once the skinned pick has set up its scratch buffer	verified	one	gxumath#mesh-ray-picks
+0xc2b858	float	s_gxuInvTwoPi		gxumath	Holds 1/2π, written by 0x5c6520 and never read	verified	one	gxumath#object-file-and-initializers
+0xc2b860	uint32_t[64]	s_texelBuffer		gxumath	Holds the 8 by 8 texel buffer that 0x5c5350 fills and hands out	verified	one	gxumath#texel-buffer-callback
+0xc2b960	uint8_t	s_texelBufferFlags		gxumath	Holds bit 0 set once 0x5c5350 has cleared its buffer	verified	one	gxumath#texel-buffer-callback
+0xc2b964	float	s_gxuTwoPi		gxumath	Holds 2π, written by 0x5c6500 and read by 0x5c6520	verified	one	gxumath#object-file-and-initializers
+0xc2b968	uint32_t	s_pickVertexCapacity		gxumath	Holds the capacity of the skinned pick scratch buffer, set by 0x596ff0	verified	one	gxumath#mesh-ray-picks
+0xc2b96c	uint32_t	s_pickVertexCount		gxumath	Holds the vertex count the skinned pick scratch buffer was last sized to	verified	one	gxumath#mesh-ray-picks
+0xc2b970	float *	s_pickVertexBuffer		gxumath	Holds the skinned pick scratch buffer of three floats per vertex	verified	one	gxumath#mesh-ray-picks
 0xc2b974	uint32_t[3]	s_fontRegistry		font	Holds the list of fonts: count, head and tail	verified	one	font/overview#static-objects
-0xc2b980	float	s_fontUtilInfinity		font	Holds +inf copied by 0x5c6660, which nothing reads	verified	one	font/overview#object-files
+0xc2b980	float	s_gxuInfinity2		gxumath	Holds +inf, written by 0x5c6660 and never read	verified	one	gxumath#object-file-and-initializers
 0xc2b984	float	s_fontUtilInvTwoPi		font	Holds 1/2π stored by 0x5c7dc0, which nothing reads	verified	one	font/overview#object-files
 0xc2b988	uint32_t[3]	s_stringPool		font	Holds the pool list of free strings: count, head and tail	verified	one	font/overview#static-objects
 0xc2b994	uint32_t[3]	s_stringList		font	Holds the global list of strings: count, head and tail	verified	one	font/overview#static-objects

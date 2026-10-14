@@ -18406,44 +18406,44 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c3c60	33			unassigned			Runs its object file code not read here	inferred	none		
 0x5c3c90	12			unassigned			Runs its object file code not read here	inferred	none		
 0x5c3ca0	25			unassigned			Runs its object file code not read here	inferred	none		
-0x5c3cc0	207	BuildPerspectiveMatrix		gxumath	primitive	void __thiscall (float *matrix, float fov, float aspect, float near, float far)	Builds a perspective matrix; the half-angle is fov / (2·sqrt(aspect² + 1)); error 0x57 on bad input	verified	one	camera#view-and-projection	gxumath::perspective_difftest
-0x5c3d90	188	BuildOrthoMatrix		gxumath	primitive		Builds an orthographic projection matrix	inferred	none	camera#orthographic-setup	gxumath::ortho_difftest
-0x5c3e50	31			gxumath	unreached		Runs its object file code that calls BuildOrthoMatrix; not read here	inferred	none		
-0x5c3e70	648	BuildLookAtMatrix		gxumath	primitive		Builds a view matrix from an eye, a target and an up vector	inferred	none	camera#view-and-projection	gxumath::lookat_v1_difftest
-0x5c4100	648			gxumath	unreached		Runs its object file code that calls SetVector3, SErrSetLastError, TranslateMatrix; not read here	inferred	none		
-0x5c4390	5			gxumath			Runs its object file code not read here	inferred	none		
-0x5c43a0	11			gxumath			Runs its object file code not read here	inferred	none		
-0x5c43b0	1404	BuildFrustumCorners		gxumath	primitive		Writes the eight world corners of the frustum of two matrices, clip-space z = -1 first	inferred	none	camera#unprojection	gxumath::frustum_corners_difftest
-0x5c4930	820			gxumath	unreached		Runs its object file code that calls 0x5c6540, 0x5c65c0, 0x5c6620 and 3 more; not read here	inferred	none		
-0x5c4c70	246			gxumath	unreached		Runs its object file code that calls BuildFrustumCorners; not read here	inferred	none		
-0x5c4d70	433			gxumath	unreached		Runs its object file code that calls GxCapsWindowSize, 0x58b060, 0x58b0c0; not read here	inferred	none		
-0x5c4f30	701			gxumath			Runs its object file code that calls GxCapsWindowSize, 0x58b060, 0x58b0c0 and 3 more; not read here	inferred	none		gxumath::unproject_difftest
-0x5c51f0	339			gxumath	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x5c5350	119			gxumath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x5c53d0	1			gxumath			Runs its object file code not read here	inferred	none		
-0x5c53e0	265			gxumath	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x5c54f0	104			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c5560	574			gxumath	unreached		Runs its object file code that calls Vector3LengthSquared, SErrSetLastError, SetVector3; not read here	inferred	none		
-0x5c57a0	1071			gxumath	unreached		Runs its object file code that calls SErrSetLastError, _atexit, 0x596ff0 and 2 more; not read here	inferred	none		
-0x5c5bd0	25			gxumath	unreached		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x5c5bf0	570			gxumath	unreached		Runs its object file code that calls SErrSetLastError, 0x5c5560; not read here	inferred	none		
-0x5c5e30	170			gxumath	unreached		Runs its object file code that calls TransformVector4; not read here	inferred	none		
-0x5c5ee0	1257			gxumath	unreached		Runs its object file code that calls GxCapsGet, 0x5c4d70, 0x5c63d0 and 4 more; not read here	inferred	none		
-0x5c63d0	154			gxumath	unreached		Runs its object file code that calls 0x5c6470, 0x5c64b0; not read here	inferred	none		
-0x5c6470	50			gxumath	unreached		Runs its object file code that calls floor, ceil; not read here	inferred	none		
-0x5c64b0	50			gxumath	unreached		Runs its object file code that calls floor, ceil; not read here	inferred	none		
-0x5c64f0	5			gxumath			Runs its object file code not read here	inferred	none		
-0x5c6500	15			gxumath			Runs its object file code not read here	inferred	none		
-0x5c6510	5			gxumath			Runs its object file code not read here	inferred	none		
-0x5c6520	19			gxumath			Runs its object file code not read here	inferred	none		
-0x5c6540	32			gxumath			Runs its object file code not read here	inferred	none		gxumath::vec_helpers_difftest
-0x5c6560	43			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c6590	40			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c65c0	45			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c65f0	33			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c6620	33			gxumath	unreached		Runs its object file code not read here	inferred	none		
-0x5c6650	5	InitFontUtilInfinityThunk		font	orchestration		Jumps to 0x5c6660; a static initializer	verified	one	font/overview#object-files	
-0x5c6660	11	InitFontUtilInfinity		font	orchestration	void __cdecl (void)	Copies +inf into 0xc2b980	verified	one	font/overview#object-files	
+0x5c3cc0	207	BuildPerspectiveMatrix		gxumath	primitive	void __thiscall (float fov, float aspect, float near, float far)	Builds a perspective matrix; the half-angle is fov / (2·sqrt(aspect² + 1)); error 0x57 on bad input	verified	one	gxumath#perspective-matrix	gxumath::perspective_difftest
+0x5c3d90	188	BuildOrthoMatrix		gxumath	primitive	void __thiscall (float l, float r, float b, float t, float n, float f)	Writes the orthographic matrix of the left, right, bottom, top, near and far planes	verified	one	gxumath#orthographic-matrix	gxumath::ortho_difftest
+0x5c3e50	31	BuildOrthoMatrixFromFloats		gxumath	unreached	void __fastcall (const float *planes, float *out)	Calls 0x5c3d90 with six floats loaded from the structure at ecx and the output in edx	verified	one	gxumath#orthographic-matrix	
+0x5c3e70	648	BuildLookAtMatrix		gxumath	primitive	void __fastcall (const float *eye, const float *target, const float *up, float *out)	Writes the view matrix of an eye, a target and an up vector; error 0x57 for a short view or up vector	verified	one	gxumath#look-at-matrices	gxumath::lookat_v1_difftest
+0x5c4100	648	BuildMirroredLookAtMatrix		gxumath	unreached	void __fastcall (const float *eye, const float *target, const float *up, float *out)	Writes the view matrix of 0x5c3e70 with its first row negated	verified	one	gxumath#look-at-matrices	
+0x5c4390	5	InitGxuInfinityThunk		gxumath	orchestration		Jumps to 0x5c43a0; a static initializer	verified	one	gxumath#object-file-and-initializers	
+0x5c43a0	11	InitGxuInfinity		gxumath	orchestration		Copies +inf into 0xc2b850, the no-hit distance of the ray tests	verified	one	gxumath#object-file-and-initializers	
+0x5c43b0	1404	BuildFrustumCorners		gxumath	primitive	void __fastcall (const float *view, const float *proj, float *corners)	Writes the eight world-space corners of the frustum of a view and a projection matrix	verified	one	gxumath#frustum-corners	gxumath::frustum_corners_difftest
+0x5c4930	820	BuildFrustumPlanes		gxumath	unreached	void __fastcall (const float *m, float *planes)	Writes the six normalized clip-volume planes of a matrix from its rows	verified	one	gxumath#frustum-planes-and-box	
+0x5c4c70	246	FrustumBounds		gxumath	unreached	void __fastcall (const float *view, const float *proj, float *min, float *max)	Writes the minimum and maximum of the eight frustum corners of a view and a projection	verified	one	gxumath#frustum-planes-and-box	
+0x5c4d70	433	ProjectPointsForDecal		gxumath	unreached	void __fastcall (uint32_t count, const float *in, float *out)	Maps points through the device matrix to window fractions scaled by the window rectangle	verified	one	gxumath#viewport-projection-for-decals	
+0x5c4f30	701	ProjectPointsToWindow		gxumath	primitive	uint32_t __fastcall (uint32_t count, const float *in, float *out)	Maps world points to window coordinates through the device matrices; returns 0 where clip w is near 0	verified	one	gxumath#world-points-to-the-screen	gxumath::unproject_difftest
+0x5c51f0	339	ResampleImage		gxumath	unreached	void __fastcall (const void *src, int sfmt, uint32_t sw, uint32_t sh, uint32_t spitch, void *dst, int dfmt, uint32_t dw, uint32_t dh, uint32_t dpitch)	Copies an image to another size by nearest source element, stepping in 16.16 fixed point	verified	one	gxumath#image-resample	
+0x5c5350	119	TexelBufferCallback		gxumath	primitive	void __stdcall (int mode, uint32_t width, ...)	Fills the 256-byte texel buffer with a dword, or returns its pitch and address, for a texture of 8 by 8	verified	one	gxumath#texel-buffer-callback	
+0x5c53d0	1	TexelBufferExit		gxumath	orchestration		Returns at once; the exit handler 0x5c5350 registers	verified	one	gxumath#texel-buffer-callback	
+0x5c53e0	265	IntersectUnitRaySphere		gxumath	unreached	uint32_t __fastcall (const float *origin, const float *dir, const float *center, float radius, float *t)	Tests a unit ray against a sphere and stores the distance along it to the closest approach on a hit	verified	one	gxumath#ray-and-sphere	
+0x5c54f0	104	PointInFrustumPlanes		gxumath	unreached	uint32_t __fastcall (const float *point, const float *planes, float margin)	Returns 1 when a point, less a margin, is on the inner side of all six planes	verified	one	gxumath#frustum-planes-and-box	
+0x5c5560	574	IntersectUnitRayTriangle		gxumath	unreached	uint32_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Tests a unit ray against a triangle by Moller-Trumbore and stores the distance on a hit	verified	one	gxumath#ray-and-triangle	
+0x5c57a0	1071	PickSkinnedMesh		gxumath	unreached		Blends bone-weighted vertices, then stores the nearest non-negative triangle hit of a ray and its index	verified	one	gxumath#mesh-ray-picks	
+0x5c5bd0	25	FreePickVertexBuffer		gxumath	unreached	void __cdecl (void)	Frees the skinned pick scratch buffer at 0xc2b970 when it is allocated	verified	one	gxumath#mesh-ray-picks	
+0x5c5bf0	570	PickStaticMesh		gxumath	unreached		Stores the nearest triangle hit of a ray over a vertex array and its index	verified	one	gxumath#mesh-ray-picks	
+0x5c5e30	170	ClipOutcode		gxumath	unreached	uint32_t __fastcall (const float *m, const float *point)	Returns six sign bits of the point transformed by a matrix against its w	verified	one	gxumath#clip-outcode	
+0x5c5ee0	1257	BuildDecalTexCoords		gxumath	unreached	void __fastcall (const float *points, float *uv, uint32_t resX, uint32_t resY)	Replaces four texel coordinate pairs with the decal coordinates of a quadrilateral of world points	inferred	none	gxumath#decal-texture-coordinates	
+0x5c63d0	154	SnapDecalPoint		gxumath	unreached	void __fastcall (const uint32_t *caps, const float *in, float *out)	Writes a point rounded by the decal grid function when the capability words select it	verified	one	gxumath#decal-grid-rounding	
+0x5c6470	50	RoundToGridCeil		gxumath	unreached	double __stdcall (float x)	Returns ceil(floor(16x + 0.5)/16) of a float	verified	one	gxumath#decal-grid-rounding	
+0x5c64b0	50	RoundToGridCeilAlt		gxumath	unreached	double __stdcall (float x)	Returns ceil(floor(16x + 0.5)/16) of a float, the same code as 0x5c6470	verified	one	gxumath#decal-grid-rounding	
+0x5c64f0	5	InitGxuTwoPiThunk		gxumath	orchestration		Jumps to 0x5c6500; a static initializer	verified	one	gxumath#object-file-and-initializers	
+0x5c6500	15	InitGxuTwoPi		gxumath	primitive		Stores π + π as a float in 0xc2b964	verified	one	gxumath#object-file-and-initializers	
+0x5c6510	5	InitGxuInvTwoPiThunk		gxumath	orchestration		Jumps to 0x5c6520; a static initializer	verified	one	gxumath#object-file-and-initializers	
+0x5c6520	19	InitGxuInvTwoPi		gxumath	primitive		Stores 1 / [0xc2b964] as a float in 0xc2b858, which nothing reads	verified	one	gxumath#object-file-and-initializers	
+0x5c6540	32	SetVector4		gxumath	orchestration	void __thiscall (float x, float y, float z, float w)	Stores four floats at ecx	verified	one	gxumath#vector-helpers	gxumath::vec_helpers_difftest
+0x5c6560	43	ScaleVector4		gxumath	unreached	void __thiscall (float s)	Multiplies four floats at ecx by a float	verified	one	gxumath#vector-helpers	
+0x5c6590	40	NegateVector4		gxumath	unreached	float * __thiscall (float *out)	Stores the four floats at ecx negated through a pointer	verified	one	gxumath#vector-helpers	
+0x5c65c0	45	SubtractVector4		gxumath	unreached	float * __fastcall (float *out, const float *a, const float *b)	Stores the difference of two vectors of four floats	verified	one	gxumath#vector-helpers	
+0x5c65f0	33	CopyMatrixRow2		gxumath	unreached	float * __thiscall (float *out)	Copies elements 2, 6, 10 and 14 of a matrix to the pointer on the stack	verified	one	gxumath#vector-helpers	
+0x5c6620	33	CopyMatrixRow3		gxumath	unreached	float * __thiscall (float *out)	Copies elements 3, 7, 11 and 15 of a matrix to the pointer on the stack	verified	one	gxumath#vector-helpers	
+0x5c6650	5	InitGxuInfinity2Thunk		gxumath	orchestration		Jumps to 0x5c6660; a static initializer	verified	one	gxumath#object-file-and-initializers	
+0x5c6660	11	InitGxuInfinity2		gxumath	orchestration		Copies +inf into 0xc2b980, which nothing reads	verified	one	gxumath#object-file-and-initializers	
 0x5c6670	10	InitFontRegistryThunk		font	orchestration		Calls 0x5c6680 and registers 0x5c66c0 with _atexit; a static initializer	verified	one	font/overview#static-objects	
 0x5c6680	34	InitFontRegistry		font	orchestration	void __cdecl (void)	Makes the font registry 0xc2b974 an empty list	verified	one	font/overview#static-objects	
 0x5c66b0	12	RegisterDestroyFontRegistry		font	orchestration	void __cdecl (void)	Registers 0x5c66c0 with _atexit	inferred	none	font/overview#static-objects	
