@@ -21,10 +21,10 @@ pub use elements::{
     TexXformDef, TexXformRec, WordState, WordTrackDef,
 };
 
-use crate::mat::m2_matmul4x4_sse2;
 use crate::sample_quat::QuatSampleState;
 use crate::sample_scalar::ByteSampleState;
 use crate::track::{M2Track, TrackSearchResult};
+use benilla_re_cmath::multiply::matmul4x4_sse2;
 
 /// `0xffffffff` — the "no track" sentinel in the per-bone clock slots.
 pub(crate) const NONE32: u32 = 0xffff_ffff;
@@ -316,7 +316,7 @@ pub fn m2_animate(
         // `+0xfc = +0xbc · parent_mtx`.
         let base = models[idx].base;
         let mut w = [0f32; 16];
-        m2_matmul4x4_sse2(&mut w, &base, parent_mtx);
+        matmul4x4_sse2(&mut w, &base, parent_mtx);
         models[idx].world = w;
 
         // `+0x84`.

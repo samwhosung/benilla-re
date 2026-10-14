@@ -178,9 +178,10 @@ fn m2_track_sample_quat_difftest() {
     };
     let mut emu = Emu::new(&wow);
     // The thunk `0x74d114` is `jmp [0x876588]`, and the slot starts at the stub `0x74d0ee`, which
-    // selects the routines on the first call. The slot is set to the routine it holds on an
-    // SSE2 processor, `0x74d11a` (`systems/models/animation.md#dispatched-matrix-math`).
-    emu.write_u32(0x876588, 0x74d11a);
+    // selects the routines on the first call. The exe's own selection fills it with `0x74d11a`
+    // (`systems/models/animation.md#dispatched-matrix-math`).
+    benilla_re_difftest::select_math_slots(&mut emu);
+    assert_eq!(emu.read_u32(0x876588), 0x74d11a, "blend slot");
     let regions = Regions {
         model: emu.alloc(0x80),
         bone: emu.alloc(0x140),

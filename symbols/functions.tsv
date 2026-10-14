@@ -32321,7 +32321,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7547df	243			d3dx			Runs its object file code not read here	inferred	none		
 0x7548d2	212			d3dx			Runs its object file code that calls 0x7547df; not read here	inferred	none		
 0x7549a6	192			d3dx			Runs its object file code not read here	inferred	none		
-0x754a66	310	MultiplyMatrixSse2		d3dx			Multiplies two 4x4 matrices in single precision with SSE; the product that a processor with SSE2 runs	verified	one	models/animation#dispatched-matrix-math	animation::m2_animate_difftest, animation::m2_matmul4x4_sse2_difftest
+0x754a66	310	MultiplyMatrixSse2		d3dx			Multiplies two 4x4 matrices in single precision with SSE; the product that a processor with SSE2 runs	verified	one	models/animation#dispatched-matrix-math	animation::m2_animate_difftest, animation::m2_matmul4x4_sse2_difftest, models::m2_decal_projection_difftest
 0x754b9c	148			d3dx			Runs its object file code not read here	inferred	none		
 0x754c30	162			d3dx			Runs its object file code not read here	inferred	none		
 0x754cd2	681	InvertMatrixSse2		d3dx			Sets the scene matrix from a view with SSE; the SSE2 set's routine	inferred	none	models/animation#dispatched-matrix-math	

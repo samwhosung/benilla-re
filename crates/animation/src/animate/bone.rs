@@ -6,9 +6,10 @@
 
 use super::clock::{bone_clocks, bone_lambda};
 use super::{Model, Vec3State, Vec3TrackDef, IDENTITY};
-use crate::mat::{m2_matmul4x4_sse2, m2_quat_to_mat4};
+use crate::mat::m2_quat_to_mat4;
 use crate::sample_quat::{m2_track_sample_quat, QuatTrack};
 use crate::track::{m2_track_search, TrackTimes};
+use benilla_re_cmath::multiply::matmul4x4_sse2;
 use benilla_re_cmath::transform::scale_matrix_rows;
 
 /// `[0x8029d4]`, 2^-22: the length below which a row is not normalized (the billboard cases and
@@ -333,7 +334,7 @@ pub(super) fn animate_bone(
         if flags & 0x80 != 0 {
             if let Some(pm) = models[idx].blocks[bone_idx].premult {
                 let b_in = *rot;
-                m2_matmul4x4_sse2(rot, &b_in, &pm);
+                matmul4x4_sse2(rot, &b_in, &pm);
             }
         }
 
@@ -377,7 +378,7 @@ pub(super) fn animate_bone(
 
         // The palette entry is the local matrix times the parent matrix (`0x74a7c0`).
         let mut out = [0f32; 16];
-        m2_matmul4x4_sse2(&mut out, rot, &src);
+        matmul4x4_sse2(&mut out, rot, &src);
         models[idx].palette[bone_idx] = out;
     } else {
         // Flags `& 0x280` clear: the entry is a copy of the parent matrix.

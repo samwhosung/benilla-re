@@ -15,7 +15,7 @@
 //!
 //! The math slots are filled by the exe's own first-call selection `0x74fb49`
 //! (`systems/models/animation.md#dispatched-matrix-math`), run on the emulated processor, which
-//! reports SSE2: the product slot `[0x876504]` holds `0x754a66`, which `m2_matmul4x4_sse2`
+//! reports SSE2: the product slot `[0x876504]` holds `0x754a66`, which `matmul4x4_sse2`
 //! transcribes, the blend slot `0x74d11a` and the rotation slot `0x74b6bb`. `HasLiveParticles`
 //! (`0x7b5f60`) is a stub that
 //! returns a fixed value, 0 or 1 per emulator.
@@ -40,10 +40,14 @@ use common::{assert_f32, next};
 const FN_VA: u64 = 0x714260;
 
 /// Runs the first-call selection (`0x74fb49`) and checks the slots it leaves: the product
-/// `0x754a66` that a processor with SSE2 runs (`m2_matmul4x4_sse2`), the blend `0x74d11a` and the
+/// `0x754a66` that a processor with SSE2 runs (`matmul4x4_sse2`), the blend `0x74d11a` and the
 /// rotation matrix `0x74b6bb`.
 fn install_slots(emu: &mut Emu) {
-    assert_eq!(common::select_math_slots(emu), 0x754a66, "product slot");
+    assert_eq!(
+        benilla_re_difftest::select_math_slots(emu),
+        0x754a66,
+        "product slot"
+    );
     assert_eq!(emu.read_u32(0x876588), 0x74d11a, "blend slot");
     assert_eq!(emu.read_u32(0x876594), 0x74b6bb, "rotation slot");
 }

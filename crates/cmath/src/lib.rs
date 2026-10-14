@@ -4,7 +4,7 @@
 //! tests against planes, polygons and triangles, a circle against a box, rotations about an axis
 //! and from yaw, pitch and roll, the point-to-segment distance, a point and a 4-vector through a
 //! 4×4 matrix, a point through a 3×4 matrix, a matrix's rows scaled, its translation shifted, the
-//! 3×3, 4×4 and 3×4 products, the two plane-record constructors, the conversions between a
+//! 3×3, 4×4 and 3×4 products, the single-precision 4×4 product `0x754a66`, the two plane-record constructors, the conversions between a
 //! colour's channels and its hue, saturation and value or its packed bytes, the cosine
 //! interpolation, and the reciprocal square root estimate.
 //!

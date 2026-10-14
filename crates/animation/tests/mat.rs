@@ -6,9 +6,8 @@
 
 mod common;
 
-use benilla_re_animation::mat::{
-    m2_matmul4x4, m2_matmul4x4_base, m2_matmul4x4_sse2, m2_quat_to_mat4,
-};
+use benilla_re_animation::mat::{m2_matmul4x4, m2_matmul4x4_base, m2_quat_to_mat4};
+use benilla_re_cmath::multiply::matmul4x4_sse2;
 use benilla_re_difftest::{Emu, Wow};
 use common::{assert_f32, fuzz_f32, next};
 
@@ -164,12 +163,7 @@ fn m2_matmul4x4_base_difftest() {
 
 #[test]
 fn m2_matmul4x4_sse2_difftest() {
-    product_difftest(
-        0x754a66,
-        m2_matmul4x4_sse2,
-        0x754a_6600,
-        "m2_matmul4x4_sse2",
-    );
+    product_difftest(0x754a66, matmul4x4_sse2, 0x754a_6600, "m2_matmul4x4_sse2");
 }
 
 /// `0x750930` stores `0x7507bb` at `[table + 0xc]` and nothing else of the product; the
@@ -214,7 +208,11 @@ fn math_slots_selection_difftest() {
     }
 
     let mut emu = Emu::new(&wow);
-    assert_eq!(common::select_math_slots(&mut emu), 0x754a66, "product");
+    assert_eq!(
+        benilla_re_difftest::select_math_slots(&mut emu),
+        0x754a66,
+        "product"
+    );
     assert_eq!(emu.read_u32(0x876544), 0x754cd2, "inverse");
     assert_eq!(emu.read_u32(0x876588), 0x74d11a, "blend");
     assert_eq!(emu.read_u32(0x876594), 0x74b6bb, "rotation");

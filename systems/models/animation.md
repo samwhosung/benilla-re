@@ -156,7 +156,8 @@ their results are not transcribed. Scale samples `+0x44` and scales the rows; tr
 `+0xc` and adds the pivot `+0x60`; `fsubr st,st(1)` at `0x7151b0` uses the unrounded z sum. Each
 track is sampled only when it has more keys than the first-update gate `+0x8c` allows.
 
-Of `0x74a7c0`, `m2_decal_projection_difftest` runs `0x74a7c0`.
+`models::m2_decal_projection_difftest` runs `0x719c20` through the same slot, filled by `0x74fb49`, so
+its product is `0x754a66` too.
 `animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Dispatched matrix math

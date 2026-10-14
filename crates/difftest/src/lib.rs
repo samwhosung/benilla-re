@@ -971,3 +971,31 @@ impl Trajectory {
         }
     }
 }
+
+/// Runs the first-call selection `0x74fb49(1)` on the emulated processor, so the math slots
+/// (`0x876504`, `0x876544`, `0x876588`, `0x876594`) hold what a client on that processor holds,
+/// and returns the product slot.
+///
+/// What the run needs from outside the exe is supplied: page 0, where `fs:0` (the exception
+/// chain that `0x74fa8a` links) lives; `0x74f951`, the registry read, which finds neither
+/// `DisablePSGP` nor `DisableD3DXPSGP` (as on a machine without them); `0x750aae`, the one-time
+/// library load whose result no slot depends on; and `IsProcessorFeaturePresent` (the import
+/// at `0x7ff344`), which reports SSE (6) and not 3DNow (7). The processor tests run as the exe
+/// runs them: `0x74fa8a` executes `cpuid` on the emulator.
+pub fn select_math_slots(emu: &mut Emu) -> u32 {
+    emu.map(0, 0x1000);
+    emu.stub(0x750aae, 0, 0);
+    emu.stub(0x74f951, 0, 4);
+    // `mov eax,[esp+4]; cmp eax,6; sete al; movzx eax,al; ret 4`
+    let api = emu.alloc(0x10);
+    emu.write(
+        api,
+        &[
+            0x8b, 0x44, 0x24, 0x04, 0x83, 0xf8, 0x06, 0x0f, 0x94, 0xc0, 0x0f, 0xb6, 0xc0, 0xc2,
+            0x04, 0x00,
+        ],
+    );
+    emu.write_u32(0x7ff344, api as u32);
+    emu.call(0x74fb49, 0, 0, &[1]);
+    emu.read_u32(0x876504)
+}

@@ -53,3 +53,27 @@ pub fn multiply_matrix4(a: &[f32; 16], b: &[f32; 16]) -> [f32; 16] {
             as f32,
     ]
 }
+
+/// `0x754a66` (`cdecl`, `ret 0xc`; `[ebp+8]` is the output, `[ebp+0xc]` is `b` and `[ebp+0x10]`
+/// is `c`): the row-major product `a = b · c` in single precision, the routine a processor with
+/// SSE2 runs. It loads all of `c` (`0x754a74` to `0x754a8f`) and reads all of `b` before its first
+/// store (`0x754b6d`), so an output that aliases an input equals the disjoint result. Output
+/// row `i` is `b[i][0]·c0 + b[i][1]·c1 + b[i][2]·c2 + b[i][3]·c3` over the rows `c0` to `c3`,
+/// each product and each sum rounded to `f32`, added in pairs for rows 0 and 3 and in a chain for
+/// rows 1 and 2:
+/// - rows 0 and 3: `(p0 + p1) + (p2 + p3)` (`0x754ac2` to `0x754ac8`, `0x754b74` to `0x754b8a`);
+/// - rows 1 and 2: `((p0 + p1) + p2) + p3` (`0x754aef` to `0x754b01`, `0x754b1c` to `0x754b3a`).
+pub fn matmul4x4_sse2(a: &mut [f32; 16], b: &[f32; 16], c: &[f32; 16]) {
+    let mut out = [0f32; 16];
+    for i in 0..4 {
+        for j in 0..4 {
+            let p = |k: usize| b[4 * i + k] * c[4 * k + j];
+            out[4 * i + j] = if i == 0 || i == 3 {
+                (p(0) + p(1)) + (p(2) + p(3))
+            } else {
+                ((p(0) + p(1)) + p(2)) + p(3)
+            };
+        }
+    }
+    *a = out;
+}
