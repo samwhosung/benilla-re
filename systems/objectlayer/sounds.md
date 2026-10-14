@@ -195,3 +195,41 @@ Test: none
 
 `0x62faa0` reads `+0xc8c`; `0x62fab9` looks it up and `0x62faf8` calls `UnitGetSpellVisual`. A
 `$CAH` with no pending swing also calls it (`unitcombat`). Both messages go through `SysMsgPrintf`.
+
+## The event sound
+
+`$CSD` plays the event's own payload dword as a `SoundEntries` id, through the emote voice
+`0x623c10` with its second argument 1: at attachment 17, attached to the unit, replacing `+0xb28`,
+and only while `EmoteSounds` is on. No table is read and any unit plays it.
+
+Addresses: `0x5ffde4`, `0x5ffeed`, `0x623c10`, `0x623c21`, `0x623c3a`, `0x623c4c`, `0x623c63`, `0x623c70`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ffde4` matches `0x44534324`; `0x5ffeed` passes `[event+0xc]` with `push 1` and `push −1` to
+`0x623c10`, whose set second argument makes it look up the `EmoteSounds` CVar (`0x623c21`) and
+return while its integer is 0. The play is `0x459230` at the attachment point (`0x623c3a`), then
+`Sound::Set3DUpdateHandle` with the unit's GUID and `Sound::Stop` of the old `+0xb28`.
+
+## Loot and auto-equip item sounds
+
+Taking an item from a loot window plays the item's pick-up sound, kind 0 of its display's
+`ItemGroupSounds` row, before the client asks the server for it with opcode 0x108; the auto-loot
+walk does the same for each item it takes. Taking the money plays `LOOTWINDOWCOINSOUND`, and the
+money change then plays it again (`playerfields`). An auto-equip from a bag puts the item on the
+cursor, which plays its pick-up sound, then equips it, whose cursor drop plays its put-down sound,
+kind 1.
+
+Addresses: `0x4c2790`, `0x4c27f9`, `0x4c2803`, `0x4c2926`, `0x4c2840`, `0x4c1fa0`, `0x4c1ffc`, `0x4c2020`, `0x4c21b3`, `0x4c21ee`, `0x5e1ad0`, `0x5ea8c0`, `0x5e1840`, `0x5e18c9`, `0x5e18d5`, `0x494b60`, `0x494c4a`, `0x5e1480`, `0x5e1567`, `0x5e1763`, `0x495190`, `0x49520a`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4c2790` reads the slot's item record through `0x55ba30` (`0x4c27f9`) and calls
+`0x457ff0(0, [record+0x18])` at `0x4c2803` or `0x4c2926`, then `0x5e1ad0`; for the money slot it
+plays at `0x4c2840` and calls `0x5ea8c0`. `0x4c1fa0` sends the money first (`0x4c1ffc`) and plays the
+coin at `0x4c2020` while `[0xb71bc4]` is 0; it plays each item at `0x4c21ee` unless `+0x194` is 1
+and the item's `+0x1c` is 2 or more, which signals event 0x11f instead (`0x4c21b3`). `0x5e1840` calls `SetCursorItem` (`0x5e18c9`), which plays `0x457fb0(0, item)` at
+`0x494c4a`, then `0x5e1480` (`0x5e18d5`), which calls `0x495190(1)` at `0x5e1567` or `0x5e1763`;
+its held-item arm plays `0x457fb0(1, item)` at `0x49520a` when the held GUID resolves.
