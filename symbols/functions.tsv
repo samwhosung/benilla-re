@@ -7448,13 +7448,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6e90	5	InitQuotient4a6ea0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4a6ea0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4a6ea0	19	InitQuotient4a6ea0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4a6ec0	567			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		ui::geo_4a6ec0
-0x4a7100	418	MapPointToWorld		ui	unreached		Turns a point of the displayed map into a world position and map id	verified	one	ui/geometry#click-to-world	
+0x4a7100	418	MapPointToWorld		ui	unreached		Converts a point of the selected map to a world position and map id, or answers 0	verified	one	ui/worldmap#unreached-map-teleport	
 0x4a72b0	104			ui	primitive		Runs its object file code that calls 0x4a7320; not read here	inferred	none		ui::geo_4a72b0
 0x4a7320	64	FindWorldMapContinent		ui	primitive		Returns the WorldMapContinent row for a map id, or 0	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7360	478	ProjectWorldPosition		ui	primitive		Normalises a world position to the displayed map for a map id	verified	one	ui/worldmap#unit-and-corpse-positions	ui::geo_4a7360
 0x4a7540	212	DrillMap		ui	primitive		Selects the continent or zone whose rectangle holds the cursor	verified	one	ui/worldmap#hover-and-click	
 0x4a7620	191	FindHoveredArea		ui	primitive		Returns the WorldMapArea id under the cursor, 0 for none	verified	one	ui/worldmap#hover-and-click	
-0x4a76e0	385			ui	unreached		Runs its object file code that calls 0x4a7100, OsGetAsyncTimeMs, CDataStore::PutUInt32 and 5 more; not read here	inferred	none		
+0x4a76e0	385	TeleportToNearestSafeLoc		ui	unreached		Sends opcode 8 for the WorldSafeLocs row nearest a map point, then signals CLOSE_WORLD_MAP	verified	one	ui/worldmap#unreached-map-teleport	
 0x4a7870	233	GetUnitMapPosition		ui	orchestration		Returns a unit's normalised map position from its object or its group record	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a7960	79	ProjectCorpsePosition		ui	orchestration		Projects the cached corpse position under its display map id	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a79b0	120	ProjectAreaPoi		ui	primitive		Projects an AreaPOI row onto the displayed map when its flags allow the level	verified	one	ui/worldmap#the-landmarks	
@@ -7738,7 +7738,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4afba0	302	Script::ReturnInboxItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the return request for a player mail that holds an item or money	verified	one	ui/mail#taking-returning-and-deleting	
 0x4afcd0	298	Script::DeleteInboxItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the delete request for a mail that may be deleted	verified	one	ui/mail#taking-returning-and-deleting	
 0x4afe00	147	Script::InboxItemCanDelete	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when DeleteInboxItem would send, else nil	verified	one	ui/mail#taking-returning-and-deleting	
-0x4afea0	50	Script::HasNewMail	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the next-mail time is zero, else nil	verified	one	ui/mail#pending-mail	ui::frameapi_fpleaf_fabs_cmp
+0x4afea0	50	Script::HasNewMail	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the absolute value of the pending mail time is below 2^-22, else nil	verified	one	ui/mail#pending-mail	
 0x4afee0	33	RegisterMailFunctions		ui	primitive	void __cdecl ()	Registers the 30 mail Lua functions from the name and function table	verified	one	ui/mail#mail-lua-functions	
 0x4aff10	27	UnregisterMailFunctions		ui	primitive	void __cdecl ()	Unregisters the 30 mail Lua functions	verified	one	ui/mail#mail-lua-functions	
 0x4aff30	23	FreeField4aff30		ui	orchestration		Frees the block that the dword at this+0x8 points at, tagged StationeryInfo pointer, when it is not null	verified	one	ui/containers#block-frees	
