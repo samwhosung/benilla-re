@@ -195,8 +195,7 @@ is `0x6cd5d5` to `0x6cd5f8`, where the float at `0x86f268` is 1.0. `1/allocW` is
 (`0x6cd6ab`) and `1/allocH` is stored as a float (`0x6cd6ba`), so `U` and `hu` use the first and `V`
 and `hv` the second. The eight UV floats go out in the order `hu, V, hu, hv, U, hv, U, V`
 (`0x6cd6f1` to `0x6cd73e`). In `0x6cd750` each UV is `fld; fmul scale; fadd offset; fstp`, one rounding
-(`0x6cd7a3` to `0x6cd7c6`); a vertex is `0x30` bytes. Each test runs the exe's floating-point
-instructions between a load and a store.
+(`0x6cd7a3` to `0x6cd7c6`); a vertex is `0x30` bytes. `0x6cd580` has 10 call sites, all in this file.
 
 ## Box and Gauss passes
 
