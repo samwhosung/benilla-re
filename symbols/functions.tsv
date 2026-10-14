@@ -21076,35 +21076,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61b160	34	InitLootRollListHead1		objectlayer	primitive	void __cdecl (void)	Makes a global list empty: link offset 0, its end link pointing at itself, marked by bit 0	verified	one	objectlayer/initializers#other-initializers	
 0x61b190	12	InitLootRollRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x61b1a0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x61b1a0	145	ReleaseLootRollList		objectlayer	primitive	void __cdecl (void)	Unlinks every node of the pending loot roll list, at exit	inferred	none	objectlayer/initializers#other-initializers	
-0x61b240	74			objectlayer	orchestration		Runs LootRoll.cpp code that calls SMemFree; not read here	inferred	none		
-0x61b290	73			objectlayer	orchestration		Signals the interface event CANCEL_LOOT_ROLL; not read further here	inferred	none		
-0x61b2e0	37			objectlayer	orchestration		Runs LootRoll.cpp code not read here	inferred	none		
-0x61b310	281			objectlayer	primitive		Runs LootRoll.cpp code that calls OsGetAsyncTimeMs, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemAlloc; not	inferred	none		
-0x61b430	48			objectlayer	primitive		Signals the interface event START_LOOT_ROLL; not read further here	inferred	none		
-0x61b460	158			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemFree; not read here	inferred	none		
-0x61b500	236			objectlayer	orchestration		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemAlloc; not read here	inferred	none		
-0x61b5f0	72			objectlayer	orchestration		Runs LootRoll.cpp code not read here	inferred	none		
-0x61b640	280			objectlayer	primitive		Signals the interface event CANCEL_LOOT_ROLL; not read further here	inferred	none		
-0x61b760	101			objectlayer	primitive		Signals the interface event START_LOOT_ROLL; not read further here	inferred	none		
-0x61b7d0	158			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemFree; not read here	inferred	none		
-0x61b870	294			objectlayer	orchestration		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemAlloc; not read here	inferred	none		
-0x61b9a0	53			objectlayer	orchestration		Runs LootRoll.cpp code that calls DBCache::NameCache::GetRecord; not read here	inferred	none		
-0x61b9e0	665			objectlayer	primitive		Signals the interface event CANCEL_LOOT_ROLL; not read further here	inferred	none		
-0x61bc80	204			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, DBCache::NameCache::GetRecord,	inferred	none		
-0x61bd50	158			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemFree; not read here	inferred	none		
-0x61bdf0	425			objectlayer	primitive		Signals the interface event CONFIRM_LOOT_ROLL, CANCEL_LOOT_ROLL; not read further here	inferred	none		
-0x61bfa0	197			objectlayer	orchestration		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemAlloc; not read here	inferred	none		
-0x61c070	52			objectlayer	orchestration		Runs LootRoll.cpp code that calls DBCache::NameCache::GetRecord; not read here	inferred	none		
-0x61c0b0	816			objectlayer	primitive		Runs LootRoll.cpp code that calls ClntObjMgrGetActivePlayer, SMemFree, SStrPrintf; not read here	inferred	none		
-0x61c3e0	204			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, DBCache::NameCache::GetRecord,	inferred	none		
-0x61c4b0	158			objectlayer	primitive		Runs LootRoll.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, SMemFree; not read here	inferred	none		
-0x61c550	269			objectlayer	primitive		Runs LootRoll.cpp code not read here	inferred	none		
-0x61c660	25			objectlayer	orchestration		Runs LootRoll.cpp code not read here	inferred	none		
+0x61b240	74	FreeAllLootRolls		objectlayer	orchestration	void __cdecl ()	Frees every open loot roll and zeroes the open count	verified	one	objectlayer/lootroll#the-open-rolls	
+0x61b290	73	CancelAllLootRolls		objectlayer	orchestration	void __cdecl ()	Signals CANCEL_LOOT_ROLL for every shown roll, then frees them all	verified	one	objectlayer/lootroll#the-open-rolls	
+0x61b2e0	37	FindLootRollById		objectlayer	primitive	void * __fastcall (uint32_t id)	Returns the open loot roll with the id, or 0	verified	one	objectlayer/lootroll#the-open-rolls	
+0x61b310	281	HandleLootStartRoll		objectlayer	orchestration	int __fastcall (CDataStore *msg)	Reads SMSG_LOOT_START_ROLL into a new roll and shows it once the item record is known	verified	one	objectlayer/lootroll#starting-a-roll	
+0x61b430	48	ShowLootRoll		objectlayer	orchestration	void __fastcall (void *roll, void *record)	Signals START_LOOT_ROLL when fewer than four rolls are shown, else queues the roll	verified	one	objectlayer/lootroll#starting-a-roll	
+0x61b460	158	OnLootRollItemReady		objectlayer	orchestration		Shows a roll when its item record arrives, or frees the roll	verified	one	objectlayer/lootroll#starting-a-roll	
+0x61b500	236	HandleLootAllPassed		objectlayer	orchestration	int __fastcall (CDataStore *msg)	Reads SMSG_LOOT_ALL_PASSED, clears the slot's roll state and writes the all-passed line	verified	one	objectlayer/lootroll#everyone-passed	
+0x61b5f0	72	FindLootRoll		objectlayer	primitive	void * __stdcall (uint32_t guidLo, uint32_t guidHi, uint32_t slot)	Returns the open loot roll for an object GUID and slot, or 0	verified	one	objectlayer/lootroll#the-open-rolls	
+0x61b640	280	WriteAllPassedLine		objectlayer	orchestration	void __fastcall (void *record, void *roll)	Writes LOOT_ROLL_ALL_PASSED to chat, closes the roll and promotes a queued one	verified	one	objectlayer/lootroll#everyone-passed	
+0x61b760	101	PromoteQueuedLootRoll		objectlayer	orchestration	void __cdecl ()	Shows the first queued roll while fewer than four are shown	verified	one	objectlayer/lootroll#starting-a-roll	
+0x61b7d0	158	OnAllPassedItemReady		objectlayer	orchestration		Writes the all-passed line when the item record arrives	verified	one	objectlayer/lootroll#everyone-passed	
+0x61b870	294	HandleLootRollWon		objectlayer	orchestration	int __fastcall (CDataStore *msg)	Reads SMSG_LOOT_ROLL_WON and writes the winner's line once the item and name are known	verified	one	objectlayer/lootroll#the-result	
+0x61b9a0	53	AskWinnerName		objectlayer	orchestration	void __fastcall (void *record, void *roll)	Asks the name cache for the winner, then writes the winner's line	verified	one	objectlayer/lootroll#the-result	
+0x61b9e0	665	WriteRollWonLine		objectlayer	orchestration	void __fastcall (void *record, void *roll, void *name)	Writes the winner line by showLootSpam and type, closes the roll and promotes a queued one	verified	one	objectlayer/lootroll#the-result	
+0x61bc80	204	OnWinnerNameReady		objectlayer	orchestration		Writes the winner's line when the name arrives	verified	one	objectlayer/lootroll#the-result	
+0x61bd50	158	OnWonItemReady		objectlayer	orchestration		Asks for the winner's name when the item record arrives	verified	one	objectlayer/lootroll#the-result	
+0x61bdf0	425	VoteOnLootRoll		objectlayer	orchestration	void __fastcall (uint32_t id, uint32_t type, int confirm)	Asks to confirm a bind-on-pickup vote, else sends CMSG_LOOT_ROLL and closes the roll	verified	one	objectlayer/lootroll#voting	
+0x61bfa0	197	HandleLootRoll		objectlayer	orchestration	int __fastcall (CDataStore *msg)	Reads SMSG_LOOT_ROLL and writes the roll line once the item and roller are known	verified	one	objectlayer/lootroll#the-roll-announcement	
+0x61c070	52	AskRollerName		objectlayer	orchestration	void __fastcall (void *roll, void *record)	Asks the name cache for the roller, then writes the roll line	verified	one	objectlayer/lootroll#the-roll-announcement	
+0x61c0b0	816	WriteRollLine		objectlayer	orchestration	void __fastcall (void *roll, void *record, void *name)	Chooses and writes the vote or dice line of a roll to chat, unless showLootSpam is 0	verified	one	objectlayer/lootroll#the-roll-announcement	
+0x61c3e0	204	OnRollerNameReady		objectlayer	orchestration		Writes the roll line when the roller's name arrives	verified	one	objectlayer/lootroll#the-roll-announcement	
+0x61c4b0	158	OnRollItemReady		objectlayer	orchestration		Asks for the roller's name when the item record arrives	verified	one	objectlayer/lootroll#the-roll-announcement	
+0x61c550	269	HandleLootMasterList		objectlayer	orchestration	int __fastcall (CDataStore *msg)	Reads SMSG_LOOT_MASTER_LIST into 40 slots grouped by raid subgroup	verified	one	objectlayer/lootroll#the-master-looters-list	
+0x61c660	25	GetMasterLootCandidate		objectlayer	primitive	uint64_t __fastcall (uint32_t slot)	Returns the master loot candidate in a slot, or 0 for 40 or more	verified	one	objectlayer/lootroll#the-master-looters-list	
 0x61c680	5	InitLootRollDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61c690, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61c690	15	InitLootRollDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61c6a0	5	InitLootRollQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61c6b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61c6b0	19	InitLootRollQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61c6d0	41			objectlayer	primitive		Runs LootRoll.cpp code not read here	inferred	none		
+0x61c6d0	41	GetLootRollLink		objectlayer	primitive	void * __thiscall (int offset)	Returns the node a loot roll link points at	verified	one	objectlayer/lootroll#the-open-rolls	
 0x61c700	5	InitMissileProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61c710, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61c710	19	InitMissileProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61c730	5	InitMissileProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61c740, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	

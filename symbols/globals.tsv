@@ -1879,7 +1879,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e278	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e2ac	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xb4e2b8	void *	s_shownTarget		ui	Holds a target record whose +0x28 a world click tests before clearing the target	inferred	none	objectlayer/interaction#world-clicks
-0xb4e2bc	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
+0xb4e2bc	void *	s_showLootSpamVar		ui	Holds the showLootSpam variable, whose value gates the roll lines and picks the winner line	verified	one	objectlayer/lootroll#the-roll-announcement
 0xb4e2c8	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName reads and writes; not read here	inferred	none	
 0xb4e2cc	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName reads and writes; not read here	inferred	none	
 0xb4e2d0	uint64_t	s_interactionTargetGuid		ui	Holds the GUID of the unit the interaction windows belong to	inferred	none	objectlayer/interaction#talking-to-an-npc
@@ -2187,6 +2187,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e1b0	uint32_t	s_questCache		dbcache	Holds the quest record cache	inferred	none	objectlayer/quests#quest-completion
 0xc0e1ec	uint32_t	s_guildCache		dbcache	Holds the guild record cache	inferred	none	objectlayer/party#guild-tabards
 0xc0e228	uint32_t	s_nameCache		dbcache	Holds the player name cache	inferred	none	objectlayer/playermessages#resurrection-and-summoning
+0xc0e2a0	void *	s_itemStatsCache		dbcache	Holds the item record cache the loot roll code asks	verified	one	objectlayer/lootroll#starting-a-roll
 0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
 0xc27d80	uint32_t			net	Holds data whose address SetSelectedCharacterRecord, GetSelectedCharacterRecord take; not read here	inferred	none	
@@ -2321,7 +2322,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4daf8	void *	s_selectionCircleVar		objectlayer	Holds the ObjectSelectionCircle variable, 1 by default, which gates drawing the circle	verified	one	objectlayer/objectbase#selection-circle-textures
 0xc4dafc	uint32_t	s_selectionRamp		objectlayer	Holds the handle of the generated 64 by 8 ramp texture that fades the circle	verified	one	objectlayer/objectbase#selection-circle-textures
 0xc4db88	uint32_t[3]	s_movementStaticList		collision	Holds the free list of move-event nodes, an intrusive list with link offset 0	verified	one	collision/overview#movementcpp-initializers
+0xc4dc00	uint32_t[3]	s_pendingLootRolls		objectlayer	Holds the list of open loot rolls: its link offset, first record and end	verified	one	objectlayer/lootroll#the-open-rolls
 0xc4dc38	uint32_t			objectlayer	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc4dda4	uint32_t	s_nextLootRollId		objectlayer	Holds the serial the next loot roll record takes as its id	verified	one	objectlayer/lootroll#the-open-rolls
+0xc4dda8	uint32_t	s_openLootRolls		objectlayer	Holds the count of loot rolls shown, at most 4	verified	one	objectlayer/lootroll#the-open-rolls
 0xc4de28	CMissile *	s_flyingMissiles		objectlayer	Heads the list of missiles in flight	verified	one	objectlayer/missiles#the-missile-object
 0xc4de2c	CMissile *	s_impactMissiles		objectlayer	Heads the list of missiles turned impact models	verified	one	objectlayer/missiles#the-missile-object
 0xc4de30	void *	s_missilePool		objectlayer	Points at the missile pool record: its heap and a byte that skips construction	verified	one	objectlayer/missiles#the-missile-object
