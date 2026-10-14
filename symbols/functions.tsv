@@ -20291,7 +20291,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x602f30	93			objectlayer	unreached		Flushes the unit's queue and places it through 0x618680; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
 0x602f90	26	CGUnit_C::OnTeleport	idb	objectlayer	orchestration		Applies a relayed teleport on the mover through 0x6186b0	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602fb0	268	CGUnit_C::OnForcedTeleport		objectlayer	orchestration		Reads a movement status: queues a teleport on the mover, or with the manager's +0xc8 set answers with opcode 0xc7	verified	one	objectlayer/unitmovement#relayed-move-events	
-0x6030c0	321			objectlayer	primitive		Decides the swim start and stop from the liquid depth; skips the start while 0x7c5de0 returns 1	inferred	none	collision/falling#apex-time-and-rising-test	objectlayer::move_event_pitch_rate, objectlayer::move_event_pitch_thresh
+0x6030c0	321	CGUnit_C::UpdateSwimState		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t time, uint32_t inLiquid, float depth, uint32_t force)	Starts or stops swimming from the liquid depth, the collision height and the unit flags with a 1/36 band	verified	one	objectlayer/swim#swim-decision	objectlayer::move_event_pitch_rate, objectlayer::move_event_pitch_thresh
 0x603210	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x603220	39	CopyIntoUnitFields		objectlayer	unreached		Copies n bytes into the unit fields; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
 0x603250	31	MapSmallCode		objectlayer	unreached		Maps 0, 1 to 3 and others to 0, 0x18, 0xc0, 0x18 or -1; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
