@@ -20653,7 +20653,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x612990	148	CGUnit_C::GetCastVisualAnim		objectlayer	orchestration		Writes the precast or channel kit's animation and returns whether there is one	verified	one	objectlayer/auras#channels	
 0x612a30	271	CGUnit_C::StartChannelVisual		objectlayer	orchestration		Starts a channel's visual: bit 0x10000, facing for a tracking spell, and its channel kit	verified	one	objectlayer/auras#channels	
 0x612b40	56	CGUnit_C::GetPlayerSkillInfo		objectlayer	primitive		Asks 0x5edae0 for a player's two values, else zeroes both	verified	one	objectlayer/units#known-spells-skills-and-prices	
-0x612b80	101	CGUnit_C::GetMerchantDiscount		objectlayer	primitive		Returns a vendor's discount for a player: 0.1 when honored, plus PvP rank steps	verified	one	objectlayer/units#known-spells-skills-and-prices	objectlayer::vendor_price_discount_difftest
+0x612b80	101	CGUnit_C::GetMerchantDiscount		objectlayer	primitive		Returns a vendor's discount: 0.1 at reaction 5, plus 0.05 at honor rank 6 and 8 for a PvP vendor	verified	one	objectlayer/vendordiscount#the-discount	objectlayer::vendor_price_discount_difftest
 0x612bf0	87	CGUnit_C::GetGenderedText		objectlayer	primitive		Returns a script text in its female or male variant by the unit's gender, else its plain one	verified	one	objectlayer/unitnames#unit-names	
 0x612c50	77			objectlayer	primitive	int32_t __thiscall (void *this, int32_t powerType)	Returns the base a percentage cost scales: base mana, base health, 1000 or 100 by power type	verified	one	spell/records#power-cost	
 0x612cc0	11	CGUnit_C::TestNodeOutdoors		objectlayer	orchestration		Returns 0x6706f0's test of the unit's world node	verified	one	objectlayer/units#caster-checks-for-a-spell	

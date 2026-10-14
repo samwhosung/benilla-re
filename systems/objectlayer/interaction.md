@@ -38,6 +38,26 @@ nonzero returns; a larger distance after that returns. The flags are `UNIT_NPC_F
 `0x5e00e0` does nothing for the unit at `0xbdcee8` and shows error 0x130 while the display is not
 native. The talk emote is `CGUnit_C::RequestTalkEmote(0)` (`0x60bb30`). Slices: p3_dist2_f32deltas_5f0130 `0x5f01b9`-`0x5f0200`; p3_in_range_gate_5f0130 `0x5f0202`-`0x5f020d` `0x5f0238`-`0x5f0243`.
 
+## The vendor click
+
+The vendor arm `0x5df5d0(&guid)` sends one of two messages, chosen by the cursor. With an item held on the cursor
+(payload mode 1 at `0xb4d900`) it sends `CMSG_SELL_ITEM` (0x1a0) with the clicked unit as vendor, the held item
+and a count of 0, the whole stack, then clears the cursor. Otherwise it sends `CMSG_LIST_INVENTORY` (0x19e) with
+the unit's GUID. No merchant window is read, opened or closed on either path, and the talk emote plays after both.
+
+Addresses: `0x5df5d0`, `0x5df5d7`, `0x5df5e0`, `0x5df5ee`, `0x5df5f0`, `0x5df600`, `0x5df60e`, `0x5df64d`, `0x494c60`, `0x5e1d50`, `0x494b60`, `0x494b87`, `0x494b8d`, `0x494ba3`, `0x494bb6`, `0x495190`, `0x4951c2`, `0x4951c4`, `0x4951bb`, `0xb4d900`, `0xb4b3e4`, `0x4fb7a7`, `0x4fa378`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x494c60` returns the held item's GUID for mode 1 and 0 for every other payload, and `0x5df5e0` branches on it, never on
+the argument. The sender `0x5e1d50` writes the opcode, the vendor GUID, the item GUID and one count byte; its
+other two callers, `0x4fb7a7` and `0x4fa378`, pass the open merchant as the vendor, so here the vendor is the clicked
+unit instead. `0x5df5ee` zeroes the count. The send is unconditional; the clear that follows goes through `0x494b60`,
+which does nothing without the active player or when player control is lost (`0xb4b3e4` 0) with flag bit 20 clear
+(`0x494ba3`). Its `ClearCursor(0, 1)` passes 0 as the first argument, so `0x4951c2` skips the unlock `0x495420` and
+the sold item stays locked until the server answers. `0x5f0320` calls the talk emote after the call on both paths.
+
 ## Confirmation dialogs
 
 The spirit healer, talent wipe, pet unlearn and binder each run twice: with a GUID they remember
