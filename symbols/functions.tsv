@@ -7199,7 +7199,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49df80	226	HandleServerMessagePacket	idb	ui	orchestration		Handles the server message: formats a ServerMessages row with the string and shows it as a system line	verified	one	ui/chatserver#server-message	
 0x49e070	329	HandleRaidInstanceInfoPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetUInt32, FrameScript_GetText, 0x4a3370 and 4 more; not read here	inferred	none		
 0x49e1c0	667	HandleRaidInstanceMessagePacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
-0x49e470	200	HandleInstanceResetPacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls 0x495d00, CDataStore::GetInt32, SStrCopy and 3 more; not read here	inferred	none		
+0x49e470	200	HandleInstanceResetPacket	idb	ui	orchestration		Clears the last instance, then adds INSTANCE_RESET_SUCCESS with the map name as a system chat line	verified	one	ui/groupverbs#instances	
 0x49e540	297	HandleInstanceResetFailedPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
 0x49e670	74	HandleUpdateLastInstancePacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, ClntObjMgrGetMapID, GetUnixTime and 1 more; not read here	inferred	none		
 0x49e6c0	32	HandleUpdateInstanceOwnershipPacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x495d50; not read here	inferred	none		
@@ -8114,14 +8114,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b6050	85			ui	orchestration		Runs UIBindings.cpp code that calls SMemAlloc, 0x4b6c50, ConsoleCommandRegister; not read here	inferred	none		
 0x4b60b0	76			ui	orchestration		Runs UIBindings.cpp code that calls SStrTokenize, 0x4b7490; not read here	inferred	none		
 0x4b6100	55			ui	orchestration		Runs UIBindings.cpp code that calls 0x63fb40, 0x4b6d90, SMemFree; not read here	inferred	none		
-0x4b6140	246			ui	primitive		Runs UIBindings.cpp code that calls 0x4b88c0, SStrTokenize, SStrCmpI and 1 more; not read here	inferred	none		
-0x4b6240	107			ui	primitive		Runs UIBindings.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 2 more; not read here	inferred	none		
-0x4b62b0	89			ui	orchestration		Runs UIBindings.cpp code that calls SFile::Load, 0x4b6140, 0x648700 and 1 more; not read here	inferred	none		
+0x4b6140	246	ParseBindingSet		ui	primitive		Empties a binding set and fills it from binding file text	verified	one	ui/keybindings#binding-files	
+0x4b6240	107	ReadBindingCache		ui	primitive		Reads a binding cache file into a stack buffer and parses it into the set of its kind	verified	one	ui/keybindings#binding-files	
+0x4b62b0	89	LoadBindingFiles		ui	orchestration		Loads the default binding file into set 0 and registers the reader 0x4b6240 for the two cache kinds	verified	one	ui/keybindings#binding-files	
 0x4b6310	409	CopyBindingSet		ui	primitive	void __thiscall (CBindings *this, int from, int to)	Copies one binding set into another, marks it, and signals UPDATE_BINDINGS for the live set	verified	one	ui/keybindings#binding-sets	
-0x4b64b0	103			ui	primitive		Runs UIBindings.cpp code that calls 0x4b6310; not read here	inferred	none		
+0x4b64b0	103	ChooseBindingSets		ui	primitive		Stores the current set, copies set 0 to 1, set 1 to 2 and set 2 to the live set	verified	one	ui/keybindings#choosing-the-sets	
 0x4b6520	144			ui	orchestration		Runs UIBindings.cpp code that calls SStrPrintf, SStrLen, 0x42a5d0; not read here	inferred	none		
 0x4b65b0	41			ui	orchestration		Runs UIBindings.cpp code that calls 0x4b6520; not read here	inferred	none		
-0x4b65e0	80			ui	primitive		Runs UIBindings.cpp code that calls WriteAccountData; not read here	inferred	none		
+0x4b65e0	80	WriteBindingSets		ui	primitive		Writes the binding sets that the mask selects to the account data	verified	one	ui/keybindings#writing-binding-files	
 0x4b6630	114	AppendModifierPrefixes		ui	primitive	void __fastcall (uint32_t mask, char **cursor, int *remaining)	Appends ALT-, CTRL- and SHIFT- to a chord string for the held modifiers	verified	one	ui/keybindings#chord-names	
 0x4b66b0	638	BuildKeyChord		ui	primitive	bool __fastcall (void *keyEvent, char *dst, int size)	Builds the chord string of a key event, or fails for an unnamed or oversized one	verified	one	ui/keybindings#key-names	
 0x4b6aa0	392	BuildMouseChord		ui	primitive	bool __fastcall (void *mouseEvent, char *dst, int size)	Builds the chord string of a mouse button or wheel event	verified	one	ui/keybindings#mouse-names	
@@ -33427,7 +33427,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76d080	78	SimpleModelGeometryGetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the model's bounding box width when the authored width is 0.0	verified	one	ui/modelview#implicit-size	ui::glue_76d080_field_diff
 0x76d0d0	78	SimpleModelGeometryGetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or the model's bounding box height when the authored height is 0.0	verified	one	ui/modelview#implicit-size	ui::glue_76d080_field_diff
 0x76d120	58	SimpleModelSetAlpha		ui	primitive	void __thiscall (uint32_t alpha)	Sets the frame's alpha, then passes the frame's own alpha over 255 to the model	verified	one	ui/modelanim#frame-alpha	ui::glue_76cd30_byte_to_unit
-0x76d160	56	SimpleModelRegisterLayer		ui	orchestration		Registers a model frame's layers, with its model draw for layer 2	inferred	none		
+0x76d160	56	SimpleModelRegisterLayer		ui	orchestration		Registers a model frame's layers, with its model draw for layer 2	verified	one	ui/model#where-the-scene-draws	
 0x76d1a0	159	SimpleModelUpdateTransform		ui	primitive	void __thiscall ()	Runs OnUpdateModel, then rebuilds the model's root matrix from position, facing and scale	verified	one	ui/modelview#root-transform	ui::glue_76d1a0_scale
 0x76d240	1078	SimpleModelDraw		ui	primitive	void __thiscall ()	Draws a model frame's scene inside its own rectangle, viewport and depth clear	verified	one	ui/modelview#the-paint	ui::glue_76d240_change_detect_and_scale
 0x76d680	368	SimpleModelLightCallback		ui	primitive		Stages the frame's fog and, when enabled, its light into the scene model's light collector	verified	one	ui/modelanim#fog	ui::glue_76d680_color_pack
