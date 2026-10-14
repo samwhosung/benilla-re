@@ -3,7 +3,7 @@
 `BattlefieldInfo.cpp` is the battleground client: the list of instances a battlemaster offers, three queue slots, the
 score board, the leave and join requests, and the Lua functions and events a battleground frame uses. It registers
 31 Lua functions (`tables/bindings.tsv`) and seven opcode handlers. The map and flag position functions share the file
-and are in `worldmap`.
+and are in `worldmapmarkers`.
 
 Roots: `0x4a9c40`, `0x4a9d30`, `0x4a9db0`, `0x4aa6c0`, `0x4aa850`, `0x4aab30`, `0x4aa200`
 

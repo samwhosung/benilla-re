@@ -7460,9 +7460,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a79b0	120	ProjectAreaPoi		ui	primitive		Projects an AreaPOI row onto the displayed map when its flags allow the level	verified	one	ui/worldmap#the-landmarks	
 0x4a7a30	68			ui	unreached		Runs WorldMap.cpp code that calls 0x4a7360; not read here	inferred	none		
 0x4a7a80	148			ui	primitive		Creates the world map arrow's model frame once and sets its scale to G48 times 5/3	verified	one	ui/modelview#model-scale-from-xml	
-0x4a7b20	87			ui	primitive		Runs WorldMap.cpp code not read here	inferred	none		
-0x4a7b80	148			ui	primitive		Runs WorldMap.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel, NDCToDDCHeight and 1 more; not read here	inferred	none		
-0x4a7c20	189			ui	orchestration		Runs WorldMap.cpp code that calls CM2Model::IsLoaded, 0x4a7b20, GetActiveCamera and 1 more; not read here	inferred	none		
+0x4a7b20	87	CenterArrowModel		ui	primitive		Centres an arrow model in its own rectangle: half its width and height, zero depth	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
+0x4a7b80	148	CreateMiniArrowModel		ui	primitive		Creates the battleground minimap's arrow model once and sets its scale to G48 times 10/9	verified	one	ui/worldmapmarkers#the-arrow-frame	
+0x4a7c20	189	UpdateArrowModels		ui	orchestration		Centres both arrow models and copies the camera followed object's facing into them	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
 0x4a7ce0	44	Script::GetMapContinents	idb	ui	primitive		Pushes the continent names and returns their count	verified	one	ui/worldmap#the-getters	
 0x4a7d10	146	Script::GetMapZones	idb	ui	primitive		Pushes the zone names of a continent and returns their count	verified	one	ui/worldmap#the-getters	
 0x4a7db0	111	Script::SetMapZoom	idb	ui	primitive		Selects continent minus one and zone minus one	verified	one	ui/worldmap#the-getters	
@@ -7479,13 +7479,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a88f0	219	Script::GetWorldLocMapPosition	idb	ui	orchestration		Implements the Lua function GetWorldLocMapPosition	inferred	none		
 0x4a89d0	44	Script::GetNumMapOverlays	idb	ui	orchestration		Pushes the number of map overlays	verified	one	ui/worldmap#the-overlays	
 0x4a8a00	423	Script::GetMapOverlayInfo	idb	ui	primitive		Pushes the path, size, offsets and map point of a map overlay	verified	one	ui/worldmap#the-overlays	
-0x4a8bb0	171	Script::CreateWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function CreateWorldMapArrowFrame	inferred	none		
-0x4a8c60	171	Script::CreateMiniWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function CreateMiniWorldMapArrowFrame	inferred	none		
-0x4a8d10	8	Script::UpdateWorldMapArrowFrames	idb	ui	orchestration		Implements the Lua function UpdateWorldMapArrowFrames	inferred	none		
-0x4a8d20	512	Script::PositionWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function PositionWorldMapArrowFrame	inferred	none		
-0x4a8f20	512	Script::PositionMiniWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function PositionMiniWorldMapArrowFrame	inferred	none		
-0x4a9120	73	Script::ShowWorldMapArrowFrame	idb	ui	orchestration		Implements the Lua function ShowWorldMapArrowFrame	inferred	none		
-0x4a9170	73	Script::ShowMiniWorldMapArrowFrame	idb	ui	orchestration		Implements the Lua function ShowMiniWorldMapArrowFrame	inferred	none		
+0x4a8bb0	171	Script::CreateWorldMapArrowFrame	idb	ui	primitive		Creates the world map arrow model once under the given frame	verified	one	ui/worldmapmarkers#the-arrow-frame	
+0x4a8c60	171	Script::CreateMiniWorldMapArrowFrame	idb	ui	primitive		Creates the battleground minimap arrow model once under the given frame	verified	one	ui/worldmapmarkers#the-arrow-frame	
+0x4a8d10	8	Script::UpdateWorldMapArrowFrames	idb	ui	orchestration		Updates both arrow models, pushing nothing	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
+0x4a8d20	512	Script::PositionWorldMapArrowFrame	idb	ui	primitive		Anchors the world map arrow model like SetPoint, with scaled offsets	verified	one	ui/worldmapmarkers#positioning-an-arrow	
+0x4a8f20	512	Script::PositionMiniWorldMapArrowFrame	idb	ui	primitive		Anchors the battleground minimap arrow model like SetPoint, with scaled offsets	verified	one	ui/worldmapmarkers#positioning-an-arrow	
+0x4a9120	73	Script::ShowWorldMapArrowFrame	idb	ui	orchestration		Shows or hides the world map arrow model like Frame:Show and Frame:Hide	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
+0x4a9170	73	Script::ShowMiniWorldMapArrowFrame	idb	ui	orchestration		Shows or hides the battleground minimap arrow model	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
 0x4a91c0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4a91f0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4a9210	85			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -7572,12 +7572,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4aa580	23	CountBattlefieldNameArrival		ui	primitive		Counts down the unknown score names and rebuilds the list on the last	verified	one	ui/battlefield#names-and-the-score-order	
 0x4aa5a0	22	SetBattlefieldScoreFilter		ui	orchestration	void __fastcall SetBattlefieldScoreFilter(int32_t team)	Stores a team filter of -1, 0 or 1 and rebuilds the score list	verified	one	ui/battlefield#names-and-the-score-order	
 0x4aa5c0	168	RequestBattlefieldPositionsImpl		ui	primitive		Sends opcode 0x2e9 at most once per 5000 ms	verified	one	ui/battlefield#joining-and-leaving	
-0x4aa670	71			ui	primitive		Runs BattlefieldInfo.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x4aa670	71	GetFlagToken		ui	primitive		Returns the flag token string for the carrier by the player's faction side, or null	verified	one	ui/worldmapmarkers#the-flag-carrier	
 0x4aa6c0	400	HandleBattlefieldListPacket	idb	ui	primitive		Reads the battlemaster list into the instance array and bracket and signals BATTLEFIELDS_SHOW	verified	one	ui/battlefield#the-list-message	
 0x4aa850	725	HandleBattlefieldStatusPacket	idb	ui	primitive		Reads one queue slot's status, signals UPDATE_BATTLEFIELD_STATUS and rebuilds the stat columns on status 3	verified	one	ui/battlefield#the-status-message	
 0x4aab30	396	HandlePvPLogDataPacket	idb	ui	primitive		Reads the score message into the score blocks, asks for the names and rebuilds when all are known	verified	one	ui/battlefield#names-and-the-score-order	
 0x4aacc0	125	HandleGroupJoinedBattlegroundPacket	idb	ui	orchestration		Shows the deserter, named map or generic message for a group battleground join result	verified	one	ui/battlefield#other-messages	
-0x4aad40	203	HandleBattlegroundPlayerPositionsPacket	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls CDataStore::GetUInt32, CDataStore::GetGuid and 2 more; not read here	inferred	none		
+0x4aad40	203	HandleBattlegroundPlayerPositionsPacket	idb	ui	primitive		Reads the 0x2e9 packet: teammate guids and positions and the flag carrier	verified	one	ui/worldmapmarkers#the-position-packet	
 0x4aae10	209	HandleBattlegroundPlayerJoinedOrLeftPacket	idb	ui	orchestration		Shows the joined or left message for a battleground player by the arrival opcode	verified	one	ui/battlefield#other-messages	
 0x4aaef0	226			ui	primitive		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 2 more; not read here	inferred	none		
 0x4aafe0	157			ui	orchestration		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPrintf and 1 more; not read here	inferred	none		
@@ -7606,17 +7606,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4abdc0	159	Script::GetBattlefieldStatData	idb	ui	primitive		Pushes one stat word of a score row	verified	one	ui/battlefield#scores-and-stats	
 0x4abe60	140	Script::LeaveBattlefield	idb	ui	primitive		Sends opcode 0x2e1 to leave the battleground once it has ended	verified	one	ui/battlefield#joining-and-leaving	
 0x4abef0	8	Script::RequestBattlefieldPositions	idb	ui	orchestration		Implements the Lua function RequestBattlefieldPositions	inferred	none		
-0x4abf00	135	Script::GetNumBattlefieldPositions	idb	ui	primitive		Implements the Lua function GetNumBattlefieldPositions	inferred	none		
-0x4abf90	510	Script::GetBattlefieldPosition	idb	ui	primitive		Implements the Lua function GetBattlefieldPosition	inferred	none		
-0x4ac190	13			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
+0x4abf00	135	Script::GetNumBattlefieldPositions	idb	ui	primitive		Pushes the count of stored teammates outside the player's party and raid	verified	one	ui/worldmapmarkers#teammate-positions	
+0x4abf90	510	Script::GetBattlefieldPosition	idb	ui	primitive		Pushes map fractions and name of the index-th teammate outside party and raid	verified	one	ui/worldmapmarkers#teammate-positions	
+0x4ac190	13	OnWorldMapNameArrived		ui	orchestration		Signals WORLD_MAP_NAME_UPDATE when a teammate's name reaches the name cache	verified	one	ui/worldmapmarkers#teammate-positions	
 0x4ac1a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ac1b0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ac1c0	61	Script::GetNumBattlefieldFlagPositions	idb	ui	primitive		Implements the Lua function GetNumBattlefieldFlagPositions	inferred	none		
+0x4ac1c0	61	Script::GetNumBattlefieldFlagPositions	idb	ui	primitive		Pushes 1 when a flag carrier is known, else 0	verified	one	ui/worldmapmarkers#the-flag-carrier	
 0x4ac200	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ac210	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ac230	327	Script::GetBattlefieldFlagPosition	idb	ui	primitive		Implements the Lua function GetBattlefieldFlagPosition	inferred	none		
+0x4ac230	327	Script::GetBattlefieldFlagPosition	idb	ui	primitive		Pushes map fractions and the flag token of the carrier for index 1	verified	one	ui/worldmapmarkers#the-flag-carrier	
 0x4ac380	69	Script::CanJoinBattlefieldAsGroup	idb	ui	orchestration		Pushes 1 when the listed map permits group queuing, else nil	verified	one	ui/battlefield#the-list-and-the-selection	
-0x4ac3d0	88	Script::GetBattlefieldMapIconScale	idb	ui	primitive		Implements the Lua function GetBattlefieldMapIconScale	inferred	none		
+0x4ac3d0	88	Script::GetBattlefieldMapIconScale	idb	ui	primitive		Pushes the minimap icon scale of the active battleground map, 1.0 by default	verified	one	ui/worldmapmarkers#the-icon-scale	
 0x4ac430	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4ac460	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4ac480	10			ui	orchestration		Runs its object file code that calls 0x4ac490; not read here	inferred	none		
