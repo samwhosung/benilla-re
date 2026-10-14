@@ -28412,17 +28412,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cafa0	43			unassigned			Runs its object file code that calls 0x6cafd0, SMemFree; not read here	inferred	none		
 0x6cafd0	42			unassigned			Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x6cb000	18			unassigned			Runs its object file code that calls 0x58b360; not read here	inferred	none		
-0x6cb020	460			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd580, 0x589e80 and 9 more; not read here	inferred	none		
+0x6cb020	460			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd580, 0x589e80 and 9 more; not read here	inferred	none		ffxeffects::ffx_glow_color_quantize_difftest
 0x6cb1f0	145			unassigned			Runs its object file code that calls 0x6cbcf0, GxCapsGet, 0x58b2e0 and 1 more; not read here	inferred	none		
 0x6cb290	43			unassigned			Runs its object file code that calls 0x6cb2c0, SMemFree; not read here	inferred	none		
 0x6cb2c0	42			unassigned			Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x6cb2f0	18			unassigned			Runs its object file code that calls 0x58b360; not read here	inferred	none		
-0x6cb310	1232			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd810, 0x6cd580 and 18 more; not read here	inferred	none		
+0x6cb310	1232			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd810, 0x6cd580 and 18 more; not read here	inferred	none		ffxeffects::ffx_glow_pass_render_difftest
 0x6cb7e0	174			unassigned			Runs its object file code that calls 0x6cde70, GxCapsGet, 0x58b2e0 and 1 more; not read here	inferred	none		
 0x6cb890	43			unassigned			Runs its object file code that calls 0x6cb8c0, SMemFree; not read here	inferred	none		
 0x6cb8c0	71			unassigned			Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x6cb910	18			unassigned			Runs its object file code that calls 0x58b360; not read here	inferred	none		
-0x6cb930	302			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd580, 0x589e80 and 5 more; not read here	inferred	none		
+0x6cb930	302			unassigned			Runs its object file code that calls 0x6cd3c0, 0x6cd580, 0x589e80 and 5 more; not read here	inferred	none		ffxeffects::ffx_death_pass_pack_difftest
 0x6cba60	64			unassigned			Runs its object file code that calls 0x6cde70, 0x58b2b0; not read here	inferred	none		
 0x6cbaa0	43			unassigned			Runs its object file code that calls 0x6cbad0, SMemFree; not read here	inferred	none		
 0x6cbad0	25			unassigned			Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
@@ -28443,7 +28443,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cbcf0	261			unassigned			Runs its object file code that calls 0x6cde70, CGxTexFlags::CGxTexFlags, GxCapsGet and 1 more; not read here	inferred	none		
 0x6cbe00	43			unassigned			Runs its object file code that calls 0x6cbe30, SMemFree; not read here	inferred	none		
 0x6cbe30	104			unassigned			Runs its object file code that calls GxTexDestroy; not read here	inferred	none		
-0x6cbea0	645			ffxeffects			Runs FFXEffects.cpp code that calls SMemFree, SMemAlloc, __ftol; not read here	inferred	none		
+0x6cbea0	645			ffxeffects			Runs FFXEffects.cpp code that calls SMemFree, SMemAlloc, __ftol; not read here	inferred	none		ffxeffects::ffx_glow_wave_lut_difftest
 0x6cc130	879	ConstructGlowEffect		ffxeffects			Constructs the glow full-screen effect	inferred	none		
 0x6cc4a0	43			ffxeffects			Runs FFXEffects.cpp code that calls 0x6cc4d0, SMemFree; not read here	inferred	none		
 0x6cc4d0	129			ffxeffects			Runs FFXEffects.cpp code that calls SMemFree; not read here	inferred	none		
@@ -28495,14 +28495,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cd1d0	441	FFXShutdown		ffxeffects			Shuts the full-screen effect system down	inferred	none		
 0x6cd390	46			ffxeffects			Runs its object file code not read here	inferred	none		
 0x6cd3c0	445			ffxeffects			Runs its object file code that calls GetDeviceProjection, BuildOrthoMatrix and 9 more; not read here	inferred	none		
-0x6cd580	455			ffxeffects			Runs its object file code that calls QueryDevice; not read here	inferred	none		
-0x6cd750	188			ffxeffects			Runs its object file code that calls 0x58a140, GxBufLock, GxBufUnlock and 1 more; not read here	inferred	none		
+0x6cd580	455			ffxeffects			Runs its object file code that calls QueryDevice; not read here	inferred	none		ffxeffects::ffx_fullscreen_quad_difftest
+0x6cd750	188			ffxeffects			Runs its object file code that calls 0x58a140, GxBufLock, GxBufUnlock and 1 more; not read here	inferred	none		ffxeffects::ffx_transform_quad_verts_difftest
 0x6cd810	44			ffxeffects			Runs its object file code that calls 0x58a140, 0x58a0c0; not read here	inferred	none		
 0x6cd840	73			ffxeffects			Runs its object file code that calls 0x589f50, SetDeviceView, SetDeviceProjection and 3 more; not read here	inferred	none		
 0x6cd890	472	BeginCurrentFfx		ffxeffects			Begins the current full-screen effect's pass	inferred	none		
 0x6cda70	149	EndCurrentFfx		ffxeffects			Ends the current full-screen effect's pass	inferred	none		
 0x6cdb10	45			ffxeffects			Runs its object file code that calls GxCapsGet; not read here	inferred	none		
-0x6cdb40	357			ffxeffects			Runs its object file code that calls GxCapsWindowSize, __ftol, 0x6cdb10 and 2 more; not read here	inferred	none		
+0x6cdb40	357			ffxeffects			Runs its object file code that calls GxCapsWindowSize, __ftol, 0x6cdb10 and 2 more; not read here	inferred	none		ffxeffects::ffx_compute_rt_dims_difftest
 0x6cdcb0	371			ffxeffects			Runs its object file code that calls GxCapsGet, CGxTexFlags::CGxTexFlags, 0x6cdb10 and 6 more; not read here	inferred	none		
 0x6cde30	42			ffxeffects			Runs its object file code that calls _atoi, ConsoleWrite; not read here	inferred	none		
 0x6cde60	12	SetCurrentFfx		ffxeffects			Makes an effect the current full-screen effect and returns the previous one	inferred	none		
