@@ -72,6 +72,34 @@ Test: none
 
 The clones are `0x459430` (sound), `0x45a570` (sound), `0x459530` (sound), `0x459940` (sound), `0x45a2a0` (sound), `0x45a3e0` (sound), `0x63e9f0` (cvar), `0x459630` (sound), `0x459fc0` (sound), `0x45d150` (sound). The table in `0x4969e0` empties its main list, then each bucket list, frees the bucket array and sets the mask to -1; the growth function `0x497240` refuses at a mask of 0x1fff or more, then keeps a counter at `+0x10` that persists between calls: each call takes 3 off it (to 0 at the least, `0x497257` to `0x497267`), each node walked adds 1 (`0x4972a4`), and a count above 13 (`0x4972a7`) doubles the buckets and returns 1. A table can therefore grow on a short chain. `ShouldGrow` (`0x6f03d0`, `0x6f0460`, the same bytes once addresses are masked) does the same with the call to `0x6f04f0` for the doubling.
 
+## Font table
+
+The font registry is a hash table at `0xcf4e80`: main list `+0x4`, bucket array `+0x14`, mask `+0x24`. The font-by-name lookup `0x783870` calls `0x784810` while the mask is still −1: it sets the mask to 3 and the bucket array to 4 twelve-byte heads, empties every head's list and
+marks each head with 4. `0x784ca0(n)` sets the bucket count to `n` by the template's rule (quantum 21 above 20 buckets, else the largest power of two not above the
+count) and, for a smaller count, unlinks and frees the dropped buckets' nodes. `0x784310(list, extra, flags)` allocates `extra + 0x1c` bytes, constructs a record in it
+with `0x783520` and links it at the head of the list.
+
+Addresses: `0x784810`, `0x783870`, `0x783913`, `0x784ca0`, `0x784e70`, `0x784310`, `0x783520`, `0xcf4e80`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x783913` is the call, after the test of `[0xcf4ea4]` against −1 (`0x783874`). `0x784810` stores 3 at `+0x24` of the table (`0x78481b`) and `0x784ca0` compares the count with 0x15 (`0x784cc7`).
+`0x784310` allocates with the tag `0x87a548` and flag 8 (`0x78432b`).
+
+## Font records
+
+A font record is five dwords and a font object: `0x783520` zeroes the five and builds a 0x7c-byte font object (tag `0x87a454`, line 0x13) into `+0x18` with `CSimpleFont`'s constructor `0x783a40`.
+`0x783560` deletes that object through its slot 0, frees the block at `+0x14` and unlinks the record's two links. `0x7839c0` empties the font table: it unlinks every node of the main
+list, then calls the table's slot 0 on each node of each bucket.
+
+Addresses: `0x783520`, `0x78354a`, `0x783560`, `0x78356f`, `0x783585`, `0x7839c0`, `0x7839e5`, `0x783a1d`, `0x783a40`, `0x7845d0`, `0xcf4e80`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x783560` frees `+0x14` with the tag `0x832b00` at line 0x8b3 (`0x783585`). `0x7839c0` loops `0x7845d0` on the main list (`0x7839e5`) and calls `[0xcf4e80]` slot 0 on each bucket node (`0x783a1d`).
+
 ## Hash table nodes
 
 12 rows add, allocate, delete and free the nodes of a hash table's lists:

@@ -200,3 +200,30 @@ Proof: one
 Test: none
 
 `0x81c744` stores `0x7733b0` and `0x773530` at its first two slots (`0x81c744`, `0x81c748`), and `0x773530` is also in the message line's table. `0x7733d0` is stored in four vtables (`0x81c72c` among them); `0x7733f0` in two. `0x773530` reads `[this+8]` before it subtracts 0xcc.
+
+## The Font object
+
+A `Font` object (`CSimpleFont`, vtable `0x81cb28`, layout part `0x81cb20`) holds a font block at `+0x38`, a justify word `+0x54` (0x212 when built), a colour word
+`+0x58` (−1), its inherit mask `+0x6c`, the font it follows `+0x28` and the list of its own followers `+0x74` with their link offset `+0x70` (0xc). `0x783a40` builds one:
+it constructs the script object part (`0x701ae0`), clears the block and the follow fields, makes `+0x74` an empty list and counts the object in `0xcf4e78`. `0x783b20` destroys one: it clears its
+name, detaches every follower (`0x770c60(0)` until the list is empty), decrements the count, unlinks itself from its own font and ends in the script object destructor (`0x701b40`).
+
+Addresses: `0x783a40`, `0x783a45`, `0x783a5c`, `0x783ad3`, `0x783ae1`, `0x783b20`, `0x783b34`, `0x783b59`, `0x783b60`, `0x783c1f`, `0x783c29`, `0x701ae0`, `0x701b40`, `0x770c60`, `0x784150`, `0x81cb20`, `0xcf4e78`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x783a40` stores 0x212 at `+0x54` (`0x783a87`), −1 at `+0x58` (`0x783a8e`), 0x1f at `+0x2c` (`0x783a98`), the list sentinel at `+0x74` with its tag (`0x783ab5` to `0x783ac4`), the vtables
+`0x81cb28` and `0x81cb20` (`0x783acd`, `0x783ad3`) and increments `0xcf4e78` (`0x783adf`). `0x783b40` loops `0x770c60(follower, 0)` while the list head is not tagged.
+
+## Font object SetFontObject
+
+`0x7841d0(source)` is a `Font`'s `SetFontObject`: it takes the source's mask, merges the source's block into its own with `FontBlockMerge` and keeps only the masked bits, follows the
+font the source follows, unless that chain reaches itself, moves itself between the two followers' lists and runs its slot 5.
+
+Addresses: `0x7841d0`, `0x7841e7`, `0x7841ea`, `0x7841f4`, `0x78420b`, `0x7842cc`, `0x770ad0`
+Confidence: verified
+Proof: one
+Test: none
+
+The chain walk from the source's `+0x28` (`0x78420b`) clears the new font when it reaches `this`, and slot 5 is `call [eax+0x14]` (`0x7842d0`).

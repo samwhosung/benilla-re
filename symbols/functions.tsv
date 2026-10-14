@@ -33696,15 +33696,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7787b0	89	ButtonIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is Button or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x778810	6	ButtonGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name Button	verified	one	ui/widgettype#type-chains	
 0x778820	43	DeletingDestructor778820		ui	orchestration		Destroys the object through 0x778850 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x778850	105			ui	primitive		Runs its object file code that calls 0x778fd0, FrameScriptReleaseScript, 0x783b20; not read here	inferred	none		
+0x778850	105	CSimpleButton::~CSimpleButton		ui	orchestration	void __thiscall ()	Clears the state textures, releases the script slots, destroys the three label fonts and runs the frame destructor	verified	one	ui/button#button-teardown-and-text-colour-slots	
 0x7788c0	901	CSimpleButton::LoadXML		ui	primitive		Loads a Button's frame node, then its state textures, fonts, colours, texts and text attribute	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x778c50	92	CSimpleButton::GetScriptByName		ui	orchestration		Returns a Button's handler slot by name, adding OnClick and OnDoubleClick to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
 0x778cb0	101			ui	orchestration		Clears every button slot that holds a region being removed, then removes it from the frame	verified	one	ui/button#state-and-highlight-textures	
 0x778d20	149	CSimpleButton::SetFontString		ui	orchestration		Installs a label, deleting the old, and anchors an unanchored one by the normal font's justify	verified	one	ui/button#the-label-and-its-fonts	
 0x778dc0	91	CSimpleButton::SetText		ui	orchestration		Sets the label's text, creating a label when there is none	verified	one	ui/button#the-label-and-its-fonts	
-0x778e20	69			ui	primitive		Runs its object file code not read here	inferred	none		
-0x778e70	69			ui	primitive		Runs its object file code not read here	inferred	none		
-0x778ec0	69			ui	primitive		Runs its object file code not read here	inferred	none		
+0x778e20	69	CSimpleButton::SetNormalTextColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores the normal label colour, marks it changed, stops it inheriting and runs the font part's slot 5	verified	one	ui/button#button-teardown-and-text-colour-slots	
+0x778e70	69	CSimpleButton::SetDisabledTextColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores the disabled label colour, marks it changed, stops it inheriting and runs the font part's slot 5	verified	one	ui/button#button-teardown-and-text-colour-slots	
+0x778ec0	69	CSimpleButton::SetHighlightTextColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores the highlight label colour, marks it changed, stops it inheriting and runs the font part's slot 5	verified	one	ui/button#button-teardown-and-text-colour-slots	
 0x778f10	188	CSimpleButton::SetStateTexturePath		ui	orchestration		Reloads a state's texture from a path, or creates one anchored to the button and installs it	verified	one	ui/button#state-and-highlight-textures	
 0x778fd0	125	CSimpleButton::SetStateTexture		ui	orchestration		Replaces a state's texture, deleting the old, and shows the new one when its state is current	verified	one	ui/button#state-and-highlight-textures	
 0x779050	191	CSimpleButton::SetHighlightTexturePath		ui	orchestration		Reloads or creates the highlight texture from a path in the HIGHLIGHT layer with a blend mode	verified	one	ui/button#state-and-highlight-textures	
@@ -33724,8 +33724,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779620	40	RestoreBase779620		ui	orchestration		Restores the base vtable and frees the object when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x779650	177	CSimpleButton::RunDoubleClick		ui	orchestration		Runs the C++ listener and OnDoubleClick with the button's name, on an enabled button	verified	one	ui/button#double-click	
 0x779730	16	CSimpleButton::RegisterForClicks		ui	orchestration		Stores the click mask	verified	one	ui/button#registerforclicks-and-click	
-0x779740	25			ui	unreached		Runs its object file code not read here	inferred	none		
-0x779760	34			ui	unreached		Runs its object file code not read here	inferred	none		
+0x779740	25			ui	unreached	void __thiscall (uint32_t a, uint32_t b)	Stores two dwords at +0x314 and +0x318; nothing reaches it	verified	one	ui/button#unreached-button-code	
+0x779760	34			ui	unreached	void __thiscall (uint32_t a, uint32_t b, uint32_t c)	Stores three dwords at +0x31c, +0x320 and +0x324; nothing reaches it	verified	one	ui/button#unreached-button-code	
 0x779790	125	CSimpleButton::SetState		ui	orchestration		Stores the lock and, for a new state, swaps to that state's texture when it has one and refreshes the label	verified	one	ui/button#setting-the-state	
 0x779810	115	CSimpleButton::UpdateLabel		ui	orchestration		Offsets the label for PUSHED and gives it the disabled, highlight or normal font by state	verified	one	ui/button#the-label-and-its-fonts	
 0x779890	6	IsButtonClickRunning		ui	orchestration	uint32_t __cdecl (void)	Returns the flag that a button click is running from the mouse	verified	one	ui/button#running-a-click	
@@ -33926,7 +33926,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x781960	16	Button::SetNormalTexture	idb	ui	orchestration		Implements the Button method SetNormalTexture, its pair in the table 0x879d00	verified	one	ui/button#state-and-highlight-textures	
 0x781970	564			ui	primitive		Sets a Button state texture from a Texture, a path or nil, raising a usage error otherwise	verified	one	ui/button#state-and-highlight-textures	
 0x781bb0	10	Button::GetNormalTexture	idb	ui	orchestration		Implements the Button method GetNormalTexture, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
-0x781bc0	242			ui	primitive		Runs its object file code that calls 0x6f3400, luaL_error, lua_rawgeti and 4 more; not read here	inferred	none		
+0x781bc0	242	ButtonGetStateTextureTable		ui	orchestration	uint32_t __fastcall (lua_State *L, uint32_t state)	Pushes the Lua table of a state texture of the Button at argument 1, or nil, raising on a wrong self	verified	one	ui/button#button-method-helper-and-type-test	
 0x781cc0	16	Button::SetPushedTexture	idb	ui	orchestration		Implements the Button method SetPushedTexture, its pair in the table 0x879d00	verified	one	ui/button#state-and-highlight-textures	
 0x781cd0	10	Button::GetPushedTexture	idb	ui	orchestration		Implements the Button method GetPushedTexture, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
 0x781ce0	13	Button::SetDisabledTexture	idb	ui	orchestration		Implements the Button method SetDisabledTexture, its pair in the table 0x879d00	verified	one	ui/button#state-and-highlight-textures	
@@ -33957,20 +33957,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x782d50	5	InitQuotient782d60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x782d60, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x782d60	19	InitQuotient782d60		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x782d80	68	CSimpleStatusBar::CSimpleStatusBar	idb	ui	primitive		Constructs a StatusBar frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
-0x782dd0	26			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
+0x782dd0	26	CSimpleStatusBar::SetBarColour		ui	orchestration	void __thiscall (const void *colour)	Sets the bar texture's vertex colour when the bar has a texture	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x782df0	45	IsTypeId782df0		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x782e20	89	StatusBarIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is StatusBar or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x782e80	6	StatusBarGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name StatusBar	verified	one	ui/widgettype#type-chains	
 0x782e90	43	DeletingDestructor782e90		ui	orchestration		Destroys the object through 0x782ec0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x782ec0	47			ui	orchestration		Runs its object file code that calls 0x7831f0, FrameScriptReleaseScript; not read here	inferred	none		
+0x782ec0	47	CSimpleStatusBar::~CSimpleStatusBar		ui	orchestration	void __thiscall ()	Clears the bar texture, releases the script slot and runs the frame destructor	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x782ef0	441	CSimpleStatusBar::LoadXML		ui	primitive		Loads a StatusBar's frame node, then its bar texture and colour, range, value and orientation	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x7830b0	5	InitInfinity7830c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7830c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7830c0	11	InitInfinity7830c0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x7830d0	60	CSimpleStatusBar::GetScriptByName		ui	orchestration		Returns a StatusBar's handler slot by name, adding OnValueChanged	verified	one	ui/xmltypes#handler-names-by-type	
-0x783110	34			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
-0x783140	174			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 2 more; not read here	inferred	none		
+0x783110	34	CSimpleStatusBar::RemoveRegion		ui	orchestration	void __thiscall (CScriptRegion *region)	Forgets the bar texture when it is the removed region, then removes the region	verified	one	ui/slider#a-status-bars-texture-and-teardown	
+0x783140	174	CSimpleStatusBar::SetBarTexture		ui	orchestration	uint32_t __thiscall (const char *path, uint32_t layer)	Loads the path into the bar texture, creating and installing one, answering 0 when the file fails	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x7831f0	85			ui	orchestration		Installs a status bar texture that changes its rectangle with its coordinates	verified	one	ui/slider#a-status-bars-fill	
-0x783250	23			ui	primitive		Runs its object file code not read here	inferred	none		
+0x783250	23	CSimpleStatusBar::SetOrientation		ui	orchestration	void __thiscall (uint32_t orientation)	Stores the orientation at +0x328 and sets bit 0 of +0x314	verified	one	ui/slider#a-status-bars-texture-and-teardown	
 0x783270	86			ui	primitive		Sets a status bar's range, the minimum no greater than the maximum, reapplying a pending value	verified	one	ui/xmltypes#slider-and-statusbar-values	
 0x7832d0	173	CSimpleStatusBar::SetValue		ui	orchestration		Clamps a status bar value to its range and runs OnValueChanged for a change	verified	one	ui/slider#a-status-bars-value	
 0x783380	49			ui	primitive		Returns a status bar's fill, (value - minimum) / (maximum - minimum), or 0	verified	one	ui/slider#a-status-bars-value	ui::glue_767_783380_guarded_fraction
@@ -33984,25 +33984,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7834d0	19	InitSquare7834d0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x7834f0	5	InitQuotient783500Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x783500, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x783500	19	InitQuotient783500		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x783520	63			ui	orchestration		Runs CSimpleFont.cpp code that calls SMemAlloc, 0x783a40; not read here	inferred	none		
-0x783560	161			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x783520	63	FontRecordConstruct		ui	orchestration	void * __thiscall ()	Zeroes the five dwords of a font record and builds its font object	verified	one	ui/containers#font-records	
+0x783560	161	FontRecordDestruct		ui	orchestration	void __thiscall ()	Deletes the record's font object, frees its block and unlinks its two links	verified	one	ui/containers#font-records	
 0x783610	10	InitHashTable783620Thunk		ui	orchestration	void __cdecl (void)	Calls 0x783620, then jumps to 0x7836e0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x783620	190	InitHashTable783620		ui	primitive	void __cdecl (void)	Builds an empty hash table in a global: link offset 0xc, a self-linked head, no buckets and a mask of -1	verified	one	ui/initstores#hash-tables	
 0x7836e0	12	InitHashTable783620Register		ui	orchestration	void __cdecl (void)	Registers 0x7836f0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x7836f0	375	InitHashTable783620Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x783620 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x783870	325			ui	primitive		Returns the font object of a name, ignoring case, creating one when its flag is nonzero	verified	one	ui/framexml#the-elements-of-a-file	
-0x7839c0	113			ui	primitive		Runs its object file code that calls 0x7845d0; not read here	inferred	none		
-0x783a40	171			ui	primitive		Runs its object file code that calls ConstructScriptObject, 0x77f570, 0x41e3a0; not read here	inferred	none		
+0x7839c0	113	FontTableClear		ui	orchestration	void ()	Unlinks every node of the font table's main list and deletes each bucket node	verified	one	ui/containers#font-records	
+0x783a40	171	CSimpleFont::CSimpleFont		ui	orchestration	void * __thiscall ()	Builds a Font object: script part, empty block, 0x212 justify word, empty follower list and the vtables	verified	one	ui/fonttext#the-font-object	
 0x783af0	43	DeletingDestructor783af0		ui	orchestration		Destroys the object through 0x783b20 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x783b20	270			ui	primitive		Runs its object file code that calls 0x784150, 0x770c60, 0x7845a0 and 1 more; not read here	inferred	none		
+0x783b20	270	CSimpleFont::~CSimpleFont		ui	orchestration	void __thiscall ()	Clears the name, detaches every follower and the font's own link and ends in the script object destructor	verified	one	ui/fonttext#the-font-object	
 0x783c30	1265	CFontObject::LoadXML		ui	primitive		Loads a named font's template, file, height, outline, spacing, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	ui::glue_geom_783c30_fontheight_spacing
 0x784130	5	InitInfinity784140Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x784140, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x784140	11	InitInfinity784140		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x784150	42	FontSetName		ui	orchestration		Clears the font name global, stores the new name and publishes it as a global	verified	one	ui/widgettype#naming-a-widget	
 0x784180	66			ui	orchestration		Pushes a font's changed groups to each follower, then clears the change bits	verified	one	ui/fontstring#following-a-font	
-0x7841d0	268			ui	primitive		Runs its object file code that calls 0x770ad0; not read here	inferred	none		
+0x7841d0	268	CSimpleFont::SetFontObject		ui	orchestration	CSimpleFont * __thiscall (CSimpleFont *source)	Takes the source's mask and block and the font it follows, then runs slot 5	verified	one	ui/fonttext#font-object-setfontobject	
 0x7842e0	34	FreeRecord7842e0		ui	orchestration		Clears the record its argument points at through 0x783560 and frees it	verified	one	ui/containers#block-frees	
-0x784310	182			ui	primitive		Runs its object file code that calls SMemAlloc, 0x783520; not read here	inferred	none		
+0x784310	182	FontTableInsertRecord		ui	orchestration	void __thiscall (void *list, uint32_t extra, uint32_t flags)	Allocates a font record of extra plus 0x1c bytes, constructs it and links it at the head of the list	verified	one	ui/containers#font-table	
 0x7843d0	189	EmptyTable7843d0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x784490	5	InitDouble7844a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7844a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7844a0	15	InitDouble7844a0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34015,13 +34015,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7846a0	135	FreeBuckets7846a0		ui	primitive		Empties a table's bucket lists and frees the bucket array	verified	one	ui/containers#hash-tables	
 0x784730	25	LinkOrEnd784730		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x784750	181	Relink784750		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
-0x784810	337			ui	primitive		Runs its object file code that calls 0x784e10, 0x784e50, 0x784e70 and 3 more; not read here	inferred	none		
+0x784810	337	FontTableInit		ui	orchestration	void __thiscall ()	Sets the font table's mask to 3 and its buckets to four empty heads	verified	one	ui/containers#font-table	
 0x784970	176	FreeBucketNodes784970		ui	primitive		Unlinks and frees the nodes of a bucket list	verified	one	ui/containers#lists	
 0x784a20	33	InitList784a20		ui	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	ui/containers#lists	
 0x784a50	483	GrowOnLongChain784a50		ui	primitive		Doubles a table's buckets and rehashes when a bucket walks more than 13 nodes, up to mask 0x1fff	verified	one	ui/containers#hash-tables	
 0x784c40	77	ClearBucket784c40		ui	primitive		Unlinks every node of a bucket list	verified	one	ui/containers#lists	
 0x784c90	12	InitEndLink784c90		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
-0x784ca0	317			ui	primitive		Runs its object file code that calls 0x784e70, 0x7845d0, 0x784de0; not read here	inferred	none		
+0x784ca0	317	ResizeBuckets784ca0		ui	primitive	void __thiscall (uint32_t count)	Sets a bucket array's count, rounding the capacity to its quantum below 21 and freeing dropped nodes	verified	one	ui/containers#font-table	
 0x784de0	41	NextLink784de0		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x784e10	57	Quantum21784e10		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 21, else 21	verified	one	ui/containers#arrays	
 0x784e50	31	RoundUp784e50		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
@@ -34034,11 +34034,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x784ff0	5	InitInfinity785000Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x785000, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x785000	11	InitInfinity785000		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x785010	55	CSimpleCheckbox::CSimpleCheckbox	idb	ui	orchestration		Constructs a CheckButton on a Button and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
-0x785050	53			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x785050	53	IsTypeId785050		ui	orchestration	uint32_t __stdcall (uint32_t id)	Answers 1 for the CheckButton, Button, Frame and Region type ids and 0 for any other	verified	one	ui/button#button-method-helper-and-type-test	
 0x785090	110	CheckButtonIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is CheckButton or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x785100	6	CheckButtonGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name CheckButton	verified	one	ui/widgettype#type-chains	
 0x785110	43	DeletingDestructor785110		ui	orchestration		Destroys the object through 0x785140 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x785140	40			ui	orchestration		Runs its object file code that calls 0x785330, 0x785440; not read here	inferred	none		
+0x785140	40	CSimpleCheckbox::~CSimpleCheckbox		ui	orchestration	void __thiscall ()	Clears the two checked textures and runs the button destructor body	verified	one	ui/button#button-teardown-and-text-colour-slots	
 0x785170	177	CSimpleCheckbox::LoadXML		ui	orchestration		Loads a CheckButton's Button node, then checked and its two checked textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x785230	50			ui	orchestration		Clears the checked slots that hold a removed region, then the button's	verified	one	ui/button#checkbutton	
 0x785270	179			ui	orchestration		Reloads the checked texture from a path, or creates one with blend mode ADD	verified	one	ui/button#checked-textures	

@@ -126,6 +126,21 @@ Test: none
 coordinates as (left, top) = (`[+4]`, `[+0]`) to (right, bottom) = (`[+0xc]`, `[+8]`). `0x7831f0`
 stores 1 at the texture's `+0x124` (`0x783220`).
 
+## A status bar's texture and teardown
+
+`0x783140(path, layer)` sets the bar texture from a path: with a texture already at `+0x324` it loads the path into it (`0x770200`) and answers 1; otherwise it creates one in layer 2, loads the
+path, pins it to every point of the bar and installs it (`0x7831f0`), or deletes it, answering 0, when the file fails. `0x783110` is the bar's `RemoveRegion`: it clears `+0x324` when it is the removed texture
+and then removes the region. `0x783250(orientation)` stores the orientation `+0x328` and sets bit 0 of `+0x314`. `0x782dd0(colour)` passes a colour to the bar texture's vertex colour when there is one.
+The destructor body `0x782ec0` clears the bar texture, releases the script slot `+0x32c` and runs the frame destructor.
+
+Addresses: `0x783140`, `0x783157`, `0x783165`, `0x783181`, `0x783192`, `0x7831b4`, `0x7831bf`, `0x7831cb`, `0x783110`, `0x783129`, `0x783250`, `0x78325c`, `0x782dd0`, `0x782de1`, `0x782ec0`, `0x782ed4`, `0x782ee2`, `0x770200`, `0x7831f0`, `0x76a7f0`, `0x77f750`, `0x702670`, `0x7693b0`, `0x878cf0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x783140` passes the dword at `0x878cf0` to `0x770200` (`0x783157`, `0x78319d`), and calls `0x767db0(bar, 1)` on the new texture (`0x7831bf`). `0x783110` ends in `CSimpleFrame::RemoveRegion` (`0x783129`).
+`0x782dd0` reads `+0x324` (`0x782dd3`) and calls `0x77f750` (`0x782de1`).
+
 ## Lua methods
 
 `Slider` has 10 methods at `0x87b260`, registered by `0x790e80`; `StatusBar` has 10 at `0x87b010`,

@@ -315,6 +315,48 @@ tests `+0x4e0` at `0x785388` and reloads it at `0x7853a5`; its creating path end
 `ADD` at 0x811ac0. `0x799e50` and `0x79a140` call these for a string and the installers for a
 texture or nil.
 
+## Button teardown and text colour slots
+
+The button's destructor body `0x778850` stores its vtables (`0x81c7f8`, `0x81c7c8` at `+0x24`), clears the three state textures (`0x778fd0(state, 0)`), releases the script
+slots `+0x4cc` and `+0x4d4`, destroys the three label fonts at `+0x434`, `+0x3b8` and `+0x33c` (`0x783b20`) and runs the frame destructor. The colour setters `0x778e20`, `0x778e70` and
+`0x778ec0` take a pointer to a colour dword. When it differs from the stored colour (`+0x394` normal, `+0x48c` disabled, `+0x410` highlight), or its changed bit is clear, they store it and set 0x404 in
+the font's validity word; then they clear bit 2 of its inherit mask and run slot 5 of the font part. `0x785140` is the check button's destructor body: it clears its two checked textures and runs `0x778850`.
+
+Addresses: `0x778850`, `0x778868`, `0x77887c`, `0x778895`, `0x7788a0`, `0x7788ab`, `0x7788b4`, `0x778e20`, `0x778e28`, `0x778e3b`, `0x778e41`, `0x778e4b`, `0x778e5e`, `0x778e70`, `0x778ec0`, `0x785140`, `0x785152`, `0x78515b`, `0x785163`, `0x778fd0`, `0x783b20`, `0x785330`, `0x785440`, `0x702670`, `0x7693b0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x778e70` and `0x778ec0` are `0x778e20` with the offsets `+0x48c`, `+0x46c`, `+0x460`, `+0x434` and `+0x410`, `+0x3f0`, `+0x3e4`, `+0x3b8`. The slot call is `call [edx+0x14]` on the font part
+(`0x778e5e`). `0x785140` stores the check button's vtables `0x81cb80` and `0x81cb54` (`0x785145`, `0x78514b`).
+
+## Button method helper and type test
+
+`0x781bc0(L, state)` is the shared part of `GetNormalTexture`, `GetPushedTexture` and `GetDisabledTexture`. It assigns the Button type id on first use, requires a table at argument 1
+(`Attempt to find 'this' in non-table object (used '.' instead of ':' ?)`), reads its element 0 as the object (`Attempt to find 'this' in non-framescript object` when nil), checks the type through slot 4
+(`Wrong object type for member function`) and pushes the Lua table of the state texture at `+0x4b8 + state·4`, making it first when needed, or nil without a texture. `0x785050(id)`, slot 4 of the check button, answers 1 for the
+CheckButton, Button, Frame and Region type ids (`0xcf4ecc`, `0xcf4d88`, `0xcf0c10`, `0xcf0c3c`).
+
+Addresses: `0x781bc0`, `0x781bc4`, `0x781bf3`, `0x781c1d`, `0x781c4b`, `0x781c69`, `0x781c80`, `0x781c90`, `0x781ca2`, `0x785050`, `0x785056`, `0x78505e`, `0x785066`, `0x78506e`, `0x6f3bc0`, `0x701bd0`, `0xcf4d88`, `0xcf0c10`, `0xcf0c3c`, `0xcf4ecc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x781bc0` takes the state in `edx` and the state's texture from `[object + state·4 + 0x4b8]` (`0x781c69`), calls `0x701bd0` when `[texture+4]` is 0 (`0x781c80`) and pushes `[texture+8]` from the registry
+(`lua_rawgeti` at index −10000, `0x781c90`). The three getters call it at `0x781bb5`, `0x781cd5` and `0x781cf2`.
+
+## Unreached button code
+
+`0x779740(a, b)` stores two dwords at `+0x314` and `+0x318` and `0x779760(a, b, c)` three at `+0x31c`, `+0x320` and `+0x324`; nothing calls either and no section stores their addresses.
+
+Addresses: `0x779740`, `0x779749`, `0x779760`, `0x779769`
+Confidence: verified
+Proof: one
+Test: none
+
+The census is every `call` and `jmp` to each address in the listing and every little-endian occurrence of it in each section of the image: none of either. The same two scans find the call of `0x778e20` (`0x778a6e`) and the vtable store of
+`0x77a8d0` (`0x81c958`), which are the controls.
+
 ## Lua methods
 
 `Button` has 39 methods at `0x879d00`, registered by `0x782c60`; `CheckButton` adds 6 at

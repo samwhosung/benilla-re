@@ -1081,6 +1081,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c9c8	void *[11]	s_simpleRegionLayoutVtable		ui	Holds the layout vtable stored at +0x24 of a region base, before a texture or font string replaces it	verified	one	ui/regions#the-region-base
 0x81c9f4	void *[11]	s_simpleRegionVtable		ui	Holds the vtable a region base stores at +0x0 while it is built or torn down, its slot 0 being 0x77f6c0	verified	one	ui/regions#the-region-base
 0x81cb20	uint32_t[13]	s_fontTableB		ui	Holds the ten slots and three floats of a font table stored at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
+0x81cb54	void *[11]	s_simpleCheckboxLayoutVtable		ui	Holds the layout vtable of a check button, stored at +0x24	verified	one	ui/button#button-teardown-and-text-colour-slots
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
 0x81cc30	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
@@ -1183,6 +1184,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
 0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	screencoord#screen-scale-state
+0x832b00	char[24]	s_pathStplH		ui	Holds the source path of Storm's stpl.h, passed to the allocator as the file	verified	one	ui/containers#font-records
 0x832cc0	int32_t	s_schedulerCallGuard		core	Holds -1 plus the number of scheduler calls in flight	verified	one	core/scheduler#load-accounting
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
@@ -2161,7 +2163,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87a240	char[74]	s_textUsageSSetHighlightTextureTextureOrTexture		ui	Holds the string "Usage: %s:SetHighlightTexture(texture or "texture" or nil [, "blendmode")"	inferred	none	
 0x87a28c	char[62]	s_textSSetHighlightTextureWrongObjectType		ui	Holds the string "%s:SetHighlightTexture(): Wrong object type, expected texture"	inferred	none	
 0x87a2cc	char[58]	s_textSSetHighlightTextureCouldnTFindThisIn		ui	Holds the string "%s:SetHighlightTexture(): Couldn't find 'this' in texture"	inferred	none	
-0x87a454	char[54]	s_textEBuildBuildWoWENGINESourceFrameCSimpleFont		ui	Holds the string "E:\build\buildWoW\ENGINE\Source\Frame\CSimpleFont.cpp"	inferred	none	
+0x87a454	char[54]	s_pathCSimpleFontCpp		ui	Holds the source path of CSimpleFont.cpp, passed to the allocator as the file	verified	one	ui/containers#font-records
+0x87a548	char[17]	s_typeSimpleFont		ui	Holds the RTTI name of the font record, an allocation tag	verified	one	ui/containers#font-table
 0x87a618	char[11]	s_textInsertMode		ui	Holds the string "insertMode"	inferred	none	
 0x87a6c0	char[12]	s_scrollChildElement		ui	Holds ScrollChild, the XML element name	verified	one	ui/xmltypes#scroll-child
 0x87a838	char[11]	s_textHSHSH		ui	Holds the string "|H%s|h%s|h"	inferred	none	
@@ -4300,7 +4303,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
 0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
 0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
+0xcf4e78	uint32_t	s_fontObjectCount		ui	Holds the number of live Font objects, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#the-font-object
+0xcf4e80	uint32_t[10]	s_fontTable		ui	Holds the hash table of font records by name, built on first lookup	verified	one	ui/containers#font-table
 0xcf4ea8	uint32_t			ui	Holds a dword that 0x77e4e0 compares an argument with; its writers are not read here	inferred	none	ui/editboxmembers#font-follower-slots
+0xcf4ecc	uint32_t	s_checkButtonTypeId		ui	Holds the script type id of CheckButton, assigned on first use	verified	one	ui/button#button-method-helper-and-type-test
 0xcf511c	uint32_t	s_divxInstanceCounter		ui	Counts the DivX decoder instances created for movie frames	verified	one	ui/movieframe#the-decoder
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
