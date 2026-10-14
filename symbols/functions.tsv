@@ -9431,8 +9431,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d2ca0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d2cb0	531			ui	primitive		Rebuilds the interface's skill list from the player's skills	inferred	none	objectlayer/playerfields#skill-changes	
 0x4d2ed0	295			ui	primitive		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4d3000	98			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d3070	332			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x4d3000	98	CompareSkillGroups		ui	orchestration		Orders skill group records by the order key of their category, equal keys answering 1	verified	one	ui/listorder#skill-groups	
+0x4d3070	332	CompareSkillRows		ui	primitive		Orders skill rows by present flag, group position, skill id 0, flag and skill name	verified	one	ui/listorder#skill-rows	
 0x4d31c0	66			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4d3210	85			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4d3270	83			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -11434,8 +11434,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc9e0	54			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4fca20	1884			ui	primitive		Rebuilds the trade skill window's list; not read here	inferred	none	objectlayer/playercombat#learning-a-spell	
 0x4fd180	510			ui	primitive		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4fd380	442			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
-0x4fd540	265			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x4fd380	442	CompareTradeSkillRows		ui	primitive		Orders trade skill rows by listed flag, header position, header row, two keys and spell name	verified	one	ui/listorder#trade-skill-rows	
+0x4fd540	265	CompareTradeSkillHeaders		ui	primitive		Orders trade skill headers by their first key and then by the name of their skill record	verified	one	ui/listorder#trade-skill-headers	
 0x4fd650	75			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4fd6a0	98			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4fd710	26			ui	orchestration		Runs its object file code that calls 0x4fd180; not read here	inferred	none		
