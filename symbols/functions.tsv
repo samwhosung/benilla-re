@@ -6750,11 +6750,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Implements the Lua function GetReleaseTimeRemaining	inferred	none		
 0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Implements the Lua function GetCorpseRecoveryDelay	inferred	none		
 0x48b620	62	Script::GetInstanceBootTimeRemaining	idb	ui	primitive		Pushes the whole seconds left of the instance boot countdown, 0 when idle	verified	one	ui/popups#the-instance-boot-countdown	
-0x48b660	62	Script::GetSummonConfirmTimeLeft	idb	ui	primitive		Implements the Lua function GetSummonConfirmTimeLeft	inferred	none		
-0x48b6a0	101	Script::GetSummonConfirmSummoner	idb	ui	orchestration		Implements the Lua function GetSummonConfirmSummoner	inferred	none		
-0x48b710	3			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration		Implements the Lua function GetSummonConfirmAreaName	inferred	none		
-0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Implements the Lua function ConfirmSummon	inferred	none		
+0x48b660	62	Script::GetSummonConfirmTimeLeft	idb	ui	primitive		Pushes the whole seconds left to answer the summon	verified	one	ui/summon#the-lua-functions	
+0x48b6a0	101	Script::GetSummonConfirmSummoner	idb	ui	orchestration		Pushes the summoner's cached name, or the empty string	verified	one	ui/summon#the-lua-functions	
+0x48b710	3	OnSummonerNameArrived		ui	orchestration		Does nothing when the summoner's name arrives	verified	one	ui/summon#the-lua-functions	
+0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration		Pushes the name of the summon's zone, or the empty string	verified	one	ui/summon#the-lua-functions	
+0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
 0x48b820	135			ui	primitive		Runs GameUI.cpp code that calls ScaleScreenDelta, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration		Implements the Lua function GetNetStats	inferred	none		
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration		Implements the Lua function SitOrStand	inferred	none		
@@ -7058,8 +7058,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496320	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
 0x496340	51	SetInstanceBootDeadline		ui	primitive	void __fastcall SetInstanceBootDeadline(int32_t delayMs)	Stores the boot deadline from a delay and signals INSTANCE_BOOT_START, or clears it and signals STOP	verified	one	ui/popups#the-instance-boot-countdown	
 0x496380	32	GetInstanceBootMs		ui	primitive		Returns the milliseconds left until the instance boot, 0 when unset or past	verified	one	ui/popups#the-instance-boot-countdown	
-0x4963a0	56			ui	primitive		Keeps a summon's zone, expiry and summoner and signals CONFIRM_SUMMON	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
-0x4963e0	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x4963a0	56	LatchSummonRequest		ui	primitive	void __stdcall LatchSummonRequest(uint64_t summoner)	Stores the summoner, zone and deadline of a summon request and signals CONFIRM_SUMMON	verified	one	ui/summon#the-request	
+0x4963e0	32	GetSummonMsLeft		ui	primitive		Returns the milliseconds left to answer the summon, 0 when unset or past	verified	one	ui/summon#the-lua-functions	
 0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party member record of a GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the record at +0x80 of the online party member whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x496440	37			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -19405,7 +19405,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e5eb0	92	ReadQuestConfirmAccept		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a shared quest and its sharer and offers it through 0x5019a0	verified	one	objectlayer/quests#shared-quests	
 0x5e5f10	253	HandleTrainerMessage		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a trainer list, or prints a failed trainer purchase's reason to the console	verified	one	objectlayer/inventory#trainers	
 0x5e6010	253	HandleLootMessage		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Dispatches the loot messages to the player and the roll messages to LootRoll.cpp	verified	one	objectlayer/inventory#loot	
-0x5e6140	116	ReadSummonRequest		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a summon request and shows it unless the active player is dead or a ghost	verified	one	objectlayer/playermessages#resurrection-and-summoning	
+0x5e6140	116	ReadSummonRequest		objectlayer	orchestration	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads a summon request and latches it and signals CONFIRM_SUMMON unless the active player is dead or a ghost	verified	one	ui/summon#the-request	
 0x5e61c0	368	ReadLearnedSpell		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Learns a spell with notification, or appends it to the initial list with no player yet	verified	one	objectlayer/playercombat#spell-book-messages	
 0x5e6330	466	ReadSupercededSpell		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Replaces a spell with its new rank in the spell book or the initial list	verified	one	objectlayer/playercombat#spell-book-messages	
 0x5e6510	358	ReadInitialSpells		objectlayer	primitive	uint32_t __fastcall (void *ctx, uint32_t opcode, uint32_t time, CDataStore *msg)	Reads the initial spell list and the spell cooldowns	verified	one	objectlayer/playercombat#spell-book-messages	

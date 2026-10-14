@@ -2157,10 +2157,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e33c	uint32_t			ui	Holds the rest start time 0x496240 stores; nothing reads it	verified	one	objectlayer/playermessages#error-notices
 0xb4e340	uint32_t	s_releaseTime		ui	Holds the time the release timer ends, 0 when off	verified	one	objectlayer/players#death
 0xb4e34c	uint32_t	s_instanceBootDeadline		ui	Holds the clock value at which the player is removed from the instance, 0 when unset	verified	one	ui/popups#the-instance-boot-countdown
-0xb4e350	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
-0xb4e354	uint32_t			ui	Holds a dword that Script::GetSummonConfirmAreaName reads and writes; not read here	inferred	none	
-0xb4e358	uint32_t			ui	Holds a dword that Script::GetSummonConfirmSummoner, Script::ConfirmSummon read and write; not read here	inferred	none	
-0xb4e35c	uint32_t			ui	Holds a dword that Script::GetSummonConfirmSummoner, Script::ConfirmSummon read and write; not read here	inferred	none	
+0xb4e350	uint32_t	s_summonDeadline		ui	Holds the clock value at which the summon request expires, 0 when unset	verified	one	ui/summon#the-request
+0xb4e354	int32_t	s_summonZone		ui	Holds the AreaTable id of the summon's destination	verified	one	ui/summon#the-request
+0xb4e358	uint64_t	s_summonerGuid		ui	Holds the GUID of the player who summoned, 0 before the first request	verified	one	ui/summon#the-request
 0xb4e370	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e374	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e378	uint32_t			unassigned	Holds a dword that ClntObjMgrCreate, Script::IsInInstance read and write; not read here	inferred	none	
