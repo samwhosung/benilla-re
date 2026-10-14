@@ -6716,8 +6716,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48a970	41	Script::RepopMe	idb	ui	orchestration		Implements the Lua function RepopMe	inferred	none		
 0x48a9a0	43	Script::AcceptResurrect	idb	ui	orchestration		Implements the Lua function AcceptResurrect	inferred	none		
 0x48a9d0	43	Script::DeclineResurrect	idb	ui	orchestration		Implements the Lua function DeclineResurrect	inferred	none		
-0x48aa00	38	Script::ResurrectHasSickness	idb	ui	orchestration		Implements the Lua function ResurrectHasSickness	inferred	none		
-0x48aa30	38	Script::ResurrectHasTimer	idb	ui	orchestration		Implements the Lua function ResurrectHasTimer	inferred	none		
+0x48aa00	38	Script::ResurrectHasSickness	idb	ui	orchestration		Pushes 1 when the resurrect offer carries sickness, else nil	verified	one	ui/deathui#the-resurrection-offer	
+0x48aa30	38	Script::ResurrectHasTimer	idb	ui	orchestration		Pushes 1 when the resurrect offer carries a timer, else nil	verified	one	ui/deathui#the-resurrection-offer	
 0x48aa60	8	Script::BeginTrade	idb	ui	orchestration		Sends the trade request	verified	one	ui/popups#the-trade-enchant-clash	
 0x48aa70	8	Script::CancelTrade	idb	ui	orchestration		Sends the trade cancel	verified	one	ui/popups#the-trade-enchant-clash	
 0x48aa80	41	Script::AcceptGroup	idb	ui	orchestration		Implements the Lua function AcceptGroup	inferred	none		
@@ -6732,8 +6732,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48abc0	160	Script::PickupPlayerMoney	idb	ui	orchestration		Implements the Lua function PickupPlayerMoney	verified	one	ui/cursormoney#money-functions	
 0x48ac60	13	Script::ShowInspectCursor	idb	ui	orchestration		Implements the Lua function ShowInspectCursor	verified	one	ui/worldcursor#setting-the-mode	
 0x48ac70	8	Script::ResetCursor	idb	ui	orchestration		Implements the Lua function ResetCursor	verified	one	ui/worldcursor#setting-the-mode	
-0x48ac80	228	Script::HasSoulstone	idb	ui	orchestration		Implements the Lua function HasSoulstone	inferred	none		
-0x48ad70	285	Script::UseSoulstone		ui	orchestration		Implements the Lua function UseSoulstone	inferred	none	spell/cancel#who-cancels-a-cast	
+0x48ac80	228	Script::HasSoulstone	idb	ui	orchestration		Pushes the self-resurrection spell or item name while dead, else nil	verified	one	ui/deathui#soulstone-and-self-resurrection	
+0x48ad70	285	Script::UseSoulstone		ui	orchestration		Sends the self-resurrection packet, or uses a self-resurrect item	verified	one	ui/deathui#soulstone-and-self-resurrection	
 0x48ae90	88	Script::HasKey	idb	ui	orchestration		Implements the Lua function HasKey	inferred	none		
 0x48aef0	184	Script::GuildInviteByName	idb	ui	orchestration		Implements the Lua function GuildInviteByName	inferred	none		
 0x48afb0	160	Script::GuildUninviteByName	idb	ui	orchestration		Implements the Lua function GuildUninviteByName	inferred	none		
@@ -6747,8 +6747,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b480	77	GetUiScreenWidth		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen width in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	
 0x48b4d0	77	GetUiScreenHeight		ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the screen height in FrameXML units divided by the UIParent scale	verified	one	ui/modelview#model-unit-to-pixel	
 0x48b520	127	Script::GetDamageBonusStat	idb	ui	primitive		Implements the Lua function GetDamageBonusStat	inferred	none		
-0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Implements the Lua function GetReleaseTimeRemaining	inferred	none		
-0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Implements the Lua function GetCorpseRecoveryDelay	inferred	none		
+0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Pushes the seconds until release, -1 for a map without a timer	verified	one	ui/deathui#the-release-timer	
+0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Pushes the whole seconds until the corpse can be reclaimed	verified	one	ui/deathui#the-reclaim-delay	
 0x48b620	62	Script::GetInstanceBootTimeRemaining	idb	ui	primitive		Pushes the whole seconds left of the instance boot countdown, 0 when idle	verified	one	ui/popups#the-instance-boot-countdown	
 0x48b660	62	Script::GetSummonConfirmTimeLeft	idb	ui	primitive		Pushes the whole seconds left to answer the summon	verified	one	ui/summon#the-lua-functions	
 0x48b6a0	101	Script::GetSummonConfirmSummoner	idb	ui	orchestration		Pushes the summoner's cached name, or the empty string	verified	one	ui/summon#the-lua-functions	
@@ -6840,11 +6840,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d170	80	Script::CheckTalentMasterDist	idb	ui	orchestration		Implements the Lua function CheckTalentMasterDist	inferred	none		
 0x48d1c0	80	Script::CheckPetUntrainerDist	idb	ui	orchestration		Pushes 1 when the remembered pet trainer is in interaction range, else nil	verified	one	ui/popups#pet-unlearn	
 0x48d210	80	Script::CheckBinderDist	idb	ui	orchestration		Implements the Lua function CheckBinderDist	inferred	none		
-0x48d260	121	Script::RetrieveCorpse	idb	ui	orchestration		Implements the Lua function RetrieveCorpse	inferred	none		
+0x48d260	121	Script::RetrieveCorpse	idb	ui	orchestration		Sends the reclaim packet with the cached corpse GUID	verified	one	ui/deathui#retrievecorpse	
 0x48d2e0	26	Script::BindEnchant	idb	ui	orchestration		Implements the Lua function BindEnchant	inferred	none		
 0x48d300	47	Script::ReplaceEnchant	idb	ui	orchestration		Implements the Lua function ReplaceEnchant	inferred	none		
 0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Applies the pending enchant to the trade slot	verified	one	ui/popups#the-trade-enchant-clash	
-0x48d340	13	Script::NotWhileDeadError	idb	ui	orchestration		Implements the Lua function NotWhileDeadError	inferred	none		
+0x48d340	13	Script::NotWhileDeadError	idb	ui	orchestration		Shows ERR_PLAYER_DEAD and pushes nothing	verified	one	ui/deathui#notwhiledeaderror	
 0x48d350	155	Script::GetRestState	idb	ui	orchestration		Implements the Lua function GetRestState	inferred	none		
 0x48d3f0	189	Script::GetXPExhaustion	idb	ui	primitive		Implements the Lua function GetXPExhaustion	inferred	none		
 0x48d4b0	11	Script::GetTimeToWellRested	idb	ui	orchestration		Implements the Lua function GetTimeToWellRested	inferred	none		
@@ -6945,12 +6945,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	ui/portraits#marking-and-draining	
 0x491a60	1145			ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x491ee0	103			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, 0x491a60; not read here	inferred	none		
-0x491f50	187			ui	primitive		Asks the server for the corpse position through MSG_CORPSE_QUERY	inferred	none	objectlayer/playerfields#player-flag-changes	
-0x492010	124	CacheCorpseLocation		ui	orchestration	void __fastcall (uint32_t map, float *position, uint32_t extra)	Caches the corpse's map and position and sets the corpse blip on that map, else clears it	verified	one	ui/minimapblips#setting-a-static-blip	
+0x491f50	187	QueryCorpse		ui	orchestration		Resets the corpse cache and asks the server for a ghost's corpse position	verified	one	ui/deathui#the-corpse-location	
+0x492010	124	CacheCorpseLocation		ui	orchestration	void __fastcall (uint32_t map, float *position, uint32_t extra)	Caches the corpse's map and position and sets the corpse blip on that map, else clears it	verified	one	ui/deathui#the-corpse-location	
 0x492090	49			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4920d0	24			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x4920f0	58			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
-0x492130	138			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4920f0; not read here	inferred	none		
+0x4920f0	58	SetCorpseInRange		ui	primitive		Signals the corpse range event when the in-range state changes	verified	one	ui/deathui#corpse-range-events	
+0x492130	138	CheckCorpseRange		ui	primitive		Compares the player's distance to the cached corpse with the range and updates the state	verified	one	ui/deathui#corpse-range-events	
 0x4921c0	201	SetAreaSpiritHealer		ui	primitive	void __stdcall SetAreaSpiritHealer(uint64_t guid)	Adopts a spirit healer GUID, cancelling the old resurrection and querying the new healer	verified	one	ui/popups#the-area-spirit-healer	
 0x492290	75	OnAreaSpiritHealerTime		ui	primitive	void __stdcall OnAreaSpiritHealerTime(uint32_t ms, uint64_t guid)	Stores the resurrection deadline for the cached healer and signals AREA_SPIRIT_HEALER_IN_RANGE	verified	one	ui/popups#the-area-spirit-healer	
 0x4922e0	33	GetAreaSpiritHealerMs		ui	primitive		Returns the milliseconds left until the resurrection, 0 when unset or past	verified	one	ui/popups#the-area-spirit-healer	
@@ -7026,7 +7026,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495420	62	UnlockItem		ui	primitive	void __stdcall (uint64_t guid)	Clears an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
 0x495460	297	UnlockAllItems		ui	primitive	void __cdecl (void)	Clears the lock of every item the player holds and signals ITEM_LOCK_CHANGED once	verified	one	ui/cursor#the-item-lock	
 0x495590	696			ui	primitive		Runs the game interface frame update, first zeroing the context nesting count	verified	one	ui/luastate#the-context-word	
-0x495850	72			ui	orchestration		Signals PLAYER_DEAD for the active player	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
+0x495850	72	SignalDeathState		ui	orchestration		Signals PLAYER_DEAD and clears the cursor at no health, else PLAYER_ALIVE	verified	one	ui/deathui#dead-and-alive	
 0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
 0x4958e0	54	SetPlayerControl		ui	orchestration		Stores the player-control flag 0xb4b3e4 and signals PLAYER_CONTROL_GAINED or PLAYER_CONTROL_LOST on a change	verified	one	spell/checks#lost-control-exemption	
 0x495920	24			ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
@@ -7051,11 +7051,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495d60	1026	ValidateSpellItemTarget		ui	primitive	void __fastcall (int suppress, uint32_t guidLow, uint32_t guidHigh)	Checks a clicked item against the pending spell's enchant and prospecting effects, then binds it with 0x6e5b40	verified	one	spell/itemtarget#item-click-validator	
 0x496170	204	CheckTradeEnchantClash		ui	primitive		Signals TRADE_REPLACE_ENCHANT when the pending enchant would replace one, else applies it	verified	one	ui/popups#the-trade-enchant-clash	
 0x496240	7	SetRestStart		ui	orchestration		Stores its argument as the rest start time	verified	one	objectlayer/playermessages#error-notices	
-0x496250	36	ArmReleaseTimer		ui	primitive		Stores now plus a delay as the release time, or 1 for a zero delay, and clears its flag	verified	one	objectlayer/players#death	
-0x496280	18	ClearReleaseTimer		ui	orchestration		Clears the release time and sets its flag	verified	one	objectlayer/players#death	
-0x4962a0	47			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x4962d0	67			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x496320	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x496250	36	ArmReleaseTimer		ui	primitive		Stores now plus a delay as the release time, or 1 for a zero delay, and clears its flag	verified	one	ui/deathui#the-release-timer	
+0x496280	18	ClearReleaseTimer		ui	orchestration		Clears the release time and sets its flag	verified	one	ui/deathui#the-release-timer	
+0x4962a0	47	GetReleaseTimeMs		ui	primitive		Returns the milliseconds until release, -1000 without a timer, else 0	verified	one	ui/deathui#the-release-timer	
+0x4962d0	67	SetCorpseReclaimDelay		ui	primitive		Stores now plus a delay and signals the range event again when in range	verified	one	ui/deathui#the-reclaim-delay	
+0x496320	32	GetCorpseReclaimMs		ui	primitive		Returns the milliseconds until the corpse can be reclaimed, or 0	verified	one	ui/deathui#the-reclaim-delay	
 0x496340	51	SetInstanceBootDeadline		ui	primitive	void __fastcall SetInstanceBootDeadline(int32_t delayMs)	Stores the boot deadline from a delay and signals INSTANCE_BOOT_START, or clears it and signals STOP	verified	one	ui/popups#the-instance-boot-countdown	
 0x496380	32	GetInstanceBootMs		ui	primitive		Returns the milliseconds left until the instance boot, 0 when unset or past	verified	one	ui/popups#the-instance-boot-countdown	
 0x4963a0	56	LatchSummonRequest		ui	primitive	void __stdcall LatchSummonRequest(uint64_t summoner)	Stores the summoner, zone and deadline of a summon request and signals CONFIRM_SUMMON	verified	one	ui/summon#the-request	
@@ -12611,7 +12611,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51a190	232	Script::GetComboPoints	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the combo points of a rogue or druid on its combo target, else 0	verified	one	ui/actionuse#combo-points	
 0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Pushes the localised creature type name of a unit, or nil	verified	one	ui/unitinfo#the-creature-type	
 0x51a310	130	Script::UnitCreatureFamily	idb	ui	orchestration		Implements the Lua function UnitCreatureFamily	inferred	none		
-0x51a3a0	268	Script::GetResSicknessDuration	idb	ui	primitive		Implements the Lua function GetResSicknessDuration	inferred	none		
+0x51a3a0	268	Script::GetResSicknessDuration	idb	ui	primitive		Pushes the resurrection sickness length as text, or nil below one second	verified	one	ui/deathui#resurrection-sickness	
 0x51a4b0	149	Script::GetPVPSessionStats	idb	ui	orchestration		Implements the Lua function GetPVPSessionStats	inferred	none		
 0x51a550	200	Script::GetPVPYesterdayStats	idb	ui	orchestration		Implements the Lua function GetPVPYesterdayStats	inferred	none		
 0x51a620	157	Script::GetPVPThisWeekStats	idb	ui	orchestration		Implements the Lua function GetPVPThisWeekStats	inferred	none		
@@ -19463,7 +19463,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e9870	98	SendGuildAccept		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GUILD_ACCEPT with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
 0x5e98e0	98	SendGuildDecline		objectlayer	orchestration	void __cdecl (void)	Sends CMSG_GUILD_DECLINE with no body	verified	one	objectlayer/party#group-and-guild-messages-sent	
 0x5e9950	95	SendUndressPlayer		objectlayer	unreached	void __cdecl (void)	Sends opcode 0x20 with no body	verified	one	objectlayer/overview#unreached-functions	
-0x5e99b0	229	CGPlayer_C::OnDied		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Announces a party member's death, or for the active player arms the release timer and resets its state	verified	one	objectlayer/players#death	
+0x5e99b0	229	CGPlayer_C::OnDied		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Announces a party member's death, or for the active player arms the release timer and resets its state	verified	one	ui/deathui#the-release-timer	
 0x5e9aa0	233	CGPlayer_C::Release		objectlayer	orchestration	void __thiscall (CGPlayer_C *this)	Releases a player: tokens, guild callbacks, the active player's watchers and timers, then the unit (slot 1)	verified	one	objectlayer/players#release-and-reactivation	
 0x5e9b90	37	StopMirrorTimers		objectlayer	primitive	void __cdecl (void)	Signals MIRROR_TIMER_STOP for timer types 0 to 2	verified	one	objectlayer/playermessages#mirror-timers	
 0x5e9bc0	81	CGPlayer_C::Reactivate		objectlayer	orchestration	void __thiscall (CGPlayer_C *this)	Copies the stand state, reactivates the unit and re-adds the active player's watchers (slot 2)	verified	one	objectlayer/players#release-and-reactivation	

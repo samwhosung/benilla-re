@@ -404,6 +404,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804498	const float	s_float41200000At804498		ui	Holds the float 10 (0x41200000)	inferred	none	
 0x8044a4	const float	s_float41f00000		ui	Holds the float 30 (0x41f00000)	inferred	none	
 0x8044b0	const float	s_float41200000At8044b0		ui	Holds the float 10 (0x41200000)	inferred	none	
+0x8044cc	float	s_corpseRange		ui	Holds 40.0, the corpse range in yards	verified	one	ui/deathui#corpse-range-events
 0x8044d0	const float	s_float41a00000At8044d0		ui	Holds the float 20 (0x41a00000)	inferred	none	
 0x804510	const float	s_float42240000		ui	Holds the float 41 (0x42240000)	inferred	none	
 0x804518	const uint32_t			ui	Holds a dword that Script::SetWorldDetail reads; not read here	inferred	none	
@@ -2135,7 +2136,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e270	void *	s_cinematicShotRow		ui	Holds the CinematicCamera row of the playing shot	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e274	uint32_t	s_cinematicNarration		ui	Holds the handle of the shot's own sound	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e278	uint32_t	s_cinematicMusicPaused		ui	Holds 1 when the cinematic paused the music and must restore it	verified	one	uicamera/cinematic#starting-a-sequence
-0xb4e2ac	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xb4e284	float[3]	s_corpsePosition		ui	Holds the cached corpse position x, y and z	verified	one	ui/deathui#the-corpse-location
+0xb4e2ac	float	s_corpseRangeSquared		ui	Holds 1600.0, the squared range of the corpse range events	verified	one	ui/deathui#corpse-range-events
 0xb4e2b0	void *	s_uiScaleOption		ui	Points to the uiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b8	void *	s_cvarDeselectOnClick		ui	Holds the CVar record of deselectOnClick, default 1	verified	one	ui/mouseover#the-nothing-leg
@@ -2157,11 +2159,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e310	uint32_t	s_inCinematic		ui	Holds 1 from the start of a cinematic to its end	verified	one	uicamera/cinematic#what-else-reads-the-cinematic-word
 0xb4e314	uint32_t	s_zoneId		ui	Holds the player's zone, read into party records and the binder dialog	inferred	none	objectlayer/party#the-party-member-record
 0xb4e318	uint32_t	s_subZoneId		ui	Holds the player's area, which the binder dialog prefers	inferred	none	objectlayer/interaction#confirmation-dialogs
-0xb4e328	uint32_t			ui	Holds a dword that Script::RetrieveCorpse reads and writes; not read here	inferred	none	
+0xb4e31c	int32_t	s_corpseDisplayMap		ui	Holds the map id the corpse arrow is drawn on, -1 for no cached corpse	verified	one	ui/deathui#the-corpse-location
+0xb4e320	int32_t	s_corpseMap		ui	Holds the map id of the corpse itself	verified	one	ui/deathui#the-corpse-location
+0xb4e324	uint32_t	s_corpseInRange		ui	Holds 1 while the cached corpse position is within range of the player	verified	one	ui/deathui#corpse-range-events
+0xb4e328	uint64_t	s_corpseGuid		ui	Holds the GUID of the active player's own corpse that RetrieveCorpse sends	verified	one	ui/deathui#retrievecorpse
 0xb4e330	uint64_t	s_areaSpiritHealerGuid		ui	Holds the GUID of the spirit healer in range, 0 for none	verified	one	ui/popups#the-area-spirit-healer
 0xb4e338	uint32_t	s_areaSpiritHealerDeadline		ui	Holds the clock value at which the spirit healer resurrection happens, 0 when unset	verified	one	ui/popups#the-area-spirit-healer
 0xb4e33c	uint32_t			ui	Holds the rest start time 0x496240 stores; nothing reads it	verified	one	objectlayer/playermessages#error-notices
-0xb4e340	uint32_t	s_releaseTime		ui	Holds the time the release timer ends, 0 when off	verified	one	objectlayer/players#death
+0xb4e340	uint32_t	s_releaseTime		ui	Holds the time the release timer ends, 0 when off	verified	one	ui/deathui#the-release-timer
+0xb4e344	uint8_t	s_noReleaseTimer		ui	Holds 1 when the map has no release timer, 0 when the timer is armed or unset	verified	one	ui/deathui#the-release-timer
+0xb4e348	uint32_t	s_corpseReclaimDeadline		ui	Holds the clock value at which the corpse can be reclaimed, 0 when unset	verified	one	ui/deathui#the-reclaim-delay
 0xb4e34c	uint32_t	s_instanceBootDeadline		ui	Holds the clock value at which the player is removed from the instance, 0 when unset	verified	one	ui/popups#the-instance-boot-countdown
 0xb4e350	uint32_t	s_summonDeadline		ui	Holds the clock value at which the summon request expires, 0 when unset	verified	one	ui/summon#the-request
 0xb4e354	int32_t	s_summonZone		ui	Holds the AreaTable id of the summon's destination	verified	one	ui/summon#the-request
