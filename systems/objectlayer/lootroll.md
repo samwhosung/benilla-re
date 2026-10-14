@@ -106,7 +106,7 @@ with type `0x18`. The dice lines take the same arguments as the others plus the 
 
 `SMSG_LOOT_ROLL_WON` (`0x61b870`) reads the GUID, slot, item id, property words, the winner's GUID
 and two bytes (the roll number and the type). `0x61b9e0` then writes the winner's line, closes an
-open roll, and promotes a queued one. With `showLootSpam` 1 the line is `LOOT_ROLL_YOU_WON` or
+open roll, and promotes a queued one. With `showLootSpam` nonzero (`0x61ba43`, `0x61bb07`) the line is `LOOT_ROLL_YOU_WON` or
 `LOOT_ROLL_WON`, without the roll number. With the variable 0 or missing, the line is the
 `_NO_SPAM_NEED` form when the type is 1, else `_NO_SPAM_GREED`, and carries the number.
 
@@ -144,7 +144,7 @@ each GUID is looked up among the members and put into the first empty slot of it
 slots `5·g` to `5·g + 4` for the member's group `g` (the member record `+0x8`); a GUID that is not
 a member, or a full group, is dropped. `0x61c660(i)` returns slot `i`, or 0 for 40 or more.
 
-Addresses: `0x61c550`, `0x61c567`, `0x61c598`, `0x61c5c9`, `0x61c5e0`, `0x61c614`, `0x61c630`, `0x61c660`, `0xc4dc38`
+Addresses: `0x61c550`, `0x61c567`, `0x61c598`, `0x61c5c9`, `0x61c5e0`, `0x61c614`, `0x61c630`, `0x61c660`, `0x61c5b9`, `0xc4dc38`, `0xc4dda4`, `0xc4dda8`
 Confidence: verified
 Proof: one
 Test: none
@@ -152,3 +152,5 @@ Test: none
 `0x61c567` zeroes the 0x50 dwords with `rep stos`. The party list is the pointer array at
 0xb712a8, counted at 0xb713e0; `0x61c5e0` compares each member's GUID, `0x61c614` scans for the
 free slot below `0x28`. Slots are indexed by subgroup, so candidates come out grouped by raid group.
+With no party list `0x61c5b9` stores each GUID at the count-byte index with no bound, so a count above 40 writes
+up to 255 GUIDs, past the table over the next roll id `0xc4dda4` and the open count `0xc4dda8`.

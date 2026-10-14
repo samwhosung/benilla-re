@@ -190,7 +190,7 @@ A shooter holds one ammo model, built from an item display id. Two callers set i
 carries an ammo id, for any caster, and a change of the active player's own ammo field. An id of 0
 removes it. Firing does not remove it.
 
-Addresses: `0x60ba30`, `0x60ba5f`, `0x60ba7e`, `0x60bab3`, `0x60bacb`, `0x60baf6`, `0x60bb19`, `0x60bb24`, `0x6e78b6`, `0x4c70b0`, `0x4c70fc`, `0x4c6fea`, `0x479f40`, `0x838d70`, `0x838d50`, `0x60f530`, `0x624b70`, `0x60f322`, `0x60f533`, `0x600177`
+Addresses: `0x60ba30`, `0x60ba5f`, `0x60ba7e`, `0x60bab3`, `0x60bacb`, `0x60baf6`, `0x60bb19`, `0x60bb24`, `0x6e78b6`, `0x4c70b0`, `0x4c70fc`, `0x479f40`, `0x838d70`, `0x838d50`, `0x60f530`, `0x624b70`, `0x60f322`, `0x60f533`, `0x600177`
 Confidence: verified
 Proof: one
 Test: none
@@ -201,24 +201,35 @@ one with `0x479f40(body, record, selector)`. The selector is 0x18, or 0x19 for a
 type 0x19 (`0x60bab3`), and picks the `Item\ObjectComponents\Ammo\` or `Weapon\` directory
 (`0x838d70`, `0x838d50`); the record is the item display row for the id. The model attaches to the body at
 35 only for selector 0x18, a ranged item that is not a gun or crossbow (class 2, subclass 3 or 18,
-`0x60bacb`), and bit 0x4000 of `+0xd58` (`0x60bb19`). The spell start calls it at `0x6e78b6` with
-the packet's id; the field watcher `0x4c70b0` (registered at `0x4c6fea` for byte offset 0x102c of the
-player block) calls it at `0x4c70fc` with the field for the active player and 0 for another.
+`0x60bacb`), and bit 0x4000 of `+0xd58` (`0x60bb19`). The spell start calls it at `0x6e78b6` with the packet's id; the field watcher below calls it too.
 `0x60f530` detaches the model without clearing `+0xd28` or `+0xd2c`; its six callers are the cancel, the
 cast-result and movement paths. Bit 0x4000 is set at `0x624b70` and cleared at `0x60f322`, `0x60f533` and `0x600177`.
+
+## The ammo field watcher
+
+The active player's ammo field sets the ammo model before any shot.
+
+Addresses: `0x4c70b0`, `0x4c6fea`, `0x4c70b1`, `0x4c70c7`, `0x4c70dc`, `0x4c70e7`, `0x4c70e9`, `0x4c70fc`, `0x4c7110`, `0x4c711a`, `0x60ba30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4c70b0` is registered at `0x4c6fea` for byte offset 0x102c of the player block and calls `0x60ba30`
+at `0x4c70fc` with that field of the active player. It ignores its arguments: it resolves the active player's own GUID (`0x4c70b1` to `0x4c70c7`, mask 0x10) and compares it with itself
+(`0x4c70dc` to `0x4c70e7`), so the zero branch (`0x4c70e9`) is never taken. It then signals event 0xba (`0x4c7110`) and returns 1 (`0x4c711a`).
 
 ## The quiver
 
 A bow shows its quiver on the back while the bow is drawn.
 
-Addresses: `0x611e10`, `0x611e31`, `0x611f08`, `0x611f17`, `0x6117bd`, `0x611f2d`, `0x611f33`, `0x611f4c`, `0x6222e0`, `0x5da0b0`, `0x478aa0`, `0x478960`, `0x479c50`, `0x479cfe`, `0x4798c0`, `0x838d10`
+Addresses: `0x611e10`, `0x611e31`, `0x611f08`, `0x611f17`, `0x6117bd`, `0x611813`, `0x611f2d`, `0x611f33`, `0x611f4c`, `0x6222e0`, `0x5da0b0`, `0x478aa0`, `0x478960`, `0x479c50`, `0x479cfe`, `0x4798c0`, `0x838d10`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x611e10(leaving)` hangs the ranged weapon. For a player with a character component
 (`+0xd30`), a nonzero argument, passed when the ranged state ends (`0x6117bd`), clears slot 11
-(`0x611f17`). With the argument 0 and a weapon whose inventory type
+(`0x611f17`), and so does the change out of state 2 to state 0 (`0x611813`). With the argument 0 and a weapon whose inventory type
 is neither 0x1a nor 0x19 (`0x611e31`), so a bow, it finds an item of class 11 among the unit's items at
 `+0x1d38` (`0x6222e0`), takes its display id (`0x5da0b0`) and sets slot 11 (`0x478aa0`). The component
 builds `Item\ObjectComponents\Quiver\` plus the record's model name (`0x479c50`) and attaches the model at

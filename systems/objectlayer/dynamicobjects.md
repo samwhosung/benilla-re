@@ -3,7 +3,7 @@
 `CGDynamicObject_C`, the object type 6: the server's ground area of a spell, such as Blizzard or
 Flamestrike. It has its own model, named by the spell's visual, a particle emitter and a looping
 sound from the spell's kit, and a far-sight start for the caster's own area. The code is
-DynamicObject_C.cpp, `0x5d5100` to `0x5d5f60`. The emitter's creation is in `spell`
+DynamicObject_C.cpp, `0x5d5100` to `0x5d5f50`. The emitter's creation is in `spell`
 (visuals).
 
 Roots: `0x5d5140`, `0x5d5420`, `0x5d52f0`, `0x5d5890`, `0x5d51e0`

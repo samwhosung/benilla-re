@@ -5845,7 +5845,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47bee0	5	InitCorpseFieldsCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47bef0	11	InitCorpseFieldsCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x47bf00	18			objectlayer	orchestration		Stores two dwords at its object	verified	one	objectlayer/overview#small-bodies	
-0x47bf20	27			objectlayer	orchestration		Stores its object's two dwords at +0xe8 of its argument	verified	one	objectlayer/overview#unreached-functions	
+0x47bf20	27			objectlayer	unreached		Stores its object's two dwords at +0xe8 of its argument	verified	one	objectlayer/overview#unreached-functions	
 0x47bf40	27			objectlayer	orchestration		Loads the two dwords at +0xe8 of its argument into its object	verified	one	objectlayer/overview#small-bodies	
 0x47bf60	6	ReadGuidAt		objectlayer	orchestration	uint64_t __thiscall (const uint64_t *this)	Returns the 64-bit value at its argument	verified	one	spell/records#range	
 0x47bf70	25			objectlayer	orchestration		Stores two dwords at its object and sets +0x8 to 1	verified	one	objectlayer/overview#small-bodies	
@@ -8958,7 +8958,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c6f70	54	SetInspectTarget		ui	orchestration		Stores a GUID as the inspect target and clears two dwords when it changes	verified	one	objectlayer/interaction#other-units	
 0x4c6fb0	79			ui	primitive		Runs its object file code that calls ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
 0x4c7000	174			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4c70b0	115			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
+0x4c70b0	115	CGPlayer_C::OnAmmoFieldChanged		ui	orchestration	int32_t __stdcall (uint32_t, uint32_t, uint32_t, uint32_t)	Sets the ammo model from the active player ammo field and signals event 0xba	verified	one	objectlayer/unitdisplay#the-ammo-field-watcher	
 0x4c7130	71			ui	primitive		Runs its object file code that calls ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
 0x4c7180	369			ui	primitive		Runs PaperDollInfoFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x4c7300	1634			ui	primitive		Passes an inventory item to 0x495d60 while the flag word wants an item	inferred	none	spell/targeting#flag-word-predicates	
@@ -18911,8 +18911,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5ee0	5	InitCorpseSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d5ef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d5ef0	19	InitCorpseSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d5f10	41	CGDynamicObject_C::GetPosition		objectlayer	primitive	float * __thiscall (float *out)	Copies the object's position field into the output	verified	one	objectlayer/dynamicobjects#members-and-fields	
-0x5d5f40	10			objectlayer	orchestration		Returns the float at +0x20 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
-0x5d5f50	7			objectlayer	orchestration		Returns the float at +0x194 of its object	verified	one	objectlayer/overview#small-bodies	
+0x5d5f40	10	CGDynamicObject_C::GetFacing		objectlayer	orchestration		Returns the float at +0x20 of the block its +0x110 points to, slot 6	verified	one	objectlayer/dynamicobjects#members-and-fields	
+0x5d5f50	7	CGDynamicObject_C::GetScale		objectlayer	orchestration		Returns the float at +0x194 of its object, slot 7	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d5f60	53	RegisterCorpseWatchers		objectlayer	orchestration	void __cdecl ()	Puts the flags and dynamic flags watchers on every corpse	verified	one	objectlayer/corpses#field-watchers	
 0x5d5fa0	54	OnCorpseFlagsChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Rebuilds the corpse whose flags changed	verified	one	objectlayer/corpses#field-watchers	
 0x5d5fe0	54	OnCorpseDynamicFlagsChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Updates the loot sparkle of the corpse whose dynamic flags changed	verified	one	objectlayer/corpses#field-watchers	

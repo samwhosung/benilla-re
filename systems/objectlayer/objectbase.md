@@ -2,7 +2,8 @@
 
 What every object does for itself: the members `CGObject_C` adds to the field array, its model and
 world node, the fade and scale ease that run each frame, the ground conform, the highlight light
-bits, and the selection circle's textures. The code is Object_C.cpp, `0x613610` to `0x6151e0`.
+bits, and the selection circle's textures. The code is Object_C.cpp, `0x613610` to `0x6151e0`, with its +∞ initializer `0x613ad0` inside the run and its block of static
+initializers, `0x6151f0` to `0x615700`, after it.
 The vtable slots are in [classes](classes.md); the manager that links and frees objects is
 [manager](manager.md).
 
@@ -115,7 +116,7 @@ and `alpha` into `+0xfc`; with `ms` 0 it also sets `+0xf4` to the target. Each f
 moves `+0xf4` from `+0xf8` to `+0xfc` by `t³`, `t` = age over `ms` between 0 and 1, and the
 model's alpha becomes `+0x100 · +0xf4`. At the end it sets `+0xf4` to `+0xfc` and `+0xf0` to 0.
 
-Addresses: `0x614f80`, `0x614b34`, `0x614b79`, `0x614b82`, `0x614baa`, `0x614bba`, `0x710cb0`, `0x6151e0`
+Addresses: `0x614f80`, `0x614f91`, `0x614f9c`, `0x614b34`, `0x614b79`, `0x614b82`, `0x614baa`, `0x614bba`, `0x710cb0`, `0x6151e0`
 Confidence: verified
 Proof: one
 Test: none
@@ -123,7 +124,8 @@ Test: none
 `0x614b1c` is the completion test, `now − start − ms ≥ 0`. `0x614b4c` to `0x614b79` clamp
 `t` to 0 below zero and 1 above one, else cube it; `0x614b82` computes
 `(to − from)·e + from`, and `0x614baa` the model's alpha. `0x6151e0(a)` stores `a` in `+0x100`. An
-object with no model skips the fade and the alpha store, but not the later steps.
+object with no model skips the fade and the alpha store, but not the later steps. The equality test of `0x614f80` is
+`fcomp` with `test ah, 0x44` and `jnp` (`0x614f91` to `0x614f9c`): an unordered compare, a NaN on either side, is not equal and restarts the fade.
 
 ## The frame update
 

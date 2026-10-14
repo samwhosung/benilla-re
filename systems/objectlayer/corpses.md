@@ -3,7 +3,7 @@
 `CGCorpse_C`, the object type 7: a player's body or skeleton on the ground. It dresses a character
 model from the corpse fields or loads a skeleton, lies down in the `Dead` or `Drowned` pose, draws
 a grey decal, shows a sparkle while it holds loot, answers a right click, and tells the interface
-which corpse is the player's own. The code is Corpse_C.cpp, `0x5d5f40` to `0x5d7120`; the
+which corpse is the player's own. The code is Corpse_C.cpp, `0x5d5f60` to `0x5d7120`; the
 constructors and the update that call it are in [classes](classes.md) and [update](update.md).
 
 Roots: `0x5d5f60`, `0x5d6050`, `0x5d6260`, `0x5d6850`, `0x5d68c0`, `0x5d6bf0`, `0x5d6fe0`
@@ -77,7 +77,7 @@ two errors at `0x5d6789` and `0x5d67c4`.
 it builds, unless the flags mark a skeleton, a character component from the race, gender, skin,
 face, hair and facial-hair bytes of fields `+0x69` to `+0x6f` and the body model. It then
 sets the pose and dresses the component from the 19 item slots. Slot 0 is skipped with flags bit 3,
-slot 14 with bit 4 and slot 17 always; slots 15 and 16 attach the weapon models. A tabard in
+slot 14 with bit 4 and slot 17 always; slots 15 and 16 attach a weapon model only when an item object has the field value as its GUID. A tabard in
 slot 18 whose display row has bit 0 of `+0x24` installs the guild emblem.
 
 Addresses: `0x5d6260`, `0x5d627c`, `0x5d6297`, `0x5d63bc`, `0x5d641d`, `0x5d6480`, `0x5d649b`, `0x5d64ad`, `0x5d64e2`, `0x5d6494`, `0x475fb0`, `0x476b90`, `0x478cb0`, `0x47a0c0`, `0x465e4f`
@@ -88,8 +88,8 @@ Test: none
 `0x5d6297` calls `NewCharacterComponent` and `0x5d63bc` `InitCharacterComponent` on a block built
 from the bytes (`0x5d635c` to `0x5d6398`). The loop `0x5d6417` runs 19 times: it takes the low 24
 bits of `+0x1c + 4·slot`, indexes the display store `0xc0dc10`, skips a missing row, then slot 17
-(`0x5d644e`); slots 15 and 16 (`0x5d6457`, `0x5d645c`) go to `0x5d649b`, which looks the full field
-value up as the low dword of an item GUID (mask 2, `0x5d64ad`) and, if an item is found, calls
+(`0x5d644e`); slots 15 and 16 (`0x5d6457`, `0x5d645c`) go to `0x5d649b`, which looks up the GUID with high dword 0 and low dword the whole field value
+(mask 2, `0x5d64ad`) and, only if an item object has that GUID, calls
 `AttachItemModel` (`0x5d64e2`); the others call `SetCharacterComponentItem` (`0x5d6480`) after the
 bit 3 and bit 4 tests (`0x5d6465`, `0x5d6470`). `0x5d6494` is the tabard call to `0x5d6ec0`.
 
@@ -99,9 +99,9 @@ A corpse lies in animation 132 `Drowned` when it is submerged, else 6 `Dead`. Th
 when the corpse is created and again when its model loads, is `0x5d6540(node, position)`: the node
 must hold liquid, and its liquid level must stand more than 2/3 above the corpse's height. The
 result stays in `+0x2ac` and also decides whether a skeleton is drawn: a submerged skeleton is
-not drawn.
+not drawn: the world frame's pass `0x4815d0` calls slot 16 at `0x4815ff` and tests the result at `0x48161d`, and a 0 skips the draw list.
 
-Addresses: `0x5d6540`, `0x5d658a`, `0x5d63d9`, `0x5d63eb`, `0x5d6402`, `0x5d6850`, `0x5d6887`, `0x5d67e0`, `0x5d6809`, `0x670630`, `0x69e280`, `0x69b6d0`, `0x80abfc`
+Addresses: `0x5d6540`, `0x5d658a`, `0x5d63d9`, `0x5d63eb`, `0x5d6402`, `0x5d6850`, `0x5d6887`, `0x5d67e0`, `0x5d6809`, `0x4815d0`, `0x4815ff`, `0x48161d`, `0x670630`, `0x69e280`, `0x69b6d0`, `0x80abfc`
 Confidence: verified
 Proof: one
 Test: none
@@ -195,7 +195,7 @@ sparkle, makes the node if a model exists and publishes at `0x5d666a`.
 and whose component updates, conforms with argument 0 and hands the node to `FadeOutModel` at the
 fade alpha `+0xfc`; any other corpse releases the node at once.
 
-Addresses: `0x5d6ce0`, `0x5d6cfd`, `0x5d6d04`, `0x5d6d0e`, `0x5d6d1d`, `0x5d6d34`, `0x5d6d47`, `0x44b4c0`, `0x477860`, `0x671ac0`, `0x672df0`
+Addresses: `0x5d6ce0`, `0x5d6cfd`, `0x5d6d04`, `0x5d6d0e`, `0x5d6d1d`, `0x5d6d34`, `0x5d6d37`, `0x614603`, `0x5d6d47`, `0x44b4c0`, `0x477860`, `0x671ac0`, `0x672df0`
 Confidence: verified
 Proof: one
 Test: none
@@ -203,7 +203,8 @@ Test: none
 `0x5d6cfd` calls `0x44b4c0` on the composite texture `[component+0x184]`, which is 0 unless the
 texture has loaded; a zero releases the node (`0x5d6d04`, `0x5d6d1d`). Else
 `UpdateCharacterComponent(component, 0)` (`0x5d6d0e`) must return nonzero, or the node is
-released. Slot 15 then runs with 0 (`0x5d6d34`) and `FadeOutModel(node, +0xfc)` (`0x5d6d47`).
+released. Slot 15 then runs with 0 (`0x5d6d34`) and `FadeOutModel(node, +0xfc)` (`0x5d6d47`); `0x5d6d37` loads `+0xfc`, the fade's
+target alpha, where the base deactivation passes the current alpha `+0xf4` (`0x614603`).
 
 ## The guild emblem
 

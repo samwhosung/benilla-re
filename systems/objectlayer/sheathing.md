@@ -10,21 +10,21 @@ Roots: `0x611cf0`, `0x5eb480`, `0x5fdf80`, `0x604c70`, `0x6127b0`
 
 ## The sheathe setter
 
-`0x611cf0(state, instant, send)` refuses a change when the state is 2 and the unit is a player of
-a class with a relic slot, when the state is the current one, and when the unit has no body model.
+`0x611cf0(state, instant, send)` refuses a change when the state is 2 and the unit is a player whose
+class is out of range, has no class row or has a relic slot, when the state is the current one, and when the unit has no body model.
 Otherwise it stores the state and the old one, sends `CMSG_SETSHEATHED` (0x1e0) with the new state for the
 active player when `send` is set, and applies it: at once when `instant` is nonzero, else with
 the sheathe animations.
 
-Addresses: `0x611cf0`, `0x611cff`, `0x611d04`, `0x611d41`, `0x611d4a`, `0x611d58`, `0x611d64`, `0x611d6c`, `0x611d72`, `0x611d7b`, `0x611de3`, `0x611770`, `0x611b60`, `0xc0def4`, `0xc0def8`, `0x5fa6d0`
+Addresses: `0x611cf0`, `0x611cff`, `0x611d04`, `0x611d1e`, `0x611d2a`, `0x611d3b`, `0x611d41`, `0x611d4a`, `0x611d58`, `0x611d64`, `0x611d6c`, `0x611d72`, `0x611d7b`, `0x611de3`, `0x611770`, `0x611b60`, `0xc0def4`, `0xc0def8`, `0x5fa6d0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x611cff` runs the class test for state 2 only, on a unit whose type has the player bit
 (`0x611d04`): the class byte `+0x79` of the descriptor indexes the `ChrClasses` table at `0xc0def4`
-(count `0xc0def8`), and a nonzero `+0x40` of its row, the relic-slot column (Paladin, Shaman,
-Druid), ends the call at `0x611dfc` (`0x611d41`). The class test comes before the test of the
+(count `0xc0def8`); a class below 0 or above the count (`0x611d1e`, `0x611d2a`), a null row (`0x611d3b`) and a
+nonzero `+0x40` of its row, the relic-slot column (Paladin, Shaman, Druid), each end the call at `0x611dfc` (`0x611d41`). The class test comes before the test of the
 current state (`0x611d4a`) and the body model test (`0x611d58`). The stores are `0x611d64` and
 `0x611d6c`; the send needs `IsActivePlayerUnit` (`0x611d72`) and the argument (`0x611d7b`). The
 function writes neither the attack target nor any bit of `+0xd58`.
