@@ -289,6 +289,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801404	void *[7]	s_observerVtable		core	Holds the observer vtable, which only 0x426450 stores	verified	one	core/events#observer-classes
 0x801420	void *[2]	s_eventRegPoolVtable		core	Holds the registration pool vtable, which only 0x4265b0 stores	verified	one	core/events#observer-classes
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
+0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
 0x801490	const uint8_t			os	Holds a byte its object file's code reads; not read here	inferred	none	
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
 0x8015c0	double	s_calibrationLimitA		core	Holds 0.016, a mode-1 calibration threshold	verified	one	core/time#calibration-thread
@@ -324,7 +325,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
 0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
+0x8030bc	const float	s_sndIfInfinitySource		sound	Holds +inf, the value the interface file's infinity initializer copies	verified	one	sound/overview#shared-header-constants
+0x803140	const float	s_footstepNearRadius		sound	Holds 20.0, the footstep radius	verified	one	sound/objects#footstep-sounds
+0x803144	const float	s_footstepFarRadius		sound	Holds 50.0, the far footstep radius	verified	one	sound/objects#footstep-sounds
+0x803148	void *[4]	s_footstepTableVtable		sound	Holds the footstep table's node free, node allocation, deleting destructor and destroy	verified	one	sound/overview#hash-tables
 0x803248	const uint32_t			sound	Holds a dword that SndInterfaceSetGlueMusic reads; not read here	inferred	none	
+0x8032c4	void *[4]	s_uiSoundTableVtable		sound	Holds the UI sound name table's node free, node allocation, deleting destructor and destroy	verified	one	sound/overview#hash-tables
+0x8032d4	void *[4]	s_sheatheTableVtable		sound	Holds the sheathe table's node free, node allocation, deleting destructor and destroy	verified	one	sound/overview#hash-tables
+0x8032e4	void *[4]	s_stringTableVtable		sound	Holds the string entry table's node free, node allocation, deleting destructor and destroy	verified	one	sound/overview#hash-tables
+0x803550	const float	s_waterTileUnit		sound	Holds 4.1666665, the unit of the water sound radius	verified	one	sound/ambience#water-sound-placement
 0x80355c	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x803560	const uint32_t			unassigned	Holds a dword that LIQUIDINFO::StopSound reads; not read here	inferred	none	
 0x803568	const float	s_oneSixth		unassigned	Holds 1/6	verified	one	lighting/precipitation#rain-draw
@@ -516,6 +525,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
+0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
@@ -798,6 +808,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d574	const float	s_framePointTenConst		ui	Holds 10.0, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d578	const float	s_hyperlinkedFrameInfinityConst		ui	Holds +inf, CSimpleHyperlinkedFrame.cpp's copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d5b0	void *[40]			ui	Holds 40 function addresses its object file's code stores; not read here	inferred	none	
+0x81d728	const float	s_cutoffFadeFraction		sound	Holds 0.10000002, the fraction of the cutoff the distance gain fades over	verified	one	sound/engine#distance-cutoff
+0x81d72c	const float	s_volumeLevelBias		sound	Holds 512.5, the bias that reads a volume back as a level	verified	one	sound/engine#volume-of-a-sound
 0x81d7b0	float	s_defaultDistance		camera	Holds 100.0, the default distance and eye x	verified	one	camera#properties
 0x81d7b4	float	s_defaultFarClip		camera	Holds 5000.0, the default far clip	verified	one	camera#properties
 0x81d7b8	float	s_defaultNearClip		camera	Holds 8.0, the default near clip	verified	one	camera#properties
@@ -866,6 +878,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
 0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	one	core/events#timers
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
+0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
 0x8332c0	uint64_t	s_cpuTicksPerSecond		core	Holds the counter rate; 10^9 by default, then the calibrated rate	verified	one	core/time#the-millisecond-clock
 0x8332c8	double	s_clockScale		core	Holds the clock's milliseconds per counter tick; 1.0 at startup	verified	one	core/time#the-millisecond-clock
@@ -883,20 +896,38 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835254	uint32_t			gx	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x835708	char[14]	s_textSolidTexture		gx	Holds the string "Solid Texture"	inferred	none	
 0x835a40	uint32_t			unassigned	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
+0x835a44	int32_t	s_soundSubmerged		sound	Holds 1 while the camera is submerged, 0 otherwise, -1 at start and exit	verified	one	sound/ambience#zone-ambience-choice
+0x835a48	int32_t	s_soundGhost		sound	Holds 1 while the player is a ghost, 0 otherwise, -1 at start and exit	verified	one	sound/ambience#zone-ambience-choice
 0x835a4c	uint8_t			sound	Holds a byte that SoundReverbHandler reads and writes; not read here	inferred	none	
 0x835a50	uint32_t			sound	Holds a dword that LoadSoundScriptFunctions, UnloadSoundScriptFunctions read; not read here	inferred	none	
+0x835a70	uint32_t	s_soundBaseFrequency		sound	Holds 22050, the base of a definition's random frequency; nothing writes it	verified	one	sound/entries#volume-and-pitch-of-a-play
+0x835c08	char[4]	s_textMusicVolumeDefault		sound	Holds "0.4", MusicVolume's default	verified	one	sound/interface#sound-cvars
+0x835c6c	char[2]	s_textFour		unassigned	Holds "4", the default of SoundRolloffFactor and SoundMemoryCache	verified	one	sound/interface#sound-cvars
+0x835d38	char[3]	s_textTwelve		sound	Holds "12", the default of the two channel count CVars	verified	one	sound/interface#sound-cvars
+0x835dd4	char[3]	s_textMinusOne		sound	Holds "-1", the default of four device CVars	verified	one	sound/interface#sound-cvars
 0x835e0c	char[4]	s_text100		sound	Holds the string "100"	inferred	none	
 0x835e10	char[3]	s_text50		sound	Holds the string "50"	inferred	none	
+0x835e14	char[28]	s_nameCombatMiss2H		sound	Holds "(DONOTRENAME)Combat Miss 2H"	verified	one	sound/interface#named-sounds
+0x835e30	char[28]	s_nameCombatMiss1H		sound	Holds "(DONOTRENAME)Combat Miss 1H"	verified	one	sound/interface#named-sounds
+0x835e4c	char[29]	s_nameWrappedItemDrop		sound	Holds "(DONOTRENAME)WrappedItemDrop"	verified	one	sound/interface#named-sounds
+0x835e6c	char[31]	s_nameWrappedItemPickup		sound	Holds "(DONOTRENAME)WrappedItemPickup"	verified	one	sound/interface#named-sounds
 0x835e8c	char[30]	s_textDONOTRENAMEShieldWoodImpact		sound	Holds the string "(DONOTRENAME)ShieldWoodImpact"	inferred	none	
 0x835eac	char[26]	s_textDONOTRENAMEAbsorbGetHit		sound	Holds the string "(DONOTRENAME)AbsorbGetHit"	inferred	none	
 0x835f60	char[26]	s_textUsagePlaySoundSound		sound	Holds the string "Usage: PlaySound("sound")"	inferred	none	
 0x835f7c	char[26]	s_textUsagePlayMusicMusic		sound	Holds the string "Usage: PlayMusic("music")"	inferred	none	
 0x835f98	char[34]	s_textUsagePlaySoundFileSoundfile		sound	Holds the string "Usage: PlaySoundFile("soundfile")"	inferred	none	
+0x835fbc	char[63]	s_pathSoundInterface		sound	Holds the source path of SoundInterface.cpp	verified	one	sound/overview#object-files
+0x836024	int32_t	s_creditsTrack		sound	Holds the credits music track index, -1 before the first	verified	one	sound/music#credits-music
 0x836028	uint32_t			sound	Holds a dword its object file's code reads; not read here	inferred	none	
+0x8362d8	const char[7]	s_formatThreeStrings		unassigned	Holds "%s%s%s"	verified	one	sound/entries#file-paths
+0x8362e0	char[64]	s_pathISoundInterface		sound	Holds the source path of ISoundInterface.cpp	verified	one	sound/overview#object-files
 0x836400	uint32_t			sound	Holds a dword that SndInterfacePauseZoneMusic reads and writes; not read here	inferred	none	
 0x836424	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x836428	char[25]	s_textUnderwaterDONOTRENAME		sound	Holds the string "Underwater (DONOTRENAME)"	inferred	none	
 0x836444	char[20]	s_textGhostDONOTRENAME		sound	Holds the string "Ghost (DONOTRENAME)"	inferred	none	
+0x8364a8	char[4]	s_textAmbienceVolumeDefault		sound	Holds "0.6", AmbienceVolume's default	verified	one	sound/interface#sound-cvars
+0x8364b0	int32_t	s_zoneIntroPriority		sound	Holds the playing zone intro's priority, -1 at start	verified	one	sound/music#zone-intro-music
+0x8364e0	int32_t	s_waterSoundsOff		sound	Holds the water sounds' off state, above 0 while ambience is off, -1 after teardown	verified	one	sound/ambience#water-sound-switches
 0x836708	char *[8]	s_objectPoolNames		objectlayer	Holds the class name of each type's object pool	verified	one	objectlayer/classes#class-sizes-and-pools
 0x836728	uint32_t[8]	s_objectPoolBlockCounts		objectlayer	Holds each type's object pool block count	verified	one	objectlayer/classes#class-sizes-and-pools
 0x836b24	int32_t	s_logonResult		glue	Holds the last reported logon result, default -1; written by 0x46afb0 and 0x46b0f0	verified	one	glue/flow#logon-state-dialogs
@@ -1574,7 +1605,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87cd54	char[46]	s_textSSetAllPointsTryingToAnchorToItself		ui	Holds the string "%s:SetAllPoints(): trying to anchor to itself"	inferred	none	
 0x87cd84	char[51]	s_textSSetAllPointsCouldnTFindRegionNamedS		ui	Holds the string "%s:SetAllPoints(): Couldn't find region named '%s'"	inferred	none	
 0x87ce60	uint32_t			unassigned	Holds a dword that Sound::DupeCheckFailed reads; not read here	inferred	none	
+0x87ce94	const char *[13]	s_soundOutputNames		sound	Holds the names of FMOD output systems 0 to 12	verified	one	sound/engine#unreached-engine-code
+0x87cec8	const char *[10]	s_soundMixerNames		sound	Holds the names of the 10 FMOD mixers	verified	one	sound/engine#unreached-engine-code
+0x87cef0	uint32_t	s_soundMixRate		sound	Holds the output rate, 44100 until the device is set up	verified	one	sound/engine#fmod-set-up-sequence
+0x87cef4	float	s_soundCategoryVolume		sound	Holds the Sound category factor, 1.0 until the CVar handler sets it	verified	one	sound/engine#volume-of-a-sound
 0x87cef8	float			unassigned	Holds a float that Sound::SetVolume2, Sound::SetMusicVolume read and write; not read here	inferred	none	
+0x87cefc	float	s_ambienceCategoryVolume		sound	Holds the Ambience category factor, 0.5 until the CVar handler sets it	verified	one	sound/engine#volume-of-a-sound
+0x87cf00	int32_t	s_soundEffectsOff		sound	Holds 1 while sound effects are off, 0 while on, -1 at start and after shutdown	verified	one	sound/engine#opening-a-stream
+0x87d3a0	char[12]	s_soundTag		sound	Holds the allocation tag of the engine's sound records	verified	one	sound/overview#object-files
 0x87d3b0	char[20]	s_textBlizzardWebClient		os	Holds the string "Blizzard Web Client"	inferred	none	
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
@@ -1666,27 +1704,61 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05d74	float	s_gaussianSpareFloat		random	Holds the spare deviate of 0x44f9b0, 0 when empty; one for every state	inferred	none	random#unreached-functions
 0xb05d78	double	s_gaussianSpareDouble		random	Holds the spare deviate of 0x44fa70, 0 when empty; one for every state	inferred	none	random#unreached-functions
 0xb05e10	uint32_t			spline	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb05ebc	uint32_t[4]	s_emoteSoundPointers		sound	Holds the emote sound pointer array: capacity, count, buffer and granularity	verified	one	sound/interface#emote-sounds
+0xb05ee0	float	s_sndIfInfinity		sound	Holds +inf, the interface file's infinity	verified	one	sound/overview#shared-header-constants
 0xb05ee4	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
-0xb05f38	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb05ef0	uint32_t[4]	s_emoteSoundRecords		sound	Holds the emote sound record array: capacity, count, buffer and granularity	verified	one	sound/interface#emote-sounds
+0xb05f18	uint32_t	s_soundNight		sound	Holds 1 at night and 0 by day, the column of the music and ambience rows	verified	one	sound/interface#day-and-night
+0xb05f30	uint32_t[4]	s_serverSoundSlots		sound	Holds the server sound slot array: capacity, count, buffer and granularity	verified	one	sound/objects#server-object-sounds
+0xb05f50	uint32_t[10]	s_footstepTable		sound	Holds the footstep hash table	verified	one	sound/objects#footstep-table
 0xb05f78	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
+0xb05f88	float	s_duckStartVolume		sound	Holds the SoundVolume the duck ramps from	verified	one	sound/objects#the-duck
 0xb05fa0	uint32_t	s_interfaceSoundSuppression		sound	Counts the open suppressions of interface sounds	verified	one	ui/framexml#sound-while-loading
+0xb05fa4	uint32_t	s_wrappedItemDropSound		sound	Holds the SoundEntries id of WrappedItemDrop	verified	one	sound/interface#item-sounds
+0xb05fa8	uint32_t	s_wrappedItemPickupSound		sound	Holds the SoundEntries id of WrappedItemPickup	verified	one	sound/interface#item-sounds
+0xb05fac	uint32_t	s_combatMiss2HSound		sound	Holds the SoundEntries id of Combat Miss 2H	verified	one	sound/interface#named-sounds
+0xb05fb0	uint32_t	s_combatMiss1HSound		sound	Holds the SoundEntries id of Combat Miss 1H	verified	one	sound/interface#named-sounds
+0xb05fb4	uint32_t	s_absorbGetHitSound		sound	Holds the SoundEntries id of AbsorbGetHit	verified	one	sound/interface#named-sounds
+0xb05fb8	uint32_t	s_shieldWoodImpactSound		sound	Holds the SoundEntries id of ShieldWoodImpact	verified	one	sound/interface#named-sounds
+0xb05fbc	uint32_t	s_weatherAmbienceSound		sound	Holds the weather message's ambience sound, 0 for none	verified	one	sound/ambience#zone-ambience-choice
+0xb05fc0	uint32_t	s_duckRampStart		sound	Holds the duck ramp's start time, 0 while no ramp runs	verified	one	sound/objects#the-duck
+0xb06028	int32_t	s_surfaceReverbId		sound	Holds the world reverb's SoundProviderPreferences id above water	verified	one	sound/ambience#world-reverb
+0xb0602c	int32_t	s_underwaterReverbId		sound	Holds the world reverb's SoundProviderPreferences id under water	verified	one	sound/ambience#world-reverb
+0xb06038	void *	s_glueMusic		sound	Holds the glue music's sound	verified	one	sound/music#glue-music
 0xb06098	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb060a0	uint8_t			sound	Holds a byte that SndInterfaceSetGlueMusic reads and writes; not read here	inferred	none	
+0xb061c0	uint32_t[4]	s_reverbRecords		sound	Holds the channel reverb record array: capacity, count, buffer and granularity	verified	one	sound/entries#channel-reverb
+0xb061d4	void *	s_soundStringBlock		sound	Holds the string block of the definitions' file names	verified	one	sound/entries#file-paths
+0xb061e0	uint32_t[10]	s_sheatheTable		sound	Holds the sheathe sound hash table	verified	one	sound/objects#material-and-sheathe-sounds
+0xb06214	uint32_t[4]	s_soundDefinitions		sound	Holds the definition pointer array: capacity, count, buffer and granularity	verified	one	sound/entries#sound-definitions
+0xb06224	uint32_t[4]	s_weaponImpactSounds		sound	Holds the weapon impact array: capacity, count, buffer and granularity	verified	one	sound/objects#weapon-impact-sounds
 0xb06240	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0xb06244	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0xb06570	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb06574	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb06bd4	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb06bfc	uint32_t[10]	s_uiSoundTable		sound	Holds the UI sound name hash table	verified	one	sound/entries#interface-sound-names
+0xb06c38	uint32_t[5]	s_soundDefPool		sound	Holds the definition block pool	verified	one	sound/entries#sound-definitions
+0xb06c6c	void *	s_ghostMusicRow		sound	Holds the ZoneMusic row named GhostMusic (DONOTRENAME)	verified	one	sound/music#zone-music-selection
 0xb06cbc	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb06cc0	void *	s_areaMusicRow		sound	Holds the area's ZoneMusic row, null for none	verified	one	sound/music#zone-music-selection
 0xb06cc4	uint32_t			sound	Holds a dword that SndInterfacePauseZoneMusic reads and writes; not read here	inferred	none	
 0xb06cc8	uint8_t			sound	Holds a byte that SndInterfacePauseZoneMusic reads and writes; not read here	inferred	none	
 0xb06ccc	uint32_t			sound	Holds a dword that SndInterfacePauseZoneMusic reads and writes; not read here	inferred	none	
+0xb06cd0	void *	s_serverMusic		sound	Holds the server's music sound	verified	one	sound/music#server-music
+0xb06d20	void *	s_areaAmbienceRow		sound	Holds the area's SoundAmbience row, null for none	verified	one	sound/ambience#zone-ambience-choice
 0xb06d3c	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb06d40	uint32_t	s_playingAmbienceSound		sound	Holds the sound id of the playing ambience loop	verified	one	sound/ambience#zone-ambience-changes
 0xb06d44	uint8_t			sound	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xb06d48	uint32_t			sound	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb06d4c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb06d54	uint32_t[4]	s_zoneIntroTimes		sound	Holds the zone intro time array: capacity, count, buffer and granularity	verified	one	sound/overview#static-objects
+0xb06d9c	uint8_t	s_zoneIntroBlocked		sound	Holds a byte that refuses every intro while set; only 0 is written	verified	one	sound/music#zone-intro-music
+0xb06dc8	void *	s_zoneIntro		sound	Holds the zone intro's sound	verified	one	sound/music#zone-intro-music
 0xb06dd8	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0xb2306c	void *	s_mapWaterSoundsCVar		sound	Holds the MapWaterSounds CVar	verified	one	sound/ambience#water-sounds
 0xb230b8	uint32_t			unassigned	Holds data whose address InitializeWaterAmbiences, ClearAllSounds take; not read here	inferred	none	
+0xb2326c	uint32_t	s_waterSubmergeState		sound	Holds bit 0x2 while submerged and bit 0x1 for the restart without fade on surfacing	verified	one	sound/ambience#water-sound-placement
 0xb232e8	void *[7]	s_objectPools		objectlayer	Holds the object pools of types 1 to 7, created at start-up	verified	one	objectlayer/classes#class-sizes-and-pools
 0xb23310	uint32_t[30768]	s_fieldWatcherLists		objectlayer	Holds 10,256 field watcher list heads of 12 bytes, one per type section and field index	verified	one	objectlayer/initializers#object-tables
 0xb41414	void *	s_objectManager		objectlayer	Holds the client object manager; its +0xd4 holds the movement manager	inferred	none	collision/mover#movement-manager
@@ -2559,7 +2631,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates
+0xcf552c	uint32_t[3]	s_soundObjectList		sound	Holds the list head of sounds that follow objects, link offset 0x10	verified	one	sound/engine#the-sound-object
 0xcf553c	uint32_t			unassigned	Holds a dword that Sound::Initialize, Sound::DupeCheckFailed, Sound::DecrementCategory read; not read here	inferred	none	
+0xcf5574	uint32_t[3]	s_soundAllList		sound	Holds the list head of every sound, link offset 0	verified	one	sound/engine#the-sound-object
+0xcf5580	uint32_t[3]	s_soundCutoffList		sound	Holds the list head of distance-cutoff sounds, link offset 0x20	verified	one	sound/engine#the-sound-object
+0xcf558c	uint32_t[3]	s_soundEndedList		sound	Holds the list head of ended sounds, link offset 0x28	verified	one	sound/engine#the-sound-object
+0xcf5598	uint32_t[5]	s_soundPool		sound	Holds the sound record block pool	verified	one	sound/engine#the-sound-object
+0xcf55b0	uint32_t	s_soundWindowActive		sound	Holds the window's active flag, 0 until the first activation event	verified	one	sound/engine#opening-a-stream
+0xcf55b4	uint32_t[6]	s_soundLock		sound	Holds the engine lock	verified	one	sound/engine#the-sound-object
+0xcf55cc	uint32_t[3]	s_soundPanningList		sound	Holds the list head of panned sounds, link offset 0x18	verified	one	sound/engine#the-sound-object
+0xcf55dc	uint32_t[3]	s_soundFadeList		sound	Holds the list head of fading sounds, link offset 8	verified	one	sound/engine#the-sound-object
+0xcf55e8	uint32_t	s_soundDeviceUp		sound	Holds 1 once the device is set up	verified	one	sound/engine#fmod-set-up-sequence
+0xcf55fc	void *	s_soundPositionCallback		sound	Holds the object position callback, null when none	verified	one	sound/engine#sounds-that-follow-objects
+0xcf5600	uint32_t	s_soundOpenBlocked		sound	Holds 0; read by every open and written nowhere	verified	one	sound/engine#opening-a-stream
+0xcf5604	uint32_t	s_soundRecordCount		sound	Holds the number of live sound records	verified	one	sound/engine#the-sound-object
 0xcf572c	float	s_cameraPropertyInfinity		camera	Holds +inf, set at startup; nothing reads it	verified	one	camera#object-files-and-initializers
 0xcf5730	float	s_cameraInvTwoPi		camera	Holds 1/2π (0x3e22f983), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties
 0xcf5734	float	s_cameraTwoPi		camera	Holds 2π (0x40c90fdb), set at startup, read by 0x7abbe0	verified	two	camera#angle-properties

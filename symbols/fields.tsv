@@ -791,6 +791,15 @@ SKILLLINEREC	0x0014	1	uint8_t	m_race	spell	Holds the race the node was added for
 SKILLLINEREC	0x0015	1	uint8_t	m_class	spell	Holds the class the node was added for	verified	one	spell/tables#spell-ability-index-by-race
 SKILLLINEREC	0x0016	2	uint16_t	m_spellLow	spell	Holds the spell id's low 16 bits	verified	one	spell/tables#spell-ability-index-by-race
 SKILLLINEREC	0x0018	4	void *	m_ability	spell	Holds the SkillLineAbility.dbc row	verified	one	spell/tables#spell-ability-index-by-race
+SOUNDDEFINITION	0x0000	120	uint32_t[30]	m_files	sound	Holds ten file slots of name, remaining weight and weight	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0078	4	float	m_volume	sound	Holds the volume, 1.0 by default	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x007c	4	uint32_t	m_flags	sound	Holds the SoundEntries row's flags	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0080	4	float	m_minDistance	sound	Holds the minimum distance, 27.777779 by default	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0084	4	float	m_cutoff	sound	Holds the distance cutoff, 83.333336 by default	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0088	4	uint32_t	m_remainingWeight	sound	Holds the sum of the remaining weights	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x008c	4	int32_t	m_eaxDefinition	sound	Holds the channel reverb record index, -1 by default	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0090	4	int32_t	m_lastFile	sound	Holds the last file picked, -1 by default	verified	one	sound/entries#sound-definitions
+SOUNDDEFINITION	0x0094	4	uint32_t	m_fileCount	sound	Holds the number of file slots filled	verified	one	sound/entries#sound-definitions
 SPELLHISTORY	0x0000	8	void *[2]	m_link	spell	Holds the record's link in its record or free list	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x0008	4	int32_t	m_spellId	spell	Holds the spell the record is for	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x000c	4	int32_t	m_itemId	spell	Holds the item entry the record is for, 0 for a spell alone	verified	one	spell/cooldowns#history-record-layout
@@ -807,6 +816,28 @@ Shard	0x0008	12	float[3]	m_position	spell	Holds the shard position the second tr
 Shard	0x0014	4	void *	m_model	spell	Holds the shard's model	verified	one	spell/visuals#shard-model-start-and-end
 Shard	0x0018	4	uint32_t	m_startTime	spell	Holds the world time at which the shard starts, never 0	verified	one	spell/visuals#shard-model-start-and-end
 Shard	0x001c	1	uint8_t	m_started	spell	Holds 1 once the shard's animation has started	verified	one	spell/visuals#shard-model-start-and-end
+Sound	0x0000	8	void *[2]	m_allLink	sound	Holds the link on the every-sound list	verified	one	sound/engine#the-sound-object
+Sound	0x0008	8	void *[2]	m_fadeLink	sound	Holds the link on the fade list	verified	one	sound/engine#the-sound-object
+Sound	0x0010	8	void *[2]	m_objectLink	sound	Holds the link on the list of sounds that follow objects	verified	one	sound/engine#the-sound-object
+Sound	0x0018	8	void *[2]	m_panLink	sound	Holds the link on the panning list	verified	one	sound/engine#the-sound-object
+Sound	0x0020	8	void *[2]	m_cutoffLink	sound	Holds the link on the distance cutoff list	verified	one	sound/engine#the-sound-object
+Sound	0x0028	8	void *[2]	m_endedLink	sound	Holds the link on the ended list	verified	one	sound/engine#the-sound-object
+Sound	0x0030	4	int32_t	m_channel	sound	Holds the FMOD channel, -1 when none	verified	one	sound/engine#the-sound-object
+Sound	0x0034	4	void *	m_stream	sound	Holds the FMOD stream	verified	one	sound/engine#the-sound-object
+Sound	0x0038	4	uint32_t	m_flags	sound	Holds the caller's flags in the low byte and the engine's state bits above	verified	one	sound/engine#the-sound-object
+Sound	0x0040	4	uint32_t	m_fadeStart	sound	Holds the fade start time in milliseconds	verified	one	sound/engine#the-sound-object
+Sound	0x0044	4	int32_t	m_fadeLevel	sound	Holds the fade target or start level, 0 to 255	verified	one	sound/engine#the-sound-object
+Sound	0x0048	4	float	m_fadeRate	sound	Holds the fade rate in levels per millisecond, below 0 for a fade out	verified	one	sound/engine#the-sound-object
+Sound	0x0050	12	float[3]	m_position	sound	Holds the position in world axes	verified	one	sound/engine#the-sound-object
+Sound	0x005c	12	float[3]	m_velocity	sound	Holds the velocity in world axes	verified	one	sound/engine#the-sound-object
+Sound	0x0068	8	uint64_t	m_guid	sound	Holds the GUID of the object the sound follows	verified	one	sound/engine#the-sound-object
+Sound	0x0070	4	float	m_cutoff	sound	Holds the cutoff distance, 0 for none	verified	one	sound/engine#the-sound-object
+Sound	0x0074	4	float	m_volume	sound	Holds the volume, 1.0 by default	verified	one	sound/engine#the-sound-object
+Sound	0x0078	4	float	m_distanceGain	sound	Holds the distance gain, 1.0 by default	verified	one	sound/engine#the-sound-object
+Sound	0x007c	4	uint32_t	m_frequency	sound	Holds the frequency, 22050 by default	verified	one	sound/engine#the-sound-object
+Sound	0x0080	4	uint32_t	m_nameHash	sound	Holds the file name's SStrHash, -1 by default	verified	one	sound/engine#the-sound-object
+Sound	0x0084	4	uint32_t	m_bus	sound	Holds the bus the sound opened on	verified	one	sound/engine#the-sound-object
+Sound	0x0088	4	uint32_t	m_pauseReasons	sound	Holds the four pause reason bits	verified	one	sound/engine#the-sound-object
 SpellCastTimesRec	0x0004	4	int32_t	m_base	dbc	Holds the cast time at the base level, in ms	verified	one	spell/records#cast-time
 SpellCastTimesRec	0x0008	4	int32_t	m_perLevel	dbc	Holds the cast time added per level above the base level	verified	one	spell/records#cast-time
 SpellCastTimesRec	0x000c	4	int32_t	m_minimum	dbc	Holds the floor the level-scaled cast time is raised to	verified	one	spell/records#cast-time
