@@ -106,6 +106,48 @@ Each site stores both dwords. `0x5eb9d2` stores the zero in `esi` and `0x5ebad4`
 0x40 of `+0xd58` clear (`0x5fd270`), then needs `0x6126b0` (`IsLooting`: the latch for the active
 player, flag 0x400 for others) and `0x612710` (`ShowsLootAnimation`).
 
+## Clicking while mounted
+
+A mounted player's right click does the following. A lootable corpse is not looted and the click
+falls to the skinning test, so a corpse that cannot be skinned does nothing and shows nothing.
+Skinning, a player corpse's insignia and a lock opened by a spell cast, and the cast validator
+refuses the mounted caster with failure 0x39. A live NPC with services opens its dialog. A
+hostile creature is not attacked and shows no error. A pet order does nothing when the pet is
+mounted.
+
+Addresses: `0x60bea0`, `0x60bf36`, `0x60bf98`, `0x60c01f`, `0x60c1b4`, `0x60c257`, `0x60c25f`, `0x60c270`, `0x5d6c22`, `0x6094f0`, `0x609c6f`, `0x609c8c`, `0x612df0`, `0x4bd40d`, `0x6131aa`, `0x6e4efb`, `0x5ecb70`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60bea0` reads the mount display (field 133, `+0x1fc`) three times: `0x60bf36` on the pet the
+player controls, `0x60bf98` on the player for the loot leg, whose `jg` goes to the skin leg
+(`0x60c01f`), and `0x60c1b4` on the player for the attack leg. A mount ends the pet leg at
+`0x60c25f` and the attack leg at `0x60c257`; the latter calls `0x60c270`, which speaks a greeting
+only when the unit's reaction toward the player and the player's toward it are both 3 or more. The
+attack leg shows no error: the refusal ladder `0x612df0` is called from `0x4bd40d`, `0x6131aa` and
+`0x6e4efb`, never from a click. `0x6094f0` fails a mounted caster at `0x609c8c` unless the spell's
+attribute word `+0x18` holds bit 0x1000000 (`0x609c6f`).
+
+## Mounted cursor and selection
+
+The hover cursor knows about the mount only for the attack cursor and a controlled pet's, so a
+mounted player sees the loot cursor over a corpse the click then ignores. Selecting a target
+sends `CMSG_SET_SELECTION` mounted or not. The client never ends a mount itself.
+
+Addresses: `0x482200`, `0x482278`, `0x482659`, `0x493540`, `0x49367d`, `0x493748`, `0x493857`, `0x6e7040`, `0x4e49a0`
+Confidence: verified
+Proof: one
+Test: none
+
+The hover classifier `0x482200` reads `+0x1fc` twice: `0x482278` on the controlled pet and
+`0x482659` on the player for the attack cursor; the loot, skin, corpse and object branches read
+nothing of it. `0x493540`, the target setter, reads it at `0x49367d` and `0x493748` only in tests
+whose pass records attackability and the enemy GUID at `0xb4e2e8`; the `0x13d` send at `0x493857`
+does not test it. The aura cancel `0x6e7040`, which a dismount is, has nine call sites, among them
+`CancelPlayerBuff`'s (`0x4e49a0`), and none is on a click path. No `0x375` immediate exists in the
+image.
+
 ## Interacting through a spell
 
 `0x5f05e0(object, walk, set, value)` interacts with a corpse or player through the spell at

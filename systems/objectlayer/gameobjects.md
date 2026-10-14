@@ -303,6 +303,27 @@ maximum (`0x5f3328`) for the distance test only: the range handed back is always
 written at `0x5f32f4` before the spell's; without a spell, state 2 gives 0xe5. `0x5f3346`: `(dx² + dy² + dz²)`
 against range², `test ah,5; jp`; farther gives 0xe1, a NaN passes. Slices: go_canuse_dist2_difftest `0x5f3346`-`0x5f3377`.
 
+## Using an object while mounted
+
+A mounted player is refused an object only when it has no lock row, and the refusal is silent.
+The test is the existence of the Lock row, not its contents: a row whose slots are all empty still
+lets a mounted player use the object. Only the mailbox, type 19, is exempt without a row. The
+refusal, error 0x19f, has no text in the 1.12.1 global strings, so the message is empty and is
+dropped before any event, and nothing is sent. A locked object opened by a spell reaches the cast,
+whose validator reports "mounted".
+
+Addresses: `0x5f3130`, `0x5f3195`, `0x5f319c`, `0x5f31a8`, `0x5f31bb`, `0x5f31d0`, `0x5f8180`, `0x47cff0`, `0x496720`, `0x4945b0`, `0x703bf0`, `0xc0dae4`, `0xc0dae8`, `0x6094f0`, `0x488021`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5f3195` calls `0x5f8180`, which returns the pointer `[0xc0dae4 + lockId*4]`, or 0 for no lock
+field, a lock id of 0, a negative one, or one past `0xc0dae8`. `0x5f319c` jumps past the mount and
+form tests when it is not 0. `0x5f31a8` reads the mount display, `0x5f31bb` asks `0x47cff0` (type
+equals 0x13), and `0x5f31d0` stores 0x19f. `0x488021` registers the error row at `0xb4b498 + 0x19f*0x14`
+with the key string `ERR_NOT_WHILE_MOUNTED`; `0x496720` reads the global through `0x703bf0`, which
+leaves the empty string when no global exists, and `0x4945b0` returns on an empty message.
+
 ## Using a game object
 
 For an interactable object, the object's slot 24 sets the player's auto-loot byte from its
