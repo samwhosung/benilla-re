@@ -34062,42 +34062,42 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x785790	89	MessageFrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is MessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x7857f0	6	MessageFrameGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name MessageFrame	verified	one	ui/widgettype#type-chains	
 0x785800	43	DeletingDestructor785800		ui	orchestration		Destroys the object through 0x785830 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x785830	180			ui	primitive		Runs CSimpleMessageFrame.cpp code that calls 0x786720, 0x785e00, SMemFree and 1 more; not read here	inferred	none		
+0x785830	180	CSimpleMessageFrame::~CSimpleMessageFrame		ui	orchestration	void __thiscall ()	Releases the line holders and the queued messages, deletes the font and runs the frame destructor	verified	one	ui/messagemembers#message-frame-teardown	
 0x7858f0	5	InitInfinity785900Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x785900, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x785900	11	InitInfinity785900		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x785910	622	CSimpleMessageFrame::LoadXML		ui	primitive		Loads a MessageFrame's frame node, then its font, fading, insert mode and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
-0x785b80	48			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
-0x785bb0	75			ui	unreached		Runs CSimpleMessageFrame.cpp code that calls 0x771680; not read here	inferred	none		
-0x785c00	24			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
-0x785c20	94			ui	primitive		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
-0x785c80	94			ui	primitive		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
+0x785b80	48	CSimpleMessageFrame::SetInsets		ui	orchestration	void __thiscall (float a, float b, float c, float d)	Stores the four insets at +0x330 to +0x33c and lays the lines out	verified	one	ui/messagemembers#message-frame-setters	
+0x785bb0	75	CSimpleMessageFrame::SetFixedLength		ui	unreached	void __thiscall (uint32_t length)	Stores a length at +0x340 and sets it on each line's FontString; nothing reaches it	verified	one	ui/messagemembers#message-frame-setters	
+0x785c00	24	CSimpleMessageFrame::RelayoutOnFlags		ui	orchestration	void __thiscall (uint32_t a, uint32_t flags)	Lays the lines out when bit 0 or 4 of the flags is set	verified	one	ui/messagemembers#message-frame-setters	
+0x785c20	94	CSimpleMessageFrame::SetTimeVisible		ui	primitive	void __thiscall (float seconds)	Stores the visible time and copies it into every line whose own time is 0	verified	one	ui/messagemembers#message-frame-setters	
+0x785c80	94	CSimpleMessageFrame::SetFadeDuration		ui	primitive	void __thiscall (float seconds)	Stores the fade time and copies it into every line whose own fade time is 0	verified	one	ui/messagemembers#message-frame-setters	
 0x785ce0	21			ui	orchestration		Stores the insert mode of a message frame and redraws its lines	verified	one	ui/fontmethods#message-frame-insert-mode	
 0x785d00	177			ui	orchestration		Queues a message frame line, copying its text and colour	verified	one	ui/messageframe#a-message-frames-addmessage	
-0x785dc0	61			ui	primitive		Runs its object file code that calls 0x786570; not read here	inferred	none		
-0x785e00	121			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x785e80	28			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnFrameSizeChanged, 0x785ea0; not read here	inferred	none		
-0x785ea0	786			ui	primitive		Runs its object file code that calls PixelAlignY, __ftol, 0x786570 and 9 more; not read here	inferred	none		ui::glue_785ea0_header, ui::glue_785ea0_quantize, ui::glue_785ea0_sum_divide, ui::glue_785ea0_tail
-0x7861c0	57			ui	primitive		Runs its object file code that calls SMemAlloc, 0x7865f0; not read here	inferred	none		
+0x785dc0	61	CSimpleMessageFrame::ClearLines		ui	orchestration	void __thiscall ()	Deactivates every line and frees the queued messages	verified	one	ui/messagemembers#message-frame-setters	
+0x785e00	121	CSimpleMessageFrame::FreeQueue		ui	orchestration	void __thiscall ()	Frees each queued message's text and then the queue	verified	one	ui/messagemembers#message-frame-teardown	
+0x785e80	28	CSimpleMessageFrame::OnFrameSizeChanged		ui	orchestration	void __thiscall (float *rect)	Runs the frame's size callback and lays the lines out	verified	one	ui/messagemembers#message-frame-setters	
+0x785ea0	786	CSimpleMessageFrame::LayoutLines		ui	primitive	void __thiscall ()	Sets the line count from the inner height over a row and brings the line holders and their anchors to it	verified	one	ui/messagemembers#message-frame-layout	ui::glue_785ea0_header, ui::glue_785ea0_quantize, ui::glue_785ea0_sum_divide, ui::glue_785ea0_tail
+0x7861c0	57	MessageLineHolderConstruct		ui	orchestration	void * __thiscall ()	Builds a line holder: a new counted line and two zeroed floats	verified	one	ui/messagemembers#making-a-line	
 0x786200	421			ui	primitive		Places the queued lines of a message frame and fades its lines	verified	one	ui/messageframe#a-message-frames-addmessage	ui::glue_786200_alpha
-0x7863b0	214			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x786490, 0x771d80 and 5 more; not read here	inferred	none		ui::glue_7863b0_level_fraction
-0x786490	212			ui	primitive		Runs its object file code that calls CLayoutFrame::SetPoint, 0x786570; not read here	inferred	none		ui::glue_786490_negate
-0x786570	56			ui	primitive		Runs its object file code that calls 0x77fc60; not read here	inferred	none		
-0x7865b0	56			ui	primitive		Runs its object file code that calls 0x77fcb0; not read here	inferred	none		
-0x7865f0	130			ui	primitive		Runs its object file code that calls GetBlockPoolData, 0x770d30, 0x7724a0; not read here	inferred	none		
+0x7863b0	214	CSimpleMessageFrame::AddLine		ui	primitive	void __thiscall (const char *text, const uint32_t *colour)	Opens line slot 0, sets its colour and text, activates it and pushes older lines down	verified	one	ui/messagemembers#adding-a-message	ui::glue_7863b0_level_fraction
+0x786490	212	CSimpleMessageFrame::ShiftLines		ui	primitive	void __thiscall (uint32_t index)	Moves the line holders from an index toward the end and re-anchors them	verified	one	ui/messagemembers#adding-a-message	ui::glue_786490_negate
+0x786570	56	CSimpleMessageFrame::DeactivateLine		ui	primitive	void __thiscall (MessageLine *line)	Unregisters an active line and clears its times and active byte	verified	one	ui/messagemembers#activating-a-line	
+0x7865b0	56	CSimpleMessageFrame::ActivateLine		ui	orchestration	void __thiscall (MessageLine *line, float a, float b)	Registers a line, stores its two times, marks it active and counts it	verified	one	ui/messagemembers#activating-a-line	
+0x7865f0	130	MessageLineConstruct		ui	orchestration	void * __thiscall ()	Builds a message line with its FontString from the region pool, bit 0x4000 set	verified	one	ui/messagemembers#making-a-line	
 0x786680	43	DeletingDestructor786680		ui	orchestration		Destroys the object through 0x7866b0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x7866b0	30			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7866b0	30	MessageLineDestruct		ui	orchestration	void __thiscall ()	Deletes the line's FontString and puts the base vtable back	verified	one	ui/messagemembers#message-frame-teardown	
 0x7866d0	5	InitDouble7866e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7866e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7866e0	15	InitDouble7866e0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x7866f0	5	InitQuotient786700Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x786700, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x786700	19	InitQuotient786700		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x786720	69			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x786770	38			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x7867a0	46			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x786720	69	MessageLineHoldersRelease		ui	orchestration	void __thiscall ()	Releases the line of every holder in the array and frees the array	verified	one	ui/messagemembers#message-frame-teardown	
+0x786770	38	FreeIfFlag786770		ui	orchestration	void * __thiscall (uint32_t free_flag)	Frees the object with SMemFree when bit 0 of the flag is set and returns it	verified	one	ui/messagemembers#message-frame-teardown	
+0x7867a0	46	MessageLineHolderRelease		ui	orchestration	void * __thiscall (uint32_t free_flag)	Releases the holder's line and frees the holder when bit 0 of the flag is set	verified	one	ui/messagemembers#message-frame-teardown	
 0x7867d0	31	RoundUp7867d0		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
 0x7867f0	144	ResizeArray7867f0		ui	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	ui/containers#arrays	
 0x786880	57	Quantum21786880		ui	primitive		Returns the grow quantum for a count: the largest power of two not above it below 21, else 21	verified	one	ui/containers#arrays	
 0x7868c0	31	RoundUp7868c0		ui	primitive		Rounds a size up to a multiple of a quantum	verified	one	ui/containers#arrays	
-0x7868e0	229			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x7868e0	229	MessageLineHoldersSetCapacity		ui	primitive	void __thiscall (uint32_t count)	Sets the holder array's capacity, releasing holders past it and moving the kept ones with a reference added	verified	one	ui/messagemembers#message-frame-layout	
 0x7869d0	8	LayoutThunk7869d0		ui	primitive		Moves this back by 0x24 to the object and jumps to its deleting destructor 0x785800	verified	one	ui/containers#layout-thunks	
 0x7869e0	5	InitSquare7869f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7869f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7869f0	19	InitSquare7869f0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
@@ -34108,7 +34108,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x786ae0	89	ScrollFrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is ScrollFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x786b40	6	ScrollFrameGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name ScrollFrame	verified	one	ui/widgettype#type-chains	
 0x786b50	43	DeletingDestructor786b50		ui	orchestration		Destroys the object through 0x786b80 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x786b80	64			ui	orchestration		Runs its object file code that calls FrameScriptReleaseScript; not read here	inferred	none		
+0x786b80	64	CSimpleScrollFrame::~CSimpleScrollFrame		ui	orchestration	void __thiscall ()	Releases the script slots at +0x32c, +0x334 and +0x33c and runs the frame destructor	verified	one	ui/scrollframe#teardown	
 0x786bc0	125	CSimpleScrollFrame::LoadXML		ui	primitive		Loads a ScrollFrame's frame node, then creates its scroll child from XML	verified	one	ui/xmltypes#scroll-child	
 0x786c40	124	CSimpleScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollFrame's handler slot by name, adding its three scroll handlers	verified	one	ui/xmltypes#handler-names-by-type	
 0x786cc0	5	InitInfinity786cd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x786cd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -34120,9 +34120,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x786f80	381			ui	primitive		Joins a frame's rectangle with its shown regions' and its shown children's	verified	one	ui/scrollframe#the-scroll-range	
 0x787100	61			ui	orchestration		Anchors the scroll child's TOPLEFT to the frame's at the offsets	verified	one	ui/scrollframe#offsets	
 0x787140	118			ui	orchestration		Measures the scroll range on an update when it is marked	verified	one	ui/scrollframe#the-scroll-range	ui::glue_787140_rect_delta
-0x7871c0	46			ui	orchestration		Runs its object file code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
+0x7871c0	46	CSimpleMessageScrollFrame::Emit		ui	orchestration	void __thiscall (void *batch, uint32_t layer)	Runs the frame's emit and, for layer 4, adds the draw callback 0x787220 to the batch	verified	one	ui/messagemembers#scroll-frame-draw	
 0x7871f0	36			ui	orchestration		Marks the scroll range after the frame's size change	verified	one	ui/scrollframe#the-scroll-range	
-0x787220	868			ui	primitive		Runs its object file code that calls CSimpleFrame::GetHitRect, GetDeviceProjection and 8 more; not read here	inferred	none		ui::glue_787220_clamp01
+0x787220	868	CSimpleMessageScrollFrame::DrawCallback		ui	primitive	void __cdecl (void *frame)	Projects the frame's rectangle, clamps its texture coordinates to 0 to 1 per axis and draws	inferred	none	ui/messagemembers#scroll-frame-draw	ui::glue_787220_clamp01
 0x787590	5	InitDouble7875a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7875a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7875a0	15	InitDouble7875a0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x7875b0	5	InitQuotient7875c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7875c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -34135,35 +34135,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x787650	5	InitInfinity787660Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x787660, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x787660	11	InitInfinity787660		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x787670	635			ui	primitive		Constructs a ScrollingMessageFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
-0x7878f0	22			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls SMemFree; not read here	inferred	none		
+0x7878f0	22	FreeLineRecordText		ui	orchestration	void __thiscall ()	Frees the text of a scroll frame line record when set	verified	one	ui/messagemembers#scroll-frame-teardown	
 0x787910	45	IsTypeId787910		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x787940	89	ScrollingMessageFrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is ScrollingMessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x7879a0	6	ScrollingMessageFrameGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name ScrollingMessageFrame	verified	one	ui/widgettype#type-chains	
 0x7879b0	43	DeletingDestructor7879b0		ui	orchestration		Destroys the object through 0x7879e0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x7879e0	311			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788f40, 0x788f90, 0x788c00 and 5 more; not read here	inferred	none		
+0x7879e0	311	CSimpleMessageScrollFrame::Destruct		ui	orchestration	void __thiscall ()	Frees the arrays and link buttons, releases the script slot and runs the hyperlink frame destructor	verified	one	ui/messagemembers#scroll-frame-teardown	
 0x787b20	615	CSimpleMessageScrollFrame::LoadXML		ui	primitive		Loads a ScrollingMessageFrame's frame node, then its font, fading, line count and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x787d90	60	CSimpleMessageScrollFrame::GetScriptByName		ui	orchestration		Returns a ScrollingMessageFrame handler slot by name, adding OnMessageScrollChanged	verified	one	ui/xmltypes#handler-names-by-type	
 0x787dd0	478			ui	orchestration		Empties a scrolling message frame and sets its line limit	verified	one	ui/messageframe#the-ring-of-lines	
-0x787fb0	48			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788310; not read here	inferred	none		
-0x787fe0	64			ui	unreached		Runs CSimpleMessageScrollFrame.cpp code that calls 0x771680; not read here	inferred	none		
-0x788020	112			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls SMemFree, 0x788750; not read here	inferred	none		
-0x788090	85			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
-0x7880f0	85			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
+0x787fb0	48	CSimpleMessageScrollFrame::SetInsets		ui	orchestration	void __thiscall (float a, float b, float c, float d)	Stores the four insets at +0x37c to +0x388 and runs the rectangle change callback	verified	one	ui/messagemembers#scroll-frame-setters	
+0x787fe0	64	CSimpleMessageScrollFrame::SetFixedLength		ui	unreached	void __thiscall (uint32_t length)	Stores a length at +0x358 and sets it on each display node's FontString; nothing reaches it	verified	one	ui/messagemembers#unreached-scroll-frame-code	
+0x788020	112	CSimpleMessageScrollFrame::OnFlagsChanged		ui	orchestration	void __thiscall (void *a, uint32_t flags)	Destroys the display nodes and frees their array when flag bits 0x11 changed, then lays out	verified	one	ui/messagemembers#scroll-frame-teardown	
+0x788090	85	CSimpleMessageScrollFrame::SetTimeVisible		ui	primitive	void __thiscall (float seconds)	Stores the visible time and copies it into every shown record that has a node	verified	one	ui/messagemembers#scroll-frame-setters	
+0x7880f0	85	CSimpleMessageScrollFrame::SetFadeDuration		ui	primitive	void __thiscall (float seconds)	Stores the fade time and copies it into every shown record that has a node	verified	one	ui/messagemembers#scroll-frame-setters	
 0x788150	256			ui	orchestration		Writes a line into the next ring slot, freeing the oldest's text when full	verified	one	ui/messageframe#the-ring-of-lines	
 0x788250	89			ui	orchestration		Recolours the lines with an id, doing nothing for id 0	verified	one	ui/messageframe#a-scrolling-frames-addmessage	
-0x7882b0	52			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788750; not read here	inferred	none		
-0x7882f0	28			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls CSimpleFrame::OnFrameSizeChanged, 0x788310; not read here	inferred	none		
-0x788310	289			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls SMemFree, 0x788750; not read here	inferred	none		ui::glue_788_788310_rect_changed
-0x788440	24			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls CSimpleFrame::OnFrameShow, 0x788750; not read here	inferred	none		
+0x7882b0	52	CSimpleMessageScrollFrame::Clear		ui	orchestration	void __thiscall ()	Empties the ring, lays out, resets the scroll and sets the write position to -1	verified	one	ui/messagemembers#scroll-frame-setters	
+0x7882f0	28	CSimpleMessageScrollFrame::OnFrameSizeChanged		ui	orchestration	void __thiscall (float *rect)	Runs the frame's size callback and the rectangle change callback	verified	one	ui/messagemembers#scroll-frame-setters	
+0x788310	289	CSimpleMessageScrollFrame::OnRectChanged		ui	primitive	void __thiscall ()	Recomputes the four edges and lays the lines out again when the size changed by 1e-5 or more	inferred	none	ui/messagemembers#scroll-frame-layout	ui::glue_788_788310_rect_changed
+0x788440	24	CSimpleMessageScrollFrame::OnShow		ui	orchestration	void __thiscall ()	Runs the frame's show and lays the lines out at the scroll position	verified	one	ui/messagemembers#scroll-frame-setters	
 0x788460	328			ui	primitive		Counts down each shown line's visible and fade times and fades or hides it, while at the bottom	verified	one	ui/messageframe#fading-a-scrolling-frame	ui::glue_788_788460_alpha_step
 0x7885b0	44			ui	orchestration		Scrolls up a line as many times as lines are shown, stopping when a step cannot move, then down a line	verified	one	ui/messageframe#paging	
 0x7885e0	44			ui	orchestration		Scrolls down a line as many times as lines are shown, stopping when a step cannot move, then up a line	verified	one	ui/messageframe#paging	
 0x788610	57			ui	orchestration		Scrolls up a line, or re-arms the shown lines at the top	verified	one	ui/messageframe#scrolling-brings-lines-back	
 0x788650	61			ui	orchestration		Scrolls down a line, or re-arms the shown lines at the bottom	verified	one	ui/messageframe#scrolling-brings-lines-back	
-0x788690	49			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788750; not read here	inferred	none		
-0x7886d0	33			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788750; not read here	inferred	none		
+0x788690	49	CSimpleMessageScrollFrame::ScrollToTop		ui	orchestration	void __thiscall ()	Lays the lines out from the oldest line of the ring	verified	one	ui/messagemembers#scroll-frame-setters	
+0x7886d0	33	CSimpleMessageScrollFrame::ScrollToBottom		ui	orchestration	void __thiscall ()	Restores the shown lines or lays out at the write position, doing nothing for an empty ring	verified	one	ui/messagemembers#scroll-frame-setters	
 0x788700	78			ui	orchestration		Scrolls to a line from the bottom, or re-arms when already there	verified	one	ui/messageframe#scrolling-brings-lines-back	
-0x788750	874			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x789060, 0x788d90, 0x788af0 and 10 more; not read here	inferred	none		ui::glue_geom_788750_acc_and_sum, ui::glue_geom_788750_bounds_ratios
+0x788750	874	CSimpleMessageScrollFrame::LayoutLines		ui	primitive	void __thiscall (int32_t position)	Places the shown lines from a ring position, anchoring and showing or hiding a node per line	inferred	none	ui/messagemembers#scroll-frame-layout	ui::glue_geom_788750_acc_and_sum, ui::glue_geom_788750_bounds_ratios
 0x788ac0	41			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
 0x788af0	138			ui	orchestration		Shows a line in a node, re-arming it unless the frame is at the bottom and not forced	verified	one	ui/messageframe#scrolling-brings-lines-back	
 0x788b80	128			ui	orchestration		Restores every shown line to full alpha and restarts its times	verified	one	ui/messageframe#scrolling-brings-lines-back	

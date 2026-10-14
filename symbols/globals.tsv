@@ -430,6 +430,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803058	double	s_exp2Bias		fastmath	Holds 1023.0, added to the exponent before the integer split	verified	one	fastmath#software-exp2
 0x803068	const float	s_minusHalf		unassigned	Holds −0.5	inferred	none	lighting/shadows#projected-decals
 0x80306c	float	s_four		objectlayer	Holds 4.0, the multiple of the melee reach an attack start allows	verified	one	objectlayer/playercombat#the-melee-attack
+0x803078	const double	s_halfDouble		ui	Holds the double 0.5	verified	one	ui/messagemembers#adding-a-message
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
 0x803090	double	s_twoPiFloatAsDouble		unassigned	Holds the float 2 pi widened to a double, the modulus of the angle wrap	verified	one	fastmath#angle-wrap
@@ -1089,9 +1090,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
 0x81cc30	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
-0x81cca0	void *[23]			unassigned	Holds 23 function addresses its object file's code stores; not read here	inferred	none	
+0x81cc34	void *[1]	s_messageFrameLayoutSlot		ui	Holds the one slot of the table a message frame keeps at +0x314	verified	one	ui/messagemembers#message-frame-teardown
+0x81cc38	void *[11]	s_messageFrameLayoutVtable		ui	Holds the vtable of a message frame's layout part, stored at +0x24	verified	one	ui/messagemembers#message-frame-teardown
+0x81cc68	void *[37]	CSimpleMessageFrame::vftable		ui	Holds the 37 virtual function slots of CSimpleMessageFrame, which its constructor stores	verified	one	ui/messagemembers#message-frame-teardown
+0x81ccfc	void *[2]	s_messageFrameLineVtable		ui	Holds the vtable of a message frame's line, slot 1 being its deleting destructor	verified	one	ui/messagemembers#making-a-line
+0x81cd10	void *[11]	s_simpleScrollFrameLayoutVtable		ui	Holds the vtable of a scroll frame's layout part, stored at +0x24	verified	one	ui/scrollframe#teardown
+0x81cd40	void *[14]	s_scrollFrameVtableHead		ui	Holds the first 14 virtual slots of the vtable a scroll frame stores at +0x0, slot 0 being its destructor	verified	one	ui/scrollframe#teardown
 0x81cd78	const char[4]	s_textQx		unassigned	Holds the string "@qx"	inferred	none	
-0x81ce50	void *[25]			unassigned	Holds 25 function addresses its object file's code stores; not read here	inferred	none	
+0x81cde4	void *[1]	s_scrollFrameSubSlot		ui	Holds the one slot, 0x788020, of the table a scroll message frame keeps at +0x338	verified	one	ui/messagemembers#scroll-frame-teardown
+0x81cde8	void *[11]	s_scrollFrameLayoutVtable		ui	Holds the vtable of a scroll message frame's layout part, stored at +0x24	verified	one	ui/messagemembers#scroll-frame-teardown
+0x81ce18	void *[39]	CSimpleMessageScrollFrame::vftable		ui	Holds the virtual function slots of CSimpleMessageScrollFrame, which its constructor stores	verified	one	ui/messagemembers#scroll-frame-teardown
 0x81cec4	void *[11]	s_messageLineLayoutVtable		ui	Holds the layout vtable of a message frame's line object, which shares the font string's size slots	verified	one	ui/regions#the-layout-vtable
 0x81d560	const float	s_regionMethodsInfinityConst		ui	Holds +inf, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d564	const float	s_regionMethodsPiConst		ui	Holds pi, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
@@ -1468,6 +1476,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x845c48	char[33]	s_textUsageGetBattlefieldInfoIndex		ui	Holds the string "Usage: GetBattlefieldInfo(index)"	inferred	none	
 0x845eac	float	s_pendingMailTime		ui	Holds the seconds until the next mail is delivered, -1.0 unknown and 0 for mail waiting	verified	one	ui/mail#pending-mail
 0x845eb0	void *[60]	s_mailFunctions		ui	Holds the 30 name and function pairs of the mail Lua functions	verified	one	ui/mail#mail-lua-functions
+0x846544	char[24]	s_typeCSimpleFontString		ui	Holds the RTTI name of CSimpleFontString, the tag a line takes its FontString block under	verified	one	ui/messagemembers#making-a-line
 0x846648	void *[38]	s_spellBookFunctions		ui	Holds the 19 name and function pairs of the spell book Lua functions, GetNumSpellTabs to CastSpellByName	verified	one	ui/scriptapi#function-tables
 0x8468b0	char[8]	s_textSSAt8468b0		unassigned	Holds the string "%s (%s)"	inferred	none	
 0x8468f0	char[29]	s_textInterfaceIconsAbilityKick		ui	Holds the string "Interface\Icons\Ability_Kick"	inferred	none	
@@ -2180,8 +2189,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87a2cc	char[58]	s_textSSetHighlightTextureCouldnTFindThisIn		ui	Holds the string "%s:SetHighlightTexture(): Couldn't find 'this' in texture"	inferred	none	
 0x87a454	char[54]	s_pathCSimpleFontCpp		ui	Holds the source path of CSimpleFont.cpp, passed to the allocator as the file	verified	one	ui/containers#font-records
 0x87a548	char[17]	s_typeSimpleFont		ui	Holds the RTTI name of the font record, an allocation tag	verified	one	ui/containers#font-table
+0x87a5dc	char[18]	s_typeMessageData		ui	Holds the RTTI name of a queued message, an allocation tag	verified	one	ui/messagemembers#message-frame-teardown
+0x87a5f8	char[30]	s_typeCSimpleMessageFrameLine		ui	Holds the RTTI name of a message frame line, an allocation tag	verified	one	ui/messagemembers#message-frame-teardown
 0x87a618	char[11]	s_textInsertMode		ui	Holds the string "insertMode"	inferred	none	
+0x87a64c	char[60]	s_pathCSimpleMessageFrameH		ui	Holds the source path of CSimpleMessageFrame.h, passed to the allocator as the file	verified	one	ui/messagemembers#making-a-line
 0x87a6c0	char[12]	s_scrollChildElement		ui	Holds ScrollChild, the XML element name	verified	one	ui/xmltypes#scroll-child
+0x87a7d0	char[43]	s_typeMessageScrollDisplayNode		ui	Holds the RTTI name of a scroll frame display node, an allocation tag	verified	one	ui/messagemembers#scroll-frame-teardown
 0x87a838	char[11]	s_textHSHSH		ui	Holds the string "|H%s|h%s|h"	inferred	none	
 0x87a88c	char[18]	s_textFontStringHeader3		ui	Holds the string "FontStringHeader3"	inferred	none	
 0x87a8a0	char[18]	s_textFontStringHeader2		ui	Holds the string "FontStringHeader2"	inferred	none	

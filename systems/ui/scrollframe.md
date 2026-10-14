@@ -85,6 +85,17 @@ getter. `0x786e9c` loads the frame's own scale `+0x7c`; `0x787100` hands `+0x324
 `0x767c70` unscaled (`0x787136`), and the point's coordinate multiplies its offset by the same
 field of the child, its layout part's `+0x58` (`0x7671bf`, `0x7a300a`).
 
+## Teardown
+
+The scroll frame's destructor body `0x786b80` stores its vtables back (`0x81cd40`, `0x81cd10` at `+0x24`), releases the script slots `+0x32c`, `+0x334` and `+0x33c` (`0x702670`) and ends in the frame destructor (`0x7693b0`).
+
+Addresses: `0x786b80`, `0x786b8a`, `0x786b97`, `0x786ba5`, `0x786bbb`, `0x702670`, `0x7693b0`
+Confidence: verified
+Proof: one
+Test: none
+
+The three slots are released in the order `+0x32c`, `+0x334`, `+0x33c` (`0x786b83`, `0x786b9c`, `0x786baa`).
+
 ## Lua methods
 
 `ScrollFrame` has 9 methods at `0x87b3c0`, registered by `0x791bc0`, and then asks the `Frame`
