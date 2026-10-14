@@ -97,9 +97,8 @@ those of a layer list. `0x76c2e0` stores `+0xf8` and switches layer 4 on or off 
 ## Child and region lists
 
 A frame keeps its child frames and its regions in two lists of the same shape, headers at `+0x2fc` and `+0x1b4`,
-and links each new member at the head, so a walk from the tail, following previous links, visits them in creation
-order (the convention of `draworder`: the head is the terminator's next pointer, header+4, and the tail is its
-previous pointer, header+8). A list node is 12 bytes: the next link, the previous link and the object. A link's low bit marks the end of the list, so an empty list holds a tagged
+and links each new member at the head, so a walk from the tail, by previous links, visits them in creation
+order (head and tail as in `draworder`). A list node is 12 bytes: the next link, the previous link and the object. A link's low bit marks the end of the list, so an empty list holds a tagged
 pointer to its own header, never 0. Attaching a frame to the parent it already has changes nothing and does not
 move it to the end.
 

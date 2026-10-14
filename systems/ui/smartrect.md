@@ -22,7 +22,7 @@ claimed into. Claiming appends a rectangle to the list; resetting sets the count
 array. The counts are zeroed at start-up (`0x5094e0`, called from `0x40166b`) and again by the world scene
 render: list 0 only in a frame whose `[render+0x3f0]` bit 0 is set (`0x48363c`), list 1 every frame.
 
-Addresses: `0xbe0b8c`, `0xbe0b90`, `0xbe0b94`, `0x508f70`, `0x509455`, `0x5094ad`, `0x481d7d`, `0x509660`, `0x509671`, `0x50967e`, `0x50a160`, `0x509500`, `0x509502`, `0x509512`, `0x5094e0`, `0x40166b`, `0x483640`, `0x483774`, `0x509228`, `0x509450`
+Addresses: `0xbe0b8c`, `0xbe0b90`, `0xbe0b94`, `0x508f70`, `0x509660`, `0x509671`, `0x50967e`, `0x50a160`, `0x509500`, `0x509502`, `0x509512`, `0x5094e0`, `0x40166b`, `0x483640`, `0x483774`, `0x509228`
 Confidence: verified
 Proof: one
 Test: none
@@ -31,15 +31,25 @@ Test: none
 array with `0x50a160` to the new count rounded up to a multiple of the step (16 from the claim that
 needs 16, before that the largest power of two not above the new count), then copies the rectangle in at `count` and
 increments it. `0x509500` stores 0 in the count for an id of 0 to 2 (`0x509502` to `0x509512`).
-`0x5094e0` stores 0 in the count of lists 0 and 1 (its base `0xbe0b90` is the first count) and its one call is at start-up (`0x40166b`). The per-frame resets are
+`0x5094e0` stores 0 in the count of lists 0 and 1 (its base `0xbe0b90` is the first count), and its one call is at start-up (`0x40166b`). The per-frame resets are
 `0x483640` (list 0) and `0x483774` (list 1) in the scene render. A census of the base `0xbe0b8c` finds
 three uses: the overlap test (`0x509226`), the reset (`0x50950c`) and the claim (`0x509667`). The
-list bytes are also reached through `0xbe0b90` (the count, `0x5094e0`) and `0xbe0b94` (the array pointer: `0x509450`
-at `0x5094ad`, and the initializer `0x508f70` that starts at `0xbe0b94` and zeroes the capacity, count and array of
-both lists). `0x509450`, called once from `0x481d7d` inside the world frame code `0x481d30`, frees the
-worklist `0xbe0bf8` (the nodes from the tail `[0xbe0bfc]`, `0x509455` to `0x509479`), the node pool `0xbe0c38`
-(`0x509480` to `0x5094ab`) and the arrays of lists 0 and 1, then zeroes the capacity, count and array of each
-(`0x5094ad` to `0x5094d6`); list 2 has no array to free.
+fields are also reached through `0xbe0b90` (`0x5094e0`) and `0xbe0b94`, the array pointer, in `0x509450` (`0x5094ad`) and the
+initializer `0x508f70`, which zeroes the capacity, count and array of both lists.
+
+## Freeing the lists
+
+`0x509450` frees what the claims and the search allocate: the worklist, the node pool and the arrays of lists 0 and 1. It is called once, from
+`0x481d7d` inside the world frame code `0x481d30`.
+
+Addresses: `0x509450`, `0x509455`, `0x509480`, `0x5094ad`, `0x5094d6`, `0x481d7d`, `0xbe0bfc`, `0xbe0c38`, `0xbe0b94`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x509450` takes the worklist nodes `0xbe0bf8` from the tail `[0xbe0bfc]` and frees each (`0x509455` to `0x509479`), then
+the nodes of the pool `0xbe0c38` from its tail (`0x509480` to `0x5094ab`), then walks the two lists from `0xbe0b94`, freeing the array and storing 0 in the
+capacity, count and array of each (`0x5094ad` to `0x5094d6`). List 2 has no array to free.
 
 ## The placement search
 
@@ -132,16 +142,29 @@ Test: none
 
 `0x509ec0(id, plate, root, point, flag)` reads the plate's width and height through layout slots 7 and
 8 (`0x509ed0`, `0x509eda`), builds `top = point.y`, `left = point.x − halfW`, `bottom = point.y − height`,
-`right = point.x + halfW`, normalises it with `0x509e20`, solves with `0x509720` and clamps. `0x509e20`
-moves a rectangle inside `[0, K1] × [0, K2]` keeping its size, in the order top, bottom, left,
-right, each clamp after the one before. It lands wholly inside only when the rectangle fits the screen:
-if it is taller than `K2` the bottom clamp, applied last on that axis, wins (bottom 0, top `h`), and if it is
-wider than `K1` the right clamp wins. A NaN compares as no overshoot and clamps nothing. The second normalisation (`0x50a010`) changes only the claimed copy, and the anchor uses the unnormalised clamped
+`right = point.x + halfW`, normalises it with `0x509e20`, solves with `0x509720` and clamps. The second normalisation (`0x50a010`) changes only the claimed copy, and the anchor uses the unnormalised clamped
 values (`0x50a026`), so a plate pinned to the bottom claims a rectangle up to `halfH` above where it
 draws. `0x50a021` clears the points and `0x50a044` calls `0x767c70(1 or 4, root, 6, x, y, 1)`, TOP for
 a zero flag and CENTER for a nonzero one. `0x509720` returns the changed flag, the centre x
 `(left + right)/2` and the top y of the solved rectangle. The caller `0x608ce0` calls the seat only
 for a plate that passed its on-screen test.
+
+## Normalising a rectangle
+
+`0x509e20` moves a rectangle onto the screen `[0, K1] × [0, K2]` keeping its size, with the four clamps in the order top, bottom, left, right. The rectangle
+lands wholly inside only when it fits the screen. A rectangle taller than `K2` ends at the bottom clamp (bottom 0, top its height), and a wider
+one at the right clamp (right `K1`). A NaN edge clamps nothing.
+
+Addresses: `0x509e20`, `0x509e51`, `0x509e55`, `0x509e5a`, `0x509e6b`, `0x509e73`, `0x509e83`, `0x509e8b`, `0x509e9c`, `0x509ea1`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x509e20` takes `h = top − bottom` and `w = right − left` (`0x509e29` to `0x509e3c`) and `K1`, `K2` from `0x41ae60` and `0x41ae70` with 1.0. The top clamp
+compares `K2` with the top and, when the top is above or equal to it (`fcom`, `test ah,0x41; jp`, which falls through only when exactly one of C0 and C3 is set), stores top `K2` and bottom `K2 − h` (`0x509e51` to `0x509e5f`). The bottom clamp, a compare with 0.0 and `test ah,5`, acts only on a
+negative bottom and stores bottom 0 and top `h` (`0x509e6b` to `0x509e7e`), so after a rectangle taller than the screen it undoes the top clamp. The left clamp
+stores left 0 and right `w` (`0x509e83` to `0x509e96`); the right clamp acts when the right is above `K1`, stores right `K1` and left `K1 − w`
+(`0x509e9c` to `0x509eb2`) and wins for a wider rectangle. Each compare with a NaN takes its skip branch.
 
 ## The combat text seat
 

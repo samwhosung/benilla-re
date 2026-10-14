@@ -81,10 +81,9 @@ which `0x770200` takes as its second argument (`0x770127`, `0x77012d`) with the 
 
 ## SetTexture
 
-`SetTexture(file)` loads the image with the wrap flag off, the filter value at `0x878cf0` (a `.data` default of 1; 39 absolute reads of it
-find no absolute writer, but writes through a register were not censused) and shader index 0, and answers the number 1,
+`SetTexture(file)` loads the image with the wrap flag off, the filter value at `0x878cf0` and shader index 0, and answers the number 1,
 or nil when the load fails. `SetTexture(r, g, b[, a])` with a number sets the solid fill instead. `SetTexture(nil)`, a value that is not a string or
-a number, and the empty string `""` all clear the image, keep the shader slot and answer 1 (`0x770235`, `0x7702cb`, `0x7702e9`). Setting the file the texture already shows is a no-op that keeps everything else. A different
+a number, and the empty string `""` all clear the image, keep the shader slot and answer 1. Setting the file the texture already shows is a no-op that keeps everything else. A different
 file also replaces the pixel-shader slot with the shader of index 0, which is none, so it ends desaturation.
 
 Addresses: `0x79bb40`, `0x79bbd5`, `0x79bd63`, `0x79bd82`, `0x79bd89`, `0x79bd93`, `0x79bda5`, `0x79bdc8`, `0x79bdd5`, `0x79bddc`, `0x770200`, `0x77020e`, `0x77021e`, `0x770225`, `0x77022b`, `0x770281`, `0x7702b8`, `0x7702c0`, `0x7702cb`, `0x7702dc`, `0x7702e7`, `0x44ac70`, `0x449d90`, `0x770620`
@@ -94,18 +93,17 @@ Test: none
 
 `0x79bb40` tests argument 2 with `0x6f34d0` (`0x79bbd5`): a number goes to `0x770360` (`0x79bd63`); a string calls `0x770200` with name, wrap 0,
 filter and shader 0 (`0x79bd89` to `0x79bda5`); anything else calls it with a null name (`0x79bdc8`, `0x79bdd5`). A result of 0
-returns nil (`0x79bddc`). `0x770200(name, wrap, filter, shader)` asks `0x44ac70` whether the held image has this file
+returns nil (`0x79bddc`). The filter at `0x878cf0` is a `.data` default of 1: 39 absolute reads find no absolute writer, but writes through a register were not censused. `0x770200(name, wrap, filter, shader)` asks `0x44ac70` whether the held image has this file
 name and returns 1 if so (`0x77021e` to `0x770225`, `0x7702e7`), loads with `0x449d90` (`0x770281`), and stores the shader from `0x770620` at
 `+0x128` (`0x7702b8`, `0x7702c0`) before the handle (`0x7702dc`). A null or empty name skips the load and the shader store: it releases the old handle, stores a null one and answers 1 (`0x770218`, `0x77022f`, `0x770235` to `0x7702cb`).
 
 ## Setting a vertex colour
 
 `SetVertexColor(r, g, b[, a])` clamps each value to 0 to 1, takes a missing alpha as the current alpha, packs it as
-`×255 + 0.5` truncated, and stores it as the only entry of both arrays. With no vertex colour yet, a white call whose alpha byte is `0xfe` or `0xff` stores nothing, and a call that repeats the one entry does nothing.
-`SetAlpha(a)` reads the current colour as `GetVertexColor` does and replaces its alpha with `a × 255` truncated, with no clamp. It is
-`SetVertexColor` with the current colour only when the texture holds exactly one entry. With a gradient (count 4) the read answers white,
-`0x77f750` sees a count other than 1 and shrinks both arrays to one entry, so `SetAlpha` replaces the gradient with flat white of the new alpha.
-`SetVertexColor` without an alpha does the same: its missing alpha is read from the white the gradient answers.
+`×255 + 0.5` truncated, and stores it as the only entry of both arrays. With no vertex colour yet, a white call of alpha `0xfe` or `0xff` stores nothing, and a call that repeats the one entry does nothing.
+`SetAlpha(a)` replaces the alpha of the colour `GetVertexColor` answers with `a × 255` truncated, with no clamp. That equals
+`SetVertexColor` with the current colour only for exactly one entry. With a gradient the read answers white and the
+store leaves one entry, so `SetAlpha`, and `SetVertexColor` without an alpha, replace it with flat white.
 
 Addresses: `0x79abd0`, `0x79ac81`, `0x79ad43`, `0x79ae17`, `0x77f750`, `0x77f766`, `0x77f77c`, `0x77f782`, `0x77f7b3`, `0x77f7bc`, `0x77f88a`, `0x77f8a7`, `0x79b580`, `0x79b627`, `0x79b638`, `0x79b649`, `0x79b64c`, `0x40a2b0`, `0x806498`, `0x7ffe58`, `0x7ffa24`
 Confidence: verified
@@ -161,10 +159,10 @@ The submit draws each record in order. It binds the image only when the handle c
 the record, binds the record's pixel shader, and draws four vertices with the colour pointer and stride. A record with
 a vertex colour and a blend mode below 2 is drawn with blend mode 2, ordinary alpha blending, so any vertex colour
 turns blending on. The submit never writes the combine preset of the first stage, so it draws with the device's, which is
-1 unless a caller leaves another value: texel and vertex colour multiply, colour and alpha alike. The result per channel is `texel × vertex colour`, alpha
+1 (see the combine preset): texel and vertex colour multiply, colour and alpha alike. The result per channel is `texel × vertex colour`, alpha
 included, when no pixel shader is set.
 
-Addresses: `0x589f40`, `0x589f50`, `0x589e60`, `0x593950`, `0x593a50`, `0x5c33ba`, `0x6b63a9`, `0x6d7fa8`, `0x4eae56`, `0x76fb00`, `0x76fb20`, `0x76fb2c`, `0x76fb75`, `0x76fb85`, `0x76fb93`, `0x76fb98`, `0x76fb9b`, `0x76fba2`, `0x76fbaf`, `0x76fbdb`, `0x76fc03`, `0x593bf0`, `0x593d93`, `0x85c250`
+Addresses: `0x76fb00`, `0x76fb20`, `0x76fb2c`, `0x76fb75`, `0x76fb85`, `0x76fb93`, `0x76fb98`, `0x76fb9b`, `0x76fba2`, `0x76fbaf`, `0x76fbdb`, `0x76fc03`, `0x593bf0`, `0x593d93`, `0x85c250`
 Confidence: verified
 Proof: one
 Test: none
@@ -172,10 +170,26 @@ Test: none
 `0x76fb00` opens a render-state bracket (`0x76fb20`), sets states 0xe, 0xf, 0x10 and 0x12 to 0 (`0x76fb2c` to `0x76fb50`), and per record binds
 the image as state 0x17 (`0x76fb75`), tests the colour pointer (`0x76fb85`), compares the blend mode with 2 (`0x76fb93`), sets state 7 to
 2 for a colour with a mode below 2 and to the record's mode otherwise unless it is 0xb (`0x76fb98`, `0x76fb9b`, `0x76fba2`), binds state 0x3f
-(`0x76fbaf`), and draws (`0x76fbdb`). It sets no state from 0x1f to 0x26. The census of those states is in the next paragraph. The device reset `0x593bf0` stores 1 in all eight (`0x593d93`);
+(`0x76fbaf`), and draws (`0x76fbdb`). It sets no state from 0x1f to 0x26. The census of those states is under the combine preset. The device reset `0x593bf0` stores 1 in all eight (`0x593d93`);
 preset 1 modulates colour and alpha (the preset table `0x85c250`, `watershade`). The bracket ends at `0x76fc03`.
 
-`0x589f40` and `0x589f50` push and pop the render state stack (`GxRsPush`, `GxRsPop`, `0x593950`, `0x593a50`), so a state the submit or a caller changes inside a bracket is restored at its pop. A census of `mov ecx, 0x1f` to `0x26` within five instructions of `call 0x589e60`, the integer state setter, finds 17 writes, all of state `0x1f` or `0x20` and none of `0x21` to `0x26` (the control: the pattern finds the minimap's `0x4eae56`, `0x4eae83`). Eleven store 1, the reset value: `0x4eae56`, `0x4eae83` (the minimap draw), `0x595806`, `0x6b2b08`, `0x6b2b8f`, `0x6b2bfc`, `0x6bf02b`, `0x6bf4bc`, `0x6bf5e2`, `0x7e5a75` and `0x7e5dca`. The six that store another value each sit in a function with its own push and pop: `0x5c33ba` stores 0 (the font frame, `0x5c3372` to `0x5c3402`), `0x6850b9`, `0x685463` and `0x6d74fc` store 3 (ocean, river, decal), `0x6b63a9` stores 3 (group liquid) and `0x6d7fa8` stores 5 (blob shadow). So every write that leaves a value other than 1 is undone before the UI draws. Writes whose state id is not a literal in `ecx` (a loop over stages, as in the device reset) were not censused.
+## The combine preset
+
+The submit draws with whatever combine preset the device holds for the first stage. The device reset stores 1, and the census of writes of the
+eight states `0x1f` to `0x26` finds 17, all of state `0x1f` or `0x20`. Eleven store 1; the six that store another value, 0, 3 or 5, each sit inside
+their own render state push and pop, so the UI always draws with 1.
+
+Addresses: `0x589f40`, `0x589f50`, `0x589e60`, `0x593950`, `0x593a50`, `0x5c33ba`, `0x6b63a9`, `0x6d7fa8`, `0x4eae56`, `0x4eae83`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x589f40` and `0x589f50` push and pop the render state stack (`GxRsPush`, `GxRsPop`, `0x593950`, `0x593a50`), so a state changed inside a bracket is restored at
+its pop. The census is `mov ecx, 0x1f` to `0x26` within five instructions of `call 0x589e60`, the integer state setter; the control is the minimap's
+`0x4eae56` and `0x4eae83`. No write has a state id from `0x21` to `0x26`. Eleven store 1, the reset value: `0x4eae56`, `0x4eae83`, `0x595806`, `0x6b2b08`, `0x6b2b8f`,
+`0x6b2bfc`, `0x6bf02b`, `0x6bf4bc`, `0x6bf5e2`, `0x7e5a75` and `0x7e5dca`. The other six: `0x5c33ba` stores 0 (the font frame, push `0x5c3372`, pop `0x5c3402`),
+`0x6850b9`, `0x685463`, `0x6b63a9` and `0x6d74fc` store 3 (ocean, river, group liquid, decal) and `0x6d7fa8` stores 5 (blob shadow). Writes whose state id is not a
+literal in `ecx`, such as a loop over stages, were not censused.
 
 ## Draw layer and blend mode
 
@@ -251,9 +265,9 @@ with `+0x124` set, calls `0x768320`, `0x770570` and `0x7705b0` on the resolved r
 cannot run the shader. A missing argument is true. Turning it off clears the slot only when it holds that shader.
 `IsDesaturated()` answers 1 only when the slot holds the usable shader, else nil, so a device without the shader cannot
 tell "off" from "unsupported". A desaturated quad takes its colour from the shader and not from the fixed combine; the
-weights are in the shader file `Shaders\Pixel\Desaturate.bls`, not in the executable. The Rec.709-style weights the exe does hold, 0.2125, 0.7154 and 0.0721 (`0x3e59999a`, `0x3f372474`, `0x3d93a92a`; `0x818880`, `0x818878`, `0x81887c`), are read only by D3DX's colour saturation code: `0x74d7a1`, `0x74d7aa` and `0x74d7b5` in the x87 routine at `0x74d794`, and the 3DNow copy at `0x818a28` by `0x75e12b` and `0x75e133`. The submit `0x76fb00` makes no call that sets a shader constant (its calls are `0x589f40`, `0x589e60`, `0x589e80`, `0x58a2a0`, `0x58a2e0`, `0x58a340`, `0x589f50`, `0x5c1ef0` and the callbacks), so a desaturated quad's weights come from the shader file alone.
+weights are in the shader file `Shaders\Pixel\Desaturate.bls`, not in the executable (see the saturation weights).
 
-Addresses: `0x74d794`, `0x74d7a1`, `0x75e12b`, `0x818878`, `0x818a28`, `0x79c1e0`, `0x79c26a`, `0x79c275`, `0x79c27e`, `0x79c28a`, `0x79c296`, `0x79c2a4`, `0x79c2b2`, `0x79c2c0`, `0x79c34a`, `0x79c354`, `0x770620`, `0x770650`, `0x76fda0`, `0x76fdb9`, `0x58b2b0`, `0x58b360`, `0x6f1c10`
+Addresses: `0x79c1e0`, `0x79c26a`, `0x79c275`, `0x79c27e`, `0x79c28a`, `0x79c296`, `0x79c2a4`, `0x79c2b2`, `0x79c2c0`, `0x79c34a`, `0x79c354`, `0x770620`, `0x770650`, `0x76fda0`, `0x76fdb9`, `0x58b2b0`, `0x58b360`, `0x6f1c10`
 Confidence: verified
 Proof: one
 Test: none
@@ -264,3 +278,17 @@ is set, else 0 (`0x58b360`). `0x76fda0` fills the table at startup from a name l
 (`0x79c2b2`); reads the flag with `0x6f1c10`, default true (`0x79c27e`); stores the shader or, for false and the same shader
 already held, 0 through `0x770650` (`0x79c28a` to `0x79c296`); and pushes the number 1.0 (`0x79c2a4`). `0x79c2c0` compares `+0x128` with the
 usable shader (`0x79c354`). The constructor stores 0 at `+0x128`.
+
+## The saturation weights in the exe
+
+The executable holds Rec.709-style luminance weights, 0.2125, 0.7154 and 0.0721, but only D3DX's colour saturation code reads them. The texture submit sets no
+shader constant, so a desaturated quad takes its weights from the shader file.
+
+Addresses: `0x74d794`, `0x74d7a1`, `0x75e12b`, `0x818878`, `0x818a28`, `0x76fb00`
+Confidence: verified
+Proof: one
+Test: none
+
+The floats are `0x3e59999a`, `0x3f372474` and `0x3d93a92a`. The x87 routine at `0x74d794` multiplies red by the dword at `0x818880` (`0x74d7a1`), blue by `0x81887c`
+(`0x74d7aa`) and green by `0x818878` (`0x74d7b5`), and the 3DNow copy reads the pairs at `0x818a28` (`0x75e12b`) and `0x818a30` (`0x75e133`); a search of the listing finds no other read. The
+submit `0x76fb00` calls `0x589f40`, `0x589e60`, `0x589e80`, `0x58a2a0`, `0x58a2e0`, `0x58a340`, `0x589f50`, `0x5c1ef0` and the callbacks, and none sets a shader constant.

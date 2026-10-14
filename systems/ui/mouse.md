@@ -104,7 +104,7 @@ sends a release to a pressed frame, through `0x764dc0`.
 
 A press or release that has a target is consumed: the top's handler overwrites what the frame's
 button slot returned with a constant, so no handler, mask or state can decline it and no frame beneath is
-offered the event. The handlers pass the event on only when there is no target, so only the handlers registered after the top's see a press that has none; a frame that is the hovered target, the world frame included, is reached through the target path, not by being passed on. A mouse-enabled frame with no script, a button whose click mask
+offered the event. The handlers pass the event on only when there is no target, so only handlers after the top see a press with none; the world frame is itself a hovered target. A mouse-enabled frame with no script, a button whose click mask
 misses the pressed button and a disabled button all swallow the click. The base pair answers 0 and reads no
 ancestor; a button answers 1 for a press it was in a state to notice.
 

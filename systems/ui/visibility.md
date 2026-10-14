@@ -143,20 +143,15 @@ base then builds the `ScrollChild` through `0x6ee280` (`0x786bf4`).
 `SetParent` takes nil, a frame name or a frame table. Nil leaves the frame with no parent, a string or
 number names a global frame (no `$parent` expansion), a table must hold a frame, and a missing
 argument raises `Couldn't find region named`. A parent that is the frame or one of its descendants
-raises `Would create a loop parenting to %s`. The change is slot 0x14, which no class overrides, so it
-is `0x76ab10`: the same parent does nothing; otherwise a visible frame is hidden before (`0x76ab3d`) and shown after only if the new parent is nil or
-itself visible (`[parent+0xd4]`, `0x76abe5` to `0x76abf7`). The frame takes the new parent's stratum, level plus one
-and scale, or 3, 0 and 1.0 for nil. `0x76ab10` also calls `0x76a400` on the frame, passing it the parent's
-`0x2000` bit (`0x76ab92` to `0x76aba0`), or 0 for nil (`0x76abc7`), and that call hands the bit to the whole subtree
-(`draworder`).
-The frame's existing children keep their levels.
+raises `Would create a loop parenting to %s`. The same parent changes nothing; otherwise a visible frame is hidden before and shown after only if the new parent is nil or
+visible. It takes the new parent's stratum, level plus one, scale and `0x2000` bit, which `0x76a400` hands to the whole subtree, or 3, 0, 1.0 and 0 for nil. Its children keep their levels.
 
-Addresses: `0x7a1550`, `0x7a15e5`, `0x7a15ee`, `0x7a1606`, `0x7a1637`, `0x7a167c`, `0x7a177f`, `0x7a1781`, `0x7a1785`, `0x7a1794`, `0x7a17dc`, `0x76ab10`, `0x76ab20`, `0x76ab65`, `0x76aba3`, `0x76a470`, `0x76a4f0`, `0x76a554`, `0x76c760`, `0x774560`
+Addresses: `0x7a1550`, `0x7a15e5`, `0x7a15ee`, `0x7a1606`, `0x7a1637`, `0x7a167c`, `0x7a177f`, `0x7a1781`, `0x7a1785`, `0x7a1794`, `0x7a17dc`, `0x76ab10`, `0x76ab20`, `0x76ab3d`, `0x76ab65`, `0x76ab92`, `0x76aba0`, `0x76abc7`, `0x76abe5`, `0x76abf7`, `0x76a400`, `0x76aba3`, `0x76a470`, `0x76a4f0`, `0x76a554`, `0x76c760`, `0x774560`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x7a1550` tests the type of argument 2: 0 calls `[vtable+0x14](0)` (`0x7a15ee`); string or number calls
+The change is slot 0x14, which no class overrides, so it is `0x76ab10`. It hides the frame at `0x76ab3d` and shows it again only if the new parent is nil or `[parent+0xd4]` is set (`0x76abe5` to `0x76abf7`). It calls `0x76a400` with the parent's `0x2000` bit (`0x76ab92` to `0x76aba0`), or 0 for nil (`0x76abc7`), and `-1` (`draworder`). `0x7a1550` tests the type of argument 2: 0 calls `[vtable+0x14](0)` (`0x7a15ee`); string or number calls
 `0x76c760` with the Frame id `[0xcf0c10]` (`0x7a1637`); a table reads element 0 with `lua_rawgeti`
 and checks the id (`0x7a16ea`). The loop guard walks the candidate's `+0x9c` chain against the
 frame (`0x7a1781` to `0x7a178d`) and raises (`0x7a17dc`) rather than returning. A census of the dword `0x76ab10` in the

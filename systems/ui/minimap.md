@@ -168,21 +168,23 @@ ninth is anchored the same way with offsets 0.001 and 0.001 (`0x3a83126f`, `0x4e
 
 ## Two small helpers
 
-`0x4ef370` is a `__thiscall` that stores its four float arguments in order at `[ecx]`, `[ecx+4]`, `[ecx+8]` and `[ecx+0xc]` as plain dwords and returns `ecx`
-(`ret 0x10`, `0x4ef37b` to `0x4ef389`). It has two callers: `0x4eb962`, which passes four differences of a rectangle and a point (`0x4eb93f` to `0x4eb95c`),
-and `0x76b119`.
-
-`0x4ead90(out, i, a, b, c, d)` (`ret 0x18`, `ecx` unused) takes the pair of floats `t0 = [0xbc7810 + 24·i]` and `t1 = [0xbc7814 + 24·i]` and writes four floats at `out`:
-`out[0] = 2·(a − t1)`, `out[1] = 2·(b − t0)`, `out[2] = 2·(c − t1)` and `out[3] = 2·(d − t0)`. The rounding is uneven. `a − t1` is stored to a float
-(`0x4eadc5`) before it is doubled, as is `d − t0` (`0x4eaddd`), so outputs 0 and 3 are doubled from a value rounded to float. `b − t0` and `c − t1` stay
-in x87 registers at the control word's 53-bit precision and are doubled there, then rounded once to float on the store (`0x4eadeb`, `0x4eadf0`).
-The two orders differ only where float rounding is uneven in scale, below the float normal range, because doubling is exact otherwise. Its one caller is `0x4eb9fe` in `0x4eb910`, which copies a four-float rectangle from `[ebp+8]` as the last four arguments.
-What fills the 24-byte records at `0xbc7810`, and the rest of `0x4eb910` and `0x4eaf00`, were not read.
+`0x4ef370` stores its four float arguments in order in a 16-byte record and returns it. `0x4ead90(out, i, a, b, c, d)` takes the pair of floats
+`t0` and `t1` of record `i` of a table of 24-byte records and writes `out[0] = 2·(a − t1)`, `out[1] = 2·(b − t0)`, `out[2] = 2·(c − t1)` and
+`out[3] = 2·(d − t0)`. The rounding is uneven: outputs 0 and 3 are doubled from a difference rounded to float, outputs 1 and 2 from one held in a register.
 
 Addresses: `0x4ef370`, `0x4ef37b`, `0x4ef389`, `0x4eb962`, `0x76b119`, `0x4ead90`, `0x4eadc5`, `0x4eaddd`, `0x4eadeb`, `0x4eadf0`, `0x4eb9fe`, `0xbc7810`
 Confidence: verified
 Proof: one
 Test: none
+
+`0x4ef370` is a `__thiscall` that moves its arguments to `[ecx]`, `[ecx+4]`, `[ecx+8]` and `[ecx+0xc]` as plain dwords and returns `ecx` (`ret 0x10`,
+`0x4ef37b` to `0x4ef389`). Its callers are `0x4eb962`, which passes four differences of a rectangle and a point (`0x4eb93f` to `0x4eb95c`), and `0x76b119`.
+
+`0x4ead90` (`ret 0x18`, `ecx` unused) reads `t0` at `0xbc7810 + 24·i` and `t1` at `0xbc7814 + 24·i`. The difference `a − t1` is stored to a float
+(`0x4eadc5`) before it is doubled, as is `d − t0` (`0x4eaddd`). `b − t0` and `c − t1` stay in x87 registers at the control word's 53-bit precision,
+are doubled there and rounded once to float on the store (`0x4eadeb`, `0x4eadf0`). The two orders differ only below the float normal range, since
+doubling is exact otherwise. Its one caller is `0x4eb9fe` in `0x4eb910`, which copies a four-float rectangle from `[ebp+8]` as the last four
+arguments. What fills the records, and the rest of `0x4eb910` and `0x4eaf00`, were not read.
 
 ## Lua methods
 

@@ -36,19 +36,16 @@ and then sets the valid bit (`0x764294`). `0x6f1eb0` converts an attribute with 
 The layout part of every frame and region has a vtable of eleven slots: 0 the rectangle-changed
 callback, 1 the destructor, 2 the XML load, 3 the default anchor target, 4 set scale, 5 set width, 6 set
 height, 7 get width, 8 get height, 9 a mirror test that answers 0 and 0xa the resolver of a relative
-frame's name. Slots 1 and 2 differ by class in every table: slot 1, the destructor, is a different function in each of
-the 31 eleven-slot tables, and slot 2, the XML load, is one of a few loaders that several classes share (the
-plain `0x769820`, the model `0x76cac0`, `0x7788c0`, `0x782ef0`, `0x767800`, `0x770f40`) or the class's own. Slot 0
-is the rectangle-changed callback, `0x76b580` in most tables and a class's own in the rest, and slots 7 and 8 are the
-plain frame's `0x768420` and `0x768410` or a class's own. The font string's two tables also replace slots 4, 5 and 6
-with `0x772ca0`, `0x772830` and `0x772860`.
+frame's name. Slots 1 and 2 differ by class in every table: each of the 31 eleven-slot tables has its own destructor,
+and slot 2 is a loader shared by a few classes or the class's own. Slots 0, 7 and 8 differ in some. The font string's
+two tables also replace slots 4, 5 and 6.
 
 Addresses: `0x81c400`, `0x81c46c`, `0x81c718`, `0x81c778`, `0x81c6ec`, `0x81c74c`, `0x81cec4`, `0x81c5d8`, `0x768420`, `0x768410`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `0x76d080`, `0x76d0d0`, `0x770670`, `0x772d40`, `0x76c700`, `0x76c6e0`, `0x46ff60`, `0x7671a0`, `0x767573`, `0x767579`
 Confidence: verified
 Proof: one
 Test: none
 
-The edge resolvers read the size with `mov eax,[esi]; call [eax+0x1c]` (`0x767573`, `0x767579`) and
+Slot 0 is the callback `0x76b580` in most tables, and slots 7 and 8 are the plain frame's `0x768420` and `0x768410` or a class's own. The font string's tables store `0x772ca0`, `0x772830` and `0x772860` in slots 4 to 6. Slot 2 is `0x769820` in the plain frames, `0x76cac0` in the model tables, and `0x7788c0`, `0x782ef0`, `0x767800` or `0x770f40` in others. The edge resolvers read the size with `mov eax,[esi]; call [eax+0x1c]` (`0x767573`, `0x767579`) and
 `[eax+0x20]`. Of the 34 vtables stored at `+0x24` by a constructor (a census of `mov [reg+0x24], 0x8xxxxx`),
 the width and height slots differ from the plain pair in the texture's `0x81c6ec`, the font string's
 `0x81c74c` and `0x81cec4`, and the five model tables `0x803934`, `0x808234`, `0x80837c`, `0x8084cc` and `0x81c5d8`

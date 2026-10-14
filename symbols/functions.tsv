@@ -10602,7 +10602,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eaa30	86	ProjectBlip		ui	primitive	void __thiscall (float player_a, float player_b, float radius, float entity_a, float entity_b, float width, float scale)	Writes a blip's disc position from its offset to the player over the zoom radius, with no rotation	verified	one	ui/minimapblips#the-north-up-disc	
 0x4eaa90	629	ClassifyObjectDot		ui	primitive	uint32_t __fastcall (void *list, uint32_t guid_lo, uint32_t guid_hi)	Classifies an object into a dot cell, or skips it, and appends its dot	verified	one	ui/minimapblips#object-dots	
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ead90	113			ui	primitive		Writes twice the difference of each of four floats and a table pair at 0xbc7810 + 24·i, the first and last rounded to float before doubling	verified	one	ui/minimap#two-small-helpers	
+0x4ead90	113			ui	primitive		Writes twice each of four floats minus a table pair; outputs 0 and 3 round to float before doubling	verified	one	ui/minimap#two-small-helpers	
 0x4eae10	229			ui	orchestration		Runs MinimapFrame.cpp code that calls GetTextureDeviceObject, 0x589e80, GxRsSet and 3 more; not read here	inferred	none		
 0x4eaf00	319			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eb910; not read here	inferred	none		
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
@@ -12040,7 +12040,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x509360	81	PushRectRight		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle right until it rests against the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
 0x5093c0	81	PushRectDown		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle down until it rests under the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
 0x509420	36	RegisterShowSmartRects		ui	orchestration		Registers the showsmartrects CVar, whose handle nothing reads	verified	one	ui/smartrect#per-frame-order	
-0x509450	141	SmartRectTeardown		ui	orchestration		Frees the claim worklist, the node pool and the arrays of claim lists 0 and 1, and zeroes their capacity, count and array; its one caller is 0x481d7d in the world frame code 0x481d30	verified	one	ui/smartrect#claim-lists	
+0x509450	141	SmartRectTeardown		ui	orchestration		Frees the claim worklist, the node pool and the arrays of claim lists 0 and 1; one caller, 0x481d7d	verified	one	ui/smartrect#freeing-the-lists	
 0x5094e0	29	SmartScreenRectClearAllGrids	idb	ui	primitive		Zeroes the counts of claim lists 0 and 1	verified	one	ui/smartrect#claim-lists	
 0x509500	26	ResetClaimList		ui	primitive	void __fastcall (int list)	Zeroes the count of a claim list of id 0 to 2, keeping its array	verified	one	ui/smartrect#claim-lists	
 0x509520	313	SeatCombatText		ui	primitive	void __fastcall (int list, RECT *rect)	Moves a combat text rectangle off the claimed ones, clamps it on screen and claims it	verified	one	ui/smartrect#the-combat-text-seat	
@@ -12052,7 +12052,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x509bf0	388	ClassifyScreenEdges		ui	primitive	int __fastcall (RECT *out, int mode, RECT rect)	Flags the screen edges a rectangle crosses and, in clamp mode, moves it back inside	verified	one	ui/smartrect#pushes-by-region	
 0x509d80	73	PickPushRegion		ui	primitive	int __fastcall (int flags)	Maps the four edge flags to the region 0 to 8 that picks the order of pushes	verified	one	ui/smartrect#pushes-by-region	
 0x509dd0	72	PlacementTryLimit		ui	primitive	int __fastcall (RECT *rect)	Returns how many candidates to try, the screen tiled by rectangles of this size	verified	one	ui/smartrect#the-placement-search	
-0x509e20	154	NormalizeRectOnScreen		ui	primitive	void __fastcall (RECT *rect)	Moves a rectangle wholly inside the screen keeping its size, top then bottom then left then right	verified	one	ui/smartrect#the-nameplate-seat	
+0x509e20	154	NormalizeRectOnScreen		ui	primitive	void __fastcall (RECT *rect)	Moves a rectangle onto the screen keeping its size: top, bottom, left, right clamps, the last on an axis winning	verified	one	ui/smartrect#normalising-a-rectangle	
 0x509ec0	401	SeatNameplate		ui	primitive	void __fastcall (int list, CSimpleFrame *plate, CLayoutFrame *root, float *point, int center)	Moves a nameplate's rectangle off the claimed ones, clamps and claims it, and anchors the plate there	verified	one	ui/smartrect#the-nameplate-seat	
 0x50a060	5			unassigned			Runs its object file code not read here	inferred	none		
 0x50a070	15			unassigned			Runs its object file code not read here	inferred	none		

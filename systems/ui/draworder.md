@@ -15,11 +15,10 @@ Roots: `0x7657d0`, `0x765920`, `0x76fb00`, `0x7731a0`, `0x7731d0`, `0x76b3a0`, `
 ## Level lists
 
 A list is a header of three dwords: the link offset, the terminator's next pointer (the head, header+4)
-and its previous pointer (the tail, header+8, tagged), and a member's link is two dwords at the offset: the
-next link and the previous link. A low bit of 1 on a pointer marks the terminator. Every list in these docs
-uses these names: a walk starts at the tail, the dword at header+8, and follows previous links, `[link+4]`. The insert takes a mode and a reference: mode 1
-inserts before the reference, any other after it, and a null reference means the terminator, so mode
-2 puts a member at the head and mode 1 at the tail. A frame is linked at the head of its level.
+and its previous pointer (the tail, header+8, tagged). A member's link is the next link and the previous link.
+A low bit of 1 marks the terminator. A walk starts at the tail and follows previous links, `[link+4]`. The insert takes
+a mode and a reference; a null reference means the terminator, so mode 2 puts a member at the head and mode 1 at the
+tail. A frame is linked at the head of its level. Every list in these docs uses these names.
 
 Addresses: `0x7668c0`, `0x7668d3`, `0x76691e`, `0x76691f`, `0x766921`, `0x766937`, `0x766880`, `0x7669a0`, `0x766aa0`, `0x764780`, `0x7648b3`, `0x7648c9`, `0x76a4b6`, `0x76a54c`, `0x76ae85`, `0x76ae10`, `0x76a470`, `0x76a4f0`
 Confidence: verified
@@ -98,15 +97,11 @@ one on layer 0 (`worldframe`). `qsort` is not stable, so equal handles may swap.
 
 ## Regions within a frame
 
-A frame keeps a list of regions for each draw layer, and a region is linked at the head when it is
-registered and drawn from the tail, so regions of one layer come out in the order of their last registration,
-oldest first, not the order of declaration. `0x77fcb0` registers a region (it links with `0x76a860` at
-`0x77fcf9`, only if `[region+0xc4]` is nonzero, the owning frame `[region+0x9c]` has `[frame+0xd4]` nonzero and the
-region is not registered already, `[region+0xc8]`) and `0x77fc60` unregisters it (it unlinks with `0x76a910`, `0x77fc95`).
-Hiding and showing a texture or font string (`0x76feab`, `0x76febc`; `0x770ff0`, `0x771001`) and giving it a
-new draw layer unregister and register it, so the region moves to the end of its layer, drawn last. There is no
-finer sort. A
-frame's layers are enabled by five switches, set for layers 0 to 3 by the constructor and clear for
+A frame keeps a list of regions for each draw layer. A region is linked at the head when it is registered
+and drawn from the tail, so regions of one layer come out in the order of their last registration, oldest first,
+not the order of declaration. Hiding and showing a texture or font string, or giving it a new draw layer,
+unregisters and registers it, so it moves to the end of its layer and draws last. There is no finer sort.
+A frame's layers are enabled by five switches, set for layers 0 to 3 by the constructor and clear for
 HIGHLIGHT; a region on a disabled layer is not drawn.
 
 Addresses: `0x77fc60`, `0x77fc95`, `0x77fcb0`, `0x76a910`, `0x76feab`, `0x76febc`, `0x770ff0`, `0x771001`, `0x76b3a0`, `0x76b3a6`, `0x76b3ad`, `0x76b3b6`, `0x76b3db`, `0x76b3e1`, `0x76b3e4`, `0x76a860`, `0x76a88a`, `0x76a8f3`, `0x77fcf9`, `0x769322`, `0x76932e`, `0x76933e`, `0x811a80`, `0x811a84`, `0x6f18b0`, `0x6f1900`
@@ -116,7 +111,10 @@ Test: none
 
 `0x76b3a0(batch, layer)` reads the switch at `+0x198 + 4·layer` (`0x76b3a6`), returns for zero, and walks
 the layer's list at `+0x1c0 + 12·layer` from the last link, calling region slot 0x28 (`0x76b3e1`). The constructor stores 1 at
-`+0x198` to `+0x1a4` and 0 at `+0x1a8` (`0x769322` to `0x76933e`). `0x76a860(region, layer)` takes two
+`+0x198` to `+0x1a4` and 0 at `+0x1a8` (`0x769322` to `0x76933e`). `0x77fcb0` registers a region: it links with `0x76a860` at `0x77fcf9`, only if `[region+0xc4]` is nonzero, the owning frame
+`[region+0x9c]` has `[frame+0xd4]` nonzero and the region is not registered already (`[region+0xc8]`). `0x77fc60` unregisters it
+with `0x76a910` (`0x77fc95`). The show and hide of a texture are `0x76feab` and `0x76febc`, of a font string `0x770ff0` and `0x771001`.
+`0x76a860(region, layer)` takes two
 arguments and its insert has no comparator; its only caller is `0x77fcf9`, and `0x76a910(region, layer)` is its inverse. The layer names are the pairs at
 `0x811a80`: BACKGROUND 0, BORDER 1, ARTWORK 2, OVERLAY 3, HIGHLIGHT 4.
 

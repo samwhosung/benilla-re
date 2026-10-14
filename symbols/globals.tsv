@@ -1016,6 +1016,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8120a8	const float[8]	s_shPackWeights		models	Holds the irradiance weights that pack the harmonic terms into seven constant vectors	verified	one	models/lights#harmonic-constants
 0x812330	const uint16_t			unassigned	Holds a word its object file's code reads; not read here	inferred	none	
 0x8126b4	void *[3]	s_minigameVtable		minigame	Holds the object's vtable: state read 0x728700, move check 0x728740, board push 0x728770	verified	one	minigame#the-object
+0x818878	const float[3]	s_saturationWeights		ui	Holds 0.7154, 0.0721 and 0.2125 that the x87 colour saturation routine 0x74d794 multiplies green, blue and red by	verified	one	ui/texture#the-saturation-weights-in-the-exe
+0x818a28	const float[4]	s_saturationWeights3dnow		ui	Holds 0.2125, 0.7154 and 0.0721, then 0, as the pairs the 3DNow saturation code 0x75e12b multiplies by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x81c378	const float	s_inputPriority		ui	Holds 1.0, the priority of the top's input handlers	verified	one	ui/input#the-handlers
 0x81c380	void *[11]	CSimpleTop::vftable		ui	Holds the vtable of CSimpleTop	verified	one	ui/strata#construction-and-teardown
 0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	one	ui/anchors#edge-resolution-from-points
@@ -1037,16 +1039,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c5a0	void *[11]	s_scriptRegionLayoutVtable		ui	Holds the vtable of a CScriptRegion's layout part	verified	one	ui/frames#vtables-and-the-two-parts
 0x81c5d8	void *[11]	CSimpleModel::Layout::vftable		ui	Holds the geometry vtable of CSimpleModel, which its constructor stores at +0x24; slots 7 and 8 size the frame	verified	one	ui/modelview#model-frame-fields
 0x81c608	void *[35]	CSimpleModel::vftable		ui	Holds the 35 virtual function slots of CSimpleModel, which its constructor stores	inferred	none	
+0x81c6b4	const float	s_float3b80806e		ui	Holds the float 0.00392156 (0x3b80806e), the factor that turns a colour byte into a component	verified	one	ui/backdrop#reading-a-backdrop-back
 0x81c6ec	void *[11]	s_simpleTextureLayoutVtable		ui	Holds the vtable of a texture's layout part; its width, height and callback slots are the texture's own	verified	one	ui/regions#the-layout-vtable
 0x81c718	void *[13]	CSimpleTexture::vftable		ui	Holds the vtable of CSimpleTexture	verified	one	ui/regions#the-layout-vtable
 0x81c74c	void *[11]	s_simpleFontStringLayoutVtable		ui	Holds the vtable of a font string's layout part; its width, height and callback slots are the font string's own	verified	one	ui/regions#the-layout-vtable
 0x81c778	void *[11]	CSimpleFontString::vftable		ui	Holds the vtable of CSimpleFontString	verified	one	ui/regions#the-layout-vtable
+0x81c7a4	uint32_t[9]	s_fontObjectBaseTable		ui	Holds the three slots of the font object's base table, then two triples of +infinity, pi and 10.0	verified	one	ui/regions#the-layout-vtable
 0x81c7c8	void *[11]			ui	Holds 11 function addresses that CSimpleButton::CSimpleButton stores; not read here	inferred	none	
 0x81c7f8	void *[40]	CSimpleButton::vftable		ui	Holds the 40 virtual function slots of CSimpleButton, which its constructor stores	inferred	none	
+0x81c8b4	void *[10]	s_fontTableA		ui	Holds the ten slots of a font table that constructors store at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
 0x81c8dc	const uint32_t			ui	Holds data whose address CSimpleEditBox::CSimpleEditBox takes; not read here	inferred	none	
 0x81c910	void *[36]			ui	Holds 36 function addresses that CSimpleEditBox::CSimpleEditBox stores; not read here	inferred	none	
 0x81c9b0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x81c9c8	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
+0x81cb20	uint32_t[13]	s_fontTableB		ui	Holds the ten slots and three floats of a font table stored at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
 0x81cc30	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
@@ -2775,6 +2781,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7658	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
 0xbc7660	uint8_t[400]	s_partyBlips		ui	Holds the five party and pet arrow records of 0x50 bytes	verified	one	ui/minimapblips#party-and-pet-arrows
+0xbc7810	float[2]	s_rectOriginPair		ui	Holds the first pair of floats of a table of 24-byte records that 0x4ead90 indexes; its extent was not read	verified	one	ui/minimap#two-small-helpers
 0xbc787c	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7880	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7968	void *	s_minimapMaskTexture		ui	Points to the mask texture handle the minimap draws through	verified	one	ui/minimap#minimap-textures
