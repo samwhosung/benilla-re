@@ -283,6 +283,30 @@ instance's draw callback `+0x1b8`. `0x70cb10` ends each.
 
 Of `0x70ca50`, `model_matrix_translate_difftest` runs `0x70ca9b`–`0x70caef`.
 
+## Custom element light
+
+A custom element (kind 5) is lit by the collector of its own model, staged just before its callback
+runs, so the result does not depend on draw order. The element uses the context's blank material
+(flags 0, blend 0), which is lit, and a lane value of 0, so `0x70baf0` always takes the
+fixed-function commit `0x71c730`. A model's collector `+0x3b8` is its own `+0x204` or, for a model with
+a parent whose flag `+0x4` bit 0 is clear, the parent's. A custom element on a held item whose parent link is
+the wearer draws under the wearer's light. The redundant-state skip never holds for a non-null collector. Emission is set to 0.
+
+Addresses: `0x70d960`, `0x70d982`, `0x70d98d`, `0x70d99a`, `0x70ca50`, `0x70ca61`, `0x70ca68`, `0x70ca30`, `0x70baf0`, `0x70bb0a`, `0x70bb7a`, `0x70bb96`, `0x70bba4`, `0x70bdf6`, `0x70b281`, `0x70b2c9`, `0x70b2d0`, `0x70b5e0`, `0x70b607`, `0x70b68c`, `0x70b6aa`, `0x718960`, `0x718982`, `0x718995`, `0x7189a9`, `0x710db0`, `0x70e0b8`, `0x70e786`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x70d982` calls `0x70ca50`, which runs `0x70b740`, `0x70baf0` and `0x70c190`; only then
+`0x70d99a` calls `[model + 0x1b8]` with `[model + 0x1bc]` (stored by `0x710db0`). No other handler of
+kind 5 stores `[ctx + 0x3348]`, so the loop's default `&[ctx + 0x3358]` (`0x70b5e0`) stays, and its
+two words are stored only as 0 (`0x70b2c9`, `0x70b2d0`). `[ctx + 0x32f0]` is zeroed each element
+(`0x70b607`) and stored only by kinds 0 and 2 (`0x70cb71`, `0x70d371`). `0x70bb96` falls through
+for lit, `0x70bba4` jumps to `0x70bdf6`. The skip at `0x70bb7a` compares the current collector with
+`[ctx + 0x3324]`, which only the constructor stores (0, `0x70b281`); `0x70b68c` reads it back. The
+collector is stored by `0x718982` to `0x7189a9`; the constructor and `0x70e786` store 0. Kinds 3,
+4 and 5 commit state 2 as 0 at `0x70ca30`.
+
 ## Grouped and projected draws
 
 A batched run draws several instances of one shared model with one state setup, loading each

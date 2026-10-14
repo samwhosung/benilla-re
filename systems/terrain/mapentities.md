@@ -112,7 +112,7 @@ stores `[0x810a64]` = 0.5 and sets bit 0x10, `0x69e4b3` stores `[0x810a68]` = 2.
 `+0x9c` steps toward the target `+0xf4` by max(1, trunc(2.0 × dt × 255)) and stops at it. With
 no channel changing and the entity not indoors, the ambient word and its target become the day
 light's ambient `+0x178`. The intensity `+0xa4` moves toward `+0xf8` by 3.3333333 × dt and stops at it. If the
-entity is attached to a node, `0x69e280` runs after.
+entity's attachment list `+0x20` is empty (odd) or unset (zero), `0x69e280` runs after.
 
 Addresses: `0x69e770`, `0x69e776`, `0x69e78b`, `0x69e790`, `0x69e7ee`, `0x69e800`, `0x69e813`, `0x69e825`, `0x69e841`, `0x69e869`, `0x69e86e`, `0x69e880`, `0x69e8a5`, `0x69e8b2`, `0x69e8c8`, `0x69e8e1`, `0x69e8ef`, `0x69e90d`, `0x69e913`, `0x6d48b0`, `0x810804`, `0x810808`
 Confidence: verified
@@ -125,7 +125,33 @@ adds the step and caps at the target (`0x69e813`), a negative one subtracts and 
 (`0x69e825`). The settled test is `0x69e850` (indoors) and the flag in `ebx` (`0x69e865`); the day
 ambient is `[state + 0x178]` (`0x69e86e`). The intensity step is `[0x810808] × dt`
 (`0x69e880`); `0x69e8a5` holds on equal; a lower value rises and clamps (`0x69e8c8`), a higher or NaN one falls and
-clamps (`0x69e8ef`). `0x69e90d` tests the node link and calls `0x69e280`.
+clamps (`0x69e8ef`). `0x69e906` loads `+0x20`; it is odd (`0x69e909`) or zero (`0x69e90d`) when the list is empty or unset, and then `0x69e911` calls `0x69e280`, otherwise `0x69e918` returns.
+
+## Entity ambient source
+
+An entity's ambient word `+0x9c` and its target `+0xf4` start and stay at the day light's ambient
+outdoors. The creator `0x670db0` packs the three floats at `[0xc89ef0] + 0xac` into both. `0x69e280`
+repacks `+0xf4` from them on every re-placement that is not indoors. Bit 0 of `+0x90`, set only by
+`0x6a87f0`, stops the per-frame copy of `[state + 0x178]` in `0x69e770`.
+
+| standing in | `+0xc` set | `+0x90` bit 0 | ambient |
+|---|---|---|---|
+| open terrain (`0x6a91f0`) | 4 | clear | day ambient, copied when settled |
+| exterior group | 4 | clear | day ambient, copied when settled |
+| exterior-lit group | 4 | set | day ambient target, ramp only |
+| other group | 2 | set | group colour at most 0x60 per channel, ramp only |
+
+Addresses: `0x670db0`, `0x670fbe`, `0x670fc4`, `0x69e37a`, `0x69e45b`, `0x69e47d`, `0x69e850`, `0x69e863`, `0x69e874`, `0x69e87a`, `0x6a8820`, `0x6a8b9d`, `0x6a8bb4`, `0x6a8bd6`, `0x6a92ae`, `0x6a92b2`, `0xc89ef0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x69e37a` loads the floats `+0xac`, `+0xb0`, `+0xb4` and clamps each to 0..255 as in "Entity
+environment"; `+0xac` becomes byte 2, so `+0xf4` reads as 0xFFRRGGBB like `+0x178`. `0x670fbe` and
+`0x670fc4` store the same dword. `0x69e850` skips the copy when `+0x90` bit 0 is set or a channel moved;
+else `0x69e874` and `0x69e87a` store the dword. `0x6a8820` is the only `or` of bit 0; the open
+terrain arm (`0x6a8bd6`) never reaches it. The bake slot call `0x6a8bb4` needs `+0xc` bit 2
+(`0x6a8b9d`), so only the last row bakes.
 
 ## Face terrain type
 

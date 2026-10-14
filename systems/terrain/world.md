@@ -257,13 +257,17 @@ node's `+0x78 − +0x68` is below the fog end; if the node's `+0x8` has bit 0x20
 the model's lighting record to 1. Without a node it adds the day-night ambient `+0x178` and the
 directional `+0x174` with direction `+0x168` of the light state.
 
-Addresses: `0x6716f0`, `0x672a20`, `0x672a36`, `0x672a3f`, `0x672a51`, `0x672a59`, `0x672a5c`, `0x672ac7`, `0x672b1b`, `0x7134b0`, `0x710390`, `0x7103a0`, `0x6c31e0`, `0x6a7300`, `0x6a7650`, `0x6a8050`, `0x71bc70`, `0x71bce0`, `0x810810`, `0x810a74`
+Addresses: `0x6716f0`, `0x672a20`, `0x672a36`, `0x672a3f`, `0x672a51`, `0x672a59`, `0x672a5c`, `0x672ac7`, `0x672b1b`, `0x7134b0`, `0x670fd5`, `0x671344`, `0x6716b2`, `0x683e6f`, `0x68416e`, `0x69515f`, `0x719313`, `0x710390`, `0x7103a0`, `0x6c31e0`, `0x6a7300`, `0x6a7650`, `0x6a8050`, `0x71bc70`, `0x71bce0`, `0x810810`, `0x810a74`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x6716f0` releases the old model's callback (`0x7134b0` with 0) and reference, stores the new
-model at `+0x88`, installs the callback with the node as argument and takes a reference. The
+model at `+0x88`, installs the callback with the node as argument and takes a reference. The other installers
+are the node creator (`0x670fd5`, when the model is set), both light object creators (`0x671344`,
+`0x6716b2`), `DrawEntityModels` for each visible node with a model on every frame (`0x683e6f`),
+`DrawDoodadModels` (`0x68416e`) and `CreateDoodadModel` (`0x69515f`); each pushes the node, so the no-node arm
+runs only for a zero argument. A model whose callback is 0 gets no fill (`0x719313`). The
 calls at `0x672a36`, `0x672a51` and `0x672a59` are `[vtable+4]`, `[vtable+8]` and `[vtable+0xc]`; in the vtables
 `0x810810` (map entity) and `0x810a74` (doodad def) slot 1 is `0x6c31e0` and slot 3 `0x6a7650`,
 slot 2 `0x6a7300` and `0x6a8050`. The gate compares `+0x78 − +0x68` with the fog end `0xc62964` (`test ah,5; jp`): slot 2 runs
