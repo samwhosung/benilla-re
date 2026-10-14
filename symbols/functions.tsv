@@ -30762,46 +30762,46 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x729d50	120			ui	orchestration		Runs LCD.CPP code that calls 0x6f2cf0, 0x729140, 0x729cc0; not read here	inferred	none		
 0x729dd0	1068	LcdInitialize		ui	host		Starts the LCD layer	inferred	none		
 0x72a200	231	LcdShutdown		ui	host		Shuts the LCD layer down	inferred	none		
-0x72a2f0	87			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72a350	20			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x72a370	200			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b480 and 4 more; not read here	inferred	none		
-0x72a450	71			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b480; not read here	inferred	none		
-0x72a4a0	61			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, 0x72a5f0; not read here	inferred	none		
-0x72a4e0	47			ui	unreached		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72a510	195			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, 0x72cf80 and 2 more; not read here	inferred	none		
-0x72a5e0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x72a5f0	734			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, ClntObjMgrGetActivePlayer and 7 more; not read here	inferred	none		
-0x72a8d0	2008	UpdateKeyboardLcd		ui	host		Updates the keyboard LCD screens each frame, the wait queue screen among them	inferred	none		
-0x72b0b0	149			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, ClntObjMgrGetActivePlayer and 1 more; not read here	inferred	none		
-0x72b150	191			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72b230	51			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72b270	51			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72b2b0	391			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b480 and 7 more; not read here	inferred	none		
-0x72b440	49			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350; not read here	inferred	none		
-0x72b480	65			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, 0x72d0d0; not read here	inferred	none		
-0x72b4d0	122			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, SStrCopy; not read here	inferred	none		
-0x72b550	207			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, SStrCopy and 2 more; not read here	inferred	none		
+0x72a2f0	87	LcdFindElement		ui	orchestration	void * __fastcall (int32_t id)	Returns the element with an id from the element tree when the LCD is ready, or 0	verified	one	ui/lcd#ready-test-and-element-lookup	
+0x72a350	20	LcdIsModeValid		ui	orchestration	uint8_t __cdecl ()	Answers 1 when the cvar value at 0xc0e080 lies in 0 to 3	verified	one	ui/lcd#ready-test-and-element-lookup	
+0x72a370	200	LcdEnterWorld		ui	orchestration	void __cdecl ()	Shows screen 1, sets the in-world flag, caches the player and sets flags on elements 0x14 and 0x2a by class	verified	one	ui/lcd#entering-and-leaving-the-world	
+0x72a450	71	LcdLeaveWorld		ui	orchestration	void __cdecl ()	Clears the in-world and battlefield flags and the player, shows screen 0 and updates the display	verified	one	ui/lcd#entering-and-leaving-the-world	
+0x72a4a0	61	LcdShowBattlefield		ui	orchestration	void __cdecl ()	Sets the battlefield flag and time, fills the battlefield screen and shows screen 3	verified	one	ui/lcd#entering-and-leaving-the-world	
+0x72a4e0	47	LcdRestoreScreen		ui	unreached	void __cdecl ()	Clears the battlefield flag and shows the previous screen; nothing reaches it	verified	one	ui/lcd#unreached-lcd-code	
+0x72a510	195	LcdChooseScreen		ui	orchestration	void __cdecl ()	Picks screen 5, 3, 2 or 1 from the elements' flags and the notice flag, while in the world	inferred	none	ui/lcd#the-per-frame-update	
+0x72a5e0	15	LcdCompareDescending		ui	primitive	int __cdecl (const int32_t *a, const int32_t *b)	Returns the first dword of the second less the first dword of the first	verified	one	ui/lcd#battlefield-scores	
+0x72a5f0	734	LcdFillBattlefieldScreen		ui	primitive	void __cdecl ()	Writes the player's and the leaders' scoreboard values to the battlefield elements after sorting a copy	inferred	none	ui/lcd#battlefield-scores	
+0x72a8d0	2008	UpdateKeyboardLcd		ui	host	void __cdecl ()	Writes the player's values to the LCD elements each frame and settles which screen shows	inferred	none	ui/lcd#the-per-frame-update	
+0x72b0b0	149	LcdReagentCount		ui	orchestration	uint32_t __cdecl ()	Counts the active player's inventory items of the class's entry, or 0 for another unit	verified	one	ui/lcd#status-readouts	
+0x72b150	191	LcdStatusElement		ui	orchestration	void * __cdecl ()	Returns the element 0x14 or 0x2a that the player's class selects, or 0	verified	one	ui/lcd#status-readouts	
+0x72b230	51	LcdFreeSlotCount		ui	orchestration	uint32_t __cdecl ()	Counts the active player's free inventory slots through CountFreeSlots	verified	one	ui/lcd#status-readouts	
+0x72b270	51	LcdDurabilityPercent		ui	orchestration	int32_t __cdecl ()	Returns the active player's equipment durability percent through GetDurabilityPercent	verified	one	ui/lcd#status-readouts	
+0x72b2b0	391	LcdShowWaitTime		ui	primitive	void __fastcall (const char *name, uint32_t minutes, uint32_t deadline)	Writes a name, stores the wait deadline, shows screen 2 and sets element 0x16 to the time left	inferred	none	ui/lcd#battlefield-status	
+0x72b440	49	LcdReturnFromWait		ui	orchestration	void __cdecl ()	Shows the previous screen when the current screen is 2	verified	one	ui/lcd#changing-screen	
+0x72b480	65	LcdSetScreen		ui	orchestration	void __fastcall (int32_t screen)	Stores a new current screen and the old one and tells the wrapper, unless it is already current	verified	one	ui/lcd#changing-screen	
+0x72b4d0	122	LcdPushNotice		ui	primitive	void __fastcall (const char *text, uint32_t kind)	Shifts the five notice records down, stores a text and kind in the first and redraws them	verified	one	ui/lcd#notice-ring	
+0x72b550	207	LcdDrawNotices		ui	primitive	void __cdecl ()	Formats each notice record through its kind's template and sets its element's text	verified	one	ui/lcd#notice-ring	
 0x72b620	78			ui	primitive		Shows a whisper's sender on the keyboard LCD and arms its timer	inferred	none	ui/chatevents#whisper-notice-on-the-lcd	
-0x72b670	77			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b4d0 and 2 more; not read here	inferred	none		
-0x72b6c0	78			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b4d0 and 2 more; not read here	inferred	none		
-0x72b710	248			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, CDataStore::GetUInt32 and 5 more; not read here	inferred	none		
-0x72b810	36	RefreshKeyboardLcd		ui	host		Redraws the keyboard LCD player screen when the LCD is present	inferred	none		
-0x72b840	51			ui	unreached		Runs its object file code that calls 0x72c850, 0x72a350, 0x72d3b0; not read here	inferred	none		
+0x72b670	77	LcdNoticeEmpty		ui	orchestration	void __cdecl ()	Stores an empty kind 2 notice, shows screen 5 and arms the notice deadline	verified	one	ui/lcd#notice-kinds	
+0x72b6c0	78	LcdNoticeAuction		ui	orchestration	void __fastcall (const char *text)	Stores a kind 3 notice, shows screen 5 and arms the notice deadline	verified	one	ui/lcd#notice-kinds	
+0x72b710	248	LcdHandleBattlefieldStatus		ui	primitive	void __fastcall (CDataStore *msg)	Reads a battlefield status message and shows the wait screen or the battlefield screen	inferred	none	ui/lcd#battlefield-status	
+0x72b810	36	RefreshKeyboardLcd		ui	host	void __cdecl ()	Redraws the keyboard LCD player screen when the LCD is present	verified	one	ui/lcd#changing-screen	
+0x72b840	51	LcdForwardScreenIndex		ui	unreached	void __fastcall (uint32_t index)	Passes the current screen and an index to 0x72d3b0; nothing reaches it	verified	one	ui/lcd#unreached-lcd-code	
 0x72b880	5	InitDouble72b890Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x72b890, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x72b890	15	InitDouble72b890		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x72b8a0	5	InitQuotient72b8b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x72b8b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x72b8b0	19	InitQuotient72b8b0		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x72b8d0	30			ui	primitive		Runs its object file code not read here	inferred	none		
-0x72b8f0	89			ui	orchestration		Runs its object file code that calls ObjectAllocNew; not read here	inferred	none		
+0x72b8d0	30	LcdPoolInit		ui	orchestration	void * __thiscall ()	Sets an object pool to block size 0x10 with an empty list	inferred	none	ui/lcd#the-element-tree	
+0x72b8f0	89	LcdPoolNew		ui	orchestration	void __thiscall ()	Takes a record from the pool and clears its fields when the pool is not flagged	inferred	none	ui/lcd#the-element-tree	
 0x72b950	60	Unlink72b950		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x72b990	16	Clear272b990		ui	orchestration		Zeroes two dwords at this and returns this	verified	one	ui/containers#lists	
-0x72b9a0	412			ui	primitive		Runs its object file code that calls 0x72c130, 0x72b9a0, 0x72c030 and 1 more; not read here	inferred	none		
-0x72bb40	346			ui	primitive		Runs its object file code that calls 0x72bce0, SMemReAlloc, SMemAlloc and 1 more; not read here	inferred	none		
+0x72b9a0	412	LcdTreeInsert		ui	primitive	uint32_t __thiscall (int32_t key, void **slot)	Inserts a key into the element tree, rebalancing, and answers whether the height grew	inferred	none	ui/lcd#the-element-tree	
+0x72bb40	346	LcdNoticeArrayResize		ui	primitive	void __thiscall (uint32_t count)	Resizes the array of 0x50-byte records to a count by reallocation	inferred	none	ui/lcd#the-element-tree	
 0x72bca0	60	Unlink72bca0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x72bce0	60	Unlink72bce0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
-0x72bd20	781			ui	primitive		Runs its object file code that calls 0x72bd20, 0x72c030; not read here	inferred	none		
-0x72c030	108			ui	primitive		Runs its object file code not read here	inferred	none		
-0x72c0a0	134			ui	primitive		Runs its object file code not read here	inferred	none		
+0x72bd20	781	LcdTreeErase		ui	primitive	uint32_t __thiscall (int32_t key, void **slot)	Erases a key from the element tree, rebalancing on the way back	inferred	none	ui/lcd#the-element-tree	
+0x72c030	108	LcdTreeRotateSingle		ui	primitive	uint32_t __stdcall (void **slot, uint32_t side)	Rotates a tree node once toward a side and updates both balances	inferred	none	ui/lcd#the-element-tree	
+0x72c0a0	134	LcdTreeRotateDouble		ui	primitive	uint32_t __stdcall (void **slot, uint32_t side)	Rotates a tree node twice toward a side and updates the three balances	inferred	none	ui/lcd#the-element-tree	
 0x72c130	41	NextLink72c130		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x72c160	5	InitSquare72c170Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x72c170, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x72c170	19	InitSquare72c170		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
@@ -30843,15 +30843,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x72c4c0	19	InitSquare72c4c0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x72c4e0	5	InitQuotient72c4f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x72c4f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x72c4f0	19	InitQuotient72c4f0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x72c510	137			ui	orchestration		Runs its object file code that calls SLogWrite, SLogClose, CStatus::~CStatus; not read here	inferred	none		
+0x72c510	137	StatusLogDestruct		ui	orchestration	void __thiscall ()	Writes out and closes a log handle, then runs the status base destructor; reached through unwinding only	inferred	none	ui/lcd#the-device-wrapper	
 0x72c5a0	10	InitCount72c5b0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x72c5b0, then jumps to 0x72c5d0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x72c5b0	22	InitCount72c5b0		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x72c5d0	12	InitCount72c5b0Register		ui	orchestration	void __cdecl (void)	Registers 0x72c5e0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x72c5e0	14	InitCount72c5b0Exit		ui	primitive	void __cdecl (void)	Counts one user less of that shared count and jumps to 0x5b71d0 when none is left	verified	one	ui/initexits#exit-counts	
-0x72c5f0	54			ui	unreached		Runs its object file code that calls SStrPrintf; not read here	inferred	none		
-0x72c630	114			ui	primitive		Runs its object file code that calls 0x72d810; not read here	inferred	none		
-0x72c6b0	410			ui	primitive		Runs its object file code that calls 0x72d6d0, SMemFree, 0x72ddd0 and 3 more; not read here	inferred	none		
-0x72c850	8			ui	primitive		Runs its object file code not read here	inferred	none		
+0x72c5f0	54	LcdFormatAndCall		ui	unreached	void __cdecl (const char *format, ...)	Formats its arguments into a 0x400-byte buffer and passes it to a table function; nothing reaches it	verified	one	ui/lcd#unreached-lcd-code	
+0x72c630	114	LcdWrapperConstruct		ui	orchestration	void * __thiscall (const char *title, uint32_t type, uint32_t flags)	Builds the device wrapper: base, empty list, type, flags and the title or World of Warcraft	inferred	none	ui/lcd#the-device-wrapper	
+0x72c6b0	410	LcdWrapperDestruct		ui	orchestration	void __thiscall ()	Destroys the device wrapper; called by LcdShutdown	inferred	none	ui/lcd#the-device-wrapper	
+0x72c850	8	LcdIsDeviceConnected		ui	orchestration	uint32_t __thiscall ()	Answers 1 when the wrapper's device handle at +0x88 is not -1	verified	one	ui/lcd#ready-test-and-element-lookup	
 0x72c860	100			ui	primitive		Runs its object file code that calls 0x72d5c0; not read here	inferred	none		
 0x72c8d0	532			ui	primitive		Runs EZ_LCD.cpp code that calls 0x72c860, SMemAlloc, 0x72f310 and 9 more; not read here	inferred	none		
 0x72caf0	5	InitInfinity72cb00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x72cb00, a static initializer	verified	one	ui/initthunks#jump-thunks	

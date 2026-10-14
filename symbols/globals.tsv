@@ -330,6 +330,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7102e8	void *[10]	s_m2DeferredCallTable		models	Holds the jump targets that replay deferred calls of kinds 0 to 9	verified	one	models/model#deferred-calls
 0x718788	void *[5]	s_m2BillboardTable		models	Holds the jump targets of the billboard cases	verified	one	animation/billboards#billboard-cases
 0x71879c	uint8_t[57]	s_m2BillboardIndex		models	Maps a bone's billboard flags minus 8 to a billboard case	verified	one	animation/billboards#billboard-cases
+0x72a438	const void *[3]	s_lcdEnterArms		ui	Holds the three arms of the in-world setup 0x72a370, one per class group	verified	one	ui/lcd#entering-and-leaving-the-world
+0x72a444	const uint8_t[9]	s_lcdEnterArmIndex		ui	Maps a class byte from 1 to 9 to an arm of the in-world setup 0x72a370	verified	one	ui/lcd#entering-and-leaving-the-world
+0x72b210	const void *[3]	s_lcdStatusArms		ui	Holds the three arms of the status element lookup 0x72b150, one per class group	verified	one	ui/lcd#status-readouts
+0x72b21c	const uint8_t[9]	s_lcdStatusArmIndex		ui	Maps a class byte from 1 to 9 to an arm of the status element lookup 0x72b150	verified	one	ui/lcd#status-readouts
 0x768c44	void *[9]	s_dragGripArms		ui	Holds the nine grip arms of 0x768710, one per anchor point	verified	one	ui/resizebounds#the-drag
 0x771bf4	const void *[2]	s_latinVowelArms		ui	Holds the two arms of the vowel test 0x771b60, a vowel and the Latin-1 range test	verified	one	ui/fonttext#french-escape-and-digit-groups
 0x771bfc	const uint8_t[53]	s_latinVowelArmIndex		ui	Maps a character from A to U to an arm of the vowel test, 0 for each ASCII vowel	verified	one	ui/fonttext#french-escape-and-digit-groups
@@ -2111,6 +2115,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
 0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
+0x87405c	int32_t	s_lcdScreen		ui	Holds the screen the keyboard LCD shows, -1 before the first change	verified	one	ui/lcd#changing-screen
+0x874060	int32_t	s_lcdPreviousScreen		ui	Holds the screen shown before the current one, -1 at first	verified	one	ui/lcd#changing-screen
+0x874064	uint32_t	s_lcdNoticeMs		ui	Holds 30000, the milliseconds a notice screen stays	verified	one	ui/lcd#notice-kinds
+0x874068	uint8_t	s_lcdNoticeRefresh		ui	Holds a flag the per-frame update sets to 1 on a screen change and a stored notice clears	verified	one	ui/lcd#notice-kinds
+0x874074	char[18]	s_typeChatMessage		ui	Holds the RTTI name of the chat message record, an allocation tag of the LCD arrays	verified	one	ui/lcd#the-element-tree
+0x874458	char[13]	s_textMinutesAbbr		ui	Holds the global string key "MINUTES_ABBR"	verified	one	ui/lcd#battlefield-status
+0x874468	char[13]	s_textSecondsAbbr		ui	Holds the global string key "SECONDS_ABBR"	verified	one	ui/lcd#battlefield-status
 0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
@@ -4277,7 +4288,18 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf05ac	float	s_minigameSquareCf05ac		minigame	Holds the square of 11.1111, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
 0xcf05b0	float	s_minigameSquareCf05b0		minigame	Holds the square of 30, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
 0xcf05b4	float	s_minigameSquareCf05b4		minigame	Holds the square of 40, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0638	void *	s_lcdElementTree		ui	Holds the root of the tree of LCD text elements by id	verified	one	ui/lcd#ready-test-and-element-lookup
+0xcf063c	uint32_t[3]	s_lcdNoticeArray		ui	Holds the array of notice records: capacity, count and data	verified	one	ui/lcd#notice-ring
+0xcf0650	char[40]	s_lcdKind3Template		ui	Holds the localized template of a kind 3 notice, copied in by LcdInitialize	verified	one	ui/lcd#notice-ring
+0xcf0678	char[64]	s_lcdKind2Template		ui	Holds the localized template of a kind 2 notice, copied in by LcdInitialize	verified	one	ui/lcd#notice-ring
+0xcf06b8	char[44]	s_lcdKind1Template		ui	Holds the localized template of a kind 1 notice, copied in by LcdInitialize	verified	one	ui/lcd#notice-ring
 0xcf06e4	uint32_t			ui	Holds a dword that LcdInitialize, LcdShutdown, UpdateKeyboardLcd read and write; not read here	inferred	none	
+0xcf06e8	void *	s_lcdPlayer		ui	Holds the active player the LCD reads, cached on entering the world and cleared on leaving	verified	one	ui/lcd#entering-and-leaving-the-world
+0xcf06ec	uint8_t	s_lcdInWorld		ui	Holds 1 between entering and leaving the world	verified	one	ui/lcd#entering-and-leaving-the-world
+0xcf06f0	uint32_t	s_lcdWaitDeadline		ui	Holds the time at which the battlefield wait screen's countdown ends	verified	one	ui/lcd#battlefield-status
+0xcf06f8	uint8_t	s_lcdBattlefieldShown		ui	Holds 1 while the battlefield screen is shown	verified	one	ui/lcd#entering-and-leaving-the-world
+0xcf0704	uint32_t	s_lcdBattlefieldTime		ui	Holds the time the battlefield screen was last shown, from 0xb6ebbc	verified	one	ui/lcd#entering-and-leaving-the-world
+0xcf0708	uint32_t	s_lcdNoticeDeadline		ui	Holds the time at which a notice screen ends	verified	one	ui/lcd#notice-kinds
 0xcf0a3c	float	s_softFloatZero		cmath	Holds 0.0, set by 0x7625e0; the floor and ceil read it	verified	one	spell/records#software-floats
 0xcf0a40	float	s_softFloatOne		cmath	Holds 1.0, set by 0x762e20; the ceil reads it	verified	one	spell/records#software-floats
 0xcf0b0c	float	s_softFloatHundredth		cmath	Holds 0x3c23d70a, 0.01, set by 0x7626e0; the software modifier applier reads it	verified	one	spell/records#modifier-appliers
