@@ -5844,11 +5844,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47bec0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x47bee0	5	InitCorpseFieldsCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47bef0	11	InitCorpseFieldsCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x47bf00	18			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
-0x47bf20	27			objectlayer	unreached		Runs its object file code not read here	inferred	none		
-0x47bf40	27			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x47bf00	18			objectlayer	orchestration		Stores two dwords at its object	verified	one	objectlayer/overview#small-bodies	
+0x47bf20	27			objectlayer	orchestration		Stores its object's two dwords at +0xe8 of its argument	verified	one	objectlayer/overview#unreached-functions	
+0x47bf40	27			objectlayer	orchestration		Loads the two dwords at +0xe8 of its argument into its object	verified	one	objectlayer/overview#small-bodies	
 0x47bf60	6	ReadGuidAt		objectlayer	orchestration	uint64_t __thiscall (const uint64_t *this)	Returns the 64-bit value at its argument	verified	one	spell/records#range	
-0x47bf70	25			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x47bf70	25			objectlayer	orchestration		Stores two dwords at its object and sets +0x8 to 1	verified	one	objectlayer/overview#small-bodies	
 0x47bf90	5	InitCorpseFieldsDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bfa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47bfa0	15	InitCorpseFieldsDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47bfb0	5	InitCorpseFieldsQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47bfc0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -20705,8 +20705,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x613650	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x613660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x613670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x613680	33			objectlayer	orchestration		Fills slot 43 of the unit vtable; its body is not read here	inferred	none		
-0x6136b0	33			objectlayer	orchestration		Fills slot 44 of the unit vtable; its body is not read here	inferred	none		
+0x613680	33			objectlayer	orchestration		Gives the unit's level times five and 0 through its two outputs	verified	one	objectlayer/classes#unit-vtable-extension	
+0x6136b0	33			objectlayer	orchestration		Gives the unit's level times five and 0 through its second and third outputs	verified	one	objectlayer/classes#unit-vtable-extension	
 0x6136e0	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613710	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613750	144			objectlayer	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	objectlayer/objectbase#constructor-and-members	
@@ -20754,10 +20754,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6149e0	25	FreeSelectionRampBuffer		objectlayer	orchestration	void __cdecl ()	Frees the ramp texture's buffer at exit	verified	one	objectlayer/objectbase#selection-circle-textures	
 0x614a00	57	OnObjectScaleChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Starts the scale ease of the object whose scale field changed	verified	one	objectlayer/objectbase#the-scale-change	
 0x614a40	70	ShutdownSelectionCircle		objectlayer	orchestration	void __cdecl ()	Destroys the ramp and blp textures and removes the scale watcher	verified	one	objectlayer/objectbase#the-scale-change	
-0x614a90	572			objectlayer	primitive		Fills slot 14 of the object vtable and others; its body is not read here	inferred	none		objectlayer::obj_anim_interp_difftest
-0x614cd0	298			objectlayer	primitive		Fills slot 15 of the object vtable and others; its body is not read here	inferred	none		objectlayer::f3_render_smooth_active_difftest, objectlayer::f3_render_smooth_delta_difftest, objectlayer::f3_render_smooth_lerp_difftest, objectlayer::f3_render_amp_product_difftest
+0x614a90	572	CGObject_C::Update		objectlayer	primitive	void __thiscall (uint32_t time)	Draws the target circle, steps the alpha fade, scale ease and missile fade	verified	one	objectlayer/objectbase#the-frame-update	objectlayer::obj_anim_interp_difftest
+0x614cd0	298	CGObject_C::Conform		objectlayer	primitive	void __thiscall (float dt)	Smooths the ground normal and conforms the model to it	verified	one	objectlayer/objectbase#ground-conform	objectlayer::f3_render_smooth_active_difftest, objectlayer::f3_render_smooth_delta_difftest, objectlayer::f3_render_smooth_lerp_difftest, objectlayer::f3_render_amp_product_difftest
 0x614e00	116	SetSelectionCircleState		objectlayer	orchestration	void __cdecl ()	Sets the circle's render state and binds the blp and ramp textures	verified	one	objectlayer/objectbase#selection-circle-textures	
-0x614e80	8			objectlayer	primitive		Fills slot 3 of the object vtable and others; its body is not read here	inferred	none		
+0x614e80	8	CGObject_C::EndReactivation		objectlayer	orchestration	void __thiscall ()	Clears the reactivating bit	verified	one	objectlayer/objectbase#showing-an-object	
 0x614e90	10	CGObject_C::IsCreated		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x4 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
 0x614ea0	10	CGObject_C::IsReleased		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x1 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
 0x614eb0	58	CGObject_C::IsModelLoaded		objectlayer	primitive	uint32_t __thiscall ()	Returns 1 when the current model has loaded	verified	one	objectlayer/objectbase#models-and-the-node	
@@ -20767,13 +20767,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x614f40	10	CGObject_C::IsReleasePending		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0x10 of the flags	verified	one	objectlayer/objectbase#showing-an-object	
 0x614f50	42	CGObject_C::SetReleasePending		objectlayer	primitive	void __thiscall (CGObject_C *this, uint32_t pending)	Sets or clears bit 0x10 of +0xe4, the release-pending flag	verified	one	objectlayer/manager#releasing-an-object	
 0x614f80	86	CGObject_C::FadeTo		objectlayer	primitive	void __thiscall (float alpha, uint32_t ms)	Starts an alpha fade to a target over a number of milliseconds	verified	one	objectlayer/objectbase#the-alpha-fade	
-0x614fe0	58			objectlayer	orchestration		Fills slot 30 of the object vtable and others; its body is not read here	inferred	none		
+0x614fe0	58	CGObject_C::IsModelReady		objectlayer	orchestration	uint32_t __thiscall ()	Returns 1 when the current model is ready to draw	verified	one	objectlayer/objectbase#models-and-the-node	
 0x615020	12	RefreshAllNodes		objectlayer	orchestration	void __cdecl ()	Enumerates every object into 0x615030	verified	one	objectlayer/objectbase#the-node-transform	
 0x615030	53	RefreshNodeCallback		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi)	Rebuilds one object's node with flag 1 and continues the enumeration	verified	one	objectlayer/objectbase#the-node-transform	
 0x615070	139	BuildYawMatrix		objectlayer	primitive	void __stdcall (float *matrix, float *point)	Fills an identity matrix rotated about Z by the camera's heading to a point	verified	one	objectlayer/objectbase#ground-conform	objectlayer::negate_facing_615070_difftest
 0x615100	79	CGObject_C::StartScaleEase		objectlayer	orchestration	void __thiscall (float old)	Starts the scale ease from the previous value and tells the interface if the camera follows the object	verified	one	objectlayer/objectbase#the-scale-change	
 0x615150	81	CGObject_C::RefreshBounds		objectlayer	primitive	void __thiscall ()	Copies the model's bounding box, stores its height and rebuilds the node	verified	one	objectlayer/objectbase#models-and-the-node	objectlayer::bounds_z_extent_difftest
-0x6151b0	33			objectlayer	orchestration		Fills slot 13 of the object vtable and others; its body is not read here	inferred	none		
+0x6151b0	33	CGObject_C::OnModelLoaded		objectlayer	orchestration	void __thiscall (void *model)	Refreshes the bounds when the loaded model is the current one	verified	one	objectlayer/objectbase#models-and-the-node	
 0x6151e0	16	CGObject_C::SetAlpha		objectlayer	primitive	void __stdcall (float alpha)	Stores the master alpha at +0x100	verified	one	objectlayer/objectbase#the-alpha-fade	
 0x6151f0	5	InitObjectBTwoPiThunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x615200, a static initializer of the file	verified	one	objectlayer/initializers#initializer-thunks	
 0x615200	15	InitObjectBTwoPi		objectlayer	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	objectlayer/initializers#float-constants	
