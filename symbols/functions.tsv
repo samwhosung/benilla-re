@@ -32049,7 +32049,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74a789	36			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a7ad	19	MultiplyMatrixFirstCall		d3dx			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
 0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-frame	animation::m2_animate_difftest, models::m2_decal_projection_difftest
-0x74a7c6	568	MultiplyMatrixOriginal		d3dx			Multiplies two row-major 4x4 matrices; the original entry of the product slot, which the first call replaces	inferred	none	models/animation#original-matrix-product	animation::m2_animate_difftest, animation::m2_matmul4x4_difftest
+0x74a7c6	568	MultiplyMatrixOriginal		d3dx			Multiplies two row-major 4x4 matrices; the original entry of the product slot, which the first call replaces	inferred	none	models/animation#original-matrix-product	animation::m2_matmul4x4_difftest
 0x74a9fe	34			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa20	42			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa4a	19			d3dx			Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
@@ -32223,7 +32223,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74f9d8	178			d3dx	unreached		Runs its object file code that calls 0x74f9b0; not read here	inferred	none		
 0x74fa8a	161	GetCpuidSseFlags		d3dx			Returns 4 for CPUID SSE and 8 for SSE2 from leaf 1, under an exception handler	inferred	none	models/animation#dispatched-matrix-math	
 0x74fb2b	30			d3dx	unreached		Runs its object file code that calls GetCpuidSseFlags; not read here	inferred	none		
-0x74fb49	259	SelectMathRoutines		d3dx			Fills the math routine slots once by registry values and processor features	inferred	none	models/animation#dispatched-matrix-math	
+0x74fb49	259	SelectMathRoutines		d3dx			Fills the math routine slots once by registry values and processor features	inferred	none	models/animation#dispatched-matrix-math	animation::math_slots_selection_difftest
 0x74fc4c	128			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74fccc	155			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74fd67	137			d3dx	unreached		Runs its object file code not read here	inferred	none		
@@ -32239,9 +32239,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x75060f	155			d3dx			Runs its object file code not read here	inferred	none		
 0x7506aa	69			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x7506ef	204			d3dx			Runs its object file code not read here	inferred	none		
-0x7507bb	229	MultiplyMatrixBase		d3dx			Multiplies two 4x4 matrices; the routine the base set stores	inferred	none	models/animation#dispatched-matrix-math	
+0x7507bb	229	MultiplyMatrixBase		d3dx			Multiplies two 4x4 matrices at 53 bits; the product that a processor without SSE2 runs	verified	one	models/animation#dispatched-matrix-math	animation::m2_matmul4x4_base_difftest
 0x7508a0	144			d3dx			Runs its object file code not read here	inferred	none		
-0x750930	74	SetMathRoutinesBase		d3dx			Replaces eight default math routine slots, the matrix product among them	inferred	none	models/animation#dispatched-matrix-math	
+0x750930	74	SetMathRoutinesBase		d3dx			Replaces eight default math routine slots, the matrix product among them	verified	one	models/animation#dispatched-matrix-math	animation::math_slots_selection_difftest
 0x75097a	95			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x7509d9	213			d3dx	unreached		Runs its object file code that calls 0x75097a; not read here	inferred	none		
 0x750aae	143			d3dx			Runs its object file code that calls 0x401050, 0x401030; not read here	inferred	none		
@@ -32321,7 +32321,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7547df	243			d3dx			Runs its object file code not read here	inferred	none		
 0x7548d2	212			d3dx			Runs its object file code that calls 0x7547df; not read here	inferred	none		
 0x7549a6	192			d3dx			Runs its object file code not read here	inferred	none		
-0x754a66	310	MultiplyMatrixSse2		d3dx			Multiplies two 4x4 matrices in single precision with SSE	inferred	none	models/animation#dispatched-matrix-math	
+0x754a66	310	MultiplyMatrixSse2		d3dx			Multiplies two 4x4 matrices in single precision with SSE; the product that a processor with SSE2 runs	verified	one	models/animation#dispatched-matrix-math	animation::m2_animate_difftest, animation::m2_matmul4x4_sse2_difftest
 0x754b9c	148			d3dx			Runs its object file code not read here	inferred	none		
 0x754c30	162			d3dx			Runs its object file code not read here	inferred	none		
 0x754cd2	681	InvertMatrixSse2		d3dx			Sets the scene matrix from a view with SSE; the SSE2 set's routine	inferred	none	models/animation#dispatched-matrix-math	

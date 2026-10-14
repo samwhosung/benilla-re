@@ -177,10 +177,10 @@ product `0x754a66` and inverse `0x754cd2`, and the default quaternion routines `
 | `0x876588` | `0x74d114` | `0x74d11a` | default | default | 3DNow set |
 | `0x876594` | `0x74b6b5` | `0x74b6bb` | default | default | 3DNow set |
 
-Addresses: `0x74fb49`, `0x74fa8a`, `0x74f951`, `0x750930`, `0x7501e9`, `0x74ff9a`, `0x74fdf0`, `0x74a7ad`, `0x74b6a2`, `0x74d0ee`, `0x8764f8`, `0x876620`, `0x87674c`, `0x754a66`
+Addresses: `0x74fb49`, `0x74fa8a`, `0x74f951`, `0x750930`, `0x7501e9`, `0x74ff9a`, `0x74fdf0`, `0x74a7ad`, `0x74b6a2`, `0x74d0ee`, `0x8764f8`, `0x876620`, `0x87674c`, `0x754a66`, `0x7507bb`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::math_slots_selection_difftest`, `animation::m2_matmul4x4_sse2_difftest`, `animation::m2_matmul4x4_base_difftest`
 
 Each slot starts at a stub (`0x74a7ad`, `0x74b6a2`, `0x74d0ee`) that calls `0x74fb49(1)` and
 jumps through the slot again. `0x74fb49` runs once while `0x87674c` is 0xffff: it copies 74 dwords
@@ -190,7 +190,10 @@ from `0x876620` to `0x8764f8`, applies `0x750930` (slot `+0xc` becomes `0x7507bb
 `IsProcessorFeaturePresent(6)`, applying `0x7501e9`, `0x74ff9a` or `0x74fdf0`. Only `0x7501e9`
 writes slots `+0x90` and `+0x9c`. The SSE2 product `0x754a66(out, a, b)` loads all of `b`, then
 forms each output row from `a`'s row in single precision: rows 0 and 3 as `(a0·b0 + a1·b1) + (a2·b2
-+ a3·b3)`, rows 1 and 2 as `((a0·b0 + a1·b1) + a2·b2) + a3·b3`. The other routines were not read. `0x74fa8a` runs
++ a3·b3)`, rows 1 and 2 as `((a0·b0 + a1·b1) + a2·b2) + a3·b3`.
+The base product `0x7507bb` is what a processor without SSE2 runs. The other routines were not read.
+`animation::math_slots_selection_difftest` runs `0x74fb49(1)` on the emulated processor (`cpuid` reports SSE2;
+no registry values; 3DNow absent) and finds `0x754a66`, `0x754cd2`, `0x74d11a`, `0x74b6bb`. `0x74fa8a` runs
 under an exception scope: its body runs from `0x74fa8a` through `0x74fac2`, `0x74fad0` through
 `0x74fad4` and `0x74fadb` through `0x74fb2a`, and its scope-table handler `0x74fac4` through
 `0x74facf` returns to `0x74fad6`.
@@ -200,7 +203,7 @@ under an exception scope: its body runs from `0x74fa8a` through `0x74fac2`, `0x7
 `0x74a7c6(out, b, c)` multiplies two row-major 4×4 matrices as `out = b · c`. It is the product's entry
 in the table that `0x74fb49` copies over the slots, and the call to `0x750930` that follows the copy
 stores `0x7507bb` in the slot `0x876504`, so after the first call the slot never holds it, and no call,
-jump or other store names it.
+jump or other store names it. No client runs it, and the animate pass does not use it.
 
 Addresses: `0x74a7c6`, `0x74fb49`, `0x74fba5`, `0x750930`, `0x75094d`, `0x7507bb`, `0x876504`, `0x876620`, `0x74a7c0`
 Confidence: inferred
@@ -213,7 +216,32 @@ image for that dword finds this one occurrence (the control, `0x74b6bb`, also oc
 and the listing has no `call` or `jmp` to `0x74a7c6`, against 37 to the thunk `0x74a7c0`. The body is not
 read instruction by instruction: `animation::m2_matmul4x4_difftest` runs it whole and finds each output
 element equal to a four-term sum from `k = 3` down to 0 at 53 bits, narrowed once, and an output that
-aliases an input equal to the disjoint one.
+aliases an input equal to the disjoint one. Because the slot never holds it, a test that stores
+`0x74a7c6` in the slot runs a routine no client runs: its products differ from the SSE2 product's in
+the last bit.
+
+## Base matrix product
+
+`0x7507bb(out, b, c)` is the product `0x750930` stores, which a processor without SSE2, or the
+registry override, runs. Each output `out[4i+j]` is `(b[i][0]·c[0][j] + b[i][2]·c[2][j]) +
+(b[i][1]·c[1][j] + b[i][3]·c[3][j])`: the four products exact at 53 bits, the three sums rounded to 53
+bits, and the result narrowed once to a float at the `fstp dword`.
+
+Addresses: `0x7507bb`, `0x750930`
+Confidence: verified
+Proof: one
+Test: `animation::m2_matmul4x4_base_difftest`
+
+After the four `fmul`s the stack holds `p0` at `st3` to `p3` at `st0`; `fxch st(3)` and `faddp st(1)`
+(`0x750810`, `0x750812`) add `p0` and `p2`, `fxch st(2)` and `faddp st(1)` (`0x750814`, `0x750816`)
+add `p1` and `p3`, and `faddp st(1)` (`0x750818`) adds the two. With `c` distinct from the output
+the routine walks `b` by rows (`0x750841`); with `c` the output and `b` distinct it walks `c` by
+columns (`0x7507d5`) and forms the same sums in the same order; with both the output it copies `c` to
+a local and takes the row walk (`0x750833`). Each path loads what it needs before the store that
+overwrites it. `animation::m2_matmul4x4_base_difftest` runs the routine whole over disjoint and
+aliased outputs, the special values and a fuzz sweep, and finds every element equal to the formula.
+It is not the same operation order as `0x74a7c6` (`k = 3, 2, 1, 0`) or `0x754a66`, so neither shares
+its transcription.
 
 ## Billboards
 

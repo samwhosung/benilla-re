@@ -1,17 +1,66 @@
-//! The 4×4 product `0x74a7c6` and the rotation matrix from a quaternion `0x74b6bb`, the routines
-//! the animate pass reaches through the math slots `0x876504` and `0x876594`
-//! (`systems/models/animation.md#dispatched-matrix-math`,
-//! `systems/animation/pose.md#rotation-leg`). The first call copies the table at `0x876620` over
-//! the slots and `0x750930` stores `0x7507bb` in the product slot, so that slot never holds
-//! `0x74a7c6`, the table's entry `+0xc`, and no call, jump or other store names it
-//! (`systems/models/animation.md#original-matrix-product`). The rotation routine is the default
-//! that every set but 3DNow keeps.
+//! The 4×4 products the math slot `0x876504` can hold and the rotation matrix from a quaternion
+//! `0x74b6bb` that the slot `0x876594` holds
+//! (`systems/models/animation.md#dispatched-matrix-math`, `systems/animation/pose.md#rotation-leg`).
+//! The first call selects the product by processor: a processor with SSE2 runs `0x754a66`
+//! ([`m2_matmul4x4_sse2`]), the product the animate pass uses; one without runs `0x7507bb`
+//! ([`m2_matmul4x4_base`]), which `0x750930` stores. The table's entry `0x74a7c6`
+//! ([`m2_matmul4x4`]) is replaced by `0x750930` before any call, so no client reaches it. The
+//! rotation routine is the default that every set but 3DNow keeps.
 //!
-//! The x87 runs at 53 bits, so each output is one `f64` chain rounded once with `as f32` at its
-//! `fstp dword`.
+//! The x87 products run at 53 bits, so each output is one `f64` chain rounded once with `as f32`
+//! at its `fstp dword`. The SSE2 product rounds to single precision after every multiply and add.
+
+/// `0x754a66` (`cdecl`, `ret 0xc`; `[ebp+8]` is the output, `[ebp+0xc]` is `b` and `[ebp+0x10]`
+/// is `c`): the row-major product `a = b · c` in single precision, the routine a processor with
+/// SSE2 runs. It loads all of `c` (`0x754a74` to `0x754a8f`) and reads all of `b` before its first
+/// store (`0x754b6d`), so an output that aliases an input equals the disjoint result. Output
+/// row `i` is `b[i][0]·c0 + b[i][1]·c1 + b[i][2]·c2 + b[i][3]·c3` over the rows `c0` to `c3`,
+/// each product and each sum rounded to `f32`, added in pairs for rows 0 and 3 and in a chain for
+/// rows 1 and 2:
+/// - rows 0 and 3: `(p0 + p1) + (p2 + p3)` (`0x754ac2` to `0x754ac8`, `0x754b74` to `0x754b8a`);
+/// - rows 1 and 2: `((p0 + p1) + p2) + p3` (`0x754aef` to `0x754b01`, `0x754b1c` to `0x754b3a`).
+pub fn m2_matmul4x4_sse2(a: &mut [f32; 16], b: &[f32; 16], c: &[f32; 16]) {
+    let mut out = [0f32; 16];
+    for i in 0..4 {
+        for j in 0..4 {
+            let p = |k: usize| b[4 * i + k] * c[4 * k + j];
+            out[4 * i + j] = if i == 0 || i == 3 {
+                (p(0) + p(1)) + (p(2) + p(3))
+            } else {
+                ((p(0) + p(1)) + p(2)) + p(3)
+            };
+        }
+    }
+    *a = out;
+}
+
+/// `0x7507bb` (`cdecl`, `ret 0xc`; `[ebp+8]` is the output, `[ebp+0xc]` is `b` and `[ebp+0x10]`
+/// is `c`): the row-major product `a = b · c` that `0x750930` stores in the slot, run by a
+/// processor without SSE2 (or with the registry override). Each output is
+/// `(b[i][0]·c[0][j] + b[i][2]·c[2][j]) + (b[i][1]·c[1][j] + b[i][3]·c[3][j])`, the four products
+/// exact at 53 bits, the sums rounded to 53 bits, narrowed once at its `fstp dword`
+/// (`0x750810` to `0x75081a`, `0x750877` to `0x750881`): after the four products the `fxch`
+/// and `faddp` pairs add the first and third, then the second and fourth, then the two sums.
+///
+/// The routine has three paths. With `c` distinct from the output it walks `b` by rows
+/// (`0x750841`); with `c` the output and `b` distinct it walks `c` by columns (`0x7507d5`),
+/// which forms the same sums in the same order; with `b` and `c` both the output it copies `c`
+/// to a local and takes the first path (`0x750833`). Each path reads what it needs before
+/// storing over it, so every case equals the disjoint result.
+pub fn m2_matmul4x4_base(a: &mut [f32; 16], b: &[f32; 16], c: &[f32; 16]) {
+    let f = f64::from;
+    let mut out = [0f32; 16];
+    for i in 0..4 {
+        for j in 0..4 {
+            let p = |k: usize| f(b[4 * i + k]) * f(c[4 * k + j]);
+            out[4 * i + j] = ((p(0) + p(2)) + (p(1) + p(3))) as f32;
+        }
+    }
+    *a = out;
+}
 
 /// `0x74a7c6` (`cdecl`, `ret 0xc`; `[ebp+8]` is `a`, the output, `[ebp+0xc]` is `b` and
-/// `[ebp+0x10]` is `c`): the row-major product `a = b · c`, `a[4i+j] = Σ_k b[4i+k] · c[4k+j]`. Each
+/// `[ebp+0x10]` is `c`): the table's original entry, which no client reaches. The row-major product `a = b · c`, `a[4i+j] = Σ_k b[4i+k] · c[4k+j]`. Each
 /// output is a four-term `fld`, `fmul`, `faddp` chain summed from `k = 3` down to 0 and narrowed
 /// once at its `fstp dword [esi+k]`.
 ///

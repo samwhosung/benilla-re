@@ -21,7 +21,7 @@ pub use elements::{
     TexXformDef, TexXformRec, WordState, WordTrackDef,
 };
 
-use crate::mat::m2_matmul4x4;
+use crate::mat::m2_matmul4x4_sse2;
 use crate::sample_quat::QuatSampleState;
 use crate::sample_scalar::ByteSampleState;
 use crate::track::{M2Track, TrackSearchResult};
@@ -316,7 +316,7 @@ pub fn m2_animate(
         // `+0xfc = +0xbc · parent_mtx`.
         let base = models[idx].base;
         let mut w = [0f32; 16];
-        m2_matmul4x4(&mut w, &base, parent_mtx);
+        m2_matmul4x4_sse2(&mut w, &base, parent_mtx);
         models[idx].world = w;
 
         // `+0x84`.

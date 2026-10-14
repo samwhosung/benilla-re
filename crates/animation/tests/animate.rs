@@ -13,12 +13,11 @@
 //! camera and ribbon loops, with the blend legs armed through bone 0 and through the bones the
 //! records name; the particle loop; the attachment walk with the children; and both exits.
 //!
-//! The math slots are set to the routines a processor with no registry override reaches except
-//! the product: `[0x876594] = 0x74b6bb` (rotation matrix) and `[0x876588] = 0x74d11a` (blend)
-//! hold what the first call stores, but `[0x876504]` is set to `0x74a7c6`, the table's original
-//! entry that `0x750930` replaces with `0x7507bb` at the first call
-//! (`systems/models/animation.md#dispatched-matrix-math`), so every product here is the x87
-//! routine that `m2_matmul4x4` transcribes. `HasLiveParticles` (`0x7b5f60`) is a stub that
+//! The math slots are filled by the exe's own first-call selection `0x74fb49`
+//! (`systems/models/animation.md#dispatched-matrix-math`), run on the emulated processor, which
+//! reports SSE2: the product slot `[0x876504]` holds `0x754a66`, which `m2_matmul4x4_sse2`
+//! transcribes, the blend slot `0x74d11a` and the rotation slot `0x74b6bb`. `HasLiveParticles`
+//! (`0x7b5f60`) is a stub that
 //! returns a fixed value, 0 or 1 per emulator.
 
 mod common;
@@ -39,6 +38,15 @@ use benilla_re_difftest::{Emu, Wow};
 use common::{assert_f32, next};
 
 const FN_VA: u64 = 0x714260;
+
+/// Runs the first-call selection (`0x74fb49`) and checks the slots it leaves: the product
+/// `0x754a66` that a processor with SSE2 runs (`m2_matmul4x4_sse2`), the blend `0x74d11a` and the
+/// rotation matrix `0x74b6bb`.
+fn install_slots(emu: &mut Emu) {
+    assert_eq!(common::select_math_slots(emu), 0x754a66, "product slot");
+    assert_eq!(emu.read_u32(0x876588), 0x74d11a, "blend slot");
+    assert_eq!(emu.read_u32(0x876594), 0x74b6bb, "rotation slot");
+}
 
 // arena sub-offsets (per model; every region disjoint).
 const SHARED: u64 = 0x400; // +0xc time, +0x10 limit
@@ -1275,10 +1283,8 @@ fn m2_animate_difftest() {
         return;
     };
     let mut emu = Emu::new(&wow);
-    // pre-resolve the delay-link slots (the resolved-program state).
-    emu.write_u32(0x876504, 0x74a7c6);
-    emu.write_u32(0x876594, 0x74b6bb);
-    emu.write_u32(0x876588, 0x74d11a);
+    // the math slots as the first call fills them on this processor.
+    install_slots(&mut emu);
     // plant the UV-pivot globals' STEADY state: the texture-transform loop's lazy init
     // (0x715f45–0x715f81) is gated on the flag byte [0xcf04c4]&1 and on first run also
     // registers an atexit (`push 0x7187e0; call 0x409aef`) that walks into the CRT heap —
@@ -1443,9 +1449,7 @@ fn m2_animate_difftest() {
     let mut emu_pred: [Emu; 2] = [Emu::new(&wow), Emu::new(&wow)];
     let mut pred_arenas = [[0u64; 3]; 2];
     for (pv, e) in emu_pred.iter_mut().enumerate() {
-        e.write_u32(0x876504, 0x74a7c6);
-        e.write_u32(0x876594, 0x74b6bb);
-        e.write_u32(0x876588, 0x74d11a);
+        install_slots(e);
         e.stub(0x7b5f60, pv as u32, 0);
         for a in pred_arenas[pv].iter_mut() {
             *a = e.alloc(0x20000);
