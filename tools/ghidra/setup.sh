@@ -12,18 +12,9 @@
 # is used, or analyzeHeadless on the PATH.
 set -euo pipefail
 . "$(dirname "${BASH_SOURCE[0]}")/../check-exe.sh"
+. "$(dirname "${BASH_SOURCE[0]}")/headless.sh"
 check_exe
 
-find_headless() {
-  if [ -n "${GHIDRA_INSTALL_DIR:-}" ] && [ -x "$GHIDRA_INSTALL_DIR/support/analyzeHeadless" ]; then
-    echo "$GHIDRA_INSTALL_DIR/support/analyzeHeadless"; return
-  fi
-  if command -v brew >/dev/null 2>&1 && [ -x "$(brew --prefix ghidra 2>/dev/null)/libexec/support/analyzeHeadless" ]; then
-    echo "$(brew --prefix ghidra)/libexec/support/analyzeHeadless"; return
-  fi
-  command -v analyzeHeadless && return
-  return 1
-}
 HEADLESS=$(find_headless) || {
   echo "error: Ghidra 12.x not found; set GHIDRA_INSTALL_DIR (CONTRIBUTING.md, Setup)" >&2; exit 1; }
 

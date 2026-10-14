@@ -52,6 +52,7 @@ no exe, no MPQ, no extracted file, no disassembly or decompiler dump (`dumps/` i
    The project is `dumps/ghidra/benilla-re`; open it in Ghidra 12.1 or later, or rerun
    `tools/ghidra/setup.sh --apply` after the table changes to apply it again to the project
    already built. The log, with every row it could not apply, is `dumps/ghidra/setup.log`.
+   `tools/ghidra/decompile.sh 0x514ae0` decompiles functions from it without opening Ghidra.
 
 `dumps/` is ignored by git and holds only what the scripts regenerate from your exe. Nothing in
 it is ever committed.
