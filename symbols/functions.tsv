@@ -33191,8 +33191,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7664f0	195	CSimpleTop::OnMouseWheel		ui	orchestration		Handles category 0x10: offers the wheel to hit frames of the wheel lists from stratum 8 down	verified	one	ui/input#the-handlers	
 0x7665c0	134	CSimpleTop::OnWindowSize		ui	orchestration		Handles category 0x1c: refreshes the fonts and every frame's regions, then the host's size callback	inferred	none	ui/input#the-handlers	
 0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	verified	one	ui/keyscripts#deactivating-the-window	
-0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal size to a whole number of screen pixels	inferred	none		
-0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical size to a whole number of screen pixels	inferred	none		
+0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal length up to a whole number of device pixels	verified	one	ui/regions#pixel-alignment	
+0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical length up to a whole number of device pixels	verified	one	ui/regions#pixel-alignment	
 0x766800	5	TopInitTwoPiThunk		ui	orchestration		Jumps to 0x766810; a static initializer	verified	one	ui/README#static-initializers	
 0x766810	15	TopInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x766820	5	TopInitInvTwoPiThunk		ui	orchestration		Jumps to 0x766830; a static initializer	verified	one	ui/README#static-initializers	
@@ -33318,13 +33318,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a630	34	CSimpleFrame::ResizeByFactor		ui	unreached		Passes a size factor and point to 0x768550; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x76a660	34	CSimpleFrame::ApplyDragDelta		ui	orchestration		Passes a cursor difference and point to 0x768710 on the frame's layout part	verified	one	ui/resizebounds#the-drag	
 0x76a690	128	CSimpleFrame::SetAlpha		ui	orchestration		Stores the alpha byte and, on a change, refreshes the regions and gives every child the same byte	verified	one	ui/visibility#alpha	
-0x76a710	27	CSimpleFrame::EnableDrawLayer		ui	orchestration		Switches a draw layer on and marks it dirty	inferred	none		
-0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	inferred	none		
+0x76a710	27	CSimpleFrame::EnableDrawLayer		ui	orchestration		Switches a draw layer on and marks it dirty	verified	one	ui/framestate#draw-layers	
+0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	verified	one	ui/framestate#draw-layers	
 0x76a750	154	CSimpleFrame::AddRegion		ui	orchestration		Appends a region node at the tail of the frame's region list	verified	one	ui/frames#child-and-region-lists	
 0x76a7f0	104	CSimpleFrame::RemoveRegion		ui	orchestration		Frees the region node of a region	verified	one	ui/frames#what-the-region-list-holds	
 0x76a860	173	CSimpleFrame::AddRegionToLayer		ui	orchestration		Gives a region the frame's scale and links it at the head of a draw layer's list, marking the layer dirty	verified	one	ui/draworder#regions-within-a-frame	
 0x76a910	113	CSimpleFrame::RemoveRegionFromLayer		ui	orchestration		Removes a region from a draw layer's list, marking the layer dirty	inferred	none	ui/frames#frame-fields	
-0x76a990	63	CSimpleFrame::NotifyLayerChanged		ui	orchestration		Marks a draw layer dirty in the frame's own mask or its level node	verified	one	ui/strata#dirty-marks	
+0x76a990	63	CSimpleFrame::NotifyLayerChanged		ui	orchestration		Marks a draw layer dirty in the frame's own mask or its level node	verified	one	ui/framestate#draw-layers	
 0x76a9d0	78	CSimpleFrame::NotifyAllLayersChanged		ui	unreached		Marks all five draw layers dirty; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x76aa20	142	CSimpleFrame::AddChild		ui	orchestration		Adds a child frame node to the frame's children	verified	one	ui/frames#child-and-region-lists	
 0x76aab0	96	CSimpleFrame::RemoveChild		ui	orchestration		Frees the child node of a frame	verified	one	ui/visibility#parent-change	
@@ -33366,7 +33366,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76c150	5	FrameInitInvTwoPiThunk		ui	orchestration		Jumps to 0x76c160; a static initializer	verified	one	ui/README#static-initializers	
 0x76c160	19	FrameInitInvTwoPi		ui	primitive		Stores 1 divided by a global set just before as a float in a global	verified	one	ui/README#static-initializers	
 0x76c180	81	CSimpleFrame::OnMouseWheel		ui	orchestration		Runs OnMouseWheel with 1 or -1 when visible	verified	one	ui/mouse#the-wheel	
-0x76c1e0	138	CSimpleFrame::OnDragStart		ui	orchestration		Runs OnDragStart with the name of the lowest held button	inferred	none		
+0x76c1e0	138	CSimpleFrame::OnDragStart		ui	orchestration		Runs OnDragStart with the name of the lowest held button	verified	one	ui/mouse#starting-a-drag	
 0x76c2a0	25	CSimpleFrame::OnDragStop		ui	orchestration		Runs the OnDragStop script	inferred	none		
 0x76c2c0	25	CSimpleFrame::OnReceiveDrag		ui	orchestration		Runs the OnReceiveDrag script	inferred	none		
 0x76c2e0	57	CSimpleFrame::SetHighlightLocked		ui	orchestration		Stores +0xf8 and switches layer 4 on, or off unless hovered	inferred	none	ui/frames#frame-fields	
@@ -33495,7 +33495,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fad0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x76fae0	21			ui	primitive		Runs its object file code not read here	inferred	none		
 0x76fb00	317	DrawBatch		ui	host		Draws a batch: its sorted quads, then its text sub-batch, then its render callbacks	verified	one	ui/draworder#what-a-batch-drains	
-0x76fc40	193			ui	primitive		Runs its object file code that calls 0x77f640, 0x770410; not read here	inferred	none		
+0x76fc40	193	CSimpleTexture::CSimpleTexture		ui	primitive		Builds a texture of a frame and layer with no image, the BLEND mode and the unit coordinates	verified	one	ui/texture#draw-layer-and-blend-mode	
 0x76fd10	43			ui	orchestration		Runs its object file code that calls 0x76fd40, CDataAllocator::PutData; not read here	inferred	none		
 0x76fd40	59			ui	primitive		Runs its object file code that calls HandleClose, UnlockScriptObject; not read here	inferred	none		
 0x76fd80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33506,11 +33506,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
 0x7701c0	54	CSimpleTexture::AnchorToParent		ui	primitive	void __thiscall (void *node, void *status)	Pins a parented texture with no anchor point to its parent with SetAllPoints	verified	one	ui/regions#the-implicit-anchor	
 0x770200	245	CSimpleTexture::SetTexture		ui	primitive		Loads a texture file with wrap, filter and shader index, or answers 1 for the file already held	verified	one	ui/texture#settexture	
-0x770300	91			ui	orchestration		Runs its object file code that calls CompareHandles, AddHandleRef, HandleClose and 1 more; not read here	inferred	none		
+0x770300	91	CSimpleTexture::SetImage		ui	orchestration		Replaces the image handle with a referenced one, closes the old and marks the texture dirty	verified	one	ui/texture#two-colour-stores	
 0x770360	58	CSimpleTexture::SetSolidColour		ui	orchestration		Replaces the image with the shared 8 by 8 solid image of a colour	verified	one	ui/texture#a-colour-without-a-file	
-0x7703a0	74			ui	orchestration		Runs its object file code that calls 0x44b410, SStrCopy, SStr::sub_64A450; not read here	inferred	none		
+0x7703a0	74	CSimpleTexture::GetFileName		ui	orchestration		Copies the image name cut at its last dot	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x7703f0	29	CSimpleTexture::SetBlendMode		ui	orchestration		Stores the blend mode and marks the texture dirty	verified	one	ui/texture#the-quad-record	
-0x770410	165			ui	orchestration		Sets a texture's four corner coordinates from a rectangle	verified	one	ui/slider#a-status-bars-fill	
+0x770410	165	CSimpleTexture::SetTexCoordRect		ui	orchestration		Sets the four corners of the coordinates from a rectangle	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x7704c0	166	StoreTextureCorners		ui	orchestration		Stores eight floats as the four corners and relays out a rect-modifying texture	verified	one	ui/taxiframe#route-line-textures	
 0x770570	64			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7705b0	106	CSimpleTexture::SetVertices		ui	primitive	void __thiscall (float *rect)	Writes the four vertex positions (left top), (left bottom), (right top), (right bottom) with z zero	verified	one	ui/regions#a-region-that-does-not-resolve	
@@ -33604,12 +33604,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7735f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x773610	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x773620	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/README#frame-core-object-files	
-0x773700	256	Frame::IsFrameType	idb	ui	orchestration		Implements the Frame method IsFrameType, its pair in the table 0x878ec0	inferred	none		
+0x773640	182	Frame::GetFrameType	idb	ui	orchestration		Implements the Frame method GetFrameType, its pair in the table 0x878ec0	verified	one	ui/framestate#frame-type	
+0x773700	256	Frame::IsFrameType	idb	ui	orchestration		Implements the Frame method IsFrameType, its pair in the table 0x878ec0	verified	one	ui/framestate#frame-type	
 0x773800	5	FrameMethodsInitInfinityThunk		ui	orchestration		Jumps to 0x773810; a static initializer	verified	one	ui/README#static-initializers	
 0x773810	11	FrameMethodsInitInfinity		ui	orchestration		Copies +inf into a global of the file	verified	one	ui/README#static-initializers	
-0x773820	225	Frame::GetTitleRegion	idb	ui	orchestration		Implements the Frame method GetTitleRegion, its pair in the table 0x878ec0	inferred	none		
-0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	inferred	none		
+0x773820	225	Frame::GetTitleRegion	idb	ui	orchestration		Implements the Frame method GetTitleRegion, its pair in the table 0x878ec0	verified	one	ui/framestate#the-title-region	
+0x773910	272	Frame::CreateTitleRegion	idb	ui	orchestration		Implements the Frame method CreateTitleRegion, its pair in the table 0x878ec0	verified	one	ui/framestate#the-title-region	
 0x773a20	520	Frame::CreateTexture	idb	ui	orchestration		Creates a texture of the frame with a name, layer and template, the template only from a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773c30	558	Frame::CreateFontString	idb	ui	orchestration		Creates a font string of the frame, inheriting a font object or else a template named by a string	verified	one	ui/script#creating-a-frame-from-lua	
 0x773e60	242	Frame::GetNumRegions	idb	ui	orchestration		Implements the Frame method GetNumRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
@@ -33632,12 +33632,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x774fc0	184	Frame::GetEffectiveScale	idb	ui	orchestration		Implements the Frame method GetEffectiveScale, its pair in the table 0x878ec0	inferred	none		
 0x775080	187	Frame::GetScale	idb	ui	orchestration		Implements the Frame method GetScale, its pair in the table 0x878ec0	inferred	none		
 0x775140	320	Frame::SetScale	idb	ui	orchestration		Implements the Frame method SetScale, its pair in the table 0x878ec0	verified	one	ui/visibility#scale	
-0x775280	187	Frame::GetID	idb	ui	orchestration		Implements the Frame method GetID, its pair in the table 0x878ec0	inferred	none		
-0x775340	241	Frame::SetID	idb	ui	orchestration		Implements the Frame method SetID, its pair in the table 0x878ec0	inferred	none		
-0x775440	163	Frame::SetToplevel	idb	ui	orchestration		Implements the Frame method SetToplevel, its pair in the table 0x878ec0	inferred	none		
-0x7754f0	177	Frame::IsToplevel	idb	ui	orchestration		Implements the Frame method IsToplevel, its pair in the table 0x878ec0	inferred	none		
-0x7755b0	202	Frame::EnableDrawLayer	idb	ui	orchestration		Implements the Frame method EnableDrawLayer, its pair in the table 0x878ec0	inferred	none		
-0x775680	202	Frame::DisableDrawLayer	idb	ui	orchestration		Implements the Frame method DisableDrawLayer, its pair in the table 0x878ec0	inferred	none		
+0x775280	187	Frame::GetID	idb	ui	orchestration		Implements the Frame method GetID, its pair in the table 0x878ec0	verified	one	ui/framestate#the-id	
+0x775340	241	Frame::SetID	idb	ui	orchestration		Implements the Frame method SetID, its pair in the table 0x878ec0	verified	one	ui/framestate#the-id	
+0x775440	163	Frame::SetToplevel	idb	ui	orchestration		Implements the Frame method SetToplevel, its pair in the table 0x878ec0	verified	one	ui/framestate#the-toplevel-flag	
+0x7754f0	177	Frame::IsToplevel	idb	ui	orchestration		Implements the Frame method IsToplevel, its pair in the table 0x878ec0	verified	one	ui/framestate#the-toplevel-flag	
+0x7755b0	202	Frame::EnableDrawLayer	idb	ui	orchestration		Implements the Frame method EnableDrawLayer, its pair in the table 0x878ec0	verified	one	ui/framestate#draw-layers	
+0x775680	202	Frame::DisableDrawLayer	idb	ui	orchestration		Implements the Frame method DisableDrawLayer, its pair in the table 0x878ec0	verified	one	ui/framestate#draw-layers	
 0x775750	183	Frame::Show	idb	ui	orchestration		Implements the Frame method Show, its pair in the table 0x878ec0	verified	one	ui/visibility#showing-a-frame	
 0x775810	183	Frame::Hide	idb	ui	orchestration		Implements the Frame method Hide, its pair in the table 0x878ec0	verified	one	ui/visibility#hiding-a-frame	
 0x7758d0	178	Frame::IsVisible	idb	ui	orchestration		Implements the Frame method IsVisible, its pair in the table 0x878ec0	inferred	none		
@@ -33650,20 +33650,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x776020	369	Frame::SetMinResize	idb	ui	orchestration		Implements the Frame method SetMinResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
 0x7761a0	252	Frame::GetMaxResize	idb	ui	orchestration		Implements the Frame method GetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-lua-methods	
 0x7762a0	369	Frame::SetMaxResize	idb	ui	orchestration		Implements the Frame method SetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
-0x776420	166	Frame::SetMovable	idb	ui	orchestration		Implements the Frame method SetMovable, its pair in the table 0x878ec0	inferred	none		
-0x7764d0	179	Frame::IsMovable		ui	orchestration		Implements the Frame method IsMovable, its pair in the table 0x878ec0	inferred	none		
-0x776590	166	Frame::SetResizable	idb	ui	orchestration		Implements the Frame method SetResizable, its pair in the table 0x878ec0	inferred	none		
-0x776640	179	Frame::IsResizable	idb	ui	orchestration		Implements the Frame method IsResizable, its pair in the table 0x878ec0	inferred	none		
-0x776700	303	Frame::StartMoving	idb	ui	orchestration		Implements the Frame method StartMoving, its pair in the table 0x878ec0	inferred	none		
-0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-drag	
-0x776990	184	Frame::StopMovingOrSizing	idb	ui	orchestration		Implements the Frame method StopMovingOrSizing, its pair in the table 0x878ec0	inferred	none		
-0x776a50	240	Frame::SetUserPlaced	idb	ui	orchestration		Implements the Frame method SetUserPlaced, its pair in the table 0x878ec0	inferred	none		
-0x776b40	179	Frame::IsUserPlaced	idb	ui	orchestration		Implements the Frame method IsUserPlaced, its pair in the table 0x878ec0	inferred	none		
-0x776c00	162	Frame::SetClampedToScreen	idb	ui	orchestration		Implements the Frame method SetClampedToScreen, its pair in the table 0x878ec0	inferred	none		
-0x776cb0	174	Frame::IsClampedToScreen	idb	ui	orchestration		Implements the Frame method IsClampedToScreen, its pair in the table 0x878ec0	inferred	none		
-0x776d60	338	Frame::RegisterForDrag	idb	ui	orchestration		Implements the Frame method RegisterForDrag, its pair in the table 0x878ec0	inferred	none		
-0x776ec0	201	Frame::EnableKeyboard	idb	ui	orchestration		Implements the Frame method EnableKeyboard, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
-0x776f90	218	Frame::IsKeyboardEnabled	idb	ui	orchestration		Implements the Frame method IsKeyboardEnabled, its pair in the table 0x878ec0	inferred	none		
+0x776420	166	Frame::SetMovable	idb	ui	orchestration		Implements the Frame method SetMovable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x7764d0	179	Frame::IsMovable		ui	orchestration		Implements the Frame method IsMovable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776590	166	Frame::SetResizable	idb	ui	orchestration		Implements the Frame method SetResizable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776640	179	Frame::IsResizable	idb	ui	orchestration		Implements the Frame method IsResizable, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776700	303	Frame::StartMoving	idb	ui	orchestration		Implements the Frame method StartMoving, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776990	184	Frame::StopMovingOrSizing	idb	ui	orchestration		Implements the Frame method StopMovingOrSizing, its pair in the table 0x878ec0	verified	one	ui/framestate#moving-and-sizing	
+0x776a50	240	Frame::SetUserPlaced	idb	ui	orchestration		Implements the Frame method SetUserPlaced, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
+0x776b40	179	Frame::IsUserPlaced	idb	ui	orchestration		Implements the Frame method IsUserPlaced, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
+0x776c00	162	Frame::SetClampedToScreen	idb	ui	orchestration		Implements the Frame method SetClampedToScreen, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
+0x776cb0	174	Frame::IsClampedToScreen	idb	ui	orchestration		Implements the Frame method IsClampedToScreen, its pair in the table 0x878ec0	verified	one	ui/framestate#placement-flags	
+0x776d60	338	Frame::RegisterForDrag	idb	ui	orchestration		Implements the Frame method RegisterForDrag, its pair in the table 0x878ec0	verified	one	ui/framestate#the-drag-buttons	
+0x776ec0	201	Frame::EnableKeyboard	idb	ui	orchestration		Implements the Frame method EnableKeyboard, its pair in the table 0x878ec0	verified	one	ui/framestate#the-keyboard	
+0x776f90	218	Frame::IsKeyboardEnabled	idb	ui	orchestration		Implements the Frame method IsKeyboardEnabled, its pair in the table 0x878ec0	verified	one	ui/framestate#the-keyboard	
 0x777070	181	Frame::EnableMouse	idb	ui	orchestration		Implements the Frame method EnableMouse, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration		Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
 0x7771f0	181	Frame::EnableMouseWheel	idb	ui	orchestration		Implements the Frame method EnableMouseWheel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
@@ -33879,14 +33879,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77f6f0	85			ui	orchestration		Runs its object file code that calls 0x77fd10, SMemFree; not read here	inferred	none		
 0x77f750	355	CScriptRegion::SetVertexColor		ui	primitive		Sets a region's vertex colour, skipping a repeat and an opaque white when none is set	verified	one	ui/texture#setting-a-vertex-colour	
 0x77f8c0	77	CScriptRegion::GetVertexColor		ui	orchestration		Copies the vertex colour, or opaque white when it holds no entry	verified	one	ui/texture#two-colour-stores	
-0x77f910	387			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0; not read here	inferred	none		
+0x77f910	387	CScriptRegion::SetGradient		ui	primitive		Sets the four corner colours of a region from a minimum, a maximum and an orientation	verified	one	ui/texture#gradients	
 0x77faa0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fab0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fac0	405	CScriptRegion::UpdateFrameAlpha		ui	primitive		Folds the owning frame's alpha into the vertex colour array	verified	one	ui/texture#the-frames-alpha-in-the-colour	
 0x77fc60	70	CScriptRegion::Unregister		ui	orchestration		Takes a registered region out of its parent's draw layer list and defers its layout	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fcb0	90	CScriptRegion::Register		ui	orchestration		Links a shown, unregistered region into its visible parent's draw layer list	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fd10	218	CScriptRegion::SetRegionParent		ui	primitive		Moves a region to a new parent and draw layer, linking it into the new parent's region list	verified	one	ui/frames#what-the-region-list-holds	
-0x77fdf0	29			ui	orchestration		Runs its object file code that calls CSimpleFrame::NotifyLayerChanged; not read here	inferred	none		
+0x77fdf0	29	CScriptRegion::NotifyLayerChanged		ui	orchestration		Tells the parent frame its layer changed while the region is registered	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x77fe10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fe20	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x77fe30	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34686,26 +34686,26 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79a670	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x79a690	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x79a6a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x79a6c0	188	Texture::GetDrawLayer	idb	ui	primitive		Implements the Texture method GetDrawLayer	inferred	none		
-0x79a780	270	Texture::SetDrawLayer	idb	ui	primitive		Implements the Texture method SetDrawLayer	inferred	none		
-0x79a890	188	Texture::GetBlendMode	idb	ui	primitive		Implements the Texture method GetBlendMode	inferred	none		
-0x79a950	256	Texture::SetBlendMode	idb	ui	primitive		Implements the Texture method SetBlendMode	inferred	none		
-0x79aa50	376	Texture::GetVertexColor	idb	ui	primitive		Implements the Texture method GetVertexColor	inferred	none		
+0x79a6c0	188	Texture::GetDrawLayer	idb	ui	primitive		Implements the Texture method GetDrawLayer	verified	one	ui/texture#draw-layer-and-blend-mode	
+0x79a780	270	Texture::SetDrawLayer	idb	ui	primitive		Implements the Texture method SetDrawLayer	verified	one	ui/texture#draw-layer-and-blend-mode	
+0x79a890	188	Texture::GetBlendMode	idb	ui	primitive		Implements the Texture method GetBlendMode	verified	one	ui/texture#draw-layer-and-blend-mode	
+0x79a950	256	Texture::SetBlendMode	idb	ui	primitive		Implements the Texture method SetBlendMode	verified	one	ui/texture#draw-layer-and-blend-mode	
+0x79aa50	376	Texture::GetVertexColor	idb	ui	primitive		Implements the Texture method GetVertexColor	verified	one	ui/texture#two-colour-stores	
 0x79abd0	594	Texture::SetVertexColor	idb	ui	primitive		Implements the Texture method SetVertexColor	verified	one	ui/texture#setting-a-vertex-colour	
-0x79ae30	806	Texture::SetGradient	idb	ui	primitive		Implements the Texture method SetGradient	inferred	none		
+0x79ae30	806	Texture::SetGradient	idb	ui	primitive		Implements the Texture method SetGradient	verified	one	ui/texture#gradients	
 0x79b160	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x79b170	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Implements the Texture method SetGradientAlpha	inferred	none		
+0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Implements the Texture method SetGradientAlpha	verified	one	ui/texture#gradients	
 0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Implements the Texture method SetAlpha	verified	one	ui/texture#setting-a-vertex-colour	
 0x79b690	222	Texture::GetAlpha	idb	ui	primitive		Implements the Texture method GetAlpha	inferred	none		
-0x79b770	180	Texture::Show	idb	ui	primitive		Implements the Texture method Show	inferred	none		
-0x79b830	180	Texture::Hide	idb	ui	primitive		Implements the Texture method Hide	inferred	none		
-0x79b8f0	178	Texture::IsVisible	idb	ui	primitive		Implements the Texture method IsVisible	inferred	none		
-0x79b9b0	178	Texture::IsShown	idb	ui	primitive		Implements the Texture method IsShown	inferred	none		
-0x79ba70	205	Texture::GetTexture	idb	ui	primitive		Implements the Texture method GetTexture	inferred	none		
+0x79b770	180	Texture::Show	idb	ui	primitive		Implements the Texture method Show	verified	one	ui/texture#showing-and-hiding-a-texture	
+0x79b830	180	Texture::Hide	idb	ui	primitive		Implements the Texture method Hide	verified	one	ui/texture#showing-and-hiding-a-texture	
+0x79b8f0	178	Texture::IsVisible	idb	ui	primitive		Implements the Texture method IsVisible	verified	one	ui/texture#showing-and-hiding-a-texture	
+0x79b9b0	178	Texture::IsShown	idb	ui	primitive		Implements the Texture method IsShown	verified	one	ui/texture#showing-and-hiding-a-texture	
+0x79ba70	205	Texture::GetTexture	idb	ui	primitive		Implements the Texture method GetTexture	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Implements the Texture method SetTexture	verified	one	ui/texture#settexture	
-0x79bdf0	190	Texture::GetTexCoord	idb	ui	primitive		Implements the Texture method GetTexCoord	inferred	none		
-0x79beb0	451	Texture::SetTexCoord	idb	ui	primitive		Stores four corner texture coordinates from 4 or 8 numbers	verified	one	ui/taxiframe#route-line-textures	
+0x79bdf0	190	Texture::GetTexCoord	idb	ui	primitive		Implements the Texture method GetTexCoord	verified	one	ui/texture#reading-the-image-and-the-coordinates	
+0x79beb0	451	Texture::SetTexCoord	idb	ui	primitive		Stores four corner texture coordinates from 4 or 8 numbers	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79c080	159	Texture::SetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method SetTexCoordModifiesRect	inferred	none		
 0x79c120	178	Texture::GetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method GetTexCoordModifiesRect	inferred	none		
 0x79c1e0	224	Texture::SetDesaturated	idb	ui	primitive		Implements the Texture method SetDesaturated	verified	one	ui/texture#desaturating	

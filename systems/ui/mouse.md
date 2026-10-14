@@ -167,6 +167,22 @@ Test: none
 `+0x300` for children whose stratum at `+0xc0` equals the frame's (`0x76a582`). `0x76ae10` enters the frame at `0x76ae85`
 and calls each child's show at `0x76aed5`.
 
+## Starting a drag
+
+A frame drags only for the buttons it registered. A press of a registered button arms the frame with the button and the press point; the next
+pointer probe of the frame starts the drag once the cursor has moved more than the threshold distance from that point, and calls `OnDragStart` with
+the name of the lowest-numbered button held at that moment: `LeftButton`, `MiddleButton`, `RightButton`, `Button4` or `Button5`, else `UNKNOWN`. The drag starts once per press.
+
+Addresses: `0x76bf70`, `0x76bf7d`, `0x76bf82`, `0x76bf8c`, `0x76bf99`, `0x76bfa5`, `0x76b320`, `0x76b34c`, `0x76b368`, `0x76b37e`, `0x76b388`, `0x76c1e0`, `0x76c1e6`, `0x76c1f6`, `0x76c206`, `0x76c21e`, `0x76c22c`, `0x76c233`, `0x76c23a`, `0x76c241`, `0x76c248`, `0x76c24f`, `0x76c25c`, `0xcf0c14`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x76bf70` ANDs the event's button (`+0x14`) with the drag mask at `+0xfc` (`0x76bf7d`); on a match it stores 1 at `+0x100`, 0 at `+0x104`, the button at `+0x108` and the press point at `+0x10c`
+and `+0x110` (`0x76bf82` to `0x76bfab`). `0x76b320` acts when `+0x100` is set and `+0x104` is not (`0x76b34c`): it compares the squared distance from the press point with `s_dragThresholdSq`
+(`0x76b368`) and, when it is not smaller, stores 1 at `+0x104` (`0x76b37e`) and calls slot 0x74 (`0x76b388`). `0x76c1e0` finds the lowest set bit of the held-buttons word at `+0x18` of the event
+(`0x76c1ef` to `0x76c204`), and, if the script at `+0x168` exists, names a bit of 1, 2, 4, 8 or 0x10 through the jump table (`0x76c21e` to `0x76c248`) and calls the script with the name (`0x76c25c`).
+
 ## The wheel
 
 A wheel turn goes to the first frame, from stratum 8 down, whose wheel mask bit is set, whose hit test holds at the

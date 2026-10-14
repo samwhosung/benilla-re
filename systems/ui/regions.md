@@ -150,3 +150,20 @@ string's `0x773080` calls `0x768320`, which answers 0 while flag 1 is clear (`0x
 `0x772e00`, which answers 1 for a rectangle with its top or right below 0 or its bottom or left above
 1.0, and the record is not appended. `0x7680e0` tests flag 8 only on its resolve-now leg (`0x7680ee`); the
 queue leg `0x768140` never reads it, so a model's ready hook that lays out with 0 (`0x76ce6b`) retries.
+
+## Pixel alignment
+
+`PixelAlignX(x)` and `PixelAlignY(y)` round a layout length up to a whole number of device pixels. A length below 2^-22
+in size, and any length on a viewport of no width or height, comes back unchanged. Otherwise the length is
+divided by the horizontal or vertical screen scale, multiplied by the viewport's size in pixels, increased by 0.99999 when it is positive,
+truncated toward zero, divided by the pixel size again and multiplied by the screen scale. A positive length therefore gains a pixel
+unless it already is a whole number of pixels, and a negative length is truncated.
+
+Addresses: `0x7666a0`, `0x7666b3`, `0x7666e0`, `0x7666f6`, `0x76670a`, `0x76671f`, `0x766725`, `0x766737`, `0x766750`, `0x7667ba`, `0x7667cf`, `0x7667e7`, `0x41ae40`, `0x41ae50`, `0x41ae60`, `0x41ae70`, `0x58a250`, `0x808120`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7666b3` compares the length with the float 2.38e-07 (`0x8029d4`). `0x7666e0` reads the viewport as four floats from the device (`0x58a250`) and takes right less left
+as the horizontal pixel count (`0x7666e8`); `0x766750` takes top less bottom (`0x766798`). `0x76670a` divides by the screen scale with `0x41ae40` (`0x7667ba` with `0x41ae50` for the vertical), `0x76671f`
+adds the float at `0x808120`, 0.99999, when the product is above zero, and `0x766725` truncates. `0x766737` multiplies by the scale again with `0x41ae60` (`0x7667e7` with `0x41ae70`).

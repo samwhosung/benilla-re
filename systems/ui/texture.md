@@ -18,13 +18,13 @@ A texture has two colour inputs that never overwrite each other: the image at `+
 multiplies it. `<Color>` and `SetTexture(r, g, b, a)` replace the image with a solid one; `SetVertexColor` and
 `SetAlpha` write the vertex colour. `GetVertexColor` answers opaque white whenever the vertex colour holds no entry.
 
-Addresses: `0x77f8c0`, `0x77f8c8`, `0x77f900`, `0x77f903`, `0x77f750`, `0x7706e0`, `0x7706e3`, `0x7706eb`
+Addresses: `0x77f8c0`, `0x770300`, `0x77f8c8`, `0x77f900`, `0x77f903`, `0x77f750`, `0x7706e0`, `0x7706e3`, `0x7706eb`, `0x79aa50`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x77f8c0` copies the four bytes from the arrays when the colour count is 1 (`0x77f8c8`) and stores `0xffffffff` otherwise
-(`0x77f900`, `0x77f903`). The emit `0x7706e0` tests the image handle alone (`0x7706e3`, `0x7706eb`), so a texture with neither a
+(`0x77f900`, `0x77f903`). `0x770300` replaces the image handle with a referenced one, closing the old and marking the texture dirty. The emit `0x7706e0` tests the image handle alone (`0x7706e3`, `0x7706eb`), so a texture with neither a
 file nor a colour draws nothing, and a vertex colour alone never draws.
 
 ## A colour without a file
@@ -156,6 +156,74 @@ the image as state 0x17 (`0x76fb75`), tests the colour pointer (`0x76fb85`), com
 2 for a colour with a mode below 2 and to the record's mode otherwise unless it is 0xb (`0x76fb98`, `0x76fb9b`, `0x76fba2`), binds state 0x3f
 (`0x76fbaf`), and draws (`0x76fbdb`). It sets no state from 0x1f to 0x26. The device reset `0x593bf0` stores 1 in all eight (`0x593d93`);
 preset 1 modulates colour and alpha (the preset table `0x85c250`, `watershade`). The bracket ends at `0x76fc03`.
+
+## Draw layer and blend mode
+
+`SetDrawLayer(layer)` moves the texture to one of the five draw layers and `GetDrawLayer()` answers the layer's name. The names
+are `BACKGROUND`, `BORDER`, `ARTWORK`, `OVERLAY` and `HIGHLIGHT`, matched ignoring case. A texture starts on the layer its
+creator gives it with the blend mode `BLEND`. `SetBlendMode(mode)` takes `DISABLE`, `ALPHAKEY`, `BLEND`, `ADD` or `MOD`, which are
+modes 0 to 4 in the order 0 `DISABLE`, 1 `ALPHAKEY`, 2 `BLEND`, 3 `ADD`, 4 `MOD`, and `GetBlendMode()` answers the name, `UNKNOWN`
+for any other value. A name that is not a string or not in the list raises `Usage: %s:SetDrawLayer("layer")` or
+`Usage: %s:SetBlendMode("mode")` and changes nothing.
+
+Addresses: `0x79a6c0`, `0x79a75f`, `0x79a765`, `0x79a780`, `0x79a810`, `0x79a834`, `0x79a851`, `0x79a890`, `0x79a935`, `0x79a950`, `0x79a9e0`, `0x79aa04`, `0x79aa13`, `0x6f18b0`, `0x6f1900`, `0x6f1920`, `0x6f1970`, `0x77fd10`, `0x7703f0`, `0x76fc40`, `0x76fc64`
+Confidence: verified
+Proof: one
+Test: none
+
+The layer is `+0xc0` and the blend mode `+0xd0`. `0x79a780` reads the name with `0x6f18b0` over the current layer (`0x79a81a` to `0x79a834`) and calls
+`0x77fd10(parent, layer, +0xc4)` (`0x79a851`), which relinks the texture in its parent's layer list and keeps its shown flag. `0x79a950` parses the name with
+`0x6f1920` (`0x79aa04`) and stores it through `0x7703f0` (`0x79aa13`). The constructor stores mode 2 (`0x76fc64`). The mode of the quad record is this value (`0x773032`).
+
+## Gradients
+
+`SetGradient(orientation, minR, minG, minB, maxR, maxG, maxB)` and `SetGradientAlpha(orientation, minR, minG, minB, minA, maxR, maxG, maxB, maxA)` give the
+four corners their own vertex colours. The orientation is `HORIZONTAL` or `VERTICAL`, ignoring case; any other string raises the usage message. Each channel
+is clamped to 0 to 1 and the alpha of `SetGradient` is 1. `HORIZONTAL` gives the two left corners the minimum colour and the two right corners the maximum;
+`VERTICAL` gives the two bottom corners the minimum and the two top corners the maximum. The result is four entries in both colour arrays, so the quad
+record's stride is 4.
+
+Addresses: `0x79ae30`, `0x79aee4`, `0x79b119`, `0x79b180`, `0x79b233`, `0x79b53c`, `0x6f1a20`, `0x77f910`, `0x77f918`, `0x77f929`, `0x77f9b2`, `0x77f9c3`, `0x77f9c5`, `0x77fa2c`, `0x77fa21`
+Confidence: verified
+Proof: one
+Test: none
+
+The bindings parse the orientation with `0x6f1a20` (`0x79aee4`, `0x79b233`) over the names `HORIZONTAL` (0) and `VERTICAL` (1), pack each colour as `×255 + 0.5`
+truncated, and call `0x77f910(orientation, min, max)` (`0x79b119`, `0x79b53c`). `0x77f910` makes both arrays four entries long unless the colour array already holds
+four (`0x77f918`, `0x77f929`) and, for orientation 0 (`0x77f9c3`), stores the minimum in entries 0 and 1 (vertices top left and bottom left) and the maximum in 2 and 3
+(`0x77f9c5` onward); for 1 (`0x77fa2c`) the minimum in entries 1 and 3 and the maximum in 0 and 2. It calls the region's alpha slot, `0x77fac0` (`0x77fa21`).
+
+## Showing and hiding a texture
+
+`Show()` and `Hide()` set the texture's shown flag at `+0xc4` and register it in its parent's draw layer list or take it out. `IsShown()` answers 1 or nil by the
+flag, and `IsVisible()` answers 1 or nil by the visible flag at `+0xc8`, which is set only while the texture is registered, that is shown inside a
+visible frame.
+
+Addresses: `0x79b770`, `0x79b80f`, `0x79b819`, `0x79b830`, `0x79b8cf`, `0x79b8d9`, `0x79b8f0`, `0x79b975`, `0x79b9b0`, `0x79ba35`, `0x77fcb0`, `0x77fc60`, `0x77fdf0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x79b770` stores 1 at `+0xc4` and calls `0x77fcb0` (`0x79b80f`, `0x79b819`), which links a shown, unregistered region of a visible parent into the layer list and sets `+0xc8`.
+`0x79b830` stores 0 and calls `0x77fc60`, which takes it out and clears `+0xc8` (`0x79b8cf`, `0x79b8d9`). `0x77fdf0` tells the parent frame that the texture's layer changed, but only while the texture is registered. `IsVisible` reads `+0xc8` (`0x79b975`) and `IsShown` `+0xc4` (`0x79ba35`).
+
+## Reading the image and the coordinates
+
+`GetTexture()` answers the name of the image without its extension, or nil when there is no image. A solid fill is named `Solid Texture`. `GetTexCoord()` answers
+the eight coordinates in the order top left, bottom left, top right, bottom right, each as a pair. `SetTexCoord(minX, maxX, minY, maxY)` sets the same four corners
+from a rectangle, and `SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)` sets all eight; any other number of arguments raises
+`Usage: %s:SetTexCoord(minX, maxX, minY, maxY) or SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)`. When `SetTexCoordModifiesRect` is on, a change of coordinates
+recomputes the vertices from the resolved rectangle.
+
+Addresses: `0x79ba70`, `0x79bafe`, `0x79bb0c`, `0x7703a0`, `0x44b410`, `0x64a450`, `0x79bdf0`, `0x79be86`, `0x79bead`, `0x79beb0`, `0x79bf58`, `0x79bff9`, `0x79c065`, `0x770410`, `0x7704c0`, `0x770462`, `0x770498`, `0x79c080`, `0x79c113`, `0x44a9ae`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7703a0` takes the image's name (`0x44b410`, the handle's `+0x0c`) into a 0x104-byte buffer and cuts it at the last dot (`0x64a450`, `0x7703ce`), and `0x79ba70` pushes it
+(`0x79bb0c`); the solid fill's name is written at `0x44a9ae`. `0x79bdf0` pushes eight numbers (`0x79be86`, `0x79bead`). `0x79beb0` reads the argument count with `lua_gettop` (`0x79bf58`): eight
+numbers go straight to `0x7704c0` (`0x79bff9`) and four become `(minY, minX, maxY, maxX)` for `0x770410` (`0x79c065`), which makes the four pairs. `0x7704c0` copies eight floats to `+0x104` and,
+with `+0x124` set, calls `0x768320`, `0x770570` and `0x7705b0` on the resolved rectangle (`0x770462` to `0x770498`). `SetTexCoordModifiesRect` stores its flag at `+0x124` (`0x79c113`).
 
 ## Desaturating
 
