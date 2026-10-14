@@ -150,7 +150,7 @@ fn eval_scalar(band: Option<&BandSub>, half_min: i32) -> u32 {
 type Record = [u32; 0x24];
 
 /// `0x6d64d0` — `dn_band_gather`: fill a fresh record from `(half_min, row)`. 18 color bands (with
-/// the idx-8 → +0x4c discontinuity), 6 scalar bands, then the direct row copies (ctb.md 0x6d64d0).
+/// the idx-8 → +0x4c discontinuity), 6 scalar bands, then the direct row copies (`daynight.md#light-record`).
 fn gather(c: &Containers, row: &LightParamsRow, half_min: i32) -> Record {
     let mut r: Record = [0; 0x24];
 
