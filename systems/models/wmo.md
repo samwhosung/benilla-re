@@ -227,3 +227,103 @@ Test: none
 
 `0x6ba1e0` creates the buffers named `VBBList_vtx` and `VBBList_idx`; `0x6b87c0`, called from the
 map code, creates two pools.
+
+## Group flag tests
+
+A group's flags exist twice: the first dword of its 32-byte `MOGI` record (`[root+0x130] + 0x20·index`)
+and the group's `+0x10`, stored from the `MOGP` header at `+0x08`. The seeds' loops test the record
+copy; the portal walk, the drawer router and the loader test the group's. The tests with an
+immediate in the map object code, `0x680000` to `0x6c5000`:
+
+| bit | tested at | effect |
+|---|---|---|
+| 0x1 | `0x6c4579` | the load parses the BSP chunks |
+| 0x4 | `0x6c45d9` | the load stores the vertex colours (`+0xf4`, count `+0x148`) |
+| 0x8 | `0x6b3d13`, `0x6b3f40`, `0x6b44f8` | exterior: a flood root, and a portal into it records a window |
+| 0x48 | `0x6b3be8`, `0x6b3fe8`, `0x6b63c9` | exterior-lit: drawer choice, no interior chain |
+| 0x200 | `0x6c453d` | the load stores the light references (`+0xe4`, count `+0x140`) |
+| 0x800 | `0x6c455b` | the load stores the doodad references (`+0xe8`, count `+0x144`) |
+| 0x1000 | `0x6b4176`, `0x6b4220`, `0x6c460d` | liquid: latches the parity, and the load stores the grid |
+| 0x2000 | `0x6a4e2f` | skips the group in the liquid query |
+| 0x10000 | `0x6b3d0b`, `0x6b3d8b`, `0x6b3f1b`, `0x6b4215` | the group draws through the callback and is never walked |
+| 0x20000 | `0x6c46a6` | the load stores the strip index chunk (`+0xcc`, count `+0x12c`) |
+| 0x40000 | `0x6b42e0` | the walk publishes the root's sky box name |
+| 0x148 | `0x6b42d0` | the walk sets the render-global byte `0xca80c4` |
+
+Addresses: `0x6c400b`, `0x6c400e`, `0x6a4b10`, `0x6b3be8`, `0x6b3d0b`, `0x6b3d13`, `0x6b3d8b`, `0x6b3f1b`, `0x6b3f40`, `0x6b3fe8`, `0x6b4176`, `0x6b4215`, `0x6b4220`, `0x6b42d0`, `0x6b42e0`, `0x6b44f8`, `0x6b63c9`, `0x6c4530`, `0x6c453d`, `0x6c455b`, `0x6c4579`, `0x6c45d9`, `0x6c460d`, `0x6c46a6`, `0x6a4e00`, `0x6a4e2f`, `0x69b570`, `0x69b575`, `0xca80c4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c400b` loads the header word and `0x6c400e` stores it at `+0x10`. The loader `0x6c4530` reads that
+copy: 0x200 and 0x800 each take a chunk of 16-bit entries, 0x1 the BSP chunks, 0x4 the colours,
+0x1000 the liquid grid and 0x20000 the chunk at `+0xcc`, which the batch draw reads as indices
+(`0x6b4e64`). The seeds read `[eax+edi]` of the record array at `+0x130`; `0x6b3be8` and the
+recursion read the group. The mask of `0x6a4e00` is its first argument, the literal 0x2000 its sole
+caller pushes (`0x69b570`). A scan of `0x680000` to `0x6c5000` for `test`, `and` and `bt` with an
+immediate above 0x10000 on the flags finds exactly `0x6b42e0` and `0x6c46a6`; the scan sees no mask
+held in a register.
+
+## Portal crossing
+
+`0x6a3f80(segment, fraction, groups)` finds the nearest portal a segment crosses and the two groups
+beside it. The ray runs from the segment's start along its unit direction for `length × fraction`. For
+each group the segment's box meets and each of its portal references, the portal plane meets the ray
+with tolerance 0.1; a hit at 0 or more and at most the shortest so far, inside the portal polygon,
+becomes the shortest. The first group out is the reference's own group when (n·start + d ≥ 0)
+equals (side > 0), else its other group; the second is the other. The fraction becomes the
+shortest over the length; the result is 1 when a portal counted.
+
+Addresses: `0x6a3f80`, `0x6a3fb2`, `0x6a3ff2`, `0x6a4018`, `0x6a406e`, `0x6a4083`, `0x6a40c0`, `0x6a40ed`, `0x6a40fd`, `0x6a4111`, `0x6a4121`, `0x6a4144`, `0x6a4150`, `0x6a4171`, `0x6a4181`, `0x6a41ec`, `0x6a47e0`, `0x6a4a00`, `0x7c22b0`, `0x7c23e0`, `0x7bf680`, `0x7ffd74`
+Confidence: verified
+Proof: one
+Test: `models::portal_extent_scale_difftest`, `models::portal_plane_side_difftest`, `models::portal_result_scale_difftest`, `models::portal_seg_normalize_difftest`
+
+`ret 0xc`. `0x6a3fb2` takes the segment's end less its start; `0x6a3ff2` forms 1/length and the unit
+direction; `0x6a4018` multiplies the length by `*fraction`. `0x6a406e` is the box test of `0x6a47e0`
+and `0x6a40c0` pushes 0.1 (`0x3dcccccd`) for `0x7c22b0`, which hits a parallel ray at 0 when the
+start lies within that tolerance of the plane. `0x6a40fd` and `0x6a4111` keep a hit with
+`test ah,5; jnp` (reject below 0) and `test ah,0x41; je` (reject above the shortest): equal and NaN
+stay. `0x6a4121` takes the plane's dominant axis for the polygon test `0x7c23e0`. The side sum is
+`n.y·s.y + n.z·s.z + n.x·s.x + d` (`0x6a4150` to `0x6a416e`); `0x6a4171` sends a negative or NaN
+sum to the `0x6a4193` arm. The tests run the slices `0x6a3f8a` to `0x6a4018`, `0x6a4018` to `0x6a4045`, `0x6a414d` to
+`0x6a4179` and `0x6a41ec` to `0x6a41f5`.
+
+## Group liquid scope
+
+`0x6a4e00(mask, point, type, height, vector)` asks the groups of one map object, in index order,
+for liquid at a point in the object's space, and the first group that answers wins. A group is asked
+only when its flags and the mask share no bit, the point is strictly inside its `MOGI` box on all
+three axes (a NaN fails each test), and the group is loaded. The sole caller passes 0x2000 (`Group
+flag tests`). The box bounds the point above and below; inside it the group's grid has no floor.
+
+Addresses: `0x6a4e00`, `0x6a4e23`, `0x6a4e2f`, `0x6a4e39`, `0x6a4e53`, `0x6a4e5f`, `0x6a4e79`, `0x6a4e86`, `0x6a4e94`, `0x6a4eac`, `0x6a4b10`, `0x6a42b0`, `0x6a4a00`, `0x69b575`
+Confidence: verified
+Proof: one
+Test: none
+
+`ret 0x14`. `0x6a4b10` returns the record `+0x130 + 0x20·index`. The lower bounds are `fcomp` with `test
+ah,0x41; jne` (rejects below, equal and NaN); the upper bounds `test ah,5; jp` (rejects above,
+equal and NaN). `0x6a42b0` reads the group's loaded byte (`+0x164`), `0x6a4a00` returns the group, and
+`0x6a4eac` calls `0x6b9f10`; its true result returns 1.
+
+## Group liquid override
+
+`0x6b9f10(point, type, height, vector)` answers a group's liquid at a point in the group's space. A
+group whose `+0x38` (the `MOGP` header's liquid word, `+0x34`) is not 0xf is liquid at every point:
+the type is that word, the height FLT_MAX (`0x7f7fffff`), the vector zero, and the result 1. Without
+flag 0x1000 the result is 0 and nothing is written. Otherwise the tile under the point has a nibble:
+0xf is a hole; the type written is nibble & 3; a tile of type 0 accepts when z < h + 0.01, type 1 never, type 2 and 3
+when z < h, with h the interpolated surface, written unbiased.
+
+Addresses: `0x6b9f10`, `0x6b9f1a`, `0x6b9f21`, `0x6b9f2e`, `0x6b9f65`, `0x6b9f68`, `0x6ba00b`, `0x6ba035`, `0x6ba04e`, `0x6ba055`, `0x6ba085`, `0x6ba08d`, `0x6ba0d9`, `0x6ba109`, `0x6ba153`, `0x6ba160`, `0x6ba16c`, `0x8029d0`, `0x6c404a`
+Confidence: verified
+Proof: one
+Test: `models::mliq_liquid_height_difftest`
+
+`ret 0x10`. `0x6c404a` loads the word from the header's `+0x34` into `+0x38`. `0x6b9f65` tests `ah,0x10`
+of the flags. `0x6ba035` masks the nibble with 3 and `0x6ba04e` jumps through `0x6ba160` by the byte
+`0x6ba16c` gives (`00 02 01 01 00 02 01 01 00`): 0 to `0x6ba055`, 1 to `0x6ba153` (the miss), 2 to
+`0x6ba0d9`. `0x6ba085` adds 0.01 (`0x8029d0`) to the surface for `fcomp` against z, rejecting with `test
+ah,0x41; jne` unless the sum is above z; `0x6ba109` compares the surface itself. Both store the
+unbiased surface and `edx` (the masked nibble) as the type, so the water tile 4 reports 0.

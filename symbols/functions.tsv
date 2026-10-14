@@ -26541,7 +26541,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a3dc0	285	CMapObj::CollectVolumeFacets		models	primitive		Collects the facets of a map object's groups inside a convex volume	inferred	none	models/wmo#queries	
 0x6a3ee0	46	CMapObj::ResetGroupQuery		models	orchestration		Clears a group's query state after validating it	inferred	none		
 0x6a3f10	97	CMapObj::GroupSegmentAnyHit		models	orchestration		Returns whether a segment hits a group of a map object	inferred	none		
-0x6a3f80	639	CMapObj::CrossPortals		models	primitive		Finds the group a segment enters through a map object's portals	inferred	none		models::portal_extent_scale_difftest, models::portal_plane_side_difftest, models::portal_result_scale_difftest, models::portal_seg_normalize_difftest
+0x6a3f80	639	CMapObj::CrossPortals		models	primitive	uint8_t __thiscall (const float *segment, float *fraction, uint32_t *groups)	Finds the nearest portal a segment crosses and the two groups beside it	verified	one	models/wmo#portal-crossing	models::portal_extent_scale_difftest, models::portal_plane_side_difftest, models::portal_result_scale_difftest, models::portal_seg_normalize_difftest
 0x6a4200	108	CMapObj::IsReady		models	host		Returns whether a map object's groups and their textures are loaded	inferred	none		
 0x6a4270	62	CMapObj::AreGroupsLoaded		models	orchestration		Returns whether a map object and all its groups are loaded	inferred	none		
 0x6a42b0	39	CMapObj::GetGroup		models	orchestration		Returns a loaded group of a map object by index	inferred	none		
@@ -26567,7 +26567,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a4b40	379	CMapObj::RayHitClosest		models	unreached		Finds the closest group surface a ray hits and its vertex colour; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6a4cc0	255	CMapObj::RayHitGroup		models	primitive		Finds the surface a ray hits in one group and its vertex colour	inferred	none		models::cmapobj_seg_hit_difftest
 0x6a4dc0	63	CMapObj::SampleGroupColor		models	orchestration		Samples a group's vertex colour at a hit	inferred	none		
-0x6a4e00	221	CMapObj::GroupLiquidAt		models	orchestration		Returns whether a group's liquid covers a point	inferred	none		
+0x6a4e00	221	CMapObj::GroupLiquidAt		models	orchestration	uint8_t __thiscall (uint32_t mask, const float *point, uint32_t *type, float *height, float *vector)	Asks a map object's groups in order for liquid at a point; the first answer wins	verified	one	models/wmo#group-liquid-scope	
 0x6a4ee0	207	CMapObj::InGroupLiquid		models	unreached		Returns whether a point lies in any group's liquid area	inferred	none	models/overview#unreached-code	
 0x6a4fb0	103	CMapObj::FindDoodadSet		models	primitive		Returns the doodad set whose range holds an index	inferred	none		
 0x6a5020	477	CMapObj::GatherBoxGroups		models	primitive		Floods through a map object's portals to gather the groups a box reaches	inferred	none		models::box_overlap_deltas_difftest
@@ -27416,7 +27416,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b9d50	1	CMapObjGroup::NoOp		models	orchestration		Returns; an exit hook registered by the colour sampler	inferred	none		
 0x6b9d60	236	CMapObjGroup::SampleBelow		models	unreached		Samples the surface and colour of a group under a segment; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6b9e50	189	CMapObjGroup::LiquidTileFlags		models	unreached		Returns the liquid tile flags of a group at a point	inferred	none	models/overview#unreached-code	
-0x6b9f10	590	CMapObjGroup::LiquidHeight		models	primitive		Returns a group's liquid height at a point	inferred	none	models/wmo#queries	models::mliq_liquid_height_difftest
+0x6b9f10	590	CMapObjGroup::LiquidHeight		models	primitive	uint8_t __thiscall (const float *point, uint32_t *type, float *height, float *vector)	Answers a group's liquid at a point: its type and unbiased surface, or the group's own type everywhere	verified	one	models/wmo#group-liquid-override	models::mliq_liquid_height_difftest
 0x6ba180	93	VertexBufferBlockSetSize		models	primitive		Sets a vertex buffer block's size and its device buffer	inferred	none		
 0x6ba1e0	149	VertexBufferPoolCreate		models	primitive		Creates a vertex buffer pool's index and vertex buffers	inferred	none	models/wmo#vertex-buffer-pools	
 0x6ba280	187	VertexBufferPoolDestroy		models	host		Frees a vertex buffer pool's blocks and device buffers	inferred	none		

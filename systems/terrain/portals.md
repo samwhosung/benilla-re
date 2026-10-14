@@ -175,7 +175,8 @@ with `rsqrtss` when `0xc9e388` is set (`0x6b4883`) and `fsqrt` otherwise (`0x6b4
 at or below 0.01 and a NaN is not. After the divide by w (`0x6b49e0`) the state keeps the
 minimum and maximum of the second component, y, at `+0x4` and `+0xc` and of the first, x, at `+0x8`
 and `+0x10` (`0x6b49fd` to `0x6b4a3c`). The third argument is not read. The walk tests flag bit 1
-(`0x6b43c9`), which nothing sets.
+(`0x6b43c9`), which nothing sets. A w below −0.001 is not clamped: its quotient is negative and
+still enters the bounds, though the guard planes keep only w of at least −0.01 × √2.
 
 ## Portal polygon clip
 
@@ -197,3 +198,93 @@ below `0x810ccc` (−0.01) and 0 between (`0x6b4b72`, `0x6b4b95`). A class 0 ver
 (`0x6b4bf4`); a class 1 vertex is copied; an edge to the next vertex of the other nonzero class adds
 the point at d[i] / (d[i] − d[i+1]) along it, after the inside vertex or in place of the outside one
 (`0x6b4c4e` to `0x6b4c8a`). The vertex after the last is the first.
+
+## Window record
+
+A deferred window is five floats at `0xcbe324 + 0x14·i` for `i` below the count `0xcbe320`: the four
+floats of the walk's rectangle, each mapped to [0, 1] as (v + 1) × 0.5, then the portal's reach
+(`0x6b4680`). The walk works in [−1, 1]; the record and the volume builder `0x682930` work in [0, 1].
+The array is the 16 records the static initializer `0x6b37b0` constructs, and the push checks no
+bound. `0xcbe310` is no element: it is the base the address arithmetic adds to, and the global at
+that address is the tail of the object-to-clip matrix `0xcbe2d8`.
+
+Addresses: `0x6b451e`, `0x6b4521`, `0x6b4526`, `0x6b4541`, `0x6b4562`, `0x6b45a6`, `0x6b45ab`, `0x6b45b7`, `0x6b37b0`, `0xcbe320`, `0xcbe324`, `0xcbe310`, `0xcbe2d8`, `0x6b3b80`, `0x6b3ba1`, `0x682930`, `0x6b3ca4`, `0x7ff9d8`, `0x7ffa24`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6b4541` is `lea edi,[ecx*4+0xcbe310]` with ecx = 5 × (count after the increment), so the lowest
+address it forms is `0xcbe324`. The stores at `0x6b4574` to `0x6b45a0` write the four mapped floats and
+`0x6b45ab` the reach. `0x682930` reads the rectangle at `+0x0`, `+0x4`, `+0x8` and `+0xc` only
+(`0x6829b7`, `0x682a11`, `0x682b7a`, `0x682bda`) and holds no compare: its only branches are the two
+loop back edges (`0x68295d`, `0x682d4f`). The corner rays are lerped by the rectangle, so the volume
+narrows the camera's own near and far planes laterally and the fifth float takes no part. The matrix is
+copied by the loop `0x6b3b80` to `0x6b3ba1`, and `0x6b46f0` reads it.
+
+## Window push
+
+A portal into a group flagged 0x8 records a window only in the inside leg (`0xcde5ac` set) and only
+when the portal has not recorded one this frame (its `+0x18` against `0xca8014`), and stamps the
+portal. The push is a side effect: every path, pushed or not, joins at `0x6b45ba`, which maps the
+rectangle, pushes a frustum volume, builds the portal's volume and walks into the neighbour with
+the own index as the from group, the rectangle and depth + 1. The outside seed sets the inside flag
+to 0, and the replay clears it, so neither pushes.
+
+Addresses: `0x6b44eb`, `0x6b44f2`, `0x6b44f8`, `0x6b44fc`, `0x6b4505`, `0x6b450b`, `0x6b4511`, `0x6b4518`, `0x6b45ba`, `0x6b4610`, `0x6b461d`, `0x6b4639`, `0x6b463e`, `0x6b4646`, `0x6b436d`, `0x6b438b`, `0x6b43c3`, `0x6b4403`, `0x6b44c4`, `0x6b44dd`, `0x6a4a00`, `0xcde5ac`, `0x6b3df0`, `0x6b3c1a`, `0x6b3b47`
+Confidence: verified
+Proof: one
+Test: none
+
+The four tests (`0x6b44f2` unresolved, `0x6b44fc` not exterior, `0x6b450b` stamped, `0x6b4518` outside
+leg) are `je 0x6b45ba`. The block `0x6b451e` to `0x6b45b7` holds no branch and falls into `0x6b45ba`. What
+skips both the push and the walk is earlier: a reference to group 0xffff (`0x6b436d`), to the from
+group (`0x6b438b`), a clipped portal (`0x6b43c3`), the side test (`0x6b4403`), a disjoint rectangle
+and a collapsed one (`0x6b44c4`, `0x6b44dd`); all go to `0x6b4646`. Writers of `0xcde5ac`: `0x6b3b47`
+sets 1, `0x6b3c1a` and `0x6b3df0` set 0; its one reader is `0x6b4511`.
+
+## Window replay
+
+The interior seed's second phase walks, for each recorded window and each group flagged 0x8 and not
+0x10000 whose box the window's volume shows, from that group: the group is the loop index, the from
+group 0xffff, the rectangle the window mapped back to [−1, 1] (2v − 1), depth 0 and interior group 0.
+Depth 0 renews the hop cap, from 0xffff excludes no portal, and no per-group stamp exists, so a
+group seen through three windows is walked three times. The phase applies no extent test: the 0.01
+reject of `0x682fa0` is not on its path, and `0x682fa0` is called only by `0x681070`.
+
+Addresses: `0x6b3c73`, `0x6b3c87`, `0x6b3c95`, `0x6b3ca4`, `0x6b3ca9`, `0x6b3cf4`, `0x6b3d0b`, `0x6b3d13`, `0x6b3d22`, `0x6b3d2b`, `0x6b3d39`, `0x6b3d4f`, `0x6b3d6f`, `0x6b41c0`, `0x6b41c6`, `0x6b4346`, `0x6b34d0`, `0x6739f0`, `0x86b6b8`, `0xcb004c`, `0x682f60`, `0x682fa0`, `0x6811b6`, `0x6811ff`, `0x681070`
+Confidence: verified
+Proof: one
+Test: `terrain::camera_inside_bias_difftest`
+
+`0x6b3c87 jbe 0x6b3d6f` skips the phase for an empty list and lands on the callback loop, which runs in
+every case. `0x6b3ca9` to `0x6b3cf4` store 2f − 1 for each of the four floats at `[ebp-0x1c]` to
+`[ebp-0x10]`, and `0x6b3d2b` to `0x6b3d37` push owner 0, depth 0, that rectangle, 0xffff and the group.
+`0x6b34d0` copies the cap from `0x86b6b8` (10) to `0xcb004c`; `0x6739f0` can set it, and `0x6b41c6`
+reads it. The walk's early returns are the cap (`0x6b41f4`), an unloaded group (`0x6b420c`), flag
+0x10000 (`0x6b4215`) and no portal references (`0x6b4346`); it writes nothing to the group. The stamp
+`0xca8014` is bumped once per seed (`0x6b3b2c`), so the rectangles cached in the first phase serve
+the replay. `0x682f60` is 0 for a box the volume shows. `0x682fa0` has two calls, `0x6811b6` and
+`0x6811ff`.
+
+## Group submit
+
+`0x685d70(group)` is the callback of the walk and of `0x6b4160`: it finds the instance's group
+node whose index is the argument and appends one draw record per visit. The first visit of a frame
+also links the node into the frame's group list (`0xc7caf0`, at the head of `0xc7caf4`) and stores
+the side parity (`+0x94`), the fog flag (`0xca7f00`, `+0x98`) and the walk's value (`+0x78`). Every
+visit takes a 0xfc-byte record from the pool, copies the frustum volume on top of the stack into
+it and links it into the node's list (`+0x9c`). Then it runs the doodad def drain (`0x6838f0`) when
+the world flags hold 0x400081 and the entity drain (`0x6834e0`).
+
+Addresses: `0x685d70`, `0x685dad`, `0x685dc1`, `0x685dc9`, `0x685dcf`, `0x685dd6`, `0x685edb`, `0x685f17`, `0x685f1d`, `0x685f24`, `0x685f30`, `0x685f45`, `0x685f76`, `0x685f79`, `0x685f85`, `0x685f8b`, `0x685f92`, `0x685f9a`, `0x685faa`, `0x685faf`, `0x685fc1`, `0x685fcb`, `0x680830`, `0x682eb0`, `0x6882f0`, `0x6872a0`, `0x6b3f90`, `0x684c63`, `0xc7caf0`, `0xc7caf4`, `0xca7f00`, `0x6b4306`, `0x6b4198`
+Confidence: verified
+Proof: one
+Test: none
+
+`ret 4`. `0x685dc1` loads the node's list link (`+0xd0`); zero takes `0x685f17`, the first visit, which
+unlinks a linked node (`0x685f2b`) and relinks it at the head (`0x685f30` to `0x685f45`), stores `+0x78`,
+`+0x94` and `+0x98` (`0x685f76` to `0x685f85`) and appends a record (`0x685f8b` to `0x685faa`). A set link
+takes `0x685dcf`: the same record and copy, no list link and no scalar stores. `0x6b3f90` draws once for each
+record of that list (`groupdraw#group-draw`), so a group walked through three windows draws three
+times, each under its own volume. `0x6b4160` and the walk reach the callback through the slot
+`0xcde5b0`.

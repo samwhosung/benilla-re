@@ -274,6 +274,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x68a738	uint8_t[15]	s_liquidMeshCases		terrain	Holds the case a template of n picks, indexed by n minus 1: 0 for n = 1, 1 for 3, 7 and 15, else 2	verified	one	terrain/liquid#liquid-mesh-templates
 0x6b63fc	uint32_t[3]	s_groupLiquidArms		terrain	Holds the three draw arms of a group's liquid: water, magma and none	verified	one	terrain/groupdraw#group-liquid
 0x6b6408	uint8_t[9]	s_groupLiquidArmByType		terrain	Holds the draw arm of each liquid type 0 to 8: 0 water, 1 magma, 2 none	verified	one	terrain/groupdraw#group-liquid
+0x6ba160	uint32_t[3]	s_groupLiquidTileArms		models	Holds the three arms of a group liquid tile accept: water, magma or slime, and a miss	verified	one	models/wmo#group-liquid-override
 0x6ba16c	uint8_t[4]	s_groupLiquidTypeArms		models	Holds the dispatch arm of each liquid type 0 to 3 of a group's liquid query: 0, 2, 1, 1	verified	one	terrain/camstate#camera-liquid-state
 0x6e225c	void *[3]	s_castFailureCleanupJumpTable		spell	Holds the failure reporter's three cleanup cases for reasons 0x2f to 0x7c	verified	one	spell/failures#player-unit-cleanup
 0x6e2268	uint8_t[78]	s_castFailureCleanupIndexTable		spell	Maps reasons 0x2f to 0x7c to their cleanup case in the failure reporter	verified	one	spell/failures#player-unit-cleanup

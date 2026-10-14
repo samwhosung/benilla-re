@@ -214,7 +214,30 @@ The outputs start as no object and the ids 0xffff (`0x6be25f` to `0x6be26c`). Th
 `0xca7da4` by the link offset `0xca7d9c`. `0x6c3330` is the box test against the instance. The group
 trace (`0x6b92b0`, mode 4) follows `0x6a47e0` and the group load check and zeroes the five batch
 counters first (`0x6be388` to `0x6be3a0`); a hit stores the instance and the group with the face
-id 0xffff. After the list, `0x6a3f80` runs with the fraction 1.0666666 (`0x6be411`). Its hit is
+id 0xffff. After the list, `0x6a3f80` runs with the fraction 1.05 (`0x3f866666`, stored at `0x6be411`). Its hit is
 compared at `0x6be421` to `0x6be434` as `fcomp 0.0001; test ah,5; jp`: it is taken when the
 difference to the fraction is below 0.0001 and refused when equal or NaN. `0x6be451` and
 `0x6be477` test bit 3 of the group flags.
+
+## Floor probe legs
+
+`0x6be250` traces each instance twice in the instance's space. The group trace calls `0x6b92b0` for each
+group of the list with the segment, the shared fraction, the instance, the class word 0 and the face
+mask 4. The mask becomes 0x84 and rejects a face whose flag byte shares a bit with it: detail faces
+(4) are skipped and every other face counts, whichever way it faces. A hit stores the instance and
+the group, with 0xffff as the other group. The class word 0 keeps the liquid ray `0x6baa70` out.
+The portal leg `0x6a3f80` follows (`models/wmo#portal-crossing`): its fraction counts when under
+0.0001 above the shared one, and its other group is stored as 0xffff when flagged 0x8.
+
+Addresses: `0x6be250`, `0x6be345`, `0x6be35e`, `0x6be36c`, `0x6be3a6`, `0x6be411`, `0x6be429`, `0x6be44c`, `0x6be451`, `0x6be468`, `0x6be477`, `0x6be47c`, `0x6be4ae`, `0x6b92b0`, `0x6b930a`, `0x6b9313`, `0x6b93c3`, `0x6b93d7`, `0x6baa70`, `0x6bc710`, `0x6bc716`, `0x6bc764`, `0x6a3f80`, `0x6a4b10`, `0x7c29f0`, `0x80c4f4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6be35e` pushes 4 and `0x6be36c` pushes 0 (`edi` zeroed at `0x6be345`) as the last two arguments of
+`0x6b92b0`, which ORs 0x80 into the mask (`0x6b9313`, the visited bit it sets on faces) and tests
+the class word with 0xf0000 before the liquid ray (`0x6b93c3`, `0x6b93d7`). `0x6bc716 test [esi+0x50],dl`
+rejects the face before the triangle test `0x7c29f0` (`0x6bc764`, both sides). The portal leg's
+distance minus the shared one is compared at `0x6be429` with `test ah,5; jp`, and the winner stores
+the instance and group; `0x6be451` tests the other group's record flag 8 and `0x6be477` the chosen
+one's, which clears the instance (`0x6be47c`). The return is whether an instance remains (`0x6be4ae`).

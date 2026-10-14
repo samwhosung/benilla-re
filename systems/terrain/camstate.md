@@ -77,3 +77,44 @@ object fraction `[ebp-0x10]` (`test ah,5; jp` keeps the hit for a larger, equal 
 terrain fraction) and `0x6822af` drops it otherwise. `0x6822b3` to `0x6822f6` format a debug text
 into a 64-byte buffer. `0x682345` stores the claim; `0x68234f` and `0x68235f` append the model and
 the group index (when not 0xffff) to the window list `0xc7cd84`.
+
+## Camera group set
+
+Each frame `0x6821f0` rebuilds the claim `0xc7b748` and the group set (capacity `0xc7cd80`, count
+`0xc7cd84`, data `0xc7cd88`). Both are zeroed on entry, before the map objects flag is tested, so
+no frame keeps the last one: a frame without the flag, without a map object floor below the camera,
+under nearer terrain or over an exterior group leaves them empty. A counted hit appends the probe's
+group and then its other group when that is not 0xffff, each once, so the set holds 0, 1 or 2 groups.
+Nothing else fills it, and the liquid probe, the interior fog and the inside seed all read it.
+
+Addresses: `0x6821f0`, `0x682201`, `0x682207`, `0x68221b`, `0x682303`, `0x682345`, `0x68234a`, `0x68234f`, `0x682357`, `0x68235f`, `0x6820b0`, `0x6820d0`, `0x66fc4a`, `0x68206f`, `0x682020`, `0xc7b748`, `0xc7cd84`, `0xc7cd88`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x682201` and `0x682207` store 0 in the claim and the count; `0x68221b` leaves for a clear flag with them
+zero, and `0x682303 je` and `0x68234a je` skip the appends. `0x6820b0` scans the data for the value before it
+appends (`0x6820d0`), and its two calls are `0x68234f` and `0x68235f`; `0x682357 cmp ecx,0xffff` guards the
+second. The claim has four writers: the start-up reset `0x66fc4a`, the two above and `0x68206f`, in
+`0x682020`, which no call, jump or stored address reaches (the census finds `0x685d70`'s two stored
+addresses as its control).
+
+## Camera probe group
+
+The liquid probe `0x6809c0` samples one group. With the claim set, it moves the probe point into the
+instance's space and asks `0x6b9f10` about the group at `0xc7cd88[0]`, never reading the count. The
+state starts at 0xf: an unresolved group, a group without flag 0x1000, a hole and a point above the
+surface all leave it there, and the terrain query `0x6723d0` runs only with no claim. A camera inside a
+map object therefore never reads the terrain's liquid. The type stored is `0x6b9f10`'s, so the water
+tile 4 reads 0, and the depth is the surface less the point's z, both in the instance's space.
+
+Addresses: `0x6809c0`, `0x680a03`, `0x680a1f`, `0x680a26`, `0x680a30`, `0x680a3e`, `0x680a43`, `0x680a59`, `0x680a60`, `0x680a74`, `0x680a79`, `0x680a87`, `0x680a8f`, `0x680a9d`, `0x680ab8`, `0x680abb`, `0x680b81`, `0x6b9f10`, `0x6723d0`, `0x6a4a00`, `0xc7cd88`, `0xc7b748`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x680a1f` seeds the type 0xf and `0x680a26` the depth 0. `0x680a30 je 0x680a8f` is the only way to the
+terrain leg (`0x680a9d`); `0x680a43` and `0x680a48` load `data[0]`. Every exit of the map object leg joins at
+`0x680abb` with the type unchanged, which `0x680b81` stores. The call at `0x680a74` ignores the result
+and the type decides (`0x680a7c`). The depth of the map object leg subtracts `[ebp-0x24]`, the probe's z
+after the `+0xd4` matrix (`0x680a87`); the terrain leg subtracts the world z `[ebp-0xc]` (`0x680aad`).
