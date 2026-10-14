@@ -113,6 +113,17 @@ bit 0 or 0. The height is `lineHeight`, or `sizeMetric` when raw. The corners ar
 H)` with z `originZ`; the UVs are copied per column and row, with `+1/512` added to bottom and left and
 `−1/512` to top and right when raw (`0xc2b9f8`, `0xc2ba00`); the colour word is stored in all four vertices.
 
+## String defaults
+
+`0x5cda00` clears a new string and sets its defaults: the size `+0x18` and the clamped size `+0x1c` to `0x3ca3d70a` (0.02), the main colour `+0x2c` to `0xffffffff`, the shadow colour `+0x30` to `0xff000000`, the shadow offsets `+0x34` and `+0x38` to `0x3aa3d70a` and `0xbaa3d70a` (±0.00125) and the flags `+0x5c` to 0. The shadow flag is clear, so the default offset draws nothing until `0x5cd650` sets a shadow.
+
+Addresses: `0x5cda00`, `0x5cd8b2`, `0x5cda16`, `0x5cda30`, `0x5cda37`, `0x5cda3e`, `0x5cda57`, `0x5cd650`, `0x5cd66f`, `0x5cd67b`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5cd8b2` calls `0x5cda00`. The offsets are fractions of the viewport height and width, converted by `0x5c6fa0` and `0x5c7010` when the shadow is drawn. `0x5cd66f` and `0x5cd67b` store the two offsets from the argument of `0x5cd650`, and `0x5cd678` sets flag bit 0.
+
 ## Hyperlink regions and selection
 
 A hyperlink region is a rectangle the layout records for a `|H` link; its coordinates are stored

@@ -18482,8 +18482,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c7e50	169	DestroyMiscList		font	primitive	void __cdecl (void)	Unlinks the records of the list 0xc2b9b4	inferred	none	font/overview#static-objects	
 0x5c7f00	22			font	orchestration		Runs its object file code not read here	inferred	none		
 0x5c7f20	5			font	orchestration		Runs its object file code not read here	inferred	none		
-0x5c7f30	32			font	orchestration		Runs GxuFontMiscClasses.cpp code that calls SMemFree; not read here	inferred	none		
-0x5c7f50	42			font	orchestration		Runs GxuFontMiscClasses.cpp code that calls 0x5c7f30; not read here	inferred	none		
+0x5c7f30	32	GlyphRecordFreeBuffer		font	orchestration	void __thiscall (void)	Frees the buffer a glyph record holds at +0 and clears the pointer	verified	one	font/glyphs#glyph-vertical-terms	
+0x5c7f50	42	GlyphRecordMove		font	orchestration	void __thiscall (void *source)	Frees the destination buffer, copies 14 dwords from the source and clears the source buffer pointer	verified	one	font/glyphs#glyph-vertical-terms	
 0x5c7f80	134	CharCodeDesc::SetUvRect		font	primitive	void __thiscall (uint32_t a, uint32_t b, uint32_t x0, uint32_t advance)	Sets a glyph's atlas UV rectangle	verified	one	font/glyphs#pages-and-cells	font::glyph_uv_rect_difftest
 0x5c8010	30	AtlasCell::FreeAfter		font	primitive	int __thiscall (void)	Returns the free texels to the right of a cell	verified	one	font/glyphs#pages-and-cells	font::cell_free_after_difftest
 0x5c8030	29	AtlasCell::FreeBefore		font	primitive	int __thiscall (void)	Returns the free texels to the left of a cell	verified	one	font/glyphs#pages-and-cells	font::cell_free_before_difftest
@@ -18614,7 +18614,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5cd830	273	CGxString::GetNewString	idb	font	primitive	void * __fastcall (int link)	Takes a string record from the pool or allocates one	verified	one	font/api#string-pool	
 0x5cd950	151	CGxString::Recycle	idb	font	primitive	void __fastcall (void *string)	Unlinks a string and returns it to the pool	verified	one	font/api#destroying-a-string	
 0x5cd9f0	5	CGxString::ClearShadowFlag		font	primitive	void __fastcall (void *string)	Clears bit 0 of the string flags	inferred	none	font/string#string-object	
-0x5cda00	209			font	orchestration		Runs GxuFontString.cpp code not read here	inferred	none		
+0x5cda00	209	CGxString::CGxString		font	orchestration	void __thiscall (void)	Clears a new string and sets its default size, colours and shadow offsets	verified	one	font/string#string-defaults	
 0x5cdae0	274			font	primitive		Runs GxuFontString.cpp code that calls 0x5c84e0, SMemFree, 0x5ce150; not read here	inferred	none		
 0x5cdc00	31			font	primitive		Runs its object file code not read here	inferred	none		
 0x5cdc20	713	CGxString::LayoutLines		font	primitive	void __fastcall (void *string)	Lays out a string line by line into glyph quads	verified	one	font/string#laying-out-lines	font::string_layout_lines_difftest

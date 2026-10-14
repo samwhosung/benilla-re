@@ -61,7 +61,7 @@ Test: `font::texcache_set_cellsize_difftest`, `font::atlas_texel_addr_difftest`,
 
 `0x5cf5f0` is the address of a glyph's top-left texel in the staging buffer `0xc2ba48`:
 `0xc2ba48 + 2 · ((page · cellSize) · 256 + x0)`, 256 texels of 2 bytes per row. `0x5c7f80` sets the glyph's
-UV rectangle, each value times `1/256` (`0x80a8ac`): `v_bottom = a · b`, `u_left = x0`, `v_top = a · b + b`, `u_right = advance + x0`,
+UV rectangle, each value times `1/256` (`0x80a8ac`): `v_top = a · b` (the cell's first texel row), `u_left = x0`, `v_bottom = a · b + b` (one past its last), `u_right = advance + x0`,
 stored at `+0x60`, `+0x64`, `+0x68`, `+0x6c`. `0x5c8010` returns the free span to the right of a cell: with a next cell
 `next.x0 − this.x1 − 1`, else `255 − this.x1`; `0x5c8030` the span to the left: with a previous cell
 `this.x0 − prev.x1 − 1`, else `this.x0`. A cell link with bit 0 set is the list's end.
@@ -120,8 +120,8 @@ Confidence: verified
 Proof: one
 Test: `font::glyph_blit_outline_difftest`, `font::glyph_blit_aa_outline_difftest`
 
-`0x5ce440` rasterizes into a working grid of 256-texel rows one row down and one column right (two with a
-thick outline). Pass 0 marks every free cell next to a glyph cell as 4; with the thick flag pass 1 marks the free cells
+`0x5ce440` rasterizes into a working grid of 256-texel rows starting `top_pad + 1` rows down and one column right (two columns with a
+thick outline; the row offset is 1 for both widths, `0x5ce481`, `0x5cea7e`). Pass 0 marks every free cell next to a glyph cell as 4; with the thick flag pass 1 marks the free cells
 next to a 4 as 2. It packs `cellSize × clearWidth` texels: glyph `0xffff`, ring 2 `0x7000`, ring 4 `0xf000`, else 0
 (black outline, white fill). `0x5cea30` keeps an outline map (1 where coverage is non-zero), the coverage map and an alpha map; its
 two passes dilate by one (mask 1 to 2; thick: mask 3 to 4). Each cell's alpha nibble is
@@ -148,6 +148,17 @@ face and fills the bitmap record: `clippedRows = min(code, rows)`; the advance m
 `(float)((advance + (advance >> 31 & 0x3f)) >> 6) + 1.0` and the bearing `bearing · 1/64`; a blank glyph has width `(code + 3) >> 2`.
 The face's calls are not read here.
 
+## Glyph vertical terms
+
+A glyph record holds two vertical terms after the bitmap record `0x5d1120` fills moves into it: `+0x58` is the gap and `+0x5c` the top padding that `0x5d1360` returns. `0x5c7f50(source)` frees the record's buffer at `+0` (`0x5c7f30`), copies 14 dwords from the source to `+0x38` and clears the source's first word, so the source's `+0x20` and `+0x24` become `+0x58` and `+0x5c`. The quad builder reads `+0x58` only: `proto.y` rises by `gap · scale`, which is 0 unless the glyph's `bitmap_top` exceeds the ascender or its ink overflows the cell (the cases of `0x5d1360`, above). The bakes read the padding at the record's `+0x24` to seat the ink in the cell.
+
+Addresses: `0x5c7f50`, `0x5c7f30`, `0x5c7f6b`, `0x5c7f6d`, `0x5c8286`, `0x5c8360`, `0x5c8494`, `0x5d12eb`, `0x5d129e`, `0x5d12a4`, `0x5cd0fa`, `0x5cf237`, `0x5ce454`, `0x5cea70`, `0x5cabd0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5c81b0` calls `0x5c7f50` at `0x5c8286`, `0x5c8360` and `0x5c8494`, each with `ecx` = glyph record + `0x38` (`0x5c827d`). `0x5d129e` and `0x5d12a4` give `0x5d1360` the addresses of the bitmap record's `+0x20` (gap) and `+0x24` (padding), set to 0 first (`0x5d12b8`, `0x5d12be`), and `0x5d12eb` calls it only when the bitmap exists. `0x5cd0fa` loads `[glyph + 0x58]` with `fild`; the plain, monochrome and outlined bakes load `+0x24` of their record (`0x5cf237`, `0x5ce454`, `0x5cea70`). The census of other readers of `+0x58` and `+0x5c` was not made.
+
 ## Emitting quads
 
 `0x5c8710` copies the quads of one line buffer into the batch's vertex buffer with the pen added, and
@@ -165,3 +176,14 @@ number of pixels from the text: the offsets are rounded to pixels and floored ag
 a fade the colour is the given colour, with red and blue swapped when the device asks
 (`[0x5c8230() + 0x1c] == 1`). A shadow pass with a fade multiplies the two alphas and `0x80a8b0`. `0x5ce090(line)` returns
 a line buffer's count (`[buffer + 0xc]`), doubled when the shadow flag is set. The fade cases are not covered by the test.
+
+## Main pass pen
+
+In the main pass `0x5c8710` adds the string's anchor to each vertex and nothing else: `x + anchor.x`, `y + anchor.y`, with the vertex z unchanged, and the colour is the main colour or the glyph's own colour. The shadow arm is the only one that adds an offset. A world-space batch takes another path: with `[0xc2b9dc]` non-zero each quad's position goes through the matrix function `0x7bca80` instead.
+
+Addresses: `0x5c8710`, `0x5c874a`, `0x5c88f9`, `0x5c8ab3`, `0x5c8aba`, `0x5c8abc`, `0x5c8ad7`, `0x5c8ae7`, `0x5c8af5`, `0x7bca80`, `0xc2b9dc`, `0x5ce0c0`, `0x5ce0e8`, `0x5ce0f3`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ce0c0` passes the anchor `+0x70` as the fifth argument and the shadow bit (flag bit 0) as the sixth (`0x5ce0e8` to `0x5ce0f3`). `0x5c874a` tests that bit: clear goes to the main arm `0x5c88f9`, and with it set, a start index below the buffer's quad count goes to the shadow arm (`0x5c875a`) and one at or above it is reduced by the count (`0x5c875c`) and goes here. `0x5c8ab3` tests `[0xc2b9dc]`: zero takes `0x5c8ad7`, which adds `[anchor]` to x (`0x5c8ae7`) and `[anchor + 4]` to y (`0x5c8af5`) and copies z unchanged. The batch drawer sets the flag only for a world-space batch and clears it afterwards (`font/api#drawing-a-batch`).

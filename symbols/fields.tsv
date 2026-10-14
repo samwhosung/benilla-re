@@ -297,7 +297,9 @@ CHARCODEDESC	0x0030	4	int32_t	m_cellX0	font	Holds the first texel column of the 
 CHARCODEDESC	0x0048	4	int32_t	m_advance	font	Holds the integer pixel advance	verified	one	font/metrics#glyph-width-and-step-base
 CHARCODEDESC	0x004c	4	float	m_stepBase	font	Holds the step base metric	verified	one	font/metrics#glyph-width-and-step-base
 CHARCODEDESC	0x0050	4	float	m_width	font	Holds the width metric	verified	one	font/metrics#glyph-width-and-step-base
-CHARCODEDESC	0x0060	16	float[4]	m_uv	font	Holds v_bottom, u_left, v_top and u_right	verified	one	font/glyphs#pages-and-cells
+CHARCODEDESC	0x0058	4	int32_t	m_gap	font	Holds the rows the glyph's quad is raised by, negative when its ink overflows the cell	verified	one	font/glyphs#glyph-vertical-terms
+CHARCODEDESC	0x005c	4	uint32_t	m_topPad	font	Holds the blank rows above the ink in the cell	verified	one	font/glyphs#glyph-vertical-terms
+CHARCODEDESC	0x0060	16	float[4]	m_uv	font	Holds v_top, u_left, v_bottom and u_right of the cell, each over 256	verified	one	font/glyphs#pages-and-cells
 CInputControl	0x0000	4	uint32_t	m_createTime	input	Holds the client clock when the object was built	inferred	none	input#input-state
 CInputControl	0x0004	4	uint32_t	m_held	input	Holds the held command bits; 0x1 and 0x2 are the two primary mouse commands	verified	one	input#mouse-commands
 CInputControl	0x0008	4	float	m_travelX	input	Holds the sum of scaled |dx| since the first primary press	verified	two	input#click-versus-drag
