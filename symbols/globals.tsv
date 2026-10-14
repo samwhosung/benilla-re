@@ -88,6 +88,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5b2ea4	uint8_t[253]	s_logonResultIndexTable		net	Maps a logon server result less 3 to its case in the eleven-entry switch	verified	one	net/login#logon-results
 0x5b3fd0	void *[6]	s_realmMessageJumpTable		net	Holds the realm connection handler's cases for opcodes 0x3a to 0x4c	verified	one	net/dispatch#realm-connection-messages
 0x5b3fe8	uint8_t[19]	s_realmMessageIndexTable		net	Maps opcodes 0x3a to 0x4c to their case in the realm connection handler	verified	one	net/dispatch#realm-connection-messages
+0x5bcf70	void *[6]	s_selectStateJumpTable		net	Holds the case addresses of the select loop switch on connection state	verified	one	net/threads#select-loop
 0x5c2af4	void *[7]	s_cases5c2810		unassigned	Holds the 7 case addresses of the switch in 0x5c2810	inferred	none	
 0x5c2b10	uint8_t[58]	s_caseIndexes5c2810		unassigned	Holds the 58 case indexes of the switch in 0x5c2810	inferred	none	
 0x5d494c	void *[8]	s_tradeStatusJumpTable		objectlayer	Holds the trade status handler's eight cases	verified	one	objectlayer/trade#trade-status-message
@@ -1467,6 +1468,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85de88	char[17]	s_textMacrosLocalTxt		unassigned	Holds the string "macros-local.txt"	inferred	none	
 0x85def0	uint32_t			unassigned	Holds a dword that ChecksumExecutables reads; not read here	inferred	none	
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
+0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
 0x85fb30	char[66]	s_textWorldGenericPassiveDoodadsDeathSkeletonsS		objectlayer	Holds the string "World\Generic\PassiveDoodads\DeathSkeletons\%s%sDeathSkeleton.mdx"	inferred	none	
 0x85fc54	uint32_t[141]	s_damageCalcEntryNames		objectlayer	Holds the damage calculation's entry names in 16-byte records, a string first, the last record cut short	verified	one	objectlayer/playercombat#damage-calculation-log
