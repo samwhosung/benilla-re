@@ -139,7 +139,7 @@ Every `CVar::Register 0x63db90` call (214 rows).
 | `flags` | The flags argument. |
 | `callback` | The change callback; empty for none. |
 | `category` | The category argument. |
-| `script_visible` | Whether Lua may read it. |
+| `script_hidden` | The fifth stack argument: 0 for a variable Lua can read, 1 for one it cannot. `CVar::Register` sets flag bit 31 when it is 0, and the script lookup `0x63dec0` finds only records with that bit. |
 | `callback_arg` | The argument passed to the callback. |
 | `record` | The global that receives the returned record; empty if the result is not stored, `|`-joined if two stores follow. |
 | `help` | The help text; empty for none. |

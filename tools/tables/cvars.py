@@ -6,10 +6,11 @@ CVar::Register 0x63db90 reads its arguments off its own stores:
     ecx        name                 edx        help text (null for none)
     [ebp+0x08] flags                [ebp+0x0c] default value, a string
     [ebp+0x10] change callback      [ebp+0x14] category
-    [ebp+0x18] script visible       [ebp+0x1c] callback argument
+    [ebp+0x18] script hidden        [ebp+0x1c] callback argument
 
 and returns with `ret 0x18`: six stack dwords, pushed right to left, so walking back from the
-call the pushes are flags, default, callback, category, script-visible, callback argument. The
+call the pushes are flags, default, callback, category, script-hidden, callback argument. A zero script-hidden sets flag bit 31 (0x63dc78,
+0x63ddb4), and the script lookup 0x63dec0 finds only records with that bit. The
 record pointer the call returns is stored by the `mov [global], eax` that follows it (MSVC
 schedules a call's result store after it), up to the next call, jmp or ret.
 
@@ -21,7 +22,7 @@ condition (`mov R,A; jcc L; mov R,B; L:`) is listed as `A|B`, both arms, and not
 `default-conditional`.
 
 Columns that hold an address are `name_address`, `default_address`, `callback` and `record`.
-`flags`, `category`, `script_visible` and `callback_arg` are decimal. A null help text or
+`flags`, `category`, `script_hidden` and `callback_arg` are decimal. A null help text or
 callback is an empty cell.
 """
 
@@ -182,7 +183,7 @@ def main():
         else:
             callback = addr(cb) if cb else ''
         category = number(pushes[3], 'category')
-        visible = number(pushes[4], 'script_visible')
+        hidden = number(pushes[4], 'script_hidden')
         cbarg = number(pushes[5], 'callback_arg')
 
         recs = []
@@ -197,13 +198,13 @@ def main():
         record = '|'.join(recs)
         if len(recs) > 1:
             notes.append('record-ambiguous')
-        if '?' in (name, default, flags, callback, category, visible, cbarg, help_):
+        if '?' in (name, default, flags, callback, category, hidden, cbarg, help_):
             unresolved += 1
         rows.append((addr(site), name, name_addr, default, default_addr, flags, callback,
-                     category, visible, cbarg, record, help_, ';'.join(notes)))
+                     category, hidden, cbarg, record, help_, ';'.join(notes)))
     note('%d registrations, %d with a computed argument' % (len(rows), unresolved))
     write_table(['site', 'name', 'name_address', 'default', 'default_address', 'flags',
-                 'callback', 'category', 'script_visible', 'callback_arg', 'record', 'help',
+                 'callback', 'category', 'script_hidden', 'callback_arg', 'record', 'help',
                  'notes'], rows, args.out)
 
 

@@ -1,4 +1,4 @@
-site	name	name_address	default	default_address	flags	callback	category	script_visible	callback_arg	record	help	notes
+site	name	name_address	default	default_address	flags	callback	category	script_hidden	callback_arg	record	help	notes
 0x40239d	disableOptionalSpeech	0x82e50c	0	0x82e570	0		5	0	0		Disables the optional speech packs (forces use of primary speech pack.)	
 0x402880	M2UseZFill	0x82e720	1	0x82e748	0		1	0	0	0x8826ac	z-fill transparent objects	
 0x4028a3	M2UseClipPlanes	0x82e6e0	1	0x82e748	0		1	0	0	0x8826dc	use clip planes for sorting transparent objects	
@@ -55,11 +55,11 @@ site	name	name_address	default	default_address	flags	callback	category	script_vi
 0x460a9d	EnableAmbience	0x836458	1	0x82e748	0	0x460ab0	7	0	0		Enable Ambience	
 0x462ac9	MapWaterSounds	0x8364e4	1	0x82e748	0	0x462af0	5	0	0	0xb2306c		
 0x46b633	gameTip	0x837140	0	0x82e570	0		5	0	0	0xb41e38		
-0x46b658	showGameTips	0x837130	1	0x82e748	?	?	5	?	?	0xb41e3c		flags-computed;callback-computed;script_visible-computed;callback_arg-computed
+0x46b658	showGameTips	0x837130	1	0x82e748	?	?	5	?	?	0xb41e3c		flags-computed;callback-computed;script_hidden-computed;callback_arg-computed
 0x481b72	PlayerFadeInRate	0x83dd58	4096	0x83dd90	0		5	0	0	0xb4b2dc	fade in rate for player mouseover	
 0x481b91	PlayerFadeOutRate	0x83dd20	4096	0x83dd90	0		5	0	0	0xb4b370	fade out rate for player mouseover	
 0x481bbf	PlayerFadeOutAlpha	0x83dce4	128	0x835c9c	0		5	0	0	0xb4b34c	min fade out alpha for player mouseover	
-0x488b8a	?	?	0	0x82e570	?	?	9	?	?			name-computed;flags-computed;callback-computed;script_visible-computed;callback_arg-computed
+0x488b8a	?	?	0	0x82e570	?	?	9	?	?			name-computed;flags-computed;callback-computed;script_hidden-computed;callback_arg-computed
 0x48fc18	debugTaint	0x843120	0	0x82e570	0		5	0	0	0xb4da34		
 0x48fc34	statusBarText	0x843110	0	0x82e570	0		5	0	0	0xb4d904		
 0x48fc50	assistAttack	0x843100	0	0x82e570	0		5	0	0	0xb4d8f8		
@@ -128,7 +128,7 @@ site	name	name_address	default	default_address	flags	callback	category	script_vi
 0x50bfa4	cameraSmoothTimeMax	0x84fb20	2.0	0x84ff78	0	0x50bfe0	5	0	0	0xbe1038		
 0x5142bc	Joystick	0x8503ac	0	0x82e570	0	0x5142f0	5	0	0		enable joystick control	
 0x5ab6a6	realmList	0x83f2dc	us.logon.worldofwarcraft.com:3724	0x85d660	0		6	0	0	0xc2812c	Address of realm list server	
-0x5ab7ee	realmName	0x83f2d0		0x882748	?	?	6	?	?	0xc28130	Last realm connected to	flags-computed;callback-computed;script_visible-computed;callback_arg-computed
+0x5ab7ee	realmName	0x83f2d0		0x882748	?	?	6	?	?	0xc28130	Last realm connected to	flags-computed;callback-computed;script_hidden-computed;callback_arg-computed
 0x5e24a9	CombatModeMaxDistance	0x860354	30.0f	0x8603ac	0		3	0	0		Specifies the range outside of which combat mode is impossible	
 0x5e24c7	guildMemberNotify	0x86030c	0	0x82e570	0		4	0	0	0xc4d3c4	Receive notification when guild members log on/off	
 0x5e24ea	autoClearAFK	0x8602cc	1	0x82e748	0		4	0	0	0xc4d68c	Automatically clear AFK when moving or chatting	
@@ -141,9 +141,9 @@ site	name	name_address	default	default_address	flags	callback	category	script_vi
 0x60335e	TargetAnim	0x860d20	0	0x82e570	0		4	0	0	0xc4da30	Toggle display of player's target anims in the debug window	
 0x603390	AutoInteract	0x860ce8	1|0	0x82e748|0x82e570	0		4	0	0	0xc4d9a4	Toggles auto-move to interact target	default-conditional
 0x6033b3	CombatLogPeriodicSpells	0x860cd0	1	0x82e748	0		5	0	0			
-0x6039b5	showfootprintparticles	0x860ef8	1	0x82e748	1	?	1	?	?	0xc4d948	toggles rendering of footprint particles	callback-computed;script_visible-computed;callback_arg-computed
-0x6039d4	automoveturnspeedwide	0x860ed8	1200	0x860ef0	?	?	5	?	?			flags-computed;callback-computed;script_visible-computed;callback_arg-computed
-0x6039ee	automoveturnspeednarrow	0x860ebc	800	0x860ed4	?	?	5	?	?			flags-computed;callback-computed;script_visible-computed;callback_arg-computed
+0x6039b5	showfootprintparticles	0x860ef8	1	0x82e748	1	?	1	?	?	0xc4d948	toggles rendering of footprint particles	callback-computed;script_hidden-computed;callback_arg-computed
+0x6039d4	automoveturnspeedwide	0x860ed8	1200	0x860ef0	?	?	5	?	?			flags-computed;callback-computed;script_hidden-computed;callback_arg-computed
+0x6039ee	automoveturnspeednarrow	0x860ebc	800	0x860ed4	?	?	5	?	?			flags-computed;callback-computed;script_hidden-computed;callback_arg-computed
 0x6146ec	ObjectSelectionCircle	0x861380	1	0x82e748	0		0	0	0	0xc4daf8		
 0x623133	FootstepSounds	0x8627d8	1	0x82e748	0		5	0	0	0xc4e140		
 0x626d39	?	?	?	?	0		5	0	0			name-computed;default-computed
