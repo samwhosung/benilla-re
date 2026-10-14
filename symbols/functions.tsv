@@ -16507,7 +16507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58c580	189			gx			Runs its object file code that calls 0x59b850; not read here	inferred	none		
 0x58c640	137			gx			Runs its object file code that calls 0x58c0f0, 0x58ea00, 0x59f980 and 4 more; not read here	inferred	none		
 0x58c6d0	820			gx			Runs its object file code that calls 0x592220, 0x591200, 0x5911a0 and 6 more; not read here	inferred	none		
-0x58ca60	316			gx			Runs its object file code that calls 0x58c640, 0x58c140, 0x592330 and 4 more; not read here	inferred	none		
+0x58ca60	316			gx			Runs its object file code that calls 0x58c640, 0x58c140, 0x592330 and 4 more; not read here	inferred	none		gx::rect_b_smaller_matches_binary
 0x58cbb0	149			gx			Runs its object file code that calls 0x58cc50, 0x591f80; not read here	inferred	none		
 0x58cc50	130			gx			Runs its object file code not read here	inferred	none		
 0x58cce0	180			gx			Runs its object file code that calls 0x58c340, 0x591fa0; not read here	inferred	none		
@@ -16627,10 +16627,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x590ff0	12			gx			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x591000	21			gx			Runs its object file code not read here	inferred	none		
 0x591020	115			gx			Runs its object file code that calls 0x5922e0, __ftol; not read here	inferred	none		
-0x5910a0	63			gx			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x5910e0	61			gx			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x591120	63			gx			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x591160	61			gx			Runs its object file code that calls __ftol; not read here	inferred	none		
+0x5910a0	63			gx			Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_x_matches_binary
+0x5910e0	61			gx			Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_x_matches_binary
+0x591120	63			gx			Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_min_y_matches_binary
+0x591160	61			gx			Runs its object file code that calls __ftol; not read here	inferred	none		gx::aspect_fit_max_y_matches_binary
 0x5911a0	29			gx			Runs its object file code not read here	inferred	none		
 0x5911c0	28			gx			Runs its object file code not read here	inferred	none		
 0x5911e0	27			gx			Runs its object file code not read here	inferred	none		
@@ -16650,7 +16650,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x591540	87			gx			Runs its object file code that calls CGxTexFlags::CGxTexFlags, 0x591600; not read here	inferred	none		
 0x5915a0	96			gx			Runs its object file code that calls CGxTexFlags::CGxTexFlags, 0x591600; not read here	inferred	none		
 0x591600	113			gx			Runs its object file code not read here	inferred	none		
-0x591680	91			gx			Runs its object file code that calls __CIpow, __ftol; not read here	inferred	none		
+0x591680	91			gx			Runs its object file code that calls __CIpow, __ftol; not read here	inferred	none		gx::gamma_ramp_matches_binary
 0x5916e0	1456			gx			Runs its object file code that calls 0x5898d0, 0x5912f0, SetVector3 and 11 more; not read here	inferred	none		
 0x591c90	43			gx			Runs its object file code that calls 0x591d00, SMemFree; not read here	inferred	none		
 0x591cc0	61			gx			Runs its object file code not read here	inferred	none		
@@ -16662,7 +16662,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x591f80	25			gx			Runs its object file code not read here	inferred	none		
 0x591fa0	32			gx			Runs its object file code not read here	inferred	none		
 0x591fc0	11			gx			Runs its object file code not read here	inferred	none		
-0x591fd0	127			gx			Runs its object file code not read here	inferred	none		
+0x591fd0	127			gx			Runs its object file code not read here	inferred	none		gx::aspect_ratio_matches_binary
 0x592050	16			gx			Runs its object file code not read here	inferred	none		
 0x592060	22			gx			Runs its object file code that calls 0x591680; not read here	inferred	none		
 0x592080	31			gx			Runs its object file code not read here	inferred	none		
@@ -16698,7 +16698,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592610	47			gx			Runs its object file code that calls 0x591440; not read here	inferred	none		
 0x592640	73			gx			Runs its object file code not read here	inferred	none		
 0x592690	43			gx			Runs its object file code not read here	inferred	none		
-0x5926c0	104			gx			Runs its object file code that calls QueryDevice; not read here	inferred	none		
+0x5926c0	104			gx			Runs its object file code that calls QueryDevice; not read here	inferred	none		gx::negate_z_row_matches_binary
 0x592730	56			gx			Runs its object file code not read here	inferred	none		
 0x592770	28			gx			Runs its object file code that calls 0x5913d0; not read here	inferred	none		
 0x592790	62			gx			Runs its object file code that calls 0x5913d0, 0x591440; not read here	inferred	none		
@@ -16723,8 +16723,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592f70	28			gx			Runs its object file code not read here	inferred	none		
 0x592f90	57			gx			Runs its object file code not read here	inferred	none		
 0x592fd0	108			gx			Runs its object file code that calls 0x58a2a0, 0x58a350; not read here	inferred	none		
-0x593040	751			gx			Runs its object file code that calls CopyColor; not read here	inferred	none		
-0x593330	143			gx			Runs its object file code that calls 0x593040; not read here	inferred	none		
+0x593040	751			gx			Runs its object file code that calls CopyColor; not read here	inferred	none		gx::color_modulate_matches_binary
+0x593330	143			gx			Runs its object file code that calls 0x593040; not read here	inferred	none		gx::sub_vec3_matches_binary
 0x5933c0	419			gx	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
 0x593570	41			gx			Runs its object file code not read here	inferred	none		
 0x5935a0	33			gx			Runs its object file code not read here	inferred	none		
@@ -16797,7 +16797,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5955f0	65			gx			Runs its object file code not read here	inferred	none		
 0x595640	130			gx			Runs its object file code that calls CGxTexFlags::CGxTexFlags, 0x58aa30; not read here	inferred	none		
 0x5956d0	30			gx			Runs its object file code that calls GxTexDestroy; not read here	inferred	none		
-0x5956f0	1256			gx			Runs its object file code that calls OsInputGetCursorPos, 0x5922e0, 0x589f40 and 15 more; not read here	inferred	none		
+0x5956f0	1256			gx			Runs its object file code that calls OsInputGetCursorPos, 0x5922e0, 0x589f40 and 15 more; not read here	inferred	none		gx::quad_corners_matches_binary
 0x595be0	35			gx			Runs its object file code not read here	inferred	none		
 0x595c10	7			gx	unreached		Runs its object file code not read here	inferred	none		
 0x595c20	16			gx			Runs its object file code not read here	inferred	none		
@@ -16988,12 +16988,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59b910	242	GxClearGL		gx	host	void __thiscall (uint32_t mask)	Applies the viewport and scissor, then clears the colour and depth buffers the mask names	verified	one	ui/modelview#clip-and-depth-clear	
 0x59ba10	89			gx			Runs its object file code that calls 0x592430, 0x592140, 0x59b890; not read here	inferred	none		
 0x59ba70	40			gx			Runs its object file code not read here	inferred	none		
-0x59baa0	1422			gx			Runs its object file code not read here	inferred	none		
-0x59c100	1213			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
+0x59baa0	1422			gx			Runs its object file code not read here	inferred	none		gx::scale_neg_65536_matches_binary
+0x59c100	1213			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		gx::color_norm_matches_binary
 0x59c610	185			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
 0x59c6d0	84	GxApplyDirtyStateGL		gx	host	void __thiscall ()	Applies the dirty device states through the GL applicators, the viewport among them	verified	one	ui/modelview#clip-and-depth-clear	
-0x59c730	232	GxApplyViewportGL		gx	host	void __thiscall ()	Passes the viewport as truncated pixels to glViewport and glScissor, and the depth range to glDepthRange	verified	one	ui/modelview#clip-and-depth-clear	
-0x59c820	461			gx			Runs its object file code that calls 0x5a0090; not read here	inferred	none		
+0x59c730	232	GxApplyViewportGL		gx	host	void __thiscall ()	Passes the viewport as truncated pixels to glViewport and glScissor, and the depth range to glDepthRange	verified	one	ui/modelview#clip-and-depth-clear	gx::viewport_matches_binary
+0x59c820	461			gx			Runs its object file code that calls 0x5a0090; not read here	inferred	none		gx::light_dir_negate_matches_binary
 0x59c9f0	100			gx			Runs its object file code that calls 0x5935d0; not read here	inferred	none		
 0x59ca60	828			gx			Runs its object file code that calls MultiplyMatrix4, 0x5a0090, 0x59baa0 and 2 more; not read here	inferred	none		
 0x59cda0	1			gx			Runs its object file code not read here	inferred	none		
@@ -17002,8 +17002,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59d020	115			gx			Runs its object file code that calls 0x59baa0, 0x59f0f0, 0x59f5d0 and 1 more; not read here	inferred	none		
 0x59d0a0	53			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
 0x59d0e0	58			gx			Runs its object file code that calls 0x59baa0; not read here	inferred	none		
-0x59d120	529			gx			Runs its object file code that calls 0x59baa0, 0x591370, 0x591440 and 1 more; not read here	inferred	none		
-0x59d350	1606			gx			Runs its object file code that calls 0x59baa0, 0x59d020, 0x59d0a0 and 4 more; not read here	inferred	none		
+0x59d120	529			gx			Runs its object file code that calls 0x59baa0, 0x591370, 0x591440 and 1 more; not read here	inferred	none		gx::matrix_reorient_matches_binary
+0x59d350	1606			gx			Runs its object file code that calls 0x59baa0, 0x59d020, 0x59d0a0 and 4 more; not read here	inferred	none		gx::color_norm_at_0x59d350_matches_binary
 0x59da70	43			gx			Runs its object file code that calls 0x59dcf0, 0x59daa0; not read here	inferred	none		
 0x59daa0	560			gx			Runs its object file code that calls 0x595e70; not read here	inferred	none		
 0x59dcf0	871			gx			Runs its object file code that calls __alloca_probe, 0x59e070, 0x595e70; not read here	inferred	none		
@@ -17046,8 +17046,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59fc90	332			gx			Runs its object file code that calls 0x590630, 0x592b00, 0x59c6d0; not read here	inferred	none		
 0x59fde0	17			gx			Runs its object file code not read here	inferred	none		
 0x59fe00	17			gx			Runs its object file code not read here	inferred	none		
-0x59fe20	480			gx			Runs its object file code that calls MultiplyMatrix4, GxCapsGet, 0x59baa0; not read here	inferred	none		
-0x5a0000	135			gx			Runs its object file code not read here	inferred	none		
+0x59fe20	480			gx			Runs its object file code that calls MultiplyMatrix4, GxCapsGet, 0x59baa0; not read here	inferred	none		gx::proj_matrix_load_matches_binary
+0x5a0000	135			gx			Runs its object file code not read here	inferred	none		gx::z_flip_matches_binary
 0x5a0090	167			gx			Runs its object file code that calls 0x5a0000, 0x59baa0; not read here	inferred	none		
 0x5a0140	30			gx			Runs its object file code that calls 0x5925e0, 0x59fe20; not read here	inferred	none		
 0x5a0160	30			gx			Runs its object file code that calls 0x592610; not read here	inferred	none		

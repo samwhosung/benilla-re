@@ -201,7 +201,7 @@ paint, inside the viewport only; the frame's pixels are drawn into the back buff
 Addresses: `0x7ad7f0`, `0x5c3d90`, `0x5a1100`, `0x5a11bb`, `0x59c730`, `0x59c7d5`, `0x59c801`, `0x59c6d0`, `0x59b910`, `0x5a17d0`, `0x58a970`, `0x592530`, `0x63a833`
 Confidence: verified
 Proof: one
-Test: none
+Test: `gx::viewport_matches_binary`
 
 `0x7ad7f0` recentres the rectangle on its centre and calls `0x5c3d90(−w/2, w/2, −h/2, h/2, −500, 500)`,
 so x = ±w/2 maps to clip ±1. `0x5a1100` builds a `D3DVIEWPORT9` (X = trunc(x0·W), Y = trunc((1 − y1)·H))
@@ -209,7 +209,7 @@ and calls `IDirect3DDevice9::SetViewport`, vtable `+0xbc` (`0x5a11bb`); the D3D 
 never include the clipping state. `0x59c730` passes the same four truncated integers to `glViewport`
 and `glScissor` (`0x59c7d5`, `0x59c801`) and runs before every draw (`0x59c6d0`) and clear
 (`0x59b910`). Clear slot 0x6c is `0x59b910` for GL and `0x5a17d0` for D3D. `gxApi` registers with the
-value `direct3d` (`0x63a833`).
+value `direct3d` (`0x63a833`). The test runs the truncation slice `0x59c786` to `0x59c7cc` of `0x59c730`.
 
 ## Root transform
 
