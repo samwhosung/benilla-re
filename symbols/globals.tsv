@@ -1047,8 +1047,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c7a4	uint32_t[9]	s_fontObjectBaseTable		ui	Holds the three slots of the font object's base table, then two triples of +infinity, pi and 10.0	verified	one	ui/regions#the-layout-vtable
 0x81c7c8	void *[11]			ui	Holds 11 function addresses that CSimpleButton::CSimpleButton stores; not read here	inferred	none	
 0x81c7f8	void *[40]	CSimpleButton::vftable		ui	Holds the 40 virtual function slots of CSimpleButton, which its constructor stores	inferred	none	
-0x81c8b4	void *[10]	s_fontTableA		ui	Holds the ten slots of a font table that constructors store at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
-0x81c8dc	const uint32_t			ui	Holds data whose address CSimpleEditBox::CSimpleEditBox takes; not read here	inferred	none	
+0x81c8b4	void *[2]			ui	Holds the two slots the edit box's own font (+0x324) keeps at +0x24 (0x779bbc); its main table 0x81c8bc follows	verified	one	ui/regions#the-layout-vtable
+0x81c8bc	void *[8]			ui	Holds the main table of the edit box's own font (0x779bb6)	verified	one	ui/regions#the-layout-vtable
+0x81c8dc	void *[1]			ui	Holds the one slot, 0x77e2a0, of the table the edit box keeps at +0x314 (0x779b35)	verified	one	ui/regions#the-layout-vtable
 0x81c910	void *[36]			ui	Holds 36 function addresses that CSimpleEditBox::CSimpleEditBox stores; not read here	inferred	none	
 0x81c9b0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x81c9c8	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	

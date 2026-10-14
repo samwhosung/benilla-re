@@ -100,12 +100,13 @@ name and returns 1 if so (`0x77021e` to `0x770225`, `0x7702e7`), loads with `0x4
 ## Setting a vertex colour
 
 `SetVertexColor(r, g, b[, a])` clamps each value to 0 to 1, takes a missing alpha as the current alpha, packs it as
-`×255 + 0.5` truncated, and stores it as the only entry of both arrays. With no vertex colour yet, a white call of alpha `0xfe` or `0xff` stores nothing, and a call that repeats the one entry does nothing.
+`×255 + 0.5` truncated, and stores it as the only entry of both arrays. With no vertex colour yet, white of alpha `0xfe` or `0xff` stores nothing; repeating the one entry does nothing.
 `SetAlpha(a)` replaces the alpha of the colour `GetVertexColor` answers with `a × 255` truncated, with no clamp. That equals
 `SetVertexColor` with the current colour only for exactly one entry. With a gradient the read answers white and the
-store leaves one entry, so `SetAlpha`, and `SetVertexColor` without an alpha, replace it with flat white.
+store leaves one entry: `SetAlpha` gives flat white, and `SetVertexColor` without an alpha the given colour at alpha
+`0xff` (`0x79ae0a` copies only the read's alpha byte).
 
-Addresses: `0x79abd0`, `0x79ac81`, `0x79ad43`, `0x79ae17`, `0x77f750`, `0x77f766`, `0x77f77c`, `0x77f782`, `0x77f7b3`, `0x77f7bc`, `0x77f88a`, `0x77f8a7`, `0x79b580`, `0x79b627`, `0x79b638`, `0x79b649`, `0x79b64c`, `0x40a2b0`, `0x806498`, `0x7ffe58`, `0x7ffa24`
+Addresses: `0x79abd0`, `0x79ac81`, `0x79ad43`, `0x79ae0a`, `0x79ae17`, `0x77f750`, `0x77f766`, `0x77f77c`, `0x77f782`, `0x77f7b3`, `0x77f7bc`, `0x77f88a`, `0x77f8a7`, `0x79b580`, `0x79b627`, `0x79b638`, `0x79b649`, `0x79b64c`, `0x40a2b0`, `0x806498`, `0x7ffe58`, `0x7ffa24`
 Confidence: verified
 Proof: one
 Test: none
