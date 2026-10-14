@@ -6579,7 +6579,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x484620	19	InitSquare484620		ui	primitive	void __cdecl (void)	Stores 40 × 40 = 1600 as a float in a global	verified	one	ui/initfloats#squares	
 0x484640	5	InitSquare484650Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x484650, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x484650	19	InitSquare484650		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
-0x484670	28			ui	primitive		Runs its object file code not read here	inferred	none		
+0x484670	28	SplitBitIndex		ui	primitive	void __stdcall (uint32_t n, uint32_t *word, uint32_t *bit)	Splits a bit number into its dword index n >> 5 and its bit n & 31	verified	one	ui/tutorials#where-tutorials-fire	
 0x484690	41	NextLink484690		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
 0x4846c0	60	Unlink4846c0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x484700	12	InitEndLink484700		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
@@ -8135,7 +8135,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b7c80	72	GetBindingNameByOrdinal		ui	orchestration	void __thiscall (uint32_t index, const char **out)	Stores the name of the displayed command with an ordinal through out, leaving it for an unknown ordinal	verified	one	ui/keybindings#binding-functions	
 0x4b7cd0	79			ui	unreached		Runs its object file code not read here	inferred	none		
 0x4b7d20	118	GetBindingKeyByOrdinal		ui	orchestration	const char * __thiscall (const char *command, uint32_t index)	Returns the key string of a command's key with an ordinal, or 0	verified	one	ui/keybindings#binding-functions	
-0x4b7da0	172			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
+0x4b7da0	172	CBindings::LookupAction		ui	primitive	const char * __thiscall (void *bindings, const char *chord)	Returns the command bound to exactly the chord in the live set, or 0 for no chord or an empty set	verified	one	ui/keybindings#binding-functions	
 0x4b7e50	119			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4b7ed0	110	LowerKeyIndices		ui	primitive		Lowers by 1 the index of every other key of a command above the changed key's index	verified	one	ui/keybindings#setting-a-binding	
 0x4b7f40	24	Script::GetNumBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of displayed binding commands	verified	one	ui/keybindings#binding-functions	

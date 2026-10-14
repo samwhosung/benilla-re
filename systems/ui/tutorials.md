@@ -90,11 +90,13 @@ Test: none
 
 ## Where tutorials fire
 
-`../../tables/tutorial_triggers.tsv` lists every site by function and number. The numbers are zero-based. A movement press and a mouse press acknowledge 1 and 2, and 3 follows the movement press by 10 s. A hit the active player lands fires 5 (`0x629b37`), a unit becoming lootable 6 (`0x60049b`), the spell book 39 (`0x4b2ba1`), a quest accept of type 1 number 40 (`0x5dde7d`, `0x5ddf14`), the meeting stone status 46 (`0x4ca363`) and the battleground queue statuses 1 and 2 numbers 47 and 48 (`0x4aaa93`, `0x4aa91d`).
+`../../tables/tutorial_triggers.tsv` lists every site by function and number. The numbers are zero-based. A movement press and a mouse press acknowledge 1 and 2, and 3 follows the movement press by 10 s. A hit the active player lands fires 5 (`0x629b37`), a unit becoming lootable 6 (`0x60049b`), the spell book 39 (`0x4b2ba1`), a quest accept of type 1 number 40 (`0x5dde7d`, `0x5ddf14`), the meeting stone status 46 (`0x4ca363`) and the battleground queue statuses 1 and 2 numbers 47 and 48 (`0x4aaa93`, `0x4aa91d`). The world frame's idle pass fires 1 once 90 s have passed since the input control's start stamp, while 1 has not fired (`0x483000`).
 
-Addresses: `0x629b37`, `0x60049b`, `0x4ca363`, `0x4aa91d`, `0x4aaa93`, `0x5dde7d`, `0x5ddf14`, `0x5de542`, `0x5e38c0`, `0x5e4092`, `0x5e40a6`, `0x5e40b2`, `0x5e40c6`, `0x5e40da`, `0x5e40e6`, `0x5e40fa`, `0x5e410e`, `0x4b2ba1`, `0x4908c0`, `0x490a48`, `0x490a51`
+Addresses: `0x629b37`, `0x60049b`, `0x4ca363`, `0x4aa91d`, `0x4aaa93`, `0x5dde7d`, `0x5ddf14`, `0x5de542`, `0x5e38c0`, `0x5e4092`, `0x5e40a6`, `0x5e40b2`, `0x5e40c6`, `0x5e40da`, `0x5e40e6`, `0x5e40fa`, `0x5e410e`, `0x4b2ba1`, `0x4908c0`, `0x490a48`, `0x490a51`, `0x482fce`, `0x482ff0`, `0x483000`, `0x484670`, `0x42c010`, `0x5143e0`
 Confidence: verified
 Proof: one
 Test: none
 
 Every world entry fires 41 and then 0 (`0x490a48`, `0x490a51`). The level message `0x5e38c0` fires 22 at level 3 or above, 13 and 2 at 4 or above, 38 at 5 or above, 21 and 37 at 7 or above, 32 at 8 or above and 12 at 10 or above. Each test is `cmp eax,N; jl` (`0x5e4086` to `0x5e4105`), so a jump of several levels fires every lower number too. One site (`0x5de542`) takes its number from a table. `unitinfo`, `meetingstone`, `battlefield`, `questtitle`, `spellbook` and `worldenter` give the condition at each of their sites.
+
+The idle pass `0x482ea0` reads the clock (`0x42c010`) on entry; after the idle legs `0x482fce` splits 1 into its dword and bit with `0x484670` and tests the fire-once set at `0xb711c4`, and when the bit is clear `0x482ff0` subtracts the input control's stamp (`0x5143e0`, its `+0`) and 90000 (`sub 0x15f90; js`) before `0x483000` calls `0x4b5390(1, 0)`.
