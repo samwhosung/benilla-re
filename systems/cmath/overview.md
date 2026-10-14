@@ -1,8 +1,8 @@
 # cmath: overview
 
 The Tempest math library: the routines the engine's other files share for vectors, matrices,
-quaternions, intersections and floats. Its code is in three stretches of the image: two small
-helpers (`0x455c70` and `0x456330`), the software floats (`0x760be0` through `0x762e20`, derived in
+quaternions, intersections and floats. Its code is in three stretches of the image: the scalar
+file (`0x455c00` through `0x4567c2`, `cmath/scalars`), the software floats (`0x760be0` through `0x762e20`, derived in
 `spell/records#software-floats`), and twelve object files from `0x7bc090` through `0x7c4810`, whose
 initializers the C runtime's run `0x82da20` to `0x82dab0` lists in groups of +∞, 2π and 1/2π
 (`cmath/geometry#static-constants`). They hold the matrix routines (not yet in a doc), the

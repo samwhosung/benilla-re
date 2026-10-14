@@ -3803,64 +3803,64 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x455b80	5	InitFastMathInvTwoPiThunk		fastmath	orchestration		Jumps to 0x455b90; a static initializer	verified	one	fastmath#header-initializers	
 0x455b90	19	InitFastMathInvTwoPi		fastmath	primitive		Stores 1 over the 2 pi global as a float	verified	one	fastmath#header-initializers	
 0x455bb0	70	SmoothWaveShifted		fastmath	unreached	float __stdcall (float x, float y)	Returns a smooth zigzag between -1 and 1 of the phase x times y minus one half	inferred	none	fastmath#arctangent-and-wave	
-0x455c00	5			unassigned			Runs its object file code not read here	inferred	none		
-0x455c10	11			unassigned			Runs its object file code not read here	inferred	none		
-0x455c20	64			unassigned	unreached		Runs its object file code that calls 0x456420; not read here	inferred	none		
-0x455c60	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x455c00	5	InitScalarInfinityThunk		cmath	orchestration		Jumps to 0x455c10; a static initializer	verified	one	cmath/scalars#header-initializers	
+0x455c10	11	InitScalarInfinity		cmath	orchestration		Copies +inf into a global nothing reads	verified	one	cmath/scalars#header-initializers	
+0x455c20	64	SmoothWave		cmath	unreached	float __stdcall (float x, float y)	Returns a smooth zigzag between -1 and 1 of the phase x times y	inferred	none	cmath/scalars#shaping-functions	
+0x455c60	12	MulHighSigned		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b)	Returns the high dword of the signed 64-bit product a times b	verified	one	cmath/scalars#division-by-constants	
 0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	verified	one	cmath/overview#high-product	
-0x455c80	15			unassigned	unreached		Runs its object file code that calls MulHigh32; not read here	inferred	none		
-0x455c90	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455ca0	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455cc0	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455ce0	32			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455d00	32			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455d20	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455d40	44			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455d70	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455d90	66			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455de0	19			unassigned	unreached		Runs its object file code that calls 0x455c90; not read here	inferred	none		
-0x455e00	40			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455e30	62			unassigned	unreached		Runs its object file code that calls 0x455d40; not read here	inferred	none		
-0x455e70	40			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455ea0	64			unassigned	unreached		Runs its object file code that calls 0x455d90; not read here	inferred	none		
-0x455ee0	29			unassigned	unreached		Runs its object file code that calls 0x455cc0; not read here	inferred	none		
-0x455f00	76			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455f50	393			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4560e0	76			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456130	216			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456210	49			unassigned	unreached		Runs its object file code that calls 0x455d00; not read here	inferred	none		
-0x456250	37			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456280	37			unassigned			Runs its object file code not read here	inferred	none		spline::normalize2_f32_diff
-0x4562b0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4562f0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x455c80	15	DivideBy3		cmath	unreached	uint32_t __fastcall (uint32_t n)	Returns n divided by 3 through a multiply by 0xaaaaaaab	verified	one	cmath/scalars#division-by-constants	
+0x455c90	12	DivideBy3Signed		cmath	unreached	int32_t __fastcall (int32_t n)	Returns the high dword of n times 0x55555556, n divided by 3 rounded down	verified	one	cmath/scalars#division-by-constants	
+0x455ca0	30	DivideBy5		cmath	unreached	uint32_t __fastcall (uint32_t n)	Returns n divided by 5 through shifts and adds, exact for small n	verified	one	cmath/scalars#division-by-constants	
+0x455cc0	30	DivideBy5Signed		cmath	unreached	int32_t __fastcall (int32_t n)	Returns n divided by 5 rounded up through shifts and adds, exact for small n	verified	one	cmath/scalars#division-by-constants	
+0x455ce0	32	DivideBy9		cmath	unreached	uint32_t __fastcall (uint32_t n)	Returns n divided by 9 through shifts and adds, exact for small n	verified	one	cmath/scalars#division-by-constants	
+0x455d00	32	DivideBy9Signed		cmath	unreached	int32_t __fastcall (int32_t n)	Returns n divided by 9 rounded up through shifts and adds, exact for small n	verified	one	cmath/scalars#division-by-constants	
+0x455d20	22	MinInt3		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c)	Returns the least of 3 integers	verified	one	cmath/scalars#order-statistics	
+0x455d40	44	MedianInt3		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c)	Returns the median of 3 integers	verified	one	cmath/scalars#order-statistics	
+0x455d70	22	MaxInt3		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c)	Returns the greatest of 3 integers	verified	one	cmath/scalars#order-statistics	
+0x455d90	66	RangeInt3		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c)	Returns the greatest less the least of 3 integers	verified	one	cmath/scalars#order-statistics	
+0x455de0	19	MeanInt3		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c)	Returns the sum of 3 integers divided by 3	verified	one	cmath/scalars#order-statistics	
+0x455e00	40	MinInt5		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Returns the least of 5 integers	verified	one	cmath/scalars#order-statistics	
+0x455e30	62	MedianInt5		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Returns the median of 5 integers	verified	one	cmath/scalars#order-statistics	
+0x455e70	40	MaxInt5		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Returns the greatest of 5 integers	verified	one	cmath/scalars#order-statistics	
+0x455ea0	64	RangeInt5		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Returns the greatest less the least of 5 integers	verified	one	cmath/scalars#order-statistics	
+0x455ee0	29	MeanInt5		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Returns the sum of 5 integers divided by 5	verified	one	cmath/scalars#order-statistics	
+0x455f00	76	MinInt9		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e, int32_t f, int32_t g, int32_t h, int32_t i)	Returns the least of 9 integers	verified	one	cmath/scalars#order-statistics	
+0x455f50	393	MedianInt9		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e, int32_t f, int32_t g, int32_t h, int32_t i)	Returns the median of 9 integers	verified	one	cmath/scalars#order-statistics	
+0x4560e0	76	MaxInt9		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e, int32_t f, int32_t g, int32_t h, int32_t i)	Returns the greatest of 9 integers	verified	one	cmath/scalars#order-statistics	
+0x456130	216	RangeInt9		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e, int32_t f, int32_t g, int32_t h, int32_t i)	Returns the greatest less the least of 9 integers	verified	one	cmath/scalars#order-statistics	
+0x456210	49	MeanInt9		cmath	unreached	int32_t __fastcall (int32_t a, int32_t b, int32_t c, int32_t d, int32_t e, int32_t f, int32_t g, int32_t h, int32_t i)	Returns the sum of 9 integers divided by 9	verified	one	cmath/scalars#order-statistics	
+0x456250	37	NormalizeTwoDoubles		cmath	unreached	void __fastcall (double *x, double *y)	Scales two doubles in place by 1 over the length of the pair	verified	one	cmath/scalars#normalizing-vectors	
+0x456280	37	NormalizeTwoFloats		cmath	primitive	void __fastcall (float *x, float *y)	Scales two floats in place by 1 over the length of the pair	verified	one	cmath/scalars#normalizing-vectors	spline::normalize2_f32_diff
+0x4562b0	62	NormalizeThreeDoubles		cmath	unreached	void __fastcall (double *x, double *y, double *z)	Scales three doubles in place by 1 over the length of the triple	verified	one	cmath/scalars#normalizing-vectors	
+0x4562f0	62	NormalizeThreeFloats		cmath	unreached	void __fastcall (float *x, float *y, float *z)	Scales three floats in place by 1 over the length of the triple	verified	one	cmath/scalars#normalizing-vectors	
 0x456330	25	RsqrtEstimate		cmath	primitive		Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	cmath::fast_inv_sqrt_seed_difftest
-0x456350	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456370	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456380	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4563a0	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4563b0	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4563c0	7			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4563d0	9			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4563e0	57			unassigned	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x456420	71			unassigned	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x456470	67			unassigned	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x4564c0	78			unassigned	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x456510	36			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456540	36			unassigned	unreached		Runs its object file code that calls 0x456510; not read here	inferred	none		
-0x456570	67			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x4565c0	81			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456620	18			unassigned	unreached		Runs its object file code that calls __CIpow; not read here	inferred	none		
-0x456640	29			unassigned	unreached		Runs its object file code that calls 0x456620; not read here	inferred	none		
-0x456660	51			unassigned	unreached		Runs its object file code that calls FastLog2, __CIpow; not read here	inferred	none		
-0x4566a0	88			unassigned	unreached		Runs its object file code that calls 0x456660; not read here	inferred	none		
-0x456700	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456720	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456740	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456760	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456780	5			unassigned			Runs its object file code not read here	inferred	none		
-0x456790	15			unassigned			Runs its object file code not read here	inferred	none		
-0x4567a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4567b0	19			unassigned			Runs its object file code not read here	inferred	none		
+0x456350	25	RsqrtEstimateDouble		cmath	unreached	double __fastcall (uint32_t magic, double x)	Returns the double whose high dword is the magic less half of the argument's	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x456370	16	RsqrtEstimateInPlace		cmath	unreached	float __fastcall (float *x, uint32_t magic)	Stores into the float the bits of the magic less half of its own and returns it	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x456380	18	RsqrtEstimateInPlaceDouble		cmath	unreached	double __fastcall (double *x, uint32_t magic)	Stores into the double a high dword of the magic less half of its own and returns it	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x4563a0	16	ReciprocalEstimate		cmath	unreached	float __fastcall (uint32_t magic, float x)	Returns the float whose bits are the magic less the argument's bits	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x4563b0	16	ReciprocalEstimateDouble		cmath	unreached	double __fastcall (uint32_t magic, double x)	Returns the double whose high dword is the magic less the argument's	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x4563c0	7	ReciprocalEstimateInPlace		cmath	unreached	float __fastcall (float *x, uint32_t magic)	Stores into the float the bits of the magic less its own and returns it	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x4563d0	9	ReciprocalEstimateInPlaceDouble		cmath	unreached	double __fastcall (double *x, uint32_t magic)	Stores into the double a high dword of the magic less its own and returns it	verified	one	cmath/scalars#reciprocal-and-root-estimates	
+0x4563e0	57	SplitFloorDoubleToInt		cmath	unreached	void __fastcall (double *fraction, int32_t *whole, double x)	Stores the fraction of a double and its whole part, one lower for negatives, as an integer	verified	one	cmath/scalars#splitting-a-float	
+0x456420	71	SplitFloorFloatToInt		cmath	unreached	void __fastcall (float *fraction, int32_t *whole, float x)	Stores the fraction of a float and its whole part, one lower for negatives, as an integer	verified	one	cmath/scalars#splitting-a-float	
+0x456470	67	SplitFloorDouble		cmath	unreached	void __fastcall (double *fraction, double *whole, double x)	Stores the fraction of a double and its whole part, one lower for negatives, as a double	verified	one	cmath/scalars#splitting-a-float	
+0x4564c0	78	SplitFloorFloat		cmath	unreached	void __fastcall (float *fraction, float *whole, float x)	Stores the fraction of a float and its whole part, one lower for negatives, as a float	verified	one	cmath/scalars#splitting-a-float	
+0x456510	36	StepGreaterEqual		cmath	unreached	float __stdcall (float a, float b)	Returns 1.0 when a is at least b and 0.0 otherwise	verified	one	cmath/scalars#shaping-functions	
+0x456540	36	Pulse		cmath	unreached	float __stdcall (float x, float lo, float hi)	Returns 1.0 for x in [lo, hi) and 0.0 otherwise	verified	one	cmath/scalars#shaping-functions	
+0x456570	67	LinearStep		cmath	unreached	float __stdcall (float x, float lo, float hi)	Returns x between lo and hi as a fraction clamped into [0, 1]	verified	one	cmath/scalars#shaping-functions	
+0x4565c0	81	SmoothStep		cmath	unreached	float __stdcall (float x, float lo, float hi)	Returns the smooth step of x between lo and hi	verified	one	cmath/scalars#shaping-functions	
+0x456620	18	Power		cmath	unreached	float __stdcall (float a, float b)	Returns a to the power b through the C runtime	verified	one	cmath/scalars#shaping-functions	
+0x456640	29	Root		cmath	unreached	float __stdcall (float a, float b)	Returns a to the power 1 over b through the C runtime	verified	one	cmath/scalars#shaping-functions	
+0x456660	51	Bias		cmath	unreached	float __stdcall (float x, float b)	Returns x to the power minus log2 of b, using the fast logarithm	verified	one	cmath/scalars#shaping-functions	
+0x4566a0	88	Gain		cmath	unreached	double __stdcall (float x, float g)	Returns the gain curve of x built from the bias of 1 minus g	verified	one	cmath/scalars#shaping-functions	
+0x456700	25	SincProductDouble		cmath	unreached	double __stdcall (double x, double y)	Returns sin(pi x y) over pi x y in doubles	verified	one	cmath/scalars#shaping-functions	
+0x456720	22	SincDouble		cmath	unreached	double __stdcall (double x)	Returns sin(pi x) over pi x in doubles	verified	one	cmath/scalars#shaping-functions	
+0x456740	25	SincProductFloat		cmath	unreached	double __stdcall (float x, float y)	Returns sin(pi x y) over pi x y from floats	verified	one	cmath/scalars#shaping-functions	
+0x456760	22	SincFloat		cmath	unreached	double __stdcall (float x)	Returns sin(pi x) over pi x from a float	verified	one	cmath/scalars#shaping-functions	
+0x456780	5	InitScalarTwoPiThunk		cmath	orchestration		Jumps to 0x456790; a static initializer	verified	one	cmath/scalars#header-initializers	
+0x456790	15	InitScalarTwoPi		cmath	primitive		Stores the float pi plus pi into a global	verified	one	cmath/scalars#header-initializers	
+0x4567a0	5	InitScalarInvTwoPiThunk		cmath	orchestration		Jumps to 0x4567b0; a static initializer	verified	one	cmath/scalars#header-initializers	
+0x4567b0	19	InitScalarInvTwoPi		cmath	primitive		Stores 1 over the 2 pi global as a float	verified	one	cmath/scalars#header-initializers	
 0x4567d0	5	InitDbcInfinityThunkStartupStrings		dbc	orchestration	void __cdecl ()	Jumps to the +inf initializer of the Startup_Strings record file	inferred	none		
 0x4567e0	11	InitDbcInfinityStartupStrings		dbc	orchestration	void __cdecl ()	Copies the float +inf into a word of the data section	inferred	none		
 0x4567f0	6	StartupStringsGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the Startup_Strings table file	inferred	none		

@@ -427,7 +427,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
 0x803090	const double	s_twoPiDouble		fastmath	Holds the float 2 pi widened to a double, the divisor of the angle wrap	verified	one	fastmath#angle-wrap
+0x803098	const float	s_scalarInfinitySource		cmath	Holds +inf, the value the scalar file's +inf initializer copies	verified	one	cmath/scalars#header-initializers
+0x80309c	const float	s_scalarPi		cmath	Holds the float pi, which the scalar file's 2 pi initializer doubles	verified	one	cmath/scalars#header-initializers
 0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
+0x8030a8	const double	s_piDouble		cmath	Holds pi as a double, the factor of the double sine cardinal	verified	one	cmath/scalars#shaping-functions
+0x8030b0	const float	s_piFloat		cmath	Holds pi as a float, the factor of the float sine cardinal	verified	one	cmath/scalars#shaping-functions
 0x8030bc	const float	s_sndIfInfinitySource		sound	Holds +inf, the value the interface file's infinity initializer copies	verified	one	sound/overview#shared-header-constants
 0x803140	const float	s_footstepNearRadius		sound	Holds 20.0, the footstep radius	verified	one	sound/objects#footstep-sounds
 0x803144	const float	s_footstepFarRadius		sound	Holds 50.0, the far footstep radius	verified	one	sound/objects#footstep-sounds
@@ -2192,6 +2196,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05e98	float	s_fastMathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#header-initializers
 0xb05e9c	float	s_fastMathInvTwoPi		fastmath	Holds 1/2 pi, set at startup; nothing reads it	verified	one	fastmath#header-initializers
 0xb05ea0	float	s_fastMathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	fastmath#header-initializers
+0xb05ea4	float	s_scalarInfinity		cmath	Holds +inf, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
+0xb05ea8	float	s_scalarInvTwoPi		cmath	Holds 1/2 pi, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
+0xb05eac	float	s_scalarTwoPi		cmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	cmath/scalars#header-initializers
 0xb05ebc	uint32_t[4]	s_emoteSoundPointers		sound	Holds the emote sound pointer array: capacity, count, buffer and granularity	verified	one	sound/interface#emote-sounds
 0xb05ee0	float	s_sndIfInfinity		sound	Holds +inf, the interface file's infinity	verified	one	sound/overview#shared-header-constants
 0xb05ee4	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
