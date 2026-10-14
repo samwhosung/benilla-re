@@ -1,0 +1,106 @@
+# sysmsg
+
+The system message printers: `SysMessage.cpp`, `0x44cb20` to `0x44cd70`. A caller reports a level
+and a text; the client checks the level, formats the text into a stack buffer and drops it. What
+the file keeps is a colour and duration table for the four levels, the display switch and level
+window the console commands set, and a registration stub for the on-screen display. Static data
+is at `0x835908` to `0x835930` and `0xb05d30`. The lower band `0x44c040` to `0x44cb20` is
+`Texture.cpp`, not this file; the next object file starts at `0x44cd80`.
+
+Roots: `0x44cbd0`, `0x44cb40`, `0x44cca0`, `0x44cd10`, `0x44cd40`, `0x44cc00`, `0x44cc20`, `0x44cc40`, `0x44cc80`, `0x44cd70`
+
+## Printing a message
+
+`0x44cbd0(level, channel, format, ...)` returns 0 after `SErrSetLastError(0x57)` when `format` is
+null, and otherwise calls `0x44cb90` with a pointer to the variable arguments. `0x44cb90` writes
+the text with `__vsnprintf` into a 256-byte stack buffer, sets its last byte to 0, and returns
+`0x44cb20(text, level)`, which returns 1 when `text` is non-null and `level < 4` (signed), and
+otherwise sets error `0x57` and returns 0. The buffer is not stored or shown, so a print does
+nothing but the check. 35 call sites reach `0x44cbd0`; 31 reach `0x44cb20`.
+
+Addresses: `0x44cbd0`, `0x44cb90`, `0x44cb20`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x44cb20` takes the text in `ecx`, the level in `edx` and one stack argument it never reads
+(`ret 4`); `0x44cb90` pushes the channel there, so the channel has no effect. The buffer is
+`[ebp-0x100]` (`0x44cba1`) and the terminator store is `0x44cbc2`.
+
+## Status object check
+
+`0x44cb40(status, _)` returns 1 at once when `CStatus::IsEmpty` (`0x41a150`) of the status holds.
+Otherwise it takes the status' error text with `CStatus::GetErrorStrAlloc` (`0x41a2c0`, argument
+0), calls `0x44cb20(text, [status+0x10])`, frees the text with `SMemFree` (file tag `0x835934`,
+line 0xae) and returns the check's result. Its second argument is pushed for the check and
+never read. Its 10 callers include the cache-update timer `0x402a20`, which calls it with a
+local status object.
+
+Addresses: `0x44cb40`, `0x41a150`, `0x41a2c0`, `0x646430`, `0x402a20`
+Confidence: verified
+Proof: one
+Test: none
+
+The call order is `0x44cb46`, `0x44cb5c`, `0x44cb69`, `0x44cb7d`.
+
+## Colour table
+
+Four message levels have a colour and a duration, 8 bytes each from `0x835908`: bytes R, G, B, a
+pad byte, then the duration as a float.
+
+| level | R, G, B | duration |
+|---|---|---|
+| 0 | 255, 255, 255 | 10.0 |
+| 1 | 255, 255, 127 | 15.0 |
+| 2 | 255, 127, 127 | 15.0 |
+| 3 | 127, 255, 255 | 20.0 |
+
+`0x44cca0(level, &r, &g, &b)` stores each byte as `(float)byte · f32(1/255)` (`0x3b808081`,
+at `0x8026c8`); the product is formed in double and rounded by the 32-bit store. The level is
+not range-checked. `0x44cd00(level)` loads the duration; nothing calls it.
+
+Addresses: `0x835908`, `0x44cca0`, `0x8026c8`, `0x44cd00`
+Confidence: verified
+Proof: one
+Test: `sysmsg::color_lookup_difftest`
+
+Each channel is `movzx byte [level*8+0x835908+k]`, `fild`, `fmul [0x8026c8]`, `fstp` (`0x44cca4`
+to `0x44ccea`). The one caller is `0x409200`, the display callback (see below): it copies the text into a
+slot of ten records of 0x10c bytes from `0x882e28`, multiplies each channel by 255.0
+(`0x7ffe58`), converts with `__ftol`, stores B, G, R and 0xff at `+0x108` to `+0x10b`, and
+advances the slot index modulo 10. The test runs `0x44cca0` whole for every byte value in each
+record.
+
+## Display switch and window
+
+Four globals hold the console's choices: the switch `0x835928`, the window low `0xb05d30` and
+high `0x83592c`, and the selector `0x835930`. `0x44cd10`, called once from `0x402ad0`, sets
+them to 1, 0, 3 and −1. Setting the low bound raises the high to it when below; setting the high
+lowers the low to it when above (`0x44cc20`, `0x44cc40`). `0x44cd40` clears the switch and
+tail-calls `0x44cd60`, a `ret`; it is the tail jump of `DestroyClientSystems` (`0x4036c0`). The
+console handlers `0x402f60` and `0x4030b0` call the window setters only for values 0 to 3
+(`0x402f6e`, `0x402f73`, `0x4030be`, `0x4030c3`). The getters `0x44cc60`, `0x44cc70` and
+`0x44cc90` have one caller each; `0x44cc10` and `0x44cd50` have none.
+
+Addresses: `0x835928`, `0xb05d30`, `0x83592c`, `0x835930`, `0x44cd10`, `0x44cc00`, `0x44cc10`, `0x44cc20`, `0x44cc40`, `0x44cc60`, `0x44cc70`, `0x44cc80`, `0x44cc90`, `0x44cd40`, `0x44cd50`, `0x44cd60`
+Confidence: verified
+Proof: one
+Test: none
+
+Census: the `e8` and `e9` targets and the operand mentions of each address. Nothing reads the
+switch except `0x44cc10`, so it gates nothing in this file.
+
+## Display callback registration
+
+`0x44cd70(callback)` is a `ret`, so it keeps nothing. `0x409040` passes it `0x409200` when its
+enable word is set (`0x4090e8`), and `0x409100` passes it 0 (`0x409112`). Nothing calls or
+jumps to `0x409200`, and its address occurs once in the image, as that immediate (`0x4090e4`),
+so it never runs, nor the colour lookup it alone calls: no colour or duration reaches the
+screen.
+
+Addresses: `0x44cd70`, `0x409040`, `0x409100`, `0x409200`, `0x4090e8`, `0x409112`
+Confidence: verified
+Proof: one
+Test: none
+
+Both call sites load `ecx` just before the call (`0x4090e3`, `0x409109`).

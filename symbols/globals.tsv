@@ -1111,6 +1111,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835624	char[15]	s_textUniqueTexture		gx	Holds the string "Unique Texture"	verified	one	gx/textures#texture-creation-variants
 0x835634	char[23]	s_textUniqueTextureNoName		gx	Holds the string "Unique Texture No Name"	verified	one	gx/textures#texture-creation-variants
 0x835708	char[14]	s_textSolidTexture		gx	Holds the string "Solid Texture"	inferred	none	
+0x835908	uint8_t[32]	s_sysMsgColors		sysmsg	Holds four 8-byte records: R, G, B, a pad byte and a float duration, for message levels 0 to 3	verified	one	sysmsg#colour-table
+0x835928	int32_t	s_sysMsgEnabled		sysmsg	Holds the display switch, 1 at start-up; nothing reads it but the unreached getter	verified	one	sysmsg#display-switch-and-window
+0x83592c	int32_t	s_sysMsgMaxLevel		sysmsg	Holds the window's high level, 3 at start-up	verified	one	sysmsg#display-switch-and-window
+0x835930	int32_t	s_sysMsgSelected		sysmsg	Holds the selector, -1 at start-up	verified	one	sysmsg#display-switch-and-window
+0x835934	char[56]	s_pathSysMessage		sysmsg	Holds the source path of SysMessage.cpp, the tag of the free at 0x44cb7d	verified	one	sysmsg#status-object-check
 0x835a40	uint32_t			unassigned	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0x835a44	int32_t	s_soundSubmerged		sound	Holds 1 while the camera is submerged, 0 otherwise, -1 at start and exit	verified	one	sound/ambience#zone-ambience-choice
 0x835a48	int32_t	s_soundGhost		sound	Holds 1 while the player is a ghost, 0 otherwise, -1 at start and exit	verified	one	sound/ambience#zone-ambience-choice
@@ -2025,6 +2030,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882be0	uint32_t	s_loadingScreen		loadingscreen	Holds the loading screen object, or null	inferred	none	
 0x882e04	uint32_t			loadingscreen	Holds a dword that EndLoadingScreen reads and writes; not read here	inferred	none	
 0x882e10	uint32_t			loadingscreen	Holds a dword that SetLoadingScreenTip, BeginLoadingScreen, EndLoadingScreen read and write; not read here	inferred	none	
+0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
@@ -2096,6 +2102,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05d18	uint32_t	s_textureFileBytesUsed		gx	Holds the bytes of the static file area already given to async texture records	verified	one	gx/textures#texture-file-creation
 0xb05d1c	uint32_t	s_bufferedTextureRecords		gx	Counts the async texture records holding a slice of the static file area	verified	one	gx/textures#texture-objects
 0xb05d20	uint32_t	s_pinnedTextureRecords		gx	Counts the async texture records pinned by a wait	verified	one	gx/textures#texture-objects
+0xb05d30	int32_t	s_sysMsgMinLevel		sysmsg	Holds the window's low level, 0 at start-up	verified	one	sysmsg#display-switch-and-window
 0xb05d68	float	s_randomInfinity		random	Holds +inf, set at startup; nothing reads it	verified	one	random#static-initializers
 0xb05d6c	float	s_randomInvTwoPi		random	Holds 1/2π, set at startup; read only by unreached noise	verified	one	random#static-initializers
 0xb05d70	float	s_randomTwoPi		random	Holds 2π, set at startup; read only by unreached noise	verified	one	random#static-initializers

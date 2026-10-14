@@ -3564,25 +3564,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44c8c0	12			gx	primitive		Runs its object file code not read here	inferred	none		
 0x44c8d0	316			gx	primitive		Runs its object file code that calls 0x44ca10, 0x44c100, 0x44c530; not read here	inferred	none		
 0x44ca10	264			gx	primitive		Runs its object file code that calls 0x44c780, 0x44c100, SMemReAlloc and 3 more; not read here	inferred	none		
-0x44cb20	29	ValidateStatusLevel		sysmsg			Returns 1 for a non-null text and a level below 4; otherwise sets error 0x57 and returns 0	verified	one	objectlayer/update#creating-an-object	
-0x44cb40	72	SysMsgAdd	idb	sysmsg			Runs SysMessage.cpp code that calls CStatus::IsEmpty, CStatus::GetErrorStrAlloc and 2 more; not read here	inferred	none		
-0x44cb90	63	SysMsgVPrintf		sysmsg			Formats a message into 256 bytes with a va_list and passes it on with the first two arguments	inferred	none		
-0x44cbd0	44	SysMsgPrintf	idb	sysmsg			Prints a formatted system message	inferred	none	spell/go#cast-visual-and-dest-effect	
-0x44cc00	7			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc10	6			sysmsg	unreached		Runs its object file code not read here	inferred	none		
-0x44cc20	21	SysMsgSetMinDisplayLevel	idb	sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc40	21	SysMsgSetMaxDisplayLevel	idb	sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc60	6			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc70	6			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc80	7			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cc90	6			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cca0	82			sysmsg			Runs its object file code not read here	inferred	none		
-0x44cd00	8			sysmsg	unreached		Runs its object file code not read here	inferred	none		
-0x44cd10	41	SysMsgInitialize	idb	sysmsg			Runs its object file code not read here	inferred	none		
-0x44cd40	15			sysmsg			Stores 0 in a global and tail-calls 0x44cd60	inferred	none		
-0x44cd50	1			sysmsg	unreached		Runs its object file code not read here	inferred	none		
-0x44cd60	1			sysmsg			Returns at once	inferred	none		
-0x44cd70	1			unassigned			Runs its object file code not read here	inferred	none		
+0x44cb20	29	ValidateStatusLevel		sysmsg	primitive	int __fastcall (const char *text, int level, int unused)	Returns 1 for a non-null text and a level below 4; otherwise sets error 0x57 and returns 0	verified	one	sysmsg#printing-a-message	
+0x44cb40	72	SysMsgAdd	idb	sysmsg	orchestration	int __fastcall (CStatus *status, int unused)	Returns 1 for an empty status, else checks its error text at its level, frees the text and returns the check	verified	one	sysmsg#status-object-check	
+0x44cb90	63	SysMsgVPrintf		sysmsg	orchestration	int __cdecl (int level, int channel, const char *format, va_list args)	Formats a message into 256 bytes with a va_list, ends it with 0 and returns the level check	verified	one	sysmsg#printing-a-message	
+0x44cbd0	44	SysMsgPrintf	idb	sysmsg	orchestration	int __cdecl (int level, int channel, const char *format, ...)	Prints a formatted system message: error 0x57 for a null format, else the formatted level check	verified	one	sysmsg#printing-a-message	
+0x44cc00	7	SysMsgSetEnabled		sysmsg	orchestration	void __fastcall (int enabled)	Stores the display switch	verified	one	sysmsg#display-switch-and-window	
+0x44cc10	6	SysMsgGetEnabled		sysmsg	unreached	int __cdecl ()	Returns the display switch	verified	one	sysmsg#display-switch-and-window	
+0x44cc20	21	SysMsgSetMinDisplayLevel	idb	sysmsg	orchestration	void __fastcall (int level)	Stores the window's low level and raises the high level to it when below	verified	one	sysmsg#display-switch-and-window	
+0x44cc40	21	SysMsgSetMaxDisplayLevel	idb	sysmsg	orchestration	void __fastcall (int level)	Stores the window's high level and lowers the low level to it when above	verified	one	sysmsg#display-switch-and-window	
+0x44cc60	6	SysMsgGetMinDisplayLevel		sysmsg	orchestration	int __cdecl ()	Returns the window's low level	verified	one	sysmsg#display-switch-and-window	
+0x44cc70	6	SysMsgGetMaxDisplayLevel		sysmsg	orchestration	int __cdecl ()	Returns the window's high level	verified	one	sysmsg#display-switch-and-window	
+0x44cc80	7	SysMsgSetSelected		sysmsg	orchestration	void __fastcall (int selected)	Stores the selector	verified	one	sysmsg#display-switch-and-window	
+0x44cc90	6	SysMsgGetSelected		sysmsg	orchestration	int __cdecl ()	Returns the selector	verified	one	sysmsg#display-switch-and-window	
+0x44cca0	82	SysMsgGetColor		sysmsg	primitive	void __fastcall (int level, float *r, float *g, float *b)	Stores the level's R, G and B bytes, each times 1/255, as floats	verified	one	sysmsg#colour-table	sysmsg::color_lookup_difftest
+0x44cd00	8	SysMsgGetDuration		sysmsg	unreached	float __fastcall (int level)	Returns the level's display duration	verified	one	sysmsg#colour-table	
+0x44cd10	41	SysMsgInitialize	idb	sysmsg	orchestration	void __cdecl ()	Sets the switch to 1, the window to 0 to 3 and the selector to -1	verified	one	sysmsg#display-switch-and-window	
+0x44cd40	15	SysMsgDisable		sysmsg	orchestration	void __cdecl ()	Clears the display switch and tail-calls a return	verified	one	sysmsg#display-switch-and-window	
+0x44cd50	1	SysMsgNopUnreached		sysmsg	unreached		Returns at once; nothing calls it	verified	one	sysmsg#display-switch-and-window	
+0x44cd60	1	SysMsgNop		sysmsg	orchestration	void __cdecl ()	Returns at once	verified	one	sysmsg#display-switch-and-window	
+0x44cd70	1	SysMsgSetDisplayCallback		sysmsg	orchestration	void __fastcall (void *callback)	Returns at once, keeping no callback	verified	one	sysmsg#display-callback-registration	
 0x44cd80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x44cd90	11			unassigned			Runs its object file code not read here	inferred	none		
 0x44cda0	5			unassigned			Runs its object file code not read here	inferred	none		
