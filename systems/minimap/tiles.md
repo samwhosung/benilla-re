@@ -38,7 +38,7 @@ from the string table and the value. The interior name is printed at `0x6d9f18` 
 
 ## Outdoor tile window
 
-The outdoor map is a block of 2 by 2 tiles held in the first four tile records. `LoadOutdoorTiles(block, changed, records)` clears bit 2 of the four records, and when the map is unchanged moves a record whose tile is still wanted to its new slot, keeping its texture. Then it
+The outdoor map is a block of 2 by 2 tiles held in the first four tile records. `LoadOutdoorTiles(block, changed, records)` clears mask `0x2` of the four records, and when `changed` is 0 (always, from its one caller `0x6da489`) moves a record whose tile is still wanted to its new slot, keeping its texture. Then it
 loads every wanted tile that has no record: it builds the name, writes `MINIMAPCHUNKNOTFOUND|<row>|<col>` for a missing one, releases the slot's old texture, creates the new texture and stores the tile's two indices. The four tiles of the block are the base
 tile plus the offsets (0, 0), (1, 0), (1, 1) and (0, 1).
 
@@ -47,23 +47,23 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x6da600` clears bit 2 of the first four records (stride `0xa4`). `0x6da60b` skips the reuse pass when `edx` is nonzero. The pass compares each record's tile (`+0x98`, `+0x9c`) with the four wanted tiles, the base plus the pair `[0x811700 + 8k]`, `[0x811704 + 8k]` (`0x6da622`, `0x6da62b`, `0x6da643`, `0x6da648`);
-a match in another slot releases the slot's handle (`0x6da657`), copies the handle and the key (`0x6da664`, `0x6da669`), zeroes the source handle (`0x6da66f`) and sets bit 2 (`0x6da675`). The loader loop is `0x6da6b0` to `0x6da796`: it skips records with bit 2, calls the name builder (`0x6da6e1`), warns for an empty name (`0x6da701`),
+`0x6da600` clears mask `0x2` of the first four records (stride `0xa4`). `0x6da60b` skips the reuse pass when `edx` is nonzero. The pass compares each record's tile (`+0x98`, `+0x9c`) with the four wanted tiles, the base plus the pair `[0x811700 + 8k]`, `[0x811704 + 8k]` (`0x6da622`, `0x6da62b`, `0x6da643`, `0x6da648`);
+a match in another slot releases the slot's handle (`0x6da657`), copies the handle and the key (`0x6da664`, `0x6da669`), zeroes the source handle (`0x6da66f`) and sets mask `0x2` (`0x6da675`). The loader loop is `0x6da6b0` to `0x6da796`: it skips records with mask `0x2`, calls the name builder (`0x6da6e1`), warns for an empty name (`0x6da701`),
 releases the old handle (`0x6da711`) and creates the texture with `TextureCreate` (`0x6da764`), storing the handle and the key (`0x6da76c`, `0x6da771`, `0x6da77a`).
 
 ## Interior tiles
 
 `LoadInteriorTile(records, group, desc, bias, nameBuf)` loads one tile of the interior descriptor `desc`: it claims a free record, builds the name from the world name and the descriptor (`desc[0]` the group index, `desc[1]` and `desc[2]` the grid indices), replaces the record's texture, stores the
 key and the six bounding floats, and sets the distance: unbounded for the player's own group, otherwise the middle of the vertical extent less the bias. `TileLodDistance(records, group, desc, bias)` does the last step for a tile that is already loaded and returns its record, or 0.
-`ClearTileKeys` sets the key word of all 512 records to −1. `ClaimTileSlot` returns the first record without bit 2, with it set, or 0.
+`ClearTileKeys` sets the key word of all 512 records to −1. `ClaimTileSlot` returns the first record without mask `0x2`, with it set, or 0.
 
 Addresses: `0x6d9ed0`, `0x6d9ee4`, `0x6d9f03`, `0x6d9ffa`, `0x6da05f`, `0x6da06b`, `0x6da07e`, `0x6da093`, `0x6da0b5`, `0x6da0c1`, `0x6da0ca`, `0x6da0dc`, `0x6da13a`, `0x6d9e30`, `0x6d9e40`, `0x6d9e75`, `0x6d9e88`, `0x6d9ea6`, `0x6d9eb3`, `0x6d9e10`, `0x6d9e20`, `0x6da150`, `0x6da160`, `0x6da179`, `0x6da150`, `0x449d90`
 Confidence: verified
 Proof: one
 Test: `minimap::blip_lod_distance_difftest`
 
-`0x6d9ed0` takes a record from `0x6da150` and returns when none is free (`0x6d9ee4`). `0x6d9ffa` releases the old handle; a non-empty path creates the texture and sets bit 4 (`0x6da06b`); an empty path clears bit 2 and the handle (`0x6da07e`). `0x6da093` stores `desc[1]` and `desc[2]` at `+0x98` and `+0x9c`, `0x6da0b5`
-copies the six floats to `+0x70` and `0x6da0c1` stores `desc[0]` at `+0xa0`. A tile of the player's own group gets the distance 3.4028235e38 (`0x6da0ca`); another gets `(minZ + maxZ) · 0.5 − bias` (`0x6da0dc` to `0x6da13a`). `0x6d9e30` looks for the record with the key (`0x6d9e40`), returns 0 without one, sets bit 2 and gives the same two distances
+`0x6d9ed0` takes a record from `0x6da150` and returns when none is free (`0x6d9ee4`). `0x6d9ffa` releases the old handle; a non-empty path creates the texture and sets mask `0x4` (`0x6da06b`); an empty path clears mask `0x2` and the handle (`0x6da07e`). `0x6da093` stores `desc[1]` and `desc[2]` at `+0x98` and `+0x9c`, `0x6da0b5`
+copies the six floats to `+0x70` and `0x6da0c1` stores `desc[0]` at `+0xa0`. A tile of the player's own group gets the distance 3.4028235e38 (`0x6da0ca`); another gets `(minZ + maxZ) · 0.5 − bias` (`0x6da0dc` to `0x6da13a`). `0x6d9e30` looks for the record with the key (`0x6d9e40`), returns 0 without one, sets mask `0x2` and gives the same two distances
 (`0x6d9e75`, `0x6d9e88`, `0x6d9ea6`, `0x6d9eb3`). The test runs `0x6d9e30` whole over a table of records.
 
 ## Tile records
@@ -84,5 +84,5 @@ Confidence: verified
 Proof: one
 Test: none
 
-The draw `0x4eae10` draws a record only when bit 0x1 and the handle are set (`0x4eae19`, `0x4eae26`). The update's promotion loop (`0x6d97f6` to `0x6d982b`) walks the 512 records: a record with both bit 2 and bit 4 whose handle is 0 loses bit 2 (`0x6d9807`); one with a handle asks
-the texture object (`0x44acf0`, `0x6d9810`) and, when it answers, loses bit 4 (`0x6d981f`), and the loop gives up for this frame when it does not (`0x6d9817`). The frame code keeps them at 0xbc83a8.
+The draw `0x4eae10` draws a record only when mask `0x1` and the handle are set (`0x4eae19`, `0x4eae26`). The update's promotion loop (`0x6d97f6` to `0x6d982b`) walks the 512 records: a record with both mask `0x2` and mask `0x4` whose handle is 0 loses mask `0x2` (`0x6d9807`); one with a handle asks
+the texture object (`0x44acf0`, `0x6d9810`) and, when it answers, loses mask `0x4` (`0x6d981f`), and the loop gives up for this frame when it does not (`0x6d9817`). The frame code keeps them at 0xbc83a8.

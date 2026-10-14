@@ -17,18 +17,18 @@ Test: none
 
 ## Family exclusion
 
-The two tile families share one array of 512 records, and the test the interior list uses, bit 2 of the flags and a texture, does not tell them apart: the outdoor loader sets bit 2 too. The update keeps them apart. It loads outdoor tiles only while the indoor byte is clear. The first indoor frame always rebuilds the interior, because the outdoor branch leaves the cached identity words at -1, and the rebuild clears bit 2 of all 512 records. A record the interior loader never filled also has an empty box, so its quad has no area.
+The two tile families share one array of 512 records, and the test the interior list uses, mask `0x2` of the flags and a texture, does not tell them apart: the outdoor loader sets mask `0x2` too. The update keeps them apart. It loads outdoor tiles only while the indoor byte is clear. The first indoor frame always rebuilds the interior, because the outdoor branch leaves the cached identity words at -1, and the rebuild clears mask `0x2` of all 512 records. A record the interior loader never filled also has an empty box, so its quad has no area.
 
 Addresses: `0x6da5e0`, `0x6da5f8`, `0x6da600`, `0x6da675`, `0x6d95cd`, `0x6d9a5f`, `0x6d9a62`, `0x6d9a75`, `0x6d999f`, `0x6d9582`, `0x6d958d`, `0x6d9592`, `0x6d94da`, `0x6d94e5`, `0x6d94ef`, `0x6d9502`, `0x6d9724`, `0x6d9730`, `0x6da0b5`, `0x4ead10`, `0x4ea430`, `0x4ea442`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6da5f8` and `0x6da600` clear bit 2 of the first four records only, and `0x6da675` sets it on a record the outdoor tile fills. The calls of the outdoor loader are `0x6d999f`, reached when the indoor byte is clear (`0x6d95cd`), and `0x6d9a75`, guarded by `0x6d9a5f` and `0x6d9a62`. The outdoor branch stores -1 in the two cached words (`0x6d958d`, `0x6d9592`), which the indoor branch compares with the live identity (`0x6d94da`, `0x6d94e5`); a difference marks the frame changed (`0x6d94ef`) and clears every record's key (`0x6d9502`). `0x6d9724` and `0x6d9730` clear bit 2 of the 512 records. The record constructor `0x4ead10`, run for all 512 by `0x4ea430`, zeroes the six box floats at `+0x70`, and the interior loader fills them with the copy at `0x6da0b5`; no instruction of the outdoor loader range `0x6da380` to `0x6da7b0` has an operand at `+0x70` to `+0x84`.
+`0x6da5f8` and `0x6da600` clear mask `0x2` of the first four records only, and `0x6da675` sets it on a record the outdoor tile fills. The calls of the outdoor loader are `0x6d999f`, reached when the indoor byte is clear (`0x6d95cd`), and `0x6d9a75`, guarded by `0x6d9a5f` and `0x6d9a62`. The outdoor branch stores -1 in the two cached words (`0x6d958d`, `0x6d9592`), which the indoor branch compares with the live identity (`0x6d94da`, `0x6d94e5`); a difference marks the frame changed (`0x6d94ef`) and clears every record's key (`0x6d9502`). `0x6d9724` and `0x6d9730` clear bit 2 of the 512 records. The record constructor `0x4ead10`, run for all 512 by `0x4ea430`, zeroes the six box floats at `+0x70`, and the interior loader fills them with the copy at `0x6da0b5`; no instruction of the outdoor loader range `0x6da380` to `0x6da7b0` has an operand at `+0x70` to `+0x84`.
 
 ## Tile order
 
-`0x4ebeb0` builds the list of interior tiles to draw. It scans the 512 records and keeps those with bit 2 of the flags word at `+0x94` set and a non-zero texture handle at `+0x90`. It inserts each into a singly linked list, linked through `+0x88`, in ascending order of the distance at `+0x8c`, before the first node whose distance is not smaller. The head of the list is drawn first, so the tile of the player's own group, which has the distance 3.4028235e38, is drawn last and lies on top.
+`0x4ebeb0` builds the list of interior tiles to draw. It scans the 512 records and keeps those with mask `0x2` of the flags word at `+0x94` set and a non-zero texture handle at `+0x90`. It inserts each into a singly linked list, linked through `+0x88`, in ascending order of the distance at `+0x8c`, before the first node whose distance is not smaller. The head of the list is drawn first, so the tile of the player's own group, which has the distance 3.4028235e38, is drawn last and lies on top.
 
 Addresses: `0x4ebeb0`, `0x4ebec3`, `0x4ebecf`, `0x4ebee0`, `0x4ebeee`, `0x4ebefc`, `0x4ebf04`, `0x4ec3ea`, `0x4ec3ff`, `0x4ebf20`, `0xbc8438`
 Confidence: verified
@@ -108,7 +108,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The array at `0xbc7938` has four vertices of three words, written under the guard bit 0 of `0xbc8260` (`0x4ec740`) with the exit handler `0x4ec830` (`0x4ec7b8`). `0x4ec7e2` submits it with a position stride 12 and one colour, and `0x4ec7f3` draws the index list `0x84c52c`, the words 0, 1, 3, 2. `0x4ec7fd` restores the saved projection and `0x4ec823` pops the state stack. The caller builds the offset at `0x4ecfd8` to `0x4ed011`: the player position `0xbc831c` less the composite position `0xbc8310`, carried through `0xbc8368` and then `0xbc8328`, divided by `3S` (`0x84c534` is one third and `0x4ecfd8` divides 1 by the radius), plus 0.5 on each axis. `0x4ed01a` passes the radius and `0x4ed01d` calls the blit.
+The array at `0xbc7938` has four vertices of three words, written under the guard mask `0x1` of `0xbc8260` (`0x4ec740`) with the exit handler `0x4ec830` (`0x4ec7b8`). `0x4ec7e2` submits it with a position stride 12 and one colour, and `0x4ec7f3` draws the index list `0x84c52c`, the words 0, 1, 3, 2. `0x4ec7fd` restores the saved projection and `0x4ec823` pops the state stack. The caller builds the offset at `0x4ecfd8` to `0x4ed011`: the player position `0xbc831c` less the composite position `0xbc8310`, carried through `0xbc8368` and then `0xbc8328`, divided by `3S` (`0x84c534` is one third and `0x4ecfd8` divides 1 by the radius), plus 0.5 on each axis. `0x4ed01a` passes the radius and `0x4ed01d` calls the blit.
 
 ## Draw tint
 
@@ -123,7 +123,7 @@ Test: none
 
 ## Outdoor tile draw
 
-`0x4eae10(record, colour)` draws one outdoor tile when bit 0 of the flags at `+0x94` and the handle at `+0x90` are set. The record holds its own four vertices: positions from `+0`, texture coordinates for the tile from `+0x30` and for the mask from `+0x50`. Stage 0 gets the tile and stage 1 the circular mask, both with preset 1. The four vertices are drawn as a strip in the order 0, 1, 2, 3, and stage 1 is cleared afterwards.
+`0x4eae10(record, colour)` draws one outdoor tile when mask `0x1` of the flags at `+0x94` and the handle at `+0x90` are set. The record holds its own four vertices: positions from `+0`, texture coordinates for the tile from `+0x30` and for the mask from `+0x50`. Stage 0 gets the tile and stage 1 the circular mask, both with preset 1. The four vertices are drawn as a strip in the order 0, 1, 2, 3, and stage 1 is cleared afterwards.
 
 Addresses: `0x4eae10`, `0x4eae19`, `0x4eae26`, `0x4eae34`, `0x4eae4c`, `0x4eae5b`, `0x4eae74`, `0x4eae88`, `0x4eae92`, `0x4eae98`, `0x4eaec7`, `0x4eaed1`, `0x4eaee4`, `0x84c51c`
 Confidence: verified

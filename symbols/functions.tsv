@@ -24562,7 +24562,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6704e0	14	CWorld::GetEntityAreaName		terrain	orchestration	uint32_t __fastcall (void *entity, const char **name)	Returns the area name under an entity through GetEntityAreaName, or 0 for none	verified	one	terrain/zones#indoor-area-names	
 0x6704f0	27	CWorld::GetEntityGroupAreaName		terrain	orchestration	uint32_t __fastcall (void *entity, const char **name, uint32_t *key)	Returns an entity's map object group name and key through GetEntityGroupAreaName, or 0 for none	verified	one	terrain/zones#indoor-area-names	
 0x670510	14	CWorld::GetEntityGroupName		terrain	orchestration	uint32_t __fastcall (void *object)	Returns an entity's group field through 0x69da10, or 0 for none	inferred	none		
-0x670520	31	CWorld::GetEntityAmbient		terrain	orchestration	uint32_t __fastcall (void *object, void *a, void *b)	Forwards an entity's light query to 0x69daa0	inferred	none		
+0x670520	31	GatherEntityGroupTiles		terrain	orchestration	uint8_t __fastcall (void *entity, const float *box, void *list, uint32_t limit)	Gathers the tile descriptors of the map object groups a box reaches around an entity; returns 0 for a null entity	verified	one	minimap/interior#interior-query	
 0x670540	40	CWorld::GetEntityGroupIdentity		terrain	orchestration	uint32_t __fastcall (void *object, void *a, void *b)	Writes three words naming the map object group an indoor entity is in	verified	one	terrain/world#entity-queries	
 0x670570	36	CWorld::GetEntityGroupBox		terrain	orchestration	uint32_t __fastcall (void *object, void *out)	Forwards an indoor entity's box query to 0x69dba0	inferred	none		
 0x6705a0	36	CWorld::GetEntityAreaRows		terrain	orchestration	uint8_t __fastcall (void *entity, void **groupRow, void **wmoRow)	Returns the group and whole-WMO area rows of an indoor entity through GetEntityAreaRows	verified	one	terrain/zones#indoor-area-names	
@@ -26199,7 +26199,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69d470	5	InitTerrainInfinity12Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69d480; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69d480	11	InitTerrainInfinity12		terrain	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	terrain/statics#static-initializers	
 0x69d490	86	FindMapObjectWithFlag		terrain	orchestration	void * __fastcall (uint32_t flag)	Returns the first loaded map object with a flag bit set	inferred	none		
-0x69d4f0	159	FindMapObjectGroupAt		terrain	orchestration	uint32_t __fastcall (void *entity, void **object, void **group, void *out)	Finds the map object and group an entity is inside	verified	one	terrain/world#entity-queries	
+0x69d4f0	159	FindMapObjectGroupAt		terrain	orchestration	uint32_t __thiscall (void *entity, void **instance, void **model, void **groupNode, void **group)	Finds the map object and group an entity is inside	verified	one	terrain/world#entity-queries	
 0x69d590	359	ConstructMapEntity		terrain	orchestration	void * __thiscall (void *this)	Constructs a map entity on the shared base with the vtable 0x810810	inferred	none		
 0x69d700	43	DeleteMapEntity		terrain	orchestration	void * __thiscall (void *this, uint32_t flags)	Destroys a map entity and frees it when bit 0 of the argument is set	inferred	none		
 0x69d730	251	DestroyMapEntity		terrain	orchestration	void __thiscall (void *this)	Releases a map entity's model and lists and runs the base destructor	inferred	none		
@@ -26208,7 +26208,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69d980	143	GetEntityAreaRows		terrain	orchestration	uint8_t __thiscall (void *entity, void **groupRow, void **wmoRow)	Looks up the group's and the whole-WMO's WMOAreaTable rows for an entity	verified	one	terrain/zones#entity-area-names	
 0x69da10	66	GetEntityGroupField		terrain	orchestration	uint32_t __fastcall (void *entity)	Returns a field of an entity's map object group	inferred	none		
 0x69da60	60	ClearEntityGroupField		terrain	unreached	uint32_t __fastcall (void *entity)	Zeroes an out field after finding an entity's group	inferred	none	terrain/overview#unreached-functions	
-0x69daa0	140	GetEntityGroupLight		terrain	orchestration	uint32_t __fastcall (void *entity, void *a, void *b)	Returns an entity's map object group light	inferred	none		
+0x69daa0	140	GatherGroupTilesAt		terrain	orchestration	uint8_t __thiscall (void *entity, const float *box, void *list, uint32_t limit)	Finds the entity's map object group, moves the box into the model frame and gathers the tiles with 0x6a5200	verified	one	minimap/interior#interior-query	
 0x69db30	97	GetGroupIdentityWords		terrain	orchestration	uint32_t __fastcall (void *entity, void *a, void *b)	Writes three words naming the group FindMapObjectGroupAt finds	verified	one	terrain/world#entity-queries	
 0x69dba0	140	GetEntityGroupBoxes		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Copies an entity's map object group boxes	inferred	none		
 0x69dc30	311	GetEntityInteriorLight		terrain	primitive	void __fastcall (void *entity, void *out)	Rotates the interior light of an entity's group into the world	inferred	none		terrain::interior_light_rotate_difftest
@@ -26570,10 +26570,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a4e00	221	CMapObj::GroupLiquidAt		models	orchestration	uint8_t __thiscall (uint32_t mask, const float *point, uint32_t *type, float *height, float *vector)	Asks a map object's groups in order for liquid at a point; the first answer wins	verified	one	models/wmo#group-liquid-scope	
 0x6a4ee0	207	CMapObj::InGroupLiquid		models	unreached		Returns whether a point lies in any group's liquid area	inferred	none	models/overview#unreached-code	
 0x6a4fb0	103	CMapObj::FindDoodadSet		models	primitive		Returns the doodad set whose range holds an index	inferred	none		
-0x6a5020	477	CMapObj::GatherBoxGroups		models	primitive		Floods through a map object's portals to gather the groups a box reaches	inferred	none		models::box_overlap_deltas_difftest
-0x6a5200	111	CMapObj::GatherBoxGroupsAt		models	orchestration		Gathers the groups a box reaches with a placement matrix	inferred	none		
-0x6a5270	793	CMapObj::FootprintCells		models	primitive		Tiles a map object's footprint into power-of-two cells	inferred	none		models::footprint_cell_rect_difftest, models::footprint_cell_size_difftest, models::footprint_count_bias_difftest, models::footprint_count_scale_difftest, models::footprint_extent_scale_difftest
-0x6a5590	49	CeilLog2		models	primitive		Returns the ceiling of log2 of a value	inferred	none		models::mip_level_count_difftest
+0x6a5020	477	CMapObj::GatherBoxGroups		models	primitive	void __thiscall (void *model, uint32_t group, uint32_t from, const float *box, void *list, uint32_t limit)	Visits one group and floods through its portals to the groups the box reaches	verified	one	minimap/interior#portal-flood	models::box_overlap_deltas_difftest
+0x6a5200	111	CMapObj::GatherBoxGroupsAt		models	orchestration	uint8_t __thiscall (void *model, uint32_t index, const float *box, void *list, uint32_t limit)	Floods from the seed group with the box, its top set to the seed group's ceiling, and gathers the groups it reaches	verified	one	minimap/interior#interior-query	
+0x6a5270	793	CMapObj::FootprintCells		models	primitive	void __thiscall (void *group, uint32_t index, const float *box, void *list, uint32_t limit)	Cuts a group into power-of-two tile cells and emits those the box overlaps	verified	one	minimap/interior#group-tile-grid	models::footprint_cell_rect_difftest, models::footprint_cell_size_difftest, models::footprint_count_bias_difftest, models::footprint_count_scale_difftest, models::footprint_extent_scale_difftest
+0x6a5590	49	CeilLog2		models	primitive		Returns the ceiling of the quotient of two base-10 logarithms, log2 of a value	inferred	none		models::mip_level_count_difftest
 0x6a55d0	5	InitMapObjTwoPiThunk		models	orchestration		Jumps to 0x6a55e0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x6a55e0	15	InitMapObjTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x6a55f0	5	InitMapObjInvTwoPiThunk		models	orchestration		Jumps to 0x6a5600; a static initializer	verified	one	models/overview#shared-header-constants	
@@ -28842,7 +28842,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d8e10	560	BuildBlipCandidates		minimap	orchestration	void __fastcall (uint32_t continent)	Collects the AreaPOI rows of a continent and the three static records into the candidate array	verified	one	ui/minimapblips#blip-candidates	
 0x6d9040	629	LoadMd5Catalog		minimap	orchestration	void __cdecl (void)	Reads md5translate.trs and fills the catalog with name and file pairs	verified	one	minimap/tiles#tile-catalog	
 0x6d92c0	215	ResetMinimap		minimap	orchestration	void __cdecl (void)	Clears the cached position, indices and group words and empties the catalog	verified	one	minimap/update#reset	
-0x6d93a0	1770	UpdateMinimap		minimap	primitive	uint8_t __thiscall (void *node, uint32_t map, const float *pos, float *offset, float *scale, void *records, void *state, uint32_t flag)	Runs the per-frame update: marker expiry, indoor state, interior window or outdoor tiles, and the blip pass	verified	one	minimap/update#frame-update	minimap::minimap_update_snap_difftest
+0x6d93a0	1770	UpdateMinimap		minimap	primitive	uint8_t __fastcall (void *node, uint32_t map, const float *pos, float *offset, float *scale, void *records, void *state, uint32_t flag)	Runs the per-frame update: marker expiry, indoor state, interior window or outdoor tiles, and the blip pass	verified	one	minimap/update#frame-update	minimap::minimap_update_snap_difftest
 0x6d9a90	884	PlaceBlips		minimap	primitive	void __cdecl ()	Splits the candidates into in-range icons and at most 3 ranked direction arrows with bearings	verified	one	ui/minimapblips#placing-the-blips	
 0x6d9e10	31	ClearTileKeys		minimap	orchestration	void __fastcall (void *records)	Sets the key word of all 512 tile records to -1	verified	one	minimap/tiles#interior-tiles	
 0x6d9e30	152	TileLodDistance		minimap	primitive	void *__fastcall (void *records, uint32_t group, const float *desc, float bias)	Finds the record of an interior tile and sets its distance; returns the record or 0	verified	one	minimap/tiles#interior-tiles	minimap::blip_lod_distance_difftest
@@ -28881,7 +28881,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6db5d0	60	Md5LinkUnlink		minimap	orchestration	void __fastcall (void *link)	Unlinks a link from its neighbours and zeroes both of its words	verified	one	minimap/overview#containers	
 0x6db610	25	Md5LinkGet		minimap	orchestration	void *__thiscall (void *list, void *object)	Returns an object's link in a list, the terminator for 0	verified	one	minimap/overview#containers	
 0x6db630	181	Md5LinkNode		minimap	orchestration	void __thiscall (void *list, void *node, uint32_t mode, void *dest)	Unlinks a node and links it after a destination for mode 1, else before it	verified	one	minimap/overview#containers	
-0x6db6f0	57	Md5Granularity		minimap	primitive	uint32_t __thiscall (void *vector, uint32_t size)	Returns the largest power of two not above a size, or stores and returns 8 for 8 and up	verified	one	minimap/overview#array-and-list-helpers	
+0x6db6f0	57	Md5Granularity		minimap	primitive	uint32_t __thiscall (void *vector, uint32_t size)	Returns the largest power of two not above a size (1 for 0), or stores and returns 8 for 8 and up	verified	one	minimap/overview#array-and-list-helpers	
 0x6db730	31	RoundUpToUnitB		minimap	primitive	uint32_t __stdcall (uint32_t value, uint32_t unit)	Rounds a value up to a multiple of a unit	verified	one	minimap/overview#array-and-list-helpers	
 0x6db750	146	PoiDirArraySetCapacity		minimap	orchestration	void __thiscall (void *array, uint32_t capacity)	Reallocates the arrow record array to a capacity of 0x4c-byte records, copying those that fit	verified	one	minimap/overview#array-and-list-helpers	
 0x6db7f0	41	Md5LinkBackSlot		minimap	orchestration	void *__thiscall (void *link, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	one	minimap/overview#containers	
@@ -28901,9 +28901,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3f0	114			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
-0x6dc470	112			unassigned			Runs its object file code not read here	inferred	none		lighting::dn_light_accumulate_3x3_difftest
+0x6dc470	112	AccumulateBoxAxes		unassigned	primitive	void __fastcall (const float *row0, const float *row1, const float *row2, const float *box, float *out)	Adds each matrix term times the box minimum and maximum: smaller product to the minimum, larger to the maximum	verified	one	minimap/interior#interior-query	lighting::dn_light_accumulate_3x3_difftest
 0x6dc4e0	81			unassigned	unreached		Runs its object file code that calls 0x6dc470; not read here	inferred	none		
-0x6dc540	81			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
+0x6dc540	81	TransformBox		unassigned	primitive	void __fastcall (const float *matrix, const float *box, float *out)	Moves a box through a matrix: both corners start at the translation, then 0x6dc470 adds the terms	verified	one	minimap/interior#interior-query	
 0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		lighting::ray_box_clip_difftest
 0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	verified	one	cmath/solids#sphere-and-box	
 0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	verified	one	cmath/solids#box-and-plane	

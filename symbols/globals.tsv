@@ -992,12 +992,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811658	const double	s_dayNightEpsilon		lighting	Holds 1e-4	verified	one	lighting/daynight#recompute
 0x811668	const float	s_shadowPi		lighting	Holds π, the decal's turn before scaling	inferred	none	lighting/shadows#projected-decals
 0x811694	const float	s_shadowBiasScale		lighting	Holds 2^-15, the scale of the shadow depth bias	verified	one	lighting/shadows#shadow-settings
+0x8116c4	const float	s_tileWidth		minimap	Holds 533.3333, the tile width; the start-up initializers multiply it	verified	one	minimap/coordinates#tile-grid
+0x8116c8	const float	s_tileHeight		minimap	Holds 533.3333, the tile height; the start-up initializers multiply it	verified	one	minimap/coordinates#tile-grid
 0x8116cc	const float	s_float442d9c72		unassigned	Holds the float 694.44446 (0x442d9c72)	inferred	none	
-0x8116d0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0x8116e8	const float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
+0x8116d0	const uint32_t[6]	s_outdoorChunkCounts		minimap	Holds the outdoor chunk counts 14, 12, 10, 8, 6, 4, indexed by the zoom	verified	one	minimap/coordinates#screen-scale
+0x8116e8	const float[6]	s_indoorZoomWidths		minimap	Holds the interior window widths 150, 120, 90, 60, 40, 25, indexed by the zoom	verified	one	minimap/update#interior-window
 0x811700	int32_t[8]	s_blockOffsets		minimap	Holds the row and column offsets of the four tiles of the outdoor block: (0,0), (1,0), (1,1), (0,1)	verified	one	minimap/tiles#outdoor-tile-window
 0x811720	void *[4]	s_md5TableVtable		minimap	Holds the four slots of the catalog table: free node, allocate node, deleting destructor, clear	verified	one	minimap/overview#containers
 0x811730	const float	s_float3f4ccccd		unassigned	Holds the float 0.8 (0x3f4ccccd)	inferred	none	
+0x811734	const float	s_tileScale		minimap	Holds 0.001875, the reciprocal of the tile size, that the world-to-tile map multiplies by	verified	one	minimap/coordinates#tile-grid
 0x811818	void *[4]	s_raceClassInfoTableVtable		spell	Holds the race-class table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
 0x811828	void *[4]	s_skillCostsInfoTableVtable		spell	Holds the skill-cost table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
 0x811838	void *[4]	s_skillLineRecPoolTableVtable		spell	Holds the ability table's pooled delete, make and destroy slots and the base clear	verified	one	spell/tables#node-vtables
@@ -4038,7 +4041,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcea760	uint8_t[116]	s_staticBlipQuest		minimap	Holds static blip record 0, the selected quest's marker	verified	one	ui/minimapblips#blip-candidates
 0xcea7d4	uint8_t[116]	s_staticBlipGossip		minimap	Holds static blip record 1, the gossip marker	verified	one	ui/minimapblips#blip-candidates
 0xcea848	uint8_t[116]	s_staticBlipCorpse		minimap	Holds static blip record 2, the corpse marker	verified	one	ui/minimapblips#blip-candidates
-0xcea8bc	uint32_t	s_blipDirtyMask		minimap	Holds the dirty bits of the update: bit 0 the tile window must be rebuilt, bit 1 the interior tiles are loaded	verified	one	minimap/update#frame-update
+0xcea8bc	uint32_t	s_updateDirtyMask		minimap	Holds the update's dirty bits: mask 0x1 the tile window must be rebuilt, mask 0x2 the interior tiles are loaded	verified	one	minimap/update#frame-update
 0xcea8c0	char[260]	s_interiorName		minimap	Holds the world name of the current interior, without World\ and the extension	verified	one	minimap/tiles#tile-names
 0xcea9c4	float[6]	s_interiorWindow		minimap	Holds the interior window bounds: min x, y, z then max x, y, z	verified	one	minimap/update#interior-window
 0xcea9e0	float[16]	s_secondMatrix		minimap	Holds the second matrix the node returns, identity at first	verified	one	minimap/update#interior-window
@@ -4049,7 +4052,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceaa74	int32_t[2]	s_tileFirstIndices		minimap	Holds the row and column of the first tile of the cached outdoor block	verified	one	minimap/coordinates#screen-scale
 0xceaa7c	float[3]	s_cachedPosition		minimap	Holds the player position the last update sampled; the largest float after a reset	verified	one	minimap/update#frame-update
 0xceaa88	float	s_originY		minimap	Holds the map origin y, 17066.666	verified	one	minimap/coordinates#tile-grid
-0xceaa8c	float	s_originX		minimap	Holds the map origin x, 17066.666	verified	one	minimap/coordinates#tile-grid
+0xceaa8c	float	s_originX		minimap	Holds 17066.666, stored by its initializer; no instruction reads it	verified	one	minimap/coordinates#tile-grid
 0xceaa90	float	s_halfTileY		minimap	Holds half a tile height, 266.667	verified	one	minimap/coordinates#tile-grid
 0xceaa94	float	s_halfTileX		minimap	Holds half a tile width, 266.667	verified	one	minimap/coordinates#tile-grid
 0xceaaa4	uint32_t	s_gossipBlipExpiry		minimap	Holds the Unix time at which the gossip marker expires, or 0	verified	one	ui/minimapblips#setting-a-static-blip
