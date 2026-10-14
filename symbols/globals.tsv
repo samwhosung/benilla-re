@@ -2980,8 +2980,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdcee8	uint64_t	s_tabardVendorGuid		ui	Holds the GUID of the open tabard vendor	inferred	none	objectlayer/interaction#talking-to-an-npc
 0xbdcf78	void **	s_craftList		ui	Holds the array of the craft window's entries	verified	one	ui/tooltipbuff#craft-spells
 0xbdcfb8	uint32_t	s_currentCraftProfession		ui	Holds the profession the craft window shows; 0x4f6000 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
+0xbdcfbc	uint32_t	s_craftSelection		ui	Holds the spell id selected in the craft window, or 0	verified	one	ui/craftverbs#window-state
 0xbdcfc0	uint32_t	s_craftCount		ui	Holds the number of entries in the craft window	verified	one	ui/tooltipbuff#craft-spells
-0xbdcfc8	uint32_t	s_craftDisplayedCount		ui	Holds the displayed count of craft rows after the collapse mask	verified	one	tradeskill/craft#open-close-and-selection
+0xbdcfc8	int32_t	s_craftVisibleCount		ui	Holds the number of visible rows of the craft window	verified	one	ui/craftverbs#window-state
 0xbdd038	uint64_t	s_bankerGuid		ui	Holds the GUID of the open banker, 0 when none	inferred	none	objectlayer/inventory#searching-the-inventory
 0xbdd060	uint64_t[10]	s_containerGuids		ui	Holds the GUIDs of the ten bag slots the windows know: equipped bags 1 to 4, then bank bags 5 to 10	verified	one	ui/bags#bag-events
 0xbdd118	uint8_t[128][28]	s_merchantRows		ui	Holds the open vendor's item rows, slot number first and item entry next	verified	one	ui/merchantcursor#grabbing-a-merchant-row

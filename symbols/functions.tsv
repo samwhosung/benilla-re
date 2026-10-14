@@ -11106,38 +11106,38 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f5eb0	47	InitCraftHeadersDtor		ui	orchestration	void __cdecl (void)	Frees the craft header array buffer	verified	one	tradeskill/overview#static-objects	
 0x4f5ee0	28			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f5f00	216			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4f5fe0	20	CloseCraftWindow		ui	orchestration	void __cdecl (void)	Sets the craft type to 0 and raises CRAFT_CLOSE	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f5fe0	20	CloseCraftWindow		ui	orchestration		Clears the craft window type and signals CRAFT_CLOSE	verified	one	ui/craftverbs#window-state	
 0x4f6000	69			ui	orchestration		Toggles the craft window: closes it with CRAFT_CLOSE for the current profession, else opens it with CRAFT_SHOW	inferred	none	spell/cast#cast-attempt-refusals	
-0x4f6050	38	SelectCraftRow		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of a craft row as the selection, or 0 for a header or a bad index	verified	one	tradeskill/craft#open-close-and-selection	
-0x4f6080	54	FindSelectedCraftRow		ui	primitive	int32_t __cdecl (void)	Returns the index of the row holding the selected craft spell, or -1	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f6050	38	SelectCraftRow		ui	orchestration		Stores the spell id of a craft row as the selection, or 0 for a header	verified	one	ui/craftverbs#selection-and-names	
+0x4f6080	54	GetCraftSelectionRow		ui	primitive		Returns the row of the selected craft spell, or -1	verified	one	ui/craftverbs#selection-and-names	
 0x4f60c0	1381	BuildCraftList		ui	primitive	void __cdecl ()	Builds the craft window rows and headers from the craft list of the current type	verified	one	ui/craft#craft-lists	
 0x4f6630	353	SortCraftList		ui	primitive	void __cdecl ()	Recounts the craft headers and sorts them and the rows	verified	one	ui/craft#craft-order	ui::listorder_craft_beast_training_e2e
 0x4f67a0	381	CompareCraftRows		ui	primitive	int __cdecl (void **a, void **b)	Orders craft rows by group, bucket and name	verified	one	ui/craft#craft-order	ui::sortcmp_4f67a0
 0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by group, bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
 0x4f6ac0	105	CompareCraftGroups		ui	orchestration	int __cdecl (void **a, void **b)	Orders craft group headers by the skill line's display name	verified	one	ui/craft#craft-order	
-0x4f6b30	66	FindCraftHeaderPosition		ui	primitive	int32_t __fastcall (uint32_t row)	Returns the header position of a craft header row, or -1 for any other row	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f6b80	88	IsCraftHeaderCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns 1 when the collapse bit of the craft header row is clear, else 0	verified	one	tradeskill/craft#craft-rows	
-0x4f6be0	21	SetCraftCollapseMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the craft collapse mask, recounts and sorts the list and raises CRAFT_UPDATE	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the craft window and returns no value	verified	one	tradeskill/craft#open-close-and-selection	
-0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the spell stored for the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
-0x4f6c90	23	Script::GetCraftButtonToken	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the button word of the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
-0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the enchanting skill line; slot -1 reads below the first slot	verified	one	tradeskill/craft#name-and-skill-line	
-0x4f6e70	23	Script::GetNumCrafts	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the craft list	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f6b30	66	GetCraftGroupOfRow		ui	primitive		Returns the group ordinal of a craft header row, or -1	verified	one	ui/craftverbs#groups-and-casting	
+0x4f6b80	88	IsCraftGroupExpanded		ui	primitive		Returns whether the group of a craft header row is expanded	verified	one	ui/craftverbs#groups-and-casting	
+0x4f6be0	21	SetCraftExpandedMask		ui	orchestration		Stores the expanded mask of the craft groups, re-sorts and signals CRAFT_UPDATE	verified	one	ui/craftverbs#window-state	
+0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the craft window	verified	one	ui/craftverbs#window-state	
+0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the spell in the effect slot of the craft type	verified	one	ui/craftverbs#selection-and-names	
+0x4f6c90	23	Script::GetCraftButtonToken	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the button token of the craft type	verified	one	ui/craftverbs#selection-and-names	
+0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the enchanting skill line name, rank and maximum	verified	one	ui/craftverbs#selection-and-names	
+0x4f6e70	23	Script::GetNumCrafts	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of visible craft rows	verified	one	ui/craftverbs#window-state	
 0x4f6e90	605	Script::GetCraftInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seven values of a craft row: name, rank text, difficulty, available count, cost and level	verified	one	tradeskill/craft#craft-rows	
-0x4f70f0	64	Script::SelectCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the craft row at an index	verified	one	tradeskill/craft#open-close-and-selection	
-0x4f7130	42	Script::GetCraftSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected craft row plus 1	verified	one	tradeskill/craft#open-close-and-selection	
-0x4f7160	165	Script::GetCraftIcon	idb	ui	primitive		Implements the Lua function GetCraftIcon	inferred	none		
-0x4f7210	142	Script::GetCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line name of the group of a craft row	verified	one	tradeskill/craft#name-and-skill-line	
-0x4f72a0	371	Script::GetCraftItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the enchant link or the created item link of a craft row	verified	one	tradeskill/craft#reagents-and-links	
-0x4f7420	169	Script::GetCraftNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a craft row	verified	one	tradeskill/craft#reagents-and-links	
-0x4f74d0	568	Script::GetCraftReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed count and owned count of a craft reagent	verified	one	tradeskill/craft#reagents-and-links	
+0x4f70f0	64	Script::SelectCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the craft row of a number	verified	one	ui/craftverbs#selection-and-names	
+0x4f7130	42	Script::GetCraftSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the selected craft, or 0	verified	one	ui/craftverbs#selection-and-names	
+0x4f7160	165	Script::GetCraftIcon	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the icon path of a craft row	verified	one	ui/craftverbs#icon-skill-line-and-link	
+0x4f7210	142	Script::GetCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line name of a craft row	verified	one	ui/craftverbs#icon-skill-line-and-link	
+0x4f72a0	371	Script::GetCraftItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item or enchant link of a craft row	verified	one	ui/craftverbs#icon-skill-line-and-link	
+0x4f7420	169	Script::GetCraftNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a craft row	verified	one	ui/craftverbs#reagents-and-focus	
+0x4f74d0	568	Script::GetCraftReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed and carried count of a craft reagent	verified	one	ui/craftverbs#reagents-and-focus	
 0x4f7710	19	OnCraftItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the craft list when an item record arrives	verified	one	tradeskill/craft#reagents-and-links	
-0x4f7730	370	Script::GetCraftReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of a reagent of a craft row	verified	one	tradeskill/craft#reagents-and-links	
-0x4f78b0	474	Script::GetCraftSpellFocus	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the spell focus and totem tools of a craft row as name and flag pairs	verified	one	tradeskill/craft#spell-focus-and-description	
-0x4f7a90	372	Script::GetCraftDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a craft row	verified	one	tradeskill/craft#spell-focus-and-description	
-0x4f7c10	124	Script::CollapseCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the group of a craft header row or every group	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f7c90	123	Script::ExpandCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the group of a craft header row or every group	verified	one	tradeskill/craft#collapse-and-cast	
-0x4f7d10	93	Script::DoCraft	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts the spell of a craft row once	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f7730	370	Script::GetCraftReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of a craft reagent	verified	one	ui/craftverbs#reagents-and-focus	
+0x4f78b0	474	Script::GetCraftSpellFocus	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the focus and tool names of a craft row with whether they are present	verified	one	ui/craftverbs#reagents-and-focus	
+0x4f7a90	372	Script::GetCraftDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a craft row	verified	one	ui/craftverbs#description	
+0x4f7c10	124	Script::CollapseCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses a craft group, or all of them	verified	one	ui/craftverbs#groups-and-casting	
+0x4f7c90	123	Script::ExpandCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands a craft group, or all of them	verified	one	ui/craftverbs#groups-and-casting	
+0x4f7d10	93	Script::DoCraft	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts the spell of a craft row	verified	one	ui/craftverbs#groups-and-casting	
 0x4f7d70	33	RegisterCraftFunctions		ui	orchestration	void __cdecl (void)	Registers the 19 Lua functions of the craft window	verified	one	tradeskill/overview#lua-function-tables	
 0x4f7da0	27	UnregisterCraftFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 19 Lua functions of the craft window	verified	one	tradeskill/overview#lua-function-tables	
 0x4f7dc0	5	InitCraftTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7dd0, a static initializer	verified	one	tradeskill/overview#static-objects	
