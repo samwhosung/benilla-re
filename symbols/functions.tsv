@@ -8458,7 +8458,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bf0c0	5	InitInfinity4bf0d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bf0d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4bf0d0	11	InitInfinity4bf0d0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x4bf0e0	309			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4bf220	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4bf220	5			ui	orchestration	void __cdecl ()	Jumps to the trade module's leave-world hook 0x5d4310	verified	one	ui/trade#starting-a-trade	
 0x4bf230	73	CGTradeInfo::PlayerAccept	idb	ui	orchestration	void __fastcall (uint32_t accepted)	Sets the player's accept flag, signals TRADE_ACCEPT_UPDATE on a change and sends accept or unaccept	verified	one	ui/trade#accept-flags	
 0x4bf280	40	CGTradeInfo::TargetAccept	idb	ui	orchestration	void __fastcall (uint32_t accepted)	Sets the partner's accept flag and signals TRADE_ACCEPT_UPDATE on a change	verified	one	ui/trade#accept-flags	
 0x4bf2b0	556	TradeInfoSetTargetItems		ui	orchestration		Takes the partner's trade item records for the interface	inferred	none		
@@ -8722,7 +8722,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c3d20	35	InitLotteryHandlers	idb	ui	orchestration		Registers the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3d50	260	HandleLotteryQueryResultPacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetInt32, OsGetCachedUnixTime, FrameScript_SignalEvent; not read here	inferred	none		
 0x4c3e60	5	HandleLotteryResultPacket	idb	ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c3e70	13			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c3e70	13			ui	orchestration	void __cdecl ()	Zeroes the two dwords that hold the lottery kiosk GUID	verified	one	ui/loot#no-walk-away-leash	
 0x4c3e80	7	CloseLootWindowThunk		ui	orchestration		Loads 1 into cl and jumps to the loot window close 0x4c3f40	verified	one	ui/gameui#interaction-close	
 0x4c3e90	20	ClearLotteryHandlers		ui	orchestration		Clears the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
 0x4c3eb0	132	SendLotteryQuery		ui	unreached	void __stdcall (uint32_t guid_lo, uint32_t guid_hi)	Sets the interaction target to the kiosk GUID, stores it and sends opcode 0x334; nothing reaches it	verified	one	ui/lottery#buying	
@@ -9592,9 +9592,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d55f0	1			ui	orchestration		Runs ReputationInfo.cpp code not read here	inferred	none		
 0x4d5600	32	CGReputationInfo::FactionToIndex	idb	ui	orchestration	int32_t __fastcall (uint32_t faction)	Returns the reputationListID of a faction id, or -1 for none	verified	one	ui/reputation#reputation-slots	
 0x4d5620	22	SlotToFaction		ui	primitive	uint32_t __fastcall (int32_t slot)	Returns the faction id held in a slot, 0 for a slot outside 0 to 63	verified	one	ui/reputation#reputation-slots	
-0x4d5640	112	HandleInitializeFactionsPacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt8, 0x4d5fc0 and 3 more; not read here	inferred	none		
-0x4d56b0	86	HandleSetFactionAtWarPacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt8, 0x4d5fc0 and 1 more; not read here	inferred	none		
-0x4d5710	73	HandleSetFactionVisiblePacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, 0x4d5a70, 0x4d5fc0 and 1 more; not read here	inferred	none		
+0x4d5640	112	HandleInitializeFactionsPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t opcode, CDataStore *msg)	Reads SMSG_INITIALIZE_FACTIONS, storing each position's flags and standing, then rebuilds the list and signals	verified	one	ui/reputationwire#faction-messages	
+0x4d56b0	86	HandleSetFactionAtWarPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t opcode, CDataStore *msg)	Sets or clears the at-war bit of a slot from SMSG_SET_FACTION_ATWAR and signals UPDATE_FACTION	verified	one	ui/reputationwire#faction-messages	
+0x4d5710	73	HandleSetFactionVisiblePacket	idb	ui	primitive	uint32_t __stdcall (uint32_t opcode, CDataStore *msg)	Makes a slot visible from SMSG_SET_FACTION_VISIBLE, adding its row and re-sorting the list	verified	one	ui/reputationwire#faction-messages	
 0x4d5760	569	HandleSetFactionStandingPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t event, CDataStore *msg)	Stores each slot's standing from SMSG_SET_FACTION_STANDING, applying visible and at-war rules, then refreshes the player	verified	one	ui/reputationwire#standing-changes	
 0x4d59a0	204	HandleSetForcedReactionsPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t event, CDataStore *msg)	Reads the forced reaction pairs of SMSG_SET_FORCED_REACTIONS into the table and refreshes the player's reaction	verified	one	ui/reputationwire#faction-messages	
 0x4d5a70	425	AddReputationEntry		ui	primitive	bool __fastcall (int32_t slot, bool notify)	Appends a slot's row and, for a non-header, its team header, returning 0 when present	verified	one	ui/reputation#list-membership	
@@ -9741,7 +9741,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d96e0	579	Script::GetTrainerServiceAbilityReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a required ability's name and rank text and whether it is known	verified	one	ui/trainer#required-abilities	
 0x4d9930	513	Script::GetTrainerServiceStepReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns nil and the number 1 for every trainer service	verified	one	ui/trainerverbs#skill-requirement	
 0x4d9b40	616	Script::GetTrainerServiceDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a trainer service	verified	one	ui/trainerverbs#description	
-0x4d9db0	19			ui	orchestration		Runs its object file code that calls 0x4d7d40; not read here	inferred	none		
+0x4d9db0	19			ui	orchestration	void __stdcall (uint32_t a, uint8_t flag)	Calls the trainer state re-evaluation when the flag byte is nonzero	verified	one	ui/trainerlist#when-states-are-re-evaluated	
 0x4d9dd0	148	Script::IsTrainerServiceSkillStep	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service teaches a skill step, else nil	verified	one	ui/trainerverbs#row-kind-tests	
 0x4d9e70	251	Script::IsTrainerServiceLearnSpell	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether a trainer service teaches a learn spell and a pet spell	verified	one	ui/trainerverbs#row-kind-tests	
 0x4d9f70	192	Script::IsTrainerServiceTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service teaches a trade skill ability, else nil	verified	one	ui/trainerverbs#row-kind-tests	
@@ -9882,7 +9882,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dd2d0	22			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4dd2f0	38	FreeIfFlag4dd2f0		ui	orchestration	void * __thiscall (uint32_t free_flag)	Frees the object with SMemFree when bit 0 of the flag is set and returns it	verified	one	ui/taxi#opening-the-map	
 0x4dd320	56	FreeArrayAndSelf4dd320		ui	orchestration		Frees an array's data and the array when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x4dd360	1			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4dd360	1			ui	orchestration	void __thiscall ()	Returns at once	verified	one	ui/taxiframe#module-state	
 0x4dd370	10	InitCount4dd380Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4dd380, then jumps to 0x4dd3a0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4dd380	22	InitCount4dd380		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4dd3a0	12	InitCount4dd380Register		ui	orchestration	void __cdecl (void)	Registers 0x4dd3b0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -34813,7 +34813,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a0f50	375	InitHashTable7a0e80Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x7a0e80 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x7a10d0	21			ui	orchestration		Adds the 22 Font methods of 0x87c7c8 to the Font method hash	verified	one	ui/fontstring#lua-methods	
 0x7a10f0	10	UnregisterFontMethods		ui	orchestration	void __cdecl ()	Unregisters the 22 Font methods that 0x7a10d0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
-0x7a1100	23			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod; not read here	inferred	none		
+0x7a1100	23			ui	orchestration	void __stdcall (const char *name, void *object)	Looks a method of the Font type up through FrameScriptPushMethod with the Font method table	verified	one	ui/widgettype#asking-for-a-type	
 0x7a1120	5	InitDouble7a1130Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a1130, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7a1130	15	InitDouble7a1130		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x7a1140	5	InitQuotient7a1150Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a1150, a static initializer	verified	one	ui/initthunks#jump-thunks	
