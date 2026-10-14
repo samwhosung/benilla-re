@@ -300,6 +300,11 @@ an end below the start (`0x77ccbe`). `0x77c70b` zeroes both ends without Shift. 
 nor `0x77de70` reads `0xcf4dc8`, and `0x77af50` does not write the selection. `0x798870` passes
 two truncated numbers to `0x77cca0` (`0x798951`).
 
+`0x77de70(piece, from, to)` places one selection texture. A row is the label's line height times the scale, pixel-aligned (`0x766750`), plus the aligned spacing; the line
+holding `from` comes from the line starts `+0x380`, and `from` and `to` are clamped to it. By the label's justify (`+0x120 & 7`: 1 `LEFT`, 2 `CENTER`, 4 `RIGHT`) it anchors the piece
+with `0x767c70` at the width of the text before `from` (`0x772ae0`, or `0x772890` for a whole last line), sets the height and resolves it, then shows it (`0x77fcb0`) when `from < to` and the
+row height is not within 2^-22 of 0, else hides it (`0x77fc60`). `ui::glue_77de70` runs slices of its geometry (head combine, piece loop, negation, half subtraction, 2^-22 settle).
+
 ## History
 
 A box with history lines keeps a ring of that many lines. `AddHistoryLine` writes at the ring's

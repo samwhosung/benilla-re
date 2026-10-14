@@ -42,7 +42,7 @@ neither nil nor a table, raises the usage message
 Addresses: `0x7776e0`, `0x777792`, `0x777799`, `0x7777c3`, `0x7777e2`, `0x77780d`, `0x777823`, `0x777854`, `0x777884`, `0x7778a3`, `0x7778b7`, `0x7778e4`, `0x7778ef`, `0x77790c`, `0x777948`, `0x777965`, `0x7779a1`, `0x7779c3`, `0x7779d3`, `0x777b4c`, `0x777b76`, `0x777b9e`, `0x777bad`, `0x768320`, `0x77f0c0`, `0x41ad70`, `0x41ae60`, `0x7ffd68`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_777_set_backdrop`
 
 `0x7776e0` allocates the object with `SMemAlloc(0x68)` (`0x77780d`) and constructs it. Each key is read with `0x6f3890` and
 `0x6f3a40`: `bgFile` at `0x777823`, `edgeFile` at `0x777854`, `tile` at `0x777884` through `0x6f1c10`
@@ -52,6 +52,7 @@ for the layout scale, with `G` from `0x41ad70` and 1024.0 at `0x7ffd68` (`0x7779
 are zeroed before the reads (`0x7779d3`) and stored left, right, top, bottom into `+0x58`, `+0x5c`, `+0x50`, `+0x54`
 (`0x777b4c` to `0x777b61`). `0x76a5d0` runs at `0x777b76`; if `0x768320` then answers that the frame's rectangle is
 valid (`0x777b9e`), `0x77f0c0` computes the texture coordinates at once (`0x777bad`).
+`ui::luabind_777_set_backdrop` runs the six logical-to-device conversions of `0x7776e0` (`0x41ad70`, `fmul` by 1024.0, `fdivr` of the argument, `0x41ae60`) as slices.
 
 ## Reading a backdrop back
 
@@ -64,13 +65,14 @@ byte times the float `0x3b80806e` (0.00392156, at `0x81c6b4`), not divided by 25
 Addresses: `0x777370`, `0x777401`, `0x777415`, `0x777421`, `0x777426`, `0x77743a`, `0x77744f`, `0x7774ec`, `0x7776cc`, `0x777bc0`, `0x777c68`, `0x777c78`, `0x777d1c`, `0x777f60`, `0x41ae40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_777_get_backdrop`, `ui::luabind_777_get_backdrop_color`, `ui::luabind_777_normalize_full_domain`
 
 `0x777370` returns 0 values when `+0x1ac` is null (`0x777401` to `0x777407`), reuses a table at argument 2 or makes one
 with `0x6f3c90` (`0x777415` to `0x777421`), replaces an unset name by the empty string (`0x77743a`, `0x77744f`), converts
 lengths with `0x41ae40` (`0x7774ec`) and returns 1 (`0x7776cc`). `0x777bc0` and `0x777f60` read the dword at `+0x60`
 and `+0x64`: `r` is bits 16 to 23, `g` bits 8 to 15, `b` bits 0 to 7 and `a` bits 24 to 31 (`0x777c78` to `0x777d1c`), each
 times the float 1/255, and they return 4.
+`ui::luabind_777_get_backdrop` runs the six device-to-logical conversions of `0x777370` (`0x41ad70`, `fmul` by 1024.0, `fmul` by the coordinate, `0x41ae40`) as slices; `ui::luabind_777_get_backdrop_color` runs the channel unpack of `0x777bc0` and `0x777f60` with `0x6f3810` stubbed to capture the pushed doubles; `ui::luabind_777_normalize_full_domain` runs the per-channel unpack over every byte value.
 
 ## The XML element
 
@@ -114,7 +116,7 @@ bottom one, so with different top and bottom insets that corner rides high.
 Addresses: `0x77e8d0`, `0x77e8e4`, `0x77e91f`, `0x77e941`, `0x77e96e`, `0x77e990`, `0x77e9a6`, `0x77e9ae`, `0x77e9c1`, `0x77e9ca`, `0x77e9f1`, `0x77e9fb`, `0x77ea3f`, `0x77ea59`, `0x77ea75`, `0x77ea79`, `0x77eb93`, `0x77ecf5`, `0x77ed05`, `0x767c70`, `0x76fc40`, `0x7680e0`, `0x811a80`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_77e8d0_negate`
 
 `0x77e8d0` asserts a nonnull frame (`0x77e8e4`) and creates each texture with `0x76fc40(frame, layer, 1)`, layer 0 for the
 background (`0x77e941`) and 1 for an edge (`0x77ea22`). Points are the 3 by 3 grid numbers 0, 2, 6 and 8 for top left, top
@@ -122,6 +124,7 @@ right, bottom left and bottom right, and the relative frame is the frame's own l
 with six arguments, the last asking for an immediate resolve, which only the corners pass as 1; the multi-anchor
 pieces call `0x7680e0` themselves (`0x77e9ca`, `0x77ea79`). The instruction `mov eax,[esi+0x50]` at `0x77e9ae`
 loads the top inset for the background's bottom right anchor; the bottom left one loads `+0x54` at `0x77e995`.
+`ui::glue_geom_77e8d0_negate` runs the `fchs` (`d9 e0`) that negates an inset or an edge size as one copied-byte island; the bytes equal all eight sites of `0x77e8d0`.
 
 ## The edge file
 
@@ -135,7 +138,7 @@ wrap flag on and a corner with it off.
 Addresses: `0x77f0c0`, `0x77f101`, `0x77f10c`, `0x77f128`, `0x77f150`, `0x77f289`, `0x77f2fc`, `0x77f36d`, `0x77f3de`, `0x77f3e9`, `0x77f3f4`, `0x77ecf5`, `0x77ed8c`, `0x7704c0`, `0x7705b0`, `0x770200`, `0x58a980`, `0x801628`, `0x7ffd74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::glue_geom_77f0c0_scale_offset_divide`
 
 `0x77f0c0(rect)` divides 1.0 by the edge size (`0x77f101`) and makes the width and height runs as `extent · (1/edge) − 2.0`
 (`0x77f10c`, `0x77f128`), the 2.0 being the two corners, and zeroes a negative run. The sides send their pairs through
@@ -144,6 +147,7 @@ Test: none
 (`0x77ecf5` onward). `0x7705b0` writes the four vertices in that order. `0x770200` takes the wrap flag as its second
 argument, 1 for a side and 0 for a corner (`0x77ed8c`); `0x58a980` puts it in bits 3 and 4 of the texture flags, wrap in U and in V.
 Both colours are applied last (`0x77f3e9`, `0x77f3f4`).
+`ui::glue_geom_77f0c0_scale_offset_divide` runs the slices `0x77f0fb` to `0x77f125` (1.0 over the edge size, the two runs minus 2.0) and `0x77f175` to `0x77f1e8` (the two divisions of the tiling) on the exe's own bytes.
 
 ## Tiling the background
 
@@ -172,7 +176,7 @@ backdrop keeps nothing, so a colour set before `SetBackdrop` is lost, and a new 
 Addresses: `0x777d30`, `0x777dc9`, `0x777e87`, `0x777ed9`, `0x777f35`, `0x777f46`, `0x7780d0`, `0x7782d5`, `0x7782e6`, `0x77f410`, `0x77f440`, `0x77f750`, `0x7ffe58`, `0x7ffa24`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_777_set_backdrop_color`
 
 `0x777d30` reads arguments 2 to 4 with `0x6f3620` (`0x777dc9`), clamps each, takes the alpha from argument 5 only when
 `0x6f34d0` finds a number (`0x777e87`), multiplies by 255.0 and adds 0.5 and truncates with `0x40a2b0` (`0x777ed9`), and
@@ -180,6 +184,7 @@ packs them into one dword with red in bits 16 to 23. With a backdrop (`0x777f35`
 `+0x60` to `+0x63` and, for a background texture, calls `0x77f750` with them. `0x77f440` stores `+0x64` to `+0x67` and calls
 `0x77f750` on each of the eight edge pointers that is set. `0x7780d0` is the same code for the border (`0x7782d5`,
 `0x7782e6`).
+`ui::luabind_777_set_backdrop_color` runs the clamp and pack of `0x777d30` and `0x7780d0` with `0x6f3620` patched to return chosen doubles and reads the packed dword.
 
 ## When the coordinates are computed
 

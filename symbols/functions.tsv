@@ -33668,12 +33668,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration		Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
 0x7771f0	181	Frame::EnableMouseWheel	idb	ui	orchestration		Implements the Frame method EnableMouseWheel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x7772b0	182	Frame::IsMouseWheelEnabled	idb	ui	orchestration		Implements the Frame method IsMouseWheelEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
-0x777370	870	Frame::GetBackdrop	idb	ui	orchestration		Implements the Frame method GetBackdrop, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_get_backdrop
-0x7776e0	1243	Frame::SetBackdrop	idb	ui	orchestration		Implements the Frame method SetBackdrop, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_set_backdrop
-0x777bc0	358	Frame::GetBackdropColor	idb	ui	orchestration		Implements the Frame method GetBackdropColor, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_get_backdrop_color, ui::luabind_777_normalize_full_domain
-0x777d30	545	Frame::SetBackdropColor	idb	ui	orchestration		Implements the Frame method SetBackdropColor, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_set_backdrop_color
-0x777f60	358	Frame::GetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method GetBackdropBorderColor, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_get_backdrop_color
-0x7780d0	545	Frame::SetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method SetBackdropBorderColor, its pair in the table 0x878ec0	inferred	none		ui::luabind_777_set_backdrop_color
+0x777370	870	Frame::GetBackdrop	idb	ui	primitive		Implements the Frame method GetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	ui::luabind_777_get_backdrop
+0x7776e0	1243	Frame::SetBackdrop	idb	ui	primitive		Implements the Frame method SetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#setbackdrop-from-a-script	ui::luabind_777_set_backdrop
+0x777bc0	358	Frame::GetBackdropColor	idb	ui	primitive		Implements the Frame method GetBackdropColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	ui::luabind_777_get_backdrop_color, ui::luabind_777_normalize_full_domain
+0x777d30	545	Frame::SetBackdropColor	idb	ui	primitive		Implements the Frame method SetBackdropColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#the-two-colours	ui::luabind_777_set_backdrop_color
+0x777f60	358	Frame::GetBackdropBorderColor	idb	ui	primitive		Implements the Frame method GetBackdropBorderColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	ui::luabind_777_get_backdrop_color
+0x7780d0	545	Frame::SetBackdropBorderColor	idb	ui	primitive		Implements the Frame method SetBackdropBorderColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#the-two-colours	ui::luabind_777_set_backdrop_color
 0x778300	10	InitFrameMethodHashThunk		ui	orchestration		Builds the Frame method hash table, then registers its exit handler; a static initializer	verified	one	ui/README#static-initializers	
 0x778310	190	InitFrameMethodHash		ui	orchestration		Builds the empty Frame method hash table at 0xcf4d38	verified	one	ui/README#static-initializers	
 0x7783d0	12	RegisterDestroyFrameMethodHash		ui	orchestration		Registers 0x7783e0 with _atexit	verified	one	ui/README#static-initializers	
@@ -33746,7 +33746,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779d50	89	EditBoxIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is EditBox or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x779db0	6	EditBoxGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name EditBox	verified	one	ui/widgettype#type-chains	
 0x779dc0	43	DeletingDestructor779dc0		ui	orchestration		Destroys the object through 0x779df0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x779df0	439			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77e410, 0x77cd90, SMemFree and 1 more; not read here	inferred	none		
+0x779df0	439	CSimpleEditBox::~CSimpleEditBox		ui	orchestration	void __thiscall ()	Clears focus and history, deletes its font, label, caret and candidate frame, frees buffers, runs the frame destructor	verified	one	ui/editboxmembers#destruction	
 0x779fb0	863	CSimpleEditBox::LoadXML		ui	primitive		Loads an EditBox's frame node, then its font, limits, flags, history and text elements	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x77a310	352	CSimpleEditBox::GetScriptByName		ui	orchestration		Returns an EditBox's handler slot by name, adding its ten text handlers to the frame's	verified	one	ui/xmltypes#handler-names-by-type	
 0x77a470	42	CSimpleEditBox::SetAutoFocus		ui	primitive	void __thiscall (CSimpleEditBox *this, int on)	Sets or clears bit 0 of an EditBox's flag word	verified	one	ui/xmltypes#editbox-flags	
@@ -33755,36 +33755,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a680	42			ui	orchestration		Sets or clears the password flag	verified	one	ui/editbox#lua-methods	
 0x77a6b0	42			ui	orchestration		Sets or clears the ignoreArrows flag	verified	one	ui/editbox#lua-methods	
 0x77a6e0	48	CSimpleEditBox::SetTextInsets		ui	orchestration		Stores the four text insets and lays the box out again	verified	one	ui/editbox#multi-line-and-the-labels-justify	
-0x77a710	56			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77b8c0; not read here	inferred	none		
+0x77a710	56	CSimpleEditBox::GetTextInsets		ui	orchestration	void __thiscall (float *a, float *b, float *c, float *d)	Writes the four text insets through its pointers and lays the box out again	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77a750	36			ui	orchestration		Runs the frame's show, then focuses an autoFocus box when nothing holds the focus	verified	one	ui/editbox#keyboard-focus	
 0x77a780	16			ui	orchestration		Runs the frame's hide, then clears the box's focus	verified	one	ui/editbox#keyboard-focus	
 0x77a790	193			ui	primitive		Flushes the box's changes and blinks the caret of the focused box	verified	one	ui/editbox#text-changes-and-their-scripts	ui::glue_77a_77a790_fill_accumulate
 0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	void __thiscall (void *event)	Moves the cursor and the selection under a drag with the point's glyph index	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
-0x77a8d0	33			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnSizeChanged, 0x77b8c0; not read here	inferred	none		
+0x77a8d0	33	CSimpleEditBox::OnSizeChanged		ui	orchestration	void __thiscall (float *rect, uint32_t flags)	Runs the frame's size callback and lays the label and caret out again	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
-0x77a960	138			ui	orchestration		Runs CSimpleEditBox.cpp code that calls GetBlockPoolData, 0x76fc40, 0x770360 and 2 more; not read here	inferred	none		
-0x77a9f0	446			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x7727b0, SMemAlloc and 9 more; not read here	inferred	none		ui::glue_77a_77a9f0_height_x10
+0x77a960	138	CSimpleEditBox::CreateCompositionTexture		ui	orchestration	void __thiscall ()	Creates once the composition texture in colour 0xff202010 and sizes it to the label's line height	verified	one	ui/editboxmembers#candidate-window	
+0x77a9f0	446	CSimpleEditBox::CreateCandidateFrame		ui	primitive	void __thiscall ()	Creates once the candidate message frame at stratum 8 with its background and highlight, ten lines high	verified	one	ui/editboxmembers#candidate-window	ui::glue_77a_77a9f0_height_x10
 0x77abb0	106	CSimpleEditBox::UpdateInputLanguage		ui	orchestration		Classifies the keyboard layout, stores a changed index and runs OnInputLanguageChanged	verified	one	ui/inputlanguage#the-language-index	
 0x77ac30	14	CSimpleEditBox::GetInputLanguageName		ui	orchestration		Returns the name of the language index at +0x3d0	verified	one	ui/inputlanguage#the-language-index	
 0x77ac40	20	CSimpleEditBox::ToggleInputLanguage		ui	orchestration		Asks the input method to switch to native mode when the index is 0, else off	verified	one	ui/inputlanguage#the-language-index	
 0x77ac60	164	CSimpleEditBox::GetCompositionSpan		ui	primitive	void __thiscall (void)	Computes the composition span with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
-0x77ad10	568			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x42c500, SMemFree, 0x77a9f0 and 7 more; not read here	inferred	none		ui::glue_77a_77ad10_row_geom
+0x77ad10	568	CSimpleEditBox::ShowCandidates		ui	primitive	uint32_t __thiscall (void *hwnd)	Fills the candidate frame from the input method: height, highlighted row, header and candidate lines	verified	one	ui/editboxmembers#candidate-window	ui::glue_77a_77ad10_row_geom
 0x77af50	100			ui	orchestration		Switches the input method and runs OnEditFocusGained or OnEditFocusLost, then marks the cursor	verified	one	ui/editbox#keyboard-focus	
 0x77afc0	384	CSimpleEditBox::OnInputLanguage		ui	primitive		Handles the input method event of a box that holds or takes the focus, inserting its text	inferred	none	ui/keyscripts#the-edit-box-in-the-walk	
 0x77b160	1340	CSimpleEditBox::OnKeyDown		ui	orchestration		Takes a key for the focused box and runs its editing, scripts and history	verified	one	ui/editbox#which-box-takes-a-key	
-0x77b730	64			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x77b730	64	CSimpleEditBox::RunKeyListener		ui	orchestration	void __thiscall (uint32_t kind)	Calls the key listener registered for a kind with an event record	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77b770	75	CSimpleEditBox::OnKeyRepeat		ui	orchestration		Forwards a key repeat to the box's own key down when it holds or takes the focus	verified	one	ui/keyscripts#the-edit-box-in-the-walk	
-0x77b7c0	55			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77e3d0; not read here	inferred	none		
+0x77b7c0	55	CSimpleEditBox::TakesKeyboard		ui	orchestration	uint32_t __thiscall (void *event)	Answers whether the box takes the keyboard, taking the focus when it is autoFocus and none holds it	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77b800	143	CSimpleEditBox::OnMouseDown		ui	orchestration		Places the cursor at a press and focuses the box	verified	one	ui/editbox#which-box-takes-a-key	
-0x77b890	45			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnMouseUp; not read here	inferred	none		
+0x77b890	45	CSimpleEditBox::OnMouseUp		ui	orchestration	uint32_t __thiscall (uint32_t button)	Runs the frame's mouse up and clears the drag flag when it did not handle the release	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77b8c0	463			ui	primitive		Lays the label and the caret out inside the insets	verified	one	ui/editbox#multi-line-and-the-labels-justify	ui::glue_77a_77b8c0_fill_edges
 0x77ba90	160	CSimpleEditBox::RebuildTokenClasses		ui	primitive	void __thiscall (void)	Rebuilds the per-byte token class array of the text with every escape enabled	verified	one	ui/editboxmarkup#which-escapes-are-on	ui::editbox_markup_class_array, ui::editbox_markup_has_no_inline_texture_escape, ui::editbox_markup_insert_refusal_range, ui::editbox_markup_reachable_cursor_indices, ui::editbox_markup_step_consumes_whole_characters, ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class
 0x77bb30	335			ui	primitive		Counts the bytes a cursor moves over for a count of characters, skipping escapes	verified	one	ui/editbox#a-negative-letter-limit-hangs	ui::editbox_markup_has_no_inline_texture_escape, ui::editbox_markup_reachable_cursor_indices, ui::editbox_markup_step_consumes_whole_characters, ui::editbox_markup_step_law_hangs_on_a_trailing_skip_class
 0x77bc80	136			ui	primitive		Counts the letters in a byte range of the text	verified	one	ui/editbox#a-negative-letter-limit-hangs	
 0x77bd10	26	CSimpleEditBox::NextTokenStart		ui	primitive	uint32_t __thiscall (uint32_t index)	Returns the index of the token after the one at an index	verified	one	ui/editboxmarkup#boundaries-and-letters	
 0x77bd30	25			ui	primitive		Returns the nearest index below a position whose character class entry is nonzero, or -1	verified	one	ui/editbox#word-steps	
-0x77bd50	55			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77bd90	108			ui	primitive		Runs CSimpleEditBox.cpp code that calls SMemReAlloc; not read here	inferred	none		
+0x77bd50	55	CSimpleEditBox::LineOfIndex		ui	primitive	uint32_t __thiscall (uint32_t index)	Returns the line that holds a byte position, walking the line starts	verified	one	ui/editboxmembers#text-capacity-and-lines	
+0x77bd90	108	CSimpleEditBox::ReserveText		ui	primitive	void __thiscall (uint32_t length)	Grows the text and class buffers to hold length plus one, rounded up to a multiple of 32	verified	one	ui/editboxmembers#text-capacity-and-lines	
 0x77be00	184	CSimpleEditBox::SetText		ui	orchestration		Replaces a different text without the typing scripts, then runs OnTextSet	verified	one	ui/editbox#setting-and-reading-text	
 0x77bec0	5	InitDouble77bed0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77bed0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77bed0	15	InitDouble77bed0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -33809,16 +33809,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77c980	98			ui	orchestration		Moves the cursor back to the start of its line	verified	one	ui/editbox#keys	
 0x77c9f0	105			ui	orchestration		Moves the cursor forward to the end of its line	verified	one	ui/editbox#keys	
 0x77ca60	91			ui	orchestration		Moves the cursor to the start of the text	verified	one	ui/editbox#keys	
-0x77cac0	93			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77c6b0; not read here	inferred	none		
+0x77cac0	93	CSimpleEditBox::MoveToEnd		ui	orchestration	void __thiscall (uint32_t extend)	Steps the cursor forward to the end of the text, clearing a selection when not extending	verified	one	ui/editboxmembers#cursor-and-selection-setters	
 0x77cb20	309	CSimpleEditBox::MoveLine		ui	primitive	void __thiscall (int32_t direction, int32_t extend)	Moves the cursor to the line above or below with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
-0x77cc60	18			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77cb20; not read here	inferred	none		
-0x77cc80	18			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77cb20; not read here	inferred	none		
+0x77cc60	18	CSimpleEditBox::MoveLineDown		ui	orchestration	void __thiscall (uint32_t extend)	Moves the cursor one line down through MoveLine	verified	one	ui/editboxmembers#cursor-and-selection-setters	
+0x77cc80	18	CSimpleEditBox::MoveLineUp		ui	orchestration	void __thiscall (uint32_t extend)	Moves the cursor one line up through MoveLine	verified	one	ui/editboxmembers#cursor-and-selection-setters	
 0x77cca0	66	CSimpleEditBox::HighlightText		ui	orchestration		Selects from a start to an end, an end past the text or before the start meaning the end	verified	one	ui/editbox#selection	
-0x77ccf0	19			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77cd10	89			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x77ccf0	19	CSimpleEditBox::CollapseSelection		ui	orchestration	void __thiscall ()	Sets both selection ends to the cursor	verified	one	ui/editboxmembers#cursor-and-selection-setters	
+0x77cd10	89	CSimpleEditBox::ExtendSelection		ui	primitive	void __thiscall (int32_t delta)	Moves the selection end that the cursor step passes and marks the selection dirty	verified	one	ui/editboxmembers#cursor-and-selection-setters	
 0x77cd70	20			ui	orchestration		Deletes the selection	verified	one	ui/editbox#ctrl-letter-keys	
-0x77cd90	385			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77e440, 0x77cf20, SMemReAlloc and 3 more; not read here	inferred	none		
-0x77cf20	25			ui	orchestration		Runs CSimpleEditBox.cpp code that calls SMemFree; not read here	inferred	none		
+0x77cd90	385	CSimpleEditBox::SetHistoryLineCount		ui	primitive	void __thiscall (uint32_t count)	Resizes the history array to a count of records, freeing dropped strings, and clamps the position	verified	one	ui/editboxmembers#history-array	
+0x77cf20	25	CSimpleEditBox::FreeHistoryLine		ui	orchestration	void __thiscall ()	Frees the string of a history record when set	verified	one	ui/editboxmembers#history-array	
 0x77cf40	139	CSimpleEditBox::AddHistoryLine		ui	orchestration		Stores a line at the history position and advances it around the ring	verified	one	ui/editbox#history	
 0x77cfd0	95			ui	orchestration		Sets the text to the nearest stored history line after the history position	verified	one	ui/editbox#history	
 0x77d030	154			ui	orchestration		Sets the text to the nearest stored history line before the history position	verified	one	ui/editbox#history	
@@ -33828,27 +33828,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77d4d0	1142			ui	primitive		Rebuilds the label's visible text and sizes a multi-line box to its text	verified	one	ui/editbox#text-changes-and-their-scripts	ui::glue_77d4d0
 0x77d950	294			ui	orchestration		Places and shows the selection textures over the selected text	verified	one	ui/editbox#selection	
 0x77da80	997			ui	primitive		Scrolls the text to the cursor, places the caret and runs OnCursorChanged	verified	one	ui/editbox#text-changes-and-their-scripts	ui::glue_77da80
-0x77de70	859			ui	primitive		Runs its object file code that calls 0x7727b0, PixelAlignY, 0x772890 and 6 more; not read here	inferred	none		ui::glue_77de70
+0x77de70	859			ui	primitive	void __thiscall (CSimpleTexture *piece, int32_t from, int32_t to)	Places one selection texture over a byte range of a line by the label's justify and shows or hides it	verified	one	ui/editbox#selection	ui::glue_77de70
 0x77e1d0	127			ui	orchestration		Copies the selection to the clipboard, or an empty string for a password box	verified	one	ui/editbox#ctrl-letter-keys	
-0x77e250	76			ui	primitive		Runs its object file code that calls OsClipboardGetString, sgetu8, 0x77c200 and 1 more; not read here	inferred	none		
+0x77e250	76	CSimpleEditBox::Paste		ui	orchestration	void __thiscall ()	Inserts the clipboard text one UTF-8 character at a time	verified	one	ui/editboxmembers#text-capacity-and-lines	
 0x77e2a0	55			ui	orchestration		Lays the box out again for a font change and takes the font's colour for the caret	verified	one	ui/editbox#the-caret	
-0x77e2e0	44			ui	unreached		Runs its object file code not read here	inferred	none		
+0x77e2e0	44	CSimpleEditBox::SetOwnFontWord		ui	unreached	void __thiscall (uint32_t word)	Stores a justify word in the box's own font block and marks it changed; nothing reaches it	verified	one	ui/editboxmembers#unreached-edit-box-code	
 0x77e310	22			ui	orchestration		Colours the caret	verified	one	ui/editbox#the-caret	
 0x77e330	41			ui	orchestration		Colours the three selection textures	verified	one	ui/editbox#construction	
-0x77e360	43			ui	primitive		Runs its object file code not read here	inferred	none		
-0x77e390	29			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x77e3b0	29			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x77e360	43	CSimpleEditBox::SetCursorPosition		ui	primitive	void __thiscall (int32_t position)	Sets the cursor clamped to the text length and marks it dirty	verified	one	ui/editboxmembers#cursor-and-selection-setters	
+0x77e390	29	CSimpleEditBox::ShowCandidateFrame		ui	orchestration	void __thiscall ()	Marks the candidate frame shown at +0xd0 and runs its show slot	verified	one	ui/editboxmembers#candidate-window	
+0x77e3b0	29	CSimpleEditBox::HideCandidateFrame		ui	orchestration	void __thiscall ()	Clears the candidate frame's +0xd0 and runs its hide slot	verified	one	ui/editboxmembers#candidate-window	
 0x77e3d0	51	CSimpleEditBox::SetFocus		ui	orchestration		Moves the keyboard focus to a visible edit box, running the old box's loss and the new one's gain	verified	one	ui/editbox#keyboard-focus	
 0x77e410	30	CSimpleEditBox::ClearFocus		ui	orchestration		Clears the keyboard focus when this box holds it, running its loss	verified	one	ui/editbox#keyboard-focus	
 0x77e430	6	IsEnterScriptRunning		ui	orchestration	uint32_t __cdecl (void)	Returns the flag that is 1 while an edit box runs its enter script	verified	one	ui/protected#input-event-flags	
-0x77e440	79			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x77e440	79	CSimpleEditBox::FreeHistory		ui	orchestration	void __thiscall ()	Frees every history string and then the history array	verified	one	ui/editboxmembers#history-array	
 0x77e490	8	LayoutThunk77e490		ui	primitive		Moves this back by 0x24 to the object and jumps to its deleting destructor 0x779dc0	verified	one	ui/containers#layout-thunks	
-0x77e4a0	4			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x77e4b0	47			ui	orchestration		Runs its object file code that calls 0x770910; not read here	inferred	none		
-0x77e4e0	23			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x77e4a0	4			ui	orchestration	uint32_t __thiscall ()	Returns the dword at +0x68 of the object	verified	one	ui/editboxmembers#font-follower-slots	
+0x77e4b0	47			ui	orchestration	void __thiscall (FontBlock *block)	Merges a font block into the block at +0x14 under the mask at +8, then runs slot 5 of the object at -0x24	verified	one	ui/editboxmembers#font-follower-slots	
+0x77e4e0	23			ui	orchestration	uint32_t __stdcall (void *p)	Answers whether its argument equals the dword at 0xcf4ea8	verified	one	ui/editboxmembers#font-follower-slots	
 0x77e500	32	FontIsTypeName		ui	primitive	bool __thiscall (const char *name)	Answers whether a name is Font or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x77e520	6	FontGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name Font	verified	one	ui/widgettype#type-chains	
-0x77e530	24			ui	orchestration		Runs its object file code that calls 0x784180; not read here	inferred	none		
+0x77e530	24			ui	orchestration	void __thiscall ()	Pushes the font's changes to its followers, then runs slot 0 of the object at +0x7c with the changed word	verified	one	ui/editboxmembers#font-follower-slots	
 0x77e550	43	DeletingDestructor77e550		ui	orchestration		Destroys the object through 0x783b20 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x77e580	5	InitSquare77e590Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77e590, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77e590	19	InitSquare77e590		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
@@ -33860,12 +33860,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77e6c0	484	CSimpleBackdrop::LoadXML		ui	orchestration		Reads the attributes and children of a Backdrop element into the object	verified	one	ui/backdrop#the-xml-element	
 0x77e8b0	5	InitInfinity77e8c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77e8c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77e8c0	11	InitInfinity77e8c0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x77e8d0	2025			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, GetBlockPoolData and 5 more; not read here	inferred	none		ui::glue_geom_77e8d0_negate
-0x77f0c0	833			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, 0x7704c0 and 2 more; not read here	inferred	none		ui::glue_geom_77f0c0_scale_offset_divide
+0x77e8d0	2025	CSimpleBackdrop::BuildPieces		ui	primitive	void __thiscall (CSimpleFrame *frame)	Creates and anchors the background and edge textures of a backdrop on a frame	verified	one	ui/backdrop#the-pieces-and-their-anchors	ui::glue_geom_77e8d0_negate
+0x77f0c0	833	CSimpleBackdrop::ApplyTexCoords		ui	primitive	void __thiscall (float *rect)	Computes the edge and tile texture coordinates from the frame rectangle and edge size and applies the colours	verified	one	ui/backdrop#the-edge-file	ui::glue_geom_77f0c0_scale_offset_divide
 0x77f410	45	CSimpleBackdrop::SetColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores the background colour in the backdrop object and repaints it	verified	one	ui/backdrop#the-two-colours	
 0x77f440	143	CSimpleBackdrop::SetBorderColor		ui	orchestration		Stores the border colour and repaints the eight edge textures	verified	one	ui/backdrop#the-two-colours	
 0x77f4d0	151	CSimpleBackdrop::ReleasePieces		ui	orchestration		Releases the nine piece textures and clears their pointers	verified	one	ui/backdrop#the-object	
-0x77f570	21			ui	primitive		Runs its object file code not read here	inferred	none		
+0x77f570	21	StoreRetained		ui	orchestration	void __thiscall (void *p)	Stores a pointer and counts a reference on it at +4 when it is not null	verified	one	ui/regions#the-region-base	
 0x77f590	5	InitDouble77f5a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77f5a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77f5a0	15	InitDouble77f5a0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x77f5b0	5	InitQuotient77f5c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77f5c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -33874,9 +33874,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77f5f0	19	InitSquare77f5f0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
 0x77f610	5	InitQuotient77f620Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x77f620, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x77f620	19	InitQuotient77f620		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
-0x77f640	122			ui	orchestration		Runs its object file code that calls CScriptRegion::CScriptRegion, 0x77fd10; not read here	inferred	none		
+0x77f640	122	SimpleRegionConstruct		ui	orchestration	void * __thiscall (CSimpleFrame *parent, uint32_t layer, uint32_t sublevel)	Builds a region base: script and layout parts, zeroed fields, vtables, and the parent link when given	verified	one	ui/regions#the-region-base	
 0x77f6c0	43	DeletingDestructor77f6c0		ui	orchestration		Destroys the object through 0x77f6f0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
-0x77f6f0	85			ui	orchestration		Runs its object file code that calls 0x77fd10, SMemFree; not read here	inferred	none		
+0x77f6f0	85	SimpleRegionDestruct		ui	orchestration	void __thiscall ()	Unparents the region, frees its two arrays and runs the script region destructor	verified	one	ui/regions#the-region-base	
 0x77f750	355	CScriptRegion::SetVertexColor		ui	primitive		Sets a region's vertex colour, skipping a repeat and an opaque white when none is set	verified	one	ui/texture#setting-a-vertex-colour	
 0x77f8c0	77	CScriptRegion::GetVertexColor		ui	orchestration		Copies the vertex colour, or opaque white when it holds no entry	verified	one	ui/texture#two-colour-stores	
 0x77f910	387	CScriptRegion::SetGradient		ui	primitive		Sets the four corner colours of a region from a minimum, a maximum and an orientation	verified	one	ui/texture#gradients	

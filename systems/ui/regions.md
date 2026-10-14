@@ -159,6 +159,22 @@ queue leg `0x768140` never reads it, so a model's ready hook that lays out with 
 
 `ui::layout_recompute` runs `0x768d20` whole with `0x767a20` stubbed to fail or to succeed, and reads the flags and the stored rectangle.
 
+## The region base
+
+Textures and font strings share a region base. `0x77f640(parent, layer, sublevel)` runs `CScriptRegion::CScriptRegion`, zeroes the eight dwords `+0xa0` to `+0xbc` and
+`+0xc0` to `+0xc8`, stores the vtables `0x81c9f4` and `0x81c9c8` (at `+0x24`) and, for a nonnull parent, calls `CScriptRegion::SetRegionParent` with the parent, layer
+and sublevel. `0x77f6f0` is its destructor body: it stores the vtables, calls `SetRegionParent(0, 1, 0)`, frees the arrays at `+0xb8` and `+0xa8` and ends in
+`CScriptRegion::~CScriptRegion`. `0x77f570(p)` stores `p` at `this` and, for a nonnull `p`, increments the count at `p+4`.
+
+Addresses: `0x77f640`, `0x77f646`, `0x77f682`, `0x77f688`, `0x77f6ae`, `0x77f6f0`, `0x77f6f9`, `0x77f706`, `0x77f71e`, `0x77f737`, `0x77f740`, `0x77f570`, `0x77fd10`, `0x76c4f0`, `0x76c560`, `0x81c9c8`, `0x84f09c`, `0x854040`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x77f6f0` pushes `0, 1, 0` before `0x77fd10` (`0x77f706`); the two frees pass the tags `0x84f09c` (line −2) and `0x854040`. `0x77f640` is called by the texture
+constructor (`0x76fc57`) and the font string constructor (`0x770d44`), `0x77f6f0` by the font string destructor body (`0x770efc`) and `0x76fd76`. `0x77f570` has two callers, in the backdrop constructor (`0x77e63e`)
+and the font object constructor (`0x783a5c`).
+
 ## Pixel alignment
 
 `PixelAlignX(x)` and `PixelAlignY(y)` round a layout length up to a whole number of device pixels. A length below 2^-22

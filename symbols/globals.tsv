@@ -1071,12 +1071,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c7a4	uint32_t[9]	s_fontObjectBaseTable		ui	Holds the three slots of the font object's base table, then two triples of +infinity, pi and 10.0	verified	one	ui/regions#the-layout-vtable
 0x81c7c8	void *[11]			ui	Holds 11 function addresses that CSimpleButton::CSimpleButton stores; not read here	inferred	none	
 0x81c7f8	void *[40]	CSimpleButton::vftable		ui	Holds the 40 virtual function slots of CSimpleButton, which its constructor stores	inferred	none	
+0x81c898	const void *[2]	s_keyListenerRecordVtable		ui	Holds the vtable of the record 0x77b730 passes to a key listener	verified	one	ui/editboxmembers#slots-and-listeners
 0x81c8b4	void *[2]			ui	Holds the two slots the edit box's own font (+0x324) keeps at +0x24 (0x779bbc); its main table 0x81c8bc follows	verified	one	ui/regions#the-layout-vtable
 0x81c8bc	void *[8]			ui	Holds the main table of the edit box's own font (0x779bb6)	verified	one	ui/regions#the-layout-vtable
 0x81c8dc	void *[1]			ui	Holds the one slot, 0x77e2a0, of the table the edit box keeps at +0x314 (0x779b35)	verified	one	ui/regions#the-layout-vtable
+0x81c8e0	void *[11]	s_simpleEditBoxLayoutVtable		ui	Holds the vtable of an edit box's layout part, stored at +0x24	verified	one	ui/editboxmembers#destruction
 0x81c910	void *[36]			ui	Holds 36 function addresses that CSimpleEditBox::CSimpleEditBox stores; not read here	inferred	none	
 0x81c9b0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x81c9c8	void *[11]			ui	Holds 11 function addresses its object file's code stores; not read here	inferred	none	
+0x81c9c8	void *[11]	s_simpleRegionLayoutVtable		ui	Holds the layout vtable stored at +0x24 of a region base, before a texture or font string replaces it	verified	one	ui/regions#the-region-base
+0x81c9f4	void *[11]	s_simpleRegionVtable		ui	Holds the vtable a region base stores at +0x0 while it is built or torn down, its slot 0 being 0x77f6c0	verified	one	ui/regions#the-region-base
 0x81cb20	uint32_t[13]	s_fontTableB		ui	Holds the ten slots and three floats of a font table stored at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
 0x81cc2c	const uint32_t			ui	Holds a dword that CSimpleMessageFrame::CSimpleMessageFrame reads; not read here	inferred	none	
@@ -1192,6 +1195,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
 0x8332c0	uint64_t	s_cpuTicksPerSecond		core	Holds the counter rate; 10^9 by default, then the calibrated rate	verified	one	core/time#the-millisecond-clock
 0x8332c8	double	s_clockScale		core	Holds the clock's milliseconds per counter tick; 1.0 at startup	verified	one	core/time#the-millisecond-clock
+0x833394	char[21]	s_typeOsIMECandidate		ui	Holds the RTTI name of the input method candidate record, an allocation tag	verified	one	ui/editboxmembers#candidate-window
 0x8333b0	uint32_t	s_windowActive		core	Holds whether the window is active, set by WM_ACTIVATE	verified	one	core/input#the-pump
 0x8333b8	uint32_t[32]	s_cp1252Chars		core	Holds the characters for code page 1252 bytes 0x80 to 0x9f	verified	one	core/input#character-codes
 0x833438	uint32_t[256]	s_cp1250Chars		core	Holds the characters for code page 1250 bytes, indexed by the byte	verified	one	core/input#character-codes
@@ -1602,6 +1606,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84efc8	char[41]	s_textUsageSGetUpperEmblemTextureTexture		ui	Holds the string "Usage: %s:GetUpperEmblemTexture(texture)"	inferred	none	
 0x84f010	char[64]	s_textSGetUpperEmblemTextureWrongObjectType		ui	Holds the string "%s:GetUpperEmblemTexture(): Wrong object type, expected texture"	inferred	none	
 0x84f050	char[67]	s_textSGetUpperEmblemTextureCouldnTFindThisIn		ui	Holds the string "%s:GetUpperEmblemTexture(): Couldn't find 'this' in texture object"	inferred	none	
+0x84f09c	char[25]	s_typeCImVector		ui	Holds the RTTI name of the vector the region base keeps at +0xb8, an allocation tag	verified	one	ui/regions#the-region-base
 0x84f190	uint32_t[6]	s_dressUpModelMethods		ui	Holds the 3 pairs of a name and a function of the DressUpModel methods	verified	one	ui/model#lua-methods
 0x84f1fc	uint32_t[6]	s_playerModelMethods		ui	Holds the 3 pairs of a name and a function of the PlayerModel methods	verified	one	ui/model#lua-methods
 0x84f2d4	const float	s_tokenHalf		ui	Holds 0.5, the half added before an amount token rounds	verified	one	ui/spelltokens#effect-amounts
@@ -1675,6 +1680,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8539d4	char[37]	s_accountSavedVariablesFormat		ui	Holds the format of the account saved variables path	verified	one	ui/addons#saved-variables-read
 0x8539fc	char[18]	s_textLoadingAddOnS		ui	Holds the string "Loading add-on %s"	inferred	none	
 0x853b88	char *[41]	s_cursorNames		ui	Holds the cursor names by cursor id, from Point at 1 to UnableSkinAlliance at 0x28	verified	one	spell/targeting#the-targeting-cursor
+0x854040	char[3]	s_arrayTagE		ui	Holds .E, the allocation tag of the region base's array at +0xa8	verified	one	ui/regions#the-region-base
 0x854120	const char *	s_redEscape		ui	Holds the pointer to the red colour escape string for an unmet item in a line	verified	one	ui/tooltipspellreq#totems
 0x854124	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x854140	const char *[5]	s_ownerTitleKeys		ui	Holds the global string keys of the pet, minion, guardian and creation owner titles	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines
@@ -2136,8 +2142,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x879828	char[26]	s_textFrameSIsNotResizable		ui	Holds the string "Frame %s is not resizable"	inferred	none	
 0x879844	char[37]	s_textFrameSIsNotMovableOrResizable		ui	Holds the string "Frame %s is not movable or resizable"	inferred	none	
 0x879a5c	const char *[4]	s_inputLanguageNames		ui	Holds the names ROMAN, KOREAN, CHINESE and JAPANESE	verified	one	ui/inputlanguage#the-language-index
+0x879a90	char[57]	s_pathCSimpleEditBoxCpp		ui	Holds the source path of CSimpleEditBox.cpp, passed to the allocator as the file	verified	one	ui/editboxmembers#destruction
+0x879ad4	char[33]	s_typeEditHistory		ui	Holds the RTTI name of the edit box history record, an allocation tag	verified	one	ui/editboxmembers#history-array
+0x879af8	char[55]	s_pathCSimpleEditBoxH		ui	Holds the source path of CSimpleEditBox.h, passed to the allocator as the file of a history line	verified	one	ui/editboxmembers#history-array
 0x879b78	char[13]	s_textIgnoreArrows		ui	Holds the string "ignoreArrows"	inferred	none	
 0x879c8c	char[15]	s_onEnterPressed		ui	Holds the script name OnEnterPressed of an edit box	verified	one	ui/protected#input-event-flags
+0x879c9c	char[7]	s_textCandidateLine		ui	Holds the string "%d: %s", the format of a candidate line	verified	one	ui/editboxmembers#candidate-window
+0x879ca4	char[8]	s_textCandidateHeader		ui	Holds the string "> %d/%d", the format of the candidate header line	verified	one	ui/editboxmembers#candidate-window
 0x879cac	char[3]	s_editBoxPipeText		ui	Holds ||, the text an edit box inserts for a typed pipe	verified	one	ui/editbox#typed-characters
 0x879cb0	char[5]	s_editBoxTabText		ui	Holds the four spaces an edit box inserts for a tab character	verified	one	ui/editbox#typed-characters
 0x879d00	uint32_t[78]	s_buttonMethods		ui	Holds the 39 pairs of a name and a function of the Button methods	verified	one	ui/button#lua-methods
@@ -4289,6 +4300,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
 0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
 0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
+0xcf4ea8	uint32_t			ui	Holds a dword that 0x77e4e0 compares an argument with; its writers are not read here	inferred	none	ui/editboxmembers#font-follower-slots
 0xcf511c	uint32_t	s_divxInstanceCounter		ui	Counts the DivX decoder instances created for movie frames	verified	one	ui/movieframe#the-decoder
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
