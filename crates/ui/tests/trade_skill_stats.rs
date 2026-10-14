@@ -109,6 +109,16 @@ fn luabind_4fde_get_trade_skill_item_stats_quantize() {
         -1234.5,
         2_000_000.0,
         -2_000_000.0,
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        3.0e9,
+        -3.0e9,
+        1.0e10,
+        1.0e30,
+        -1.0e30,
     ];
     for &v in &pivots {
         for &w in &pivots {

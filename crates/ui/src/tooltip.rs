@@ -13,10 +13,7 @@ const SCALE_001: f32 = f32::from_bits(0x3a83_126f);
 /// host's NaN has it clear.
 const X87_INDEFINITE_NAN: u64 = 0xfff8_0000_0000_0000;
 
-/// `__ftol` (`0x40a2b0`): truncate toward zero and keep the low 32 bits.
-fn ftol(x: f64) -> i32 {
-    x.trunc() as i64 as i32
-}
+use benilla_re_cmath::x87::ftol;
 
 /// The rebase of a 1-based script index in `SetSpell` (`0x532d10`), `SetLootItem` (`0x533470`),
 /// `SetMerchantItem` (`0x534080`), `SetTradePlayerItem` (`0x5341e0`), `SetTradeTargetItem`

@@ -32,22 +32,7 @@ fn k(bits: u32) -> f64 {
     f64::from(f32::from_bits(bits))
 }
 
-/// The CRT `__ftol` (`0x40a2b0`): `fistp qword` under round-toward-zero, returning the low dword in
-/// EAX. Faithfully models the x87 64-bit conversion: in-range values truncate toward zero and EAX is
-/// the low 32 bits (wrapping); out-of-i64-range or NaN yields the "integer indefinite"
-/// `0x8000_0000_0000_0000`, whose low dword is `0`. This matches the binary even when the product
-/// overflows i32 (the legs `push eax` = exactly this low dword).
-#[inline]
-fn ftol(v: f64) -> i32 {
-    // The i64 range as f64 (2^63 is exactly representable; -2^63 is the inclusive min).
-    const I64_MIN_F: f64 = -9_223_372_036_854_775_808.0;
-    const I64_2P63: f64 = 9_223_372_036_854_775_808.0; // 2^63 (exclusive max)
-    if v.is_nan() || !(I64_MIN_F..I64_2P63).contains(&v) {
-        0 // integer indefinite 0x8000000000000000 → low dword 0
-    } else {
-        (v.trunc() as i64) as i32 // low 32 bits of the i64 truncation
-    }
-}
+use benilla_re_cmath::x87::ftol;
 
 // ===========================================================================================
 // (1) 0x490e60 — 4× "round-to-nearest of ((v − Y)/div · 1024) / 0.8" position legs.

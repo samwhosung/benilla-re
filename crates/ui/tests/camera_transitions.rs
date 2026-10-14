@@ -285,6 +285,30 @@ fn run_outer(c: &Chan) {
         now: 5000,
     });
 
+    // NaN, the infinities and delays whose product with -1000 passes `i32` and `i64`: `__ftol`
+    // returns the low dword of its qword, 0 for the indefinite.
+    for delay in [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        4.0e6,
+        -4.0e6,
+        1.0e30,
+        -1.0e30,
+    ] {
+        cases.push(OuterCase {
+            pre: CamState {
+                live: 0.0f32.to_bits(),
+                ..blank
+            },
+            speed: 0.016,
+            target: 1.5,
+            delay,
+            factor: 1.25,
+            now: 500,
+        });
+    }
+
     // --- fuzz grid straddling each branch + wrap seam ---
     let mut s = 0x5e77_0000u32 ^ (c.outer as u32);
     for _ in 0..4000 {

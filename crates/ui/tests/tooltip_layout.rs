@@ -560,7 +560,24 @@ fn cursor_fade_530b20() {
     let mut alpha_lt = 0u32;
     let mut alpha_ge = 0u32;
     // boundary: t == half (1.0) -> frac=1.0 (the >= arm); t just below -> t/half.
-    for t in [0.0f32, 0.25, 0.5, 0.999_999, 1.0, 1.5, 100.0] {
+    // Then NaN (which takes the `1.0` arm), the infinities, and negative values whose product with
+    // 255 passes `i32` and `i64`: `__ftol` returns the low dword of its qword, 0 for the
+    // indefinite.
+    for t in [
+        0.0f32,
+        0.25,
+        0.5,
+        0.999_999,
+        1.0,
+        1.5,
+        100.0,
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        -1.0e7,
+        -1.0e10,
+        -1.0e30,
+    ] {
         let bin = run_alpha(&mut emu, t);
         let mine = fade_alpha(t);
         assert_eq!(bin, mine, "fade_alpha det t={t}: bin={bin} mine={mine}");

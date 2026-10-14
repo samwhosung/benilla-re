@@ -125,6 +125,14 @@ fn luabind_4d0260_cancel_auction_min_increment() {
         0x7fff_ffff,
         0x8000_0000,
         0xffff_ffff,
+        // Bids whose 5% passes `i32`: `__ftol` keeps the low dword of its qword. A bid is an `i64`
+        // and the product at most 4.6e17, so no NaN or past-`i64` value reaches it.
+        0x1_0000_0000,
+        0x7_ffff_ffff,
+        100_000_000_000,
+        i64::MAX,
+        i64::MIN,
+        -100_000_000_000,
     ];
     for &bid in &bids {
         assert_eq!(
@@ -182,8 +190,38 @@ fn luabind_4d14a0_guild_last_online() {
     // the reciprocal of 30 at 0x807334 decides the month: 0x3d088889), assorted LastOnline floats,
     // and a couple of negatives, as the arithmetic does not look at the sign.
     let probes = [
-        0.0f32, 1.0, 29.0, 30.0, 30.5, 31.0, 364.0, 365.0, 366.0, 730.0, 100.25, 12345.0, 99999.0,
-        0.5, -1.0, -400.0, 59.999, 89.999, 119.999, 179.995, 179.999, 209.999,
+        0.0f32,
+        1.0,
+        29.0,
+        30.0,
+        30.5,
+        31.0,
+        364.0,
+        365.0,
+        366.0,
+        730.0,
+        100.25,
+        12345.0,
+        99999.0,
+        0.5,
+        -1.0,
+        -400.0,
+        59.999,
+        89.999,
+        119.999,
+        179.995,
+        179.999,
+        209.999,
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e9,
+        -1.0e9,
+        1.0e12,
+        1.0e30,
+        -1.0e30,
     ];
     for &t in &probes {
         assert_eq!(

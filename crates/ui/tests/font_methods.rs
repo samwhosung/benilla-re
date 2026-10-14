@@ -713,7 +713,7 @@ fn color_byte_79f420() {
         (emu.get_reg(RegisterX86::EAX) & 0xff) as u8
     };
     // deterministic: the [0,1] fractions land on integer/half boundaries; negatives truncate toward 0.
-    let det: [f64; 12] = [
+    let det: [f64; 19] = [
         0.0,
         1.0,
         0.5,
@@ -726,6 +726,15 @@ fn color_byte_79f420() {
         2.0,                          // 510 -> low byte 0xfe
         f64::from(f32::from_bits(1)), // tiny -> 0
         0.999_999,                    // ~254.99 -> 254
+        // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e8,
+        -1.0e8,
+        4.0e16,
+        1.0e300,
     ];
     for lua in det {
         let bin = run(&mut emu, lua);

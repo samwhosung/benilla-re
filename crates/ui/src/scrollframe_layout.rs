@@ -160,7 +160,7 @@ pub fn child_neg_acc(cy: f32, acc_in: f32, step: f32) -> (f32, f32) {
 pub fn fade_alpha_byte(f14: f32, arg: f32, dur: f32) -> u8 {
     let diff = f64::from(f14) - f64::from(arg); // fld; fsub (live st0, no f32 spill before fdiv)
     let v = (diff / f64::from(dur)) * f64::from(f32::from_bits(SCALE255_BITS));
-    (v.trunc() as i32) as u8 // __ftol = truncate toward zero; mov [edi+0xb],al
+    (benilla_re_cmath::x87::ftol(v)) as u8 // __ftol = truncate toward zero; mov [edi+0xb],al
 }
 
 /// `0x786200`'s keep-path predicate (`0x78633c`..`0x78634d`): after `diff = f14 − arg`,

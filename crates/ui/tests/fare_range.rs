@@ -53,6 +53,7 @@ fn glue_4dc_4dc3d0_fade_step() {
     let cell_r = emu.alloc(8); // f64 input r (the callee's st0)
     let cell_n = emu.alloc(4); // i32 input n (the fild operand)
     let cell_out = emu.alloc(4); // f32 product store
+    let cell_int = emu.alloc(4); // i32 from the reload and `fistp`
 
     // Island: fld qword [cell_r]; <SRC fsubr>; fild dword [cell_n]; <SRC fmul>; fstp dword [cell_out].
     let isl = emu.alloc(0x20);
@@ -67,6 +68,10 @@ fn glue_4dc_4dc3d0_fade_step() {
     code.extend_from_slice(&[0xd8, 0xc9]); // SRC fmul st,st(1)
     code.extend_from_slice(&[0xd9, 0x1d]); // fstp dword [cell_out]
     code.extend_from_slice(&(cell_out as u32).to_le_bytes());
+    code.extend_from_slice(&[0xd9, 0x05]); // fld dword [cell_out]   == src 0x4dc485
+    code.extend_from_slice(&(cell_out as u32).to_le_bytes());
+    code.extend_from_slice(&[0xdb, 0x1d]); // fistp dword [cell_int] == src 0x4dc488
+    code.extend_from_slice(&(cell_int as u32).to_le_bytes());
     let isl_end = isl + code.len() as u64;
     emu.write(isl, &code);
 
@@ -97,12 +102,19 @@ fn glue_4dc_4dc3d0_fade_step() {
     // the binary's own 1.0 constant cell drives `fsubr` — the transcription reads the same bits.
     assert_eq!(emu.read_u32(0x7ff9d8), ONE_BITS, "1.0 const drift");
 
-    let run = |emu: &mut Emu, r: f64, n: i32| -> f32 {
+    // The reload and `fistp` bytes are the source's (`fld dword [ebp-4]; fistp dword [ebp-8]`) with
+    // the operands re-pointed.
+    assert_eq!(&emu.read(0x4dc485, 2), &[0xd9, 0x45], "src reload");
+    assert_eq!(&emu.read(0x4dc488, 2), &[0xdb, 0x5d], "src fistp");
+
+    let run = |emu: &mut Emu, r: f64, n: i32| -> (f32, i32) {
         emu.write(cell_r, &r.to_bits().to_le_bytes());
         emu.write_u32(cell_n, n as u32);
         emu.run(isl, isl_end);
-        emu.read_f32(cell_out)
+        (emu.read_f32(cell_out), emu.read_u32(cell_int) as i32)
     };
+    // A NaN product compares as NaN: the x87's default NaN is negative and the host's is not.
+    let same = |a: f32, b: f32| a.to_bits() == b.to_bits() || (a.is_nan() && b.is_nan());
 
     let mut total = 0u32;
     // deterministic probes: r = the callee's reachable outputs (0.0, 0.1, 0.15, 0.2 — f32 sums in f64),
@@ -116,6 +128,14 @@ fn glue_4dc_4dc3d0_fade_step() {
         0.5,
         -0.25,
         1.0e10,
+        // NaN, the infinities and values whose product with `n` passes `i32` and `i64`: the
+        // `fistp` stores `0x80000000`.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e30,
+        -1.0e30,
+        -3.0e9,
     ];
     let n_probes = [
         0i32,
@@ -133,9 +153,14 @@ fn glue_4dc_4dc3d0_fade_step() {
     ];
     for &r in &r_probes {
         for &n in &n_probes {
-            let got = run(&mut emu, r, n);
+            let (got, got_int) = run(&mut emu, r, n);
             let want = benilla_re_ui::fare_range::fade_step(r, n);
-            assert_eq!(got.to_bits(), want.to_bits(), "fade_step r={r} n={n}");
+            assert!(same(got, want), "fade_step r={r} n={n}");
+            assert_eq!(
+                got_int,
+                benilla_re_ui::fare_range::fade_step_round(r, n),
+                "fade_step_round r={r} n={n}"
+            );
             total += 1;
         }
     }
@@ -144,9 +169,14 @@ fn glue_4dc_4dc3d0_fade_step() {
     for _ in 0..6000 {
         let r = f64::from(rng(&mut s, -2.0, 2.0));
         let n = (next(&mut s) >> 8) as i32 - 0x40_0000;
-        let got = run(&mut emu, r, n);
+        let (got, got_int) = run(&mut emu, r, n);
         let want = benilla_re_ui::fare_range::fade_step(r, n);
         assert_eq!(got.to_bits(), want.to_bits(), "fade_step fuzz r={r} n={n}");
+        assert_eq!(
+            got_int,
+            benilla_re_ui::fare_range::fade_step_round(r, n),
+            "fade_step_round fuzz r={r} n={n}"
+        );
         total += 1;
     }
     eprintln!("glue_4dc_4dc3d0_fade_step: {total} bit-exact (island fsubr[1.0]+fmul, 4 owned ops)");

@@ -147,7 +147,7 @@ pub fn alpha_step(field_10: f32, step: f32, divisor: f32) -> (f32, u8) {
     let d = f64::from(field_10) - f64::from(step); // fld [esi+0x10]; fsub [ebp+8]  (LIVE st0)
     let stored = d as f32; // fst [esi+0x10]
     let alpha_f = d / f64::from(divisor) * w(SCALE255_BITS); // fdiv [ebx+0x368]; fmul [255.0]
-    let alpha = alpha_f.trunc() as i32; // __ftol = truncate toward zero
+    let alpha = benilla_re_cmath::x87::ftol(alpha_f); // __ftol = truncate toward zero
     (stored, (alpha & 0xff) as u8) // mov [esi+0x7], al
 }
 

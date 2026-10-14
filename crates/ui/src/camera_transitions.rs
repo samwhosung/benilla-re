@@ -134,7 +134,7 @@ pub fn arm_transition(
     }
     s.delay_memo = delay.to_bits(); // mov [base+0x14]
     s.factor_memo = factor.to_bits(); // mov [base+0x10]
-    let delay_ms = (f64::from(delay) * NEG_1000) as i32; // __ftol
+    let delay_ms = benilla_re_cmath::x87::ftol(f64::from(delay) * NEG_1000); // __ftol
     let duration = ((f64::from(target) - wrapped).abs() / (f64::from(speed) * PI_OVER_180)
         * f64::from(factor)) as f32;
     let start_ms = now.wrapping_sub(delay_ms);

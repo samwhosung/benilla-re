@@ -284,6 +284,18 @@ fn luabind_488_set_base_mip() {
         16.0,    // -15.0 => -15
         100.25,  // -99.25 => -99
         -100.75, // 101.75 => 101
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the whole qword,
+        // `0x8000000000000000` for the indefinite.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        3.0e9,
+        -3.0e9,
+        1.0e10,
+        9.3e18,
+        -9.3e18,
+        1.0e19,
+        1.0e300,
     ] {
         let bin = run(&mut emu, arg);
         assert_eq!(

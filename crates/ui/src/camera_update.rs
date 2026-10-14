@@ -93,11 +93,7 @@ fn fade_k_f32() -> f64 {
     f64::from(f32::from_bits(FADE_K_F32_BITS))
 }
 
-/// The CRT `__ftol` (`0x40a2b0`): truncate-toward-zero a PC_53 `f64` to a 32-bit signed int.
-#[inline]
-fn ftol(v: f64) -> i32 {
-    (v.trunc() as i64) as i32
-}
+use benilla_re_cmath::x87::{fistp, ftol};
 
 // ===========================================================================================
 // (1) 0x4fda20 GetTradeSkillCooldown — `fild qword [ebp-0x14]; fmul dword [0x801360]=1/1000(f32);
@@ -186,8 +182,7 @@ pub fn mos_round_half(v: f32, local_c: f32) -> (f32, i32) {
 /// x87 `fistp` to a 32-bit int under the default rounding mode (round-to-nearest, ties-to-even).
 #[inline]
 fn round_nearest_even_i32(v: f64) -> i32 {
-    let r = v.round_ties_even();
-    (r as i64) as i32
+    fistp(v)
 }
 
 /// `0x507710` the `'f'`-case scale (`fld [ebp-0x8]=local_c; fmul dword [esi+4*edi+0x29c]; fstp qword`

@@ -9,7 +9,7 @@
 /// `value` is the `fimul` operand: an `i32` base, or a sign-extended `i16` modifier.
 pub fn attack_power_term(mult: f32, value: i32) -> i32 {
     let p = ((f64::from(mult) + 1.0) * f64::from(value)) as f32;
-    p.round_ties_even() as i32
+    benilla_re_cmath::x87::fistp(f64::from(p))
 }
 
 /// The three values `UnitAttackPower` (melee) and `UnitRangedAttackPower` push:

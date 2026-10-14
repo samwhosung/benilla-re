@@ -596,6 +596,18 @@ fn glue_unit_convert_ftol() {
             (2.0, 4.0),
             (0.0, 1.0),
             (1999.999, 1.0),
+            // NaN, the infinities and quotients past `i32` and `i64`: `__ftol` returns the low
+            // dword of its qword, 0 for the indefinite.
+            (f32::NAN, 1.0),
+            (f32::INFINITY, 1.0),
+            (f32::NEG_INFINITY, 1.0),
+            (4.0e6, 1.0),
+            (-4.0e6, 1.0),
+            (1.0e30, 1.0),
+            (1.0, 0.0),
+            (0.0, 0.0),
+            (1.0, 1.0e-30),
+            (1.0, f32::NAN),
         ] {
             assert_eq!(
                 run(&mut emu, start, end, arg, gv),

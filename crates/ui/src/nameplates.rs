@@ -74,7 +74,7 @@ pub fn scale6(gx: f32, gy: f32) -> [f32; 6] {
 /// downstream (orchestration past this slice). `arg = [ebp+8]`. Returns the truncated i32.
 pub fn scale1000_ftol(arg: f32) -> i32 {
     let v = f64::from(arg) * k(SCALE1000_BITS);
-    v.trunc() as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(v) // __ftol = truncate toward zero
 }
 
 // ===========================================================================================
@@ -90,7 +90,7 @@ pub fn scale1000_ftol(arg: f32) -> i32 {
 pub fn percent_round(b: u8) -> i32 {
     let n = u32::from(b.min(100)); // cmp al,0x64; jb; mov al,0x64; movzx
     let v = (f64::from(n) * k(PCT05_BITS)) + k(HALF_BITS);
-    v.trunc() as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(v) // __ftol = truncate toward zero
 }
 
 // ===========================================================================================

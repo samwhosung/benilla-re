@@ -130,7 +130,7 @@ fn glue_4c0_490e60_round_pos_legs() {
     let mut total = 0u32;
     // deterministic probes incl. the sign pivot (x just below/at 0, the half-away boundary), and
     // exact-half products that test round-half-away-from-zero.
-    let probes: [(f32, f32, f32); 11] = [
+    let probes: [(f32, f32, f32); 22] = [
         (0.0, 0.0, 1.0),
         (1.0, 0.0, 1.0),    // 1/1*1024/0.8 = 1280
         (-1.0, 0.0, 1.0),   // negative ⇒ −0.5 bias
@@ -142,6 +142,19 @@ fn glue_4c0_490e60_round_pos_legs() {
         (-100.0, 0.0, 1.0),
         (0.5, 0.0, 1280.0),  // 0.5/1280*1024/0.8 = 0.5 exactly → half-away → 1
         (-0.5, 0.0, 1280.0), // −0.5 exactly → −1
+        // NaN, the infinities and quotients past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        (f32::NAN, 0.0, 1.0),
+        (1.0, f32::NAN, 1.0),
+        (1.0, 0.0, f32::NAN),
+        (f32::INFINITY, 0.0, 1.0),
+        (f32::NEG_INFINITY, 0.0, 1.0),
+        (1.0, 0.0, 0.0),
+        (0.0, 0.0, 0.0),
+        (1.0e10, 0.0, 1.0),
+        (-1.0e10, 0.0, 1.0),
+        (1.0e30, 0.0, 1.0),
+        (1.0, 0.0, 1.0e-30),
     ];
     for leg in &legs {
         for &(v, y, div) in &probes {

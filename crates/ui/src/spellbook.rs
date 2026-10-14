@@ -113,5 +113,5 @@ pub fn hi_bound(l: f32, m: f32) -> f32 {
 /// Returns the truncated i32 index.
 pub fn index_from_f64(v: f64) -> i32 {
     let biased = v - f64::from_bits(ONE_F64_BITS); // fsub qword [0x8015b8] (= 1.0)
-    biased.trunc() as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(biased) // __ftol = truncate toward zero
 }

@@ -48,9 +48,9 @@ pub fn midpoint(a: f32, b: f32) -> f32 {
 pub fn ratio_product(g44: f32, g48: f32, a: f32, b: f32, c: f32, d: f32) -> i32 {
     // m[ebp-0x4] = (f32)(g44·1.0) = g44, m[ebp-0x14]-equivalent g48 — both pass through 0x41ae*.
     let r1 = f64::from(g44) / (f64::from(c) - f64::from(b)); // fdivr [ebp-0x4]
-    let t1 = r1.trunc() as i32; // __ftol (truncate toward zero)
+    let t1 = benilla_re_cmath::x87::ftol(r1); // __ftol (truncate toward zero)
     let r2 = f64::from(g48) / (f64::from(a) - f64::from(d)); // fdivr st,st(1)
-    let t2 = r2.trunc() as i32; // __ftol
+    let t2 = benilla_re_cmath::x87::ftol(r2); // __ftol
     t1.wrapping_add(1).wrapping_mul(t2.wrapping_add(1)) // inc edi; inc eax; imul eax,edi
 }
 

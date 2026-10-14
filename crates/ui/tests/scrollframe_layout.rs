@@ -582,6 +582,16 @@ fn glue_786200_alpha() {
         (0.5, 0.0, 1.0),          // 0.5·255 = 127.5 -> 127
         (1.0, 1.0, 1.0),          // 0 -> 0
         (2.0, 0.0, 4.0),          // 0.5·255 -> 127
+        // NaN, infinite and past-`i32` and past-`i64` quotients: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite, and the byte is its low byte.
+        (1.0, 0.0, 0.0),
+        (0.0, 0.0, 0.0),
+        (1.0, 0.0, f32::NAN),
+        (1.0, 0.0, 1.0e-30),
+        (1.0e10, 0.0, 1.0),
+        (1.0e30, 0.0, 1.0),
+        (f32::INFINITY, 0.0, 1.0),
+        (3.0e7, 0.0, 1.0),
     ] {
         let got = run_alpha(&mut emu, f14, arg, dur);
         assert_eq!(

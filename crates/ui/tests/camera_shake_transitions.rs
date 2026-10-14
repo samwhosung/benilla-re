@@ -689,6 +689,15 @@ fn glue_511_512120_body() {
         (-5.0, 0.5, 3.0, 100, 2.0, 1.0),
         (0.0, -1.0, 1.0, -50, 1.0, 0.0),
         (7.5, 0.0, -2.0, 7, 0.5, -3.0),
+        // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        (1.0, f32::NAN, 1.0, 5, 1.0, 0.0),
+        (1.0, f32::INFINITY, 1.0, 5, 1.0, 0.0),
+        (1.0, f32::NEG_INFINITY, 1.0, -5, 1.0, 0.0),
+        (1.0, 4.0e6, 1.0, 5, 1.0, 0.0),
+        (1.0, -4.0e6, 1.0, 5, 1.0, 0.0),
+        (1.0, 1.0e30, 1.0, 5, 1.0, 0.0),
+        (1.0, -1.0e30, 1.0, 5, 1.0, 0.0),
     ] {
         let (frac, ecx) = run(&mut emu, arg0, arg1, arg2, arg4, gv, field_ec);
         assert_eq!(

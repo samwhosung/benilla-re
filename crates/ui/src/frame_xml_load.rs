@@ -51,7 +51,7 @@ pub const EPS_F32_BITS: u32 = 0x3480_0000;
 /// plain truncate of `v·255`.
 pub fn alpha_quantize(v: f64) -> u8 {
     let p = v * k(C255_F32_BITS); // fmul dword [0x7ffe58]=255.0  (PC_53 f64)
-    (p.trunc() as i64 as i32) as u8 // __ftol truncate toward zero, low byte
+    (benilla_re_cmath::x87::ftol(p)) as u8 // __ftol truncate toward zero, low byte
 }
 
 // ===========================================================================================

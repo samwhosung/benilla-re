@@ -65,7 +65,7 @@ pub fn clamp01(value: f32) -> f32 {
 /// One channel of a setter: `c * 255.0 + 0.5` at 53 bits, then `__ftol` truncates toward zero.
 pub fn quantize_channel(c: f64) -> i32 {
     let p = c * f64::from(SCALE_255_F32) + f64::from(HALF);
-    p.trunc() as i64 as i32
+    benilla_re_cmath::x87::ftol(p)
 }
 
 /// [`quantize_channel`] stored as a byte.
@@ -167,7 +167,7 @@ pub fn channel_over_255_f32(byte: u8) -> f64 {
 /// (`0x79b580`, `0x79cb70`), `ChangeChatColor`, the chat window setters and the font colour byte.
 /// There is no clamp and no 0.5.
 pub fn scaled_byte(lua: f64) -> u8 {
-    (scale_255(lua).trunc() as i64 as i32) as u8
+    (benilla_re_cmath::x87::ftol(scale_255(lua))) as u8
 }
 
 /// The product `x * 255.0` of those setters, as it sits in `st0` entering `__ftol`.

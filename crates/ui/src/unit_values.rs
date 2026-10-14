@@ -2,10 +2,7 @@
 //! The entries are in `systems/ui/unitlevels.md`, `systems/ui/honor.md`, `systems/ui/petbar.md`,
 //! `systems/ui/auctionlists.md`, `systems/ui/guild.md` and `systems/ui/rested.md`.
 
-/// `__ftol` (`0x40a2b0`): truncate toward zero and keep the low 32 bits.
-fn ftol(x: f64) -> i32 {
-    x.trunc() as i64 as i32
-}
+use benilla_re_cmath::x87::ftol;
 
 /// `UnitLevel` (`0x517fc0`, `0x5180bc` to `0x5180dd`): the level byte clamps to 100, then
 /// `n * 5.0 * 0.01 + 0.5` stays live in `st0` (the three constants are `f32`: `0x808bf4`,
@@ -14,7 +11,7 @@ pub fn level_round(b: u8) -> i32 {
     let n = u32::from(b.min(100));
     let v = (f64::from(n) * 5.0) * f64::from(f32::from_bits(0x3c23_d70a))
         + f64::from(f32::from_bits(0x3f00_0000));
-    v.trunc() as i32
+    benilla_re_cmath::x87::ftol(v)
 }
 
 /// `GetPVPRankProgress` (`0x51aacb` to `0x51aad4`) and `GetInspectPVPRankProgress` (`0x51ab11` to

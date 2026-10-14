@@ -149,7 +149,7 @@ pub fn region2_ratio(a: f32, b: f32, c: f32, d: f32) -> f32 {
 /// widened. Returns the truncated i32 (the `__ftol` result in EAX).
 pub fn percent_quantize(n: u8, mul_bits: u32, half_bits: u32) -> i32 {
     let p = f64::from(i32::from(n)) * k(mul_bits) + k(half_bits); // fmul; fadd  (PC_53 f64)
-    p.trunc() as i64 as i32 // __ftol truncate toward zero
+    benilla_re_cmath::x87::ftol(p) // __ftol truncate toward zero
 }
 
 // ===========================================================================================
@@ -182,5 +182,5 @@ pub fn timer_ratio(n: i32, c_bits: u32) -> f64 {
 /// slot) and the subtrahend is the full-width f64 `1.0` at `0x8015b8`. Returns the truncated i32
 /// (the `__ftol` result in EAX), the 0-based slot index.
 pub fn inv_slot(arg: f64) -> i32 {
-    (arg - f64::from_bits(ONE_F64_BITS)).trunc() as i64 as i32 // fsub qword; __ftol
+    benilla_re_cmath::x87::ftol(arg - f64::from_bits(ONE_F64_BITS)) // fsub qword; __ftol
 }

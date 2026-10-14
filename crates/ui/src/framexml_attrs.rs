@@ -102,7 +102,7 @@ pub fn clamp01_unit(value: f32) -> f32 {
 /// the clamped channel `f32` reloaded from its slot.
 pub fn quantize_channel(c: f32) -> i32 {
     let p = f64::from(c) * c255() + half(); // fmul 255.0; fadd 0.5  (OWNED)
-    p.trunc() as i64 as i32 // __ftol: round-toward-zero fistp qword, low dword
+    benilla_re_cmath::x87::ftol(p) // __ftol: round-toward-zero fistp qword, low dword
 }
 
 /// Pack four `[0,1]` channels into the u32 `0xAARRGGBB` exactly as `0x6f23d0` assembles it

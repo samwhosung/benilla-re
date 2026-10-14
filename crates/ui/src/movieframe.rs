@@ -78,7 +78,7 @@ pub fn time_to_index(t: u32, rate: f32) -> i32 {
     let p = f64::from(t) * f64::from(rate); // fmul dword [esi+0x33c]   (rate widens f32->f64)
     let p = p * k(MS_TO_S_F32_BITS); // fmul dword [0x801360]=0.001
     let p = p + k(HALF_F32_BITS); // fadd dword [0x7ffa24]=0.5
-    p.trunc() as i64 as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(p) // __ftol = truncate toward zero
 }
 
 // ===========================================================================================

@@ -209,6 +209,15 @@ fn luabind_4a07f0_change_chat_color() {
         1.5,
         -0.25,
         100.0,
+        // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e8,
+        -1.0e8,
+        4.0e16,
+        1.0e300,
     ];
     for &lua in &probes {
         assert_eq!(

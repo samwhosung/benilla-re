@@ -102,6 +102,20 @@ fn ap_fuzz(fn_va: u64, off: (u64, u64, u64, u64), seed: u32, lbl: &str) {
     ap_check(&mut emu, &rig, fn_va, off, 0.0, 5, 3, -3, true); // (1)*v
     ap_check(&mut emu, &rig, fn_va, off, 0.5, 5, 7, -1, true); // 1.5*5=7.5 -> 8 (even)
     ap_check(&mut emu, &rig, fn_va, off, 0.5, 3, 9, -7, true); // 1.5*3=4.5 -> 4 (even)
+                                                               // NaN, the infinities, and products past `i32` and `i64`: the `fistp` stores `0x80000000`.
+    for mult in [
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        1.0e9,
+        -1.0e9,
+        1.0e30,
+        -1.0e30,
+    ] {
+        ap_check(&mut emu, &rig, fn_va, off, mult, 5000, 3, -3, true);
+        ap_check(&mut emu, &rig, fn_va, off, mult, i32::MAX, 20, -10, true);
+        ap_check(&mut emu, &rig, fn_va, off, mult, 0, 0, 0, true);
+    }
     let mut s = seed;
     let mut unit_n = 0u32;
     for _ in 0..2000 {

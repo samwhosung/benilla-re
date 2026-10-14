@@ -217,6 +217,17 @@ fn glue_4a6_4a6d50_aspect_ftol() {
         (1000.0, 0.0, 1.0, 0.0), // 1.002 -> 1
         (1001.0, 0.0, 1.0, 0.0), // 1.0009.. -> 1
         (1.0, 0.0, 0.0009, 0.0), // 0.9018 -> 0
+        // NaN, the infinities and quotients past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        (f32::NAN, 0.0, 1.0, 0.0),
+        (1.0, 0.0, f32::NAN, 0.0),
+        (f32::INFINITY, 0.0, 1.0, 0.0),
+        (1.0, 0.0, f32::INFINITY, 0.0),
+        (1.0, 0.0, f32::NEG_INFINITY, 0.0),
+        (1.0e-10, 0.0, 1.0, 0.0),
+        (1.0e-30, 0.0, 1.0, 0.0),
+        (1.0, 0.0, 1.0e30, 0.0),
+        (1.0, 0.0, 1.0e7, 0.0),
     ] {
         assert_eq!(
             run(&mut emu, a, b, c, d),

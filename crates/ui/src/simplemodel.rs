@@ -149,7 +149,7 @@ pub fn d680_channel(c: f32) -> u8 {
         255.0 // c >= 1.0 ⇒ clamp high (the loaded 255.0 const)
     };
     // __ftol truncates toward zero; all non-NaN results are in [0,255], non-negative.
-    scaled.trunc() as i64 as u8
+    benilla_re_cmath::x87::ftol(scaled) as u8
 }
 
 /// `0x76d680` full colour pack (`0x76d6ac`..`0x76d79a`): the three unpacked channels at
@@ -183,5 +183,5 @@ pub fn d680_pack(a8: f32, ac: f32, a10: f32) -> u32 {
 /// discarded.) `arg` = the `f32` pushed by the caller.
 pub fn d7f0_unit_convert(arg: f32) -> i32 {
     let v = f64::from(arg) * f64::from(f32::from_bits(SCALE1000_BITS));
-    v.trunc() as i32
+    benilla_re_cmath::x87::ftol(v)
 }

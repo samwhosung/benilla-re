@@ -93,6 +93,49 @@ fn glue_48fbf0_finite_diff() {
         emu.read_f32(out)
     };
 
+    // The same difference through the exe's own `__ftol`: `fld dword [pa]; fsub dword [pb]; call
+    // 0x40a2b0`, whose `eax` is what the callers keep.
+    let ftol_isl = emu.alloc(0x20);
+    let ftol_stack = emu.alloc(0x100) + 0x80;
+    let mut f = Vec::new();
+    f.extend_from_slice(&[0xd9, 0x05]);
+    f.extend_from_slice(&(pa as u32).to_le_bytes());
+    f.extend_from_slice(&[0xd8, 0x25]);
+    f.extend_from_slice(&(pb as u32).to_le_bytes());
+    f.push(0xe8);
+    let rel = 0x40a2b0u32.wrapping_sub((ftol_isl + f.len() as u64 + 4) as u32);
+    f.extend_from_slice(&rel.to_le_bytes());
+    let ftol_end = ftol_isl + f.len() as u64;
+    f.push(0x90);
+    emu.write(ftol_isl, &f);
+    let run_ftol = |emu: &mut Emu, a: f32, b: f32| -> i32 {
+        emu.write_u32(pa, a.to_bits());
+        emu.write_u32(pb, b.to_bits());
+        emu.set_reg(RegisterX86::ESP, ftol_stack);
+        emu.run(ftol_isl, ftol_end);
+        emu.get_reg(RegisterX86::EAX) as u32 as i32
+    };
+    // NaN, the infinities, and differences past `i32` and `i64`: `__ftol` returns the low dword of
+    // its qword, 0 for the indefinite.
+    for (a, b) in [
+        (f32::NAN, 1.0f32),
+        (1.0, f32::NAN),
+        (f32::INFINITY, 1.0),
+        (f32::INFINITY, f32::INFINITY),
+        (f32::NEG_INFINITY, 1.0),
+        (3.0e9, -3.0e9),
+        (4.0e9, -1.0e9),
+        (1.0e30, -1.0e30),
+        (-1.0e19, 1.0e19),
+        (f32::MAX, f32::MIN),
+    ] {
+        let got = run_ftol(&mut emu, a, b);
+        let (dx, dy) = finite_diff_ftol(a, b, a, b);
+        assert_eq!((dx, dy), (got, got), "finite_diff_ftol a={a} b={b}");
+        let (fx, fy) = fallback_diff_ftol(a, b, a, b);
+        assert_eq!((fx, fy), (got, got), "fallback_diff_ftol a={a} b={b}");
+    }
+
     let mut total = 0u32;
     // deterministic boundary: a == b exactly ⇒ difference is exactly 0.0.
     for (a, b) in [
@@ -108,7 +151,7 @@ fn glue_48fbf0_finite_diff() {
         assert_eq!(got.to_bits(), want.to_bits(), "diff a={a} b={b}");
         // and the documented (dx,dy) i32 truncation:
         let (dx, _) = finite_diff_ftol(a, b, a, b);
-        assert_eq!(dx, (f64::from(a) - f64::from(b)).trunc() as i32);
+        assert_eq!(dx, run_ftol(&mut emu, a, b));
         total += 1;
     }
     let mut s = 0x48fb_f000u32;
@@ -119,8 +162,8 @@ fn glue_48fbf0_finite_diff() {
         let want = (f64::from(a) - f64::from(b)) as f32;
         assert_eq!(got.to_bits(), want.to_bits(), "diff fuzz a={a} b={b}");
         let (dx, dy) = finite_diff_ftol(a, b, b, a);
-        assert_eq!(dx, (f64::from(a) - f64::from(b)).trunc() as i32);
-        assert_eq!(dy, (f64::from(b) - f64::from(a)).trunc() as i32);
+        assert_eq!(dx, run_ftol(&mut emu, a, b));
+        assert_eq!(dy, run_ftol(&mut emu, b, a));
         let (fx, fy) = fallback_diff_ftol(a, b, b, a);
         assert_eq!((fx, fy), (dx, dy)); // same shape, distinct slots
         total += 1;

@@ -218,9 +218,24 @@ fn glue_7cb950_scale1000() {
     let mut total = 0u32;
     // deterministic probes incl. the truncate-toward-zero boundary (x·1000 just below/at an int).
     for arg in [
-        0.0f32, 1.0, 1.5, -1.5, 0.0009999, // ·1000 = 0.9999 → 0
+        0.0f32,
+        1.0,
+        1.5,
+        -1.5,
+        0.0009999, // ·1000 = 0.9999 → 0
         0.001,     // ·1000 = 1.0 → 1
-        -0.001, 12.3456, 1.9999999, // just under 2000
+        -0.001,
+        12.3456,
+        1.9999999, // just under 2000
+        // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        4.0e6,
+        -4.0e6,
+        1.0e30,
+        -1.0e30,
     ] {
         assert_eq!(
             run(&mut emu, arg),
@@ -250,6 +265,8 @@ fn glue_7cb950_scale1000() {
 // ===========================================================================================
 #[test]
 fn glue_7cbce0_percent_round() {
+    // The byte is clamped to 100, so the `__ftol` input is at most 5.5 and no NaN or out-of-range
+    // value reaches it.
     let Some(wow) = Wow::load() else {
         return;
     };

@@ -169,6 +169,17 @@ fn glue_789930_set_value() {
         (7.5, 0.0, 10.0, 2.5),             // diff=7.5, exact multiples
         (-100.0, -50.0, 0.0, 0.0),         // span 0: bound==min, clamp to min
         (3.3, 1.0, 8.0, 0.5),              // fractional step
+        // NaN, the infinities and quotients past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        (f32::NAN, 0.0, 10.0, 2.0),
+        (5.0, 0.0, 10.0, f32::NAN),
+        (5.0, f32::NAN, 10.0, 2.0),
+        (5.0, 0.0, 10.0, 1.0e-9),
+        (5.0, 0.0, 10.0, 1.0e-30),
+        (5.0, 0.0, 10.0, -1.0e-9),
+        (5.0, 0.0, f32::INFINITY, 2.0),
+        (f32::INFINITY, 0.0, 10.0, 2.0),
+        (5.0, 0.0, 1.0e30, 1.0e-3),
     ] {
         let got = run(&mut emu, v, min, sp, step);
         let want = set_value(v, min, sp, step);

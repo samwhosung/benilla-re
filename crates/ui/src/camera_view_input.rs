@@ -173,7 +173,7 @@ pub fn deg2rad_settled(field: f32, converted: f32) -> bool {
 pub fn unit_convert_ftol(arg: f32, g: f32) -> i32 {
     let v = (f64::from(arg) / f64::from(g)) * f64::from(f32::from_bits(SCALE1000_BITS));
     // __ftol = truncate toward zero.
-    v.trunc() as i32
+    benilla_re_cmath::x87::ftol(v)
 }
 
 // ===========================================================================================

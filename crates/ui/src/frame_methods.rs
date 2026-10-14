@@ -10,9 +10,10 @@ const SCALE_255: f64 = 255.0;
 /// `Frame::SetAlpha` (`0x774e90`, slice `0x774f32` to `0x774f64`): the Lua number is clamped to
 /// `[0, 1]` against the `f32` constants at `0x7ffd74` and `0x7ff9d8` with the value kept live in
 /// `st0`, then multiplied by 255.0 and left live for `__ftol`. The clamp is a `max` against 0.0 and a
-/// `min` against 1.0 on finite values.
+/// `min` against 1.0; a NaN passes the first (only `x < 0` clamps) and takes the second's bound,
+/// so it gives 1.0.
 pub fn set_alpha_scaled(x: f64) -> f64 {
-    let lo_clamped = if x >= 0.0 { x } else { 0.0 };
+    let lo_clamped = if x < 0.0 { 0.0 } else { x };
     let hi_clamped = if lo_clamped <= ONE { lo_clamped } else { ONE };
     hi_clamped * SCALE_255
 }
@@ -20,7 +21,7 @@ pub fn set_alpha_scaled(x: f64) -> f64 {
 /// The alpha byte `Frame::SetAlpha` stores: the scaled product truncated by `__ftol`. The clamp keeps
 /// the product in `[0, 255]`, so the truncation is exact.
 pub fn set_alpha_value(x: f64) -> i32 {
-    set_alpha_scaled(x) as i64 as i32
+    benilla_re_cmath::x87::ftol(set_alpha_scaled(x))
 }
 
 /// `Slider::GetMinMaxValues` (`0x7906e0`, `0x790778`): the maximum is rebuilt as the stored range

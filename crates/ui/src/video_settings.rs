@@ -34,9 +34,8 @@ pub fn set_gamma(lua_arg: f64) -> f64 {
 }
 
 /// `SetBaseMip` (`0x4892f0` to `0x489300`): the complement of the live f64 Lua argument, truncated
-/// toward zero to an `i64` by `__ftol` (`0x40a2b0`) for the `%I64d` config writer. Holds for results
-/// inside the `i64` range; `__ftol` returns `0x8000000000000000` for a NaN or an out-of-range value,
-/// where `as` saturates.
+/// toward zero to an `i64` by `__ftol` (`0x40a2b0`) for the `%I64d` config writer. `__ftol` returns
+/// `0x8000000000000000` for a NaN or a value outside the `i64` range.
 pub fn set_base_mip(lua_arg: f64) -> i64 {
-    complement(lua_arg) as i64
+    benilla_re_cmath::x87::ftol64(complement(lua_arg))
 }

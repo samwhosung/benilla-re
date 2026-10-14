@@ -226,6 +226,17 @@ fn worldmap_highlight() {
         (1024.0, 0.0, 768.0, 0.0),
         (100.0, 50.0, 400.0, 100.0),
         (33_554_432.0, 0.0, 33_554_432.0, 1.0), // den=2^25; num=2^25-1 live(f64) vs 2^25 if f32 → dim differs
+        // NaN, the infinities, a zero denominator and quotients past `i32` and `i64`: `__ftol`
+        // returns the low dword of its qword, 0 for the indefinite.
+        (f32::NAN, 0.0, 256.0, 0.0),
+        (256.0, 0.0, f32::NAN, 0.0),
+        (f32::INFINITY, 0.0, 256.0, 0.0),
+        (256.0, 0.0, f32::INFINITY, 0.0),
+        (256.0, 0.0, f32::NEG_INFINITY, 0.0),
+        (256.0, 256.0, 256.0, 0.0),
+        (256.0, 0.0, 1.0e30, 0.0),
+        (1.0e-10, 0.0, 256.0, 0.0),
+        (1.0e-30, 0.0, 256.0, 0.0),
     ];
     for &(x0, x1, y0, y1) in rect_cases {
         let bin = run_rect(&mut emu, x0, x1, y0, y1);

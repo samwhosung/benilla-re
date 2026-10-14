@@ -369,6 +369,16 @@ fn glue4fd_507710_mos_round_half() {
         0.250_000_03,
         -1.5,
         -60.0,
+        // NaN, the infinities and values whose doubled magnitude passes `i32` and `i64`: the
+        // `fistp` stores `0x80000000`.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        2.0e9,
+        -2.0e9,
+        1.0e10,
+        1.0e30,
+        -1.0e30,
     ];
     for &lc in &lc_vals {
         for &v in &v_vals {
@@ -486,6 +496,16 @@ fn glue4fd_507710_f_case_quantize() {
         100.6,
         1e-7,
         -1e-7,
+        // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+        // of its qword, 0 for the indefinite.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        4.0e9,
+        -4.0e9,
+        1.0e19,
+        1.0e30,
+        -1.0e30,
     ];
     for &lc in &lcs {
         for &fld in &fields {
@@ -1480,6 +1500,16 @@ fn glue4fd_507710_mos_snap() {
         (1.5, 0),
         (1.5, 1),
         (2.5, 1),
+        // Integral magnitudes past `i32` and `i64`: `__ftol(ceil(m))` keeps the low dword of its
+        // qword, 0 past `i64`. NaN and the infinities do not reach it: the C runtime's `floor`
+        // and `ceil` take an error path the emulator does not map.
+        (3.0e9, 7),
+        (4_294_967_296.0, 0),
+        (4_294_967_296.0, 7),
+        (1.0e10, 7),
+        (1.0e19, 0),
+        (1.0e30, 0),
+        (1.0e30, 7),
     ];
     for &(m, half) in probes {
         check(&mut total, m, half);

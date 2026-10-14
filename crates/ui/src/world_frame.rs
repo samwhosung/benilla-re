@@ -148,7 +148,7 @@ pub fn affine_combine(
 /// `RenderWorldFrame` (`0x483659` to `0x483671`): `field * 1000.0 + 0.5`, truncated by `__ftol`.
 pub fn unit_convert_round(field: f32) -> i32 {
     let v = f64::from(field) * f64::from(SCALE_1000) + f64::from(HALF);
-    v.trunc() as i32
+    benilla_re_cmath::x87::ftol(v)
 }
 
 /// `RenderWorldFrame` (`0x48368f` to `0x48369a`): `fld [0xc7b4a0]; fchs; fstp [esp]`.

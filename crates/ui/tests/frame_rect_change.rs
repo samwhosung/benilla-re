@@ -521,6 +521,16 @@ fn glue_788_788460_alpha_step() {
         (2.0, 1.0, 4.0),       // (2-1)/4*255 = 63.75 -> 63
         (300.0, 45.0, 1000.0), // (255)/1000*255 = 65.025 -> 65
         (1.0, 0.0, 2.0),       // 0.5*255 = 127.5 -> 127
+        // A zero or NaN divisor, and quotients past `i32` and `i64`: `__ftol` returns the low
+        // dword of its qword, 0 for the indefinite, and the byte is its low byte.
+        (1.0, 0.0, 0.0),
+        (0.0, 0.0, 0.0),
+        (1.0, 0.0, f32::NAN),
+        (1.0, 0.0, 1.0e-9),
+        (1.0, 0.0, 1.0e-30),
+        (1.0e10, 0.0, 1.0),
+        (1.0e30, 0.0, 1.0),
+        (f32::INFINITY, 0.0, 1.0),
     ] {
         let (bs, ba) = run_alpha(&mut emu, f10, st, div);
         let (ms, ma) = alpha_step(f10, st, div);

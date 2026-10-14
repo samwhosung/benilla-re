@@ -130,7 +130,7 @@ fn set_alpha_value() {
         let x = k as f64 / 255.0;
         let prod = run(&mut emu, isl, isl_end, in_cell, out_cell, x);
         assert_eq!(
-            prod as i64 as i32,
+            benilla_re_cmath::x87::ftol(prod),
             frameapi_alpha::set_alpha_value(x),
             "alpha step k={k} x={x}"
         );
@@ -139,10 +139,29 @@ fn set_alpha_value() {
         let x = rngd(&mut s, -2.0, 3.0);
         let prod = run(&mut emu, isl, isl_end, in_cell, out_cell, x);
         assert_eq!(
-            prod as i64 as i32,
+            benilla_re_cmath::x87::ftol(prod),
             frameapi_alpha::set_alpha_value(x),
             "alpha value x={x} ({:#018x})",
             x.to_bits()
+        );
+    }
+    // NaN, the infinities and values past `i32` and `i64`: the clamp pins the product to 0 to 255
+    // (a NaN goes through it), and `__ftol` returns the low dword of its qword, 0 for the
+    // indefinite.
+    for x in [
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e10,
+        -1.0e10,
+        1.0e30,
+        -1.0e30,
+    ] {
+        let prod = run(&mut emu, isl, isl_end, in_cell, out_cell, x);
+        assert_eq!(
+            benilla_re_cmath::x87::ftol(prod),
+            frameapi_alpha::set_alpha_value(x),
+            "alpha wide x={x}"
         );
     }
 }

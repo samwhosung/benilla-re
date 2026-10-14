@@ -448,7 +448,24 @@ fn glue_76d7f0_unit_convert() {
     };
     let mut total = 0u32;
     // deterministic: exact-integer products and a fractional truncate boundary.
-    for arg in [0.0f32, 1.0, 1.5, -1.5, 0.0019999, -0.0019999, 2.147] {
+    // Then NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+    // of its qword, 0 for the indefinite.
+    for arg in [
+        0.0f32,
+        1.0,
+        1.5,
+        -1.5,
+        0.0019999,
+        -0.0019999,
+        2.147,
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        4.0e6,
+        -4.0e6,
+        1.0e30,
+        -1.0e30,
+    ] {
         assert_eq!(run(&mut emu, arg), d7f0_unit_convert(arg), "d7f0 arg={arg}");
         total += 1;
     }

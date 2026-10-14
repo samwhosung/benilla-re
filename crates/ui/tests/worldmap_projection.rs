@@ -173,6 +173,9 @@ fn geo_4a6ec0() {
         });
     }
 
+    // The `__ftol` inputs are `g · -128` and `f · 128` after the ladder rejects a NaN and any value
+    // outside 0 to 1, so they lie within 128 in magnitude and no NaN or out-of-range value
+    // reaches the conversion.
     let mut tally = [0u32; 5]; // [success, none, clamp-applied, du0/dv0-exact, range-fail]
     for (i, c) in cases.iter().enumerate() {
         emu.write_u32(G_CONTINENT, c.cont as u32);

@@ -53,7 +53,10 @@ fn zp75() -> f64 {
 pub fn finite_diff_ftol(a: f32, b: f32, c: f32, d: f32) -> (i32, i32) {
     let dx = f64::from(a) - f64::from(b); // fld [ebp-0x20]; fsub [ebp-0x28]
     let dy = f64::from(c) - f64::from(d); // fld [ebp-0x24]; fsub [ebp-0x2c]
-    (dx.trunc() as i32, dy.trunc() as i32) // __ftol = truncate toward zero
+    (
+        benilla_re_cmath::x87::ftol(dx),
+        benilla_re_cmath::x87::ftol(dy),
+    ) // __ftol = truncate toward zero
 }
 
 // ===========================================================================================
@@ -139,5 +142,8 @@ pub fn gate_v_lt_g075(g: f32, v: f32) -> bool {
 pub fn fallback_diff_ftol(a: f32, b: f32, c: f32, d: f32) -> (i32, i32) {
     let dx = f64::from(a) - f64::from(b); // fld [ebp-0x8]; fsub [ebp-0x10]
     let dy = f64::from(c) - f64::from(d); // fld [ebp-0x4]; fsub [ebp-0xc]
-    (dx.trunc() as i32, dy.trunc() as i32) // __ftol = truncate toward zero
+    (
+        benilla_re_cmath::x87::ftol(dx),
+        benilla_re_cmath::x87::ftol(dy),
+    ) // __ftol = truncate toward zero
 }

@@ -111,7 +111,7 @@ pub fn ratio_round(arg: f32, cbits: u32, d: f32) -> i32 {
     let r = f64::from(arg) / k(cbits); // leaf `fld [arg]; fdiv [divisor]`, st0 (f64)
     let p = r * f64::from(d); // owned `fmul [ebp-0x4]`
     let biased = if p > 0.0 { p + k(BIAS_BITS) } else { p }; // owned conditional `fadd [bias]`
-    biased.trunc() as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(biased) // __ftol = truncate toward zero
 }
 
 /// 0x7666a0/0x766750's owned final `fdiv`: `(n / d) as f32` (`fild n; fdiv [ebp-0x4]; fstp [esp]`).

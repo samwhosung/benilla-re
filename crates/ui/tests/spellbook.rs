@@ -368,8 +368,30 @@ fn glue_4b0_4b3ec0_index_ftol() {
     let mut total = 0u32;
     // deterministic incl. truncate-toward-zero boundaries around integers after the −1.0 bias.
     for v in [
-        0.0f64, 1.0, 2.0, 2.9999, 3.0, 3.0001, 1.5, -0.5, 0.9999999, 1.0000001, 1024.0, 1025.0,
-        -10.0, 100.5,
+        0.0f64,
+        1.0,
+        2.0,
+        2.9999,
+        3.0,
+        3.0001,
+        1.5,
+        -0.5,
+        0.9999999,
+        1.0000001,
+        1024.0,
+        1025.0,
+        -10.0,
+        100.5,
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        3.0e9,
+        -3.0e9,
+        4_294_967_297.0,
+        1.0e19,
+        1.0e300,
     ] {
         assert_eq!(run(&mut emu, v), index_from_f64(v), "index v={v}");
         total += 1;

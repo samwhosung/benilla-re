@@ -969,9 +969,8 @@ fn textglue_482_affine_combine() {
 }
 
 /// (11) 0x483460 unit-convert — real slice 0x483659..0x483671:
-///   fld[edi+0x3f4]; fmul[0x8022cc]=1000.0; fadd[0x7ffa24]=0.5; __ftol(@0x40a2b0). We run up to (not
-///   including) the __ftol call and read the LIVE st0 = field·1000+0.5 (fstp qword), then truncate in
-///   Rust (the CRT __ftol = round-toward-zero). Covers fmul (0x48365f) + fadd (0x48366b).
+///   fld[edi+0x3f4]; fmul[0x8022cc]=1000.0; fadd[0x7ffa24]=0.5; __ftol(@0x40a2b0). We run through the
+///   __ftol call, which runs for real, and read `eax`. Covers fmul (0x48365f) + fadd (0x48366b).
 #[test]
 fn textglue_482_unit_convert() {
     let Some(wow) = Wow::load() else {
@@ -979,9 +978,9 @@ fn textglue_482_unit_convert() {
     };
     let mut emu = Emu::new(&wow);
     let edi = emu.alloc(0x400);
-    let res = emu.alloc(8);
+    let stack = emu.alloc(0x100) + 0x80;
 
-    // island: fld[field]; <verbatim fmul[1000]>; <verbatim fadd[0.5]>; fstp qword[res] (live f64).
+    // island: fld[field]; <verbatim fmul[1000]>; <verbatim fadd[0.5]>; call __ftol.
     let fmul = emu.read(0x48365f, 6);
     let fadd = emu.read(0x48366b, 6);
     assert_eq!(fmul, vec![0xd8, 0x0d, 0xcc, 0x22, 0x80, 0x00], "fmul[1000]");
@@ -991,23 +990,42 @@ fn textglue_482_unit_convert() {
     code.extend_from_slice(&(0x3f4u32).to_le_bytes());
     code.extend_from_slice(&fmul);
     code.extend_from_slice(&fadd);
-    code.extend_from_slice(&[0xdd, 0x1d]); // fstp qword [res]
-    code.extend_from_slice(&(res as u32).to_le_bytes());
+    // `call __ftol` (0x40a2b0), as the source does at 0x483671.
+    let rel = 0x40a2b0u32.wrapping_sub((region + code.len() as u64 + 5) as u32);
+    code.push(0xe8);
+    code.extend_from_slice(&rel.to_le_bytes());
     let end = region + code.len() as u64;
+    code.push(0x90);
     emu.write(region, &code);
 
     let run = |emu: &mut Emu, field: f32| -> i32 {
         emu.set_reg(RegisterX86::EDI, edi);
-        emu.set_reg(RegisterX86::ESP, 0x0020_0000);
+        emu.set_reg(RegisterX86::ESP, stack);
         emu.write_u32(edi + 0x3f4, field.to_bits());
         emu.run(region, end);
-        let b = emu.read(res, 8);
-        let v = f64::from_bits(u64::from_le_bytes(b.try_into().unwrap()));
-        v.trunc() as i32 // __ftol = round-toward-zero
+        emu.get_reg(RegisterX86::EAX) as u32 as i32 // __ftol's eax
     };
 
     let mut total = 0u32;
-    for field in [0.0f32, 0.5, -0.5, 1.0, 3.25, -2.5, 0.0009, 100.0] {
+    // Then NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword
+    // of its qword, 0 for the indefinite.
+    for field in [
+        0.0f32,
+        0.5,
+        -0.5,
+        1.0,
+        3.25,
+        -2.5,
+        0.0009,
+        100.0,
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        4.0e6,
+        -4.0e6,
+        1.0e30,
+        -1.0e30,
+    ] {
         assert_eq!(
             run(&mut emu, field),
             unit_convert_round(field),

@@ -377,6 +377,8 @@ fn glue_512_524f60_scale_ratios() {
 // 0x529fe0 — percent-quantize (i32)(n·0.05 + 0.5), n clamped 0..=100. [.,0x52aa15 ret 4]
 //   slice [0x52a3d2,0x52a3e6): fild [ebp-0x18]; fmul [0x8029c8]; fadd [0x7ffa24]; call __ftol → EAX.
 // ===========================================================================================
+// The count is a byte clamped to 100, so the `__ftol` input is at most 5.5 and no NaN or
+// out-of-range value reaches it.
 #[test]
 fn glue_512_529fe0_percent_quantize() {
     let Some(wow) = Wow::load() else {
@@ -546,6 +548,16 @@ fn glue_512_532ee0_setinventoryitem_slot() {
         100.5,
         1000.0,
         1.000_000_000_1,
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        3.0e9,
+        -3.0e9,
+        4_294_967_297.0,
+        1.0e19,
+        1.0e300,
     ];
     for &v in &probes {
         assert_eq!(run(&mut emu, v), inv_slot(v), "inv_slot v={v}");

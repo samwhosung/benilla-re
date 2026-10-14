@@ -58,7 +58,7 @@ pub fn fade_step_round(r: f64, n: i32) -> i32 {
 /// x87 `fistp` with the FPCW-default rounding mode (round-to-nearest, ties-to-even).
 #[inline]
 fn round_nearest_even(v: f64) -> i32 {
-    v.round_ties_even() as i32
+    benilla_re_cmath::x87::fistp(v)
 }
 
 // ===========================================================================================

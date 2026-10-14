@@ -111,14 +111,11 @@ pub fn ac10_unchanged(stored: f32, arg: f32) -> bool {
 /// the gated packer `0x76d680`): the product `arg·255 + 0.5` (a PC_53 f64, kept in st0 straight
 /// into `__ftol`) is truncated toward zero by the CRT helper, and only the LOW byte of the i32
 /// result is taken (`mov bh,al` / `mov bl,al` / `movzx eax,al` / `mov cl,al`). For NaN, `__ftol`
-/// yields the x87 integer-indefinite `0x80000000`, low byte `0x00`. Returns the packed byte.
+/// yields the integer indefinite, whose low byte is `0x00`. Returns the packed byte.
 pub fn channel(arg: f32) -> u8 {
     let v = f64::from(arg) * f(C255_BITS) + f(HALF_BITS);
-    if v.is_nan() {
-        return 0; // __ftol(NaN) = 0x80000000, low byte 0x00
-    }
     // __ftol truncates toward zero; only the low byte is kept (matches al/bl/bh/cl truncation).
-    (v.trunc() as i64 as u32 & 0xff) as u8
+    (benilla_re_cmath::x87::ftol(v) as u32 & 0xff) as u8
 }
 
 /// `0x76f900`'s full 4-channel pack (`0x76f903`..`0x76f96e`). The four args (`[ebp+8]`/`[ebp+0xc]`/

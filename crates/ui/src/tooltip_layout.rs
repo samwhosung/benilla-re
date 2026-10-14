@@ -164,7 +164,9 @@ const ALPHA_MAX: f32 = f32::from_bits(0x437f_0000); // 0x7ffe58 = 255.0
 /// (`fld [0x7ff9d8]`). Then `alpha = __ftol(frac · [0x7ffe58]=255.0)` (truncate toward zero).
 pub fn fade_alpha(t: f32) -> i32 {
     let half = FADE_HALF; // fld 2.0 ; fmul 0.5
-    let frac = if f64::from(t) < half {
+                          // An unordered compare sets C0 too, so NaN takes the quotient arm (`t >= half` is false).
+    #[allow(clippy::neg_cmp_op_on_partial_ord)]
+    let frac = if !(f64::from(t) >= half) {
         f64::from(t) / half // 0x530c18: fdivr [ebp+8] = t/half
     } else {
         1.0 // 0x530c10: fld [0x7ff9d8]=1.0
@@ -173,8 +175,4 @@ pub fn fade_alpha(t: f32) -> i32 {
     ftol(alpha_f) // __ftol (0x40a2b0, RC=truncate)
 }
 
-/// `__ftol` (`0x40a2b0`): truncate toward zero to a signed 32-bit integer (the CRT RC=truncate
-/// float-to-long). Exact for the in-range values here.
-pub fn ftol(x: f64) -> i32 {
-    x.trunc() as i32
-}
+pub use benilla_re_cmath::x87::ftol;

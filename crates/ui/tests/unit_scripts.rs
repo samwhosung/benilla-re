@@ -147,6 +147,8 @@ fn luabind_517fc0_unit_level() {
     let mut total = 0u32;
     // every clamped n in 0..=100 (the full domain after min(level,100)); covers the round-half pivots.
     for n in 0..=100u32 {
+        // The byte clamps to 100, so the `__ftol` input is at most 5.5 and no NaN or out-of-range
+        // value reaches it.
         // mirror level_round but feeding n pre-clamped (n<=100 here, so b.min(100)==n).
         let want = level_round(n as u8);
         assert_eq!(run(&mut emu, n), want, "UnitLevel fp n={n}");

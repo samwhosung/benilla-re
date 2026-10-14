@@ -102,6 +102,16 @@ fn glue769_769820_set_alpha_quantize() {
         0.999,
         0.001,
         0.99999,
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite, and the byte is its low byte.
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        2.0e7,
+        1.7e7,
+        -2.0e7,
+        1.0e17,
+        1.0e300,
     ];
     for &v in &probes {
         assert_eq!(run(&mut emu, v), alpha_quantize(v), "alpha_quantize v={v}");

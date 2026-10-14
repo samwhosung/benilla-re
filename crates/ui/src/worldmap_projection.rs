@@ -67,8 +67,8 @@ pub fn zone_cell_index(u: f32, v: f32, continent: i32, rec: [f32; 4]) -> Option<
     if bad {
         return None;
     }
-    let row = (f64::from(g) * -128.0).trunc() as i32;
-    let col = (f64::from(f) * 128.0).trunc() as i32;
+    let row = benilla_re_cmath::x87::ftol(f64::from(g) * -128.0);
+    let col = benilla_re_cmath::x87::ftol(f64::from(f) * 128.0);
     Some(col - row * 128 + continent.wrapping_mul(0x4009))
 }
 

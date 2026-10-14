@@ -62,7 +62,7 @@ pub fn aspect_ftol(a: f32, b: f32, c: f32, d: f32) -> i32 {
     let p = f64::from(a) - f64::from(b); // fsub
     let q = f64::from(c) - f64::from(d); // fsub
     let v = (q * k(SCALE1002_BITS)) / p; // fmul [1002.0]; fdiv st,st(1)
-    v.trunc() as i32 // __ftol = truncate toward zero
+    benilla_re_cmath::x87::ftol(v) // __ftol = truncate toward zero
 }
 
 // ===========================================================================================

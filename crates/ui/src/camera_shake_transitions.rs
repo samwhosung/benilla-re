@@ -207,7 +207,7 @@ pub fn body_frac(arg0: f32, field_ec: f32, arg2: f32, g: f32) -> f32 {
 /// `[ebp+0xc]`, `arg4` = `[ebp+0x14]`.
 pub fn body_int_term(arg1: f32, arg4: i32) -> i32 {
     let v = f64::from(arg1) * f64::from(f32::from_bits(NEG1000_BITS));
-    arg4.wrapping_sub(v.trunc() as i32)
+    arg4.wrapping_sub(benilla_re_cmath::x87::ftol(v))
 }
 
 // ===========================================================================================

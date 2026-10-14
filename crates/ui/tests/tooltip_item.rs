@@ -80,6 +80,16 @@ fn textglue_52b_bias_round_pair() {
         100.5,
         -100.5,
         0.000_009_5, // < 1-0.99999, biased positive stays < 1 -> trunc 0 vs unbiased trunc 0
+        // NaN, the infinities and values past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite.
+        f32::NAN,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        3.0e9,
+        -3.0e9,
+        1.0e10,
+        1.0e30,
+        -1.0e30,
     ];
     for &v0 in &probes {
         for &v1 in &probes {

@@ -43,7 +43,7 @@ pub fn point_in_zone_rect(p1: f32, p2: f32, a: f32, b: f32, c: f32, d: f32) -> b
 pub fn texture_height_from_rect(x0: f32, x1: f32, y0: f32, y1: f32) -> i32 {
     let den = (f64::from(x0) - f64::from(x1)) as f32;
     let num = f64::from(y0) - f64::from(y1);
-    ((num * 128.0) / f64::from(den)).trunc() as i32
+    benilla_re_cmath::x87::ftol((num * 128.0) / f64::from(den))
 }
 
 /// The same from the matched area record `ebx` (`0x4a82ed` to `0x4a8339`, selector 0), with `K =
@@ -53,7 +53,7 @@ pub fn texture_height_from_rect(x0: f32, x1: f32, y0: f32, y1: f32) -> i32 {
 pub fn texture_height_from_area(denom_int: i32, num_int: i32) -> i32 {
     let den = f64::from(denom_int) as f32;
     let num = f64::from(num_int);
-    ((num * 256.0) / f64::from(den)).trunc() as i32
+    benilla_re_cmath::x87::ftol((num * 256.0) / f64::from(den))
 }
 
 /// The power-of-two round-up of the texture size (`0x4a833c` to `0x4a83ac`), integer arithmetic. `n`

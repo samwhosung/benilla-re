@@ -244,6 +244,15 @@ fn glue_765_7666a0_ratio_round_x() {
         (eps, 9.0, 2.0),       // |arg| == eps  (prologue C3 boundary)
         (-eps, 9.0, 2.0),      // |−eps| == eps
         (eps * 0.5, 9.0, 2.0), // |arg| < eps   (prologue C0)
+        // The infinities and products past `i32` and `i64`: `__ftol` returns the low dword of its
+        // qword, 0 for the indefinite. A NaN argument is not run: the prologue's flag word is not
+        // modelled for it.
+        (f32::INFINITY, 9.0, 2.0),
+        (f32::NEG_INFINITY, 9.0, 2.0),
+        (1.0e9, 9.0, 2.0),
+        (-1.0e9, 9.0, 2.0),
+        (1.0e30, 9.0, 2.0),
+        (1.0e30, 9.0, -1.0e30),
     ] {
         check(&mut emu, arg, bh, bl);
     }

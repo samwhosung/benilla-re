@@ -168,6 +168,19 @@ fn chat_scale_byte() {
             chk(&mut emu, f64::from(k) / 255.0 + d, &mut total);
         }
     }
+    // NaN, the infinities and products past `i32` and `i64`: `__ftol` returns the low dword of its
+    // qword, 0 for the indefinite.
+    for x in [
+        f64::NAN,
+        f64::INFINITY,
+        f64::NEG_INFINITY,
+        1.0e8,
+        -1.0e8,
+        4.0e16,
+        1.0e300,
+    ] {
+        chk(&mut emu, x, &mut total);
+    }
     // exact-integer-product pivots: x·255 just below / at an integer flips the truncated byte.
     let pivots = [
         0.0f64,

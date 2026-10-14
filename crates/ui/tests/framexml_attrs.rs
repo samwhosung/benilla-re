@@ -236,6 +236,8 @@ fn glue_6f1_color_pack() {
 // (3) direct unit coverage of the clamp + quantize leaves on the deterministic boundaries (the
 // pack test exercises them through the binary; these assert the leaf primitives in isolation at
 // the exact float boundaries, so a refactor of the kernels can't silently drift off-boundary).
+// The channel is clamped to 0 to 1 before the quantize (NaN becomes 1), so the `__ftol` input is
+// at most 255.5 and no NaN or out-of-range value reaches it.
 // ===========================================================================================
 
 #[test]

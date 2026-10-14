@@ -95,7 +95,7 @@ pub fn set_value(v: f32, min: f32, span: f32, step: f32) -> f32 {
         } else {
             (diff - halfstep) / stepv // fsubr st,st(1) = diff−halfstep; fdiv step
         };
-        let n = scaled.trunc() as i32; // __ftol = truncate toward zero
+        let n = benilla_re_cmath::x87::ftol(scaled); // __ftol = truncate toward zero
         hi = (f64::from(n) * stepv) + minv; // fild n; fmul step; fadd min
     }
     hi as f32
