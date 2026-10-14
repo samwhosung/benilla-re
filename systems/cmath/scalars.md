@@ -100,8 +100,7 @@ Proof: one
 Test: none
 
 `__ftol` is `0x40a2b0`. `0x456442` compares `x` with 0.0 and `jp` skips the `dec ecx` for `x ≥ 0` and NaN.
-For −2.0 the parts are −3 and 1.0. `0x455c20` and `0x455bb0` (`fastmath#arctangent-and-wave`) use
-`0x456420`.
+For −2.0 the parts are −3 and 1.0. `0x455c20` and `0x455bb0` use `0x456420`.
 
 ## Shaping functions
 
@@ -109,16 +108,16 @@ For −2.0 the parts are −3 and 1.0. `0x455c20` and `0x455bb0` (`fastmath#arct
 of them, 1.0 inside `[lo, hi)`. `0x456570(x, lo, hi)` is `(x − lo)/(hi − lo)` clamped into [0, 1], a NaN
 giving 1.0. `0x4565c0` is the smooth step: 0.0 below `lo`, 1.0 at or above `hi`, else `t²·(3 − 2t)` for
 that `t`. `0x456620(a, b)` is the C runtime's `pow(a, b)` (`__CIpow`, `0x73f940`), `0x456640` is
-`pow(a, 1/b)`, `0x456660(x, b)` is `pow(x, −log2(b))` through `fastmath#logarithm`, and `0x4566a0(x, g)` is
+`pow(a, 1/b)`, `0x456660(x, b)` is `pow(x, −log2(b))` through the fast logarithm `0x454c80`, and `0x4566a0(x, g)` is
 the gain built from it: `0.5·bias(2x, 1 − g)` for `x < 0.5` and `1 − 0.5·bias(2 − 2x, 1 − g)` otherwise.
 
-Addresses: `0x456510`, `0x456540`, `0x456570`, `0x4565c0`, `0x456620`, `0x456640`, `0x456660`, `0x4566a0`, `0x455c20`, `0x456700`, `0x456720`, `0x456740`, `0x456760`, `0x73f940`, `0x80297c`, `0x8030a0`, `0x8030a8`, `0x8030b0`, `0x801628`
-Confidence: inferred
-Proof: none
+Addresses: `0x456510`, `0x456540`, `0x456570`, `0x4565c0`, `0x456620`, `0x456640`, `0x456660`, `0x4566a0`, `0x455c20`, `0x456700`, `0x456720`, `0x456740`, `0x456760`, `0x455bb0`, `0x73f940`, `0x80297c`, `0x8030a0`, `0x8030a8`, `0x8030b0`, `0x801628`
+Confidence: verified
+Proof: one
 Test: none
 
 `0x455c20(x, y)` is a smooth zigzag of the phase `p = x·y`: with `f = p − ⌊p⌋` it is `1 − (6 − 4f)·f²`,
-negated for odd `⌊p⌋`. `0x456700` and `0x456740` return `sin(πxy)/(πxy)`, and `0x456720` and `0x456760`
+negated for odd `⌊p⌋`; `0x455bb0`, which lies before this file's +∞ initializer, is the same with `p = x·y − 0.5`. `0x456700` and `0x456740` return `sin(πxy)/(πxy)`, and `0x456720` and `0x456760`
 `sin(πx)/(πx)`, with no zero guard. `0x456510` is `fcomp; test ah,5; jp`: below gives 0.0 (`0x7ffd74`), else 1.0. `0x4565c0` loads 3.0 from
 `0x80297c` and `0x4566da` loads 2.0 from `0x801628`. `0x456660` multiplies the logarithm by −1.0 (`0x8030a0`) before `__CIpow`. The sine
 routines multiply by π as a double (`0x8030a8`) or a float (`0x8030b0`) and divide `fsin` into the
@@ -151,5 +150,5 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x455c80` is called by the unreached batch routines of the fast-math file (`fastmath#batch-arithmetic`).
+`0x455c80` is called by the unreached batch routines `0x454fd0`, `0x455260` and `0x4555f0` of the fast-math file.
 No address in the file is stored in a table.
