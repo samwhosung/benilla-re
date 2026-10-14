@@ -247,6 +247,53 @@ CGUnit_C	0x0d54	4	uint32_t	m_transformSpell	objectlayer	Holds the shapeshift or 
 CGUnit_C	0x0d5c	4	int32_t	m_keyBone	objectlayer	Holds the key bone 4, 6 or -1, written by 0x60ce70 and 0x60abe0	verified	one	objectlayer/unitdisplay#changing-the-display
 CGUnit_C	0x0e60	4	void *	m_namePlate	objectlayer	Holds the nameplate frame, written by 0x6086e0 and cleared by 0x608a10	verified	one	objectlayer/unitnames#nameplates
 CGUnit_C	0x0e64	4	void *	m_chatBubble	objectlayer	Holds the chat bubble, written by 0x608ac0 and cleared by 0x608c00	verified	one	objectlayer/unitnames#chat-bubbles
+CGxFont	0x0000	4	void *	m_prevLink	font	Holds the address of the previous link in the font registry	verified	one	font/api#font-object
+CGxFont	0x0004	4	CGxFont *	m_next	font	Holds the next font of the registry	verified	one	font/api#font-object
+CGxFont	0x0008	4	uint32_t	m_stringLinkOffset	font	Holds the offset of the link in a string of this font	verified	one	font/api#font-object
+CGxFont	0x000c	4	void *	m_strings	font	Holds the head of the font's string list	verified	one	font/api#font-object
+CGxFont	0x0030	4	void *	m_glyphBuckets	font	Holds the glyph hash buckets, 12 bytes each	verified	one	font/api#font-object
+CGxFont	0x0038	4	uint32_t	m_glyphMask	font	Holds the glyph hash mask, -1 while empty	verified	one	font/api#font-object
+CGxFont	0x0064	4	uint32_t	m_recencyLinkOffset	font	Holds the offset of the recency link in a glyph descriptor	verified	one	font/api#font-object
+CGxFont	0x0068	4	void *	m_recencyHead	font	Holds the head of the glyph recency list	verified	one	font/api#font-object
+CGxFont	0x0070	4	void *	m_face	font	Holds the face handle	verified	one	font/api#font-object
+CGxFont	0x0074	260	char[260]	m_name	font	Holds the face file name	verified	one	font/api#font-object
+CGxFont	0x0178	4	uint32_t	m_cellSize	font	Holds the atlas cell size: pixel size plus 0, 2 or 4	verified	one	font/api#font-object
+CGxFont	0x017c	4	uint32_t	m_ascender	font	Holds the baseline ascender in pixels	verified	one	font/api#font-object
+CGxFont	0x0180	4	uint32_t	m_flags	font	Holds bit 0 outline, 1 monochrome, 2 page-texture variant, 3 thick	verified	one	font/api#font-object
+CGxFont	0x0184	4	float	m_requestedSize	font	Holds the requested size as a fraction of the screen height	verified	one	font/api#font-object
+CGxFont	0x0188	4	float	m_advanceAdjust	font	Holds the ratio that scales a negative kerning	verified	one	font/api#font-object
+CGxFont	0x018c	192	uint8_t[192]	m_pages	font	Holds eight atlas page records of 0x18 bytes	verified	one	font/api#font-object
+CGxFont	0x024c	4	uint32_t	m_pixelSize	font	Holds the rendered pixel size, at most 32	verified	one	font/api#font-object
+CGxString	0x0000	8	void *[2]	m_link	font	Holds the link in the global string list or the pool	verified	one	font/string#string-object
+CGxString	0x0010	8	void *[2]	m_fontLink	font	Holds the link in the font's string list	verified	one	font/string#string-object
+CGxString	0x0018	4	float	m_size	font	Holds the size, or the font's natural height	verified	one	font/string#string-object
+CGxString	0x001c	4	float	m_clampedSize	font	Holds the size raised to two device pixels	verified	one	font/string#string-object
+CGxString	0x0020	12	float[3]	m_position	font	Holds the position	verified	one	font/string#string-object
+CGxString	0x002c	4	uint32_t	m_color	font	Holds the main colour; byte 3 is the alpha	verified	one	font/string#string-object
+CGxString	0x0030	4	uint32_t	m_shadowColor	font	Holds the shadow colour; byte 3 is the alpha	verified	one	font/string#string-object
+CGxString	0x0034	8	float[2]	m_shadowOffset	font	Holds the shadow offsets	verified	one	font/string#string-object
+CGxString	0x003c	4	float	m_boxWidth	font	Holds the box width	verified	one	font/string#string-object
+CGxString	0x0040	4	float	m_boxHeight	font	Holds the box height	verified	one	font/string#string-object
+CGxString	0x0044	4	CGxFont *	m_font	font	Holds the font	verified	one	font/string#string-object
+CGxString	0x0048	4	char *	m_text	font	Holds the text buffer	verified	one	font/string#string-object
+CGxString	0x004c	4	uint32_t	m_textCapacity	font	Holds the capacity of the text buffer	verified	one	font/string#string-object
+CGxString	0x0050	4	uint32_t	m_justifyV	font	Holds the vertical justification, 0 to 2	verified	one	font/string#string-object
+CGxString	0x0054	4	uint32_t	m_justifyH	font	Holds the horizontal justification, 0 to 2	verified	one	font/string#string-object
+CGxString	0x0058	4	float	m_lineSpacing	font	Holds the line spacing	verified	one	font/string#string-object
+CGxString	0x005c	4	uint32_t	m_flags	font	Holds the string flags; bit 7 pre-snapped, bit 0 shadow	verified	one	font/string#string-object
+CGxString	0x0070	12	float[3]	m_anchor	font	Holds the screen anchor	verified	one	font/string#string-object
+CGxString	0x009c	4	uint32_t	m_lineCount	font	Holds the laid-out line count, 0 without a layout	verified	one	font/string#string-object
+CGxString	0x00a0	32	void *[8]	m_lineBuffers	font	Holds the eight per-line quad buffers	verified	one	font/string#string-object
+CGxString	0x00c0	4	uint32_t	m_age	font	Holds the frames since the layout was last used	verified	one	font/string#string-object
+CGxStringBatch	0x000c	4	void *	__vfptr	font	Holds the vtable of the element list, 0x80a884	verified	one	font/api#batches
+CHARCODEDESC	0x0000	4	uint32_t	m_code	font	Holds the character code	verified	one	font/glyphs#finding-or-making-a-glyph
+CHARCODEDESC	0x0028	4	int32_t	m_page	font	Holds the atlas page index, -1 before placement	verified	one	font/glyphs#finding-or-making-a-glyph
+CHARCODEDESC	0x002c	4	int32_t	m_row	font	Holds the atlas row, -1 before placement	verified	one	font/glyphs#finding-or-making-a-glyph
+CHARCODEDESC	0x0030	4	int32_t	m_cellX0	font	Holds the first texel column of the cell	verified	one	font/glyphs#finding-or-making-a-glyph
+CHARCODEDESC	0x0048	4	int32_t	m_advance	font	Holds the integer pixel advance	verified	one	font/metrics#glyph-width-and-step-base
+CHARCODEDESC	0x004c	4	float	m_stepBase	font	Holds the step base metric	verified	one	font/metrics#glyph-width-and-step-base
+CHARCODEDESC	0x0050	4	float	m_width	font	Holds the width metric	verified	one	font/metrics#glyph-width-and-step-base
+CHARCODEDESC	0x0060	16	float[4]	m_uv	font	Holds v_bottom, u_left, v_top and u_right	verified	one	font/glyphs#pages-and-cells
 CInputControl	0x0000	4	uint32_t	m_createTime	input	Holds the client clock when the object was built	inferred	none	input#input-state
 CInputControl	0x0004	4	uint32_t	m_held	input	Holds the held command bits; 0x1 and 0x2 are the two primary mouse commands	verified	one	input#mouse-commands
 CInputControl	0x0008	4	float	m_travelX	input	Holds the sum of scaled |dx| since the first primary press	verified	two	input#click-versus-drag

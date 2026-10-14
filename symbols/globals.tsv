@@ -124,6 +124,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x5b3fd0	void *[6]	s_realmMessageJumpTable		net	Holds the realm connection handler's cases for opcodes 0x3a to 0x4c	verified	one	net/dispatch#realm-connection-messages
 0x5b3fe8	uint8_t[19]	s_realmMessageIndexTable		net	Maps opcodes 0x3a to 0x4c to their case in the realm connection handler	verified	one	net/dispatch#realm-connection-messages
 0x5bcf70	void *[6]	s_selectStateJumpTable		net	Holds the case addresses of the select loop switch on connection state	verified	one	net/threads#select-loop
+0x5c26dc	const void *[6]	s_stripCases		font	Holds the case addresses of the token class switch of 0x5c2590	verified	one	font/markup#stripping
 0x5c2af4	void *[7]	s_cases5c2810		unassigned	Holds the 7 case addresses of the switch in 0x5c2810	inferred	none	
 0x5c2b10	uint8_t[58]	s_caseIndexes5c2810		unassigned	Holds the 58 case indexes of the switch in 0x5c2810	inferred	none	
 0x5d494c	void *[8]	s_tradeStatusJumpTable		objectlayer	Holds the trade status handler's eight cases	verified	one	objectlayer/trade#trade-status-message
@@ -558,8 +559,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
 0x80a7a8	void *[2]	s_wdataStoreVtable		net	Holds the vtable of the data store the logon link writes its commands into	verified	one	net/connection#connect-and-realm-list
 0x80a7dc	void *[9]	ClientLink::vftable		net	Holds ClientLink's vtable: the connection callbacks, slot 7 the raw data hook	verified	one	net/login#logon-commands
+0x80a884	void *[4]	BatchElementList::vftable		font	Holds the vtable of a batch's element list	verified	one	font/api#batches
 0x80a8ac	float	s_oneOver256		terrain	Holds 1/256, the scale of a magma coordinate	verified	one	terrain/groupdraw#group-liquid-mesh
 0x80a8b0	const float	s_oneOver65536		unassigned	Holds 1/65536	verified	one	lighting/celestial#celestial-bodies
+0x80a8bc	void *[4]	KerningHash::vftable		font	Holds the vtable of a font's kerning hash	verified	one	font/api#font-object
+0x80a8cc	void *[4]	GlyphHash::vftable		font	Holds the vtable of a font's glyph hash	verified	one	font/api#font-object
 0x80a8ec	const uint32_t			font	Holds a dword its object file's code reads; not read here	inferred	none	
 0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	verified	one	terrain/liquid#wave-field
 0x80a930	uint8_t[64]	s_sha1Padding		net	Holds the padding block of 0x80 and 63 zero bytes	verified	one	net/crypto#sha-1-first-context
@@ -1558,6 +1562,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85e278	uint32_t[28]	s_clientLinkCommands		net	Holds ClientLink's seven commands: byte, name, handler and this offset each	verified	one	net/login#logon-commands
 0x85e9e0	uint32_t	s_wakePipeRead		net	Holds the read end of the loopback pipe that wakes the select loop	verified	one	net/threads#select-loop
 0x85e9e4	uint32_t	s_netWakeSocket		net	Holds the write end of the network thread's wake socket pair	verified	one	net/wire#sending
+0x85f4d8	const uint32_t[21]	s_stripTable		font	Holds seven triples of mask, replacement character and prefix flag per token class	verified	one	font/markup#stripping
+0x85f534	const char[20]	s_batchTag		font	Holds the allocation tag of a batch	verified	one	font/api#batches
+0x85f554	const char[14]	s_fontTag		font	Holds the allocation tag of a font	verified	one	font/api#creating-a-font
+0x85f56c	const char[16]	s_stringTag		font	Holds the allocation tag of a string	verified	one	font/api#string-pool
+0x85f5fc	const char[50]	s_fontUtilPath		font	Holds the source path of GxuFontUtil.cpp	verified	one	font/overview#object-files
+0x85f630	const char[58]	s_fontMiscPath		font	Holds the source path of GxuFontMiscClasses.cpp	verified	one	font/overview#object-files
+0x85f674	const char[18]	s_glyphTag		font	Holds the allocation tag of a glyph descriptor	verified	one	font/api#destroying-a-font
+0x85f7f0	const char[53]	s_fontStringPath		font	Holds the source path of GxuFontString.cpp	verified	one	font/overview#object-files
 0x85fb30	char[66]	s_textWorldGenericPassiveDoodadsDeathSkeletonsS		objectlayer	Holds the string "World\Generic\PassiveDoodads\DeathSkeletons\%s%sDeathSkeleton.mdx"	inferred	none	
 0x85fc54	uint32_t[141]	s_damageCalcEntryNames		objectlayer	Holds the damage calculation's entry names in 16-byte records, a string first, the last record cut short	verified	one	objectlayer/playercombat#damage-calculation-log
 0x85fe88	uint32_t[6]	s_saveEmblemErrors		objectlayer	Holds the errors for emblem save results 0 to 5	verified	one	objectlayer/party#guild-tabards
@@ -2918,6 +2930,45 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a3bc	uint32_t	s_latencyMax		net	Holds the greatest simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
 0xc2a3c4	uint32_t	s_initUnitCount		net	Counts the object files whose static initializers ran the shared unit count	inferred	none	net/layout#shared-helpers
 0xc2a428	uint8_t[64]	s_randomPool		net	Holds the SHA-1 random pool SRP6 draws from, seeded at startup with the client clock	verified	one	net/login#random-pool
+0xc2a738	uint8_t[640]	s_fpsDigitsA		font	Holds the first set of frame-rate digit quads	verified	one	font/overview#static-objects
+0xc2a9b8	float[30]	s_frameTimes		font	Holds the last 30 frame times in seconds	verified	one	font/api#frame-rate-bar
+0xc2aa38	uint8_t[640]	s_fpsDigitsB		font	Holds the second set of frame-rate digit quads	verified	one	font/overview#static-objects
+0xc2acb8	uint8_t[640]	s_fpsDigitsC		font	Holds the third set of frame-rate digit quads	verified	one	font/overview#static-objects
+0xc2af38	uint8_t[1920]	s_fpsWork		font	Holds the frame-rate bar's work buffer	verified	one	font/overview#static-objects
+0xc2b6b8	uint32_t	s_lastFrameTime		font	Holds the clock value of the previous frame	verified	one	font/api#frame-rate-bar
+0xc2b6c0	uint16_t[180]	s_quadIndices		font	Holds the index table of 30 quads, six indices each	verified	one	font/overview#static-objects
+0xc2b828	uint8_t	s_viewportCacheGuard		font	Holds bit 0 once the viewport cache is set up	verified	one	font/metrics#viewport-size
+0xc2b82c	float[4]	s_viewportCache		font	Holds the last viewport rectangle seen	verified	one	font/metrics#viewport-size
+0xc2b840	uint32_t[3]	s_batchFreeList		font	Holds the free list of batches: count, head and tail	verified	one	font/overview#static-objects
+0xc2b84c	uint32_t	s_frameTimeIndex		font	Holds the next slot of the frame time ring	verified	one	font/api#frame-rate-bar
+0xc2b974	uint32_t[3]	s_fontRegistry		font	Holds the list of fonts: count, head and tail	verified	one	font/overview#static-objects
+0xc2b980	float	s_fontUtilInfinity		font	Holds +inf copied by 0x5c6660, which nothing reads	verified	one	font/overview#object-files
+0xc2b984	float	s_fontUtilInvTwoPi		font	Holds 1/2π stored by 0x5c7dc0, which nothing reads	verified	one	font/overview#object-files
+0xc2b988	uint32_t[3]	s_stringPool		font	Holds the pool list of free strings: count, head and tail	verified	one	font/overview#static-objects
+0xc2b994	uint32_t[3]	s_stringList		font	Holds the global list of strings: count, head and tail	verified	one	font/overview#static-objects
+0xc2b9a0	uint32_t	s_viewportHeight		font	Holds the viewport height in pixels	verified	one	font/metrics#screen-and-pixel-units
+0xc2b9a4	uint32_t	s_viewportWidth		font	Holds the viewport width in pixels	verified	one	font/metrics#screen-and-pixel-units
+0xc2b9a8	void *	s_fontLibrary		font	Holds the font library handle the faces load through	verified	one	font/api#creating-a-font
+0xc2b9ac	float	s_fontUtilTwoPi		font	Holds 2π stored by 0x5c7da0, which nothing reads	verified	one	font/overview#object-files
+0xc2b9b0	uint8_t	s_batchDebugFlag		font	Holds the flag that stops batch drawing; nothing sets it	verified	one	font/api#batches
+0xc2b9b4	uint32_t[3]	s_miscList		font	Holds a list of GxuFontMiscClasses.cpp: count, head and tail	verified	one	font/overview#static-objects
+0xc2b9c0	float	s_fontMiscInfinity		font	Holds +inf copied by 0x5c7df0, which nothing reads	verified	one	font/overview#object-files
+0xc2b9c4	float	s_fontMiscInvTwoPi		font	Holds 1/2π stored by 0x5c9580, which nothing reads	verified	one	font/overview#object-files
+0xc2b9cc	float	s_fontMiscTwoPi		font	Holds 2π stored by 0x5c9560, which nothing reads	verified	one	font/overview#object-files
+0xc2b9d4	void *	s_quadIndexBuffer		font	Holds the shared index buffer of 512 quads	verified	one	font/api#drawing-a-batch
+0xc2b9d8	void *	s_quadIndexView		font	Holds the index buffer wrapper the quads draw through	verified	one	font/api#drawing-a-batch
+0xc2b9dc	uint8_t	s_worldBatchDrawing		font	Holds 1 while a world-space batch draws	verified	one	font/api#drawing-a-batch
+0xc2b9e0	float	s_fontClassInfinity		font	Holds +inf copied by 0x5c9f40, which nothing reads	verified	one	font/overview#object-files
+0xc2b9e4	float	s_fontClassInvTwoPi		font	Holds 1/2π stored by 0x5cb850, which nothing reads	verified	one	font/overview#object-files
+0xc2b9e8	float	s_fontClassTwoPi		font	Holds 2π stored by 0x5cb830, which nothing reads	verified	one	font/overview#object-files
+0xc2b9ec	float	s_fontStringInfinity		font	Holds +inf copied by 0x5ccb00, which nothing reads	verified	one	font/overview#object-files
+0xc2b9f4	float	s_fontStringInvTwoPi		font	Holds 1/2π stored by 0x5ce1a0, which nothing reads	verified	one	font/overview#object-files
+0xc2b9f8	float[4]	s_texelNudge		font	Holds the raw-mode UV nudges: +1/512, +1/512, -1/512, -1/512	inferred	none	font/string#one-glyph-quad
+0xc2ba08	float	s_fontStringTwoPi		font	Holds 2π stored by 0x5ce180, which nothing reads	verified	one	font/overview#object-files
+0xc2ba40	float	s_fontRasterInfinity		font	Holds +inf copied by 0x5ce430, which nothing reads	verified	one	font/overview#object-files
+0xc2ba48	uint16_t[65536]	s_glyphStaging		font	Holds the 256 by 256 texel staging buffer glyphs are baked into	verified	one	font/glyphs#pages-and-cells
+0xc4ba48	float	s_fontRasterInvTwoPi		font	Holds 1/2π stored by 0x5cfce0, which nothing reads	verified	one	font/overview#object-files
+0xc4ba70	float	s_fontRasterTwoPi		font	Holds 2π stored by 0x5cfc90, which nothing reads	verified	one	font/overview#object-files
 0xc4bab8	uint8_t[896]	s_tradeSlots		objectlayer	Holds 14 64-byte trade item records, the client's 0 to 6 and the partner's 7 to 13	verified	one	objectlayer/trade#trade-state
 0xc4be70	uint32_t[2]	s_tradeMoney		objectlayer	Holds the money offered by the client and by the partner	verified	one	objectlayer/trade#trade-state
 0xc4be78	uint32_t[2]	s_tradeExtendedFlag		objectlayer	Holds the second header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
