@@ -57,7 +57,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `os`: the engine's Windows layer outside `core`'s time and window files: CPU and system queries,
   file calls, `OsIME.cpp` and the IME initializer file after it, `OsGui.cpp`, `OsCall.cpp` (engine
   threads), `OsTcp.cpp`, `OsURLDownload.cpp`, `OsClipboard.cpp` and `OsISoundCache.cpp`
-- `playername`: `PlayerName.cpp`, the unit names drawn in the world (`UnitNamePlayer` and the like)
 - `screencoord`: the screen aspect and scale helpers
 - `spline`: the movement spline file
 - `sysmsg`: `SysMessage.cpp`, the system message printers

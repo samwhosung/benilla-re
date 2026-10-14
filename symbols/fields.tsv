@@ -981,6 +981,15 @@ OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	
 OsThreadRecord	0x000c	4	void *	m_handle	os	Holds a duplicate of the thread handle	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x0014	4	void *	m_nameObject	os	Holds the name object tied to the thread, or null	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x181c	128	char[128]	m_name	os	Holds the display text name [id]	verified	one	core/threads#engine-thread-records
+PLAYERNAMEDESC	0x0000	4	void *	m_prevLink	playername	Holds the address of the previous link in the name list	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0004	4	PLAYERNAMEDESC *	m_next	playername	Holds the next name record	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0008	4	void *	m_text	playername	Holds the name text handle, 0 while none exists	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x000c	4	uint32_t	m_color	playername	Holds the name colour dword	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0010	8	uint64_t	m_guid	playername	Holds the unit GUID	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0018	4	uint32_t	m_flags	playername	Holds bit 0 rebuild the text and bit 1 refetch the colour	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x001c	4	uint32_t	m_tick	playername	Holds the frame tick of the last update	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0020	16	WORLDTEXTSTRING *[4]	m_worldTexts	playername	Holds the four world text slots	verified	one	playername/plates#name-record-layout
+PLAYERNAMEDESC	0x0030	4	float	m_blockHeight	playername	Holds the name block height: lines times the plate scale	verified	one	playername/plates#name-record-layout
 PendingSpellCast	0x0000	8	uint64_t	m_sourceGuid	spell	Holds the casting item's guid, else the caster's	verified	one	spell/pending#pending-cast-fields
 PendingSpellCast	0x0008	8	uint64_t	m_casterGuid	spell	Holds the caster's guid	verified	one	spell/pending#pending-cast-fields
 PendingSpellCast	0x0010	4	int32_t	m_spellId	spell	Holds the spell being cast	verified	one	spell/pending#pending-cast-fields
@@ -1044,6 +1053,19 @@ SPELLHISTORY	0x0020	4	uint32_t	m_categoryTime	spell	Holds the category recovery'
 SPELLHISTORY	0x0024	1	uint8_t	m_onHold	spell	Holds 1 while the record waits for the server to start it	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x0028	4	int32_t	m_gcdCategory	spell	Holds the global-cooldown category the record blocks	verified	one	spell/cooldowns#history-record-layout
 SPELLHISTORY	0x002c	4	uint32_t	m_gcdTime	spell	Holds the global cooldown's length in milliseconds	verified	one	spell/cooldowns#history-record-layout
+SWING	0x0000	4	uint32_t	m_head	playername	Holds the ring write counter	verified	one	playername/swing#trail-objects
+SWING	0x0004	4	uint32_t	m_tail	playername	Holds the ring read counter	verified	one	playername/swing#trail-objects
+SWING	0x0008	1536	float[384]	m_points	playername	Holds 128 points of three floats	verified	one	playername/swing#trail-objects
+SWING	0x0608	4	uint32_t	m_color	playername	Holds the trail colour; byte 3 is the alpha	verified	one	playername/swing#trail-objects
+SWING	0x060c	4	uint32_t	m_lifetime	playername	Holds the time in milliseconds during which points are added	verified	one	playername/swing#trail-objects
+SWING	0x0610	4	uint32_t	m_startTime	playername	Holds the clock value when the trail started	verified	one	playername/swing#trail-objects
+SWING	0x0614	4	uint32_t	m_lastStep	playername	Holds the clock value of the last step	verified	one	playername/swing#trail-objects
+SWorldTextIcon	0x0000	4	float	m_x	playername	Holds the pixel x of the icon	verified	one	playername/worldtext#rank-icon-records
+SWorldTextIcon	0x0004	4	float	m_y	playername	Holds the pixel y of the icon	verified	one	playername/worldtext#rank-icon-records
+SWorldTextIcon	0x0008	4	float	m_z	playername	Holds the anchor z	verified	one	playername/worldtext#rank-icon-records
+SWorldTextIcon	0x000c	4	float	m_size	playername	Holds twice the height times the string's half height	verified	one	playername/worldtext#rank-icon-records
+SWorldTextIcon	0x0010	4	uint32_t	m_color	playername	Holds the colour dword; byte 3 is the alpha	verified	one	playername/worldtext#rank-icon-records
+SWorldTextIcon	0x0014	4	void *	m_texture	playername	Holds the rank badge texture	verified	one	playername/worldtext#rank-icon-records
 SelectedCharacterRecord	0x0008	56	char[56]	m_name	ui	Holds the character's name, empty before the first copy	verified	one	ui/unitplayer#the-selected-character-record
 SelectedCharacterRecord	0x0100	1	uint8_t	m_race	ui	Holds the ChrRaces id	verified	one	ui/unitplayer#the-selected-character-record
 SelectedCharacterRecord	0x0101	1	uint8_t	m_class	ui	Holds the ChrClasses id	verified	one	ui/unitplayer#the-selected-character-record
@@ -1126,6 +1148,20 @@ TimeManager	0x0020	4	uint32_t	m_multiCore	core	Holds the multi-core bit; nonzero
 TimeManager	0x0028	1936	uint8_t[1936]	m_samples	core	Holds 121 samples of 16 bytes: counter low and high dwords, GetTickCount, padding	verified	one	core/time#calibration-thread
 TimeManager	0x07b8	4	uint32_t	m_sampleIndex	core	Holds the index of the newest sample	verified	one	core/time#calibration-thread
 TimeManager	0x07c0	32	uint64_t[4]	m_estimates	core	Holds the counter rate estimates over 1, 4, 20 and 120 samples	verified	one	core/time#calibration-thread
+WORLDTEXTSTRING	0x0000	4	void *	__vfptr	playername	Holds the vtable pointer	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0008	4	uint32_t	m_category	playername	Holds the category row index, 0 to 5	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x000c	4	float	m_halfWidth	playername	Holds half the string's measured width	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0010	4	float	m_halfHeight	playername	Holds half the string's measured block height	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0014	12	float[3]	m_position	playername	Holds the world position	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0020	4	uint32_t	m_color	playername	Holds the colour dword; byte 3 is the text alpha	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0024	4	uint32_t	m_startTime	playername	Holds the clock value at construction, in milliseconds	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0028	4	void *	m_string	playername	Holds the string handle	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x002c	4	float	m_size	playername	Holds the cached size, -1.0 at construction	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x0030	12	float[3]	m_screenAnchor	playername	Holds the screen anchor the draw writes	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x003c	64	char[64]	m_text	playername	Holds the text	verified	one	playername/worldtext#text-record
+WORLDTEXTSTRING	0x007c	4	uint32_t	m_iconValue	playername	Holds the rank icon value of a category 5 text	verified	one	playername/worldtext#text-record
+WTOBJECT	0x0000	4	SWING *	m_swing	playername	Holds the swing record, 0 while none	verified	one	playername/swing#trail-objects
+WTOBJECT	0x0004	4	void *	m_model	playername	Holds the model the trail follows	verified	one	playername/swing#trail-objects
 WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/friends#who-list-reply
 WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/friends#who-list-reply
 WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/friends#who-list-reply

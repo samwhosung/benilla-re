@@ -841,8 +841,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811278	const float	s_float3b5a740e		unassigned	Holds the float 0.0033333334 (0x3b5a740e)	inferred	none	
 0x8112a8	const float	s_float40800000		unassigned	Holds the float 4 (0x40800000)	inferred	none	
 0x8112ac	const float	s_float3fc00000At8112ac		unassigned	Holds the float 1.5 (0x3fc00000)	inferred	none	
-0x8112dc	const float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
+0x8112dc	const float[12]	s_keyframeTable		playername	Holds the crit scale keyframes: start, end, low and high of three segments	verified	one	playername/worldtext#timing-and-scale
 0x811310	const float	s_float42fe0000		unassigned	Holds the float 127 (0x42fe0000)	inferred	none	
+0x811314	void *[2]	WORLDTEXTSTRING::vftable		playername	Holds the text record vtable: the deleting destructor and one more slot	verified	one	playername/worldtext#text-record
 0x811508	const float	s_piConst		lighting	Holds π as a float	verified	one	lighting/celestial#static-tracks
 0x811510	const float[7]	s_skyKeyTimes		lighting	Holds the day fractions 0.2291667, 0.5, 0.8958333, 0.9166667, 0.1666667, and 1.0 the track keys start from	verified	one	lighting/celestial#static-tracks
 0x81152c	const float[6]	s_skyRingAngles		lighting	Holds the sky dome's ring angles over π: 0, 0.17, 0.2, 0.23, 0.24, 0.25	verified	one	lighting/sky#sky-dome
@@ -3282,15 +3283,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8534	int32_t	s_violenceLevel		client	Holds the violenceLevel CVar value; written by 0x6c5af0	inferred	none	spell/visuals#spell-visual-record-choice
 0xce8538	int32_t			unassigned	Holds an int32_t that SndInterfaceWorldInitialize, Script::GetGameTime, IsDaytime read; not read here	inferred	none	
 0xce853c	int32_t			unassigned	Holds an int32_t that Script::GetGameTime reads; not read here	inferred	none	
-0xce86d8	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xce86ec	uint32_t			unassigned	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xce8720	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce875c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce8804	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce8820	uint32_t			unassigned	Holds a dword that WorldTextInitialize reads and writes; not read here	inferred	none	
-0xce8828	float			unassigned	Holds the first float of a table its object file's code reads and writes; not read here	inferred	none	
-0xce88dc	uint32_t[15]	s_rankBadgeTextures		ui	Holds the 15 loaded rank badge texture handles	verified	one	ui/honorcredit#rank-badges
+0xce86d4	uint32_t	s_trailObjectCount		playername	Counts the live trail objects	verified	one	playername/swing#trail-objects
+0xce86d8	uint8_t[20]	s_trailObjectPool		playername	Holds the block pool of trail objects	verified	one	playername/overview#block-pools
+0xce86ec	uint8_t[20]	s_swingPool		playername	Holds the block pool of swing records	verified	one	playername/overview#block-pools
+0xce8700	float	s_playerNameInfinity		playername	Holds +inf copied by 0x6c63f0, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
+0xce870c	uint8_t[20]	s_namePool		playername	Holds the block pool of name records	verified	one	playername/overview#block-pools
+0xce8720	uint32_t	s_nameFlags		playername	Holds the name display mask the five name cvars set	verified	one	playername/plates#name-cvars-and-font
+0xce8724	uint32_t	s_frameTick		playername	Holds the frame tick that name records stamp when updated	verified	one	playername/plates#per-frame-work
+0xce8728	uint32_t[3]	s_nameList		playername	Holds the name record list: link offset, tail and head	verified	one	playername/plates#name-record-layout
+0xce8734	void *	s_nameBatch		playername	Holds the font batch the name texts draw through	verified	one	playername/plates#plate-update
+0xce8738	void *	s_nameFont		playername	Holds the font of UNIT_NAME_FONT, or 0 when the global is missing	verified	one	playername/plates#name-cvars-and-font
+0xce873c	float[8]	s_markerUVOffsets		playername	Holds the four UV offsets of a raid marker quad	verified	one	playername/plates#raid-target-marker
+0xce875c	float[12]	s_markerCorners		playername	Holds the four corner positions of a raid marker quad	verified	one	playername/plates#raid-target-marker
+0xce878c	void *	s_raidTargetTexture		playername	Holds the raid target icon texture	verified	one	playername/plates#raid-target-marker
+0xce8790	float	s_playerNameInfinity2		playername	Holds +inf copied by 0x6c69f0, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
+0xce87a0	float[8]	s_iconQuadUVs		playername	Holds the four UV pairs of a rank icon quad	verified	one	playername/worldtext#drawing-icons
+0xce87c0	float[12]	s_iconQuadPositions		playername	Holds the four corner positions of a rank icon quad, in units of 32 pixels	verified	one	playername/worldtext#drawing-icons
+0xce87f0	uint32_t[4]	s_iconRing		playername	Holds the rank icon ring: capacity, count, records and growth step	verified	one	playername/worldtext#rank-icon-records
+0xce8800	void *	s_textBatch		playername	Holds the font batch the world texts draw through	verified	one	playername/worldtext#rebuilding-the-string
+0xce8804	float[2]	s_shadowOffset		playername	Holds the world text shadow offsets, 0.002 each	verified	one	playername/worldtext#timing-and-scale
+0xce880c	uint8_t[20]	s_textPool		playername	Holds the block pool of text records	verified	one	playername/overview#block-pools
+0xce8820	void *	s_damageFont		playername	Holds the font of DAMAGE_TEXT_FONT	verified	one	playername/worldtext#damage-text-font
+0xce8828	uint32_t[42]	s_categoryTable		playername	Holds six rows of seven dwords: rise, fade-in end, fade-out start, duration, sizes, colour	verified	one	playername/worldtext#category-table
+0xce88d0	float	s_playerNameInfinity3		playername	Holds +inf copied by 0x6c7980, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
+0xce88dc	void *[15]	s_rankBadgeTextures		playername	Holds the 15 PvP rank badge textures	verified	one	playername/worldtext#rank-icon-records
 0xce8918	uint32_t[15]	s_filterLists		unassigned	Holds five capacity, count, base triples of word lists: server spam, spam, reserved, profanity, profane names	verified	one	ui/chatfilter#the-word-lists
+0xce893c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xce89a0	uint32_t			unassigned	Holds a dword that ConstructGlowEffect reads and writes; not read here	inferred	none	
 0xce89c0	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xce89c4	int32_t			unassigned	Holds an int32_t its object file's code reads and writes; not read here	inferred	none	

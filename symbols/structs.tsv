@@ -67,6 +67,7 @@ NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data
 NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
 OsThreadRecord	6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
+PLAYERNAMEDESC	56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
 PROFICIENCYSPELL	28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
 PendingSpellCast	256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields
 PlaneParticleEmitter	672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
@@ -78,6 +79,8 @@ SKILLCOSTSINFO	32		spell	Holds a skill-cost index node: cost-set id, two links, 
 SKILLLINEREC	28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race
 SOUNDDEFINITION	152		sound	Holds a SoundEntries row's sound definition: ten file slots, volume, flags, distances, weights and picks	verified	one	sound/entries#sound-definitions
 SPELLHISTORY	48		spell	Holds one spell-history record: link, spell, item, three timers and a held flag	verified	one	spell/cooldowns#history-record-layout
+SWING	1560		playername	Holds a weapon trail: a ring of 128 points, colour, lifetime and times	verified	one	playername/swing#trail-objects
+SWorldTextIcon	24		playername	Holds a queued rank icon: pixel position, size, colour and texture	verified	one	playername/worldtext#rank-icon-records
 SelectedCharacterRecord	272		ui	Holds the character list entry copied when the player enters the world: name, race, class, sex and level	verified	one	ui/unitplayer#the-selected-character-record
 Shard	32		spell	Holds one shard: link, position, model, start time and started flag	verified	one	spell/visuals#shard-model-start-and-end
 Sound	144		sound	Holds a playing stream: six list links, channel, stream, flags, fade, position, GUID, volume, bus and pauses	verified	one	sound/engine#the-sound-object
@@ -89,6 +92,8 @@ SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitt
 SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
 TRADESKILLLINE	40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
 TimeManager	2016		core	Holds the calibration state of the clock: scale, offset, thread, samples and rate estimates	verified	one	core/time#calibration-thread
+WORLDTEXTSTRING	128	0x811314	playername	Holds a floating text: category, position, colour, start time and string	verified	one	playername/worldtext#text-record
+WTOBJECT	8		playername	Holds a trail object: its swing record and its model	verified	one	playername/swing#trail-objects
 WhoResult	160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
 WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

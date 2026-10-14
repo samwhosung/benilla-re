@@ -28208,114 +28208,114 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
 0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c63d0	8	LootDestroy	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x6c63e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6c63f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6400	10			unassigned			Runs its object file code that calls 0x6c6410; not read here	inferred	none		
-0x6c6410	18			unassigned			Runs its object file code that calls InitBlockPool; not read here	inferred	none		
-0x6c6430	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6440	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6450	10			unassigned			Runs its object file code that calls 0x6c6460; not read here	inferred	none		
-0x6c6460	18			unassigned			Runs its object file code that calls InitBlockPool; not read here	inferred	none		
-0x6c6480	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6490	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6c64a0	33			unassigned			Runs its object file code not read here	inferred	none		
-0x6c64d0	97			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6540	29			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6560	418			unassigned			Runs its object file code that calls 0x6c64a0, __ftol, 0x6c6540 and 8 more; not read here	inferred	none		playername::pn_swing_step_count
-0x6c6710	52			unassigned			Runs its object file code that calls CM2Model::SetDrawCallback, HandleClose2, CDataAllocator::PutData; not read here	inferred	none		
-0x6c6750	152			unassigned			Runs its object file code that calls GetBlockPoolData, CM2Model::SetDrawCallback, OsGetAsyncTimeMs; not read here	inferred	none		
-0x6c67f0	236			unassigned			Runs its object file code that calls CM2Model::HasEvent, 0x589f40, GxRsSet and 6 more; not read here	inferred	none		
-0x6c68e0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c68f0	39			unassigned			Runs its object file code that calls FreeBlockPoolBlocks; not read here	inferred	none		
-0x6c6920	68			unassigned			Runs its object file code that calls GetBlockPoolData, CM2Model::AddRef; not read here	inferred	none		
-0x6c6970	36			unassigned			Runs its object file code that calls 0x6c6710, CDataAllocator::PutData; not read here	inferred	none		
-0x6c69a0	32			unassigned	unreached		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
-0x6c69c0	25			unassigned			Runs its object file code that calls 0x6c6750; not read here	inferred	none		
-0x6c69e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6c69f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6a00	10			unassigned			Runs its object file code that calls 0x6c6a10; not read here	inferred	none		
-0x6c6a10	121			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6a90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6aa0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6ab0	10			unassigned			Runs its object file code that calls 0x6c6ac0; not read here	inferred	none		
-0x6c6ac0	81			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6b20	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6b30	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6b40	10			unassigned			Runs its object file code that calls 0x6c6b50; not read here	inferred	none		
-0x6c6b50	34			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6b80	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6b90	165			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6c40	10			unassigned			Runs its object file code that calls 0x6c6c50; not read here	inferred	none		
-0x6c6c50	18			unassigned			Runs its object file code that calls InitBlockPool; not read here	inferred	none		
-0x6c6c70	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c6c80	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6c90	55			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6cd0	109			unassigned			Runs its object file code that calls GxuFontDestroyString, 0x6c86a0; not read here	inferred	none		
-0x6c6d40	183			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, CM2Model::IsReady, 0x50d390 and 2 more; not read here	inferred	none		
-0x6c6e00	86			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, CM2Model::IsReady, 0x6c86d0; not read here	inferred	none		
-0x6c6e60	43			playername			Runs PlayerName.cpp code that calls 0x6c86a0; not read here	inferred	none		
-0x6c6e90	1363			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::ShouldShowName and 32 more; not read here	inferred	none		playername::pn_plate_render, playername::pn_plate_render_text_width_scale, playername::pn_plate_render_billboard_quad, playername::pn_plate_render_screen_y_accumulate, playername::pn_plate_render_accumulate2
-0x6c73f0	125			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::GetNamePosition, 0x6c8570; not read here	inferred	none		playername::pn_worldtext_anchor_lift
-0x6c7470	324	PlayerNameInitialize	idb	playername			Runs PlayerName.cpp code that calls PlayerNameShutdown, FrameScript::GetVariable and 6 more; not read here	inferred	none		
-0x6c75c0	98			playername			Runs PlayerName.cpp code that calls 0x64ac60; not read here	inferred	none		
-0x6c7630	105	PlayerNameShutdown	idb	playername			Runs PlayerName.cpp code that calls 0x5c1c00, 0x5c1f70, FreeBlockPoolBlocks and 2 more; not read here	inferred	none		
-0x6c76a0	214			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, GetBlockPoolData, 0x6c6c90 and 1 more; not read here	inferred	none		
-0x6c7780	73			playername			Runs PlayerName.cpp code that calls ClntObjMgrObjectPtr, CM2Model::IsReady, 0x6c6e90; not read here	inferred	none		
-0x6c77d0	29			unassigned			Runs its object file code that calls 0x6c6cd0, CDataAllocator::PutData; not read here	inferred	none		
-0x6c77f0	9			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7800	53			unassigned	primitive		Runs code after a ghost change; not read here	inferred	none	objectlayer/playerfields#player-flag-changes	
-0x6c7840	88			unassigned			Runs its object file code that calls 0x50d390, ClntObjMgrGetC8, 0x6c73f0; not read here	inferred	none		
-0x6c78a0	7			unassigned			Runs its object file code not read here	inferred	none		
-0x6c78b0	58			unassigned			Runs its object file code that calls 0x6c6e60; not read here	inferred	none		
-0x6c78f0	9			unassigned		void __thiscall (void *record)	Sets bit 0 of the dword at +0x18 of a non-null record	inferred	none		
-0x6c7900	74			unassigned			Runs its object file code that calls OsGetAsyncTimeMs, 0x6c6d40, 0x6c6e00; not read here	inferred	none		
-0x6c7950	20			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7970	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7980	11			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7990	10			unassigned			Runs its object file code that calls 0x6c79a0; not read here	inferred	none		
-0x6c79a0	444			unassigned			Runs its object file code that calls NTempest::CImVector::Set, 0x6c7b60; not read here	inferred	none		
-0x6c7b60	52			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7ba0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c7bb0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7bc0	10			unassigned			Runs its object file code that calls 0x6c7bd0; not read here	inferred	none		
-0x6c7bd0	18			unassigned			Runs its object file code that calls InitBlockPool; not read here	inferred	none		
-0x6c7bf0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c7c00	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7c10	10			unassigned			Runs its object file code that calls 0x6c7c20; not read here	inferred	none		
-0x6c7c20	21			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7c40	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c7c50	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7c60	10			unassigned			Runs its object file code that calls 0x6c7c70; not read here	inferred	none		
-0x6c7c70	23			unassigned			Runs its object file code not read here	inferred	none		
-0x6c7c90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c7ca0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6c7cc0	591			unassigned			Runs its object file code that calls 0x6c80b0, 0x6c82e0, 0x6c8070 and 8 more; not read here	inferred	none		playername::pn_label_clip_quad, playername::pn_label_clip_quad_world_z
-0x6c7f10	345	AddRankBadgeQuad		ui	primitive	void __thiscall ()	Adds a quad with the badge texture of a world text record's rank, for ranks 5 to 19	verified	one	ui/honorcredit#rank-badges	
-0x6c8070	53			unassigned			Runs its object file code not read here	inferred	none		playername::pn_interp_param
-0x6c80b0	240			unassigned			Runs its object file code that calls 0x6c82c0; not read here	inferred	none		playername::pn_keyframe_interp
-0x6c81a0	282			unassigned			Runs its object file code that calls GxuFontDestroyString, TextBlockGetFontPtr, 0x41ae50 and 6 more; not read here	inferred	none		playername::pn_string_measure_layout
-0x6c82c0	31			unassigned			Runs its object file code that calls 0x6c81a0; not read here	inferred	none		playername::pn_width_dirty_guard
-0x6c82e0	397			unassigned			Runs its object file code that calls __ftol, 0x5c2750, 0x5c27a0; not read here	inferred	none		playername::pn_time_alpha_fade
-0x6c8470	176	WorldTextInitialize	idb	ui	primitive	void __cdecl ()	Loads the 15 rank badge textures among the world text setup	verified	one	ui/honorcredit#rank-badges	
-0x6c8520	79			unassigned			Runs its object file code that calls HandleClose, FreeBlockPoolBlocks, 0x5c1f70; not read here	inferred	none		
-0x6c8570	223			ui	primitive	void *__thiscall (uint32_t category, float *pos, const char *text, uint32_t flags, uint32_t *extra)	Builds a world text record and copies the rank into it for category 5	verified	one	ui/honorcredit#rank-badges	
-0x6c8650	61			unassigned			Runs its object file code that calls GxuFontDestroyString, SMemFree; not read here	inferred	none		
-0x6c8690	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c86a0	26			unassigned			Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
-0x6c86c0	14			unassigned			Runs its object file code that calls 0x6c7cc0; not read here	inferred	none		
-0x6c86d0	10			unassigned			Runs its object file code not read here	inferred	none		
-0x6c86e0	10			unassigned			Runs its object file code that calls 0x6c86f0; not read here	inferred	none		
-0x6c86f0	121			unassigned			Runs its object file code not read here	inferred	none		
-0x6c8770	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c8780	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c8790	10			unassigned			Runs its object file code that calls 0x6c87a0; not read here	inferred	none		
-0x6c87a0	81			unassigned			Runs its object file code not read here	inferred	none		
-0x6c8800	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6c8810	1			unassigned			Runs its object file code not read here	inferred	none		
-0x6c8820	1244			unassigned			Runs its object file code that calls 0x5c1ef0, GetDeviceProjection, GetDeviceView and 22 more; not read here	inferred	none		playername::pn_render_driver
-0x6c8d00	424			unassigned			Runs its object file code that calls 0x58b060, GxCapsGet, GxCapsWindowSize and 4 more; not read here	inferred	none		playername::pn_matrix_scale
-0x6c8eb0	57			unassigned			Runs its object file code not read here	inferred	none		
-0x6c8ef0	202			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x6c63e0	5	InitPlayerNameInfinityThunk		playername	orchestration		Jumps to 0x6c63f0; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c63f0	11	InitPlayerNameInfinity		playername	orchestration	void __cdecl (void)	Copies +inf into 0xce8700	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6400	10	InitSwingPoolThunk		playername	orchestration		Calls 0x6c6410 and registers 0x6c6430 with _atexit; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6410	18	InitSwingPool		playername	orchestration	void __cdecl (void)	Makes 0xce86ec a pool of 0x618-byte swing records, 8 per block	verified	one	playername/overview#block-pools	
+0x6c6430	12	RegisterDestroySwingPool		playername	orchestration	void __cdecl (void)	Registers 0x6c6440 with _atexit	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6440	10	DestroySwingPool		playername	orchestration	void __cdecl (void)	Frees every block of the swing pool 0xce86ec	verified	one	playername/overview#block-pools	
+0x6c6450	10	InitTrailPoolThunk		playername	orchestration		Calls 0x6c6460 and registers 0x6c6480 with _atexit; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6460	18	InitTrailPool		playername	orchestration	void __cdecl (void)	Makes 0xce86d8 a pool of 8-byte trail objects, 128 per block	verified	one	playername/overview#block-pools	
+0x6c6480	12	RegisterDestroyTrailPool		playername	orchestration	void __cdecl (void)	Registers 0x6c6490 with _atexit	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6490	10	DestroyTrailPool		playername	orchestration	void __cdecl (void)	Frees every block of the trail object pool 0xce86d8	verified	one	playername/overview#block-pools	
+0x6c64a0	33	SWING::AppendPoint		playername	primitive	float * __thiscall (void)	Returns the ring slot of the next point and advances the write counter	verified	one	playername/swing#ring-read-slot	
+0x6c64d0	97	SWING::FillVertices		playername	primitive	void __thiscall (uint32_t color, uint32_t step, void *vertices)	Writes the ring points and fading colours into a vertex buffer	verified	one	playername/swing#ring-read-slot	
+0x6c6540	29	SWING::ClampTail		playername	primitive	int32_t __thiscall (int32_t keep)	Raises the read counter to keep at most a number of points and returns the count	verified	one	playername/swing#trail-step	
+0x6c6560	418	SWING::Step		playername	primitive	bool __thiscall (uint32_t now, const float *p2, const float *p1)	Adds the two attachment points and draws the fading strip; false ends the trail	verified	one	playername/swing#trail-step	playername::pn_swing_step_count
+0x6c6710	52	WTOBJECT::Release		playername	orchestration	void __thiscall (void)	Clears the model callback, releases the model and frees the swing record	verified	one	playername/swing#trail-objects	
+0x6c6750	152	WTOBJECT::SetTrail		playername	orchestration	void __thiscall (const uint32_t *color, uint32_t lifetime)	Starts a trail: takes a swing record, installs the callback and stores colour and time	verified	one	playername/swing#trail-objects	
+0x6c67f0	236	WTOBJECT::DrawCallback		playername	orchestration	void __cdecl (WTOBJECT *object)	Reads the model events $WTB and $WTT and steps the trail	verified	one	playername/swing#trail-callback	
+0x6c68e0	1	PlayerNameNoop		playername	orchestration	void __cdecl (void)	Returns at once; the world session start calls it	inferred	none	playername/plates#name-cvars-and-font	
+0x6c68f0	39	WorldTextShutdownPools		playername	orchestration	void __cdecl (void)	Frees every block of the trail object and swing pools	verified	one	playername/swing#trail-objects	
+0x6c6920	68	WTOBJECT::Create		playername	orchestration	WTOBJECT * __thiscall (void)	Takes a trail object from its pool and holds a reference to the model	verified	one	playername/swing#trail-objects	
+0x6c6970	36	WTOBJECT::Destroy		playername	orchestration	void __thiscall (void)	Releases a trail object and returns it to its pool	verified	one	playername/swing#trail-objects	
+0x6c69a0	32	WTOBJECT::FreeSwing		playername	unreached	void __thiscall (void)	Returns the swing record to its pool and clears the pointer	verified	one	playername/overview#unreached-functions	
+0x6c69c0	25	WTOBJECT::StartTrail		playername	orchestration	void __thiscall (const uint32_t *color, uint32_t lifetime)	Starts a trail when the colour pointer and the lifetime are set	verified	one	playername/swing#trail-objects	
+0x6c69e0	5	InitPlayerNameInfinity2Thunk		playername	orchestration		Jumps to 0x6c69f0; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c69f0	11	InitPlayerNameInfinity2		playername	orchestration	void __cdecl (void)	Copies +inf into 0xce8790	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6a00	10	InitMarkerCornersThunk		playername	orchestration		Calls 0x6c6a10 and registers 0x6c6a90 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c6a10	121	InitMarkerCorners		playername	primitive	void __cdecl (void)	Stores the four marker corner positions in 0xce875c	verified	one	playername/plates#raid-target-marker	
+0x6c6a90	12	RegisterDestroyMarkerCorners		playername	orchestration	void __cdecl (void)	Registers 0x6c6aa0 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c6aa0	1	DestroyMarkerCorners		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c6ab0	10	InitMarkerUVThunk		playername	orchestration		Calls 0x6c6ac0 and registers 0x6c6b20 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c6ac0	81	InitMarkerUV		playername	primitive	void __cdecl (void)	Stores the four marker UV offsets in 0xce873c	verified	one	playername/plates#raid-target-marker	
+0x6c6b20	12	RegisterDestroyMarkerUV		playername	orchestration	void __cdecl (void)	Registers 0x6c6b30 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c6b30	1	DestroyMarkerUV		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c6b40	10	InitNameListThunk		playername	orchestration		Calls 0x6c6b50 and registers 0x6c6b80 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c6b50	34	InitNameList		playername	orchestration	void __cdecl (void)	Makes the name record list 0xce8728 empty with link offset 0	verified	one	playername/plates#name-record-layout	
+0x6c6b80	12	RegisterDestroyNameList		playername	orchestration	void __cdecl (void)	Registers 0x6c6b90 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c6b90	165	DestroyNameList		playername	orchestration	void __cdecl (void)	Unlinks every record of the name list and clears its head and tail	verified	one	playername/plates#name-record-layout	
+0x6c6c40	10	InitNamePoolThunk		playername	orchestration		Calls 0x6c6c50 and registers 0x6c6c70 with _atexit; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6c50	18	InitNamePool		playername	orchestration	void __cdecl (void)	Makes 0xce870c a pool of 0x38-byte name records, 256 per block	verified	one	playername/overview#block-pools	
+0x6c6c70	12	RegisterDestroyNamePool		playername	orchestration	void __cdecl (void)	Registers 0x6c6c80 with _atexit	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c6c80	10	DestroyNamePool		playername	orchestration	void __cdecl (void)	Frees every block of the name pool 0xce870c	verified	one	playername/overview#block-pools	
+0x6c6c90	55	PLAYERNAMEDESC::PLAYERNAMEDESC		playername	orchestration	void __thiscall (void)	Clears a name record, sets its flags to 3 and stamps the frame tick	verified	one	playername/plates#name-record-layout	
+0x6c6cd0	109	PLAYERNAMEDESC::~PLAYERNAMEDESC		playername	orchestration	void __thiscall (void)	Destroys the name text, releases the world texts and unlinks the record	verified	one	playername/plates#name-record-layout	
+0x6c6d40	183	PLAYERNAMEDESC::DrawWorldTexts		playername	orchestration	void __thiscall (uint32_t now)	Draws the record's world texts and releases the finished ones	verified	one	playername/plates#per-frame-work	
+0x6c6e00	86	PLAYERNAMEDESC::QueueIcons		playername	orchestration	void __thiscall (void)	Queues the rank icon of each world text when the model is ready	verified	one	playername/plates#per-frame-work	
+0x6c6e60	43	PLAYERNAMEDESC::ReleaseWorldTexts		playername	orchestration	void __thiscall (void)	Releases the four world texts and clears their slots	verified	one	playername/plates#per-frame-work	
+0x6c6e90	1363	PLAYERNAMEDESC::UpdatePlate		playername	primitive	void __thiscall (void)	Shows, builds, places and draws a unit's name text and raid target marker	verified	one	playername/plates#plate-update	playername::pn_plate_render, playername::pn_plate_render_text_width_scale, playername::pn_plate_render_billboard_quad, playername::pn_plate_render_screen_y_accumulate, playername::pn_plate_render_accumulate2
+0x6c73f0	125	PLAYERNAMEDESC::AddWorldText		playername	primitive	void __thiscall (uint32_t category, const char *text, const uint32_t *color, const uint32_t *icon)	Takes a free slot and constructs a world text over the unit, 1/3 below its name position	verified	one	playername/worldtext#submitting-a-text	playername::pn_worldtext_anchor_lift
+0x6c7470	324	PlayerNameInitialize	idb	playername	orchestration	void __cdecl (void)	Creates the name font and batch, registers the name cvars and loads the marker texture	verified	one	playername/plates#name-cvars-and-font	
+0x6c75c0	98	PlayerNameCVarChanged		playername	orchestration	bool __cdecl (const char *value, uint32_t mask)	Sets or clears a name flag mask from a cvar value and marks every record for rebuild	verified	one	playername/plates#name-cvars-and-font	
+0x6c7630	105	PlayerNameShutdown	idb	playername	orchestration	void __cdecl (void)	Destroys the name font, batch, pool and marker texture	verified	one	playername/plates#name-cvars-and-font	
+0x6c76a0	214	CreatePlayerNameDesc		playername	orchestration	PLAYERNAMEDESC * __thiscall (void)	Creates a name record for a GUID and installs its draw callback on the unit's model	verified	one	playername/plates#name-record-layout	
+0x6c7780	73	PlayerNameDrawCallback		playername	orchestration	void __cdecl (PLAYERNAMEDESC *desc)	Updates a name record when its unit exists and its model is ready	verified	one	playername/plates#per-frame-work	
+0x6c77d0	29	DestroyPlayerNameDesc		playername	orchestration	void __thiscall (void)	Destroys a name record and returns it to its pool	verified	one	playername/plates#name-record-layout	
+0x6c77f0	9	PlayerNameMarkColorDirty		playername	orchestration	void __thiscall (void)	Sets the refetch-colour flag of a name record	verified	one	playername/plates#name-record-layout	
+0x6c7800	53	PlayerNameMarkAllColorDirty		playername	orchestration	void __cdecl (void)	Sets the refetch-colour flag of every name record	verified	one	playername/plates#name-record-layout	
+0x6c7840	88	SubmitWorldText		playername	orchestration	void __thiscall (const char *text, uint32_t category, const uint32_t *color, const uint32_t *icon)	Adds a world text over a unit unless the camera or manager gate holds	verified	one	playername/worldtext#submitting-a-text	
+0x6c78a0	7	PlayerNameNextFrame		playername	primitive	void __cdecl (void)	Increments the frame tick	verified	one	playername/plates#per-frame-work	
+0x6c78b0	58	PlayerNameReleaseStale		playername	orchestration	void __cdecl (void)	Releases the world texts of every record not updated this frame	verified	one	playername/plates#per-frame-work	
+0x6c78f0	9	PlayerNameMarkRebuild		playername	orchestration	void __thiscall (void)	Sets the rebuild-text flag of a name record	verified	one	playername/plates#name-record-layout	
+0x6c7900	74	PlayerNameRender		playername	orchestration	void __cdecl (void)	Draws every record's world texts and queued icons	verified	one	playername/plates#per-frame-work	
+0x6c7950	20	PlayerNameHasText		playername	orchestration	bool __thiscall (void)	Returns whether a name record holds a name text	verified	one	playername/plates#per-frame-work	
+0x6c7970	5	InitPlayerNameInfinity3Thunk		playername	orchestration		Jumps to 0x6c7980; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c7980	11	InitPlayerNameInfinity3		playername	orchestration	void __cdecl (void)	Copies +inf into 0xce88d0	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c7990	10	InitCategoryTableThunk		playername	orchestration		Calls 0x6c79a0 and registers 0x6c7ba0 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c79a0	444	InitCategoryTable		playername	primitive	void __cdecl (void)	Stores the six world text category rows in 0xce8828	verified	one	playername/worldtext#category-table	
+0x6c7b60	52	WorldTextCategory::Init		playername	primitive	void __thiscall (uint32_t rise, uint32_t fadeIn, uint32_t fadeOut, uint32_t duration, float sizeLow, float sizeHigh, const uint32_t *color)	Stores one category row's seven fields	verified	one	playername/worldtext#category-table	
+0x6c7ba0	12	RegisterDestroyCategoryTable		playername	orchestration	void __cdecl (void)	Registers 0x6c7bb0 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c7bb0	1	DestroyCategoryTable		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c7bc0	10	InitTextPoolThunk		playername	orchestration		Calls 0x6c7bd0 and registers 0x6c7bf0 with _atexit; a static initializer	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c7bd0	18	InitTextPool		playername	orchestration	void __cdecl (void)	Makes 0xce880c a pool of 0x80-byte text records, 30 per block	verified	one	playername/overview#block-pools	
+0x6c7bf0	12	RegisterDestroyTextPool		playername	orchestration	void __cdecl (void)	Registers 0x6c7c00 with _atexit	verified	one	playername/overview#infinity-copies-and-pools	
+0x6c7c00	10	DestroyTextPool		playername	orchestration	void __cdecl (void)	Frees every block of the text pool 0xce880c	verified	one	playername/overview#block-pools	
+0x6c7c10	10	InitShadowOffsetThunk		playername	orchestration		Calls 0x6c7c20 and registers 0x6c7c40 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c7c20	21	InitShadowOffset		playername	primitive	void __cdecl (void)	Stores 0.002 in both shadow offsets 0xce8804 and 0xce8808	verified	one	playername/worldtext#timing-and-scale	
+0x6c7c40	12	RegisterDestroyShadowOffset		playername	orchestration	void __cdecl (void)	Registers 0x6c7c50 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c7c50	1	DestroyShadowOffset		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c7c60	10	InitIconRingThunk		playername	orchestration		Calls 0x6c7c70 and registers 0x6c7c90 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c7c70	23	InitIconRing		playername	orchestration	void __cdecl (void)	Clears the rank icon ring 0xce87f0 to 0xce87fc	verified	one	playername/worldtext#rank-icon-records	
+0x6c7c90	12	RegisterDestroyIconRing		playername	orchestration	void __cdecl (void)	Registers 0x6c7ca0 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c7ca0	25	DestroyIconRing		playername	orchestration	void __cdecl (void)	Frees the rank icon ring buffer 0xce87f8	verified	one	playername/worldtext#rank-icon-records	
+0x6c7cc0	591	WORLDTEXTSTRING::Draw		playername	primitive	bool __thiscall (uint32_t now)	Ages a text, projects its anchor and clamps its rectangle; false releases it	verified	one	playername/worldtext#placing-a-text	playername::pn_label_clip_quad, playername::pn_label_clip_quad_world_z
+0x6c7f10	345	WORLDTEXTSTRING::QueueIcon		playername	primitive	void __thiscall (void)	Appends the rank icon record of a text to the icon ring	verified	one	playername/worldtext#rank-icon-records	playername::pn_glyph_quad_build, playername::pn_glyph_quad_build_deltas
+0x6c8070	53	WORLDTEXTSTRING::Rise		playername	primitive	double __thiscall (uint32_t elapsed)	Returns the elapsed share of the duration times the category rise	verified	one	playername/worldtext#timing-and-scale	playername::pn_interp_param
+0x6c80b0	240	WORLDTEXTSTRING::ScaleAt		playername	primitive	void __thiscall (uint32_t elapsed)	Computes the size at an age from the category row and passes it on	verified	one	playername/worldtext#timing-and-scale	playername::pn_keyframe_interp
+0x6c81a0	282	WORLDTEXTSTRING::Rebuild		playername	orchestration	void __thiscall (void)	Recreates the string at the cached size and stores its half extents	verified	one	playername/worldtext#rebuilding-the-string	playername::pn_string_measure_layout
+0x6c82c0	31	WORLDTEXTSTRING::SetSize		playername	primitive	void __thiscall (float size)	Stores a changed size and rebuilds the string	verified	one	playername/worldtext#timing-and-scale	playername::pn_width_dirty_guard
+0x6c82e0	397	WORLDTEXTSTRING::Fade		playername	primitive	void __thiscall (uint32_t elapsed)	Sets the text and shadow alpha bytes for an age	verified	one	playername/worldtext#timing-and-scale	playername::pn_time_alpha_fade
+0x6c8470	176	WorldTextInitialize	idb	playername	orchestration	void __cdecl (void)	Creates the damage text font and batch and loads the rank badge textures	verified	one	playername/worldtext#damage-text-font	
+0x6c8520	79	WorldTextShutdown		playername	orchestration	void __cdecl (void)	Releases the damage font, the text pool, the batch and the badge textures	verified	one	playername/worldtext#damage-text-font	
+0x6c8570	223	WORLDTEXTSTRING::Create		playername	orchestration	WORLDTEXTSTRING * __cdecl (uint32_t category, const float *position, const char *text, const uint32_t *color, const uint32_t *icon)	Takes a text record from its pool and fills it	verified	one	playername/worldtext#text-record	
+0x6c8650	61	WORLDTEXTSTRING::DeletingDestructor		playername	orchestration	void __thiscall (uint32_t flags)	Destroys the string and frees the record when bit 0 of flags is set	verified	one	playername/worldtext#text-record	
+0x6c8690	8	WORLDTEXTSTRING::SetIcon		playername	unreached	void __thiscall (uint32_t value)	Stores a rank icon value at +0x7c	verified	one	playername/overview#unreached-functions	
+0x6c86a0	26	WORLDTEXTSTRING::Release		playername	orchestration	void __thiscall (void)	Destroys a text through its vtable and returns it to its pool	verified	one	playername/worldtext#text-record	
+0x6c86c0	14	WORLDTEXTSTRING::DrawIfSet		playername	orchestration	bool __fastcall (WORLDTEXTSTRING *text, uint32_t now)	Draws a text when it is not null	verified	one	playername/worldtext#text-record	
+0x6c86d0	10	WORLDTEXTSTRING::QueueIconIfSet		playername	orchestration	void __fastcall (WORLDTEXTSTRING *text)	Queues a text's icon when it is not null	verified	one	playername/worldtext#text-record	
+0x6c86e0	10	InitIconQuadThunk		playername	orchestration		Calls 0x6c86f0 and registers 0x6c8770 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c86f0	121	InitIconQuad		playername	primitive	void __cdecl (void)	Stores the rank icon quad positions in 0xce87c0	verified	one	playername/worldtext#drawing-icons	
+0x6c8770	12	RegisterDestroyIconQuad		playername	orchestration	void __cdecl (void)	Registers 0x6c8780 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c8780	1	DestroyIconQuad		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c8790	10	InitIconUVThunk		playername	orchestration		Calls 0x6c87a0 and registers 0x6c8800 with _atexit; a static initializer	verified	one	playername/overview#table-initializers	
+0x6c87a0	81	InitIconUV		playername	primitive	void __cdecl (void)	Stores the rank icon quad UVs in 0xce87a0	verified	one	playername/worldtext#drawing-icons	
+0x6c8800	12	RegisterDestroyIconUV		playername	orchestration	void __cdecl (void)	Registers 0x6c8810 with _atexit	verified	one	playername/overview#table-initializers	
+0x6c8810	1	DestroyIconUV		playername	orchestration	void __cdecl (void)	Returns at once	verified	one	playername/overview#table-initializers	
+0x6c8820	1244	WorldTextDrawIcons		playername	orchestration	void __cdecl (void)	Flushes the text batch and draws every queued rank icon as a pixel quad	verified	one	playername/worldtext#drawing-icons	playername::pn_render_driver
+0x6c8d00	424	WorldTextSetPixelProjection		playername	primitive	void __cdecl (void)	Sets an orthographic projection that maps the viewport to whole pixels	verified	one	playername/worldtext#drawing-icons	playername::pn_matrix_scale
+0x6c8eb0	57	SArray::GrowChunk		playername	primitive	uint32_t __thiscall (uint32_t count)	Returns the growth step for a count	verified	one	playername/worldtext#rank-icon-records	
+0x6c8ef0	202	SArray::SetCapacity		playername	host	void __thiscall (uint32_t count)	Reallocates the array to a capacity and copies its records	verified	one	playername/worldtext#rank-icon-records	
 0x6c8fc0	10			unassigned			Runs its object file code that calls 0x6c8fd0; not read here	inferred	none		
 0x6c8fd0	18			unassigned			Runs its object file code not read here	inferred	none		
 0x6c8ff0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
