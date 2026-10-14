@@ -2341,9 +2341,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b334	float[3]	s_listenerUp		ui	Holds the listener up vector (0, 0, 1), stored on the first listener update	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
-0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
+0xb4b350	void *	s_normalFfx		ui	Holds the glow effect the world frame builds and restores when the ghost state clears	verified	one	ffxeffects#start-and-shutdown
 0xb4b36c	uint8_t	s_listenerUpInit		ui	Holds bit 0 set once the up vector is stored	verified	one	sound/listener#the-listener-follows-the-mover
-0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
+0xb4b39c	void *	s_ghostFfx		ui	Holds the death effect the world frame builds and the ghost state makes current	verified	one	ffxeffects#start-and-shutdown
 0xb4b3a0	float[3]	s_reticlePosition		ui	Holds the picked ground position the reticle is drawn at	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3b0	float	s_reticleRadius		ui	Holds the half-extent of the area decal, 0 when out of range	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip

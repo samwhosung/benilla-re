@@ -182,8 +182,8 @@ same with `0x5ee8d0` and `0x5ee7f0` (`inventory`). Bit 0x10 also calls `0x491f50
 
 ## Ghost state
 
-`0x5de9c0` applies `PLAYER_FLAGS` bit 0x10: set, it switches to the ghost fog `[0xb4b39c]`, calls
-`0x6d4620(4)` and the ghost tutorial; clear, it restores `[0xb4b350]`, calls `0x6d4630`,
+`0x5de9c0` applies `PLAYER_FLAGS` bit 0x10: set, it makes the death effect `[0xb4b39c]` current (`ffxeffects`), calls
+`0x6d4620(4)` and the ghost tutorial; clear, it restores the glow effect `[0xb4b350]`, calls `0x6d4630`,
 `0x6d4900` and `0x4921c0(0,0)` and signals `PLAYER_UNGHOST`. Both end in `0x458680` with the bit.
 
 Addresses: `0x5de9c0`, `0xb4b39c`, `0xb4b350`

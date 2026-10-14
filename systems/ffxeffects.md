@@ -73,7 +73,7 @@ nonzero `atoi` of the new value and `disabled` otherwise, and returns 1; the eff
 `ffxGlow` and `ffxDeath` with it too. `0x6cd1d0` destroys the textures of the seven target
 descriptors (`0x58ad60` where a handle is set) and zeroes them.
 
-Addresses: `0x6ccfc0`, `0x6cd1d0`, `0x6cde30`, `0x6cde60`, `0x6cd16f`, `0x6cd1ac`, `0x6cd390`, `0xce89f8`, `0xce89fc`, `0xce8a00`, `0xce8a04`, `0xce8bb4`, `0x46a700`, `0x481c46`, `0x481e4e`, `0x46a7a0`
+Addresses: `0x6ccfc0`, `0x6cd1d0`, `0x6cde30`, `0x6cde60`, `0x6cd16f`, `0x6cd1ac`, `0x6cd390`, `0xce89f8`, `0xce89fc`, `0xce8a00`, `0xce8a04`, `0xce8bb4`, `0x46a700`, `0x481c46`, `0x481e4e`, `0x46a7a0`, `0x481cdb`, `0x481c63`, `0x481c8d`, `0x5de9c0`, `0xb4b350`, `0xb4b39c`
 Confidence: verified
 Proof: one
 Test: none
@@ -84,7 +84,10 @@ The registrations are `0x6ccfe3` (`ffx`) and `0x6cd007` (`ffxRectangle`); the re
 `0x6cd1ac` stores 1. The callers of `0x6ccfc0` are glue (`0x46a700`) and the world frame
 (`0x481c46`), which then build the effects. `0x6cd1d0` is called from `0x481e4e` and jumped to from
 `0x46a7a0`. `0x6cde60` stores the current effect (`0xce8bb4`) and returns the old one; its six
-callers are glue, the world frame and `0x5de9c0`.
+callers are glue, the world frame (`0x481cdb`, with the glow effect `0xb4b350` or the death effect
+`0xb4b39c` its `0x481c63` and `0x481c8d` built) and `0x5de9c0`, which makes the death effect current
+while `PLAYER_FLAGS` bit 0x10 is set and the glow effect otherwise. An effect is a single slot:
+the death effect replaces the glow effect.
 
 ## Begin and end
 

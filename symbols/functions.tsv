@@ -3807,7 +3807,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x455c10	11			unassigned			Runs its object file code not read here	inferred	none		
 0x455c20	64			unassigned	unreached		Runs its object file code that calls 0x456420; not read here	inferred	none		
 0x455c60	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	inferred	none		
+0x455c70	7	MulHigh32		cmath	primitive	uint32_t __fastcall (uint32_t a, uint32_t b)	Returns the high dword of the 64-bit product a·b	verified	one	cmath/overview#high-product	
 0x455c80	15			unassigned	unreached		Runs its object file code that calls MulHigh32; not read here	inferred	none		
 0x455c90	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x455ca0	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -35652,86 +35652,86 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ba8f0	31	CParticleArrayRoundUp		models	unreached		Rounds a count up to a multiple of a quantum; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7ba910	209	CParticleArrayRealloc		models	unreached		Reallocates a legacy particle array to an exact capacity; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x7ba9f0	171	VectorsEqualFuzzy		models	unreached		Compares two vectors component by component; nothing reaches it	inferred	none	models/overview#object-files	
-0x7baaa0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7baab0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7baac0	171			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bab70	146			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bac10	144			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7baca0	144			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bad30	146			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7badd0	144			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bae60	350			unassigned			Runs its object file code not read here	inferred	none		cmath::affine_mul34
-0x7bafc0	144			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb050	144			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb0e0	93			unassigned			Runs its object file code not read here	inferred	none		cmath::transform_point34
-0x7bb140	84			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb1a0	114			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb220	111			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb290	109			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb300	153			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bb3a0	61			unassigned	unreached		Runs its object file code that calls 0x7bab70; not read here	inferred	none		
-0x7bb3e0	61			unassigned	unreached		Runs its object file code that calls 0x7bad30; not read here	inferred	none		
-0x7bb420	61			unassigned	unreached		Runs its object file code that calls 0x7bae60; not read here	inferred	none		
-0x7bb460	61			unassigned	unreached		Runs its object file code that calls 0x7bafc0; not read here	inferred	none		
-0x7bb4a0	61			unassigned	unreached		Runs its object file code that calls 0x7bb300; not read here	inferred	none		
-0x7bb4e0	240			unassigned	unreached		Runs its object file code that calls 0x5f8d20, 0x7bb990; not read here	inferred	none		
-0x7bb5d0	307			unassigned	unreached		Runs its object file code that calls 0x7bb4e0, 0x5f8d20, 0x7bba50 and 1 more; not read here	inferred	none		
-0x7bb710	329			unassigned	unreached		Runs its object file code that calls 0x5f8d20, 0x7be6d0, 0x7bb9f0 and 1 more; not read here	inferred	none		
-0x7bb860	303			unassigned			Runs its object file code not read here	inferred	none		cmath::axis_angle_mat34
-0x7bb990	90			unassigned			Runs its object file code not read here	inferred	none		cmath::apply_translation3
-0x7bb9f0	82			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bba50	86			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bbab0	74			unassigned			Runs its object file code that calls 0x7bb860, 0x7bae60; not read here	inferred	none		
-0x7bbb00	299			unassigned	unreached		Runs its object file code that calls 0x7bae60; not read here	inferred	none		
-0x7bbc30	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbc40	15			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbc50	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbc60	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7baaa0	5	InitMatrix34InfinityThunk		unassigned			Jumps to 0x7baab0; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7baab0	11	InitMatrix34Infinity		unassigned			Copies +inf into a global the file does not read	verified	one	cmath/matrices#header-initializers	
+0x7baac0	171	CompareMatrix34		unassigned	unreached		Compares the 12 entries of two 3×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bab70	146	AddMatrix34		unassigned	unreached		Stores the entrywise sum of two 3×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bac10	144	AddMatrix34InPlace		unassigned	unreached		Adds a 3×4 matrix into another	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7baca0	144	AddMatrix34ByValue		unassigned	unreached		Stores the entrywise sum of two 3×4 matrices by value	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bad30	146	SubtractMatrix34		unassigned	unreached		Stores the entrywise difference of two 3×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7badd0	144	SubtractMatrix34InPlace		unassigned	unreached		Subtracts a 3×4 matrix from another	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bae60	350	MultiplyMatrix34		unassigned	primitive		Stores the product of two 3×4 rotation-and-translation matrices	verified	one	cmath/matrices#three-by-four-matrices	cmath::affine_mul34
+0x7bafc0	144	ScaleMatrix34		unassigned	unreached		Stores a scalar times each of the 12 entries of a 3×4 matrix	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb050	144	ScaleMatrix34InPlace		unassigned	unreached		Multiplies the 12 entries of a 3×4 matrix by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb0e0	93	TransformPoint34		unassigned	primitive		Stores a point of three through the 3×3 of a 3×4 matrix plus its translation	verified	one	cmath/matrices#three-by-four-matrices	cmath::transform_point34
+0x7bb140	84	TransformVector33		unassigned	unreached		Applies a 3×3 to a vector with nine products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb1a0	114	TransformVector33Add		unassigned	unreached		Applies a 3×4 to a vector with twelve products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb220	111	TransformPoint34Alt		unassigned	unreached		Applies a 3×4 to a point with twelve products and one sum	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb290	109	TransformPoint34InPlace		unassigned	unreached		Applies a 3×4 to a point in place	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb300	153	DivideMatrix34		unassigned	unreached		Stores each of the 12 entries of a 3×4 matrix divided by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb3a0	61	AddMatrix34Wrapper		unassigned	unreached		Calls 0x7bab70 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb3e0	61	SubtractMatrix34Wrapper		unassigned	unreached		Calls 0x7bad30 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb420	61	MultiplyMatrix34Wrapper		unassigned	unreached		Calls 0x7bae60 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb460	61	ScaleMatrix34Wrapper		unassigned	unreached		Calls 0x7bafc0 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb4a0	61	DivideMatrix34Wrapper		unassigned	unreached		Calls 0x7bb300 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb4e0	240	BuildTranslationMatrix34		unassigned	unreached		Builds a 3×4 matrix from a translation through 0x5f8d20 and 0x7bb990	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb5d0	307	BuildRotationScaleMatrix34		unassigned	unreached		Builds a 3×4 matrix from a rotation and a translation through 0x7bb4e0	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb710	329	BuildScaleMatrix34		unassigned	unreached		Builds a 3×4 matrix from a scale and a translation through 0x7be6d0 and 0x7bb990	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bb860	303	BuildAxisRotation34		unassigned	primitive		Stores the rotation about an axis by an angle in a 3×4 matrix with zero translation	verified	one	cmath/matrices#axis-and-angle-rotations	cmath::axis_angle_mat34
+0x7bb990	90	ApplyTranslation34		unassigned	primitive		Adds the 3×3 of a 3×4 matrix applied to a vector into its translation	verified	one	cmath/matrices#three-by-four-matrices	cmath::apply_translation3
+0x7bb9f0	82	ScaleMatrix33Rows		unassigned	unreached		Multiplies nine entries of a 3×3 matrix by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bba50	86	ScaleMatrix33RowsAlt		unassigned	unreached		Multiplies nine entries of a 3×3 matrix by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bbab0	74	RotateMatrix34		unassigned	orchestration		Multiplies a 3×4 matrix on the left by the rotation about an axis by an angle	verified	one	cmath/matrices#axis-and-angle-rotations	
+0x7bbb00	299	MultiplyMatrix34ByQuaternion		unassigned	unreached		Multiplies a 3×4 matrix by the rotation of a quaternion through 0x7bae60	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bbc30	5	InitMatrix34TwoPiThunk		unassigned			Jumps to 0x7bbc40; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7bbc40	15	InitMatrix34TwoPi		unassigned			Stores π + π as a float in a global	verified	one	cmath/matrices#header-initializers	
+0x7bbc50	5	InitMatrix34InvTwoPiThunk		unassigned			Jumps to 0x7bbc60; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7bbc60	19	InitMatrix34InvTwoPi		unassigned			Stores 1 over the π + π global as a float	verified	one	cmath/matrices#header-initializers	
 0x7bbc80	183	RgbToHsv		unassigned			Converts a colour's three channels in [0, 1] to hue, saturation and value	verified	one	lighting/daynight#underwater-tint	cmath::rgb_to_hsv_difftest
-0x7bbd40	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbd50	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7bbd40	5	InitColourInfinityThunk		unassigned			Jumps to 0x7bbd50; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7bbd50	11	InitColourInfinity		unassigned			Copies +inf into a global	verified	one	cmath/matrices#header-initializers	
 0x7bbd60	316	HsvToRgb		unassigned			Converts hue, saturation and value back to three channels in [0, 1]	verified	one	lighting/daynight#underwater-tint	cmath::hsv_to_rgb_difftest
 0x7bbec0	95			unassigned	primitive		Packs three unit values into bytes through a 512.0 bias, with 0xff alpha	verified	one	ui/colorselect#reading-the-colour	cmath::color_pack_rgb
 0x7bbf20	68			unassigned	primitive		Unpacks three bytes into unit values times 1/255	verified	one	ui/colorselect#setting-the-colour	cmath::color_unpack_rgb
 0x7bbf70	118			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7bbff0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7bc000	15			unassigned			Runs its object file code not read here	inferred	none		
-0x7bc010	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7bc020	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7bc040	71			unassigned			Runs its object file code not read here	inferred	none		cmath::det3
+0x7bbff0	5	InitColourTwoPiThunk		unassigned			Jumps to 0x7bc000; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7bc000	15	InitColourTwoPi		unassigned			Stores π + π as a float in a global	verified	one	cmath/matrices#header-initializers	
+0x7bc010	5	InitColourInvTwoPiThunk		unassigned			Jumps to 0x7bc020; a static initializer	verified	one	cmath/matrices#header-initializers	
+0x7bc020	19	InitColourInvTwoPi		unassigned			Stores 1 over the π + π global as a float	verified	one	cmath/matrices#header-initializers	
+0x7bc040	71	Determinant3FromEntries		unassigned	primitive		Leaves the determinant of nine floats on the stack in st0 at 53 bits	verified	one	cmath/matrices#determinants-and-inverses	cmath::det3
 0x7bc090	5			cmath	orchestration		Jumps to 0x7bc0a0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bc0a0	11			cmath	orchestration		Stores +infinity at 0xcf5c04, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7bc0b0	239			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc1a0	239			cmath	orchestration		Runs its object file code not read here	inferred	none		cmath::mat4_ne
-0x7bc290	206			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::mat4_add
-0x7bc360	204			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc430	204			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc500	206			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc5d0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
+0x7bc0b0	239	CompareMatrix4Equal		cmath	unreached		Compares the 16 entries of two 4×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bc1a0	239	CompareMatrix4		cmath	orchestration		Returns in al whether any of the 16 entries of two matrices differs under the float compare	verified	one	cmath/matrices#sum-scalar-and-product	cmath::mat4_ne
+0x7bc290	206	AddMatrix4		cmath	primitive		Stores the entrywise sum of two 4×4 matrices	verified	one	cmath/matrices#sum-scalar-and-product	cmath::mat4_add
+0x7bc360	204	AddMatrix4InPlace		cmath	unreached		Adds a 4×4 matrix into another	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bc430	204	AddMatrix4ByValue		cmath	unreached		Stores the entrywise sum of two 4×4 matrices by value	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bc500	206	SubtractMatrix4		cmath	unreached		Stores the entrywise difference of two 4×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bc5d0	204	SubtractMatrix4InPlace		cmath	unreached		Subtracts a 4×4 matrix from another	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, cmath::multiply_matrix4_difftest, gx::lightningrender_strip_difftest
-0x7bc8c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
-0x7bc8e0	204			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::mat4_mul_scalar
-0x7bc9b0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
+0x7bc8c0	29	DotRowColumn0		cmath	primitive		Returns in st0 the dot product of a row of four with the first column of a 4×4 matrix	verified	one	cmath/matrices#sum-scalar-and-product	cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
+0x7bc8e0	204	ScaleMatrix4Entries		cmath	primitive		Stores a scalar times each of the 16 entries of a 4×4 matrix	verified	one	cmath/matrices#sum-scalar-and-product	cmath::mat4_mul_scalar
+0x7bc9b0	204	ScaleMatrix4InPlace		cmath	unreached		Multiplies the 16 entries of a 4×4 matrix by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bca80	93	TransformPoint		cmath	primitive	float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	terrain::liquid_hit_flush_difftest, terrain::horizon_insert, gx::lightningrender_strip_difftest, models::m2_light_coord_finalize_difftest, models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest, cmath::transform_point4
-0x7bcae0	93			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::transform_mat43_vec3_difftest
+0x7bcae0	93	TransformPoint34Rows		cmath	primitive		Returns a vector of three through three rows of four: each row dotted with it plus its fourth entry	verified	one	cmath/matrices#points-and-vectors-through-a-matrix	cmath::transform_mat43_vec3_difftest
 0x7bcb40	140	TransformVector4		cmath	primitive	float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	terrain::portal_screen_rect_difftest, models::particle_quad_expand_stretched_difftest, cmath::transform_vec4
-0x7bcbd0	140			cmath	unreached		Runs its object file code not read here	inferred	none		
+0x7bcbd0	140	TransformVector4Alt		cmath	unreached		Applies a 4×4 to a vector of four with sixteen products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bcc60	109	TransformPointInPlace		cmath	primitive	float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	models::ribbonbasis_difftest, cmath::transform_point4
-0x7bccd0	213			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bcdb0	61			cmath	unreached		Runs its object file code that calls 0x7bc290; not read here	inferred	none		
-0x7bcdf0	61			cmath	unreached		Runs its object file code that calls 0x7bc500; not read here	inferred	none		
-0x7bce30	61			cmath	primitive		Runs its object file code that calls MultiplyMatrix4; not read here	inferred	none		
-0x7bce70	61			cmath	unreached		Runs its object file code that calls 0x7bc8e0; not read here	inferred	none		
-0x7bceb0	61			cmath	unreached		Runs its object file code that calls 0x7bccd0; not read here	inferred	none		
-0x7bcef0	156			cmath	unreached		Runs its object file code not read here	inferred	none		
+0x7bccd0	213	DivideMatrix4		cmath	unreached		Stores each of the 16 entries of a 4×4 matrix divided by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bcdb0	61	AddMatrix4Wrapper		cmath	unreached		Calls 0x7bc290 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bcdf0	61	SubtractMatrix4Wrapper		cmath	unreached		Calls 0x7bc500 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bce30	61	MultiplyMatrix4InPlace		cmath	primitive		Sets a 4×4 matrix to its product with another and returns it	verified	one	cmath/matrices#sum-scalar-and-product	
+0x7bce70	61	ScaleMatrix4Wrapper		cmath	unreached		Calls 0x7bc8e0 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bceb0	61	DivideMatrix4Wrapper		cmath	unreached		Calls 0x7bccd0 and copies the result	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bcef0	156	TransposeMatrix4		cmath	unreached		Stores the transpose of a 4×4 matrix	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bcf90	201	Determinant4		cmath	primitive	float __thiscall (const float *m)	Returns the determinant of a 4x4 matrix by cofactors	inferred	none	models/scene#segment-collision	cmath::det4
-0x7bd060	815			cmath	unreached		Runs its object file code that calls 0x7bc040; not read here	inferred	none		
-0x7bd390	815			cmath	primitive		Runs its object file code that calls 0x7bc040; not read here	inferred	none		cmath::adj4t
+0x7bd060	815	AdjugateMatrix4NoTranspose		cmath	unreached		Stores the 4×4 adjugate from the signed 3×3 minors through 0x7bc040	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bd390	815	AdjugateMatrix4		cmath	primitive		Stores the adjugate of a 4×4 matrix from its signed 3×3 minors	verified	one	cmath/matrices#determinants-and-inverses	cmath::adj4t
 0x7bd6c0	50	InvertMatrix4WithDeterminant		cmath	primitive	float * __thiscall (const float *m, float *out, float det)	Writes the inverse of a 4x4 matrix given its determinant	inferred	none	models/scene#segment-collision	cmath::mat4_inverse_from_det
 0x7bd700	280	InvertRigidMatrix		cmath	primitive	void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	cmath::mat4_affine_invert
 0x7bd820	347	InvertAffineMatrix		cmath	primitive		Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	cmath::mat4_affine_invert_uscale
-0x7bd980	372			cmath	unreached		Runs its object file code that calls 0x5f8d20, 0x7be6d0, ScaleMatrixRows and 1 more; not read here	inferred	none		
-0x7bdb00	311			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::axis_angle_mat4_difftest
+0x7bd980	372	BuildScaleMatrix4		cmath	unreached		Builds a 4×4 matrix from a scale and a translation through 0x7be6d0, 0x7bdca0 and 0x7bdc40	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bdb00	311	BuildAxisRotation4x4		cmath	primitive		Stores the rotation about an axis by an angle in a 4×4 matrix with a unit last row and column	verified	one	cmath/matrices#axis-and-angle-rotations	cmath::axis_angle_mat4_difftest
 0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	animation::m2_animate_difftest, cmath::translate_matrix_difftest
 0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	animation::m2_animate_difftest, terrain::liquid_tex_matrix_difftest, cmath::mat34_scale3_rows
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	cmath::mat34_scale3
@@ -35741,38 +35741,38 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bdf10	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c0c	verified	one	cmath/geometry#static-constants	
 0x7bdf20	5			cmath	orchestration		Jumps to 0x7bdf30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bdf30	19			cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c0c, at 0xcf5c08	verified	one	cmath/geometry#static-constants	
-0x7bdf50	104			cmath	orchestration		Runs its object file code not read here	inferred	none		animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, gx::lightningrender_strip_difftest
-0x7bdfc0	247			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::multiply_matrix3_difftest
+0x7bdf50	104	Matrix4FromFloats		cmath	orchestration		Stores sixteen floats from the stack into a 4×4 matrix	verified	one	cmath/matrices#sum-scalar-and-product	gx::lightningrender_strip_difftest
+0x7bdfc0	247	MultiplyMatrix3		cmath	primitive		Stores the product of two 3×3 matrices	verified	one	cmath/matrices#three-by-three-matrices	cmath::multiply_matrix3_difftest
 0x7be0c0	5			cmath	orchestration		Jumps to 0x7be0d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7be0d0	11			cmath	orchestration		Stores +infinity at 0xcf5c10, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7be0e0	63	Matrix3Determinant		cmath	primitive	float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
-0x7be120	183			cmath	unreached		Runs its object file code not read here	inferred	none		
+0x7be120	183	Matrix3Cofactors		cmath	unreached		Stores the 3×3 cofactor matrix with eighteen products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7be1e0	183	Matrix3Adjugate		cmath	primitive	float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
 0x7be2a0	121	InvertMatrix3		cmath	primitive	float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3
-0x7be320	199			cmath	unreached		Runs its object file code that calls 0x7be610; not read here	inferred	none		
-0x7be3f0	159			cmath	unreached		Runs its object file code that calls 0x7be6d0; not read here	inferred	none		
+0x7be320	199	InvertMatrix3Checked		cmath	unreached		Inverts a 3×3 matrix when its determinant is not near 0	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be3f0	159	DivideMatrix3Rows		cmath	unreached		Divides the rows of a 3×3 matrix by three scalars	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7be490	282	BuildAxisRotation		cmath	primitive	float * __fastcall (float *out, const float *axis, float angle, uint8_t axisIsUnit)	Builds a rotation matrix about an axis by an angle, normalizing the axis unless told it is unit	verified	one	models/emission#spline-spawn	models::particle_quad_expand_tiled_rotated_difftest, cmath::axis_angle_mat3
-0x7be5b0	87			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be610	86			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be670	86			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::mat3_scale_rows3
-0x7be6d0	82			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::mat3_scale_rows
-0x7be730	57			cmath	orchestration		Runs its object file code that calls BuildAxisRotation, 0x7bdfc0; not read here	inferred	none		
-0x7be770	225			cmath	unreached		Runs its object file code that calls 0x7bdfc0; not read here	inferred	none		
-0x7be860	47			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be890	41			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be8c0	41			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be8f0	50			cmath	unreached		Runs its object file code that calls 0x7be5b0, 0x7bdfc0; not read here	inferred	none		
-0x7be930	162			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7be9e0	160			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7bea80	159			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7beb20	162			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7bebd0	161			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7bec80	164			cmath	unreached		Runs its object file code that calls __CIasin; not read here	inferred	none		
-0x7bed30	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7beeb0	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf030	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf1b0	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf330	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
+0x7be5b0	87	BuildZRotation3		cmath	unreached		Stores the rotation about the z axis by an angle through fsincos	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be610	86	ScaleMatrix3Uniform		cmath	unreached		Multiplies the nine entries of a 3×3 matrix by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be670	86	ScaleMatrix3Rows3		cmath	primitive		Multiplies the rows of a 3×3 matrix by three scalars on the stack	verified	one	cmath/matrices#three-by-three-matrices	cmath::mat3_scale_rows3
+0x7be6d0	82	ScaleMatrix3Rows		cmath	primitive		Multiplies the rows of a 3×3 matrix by the three floats at a pointer	verified	one	cmath/matrices#three-by-three-matrices	cmath::mat3_scale_rows
+0x7be730	57	RotateMatrix3		cmath	orchestration		Multiplies a 3×3 matrix on the left by the rotation about an axis by an angle	verified	one	cmath/matrices#axis-and-angle-rotations	
+0x7be770	225	RotateMatrix3ByQuaternion		cmath	unreached		Multiplies a 3×3 matrix on the left by the rotation of a quaternion	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be860	47	TransformVector2		cmath	unreached		Applies two rows to a vector with four products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be890	41	ScaleVector4Alt		cmath	unreached		Multiplies four floats by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be8c0	41	ScaleVector4Alt2		cmath	unreached		Multiplies four floats by a scalar	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be8f0	50	RotateMatrix3Z		cmath	unreached		Builds a z rotation and multiplies a 3×3 matrix by it	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be930	162	ExtractEulerAngles0		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7be9e0	160	ExtractEulerAngles1		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bea80	159	ExtractEulerAngles2		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7beb20	162	ExtractEulerAngles3		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bebd0	161	ExtractEulerAngles4		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bec80	164	ExtractEulerAngles5		cmath	unreached		Extracts three Euler angles from a 3×3 rotation by fpatan and the C runtime asin	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bed30	374	BuildEulerBasis0		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7beeb0	374	BuildEulerBasis1		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bf030	374	BuildEulerBasis2		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bf1b0	374	BuildEulerBasis3		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
+0x7bf330	374	BuildEulerBasis4		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bf4b0	374	BuildYawPitchRollBasis		cmath	primitive	void __thiscall (float *dest, float yaw, float pitch, float roll)	Builds the transpose of Rz(yaw), Ry(pitch), Rx(roll) multiplied in that order	verified	one	uicamera/view#pitch-units-and-sign	cmath::euler_to_mat3_f
 0x7bf630	5			cmath	orchestration		Jumps to 0x7bf640, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf640	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c18	verified	one	cmath/geometry#static-constants	
@@ -35781,15 +35781,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf680	81	DominantAxis		cmath	primitive	uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component by magnitude, a tie going to the later axis	verified	one	cmath/geometry#dominant-axis-and-bounds	cmath::dominant_axis_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest, models::wmo_mocv_barycentric_color_difftest
 0x7bf6e0	5			cmath	orchestration		Jumps to 0x7bf6f0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf6f0	11			cmath	orchestration		Stores +infinity at 0xcf5c1c, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7bf700	92			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::minor_axis_difftest
+0x7bf700	92	MinorAxis		cmath	primitive		Returns the index of the component of a vector with the least magnitude	verified	one	cmath/matrices#axis-index-and-planes	cmath::minor_axis_difftest
 0x7bf760	5			cmath	orchestration		Jumps to 0x7bf770, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf770	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c24	verified	one	cmath/geometry#static-constants	
 0x7bf780	5			cmath	orchestration		Jumps to 0x7bf790, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf790	19			cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c24, at 0xcf5c20	verified	one	cmath/geometry#static-constants	
-0x7bf7b0	135			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::scalar_bcast_struct13
+0x7bf7b0	135	FillPlaneRecordWithScalar		cmath	primitive		Stores the plane record (0, 0, 1, -s) with a scalar in every point coordinate	verified	one	cmath/matrices#axis-index-and-planes	cmath::scalar_bcast_struct13
 0x7bf840	5			cmath	orchestration		Jumps to 0x7bf850, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf850	11			cmath	orchestration		Stores +infinity at 0xcf5c28, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7bf860	278			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::plane_from_3pts
+0x7bf860	278	BuildPlaneFromPoints		cmath	primitive		Stores the unit normal and distance of the plane through three points, then the points	verified	one	cmath/matrices#axis-index-and-planes	cmath::plane_from_3pts
 0x7bf980	5			cmath	orchestration		Jumps to 0x7bf990, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bf990	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c30	verified	one	cmath/geometry#static-constants	
 0x7bf9a0	5			cmath	orchestration		Jumps to 0x7bf9b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
