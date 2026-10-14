@@ -133,27 +133,6 @@ The pushes are `0x5d6a9d push 0x100111`, `0x60fe18 push 0x100111`, `0x6320d0 pus
 `0x480e1e`. Bit 0x8000 is in no other word, and 0x111, 0x2111 and 0x30000 have no 0xf00000 bit, so the entity leg skips them. The second reader of the entity callback `0xc91f54` is
 the segment trace's game object pass `0x69ce90` (`0x69cf2e`).
 
-## World object bounds
-
-`0x6717d0(box, position)` places a world object. It keeps the object's previous position at `+0x24` and
-overwrites it with the new one, builds the transform at `+0x34` from the nine axis floats, stores the
-position at `+0xa8`, and sets the bounding sphere: the centre at `+0x5c` and the radius at `+0x68`. The
-sphere is the world corners at `+0x44` and `+0x50` (from `0x6dc540`), centre half their sum, radius the
-distance from `+0x50` to the centre. A box whose minimum exceeds its maximum on any axis gives both
-corners and the centre at the position and radius 0.
-
-Addresses: `0x6717d0`, `0x6717df`, `0x6717f6`, `0x671800`, `0x671842`, `0x671850`, `0x671873`, `0x67193b`, `0x67194b`, `0x67195c`, `0x67196d`, `0x671973`, `0x671981`, `0x671989`, `0x6719a8`, `0x6719b9`, `0x6719c9`, `0x6719f5`, `0x6719fa`, `0x671a3a`, `0x621160`, `0x6dc540`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x6717df`, `0x6717f6` and `0x671800` subtract the previous position and `0x671842` to `0x671850`
-store the new one. The three compares from `0x67193b` branch to `0x6719fa` on a minimum above the
-maximum. `0x621160` adds the two corners (`0x671981`), `0x6719a8` halves the sum and `0x6719b9` to
-`0x6719c9` store the centre. `0x6719cc` to `0x6719f5` take `fsqrt` of the squared offset from `+0x50`.
-The fallback copies `+0x24` to `+0x44`, `+0x50` and `+0x5c` and zeroes `+0x68` (`0x671a3a`). The outdoor
-walk tests `+0x5c` and `+0x68` (`0x683340`), so an object with the fallback box is culled by its position.
-
 ## Mover and other world queries
 
 The mover's world is terrain, map-object groups, liquid layers (while water walking), impassable
