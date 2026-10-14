@@ -31,6 +31,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4712e0	void *[5]	s_countCustomizationCases		glue	Holds the five case addresses of the customization count 0x471270, skin to facial hair	verified	one	glue/create#randomizing-and-counts
 0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
 0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
+0x492ab8	void *[4]	s_hoverKindArms		ui	Holds the four arms of the mouseover kind switch of 0x492890	verified	one	ui/tooltipobject#the-publisher
+0x492ac8	uint8_t[121]	s_hoverKindMap		ui	Maps an object type mask minus 9 to an arm of the mouseover kind switch	verified	one	ui/tooltipobject#the-publisher
 0x494b48	void *[3]	s_protectedGateArms		ui	Holds the three arm addresses of the action gate 0x494a50: refuse, flags test, continue	verified	one	ui/protected#protected-action-gate
 0x494b54	uint8_t[12]	s_protectedGateTagArm		ui	Holds the arm index of each action gate tag 0 to 11	verified	one	ui/protected#protected-action-gate
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
@@ -54,6 +56,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x508138	uint8_t[58]	s_caseIndexes507710		ui	Holds the 58 case indexes of the switch in 0x507710	inferred	none	
 0x52e4fc	void *[13]	s_cases52b650		ui	Holds the 13 case addresses of the switch in 0x52b650	inferred	none	
 0x52f7c4	void *[5]	s_cases52e610		ui	Holds the 5 case addresses of the switch in 0x52e610	inferred	none	
+0x52fe38	void *[3]	s_ownerEffectArms		ui	Holds the three arms of the owner title switch of 0x52fd30	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines
+0x52fe44	uint8_t[66]	s_ownerEffectMap		ui	Maps a summon effect minus 42 to an arm of the owner title switch	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines
 0x52ffbc	void *[6]	s_cases52fe90		ui	Holds the 6 case addresses of the switch in 0x52fe90	inferred	none	
 0x531530	void *[9]	s_cases5313e0		ui	Holds the 9 case addresses of the switch in 0x5313e0	inferred	none	
 0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
@@ -1098,12 +1102,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8430c0	char[11]	s_textUseUiScale		ui	Holds the string "useUiScale"	inferred	none	
 0x8430cc	char[8]	s_textUiScale		ui	Holds the string uiScale	verified	one	ui/uiscale#the-two-options
 0x8432cc	char[5]	s_textDS		unassigned	Holds the string "%d%s"	inferred	none	
+0x8432d4	const char[25]	s_soundNeutralUnit		ui	Holds the interface sound name GAMEHIGHLIGHTNEUTRALUNIT played for a neutral or unfriendly hover target	verified	one	ui/tooltipobject#the-publisher
+0x8432f0	const char[26]	s_soundFriendlyUnit		ui	Holds the interface sound name GAMEHIGHLIGHTFRIENDLYUNIT played for a friendly hover target	verified	one	ui/tooltipobject#the-publisher
+0x84330c	const char[25]	s_soundHostileUnit		ui	Holds the interface sound name GAMEHIGHLIGHTHOSTILEUNIT played for a hostile hover target	verified	one	ui/tooltipobject#the-publisher
 0x843414	char[11]	s_textLootButton		ui	Holds the string "LootButton"	inferred	none	
 0x8435fc	uint32_t			ui	Holds a dword that ClientChatHandler, ClientTextEmoteHandler, HandleZoneUnderAttackPacket read and write; not read here	inferred	none	
 0x843600	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x843604	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x843608	int32_t			ui	Holds an int32_t that Script::GetGuildRecruitmentMode reads and writes; not read here	inferred	none	
 0x843628	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x84439c	const char[7]	s_keyLocked		ui	Holds the global string key LOCKED of the locked line	verified	one	ui/tooltipobject#the-game-object-lock-lines
 0x844538	char[3]	s_textR		unassigned	Holds the string "|r"	inferred	none	
 0x84453c	char[3]	s_textH		unassigned	Holds the string "|h"	inferred	none	
 0x8445b4	char[15]	s_textPVPRANKDD		unassigned	Holds the string "PVP_RANK_%d_%d"	inferred	none	
@@ -1140,6 +1148,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x846f98	char[8]	s_textWindows		ui	Holds the string "windows"	inferred	none	
 0x846fd8	char[25]	s_textCouldnTParseXMLInS		ui	Holds the string "Couldn't parse XML in %s"	inferred	none	
 0x846ff4	char[17]	s_textCouldnTOpenS		ui	Holds the string "Couldn't open %s"	inferred	none	
+0x847490	const char[15]	s_keyPlayerOffline		ui	Holds the global string key PLAYER_OFFLINE of the offline party member line	verified	one	ui/tooltipunit#the-offline-and-faction-lines
 0x8474a0	char[32]	s_textUsageGetRaidRosterInfoIndex		ui	Holds the string "Usage: GetRaidRosterInfo(index)"	inferred	none	
 0x847894	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName, Script::UnitIsFriend, Script::UnitCanCooperate read; not read here	inferred	none	
 0x847ce0	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1273,12 +1282,26 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x853b88	char *[41]	s_cursorNames		ui	Holds the cursor names by cursor id, from Point at 1 to UnableSkinAlliance at 0x28	verified	one	spell/targeting#the-targeting-cursor
 0x854120	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x854124	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x854158	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x854140	const char *[5]	s_ownerTitleKeys		ui	Holds the global string keys of the pet, minion, guardian and creation owner titles	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines
+0x854158	const char *[5]	s_creatureRankWords		ui	Holds the rank words of a creature: none, ELITE, ELITE, BOSS and none	verified	one	ui/tooltipunit#the-level-line-type-and-template
 0x85416c	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x854198	uint32_t[92]	s_gameTooltipMethods		ui	Holds the 46 pairs of a name and a function of the GameTooltip methods	verified	one	ui/tooltip#lua-methods
+0x854670	const char[5]	s_wordBoss		ui	Holds the global string key BOSS of the boss rank word	verified	one	ui/tooltipunit#the-level-line-type-and-template
+0x854678	const char[6]	s_wordElite		ui	Holds the global string key ELITE of the elite rank word	verified	one	ui/tooltipunit#the-level-line-type-and-template
 0x8546dc	char[11]	s_textCffe6cc80		unassigned	Holds the string "|cffe6cc80"	inferred	none	
+0x854780	const char[18]	s_scriptAddMoney		ui	Holds the tooltip script name OnTooltipAddMoney whose slot is at +0x454	verified	one	ui/tooltipobject#the-script-slots
+0x854794	const char[17]	s_scriptCleared		ui	Holds the tooltip script name OnTooltipCleared whose slot is at +0x44c	verified	one	ui/tooltipobject#the-script-slots
+0x8547a8	const char[26]	s_scriptSetDefaultAnchor		ui	Holds the tooltip script name OnTooltipSetDefaultAnchor whose slot is at +0x444	verified	one	ui/tooltipobject#the-script-slots
 0x854820	char[6]	s_textSAt854820		ui	Holds the string " (%s)"	inferred	none	
+0x85496c	const char[7]	s_keyPlayer		ui	Holds the global string key PLAYER of the type word of a player	verified	one	ui/tooltipunit#the-level-line-type-and-template
+0x854974	const char[7]	s_keyCorpse		ui	Holds the global string key CORPSE of the class word of a dead unit	verified	one	ui/tooltipunit#the-class-text
+0x85497c	const char[3]	s_unknownLevel		ui	Holds the two-character placeholder shown for an unknown unit level	verified	one	ui/tooltipunit#the-level-text
+0x854980	const char[8]	s_fmtNameRealm		ui	Holds the format %s - %s that joins a unit's name and realm	verified	one	ui/tooltipunit#the-name-line
+0x854988	const char[17]	s_keyLockedWithItem		ui	Holds the global string key LOCKED_WITH_ITEM of the key item line	verified	one	ui/tooltipobject#the-game-object-lock-lines
+0x85499c	const char[18]	s_keyLockedWithSpell		ui	Holds the global string key LOCKED_WITH_SPELL of the unknown skill lock line	verified	one	ui/tooltipobject#the-game-object-lock-lines
+0x8549b0	const char[24]	s_keyLockedWithSpellKnown		ui	Holds the global string key LOCKED_WITH_SPELL_KNOWN of the known skill lock line	verified	one	ui/tooltipobject#the-game-object-lock-lines
 0x8549c8	char[31]	s_textSHitemDDDDHSHS		ui	Holds the string "%s|Hitem:%d:%d:%d:%d|h[%s]|h%s"	inferred	none	
+0x8549e8	const char[15]	s_keyCorpseTooltip		ui	Holds the global string key CORPSE_TOOLTIP of the corpse tooltip line	verified	one	ui/tooltipobject#the-corpse-tooltip
 0x8549f8	char[21]	s_textTOOLTIPTALENTLEARN		ui	Holds the string "TOOLTIP_TALENT_LEARN"	inferred	none	
 0x854a10	char[25]	s_textTOOLTIPTALENTNEXTRANK		ui	Holds the string "TOOLTIP_TALENT_NEXT_RANK"	inferred	none	
 0x854a2c	char[20]	s_textTOOLTIPTALENTRANK		ui	Holds the string "TOOLTIP_TALENT_RANK"	inferred	none	
@@ -1305,6 +1328,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x854fb4	char[6]	s_textDD		ui	Holds the string "%d-%d"	inferred	none	
 0x855290	char[31]	s_textInvalidSpellSlotInSetSpell		ui	Holds the string "Invalid spell slot in SetSpell"	inferred	none	
 0x8552dc	char[49]	s_textUsageSetInventoryItemUnitSlotNameOnly		ui	Holds the string "Usage: SetInventoryItem(unit, slot [, nameOnly])"	inferred	none	
+0x855808	int32_t	s_physicalResistIndex		ui	Holds the index of the damage class row marked physical, −1 until the table is checked	verified	one	ui/tooltipunitstatus#the-studied-creature-lines
 0x8558a4	uint32_t			unassigned	Holds a dword that InitializeGlobal, Script::GetLocale read; not read here	inferred	none	
 0x856450	uint32_t			unassigned	Holds a dword that SendBugReport reads; not read here	inferred	none	
 0x85645c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -2084,6 +2108,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc6e98	uint8_t			ui	Holds a byte that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
 0xbc6f48	uint32_t[8]	s_partyMemberGuids		ui	Holds the GUIDs of the four other party members	verified	one	ui/minimapblips#party-and-pet-arrows
 0xbc70a0	uint32_t			ui	Holds a dword that CGPartyInfo::InitializeGame, Script::GetLookingForGroup read and write; not read here	inferred	none	
+0xbc70b0	uint8_t[1312]	s_partyMembers		ui	Holds the four party member records of 0x148 bytes each	verified	one	ui/tooltipunit#who-the-builder-describes
 0xbc75fc	uint32_t			unassigned	Holds a dword that Script::SendChatMessage, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	
 0xbc762c	float	s_iconHalfSize		ui	Holds half the landmark icon size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc7630	float	s_dotHalfSize		ui	Holds half the object dot size in layout units	verified	one	ui/minimapblips#blip-sizes
@@ -2147,7 +2172,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe10c0	uint32_t			uicamera	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe10c8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe1148	CInputControl *	s_inputControl		input	Holds the CInputControl singleton	verified	one	input#input-state
-0xbe1198	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
+0xbe1198	const char *	s_eventNames		ui	Holds the first event name pointer; the names follow in event order and index 0x150 is UPDATE_MOUSEOVER_UNIT	verified	one	ui/tooltipobject#the-publisher
 0xbe160c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe17b8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe1b64	uint32_t[3]	s_addOnList		ui	Holds the add-on list: its link offset, its sentinel link and its head	verified	one	ui/addons#finding-add-ons
@@ -2168,6 +2193,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d3a4	uint32_t	s_colorSkillOrange		ui	Holds the orange 0xffff8040 of a skill 0 to 24 above its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0d3a8	uint32_t	s_tooltipRedLocked		ui	Holds the red 0xffff2020 of a locked line	verified	one	ui/tooltipcontent#the-colours
 0xc0d3ac	uint32_t	s_tooltipGreen		ui	Holds the green 0xff00ff00 of a trigger or learnable line	verified	one	ui/tooltipcontent#the-colours
+0xc0d3bc	uint32_t	s_tooltipBackdropBlue		ui	Holds the colour 0xff002e5a of a game object tooltip's backdrop	verified	one	ui/tooltipobject#the-game-object-tooltip
 0xc0d3c4	uint32_t	s_tooltipGray		ui	Holds the gray 0xff808080 of an inactive line	verified	one	ui/tooltipcontent#the-colours
 0xc0d3c8	uint32_t[7]	s_qualityColors		ui	Holds the item quality colours from Poor to Artifact	verified	one	ui/tooltipcontent#the-colours
 0xc0d3e4	uint32_t	s_setSortRow		ui	Holds the item set row whose bonus slots the comparator 0x52e5c0 orders	verified	one	ui/tooltipitemreq#set-bonus-lines
@@ -2220,6 +2246,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dbc0	uint32_t	s_itemSetIdMap		dbc	Holds the ItemSet.dbc rows by id	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0dbc4	uint32_t	s_itemSetMaxId		dbc	Holds the highest ItemSet.dbc id	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0dbcc	uint32_t[5]	s_itemRandomPropertiesStore		dbc	Holds the ItemRandomProperties.dbc store	verified	one	objectlayer/items#item-names
+0xc0dbe0	uint32_t	s_petFoodRows		dbc	Holds the ItemPetFood.dbc rows, 0x28 bytes each	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
+0xc0dbe4	uint32_t	s_petFoodCount		dbc	Holds the number of ItemPetFood.dbc rows	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
 0xc0dbf4	uint32_t[5]	s_itemGroupSoundsStore		dbc	Holds the ItemGroupSounds.dbc store	verified	one	objectlayer/items#the-item-record
 0xc0dc08	uint32_t[5]	s_itemDisplayInfoStore		dbc	Holds the ItemDisplayInfo.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/playercombat#hand-weapons
 0xc0dc24	uint32_t	s_itemClassIdMap		unassigned	Holds the ItemClass.dbc rows by row index	verified	one	ui/tooltipitemhead#the-slot-and-type-line
@@ -2236,7 +2264,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
 0xc0dde8	uint32_t[5]	s_durabilityQualityStore		dbc	Holds the DurabilityQuality.dbc store	verified	one	objectlayer/items#repair-cost
 0xc0ddfc	uint32_t[5]	s_durabilityCostsStore		dbc	Holds the DurabilityCosts.dbc store	verified	one	objectlayer/items#repair-cost
-0xc0de2c	uint32_t			unassigned	Holds a dword that Script::UnitCreatureType reads and writes; not read here	inferred	none	
+0xc0de2c	uint32_t	s_creatureTypeIdMap		unassigned	Holds the CreatureType.dbc rows by id	verified	one	ui/tooltipunit#the-class-text
+0xc0de30	uint32_t	s_creatureTypeMaxId		dbc	Holds the highest CreatureType.dbc id	verified	one	ui/tooltipunit#the-class-text
+0xc0de40	uint32_t	s_creatureSpellDataIdMap		dbc	Holds the CreatureSpellData.dbc rows by id	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
+0xc0de44	uint32_t	s_creatureSpellDataMaxId		dbc	Holds the highest CreatureSpellData.dbc id	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
+0xc0de7c	uint32_t	s_creatureFamilyIdMap		dbc	Holds the CreatureFamily.dbc rows by id	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
+0xc0de80	uint32_t	s_creatureFamilyMaxId		dbc	Holds the highest CreatureFamily.dbc id	verified	one	ui/tooltipunitstatus#the-studied-creature-diet-and-abilities
 0xc0deb0	uint8_t[20]	s_cinematicSequencesStore		dbc	Holds the CinematicSequences.dbc store	inferred	none	
 0xc0dec4	uint8_t[20]	s_cinematicCameraStore		dbc	Holds the CinematicCamera.dbc store	inferred	none	
 0xc0ded8	uint32_t[5]	s_chrRacesStore		dbc	Holds the ChrRaces.dbc store: records, count, id map by record +0x00, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes

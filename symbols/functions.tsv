@@ -7060,8 +7060,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496380	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
 0x4963a0	56			ui	primitive		Keeps a summon's zone, expiry and summoner and signals CONFIRM_SUMMON	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x4963e0	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Runs GameUI.cpp code that calls 0x4e8820; not read here	inferred	none		
-0x496420	22			ui	orchestration		Runs GameUI.cpp code that calls 0x4e8860; not read here	inferred	none		
+0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party member record of a GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
+0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the record at +0x80 of the online party member whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x496440	37			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x496470	49			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
 0x4964b0	84			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
@@ -10454,8 +10454,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e85d0	250			ui	primitive		Updates a player's party token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
 0x4e86d0	28	CountPartyMembers		ui	primitive		Counts the nonzero GUIDs of the four party slots	verified	one	objectlayer/party#group-notices	
 0x4e86f0	282			ui	primitive		Stores the loot method, master and threshold and shows the changes	inferred	none	objectlayer/party#the-group-list	
-0x4e8820	61			ui	primitive		Returns the party member record of a GUID, or 0	inferred	none	objectlayer/party#party-member-stats	
-0x4e8860	86			ui	primitive		Runs PartyFrame.cpp code not read here	inferred	none		
+0x4e8820	61			ui	primitive		Returns the party member record of a GUID, or 0 through the four GUIDs at 0xbc6f48	verified	one	ui/tooltipunit#who-the-builder-describes	
+0x4e8860	86	FindPartyPetRecord		ui	primitive	void * __thiscall (const uint64_t *guid)	Returns the pet part at +0x80 of the online party member record whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x4e88c0	247			ui	primitive		Runs PartyFrame.cpp code that calls SStrCmp, SStrCopy, CDataStore::PutUInt32 and 2 more; not read here	inferred	none		
 0x4e89c0	346			ui	primitive		Rebuilds the looking-for-group types for the active player; not read here	inferred	none	objectlayer/quests#quest-giver-status-refresh	
 0x4e8b20	180			ui	orchestration		Runs PartyFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
@@ -13141,7 +13141,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x528fe0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x528ff0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529000	10			ui	orchestration		Runs its object file code that calls 0x529010; not read here	inferred	none		
-0x529010	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x529010	11			ui	orchestration		Stores 0xff002e5a in the game object tooltip's backdrop colour	verified	one	ui/tooltipobject#the-game-object-tooltip	
 0x529020	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x529030	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529040	10			ui	orchestration		Runs its object file code that calls 0x529050; not read here	inferred	none		
@@ -13178,22 +13178,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529440	6			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x529450	43			ui	orchestration		Runs its object file code that calls 0x529480, SMemFree; not read here	inferred	none		
 0x529480	215			ui	primitive		Runs its object file code that calls 0x467d00, ClntObjMgrClearObjectMirrorHandler and 2 more; not read here	inferred	none		
-0x529560	98			ui	orchestration		Runs Tooltip.cpp code that calls ClntObjMgrObjectPtr, 0x783270; not read here	inferred	none		
-0x5295d0	124			ui	orchestration		Runs Tooltip.cpp code that calls CSimpleFrame::GetScriptByName, SStrCmpI; not read here	inferred	none		
+0x529560	98	CGTooltip::OnUnitHealthChanged		ui	orchestration	uint32_t __cdecl (uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *statusBar)	Sets the tooltip health bar's range and value from the unit and returns 1	verified	one	ui/tooltipunit#the-health-bar	
+0x5295d0	124	CGTooltip::GetScriptSlot		ui	orchestration	uint32_t * __thiscall (const char *name)	Returns the address of the tooltip script slot of a name, else the frame's own lookup	verified	one	ui/tooltipobject#the-script-slots	
 0x529650	737			ui	primitive		Runs Tooltip.cpp code that calls CSimpleFrame::PostLoadXML, 0x536d10, 0x536c80 and 4 more; not read here	inferred	none		
 0x529940	243			ui	primitive		Runs Tooltip.cpp code that calls 0x536d10, 0x536c80, 0x536910 and 2 more; not read here	inferred	none		
-0x529a40	1152			ui	primitive		Runs Tooltip.cpp code that calls __ftol, ceil, FrameScript_GetText and 6 more; not read here	inferred	none		
-0x529ec0	222			ui	primitive		Runs Tooltip.cpp code that calls FrameScript_GetText, SStrCopy, GetSpellEffectPointsInt and 2 more; not read here	inferred	none		
+0x529a40	1152	CGTooltip::AddStudiedCreatureLines		ui	primitive	void __thiscall (void *unit, char *buffer, uint32_t size)	Adds the damage, armor, health, resistance, diet and pet ability lines of a studied creature	verified	one	ui/tooltipunitstatus#the-studied-creature-lines	
+0x529ec0	222	CGTooltip::AddSkinnableLine		ui	primitive	void __thiscall (void *unit, char *buffer, uint32_t size)	Adds the skinnable line, in the skill colour when the interact spell skins	verified	one	ui/tooltipunitstatus#the-skinnable-line	
 0x529fa0	54	SkillColorPointer		ui	primitive	uint32_t * __fastcall (int32_t required, int32_t value)	Returns the colour pointer of a skill value against its requirement: gray, green, yellow, orange or red	verified	one	ui/tooltipitemhead#the-skill-colours	
-0x529fe0	2613			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, GPartyInfo::GetRemoteStats and 26 more; not read here	inferred	none		
-0x52aa20	747			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, 0x77f410 and 10 more; not read here	inferred	none		
-0x52ad10	88			ui	primitive		Runs Tooltip.cpp code that calls 0x52aa20, 0x530640; not read here	inferred	none		
+0x529fe0	2613	CGTooltip::BuildUnit		ui	primitive	uint32_t __thiscall (const uint64_t *guid)	Adds the lines of a unit tooltip for a unit in sight, or a party member or party pet record	verified	one	ui/tooltipunit#who-the-builder-describes	
+0x52aa20	747	CGTooltip::BuildGameObject		ui	primitive	void __thiscall (const uint64_t *guid)	Adds the name, backdrop tint, handler lines and lock lines of a game object tooltip	verified	one	ui/tooltipobject#the-game-object-tooltip	
+0x52ad10	88	CGTooltip::OnLockKeyItem		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the game object tooltip again from its stored GUID when the key item arrives	verified	one	ui/tooltipobject#the-game-object-lock-lines	
 0x52ad70	26	QualityColorPointer		ui	primitive	uint32_t * __cdecl (uint32_t quality)	Returns the quality colour pointer, with the index clamped to 6	verified	one	ui/tooltipcontent#the-colours	
 0x52ad90	26	QualityColorEscape		ui	primitive	const char * __cdecl (uint32_t quality)	Returns the inline colour escape string of a quality	verified	one	ui/tooltipcontent#the-colours	
 0x52adb0	80			ui	orchestration		Formats an item link with its quality colour	inferred	none	objectlayer/quests#quest-completion	
 0x52ae00	238			ui	primitive		Runs Tooltip.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, 0x5d8bc0, 0x52adb0; not read here	inferred	none		
-0x52aef0	230			ui	orchestration		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrObjectPtr, DBCache::NameCache::GetRecord and 3 more; not read here	inferred	none		
-0x52afe0	88			ui	primitive		Runs Tooltip.cpp code that calls 0x52aef0, 0x530640; not read here	inferred	none		
+0x52aef0	230	CGTooltip::BuildCorpse		ui	orchestration	void __thiscall (const uint64_t *guid)	Adds the corpse line with the owner's name, or waits for the name cache	verified	one	ui/tooltipobject#the-corpse-tooltip	
+0x52afe0	88	CGTooltip::OnCorpseOwnerName		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the corpse tooltip again from its stored GUID when the owner's name arrives	verified	one	ui/tooltipobject#the-corpse-tooltip	
 0x52b040	85			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, 0x4f0f40, 0x5303b0; not read here	inferred	none		
 0x52b0a0	752			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 8 more; not read here	inferred	none		
 0x52b390	695			ui	primitive		Runs Tooltip.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 5 more; not read here	inferred	none		
@@ -13206,7 +13206,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x52f980	203			ui	primitive		Runs Tooltip.cpp code that calls floor; not read here	inferred	none		
 0x52fa50	375	FormatDuration		ui	primitive	char * __thiscall (uint32_t ms, const char *prefix, const char *extra, uint32_t round_up)	Formats a duration in milliseconds as days, hours, minutes or seconds through a global string	verified	one	ui/tooltipcontent#durations	
 0x52fbd0	350			ui	primitive		Runs Tooltip.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
-0x52fd30	264			ui	primitive		Runs Tooltip.cpp code that calls GetUnitCreatureType, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
+0x52fd30	264	CGTooltip::FormatUnitOwner		ui	primitive	void __thiscall (char *out, uint32_t size)	Writes the owner title line of a charmed or created unit, or nothing without an owner	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines	
 0x52fe90	300			ui	orchestration		Anchors a tooltip to its owner by its mode	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
 0x52ffe0	97			ui	orchestration		Sets a tooltip's owner, mode and offsets and anchors it	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
 0x530050	543	GameTooltipClear		ui	orchestration	void __thiscall ()	Hides the status bar and every line, empties their texts and runs the cleared script	verified	one	ui/tooltipcontent#the-line-arrays	
@@ -33861,7 +33861,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77e8c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77e8d0	2025			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, GetBlockPoolData and 5 more; not read here	inferred	none		
 0x77f0c0	833			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, 0x7704c0 and 2 more; not read here	inferred	none		
-0x77f410	45			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
+0x77f410	45	CSimpleBackdrop::SetColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores a colour in the backdrop object and repaints it	verified	one	ui/tooltipobject#the-game-object-tooltip	
 0x77f440	143			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
 0x77f4d0	151			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77f570	21			ui	primitive		Runs its object file code not read here	inferred	none		

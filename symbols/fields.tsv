@@ -162,7 +162,11 @@ CGPlayer_C	0x1d50	24	uint8_t[24]	m_handWeapons	objectlayer	Holds each hand's wea
 CGPlayer_C	0x1d68	4	uint32_t	m_localStandState	objectlayer	Holds the active player's local stand state	verified	one	objectlayer/players#the-player-object
 CGTooltip	0x031c	4	uint32_t	m_lineCount	ui	Holds the number of lines in use	verified	one	ui/tooltipcontent#the-line-arrays
 CGTooltip	0x0320	4	uint32_t	m_lineLimit	ui	Holds the number of lines the arrays hold	verified	one	ui/tooltipcontent#the-line-arrays
+CGTooltip	0x0348	4	void *	m_statusBar	ui	Holds the health status bar attached to the tooltip, or null	verified	one	ui/tooltipunit#the-health-bar
+CGTooltip	0x0368	8	uint32_t[2]	m_unitGuid	ui	Holds the GUID the unit builder last described, low then high	verified	one	ui/tooltipunit#who-the-builder-describes
+CGTooltip	0x0370	8	uint32_t[2]	m_objectGuid	ui	Holds the GUID of the game object the tooltip describes, low then high	verified	one	ui/tooltipobject#the-game-object-tooltip
 CGTooltip	0x0380	8	uint32_t[2]	m_itemGuid	ui	Holds the item GUID the item builder was given, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x0388	8	uint32_t[2]	m_corpseGuid	ui	Holds the GUID of the corpse the tooltip describes, low then high	verified	one	ui/tooltipobject#the-corpse-tooltip
 CGTooltip	0x0398	4	uint32_t	m_itemEntry	ui	Holds the item entry of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x03a0	4	uint32_t	m_nameOnly	ui	Holds the nameOnly argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x03a4	4	uint32_t	m_equippedHeader	ui	Holds the equipped header argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
@@ -180,6 +184,9 @@ CGTooltip	0x0430	4	uint32_t	m_lockId	ui	Holds the lock id of the item	verified	o
 CGTooltip	0x0434	4	uint32_t	m_maxDurability	ui	Holds the maximum durability of the item, −1 when unset	verified	one	ui/tooltipenchant#durability
 CGTooltip	0x0438	4	uint32_t	m_durability	ui	Holds the current durability of the item	verified	one	ui/tooltipenchant#durability
 CGTooltip	0x0440	4	uint32_t	m_fieldsValid	ui	Holds 1 when the item fields from 0x3d0 are valid	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x0444	4	uint32_t	m_scriptDefaultAnchor	ui	Holds the OnTooltipSetDefaultAnchor script slot	verified	one	ui/tooltipobject#the-script-slots
+CGTooltip	0x044c	4	uint32_t	m_scriptCleared	ui	Holds the OnTooltipCleared script slot	verified	one	ui/tooltipobject#the-script-slots
+CGTooltip	0x0454	4	uint32_t	m_scriptAddMoney	ui	Holds the OnTooltipAddMoney script slot	verified	one	ui/tooltipobject#the-script-slots
 CGUnit_C	0x0110	4	uint32_t *	m_unitFields	objectlayer	Points at field 6, the unit section, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0114	4	uint32_t *	m_unitWatchCopy	objectlayer	Points at the unit section's watch copy, past the object's 3, written by 0x5fad10	verified	one	objectlayer/classes#field-storage
 CGUnit_C	0x0118	4	CMovement *	m_movementPtr	objectlayer	Points at the unit's own CMovement at +0x9a8, set by 0x5fad50	verified	one	objectlayer/units#the-unit-object
