@@ -33546,10 +33546,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772100	119			ui	primitive		Runs its object file code that calls 0x44d600; not read here	inferred	none		ui::textglue_scale_offset
 0x772180	189			ui	primitive		Draws a FontString's colour and, with a shadow, its shadow pass at the scaled offset	verified	one	ui/fontstring#shadow	ui::textglue_scale_mul
 0x772240	88			ui	primitive		Runs its object file code that calls 0x7724a0; not read here	inferred	none		ui::textglue_settled_eps
-0x7722a0	231			ui	primitive		Runs its object file code that calls CopyColor, 0x44d3b0; not read here	inferred	none		ui::textglue_scale_mul
-0x772390	38			ui	primitive		Runs its object file code not read here	inferred	none		
-0x7723c0	41			ui	orchestration		Runs its object file code that calls 0x7724a0; not read here	inferred	none		
-0x7723f0	109			ui	orchestration		Runs its object file code that calls 0x772390, 0x7722a0; not read here	inferred	none		
+0x7722a0	231			ui	primitive		Sets the shadow bit and passes the shadow colour and offset to the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
+0x772390	38			ui	primitive		Clears the shadow bit and tells the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
+0x7723c0	41			ui	orchestration		Stores a changed shadow colour and refreshes the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
+0x7723f0	109			ui	orchestration		Stores a changed shadow offset and sets or clears the shadow bit by whether it is zero	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x772460	57			ui	orchestration		Runs its object file code that calls 0x44dc40; not read here	inferred	none		
 0x7724a0	667			ui	primitive		Runs its object file code that calls HandleClose, 0x771ec0, CLayoutFrame::GetWidth and 7 more; not read here	inferred	none		ui::textglue_recip_span_pair, ui::textglue_scale_offset_7724a0, ui::textglue_settled_poseps
 0x772740	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33911,18 +33911,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x780640	190	Button::GetDisabledFontObject	idb	ui	primitive		Implements the Button method GetDisabledFontObject, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
 0x780700	190	Button::SetHighlightFontObject	idb	ui	primitive		Implements the Button method SetHighlightFontObject, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
 0x7807c0	190	Button::GetHighlightFontObject	idb	ui	primitive		Implements the Button method GetHighlightFontObject, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
-0x780880	274	Button::SetFont	idb	ui	primitive		Implements the Button method SetFont, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
-0x7809a0	191	Button::GetFont	idb	ui	primitive		Implements the Button method GetFont, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
+0x780880	274	Button::SetFont	idb	ui	primitive		Sets the normal, disabled and highlight fonts of a button, returning nothing	verified	one	ui/fontmethods#fonts-of-a-button	
+0x7809a0	191	Button::GetFont	idb	ui	primitive		Returns the normal font's file name, height and flags text	verified	one	ui/fontmethods#fonts-of-a-button	
 0x780a60	449	Button::SetFontString	idb	ui	primitive		Implements the Button method SetFontString, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
 0x780c30	225	Button::GetFontString	idb	ui	primitive		Implements the Button method GetFontString, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
 0x780d20	238	Button::SetText	idb	ui	primitive		Implements the Button method SetText, its pair in the table 0x879d00	verified	one	ui/button#the-label-and-its-fonts	
 0x780e10	204	Button::GetText	idb	ui	primitive		Implements the Button method GetText, its pair in the table 0x879d00	verified	one	ui/button#the-label-and-its-fonts	
-0x780ee0	537	Button::SetTextColor	idb	ui	primitive		Implements the Button method SetTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::pack_settextcolor_780ee0
-0x781100	345	Button::GetTextColor	idb	ui	primitive		Implements the Button method GetTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::normalize_channel_full_domain_781100, ui::unpack_gettextcolor_781100
-0x781260	537	Button::SetDisabledTextColor	idb	ui	primitive		Implements the Button method SetDisabledTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::pack_setdisabledtextcolor_781260
-0x781480	345	Button::GetDisabledTextColor	idb	ui	primitive		Implements the Button method GetDisabledTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::unpack_getdisabledtextcolor_781480
-0x7815e0	537	Button::SetHighlightTextColor	idb	ui	primitive		Implements the Button method SetHighlightTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::pack_sethighlighttextcolor_7815e0
-0x781800	345	Button::GetHighlightTextColor	idb	ui	primitive		Implements the Button method GetHighlightTextColor, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	ui::unpack_gethighlighttextcolor_781800
+0x780ee0	537	Button::SetTextColor	idb	ui	primitive		Sets the normal text colour of a button from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x781100	345	Button::GetTextColor	idb	ui	primitive		Returns the red, green, blue and alpha of the normal text colour of a button	verified	one	ui/fontmethods#reading-colours	
+0x781260	537	Button::SetDisabledTextColor	idb	ui	primitive		Sets the disabled text colour of a button from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x781480	345	Button::GetDisabledTextColor	idb	ui	primitive		Returns the red, green, blue and alpha of the disabled text colour of a button	verified	one	ui/fontmethods#reading-colours	
+0x7815e0	537	Button::SetHighlightTextColor	idb	ui	primitive		Sets the highlight text colour of a button from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x781800	345	Button::GetHighlightTextColor	idb	ui	primitive		Returns the red, green, blue and alpha of the highlight text colour of a button	verified	one	ui/fontmethods#reading-colours	
 0x781960	16	Button::SetNormalTexture	idb	ui	orchestration		Implements the Button method SetNormalTexture, its pair in the table 0x879d00	verified	one	ui/button#state-and-highlight-textures	
 0x781970	564			ui	primitive		Sets a Button state texture from a Texture, a path or nil, raising a usage error otherwise	verified	one	ui/button#state-and-highlight-textures	
 0x781bb0	10	Button::GetNormalTexture	idb	ui	orchestration		Implements the Button method GetNormalTexture, its pair in the table 0x879d00	verified	one	ui/button#lua-methods	
@@ -34071,7 +34071,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x785c00	24			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
 0x785c20	94			ui	primitive		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
 0x785c80	94			ui	primitive		Runs CSimpleMessageFrame.cpp code not read here	inferred	none		
-0x785ce0	21			ui	orchestration		Runs CSimpleMessageFrame.cpp code that calls 0x785ea0; not read here	inferred	none		
+0x785ce0	21			ui	orchestration		Stores the insert mode of a message frame and redraws its lines	verified	one	ui/fontmethods#message-frame-insert-mode	
 0x785d00	177			ui	orchestration		Queues a message frame line, copying its text and colour	verified	one	ui/messageframe#a-message-frames-addmessage	
 0x785dc0	61			ui	primitive		Runs its object file code that calls 0x786570; not read here	inferred	none		
 0x785e00	121			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -34536,8 +34536,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x794c90	190	MessageFrame::GetJustifyH	idb	ui	primitive		Implements the MessageFrame method GetJustifyH, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
 0x794d50	190	MessageFrame::SetJustifyV	idb	ui	primitive		Implements the MessageFrame method SetJustifyV, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
 0x794e10	190	MessageFrame::GetJustifyV	idb	ui	primitive		Implements the MessageFrame method GetJustifyV, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
-0x794ed0	278	MessageFrame::SetInsertMode	idb	ui	primitive		Implements the MessageFrame method SetInsertMode, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
-0x794ff0	214	MessageFrame::GetInsertMode	idb	ui	primitive		Implements the MessageFrame method GetInsertMode, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
+0x794ed0	278	MessageFrame::SetInsertMode	idb	ui	primitive		Sets the insert mode of a message frame to TOP or BOTTOM	verified	one	ui/fontmethods#message-frame-insert-mode	
+0x794ff0	214	MessageFrame::GetInsertMode	idb	ui	primitive		Returns the insert mode of a message frame as TOP or BOTTOM	verified	one	ui/fontmethods#message-frame-insert-mode	
 0x7950d0	159	MessageFrame::SetFading	idb	ui	primitive		Implements the MessageFrame method SetFading, its pair in the table 0x87b960	verified	one	ui/messageframe#getfading-and-setfading	
 0x795170	178	MessageFrame::GetFading	idb	ui	primitive		Implements the MessageFrame method GetFading, its pair in the table 0x87b960	verified	one	ui/messageframe#getfading-and-setfading	
 0x795230	236	MessageFrame::SetTimeVisible	idb	ui	primitive		Implements the MessageFrame method SetTimeVisible, its pair in the table 0x87b960	verified	one	ui/messageframe#lua-methods	
@@ -34733,12 +34733,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79d4f0	403	FontString::SetFont	idb	ui	primitive		Implements the FontString method SetFont, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::set_scaled_slice
 0x79d690	194	FontString::GetText	idb	ui	primitive		Implements the FontString method GetText, its pair in the table 0x87c1d8	verified	one	ui/fontstring#setting-the-text	
 0x79d760	211	FontString::SetText	idb	ui	primitive		Implements the FontString method SetText, its pair in the table 0x87c1d8	verified	one	ui/fontstring#setting-the-text	
-0x79d840	376	FontString::GetTextColor	idb	ui	primitive		Implements the FontString method GetTextColor, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::unpack_color_79d840
-0x79d9c0	544	FontString::SetTextColor	idb	ui	primitive		Implements the FontString method SetTextColor, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::pack_color_79d9c0
-0x79dbe0	345	FontString::GetShadowColor	idb	ui	primitive		Implements the FontString method GetShadowColor, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::normalize_channel_full_domain, ui::unpack_color_79dbe0
-0x79dd40	544	FontString::SetShadowColor	idb	ui	primitive		Implements the FontString method SetShadowColor, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::pack_color_79dd40
+0x79d840	376	FontString::GetTextColor	idb	ui	primitive		Returns the text colour of a font string, rounding green, blue and alpha to a float	verified	one	ui/fontmethods#reading-colours	
+0x79d9c0	544	FontString::SetTextColor	idb	ui	primitive		Sets the text colour of a font string from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x79dbe0	345	FontString::GetShadowColor	idb	ui	primitive		Returns the red, green, blue and alpha of the shadow colour of a font string	verified	one	ui/fontmethods#reading-colours	
+0x79dd40	544	FontString::SetShadowColor	idb	ui	primitive		Sets the shadow colour of a font string from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
 0x79df60	267	FontString::GetShadowOffset	idb	ui	primitive		Implements the FontString method GetShadowOffset, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::get_scaled_pair_79df60
-0x79e070	338	FontString::SetShadowOffset	idb	ui	primitive		Implements the FontString method SetShadowOffset, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::set_scaled_pair_79e070
+0x79e070	338	FontString::SetShadowOffset	idb	ui	primitive		Sets the shadow offset of a font string and its shadow bit from two numbers	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x79e1d0	220	FontString::GetSpacing	idb	ui	primitive		Implements the FontString method GetSpacing, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::get_scaled_slice
 0x79e2b0	266	FontString::SetSpacing	idb	ui	primitive		Implements the FontString method SetSpacing, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::set_scaled_79e2b0
 0x79e3c0	329	FontString::SetTextHeight	idb	ui	primitive		Implements the FontString method SetTextHeight, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	ui::set_spacing_guarded_79e3c0
@@ -34770,17 +34770,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79f210	384			ui	orchestration		Sets a font's file, height and flags, returning 1, or nil for a bad height or file	verified	one	ui/fontstring#setfont	ui::set_scaled_changed_spilled_79f210
 0x79f390	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x79f3a0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x79f3b0	97			ui	primitive		Runs its object file code that calls 0x41e4c0, lua_pushstring, GetScaledScreenAspect and 3 more; not read here	inferred	none		ui::get_scaled_79f3b0
-0x79f420	119			ui	primitive		Runs its object file code that calls 0x6f34d0, 0x6f3620, __ftol and 1 more; not read here	inferred	none		ui::color_byte_79f420
-0x79f4a0	45			ui	primitive		Runs its object file code that calls lua_pushnumber; not read here	inferred	none		ui::normalize_byte_79f4a0
-0x79f4d0	430			ui	primitive		Runs its object file code that calls 0x6f3620, 0x6f34d0, __ftol; not read here	inferred	none		ui::pack_color_79f4d0
-0x79f680	175			ui	primitive		Runs its object file code that calls lua_pushnumber; not read here	inferred	none		ui::unpack_color_79f680
-0x79f730	466			ui	primitive		Runs its object file code that calls 0x6f3620, 0x6f34d0, __ftol; not read here	inferred	none		ui::pack_color_79f730
-0x79f910	175			ui	primitive		Runs its object file code that calls lua_pushnumber; not read here	inferred	none		ui::unpack_color_79f910
-0x79f9c0	261			ui	primitive		Runs its object file code that calls 0x6f34d0, 0x6f3620, GetScaledScreenAspect and 2 more; not read here	inferred	none		ui::set_scaled_pair_79f9c0
-0x79fad0	106			ui	primitive		Runs its object file code that calls GetScaledScreenAspect, DivideByScreenScaleX, lua_pushnumber; not read here	inferred	none		ui::get_scaled_pair_79fad0
-0x79fb40	157			ui	primitive		Runs its object file code that calls 0x6f34d0, 0x6f3620, GetScaledScreenAspect and 2 more; not read here	inferred	none		ui::set_scaled_changed_79fb40
-0x79fbe0	58			ui	primitive		Runs its object file code that calls GetScaledScreenAspect, DivideByScreenScaleX, lua_pushnumber; not read here	inferred	none		ui::get_scaled_79fbe0
+0x79f3b0	97	FontMethods::GetFont		ui	primitive		Returns the file name, scaled height and flags text of a font	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79f420	119	FontMethods::SetAlpha		ui	primitive		Stores the low byte of the truncated alpha times 255 in the top byte of the text colour	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79f4a0	45	FontMethods::GetAlpha		ui	primitive		Returns the alpha byte of the text colour times 1/255	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79f4d0	430	FontMethods::SetTextColor		ui	primitive		Sets the text colour of a font object from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x79f680	175	FontMethods::GetTextColor		ui	primitive		Returns the red, green, blue and alpha of the text colour as unrounded doubles	verified	one	ui/fontmethods#reading-colours	
+0x79f730	466	FontMethods::SetShadowColor		ui	primitive		Sets the shadow colour of a font object from clamped red, green, blue and alpha arguments	verified	one	ui/fontmethods#setting-colours	
+0x79f910	175	FontMethods::GetShadowColor		ui	primitive		Returns the red, green, blue and alpha of the shadow colour as unrounded doubles	verified	one	ui/fontmethods#reading-colours	
+0x79f9c0	261	FontMethods::SetShadowOffset		ui	primitive		Stores the shadow offset converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79fad0	106	FontMethods::GetShadowOffset		ui	primitive		Returns the shadow offset converted from layout units to Lua units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79fb40	157	FontMethods::SetSpacing		ui	primitive		Stores the line spacing converted from Lua units to layout units	verified	one	ui/fontmethods#alpha-spacing-and-offsets	
+0x79fbe0	58	FontMethods::GetSpacing		ui	primitive		Returns the line spacing converted from layout units to Lua units	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x79fc20	136			ui	primitive		Runs its object file code that calls lua_isstring, lua_tostring, 0x6f1990 and 1 more; not read here	inferred	none		
 0x79fcb0	33			ui	primitive		Runs its object file code that calls 0x6f1a00, lua_pushstring; not read here	inferred	none		
 0x79fce0	136			ui	primitive		Runs its object file code that calls lua_isstring, lua_tostring, 0x6f1990 and 1 more; not read here	inferred	none		
