@@ -1,6 +1,6 @@
 [package]
 name = "benilla-re-storm"
-description = "The client's MPQ archive set, mounted with the exe's priorities, over WoW.exe 1.12.1.5875's install"
+description = "The Storm library of WoW.exe 1.12.1.5875: the client's MPQ archive set mounted with the exe's priorities, and its MD5 and CRC-32, tested against the exe"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

@@ -1,12 +1,21 @@
-//! The client's MPQ archive set, mounted in the order the exe mounts it.
+//! Storm: the client's MPQ archive set, mounted in the order the exe mounts it.
 //!
 //! [`wow_mpq`] reads the MPQ format and its codecs. What this crate adds is the client's mount: the
 //! start-up routine `0x403740` opens the base archives at fixed priorities `0x3f` (model) down to
 //! `0x36` (dbc), the patch chain above them from `0x40`, and `speech2.MPQ` above the patches. A name
 //! resolves by the flat priority walk: the first archive that holds it wins, patches over base, a later
 //! patch over an earlier one.
+//!
+//! The crate also holds two of Storm's routines whose output the client sends or checks: MD5
+//! ([`md5`]) and CRC-32 ([`crc32`]).
 
 #![forbid(unsafe_code)]
+
+mod crc32;
+mod md5;
+
+pub use crc32::crc32;
+pub use md5::md5;
 
 use std::path::{Path, PathBuf};
 use wow_mpq::{FileEntry, PatchChain, Result};
