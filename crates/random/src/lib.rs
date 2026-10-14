@@ -54,6 +54,35 @@ pub fn crandom_uint32(accumulator: u32, index_state: u32, table: &[u8]) -> (u32,
     (new_acc, new_index, new_acc)
 }
 
+/// The advance `0x4531e0` on a held state, as the callers that keep it in the globals `[0x882664]`
+/// (accumulator) and `[0x882668]` (lanes) run it, and as the weather code inlines it at
+/// `0x68e31a`, `0x68e41b` and `0x68e83e`: the same adds of 0xbc, 0xd4, 0xec and 0xf4 as the
+/// function.
+pub struct Stream<'t> {
+    /// The accumulator `[0x882664]`.
+    pub acc: u32,
+    /// The lanes `[0x882668]`.
+    pub idx: u32,
+    /// The table at [`TABLE_VA`], at least 256 bytes.
+    pub table: &'t [u8],
+}
+
+impl Stream<'_> {
+    /// One advance; returns the new accumulator.
+    pub fn uint32(&mut self) -> u32 {
+        let (acc, idx, ret) = crandom_uint32(self.acc, self.idx, self.table);
+        self.acc = acc;
+        self.idx = idx;
+        ret
+    }
+
+    /// One advance read as the callers read it: the low 23 bits as the mantissa of a float in
+    /// `[1, 2)`.
+    pub fn unit12(&mut self) -> f32 {
+        f32::from_bits((self.uint32() & 0x007f_ffff) | 0x3f80_0000)
+    }
+}
+
 /// `NTempest::CRndSeed::SetSeed` (`0x44ea80`, `systems/random.md#state-and-seeding`): the
 /// accumulator is the seed, and the lanes are `seed mod 47, 53, 59, 61`, unsigned, packed high
 /// byte first and shifted left by 2. `__thiscall`, the seed on the stack, `ret 4`.
