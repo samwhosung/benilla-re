@@ -20,6 +20,7 @@ pub mod colornorm;
 pub mod cull;
 pub mod dda;
 pub mod depthbucket;
+pub mod driftcloud;
 pub mod entity;
 pub mod fills;
 pub mod frustum;
