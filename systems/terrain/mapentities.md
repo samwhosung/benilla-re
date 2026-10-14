@@ -159,3 +159,47 @@ Test: none
 passed on to `0x6a3b10` at `0x6ad4a4`). `0x6ad3f1` skips an object with `+0xd` bit 0; `0x6ad419`
 moves the centre by the object's matrix, `0x6ad444` copies its nine axis floats, `0x6ad466`
 transforms the box (`0x6dc3f0`). How `0x6a3b10` selects facets is the map object's, in `models`.
+
+## Entity attachment list
+
+An entity node keeps what it is attached to in a list at `+0x18` (link offset 0x14), `+0x1c` and `+0x20`.
+Empty is the odd pointer `(&node+0x1c) | 1`, never 0; a walk starts at the first record inserted and
+follows `*(record + 0x18)`. `0x6a86d0` drains the list and refills it in one call. An entity without
+`+0x90` bit 0x2000 takes `0x6a8a20`: a map object hit links one record to the hit's group and then
+classifies the entity from that group (`0x6a87f0`), a terrain hit links the chunk, a miss links
+nothing. An entity with the bit takes `0x6a8c10`, a record for each group it touches. `0x69e770`
+re-places an entity only when its list is empty.
+
+Addresses: `0x6c3020`, `0x6c3045`, `0x6c3047`, `0x6c3051`, `0x6a0450`, `0x6a04f2`, `0x6a04f9`, `0x6a86d0`, `0x6a86f4`, `0x6a8714`, `0x6a8a20`, `0x6a8b2d`, `0x6a8b3a`, `0x6a8b47`, `0x6a8bcd`, `0x6a8bd6`, `0x6a92d0`, `0x6a91f0`, `0x6a87f0`, `0x6a8c10`, `0x69e770`, `0x69e906`, `0x69e90f`, `0x69e913`, `0x69e280`, `0x69e2a3`, `0x69e2af`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c3020`, the constructor every node class calls, stores the link offset 0x14 (`0x6c3047`), the head
+`+0x1c` pointing at itself (`0x6c3045`) and the tagged head in `+0x20` (`0x6c3051`). `0x6a0450`
+inserts after the head's last record (`0x6a04f2`, `0x6a04f9`), so `+0x20` becomes the first record. `0x6a92d0` and
+`0x6a91f0` each have one caller (`0x6a8b3a`, `0x6a8bd6`) and call `0x6a0450` with the node as owner.
+`0x69e280` clears bits 2 and 4 of `+0xc` (`0x69e2a3`) and calls `0x6a86d0` (`0x69e2af`); `0x6a8b47`
+classifies from the object just linked, so the flag and the record come from one hit. `0x69e90f jne`
+skips `0x69e280` for a linked node.
+
+## Entity fog lane
+
+`0x6c31e0` takes the interior fog for an entity node flagged `+0xc` bit 2 by walking its list to the
+first record whose target has bit 0x10 in its `+0x8` word, and then reading that target's `+0x98`,
+the stamp of the group fog flag. A zero stamp, no such record or an empty list gives the scene fog, and
+the walk does not go on to a later record. Bit 0x10 is the map object group record's class tag; its
+constructor `0x6a1ca0` sets it and no other code sets it in a dword at `+0x8`. `0x69d4f0` walks the
+same list with the same test and does go on.
+
+Addresses: `0x6c31e0`, `0x6c31ee`, `0x6c31f8`, `0x6c3206`, `0x6c3212`, `0x6c3216`, `0x6c3222`, `0x6c3229`, `0x6c3231`, `0x6c327a`, `0x6c3233`, `0x6a1ca0`, `0x6a1d7b`, `0x69d4f0`, `0x69d529`, `0x69d52c`, `0x69d567`, `0x69d56c`, `0x695960`, `0x695986`, `0x695a5c`, `0x6a0ca0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6c3216 jne 0x6c3222` leaves the loop for good: no jump returns from `0x6c3222` to `0x6c3206`, so
+`0x6c3231 je 0x6c327a` ends the walk. `0x69d567` instead falls into the advance `0x69d56c` on a miss.
+The scan for `or dword [reg+8],0x10` finds `0x6a1d7b` alone (the one other hit, `0x5109ce`, is a stack
+word). The target record is the per-(instance, group) one `0x685d70` stamps (`terrain/portals#group-submit`):
+`0x695960` makes one per group (`0x695986` to the constructor through `0x6a0ca0`, the group index stored at
+`0x695a5c`), and `0x685d70` finds it by that index.

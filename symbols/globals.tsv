@@ -3384,6 +3384,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca05a0	float[3]	s_footprintNormal		terrain	Holds (0, 0, 1), the normal of every footprint vertex	verified	one	terrain/footprints#fade-and-draw
 0xca05b0	uint32_t[3]	s_footprintTriangles		terrain	Holds the ground triangle list a footprint gathers: capacity, count and data	verified	one	terrain/footprints#footprint-spawn
 0xca05f0	uint8_t	s_footprintPools		terrain	Begins the 576 footprint slots, 0x34 bytes each	verified	one	terrain/footprints#footprint-spawn
+0xca7c20	uint8_t[32]	s_fogCandidateHeap		terrain	Holds the max-heap of fog record candidates: data at +0xc, entry count plus one at +0x1c	verified	one	terrain/lights#fog-record-blend
 0xca7d70	void *	s_sceneDefList		terrain	Holds the scene's placement list	inferred	none	
 0xca7d98	void *	s_globalMapObjList		terrain	Holds the global map object list	inferred	none	
 0xca7d9c	uint32_t[3]	s_mapObjectListLink		terrain	Holds the global map object list's link offset, tail and head	verified	one	terrain/liquidpass#map-object-liquid-at-a-point

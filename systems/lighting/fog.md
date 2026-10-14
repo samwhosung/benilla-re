@@ -165,3 +165,25 @@ Test: none
 `0x68a830` loads state `+0x11c`, `+0x114` and `+0x120` (`0x68a87d`, `0x68a895`, `0x68a8b3`), each
 `fmul` 255.0, `fadd` 512.0, `fstp` and `shr 0xe`. `0x6b6b60` loads `+0x114` and `+0x118`
 (`0x6b6b6a`, `0x6b6b7f`). State `+0x114` is table `+0x68`.
+
+## Interior fog claim
+
+`0x6705d0(record, byte, container)` is the fog query of the active player. It returns 0 without asking
+the map object when bit 0x10 of the player's flags is set; otherwise it returns the result of `0x69de20`
+(`terrain/lights#camera-interior-fog`). While the query holds and the byte is set, `0x6cee30` stores the
+instance at `0xce9bf8`, copies the container's group array into `0xce9bfc` (capacity, count `+4` =
+`0xce9c00`, data `+8` = `0xce9c04`) and its dword at `+0xc` to `0xce9c08`, and raises the weight; with
+the byte clear it lowers the weight, and at 0 it clears the instance and the count. The map object
+passes read the claim to set the group fog flag (`terrain/portals#interior-fog-gate`).
+
+Addresses: `0x6705d0`, `0x6705de`, `0x6705ef`, `0x6705f8`, `0x6705fe`, `0x670601`, `0x670607`, `0x670609`, `0x670611`, `0x670619`, `0x6cef8b`, `0x6cef90`, `0x6cef92`, `0x6cefb0`, `0x6cefc2`, `0x6cefcb`, `0x6cf011`, `0x6cf034`, `0x6cf036`, `0x6cf040`, `0x667290`, `0x468550`, `0x468460`, `0xce9bf8`, `0xce9bfc`, `0xce9c00`, `0xce9c04`, `0xce9c08`, `0xce9bdc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6705de` and `0x6705ef` find the active player (object mask 0x10); `0x6705f8` to `0x670607` read the
+word at `[[player+0xe68]+8]`, shift it right by 4 and test bit 0, and a set bit returns 0 at
+`0x670609`. `0x6cef92` stores the instance; `0x6cefb0` calls `0x667290(0xce9bfc, count, data)`, which
+sets the capacity to the count, reallocates the array to four bytes per entry, copies the entries
+and stores the count last (`0x6672e9`). The clear at `0x6cf036` and `0x6cf040` follows a weight at or
+below 0, tested by `test ah,0x41; jp` (`0x6cf034`).

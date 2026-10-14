@@ -26213,10 +26213,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69dba0	140	GetEntityGroupBoxes		terrain	orchestration	uint32_t __fastcall (void *entity, void *out)	Copies an entity's map object group boxes	inferred	none		
 0x69dc30	311	GetEntityInteriorLight		terrain	primitive	void __fastcall (void *entity, void *out)	Rotates the interior light of an entity's group into the world	inferred	none		terrain::interior_light_rotate_difftest
 0x69dd70	165	ForEachChunkDef		terrain	orchestration	uint32_t __fastcall (void *chunk, void *a, void *b, void *c)	Runs the group liquid search over each of an indoor entity's map object groups	verified	one	terrain/world#nearest-liquid	
-0x69de20	917	GetCameraInteriorFog		terrain	primitive	uint32_t __fastcall (void *a, void *b)	Evaluates the fog of the groups holding the camera from their fog records nearest first	inferred	none	terrain/lights#camera-interior-fog	terrain::light_distance_difftest
+0x69de20	917	GetCameraInteriorFog		terrain	primitive	uint32_t __fastcall (void *a, void *b)	Fills the fog record of the map object holding the camera from its MFOG records, nearest weighing most	verified	one	terrain/lights#camera-interior-fog	terrain::light_distance_difftest
 0x69e1c0	95	LightFalloff		terrain	primitive	float __fastcall (void *light, float distance)	Returns 1 below a range's start and falls linearly to 0 at its end	verified	one	terrain/lights#point-lights	terrain::wmo_molt_attenuation_difftest
 0x69e220	20	DestroyFogQueue		terrain	orchestration	void __cdecl (void)	Calls the fog queue's destructor at exit, as a tail call	inferred	none		
-0x69e240	55	CopyLightPair		terrain	orchestration	void __fastcall (void *dst, const void *src)	Copies two interleaved vector records	inferred	none		
+0x69e240	55	CopyFogSubrecords		terrain	orchestration	void __fastcall (void *dst, const void *src)	Copies two 12-byte fog sub-records	verified	one	terrain/lights#camera-interior-fog	
 0x69e280	574	UpdateMapEntityEnvironment		terrain	primitive	void __thiscall (void *this)	Recomputes an entity's indoors, liquid and shadow state and its light targets	verified	one	terrain/mapentities#entity-environment	terrain::env_update_color_difftest
 0x69e4c0	683	BakeMapEntityGroupLight		terrain	primitive	void __thiscall (void *this, void *a, void *b, void *c)	Bakes a map object group's vertex colour into an entity's directional light and ambient target	verified	one	terrain/lights#interior-light-bake	terrain::cmapobj_vert_offsets_difftest
 0x69e770	429	AnimateMapEntityLight		terrain	primitive	void __thiscall (void *this)	Steps an entity's ambient bytes and intensity toward their targets by the frame time	verified	one	terrain/mapentities#entity-light-ramp	terrain::color_step_magnitude_difftest, terrain::intensity_ramp_difftest
@@ -26230,7 +26230,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69e9e0	83	FogQ::FogQ		terrain	orchestration	void * __fastcall (void *a, void *b, void *c, void *d)	Allocates a fog queue entry and copies its fields	inferred	none		
 0x69ea40	157	PushFogEntry		terrain	host	void __thiscall (void *array, const void *entry)	Appends an 8-byte entry to a growable array	inferred	none		
 0x69eae0	43	FogQEntry::DeletingDestructor		terrain	orchestration	void * __thiscall (void *this, uint32_t flags)	Destroys a fog queue entry and frees it when bit 0 of the argument is set	inferred	none		
-0x69eb10	81	SetFogEntry		terrain	orchestration	void __fastcall (void *entry, const void *source)	Copies a fog entry's values	inferred	none		
+0x69eb10	81	RemoveHeapEntries		terrain	orchestration	void __fastcall (void *entry, const void *source)	Removes a run of 8-byte entries from a growable array by moving the tail down	verified	one	terrain/lights#fog-record-blend	
 0x69eb70	26	CopyColorRgb		terrain	orchestration	void __fastcall (uint32_t *dst, uint32_t color)	Copies a colour's red, green and blue, keeping the alpha	inferred	none		
 0x69eb90	5	InitTerrainSquare199Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69eba0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69eba0	19	InitTerrainSquare199		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	
@@ -26278,7 +26278,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x69ef80	19	InitTerrainProduct48		terrain	primitive	void __cdecl (void)	Stores a global set just before × 256 as a float in a global	verified	one	terrain/statics#static-initializers	
 0x69efa0	5	InitTerrainQuotient24Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69efb0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69efb0	19	InitTerrainQuotient24		terrain	primitive	void __cdecl (void)	Stores 1 divided by 4.16667 as a float in a global	verified	one	terrain/statics#static-initializers	
-0x69efd0	227	LerpFogRecord		terrain	primitive	void __fastcall (void *out, const void *a, const void *b, float t)	Blends two records of two floats and a packed colour, keeping the alpha	inferred	none		terrain::lerp_color_rec_difftest
+0x69efd0	227	LerpFogRecord		terrain	primitive	void __fastcall (void *out, const void *a, const void *b, float t)	Blends two records of two floats and a packed colour, keeping the alpha	verified	one	terrain/lights#fog-record-blend	terrain::lerp_color_rec_difftest
 0x69f0c0	5	InitTerrainSquare216Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69f0d0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x69f0d0	19	InitTerrainSquare216		terrain	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	terrain/statics#static-initializers	
 0x69f0f0	5	InitTerrainQuotient25Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x69f100; a static initializer	verified	one	terrain/statics#static-initializers	

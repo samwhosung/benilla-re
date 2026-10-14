@@ -288,3 +288,28 @@ takes `0x685dcf`: the same record and copy, no list link and no scalar stores. `
 record of that list (`groupdraw#group-draw`), so a group walked through three windows draws three
 times, each under its own volume. `0x6b4160` and the walk reach the callback through the slot
 `0xcde5b0`.
+
+## Interior fog gate
+
+For each visited group `0x6b41c0` sets the group fog flag `0xca7f00` to 1 when the light state's claim
+(`+0x98`) is of the root being walked, the walk's interior group is set, and that group is one of the
+claim's copied groups (`+0xa4`, count `+0xa0`); else to 0. The interior group is the latest group on
+the chain flagged without 0x48: a group with either bit clears it and the next without them sets it.
+The inside seed passes the camera group when flagged without 0x48, else 0; the outside seed and the
+replay pass 0. The callback stamps the flag into the group record (`+0x98`); a 0x10000 group, drawn
+by `0x6b4160` without the walk, stamps what the seed left, 1.
+
+Addresses: `0x6b4241`, `0x6b424b`, `0x6b424f`, `0x6b4258`, `0x6b425c`, `0x6b425f`, `0x6b4266`, `0x6b4277`, `0x6b427f`, `0x6b4290`, `0x6b4299`, `0x6b42af`, `0x6b42c6`, `0x6b466a`, `0x6b466d`, `0x6b4622`, `0x6b3be8`, `0x6b3b4c`, `0x6b3df5`, `0x6d48b0`, `0x685f7f`, `0x685f85`, `0xca7f00`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6d48b0` returns the light state (`lighting/daynight#light-state`). `0x6b4244` to `0x6b425c` read the
+owner argument and the group's flag byte: set with a 0x48 group clears it (`0x6b424f`), clear with a
+group without them stores the group's pointer (`0x6b425c`), and `0x6b4622` hands the updated owner to
+the next hop. The tests `0x6b426e`, `0x6b4275` and `0x6b427d` go to `0x6b42c6` (store 0); the loop
+`0x6b4290` skips an index at or past the root's group count (`0x6b4299`) and compares the group
+pointer with the owner (`0x6b42af`), jumping to `0x6b466a`, which stores 1. The seeds store 1 first
+(`0x6b3b4c`, `0x6b3df5`), but every walk visit rewrites it before its callback; only `0x6b4160`
+leaves it. Of the eleven references to `0xca7f00` in the image, eight write it and three read it
+(`0x685f7f`, `0x6b51c1`, `0x6b630e`).
