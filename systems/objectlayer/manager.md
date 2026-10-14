@@ -175,5 +175,135 @@ Test: none
 frees the tables and stores 0 at `0xb41414` (`0x46771e`). `0x467800` and `0x467bf0` walk the lists
 calling slot 0 and `SMemFree` or `0x463b00`. `0x468490` frees `CMirrorHandler` records and passes
 `ObjUsage` to the console (`0x468530`); `0x467da0` writes `Object manager list status:` and the
-counts. `0x467d40` creates the seven pools; `0x467d10` is its shutdown. Not read instruction by
-instruction.
+counts. `0x467d40` creates the seven pools; `0x467d10` tests the manager's block for the debug dump.
+Not read instruction by instruction.
+
+## Freeing every object
+
+`0x467800` frees all objects when the manager is destroyed. It walks the live table's iteration
+list twice: first every object whose GUID's top four bits are neither 6 nor 8, then the rest.
+Then it walks the released table's list, and removes the three update handlers.
+
+Addresses: `0x467800`, `0x46784d`, `0x467820`, `0x467954`, `0x467a27`, `0x467a30`, `0x467a84`, `0x467bf0`, `0x467c5b`, `0x464c40`, `0x463b00`, `0x537a80`
+Confidence: verified
+Proof: one
+Test: none
+
+Each object is unlinked from the live table's two links (`+0x1c`, `+0x24`) when `+0x20` is set, and
+from the object list when it is linked (`0x46789a`); `0x464c40` frees its watcher records; slot 0
+runs by the type mask (`0x4678dc` to `0x46790a`); and the memory goes back to the pool of its
+type through `ObjectFree` (`0x46792e`), except the active player's, which `SMemFree` frees
+(`0x46790a`). The top-nibble test is at `0x46784d`: `0x467877` and `0x467881` skip 6 and 8 in the first
+round; the second round starts at `0x467954`. `0x467a30` takes each node of the released list
+(`+0x34`), unlinks it at `+0x38`, and `0x467bf0` frees it the same way. `0x467a84` calls
+`ClearMessageHandler` on the network client for opcodes 0xa9, 0x1f6 and 0xaa.
+
+## Adding an object
+
+`0x4643b0` links a new object into the live table under its GUID. The first insert makes the
+table: mask 3 and four buckets, each a list linked through offset `0x1c`. The bucket is `lo &
+mask`. A credit at `+0x10` falls by 3 per insert, to 0; each node in the chosen chain adds 1, and
+a total over 13 rehashes to `2·mask + 2` buckets and starts again. The table stops growing at
+mask `0x1fff`. The object goes onto its bucket and the iteration list (`+0x4` of the table), and
+`+0x18`, `+0x30` and `+0x34` take the GUID.
+
+Addresses: `0x4643b0`, `0x4643ed`, `0x4643fa`, `0x46440e`, `0x46442c`, `0x464437`, `0x46447c`, `0x46448b`, `0x46449c`, `0x4644b9`, `0x4644c8`, `0x4699f0`, `0x468f10`, `0x469810`, `0x468940`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4643ed` stores 3 in the mask; `0x4643fa` sizes the bucket array (`0x4699f0`, mask + 1);
+`0x46440e` makes each bucket list (`0x468f10` with offset `0x1c`). `0x46442c` ends growth at
+`0x1fff`. `0x464437` subtracts 3 from `+0x10` (to 0 below 4). The chain walk `0x46447c` counts
+nodes (`inc`, `cmp 0xd`); `0x46449c` rehashes with `0x469810` and the doubled size. `0x4644b9` and
+`0x4644c8` link with `0x468940`. The constructor `0x6139a0` calls it.
+
+## Trace lines
+
+`0x464700` and `0x464ad0` write a status line naming the object's type: `Remembering object`,
+`item`, `container`, `unit`, `player`, `game object`, `dynamic object` or `corpse` when an object is
+created or reactivated (`0x464700`), and `Forgetting …` before one is released (`0x464ad0`). The
+line goes through `ValidateStatusLevel` with level 0x20; a GUID that is not live, or a type outside
+1 to 7, writes nothing.
+
+Addresses: `0x464700`, `0x464ad0`, `0x464519`, `0x464966`, `0x44cb20`
+Confidence: verified
+Proof: one
+Test: none
+
+Both look the GUID up with `0x464870` and index a jump table by the object's type id minus 1
+(`0x464700`: the table at 0x4647c8). The strings are `Remembering …` from 0x8367b8 to 0x836854 and
+`Forgetting …` from 0x836868 to 0x8368fc. `0x464519` is the call in the find-or-create function
+(`0x4644f0`) and `0x464966` the call in the release (`0x464920`).
+
+## Watcher copy offsets
+
+A watcher's copy offset says where in the copy array its range lives. `0x4680c0(type, offset,
+length)` takes the type's section: the item, container, unit, player, game object, dynamic object
+or corpse index function with `offset / 4` and `(length + 3) / 4`, adds the count of the section's
+parent (the unit's or the object's, the item's for a container), and returns that sum times 4 plus
+`offset & 3`. A type outside 1 to 7 uses the object section alone.
+
+Addresses: `0x4680c0`, `0x4680ea`, `0x468114`, `0x46813e`, `0x468168`, `0x468192`, `0x4681bc`, `0x4681e6`, `0x468200`
+Confidence: verified
+Proof: one
+Test: none
+
+The jump table at 0x468224 sends the types 1 to 7 to the blocks of the item (`0x468158`), container
+(`0x46812e`), unit (`0x468104`), player (`0x4680da`), game object (`0x468182`), dynamic object
+(`0x4681ac`) and corpse (`0x4681d6`). The calls are the sections' `…WatchedIndex` functions
+(`fields`) and the `…WatchedCount` functions of the parents (`0x47db10`, `0x47f2b0`, `0x47e5d0`).
+
+## The object list
+
+An object an enumeration should not see is taken off the object list, and put back when it may be
+seen. `0x468270(guid)` unlinks the live object with that GUID from the list at `+0xa4` if it is
+on it; `0x4682f0(guid)` links it at the list's head if it is not on it. Items and game objects
+call the first at construction and reactivation, and a game object calls the second when its
+record arrives.
+
+Addresses: `0x468270`, `0x4682f0`, `0x5d8267`, `0x5f703e`, `0x5f7ec3`, `0x5f7d00`, `0x464890`
+Confidence: verified
+Proof: one
+Test: none
+
+Both find the object with `0x464890` and test its link at the list offset `[+0xa4]`: `0x468270` acts when
+the link's next is set, `0x4682f0` when it is clear.
+
+## List code
+
+The rest of the file is container template code, instantiated for `CGObject_C` and the GUID
+tables. A list is a link offset, a first link and an end link marked by bit 0.
+
+Addresses: `0x468640`, `0x468680`, `0x468b20`, `0x468b90`, `0x468b60`, `0x468bd0`, `0x468940`, `0x468a00`, `0x468a30`, `0x468e90`, `0x468ee0`, `0x468f10`, `0x468f80`, `0x469070`, `0x4694b0`, `0x468ec0`, `0x4688b0`, `0x467430`, `0x464ec0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x468640`, `0x468680`, `0x468b20` and `0x468b90` are one body, as are `0x468b60` and `0x468bd0`: the
+first unlinks a node (the neighbours are joined through the bit-0 end marks) and the second returns
+the address a link names, negative offsets resolving through the list's offset. `0x468a00`
+(offset `0x38`), `0x468a30` (`0x40`), `0x468e90` (−0x22222223), `0x468ee0` (0) make an empty list;
+`0x468f10` empties one and sets its offset, `0x468f80` and `0x4688b0` empty one, and `0x469070` and
+`0x4694b0` make a bare node. `0x468ec0` returns a node's link address, and `0x468940` unlinks a
+node and links it again by a placement argument. `0x467430` and `0x464ec0` are destructors that
+unlink and free.
+
+## Table and array code
+
+A hash table is a vtable `0x803600`, a list, a bucket array and a mask, −1 until used. The code
+inserts, rehashes and frees its buckets, and grows the arrays behind them.
+
+Addresses: `0x468d30`, `0x469810`, `0x4699f0`, `0x469080`, `0x469290`, `0x468c30`, `0x468fe0`, `0x4691e0`, `0x469c20`, `0x469dc0`, `0x469d60`, `0x469da0`, `0x4686c0`, `0x4686f0`, `0x468a60`, `0x4687f0`, `0x468c00`, `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0`, `0x469b30`, `0x803600`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x468d30` inserts into a table as `0x4643b0` does. `0x469810`, `0x4699f0`, `0x469080`, `0x469290`,
+`0x468c30`, `0x468fe0` and `0x4691e0` rehash, size, empty and free the bucket array; `0x469c20`
+and `0x469dc0` grow arrays with `SMemReAlloc`, and `0x469d60` and `0x469da0` round a size to a
+power of two (at most 0x15) and up to a multiple. `0x4686c0`, `0x4686f0`, `0x468a60` and
+`0x4687f0` are slots 0 to 3 of the table vtable: a deleting destructor, a `CGObject_C` factory
+that builds the six watcher lists, and two destructors of the table. `0x468c00` reads three
+floats from a packet, and `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0` and `0x469b30` zero, set
+up or free small members.

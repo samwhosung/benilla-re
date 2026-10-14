@@ -4710,16 +4710,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4642d0	42	InitWatcherLists		objectlayer	primitive	void __cdecl (void)	Makes the 10,256 field watcher lists from 0xb23310 empty, each a link offset and a marked end link	verified	one	objectlayer/initializers#object-tables	
 0x464300	12	InitObjMgrRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x464310 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x464310	156	ReleaseWatcherLists		objectlayer	primitive	void __cdecl (void)	Unlinks every node left on the 10,256 field watcher lists, at exit	verified	one	objectlayer/initializers#object-tables	
-0x4643b0	315			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
+0x4643b0	315	ClntObjMgrInsertObject		objectlayer	primitive	void __thiscall (CGObject_C *object)	Links a new object into the live table under its GUID, growing the table when a chain runs long	verified	one	objectlayer/manager#adding-an-object	
 0x4644f0	52	ReactivateNearObject		objectlayer	orchestration	void __stdcall (uint32_t guidLow, uint32_t guidHigh)	Looks an object up, and when that reactivated it runs vtable slot 2 and 0x464700	verified	one	objectlayer/update#near-objects	
 0x464530	461	ClntObjMgrFindOrReactivate		objectlayer	primitive	CGObject_C * __thiscall (uint32_t *reactivated, uint32_t guidLow, uint32_t guidHigh)	Looks a GUID up in the live table, else moves it back from the released table and flags that	verified	one	objectlayer/manager#reactivating-an-object	
-0x464700	200			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ValidateStatusLevel, GetObjectPtr; not read here	inferred	none		
+0x464700	200	TraceRememberObject		objectlayer	orchestration	void __stdcall (uint32_t lo, uint32_t hi)	Writes a Remembering line naming the type of the live object with the GUID	verified	one	objectlayer/manager#trace-lines	
 0x464870	32	GetObjectPtr	idb	objectlayer	orchestration	CGObject_C * __stdcall (uint32_t guidLow, uint32_t guidHigh)	Returns the live object a nonzero GUID names, or 0	verified	one	objectlayer/manager#finding-an-object	
 0x464890	132	ClntObjMgrFindLive		objectlayer	primitive	CGObject_C * __stdcall (uint32_t guidLow, uint32_t guidHigh)	Looks a GUID up in the live hash table by its low dword ANDed with the mask	verified	one	objectlayer/manager#finding-an-object	
 0x464920	432	ClntObjMgrRelease		objectlayer	primitive	void __stdcall (uint32_t guidLow, uint32_t guidHigh)	Releases a live object unless held: slot 1, watchers freed, into the released table and reuse list	verified	one	objectlayer/manager#releasing-an-object	
-0x464ad0	200			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ValidateStatusLevel, GetObjectPtr; not read here	inferred	none		
+0x464ad0	200	TraceForgetObject		objectlayer	orchestration	void __stdcall (uint32_t lo, uint32_t hi)	Writes a Forgetting line naming the type of the live object with the GUID	verified	one	objectlayer/manager#trace-lines	
 0x464c40	600			objectlayer	primitive	void __thiscall (CGObject_C *this)	Frees the CMirrorHandler records on the object's own watcher lists, every section of its type	verified	one	objectlayer/manager#releasing-an-object	
-0x464ec0	131			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
+0x464ec0	131			objectlayer	orchestration		Destroys a list node, unlinking both its links, and frees it on bit 0	verified	one	objectlayer/manager#list-code	
 0x464f50	5	InitObjMgrDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x464f60, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x464f60	15	InitObjMgrDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x464f70	5	InitObjMgrQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x464f80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -4764,24 +4764,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x467160	203	ObjectValuesBlock		objectlayer	primitive	void __fastcall (CDataStore *msg, uint8_t flagged)	Writes a values block into the object its GUID names, in its pass; skips it for an unknown object	verified	one	objectlayer/update#writing-the-values	
 0x467230	179	ProcessNearObjects		objectlayer	primitive	uint32_t __fastcall (CDataStore *msg, uint8_t flagged)	Looks up each listed GUID of the pass's kind, reactivating released objects, and returns how many	verified	one	objectlayer/update#near-objects	
 0x4672f0	314	ObjectCompressedUpdateHandler	idb	objectlayer	host	uint32_t __fastcall (void *context, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles SMSG_COMPRESSED_UPDATE_OBJECT: inflates the zlib body and runs the update handler on it	verified	one	objectlayer/update#compressed-update	
-0x467430	98			objectlayer	orchestration		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
+0x467430	98			objectlayer	orchestration		Destroys a data store, running its two release virtuals, and frees it on bit 0	verified	one	objectlayer/manager#list-code	
 0x4674a0	464	OnObjectDestroy	idb	objectlayer	primitive	uint32_t __fastcall (void *context, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles SMSG_DESTROY_OBJECT: releases the object and then destroys and frees it at once	verified	one	objectlayer/update#destroy-object	
 0x467700	243	ClntObjMgrDestroy		objectlayer	orchestration	void __cdecl (void)	Frees every object, the tables and the manager, and clears 0xb41414	inferred	none	objectlayer/manager#leaving-the-world	
-0x467800	710			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ObjectFree, ClntObjMgrGetActivePlayer, NetClient::ClearMessageHandler; not	inferred	none		
-0x467bf0	128			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ClntObjMgrGetActivePlayer, SMemFree; not read here	inferred	none		
+0x467800	710	ClntObjMgrFreeObjects		objectlayer	orchestration	void __cdecl ()	Frees every live object in two rounds, then the released ones, and removes the update handlers	verified	one	objectlayer/manager#freeing-every-object	
+0x467bf0	128	ClntObjMgrFreeObject		objectlayer	orchestration	void __thiscall ()	Runs an object's destructor by its type and returns its memory to its pool or the heap	verified	one	objectlayer/manager#freeing-every-object	
 0x467d00	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
-0x467d10	34			objectlayer	orchestration		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x467d40	87			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ObjectAllocAddHeap, MirrorInitialize; not read here	inferred	none		
+0x467d10	34	ClntObjMgrIsValid		objectlayer	orchestration	uint32_t __thiscall ()	Tells whether the manager exists and its block passes the heap's check	verified	one	objectlayer/manager#leaving-the-world	
+0x467d40	87	ClntObjMgrCreatePools		objectlayer	orchestration	void __cdecl ()	Creates the seven object pools once, initialises the mirror tables and registers ObjUsage	verified	one	objectlayer/manager#leaving-the-world	
 0x467da0	197	CCommand_ObjUsage	idb	objectlayer	orchestration		Writes the object manager's live and pending object counts to the console	inferred	none	objectlayer/manager#leaving-the-world	
 0x467e70	132	ClntObjMgrSetObjectMirrorHandler		objectlayer	primitive	void __fastcall (uint32_t section, uint32_t offset, uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *callback, void *argument, uint32_t kind)	Registers a watcher on a field range of one live object	verified	one	objectlayer/fields#registering-a-watcher	
 0x467f00	171	AssignMirrorHandler	idb	objectlayer	host	void __fastcall (void *list, uint32_t offset, uint32_t copyOffset, uint32_t length, void *callback, void *argument, uint32_t kind)	Allocates a CMirrorHandler record for a range and links it onto a watcher list	verified	one	objectlayer/fields#watcher-records	
 0x467fb0	59	ClntObjMgrClearObjectMirrorHandler		objectlayer	primitive	void __fastcall (uint32_t section, uint32_t offset, uint32_t guidLow, uint32_t guidHigh, void *callback, void *argument)	Removes a watcher from one live object's field list	verified	one	objectlayer/fields#registering-a-watcher	
 0x467ff0	114	RemoveMirrorHandler		objectlayer	host	void __fastcall (void *list, void *callback, void *argument)	Frees a list's records with this callback and argument, or marks one whose callback is running	verified	one	objectlayer/fields#watcher-records	
 0x468070	77	ClntObjMgrSetTypeMirrorHandler	idb	objectlayer	primitive	void __fastcall (uint32_t section, uint32_t offset, uint32_t length, void *callback, void *argument, uint32_t kind)	Registers a watcher on a field range of a type	verified	one	objectlayer/fields#registering-a-watcher	
-0x4680c0	353			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls CorpseWatchedIndex, DynamicObjectWatchedIndex, GameObjectWatchedIndex; not	inferred	none		
+0x4680c0	353	GetWatcherCopyOffset		objectlayer	primitive	uint32_t __fastcall (uint32_t type, uint32_t offset, uint32_t length)	Gives the copy-array offset of a watched range of a type's section	verified	one	objectlayer/manager#watcher-copy-offsets	
 0x468240	40	ClntObjMgrClearTypeMirrorHandler		objectlayer	primitive	void __fastcall (uint32_t section, uint32_t offset, void *callback, void *argument)	Removes a type watcher from its field's global list	verified	one	objectlayer/fields#registering-a-watcher	
-0x468270	114			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ClntObjMgrFindLive; not read here	inferred	none		
-0x4682f0	132			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls ClntObjMgrFindLive; not read here	inferred	none		
+0x468270	114	ClntObjMgrUnlistObject		objectlayer	orchestration	void __stdcall (uint32_t lo, uint32_t hi)	Takes a live object off the manager's object list	verified	one	objectlayer/manager#the-object-list	
+0x4682f0	132	ClntObjMgrListObject		objectlayer	orchestration	void __stdcall (uint32_t lo, uint32_t hi)	Puts a live object on the manager's object list when it is not on it	verified	one	objectlayer/manager#the-object-list	
 0x468380	91	ClntObjMgrEnumObjects		objectlayer	orchestration	uint32_t __fastcall (void *callback, void *context)	Calls a callback with each live object's GUID in list order until it returns 0; returns 1 at the end	verified	one	objectlayer/manager#accessors-and-enumeration	
 0x4683e0	33	ClntObjMgrHoldObject		objectlayer	orchestration	void __stdcall (uint32_t guidLow, uint32_t guidHigh)	Increments a live object's hold count	verified	one	objectlayer/manager#holding-an-object	
 0x468410	70	ClntObjMgrUnholdObject		objectlayer	orchestration	void __stdcall (uint32_t guidLow, uint32_t guidHigh)	Decrements a hold and releases the object when none is left and a release is pending	verified	one	objectlayer/manager#holding-an-object	
@@ -4797,35 +4797,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x468600	16	ClntObjMgrSetMovementGlobals	idb	objectlayer	orchestration	void __fastcall (void *globals)	Stores ecx at +0xd4 of the object manager 0xb41414 when there is one	verified	one	collision/mover#movement-manager	
 0x468610	17	ClntObjMgrGetD8		objectlayer	unreached	uint32_t __cdecl (void)	Returns the manager's +0xd8, or 0 with no manager	verified	one	objectlayer/manager#accessors-and-enumeration	
 0x468630	1	ClntObjMgrEmptyHook		objectlayer	orchestration	void __cdecl (void)	Returns at once	verified	one	objectlayer/manager#accessors-and-enumeration	
-0x468640	60			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468680	60			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x4686c0	35			objectlayer	orchestration		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x4686f0	242			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SplatVector3, SMemAlloc; not read here	inferred	none		
-0x4687f0	189			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x4688b0	136			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468940	181			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468a00	33			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468a30	33			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468a60	190			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x468b20	60			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468b60	41			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468b90	60			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468bd0	41			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468c00	39			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468c30	256			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468d30	348			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468e90	33			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468ec0	25			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468ee0	33			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468f10	108			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468f80	77			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468fd0	16			objectlayer	orchestration		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x468fe0	135			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x469070	12			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469080	337			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x4691e0	176			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x469290	535			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x4694b0	12			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
+0x468640	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/manager#list-code	
+0x468680	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/manager#list-code	
+0x4686c0	35			objectlayer	orchestration	void __stdcall (CGObject_C *object)	Runs an object's destructor and frees its block with the object tag	verified	one	objectlayer/manager#table-and-array-code	
+0x4686f0	242			objectlayer	orchestration		Allocates a CGObject_C-sized block and builds the base object in it and links it	verified	one	objectlayer/manager#table-and-array-code	
+0x4687f0	189			objectlayer	orchestration		Empties the table, frees its buckets and sets the mask to -1	verified	one	objectlayer/manager#table-and-array-code	
+0x4688b0	136			objectlayer	orchestration		Empties a list node by node	verified	one	objectlayer/manager#list-code	
+0x468940	181			objectlayer	orchestration		Unlinks a node and links it again into a list by a placement argument	verified	one	objectlayer/manager#list-code	
+0x468a00	33			objectlayer	orchestration		Makes an empty list with link offset 0x38	verified	one	objectlayer/manager#list-code	
+0x468a30	33			objectlayer	orchestration		Makes an empty list with link offset 0x40	verified	one	objectlayer/manager#list-code	
+0x468a60	190			objectlayer	orchestration		Destroys a GUID table: empties it, frees its buckets and frees it on bit 0	verified	one	objectlayer/manager#table-and-array-code	
+0x468b20	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/manager#list-code	
+0x468b60	41			objectlayer	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	objectlayer/manager#list-code	
+0x468b90	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/manager#list-code	
+0x468bd0	41			objectlayer	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	objectlayer/manager#list-code	
+0x468c00	39			objectlayer	orchestration		Reads three floats from a packet into a vector	verified	one	objectlayer/manager#table-and-array-code	
+0x468c30	256			objectlayer	orchestration		Empties a table, optionally destroying its entries	verified	one	objectlayer/manager#table-and-array-code	
+0x468d30	348			objectlayer	primitive		Inserts a node into a table's bucket, rehashing when the chain grows	verified	one	objectlayer/manager#table-and-array-code	
+0x468e90	33			objectlayer	orchestration		Makes an empty list with the unset link offset 0xdddddddd	verified	one	objectlayer/manager#list-code	
+0x468ec0	25			objectlayer	primitive		Returns the address of a node's link at an offset, or the node's first link	verified	one	objectlayer/manager#list-code	
+0x468ee0	33			objectlayer	orchestration		Makes an empty list with link offset 0	verified	one	objectlayer/manager#list-code	
+0x468f10	108			objectlayer	orchestration		Empties a list and sets its link offset	verified	one	objectlayer/manager#list-code	
+0x468f80	77			objectlayer	orchestration		Empties a list node by node	verified	one	objectlayer/manager#list-code	
+0x468fd0	16			objectlayer	orchestration		Zeroes four dwords	verified	one	objectlayer/manager#table-and-array-code	
+0x468fe0	135			objectlayer	orchestration		Empties a table's bucket lists and frees the bucket array	verified	one	objectlayer/manager#table-and-array-code	
+0x469070	12			objectlayer	orchestration		Makes a bare list node, its end link marked by bit 0	verified	one	objectlayer/manager#list-code	
+0x469080	337			objectlayer	primitive		Shrinks a table to four buckets, rehashing its nodes	verified	one	objectlayer/manager#table-and-array-code	
+0x4691e0	176			objectlayer	orchestration		Empties a bucket's lists and frees the array when asked	verified	one	objectlayer/manager#table-and-array-code	
+0x469290	535			objectlayer	primitive		Checks a table's chain credit and rehashes it when due	verified	one	objectlayer/manager#table-and-array-code	
+0x4694b0	12			objectlayer	orchestration		Makes a bare list node, its end link marked by bit 0	verified	one	objectlayer/manager#list-code	
 0x4694c0	5	InitObjMgrSquare1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4694d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x4694d0	19	InitObjMgrSquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x4694f0	5	InitObjMgrSquare2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x469500, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -4862,25 +4862,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4697c0	19	InitObjMgrSquare16		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x4697e0	5	InitObjMgrSquare17Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4697f0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x4697f0	19	InitObjMgrSquare17		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x469810	478			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x4699f0	316			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469b30	49			objectlayer	orchestration		Runs ObjectMgrClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x469b70	61			objectlayer	orchestration		Runs ObjectMgrClient.cpp code not read here	inferred	none		
+0x469810	478			objectlayer	primitive		Rehashes a table to a bucket count	verified	one	objectlayer/manager#table-and-array-code	
+0x4699f0	316			objectlayer	primitive		Sets a table's bucket array length, making or removing buckets	verified	one	objectlayer/manager#table-and-array-code	
+0x469b30	49			objectlayer	orchestration		Frees two members	verified	one	objectlayer/manager#table-and-array-code	
+0x469b70	61			objectlayer	orchestration		Zeroes 20 dwords	verified	one	objectlayer/manager#table-and-array-code	
 0x469bb0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x469bc0	69			objectlayer	orchestration		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469c10	16			objectlayer	orchestration		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469c20	319			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
-0x469d60	57			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469da0	31			objectlayer	primitive		Runs ObjectMgrClient.cpp code not read here	inferred	none		
-0x469dc0	264			objectlayer	primitive		Runs ObjectMgrClient.cpp code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none		
+0x469bc0	69			objectlayer	orchestration		Zeroes a 0x68-byte object's members, stores a vtable at +0x2c and sets +0x54 to 1	verified	one	objectlayer/manager#table-and-array-code	
+0x469c10	16			objectlayer	orchestration		Zeroes four dwords	verified	one	objectlayer/manager#table-and-array-code	
+0x469c20	319			objectlayer	primitive		Grows an array to a capacity, reallocating and moving its entries	verified	one	objectlayer/manager#table-and-array-code	
+0x469d60	57			objectlayer	primitive		Rounds a size down to a power of two, at most 0x15	verified	one	objectlayer/manager#table-and-array-code	
+0x469da0	31			objectlayer	primitive		Rounds a size up to a multiple	verified	one	objectlayer/manager#table-and-array-code	
+0x469dc0	264			objectlayer	primitive		Grows an array to a capacity with SMemReAlloc, moving its entries	verified	one	objectlayer/manager#table-and-array-code	
 0x469ed0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x469ee0	20			objectlayer	orchestration		Fills slot 5 of the object vtable and others; its body is not read here	inferred	none		
+0x469ee0	20			objectlayer	orchestration		Writes the vector (0, 0, 0) to its argument	verified	one	objectlayer/classes#base-slots-0-to-10	
 0x469f00	7			objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
 0x469f10	7			objectlayer	orchestration		Returns the float at +0x10 of the block its +0x8 points to	verified	one	objectlayer/overview#small-bodies	
-0x469f20	30			objectlayer	orchestration		Fills slot 8 of the object vtable and others; its body is not read here	inferred	none		
-0x469f40	5			objectlayer	orchestration		Fills slot 9 of the object vtable and others; its body is not read here	inferred	none		
+0x469f20	30			objectlayer	orchestration		Writes the vector (0, 0, 1) to its argument	verified	one	objectlayer/classes#base-slots-0-to-10	
+0x469f40	5			objectlayer	orchestration		Returns the GUID 0 in edx:eax	verified	one	objectlayer/classes#base-slots-0-to-10	
 0x469f50	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x469f60	21			objectlayer	orchestration		Fills slot 11 of the object vtable and others; its body is not read here	inferred	none		
+0x469f60	21			objectlayer	orchestration		Writes −1 to its argument and returns 1	verified	one	objectlayer/classes#base-slots-11-to-20	
 0x469f80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x469f90	5			objectlayer	orchestration		Jumps through slot 6 of its object's vtable	verified	one	objectlayer/overview#small-bodies	
 0x469fa0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
@@ -4890,12 +4890,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x469fe0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x469ff0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x46a000	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x46a010	64			objectlayer	orchestration		Fills slot 25 of the object vtable and others; its body is not read here	inferred	none		
+0x46a010	64			objectlayer	orchestration		Writes the identity matrix to its argument	verified	one	objectlayer/classes#base-slots-21-to-30	
 0x46a050	6			objectlayer	orchestration		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x46a060	7			objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
 0x46a070	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x46a080	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x46a090	43			objectlayer	orchestration		Fills slot 0 of the object vtable; its body is not read here	inferred	none		
+0x46a090	43			objectlayer	orchestration		Runs the base destructor and frees on bit 0	verified	one	objectlayer/classes#base-slots-0-to-10	
 0x46a0c0	5	InitObjMgrSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x46a0d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x46a0d0	19	InitObjMgrSquare18		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x46a0f0	5	InitObjMgrQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x46a100, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
