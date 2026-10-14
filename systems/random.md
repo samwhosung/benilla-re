@@ -124,7 +124,8 @@ the image, all inside the library.
 seeded at startup, before `WinMain`, with the client clock `0x42c010`; again with the clock
 whenever the player enters a PIN at login; and whenever Lua code calls `math.randomseed`. So the
 sequence differs on every run. `rand` has 15 call
-sites; one is Lua's `math.random` (`0x7fb310`).
+sites; one is Lua's `math.random` (`0x7fb310`), and one, `MakeSocketPipe` (`0x5bcf90`), picks its
+first loopback port as 40000 + `rand() % 10000`.
 
 Addresses: `0x7400e5`, `0x7400d8`, `0x40acbb`, `0x7fb310`, `0x7fb450`, `0x822d10`, `0x5d1c70`, `0x5b8000`, `0x5b3120`, `0x5ab5a0`, `0x46b0c0`, `0x46d1c0`
 Confidence: verified
@@ -144,6 +145,23 @@ static initializer `0x5b8000` (table slot `0x82a9ac`, through the thunk `0x5b7ff
 `0x5b3163`, in `0x5b3120`, which also passes `0x42c010()`. The glue script function
 `PINEntered` (`0x46d1c0`) passes the digits to `0x46b0c0`, whose last instruction, at
 `0x46b0e0`, jumps to `0x5ab5a0`; that calls `0x5b3120` when its global object pointer is set.
+
+## Other threads' rand
+
+A thread's `rand` state starts at 1: `__initptd` (`0x40aca8`) stores 1 at `+0x14` of the thread data, and only the
+main thread's is seeded, so another thread draws the default sequence. `MakeSocketPipe` (`0x5bcf90`) calls `rand` at
+`0x5bcfc5` and connects to `127.0.0.1` at port 40000 + `rand() % 10000`, then the next port on each failure, up
+to 64999.
+
+Addresses: `0x40aca8`, `0x5bcf90`, `0x5bcfc5`, `0x5bcb00`, `0x5bcb18`, `0x7400e5`
+Confidence: verified
+Proof: one
+Test: none
+
+`mov [eax+0x14],1` (`0x40acb3`). `idiv 0x2710` (`0x5bcfd0`), `sub edi,0x63c0` (`0x5bcfda`) on a 16-bit port,
+which wraps to 40000 + the remainder; `inc edi`, `cmp di,0xfde8`, `jb` (`0x5bd043` to `0x5bd049`) steps and ends
+at 65000. `MakeSocketPipe` is called from `WowConnectionNet::PlatformRun` (`0x5bcb18`); the network thread is
+`systems/net/dispatch.md#network-thread-handoff`'s.
 
 ## Unreached functions
 
