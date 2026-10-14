@@ -49,8 +49,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
 0x496888	void *[4]	s_cases496720		ui	Holds the 4 case addresses of the switch in 0x496720	inferred	none	
 0x499a64	void *[5]	s_cases498a60		ui	Holds the five line-state arms of the settings loader 0x498a60	verified	one	ui/chatwindows#settings-file-reader
+0x49a6dc	void *[2]	s_cases49a6c0		ui	Holds the keep and skip arms of the history type test 0x49a6c0	verified	one	ui/chatevents#the-history-ring
+0x49a6e4	uint8_t[93]	s_caseIndexes49a6c0		ui	Holds 1 for each chat type the history keeps	verified	one	ui/chatevents#the-history-ring
 0x49afe0	void *[5]	s_cases49a870		ui	Holds the 5 case addresses of the switch in 0x49a870	inferred	none	
 0x49aff4	uint8_t[92]	s_caseIndexes49a870		ui	Holds the 92 case indexes of the switch in 0x49a870	inferred	none	
+0x49b050	void *[5]	s_cases49a870Log		ui	Holds the five log-line arms of the chat line function	verified	one	ui/chatevents#the-chat-log-line
+0x49b064	uint8_t[75]	s_caseIndexes49a870Log		ui	Maps chat types 17 to 91 to a log-line arm	verified	one	ui/chatevents#the-chat-log-line
 0x49c60c	void *[32]	s_cases49bf80		ui	Holds the 32 case addresses of the switch in 0x49bf80	inferred	none	
 0x49e45c	void *[4]	s_cases49e1c0		ui	Holds the 4 case addresses of the switch in 0x49e1c0	inferred	none	
 0x4ab604	void *[4]	s_cases4ab4a0		ui	Holds the 4 case addresses of the switch in 0x4ab4a0	inferred	none	
@@ -406,6 +410,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8046d8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
 0x805fb0	ChatMessageGroup[68]	s_chatMessageGroups		ui	Holds the 68 message groups a window can show	verified	one	ui/chatwindows#message-groups-of-a-window
+0x8062e0	const uint32_t[94]	s_chatTypeEvents		ui	Holds the event id each of the 94 chat types fires	verified	one	ui/chatevents#the-ten-event-arguments
 0x806458	const uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
 0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
@@ -1205,7 +1210,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8432f0	const char[26]	s_soundFriendlyUnit		ui	Holds the interface sound name GAMEHIGHLIGHTFRIENDLYUNIT played for a friendly hover target	verified	one	ui/tooltipobject#the-publisher
 0x84330c	const char[25]	s_soundHostileUnit		ui	Holds the interface sound name GAMEHIGHLIGHTHOSTILEUNIT played for a hostile hover target	verified	one	ui/tooltipobject#the-publisher
 0x843414	char[11]	s_textLootButton		ui	Holds the string "LootButton"	inferred	none	
-0x8435fc	uint32_t			ui	Holds a dword that ClientChatHandler, ClientTextEmoteHandler, HandleZoneUnderAttackPacket read and write; not read here	inferred	none	
+0x8435fc	uint32_t	s_chatDisplayHold		ui	Holds 1 while chat lines are queued instead of shown, from start-up to world entry	verified	one	ui/chatevents#the-display-latch
 0x843600	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x843604	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x843608	int32_t	s_guildRecruitmentAuto		ui	Holds 1 while guild recruitment joins its channel by itself	verified	one	ui/chatwindows#settings-file-reader
@@ -2152,11 +2157,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e4	uint32_t	s_forbiddenSignalGuard		ui	Holds 1 while 0x494a50 signals a forbidden action	verified	one	ui/luastate#the-context-word
+0xb4e3f8	uint32_t[60]	s_chatHistoryTimes		ui	Holds the time each history slot was written	verified	one	ui/chatevents#the-history-ring
 0xb4e4f0	void *	s_cityAreaRow		ui	Points at the one AreaTable row whose flags include 0x200, which names a capital's channels	verified	one	ui/chatchannels#composing-a-channel-name
 0xb4e500	uint32_t	s_extraChatColorCount		ui	Holds the number of extra channel colour entries	verified	one	ui/chatcolors#the-colour-registry
 0xb4e504	void *	s_extraChatColors		ui	Points at the extra channel colour entries, 67 bytes each	verified	one	ui/chatcolors#the-colour-registry
 0xb4e518	uint8_t[94][67]	s_chatColors		ui	Holds the live chat type names and colours, seeded from the table at 0x804710	verified	one	ui/chatcolors#the-colour-registry
 0xb4fdb4	uint32_t[2]	s_loggingFlags		ui	Holds whether chat and combat logging are on, set by LoggingChat and LoggingCombat	verified	one	ui/chatwindows#chat-logging
+0xb4fdc0	uint32_t	s_pendingChatHead		ui	Holds the list head of the queued chat lines	verified	one	ui/chatevents#pending-lines
+0xb4fdc4	void *	s_pendingChatFirst		ui	Points at the first queued chat line	verified	one	ui/chatevents#pending-lines
 0xb4fdd4	uint32_t	s_deferredJoinCapacity		ui	Holds the capacity of the list of channel names the settings header asked to join	verified	one	ui/chatwindows#settings-file-lines
 0xb4fdd8	uint32_t	s_deferredJoinCount		ui	Holds the count of channel names in the deferred-join list	verified	one	ui/chatwindows#settings-file-lines
 0xb4fddc	char **	s_deferredJoins		ui	Points at the deferred-join list of channel name strings	verified	one	ui/chatwindows#settings-file-lines
@@ -2166,10 +2174,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb50440	char[128]	s_guildRecruitmentShortcut		ui	Holds the guild recruitment channel's shortcut, written once by the name composer	verified	one	ui/channelverbs#guild-recruitment-cascade
 0xb504c0	char[128]	s_guildRecruitmentName		ui	Holds the guild recruitment channel's composed capital name, written once by the name composer	verified	one	ui/channelverbs#guild-recruitment-cascade
 0xb50540	void *[2]	s_logWriters		ui	Holds the open chat log and combat log writers, null while closed	verified	one	ui/chatwindows#chat-logging
+0xb50580	char[60][2048]	s_chatHistory		ui	Holds the 60 slots of the chat history ring	verified	one	ui/chatevents#the-history-ring
+0xb6e598	uint32_t[7]	s_languageWordIndex		ui	Holds the hash table object of the language word index	verified	one	ui/chatlanguage#choosing-the-substitute
+0xb6e5b4	void *	s_languageWordBuckets		ui	Points at the bucket array of the language word index, 12 bytes a bucket	verified	one	ui/chatlanguage#choosing-the-substitute
+0xb6e5bc	uint32_t	s_languageWordMask		ui	Holds the bucket mask of the language word index, -1 while it is not built	verified	one	ui/chatlanguage#choosing-the-substitute
 0xb6e5c4	uint32_t	s_chatSettingsDirty		ui	Holds a flag the saver registration clears and channel join and leave set; no instruction reads it	verified	one	ui/chatwindows#settings-file-writer
 0xb6e5c8	uint32_t	s_chatReady		ui	Holds 1 once the settings loader has finished	verified	one	ui/chatwindows#settings-file-backfill
 0xb6e5cc	uint32_t	s_isAfk		ui	Holds whether the active player is marked AFK	verified	one	objectlayer/interaction#afk
 0xb6e5d0	uint32_t	s_walkZone		ui	Holds the parent zone id the last zone walk read, before the walk's checks	verified	one	ui/chatchannels#the-zone-walk
+0xb6e5d4	uint32_t	s_chatHistoryNext		ui	Holds the next history slot to write, wrapping at 60	verified	one	ui/chatevents#the-history-ring
+0xb6e5d8	uint32_t	s_chatHistoryReady		ui	Holds 1 once the history ring is cleared	verified	one	ui/chatevents#the-history-ring
 0xb6e5dc	uint32_t	s_inDefenseChannel		ui	Holds 1 while a confirmed zone-scoped defence channel is joined	verified	one	ui/chatchannels#defence-channel-state
 0xb6e5e0	uint32_t	s_zoneChannelMask		ui	Holds the bit set of ChatChannels ids that join by zone, bit id-1	verified	one	ui/chatwindows#settings-file-reader
 0xb6e5e4	uint8_t	s_zoneRefreshRetry		ui	Holds 1 when the guild recruitment cascade could not act and the next zone walk runs it	verified	one	ui/chatchannels#walk-rows-not-held
@@ -2499,9 +2513,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0daac	uint32_t	s_mapMaxId		dbc	Holds the highest Map.dbc id	verified	one	ui/tooltipitemhead#area-map-and-conjured-lines
 0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
 0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
-0xc0db40	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex, StaticDBLoadAll read and write; not read here	inferred	none	
-0xc0db44	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex read and write; not read here	inferred	none	
-0xc0db48	uint32_t			unassigned	Holds a dword that Script::GetDefaultLanguage reads and writes; not read here	inferred	none	
+0xc0db40	uint32_t[5]	s_languagesStore		dbc	Holds the Languages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
+0xc0db54	uint32_t[5]	s_languageWordsStore		dbc	Holds the LanguageWords.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
 0xc0db70	uint32_t	s_itemVisualsIdMap		dbc	Holds the ItemVisuals.dbc rows by id	verified	one	charactermodel/equipment#item-models
 0xc0db74	uint32_t	s_itemVisualsMaxId		dbc	Holds the highest ItemVisuals.dbc id	verified	one	charactermodel/equipment#item-models
 0xc0db84	uint32_t	s_itemVisualEffectsIdMap		dbc	Holds the ItemVisualEffects.dbc rows by id	verified	one	charactermodel/equipment#item-models

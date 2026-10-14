@@ -7147,8 +7147,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4982c0	1078	CGChat::InitializeGame	idb	ui	primitive		Seeds the chat colours, ten window records, extra channel colours and registers the chat messages	verified	one	ui/chatwindows#window-start-up-state	
 0x498700	588	ShutdownChat		ui	primitive		Closes the log writers, frees the windows' arrays and the channel list and unregisters the chat messages	verified	one	ui/chatwindows#chat-logging	
 0x498950	106			ui	primitive		Runs ChatFrame.cpp code that calls SMemFree; not read here	inferred	none		
-0x4989c0	72			ui	orchestration		Runs ChatFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x498a10	11			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
+0x4989c0	72	ReleaseChatDisplay		ui	orchestration		Seeds the AFK mirror from PLAYER_FLAGS, clears the display latch and drains the queued lines	verified	one	ui/chatevents#the-display-latch	
+0x498a10	11	HoldChatDisplay		ui	orchestration		Sets the chat display latch	verified	one	ui/chatevents#the-display-latch	
 0x498a20	18	RegisterChatSettingsLoader		ui	orchestration		Registers 0x498a60 as the reader of cache file kind 7	verified	one	ui/chatwindows#settings-file-writer	
 0x498a40	28	RegisterChatSettingsSaver		ui	orchestration		Registers 0x499a80 as the writer of cache file kind 7 and clears the unread dirty flag	verified	one	ui/chatwindows#settings-file-writer	
 0x498a60	4098	LoadChatSettings		ui	primitive		Parses chat-cache.txt into the window records, colours and channels, or applies the defaults when absent	verified	one	ui/chatwindows#settings-file-reader	
@@ -7158,20 +7158,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49a1e0	5			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a1f0	19			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a210	1198	ZoneChannelRefresh		ui	primitive		Leaves, renames and joins the zone channels for the current zone, then the deferred joins and guild cascade	verified	one	ui/chatchannels#the-zone-walk	
-0x49a6c0	28			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49a750	182			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a6c0, _sprintf, GetUnixTime; not read here	inferred	none		
+0x49a6c0	28	IsHistoryChatType		ui	orchestration		Returns whether a chat type is kept in the history	verified	one	ui/chatevents#the-history-ring	
+0x49a750	182	AddChatHistoryLine		ui	primitive		Writes a line of a kept type into the history ring with its time	verified	one	ui/chatevents#the-history-ring	
 0x49a810	32	HasChatHistoryLine		ui	primitive		Returns whether line i of the 60-line chat history ring holds text	verified	one	objectlayer/playermessages#gm-tickets	
 0x49a830	26	GetChatHistoryLine		ui	primitive		Returns the address of line i of the 60-line chat history ring	verified	one	objectlayer/playermessages#gm-tickets	
 0x49a850	23	GetChatHistoryTime		ui	primitive		Returns the time of line i of the 60-line chat history ring	verified	one	objectlayer/playermessages#gm-tickets	
-0x49a870	1904			ui	primitive		Adds a message of a chat type to the chat frames	inferred	none	objectlayer/playerfields#player-flag-changes	
-0x49b0b0	250			ui	orchestration		Runs ChatFrame.cpp code that calls 0x4b5390, FrameScript_SignalEvent2; not read here	inferred	none		
+0x49a870	1904	AddChatLine		ui	primitive		Shows one chat line: rewrites, filters and decorates it, fires its event, bubbles it and logs it	verified	one	ui/chatevents#the-chat-line-function	
+0x49b0b0	250	FireChatEvent		ui	orchestration		Fires the CHAT_MSG event of a type with the ten arguments of a line	verified	one	ui/chatevents#the-ten-event-arguments	
 0x49b1b0	66			ui	orchestration		Runs ChatFrame.cpp code that calls SErrSetLastError, 0x49b0b0, SLogWrite; not read here	inferred	none		
 0x49b200	761			ui	primitive		Runs ChatFrame.cpp code that calls SErrSetLastError, ClntObjMgrGetActivePlayer and 8 more; not read here	inferred	none		
 0x49b500	81			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
-0x49b560	837			ui	primitive		Runs ChatFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, SStrCopy and 5 more; not read here	inferred	none		
-0x49b8b0	132			ui	primitive		Runs ChatFrame.cpp code that calls _isupper, _toupper, tolower; not read here	inferred	none		
-0x49b940	42			ui	orchestration		Runs ChatFrame.cpp code that calls 0x6c9c60, 0x6c9c30; not read here	inferred	none		
-0x49b970	10			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
+0x49b560	837	RewriteInLanguage		ui	primitive		Rewrites each word the skill does not cover into a same-length word of the language, in the source's case	verified	one	ui/chatlanguage#when-a-line-is-rewritten	
+0x49b8b0	132	AppendCasedWord		ui	primitive		Appends a substitute to the output with each character's case taken from the source word	verified	one	ui/chatlanguage#stamping-the-case	
+0x49b940	42	IsWordCharacter		ui	orchestration		Returns whether a code point is a letter, digit, apostrophe or above 0xff	verified	one	ui/chatlanguage#splitting-a-line-into-words	
+0x49b970	10	SignalLanguageListChanged		ui	orchestration		Fires LANGUAGE_LIST_CHANGED	verified	one	ui/chatlanguage#knowing-a-language	
 0x49b980	407	FindOrCreateChannelSlot		ui	primitive		Returns an existing slot of the name or fills a free or new slot in state 1 with the name and id	verified	one	ui/chatchannels#joined-channel-slots	
 0x49bb20	171	ConfirmChannelSlot		ui	primitive		Sets the first unconfirmed slot of the name to state 0, sets its zone mask bit and stores the instance	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
 0x49bbd0	118	DropChannelSlot		ui	primitive		Frees the slot of the name: number 0, name emptied, state 1	verified	one	ui/chatchannels#confirming-renaming-and-dropping	
@@ -7186,13 +7186,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49bf80	1675	ChannelNotifyHandler	idb	ui	primitive		Handles the channel notify message: reads the notice and name, picks a token and chat type, and shows the line	verified	one	ui/chatchannels#the-channel-notify-message	
 0x49c690	332	ClientChannelListHandler	idb	ui	primitive		Handles the channel list message: builds the member list text and shows it as channel list lines	inferred	none	ui/chatchannels#channel-list-message	
 0x49c7e0	766			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 6 more; not read here	inferred	none		
-0x49cae0	285	CGChat::QueueChatText	idb	ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc, SStrDupA, SStrCopy; not read here	inferred	none		
+0x49cae0	285	CGChat::QueueChatText	idb	ui	primitive		Queues a chat line with its fields for later display	verified	one	ui/chatevents#pending-lines	
 0x49cc00	182			ui	primitive		Runs ChatFrame.cpp code that calls SMemAlloc, SStrDupA; not read here	inferred	none		
-0x49ccc0	1029			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, ClntObjMgrObjectPtr and 11 more; not read here	inferred	none		
+0x49ccc0	1029			ui	primitive		Shows queued lines whose sender's name has arrived, re-queueing while the display latch is set	verified	one	ui/chatevents#pending-lines	
 0x49d0d0	349			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49b200, SMemFree and 1 more; not read here	inferred	none		
-0x49d230	634			ui	primitive		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, ClntObjMgrObjectPtr and 9 more; not read here	inferred	none		
+0x49d230	634			ui	primitive		Shows every queued chat line when the display latch clears	verified	one	ui/chatevents#the-display-latch	
 0x49d4b0	171	SendIgnoredResponse	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::PutUInt32, CDataStore::PutGuid, ClientServices::Send; not read here	inferred	none		
-0x49d560	1662	ClientChatHandler	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetUInt8, CDataStore::GetUInt32 and 18 more; not read here	inferred	none		
+0x49d560	1662	ClientChatHandler	idb	ui	primitive		Handles the chat message: reads the type, language, names, text and tag, then queues or shows the line	verified	one	ui/chatevents#the-chat-message	
 0x49dbe0	223	ClientTextEmoteHandler	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetGuid, CDataStore::GetInt32 and 6 more; not read here	inferred	none		
 0x49dcc0	368	HandleZoneUnderAttackPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, FrameScript_GetText, SStrPrintf and 2 more; not read here	inferred	none		
 0x49de30	329	HandleDefenseMessagePacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt32 and 3 more; not read here	inferred	none		
@@ -7218,9 +7218,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49f7a0	246			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x49f8a0	125			ui	primitive		Runs ChatFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x49f920	522	Script::SendAddonMessage	idb	ui	primitive		Implements the Lua function SendAddonMessage	inferred	none		
-0x49fb30	172	Script::GetNumLaguages	idb	ui	primitive		Implements the Lua function GetNumLaguages	inferred	none		
-0x49fbe0	236	Script::GetLanguageByIndex	idb	ui	primitive		Implements the Lua function GetLanguageByIndex	inferred	none		
-0x49fcd0	94	Script::GetDefaultLanguage	idb	ui	orchestration		Implements the Lua function GetDefaultLanguage	inferred	none		
+0x49fb30	172	Script::GetNumLaguages	idb	ui	primitive		Pushes the number of languages the active player understands	verified	one	ui/chatlanguage#language-functions	
+0x49fbe0	236	Script::GetLanguageByIndex	idb	ui	primitive		Pushes the name of the n-th language the active player understands	verified	one	ui/chatlanguage#language-functions	
+0x49fcd0	94	Script::GetDefaultLanguage	idb	ui	orchestration		Pushes the name of the default language of the player's race	verified	one	ui/chatlanguage#language-functions	
 0x49fd30	267	Script::DoEmote	idb	ui	primitive		Implements the Lua function DoEmote	inferred	none		
 0x49fe40	7	Script::LoggingChat	idb	ui	orchestration		Calls the logging setter for the chat log	verified	one	ui/chatwindows#chat-logging	
 0x49fe50	146	SetLoggingFlag		ui	orchestration		Sets or reads the chat or combat logging flag, opens the log, and pushes 1 or nil	verified	one	ui/chatwindows#chat-logging	
@@ -28346,9 +28346,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9b70	61			unassigned			Runs its object file code that calls 0x6c96c0; not read here	inferred	none		
 0x6c9bb0	86			unassigned	unreached		Runs its object file code that calls 0x6c9c50, 0x6c9d80, 0x6c9d10; not read here	inferred	none		
 0x6c9c10	24			unassigned	unreached		Runs its object file code that calls 0x6c9bb0; not read here	inferred	none		
-0x6c9c30	21			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9c30	21	IsAsciiDigit		unassigned			Returns whether a 16-bit code is an ASCII digit	verified	one	ui/chatlanguage#splitting-a-line-into-words	
 0x6c9c50	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6c9c60	79			unassigned			Runs its object file code not read here	inferred	none		
+0x6c9c60	79	IsLatin1Letter		unassigned			Returns whether a 16-bit code is A to Z, a to z or a Latin-1 letter	verified	one	ui/chatlanguage#splitting-a-line-into-words	
 0x6c9cb0	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c9ce0	33			unassigned			Runs its object file code not read here	inferred	none		
 0x6c9d10	51			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -30781,7 +30781,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x72b480	65			ui	orchestration		Runs its object file code that calls 0x72c850, 0x72a350, 0x72d0d0; not read here	inferred	none		
 0x72b4d0	122			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, SStrCopy; not read here	inferred	none		
 0x72b550	207			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, SStrCopy and 2 more; not read here	inferred	none		
-0x72b620	78			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b4d0 and 2 more; not read here	inferred	none		
+0x72b620	78			ui	primitive		Shows a whisper's sender on the keyboard LCD and arms its timer	inferred	none	ui/chatevents#whisper-notice-on-the-lcd	
 0x72b670	77			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b4d0 and 2 more; not read here	inferred	none		
 0x72b6c0	78			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, 0x72b4d0 and 2 more; not read here	inferred	none		
 0x72b710	248			ui	primitive		Runs its object file code that calls 0x72c850, 0x72a350, CDataStore::GetUInt32 and 5 more; not read here	inferred	none		
