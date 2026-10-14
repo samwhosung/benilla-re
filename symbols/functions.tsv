@@ -32047,7 +32047,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74a758	49			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a789	36			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a7ad	19	MultiplyMatrixFirstCall		d3dx			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-scratch	models::m2_decal_projection_difftest
+0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-frame	models::m2_decal_projection_difftest
 0x74a7c6	568			d3dx			Runs its object file code not read here	inferred	none		
 0x74a9fe	34			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa20	42			d3dx	unreached		Runs its object file code not read here	inferred	none		

@@ -21,7 +21,7 @@ table: while the id is past the lookup or unmapped, it moves to the row's fallba
 falls back to itself ends at the default: animation 0 when mapped, else 0x93, else the first
 sequence.
 
-Addresses: `0x711bf0`, `0xc0e070`, `0xc0e074`
+Addresses: `0x711bf0`, `0x711c22`, `0x711c35`, `0x711c71`, `0xc0e070`, `0xc0e074`
 Confidence: verified
 Proof: one
 Test: none
@@ -31,7 +31,7 @@ The playable table is header `+0x30`, counted at `+0x2c`; the lookup is `+0x28`,
 are `+0x14` and its fallback `+0x18`. Two counters start at 1 and 0; flag 0x10 adds the first to
 the second and negates the first, flag 0x20 adds it and zeroes it. The result flag is 0 for a
 positive first counter, 1 for a negative one, else 3 when the second is positive and 2 otherwise.
-A visited array of 0xd0 dwords stops loops.
+A visited array of 0xd0 dwords stops loops. The default is chosen first: `0x711c22` reads entry 0 of the lookup and `0x711c35` entry `0x93` without comparing the index with the count at `+0x24`, which the walk's own test does check (`0x711c71`), so a lookup shorter than 0x94 entries is read past its end.
 
 ## Playing an animation
 

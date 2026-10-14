@@ -49,7 +49,7 @@ Test: none
 `+0x50` from the two. The sum is `fld c; fld b; fld a`, then `a·a`, `b·b`, add, `c·c`, add, one
 `fstp dword` at `0x7143e2`. The scene reads `+0x84` for its depth keys (`models/scene#element-depth-keys`).
 
-## World matrix and scratch
+## World matrix and frame
 
 The pass sets the world matrix `+0xfc` to the base matrix `+0xbc` times the parent matrix, through the
 dispatched product `0x74a7c0(out, a, b)`, which computes `out = a · b` for row-major 4×4 matrices. It

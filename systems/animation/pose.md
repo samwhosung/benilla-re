@@ -61,8 +61,6 @@ Test: none
 
 The squared lengths of leg 4 are summed as `(x² + y²) + z²` for world rows 0 and 1, `(y² + z²) + x²` for
 world row 2, `(x² + z²) + y²` for working row 0 and `(z² + y²) + x²` for working rows 1 and 2.
-The squared lengths of leg 4 are summed as `(x² + y²) + z²` for world rows 0 and 1, `(y² + z²) + x²` for
-world row 2, `(x² + z²) + y²` for working row 0 and `(z² + y²) + x²` for working rows 1 and 2.
 `and eax,6; sub eax,2; je` selects 2, a second `sub eax,2; je` selects 4, a third `jne` leaves 6 to
 fall into `0x714a18`. The rows of 2 use `0x4549f0` (`(x² + y²) + z²`), `fsqrt`, `fabs` and
 `fcomp 2^-22; test ah,5; jnp`, which skips only when the length is below 2^-22: a length equal to it or

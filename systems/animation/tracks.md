@@ -25,8 +25,9 @@ Proof: one
 Test: none
 
 All compares are unsigned. The hint `k` is read without a bound check, and the forward and backward scans
-do not clamp it to the window: a hint below `lo` scans forward from there, and one at or above `hi` is
-returned as it is. The forward scan tests the bound
+do not clamp it to the window. On the forward leg a hint below `lo` scans forward from there and one at or above `hi` is
+returned as it is (`0x713dcb`). On the backward leg a hint at or below `lo` is returned as it is (`0x713dec`) and one at or above `hi`
+walks down from itself. The forward scan tests the bound
 before the time (`0x713dcb`, `0x713dd3`: equal times advance); the backward scan exits at `lo` without
 reading `ts[lo]` (`0x713dec`). The bisection takes `mid = (lo + hi) >> 1`; `t < ts[mid]` sets `hi = mid − 1`;
 otherwise `lo = mid + 1` and `t < ts[mid+1]` ends it at `mid`. A window that collapses ends at the last
@@ -54,8 +55,8 @@ positive value.
 
 Every sampled track runs the same block. It runs only when the track's key count exceeds the first-update
 gate. It searches with the primary clock `(time = +0x98, slot = +0x9c)` of a bone state, writes the value,
-and stops there for an interpolation word of 0. Otherwise, when that state's blend weight `+0x10c` is neither
-0 nor a number (a negative weight runs the leg) and the track's global sequence word is 0xffff, it searches again with the blend clock `(+0xc4, +0xc8)` into the second slot and sets the
+and stops there for an interpolation word of 0. Otherwise, when that state's blend weight `+0x10c` is not equal to 0
+(a negative or NaN weight runs the leg) and the track's global sequence word is 0xffff, it searches again with the blend clock `(+0xc4, +0xc8)` into the second slot and sets the
 value to `value + (second − value) · weight`. Byte and word values are not blended: the second value is
 fetched and stored, and the first is kept.
 
@@ -66,8 +67,7 @@ Test: none
 
 The bone state is the bone's own for a bone track, bone 0's for colour, transparency, texture frame, texture
 transform and camera tracks, and the state of the bone the record names for light, ribbon, particle and attachment tracks.
-The weight test is `fld 0.0; fcomp [state+0x10c]; test ah,0x44; jnp skip`: `0x44` masks the equal and
-unordered flags, so only an equal or unordered weight skips. The blend leg reads `word [track+2] = 0xffff`
+The weight test is `fld 0.0; fcomp [state+0x10c]; test ah,0x44; jnp skip`: `0x44` masks C3 and C2. An equal compare sets only C3, one bit, odd parity, so `jnp` skips. A less or greater compare sets neither and an unordered one sets both, even parity, so a positive, negative or NaN weight runs the leg. The blend leg reads `word [track+2] = 0xffff`
 (`0x715a50`), so a track tied to a global sequence never blends. A state is `{k, k+1, fraction} @ +0x0`,
 value `@ +0xc`, the second `{k, k+1, fraction} @ +0x10` for 4-byte and smaller values (`+0x18` for
 vectors) and the second value after it (`+0x1c`, `+0x24`). Texture frames fetch a word at `k` even
@@ -152,9 +152,9 @@ blend uses the same code with the state's `+0x10` triple (`0x71751e` onward) and
 The rotation sampler `0x713ea0(track, out)` searches with the state's primary clock. For an interpolation
 word of 0 it copies the key at `k` to the value and returns. Otherwise it sets the value to the componentwise
 `a + (b − a) · t` of the keys at `k` and `k+1`, narrowing each component, with no renormalization. Then,
-when the weight is neither 0 nor a number and the track's global sequence word is 0xffff, it searches the
-blend clock, lerps the blend keys the same way into a scratch quaternion at `out+0x28`, and calls the
-quaternion blend `0x74d114(value, value, scratch, weight)`.
+when the weight is not equal to 0 (a negative or NaN weight runs the leg) and the track's global sequence word is 0xffff, it searches the
+blend clock, lerps the blend keys the same way into a temporary quaternion at `out+0x28`, and calls the
+quaternion blend `0x74d114(value, value, temporary, weight)`.
 
 Addresses: `0x713ea0`, `0x713ec2`, `0x713ecc`, `0x713ed2`, `0x713ef7`, `0x713f0c`, `0x713f3f`, `0x713f41`, `0x713f58`, `0x713f5b`, `0x713f7d`, `0x713f9c`, `0x713fa1`, `0x713fd7`, `0x713fe3`
 Confidence: verified
@@ -164,7 +164,7 @@ Test: none
 The keys are 16 bytes (`shl eax,4`), the track values at `[track+0x18]`. `0x713ecc cmp word [edi],0` and
 `jne 0x713ef7` separate the copy at `0x713ed2` from the lerp. The blend leg's gate is `0x713f47 fcomp
 [ebx+0x10c]; test ah,0x44; jnp` and `0x713f5b cmp word [ecx+2],0xffff`. The call pushes the weight,
-the scratch address, the value address twice (`0x713fd7` to `0x713fe3`).
+the temporary's address, the value address twice (`0x713fd7` to `0x713fe3`).
 
 ## Quaternion blend
 

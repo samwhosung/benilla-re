@@ -118,11 +118,11 @@ The file binds five kinds of replaceable texture to a character model, by the ty
 | 2 | item model and cloak textures | `0x479935`, `0x479c1a`, `0x47a045` |
 | 6 | hair | `0x4782cc` |
 | 8 | extra skin | `0x478204` |
-| 11 to 13 | creature skins | `0x479891` |
+| 11 to 13 | creature skins | `0x479891`, `0x5f7ba5` |
 
 Addresses: `0x710ec0`, `0x477970`, `0x479622`, `0x479935`, `0x479c1a`, `0x47a045`, `0x4782cc`, `0x478204`, `0x479891`, `0x5f7ba5`, `0x7101d6`, `0x76d05c`
 Confidence: verified
 Proof: one
 Test: none
 
-A scan of the listing finds eleven calls to `0x710ec0`. Nine push the types above: a literal 1, 2, 6 or 8 before the call (`push 0x1` at `0x477970`, `push 0x6` at `0x4782cc`, `push 0x8` at `0x478204`), or `lea edx,[edi+0xb]` with `edi` below 3 (`0x4798a1 cmp edi,3`) at `0x479891` and `lea ecx,[edi+0xb]` at `0x5f7ba5`. The other two pass a variable type: the deferred-call replay at `0x7101d6` and `0x76d05c`. No call pushes a literal 7.
+A scan of the listing finds eleven calls to `0x710ec0`. Nine push the types above: a literal 1, 2, 6 or 8 before the call (`push 0x1` at `0x477970`, `push 0x6` at `0x4782cc`, `push 0x8` at `0x478204`), or `lea edx,[edi+0xb]` with `edi` below 3 (`0x4798a1 cmp edi,3`) at `0x479891` and `lea ecx,[edi+0xb]` at `0x5f7ba5` (`0x5f7bb5 cmp edi,3`). The other two pass a variable type: the deferred-call replay at `0x7101d6` and `0x76d05c`. No call pushes a literal 7.

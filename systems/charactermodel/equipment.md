@@ -53,13 +53,14 @@ column `c` of group `g`'s row and ORs `1 << g` into `+0x10`; with the store flag
 | 8 hands | - | 3 | 0 | - | - | - | - | - |
 | 9 tabard | - | - | - | 4 | 4 | - | - | - |
 
-Addresses: `0x4791c0`, `0x479210`, `0x479290`, `0x479300`, `0x479350`, `0x4793a0`, `0x4793f0`, `0x479520`, `0x4792e0`, `0x4792f0`, `0x803bf8`, `0xb42424`, `0x478b95`, `0x478ba0`, `0x478bb0`, `0x479238`, `0x479248`, `0x47941d`, `0x47943b`, `0x479468`, `0x479529`, `0x479538`, `0x476c5a`
+Addresses: `0x4791c0`, `0x479210`, `0x479290`, `0x479300`, `0x479350`, `0x4793a0`, `0x4793f0`, `0x479520`, `0x4792e0`, `0x4792f0`, `0x803bf8`, `0xb42424`, `0x478b95`, `0x478ba0`, `0x478bb0`, `0x479238`, `0x479248`, `0x47941d`, `0x47943b`, `0x479468`, `0x479529`, `0x479538`, `0x476c5a`, `0x479496`, `0x4794b9`, `0x4794cb`, `0x479508`
 Confidence: verified
 Proof: one
 Test: none
 
 `-` is the table value -1; rows 0, 1, 10 and 11 of the table are never used. `0x478b95 cmp BYTE PTR [ecx],0` tests the first byte of the name, not the pointer. The overrides: hands whose record has geoset group 0 use column 6 in group 1 (`0x479238`), a chest with group 0 column 5 (`0x479248`). In group 6, feet with group 0
 use column 3 (`0x47941d`), a chest with group 2 column 4 (`0x47943b`), and legs with group 2 column 3 under a chest with group 2 (`0x479468`), else 4. Group 7 clears its cell on every call when `+0x0b` is set (`0x479538`), which is the race flag of `component#create-build-and-delete`.
+On the clear path group 6 first clears column `c` (`0x479496`); clearing the chest (`0x47949b cmp edi,3`) then clears column 3 (`0x4794b9`), re-stores the legs record at column 4 when it has group 2 (`0x4794cb`) and re-stores the feet record at column 3 when it has group 0 (`0x479508`). The legs branch (`0x4794e8`) reads `+0x4bc`, which unequip has already cleared, so it stores nothing.
 `0x4792e0` and `0x4792f0` are the table's slots 8 and 9, `ret 0xc` and never indexed.
 
 ## Cell store

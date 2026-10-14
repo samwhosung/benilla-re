@@ -14,9 +14,9 @@ Roots: none
 
 A bone state is 0x118 bytes: three track states, then the primary slot, the blend slot laid out the
 same, the fade and the active list link. A time is a signed 32-bit millisecond count, a speed a float.
-The constructor sets the primary and blend records and slots to −1, the cursors, speeds and offsets to 0,
+The constructor sets the primary and blend records, slots and bone indices (`+0xa0`, `+0xcc`) to −1, the cursors, speeds and offsets to 0,
 the repeats to 1, both completion latches to 1, the fade scale to 1.0, the requested id to −1 and the
-list next index to −1.
+list next index to −1. It never writes the inverse speeds `+0xb4` and `+0xe0`.
 
 | offset | holds |
 |---|---|
