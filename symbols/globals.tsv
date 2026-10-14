@@ -524,8 +524,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x807e00	const char[5]	s_textNone		ui	Holds the string "none"	inferred	none	
 0x808120	float	s_m2OpaqueAlpha		models	Holds 0.99999, the alpha at or above which a batch draws as opaque	verified	one	models/scene#element-collection
 0x808220	const uint32_t[5]	s_tabardCounts		ui	Holds the counts of the five tabard design values: 170, 17, 6, 17 and 51	verified	one	ui/tabard#design-state
+0x808234	void *[11]			ui	Holds the layout vtable of a model-derived frame; its width and height slots are the model's 0x76d080 and 0x76d0d0	verified	one	ui/regions#the-layout-vtable
 0x808260	void *[40]	CGTabardModelFrame::vftable		ui	Holds the 40 virtual function slots of CGTabardModelFrame, which its constructor stores	inferred	none	
 0x808300	const float	s_point33		unassigned	Holds 0.33	verified	one	lighting/fog#light-colours
+0x80837c	void *[11]			ui	Holds the layout vtable of a model-derived frame; its width and height slots are the model's 0x76d080 and 0x76d0d0	verified	one	ui/regions#the-layout-vtable
 0x8083a8	void *[40]	CGDressUpModelFrame::vftable		ui	Holds the 40 virtual function slots of CGDressUpModelFrame, which its constructor stores	inferred	none	
 0x8084cc	void *[11]	CGCharacterModelBase::Layout::vftable		ui	Holds the geometry vtable of CGCharacterModelBase, which its constructor stores at +0x24	verified	one	ui/playermodel#pane-classes
 0x8084f8	void *[40]	CGCharacterModelBase::vftable		ui	Holds the 40 virtual function slots of CGCharacterModelBase, which its constructor stores	verified	one	ui/playermodel#pane-classes
@@ -1027,6 +1029,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c5a0	void *[11]	s_scriptRegionLayoutVtable		ui	Holds the vtable of a CScriptRegion's layout part	verified	one	ui/frames#vtables-and-the-two-parts
 0x81c5d8	void *[11]	CSimpleModel::Layout::vftable		ui	Holds the geometry vtable of CSimpleModel, which its constructor stores at +0x24; slots 7 and 8 size the frame	verified	one	ui/modelview#model-frame-fields
 0x81c608	void *[35]	CSimpleModel::vftable		ui	Holds the 35 virtual function slots of CSimpleModel, which its constructor stores	inferred	none	
+0x81c6ec	void *[11]	s_simpleTextureLayoutVtable		ui	Holds the vtable of a texture's layout part; its width, height and callback slots are the texture's own	verified	one	ui/regions#the-layout-vtable
+0x81c718	void *[13]	CSimpleTexture::vftable		ui	Holds the vtable of CSimpleTexture	verified	one	ui/regions#the-layout-vtable
+0x81c74c	void *[11]	s_simpleFontStringLayoutVtable		ui	Holds the vtable of a font string's layout part; its width, height and callback slots are the font string's own	verified	one	ui/regions#the-layout-vtable
+0x81c778	void *[11]	CSimpleFontString::vftable		ui	Holds the vtable of CSimpleFontString	verified	one	ui/regions#the-layout-vtable
 0x81c7c8	void *[11]			ui	Holds 11 function addresses that CSimpleButton::CSimpleButton stores; not read here	inferred	none	
 0x81c7f8	void *[40]	CSimpleButton::vftable		ui	Holds the 40 virtual function slots of CSimpleButton, which its constructor stores	inferred	none	
 0x81c8dc	const uint32_t			ui	Holds data whose address CSimpleEditBox::CSimpleEditBox takes; not read here	inferred	none	
@@ -1039,6 +1045,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81cca0	void *[23]			unassigned	Holds 23 function addresses its object file's code stores; not read here	inferred	none	
 0x81cd78	const char[4]	s_textQx		unassigned	Holds the string "@qx"	inferred	none	
 0x81ce50	void *[25]			unassigned	Holds 25 function addresses its object file's code stores; not read here	inferred	none	
+0x81cec4	void *[11]	s_messageLineLayoutVtable		ui	Holds the layout vtable of a message frame's line object, which shares the font string's size slots	verified	one	ui/regions#the-layout-vtable
 0x81d560	const float	s_regionMethodsInfinityConst		ui	Holds +inf, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d564	const float	s_regionMethodsPiConst		ui	Holds pi, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d568	const float	s_regionMethodsTenConst		ui	Holds 10.0, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
@@ -1125,7 +1132,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f00c	uint32_t			unassigned	Holds a dword that BeginLoadingScreen reads and writes; not read here	inferred	none	
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
-0x832a40	float	s_screenAspect		screencoord	Holds the display aspect stored by 0x41ad10; 1.3333334 in the file	verified	one	screencoord#screen-scale-state
+0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	one	ui/regions#layout-space-and-units
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
 0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	screencoord#screen-scale-state

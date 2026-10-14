@@ -138,7 +138,7 @@ the extra argument is pushed after the count (`0x52fb8c`) and adds a leading arg
 A blank line in a tooltip is written as a space and a newline and is one line tall, not two. The newline
 that ends the text opens no further line, and the empty string adds no line at all, so no builder or
 caller can ask for a line of zero height. The item set block passes this literal twice, in gold with wrap
-on. A font string never reads back a height below one device pixel.
+on. A font string never reads back a height below one interface unit.
 
 Addresses: `0x52dd5e`, `0x52dd68`, `0x52dfb9`, `0x52dfc3`, `0x854b2c`, `0x5c2070`, `0x5c20d6`, `0x5c2810`, `0x5c2896`, `0x5c7470`, `0x5c7659`, `0x5c7752`, `0x5c7260`, `0x5c2116`, `0x772a60`, `0x7729b0`, `0x771e87`
 Confidence: verified
@@ -150,7 +150,7 @@ Test: none
 `0x5c7470`, which every interface font string takes, adds the break's length to its cursor at `0x5c7659`
 and returns a line end one past the newline (`0x5c7752`), so the text ends and counts as one line. The height
 of N lines is `N·size + (N−1)·snapped spacing`, with the spacing zero by default. `0x772a60` returns the
-larger of the declared or measured height and one device pixel.
+larger of the declared or measured height and one interface unit (`regions`).
 
 ## Sizing the tooltip
 

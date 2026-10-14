@@ -6915,8 +6915,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48fbf0	1496	CGGameUI::Initialize	idb	ui	primitive		Builds the game interface: Lua state, functions, events, signature check, FrameXML, add-ons and saved variables	verified	one	ui/framexml#building-the-game-interface	
 0x4901e0	98	GetConfiguredAspect		ui	primitive	float __cdecl ()	Returns the gxResolution width over height when widescreen is on, else 4/3	verified	one	ui/uiscale#the-automatic-scale	
 0x490250	302	CGGameUI::RegisterScriptFunctions		ui	primitive		Registers the frame types, the game C functions of 0x83de68 and 53 files of functions as globals	verified	one	ui/luastate#the-c-function-contract	
-0x490380	596			ui	primitive		Runs GameUI.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 6 more; not read here	inferred	none		
-0x4905e0	316			ui	primitive		Runs GameUI.cpp code that calls CSimpleFrame::SetFrameLevel, CLayoutFrame::ClearAllPointsThunk and 5 more; not read here	inferred	none		
+0x490380	596	LayoutCacheRead		ui	primitive	void __fastcall (void *unused, HANDLE file, void *unused2)	Parses the layout cache file into records and applies each to its frame	verified	one	ui/layoutcache#reading-a-record	
+0x4905e0	316	LayoutCacheApply		ui	primitive	void __thiscall (int level, int x, int y, int w, int h)	Sets a frame's level, then its one top left anchor to the root and its size, as its flags allow	verified	one	ui/layoutcache#applying-a-record	
 0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
 0x490770	115	UiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies a new uiScale text to UIParent when useUiScale is on, capped for narrow windows	verified	one	ui/uiscale#applying-a-scale	
 0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	
@@ -6924,8 +6924,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490a80	321	LeaveWorldUI		ui	primitive		Clears the world latch, runs 36 interface cleanups and fires PLAYER_LEAVING_WORLD	verified	one	ui/worldenter#leaving-the-world	
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
 0x490ce0	301			ui	primitive		Runs GameUI.cpp code that calls 0x4f5970, UnloadFrameScriptFunctions, 0x5368c0 and 51 more; not read here	inferred	none		
-0x490e10	75			ui	orchestration		Runs GameUI.cpp code that calls 0x490e60; not read here	inferred	none		
-0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		
+0x490e10	75	LayoutCacheWrite		ui	orchestration	void __fastcall (void *unused, HANDLE file, CSimpleTop *top)	Writes a record for every frame of the top's list that passes the saved-frame test	verified	one	ui/layoutcache#which-frames-are-saved	
+0x490e60	799	LayoutCacheWriteFrame		ui	primitive	void __thiscall (HANDLE file)	Writes one frame's name, level, position and size lines when it is named, user placed and movable or resizable	verified	one	ui/layoutcache#which-frames-are-saved	
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	primitive		Runs GameUI.cpp code that calls 0x490bd0, 0x524b70, 0x4edb70 and 37 more; not read here	inferred	none		
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration	void __fastcall ()	Sets the reload byte 0xb4b3f4 when the protected-action gate allows tag 10	verified	one	ui/bindings#reloading-the-interface	
 0x4913a0	16			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -29616,8 +29616,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
 0x6f23d0	601			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, __ftol; not read here	inferred	none		
 0x6f2630	182			ui	orchestration		Runs its object file code that calls 0x6f2cf0, 0x6f1a20, SStrCmpI and 1 more; not read here	inferred	none		
-0x6f26f0	143			ui	orchestration		Runs its object file code that calls GetBlockPoolData, 0x76fc40, 0x76fdf0 and 1 more; not read here	inferred	none		
-0x6f2780	143			ui	orchestration		Runs its object file code that calls GetBlockPoolData, 0x770d30, 0x770f10 and 1 more; not read here	inferred	none		
+0x6f26f0	143	FrameXML::AddTextureElement		ui	orchestration	CSimpleTexture * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a texture region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
+0x6f2780	143	FrameXML::AddFontStringElement		ui	orchestration	CSimpleFontString * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a font string region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
 0x6f2810	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x6f2820	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f2830	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33308,7 +33308,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a060	104	CSimpleFrame::LoadXMLChildren		ui	orchestration		Creates the Frames children of a node, its template first, with the frame as parent	verified	one	ui/framexml#child-frames-and-names	
 0x76a0d0	544	CSimpleFrame::GetScriptByName		ui	orchestration		Returns the script slot of a handler name, OnEvent included, or 0	verified	one	ui/frames#script-slots-by-name	
 0x76a2f0	206	CSimpleFrame::PostLoadXML		ui	orchestration		Ends the load: undefers layout, loads children, runs OnLoad, then OnShow when visible	verified	one	ui/visibility#show-and-hide-scripts	
-0x76a3c0	54	CSimpleFrame::SetFrameFlag		ui	orchestration		Sets or clears bits of the frame flags +0xb4	inferred	none	ui/frames#frame-fields	
+0x76a3c0	54	CSimpleFrame::SetFrameFlag		ui	primitive	void __thiscall (uint32_t mask, bool value)	Sets or clears the bits of mask in the frame flags +0xb4	verified	one	ui/layoutcache#which-frames-are-saved	
 0x76a400	111	CSimpleFrame::SetDrawsItself		ui	orchestration		Sets the draw-itself bits of a frame and its descendants, marking its own layers dirty	verified	one	ui/visibility#parent-change	
 0x76a470	126	CSimpleFrame::SetFrameStrata		ui	orchestration		Moves a frame and its children to a stratum	verified	one	ui/visibility#parent-change	
 0x76a4f0	182	CSimpleFrame::SetFrameLevel		ui	orchestration		Moves a frame to a level of at least 0, children of its stratum following when asked	verified	one	ui/methods#what-the-frame-methods-call	
@@ -33504,7 +33504,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fdd0	32			ui	primitive		Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x76fdf0	41			ui	orchestration		Runs its object file code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
 0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
-0x7701c0	54			ui	primitive		Runs its object file code that calls CLayoutFrame::SetAllPoints; not read here	inferred	none		
+0x7701c0	54	CSimpleTexture::AnchorToParent		ui	primitive	void __thiscall (void *node, void *status)	Pins a parented texture with no anchor point to its parent with SetAllPoints	verified	one	ui/regions#the-implicit-anchor	
 0x770200	245			ui	primitive		Runs its object file code that calls 0x44ac70, CGxTexFlags::CGxTexFlags, TextureCreate and 5 more; not read here	inferred	none		
 0x770300	91			ui	orchestration		Runs its object file code that calls CompareHandles, AddHandleRef, HandleClose and 1 more; not read here	inferred	none		
 0x770360	58			ui	orchestration		Runs its object file code that calls 0x44a9c0, HandleClose, 0x77fdf0; not read here	inferred	none		
@@ -33513,14 +33513,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x770410	165			ui	orchestration		Sets a texture's four corner coordinates from a rectangle	verified	one	ui/slider#a-status-bars-fill	
 0x7704c0	166	StoreTextureCorners		ui	orchestration		Stores eight floats as the four corners and relays out a rect-modifying texture	verified	one	ui/taxiframe#route-line-textures	
 0x770570	64			ui	primitive		Runs its object file code not read here	inferred	none		
-0x7705b0	106			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7705b0	106	CSimpleTexture::SetVertices		ui	primitive	void __thiscall (float *rect)	Writes the four vertex positions (left top), (left bottom), (right top), (right bottom) with z zero	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x770620	36			ui	orchestration		Runs its object file code that calls 0x58b360; not read here	inferred	none		
 0x770650	29			ui	orchestration		Runs its object file code that calls 0x77fdf0; not read here	inferred	none		
-0x770670	98			ui	orchestration		Runs its object file code that calls CLayoutFrame::OnFrameSizeChanged, 0x770570, 0x7705b0; not read here	inferred	none		
-0x7706e0	26			ui	orchestration		Runs its object file code that calls 0x772fd0; not read here	inferred	none		
+0x770670	98	CSimpleTexture::OnFrameSizeChanged		ui	orchestration	void __thiscall (float *oldRect)	Lays out dependents, applies the texture coordinate rule to the rectangle and writes the four vertices	verified	one	ui/regions#a-region-that-does-not-resolve	
+0x7706e0	26	CSimpleTexture::Emit		ui	orchestration	void __thiscall (void *batch)	Appends the texture to a layer batch when it has an image	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x770700	24			ui	orchestration		Runs its object file code that calls GetTextureDeviceObject; not read here	inferred	none		
-0x770720	98			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x44b3b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		
-0x770790	99			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, 0x44b3b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		
+0x770720	98	CSimpleTexture::GetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the image's width in texels in layout units when it is 0.0	verified	one	ui/regions#a-textures-size	
+0x770790	99	CSimpleTexture::GetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or the image's height in texels in layout units when it is 0.0	verified	one	ui/regions#a-textures-size	
 0x770800	265			ui	orchestration		Applies a font's changed font, justify, colour, shadow and spacing to a FontString under its masks	verified	one	ui/fontstring#following-a-font	
 0x770910	434			ui	primitive		Runs its object file code that calls 0x41e4c0, SStrCmpI, TextBlockGenerateFont and 2 more; not read here	inferred	none		
 0x770ad0	396			ui	primitive		Runs its object file code that calls 0x41e4c0, SStrCmpI, TextBlockGenerateFont and 2 more; not read here	inferred	none		
@@ -33530,7 +33530,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x770e50	177			ui	primitive		Runs CSimpleRender.cpp code that calls SMemFree, 0x7714f0, UnlockScriptObject and 1 more; not read here	inferred	none		
 0x770f10	41			ui	orchestration		Runs CSimpleRender.cpp code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
 0x770f40	1329	CSimpleFontString::LoadXML		ui	primitive		Loads a font string's layout node, template, hidden, text, limits, font, justification, colour and shadow	verified	one	ui/xmltypes#regions-and-fonts	
-0x771480	110			ui	orchestration		Anchors an unanchored, parented FontString to its parent by its own horizontal justify	verified	one	ui/button#label-elements-from-xml	
+0x771480	110	CSimpleFontString::AnchorToParent		ui	orchestration	void __thiscall (void *node, void *status)	Pins a parented font string with no anchor point to its parent by its horizontal justification	verified	one	ui/regions#the-implicit-anchor	
 0x7714f0	266			ui	primitive		Runs CSimpleRender.cpp code that calls 0x772790, SStrCmpI, 0x772810 and 3 more; not read here	inferred	none		
 0x771600	121	CSimpleFontString::SetTextHeight		ui	orchestration		Sets a different text height and clears the one-to-one size bit	verified	one	ui/fontstring#size-and-fitting	
 0x771680	102			ui	orchestration		Runs CSimpleRender.cpp code that calls SMemAlloc, SMemFree; not read here	inferred	none		
@@ -33562,9 +33562,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772830	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetWidth; not read here	inferred	none		
 0x772860	34			ui	orchestration		Runs its object file code that calls CLayoutFrame::SetHeight; not read here	inferred	none		
 0x772890	149			ui	primitive		Returns the unwrapped text width in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#sizing-the-tooltip	
-0x772930	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x772890, GetScaledScreenAspect and 1 more; not read here	inferred	none		
+0x772930	113	CSimpleFontString::GetWidth		ui	primitive	float __thiscall ()	Returns the authored or measured text width, at least one interface unit	verified	one	ui/regions#a-font-strings-size	
 0x7729b0	170			ui	primitive		Returns the text height in layout units, measuring and caching it when none is cached	verified	one	ui/tooltipcontent#the-spacer-line	
-0x772a60	113			ui	primitive		Returns the larger of the text height and one device pixel	verified	one	ui/tooltipcontent#the-spacer-line	
+0x772a60	113	CSimpleFontString::GetHeight		ui	primitive	float __thiscall ()	Returns the authored or measured text height, at least one interface unit	verified	one	ui/regions#a-font-strings-size	
 0x772ae0	119	MeasureRunWidth		ui	primitive	float __thiscall (const char *text, int32_t bytes)	Measures the width of a byte range of the label's text, escapes giving none	verified	one	ui/editboxmarkup#how-the-box-draws-and-measures	
 0x772b60	87			ui	primitive		Splits the text into wrapped pieces for a width and a piece count	verified	one	ui/tooltipcontent#sizing-the-tooltip	
 0x772bc0	101			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44d860; not read here	inferred	none		
@@ -33572,13 +33572,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772ca0	122			ui	primitive		Runs its object file code that calls CLayoutFrame::SetLayoutScale, 0x772790, SStrCopy and 3 more; not read here	inferred	none		
 0x772d20	24			ui	orchestration		Runs its object file code that calls CLayoutFrame::Resize; not read here	inferred	none		
 0x772d40	191			ui	primitive		Runs its object file code that calls CLayoutFrame::OnFrameSizeChanged, 0x44d600, 0x772e00 and 2 more; not read here	inferred	none		
-0x772e00	72			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x772e00	72	RectWhollyOffScreen		ui	primitive	bool __thiscall (float *rect)	Answers 1 for a rectangle with its top or right below 0 or its bottom or left above 1.0	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x772e50	41			ui	orchestration		Runs its object file code that calls 0x773080; not read here	inferred	none		
 0x772e80	55			ui	primitive		Runs its object file code not read here	inferred	none		
 0x772ec0	43			ui	orchestration		Runs its object file code that calls 0x772ef0, SMemFree; not read here	inferred	none		
 0x772ef0	213			ui	primitive		Runs its object file code that calls 0x7731d0, 0x773370, SMemFree; not read here	inferred	none		
-0x772fd0	164			ui	primitive		Runs its object file code that calls 0x770700, 0x773280; not read here	inferred	none		
-0x773080	130			ui	primitive		Runs its object file code that calls CLayoutFrame::GetRect, 0x772e00, 0x44d360 and 2 more; not read here	inferred	none		
+0x772fd0	164	CSimpleTexture::AppendQuad		ui	primitive	void __thiscall (void *batch)	Appends a 0x1c-byte quad record of the texture's image, vertices, texcoords, blend, colours and shader	verified	one	ui/regions#a-region-that-does-not-resolve	
+0x773080	130	CSimpleFontString::AppendToBatch		ui	orchestration	void __thiscall (void *batch)	Appends the text to a batch when its rectangle is valid and not wholly off screen	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x773110	142	RegisterLayerCallback		ui	primitive		Adds a draw callback and its argument to a layer's list	inferred	none		
 0x7731a0	29			ui	orchestration		Runs its object file code that calls _qsort; not read here	inferred	none		
 0x7731c0	15			ui	primitive		Runs its object file code not read here	inferred	none		
