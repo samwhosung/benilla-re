@@ -28841,26 +28841,26 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d8e10	560	BuildBlipCandidates		minimap	orchestration	void __fastcall (uint32_t continent)	Collects the AreaPOI rows of a continent and the three static records into the candidate array	verified	one	ui/minimapblips#blip-candidates	
 0x6d9040	629			minimap			Runs its object file code that calls SStrPrintf, 0x6485f0, SStrTokenize and 13 more; not read here	inferred	none		
 0x6d92c0	215			minimap			Runs its object file code that calls 0x6db5d0; not read here	inferred	none		
-0x6d93a0	1770	UpdateMinimap		minimap	primitive		Runs the minimap's update, which expires and clears the gossip marker	inferred	none	ui/minimapblips#clearing-the-gossip-marker	
+0x6d93a0	1770	UpdateMinimap		minimap	primitive		Runs the minimap's update, which expires and clears the gossip marker	inferred	none	ui/minimapblips#clearing-the-gossip-marker	minimap::minimap_update_snap_difftest
 0x6d9a90	884	PlaceBlips		minimap	primitive	void __cdecl ()	Splits the candidates into in-range icons and at most 3 ranked direction arrows with bearings	verified	one	ui/minimapblips#placing-the-blips	
 0x6d9e10	31			minimap			Runs its object file code not read here	inferred	none		
-0x6d9e30	152			minimap			Runs its object file code not read here	inferred	none		
+0x6d9e30	152			minimap			Runs its object file code not read here	inferred	none		minimap::blip_lod_distance_difftest
 0x6d9ed0	633			minimap			Runs its object file code that calls 0x6da150, SStrPrintf, SStrHashHT and 8 more; not read here	inferred	none		
 0x6da150	48			minimap			Runs its object file code not read here	inferred	none		
-0x6da180	430			minimap			Runs its object file code that calls CWorld::GetEntityGroupBox, RotateMatrix; not read here	inferred	none		
+0x6da180	430			minimap			Runs its object file code that calls CWorld::GetEntityGroupBox, RotateMatrix; not read here	inferred	none		minimap::orientation_renormalize_difftest
 0x6da330	69			minimap			Runs its object file code that calls CWorld::GetEntityGroupName, SStrLen, SStrCopy and 1 more; not read here	inferred	none		
-0x6da380	445			minimap			Runs its object file code that calls 0x6d9a90, 0x6da540, 0x6da5e0 and 1 more; not read here	inferred	none		
-0x6da540	97			minimap			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x6da5b0	44			minimap			Runs its object file code not read here	inferred	none		
+0x6da380	445			minimap			Runs its object file code that calls 0x6d9a90, 0x6da540, 0x6da5e0 and 1 more; not read here	inferred	none		minimap::world_to_screen_scale_difftest
+0x6da540	97			minimap			Runs its object file code that calls __ftol; not read here	inferred	none		minimap::world_to_tile_difftest
+0x6da5b0	44			minimap			Runs its object file code not read here	inferred	none		minimap::tile_to_world_difftest
 0x6da5e0	453			minimap			Runs its object file code that calls HandleClose, 0x6da7b0, SysMsgPrintf and 3 more; not read here	inferred	none		
 0x6da7b0	294			minimap			Runs its object file code that calls SStrPrintf, SStrHashHT, SStrCmpI and 1 more; not read here	inferred	none		
 0x6da8e0	158	SetZoomIndex		minimap	primitive	void __fastcall (uint32_t index)	Stores a zoom index of at most 5 in the active cell and its option	verified	one	ui/minimap#the-zoom-radius	
 0x6da980	20	GetZoomIndex		minimap	orchestration	uint32_t __cdecl ()	Returns the active zoom index, indoor or outdoor	verified	one	ui/minimap#the-zoom-radius	
 0x6da9a0	6	GetZoomLevelCount		minimap	orchestration	uint32_t __cdecl ()	Returns 6, the number of zoom levels	verified	one	ui/minimap#the-zoom-radius	
-0x6da9b0	73	GetZoomRadius		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards for the active index and indoor state	verified	one	ui/minimap#the-zoom-radius	
+0x6da9b0	73	GetZoomRadius		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards for the active index and indoor state	verified	one	ui/minimap#the-zoom-radius	minimap::zoom_to_scale_difftest
 0x6daa00	23			minimap			Runs its object file code not read here	inferred	none		
 0x6daa20	327	BuildArrowList		minimap	orchestration	uint32_t __fastcall (void *list)	Rebuilds the arrow records when dirty, else only refreshes their bearings, and reports a rebuild	verified	one	ui/minimapblips#the-arrow-list	
-0x6dab70	73	GetZoomRadiusDraw		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards, the body the draw uses	verified	one	ui/minimap#the-zoom-radius	
+0x6dab70	73	GetZoomRadiusDraw		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards, the body the draw uses	verified	one	ui/minimap#the-zoom-radius	minimap::zoom_to_scale_difftest
 0x6dabc0	78			minimap			Runs its object file code not read here	inferred	none		
 0x6dac10	155	SetStaticBlip		minimap	orchestration	void __fastcall (uint32_t slot, uint32_t flags, float x, float y, uint32_t icon, int32_t rank, const char *name)	Fills a static blip record, starts the gossip marker's lifetime and places the blips	verified	one	ui/minimapblips#setting-a-static-blip	
 0x6dacb0	28	SetQuestBlip		minimap	orchestration	void __fastcall (int32_t rank, const char *name, float x, float y)	Sets static blip 0, the selected quest's marker, with icon 5 and no flags	verified	one	ui/minimapblips#setting-a-static-blip	

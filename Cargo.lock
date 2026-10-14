@@ -199,6 +199,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-minimap"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-models"
 version = "0.1.0"
 dependencies = [

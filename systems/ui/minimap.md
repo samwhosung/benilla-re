@@ -104,7 +104,7 @@ and the dots all use this radius.
 Addresses: `0x6da9b0`, `0x6da9b6`, `0x6da9bf`, `0x6da9cf`, `0x6da9e9`, `0x6da9ef`, `0x6dab70`, `0x6da8e0`, `0x6da8fd`, `0x6da902`, `0x6da980`, `0x6da9a0`, `0x6d9013`, `0x6d9016`, `0x6d901f`, `0x6d902a`, `0x48fc6c`, `0x48fc88`, `0x86f698`, `0x86f69c`, `0x8116d0`, `0x8116e8`, `0x80fee4`, `0xceaa60`
 Confidence: verified
 Proof: one
-Test: none
+Test: `minimap::zoom_to_scale_difftest`
 
 `0x6da9b6` reads the indoor byte `0xceaa60`: set loads `[0x8116e8 + 4·index]` of the indoor index at `0x86f69c`
 (`0x6da9bf`); clear loads the integer from `0x8116d0` at the outdoor index `0x86f698` as a 64-bit value,
@@ -114,7 +114,8 @@ indoor byte, caps the argument with an unsigned compare against 5 (`0x6da8fd`, `
 `CVar::Set`. The options are registered at `0x48fc6c` and `0x48fc88`; `0x6d9016` and `0x6d901f` copy their
 integers into the two indices, then the event 0xcf (`MINIMAP_UPDATE_ZOOM`) is signalled (`0x6d902a`).
 `0xceaa60` has one writer, in the update `0x6d93a0`, which sets bit 0 of the dirty mask `0xcea8bc` and
-signals the same event when it changes.
+signals the same event when it changes. The test runs `0x6da9b0` and `0x6dab70` whole, both
+branches of `0xceaa60` and all six indices.
 
 ## Minimap textures
 
