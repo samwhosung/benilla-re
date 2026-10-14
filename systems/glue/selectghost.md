@@ -160,13 +160,15 @@ at once.
 Addresses: `0x4727f0`, `0x4727f6`, `0x47280f`, `0x472780`, `0x472797`, `0x472799`, `0x4728ec`, `0x4728f3`, `0x472939`, `0x4728a4`, `0x4728cb`, `0x710cf0`, `0x710cb0`, `0x472d49`, `0xc0d750`, `0xc0d74c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::char_customize_clamp_difftest`, `glue::char_customize_color_difftest`
 
 `0x4727f6 cmp [0xc0d750],0x3dd` and `0x47280f` read index entry 989. The tint is `_ftol` of the value
 (0x8cb9fd) with `or eax,0xff000000`: the alpha byte is the top byte, so byte 2 is red. The
 shipped row has `+0x14` 717, `+0x3c` to `+0x48` (1, 14, −1, −1) and `+0x4c` to `+0x58`
 (`0x4b0cb9fd`, 0.5, 0, 0); `SpellVisualEffectName` 717 is `Ghost_state` and the file above. `0x710cb0`
 is one store and `0x710cf0` three; `0x4727f0` has one call site.
+`char_customize_clamp_difftest` runs `0x4728a4` to `0x47293e`; `char_customize_color_difftest` runs `0x4728ec` to
+`0x472939`.
 
 ## Ghost kit scope
 

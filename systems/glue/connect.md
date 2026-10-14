@@ -20,7 +20,7 @@ the realm by name and dials it, or reports `REALM_LIST_REALM_NOT_FOUND` (0x26). 
 nothing, so the operation stays incomplete and `0x46e510` never runs: the realm list appears only on
 a failed lookup, a failed list query or a request from the player.
 
-Addresses: `0x46b12c`, `0x46ba85`, `0x46ba8d`, `0x46ba93`, `0x46b1f0`, `0x46b20a`, `0x5aab20`, `0x5ab800`, `0x5ab809`, `0x5ab812`, `0x5ab823`, `0x5ab82f`, `0x5aa920`, `0x5aa960`, `0x46be9e`, `0x46b27b`, `0x46c5bf`
+Addresses: `0x46b12c`, `0x46ba85`, `0x46ba8d`, `0x46ba93`, `0x46b1f0`, `0x46b20a`, `0x5aab20`, `0x46b217`, `0x5ab7b0`, `0x5ab7c4`, `0x5ab800`, `0x5ab809`, `0x5ab812`, `0x5ab823`, `0x5ab82f`, `0x5aa920`, `0x5aa960`, `0x46be9e`, `0x46b27b`, `0x46c5bf`
 Confidence: verified
 Proof: one
 Test: none
@@ -30,7 +30,27 @@ Test: none
 otherwise `push 0x26; push 0` and `0x5aa920`. `0x5aa920` stores `[+0x1b0c]` the result, `[+0x1b08]` 1;
 `0x5aa400` clears `+0x1b08`; `0x5aa960` returns it, and `0x46be9e cmp [ebp-0x10],0; je` skips the
 report while it is 0. `0x5aab20` has three call sites: `0x46b20a`, `0x46b27b` and the redial tick
-`0x46c5bf`, so a census of `0x46b210` alone misses this path.
+`0x46c5bf`, so a census of `0x46b210` alone misses this path. `ConnectToRealm` fills the CVar: `0x46b217 call 0x5ab7b0` sets
+`realmName` ("Last realm connected to") to the record's name, then selects by it (`0x5ab7c4`).
+
+## Change Realm link
+
+Change Realm on character select requests the realm list (`RequestRealmList(1)`) and raises it over the
+unchanged screen; the world connection drops only when the player picks a realm. Choosing one runs
+`0x46b210`, which stores the realm's name in `realmName`; with a live connection it then sets the
+expected-disconnect flag `0xb41d98` and the reconnect flag `0xb41d9c` and ends in `Disconnect`
+(`0x5ab1a0`). The disconnect handler `0x46c540` clears the flags and, for the reconnect, enters state 2
+with `GAME_SERVER_LOGIN` and begins operation 2.
+
+Addresses: `0x46b210`, `0x46b221`, `0x46b230`, `0x46b235`, `0x46b241`, `0x46b246`, `0x5ab1a0`, `0x46c540`, `0x46c56f`, `0x46c579`, `0x46c585`, `0x46c594`, `0x46b8d0`, `0x46ecf0`
+Confidence: verified
+Proof: one
+Test: none
+
+`CharacterSelect_ChangeRealm` calls only `RequestRealmList(1)`; the `ChangeRealm` verbs are called from
+`RealmList.lua` and `GlueDialog.lua`. `0x46b227 test [svc+0x1b00]` splits the live case (`0x46b22b` to
+`0x46b241`) from the new connection (`0x46b246`, state 2 at `0x46b250`). `0x46c56f` reads `0xb41d9c`,
+`0x46c579` clears `0xb41d98`, and `0x46c594` stores state 2 on the reconnect path.
 
 ## Queue dialog
 

@@ -158,7 +158,8 @@ runs there.
 ## Return to character select
 
 A logout and a refused character login both return to character select on the same world link and
-send `CMSG_CHAR_ENUM` there, with no realmd logon and no new world authentication. The logout
+send `CMSG_CHAR_ENUM` there, on direct-call evidence with no realmd logon and no new world
+authentication. The logout
 reply handler `0x5aaeb0` calls `0x401ee0(1, 1, 0)`, which unregisters ten world handlers, shuts the
 world down, rebuilds the glue on a fresh Lua state (`0x46a7b0(1)`) and signals `SET_GLUE_SCREEN
 "charselect"`; `CharacterSelect_OnShow` then asks for the list. The refusal handler `0x5aad70` does
@@ -176,10 +177,11 @@ argument) gates the rebuild (`0x402062`), the stack argument the state-9 store (
 picks `charselect` or the other screen (`0x402089`): the logout and refusal pass 1, the disconnect
 handler `0x46c5f8` passes 0. The refusal result byte 1 to 6 maps to status `0x3e`, `0x3f`, `0x40`,
 `0x42`, `0x43`, `0x44` and any other to `0x41` (`0x5aae08`). `0x46b880` returns at once in state 9.
-The only `0x418190` calls with an immediate opcode 0x3d (`CMSG_PLAYER_LOGIN`) and 0x37 (`CMSG_CHAR_ENUM`) are
-in `0x5b4700` (`0x5b472b`, caller `0x5aae53` in `0x5aae20`, whose caller is `0x46c272`) and `0x5b4690`
-(`0x5b46bb`, reached by a jump from `0x5aabd4`); 266 of the 733 calls take their opcode from a register or a
-field and are not read here.
+A closure over direct calls and jumps from either handler (3,414 functions) reaches `0x5ab1a0`, `0x5b5370`,
+`0x5b3320`, `0x5ab800`, `0x5ab840`, `0x5b2200`, `0x5bc3e0`, `0x5b2fb0` and `0x5ab4b0` in none; indirect calls are not
+followed. The only `0x418190` calls with an immediate opcode 0x3d (`CMSG_PLAYER_LOGIN`) and 0x37
+(`CMSG_CHAR_ENUM`) are in `0x5b4700` (`0x5b472b`, caller `0x5aae53` in `0x5aae20`, whose caller is `0x46c272`) and
+`0x5b4690` (`0x5b46bb`, by a jump from `0x5aabd4`); 266 of the 733 calls take their opcode from elsewhere.
 
 ## Character name check
 

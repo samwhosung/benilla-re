@@ -32,9 +32,9 @@ Test: none
 (control: the same scan finds one caller of `0x472950`, four of `0x472580`). The two −1 legs run
 with the count at 0 (`0x47250c` zeroes it before the enumeration, `0x4725af` in the teardown), so
 `0x472971 jge` exits. In `CharacterSelect.lua` the
-binding has one live call, in `CharacterSelect_SelectCharacter`, called ungated from arrow keys,
-`SELECT_FIRST_CHARACTER`, `SELECT_LAST_CHARACTER` and `UpdateCharacterList`, and gated
-`id ~= CharacterSelect.selectedIndex` at `CharacterSelectButton_OnClick` and `_OnDoubleClick`.
+binding has one live call, in `CharacterSelect_SelectCharacter`. Its other callers (the arrow keys, which
+test only the roster size, `SELECT_FIRST_CHARACTER` and `UpdateCharacterList`) make no already-selected test;
+`CharacterSelectButton_OnClick` and `_OnDoubleClick` test `id ~= CharacterSelect.selectedIndex`.
 `selectedIndex` is the 1-based echo of event 8.
 
 ## Facing reset
@@ -69,7 +69,7 @@ so the cells hold radians and the scripts see degrees. The pet's matrix is never
 Addresses: `0x4730e0`, `0x473179`, `0x710650`, `0x7bdd60`, `0x7bdb00`, `0x7bdb67`, `0x473650`, `0x473670`, `0x471910`, `0x471930`, `0x803a78`, `0x7ffaac`, `0x472f94`, `0x710620`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::lua_deg2rad_difftest`, `glue::lua_rad2deg_difftest`
 
 `0x473179` calls `0x710650(model, pos, angle, axis, scale)` on `[[record+0x110]+0x38]`, which resets
 `+0xbc` to identity, then translates (`0x7bdc40`), rotates (`0x7bdd60` to `0x7bdb00`) and scales.
@@ -77,6 +77,8 @@ Test: none
 `0x7bdc2e`, with the axis normalisation skipped by the caller's flag. `0x710650` has three callers:
 `0x470abc`, `0x473179` and the widget's own `0x76d235`. The only other local-matrix writer in the
 screen is `0x472f94`, the pet's scale. The dereference of `+0x110` has no null test.
+`lua_rad2deg_difftest` runs the getters `0x471910` and `0x473650` up to `lua_pushnumber`; `lua_deg2rad_difftest`
+runs the setters `0x471930` and `0x473670` from `lua_tonumber` to the store. `0x4730e0` and the matrix are not run.
 
 ## Facing drive constants
 
@@ -92,7 +94,7 @@ pixel at 768 lines only.
 Addresses: `0x46dad0`, `0x471930`, `0x473670`, `0x41ad10`, `0x41ad70`, `0x41ae40`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `glue::lua_model_scale_difftest`
 
 `CharacterSelect.lua` defines the constant at line 4 and the update at lines 400 to 418; the
 handlers sit on `CharacterSelectUI`, a `setAllPoints`, `enableMouse` frame. `0x46dad0` multiplies
@@ -100,6 +102,7 @@ handlers sit on `CharacterSelectUI`, a `setAllPoints`, `enableMouse` frame. `0x4
 device value `[reg+0x1118]`, then divides out `[0x832a44]` (`0x41ae40`). `SetBackgroundModel`
 in `GlueParent.lua` maps Gnome to Dwarf, Troll and no race to Orc and BloodElf to NightElf, so six scenes
 serve every race.
+`lua_model_scale_difftest` runs the arithmetic of `GetCursorPosition` from `0x46db05`.
 
 ## Scene attachments
 
