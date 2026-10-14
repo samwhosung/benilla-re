@@ -190,6 +190,30 @@ bit 0x4 and `CGGameObject_C::ObjectReaction`, the unit's `+0x234` bit 0x2 and
 of the active player (`0x5edb60`) also refreshes them, after `0x4b2fd0(0,0)` and `0x4d7d40`, then
 calls `0x4e89c0` and `SetNamePlateRefresh(1)`.
 
+## Status query triggers
+
+Eleven calls of the sweep `0x5eb070` ask the server for every quest giver's status again. They run
+on a quest update (opcodes 0x196 to 0x19a), a quest-giver dialog packet, a change of one of the
+player's quest-log slots, coinage, skill info, the group list (opcode 0x7d), player flags, the
+level, the item watch and the player's own death, and the player's reputation. A single unit is
+queried again when its NPC flags change, its reaction may have changed, or it is created. The
+status message answers units only: a game object is dropped.
+
+Addresses: `0x5eb070`, `0x4df531`, `0x4df864`, `0x5dc6f9`, `0x5dc792`, `0x5ddddd`, `0x5ddf71`, `0x5de428`, `0x5e6f00`, `0x5e9a61`, `0x5edb85`, `0x5eeac6`, `0x607380`, `0x60b490`, `0x60b4c5`, `0x606f0a`, `0x5fba72`, `0x5fbe2f`, `0x60acff`, `0x5eb3c0`, `0x5fefa9`, `0x606eef`, `0x5dca22`, `0x5ddd80`, `0x5ddf30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5e5ad0` is registered for opcode 0x196 and tail-jumps `0x4df550` (`0x5e5cd9`), which reaches
+`0x4df531`. `0x5e59b0` calls `0x5dc400` (`0x5e5a4c`), which calls the sweep at `0x5dc6f9` and
+leaves `0x5dc710` to the second at `0x5dc792`. The quest log slots (`0x5dd990`, offsets 0x28 to
+0x10c step 0xc) watch `0x5ddd80`; coinage (`0x5dd9bf`) watches `0x5ddf30`; skills `0x5de180`; the
+group list opcode (`0x5e31d6`) `0x5e6a40`; the level (`0x60426d`) leads to `0x5edb60`; the player
+flags (`0x5e25e8`) to `0x5ee990`. `0x605860` calls `0x5e99b0` for a player (`0x60588d`). The single
+unit `0x607380` has seven callers, two of them the NPC-flag handler `0x60b420`; the full re-query
+`0x5eb3c0` has two, the revival edge `0x5fef70` and the reaction refresh `0x606e20`. `0x5dca22`
+resolves the status packet's GUID with mask 8, which a game object fails.
+
 ## Quest messages sent
 
 | sender | opcode | body |

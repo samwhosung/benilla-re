@@ -60,6 +60,22 @@ when mounted, else 18, else 1.25 heights above the feet (0x80c5d0). `0x606fe0` m
 descriptor, `0x607030` frees it, `0x607050` dirties it and re-checks the plate, `0x607080`
 redraws both; `0x608f40`, which nothing reaches, dirties it.
 
+## The name colour
+
+The overhead name has the colour of the unit's selection ring, and a player's name carries its AFK,
+DND and GM tags.
+
+Addresses: `0x6c6e90`, `0x6c6f63`, `0x6c6f75`, `0x605960`, `0x5c2750`, `0x5ec9e0`, `0x5eca40`, `0x5eca80`
+Confidence: verified
+Proof: one
+Test: none
+
+The name renderer `0x6c6e90` calls slot 11 (`+0x2c`) of the unit's vtable at `0x6c6f63` with the
+descriptor's `+0xc`, and the unit and player vtables both hold `0x605960` there (`unitdisplay`);
+`0x6c6f75` hands the colour to the string through `0x5c2750`. The prefix slots 31 to 33 hold the
+player's AFK, DND and GM tags at `0x5ec9e0`, `0x5eca40` and `0x5eca80` (`players`); the unit's are
+empty.
+
 ## Nameplates
 
 `0x60f600` runs each frame. A unit gets a plate when it is alive, selectable, not stealthed, in a
@@ -85,6 +101,56 @@ back. `0x608ce0` lays them out, `0x60f830` shows or hides them, `0x60f890` relea
 `0x605530` and `0x605550` set bits 0x2 and 0x4. `0x6122e0` flashes a plate red for 5 seconds
 (0x7cba70); `0x608a90` sets its icon from 0x4bb190. `0x604ef0` frees the pool and clears
 `0xc4d908`. Slices: follow_dist_proceed_difftest `0x60f798`-`0x60f7c2`.
+
+## Plates under far sight
+
+Under far sight a plate is judged around the camera's unit, and its category by the active player.
+
+Addresses: `0x60f600`, `0x4818f0`, `0x468550`, `0x60f68c`, `0x60f6c3`, `0x60f7c9`, `0x60706a`, `0x607ef9`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60f600` takes the camera from `0x4818f0` and resolves the unit its attached GUID names, the
+camera's unit, and separately the active player from `0x468550`. `0x60f68c` drops the camera's own
+unit, `0x60f7c9` measures the squared distance from the subject to the camera's unit, and `0x60f6c3`
+makes the active player the observer of both category predicates. The gate runs completely every
+tick, from `0x607ef9` in the frame update and from `0x60706a` after a reaction change.
+
+## The plate projection
+
+A plate whose anchor does not project inside the viewport is destroyed, not clamped, and a later
+tick creates it afresh. The anchor is the name anchor raised by 2/3 in world z.
+
+Addresses: `0x60f600`, `0x60f773`, `0x60f77a`, `0x60f740`, `0x60f7f0`, `0x60f808`, `0x608a10`, `0x483ee0`, `0x483f7a`, `0x484065`, `0x484075`, `0x484086`, `0x484093`, `0x4840a3`, `0x4840a8`, `0x80abfc`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60f7f0` calls `0x608640`, adds the float at `0x80abfc` (0.6667) and returns the verdict of
+`0x483ee0`, which `0x60f773` tests; a failure jumps to `0x60f740`, the pool return `0x608a10`,
+which clears `+0xe60`. `0x483ee0` fails when the clip depth is below the camera's near plane
+(`0x483f7a`) without writing the point, and when the mapped point leaves the viewport, edges
+included (`0x484075` to `0x4840a3`), after writing it (`0x484065`). The projection test runs before
+the 20-yard test.
+
+## Seating the plates
+
+A plate is seated again only when one is created or one's screen point moves. The seat walk has no
+visibility test of its own, because a plate off screen was dropped by `0x60f600`.
+
+Addresses: `0x6086e0`, `0x6087a7`, `0x6087b6`, `0x6087c0`, `0x6087d5`, `0x6087dd`, `0x60874b`, `0x4840c0`, `0x483635`, `0x483640`, `0x483647`, `0x48364c`, `0x608ce0`, `0x608d37`, `0x509500`, `0x509ec0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6086e0` stores the point at plate `+0x508` and `+0x50c` and sorts the plate (`0x6087d5`), then
+`0x6087dd` sets bit 0 of the world frame's `+0x3f0` through `0x4840c0`; a new plate does the same at
+`0x60874b`. The point counts as changed when the squared difference from the stored one is not
+exactly 0 (`0x6087a7`, `0x6087b6`); bit 0x2 of `0xc4da34` skips that test. The paint pass tests
+the bit (`0x483635`); when set it empties bucket 0 (`0x509500`), calls `0x608ce0` and clears the
+bit (`0x48364c`), so one moved plate seats them all. `0x608ce0` hands each plate's stored point to
+`0x509ec0` at `0x608d37`, nearest first.
 
 ## Chat bubbles
 
@@ -128,6 +194,42 @@ attachment 29 when mounted and present, else 18; `0x607570` undoes the parent's 
 lost flag: 0x1 the gossip (GUID 0xbc3f58, 0x4e1fa0), 0x2 the quest (0xbe0810, 0x501130), 0x8 the
 taxi (0xbb4ab8, 0x4dc0f0), 0x10 the trainer (0xb73a00, 0x4d7440), 0x100 the one at 0xbdd038
 (0x4f84d0); bits 0x2 and 0x8 also refresh the marker.
+
+## The marker scale
+
+The marker is scaled once per attach, by the reciprocal of the length of its attachment's first row,
+which cancels the unit's scale. A bake that is skipped leaves the marker's base matrix as the
+constructor made it, the identity.
+
+Addresses: `0x607570`, `0x607584`, `0x607591`, `0x6075ac`, `0x6075ba`, `0x6075cb`, `0x60761f`, `0x607633`, `0x6076ac`, `0x607553`, `0x60b256`, `0x6074c0`, `0x6074ea`, `0x60ce70`, `0x70dd7f`, `0x712de0`, `0x710620`, `0x604c30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x607570` returns at `0x607584` without a marker, at `0x607591` before it has a parent, at
+`0x6075ac` while the mount model is not loaded, at `0x6075ba` and `0x6075cb` when the body is
+absent or not loaded. It takes the attachment matrix of the body (`0x712de0`), forms `L` as the
+square root of the sum of the squares of its first three floats, returns when `L` is exactly 1.0
+(`0x60761f`) or not above 0 (`0x607633`), and writes a diagonal of 1/L through `0x710620`
+(`0x6076ac`). It runs from `0x6074c0` (`0x607553`), whose callers are the marker swap, the
+model-loaded handler `0x60ce70` and the mount display watcher, and from the scale-change handler
+`0x60b1d0` (`0x60b256`). `0x6074c0` returns at `0x6074ea` while the body is not loaded, and
+`0x70dd7f` is where the constructor sets 1.0.
+
+## The cached quest status
+
+A unit caches its last quest status at `+0xcb8`; the status also feeds the minimap and the
+interaction tests.
+
+Addresses: `0x5faee5`, `0x607426`, `0x60746a`, `0x607446`, `0x4eac31`, `0x5df4a9`, `0x5f0268`
+Confidence: verified
+Proof: one
+Test: none
+
+The constructor zeroes it (`0x5faee5`), the marker release clears it (`0x607426`) and `0x607440`
+stores it (`0x60746a`) after reading the old value to compare mapped markers (`0x607446`). The
+other readers are the minimap's object icon (`0x4eac31`), the quest-giver interaction test
+(`0x5df4a9`) and the compare with 1 at `0x5f0268`.
 
 ## Damage and miss numbers
 
