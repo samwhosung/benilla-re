@@ -6,7 +6,7 @@
 
 mod common;
 
-use benilla_re_difftest::{Emu, RegisterX86, Wow};
+use benilla_re_difftest::{select_math_slots, Emu, RegisterX86, Wow};
 use benilla_re_models::render::{
     add_f32, batch_alpha_resolve, batch_clamp_pack, batch_negate4, color_scale, decal_texgen_pack,
     m2_decal_projection, m2_vertex_skin, m2_vertex_transform, m2_vertex_transform_sse,
@@ -286,7 +286,8 @@ fn run_decal(
     }
 }
 
-/// `0x719c20` whole, its matrix product `0x74a7c8` run through the thunk slot `0x876504`. Random
+/// `0x719c20` whole, its matrix product run through the thunk `0x74a7c0` and the slot `0x876504`,
+/// which the exe's own first-call selection fills with `0x754a66`. Random
 /// submeshes of 4, 5 and 8 vertices; and with identity bones and scene, first-three vertices whose
 /// y are a NaN, a tie, or span just under 2.3841858e-7 (the difference rounds to it as `f32`).
 #[test]
@@ -295,7 +296,7 @@ fn m2_decal_projection_difftest() {
         return;
     };
     let mut emu = Emu::new(&wow);
-    emu.write_u32(0x0087_6504, 0x0074_a7c8);
+    assert_eq!(select_math_slots(&mut emu), 0x754a66, "product slot");
     let mut rng = Lcg(0x6465_6361);
 
     let identity: [f32; 16] = std::array::from_fn(|i| if i % 5 == 0 { 1.0 } else { 0.0 });

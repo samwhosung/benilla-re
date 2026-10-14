@@ -332,7 +332,7 @@ entries 0 to 2 of each row; the last entry of each row is seeded (0, 0, 0, 1) on
 by the product, so each vertex's product reads the previous vertex's. It stays (0, 0, 0, 1) while
 the scene matrix's last column is (0, 0, 0, 1).
 
-Addresses: `0x719c20`, `0x719c2d`, `0x719c5f`, `0x719dcb`, `0x719e04`, `0x719f45`, `0x719f59`, `0x71a00b`, `0x71a016`, `0x71a093`, `0x74a7c0`, `0x8026c8`
+Addresses: `0x719c20`, `0x719c2d`, `0x719c5f`, `0x719dcb`, `0x719e04`, `0x719f45`, `0x719f59`, `0x71a00b`, `0x71a016`, `0x71a093`, `0x74a7c0`, `0x754a66`, `0x8026c8`
 Confidence: verified
 Proof: one
 Test: `models::m2_decal_projection_difftest`
@@ -347,4 +347,6 @@ bounds start at ±3.402823e38 and each compare skips on equal or NaN. The x sum 
 the FPU stack into its compares and the `+0x10c` subtraction (`0x71a016`); y and z go through
 floats. The three corners feed the code from `0x71a093`.
 
-`m2_decal_projection_difftest` runs `0x719c20` whole.
+`m2_decal_projection_difftest` runs `0x719c20` whole. The slot `0x876504` that `0x74a7c0` jumps through
+is filled by the exe's own selection `0x74fb49`, which leaves `0x754a66`; the product in `render.rs` is
+that routine's transcription.

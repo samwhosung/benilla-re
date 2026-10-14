@@ -6,6 +6,7 @@
 //! the unit-length test of `M2DrawBatchedRun` (`0x70d330`).
 
 use crate::lights::light_pack_triple3;
+use benilla_re_cmath::multiply::matmul4x4_sse2;
 
 /// 1/255 (`0x8026c8`, `0x3b808081`): a bone weight's scale.
 const INV_255: f32 = f32::from_bits(0x3b80_8081);
@@ -203,43 +204,6 @@ fn decal_blend_bones_inplace(
     }
 }
 
-/// `0x74a7c8`: the 4×4 product `a·b` with each entry's four products summed in the routine's
-/// order and stored as `f32`.
-fn mat4_mul_colmajor(a: &[f32; 16], b: &[f32; 16]) -> [f32; 16] {
-    let af = |off: usize| f64::from(a[off / 4]);
-    let bf = |off: usize| f64::from(b[off / 4]);
-    let mut o = [0f32; 16];
-    o[0] = (af(0xc) * bf(0x30) + af(0) * bf(0) + af(8) * bf(0x20) + bf(0x10) * af(4)) as f32;
-    o[1] = (af(4) * bf(0x14) + af(0xc) * bf(0x34) + af(8) * bf(0x24) + bf(4) * af(0)) as f32;
-    o[2] = (af(0xc) * bf(0x38) + bf(8) * af(0) + af(8) * bf(0x28) + bf(0x18) * af(4)) as f32;
-    o[3] = (af(0xc) * bf(0x3c) + bf(0x2c) * af(8) + af(0) * bf(0xc) + bf(0x1c) * af(4)) as f32;
-    o[4] =
-        (af(0x1c) * bf(0x30) + af(0x10) * bf(0) + bf(0x10) * af(0x14) + af(0x18) * bf(0x20)) as f32;
-    o[5] =
-        (af(0x18) * bf(0x24) + af(0x1c) * bf(0x34) + bf(0x14) * af(0x14) + bf(4) * af(0x10)) as f32;
-    o[6] =
-        (bf(0x18) * af(0x14) + af(0x1c) * bf(0x38) + bf(8) * af(0x10) + af(0x18) * bf(0x28)) as f32;
-    o[7] = (bf(0x1c) * af(0x14) + af(0x1c) * bf(0x3c) + af(0x18) * bf(0x2c) + af(0x10) * bf(0xc))
-        as f32;
-    o[8] =
-        (af(0x2c) * bf(0x30) + af(0x20) * bf(0) + bf(0x10) * af(0x24) + af(0x28) * bf(0x20)) as f32;
-    o[9] =
-        (af(0x2c) * bf(0x34) + af(0x28) * bf(0x24) + bf(0x14) * af(0x24) + bf(4) * af(0x20)) as f32;
-    o[0xa] =
-        (bf(0x18) * af(0x24) + bf(8) * af(0x20) + af(0x2c) * bf(0x38) + af(0x28) * bf(0x28)) as f32;
-    o[0xb] = (af(0x2c) * bf(0x3c) + af(0x28) * bf(0x2c) + bf(0x1c) * af(0x24) + af(0x20) * bf(0xc))
-        as f32;
-    o[0xc] =
-        (af(0x3c) * bf(0x30) + af(0x38) * bf(0x20) + af(0x30) * bf(0) + bf(0x10) * af(0x34)) as f32;
-    o[0xd] =
-        (af(0x3c) * bf(0x34) + bf(0x14) * af(0x34) + af(0x38) * bf(0x24) + bf(4) * af(0x30)) as f32;
-    o[0xe] =
-        (af(0x38) * bf(0x28) + bf(0x18) * af(0x34) + bf(8) * af(0x30) + af(0x3c) * bf(0x38)) as f32;
-    o[0xf] = (af(0x3c) * bf(0x3c) + bf(0x1c) * af(0x34) + af(0x30) * bf(0xc) + bf(0x2c) * af(0x38))
-        as f32;
-    o
-}
-
 /// One vertex `0x719c20` reads.
 #[derive(Clone, Copy)]
 pub struct DecalVert {
@@ -319,7 +283,8 @@ pub fn m2_decal_projection(
         let i_float = f32::from_bits(u32::from_le_bytes(v.indices));
         if !(cache_w == w_dword && cache_i == i_float) {
             decal_blend_bones_inplace(&mut m, v.weights, v.indices, bones);
-            m = mat4_mul_colmajor(&m, world);
+            let blend = m;
+            matmul4x4_sse2(&mut m, &blend, world);
             cache_w = w_dword;
             cache_i = i_float;
         }
