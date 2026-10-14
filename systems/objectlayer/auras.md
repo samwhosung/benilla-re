@@ -73,6 +73,27 @@ at the position (`0x60f106`); `+0x34` sound (`0x60f4bc`); `+0x38` shake (`0x60f4
 ranged spell (Attributes 0x2) draws the ranged weapon. The animation `+0x8` plays through
 `0x5fe2f0` (`0x60f3c5`), as a wound for 8 to 10 (`0x60f510`).
 
+## The kit sound
+
+A visual kit's sound, kit `+0x34`, plays once per kit play, at a position and for everyone near,
+without a test of the active player. Each effect the kit makes copies the caller's flag word, and
+`PlayUnitSpellVisualKit` ORs 0x400, "no kit sound", into its own word after it makes one, so only
+the first effect plays the sound, in its one-time arm pass. A kit that made no effect plays the
+sound at the end of `0x60edf0` instead.
+
+Addresses: `0x60edf0`, `0x60f106`, `0x60f119`, `0x60f434`, `0x60f444`, `0x60f464`, `0x60f48f`, `0x60f4bc`, `0x61fec0`, `0x620be0`, `0x620c05`, `0x620c10`, `0x6210a1`, `0x6210b9`, `0x6210c9`, `0x4589a0`, `0x458870`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60f106` makes an effect with `PlantEffect` and `0x60f119` sets 0x400 in the word at `[ebp-0xc]`.
+`0x620c05` sets 0x800 on an effect and `0x620c10` skips its sound when 0x400 is set or the kit's
+`+0x34` is 0 or −1; the pass runs once. `0x6210a1` starts a looping sound at the effect's
+position and keeps the handle at `+0x28`; `0x6210b9` plays a one-shot there (`0x458870` with −1 and
+1.0). The end of `0x60edf0` tests 0x400 (`0x60f434`) and the kit's `+0x34` (`0x60f43d`): a looping
+sound (`0x60f444`) makes an effect for it (`0x60f464`, `0x61fec0`), else a one-shot plays
+(`0x60f4bc`).
+
 ## Kit character procedures
 
 `0x60d7c0(spell, kit, time)` runs the kit's four procedures, kinds at `+0x3c` and four float
