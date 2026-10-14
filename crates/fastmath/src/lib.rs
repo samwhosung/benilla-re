@@ -1,9 +1,11 @@
-//! The client's quadratic solver `0x454f40` (`quadratic`) and its software `exp2`: the exponent
+//! The client's angle wrap `0x455b30` (`angle_wrap`), its quadratic solver `0x454f40`
+//! (`quadratic`) and its software `exp2`: the exponent
 //! field, a 64-entry table and a polynomial, with no `f2xm1`, so the result is exact on any CPU,
 //! unlike CRT `pow` (`0x73f940`). The x87 runs at 53-bit precision (`f64`). Its `log2`,
 //! `FastLog2` (`0x454c80`), is unreached and owes no port.
 #![allow(clippy::float_cmp)]
 
+pub mod angle_wrap;
 pub mod quadratic;
 
 /// The data `exp2` reads, from the reader's exe. The table is 64 qwords, `LUT[i] = 2^(i/64)`, indexed

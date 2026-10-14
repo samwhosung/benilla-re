@@ -1,7 +1,8 @@
 //! `0x454f40` whole, against `quadratic_roots`: the roots are poisoned, the function runs, and `al`
 //! and both outputs are compared bit for bit. The discriminant at `h == g` (no roots), NaN and the
 //! infinities in each position, `b` of both signs and zeros, `a` of 0 (an infinite `inv`) and the
-//! tie `r_b == r_a` run among a fuzz. A NaN output matches any NaN.
+//! tie `r_b == r_a` run among a fuzz, a second edge set against c of ±1, and a bounded fuzz. A NaN
+//! output matches any NaN.
 
 use benilla_re_difftest::{Emu, Wow};
 use benilla_re_fastmath::quadratic::quadratic_roots;
@@ -105,5 +106,40 @@ fn quadratic_roots_difftest() {
         let c = (sign(&mut s) * m(&mut s) * 10.0) as f32;
         run(a, b, c);
         run(a, b, -a.abs() * 0.5 + f32::MIN_POSITIVE);
+    }
+
+    // A second edge set, with a subnormal, 2 and 3 and two ordinary values, against c of ±1.
+    let edges2 = [
+        0.0f32,
+        -0.0,
+        1.0,
+        -1.0,
+        0.5,
+        -0.5,
+        2.0,
+        3.0,
+        1e30,
+        -1e30,
+        f32::MIN_POSITIVE,
+        f32::from_bits(1),
+        f32::MAX,
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        123.456,
+        -789.012,
+    ];
+    for &a in &edges2 {
+        for &b in &edges2 {
+            run(a, b, 1.0);
+            run(a, b, -1.0);
+        }
+    }
+    for _ in 0..8000 {
+        let m = |s: &mut u32| f64::from(next(s) >> 8) / f64::from(1u32 << 24);
+        run(
+            ((m(&mut s) * 2.0 - 1.0) * 10.0) as f32,
+            ((m(&mut s) * 2.0 - 1.0) * 10.0) as f32,
+            ((m(&mut s) * 2.0 - 1.0) * 10.0) as f32,
+        );
     }
 }
