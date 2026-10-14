@@ -166,6 +166,7 @@ dependencies = [
 name = "benilla-re-objectlayer"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 

@@ -77,6 +77,12 @@ fn dot3_difftest() {
 
         let bin = e.call_f64(0x602630, pa as u32, pb as u32, &[]);
         let ours = dot3(a, b);
+        // Which NaN the sum of two NaNs returns is not fixed by the source: the x87 keeps the one
+        // with the larger significand and the host the first operand, which an optimised build may
+        // swap. Any NaN equals any NaN.
+        if bin.is_nan() && ours.is_nan() {
+            return;
+        }
         assert_eq!(
             bin.to_bits(),
             ours.to_bits(),
