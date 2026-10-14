@@ -687,6 +687,12 @@ ClientConnection	0x1b18	4	uint32_t	m_worldHandle	net	Holds the handle set when t
 ClientConnection	0x1b1c	1	uint8_t	m_quitAfterLogout	net	Holds the quit flag of the pending logout	verified	one	net/connection#logout
 ClientConnection	0x1b1d	1	uint8_t	m_logoutPending	net	Holds 1 while a logout is requested and not yet answered	verified	one	net/connection#logout
 ClientConnection	0x1b20	4	void *	m_cleanup	net	Holds the operation cleanup callback, run once	verified	one	net/connection#operations
+DYNAMICELEMENTVERT	0x0000	4	float	m_x	loadingscreen	Holds the x position	verified	one	loadingscreen/route#route-ribbon
+DYNAMICELEMENTVERT	0x0004	4	float	m_y	loadingscreen	Holds the y position	verified	one	loadingscreen/route#route-ribbon
+DYNAMICELEMENTVERT	0x0008	4	float	m_z	loadingscreen	Holds the z position, 0	verified	one	loadingscreen/route#route-ribbon
+DYNAMICELEMENTVERT	0x000c	4	float	m_u	loadingscreen	Holds the horizontal texture coordinate	verified	one	loadingscreen/route#route-ribbon
+DYNAMICELEMENTVERT	0x0010	4	float	m_v	loadingscreen	Holds the vertical texture coordinate	verified	one	loadingscreen/route#route-ribbon
+DYNAMICELEMENTVERT	0x0014	4	uint32_t	m_color	loadingscreen	Holds the vertex colour	verified	one	loadingscreen/route#route-ribbon
 DictionaryRecord	0x0000	4	char[4]	m_key	glue	Holds up to three bytes of a lower-cased name window and a terminator	verified	one	glue/create#name-statistics
 DictionaryRecord	0x0004	4	int32_t	m_count	glue	Holds how many times the key was seen, at least 1	verified	one	glue/create#name-statistics
 EvtContext	0x0000	4	void **	__vfptr	core	Holds the vtable 0x801364	verified	one	core/loop#start-and-stop
@@ -778,6 +784,8 @@ ITEMCOOLDOWNHASHNODE	0x0014	1	uint8_t	m_flagHighByte	spell	Holds the high byte o
 ITEMCOOLDOWNHASHNODE	0x0018	4	uint32_t	m_spellId	spell	Holds the spell whose item cooldown waits for the item record	verified	one	spell/go#pending-item-cooldowns
 ITEMCOOLDOWNHASHNODE	0x001c	4	uint32_t	m_time	spell	Holds the time the pending cooldown starts from	verified	one	spell/go#pending-item-cooldowns
 ITEMCOOLDOWNHASHNODE	0x0020	1	uint8_t	m_onHold	spell	Holds the on-hold flag the pending cooldown is inserted with	verified	one	spell/go#pending-item-cooldowns
+LOADINGSCREENTAXIPATHINFO	0x0000	4	uint32_t	m_firstStop	loadingscreen	Holds the id of the first stop node of the run	verified	one	loadingscreen/route#taxi-leg-table
+LOADINGSCREENTAXIPATHINFO	0x0004	4	uint32_t	m_lastStop	loadingscreen	Holds the id of the last stop node seen before the run closed	verified	one	loadingscreen/route#taxi-leg-table
 LightningObject	0x0000	8	void *[2]	m_link	spell	Holds the chain's link in the chain list	verified	one	spell/visuals#chain-effect-creation
 LightningObject	0x0008	16	uint32_t[4]	m_guids	spell	Holds the uint64 GUID array: capacity, count, data, quantum	verified	one	spell/visuals#chain-hop-table
 LightningObject	0x0018	16	uint32_t[4]	m_bolts	spell	Holds the hop array: capacity, count, data, quantum	verified	one	spell/visuals#chain-hop-table
@@ -1035,6 +1043,10 @@ OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	
 OsThreadRecord	0x000c	4	void *	m_handle	os	Holds a duplicate of the thread handle	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x0014	4	void *	m_nameObject	os	Holds the name object tied to the thread, or null	verified	one	core/threads#engine-thread-records
 OsThreadRecord	0x181c	128	char[128]	m_name	os	Holds the display text name [id]	verified	one	core/threads#engine-thread-records
+PATHINFO	0x0000	4	uint32_t	m_capacity	loadingscreen	Holds the capacity in entries	verified	one	loadingscreen/route#taxi-leg-table
+PATHINFO	0x0004	4	uint32_t	m_count	loadingscreen	Holds the number of legs	verified	one	loadingscreen/route#taxi-leg-table
+PATHINFO	0x0008	4	uint32_t *	m_data	loadingscreen	Holds the buffer of pair indices	verified	one	loadingscreen/route#taxi-leg-table
+PATHINFO	0x000c	4	uint32_t	m_granularity	loadingscreen	Holds the growth granularity, 0 until set	verified	one	loadingscreen/route#taxi-leg-table
 PLAYERNAMEDESC	0x0000	4	void *	m_prevLink	playername	Holds the address of the previous link in the name list	verified	one	playername/plates#name-record-layout
 PLAYERNAMEDESC	0x0004	4	PLAYERNAMEDESC *	m_next	playername	Holds the next name record	verified	one	playername/plates#name-record-layout
 PLAYERNAMEDESC	0x0008	4	void *	m_text	playername	Holds the name text handle, 0 while none exists	verified	one	playername/plates#name-record-layout

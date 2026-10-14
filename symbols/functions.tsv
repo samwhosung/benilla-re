@@ -342,150 +342,150 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4060a0	14			unassigned			Runs its object file code not read here	inferred	none		
 0x4060b0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x4060c0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x4060d0	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4060e0	11			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4060f0	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406100	15			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406110	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406120	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406140	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406150	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406170	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406180	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4061a0	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4061b0	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4061d0	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4061e0	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406200	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406210	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406230	10			loadingscreen			Runs its object file code that calls 0x406240; not read here	inferred	none		
-0x406240	11			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406250	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406260	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406270	10			loadingscreen			Runs its object file code that calls 0x406280; not read here	inferred	none		
-0x406280	81			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4062e0	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4062f0	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406300	10			loadingscreen			Runs its object file code that calls 0x406310; not read here	inferred	none		
-0x406310	31			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406330	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406340	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406350	10			loadingscreen			Runs its object file code that calls 0x406360; not read here	inferred	none		
-0x406360	28			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406380	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406390	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4063a0	10			loadingscreen			Runs its object file code that calls 0x4063b0; not read here	inferred	none		
-0x4063b0	23			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4063d0	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4063e0	25			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x406400	10			loadingscreen			Runs its object file code that calls 0x406410; not read here	inferred	none		
-0x406410	43			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406440	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406450	160			loadingscreen			Runs its object file code that calls 0x408440, SMemFree, 0x4084b0 and 1 more; not read here	inferred	none		
-0x4064f0	10			loadingscreen			Runs its object file code that calls 0x406500; not read here	inferred	none		
-0x406500	121			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406580	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406590	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4065a0	10			loadingscreen			Runs its object file code that calls 0x4065b0; not read here	inferred	none		
-0x4065b0	81			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406610	12			loadingscreen			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x406620	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406630	7	SetLoadingScreenTip		loadingscreen			Stores the game tip text the loading screen shows	inferred	none		
-0x406640	443	BeginLoadingScreen		loadingscreen			Starts the loading screen for a map	inferred	none		
-0x406800	248	CreateLoadingScreen		loadingscreen			Creates the loading screen object	inferred	none		
-0x406900	28	DrawLoadingBar		loadingscreen	primitive		Computes the loading bar, draws its quads and calls the device virtual at 0x68 with 3	verified	one	ui/worldenter#handlers-and-frames-during-the-load	
-0x406920	188			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::progress_fraction_difftest
-0x4069e0	111			loadingscreen	orchestration		Registers the loading screen's veto 0x406a50 on input categories 1, 8, 0xa, 0xb and 0xc	verified	one	ui/loadinginput#what-the-veto-starves	
-0x406a50	3			loadingscreen	primitive		Answers 0 (xor eax,eax; ret), the loading screen's veto of an input event	verified	one	ui/loadinginput#what-the-veto-starves	
-0x406a60	611			loadingscreen			Runs its object file code that calls 0x58b060, 0x58af60, 0x58a970 and 9 more; not read here	inferred	none		loadingscreen::aspect_fit_ortho_difftest
-0x406cd0	20			loadingscreen			Runs its object file code that calls 0x406f20, 0x406cf0; not read here	inferred	none		
-0x406cf0	304			loadingscreen			Runs its object file code that calls 0x406e20, _atexit, 0x58a2a0 and 5 more; not read here	inferred	none		
-0x406e20	240			loadingscreen			Runs its object file code that calls 0x6548b0, CGxTexFlags::CGxTexFlags, TextureCreate and 1 more; not read here	inferred	none		
-0x406f10	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406f20	142			loadingscreen			Runs its object file code that calls 0x58a2a0, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none		
-0x406fb0	410			loadingscreen			Runs its object file code that calls __alloca_probe, GetTextureDeviceObject, 0x589e80 and 4 more; not read here	inferred	none		
-0x407150	347			loadingscreen			Runs its object file code that calls _atexit, GxRsSet, 0x58a2a0 and 4 more; not read here	inferred	none		loadingscreen::progress_bar_quad_difftest
-0x4072b0	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4072c0	303			loadingscreen			Runs LoadingScreen.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 4 more; not read here	inferred	none		
-0x4073f0	29			loadingscreen			Runs LoadingScreen.cpp code that calls 0x4075a0, 0x4074b0, 0x407410; not read here	inferred	none		
-0x407410	151			loadingscreen			Runs LoadingScreen.cpp code that calls HandleClose, 0x408560, SMemFree; not read here	inferred	none		
-0x4074b0	236			loadingscreen			Runs LoadingScreen.cpp code that calls CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		
-0x4075a0	818			loadingscreen			Runs LoadingScreen.cpp code that calls 0x407da0, 0x4a72b0, __alloca_probe and 11 more; not read here	inferred	none		loadingscreen::route_tessellate_segs_difftest
+0x4060d0	5	InitLsInfinityThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4060e0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4060e0	11	InitLsInfinity		loadingscreen	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4060f0	5	InitLsTwoPiThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x406100, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x406100	15	InitLsTwoPi		loadingscreen	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	loadingscreen/overview#shared-header-constants	
+0x406110	5	InitLsInvTwoPiThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x406120, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x406120	19	InitLsInvTwoPi		loadingscreen	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	loadingscreen/overview#shared-header-constants	
+0x406140	5	InitLsNegTwentyOneOverThirtySixThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x406150, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x406150	19	InitLsNegTwentyOneOverThirtySix		loadingscreen	primitive	void __cdecl (void)	Stores -21.0 · -0.02777778 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x406170	5	InitLsScaledNeg255Thunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x406180, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x406180	19	InitLsScaledNeg255		loadingscreen	primitive	void __cdecl (void)	Stores the previous product · -255.0 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4061a0	5	InitLsEighteenOverThirtySixThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4061b0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4061b0	19	InitLsEighteenOverThirtySix		loadingscreen	primitive	void __cdecl (void)	Stores 18.0 · 0.02777778 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4061d0	5	InitLsScaled256Thunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4061e0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4061e0	19	InitLsScaled256		loadingscreen	primitive	void __cdecl (void)	Stores the previous product · 256.0 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x406200	5	InitLsInvFourPointOneThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x406210, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x406210	19	InitLsInvFourPointOne		loadingscreen	primitive	void __cdecl (void)	Stores 1.0 / 4.1666665 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x406230	10	InitLsRouteColor		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406240 and registers the destructor 0x406260	verified	one	loadingscreen/overview#static-objects	
+0x406240	11	InitLsRouteColorBody		loadingscreen	orchestration	void __cdecl (void)	Stores 0xffffffff, white, in the route colour global	verified	one	loadingscreen/overview#static-objects	
+0x406250	12	InitLsRouteColorAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406260 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406260	1	InitLsRouteColorDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x406270	10	InitLsQuadUvs		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406280 and registers the destructor 0x4062f0	verified	one	loadingscreen/overview#static-objects	
+0x406280	81	InitLsQuadUvsBody		loadingscreen	orchestration	void __cdecl (void)	Stores the unit quad texture coordinates (0, 1), (1, 1), (0, 0), (1, 0)	verified	one	loadingscreen/overview#static-objects	
+0x4062e0	12	InitLsQuadUvsAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x4062f0 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x4062f0	1	InitLsQuadUvsDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x406300	10	InitLsTilePositions		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406310 and registers the destructor 0x406340	verified	one	loadingscreen/overview#static-objects	
+0x406310	31	InitLsTilePositionsBody		loadingscreen	orchestration	void __cdecl (void)	Zeroes the 48 corner positions of the world map tiles	verified	one	loadingscreen/overview#static-objects	
+0x406330	12	InitLsTilePositionsAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406340 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406340	1	InitLsTilePositionsDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x406350	10	InitLsTileUvs		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406360 and registers the destructor 0x406390	verified	one	loadingscreen/overview#static-objects	
+0x406360	28	InitLsTileUvsBody		loadingscreen	orchestration	void __cdecl (void)	Zeroes the 48 corner texture coordinates of the world map tiles	verified	one	loadingscreen/overview#static-objects	
+0x406380	12	InitLsTileUvsAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406390 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406390	1	InitLsTileUvsDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x4063a0	10	InitLsRouteVertices		loadingscreen	orchestration	void __cdecl (void)	Runs 0x4063b0 and registers the destructor 0x4063e0	verified	one	loadingscreen/overview#static-objects	
+0x4063b0	23	InitLsRouteVerticesBody		loadingscreen	orchestration	void __cdecl (void)	Clears the route vertex array header	verified	one	loadingscreen/overview#static-objects	
+0x4063d0	12	InitLsRouteVerticesAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x4063e0 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x4063e0	25	InitLsRouteVerticesDtor		loadingscreen	orchestration	void __cdecl (void)	Frees the route vertex array buffer	verified	one	loadingscreen/overview#static-objects	
+0x406400	10	InitLsTaxiTables		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406410 and registers the destructor 0x406450	verified	one	loadingscreen/overview#static-objects	
+0x406410	43	InitLsTaxiTablesBody		loadingscreen	orchestration	void __cdecl (void)	Clears the taxi path array and the leg pair array	verified	one	loadingscreen/overview#static-objects	
+0x406440	12	InitLsTaxiTablesAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406450 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406450	160	InitLsTaxiTablesDtor		loadingscreen	orchestration	void __cdecl (void)	Destroys the taxi path array and frees the leg pair buffer	verified	one	loadingscreen/overview#static-objects	
+0x4064f0	10	InitLsShipQuad		loadingscreen	orchestration	void __cdecl (void)	Runs 0x406500 and registers the destructor 0x406590	verified	one	loadingscreen/overview#static-objects	
+0x406500	121	InitLsShipQuadBody		loadingscreen	orchestration	void __cdecl (void)	Stores the ship quad's four corner offsets	verified	one	loadingscreen/overview#static-objects	
+0x406580	12	InitLsShipQuadAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406590 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406590	1	InitLsShipQuadDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x4065a0	10	InitLsShipQuadUvs		loadingscreen	orchestration	void __cdecl (void)	Runs 0x4065b0 and registers the destructor 0x406620	verified	one	loadingscreen/overview#static-objects	
+0x4065b0	81	InitLsShipQuadUvsBody		loadingscreen	orchestration	void __cdecl (void)	Stores the ship quad's four texture coordinate pairs	verified	one	loadingscreen/overview#static-objects	
+0x406610	12	InitLsShipQuadUvsAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x406620 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x406620	1	InitLsShipQuadUvsDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once	verified	one	loadingscreen/overview#static-objects	
+0x406630	7	SetLoadingScreenTip		loadingscreen	orchestration	void __fastcall (const char *tip)	Stores the tip text pointer the next raise lays out	verified	one	loadingscreen/screen#tip-text	
+0x406640	443	BeginLoadingScreen		loadingscreen	primitive	void __fastcall (uint32_t mapId)	Lays out the tip text when one is set, stores the map id and raises the screen	verified	one	loadingscreen/screen#tip-text	
+0x406800	248	CreateLoadingScreen		loadingscreen	orchestration	void __cdecl (void)	Creates the layer, bar textures and input veto when absent, resets the inputs and repaints	verified	one	loadingscreen/screen#raising-the-screen	
+0x406900	28	RepaintLoadingScreen		loadingscreen	orchestration	void __cdecl (void)	Recomputes the fraction, calls the paint callback directly and calls device slot +0x68 with 3	verified	one	loadingscreen/screen#progress-fraction	
+0x406920	188	ComputeLoadingFraction		loadingscreen	primitive	void __cdecl (void)	Blends the three load fractions into the bar fill and clamps it to 0 through 1	verified	one	loadingscreen/screen#progress-fraction	loadingscreen::progress_fraction_difftest
+0x4069e0	111	InstallLoadingInputVeto		loadingscreen	orchestration	void __cdecl (void)	Registers 0x406a50 at priority 8.0 on the event categories 1, 8, 0xa, 0xb and 0xc	verified	one	loadingscreen/screen#input-veto	
+0x406a50	3	LoadingInputVeto		loadingscreen	orchestration	uint32_t __fastcall (void *payload, void *argument)	Returns 0, which stops the dispatch of the category it handles	verified	one	loadingscreen/screen#input-veto	
+0x406a60	611	PaintLoadingScreen		loadingscreen	primitive		Fits the viewport to the aspect, loads an ortho projection and draws the screen and the bar	verified	one	loadingscreen/screen#paint-pass	loadingscreen::aspect_fit_ortho_difftest
+0x406cd0	20	DrawLoadingScreen		loadingscreen	orchestration	uint32_t __cdecl (void)	Draws the taxi screen or the plain screen and returns whether the progress bar draws	verified	one	loadingscreen/screen#plain-screen	
+0x406cf0	304	DrawPlainScreen		loadingscreen	orchestration	uint32_t __cdecl (void)	Draws the map art quad and the tip batch, returning 0 without a map id	verified	one	loadingscreen/screen#plain-screen	
+0x406e20	240	ResolveLoadingArt		loadingscreen	orchestration	uint32_t __cdecl (void)	Loads the map art or the default into the art handle and returns whether a texture exists	verified	one	loadingscreen/screen#plain-screen	
+0x406f10	1	PlainQuadDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once; the destructor the plain screen registers for its quad data	verified	one	loadingscreen/screen#plain-screen	
+0x406f20	142	DrawTaxiScreen		loadingscreen	orchestration	uint32_t __cdecl (void)	Draws the 12 world map tiles and the route and returns 1 when the route has vertices, else returns 0	verified	one	loadingscreen/route#route-drawing	
+0x406fb0	410	DrawRoute		loadingscreen	primitive	void __cdecl (void)	Reveals the ribbon quads the fraction has reached and draws the markers and the ribbon	verified	one	loadingscreen/route#route-drawing	
+0x407150	347	DrawProgressBar		loadingscreen	primitive	void __cdecl (void)	Draws the fill quad and the border quad of the bar from the table at 0x7ffd34	verified	one	loadingscreen/screen#progress-bar	loadingscreen::progress_bar_quad_difftest
+0x4072b0	1	ProgressBarDtor		loadingscreen	orchestration	void __cdecl (void)	Returns at once; the destructor the bar registers for its static data	verified	one	loadingscreen/screen#progress-bar	
+0x4072c0	303	BeginTransferLoading		loadingscreen	orchestration	void __fastcall (uint32_t transportEntry, uint32_t fromMap, uint32_t mapId)	Raises the screen for a transfer, with a route when the player's transport has a matching leg	verified	one	loadingscreen/route#transfer-entries	
+0x4073f0	29	BuildRoute		loadingscreen	orchestration	uint32_t __fastcall (uint32_t pathId, uint32_t leg)	Builds the route vertices and textures for a path and leg, clearing them on failure	verified	one	loadingscreen/route#route-ribbon	
+0x407410	151	ClearRoute		loadingscreen	orchestration	void __cdecl (void)	Closes the route and tile textures and frees the route vertex array	verified	one	loadingscreen/route#route-drawing	
+0x4074b0	236	LoadRouteTextures		loadingscreen	orchestration	uint32_t __cdecl (void)	Loads the DynamicElements texture and the 12 world map tile textures, returning whether all loaded	verified	one	loadingscreen/route#route-drawing	
+0x4075a0	818	BuildRouteVertices		loadingscreen	primitive	uint32_t __fastcall (uint32_t pathId, uint32_t leg)	Fits a spline over a leg's endpoints and waypoints and fills the route vertices	verified	one	loadingscreen/route#route-ribbon	loadingscreen::route_tessellate_segs_difftest
 0x4078e0	22	SplatVector3		loadingscreen	orchestration	float * __thiscall (float *this, float v)	Stores one float in all three components	verified	one	camera#unprojection	models::portal_seg_normalize_difftest
-0x407900	895			loadingscreen			Runs LoadingScreen.cpp code not read here	inferred	none		loadingscreen::route_endpoint_quads_difftest
-0x407c80	286			loadingscreen			Runs LoadingScreen.cpp code that calls EvaluateSplinePoint; not read here	inferred	none		
-0x407da0	59			loadingscreen			Runs LoadingScreen.cpp code not read here	inferred	none		
-0x407de0	139			loadingscreen			Runs LoadingScreen.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x407e70	14	IsLoadingScreenUp		loadingscreen			Returns whether the loading screen object exists	inferred	none		
-0x407e80	237	EndLoadingScreen		loadingscreen			Ends the loading screen and clears its object	inferred	none		
-0x407f70	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
-0x407fa0	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
-0x407fd0	36	OnLoadProgress		loadingscreen	primitive		Redraws the loading bar when the progress fraction is above the last drawn one	verified	one	ui/worldenter#handlers-and-frames-during-the-load	
-0x408000	479			loadingscreen			Runs its object file code that calls 0x408b40, 0x408a30, 0x408510 and 4 more; not read here	inferred	none		
-0x4081e0	453			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::worldmap_tile_geometry_difftest
-0x4083b0	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4083c0	58			unassigned	primitive		Runs code the arrival calls on a transport; not read here	inferred	none	objectlayer/players#arrival-in-the-world	
-0x408400	23			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x408420	23			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x408440	97			loadingscreen			Runs its object file code that calls 0x4088f0, SMemFree; not read here	inferred	none		
-0x4084b0	56			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4084f0	22			loadingscreen			Runs its object file code not read here	inferred	none		
-0x408510	76			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x408560	1			loadingscreen			Runs its object file code not read here	inferred	none		
-0x408570	5			loadingscreen			Runs its object file code not read here	inferred	none		
-0x408580	19			loadingscreen			Runs its object file code not read here	inferred	none		
-0x4085a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4085b0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4085d0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4085e0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408600	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408610	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408630	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408640	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408660	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408670	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408690	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4086a0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4086c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4086d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4086f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408700	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408720	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408730	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408750	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408760	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408780	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408790	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4087b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4087c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4087e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4087f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x408800	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408810	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408830	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408840	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408860	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408870	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408890	5			unassigned			Runs its object file code not read here	inferred	none		
-0x4088a0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4088c0	35			unassigned			Runs its object file code not read here	inferred	none		
-0x4088f0	23			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x408910	287			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x408a30	16			unassigned			Runs its object file code not read here	inferred	none		
-0x408a40	256			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x408b40	352			unassigned			Runs its object file code that calls 0x4084b0, 0x4088f0, SMemReAlloc and 3 more; not read here	inferred	none		
-0x408ca0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408cb0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408cd0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x408ce0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x408d00	128			unassigned			Runs its object file code that calls 0x408f30; not read here	inferred	none		
-0x408d80	226			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x408e70	10			unassigned			Runs its object file code that calls 0x408e80; not read here	inferred	none		
-0x408e80	22			unassigned			Runs its object file code not read here	inferred	none		
-0x408ea0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x408eb0	14			unassigned			Runs its object file code not read here	inferred	none		
-0x408ec0	106			unassigned			Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
-0x408f30	144			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x407900	895	FillRouteEndpoints		loadingscreen	primitive	void __fastcall (const float *a, const float *b)	Fills the first 8 route vertices with the marker quads around two points	verified	one	loadingscreen/route#route-ribbon	loadingscreen::route_endpoint_quads_difftest
+0x407c80	286	FillRouteRibbon		loadingscreen	primitive	void __fastcall (void *spline, uint32_t segs)	Fills the ribbon vertices along the spline at segs + 1 steps with the ship quad offsets	verified	one	loadingscreen/route#route-ribbon	
+0x407da0	59	FindShipInfo		loadingscreen	orchestration	void *__fastcall (uint32_t pathId, uint32_t leg)	Returns the LoadingScreenTaxiSplines row for a path and leg, or 0	verified	one	loadingscreen/route#route-ribbon	
+0x407de0	139	BeginLegLoading		loadingscreen	orchestration	void __fastcall (uint32_t transportEntry, uint32_t leg)	Builds the route for the player's transport leg and raises the screen	verified	one	loadingscreen/route#transfer-entries	
+0x407e70	14	IsLoadingScreenUp		loadingscreen	orchestration	uint32_t __cdecl (void)	Returns whether the loading screen layer handle exists	verified	one	loadingscreen/screen#ending-the-screen	
+0x407e80	237	EndLoadingScreen		loadingscreen	orchestration	void __cdecl (void)	Closes the layer, textures, veto, route and tip, and clears the handle	verified	one	loadingscreen/screen#ending-the-screen	
+0x407f70	36	OnAsyncLoadProgress		loadingscreen	orchestration	void __stdcall (float fraction)	Stores a larger asynchronous load fraction and repaints	verified	one	loadingscreen/screen#progress-fraction	
+0x407fa0	36	OnMapLoadProgress		loadingscreen	orchestration	void __stdcall (float fraction)	Stores a larger map load fraction and repaints	verified	one	loadingscreen/screen#progress-fraction	
+0x407fd0	36	OnUiLoadProgress		loadingscreen	orchestration	void __stdcall (float fraction)	Stores a larger interface load fraction and repaints	verified	one	loadingscreen/screen#progress-fraction	
+0x408000	479	BuildTaxiLegTable		loadingscreen	orchestration	void __cdecl (void)	Builds the per-path leg lists and stop pairs from the TaxiPathNode store, then the tile arrays	verified	one	loadingscreen/route#taxi-leg-table	
+0x4081e0	453	BuildWorldMapTiles		loadingscreen	primitive	void __cdecl (void)	Fills the corner and texture coordinate arrays of the 12 world map tiles	verified	one	loadingscreen/route#world-map-tiles	loadingscreen::worldmap_tile_geometry_difftest
+0x4083b0	5	EndLoadingScreenThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x407e80	verified	one	loadingscreen/screen#ending-the-screen	
+0x4083c0	58	SetLoadingLayerBit		loadingscreen	primitive	void __fastcall (uint8_t set)	Sets or clears bit 0 of the loading screen layer's flags	verified	one	loadingscreen/screen#raising-the-screen	
+0x408400	23	FreeVector3Buffer		loadingscreen	orchestration	void __thiscall (void)	Frees the buffer at +8 under the vector tag	verified	one	loadingscreen/overview#growable-arrays	
+0x408420	23	FreeFloatBuffer		loadingscreen	orchestration	void __thiscall (void)	Frees the buffer at +8 under the float tag	verified	one	loadingscreen/overview#growable-arrays	
+0x408440	97	DestroyPathInfoArray		loadingscreen	orchestration	void __thiscall (void)	Frees each leg list of the outer array, then its buffer	verified	one	loadingscreen/overview#growable-arrays	
+0x4084b0	56	LsDwordArrayDeletingDtor		loadingscreen	orchestration	void *__thiscall (uint32_t flags)	Frees a dword array's buffer and, with bit 0 of its argument, the array	verified	one	loadingscreen/overview#growable-arrays	
+0x4084f0	22	ConstructRouteVertex		loadingscreen	orchestration	void __thiscall (void)	Zeroes the six dwords of a route vertex	verified	one	loadingscreen/overview#growable-arrays	
+0x408510	76	LsDwordArrayDestroy		loadingscreen	orchestration	void *__thiscall (uint32_t flags)	Frees a dword array's buffer, clears it and, with bit 0 of its argument, frees the array	verified	one	loadingscreen/overview#growable-arrays	
+0x408560	1	DestroyRouteVertex		loadingscreen	orchestration	void __thiscall (void)	Returns at once	verified	one	loadingscreen/overview#growable-arrays	
+0x408570	5	InitLsTenSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408580, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408580	19	InitLsTenSquared		loadingscreen	primitive	void __cdecl (void)	Stores 10.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4085a0	5	InitLsElevenSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4085b0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4085b0	19	InitLsElevenSquared		loadingscreen	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4085d0	5	InitLsFivePointFiveSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4085e0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4085e0	19	InitLsFivePointFiveSquared		loadingscreen	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408600	5	InitLsTenSquaredBThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408610, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408610	19	InitLsTenSquaredB		loadingscreen	primitive	void __cdecl (void)	Stores 10.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408630	5	InitLsFiveSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408640, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408640	19	InitLsFiveSquared		loadingscreen	primitive	void __cdecl (void)	Stores 5.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408660	5	InitLsTenSquaredCThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408670, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408670	19	InitLsTenSquaredC		loadingscreen	primitive	void __cdecl (void)	Stores 10.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408690	5	InitLsThirtySquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4086a0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4086a0	19	InitLsThirtySquared		loadingscreen	primitive	void __cdecl (void)	Stores 30.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4086c0	5	InitLsHundredTwentySquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4086d0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4086d0	19	InitLsHundredTwentySquared		loadingscreen	primitive	void __cdecl (void)	Stores 120.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4086f0	5	InitLsTwentySquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408700, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408700	19	InitLsTwentySquared		loadingscreen	primitive	void __cdecl (void)	Stores 20.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408720	5	InitLsTenSquaredDThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408730, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408730	19	InitLsTenSquaredD		loadingscreen	primitive	void __cdecl (void)	Stores 10.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408750	5	InitLsHalfSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408760, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408760	19	InitLsHalfSquared		loadingscreen	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408780	5	InitLsThreeSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408790, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408790	19	InitLsThreeSquared		loadingscreen	primitive	void __cdecl (void)	Stores 3.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4087b0	5	InitLsHundredSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4087c0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4087c0	19	InitLsHundredSquared		loadingscreen	primitive	void __cdecl (void)	Stores 100.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4087e0	5	InitLsFiveThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4087f0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4087f0	11	InitLsFive		loadingscreen	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408800	5	InitLsFiftySquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408810, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408810	19	InitLsFiftySquared		loadingscreen	primitive	void __cdecl (void)	Stores 50.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408830	5	InitLsHundredSquaredBThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408840, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408840	19	InitLsHundredSquaredB		loadingscreen	primitive	void __cdecl (void)	Stores 100.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408860	5	InitLsFortySquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408870, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408870	19	InitLsFortySquared		loadingscreen	primitive	void __cdecl (void)	Stores 40.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408890	5	InitLsOnePointFiveSquaredThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x4088a0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x4088a0	19	InitLsOnePointFiveSquared		loadingscreen	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x4088c0	35	ConstructRouteSpline		loadingscreen	orchestration	void __thiscall (void)	Clears eight dwords at +8 and stores the placeholder vtable 0x7ffdbc	verified	one	loadingscreen/overview#growable-arrays	
+0x4088f0	23	FreeDwordBuffer		loadingscreen	orchestration	void __thiscall (void)	Frees the buffer at +8 under the dword tag	verified	one	loadingscreen/overview#growable-arrays	
+0x408910	287	ReserveRouteVertices		loadingscreen	primitive	void __thiscall (uint32_t count, uint32_t grow)	Grows the route vertex array to hold count more vertices	verified	one	loadingscreen/overview#growable-arrays	
+0x408a30	16	ConstructDwordArray		loadingscreen	orchestration	void __thiscall (void)	Clears the four dwords of a growable array	verified	one	loadingscreen/overview#growable-arrays	
+0x408a40	256	DwordArrayPush		loadingscreen	primitive	uint32_t *__thiscall (const uint32_t *value)	Appends a dword to a growable array, growing it, and returns its slot	verified	one	loadingscreen/overview#growable-arrays	
+0x408b40	352	ReservePathInfoArray		loadingscreen	primitive	void __thiscall (uint32_t count, uint32_t grow)	Grows the outer array of leg lists to hold count more entries	verified	one	loadingscreen/overview#growable-arrays	
+0x408ca0	5	InitLsTenSquaredEThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408cb0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408cb0	19	InitLsTenSquaredE		loadingscreen	primitive	void __cdecl (void)	Stores 10.0 squared as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408cd0	5	InitLsHalfOverTenThunk		loadingscreen	orchestration	void __cdecl (void)	Jumps to 0x408ce0, a static initializer	verified	one	loadingscreen/overview#shared-header-constants	
+0x408ce0	19	InitLsHalfOverTen		loadingscreen	primitive	void __cdecl (void)	Stores 0.5 / 10.0 as a float in an object-file global	verified	one	loadingscreen/overview#shared-header-constants	
+0x408d00	128	PairArrayAppend		loadingscreen	primitive	void *__thiscall (void)	Appends a zeroed pair to a growable array, growing it, and returns the pair	verified	one	loadingscreen/overview#growable-arrays	
+0x408d80	226	DwordArrayReserve		loadingscreen	primitive	void __thiscall (uint32_t count, uint32_t grow)	Grows a dword array to hold count more dwords	verified	one	loadingscreen/overview#growable-arrays	
+0x408e70	10	InitLsCounter		loadingscreen	orchestration	void __cdecl (void)	Runs 0x408e80 and registers the destructor 0x408eb0	verified	one	loadingscreen/overview#static-objects	
+0x408e80	22	InitLsCounterBody		loadingscreen	orchestration	void __cdecl (void)	Counts the file as one more user of a shared library object and calls 0x5b71c0 on the first	verified	one	loadingscreen/overview#static-objects	
+0x408ea0	12	InitLsCounterAtExit		loadingscreen	orchestration	void __cdecl (void)	Registers the destructor 0x408eb0 with _atexit	verified	one	loadingscreen/overview#static-objects	
+0x408eb0	14	InitLsCounterDtor		loadingscreen	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	loadingscreen/overview#static-objects	
+0x408ec0	106	LsCopyDwordArray		loadingscreen	orchestration	void *__thiscall (const void *other)	Builds a dword array as a copy of another	verified	one	loadingscreen/overview#growable-arrays	
+0x408f30	144	ResizePairArray		loadingscreen	orchestration	void __thiscall (uint32_t capacity)	Reallocates a pair array's buffer to a capacity, copying the pairs that fit	verified	one	loadingscreen/overview#growable-arrays	
 0x408fc0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x408fd0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x408fe0	10			unassigned			Runs its object file code that calls 0x408ff0; not read here	inferred	none		

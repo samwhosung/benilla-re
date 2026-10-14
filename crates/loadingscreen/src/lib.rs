@@ -1,4 +1,4 @@
-//! The world-enter loading screen's geometry, `Source\LoadingScreen.cpp` (`0x4060d0` to `0x408580`):
+//! The world-enter loading screen's geometry, `Source\LoadingScreen.cpp` (`0x4060d0` to `0x408f30`):
 //! the `Glues\LoadingBar` progress fill, the letterboxed ortho rect, the taxi-route ship ribbon and
 //! the `WorldMap\World%d` art tiles. Drawing, the ortho set, the fonts and the spline arc length and
 //! point-at-t (`0x453360`, `0x453390`, stubbed in the tests) belong to other layers.

@@ -345,14 +345,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffaac	float	s_degreesToRadians		terrain	Holds pi/180 (0x3c8efa35)	verified	one	terrain/files#doodad-placements
 0x7ffab0	float	s_mapSize		terrain	Holds 34133.332, the map's side in yards	verified	one	terrain/queries#shadow-test
 0x7ffab4	float	s_mapHalfSize		terrain	Holds 17066.666 (0x46855555), the world coordinate of tile index 0's edge	verified	one	terrain/chunk#chunk-vertices
-0x7ffd34	const uint32_t			loadingscreen	Holds data whose address CreateLoadingScreen takes; not read here	inferred	none	
+0x7ffd34	const uint32_t[12]	s_loadingBarTable		loadingscreen	Holds the two bar entries: path, fill flag, centre x and y, width and height	verified	one	loadingscreen/screen#progress-bar
 0x7ffd68	const float	s_ticksPerSecond		unassigned	Holds 1024.0, the particle clock ticks per second	verified	one	lighting/precipitation#particle-clock
 0x7ffd6c	const float	s_float3e19999a		unassigned	Holds the float 0.15 (0x3e19999a)	inferred	none	
 0x7ffd70	const float	s_point35		unassigned	Holds 0.35	verified	one	lighting/fog#world-light-commit
 0x7ffd74	const float	s_zero		ui	Holds 0.0, against which the layout tests sizes and edges	verified	one	ui/anchors#edge-resolution-from-size
 0x7ffd7c	const float	s_point7		unassigned	Holds 0.7	verified	one	lighting/sky#sky-colours
 0x7ffd84	void *[9]	s_catmullRomCurveVtable		spline	Holds the Catmull-Rom curve vtable stored at +0x2c of the movement spline object	verified	one	spline#curve-objects
-0x7ffdbc	void *[9]	s_curveBaseVtable		spline	Holds the base curve vtable: the pure-call stub in slots 0 to 6, then 0x4534f0 and 0x453570	verified	one	spline#curve-objects
+0x7ffdbc	void *[7]	s_routeSplineBaseVtable		loadingscreen	Holds seven pure-call slots, the vtable the spline constructor stores before the curve class replaces it	verified	one	loadingscreen/overview#growable-arrays
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
 0x80108c	uint32_t[52]	s_commandLineOptions		unassigned	Holds 13 command-line option records of id, name, 0 and flags: d3d is id 0, opengl id 5	verified	one	gx/device#backend-selection-and-creation
@@ -1144,7 +1144,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82edfc	uint16_t			unassigned	Holds a word that RunPrepatchList, CVarLoadFile, TopLevelExceptionFilter read; not read here	inferred	none	
 0x82ee00	char[2]			unassigned	Holds the string " "	inferred	none	
 0x82ef08	char[6]	s_textSS		unassigned	Holds the string "%s %s"	inferred	none	
-0x82f00c	uint32_t			unassigned	Holds a dword that BeginLoadingScreen reads and writes; not read here	inferred	none	
+0x82f00c	int32_t	s_loadingMapId		loadingscreen	Holds the map the plain screen shows art for, -1 for none	verified	one	loadingscreen/screen#plain-screen
+0x82f010	const uint16_t[4]	s_loadingQuadIndices		loadingscreen	Holds the indices 0, 1, 2, 3 of a four-corner strip	verified	one	loadingscreen/screen#plain-screen
+0x82f018	const char *[8]	s_loadingFontPaths		loadingscreen	Holds the tip font file for each locale index	verified	one	loadingscreen/screen#tip-text
+0x82f1a4	char[47]	s_pathLoadingScreen		loadingscreen	Holds the source path of LoadingScreen.cpp	verified	one	loadingscreen/overview#object-file
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	one	ui/regions#layout-space-and-units
@@ -2118,10 +2121,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882734	uint32_t			client	Holds a dword that ClientInitializeGame, ClientDestroyGame read and write; not read here	inferred	none	
 0x882738	uint32_t	s_quitCode		client	Holds the quit code 0x401560 stores, shown from Startup_Strings.dbc at teardown when nonzero	inferred	none	
 0x882748	const char[1]	s_emptyString		unassigned	Holds the empty string	verified	one	ui/tooltipcontent#localized-lines
-0x882894	float	s_loadProgressDrawn		ui	Holds the last progress fraction the loading bar drew, 0 when the loading screen starts	verified	one	ui/worldenter#handlers-and-frames-during-the-load
-0x882be0	uint32_t	s_loadingScreen		loadingscreen	Holds the loading screen object, or null	inferred	none	
-0x882e04	uint32_t			loadingscreen	Holds a dword that EndLoadingScreen reads and writes; not read here	inferred	none	
-0x882e10	uint32_t			loadingscreen	Holds a dword that SetLoadingScreenTip, BeginLoadingScreen, EndLoadingScreen read and write; not read here	inferred	none	
+0x882894	float	s_progressUi		loadingscreen	Holds the interface load fraction	verified	one	loadingscreen/screen#progress-fraction
+0x8828a4	uint32_t	s_routeColor		loadingscreen	Holds the vertex colour of the route markers and revealed ribbon quads, white	verified	one	loadingscreen/overview#static-objects
+0x8828b0	float[12]	s_shipQuadOffsets		loadingscreen	Holds the ship quad corner offsets as four vectors	verified	one	loadingscreen/overview#static-objects
+0x8828e0	uint32_t[4]	s_routeVertices		loadingscreen	Holds the route vertex array: capacity, count, buffer and granularity	verified	one	loadingscreen/route#route-ribbon
+0x8828f8	float[144]	s_tilePositions		loadingscreen	Holds the corner positions of the 12 world map tiles	verified	one	loadingscreen/route#world-map-tiles
+0x882b48	uint8_t	s_barStaticInit		loadingscreen	Holds the flag that the bar draw sets once its static data is set up	verified	one	loadingscreen/screen#progress-bar
+0x882b50	uint32_t[4]	s_taxiPaths		loadingscreen	Holds the outer array of leg lists, indexed by taxi path id	verified	one	loadingscreen/route#taxi-leg-table
+0x882b60	uint32_t[4]	s_taxiLegPairs		loadingscreen	Holds the array of first stop and last stop pairs	verified	one	loadingscreen/route#taxi-leg-table
+0x882b70	uint32_t	s_routeTexture		loadingscreen	Holds the DynamicElements texture handle	verified	one	loadingscreen/route#route-drawing
+0x882b8c	float[8]	s_quadUvs		loadingscreen	Holds the texture coordinates of a unit quad in strip order	verified	one	loadingscreen/overview#static-objects
+0x882bac	float[8]	s_shipQuadUvs		loadingscreen	Holds the texture coordinates of the ship quad in strip order	verified	one	loadingscreen/overview#static-objects
+0x882bd0	float	s_progressAsync		loadingscreen	Holds the asynchronous load fraction	verified	one	loadingscreen/screen#progress-fraction
+0x882bd4	float[3]	s_barStaticVector		loadingscreen	Holds a vector the bar draw sets once and does not read	verified	one	loadingscreen/screen#progress-bar
+0x882be0	uint32_t	s_loadingScreen		loadingscreen	Holds the loading screen layer handle, or 0	verified	one	loadingscreen/screen#raising-the-screen
+0x882be4	float	s_loadingFraction		loadingscreen	Holds the bar fill in 0 to 1	verified	one	loadingscreen/screen#progress-fraction
+0x882be8	float[96]	s_tileUvs		loadingscreen	Holds the texture coordinates of the 12 world map tiles	verified	one	loadingscreen/route#world-map-tiles
+0x882d70	uint32_t[12]	s_tileTextures		loadingscreen	Holds the world map tile texture handles	verified	one	loadingscreen/route#route-drawing
+0x882da8	uint32_t[2]	s_barTextures		loadingscreen	Holds the fill and border texture handles of the bar	verified	one	loadingscreen/screen#progress-bar
+0x882db0	uint8_t	s_plainQuadInit		loadingscreen	Holds the flag that the plain draw sets once its quad data is set up	verified	one	loadingscreen/screen#plain-screen
+0x882dc0	float[12]	s_plainQuadCorners		loadingscreen	Holds the four corner positions of the plain screen quad	verified	one	loadingscreen/screen#plain-screen
+0x882df4	float	s_progressMap		loadingscreen	Holds the map load fraction	verified	one	loadingscreen/screen#progress-fraction
+0x882e04	uint32_t	s_loadingArt		loadingscreen	Holds the map art texture handle, or 0 until resolved	verified	one	loadingscreen/screen#plain-screen
+0x882e08	uint32_t	s_tipFont		loadingscreen	Holds the tip font handle	verified	one	loadingscreen/screen#tip-text
+0x882e0c	uint32_t	s_tipString		loadingscreen	Holds the tip string handle	verified	one	loadingscreen/screen#tip-text
+0x882e10	const char *	s_tipText		loadingscreen	Holds the tip text to lay out, or 0	verified	one	loadingscreen/screen#tip-text
+0x882e14	uint32_t	s_tipBatch		loadingscreen	Holds the tip string batch handle	verified	one	loadingscreen/screen#tip-text
 0x882e28	uint8_t[2680]	s_displayMessages		unassigned	Holds ten 268-byte display records: time, text, colour; written only by 0x409200	verified	one	sysmsg#colour-table
 0x883b08	int32_t	s_localeHandle		crt	Holds the locale handle the C runtime's character functions test, 0 for the C locale; nothing writes it	verified	one	storm/format#name-hash
 0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
@@ -3064,8 +3089,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dab4	uint32_t[5]	s_mailTemplateStore		ui	Holds the MailTemplate.dbc store: records of 40 bytes, count, id map, id bound and loaded flag	verified	one	ui/mail#reading-a-mails-text
 0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
 0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
-0xc0daf0	uint32_t[5]	s_loadingScreenTaxiSplinesStore		dbc	Holds the LoadingScreenTaxiSplines table store: records, count, id map, largest id, loaded flag	inferred	none	
-0xc0db04	uint32_t[5]	s_loadingScreensStore		dbc	Holds the LoadingScreens table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0daf0	uint32_t[5]	s_loadingScreenTaxiSplinesStore		dbc	Holds the LoadingScreenTaxiSplines.dbc store: records at +0 and count at +4	verified	one	loadingscreen/route#route-ribbon
+0xc0db04	uint32_t[5]	s_loadingScreensStore		dbc	Holds the LoadingScreens.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	loadingscreen/screen#plain-screen
 0xc0db18	uint32_t[5]	s_liquidTypeStore		dbc	Holds the LiquidType table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0db2c	uint32_t[5]	s_lfgDungeonsStore		dbc	Holds the LfgDungeons.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/lfg#the-type-lists
 0xc0db40	uint32_t[5]	s_languagesStore		dbc	Holds the Languages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages

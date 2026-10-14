@@ -1,8 +1,9 @@
 //! The `WorldMap\World%d` art tile geometry, `0x4081e0`.
 //!
-//! Builds the 4 by 3 grid of tile quads: an atlas UV array (`0x8828f8`, 12 floats per tile) and a
-//! unit-quad corner array (`0x882be8`, 8 floats per tile). The art is a 1002 by 668 pixel atlas split
-//! into 256 pixel tiles.
+//! Builds the 4 by 3 grid of tile quads: a corner position array (`0x8828f8`, 12 floats per tile: x, y, 0
+//! for four corners) and a texture coordinate array (`0x882be8`, 8 floats per tile). The map is 1002 by
+//! 668 pixels in 256 pixel tiles; the returned `uv` array is the exe's position array and `quad` its
+//! texture coordinate array.
 
 const KU: f32 = f32::from_bits(0x3a82_cf75); // 1/1002 (0x7ffdb8)
 const KV: f32 = f32::from_bits(0x3ac4_3730); // 1/668  (0x7ffdb4)
@@ -11,8 +12,8 @@ const W_COL3: f32 = f32::from_bits(0x3f6a_0000); // 0.9140625 — last-col quad 
 const H_ROW2: f32 = f32::from_bits(0x3f1c_0000); // 0.609375 — last-row quad height (0x7ffdb0)
 
 /// The tile geometry of `0x4081e0`. Returns `(uv, quad)` for 12 tiles in row-major order, index
-/// `col + row * 4`: the UV array has 12 floats per tile (4 corners of `(u, v, 0)`), the quad array 8
-/// (4 corners of `(x, y)`). `fild` widens an integer to `f64`, `fmul` and `fsubr` run in `f64`, and
+/// `col + row * 4`: `uv` has 12 floats per tile (4 corner positions `(x, y, 0)` in the unit box), `quad`
+/// 8 (4 texture coordinates `(u, v)`). `fild` widens an integer to `f64`, `fmul` and `fsubr` run in `f64`, and
 /// `fstp` stores `f32`.
 pub fn worldmap_tile_geometry() -> ([f32; 144], [f32; 96]) {
     let mut uv = [0f32; 144];

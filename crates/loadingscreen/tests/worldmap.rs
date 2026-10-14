@@ -1,5 +1,5 @@
-//! The world map tile geometry (`0x4081e0`) against the exe, whole function: it builds the UV and
-//! quad arrays, and both are read back and compared.
+//! The world map tile geometry (`0x4081e0`) against the exe, whole function: it builds the corner
+//! position and texture coordinate arrays (`uv` and `quad` here), and both are read back and compared.
 
 mod common;
 
@@ -8,8 +8,8 @@ use benilla_re_loadingscreen::worldmap::worldmap_tile_geometry;
 use common::assert_f32;
 
 const WORLDMAP_TILE_GEOMETRY: u64 = 0x4081e0; // void(void)
-const UV_ARRAY: u64 = 0x0088_28f8; // 12 floats/tile × 12 tiles
-const QUAD_ARRAY: u64 = 0x0088_2be8; // 8 floats/tile × 12 tiles
+const UV_ARRAY: u64 = 0x0088_28f8; // corner positions, 12 floats/tile × 12 tiles
+const QUAD_ARRAY: u64 = 0x0088_2be8; // texture coordinates, 8 floats/tile × 12 tiles
 
 #[test]
 fn worldmap_tile_geometry_difftest() {

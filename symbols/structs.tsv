@@ -41,6 +41,7 @@ ChatMessageGroup	12		ui	Holds a message group: its name, whether a new second wi
 ChatWindow	152		ui	Holds one chat window: name, group flags, channel name and id arrays, size, colour, locked, docked and shown	verified	one	ui/chatwindows#window-records
 ClientConnection	6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
 ClientLink	548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
+DYNAMICELEMENTVERT	24		loadingscreen	Holds one route vertex: position, texture coordinates and colour	verified	one	loadingscreen/route#route-ribbon
 DictionaryRecord	8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
 EvtContext	532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
 EvtHandler	24		core	Holds a registered handler: its link, function, argument, priority and skip flag	verified	two	core/events#handler-records
@@ -52,6 +53,7 @@ FriendList	1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending
 FriendSlot	32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
 GuildMemberInfo	344		ui	Holds one guild roster member: GUID, name, level, class, zone, rank, presence, notes and last-online days	verified	one	ui/guild#the-member-record
 ITEMCOOLDOWNHASHNODE	36		spell	Holds one item-cooldown hash node: key, slot link, node-list link and payload	verified	one	spell/cooldowns#item-cooldown-table
+LOADINGSCREENTAXIPATHINFO	8		loadingscreen	Holds a leg's first and last stop node ids	verified	one	loadingscreen/route#taxi-leg-table
 LightningObject	80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
 LightningObject::Bolt	16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
 M2Bone	108		models	Holds a bone record of an MD20 file: key bone id, flags, parent, three tracks and pivot	verified	one	models/records#bone-record
@@ -72,6 +74,7 @@ NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data
 NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
 ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
 OsThreadRecord	6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
+PATHINFO	16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
 PLAYERNAMEDESC	56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
 PROFICIENCYSPELL	28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
 PendingSpellCast	256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields
