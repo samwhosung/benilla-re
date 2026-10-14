@@ -53,8 +53,8 @@ Test: `ui::glue_7714f0_scale_mul`, `ui::glue_settled_eps`
 
 `0x772100(x, y)` sets the text offset at `+0x110`, `+0x114` when either differs, and with a built string moves it to
 `(x · scale + left, y · scale + bottom)` of the stored rectangle (`+0x68`, `+0x64`) through `0x44d600`; a button's label
-uses it for its pressed offset. `0x772240(v)` clamps a negative spacing to 0 (a NaN skips the clamp: `jp` at `0x772251`), and when it differs from `+0xf4` by 2^-22 or
-more stores it (a NaN difference is neither less nor equal, so `0x772270 jnp` is not taken and the NaN is stored), zeroes the height measure `+0x100` and rebuilds the built string with `0x7724a0`. `0x773500(word)` stores
+uses it for its pressed offset. `0x772240(v)` clamps a negative spacing to 0, and when it differs from `+0xf4` by 2^-22 or
+more stores it, zeroes the height measure `+0x100` and rebuilds the built string with `0x7724a0`. `0x773500(word)` stores
 the justify word `+0x120` when changed and rebuilds. `0x772460(start, length)` stores the alpha gradient pair at `+0x118`,
 `+0x11c` and answers 1, or with a built string whether `0x44dc40` answers less than 2.
 
@@ -66,6 +66,8 @@ Test: `ui::textglue_scale_offset`, `ui::textglue_settled_eps`
 `ui::textglue_scale_offset` runs the slice `0x772142` to `0x77216c` of `0x772100` (both position legs, halting before the call).
 `ui::textglue_settled_eps` runs `0x77225a` to `0x77226d` of `0x772240`, halting before `test ah,5`. The compare `test ah,0x44; jp` at `0x772114` and `0x772124` stores when
 either value differs or is NaN.
+
+A NaN spacing skips the clamp (`jp` at `0x772251` is taken) and its difference from `+0xf4` is unordered, so `0x772270 jnp` is not taken and the NaN is stored.
 
 ## Text size reads
 

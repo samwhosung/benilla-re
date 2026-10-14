@@ -135,8 +135,8 @@ Test: none
 
 `tonumber(v [, base])` takes the base as `__ftol` of the optional number, default 10. Base 10 requires an argument and
 answers its number value when `lua_isnumber` holds, else nil. Another base must be 2 to 36 (`base out of range`) and `v`
-a string: `strtoul` (`0x40dd0e`, which calls `_strtoxl` `0x40db09` with the unsigned flag) parses it, and the answer is the unsigned value, loaded as a quad with a zero high dword (`0x702f11`), when nothing but white space follows the digits, else
-nil. A string with no digits answers nil. A leading `-` negates the parsed value modulo 2^32 (`0x40db59`, `0x40dcf4`), so `tonumber("-1", 16)` is 4294967295. An overflow returns 0xffffffff (`0x40dccc`), so `tonumber("fffffffff", 16)` is 4294967295, but with a `-` the overflow value is negated and gives 1. In base 16 a `0x` or `0X` prefix is skipped (`0x40dbc6`).
+a string: `strtoul` (`0x40dd0e`, which calls `_strtoxl` `0x40db09` with the unsigned flag) parses it, and the answer is the unsigned value when nothing but white space follows the digits, else
+nil. A string with no digits answers nil.
 
 Addresses: `0x702e30`, `0x702e52`, `0x702ead`, `0x702ec6`, `0x702ed3`, `0x702f02`, `0x702f11`, `0x40dd0e`, `0x40db09`, `0x40db59`, `0x40dbc6`, `0x40dccc`, `0x40dcf4`, `0x73fc64`
 Confidence: verified
@@ -146,7 +146,7 @@ Test: none
 `0x702e30` compares the base with 10 (`0x702e52`), range-checks 2 to 0x24 (`0x702ea3`, `0x702ead`), calls `0x40dd0e` with the
 end pointer (`0x702ec6`), answers nil when the end equals the start (`0x702ed3`), skips bytes while `0x73fc64` holds and
 requires the terminator (`0x702f02`). The result is the `fild` of a quad whose high dword is 0 (`0x702f11`), so values past
-2^31 stay positive.
+2^31 stay positive. A leading `-` negates the parsed value modulo 2^32 (`0x40db59`, `0x40dcf4`), so `tonumber("-1", 16)` is 4294967295. An overflow returns 0xffffffff (`0x40dccc`), so `tonumber("fffffffff", 16)` is 4294967295, but with a `-` the overflow value is negated and gives 1. In base 16 a `0x` or `0X` prefix is skipped (`0x40dbc6`).
 
 ## Raw access
 

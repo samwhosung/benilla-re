@@ -71,13 +71,15 @@ scans the `WorldMapArea` rows for the map id and the area id (`0x4a60c7`) and st
 `0x4a6ec0(u, v)` returns the area id under a point of the displayed map, or 0. The row is the selection's: the
 selected zone, else the continent's own row, else the direct-area word. Both arguments are clamped to 0 to 1. The row's two extents
 (`+0x10` less `+0x14`, `+0x18` less `+0x1c`) must be nonzero. The position is `lo + (1 − u)·extent`, and a cell's coordinate on each axis is
-`0.5 − position / 34133.33`, which must lie in 0 to 1 inclusive (the clamp-and-compare at `0x4a7032` to `0x4a7071` accepts 1.0); the cell is column `trunc(128·x)` and row `trunc(128·y)` of the continent's
-grid. A coordinate of exactly 1.0 gives index 128, which reads into the next row (or past the 128×128 grid on the last). A direct area, the world view and a missing row give 0.
+`0.5 − position / 34133.33`, which must lie in 0 to 1 inclusive; the cell is column `trunc(128·x)` and row `trunc(128·y)` of the continent's
+grid. A direct area, the world view and a missing row give 0.
 
 Addresses: `0x4a6ec0`, `0x4a6ec7`, `0x4a6ed6`, `0x4a6f05`, `0x4a6f0e`, `0x4a6f1f`, `0x4a6f31`, `0x4a6fbc`, `0x4a6fd1`, `0x4a6ff6`, `0x4a7005`, `0x4a7020`, `0x4a70b8`, `0x4a70c6`, `0x4a70cc`, `0x4a70d6`, `0x4a70dc`, `0x4a70e0`, `0x84506c`, `0x845070`, `0x845074`, `0x806544`, `0x80653c`, `0x806540`, `0xc0d5bc`, `0xc0d5c0`
 Confidence: verified
 Proof: one
 Test: `ui::geo_4a6ec0`
+
+The clamp-and-compare at `0x4a7032` to `0x4a7071` accepts a coordinate of exactly 1.0, which gives column or row 128: it reads into the next row, or past the 128×128 grid on the last.
 
 `0x4a6ec7` reads the continent word; a value below 0 takes the direct-area word (`0x4a6f00`), otherwise a zone of 0 or more
 takes the child at that index (`0x4a6eed`) and a zone below 0 the continent's own id (`0x4a6efa`). The id must lie in 0 to the maximum of the index
@@ -109,7 +111,7 @@ from its four floats (`0x4a726f` to `0x4a7289`); both products use the argument 
 ## World to map
 
 `0x4a72b0(a, b)` and the world leg of `0x4a7360` put a world position on the world view. For the `WorldMapContinent` row of the map id, the
-horizontal result is `f6·k6 + 0.5 − b·c6·s` and the vertical one `f7·k7 + 0.5 − a·c7·s`, with `k6` = `[0x806528]` (1/62.625), `k7` = `[0x806524]` (1/41.75) as multipliers, not divisors, and `c6` = `[0x806554]`, `c7` = `[0x806558]`.
+horizontal result is `f6·k6 + 0.5 − b·c6·s` and the vertical one `f7·k7 + 0.5 − a·c7·s`, with `k6`, `k7`, `c6` and `c7` the constants below.
 `0x4a72b0` returns the horizontal result and one minus the vertical one; `0x4a7360` returns both unchanged. The two
 projections do not invert `0x4a7100`: its offset term is `f6·533.3333` where the inverse of this formula has `f6·533.3333 / s`, so a round trip
 closes only when `s` is 1, or when `f6` is 0 on the horizontal axis and `f7` is 0 on the vertical one.
@@ -118,6 +120,8 @@ Addresses: `0x4a72b0`, `0x4a72b6`, `0x4a72c9`, `0x4a72d8`, `0x4a72de`, `0x4a72e6
 Confidence: verified
 Proof: one
 Test: `ui::geo_4a72b0`, `ui::geo_4a7360`
+
+`k6` is `[0x806528]` (1/62.625) and `k7` is `[0x806524]` (1/41.75); `f6` and `f7` are multiplied by them, not divided. `c6` is `[0x806554]` and `c7` is `[0x806558]`.
 
 `0x4a7320` finds the `WorldMapContinent` row of the map id in `ecx` (`0x4a7352`). `0x4a72b0` multiplies `f7` by `0x806524` and adds 0.5 (`0x4a72c9`, `0x4a72cf`), takes `a` times `0x806558` (`0x383c5df1`, 4.4910183e-05)
 times `s` (`0x4a72d8`, `0x4a72de`) away (`0x4a72e1`), does the same for the horizontal pair with `0x806554` (`0x37fb27eb`, 2.9940120e-05; `f6` is multiplied by `0x806528` at `0x4a72e6`), stores the horizontal result (`0x4a7303`) and
