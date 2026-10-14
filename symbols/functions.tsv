@@ -12267,9 +12267,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50f710	356	CCamera::MakeViewAngles		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, float *yaw, float *pitch, float *roll)	Makes the view yaw, pitch and roll from the offsets and the target's facing and builds the basis	verified	one	uicamera/driver#view-angles	
 0x50f880	101	CCamera::ArmPivotHeight		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Arms the height transition to the swimming, near or far pivot height	verified	one	uicamera/driver#pivot-height	
 0x50f8f0	22	CCamera::SetTargetAlpha		uicamera	orchestration	void __thiscall (CCamera *this, uint32_t alpha)	Passes the self fade alpha to the world frame	verified	one	uicamera/driver#the-self-fade	
-0x50f910	22			uicamera	orchestration		Runs Camera.cpp code that calls 0x50f940; not read here	inferred	none		
-0x50f930	5			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
-0x50f940	79			uicamera	primitive		Runs Camera.cpp code that calls 0x50fdd0; not read here	inferred	none		
+0x50f910	22	CCamera::ToggleMouselook		uicamera	orchestration	void __thiscall (CCamera *this)	Leaves mouselook when in it, else enters it	verified	one	uicamera/follow#leaving-mouselook	
+0x50f930	5	CCamera::EnterMouselookThunk		uicamera	orchestration	void __thiscall (CCamera *this)	Jumps to the mouselook entry	verified	one	uicamera/follow#leaving-mouselook	
+0x50f940	79	CCamera::LeaveMouselook		uicamera	primitive	void __thiscall (CCamera *this, bool noReturn)	Leaves mouselook, sets or clears the no-return bit and keeps the live angles	verified	one	uicamera/follow#leaving-mouselook	
 0x50f990	149	CCamera::StoreView		uicamera	primitive	void __thiscall (CCamera *this, int view, float distance, float pitch, float yaw)	Stores a view in its slot and writes its CVars in degrees	inferred	none	uicamera/driver#setting-a-view	
 0x50fa30	37	CCamera::SaveView		uicamera	orchestration	void __thiscall (CCamera *this, int view)	Saves the target distance, pitch and yaw as a view	inferred	none	uicamera/driver#setting-a-view	
 0x50fa60	59	CCamera::CycleView		uicamera	unreached	void __thiscall (CCamera *this)	Steps back and forth through views 1 to 3	inferred	none	uicamera/driver#setting-a-view	
@@ -12321,10 +12321,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x511c60	209	CCamera::AddShakeRecord		uicamera	primitive	void __thiscall (CCamera *this, const C3Vector *position, int type, int axis, float amplitude, float frequency, float duration, float preroll, float decay)	Allocates a shake record, links it at the tail and stamps the clock	verified	one	uicamera/effects#spawning-a-shake	
 0x511d40	81	CameraAddShake		uicamera	primitive	void __stdcall (int id, const C3Vector *position)	Adds the shake a CameraShakes row describes at a position	verified	one	uicamera/effects#spawning-a-shake	
 0x511da0	237	SetCameraTransport		uicamera	primitive	void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
-0x511e90	174			uicamera	orchestration		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x7be730; not read here	inferred	none		
+0x511e90	174	CCamera::BuildTransportRotation		uicamera	orchestration	void __thiscall (CCamera *this, float *out)	Builds the rotation of the camera's transport about the vertical axis	verified	one	uicamera/driver#riding-a-transport	
 0x511f40	155	CCamera::GetForward		uicamera	primitive	void __thiscall (CCamera *this, float *out)	Returns the first row of the camera's basis	verified	one	uicamera/view#pitch-units-and-sign	
-0x511fe0	155			uicamera	primitive		Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
-0x512080	155			uicamera	primitive		Runs Camera.cpp code that calls 0x511e90; not read here	inferred	none		
+0x511fe0	155	CCamera::GetLeft		uicamera	primitive	void __thiscall (CCamera *this, C3Vector *out)	Returns the second basis row, turned by the transport's rotation	verified	one	uicamera/driver#riding-a-transport	
+0x512080	155	CCamera::GetUp		uicamera	primitive	void __thiscall (CCamera *this, C3Vector *out)	Returns the third basis row, turned by the transport's rotation	verified	one	uicamera/driver#riding-a-transport	
 0x512120	218	CCamera::ArmDistance		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the distance transition for a duration from the speed CVar	verified	one	uicamera/transitions#arming-a-transition	
 0x512200	98	CCamera::BeginDistanceTransition		uicamera	primitive	bool __thiscall (CCamera *this, float target, float duration, uint32_t start)	Stores the distance transition and sets its flag	verified	one	uicamera/transitions#arming-a-transition	
 0x512270	329	CCamera::ArmFov		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the field of view transition by the shortest arc	verified	one	uicamera/transitions#arming-a-transition	
@@ -12332,7 +12332,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x512490	329	CCamera::ArmGroundPitch		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the ground pitch transition by the shortest arc	verified	one	uicamera/transitions#arming-a-transition	
 0x5125e0	194	CCamera::BeginGroundPitchTransition		uicamera	primitive	bool __thiscall (CCamera *this, float target, float duration, uint32_t start)	Wraps the live ground pitch and stores its transition	verified	one	uicamera/transitions#arming-a-transition	
 0x5126b0	218	CCamera::ArmHeight		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the pivot height transition for a duration from the speed CVar	verified	one	uicamera/transitions#arming-a-transition	
-0x512790	147			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x512790	147	CCamera::BeginHeightTransition		uicamera	primitive	bool __thiscall (CCamera *this, float target, float duration, uint32_t start)	Stores the height transition and sets its flag	inferred	none	uicamera/transitions#arming-a-transition	
 0x512830	329	CCamera::ArmPitch		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the pitch transition by the shortest arc	verified	one	uicamera/transitions#arming-a-transition	
 0x512980	194	CCamera::BeginPitchTransition		uicamera	primitive	bool __thiscall (CCamera *this, float target, float duration, uint32_t start)	Wraps the live pitch and stores the pitch transition	verified	one	uicamera/transitions#arming-a-transition	
 0x512a50	329	CCamera::ArmPivotBias		uicamera	primitive	bool __thiscall (CCamera *this, float target, float delay, float factor, uint32_t now)	Arms the pivot bias transition by the shortest arc	verified	one	uicamera/transitions#arming-a-transition	

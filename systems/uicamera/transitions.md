@@ -57,10 +57,10 @@ An angle setter `(target, delay, factor, now)` begins at `now + delay * 1000` mi
 the angle to cover divided by the speed CVar in radians a second. The angle runs from the live value, wrapped to within π
 of the target, to the target. Nothing is armed within 0.001 of the target or on a repeat of the armed target, delay and factor.
 Yaw `0x512c70` (inner `0x512dc0`), pitch `0x512830` (`0x512980`), pivot bias `0x512a50` (`0x512ba0`), ground pitch `0x512490`
-(`0x5125e0`) and field of view `0x512270` (`0x5123c0`) follow this. Distance `0x512120` and height `0x5126b0` do not wrap. A zero
+(`0x5125e0`) and field of view `0x512270` (`0x5123c0`) follow this. Distance `0x512120` (inner `0x512200`) and height `0x5126b0` (inner `0x512790`) do not wrap. A zero
 factor gives a duration of 0, and the value arrives at the next frame.
 
-Addresses: `0x512270`, `0x5123c0`, `0x512200`, `0x512120`, `0x5126b0`, `0x512c70`, `0x512dc0`, `0x512830`, `0x512980`, `0x512a50`, `0x512ba0`, `0x512490`, `0x5125e0`
+Addresses: `0x512270`, `0x5123c0`, `0x512200`, `0x512120`, `0x5126b0`, `0x512790`, `0x512c70`, `0x512dc0`, `0x512830`, `0x512980`, `0x512a50`, `0x512ba0`, `0x512490`, `0x5125e0`
 Confidence: verified
 Proof: one
 Test: none

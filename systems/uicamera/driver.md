@@ -151,6 +151,19 @@ Test: none
 
 `0x50f810` to `0x50f818` add `+0x108` when `+0xa8` is 0 or less, `0x50f826` to `0x50f85b` clamp and `0x50f866` calls `0x50ab50`, which builds the basis. `0x50eb0f` to `0x50eb3b` add the bob to the offset. `0x50ed59` is the solver, `0x50eddb` the eye placement and `0x50ede0` to `0x50edf0` store the eye. `0x50ee32` to `0x50ee45` skip a bias under 0.001 (0x801360); `0x50ee58` calls `0x7be730` with the basis `+0x14`, the bias, the axis at `0xbe0f20` (set to (0, 1, 0) on first use at `0x50ee06` to `0x50ee20`) and a flag of 1. `0x50efd0` to `0x50effc` store the cosine and sine of the yaw in the first two words of the forward row; `0x50f003` calls `0x50a780`.
 
+## Riding a transport
+
+The camera keeps the GUID of the transport its target rides, at `+0x98` and `+0x9c`. The three basis rows the camera returns (forward, left, up) are rotated about the vertical axis by the transport's facing when the GUID is set.
+When the GUID changes while the camera is in the absolute frame (`+0xa4` above 0), the yaw offset moves by the old transport's facing and back by the new one's, so the picture does not turn; the view angles are then made again for the target.
+Setting a target stores its transport.
+
+Addresses: `0x511da0`, `0x511e90`, `0x511f40`, `0x511fe0`, `0x512080`, `0x50d0f0`, `0x5102b0`, `0x50f710`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x511dbd` to `0x511dc3` return on an unchanged GUID. `0x511dcd` to `0x511dff` shift the yaw by the old facing; `0x511e08` stores the GUID; `0x511e20` to `0x511e45` shift it back by the new one, negated. `0x511e7f` calls `0x50f710`. The transport is resolved with the game object mask 0x20 and its facing read through the virtual slot at `+0x18` (`0x511dea`, `0x511f09`). `0x511e90` builds the rotation (`0x7be730` about (0, 0, 1)) and copies the nine words to its output; `0x511f4c` returns the plain row for a null GUID. `0x50d25a` passes the target's transport to `0x511da0`.
+
 ## Pull-in and the glide back
 
 The near and far solver (`0x50e570`) gives a distance and a height that clear walls and ceilings. When the live

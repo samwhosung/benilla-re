@@ -105,3 +105,16 @@ Test: none
 
 `0x510fd6` requires the Track bit, `0x510fde` reads the style, `0x510ff0` the global; `0x51109f` and `0x5110b7` raise and lower the frame with mode bit 13. What the global
 holds was not read here.
+
+## Leaving mouselook
+
+When the last primary button is released, `0x514b70` calls `0x50f940(extra)` with its third argument. The camera leaves mouselook (`ui/mouseover#mouselook`), sets mode bit 5 when the argument is nonzero and clears it otherwise,
+and copies the live yaw, pitch and pivot bias into their transition targets so nothing returns to the view. While bit 5 is set the auto-return is refused (`uicamera/cvars#clear-and-band-tests`).
+`ToggleMouseMove` runs `0x50f910`: it leaves mouselook with the argument 0 when mode bit 0 is set and enters it otherwise.
+
+Addresses: `0x50f940`, `0x50f910`, `0x50f930`, `0x514b70`, `0x50b5a0`, `0x50fdd0`, `0x510940`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x514c48` is the call in `0x514b70`. `0x50f946` calls the leave routine `0x50fdd0`; `0x50f958` and `0x50f95d` set or clear bit 5 (0x20); `0x50f966` to `0x50f984` copy `+0xf4`, `+0xf0` and `+0x104` into `+0x1e0`, `+0x210` and `+0x1f8`. `0x50f910` tests bit 0 and `0x50f91b` calls `0x50f940(0)`, else `0x50f921` goes to the enter thunk `0x50f930`. `0x510940` returns 0 for a camera whose bit 5 is set.
