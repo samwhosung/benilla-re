@@ -42,6 +42,26 @@ the same, `0x6e5064` 0x2d, 9 or 0xa, `0x6e4195` 0x19 or 0x1a, `0x6e4ec4` 0x12, `
 target-state reason (0x65 to 0x75, 0x7f to 0x81) and 0x8e. The client passes 0x1c to its cancels (`cancel`)
 but never reports it.
 
+## Packets of a local refusal
+
+A refusal of the spell in flight cancels it on the wire. The reporter aborts with `0x6e4940(1, !fromServer,
+reason)` when the reported spell is the in-flight spell, so a refusal made by the client sends `CMSG_CANCEL_CAST`
+with that spell's id, unless a targeting word is up (the abort then only clears it). For a player whose
+running auto-repeat spell is the reported one, the reporter first stops the auto-repeat (`CMSG_CANCEL_AUTO_REPEAT_SPELL`,
+which also pops the in-flight slot), so the in-flight compare fails and no cancel follows. Reason 0x17 does
+neither. A refusal never sends a cast.
+
+Addresses: `0x6e1c67`, `0x6e1c7a`, `0x6e1cd9`, `0x6e1ce1`, `0x6e1cea`, `0x6e2201`, `0x6e2209`, `0x6e220e`, `0x6e2218`, `0x6e4940`, `0x6ea080`, `0x6ea14e`, `0x6ea154`, `0x6ea160`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6e1c7a` jumps over the auto-repeat leg for an active player that is missing or not a player. `0x6e1cd9`
+compares `0xceac30` with the spell, `0x6e1ce1` leaves for reason 0x17, and `0x6e1cea` calls `0x6ea080`,
+which pops the in-flight slot when `0xceac30` equals it (`0x6ea154`, `0x6ea160`) before clearing the
+auto-repeat. `0x6e2201 cmp esi,[0xceca88]` follows (`esi` reloaded from the spell id at `0x6e21f4`);
+`0x6e220e` loads the from-server byte and `sete dl`, and `0x6e2218` calls the abort with `cl` 1.
+
 ## Failure chat line
 
 After it shows the message, the reporter writes a combat log line with `0x62c360(player, spell, text)`. The
