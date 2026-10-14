@@ -121,7 +121,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4590c0` returns true for a definition with `+0x7c & 2` clear. `0x459048` is `0x45cf00(culled,
+`0x4590c0` returns true for a non-null definition (`0x45cda0`) with `+0x7c & 2` clear; it never
+reads the registry. `0x459048` is `0x45cf00(culled,
 keep 1, noCategory 1, bus 0, id, pos, −1, 1.0)`. `0x459120` reuses the last empty slot or grows the
 16-byte slot array (granularity 16 or less). The other objects in a 0x278 message play once with
 `0x458870` (`0x48f8d3`).
@@ -140,7 +141,8 @@ Confidence: verified
 Proof: one
 Test: none
 
-The down ramp's start is the clock stored in `[0xb05fc0]` (`0x45909f`). `0x457960(now)` starts the
+The down ramp's start is the clock stored raw in `[0xb05fc0]` (`0x45909f`): a first fill at clock 0
+stores 0, which reads as no ramp, so that fill gets no duck. `0x457960(now)` starts the
 return ramp on the frame the registry empties, storing `now`, or 1 when `now` is 0 (`0x457999`);
 past the duration (`jle`) it applies the target (`V · 0.5` at `0x4579cb`, the CVar at `0x4579e6`)
 and clears the start. The value is `start + (T − start) · (e / d)` with `e / d` from `fild`/`fidiv`

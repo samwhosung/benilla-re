@@ -214,14 +214,15 @@ return while its integer is 0. The play is `0x459230` at the attachment point (`
 
 ## Loot and auto-equip item sounds
 
-Taking an item from a loot window plays the item's pick-up sound, kind 0 of its display's
-`ItemGroupSounds` row, before the client asks the server for it with opcode 0x108; the auto-loot
-walk does the same for each item it takes. Taking the money plays `LOOTWINDOWCOINSOUND`, and the
+Taking an item from a loot window plays kind 0 of its display's `ItemGroupSounds` row before the
+client asks the server for it with opcode 0x108; the auto-loot walk does the same for each item it
+takes, but of the items whose record has `+0x194` 1 and quality 2 or more it signals event 0x11f for
+the first and skips the rest, with no sound and no request. Taking the money plays `LOOTWINDOWCOINSOUND`, and the
 money change then plays it again (`playerfields`). An auto-equip from a bag puts the item on the
-cursor, which plays its pick-up sound, then equips it, whose cursor drop plays its put-down sound,
-kind 1.
+cursor, which plays kind 0, then equips it, whose cursor drop plays kind 1; the kinds are named
+only by this use.
 
-Addresses: `0x4c2790`, `0x4c27f9`, `0x4c2803`, `0x4c2926`, `0x4c2840`, `0x4c1fa0`, `0x4c1ffc`, `0x4c2020`, `0x4c21b3`, `0x4c21ee`, `0x5e1ad0`, `0x5ea8c0`, `0x5e1840`, `0x5e18c9`, `0x5e18d5`, `0x494b60`, `0x494c4a`, `0x5e1480`, `0x5e1567`, `0x5e1763`, `0x495190`, `0x49520a`
+Addresses: `0x4c2790`, `0x4c27f9`, `0x4c2803`, `0x4c2926`, `0x4c2840`, `0x4c1fa0`, `0x4c1ffc`, `0x4c2020`, `0x4c21b3`, `0x4c21c4`, `0x4c21e2`, `0x4c2204`, `0x4c21ee`, `0x5e1ad0`, `0x5ea8c0`, `0x5e1840`, `0x5e18c9`, `0x5e18d5`, `0x494b60`, `0x494c4a`, `0x5e1480`, `0x5e1567`, `0x5e1763`, `0x495190`, `0x49520a`
 Confidence: verified
 Proof: one
 Test: none
@@ -230,6 +231,9 @@ Test: none
 `0x457ff0(0, [record+0x18])` at `0x4c2803` or `0x4c2926`, then `0x5e1ad0`; for the money slot it
 plays at `0x4c2840` and calls `0x5ea8c0`. `0x4c1fa0` sends the money first (`0x4c1ffc`) and plays the
 coin at `0x4c2020` while `[0xb71bc4]` is 0; it plays each item at `0x4c21ee` unless `+0x194` is 1
-and the item's `+0x1c` is 2 or more, which signals event 0x11f instead (`0x4c21b3`). `0x5e1840` calls `SetCursorItem` (`0x5e18c9`), which plays `0x457fb0(0, item)` at
-`0x494c4a`, then `0x5e1480` (`0x5e18d5`), which calls `0x495190(1)` at `0x5e1567` or `0x5e1763`;
+and the item's `+0x1c` is 2 or more (`0x4c21b3`): the first such item signals event 0x11f and sets
+`ebx` (`0x4c21e2`), after which `0x4c21c4` jumps every later such item to the next slot
+(`0x4c2204`). `0x5e1840` calls `SetCursorItem` (`0x5e18c9`), which plays `0x457fb0(0, item)` at
+`0x494c4a`, then `0x5e1480` (`0x5e18d5`), which calls `0x495190` with `edx` 1 at `0x5e1567` or `0x5e1763` (`ecx` 1 at the first, `ebx` at
+the second);
 its held-item arm plays `0x457fb0(1, item)` at `0x49520a` when the held GUID resolves.

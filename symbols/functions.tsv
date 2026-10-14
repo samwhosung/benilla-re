@@ -3934,7 +3934,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457ec0	95	PlayWeaponImpact		sound	orchestration		Plays the impact table's sound for a weapon, kind and critical flag on bus 10	verified	one	sound/objects#weapon-impact-sounds	
 0x457f20	60	PlayShieldImpact		sound	primitive		Plays ShieldWoodImpact 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
 0x457f60	70	PlayWeaponSwing		sound	orchestration		Plays the swing table's sound for a type and critical flag on bus 6, at 0.5 when quiet	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
-0x457fb0	54	SndInterfacePlayItemSound	idb	sound	orchestration		Plays a live item's pick-up, put-down or wrapped-item sound of a kind	verified	one	sound/interface#item-sounds	
+0x457fb0	54	SndInterfacePlayItemSound	idb	sound	orchestration		Plays a live item's ItemGroupSounds or wrapped-item sound of a kind	verified	one	sound/interface#item-sounds	
 0x457ff0	62	PlayItemDisplaySound		sound	orchestration		Plays the ItemGroupSounds sound of a kind for an item display id	verified	one	sound/interface#item-sounds	
 0x458030	187	SndInterfacePlayInterfaceSound	idb	sound	primitive		Plays the interface sound of a name unless suppressed or sound effects are off	verified	one	sound/interface#interface-sounds-by-name	
 0x4580f0	266	BuildVocalErrorSounds		sound	primitive		Fills the error speech table from VocalUISounds rows of a race and gender	verified	one	sound/interface#error-speech	
@@ -3983,7 +3983,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458f70	19	GetSoundDefFileCount		sound	orchestration		Returns a sound id's file count, or 0	verified	one	sound/entries#definition-queries	
 0x458f90	32	PlaySoundAtPositionKept		sound	orchestration		Plays a sound id at a position on bus 0 and keeps its record	verified	one	sound/entries#playing-at-a-position	
 0x458fb0	260	PlayServerObjectSound		sound	orchestration		Plays the server's object sound at a unit, registering a 3D one that follows it	verified	one	sound/objects#server-object-sounds	
-0x4590c0	24	IsServerSoundRegistered		sound	orchestration		Returns whether a definition's flag 0x2 is clear, so a server sound takes the registered path	verified	one	sound/objects#server-object-sounds	
+0x4590c0	24	UsesServerSoundRegistry		sound	orchestration		Returns whether a sound id has a non-null definition with flag 0x2 clear, the registered server sound path	verified	one	sound/objects#server-object-sounds	
 0x4590e0	61	FindServerSoundSlot		sound	primitive		Returns whether a unit's GUID holds a server sound slot	verified	one	sound/objects#server-object-sounds	
 0x459120	198	AddServerSoundSlot		sound	primitive		Fills the last empty server sound slot, or grows the slot array, with a sound and GUID	verified	one	sound/objects#server-object-sounds	
 0x4591f0	54	HasServerSound		sound	orchestration		Returns whether a unit holds a server sound slot	verified	one	sound/objects#server-object-sounds	

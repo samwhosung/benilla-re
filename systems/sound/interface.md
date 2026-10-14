@@ -146,8 +146,9 @@ compare `SStrCmpI`. `0x458f50` is `inc dword [0xb05fa0]`, `0x458f60` the `dec`; 
 
 ## Item sounds
 
-`SndInterfacePlayItemSound(kind, item)` plays a live item's sound of kind 0 (pick up), 1 (put down)
-or 2: a wrapped item (flag 0x8 in its fields' `+0x3c`) plays WrappedItemDrop for kind 1 and
+`SndInterfacePlayItemSound(kind, item)` plays a live item's sound of kind 0, 1 or 2. Only the
+wrapped-item names label a kind; the callers pass 0 when an item goes onto the cursor and 1 when it
+leaves it. A wrapped item (flag 0x8 in its fields' `+0x3c`) plays WrappedItemDrop for kind 1 and
 WrappedItemPickup otherwise; any other item plays column `kind + 1` of its cached ItemGroupSounds
 row, or nothing without one. `0x457ff0(kind, displayId)` reaches the same row through
 ItemDisplayInfo column 11.

@@ -293,7 +293,7 @@ flagged 0x4, and released otherwise. In range its distance gain is `1 − min(ma
 `k = c · 0.10000002`: recomputed every frame between `0.9c` and `c`, and once on entering `0.9c`,
 which leaving re-arms. A cut-off sound coming back resumes, restarting its stream.
 
-Addresses: `0x7a5ca0`, `0x7a5cca`, `0x7a5d14`, `0x7a506e`, `0x7a5d1a`, `0x7a5d32`, `0x7a5000`, `0x7a5071`, `0x7a507e`, `0x7a508e`, `0x7a50ac`, `0x7a50d2`, `0x7a50e6`, `0x7a50f2`, `0x7a5102`, `0x7a510e`, `0x7a515d`, `0x7a516f`, `0x7a5196`, `0x7a6240`, `0x7a62b0`, `0x804588`, `0x81d728`
+Addresses: `0x7a5ca0`, `0x7a5cca`, `0x7a5d14`, `0x7a506e`, `0x7a5d1a`, `0x7a5d32`, `0x7a5000`, `0x7a5071`, `0x7a507e`, `0x7a508e`, `0x7a50ac`, `0x7a50d2`, `0x7a50e6`, `0x7a50f2`, `0x7a517d`, `0x7a5102`, `0x7a510e`, `0x7a515d`, `0x7a516f`, `0x7a5196`, `0x7a6240`, `0x7a62b0`, `0x804588`, `0x81d728`
 Confidence: verified
 Proof: one
 Test: none
@@ -301,8 +301,9 @@ Test: none
 `0x7a5cca` `jnp` takes `c == 0` only. The pump stores `d²` as a float and compares it with `c·c` in
 the register (`0x7a506e`, `fld d²; fcompp`, `test ah,0x41; jne`): only `d² > c²` is out of range.
 The setter keeps `d²` in the register (`0x7a5d14`, `fld c; fmul c; fcompp`, `test ah,0x41; je`):
-only `c² > d²` is in range, so equality and NaN count as out. The `0.9c` test at `0x7a50f2` sets the
-near flag (`0x7a6930`); `0x7a6960` skips the gain while it is set. `0x804588` is 0.9 and `0x81d728` 0.10000002. `de f1` at `0x7a515d` is `fdivrp`
+only `c² > d²` is in range, so equality and NaN count as out. The `0.9c` test at `0x7a50f2` computes the
+near state, which `SetNearCutoff` (`0x7a6930`) stores at `0x7a517d`; `0x7a6960` skips the gain
+while it is set. `0x804588` is 0.9 and `0x81d728` 0.10000002. `de f1` at `0x7a515d` is `fdivrp`
 computing `v / k`; the store at `0x7a516f` happens only when the value differs from `+0x78`, which
 sets the reapply flag. A cutoff of 0 is never listed, so its sound is never cut.
 
