@@ -10,8 +10,8 @@ use benilla_re_difftest::{Emu, Wow};
 use common::{assert_f32, fuzz, next};
 
 const NORMALIZE: u64 = 0x7ab_be0;
-const INIT_TWO_PI: u64 = 0x7ac_5b0; // InitCameraTwoPi: [0xcf5734] = π + π
-const INIT_RECIP: u64 = 0x7ac_5d0; // InitCameraInvTwoPi: [0xcf5730] = 1.0 / [0xcf5734]
+const INIT_TWO_PI: u64 = 0x7ac_5b0; // InitCameraPropertyTwoPi:[0xcf5734] = π + π
+const INIT_RECIP: u64 = 0x7ac_5d0; // InitCameraPropertyInvTwoPi:[0xcf5730] = 1.0 / [0xcf5734]
 const G_TWO_PI: u64 = 0x00cf_5734;
 const G_RECIP: u64 = 0x00cf_5730;
 
