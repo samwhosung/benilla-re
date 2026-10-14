@@ -1199,7 +1199,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835144	uint16_t			unassigned	Holds a word that SendBugReport, CreateGmTicket, CGUnit_C::GetPvPName read; not read here	inferred	none	
 0x835154	char[3]	s_textD		unassigned	Holds the string "%d"	inferred	none	
 0x835160	char[3]	s_textF		unassigned	Holds the string "%f"	inferred	none	
-0x835248	char *[2]	s_textureExtensions		gx	Holds the pointers to the strings ".tga" and ".blp"	verified	one	gx/textures#texture-creation
+0x835248	char *[2]	s_textureExtensions		gx	Holds the pointers to the strings ".tga" and ".blp"	verified	one	gx/textures#texture-name-candidates
 0x835250	uint32_t	s_forcedFilterMode		gx	Holds the filter mode that forced textures take; 3 until a setter writes it	verified	one	gx/textures#texture-flags-word
 0x835254	uint32_t	s_forcedAnisotropy		gx	Holds the anisotropy level that forced textures take when the mode is 5; 1 until a setter writes it	verified	one	gx/textures#texture-flags-word
 0x835258	uint32_t[8]	s_texturePixelTypeToFormat		gx	Maps a pixel type code 0 to 7 to its GxTex format: 5, 6, 1, 3, 2, 4, 0, 7	verified	one	gx/textures#format-choice-and-size-limit
@@ -1208,6 +1208,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835604	char[9]	s_textHtexture		gx	Holds the string "HTEXTURE", the tag of texture handles and objects	verified	one	gx/textures#texture-objects
 0x835624	char[15]	s_textUniqueTexture		gx	Holds the string "Unique Texture"	verified	one	gx/textures#texture-creation-variants
 0x835634	char[23]	s_textUniqueTextureNoName		gx	Holds the string "Unique Texture No Name"	verified	one	gx/textures#texture-creation-variants
+0x83564c	char[8]	s_textTexture		gx	Holds the string "texture", the kind word of a load failure message	verified	one	gx/textures#texture-load-failure
+0x835654	char[32]	s_textErrorLoadingFileFormat		gx	Holds the format "Error loading %s file \"%s\": %s\n" of a load failure message	verified	one	gx/textures#texture-load-failure
 0x835708	char[14]	s_textSolidTexture		gx	Holds the string "Solid Texture"	inferred	none	
 0x835908	uint8_t[32]	s_sysMsgColors		sysmsg	Holds four 8-byte records: R, G, B, a pad byte and a float duration, for message levels 0 to 3	verified	one	sysmsg#colour-table
 0x835928	int32_t	s_sysMsgEnabled		sysmsg	Holds the display switch, 1 at start-up; nothing reads it but the unreached getter	verified	one	sysmsg#display-switch-and-window
@@ -1959,6 +1961,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86c35c	char[3]	s_shaderTextureSuffix		terrain	Holds the string _s put before a texture's extension under the terrain shader	verified	one	terrain/files#texture-names
 0x86c3c0	const char[29]	s_defaultMapTextureName		models	Holds createcrappygreentexture.blp, the texture a material with an empty first name loads	verified	one	models/wmo#material-textures
 0x86c3f8	uint32_t			unassigned	Holds a dword that ViolenceLevelsInitialize, OnViolenceLevelChanged read; not read here	inferred	none	
+0x86c418	char *[2]	s_violenceBlpReplacements		client	Holds the replacement file names for violence levels 0 and 1, the Low and Medium blood spurt	verified	one	gx/textures#texture-basename-substitution
+0x86c420	const char *	s_violenceBlpReplaced		client	Holds the pointer to the BLP file name BloodSpurtSmall01.blp that levels 0 and 1 replace	verified	one	gx/textures#texture-basename-substitution
 0x86c668	char[23]	s_textUnitNamePlayerPVPTitle		playername	Holds the string "UnitNamePlayerPVPTitle"	inferred	none	
 0x86c680	char[20]	s_textUnitNamePlayerGuild		playername	Holds the string "UnitNamePlayerGuild"	inferred	none	
 0x86c694	char[15]	s_textUnitNamePlayer		playername	Holds the string "UnitNamePlayer"	inferred	none	
@@ -2322,6 +2326,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t	s_failedTextureColour		gx	Holds 0xff00ff00, the colour of the solid texture that replaces a texture that failed to load	verified	one	gx/textures#texture-creation
 0x905844	uint32_t[216]	s_mipBufferLists		gx	Holds the lists of free decoded mip buffers, one list per pixel type and size class	inferred	none	gx/textures#texture-readiness-and-info
+0x905bd4	const char *	s_blpBasenameReplaced		gx	Holds the BLP file name to replace, or null; written by TextureSetBasenameSubstitution	verified	one	gx/textures#texture-basename-substitution
+0x905bd8	const char *	s_blpBasenameReplacement		gx	Holds the file name that replaces the BLP file name of 0x905bd4	verified	one	gx/textures#texture-basename-substitution
 0x905be4	char[2097152]	s_textureFileArea		gx	Holds the static 2 MiB area whose slices buffer async texture file reads	verified	one	gx/textures#texture-file-creation
 0xb05bec	uint32_t[75]	s_texturePoolLists		gx	Holds the 25 size-class lists of free pooled device textures, 12 bytes each	verified	one	gx/textures#device-texture-pool
 0xb05d18	uint32_t	s_textureFileBytesUsed		gx	Holds the bytes of the static file area already given to async texture records	verified	one	gx/textures#texture-file-creation

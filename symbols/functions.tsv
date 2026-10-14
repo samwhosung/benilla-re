@@ -3480,7 +3480,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4493a0	425			gx	primitive		Runs Texture.cpp code that calls 0x44ae70, SStrPrintf, 0x648a30 and 6 more; not read here	inferred	none		
 0x449550	40			gx	orchestration		Runs Texture.cpp code that calls SStrCopy, 0x449580, SStrPack; not read here	inferred	none		
 0x449580	15			gx	orchestration		Runs Texture.cpp code that calls SStr::sub_64A450; not read here	inferred	none		
-0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name, strips a trailing extension and returns 0 for tga and 1 otherwise	verified	one	gx/textures#texture-creation	
+0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name and strips a dot four bytes from the end, returning 0 for tga and 1 otherwise	verified	one	gx/textures#texture-name-split	
 0x449610	470	TextureCreateFromFile		gx	orchestration	void * __fastcall (const char *path, uint32_t format, uint32_t deferred)	Opens path with .blp appended and returns an HTEXTURE handle whose pixels decode when the async read completes	verified	one	gx/textures#texture-file-creation	
 0x4497f0	80	TextureFileReadDone		gx	orchestration	void __thiscall ()	Decodes a file texture's bytes, closes the file and frees its async record	verified	one	gx/textures#texture-file-creation	
 0x449840	386	TextureDecodeFileBytes		gx	primitive	uint32_t __thiscall ()	Opens the record's buffer as BLP, drops mips to the device limit and decodes the levels into a new buffer	verified	one	gx/textures#texture-file-creation	
@@ -3496,10 +3496,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x449d90	281	TextureCreate	idb	gx	orchestration	void * __fastcall (const char *name, void *log, uint32_t filterIn, uint32_t force, uint32_t fileFlag)	Returns the texture cached under a name and flags, else loads the BLP or TGA, else the green solid texture	verified	one	gx/textures#texture-creation	
 0x449eb0	246	TextureHashFind		gx	orchestration	void * __fastcall (const char *name, uint32_t flags)	Returns a handle on the cached texture with the name's hash, flags and name, or 0	verified	one	gx/textures#texture-creation	
 0x449fb0	303	TextureHashInsert		gx	orchestration	void __fastcall (const char *name, void *texture, uint32_t flags)	Caches a texture under the hash of its name with its flags	verified	one	gx/textures#texture-creation	
-0x44a0e0	81	TextureLogNotLoaded		gx	orchestration	void __fastcall (void *log, const char *what, const char *name)	Logs a texture failure message with the last Storm error text through the log object	verified	one	gx/textures#texture-creation	
-0x44a140	277	TextureCreateFromTga		gx	orchestration	void * __fastcall (const char *path, uint32_t fileFlag, uint32_t flags, void *log)	Loads a TGA at once and creates a one-level format 2 texture whose callback 0x44a260 supplies the pixels	verified	one	gx/textures#texture-creation	
+0x44a0e0	81	TextureLogNotLoaded		gx	orchestration	void __fastcall (void *log, const char *what, const char *name)	Logs a texture failure message with the last Storm error text through the log object	verified	one	gx/textures#texture-load-failure	
+0x44a140	277	TextureCreateFromTga		gx	orchestration	void * __fastcall (const char *path, uint32_t fileFlag, uint32_t flags, void *log)	Loads a TGA at once and creates a one-level format 2 texture whose callback 0x44a260 supplies the pixels	verified	one	gx/textures#texture-name-candidates	
 0x44a260	172	TextureTgaUpdate		gx	orchestration	void __stdcall (uint32_t mode, uint32_t width, uint32_t level, void *texture, uint32_t *pitch, void **bits)	Serves a TGA texture's update calls: returns the decoded buffer at mode 1 and frees it at mode 2	verified	one	gx/textures#texture-creation	
-0x44a310	495	TextureCreateFromBlp		gx	orchestration	void * __fastcall (const char *path, uint32_t fileFlag, uint32_t flags, void *log)	Opens a BLP name with its extension, queues the async read and returns an HTEXTURE handle with flags stored	verified	one	gx/textures#texture-file-creation	
+0x44a310	495	TextureCreateFromBlp		gx	orchestration	void * __fastcall (const char *path, uint32_t fileFlag, uint32_t flags, void *log)	Opens a BLP name with its extension, queues the async read and returns an HTEXTURE handle with flags stored	verified	one	gx/textures#texture-basename-substitution	
 0x44a500	96	TextureBlpReadDone		gx	orchestration	void __thiscall ()	Decodes a BLP texture's bytes into a device texture, substitutes the solid texture on failure, then frees the record	verified	one	gx/textures#texture-file-creation	
 0x44a560	551	TextureBuildFromBlp		gx	primitive	uint32_t __thiscall ()	Opens the record's buffer as BLP, makes the device texture and requests its fill through GxTexUpdateRect	verified	one	gx/textures#texture-file-creation	
 0x44a790	321			gx	primitive		Runs Texture.cpp code that calls GxCapsGet; not read here	inferred	none		
@@ -3520,14 +3520,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x44af70	19			gx	primitive		Runs Texture.cpp code not read here	inferred	none		
 0x44af90	373	TextureAllocMips		gx	primitive	void * __fastcall (uint32_t format, uint32_t width, uint32_t height)	Hands out a decoded mip buffer for a format and size from the per-size lists	verified	one	gx/textures#texture-readiness-and-info	
 0x44b110	421	TextureFreeMips		gx	primitive	void __fastcall (void *buffer, uint32_t format, uint32_t width, uint32_t height)	Returns a decoded mip buffer to the per-size list of its format and size	verified	one	gx/textures#texture-readiness-and-info	
-0x44b2c0	84	TextureDiscoverFileType	idb	gx	primitive		Returns the image type of a file name by its last four characters: 1 for .TGA, 2 for .BLP, otherwise 0	verified	one	gx/textures#texture-creation	
-0x44b320	115	TexturePickAlternateFilename	idb	gx	primitive		Copies a file name, swaps its extension for the other image type's and returns that type: 2 after .TGA, 1 after .BLP	verified	one	gx/textures#texture-creation	
+0x44b2c0	84	TextureDiscoverFileType	idb	gx	primitive		Returns the image type of a file name by its last four characters: 1 for .TGA, 2 for .BLP, otherwise 0	verified	one	gx/textures#texture-file-name-builders	
+0x44b320	115	TexturePickAlternateFilename	idb	gx	primitive		Copies a file name, cuts it at its last dot and appends .BLP for type 1 or .TGA for type 2, returning 2 or 1	verified	one	gx/textures#texture-file-name-builders	
 0x44b3a0	3			gx	unreached		Runs Texture.cpp code not read here	inferred	none		
 0x44b3b0	96	TextureGetDimensions		gx	orchestration	uint32_t __fastcall (void *texture, uint32_t *w, uint32_t *h, uint32_t wait)	Returns a texture's width and height, waiting for the load first when wait is set and none exists	verified	one	gx/textures#texture-readiness-and-info	
 0x44b410	18			gx	orchestration		Runs Texture.cpp code that calls SErrSetLastError; not read here	inferred	none		
 0x44b430	135	TextureGetInfo		gx	orchestration	uint32_t __fastcall (void *texture, uint32_t *w, uint32_t *h, uint32_t *mips, uint32_t *format, uint32_t *opaque, uint32_t *alphaBits, uint32_t wait)	Returns a texture's size, mip count, format, opaque bit and alpha depth	verified	one	gx/textures#texture-readiness-and-info	
 0x44b4c0	22			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
-0x44b4e0	13			gx	orchestration		Runs Texture.cpp code not read here	inferred	none		
+0x44b4e0	13	TextureSetBasenameSubstitution		gx	orchestration	void __fastcall (const char *from, const char *to)	Stores the BLP file name to replace and the name that replaces it	verified	one	gx/textures#texture-basename-substitution	
 0x44b4f0	279			gx	unreached		Runs Texture.cpp code that calls SLogWrite, CGxTexFlags::CGxTexFlags, 0x58ada0 and 1 more; not read here	inferred	none		
 0x44b610	173	TextureChainBytes		gx	unreached	uint32_t __fastcall (uint32_t format, uint32_t levels, uint32_t width, uint32_t height)	Returns the byte size of a mip chain from the block tables of its format	verified	one	gx/textures#texture-readiness-and-info	
 0x44b6c0	669			gx	unreached		Runs Texture.cpp code that calls 0x44c7d0, 0x44c810, 0x44c830 and 6 more; not read here	inferred	none		
@@ -23397,7 +23397,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a2b0	264			storm	boundary		Runs its object file code that calls 0x649900, 0x649380, SMemReAlloc and 3 more; not read here	inferred	none		
 0x64a3c0	37	SStrChr	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a3f0	37	SStrChr2	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x64a420	43			storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x64a420	43	SStrChrR		storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0	verified	one	gx/textures#texture-basename-substitution	
 0x64a450	43	SStr::sub_64A450	idb	storm	boundary		Returns the last occurrence of a character in a string	inferred	none		
 0x64a480	56	SStrCmp		storm	orchestration		Compares two strings up to a length through strncmp	verified	one	objectlayer/party#guild-events	
 0x64a4c0	56	SStrCmpI	idb	storm	primitive		Compares two strings ignoring case up to a length	inferred	none	spell/cooldowns#spell-id-by-name	
@@ -23426,7 +23426,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b1d0	493	bjhash	idb	storm	boundary		Runs its object file code not read here	inferred	none		
 0x64b3f0	100	SStrHashHT	idb	storm	boundary		Runs its object file code that calls bjhash; not read here	inferred	none		
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
-0x64b480	19			storm	boundary		Runs its object file code that calls __strlwr; not read here	inferred	none		
+0x64b480	19			storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
 0x64b4a0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
 0x64b4f0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
 0x64b540	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmpI; not read here	inferred	none		

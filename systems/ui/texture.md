@@ -97,6 +97,17 @@ returns nil (`0x79bddc`). The filter at `0x878cf0` is a `.data` default of 1: 39
 name and returns 1 if so (`0x77021e` to `0x770225`, `0x7702e7`), loads with `0x449d90` (`0x770281`), and stores the shader from `0x770620` at
 `+0x128` (`0x7702b8`, `0x7702c0`) before the handle (`0x7702dc`). A null or empty name skips the load and the shader store: it releases the old handle, stores a null one and answers 1 (`0x770218`, `0x77022f`, `0x770235` to `0x7702cb`).
 
+## SetTexture failure
+
+When `0x770200` loads a non-empty name that no candidate resolves, the texture keeps what it held: the loaded placeholder is released, the held handle and the shader slot are not written, and the call answers 0, so the Lua method answers nil. The status the load fills is a stack object of vtable `CStatus` with its highest severity at `+0x10` set to 0; a load failure puts 3 there, and any value of 2 or more takes the failure path. The solid green texture `TextureCreate` returns on failure never reaches the widget.
+
+Addresses: `0x770200`, `0x770266`, `0x770269`, `0x770281`, `0x770288`, `0x77028c`, `0x770290`, `0x77029d`, `0x7702a5`, `0x7702ac`, `0x7702b5`, `0x7702dc`, `0x41aed0`, `0x44cb40`, `0x419e30`, `0x7ffa10`, `0x79bb40`, `0x79bda5`, `0x79bdac`, `0x79bdae`, `0x79bddc`, `0x6f37f0`, `0x6f3810`, `0x449d90`, `0x41a0f6`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x770266` and `0x770269` store 0 at `+0x10` of the status and the `CStatus` vtable. `0x770281` calls `TextureCreate` and `0x770288` compares the severity with 2: at 2 or more `0x770290` closes the returned handle (`HandleClose`), `0x77029d` passes the status to `0x44cb40` with 4, `0x7702a5` destroys it, and `0x7702ac` returns 0 before the stores at `0x7702b5` and `0x7702dc`. Below 2 the shader slot and the new handle are stored. `0x79bda5` calls `0x770200`; `0x79bdac` branches on 0 to `0x79bddc`, which pushes nil (`0x6f37f0`), else `0x79bdae` pushes the number 1 (`0x6f3810`); both paths return one value. A candidate that loads after a failed first one leaves the status at 0, since the loaders write nothing on a failed open (`gx/textures#texture-name-candidates`).
+
 ## Setting a vertex colour
 
 `SetVertexColor(r, g, b[, a])` clamps each value to 0 to 1, takes a missing alpha as the current alpha, packs it as

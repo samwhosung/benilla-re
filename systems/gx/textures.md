@@ -17,14 +17,75 @@ Test: none
 
 ## Texture creation
 
-`0x449d90(name, log, filterIn, force, fileFlag)` returns a handle; `log` is a status object (vtable slot `+0xc` takes severity, format, arguments), non-null. It strips a trailing `.tga` or `.blp` (`0x449590`: 0 for `.tga`, 1 otherwise), builds the flags word (`Texture flags word`) and returns a texture of that name and flags from the hash. Otherwise it appends `.blp` or `.tga` (`0x835248`; tga first after a `.tga` name), loads through `0x44a310` or `0x44a140`, and tries the other extension. When both fail it tells `log` (`0x44a0e0`) and returns the solid texture of `0x44a9c0`: 8 by 8, colour `0xff00ff00`, format 2.
+`0x449d90(name, log, filterIn, force, fileFlag)` returns a handle; `log` is a status object (vtable slot `+0xc` takes severity, format, arguments). A null or empty name, or a null `log`, sets Storm error 0x57 and returns 0. Otherwise it splits the name (`Texture name split`), builds the flags word (`Texture flags word`) and looks the stripped name and flags up in the hash; a hit is returned as it is. A miss tries the candidate files (`Texture name candidates`), caches the loaded texture under the stripped name and flags, and returns it. When every candidate fails it tells `log` and returns the solid texture (`Texture load failure`).
 
-Addresses: `0x449d90`, `0x449590`, `0x449eb0`, `0x449fb0`, `0x44a310`, `0x44a140`, `0x44a260`, `0x44a0e0`, `0x44a9c0`, `0x44aa20`, `0x44ab30`, `0x44a900`, `0x90582c`, `0x835248`, `0x44b2c0`, `0x44b320`
+Addresses: `0x449d90`, `0x449eb0`, `0x449fb0`, `0x44a9c0`, `0x44aa20`, `0x44ab30`, `0x44a900`, `0x90582c`, `0x449db1`, `0x449dec`, `0x449df3`, `0x449e99`, `0x44a260`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x449eb0` hashes the stripped name (`SStrHash`, `0x64af90`) with mask `[0x905bc4]` and matches the stored hash, the flags at `+0x18` and the name at `+0x14` (`SStrCmpI`). `0x44a9c0(colour ptr)` first asks `0x44aa20` for a texture cached under the name `Solid Texture` (`0x835708`) and flags of that colour; on a miss `0x44a900` fills an 8 by 8 texture through `0x448450` with the callback `0x5c5350` (it fills a 64-dword buffer with the colour), bit 0 of the flags set when the colour's alpha byte is `0xfe` or more, and `0x44ab30` caches it. `0x44a0e0` builds its message from `0x64df50`.
+`0x449eb0` hashes the stripped name (`SStrHash`, `0x64af90`, called with flag argument 0, so it folds case and maps `/` to `\`) with mask `[0x905bc4]` and matches the stored hash, the flags at `+0x18` and the name at `+0x14` (`SStrCmpI`, at most 0x104 bytes, case-insensitive and slash-literal). `0x449dec` calls it with the stripped name in the stack buffer and `0x449df3` returns a hit. `0x449e99` inserts only on the success path, through `0x449fb0`; the failure path at `0x449e65` never reaches it, so a name that does not resolve runs both opens again on every call. `0x44a9c0(colour ptr)` first asks `0x44aa20` for a texture cached under the name `Solid Texture` (`0x835708`) and flags of that colour; on a miss `0x44a900` fills an 8 by 8 texture through `0x448450` with the callback `0x5c5350` (it fills a 64-dword buffer with the colour), bit 0 of the flags set when the colour's alpha byte is `0xfe` or more, and `0x44ab30` caches it. `0x44a0e0` builds its message from `0x64df50`. `0x44a140` loads a TGA through the pixel callback `0x44a260`.
+
+## Texture name split
+
+`0x449590(name, buffer, &split)` copies the name into the 0x104-byte buffer (`SStrCopy`, at most 0x103 bytes) and sets `split` to the dot when the byte four from the end is `.`, else to the end of the copy; a copy shorter than four bytes has no dot. At a dot it lowercases the three bytes after it (`0x64b480`, `_strlwr`), writes 0 over the dot, and returns 0 when they are `tga` and 1 for every other three bytes, `blp` included. With no dot at that place it returns 1 and strips nothing: `Foo.jpeg` keeps its extension, `Foo` has none. The extension is not checked beyond its length: `Foo.bmp` becomes `Foo`.
+
+Addresses: `0x449590`, `0x4495a3`, `0x4495a8`, `0x4495ad`, `0x4495b4`, `0x4495be`, `0x4495c5`, `0x4495ea`, `0x449603`, `0x64a5a0`, `0x64b480`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4495a8` compares the copy's length with 4 (`jb` skips the dot test), `0x4495ad` tests `[len - 4] == 0x2e` and `0x4495b4` backs the pointer up by four. `0x4495be` tests the byte at the split point; anything but `.` returns 1 at `0x449606`. `0x4495cf` to `0x4495fb` compare the lowered bytes: the `tga` path reaches `0x449601` and returns 0, the `blp` path stores 0 at `0x4495ea` and returns 1, and every other case jumps to `0x449603`, which stores 0 over the dot with the return value still 1. The lowering touches the buffer, never the caller's string.
+
+## Texture name candidates
+
+`0x449d90` appends `.tga` (index 0) or `.blp` (index 1) at the split point from the table `0x835248` and loads `<buffer>` through `0x44a140` (TGA) or `0x44a310` (BLP), starting at the index `0x449590` returned and trying the other once. A name with no three-byte extension, or `.blp` or any other extension, goes `.blp` first; only `.tga` goes `.tga` first. A kept long extension stays in front of the candidate. The base name and its slashes reach Storm as written; only the stripped three bytes were lowered, and they are gone. Both loaders return 0 without writing to `log` when the open fails.
+
+| name | first | second |
+|---|---|---|
+| `X`, `X.blp`, `X.bmp` | `X.blp` | `X.tga` |
+| `X.tga` | `X.tga` | `X.blp` |
+| `X.jpeg` | `X.jpeg.blp` | `X.jpeg.tga` |
+
+Addresses: `0x449d90`, `0x449e00`, `0x449e11`, `0x449e2b`, `0x449e3d`, `0x449e4b`, `0x449e5d`, `0x44a140`, `0x44a169`, `0x44a310`, `0x44a399`, `0x835248`, `0x64a5a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x449e00` loads `[4*edi + 0x835248]`, `0x449e11` copies it over the split point with no length limit, and `0x449e16` to `0x449e3d` choose `0x44a310` for 1 and `0x44a140` for 0. `0x449e4b` flips `edi` and `0x449e5d` ends the loop after two passes. The copy at `0x449e11` is unbounded and the buffer is 0x104 bytes at `[ebp-0x110]`: a name of 0x100 to 0x103 bytes with no dot four from the end writes the candidate's 5 bytes up to index `len + 4`, past the buffer, over the saved name pointer at `[ebp-0xc]` (the low byte first), which `0x449e65` reads for the message. `0x44a169` and `0x44a399` return 0 on a failed open with no status write.
+
+## Texture load failure
+
+When both candidates fail, `0x449d90` calls `0x44a0e0` with `log`, the word `texture` and the caller's original name, and returns the solid texture of colour `[0x90582c]`, which is never 0. `0x44a0e0` calls `log` slot `+0xc` with severity 3 and the format `Error loading %s file "%s": %s\n`, the last Storm error text as the third argument. `CStatus::Add` raises the status's highest severity to 3. The name in the message is the argument as the caller wrote it, extension included, not the stripped name.
+
+Addresses: `0x449e65`, `0x449e70`, `0x449e77`, `0x44a0e0`, `0x44a11c`, `0x41a000`, `0x41a0f6`, `0x90582c`, `0x835654`, `0x83564c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x449e65` pushes the saved original name (`[ebp-0xc]`), `0x449e69` the word at `0x83564c` and `0x449e70` calls `0x44a0e0`; `0x449e77` loads `0x90582c` and calls `0x44a9c0`, whose result is the return value. `0x44a0e0` pushes severity 3 and the format at `0x835654` and calls `[ecx+0xc]` (`0x44a11c`); `0x41a0f6` stores the severity at `+0x10` when it is higher. The caller decides what the placeholder is worth: the widget path (`ui/texture#settexture-failure`) discards it.
+
+## Texture basename substitution
+
+`0x44a310` replaces the file name of a BLP path before it opens it. When `[0x905bd4]` is non-null and the part of the path after its last backslash equals that string ignoring case, the part is replaced by `[0x905bd8]` in a 0x104-byte copy and the copy is opened. The compared part is the candidate with its `.blp`. `0x44b4e0(from = ecx, to = edx)` stores the two pointers. The violence-level handler `0x6c5af0` calls it: at level 2 with both 0, so nothing is replaced; at level 0 or 1 with `BloodSpurtSmall01.blp` (`[0x86c420]`) and `BloodSpurtSmall01_Low.blp` or `BloodSpurtSmall01_Medium.blp` (`[0x86c418]` and `[0x86c41c]`).
+
+Addresses: `0x44a310`, `0x44a319`, `0x44a329`, `0x44a347`, `0x44a35f`, `0x44a37a`, `0x905bd4`, `0x905bd8`, `0x44b4e0`, `0x6c5af0`, `0x6c5b29`, `0x6c5b41`, `0x86c418`, `0x86c420`, `0x64a420`, `0x64a4c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x44a319` skips everything while `[0x905bd4]` is null. `0x44a32b` finds the last `\` (`0x64a420` keeps the last match), `0x44a347` compares with `SStrCmpI` (0 means equal) and `0x44a34e` skips the rest on a difference. On a match `0x44a35f` copies the whole path and `0x44a37a` copies `[0x905bd8]` over it from the file name's offset, limited by what remains of 0x104, and `0x44a37f` points the open at the copy. Only the BLP loader does this; `0x44a140` has no such step. `0x6c5b29` is the level 2 call (both registers cleared); `0x6c5b41` loads `ecx` from `[0x86c420]` and `edx` from `[eax*4 + 0x86c418]`.
+
+## Texture file name builders
+
+Callers that build a texture file name themselves do not all split it. `0x449610` splits the name with `0x449590` and then always appends `.blp`, so `Foo.tga` opens `Foo.blp`. `0x44b320(name, buffer, type, size)` copies the name, cuts it at its last dot of any length (at the end when it has none), and appends `.BLP` for type 1 and returns 2, or `.TGA` for type 2 and returns 1; type 0 returns 0 with the copy uncut, and another type returns itself with the cut and no suffix. The builders that format a name append `.blp` to whatever they are given, with no split: a name ending in `.tga` gives `<name>.tga.blp`.
+
+Addresses: `0x449610`, `0x44963c`, `0x449641`, `0x44b320`, `0x44b2c0`, `0x47ac57`, `0x525e0f`, `0x476e4c`, `0x479a73`, `0x479bb5`, `0x479cc3`, `0x479d85`, `0x479e30`, `0x47a1d4`, `0x523705`, `0x5f87b9`, `0x50338a`, `0x5037b9`, `0x64a450`, `0x64a760`, `0x64a7f0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x449590` has four `call` sites and no `jmp` or stored address: `0x449111` (in `0x4490c0`, which nothing reaches), `0x44963c`, `0x449dcd` and `0x44ac8a` (in `0x44ac70`). `0x44b320` cuts at the last `.` found by `0x64a450` (`0x44b34b`) and appends with `0x64a760` (`0x44b366`, `0x44b380`); `0x47ac57` passes it the type `0x44b2c0` read from the last four characters. The formats are `%s.blp` (`0x525e0f`, the portrait name, `ui/portraittextures#portrait-sink`), `Item\TextureComponents\%s\%s_%s.blp` (`0x476e4c`), `%s%s.blp` (six sites from `0x479a73` to `0x47a1d4`, into a 0x104-byte buffer) and `Interface\Cursor\%s.blp` (`0x523705`, `0x5f87b9`). `0x50338a` and `0x5037b9` append `.BLP` to the emblem name built by `0x47a520`.
 
 ## Texture creation variants
 
@@ -39,7 +100,7 @@ The callbacks take `(mode, ...)`: mode 0 starts an update, 1 asks for a level's 
 
 ## Texture file creation
 
-`0x449610(path, format, deferred)` opens `path` with the extension `.blp` appended (`0x83524c`) through `SFile::OpenEx(0, name, deferred != 0, &handle)`, returns 0 when it fails, and otherwise allocates a `CTexture`, copies the name, stores `format` at `+0x118` and `0` at `+0x120`, and takes an async record from `0x4438b0`: record `+0` the file, `+8` its size, `+0xc` the texture, `+0x10` the completion callback `0x4497f0`. When the file's size fits in what remains of 2 MiB (counter `0xb05d18`) the record's buffer is the next slice of the static area at `0x905be4` and `0x443ae0` queues the read; otherwise the record joins the waiting list. `0x44a310` does the same for a name that already carries its extension, with callback `0x44a500`.
+`0x449610(path, format, deferred)` opens `path` with the extension `.blp` appended (`0x83524c`) after splitting it with `0x449590` through `SFile::OpenEx(0, name, deferred != 0, &handle)`, returns 0 when it fails, and otherwise allocates a `CTexture`, copies the name, stores `format` at `+0x118` and `0` at `+0x120`, and takes an async record from `0x4438b0`: record `+0` the file, `+8` its size, `+0xc` the texture, `+0x10` the completion callback `0x4497f0`. When the file's size fits in what remains of 2 MiB (counter `0xb05d18`) the record's buffer is the next slice of the static area at `0x905be4` and `0x443ae0` queues the read; otherwise the record joins the waiting list. `0x44a310` does the same for a name that already carries its extension, with callback `0x44a500`.
 
 Addresses: `0x449610`, `0x44a310`, `0x4497f0`, `0x44a500`, `0x4438b0`, `0x443ae0`, `0x448c10`, `0x449840`, `0x44a560`, `0x448840`, `0x448920`, `0x4489a0`, `0x905be4`, `0xb05d18`
 Confidence: verified
