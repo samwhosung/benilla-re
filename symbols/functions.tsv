@@ -12238,7 +12238,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50c870	413	CCamera::LoadShot		uicamera	primitive	bool __thiscall (CCamera *this, const char *path, const C3Vector *origin, float facing, void *callback, uint32_t a, uint32_t b)	Makes the shot model and installs its origin and facing matrix	verified	one	uicamera/cinematic#loading-a-shot	
 0x50ca10	54	CCamera::RestartShot		uicamera	orchestration	void __thiscall (CCamera *this)	Resets the scene clock and restarts the shot's animation	verified	one	uicamera/cinematic#playing-a-shot	
 0x50ca50	53	CCamera::ReleaseShot		uicamera	primitive	void __thiscall (CCamera *this)	Closes the shot camera and releases the shot model	verified	one	uicamera/cinematic#stepping-and-ending	
-0x50ca90	1593			uicamera	primitive		Runs its object file code that calls CM2Model::IsLoaded, CM2Model::HasAttachment and 12 more; not read here	inferred	none		
+0x50ca90	1593	CCamera::BuildPivotHeights		uicamera	primitive	bool __thiscall (CCamera *this, CGObject_C *unit)	Rebuilds the near, far and swimming pivot heights from the unit's model and arms the height	verified	one	uicamera/driver#pivot-height	
 0x50d0f0	546	CCamera::SetTarget		uicamera	orchestration	void __thiscall (CCamera *this, CGObject_C *target)	Switches the followed object, snapping its tilt and drunk bias, or frees the shakes for none	verified	one	uicamera/effects#where-a-shake-lands	
 0x50d320	98	CCamera::SetFovOverride		uicamera	primitive	void __thiscall (CCamera *this, int degrees)	Switches to first person with a given field of view, or restores the third person view	verified	one	uicamera/transitions#field-of-view	
 0x50d390	28			uicamera	orchestration		Runs its object file code not read here	inferred	none		
@@ -12250,9 +12250,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50d5d0	193	CCamera::SetLookAt		uicamera	primitive	void __thiscall (CCamera *this, const C3Vector *eye, const C3Vector *target, float roll)	Stores the eye and builds the view basis toward the target with the roll	verified	one	uicamera/cinematic#applying-the-view	
 0x50d6a0	40			uicamera	unreached		Runs Camera.cpp code that calls 0x50a780; not read here	inferred	none		
 0x50d6d0	70	CCamera::GetFov		uicamera	primitive	float __thiscall (CCamera *this)	Returns the base field of view plus the bias, kept from 0 to 179 degrees	verified	one	uicamera/transitions#field-of-view	
-0x50d720	97			uicamera	orchestration		Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
+0x50d720	97	CCamera::ClampAngles		uicamera	orchestration	void __thiscall (CCamera *this)	Clamps the pitch to plus or minus 89 degrees and wraps the yaw and flip bias	verified	one	uicamera/driver#turning-with-the-mouse	
 0x50d790	115			uicamera	unreached		Runs Camera.cpp code not read here	inferred	none		
-0x50d810	227			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
+0x50d810	227	CCamera::FilterFacing		uicamera	primitive	float __thiscall (CCamera *this, float facing, bool moved)	Limits the rate at which the camera follows a unit's facing	verified	one	uicamera/driver#smoothing-the-facing	
 0x50d900	697	CCamera::ProbeSlope		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *unit, uint32_t now)	Measures the ground slope ahead of the unit and stores the tilt angle	verified	one	uicamera/effects#probing-the-slope	
 0x50dbc0	508	CCamera::ArmTerrainTilt		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *unit, uint32_t now, bool snap)	Sets or arms the ground pitch from the probed angle and the unit's state row	verified	one	uicamera/effects#arming-the-tilt	
 0x50ddc0	50	CameraClipCommand		uicamera	orchestration	uint32_t __stdcall (const char *argument)	Stores the number given, or flips the stored flag, in a word nothing reads	verified	one	uicamera/cvars#cameraclip	
@@ -12265,7 +12265,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50f060	254	CCamera::UpdateShot		uicamera	primitive	void __thiscall (CCamera *this)	Advances the shot and applies its eye, look-at and roll	verified	one	uicamera/cinematic#arming-and-the-per-frame-step	
 0x50f160	1444	CCamera::UpdateTransitions		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Eases the bob offsets and the seven channels toward their targets	verified	one	uicamera/transitions#the-ease	
 0x50f710	356	CCamera::MakeViewAngles		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, float *yaw, float *pitch, float *roll)	Makes the view yaw, pitch and roll from the offsets and the target's facing and builds the basis	verified	one	uicamera/driver#view-angles	
-0x50f880	101	CCamera::ArmPivotHeight		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Arms the pivot height transition from the swim, near or far value	inferred	none	uicamera/driver#pivot-height	
+0x50f880	101	CCamera::ArmPivotHeight		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *target, uint32_t now)	Arms the height transition to the swimming, near or far pivot height	verified	one	uicamera/driver#pivot-height	
 0x50f8f0	22	CCamera::SetTargetAlpha		uicamera	orchestration	void __thiscall (CCamera *this, uint32_t alpha)	Passes the self fade alpha to the world frame	verified	one	uicamera/driver#the-self-fade	
 0x50f910	22			uicamera	orchestration		Runs Camera.cpp code that calls 0x50f940; not read here	inferred	none		
 0x50f930	5			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
@@ -12285,7 +12285,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50fd90	56	CCamera::StopAxis		uicamera	primitive	void __thiscall (CCamera *this, uint32_t axis, uint32_t end)	Marks an active keyboard axis to stop at a time	verified	one	uicamera/driver#the-keyboard-axes	
 0x50fdd0	84	CameraLeaveFreelook		uicamera	primitive	void __thiscall (Camera *this)	Shows the cursor, leaves relative mouse mode and ends the world frame's mouselook	verified	one	ui/mouseover#mouselook	
 0x50fe30	171	CameraEnterFreelook		uicamera	primitive	void __thiscall (Camera *this)	Hides the cursor, switches to relative mouse mode and begins the world frame's mouselook	verified	one	ui/mouseover#mouselook	
-0x50fee0	561			uicamera	primitive		Runs Camera.cpp code that calls 0x41ade0, ClntObjMgrObjectPtr, 0x510690 and 5 more; not read here	inferred	none		
+0x50fee0	561	CCamera::MouseTurn		uicamera	primitive	void __thiscall (CCamera *this, int dx, int dy)	Turns the yaw and pitch, or the pivot bias, by a mouse step	verified	one	uicamera/driver#turning-with-the-mouse	
 0x510120	395	CCamera::ShiftPitch		uicamera	primitive	void __thiscall (CCamera *this, float delta)	Adds an angle to the pitch target, start and live value, clamped	inferred	none	uicamera/transitions#relative-and-absolute-frames	
 0x5102b0	294	CCamera::ShiftYaw		uicamera	primitive	void __thiscall (CCamera *this, float delta)	Adds an angle to the yaw target, start and live value, wrapped	verified	one	uicamera/transitions#relative-and-absolute-frames	
 0x5103e0	442	CCamera::CommitFacing		uicamera	primitive	void __thiscall (CCamera *this)	Hands the camera yaw and the final pitch to the player's facing and pitch	verified	one	uicamera/effects#committing-the-facing	

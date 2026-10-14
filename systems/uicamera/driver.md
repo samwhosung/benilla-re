@@ -84,6 +84,44 @@ Test: none
 `0x50f7f0` tests `+0xa4` and `0x50f7f2` adds the facing; `0x50f80e` tests `+0xa8` and `0x50f816` adds `+0x108`. `0x50f81d` normalises, `0x50f826` to `0x50f84c` clamp, `0x50f866` builds the basis.
 `0x50b6c9` to `0x50b6d2` convert the argument of `FlipCameraYaw` and add it to `+0x100`.
 
+## Turning with the mouse
+
+`0x50fee0(dx, dy)` turns the camera by a mouse step. It sets mode bit 6. Each pointer delta is divided by 0.8 and 0.6 (`0x41ade0`); the
+yaw step is `cameraYawMoveSpeed` in radians times `dx` times 0.00125 and the pitch step is `cameraPitchMoveSpeed` in radians times `dy` times
+1/600. The yaw is shifted by the negative of its step, the pitch by its step; `mouseInvertYaw` and `mouseInvertPitch`, when nonzero, flip the sign of the matching step.
+A positive `dy` therefore looks down. The caller is the input control's motion handler `0x514400`, which also commits the facing (`uicamera/effects#committing-the-facing`).
+
+Addresses: `0x50fee0`, `0x5102b0`, `0x510120`, `0x50d720`, `0x41ade0`, `0x514400`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50fef0` to `0x50ff1b` read the speeds from `0xbe0f78` and `0xbe1094`. `0x50ff2d` converts the deltas (divisors 0x832a44 and 0x832a48). `0x50ff49` multiplies `dx` by 0x808ac4 and `0x50ff67` `dy` by 0x808ac0, after the degree to radian factor 0x7ffaac. `0x50ff4f` and `0x50ff74` set the pitch sign from `mouseInvertPitch` (`0xbe1040`), `0x50ff86` and `0x50ff8f` the yaw sign from `mouseInvertYaw` (`0xbe1084`). `0x5100ef` to `0x5100fd` shift the yaw with `0x5102b0` and `0x510102` calls `0x50d720`, which clamps the pitch to plus or minus 89 degrees and wraps the yaw and flip bias with `0x455b30`.
+
+## Looking past level
+
+While the pivot test `0x510690` holds (`cameraPivot` on, no move or strafe key, the pitch 0 or up), a mostly vertical mouse step moves the pivot bias `+0x104` instead of the pitch, so the view tilts further up without leaving the pitch. The step goes to the bias when `|pitch step| > cameraPivotDYMin` and `|yaw step| < cameraPivotDXMax`, or when a bias is already held. The bias is kept so that pitch plus bias stays above -89 degrees. A bias above 0, or a pitch of 0 or more, sends the step to the pitch and eases the bias back to 0.
+
+Addresses: `0x50fee0`, `0x510690`, `0x512a50`
+Confidence: inferred
+Proof: none
+Test: none
+
+`0x50ffbb` calls `0x510690`. `0x50ffc8` to `0x50ffe7` test mode bit 27 and `|+0x104| > 0.001` (0x801360). `0x50ffee` to `0x51000e` test the two step sizes against `0xbe0cec` and `0xbe0f30`. `0x510020` to `0x51002c` add the step to the bias. `0x51009a` arms the bias back to 0 through `0x512a50(0, 0, 1.0, now)`; `0x5100c3` stores the bias as its own target and clears the armed bit. The cases were read, not run.
+
+## Smoothing the facing
+
+For a unit other than the active mover, with the CVar `camerasmooth` nonzero and the unit moved since the last update, the camera follows the unit's facing at a limited rate.
+It keeps the last used facing (`+0x184`); the error to the new facing is wrapped to plus or minus π. An error of 0.09 radian or less uses the new facing;
+up to 15 degrees (0.2618) the facing moves by 0.09 toward it; beyond that by 0.2618. The result is wrapped into 0 to 2π and stored at `+0x184`.
+
+Addresses: `0x50d810`, `0x50f710`, `0xbe1074`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x50f752` to `0x50f786` compare the unit's position with `+0x174` to `+0x17c` and form the moved flag. `0x50f7b4` compares the target GUID with the active mover `0xc4da98`; `0x50f7d3` calls `0x50d810`; `0x50f7d8` stores the result. `0x50d813` to `0x50d82b` test the CVar and the flag; `0x50d833` forms the error; `0x50d839` to `0x50d867` wrap it with π (0x80891c) and 2π; `0x50d86f` compares with 0x808a2c and `0x50d8cc` with 0x808a28; `0x50d898` adds to the last facing.
+
 ## The pivot and the eye
 
 The camera looks at a pivot above the target's feet: the pivot is the target's position plus the live pivot
@@ -135,18 +173,16 @@ alpha to the world frame's `0x482c10`. The smoothstep is `a + (b - a) * (1 - cos
 
 ## Pivot height
 
-The pivot height is chosen from three model values the camera measures when it starts: a swimming unit uses the swim
-value, otherwise the near value when the target orbit distance is below 1.8315 yards and the far value from
-there up. The chosen value is armed as the target of the height transition, which `0x50f160` eases.
+The camera keeps three pivot heights for its target: near, far and swimming. It rebuilds them whenever it gets a target, once the unit's model (the mount's, if mounted) is loaded.
+The base height is the attachment 17 height plus 7/72 yard, or 0.9 of the bounding box height, times a scale `S` of the descriptor and spell scales. Sitting, sleeping, kneeling, dying and mounted states subtract an animation box drop; each preset is clamped from 5/6 to 15. The arm `0x50f880` picks the swimming
+preset for a swimmer, else the near one when the target distance is under 1.8315 yards and the far one beyond, and eases to it over 1 second.
 
-Addresses: `0x50f880`, `0x5126b0`, `0x50cbc0`
-Confidence: inferred
-Proof: none
+Addresses: `0x50ca90`, `0x50f880`, `0x5126b0`, `0x50d0f0`, `0x50e8d0`, `0x712cb0`, `0x712cf0`, `0x713700`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x50f89e` tests the movement word for swimming (0x200000) and loads `+0x124`; otherwise `0x50f8b5` compares the target distance `+0x198` with
-`0x8089b0` and loads `+0x11c` below it or `+0x120` from it up (`0x50f8c2`, `0x50f8ca`). The result is armed through `0x5126b0` with a duration of 1
-second (`0x3f800000`). How `0x50cbc0` measures the three values from the model was not read here.
+`0x50cab2` takes the mount model `+0xdc` before the body model `+0xd8`; `0x50cae0` sets mode bit 2 and the presets `+0x11c`, `+0x120`, `+0x124` are rebuilt. `0x50cb24` reads the descriptor scale; `S` also takes `+0x94` and `+0x9c` (mounted) or `+0x98`. The stand state picks an animation id by the jump table `0x50cb60`: 0x61, 0x64, 0x66, 0x67, 0x68, 6 or 0x73, else 0; `cameraHeightIgnoreStandState` (`0xbe0cf4`) clears it and a mount display forces 0x5b. `0x50cbc7` to `0x50cc03` form the base. `0x50cfc4` gives a non-unit 0.99 of its box centre height or twice `S`. `0x50cfa7` to `0x50d092` clamp with 5/6 (0x8089cc) and 15 (0x8089c8). `0x50d0a1` calls the arm; `0x50f89e` tests swimming (0x200000) and `0x50f8b5` compares `+0x198` with 0x8089b0. `0x50e900` retries `0x50ca90` each frame while mode bit 2 is clear, and the update waits.
 
 ## Setting a view
 
