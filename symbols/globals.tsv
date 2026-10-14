@@ -2629,7 +2629,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e3b4	uint32_t	s_nearestUsedAt		ui	Holds the millisecond time of the last nearby selection	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3b8	uint32_t	s_nearestKind		ui	Holds the kind, 1 to 4, the nearby list was built for	verified	one	ui/targeting#cycling-through-nearby-units
 0xb4e3c0	uint64_t	s_pendingEnchantItemGuid		ui	Holds the GUID of the item an enchant waits to bind	verified	one	ui/serviceverbs#helm-cloak-and-enchants
-0xb4e3c8	uint32_t	s_scriptCvarCount		ui	Holds the number of CVars RegisterCVar has registered; the 31st is refused	verified	one	ui/cvarverbs#writing-cvars-from-lua
+0xb4e3c8	uint32_t	s_scriptCvarCount		ui	Holds the number of CVars RegisterCVar has registered; the 31st is refused	verified	one	ui/cvarverbs#registering-cvars-from-lua
 0xb4e3cc	float[4]	s_interactRangesSquared		ui	Holds the squared ranges of CheckInteractDistance indices 1 to 4, copied at the first call	verified	one	ui/distancegates#thresholds
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	

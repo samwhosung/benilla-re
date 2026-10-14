@@ -20,7 +20,7 @@ equal to the last one kept. With the option clear, missing, or no mode surviving
 Addresses: `0x48bc90`, `0x48bd03`, `0x804570`, `0x48bd0b`, `0x48bd10`, `0x48bd18`, `0x48bd23`, `0x48bd79`, `0x48bd8f`, `0x48bda2`, `0x48bddf`, `0x48be43`, `0x48bea7`, `0x5899c0`, `0x58bd40`, `0x58be40`, `0xb4b3d0`, `0xb4b3d4`, `0xb4b3d8`, `0xb4b3dc`, `0x48bb60`, `0x48bb70`, `0x48bb90`, `0x48bba0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_48b_aspect_filter`
 
 `0x48bc90` returns at once when the count `0xb4b3d4` is nonzero (`0x48bc9e`), looks up `widescreen` and takes the fixed path
 when it is absent or zero (`0x48bcb8`, `0x48bcc1`). The aspect test is `fild`, `fidiv`, `fcomp` against 1.248 and
@@ -28,6 +28,8 @@ when it is absent or zero (`0x48bcb8`, `0x48bcc1`). The aspect test is `fild`, `
 when nothing was kept. The enumerator `0x58bd40`, called through `0x5899c0`, reads display 0 only, keeps modes of 640x480 and
 16 bits or more, stores 16-byte records of width, height, bits and rate, and sorts by `height·width` (`0x58be40`) with no
 tie-break. The array is `0xb4b3d0` capacity, count, data and quantum, zeroed by `0x48bb70` (run from `0x48bb60`, which `0x48bb90` follows by registering `0x48bba0`) and freed by `0x48bba0`.
+
+`ui::luabind_48b_aspect_filter` runs the aspect test, the slice `0x48bcfa` to `0x48bd0b` (`fild`, `fidiv`, `fcomp` against 1.248), and reads the kept bit from C0.
 
 ## The resolution verbs
 
@@ -134,7 +136,7 @@ device slot at `+0x34`. `DesktopGamma` set to nonzero restores the desktop's ram
 Addresses: `0x4891c0`, `0x4891d0`, `0x4891f0`, `0x4891fe`, `0x48920d`, `0x8424cc`, `0x489235`, `0x489251`, `0x489267`, `0x8015b8`, `0x4034d0`, `0x4034e8`, `0x4034f3`, `0x403500`, `0x589c00`, `0x58d080`, `0x599dc0`, `0x592220`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_488_set_gamma`, `ui::luabind_488_get_gamma_basemip`
 
 `0x4891d0` is `dc 2d`, `fsubr qword`, so the result is the constant minus the option's float at `+0x24`. `0x489251` formats
 into a 16-byte buffer through `0x64a7f0`. The callback returns 1 at `0x4034f8`, so it never vetoes. `0x403500` converts the
@@ -143,65 +145,39 @@ text with `0x64ac60`; nonzero copies the device's saved ramp (`0x589c70`, from d
 slot `+0x34`. Both upload paths skip the hardware write when the format's windowed byte (device `+0x20b`) is set; Direct3D
 also requires bit 0x20000 of the device's `Caps2`.
 
+`ui::luabind_488_get_gamma_basemip` runs the complement slice of `GetGamma` (`0x4891cd` to `0x4891de`) and `ui::luabind_488_set_gamma` that of `SetGamma` (`0x489230` to `0x489241`); the callback and the ramp upload are not run.
+
 ## Restarting the display
 
-`RestartGx()` runs the console command `gxRestart` with history on and returns no value. The command's handler applies
-the pending display format: it runs `0x63a060` on it, rebuilds the device, and on success commits the fourteen latched
-display options. A failed apply echoes a line and retries the last good format, then 800x600 at 60 Hz, then 640x480 at
-60 Hz; a retry that works overwrites the options from the format that came up, and a total failure still returns 1. No
-function of the chain contains a signal call, and the device class is not changed.
+`RestartGx()` runs the console command `gxRestart` with history on and returns no value. The handler applies the pending
+display format, rebuilds the device and commits the latched display options; it is `console/display#restart-and-defaults`,
+the latch is `cvar/registry#setting-a-value` and the validators are `console/display#display-callbacks`. No function of the chain
+contains a signal call, and the device class is not changed.
 
-Addresses: `0x48dab0`, `0x842978`, `0x63ce00`, `0x639f60`, `0x639f62`, `0x639f6c`, `0x639f76`, `0x639f8e`, `0x639f90`, `0x639fa1`, `0x639fbc`, `0x639fcc`, `0x639fe7`, `0x639ff7`, `0x63a012`, `0x63a031`, `0x63a036`, `0x639ec0`, `0x639c40`, `0x63a060`, `0x63cb50`, `0x589be0`, `0x589c90`, `0x435c50`, `0x435a50`, `0x589ac0`, `0x63a230`, `0x63a47e`
+Addresses: `0x48dab0`, `0x842978`, `0x63ce00`, `0x589ac0`, `0x63a230`, `0x63a47e`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x63ce00(command, history)` looks the name up and calls the handler at `+0x18` synchronously. `0x639f60` passes the
-working format record `0xc4eb98` to `0x63a060` and then `0x589be0`, which calls device slot `+0x28`. On failure it echoes
-(`0x639fa1`, `0x639fcc`, `0x639ff7`) and copies the last-good record, the 800x600 record and the 640x480 record into the
-working one before each retry (`0x639fbc`, `0x639fe7`, `0x63a012`). Success copies the record to the last-good copy and runs
-`0x639ec0`, which makes fourteen `0x63e060` calls (thirteen calls and a tail `jmp`); a retry that worked runs `0x639c40`
-instead. The device class is chosen by `0x589ac0`, called only from `0x63a230` (`0x63a47e`).
-
-## The latched display options
-
-The fourteen display options (`gxWindow`, `gxResolution`, `gxRefresh`, `gxVSync` and the rest) are latched. Setting one
-runs its validator first, which writes the pending format record and echoes `set pending gxRestart`, and can refuse the
-text by returning 0. A text that passes is kept in the option's pending slot and the live value changes only at `0x63e060`.
-`gxRefresh` accepts 60, 70, 72, 75, 85, 90, 100, 120, 160, 180 and 200 only. `gxResolution`'s validator accepts a
-wider set than the list: floor 640x480 and a seven-entry fallback.
-
-Addresses: `0x63df50`, `0x63df7d`, `0x63df85`, `0x63df8e`, `0x63e060`, `0x63e0b0`, `0x63aa00`, `0x63aaa0`, `0x63ab16`, `0x63ad70`, `0x63aed0`, `0x63aef3`, `0x63afb7`, `0x8645e0`, `0x63b030`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x63df50` calls the validator at `+0xbc` (`0x63df7d`) and returns at `0x63df85` on 0; bit 1 of the flags at `+0x1c` sends the text
-to `+0x38` and sets the dirty byte (`0x63dfc4`). `0x63e060` returns when the flag or the pending text is missing, else
-sets the live value through `0x63e0b0` and frees the pending text. `0x63aa00` repeats the list test with a 640 by 480
-floor (`0x63aaa0`) and appends 640x480, 800x600, 1024x768, 1152x864, 1280x960, 1280x1024 and 1600x1200 when no mode passes
-(`0x63ab16`). `0x63aed0` searches the table `0x8645e0` of 11 values, storing the match in the pending record (`0x63afb7`).
-`0x63b030`, the `gxApi` validator, only checks the name against a two-entry table.
+`0x63ce00(command, history)` looks the name up and calls the handler at `+0x18` synchronously. The device class is chosen by
+`0x589ac0`, called only from `0x63a230` (`0x63a47e`), which `gxRestart` does not reach.
 
 ## Restoring the video defaults
 
-`RestoreVideoDefaults()` installs the recommended settings for the adapter and restarts the display, returning no value.
-It maps the adapter's hardware row into a settings block, copies the display format preset that row names into the
-working record, writes the twelve display options from it, runs the restart handler, and then writes sixteen
-graphics options from the block, in order `farclip`, `lodDist`, `shadowLevel`, `frillDensity`, `fullAlpha`, `doodadAnim`,
-`trilinear`, `MaxLights`, `pixelShaders`, `specular` (the same byte), `waterLOD`, `particleDensity`, `unitDrawDist`,
-`SmallCull`, `DistCull` and `baseMip`. The registered defaults are not used.
+`RestoreVideoDefaults()` installs the recommended settings for the adapter and restarts the display, returning no value. The
+installer is `console/display#restart-and-defaults` (`0x639a20`): it writes the twelve display options and then sixteen
+graphics options from the hardware row's settings block, not from the registered defaults. The block's `+0x2c` field goes to
+`SmallCull` and `+0x30` to `DistCull`.
 
-Addresses: `0x48dad0`, `0x639a20`, `0x639a2c`, `0x639a31`, `0x639a41`, `0x639a48`, `0x639a51`, `0x639a58`, `0x639a60`, `0x639b80`, `0x639bc0`, `0x639c00`, `0x639c40`, `0x641820`, `0x641924`, `0x641933`, `0x641260`, `0x63a26b`, `0x63a35e`, `0xc4e6ac`
+Addresses: `0x48dad0`, `0x639a20`, `0x639a60`, `0x639b3f`, `0x639b51`, `0x641820`, `0x641924`, `0x641933`, `0x641260`, `0x63a26b`, `0xc4e6ac`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x639a20` calls `0x641820` with the settings block at 0xc4e678 and the matched row at 0xc4e6bc; `0x641924` to
 `0x641933` store at the block's `+0x34` the address 0xc518e0 plus 0x38 times the row's field at `+0x40`, so the dword at
-`0xc4e6ac` is a pointer into a preset table. The three helpers each format (`%f`, `%d`, or `1` and `0`) and call
-`0x63df50` with the callback flag. The block's `+0x2c` field goes to `SmallCull` and `+0x30` to `DistCull`
-(`0x639b3f`, `0x639b51`). `0x641260`, the detection, has one caller, `0x63a26b`.
+`0xc4e6ac` is a pointer into a preset table. `0x639b3f` and `0x639b51` store the block's `+0x2c` and `+0x30` into
+`SmallCull` and `DistCull`. `0x641260`, the detection, has one caller, `0x63a26b`.
 
 ## The multisample verbs
 

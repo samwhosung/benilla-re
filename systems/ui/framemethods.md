@@ -20,11 +20,13 @@ byte at `+0xc8` times 1/255.
 Addresses: `0x773700`, `0x77376e`, `0x77379c`, `0x7737d4`, `0x7737df`, `0x774680`, `0x774754`, `0x774dc0`, `0x774e63`, `0x774e75`, `0x774fc0`, `0x77505f`, `0x775080`, `0x77511f`, `0x775280`, `0x77531f`, `0x775340`, `0x7753d6`, `0x7753e7`, `0x804578`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_774dc0_get_alpha`
 
 `0x7737d4` and `0x774754` call the slots with the type text as the one stack argument. `0x77379c` and `0x7737a4` build the
 name for the usage error through slot `+0x4`. `0x774e63` loads the alpha byte and `0x774e75` multiplies by the double 1/255
 (`0x804578`); the value is not rounded. `0x7753e7` stores the `__ftol` result with no clamp.
+
+`ui::luabind_774dc0_get_alpha` runs the channel normalisation of `GetAlpha`, the slice `0x774e72` to `0x774e7e` (`fild`, `fmul` by 1/255, `fstp`).
 
 ## Visibility getters and the toplevel flag
 

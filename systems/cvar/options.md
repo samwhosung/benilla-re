@@ -152,14 +152,14 @@ The four stores are the only references to their globals (`0x868620`, `0x868624`
 
 ## World detail verbs
 
-`SetWorldDetail(n)` sets two settings from the level `n`, 0 to 2: `frillDensity` to 16, 32 or 48 and `smallCull` to 0.07, 0.04 or 0.01. `GetWorldDetail()` reads only `smallCull` and answers the highest level `i` for which the setting is at most the table value, or 2 when it is above 0.07. A level outside 0 to 2 raises `value must be in the range 0, 2`; a non-number raises the usage text. The registered pair, `frillDensity` 16 and `SmallCull` 0.04, is level 0's frill with level 1's cull, so a fresh client reads back level 1 while its frill is the level 0 value.
+`SetWorldDetail(n)` sets two settings from the level `n`, 0 to 2: `frillDensity` to 16, 32 or 48 and `smallCull` to 0.07, 0.04 or 0.01. `GetWorldDetail()` reads only `smallCull` and answers the highest level `i` for which the setting is at most the table value, or 2 when it is above 0.07 or not a number. A level outside 0 to 2 raises `value must be in the range 0, 2`; a non-number raises the usage text. The registered pair, `frillDensity` 16 and `SmallCull` 0.04, is level 0's frill with level 1's cull, so a fresh client reads back level 1 while its frill is the level 0 value.
 
 Addresses: `0x488d70`, `0x488d77`, `0x488d90`, `0x488d9e`, `0x488dd0`, `0x488e0a`, `0x488e11`, `0x488e19`, `0x488e1e`, `0x488e39`, `0x488e51`, `0x488e56`, `0x488e76`, `0x488e8e`, `0x488e9b`, `0x804518`, `0x804524`, `0x68854a`, `0x68862e`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x488e0a` truncates the number, `0x488e11` and `0x488e19` reject a value below 0 or above 2 at `0x488e9b`. `0x488e1e` takes the frill from the dwords at `0x804518` (16, 32, 48), `0x488e39` finds `frillDensity` and `0x488e51` sets its text with the apply flag; `0x488e56` takes the cull from the floats at `0x804524`, which `0x488e76` finds as `smallCull` (the registered name `SmallCull` matches because the lookup folds case) and `0x488e8e` sets. `0x488d77` finds `smallCull`; `0x488d90` compares the value with each table entry in turn, `0x488d9e` keeps the index when the value is at most the entry, and no step stops the loop. The registrations `0x68854a` and `0x68862e` give the defaults 0.04 and 16.
+`0x488e0a` truncates the number, `0x488e11` and `0x488e19` reject a value below 0 or above 2 at `0x488e9b`. `0x488e1e` takes the frill from the dwords at `0x804518` (16, 32, 48), `0x488e39` finds `frillDensity` and `0x488e51` sets its text with the apply flag; `0x488e56` takes the cull from the floats at `0x804524`, which `0x488e76` finds as `smallCull` (the registered name `SmallCull` matches because the lookup folds case) and `0x488e8e` sets. `0x488d77` finds `smallCull`; `0x488d90` compares the value with each table entry in turn, `0x488d9e` keeps the index when the value is at most the entry (`test ah,0x41; jp` skips a greater or unordered compare, so a NaN keeps the start value 2), and no step stops the loop. The registrations `0x68854a` and `0x68862e` give the defaults 0.04 and 16.
 
 ## Unregistered callback
 

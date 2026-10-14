@@ -85,11 +85,13 @@ escape string. It raises `Usage: GetItemQualityColor(index)` for a non-number. T
 Addresses: `0x48dfb0`, `0x48dff1`, `0x48dff8`, `0x48e007`, `0x48e015`, `0x48e032`, `0x48e050`, `0x52ad70`, `0x52ad90`, `0x804578`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_48dfb0_quality_color`
 
 `0x48dff1` calls `QualityColorPointer(quality)` and `0x48dff8`, `0x48e015` and `0x48e032` load the bytes at `+2`, `+1` and `+0`, each
 converted with `fild` and `fmul` by the double 1/255 (`0x804578`) and pushed. `0x48e050` pushes the string from
 `QualityColorEscape`, so the verb returns 4.
+
+`ui::luabind_48dfb0_quality_color` runs the three channel normalisations of `GetItemQualityColor` (`fild`, `fmul` by 1/255, `fstp` at `0x48e004`, `0x48e021` and `0x48e03d`), each at its own address.
 
 ## Item information
 

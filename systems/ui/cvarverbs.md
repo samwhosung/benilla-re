@@ -13,10 +13,9 @@ Roots: `0x488b00`, `0x488ba0`, `0x488c10`, `0x488cf0`, `0x488d70`, `0x488dd0`, `
 `GetCVar("name")` returns the CVar's current text; `GetCVarDefault("name")` returns its default text, or nil when it has
 none. Both raise `Usage: GetCVar("cvar")` (the second raises `Usage: SetCVarDefault("cvar")`) for a non-string argument, and
 `Couldn't find CVar named '%s'` when the name is unknown. The name is matched without regard to case, and only a CVar that
-Lua may read is found: `CVar::Register` sets bit 31 of the flag word unless its fifth stack argument is nonzero, and the
-script lookup finds only records with that bit. A latched CVar answers with its live text, not its pending one.
+scripts may see is found (`cvar/registry#lookup`, bit 31 of the flag word). A latched CVar answers with its live text, not its pending one.
 
-Addresses: `0x488ba0`, `0x488bb1`, `0x488bd1`, `0x488bdc`, `0x488bf9`, `0x488cf0`, `0x488d01`, `0x488d49`, `0x63dec0`, `0x63df3c`, `0x63dc78`, `0x63ddb4`, `0x63de30`
+Addresses: `0x488ba0`, `0x488bb1`, `0x488bd1`, `0x488bdc`, `0x488bf9`, `0x488cf0`, `0x488d01`, `0x488d49`, `0x63dec0`, `0x63df3c`
 Confidence: verified
 Proof: one
 Test: none
@@ -24,8 +23,7 @@ Test: none
 `0x488ba0` tests `lua_isstring` (`0x488bad`), looks the name up through `0x63dec0` (`0x488bd1`), which hashes with
 `SStrHashHT` and compares with `SStrCmpI`, and returns `[record+0x20]` through `lua_pushstring` (`0x488bf9`). `0x63df3c`
 loads the flag word and `jns` returns null when bit 31 is clear. `0x488d49` loads `[record+0x30]` and pushes nil when it is
-null (`0x488d5e`). Registration sets bit 31 at `0x63dc78` and `0x63ddb4` when the fifth argument is zero, which the
-`script_hidden` column of `tables/cvars.tsv` lists for every registration. `0x63de30`, the plain lookup, has no flag test.
+null (`0x488d5e`).
 
 ## Writing CVars from Lua
 
@@ -33,28 +31,42 @@ null (`0x488d5e`). Registration sets bit 31 at `0x63dc78` and `0x63ddb4` when th
 callback flag on, and returns no value. It raises `Usage: SetCVar("cvar", value [, "scriptCvar")` for a non-string name, the not-found error,
 and `"%s" is read-only` when flag bit 2 is set. When the third argument is a string or a
 number it then signals `CVAR_UPDATE` (event 312) with the token as `arg1` and the written text as `arg2`; two arguments
-signal nothing. `RegisterCVar("name" [, default])` registers a script CVar once: an existing name is left alone, a new one
-gets flags 0, category 9 and the default text, or `0`; the thirty-first registration raises `Attempted to register too
-many CVars`.
+signal nothing.
 
-Addresses: `0x488c10`, `0x488c4c`, `0x488c67`, `0x488c6d`, `0x488c98`, `0x488ca8`, `0x488cb4`, `0x488cd0`, `0x488cd5`, `0x703f50`, `0x488b00`, `0x488b25`, `0x488b81`, `0x488b8a`, `0x488b8f`, `0xb4e3c8`, `0x63db90`, `0x63df50`, `0x82e424`
+Addresses: `0x488c10`, `0x488c4c`, `0x488c67`, `0x488c6d`, `0x488c98`, `0x488ca8`, `0x488cb4`, `0x488cd0`, `0x488cd5`, `0x703f50`, `0x63df50`, `0x82e424`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x488c67` to `0x488c6d` shift the flags right 2 and test bit 0. `0x488ca8` calls `CVar::Set(record, text, 1, 0, 0, 1)`. The
 signal is `0x703f50(0x138, "%s%s", tostring(arg 3), text)` (`0x488cd5`), reached only when `0x488cb4` finds a string or number
-at index 3. `0x488b25` compares the count `0xb4e3c8` with 0x1e and `0x488b8f` increments it after `0x63db90` with the
-arguments flags 0, default, no callback, category 9 and a zero fifth argument.
+at index 3.
+
+## Registering CVars from Lua
+
+`RegisterCVar("name" [, default])` registers a script CVar: a new name gets flags 0, category 9 and the default text, or `0`; the
+thirty-first registration raises `Attempted to register too many CVars`. It looks the name up with the script lookup, which does not
+see an engine CVar that is hidden from scripts, so such a CVar counts as new. `CVar::Register` then finds the existing record,
+sets its bit 31 and clears its callback, which hands that CVar to scripts and silences its change callback. The script lookup
+is `cvar/registry#lookup`, the registration `cvar/registry#registering-a-setting`.
+
+Addresses: `0x488b00`, `0x488b25`, `0x488b76`, `0x488b81`, `0x488b8a`, `0x488b8f`, `0xb4e3c8`, `0x63db90`, `0x63dec0`, `0x63dc3d`, `0x63dc78`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x488b25` compares the count `0xb4e3c8` with 0x1e and `0x488b8f` increments it after `0x63db90` with the
+arguments flags 0, default, no callback, category 9 and a zero fifth argument. `0x488b76` looks the name up through `0x63dec0`, and only a null result reaches `0x63db90`.
+When `0x63db90` finds the record under its own hash lookup, `0x63dc3d` stores the callback argument (null) at `+0xbc` and `0x63dc78` ors 0x80000000 into the flags for a zero fifth argument.
 
 ## The detail verbs
 
-Eight pairs read and write CVars through a conversion. The setters raise `Usage: Set<Name>(value)` without a numeric
+Seven pairs read and write CVars through a conversion. The setters raise `Usage: Set<Name>(value)` without a numeric
 argument, and the water setter does nothing else.
 
 | verb | CVar | get returns | set stores |
 |---|---|---|---|
-| `WorldDetail` | `smallCull`, `frillDensity` | 0, 1 or 2 from `smallCull` | `frillDensity` 16, 32, 48 and `smallCull` 0.07, 0.04, 0.01 for 0, 1, 2 |
+| `WorldDetail` | `smallCull`, `frillDensity` | 0, 1 or 2 from `smallCull` | `frillDensity` 16, 32, 48 and `smallCull` 0.07, 0.04, 0.01 for 0, 1, 2 (`cvar/options#world-detail-verbs`) |
 | `WaterDetail` | none | always 0 | nothing |
 | `Farclip` | `farclip` | the number | `%f` text |
 | `TerrainMip` | `shadowLevel` | 1 minus the CVar's integer | `%d` of 1 minus the argument |
@@ -65,13 +77,12 @@ argument, and the water setter does nothing else.
 Addresses: `0x488d70`, `0x488d90`, `0x488dd0`, `0x488e19`, `0x488e9b`, `0x488ec0`, `0x488ed0`, `0x488f00`, `0x488f30`, `0x488fb0`, `0x488fe0`, `0x489060`, `0x489090`, `0x489110`, `0x489140`, `0x489280`, `0x4892b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_488_get_terrain_mip`, `ui::luabind_488_get_gamma_basemip`, `ui::luabind_488_set_gamma`, `ui::luabind_488_set_base_mip`
 
-`GetWorldDetail` compares `smallCull` with the table 0.07, 0.04, 0.01 in order (`0x488d90`) and keeps the last index whose
-entry is at least the value, starting from 2, so every value above 0.07 answers 2. `SetWorldDetail` truncates its argument
-with `__ftol`, accepts 0 to 2 only and raises `value must be in the range 0, 2` otherwise (`0x488e19`, `0x488e9b`); the
-integer table is 16, 32, 48. Farclip, DoodadAnim and TexLodBias format into 16 bytes with `%f`. The Get/Set pair names
+The `WorldDetail` pair is `cvar/options#world-detail-verbs`. Farclip, DoodadAnim and TexLodBias format into 16 bytes with `%f`. The Get/Set pair names
 are capitalised exactly as registered, `GetFarclip` and `SetFarclip`.
+
+`ui::luabind_488_get_terrain_mip` runs the slice `0x488fbd` to `0x488fce` of `GetTerrainMip`, `ui::luabind_488_get_gamma_basemip` the same complement in `GetBaseMip` (`0x48928d` to `0x48929e`) and in `GetGamma` (`0x4891cd` to `0x4891de`), `ui::luabind_488_set_gamma` the complement of `SetGamma` (`0x489230` to `0x489241`) and `ui::luabind_488_set_base_mip` the complement and `__ftol` of `SetBaseMip` (`0x4892f0` to `0x489300`). The registry lookup and the Lua marshalling are not run.
 
 ## Modifier keys and layout mode
 

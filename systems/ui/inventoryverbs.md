@@ -48,9 +48,11 @@ returns 0, 0, 0.
 Addresses: `0x4c8590`, `0x4c8a60`, `0x4c8621`, `0x4c8628`, `0x4c8632`, `0x4c863e`, `0x4c8643`, `0x4c8b47`, `0x4c8b55`, `0x4c8b67`, `0x4c8b86`, `0x4c8b9e`, `0x4c8bbd`, `0x6e2ed0`, `0x6228a0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4c8a60_get_inventory_item_cooldown`
 
 `0x4c8628` loads the flags, `0x4c8632` the maximum and `0x4c863e` and `0x4c8643` the current durability. `0x4c8b47` tests the use spell, `0x4c8b55` the charges and `0x4c8b86` calls `GetItemCooldown`. `0x4c8b9e` and `0x4c8bbd` multiply the first two by 0.001; the third is pushed as it is.
+
+`ui::luabind_4c8a60_get_inventory_item_cooldown` runs the two cooldown scalings of `GetInventoryItemCooldown` (`fild qword`, `fmul` by 0.001, `fstp`) at `0x4c8b96` to `0x4c8ba7` and `0x4c8bb5` to `0x4c8bc6`.
 
 ## Using and cursor tests
 

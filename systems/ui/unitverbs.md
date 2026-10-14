@@ -16,9 +16,11 @@ Roots: `0x515ea0`, `0x515ee0`, `0x515f10`, `0x516070`, `0x516460`, `0x516630`, `
 Addresses: `0x515ea0`, `0x515ea9`, `0x515ebb`, `0x515ee0`, `0x515ee7`, `0x515ef4`, `0x515f10`, `0x515f43`, `0x515f50`, `0x515f56`, `0x515f70`, `0x515f90`, `0x42c010`, `0x63ce00`, `0xce8538`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_515ea0_get_time`
 
 `0x515ebb` multiplies the milliseconds by the double 0.001. `0x515ee7` pushes the dword at `0xce853c` (the hour) and `0x515ef4` the one at `0xce8538`. `0x515f43` calls `ConsoleCommandExecute`. The three file functions are `push "Access Denied"; call luaL_error` and nothing else.
+
+`ui::luabind_515ea0_get_time` runs the scaling of `GetTime`, the slice `0x515eb8` to `0x515ec4` (`fild qword`, `fmul` by 0.001, `fstp`).
 
 ## Same unit and membership
 
