@@ -17,14 +17,14 @@ The count is the registrar's loop limit divided by 8, and the name and function 
 
 ## Registrars
 
-43 registrars, one for each table: a loop of `FrameScriptRegisterFunction(name, function)` over the pairs, 30 or 33 bytes, `ret` at the end. `0x490250` calls them in a fixed order after the 216-pair loop.
+43 registrars, one for each table: a loop of `FrameScriptRegisterFunction(name, function)` over the pairs, 30 or 33 bytes (38 for `0x51bb60`), `ret` at the end. `0x490250` calls them in a fixed order after the 216-pair loop.
 
 Addresses: `0x4a1a10`, `0x4a91c0`, `0x4ac430`, `0x4afee0`, `0x4b4b40`, `0x4b5a20`, `0x4b82c0`, `0x4bc130`, `0x4beb90`, `0x4c0860`, `0x4c3450`, `0x4c4730`, `0x4c4e10`, `0x4c5c00`, `0x4c9a30`, `0x4ca5d0`, `0x4cbbd0`, `0x4d03e0`, `0x4d2420`, `0x4d40e0`, `0x4d4d00`, `0x4d6c50`, `0x4da7c0`, `0x4dcf20`, `0x4e1a80`, `0x4e2b60`, `0x4e3bb0`, `0x4e4aa0`, `0x4e7780`, `0x4e9be0`, `0x4f1b90`, `0x4f3830`, `0x4f4a10`, `0x4f5370`, `0x4f5950`, `0x4f7d70`, `0x4f8810`, `0x4fa7a0`, `0x4fc1b0`, `0x500320`, `0x502310`, `0x51bb20`, `0x51bb60`
 Confidence: verified
 Proof: one
 Test: none
 
-A registrar is `push esi; xor esi,esi; mov edx,[esi+table+4]; mov ecx,[esi+table]; call 0x704120; add esi,8; cmp esi,count*8; jb; pop esi; ret`. `0x51bb60` first calls `0x51bb20` for the six shared functions and then runs the same loop over the 83-pair table. All but `0x51bb20` are called from `0x490250` only.
+A registrar is `push esi; xor esi,esi; mov edx,[esi+table+4]; mov ecx,[esi+table]; call 0x704120; add esi,8; cmp esi,count*8; jb; pop esi; ret`. `0x51bb60` first calls `0x51bb20` for the six shared functions and then runs the same loop over the 83-pair table. All but `0x51bb20` are reached from `0x490250` only, `0x4c4730` by a tail `jmp` (`0x490379`) and the rest by `call`; `0x51bb20` is also called from `0x46abb0`.
 
 ## Unregistrars
 
@@ -35,7 +35,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The loop is `push esi; xor esi,esi; mov ecx,[esi+table]; call 0x704160; add esi,8; cmp esi,count*8; jb`. `0x490ce0` unregisters the tabard functions, the frame types, the method tables, the 216 game functions and then these files.
+The addresses are the 43 unregistrars and their caller `0x490ce0`. The loop is `push esi; xor esi,esi; mov ecx,[esi+table]; call 0x704160; add esi,8; cmp esi,count*8; jb`. `0x490ce0` unregisters the tabard functions, the frame types, the method tables, the 216 game functions and then these files.
 
 ## Method table unregistrars
 

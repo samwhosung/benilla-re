@@ -57,7 +57,7 @@ and the right and top at 0 (`0x786e5d`, `0x786e64`), joins through `0x786f80` (`
 which reads its own rectangle with `0x768320` (`0x786fb0`) and no shown test, each region with `+0xc4` set
 (`0x78703b`) and calls itself for each child frame with `+0xd0` set (`0x7870e0`, `0x7870ec`),
 subtracts the width (`0x786e84`), raises a negative to 0 (`0x786e8f`) and multiplies by `1/+0x7c`
-(`0x786e9f`, `0x786eaa`), likewise the height (`0x786ed1`). Unless both moved less than 2^−22
+(`0x786e9f`, `0x786eaa`) at full precision, likewise the height (`0x786ed1`), but by the float-rounded copy of that reciprocal (`0x786ea5` stores it, `0x786ece` multiplies by it). Unless both moved less than 2^−22
 (`0x786ede`, `0x786ef2`) it runs `+0x33c` with two numbers (`0x786f56`). The flag's writers are
 `0x786d16`, `0x787205` in `0x7871f0` (slot 18) and `0x7918b0`.
 
