@@ -56,21 +56,20 @@ Test: none
 
 ## Constant tables
 
-9 bodies store a table or a matrix of constants:
+8 bodies store a table or a matrix of constants:
 
 | Body | Stores |
 |---|---|
 | `0x4804f0` | Stores the 4 × 4 identity matrix as 16 floats from 0xb4b2e8 |
-| `0x4ea270` | Stores 24 dwords between 0xbc7810 and 0xbc786c: 0, 0.5, 1 |
-| `0x4ea4d0` | Stores 38 dwords from 0xbc8310, each one of 0, 1 |
+| `0x4ea270` | Stores 24 floats from 0xbc7810 as eight triples: (0, 0, 0.5), (0.5, 0, 0), (0.5, 0, 1), (0.5, 1, 0), (0.5, 0.5, 1), (1, 1, 1), (0, 0.5, 0.5), (1, 0, 1) |
+| `0x4ea4d0` | Stores 38 floats from 0xbc8310: 1.0 at the word indices 6, 11, 16, 21, 22, 27, 32 and 37, 0.0 at the others |
 | `0x4ea790` | Stores the four corners (±h, ±h, 0) of a square as 12 floats from 0xbc81f8, h being the float at 0xbc762c |
 | `0x4ea850` | Stores the four corners (±h, ±h, 0) of a square as 12 floats from 0xbc8230, h being the float at 0xbc7630 |
 | `0x506880` | Stores the 4 × 4 identity matrix as 16 floats from 0xbe0a50 |
-| `0x5291d0` | Stores 7 dwords from 0xc0d3c8, each one of 0xff0070dd, 0xff1eff00, 0xff9d9d9d, 0xffa335ee, 0xffe6cc80, 0xffff8000, 0xffffffff |
-| `0x76fab0` | Stores 3 dwords from 0xcf4cf4, each one of 0, 1 |
-| `0x779440` | Stores 4 dwords between 0xcf4d90 and 0xcf4d9c: 0, -1 and 1 data addresses |
+| `0x5291d0` | Stores 7 colours from 0xc0d3c8 in item quality order: 0xff9d9d9d, 0xffffffff, 0xff1eff00, 0xff0070dd, 0xffa335ee, 0xffff8000, 0xffe6cc80 |
+| `0x76fab0` | Stores the dwords 0, 0 and the float 1.0 at 0xcf4cf4, 0xcf4cf8 and 0xcf4cfc |
 
-Addresses: `0x4804f0`, `0x4ea270`, `0x4ea4d0`, `0x4ea790`, `0x4ea850`, `0x506880`, `0x5291d0`, `0x76fab0`, `0x779440`
+Addresses: `0x4804f0`, `0x4ea270`, `0x4ea4d0`, `0x4ea790`, `0x4ea850`, `0x506880`, `0x5291d0`, `0x76fab0`
 Confidence: verified
 Proof: one
 Test: none
@@ -101,7 +100,7 @@ Test: none
 
 ## Object constructors
 
-9 bodies run a function on a global. Two set up a block pool through `InitBlockPool`, two call a function on each record of a table, and five run a constructor or a sizing call on a global. All but `0x4ea250` have an exit callback.
+10 bodies run a function on a global or build one. Two set up a block pool through `InitBlockPool`, two call a function on each record of a table, five run a constructor or a sizing call on a global, and one stores the fields of a static object. All but `0x4ea250` have an exit callback.
 
 | Body | Does |
 |---|---|
@@ -112,10 +111,11 @@ Test: none
 | `0x6eda30` | Runs 0x6ef190 on the object at 0xceea00 |
 | `0x6eda70` | Runs 0x6ef670 on the object at 0xcee9bc |
 | `0x728fb0` | Runs 0x72b8d0 on the object at 0xcf062c |
+| `0x779440` | Builds a static object at 0xcf4d90: the vtable 0x81c898, then 0, -1 and 0 at 0xcf4d94, 0xcf4d98 and 0xcf4d9c |
 | `0x76f9f0` | Sets the block pool at 0xcf4ce0 to elements of 300 bytes, 873 to a block, through InitBlockPool |
 | `0x76fa50` | Sets the block pool at 0xcf4d10 to elements of 304 bytes, 862 to a block, through InitBlockPool |
 
-Addresses: `0x4e4070`, `0x4ea250`, `0x4ea430`, `0x6ed940`, `0x6eda30`, `0x6eda70`, `0x728fb0`, `0x76f9f0`, `0x76fa50`
+Addresses: `0x4e4070`, `0x4ea250`, `0x4ea430`, `0x6ed940`, `0x6eda30`, `0x6eda70`, `0x728fb0`, `0x779440`, `0x76f9f0`, `0x76fa50`
 Confidence: verified
 Proof: one
 Test: none

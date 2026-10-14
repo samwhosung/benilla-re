@@ -100,7 +100,7 @@ Test: none
 | Callback | Does |
 |---|---|
 | `0x4b6010` | Runs 0x419e30 (CStatus::~CStatus) on the object at 0xb7124c |
-| `0x6ed960` | Runs 0x6ed970 (j_CStatus::CStatus) on the object at 0xcee9e8 |
+| `0x6ed960` | Runs 0x6ed970 (`JumpToCStatusDestroy`, the status destructor) on the object at 0xcee9e8 |
 | `0x6eda50` | Runs 0x6ef430 on the object at 0xceea00 |
 | `0x6eda90` | Runs 0x6ef780 on the object at 0xcee9bc |
 | `0x728fd0` | Runs 0x728ff0 on the object at 0xcf062c, at most once |
@@ -138,12 +138,12 @@ Test: none
 
 ## Other exits
 
-2 callbacks do something else:
+2 callbacks do something else: one runs destructors on a record table, one puts a vtable back.
 
 | Callback | Does |
 |---|---|
 | `0x4ea470` | Runs array destructors on each of the 512 records that 0x4ea430 set up |
-| `0x779480` | Stores the address 0x80131c in a global |
+| `0x779480` | Puts the base vtable 0x80131c back in the object at 0xcf4d90 that `0x779440` builds, an inlined destructor |
 
 Addresses: `0x4ea470`, `0x779480`
 Confidence: verified

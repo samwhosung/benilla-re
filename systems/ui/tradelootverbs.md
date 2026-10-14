@@ -59,8 +59,7 @@ Test: none
 
 `0x4bfe34` tests the cursor money `0xb4e2f0`. `0x4bfeb7` calls the bound test; `0x4bfee7` reads `+0x194` of the record and
 `0x4bfef7` shows message 0x29, `0x4bff0c` message 0x28. `0x4bff62` shows 0x2b after counting the nonzero GUIDs in the
-container's slot list, and `0x4bffae` shows 0xe. Past `0x4bffc3` the function reads the slot's offer state and places the item;
-that tail was not read.
+container's slot list, and `0x4bffae` shows 0xe. Past `0x4bffc3` the function reads the slot's offer state and places the item; that tail is open: its conditions and the packets it sends are not decoded.
 
 ## Loot rolls
 

@@ -33714,10 +33714,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779210	178	CSimpleButton::OnMouseDown		ui	orchestration		Takes a registered press under the mouse: runs a down click and sets PUSHED unless locked	verified	one	ui/button#mouse-presses-and-clicks	
 0x7792d0	287	CSimpleButton::OnMouseUp		ui	orchestration		Takes a release of a PUSHED button: runs the click or double click, then sets NORMAL unless locked	verified	one	ui/button#mouse-presses-and-clicks	
 0x7793f0	64	CSimpleButton::OnDragStart		ui	orchestration		Sets NORMAL on an enabled, unlocked button, then runs the frame's drag start	verified	one	ui/button#mouse-presses-and-clicks	
-0x779430	10	InitTable779440Thunk		ui	orchestration	void __cdecl (void)	Calls 0x779440, then jumps to 0x779470 to register its exit callback	verified	one	ui/initthunks#call-thunks	
-0x779440	33	InitTable779440		ui	orchestration	void __cdecl (void)	Stores 4 dwords in globals: 0, -1 and 1 data addresses	verified	one	ui/initstores#constant-tables	
-0x779470	12	InitTable779440Register		ui	orchestration	void __cdecl (void)	Registers 0x779480 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
-0x779480	11	InitTable779440Exit		ui	orchestration	void __cdecl (void)	Stores a data address in a global	verified	one	ui/initexits#other-exits	
+0x779430	10	InitObject779440Thunk		ui	orchestration	void __cdecl (void)	Calls 0x779440, then jumps to 0x779470 to register its exit callback	verified	one	ui/initthunks#call-thunks	
+0x779440	33	InitObject779440		ui	orchestration	void __cdecl (void)	Builds a static object: stores its vtable, then 0, -1 and 0	verified	one	ui/initstores#object-constructors	
+0x779470	12	InitObject779440Register		ui	orchestration	void __cdecl (void)	Registers 0x779480 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
+0x779480	11	InitObject779440Exit		ui	orchestration	void __cdecl (void)	Puts the base vtable back in the static object that 0x779440 builds	verified	one	ui/initexits#other-exits	
 0x779490	78	CSimpleButton::OnEnter		ui	orchestration		Runs the frame's enter and the label refresh only when enabled, then the C++ listener	verified	one	ui/button#entering-and-leaving	
 0x7794e0	88	CSimpleButton::OnLeave		ui	orchestration		Runs the frame's leave and the label refresh only when enabled, then the C++ listener	verified	one	ui/button#entering-and-leaving	
 0x779540	177	CSimpleButton::RunClick		ui	orchestration		Runs the C++ listener and OnClick with the button's name, on an enabled button	verified	one	ui/button#running-a-click	
