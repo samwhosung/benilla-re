@@ -565,6 +565,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
+0x80917c	void *[4]	s_nameCacheVtable		dbcache	Holds the vtable of the names cache object; slot 0 frees a node	inferred	none	
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
 0x80928c	int32_t[9]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, -42000 to 21000 and 42000, then the bound 43000	verified	one	objectlayer/playercombat#using-an-item
