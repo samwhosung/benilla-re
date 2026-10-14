@@ -11426,55 +11426,55 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc750	33	ResetTradeSkillState		ui	orchestration	void __cdecl (void)	Zeroes the selection, the row and header counts, the last built line and the repeat spell	verified	one	tradeskill/recipes#list-state	
 0x4fc780	5	CancelTradeSkillRequestsThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc890, which cancels the pending item requests	verified	one	tradeskill/recipes#created-item	
 0x4fc790	210	FreeTradeSkillLists		ui	orchestration	void __cdecl (void)	Frees every row and header, both arrays and the open line, and zeroes the counts	verified	one	tradeskill/recipes#list-state	
-0x4fc870	25	CloseTradeSkillWindow		ui	orchestration	void __cdecl (void)	Stores 0 as the open line, clears the repeat latch and raises TRADE_SKILL_CLOSE	verified	one	tradeskill/recipes#open-close-and-selection	
-0x4fc890	71	CancelTradeSkillRequests		ui	primitive	void __cdecl (void)	Cancels the item request callback of every row by spell id and zeroes the pending count	verified	one	tradeskill/recipes#created-item	
-0x4fc8e0	41	OnPendingItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the list with flag 1 when the last pending item record arrives or the count is already 0	verified	one	tradeskill/recipes#created-item	
+0x4fc870	25	CloseTradeSkillWindow		ui	orchestration		Clears the profession window line and the recast and signals TRADE_SKILL_CLOSE	verified	one	ui/tradeskill#opening-and-closing	
+0x4fc890	71	CancelTradeSkillItemWaits		ui	primitive		Cancels the pending created item requests of the profession list	verified	one	ui/tradeskill#building-the-list	
+0x4fc8e0	41	TradeSkillItemArrived		ui	orchestration		Rebuilds the profession list when the last awaited item record arrives	verified	one	ui/tradeskill#building-the-list	
 0x4fc910	150	ToggleTradeSkill		ui	orchestration	void __fastcall (uint32_t skillLine)	Closes the window of the open skill line, or opens one for another and raises TRADE_SKILL_SHOW	verified	one	tradeskill/recipes#open-close-and-selection	
-0x4fc9b0	38	SelectTradeSkillRow		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of a row as the selection, or 0 for a header or a bad index	verified	one	tradeskill/recipes#open-close-and-selection	
-0x4fc9e0	54	FindSelectedTradeSkillRow		ui	primitive	int32_t __cdecl (void)	Returns the index of the row holding the selected spell id, or -1	verified	one	tradeskill/recipes#open-close-and-selection	
-0x4fca20	1884	BuildTradeSkillList		ui	primitive	void __fastcall (uint32_t rebuildHeaders)	Rebuilds the profession list from the local player and the open skill line	verified	one	tradeskill/recipes#building-the-list	
-0x4fd180	510	FilterAndSortTradeSkillList		ui	primitive	void __fastcall (uint32_t deriveFlags)	Sets the visible flags and the displayed count from the masks, then sorts the headers and the rows	verified	one	tradeskill/recipes#filter-and-visibility	
-0x4fd380	442	CompareTradeSkillRows		ui	primitive	int __cdecl (void **a, void **b)	Orders rows by shown group, group position, header first, difficulty, item level and name	verified	one	tradeskill/recipes#row-order	
-0x4fd540	265	CompareTradeSkillHeaders		ui	primitive	int __cdecl (void **a, void **b)	Orders headers by item class and the case-blind ItemSubClass name	verified	one	tradeskill/recipes#header-order	
-0x4fd650	75	FindTradeSkillHeaderPosition		ui	primitive	int32_t __fastcall (uint32_t row)	Returns the header position of a header row, or -1 for any other row	verified	one	tradeskill/recipes#filter-masks	
-0x4fd6a0	98	IsTradeSkillHeaderCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns 1 when the collapse bit of the header row is clear, else 0	verified	one	tradeskill/recipes#filter-masks	
-0x4fd710	26	SetTradeSkillSubclassMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the subclass filter mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
-0x4fd730	26	SetTradeSkillSlotMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the slot filter mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
-0x4fd750	26	SetTradeSkillCollapseMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the collapse mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
-0x4fd770	22	LatchTradeSkillRecast		ui	orchestration	void __fastcall (uint32_t spell, uint32_t count)	Stores the repeat spell and count and raises UPDATE_TRADESKILL_RECAST	verified	one	tradeskill/cast#repeat-latch	
+0x4fc9b0	38	SelectTradeSkillRow		ui	orchestration		Stores the spell id of a profession row as the selection, or 0 for a header	verified	one	ui/tradeskill#opening-and-closing	
+0x4fc9e0	54	GetTradeSkillSelectionRow		ui	primitive		Returns the row of the selected profession spell, or -1	verified	one	ui/tradeskill#opening-and-closing	
+0x4fca20	1884	BuildTradeSkillList		ui	primitive		Builds the profession window's recipe rows and item-type headers and sorts them	verified	one	ui/tradeskill#building-the-list	
+0x4fd180	510	SortTradeSkillList		ui	primitive		Applies the filters, marks row visibility and sorts the headers and rows	verified	one	ui/tradeskill#filters-and-visibility	
+0x4fd380	442	CompareTradeSkillRows		ui	primitive		Orders profession rows by visibility, header, bucket, item field and name	verified	one	ui/tradeskill#order	
+0x4fd540	265	CompareTradeSkillHeaders		ui	primitive		Orders profession headers by item class and subclass name	verified	one	ui/tradeskill#order	
+0x4fd650	75	GetTradeSkillGroupOfRow		ui	primitive		Returns the header ordinal of a profession header row, or -1	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
+0x4fd6a0	98	IsTradeSkillGroupCollapsed		ui	primitive		Returns whether the header of a profession header row is collapsed	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
+0x4fd710	26	SetTradeSkillTypeFilter		ui	orchestration		Stores the type filter, re-sorts and signals TRADE_SKILL_UPDATE	verified	one	ui/tradeskill#filters-and-visibility	
+0x4fd730	26	SetTradeSkillSlotFilter		ui	orchestration		Stores the slot filter, re-sorts and signals TRADE_SKILL_UPDATE	verified	one	ui/tradeskill#filters-and-visibility	
+0x4fd750	26	SetTradeSkillExpandedMask		ui	orchestration		Stores the expanded mask, re-sorts and signals TRADE_SKILL_UPDATE	verified	one	ui/tradeskill#filters-and-visibility	
+0x4fd770	22	SetTradeSkillRecast		ui	orchestration		Stores the repeated cast spell and count and signals UPDATE_TRADESKILL_RECAST	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
 0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	tradeskill/cast#repeat-latch	
 0x4fd7b0	60	OnTradeSkillCastDone		ui	orchestration	void __fastcall (uint32_t spell)	Counts down the repeat and casts the spell again, or clears the latch	verified	one	tradeskill/cast#repeat-latch	
-0x4fd7f0	8	Script::CloseTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the profession window and returns no value	verified	one	tradeskill/recipes#open-close-and-selection	
-0x4fd800	23	Script::GetNumTradeSkills	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the profession list	verified	one	tradeskill/bindings#list-and-selection	
-0x4fd820	400	Script::GetTradeSkillInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, difficulty word, available count and expanded flag of a profession row	verified	one	tradeskill/bindings#list-and-selection	
-0x4fd9b0	64	Script::SelectTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the profession row at an index	verified	one	tradeskill/bindings#list-and-selection	
-0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected profession row plus 1	verified	one	tradeskill/bindings#list-and-selection	
-0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds left of the cooldown of a profession recipe, or nil	verified	one	tradeskill/bindings#row-values	
+0x4fd7f0	8	Script::CloseTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the profession window	verified	one	ui/tradeskill#opening-and-closing	
+0x4fd800	23	Script::GetNumTradeSkills	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of visible profession rows	verified	one	ui/tradeskill#opening-and-closing	
+0x4fd820	400	Script::GetTradeSkillInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, kind, makeable count and expanded flag of a profession row	verified	one	ui/tradeskill#reading-a-row	
+0x4fd9b0	64	Script::SelectTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the profession row of a number	verified	one	ui/tradeskill#opening-and-closing	
+0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the selected profession spell, or 0	verified	one	ui/tradeskill#opening-and-closing	
+0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds left of a recipe cooldown, or nil	verified	one	ui/tradeskill#reading-a-row	
 0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive		Implements the Lua function GetTradeSkillIcon	inferred	none		
 0x4fdc30	21	OnTradeSkillItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the trade skill window's list when an item template arrives	verified	one	ui/spellbook#recipe-icons	
-0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the least and greatest number of items a profession recipe makes	verified	one	tradeskill/bindings#row-values	
-0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the open skill line; slot -1 reads below the first slot	verified	one	tradeskill/bindings#row-values	
-0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the tooltip lines of the item a profession recipe creates	verified	one	tradeskill/itemstats#entry-and-gates	
+0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the lowest and highest number a recipe makes	verified	one	ui/tradeskill#reading-a-row	
+0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the open skill line name, the player rank and the maximum	verified	one	ui/tradeskill#the-windows-line	
+0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the statistics lines of the item a recipe creates	inferred	none	ui/tradeskill#item-statistics	
 0x4ff3c0	5	InitTradeSkillTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ff3d0, a static initializer	verified	one	tradeskill/overview#static-objects	
 0x4ff3d0	15	InitTradeSkillTwoPi		ui	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	tradeskill/overview#static-objects	
 0x4ff3e0	5	InitTradeSkillInvTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ff3f0, a static initializer	verified	one	tradeskill/overview#static-objects	
 0x4ff3f0	19	InitTradeSkillInvTwoPi		ui	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	tradeskill/overview#static-objects	
-0x4ff410	246	Script::GetTradeSkillItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of the item a profession recipe creates	verified	one	tradeskill/bindings#item-links	
-0x4ff510	169	Script::GetTradeSkillNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a profession recipe	verified	one	tradeskill/bindings#reagents	
-0x4ff5c0	568	Script::GetTradeSkillReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed count and owned count of a recipe reagent	verified	one	tradeskill/bindings#reagents	
-0x4ff800	370	Script::GetTradeSkillReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of a reagent of a profession recipe	verified	one	tradeskill/bindings#item-links	
-0x4ff980	470	Script::GetTradeSkillTools	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the spell focus and totem tools of a profession recipe as name and flag pairs	verified	one	tradeskill/bindings#tools	
-0x4ffb60	181	Script::GetTradeSkillSubClasses	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the subclass name of every profession header	verified	one	tradeskill/bindings#subclasses-and-slots	
-0x4ffc20	79	Script::GetTradeSkillInvSlots	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the slot name of every inventory slot bit of the profession list	verified	one	tradeskill/bindings#subclasses-and-slots	
-0x4ffc70	275	Script::SetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the subclass filter of a profession header	verified	one	tradeskill/bindings#filter-functions	
-0x4ffd90	195	Script::GetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether the subclass filter shows a profession header	verified	one	tradeskill/bindings#filter-functions	
-0x4ffe60	356	Script::SetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the inventory slot filter of a profession slot	verified	one	tradeskill/bindings#filter-functions	
-0x4fffd0	238	Script::GetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether the slot filter shows a profession slot	verified	one	tradeskill/bindings#filter-functions	
-0x5000c0	124	Script::CollapseTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the group of a profession header row or every group	verified	one	tradeskill/bindings#collapse-functions	
-0x500140	123	Script::ExpandTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the group of a profession header row or every group	verified	one	tradeskill/bindings#collapse-functions	
-0x5001c0	112	Script::GetFirstTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the first displayed profession recipe, or 0	verified	one	tradeskill/bindings#list-and-selection	
-0x500230	71	Script::GetTradeskillRepeatCount	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the remaining repeat count when the selected spell is latched, else 1	verified	one	tradeskill/cast#repeat-latch	
-0x500280	159	Script::DoTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts a profession recipe, latching a repeat count above 1	verified	one	tradeskill/cast#dotradeskill	
+0x4ff410	246	Script::GetTradeSkillItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of the item a recipe creates	verified	one	ui/tradeskill#reading-a-row	
+0x4ff510	169	Script::GetTradeSkillNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a recipe	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ff5c0	568	Script::GetTradeSkillReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed and carried count of a recipe reagent	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ff800	370	Script::GetTradeSkillReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of a recipe reagent	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ff980	470	Script::GetTradeSkillTools	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the focus and tool names of a recipe with whether they are present	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ffb60	181	Script::GetTradeSkillSubClasses	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the subclass names of the profession headers	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ffc20	79	Script::GetTradeSkillInvSlots	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the slot names of the slot kinds the profession list offers	verified	one	ui/tradeskill#reagents-tools-and-filters	
+0x4ffc70	275	Script::SetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the shown state of an item subclass header	verified	one	ui/tradeskill#setting-the-filters	
+0x4ffd90	195	Script::GetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when an item subclass is shown, else nil	verified	one	ui/tradeskill#setting-the-filters	
+0x4ffe60	356	Script::SetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the shown state of an equipment slot kind	verified	one	ui/tradeskill#setting-the-filters	
+0x4fffd0	238	Script::GetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when an equipment slot kind is shown, else nil	verified	one	ui/tradeskill#setting-the-filters	
+0x5000c0	124	Script::CollapseTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses an item subclass header, or all of them	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
+0x500140	123	Script::ExpandTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands an item subclass header, or all of them	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
+0x5001c0	112	Script::GetFirstTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the first visible recipe, or 0	verified	one	ui/tradeskill#the-windows-line	
+0x500230	71	Script::GetTradeskillRepeatCount	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the repeat count of the running repeated cast, or 1	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
+0x500280	159	Script::DoTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts a recipe, repeating it up to the makeable count	verified	one	ui/tradeskill#collapsing-repeating-and-casting	
 0x500320	33	RegisterTradeSkillFunctions		ui	orchestration	void __cdecl (void)	Registers the 26 Lua functions of the profession window	verified	one	tradeskill/overview#lua-function-tables	
 0x500350	27	UnregisterTradeSkillFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 26 Lua functions of the profession window	verified	one	tradeskill/overview#lua-function-tables	
 0x500370	10	InitTradeSkillUseCount		ui	orchestration	void __cdecl (void)	Runs 0x500380 and registers the destructor 0x5003b0	verified	one	tradeskill/overview#static-objects	

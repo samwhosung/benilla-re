@@ -1549,10 +1549,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84d860	char[41]	s_textUsageGetContainerItemInfoIndexSlot		ui	Holds the string "Usage: GetContainerItemInfo(index, slot)"	inferred	none	
 0x84d88c	char[41]	s_textUsageGetContainerItemLinkIndexSlot		ui	Holds the string "Usage: GetContainerItemLink(index, slot)"	inferred	none	
 0x84d8b8	char[45]	s_textUsageGetContainerItemCooldownIndexSlot		ui	Holds the string "Usage: GetContainerItemCooldown(index, slot)"	inferred	none	
-0x84dd60	uint32_t	s_subclassFilterMask		ui	Holds the subclass filter mask: a set bit shows the header at that position	verified	one	tradeskill/recipes#list-state
-0x84dd64	uint32_t	s_slotFilterMask		ui	Holds the inventory slot filter mask: a set bit shows the slot	verified	one	tradeskill/recipes#list-state
-0x84dd68	uint32_t	s_collapseMask		ui	Holds the collapse mask: a clear bit collapses the header at that position	verified	one	tradeskill/recipes#list-state
-0x84dd70	const char *[24]	s_slotKeys		ui	Holds the global string key of each of the 24 inventory slot bits	verified	one	tradeskill/recipes#inventory-slots
+0x84dd60	uint32_t	s_tradeSkillTypeFilter		ui	Holds the mask of item-type headers shown, bit n for header n	verified	one	ui/tradeskill#window-state
+0x84dd64	uint32_t	s_tradeSkillSlotFilter		ui	Holds the mask of equipment slot kinds shown	verified	one	ui/tradeskill#window-state
+0x84dd68	uint32_t	s_tradeSkillExpandedMask		ui	Holds the mask of expanded item-type headers, bit n for header n	verified	one	ui/tradeskill#window-state
+0x84dd70	char *[24]	s_tradeSkillSlotNames		ui	Holds the global string keys of the 24 equipment slot kinds	verified	one	ui/tradeskill#reagents-tools-and-filters
 0x84ddd0	void *[52]	s_tradeSkillFunctions		ui	Holds the name and handler of each of the 26 profession window Lua functions	verified	one	tradeskill/overview#lua-function-tables
 0x84e270	char[52]	s_pathTradeSkillFrame		ui	Holds the source path of TradeSkillFrame.cpp	verified	one	tradeskill/overview#object-files
 0x84e32c	const char[12]	s_fmtPvpMedal		ui	Holds the format PVP_MEDAL%d that builds the key of a required medal	verified	one	ui/tooltipitemreq#spell-honor-rank-and-medal-lines
@@ -2990,19 +2990,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbddfa0	uint32_t[2]	s_merchantItems		ui	Holds the open merchant's item table pointer and count; both zero when no merchant is open	verified	one	ui/tooltipitemfoot#the-sell-price
 0xbddfa8	uint32_t	s_merchantItemCount		ui	Holds the number of rows of the open vendor	verified	one	ui/merchantcursor#grabbing-a-merchant-row
 0xbddfac	uint32_t	s_buybackCount		ui	Holds the number of items the vendor will buy back	verified	one	ui/merchantcursor#merchant-sell-cursors
-0xbddfb8	uint32_t[4]	s_tradeSkillRows		ui	Holds the recipe row array: capacity, count, data pointer and granularity	verified	one	tradeskill/recipes#list-state
+0xbddfb8	uint32_t[4]	s_tradeSkillRowArray		ui	Holds the growable array of recipe row pointers: capacity, count, data, chunk	verified	one	ui/tradeskill#window-state
 0xbddfd8	float	s_tradeSkillInfinity		ui	Holds +infinity copied by the first static initializer of the file; nothing reads it	verified	one	tradeskill/overview#static-objects
-0xbddff8	uint32_t[4]	s_tradeSkillHeaders		ui	Holds the header array: capacity, count, data pointer and granularity	verified	one	tradeskill/recipes#list-state
+0xbddff8	uint32_t[4]	s_tradeSkillHeaderArray		ui	Holds the growable array of item-type header pointers: capacity, count, data, chunk	verified	one	ui/tradeskill#window-state
 0xbde040	uint32_t	s_currentTradeSkillLine		ui	Holds the skill line the trade-skill window shows; 0x4fc910 sets or clears it	verified	one	spell/cast#cast-attempt-refusals
-0xbde044	uint32_t	s_selectedTradeSkillSpell		ui	Holds the spell id of the selected profession row, 0 for none	verified	one	tradeskill/recipes#list-state
-0xbde048	uint32_t	s_pendingItemRequests		ui	Holds the count of item requests the profession build waits for	verified	one	tradeskill/recipes#created-item
-0xbde04c	uint32_t	s_tradeSkillRowCount		ui	Holds the full count of profession rows, header rows included	verified	one	tradeskill/recipes#list-state
-0xbde050	uint32_t	s_tradeSkillHeaderCount		ui	Holds the count of headers of the profession list	verified	one	tradeskill/recipes#list-state
-0xbde054	uint32_t	s_tradeSkillDisplayedCount		ui	Holds the displayed count of profession rows after the filters	verified	one	tradeskill/recipes#list-state
-0xbde058	uint32_t	s_tradeSkillSlotBits		ui	Holds the inventory slot bits of the rows built for the open skill line	verified	one	tradeskill/recipes#inventory-slots
-0xbde05c	uint32_t	s_tradeSkillRepeatSpell		ui	Holds the spell the profession window repeats, 0 for none	verified	one	tradeskill/cast#repeat-latch
-0xbde060	uint32_t	s_tradeSkillRepeatCount		ui	Holds the number of repeats left for the repeat spell	verified	one	tradeskill/cast#repeat-latch
-0xbde064	uint32_t	s_lastBuiltSkillLine		ui	Holds the skill line of the last profession build	verified	one	tradeskill/recipes#open-close-and-selection
+0xbde044	uint32_t	s_tradeSkillSelection		ui	Holds the spell id selected in the profession window, or 0	verified	one	ui/tradeskill#window-state
+0xbde048	uint32_t	s_tradeSkillPendingItems		ui	Holds the number of created item records the profession list still waits for	verified	one	ui/tradeskill#window-state
+0xbde04c	uint32_t	s_tradeSkillRowCount		ui	Holds the number of rows in the profession list	verified	one	ui/tradeskill#window-state
+0xbde050	uint32_t	s_tradeSkillHeaderCount		ui	Holds the number of item-type headers in the profession list	verified	one	ui/tradeskill#window-state
+0xbde054	int32_t	s_tradeSkillVisibleCount		ui	Holds the number of visible rows of the profession list	verified	one	ui/tradeskill#window-state
+0xbde058	uint32_t	s_tradeSkillSlotKinds		ui	Holds the set of equipment slot kinds the profession list offers	verified	one	ui/tradeskill#window-state
+0xbde05c	uint32_t	s_tradeSkillRecastSpell		ui	Holds the spell id of the running repeated cast, or 0	verified	one	ui/tradeskill#window-state
+0xbde060	uint32_t	s_tradeSkillRecastCount		ui	Holds the repeat count of the running repeated cast	verified	one	ui/tradeskill#window-state
+0xbde064	uint32_t	s_tradeSkillBuiltLine		ui	Holds the skill line of the last profession list built	verified	one	ui/tradeskill#opening-and-closing
 0xbde068	char[512]	s_questGreetingText		ui	Holds the quest giver's greeting	verified	one	ui/gossip#quest-greetings
 0xbde288	char[1024]	s_questDetailText		ui	Holds the quest details text	verified	one	ui/gossip#quest-greetings
 0xbde690	uint8_t[32][76]	s_activeQuests		ui	Holds the quest giver's active quests: id, level and title	verified	one	ui/questgiver#the-two-pools
