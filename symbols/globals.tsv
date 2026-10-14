@@ -71,6 +71,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4d0f44	void *[8]	s_cases4d0d50		ui	Holds the 8 case addresses of the switch in 0x4d0d50	inferred	none	
 0x504b44	void *[14]	s_cases504540		ui	Holds the 14 case addresses of the switch in 0x504540	inferred	none	
 0x504b7c	uint8_t[28]	s_caseIndexes504540		ui	Holds the 28 case indexes of the switch in 0x504540	inferred	none	
+0x507590	void *[9]	s_serverTokenArms		ui	Holds the nine arms of the server text token handler 0x5070a0	verified	one	ui/questtext#the-tokens
+0x5075b4	uint8_t[54]	s_serverTokenIndexes		ui	Maps a token letter from B to w to its arm	verified	one	ui/questtext#the-tokens
 0x5080e0	void *[22]	s_tokenArms		ui	Holds the 22 arms of the description token switch of 0x507710	verified	one	ui/spelltokens#the-token-syntax
 0x508138	uint8_t[58]	s_caseIndexes507710		ui	Holds the 58 case indexes of the switch in 0x507710	inferred	none	
 0x52e4fc	void *[13]	s_cases52b650		ui	Holds the 13 case addresses of the switch in 0x52b650	inferred	none	
@@ -2265,7 +2267,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71e7c	uint32_t			ui	Holds a dword that Script::GetWorldStateUIInfo reads and writes; not read here	inferred	none	
 0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state
 0xb71ea8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb71ec8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb71ec8	uint32_t	s_worldStateBuckets		ui	Points at the bucket array of the world state table, three dwords a bucket	verified	one	ui/questtext#world-state-numbers
+0xb71ed0	uint32_t	s_worldStateMask		ui	Holds the bucket mask of the world state table, -1 while it is empty	verified	one	ui/questtext#world-state-numbers
 0xb71fcc	uint32_t			ui	Holds a dword that HandleInspectHonorStatsPacket, SetInspectTarget read and write; not read here	inferred	none	
 0xb7203c	uint32_t			ui	Holds a dword that Script::GetMeetingStoneStatusText reads and writes; not read here	inferred	none	
 0xb72060	uint32_t			ui	Holds a dword that HandleListStabledPetsPacket, Script::SetPetStablePaperdoll read and write; not read here	inferred	none	

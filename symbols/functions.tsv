@@ -8873,7 +8873,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c5650	137			ui	primitive		Runs its object file code that calls 0x4c6410, 0x4c56e0; not read here	inferred	none		
 0x4c56e0	299			ui	primitive		Runs its object file code that calls 0x4368c0; not read here	inferred	none		
 0x4c5810	91	GetWorldStateValue		ui	orchestration	uint32_t __fastcall (uint32_t id)	Returns the value stored for a world state id, or 0	verified	one	ui/minimapblips#placing-the-blips	
-0x4c5870	449			ui	primitive		Runs its object file code that calls 0x4c6890, 0x4c6530, 0x4c6880 and 4 more; not read here	inferred	none		
+0x4c5870	449	SetWorldState		ui	primitive		Stores a world state value for an id	inferred	none	ui/questtext#world-state-numbers	
 0x4c5a40	44	Script::GetNumWorldStateUI	idb	ui	orchestration		Implements the Lua function GetNumWorldStateUI	inferred	none		
 0x4c5a70	395	Script::GetWorldStateUIInfo	idb	ui	primitive		Implements the Lua function GetWorldStateUIInfo	inferred	none		
 0x4c5c00	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
@@ -11962,8 +11962,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x506f30	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x506f50	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x506f60	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x506f70	298			ui	primitive		Runs QuestTextParser.cpp code that calls ClntObjMgrObjectPtr, DBCache::NameCache::GetRecord and 4 more; not read here	inferred	none		
-0x5070a0	1264			ui	primitive		Runs QuestTextParser.cpp code that calls SStrCopy, CGUnit_C::GetUnitName, 0x64b480 and 10 more; not read here	inferred	none		
+0x506f70	298	ExpandServerText		ui	primitive		Copies server text expanding $ macros for a GUID's unit or name record, returning whether all were known	verified	one	ui/questtext#the-driver	
+0x5070a0	1264	ExpandServerToken		ui	primitive		Expands the macro letter after a $ into the output, or refuses it	verified	one	ui/questtext#the-tokens	
 0x5075f0	279	ExpandSpellText		ui	primitive	uint32_t __thiscall (char *out, uint32_t size, uint32_t pet, uint32_t level, uint32_t aura, uint32_t stack, uint32_t unmodified)	Copies a spell description with every dollar token expanded and returns 1 when none failed	verified	one	ui/spelltokens#the-expander	
 0x507710	2511	ExpandSpellToken		ui	primitive	uint32_t __thiscall (void *spell, uint32_t level, uint32_t stack, uint32_t pet, uint32_t unmodified)	Expands the token at the text cursor into the buffer and returns 0 when it cannot	verified	one	ui/spelltokens#the-token-syntax	
 0x508180	277	ExpandGenderToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size)	Appends the male or female form of a dollar g token by the active player's gender	verified	one	ui/spelltokens#gendered-text	
