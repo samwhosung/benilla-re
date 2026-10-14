@@ -108,9 +108,10 @@ with type `0x18`. The dice lines take the same arguments as the others plus the 
 and two bytes (the roll number and the type). `0x61b9e0` then writes the winner's line, closes an
 open roll, and promotes a queued one. With `showLootSpam` nonzero (`0x61ba43`, `0x61bb07`) the line is `LOOT_ROLL_YOU_WON` or
 `LOOT_ROLL_WON`, without the roll number. With the variable 0 or missing, the line is the
-`_NO_SPAM_NEED` form when the type is 1, else `_NO_SPAM_GREED`, and carries the number.
+`_NO_SPAM_NEED` form when the type is 1, else `_NO_SPAM_GREED`, and carries the number. A null variable is
+shown by `0x61c0b0` (`0x61c0c3`) but takes the `_NO_SPAM` line here (`0x61ba41`, `0x61ba8a`).
 
-Addresses: `0x61b870`, `0x61b9a0`, `0x61b9e0`, `0x61bc80`, `0x61bd50`, `0x61ba3a`, `0x61ba94`, `0x61bafe`, `0x61bb52`, `0x61bc12`, `0x61bc6b`, `0x5ebcf0`
+Addresses: `0x61b870`, `0x61b9a0`, `0x61b9e0`, `0x61bc80`, `0x61bd50`, `0x61ba3a`, `0x61ba94`, `0x61bafe`, `0x61bb52`, `0x61bc12`, `0x61bc6b`, `0x5ebcf0`, `0x61c0c3`, `0x61ba41`, `0x61ba8a`
 Confidence: verified
 Proof: one
 Test: none
@@ -153,4 +154,4 @@ Test: none
 0xb712a8, counted at 0xb713e0; `0x61c5e0` compares each member's GUID, `0x61c614` scans for the
 free slot below `0x28`. Slots are indexed by subgroup, so candidates come out grouped by raid group.
 With no party list `0x61c5b9` stores each GUID at the count-byte index with no bound, so a count above 40 writes
-up to 255 GUIDs, past the table over the next roll id `0xc4dda4` and the open count `0xc4dda8`.
+up to 255 GUIDs past the table: the high dword of index 45 lands on `0xc4dda4` and the low dword of index 46 on `0xc4dda8`.

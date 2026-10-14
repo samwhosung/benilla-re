@@ -79,7 +79,7 @@ A kit played as a state (kind 2) does not play its animation. It only checks whe
 already plays it and, if not, picks the base animation again. The stun animation is therefore
 named by the stun spells' state kits and never played by them.
 
-Addresses: `0x60edf0`, `0x60f361`, `0x60f366`, `0x60f383`, `0x60f38b`, `0x60f390`, `0x60f399`, `0x60f3c5`, `0x5fdb50`, `0x5fd9e0`, `0x5ff4c6`, `0x612b31`, `0x61da65`, `0x61dced`, `0x612990`, `0x5fd2e0`, `0x5fd31f`, `0x612a05`, `0x5fda20`
+Addresses: `0x60edf0`, `0x60f361`, `0x60f366`, `0x60f383`, `0x60f38b`, `0x60f390`, `0x60f399`, `0x60f3c5`, `0x5fdb50`, `0x5fd9e0`, `0x5ff4c6`, `0x612b31`, `0x61da65`, `0x61dced`, `0x612990`, `0x5fd2e0`, `0x5fd31f`, `0x612a05`, `0x5fda20`, `0x5fd951`, `0x5fda03`, `0x6129e4`, `0x6129e9`
 Confidence: verified
 Proof: one
 Test: none
@@ -88,9 +88,9 @@ A kit animation below 0 skips the block (`0x60f366`). For kind 2 (`0x60f383`) th
 animation armed on the unit (`0x5fdb50`, the upper-body key bone first), returns when it equals
 the kit's (`0x60f390`) and else calls `0x5fd9e0(-1)` (`0x60f399`); it never reaches `0x60f3c5`,
 the call that plays a kit's animation for the other kinds. A precast or channel kit's animation reaches `0x5fe2f0` another way:
-`0x5fd9e0` picks the base animation, the resolver `0x5fd2e0` calls `0x612990` (`0x5fd31f`), which returns `[kit+0x8]` (`0x612a05`), and `0x5fd9e0` plays it (`0x5fda20`). The four calls with kind 2 are `0x5ff4c6`,
+`0x5fd9e0` calls the selector `0x5fd8b0` (`0x5fda03`), which calls the resolver `0x5fd2e0` (`0x5fd951`); that calls `0x612990` (`0x5fd31f`), which returns the animation `+0x8` of a kit row (`0x612a05`), and `0x5fda20`, inside `0x5fd9e0`, plays it through `0x5fe2f0`. The four calls with kind 2 are `0x5ff4c6`,
 `0x612b31`, `0x61da65` and `0x61dced`; the first and last read the visual's state kit, `0x612b31` its channel
-kit. `0x612990` takes the base animation only from the visual's precast kit (`+0x4`) and channel kit (`+0x14`).
+kit. The kit row of `0x612990` comes from the table `0xc0d74c` by the spell's visual: its field `+0x4` when the unit holds a precast spell `+0xc8c`, else its field `+0x14` for the spell in `+0x228` of the field block (`0x6129e4`, `0x6129e9`).
 
 ## Stopping a spell's kits
 

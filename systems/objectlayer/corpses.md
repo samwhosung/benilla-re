@@ -98,10 +98,9 @@ bit 3 and bit 4 tests (`0x5d6465`, `0x5d6470`). `0x5d6494` is the tabard call to
 A corpse lies in animation 132 `Drowned` when it is submerged, else 6 `Dead`. The test, made once
 when the corpse is created and again when its model loads, is `0x5d6540(node, position)`: the node
 must hold liquid, and its liquid level must stand more than 2/3 above the corpse's height. The
-result stays in `+0x2ac` and also decides whether a skeleton is drawn: a submerged skeleton is
-not drawn: the world frame's pass `0x4815d0` calls slot 16 at `0x4815ff` and tests the result at `0x48161d`, and a 0 skips the draw list.
+result stays in `+0x2ac` and also decides whether a skeleton is drawn, through slot 16 below: the world frame's pass `0x4815d0` calls slot 16 with `list` at `0x4815ff` and tests the result at `0x48161d`, and a 0 skips the draw list.
 
-Addresses: `0x5d6540`, `0x5d658a`, `0x5d63d9`, `0x5d63eb`, `0x5d6402`, `0x5d6850`, `0x5d6887`, `0x5d67e0`, `0x5d6809`, `0x4815d0`, `0x4815ff`, `0x48161d`, `0x670630`, `0x69e280`, `0x69b6d0`, `0x80abfc`
+Addresses: `0x5d6540`, `0x5d658a`, `0x5d63d9`, `0x5d63eb`, `0x5d6402`, `0x5d6850`, `0x5d6887`, `0x5d67e0`, `0x5d6809`, `0x5d67ef`, `0x5d67fd`, `0x5d6813`, `0x5d682b`, `0x683e9e`, `0x683f65`, `0x481540`, `0x477ab0`, `0x477860`, `0x4815d0`, `0x4815ff`, `0x48161d`, `0x670630`, `0x69e280`, `0x69b6d0`, `0x80abfc`
 Confidence: verified
 Proof: one
 Test: none
@@ -113,8 +112,12 @@ subtracts the corpse's `z`, and `0x5d658a` compares with 0.6666667 (`0x80abfc`) 
 true only above it. `0x5d63eb` stores the latch and `0x5d63f7` chooses `0x84` or `6`. Slot 13
 (`0x5d6850`), the model-loaded hook, repeats the test through the latch and the play call
 (`0x5d6887`), then stores half the model's bounding-sphere radius, `+0xc · 0.5`, at `+0x2b0`.
-Slot 16 (`0x5d67e0`) draws only if the base test passes, the latch is clear or the flags are not a
-skeleton, and the component updates (`0x5d6809`, `0x5d682b`).
+Slot 16 (`0x5d67e0(list)`) answers the world frame's pass, whose argument `list` is 1 in the first walk of the render
+records and 2 in the second (`0x683e9e`, `0x683f65`, passed on by `0x481540`). With bit 0 of `list` clear
+(`0x5d67ef`) it returns 0 for every corpse, after `0x477ab0` on the component when there is one
+(`0x5d67fd`). With the bit set it returns 0 when the latch `+0x2ac` is nonzero and bit 0 of the flags word
+`+0x74` is set (`0x5d6813` to `0x5d681d`); otherwise 1 with no component, else 1 only when `0x477860(component, 0)`
+returns nonzero (`0x5d682b`).
 
 ## The ground normal
 
