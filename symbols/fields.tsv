@@ -1,4 +1,12 @@
 struct	offset	size	type	name	system	meaning	confidence	proof	finding
+AccountDataSection	0x0000	1	uint8_t	m_accountWide	net	Holds 1 for an account-wide section and 0 for a per-character one	verified	one	net/accountdata#section-table
+AccountDataSection	0x0004	4	const char *	m_localFile	net	Holds the name of the second file, or null	verified	one	net/accountdata#section-table
+AccountDataSection	0x0008	4	const char *	m_cacheFile	net	Holds the name of the file that is hashed, uploaded and replaced	verified	one	net/accountdata#section-table
+AccountDataSection	0x000c	1	uint8_t	m_pending	net	Holds 1 while the section waits for the server	verified	one	net/accountdata#section-table
+AccountDataSection	0x0010	4	void *	m_readCallback	net	Holds the read callback saved while the section is pending	verified	one	net/accountdata#section-table
+AccountDataSection	0x0014	4	void *	m_readArgument	net	Holds the argument saved with the read callback	verified	one	net/accountdata#section-table
+AccountDataSection	0x0018	4	uint32_t	m_saveTimer	net	Holds the save timer, zero when none is armed	verified	one	net/accountdata#section-table
+AccountDataSection	0x001c	16	uint8_t[16]	m_digest	net	Holds the digest of the file the last time client and server agreed	verified	one	net/accountdata#section-table
 BlizzardObject	0x0000	4	void *	m_prevLink	spell	Holds the address of the previous link in the emitter list	verified	one	spell/visuals#area-shard-emitter-creation
 BlizzardObject	0x0004	4	void *	m_next	spell	Holds the next emitter, or the terminator address marked by bit 0	verified	one	spell/visuals#area-shard-emitter-creation
 BlizzardObject	0x0008	260	char[260]	m_modelPath	spell	Holds the shard model path 0x6eb930 copies	verified	one	spell/visuals#emitter-initialization

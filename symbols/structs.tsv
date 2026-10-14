@@ -1,4 +1,5 @@
 name	size	vtable	system	meaning	confidence	proof	finding
+AccountDataSection	44		net	Holds an account data section: scope, file names, pending byte, read callback, save timer and cached digest	verified	one	net/accountdata#section-table
 BlizzardObject	324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
 CBaseManaged	28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
 CCamera	368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime

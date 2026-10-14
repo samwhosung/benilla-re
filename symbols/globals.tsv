@@ -1462,6 +1462,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85d6bc	char[8]	s_textHttp		net	Holds the string "http://"	inferred	none	
 0x85d830	void *[38]	s_socialBindings		net	Holds the 19 name and function pairs of the friend, ignore and who script functions	verified	one	net/friends#friend-list-object
 0x85db88	char[23]	s_textUsgaeSortWhoType		net	Holds the string "Usgae: SortWho("type")"	inferred	none	
+0x85dcf0	AccountDataSection[8]	s_accountDataSections		net	Holds the eight account data sections	verified	one	net/accountdata#section-table
 0x85de74	char[17]	s_textMacrosCacheTxt		unassigned	Holds the string "macros-cache.txt"	inferred	none	
 0x85de88	char[17]	s_textMacrosLocalTxt		unassigned	Holds the string "macros-local.txt"	inferred	none	
 0x85def0	uint32_t			unassigned	Holds a dword that ChecksumExecutables reads; not read here	inferred	none	
