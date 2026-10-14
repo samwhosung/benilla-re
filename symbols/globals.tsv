@@ -2833,14 +2833,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb73128	uint64_t	s_guildSelection		ui	Holds the GUID of the selected roster member, 0 for none	verified	one	ui/guild#last-online-and-selection
 0xb73130	uint32_t	s_guildRosterDeadline		ui	Holds the clock value before which GuildRoster sends nothing	verified	one	ui/guild#notes-and-text
 0xb73168	uint32_t[3]	s_skillCategories		ui	Holds the skill category array: capacity, count and data pointer	verified	one	tradeskill/skills#list-state
+0xb73170	void **	s_skillHeaders		ui	Holds the array of skill category header pointers	verified	one	ui/skillverbs#building-the-list
 0xb73184	uint32_t[3]	s_skillRows		ui	Holds the skill row array: capacity, count and data pointer	verified	one	tradeskill/skills#list-state
-0xb731b8	uint32_t	s_skillRowCount		ui	Holds the count of rows of the skill list, headers included	verified	one	tradeskill/skills#list-state
-0xb731bc	uint32_t	s_skillCategoryCount		ui	Holds the count of categories of the skill list	verified	one	tradeskill/skills#list-state
-0xb731c0	uint32_t	s_skillVisibleCount		ui	Holds the count of visible rows of the skill list	verified	one	tradeskill/skills#list-state
-0xb731c4	uint32_t	s_selectedSkillLine		ui	Holds the skill line of the selected skill row, 0 for none	verified	one	tradeskill/skills#selection
-0xb731c8	uint32_t	s_skillCollapseMask		ui	Holds the skill collapse mask: a clear bit collapses the category at that position	verified	one	tradeskill/skills#list-state
-0xb731cc	uint32_t	s_hideUntrainedSkills		ui	Holds the flag that would hide untrained skills; nothing sets it	verified	one	tradeskill/skills#list-state
-0xb731d0	uint32_t	s_chosenSkillCost		ui	Holds the skill point cost of the chosen skill-ups	verified	one	tradeskill/skills#list-state
+0xb7318c	void **	s_skillRows		ui	Holds the array of skill list row pointers, five dwords each	verified	one	ui/skillverbs#building-the-list
+0xb731b8	uint32_t	s_skillRowCount		ui	Holds the number of rows in the skills list	verified	one	ui/skillverbs#building-the-list
+0xb731bc	uint32_t	s_skillHeaderCount		ui	Holds the number of skill category headers	verified	one	ui/skillverbs#building-the-list
+0xb731c0	uint32_t	s_skillVisibleCount		ui	Holds the number of visible rows of the skills list	verified	one	ui/skillverbs#order-and-visibility
+0xb731c4	uint32_t	s_selectedSkill		ui	Holds the skill line id selected in the skills window, or 0	verified	one	ui/skillverbs#headers-and-the-selected-skill
+0xb731c8	uint32_t	s_skillExpandedMask		ui	Holds the mask of expanded skill categories, a clear bit is collapsed	verified	one	ui/skillverbs#order-and-visibility
+0xb731cc	uint32_t	s_skillHideUnlearned		ui	Holds the flag that hides unlearned skills, never set	verified	one	ui/skillverbs#order-and-visibility
+0xb731d0	int32_t	s_skillPointsStaged		ui	Holds the cost of the skill ups staged and not yet accepted	verified	one	ui/skillverbs#staged-skill-ups
 0xb73240	uint32_t			ui	Holds a dword that CGDuelInfo::OnDuelRequested, CGDuelInfo::OnDuelComplete read and write; not read here	inferred	none	
 0xb73254	uint32_t	s_reputationEntryCapacity		ui	Holds the capacity of the entry pointer array, 97 once allocated	verified	one	ui/reputation#display-entries-and-headers
 0xb73258	void **	s_reputationEntries		ui	Points to the array of 97 list entries of 20 bytes	verified	one	ui/reputation#display-entries-and-headers

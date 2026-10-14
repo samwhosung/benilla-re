@@ -9425,33 +9425,33 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d2a50	18	InitSkillCategoriesBody		ui	orchestration	void __cdecl (void)	Empties the skill category array	verified	one	tradeskill/overview#static-objects	
 0x4d2a70	12	InitSkillCategoriesAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4d2a80 with _atexit	verified	one	tradeskill/overview#static-objects	
 0x4d2a80	47	InitSkillCategoriesDtor		ui	orchestration	void __cdecl (void)	Frees the skill category records and the array buffer	verified	one	tradeskill/overview#static-objects	
-0x4d2ab0	326	InitSkillLists		ui	primitive	void __cdecl (void)	Sizes the skill row and category arrays and fills them with empty records	verified	one	tradeskill/skills#list-state	
+0x4d2ab0	326	AllocateSkillList		ui	primitive		Allocates the skill list rows and category headers and clears the list state	verified	one	ui/skillverbs#building-the-list	
 0x4d2c00	132	FreeSkillLists		ui	orchestration	void __cdecl (void)	Frees every skill row and category record	verified	one	tradeskill/skills#list-state	
 0x4d2c90	5	RebuildSkillListThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d2cb0, which rebuilds the skill list	verified	one	tradeskill/skills#rebuilding-the-list	
 0x4d2ca0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d2cb0	531	RebuildSkillList		ui	primitive	void __cdecl (void)	Rebuilds the skill rows and categories from the local player's 128 skill slots	verified	one	tradeskill/skills#rebuilding-the-list	
-0x4d2ed0	295	OrderSkillList		ui	primitive	void __cdecl (void)	Sets the visible flags and count from the collapse mask, sorts the categories and rows and raises SKILL_LINES_CHANGED	verified	one	tradeskill/skills#order-and-visibility	
-0x4d3000	98	CompareSkillCategories		ui	primitive	int __cdecl (void **a, void **b)	Orders skill categories by the sort field of their SkillLineCategory row	verified	one	tradeskill/skills#order-and-visibility	
-0x4d3070	332	CompareSkillRows		ui	primitive	int __cdecl (void **a, void **b)	Orders skill rows by visibility, category position, header first, trained first and name	verified	one	tradeskill/skills#order-and-visibility	
-0x4d31c0	66	IsSkillCategoryCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns the collapsed flag of the category of a skill row	verified	one	tradeskill/skills#skill-rows	
-0x4d3210	85	CollapseSkillCategory		ui	orchestration	void __fastcall (uint32_t row)	Clears the collapse bit of the category of a skill row and reorders the list	verified	one	tradeskill/skills#collapse-and-expand	
-0x4d3270	83	ExpandSkillCategory		ui	orchestration	void __fastcall (uint32_t row)	Sets the collapse bit of the category of a skill row and reorders the list	verified	one	tradeskill/skills#collapse-and-expand	
-0x4d32d0	427	AddSkillPoint		ui	primitive	void __fastcall (uint32_t row)	Adds one chosen skill point to a skill row when the maximum and the point budget allow	verified	one	tradeskill/skills#skill-points	
-0x4d3480	292	RemoveSkillPoint		ui	primitive	void __fastcall (uint32_t row)	Removes one chosen skill point from a skill row and refunds its cost	verified	one	tradeskill/skills#skill-points	
-0x4d35b0	46	ClearSkillPoints		ui	primitive	void __cdecl (void)	Zeroes the chosen points of every row and the total cost	verified	one	tradeskill/skills#skill-points	
-0x4d35e0	44	Script::GetNumSkillLines	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the visible count of the skill list	verified	one	tradeskill/skills#skill-rows	
-0x4d3610	1177	Script::GetSkillLineInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 12 or 13 values of a skill list row	verified	one	tradeskill/skills#skill-rows	
-0x4d3ab0	191	Script::AbandonSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the message that abandons the skill of a row	verified	one	tradeskill/skills#abandon	
-0x4d3b70	85	Script::CollapseSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the category of a skill row or every category	verified	one	tradeskill/skills#collapse-and-expand	
-0x4d3bd0	85	Script::ExpandSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the category of a skill row or every category	verified	one	tradeskill/skills#collapse-and-expand	
-0x4d3c30	64	Script::AddSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Adds a chosen skill point to the skill of a row	verified	one	tradeskill/skills#skill-points	
-0x4d3c70	64	Script::RemoveSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Removes a chosen skill point from the skill of a row	verified	one	tradeskill/skills#skill-points	
-0x4d3cb0	142	Script::GetAdjustedSkillPoints	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill points not yet spent on chosen points	verified	one	tradeskill/skills#skill-points	
-0x4d3d40	232	Script::AcceptSkillUps	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the chosen skill points of the visible rows and clears them	verified	one	tradeskill/skills#skill-points	
-0x4d3e30	18	Script::CancelSkillUps	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Clears the chosen skill points	verified	one	tradeskill/skills#skill-points	
-0x4d3e50	458	Script::BuySkillTier	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the message that buys the next step of the skill of a row	verified	one	tradeskill/skills#skill-points	
-0x4d4020	97	Script::SetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the skill line of the row at an index	verified	one	tradeskill/skills#selection	
-0x4d4090	80	Script::GetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected skill among the visible rows	verified	one	tradeskill/skills#selection	
+0x4d2cb0	531	RebuildSkillList		ui	primitive		Rebuilds the skills list from the player's skill slots and sorts it	verified	one	ui/skillverbs#building-the-list	
+0x4d2ed0	295	SortSkillList		ui	primitive		Sets the category collapse flags, the row visibility and the visible count, then sorts	verified	one	ui/skillverbs#order-and-visibility	
+0x4d3000	98	CompareSkillCategories		ui	primitive		Orders skill categories by their order value	verified	one	ui/skillverbs#order-and-visibility	
+0x4d3070	332	CompareSkillRows		ui	primitive		Orders skill rows by visibility, category, header, learned state and name	verified	one	ui/skillverbs#order-and-visibility	
+0x4d31c0	66	IsSkillRowCategoryCollapsed		ui	primitive		Returns the collapsed flag of a skill row's category	verified	one	ui/skillverbs#reading-a-line	
+0x4d3210	85	CollapseSkillCategory		ui	orchestration		Collapses the category of a skill row and re-sorts	verified	one	ui/skillverbs#headers-and-the-selected-skill	
+0x4d3270	83	ExpandSkillCategory		ui	orchestration		Expands the category of a skill row and re-sorts	verified	one	ui/skillverbs#headers-and-the-selected-skill	
+0x4d32d0	427	StageSkillUp		ui	primitive		Stages one more rank on a skill row when the points allow	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3480	292	UnstageSkillUp		ui	primitive		Drops one staged rank of a skill row and returns its cost	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d35b0	46	ClearStagedSkillUps		ui	primitive		Clears the staged ups of every skill row and the staged cost	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d35e0	44	Script::GetNumSkillLines	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of visible skill list rows	verified	one	ui/skillverbs#reading-a-line	
+0x4d3610	1177	Script::GetSkillLineInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, ranks, costs and description of a skill list row	verified	one	ui/skillverbs#reading-a-line	
+0x4d3ab0	191	Script::AbandonSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Abandons the skill of a row	verified	one	ui/skillverbs#buying-a-tier-and-abandoning	
+0x4d3b70	85	Script::CollapseSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses a skill category, or all of them	verified	one	ui/skillverbs#headers-and-the-selected-skill	
+0x4d3bd0	85	Script::ExpandSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands a skill category, or all of them	verified	one	ui/skillverbs#headers-and-the-selected-skill	
+0x4d3c30	64	Script::AddSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stages one more skill rank on a row	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3c70	64	Script::RemoveSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Removes a staged skill rank from a row	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3cb0	142	Script::GetAdjustedSkillPoints	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill points not yet staged	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3d40	232	Script::AcceptSkillUps	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the staged skill ranks to the server	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3e30	18	Script::CancelSkillUps	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Clears the staged skill ranks and signals the change	verified	one	ui/skillverbs#staged-skill-ups	
+0x4d3e50	458	Script::BuySkillTier	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Buys the next tier of the skill of a row	verified	one	ui/skillverbs#buying-a-tier-and-abandoning	
+0x4d4020	97	Script::SetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the skill of a row	verified	one	ui/skillverbs#headers-and-the-selected-skill	
+0x4d4090	80	Script::GetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the selected skill, or 0	verified	one	ui/skillverbs#headers-and-the-selected-skill	
 0x4d40e0	30	RegisterSkillFunctions		ui	orchestration	void __cdecl (void)	Registers the 13 Lua functions of the skills tab	verified	one	tradeskill/overview#lua-function-tables	
 0x4d4100	24	UnregisterSkillFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 13 Lua functions of the skills tab	verified	one	tradeskill/overview#lua-function-tables	
 0x4d4120	5	InitSkillTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4130, a static initializer	verified	one	tradeskill/overview#static-objects	
