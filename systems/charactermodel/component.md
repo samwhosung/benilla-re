@@ -38,7 +38,7 @@ The constructor `0x476810` zeroes `+0x00`, `+0x04` and `+0x18` to `+0x38`, sets 
 `0x476020` runs once at start-up. It allocates the 8-byte pool record, creates the pool of 0x4e4-byte blocks (0x20 to a chunk) and stores it in
 `0xb42720`, stores the end of each path buffer (`0xb422f0` for `0xb42510`, `0xb42508` for `0xb42618`), fills the ten group handlers and the ten
 choosers, creates the composite target table `0xb422d8` (`0x44af90(5, 256, 256)`), resets the load counters (`0x475f20`), then builds the CharSections grid and the facial hair count table (`customization#grid-build`). It returns 0 when the
-rows are not dense. `0x4766e0` frees the grid, the table, the composite target table and the pool at shutdown.
+density test of the grid build fails. `0x4766e0` frees the grid, the table, the composite target table and the pool at shutdown.
 
 Addresses: `0x476020`, `0x4766e0`, `0x4766c0`, `0x4766d0`, `0x476800`, `0x475f20`, `0x476188`, `0x44af90`, `0x463920`, `0x6462e0`, `0x838be4`, `0xb42720`, `0xb422f0`, `0xb42510`, `0xb42508`, `0xb42618`, `0xb422d8`, `0xb4231c`, `0xb4244c`, `0xb4250c`
 Confidence: verified
@@ -130,7 +130,7 @@ texture type 1 (`0x477970 call 0x710ec0`). The handler call is `0x477999 call [e
 
 ## Target callback
 
-The composite target registers `0x477a70` with the texture (`0x477958`). Event 0, a restore, composites everything again with `0x477b50` unless a composite is running; event 1 answers a mip request with a pitch of twice the width and the pointer
+The composite target registers `0x477a70` with the texture (`0x477958`). Event 0 composites everything again with `0x477b50` unless a composite is running; event 1 answers with a pitch of twice the width and the pointer
 `[0xb422d8][mip]`. `0x477b50` marks a full rebuild, forces both loads, runs every handler in `0xb422f4` to `0xb4231c` and clears the flags.
 
 Addresses: `0x477a70`, `0x477b50`, `0x477958`, `0xb42724`, `0xb422d8`, `0xb422f4`, `0xb4231c`, `0x4420b0`

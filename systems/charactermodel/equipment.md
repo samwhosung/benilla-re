@@ -40,7 +40,7 @@ and off-hand weapons 22 to `0x479ec0`; the rest do nothing. The clear table `0x4
 ## Layer choosers
 
 A record carries eight texture names, one per composite group `g` (`+0x38 + 4·g`). For body slots 2 to 9, `0x478ad0` calls chooser `g` as `(body slot, record, 1)` for every group whose name is not empty and whose cell in the slot table is not -1. A chooser sets the item's cell at
-column `c` of group `g`'s row, ORs `1 << g` into `+0x10`, and marks nothing else; with the store flag 0 it clears the cell instead. The column is the table value `[0x803bf8 + 0x28·slot + 4·g]`, with the exceptions below.
+column `c` of group `g`'s row and ORs `1 << g` into `+0x10`; with the store flag 0 it clears the cell instead. Group 6 also marks `+0x0a` when it overrides the column. The column is the table value `[0x803bf8 + 0x28·slot + 4·g]`, with the exceptions below.
 
 | slot | g0 | g1 | g2 | g3 | g4 | g5 | g6 | g7 |
 |---|---|---|---|---|---|---|---|---|
