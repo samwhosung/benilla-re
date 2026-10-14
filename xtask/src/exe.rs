@@ -187,7 +187,12 @@ fn write_listing(root: &Path, exe: &Path) -> io::Result<Option<Problem>> {
     Ok((!status.success()).then(|| problem("tools/disasm.sh", format!("failed ({status})"))))
 }
 
-/// Runs `cargo test --workspace` with skipping forbidden, and checks every named test passed.
+/// The cargo profile the tests run under: release optimization with overflow checks and debug
+/// assertions (`[profile.exetest]` in `Cargo.toml`).
+const TEST_PROFILE: &str = "exetest";
+
+/// Runs `cargo test --workspace --profile exetest` with skipping forbidden, and checks every named
+/// test passed.
 fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Problem>, String)> {
     let cargo = env::var_os("CARGO").unwrap_or_else(|| OsString::from("cargo"));
     let (reader, writer) = io::pipe()?;
@@ -197,6 +202,8 @@ fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Prob
         .args([
             "test",
             "--workspace",
+            "--profile",
+            TEST_PROFILE,
             "--no-fail-fast",
             "--message-format=json-render-diagnostics",
         ])
@@ -226,7 +233,7 @@ fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Prob
     let mut problems = Vec::new();
     if !status.success() {
         problems.push(problem(
-            "cargo test --workspace",
+            format!("cargo test --workspace --profile {TEST_PROFILE}"),
             format!("failed ({status})"),
         ));
     }

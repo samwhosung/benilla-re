@@ -109,8 +109,8 @@ It refuses any exe but 1.12.1.5875, at `WoW/WoW.exe` or at the path in `BENILLA_
 It writes `dumps/disasm.txt` with `tools/disasm.sh` when it is missing, or when a row starts where
 it has no instruction (a row newer than the listing), and checks that every function row starts
 a function and has its body's size. It regenerates every table into a
-scratch directory and requires each byte for byte. It runs `cargo test --workspace` with
-`BENILLA_RE_REQUIRE_EXE=1`, and requires every test that a row's `test` or an entry's `Test` line
+scratch directory and requires each byte for byte. It runs
+`cargo test --workspace --profile exetest` with `BENILLA_RE_REQUIRE_EXE=1`, and requires every test that a row's `test` or an entry's `Test` line
 names to appear as passed. It needs GNU objdump (above), Python 3, bash for `tools/disasm.sh`, a
 POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK.
 
@@ -118,6 +118,15 @@ The tests build the Unicorn emulator from source, which needs CMake and a C comp
 `brew install cmake` on macOS, `sudo apt install cmake build-essential` on Linux. Without the exe
 `cargo test --workspace` builds and runs them, and each test that needs the exe skips with one
 line; CI runs it that way.
+
+A transcription can pass in a debug build and fail in an optimized one: the optimizer may fold a
+float compare so that `-0.0` or NaN comes out differently. `exetest` (in `Cargo.toml`) inherits
+`release` and keeps `overflow-checks` and `debug-assertions` on, so one run is optimized and still
+catches overflow. To run the tests the way the check does:
+
+```
+BENILLA_RE_REQUIRE_EXE=1 cargo test --workspace --profile exetest
+```
 
 `cargo xtask cited <path to a benilla checkout>` lists every client address the benilla tree
 cites that has neither a row nor a mention in a doc here: a report, not a check.
