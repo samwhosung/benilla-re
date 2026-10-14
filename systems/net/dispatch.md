@@ -6,7 +6,7 @@ The `NetClient` (`NetClient.cpp`) holds two tables of 828 entries, a handler and
 opcode. Code anywhere in the client fills them through `NetClient::SetMessageHandler`
 (`0x537a60`), mostly by way of `ClientServices::SetMessageHandler` (`0x5ab650`), which addresses
 the one live client; `tables/opcodes.tsv` lists all 387 registrations. Packets arrive on the
-network thread (`wire`), which copies each into a node of the `NETEVENTQUEUE` (`NetInternal.cpp`)
+a network worker thread (`threads`), which copies each into a node of the `NETEVENTQUEUE` (`NetInternal.cpp`)
 instead of handling it. The main thread drains the queue from an event handler and the
 dispatcher `0x537aa0` calls each packet's handler. The realm connection registers one handler,
 `RealmConnection::MessageHandler` (`0x5b3ea0`), for the ten opcodes of logon to the world
@@ -61,7 +61,7 @@ and `0x80a658`.
 
 ## Network thread handoff
 
-The connection's handler on the network thread is the `NetClient`'s slot 1, `0x537b10`. It adds
+The connection's handler on a network worker thread (`threads`) is the `NetClient`'s slot 1, `0x537b10`. It adds
 the packet's length to the received-byte count and peeks the opcode: `SMSG_PONG` (`0x1dd`) is
 handled there and then (`session`, Ping and latency); every other packet is copied into a
 queue node of type `0x12`. Connecting, a failed connection and disconnecting queue nodes of

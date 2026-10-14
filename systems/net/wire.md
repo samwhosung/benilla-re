@@ -41,7 +41,7 @@ On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bi
 
 Every opcode the client builds goes in through the data store's 32-bit put, as in
 `0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits:
-`0x537abe` in the dispatcher and `0x537b46` in the network thread's data hook.
+`0x537abe` in the dispatcher and `0x537b46` in the worker thread's data hook.
 `header_decode` runs `0x5b6730` to `0x5b6789`; `header_encode` runs `0x5b5495` to `0x5b54f0`.
 
 ## Header cipher
@@ -134,7 +134,7 @@ to `[ebx+0x1c]` with `ebx` 0.
 
 ## Receive loop
 
-On the network thread, `0x5b65f0` keeps one buffer per connection, starting at 1,024 bytes.
+On a network worker thread, `0x5b65f0` keeps one buffer per connection, starting at 1,024 bytes.
 It reads only the bytes still missing from the current frame: the header's bytes until the
 header is complete, then the rest of the frame. A complete frame is handed to the connection's
 handler as a data store over the opcode and body, with the current clock, and the loop reads

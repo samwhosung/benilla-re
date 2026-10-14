@@ -121,7 +121,7 @@ Every 30 seconds after the last ping, measured from connecting, the client sends
 (`0x1dc`): a sequence number, incremented first, and in state 6 the sample just before the
 ring's write index, or 0 when that index is 0: before the first pong and after every 16th, when
 the index wraps. `SMSG_PONG` (`0x1dd`) with the current number stores
-`now − sent` in a ring of 16 on the network thread; a pong with another number is logged and
+`now − sent` in a ring of 16 on a network worker thread (`threads`); a pong with another number is logged and
 ignored. The latency the interface reads is the integer mean of the samples present, at
 most 15, or 0; the rates are kilobytes per second since connecting.
 
@@ -143,7 +143,7 @@ byte counts and stamps `+0x1a64` (`0x537bcf`). `0x537f20` divides the sum by the
 
 ## Disconnecting
 
-`NetClient::Disconnect` in state 6 enters state 7 and closes the socket; the network thread then
+`NetClient::Disconnect` in state 6 enters state 7 and closes the socket; a network worker thread then
 reports the disconnect, and the session sets state 2. In any other state it tears the connection
 down at once and builds a fresh one in state 2. On the disconnect event the session marks the
 status done, clears its connected flag and calls the login screen's disconnect handler.
@@ -158,3 +158,14 @@ sets the socket's state to 7 when it is 5. Otherwise (`0x53792c`): `0x5b71e0(0, 
 queue flush `0x538700`, `0x5b5200` and a new 0x130-byte `WowConnection` (`0x537975`), state 2. Slot 14
 is `0x5aaac0`: `0x5aaa70`, `+0x1b08 = 1`, `+0x1b00 = 0`, `+0x1b1d = 0`, a call outside the system, then `0x537d00`,
 which stores 2 and calls `0x46c540` (`0x537d20`).
+
+## Ping sequence and statistics
+
+`CMSG_PING` sequence numbers are not reset when the session connects, and the idle check pings before there is a connection, so the first ping a server receives can carry a number above 1: a ping sent in any other state than 6 still counts and is dropped by `NetClient::Send`. `GetNetStats` returns, through three out parameters, the bytes received and the bytes sent, each times 1/1024 over the seconds since connecting, and the latency. The seconds are the clock less the time recorded when the connection came up, times 0.001; with none elapsed the quotient follows the x87 rules. Pings, pongs, the connect hook and `GetNetStats` all run under the connection's statistics lock `+0x1ac0`.
+
+Addresses: `0x537b90`, `0x537ff0`, `0x537e10`, `0x537d60`, `0x537f20`, `0x537b34`, `0x5379c6`, `0x537bcf`, `0x537e74`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x537b90` stores the node's time at `+0x1abc`, zeroes `+0x1ab8`, `+0x1ab4`, `+0x1aac` and `+0x1ab0`, and stamps `+0x1a64`; it never writes `+0x1a68`. `0x537ff0` runs for every polled client and pings once `now − [+0x1a64] ≥ 30000`, where `+0x1a64` is 0 until the first ping or connect. `0x537e10` increments `+0x1a68` before its state test at `0x537e74`. `0x537f20` takes `+0x1ac0` (`0x537f33`), scales `now − [+0x1abc]` by `0x801360` and the two byte counts (`+0x1ab8` received, `+0x1ab4` sent) by `0x8090d8`, divides, and stores the received rate through the first argument, the sent rate through the second and the mean through the third (`0x537f80`, `0x537f96`, `0x537fd7`). `0x537d60` and `0x537e10` take the same lock (`0x537d70`, `0x537e3f`).
