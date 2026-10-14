@@ -7557,54 +7557,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a9bf0	21			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a9c10	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4a9c20	21			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a9c40	227	CGBattlefieldInfo::InitializeGame	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls ClientServices::SetMessageHandler, SMemAlloc; not read here	inferred	none		
-0x4a9d30	118			ui	primitive		Runs BattlefieldInfo.cpp code that calls ClientServices::ClearMessageHandler, SMemFree; not read here	inferred	none		
-0x4a9db0	307			ui	primitive		Runs BattlefieldInfo.cpp code that calls 0x55f870, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4a9ef0	8			ui	orchestration		Runs BattlefieldInfo.cpp code that calls 0x4aa580; not read here	inferred	none		
+0x4a9c40	227	CGBattlefieldInfo::InitializeGame	idb	ui	primitive		Registers the seven battleground handlers, clears the queue and scalars and allocates the 80 score blocks	verified	one	ui/battlefield#caches-and-lifecycle	
+0x4a9d30	118	ShutdownBattlefieldInfo		ui	primitive		Unregisters the seven battleground handlers and frees the score blocks	verified	one	ui/battlefield#caches-and-lifecycle	
+0x4a9db0	307	ResetBattlefieldInfo		ui	primitive		Releases the name queries, clears the battleground scalars and sends opcode 0x2d3	verified	one	ui/battlefield#caches-and-lifecycle	
+0x4a9ef0	8	OnBattlefieldNameArrived		ui	orchestration		Counts down the unknown score names and rebuilds the score list at zero	verified	one	ui/battlefield#names-and-the-score-order	
 0x4a9f00	55			ui	orchestration		Runs BattlefieldInfo.cpp code that calls SMemFree; not read here	inferred	none		
-0x4a9f40	6			ui	orchestration		Runs BattlefieldInfo.cpp code not read here	inferred	none		
-0x4a9f50	9			ui	orchestration		Runs BattlefieldInfo.cpp code not read here	inferred	none		
-0x4a9f60	293			ui	primitive		Runs BattlefieldInfo.cpp code that calls CountPartyMembers, CGGameUI::DisplayError and 4 more; not read here	inferred	none		
-0x4aa090	212			ui	primitive		Runs BattlefieldInfo.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4aa170	136			ui	primitive		Runs BattlefieldInfo.cpp code that calls OsGetAsyncTimeMs, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4aa200	336			ui	primitive		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, _qsort, FrameScript_SignalEvent; not read here	inferred	none		
-0x4aa350	560			ui	primitive		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCmpI; not read here	inferred	none		
-0x4aa580	23			ui	primitive		Runs BattlefieldInfo.cpp code not read here	inferred	none		
-0x4aa5a0	22			ui	orchestration		Runs BattlefieldInfo.cpp code not read here	inferred	none		
-0x4aa5c0	168			ui	primitive		Runs BattlefieldInfo.cpp code that calls OsGetAsyncTimeMs, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
+0x4a9f40	6	GetBattlefieldInstanceCount		ui	orchestration		Returns the number of listed battleground instances	verified	one	ui/battlefield#caches-and-lifecycle	
+0x4a9f50	9	GetBattlefieldInstanceIdAt		ui	orchestration		Returns the instance id at an index of the battleground list	verified	one	ui/battlefield#caches-and-lifecycle	
+0x4a9f60	293	SendBattlefieldJoin		ui	primitive	void __fastcall SendBattlefieldJoin(uint32_t listIndex, int32_t asGroup)	Checks the group size and sends opcode 0x2ee or 0x23e with map, instance and group flag	verified	one	ui/battlefield#joining-and-leaving	
+0x4aa090	212	CheckBattlefieldListLeash		ui	primitive		Closes the battlemaster list and signals BATTLEFIELDS_CLOSED when the player walked away	verified	one	ui/battlefield#the-list-message	
+0x4aa170	136	RequestBattlefieldScores		ui	primitive		Sends opcode 0x2e0 at most once per 5000 ms	verified	one	ui/battlefield#joining-and-leaving	
+0x4aa200	336	RebuildBattlefieldScores		ui	primitive		Sets each row's team, counts the filtered rows, sorts the scores and signals UPDATE_BATTLEFIELD_SCORE	verified	one	ui/battlefield#names-and-the-score-order	
+0x4aa350	560	CompareBattlefieldScores		ui	primitive	int32_t __cdecl CompareBattlefieldScores(void **a, void **b)	Orders two score rows by the filtered team, kills, deaths, honor and name	verified	one	ui/battlefield#the-comparator	
+0x4aa580	23	CountBattlefieldNameArrival		ui	primitive		Counts down the unknown score names and rebuilds the list on the last	verified	one	ui/battlefield#names-and-the-score-order	
+0x4aa5a0	22	SetBattlefieldScoreFilter		ui	orchestration	void __fastcall SetBattlefieldScoreFilter(int32_t team)	Stores a team filter of -1, 0 or 1 and rebuilds the score list	verified	one	ui/battlefield#names-and-the-score-order	
+0x4aa5c0	168	RequestBattlefieldPositionsImpl		ui	primitive		Sends opcode 0x2e9 at most once per 5000 ms	verified	one	ui/battlefield#joining-and-leaving	
 0x4aa670	71			ui	primitive		Runs BattlefieldInfo.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4aa6c0	400	HandleBattlefieldListPacket	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls CDataStore::GetGuid, CDataStore::GetInt32 and 7 more; not read here	inferred	none		
-0x4aa850	725	HandleBattlefieldStatusPacket	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls CDataStore::GetUInt32, CDataStore::GetInt32 and 6 more; not read here	inferred	none		
-0x4aab30	396	HandlePvPLogDataPacket	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls 0x55f870, CDataStore::GetUInt8, CDataStore::GetUInt32 and 4 more; not read here	inferred	none		
-0x4aacc0	125	HandleGroupJoinedBattlegroundPacket	idb	ui	orchestration		Runs BattlefieldInfo.cpp code that calls CDataStore::GetInt32, CGGameUI::DisplayError; not read here	inferred	none		
+0x4aa6c0	400	HandleBattlefieldListPacket	idb	ui	primitive		Reads the battlemaster list into the instance array and bracket and signals BATTLEFIELDS_SHOW	verified	one	ui/battlefield#the-list-message	
+0x4aa850	725	HandleBattlefieldStatusPacket	idb	ui	primitive		Reads one queue slot's status, signals UPDATE_BATTLEFIELD_STATUS and rebuilds the stat columns on status 3	verified	one	ui/battlefield#the-status-message	
+0x4aab30	396	HandlePvPLogDataPacket	idb	ui	primitive		Reads the score message into the score blocks, asks for the names and rebuilds when all are known	verified	one	ui/battlefield#names-and-the-score-order	
+0x4aacc0	125	HandleGroupJoinedBattlegroundPacket	idb	ui	orchestration		Shows the deserter, named map or generic message for a group battleground join result	verified	one	ui/battlefield#other-messages	
 0x4aad40	203	HandleBattlegroundPlayerPositionsPacket	idb	ui	primitive		Runs BattlefieldInfo.cpp code that calls CDataStore::GetUInt32, CDataStore::GetGuid and 2 more; not read here	inferred	none		
-0x4aae10	209	HandleBattlegroundPlayerJoinedOrLeftPacket	idb	ui	orchestration		Runs BattlefieldInfo.cpp code that calls CDataStore::GetGuid, DBCache::NameCache::GetRecord and 3 more; not read here	inferred	none		
+0x4aae10	209	HandleBattlegroundPlayerJoinedOrLeftPacket	idb	ui	orchestration		Shows the joined or left message for a battleground player by the arrival opcode	verified	one	ui/battlefield#other-messages	
 0x4aaef0	226			ui	primitive		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 2 more; not read here	inferred	none		
 0x4aafe0	157			ui	orchestration		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPrintf and 1 more; not read here	inferred	none		
-0x4ab080	44	Script::GetNumBattlefields	idb	ui	orchestration		Implements the Lua function GetNumBattlefields	inferred	none		
-0x4ab0b0	310	Script::GetBattlefieldInfo	idb	ui	primitive		Implements the Lua function GetBattlefieldInfo	inferred	none		
-0x4ab1f0	148	Script::GetBattlefieldInstanceInfo	idb	ui	orchestration		Implements the Lua function GetBattlefieldInstanceInfo	inferred	none		
-0x4ab290	84	Script::JoinBattlefield	idb	ui	primitive		Implements the Lua function JoinBattlefield	inferred	none		
-0x4ab2f0	3	Script::CloseBattlefield	idb	ui	orchestration		Implements the Lua function CloseBattlefield	inferred	none		
-0x4ab300	96	Script::SetSelectedBattlefield	idb	ui	primitive		Implements the Lua function SetSelectedBattlefield	inferred	none		
-0x4ab360	74	Script::GetSelectedBattlefield	idb	ui	primitive		Implements the Lua function GetSelectedBattlefield	inferred	none		
-0x4ab3b0	239	Script::AcceptBattlefieldPort	idb	ui	primitive		Implements the Lua function AcceptBattlefieldPort	inferred	none		
-0x4ab4a0	353	Script::GetBattlefieldStatus	idb	ui	primitive		Implements the Lua function GetBattlefieldStatus	inferred	none		
-0x4ab620	162	Script::GetBattlefieldPortExpiration	idb	ui	primitive		Implements the Lua function GetBattlefieldPortExpiration	inferred	none		
-0x4ab6d0	94	Script::GetBattlefieldInstanceExpiration	idb	ui	primitive		Implements the Lua function GetBattlefieldInstanceExpiration	inferred	none		
-0x4ab730	86	Script::GetBattlefieldInstanceRunTime	idb	ui	primitive		Implements the Lua function GetBattlefieldInstanceRunTime	inferred	none		
-0x4ab790	137	Script::GetBattlefieldEstimatedWaitTime	idb	ui	primitive		Implements the Lua function GetBattlefieldEstimatedWaitTime	inferred	none		
-0x4ab820	151	Script::GetBattlefieldTimeWaited	idb	ui	primitive		Implements the Lua function GetBattlefieldTimeWaited	inferred	none		
-0x4ab8c0	198	Script::ShowBattlefieldList	idb	ui	primitive		Implements the Lua function ShowBattlefieldList	inferred	none		
-0x4ab990	8	Script::RequestBattlefieldScoreData	idb	ui	orchestration		Implements the Lua function RequestBattlefieldScoreData	inferred	none		
-0x4ab9a0	44	Script::GetNumBattlefieldScores	idb	ui	orchestration		Implements the Lua function GetNumBattlefieldScores	inferred	none		
-0x4ab9d0	622	Script::GetBattlefieldScore	idb	ui	primitive		Implements the Lua function GetBattlefieldScore	inferred	none		
-0x4abc40	67	Script::GetBattlefieldWinner	idb	ui	orchestration		Implements the Lua function GetBattlefieldWinner	inferred	none		
-0x4abc90	52	Script::SetBattlefieldScoreFaction	idb	ui	orchestration		Implements the Lua function SetBattlefieldScoreFaction	inferred	none		
-0x4abcd0	44	Script::GetNumBattlefieldStats	idb	ui	orchestration		Implements the Lua function GetNumBattlefieldStats	inferred	none		
-0x4abd00	181	Script::GetBattlefieldStatInfo	idb	ui	primitive		Implements the Lua function GetBattlefieldStatInfo	inferred	none		
-0x4abdc0	159	Script::GetBattlefieldStatData	idb	ui	primitive		Implements the Lua function GetBattlefieldStatData	inferred	none		
-0x4abe60	140	Script::LeaveBattlefield	idb	ui	primitive		Implements the Lua function LeaveBattlefield	inferred	none		
+0x4ab080	44	Script::GetNumBattlefields	idb	ui	orchestration		Pushes the number of listed battleground instances	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab0b0	310	Script::GetBattlefieldInfo	idb	ui	primitive		Pushes nine values describing the battlemaster's map and the bracket levels, or none	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab1f0	148	Script::GetBattlefieldInstanceInfo	idb	ui	orchestration		Pushes the instance id at a 1-based list index, or nothing	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab290	84	Script::JoinBattlefield	idb	ui	primitive		Joins the battleground instance at a 1-based list index, optionally as a group	verified	one	ui/battlefield#joining-and-leaving	
+0x4ab2f0	3	Script::CloseBattlefield	idb	ui	orchestration		Does nothing	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab300	96	Script::SetSelectedBattlefield	idb	ui	primitive		Stores the instance id at a 1-based list index as the selection, else 0	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab360	74	Script::GetSelectedBattlefield	idb	ui	primitive		Pushes the 1-based list position of the selected instance id, 0 when absent	verified	one	ui/battlefield#the-list-and-the-selection	
+0x4ab3b0	239	Script::AcceptBattlefieldPort	idb	ui	primitive		Sends opcode 0x2d5 to accept or decline a queue slot's port	verified	one	ui/battlefield#joining-and-leaving	
+0x4ab4a0	353	Script::GetBattlefieldStatus	idb	ui	primitive		Pushes the status word, map name, instance id and bracket levels of a queue slot	verified	one	ui/battlefield#queue-status	
+0x4ab620	162	Script::GetBattlefieldPortExpiration	idb	ui	primitive		Pushes the milliseconds left to accept a queue slot's port	verified	one	ui/battlefield#queue-status	
+0x4ab6d0	94	Script::GetBattlefieldInstanceExpiration	idb	ui	primitive		Pushes the milliseconds left until the running instance expires	verified	one	ui/battlefield#queue-status	
+0x4ab730	86	Script::GetBattlefieldInstanceRunTime	idb	ui	primitive		Pushes the milliseconds the running instance has been running	verified	one	ui/battlefield#queue-status	
+0x4ab790	137	Script::GetBattlefieldEstimatedWaitTime	idb	ui	primitive		Pushes the estimated wait of a queue slot in milliseconds	verified	one	ui/battlefield#queue-status	
+0x4ab820	151	Script::GetBattlefieldTimeWaited	idb	ui	primitive		Pushes the milliseconds a queue slot has waited	verified	one	ui/battlefield#queue-status	
+0x4ab8c0	198	Script::ShowBattlefieldList	idb	ui	primitive		Sends opcode 0x23c to request the instance list of a queue slot's map	verified	one	ui/battlefield#joining-and-leaving	
+0x4ab990	8	Script::RequestBattlefieldScoreData	idb	ui	orchestration		Requests the score data, at most once per 5 seconds	verified	one	ui/battlefield#joining-and-leaving	
+0x4ab9a0	44	Script::GetNumBattlefieldScores	idb	ui	orchestration		Pushes the number of score rows of the filtered team	verified	one	ui/battlefield#scores-and-stats	
+0x4ab9d0	622	Script::GetBattlefieldScore	idb	ui	primitive		Pushes nine values of a score row: name, counts, team, rank, race and class	verified	one	ui/battlefield#scores-and-stats	
+0x4abc40	67	Script::GetBattlefieldWinner	idb	ui	orchestration		Pushes the battleground winner once ended, else nil	verified	one	ui/battlefield#scores-and-stats	
+0x4abc90	52	Script::SetBattlefieldScoreFaction	idb	ui	orchestration		Sets the score team filter from an optional number and rebuilds the scores	verified	one	ui/battlefield#scores-and-stats	
+0x4abcd0	44	Script::GetNumBattlefieldStats	idb	ui	orchestration		Pushes the number of battleground stat columns	verified	one	ui/battlefield#scores-and-stats	
+0x4abd00	181	Script::GetBattlefieldStatInfo	idb	ui	primitive		Pushes the text, icon and tooltip of a battleground stat column	verified	one	ui/battlefield#scores-and-stats	
+0x4abdc0	159	Script::GetBattlefieldStatData	idb	ui	primitive		Pushes one stat word of a score row	verified	one	ui/battlefield#scores-and-stats	
+0x4abe60	140	Script::LeaveBattlefield	idb	ui	primitive		Sends opcode 0x2e1 to leave the battleground once it has ended	verified	one	ui/battlefield#joining-and-leaving	
 0x4abef0	8	Script::RequestBattlefieldPositions	idb	ui	orchestration		Implements the Lua function RequestBattlefieldPositions	inferred	none		
 0x4abf00	135	Script::GetNumBattlefieldPositions	idb	ui	primitive		Implements the Lua function GetNumBattlefieldPositions	inferred	none		
 0x4abf90	510	Script::GetBattlefieldPosition	idb	ui	primitive		Implements the Lua function GetBattlefieldPosition	inferred	none		
@@ -7615,7 +7615,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ac200	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ac210	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4ac230	327	Script::GetBattlefieldFlagPosition	idb	ui	primitive		Implements the Lua function GetBattlefieldFlagPosition	inferred	none		
-0x4ac380	69	Script::CanJoinBattlefieldAsGroup	idb	ui	orchestration		Implements the Lua function CanJoinBattlefieldAsGroup	inferred	none		
+0x4ac380	69	Script::CanJoinBattlefieldAsGroup	idb	ui	orchestration		Pushes 1 when the listed map permits group queuing, else nil	verified	one	ui/battlefield#the-list-and-the-selection	
 0x4ac3d0	88	Script::GetBattlefieldMapIconScale	idb	ui	primitive		Implements the Lua function GetBattlefieldMapIconScale	inferred	none		
 0x4ac430	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4ac460	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		

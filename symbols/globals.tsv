@@ -1240,7 +1240,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x845074	uint32_t			unassigned	Holds a dword that CGGameUI::HandlePacket reads and writes; not read here	inferred	none	
 0x845374	char[26]	s_textInterfaceWorldMapSZmp		ui	Holds the string "Interface\WorldMap\%s.zmp"	inferred	none	
 0x8453c0	char[35]	s_textInterfaceMinimapMinimapArrowMdx		ui	Holds the string "Interface\Minimap\MinimapArrow.mdx"	inferred	none	
-0x8457cc	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandleBattlefieldStatusPacket read and write; not read here	inferred	none	
+0x8457cc	int32_t	s_bgActiveSlot		ui	Holds the queue slot of the active battleground, -1 for none	verified	one	ui/battlefield#caches-and-lifecycle
+0x8457d0	int32_t	s_bgScoreFilter		ui	Holds the team shown first in the score list, -1 for all	verified	one	ui/battlefield#caches-and-lifecycle
 0x845c48	char[33]	s_textUsageGetBattlefieldInfoIndex		ui	Holds the string "Usage: GetBattlefieldInfo(index)"	inferred	none	
 0x845eac	float			ui	Holds a float that HandleQueryNextMailTimePacket, HandleReceivedMailPacket read and write; not read here	inferred	none	
 0x8468b0	char[8]	s_textSSAt8468b0		unassigned	Holds the string "%s (%s)"	inferred	none	
@@ -2204,20 +2205,27 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6e5f0	uint32_t	s_maskIndex		ui	Holds the index of the next mask character, advanced by each masked byte and wrapped at 8	verified	one	ui/chatfilter#masking
 0xb6e630	uint32_t			ui	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	
 0xb6e664	uint32_t			ui	Holds a dword that Script::GetMapContinents, Script::GetMapZones read and write; not read here	inferred	none	
-0xb6e860	uint32_t			ui	Holds a dword that HandleBattlefieldListPacket reads and writes; not read here	inferred	none	
-0xb6e868	uint32_t			ui	Holds a dword that HandleBattlefieldListPacket, Script::SetSelectedBattlefield read and write; not read here	inferred	none	
-0xb6e870	float			ui	Holds a float that HandleBattlefieldListPacket reads and writes; not read here	inferred	none	
-0xb6e9d0	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandleBattlefieldStatusPacket read and write; not read here	inferred	none	
-0xb6eba0	uint32_t			ui	Holds a dword that Script::SetSelectedBattlefield, Script::GetSelectedBattlefield read and write; not read here	inferred	none	
-0xb6eba4	uint32_t			ui	Holds a dword that HandleBattlefieldListPacket, Script::GetBattlefieldInfo read and write; not read here	inferred	none	
-0xb6eba8	uint32_t			ui	Holds a dword that HandleBattlefieldListPacket, Script::GetBattlefieldInfo read and write; not read here	inferred	none	
-0xb6ebac	uint32_t			ui	Holds a dword that HandleBattlefieldListPacket, Script::GetBattlefieldInfo read and write; not read here	inferred	none	
-0xb6ebb8	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandleBattlefieldStatusPacket read and write; not read here	inferred	none	
-0xb6ebbc	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandleBattlefieldStatusPacket read and write; not read here	inferred	none	
-0xb6ebc0	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandlePvPLogDataPacket read and write; not read here	inferred	none	
-0xb6ebc4	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, Script::GetNumBattlefieldScores read and write; not read here	inferred	none	
-0xb6ebd4	uint32_t			ui	Holds a dword that CGBattlefieldInfo::InitializeGame, HandlePvPLogDataPacket read and write; not read here	inferred	none	
-0xb6ebe0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb6e6ec	uint32_t[9]	s_bgStatColumns		ui	Holds the WorldStateUI row ids of the active battleground's stat columns	verified	one	ui/battlefield#the-status-message
+0xb6e854	float	s_bgLeashSquared		ui	Holds the squared walk-away radius of the battlemaster list, 5.5555553 yards squared	verified	one	ui/battlefield#the-list-message
+0xb6e860	uint32_t[4]	s_bgInstanceList		ui	Holds the battleground instance id array: capacity, count, data pointer and growth state	verified	one	ui/battlefield#caches-and-lifecycle
+0xb6e870	float[3]	s_bgListAnchor		ui	Holds the player position when the battlemaster list arrived, zero when cleared	verified	one	ui/battlefield#the-list-message
+0xb6e880	void *[80]	s_bgScores		ui	Holds the 80 pointers to the 0x40-byte score blocks	verified	one	ui/battlefield#caches-and-lifecycle
+0xb6e9d0	uint8_t[96]	s_bgQueue		ui	Holds the three battleground queue slots of 0x20 bytes	verified	one	ui/battlefield#caches-and-lifecycle
+0xb6eba0	uint32_t	s_bgSelectedInstance		ui	Holds the selected battleground instance id, 0 for none	verified	one	ui/battlefield#the-list-and-the-selection
+0xb6eba4	int32_t	s_bgMapId		ui	Holds the Map row id of the last battlemaster list	verified	one	ui/battlefield#the-list-message
+0xb6eba8	uint32_t	s_bgMinLevel		ui	Holds the minimum level of the listed bracket	verified	one	ui/battlefield#the-list-message
+0xb6ebac	uint32_t	s_bgMaxLevel		ui	Holds the maximum level of the listed bracket, at most 60	verified	one	ui/battlefield#the-list-message
+0xb6ebb0	uint64_t	s_bgBattlemasterGuid		ui	Holds the GUID of the battlemaster of the last list, 0 for a list without one	verified	one	ui/battlefield#caches-and-lifecycle
+0xb6ebb8	uint32_t	s_bgInstanceDeadline		ui	Holds the clock value at which the running instance expires, 0 when unset	verified	one	ui/battlefield#queue-status
+0xb6ebbc	uint32_t	s_bgInstanceStamp		ui	Holds the clock value minus the instance run time, 0 when unset	verified	one	ui/battlefield#queue-status
+0xb6ebc0	uint32_t	s_bgScoreCount		ui	Holds the row count of the last score message, not clamped to 80	verified	one	ui/battlefield#names-and-the-score-order
+0xb6ebc4	uint32_t	s_bgFilteredCount		ui	Holds the number of score rows of the filtered team	verified	one	ui/battlefield#names-and-the-score-order
+0xb6ebc8	uint32_t	s_bgScoreThrottle		ui	Holds the clock value before which the score request is not repeated	verified	one	ui/battlefield#joining-and-leaving
+0xb6ebcc	uint32_t	s_bgEnded		ui	Holds 1 once a score message reported the battleground ended	verified	one	ui/battlefield#joining-and-leaving
+0xb6ebd0	uint32_t	s_bgWinner		ui	Holds the winner byte of the last ended score message	verified	one	ui/battlefield#names-and-the-score-order
+0xb6ebd4	uint32_t	s_bgPendingNames		ui	Holds the number of score rows whose player name is still unknown	verified	one	ui/battlefield#names-and-the-score-order
+0xb6ebd8	uint32_t	s_bgStatColumnCount		ui	Holds the number of battleground stat columns	verified	one	ui/battlefield#the-status-message
+0xb6ebe0	uint32_t	s_bgPositionThrottle		ui	Holds the clock value before which the position request is not repeated	verified	one	ui/battlefield#joining-and-leaving
 0xb6ef88	uint32_t			ui	Holds a dword that HandleMailListResultPacket, HandleReceivedMailPacket, Script::SendMail read and write; not read here	inferred	none	
 0xb6ef8c	uint32_t			ui	Holds a dword that HandleMailListResultPacket, HandleReceivedMailPacket, Script::SendMail read and write; not read here	inferred	none	
 0xb6ef90	uint64_t	s_heldItemGuidA		ui	Holds an item GUID 0x622210 leaves locked	inferred	none	objectlayer/inventory#searching-the-inventory
@@ -2509,6 +2517,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message
 0xc0d5bc	uint32_t			unassigned	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	
 0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
 0xc0d67c	uint32_t[5]	s_terrainTypeStore		terrain	Holds the TerrainType.dbc store: rows, count, the table by id at +0x8 and the id bound at +0xc	verified	one	terrain/footprints#footprint-spawn
