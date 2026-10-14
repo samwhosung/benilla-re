@@ -1,5 +1,5 @@
 address	size	name	name_from	system	class	signature	meaning	confidence	proof	finding	test
-0x401000	10			unassigned			Runs its object file code that calls 0x645010; not read here	inferred	none		
+0x401000	10	ProcessEntry		unassigned			Calls 0x645010, then jumps to the C runtime start-up 0x4098c0	verified	one	core/threads#process-entry	
 0x401010	5			client			Runs its object file code not read here	inferred	none		
 0x401020	11			client			Runs its object file code not read here	inferred	none		
 0x401030	27			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -66,7 +66,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4020f0	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402100	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
 0x402110	1			client	unreached		Runs Client.cpp code not read here	inferred	none		
-0x402120	222	ClientMain		client			Runs the client: creates the time manager, initializes, runs the event loop through 0x41f5c0 and shuts down	inferred	none	core/loop#startup-and-shutdown	
+0x402120	222	ClientMain		client			Runs the application: start-up calls, the time manager, init, the event loop and teardown	verified	one	core/threads#application-body	
 0x402200	15			client			Runs Client.cpp code not read here	inferred	none		
 0x402210	161			client			Runs Client.cpp code that calls 0x648c20, 0x648be0, 0x419c20 and 5 more; not read here	inferred	none		
 0x4022c0	12			client			Runs Client.cpp code not read here	inferred	none		
@@ -1669,16 +1669,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41d870	77			base	unreached		Runs its object file code not read here	inferred	none		
 0x41d8c0	264			base	unreached		Runs its object file code that calls 0x41d870, 0x41c6e0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x41d9d0	264			base	unreached		Runs its object file code that calls 0x41d190, 0x41ca00, SMemReAlloc and 3 more; not read here	inferred	none		
-0x41dae0	19			base			Runs its object file code that calls 0x436d60; not read here	inferred	none		
-0x41db00	11			base			Runs its object file code not read here	inferred	none		
+0x41dae0	19	CreateThreadPropSlot		base			Allocates the TLS slot of the thread properties and stores null in it	verified	one	core/threads#thread-properties	
+0x41db00	11	FreeThreadPropSlot		base			Frees the TLS slot of the thread properties	verified	one	core/threads#thread-properties	
 0x41db10	5			base			Runs its object file code not read here	inferred	none		
 0x41db20	11			base			Runs its object file code not read here	inferred	none		
-0x41db30	17			base			Runs Prop.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x41db50	13	SetThreadPropContext		base			Stores a value in the calling thread's property slot through 0x436db0	verified	one	core/loop#one-tick	
-0x41db60	11	PropGetSelectedContext	idb	base			Runs its object file code not read here	inferred	none		
-0x41db70	20			base			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x41db90	27	PropGet	idb	base			Returns an entry of the calling thread's property array, read through TlsGetValue	inferred	none	core/loop#one-tick	
-0x41dbb0	27	SetThreadProp		base			Stores a value in an entry of the calling thread's property array	verified	one	core/loop#one-tick	
+0x41db30	17	AllocThreadPropArray		base			Allocates a property array of 0x4c bytes, 19 dwords	verified	one	core/threads#thread-properties	
+0x41db50	13	SetThreadPropContext		base			Stores a property array pointer in the calling thread's slot, null clearing it	verified	one	core/threads#thread-properties	
+0x41db60	11	PropGetSelectedContext	idb	base			Returns the property array pointer in the calling thread's slot	verified	one	core/threads#thread-properties	
+0x41db70	20	FreeThreadPropArray		base			Frees a property array when it is not null	verified	one	core/threads#thread-properties	
+0x41db90	27	PropGet	idb	base			Returns element i of the calling thread's property array, 0 without an array	verified	one	core/threads#thread-properties	
+0x41dbb0	27	SetThreadProp		base			Stores element i of the calling thread's property array when there is one	verified	one	core/threads#thread-properties	
 0x41dbd0	5			base			Runs its object file code not read here	inferred	none		
 0x41dbe0	15			base			Runs its object file code not read here	inferred	none		
 0x41dbf0	5			base			Runs its object file code not read here	inferred	none		
@@ -2173,7 +2173,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42a180	24			os	unreached		Runs its object file code that calls __clearfp, __control87; not read here	inferred	none		
 0x42a1a0	14			os	unreached		Runs its object file code not read here	inferred	none		
 0x42a1b0	15			os	unreached		Runs its object file code not read here	inferred	none		
-0x42a1c0	337			os			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
+0x42a1c0	337	RestrictProcessAccess		os			Sets the process access list: deny Everyone mask 250, allow the user mask 1050369, protected	verified	one	core/threads#process-access-list	
 0x42a320	86	CheckFunctionPointer		os			Stops the client with Invalid function pointer when an address lies outside the exe .text section	verified	one	ui/luastate#the-c-function-contract	
 0x42a380	133	FindTextSection		os			Stores the start and end of the exe .text section from its section table	verified	one	ui/luastate#the-c-function-contract	
 0x42a410	5			os			Runs its object file code not read here	inferred	none		
@@ -2799,10 +2799,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x436c70	57			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x436cb0	31			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x436cd0	141			unassigned	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x436d60	6			unassigned			Runs its object file code not read here	inferred	none		
-0x436d70	8			unassigned			Runs its object file code not read here	inferred	none		
-0x436d80	35	OsTlsGetValue	idb	unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x436db0	9	OsTlsSetValue		os			Stores a value in a TLS slot through TlsSetValue	inferred	none	core/loop#one-tick	
+0x436d60	6	OsTlsAlloc		unassigned			Allocates a TLS slot with TlsAlloc	verified	one	core/threads#engine-thread-records	
+0x436d70	8	OsTlsFree		unassigned			Frees a TLS slot with TlsFree	verified	one	core/threads#engine-thread-records	
+0x436d80	35	OsTlsGetValue	idb	unassigned			Returns the TLS value, raising error 0x57 and returning 0 when GetLastError is set	verified	one	core/threads#engine-thread-records	
+0x436db0	9	OsTlsSetValue		os			Stores a value in a TLS slot with TlsSetValue	verified	one	core/threads#engine-thread-records	
 0x436dc0	5			os			Runs its object file code not read here	inferred	none		
 0x436dd0	11			os			Runs its object file code not read here	inferred	none		
 0x436de0	5			os			Runs its object file code not read here	inferred	none		
@@ -2819,16 +2819,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x436f70	145			os			Runs its object file code not read here	inferred	none		
 0x437010	17			os	unreached		Runs its object file code that calls 0x437ad0; not read here	inferred	none		
 0x437030	43			os	unreached		Runs its object file code that calls 0x437a00; not read here	inferred	none		
-0x437060	377	RegisterEngineThread		os			Registers the calling thread's record under a name	inferred	none	core/loop#the-loop	
-0x4371e0	237	UnregisterEngineThread		os			Unregisters and frees the calling thread's record	inferred	none	core/loop#the-loop	
+0x437060	377	RegisterEngineThread		os			Registers the calling thread: counts it, makes its record with id, handle and name, and links it	verified	one	core/threads#engine-thread-records	
+0x4371e0	237	UnregisterEngineThread		os			Unregisters the calling thread: clears its slot, closes its handle, unlinks and frees its record	verified	one	core/threads#engine-thread-records	
 0x4372d0	7			os	unreached		Runs OsCall.cpp code not read here	inferred	none		
 0x4372e0	32			os	unreached		Runs OsCall.cpp code that calls OsTlsGetValue; not read here	inferred	none		
-0x437300	235			os			Runs OsCall.cpp code that calls SMemAlloc, SStrCopy, 0x437ce0; not read here	inferred	none		
+0x437300	235	CreateNameObject		os			Builds a name object of 0x45a8 bytes with a copied name and links it at the head of the name list	verified	one	core/threads#context-binding	
 0x4373f0	5			os			Runs its object file code not read here	inferred	none		
 0x437400	11			os			Runs its object file code not read here	inferred	none		
-0x437410	179			os			Runs its object file code that calls 0x437ca0, 0x437d10, SMemFree; not read here	inferred	none		
-0x4374d0	138	BindContextToThread		os			Binds a context's record to the calling thread's record	inferred	none	core/loop#one-tick	
-0x437560	181	UnbindContextFromThread		os			Unbinds a context's record from the calling thread's record	inferred	none	core/loop#one-tick	
+0x437410	179	DestroyNameObject		os			Clears a name object's thread tie and entries, then frees it	verified	one	core/threads#context-binding	
+0x4374d0	138	BindNameObjectToThread		os			Ties a name object and the calling thread's record to each other; returns for a null object	verified	one	core/threads#context-binding	
+0x437560	181	UnbindNameObjectFromThread		os			Clears the tie between a name object and the calling thread's record	verified	one	core/threads#context-binding	
 0x437620	119			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
 0x4376a0	42			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
 0x4376d0	102			os	unreached		Runs its object file code that calls OsTlsGetValue; not read here	inferred	none		
@@ -3043,7 +3043,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x43eff0	50			os	unreached		Runs OsTcp.cpp code not read here	inferred	none		
 0x43f030	5			os			Runs OsTcp.cpp code not read here	inferred	none		
 0x43f040	5			os			Runs OsTcp.cpp code not read here	inferred	none		
-0x43f050	25	PollingWait		os	orchestration		Runs the network pump for a time when it exists, else sleeps for that time	inferred	none	core/loop#the-loop	
+0x43f050	25	PollingWait		os	orchestration		Runs the network object's wait for ecx milliseconds when one exists, else sleeps for that time	verified	one	core/threads#host-calls	
 0x43f070	29			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError, 0x43cb30; not read here	inferred	none		
 0x43f090	17			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError; not read here	inferred	none		
 0x43f0b0	19			os	unreached		Runs OsTcp.cpp code that calls SErrSetLastError, 0x43cb60; not read here	inferred	none		
@@ -23233,7 +23233,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x644fc0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x644fd0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x644ff0	22			unassigned			Runs its object file code that calls 0x64e8a0, 0x6462b0, 0x64cea0; not read here	inferred	none		
-0x645010	10			unassigned			Runs its object file code that calls 0x65aa20; not read here	inferred	none		
+0x645010	10	StormStartup		unassigned			Starts Storm: its locks through 0x65aa20 and its allocator through 0x646280	verified	one	core/threads#process-entry	
 0x645020	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645030	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x645040	7			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23271,11 +23271,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6461c0	130			storm	boundary		Runs its object file code that calls 0x6450c0, 0x6452a0; not read here	inferred	none		
 0x646250	20			storm	unreached		Runs its object file code that calls 0x6454d0; not read here	inferred	none		
 0x646270	8			storm	boundary		Runs its object file code not read here	inferred	none		
-0x646280	43			storm	boundary		Runs its object file code that calls 0x667440, 0x6454e0; not read here	inferred	none		
+0x646280	43	SMemInitialize		storm	boundary		Initializes the Storm allocator once, guarded by a flag dword	verified	one	core/threads#process-entry	
 0x6462b0	48			storm	boundary		Runs its object file code that calls 0x667440, 0x6455b0; not read here	inferred	none		
-0x6462e0	61	SMemAlloc	idb	storm	boundary		Allocates memory tagged with a name and line	inferred	none		
+0x6462e0	61	SMemAlloc	idb	storm	boundary		Allocates size bytes tagged with a name and line through the allocator, zero-filled when flag bit 3 is set	verified	one	core/threads#allocator-and-error-calls	
 0x646320	261	SMemReAlloc		storm	boundary		Reallocates tagged memory	inferred	none		
-0x646430	34	SMemFree	idb	storm	boundary		Frees tagged memory	inferred	none		
+0x646430	34	SMemFree	idb	storm	boundary		Frees a block through the allocator and returns 1	verified	one	core/threads#allocator-and-error-calls	
 0x646460	5			storm	unreached		Runs its object file code not read here	inferred	none		
 0x646470	45			storm	boundary		Runs its object file code that calls 0x646270; not read here	inferred	none		
 0x6464a0	56			storm	unreached		Runs its object file code that calls 0x6458a0; not read here	inferred	none		
@@ -23404,13 +23404,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a500	150			storm	unreached		Runs its object file code that calls _toupper; not read here	inferred	none		
 0x64a5a0	123	SStrCopy	idb	storm	boundary		Copies a string up to a length	inferred	none	collision/mover#initialisation-and-teardown	
 0x64a620	75	SStrDupA	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SMemAlloc; not read here	inferred	none		
-0x64a670	16			storm	boundary		Runs its object file code that calls 0x64a680; not read here	inferred	none		
-0x64a680	88			storm	boundary		Runs its object file code that calls __CIpow; not read here	inferred	none		
+0x64a670	16	BuildPow10TableOnce		storm	boundary		Runs 0x64a680 once and sets its guard	verified	one	core/threads#string-conversion-table	
+0x64a680	88	BuildPow10Table		storm	boundary		Fills a table of 20 by 10 doubles with k times 10 to the power -(r+1)	verified	one	core/threads#string-conversion-table	
 0x64a6e0	1			storm	boundary		Runs its object file code not read here	inferred	none		
 0x64a6f0	46	SStrLen	idb	storm	boundary	uint32_t __stdcall (const char *text)	Returns the length of a C string	inferred	none		
 0x64a720	49			storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a760	142	SStrPack		storm			Appends a string within a buffer size and terminates it	inferred	none		
-0x64a7f0	43	SStrPrintf	idb	storm			Formats into a buffer of a given size	inferred	none	spell/failures#reason-text-and-pet-variant	
+0x64a7f0	43	SStrPrintf	idb	storm			Formats into a buffer of a given size, raising error 0x57 for a null buffer or format	verified	one	core/threads#allocator-and-error-calls	
 0x64a820	140	ISStrVPrintf	idb	storm	boundary		Runs its object file code that calls vsnoprintf, __vsnprintf, vsoprintf and 1 more; not read here	inferred	none		
 0x64a8b0	43	SStrVPrintf	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, ISStrVPrintf; not read here	inferred	none		
 0x64a8e0	434			storm	unreached		Runs its object file code that calls SErrSetLastError, 0x64a670, __CIpow and 1 more; not read here	inferred	none		
@@ -23439,10 +23439,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64b970	277			storm	unreached		Runs SStr.cpp code that calls 0x64b800, SInterlockedDecrement, SStrLen and 2 more; not read here	inferred	none		
 0x64ba90	266			unassigned			Runs its object file code that calls __alloca_probe, SUniConvertUTF8to16, SMemAlloc and 1 more; not read here	inferred	none		
 0x64bba0	46			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x64bbd0	6			unassigned			Runs its object file code not read here	inferred	none		
+0x64bbd0	6	GetCurrentThreadIdThunk		unassigned			Jumps to the GetCurrentThreadId import	verified	one	core/threads#host-calls	
 0x64bbe0	6	GetCurrentProcessId		unassigned			Jumps to GetCurrentProcessId, imported from KERNEL32.dll	inferred	none		
-0x64bbf0	14			unassigned			Runs its object file code not read here	inferred	none		
-0x64bc00	24			unassigned			Runs its object file code not read here	inferred	none		
+0x64bbf0	14	GetCurrentThreadPriority		unassigned			Returns the priority of the current thread with GetThreadPriority	verified	one	core/threads#host-calls	
+0x64bc00	24	SetCurrentThreadPriority		unassigned			Sets the priority of the current thread with SetThreadPriority	verified	one	core/threads#host-calls	
 0x64bc20	248	StartAddress	idb	storm	boundary		Runs SThread.cpp code that calls SMemFree, 0x64e9b0, 0x64e9c0; not read here	inferred	none		
 0x64bd20	31			storm	boundary		Runs SThread.cpp code that calls 0x64bd40; not read here	inferred	none		
 0x64bd40	577			storm	boundary		Runs SThread.cpp code that calls SStrCopy, 0x64ead0, SMemAlloc; not read here	inferred	none		
@@ -23520,7 +23520,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64e6f0	76			storm	unreached		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
 0x64e740	18			storm	boundary		Runs its object file code that calls 0x64e760; not read here	inferred	none		
 0x64e760	227			storm	boundary		Runs its object file code that calls 0x64c650, SStrPrintf, 0x64d100; not read here	inferred	none		
-0x64e850	22	SErrSetLastError	idb	storm	boundary	void __stdcall (uint32_t code)	Stores an error code and passes it to SetLastError	inferred	none		
+0x64e850	22	SErrSetLastError	idb	storm	boundary	void __stdcall (uint32_t code)	Stores an error code in a global and passes it to SetLastError	verified	one	core/threads#allocator-and-error-calls	
 0x64e870	46			storm	boundary		Runs its object file code that calls 0x64d020, SStrCopy, 0x64d070; not read here	inferred	none		
 0x64e8a0	35			storm	boundary		Runs its object file code that calls 0x64d020, 0x64d070; not read here	inferred	none		
 0x64e8d0	65			storm	boundary		Runs its object file code that calls 0x64d020, SStrCopy, 0x64d070; not read here	inferred	none		
@@ -23756,10 +23756,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6578f0	60			storm	unreached		Runs its object file code not read here	inferred	none		
 0x657930	41			storm	boundary		Runs its object file code not read here	inferred	none		
 0x657960	41	Pause	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x657990	14	SCritSect::SCritSect	idb	storm	boundary		Initializes a critical section	inferred	none		
-0x6579a0	8	SCritSect::~SCritSect		storm	boundary		Deletes a critical section	inferred	none		
-0x6579b0	8	SCritSect::Enter	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x6579c0	8	SCritSect::Leave	idb	storm	boundary		Leaves a critical section	inferred	none		
+0x657990	14	SCritSect::SCritSect	idb	storm	boundary		Initializes the critical section at ecx and returns it	verified	one	core/threads#host-calls	
+0x6579a0	8	SCritSect::~SCritSect		storm	boundary		Deletes the critical section at ecx	verified	one	core/threads#host-calls	
+0x6579b0	8	SCritSect::Enter	idb	storm	boundary		Enters the critical section at ecx	verified	one	core/threads#host-calls	
+0x6579c0	8	SCritSect::Leave	idb	storm	boundary		Leaves the critical section at ecx	verified	one	core/threads#host-calls	
 0x6579d0	5			storm	unreached		Runs its object file code not read here	inferred	none		
 0x6579e0	229			storm	unreached		Runs its object file code that calls SCritSect::SCritSect; not read here	inferred	none		
 0x657ad0	309			storm	unreached		Runs SLock.cpp code that calls 0x667440, SCritSect::~SCritSect; not read here	inferred	none		
@@ -23783,13 +23783,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6587a0	38			storm	boundary		Runs SLock.cpp code that calls 0x658870, SInterlockedExchange, SRWLock::IFreeEvent; not read here	inferred	none		
 0x6587d0	158	SRWLock::IFreeEvent	idb	storm	boundary		Runs SLock.cpp code that calls SInterlockedIncrement, SInterlockedExchange, Pause; not read here	inferred	none		
 0x658870	32			storm	boundary		Runs SLock.cpp code that calls SInterlockedExchange, SRWLock::IFreeEvent; not read here	inferred	none		
-0x658890	15	CSRWLock::Enter	idb	storm	boundary		Runs SLock.cpp code that calls SRWLock::SURWLockEnter; not read here	inferred	none		
+0x658890	15	CSRWLock::Enter	idb	storm	boundary		Enters the read-write lock at ecx in the mode on the stack	verified	one	core/threads#allocator-and-error-calls	
 0x6588a0	160	SRWLock::SURWLockEnter	idb	storm	boundary		Runs SLock.cpp code that calls SRWLock::IAllocEventOrIncRefCount, SRWLock::SUNNLockEnter and 4 more; not read here	inferred	none		
 0x658940	105	SRWLock::IAllocEventOrIncRefCount	idb	storm	boundary		Runs SLock.cpp code that calls 0x6589b0, SInterlockedCompareExchange, SRWLock::IFreeEvent; not read here	inferred	none		
 0x6589b0	101			storm	boundary		Runs SLock.cpp code that calls SInterlockedDecrement, SInterlockedIncrement and 2 more; not read here	inferred	none		
 0x658a20	186	SRWLock::SUNNLockEnter	idb	storm	boundary		Runs SLock.cpp code that calls SInterlockedExchange, Pause, SRWLock::IAllocEventOrIncRefCount and 4 more; not read here	inferred	none		
 0x658ae0	104	SRWLock::IDecRefCountAndFreeEvent	idb	storm	boundary		Runs SLock.cpp code that calls SInterlockedCompareExchange, SRWLock::IFreeEvent; not read here	inferred	none		
-0x658b50	15	CSRWLock::Leave	idb	storm	boundary		Runs SLock.cpp code that calls SRWLock::SURWLockLeave; not read here	inferred	none		
+0x658b50	15	CSRWLock::Leave	idb	storm	boundary		Leaves the read-write lock at ecx in the mode on the stack	verified	one	core/threads#allocator-and-error-calls	
 0x658b60	52	SRWLock::SURWLockLeave	idb	storm	boundary		Runs SLock.cpp code that calls SRWLock::IDecRefCountAndFreeEvent; not read here	inferred	none		
 0x658ba0	31	SRWLock::SUNNLockLeave	idb	storm	boundary		Runs SLock.cpp code not read here	inferred	none		
 0x658bc0	15			storm	unreached		Runs SLock.cpp code that calls 0x658bd0; not read here	inferred	none		
@@ -23803,18 +23803,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x659520	588			storm	unreached		Runs SLock.cpp code that calls 0x667440, CSRWLock::Leave; not read here	inferred	none		
 0x659770	387			storm	boundary		Runs SLock.cpp code that calls 0x667440; not read here	inferred	none		
 0x659900	40			storm	unreached		Runs SLock.cpp code not read here	inferred	none		
-0x659930	9			storm	boundary		Runs SLock.cpp code not read here	inferred	none		
+0x659930	9			storm	boundary		Stores 0 at ecx, an empty handle	verified	one	core/threads#host-calls	
 0x659940	22			storm	unreached		Runs SLock.cpp code that calls 0x659900; not read here	inferred	none		
-0x659960	5	SHandleCloseThunk		storm	boundary		Jumps to 0x6599a0	inferred	none		
+0x659960	5	SHandleCloseThunk		storm	boundary		Jumps to 0x6599a0, which closes the handle at ecx and zeroes it	verified	one	core/threads#host-calls	
 0x659970	29			storm	unreached		Runs SLock.cpp code that calls SHandleClose, 0x659900; not read here	inferred	none		
 0x659990	10			storm	boundary		Runs SLock.cpp code not read here	inferred	none		
 0x6599a0	24	SHandleClose		storm	boundary		Closes the handle at ecx and clears it	inferred	none		
-0x6599c0	20	SEventWait		storm	boundary		Waits on the handle at ecx with WaitForSingleObject and a timeout	verified	one	core/loop#the-loop	
+0x6599c0	20	SEventWait		storm	boundary		Waits on the handle at ecx for the stack timeout with WaitForSingleObject	verified	one	core/threads#host-calls	
 0x6599e0	35			storm	unreached		Runs SLock.cpp code not read here	inferred	none		
 0x659a10	96			storm	boundary		Runs SLock.cpp code not read here	inferred	none		
-0x659a70	38			storm	boundary		Runs SLock.cpp code that calls 0x659930; not read here	inferred	none		
-0x659aa0	10	SEvent::Set	idb	storm	boundary		Sets the event at ecx	inferred	none		
-0x659ab0	10			storm	boundary		Runs SLock.cpp code not read here	inferred	none		
+0x659a70	38	SEvent::SEvent		storm	boundary		Creates an event with the manual-reset and initial-state flags on the stack and stores it at ecx	verified	one	core/threads#host-calls	
+0x659aa0	10	SEvent::Set	idb	storm	boundary		Sets the event at ecx	verified	one	core/threads#host-calls	
+0x659ab0	10	SEvent::Reset		storm	boundary		Resets the event at ecx	verified	one	core/threads#host-calls	
 0x659ac0	39	SThread::Create	idb	storm	boundary		Runs SLock.cpp code that calls 0x64bd20; not read here	inferred	none		
 0x659af0	38			storm	boundary		Runs SLock.cpp code that calls 0x659930; not read here	inferred	none		
 0x659b20	22			storm	boundary		Runs SLock.cpp code not read here	inferred	none		
@@ -23854,7 +23854,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65a970	48	SLogFlush	idb	storm	boundary		Runs its object file code that calls LockLog, FlushLog, UnlockLog; not read here	inferred	none		
 0x65a9a0	78			storm	boundary		Runs its object file code that calls FlushLog; not read here	inferred	none		
 0x65a9f0	47			storm	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
-0x65aa20	62			storm	boundary		Runs its object file code not read here	inferred	none		
+0x65aa20	62	InitStormLocks		storm	boundary		Initializes five critical sections once, guarded by a flag dword	verified	one	core/threads#process-entry	
 0x65aa60	6			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65aa70	138			storm	unreached		Runs its object file code that calls LockLog, PrepareLog, OutputTime and 5 more; not read here	inferred	none		
 0x65ab00	5			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -23867,11 +23867,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x65ace0	22	SLogWrite	idb	storm	boundary	void __cdecl (HSLOG log, const char *format, ...)	Writes a formatted line to a log, handing its variadic arguments to 0x65ac20 as a list	verified	one	ui/framexml#building-the-game-interface	
 0x65ad00	9			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65ad10	25			storm	boundary		Runs its object file code not read here	inferred	none		
-0x65ad30	11	SInterlockedIncrement	idb	storm	boundary	int32_t __stdcall (int32_t *value)	Increments a dword atomically and returns the new value	inferred	none		
-0x65ad40	11	SInterlockedDecrement	idb	storm	boundary		Decrements a dword atomically and returns the result	inferred	none		
+0x65ad30	11	SInterlockedIncrement	idb	storm	boundary	int32_t __fastcall (int32_t *value)	Adds 1 to the dword at ecx atomically and returns the new value	verified	one	core/threads#host-calls	
+0x65ad40	11	SInterlockedDecrement	idb	storm	boundary	int32_t __fastcall (int32_t *value)	Subtracts 1 from the dword at ecx atomically and returns the new value	verified	one	core/threads#host-calls	
 0x65ad50	7			storm	boundary		Runs its object file code not read here	inferred	none		
 0x65ad60	9			storm	unreached		Runs its object file code not read here	inferred	none		
-0x65ad70	6	SInterlockedExchange	idb	storm	boundary		Runs its object file code not read here	inferred	none		
+0x65ad70	6	SInterlockedExchange	idb	storm	boundary	int32_t __fastcall (int32_t *value, int32_t newValue)	Exchanges the dword at ecx with edx atomically and returns the old value	verified	one	core/threads#host-calls	
 0x65ad80	11	SInterlockedCompareExchange	idb	storm	boundary		Runs its object file code not read here	inferred	none		
 0x65ad90	32			storm	unreached		Runs its object file code not read here	inferred	none		
 0x65adb0	32			storm	unreached		Runs its object file code not read here	inferred	none		

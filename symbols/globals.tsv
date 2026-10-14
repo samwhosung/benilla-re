@@ -1858,6 +1858,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882be0	uint32_t	s_loadingScreen		loadingscreen	Holds the loading screen object, or null	inferred	none	
 0x882e04	uint32_t			loadingscreen	Holds a dword that EndLoadingScreen reads and writes; not read here	inferred	none	
 0x882e10	uint32_t			loadingscreen	Holds a dword that SetLoadingScreenTip, BeginLoadingScreen, EndLoadingScreen read and write; not read here	inferred	none	
+0x883e68	uint32_t	s_threadPropSlot		base	Holds the TLS slot of the thread property arrays	verified	one	core/threads#thread-properties
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
 0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	verified	one	core/scheduler#growable-arrays
@@ -1913,6 +1914,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884e68	uint32_t	s_frameReleaseDone		core	Holds 1 after a frame double click until the next release is skipped	verified	one	core/input#window-frame
 0x884e6c	void *	s_windowMessageHook		core	Holds the hook the window procedure passes other messages to	verified	one	core/input#window-messages
 0x884e9c	uint32_t	s_guiFilterEnabled		os	Holds 0, the word that enables the message filter 0x42e3d0	verified	one	core/input#message-filter-and-idle-sleep
+0x884ecc	void *	s_threadLock		os	Holds the thread list's critical section, created on first use	verified	one	core/threads#engine-thread-records
+0x884ef0	uint32_t	s_threadRecordSlot		os	Holds the TLS slot of the thread records	verified	one	core/threads#engine-thread-records
+0x884ef8	void *	s_threadRecords		os	Holds the head of the registered thread record list	verified	one	core/threads#engine-thread-records
+0x884f00	uint32_t	s_threadRecordCount		os	Holds the number of registered thread records	verified	one	core/threads#engine-thread-records
+0x884f0c	void *	s_nameObjects		os	Holds the head of the name object list	verified	one	core/threads#context-binding
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t			gx	Holds a dword that TextureCreate reads and writes; not read here	inferred	none	
 0xb05d68	float	s_randomInfinity		random	Holds +inf, set at startup; nothing reads it	verified	one	random#static-initializers
@@ -2746,7 +2752,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4eb9e	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xc4eba1	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
-0xc52560	double			storm	Holds the first double of a table that SStrToFloat reads; not read here	inferred	none	
+0xc52560	double[200]	s_pow10Table		storm	Holds k times 10 to the power -(r+1) at row r, column k, for the string-to-double conversion	verified	one	core/threads#string-conversion-table
+0xc52ba0	uint32_t	s_pow10TableBuilt		storm	Holds 1 once the power table is built	verified	one	core/threads#string-conversion-table
 0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
 0xc5a470	uint32_t	s_worldMode		terrain	Holds the world mode read from an option object at start-up	inferred	none	
 0xc5a474	uint32_t	s_batchCount		terrain	Holds the count of batch headers in use	verified	one	terrain/collide#triangle-batches

@@ -946,6 +946,11 @@ ObjectManager	0x00c0	8	uint64_t	m_activePlayerGuid	objectlayer	Holds the active 
 ObjectManager	0x00cc	4	uint32_t	m_mapId	objectlayer	Holds the map id, written by 0x4685a0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d0	4	ClientConnection *	m_client	objectlayer	Holds the client connection the update handlers are registered on, written by 0x4685b0	verified	one	objectlayer/manager#manager-block
 ObjectManager	0x00d4	4	MovementGlobals *	m_movementGlobals	objectlayer	Holds the movement manager, written by 0x468600	verified	one	objectlayer/manager#accessors-and-enumeration
+OsThreadRecord	0x0000	8	void *[2]	m_link	os	Holds the record's link in the record list	verified	one	core/threads#engine-thread-records
+OsThreadRecord	0x0008	4	uint32_t	m_threadId	os	Holds the thread id	verified	one	core/threads#engine-thread-records
+OsThreadRecord	0x000c	4	void *	m_handle	os	Holds a duplicate of the thread handle	verified	one	core/threads#engine-thread-records
+OsThreadRecord	0x0014	4	void *	m_nameObject	os	Holds the name object tied to the thread, or null	verified	one	core/threads#engine-thread-records
+OsThreadRecord	0x181c	128	char[128]	m_name	os	Holds the display text name [id]	verified	one	core/threads#engine-thread-records
 PendingSpellCast	0x0000	8	uint64_t	m_sourceGuid	spell	Holds the casting item's guid, else the caster's	verified	one	spell/pending#pending-cast-fields
 PendingSpellCast	0x0008	8	uint64_t	m_casterGuid	spell	Holds the caster's guid	verified	one	spell/pending#pending-cast-fields
 PendingSpellCast	0x0010	4	int32_t	m_spellId	spell	Holds the spell being cast	verified	one	spell/pending#pending-cast-fields
