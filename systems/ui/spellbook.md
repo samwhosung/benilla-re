@@ -193,6 +193,19 @@ key of 0 and `0x4b305e` +1 for a second key of 0. `0x4b310c` and `0x4b3115` are 
 `0x4b3179` the rank strings. `0x4b3c30` loops over the rank string with the digit test `0x6c9c30`
 (`n = 10n + digit`) and falls back to `[rec+0x74]` at `0x4b3c94`.
 
+## Who signals SPELLS_CHANGED
+
+`0x4b2fd0` is the only function that signals `SPELLS_CHANGED` (260), and seven direct calls are all that reach it. Each passes the book flag and the pet flag. A learned spell (`0x4b2b5a`) passes 1, 0 and a removed one (`0x4b2f3f`) 1, 0, the removal only when the id was in the book. `UpdateSpells` (`0x4b43e4`) passes 0, 0 and `SMSG_PET_SPELLS` (`0x4bdadb`) 0, 1.
+The active player's arrival (`0x5deac2`) passes 1, 0 after it replays the pending initial spells. Two calls pass 0, 0 for the active player: a changed main hand or ranged visible item (`0x5deeed`) and a level change (`0x5edb7b`).
+
+Addresses: `0x4b2fd0`, `0x4b302f`, `0x4b2b5a`, `0x4b2f2f`, `0x4b2f38`, `0x4b2f3f`, `0x4b43e4`, `0x4bdadb`, `0x5dea50`, `0x5deac2`, `0x5dee30`, `0x5dee91`, `0x5deeb1`, `0x5deeed`, `0x5edb60`, `0x5edb6f`, `0x5edb7b`, `0x60cdd0`, `0x60ce4b`
+Confidence: verified
+Proof: one
+Test: none
+
+No jump table, vtable or data word holds the address of `0x4b2fd0`, so the seven are the whole list. `0x4b2c50` leaves its search index at 0x400 when the id is not in the book, and `0x4b2f2f` compares it with 0x400 and skips the call. `0x5dee30` takes the slot as `(field offset - 0x118) / 48`; slots 15 and 17 reach `0x5deeed` (17 after `UNIT_RANGED_ATTACK_POWER`) and slot 16 does not.
+Both active-player paths compare the object's GUID with `0x468550` first (`0x5dee91`, `0x5edb6f`); `0x60cdd0` reaches `0x5edb60` only for an object whose type mask has bit 0x10 (`0x60ce4b`). A call that moves entries sorts first, so the signal never precedes the order; the three 0, 0 calls leave the order alone.
+
 ## Checked spells
 
 `IsCurrentCast` (`0x4b4370`) pushes 1 or nil from `0x4b3600(slot, book)`, a smaller test than the action
