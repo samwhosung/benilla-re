@@ -90,6 +90,30 @@ sites, 149 of them `SignalEvent2`).
 An event with no row here may still be fired: the unit-field events reach the dispatcher through
 a wrapper, `0x515e50`, which is the `?` row at `0x515e7a`.
 
+## chat_types.tsv
+
+The 94 chat types, in the order the client indexes them (94 rows). A line of chat carries a type
+byte; the type picks the colour and the event.
+
+| column | meaning |
+|---|---|
+| `index` | The type byte, `0` to `93`. |
+| `name` | The type's name, without the `CHAT_MSG_` prefix. |
+| `rgb` | The default colour, six lowercase hex digits. |
+| `event_id` | The event id fired for a line of this type. |
+| `event` | The event's name in `events.tsv`; empty where the id has no name. |
+
+## chat_groups.tsv
+
+The 68 message groups a chat window can show (68 rows). A window keeps one flag byte per group.
+
+| column | meaning |
+|---|---|
+| `index` | The group's position, `0` to `67`, which is the flag byte's position. |
+| `name` | The group's name. |
+| `default_on` | `1` when the group is on in the second chat window of a new character. |
+| `added_in` | The settings-file version that added the group: `0`, `1` or `2`. |
+
 ## cvars.tsv
 
 Every `CVar::Register 0x63db90` call (214 rows).

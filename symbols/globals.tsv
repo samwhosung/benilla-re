@@ -48,6 +48,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x494b54	uint8_t[12]	s_protectedGateTagArm		ui	Holds the arm index of each action gate tag 0 to 11	verified	one	ui/protected#protected-action-gate
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
 0x496888	void *[4]	s_cases496720		ui	Holds the 4 case addresses of the switch in 0x496720	inferred	none	
+0x499a64	void *[5]	s_cases498a60		ui	Holds the five line-state arms of the settings loader 0x498a60	verified	one	ui/chatwindows#settings-file-reader
 0x49afe0	void *[5]	s_cases49a870		ui	Holds the 5 case addresses of the switch in 0x49a870	inferred	none	
 0x49aff4	uint8_t[92]	s_caseIndexes49a870		ui	Holds the 92 case indexes of the switch in 0x49a870	inferred	none	
 0x49c60c	void *[32]	s_cases49bf80		ui	Holds the 32 case addresses of the switch in 0x49bf80	inferred	none	
@@ -280,6 +281,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x718788	void *[5]	s_m2BillboardTable		models	Holds the jump targets of the billboard cases	verified	one	animation/billboards#billboard-cases
 0x71879c	uint8_t[57]	s_m2BillboardIndex		models	Maps a bone's billboard flags minus 8 to a billboard case	verified	one	animation/billboards#billboard-cases
 0x768c44	void *[9]	s_dragGripArms		ui	Holds the nine grip arms of 0x768710, one per anchor point	verified	one	ui/resizebounds#the-drag
+0x77ac1c	void *[4]	s_cases77abb0		ui	Holds the arms that map a classified language to the edit box's language index	verified	one	ui/inputlanguage#the-language-index
 0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
 0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
@@ -403,7 +405,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8045c0	void *[40]	s_guiButtonVtable		ui	Holds the 40 virtual function slots of a CSimpleButton subclass the game interface creates	verified	one	ui/hover#the-notifies-by-class
 0x8046d8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x804710	uint8_t[94][67]	s_chatTypeInfo		ui	Holds each chat type's name and colour, 67 bytes a type	verified	one	objectlayer/combatlog#a-line
-0x805fb0	const uint32_t			ui	Holds a dword that Script::GetChatWindowMessages, Script::AddChatWindowMessages read; not read here	inferred	none	
+0x805fb0	ChatMessageGroup[68]	s_chatMessageGroups		ui	Holds the 68 message groups a window can show	verified	one	ui/chatwindows#message-groups-of-a-window
 0x806458	const uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
 0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
@@ -1206,8 +1208,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8435fc	uint32_t			ui	Holds a dword that ClientChatHandler, ClientTextEmoteHandler, HandleZoneUnderAttackPacket read and write; not read here	inferred	none	
 0x843600	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x843604	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0x843608	int32_t			ui	Holds an int32_t that Script::GetGuildRecruitmentMode reads and writes; not read here	inferred	none	
-0x843628	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x843608	int32_t	s_guildRecruitmentAuto		ui	Holds 1 while guild recruitment joins its channel by itself	verified	one	ui/chatwindows#settings-file-reader
+0x84360c	const char *[2]	s_logPaths		ui	Holds the paths Logs\WoWChatLog.txt and Logs\WoWCombatLog.txt	verified	one	ui/chatwindows#chat-logging
+0x843614	const char *	s_guildRecruitmentOption		ui	Points at the option name written before the recruitment mode in the settings header	verified	one	ui/chatwindows#settings-file-writer
+0x843618	luaL_reg[50]	s_chatFunctions		ui	Holds the 50 name and function pairs of the Lua functions of ChatFrame.cpp	verified	one	ui/chatwindows#chat-script-functions
 0x84439c	const char[7]	s_keyLocked		ui	Holds the global string key LOCKED of the locked line	verified	one	ui/tooltipobject#the-game-object-lock-lines
 0x844538	char[3]	s_textR		unassigned	Holds the string "|r"	inferred	none	
 0x84453c	char[3]	s_textH		unassigned	Holds the string "|h"	inferred	none	
@@ -1735,6 +1739,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x879810	char[24]	s_textFrameSIsNotMovable		ui	Holds the string "Frame %s is not movable"	inferred	none	
 0x879828	char[26]	s_textFrameSIsNotResizable		ui	Holds the string "Frame %s is not resizable"	inferred	none	
 0x879844	char[37]	s_textFrameSIsNotMovableOrResizable		ui	Holds the string "Frame %s is not movable or resizable"	inferred	none	
+0x879a5c	const char *[4]	s_inputLanguageNames		ui	Holds the names ROMAN, KOREAN, CHINESE and JAPANESE	verified	one	ui/inputlanguage#the-language-index
 0x879b78	char[13]	s_textIgnoreArrows		ui	Holds the string "ignoreArrows"	inferred	none	
 0x879c8c	char[15]	s_onEnterPressed		ui	Holds the script name OnEnterPressed of an edit box	verified	one	ui/protected#input-event-flags
 0x879cac	char[3]	s_editBoxPipeText		ui	Holds ||, the text an edit box inserts for a typed pipe	verified	one	ui/editbox#typed-characters
@@ -2148,15 +2153,22 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e4	uint32_t	s_forbiddenSignalGuard		ui	Holds 1 while 0x494a50 signals a forbidden action	verified	one	ui/luastate#the-context-word
 0xb4e4f0	uint32_t			ui	Holds a dword that CGChat::InitializeGame reads and writes; not read here	inferred	none	
-0xb4e518	uint8_t			ui	Holds a byte that CGChat::InitializeGame, Script::ChangeChatColor, Script::ResetChatColors read; not read here	inferred	none	
+0xb4e500	uint32_t	s_extraChatColorCount		ui	Holds the number of extra channel colour entries	verified	one	ui/chatwindows#start-up-events
+0xb4e504	void *	s_extraChatColors		ui	Points at the extra channel colour entries, 67 bytes each	verified	one	ui/chatwindows#start-up-events
+0xb4e518	uint8_t[94][67]	s_chatColors		ui	Holds the live chat type names and colours, seeded from the table at 0x804710	verified	one	ui/chatwindows#start-up-events
+0xb4fdb4	uint32_t[2]	s_loggingFlags		ui	Holds whether chat and combat logging are on, set by LoggingChat and LoggingCombat	verified	one	ui/chatwindows#chat-logging
+0xb4fdd4	uint32_t	s_deferredJoinCapacity		ui	Holds the capacity of the list of channel names the settings header asked to join	verified	one	ui/chatwindows#settings-file-lines
+0xb4fdd8	uint32_t	s_deferredJoinCount		ui	Holds the count of channel names in the deferred-join list	verified	one	ui/chatwindows#settings-file-lines
+0xb4fddc	char **	s_deferredJoins		ui	Points at the deferred-join list of channel name strings	verified	one	ui/chatwindows#settings-file-lines
+0xb4fe00	uint32_t	s_joinedChannelCount		ui	Holds the number of joined-channel slots, each 0xa0 bytes	verified	one	ui/chatwindows#settings-file-writer
 0xb4fe04	uint32_t			ui	Holds a dword that HandleZoneUnderAttackPacket, HandleDefenseMessagePacket read and write; not read here	inferred	none	
-0xb4fe50	uint8_t			ui	Holds a byte that CGChat::InitializeGame, Script::GetChatWindowInfo read and write; not read here	inferred	none	
-0xb4ff78	uint32_t			ui	Holds a dword that CGChat::InitializeGame reads and writes; not read here	inferred	none	
-0xb6e5c4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb6e5c8	uint32_t			ui	Holds a dword that CGChat::InitializeGame reads and writes; not read here	inferred	none	
+0xb4fe50	ChatWindow[10]	s_chatWindows		ui	Holds the ten chat window records	verified	one	ui/chatwindows#window-records
+0xb50540	void *[2]	s_logWriters		ui	Holds the open chat log and combat log writers, null while closed	verified	one	ui/chatwindows#chat-logging
+0xb6e5c4	uint32_t	s_chatSettingsDirty		ui	Holds a flag the saver registration clears and channel join and leave set; no instruction reads it	verified	one	ui/chatwindows#settings-file-writer
+0xb6e5c8	uint32_t	s_chatReady		ui	Holds 1 once the settings loader has finished	verified	one	ui/chatwindows#settings-file-backfill
 0xb6e5cc	uint32_t	s_isAfk		ui	Holds whether the active player is marked AFK	verified	one	objectlayer/interaction#afk
 0xb6e5d0	uint32_t			ui	Holds a dword that HandleZoneUnderAttackPacket, HandleDefenseMessagePacket read and write; not read here	inferred	none	
-0xb6e5e0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb6e5e0	uint32_t	s_zoneChannelMask		ui	Holds the bit set of ChatChannels ids that join by zone, bit id-1	verified	one	ui/chatwindows#settings-file-reader
 0xb6e5e4	uint8_t			ui	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xb6e5f0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb6e630	uint32_t			ui	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	

@@ -2269,7 +2269,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42c160	15	InitClockTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
 0x42c170	5	InitClockInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c180; a static initializer	verified	one	core/time#static-initializers	
 0x42c180	19	InitClockInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/time#static-initializers	
-0x42c1a0	167			unassigned			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmGetConversionStatus and 1 more; not read here	inferred	none		
+0x42c1a0	167			unassigned			Classifies the active input method and keyboard layout as 0 roman, 1 Japanese, 2 Korean or 3 Chinese	verified	one	ui/inputlanguage#the-language-index	
 0x42c250	16			unassigned			Runs its object file code that calls 0x42c260; not read here	inferred	none		
 0x42c260	171			unassigned			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmGetCompositionStringA and 3 more; not read here	inferred	none		
 0x42c310	16			unassigned			Runs its object file code that calls 0x42c260; not read here	inferred	none		
@@ -2279,7 +2279,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42c840	11	InitImeInfinity		os	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/input#static-initializers	
 0x42c850	68			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContext; not read here	inferred	none		
 0x42c8a0	59			os			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmAssociateContext; not read here	inferred	none		
-0x42c8e0	85			os			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmGetConversionStatus and 1 more; not read here	inferred	none		
+0x42c8e0	85			os			Sets or clears the native-mode bit of the window's input method conversion status	verified	one	ui/inputlanguage#the-language-index	
 0x42c940	21			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContext; not read here	inferred	none		
 0x42c960	28			os			Runs its object file code that calls OsGuiGetWindow, ImmAssociateContextEx; not read here	inferred	none		
 0x42c980	5	InitImeTwoPiThunk		os	orchestration	void __cdecl (void)	Jumps to 0x42c990; a static initializer	verified	one	core/input#static-initializers	
@@ -7144,15 +7144,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x498080	190			ui	primitive		Runs its object file code not read here	inferred	none		
 0x498140	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x498150	359			ui	primitive		Runs its object file code that calls 0x4a44e0, 0x4a3a60, 0x4a3ba0 and 1 more; not read here	inferred	none		
-0x4982c0	1078	CGChat::InitializeGame	idb	ui	primitive		Runs its object file code that calls SStrLen, 0x4a4200, 0x4a3560 and 10 more; not read here	inferred	none		
-0x498700	588			ui	primitive		Runs ChatFrame.cpp code that calls SLogClose, 0x4a3460, 0x4a3840 and 9 more; not read here	inferred	none		
+0x4982c0	1078	CGChat::InitializeGame	idb	ui	primitive		Seeds the chat colours, ten window records, extra channel colours and registers the chat messages	verified	one	ui/chatwindows#window-start-up-state	
+0x498700	588	ShutdownChat		ui	primitive		Closes the log writers, frees the windows' arrays and the channel list and unregisters the chat messages	verified	one	ui/chatwindows#chat-logging	
 0x498950	106			ui	primitive		Runs ChatFrame.cpp code that calls SMemFree; not read here	inferred	none		
 0x4989c0	72			ui	orchestration		Runs ChatFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x498a10	11			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
-0x498a20	18			ui	orchestration		Runs ChatFrame.cpp code that calls ReadAccountData; not read here	inferred	none		
-0x498a40	28			ui	orchestration		Runs ChatFrame.cpp code that calls WriteAccountData; not read here	inferred	none		
-0x498a60	4098			ui	primitive		Runs ChatFrame.cpp code that calls 0x42a670, __alloca_probe, 0x42a520 and 18 more; not read here	inferred	none		
-0x499a80	1842			ui	primitive		Runs ChatFrame.cpp code that calls SStrPrintf, SStrLen, 0x42a5d0 and 1 more; not read here	inferred	none		
+0x498a20	18	RegisterChatSettingsLoader		ui	orchestration		Registers 0x498a60 as the reader of cache file kind 7	verified	one	ui/chatwindows#settings-file-writer	
+0x498a40	28	RegisterChatSettingsSaver		ui	orchestration		Registers 0x499a80 as the writer of cache file kind 7 and clears the unread dirty flag	verified	one	ui/chatwindows#settings-file-writer	
+0x498a60	4098	LoadChatSettings		ui	primitive		Parses chat-cache.txt into the window records, colours and channels, or applies the defaults when absent	verified	one	ui/chatwindows#settings-file-reader	
+0x499a80	1842	SaveChatSettings		ui	primitive		Writes the whole of chat-cache.txt from the window records, colours and channels	verified	one	ui/chatwindows#settings-file-writer	
 0x49a1c0	5			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a1d0	15			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
 0x49a1e0	5			ui	orchestration		Runs ChatFrame.cpp code not read here	inferred	none		
@@ -7222,9 +7222,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49fbe0	236	Script::GetLanguageByIndex	idb	ui	primitive		Implements the Lua function GetLanguageByIndex	inferred	none		
 0x49fcd0	94	Script::GetDefaultLanguage	idb	ui	orchestration		Implements the Lua function GetDefaultLanguage	inferred	none		
 0x49fd30	267	Script::DoEmote	idb	ui	primitive		Implements the Lua function DoEmote	inferred	none		
-0x49fe40	7	Script::LoggingChat	idb	ui	orchestration		Implements the Lua function LoggingChat	inferred	none		
-0x49fe50	146			ui	orchestration		Runs ChatFrame.cpp code that calls lua_gettop, GetScriptFlagArg, OsCreateDirectory and 3 more; not read here	inferred	none		
-0x49fef0	10	Script::LoggingCombat	idb	ui	orchestration		Implements the Lua function LoggingCombat	inferred	none		
+0x49fe40	7	Script::LoggingChat	idb	ui	orchestration		Calls the logging setter for the chat log	verified	one	ui/chatwindows#chat-logging	
+0x49fe50	146	SetLoggingFlag		ui	orchestration		Sets or reads the chat or combat logging flag, opens the log, and pushes 1 or nil	verified	one	ui/chatwindows#chat-logging	
+0x49fef0	10	Script::LoggingCombat	idb	ui	orchestration		Calls the logging setter for the combat log	verified	one	ui/chatwindows#chat-logging	
 0x49ff00	254	Script::JoinChannelByName	idb	ui	primitive		Implements the Lua function JoinChannelByName	inferred	none		
 0x4a0000	62	Script::LeaveChannelByName	idb	ui	orchestration		Implements the Lua function LeaveChannelByName	inferred	none		
 0x4a0040	23	Script::GetGuildRecruitmentMode	idb	ui	orchestration		Implements the Lua function GetGuildRecruitmentMode	inferred	none		
@@ -7251,25 +7251,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a07f0	495	Script::ChangeChatColor	idb	ui	primitive		Implements the Lua function ChangeChatColor	inferred	none		
 0x4a09e0	152	Script::ResetChatColors	idb	ui	primitive		Implements the Lua function ResetChatColors	inferred	none		
 0x4a0a80	276	Script::GetChatTypeIndex	idb	ui	primitive		Implements the Lua function GetChatTypeIndex	inferred	none		
-0x4a0ba0	381	Script::GetChatWindowInfo	idb	ui	primitive		Implements the Lua function GetChatWindowInfo	inferred	none		
-0x4a0d20	151	Script::GetChatWindowMessages	idb	ui	primitive		Implements the Lua function GetChatWindowMessages	inferred	none		
-0x4a0dc0	185	Script::GetChatWindowChannels	idb	ui	primitive		Implements the Lua function GetChatWindowChannels	inferred	none		
-0x4a0e80	178	Script::AddChatWindowMessages	idb	ui	primitive		Implements the Lua function AddChatWindowMessages	inferred	none		
-0x4a0f40	178	Script::RemoveChatWindowMessages	idb	ui	primitive		Implements the Lua function RemoveChatWindowMessages	inferred	none		
-0x4a1000	593	Script::AddChatWindowChannel	idb	ui	primitive		Implements the Lua function AddChatWindowChannel	inferred	none		
-0x4a1260	387	Script::RemoveChatWindowChannel	idb	ui	primitive		Implements the Lua function RemoveChatWindowChannel	inferred	none		
-0x4a13f0	125	Script::SetChatWindowName	idb	ui	primitive		Implements the Lua function SetChatWindowName	inferred	none		
-0x4a1470	116	Script::SetChatWindowSize	idb	ui	primitive		Implements the Lua function SetChatWindowSize	inferred	none		
-0x4a14f0	219	Script::SetChatWindowColor	idb	ui	primitive		Implements the Lua function SetChatWindowColor	inferred	none		
-0x4a15d0	118	Script::SetChatWindowAlpha	idb	ui	primitive		Implements the Lua function SetChatWindowAlpha	inferred	none		
-0x4a1650	93	Script::SetChatWindowLocked	idb	ui	primitive		Implements the Lua function SetChatWindowLocked	inferred	none		
-0x4a16b0	118	Script::SetChatWindowDocked	idb	ui	primitive		Implements the Lua function SetChatWindowDocked	inferred	none		
-0x4a1730	93	Script::SetChatWindowShown	idb	ui	primitive		Implements the Lua function SetChatWindowShown	inferred	none		
-0x4a1790	178	Script::EnumerateServerChannels	idb	ui	primitive		Implements the Lua function EnumerateServerChannels	inferred	none		
+0x4a0ba0	381	Script::GetChatWindowInfo	idb	ui	primitive		Pushes a window's name, size, colour as floats, shown, locked and docked	verified	one	ui/chatwindows#reading-a-window	
+0x4a0d20	151	Script::GetChatWindowMessages	idb	ui	primitive		Pushes the name of each message group a window shows	verified	one	ui/chatwindows#message-groups-of-a-window	
+0x4a0dc0	185	Script::GetChatWindowChannels	idb	ui	primitive		Pushes the name and id of each channel a window shows	verified	one	ui/chatwindows#channels-of-a-window	
+0x4a0e80	178	Script::AddChatWindowMessages	idb	ui	primitive		Sets a window's flag for the message group of the given name	verified	one	ui/chatwindows#message-groups-of-a-window	
+0x4a0f40	178	Script::RemoveChatWindowMessages	idb	ui	primitive		Clears a window's flag for the message group of the given name	verified	one	ui/chatwindows#message-groups-of-a-window	
+0x4a1000	593	Script::AddChatWindowChannel	idb	ui	primitive		Adds a channel to a window and pushes its ChatChannels id, 0 for a custom channel	verified	one	ui/chatwindows#channels-of-a-window	
+0x4a1260	387	Script::RemoveChatWindowChannel	idb	ui	primitive		Removes a channel, given by name or number, from a window	verified	one	ui/chatwindows#channels-of-a-window	
+0x4a13f0	125	Script::SetChatWindowName	idb	ui	primitive		Copies a name of at most 31 characters into a window's record	verified	one	ui/chatwindows#locked-docked-shown-and-name	
+0x4a1470	116	Script::SetChatWindowSize	idb	ui	primitive		Stores a window's font size when it is above 0	verified	one	ui/chatwindows#setting-colour-alpha-and-size	
+0x4a14f0	219	Script::SetChatWindowColor	idb	ui	primitive		Stores a window's red, green and blue as the unit values times 255 truncated	verified	one	ui/chatwindows#setting-colour-alpha-and-size	
+0x4a15d0	118	Script::SetChatWindowAlpha	idb	ui	primitive		Stores a window's alpha as the unit value times 255 truncated	verified	one	ui/chatwindows#setting-colour-alpha-and-size	
+0x4a1650	93	Script::SetChatWindowLocked	idb	ui	primitive		Stores a window's locked flag, default 0	verified	one	ui/chatwindows#locked-docked-shown-and-name	
+0x4a16b0	118	Script::SetChatWindowDocked	idb	ui	primitive		Stores a window's dock number, 0 when not a number	verified	one	ui/chatwindows#locked-docked-shown-and-name	
+0x4a1730	93	Script::SetChatWindowShown	idb	ui	primitive		Stores a window's shown flag, default 1	verified	one	ui/chatwindows#locked-docked-shown-and-name	
+0x4a1790	178	Script::EnumerateServerChannels	idb	ui	primitive		Pushes the shortcuts of the ChatChannels rows that apply in the current zone	verified	one	ui/chatwindows#enumerating-server-channels	
 0x4a1850	155	Script::RequestRaidInfo	idb	ui	orchestration		Implements the Lua function RequestRaidInfo	inferred	none		
 0x4a18f0	44	Script::GetNumSavedInstances	idb	ui	orchestration		Implements the Lua function GetNumSavedInstances	inferred	none		
 0x4a1920	235	Script::GetSavedInstanceInfo	idb	ui	primitive		Implements the Lua function GetSavedInstanceInfo	inferred	none		
-0x4a1a10	33			ui	primitive		Runs ChatFrame.cpp code that calls FrameScriptRegisterFunction; not read here	inferred	none		
+0x4a1a10	33	RegisterChatScriptFunctions		ui	primitive		Registers the 50 Lua functions of the table at 0x843618	verified	one	ui/chatwindows#chat-script-functions	
 0x4a1a40	27			ui	primitive		Runs ChatFrame.cpp code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4a1a60	564			ui	primitive		Replaces profane words in a string	inferred	none	objectlayer/party#guild-events	
 0x4a1ca0	911			ui	primitive		Runs ChatFrame.cpp code that calls SStrHashHT, 0x4a4360, SMemFree and 6 more; not read here	inferred	none		
@@ -7325,7 +7325,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a2a00	131			ui	orchestration		Runs ChatFrame.cpp code that calls SMemFree, 0x4a3a60, 0x4a4330; not read here	inferred	none		
 0x4a2a90	185			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x4a2b50	189			ui	primitive		Runs its object file code that calls 0x4a3a60, 0x4a3ba0, SMemFree; not read here	inferred	none		
-0x4a2c10	35	NTempest::CImVector::Set	idb	ui	primitive		Packs four bytes into a colour, the first on top	inferred	none		models::light_clamp_pack_difftest
+0x4a2c10	35	NTempest::CImVector::Set	idb	ui	primitive		Packs four bytes into a colour dword, the first byte on top	verified	one	ui/chatwindows#window-records	models::light_clamp_pack_difftest
 0x4a2c40	91			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4a2ca0	198			ui	orchestration		Runs its object file code that calls 0x4a3090, SMemFree, 0x4a3d40; not read here	inferred	none		
 0x4a2d70	56			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -33764,9 +33764,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
 0x77a960	138			ui	orchestration		Runs CSimpleEditBox.cpp code that calls GetBlockPoolData, 0x76fc40, 0x770360 and 2 more; not read here	inferred	none		
 0x77a9f0	446			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x7727b0, SMemAlloc and 9 more; not read here	inferred	none		
-0x77abb0	106			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x42c1a0, 0x77ac30, FrameScriptExecuteVarArgs; not read here	inferred	none		
-0x77ac30	14			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77ac40	20			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x77abb0	106	CSimpleEditBox::UpdateInputLanguage		ui	orchestration		Classifies the keyboard layout, stores a changed index and runs OnInputLanguageChanged	verified	one	ui/inputlanguage#the-language-index	
+0x77ac30	14	CSimpleEditBox::GetInputLanguageName		ui	orchestration		Returns the name of the language index at +0x3d0	verified	one	ui/inputlanguage#the-language-index	
+0x77ac40	20	CSimpleEditBox::ToggleInputLanguage		ui	orchestration		Asks the input method to switch to native mode when the index is 0, else off	verified	one	ui/inputlanguage#the-language-index	
 0x77ac60	164	CSimpleEditBox::GetCompositionSpan		ui	primitive	void __thiscall (void)	Computes the composition span with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77ad10	568			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x42c500, SMemFree, 0x77a9f0 and 7 more; not read here	inferred	none		
 0x77af50	100			ui	orchestration		Switches the input method and runs OnEditFocusGained or OnEditFocusLost, then marks the cursor	verified	one	ui/editbox#keyboard-focus	
@@ -34644,8 +34644,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7992c0	208	EditBox::GetNumLetters	idb	ui	primitive		Implements the EditBox method GetNumLetters, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
 0x799390	187	EditBox::GetHistoryLines	idb	ui	primitive		Implements the EditBox method GetHistoryLines, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
 0x799450	247	EditBox::SetHistoryLines	idb	ui	primitive		Implements the EditBox method SetHistoryLines, its pair in the table 0x87bb68	verified	one	ui/editbox#history	
-0x799550	182	EditBox::GetInputLanguage	idb	ui	primitive		Implements the EditBox method GetInputLanguage, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
-0x799610	197	EditBox::ToggleInputLanguage	idb	ui	primitive		Implements the EditBox method ToggleInputLanguage, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
+0x799550	182	EditBox::GetInputLanguage	idb	ui	primitive		Pushes the name of the edit box's input language	verified	one	ui/inputlanguage#the-language-index	
+0x799610	197	EditBox::ToggleInputLanguage	idb	ui	primitive		Toggles the input method's native mode through the edit box's language index	verified	one	ui/inputlanguage#the-language-index	
 0x7996e0	161	EditBox::SetAltArrowKeyMode	idb	ui	primitive		Implements the EditBox method SetAltArrowKeyMode, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
 0x799790	177	EditBox::GetAltArrowKeyMode	idb	ui	primitive		Implements the EditBox method GetAltArrowKeyMode, its pair in the table 0x87bb68	verified	one	ui/editbox#lua-methods	
 0x799850	10			ui	orchestration		Runs its object file code that calls 0x799860; not read here	inferred	none		

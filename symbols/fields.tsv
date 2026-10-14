@@ -585,6 +585,18 @@ CharacterSelectionDisplay	0x010a	1	uint8_t	m_newCharacter	glue	Holds 1 for a cha
 CharacterSelectionDisplay	0x0110	4	void *	m_component	glue	Holds the built character component, null until the select build makes it; the record destructor zeroes it	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0114	4	void *	m_petModel	glue	Holds the pet's model, null until built; the destructor releases it without clearing	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0118	1	uint8_t	m_rebuildModel	glue	Holds 1 for a new or entered record; the select screen clears it when it builds the model	inferred	none	glue/flow#enter-world
+ChatMessageGroup	0x0000	4	const char *	m_name	ui	Holds the group's name	verified	one	ui/chatwindows#message-groups-of-a-window
+ChatMessageGroup	0x0004	4	uint32_t	m_defaultOn	ui	Holds 1 when window 2 shows the group at start-up	verified	one	ui/chatwindows#window-start-up-state
+ChatMessageGroup	0x0008	4	uint32_t	m_addedVersion	ui	Holds the settings file version that added the group	verified	one	ui/chatwindows#settings-file-backfill
+ChatWindow	0x0000	32	char[32]	m_name	ui	Holds the window's name, empty until set	verified	one	ui/chatwindows#window-records
+ChatWindow	0x0020	68	uint8_t[68]	m_groupFlags	ui	Holds one flag byte per message group, set when the window shows the group	verified	one	ui/chatwindows#window-records
+ChatWindow	0x0064	16	uint32_t[4]	m_channelNames	ui	Holds the header of the array of channel names, its count at +0x68 and slots at +0x6c	verified	one	ui/chatwindows#window-records
+ChatWindow	0x0074	16	uint32_t[4]	m_channelIds	ui	Holds the header of the array of channel ids, its count at +0x78 and slots at +0x7c	verified	one	ui/chatwindows#window-records
+ChatWindow	0x0084	4	int32_t	m_fontSize	ui	Holds the font size set by SetChatWindowSize, 0 until set	verified	one	ui/chatwindows#setting-colour-alpha-and-size
+ChatWindow	0x0088	4	uint32_t	m_color	ui	Holds the background colour as bytes blue, green, red, alpha	verified	one	ui/chatwindows#setting-colour-alpha-and-size
+ChatWindow	0x008c	4	int32_t	m_locked	ui	Holds the locked flag, 1 at start-up	verified	one	ui/chatwindows#locked-docked-shown-and-name
+ChatWindow	0x0090	4	int32_t	m_docked	ui	Holds the dock position, an integer the interface chooses	verified	one	ui/chatwindows#locked-docked-shown-and-name
+ChatWindow	0x0094	4	int32_t	m_shown	ui	Holds the shown flag	verified	one	ui/chatwindows#locked-docked-shown-and-name
 ClientConnection	0x0004	64	char[64]	m_account	net	Holds the account name copied from the logon object when it authenticates	verified	one	net/session#session-key
 ClientConnection	0x0044	4	uint32_t	m_loginServerId	net	Holds the dword from the logon link that the auth session packet sends	verified	one	net/session#session-challenge
 ClientConnection	0x0048	40	uint8_t[40]	m_sessionKey	net	Holds the 40-byte session key that arms the header cipher	verified	one	net/session#session-key

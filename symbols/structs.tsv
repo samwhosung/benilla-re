@@ -32,6 +32,8 @@ CSimpleModel	988	0x81c608	ui	Holds a Model frame: a CSimpleFrame, its scene, mod
 CSimpleModelFFX	988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
 CSimpleTop	4408	0x81c380	ui	Holds the interface root: strata records, input lists, key takers, hover, pressed and moving frames	verified	one	ui/strata#construction-and-teardown
 CharacterSelectionDisplay	288		glue	Holds one character-list record: the session character record in its first 0x110 bytes, then the select screen state	verified	one	glue/flow#enter-world
+ChatMessageGroup	12		ui	Holds a message group: its name, whether a new second window shows it and the file version that added it	verified	one	ui/chatwindows#message-groups-of-a-window
+ChatWindow	152		ui	Holds one chat window: name, group flags, channel name and id arrays, size, colour, locked, docked and shown	verified	one	ui/chatwindows#window-records
 ClientConnection	6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
 ClientLink	548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
 DictionaryRecord	8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
