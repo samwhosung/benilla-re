@@ -9986,18 +9986,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4df580	560			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x562a40 and 4 more; not read here	inferred	none		
 0x4df7b0	194			ui	primitive		Runs its object file code that calls 0x562a40, FrameScript_SignalEvent and 3 more; not read here	inferred	none		
 0x4df880	37	GetQuestLogIndex		ui	primitive		Returns the 1-based position of a quest among the 40 log entries, headers counted and skipped, or 0	verified	one	objectlayer/quests#quest-updates	
-0x4df8b0	127	Script::GetNumQuestLogEntries	idb	ui	primitive		Implements the Lua function GetNumQuestLogEntries	inferred	none		
+0x4df8b0	127	Script::GetNumQuestLogEntries	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of rows and of quest rows in the quest log	verified	one	ui/questlog#visible-rows	
 0x4df930	422	Script::GetQuestLogTitle	idb	ui	primitive		Pushes a list row's title, level, tag, isHeader, isCollapsed and isComplete	verified	one	ui/questtitle#the-six-returns	
-0x4dfae0	64	Script::SelectQuestLogEntry	idb	ui	orchestration		Implements the Lua function SelectQuestLogEntry	inferred	none		
-0x4dfb20	42	Script::GetQuestLogSelection	idb	ui	primitive		Implements the Lua function GetQuestLogSelection	inferred	none		
-0x4dfb50	13	Script::SetAbandonQuest	idb	ui	orchestration		Implements the Lua function SetAbandonQuest	inferred	none		
-0x4dfb60	117	Script::GetAbandonQuestName	idb	ui	orchestration		Implements the Lua function GetAbandonQuestName	inferred	none		
-0x4dfbe0	534	Script::GetAbandonQuestItems	idb	ui	primitive		Implements the Lua function GetAbandonQuestItems	inferred	none		
-0x4dfe00	8	Script::AbandonQuest	idb	ui	orchestration		Implements the Lua function AbandonQuest	inferred	none		
+0x4dfae0	64	Script::SelectQuestLogEntry	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the quest row of a number, 1-based	verified	one	ui/questlog#the-selection	
+0x4dfb20	42	Script::GetQuestLogSelection	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the selected quest, or 0	verified	one	ui/questlog#the-selection	
+0x4dfb50	13	Script::SetAbandonQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Remembers the selected quest as the one to abandon	verified	one	ui/questlogverbs#selected-quest-text	
+0x4dfb60	117	Script::GetAbandonQuestName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the title of the quest set to abandon, or nil	verified	one	ui/questlogverbs#selected-quest-text	
+0x4dfbe0	534	Script::GetAbandonQuestItems	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the names of the quest items that abandoning would destroy	verified	one	ui/questlogverbs#abandoning-a-quest	
+0x4dfe00	8	Script::AbandonQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Abandons the quest set by SetAbandonQuest	verified	one	ui/questlogverbs#abandoning-a-quest	
 0x4dfe10	267	Script::IsUnitOnQuest	idb	ui	primitive		Pushes 1 when the player or a party member holds the quest at a list row, else nil	verified	one	ui/questshare#isunitonquest	
-0x4dff20	215	Script::GetQuestLogQuestText	idb	ui	orchestration		Implements the Lua function GetQuestLogQuestText	inferred	none		
-0x4e0000	265	Script::GetNumQuestLeaderBoards	idb	ui	primitive		Implements the Lua function GetNumQuestLeaderBoards	inferred	none		
-0x4e0110	1727	Script::GetQuestLogLeaderBoard	idb	ui	primitive		Implements the Lua function GetQuestLogLeaderBoard	inferred	none		
+0x4dff20	215	Script::GetQuestLogQuestText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the details and objectives text of the selected quest	verified	one	ui/questlogverbs#selected-quest-text	
+0x4e0000	265	Script::GetNumQuestLeaderBoards	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of objective lines of a quest	verified	one	ui/questobjectives#the-lines-of-a-quest	
+0x4e0110	1727	Script::GetQuestLogLeaderBoard	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the text, type and finished flag of a quest objective line	verified	one	ui/questobjectives#asking-for-a-line	
 0x4e07d0	40			ui	orchestration		Runs its object file code that calls ConsoleWrite, FrameScript_SignalEvent; not read here	inferred	none		
 0x4e0800	40			ui	orchestration		Runs its object file code that calls ConsoleWrite, FrameScript_SignalEvent; not read here	inferred	none		
 0x4e0830	24			ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
@@ -10006,28 +10006,28 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e0870	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e0880	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e08a0	183	Script::GetQuestLogTimeLeft	idb	ui	primitive		Pushes the time left of the selected quest's slot, clamped to 0, or nil	verified	one	ui/questtimers#getquestlogtimeleft	
-0x4e0960	120	Script::IsCurrentQuestFailed	idb	ui	orchestration		Implements the Lua function IsCurrentQuestFailed	inferred	none		
-0x4e09e0	137	Script::GetNumQuestLogRewards	idb	ui	primitive		Implements the Lua function GetNumQuestLogRewards	inferred	none		
-0x4e0a70	135	Script::GetNumQuestLogChoices	idb	ui	primitive		Implements the Lua function GetNumQuestLogChoices	inferred	none		
-0x4e0b00	484	Script::GetQuestLogRewardInfo	idb	ui	primitive		Implements the Lua function GetQuestLogRewardInfo	inferred	none		
-0x4e0cf0	484	Script::GetQuestLogChoiceInfo	idb	ui	primitive		Implements the Lua function GetQuestLogChoiceInfo	inferred	none		
-0x4e0ee0	396	Script::GetQuestLogItemLink	idb	ui	primitive		Implements the Lua function GetQuestLogItemLink	inferred	none		
-0x4e1070	182	Script::GetQuestLogRewardMoney	idb	ui	primitive		Implements the Lua function GetQuestLogRewardMoney	inferred	none		
+0x4e0960	120	Script::IsCurrentQuestFailed	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the selected quest has failed, else nil	verified	one	ui/questlogverbs#selected-quest-text	
+0x4e09e0	137	Script::GetNumQuestLogRewards	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of fixed reward items of the selected quest	verified	one	ui/questlogverbs#reward-lists	
+0x4e0a70	135	Script::GetNumQuestLogChoices	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reward choices of the selected quest	verified	one	ui/questlogverbs#reward-lists	
+0x4e0b00	484	Script::GetQuestLogRewardInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, count, quality and usability of a fixed reward	verified	one	ui/questlogverbs#reward-lists	
+0x4e0cf0	484	Script::GetQuestLogChoiceInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, count, quality and usability of a reward choice	verified	one	ui/questlogverbs#reward-lists	
+0x4e0ee0	396	Script::GetQuestLogItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of a reward or choice of the selected quest	verified	one	ui/questlogverbs#reward-links-and-money	
+0x4e1070	182	Script::GetQuestLogRewardMoney	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the money reward of the selected quest	verified	one	ui/questlogverbs#reward-links-and-money	
 0x4e1130	237	Script::GetQuestLogRewardSpell	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon, name and trade skill flag of the selected log quest's reward spell	verified	one	ui/questrewardspell#quest-log-reward-spell	
-0x4e1220	137	Script::GetQuestLogRequiredMoney	idb	ui	primitive		Implements the Lua function GetQuestLogRequiredMoney	inferred	none		
+0x4e1220	137	Script::GetQuestLogRequiredMoney	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the money the selected quest asks for	verified	one	ui/questlogverbs#reward-links-and-money	
 0x4e12b0	129	Script::GetQuestLogPushable	idb	ui	orchestration		Pushes 1 when the selected quest is cached and shareable, else nil	verified	one	ui/questshare#whether-a-quest-can-be-shared	
 0x4e1340	135	Script::QuestLogPushQuest	idb	ui	primitive		Sends the selected quest to the party when it is shareable and the player is in a party	verified	one	ui/questshare#whether-a-quest-can-be-shared	
 0x4e13d0	421	Script::GetQuestTimers	idb	ui	primitive		Pushes the time left of each running timed quest in list order	verified	one	ui/questtimers#getquesttimers	
 0x4e1580	111			ui	primitive		Runs its object file code that calls ConsoleWrite, 0x562a40, CGGameUI::DisplayError; not read here	inferred	none		
 0x4e15f0	320	Script::GetQuestIndexForTimer	idb	ui	primitive		Pushes the 1-based list index of the n-th running timed quest, or nil	verified	one	ui/questtimers#getquestindexfortimer	
-0x4e1730	69	Script::CollapseQuestHeader	idb	ui	primitive		Implements the Lua function CollapseQuestHeader	inferred	none		
-0x4e1780	66	Script::ExpandQuestHeader	idb	ui	primitive		Implements the Lua function ExpandQuestHeader	inferred	none		
+0x4e1730	69	Script::CollapseQuestHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the header row of a number	verified	one	ui/questlogverbs#headers-and-watches-by-row	
+0x4e1780	66	Script::ExpandQuestHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the header row of a number	verified	one	ui/questlogverbs#headers-and-watches-by-row	
 0x4e17d0	137	Script::GetQuestGreenRange	idb	ui	primitive		Pushes the gray-range gap for the active player's level, 0 with no player	verified	one	ui/unitlevels#the-gray-range	
-0x4e1860	44	Script::GetNumQuestWatches	idb	ui	orchestration		Implements the Lua function GetNumQuestWatches	inferred	none		
-0x4e1890	150	Script::IsQuestWatched	idb	ui	primitive		Implements the Lua function IsQuestWatched	inferred	none		
-0x4e1930	64	Script::AddQuestWatch	idb	ui	orchestration		Implements the Lua function AddQuestWatch	inferred	none		
-0x4e1970	64	Script::RemoveQuestWatch	idb	ui	orchestration		Implements the Lua function RemoveQuestWatch	inferred	none		
-0x4e19b0	201	Script::GetQuestIndexForWatch	idb	ui	primitive		Implements the Lua function GetQuestIndexForWatch	inferred	none		
+0x4e1860	44	Script::GetNumQuestWatches	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of watched quests	verified	one	ui/questlogverbs#headers-and-watches-by-row	
+0x4e1890	150	Script::IsQuestWatched	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when the quest of a row is watched, else nil	verified	one	ui/questlogverbs#headers-and-watches-by-row	
+0x4e1930	64	Script::AddQuestWatch	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Adds the quest of a row, or the selected quest, to the watch list	verified	one	ui/questlog#quest-watches	
+0x4e1970	64	Script::RemoveQuestWatch	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Removes the quest of a row, or the selected quest, from the watch list	verified	one	ui/questlog#quest-watches	
+0x4e19b0	201	Script::GetQuestIndexForWatch	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the row of the quest in a watch slot, or nil	verified	one	ui/questlogverbs#headers-and-watches-by-row	
 0x4e1a80	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e1ab0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e1ad0	10			ui	orchestration		Runs its object file code that calls 0x4e1ae0; not read here	inferred	none		

@@ -16,7 +16,7 @@ item, then one reputation line, in that order. The event line is present when th
 `+0x129c` is non-empty. A creature or object line exists for each non-zero id in `ReqCreatureOrGOId[4]` (`+0x149c`;
 a negative id is a game object). An item line exists for each id above 0 in `ReqItemId[4]` (`+0x14bc`) except the
 quest's own source item (`+0x34`). The reputation line exists when `+0x14` is non-zero.
-`GetNumQuestLeaderBoards()` returns the number of lines as one number, 0 with no player.
+`GetNumQuestLeaderBoards([row])` returns the number of lines of the quest in the optional row, else of the selected quest, as one number, 0 with no player.
 
 Addresses: `0x4e0000`, `0x4e0042`, `0x4e00a9`, `0x4e00c0`, `0x4e00c8`, `0x4e00ce`, `0x4e00d1`, `0x4e00da`, `0x4e0102`, `0x4e0280`, `0x4e0285`, `0x4e026c`, `0x4e02d7`, `0x4e02e1`, `0x4e02ea`, `0x4e04f4`, `0x4e04fa`, `0x4e0510`, `0x4e051b`, `0x4e0527`, `0x4e053b`
 Confidence: verified
