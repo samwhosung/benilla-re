@@ -290,6 +290,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
 0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3140	uint8_t[9]	s_pointYCaseIndex		ui	Holds the case of each anchor point for the y getter: 0, 0, 0, 1, 1, 1, 2, 2, 2	verified	one	ui/anchors#relative-point-coordinates
+0x7a3850	void *[6]	s_cases7a37e0		ui	Holds the six button name arms of the hyperlink click firer 0x7a37e0	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
+0x7a3868	uint8_t[16]	s_caseIndexes7a37e0		ui	Maps a button mask to a button name arm, 5 for none	verified	one	ui/hyperlinks#the-three-hyperlink-scripts
 0x7c229c	void *[4]	s_circleBoxModeCases		cmath	Holds the four mode case addresses of the circle against a box test 0x7c2040	verified	one	cmath/geometry#circle-and-point-against-a-box
 0x7c5468	void *[5]	s_displacementCases		collision	Holds the five case labels of the displacement dispatcher 0x7c5360	verified	one	collision/kinematics#displacement-dispatcher
 0x7c547c	uint8_t[15]	s_displacementCaseIndex		collision	Holds the case index for modes 1 to 15 of the displacement dispatcher	verified	one	collision/kinematics#displacement-dispatcher
@@ -914,7 +916,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d570	const float	s_framePointPiConst		ui	Holds pi, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d574	const float	s_framePointTenConst		ui	Holds 10.0, the point getters' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d578	const float	s_hyperlinkedFrameInfinityConst		ui	Holds +inf, CSimpleHyperlinkedFrame.cpp's copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
-0x81d5b0	void *[40]			ui	Holds 40 function addresses its object file's code stores; not read here	inferred	none	
+0x81d5b0	void *[40]	CSimpleHyperlinkButton::vftable		ui	Holds the vtable of the hyperlink button	verified	one	ui/hyperlinks#the-two-classes
+0x81d680	void *[39]	CSimpleHyperlinkedFrame::vftable		ui	Holds the vtable of the hyperlinked frame base, with its three hyperlink firers at +0x90	verified	one	ui/hyperlinks#the-two-classes
 0x81d728	const float	s_cutoffFadeFraction		sound	Holds 0.10000002, the fraction of the cutoff the distance gain fades over	verified	one	sound/engine#distance-cutoff
 0x81d72c	const float	s_volumeLevelBias		sound	Holds 512.5, the bias that reads a volume back as a level	verified	one	sound/engine#volume-of-a-sound
 0x81d7b0	float	s_defaultDistance		camera	Holds 100.0, the default distance and eye x	verified	one	camera#properties

@@ -34167,7 +34167,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x788ac0	41			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code not read here	inferred	none		
 0x788af0	138			ui	orchestration		Shows a line in a node, re-arming it unless the frame is at the bottom and not forced	verified	one	ui/messageframe#scrolling-brings-lines-back	
 0x788b80	128			ui	orchestration		Restores every shown line to full alpha and restarts its times	verified	one	ui/messageframe#scrolling-brings-lines-back	
-0x788c00	394			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls 0x7a3920, 0x44d360, 0x5c27e0 and 2 more; not read here	inferred	none		
+0x788c00	394			ui	primitive		Releases every link button of a message frame and builds one per hyperlink span of the shown lines	verified	one	ui/hyperlinks#what-fills-the-pool	
 0x788d90	194			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls SMemAlloc, 0x770d30, 0x7724a0; not read here	inferred	none		
 0x788e60	43			ui	orchestration		Runs its object file code that calls 0x788ec0, SMemFree; not read here	inferred	none		
 0x788e90	43			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -34874,22 +34874,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a3200	19	FramePointInitHalfTenth		ui	primitive		Stores 0.5 divided by 10 as a float in a global	verified	one	ui/README#static-initializers	
 0x7a3220	5	HyperlinkedFrameInitInfinityThunk		ui	orchestration		Jumps to 0x7a3230; the first static initializer of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#frame-core-object-files	
 0x7a3230	11	HyperlinkedFrameInitInfinity		ui	orchestration		Copies +inf into a global of CSimpleHyperlinkedFrame.cpp	verified	one	ui/README#frame-core-object-files	
-0x7a3240	73			ui	orchestration		Runs its object file code that calls CSimpleButton::CSimpleButton, 0x779730; not read here	inferred	none		
+0x7a3240	73	CSimpleHyperlinkButton::CSimpleHyperlinkButton		ui	orchestration		Builds a mouse-enabled hyperlink button with empty link and text and the click mask 0x500	verified	one	ui/hyperlinks#the-link-button	
 0x7a3290	43			ui	orchestration		Runs its object file code that calls 0x7a32c0, SMemFree; not read here	inferred	none		
 0x7a32c0	143			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemFree; not read here	inferred	none		
-0x7a3350	344			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemReAlloc, SStrCopy, ScaleScreenDelta and 2 more; not read here	inferred	none		
-0x7a34b0	33			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code not read here	inferred	none		
-0x7a34e0	35			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code not read here	inferred	none		
-0x7a3510	43			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code not read here	inferred	none		
-0x7a3540	112			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls CSimpleFrame::CSimpleFrame; not read here	inferred	none		
+0x7a3350	344	CSimpleHyperlinkButton::Configure		ui	primitive		Copies a span's link and text into a button, anchors it over the span and shows it, or hides it	verified	one	ui/hyperlinks#the-pool	
+0x7a34b0	33			ui	orchestration		Forwards a link button's enter to its parent's enter firer with the link and text	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a34e0	35			ui	orchestration		Forwards a link button's leave to its parent's leave firer with the link and text	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a3510	43			ui	orchestration		Forwards a link button's click to its parent's click firer with the link, text and button	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a3540	112	CSimpleHyperlinkedFrame::CSimpleHyperlinkedFrame		ui	primitive		Builds the hyperlinked frame base: a frame with the pool fields and three empty hyperlink script slots	verified	one	ui/hyperlinks#the-two-classes	
 0x7a35b0	43			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls 0x7a35e0, SMemFree; not read here	inferred	none		
 0x7a35e0	284			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemFree, FrameScriptReleaseScript; not read here	inferred	none		
 0x7a3700	124	CSimpleHyperlinkedFrame::GetScriptByName		ui	orchestration		Returns a handler slot by name, adding the three hyperlink handlers	verified	one	ui/xmltypes#handler-names-by-type	
-0x7a3780	46			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
-0x7a37b0	46			ui	orchestration		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
-0x7a37e0	110			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls FrameScriptExecuteVarArgs; not read here	inferred	none		
-0x7a3880	151			ui	primitive		Runs CSimpleHyperlinkedFrame.cpp code that calls SMemAlloc, 0x7a3240; not read here	inferred	none		
-0x7a3920	123			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7a3780	46	CSimpleHyperlinkedFrame::FireOnHyperlinkEnter		ui	orchestration		Runs OnHyperlinkEnter with the link as its only argument	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a37b0	46	CSimpleHyperlinkedFrame::FireOnHyperlinkLeave		ui	orchestration		Runs OnHyperlinkLeave with the link as its only argument	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a37e0	110	CSimpleHyperlinkedFrame::FireOnHyperlinkClick		ui	primitive		Runs OnHyperlinkClick with the link, text and button name	verified	one	ui/hyperlinks#the-three-hyperlink-scripts	
+0x7a3880	151	CSimpleHyperlinkedFrame::AcquireLinkButton		ui	primitive		Takes a link button from the free list or allocates and builds one	verified	one	ui/hyperlinks#the-pool	
+0x7a3920	123	CSimpleHyperlinkedFrame::ReleaseLinkButton		ui	primitive		Hides a link button and returns it to the free list	verified	one	ui/hyperlinks#the-pool	
 0x7a39a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7a39b0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7a39c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
