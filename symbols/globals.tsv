@@ -1052,7 +1052,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x839430	uint32_t[643]	s_activePlayerWatchedFields		objectlayer	Holds the 643 further player field indices only the active player watches	verified	one	objectlayer/fields#watched-fields
 0x83a3c8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x83b880	uint8_t[320]	s_gameObjectFieldInfo		unassigned	Holds the 16 game object field descriptors of 20 bytes: name, index, count, type, flags	verified	one	objectlayer/gameobjects#the-game-object
-0x83dc2c	uint32_t	s_worldPickState		ui	Holds a state word the world frame's leave sets to 3; other code sets 0 and 1	inferred	none	ui/hover#world-hover-and-its-tooltip
+0x83dc2c	uint32_t	s_reticleState		ui	Holds which ground target decal is drawn, 0 acceptable, 1 unacceptable, 3 none	verified	one	ui/mouse#enter-and-leave
 0x83ddb0	const char *[29]	s_invTypeKeys		ui	Holds the global string key of each inventory type, empty for type 0	verified	one	ui/tooltipitemhead#the-slot-and-type-line
 0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
 0x83de28	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1935,7 +1935,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42264	uint8_t	s_deletePatchAfterList		glue	Holds 1 when prepatch.lst asked to delete wow-patch.mpq; cleared by 0x4749f0, set by 0x474830	verified	one	glue/downloads#applying-the-patch
 0xb42424	uint32_t			charactermodel	Holds a dword that UnequipCharacterSlot reads and writes; not read here	inferred	none	
 0xb42450	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb4b2bc	void *	s_worldFrame		ui	Points to the world frame	verified	one	ui/hover#freelook-and-the-removal
+0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
@@ -1975,8 +1975,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b8	void *	s_shownTarget		ui	Holds a target record whose +0x28 a world click tests before clearing the target	inferred	none	objectlayer/interaction#world-clicks
 0xb4e2bc	void *	s_showLootSpamVar		ui	Holds the showLootSpam variable, whose value gates the roll lines and picks the winner line	verified	one	objectlayer/lootroll#the-roll-announcement
-0xb4e2c8	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName reads and writes; not read here	inferred	none	
-0xb4e2cc	uint32_t			unassigned	Holds a dword that Script::GetGUIDFromName reads and writes; not read here	inferred	none	
+0xb4e2c8	uint64_t	s_mouseoverGuid		ui	Holds the GUID of the published mouseover object, 0 for none	verified	one	ui/mouseover#publishing-the-mouseover
 0xb4e2d0	uint64_t	s_interactionTargetGuid		ui	Holds the GUID of the unit the interaction windows belong to	inferred	none	objectlayer/interaction#talking-to-an-npc
 0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
 0xb4e2e0	uint32_t			ui	Holds a dword that Script::TargetLastTarget reads and writes; not read here	inferred	none	
