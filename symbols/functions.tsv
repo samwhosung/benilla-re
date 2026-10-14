@@ -2233,16 +2233,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b470	124			unassigned	unreached		Runs its object file code that calls SStrCopy, 0x42b3d0, SStr::sub_64A450; not read here	inferred	none		
 0x42b4f0	11			unassigned	unreached		Runs its object file code that calls OsPathGetRootChars; not read here	inferred	none		
 0x42b500	48			unassigned	unreached		Runs its object file code that calls SStrChr2; not read here	inferred	none		
-0x42b530	5	InitTimeManagerInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b540; a static initializer	verified	one	core/time#static-initializers	
-0x42b540	11	InitTimeManagerInfinity		core	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/time#static-initializers	
-0x42b550	48			core	unreached		Runs its object file code that calls SStrChr2; not read here	inferred	none		
-0x42b580	118			core	unreached		Runs its object file code that calls 0x42b550, 0x64a420, SStrCopy and 1 more; not read here	inferred	none		
-0x42b600	66			core	unreached		Runs its object file code that calls SStrCopy; not read here	inferred	none		
-0x42b650	31			core	orchestration		Runs its object file code that calls SStrPrintf; not read here	inferred	none		
-0x42b670	5	InitTimeManagerTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#static-initializers	
-0x42b680	15	InitTimeManagerTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
-0x42b690	5	InitTimeManagerInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#static-initializers	
-0x42b6a0	19	InitTimeManagerInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/time#static-initializers	
+0x42b530	5	InitFileNameInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b540; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b540	11	InitFileNameInfinity		unassigned	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/time#file-name-helpers	
+0x42b550	48	HasInvalidFileNameChar		unassigned	unreached		Returns 1 when a string holds a character that a file name may not, else 0	verified	one	core/time#file-name-helpers	
+0x42b580	118	IsValidFileName		unassigned	unreached		Returns 1 when a file name has no such character and no reserved device name before its last dot	verified	one	core/time#file-name-helpers	
+0x42b600	66	GetWindowsFontsDirectory		unassigned	unreached		Writes the Windows directory, a backslash if missing, and fonts\ into a buffer	verified	one	core/time#file-name-helpers	
+0x42b650	31	FormatFontsDirectory		unassigned	orchestration		Formats base\Fonts into a buffer of a given size	verified	one	core/time#file-name-helpers	
+0x42b670	5	InitFileNameTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b680	15	InitFileNameTwoPi		unassigned	primitive	void __cdecl (void)	Stores pi + pi as a float in the object file's 2pi global	verified	one	core/time#file-name-helpers	
+0x42b690	5	InitFileNameInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b6a0	19	InitFileNameInvTwoPi		unassigned	primitive	void __cdecl (void)	Stores 1 / 2pi as a float in the object file's 1/2pi global	verified	one	core/time#file-name-helpers	
 0x42b6c0	42	CreateTimeManager		core	orchestration	void __cdecl (void)	Allocates and builds the time manager, then calls Sleep(0)	verified	one	core/time#time-manager-lifetime	
 0x42b6f0	91	DestroyTimeManager		core	orchestration	void __cdecl (void)	Signals the calibration thread and waits up to 20 ms for it to free the time manager	verified	one	core/time#time-manager-lifetime	
 0x42b750	22	OsGetClockCounter		core	host	uint64_t __cdecl (void)	Returns the time-stamp counter in mode 1, else GetTickCount	verified	two	core/time#the-millisecond-clock	

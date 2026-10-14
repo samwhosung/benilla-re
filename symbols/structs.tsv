@@ -79,6 +79,10 @@ SpellRec	692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-loo
 SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
 SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
 TRADESKILLLINE	40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
+<<<<<<< HEAD
 WhoResult	160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
+=======
+TimeManager	2016		core	Holds the calibration state of the clock: scale, offset, thread, samples and rate estimates	verified	one	core/time#calibration-thread
+>>>>>>> da25d63 (core/time: the stretch before TimeManager.cpp is a file-name helper file; TimeManager fields)
 WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

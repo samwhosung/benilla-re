@@ -7,13 +7,13 @@ earliest a quarter of a second in, and back again, keeping it continuous; on a p
 reports more than one core in the way `Multi-core gate` reads, it stays `GetTickCount` exactly.
 
 The clock lives in three OS object files: the time calls from `0x4293d0` through `0x429790`
-(calendar time, file times and the manager's creation), `TimeManager.cpp` from `0x42b530` through
+(calendar time, file times and the manager's creation), `TimeManager.cpp` from `0x42b6c0` through
 `0x42ba90` (the counter, its scale and offset, the calibration thread), and the clock file from
 `0x42bff0` (the millisecond clock and the processor frequency), whose end is not settled. The state is the
 counter mode `0x884c80`, the scale `0x8332c8`, the offset `0x884c88`, the counter rate
 `0x8332c0`, and one time manager object at `0x884c78`.
 
-Roots: `0x42c010`, `0x42c020`, `0x42c060`, `0x4293d0`, `0x429450`, `0x4294c0`, `0x429580`, `0x429780`, `0x429790`, and the static initializers `0x42b530`, `0x42b670`, `0x42b690`, `0x42bff0`, `0x42c150`, `0x42c170`
+Roots: `0x42c010`, `0x42c020`, `0x42c060`, `0x4293d0`, `0x429450`, `0x4294c0`, `0x429580`, `0x429780`, `0x429790`, and the static initializers `0x42bff0`, `0x42c150`, `0x42c170`
 
 ## The millisecond clock
 
@@ -165,24 +165,47 @@ and the C runtime's `strftime`-style `0x4134e3`.
 
 ## Static initializers
 
-`TimeManager.cpp` and the clock file each run three static initializers: +∞ first, then 2π and
-1/2π. The time manager's are `0x42b530`, `0x42b670` and `0x42b690`; the clock file's are
-`0x42bff0`, `0x42c150` and `0x42c170`.
+The clock file runs three static initializers: +∞ first, then 2π and 1/2π. They are `0x42bff0`,
+`0x42c150` and `0x42c170`.
 
-Addresses: `0x8273f4`, `0x8273f8`, `0x42b530`, `0x42b540`, `0x42b670`, `0x42b680`, `0x42b690`, `0x42b6a0`, `0x42bff0`, `0x42c000`, `0x42c150`, `0x42c160`, `0x42c170`, `0x42c180`
+Addresses: `0x8273f4`, `0x8273f8`, `0x827400`, `0x827404`, `0x827408`, `0x42bff0`, `0x42c000`, `0x42c150`, `0x42c160`, `0x42c170`, `0x42c180`, `0x42b6c0`, `0x42b530`, `0x42b670`, `0x42b690`
 Confidence: verified
 Proof: one
 Test: none
 
-They are the slots `0x8273f4` through `0x827408`, matched by the census of
+They are the slots `0x827400` through `0x827408`, matched by the census of
 `core/loop#static-initializers`. A file that includes the shared header opens its run with its +∞
-(`systems/README`, Object files): `0x42b530` copies the +∞ at 0x8015a0 and `0x42b670` doubles the π
-4 bytes on; `0x42bff0` copies 0x8015a8 and `0x42c150` doubles 0x8015ac. So the code from
-`0x42b530` to `0x42b690`, and from `0x42bff0` to `0x42c170`, is one file each. Past `0x42b690`,
-`TimeManager.cpp` is pushed at 0x42b6c7, in `0x42b6c0`, and the functions to `0x42ba90` are the
-time manager's own; the clock file's run follows at once. Past `0x42c180` the code from 0x42c1a0
+(`systems/README`, Object files): `0x42bff0` copies 0x8015a8 and `0x42c150` doubles 0x8015ac.
+`TimeManager.cpp` has none: its source path is pushed at 0x42b6c7, in `0x42b6c0`, its functions
+run to the end of `0x42ba90`, and no table slot points into that stretch. The slots before the
+clock file's, `0x8273f4` through `0x8273fc` (`0x42b530`, `0x42b670`, `0x42b690`), belong to the
+file whose functions lie between them (`File name helpers`). Past `0x42c180` the code from 0x42c1a0
 to 0x42c828 calls IMM32 and passes `OsIME.cpp` (`os`, `core/input`); nothing settles whether the
 clock file ends at `0x42c180` or runs on through it.
+
+## File name helpers
+
+The stretch from `0x42b530` to `0x42b6a0` holds a file of four font-file helpers, not part of
+`TimeManager.cpp`. `0x42b550` returns 1 for a string with a character of the set `\*/:><|&+^?"`.
+`0x42b580` returns 1 for a file name with none of them whose part before its last dot differs,
+ignoring case, from `nul`, `con`, `prn`, `aux`, `com1` to `com9` and `lpt1` to `lpt9`.
+`0x42b600(buffer, size)` writes the Windows directory, a backslash if missing, and `fonts\`.
+`0x42b650(buffer, size, base)` formats `base\Fonts`. Only `0x42b650` is called from outside the
+stretch, by the fonts set-up at `0x442b00`.
+
+Addresses: `0x42b550`, `0x42b580`, `0x42b600`, `0x42b650`, `0x42b530`, `0x42b540`, `0x42b670`, `0x42b680`, `0x42b690`, `0x42b6a0`, `0x442b00`, `0x64a3f0`, `0x64a420`, `0x64a4c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x42b550` loops `SStrChr2(set, char)` (`0x64a3f0`) over the string with the set at `ecx`
+(`0x42b560` to `0x42b565`). `0x42b580` calls it, finds the last dot with `0x64a420` (`0x42b5a0`),
+copies up to it with `SStrCopy` (`0x42b5c1`, at most 0x104 bytes) and compares with each of the 22
+pointers at 0x833190 through `SStrCmpI` (`0x64a4c0`, `0x42b5db`). `0x42b600` calls
+`GetWindowsDirectoryA` and two copies (`0x42b629`, `0x42b639`); `0x42b650` is `SStrPrintf` with the
+format `%s\%s` (`0x42b663`). A scan for `e8`/`e9` and for the dwords of the addresses, with
+`0x420c00` as the control, finds `0x42b58c` calling `0x42b550`, `0x442b1e` calling `0x42b650`, and
+nothing for the others.
 
 ## Unreached functions
 
