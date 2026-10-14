@@ -1,5 +1,5 @@
 //! The area queries' arithmetic, as slices: `FindNearestLiquidInAreas` (`0x68af10`) from
-//! `0x68af1b` to `0x68af63` and from `0x68b031` to `0x68b05d`; and `UpdateShowQuery`
+//! `0x68af1b` to `0x68af63` and from `0x68b031` to `0x68b05d`; and `ClaimCameraMapObject`
 //! (`0x6821f0`) from `0x68223c` to `0x682252` and from `0x6822a2` to `0x6822b3`.
 
 mod common;

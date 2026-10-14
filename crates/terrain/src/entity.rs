@@ -4,7 +4,7 @@
 //! (`0x672ef0`), the ground probes of `AttachEntityToGround` (`0x6a8a20`), the placement of
 //! `PlaceDoodadDef` (`0x694bc0`, `systems/terrain/files.md#doodad-placements`), the colours of
 //! `CreateWorldCallbackObject` (`0x670db0`) and `UpdateMapEntityEnvironment` (`0x69e280`), and the
-//! probe heights of `BakeMapEntityGroupLight` (`0x69e4c0`) and `CMapDoodadDef::ComputeSkyLight`
+//! probe heights of `BakeMapEntityGroupLight` (`0x69e4c0`) and `CMapDoodadDef::BakeGroupLight`
 //! (`0x6a8410`).
 
 use crate::geomscale::register_light_window;

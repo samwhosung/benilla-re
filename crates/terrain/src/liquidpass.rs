@@ -1,5 +1,5 @@
 //! The liquid passes' arithmetic: the camera-relative offset of `DrawOceanPass` (`0x685010`) and
-//! `DrawDoodadListPass` (`0x6855a0`), and the frame indices of `GetLiquidFrame` (`0x68aac0`,
+//! `DrawMagmaPass` (`0x6855a0`), and the frame indices of `GetLiquidFrame` (`0x68aac0`,
 //! `systems/terrain/liquid.md#animated-textures`) and `CChunkLiquid::DrawMagma` (`0x68dca0`,
 //! `systems/terrain/liquid.md#liquid-render-passes`).
 

@@ -191,7 +191,7 @@ pub struct LiquidBatch {
     pub tri_count: u16,
 }
 
-/// `FlushLiquidFacets` (`0x671cc0`), the path without SSE (`0xc9e388` clear): a facet for each
+/// `FlushTriangleBatchFacets` (`0x671cc0`), the path without SSE (`0xc9e388` clear): a facet for each
 /// triangle of each entry, its vertices through `TransformPoint` (`0x7bca80`), the normal `(v1 − v0)
 /// × (v2 − v0)` (`0x672130`) normalized (`0x6720f0`), and `d = −n·v0` (`0x602630`). With SSE the
 /// normal is scaled by `rsqrtss`, which differs by CPU.

@@ -40,7 +40,7 @@ pub fn liquid_strip_indices(cell_flags: &[u8; 64], liquid_type: u8) -> Vec<u16> 
     out
 }
 
-/// `BuildHoleStrip` (`0x6b61a0`): the same strip over a `rows`×`cols` cell map, vertex rows
+/// `BuildLiquidCellStrip` (`0x6b61a0`): the same strip over a `rows`×`cols` cell map, vertex rows
 /// `stride` apart from vertex `base`. A cell takes part when its low nibble is not 0xf and its
 /// 0x80 bit is clear or `include_flagged` is set. The client adds the count to an in-out.
 #[allow(clippy::explicit_counter_loop)] // the counters are the client's cursors

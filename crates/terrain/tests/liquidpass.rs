@@ -128,7 +128,7 @@ fn chunk_liquid_pass1_offset_difftest() {
     );
 }
 
-/// `DrawDoodadListPass` (`0x6855a0`) from `0x68566a` to the call at `0x685698`.
+/// `DrawMagmaPass` (`0x6855a0`) from `0x68566a` to the call at `0x685698`.
 #[test]
 fn chunk_liquid_pass2_offset_difftest() {
     cam_offset_family(

@@ -1,9 +1,9 @@
-//! The arithmetic of `CullGroupDoodads` (`0x6834e0`), `CullEntityList` (`0x683700`),
+//! The arithmetic of `CullGroupEntityList` (`0x6834e0`), `CullDoodadDefList` (`0x683700`),
 //! `CullLowDetailTiles` (`0x683040`, `systems/terrain/lod.md#low-detail-pass`) and the fade ageing
 //! of `BeginMapObjectFrame` (`0x6b3890`). The sort key and the audibility test of the first two are
 //! `crate::scenevis`'s.
 
-/// `CullGroupDoodads` (`0x6834e0`) from `0x683681`: the centre `[ebx]` less the camera `0xc7cf20`,
+/// `CullGroupEntityList` (`0x6834e0`) from `0x683681`: the centre `[ebx]` less the camera `0xc7cf20`,
 /// each stored as an argument to `0x4549a0`; `0x4549f0` squares and sums them.
 pub fn near_audibility_diffs(v: [f32; 3], cam: [f32; 3]) -> [f32; 3] {
     std::array::from_fn(|k| (f64::from(v[k]) - f64::from(cam[k])) as f32)

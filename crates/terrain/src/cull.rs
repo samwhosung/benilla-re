@@ -22,7 +22,7 @@ const EYE_ON_PLANE_EPS: f32 = f32::from_bits(0x3c23_d70a);
 /// `[0x801360]`: 0.001 (`0x3a83126f`), the least `|w|` divided by.
 const W_CLAMP_EPS: f32 = f32::from_bits(0x3a83_126f);
 
-/// 5e-6 (`0x3727c5ac`), the `w` used in place of a smaller one.
+/// 1e-5 (`0x3727c5ac`), the `w` used in place of a smaller one.
 const W_CLAMP_VAL: f32 = f32::from_bits(0x3727_c5ac);
 
 /// A vector of three components, each stored as `f32` before it is passed to `0x4549a0`.
@@ -191,10 +191,10 @@ pub struct PortalRect {
 /// rectangle. Each vertex `(x, y, z, 1)` goes through `TransformVector4` (`0x7bcb40`) with the
 /// matrix at `0xcbe2d8`, and `(x, y, w)` is clipped against the planes at `0xc7d0dc`
 /// (`ClipPortalPolygon`); nothing left culls it. The plane of the first three vertices, normalized,
-/// decides whether the eye is on it (`|n·eye − n·v0| < 0.01`) and inside the polygon
+/// decides whether the eye is on it (`|n·eye − n·v0| <= 0.01`) and inside the polygon
 /// (`IsPointInPolygon`, `0x7c23e0`, along `0x7bf680`'s axis): then the rectangle is the whole
 /// screen. Otherwise it is the bounds of `x/w`, `y/w` over the clipped vertices, `w` below 0.001 in
-/// size replaced by 5e-6. With SSE the normal is scaled by `rsqrtss`, which differs by CPU.
+/// size replaced by 1e-5. With SSE the normal is scaled by `rsqrtss`, which differs by CPU.
 #[allow(clippy::too_many_arguments)]
 pub fn portal_screen_rect(
     verts: &[V3],
@@ -250,7 +250,7 @@ pub fn portal_screen_rect(
             + f64::from(nzf) * f64::from(v0[2])
             + f64::from(nxf) * f64::from(v0[0]))) as f32;
     let d = d.abs();
-    if d < EYE_ON_PLANE_EPS {
+    if d <= EYE_ON_PLANE_EPS {
         let flat: Vec<f32> = verts.iter().flatten().copied().collect();
         if point_in_poly(eye, &flat, count, dominant_axis(&[nxf, nyf, nzf])) {
             return PortalRect {

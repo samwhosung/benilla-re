@@ -1,7 +1,7 @@
 //! Ripples, map lights, detail doodads, the liquid level-of-detail meshes and the nearest liquid,
 //! and the distance fade of entity models: `AgeRipple` (`0x68a1a0`), `AddMapLight` (`0x6a7ac0`),
 //! `FillDetailDoodadVertices` (`0x6b2600`), `BuildLiquidLodMesh` (`0x68a400`),
-//! `FindNearestChunkLiquid` (`0x68b0d0`) and `DrawEntityModels` (`0x683f80`).
+//! `FindNearestChunkLiquid` (`0x68b0d0`) and `DrawDoodadModels` (`0x683f80`).
 
 use crate::x87::fistp;
 
@@ -428,7 +428,7 @@ pub struct FadeDecision {
     pub visible: bool,
 }
 
-/// `DrawEntityModels` (`0x683f80`) for one model: the band ends `f32(50 − 10)`, `f32(125 − 25)` and
+/// `DrawDoodadModels` (`0x683f80`) for one model: the band ends `f32(50 − 10)`, `f32(125 − 25)` and
 /// `f32(min(farclip, 200) − 50)` (a far clip at or above 200, or NaN, keeps 200); the distance
 /// `√(dy² + dx²) − radius` from the camera in the register. A radius above 7.0, or NaN (`test
 /// ah,0x41; jp` at `0x6840c2`), shows at 1.0; above 2.5 the alpha is `1 − (dist − end2)/50`, above

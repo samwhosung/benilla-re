@@ -1,5 +1,5 @@
-//! Colour bytes to floats and back, and the arithmetic around them: `ConsoleSetFogColor`
-//! (`0x673290`), `CullDoodadDefs` (`0x68df70`), `DrawGroupBatches` (`0x6b5190`) and
+//! Colour bytes to floats and back, and the arithmetic around them: `ConsoleSetShadowColor`
+//! (`0x673290`), `GatherSlotLights` (`0x68df70`), `DrawInteriorGroupBatches` (`0x6b5190`) and
 //! `UpdateFootprints` (`0x69a3e0`).
 //!
 //! `fild` loads an integer exactly; a product rounds at 53 bits and a store to `f32`.
@@ -19,15 +19,15 @@ pub const INV_6000: f32 = f32::from_bits(0x392e_c33e);
 /// `[0x8106d8]`: 0.00048828870 (`0x3a000080`).
 pub const SCALE_8106D8: f32 = f32::from_bits(0x3a00_0080);
 
-/// `ConsoleSetFogColor` (`0x673290`) at `0x6732e2`, `0x6732f0`, `0x673302` and `0x673315`: one of
+/// `ConsoleSetShadowColor` (`0x673290`) at `0x6732e2`, `0x6732f0`, `0x673302` and `0x673315`: one of
 /// the four parsed floats times 255, kept in the register for `__ftol` (`0x40a2b0`).
 pub fn color_scale255(v: f32) -> f64 {
     f64::from(v) * f64::from(COLOR_SCALE)
 }
 
-/// `f32(byte·(1/255))`, `fild; fmul [0x8026c8]; fstp`: in `CullDoodadDefs` (`0x68df70`) at
+/// `f32(byte·(1/255))`, `fild; fmul [0x8026c8]; fstp`: in `GatherSlotLights` (`0x68df70`) at
 /// `0x68e0b8`, `0x68e0cb` and `0x68e0d8` on the bytes at `+0x70` to `+0x72` of the object
-/// `0x6d48b0` returns, and twelve times in `DrawGroupBatches` (`0x6b5190`), from `0x6b5326` to
+/// `0x6d48b0` returns, and twelve times in `DrawInteriorGroupBatches` (`0x6b5190`), from `0x6b5326` to
 /// `0x6b53ad` and from `0x6b56d5` to `0x6b5756`.
 pub fn color_normalize(byte: u8) -> f32 {
     (f64::from(byte) * f64::from(INV_255)) as f32

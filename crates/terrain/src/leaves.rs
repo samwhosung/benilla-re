@@ -55,7 +55,7 @@ pub fn color_lerp_i(dst: u32, t: u32, src: u32) -> u32 {
     (dst & 0xff00_0000) | (u32::from(r) << 16) | (u32::from(g) << 8) | u32::from(b)
 }
 
-/// The integer fade of `FadeGroupColors` (`0x6b4090`): `fistp(f32(fade·255) − 0.5)`, the product
+/// The integer fade of `ScaleSelfLitMaterials` (`0x6b4090`): `fistp(f32(fade·255) − 0.5)`, the product
 /// stored at `0x6b40e3`. The fade is `+0x1ac` of the object `0x6d48b0` returns.
 pub fn fade_to_i(fade: f32) -> i32 {
     let scaled = (f64::from(fade) * f64::from(MUL_255)) as f32;
@@ -63,7 +63,7 @@ pub fn fade_to_i(fade: f32) -> i32 {
     round_ties_even_i32(biased)
 }
 
-/// One colour of `FadeGroupColors` (`0x6b4090`): each of the three bytes times `i`, shifted right
+/// One colour of `ScaleSelfLitMaterials` (`0x6b4090`): each of the three bytes times `i`, shifted right
 /// by 8; the alpha is dropped. The function does this to every 0x40-byte element of `+0x1d8` (count
 /// `+0x1dc`) whose first byte has 0x10, after copying its `+0x10` to `+0x14`.
 pub fn color_fade_modulate_i(rgb: u32, i: i32) -> u32 {

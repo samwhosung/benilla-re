@@ -40,7 +40,7 @@ fn ah(e: &Emu) -> u8 {
     ((e.get_reg(RegisterX86::EAX) >> 8) & 0xff) as u8
 }
 
-/// `CullDoodadDefList` (`0x683340`) from `0x683388` and `CullGroupEntities` (`0x6838f0`) from
+/// `CullEntityList` (`0x683340`) from `0x683388` and `CullGroupDoodadDefList` (`0x6838f0`) from
 /// `0x683972`, each to the call after: the key at `+0x78`.
 #[test]
 fn camplane_sort_key_difftest() {

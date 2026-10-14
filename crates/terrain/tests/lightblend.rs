@@ -46,7 +46,7 @@ fn ah(e: &Emu) -> u8 {
     ((e.get_reg(RegisterX86::EAX) >> 8) & 0xff) as u8
 }
 
-/// `GetMapObjectFog` (`0x6c31e0`) from `begin` to the `call 0x71c110` at `0x6c3300`, eax the object
+/// `ApplyMapObjectFog` (`0x6c31e0`) from `begin` to the `call 0x71c110` at `0x6c3300`, eax the object
 /// `0x6d48b0` returns: the colour at `[ebp-0x10]` up.
 fn run_fog_slice(e: &mut Emu, begin: u64, ebp: u64) -> [f32; 3] {
     e.set_reg(RegisterX86::EAX, DAYNIGHT);
@@ -429,7 +429,7 @@ fn fog_select_fallthrough_difftest() {
     );
 }
 
-/// `UpdateDoodadDef` (`0x6952a0`) from `0x69538a` to `0x6953a3`: ebx = this, the fade at
+/// `SetDoodadDefBounds` (`0x6952a0`) from `0x69538a` to `0x6953a3`: ebx = this, the fade at
 /// `[ebp-0x1c]`, eax a buffer the slice copies from; the product at `[ebx+0x68]`.
 #[test]
 fn chunk_fade_scale_difftest() {

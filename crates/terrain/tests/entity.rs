@@ -1,7 +1,7 @@
 //! The arithmetic of the map entities, as slices: `CWorld::IsPointInEntity` (`0x670a70`),
 //! `LinkEntityToMapObject` (`0x6a8ed0`), `LinkEntityToChunks` (`0x6a8ca0`),
 //! `CWorld::UpdateFadingModels` (`0x672ef0`), `AttachEntityToGround` (`0x6a8a20`),
-//! `BakeMapEntityGroupLight` (`0x69e4c0`), `CMapDoodadDef::ComputeSkyLight` (`0x6a8410`),
+//! `BakeMapEntityGroupLight` (`0x69e4c0`), `CMapDoodadDef::BakeGroupLight` (`0x6a8410`),
 //! `CreateWorldCallbackObject` (`0x670db0`), `UpdateMapEntityEnvironment` (`0x69e280`) and
 //! `PlaceDoodadDef` (`0x694bc0`). A stretch run in an island is the exe's own bytes, checked,
 //! copied between a load and a store.

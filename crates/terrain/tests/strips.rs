@@ -1,6 +1,6 @@
 //! The index strips, each run whole: `CChunkLiquid::BuildStrip` (`0x68d9b0`) and
 //! `FillLowDetailIndices` (`0x6bd9b0`) with the buffer lock and unlock (`0x58a080`, `0x58a0a0`)
-//! stubbed to hand out the test's buffer, and `BuildHoleStrip` (`0x6b61a0`).
+//! stubbed to hand out the test's buffer, and `BuildLiquidCellStrip` (`0x6b61a0`).
 
 use benilla_re_difftest::{Emu, RegisterX86, Wow};
 

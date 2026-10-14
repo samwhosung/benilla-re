@@ -1,5 +1,5 @@
 //! The lighting a model is given: `ApplyEntityLighting` (`0x672a20`), `CMapDoodadDef::AddLights`
-//! (`0x6a8050`), `GetMapObjectFog` (`0x6c31e0`) and `UpdateDoodadDef` (`0x6952a0`).
+//! (`0x6a8050`), `ApplyMapObjectFog` (`0x6c31e0`) and `SetDoodadDefBounds` (`0x6952a0`).
 //!
 //! A colour byte becomes `f32(byte·(1/255))` (`crate::colornorm::color_normalize`); a product of two
 //! `f32` loads rounds at 53 bits and again at its `fstp dword`.
@@ -61,7 +61,7 @@ pub fn lightstate_exterior_scaled_directional(intensity: f32, comps: [f32; 3]) -
     ]
 }
 
-/// `GetMapObjectFog` (`0x6c31e0`) inside a group with `[grp+8] & 0x10` and `[grp+0x98]` set
+/// `ApplyMapObjectFog` (`0x6c31e0`) inside a group with `[grp+8] & 0x10` and `[grp+0x98]` set
 /// (`0x6c3233`): the fog colour from the bytes `+0x82`, `+0x81` and `+0x80` of the object
 /// `0x6d48b0` returns, stored to `[ebp-0x10]` up.
 pub fn fog_indoor_color(b82: u8, b81: u8, b80: u8) -> [f32; 3] {
@@ -74,7 +74,7 @@ pub fn fog_outdoor_color(b72: u8, b71: u8, b70: u8) -> [f32; 3] {
     color3(b72, b71, b70)
 }
 
-/// `UpdateDoodadDef` (`0x6952a0`) at `0x69538f`: `[this+0x68] = f32([ebp-0x1c]·[this+0x30])`, the
+/// `SetDoodadDefBounds` (`0x6952a0`) at `0x69538f`: `[this+0x68] = f32([ebp-0x1c]·[this+0x30])`, the
 /// fade from the transform `0x7bca80` wrote, times the scale.
 pub fn chunk_fade_scale(fade: f32, scale: f32) -> f32 {
     (f64::from(fade) * f64::from(scale)) as f32

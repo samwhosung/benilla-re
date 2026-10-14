@@ -1,5 +1,5 @@
 //! The facet emitters, each run whole: `AddQuadFacets` (`0x6aba30`), `CMapChunk::AddImpassableWalls`
-//! (`0x6ab530`) and `FlushLiquidFacets` (`0x671cc0`) on its x87 path, each into a list sized so
+//! (`0x6ab530`) and `FlushTriangleBatchFacets` (`0x671cc0`) on its x87 path, each into a list sized so
 //! its growers do not reallocate.
 
 mod common;

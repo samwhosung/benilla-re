@@ -1,4 +1,4 @@
-//! The arithmetic of `CullDoodadDefList` (`0x683340`), `CullGroupEntities` (`0x6838f0`) and
+//! The arithmetic of `CullEntityList` (`0x683340`), `CullGroupDoodadDefList` (`0x6838f0`) and
 //! `TraceWorldSegmentBody` (`0x69bff0`).
 
 /// `0x683340` from `0x683388` and `0x6838f0` from `0x683972`: the camera plane `[0xc7bcb0]` up

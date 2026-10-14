@@ -696,7 +696,7 @@ fn chunk_add_light_falloff_difftest() {
     );
 }
 
-/// `DrawEntityModels` (`0x683f80`) over a one-model list, the setters and the bounds pass stubbed:
+/// `DrawDoodadModels` (`0x683f80`) over a one-model list, the setters and the bounds pass stubbed:
 /// whether `0x710cb0` is called and the alpha it is passed.
 #[test]
 fn doodad_fade_difftest() {

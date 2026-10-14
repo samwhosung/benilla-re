@@ -1,6 +1,6 @@
 //! The map object lights the world reads: the falloff `LightFalloff` (`0x69e1c0`), the distance of
 //! `GetCameraInteriorFog` (`0x69de20`), the rotated normal of `GetEntityInteriorLight`
-//! (`0x69dc30`), and the alpha scale of `PackLightColor` (`0x6a77e0`).
+//! (`0x69dc30`), and the alpha scale of `SplitLightColor` (`0x6a77e0`).
 
 use crate::x87::fistp;
 

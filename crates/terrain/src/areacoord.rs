@@ -1,5 +1,5 @@
 //! The arithmetic of two area queries: the tile window of `FindNearestLiquidInAreas` (`0x68af10`)
-//! and the downward ray of `UpdateShowQuery` (`0x6821f0`), with the compare it uses to pick the
+//! and the downward ray of `ClaimCameraMapObject` (`0x6821f0`), with the compare it uses to pick the
 //! nearer hit. `CWorld::GetAreaIdAt` (`0x670250`), whose ray is the same, is unreached.
 
 use crate::x87::fistp;

@@ -1,6 +1,6 @@
-//! The colour conversions and the arithmetic around them, as slices: `ConsoleSetFogColor`
-//! (`0x673290`) at `0x6732e2`; `CullDoodadDefs` (`0x68df70`) from `0x68df92` to `0x68dfb9`, from
-//! `0x68e0fd` to `0x68e130` and from `0x68e0b2` to `0x68e0c2`; `DrawGroupBatches` (`0x6b5190`)
+//! The colour conversions and the arithmetic around them, as slices: `ConsoleSetShadowColor`
+//! (`0x673290`) at `0x6732e2`; `GatherSlotLights` (`0x68df70`) from `0x68df92` to `0x68dfb9`, from
+//! `0x68e0fd` to `0x68e130` and from `0x68e0b2` to `0x68e0c2`; `DrawInteriorGroupBatches` (`0x6b5190`)
 //! from `0x6b531c` to `0x6b5335`; and `UpdateFootprints` (`0x69a3e0`) from `0x69a431` to
 //! `0x69a48c`, from `0x69a53b` to `0x69a54a` and from `0x69a54f` to `0x69a583`. A stretch run in
 //! an island is the exe's own bytes, checked, copied between a load and a store.

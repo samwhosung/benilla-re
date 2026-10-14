@@ -102,7 +102,7 @@ fn run_age_fst(
     (e.read_f32(obj + field_off), ah(e) & TEST_AH_41, pf)
 }
 
-/// `CullGroupDoodads` (`0x6834e0`) from `0x68354a` and `CullEntityList` (`0x683700`) from `0x68377b`,
+/// `CullGroupEntityList` (`0x6834e0`) from `0x68354a` and `CullDoodadDefList` (`0x683700`) from `0x68377b`,
 /// each to the call after: the key at `+0x78`.
 #[test]
 fn scenewalk_camplane_sort_key_difftest() {

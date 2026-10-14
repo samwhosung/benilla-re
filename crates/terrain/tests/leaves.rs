@@ -1,5 +1,5 @@
 //! The small functions, each run whole: `DistanceSquared` (`0x69be70`), `SetPlaneFromNormal`
-//! (`0x6acde0`), `LerpColor` (`0x690ae0`), `FadeGroupColors` (`0x6b4090`) with `0x6d48b0` stubbed
+//! (`0x6acde0`), `LerpColor` (`0x690ae0`), `ScaleSelfLitMaterials` (`0x6b4090`) with `0x6d48b0` stubbed
 //! to return the fade object, `LerpFogRecord` (`0x69efd0`), `ScaleMatrix3` (`0x672d80`) and
 //! `GetAreaId` (`0x69b120`) on an area table the test lays out.
 

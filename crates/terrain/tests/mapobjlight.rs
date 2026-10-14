@@ -1,4 +1,4 @@
-//! The map object lights the world reads: `LightFalloff` (`0x69e1c0`) and `PackLightColor`
+//! The map object lights the world reads: `LightFalloff` (`0x69e1c0`) and `SplitLightColor`
 //! (`0x6a77e0`) run whole, and `GetCameraInteriorFog` (`0x69de20`) and `GetEntityInteriorLight`
 //! (`0x69dc30`) as slices. A stretch run in an island is the exe's own bytes, checked, copied
 //! between a load and a store.
