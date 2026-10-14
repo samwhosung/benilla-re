@@ -270,6 +270,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x62c318	void *[2]	s_switch62c318		objectlayer	Holds the 2 case addresses of the switch in 0x62c2d0	verified	one	objectlayer/overview#indexed-switch-tables
 0x62c320	uint8_t[58]	s_switchIndex62c320		objectlayer	Maps the switch value of 0x62c2d0 to its case in 0x62c318	verified	one	objectlayer/overview#indexed-switch-tables
 0x63679c	void *[4]	s_bevelCountCases		collision	Holds the case addresses of 0x636610 for one to four planes	verified	one	collision/walking#bevel-contact-direction
+0x63c794	uint32_t[8]	s_keyJumpTable		console	Holds the jump targets of the keys 0x206 to 0x20d in the key-down handler	verified	one	console/screen#keys
+0x63c938	uint32_t[12]	s_keyRepeatJumpTable		console	Holds the jump targets of the keys 0x202 to 0x20d in the key-repeat handler	verified	one	console/screen#keys
 0x6485d8	uint32_t[5]	s_fileReadKinds		storm	Holds the five cases of SFile::Read by file kind: 0x6484c0, 0x6484fb, 0x64851c twice, 0x648568	verified	one	dbc#record-reads
 0x67b8e8	void *[4]	s_cases67b870		lighting	Holds the 4 case addresses of the switch in 0x67b870	inferred	none	
 0x680ba4	uint32_t[4]	s_cameraLiquidCases		terrain	Holds the case addresses of the liquid type switch, indexed by the type's low two bits	verified	one	terrain/camstate#camera-environment
@@ -745,6 +747,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e020	float	s_invGravity		collision	Holds 1/g, 0.051837362 (0x3d54536a)	verified	one	collision/falling#arc-fields-and-constants
 0x80e024	float	s_bevelPairScale		collision	Holds 0.6385560 (0x3f237868), one over the length of two perpendicular bevel normals summed	verified	one	collision/walking#slope-thresholds
 0x80e028	float	s_cos89		collision	Holds cos 89°, 0.0174524 (0x3c8ef859), the normal z the ground normal must exceed	verified	one	collision/walking#slope-thresholds
+0x80e128	char[32]	s_gxApiNames		console	Holds the API names OpenGL and Direct3D in two 16-byte slots	verified	one	console/display#display-callbacks
+0x80e148	const void *[13]	s_commandHandlers		console	Holds the handlers of the 13 console commands of the screen	verified	one	console/commands#screen-commands
+0x80e268	void *[4]	s_commandTableVtable		console	Holds the four slots of the command table: free node, allocate node, deleting destructor, clear	verified	one	console/commands#command-records
+0x80e2c4	char[25]	s_keyWowClient		unassigned	Holds the registry key World of Warcraft\Client	verified	one	console/hardware#hardware-change-check
+0x80e2e0	const float	s_fastCpuMhz		unassigned	Holds 1500.0, the processor frequency in MHz above which the processor class is 1	verified	one	console/hardware#detection-record
 0x80e2e4	const float	s_epsilon1e6		unassigned	Holds 1e-6, a pooled tolerance; the ray triangle test bounds its determinant with it	verified	one	models/scene#ray-triangle-test
 0x80e448	float	s_timeScaleMax		gametime	Holds 60.0, the clock's highest time scale	verified	one	gametime#time-scale
 0x80e44c	void *[4]	s_gameTimeTableVtable		gametime	Holds the vtable of the clock's callback table: entry free at 0x643bb0, then three more slots	verified	one	gametime#clock-state
@@ -1118,10 +1125,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e3e0	char[6]	s_textLogin		unassigned	Holds the string "login"	inferred	none	
 0x82e3e8	char[11]	s_textCharselect		unassigned	Holds the string "charselect"	inferred	none	
 0x82e424	const char[5]	s_textPercentSPercentS		charactermodel	Holds the string "%s%s"	verified	one	charactermodel/equipment#item-models
-0x82e42c	char[18]	s_windowTitle		gx	Holds the window title "World of Warcraft"	verified	one	gx/device#opengl-window-and-pixel-formats
-0x82e440	char[28]	s_textCannotReadStringTable		dbc	Holds the fatal message of a table whose string block cannot be read	verified	one	dbc#the-loader
-0x82e460	char[46]	s_textWrongRowSize		dbc	Holds the fatal message of a table whose record size is not the type's	verified	one	dbc#the-loader
-0x82e490	char[55]	s_textWrongColumnCount		dbc	Holds the fatal message of a table whose field count is not the type's	verified	one	dbc#the-loader
+0x82e42c	char[18]	s_textWorldOfWarcraft		unassigned	Holds the title World of Warcraft of the hardware change question	verified	one	console/hardware#hardware-change-check
+0x82e440	char[29]	s_textNoStringTable		unassigned	Holds the message %s: Cannot read string table	verified	one	console/hardware#hardware-table
+0x82e460	char[46]	s_textWrongRowSize		unassigned	Holds the message %s has wrong row size (found %i, expected %i)	verified	one	console/hardware#hardware-table
+0x82e490	char[55]	s_textWrongColumns		unassigned	Holds the message %s has wrong number of columns (found %i, expected %i)	verified	one	console/hardware#hardware-table
+0x82e4c8	char[18]	s_textUnableToOpen		unassigned	Holds the message Unable to open %s	verified	one	console/hardware#hardware-table
 0x82e570	char[2]	s_text0		unassigned	Holds the string "0"	inferred	none	
 0x82e644	char[18]	s_textM2UsePixelShaders		client	Holds the string "M2UsePixelShaders"	inferred	none	
 0x82e67c	char[13]	s_textM2UseShaders		client	Holds the string "M2UseShaders"	inferred	none	
@@ -1370,6 +1378,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8424e4	char[8]	s_textBaseMip		unassigned	Holds the string "baseMip"	inferred	none	
 0x8424ec	char[25]	s_textUsageSetBaseMipValue		ui	Holds the string "Usage: SetBaseMip(value)"	inferred	none	
 0x842978	char[10]	s_textGxRestart		unassigned	Holds the string "gxRestart"	inferred	none	
+0x84298c	char[21]	s_tagGxMonitorMode		console	Holds the allocation tag of the device-mode list, the type name CGxMonitorMode	verified	one	console/overview#static-objects
 0x842a5c	char[7]	s_textOpenGl		unassigned	Holds the string "OpenGl"	inferred	none	
 0x842a64	char[6]	s_textGxApi		unassigned	Holds the string "gxApi"	inferred	none	
 0x842cf4	const char[9]	s_keyHomeInn		ui	Holds the global string key HOME_INN shown by the zone token without a bind point	verified	one	ui/spelltokens#tokens-that-compute-a-value
@@ -1771,8 +1780,21 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86424c	uint32_t[13]	s_playerVocalChance		objectlayer	Holds per vocal kind the highest roll out of 101 that lets a player's vocal play	verified	one	objectlayer/sounds#vocal-sounds
 0x8642e8	char[64]	s_movementCSourcePath		collision	Holds the source path of Movement_C.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
 0x864330	const char *[6]	s_exhaustionXpKeys		objectlayer	Holds the XP line key of each rest state	verified	one	objectlayer/combatlogmessages#experience
-0x8645e0	uint32_t			console	Holds a dword its object file's code reads; not read here	inferred	none	
+0x864544	float[4]	s_panelRect		console	Holds the panel rectangle: left, lower edge, right, upper edge, starting at 0, 0, 1, 1	verified	one	console/screen#paint
+0x864554	uint32_t	s_consoleKey		console	Holds the key code that opens and closes the console, 0x60	verified	one	console/screen#console-key
+0x864558	int32_t	s_historyIndex		console	Holds the position in the command history the input line shows, -1 for the empty line	verified	one	console/screen#input-line
+0x86455c	float	s_fontSize		console	Holds the console font size, 0.02 at first	verified	one	console/commands#screen-commands
+0x864560	float	s_lineCount		console	Holds the number of lines the panel shows, 10.0 at first	verified	one	console/commands#screen-commands
+0x864564	float[4]	s_highlightRect		console	Holds the selection highlight rectangle: left, lower edge, right, upper edge	verified	one	console/screen#mouse
+0x864574	uint32_t	s_styleFlags		console	Holds the font style bits of the console text, 8 at first and bit 0x10 for proportional	verified	one	console/commands#screen-commands
+0x864578	const char *[13]	s_commandNames		console	Holds the names of the 13 console commands of the screen	verified	one	console/commands#screen-commands
+0x8645ac	const char *[13]	s_commandHelp		console	Holds the help lines of the 13 console commands of the screen	verified	one	console/commands#screen-commands
+0x8645e0	uint32_t[11]	s_refreshRates		console	Holds the 11 refresh rates gxRefresh accepts: 60 to 200	verified	one	console/display#display-callbacks
+0x86460c	const char *[8]	s_formatIndexNames		console	Holds the text of each colour and depth index: 16, 24, 24, 30, 16, 24, 24, 32	verified	one	console/display#display-callbacks
+0x86462c	uint32_t[4]	s_formatWords		console	Holds the device format word of each colour index: 16, 32, 32, 32	verified	one	console/display#format-validation
 0x864644	char[3]	s_text16		unassigned	Holds the string "16"	inferred	none	
+0x8648c8	char[55]	s_pathConsoleClient		console	Holds the source path of ConsoleClient.cpp	verified	one	console/overview#object-files
+0x864908	char[18]	s_tagConsoleLine		console	Holds the allocation tag of a console line, the type name CONSOLELINE	verified	one	console/screen#line-records
 0x864a48	char[7]	s_globalNameKind		unassigned	Holds global	verified	one	ui/luastate#function-names-from-globals
 0x864e40	char[9]	s_textGxFixLag		console	Holds the string "gxFixLag"	inferred	none	
 0x864eb8	char[9]	s_textGxCursor		console	Holds the string "gxCursor"	inferred	none	
@@ -1781,6 +1803,23 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x864f88	char[15]	s_textGxTripleBuffer		console	Holds the string "gxTripleBuffer"	inferred	none	
 0x864fa8	char[10]	s_textGxRefresh		console	Holds the string "gxRefresh"	inferred	none	
 0x8650b8	char[28]	s_textTripleBufferMustBe0Or1		console	Holds the string "TripleBuffer must be 0 or 1"	inferred	none	
+0x8653a0	uint8_t[216]	s_helpCategoryTable		console	Holds the nine category entries of 0x18 bytes: an id and a name from debug to gm	verified	one	console/commands#help
+0x86547c	uint32_t	s_scriptMode		console	Holds the executor mode, 4 at first; a value below 3 routes lines to the recorder	verified	one	console/screen#writing-and-executing
+0x865494	char[53]	s_tagCommandBuckets		console	Holds the allocation tag of the command table bucket vector	verified	one	console/commands#command-records
+0x8655c0	char[21]	s_tagConsoleCommand		console	Holds the allocation tag of a console command, the type name CONSOLECOMMAND	verified	one	console/commands#command-records
+0x8655d8	uint32_t[12]	s_hardwareBiasRows		unassigned	Holds the two bias rows of six words each: zeros for a slow processor, ones for a fast one	verified	one	console/hardware#detection-record
+0x865610	float[4]	s_lodDistTable		unassigned	Holds the lodDist value of each lodDist column of a hardware row	verified	one	console/hardware#quality-block
+0x865620	uint32_t[4]	s_frillDensityTable		unassigned	Holds the frillDensity value of each frill column of a hardware row	verified	one	console/hardware#quality-block
+0x865630	uint8_t[4]	s_doodadAnimTable		unassigned	Holds the doodadAnim flag of each doodad column and bias	verified	one	console/hardware#quality-block
+0x865634	uint32_t[4]	s_waterLodTable		unassigned	Holds the waterLOD value of each water column and bias	verified	one	console/hardware#quality-block-rest
+0x865644	float[8]	s_particleDensityTable		unassigned	Holds the particleDensity value of each particle column and bias	verified	one	console/hardware#quality-block-rest
+0x865664	float[8]	s_unitDrawDistTable		unassigned	Holds the unitDrawDist value of each distance column and bias	verified	one	console/hardware#quality-block-rest
+0x865684	float[8]	s_smallCullTable		unassigned	Holds the SmallCull value of each cull column and bias	verified	one	console/hardware#quality-block-rest
+0x8656a4	float[8]	s_distCullTable		unassigned	Holds the DistCull value of each cull column and bias	verified	one	console/hardware#quality-block-rest
+0x8656c4	float[8]	s_farclipTable		unassigned	Holds the farclip value of each farclip column and bias	verified	one	console/hardware#quality-block
+0x8656e4	const char *[4]	s_hardwareValueNames		unassigned	Holds the registry names of the saved processor, memory, video and sound indices	verified	one	console/hardware#hardware-change-check
+0x865724	char[20]	s_pathWowClientDb		unassigned	Holds the path ..\DB/WowClientDB.h the table allocations name	verified	one	console/hardware#hardware-table
+0x865784	char[44]	s_textHardwareChanged		unassigned	Holds the text of the hardware change question	verified	one	console/hardware#hardware-change-check
 0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x865b44	uint8_t	s_keepLooseFlags		storm	Holds a byte that start-up clears so the open calls drop the loose-file flag bits	verified	one	storm/mount#loose-files
 0x866520	uint16_t	s_lookupLocale		storm	Holds the locale a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
@@ -1818,6 +1857,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8697d0	char[4]	s_textLod		cvar	Holds the string "lod"	inferred	none	
 0x869abc	char[38]	s_textNearClipMustBeInRange001033		cvar	Holds the string "NearClip must be in range 0.01 - 0.33"	inferred	none	
 0x869f94	char[30]	s_textSpellEffectLevelSetToD		unassigned	Holds the string "Spell effect level set to %d."	inferred	none	
+0x869fb8	char[32]	s_pathVideoHardwareDbc		unassigned	Holds the path DBFilesClient\VideoHardware.dbc	verified	one	console/hardware#hardware-table
 0x869ffc	float	s_liquidHalf		terrain	Holds 0.5	verified	one	terrain/liquid#animated-textures
 0x86a000	const char *[8]	s_liquidFrameNames		terrain	Holds each liquid type's frame name format; type 5's is null	verified	one	terrain/liquid#animated-textures
 0x86a030	uint32_t	s_waterMaxLod		terrain	Holds the waterMaxLOD setting, 4 or 0	inferred	none	
@@ -3438,15 +3478,94 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4e52c	uint32_t[8]	s_facetList		collision	Holds the solid facet list: count +0x04, 52-byte facets at +0x08, their 64-bit ids at +0x18	verified	one	collision/overview#resolution-file-initializers
 0xc4e564	uint32_t[8]	s_liquidList		collision	Holds the liquid facet list, laid out as 0xc4e52c	verified	one	collision/overview#resolution-file-initializers
 0xc4e5a0	float[6]	s_queryBox		collision	Holds six floats zeroed at start-up	verified	one	collision/overview#resolution-file-initializers
-0xc4e6ac	uint32_t			console	Holds a dword its object file's code reads; not read here	inferred	none	
-0xc4e6e4	uint32_t			console	Holds a dword its object file's code reads; not read here	inferred	none	
-0xc4ea90	uint32_t			console	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc4ea94	uint32_t			console	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc4eab4	uint32_t			console	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc4eb98	uint32_t			console	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xc4eb9d	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
-0xc4eb9e	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
-0xc4eba1	uint8_t			console	Holds a byte its object file's code reads and writes; not read here	inferred	none	
+0xc4e64c	uint8_t[24]	s_consoleLock		console	Holds the critical section that guards the line list	verified	one	console/screen#writing-and-executing
+0xc4e668	uint32_t	s_textLayer		console	Holds the handle of the text layer, priority 7.0	verified	one	console/screen#start-up-and-shutdown
+0xc4e678	uint32_t[13]	s_hardwareQuality		console	Holds the quality values of the matched hardware row that ApplyHardwareQuality sets	verified	one	console/display#restart-and-defaults
+0xc4e6ac	const uint32_t *	s_hardwareDefaultFormat		console	Points at the default device format of the matched hardware row	verified	one	console/display#start-up-record
+0xc4e6b0	int32_t	s_hardwareBaseMip		console	Holds the base mip level of the matched hardware row	verified	one	console/display#restart-and-defaults
+0xc4e6bc	uint32_t[10]	s_hardwareRecord		console	Holds the first ten words of the copy of the matched hardware row record	verified	one	console/display#start-up-record
+0xc4e6e4	const void *	s_hardwareRow		console	Points at the matched hardware row, whose +0x48, +0x4c, +0x50 and +0x54 words the start-up reads	verified	one	console/display#start-up-record
+0xc4e6e8	uint32_t[2]	s_hardwareRecordTail		console	Holds the last two words of the copy of the matched hardware row record	verified	one	console/display#start-up-record
+0xc4e6f4	float	s_blinkClock		console	Holds the seconds since the caret phase last flipped	verified	one	console/screen#paint
+0xc4e6f8	uint32_t	s_blinkPhase		console	Holds the caret blink phase; its only reader feeds its own toggle	verified	one	console/screen#paint
+0xc4e6fc	uint32_t[14]	s_fallbackFormat		console	Holds the second fixed device format, 800 x 600 until the desktop mode replaces its size	verified	one	console/display#device-format-record
+0xc4e738	char[256]	s_completionPrefix		console	Holds the typed text the Tab completion cycles through	verified	one	console/screen#keys
+0xc4e848	char[260]	s_fontPath		console	Holds the path of the console font, Fonts\ARIALN.ttf at first	verified	one	console/commands#screen-commands
+0xc4e954	CVar *	s_gxOverrideCVar		console	Holds the record of the gxOverride setting	verified	one	console/display#display-cvars
+0xc4e958	uint8_t	s_stockSizesBuilt		console	Holds the flag that the stock size list is built	verified	one	console/display#format-validation
+0xc4e960	char[64]	s_repeatCommand		console	Holds the command text that repeat runs each frame	verified	one	console/screen#slide
+0xc4e9a0	CVar *	s_gxTripleBufferCVar		console	Holds the record of the gxTripleBuffer setting	verified	one	console/display#display-cvars
+0xc4e9a4	uint32_t[3]	s_lineList		console	Holds the console line list: link offset, terminator link and first line	verified	one	console/screen#line-records
+0xc4e9b0	uint32_t	s_backgroundLayer		console	Holds the handle of the background layer, priority 6.0	verified	one	console/screen#start-up-and-shutdown
+0xc4e9b4	CONSOLELINE *	s_viewAnchor		console	Holds the newest line the panel shows, or 0 for the head	verified	one	console/screen#line-records
+0xc4e9b8	int32_t[9]	s_overrideValues		console	Holds the value of each of the nine override slots	verified	one	console/display#override-string
+0xc4e9dc	CVar *	s_gxMultisampleCVar		console	Holds the record of the gxMultisample setting	verified	one	console/display#display-cvars
+0xc4e9e0	CVar *	s_gxRefreshCVar		console	Holds the record of the gxRefresh setting	verified	one	console/display#display-cvars
+0xc4e9e4	uint32_t[9]	s_overrideFlags		console	Holds the flag of each of the nine override slots	verified	one	console/display#override-string
+0xc4ea08	uint32_t[14]	s_lastGoodFormat		console	Holds the last device format the device accepted	verified	one	console/display#device-format-record
+0xc4ea40	uint32_t[14]	s_stockSizes		console	Holds the seven stock sizes as width and height pairs, 1600 x 1200 down to 640 x 480	verified	one	console/display#format-validation
+0xc4ea7c	CVar *	s_hwDetectCVar		console	Holds the record of the hwDetect setting	verified	one	console/display#display-cvars
+0xc4ea84	CVar *	s_gxDepthBitsCVar		console	Holds the record of the gxDepthBits setting	verified	one	console/display#display-cvars
+0xc4ea8c	float	s_scaleR02		console	Holds 1 / (r2 - r0) of the window rectangle, or 1; nothing reads it	verified	one	console/screen#start-up-and-shutdown
+0xc4ea90	CVar *	s_gxColorBitsCVar		console	Holds the record of the gxColorBits setting	verified	one	console/display#display-cvars
+0xc4ea94	CVar *	s_gxApiCVar		console	Holds the record of the gxApi setting	verified	one	console/display#display-cvars
+0xc4ea9c	uint32_t[4]	s_deviceModes		console	Holds the device mode list: capacity, count, buffer and granularity, of 16-byte modes	verified	one	console/display#format-validation
+0xc4eaac	uint32_t	s_inputString		console	Holds the string handle of the input line, or 0	verified	one	console/screen#input-line
+0xc4eab0	CVar *	s_gxCursorCVar		console	Holds the record of the gxCursor setting	verified	one	console/display#display-cvars
+0xc4eab4	CVar *	s_gxFixLagCVar		console	Holds the record of the gxFixLag setting	verified	one	console/display#display-cvars
+0xc4eab8	CVar *	s_gxAspectCVar		console	Holds the record of the gxAspect setting	verified	one	console/display#display-cvars
+0xc4eabc	uint32_t	s_repeatCount		console	Holds the number of times repeat still runs its command	verified	one	console/screen#slide
+0xc4eac0	float	s_scaleR13		console	Holds 1 / (r3 - r1) of the window rectangle, or 1; the caret width unit	verified	one	console/screen#start-up-and-shutdown
+0xc4eac4	CVar *	s_gxResolutionCVar		console	Holds the record of the gxResolution setting	verified	one	console/display#display-cvars
+0xc4eac8	uint32_t	s_consoleOpen		console	Holds the flag that the console is open	verified	one	console/screen#console-key
+0xc4eacc	CVar *	s_gxMaximizeCVar		console	Holds the record of the gxMaximize setting	verified	one	console/display#display-cvars
+0xc4ead8	uint32_t[9]	s_colourTable		console	Holds the nine console colours by class: default, input, echo, error, warning, global, admin, highlight, background	verified	one	console/screen#colour-classes
+0xc4eb00	char[128]	s_copyBuffer		console	Holds the text of the selected line for the copy	verified	one	console/screen#selection-copy
+0xc4eb88	CVar *	s_gxVSyncCVar		console	Holds the record of the gxVSync setting	verified	one	console/display#display-cvars
+0xc4eb98	uint32_t	s_workingFormatHead		console	Holds the first word of the working device format, which nothing writes	verified	one	console/display#device-format-record
+0xc4eb9c	uint8_t	s_workingHardwareTL		console	Holds the working format flag for hardware transform and lighting, +4	verified	one	console/display#device-format-record
+0xc4eb9d	uint8_t	s_workingHardwareCursor		console	Holds the working format flag for the hardware cursor, +5	verified	one	console/display#device-format-record
+0xc4eb9e	uint8_t	s_workingFixLag		console	Holds the working format flag for fix-lag, +6	verified	one	console/display#device-format-record
+0xc4eb9f	uint8_t	s_workingWindowed		console	Holds the working format flag for windowed mode, +7	verified	one	console/display#device-format-record
+0xc4eba0	uint8_t	s_workingAspect		console	Holds the working format flag for constrained aspect, +8	verified	one	console/display#device-format-record
+0xc4eba1	uint8_t	s_workingMaximize		console	Holds the working format flag for maximise, +9	verified	one	console/display#device-format-record
+0xc4eba4	uint32_t	s_workingDepthIndex		console	Holds the working format depth index, +0xc	verified	one	console/display#device-format-record
+0xc4eba8	uint32_t	s_workingWidth		console	Holds the working format width, +0x10	verified	one	console/display#device-format-record
+0xc4ebac	uint32_t	s_workingHeight		console	Holds the working format height, +0x14	verified	one	console/display#device-format-record
+0xc4ebb0	uint32_t	s_workingTripleBuffer		console	Holds the working format buffer count, 1 or 2, +0x18	verified	one	console/display#device-format-record
+0xc4ebb4	uint32_t	s_workingMultisample		console	Holds the working format multisample count, +0x1c	verified	one	console/display#device-format-record
+0xc4ebb8	float	s_workingMultisampleQuality		console	Holds the working format multisample quality, +0x20	verified	one	console/display#device-format-record
+0xc4ebbc	uint32_t	s_workingColourIndex		console	Holds the working format colour index, +0x24	verified	one	console/display#device-format-record
+0xc4ebc0	uint32_t	s_workingRefresh		console	Holds the working format refresh rate, +0x28	verified	one	console/display#device-format-record
+0xc4ebc4	uint8_t	s_workingVSync		console	Holds the working format vertical sync flag, +0x2c	verified	one	console/display#device-format-record
+0xc4ebc8	uint32_t[2]	s_workingFormatTail		console	Holds the last two words of the working device format, which the constructor zeroes	verified	one	console/display#device-format-record
+0xc4ebd0	uint32_t[14]	s_format640		console	Holds the first fixed device format, 640 x 480	verified	one	console/display#device-format-record
+0xc4ec08	CVar *	s_widescreenCVar		console	Holds the record of the widescreen setting	verified	one	console/display#display-cvars
+0xc4ec0c	CVar *	s_gxMultisampleQualityCVar		console	Holds the record of the gxMultisampleQuality setting	verified	one	console/display#display-cvars
+0xc4ec10	float	s_panelHeight		console	Holds the height of the open panel, the line count times the font size	verified	one	console/screen#paint
+0xc4ec18	uint32_t	s_consoleTextBatch		console	Holds the handle of the text batch the layers draw into	verified	one	console/screen#start-up-and-shutdown
+0xc4ec1c	uint32_t	s_device		console	Holds the graphics device handle, or 0	verified	one	console/display#device-creation
+0xc4ec20	uint32_t	s_consoleEnabled		console	Holds 1 when the client started with -console	verified	one	console/screen#console-key
+0xc4ec24	int32_t	s_lineTotal		console	Holds the number of lines in the list	verified	one	console/screen#line-records
+0xc4ec28	uint32_t	s_tabCycle		console	Holds the flag that a Tab completion is under way	verified	one	console/screen#keys
+0xc4ec2c	const char *	s_tabState		console	Holds the command name the last Tab completion offered	verified	one	console/screen#keys
+0xc4ec34	uint32_t	s_font		console	Holds the console font handle	verified	one	console/commands#screen-commands
+0xc4ec38	uint32_t	s_dragState		console	Holds 1 while the panel edge is being dragged	verified	one	console/screen#mouse
+0xc4ec3c	uint32_t	s_selectionState		console	Holds the selection state: 0 none, 1 dragging, 2 fixed	verified	one	console/screen#mouse
+0xc4ec40	float	s_selectionAnchorX		console	Holds the x position where the selection drag began	verified	one	console/screen#mouse
+0xc4ec44	float	s_selectionCurrentX		console	Holds the x position of the selection drag now	verified	one	console/screen#mouse
+0xc4ec48	int32_t	s_selectionStart		console	Holds the first character of the selected span	verified	one	console/screen#mouse
+0xc4ec4c	int32_t	s_selectionEnd		console	Holds the end of the selected span	verified	one	console/screen#mouse
+0xc4ec50	float	s_charSpacing		console	Holds the character spacing of the console text	verified	one	console/commands#screen-commands
+0xc4ec54	uint8_t	s_hardwareFlag		console	Holds the flag byte GetHardwareRecord returns, set to 1 at start-up	verified	one	console/display#start-up-record
+0xc4ec58	char[256]	s_windowTitle		console	Holds the window title	verified	one	console/display#restart-and-defaults
+0xc4ee08	char[64]	s_commandWord		console	Holds the first word of the line the parser last split	verified	one	console/commands#parsing-a-line
+0xc4ee48	char[2560]	s_historyRing		console	Holds the 32 history lines of 0x50 bytes	verified	one	console/commands#history
+0xc4f848	uint32_t[10]	s_commandTable		console	Holds the command table object: vtable, list, chain counter, bucket vector and mask	verified	one	console/commands#command-records
+0xc518a0	uint32_t	s_historyHead		console	Holds the index of the next history slot to write	verified	one	console/commands#history
+0xc518a4	void *	s_fallbackHandler		console	Holds the handler for unknown commands; nothing sets it	verified	one	console/screen#writing-and-executing
+0xc518c8	uint32_t[5]	s_videoHardwareStore		unassigned	Holds the VideoHardware table: the rows, their count, the id index, the largest id and the loaded flag	verified	one	console/hardware#hardware-table
+0xc518e0	uint32_t[98]	s_hardwareFormats		unassigned	Holds the seven default device format records, 0x38 bytes each	verified	one	console/hardware#default-formats
 0xc521e8	void *	s_pathAliasTable		storm	Holds the hash table of path aliases a name is checked against when the open flags ask for it	inferred	none	storm/mount#loose-files
 0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
 0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	one	storm/mount#loose-files

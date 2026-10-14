@@ -14,6 +14,7 @@ CGPlayer_C	11340	0x80af78	objectlayer	Holds a player other than the active one, 
 CGTooltip	1120	0x808f60	ui	Holds a GameTooltip: the frame, its owner and anchor, its lines and the fields a rebuild needs	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGUnit_C	5120	0x80c4f8	objectlayer	Holds a unit: the object, the unit members with their field pointers, the unit fields and watch copy	verified	one	objectlayer/classes#class-sizes-and-pools
 CGxFont	592		font	Holds a font: its face, glyph and kerning caches, atlas pages and metrics	verified	one	font/api#font-object
+CGxMonitorMode	16		console	Names a device display mode: width, height, format word and refresh rate	verified	one	console/display#format-validation
 CGxString	196		font	Holds a string: text, size, box, justification, colours and layout	verified	one	font/string#string-object
 CGxStringBatch	52		font	Holds the strings of one flush, grouped by font	verified	one	font/api#batches
 CHARCODEDESC	112		font	Holds a cached glyph: its atlas cell, metrics and UV rectangle	verified	one	font/glyphs#finding-or-making-a-glyph
@@ -26,6 +27,8 @@ CMapObjGroup	368		models	Holds a map object group: its header fields, chunk poin
 CMirrorHandler	48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
 CMissile	144		objectlayer	Holds a spell missile: model, GUIDs, spell, speed, position, destination, flags, sound, outcome arrays and list link	verified	one	objectlayer/missiles#the-missile-object
 CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
+CONSOLECOMMAND	36		console	Names the console command record: hash, links, name, handler, help and category	verified	one	console/commands#command-records
+CONSOLELINE	36		console	Names the console line record: links, text, length, capacity, cursor, floor, class and string	verified	one	console/screen#line-records
 CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
 CParticleEmitter2	656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter
 CPlayerMoveEvent	80		collision	Holds one queued movement event: list link, time, tag, pose, status snapshot, payload and flags	verified	one	collision/events#event-node

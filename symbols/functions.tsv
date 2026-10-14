@@ -22545,180 +22545,180 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6384b0	19	InitCombatLogXpSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6384d0	5	InitCombatLogXpSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6384e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6384e0	19	InitCombatLogXpSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x638500	5	InitConsoleCopy1Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638510, a static initializer	verified	one	objectlayer/overview#object-files	
-0x638510	11	InitConsoleCopy1		console	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/overview#object-files	
-0x638520	5			console			Runs its object file code not read here	inferred	none		
-0x638530	15			console			Runs its object file code not read here	inferred	none		
-0x638540	5			console			Runs its object file code not read here	inferred	none		
-0x638550	19			console			Runs its object file code not read here	inferred	none		
-0x638570	5			console			Runs its object file code not read here	inferred	none		
-0x638580	19			console			Runs its object file code not read here	inferred	none		
-0x6385a0	5			console			Runs its object file code not read here	inferred	none		
-0x6385b0	19			console			Runs its object file code not read here	inferred	none		
-0x6385d0	5			console			Runs its object file code not read here	inferred	none		
-0x6385e0	19			console			Runs its object file code not read here	inferred	none		
-0x638600	5			console			Runs its object file code not read here	inferred	none		
-0x638610	19			console			Runs its object file code not read here	inferred	none		
-0x638630	5			console			Runs its object file code not read here	inferred	none		
-0x638640	19			console			Runs its object file code not read here	inferred	none		
-0x638660	5			console			Runs its object file code not read here	inferred	none		
-0x638670	19			console			Runs its object file code not read here	inferred	none		
-0x638690	5			console			Runs its object file code not read here	inferred	none		
-0x6386a0	19			console			Runs its object file code not read here	inferred	none		
-0x6386c0	5			console			Runs its object file code not read here	inferred	none		
-0x6386d0	19			console			Runs its object file code not read here	inferred	none		
-0x6386f0	5			console			Runs its object file code not read here	inferred	none		
-0x638700	19			console			Runs its object file code not read here	inferred	none		
-0x638720	5			console			Runs its object file code not read here	inferred	none		
-0x638730	19			console			Runs its object file code not read here	inferred	none		
-0x638750	5			console			Runs its object file code not read here	inferred	none		
-0x638760	19			console			Runs its object file code not read here	inferred	none		
-0x638780	5			console			Runs its object file code not read here	inferred	none		
-0x638790	19			console			Runs its object file code not read here	inferred	none		
-0x6387b0	5			console			Runs its object file code not read here	inferred	none		
-0x6387c0	19			console			Runs its object file code not read here	inferred	none		
-0x6387e0	5			console			Runs its object file code not read here	inferred	none		
-0x6387f0	11			console			Runs its object file code not read here	inferred	none		
-0x638800	5			console			Runs its object file code not read here	inferred	none		
-0x638810	19			console			Runs its object file code not read here	inferred	none		
-0x638830	5			console			Runs its object file code not read here	inferred	none		
-0x638840	19			console			Runs its object file code not read here	inferred	none		
-0x638860	5			console			Runs its object file code not read here	inferred	none		
-0x638870	19			console			Runs its object file code not read here	inferred	none		
-0x638890	5			console			Runs its object file code not read here	inferred	none		
-0x6388a0	19			console			Runs its object file code not read here	inferred	none		
-0x6388c0	5			console			Runs its object file code not read here	inferred	none		
-0x6388d0	19			console			Runs its object file code not read here	inferred	none		
-0x6388f0	5			console			Runs its object file code not read here	inferred	none		
-0x638900	19			console			Runs its object file code not read here	inferred	none		
-0x638920	10			console			Runs its object file code that calls 0x638930; not read here	inferred	none		
-0x638930	10			console			Runs its object file code not read here	inferred	none		
-0x638940	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638950	10			console			Runs its object file code not read here	inferred	none		
-0x638960	10			console			Runs its object file code that calls 0x638970; not read here	inferred	none		
-0x638970	34			console			Runs its object file code not read here	inferred	none		
-0x6389a0	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6389b0	145			console			Runs its object file code not read here	inferred	none		
-0x638a50	10			console			Runs its object file code that calls 0x638a60; not read here	inferred	none		
-0x638a60	74			console			Runs its object file code not read here	inferred	none		
-0x638ab0	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638ac0	1			console			Runs its object file code not read here	inferred	none		
-0x638ad0	5			console			Runs its object file code not read here	inferred	none		
-0x638ae0	19			console			Runs its object file code not read here	inferred	none		
-0x638b00	10			console			Runs its object file code that calls 0x638b10; not read here	inferred	none		
-0x638b10	58			console			Runs its object file code that calls 0x589900; not read here	inferred	none		
-0x638b50	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638b60	1			console			Runs its object file code not read here	inferred	none		
-0x638b70	10			console			Runs its object file code that calls 0x638b80; not read here	inferred	none		
-0x638b80	58			console			Runs its object file code that calls 0x589900; not read here	inferred	none		
-0x638bc0	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638bd0	1			console			Runs its object file code not read here	inferred	none		
-0x638be0	10			console			Runs its object file code that calls 0x638bf0; not read here	inferred	none		
-0x638bf0	10			console			Runs its object file code not read here	inferred	none		
-0x638c00	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638c10	1			console			Runs its object file code not read here	inferred	none		
-0x638c20	10			console			Runs its object file code that calls 0x638c30; not read here	inferred	none		
-0x638c30	10			console			Runs its object file code not read here	inferred	none		
-0x638c40	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638c50	1			console			Runs its object file code not read here	inferred	none		
-0x638c60	10			console			Runs its object file code that calls 0x638c70; not read here	inferred	none		
-0x638c70	23			console			Runs its object file code not read here	inferred	none		
-0x638c90	12			console			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x638ca0	25			console			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x638cc0	73			console			Runs its object file code that calls 0x4100f0; not read here	inferred	none		
-0x638d10	138			console			Runs its object file code that calls GxuFontDestroyString, TextBlockGetFontPtr, GxuFontCreateString; not read here	inferred	none		
-0x638da0	52			console			Runs its object file code that calls 0x4100f0; not read here	inferred	none		
-0x638de0	13			console			Runs its object file code not read here	inferred	none		
-0x638df0	13			console			Runs its object file code not read here	inferred	none		
-0x638e00	63			console			Runs its object file code that calls ConsoleCommandHistoryDepth, ConsoleCommandHistory and 1 more; not read here	inferred	none		
-0x638e40	73	MakeCommandCurrent	idb	console			Runs its object file code that calls SStrLen, ReserveInputSpace, SStrCopy; not read here	inferred	none		
-0x638e90	88	ReserveInputSpace	idb	console			Runs ConsoleClient.cpp code that calls SMemAlloc, SStrCopy, SMemFree; not read here	inferred	none		
-0x638ef0	68			console			Runs ConsoleClient.cpp code that calls ConsoleCommandHistory, MakeCommandCurrent; not read here	inferred	none		
-0x638f40	138			console			Runs ConsoleClient.cpp code that calls SMemFree, GxuFontDestroyString, 0x63cfb0 and 1 more; not read here	inferred	none		
-0x638fd0	18	ConsoleCommand_Proportional	idb	console			Runs ConsoleClient.cpp code that calls RegenerateFontStrings; not read here	inferred	none		
-0x638ff0	41	RegenerateFontStrings	idb	console			Runs ConsoleClient.cpp code that calls GenerateNodeString; not read here	inferred	none		
-0x639020	145	GenerateNodeString	idb	console			Runs ConsoleClient.cpp code that calls TextBlockGetFontPtr, GxuFontDestroyString, GxuFontCreateString; not read here	inferred	none		
-0x6390c0	53	ConsoleCommand::CharSpacing	idb	console			Runs ConsoleClient.cpp code that calls SStrToFloat, RegenerateFontStrings; not read here	inferred	none		
-0x639100	307	ConsoleCommand_DefaultSettings	idb	console			Runs ConsoleClient.cpp code that calls NTempest::CImVector::Set, SStrCopy, HandleClose and 3 more; not read here	inferred	none		console::font_metrics_reset_difftest
-0x639240	13			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x639250	170			console			Runs ConsoleClient.cpp code that calls SStrLen, __alloca_probe, SStrCopy and 2 more; not read here	inferred	none		
-0x639300	161	ConsoleCommand_CurrentSettings	idb	console			Runs ConsoleClient.cpp code that calls SStrPrintf, ConsoleWrite; not read here	inferred	none		
-0x6393b0	490			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 3 more; not read here	inferred	none		
-0x6395a0	22			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x6395c0	150	ConsoleCommandConsoleLines		console			Implements the console command consolelines: the console's height in lines	inferred	none		console::line_spacing_set_difftest
-0x639660	150	ConsoleCommand_FontSize	idb	console			Runs ConsoleClient.cpp code that calls SStrToFloat, HandleClose, NDCToDDCHeight and 2 more; not read here	inferred	none		console::font_size_set_difftest
-0x639700	196	ConsoleCommand_Font	idb	console			Runs ConsoleClient.cpp code that calls SStrPack, NDCToDDCHeight, TextBlockGenerateFont and 3 more; not read here	inferred	none		
-0x6397d0	192			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 1 more; not read here	inferred	none		
-0x639890	192			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 1 more; not read here	inferred	none		
-0x639950	167			console			Runs ConsoleClient.cpp code that calls SStrTokenize, _atoi; not read here	inferred	none		
-0x639a00	24			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x639a20	61			console			Runs ConsoleClient.cpp code that calls 0x641820, 0x639c40, 0x639f60; not read here	inferred	none		
-0x639a60	276			console			Runs ConsoleClient.cpp code that calls 0x639b80, 0x639bc0, 0x639c00; not read here	inferred	none		
-0x639b80	63			console			Runs ConsoleClient.cpp code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
-0x639bc0	53			console			Runs ConsoleClient.cpp code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
-0x639c00	62			console			Runs ConsoleClient.cpp code that calls SStrPrintf, CVar::Set; not read here	inferred	none		
-0x639c40	627			console			Runs ConsoleClient.cpp code that calls CVar::Set, SStrPrintf, 0x639ec0; not read here	inferred	none		
-0x639ec0	154			console			Runs ConsoleClient.cpp code that calls CVar::Update; not read here	inferred	none		
-0x639f60	251			console			Runs ConsoleClient.cpp code that calls 0x4913a0, 0x63a060, 0x589be0 and 6 more; not read here	inferred	none		
-0x63a060	448			console			Runs ConsoleClient.cpp code that calls _atexit, 0x58b600; not read here	inferred	none		
-0x63a220	1			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63a230	1260			console			Runs ConsoleClient.cpp code that calls 0x58b5e0, CVar::Register, 0x641260 and 29 more; not read here	inferred	none		
-0x63a720	725			console			Runs ConsoleClient.cpp code that calls CVar::Register, SStrPrintf; not read here	inferred	none		
-0x63aa00	936			console			Runs ConsoleClient.cpp code that calls _sscanf, 0x5899c0, 0x496d70 and 5 more; not read here	inferred	none		console::resolution_validate_difftest
-0x63adb0	139			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63ae40	139			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63aed0	263			console			Runs ConsoleClient.cpp code that calls 0x64ac60, SStrPrintf, ConsoleWrite; not read here	inferred	none		
-0x63afe0	71			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b030	293			console			Runs ConsoleClient.cpp code that calls SStrCmpI, ConsoleWrite; not read here	inferred	none		
-0x63b160	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b190	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b1c0	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b1f0	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b220	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b250	57			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b290	122			console			Runs ConsoleClient.cpp code that calls SStrToFloat, ConsoleWrite; not read here	inferred	none		
-0x63b310	41			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x63b340	17			console			Runs ConsoleClient.cpp code that calls 0x639950; not read here	inferred	none		
-0x63b360	20			console			Runs ConsoleClient.cpp code that calls ConsoleCommandRegister; not read here	inferred	none		
-0x63b380	74			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63b3d0	99			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63b440	26			console			Runs ConsoleClient.cpp code that calls 0x589ba0; not read here	inferred	none		
-0x63b460	352	ConsoleScreenInitialize	idb	console			Initializes the console screen and installs the confirm-close callback 0x63c9a0	inferred	none	core/input#close-and-quit	console::console_scale_init_difftest
-0x63b5c0	41			console			Runs ConsoleClient.cpp code that calls 0x63b5f0, 0x63b710; not read here	inferred	none		
-0x63b5f0	287			console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 4 more; not read here	inferred	none		
-0x63b710	230			console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x58a2a0 and 3 more; not read here	inferred	none		
-0x63b800	390	PaintText	idb	console			Runs ConsoleClient.cpp code that calls GetInputLine, 0x5c1f00, 0x5c2770 and 5 more; not read here	inferred	none		console::paint_text_layout_difftest
-0x63b990	270	DrawCaret	idb	console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 4 more; not read here	inferred	none		console::draw_caret_difftest
-0x63baa0	296	GetInputLine	idb	console			Runs ConsoleClient.cpp code that calls SMemAlloc, SStrCopy, 0x638d10 and 2 more; not read here	inferred	none		
-0x63bbd0	187	EnforceMaxLines	idb	console			Runs ConsoleClient.cpp code that calls SMemFree, GxuFontDestroyString, 0x63cfb0 and 1 more; not read here	inferred	none		
-0x63bc90	177			console			Runs ConsoleClient.cpp code that calls EventRegisterEx; not read here	inferred	none		
-0x63bd50	317			console			Runs ConsoleClient.cpp code that calls ConsoleCommandExecute, ScrnLayerSetRect; not read here	inferred	none		console::slide_animate_difftest
-0x63be90	79	OnChar	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, PasteInInputLine, ResetHighlight; not read here	inferred	none		
-0x63bee0	397	PasteInInputLine	idb	console			Runs ConsoleClient.cpp code that calls SStrLen, GetInputLine, ReserveInputSpace and 6 more; not read here	inferred	none		
-0x63c070	51	ResetHighlight	idb	console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63c0b0	368	OnMouseDown	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, ResetHighlight, GetLineAtMousePosition and 3 more; not read here	inferred	none		console::mouse_down_drag_difftest
-0x63c220	99	GetLineAtMousePosition	idb	console			Runs ConsoleClient.cpp code that calls __ftol; not read here	inferred	none		console::line_at_mouse_difftest
-0x63c290	299	UpdateHighlight	idb	console			Runs ConsoleClient.cpp code that calls TextBlockGetFontPtr, SStrLen, GxuFontGetMaxCharsWithinWidth; not read here	inferred	none		
-0x63c3c0	50	OnMouseUp	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown; not read here	inferred	none		
-0x63c400	128	OnMouseMove	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, UpdateHighlight; not read here	inferred	none		console::mouse_move_drag_difftest
-0x63c480	788	OnKeyDown	idb	console			Runs ConsoleClient.cpp code that calls ResetHighlight, EventIsKeyDown, GetInputLine and 17 more; not read here	inferred	none		
-0x63c7c0	149	MoveLinePtr	idb	console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63c860	213	OnKeyDownRepeat	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, GetInputLine, MoveLinePtr and 7 more; not read here	inferred	none		
-0x63c970	36	OnKeyUp	idb	console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63c9a0	8	ConfirmCloseCallback		console			Closes the current context through 0x63cdf0 and returns 0	verified	one	core/input#close-and-quit	
-0x63c9b0	203	ConsoleScreenShutdown		console			Shuts the console screen down and removes the confirm-close callback	inferred	none	core/input#close-and-quit	
-0x63ca80	120			console			Runs ConsoleClient.cpp code that calls EventUnregister; not read here	inferred	none		
-0x63cb00	7			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63cb10	49			console			Runs ConsoleClient.cpp code that calls SStrCopy, 0x589c90; not read here	inferred	none		
-0x63cb50	422	ConsoleWrite	idb	console			Writes a line to the console	inferred	none	spell/cast#item-use-fields	
-0x63cd00	74	ConsoleWriteA	idb	console			Writes a formatted line to the console	inferred	none	spell/cooldowns#spell-id-by-name	
-0x63cd50	73	ConsolePrintf		console		void __cdecl (const char *format, ...)	Formats a message into 1024 bytes and writes it to the console when the console exists	inferred	none	collision/mover#local-player-step	
-0x63cda0	66			console	unreached		Runs its object file code that calls SStrVPrintf, ConsoleWrite; not read here	inferred	none		
-0x63cdf0	12	CloseCurrentContext		console			Closes the current context: 0x41f6e0, then a jump to 0x41f9b0	verified	one	core/input#close-and-quit	
-0x63ce00	329	ConsoleCommandExecute	idb	unassigned			Runs its object file code that calls AddLineToExecFile, ConsoleCommandHistory, SStrCmp and 6 more; not read here	inferred	none		
-0x63cf50	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x63cf60	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x63cf70	6			unassigned			Runs its object file code not read here	inferred	none		
+0x638500	5	InitConInfinityThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638510, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638510	11	InitConInfinity		console	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	console/overview#shared-header-constants	
+0x638520	5	InitConTwoPiThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638530, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638530	15	InitConTwoPi		console	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	console/overview#shared-header-constants	
+0x638540	5	InitConInvTwoPiThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638550, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638550	19	InitConInvTwoPi		console	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	console/overview#shared-header-constants	
+0x638570	5	InitConSquare10Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638580, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638580	19	InitConSquare10		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6385a0	5	InitConSquare11p111111Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6385b0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6385b0	19	InitConSquare11p111111		console	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6385d0	5	InitConSquare5p5555553Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6385e0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6385e0	19	InitConSquare5p5555553		console	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638600	5	InitConSquare10BThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638610, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638610	19	InitConSquare10B		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638630	5	InitConSquare5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638640, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638640	19	InitConSquare5		console	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638660	5	InitConSquare10CThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638670, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638670	19	InitConSquare10C		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638690	5	InitConSquare30Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6386a0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6386a0	19	InitConSquare30		console	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6386c0	5	InitConSquare120Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6386d0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6386d0	19	InitConSquare120		console	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6386f0	5	InitConSquare20Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638700, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638700	19	InitConSquare20		console	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638720	5	InitConSquare10DThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638730, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638730	19	InitConSquare10D		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638750	5	InitConSquare0p5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638760, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638760	19	InitConSquare0p5		console	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638780	5	InitConSquare3Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638790, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638790	19	InitConSquare3		console	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6387b0	5	InitConSquare100Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6387c0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6387c0	19	InitConSquare100		console	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6387e0	5	InitConFiveThunk		console	orchestration	void __cdecl (void)	Jumps to 0x6387f0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6387f0	11	InitConFive		console	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638800	5	InitConSquare50Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638810, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638810	19	InitConSquare50		console	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638830	5	InitConSquare100BThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638840, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638840	19	InitConSquare100B		console	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638860	5	InitConSquare40Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638870, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638870	19	InitConSquare40		console	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638890	5	InitConSquare1p5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x6388a0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6388a0	19	InitConSquare1p5		console	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6388c0	5	InitConSquare10EThunk		console	orchestration	void __cdecl (void)	Jumps to 0x6388d0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x6388d0	19	InitConSquare10E		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x6388f0	5	InitConHalfOver10Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x638900, a static initializer	verified	one	console/overview#shared-header-constants	
+0x638900	19	InitConHalfOver10		console	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x638920	10	InitConLock		console	orchestration	void __cdecl (void)	Runs 0x638930 and registers the destructor 0x638950	verified	one	console/overview#static-objects	
+0x638930	10	InitConLockBody		console	orchestration	void __cdecl (void)	Constructs the console lock at 0xc4e64c through SCritSect::SCritSect	verified	one	console/overview#static-objects	
+0x638940	12	InitConLockAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638950 with _atexit	verified	one	console/overview#static-objects	
+0x638950	10	InitConLockDtor		console	orchestration	void __cdecl (void)	Destroys the console lock through SCritSect::~SCritSect	verified	one	console/overview#static-objects	
+0x638960	10	InitConLineList		console	orchestration	void __cdecl (void)	Runs 0x638970 and registers the destructor 0x6389b0	verified	one	console/overview#static-objects	
+0x638970	34	InitConLineListBody		console	orchestration	void __cdecl (void)	Empties the line list: link offset 0, sentinel linked to itself, head the sentinel with bit 0 set	verified	one	console/overview#static-objects	
+0x6389a0	12	InitConLineListAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x6389b0 with _atexit	verified	one	console/overview#static-objects	
+0x6389b0	145	InitConLineListDtor		console	orchestration	void __cdecl (void)	Unlinks and clears every line link of the list	verified	one	console/overview#static-objects	
+0x638a50	10	InitConColours		console	orchestration	void __cdecl (void)	Runs 0x638a60 and registers the destructor 0x638ac0	verified	one	console/overview#static-objects	
+0x638a60	74	InitConColoursBody		console	orchestration	void __cdecl (void)	Stores the nine console colours in the table at 0xc4ead8	verified	one	console/overview#static-objects	
+0x638ab0	12	InitConColoursAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638ac0 with _atexit	verified	one	console/overview#static-objects	
+0x638ac0	1	InitConColoursDtor		console	orchestration	void __cdecl (void)	Returns at once	verified	one	console/overview#static-objects	
+0x638ad0	5	InitConPanelHeightThunk		console	orchestration	void __cdecl (void)	Jumps to 0x638ae0, a static initializer	verified	one	console/overview#static-objects	
+0x638ae0	19	InitConPanelHeight		console	primitive	void __cdecl (void)	Stores the line count times the font size as the panel height	verified	one	console/overview#static-objects	
+0x638b00	10	InitConFormat640		console	orchestration	void __cdecl (void)	Runs 0x638b10 and registers the destructor 0x638b60	verified	one	console/overview#static-objects	
+0x638b10	58	InitConFormat640Body		console	orchestration	void __cdecl (void)	Fills the 640 x 480 fixed device-format record through 0x589900	verified	one	console/overview#static-objects	
+0x638b50	12	InitConFormat640AtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638b60 with _atexit	verified	one	console/overview#static-objects	
+0x638b60	1	InitConFormat640Dtor		console	orchestration	void __cdecl (void)	Returns at once	verified	one	console/overview#static-objects	
+0x638b70	10	InitConFormat800		console	orchestration	void __cdecl (void)	Runs 0x638b80 and registers the destructor 0x638bd0	verified	one	console/overview#static-objects	
+0x638b80	58	InitConFormat800Body		console	orchestration	void __cdecl (void)	Fills the 800 x 600 fixed device-format record through 0x589900	verified	one	console/overview#static-objects	
+0x638bc0	12	InitConFormat800AtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638bd0 with _atexit	verified	one	console/overview#static-objects	
+0x638bd0	1	InitConFormat800Dtor		console	orchestration	void __cdecl (void)	Returns at once	verified	one	console/overview#static-objects	
+0x638be0	10	InitConWorkingFormat		console	orchestration	void __cdecl (void)	Runs 0x638bf0 and registers the destructor 0x638c10	verified	one	console/overview#static-objects	
+0x638bf0	10	InitConWorkingFormatBody		console	orchestration	void __cdecl (void)	Constructs the working device-format record through 0x5898d0	verified	one	console/overview#static-objects	
+0x638c00	12	InitConWorkingFormatAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638c10 with _atexit	verified	one	console/overview#static-objects	
+0x638c10	1	InitConWorkingFormatDtor		console	orchestration	void __cdecl (void)	Returns at once	verified	one	console/overview#static-objects	
+0x638c20	10	InitConLastGoodFormat		console	orchestration	void __cdecl (void)	Runs 0x638c30 and registers the destructor 0x638c50	verified	one	console/overview#static-objects	
+0x638c30	10	InitConLastGoodFormatBody		console	orchestration	void __cdecl (void)	Constructs the last-good device-format record through 0x5898d0	verified	one	console/overview#static-objects	
+0x638c40	12	InitConLastGoodFormatAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638c50 with _atexit	verified	one	console/overview#static-objects	
+0x638c50	1	InitConLastGoodFormatDtor		console	orchestration	void __cdecl (void)	Returns at once	verified	one	console/overview#static-objects	
+0x638c60	10	InitConModeList		console	orchestration	void __cdecl (void)	Runs 0x638c70 and registers the destructor 0x638ca0	verified	one	console/overview#static-objects	
+0x638c70	23	InitConModeListBody		console	orchestration	void __cdecl (void)	Clears the four words of the device-mode list	verified	one	console/overview#static-objects	
+0x638c90	12	InitConModeListAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x638ca0 with _atexit	verified	one	console/overview#static-objects	
+0x638ca0	25	InitConModeListDtor		console	orchestration	void __cdecl (void)	Frees the mode list buffer when it exists	verified	one	console/overview#static-objects	
+0x638cc0	73	InputBackspace		console	primitive	void __fastcall (CONSOLELINE *line)	Removes the byte before the cursor above the floor and rebuilds the string	verified	one	console/screen#input-line	
+0x638d10	138	RebuildInputString		console	orchestration	void __fastcall (const char *text)	Frees the input string and makes a new one from the text with the console font	verified	one	console/screen#input-line	
+0x638da0	52	InputDelete		console	primitive	void __fastcall (CONSOLELINE *line)	Removes the byte at the cursor, or only lowers the length at the end of the text, and rebuilds the string	verified	one	console/screen#input-line	
+0x638de0	13	InputCursorLeft		console	primitive	void __fastcall (CONSOLELINE *line)	Moves the cursor left down to the floor	verified	one	console/screen#input-line	
+0x638df0	13	InputCursorRight		console	primitive	void __fastcall (CONSOLELINE *line)	Moves the cursor right up to the length	verified	one	console/screen#input-line	
+0x638e00	63	InputHistoryOlder		console	primitive	void __fastcall (CONSOLELINE *line)	Loads the next older history entry into the input line, stopping at the 32nd	verified	one	console/screen#input-line	
+0x638e40	73	MakeCommandCurrent	idb	console	primitive	void __fastcall (CONSOLELINE *line, const char *text)	Replaces the text after the floor with the given text and puts the cursor at its end	verified	one	console/screen#input-line	
+0x638e90	88	ReserveInputSpace	idb	console	primitive	void __fastcall (CONSOLELINE *line, uint32_t extra)	Grows the text buffer in steps of 0x10 until extra more bytes fit	verified	one	console/screen#input-line	
+0x638ef0	68	InputHistoryNewer		console	primitive	void __fastcall (CONSOLELINE *line)	Loads the next newer history entry, or the empty line at index -1	verified	one	console/screen#input-line	
+0x638f40	138	ConsoleCommandClear		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Frees every console line, the input line included	verified	one	console/screen#line-records	
+0x638fd0	18	ConsoleCommand_Proportional	idb	console	primitive	uint32_t __fastcall (const char *name, const char *args)	Toggles the proportional style bit and rebuilds every line string	verified	one	console/commands#screen-commands	
+0x638ff0	41	RegenerateFontStrings	idb	console	orchestration	void __cdecl (void)	Rebuilds the string of every console line	verified	one	console/screen#line-records	
+0x639020	145	GenerateNodeString	idb	console	orchestration	void __fastcall (CONSOLELINE *line)	Makes a line's string from its text, the font size, the style bits, the spacing and its class colour	verified	one	console/screen#line-records	
+0x6390c0	53	ConsoleCommand::CharSpacing	idb	console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Stores the character spacing, 0 for no argument, and rebuilds every line string	verified	one	console/commands#screen-commands	
+0x639100	307	ConsoleCommand_DefaultSettings	idb	console	primitive	uint32_t __fastcall (const char *name, const char *args)	Restores the colours, the font size 0.02, the font ARIALN.ttf and 10 lines	verified	one	console/commands#screen-commands	console::font_metrics_reset_difftest
+0x639240	13	ConsoleCommandCloseConsole		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Clears the open flag and returns 0	verified	one	console/screen#console-key	
+0x639250	170	ConsoleCommandRepeat		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Stores the repeat count and the command text the slide runs once a frame	verified	one	console/screen#slide	
+0x639300	161	ConsoleCommand_CurrentSettings	idb	console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Writes the font size, the font file and the line count	verified	one	console/commands#screen-commands	
+0x6393b0	490	ConsoleCommandFontColor		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the colour of a named class from three 0 to 255 channels and recolours its lines	verified	one	console/screen#colour-classes	
+0x6395a0	22	SetColourClass		console	orchestration	void __fastcall (uint32_t class, uint32_t colour)	Stores a colour in the table when the class is below 9	verified	one	console/screen#colour-classes	
+0x6395c0	150	ConsoleCommandConsoleLines		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the line count and the panel height from a number, ignoring 0	verified	one	console/commands#screen-commands	console::line_spacing_set_difftest
+0x639660	150	ConsoleCommand_FontSize	idb	console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the font size to the number times 0.001 within 0.01 to 0.05, recreating the font and the height	verified	one	console/commands#screen-commands	console::font_size_set_difftest
+0x639700	196	ConsoleCommand_Font	idb	console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Loads the font Fonts\<name>.ttf and replaces the console font only when it loads	verified	one	console/commands#screen-commands	
+0x6397d0	192	ConsoleCommandBgColor		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the background colour, class 8, from alpha and three channels	verified	one	console/screen#colour-classes	
+0x639890	192	ConsoleCommandHighlightColor		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the selection highlight colour, class 7, from alpha and three channels	verified	one	console/screen#colour-classes	
+0x639950	167	ParseGxOverrides		console	orchestration	void __fastcall (const char *text)	Reads index,value pairs and flags each slot below 9 with its value for the device	verified	one	console/display#override-string	
+0x639a00	24	GetHardwareRecord		console	orchestration	uint8_t __fastcall (void *out)	Copies the matched hardware row record to the caller and returns the byte at 0xc4ec54	verified	one	console/display#start-up-record	
+0x639a20	61	RestoreVideoDefaults		console	orchestration	void __cdecl (void)	Sets the working record to the hardware row's default format, restarts the device and sets the quality CVars	verified	one	console/display#restart-and-defaults	
+0x639a60	276	ApplyHardwareQuality		console	orchestration	void __cdecl (void)	Sets the 16 video option CVars from the hardware quality values	verified	one	console/display#restart-and-defaults	
+0x639b80	63	SetCVarFloat		console	orchestration	void __thiscall (CVar *cvar, float value)	Formats a float and sets the CVar to it with apply and force	verified	one	console/display#restart-and-defaults	
+0x639bc0	53	SetCVarInt		console	orchestration	void __fastcall (CVar *cvar, int32_t value)	Formats an integer and sets the CVar to it with apply and force	verified	one	console/display#restart-and-defaults	
+0x639c00	62	SetCVarFlag		console	orchestration	void __fastcall (CVar *cvar, uint8_t on)	Sets the CVar to 1 or 0 with apply and force	verified	one	console/display#restart-and-defaults	
+0x639c40	627	WriteFormatToCVars		console	primitive	void __fastcall (const uint32_t *format)	Writes twelve fields of a device-format record into their gx CVars as text	verified	one	console/display#restart-and-defaults	
+0x639ec0	154	CommitDisplayCVars		console	orchestration	void __cdecl (void)	Applies the latched value of each of the 14 display CVars	verified	one	console/display#restart-and-defaults	
+0x639f60	251	ConsoleCommandGxRestart		console	orchestration	uint32_t __cdecl (void)	Validates the working format, switches the device to it with fallbacks, and sets the window title	verified	one	console/display#restart-and-defaults	
+0x63a060	448	ValidateDeviceFormat		console	primitive	void __fastcall (uint32_t *format)	Makes a format's size and refresh rate agree with the device's modes	verified	one	console/display#format-validation	
+0x63a220	1	StockSizesExitCallback		console	orchestration	void __cdecl (void)	Returns at once; the exit callback of the stock size list	verified	one	console/display#format-validation	
+0x63a230	1260	ConsoleDeviceInitialize		console	orchestration	void __fastcall (const char *title, uint32_t, uint32_t)	Registers the display CVars, builds the device format, creates the device and registers the video options	verified	one	console/display#start-up-record	
+0x63a720	725	RegisterDisplayCVars		console	orchestration	void __cdecl (void)	Registers the widescreen CVar and the 15 gx CVars with their callbacks	verified	one	console/display#display-cvars	
+0x63aa00	936	GxResolutionCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts a width x height text found in the permitted list and stores the size in the working format	verified	one	console/display#resolution	console::resolution_validate_difftest
+0x63adb0	139	GxColorBitsCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts 16, 24 or 30 colour bits and stores the colour index	verified	one	console/display#display-callbacks	
+0x63ae40	139	GxDepthBitsCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts 16, 24 or 32 depth bits and stores the depth index	verified	one	console/display#display-callbacks	
+0x63aed0	263	GxRefreshCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts a refresh rate from the list of 11 and stores it	verified	one	console/display#display-callbacks	
+0x63afe0	71	GxTripleBufferCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts 0 or 1 and stores the buffer count 1 or 2	verified	one	console/display#display-callbacks	
+0x63b030	293	GxApiCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Accepts OpenGL or Direct3D without storing anything	verified	one	console/display#display-callbacks	
+0x63b160	41	GxVSyncCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the vertical sync byte	verified	one	console/display#display-callbacks	
+0x63b190	41	GxWindowCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the windowed byte	verified	one	console/display#display-callbacks	
+0x63b1c0	41	GxAspectCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the constrain-aspect byte	verified	one	console/display#display-callbacks	
+0x63b1f0	41	GxMaximizeCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the maximise byte	verified	one	console/display#display-callbacks	
+0x63b220	41	GxCursorCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the hardware cursor byte	verified	one	console/display#display-callbacks	
+0x63b250	57	GxMultisampleCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores the multisample count clamped to 1 through 16	verified	one	console/display#display-callbacks	
+0x63b290	122	GxMultisampleQualityCallback		console	primitive	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores the multisample quality clamped to 0 through 1, a NaN as 1	verified	one	console/display#display-callbacks	
+0x63b310	41	GxFixLagCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Stores whether the number is nonzero as the fix-lag byte	verified	one	console/display#display-callbacks	
+0x63b340	17	GxOverrideCallback		console	orchestration	uint8_t __thiscall (void *cvar, const char *value, void *arg)	Passes the text to the override parser and accepts it	verified	one	console/display#override-string	
+0x63b360	20	RegisterGxRestartCommand		console	orchestration	void __cdecl (void)	Registers the command gxRestart with the handler 0x639f60	verified	one	console/display#start-up-record	
+0x63b380	74	LowerDeviceFormat		console	primitive	uint8_t __fastcall (uint32_t *format)	Lowers the multisample count, else the depth and colour indices, and returns whether it could	verified	one	console/display#device-creation	
+0x63b3d0	99	RaiseDeviceFormatFloor		console	primitive	void __fastcall (uint32_t *format)	Raises a small size, depth index and colour index to 800 x 600, 5 and 1 where the hardware default allows	verified	one	console/display#device-creation	
+0x63b440	26	DestroyConsoleDevice		console	orchestration	void __cdecl (void)	Destroys the device and clears its handle	verified	one	console/display#device-creation	
+0x63b460	352	ConsoleScreenInitialize	idb	console	primitive	void __cdecl (void)	Sets the scale factors, loads the font, creates the two layers, registers the handlers and the 13 commands	verified	one	console/screen#start-up-and-shutdown	console::console_scale_init_difftest
+0x63b5c0	41	PaintPanelBackground		console	orchestration	void __stdcall (void *, void *)	Draws the background quad and, in the selection state, the highlight quad while the panel is open	verified	one	console/screen#paint	
+0x63b5f0	287	DrawPanelQuad		console	primitive	void __cdecl (void)	Draws the panel background quad in the class 8 colour	verified	one	console/screen#paint	
+0x63b710	230	DrawSelectionQuad		console	primitive	void __cdecl (void)	Draws the selection highlight quad in the class 7 colour	verified	one	console/screen#paint	
+0x63b800	390	PaintText	idb	console	primitive	void __stdcall (void *, void *)	Runs the blink clock, places the input string and the caret, and draws the older lines upward	verified	one	console/screen#paint	console::paint_text_layout_difftest
+0x63b990	270	DrawCaret	idb	console	primitive	void __fastcall (const float *pen)	Draws the caret quad at the pen position in the input colour	verified	one	console/screen#paint	console::draw_caret_difftest
+0x63baa0	296	GetInputLine	idb	console	orchestration	CONSOLELINE *__cdecl (void)	Returns the input line, creating a fresh one when the head has no cursor	verified	one	console/screen#line-records	
+0x63bbd0	187	EnforceMaxLines	idb	console	orchestration	void __cdecl (void)	Frees the oldest line when the list holds more than 0x100	verified	one	console/screen#line-records	
+0x63bc90	177	RegisterConsoleHandlers		console	orchestration	void __cdecl (void)	Registers the eight event handlers of the screen at priority 7.0	verified	one	console/screen#keys	
+0x63bd50	317	OnConsoleIdle		console	primitive	uint32_t __fastcall (const void *event)	Moves the panel edge toward its target each frame, runs a pending repeat command and returns 1	verified	one	console/screen#slide	console::slide_animate_difftest
+0x63be90	79	OnChar	idb	console	orchestration	uint32_t __fastcall (const void *event)	Swallows the character of the console key and of every key while the console is open	verified	one	console/screen#console-key	
+0x63bee0	397	PasteInInputLine	idb	console	primitive	void __fastcall (const char *text)	Inserts text at the cursor, splicing head, text and tail, and rebuilds the string	verified	one	console/screen#input-line	
+0x63c070	51	ResetHighlight	idb	console	orchestration	void __cdecl (void)	Clears the selection state and the highlight rectangle	verified	one	console/screen#mouse	
+0x63c0b0	368	OnMouseDown	idb	console	primitive	uint32_t __fastcall (const void *event)	Starts a resize drag in the panel edge band or selects the line under the cursor	verified	one	console/screen#mouse	console::mouse_down_drag_difftest
+0x63c220	99	GetLineAtMousePosition	idb	console	primitive	CONSOLELINE *__stdcall (float y)	Returns the console line at a y position, the input line for the first row	verified	one	console/screen#mouse	console::line_at_mouse_difftest
+0x63c290	299	UpdateHighlight	idb	console	primitive	void __cdecl (void)	Measures the selected character span and the highlight band from the two drag positions	verified	one	console/screen#mouse	
+0x63c3c0	50	OnMouseUp	idb	console	orchestration	uint32_t __fastcall (const void *event)	Fixes the selection and ends a resize drag, then returns 1	verified	one	console/screen#mouse	
+0x63c400	128	OnMouseMove	idb	console	primitive	uint32_t __fastcall (const void *event)	Resizes the panel during a drag or extends the selection, then returns 1	verified	one	console/screen#mouse	console::mouse_move_drag_difftest
+0x63c480	788	OnKeyDown	idb	console	primitive	uint32_t __fastcall (const void *event)	Handles the console key and the editing, history, completion, scroll and copy keys, swallowing them while open	verified	one	console/screen#keys	
+0x63c7c0	149	MoveLinePtr	idb	console	primitive	void __fastcall (uint32_t older, uint32_t modifiers)	Moves the scroll anchor one line, or ten with Shift, toward older lines or newer	verified	one	console/screen#keys	
+0x63c860	213	OnKeyDownRepeat	idb	console	primitive	uint32_t __fastcall (const void *event)	Handles key repeat: flips the console state on its key and repeats the cursor, delete and scroll keys	verified	one	console/screen#keys	
+0x63c970	36	OnKeyUp	idb	console	orchestration	uint32_t __fastcall (const void *event)	Swallows the console key release, and every release while the console is open	verified	one	console/screen#console-key	
+0x63c9a0	8	ConfirmCloseCallback		console	orchestration	uint32_t __cdecl (void)	Closes the current context and returns 0	verified	one	console/screen#start-up-and-shutdown	
+0x63c9b0	203	ConsoleScreenShutdown		console	orchestration	void __cdecl (void)	Removes the callback and handlers, closes the font and layers and frees the lines and the batch	verified	one	console/screen#start-up-and-shutdown	
+0x63ca80	120	UnregisterConsoleHandlers		console	orchestration	void __cdecl (void)	Unregisters the eight event handlers of the screen	verified	one	console/screen#keys	
+0x63cb00	7	ConsoleSetToggleKey		console	orchestration	void __fastcall (uint32_t key)	Replaces the key code that opens and closes the console	verified	one	console/screen#console-key	
+0x63cb10	49	ConsoleSetCaption		console	orchestration	void __fastcall (const char *title)	Stores the window title, empty for null, and sets it on the window	verified	one	console/display#restart-and-defaults	
+0x63cb50	422	ConsoleWrite	idb	console	primitive	void __fastcall (const char *text, uint32_t class)	Adds a line of text in a colour class behind the input line	verified	one	console/screen#writing-and-executing	
+0x63cd00	74	ConsoleWriteA	idb	console	orchestration	void __cdecl (const char *format, uint32_t class, ...)	Formats a message into 1024 bytes and writes it in a colour class	verified	one	console/screen#writing-and-executing	
+0x63cd50	73	ConsolePrintf		console	orchestration	void __cdecl (const char *format, ...)	Formats a message into 1024 bytes and writes it in class 0 when the console exists	verified	one	console/screen#writing-and-executing	
+0x63cda0	66	ConsoleWriteV		console	orchestration	void __fastcall (const char *format, va_list args)	Formats a message with a va_list into 1024 bytes and writes it in class 0	verified	one	console/overview#unreached-code	
+0x63cdf0	12	CloseCurrentContext		console	orchestration	void __cdecl (void)	Closes the current context: 0x41f6e0, then a jump to 0x41f9b0	verified	one	console/commands#built-in-commands	
+0x63ce00	329	ConsoleCommandExecute	idb	console	orchestration	void __fastcall (const char *line, uint32_t history)	Runs a typed line: records it, finds the command and calls its handler	verified	one	console/screen#writing-and-executing	
+0x63cf50	1	EmptyConsoleStubA		console	unreached	void __cdecl (void)	Returns at once	verified	one	console/overview#unreached-code	
+0x63cf60	1	EmptyConsoleStubB		console	unreached	void __cdecl (void)	Returns at once	verified	one	console/overview#unreached-code	
+0x63cf70	6	SetMapCommandStub		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Returns 1; the handler of the command setmap	verified	one	console/commands#built-in-commands	
 0x63cf80	41			unassigned			Runs its object file code not read here	inferred	none		
 0x63cfb0	60			unassigned			Runs its object file code not read here	inferred	none		
 0x63cff0	5			cvar			Runs its object file code not read here	inferred	none		
@@ -22810,82 +22810,82 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63f220	19			unassigned			Runs its object file code not read here	inferred	none		
 0x63f240	5			unassigned			Runs its object file code not read here	inferred	none		
 0x63f250	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f270	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f280	11			unassigned			Runs its object file code not read here	inferred	none		
-0x63f290	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f2a0	15			unassigned			Runs its object file code not read here	inferred	none		
-0x63f2b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f2c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f2e0	10			unassigned			Runs its object file code that calls 0x63f2f0; not read here	inferred	none		
-0x63f2f0	190			unassigned			Runs its object file code not read here	inferred	none		
-0x63f3b0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x63f3c0	359			unassigned			Runs its object file code that calls 0x6406a0, 0x6404a0, 0x6404e0 and 1 more; not read here	inferred	none		
-0x63f530	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f540	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f560	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f570	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f590	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f5a0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f5c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f5d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f5f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f600	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f620	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f630	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f650	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f660	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f680	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f690	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f6b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f6c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f6e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f6f0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f710	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f720	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f740	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f750	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f770	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f780	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f7a0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f7b0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x63f7c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f7d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f7f0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f800	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f820	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f830	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f850	5			unassigned			Runs its object file code not read here	inferred	none		
-0x63f860	19			unassigned			Runs its object file code not read here	inferred	none		
-0x63f880	300	ParseCommand	idb	unassigned			Runs its object file code that calls sgetu8, SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x63f9b0	6	ConsoleCommandHistoryDepth	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x63f9c0	23	ConsoleCommandHistory	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x63f9e0	352	ConsoleCommandRegister	idb	console			Registers a console command with its handler, category and help	verified	one	lighting/celestial#sun-glare-toggle	
-0x63fb40	277			unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
-0x63fc60	326	ConsoleCommandComplete	idb	unassigned			Runs its object file code that calls SStrHashHT, SStrCmpI, 0x6406a0 and 1 more; not read here	inferred	none		
-0x63fdb0	12	ConsoleCommandWriteHelp	idb	unassigned			Runs its object file code not read here	inferred	none		
-0x63fdc0	777			unassigned			Runs its object file code that calls ConsoleWrite, SStrPack, SStrCmpI and 3 more; not read here	inferred	none		
-0x6400d0	7			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x6400e0	80			unassigned			Runs its object file code that calls ConsoleCommandRegister; not read here	inferred	none		
-0x640130	11			unassigned			Runs its object file code that calls CloseCurrentContext; not read here	inferred	none		
-0x640140	18			unassigned			Runs its object file code that calls ConsoleWrite; not read here	inferred	none		
-0x640160	113			unassigned			Runs its object file code that calls 0x6404a0; not read here	inferred	none		
-0x6401e0	117			unassigned			Runs its object file code that calls 0x640670, SMemFree; not read here	inferred	none		
-0x640260	185			unassigned			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
-0x640320	189			unassigned			Runs its object file code that calls 0x6404a0, 0x6404e0, SMemFree; not read here	inferred	none		
-0x6403e0	190			unassigned			Runs its object file code that calls 0x6406a0, 0x6404a0, 0x6405e0 and 1 more; not read here	inferred	none		
-0x6404a0	60			unassigned			Runs its object file code not read here	inferred	none		
-0x6404e0	136			unassigned			Runs its object file code not read here	inferred	none		
-0x640570	108			unassigned			Runs its object file code not read here	inferred	none		
-0x6405e0	135			unassigned			Runs its object file code that calls 0x6406a0, 0x6404a0, SMemFree; not read here	inferred	none		
-0x640670	41			unassigned			Runs its object file code not read here	inferred	none		
-0x6406a0	25			unassigned			Runs its object file code not read here	inferred	none		
-0x6406c0	181			unassigned			Runs its object file code not read here	inferred	none		
-0x640780	483			unassigned			Runs its object file code that calls 0x640970, 0x6409f0, 0x6409a0 and 4 more; not read here	inferred	none		
-0x640970	33			unassigned			Runs its object file code not read here	inferred	none		
-0x6409a0	77			unassigned			Runs its object file code not read here	inferred	none		
-0x6409f0	12			unassigned			Runs its object file code not read here	inferred	none		
-0x640a00	316			unassigned			Runs its object file code that calls 0x640b40, 0x6404a0, 0x640670; not read here	inferred	none		
-0x640b40	264			unassigned			Runs its object file code that calls 0x6409a0, 0x6404a0, SMemReAlloc and 3 more; not read here	inferred	none		
+0x63f270	5	InitRegInfinityThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f280, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f280	11	InitRegInfinity		console	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	console/overview#shared-header-constants	
+0x63f290	5	InitRegTwoPiThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f2a0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f2a0	15	InitRegTwoPi		console	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	console/overview#shared-header-constants	
+0x63f2b0	5	InitRegInvTwoPiThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f2c0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f2c0	19	InitRegInvTwoPi		console	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	console/overview#shared-header-constants	
+0x63f2e0	10	InitRegCommandTable		console	orchestration	void __cdecl (void)	Runs 0x63f2f0 and registers the destructor 0x63f3c0	verified	one	console/overview#static-objects	
+0x63f2f0	190	InitRegCommandTableBody		console	orchestration	void __cdecl (void)	Builds the empty command table: vtable 0x80e268, list offset 0xc, mask -1	verified	one	console/overview#static-objects	
+0x63f3b0	12	InitRegCommandTableAtExit		console	orchestration	void __cdecl (void)	Registers the destructor 0x63f3c0 with _atexit	verified	one	console/overview#static-objects	
+0x63f3c0	359	InitRegCommandTableDtor		console	orchestration	void __cdecl (void)	Unlinks every command from the list and the buckets	verified	one	console/overview#static-objects	
+0x63f530	5	InitRegSquare10Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f540, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f540	19	InitRegSquare10		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f560	5	InitRegSquare11p111111Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f570, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f570	19	InitRegSquare11p111111		console	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f590	5	InitRegSquare5p5555553Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f5a0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f5a0	19	InitRegSquare5p5555553		console	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f5c0	5	InitRegSquare10BThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f5d0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f5d0	19	InitRegSquare10B		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f5f0	5	InitRegSquare5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f600, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f600	19	InitRegSquare5		console	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f620	5	InitRegSquare10CThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f630, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f630	19	InitRegSquare10C		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f650	5	InitRegSquare30Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f660, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f660	19	InitRegSquare30		console	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f680	5	InitRegSquare120Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f690, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f690	19	InitRegSquare120		console	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f6b0	5	InitRegSquare20Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f6c0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f6c0	19	InitRegSquare20		console	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f6e0	5	InitRegSquare10DThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f6f0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f6f0	19	InitRegSquare10D		console	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f710	5	InitRegSquare0p5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f720, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f720	19	InitRegSquare0p5		console	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f740	5	InitRegSquare3Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f750, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f750	19	InitRegSquare3		console	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f770	5	InitRegSquare100Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f780, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f780	19	InitRegSquare100		console	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f7a0	5	InitRegFiveThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f7b0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f7b0	11	InitRegFive		console	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f7c0	5	InitRegSquare50Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f7d0, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f7d0	19	InitRegSquare50		console	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f7f0	5	InitRegSquare100BThunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f800, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f800	19	InitRegSquare100B		console	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f820	5	InitRegSquare40Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f830, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f830	19	InitRegSquare40		console	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f850	5	InitRegSquare1p5Thunk		console	orchestration	void __cdecl (void)	Jumps to 0x63f860, a static initializer	verified	one	console/overview#shared-header-constants	
+0x63f860	19	InitRegSquare1p5		console	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	console/overview#shared-header-constants	
+0x63f880	300	ParseCommand	idb	console	primitive	CONSOLECOMMAND *__fastcall (const char *line, const char **name, const char **rest)	Splits a line into its first word and the rest and returns the command of that name, or 0	verified	one	console/commands#parsing-a-line	
+0x63f9b0	6	GetHistorySize	idb	console	orchestration	uint32_t __cdecl (void)	Returns 0x20, the number of lines the history keeps	verified	one	console/commands#history	
+0x63f9c0	23	GetHistoryEntry	idb	console	primitive	char *__fastcall (uint32_t back)	Returns the address of the history line a number of lines back from the newest	verified	one	console/commands#history	
+0x63f9e0	352	ConsoleCommandRegister	idb	console	primitive	uint32_t __fastcall (const char *name, void *handler, uint32_t category, const char *help)	Adds a command, refusing a name of 64 bytes or more or one already registered	verified	one	console/commands#registering-and-removing	
+0x63fb40	277	ConsoleCommandUnregister		console	orchestration	void __fastcall (const char *name)	Unlinks a command from both lists and frees it	verified	one	console/commands#registering-and-removing	
+0x63fc60	326	ConsoleCommandComplete	idb	console	primitive	uint32_t __fastcall (const char *prefix, const char **state, uint32_t reverse)	Finds the next command whose name begins with the prefix and stores its name in the state	verified	one	console/commands#completion	
+0x63fdb0	12	ConsoleCommandHelpFor	idb	console	orchestration	uint32_t __fastcall (const char *name)	Runs the help command for a command name	verified	one	console/commands#help	
+0x63fdc0	777	ConsoleCommandHelp		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Lists the categories, the commands of a category or the help of a command	verified	one	console/commands#help	
+0x6400d0	7	SetConsoleFallback		console	unreached	void __fastcall (void *handler)	Stores the fallback handler for unknown commands	verified	one	console/overview#unreached-code	
+0x6400e0	80	RegisterBuiltinCommands		console	orchestration	void __cdecl (void)	Registers help, quit, ver and setmap	verified	one	console/commands#built-in-commands	
+0x640130	11	ConsoleCommandQuit		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Closes the current context and returns 1	verified	one	console/commands#built-in-commands	
+0x640140	18	ConsoleCommandVer		console	orchestration	uint32_t __fastcall (const char *name, const char *args)	Writes the client version line and returns 1	verified	one	console/commands#built-in-commands	
+0x640160	113	ConsoleCommandTableShutdown		console	orchestration	void __cdecl (void)	Unlinks every command from the list and frees those still in a bucket	verified	one	console/commands#growth-twins	
+0x6401e0	117	CommandTableFreeNode		console	orchestration	void __thiscall (void *table, CONSOLECOMMAND *node)	Unlinks both links of a command and frees it	verified	one	console/commands#table-twins	
+0x640260	185	CommandTableAllocNode		console	orchestration	CONSOLECOMMAND *__thiscall (void *table, void *bucket, uint32_t extra, uint32_t flags)	Allocates a zeroed command and links it first in the bucket	verified	one	console/commands#table-twins	
+0x640320	189	CommandTableClear		console	orchestration	void __thiscall (void *table)	Unlinks every command, sets the mask to -1 and frees the bucket vector	verified	one	console/commands#table-twins	
+0x6403e0	190	CommandTableDeletingDtor		console	orchestration	void *__thiscall (void *table, uint32_t flags)	Unlinks the commands and buckets, frees the vector and, with bit 0 of the argument, the table	verified	one	console/commands#table-twins	
+0x6404a0	60	CommandLinkUnlink		console	orchestration	void __fastcall (void *link)	Unlinks a link from its neighbours and zeroes both of its words	verified	one	console/commands#table-twins	
+0x6404e0	136	CommandBucketDrain		console	orchestration	void __fastcall (void *bucket)	Unlinks every object of a bucket and then its terminator	verified	one	console/commands#table-twins	
+0x640570	108	CommandListSetLinkOffset		console	orchestration	void __thiscall (void *list, int32_t offset)	Unlinks every object of a list and stores a new link offset	verified	one	console/commands#growth-twins	
+0x6405e0	135	CommandBucketsFree		console	orchestration	void __thiscall (void *vector)	Empties every bucket and frees the bucket vector	verified	one	console/commands#table-twins	
+0x640670	41	CommandLinkBackSlot		console	orchestration	void *__thiscall (void *link, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	one	console/commands#table-twins	
+0x6406a0	25	CommandLinkGet		console	orchestration	void *__thiscall (void *list, void *object)	Returns an object's link in a list, the terminator for 0	verified	one	console/commands#table-twins	
+0x6406c0	181	CommandLinkNode		console	orchestration	void __thiscall (void *list, void *node, uint32_t mode, void *dest)	Unlinks a node and links it after a destination for mode 1, else before it	verified	one	console/commands#table-twins	
+0x640780	483	CommandTableRehash		console	primitive	uint32_t __thiscall (void *table, uint32_t bucket)	Counts the chain of a bucket and doubles the bucket count when the counter passes 13	verified	one	console/commands#growth-twins	
+0x640970	33	CommandListInit		console	orchestration	void __fastcall (void *list)	Makes a list empty	verified	one	console/commands#growth-twins	
+0x6409a0	77	CommandBucketChainDrain		console	orchestration	void __fastcall (void *bucket)	Unlinks every object of a bucket chain	verified	one	console/commands#growth-twins	
+0x6409f0	12	CommandListReset		console	orchestration	void __fastcall (void *list)	Points a list terminator at itself	verified	one	console/commands#growth-twins	
+0x640a00	316	CommandBucketsResize		console	primitive	void __thiscall (void *vector, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	console/commands#growth-twins	
+0x640b40	264	CommandBucketsRealloc		console	primitive	void __thiscall (void *vector, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	console/commands#growth-twins	
 0x640c50	5			unassigned			Runs its object file code not read here	inferred	none		
 0x640c60	11			unassigned			Runs its object file code not read here	inferred	none		
 0x640c70	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -22932,15 +22932,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x641020	33			unassigned			Runs its object file code not read here	inferred	none		
 0x641050	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x641060	101			unassigned			Runs its object file code that calls 0x689a90, SMemFree; not read here	inferred	none		
-0x6410d0	10			unassigned			Runs its object file code that calls 0x6410e0; not read here	inferred	none		
-0x6410e0	346			unassigned			Runs its object file code that calls 0x589900; not read here	inferred	none		
-0x641240	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x641250	1			unassigned			Runs its object file code not read here	inferred	none		
-0x641260	940			unassigned			Runs its object file code that calls 0x689a70, SFile::Open, SErrDisplayAppFatal2 and 14 more; not read here	inferred	none		
-0x641610	84			unassigned			Runs its object file code not read here	inferred	none		
-0x641670	420			unassigned			Runs its object file code that calls 0x64c650, OsGuiGetWindow, ShowErrorText and 1 more; not read here	inferred	none		
-0x641820	297			unassigned			Runs its object file code not read here	inferred	none		
-0x641950	19			unassigned			Runs its object file code not read here	inferred	none		
+0x6410d0	10	InitHardwareFormats		unassigned	orchestration	void __cdecl (void)	Runs 0x6410e0 and registers the exit function 0x641250	verified	one	console/hardware#default-formats	
+0x6410e0	346	InitHardwareFormatsBody		unassigned	orchestration	void __cdecl (void)	Builds the seven default device format records with the format constructor 0x589900	verified	one	console/hardware#default-formats	
+0x641240	12	InitHardwareFormatsAtExit		unassigned	orchestration	void __cdecl (void)	Registers the exit function 0x641250 with _atexit	verified	one	console/hardware#default-formats	
+0x641250	1	InitHardwareFormatsDtor		unassigned	orchestration	void __cdecl (void)	Returns at once	verified	one	console/hardware#default-formats	
+0x641260	940	DetectHardware		unassigned	primitive	void __fastcall (void *record, uint8_t *changed)	Loads the VideoHardware table once, then matches the machine and fills the detection record	verified	one	console/hardware#hardware-table	
+0x641610	84	MatchHardwareRow		unassigned	primitive	void __fastcall (void *record)	Finds the first row from index 1 whose vendor and device fields equal the record and stores its id	verified	one	console/hardware#matching-a-row	
+0x641670	420	CheckHardwareChange		unassigned	orchestration	void __fastcall (void *record, uint8_t *changed)	Compares the detection record with the saved indices, asks about a change and saves the current ones	verified	one	console/hardware#hardware-change-check	
+0x641820	297	BuildQualityBlock		unassigned	primitive	void __fastcall (void *block, void *record)	Fills the quality block from the matched row, the bias row and the option tables	verified	one	console/hardware#quality-block	
+0x641950	19	SetHardwareDefaultFormat		unassigned	primitive	void __fastcall (void *block, void *record)	Stores the address of the default device format record of the matched row in a block	verified	one	console/hardware#default-formats	
 0x641970	5			unassigned			Runs its object file code not read here	inferred	none		
 0x641980	11			unassigned			Runs its object file code not read here	inferred	none		
 0x641990	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -25369,7 +25369,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x689a30	19			unassigned			Runs its object file code not read here	inferred	none		
 0x689a50	5	InitDbcInfinityThunkVideoHardware		dbc	orchestration	void __cdecl ()	Jumps to the +inf initializer of the VideoHardware record file	inferred	none		
 0x689a60	11	InitDbcInfinityVideoHardware		dbc	orchestration	void __cdecl ()	Copies the float +inf into a word of the data section	inferred	none		
-0x689a70	6	VideoHardwareGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the VideoHardware table file	inferred	none		
+0x689a70	6	GetVideoHardwarePath		unassigned	primitive	const char * __cdecl (void)	Returns the path of VideoHardware.dbc	verified	one	console/hardware#hardware-table	
 0x689a80	3	VideoHardwareRecConstruct		dbc	orchestration	VideoHardwareRec * __thiscall ()	Returns the record it is called on and does nothing else	inferred	none		
 0x689a90	1	VideoHardwareRecDestruct		dbc	orchestration	void __thiscall ()	Returns at once; the record has no destructor work	inferred	none		
 0x689aa0	804	VideoHardwareRecRead		dbc	primitive	bool __thiscall (void *file, const char *stringBase)	Reads one VideoHardware record column by column from the file and rebases its string offsets	inferred	none		

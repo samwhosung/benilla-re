@@ -264,6 +264,10 @@ CGxFont	0x0184	4	float	m_requestedSize	font	Holds the requested size as a fracti
 CGxFont	0x0188	4	float	m_advanceAdjust	font	Holds the ratio that scales a negative kerning	verified	one	font/api#font-object
 CGxFont	0x018c	192	uint8_t[192]	m_pages	font	Holds eight atlas page records of 0x18 bytes	verified	one	font/api#font-object
 CGxFont	0x024c	4	uint32_t	m_pixelSize	font	Holds the rendered pixel size, at most 32	verified	one	font/api#font-object
+CGxMonitorMode	0x0000	4	uint32_t	m_width	console	Holds the width in pixels	verified	one	console/display#format-validation
+CGxMonitorMode	0x0004	4	uint32_t	m_height	console	Holds the height in pixels	verified	one	console/display#format-validation
+CGxMonitorMode	0x0008	4	uint32_t	m_formatWord	console	Holds the format word, 16 or 32	verified	one	console/display#format-validation
+CGxMonitorMode	0x000c	4	uint32_t	m_refresh	console	Holds the refresh rate	verified	one	console/display#format-validation
 CGxString	0x0000	8	void *[2]	m_link	font	Holds the link in the global string list or the pool	verified	one	font/string#string-object
 CGxString	0x0010	8	void *[2]	m_fontLink	font	Holds the link in the font's string list	verified	one	font/string#string-object
 CGxString	0x0018	4	float	m_size	font	Holds the size, or the font's natural height	verified	one	font/string#string-object
@@ -453,6 +457,22 @@ CMovement	0x0148	4	float	m_facingRateTime	collision	Holds the seconds to the que
 CMovement	0x014c	4	int32_t	m_correctionTime	collision	Holds the ms to the queue head at arming, read as int32, the divisor of the position blend; 0 when off	verified	one	collision/status#position-blend-arming
 CMovement	0x0150	12	void *[3]	m_events	collision	Holds the event queue header: link offset, last link, then the first CPlayerMoveEvent	verified	one	collision/events#insertion-in-time-order
 CMovement	0x015c	4	void *	m_unit	collision	Holds the unit that owns the mover, the constructor's fourth argument	verified	one	collision/mover#construction
+CONSOLECOMMAND	0x0000	4	uint32_t	m_hash	console	Holds the hash of the name	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x0004	8	uint32_t[2]	m_bucketLink	console	Holds the link in the hash bucket chain	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x000c	8	uint32_t[2]	m_listLink	console	Holds the link in the list of all commands	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x0014	4	const char *	m_name	console	Holds the name pointer the registrant passed	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x0018	4	void *	m_handler	console	Holds the handler called with the name and the arguments	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x001c	4	const char *	m_help	console	Holds the help line, or 0	verified	one	console/commands#command-records
+CONSOLECOMMAND	0x0020	4	uint32_t	m_category	console	Holds the category id	verified	one	console/commands#command-records
+CONSOLELINE	0x0000	4	void *	m_prevLink	console	Holds the previous link of the line list	verified	one	console/screen#line-records
+CONSOLELINE	0x0004	4	CONSOLELINE *	m_next	console	Holds the next line, older than this one	verified	one	console/screen#line-records
+CONSOLELINE	0x0008	4	char *	m_text	console	Holds the text buffer	verified	one	console/screen#line-records
+CONSOLELINE	0x000c	4	uint32_t	m_length	console	Holds the number of bytes in the text	verified	one	console/screen#line-records
+CONSOLELINE	0x0010	4	uint32_t	m_capacity	console	Holds the size of the text buffer	verified	one	console/screen#line-records
+CONSOLELINE	0x0014	4	uint32_t	m_cursor	console	Holds the cursor index, nonzero only for the input line	verified	one	console/screen#line-records
+CONSOLELINE	0x0018	4	uint32_t	m_floor	console	Holds the first index the cursor may edit	verified	one	console/screen#line-records
+CONSOLELINE	0x001c	4	uint32_t	m_colourClass	console	Holds the colour class of the line	verified	one	console/screen#line-records
+CONSOLELINE	0x0020	4	uint32_t	m_string	console	Holds the handle of the drawn string	verified	one	console/screen#line-records
 CParticle2	0x0000	12	float[3]	m_position	models	Holds the position, in world or emitter space	verified	one	models/particles#particle-life
 CParticle2	0x000c	1	uint8_t	m_gradient	models	Holds which gradient colours the particle, 1 past the midpoint	verified	one	models/particles#particle-life
 CParticle2	0x0010	12	float[3]	m_velocity	models	Holds the velocity	verified	one	models/emission#spawn-space
