@@ -47,7 +47,7 @@ EvtHandler	24		core	Holds a registered handler: its link, function, argument, pr
 EvtKeyDown	12		core	Holds a held-key record: its list link and the key code	verified	one	core/events#held-keys-and-repeats
 EvtThread	56		core	Holds a scheduler slot: its list link, thread count, load, event and heap of contexts	verified	one	core/scheduler#slot-acquire-and-release
 EvtTimer	56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	one	core/events#timers
-FfxRenderTarget	28		ffxeffects	Holds a full-screen effect target: handle, allocated and wanted size and the reciprocals of the allocation	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	28		ffxeffects	Holds a full-screen effect target: handle, allocated and wanted size and the reciprocals of the allocation	verified	one	ffxeffects/targets#render-target-allocation
 FriendList	1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
 FriendSlot	32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
 GuildMemberInfo	344		ui	Holds one guild roster member: GUID, name, level, class, zone, rank, presence, notes and last-online days	verified	one	ui/guild#the-member-record

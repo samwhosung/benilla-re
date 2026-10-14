@@ -28397,119 +28397,119 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ca8e0	28			warden			Runs WardenClient.cpp code that calls SMemFree; not read here	inferred	none		
 0x6ca900	91			warden			Runs WardenClient.cpp code that calls SMemFree, SMemAlloc; not read here	inferred	none		
 0x6ca960	112			warden			Runs WardenClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x6ca9d0	85	ConstructBox4Pass		ffxeffects	orchestration		Builds a Box4 downsample pass: the base, its vtable and its program from FFXBox4.bls	verified	one	ffxeffects#pass-and-effect-objects	
-0x6caa30	43	DeleteBox4Pass		ffxeffects	orchestration		Destroys a Box4 downsample pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6caa60	42	DestroyBox4Pass		ffxeffects	orchestration		Releases the program handles of a Box4 downsample pass and restores the base vtable	verified	one	ffxeffects#pass-and-effect-objects	
-0x6caa90	40	FFX::Pass::DeletingDestructor		ffxeffects	orchestration		Restores the base vtable and frees the pass when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6caac0	18	Box4PassIsReady		ffxeffects	orchestration		Returns whether the program of a Box4 downsample pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6caae0	311	RenderBox4Pass		ffxeffects	orchestration		Draws the source into the destination target with four box taps	verified	one	ffxeffects#box-and-gauss-passes	
-0x6cac20	1	Box4TapsExit		ffxeffects	orchestration		Returns; the exit stub the Box4 tap table registers	verified	one	ffxeffects#box-and-gauss-passes	
-0x6cac30	85	ConstructGauss4Pass		ffxeffects	orchestration		Builds a Gauss4 blur pass: the base, its vtable and its program from FFXGauss4.bls	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cac90	43	DeleteGauss4Pass		ffxeffects	orchestration		Destroys a Gauss4 blur pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cacc0	42	DestroyGauss4Pass		ffxeffects	orchestration		Releases the program handles of a Gauss4 blur pass and restores the base vtable	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cacf0	18	Gauss4PassIsReady		ffxeffects	orchestration		Returns whether the program of a Gauss4 blur pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cad10	550	RenderGauss4Pass		ffxeffects	primitive	void __thiscall (void)	Blurs the source in two draws, horizontal into 0xce8b04 and vertical into the destination	verified	one	ffxeffects#box-and-gauss-passes	
-0x6caf40	85	ConstructGlowPass		ffxeffects	orchestration		Builds a glow combine pass: the base, its vtable and its program from FFXGlow.bls	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cafa0	43	DeleteGlowPass		ffxeffects	orchestration		Destroys a glow combine pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cafd0	42	DestroyGlowPass		ffxeffects	orchestration		Releases the program handles of a glow combine pass and restores the base vtable	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb000	18	GlowPassIsReady		ffxeffects	orchestration		Returns whether the program of a glow combine pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb020	460	RenderGlowPass		ffxeffects	primitive		Draws the glow combine quad with the colour of the glow, drunk and liquid bytes	verified	one	ffxeffects#glow-combine-pass	ffxeffects::ffx_glow_color_quantize_difftest
-0x6cb1f0	145	ConstructGlowWavePass		ffxeffects	orchestration		Builds a glow wave pass: the base, its vtable and its program from FFXGlowWave.bls	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb290	43	DeleteGlowWavePass		ffxeffects	orchestration		Destroys a glow wave pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb2c0	42	DestroyGlowWavePass		ffxeffects	orchestration		Releases the four program handles of a glow wave pass and destroys its wave map base	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb2f0	18	GlowWavePassIsReady		ffxeffects	orchestration		Returns whether the program of a glow wave pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb310	1232	RenderGlowWavePass		ffxeffects	primitive		Draws the glow quad with the wave map UV matrix and the screen and blur offset constants	verified	one	ffxeffects#glow-wave-pass	ffxeffects::ffx_glow_pass_render_difftest
-0x6cb7e0	174	ConstructDeathPass		ffxeffects	orchestration		Builds a death tint pass: the base, its vtable and its program from a death program	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb890	43	DeleteDeathPass		ffxeffects	orchestration		Destroys a death tint pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb8c0	71	DestroyDeathPass		ffxeffects	orchestration		Releases the program handles of a death pass and restores the base vtable	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb910	18	DeathPassIsReady		ffxeffects	orchestration		Returns whether the program of a death pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cb930	302	RenderDeathPass		ffxeffects	primitive		Draws the death quad with the colour of the glow byte and 0x5393a8	verified	one	ffxeffects#death-passes	ffxeffects::ffx_death_pass_pack_difftest
-0x6cba60	64	ConstructDeathCombinerPass		ffxeffects	orchestration		Builds a combiner death pass: the base, its vtable and its program from FFXDeath_nvrc.bls	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cbaa0	43	DeleteDeathCombinerPass		ffxeffects	orchestration		Destroys a combiner death pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cbad0	25	DestroyDeathCombinerPass		ffxeffects	orchestration		Releases the program handles of a combiner death pass and restores the base vtable	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cbaf0	14	DeathCombinerPassIsReady		ffxeffects	orchestration		Returns whether the program of a combiner death pass loaded	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cbb00	178	RenderDeathCombinerPass		ffxeffects	orchestration		Draws one source with the constant colour 0xff5393a8 and render state 7	verified	one	ffxeffects#death-passes	
-0x6cbbc0	10	InitWaveMapFieldsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6cbbd0	33	InitWaveMapFields		ffxeffects	orchestration		Zeroes the size and scale fields of the wave map descriptor	verified	one	ffxeffects#static-initializers	
-0x6cbc00	12	RegisterWaveMapFieldsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6cbc10	21	ExitWaveMapFields		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6cbc30	10	InitGlowWavePeriodsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6cbc40	21	InitGlowWavePeriods		ffxeffects	orchestration		Sets the glow wave periods 0xce89c4 and 0xce89c8 to 3174 and 2805	verified	one	ffxeffects#static-initializers	
-0x6cbc60	12	RegisterGlowWavePeriodsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6cbc70	21	ExitGlowWavePeriods		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6cbc90	10	InitGlowWaveScalesThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6cbca0	21	InitGlowWaveScales		ffxeffects	orchestration		Sets the glow wave scales 0xce89bc and 0xce89c0 to 1.0 and 0.88	verified	one	ffxeffects#static-initializers	
-0x6cbcc0	12	RegisterGlowWaveScalesExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6cbcd0	21	ExitGlowWaveScales		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6cbcf0	261	ConstructWaveMapPass		ffxeffects	orchestration		Builds the wave map base pass and creates the shared 128 by 128 wave map on the first use	verified	one	ffxeffects#wave-map-table	
-0x6cbe00	43	DeleteWaveMapPass		ffxeffects	orchestration		Destroys a wave map base pass and frees it when bit 0 of flags is set	verified	one	ffxeffects#wave-map-table	
-0x6cbe30	104	DestroyWaveMapPass		ffxeffects	orchestration		Drops a use of the wave map and destroys it with the last	verified	one	ffxeffects#wave-map-table	
-0x6cbea0	645	WaveMapTexelCallback		ffxeffects	primitive		Fills, reports or frees the 128 by 128 wave map table by mode 0, 1 or 2	verified	one	ffxeffects#wave-map-table	ffxeffects::ffx_glow_wave_lut_difftest
-0x6cc130	879	ConstructGlowEffect		ffxeffects	orchestration		Builds the glow effect: the ffxGlow CVar, list A of three passes and list B of three	verified	one	ffxeffects#effect-pass-lists	
-0x6cc4a0	43	DeleteGlowEffect		ffxeffects	orchestration		Destroys a glow effect and frees it when bit 0 of flags is set	verified	one	ffxeffects#effect-pass-lists	
-0x6cc4d0	129	DestroyGlowEffect		ffxeffects	orchestration		Deletes the passes of both lists, frees both arrays and restores the base effect vtable	verified	one	ffxeffects#effect-pass-lists	
-0x6cc560	62	DeleteFfxEffect		ffxeffects	orchestration		Frees the pass array of a base effect and the effect when bit 0 of flags is set	verified	one	ffxeffects#effect-pass-lists	
-0x6cc5a0	143	GlowEffectIsReady		ffxeffects	orchestration		Returns the ffxGlow integer ANDed with the readiness of each pass of the list in use	verified	one	ffxeffects#effect-pass-lists	
-0x6cc630	87	RenderGlowEffect		ffxeffects	orchestration		Renders each pass of list B in water or list A otherwise	verified	one	ffxeffects#effect-pass-lists	
-0x6cc690	551	ConstructDeathEffect		ffxeffects	orchestration		Builds the death effect: the ffxDeath CVar and the pass list the capability word picks	verified	one	ffxeffects#effect-pass-lists	
-0x6cc8c0	43	DeleteDeathEffect		ffxeffects	orchestration		Destroys a death effect and frees it when bit 0 of flags is set	verified	one	ffxeffects#effect-pass-lists	
-0x6cc8f0	74	DestroyDeathEffect		ffxeffects	orchestration		Deletes the passes of the list, frees the array and restores the base effect vtable	verified	one	ffxeffects#effect-pass-lists	
-0x6cc940	226	ReservePassList		ffxeffects	primitive		Grows a pass list to hold its count plus an extra count, rounded up to its quantum	verified	one	ffxeffects#pass-list-container	
-0x6cca30	57	PassListQuantum		ffxeffects	primitive		Returns the growth quantum for a size, 0x40 from 0x40 up, else the largest power of 2 below it	verified	one	ffxeffects#pass-list-container	
-0x6cca70	31	AlignUpToQuantum		ffxeffects	primitive		Returns a size rounded up to a multiple of a quantum	verified	one	ffxeffects#pass-list-container	
-0x6cca90	133	SetPassListCapacity		ffxeffects	host		Reallocates a pass list to a capacity and keeps its leading pointers	verified	one	ffxeffects#pass-list-container	
-0x6ccb20	10	InitScreenTargetThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccb30	33	InitScreenTarget		ffxeffects	orchestration		Zeroes the size and reciprocal fields of the screen target descriptor	verified	one	ffxeffects#static-initializers	
-0x6ccb60	12	RegisterScreenTargetExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccb70	21	ExitScreenTarget		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccb90	10	InitFullTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccba0	40	InitFullTargets		ffxeffects	orchestration		Zeroes the fields of the full target descriptor and its twin	verified	one	ffxeffects#static-initializers	
-0x6ccbd0	12	RegisterFullTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccbe0	21	ExitFullTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccc00	10	InitHalfTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccc10	40	InitHalfTargets		ffxeffects	orchestration		Zeroes the fields of the two half target descriptors	verified	one	ffxeffects#static-initializers	
-0x6ccc40	12	RegisterHalfTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccc50	21	ExitHalfTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccc70	10	InitQuarterTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccc80	40	InitQuarterTargets		ffxeffects	orchestration		Zeroes the fields of the two quarter target descriptors	verified	one	ffxeffects#static-initializers	
-0x6cccb0	12	RegisterQuarterTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6cccc0	21	ExitQuarterTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccce0	10	InitQuadPositionsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6cccf0	31	InitQuadPositions		ffxeffects	orchestration		Zeroes the quad position array 0xce8ab8	verified	one	ffxeffects#static-initializers	
-0x6ccd10	12	RegisterQuadPositionsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccd20	21	ExitQuadPositions		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccd40	10	InitQuadOffsetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccd50	28	InitQuadOffsets		ffxeffects	orchestration		Zeroes the quad UV offset array 0xce8a98	verified	one	ffxeffects#static-initializers	
-0x6ccd70	12	RegisterQuadOffsetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccd80	21	ExitQuadOffsets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccda0	5	InitStripDrawDescThunk		ffxeffects	orchestration		Jumps to the body; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccdb0	41	InitStripDrawDesc		ffxeffects	orchestration		Sets the strip draw descriptor 0xce8a88 to counts 4 and type 3	verified	one	ffxeffects#static-initializers	
-0x6ccde0	10	InitSavedProjectionThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccdf0	161	InitSavedProjection		ffxeffects	orchestration		Sets the saved projection 0xce8a48 to the identity matrix	verified	one	ffxeffects#static-initializers	
-0x6ccea0	12	RegisterSavedProjectionExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6cceb0	21	ExitSavedProjection		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6cced0	10	InitSavedViewThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects#static-initializers	
-0x6ccee0	161	InitSavedView		ffxeffects	orchestration		Sets the saved view 0xce8a08 to the identity matrix	verified	one	ffxeffects#static-initializers	
-0x6ccf90	12	RegisterSavedViewExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects#static-initializers	
-0x6ccfa0	21	ExitSavedView		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects#static-initializers	
-0x6ccfc0	515	FFXInitialize		ffxeffects	orchestration		Registers the ffx and ffxRectangle CVars, clears the targets and sets the rectangle program flag	verified	one	ffxeffects#start-and-shutdown	
-0x6cd1d0	441	FFXShutdown		ffxeffects	orchestration		Destroys the seven target textures and zeroes their descriptors	verified	one	ffxeffects#start-and-shutdown	
-0x6cd390	46	ResetTargetDescriptor		ffxeffects	orchestration		Zeroes a render target descriptor of seven dwords	verified	one	ffxeffects#render-target-allocation	
-0x6cd3c0	445	BeginPassTarget		ffxeffects	primitive		Saves the device matrices, sets an orthographic pass view, binds a target and sets its viewport	verified	one	ffxeffects#pass-target-and-draw-state	
-0x6cd580	455	BuildFullScreenQuad		ffxeffects	primitive		Writes the four positions and four UV offsets of a full-screen quad of a target	verified	one	ffxeffects#full-screen-quad	ffxeffects::ffx_fullscreen_quad_difftest
-0x6cd750	188	BuildQuadVertices		ffxeffects	primitive		Fills a four-vertex buffer with positions, a colour and four UV sets uv times scale plus offset	verified	one	ffxeffects#full-screen-quad	ffxeffects::ffx_transform_quad_verts_difftest
-0x6cd810	44	SetStripIndices		ffxeffects	orchestration		Fills a four-index buffer from the strip order table and passes it to the device	verified	one	ffxeffects#pass-target-and-draw-state	
-0x6cd840	73	EndPassTarget		ffxeffects	orchestration		Restores the saved view and projection, rebinds the screen and sets the whole viewport	verified	one	ffxeffects#pass-target-and-draw-state	
-0x6cd890	472	BeginCurrentFfx		ffxeffects	primitive		Begins the current full-screen effect: resizes the targets, binds the full target and sets the viewport	verified	one	ffxeffects#begin-and-end	
-0x6cda70	149	EndCurrentFfx		ffxeffects	orchestration		Ends the current full-screen effect: unbinds or copies the full target, renders and resets the viewport	verified	one	ffxeffects#begin-and-end	
-0x6cdb10	45	GetTargetMode		ffxeffects	orchestration		Returns 2 when ffxRectangle is set and the device takes rectangle textures, else 0	verified	one	ffxeffects#render-target-sizes	
-0x6cdb40	357	ComputeTargetSizes		ffxeffects	primitive		Sizes the full, half and quarter targets from the window rectangle and stores the screen size	verified	one	ffxeffects#render-target-sizes	ffxeffects::ffx_compute_rt_dims_difftest
-0x6cdcb0	371	AllocateTarget		ffxeffects	primitive		Allocates a target texture of a wanted size, rounded and clamped, and stores its descriptor	verified	one	ffxeffects#render-target-allocation	
-0x6cde30	42	FfxCVarCallback		ffxeffects	orchestration		Prints enabled or disabled for the new value of an effect CVar and returns 1	verified	one	ffxeffects#start-and-shutdown	
-0x6cde60	12	SetCurrentFfx		ffxeffects	orchestration		Makes an effect the current full-screen effect and returns the previous one	verified	one	ffxeffects#start-and-shutdown	
-0x6cde70	88	FFX::Pass::Pass		ffxeffects	orchestration		Builds a base pass: its vtable, the source pointers, the destination, a dword and a flag byte	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cded0	79	EffectIsReady		ffxeffects	orchestration		Returns whether every pass of list A is ready and the effect CVar is nonzero	verified	one	ffxeffects#pass-and-effect-objects	
-0x6cdf20	38	RenderEffect		ffxeffects	orchestration		Renders each pass of list A in order	verified	one	ffxeffects#pass-and-effect-objects	
+0x6ca9d0	85	ConstructBox4Pass		ffxeffects	orchestration		Builds a Box4 downsample pass: the base, its vtable and its program from FFXBox4.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6caa30	43	DeleteBox4Pass		ffxeffects	orchestration		Destroys a Box4 downsample pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6caa60	42	DestroyBox4Pass		ffxeffects	orchestration		Releases the program handles of a Box4 downsample pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6caa90	40	FFX::Pass::DeletingDestructor		ffxeffects	orchestration		Restores the base vtable and frees the pass when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6caac0	18	Box4PassIsReady		ffxeffects	orchestration		Returns whether the program of a Box4 downsample pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6caae0	311	RenderBox4Pass		ffxeffects	orchestration		Draws the source into the destination target with four box taps	verified	one	ffxeffects/passes#box-and-gauss-passes	
+0x6cac20	1	Box4TapsExit		ffxeffects	orchestration		Returns; the exit stub the Box4 tap table registers	verified	one	ffxeffects/passes#box-and-gauss-passes	
+0x6cac30	85	ConstructGauss4Pass		ffxeffects	orchestration		Builds a Gauss4 blur pass: the base, its vtable and its program from FFXGauss4.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cac90	43	DeleteGauss4Pass		ffxeffects	orchestration		Destroys a Gauss4 blur pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cacc0	42	DestroyGauss4Pass		ffxeffects	orchestration		Releases the program handles of a Gauss4 blur pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cacf0	18	Gauss4PassIsReady		ffxeffects	orchestration		Returns whether the program of a Gauss4 blur pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cad10	550	RenderGauss4Pass		ffxeffects	primitive	void __thiscall (void)	Blurs the source in two draws, horizontal into 0xce8b04 and vertical into the destination	verified	one	ffxeffects/passes#box-and-gauss-passes	
+0x6caf40	85	ConstructGlowPass		ffxeffects	orchestration		Builds a glow combine pass: the base, its vtable and its program from FFXGlow.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cafa0	43	DeleteGlowPass		ffxeffects	orchestration		Destroys a glow combine pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cafd0	42	DestroyGlowPass		ffxeffects	orchestration		Releases the program handles of a glow combine pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb000	18	GlowPassIsReady		ffxeffects	orchestration		Returns whether the program of a glow combine pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb020	460	RenderGlowPass		ffxeffects	primitive		Draws the glow combine quad with the colour of the glow, drunk and liquid bytes	verified	one	ffxeffects/passes#glow-combine-pass	ffxeffects::ffx_glow_color_quantize_difftest
+0x6cb1f0	145	ConstructGlowWavePass		ffxeffects	orchestration		Builds a glow wave pass: the base, its vtable and its program from FFXGlowWave.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb290	43	DeleteGlowWavePass		ffxeffects	orchestration		Destroys a glow wave pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb2c0	42	DestroyGlowWavePass		ffxeffects	orchestration		Releases the four program handles of a glow wave pass and destroys its wave map base	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb2f0	18	GlowWavePassIsReady		ffxeffects	orchestration		Returns whether the program of a glow wave pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb310	1232	RenderGlowWavePass		ffxeffects	primitive		Draws the glow quad with the wave map UV matrix and the screen and blur offset constants	verified	one	ffxeffects/passes#glow-wave-pass	ffxeffects::ffx_glow_pass_render_difftest
+0x6cb7e0	174	ConstructDeathPass		ffxeffects	orchestration		Builds a death tint pass: the base, its vtable and its program from a death program	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb890	43	DeleteDeathPass		ffxeffects	orchestration		Destroys a death tint pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb8c0	71	DestroyDeathPass		ffxeffects	orchestration		Releases the program handles of a death pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb910	18	DeathPassIsReady		ffxeffects	orchestration		Returns whether the program of a death pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cb930	302	RenderDeathPass		ffxeffects	primitive		Draws the death quad with the colour of the glow byte and 0x5393a8	verified	one	ffxeffects/passes#death-passes	ffxeffects::ffx_death_pass_pack_difftest
+0x6cba60	64	ConstructDeathCombinerPass		ffxeffects	orchestration		Builds a combiner death pass: the base, its vtable and its program from FFXDeath_nvrc.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cbaa0	43	DeleteDeathCombinerPass		ffxeffects	orchestration		Destroys a combiner death pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cbad0	25	DestroyDeathCombinerPass		ffxeffects	orchestration		Releases the program handles of a combiner death pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cbaf0	14	DeathCombinerPassIsReady		ffxeffects	orchestration		Returns whether the program of a combiner death pass loaded	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cbb00	178	RenderDeathCombinerPass		ffxeffects	orchestration		Draws one source with the constant colour 0xff5393a8 and render state 7	verified	one	ffxeffects/passes#death-passes	
+0x6cbbc0	10	InitWaveMapFieldsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6cbbd0	33	InitWaveMapFields		ffxeffects	orchestration		Zeroes the size and scale fields of the wave map descriptor	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc00	12	RegisterWaveMapFieldsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc10	21	ExitWaveMapFields		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc30	10	InitGlowWavePeriodsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc40	21	InitGlowWavePeriods		ffxeffects	orchestration		Sets the glow wave periods 0xce89c4 and 0xce89c8 to 3174 and 2805	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc60	12	RegisterGlowWavePeriodsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc70	21	ExitGlowWavePeriods		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6cbc90	10	InitGlowWaveScalesThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6cbca0	21	InitGlowWaveScales		ffxeffects	orchestration		Sets the glow wave scales 0xce89bc and 0xce89c0 to 1.0 and 0.88	verified	one	ffxeffects/overview#static-initializers	
+0x6cbcc0	12	RegisterGlowWaveScalesExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6cbcd0	21	ExitGlowWaveScales		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6cbcf0	261	ConstructWaveMapPass		ffxeffects	orchestration		Builds the wave map base pass and creates the shared 128 by 128 wave map on the first use	verified	one	ffxeffects/passes#wave-map-table	
+0x6cbe00	43	DeleteWaveMapPass		ffxeffects	orchestration		Destroys a wave map base pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/passes#wave-map-table	
+0x6cbe30	104	DestroyWaveMapPass		ffxeffects	orchestration		Drops a use of the wave map and destroys it with the last	verified	one	ffxeffects/passes#wave-map-table	
+0x6cbea0	645	WaveMapTexelCallback		ffxeffects	primitive		Fills, reports or frees the 128 by 128 wave map table by mode 0, 1 or 2	verified	one	ffxeffects/passes#wave-map-table	ffxeffects::ffx_glow_wave_lut_difftest
+0x6cc130	879	ConstructGlowEffect		ffxeffects	orchestration		Builds the glow effect: the ffxGlow CVar, list A of three passes and list B of three	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc4a0	43	DeleteGlowEffect		ffxeffects	orchestration		Destroys a glow effect and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc4d0	129	DestroyGlowEffect		ffxeffects	orchestration		Deletes the passes of both lists, frees both arrays and restores the base effect vtable	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc560	62	DeleteFfxEffect		ffxeffects	orchestration		Frees the pass array of a base effect and the effect when bit 0 of flags is set	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc5a0	143	GlowEffectIsReady		ffxeffects	orchestration		Returns the ffxGlow integer ANDed with the readiness of each pass of the list in use	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc630	87	RenderGlowEffect		ffxeffects	orchestration		Renders each pass of list B in water or list A otherwise	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc690	551	ConstructDeathEffect		ffxeffects	orchestration		Builds the death effect: the ffxDeath CVar and the pass list the capability word picks	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc8c0	43	DeleteDeathEffect		ffxeffects	orchestration		Destroys a death effect and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc8f0	74	DestroyDeathEffect		ffxeffects	orchestration		Deletes the passes of the list, frees the array and restores the base effect vtable	verified	one	ffxeffects/objects#effect-pass-lists	
+0x6cc940	226	ReservePassList		ffxeffects	primitive		Grows a pass list to hold its count plus an extra count, rounded up to its quantum	verified	one	ffxeffects/objects#pass-list-container	
+0x6cca30	57	PassListQuantum		ffxeffects	primitive		Returns the growth quantum for a size, 0x40 from 0x40 up, else the largest power of 2 below it	verified	one	ffxeffects/objects#pass-list-container	
+0x6cca70	31	AlignUpToQuantum		ffxeffects	primitive		Returns a size rounded up to a multiple of a quantum	verified	one	ffxeffects/objects#pass-list-container	
+0x6cca90	133	SetPassListCapacity		ffxeffects	host		Reallocates a pass list to a capacity and keeps its leading pointers	verified	one	ffxeffects/objects#pass-list-container	
+0x6ccb20	10	InitScreenTargetThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccb30	33	InitScreenTarget		ffxeffects	orchestration		Zeroes the size and reciprocal fields of the screen target descriptor	verified	one	ffxeffects/overview#static-initializers	
+0x6ccb60	12	RegisterScreenTargetExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccb70	21	ExitScreenTarget		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccb90	10	InitFullTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccba0	40	InitFullTargets		ffxeffects	orchestration		Zeroes the fields of the full target descriptor and its twin	verified	one	ffxeffects/overview#static-initializers	
+0x6ccbd0	12	RegisterFullTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccbe0	21	ExitFullTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc00	10	InitHalfTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc10	40	InitHalfTargets		ffxeffects	orchestration		Zeroes the fields of the two half target descriptors	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc40	12	RegisterHalfTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc50	21	ExitHalfTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc70	10	InitQuarterTargetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccc80	40	InitQuarterTargets		ffxeffects	orchestration		Zeroes the fields of the two quarter target descriptors	verified	one	ffxeffects/overview#static-initializers	
+0x6cccb0	12	RegisterQuarterTargetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6cccc0	21	ExitQuarterTargets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccce0	10	InitQuadPositionsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6cccf0	31	InitQuadPositions		ffxeffects	orchestration		Zeroes the quad position array 0xce8ab8	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd10	12	RegisterQuadPositionsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd20	21	ExitQuadPositions		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd40	10	InitQuadOffsetsThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd50	28	InitQuadOffsets		ffxeffects	orchestration		Zeroes the quad UV offset array 0xce8a98	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd70	12	RegisterQuadOffsetsExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccd80	21	ExitQuadOffsets		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccda0	5	InitStripDrawDescThunk		ffxeffects	orchestration		Jumps to the body; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccdb0	41	InitStripDrawDesc		ffxeffects	orchestration		Sets the strip draw descriptor 0xce8a88 to counts 4 and type 3	verified	one	ffxeffects/overview#static-initializers	
+0x6ccde0	10	InitSavedProjectionThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccdf0	161	InitSavedProjection		ffxeffects	orchestration		Sets the saved projection 0xce8a48 to the identity matrix	verified	one	ffxeffects/overview#static-initializers	
+0x6ccea0	12	RegisterSavedProjectionExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6cceb0	21	ExitSavedProjection		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6cced0	10	InitSavedViewThunk		ffxeffects	orchestration		Calls the body and registers its exit stub; a static initializer	verified	one	ffxeffects/overview#static-initializers	
+0x6ccee0	161	InitSavedView		ffxeffects	orchestration		Sets the saved view 0xce8a08 to the identity matrix	verified	one	ffxeffects/overview#static-initializers	
+0x6ccf90	12	RegisterSavedViewExit		ffxeffects	orchestration		Registers the exit stub with _atexit	verified	one	ffxeffects/overview#static-initializers	
+0x6ccfa0	21	ExitSavedView		ffxeffects	orchestration		Sets one flag bit; the exit stub of the static	verified	one	ffxeffects/overview#static-initializers	
+0x6ccfc0	515	FFXInitialize		ffxeffects	orchestration		Registers the ffx and ffxRectangle CVars, clears the targets and sets the rectangle program flag	verified	one	ffxeffects/objects#start-and-shutdown	
+0x6cd1d0	441	FFXShutdown		ffxeffects	orchestration		Destroys the seven target textures and zeroes their descriptors	verified	one	ffxeffects/objects#start-and-shutdown	
+0x6cd390	46	ResetTargetDescriptor		ffxeffects	orchestration		Zeroes a render target descriptor of seven dwords	verified	one	ffxeffects/targets#render-target-allocation	
+0x6cd3c0	445	BeginPassTarget		ffxeffects	primitive		Saves the device matrices, sets an orthographic pass view, binds a target and sets its viewport	verified	one	ffxeffects/targets#pass-target-and-draw-state	
+0x6cd580	455	BuildFullScreenQuad		ffxeffects	primitive		Writes the four positions and four UV offsets of a full-screen quad of a target	verified	one	ffxeffects/targets#full-screen-quad	ffxeffects::ffx_fullscreen_quad_difftest
+0x6cd750	188	BuildQuadVertices		ffxeffects	primitive		Fills a four-vertex buffer with positions, a colour and four UV sets uv times scale plus offset	verified	one	ffxeffects/targets#full-screen-quad	ffxeffects::ffx_transform_quad_verts_difftest
+0x6cd810	44	SetStripIndices		ffxeffects	orchestration		Fills a four-index buffer from the strip order table and passes it to the device	verified	one	ffxeffects/targets#pass-target-and-draw-state	
+0x6cd840	73	EndPassTarget		ffxeffects	orchestration		Restores the saved view and projection, rebinds the screen and sets the whole viewport	verified	one	ffxeffects/targets#pass-target-and-draw-state	
+0x6cd890	472	BeginCurrentFfx		ffxeffects	primitive		Begins the current full-screen effect: resizes the targets, binds the full target and sets the viewport	verified	one	ffxeffects/objects#begin-and-end	
+0x6cda70	149	EndCurrentFfx		ffxeffects	orchestration		Ends the current full-screen effect: unbinds or copies the full target, renders and resets the viewport	verified	one	ffxeffects/objects#begin-and-end	
+0x6cdb10	45	GetTargetMode		ffxeffects	orchestration		Returns 2 when ffxRectangle is set and the device takes rectangle textures, else 0	verified	one	ffxeffects/targets#render-target-sizes	
+0x6cdb40	357	ComputeTargetSizes		ffxeffects	primitive		Sizes the full, half and quarter targets from the window rectangle and stores the screen size	verified	one	ffxeffects/targets#render-target-sizes	ffxeffects::ffx_compute_rt_dims_difftest
+0x6cdcb0	371	AllocateTarget		ffxeffects	primitive		Allocates a target texture of a wanted size, rounded and clamped, and stores its descriptor	verified	one	ffxeffects/targets#render-target-allocation	
+0x6cde30	42	FfxCVarCallback		ffxeffects	orchestration		Prints enabled or disabled for the new value of an effect CVar and returns 1	verified	one	ffxeffects/objects#start-and-shutdown	
+0x6cde60	12	SetCurrentFfx		ffxeffects	orchestration		Makes an effect the current full-screen effect and returns the previous one	verified	one	ffxeffects/objects#start-and-shutdown	
+0x6cde70	88	FFX::Pass::Pass		ffxeffects	orchestration		Builds a base pass: its vtable, the source pointers, the destination, a dword and a flag byte	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cded0	79	EffectIsReady		ffxeffects	orchestration		Returns whether every pass of list A is ready and the effect CVar is nonzero	verified	one	ffxeffects/objects#pass-and-effect-objects	
+0x6cdf20	38	RenderEffect		ffxeffects	orchestration		Renders each pass of list A in order	verified	one	ffxeffects/objects#pass-and-effect-objects	
 0x6cdf50	10	InitDayNightLightState		lighting	orchestration		Runs 0x6cdf60, then registers an exit hook through 0x6ce080; a static initializer	verified	one	lighting/overview#static-objects	
 0x6cdf60	287	InitLightStateFields		lighting	orchestration		Zeroes the light state's clock and camera fields and builds its array of four	verified	one	lighting/overview#static-objects	
 0x6ce080	12	InitDayNightLightStateAtexit		lighting	orchestration		Registers 0x6ce090 with _atexit	verified	one	lighting/overview#static-objects	
