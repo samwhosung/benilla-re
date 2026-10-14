@@ -84,10 +84,10 @@ Confidence: verified
 Proof: one
 Test: none
 
-The closure starts from 1,056 roots: the 945 initializer slots, and every terrain function that a
-`call`, `jmp`, pushed or stored immediate, or a dword of a vtable or other table outside the
-terrain's files names. It follows calls, jumps, immediates and table dwords inside the files and
-reaches 2,876 of the 2,967 functions. For each of the 91 left, a scan of the listing and of the
+The census (`cargo xtask census --all`) finds live code reaching 2,876 of the 2,967 functions: from
+the 945 initializer slots, and from every terrain function that a `call`, `jmp`, pushed or stored immediate,
+or a dword of a vtable or other table outside the terrain's files names, through calls, jumps, immediates
+and table dwords. For each of the 91 left, a scan of the listing and of the
 image's dwords for its address finds no reference, or one only from another of the 90. Three,
 `0x6733e0`, `0x6734b0` and `0x6734f0`, start right after a `ret` with no padding between. `0x670250`'s only
 caller, `0x4020a0`, is itself unreferenced, so it is no root.
