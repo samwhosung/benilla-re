@@ -1009,6 +1009,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8387f0	char[36]	s_usageRenameCharacter		glue	Holds the usage error of RenameCharacter	verified	one	glue/select#script-functions
 0x838814	char[41]	s_usageSetCharacterSelectFacing		glue	Holds the usage error of SetCharacterSelectFacing	verified	one	glue/select#script-functions
 0x838848	uint8_t[256]	s_surveyArchiveKey		glue	Holds the 256-byte public key the survey archive's signature is checked with	verified	one	glue/downloads#running-the-survey
+0x838d10	const char[30]	s_quiverModelDir		objectlayer	Holds the quiver model directory Item\ObjectComponents\Quiver\	verified	one	objectlayer/unitdisplay#the-quiver
+0x838d50	const char[30]	s_weaponModelDir		objectlayer	Holds the weapon model directory Item\ObjectComponents\Weapon\	verified	one	objectlayer/unitdisplay#the-ammo-model
+0x838d70	const char[28]	s_ammoModelDir		objectlayer	Holds the ammo model directory Item\ObjectComponents\Ammo\	verified	one	objectlayer/unitdisplay#the-ammo-model
 0x838dd8	char[43]	s_textTexturesGuildEmblemsBackground02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Background_%02d_TU_U"	inferred	none	
 0x838f50	uint32_t[3]	s_corpseWatchedFields		objectlayer	Holds the corpse's watched field indices, 29, 30 and 32	verified	one	objectlayer/fields#watched-fields
 0x838f6c	uint32_t[5]	s_gameObjectWatchedFields		objectlayer	Holds the game object's watched field indices, 3, 8, 17, 18 and 20	verified	one	objectlayer/fields#watched-fields

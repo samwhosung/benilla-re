@@ -152,6 +152,60 @@ one (0x47a070), opening or closing the hand.
 to `$WTB`) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
 `WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both. Slices run `0x612044`-`0x612116` and `0x612221`-`0x612269`.
 
+## The ammo model
+
+A shooter holds one ammo model, built from an item display id. Two callers set it: a spell start that
+carries an ammo id, for any caster, and a change of the active player's own ammo field. An id of 0
+removes it. Firing does not remove it.
+
+Addresses: `0x60ba30`, `0x60ba5f`, `0x60ba7e`, `0x60bab3`, `0x60bacb`, `0x60baf6`, `0x60bb19`, `0x60bb24`, `0x6e78b6`, `0x4c70b0`, `0x4c70fc`, `0x4c6fea`, `0x479f40`, `0x838d70`, `0x838d50`, `0x60f530`, `0x624b70`, `0x60f322`, `0x60f533`, `0x600177`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60ba30(id)` does nothing when `+0xd2c` already holds the id and a model hangs at `+0xd28`;
+else it detaches and closes the old model (`0x60ba5f` to `0x60ba7e`), stores the id, and builds the new
+one with `0x479f40(body, record, selector)`. The selector is 0x18, or 0x19 for a ranged item of inventory
+type 0x19 (`0x60bab3`), and picks the `Item\ObjectComponents\Ammo\` or `Weapon\` directory
+(`0x838d70`, `0x838d50`); the record is the item display row for the id. The model attaches to the body at
+35 only for selector 0x18, a ranged item that is not a gun or crossbow (class 2, subclass 3 or 18,
+`0x60bacb`), and bit 0x4000 of `+0xd58` (`0x60bb19`). The spell start calls it at `0x6e78b6` with
+the packet's id; the field watcher `0x4c70b0` (registered at `0x4c6fea` for byte offset 0x102c of the
+player block) calls it at `0x4c70fc` with the field for the active player and 0 for another.
+`0x60f530` detaches the model without clearing `+0xd28` or `+0xd2c`; its six callers are the cancel, the
+cast-result and movement paths. Bit 0x4000 is set at `0x624b70` and cleared at `0x60f322`, `0x60f533` and `0x600177`.
+
+## The quiver
+
+A bow shows its quiver on the back while the bow is drawn.
+
+Addresses: `0x611e10`, `0x611e31`, `0x611f08`, `0x611f17`, `0x6117bd`, `0x611f2d`, `0x611f33`, `0x611f4c`, `0x6222e0`, `0x5da0b0`, `0x478aa0`, `0x478960`, `0x479c50`, `0x479cfe`, `0x4798c0`, `0x838d10`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x611e10(leaving)` hangs the ranged weapon. For a player with a character component
+(`+0xd30`), a nonzero argument, passed when the ranged state ends (`0x6117bd`), clears slot 11
+(`0x611f17`). With the argument 0 and a weapon whose inventory type
+is neither 0x1a nor 0x19 (`0x611e31`), so a bow, it finds an item of class 11 among the unit's items at
+`+0x1d38` (`0x6222e0`), takes its display id (`0x5da0b0`) and sets slot 11 (`0x478aa0`). The component
+builds `Item\ObjectComponents\Quiver\` plus the record's model name (`0x479c50`) and attaches the model at
+attachment 26 (`0x479cfe`).
+
+## The bowstring
+
+A bow's string is drawn by a callback, not by the model.
+
+Addresses: `0x611ff0`, `0x611edf`, `0x611eee`, `0x710db0`, `0x7131b0`, `0x6121b8`, `0x6121c9`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x611e10` registers `0x611ff0` with `SetDrawCallback` (`0x611eee`) only when the ranged weapon is
+class 2, subclass 2 (`0x611edf`). The callback reads the bow's event positions `$WTT` and `$WTB`
+through `0x7131b0` and joins them to a middle point by two lines: the unit's attachment 35 while
+bit 0x4000 of `+0xd58` is set (`0x6121b8`), else the midpoint of the two ends.
+
 ## Weapon trails
 
 A visual kit's character procedure of type 8 arms the swing trails of the unit's weapons. It
