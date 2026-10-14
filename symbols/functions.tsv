@@ -24588,7 +24588,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x671380	868	CWorld::CreateLightObjectA		terrain	primitive	void * __fastcall (void *a, void *b, uint32_t c)	Creates a world light object with flags 0x200 or 0x8000 from colour, position and radius	inferred	none		terrain::pos_magnitude_difftest
 0x6716f0	75	CWorld::SetObjectModel		terrain	orchestration	void __fastcall (void *object, void *model)	Swaps a world object's model, moving its light callback	verified	one	terrain/world#model-lighting-callback	
 0x671740	140	CWorld::SetObjectFlags		terrain	orchestration	void __fastcall (void *object, uint32_t flags)	Writes a world object's flag bits into its +0x90	inferred	none		
-0x6717d0	689	SetWorldObjectBounds		terrain	primitive		Sets a world object's transform and bounding box	inferred	none	spell/visuals#emitter-initialization	terrain::camera_set_difftest
+0x6717d0	689	SyncLightNode		terrain	primitive		Stores a light node's position, scale, world box, centre, radius and probe point from a matrix	verified	one	terrain/lightattach#node-sync	terrain::camera_set_difftest
 0x671a90	5	CWorld::UpdateLightObject		terrain	orchestration	void __cdecl (void)	Jumps to the light state animator 0x69e770	inferred	none		
 0x671aa0	23	GetObjectBoxPointer		terrain	unreached	void * __fastcall (void *object)	Returns a world object's box pointer	inferred	none	terrain/overview#unreached-functions	
 0x671ac0	100	ReleaseWorldObject		terrain	orchestration		Releases a world object	inferred	none	spell/visuals#shard-model-start-and-end	
@@ -26534,13 +26534,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a3630	153	CMapObj::ClearFields		models	orchestration		Zeroes a map object's header and group pointers	inferred	none		
 0x6a36d0	223	CMapObj::Free		models	host		Closes a map object's file and frees its data and groups	inferred	none	models/overview#object-files	
 0x6a37b0	649	CMapObj::IntersectSegment		models	primitive		Tests a segment against a map object's groups and returns the hit and surface	inferred	none	models/wmo#queries	models::seg_face_cross_difftest, models::seg_face_dot_difftest, models::seg_normal_scale_difftest
-0x6a3a40	200	CMapObj::IntersectSegmentTwoGroups		models	primitive		Tests a segment against two groups of a map object	inferred	none		
+0x6a3a40	200	CMapObj::GroupFaceRay		models	primitive		Traces a segment against one group under a class word and returns the face it hits	verified	one	terrain/lightattach#containment-queries	
 0x6a3b10	266	CMapObj::CollectSegmentFacets		models	primitive		Collects the facets of a map object's groups a segment crosses	inferred	none	models/wmo#queries	
 0x6a3c20	207	CMapObj::CollectBoxFacets		models	primitive		Collects the facets of a map object's groups a box touches	inferred	none	models/wmo#queries	
 0x6a3cf0	199	CMapObj::QueryGroups		models	primitive		Tests a query against each loaded group of a map object	inferred	none		
 0x6a3dc0	285	CMapObj::CollectVolumeFacets		models	primitive		Collects the facets of a map object's groups inside a convex volume	inferred	none	models/wmo#queries	
-0x6a3ee0	46	CMapObj::ResetGroupQuery		models	orchestration		Clears a group's query state after validating it	inferred	none		
-0x6a3f10	97	CMapObj::GroupSegmentAnyHit		models	orchestration		Returns whether a segment hits a group of a map object	inferred	none		
+0x6a3ee0	46	CMapObj::GroupBoxAnyHit		models	orchestration		Returns whether a box touches a face of a group that the mask 0x86 lets through	verified	one	terrain/lightattach#containment-queries	
+0x6a3f10	97	CMapObj::GroupSegmentAnyHit		models	orchestration		Returns whether a segment hits a face of a group that the mask 0x86 lets through, lowering the fraction	verified	one	terrain/lightattach#containment-queries	
 0x6a3f80	639	CMapObj::CrossPortals		models	primitive	uint8_t __thiscall (const float *segment, float *fraction, uint32_t *groups)	Finds the nearest portal a segment crosses and the two groups beside it	verified	one	models/wmo#portal-crossing	models::portal_extent_scale_difftest, models::portal_plane_side_difftest, models::portal_result_scale_difftest, models::portal_seg_normalize_difftest
 0x6a4200	108	CMapObj::IsReady		models	host		Returns whether a map object's groups and their textures are loaded	inferred	none		
 0x6a4270	62	CMapObj::AreGroupsLoaded		models	orchestration		Returns whether a map object and all its groups are loaded	inferred	none		
@@ -26551,11 +26551,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a44b0	250	CMapObj::GetGroupBoundingSphere		models	primitive	float * __thiscall (CMapObj *this, float *sphere, uint32_t group)	Returns the centre and radius of a group record's box, or zero when unloaded	verified	one	models/wmo#bounding-spheres-and-volume	models::wmo_bounding_sphere_difftest
 0x6a45b0	142	CMapObj::GetGroupBoundingBox		models	orchestration		Copies a group's bounding box from the group info	inferred	none		
 0x6a4640	38	CMapObj::GetGroupFlags		models	orchestration		Returns a group's flags from the group info	inferred	none		
-0x6a4670	150	CMapObj::BoxOverlaps		models	orchestration		Returns whether a box overlaps a map object's bounding box	inferred	none		
+0x6a4670	150	CMapObj::BoxOverlaps		models	orchestration		Returns whether a box overlaps a map object's bounding box	verified	one	terrain/lightattach#containment-walk	
 0x6a4710	149	CMapObj::ContainsPoint		models	unreached		Returns whether a point lies in a map object's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6a47b0	47	CMapObj::QueryLiquid		models	primitive		Forwards a liquid query to a group when the map object is loaded	inferred	none		
 0x6a47e0	73	CMapObj::QueryGroupLiquid		models	primitive		Resolves a group and forwards a liquid query to it	inferred	none		
-0x6a4830	170	CMapObj::BoxOverlapsGroup		models	orchestration		Returns whether a box overlaps a group's bounding box	inferred	none		
+0x6a4830	170	CMapObj::BoxOverlapsGroup		models	orchestration		Returns whether a box overlaps a group's bounding box	verified	one	terrain/lightattach#containment-walk	
 0x6a48e0	166	CMapObj::GroupContainsPoint		models	unreached		Returns whether a point lies in a group's bounding box; nothing reaches it	inferred	none	models/overview#unreached-code	
 0x6a4990	100	PointInsidePlanes		models	primitive	bool __thiscall (CMapObj *this, const float *point)	Returns whether a point lies inside a loaded map object's convex volume planes	verified	one	models/wmo#bounding-spheres-and-volume	models::wmo_point_in_convex_volume_difftest
 0x6a4a00	46	CMapObj::GetLoadedGroup		models	orchestration		Returns a group of a map object when both are loaded	inferred	none	models/wmo#queries	
@@ -26734,10 +26734,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a8730	190	PurgeMapObjectLinks		terrain	orchestration	void __cdecl (void)	Frees the links of map objects marked for removal	inferred	none		
 0x6a87f0	79	SetEntityLightFlags		terrain	orchestration	void __thiscall (void *entity, void *mapObject, void *groupNode)	Sets an entity's indoors bit and light flags from the header flags of the map object group it stands in	verified	one	terrain/mapentities#group-claim-flags	
 0x6a8840	476	TraceMapObjectsNearest		terrain	orchestration	uint8_t __fastcall (const float *start, const float *end, float *t, void *out)	Traces a segment against the loaded map objects and returns the nearest face, object, group node and word	inferred	none	terrain/mapentities#map-object-trace	
-0x6a8a20	487	AttachEntityToGround		terrain	primitive	void __fastcall (void *entity)	Probes down from an entity against terrain and map objects and attaches it to the nearer	inferred	none	terrain/mapentities#entity-placement	terrain::cmapdoodaddef_ground_attach_difftest
-0x6a8c10	142	PlaceEntity		terrain	orchestration	void __fastcall (void *entity)	Links an entity to the map object group that holds it, sets its light flags and bakes its light	inferred	none	terrain/mapentities#entity-placement	
+0x6a8a20	487	AttachEntityToGround		terrain	primitive	void __fastcall (void *entity)	Probes down from an entity against terrain and map objects and attaches it to the nearer	verified	one	terrain/lightattach#down-ray-attach	terrain::cmapdoodaddef_ground_attach_difftest
+0x6a8c10	142	PlaceEntity		terrain	orchestration	void __fastcall (void *entity)	Links an entity to the map object group that holds it, sets its light flags and bakes its light	verified	one	terrain/lightattach#containment-attach	
 0x6a8ca0	547	LinkEntityToChunks		terrain	primitive	void __fastcall (void *entity)	Links an entity into the lists of every chunk its box overlaps	inferred	none		terrain::def_chunk_window_difftest
-0x6a8ed0	793	LinkEntityToMapObject		terrain	primitive	void __fastcall (void *entity, void *a, void *b)	Finds the map object group holding an entity and links the entity into its lists	inferred	none	terrain/mapentities#entity-placement	terrain::floordrop_down_probe_difftest, terrain::floordrop_lerp_difftest, terrain::floordrop_offset_difftest
+0x6a8ed0	793	LinkEntityToMapObject		terrain	primitive	void __fastcall (void *entity, void *a, void *b)	Finds the map object group holding an entity and links the entity into its lists	verified	one	terrain/lightattach#containment-walk	terrain::floordrop_down_probe_difftest, terrain::floordrop_lerp_difftest, terrain::floordrop_offset_difftest
 0x6a91f0	210	LinkEntityToGroup		terrain	orchestration	void __fastcall (void *entity, void *group)	Links an entity into a map object group's lists	inferred	none		
 0x6a92d0	180	LinkEntityToObject		terrain	orchestration	void __fastcall (void *entity, void *object)	Links an entity into a map object's lists	inferred	none		
 0x6a9390	5	InitTerrainTwoPi16Thunk		terrain	orchestration	void __cdecl (void)	Jumps to 0x6a93a0; a static initializer	verified	one	terrain/statics#static-initializers	
@@ -27406,8 +27406,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6b91c0	238	CMapObjGroup::CollectSegment		models	primitive		Collects the facets a segment crosses through a group's BSP	inferred	none		
 0x6b92b0	384	CMapObjGroup::IntersectSegment		models	primitive		Intersects a segment with a group's BSP and liquid	inferred	none	models/wmo#queries	models::bspdispatch_normalize_difftest
 0x6b9430	252	CMapObjGroup::CollectVolume		models	primitive		Collects a group's facets and liquid in a convex volume	inferred	none		
-0x6b9530	172	CMapObjGroup::ResetQuery		models	primitive		Clears a group's BSP query and capture state	inferred	none		
-0x6b95e0	349	CMapObjGroup::SegmentAnyHit		models	primitive		Returns whether a segment hits any face of a group's BSP	inferred	none		models::seg_normalize_difftest
+0x6b9530	172	CMapObjGroup::BoxAnyHit		models	primitive		Returns whether a box touches a face of a group's BSP that the mask lets through	verified	one	terrain/lightattach#containment-queries	
+0x6b95e0	349	CMapObjGroup::SegmentAnyHit		models	primitive		Returns whether a segment hits any face of a group's BSP	verified	one	terrain/lightattach#containment-queries	models::seg_normalize_difftest
 0x6b9740	189	CMapObjGroup::ClearA		models	orchestration		Zeroes the first part of a group's fields	inferred	none		
 0x6b9800	188	CMapObjGroup::ClearB		models	orchestration		Zeroes the second part of a group's fields	inferred	none		
 0x6b98c0	130	CMapObjGroup::Free		models	host		Closes a group's file and frees its BSP, buffers and data	inferred	none		

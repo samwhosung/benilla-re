@@ -166,6 +166,26 @@ three colour bytes are read at `0x695d1f`, `0x695d23` and `0x695d27`, each times
 getting 0.1 added to the end. `0x695d03`, `0x695d0a` and `0x695d11` store 0, `0x3f333333` and
 `0x3cf5c28f`. `0x698f50` reads the same records at `0x699120` and registers them at `0x699146`.
 
+## Group re-pose
+
+`0x698f50(position, heading)` poses a placed map object again. It rebuilds the matrices `+0x24`, `+0x94` and
+`+0xd4`, moves each group's sphere and box and each map light of the object to the new place, and calls
+`0x6a2070` for each group def. That poses every doodad def of the group's list (`+0xb0`, link offset `+0xa8`)
+with `0x6a81d0`: a def with a loaded model gets the position `+0x24` as its local translation
+(`+0x13c`) times the object matrix, the matrix `+0xcc` as its preserved local matrix `+0x10c` times it, and new
+bounds. The sun scale `+0xa4` is not touched.
+
+Addresses: `0x698f50`, `0x699146`, `0x6991a9`, `0x6991b8`, `0x6991ca`, `0x6991db`, `0x6991e4`, `0x6a2070`, `0x6a207b`, `0x6a209d`, `0x6a81d0`, `0x6a81dc`, `0x6a81f2`, `0x6a8215`, `0x6a8227`, `0x6a822c`, `0x6709a0`, `0x5f50a0`, `0x7bcc60`, `0x7bc6a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6a81d0` returns at once for a def without a model (`0x6a81dc`, `0x6a81e4`). `0x7bcc60` writes the transformed
+vector back through its input pointer, so `0x6a8215` leaves the world position in `+0x24`. `0x694e90` saved
+the local matrix at `+0x10c` before it multiplied by the object matrix, which is what `0x6a8227` reuses. The
+transport tick `0x5f50a0` reaches `0x698f50` through `0x6709a0` when the object's class bits `+0x8` hold 8.
+The sun scale stays what the pending drain set, so a moving map object keeps the verdict of its first frame.
+
 ## Pending doodads
 
 `0x698c50` finishes the doodad defs whose models have loaded. For each def in the pending list
