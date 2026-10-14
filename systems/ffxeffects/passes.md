@@ -92,7 +92,7 @@ H·[0xce89c0]/128` with `[0xce89bc] = 1.0` and `[0xce89c0] = 0.88` (`0x6cb48e` t
 and `H` are the target's `+0xc` and `+0x10`), and `0x7bdd60` multiplies on the left by the rotation of
 `0x3e32b8c3` (10° as a float) about `(0, 0, 1)`; the wave UVs go through `0x7bca80`. 3.0 is the
 float at `0x81147c`. `0x6cb25e` and `0x6cb272` look up the program constants `screenMtx` and
-`blurMtx` by name. The player lookup at `0x6cb58d` is not tested for null: `0x6cb592` adds `0xe68` to
+`blurMtx` by name. The constructor `0x6cb1f0` sets `+0x30` to 0, plus 1 when `0xce89f8` is nonzero (`0x6cb21e`) and plus 2 when `caps+0x4c` is 0 (`0x6cb22e`), loads the four programs of `FFXGlowWave.bls` to `+0x34` (`0x58b2e0`) and keeps the constant handles at `+0x44` and `+0x48`. The base constructor clears `caps+0x4c` and no store to it in the device code, `0x58a000` to `0x5a8000`, is outside the OpenGL path (`0x58e5d6`), so on Direct3D the index is 2. The player lookup at `0x6cb58d` is not tested for null: `0x6cb592` adds `0xe68` to
 the result. The test runs the phase, the scroll and the 3.0 scale.
 
 ## Wave map table
