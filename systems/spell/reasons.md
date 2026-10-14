@@ -35,7 +35,7 @@ Proof: one
 Test: none
 
 A scan of the listing for `call 0x6e1a00` and `jmp 0x6e1a00` finds 63 sites (no `jmp`); for each, the
-nearest earlier load of `dl` gives its reason, and two are not constants (`0x609e64` reads `[ebp-0x18]`,
+nearest preceding load of `dl` gives its reason, and two are not constants (`0x609e64` reads `[ebp-0x18]`,
 `0x6e73ac` reads `[ebp-0x1]`). Sites that share a call take two reasons: `0x6e4737` 0x59 or 0x76, `0x6e6089`
 the same, `0x6e5064` 0x2d, 9 or 0xa, `0x6e4195` 0x19 or 0x1a, `0x6e4ec4` 0x12, `0x609dd1` 4, 5 or 0x50 and
 `0x609fbe` 0x4b or 0x55. No site loads 0x5d or 0x5e. The reasons only the server sends include every

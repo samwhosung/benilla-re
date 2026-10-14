@@ -75,5 +75,5 @@ pushes 0x1c with `dl` 1 and `cl` 0 for `0x6e4940` (`0x6e6ec3`) and pushes 1.0. T
 `0x6f37f0` (`0x6e6edf`). All three paths set `eax` to 1, the count of values pushed. The binding's
 call closure is `0x494a50`, `0x6e9fd0`, `0x6ea080`, `0x6e3d30`, `0x6e4940` and the two push functions.
 Lua truthiness is the caller's: a pushed 1.0 is true and nil is false. The binding `ClearTarget`
-(`0x489ff0`) pushes 1.0 when the selection `0xb4e2d8` was nonzero at entry, else nil, and always clears the
+(`0x489ff0`) pushes 1.0 when the selection `0xb4e2d8` is nonzero at entry, else nil, and always clears the
 selection (`0x493540`).

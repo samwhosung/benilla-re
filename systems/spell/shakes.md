@@ -29,7 +29,7 @@ Test: none
 after every call of the spawner `0x60ed40`. Bit 0x10 of a node's `+0x2c` has one reader, `0x620df5`. The
 per-frame update `0x620580` calls the arm pass `0x620be0` unless `+0x2c` has 0x800 or 0x100 (`0x62058f test
 ah,9`); the pass sets 0x800 first and plays the group at `0x620e11` with `&node+0x48` when the node's kit has
-`+0x38` above 0. The tail at `0x60f4c1` runs when no node was recorded (`[ebp-0x1c]` is 0) and plays at
+`+0x38` above 0. The tail at `0x60f4c1` runs when no node has been created (`[ebp-0x1c]` is 0) and plays at
 the extra position `[ebx+0x14]`, else the unit's position (vtable `+0x14`). The stage 2 node (`0x60f3ca`,
 the flag 0x1000 test at `0x60f3d4`) goes through `0x61ffa0`, which ors 0x800 in (`0x61fffd`), so the arm pass
 skips it.
