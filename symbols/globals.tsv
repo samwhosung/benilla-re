@@ -2257,6 +2257,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71100	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71104	uint32_t	s_formSpellCount		unassigned	Holds the number of spells on the form bar	verified	one	ui/petbar#form-list
 0xb71108	uint32_t *	s_formSpells		unassigned	Points at the form bar's sorted spell ids	verified	one	ui/petbar#form-list
+0xb71110	uint32_t[3]	s_dispelTypes		ui	Holds capacity, count and data of the dispel types of the player's known dispel spells	verified	one	ui/auradisplay#the-per-slot-display-test
 0xb71130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71160	void **	s_bookTabs		unassigned	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
 0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
@@ -2340,9 +2341,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc3f58	uint64_t	s_trainerWindowGuid		ui	Holds the trainer GUID a trainer list may also open for	inferred	none	objectlayer/inventory#trainers
 0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
 0xbc3fd0	uint32_t			ui	Holds a dword that Script::ItemTextHasNextPage reads and writes; not read here	inferred	none	
-0xbc5f68	uint32_t			ui	Holds a dword that SetAuraDuration reads and writes; not read here	inferred	none	
-0xbc6040	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0xbc6378	uint32_t			ui	Holds a dword that Script::GetTrackingTexture, Script::CancelTrackingBuff read and write; not read here	inferred	none	
+0xbc5f68	uint32_t[48]	s_auraExpiry		ui	Holds each aura slot's expiry time in milliseconds, 0 for none	verified	one	ui/auradisplay#the-duration-packet
+0xbc6040	uint8_t[768]	s_buffCache		ui	Holds the 48 sixteen-byte buff records of the active player	verified	one	ui/auradisplay#the-players-buff-cache
+0xbc6378	uint32_t	s_trackingSpell		ui	Holds the spell id of the last tracking aura the cache rebuild met	verified	one	ui/auradisplay#rebuilding-the-cache
 0xbc6390	uint32_t[120]	s_actionItemCounts		ui	Holds each item slot's cached stack count or charges	verified	one	ui/actionbar#item-slot-counts
 0xbc6578	char[260]	s_rangedIconPath		unassigned	Holds the ranged weapon icon path of the ranged helper	verified	one	ui/actionbar#attack-and-ranged-icons
 0xbc6698	char[260]	s_attackIconPath		unassigned	Holds the weapon icon path of the attack helper	verified	one	ui/actionbar#attack-and-ranged-icons
@@ -2546,6 +2547,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d7b4	uint32_t	s_spellRadiusMaxId		dbc	Holds the highest SpellRadius.dbc id	verified	one	ui/spelltokens#tokens-that-read-a-record-field
 0xc0d7c4	uint32_t			unassigned	Holds a dword that CGUnit_C::CanStartMeleeAttack, ReportCastFailure, PetSpellFailedHandler read and write; not read here	inferred	none	
 0xc0d7d0	uint32_t[5]	s_spellItemEnchantmentStore		dbc	Holds the SpellItemEnchantment.dbc store	verified	one	objectlayer/items#bound-items
+0xc0d7e4	uint32_t[5]	s_spellIconStore		dbc	Holds the SpellIcon.dbc store: its record table by id at +0x08 and the highest id at +0x0c	verified	one	ui/auradisplay#texture-dispel-type-stacks-and-time
 0xc0d800	uint32_t			unassigned	Holds a dword that Script::GetCraftSpellFocus, Script::GetTradeSkillTools read and write; not read here	inferred	none	
 0xc0d80c	uint32_t[5]	s_spellEffectCameraShakesStore		dbc	Holds the SpellEffectCameraShakes.dbc store	verified	one	objectlayer/gameobjecttypes#display-sounds-and-shakes
 0xc0d820	uint32_t[5]	s_spellDurationStore		dbc	Holds the SpellDuration.dbc store	verified	one	spell/records#record-lookups

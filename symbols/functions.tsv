@@ -10240,29 +10240,29 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e4040	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e4050	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e4060	10			ui	orchestration		Runs its object file code that calls 0x4e4070; not read here	inferred	none		
-0x4e4070	32			ui	primitive		Runs its object file code that calls 0x4e4490; not read here	inferred	none		
+0x4e4070	32	ClearBuffRecords		ui	primitive		Empties all 48 buff records	verified	one	ui/auradisplay#the-players-buff-cache	
 0x4e4090	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4e40a0	21			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e40c0	48			ui	primitive		Runs its object file code that calls 0x4e44b0; not read here	inferred	none		
+0x4e40c0	48	ResetBuffCache		ui	primitive		Empties all 48 buff records and zeroes the 48 expiry words	verified	one	ui/auradisplay#the-duration-packet	
 0x4e40f0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e4100	51			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x4e4140	13			ui	orchestration		Runs its object file code that calls 0x4e4170; not read here	inferred	none		
-0x4e4150	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
-0x4e4170	539			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4e44b0 and 1 more; not read here	inferred	none		
+0x4e4100	51	WatchPlayerAuras		ui	orchestration		Watches the player's aura fields, builds the cache once and clears the tracking word	verified	one	ui/auradisplay#the-players-buff-cache	
+0x4e4140	13	OnPlayerAurasChanged		ui	orchestration		Rebuilds the buff cache and answers 1 to the field watcher	verified	one	ui/auradisplay#the-players-buff-cache	
+0x4e4150	30	UnwatchPlayerAuras		ui	orchestration		Removes the watcher on the player's aura fields	verified	one	ui/auradisplay#the-players-buff-cache	
+0x4e4170	539	RebuildBuffCache		ui	primitive		Removes stale records, appends new auras and signals PLAYER_AURAS_CHANGED	verified	one	ui/auradisplay#rebuilding-the-cache	
 0x4e4390	32	SetAuraDuration		ui	primitive		Stores now plus a duration for an aura slot below 0x30	verified	one	objectlayer/playermessages#notices	
-0x4e43b0	115			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4e43b0	115	FindBuffRecord		ui	primitive		Returns the index-th record passing a filter mask and stores its position	verified	one	ui/auradisplay#getplayerbuff	
 0x4e4430	23	GetBuffRecord		ui	primitive	void * __fastcall (int32_t index)	Returns the 16-byte buff record of an index below 48, else 0	verified	one	ui/tooltipbuff#the-time-left-on-buffs	
 0x4e4450	50	GetBuffTimeLeft		ui	primitive	uint32_t __fastcall (int32_t index)	Returns the milliseconds until a buff ends, or 0 once past	verified	one	ui/tooltipbuff#the-time-left-on-buffs	
-0x4e4490	17			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4e44b0	282			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e45d0	365	Script::GetPlayerBuff	idb	ui	primitive		Implements the Lua function GetPlayerBuff	inferred	none		
-0x4e4740	181	Script::GetPlayerBuffTexture	idb	ui	orchestration		Implements the Lua function GetPlayerBuffTexture	inferred	none		
-0x4e4800	165	Script::GetPlayerBuffDispelType	idb	ui	orchestration		Implements the Lua function GetPlayerBuffDispelType	inferred	none		
-0x4e48b0	125	Script::GetPlayerBuffApplications	idb	ui	orchestration		Implements the Lua function GetPlayerBuffApplications	inferred	none		
-0x4e4930	110	Script::GetPlayerBuffTimeLeft	idb	ui	primitive		Implements the Lua function GetPlayerBuffTimeLeft	inferred	none		
-0x4e49a0	127	Script::CancelPlayerBuff	idb	ui	orchestration		Implements the Lua function CancelPlayerBuff	inferred	none		
-0x4e4a20	86	Script::GetTrackingTexture	idb	ui	orchestration		Implements the Lua function GetTrackingTexture	inferred	none		
-0x4e4a80	18	Script::CancelTrackingBuff	idb	ui	orchestration		Implements the Lua function CancelTrackingBuff	inferred	none		
+0x4e4490	17	ClearBuffRecord		ui	primitive		Sets a record to slot -1, spell 0 and until-cancelled 0	verified	one	ui/auradisplay#the-players-buff-cache	
+0x4e44b0	282	BuildBuffRecord		ui	primitive		Fills a record from an aura slot: spell, level, stacks, flag nibble and until-cancelled	verified	one	ui/auradisplay#the-players-buff-cache	
+0x4e45d0	365	Script::GetPlayerBuff	idb	ui	primitive		Pushes the position of the index-th buff passing the filter and its until-cancelled flag	verified	one	ui/auradisplay#getplayerbuff	
+0x4e4740	181	Script::GetPlayerBuffTexture	idb	ui	orchestration		Pushes the icon path of a buff record's spell, or nil	verified	one	ui/auradisplay#texture-dispel-type-stacks-and-time	
+0x4e4800	165	Script::GetPlayerBuffDispelType	idb	ui	orchestration		Pushes the dispel type string of a buff record's spell, or nil	verified	one	ui/auradisplay#texture-dispel-type-stacks-and-time	
+0x4e48b0	125	Script::GetPlayerBuffApplications	idb	ui	orchestration		Pushes the stack count of a buff record, 1 for none	verified	one	ui/auradisplay#texture-dispel-type-stacks-and-time	
+0x4e4930	110	Script::GetPlayerBuffTimeLeft	idb	ui	primitive		Pushes the seconds left on a buff record	verified	one	ui/auradisplay#texture-dispel-type-stacks-and-time	
+0x4e49a0	127	Script::CancelPlayerBuff	idb	ui	orchestration		Cancels a buff record's aura when its slot is a cancelable buff or its spell allows	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
+0x4e4a20	86	Script::GetTrackingTexture	idb	ui	orchestration		Pushes the icon path of the tracking spell, or nil	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
+0x4e4a80	18	Script::CancelTrackingBuff	idb	ui	orchestration		Cancels the tracking spell when one is held	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
 0x4e4aa0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4e4ac0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4e4ae0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -12597,9 +12597,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x519200	210	Script::UnitDefense	idb	ui	primitive		Implements the Lua function UnitDefense	inferred	none		
 0x5192e0	306	Script::UnitArmor	idb	ui	primitive		Implements the Lua function UnitArmor	inferred	none		
 0x519420	217	Script::UnitCharacterPoints	idb	ui	primitive		Implements the Lua function UnitCharacterPoints	inferred	none		
-0x519500	862	Script::UnitBuff	idb	ui	primitive		Implements the Lua function UnitBuff	inferred	none		
-0x519860	134			ui	primitive		Runs ScriptEvents.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5198f0	928	Script::UnitDebuff	idb	ui	primitive		Implements the Lua function UnitDebuff	inferred	none		
+0x519500	862	Script::UnitBuff	idb	ui	primitive		Pushes a unit's index-th buff icon and stack count, gated by who may see buffs	verified	one	ui/auradisplay#unitbuff-and-unitdebuff	
+0x519860	134	IsAuraDisplayable		ui	primitive		Returns whether a spell's aura shows: attribute bits, category bit and no tracking effect	verified	one	ui/auradisplay#the-per-slot-display-test	
+0x5198f0	928	Script::UnitDebuff	idb	ui	primitive		Pushes a unit's index-th debuff icon, stack count and dispel type	verified	one	ui/auradisplay#unitbuff-and-unitdebuff	
 0x519c90	108	Script::UnitIsTapped	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x4 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
 0x519d00	108	Script::UnitIsTappedByPlayer	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x8 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
 0x519d70	104	Script::UnitIsTrivial	idb	ui	orchestration		Implements the Lua function UnitIsTrivial	inferred	none	ui/unitlevels#trivial-units	
