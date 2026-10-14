@@ -42,7 +42,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x47911c	void *[15]	s_equipTypeJumps		charactermodel	Holds the arm of the equip by inventory type	verified	one	charactermodel/equipment#entry-points
 0x479158	const uint8_t[27]	s_equipTypeArms		charactermodel	Maps an inventory type to an arm of the equip jump table	verified	one	charactermodel/equipment#entry-points
 0x47a0a8	void *[5]	s_sheathAttachJumps		charactermodel	Holds the arm of the sheath attachment by sheathe type	verified	one	charactermodel/equipment#held-items
+0x48083c	uint32_t[5]	s_worldPickCaseTargets		ui	Holds the jump targets of 0x480780 for unit, player, game object, corpse and refused types	verified	one	ui/worldpick#the-candidate-filters
 0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
+0x480d00	uint32_t[4]	s_hitTestValueTargets		ui	Holds the jump targets of 0x480c90 for unit, game object, corpse and other types	verified	one	ui/worldpick#the-candidate-filters
+0x480d10	uint8_t[121]	s_hitTestValueCaseTable		ui	Maps an object type mask less 9 to the cases of 0x480c90: unit and player 0, game object 1, corpse 2, else 3	verified	one	ui/worldpick#the-candidate-filters
 0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
 0x492ab8	void *[4]	s_hoverKindArms		ui	Holds the four arms of the mouseover kind switch of 0x492890	verified	one	ui/tooltipobject#the-publisher
 0x492ac8	uint8_t[121]	s_hoverKindMap		ui	Maps an object type mask minus 9 to an arm of the mouseover kind switch	verified	one	ui/tooltipobject#the-publisher

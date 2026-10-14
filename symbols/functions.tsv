@@ -6470,21 +6470,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4805d0	31			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4805f0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x480600	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x480610	353			ui	primitive		Runs its object file code that calls IsActivePlayerUnit, ClntObjMgrGetActivePlayer and 5 more; not read here	inferred	none		
-0x480780	187			ui	orchestration		Returns whether the world pick admits an object of type unit, player, game object or corpse	inferred	none	spell/targeting#object-pick-filters	
+0x480610	353	AdmitPickUnit		ui	primitive		Returns whether the pick admits a unit by self, control, relation, life and targeting tests	verified	one	ui/worldpick#what-a-unit-must-pass	
+0x480780	187	AdmitPickCandidate		ui	orchestration		Returns whether the pick admits a candidate of type unit, player, game object or corpse	verified	one	ui/worldpick#the-candidate-filters	
 0x4808d0	188			ui	unreached		Runs WorldFrame.cpp code that calls HandleClose2; not read here	inferred	none		
-0x480990	182			ui	primitive		Runs WorldFrame.cpp code that calls HandleClose2, SErrSetLastError; not read here	inferred	none		
-0x480a50	572			ui	orchestration		Runs a scene test the glare occlusion trace calls, not read here	inferred	none		
-0x480c90	112			ui	primitive		Runs WorldFrame.cpp code that calls 0x5f8800, OsGetAsyncTimeMs, CGUnit_C::IsLootable and 1 more; not read here	inferred	none		
-0x480d90	83			ui	orchestration		Runs WorldFrame.cpp code that calls CM2Model::SetHitTestMode, CM2Model::GetFirstChild and 2 more; not read here	inferred	none		
-0x480df0	600			ui	primitive		Runs WorldFrame.cpp code that calls TraceWorldSegment, 0x480a50, SetVector3 and 2 more; not read here	inferred	none		
-0x481050	318			ui	primitive		Returns the world pick mask, built from the flag word predicates while targeting	inferred	none	spell/targeting#flag-word-predicates	
-0x481190	535			ui	orchestration		Runs WorldFrame.cpp code that calls GetDeviceProjection, GetDeviceView, 0x511c50 and 6 more; not read here	inferred	none		
+0x480990	182	ReleasePickNodes		ui	primitive		Releases the model of every node of a pick list and returns the nodes to the free list	verified	one	ui/worldpick#the-candidate-list	
+0x480a50	572			ui	orchestration		Registers the admitted candidates as hit-test instances and returns the GUID and distance of the nearest ray hit	verified	one	ui/worldpick#the-candidate-filters	
+0x480c90	112	HitTestValue		ui	primitive		Returns the hit-test value of an object: 3 living unit, 2 lootable dead unit or corpse, 1 interactable game object	verified	one	ui/worldpick#the-candidate-filters	
+0x480d90	83	SetModelHitTest		ui	orchestration		Registers a model and its children as hit-test instances with a value and a node	verified	one	ui/worldpick#the-candidate-filters	
+0x480df0	600	TracePick		ui	primitive		Traces the terrain and the candidate objects and returns the nearer hit as a pick state	verified	one	ui/worldpick#what-the-pick-returns	
+0x481050	318	BuildPickFlags		ui	primitive		Builds the pick flag word from the mover or from the pending spell's target word	verified	one	ui/worldpick#the-pick-flags	
+0x481190	535	PickAtCursor		ui	orchestration		Builds the pick ray, traces it with the flag word and caches the picked GUID	verified	one	ui/worldpick#what-the-pick-returns	
 0x4813b0	261			ui	primitive		Runs WorldFrame.cpp code that calls UnprojectScreenPoint; not read here	inferred	none		
 0x4814c0	70			ui	orchestration		Runs WorldFrame.cpp code that calls 0x61ce00; not read here	inferred	none		
 0x481510	40			ui	orchestration		Runs WorldFrame.cpp code that calls 0x620520; not read here	inferred	none		
 0x481540	144			ui	orchestration		Renders one object by GUID for a pass: draws it, or clears its model visible flag	verified	one	terrain/scene#object-election	
-0x4815d0	419			ui	orchestration		Runs WorldFrame.cpp code that calls 0x614f40, SMemAlloc, 0x481780 and 5 more; not read here	inferred	none		
+0x4815d0	419	AddPickCandidate		ui	orchestration		Asks an object to update its model and adds a node for it to the candidate list when it renders	verified	one	ui/worldpick#the-candidate-list	
 0x481780	16			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481790	338	CGWorldFrame::OnUpdate		ui	orchestration	void __thiscall (CGWorldFrame *this, uint32_t time)	Picks under the pointer and sets the cursor mode when the world is the mouse focus	verified	one	ui/worldcursor#the-world-update	
 0x4818f0	12	GetActiveCamera		ui	orchestration	void * __cdecl (void)	Returns the camera object whose +0x88 holds the GUID it follows	inferred	none	collision/world#camera-notices	
@@ -6505,9 +6505,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4828d0	309	CGWorldFrame::ClassifyHoveredObject		ui	orchestration	void __thiscall (CGWorldFrame *this, void *pick, int x, int y)	Sets the cursor mode for the picked object and publishes it as the mouseover	verified	one	ui/worldcursor#classifying-a-hovered-object	
 0x482aa0	34			ui	orchestration		Overrides the probe of the world frame, calling the base probe	verified	one	ui/mouse#what-the-pointer-is-tested-against	
 0x482ad0	316	StampLightState		ui	primitive		Writes the frame's clock, player, camera, far clip and weather density into the light state	verified	one	lighting/daynight#light-state	
-0x482c10	132			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, SetShowOwnModel and 2 more; not read here	inferred	none		
-0x482ca0	42			ui	orchestration		Runs WorldFrame.cpp code that calls 0x480990; not read here	inferred	none		
-0x482cd0	107			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::Tick, 0x5f8c90; not read here	inferred	none		
+0x482c10	132	ApplySelfFade		ui	primitive		Sets the own-model flag from the fade alpha when the camera follows the active player and sets the model alpha	verified	one	ui/worldpick#the-local-player-as-a-target	
+0x482ca0	42	ResetPickLists		ui	orchestration		Empties both pick lists and ticks every unit and game object	verified	one	ui/worldpick#the-candidate-list	
+0x482cd0	107	TickWorldObject		ui	primitive		Ticks a unit or a game object of the object manager's enumeration	verified	one	ui/worldpick#the-candidate-list	
 0x482d40	45			ui	orchestration		Runs WorldFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
 0x482d70	292			ui	orchestration		Runs WorldFrame.cpp code that calls GetDeviceProjection, GetDeviceView, 0x482ea0 and 4 more; not read here	inferred	none		
 0x482ea0	1184	CGWorldFrame::OnRender		ui	orchestration	void __thiscall (CGWorldFrame *this)	Applies the idle law at the head of the world frame's render callback, then runs its per-frame work	verified	one	ui/idle#the-idle-law	
