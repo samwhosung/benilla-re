@@ -1938,9 +1938,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42450	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
+0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
-0xb4b3b0	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xb4b3a0	float[3]	s_reticlePosition		ui	Holds the picked ground position the reticle is drawn at	verified	one	ui/groundreticle#the-reticle-state
+0xb4b3b0	float	s_reticleRadius		ui	Holds the half-extent of the area decal, 0 when out of range	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip
 0xb4b3c8	uint64_t	s_cursorItemContainerGuid		ui	Holds the GUID of the container the item payload came from	verified	one	ui/cursor#payload-kinds
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption

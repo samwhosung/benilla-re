@@ -6498,7 +6498,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481f00	87	PickObjectUnderCursor		ui	orchestration		Picks the world object under the cursor for the armed click	verified	one	ui/mouseover#clicks-on-the-world	
 0x481f60	301	DispatchWorldClick		ui	orchestration		Runs world click action 1 or 4 on the object picked at the press	verified	one	ui/mouseover#clicks-on-the-world	
 0x482090	94	CGWorldFrame::PublishMouseover		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, uint64_t guid)	Stores the mouseover GUID and reports it when it changes	verified	one	ui/worldcursor#classifying-a-hovered-object	
-0x4820f0	264			ui	orchestration		Places the area reticle and the targeting cursor over a picked position	inferred	none	spell/targeting#the-targeting-cursor	
+0x4820f0	264			ui	orchestration		Stores the picked ground position, the reticle state and radius, and the targeting cursor	verified	one	ui/groundreticle#the-reticle-state	
 0x482200	1241	CGWorldFrame::ClassifyHoveredUnit		ui	primitive	void __thiscall (CGWorldFrame *this, CGUnit_C *unit)	Sets the cursor mode for a hovered unit from its flags, state and distance	verified	one	ui/worldcursor#units-charm-and-interaction	
 0x4826e0	90	CGWorldFrame::ClassifyHoveredGameObject		ui	orchestration	void __thiscall (CGWorldFrame *this, CGGameObject_C *object)	Sets the cursor mode a game object gives, or the custom cursor for 41	verified	one	ui/worldcursor#corpses-and-game-objects	
 0x482740	394	CGWorldFrame::ClassifyHoveredCorpse		ui	primitive	void __thiscall (CGWorldFrame *this, CGCorpse_C *corpse)	Sets the cursor mode for a hovered corpse from its loot and skin state	verified	one	ui/worldcursor#corpses-and-game-objects	
@@ -6515,7 +6515,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x483430	32			ui	primitive		Runs its object file code not read here	inferred	none		
 0x483450	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x483460	839	RenderWorldFrame		ui	primitive		Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	
-0x4837b0	442			ui	primitive		Draws the placement preview model 0xceca8c	inferred	none	spell/targeting#placement-model-and-rotation	
+0x4837b0	442			ui	primitive		Draws the area decal at the picked position, or tints the placement model	verified	one	ui/groundreticle#the-area-decal	
 0x483970	410			ui	orchestration		Runs its object file code that calls CSimpleFrame::OnFrameSizeChanged, MultiplyByScreenScaleX and 2 more; not read here	inferred	none		
 0x483b10	94	CGWorldFrame::OnLeave		ui	primitive	void __thiscall (CGWorldFrame *this, uint32_t flag)	Leaves the world frame: clears the mouseover, shows the base cursor, resets the reticle	verified	one	ui/mouseover#leaving-the-world-frame	
 0x483b70	94	CGWorldFrame::OnKeyDown		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *keyEvent)	Builds the chord of a key press into its latch slot and runs its binding	verified	one	ui/keybindings#key-press-and-release	
