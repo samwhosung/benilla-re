@@ -487,6 +487,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80655c	const float	s_float3fd55555		unassigned	Holds the float 1.6666666 (0x3fd55555)	inferred	none	
 0x806574	const float	s_float40b1c71cAt806574		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
 0x8065ec	const float	s_mailRangeYards		ui	Holds 5.5555553, the mailbox walk-away range in yards, squared into the range cell	verified	one	ui/mail#opening-and-closing
+0x8066dc	void *[11]	s_bubbleLayoutVtable		ui	Holds the vtable of the layout part embedded at +0x24 of a chat bubble frame	inferred	none	
+0x806708	void *[36]	CGChatBubbleFrame::vftable		ui	Holds the chat bubble frame's vtable, 36 slots; slot 0 is the destructor 0x4b0bb0	verified	one	ui/chatbubble#bubble-frame
 0x80679c	const float	s_float3e4ccccd		unassigned	Holds the float 0.2 (0x3e4ccccd)	verified	one	terrain/liquid#wave-field
 0x806b10	const float	s_float42c80000		unassigned	Holds the float 100 (0x42c80000)	inferred	none	
 0x806eb8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -2499,9 +2501,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6efc4	uint32_t	s_mailListDeadline		ui	Holds the tick before which a CheckInbox does not ask the server again	verified	one	ui/mail#opening-the-inbox
 0xb6efc8	uint32_t	s_mailRequestPending		ui	Holds 1 from sending a mail request until its reply arrives	verified	one	ui/mail#opening-the-inbox
 0xb6efcc	uint32_t	s_mailReadSinceQuery		ui	Holds 1 once a mail is marked read, so closing the mailbox asks for the next-mail time	verified	one	ui/mail#opening-the-inbox
-0xb6eff0	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xb6effc	uint8_t			ui	Holds a byte its object file's code reads and writes; not read here	inferred	none	
-0xb6f038	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb6eff0	float[3]	s_bubbleCameraPos		ui	Holds the camera position the live chat bubbles were last ordered for	verified	one	ui/chatbubble#the-bubble-lists
+0xb6effc	uint8_t	s_bubbleCameraValid		ui	Holds 1 once s_bubbleCameraPos has been stored; the free list drain clears it	verified	one	ui/chatbubble#the-bubble-lists
+0xb6f038	uint32_t	s_liveBubbleHead		ui	Holds the first live chat bubble, the farthest from the camera, with bit 0 set for none	verified	one	ui/chatbubble#the-bubble-lists
 0xb6f064	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb6f098	uint32_t[1024]	s_petBookSpells		unassigned	Holds the pet's spell book, a spell id per slot	verified	one	ui/spellbook#spell-book-lists
 0xb700ac	uint32_t *	s_indexedSpells		ui	Points at the spells 0x5ec720 looks up by index	inferred	none	objectlayer/playercombat#skills

@@ -7815,22 +7815,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b0900	31			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b0920	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4b0930	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4b0940	610			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CSimpleFrame::CSimpleFrame, SMemAlloc, 0x77e5f0 and 11 more; not read here	inferred	none		
-0x4b0bb0	116			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CSimpleFrame::~CSimpleFrame, SMemFree; not read here	inferred	none		
-0x4b0c30	617			ui	primitive		Runs ChatBubbleFrame.cpp code that calls CM2Model::IsLoaded, CWorld::IsEntityDrawn, 0x4b0ee0 and 5 more; not read here	inferred	none		
-0x4b0ea0	59			ui	primitive		Runs ChatBubbleFrame.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x4b0ee0	70			ui	primitive		Runs ChatBubbleFrame.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x4b0940	610	CGChatBubbleFrame::CGChatBubbleFrame		ui	primitive	CGChatBubbleFrame * __thiscall (void *parent)	Builds a chat bubble frame: tiled backdrop, tail texture and a text string with the frame hugging the text	verified	one	ui/chatbubble#bubble-frame	
+0x4b0bb0	116	CGChatBubbleFrame::DeletingDestructor		ui	orchestration	void * __thiscall (uint32_t flags)	Unlinks a chat bubble from its list and frees it when flag bit 0 is set	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b0c30	617	CGChatBubbleFrame::Update		ui	primitive	bool __thiscall (CGPlayer_C *player, CGUnit_C *speaker)	Fades a bubble by range and the scene's draw election, ends it at its duration and writes its world point	verified	one	ui/chatbubble#the-update-gates	
+0x4b0ea0	59	CGChatBubbleFrame::StartFadeIn		ui	primitive	void __thiscall ()	Starts a 250 ms fade in and shows the frame unless it is fading in or in its final fade out	verified	one	ui/chatbubble#fades	
+0x4b0ee0	70	CGChatBubbleFrame::StartFadeOut		ui	primitive	void __thiscall (bool final)	Starts a 250 ms fade out, marking it final when asked	verified	one	ui/chatbubble#fades	
 0x4b0f30	1			ui	orchestration		Runs ChatBubbleFrame.cpp code not read here	inferred	none		
-0x4b0f40	50			ui	orchestration		Runs ChatBubbleFrame.cpp code that calls SMemFree; not read here	inferred	none		
-0x4b0f80	209			ui	primitive		Runs ChatBubbleFrame.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::ReleaseChatBubble; not read here	inferred	none		
-0x4b1060	757			ui	primitive		Runs ChatBubbleFrame.cpp code that calls GetActiveCamera, 0x4b1de0, ClntObjMgrGetActivePlayer and 10 more; not read here	inferred	none		
-0x4b1360	251			ui	primitive		Runs ChatBubbleFrame.cpp code that calls 0x4b1960; not read here	inferred	none		
-0x4b1460	58			ui	orchestration		Runs ChatBubbleFrame.cpp code that calls 0x4b14a0; not read here	inferred	none		
-0x4b14a0	231			ui	primitive		Runs ChatBubbleFrame.cpp code that calls ClntObjMgrObjectPtr, 0x483ee0, PixelAlignX and 2 more; not read here	inferred	none		
-0x4b1590	110			ui	primitive		Runs ChatBubbleFrame.cpp code not read here	inferred	none		
-0x4b1600	517			ui	primitive		Runs ChatBubbleFrame.cpp code that calls 0x7716f0, SStrChr, SStrCmp and 9 more; not read here	inferred	none		
-0x4b1810	91			ui	primitive		Runs ChatBubbleFrame.cpp code not read here	inferred	none		
-0x4b1870	153			ui	primitive		Runs ChatBubbleFrame.cpp code that calls SMemAlloc, 0x4b0940; not read here	inferred	none		
+0x4b0f40	50	FreeBubblePool		ui	orchestration	void __cdecl ()	Destroys every bubble on the free list and clears the pool flag	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b0f80	209	RetireAllBubbles		ui	orchestration	void __cdecl ()	Retires every live bubble: releases the speaker's bubble, or hides it and frees it when the speaker is gone	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b1060	757	UpdateChatBubbles		ui	primitive	void __cdecl ()	Updates every live bubble, retires or destroys the dead ones, reorders by camera distance and sets frame levels	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b1360	251	InsertBubbleByDistance		ui	primitive	void __thiscall ()	Links a bubble into the live list before the first bubble that is nearer the camera	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b1460	58	PlaceChatBubbles		ui	orchestration	void __thiscall (void *worldFrame)	Places every live bubble on the screen, then lays out the pending frames	verified	one	ui/chatbubble#placing-the-bubble	
+0x4b14a0	231	CGChatBubbleFrame::Place		ui	primitive	void __thiscall (void *worldFrame)	Projects a bubble's world point, snaps it to device pixels and seats its text when the point moved	verified	one	ui/chatbubble#placing-the-bubble	
+0x4b1590	110	CGChatBubbleFrame::Release		ui	orchestration	void __thiscall ()	Hides a bubble and moves it to the free list	verified	one	ui/chatbubble#the-bubble-lists	
+0x4b1600	517	CGChatBubbleFrame::SetLine		ui	primitive	void __thiscall (uint64_t *speaker, const char *text, uint32_t *colour)	Strips a line to its text, sets and sizes the string, latches the duration and starts the fade in	verified	one	ui/chatbubble#bubble-text	
+0x4b1810	91	ChatBubbleDuration		ui	primitive	uint32_t __fastcall (const char *text, bool isSelf)	Returns a bubble's lifetime in ms from the separator runs of its text	verified	one	ui/chatbubble#lifetime	
+0x4b1870	153	AcquireChatBubble		ui	orchestration	CGChatBubbleFrame * __thiscall (void *parent)	Takes a bubble from the free list or builds one, and links it on the live list	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b1910	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b1920	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4b1930	5			ui	orchestration		Runs its object file code not read here	inferred	none		

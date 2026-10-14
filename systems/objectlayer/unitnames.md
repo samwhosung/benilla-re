@@ -76,6 +76,65 @@ descriptor's `+0xc`, and the unit and player vtables both hold `0x605960` there 
 player's AFK, DND and GM tags at `0x5ec9e0`, `0x5eca40` and `0x5eca80` (`players`); the unit's are
 empty.
 
+## The name anchor
+
+The name hangs on a model attachment posed in the current frame: attachment 18 for an unmounted
+unit and 29 for a mounted one. A model without it gets the point 1.25 heights above the feet.
+`0x608640` rebuilds the point every call, caches nothing and smooths nothing; the name moves with
+the head the model draws, never a frame behind it.
+
+Addresses: `0x608640`, `0x608649`, `0x608652`, `0x60865a`, `0x60866d`, `0x608681`, `0x6086a7`, `0x6086b1`, `0x712cb0`, `0x712d50`, `0x714000`, `0x71400c`, `0x615185`, `0x60f7fd`, `0x6c6f00`, `0x6c7439`
+Confidence: verified
+Proof: one
+Test: none
+
+The id is `(−(field ≤ 0) & 0xb) + 0x12`: the mount display id at `[[+0x110]+0x1fc]` (`0x608652`)
+tested by `setle` (`0x60865a`) gives 18 or 29. `0x712cb0` asks the model for the attachment and
+`0x712d50` takes its bone's palette entry from the model after `0x714000` has run; `0x714000`
+returns at once when the model's stamp `+0x40` equals its scene's `+0x10` (`0x71400c`), so the
+palette is the one the mesh is skinned with. Without the attachment `0x6086a7` multiplies the unit scale
+`+0x90` by the box height `+0xbc` and `0x6086b1` by 1.25 (`0x80c5d0`) and adds it to the base z. The box
+height is `max.z − min.z` of the box copied at `0x615183` to `0x61518b`. `0x608640` has three callers:
+the plate projection (`0x60f7fd`), the name update (`0x6c6f00`) and `0x6c7439`.
+
+## The show test
+
+A name shows by a fixed order of tests, the first that decides winning. `0x6070a0(mask)` returns 0
+when the unit's selectable slot `+0x58` says no, when it has a nameplate (`+0xe60`) or a chat
+bubble (`+0xe64`); for the active player it returns bit 0 of the mask; for the current target 1,
+whatever the mask; 0 when the byte at field `+0x213` has bit 0 or 1; then bit 2 of the mask for a
+player and bit 1 for anything else. The own-unit test comes before the target test, so
+targeting oneself still obeys `UnitNameOwn`.
+
+Addresses: `0x6070a0`, `0x6070a8`, `0x6070af`, `0x6070b9`, `0x6070c5`, `0x6070d1`, `0x6070dc`, `0x6070e6`, `0x607101`, `0x607113`, `0x5fa6d0`, `0xb4e2d8`
+Confidence: verified
+Proof: one
+Test: none
+
+The tests in address order: `[unit vtable+0x58]` (`0x6070a8`), `+0xe60` (`0x6070af`), `+0xe64`
+(`0x6070b9`), `0x5fa6d0` for the active player's own unit (`0x6070c5`, return `mask & 1`), the GUID
+against the target pair `0xb4e2d8` (`0x6070dc`, `0x6070e6`, return 1), `test [field+0x213],3`
+(`0x607101`) and the unit type bit 4 of `[[+8]+8]` (`0x607113`) selecting `(mask >> 2) & 1` or
+`(mask >> 1) & 1`. The mask is `0xce8720`, whose bits 0x1, 0x2, 0x4, 0x10 and 0x20 the five `UnitName*`
+variables set (`playername`); only the first three reach this test.
+
+## No distance cull
+
+No name is dropped for its distance. The descriptor update `0x6c6d40` and the icon queue `0x6c6e00`
+compare no float, and the name draw `0x6c6e90` has one float compare, of the unit's name height
+against 4 (`0x6c6f1d`), which sets a line step and gates nothing. The name draw's gates are the
+unit lookup and the show test.
+
+Addresses: `0x6c6d40`, `0x6c6e00`, `0x6c6e90`, `0x6c6f1d`, `0x6c6f10`, `0x6070a0`
+Confidence: verified
+Proof: one
+Test: none
+
+The census is every `fcom`, `fcomp`, `ucomis` and `comis` in `[0x6c6d40, 0x6c6e90)`: none, and in
+`[0x6c6e90, 0x6c7100)`: `0x6c6f1d`, with the control that the same pattern finds `0x6c6f1d`. The operands
+at `0x6c6f10` and `0x6c6f13` are the name anchor's z and the unit's base z, so the compared quantity is a
+height. The callees of `0x6c6e90` include no camera accessor.
+
 ## Nameplates
 
 `0x60f600` runs each frame. A unit gets a plate when it is alive, selectable, not stealthed, in a

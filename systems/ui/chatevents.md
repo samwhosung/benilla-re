@@ -18,7 +18,7 @@ Opcode 0x96, handled by `0x49d560`: `u8 type`, `u32 language`, then by type. Typ
 to 128 bytes) and a `u32` rank. Every type ends with a GUID, `u32 length`, that many bytes of text and
 `u8 tag`.
 
-Addresses: `0x49d560`, `0x49d5af`, `0x49d5ba`, `0x49d5dc`, `0x49d5e4`, `0x49d610`, `0x49d6a3`, `0x49d6b1`, `0x49d6bc`, `0x49d6c7`, `0x49d6d2`, `0x49d6e1`, `0x49d6f2`, `0x49d961`, `0x49da3d`, `0x498630`, `0x4190b0`, `0x418e30`, `0x418eb0`, `0x4191b0`, `0x419ac0`, `0x418cb0`
+Addresses: `0x49d560`, `0x49d5af`, `0x49d5ba`, `0x49d5dc`, `0x49d5e4`, `0x49d610`, `0x49d6a3`, `0x49d6b1`, `0x49d6bc`, `0x49d6c7`, `0x49d6d2`, `0x49d6e1`, `0x49d6f2`, `0x49d671`, `0x49d67e`, `0x49d961`, `0x49da3d`, `0x498630`, `0x4190b0`, `0x418e30`, `0x418eb0`, `0x4191b0`, `0x419ac0`, `0x418cb0`
 Confidence: verified
 Proof: one
 Test: none
@@ -28,7 +28,7 @@ tested at `0x49d5c2` to `0x49d5d4` (`GetGuid`, `0x49d5dc`). The tests `0x49d5e4`
 types 11, 12, 90, 13 and 26 to `0x49da3d` (length, name, GUID, length, text, tag) and 89 falls into `0x49d610`, the
 same reads. Types 82, 83 and 84 go to `0x49d961`, the default reads with their own checks; 14 reads the name
 with limit 0x80 (`0x49d6b1`) and a `u32` (`0x49d6bc`). The text is not copied: `GetDataInSitu` (`0x419ac0`) returns a pointer into the packet, advancing past the
-length. The tag byte is read at `0x49d6f2`. The handler is registered by `0x498630` to `0x49863a`.
+length. The tag byte is read at `0x49d6f2`. Type 89 reads its fields at `0x49d610` to `0x49d65e` and, if its sender is not ignored (`0x49d671`), becomes type 6, a whisper (`0x49d67e`). The handler is registered by `0x498630` to `0x49863a`.
 
 ## The chat tag
 
