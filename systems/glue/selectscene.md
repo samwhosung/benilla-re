@@ -210,19 +210,20 @@ scales at `+0x04` and `+0x0c` and the levels at `+0x08` and `+0x10`.
 
 The body and the pet start with identical calls, `0x7121a0(-1, 0, -1, 0, 1.0, 1, 1)`: the whole
 model, animation 0, a random variation, from the start, blended and persistent. No argument loops.
+
 Both models register `0x473090` through `0x711bb0` as the sequence-completion callback. On a
 completion (reason 0) it branches on the channel in `edx`: −1 or 0x1a replays animation 0 on the
 whole model with a fresh random variation (`0x47309a`, `0x47309f`), so a pet idles by chaining Stand
 variations; any other channel gets `0x7121a0(edx, −1, −1, 0, 1.0, 1, 1)` unless the animation is 15
-(`0x4730a4`), which does nothing. A variation plays once: the shipped Wolf and Imp chains have replay range (0, 0), and
-the variation probabilities sum to 32767.
+(`0x4730a4`), which does nothing.
 
 Addresses: `0x472bda`, `0x472eea`, `0x472b87`, `0x472e99`, `0x473090`, `0x47309a`, `0x47309f`, `0x4730a4`, `0x711bb0`, `0x7121a0`, `0x7122c1`, `0x719494`, `0x7194fd`, `0x70a280`, `0x7194f5`
 Confidence: verified
 Proof: one
 Test: none
 
-The pushes at `0x472bb6` to `0x472bd8` and `0x472ec7` to `0x472ee8` match slot for slot. The callback
+A variation plays once: the shipped Wolf and Imp chains have replay range (0, 0), and the variation
+probabilities sum to 32767. The pushes at `0x472bb6` to `0x472bd8` and `0x472ec7` to `0x472ee8` match slot for slot. The callback
 cell `[model+0x70]` is called from the per-frame advance at `0x7194fd` with reason 0 (`0x7194f5
 push 0`) once a channel reaches its end, behind a latch (`0x7194bc`), and from `0x7122c1` with
 reason 1 when a call replaces the channel; `0x473093` returns for a nonzero reason. Wolf (animation
