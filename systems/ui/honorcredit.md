@@ -4,7 +4,7 @@ The server message that reports an honor kill or an honor award, what the client
 rank badge textures the kill text carries. The log line and the floating text are also in `objectlayer/unitcombat#honor`;
 the rank functions are `ui/honor`.
 
-Roots: `0x6c8470`, `0x6c7f10`
+Roots: `0x48f690`
 
 ## Honor credit message
 

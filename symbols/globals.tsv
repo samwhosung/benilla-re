@@ -3397,7 +3397,6 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce88d0	float	s_playerNameInfinity3		playername	Holds +inf copied by 0x6c7980, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
 0xce88dc	void *[15]	s_rankBadgeTextures		playername	Holds the 15 PvP rank badge textures	verified	one	playername/worldtext#rank-icon-records
 0xce8918	uint32_t[15]	s_filterLists		unassigned	Holds five capacity, count, base triples of word lists: server spam, spam, reserved, profanity, profane names	verified	one	ui/chatfilter#the-word-lists
-0xce893c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xce89a0	uint32_t			unassigned	Holds a dword that ConstructGlowEffect reads and writes; not read here	inferred	none	
 0xce89c0	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xce89c4	int32_t			unassigned	Holds an int32_t its object file's code reads and writes; not read here	inferred	none	
