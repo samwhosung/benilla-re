@@ -8987,8 +8987,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c8ff0	191	Script::CursorCanGoInSlot	idb	ui	orchestration		Implements the Lua function CursorCanGoInSlot	inferred	none		
 0x4c90b0	157	Script::ShowInventorySellCursor	idb	ui	orchestration		Implements the Lua function ShowInventorySellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4c9150	468	Script::SetInventoryPortaitTexture	idb	ui	primitive		Implements the Lua function SetInventoryPortaitTexture	inferred	none		
-0x4c9330	307	Script::GetGuildInfo	idb	ui	primitive		Implements the Lua function GetGuildInfo	inferred	none		
-0x4c9470	26			ui	orchestration		Runs PaperDollInfoFrame.cpp code that calls 0x515e50; not read here	inferred	none		
+0x4c9330	307	Script::GetGuildInfo	idb	ui	primitive		Pushes the guild name, rank name and rank of a unit that is a player in a cached guild	verified	one	ui/guild#the-units-guild	
+0x4c9470	26	OnGuildInfoArrived		ui	orchestration		Broadcasts PLAYER_GUILD_UPDATE for the unit whose guild record landed	verified	one	ui/guild#the-units-guild	
 0x4c9490	5			ui	orchestration		Runs PaperDollInfoFrame.cpp code not read here	inferred	none		
 0x4c94a0	15			ui	primitive		Runs PaperDollInfoFrame.cpp code not read here	inferred	none		
 0x4c94b0	117	Script::GetInventoryAlertStatus	idb	ui	primitive		Implements the Lua function GetInventoryAlertStatus	inferred	none		
@@ -9315,55 +9315,55 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d0920	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d0930	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d0940	10			ui	orchestration		Runs its object file code that calls 0x4d0950; not read here	inferred	none		
-0x4d0950	23			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4d0950	23	InitGuildRosterVector		ui	primitive		Zeroes the roster member array's control block	verified	one	ui/guild#state-and-start-up	
 0x4d0970	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4d0980	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4d09b0	13			ui	orchestration		Runs its object file code that calls 0x4d09d0; not read here	inferred	none		
-0x4d09c0	16			ui	orchestration		Runs its object file code that calls 0x4d09d0; not read here	inferred	none		
-0x4d09d0	39			ui	orchestration		Runs its object file code that calls 0x4a1a60; not read here	inferred	none		
-0x4d0a00	102			ui	primitive		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4d0a70	82			ui	primitive		Runs its object file code that calls ClientServices::ClearMessageHandler, SMemFree; not read here	inferred	none		
-0x4d0ad0	639	OnGuildRoster	idb	ui	primitive		Runs GuildInfo.cpp code that calls CDataStore::GetUInt32, 0x4d24c0, SMemAlloc and 8 more; not read here	inferred	none		
-0x4d0d50	500			ui	primitive		Runs its object file code that calls 0x4d09b0, SStrCmpI; not read here	inferred	none		
-0x4d0f70	53			ui	orchestration		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4d0fb0	119			ui	primitive		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4d1030	71			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d1080	67			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d10d0	136			ui	primitive		Runs its object file code that calls OsGetAsyncTimeMs, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4d1160	45			ui	orchestration		Signals GUILD_ROSTER_UPDATE with its argument	inferred	none	objectlayer/party#guild-events	
-0x4d1190	81	Script::GetNumGuildMembers	idb	ui	orchestration		Implements the Lua function GetNumGuildMembers	inferred	none		
-0x4d11f0	16	Script::GetGuildRosterMOTD	idb	ui	orchestration		Implements the Lua function GetGuildRosterMOTD	inferred	none		
-0x4d1200	627	Script::GetGuildRosterInfo	idb	ui	primitive		Implements the Lua function GetGuildRosterInfo	inferred	none		
-0x4d1480	21			ui	orchestration		Runs its object file code that calls 0x4d1160; not read here	inferred	none		
-0x4d14a0	312	Script::GetGuildRosterLastOnline	idb	ui	primitive		Implements the Lua function GetGuildRosterLastOnline	inferred	none		
-0x4d15e0	280	Script::GuildRosterSetPublicNote	idb	ui	primitive		Implements the Lua function GuildRosterSetPublicNote	inferred	none		
-0x4d1700	280	Script::GuildRosterSetOfficerNote	idb	ui	primitive		Implements the Lua function GuildRosterSetOfficerNote	inferred	none		
-0x4d1820	106	Script::SetGuildRosterSelection	idb	ui	primitive		Implements the Lua function SetGuildRosterSelection	inferred	none		
-0x4d1890	42	Script::GetGuildRosterSelection	idb	ui	primitive		Implements the Lua function GetGuildRosterSelection	inferred	none		
-0x4d18c0	105	Script::CanGuildPromote	idb	ui	orchestration		Implements the Lua function CanGuildPromote	inferred	none		
-0x4d1930	106	Script::CanGuildDemote	idb	ui	orchestration		Implements the Lua function CanGuildDemote	inferred	none		
-0x4d19a0	105	Script::CanGuildInvite	idb	ui	orchestration		Implements the Lua function CanGuildInvite	inferred	none		
-0x4d1a10	105	Script::CanGuildRemove	idb	ui	orchestration		Implements the Lua function CanGuildRemove	inferred	none		
-0x4d1a80	106	Script::CanEditMOTD	idb	ui	orchestration		Implements the Lua function CanEditMOTD	inferred	none		
-0x4d1af0	106	Script::CanEditPublicNote	idb	ui	orchestration		Implements the Lua function CanEditPublicNote	inferred	none		
-0x4d1b60	105	Script::CanEditOfficerNote	idb	ui	orchestration		Implements the Lua function CanEditOfficerNote	inferred	none		
-0x4d1bd0	106	Script::CanViewOfficerNote	idb	ui	orchestration		Implements the Lua function CanViewOfficerNote	inferred	none		
-0x4d1c40	108	Script::CanEditGuildInfo	idb	ui	orchestration		Implements the Lua function CanEditGuildInfo	inferred	none		
-0x4d1cb0	343	Script::SortGuildRoster	idb	ui	orchestration		Implements the Lua function SortGuildRoster	inferred	none		
-0x4d1e10	22	Script::SetGuildRosterShowOffline	idb	ui	orchestration		Implements the Lua function SetGuildRosterShowOffline	inferred	none		
-0x4d1e30	38	Script::GetGuildRosterShowOffline	idb	ui	orchestration		Implements the Lua function GetGuildRosterShowOffline	inferred	none		
-0x4d1e60	44	Script::GuildControlGetNumRanks	idb	ui	orchestration		Implements the Lua function GuildControlGetNumRanks	inferred	none		
-0x4d1e90	262	Script::GuildControlGetRankName	idb	ui	primitive		Implements the Lua function GuildControlGetRankName	inferred	none		
-0x4d1fa0	64	Script::GuildControlSetRank	idb	ui	orchestration		Implements the Lua function GuildControlSetRank	inferred	none		
-0x4d1fe0	140	Script::GuildControlGetRankFlags	idb	ui	primitive		Implements the Lua function GuildControlGetRankFlags	inferred	none		
-0x4d2070	88	Script::GuildControlSetRankFlag	idb	ui	primitive		Implements the Lua function GuildControlSetRankFlag	inferred	none		
-0x4d20d0	305	Script::GuildControlSaveRank	idb	ui	primitive		Implements the Lua function GuildControlSaveRank	inferred	none		
-0x4d2210	207	Script::GuildControlAddRank	idb	ui	primitive		Implements the Lua function GuildControlAddRank	inferred	none		
-0x4d22e0	109	Script::GuildControlDelRank	idb	ui	orchestration		Implements the Lua function GuildControlDelRank	inferred	none		
-0x4d2350	3	Script::CloseGuildRoster	idb	ui	orchestration		Implements the Lua function CloseGuildRoster	inferred	none		
-0x4d2360	8	Script::GuildRoster	idb	ui	orchestration		Implements the Lua function GuildRoster	inferred	none		
-0x4d2370	16	Script::GetGuildInfoText	idb	ui	orchestration		Implements the Lua function GetGuildInfoText	inferred	none		
-0x4d2380	160	Script::SetGuildInfoText	idb	ui	orchestration		Implements the Lua function SetGuildInfoText	inferred	none		
+0x4d0980	47	FreeGuildRosterVector		ui	primitive		Frees the roster member pointer array at exit	verified	one	ui/guild#state-and-start-up	
+0x4d09b0	13	GetGuildMemberPublicNote		ui	primitive		Returns a member's public note after masking its notes once	verified	one	ui/guild#the-member-record	
+0x4d09c0	16	GetGuildMemberOfficerNote		ui	primitive		Returns a member's officer note after masking its notes once	verified	one	ui/guild#the-member-record	
+0x4d09d0	39	MaskGuildMemberNotes		ui	primitive		Runs the profanity masker over both notes of a member and clears the mark	verified	one	ui/guild#the-member-record	
+0x4d0a00	102	InitGuildRoster		ui	orchestration		Registers the roster message handler and zeroes the roster state and sort chain	verified	one	ui/guild#state-and-start-up	
+0x4d0a70	82	ShutdownGuildRoster		ui	orchestration		Clears the roster handler and frees every member record	verified	one	ui/guild#state-and-start-up	
+0x4d0ad0	639	OnGuildRoster	idb	ui	primitive	int32_t __stdcall OnGuildRoster(void *unused, CDataStore *msg)	Reads the roster message into the member array, sorts it and signals GUILD_ROSTER_UPDATE	verified	one	ui/guild#the-roster-message	
+0x4d0d50	500	CompareGuildMembers		ui	primitive	int32_t __cdecl CompareGuildMembers(GuildMemberInfo **a, GuildMemberInfo **b)	Orders two roster members by the online pre-gate and the eight-slot sort chain	verified	one	ui/guild#the-roster-order	
+0x4d0f70	53	SetGuildShowOffline		ui	orchestration	void __fastcall SetGuildShowOffline(uint32_t flag)	Stores the show-offline flag, sorts a nonempty roster and signals the update	verified	one	ui/guild#changing-the-order	
+0x4d0fb0	119	PromoteGuildSortKey		ui	primitive	void __fastcall PromoteGuildSortKey(uint32_t key)	Moves a sort key to slot 0 of the chain, flips its direction when already there, and sorts	verified	one	ui/guild#changing-the-order	
+0x4d1030	71	FindSelectedGuildMember		ui	primitive		Returns the 0-based index of the selected member in the array, or -1	verified	one	ui/guild#last-online-and-selection	
+0x4d1080	67	StageGuildRankFlags		ui	primitive	void __fastcall StageGuildRankFlags(int32_t rank)	Stores the staged rank index and stages each rank flag as its mask AND the rank's rights	verified	one	ui/guild#rank-control	
+0x4d10d0	136	RequestGuildRoster		ui	primitive		Sends the roster request unless the 10 second deadline has not passed	verified	one	ui/guild#notes-and-text	
+0x4d1160	45	SignalGuildRosterUpdate		ui	orchestration	void __fastcall SignalGuildRosterUpdate(int32_t stale)	Signals GUILD_ROSTER_UPDATE with no argument, or with 1 after clearing the request deadline	verified	one	ui/guild#roster-events	
+0x4d1190	81	Script::GetNumGuildMembers	idb	ui	orchestration		Pushes the full member count or the online count by the show-offline flag and the argument	verified	one	ui/guild#reading-the-roster	
+0x4d11f0	16	Script::GetGuildRosterMOTD	idb	ui	orchestration		Pushes the guild message of the day	verified	one	ui/guild#notes-and-text	
+0x4d1200	627	Script::GetGuildRosterInfo	idb	ui	primitive		Pushes the ten values of one roster member, or ten empty values	verified	one	ui/guild#reading-the-roster	
+0x4d1480	21	OnGuildRecordArrived		ui	orchestration		Signals GUILD_ROSTER_UPDATE when a guild record lands in the cache	verified	one	ui/guild#roster-events	
+0x4d14a0	312	Script::GetGuildRosterLastOnline	idb	ui	primitive		Pushes years, months, days and hours since an offline member was online	verified	one	ui/guild#last-online-and-selection	
+0x4d15e0	280	Script::GuildRosterSetPublicNote	idb	ui	primitive		Sends a changed public note for a roster member	verified	one	ui/guild#notes-and-text	
+0x4d1700	280	Script::GuildRosterSetOfficerNote	idb	ui	primitive		Sends a changed officer note for a roster member	verified	one	ui/guild#notes-and-text	
+0x4d1820	106	Script::SetGuildRosterSelection	idb	ui	primitive		Stores the GUID of the roster member at an index as the selection	verified	one	ui/guild#last-online-and-selection	
+0x4d1890	42	Script::GetGuildRosterSelection	idb	ui	primitive		Pushes the 1-based index of the selected member, 0 for none	verified	one	ui/guild#last-online-and-selection	
+0x4d18c0	105	Script::CanGuildPromote	idb	ui	orchestration		Pushes 1 when the player's rank has the promote right, else nil	verified	one	ui/guild#rank-rights	
+0x4d1930	106	Script::CanGuildDemote	idb	ui	orchestration		Pushes 1 when the player's rank has the demote right, else nil	verified	one	ui/guild#rank-rights	
+0x4d19a0	105	Script::CanGuildInvite	idb	ui	orchestration		Pushes 1 when the player's rank has the invite right, else nil	verified	one	ui/guild#rank-rights	
+0x4d1a10	105	Script::CanGuildRemove	idb	ui	orchestration		Pushes 1 when the player's rank has the remove right, else nil	verified	one	ui/guild#rank-rights	
+0x4d1a80	106	Script::CanEditMOTD	idb	ui	orchestration		Pushes 1 when the player's rank may set the message of the day, else nil	verified	one	ui/guild#rank-rights	
+0x4d1af0	106	Script::CanEditPublicNote	idb	ui	orchestration		Pushes 1 when the player's rank may edit public notes, else nil	verified	one	ui/guild#rank-rights	
+0x4d1b60	105	Script::CanEditOfficerNote	idb	ui	orchestration		Pushes 1 when the player's rank may edit officer notes, else nil	verified	one	ui/guild#rank-rights	
+0x4d1bd0	106	Script::CanViewOfficerNote	idb	ui	orchestration		Pushes 1 when the player's rank may view officer notes, else nil	verified	one	ui/guild#rank-rights	
+0x4d1c40	108	Script::CanEditGuildInfo	idb	ui	orchestration		Pushes 1 when the player's rank may edit the guild information, else nil	verified	one	ui/guild#rank-rights	
+0x4d1cb0	343	Script::SortGuildRoster	idb	ui	orchestration		Promotes a named sort key, or the name key for an unknown string	verified	one	ui/guild#changing-the-order	
+0x4d1e10	22	Script::SetGuildRosterShowOffline	idb	ui	orchestration		Sets the show-offline flag, on when no argument is given	verified	one	ui/guild#changing-the-order	
+0x4d1e30	38	Script::GetGuildRosterShowOffline	idb	ui	orchestration		Pushes 1 when offline members are shown, else nil	verified	one	ui/guild#changing-the-order	
+0x4d1e60	44	Script::GuildControlGetNumRanks	idb	ui	orchestration		Pushes the rank count of the last roster message	verified	one	ui/guild#rank-edits	
+0x4d1e90	262	Script::GuildControlGetRankName	idb	ui	primitive		Pushes the masked name of a 1-based rank, or nil	verified	one	ui/guild#rank-edits	
+0x4d1fa0	64	Script::GuildControlSetRank	idb	ui	orchestration		Stages the rank flags of a 1-based rank	verified	one	ui/guild#rank-control	
+0x4d1fe0	140	Script::GuildControlGetRankFlags	idb	ui	primitive		Pushes thirteen values, 1 or nil, from the live rights of the staged rank	verified	one	ui/guild#rank-control	
+0x4d2070	88	Script::GuildControlSetRankFlag	idb	ui	primitive		Stores a staged value for one of the thirteen rank flags	verified	one	ui/guild#rank-control	
+0x4d20d0	305	Script::GuildControlSaveRank	idb	ui	primitive		Sends the staged rank's rights and a new name for it	verified	one	ui/guild#rank-edits	
+0x4d2210	207	Script::GuildControlAddRank	idb	ui	primitive		Sends a new rank name while fewer than ten ranks exist	verified	one	ui/guild#rank-edits	
+0x4d22e0	109	Script::GuildControlDelRank	idb	ui	orchestration		Sends the delete-rank request while more than five ranks exist	verified	one	ui/guild#rank-edits	
+0x4d2350	3	Script::CloseGuildRoster	idb	ui	orchestration		Does nothing	verified	one	ui/guild#notes-and-text	
+0x4d2360	8	Script::GuildRoster	idb	ui	orchestration		Requests the roster once per 10 seconds	verified	one	ui/guild#notes-and-text	
+0x4d2370	16	Script::GetGuildInfoText	idb	ui	orchestration		Pushes the guild information text	verified	one	ui/guild#notes-and-text	
+0x4d2380	160	Script::SetGuildInfoText	idb	ui	orchestration		Sends a new guild information text	verified	one	ui/guild#notes-and-text	
 0x4d2420	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4d2450	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4d2470	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -12558,8 +12558,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Implements the Lua function UnitIsCharmed	inferred	none		
 0x516d40	79	Script::UnitIsPlusMob	idb	ui	primitive		Implements the Lua function UnitIsPlusMob	inferred	none		
 0x516d90	72	Script::UnitClassification	idb	ui	orchestration		Implements the Lua function UnitClassification	inferred	none		
-0x516de0	82	Script::IsInGuild	idb	ui	orchestration		Implements the Lua function IsInGuild	inferred	none		
-0x516e40	89	Script::IsGuildLeader	idb	ui	orchestration		Implements the Lua function IsGuildLeader	inferred	none		
+0x516de0	82	Script::IsInGuild	idb	ui	orchestration		Pushes 1 when the player has a guild id, else nil	verified	one	ui/guild#rank-rights	
+0x516e40	89	Script::IsGuildLeader	idb	ui	orchestration		Pushes 1 when the player's guild rank is 0, else nil	verified	one	ui/guild#rank-rights	
 0x516ea0	86	Script::IsResting	idb	ui	primitive		Implements the Lua function IsResting	inferred	none		
 0x516f00	82	Script::GetDodgeChance	idb	ui	orchestration		Implements the Lua function GetDodgeChance	inferred	none		
 0x516f60	82	Script::GetBlockChance	idb	ui	orchestration		Implements the Lua function GetBlockChance	inferred	none		

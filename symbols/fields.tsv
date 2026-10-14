@@ -681,6 +681,18 @@ FriendSlot	0x0008	8	uint64_t	m_guid	net	Holds the friend guid, zero for an empty
 FriendSlot	0x0010	4	uint32_t	m_level	net	Holds the friend level	verified	one	net/friends#friend-list-object
 FriendSlot	0x0014	4	uint32_t	m_class	net	Holds the friend class id	verified	one	net/friends#friend-list-object
 FriendSlot	0x0018	4	uint32_t	m_area	net	Holds the friend area id	verified	one	net/friends#friend-list-object
+GuildMemberInfo	0x0000	8	uint64_t	m_guid	ui	Holds the member's GUID	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0008	48	char[48]	m_name	ui	Holds the member's name	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0038	4	int32_t	m_level	ui	Holds the level, widened from a byte	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x003c	4	int32_t	m_classId	ui	Holds the ChrClasses id, widened from a byte	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0040	4	int32_t	m_zoneId	ui	Holds the AreaTable id	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0044	4	uint32_t	m_rankId	ui	Holds the 0-based rank id, 0 for the guild master	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0048	4	uint32_t	m_online	ui	Holds 1 when the presence byte is nonzero	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x004c	1	uint8_t	m_presence	ui	Holds the wire presence byte, bit 0x2 away and bit 0x4 do-not-disturb	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x004d	1	uint8_t	m_notesUnmasked	ui	Holds 1 while the notes have not been run through the profanity masker	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x004e	128	char[128]	m_publicNote	ui	Holds the public note	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x00ce	128	char[128]	m_officerNote	ui	Holds the officer note	verified	one	ui/guild#the-member-record
+GuildMemberInfo	0x0150	4	float	m_lastOnlineDays	ui	Holds the days since the member was last online, 0 for an online member	verified	one	ui/guild#the-member-record
 ITEMCOOLDOWNHASHNODE	0x0000	4	uint32_t	m_hashVal	spell	Holds the key whose low bits pick the slot	verified	one	spell/cooldowns#item-cooldown-table-internals
 ITEMCOOLDOWNHASHNODE	0x0004	8	void *[2]	m_linkToSlot	spell	Holds the node's link in its slot list	verified	one	spell/cooldowns#item-cooldown-table
 ITEMCOOLDOWNHASHNODE	0x000c	8	void *[2]	m_linkToFull	spell	Holds the node's link in the table's node list	verified	one	spell/cooldowns#item-cooldown-table

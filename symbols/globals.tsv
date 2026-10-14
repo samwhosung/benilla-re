@@ -68,7 +68,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4ca3a4	void *[5]	s_cases4ca230		ui	Holds the 5 case addresses of the switch in 0x4ca230	inferred	none	
 0x4cad98	void *[5]	s_cases4cacb0		ui	Holds the 5 case addresses of the switch in 0x4cacb0	inferred	none	
 0x4cadac	uint8_t[11]	s_caseIndexes4cacb0		ui	Holds the 11 case indexes of the switch in 0x4cacb0	inferred	none	
-0x4d0f44	void *[8]	s_cases4d0d50		ui	Holds the 8 case addresses of the switch in 0x4d0d50	inferred	none	
+0x4d0f44	void *[8]	s_guildSortKeyArms		ui	Holds the eight case addresses of the comparator's key switch	verified	one	ui/guild#the-roster-order
 0x504b44	void *[14]	s_cases504540		ui	Holds the 14 case addresses of the switch in 0x504540	inferred	none	
 0x504b7c	uint8_t[28]	s_caseIndexes504540		ui	Holds the 28 case indexes of the switch in 0x504540	inferred	none	
 0x507590	void *[9]	s_serverTokenArms		ui	Holds the nine arms of the server text token handler 0x5070a0	verified	one	ui/questtext#the-tokens
@@ -1277,7 +1277,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x848894	char[47]	s_textInvalidInventorySlotInGetInventorySlotInfo		ui	Holds the string "Invalid inventory slot in GetInventorySlotInfo"	inferred	none	
 0x848984	char[48]	s_textInvalidInventorySlotIn		ui	Holds the string "Invalid inventory slot in GetInventoryItemCount"	inferred	none	
 0x8489b4	char[41]	s_textUsageGetInventoryItemCountUnitSlot		ui	Holds the string "Usage: GetInventoryItemCount(unit, slot)"	inferred	none	
-0x84966c	uint32_t			ui	Holds a dword that Script::GuildControlGetRankFlags, Script::GuildControlSaveRank read and write; not read here	inferred	none	
+0x84966c	int32_t	s_guildStagedRank		ui	Holds the staged rank index of the rank control functions, -1 for none	verified	one	ui/guild#rank-control
+0x849670	uint32_t[26]	s_guildRankFlags		ui	Holds thirteen pairs of a rights mask and its staged value, in flag order	verified	one	ui/guild#rank-control
 0x849fa8	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84a0a4	uint32_t			ui	Holds a dword that Script::GetFactionInfo reads and writes; not read here	inferred	none	
 0x84b4ec	char[34]	s_textMissingHeaderQuestDesigners		ui	Holds the string "Missing header! (quest designers)"	inferred	none	
@@ -2279,15 +2280,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb72608	uint64_t	s_heldItemGuidB		ui	Holds an item GUID 0x622210 leaves locked	inferred	none	objectlayer/inventory#searching-the-inventory
 0xb72650	uint32_t			ui	Holds a dword that HandleAuctionCommandResultPacket reads and writes; not read here	inferred	none	
 0xb72654	uint32_t			ui	Holds a dword that HandleAuctionCommandResultPacket reads and writes; not read here	inferred	none	
-0xb72680	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb726d0	uint32_t			ui	Holds a dword that OnGuildRoster, Script::CanGuildPromote, Script::CanGuildDemote read; not read here	inferred	none	
-0xb72720	uint32_t			ui	Holds data whose address OnGuildRoster, Script::GetGuildInfoText take; not read here	inferred	none	
-0xb73118	uint32_t			ui	Holds a dword that OnGuildRoster, Script::GetNumGuildMembers, Script::GetGuildRosterInfo read and write; not read here	inferred	none	
-0xb7311c	uint32_t			ui	Holds a dword that OnGuildRoster, Script::GetNumGuildMembers read and write; not read here	inferred	none	
-0xb73120	uint32_t			ui	Holds a dword that OnGuildRoster, Script::GuildControlGetNumRanks read and write; not read here	inferred	none	
-0xb73124	uint32_t			ui	Holds a dword that Script::GetNumGuildMembers, Script::GetGuildRosterShowOffline read and write; not read here	inferred	none	
-0xb73128	uint32_t			ui	Holds a dword that Script::SetGuildRosterSelection reads and writes; not read here	inferred	none	
-0xb73130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb72680	uint32_t[16]	s_guildSortChain		ui	Holds the eight sort slots, a key and a direction each, the latest first	verified	one	ui/guild#the-roster-order
+0xb726d0	uint32_t[10]	s_guildRankRights		ui	Holds the rights bit mask of each of the ten ranks	verified	one	ui/guild#rank-rights
+0xb726fc	uint32_t[4]	s_guildRosterVector		ui	Holds the member array's capacity, high-water count, data pointer and growth hint	verified	one	ui/guild#state-and-start-up
+0xb72720	char[2000]	s_guildInfoText		ui	Holds the guild information text	verified	one	ui/guild#notes-and-text
+0xb72f00	char[512]	s_guildMotd		ui	Holds the guild message of the day	verified	one	ui/guild#notes-and-text
+0xb73118	uint32_t	s_guildMemberCount		ui	Holds the member count of the last roster message, the bound of every roster index	verified	one	ui/guild#the-roster-message
+0xb7311c	uint32_t	s_guildOnlineCount		ui	Holds the number of online members in the last roster message	verified	one	ui/guild#the-roster-message
+0xb73120	uint32_t	s_guildRankCount		ui	Holds the rank count of the last roster message	verified	one	ui/guild#the-roster-message
+0xb73124	uint32_t	s_guildShowOffline		ui	Holds 1 when offline members are shown among the online ones	verified	one	ui/guild#changing-the-order
+0xb73128	uint64_t	s_guildSelection		ui	Holds the GUID of the selected roster member, 0 for none	verified	one	ui/guild#last-online-and-selection
+0xb73130	uint32_t	s_guildRosterDeadline		ui	Holds the clock value before which GuildRoster sends nothing	verified	one	ui/guild#notes-and-text
 0xb73240	uint32_t			ui	Holds a dword that CGDuelInfo::OnDuelRequested, CGDuelInfo::OnDuelComplete read and write; not read here	inferred	none	
 0xb73294	uint8_t			ui	Holds a byte that HandleSetFactionAtWarPacket, HandleSetFactionVisiblePacket read and write; not read here	inferred	none	
 0xb73764	uint32_t			ui	Holds a dword that Script::GetNumFactions, Script::GetSelectedFaction read and write; not read here	inferred	none	
