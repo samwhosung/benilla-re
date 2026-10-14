@@ -6940,7 +6940,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491930	5			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x491940	30			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x491960	98			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4919d0	40			ui	orchestration		Runs GameUI.cpp code that calls 0x529fe0; not read here	inferred	none		
+0x4919d0	40	RefreshTooltipForUnit		ui	orchestration	void __fastcall (uint64_t *guid)	Rebuilds the tooltip when it still shows the unit the GUID names	verified	one	ui/mouseover#the-tooltip-stays-put	
 0x491a00	65			ui	orchestration		Marks the name of a GUID's unit dirty	inferred	none	objectlayer/playerfields#watchers-on-every-player	
 0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	objectlayer/party#guild-tabards	
 0x491a60	1145			ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
@@ -13217,7 +13217,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5305b0	113			ui	orchestration		Runs Tooltip.cpp code that calls SStrPrintf, 0x771d80, 0x530640; not read here	inferred	none		
 0x530630	16			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
 0x530640	1054	GameTooltipSize		ui	primitive	void __thiscall ()	Sizes the plate from its lines, padding and wrap limit, then re-anchors it	verified	one	ui/tooltipcontent#sizing-the-tooltip	
-0x530a60	24	CGTooltip::HideEffective		ui	orchestration	void __thiscall ()	Gives the tooltip no owner, then runs the base effective hide	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
+0x530a60	24	CGameTooltip::Hide		ui	orchestration	void __thiscall (CGameTooltip *this)	Clears the owner with SetOwner(0, 0, 0, 0), then hides the frame	verified	one	ui/mouseover#the-tooltip-stays-put	
 0x530a80	82	CGTooltip::ShowEffective		ui	orchestration	void __thiscall ()	Shows the tooltip with an owner and a line, else hides it	verified	one	ui/hover#the-tooltip-of-a-hidden-frame	
 0x530ae0	56			ui	orchestration		Hides a cursor-anchored tooltip, or starts a 2-second fade	verified	one	ui/tooltip#fading-out	
 0x530b20	279			ui	primitive		Keeps a cursor-anchored tooltip at the cursor and fades a fading one	verified	one	ui/tooltip#following-the-cursor	

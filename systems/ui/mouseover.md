@@ -125,6 +125,28 @@ Test: none
 `0x492be5` slot 0x6c on the world frame `0xb4b2bc`. The release handler runs the hook only with no pressed frame
 (`ui/mouse#mouse-release`).
 
+## The tooltip stays put
+
+Nothing in the GameTooltip's hide, owner or fade code writes the mouseover state, and nothing polls for a missing
+plate. The hide `0x530a60` is `SetOwner(0, 0, 0, 0)` then the base hide. `0x52ffe0` clears the tooltip first
+(`0x530050`), which zeroes the remembered unit and game object subjects and the line count and fires
+`OnTooltipCleared`; it then stores the owner and the anchor mode, 7 (none) unless an owner is given. The fade
+`0x530ae0` hides at once when the anchor mode is 6 (cursor) and otherwise arms a fade of 2.0 seconds. So a script
+that hides the tooltip leaves the plate gone until the mouseover object changes or a reset of the cached pair
+happens.
+
+Addresses: `0x530a60`, `0x52ffe0`, `0x530050`, `0x530ae0`, `0x4919d0`, `0x529fe0`, `0x76ad50`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x530a6b` calls `0x52ffe0` and `0x530a73` jumps to the base hide. `0x52ffe6` clears, `0x53000c` stores the owner at `+0x314`, `0x530012` mode 7
+at `+0x318` and `0x530031` the given mode. Clear stores zero at `+0x368`, `+0x36c`, `+0x370`, `+0x374` (`0x5300ad` to `0x5300bf`)
+and `+0x31c` (`0x530244`), then fires `+0x44c` (`0x530263`). `0x530ae3` tests mode 6; the fade timer is 2.0 (`0x808e7c`). `0x4919dc` to
+`0x4919ec` compare the remembered subject at `+0x368`, `+0x36c` and `0x4919f2` calls `0x529fe0`: the refresh after a
+unit's flags change rebuilds only for that subject, which a hide or owner call has just zeroed. The only code that writes
+`0xb4e2c8` is `0x492890`; the other references are the crash dump and the `mouseover` unit token.
+
 ## Leaving the world frame
 
 The world frame's leave runs the base leave, publishes a null mouseover when one is cached, zeroes the cache,
