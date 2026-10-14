@@ -68,7 +68,7 @@ values, radii included.
 Addresses: `0x6d6160`, `0x6d60c0`, `0x6d5fb0`, `0x6d5fe7`, `0x6d5fff`, `0x6d603f`, `0x6d6048`, `0x6d6062`, `0x53f4f0`, `0x66fc30`, `0xc9e384`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::vec_scale_remap_difftest`
 
 The DBC finalizer `0x53f4f0` jumps to `0x6d6160` with cl = 1, which runs `0x6d60c0` over every
 Light record with that flag, then the band pass below. `0x6d5fb0` skips a record whose three
@@ -87,7 +87,7 @@ bands of each LightParams group in id order with no gap. A record with no keys i
 Addresses: `0x6d6100`, `0x6d6090`, `0x6d6118`, `0x6d6124`, `0x6d60a4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_array_scale_36_difftest`
 
 `0x6d6100` walks the records by index, `idiv` by 6 at `0x6d6118`, and calls `0x6d6090` only on a
 zero remainder (`0x6d6124`), passing the flag in dl. `0x6d6090` returns when the flag is clear or
@@ -103,7 +103,7 @@ for a LightIntBand record, its bytes blue, green and red with the fourth unused.
 Addresses: `0x6d62ec`, `0x6d6313`, `0x6d6326`, `0x6d6341`, `0x6d6489`, `0x6d64a7`, `0x6d64b6`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_band_lerp_bgra_difftest`, `lighting::dn_band_lerp_scalar_difftest`, `lighting::dn_band_repack_half_boundary_difftest`, `lighting::dn_band_single_key_constant_difftest`, `lighting::dn_band_zero_key_commit_difftest`
 
 Both evaluators read the count at `+0x4` (`0x6d62ec`, `0x6d6489`) and pass `row + 8` as the key
 times (`0x6d6313`, `0x6d64a7`). The colour evaluator reads byte `+0x4a` of a value as one channel

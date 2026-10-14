@@ -19,7 +19,7 @@ always 0: 250 indices, with the vertex count 121 and the index count 300 stored 
 Addresses: `0x6d0d10`, `0x6d0d28`, `0x6d0daa`, `0x81152c`, `0x811540`, `0x8115bc`, `0x8026bc`, `0x6d1c9f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::sky_band_orient_setup_difftest`
 
 `0x6d0d10(r)` stores 24 columns at `+0x24` (`0x6d0d28`), sizes the vertex array to 168, the colours
 to 168 and the indices to 300 (`0x6d0daa`). It walks the six floats at `0x81152c` times π, with
@@ -39,7 +39,7 @@ the screen tint (`sky-colour-tracks`).
 Addresses: `0x6d0f50`, `0x6d0f7b`, `0x6d0f87`, `0x6d0ff7`, `0x6d1015`, `0x6d10af`, `0x6d10e3`, `0x6d10ef`, `0x6d1111`, `0x6d1117`, `0x6d111d`, `0x6d115e`, `0x6d117a`, `0x6d118a`, `0x6d11a2`, `0x6d11c6`, `0x6d125c`, `0x6d1282`, `0x6d1297`, `0x6d12c1`, `0x6d12c9`, `0x6d13bc`, `0x6d1484`, `0x6d14de`, `0x6d1508`, `0x6d1550`, `0x6d5270`, `0x8030a0`, `0x811614`, `0x7ffd7c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_pack_bytes_color_difftest`, `lighting::lerp_result_to_byte_difftest`, `lighting::sky_alpha_branch_difftest`, `lighting::sky_alpha_index_difftest`, `lighting::sky_angle_accum_difftest`, `lighting::sky_angle_wrap_difftest`, `lighting::sky_row_angle_difftest`, `lighting::sky_row_step_difftest`, `lighting::sky_scale_init_difftest`
 
 `0x6d0f7b` evaluates `0xce9b2c` and `0x6d0f87` multiplies by `[0xce9c5c]`. G is built per channel
 by `0x6d15f0(band 3 + i, band 3, g)` with round(f32 − 0.5) and packed by `0x6d5270`. The apex is
@@ -49,6 +49,7 @@ column count). `0x6d118a` takes the w < 0 arm. The w ≥ 0 lerp is `0x6d15f0(ban
 (`0x6d11c6`); the other arm builds P = `0x6d15f0(G, band 2, 0.7·g)` (`0x7ffd7c`) and then
 `0x6d15f0(G, P, −w·g)` (`0x6d13bc`); a byte scale it computes first at `0x6d12c1` is overwritten.
 Each takes `0x690ae0` with the tint (`0x6d1282`). The rim loop is `0x6d1508`.
+The tests run `0x6d0f50` in 9 slices between `0x6d0f6b` and `0x6d149a`.
 
 ## Sky colour tracks
 
@@ -62,7 +63,7 @@ The sky colours read two tracks of six keys, built at start-up:
 Addresses: `0x6ce120`, `0x6ce210`, `0xce9b2c`, `0xce9af8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_init_6ce120_difftest`
 
 `0x6ce120` stores the glow track's six keys and `0x6ce210` the other's, each a time and a value,
 at start-up; `0x6d0f7b` and the column loop evaluate them through `0x6cf6c0`.

@@ -19,7 +19,7 @@ as value[j] − (value[j] − value[i])·e/d when value[i] < value[j].
 Addresses: `0x6cf6c0`, `0x6cf6d1`, `0x6cf6ea`, `0x6cf703`, `0x6cf70b`, `0x6cf714`, `0x6cf71d`, `0x6cf72f`, `0x6cf73f`, `0x6cf752`, `0x6cf76b`, `0x6cf773`, `0x6cf786`, `0x801360`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_track_eval_difftest`
 
 `0x6cf6c0(keys, count, phase)` in ecx, edx and the stack, `ret 4`, value in st0. The search
 `fcomp [key]`, `test ah,0x41`, `jnp` exits at phase ≤ time (`0x6cf70b`). `0x6cf714` handles no
@@ -51,7 +51,7 @@ written as clock times; angles are π times a constant, shown in degrees.
 Addresses: `0x6d3a10`, `0x6d3a3b`, `0x6d3ab8`, `0x6d3b80`, `0x6ce4a0`, `0x6ce560`, `0x811508`, `0x81163c`, `0x811638`, `0x80c5d0`, `0x811650`, `0x811648`, `0x810018`, `0x811644`, `0xce8d90`, `0xce8db0`, `0xce8d4c`, `0xce8d64`, `0xce8cac`, `0xce8d0c`, `0xce8d24`, `0xce8ccc`, `0xce8ce4`, `0xce8c8c`, `0xce9a98`, `0xce9a58`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_celestial_positions_difftest`, `lighting::dn_init_6ce4a0_difftest`, `lighting::dn_init_6ce560_difftest`, `lighting::dn_sun_dir_difftest`
 
 The times are the floats 0.2291667 (05:30), 0.5, 0.8958333 (21:30), 0.9166667 (22:00), 0.1666667
 (04:00) and 1.0 at `0x811510` to `0x811528`, with offsets 0.0034722 (5 min), 0.0208333, 0.0520833,
@@ -69,7 +69,7 @@ and 127°, so the direction always points down; it is the direction light travel
 Addresses: `0x6d3a10`, `0x6d3b12`, `0x6d3b17`, `0x6d3b25`, `0x6d3b2d`, `0x6d3b36`, `0x6d3b42`, `0x6d3b4f`, `0xce9cc8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_sun_dir_difftest`
 
 The polar track's result is stored as a float (`0x6d3b17`), the azimuth's stays in st0. `fsin` of
 the stored polar, `fcos` of the azimuth times it to `+0x168` (`0x6d3b36`), `fsin` of the azimuth
@@ -88,7 +88,7 @@ white moon's position, and the moon glare's two scale ends the white moon's size
 Addresses: `0x6d3b80`, `0x6d3fda`, `0x6d3fed`, `0x6d4008`, `0x6d4033`, `0x6d403b`, `0x6d4067`, `0x6d408b`, `0x6d40a1`, `0x6d40b4`, `0x6d40c9`, `0x6d417a`, `0x6d4190`, `0x6d41a1`, `0x6d41ad`, `0x6d41b3`, `0x6d41bf`, `0x6d4207`, `0x6d4210`, `0x6d423a`, `0x6d4259`, `0x6d425f`, `0x6d426c`, `0x6d4322`, `0x80c4e8`, `0x80a000`, `0x80a8b0`, `0xce9858`, `0xce9878`, `0xce9898`, `0x73ff3f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_celestial_positions_difftest`
 
 The sun disc: polar `0xce8d64` (`0x6d3fda`), azimuth `0xce8d4c` (`0x6d3fed`), x stored at
 `0x6d4008`, `fsqrt` of the squared sum (`0x6d4033`), `fdivr [0x80c4e8]` (12.0, `0x6d403b`), each
@@ -107,7 +107,7 @@ falling 12:00 to 21:30, rising 22:00 to 24:00, falling 00:00 to 04:00, else 0. N
 Addresses: `0x6d432f`, `0x6d4463`, `0xce9d08`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_celestial_positions_difftest`
 
 A census of `0xce9d08` in the listing finds four `fstp` and one `mov` of 0 in `0x6d3b80`, ending at
 `0x6d4463`, and no other instruction; the control `0xce9d0c` finds its two stores in `0x6d2260`.
@@ -133,7 +133,7 @@ alpha ends and a look factor. A disc holds its position, colour, texture, size a
 Addresses: `0x6d1ba0`, `0x6d1cf8`, `0x6d1e30`, `0x6d1f30`, `0x6d2030`, `0x6d20a0`, `0x7e5000`, `0x7e5b10`, `0x7e60f0`, `0x6cec80`, `0x6ced30`, `0x6cec20`, `0x6cede0`, `0x8115d4`, `0x8115e8`, `0x80e004`, `0x811624`, `0x86f4f4`, `0x86f50c`, `0x86f54c`, `0x86f538`, `0x86f524`, `0x881c70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::moon_glare_setup_difftest`, `lighting::sun_glare_setup_difftest`
 
 `0x6d1e30` and `0x6d1f30` load the texture through `0x7e5000`, which also creates the occlusion
 query object at `+0x4` when the device supports one, and store the fields above; the times are
@@ -142,6 +142,7 @@ query object at `+0x4` when the device supports one, and store the fields above;
 `moon02.blp` through `0x7e5b10` with base scales 1.0, 1.75 (0x3fe00000) and 1.0, and moon02's
 period 1.7. `0x6d20a0` creates the star model `0x881c70` in its own scene through `0x7e60f0`.
 `0x6cec80` and `0x6ced30` zero the glares and store their method tables `0x8115d4` and `0x8115e8`.
+The tests run `0x6d1e30` from `0x6d1e3f` to `0x6d1f22`; `0x6d1f30` from `0x6d1f3f` to `0x6d2022`.
 
 ## Glare update
 
@@ -156,7 +157,7 @@ f) times the base scale, the alpha byte becomes bits(f32(old/255 · lerp(alpha e
 Addresses: `0x6cf490`, `0x6cf4cf`, `0x6cf4f1`, `0x6cf4fe`, `0x6cf50e`, `0x6cf533`, `0x6cf557`, `0x6cf576`, `0x6cf58c`, `0x6cf592`, `0x6cf5a6`, `0x6cf5bd`, `0x6cf5e3`, `0x6cf61a`, `0x6cf641`, `0x6cf65a`, `0x6cf68b`, `0x6cf699`, `0x6cf6a2`, `0x6cf6aa`, `0x86f3d8`, `0x73f940`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::sky_band_scale_difftest`, `lighting::sky_clamp_difftest`, `lighting::sky_dir_normalize_difftest`, `lighting::sky_exposure_pre_difftest`, `lighting::sky_factor_mul_difftest`, `lighting::sky_light_dot_difftest`
 
 The unit direction is (pos − eye) times 1/√(sum of squares), each a float (`0x6cf4cf`). Slots 3
 and 4 multiply in (`0x6cf4f1`, `0x6cf4fe`). The skybox weight is the override's when its handle is
@@ -166,6 +167,7 @@ skips slot 2 for a target of exactly 0. The envelope rises to min(env + rise·dt
 above the threshold. `0x6cf641` is DE F9, (c − t)/(1 − t). `0x6cf6a2` calls the C runtime's
 `pow(c, [0x86f3d8])`, 10.0. The alpha byte is reset by the table build each frame
 (`daynight#body-colours`).
+The tests run `0x6cf490` in 11 slices between `0x6cf4a0` and `0x6cf6b0`.
 
 ## Glare occlusion
 
@@ -178,7 +180,7 @@ byte is nonzero; then it runs the device occlusion test when the glare has a que
 Addresses: `0x6cf7b0`, `0x6cf7be`, `0x6cf7c3`, `0x6cf7d0`, `0x6cf7e3`, `0x6cf800`, `0x6cf810`, `0x6cf81d`, `0x6cf82e`, `0x6cf84d`, `0x7e5780`, `0x7e5787`, `0x7e579c`, `0x7e57aa`, `0x7e57af`, `0x801620`, `0xc7f31c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_fade_factor_difftest`, `lighting::sf_skyblend_complement_difftest`, `lighting::sf_skyblend_triangle_difftest`
 
 `0x6cf7b0` passes `this + 0xc` and 1.0 to the cloud sampler `0x6cfa90` (`clouds#cover-projection`) on
 `0xce98e8` and returns `fsubr 1.0`; `0x6cf7d0` subtracts 0.5, doubles, takes `fabs` and subtracts
@@ -186,6 +188,7 @@ from 1 (`0x6cf7e3`). `0x6cf800` calls `0x672470` with a depth out-pointer (`0x6c
 for 0xf, and otherwise clamps depth times `[0x801620]` (0.1). `0x7e5780` tests `[0xce8c34]`, `+0x8`
 and `+0x1b` (`0x7e5787`), then `+0x4` and `[0xc7f31c]+0x28` (`0x7e579c`) before jumping to the test
 (`0x7e57aa`) or the trace (`0x7e57af`). `0xc7f31c` is the `occlusion` CVar.
+The tests run `0x6cf7b0` from `0x6cf7c3` to `0x6cf7c9`; `0x6cf7d0` from `0x6cf7e3` to `0x6cf7f3`.
 
 ## Draw occlusion
 
@@ -198,11 +201,12 @@ trace returns 0 when a trace from the eye along the glare's direction to the far
 Addresses: `0x7e5220`, `0x7e5259`, `0x7e527d`, `0x7e50a0`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `lighting::d7_50a0_normalize_half_difftest`, `lighting::d7_5220_bbox_area_difftest`, `lighting::d7_5220_coverage_difftest`, `lighting::d7_5220_one_minus_c_difftest`
 
 `0x7e5220` sets the four states at `0x7e5259` to `0x7e527d`; the readback and area are read from
 the decompiled body, not settled at the bytes. `0x7e50a0` traces with flags 0x200112 through the
 world and then calls `0x480a50`; the second test's meaning is not read.
+The tests run `0x7e50a0` from `0x7e50af` to `0x7e5120`; `0x7e5220` from `0x7e535f` to `0x7e537d`, from `0x7e55b1` to `0x7e55db` and from `0x7e5627` to `0x7e566a`.
 
 ## Glare draw
 
@@ -215,13 +219,14 @@ in the depth range [0.995, 1.0].
 Addresses: `0x6d48c0`, `0x6d48d4`, `0x6d48de`, `0x6d48f9`, `0x7e57e0`, `0x7e57f3`, `0x7e57fe`, `0x7e5809`, `0x7e5a20`, `0x7e5a2c`, `0x7e5a38`, `0x7e5a44`, `0x7e5a50`, `0x6cf340`, `0x6cf400`, `0x7e5670`, `0x80fec4`, `0x483740`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::d7_basis_from_normal_difftest`, `lighting::d7_vec3_sub_57e0_difftest`
 
 `0x483740` calls `0x6d48c0`, which runs `0x6cf490(dt)` and `0x7e57e0` on `0xce97a8`, then on
 `0xce96f8`. `0x7e57e0` builds the basis of the direction with `0x7e5670`, scales it by `+0x24`, sets
 the depth range from 1 − `[0x80fec4]` (0.005) to 1, render state 7 to 3 (`0x7e5a20`) and states
 0xe, 0xf, 0x12 and 0x14 to 0, and draws the four corners `0x6cf340` with the UVs `0x6cf400` and the
 colour at stride 0.
+The tests run `0x7e57e0` from `0x7e5943` to `0x7e5966`.
 
 ## Disc draw
 
@@ -235,7 +240,7 @@ colour's alpha. The disc uses the device's blend 2, with lighting, fog and depth
 Addresses: `0x7e5b90`, `0x7e5c0b`, `0x7e5c36`, `0x7e5d82`, `0x6d1710`, `0x6d1960`, `0x6d1972`, `0x6d19a3`, `0x6d19db`, `0x6d19ed`, `0x6d1a3b`, `0x6d1a4b`, `0x6d1a56`, `0x6d1ad6`, `0x6d1ae0`, `0x6d1b27`, `0x803088`, `0x80c5c0`, `0x86f410`, `0x86f418`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::d7_vec3_sub_5b90_difftest`, `lighting::fog_plane_clip_difftest`, `lighting::sky_dome_geom_template_difftest`
 
 `0x6d1710` scales six template corners (y and z ±0.5, x 0; the last two at z 99.0 as spares) by
 `[disc+0x14]` and copies `[disc+0xc]` to each vertex, strip `0x86f410`. `0x6d1960` stores t
@@ -245,6 +250,7 @@ the edge (`0x6d19ed`) with that UV v. With t + top z − 0.4 above 0.001 (`0x6d1
 below (`0x6d1a4b`) it adds two vertices at the crossing, strip `0x86f418` (`0x6d1a56`). `0x6d1ad6 jp`
 skips the alpha write at or above 0.001 and for NaN; `0x6d1ae0` multiplies by `[0x803088]` (2.5).
 `0x7e5b90` calls both (`0x7e5c0b`, `0x7e5c36`) and sets state 7 to 2 (`0x7e5d82`).
+The tests run `0x7e5b90` from `0x7e5d0f` to `0x7e5d31`.
 
 ## Stars
 
@@ -255,12 +261,13 @@ since its last draw.
 Addresses: `0x6d1b50`, `0x6d1b81`, `0x6d1b86`, `0x6d1b92`, `0x7e6120`, `0x7e6129`, `0x7e61c0`, `0x40a2b0`, `0x811618`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::d7_star_byte_norm_difftest`, `lighting::dn_cam_sky_setter_difftest`
 
 `0x6d1b50` copies the eye to `+0xc` and stores `__ftol(track·[0x811618] + 1.0)` (254.0) in byte
 `+0xb` (`0x6d1b92`). `0x7e6120` returns when the byte is below 2 (`0x7e6129`), sets the model
 animated and visible with that alpha, advances the scene, collects with a zero offset and draws
 lists 0 and 1. `0x7e61c0` releases the model and the scene.
+The tests run `0x7e6120` from `0x7e6153` to `0x7e615f`.
 
 ## Sun glare toggle
 

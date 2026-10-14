@@ -18,7 +18,7 @@ row at once. The texture starts white and opaque.
 Addresses: `0x6d09b0`, `0x6d0a2f`, `0x6d0a58`, `0x6d0ab8`, `0x6d0bd8`, `0x6d0be3`, `0x6d1d60`, `0x6d1d8f`, `0x6cffc0`, `0x6cffcf`, `0x6cfff4`, `0x6d04e3`, `0x6d04fe`, `0x6cff90`, `0x6cffa8`, `0x6d0890`, `0x811548`, `0x81155c`, `0x8115b4`, `0xce9d18`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_coverage_noise_difftest`
 
 `0x6d09b0(lod, rows)` stores cols `[0x811548 + 4·lod]` and the shift `[0x81155c + 4·lod]`, rows 32
 when the argument is 0, fills the colour buffer with 0xffffffff and binds it to a device texture
@@ -38,7 +38,7 @@ curve[i] = trunc(255 − 255·0.96^(i·d)), d = (255 − 102)/256 accumulated as
 Addresses: `0x6d0970`, `0x6d0984`, `0x6d0996`, `0x6d09a3`, `0x6d0900`, `0x6d0914`, `0x6d0928`, `0x6d0937`, `0x6d0942`, `0x6d0953`, `0x6d0010`, `0x6d0477`, `0x6d0489`, `0x6d0499`, `0x6d049b`, `0x808de4`, `0x80653c`, `0xce91d8`, `0xce9c64`, `0x6d1cc9`, `0x6d1cd8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_coverage_noise_difftest`, `lighting::dn_tone_curve_difftest`, `lighting::sky_ftol_field_setter_difftest`
 
 `0x6d0970(c)` uses `+0xc` instead when it is not 0 (`0x6d0984`), and stores `__ftol((1 − c)·255)`
 in byte `+0x8` (`0x6d09a3`). The band starts with `0x6d0970([0xce9c64])` (`0x6d0010`). `0x6d0900(γ)`
@@ -60,7 +60,7 @@ and the previous row times 2^(shift − 7).
 Addresses: `0x6d0c90`, `0x6d0ca0`, `0x6d0cb4`, `0x6d0ce8`, `0x6d0cf6`, `0x6d0c00`, `0x86f2d0`, `0x86f3dc`, `0xce92d8`, `0xce8dd8`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `lighting::sky_bump_lut_difftest`, `lighting::sky_noise_lut_difftest`
 
 `0x6d0c90` fills `0xce92d8` with `1 − 2·rand()·(1/32767)` through `_rand` (`0x6d0ca0`, `0x6d0cb4`)
 and `0xce8dd8` with the fade (`0x6d0ce8`, `0x6d0cf6`); `0x6d0c00` sets four octaves at `+0x28`.
@@ -79,7 +79,7 @@ moon. A texel with no cover copies the previous texel's colour with alpha 0.
 Addresses: `0x6cfb00`, `0x6cfb43`, `0x6cfb5c`, `0x6cfd2a`, `0x6cfd36`, `0x6cfd3f`, `0x6cfd4d`, `0x6cfd57`, `0x6cf9c0`, `0x456330`, `0x811608`, `0x8012cc`, `0x6ce390`, `0xce9ab8`, `0xce9d00`, `0xce9d04`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::fast_inv_sqrt_seed_difftest`, `lighting::dn_init_6ce390_difftest`, `lighting::sky_dome_ray_point_difftest`, `lighting::sky_dome_vtx_color_build_difftest`
 
 `0x6cfb43` and `0x6cfb5c` pick the sun disc for 0.2291667 − 0.0277778 ≤ t ≤ 0.8958333 +
 0.0277778. Its direction from the eye meets the unit sphere centred cos 45° below the eye
@@ -97,7 +97,7 @@ The envelope E has eight keys from `0x6ce390`, the last four out of order: 04:00
 Addresses: `0x6ce390`, `0x6ce3da`, `0x6ce434`, `0x6ce446`, `0x8115ac`, `0x81151c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_init_6ce390_difftest`
 
 `0x6ce3da` stores 04:00 + 0:40 for the second key; the sixth is 21:30 + 0:40 (`0x6ce434`) and the
 seventh 22:00 − 0:40 (`0x6ce446`), with `[0x8115ac]` = 1/36 day. After 22:10 no key time is at or
@@ -113,7 +113,7 @@ and v = (dy/h·r + 0.5)·cols, or 0.5·cols each when h ≤ 1e-5. The cover samp
 Addresses: `0x6cf870`, `0x6cf8bd`, `0x6cf8fd`, `0x6cf91f`, `0x6cf92f`, `0x6cf947`, `0x6cf995`, `0x6cfa90`, `0x6cfa9e`, `0x6cface`, `0x6cfae5`, `0x741820`, `0x811600`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_sky_tex_sample_difftest`, `lighting::sky_cloud_uv_scroll_difftest`
 
 `0x6cf8bd` subtracts −cos(0.25π) from dz. `0x6cf8fd` calls `_CIacos` on dz' over the length;
 `0x6cf91f jne` keeps an angle at or below 0.25π, a NaN included. `0x6cf947` compares h with the
@@ -132,10 +132,12 @@ and render states 0xe, 0xf, 0x12 and 0x14 at 0; it skips a cloud object without 
 Addresses: `0x6d0530`, `0x811570`, `0x8115a0`, `0x81160c`, `0x6d1cba`, `0x7e5f80`, `0x7e5f8e`, `0x7e5fd9`, `0x7e601e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::d7_strip_color_repack_difftest`, `lighting::dn_sun_trig_table_difftest`
 
 `0x6d0530(r)` walks the twelve floats at `0x811570` times π with 16 columns of 2π/16, stores
 vertices as the sky dome does, UVs `sin·(k·[0x81160c]·0.5) + 0.5`, and colours `byte[0x8115a0 +
 k] << 24 | 0xffffff`, 374 indices (0x176). The initializer calls it with 1.0 (`0x6d1cba`).
 `0x7e5f80` sets state 7 to 2 (`0x7e5fd9`); its other colour path, a single colour from
 `0xce99d0`, sits behind the never-set flag `0xce99f8` (`0x7e601e`, `fog#dead-fog-modifiers`).
+The tests run `0x7e5f80` from `0x7e602d` to `0x7e6065`.
+

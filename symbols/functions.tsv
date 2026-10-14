@@ -3791,7 +3791,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x454d40	196	FastPow2		fastmath			Returns 2 to a double power through a table and a polynomial	inferred	none		
 0x454e10	131			fastmath	unreached		Runs its object file code not read here	inferred	none		
 0x454ea0	152			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454f40	140			fastmath			Runs its object file code not read here	inferred	none		
+0x454f40	140			fastmath			Runs its object file code not read here	inferred	none		fastmath::quadratic_roots_difftest
 0x454fd0	652			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
 0x455260	909			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
 0x4555f0	884			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
@@ -3833,7 +3833,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x456280	37			unassigned			Runs its object file code not read here	inferred	none		
 0x4562b0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x4562f0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456330	25	RsqrtEstimate		cmath			Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	
+0x456330	25	RsqrtEstimate		cmath			Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	cmath::fast_inv_sqrt_seed_difftest
 0x456350	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456370	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456380	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -24740,60 +24740,60 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x674590	15	InitWeatherTwoPi		lighting	primitive		Stores π + π as a float in the object file's 2π global	verified	one	lighting/overview#shared-header-constants	
 0x6745a0	5	InitWeatherInvTwoPiThunk		lighting	orchestration		Jumps to 0x6745b0; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x6745b0	19	InitWeatherInvTwoPi		lighting	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	lighting/overview#shared-header-constants	
-0x6745d0	37	SecondsToWeatherTicks		lighting	primitive	int32_t __stdcall (float seconds)	Converts seconds to particle clock ticks: round(s·1024 − 0.5), ties to even	verified	one	lighting/precipitation#particle-clock	
-0x674600	29	WeatherTicksToSeconds		lighting	primitive		Converts a tick count in ecx to seconds as ticks/1024	verified	one	lighting/precipitation#particle-clock	
-0x674620	526	Rain::Rain		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the rain effect: its box, mist, packet lists, rate and the rain and patter shaders	verified	one	lighting/precipitation#effect-objects	
+0x6745d0	37	SecondsToWeatherTicks		lighting	primitive	int32_t __stdcall (float seconds)	Converts seconds to particle clock ticks: round(s·1024 − 0.5), ties to even	verified	one	lighting/precipitation#particle-clock	lighting::weather_fixed_quantize_difftest
+0x674600	29	WeatherTicksToSeconds		lighting	primitive		Converts a tick count in ecx to seconds as ticks/1024	verified	one	lighting/precipitation#particle-clock	lighting::weather_tick_scale_difftest
+0x674620	526	Rain::Rain		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the rain effect: its box, mist, packet lists, rate and the rain and patter shaders	verified	one	lighting/precipitation#effect-objects	lighting::weather_effect_ctor_674620_difftest
 0x674830	420	Rain::~Rain		lighting	host	void __thiscall (void *this)	Releases the rain effect's textures and shaders, frees both packet lists and its mist	verified	one	lighting/precipitation#effect-objects	
-0x6749e0	139	Rain::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the rain's drop rate K·P·x, its packet fill limit P/6144 and its mist rate	verified	one	lighting/precipitation#rain-rates	
-0x674a70	294	BuildRainTiltMatrix		lighting	primitive		Builds the matrix that leans the rain streaks by up to 45 degrees with the player's horizontal speed	verified	one	lighting/precipitation#rain-draw	
-0x674ba0	78	LerpClamped		lighting	primitive	float __stdcall (float from, float to, float t)	Interpolates from a to b with t clamped to [0, 1]	verified	one	lighting/weather#weather-ramps	
-0x674bf0	86	GetRainTailLength		lighting	primitive	float __stdcall (void)	Returns the rain tail length: 2.0 while the player is still, else 0	verified	one	lighting/precipitation#rain-draw	
-0x674c50	1577	Rain::SpawnDrop		lighting	primitive	void __thiscall (void *this, void *drop, float birth)	Seeds one rain drop: its velocity, its start on the box top, and its birth and death on the ground	verified	one	lighting/precipitation#rain-drops	
-0x675280	47	SetPatter		lighting	primitive	void __stdcall (void *patter, float time, const float *point)	Stores a patter's point and its times t and t + 0.25	verified	one	lighting/precipitation#patter	
+0x6749e0	139	Rain::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the rain's drop rate K·P·x, its packet fill limit P/6144 and its mist rate	verified	one	lighting/precipitation#rain-rates	lighting::rain_density_param_set_difftest
+0x674a70	294	BuildRainTiltMatrix		lighting	primitive		Builds the matrix that leans the rain streaks by up to 45 degrees with the player's horizontal speed	verified	one	lighting/precipitation#rain-draw	lighting::weather_wind_tilt_difftest
+0x674ba0	78	LerpClamped		lighting	primitive	float __stdcall (float from, float to, float t)	Interpolates from a to b with t clamped to [0, 1]	verified	one	lighting/weather#weather-ramps	lighting::weather_clamped_lerp_difftest
+0x674bf0	86	GetRainTailLength		lighting	primitive	float __stdcall (void)	Returns the rain tail length: 2.0 while the player is still, else 0	verified	one	lighting/precipitation#rain-draw	lighting::wind_speed_gate_difftest
+0x674c50	1577	Rain::SpawnDrop		lighting	primitive	void __thiscall (void *this, void *drop, float birth)	Seeds one rain drop: its velocity, its start on the box top, and its birth and death on the ground	verified	one	lighting/precipitation#rain-drops	lighting::rainspawn_angle_difftest, lighting::rainspawn_cam_global_difftest, lighting::rainspawn_cell_delta_difftest, lighting::rainspawn_collide_pos_difftest, lighting::rainspawn_collide_scale_difftest, lighting::rainspawn_collide_wind_difftest, lighting::rainspawn_final_delta_difftest, lighting::rainspawn_lifetime_difftest, lighting::rainspawn_pos_offset_difftest, lighting::rainspawn_pos_seed_difftest, lighting::rainspawn_residual_difftest, lighting::rainspawn_sincos_difftest, lighting::rainspawn_sky_time_difftest, lighting::rainspawn_vel_mag_difftest, lighting::rainspawn_vel_xy_difftest, lighting::rainspawn_vel_z_difftest, lighting::rainspawn_velmag_difftest, lighting::rainspawn_wind_apply_difftest, lighting::rainspawn_wind_delta_difftest, lighting::rainspawn_wind_factor_difftest, lighting::rainspawn_wind_scale2_difftest, lighting::rainspawn_world_scale_difftest
+0x675280	47	SetPatter		lighting	primitive	void __stdcall (void *patter, float time, const float *point)	Stores a patter's point and its times t and t + 0.25	verified	one	lighting/precipitation#patter	lighting::patter_record_init_difftest
 0x6752b0	261	BakeRainPacket		lighting	primitive	void __stdcall (void *packet)	Writes a closed drop packet's three vertices per drop into its vertex buffer	verified	one	lighting/precipitation#particle-packets	
 0x6753c0	213	BakePatterPacket		lighting	primitive	void __stdcall (void *packet)	Writes a closed patter packet's three vertices per patter into its vertex buffer	verified	one	lighting/precipitation#particle-packets	
-0x6754a0	508	Rain::EmitDrops		lighting	primitive	void __thiscall (void *this, void *packet, void *patter, float budget)	Emits round(min(6144 − count, budget) − 0.5) drops into the open packet and their patters	verified	one	lighting/precipitation#emission-budget	
-0x6756a0	1055	Rain::Update		lighting	primitive	void __thiscall (void *this)	Retires and discards rain packets, then opens, fills and closes the frame's packet	verified	one	lighting/precipitation#particle-packets	
-0x675ac0	1692	Rain::DrawPatterFixed		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	
-0x676160	2158	Rain::DrawDropsFixed		lighting	primitive	void __thiscall (void *this)	Draws the started drop packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	
-0x6769d0	1179	Rain::DrawPatterShader		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets through patter.bls as camera quads	verified	one	lighting/precipitation#rain-draw	
+0x6754a0	508	Rain::EmitDrops		lighting	primitive	void __thiscall (void *this, void *packet, void *patter, float budget)	Emits round(min(6144 − count, budget) − 0.5) drops into the open packet and their patters	verified	one	lighting/precipitation#emission-budget	lighting::wl_emit_count_clamp, lighting::wl_emit_phase_advance, lighting::wl_emit_phase_advance_trajectory, lighting::wl_emit_phase_inc, lighting::wl_rain_drop_t, lighting::wl_rain_patter_vec, lighting::wl_rain_wind_gate
+0x6756a0	1055	Rain::Update		lighting	primitive	void __thiscall (void *this)	Retires and discards rain packets, then opens, fills and closes the frame's packet	verified	one	lighting/precipitation#particle-packets	lighting::wl_update_dt_accum, lighting::wl_update_interval_div
+0x675ac0	1692	Rain::DrawPatterFixed		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	lighting::wx_rainrender_basis_difftest, lighting::wx_rainrender_quad_difftest
+0x676160	2158	Rain::DrawDropsFixed		lighting	primitive	void __thiscall (void *this)	Draws the started drop packets on the processor, without shaders	verified	one	lighting/precipitation#rain-draw	lighting::snow_flake_quad_difftest
+0x6769d0	1179	Rain::DrawPatterShader		lighting	primitive	void __thiscall (void *this)	Draws the started patter packets through patter.bls as camera quads	verified	one	lighting/precipitation#rain-draw	lighting::snow_scroll_matrix_difftest
 0x676e70	1284	Rain::DrawDropsShader		lighting	primitive	void __thiscall (void *this)	Draws the started drop packets through rain.bls with the streak constants	verified	one	lighting/precipitation#rain-draw	
 0x677380	68	Rain::Render		lighting	orchestration	void __thiscall (void *this)	Updates the rain, then draws its drops, patters and mist when weather is visible	verified	one	lighting/precipitation#rain-draw	
 0x6773d0	69	Rain::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts rain packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
-0x677420	424	Snow::Snow		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the snow effect: its box, mist, packet list, rate and the snowpoint shader	verified	one	lighting/precipitation#effect-objects	
+0x677420	424	Snow::Snow		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the snow effect: its box, mist, packet list, rate and the snowpoint shader	verified	one	lighting/precipitation#effect-objects	lighting::weather_effect_helper_677420_difftest
 0x6775d0	236	Snow::~Snow		lighting	host	void __thiscall (void *this)	Releases the snow effect's texture and shader, frees its packets and its mist	verified	one	lighting/precipitation#effect-objects	
-0x6776c0	139	Snow::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the snow's flake rate K·P·x, its packet fill limit and its mist rate	verified	one	lighting/precipitation#snow	
-0x677750	1516	Snow::SpawnFlake		lighting	primitive		Seeds one snow flake: its velocity, its start on the box top and its lead	verified	one	lighting/precipitation#snow	
+0x6776c0	139	Snow::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the snow's flake rate K·P·x, its packet fill limit and its mist rate	verified	one	lighting/precipitation#snow	lighting::snow_density_param_set_difftest
+0x677750	1516	Snow::SpawnFlake		lighting	primitive		Seeds one snow flake: its velocity, its start on the box top and its lead	verified	one	lighting/precipitation#snow	lighting::snowfl_add_base_difftest, lighting::snowfl_add_offset_difftest, lighting::snowfl_angle1_difftest, lighting::snowfl_cam_global_difftest, lighting::snowfl_cell_delta_difftest, lighting::snowfl_drift_difftest, lighting::snowfl_drift_vel_difftest, lighting::snowfl_lifetime_difftest, lighting::snowfl_mtx_scale_difftest, lighting::snowfl_phase_difftest, lighting::snowfl_pos_seed_difftest, lighting::snowfl_sincos_difftest, lighting::snowfl_sky_rot_difftest, lighting::snowfl_sub_drift_difftest, lighting::snowfl_vel_drift_scale_difftest, lighting::snowfl_vel_flag_scale_difftest, lighting::snowfl_vel_z_scale_difftest, lighting::snowfl_world_scale_difftest
 0x677d40	164	Snow::BakePacket		lighting	host		Writes a closed snow packet's flakes into its vertex buffer	inferred	none		
-0x677df0	502	Snow::EmitFlakes		lighting	primitive		Emits the frame's snow flakes into the open packet	inferred	none		
-0x677ff0	1558	Snow::Update		lighting	primitive	void __thiscall (void *this)	Retires snow packets, builds the lead vector, and opens, fills and closes the frame's packet	verified	one	lighting/precipitation#snow	
+0x677df0	502	Snow::EmitFlakes		lighting	primitive		Emits the frame's snow flakes into the open packet	inferred	none		lighting::wl_emit_count_clamp, lighting::wl_emit_phase_advance, lighting::wl_emit_phase_inc, lighting::wl_snow_patter_value
+0x677ff0	1558	Snow::Update		lighting	primitive	void __thiscall (void *this)	Retires snow packets, builds the lead vector, and opens, fills and closes the frame's packet	verified	one	lighting/precipitation#snow	lighting::snow_exp2_arg_difftest, lighting::snow_exp2_blend_difftest, lighting::snow_field_lerp_difftest, lighting::snow_final_recip_difftest, lighting::snow_min_select_scale_difftest, lighting::snow_normalize_scale_difftest, lighting::snow_record_distance_difftest, lighting::snow_wind_deflect_difftest
 0x678610	838	Snow::DrawShader		lighting	host	void __thiscall (void *this)	Draws the started snow packets as points through snowpoint.bls	verified	one	lighting/precipitation#snow	
-0x678960	1845	Snow::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started snow packets on the processor, without shaders	verified	one	lighting/precipitation#snow	
+0x678960	1845	Snow::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started snow packets on the processor, without shaders	verified	one	lighting/precipitation#snow	lighting::snow_alpha_pack_difftest, lighting::snow_basis_difftest, lighting::snow_flake_center_difftest, lighting::snow_flake_gate_difftest, lighting::snow_tri_vertices_difftest
 0x6790a0	1	SnowDrawFixedStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x678960 registers	verified	one	lighting/overview#static-objects	
 0x6790b0	54	Snow::Render		lighting	orchestration	void __thiscall (void *this)	Updates the snow, then draws its flakes and mist when weather is visible	verified	one	lighting/weather#weather-visibility	
 0x6790f0	69	Snow::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts snow packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
-0x679140	334	Sand::Sand		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the sand effect: its box, mist, packet list, rate and the sand shader	verified	one	lighting/precipitation#effect-objects	
+0x679140	334	Sand::Sand		lighting	primitive	void * __thiscall (void *this, float width, float height)	Builds the sand effect: its box, mist, packet list, rate and the sand shader	verified	one	lighting/precipitation#effect-objects	lighting::weather_effect_helper_679140_difftest
 0x679290	232	Sand::~Sand		lighting	host	void __thiscall (void *this)	Releases the sand effect's shader, frees its packets and its mist	verified	one	lighting/precipitation#effect-objects	
-0x679380	103	Sand::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the sand's grain rate K·P·x, its packet fill limit and its mist rate K·Q·x	inferred	none	lighting/precipitation#sand	
-0x6793f0	1147	Sand::SpawnGrain		lighting	primitive		Seeds one sand grain near the box's far end with a velocity turned by the heading	inferred	none	lighting/precipitation#sand	
+0x679380	103	Sand::SetIntensity		lighting	primitive	void __thiscall (void *this, float x)	Sets the sand's grain rate K·P·x, its packet fill limit and its mist rate K·Q·x	inferred	none	lighting/precipitation#sand	lighting::sand_density_param_set_difftest
+0x6793f0	1147	Sand::SpawnGrain		lighting	primitive		Seeds one sand grain near the box's far end with a velocity turned by the heading	inferred	none	lighting/precipitation#sand	lighting::sand_angle_difftest, lighting::sand_cam_global_difftest, lighting::sand_cell_delta_difftest, lighting::sand_lifetime_difftest, lighting::sand_negate_difftest, lighting::sand_pos_seed_difftest, lighting::sand_sincos_difftest, lighting::sand_speed_difftest, lighting::sand_vel_offset_difftest, lighting::sand_vel_scale_difftest, lighting::sand_vel_xy_difftest, lighting::sand_vel_z_difftest, lighting::sand_world_scale_difftest
 0x679870	1	SandSpawnGrainStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6793f0 registers	verified	one	lighting/overview#static-objects	
 0x679880	164	Sand::BakePacket		lighting	host		Writes a closed sand packet's grains into its vertex buffer	inferred	none		
-0x679930	459	Sand::EmitGrains		lighting	primitive		Emits the frame's sand grains into the open packet	inferred	none		
-0x679b00	843	Sand::Update		lighting	primitive	void __thiscall (void *this)	Retires sand packets, and opens, fills and closes the frame's packet	inferred	none	lighting/precipitation#sand	
-0x679e50	854	Sand::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets on the processor, without shaders	inferred	none	lighting/precipitation#sand	
-0x67a1b0	869	Sand::DrawShader		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets as points through sand.bls	inferred	none	lighting/precipitation#sand	
+0x679930	459	Sand::EmitGrains		lighting	primitive		Emits the frame's sand grains into the open packet	inferred	none		lighting::wl_emit_count_clamp, lighting::wl_emit_phase_advance, lighting::wl_emit_phase_inc
+0x679b00	843	Sand::Update		lighting	primitive	void __thiscall (void *this)	Retires sand packets, and opens, fills and closes the frame's packet	inferred	none	lighting/precipitation#sand	lighting::wl_update_dt_accum, lighting::wl_update_interval_div
+0x679e50	854	Sand::DrawFixed		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets on the processor, without shaders	inferred	none	lighting/precipitation#sand	lighting::sand_clamp_difftest, lighting::sand_color_repack_difftest, lighting::sand_ramp_arg_difftest, lighting::sand_transform_difftest
+0x67a1b0	869	Sand::DrawShader		lighting	primitive	void __thiscall (void *this)	Draws the started sand packets as points through sand.bls	inferred	none	lighting/precipitation#sand	lighting::mist_tex_scroll_difftest
 0x67a520	54	Sand::Render		lighting	orchestration	void __thiscall (void *this)	Updates the sand, then draws its grains and mist when weather is visible	verified	one	lighting/weather#weather-visibility	
 0x67a560	69	Sand::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts sand packets before their last tick plus the mist's live puffs	verified	one	lighting/precipitation#effect-fade	
 0x67a5b0	440	Mists::Mists		lighting	primitive		Builds a mist: puff size, box, texture, direction, spread, speed, speed spread and 128 puffs	verified	one	lighting/precipitation#mist	
 0x67a770	41	Mists::~Mists		lighting	host		Releases a mist's texture and frees its puffs	inferred	none		
-0x67a7a0	474	Mists::SpawnPuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Spawns a puff, samples the ground along its path and cuts its life where the ground rises	inferred	none	lighting/precipitation#mist-ground	
+0x67a7a0	474	Mists::SpawnPuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Spawns a puff, samples the ground along its path and cuts its life where the ground rises	inferred	none	lighting/precipitation#mist-ground	lighting::mist_basis_count_difftest, lighting::mist_gate_diff_difftest, lighting::mist_node_accumulate_difftest, lighting::mist_node_spacing_difftest
 0x67a980	13	Mists::SetRate		lighting	orchestration	void __thiscall (void *this, float rate)	Stores a mist's puff rate	verified	one	lighting/precipitation#rain-rates	
-0x67a990	950	Mists::PlacePuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Places a puff: its velocity turned by the heading, its position, spin and life	verified	one	lighting/precipitation#mist	
+0x67a990	950	Mists::PlacePuff		lighting	primitive	void __thiscall (void *this, void *puff, uint32_t birth)	Places a puff: its velocity turned by the heading, its position, spin and life	verified	one	lighting/precipitation#mist	lighting::mist_spawn_difftest
 0x67ad50	1	MistsPlacePuffStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x67a990 registers	verified	one	lighting/overview#static-objects	
-0x67ad60	37	SetFadeRamp		lighting	primitive	void __thiscall (float *ramp, float a, float b)	Sets a ramp to (b − v)/(b − a)	verified	one	lighting/precipitation#mist	
-0x67ad90	61	EvalFadeRamp		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	
-0x67add0	73	EvalFadeRampInverse		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates one less a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	
-0x67ae20	2262	Mists::Render		lighting	primitive	void __thiscall (void *this)	Spawns, moves and fades a mist's puffs and draws them as quads in the fog colour	verified	one	lighting/precipitation#mist	
+0x67ad60	37	SetFadeRamp		lighting	primitive	void __thiscall (float *ramp, float a, float b)	Sets a ramp to (b − v)/(b − a)	verified	one	lighting/precipitation#mist	lighting::weather_ramp_setup_difftest
+0x67ad90	61	EvalFadeRamp		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	lighting::weather_ramp_eval_difftest
+0x67add0	73	EvalFadeRampInverse		lighting	primitive	float __thiscall (const float *ramp, float v)	Evaluates one less a ramp clamped to [0, 1]	verified	one	lighting/precipitation#mist	lighting::weather_ramp_eval_inv_difftest
+0x67ae20	2262	Mists::Render		lighting	primitive	void __thiscall (void *this)	Spawns, moves and fades a mist's puffs and draws them as quads in the fog colour	verified	one	lighting/precipitation#mist	lighting::mistr_cell_lerp_difftest, lighting::mistr_cell_round_difftest, lighting::mistr_color_repack_difftest, lighting::mistr_corner_add_difftest, lighting::mistr_corner_basis_difftest, lighting::mistr_corner_dist_difftest, lighting::mistr_drift_clamp_difftest, lighting::mistr_fade_mag_difftest, lighting::mistr_half_scale_difftest, lighting::mistr_hash_count_difftest, lighting::mistr_life_span_difftest, lighting::mistr_node_accum_difftest, lighting::mistr_phase_advance_difftest, lighting::mistr_phase_wrap_difftest, lighting::mistr_ramp_product_difftest, lighting::mistr_spacing_recip_difftest, lighting::mistr_time_accum_difftest
 0x67b700	60	Mists::CountLive		lighting	orchestration	int32_t __thiscall (void *this)	Counts the puffs with birth before now and death at or after now	verified	one	lighting/precipitation#effect-fade	
 0x67b740	299	BuildWeatherManager		lighting	primitive	void * __thiscall (void *this)	Builds the weather manager, its ground grid and settings, and applies a forced type	verified	one	lighting/weather#weather-manager	
 0x67b870	118	OnWeatherDensityChanged		lighting	host		Sets the weather scale K from weatherDensity 0 to 3 and asks the manager to ramp	verified	one	lighting/weather#weather-settings	
@@ -24803,11 +24803,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x67baf0	276	SetWeather		lighting	orchestration	void __thiscall (void *this, int32_t type, float grade, uint8_t smooth)	Sets the weather type and grade and restarts both ramps	verified	one	lighting/weather#weather-message	
 0x67bc10	41	GetWeatherType		lighting	orchestration	int32_t __thiscall (void *this)	Returns 1, 2 or 3 for a live rain, snow or sand effect, else 0	verified	one	lighting/weather#weather-manager	
 0x67bc40	33	WeatherUsesShaders		lighting	orchestration		Returns the live effect's shader byte for the weather console report	verified	one	lighting/weather#weather-settings	
-0x67bc70	276	RampWeather		lighting	primitive	void __thiscall (void *this, float from, float to)	Moves the grade and the density along their ramps and passes them on	verified	one	lighting/weather#weather-ramps	
+0x67bc70	276	RampWeather		lighting	primitive	void __thiscall (void *this, float from, float to)	Moves the grade and the density along their ramps and passes them on	verified	one	lighting/weather#weather-ramps	lighting::weather_intensity_ramp_difftest
 0x67bd90	51	GetWeatherGridBounds		lighting	unreached		Asks the ground grid for its bounds when an effect is live; nothing calls it	verified	one	lighting/overview#unreached-code	
 0x67bdd0	106	GetWeatherBox		lighting	orchestration		Copies the live effect's box and reports whether one exists	verified	one	lighting/weather#weather-reset	
-0x67be40	779	UpdateWeather		lighting	primitive	void __thiscall (void *this)	Drives the weather each frame: motion, heading, speed, type changes and ramps	verified	one	lighting/weather#weather-driver	
-0x67c150	1380	SampleWeatherMotion		lighting	primitive	void __thiscall (void *this)	Keeps the player's and transport's position steps and averages them into velocities	verified	one	lighting/weather#player-motion	
+0x67be40	779	UpdateWeather		lighting	primitive	void __thiscall (void *this)	Drives the weather each frame: motion, heading, speed, type changes and ramps	verified	one	lighting/weather#weather-driver	lighting::wx_67be40_owned_fp_difftest
+0x67c150	1380	SampleWeatherMotion		lighting	primitive	void __thiscall (void *this)	Keeps the player's and transport's position steps and averages them into velocities	verified	one	lighting/weather#player-motion	lighting::wx_67c150_owned_fp_difftest
 0x67c6c0	1	SampleWeatherMotionStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x67c150 registers	verified	one	lighting/overview#static-objects	
 0x67c6d0	1	SampleWeatherMotionStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x67c150 registers	verified	one	lighting/overview#static-objects	
 0x67c6e0	58	HasLiveWeather		lighting	orchestration	bool __thiscall (void *this)	Reports whether any effect still has live particles	verified	one	lighting/weather#weather-driver	
@@ -24815,15 +24815,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x67c760	9	GetWeatherGrid		lighting	orchestration	void * __fastcall (void)	Returns the weather manager's ground grid	verified	one	lighting/weather#weather-manager	
 0x67c770	50	BuildWeatherGridTile		lighting	orchestration		Builds a grid tile at no chunk and empties its cells	verified	one	lighting/weather#ground-grid	
 0x67c7b0	59	ResetWeatherGridTile		lighting	orchestration		Sets a grid tile's chunk and fills its 32 × 32 cells with FLT_MAX	verified	one	lighting/weather#ground-grid	
-0x67c7f0	48	GetWeatherGroundHeight		lighting	primitive	float __stdcall (float *point)	Returns the surface height within 200 below a point, or its height less 200	verified	one	lighting/weather#ground-grid	
-0x67c820	218	GetWeatherTileHeight		lighting	primitive		Returns a tile cell's height, filling it on first use, or FLT_MAX outside the tile	verified	one	lighting/weather#ground-grid	
+0x67c7f0	48	GetWeatherGroundHeight		lighting	primitive	float __stdcall (float *point)	Returns the surface height within 200 below a point, or its height less 200	verified	one	lighting/weather#ground-grid	lighting::wl_height_sample_bias
+0x67c820	218	GetWeatherTileHeight		lighting	primitive		Returns a tile cell's height, filling it on first use, or FLT_MAX outside the tile	verified	one	lighting/weather#ground-grid	lighting::tile_cell_fill_difftest, lighting::wl_height_cache_lookup_xy
 0x67c900	127	BuildWeatherGrid		lighting	host	void * __thiscall (void *this)	Builds the ground grid and its 25 tiles	verified	one	lighting/weather#ground-grid	
 0x67c980	43	DeleteWeatherGrid		lighting	host		Destroys the ground grid and frees it when asked	verified	one	lighting/weather#ground-grid	
 0x67c9b0	78	DestroyWeatherGrid		lighting	host		Frees the ground grid's 25 tiles	verified	one	lighting/weather#ground-grid	
-0x67ca00	133	GetWeatherGridHeight		lighting	primitive		Returns the grid height at a point, or FLT_MAX outside the grid	verified	one	lighting/weather#ground-grid	
-0x67ca90	204	GetWeatherCellHeight		lighting	primitive		Returns a grid cell's height by cell index, filling it on first use	verified	one	lighting/weather#ground-grid	
-0x67cb60	752	IntersectWeatherGrid		lighting	primitive		Tests a segment against the ground grid and returns the hit	verified	one	lighting/weather#ground-grid	
-0x67ce50	393	RecenterWeatherGrid		lighting	primitive		Recentres the grid on a point's chunk, keeping the tiles it still covers	verified	one	lighting/weather#ground-grid	
+0x67ca00	133	GetWeatherGridHeight		lighting	primitive		Returns the grid height at a point, or FLT_MAX outside the grid	verified	one	lighting/weather#ground-grid	lighting::mist_grid_sample_difftest, lighting::mist_spawn_difftest
+0x67ca90	204	GetWeatherCellHeight		lighting	primitive		Returns a grid cell's height by cell index, filling it on first use	verified	one	lighting/weather#ground-grid	lighting::mist_cell_world_difftest, lighting::wl_height_cache_lookup_cell
+0x67cb60	752	IntersectWeatherGrid		lighting	primitive		Tests a segment against the ground grid and returns the hit	verified	one	lighting/weather#ground-grid	lighting::mist_grid_raymarch_difftest
+0x67ce50	393	RecenterWeatherGrid		lighting	primitive		Recentres the grid on a point's chunk, keeping the tiles it still covers	verified	one	lighting/weather#ground-grid	lighting::wl_recenter_tile_coords
 0x67cfe0	133	GetWeatherGridExtent		lighting	orchestration		Returns the chunk range the grid's tiles cover	verified	one	lighting/weather#ground-grid	
 0x67d070	5	InitWeatherTenSquaredThunk		lighting	orchestration		Jumps to 0x67d080; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x67d080	19	InitWeatherTenSquared		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	
@@ -25474,16 +25474,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x68de40	253	CChunkLiquid::Draw		terrain	orchestration	void __thiscall (CChunkLiquid *this, uint32_t pass)	Draws a liquid through its river, ocean or magma pass, making its buffers when needed	verified	one	terrain/liquid#liquid-render-passes	terrain::liquid_lazy_init_scalar_difftest
 0x68df40	43	CopyCullPlane		terrain	orchestration	void __fastcall (void *out, const void *in)	Copies a plane record and two fields	inferred	none		
 0x68df70	589	CullDoodadDefs		terrain	primitive	void __fastcall (void *list, void *frustum)	Tests a list's doodads against the frustum and queues the visible ones	inferred	none		terrain::light_mid_y_difftest, terrain::doodad_plane_value_difftest, terrain::doodad_gate_difftest, terrain::doodad_color_normalize_difftest
-0x68e1c0	807	ResetDriftParticle		terrain	primitive	void __fastcall (void *cloud, void *particle)	Gives a drift particle a new random direction and speed	inferred	none		
-0x68e4f0	172	GetDriftVelocity		terrain	primitive	void __fastcall (void *cloud, float *out)	Returns the drift cloud's gust velocity by its mode	inferred	none		
+0x68e1c0	807	ResetDriftParticle		terrain	primitive	void __fastcall (void *cloud, void *particle)	Gives a drift particle a new random direction and speed	inferred	none		terrain::weather_drift_reinit_difftest, terrain::weather_gust_velocity_difftest, terrain::weather_toroidal_advect_difftest
+0x68e4f0	172	GetDriftVelocity		terrain	primitive	void __fastcall (void *cloud, float *out)	Returns the drift cloud's gust velocity by its mode	inferred	none		terrain::weather_gust_velocity_difftest, terrain::weather_toroidal_advect_difftest
 0x68e5a0	148	CreateDriftCloud		terrain	orchestration	void __fastcall (void *cloud)	Constructs the 4000-particle drift cloud	verified	one	terrain/liquid#drift-cloud	
 0x68e640	16	FreeDriftCloudTexture		terrain	host	void __fastcall (void *cloud)	Closes the drift cloud's texture	inferred	none		
-0x68e650	31	SetDriftCloudCount		terrain	primitive	void __thiscall (void *cloud, float count)	Stores the drift cloud's particle count, converted	inferred	none		
+0x68e650	31	SetDriftCloudCount		terrain	primitive	void __thiscall (void *cloud, float count)	Stores the drift cloud's particle count, converted	inferred	none		terrain::drift_cloud_set_fa00_difftest
 0x68e670	16	SetDriftCloudParamA		terrain	orchestration	void __thiscall (void *cloud, uint32_t value)	Stores a drift cloud setting	inferred	none		
 0x68e680	16	SetDriftCloudParamB		terrain	orchestration	void __thiscall (void *cloud, uint32_t value)	Stores a drift cloud setting	inferred	none		
 0x68e690	136	SetDriftCloudTexture		terrain	host	void __thiscall (void *cloud, const char *path)	Replaces the drift cloud's texture	inferred	none		
-0x68e720	523	ScatterDriftCloud		terrain	primitive	void __thiscall (void *cloud, uint32_t mode)	Scatters the drift records in a cube of the box edge, sizes each s/2 + u·s at +0xc, and stores the mode	verified	one	terrain/liquid#drift-cloud	
-0x68e930	486	AdvectDriftCloud		terrain	primitive	void __fastcall (void *cloud, float dt)	Moves the drift particles and wraps them around the camera	inferred	none		
+0x68e720	523	ScatterDriftCloud		terrain	primitive	void __thiscall (void *cloud, uint32_t mode)	Scatters the drift records in a cube of the box edge, sizes each s/2 + u·s at +0xc, and stores the mode	verified	one	terrain/liquid#drift-cloud	terrain::weather_cloud_reseed_difftest, terrain::weather_toroidal_advect_difftest
+0x68e930	486	AdvectDriftCloud		terrain	primitive	void __fastcall (void *cloud, float dt)	Moves the drift particles and wraps them around the camera	inferred	none		terrain::weather_toroidal_advect_difftest
 0x68eb20	10	InitTerrainQuadCornersThunk		terrain	orchestration	void __cdecl (void)	Calls 0x68eb30, then jumps to 0x68ebb0; a static initializer	verified	one	terrain/statics#static-initializers	
 0x68eb30	121	InitTerrainQuadCorners		terrain	orchestration	void __cdecl (void)	Stores four corner offsets of ±0.5 in x and y and 0 in z in a global	verified	one	terrain/statics#static-initializers	
 0x68ebb0	12	RegisterDestroyTerrainQuadCorners		terrain	orchestration	void __cdecl (void)	Registers 0x68ebc0 with atexit	verified	one	terrain/statics#static-initializers	
@@ -28515,7 +28515,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ce090	67	DayNightLightStateExit		lighting	orchestration		Frees what the static holds; an exit hook	verified	one	lighting/overview#static-objects	
 0x6ce0e0	37			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
 0x6ce110	10	InitDayNightSkyGlowTrack		lighting	orchestration		Runs 0x6ce120, then registers an exit hook through 0x6ce1d0; a static initializer	verified	one	lighting/overview#static-objects	
-0x6ce120	163	BuildSkyGlowTrack		lighting	primitive		Stores the sky glow track's six keys at start-up	verified	one	lighting/sky#sky-colour-tracks	
+0x6ce120	163	BuildSkyGlowTrack		lighting	primitive		Stores the sky glow track's six keys at start-up	verified	one	lighting/sky#sky-colour-tracks	lighting::dn_init_6ce120_difftest
 0x6ce1d0	12	InitDayNightSkyGlowTrackAtexit		lighting	orchestration		Registers 0x6ce1e0 with _atexit	verified	one	lighting/overview#static-objects	
 0x6ce1e0	21	DayNightSkyGlowTrackExit		lighting	primitive		Clears guard bit 0x1 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
 0x6ce200	10	InitDayNightSkyWarpTrack		lighting	orchestration		Runs 0x6ce210, then registers an exit hook through 0x6ce290; a static initializer	verified	one	lighting/overview#static-objects	
@@ -28527,19 +28527,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ce310	5	InitDayNightDeadVectors2Thunk		lighting	orchestration		Jumps to 0x6ce320; a static initializer	verified	one	lighting/overview#static-objects	
 0x6ce320	93	InitDeadVectors2		lighting	primitive		Stores π less each of those four and two zeros in globals nothing reads	verified	one	lighting/overview#static-objects	
 0x6ce380	10	InitDayNightCloudEnvelope		lighting	orchestration		Runs 0x6ce390, then registers an exit hook through 0x6ce460; a static initializer	verified	one	lighting/overview#static-objects	
-0x6ce390	201	BuildCloudEnvelopeTrack		lighting	primitive		Stores the cloud envelope's eight keys at start-up, the last four out of order	verified	one	lighting/clouds#cloud-envelope	
+0x6ce390	201	BuildCloudEnvelopeTrack		lighting	primitive		Stores the cloud envelope's eight keys at start-up, the last four out of order	verified	one	lighting/clouds#cloud-envelope	lighting::dn_init_6ce390_difftest
 0x6ce460	12	InitDayNightCloudEnvelopeAtexit		lighting	orchestration		Registers 0x6ce470 with _atexit	verified	one	lighting/overview#static-objects	
 0x6ce470	21	DayNightCloudEnvelopeExit		lighting	primitive		Clears guard bit 0x4 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
 0x6ce490	10	InitDayNightStarTrack		lighting	orchestration		Runs 0x6ce4a0, then registers an exit hook through 0x6ce520; a static initializer	verified	one	lighting/overview#static-objects	
-0x6ce4a0	113	BuildStarTrack		lighting	primitive		Stores the star track's four keys at start-up	verified	one	lighting/celestial#static-tracks	
+0x6ce4a0	113	BuildStarTrack		lighting	primitive		Stores the star track's four keys at start-up	verified	one	lighting/celestial#static-tracks	lighting::dn_init_6ce4a0_difftest
 0x6ce520	12	InitDayNightStarTrackAtexit		lighting	orchestration		Registers 0x6ce530 with _atexit	verified	one	lighting/overview#static-objects	
 0x6ce530	21	DayNightStarTrackExit		lighting	primitive		Clears guard bit 0x8 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
 0x6ce550	10	InitDayNightUnusedTrack		lighting	orchestration		Runs 0x6ce560, then registers an exit hook through 0x6ce630; a static initializer	verified	one	lighting/overview#static-objects	
-0x6ce560	201	BuildUnusedSkyTrack		lighting	primitive		Stores the eight keys of a track nothing reads, at start-up	verified	one	lighting/celestial#static-tracks	
+0x6ce560	201	BuildUnusedSkyTrack		lighting	primitive		Stores the eight keys of a track nothing reads, at start-up	verified	one	lighting/celestial#static-tracks	lighting::dn_init_6ce560_difftest
 0x6ce630	12	InitDayNightUnusedTrackAtexit		lighting	orchestration		Registers 0x6ce640 with _atexit	verified	one	lighting/overview#static-objects	
 0x6ce640	21	DayNightUnusedTrackExit		lighting	primitive		Clears guard bit 0x10 of the sky colour tracks's flags; an exit hook	verified	one	lighting/overview#static-objects	
 0x6ce660	10	InitDayNightNightTrack		lighting	orchestration		Runs 0x6ce670, then registers an exit hook through 0x6ce6d0; a static initializer	verified	one	lighting/overview#static-objects	
-0x6ce670	91	BuildNightTrack		lighting	primitive		Stores the first night fraction track's keys at start-up	verified	one	lighting/daynight#night-fraction	
+0x6ce670	91	BuildNightTrack		lighting	primitive		Stores the first night fraction track's keys at start-up	verified	one	lighting/daynight#night-fraction	lighting::dn_init_6ce670_difftest
 0x6ce6d0	12	InitDayNightNightTrackAtexit		lighting	orchestration		Registers 0x6ce6e0 with _atexit	verified	one	lighting/overview#static-objects	
 0x6ce6e0	1	DayNightNightTrackExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
 0x6ce6f0	10	InitDayNightNightTrack2		lighting	orchestration		Runs 0x6ce700, then registers an exit hook through 0x6ce730; a static initializer	verified	one	lighting/overview#static-objects	
@@ -28582,9 +28582,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cede0	41	InitStarObject		lighting	orchestration		Zeroes the star object at start-up	verified	one	lighting/celestial#body-objects	
 0x6cee10	12	InitDayNightStarObjectAtexit		lighting	orchestration		Registers 0x6cee20 with _atexit	verified	one	lighting/overview#static-objects	
 0x6cee20	1	DayNightStarObjectExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
-0x6cee30	871	BuildSceneFog		lighting	primitive		Builds the scene fog and the interior-blended fog from the light table	verified	one	lighting/fog#scene-fog	
-0x6cf1a0	225	ApplyFogColourModifier		lighting	primitive		Tints the fog colour toward the modifier colour, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	
-0x6cf290	128	ScaleFogColourModifier		lighting	primitive		Scales each fog colour channel by the modifier, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	
+0x6cee30	871	BuildSceneFog		lighting	primitive		Builds the scene fog and the interior-blended fog from the light table	verified	one	lighting/fog#scene-fog	lighting::dn_blend_difftest, lighting::dn_blue_premul_difftest, lighting::dn_case2_premul_difftest, lighting::dn_fog_color_lerp_difftest, lighting::dn_phase_alpha_delta_difftest, lighting::dn_phase_fade_arg_difftest, lighting::dn_repack_scale_difftest
+0x6cf1a0	225	ApplyFogColourModifier		lighting	primitive		Tints the fog colour toward the modifier colour, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	lighting::fog_color_modulate_difftest
+0x6cf290	128	ScaleFogColourModifier		lighting	primitive		Scales each fog colour channel by the modifier, under a flag nothing sets	verified	one	lighting/fog#dead-fog-modifiers	lighting::cloud_color_modulate_difftest
 0x6cf310	30	InitFogRecords		lighting	orchestration		Fills two fog records of end, fraction and colour for the interior fog query	verified	one	lighting/fog#interior-fog	
 0x6cf330	10	InitDayNightGlareCorners		lighting	orchestration		Runs 0x6cf340, then registers an exit hook through 0x6cf3c0; a static initializer	verified	one	lighting/overview#static-objects	
 0x6cf340	121	BuildGlareCorners		lighting	orchestration		Stores the glare quad's four corners at start-up	verified	one	lighting/celestial#glare-draw	
@@ -28594,54 +28594,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6cf400	81	BuildGlareUVs		lighting	orchestration		Stores the glare quad's four texture coordinates at start-up	verified	one	lighting/celestial#glare-draw	
 0x6cf460	12	InitDayNightGlareUVsAtexit		lighting	orchestration		Registers 0x6cf470 with _atexit	verified	one	lighting/overview#static-objects	
 0x6cf470	21	DayNightGlareUVsExit		lighting	primitive		Clears guard bit 0x2 of the glare quad's flags; an exit hook	verified	one	lighting/overview#static-objects	
-0x6cf490	551	UpdateGlare		lighting	primitive	void __thiscall (void *this, float dt)	Moves a glare's envelope, scale and alpha toward its targets for the frame	verified	one	lighting/celestial#glare-update	
-0x6cf6c0	232	EvalSkyTrack		lighting	primitive	float __fastcall (const float *keys, uint32_t count, float phase)	Evaluates a key track at a phase of the day, interpolating cyclically	verified	one	lighting/celestial#tracks	
-0x6cf7b0	26	GetGlareCloudCover		lighting	primitive		Returns one less the cloud cover at a glare's position	verified	one	lighting/celestial#glare-occlusion	
-0x6cf7d0	36	GetGlareCoverEdge		lighting	primitive		Returns one less twice the cloud cover's distance from 0.5 at a glare	verified	one	lighting/celestial#glare-occlusion	
-0x6cf800	104	GetGlareDepthFactor		lighting	primitive		Returns the glare's depth occlusion from the scene depth test	verified	one	lighting/celestial#glare-occlusion	
-0x6cf870	330	ProjectToCloudTexture		lighting	primitive		Maps a point's direction from the eye to cloud texture coordinates	verified	one	lighting/clouds#cover-projection	
-0x6cf9c0	200	ProjectCloudLight		lighting	primitive		Projects the cloud light's direction onto the cloud sphere	verified	one	lighting/clouds#cloud-colours	
-0x6cfa90	109	SampleCloudCover		lighting	primitive		Returns the cloud cover byte at a point over 255, or 0 before the texture exists	verified	one	lighting/clouds#cover-projection	
-0x6cfb00	1155	ColourCloudBand		lighting	primitive		Colours a band of cloud texels from their cover, slope and the sun or moon	verified	one	lighting/clouds#cloud-colours	
+0x6cf490	551	UpdateGlare		lighting	primitive	void __thiscall (void *this, float dt)	Moves a glare's envelope, scale and alpha toward its targets for the frame	verified	one	lighting/celestial#glare-update	lighting::sky_band_scale_difftest, lighting::sky_clamp_difftest, lighting::sky_dir_normalize_difftest, lighting::sky_exposure_pre_difftest, lighting::sky_factor_mul_difftest, lighting::sky_light_dot_difftest
+0x6cf6c0	232	EvalSkyTrack		lighting	primitive	float __fastcall (const float *keys, uint32_t count, float phase)	Evaluates a key track at a phase of the day, interpolating cyclically	verified	one	lighting/celestial#tracks	lighting::dn_track_eval_difftest
+0x6cf7b0	26	GetGlareCloudCover		lighting	primitive		Returns one less the cloud cover at a glare's position	verified	one	lighting/celestial#glare-occlusion	lighting::sf_skyblend_complement_difftest
+0x6cf7d0	36	GetGlareCoverEdge		lighting	primitive		Returns one less twice the cloud cover's distance from 0.5 at a glare	verified	one	lighting/celestial#glare-occlusion	lighting::sf_skyblend_triangle_difftest
+0x6cf800	104	GetGlareDepthFactor		lighting	primitive		Returns the glare's depth occlusion from the scene depth test	verified	one	lighting/celestial#glare-occlusion	lighting::dn_fade_factor_difftest
+0x6cf870	330	ProjectToCloudTexture		lighting	primitive		Maps a point's direction from the eye to cloud texture coordinates	verified	one	lighting/clouds#cover-projection	lighting::sky_cloud_uv_scroll_difftest
+0x6cf9c0	200	ProjectCloudLight		lighting	primitive		Projects the cloud light's direction onto the cloud sphere	verified	one	lighting/clouds#cloud-colours	lighting::sky_dome_ray_point_difftest
+0x6cfa90	109	SampleCloudCover		lighting	primitive		Returns the cloud cover byte at a point over 255, or 0 before the texture exists	verified	one	lighting/clouds#cover-projection	lighting::dn_sky_tex_sample_difftest
+0x6cfb00	1155	ColourCloudBand		lighting	primitive		Colours a band of cloud texels from their cover, slope and the sun or moon	verified	one	lighting/clouds#cloud-colours	lighting::sky_dome_vtx_color_build_difftest
 0x6cff90	35	RebuildCloudTexture		lighting	orchestration		Regenerates every row of the cloud texture at once	verified	one	lighting/clouds#cloud-texture	
-0x6cffc0	1392	UpdateCloudTexture		lighting	primitive		Builds the next band of cloud rows every 0.1 s: noise cover, colour and the device update	verified	one	lighting/clouds#cloud-texture	
-0x6d0530	858	BuildCloudDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the cloud dome's vertices, texture coordinates, ring alphas and indices	verified	one	lighting/clouds#cloud-dome	
+0x6cffc0	1392	UpdateCloudTexture		lighting	primitive		Builds the next band of cloud rows every 0.1 s: noise cover, colour and the device update	verified	one	lighting/clouds#cloud-texture	lighting::cloud_coverage_noise_difftest
+0x6d0530	858	BuildCloudDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the cloud dome's vertices, texture coordinates, ring alphas and indices	verified	one	lighting/clouds#cloud-dome	lighting::dn_sun_trig_table_difftest
 0x6d0890	39	AnswerCloudTextureLock		lighting	orchestration		Answers the device's texture request with the cloud buffer and its pitch	verified	one	lighting/clouds#cloud-texture	
 0x6d08c0	26	ReleaseCloudTexture		lighting	host		Releases the cloud texture	verified	one	lighting/sky#sky-shutdown	
 0x6d08e0	21	SetCloudCoverOverride		lighting	unreached		Stores a cloud cover override and recomputes the threshold; nothing calls it	verified	one	lighting/overview#unreached-code	
-0x6d0900	109	BuildCloudCurve		lighting	primitive	void __thiscall (void *this, float gamma)	Builds the cloud cover curve 255 − 255·γ^x from the current threshold	verified	one	lighting/clouds#cloud-cover	
-0x6d0970	59	SetCloudCover		lighting	primitive	void __thiscall (void *this, float cover)	Stores the cloud threshold trunc((1 − c)·255), or the override's	verified	one	lighting/clouds#cloud-cover	
+0x6d0900	109	BuildCloudCurve		lighting	primitive	void __thiscall (void *this, float gamma)	Builds the cloud cover curve 255 − 255·γ^x from the current threshold	verified	one	lighting/clouds#cloud-cover	lighting::dn_tone_curve_difftest
+0x6d0970	59	SetCloudCover		lighting	primitive	void __thiscall (void *this, float cover)	Stores the cloud threshold trunc((1 − c)·255), or the override's	verified	one	lighting/clouds#cloud-cover	lighting::sky_ftol_field_setter_difftest
 0x6d09b0	580	CreateCloudTexture		lighting	primitive	void __thiscall (void *this, uint32_t lod, uint32_t rows)	Sizes the cloud texture by its level, fills it white and binds it to the device	verified	one	lighting/clouds#cloud-texture	
 0x6d0c00	137	InitCloudNoise		lighting	orchestration		Sets the cloud noise's four octaves	inferred	none	lighting/clouds#cloud-noise	
-0x6d0c90	115	BuildCloudNoiseTables		lighting	primitive		Fills the cloud noise lattice from rand and the fade table	inferred	none	lighting/clouds#cloud-noise	
-0x6d0d10	569	BuildSkyDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the sky dome's vertices and index strip at a radius	verified	one	lighting/sky#sky-dome	
-0x6d0f50	1689	ColourSkyDome		lighting	primitive		Colours the sky dome's vertices from the light table, the glow and the heading	verified	one	lighting/sky#sky-colours	
-0x6d15f0	48	LerpChannel		lighting	primitive	float __stdcall (float a, float b, float t)	Moves a toward b by t, subtracting when b is below a	verified	one	lighting/daynight#area-overblend	
-0x6d1620	232	ScaleColourValue		lighting	primitive		Scales a colour's HSV value by a factor and returns it with alpha 255	verified	one	lighting/daynight#underwater-tint	
-0x6d1710	560	BuildDiscQuad		lighting	primitive		Builds a disc's quad from its direction, size and the camera	verified	one	lighting/celestial#disc-draw	
+0x6d0c90	115	BuildCloudNoiseTables		lighting	primitive		Fills the cloud noise lattice from rand and the fade table	inferred	none	lighting/clouds#cloud-noise	lighting::sky_bump_lut_difftest, lighting::sky_noise_lut_difftest
+0x6d0d10	569	BuildSkyDome		lighting	primitive	void __thiscall (void *this, float radius)	Builds the sky dome's vertices and index strip at a radius	verified	one	lighting/sky#sky-dome	lighting::sky_band_orient_setup_difftest
+0x6d0f50	1689	ColourSkyDome		lighting	primitive		Colours the sky dome's vertices from the light table, the glow and the heading	verified	one	lighting/sky#sky-colours	lighting::lerp_result_to_byte_difftest, lighting::sky_alpha_branch_difftest, lighting::sky_alpha_index_difftest, lighting::sky_angle_accum_difftest, lighting::sky_angle_wrap_difftest, lighting::sky_row_angle_difftest, lighting::sky_row_step_difftest, lighting::sky_scale_init_difftest
+0x6d15f0	48	LerpChannel		lighting	primitive	float __stdcall (float a, float b, float t)	Moves a toward b by t, subtracting when b is below a	verified	one	lighting/daynight#area-overblend	lighting::sky_scalar_lerp_difftest
+0x6d1620	232	ScaleColourValue		lighting	primitive		Scales a colour's HSV value by a factor and returns it with alpha 255	verified	one	lighting/daynight#underwater-tint	lighting::dn_color_to_bgra_difftest
+0x6d1710	560	BuildDiscQuad		lighting	primitive		Builds a disc's quad from its direction, size and the camera	verified	one	lighting/celestial#disc-draw	lighting::sky_dome_geom_template_difftest
 0x6d1940	1	BuildDiscQuadStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d1710 registers	verified	one	lighting/overview#static-objects	
 0x6d1950	1	BuildDiscQuadStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d1710 registers	verified	one	lighting/overview#static-objects	
-0x6d1960	482	UpdateDisc		lighting	primitive		Places a disc from its tracks and sets its alpha from its height	verified	one	lighting/celestial#disc-draw	
-0x6d1b50	76	UpdateStars		lighting	primitive		Places the stars at the eye and sets their alpha from the star track	verified	one	lighting/celestial#stars	
+0x6d1960	482	UpdateDisc		lighting	primitive		Places a disc from its tracks and sets its alpha from its height	verified	one	lighting/celestial#disc-draw	lighting::fog_plane_clip_difftest
+0x6d1b50	76	UpdateStars		lighting	primitive		Places the stars at the eye and sets their alpha from the star track	verified	one	lighting/celestial#stars	lighting::dn_cam_sky_setter_difftest
 0x6d1ba0	446	InitSky		lighting	orchestration		Builds the sky: the light state, the bodies, the dome, the clouds and the settings	verified	one	lighting/celestial#body-objects	
 0x6d1d60	96	OnSkyCloudLodChanged		lighting	host		Clamps SkyCloudLOD to 0 or 1 and rebuilds the cloud texture	verified	one	lighting/clouds#cloud-texture	
 0x6d1dc0	105	SkySunGlareCommand		lighting	orchestration		Turns the sun glare on or off from the console	verified	one	lighting/celestial#sun-glare-toggle	
-0x6d1e30	243	BuildSunGlare		lighting	primitive		Loads the sun glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	
-0x6d1f30	243	BuildMoonGlare		lighting	primitive		Loads the moon glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	
+0x6d1e30	243	BuildSunGlare		lighting	primitive		Loads the sun glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	lighting::sun_glare_setup_difftest
+0x6d1f30	243	BuildMoonGlare		lighting	primitive		Loads the moon glare's texture and stores its fields	verified	one	lighting/celestial#body-objects	lighting::moon_glare_setup_difftest
 0x6d2030	106	BuildDiscs		lighting	orchestration		Loads the sun, white moon and moon02 textures with their sizes	verified	one	lighting/celestial#body-objects	
 0x6d20a0	10	BuildStars		lighting	orchestration		Creates the star model in its own scene	verified	one	lighting/celestial#body-objects	
 0x6d20b0	343	ShutdownSky		lighting	primitive		Releases the skyboxes and their scene, and the first time the sky's textures and stars	verified	one	lighting/sky#sky-shutdown	
 0x6d2210	65	RecomputeLighting		lighting	orchestration		Rebuilds the light table, the sun and the bodies, and the clouds	verified	one	lighting/daynight#recompute	
-0x6d2260	2710	BuildLightTable		lighting	primitive		Builds the frame's light table from the area lights, the liquid and the override	verified	one	lighting/daynight#light-table-build	
-0x6d2d00	868	BlendAreaLights		lighting	primitive		Blends the area lights around the camera into the light table	verified	one	lighting/daynight#area-lights	
+0x6d2260	2710	BuildLightTable		lighting	primitive		Builds the frame's light table from the area lights, the liquid and the override	verified	one	lighting/daynight#light-table-build	lighting::dn_color_table_build_difftest, lighting::dn_color_table_edges_difftest
+0x6d2d00	868	BlendAreaLights		lighting	primitive		Blends the area lights around the camera into the light table	verified	one	lighting/daynight#area-lights	lighting::cloud_layer_distance_difftest, lighting::cloud_layer_factor_difftest, lighting::cloud_phase_index_difftest
 0x6d3070	1	AreaLightNoop		lighting	orchestration		Returns at once	verified	one	lighting/overview#static-objects	
 0x6d3080	92			lighting	orchestration		Runs the day-night file's container code, not read here	inferred	none		
-0x6d30e0	1783	OverblendAreaLight		lighting	primitive		Blends one area light's record into the base record by its weight w	verified	one	lighting/daynight#area-overblend	
-0x6d37e0	546	BuildLightColours		lighting	primitive		Builds the diffuse, ambient, window and HSV colours from the light table	verified	one	lighting/fog#light-colours	
-0x6d3a10	329	UpdateSunDirection		lighting	primitive		Sets the sun direction from the sun tracks at the time of day	verified	one	lighting/celestial#sun-direction	
+0x6d30e0	1783	OverblendAreaLight		lighting	primitive		Blends one area light's record into the base record by its weight w	verified	one	lighting/daynight#area-overblend	lighting::cloud_record_overblend_difftest
+0x6d37e0	546	BuildLightColours		lighting	primitive		Builds the diffuse, ambient, window and HSV colours from the light table	verified	one	lighting/fog#light-colours	lighting::dn_fog_ambient_darkened_difftest, lighting::dn_fog_derive_difftest
+0x6d3a10	329	UpdateSunDirection		lighting	primitive		Sets the sun direction from the sun tracks at the time of day	verified	one	lighting/celestial#sun-direction	lighting::dn_sun_dir_difftest
 0x6d3b60	1	UpdateSunDirectionStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3a10 registers	verified	one	lighting/overview#static-objects	
 0x6d3b70	1	UpdateSunDirectionStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3a10 registers	verified	one	lighting/overview#static-objects	
-0x6d3b80	2289	UpdateCelestialBodies		lighting	primitive		Places the sun disc, the moons and the stars from their tracks	verified	one	lighting/celestial#celestial-bodies	
+0x6d3b80	2289	UpdateCelestialBodies		lighting	primitive		Places the sun disc, the moons and the stars from their tracks	verified	one	lighting/celestial#celestial-bodies	lighting::dn_celestial_positions_difftest
 0x6d4480	1	UpdateCelestialBodiesStaticExit		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
 0x6d4490	1	UpdateCelestialBodiesStaticExit2		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
 0x6d44a0	1	UpdateCelestialBodiesStaticExit3		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
@@ -28650,9 +28650,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d44d0	1	UpdateCelestialBodiesStaticExit6		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
 0x6d44e0	1	UpdateCelestialBodiesStaticExit7		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
 0x6d44f0	1	UpdateCelestialBodiesStaticExit8		lighting	orchestration		Returns at once; the exit hook a local static of 0x6d3b80 registers	verified	one	lighting/overview#static-objects	
-0x6d4500	47	UpdateStormWeight		lighting	primitive		Sets the storm weight min(4·density, 1)	verified	one	lighting/daynight#storm-weight	
-0x6d4530	142	UpdateCameraHeading		lighting	primitive		Sets the camera heading in [0, 2π) from the forward vector	verified	one	lighting/daynight#recompute	
-0x6d45c0	45	SetSpellScreenTint		lighting	primitive	void __fastcall (uint32_t colour, float level)	Stores the screen tint colour and the byte of 255 times its level	verified	one	lighting/daynight#screen-tint	
+0x6d4500	47	UpdateStormWeight		lighting	primitive		Sets the storm weight min(4·density, 1)	verified	one	lighting/daynight#storm-weight	lighting::cloud_density_clamp_difftest
+0x6d4530	142	UpdateCameraHeading		lighting	primitive		Sets the camera heading in [0, 2π) from the forward vector	verified	one	lighting/daynight#recompute	lighting::wind_angle_update_difftest
+0x6d45c0	45	SetSpellScreenTint		lighting	primitive	void __fastcall (uint32_t colour, float level)	Stores the screen tint colour and the byte of 255 times its level	verified	one	lighting/daynight#screen-tint	lighting::dn_override_sky_phase_difftest
 0x6d45f0	13	SetOverrideLightRecord		lighting	unreached		Stores an override LightParams record and recomputes; nothing calls it	verified	one	lighting/overview#unreached-code	
 0x6d4600	26	GetDiscRecord		lighting	unreached		Returns disc record 0 to 2, or 0 with an error past 2; nothing calls it	verified	one	lighting/overview#unreached-code	
 0x6d4620	7	SetOverrideLight		lighting	orchestration	void __fastcall (int32_t light)	Stores the override light reference	verified	one	lighting/daynight#override-light	
@@ -28660,7 +28660,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d4640	421	InternSkybox		lighting	primitive	void * __fastcall (const char *path)	Returns the skybox entry for a path, loading its model on first request	verified	one	lighting/tables#skybox-models	
 0x6d47f0	26	SetOverrideSkybox		lighting	unreached		Makes a path the override skybox at a weight; nothing calls it	verified	one	lighting/overview#unreached-code	
 0x6d4810	71	SetSkyboxSlot		lighting	orchestration		Loads a skybox path into slot 0 to 2 at a weight, or clears it	verified	one	lighting/daynight#skybox-slots	
-0x6d4860	35	GetNightFraction		lighting	primitive		Evaluates the first night fraction track at the time of day plus an offset	verified	one	lighting/daynight#night-fraction	
+0x6d4860	35	GetNightFraction		lighting	primitive		Evaluates the first night fraction track at the time of day plus an offset	verified	one	lighting/daynight#night-fraction	lighting::dn_track_phase_wrap_difftest
 0x6d4890	22	GetNightFraction2		lighting	orchestration		Evaluates the second night fraction track at the time of day	verified	one	lighting/daynight#night-fraction	
 0x6d48b0	6	GetLightState		lighting	orchestration	void * __fastcall (void)	Returns the light state	verified	one	lighting/daynight#light-state	terrain::mliq_depth_alpha_lut_difftest
 0x6d48c0	63	DrawGlares		lighting	orchestration		Updates and draws the sun glare, then the moon glare, when the sky is on	verified	one	lighting/celestial#glare-draw	
@@ -28680,8 +28680,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d5090	190			lighting	host		Runs a skybox table method, not read here	inferred	none	lighting/sky#skybox-table	
 0x6d5150	45			lighting	host		Runs the day-night file's container code, not read here	inferred	none		
 0x6d5180	86			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
-0x6d51e0	143	LerpColourBytes		lighting	primitive		Moves a colour's low three bytes toward another's by weight/256, copying at 255	verified	one	lighting/fog#light-colours	
-0x6d5270	37	PackColourBytes		lighting	primitive		Packs four bytes into a colour, the first on top	verified	one	lighting/sky#sky-colours	
+0x6d51e0	143	LerpColourBytes		lighting	primitive		Moves a colour's low three bytes toward another's by weight/256, copying at 255	verified	one	lighting/fog#light-colours	lighting::dn_channel_lerp8_difftest
+0x6d5270	37	PackColourBytes		lighting	primitive		Packs four bytes into a colour, the first on top	verified	one	lighting/sky#sky-colours	lighting::dn_pack_bytes_color_difftest
 0x6d52a0	1	DayNightElementNoop		lighting	orchestration		Returns at once; the element destructor the light state array passes	verified	one	lighting/overview#static-objects	
 0x6d52b0	136			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
 0x6d5340	108			lighting	primitive		Runs the day-night file's container code, not read here	inferred	none		
@@ -28721,17 +28721,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d5f00	33	InitLightStore		lighting	orchestration		Clears the Light store and sets its largest id to −1 at start-up	verified	one	lighting/tables#table-stores	
 0x6d5f30	12	InitDayNightLightStoreAtexit		lighting	orchestration		Registers 0x6d5f40 with _atexit	verified	one	lighting/overview#static-objects	
 0x6d5f40	101	DayNightLightStoreExit		lighting	host		Frees the Light store's records and map; an exit hook	verified	one	lighting/overview#static-objects	
-0x6d5fb0	219	ScaleLightPosition		lighting	primitive		Converts a Light record's position and radii from file units at load	verified	one	lighting/tables#light-positions-at-load	
-0x6d6090	41	ScaleFogDistance		lighting	primitive		Divides a fog distance band's values by 36 at load	verified	one	lighting/tables#fog-distances-at-load	
+0x6d5fb0	219	ScaleLightPosition		lighting	primitive		Converts a Light record's position and radii from file units at load	verified	one	lighting/tables#light-positions-at-load	lighting::vec_scale_remap_difftest
+0x6d6090	41	ScaleFogDistance		lighting	primitive		Divides a fog distance band's values by 36 at load	verified	one	lighting/tables#fog-distances-at-load	lighting::dn_array_scale_36_difftest
 0x6d60c0	62	ScaleLightPositions		lighting	orchestration		Runs the Light position conversion over every record at load	verified	one	lighting/tables#light-positions-at-load	
 0x6d6100	90	ScaleFogDistances		lighting	primitive		Runs the fog distance conversion over every sixth LightFloatBand record at load	verified	one	lighting/tables#fog-distances-at-load	
 0x6d6160	16	FinishLightTables		lighting	orchestration		Converts the Light and fog band records once the tables load	verified	one	lighting/tables#light-positions-at-load	
 0x6d6170	366	BuildMapLightList		lighting	orchestration		Collects the map's Light records, with the fallback light, into the light list	verified	one	lighting/tables#per-map-light-list	
-0x6d62e0	256	EvalLightIntBand		lighting	primitive	uint32_t * __fastcall (uint32_t *out, uint32_t h, const void *row)	Interpolates a LightIntBand row's colour at half-minute h into out and returns out	verified	one	lighting/daynight#colour-band-value	
-0x6d63e0	149	FindBandSegment		lighting	primitive		Finds the band keys around half-minute h and the fraction between them	verified	one	lighting/daynight#key-search	
-0x6d6480	74	EvalLightFloatBand		lighting	primitive		Interpolates a LightFloatBand value at half-minute h	verified	one	lighting/daynight#scalar-band-value	
+0x6d62e0	256	EvalLightIntBand		lighting	primitive	uint32_t * __fastcall (uint32_t *out, uint32_t h, const void *row)	Interpolates a LightIntBand row's colour at half-minute h into out and returns out	verified	one	lighting/daynight#colour-band-value	lighting::dn_band_lerp_bgra_difftest, lighting::dn_band_repack_half_boundary_difftest, lighting::dn_band_single_key_constant_difftest, lighting::dn_band_zero_key_commit_difftest
+0x6d63e0	149	FindBandSegment		lighting	primitive		Finds the band keys around half-minute h and the fraction between them	verified	one	lighting/daynight#key-search	lighting::dn_band_find_frac_difftest
+0x6d6480	74	EvalLightFloatBand		lighting	primitive		Interpolates a LightFloatBand value at half-minute h	verified	one	lighting/daynight#scalar-band-value	lighting::dn_band_lerp_scalar_difftest, lighting::dn_band_zero_key_commit_difftest
 0x6d64d0	746	BuildLightRecord		lighting	orchestration		Fills a light record from a LightParams record at half-minute h	verified	one	lighting/daynight#light-record	
-0x6d67c0	710	BlendLightRecord		lighting	primitive		Blends a light record into another by a clamped weight	verified	one	lighting/daynight#record-blend	
+0x6d67c0	710	BlendLightRecord		lighting	primitive		Blends a light record into another by a clamped weight	verified	one	lighting/daynight#record-blend	lighting::sky_weighted_blend_difftest
 0x6d6a90	29	GetLightPosition		lighting	orchestration		Copies a Light record's position	verified	one	lighting/daynight#area-lights	
 0x6d6ab0	29	GetLightParamsRecord		lighting	orchestration		Returns a LightParams record by its light reference	verified	one	lighting/tables#band-references	
 0x6d6ad0	34	GetLightIntBand		lighting	primitive		Returns LightIntBand record 18 times the LightParams id less 17, plus the band	verified	one	lighting/tables#band-references	
@@ -28750,7 +28750,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d6e00	11	InitShadowInfinity		lighting	orchestration		Copies +inf into the object file's infinity global	verified	one	lighting/overview#shared-header-constants	
 0x6d6e10	5	InitShadowShadowBoxRatiosThunk		lighting	orchestration		Jumps to 0x6d6e20; a static initializer	verified	one	lighting/overview#static-objects	
 0x6d6e20	33	InitShadowBoxRatios		lighting	orchestration		Stores the blob shadow's box ratios 5/3 and 1 at start-up	inferred	none	lighting/shadows#blob-shadow	
-0x6d6e50	16	ThirdOf		lighting	primitive	float __stdcall (float x)	Returns x times 1/3	inferred	none	lighting/shadows#blob-shadow	
+0x6d6e50	16	ThirdOf		lighting	primitive	float __stdcall (float x)	Returns x times 1/3	inferred	none	lighting/shadows#blob-shadow	lighting::sky_scale_third_difftest
 0x6d6e60	10	InitShadowShadowRampBuffer		lighting	orchestration		Runs 0x6d6e70, then registers an exit hook through 0x6d6e90; a static initializer	verified	one	lighting/overview#static-objects	
 0x6d6e70	23	ClearShadowRampBuffer		lighting	orchestration		Zeroes the ramp texture buffer and stores its size 0x200	verified	one	lighting/overview#static-objects	
 0x6d6e90	12	InitShadowShadowRampBufferAtexit		lighting	orchestration		Registers 0x6d6ea0 with _atexit	verified	one	lighting/overview#static-objects	
@@ -28764,17 +28764,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d6f70	12	InitShadowDecalColourAtexit		lighting	orchestration		Registers 0x6d6f80 with _atexit	verified	one	lighting/overview#static-objects	
 0x6d6f80	1	ShadowDecalColourExitNoop		lighting	orchestration		Returns at once; the exit hook of a static with nothing to undo	verified	one	lighting/overview#static-objects	
 0x6d6f90	6	GetFootprintRamp		lighting	orchestration	void * __fastcall (void)	Returns the first ramp texture	inferred	none	lighting/shadows#shadow-textures	
-0x6d6fa0	908	BuildDecalTransforms		lighting	primitive		Builds a decal box's texture transform and its height fade transform	inferred	none	lighting/shadows#projected-decals	
+0x6d6fa0	908	BuildDecalTransforms		lighting	primitive		Builds a decal box's texture transform and its height fade transform	inferred	none	lighting/shadows#projected-decals	lighting::sky_billboard_build_difftest
 0x6d7330	322	DrawDecal		lighting	host		Draws a texture projected over a box onto the world geometry	inferred	none	lighting/shadows#projected-decals	
-0x6d7480	725	DrawDecalBatches		lighting	primitive		Draws the collected world batches with a decal's texture transform	inferred	none	lighting/shadows#projected-decals	
+0x6d7480	725	DrawDecalBatches		lighting	primitive		Draws the collected world batches with a decal's texture transform	inferred	none	lighting/shadows#projected-decals	lighting::sky_element_draw_scale_difftest
 0x6d7760	173	WriteDecalVerticesColoured		lighting	host		Writes a batch's positions with the decal colour vector	inferred	none	lighting/shadows#projected-decals	
 0x6d7810	138	WriteDecalVertices		lighting	host		Writes a batch's positions with one packed colour	inferred	none	lighting/shadows#projected-decals	
 0x6d78a0	79	WriteDecalIndices		lighting	host		Writes a running index list for a batch	inferred	none	lighting/shadows#projected-decals	
 0x6d78f0	38	DrawBlobShadowIfOn		lighting	orchestration	void __thiscall (void *model)	Draws a model's blob shadow when it is loaded and shadowLOD is 1	inferred	none	lighting/shadows#blob-shadow	
-0x6d7920	1866	DrawBlobShadow		lighting	primitive	void __thiscall (void *model)	Projects the blob texture under a model from its bounds and scale	inferred	none	lighting/shadows#blob-shadow	
+0x6d7920	1866	DrawBlobShadow		lighting	primitive	void __thiscall (void *model)	Projects the blob texture under a model from its bounds and scale	inferred	none	lighting/shadows#blob-shadow	lighting::shadow_axis_rotate_difftest, lighting::shadow_color_quantize_difftest, lighting::shadow_extent_gate_b_difftest, lighting::shadow_extent_gate_difftest, lighting::shadow_extent_inv_difftest, lighting::shadow_half_diff_difftest, lighting::shadow_inv_len_difftest, lighting::shadow_len_gate_difftest, lighting::shadow_offset_bias_difftest, lighting::shadow_quad_corner_transform_difftest, lighting::shadow_span_diff_difftest, lighting::shadow_vec3_len_scale_difftest
 0x6d8070	291	InitShadows		lighting	primitive	void __cdecl (void)	Loads the blob texture, builds the two ramp textures and registers the shadow settings	inferred	none	lighting/shadows#shadow-textures	
-0x6d81a0	294	FillShadowRamp		lighting	primitive		Fills the first ramp texture white with a computed alpha	inferred	none	lighting/shadows#shadow-textures	
-0x6d82d0	321	FillShadowGreyRamp		lighting	primitive		Fills the second ramp texture with the grey ramp across its columns	inferred	none	lighting/shadows#shadow-textures	
+0x6d81a0	294	FillShadowRamp		lighting	primitive		Fills the first ramp texture white with a computed alpha	inferred	none	lighting/shadows#shadow-textures	lighting::sb_shadow_ramp_0x6d81a0_difftest
+0x6d82d0	321	FillShadowGreyRamp		lighting	primitive		Fills the second ramp texture with the grey ramp across its columns	inferred	none	lighting/shadows#shadow-textures	lighting::sb_shadow_ramp_gray_0x6d82d0_difftest
 0x6d8420	46	ShutdownShadows		lighting	host	void __cdecl (void)	Releases the blob and ramp textures	inferred	none	lighting/shadows#shadow-textures	
 0x6d8450	212	OnShadowLodChanged		lighting	host		Stores shadowLOD 0 or 1 and at 1 refills the ramp textures	verified	one	lighting/shadows#shadow-settings	
 0x6d8530	146	OnShadowBiasChanged		lighting	orchestration		Stores shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings	
@@ -28900,10 +28900,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3f0	114			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
-0x6dc470	112			unassigned			Runs its object file code not read here	inferred	none		
+0x6dc470	112			unassigned			Runs its object file code not read here	inferred	none		lighting::dn_light_accumulate_3x3_difftest
 0x6dc4e0	81			unassigned	unreached		Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc540	81			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
-0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		
+0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		lighting::ray_box_clip_difftest
 0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	inferred	none		
 0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	inferred	none		
 0x6dc900	1147	SegmentSegmentDistanceSquared		unassigned	unreached		Returns the squared distance between two segments, each given by a point and a direction	inferred	none		
@@ -35686,10 +35686,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bbc40	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbc50	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbc60	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbc80	183	RgbToHsv		unassigned			Converts a colour's three channels in [0, 1] to hue, saturation and value	verified	one	lighting/daynight#underwater-tint	
+0x7bbc80	183	RgbToHsv		unassigned			Converts a colour's three channels in [0, 1] to hue, saturation and value	verified	one	lighting/daynight#underwater-tint	cmath::rgb_to_hsv_difftest
 0x7bbd40	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7bbd50	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7bbd60	316	HsvToRgb		unassigned			Converts hue, saturation and value back to three channels in [0, 1]	verified	one	lighting/daynight#underwater-tint	
+0x7bbd60	316	HsvToRgb		unassigned			Converts hue, saturation and value back to three channels in [0, 1]	verified	one	lighting/daynight#underwater-tint	cmath::hsv_to_rgb_difftest
 0x7bbec0	95			unassigned	primitive		Packs three unit values into bytes through a 512.0 bias, with 0xff alpha	verified	one	ui/colorselect#reading-the-colour	
 0x7bbf20	68			unassigned	primitive		Unpacks three bytes into unit values times 1/255	verified	one	ui/colorselect#setting-the-colour	
 0x7bbf70	118			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -35707,12 +35707,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bc430	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc500	206			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc5d0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	gx::lightningrender_strip_difftest
-0x7bc8c0	29			cmath			Runs its object file code not read here	inferred	none		gx::lightningrender_strip_difftest
+0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	cmath::multiply_matrix4_difftest, gx::lightningrender_strip_difftest
+0x7bc8c0	29			cmath			Runs its object file code not read here	inferred	none		cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
 0x7bc8e0	204			cmath			Runs its object file code not read here	inferred	none		
 0x7bc9b0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	terrain::liquid_hit_flush_difftest, terrain::horizon_insert, gx::lightningrender_strip_difftest, models::m2_light_coord_finalize_difftest, models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
-0x7bcae0	93			cmath			Runs its object file code not read here	inferred	none		
+0x7bcae0	93			cmath			Runs its object file code not read here	inferred	none		cmath::transform_mat43_vec3_difftest
 0x7bcb40	140	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	terrain::portal_screen_rect_difftest, models::particle_quad_expand_stretched_difftest
 0x7bcbd0	140			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	models::ribbonbasis_difftest
@@ -35730,8 +35730,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bd700	280	InvertRigidMatrix		cmath		void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
 0x7bd820	347	InvertAffineMatrix		cmath			Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	
 0x7bd980	372			cmath	unreached		Runs its object file code that calls 0x5f8d20, 0x7be6d0, ScaleMatrixRows and 1 more; not read here	inferred	none		
-0x7bdb00	311			cmath			Runs its object file code not read here	inferred	none		
-0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	
+0x7bdb00	311			cmath			Runs its object file code not read here	inferred	none		cmath::axis_angle_mat4_difftest
+0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	cmath::translate_matrix_difftest
 0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	terrain::liquid_tex_matrix_difftest
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	
 0x7bdd60	75	RotateMatrix		cmath		void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
@@ -35741,7 +35741,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bdf20	5			cmath			Runs its object file code not read here	inferred	none		
 0x7bdf30	19			cmath			Runs its object file code not read here	inferred	none		
 0x7bdf50	104			cmath			Runs its object file code not read here	inferred	none		gx::lightningrender_strip_difftest
-0x7bdfc0	247			cmath			Runs its object file code not read here	inferred	none		
+0x7bdfc0	247			cmath			Runs its object file code not read here	inferred	none		cmath::multiply_matrix3_difftest
 0x7be0c0	5			cmath			Runs its object file code not read here	inferred	none		
 0x7be0d0	11			cmath			Runs its object file code not read here	inferred	none		
 0x7be0e0	63	Matrix3Determinant		cmath		float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
@@ -35780,7 +35780,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		cmath::dominant_axis_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest, models::wmo_mocv_barycentric_color_difftest
 0x7bf6e0	5			cmath			Runs its object file code not read here	inferred	none		
 0x7bf6f0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7bf700	92			cmath			Runs its object file code not read here	inferred	none		
+0x7bf700	92			cmath			Runs its object file code not read here	inferred	none		cmath::minor_axis_difftest
 0x7bf760	5			cmath			Runs its object file code not read here	inferred	none		
 0x7bf770	15			cmath			Runs its object file code not read here	inferred	none		
 0x7bf780	5			cmath			Runs its object file code not read here	inferred	none		
@@ -37242,19 +37242,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7e4fd0	5	InitSkyDrawInvTwoPiThunk		lighting	orchestration		Jumps to 0x7e4fe0; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x7e4fe0	19	InitSkyDrawInvTwoPi		lighting	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	lighting/overview#shared-header-constants	
 0x7e5000	150	LoadGlare		lighting	primitive		Loads a glare's texture and creates its occlusion query when the device has one	verified	one	lighting/celestial#body-objects	
-0x7e50a0	380	TraceGlareOcclusion		lighting	primitive		Traces the scene between the eye and a glare for occlusion	inferred	none	lighting/celestial#draw-occlusion	
-0x7e5220	1099	QueryGlareOcclusion		lighting	primitive		Draws a glare's occlusion query and reads its result	inferred	none	lighting/celestial#draw-occlusion	
-0x7e5670	260	BuildGlareBasis		lighting	primitive		Normalizes a direction and builds two axes perpendicular to it	verified	one	lighting/celestial#glare-draw	
+0x7e50a0	380	TraceGlareOcclusion		lighting	primitive		Traces the scene between the eye and a glare for occlusion	inferred	none	lighting/celestial#draw-occlusion	lighting::d7_50a0_normalize_half_difftest
+0x7e5220	1099	QueryGlareOcclusion		lighting	primitive		Draws a glare's occlusion query and reads its result	inferred	none	lighting/celestial#draw-occlusion	lighting::d7_5220_bbox_area_difftest, lighting::d7_5220_coverage_difftest, lighting::d7_5220_one_minus_c_difftest
+0x7e5670	260	BuildGlareBasis		lighting	primitive		Normalizes a direction and builds two axes perpendicular to it	verified	one	lighting/celestial#glare-draw	lighting::d7_basis_from_normal_difftest
 0x7e5780	59	GetGlareOcclusion		lighting	orchestration		Returns a glare's occlusion from its query or trace, or 0 with occlusion off	verified	one	lighting/celestial#glare-occlusion	
 0x7e57c0	32	ReleaseGlare		lighting	orchestration		Releases a glare's texture	verified	one	lighting/sky#sky-shutdown	
-0x7e57e0	812	DrawGlare		lighting	primitive		Draws a glare as an additive quad facing the eye	verified	one	lighting/celestial#glare-draw	
+0x7e57e0	812	DrawGlare		lighting	primitive		Draws a glare as an additive quad facing the eye	verified	one	lighting/celestial#glare-draw	lighting::d7_vec3_sub_57e0_difftest
 0x7e5b10	118	LoadDisc		lighting	primitive		Loads a disc's texture and stores its base scale	verified	one	lighting/celestial#body-objects	
-0x7e5b90	726	DrawDisc		lighting	primitive		Draws a sun or moon disc	verified	one	lighting/celestial#disc-draw	
+0x7e5b90	726	DrawDisc		lighting	primitive		Draws a sun or moon disc	verified	one	lighting/celestial#disc-draw	lighting::d7_vec3_sub_5b90_difftest
 0x7e5e70	13	ReleaseDisc		lighting	orchestration		Releases a disc's texture	verified	one	lighting/sky#sky-shutdown	
 0x7e5e80	246	DrawSkyGradient		lighting	host		Draws the sky dome with its vertex colours	verified	one	lighting/sky#gradient-draw	
-0x7e5f80	363	DrawClouds		lighting	primitive		Draws the cloud dome with the cloud texture	verified	one	lighting/clouds#cloud-dome	
+0x7e5f80	363	DrawClouds		lighting	primitive		Draws the cloud dome with the cloud texture	verified	one	lighting/clouds#cloud-dome	lighting::d7_strip_color_repack_difftest
 0x7e60f0	37	LoadStars		lighting	orchestration		Creates the star model in its own scene	verified	one	lighting/celestial#body-objects	
-0x7e6120	152	DrawStars		lighting	primitive		Draws the star model when its alpha byte is 2 or more	verified	one	lighting/celestial#stars	
+0x7e6120	152	DrawStars		lighting	primitive		Draws the star model when its alpha byte is 2 or more	verified	one	lighting/celestial#stars	lighting::d7_star_byte_norm_difftest
 0x7e61c0	41	ReleaseStars		lighting	orchestration		Releases the star model	verified	one	lighting/celestial#stars	
 0x7e61f0	5	InitSkyDrawTenSquaredThunk		lighting	orchestration		Jumps to 0x7e6200; a static initializer	verified	one	lighting/overview#shared-header-constants	
 0x7e6200	19	InitSkyDrawTenSquared		lighting	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	lighting/overview#shared-header-constants	

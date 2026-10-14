@@ -160,7 +160,7 @@ when the cloud scatters again.
 Addresses: `0x66f971`, `0x66f9a3`, `0x66f9a8`, `0x66f9af`, `0x68e5a0`, `0x68e650`, `0x68e657`, `0x68e670`, `0x68e720`, `0x68e729`, `0x68e75c`, `0x68e77d`, `0x68e7c6`, `0x68e8ea`, `0x68e8f8`, `0x68e902`, `0x68e91e`, `0x68efe0`, `0x68f249`, `0xc63180`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::drift_cloud_set_fa00_difftest`, `terrain::weather_cloud_reseed_difftest`, `terrain::weather_toroidal_advect_difftest`
 
 `0x66f971` allocates 0xfa40 bytes and `0x66f9af` constructs them with the size base 0x3ce38e39,
 the edge 30.0 and a texture path, storing the cloud in `0xc63180`. `0x68e5a0` zeroes the
@@ -181,7 +181,7 @@ than E, or until the liquid changes again. Both scatters need `[0xc7b2a4]` bit 0
 Addresses: `0x680afa`, `0x680b0d`, `0x680b1d`, `0x680b39`, `0x680b4c`, `0x680b5c`, `0x680b75`, `0x68e930`, `0x68e9da`
 Confidence: verified
 Proof: one
-Test: none
+Test: `terrain::weather_toroidal_advect_difftest`
 
 The liquid probe tests the bit (`0x680afa`, `0x680b39`), calls `0x68e720` at `0x680b0d` and
 `0x680b4c` before `0x68e670` with 1/36 (`0x680b1d`) or 1/9 (`0x680b5c`), and for slime stores 0 in

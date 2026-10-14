@@ -20,7 +20,7 @@ of band 8.
 Addresses: `0x6d37e0`, `0x6d37f3`, `0x6d37f8`, `0x6d3804`, `0x6d380a`, `0x6d381a`, `0x6d3824`, `0x6d382c`, `0x6d3856`, `0x6d385f`, `0x6d38c5`, `0x6d3945`, `0x6d3998`, `0x6d39a0`, `0x6d39b2`, `0x6d39bb`, `0x6d39f7`, `0x6d51e0`, `0x6d51f1`, `0x6d5264`, `0x808300`, `0x80c5d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_channel_lerp8_difftest`, `lighting::dn_fog_ambient_darkened_difftest`, `lighting::dn_fog_derive_difftest`
 
 `0x6d37e0` stores `[0xce9c0c]` at `0xce9cd4` and `0xce9cdc`, `[0xce9c10]` at `0xce9cd8` and
 `0xce9ce0` (`0x6d37f3` to `0x6d380a`). `0x6d51e0(dst, a, src)` is the 8-bit blend whose result has
@@ -39,7 +39,7 @@ them.
 Addresses: `0x6d3864`, `0x6d386f`, `0x6d3879`, `0x6d3883`, `0x6d388d`, `0x6d3899`, `0x6d38a5`, `0x6d38b1`, `0x6d38c8`, `0x6d38d4`, `0x6d38f0`, `0x6d38fc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_fog_ambient_darkened_difftest`, `lighting::dn_fog_derive_difftest`
 
 The copies `0xce9c9c` to `0xce9cc4` from `0xce9cc8` to `0xce9cf0` run at `0x6d3864` to `0x6d38fc`,
 before the stores of `0xce9ce4` to `0xce9cf0` at the function's end, so the snapshot's last four
@@ -55,11 +55,12 @@ negative.
 Addresses: `0x6cee30`, `0x6cee3c`, `0x6cee47`, `0x6cee61`, `0x6cee6d`, `0x6cee76`, `0x6cee83`, `0xce9bd0`, `0xce9bd4`, `0xce9bd8`, `0xce9b94`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_blend_difftest`, `lighting::dn_blue_premul_difftest`, `lighting::dn_case2_premul_difftest`, `lighting::dn_fog_color_lerp_difftest`, `lighting::dn_phase_alpha_delta_difftest`, `lighting::dn_phase_fade_arg_difftest`, `lighting::dn_repack_scale_difftest`
 
 `fld [0xce9c50]`, `fcomp [0xce9b94]`, `test ah,5`, `jp` takes the far clip for band end ≥ far clip
 or unordered (`0x6cee47`). `fld [0xce9c54]`, `fmul [0xce9bd8]`, `fstp [0xce9bd4]`; `[0xce9c28]` to
 `0xce9bd0` (`0x6cee76`).
+The tests run `0x6cee30` in 7 slices between `0x6cee61` and `0x6cf17e`.
 
 ## Interior fog
 
@@ -74,7 +75,7 @@ moved toward the target by it.
 Addresses: `0x6cee97`, `0x6ceeaa`, `0x6ceeb9`, `0x6ceec1`, `0x6ceed3`, `0x6ceedb`, `0x6cef0c`, `0x6cef12`, `0x6cef36`, `0x6ceeee`, `0x6cef01`, `0x6cef56`, `0x6cef68`, `0x6cef6f`, `0x6cef90`, `0x6cefb5`, `0x6cefc2`, `0x6cefcb`, `0x6cefe8`, `0x6ceff9`, `0x6cf011`, `0x6cf034`, `0x6cf054`, `0x6cf069`, `0x6cf093`, `0x6cf0c4`, `0x6cf310`, `0x6705d0`, `0x8115b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_blend_difftest`, `lighting::dn_blue_premul_difftest`, `lighting::dn_case2_premul_difftest`, `lighting::dn_fog_color_lerp_difftest`, `lighting::dn_phase_alpha_delta_difftest`, `lighting::dn_phase_fade_arg_difftest`, `lighting::dn_repack_scale_difftest`
 
 The colour moves by the byte bits(f32(w·255 + 512)) >> 14 of the weight.
 
@@ -86,6 +87,7 @@ liquid word, masked with 3 unless 0xf (`0x6ceec1`), picks the index at `0x6ceed3
 time; a clear one ramps down (`0x6cf011`), and at or below 0 clears `0xce9bf8`, `0xce9c00` and the
 weight (`0x6cf034`). `0x6cf054` to `0x6cf093` lerp end and start; `0x690ae0` blends the colour only
 for a nonzero byte (`0x6cf0c4`).
+The tests run `0x6cee30` in 7 slices between `0x6cee61` and `0x6cf17e`.
 
 ## Dead fog modifiers
 
@@ -97,7 +99,7 @@ dims the light, does nothing.
 Addresses: `0x6cf0c9`, `0x6cf0ef`, `0x6cf11a`, `0x6cf138`, `0x6cf17c`, `0x6cf1a0`, `0x6cf290`, `0x6d4920`, `0x6d4910`, `0x6d1d2d`, `0x6d1bba`, `0xce99f8`, `0xce99d0`, `0x454d40`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_color_modulate_difftest`, `lighting::dn_blend_difftest`, `lighting::dn_blue_premul_difftest`, `lighting::dn_case2_premul_difftest`, `lighting::dn_fog_color_lerp_difftest`, `lighting::dn_phase_alpha_delta_difftest`, `lighting::dn_phase_fade_arg_difftest`, `lighting::dn_repack_scale_difftest`, `lighting::fog_color_modulate_difftest`
 
 A census of `0xce99f8` in the listing finds seven instructions: tests at `0x6cf0c9`, `0x6cf0ef`,
 `0x6d0f80` and `0x7e601e`, the store of ebx at `0x6d1d2d`, which `0x6d1bba` zeroed, and the load
@@ -106,6 +108,7 @@ known four. No code holding the sky gradient's address `0xce99a0` writes its `+0
 `0x6cf290` would scale each channel by the byte of 1 − `[0xce99d4]`; with bit 0, `0x6cf1a0` would
 take k = 1 − 1/`0x454d40`(((clock − `[0xce99e8]`) / `[0xce99d8]`)·7.2134752), clamped, into
 `0xce99d0` (`0x6cf17c`). `0x6d4910` is `ret 8`.
+The tests run `0x6cee30` in 7 slices between `0x6cee61` and `0x6cf17e`.
 
 ## World light commit
 

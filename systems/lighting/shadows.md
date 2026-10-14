@@ -16,12 +16,13 @@ console message.
 Addresses: `0x6d8070`, `0x6d8157`, `0x6d817d`, `0x6d8450`, `0x6d8476`, `0x6d847f`, `0x6d8492`, `0x6d84c4`, `0x6d8530`, `0x6d855f`, `0x6d856f`, `0x6d8589`, `0x86f5b4`, `0xcea620`, `0x811694`, `0x6d7506`, `0x6d7524`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::sky_element_draw_scale_difftest`
 
 `0x6d8450` parses an integer, refuses it below 0 or above 1 (`0x6d8476`, `0x6d847f`), stores it
 in `0x86f5b4` (`0x6d8492`) and at 1 refills `0xce9df8` and `0xce9df4` with their callbacks.
 `0x6d8530` refuses a value below 0 (`0x6d855f`) or above 1 (`0x6d856f`) and stores `0xcea620`.
 The decal draw doubles it and multiplies by `[0x811694]` (2⁻¹⁵) when it is not 0 (`0x6d7506`, `0x6d7524`).
+The tests run `0x6d7480` from `0x6d7506` to `0x6d7532`.
 
 ## Shadow textures
 
@@ -33,7 +34,7 @@ ramp across the 64 columns: with f = 12·i/63, the darkness is f/2 below 2, 1 fr
 Addresses: `0x6d8070`, `0x6d80c1`, `0x6d80fe`, `0x6d8136`, `0x6d8420`, `0x6d81a0`, `0x6d82d0`, `0x6038e9`, `0x605283`, `0xce9dfc`, `0xce9df8`, `0xce9df4`, `0x80c4e8`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `lighting::sb_shadow_ramp_0x6d81a0_difftest`, `lighting::sb_shadow_ramp_gray_0x6d82d0_difftest`
 
 `0x6038e9` and `0x605283` call `0x6d8070` and `0x6d8420`. `0x6d80c1` creates `0xce9dfc`; `0x6d80fe`
 and `0x6d8136` create 64 × 8 textures with `0x6d81a0` and `0x6d82d0`. The ramp's breakpoints are
@@ -51,7 +52,7 @@ colour itself.
 Addresses: `0x6d7330`, `0x6d6fa0`, `0x6d7480`, `0x6d7760`, `0x6d7810`, `0x6d78a0`, `0x608f28`, `0x611575`, `0x69014b`, `0x69a0a9`, `0x672b48`, `0x48395a`, `0x5d7105`, `0x811668`, `0x803068`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `lighting::sky_billboard_build_difftest`, `lighting::sky_element_draw_scale_difftest`
 
 `0x6d7330` calls `0x6d6fa0` and `0x6d7480` between two transform pushes. `0x6d6fa0` turns by
 `[0x811668]`·`[0x803068]` (−π/2). `0x6d7760` writes positions with the colour `0xce9dc8`,
@@ -59,6 +60,7 @@ Test: none
 selection circle `0x608f28`, the auto-move target `0x611575`, ripples `0x69014b`, footprints
 `0x69a0a9` and world events `0x672b48`. The batch list and the transform layout are read from the
 decompiled bodies, not settled at the bytes.
+The tests run `0x6d7480` from `0x6d7506` to `0x6d7532`.
 
 ## Blob shadow
 
@@ -70,9 +72,11 @@ length, in white with the model's alpha.
 Addresses: `0x683eb9`, `0x683ebe`, `0x683ec3`, `0x6d78f0`, `0x6d78fb`, `0x6d7904`, `0x6d790f`, `0x6d7920`, `0x6d6e20`, `0x6d6e50`, `0xcea610`, `0xcea60c`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `lighting::shadow_axis_rotate_difftest`, `lighting::shadow_color_quantize_difftest`, `lighting::shadow_extent_gate_b_difftest`, `lighting::shadow_extent_gate_difftest`, `lighting::shadow_extent_inv_difftest`, `lighting::shadow_half_diff_difftest`, `lighting::shadow_inv_len_difftest`, `lighting::shadow_len_gate_difftest`, `lighting::shadow_offset_bias_difftest`, `lighting::shadow_quad_corner_transform_difftest`, `lighting::shadow_span_diff_difftest`, `lighting::shadow_vec3_len_scale_difftest`, `lighting::sky_scale_third_difftest`
 
 `0x683ec3` calls `0x6d78f0` after testing the model's `+0x90` for 0x8 and 0x400. `0x6d78f0`
 needs `0x710450` ready (`0x6d78fb`) and `[0x86f5b4]` equal to 1 (`0x6d7904`). The initializer
 `0x6d6e20` stores 5·(1/3) in `0xcea610` and 3·(1/3) in `0xcea60c` through `0x6d6e50`. The box,
 scale and colour steps of `0x6d7920` are read from its decompiled body.
+The tests run `0x6d7920` in 12 slices between `0x6d7965` and `0x6d8027`.
+

@@ -52,7 +52,7 @@ their own h: glue evaluates LightParams 3, bands 0 and 1, at h = 0.
 Addresses: `0x6d2483`, `0x6d248f`, `0x6d2495`, `0x6d249b`, `0x6d24a1`, `0x811630`, `0x86f2c8`, `0x4721f8`, `0x47220f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`
 
 `fld [0xce9b64]`, `fmul [0x811630]` (2880.0) and `fstp` a float local (`0x6d2495`), then `fld`,
 `fsub [0x86f2c8]` (0.5) and `fistp` (`0x6d24a1`) under the client's control word. Each gather site
@@ -71,7 +71,7 @@ to a float. With no keys it writes i = next = 0 and fraction 0; a single key is 
 Addresses: `0x6d63e0`, `0x6d63ea`, `0x6d6407`, `0x6d6417`, `0x6d6424`, `0x6d642e`, `0x6d6437`, `0x6d644d`, `0x6d6450`, `0x6d646c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_band_find_frac_difftest`
 
 `0x6d63e0(keys, &frac, &i, &next)` with h in ecx and the count in edx, `ret 0x10`. It zeroes the
 three outputs first (`0x6d63ea`) and returns at once for a count of 0 or less (`0x6d6407 jle`).
@@ -91,7 +91,7 @@ from the record's byte 2 in bits 16 to 23, byte 1 in 8 to 15 and byte 0 in 0 to 
 Addresses: `0x6d62e0`, `0x6d62f4`, `0x6d62f6`, `0x6d6319`, `0x6d6355`, `0x6d6372`, `0x6d6379`, `0x6d6385`, `0x6d639d`, `0x6d63d4`, `0x8029cc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_band_lerp_bgra_difftest`, `lighting::dn_band_repack_half_boundary_difftest`, `lighting::dn_band_single_key_constant_difftest`, `lighting::dn_band_zero_key_commit_difftest`
 
 `0x6d62e0(out, h, row)`, `ret 4`, returns `out`. A count of 0 stores the immediate at `0x6d62f6`.
 Per channel: `fild` (hi − lo), `fmul` the fraction, `fiadd` lo, `fadd [0x8029cc]` (512.0) and
@@ -107,7 +107,7 @@ bits, left on the x87 stack; every caller stores it as a float.
 Addresses: `0x6d6480`, `0x6d648e`, `0x6d6490`, `0x6d64b6`, `0x6d64ba`, `0x6d64be`, `0x6d64c1`, `0x7ffd74`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_band_lerp_scalar_difftest`, `lighting::dn_band_zero_key_commit_difftest`
 
 `0x6d6480(h, row)` in ecx and edx. A count of 0 loads `[0x7ffd74]`, 0.0 (`0x6d6490`). Otherwise
 `fld v[next]`, `fsub v[i]`, `fmul f`, `fadd v[i]` (`0x6d64b6` to `0x6d64c1`) and returns.
@@ -150,7 +150,7 @@ byte, and take the source's three channels whole when a is 255. The floats `+0x4
 Addresses: `0x6d67c0`, `0x6d67d6`, `0x6d67ef`, `0x6d6807`, `0x6d6813`, `0x6d6820`, `0x6d6913`, `0x6d691d`, `0x6d69d8`, `0x6d6a11`, `0x6d6c20`, `0x6d6c35`, `0x690ae0`, `0x69eb70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::sky_weighted_blend_difftest`
 
 `0x6d67c0(dst, src, t)`, `ret 4`. `fcomp 0.0`, `test ah,5`, `jp` keeps t unless below 0
 (`0x6d67d6`); `fcomp 1.0`, `jnp` keeps it below 1 (`0x6d67ef`); a NaN takes 1.0. Colours `+0x00`
@@ -167,7 +167,7 @@ has no lower clamp, and a NaN density gives NaN.
 Addresses: `0x6d4500`, `0x6d4506`, `0x6d4512`, `0x6d4519`, `0x6d451d`, `0x6d4528`, `0x80306c`, `0xce9bcc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_density_clamp_difftest`
 
 `fld [0xce9ba0]`, `fmul [0x80306c]` (4.0); `fld 1.0`, `fcomp st(1)`; `test ah,5`, `jp` stores the
 product (`0x6d4528`) unless 1.0 < product, which stores 0x3f800000 (`0x6d451d`).
@@ -183,7 +183,7 @@ base, with the storm blend, and blended in by w = 1 when d ≤ inner, else 1 −
 Addresses: `0x6d2d00`, `0x6d2d2f`, `0x6d2d64`, `0x6d2d95`, `0x6d2d9d`, `0x6d2da3`, `0x6d2dab`, `0x6d2dda`, `0x6d2e60`, `0x6d2e91`, `0x6d2ea2`, `0x6d2f75`, `0x6d2f8b`, `0x6d2fe8`, `0x6d2ffd`, `0x6d301a`, `0x6d3032`, `0x6d6a90`, `0x6d5a70`, `0x6d5ad0`, `0x6d5b70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_layer_distance_difftest`, `lighting::cloud_layer_factor_difftest`, `lighting::cloud_phase_index_difftest`
 
 `0x6d2d00(base, k)` starts at slot 1 (`0x6d2d2f`), reads the position through `0x6d6a90`, and
 `fstp`s the root (`0x6d2d9d`). `fcomp [row+0x18]`, `jp` (`0x6d2dab`) skips d ≥ outer and NaN. The
@@ -192,6 +192,7 @@ The drain pops index 1 (`0x6d2e60`), sifts down choosing the right child unless 
 left (`0x6d2e91`), gathers with reference k (`0x6d2f75`), blends reference k + 2 when the storm
 weight is above 0 (`0x6d2f8b`, `0x6d2fe8`), and computes w with `fcomp [row+0x14]` and
 `test ah,0x41` (`0x6d2ffd`), `fdivp` (DE F9) and `fsubr 1.0` (`0x6d301a`) before `0x6d30e0`.
+The tests run `0x6d2d00` from `0x6d2d69` to `0x6d2da0` and from `0x6d300e` to `0x6d3025` and at `0x6d2f40` and `0x6d2f98`.
 
 ## Area overblend
 
@@ -204,7 +205,7 @@ a + (b − a)·w. An area light's skybox adds its weight to a matching pair or t
 Addresses: `0x6d30e0`, `0x6d310f`, `0x6d3114`, `0x6d311a`, `0x6d3120`, `0x6d319d`, `0x6d375b`, `0x6d3770`, `0x6d378c`, `0x6d37a4`, `0x6d37ae`, `0x6d37c2`, `0x6d37c8`, `0x6d15f0`, `0x6d15fe`, `0x6d1619`, `0x4a2c10`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::cloud_record_overblend_difftest`, `lighting::sky_scalar_lerp_difftest`
 
 `0x6d15f0(a, b, w)`, `ret 0xc`, is the lerp: `fcomp` b against a, `test ah,1`, then `fsub`,
 `fmul`, `fadd` or `fsubr` (`0x6d1619`). Each channel `fstp`s the lerp, subtracts 0.5 and `fistp`s
@@ -224,7 +225,7 @@ leaves the table as it was. Before any map loads it is the default table.
 Addresses: `0x6d2260`, `0x6d226e`, `0x6d2277`, `0x6d227c`, `0x6d228b`, `0x6d22a6`, `0x6d22c2`, `0x6d22db`, `0x6d22fb`, `0x6d2315`, `0x6d2371`, `0x6d237d`, `0x6d2386`, `0x6d2389`, `0x6d239e`, `0x6d23e1`, `0x6d23c9`, `0x6d240c`, `0x6d24ad`, `0x6d24bf`, `0x6d24d5`, `0x6d2572`, `0x6d259c`, `0x6d25d4`, `0x6d26df`, `0x672470`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`
 
 `0x672470(0)` returns the liquid word, 0xf when dry; k = 1 when its low nibble is 0 or 1
 (`0x6d227c`, `0x6d228b`). With an empty list and no override (`0x6d22a6`, `0x6d22c2`) it fills the
@@ -246,7 +247,7 @@ nonzero `+0x4c` names the LightParams record to use instead; nothing live sets i
 Addresses: `0x6d4620`, `0x6d4630`, `0x6d45f0`, `0x6d25d9`, `0x6d25e2`, `0x6d25ea`, `0x6d25f8`, `0x6d25fc`, `0x6d262f`, `0x6d2634`, `0x6d268e`, `0x6d2694`, `0x6d26a5`, `0x6d26c6`, `0x6d26cb`, `0x5de9c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`
 
 `0x6d25d9` reads `[0xce9bb0]`; −1 takes the copy (`0x6d25e2`). Otherwise an empty list skips
 (`0x6d25ea`), `[0xce9bac]` nonzero is the record (`0x6d25f8`), else `0x6d6ab0([slot0], edx)` with
@@ -267,7 +268,7 @@ same frame by the fog update.
 Addresses: `0x6d2809`, `0x6d280e`, `0x6d2819`, `0x6d2834`, `0x6d2847`, `0x6d285a`, `0x6d2872`, `0x6d2878`, `0x6d288a`, `0x6d28a7`, `0x6d28c5`, `0x6d28da`, `0x6d28f7`, `0x6d1620`, `0x6d1688`, `0x7bbc80`, `0x7bbd60`, `0x81162c`, `0x811628`
 Confidence: verified
 Proof: one
-Test: none
+Test: `cmath::hsv_to_rgb_difftest`, `cmath::rgb_to_hsv_difftest`, `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`, `lighting::dn_color_to_bgra_difftest`
 
 After `0x6d37e0` (`0x6d2809`) the tint runs when k = 1 (`0x6d280e`) and ramps only when
 `esi − 1 == 0` (`0x6d2819`). The ladder clamps `[0xce9b80]` to [−30, 0] (`0x6d2834`, `0x6d2847`,
@@ -286,7 +287,7 @@ underwater tint and the body broadcast.
 Addresses: `0x6d45c0`, `0x6d45cf`, `0x6d45e3`, `0x6d290d`, `0x6d2943`, `0x6d295f`, `0x6d2992`, `0x6d2a21`, `0x6d2a58`, `0x6d2ad5`, `0x6d2b7e`, `0x6d2c24`, `0xce9ba4`, `0xce9ba5`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`, `lighting::dn_override_sky_phase_difftest`
 
 `0x6d45c0(colour, level)`, `ret 8`, stores the colour dword at `0xce9ba5` (`0x6d45cf`) and the
 byte (`0x6d45e3`). `0x6d2943 jnp` skips when a = 0. The fog colour goes through `0x690ae0`
@@ -303,7 +304,7 @@ glare colours. When the storm weight is not 0 it then writes alpha = bits(f32((1
 Addresses: `0x6d2914`, `0x6d291d`, `0x6d2926`, `0x6d292c`, `0x6d2932`, `0x6d2c3d`, `0x6d2c57`, `0x6d2c60`, `0x6d2c74`, `0xce9864`, `0xce97c0`, `0xce9884`, `0xce9710`, `0xce98a4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`
 
 `0x6d2914` loads `[0xce9c2c]` and stores it at the four colours (`0x6d291d` to `0x6d2932`).
 `fcomp 0.0`, `test ah,0x44`, `jnp` skips only an exact 0 (`0x6d2c3d`), so a NaN or negative
@@ -320,7 +321,7 @@ override slot `0xce9bb4` is the override light's. `0x6d4810` sets a slot from ou
 Addresses: `0x6d2292`, `0x6d22ac`, `0x6d2c79`, `0x6d2c97`, `0x6d2c9f`, `0x6d2cbd`, `0x6d2cc2`, `0x6d4810`, `0xce9bb4`, `0xce9bbc`, `0xce9bc0`, `0xce9bc4`, `0xce9bc8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`
 
 The loop at `0x6d2292` zeroes `0xce9bbc` to `0xce9bc8`, and `0x6d22ac` the override pair. The pass
 from `0x6d2c79` skips a zero id, a weight not above 0 (`0x6d2c97`) and an id not below
@@ -339,7 +340,7 @@ first sets the camera heading.
 Addresses: `0x6d2210`, `0x6d2215`, `0x6d2229`, `0x6d222e`, `0x6d2233`, `0x6d2238`, `0x6d2247`, `0x6d224c`, `0x6d4530`, `0x6d4551`, `0x6d4555`, `0x6d4569`, `0x6d4582`, `0x6d4596`, `0x6d45b9`, `0x66ff60`, `0x66ff98`, `0x66ffe3`, `0x66ffe8`, `0x811658`, `0x80295c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::wind_angle_update_difftest`
 
 `0x6d2210` zeroes `0xce9bdc`, `0xce9bf8` and `0xce9c00`, calls `0x6d4500`, `0x6d2260`, `0x6d3a10`
 and `0x6d3b80`, and jumps to `0x6cff90` when cl is set, else `0x6cffc0`. `0x66ff60` calls it with
@@ -347,6 +348,7 @@ cl = 1 when its flag argument is set (`0x66ff98`), else `0x6d4530` (`0x66ffe3`);
 the fog update (`0x66ffe8`). `0x6d4530` stores atan2(fy, fx) of the camera forward when
 fx² + fy² is not at most 0.0001 (`0x6d4555`), else atan2(fz, fx) (`0x6d4569`), adds 2π below 0
 (`0x6d4582`), runs the same four steps, the cloud band and the stars (`0x6d45b9`).
+The tests run `0x6d4530` from `0x6d4530` to `0x6d4596`.
 
 ## Night fraction
 
@@ -357,7 +359,7 @@ The map object group fade `0x6b4090` reads the first.
 Addresses: `0x6d2cd9`, `0x6d2cde`, `0x6d2ce4`, `0x6d2ce9`, `0x6d4860`, `0x6d4890`, `0x6ce670`, `0x6ce700`, `0xce9a24`, `0xce9a34`, `0xce9d0c`, `0xce9d10`, `0x6b4090`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::dn_color_table_build_difftest`, `lighting::dn_color_table_edges_difftest`, `lighting::dn_init_6ce670_difftest`, `lighting::dn_track_phase_wrap_difftest`
 
 `0x6d4860(0)` evaluates the four keys at `0xce9a34` at the time of day plus its argument, and
 `0x6d4890` the two at `0xce9a24`, through `celestial#tracks`. The static initializers store the keys: `0x6ce670` (0.25, 1),

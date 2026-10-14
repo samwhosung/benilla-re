@@ -27,7 +27,7 @@ draws, runs from `0x7e4f90` through `0x7e6670`.
 Addresses: `0x674560`, `0x67e350`, `0x6cdf50`, `0x6d6c20`, `0x6d6df0`, `0x6d8530`, `0x7e4f90`, `0x7e6670`, `0x678218`, `0x82bc44`, `0x82bcb0`, `0x82cde4`, `0x82ce48`, `0x82ce4c`, `0x82ce50`, `0x82ce60`, `0x82dfb4`, `0x82e020`, `0x67e390`, `0x6cde70`, `0x6cded0`, `0x6cdf20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::snow_exp2_arg_difftest`, `lighting::snow_exp2_blend_difftest`, `lighting::snow_field_lerp_difftest`, `lighting::snow_final_recip_difftest`, `lighting::snow_min_select_scale_difftest`, `lighting::snow_normalize_scale_difftest`, `lighting::snow_record_distance_difftest`, `lighting::snow_wind_deflect_difftest`
 
 `0x678218` pushes the path `MapWeather.cpp`. The runs are `0x82bc44` to `0x82bcb0` (weather,
 opening with its +∞), `0x82cde4` to `0x82ce48` (day-night), `0x82ce50` to `0x82ce60` (shadow,
@@ -35,6 +35,7 @@ opening with its +∞) and `0x82dfb4` to `0x82e020` (sky draw, opening with its 
 `0x82ce4c` between them holds the guild emblem file's initializer; the run after the weather's opens at
 `0x67e390` (terrain), and the minimap's after the shadow's. The day-night file's code starts after FFXEffects'
 `0x6cde70`, `0x6cded0` and `0x6cdf20`, which only FFXEffects' code calls.
+The tests run `0x677ff0` in 8 slices between `0x6780d8` and `0x678572`.
 
 ## Shared header constants
 

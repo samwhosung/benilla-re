@@ -89,7 +89,7 @@ weather density and rebuilds the light table.
 Addresses: `0x67bc70`, `0x67bc9b`, `0x67bca7`, `0x67bcb3`, `0x67bcb9`, `0x67bcc0`, `0x67bcc8`, `0x67bcce`, `0x67bcfc`, `0x67bd09`, `0x67bd16`, `0x67bd3e`, `0x67bd62`, `0x67bd65`, `0x67bd72`, `0x674ba0`, `0x801360`, `0x801624`, `0x80b058`, `0x80306c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::weather_clamped_lerp_difftest`, `lighting::weather_intensity_ramp_difftest`
 
 `0x67bc70(from, to)` takes the milliseconds since `+0x18` times 0.001, adds 0.001 inside the
 `fabs`, multiplies by 10 and divides (`0x67bcb9`, `DE F9`, the elapsed time over the span).
@@ -111,7 +111,7 @@ target ramps toward the full target.
 Addresses: `0x67be40`, `0x66ff06`, `0x67be4b`, `0x67bea6`, `0x67bebf`, `0x67bede`, `0x67bef0`, `0x67beff`, `0x67bf1b`, `0x67bf5a`, `0x67bf66`, `0x67bf85`, `0x67bfa9`, `0x67bfb9`, `0x67bfde`, `0x67bfec`, `0x67c01b`, `0x67c052`, `0x67c085`, `0x67c0b8`, `0x67c0cf`, `0x67c0e3`, `0x67c102`, `0x67c138`, `0x67c13e`, `0x67c6e0`, `0x67ba50`, `0xc7b554`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::wx_67be40_owned_fp_difftest`
 
 `0x67bede` is `atan2(vy, vx)`, plus `[0xc7b554]` (2π) below 0 (`0x67bef0`); `0x67beff` calls the
 facing slot. `0x67bf5a` compares the transport's squared speed with 2.0 and `0x67bf66` tests `ah,0x41`; `0x67bf85` reads
@@ -119,6 +119,7 @@ facing slot. `0x67bf5a` compares the transport's squared speed with 2.0 and `0x6
 of each effect (`0x67bfec`). Teardown `0x67ba50`; types 3, 2, 1 build sand `0x679140(40, 25)`,
 snow `0x677420(90, 60)` and rain `0x674620(130, 75)`; then `+0x18` = now, `+0x4` = `+0x8`,
 `+0x20` = −1 (`0x67c0cf`). `0x67c0e3` recentres the grid on the camera; `0x67c102` tests 2⁻²².
+The tests run `0x67be40` in 7 slices between `0x67be8a` and `0x67c117`.
 
 ## Player motion
 
@@ -132,7 +133,7 @@ included), the player's velocity is zero at once.
 Addresses: `0x67c150`, `0x67c180`, `0x67c2b5`, `0x67c2cf`, `0x67c3c8`, `0x67c4a2`, `0x67c680`, `0x67d740`, `0x61eec0`, `0xc7b4a8`
 Confidence: verified
 Proof: one
-Test: `objectlayer::missile_scale_vec_difftest`
+Test: `lighting::wx_67c150_owned_fp_difftest`, `objectlayer::missile_scale_vec_difftest`
 
 `0x67c680` tests the transport's v² against 2.0 with `test ah,0x41` before the zeroing. `0x67c150`
 frees the head of a list for each step once the running sum reaches 0x96 (`0x67c180`);
@@ -141,6 +142,7 @@ position comes from slot `+0x14`, the transport's when `[player+0x118]+0x38` hol
 (`0x67c2cf`). Transport steps go to the list at `+0x44` (`0x67c3c8`), the player's to `+0x38`
 (`0x67c4a2`); their sums give `+0x5c` and `+0x50`. `0x61eec0` is the movement speed times its
 direction; `0xc7b4a8` keeps the last frame's milliseconds.
+The tests run `0x67c150` in 6 slices between `0x67c37b` and `0x67c674`.
 
 ## Ground grid
 
@@ -153,13 +155,14 @@ keeping the tiles it still covers.
 Addresses: `0x67c900`, `0x67c7b0`, `0x67c770`, `0x67c820`, `0x67ca00`, `0x67ca90`, `0x67cb60`, `0x67ce50`, `0x67cfe0`, `0x67c980`, `0x67c9b0`, `0x67d820`, `0x67c7f0`, `0x6b7070`, `0x810038`, `0x80ff70`, `0x80ff8c`, `0x80ff90`, `0x810008`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::mist_cell_world_difftest`, `lighting::mist_grid_raymarch_difftest`, `lighting::mist_grid_sample_difftest`, `lighting::mist_spawn_difftest`, `lighting::tile_cell_fill_difftest`, `lighting::wl_height_cache_lookup_cell`, `lighting::wl_height_cache_lookup_xy`, `lighting::wl_height_sample_bias`, `lighting::wl_recenter_tile_coords`
 
 The table `0x810038` holds `0x67cfe0` (bounds), `0x67ce50` (recentre), `0x67cb60` (segment),
 `0x67ca00` (height), `0x67d820` and `0x67c980`. `0x67ca00` takes the chunk as floor(0.03·p) and
 `0x67c820` the cell as the low byte of bits(0.96·d + 512) >> 14. `0x67c7f0` calls `0x6b7070` with
 200 and falls back to z − 200 (`0x810008`). `0x67ce50` moves matching tiles, then refills the
 rest with `0x67c7b0`. How `0x67cb60` walks a segment is not read.
+The tests run `0x67ce50` from `0x67ce56` to `0x67ce96`.
 
 ## Weather visibility
 
@@ -172,13 +175,14 @@ moves only in its draw, after the test, so it stops while unseen.
 Addresses: `0xca80c4`, `0x6b38c1`, `0x68111a`, `0x6811d4`, `0x6b42d0`, `0x6b42d9`, `0x6b42e0`, `0x6b42f4`, `0x67c720`, `0x677380`, `0x677388`, `0x6790b0`, `0x6790b8`, `0x67a520`, `0x67a528`, `0x67ae20`, `0x67b14d`, `0x67b24d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `lighting::mistr_cell_lerp_difftest`, `lighting::mistr_cell_round_difftest`, `lighting::mistr_color_repack_difftest`, `lighting::mistr_corner_add_difftest`, `lighting::mistr_corner_basis_difftest`, `lighting::mistr_corner_dist_difftest`, `lighting::mistr_drift_clamp_difftest`, `lighting::mistr_fade_mag_difftest`, `lighting::mistr_half_scale_difftest`, `lighting::mistr_hash_count_difftest`, `lighting::mistr_life_span_difftest`, `lighting::mistr_node_accum_difftest`, `lighting::mistr_phase_advance_difftest`, `lighting::mistr_phase_wrap_difftest`, `lighting::mistr_ramp_product_difftest`, `lighting::mistr_spacing_recip_difftest`, `lighting::mistr_time_accum_difftest`
 
 `0x6b38c1` stores 0; `0x68111a` branches to `0x6811d4` when the camera's group claim is 0. The
 portal walk tests `[group+0x10]` with 0x148 (`0x6b42d0`) and 0x40000 (`0x6b42e0`). `0x67c720`
 returns until `+0x80` is set, then calls the three dispatchers; each runs its update first and
 returns at `0x677388`, `0x6790b8` or `0x67a528` when the byte is 0, before its tail call to
 `0x67ae20`, which accumulates the mist rate (`0x67b14d`) and spawns (`0x67b24d`).
+The tests run `0x67ae20` in 20 slices between `0x67ae66` and `0x67b551`.
 
 ## Weather reset
 
