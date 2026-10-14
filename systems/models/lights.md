@@ -227,14 +227,14 @@ Slots 1 to 3 take the nearest point lights from the end of the heap backward, so
 heap root, the farthest, is left out: diffuse from the light's `+0x3c`, no ambient or third
 colour, attenuation `+0x54` to `+0x5c`, at `+0x18` (view space) or at `+0xc` minus the caller's
 origin. Unused slots are disabled. A colour reaches the device as an ARGB word divided by its
-largest component, alpha included, with that largest value as the light's scale; the device multiplies the bytes by the scale again, so a diffuse above 1 reaches it undivided, as byte × scale / 255.
+largest component, alpha included, with that largest value as the light's scale.
 
 Addresses: `0x71c730`, `0x71ca80`, `0x591260`, `0x589d80`, `0x589de0`, `0x71b7c0`, `0x593040`, `0x71c889`
 Confidence: verified
 Proof: one
 Test: `models::driver_clamp_pack_difftest`, `models::driver_mag_gate_difftest`, `models::driver_vec_diff_difftest`, `models::light_clamp_pack_difftest`, `models::m2_light_color_pack_difftest`
 
-`0x71c730(origin, fog)` sets device light bit 1 for point lights; the colour calls pass alpha 0.0
+The device multiplies each byte by the scale again (`0x593040`), so a diffuse above 1 reaches it as byte × scale / 255, undivided. `0x71c730(origin, fog)` sets device light bit 1 for point lights; the colour calls pass alpha 0.0
 (ambient, third) and 1.0 (diffuse). `0x71ca80` takes the maximum through `fcomp` with `test ah,5`,
 writes colour 0 when it is under 1e-5, else clamps each scaled channel to 0 when at or under 0 and
 to 255 when at or over 1, else `__ftol(v·255 + 0.5)`. With `fog` non-zero and
