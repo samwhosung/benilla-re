@@ -40,6 +40,7 @@ ITEMCOOLDOWNHASHNODE	36		spell	Holds one item-cooldown hash node: key, slot link
 LightningObject	80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
 LightningObject::Bolt	16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
 M2Bone	108		models	Holds a bone record of an MD20 file: key bone id, flags, parent, three tracks and pivot	verified	one	models/records#bone-record
+M2BoneState	280		models	Holds a bone state: three track states, the primary and blend slots, the fade and the active list link	verified	one	animation/clock#bone-state
 M2Cache	4152		models	Holds the model cache: features, shared model buckets, release list, helper thread and shaders	verified	one	models/cache#cache-object
 M2Element	64		models	Holds one drawable of a scene frame: its kind, instance, batch, depth keys and shader ids	verified	one	models/scene#element-collection
 M2Header	340		models	Holds an MD20 file header: magic, version and the count and offset of every array	verified	one	models/shared#header-fixup

@@ -36,7 +36,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x695140 call 0x711bb0` installs the done callback, `0x695153 call 0x7133a0` the event callback and `0x695164 call 0x7134b0` the lighting
+`0x695140 call 0x711bb0` installs the done callback (`0x711bb0` stores it at `+0x70` and its two arguments at `+0x78` and `+0x7c`), `0x695153 call 0x7133a0` the event callback and `0x695164 call 0x7134b0` the lighting
 callback. The pushes before `0x695180` are 1, 1, 1.0, 0, −1, 0, −1: primary, blend, speed, offset, variation, id, key bone. In
 `0x6951b0` the `test eax,eax; jne` on the second stack argument lets only reason 0 through, and the pushes before `0x6951cc call
 0x7121a0` are 1, 0, 1.0, 0, −1, the finished id and the key bone in `edx`. Three sites call `CreateDoodadModel`.

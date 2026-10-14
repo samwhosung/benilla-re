@@ -57,14 +57,14 @@ then builds two identity matrices on its frame, the working parent matrix at `eb
 rotation matrix at `ebp-0xe4`, reads the bone count from header `+0x34`, and skips the bone loop to the
 element loops when it is 0.
 
-Addresses: `0x714389`, `0x71438d`, `0x714393`, `0x71439b`, `0x7143ee`, `0x714463`, `0x71451c`, `0x714527`, `0x74a7c0`
+Addresses: `0x714389`, `0x71438c`, `0x71438d`, `0x714393`, `0x714399`, `0x71439a`, `0x71439b`, `0x7143ee`, `0x714463`, `0x71451c`, `0x714527`, `0x74a7c0`, `0x754a66`
 Confidence: verified
 Proof: one
 Test: none
 
-The pushes at `0x714389`, `0x71439a` and `0x714399` leave the destination on top, then `+0xbc`, then
-the parent matrix, and `0x74a7c6` takes its arguments in that order (`Dispatched matrix math` in
-`models/animation`). The working matrix is rewritten per bone by the parent matrix legs (`pose`).
+The pushes at `0x71438c`, `0x714399` and `0x71439a` leave the destination on top, then `+0xbc`, then
+the parent matrix, and the routines behind `0x74a7c0` take `(out, a, b)` in that order: the SSE2 product
+`0x754a66` reads `[ebp+8]` as the destination (`Dispatched matrix math` in `models/animation`). The working matrix is rewritten per bone by the parent matrix legs (`pose`).
 
 ## Pause slide
 

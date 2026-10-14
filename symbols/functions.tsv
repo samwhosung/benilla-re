@@ -26433,7 +26433,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6a1f90	111	AddPlacementGroupLights		terrain	orchestration	void __thiscall (void *this, void *lights)	Clears a dirty bit and feeds the group's doodads' lights to the model lighting	inferred	none		
 0x6a2000	110	MarkPlacementGroupDirty		terrain	orchestration	void __thiscall (void *this)	Sets a group's dirty bit and its two lists' members' bits	inferred	none		
 0x6a2070	119	UpdatePlacementGroupDoodads		terrain	orchestration	void __thiscall (void *this, const void *transform)	Poses each doodad of a group again	inferred	none		
-0x6a20f0	95	PlayPlacementGroupAnimation		terrain	orchestration	void __thiscall (void *this, uint32_t anim, uint32_t a)	Plays an animation on each doodad of a group	inferred	none		
+0x6a20f0	95	PlayPlacementGroupAnimation		terrain	orchestration	void __thiscall (void *this, uint32_t anim, uint32_t a)	Plays an animation on each doodad of a group	verified	one	animation/hosts#doodad-set-command	
 0x6a2150	88	SetPlacementGroupDoneCallback		terrain	orchestration	void __thiscall (void *this, void *a, void *b, void *c)	Sets a done callback on each doodad of a group	inferred	none		
 0x6a21b0	79	ArePlacementGroupModelsLoaded		terrain	orchestration	uint32_t __thiscall (void *this)	Returns whether every doodad model of a group has loaded	inferred	none		
 0x6a2200	384	CMapObjDef::CMapObjDef		terrain	orchestration	void * __thiscall (void *this)	Constructs a map object def on the shared base with the vtable 0x810928	inferred	none		
@@ -30369,10 +30369,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x710a80	247	M2ConformRows		models	primitive		Rebuilds a rotation's rows so its third row is a given normal, keeping the first row's heading	inferred	none	models/model#base-transform	models::m2_orthonormal_basis_difftest
 0x710b80	11	CM2Model::IsAnimated		models	orchestration		Returns whether an instance is on its scene's animate list	inferred	none		
 0x710b90	90	CM2Model::SetAnimated		models	orchestration		Links an instance into or out of its scene's animate list	verified	one	models/scene#scene-object	
-0x710bf0	4	CM2Model::GetPauseTime		models	orchestration		Returns the clock stamp at which an instance's animation was paused, or 0	inferred	none		
-0x710c00	43	CM2Model::SetPaused		models	orchestration		Pauses an instance's animation at the scene clock, or resumes it	inferred	none		
+0x710bf0	4	CM2Model::GetPauseTime		models	orchestration		Returns the clock stamp at which an instance's animation was paused, or 0	verified	one	animation/kernel#pause-slide	
+0x710c00	43	CM2Model::SetPaused		models	orchestration		Pauses an instance's animation at the scene clock, or resumes it	verified	one	animation/kernel#pause-slide	
 0x710c30	21	CM2Model::GetVisible		models	unreached		Returns an instance's visible flag; nothing reaches it	verified	one	models/overview#unreached-code	
-0x710c50	36	CM2Model::SetVisible		models	orchestration		Sets an instance's visible flag, kept apart for attached instances	inferred	none		
+0x710c50	36	CM2Model::SetVisible		models	orchestration		Sets an instance's visible flag, kept apart for attached instances	verified	one	animation/kernel#parent-driven-state	
 0x710c80	4	CM2Model::GetUserData		models	unreached		Returns an instance's user value; nothing reaches it	verified	one	models/overview#unreached-code	
 0x710c90	13	CM2Model::SetUserData		models	orchestration		Stores an instance's user value	inferred	none		
 0x710ca0	7	CM2Model::GetAlpha		models	orchestration		Returns an instance's alpha	inferred	none		
@@ -30401,7 +30401,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711960	56	CM2Model::HasAnimation		models	orchestration		Returns whether an instance's model has a sequence for an animation id	verified	one	ui/modelanim#the-idle-sequence	
 0x7119a0	122	CM2Model::CountVariations		models	unreached		Counts the variations of an animation id's sequence chain; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711a20	392	CM2Model::GetSequenceInfo		models	primitive		Fills a record with a resolved sequence's flags, length, speed, bounds and radius	inferred	none		models::attach_world_transform_difftest
-0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	inferred	none		
+0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	verified	one	animation/hosts#doodad-model	
 0x711bd0	5	InitM2ModelInfinityThunk		models	orchestration		Jumps to 0x711be0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x711be0	11	InitM2ModelInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
 0x711bf0	289	CM2Model::ResolveAnimationId		models	primitive		Maps an animation id to one the model has, following the fallback chain, with reverse and hold flags	verified	one	models/animation#animation-id-resolution	
@@ -30411,7 +30411,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711e60	91	CM2Model::GetKeyBoneMatrix		models	unreached		Copies a key bone's animated matrix; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711ec0	78	CM2Model::GetKeyBoneFlags		models	unreached		Returns a key bone's runtime flags; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711f10	201	CM2Model::SetKeyBoneFlags		models	primitive		Writes a key bone's runtime flags under a mask, or defers the call	verified	one	models/model#deferred-calls	
-0x711fe0	172	CM2Model::GetKeyBoneAnimState		models	primitive		Copies a key bone's animation id, variation, time, speed and timing stamps	inferred	none	models/model#base-transform	models::query_attach_event_difftest
+0x711fe0	172	CM2Model::GetKeyBoneAnimState		models	primitive		Copies a key bone's animation id, variation, time, speed and timing stamps	verified	one	animation/units#track-states	models::query_attach_event_difftest
 0x712090	78	CM2Model::GetKeyBoneAnimId		models	orchestration		Returns the animation id playing on a key bone	verified	one	ui/playermodel#turning-the-model	
 0x7120e0	108	CM2Model::GetKeyBoneAnimTime		models	unreached		Returns the sequence time of a key bone's animation; nothing reaches it	verified	one	models/overview#unreached-code	
 0x712150	78	CM2Model::GetKeyBoneAnimSpeed		models	orchestration		Returns the speed of a key bone's animation	inferred	none		
@@ -30492,15 +30492,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71ae00	133	M2TextureArrayRealloc		models	host		Reallocates a texture handle array to an exact capacity	inferred	none		
 0x71ae90	131	M2SampleByteTrack		models	orchestration		Samples a byte track at a time, stepping without interpolation	verified	one	models/animation#key-lookup	
 0x71af20	199	M2SampleFloatTrack		models	primitive		Samples a float track at a bone's times, blending toward the blend slot's value	verified	one	models/animation#key-lookup	
-0x71aff0	16	M2TrackValueAddress		models	orchestration		Returns the address of a 16-bit value in a track's value array	inferred	none	models/animation#element-tracks	
+0x71aff0	16	M2TrackValueAddress		models	orchestration		Returns the address of a 16-bit value in a track's value array	verified	one	animation/tracks#value-codecs	
 0x71b000	13	M2TextureStateInitialize		models	primitive		Sets the low five flag bits of a texture state and clears its count	inferred	none		
-0x71b010	18	M2CopyWord		models	orchestration		Copies a 16-bit value	inferred	none	models/animation#element-tracks	
+0x71b010	18	M2CopyWord		models	orchestration		Copies a 16-bit value	verified	one	animation/tracks#value-codecs	
 0x71b030	5	InitM2ModelTenSquaredThunk		models	orchestration		Jumps to 0x71b040; a static initializer	verified	one	models/overview#shared-header-constants	
 0x71b040	19	InitM2ModelTenSquared		models	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	models/overview#shared-header-constants	
 0x71b060	5	InitM2ModelHalfTenthThunk		models	orchestration		Jumps to 0x71b070; a static initializer	verified	one	models/overview#shared-header-constants	
 0x71b070	19	InitM2ModelHalfTenth		models	primitive		Stores 0.5 / 10.0 as a float in an object-file global	verified	one	models/overview#object-files	
 0x71b090	13	M2TrackStateClear		models	orchestration		Zeroes the three dwords of a track state's key and fraction	verified	one	models/overview#object-files	
-0x71b0a0	348	M2BoneStateConstruct		models	primitive		Constructs a bone state: cleared track states, no sequence in either slot, blend weight scale 1.0	inferred	none		
+0x71b0a0	348	M2BoneStateConstruct		models	primitive		Constructs a bone state: cleared track states, no sequence in either slot, blend weight scale 1.0	verified	one	animation/clock#bone-state	
 0x71b200	31	M2Vec3TrackStateClear		models	orchestration		Zeroes a vector track state's key, value and blend value	inferred	none		
 0x71b220	20	M2QuatClear		models	orchestration		Sets a quaternion to (0, 0, 0, 1)	inferred	none		
 0x71b240	60	M2Vec3BlendStateClear		models	orchestration		Zeroes a vector track state and its blend copy	inferred	none		
@@ -32047,7 +32047,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74a758	49			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a789	36			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a7ad	19	MultiplyMatrixFirstCall		d3dx			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	inferred	none	models/animation#bone-transform	models::m2_decal_projection_difftest
+0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-scratch	models::m2_decal_projection_difftest
 0x74a7c6	568			d3dx			Runs its object file code not read here	inferred	none		
 0x74a9fe	34			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa20	42			d3dx	unreached		Runs its object file code not read here	inferred	none		
@@ -32087,8 +32087,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74b59b	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74b5a1	257			d3dx			Runs its object file code that calls 0x7497eb; not read here	inferred	none		
 0x74b6a2	19	MatrixFromQuaternionFirstCall		d3dx			Selects the math routines, then jumps through the quaternion matrix slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74b6b5	6	MatrixFromQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion-to-matrix routine	inferred	none	models/animation#bone-transform	
-0x74b6bb	228	MatrixFromQuaternionDefault		d3dx			Builds a rotation matrix from a quaternion; the default routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74b6b5	6	MatrixFromQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion-to-matrix routine	verified	one	animation/pose#rotation-leg	
+0x74b6bb	228	MatrixFromQuaternionDefault		d3dx			Builds a rotation matrix from a quaternion; the default routine	verified	one	animation/pose#rotation-leg	
 0x74b79f	91			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74b7fa	48			d3dx	unreached		Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
 0x74b82a	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
@@ -32154,8 +32154,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74d04e	6			d3dx			Runs its object file code not read here	inferred	none		
 0x74d054	154			d3dx			Runs its object file code that calls 0x74924c; not read here	inferred	none		
 0x74d0ee	38	BlendQuaternionFirstCall		d3dx			Selects the math routines, then calls the quaternion blend slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74d114	6	BlendQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion blend routine	inferred	none	models/animation#key-lookup	
-0x74d11a	229	BlendQuaternionDefault		d3dx			Blends two quaternions by a weight; the default routine	inferred	none	models/animation#dispatched-matrix-math	
+0x74d114	6	BlendQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion blend routine	verified	one	animation/tracks#quaternion-blend	
+0x74d11a	229	BlendQuaternionDefault		d3dx			Blends two quaternions by a weight; the default routine	verified	one	animation/tracks#quaternion-blend	
 0x74d1ff	44			d3dx	unreached		Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
 0x74d22b	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74d231	89			d3dx			Runs its object file code that calls BlendQuaternionDispatch; not read here	inferred	none		

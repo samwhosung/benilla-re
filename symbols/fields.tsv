@@ -640,6 +640,41 @@ M2Bone	0x0004	4	uint32_t	m_flags	models	Holds the flags	verified	one	models/reco
 M2Bone	0x0008	2	uint16_t	m_parent	models	Holds the parent bone	verified	one	models/records#bone-record
 M2Bone	0x000c	84	uint8_t[84]	m_tracks	models	Holds the translation, rotation and scale tracks	verified	one	models/records#bone-record
 M2Bone	0x0060	12	float[3]	m_pivot	models	Holds the pivot	verified	one	models/records#bone-record
+M2BoneState	0x0000	48	uint8_t[48]	m_translation	models	Holds the translation track state: key triple and sampled vector	verified	one	animation/clock#bone-state
+M2BoneState	0x0030	56	uint8_t[56]	m_rotation	models	Holds the rotation track state: key triple and sampled quaternion	verified	one	animation/clock#bone-state
+M2BoneState	0x0068	48	uint8_t[48]	m_scale	models	Holds the scale track state: key triple and sampled vector	verified	one	animation/clock#bone-state
+M2BoneState	0x0098	4	int32_t	m_time	models	Holds the primary sequence time in milliseconds	verified	one	animation/clock#bone-state
+M2BoneState	0x009c	4	int32_t	m_slot	models	Holds the primary sequence record index the time was taken in	verified	one	animation/clock#bone-state
+M2BoneState	0x00a0	4	int32_t	m_boneIndex	models	Holds the bone index stored with the primary time	verified	one	animation/clock#bone-state
+M2BoneState	0x00a4	4	int32_t	m_record	models	Holds the primary sequence record index, -1 for none	verified	one	animation/clock#bone-state
+M2BoneState	0x00a8	4	int32_t	m_start	models	Holds the primary start stamp of the play window	verified	one	animation/clock#bone-state
+M2BoneState	0x00ac	4	int32_t	m_end	models	Holds the primary end stamp of the play window	verified	one	animation/clock#bone-state
+M2BoneState	0x00b0	4	float	m_speed	models	Holds the primary playback speed	verified	one	animation/clock#bone-state
+M2BoneState	0x00b4	4	float	m_speedInverse	models	Holds the reciprocal of the primary speed	verified	one	animation/clock#bone-state
+M2BoneState	0x00b8	4	int32_t	m_offset	models	Holds the primary time offset in milliseconds	verified	one	animation/clock#bone-state
+M2BoneState	0x00bc	4	int32_t	m_repeats	models	Holds the primary repeat count	verified	one	animation/clock#bone-state
+M2BoneState	0x00c0	4	int32_t	m_latch	models	Holds the primary completion latch	verified	one	animation/clock#bone-state
+M2BoneState	0x00c4	4	int32_t	m_blendTime	models	Holds the blend sequence time in milliseconds	verified	one	animation/clock#bone-state
+M2BoneState	0x00c8	4	int32_t	m_blendSlot	models	Holds the blend sequence record index the time was taken in	verified	one	animation/clock#bone-state
+M2BoneState	0x00cc	4	int32_t	m_blendBoneIndex	models	Holds the bone index stored with the blend time	verified	one	animation/clock#bone-state
+M2BoneState	0x00d0	4	int32_t	m_blendRecord	models	Holds the blend sequence record index, -1 for none	verified	one	animation/clock#bone-state
+M2BoneState	0x00d4	4	int32_t	m_blendStart	models	Holds the blend start stamp of the play window	verified	one	animation/clock#bone-state
+M2BoneState	0x00d8	4	int32_t	m_blendEnd	models	Holds the blend end stamp of the play window	verified	one	animation/clock#bone-state
+M2BoneState	0x00dc	4	float	m_blendSpeed	models	Holds the blend playback speed	verified	one	animation/clock#bone-state
+M2BoneState	0x00e0	4	float	m_blendSpeedInverse	models	Holds the reciprocal of the blend speed	verified	one	animation/clock#bone-state
+M2BoneState	0x00e4	4	int32_t	m_blendOffset	models	Holds the blend time offset in milliseconds	verified	one	animation/clock#bone-state
+M2BoneState	0x00e8	4	int32_t	m_blendRepeats	models	Holds the blend repeat count	verified	one	animation/clock#bone-state
+M2BoneState	0x00ec	4	int32_t	m_blendLatch	models	Holds the blend completion latch	verified	one	animation/clock#bone-state
+M2BoneState	0x00f0	4	void *	m_overrideMatrix	models	Holds the override matrix of the bone, 0 for none	verified	one	animation/clock#bone-state
+M2BoneState	0x00f4	4	uint32_t	m_flags	models	Holds a copy of the bone record flags	verified	one	animation/clock#bone-state
+M2BoneState	0x00f8	4	int32_t	m_requestedId	models	Holds the animation id the last play requested, -1 for none	verified	one	animation/clock#bone-state
+M2BoneState	0x00fc	4	int32_t	m_requestedVariation	models	Holds the variation the last play requested	verified	one	animation/clock#bone-state
+M2BoneState	0x0100	4	int32_t	m_fadeEnd	models	Holds the stamp at which the fade ends	verified	one	animation/clock#bone-state
+M2BoneState	0x0104	4	float	m_fadeRate	models	Holds the reciprocal of the fade length	verified	one	animation/clock#bone-state
+M2BoneState	0x0108	4	float	m_fadeScale	models	Holds the weight a fade starts from	verified	one	animation/clock#bone-state
+M2BoneState	0x010c	4	float	m_blendWeight	models	Holds the weight of the blend sequence this pass	verified	one	animation/clock#bone-state
+M2BoneState	0x0110	4	void *	m_listCell	models	Holds the address of the cell that points to this state in the active list	verified	one	animation/clock#bone-state
+M2BoneState	0x0114	4	int32_t	m_nextIndex	models	Holds the index of the next bone in the active list, -1 for the end	verified	one	animation/clock#bone-state
 M2Cache	0x0000	4	uint32_t	m_initialized	models	Holds 1 once the cache is initialized	verified	one	models/cache#cache-object
 M2Cache	0x0004	4	uint32_t	m_features	models	Holds the granted feature mask	verified	one	models/cache#cache-object
 M2Cache	0x0008	4	uint32_t	m_sortMode	models	Holds the scene sort and draw mode flags	verified	one	models/cache#cache-object
