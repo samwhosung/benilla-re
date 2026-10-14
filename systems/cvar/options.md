@@ -21,7 +21,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-Each registration pushes the callback, the default text, the help line and the name, then calls `0x63db90`; the first is `lod` at `0x68848c` and the last
+Each registration pushes the flags, the default text, the callback, the category and the two trailing arguments, puts the help line in edx and the name in ecx, then calls `0x63db90`; the first is `lod` at `0x68848c` and the last
 `spellEffectLevel` at `0x688900`. The records go to the globals of the address list, in the order above, from `0xc7f314` (`lod`) to `0xc7f2a4` (`spellEffectLevel`).
 
 ## Switch settings
@@ -36,7 +36,7 @@ inverted: the bit is set while the option is off, and the line is written only w
 | `fullAlpha` | `0x688960` | bit 0x4000, set for 0 | `Full alpha on doodads enabled.` or `disabled.` |
 | `doodadAnim` | `0x688a10` | bit 0x8000, set for 0; calls `0x6953d0` | `Doodad animation enabled.` or `disabled.` |
 | `mapShadows` | `0x688a70` | bit 0x40 | `Terrain shadows enabled.` or `disabled.` |
-| `trilinear` | `0x688ce0` | bit 0x800000; for 1 with bit 31 clear stores 4 through `0x449ac0` | `Trilinear filtering enabled upon restart.` or `disabled upon restart.` |
+| `trilinear` | `0x688ce0` | bit 0x800000; for any nonzero value with bit 31 of the word clear stores 4 through `0x449ac0` (`0x688cee`, `0x688d0d`) | `Trilinear filtering enabled upon restart.` or `disabled upon restart.` |
 | `specular` | `0x688e20` | bit 0x8000000 | `Specular enabled`, `Specular disabled.` or the unsupported line |
 | `mapObjOverbright` | `0x688e90` | byte `0xca809c` | `MapObjOverbright enabled`, `disabled.` or the unsupported line |
 | `pixelShaders` | `0x688f40` | bit 0x10000000 | `Pixel shaders enabled.`, `disabled.` or the unsupported line |
@@ -44,7 +44,7 @@ inverted: the bit is set while the option is off, and the line is written only w
 | `triangleStrips` | `0x689400` | bit 0x10000 | `Triangle strips enabled on restart.` or `disabled on restart.` |
 | `occlusion` | `0x6894e0` | nothing | `Using hardware occlusion test.` or `Disabled hardware occlusion test.` |
 
-Addresses: `0x688920`, `0x688960`, `0x688a10`, `0x688a70`, `0x688ce0`, `0x688e20`, `0x688e90`, `0x688f40`, `0x6892e0`, `0x689400`, `0x6894e0`, `0x6953d0`, `0x449ac0`, `0x58a230`, `0xc7b2a4`, `0xca809c`, `0x688d0d`, `0x688e38`, `0x688e43`, `0x688ea8`, `0x688eb3`, `0x688f58`, `0x688f63`, `0x688975`, `0x688a25`, `0x63a6fb`, `0x402840`, `0x66f6cb`
+Addresses: `0x688920`, `0x688960`, `0x688a10`, `0x688a70`, `0x688ce0`, `0x688cee`, `0x688e20`, `0x688e90`, `0x688f40`, `0x6892e0`, `0x689400`, `0x6894e0`, `0x6953d0`, `0x449ac0`, `0x58a230`, `0xc7b2a4`, `0xca809c`, `0x688d0d`, `0x688e38`, `0x688e43`, `0x688ea8`, `0x688eb3`, `0x688f58`, `0x688f63`, `0x688975`, `0x688a25`, `0x63a6fb`, `0x402840`, `0x66f6cb`
 Confidence: verified
 Proof: one
 Test: none

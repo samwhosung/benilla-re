@@ -3915,7 +3915,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457490	59	EnableMusicHandler	idb	sound	orchestration		Pauses the zone music by the inverse of EnableMusic, then restarts or stops the glue music; returns 1	verified	one	sound/interface#cvar-handlers	
 0x4574d0	37	SoundReverbHandler	idb	sound	orchestration		Stores the SoundReverb byte and applies the default reverb when it is 0; returns 1	verified	one	sound/interface#cvar-handlers	
 0x457500	31	MasterSoundEffectsHandler	idb	sound	primitive		Passes MasterSoundEffects being 0 to the engine's sound-effects switch; returns 1	verified	one	sound/interface#cvar-handlers	
-0x457520	38	GetSoundBufferSizeDefault		sound	orchestration		Returns the SoundBufferSize default, "50" when the console record has 1 at +0x18, else "100"	verified	one	sound/interface#sound-cvars	
+0x457520	38	GetSoundBufferSizeDefault		sound	orchestration		Returns "50" if 0xc4ec54 is set and the detection record has 1 at +0x18, else "100"	verified	one	sound/interface#sound-cvars	
 0x457550	25	SoundGetParamValueInt		sound	orchestration		Stores a named CVar's integer value; returns false for an unknown name	verified	one	sound/interface#start-up	
 0x457570	25	SoundGetParamValueFloat		sound	orchestration		Stores a named CVar's float value; returns false for an unknown name	verified	one	sound/interface#start-up	
 0x457590	25	SoundGetParamValueString	idb	sound	orchestration		Stores a named CVar's string; returns false for an unknown name	verified	one	sound/interface#start-up	
@@ -22651,7 +22651,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6397d0	192	ConsoleCommandBgColor		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the background colour, class 8, from alpha and three channels	verified	one	console/screen#colour-classes	
 0x639890	192	ConsoleCommandHighlightColor		console	primitive	uint32_t __fastcall (const char *name, const char *args)	Sets the selection highlight colour, class 7, from alpha and three channels	verified	one	console/screen#colour-classes	
 0x639950	167	ParseGxOverrides		console	orchestration	void __fastcall (const char *text)	Reads index,value pairs and flags each slot below 9 with its value for the device	verified	one	console/display#override-string	
-0x639a00	24	GetHardwareRecord		console	orchestration	uint8_t __fastcall (void *out)	Copies the matched hardware row record to the caller and returns the byte at 0xc4ec54	verified	one	console/display#start-up-record	
+0x639a00	24	GetHardwareRecord		console	orchestration	uint8_t __fastcall (void *out)	Copies the 0x34-byte detection record at 0xc4e6bc to the caller and returns the byte at 0xc4ec54	verified	one	console/display#start-up-record	
 0x639a20	61	RestoreVideoDefaults		console	orchestration	void __cdecl (void)	Sets the working record to the hardware row's default format, restarts the device and sets the quality CVars	verified	one	console/display#restart-and-defaults	
 0x639a60	276	ApplyHardwareQuality		console	orchestration	void __cdecl (void)	Sets the 16 video option CVars from the hardware quality values	verified	one	console/display#restart-and-defaults	
 0x639b80	63	SetCVarFloat		console	orchestration	void __thiscall (CVar *cvar, float value)	Formats a float and sets the CVar to it with apply and force	verified	one	console/display#restart-and-defaults	
@@ -22713,7 +22713,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63cb50	422	ConsoleWrite	idb	console	primitive	void __fastcall (const char *text, uint32_t class)	Adds a line of text in a colour class behind the input line	verified	one	console/screen#writing-and-executing	
 0x63cd00	74	ConsoleWriteA	idb	console	orchestration	void __cdecl (const char *format, uint32_t class, ...)	Formats a message into 1024 bytes and writes it in a colour class	verified	one	console/screen#writing-and-executing	
 0x63cd50	73	ConsolePrintf		console	orchestration	void __cdecl (const char *format, ...)	Formats a message into 1024 bytes and writes it in class 0 when the console exists	verified	one	console/screen#writing-and-executing	
-0x63cda0	66	ConsoleWriteV		console	orchestration	void __fastcall (const char *format, va_list args)	Formats a message with a va_list into 1024 bytes and writes it in class 0	verified	one	console/overview#unreached-code	
+0x63cda0	66	ConsoleWriteV		console	unreached	void __fastcall (const char *format, va_list args)	Formats a message with a va_list into 1024 bytes and writes it in class 0	verified	one	console/overview#unreached-code	
 0x63cdf0	12	CloseCurrentContext		console	orchestration	void __cdecl (void)	Closes the current context: 0x41f6e0, then a jump to 0x41f9b0	verified	one	console/commands#built-in-commands	
 0x63ce00	329	ConsoleCommandExecute	idb	console	orchestration	void __fastcall (const char *line, uint32_t history)	Runs a typed line: records it, finds the command and calls its handler	verified	one	console/screen#writing-and-executing	
 0x63cf50	1	EmptyConsoleStubA		console	unreached	void __cdecl (void)	Returns at once	verified	one	console/overview#unreached-code	
@@ -22948,7 +22948,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6419b0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6419c0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6419e0	264	AddLineToExecFile	idb	unassigned			Runs its object file code that calls ConsoleWrite, SStrCmpI, SStrPrintf and 2 more; not read here	inferred	none		
-0x641af0	42	AddToHistory	idb	unassigned			Runs its object file code that calls SStrCopy; not read here	inferred	none		
+0x641af0	42	AddToHistory	idb	console	primitive	void __fastcall (const char *text)	Copies a line into the history ring at the write index and advances the index	verified	one	console/commands#history	
 0x641b20	5			unassigned			Runs its object file code not read here	inferred	none		
 0x641b30	19			unassigned			Runs its object file code not read here	inferred	none		
 0x641b50	5			unassigned			Runs its object file code not read here	inferred	none		

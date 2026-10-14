@@ -41,7 +41,7 @@ callback and its argument are stored at `0x63dc3d` and `0x63dc43` for an existin
 Bit 0 of the flags is set on every record `Register` creates: the config file keeps only records with it, and so
 every changed setting is saved. Bit 1 latches the value: a set is kept in `+0x38` until `Update` applies it. Bit 2
 makes the record read-only. Bit 31 marks the record as visible to scripts, and `Register` sets it when its
-script-visible argument is 0. The category is an index into the table `0x8653a0` of nine 0x18-byte entries, an id
+script-hidden byte is 0. The category is an index into the table `0x8653a0` of nine 0x18-byte entries, an id
 then a name: 0 debug, 1 graphics, 2 console, 3 combat, 4 game, 5 default, 6 net, 7 sound, 8 gm.
 
 Addresses: `0x63ddaa`, `0x63ddb4`, `0x63dc78`, `0x63da21`, `0x63df3c`, `0x63df8e`, `0x63e0ba`, `0x63e0bf`, `0x63e030`, `0x63e060`, `0x48f579`, `0x491252`, `0x83de4c`, `0x8653a0`, `0x488b76`, `0x488bd1`, `0x488c47`, `0x488d21`, `0x63d56b`
@@ -58,7 +58,7 @@ calls it for the three names at `0x83de4c`, `realmList`, `realmName` and `script
 ## Registering a setting
 
 `Register(name, help, flags, default, callback, category, scriptHidden, callbackArg)` returns the record. A name that exists keeps its record: the
-flags are ORed, the callback and argument replaced, and the callback called with the current value. Then the default text is offered with
+flags are ORed, the callback and argument are replaced, and the callback is called with the current value. Then the default text is offered with
 `Set(apply 0)`, which fills only the empty reset and default slots, so a value read from the config file survives. A new name gets a duplicated name, the help text and
 the callback, and `Set(default, apply 1)` runs before the flags exist, so a latch cannot defer it; the callback sees the default, and a false result leaves the value
 empty. The record then gets its flags and a console command of its own name.
@@ -68,16 +68,16 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x63dc58` calls the callback with `(record, current value, argument)` and ignores its result. `0x63dc6c` calls `0x63df50` with apply 0 and
+`0x63dc58` calls the callback as `fastcall(record, old value, new value, argument)`, the record in ecx and the current text in edx (`0x63dc51`) and again as the pushed new value, and ignores its result. `0x63dc6c` calls `0x63df50` with apply 0 and
 the two slot flags set from whether `+0x34` and `+0x30` are empty. The new path hashes at `0x63dc8b`, builds the buckets at `0x63dca0` the first time, grows at `0x63dcb4`, allocates with the table's slot 1 at
 `0x63dce1` and links the record at the end of the all-records list (`0x63dcf0`, mode 2). `0x63dd9f` calls `Set` with apply 1, and with
 the reset flag for a nonzero byte argument and the default flag otherwise; `0x63ddaf` stores the flags after it. `0x63ddc9` registers the command `0x63dde0` under the
-name, with the registration's category and help. A script-hidden byte of 0 fills the default slot, 1 the reset slot.
+name, with the registration's category and help. A script-hidden byte of 0 fills the default slot, 1 the reset slot. An existing record also gets bit 31 for a byte of 0 (`0x63dc78`).
 
 ## Setting a value
 
-`Set(record, text, apply, setReset, setDefault, force)` always returns 1. With apply 0 it is `InternalSet`. With apply 1 it first calls the callback with
-`(record, text, argument)`; a false result drops the set. Then it counts the change. A latched record keeps the text in `+0x38` and marks the config dirty; any other
+`Set(record, text, apply, setReset, setDefault, force)` always returns 1. With apply 0 it is `InternalSet`. With apply 1 it first calls the callback as
+`fastcall(record, old value, text, argument)`; a false result drops the set. Then it counts the change. A latched record keeps the text in `+0x38` and marks the config dirty; any other
 runs `InternalSet`. That does nothing to a read-only record or a null text. With apply it stores the text, with its integer and float, only when `SStrCmpI`
 finds it different from the value, so a change of case alone is ignored. It fills an empty reset or default slot when asked, and marks the config dirty when
 something changed and force is set.
@@ -87,11 +87,11 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x63df56` tests apply, `0x63df67` the callback, `0x63df6b` checks the pointer with `0x42a320` (`CheckFunctionPointer`) and `0x63df7d` calls it with the argument and the new text. `0x63df83` drops the set on a zero result. `0x63df90` bumps `+0x2c`;
+`0x63df56` tests apply, `0x63df67` the callback, `0x63df6b` checks the pointer with `0x42a320` (`CheckFunctionPointer`) and `0x63df7d` calls it with the old text in edx (`0x63df76`), the new text and the argument pushed. `0x63df83` drops the set on a zero result. `0x63df90` bumps `+0x2c`;
 a latched record duplicates the text at `0x63dfb9` and stores the dirty byte `0xc4edd8` at `0x63dfc4`. `0x63e0ec` is the case-blind compare. The reset slot
 is filled at `0x63e158` when `+0x34` is empty, the default slot at `0x63e179`, and the dirty byte at `0x63e190`. `Reset` (`0x63dff0`) and `Default` (`0x63e010`)
 call `InternalSet` straight with the reset or default text, falling back to the other, so they run no callback. `Update` (`0x63e060`) applies a
-latched text through `InternalSet` (`0x63e083`) and frees it (`0x63e098`). Every caller outside `Register` passes `(1, 0, 0, 1)` for the last four arguments.
+latched text through `InternalSet` (`0x63e083`) and frees it (`0x63e098`). Every caller outside `Register` and the per-record command `0x63dde0` passes `(1, 0, 0, 1)` for the last four arguments; `0x63de23` pushes apply 1, reset 1, default 0, force 1.
 
 ## Lookup
 

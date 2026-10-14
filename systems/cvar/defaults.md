@@ -6,12 +6,12 @@ Roots: none, the rows of the registration sites belong to the systems that regis
 
 ## Formatted defaults
 
-A formatted default is text built by `SStrPrintf` just before the `Register` call.
+A formatted default is text built by `SStrPrintf` just before the `Register` call; `SoundBufferSize` is the exception, for `0x457520` picks one of two literal strings.
 
 | setting | site | text |
 |---|---|---|
 | `mouseSpeed` | `0x402c7b` | `%1.1f` of the host pointer speed times 0.1 |
-| `SoundBufferSize` | `0x4571ca` | `50` for a fast processor with the hardware flag set, else `100` |
+| `SoundBufferSize` | `0x4571ca` | `50` when the byte `0xc4ec54` is set and the detection record has 1 at `+0x18`, else `100`; a literal, not formatted |
 | `targetNearestDistanceRadius` | `0x48fd60` | `%f` of 10.0, so `10.000000` |
 | `targetNearestDistance` | `0x48fda4` | `%f` of 41.0, so `41.000000` |
 | `violenceLevel` | `0x6c5ae1` | `%d` of the entry of the locale table |

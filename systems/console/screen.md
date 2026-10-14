@@ -198,8 +198,8 @@ The tests run `0x63b806` to `0x63b868` and `0x63b87e` to `0x63b89c` of the text 
 ## Slide
 
 Each frame (category 5) the panel's lower edge `0x864548` moves toward its target at 5 screen units a second.
-The target is 1.0 while closed and `min(1, 1 − height)` while open, and never below 0. A snap flag
-(`0xc4ec38`) jumps to it. The new edge is clamped so it does not pass the target, and both layers get the
+The target is 1.0 while closed and `min(1, 1 − height)` while open, and never below 0. While the resize-drag flag
+(`0xc4ec38`) is set, the edge jumps to it (`0x63bdea`). The new edge is clamped so it does not pass the target, and both layers get the
 rectangle again. A pending `repeat` command runs once a frame.
 
 Addresses: `0x63bd50`, `0x4429c0`, `0x639250`, `0xc4eabc`, `0xc4e960`, `0xc4eac8`, `0xc4ec10`
