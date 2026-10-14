@@ -4731,14 +4731,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x465140	87	ClntObjMgrInitialize	idb	objectlayer	orchestration	void __cdecl (void)	Registers the update, compressed update and destroy handlers on the manager's client connection	verified	one	objectlayer/update#handler-registration	
 0x4651a0	370	ObjectUpdateHandler	idb	objectlayer	primitive	uint32_t __fastcall (void *context, uint32_t opcode, uint32_t time, CDataStore *msg)	Handles SMSG_UPDATE_OBJECT: the out-of-range list, the flagged and other create passes, then the notify pass	verified	one	objectlayer/update#update-packet	
 0x465330	533	ObjectValuesNotify		objectlayer	primitive	void __fastcall (CDataStore *msg, uint8_t guidRead, uint32_t guidLow, uint32_t guidHigh)	Rereads a values block and runs the change check of each sent field's watchers on the live object	verified	one	objectlayer/update#notify-pass	
-0x465550	25	UpdateMaskTestBit		objectlayer	primitive	uint32_t __fastcall (const uint32_t *mask, uint32_t bit)	Returns mask word bit >> 5 ANDed with 1 << (bit & 31)	verified	one	objectlayer/update#values-block	
+0x465550	25	UpdateMaskTestBit		objectlayer	primitive	uint32_t __fastcall (const uint32_t *mask, uint32_t bit)	Returns mask word bit >> 5 ANDed with 1 << (bit & 31)	verified	one	objectlayer/update#values-block	objectlayer::updatemask_test_bit_difftest
 0x465570	278	FireWatchers		objectlayer	primitive	void __fastcall (void *pending, CGObject_C *object, uint32_t guidLow, uint32_t guidHigh, uint32_t section)	Calls each pending watcher whose range differs from the copy, then frees those removed meanwhile	verified	one	objectlayer/fields#when-a-watcher-runs	
-0x465690	33	GetDataBaseOffset	idb	objectlayer	orchestration	uint32_t __fastcall (uint32_t section)	Returns a section's byte offset in the field array: 0, 0x18, 0xc0 or 0x2f0	verified	one	objectlayer/fields#field-counts-and-sections	
-0x4656e0	104	NextFieldSection		objectlayer	primitive	uint32_t __fastcall (CGObject_C *object, uint32_t section)	Returns the section after a section in the object's class chain, or 8	verified	one	objectlayer/fields#field-counts-and-sections	
+0x465690	33	GetDataBaseOffset	idb	objectlayer	orchestration	uint32_t __fastcall (uint32_t section)	Returns a section's byte offset in the field array: 0, 0x18, 0xc0 or 0x2f0	verified	one	objectlayer/fields#field-counts-and-sections	objectlayer::updateblock_stride_difftest
+0x4656e0	104	NextFieldSection		objectlayer	primitive	uint32_t __fastcall (CGObject_C *object, uint32_t section)	Returns the section after a section in the object's class chain, or 8	verified	one	objectlayer/fields#field-counts-and-sections	objectlayer::descriptor_section_difftest
 0x4657e0	105	StepWatchers		objectlayer	primitive	void __fastcall (void *pending)	Counts each pending watcher down by one field and unlinks those that reach 0	verified	one	objectlayer/fields#when-a-watcher-runs	
-0x465850	251	ObjectWatcherList		objectlayer	primitive	void * __fastcall (CGObject_C *object, uint32_t section, uint32_t field)	Returns the object's own watcher list for a field of a section	verified	one	objectlayer/fields#registering-a-watcher	
+0x465850	251	ObjectWatcherList		objectlayer	primitive	void * __fastcall (CGObject_C *object, uint32_t section, uint32_t field)	Returns the object's own watcher list for a field of a section	verified	one	objectlayer/fields#registering-a-watcher	objectlayer::updatefield_addr_difftest
 0x465970	270	SpliceWatchers		objectlayer	primitive	uint32_t __fastcall (void *list, void *pending)	Moves a field's watchers onto the pending list, each with a countdown of the dwords it spans	verified	one	objectlayer/fields#when-a-watcher-runs	
-0x465a80	133	ObjectFieldCount		objectlayer	primitive	uint32_t __fastcall (uint32_t typeMask, uint32_t unused, uint32_t guidLow, uint32_t guidHigh)	Returns the field count for a type mask: 1282 for the active player and 486 for another player	verified	one	objectlayer/update#values-block	
+0x465a80	133	ObjectFieldCount		objectlayer	primitive	uint32_t __fastcall (uint32_t typeMask, uint32_t unused, uint32_t guidLow, uint32_t guidHigh)	Returns the field count for a type mask: 1282 for the active player and 486 for another player	verified	one	objectlayer/update#values-block	objectlayer::updatefield_count_difftest
 0x465bb0	150	SkipValuesBlock		objectlayer	primitive	void __fastcall (CDataStore *msg)	Reads a values block's mask and a u32 for each set bit below 32 times its word count, and drops them	verified	one	objectlayer/update#values-block	
 0x465c50	550	ObjectCreateNotify		objectlayer	orchestration	void __fastcall (uint32_t time, CDataStore *msg, uint8_t isCreate2)	Rereads a create block and runs the object's create hook, or its watchers' checks, then skips the values	verified	one	objectlayer/update#notify-pass	
 0x465ea0	29	SkipMovementUpdate		objectlayer	orchestration	void __fastcall (CDataStore *msg)	Skips a movement block: a packed GUID and the movement codec's skip	verified	one	objectlayer/update#movement-blocks	
@@ -4748,15 +4748,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4660a0	625	ObjectCreateBlock		objectlayer	primitive	void __fastcall (uint32_t time, CDataStore *msg, uint8_t flagged)	Creates an object from a create block, or updates the one the GUID names, in its pass	verified	one	objectlayer/update#creating-an-object	
 0x466320	45	ObjectInitFields		objectlayer	orchestration	void __fastcall (CGObject_C *object, CDataStore *msg, uint32_t guidLow, uint32_t guidHigh, uint32_t type)	Stores a new object's type and writes its first values	verified	one	objectlayer/update#creating-an-object	
 0x466350	576	ObjectRecreate		objectlayer	primitive	void __fastcall (CGObject_C *object, CDataStore *msg)	Applies a create block to an existing object: a unit's movement, then values clearing unsent fields	verified	one	objectlayer/update#creating-an-object	
-0x466590	516	ObjectApplyValues		objectlayer	primitive	void __fastcall (CGObject_C *object, CDataStore *msg, uint32_t guidLow, uint32_t guidHigh, uint8_t create, uint8_t clear)	Writes a values block into an object's field array, copying watched fields first on an update	verified	one	objectlayer/update#writing-the-values	
+0x466590	516	ObjectApplyValues		objectlayer	primitive	void __fastcall (CGObject_C *object, CDataStore *msg, uint32_t guidLow, uint32_t guidHigh, uint8_t create, uint8_t clear)	Writes a values block into an object's field array, copying watched fields first on an update	verified	one	objectlayer/update#writing-the-values	objectlayer::apply_update_fields_difftest
 0x4667a0	142	CopyWatchedFields		objectlayer	orchestration	void __fastcall (void *list, CGObject_C *object)	Copies the current bytes of each watcher's range into the object's watch copy	verified	one	objectlayer/fields#when-a-watcher-runs	
-0x466830	425	FieldCopyOffset		objectlayer	primitive	uint32_t __fastcall (uint32_t type, uint32_t offset, uint32_t length, uint8_t isActivePlayer)	Returns the byte offset of a field's slot in the watch copy for a type	verified	one	objectlayer/fields#watched-fields	
+0x466830	425	FieldCopyOffset		objectlayer	primitive	uint32_t __fastcall (uint32_t type, uint32_t offset, uint32_t length, uint8_t isActivePlayer)	Returns the byte offset of a field's slot in the watch copy for a type	verified	one	objectlayer/fields#watched-fields	objectlayer::field_dynamic_offset_difftest
 0x466a00	17	ObjectSetField		objectlayer	orchestration	void __fastcall (CGObject_C *object, uint32_t index, uint32_t value)	Stores a field value through 0x6142e0	verified	one	objectlayer/update#writing-the-values	
 0x466a20	180	ObjectConstruct		objectlayer	orchestration	void __fastcall (uint32_t time, CGObject_C *object, void *movement)	Runs the class constructor for the object's type id, 1 to 7, and the common post-construct 0x613e10	verified	one	objectlayer/update#creating-an-object	
 0x466af0	208	SkipCreateBlock		objectlayer	orchestration	void __fastcall (CDataStore *msg)	Skips the rest of a create block after its type byte: flags, flagged fields and values	verified	one	objectlayer/update#top-nibble-6-and-8-guids	
 0x466bc0	132	CheckObjectTypeName		objectlayer	orchestration	void __fastcall (uint32_t type)	Passes the type's Creating text to 0x44cb20, which returns 1 and does nothing else for these arguments	verified	one	objectlayer/update#creating-an-object	
-0x466c70	327	ObjectClearFields		objectlayer	primitive	void __fastcall (uint32_t type, CGObject_C *object, uint32_t guidLow, uint32_t guidHigh)	Points the object at its field array for its type and zeroes the array	verified	one	objectlayer/update#creating-an-object	
-0x466de0	23	CGPlayer_C::SetActivePlayerExtra		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Points +0x1c68 at the extra block after the active player's watch copy	verified	one	objectlayer/manager#allocating-and-reusing	
+0x466c70	327	ObjectClearFields		objectlayer	primitive	void __fastcall (uint32_t type, CGObject_C *object, uint32_t guidLow, uint32_t guidHigh)	Points the object at its field array for its type and zeroes the array	verified	one	objectlayer/update#creating-an-object	objectlayer::zero_descriptor_block_difftest
+0x466de0	23	CGPlayer_C::SetActivePlayerExtra		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Points +0x1c68 at the extra block after the active player's watch copy	verified	one	objectlayer/manager#allocating-and-reusing	objectlayer::player_dynfield_base_difftest
 0x466e00	430	ClntObjMgrAllocObject		objectlayer	primitive	CGObject_C * __fastcall (uint32_t type, uint32_t unused, uint32_t guidLow, uint32_t guidHigh)	Allocates an object from its type's pool after destroying the oldest reusable one, or the active player on the heap	verified	one	objectlayer/manager#allocating-and-reusing	
 0x467040	6	ActivePlayerExtraSize		objectlayer	orchestration	uint32_t __cdecl (void)	Returns 0x2550, the size of the active player's extra block	verified	one	objectlayer/manager#allocating-and-reusing	
 0x467050	240	ObjectMovementBlock		objectlayer	orchestration	void __fastcall (CDataStore *msg, uint8_t flagged)	Applies a movement block to a known unit not moved by this client; skips it in the flagged pass	verified	one	objectlayer/update#movement-blocks	
@@ -6025,7 +6025,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47cf20	15	InitGameObjFieldsDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47cf30	5	InitGameObjFieldsQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47cf40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47cf40	19	InitGameObjFieldsQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x47cf60	134			objectlayer	primitive	void __fastcall (const float *matrix, uint32_t count, float *out)	Places a chair's seats 1 yard apart along its local y axis through its world matrix	verified	one	objectlayer/gameobjecttypes#chairs	
+0x47cf60	134			objectlayer	primitive	void __fastcall (const float *matrix, uint32_t count, float *out)	Places a chair's seats 1 yard apart along its local y axis through its world matrix	verified	one	objectlayer/gameobjecttypes#chairs	objectlayer::ot_transport_segment_offset0_difftest, objectlayer::ot_transport_segment_local_y_difftest
 0x47cff0	16			objectlayer	orchestration		Returns whether a game object's section names type 19, a mailbox	verified	one	objectlayer/gameobjects#usable	
 0x47d000	9	GameObjectWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the game object's watched field count, 3 + 5	verified	one	objectlayer/fields#watched-fields	
 0x47d010	25	GameObjectWatchedIndex		objectlayer	orchestration	uint32_t __fastcall (uint32_t field)	Returns a field's position among the game object's watched fields	verified	one	objectlayer/fields#watched-fields	
@@ -6085,7 +6085,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47d500	15	InitPlayerFieldsDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47d510	5	InitPlayerFieldsQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47d520, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47d520	19	InitPlayerFieldsQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x47d540	11	ActivePlayerWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the active player's watched field count, the unit's + 0x3aa	verified	one	objectlayer/fields#watched-fields	
+0x47d540	11	ActivePlayerWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the active player's watched field count, the unit's + 0x3aa	verified	one	objectlayer/fields#watched-fields	objectlayer::player_dynfield_base_difftest
 0x47d550	11	PlayerWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns another player's watched field count, the unit's + 0x127	verified	one	objectlayer/fields#watched-fields	
 0x47d560	67	PlayerWatchedIndex		objectlayer	orchestration	uint32_t __fastcall (uint32_t field, uint8_t isActivePlayer)	Returns a field's position in the player's watched tables, the second only for the active player	verified	one	objectlayer/fields#watched-fields	
 0x47d5b0	67			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
@@ -6316,13 +6316,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47ead0	19	InitObjectFieldsQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47eaf0	5	InitObjectFieldsCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47eb00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47eb00	11	InitObjectFieldsCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x47eb10	103	SkipMovementStatus		objectlayer	primitive	uint32_t __fastcall (CDataStore *msg)	Reads a movement status's flags and skips the rest of it by them; returns the flags	verified	one	objectlayer/movement#skipping-a-movement-block	
+0x47eb10	103	SkipMovementStatus		objectlayer	primitive	uint32_t __fastcall (CDataStore *msg)	Reads a movement status's flags and skips the rest of it by them; returns the flags	verified	one	objectlayer/movement#skipping-a-movement-block	objectlayer::movement_info_size_difftest
 0x47eb80	26			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47eba0	264	CMovementStatus::Read	idb	objectlayer	orchestration	CDataStore * __fastcall (CDataStore *msg, void *status)	Reads a movement status: flags, time, position, the flagged transport, pitch, fall and elevation fields	verified	one	objectlayer/movement#movement-status	
-0x47ecb0	304	CMovementStatus::Write		objectlayer	orchestration	CDataStore * __fastcall (CDataStore *msg, const void *status)	Writes a movement status in the order and under the flags the reader uses	verified	one	objectlayer/movement#movement-status	
-0x47ede0	151	SkipMovementBlock		objectlayer	primitive	void __fastcall (CDataStore *msg)	Skips an update's movement block: the status, six speeds and the flagged spline	verified	one	objectlayer/movement#skipping-a-movement-block	
+0x47ecb0	304	CMovementStatus::Write		objectlayer	orchestration	CDataStore * __fastcall (CDataStore *msg, const void *status)	Writes a movement status in the order and under the flags the reader uses	verified	one	objectlayer/movement#movement-status	objectlayer::movement_block_encode_difftest
+0x47ede0	151	SkipMovementBlock		objectlayer	primitive	void __fastcall (CDataStore *msg)	Skips an update's movement block: the status, six speeds and the flagged spline	verified	one	objectlayer/movement#skipping-a-movement-block	objectlayer::movement_block_skip_difftest
 0x47ee80	452			objectlayer	unreached		Runs its object file code that calls OsGetAsyncTimeMs, CMovementStatus::Write; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x47f050	333	ReadMovementBlock		objectlayer	primitive	CDataStore * __fastcall (CDataStore *msg, void *movement)	Reads an update's movement block: status, six speeds and the flagged spline, its start from the clock	verified	one	objectlayer/movement#movement-block	
+0x47f050	333	ReadMovementBlock		objectlayer	primitive	CDataStore * __fastcall (CDataStore *msg, void *movement)	Reads an update's movement block: status, six speeds and the flagged spline, its start from the clock	verified	one	objectlayer/movement#movement-block	objectlayer::movement_block_decode_difftest
 0x47f1a0	119			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47f220	141	HeadingBetweenPoints		objectlayer	primitive	float __fastcall (const float *from, const float *to)	Returns atan2 of the y and x differences, with fixed headings when either difference is below 2^-22	verified	one	objectlayer/movement#heading-between-two-points	
 0x47f2b0	6	ObjectWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns 3, the object section's watched field count	verified	one	objectlayer/fields#watched-fields	
@@ -18836,11 +18836,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5210	192			objectlayer	primitive		Runs DynamicObject_C.cpp code that calls DynamicObjectStopAreaKit; not read here	inferred	none		
 0x5d52d0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5d52e0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5d52f0	294			objectlayer	primitive		Fills slot 13 of the dynamic object vtable; its body is not read here	inferred	none		
+0x5d52f0	294			objectlayer	primitive		Fills slot 13 of the dynamic object vtable; its body is not read here	inferred	none		objectlayer::dy_dynobj_visual_scale_difftest, objectlayer::dy_dynobj_visual_scale_gates_difftest
 0x5d5420	283			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, DynamicObjectStartAreaKit;	inferred	none		
 0x5d5540	59			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x5d5580	50			objectlayer	orchestration		Runs DynamicObject_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d55c0	263	DynamicObjectStartAreaKit		objectlayer	primitive		Starts a dynamic object's spell kit: the kind-9 emitter through 0x6ece30 and the kit sound	inferred	none	spell/visuals#area-shard-emitter-creation	
+0x5d55c0	263	DynamicObjectStartAreaKit		objectlayer	primitive		Starts a dynamic object's spell kit: the kind-9 emitter through 0x6ece30 and the kit sound	inferred	none	spell/visuals#area-shard-emitter-creation	objectlayer::dy_dynobj_light_bias_difftest
 0x5d56d0	35			objectlayer	orchestration		Runs DynamicObject_C.cpp code not read here	inferred	none		
 0x5d5700	32	DynamicObjectStopAreaKit		objectlayer	orchestration		Stops a dynamic object's emitter through 0x6ecf20 and tail-calls its sound stop	inferred	none	spell/visuals#area-shard-emitter-creation	
 0x5d5720	16			objectlayer	orchestration		Fills slot 1 of the dynamic object vtable; its body is not read here	inferred	none		
@@ -18924,7 +18924,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d6210	11	InitCorpseCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d6220	51	CGCorpse_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGCorpse_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
 0x5d6260	729			objectlayer	primitive		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, NewCharacterComponent; not read here	inferred	none		
-0x5d6540	101			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		
+0x5d6540	101			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		objectlayer::dy_corpse_submerged_difftest
 0x5d65b0	68			objectlayer	orchestration		Fills slot 1 of the corpse vtable; its body is not read here	inferred	none		
 0x5d6600	114			objectlayer	orchestration		Fills slot 2 of the corpse vtable; its body is not read here	inferred	none		
 0x5d6680	41			objectlayer	unreached		Runs Corpse_C.cpp code that calls CGObject_C::SetUpdateField; not read here	inferred	none	objectlayer/overview#unreached-functions	
@@ -18932,8 +18932,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d66e0	20			objectlayer	unreached		Runs Corpse_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d6700	211			objectlayer	orchestration		Fills slot 10 of the corpse vtable; its body is not read here	inferred	none		
 0x5d67e0	101			objectlayer	orchestration		Fills slot 16 of the corpse vtable; its body is not read here	inferred	none		
-0x5d6850	98			objectlayer	primitive		Fills slot 13 of the corpse vtable; its body is not read here	inferred	none		
-0x5d68c0	742			objectlayer	primitive		Fills slot 8 of the corpse vtable; its body is not read here	inferred	none		
+0x5d6850	98			objectlayer	primitive		Fills slot 13 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_half_render_radius_difftest
+0x5d68c0	742			objectlayer	primitive		Fills slot 8 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_center_inv_difftest, objectlayer::dy_corpse_center_component_difftest, objectlayer::dy_corpse_center_x_difftest
 0x5d6bb0	49			objectlayer	orchestration		Runs Corpse_C.cpp code that calls SMemFree; not read here	inferred	none		
 0x5d6bf0	237			objectlayer	primitive		Fills slot 24 of the corpse vtable; its body is not read here	inferred	none		
 0x5d6ce0	120			objectlayer	orchestration		Runs Corpse_C.cpp code that calls UpdateCharacterComponent, ReleaseWorldObject; not read here	inferred	none		
@@ -18944,7 +18944,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d6e80	56			objectlayer	orchestration		Runs Corpse_C.cpp code that calls HandleClose2; not read here	inferred	none		
 0x5d6ec0	205			objectlayer	orchestration		Runs Corpse_C.cpp code that calls SetCharacterComponentEmblem, SMemAlloc, GetGuildEmblem; not read here	inferred	none		
 0x5d6f90	67			objectlayer	orchestration		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr, SMemFree; not read here	inferred	none		
-0x5d6fe0	308			objectlayer	primitive		Fills slot 12 of the corpse vtable; its body is not read here	inferred	none		
+0x5d6fe0	308			objectlayer	primitive		Fills slot 12 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_decal_box_difftest
 0x5d7120	42			objectlayer	orchestration		Runs Corpse_C.cpp code not read here	inferred	none		
 0x5d7150	5	InitContainerDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7160, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7160	15	InitContainerDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
@@ -19152,7 +19152,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5da260	64			objectlayer	orchestration		Returns an item's record, or 0	verified	one	objectlayer/items#record-getters	
 0x5da2a0	22			objectlayer	primitive		Returns the flags of an item's record through its secondary vtable	verified	one	objectlayer/items#record-getters	
 0x5da2c0	103			objectlayer	primitive		Returns whether an item is bound: flags bit 0 or a binding enchantment	verified	one	objectlayer/items#item-use-gates	
-0x5da330	450			objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	
+0x5da330	450			objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	objectlayer::item_randprop_delta_difftest
 0x5da500	101			objectlayer	orchestration		Returns whether the record dword +0x1c8 is non-zero	verified	one	objectlayer/items#record-getters	
 0x5da570	101			objectlayer	orchestration		Returns whether the record dword +0x1cc is non-zero	verified	one	objectlayer/items#record-getters	
 0x5da5e0	456			objectlayer	primitive		Finds how the active player opens a lock: a spell of open-lock effect with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
@@ -19300,23 +19300,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ded50	37	ShowResurrectRequest		objectlayer	orchestration		Signals the resurrect request with a non-empty name while the active player is dead or a ghost	verified	one	objectlayer/playermessages#resurrection-and-summoning	
 0x5ded80	163	SendResurrectResponse		objectlayer	primitive		Answers the pending resurrect request with 0x15c and the accept byte and forgets it	verified	one	objectlayer/playermessages#resurrection-and-summoning	
 0x5dee30	766	CGPlayer_C::OnVisibleItemChanged		objectlayer	primitive		Refreshes the action bars and attack events and swaps the model's display for a changed visible item	verified	one	objectlayer/inventory#visible-equipment	
-0x5df130	360	CGPlayer_C::LootCorpse		objectlayer	primitive		Loots a corpse: checks it may, walks up beyond 5 yards, then sends CMSG_LOOT and holds the GUID	verified	one	objectlayer/interaction#looting	
-0x5df2a0	434	CGPlayer_C::LootUnit		objectlayer	primitive		Loots a lootable unit: checks it may, walks up beyond reach, sends CMSG_LOOT and plays animation 50	verified	one	objectlayer/interaction#looting	
+0x5df130	360	CGPlayer_C::LootCorpse		objectlayer	primitive		Loots a corpse: checks it may, walks up beyond 5 yards, then sends CMSG_LOOT and holds the GUID	verified	one	objectlayer/interaction#looting	objectlayer::loot_range_5df130_difftest
+0x5df2a0	434	CGPlayer_C::LootUnit		objectlayer	primitive		Loots a lootable unit: checks it may, walks up beyond reach, sends CMSG_LOOT and plays animation 50	verified	one	objectlayer/interaction#looting	objectlayer::interact_reach_5df2a0_difftest
 0x5df460	41	CGPlayer_C::SetAutoLoot		objectlayer	primitive		Sets the auto-loot byte +0x1d30 and, with a loot held, calls 0x4c1fa0(0)	verified	one	objectlayer/interaction#looting	
 0x5df490	55	IsQuestGiverToTalk		objectlayer	primitive		Returns 1 for a unit with NPC flag 0x2 whose quest status is neither 0 nor 1	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5df4d0	118	SendGossipHello		objectlayer	orchestration		Sends CMSG_GOSSIP_HELLO (0x17b) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5df550	118	SendQuestGiverHello		objectlayer	orchestration		Sends CMSG_QUESTGIVER_HELLO (0x184) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5df5d0	171	TalkToVendor		objectlayer	primitive		Sells the cursor's item to the vendor, or asks for the vendor's list	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5df680	174	TalkToTrainer		objectlayer	orchestration		Remembers the trainer's GUID in 0xc4d788 and sends CMSG_TRAINER_LIST	verified	one	objectlayer/interaction#talking-to-an-npc	
-0x5df730	391	CGPlayer_C::SpiritHealerDialog		objectlayer	primitive		Asks the ghost to confirm the spirit healer's experience loss, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	
-0x5df8c0	143	IsSpiritHealerInRange		objectlayer	primitive		Returns 1 while the remembered spirit healer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5df730	391	CGPlayer_C::SpiritHealerDialog		objectlayer	primitive		Asks the ghost to confirm the spirit healer's experience loss, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_5df730_difftest, objectlayer::skill_rank_scale_5df730_difftest, objectlayer::range_gate_5df980_clone_family_difftest
+0x5df8c0	143	IsSpiritHealerInRange		objectlayer	primitive		Returns 1 while the remembered spirit healer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_5df8c0_difftest
 0x5df950	48	TalkToSpiritGuide		objectlayer	primitive		Calls 0x4921c0 with 0 and then the GUID while the player is a ghost	verified	one	objectlayer/interaction#talking-to-an-npc	
-0x5df980	385	CGPlayer_C::TalentWipeDialog		objectlayer	primitive		Asks to confirm a talent wipe and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	
-0x5dfb10	143	IsTalentWiperInRange		objectlayer	primitive		Returns 1 while the remembered talent trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
-0x5dfba0	385	CGPlayer_C::PetUnlearnDialog		objectlayer	primitive		Asks to confirm a pet unlearn and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	
-0x5dfd30	143	IsPetUnlearnerInRange		objectlayer	primitive		Returns 1 while the remembered pet trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5df980	385	CGPlayer_C::TalentWipeDialog		objectlayer	primitive		Asks to confirm a talent wipe and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_5df980_clone_family_difftest
+0x5dfb10	143	IsTalentWiperInRange		objectlayer	primitive		Returns 1 while the remembered talent trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
+0x5dfba0	385	CGPlayer_C::PetUnlearnDialog		objectlayer	primitive		Asks to confirm a pet unlearn and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_5df980_clone_family_difftest
+0x5dfd30	143	IsPetUnlearnerInRange		objectlayer	primitive		Returns 1 while the remembered pet trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
 0x5dfdc0	387	BinderDialog		objectlayer	primitive		Asks to confirm binding at the inn's area, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	
-0x5dff50	143	IsBinderInRange		objectlayer	primitive		Returns 1 while the remembered innkeeper exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dff50	143	IsBinderInRange		objectlayer	primitive		Returns 1 while the remembered innkeeper exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
 0x5dffe0	118	SendBankerActivate		objectlayer	orchestration		Sends CMSG_BANKER_ACTIVATE (0x1b7) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5e0060	118	SendPetitionShowList		objectlayer	orchestration		Sends CMSG_PETITION_SHOWLIST (0x1bb) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5e00e0	184	CGPlayer_C::TalkToTabardVendor		objectlayer	orchestration		Sends 0x1f2 to a tabard vendor, refusing with error 0x130 while the player's display is not native	verified	one	objectlayer/interaction#talking-to-an-npc	
@@ -19370,7 +19370,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e2080	134	LoadAreaTriggers		objectlayer	primitive		Selects the map's AreaTrigger rows, clears the current trigger and arms the 100 ms check	verified	one	objectlayer/players#area-triggers	
 0x5e2110	389	AreaTriggerCheck		objectlayer	primitive		Arms itself again and sends CMSG_AREATRIGGER when the active player enters a trigger it was not in	verified	one	objectlayer/players#area-triggers	
 0x5e22a0	36	StopAreaTriggerCheck		objectlayer	orchestration	void __cdecl (void)	Kills the area-trigger timer when it is armed	verified	one	objectlayer/players#world-entry-and-exit	
-0x5e22d0	441	IsInsideAreaTrigger		objectlayer	primitive	uint32_t __fastcall (void *row, float *position)	Tests a point inside an AreaTrigger row's sphere, or strictly inside its rotated box when its radius is 0	verified	one	objectlayer/players#area-triggers	
+0x5e22d0	441	IsInsideAreaTrigger		objectlayer	primitive	uint32_t __fastcall (void *row, float *position)	Tests a point inside an AreaTrigger row's sphere, or strictly inside its rotated box when its radius is 0	verified	one	objectlayer/players#area-triggers	objectlayer::area_trigger_kind_5e22d0_difftest, objectlayer::area_trigger_sphere_5e22d0_difftest
 0x5e2490	101	RegisterPlayerCVars		objectlayer	orchestration	void __cdecl (void)	Registers CombatModeMaxDistance, guildMemberNotify and autoClearAFK, keeping the last two pointers	verified	one	objectlayer/players#world-entry-and-exit	
 0x5e2500	15	PlayerDestroy		objectlayer	orchestration	void __cdecl (void)	Clears the player handlers, calls 0x62f870 and stops the area-trigger timer	verified	one	objectlayer/players#world-entry-and-exit	
 0x5e2510	321	AddPlayerTypeWatchers		objectlayer	primitive	void __cdecl (void)	Clears player state and registers the type watchers on every player's visible items, flags and guild fields	verified	one	objectlayer/playerfields#watchers-on-every-player	
@@ -19385,7 +19385,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e29e0	80	RefreshGuildTagIfMember		objectlayer	primitive		Refreshes a player's guild tag when its guild is the one walked for	verified	one	objectlayer/playerfields#guild-timestamps	
 0x5e2a30	20	OnPlayerBytes3Byte2Changed		objectlayer	orchestration		Calls 0x491a00 with the player's GUID	verified	one	objectlayer/playerfields#watchers-on-every-player	
 0x5e2a50	59	OnPlayerBytes3Byte3Changed		objectlayer	orchestration		Calls 0x491a00 with the player's GUID and refreshes its reaction	verified	one	objectlayer/playerfields#watchers-on-every-player	
-0x5e2a90	513	OnDrunkChanged		objectlayer	primitive		Refreshes the drunk camera and prints the drunk message for each threshold the level crosses	verified	one	objectlayer/playerfields#drunk-messages	
+0x5e2a90	513	OnDrunkChanged		objectlayer	primitive		Refreshes the drunk camera and prints the drunk message for each threshold the level crosses	verified	one	objectlayer/playerfields#drunk-messages	objectlayer::drunk_fraction_5e2a90_difftest
 0x5e2ca0	264	BuildWeaponSkillSpells		objectlayer	primitive		Fills the weapon-subclass spell table 0xc4d730 and the effect-0x1a spell 0xc4d688 from Spell.dbc	verified	one	objectlayer/playercombat#weapon-skills	
 0x5e2db0	93	GetWeaponSubclassCount		objectlayer	primitive	uint32_t __cdecl (void)	Returns one past the highest ItemSubClass subclass of class 2, or 0 when there is none	verified	one	objectlayer/playercombat#weapon-skills	
 0x5e2e10	72	GetSingleBitIndex		objectlayer	primitive	uint32_t __fastcall (uint32_t mask, int32_t *index)	Returns whether a mask has at most one bit and stores that bit's index, −1 for an empty mask	verified	one	objectlayer/playercombat#weapon-skills	
@@ -19480,7 +19480,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ea700	5			objectlayer	orchestration		Jumps to 0x468580	verified	one	objectlayer/overview#small-bodies	
 0x5ea710	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x5ea720	214	CGPlayer_C::CheckItemForSlot		objectlayer	primitive		Refuses a non-empty bag outside the bag slots, else asks the item's check with the class's ranged rule	verified	one	objectlayer/playercombat#using-an-item	
-0x5ea800	180	CGPlayer_C::OnAttackStart		objectlayer	primitive		Resets the attack error and stops the attack when the target is beyond four times the melee reach	verified	one	objectlayer/playercombat#the-melee-attack	
+0x5ea800	180	CGPlayer_C::OnAttackStart		objectlayer	primitive		Resets the attack error and stops the attack when the target is beyond four times the melee reach	verified	one	objectlayer/playercombat#the-melee-attack	objectlayer::reach_gate_5ea800_difftest
 0x5ea8c0	112	CGPlayer_C::SendLootMoney		objectlayer	primitive		Sends CMSG_LOOT_MONEY (0x15e) while a loot is held	verified	one	objectlayer/inventory#loot	
 0x5ea930	431	CGPlayer_C::CanUseItem		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, void *record, uint32_t *error)	Tests an item record's level, class, race, proficiency, skill, spell, rank and reputation needs	verified	one	objectlayer/playercombat#using-an-item	
 0x5eaae0	134	CGPlayer_C::HasRecordSkill		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, void *record)	Returns whether the skill named at a record's +0xac reaches the value at +0xb0	verified	one	objectlayer/playercombat#skills	
@@ -19524,7 +19524,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ec030	13	ReadLootClearMoney		objectlayer	orchestration		Calls 0x4c2750	verified	one	objectlayer/inventory#loot	
 0x5ec040	79	ReadLootItemNotify		objectlayer	orchestration		Reads a looted item's notice and drops it	verified	one	objectlayer/inventory#loot	
 0x5ec090	117	CGPlayer_C::ReadLootReleaseResponse		objectlayer	orchestration		Ends the held loot when the release names it	verified	one	objectlayer/inventory#loot	
-0x5ec110	302	CGPlayer_C::CanLootNow		objectlayer	primitive		Returns whether the player may loot an object now, in reach when it cannot walk there	verified	one	objectlayer/interaction#looting	
+0x5ec110	302	CGPlayer_C::CanLootNow		objectlayer	primitive		Returns whether the player may loot an object now, in reach when it cannot walk there	verified	one	objectlayer/interaction#looting	objectlayer::p3_interact_reach_sq_5ec110, objectlayer::p3_interact_in_range_5ec110
 0x5ec240	271	CGPlayer_C::GetVirtualItem		objectlayer	primitive	void *__thiscall (CGPlayer_C *this, uint32_t hand, uint32_t raw)	Returns a hand's weapon record of class, subclass and three bytes, honouring disarm (vtable slot 38)	verified	one	objectlayer/playercombat#hand-weapons	
 0x5ec350	46	CGPlayer_C::GetVirtualItemRecord		objectlayer	orchestration	void *__thiscall (CGPlayer_C *this, uint32_t hand)	Returns the ItemDisplayInfo row of a hand's weapon (vtable slot 39)	verified	one	objectlayer/playercombat#hand-weapons	
 0x5ec380	169	CGPlayer_C::GetVirtualItemDisplay		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t hand)	Returns the display id of a hand's weapon, honouring disarm (vtable slot 40)	verified	one	objectlayer/playercombat#hand-weapons	
@@ -19545,7 +19545,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ec9e0	95	CGPlayer_C::AppendAfkTag		objectlayer	orchestration		Appends CHAT_FLAG_AFK for an AFK player (vtable slot 31)	verified	one	objectlayer/players#the-players-virtual-slots	
 0x5eca40	57	CGPlayer_C::AppendDndTag		objectlayer	orchestration		Appends CHAT_FLAG_DND for PLAYER_FLAGS 0x4 (vtable slot 32)	verified	one	objectlayer/players#the-players-virtual-slots	
 0x5eca80	62	CGPlayer_C::AppendGmTag		objectlayer	primitive		Appends CHAT_FLAG_GM for PLAYER_FLAGS 0x8 (vtable slot 33)	verified	one	objectlayer/players#the-players-virtual-slots	
-0x5ecac0	172	CGPlayer_C::StopMeleeAttack		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Stops the active player's attack with CMSG_ATTACKSTOP after the low-health and low-mana tutorials	verified	one	objectlayer/playercombat#the-melee-attack	
+0x5ecac0	172	CGPlayer_C::StopMeleeAttack		objectlayer	primitive	void __thiscall (CGPlayer_C *this)	Stops the active player's attack with CMSG_ATTACKSTOP after the low-health and low-mana tutorials	verified	one	objectlayer/playercombat#the-melee-attack	objectlayer::lowhp_warn_5ecac0_difftest
 0x5ecb70	563	CGPlayer_C::StartMeleeAttack		objectlayer	primitive	void __thiscall (CGPlayer_C *this, uint64_t *guid)	Starts a melee attack on an attackable unit, sending CMSG_ATTACKSWING unless already attacking	verified	one	objectlayer/playercombat#the-melee-attack	
 0x5ecdb0	17	SetAttackErrorState		objectlayer	orchestration	void __fastcall (uint32_t state)	Sets the attack error state 0xc4d758 and restarts its delay from now	verified	one	objectlayer/players#attack-error-repeat	
 0x5ecdd0	131	ReadTaxiNodeStatus		objectlayer	primitive		Marks a flight master 4 for an unknown node and 0 for a known one	verified	one	objectlayer/interaction#taxis	
@@ -19587,7 +19587,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5edfc0	279	CGPlayer_C::SendWrapItem		objectlayer	orchestration		Sends CMSG_WRAP_ITEM with the paper's and the item's bags and slots, then ends wrapping	verified	one	objectlayer/inventory#opening-and-wrapping-items	
 0x5ee0e0	67	CGPlayer_C::StartSplineRun		objectlayer	unreached		Starts a spline path on the mover and runs along it	verified	one	objectlayer/overview#unreached-functions	
 0x5ee130	25	CGPlayer_C::HasMoverRecordFlag		objectlayer	unreached		Returns 1 when +0xa4c holds a record without bit 0x4 at +0x18	verified	one	objectlayer/overview#unreached-functions	
-0x5ee150	277	CGPlayer_C::GetSpellCastTime		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns a spell's cast time with the casting-time modifier and cast speed, plus 500 for Attributes 0x2 (slot 45)	verified	one	objectlayer/playercombat#cast-time	
+0x5ee150	277	CGPlayer_C::GetSpellCastTime		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns a spell's cast time with the casting-time modifier and cast speed, plus 500 for Attributes 0x2 (slot 45)	verified	one	objectlayer/playercombat#cast-time	objectlayer::player_cast_time_difftest, objectlayer::player_cast_time_special_values_difftest
 0x5ee270	17	CGPlayer_C::StartFarSight		objectlayer	orchestration		Runs the far-sight update while far sight is off	verified	one	objectlayer/interaction#far-sight	
 0x5ee290	755	CGPlayer_C::UpdateFarSight		objectlayer	primitive	uint8_t __thiscall (CGPlayer_C *this)	Starts or ends far sight on PLAYER_FARSIGHT's object, moving control and telling the server	verified	one	objectlayer/interaction#far-sight	
 0x5ee590	15	CGPlayer_C::EndFarSight		objectlayer	orchestration		Runs the far-sight update while far sight is on	verified	one	objectlayer/interaction#far-sight	
@@ -19632,8 +19632,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5efe00	88	CGPlayer_C::GetFactionSide		objectlayer	primitive		Returns 0 for a race whose faction template has bit 0x4, 1 for bit 0x2, else −1	verified	one	objectlayer/interaction#other-units	
 0x5efe60	56	CGPlayer_C::GetPvpRankName		objectlayer	orchestration		Returns the gendered PVP_RANK_%d_%d text of a rank for the player's side	verified	one	objectlayer/interaction#other-units	
 0x5efea0	649	ClassifyGuidForPlayer		objectlayer	primitive		Returns the relation of a GUID's unit, or a game object's creator, to the active player, 0 to 9	verified	one	objectlayer/interaction#other-units	
-0x5f0130	1189	CGPlayer_C::InteractWithNpc		objectlayer	primitive		Walks up to an NPC or starts the service its first matching NPC flag names	verified	one	objectlayer/interaction#talking-to-an-npc	
-0x5f05e0	287	CGPlayer_C::InteractWithSpell		objectlayer	primitive		Casts the interaction spell on an object in range, else walks up, and sets the auto-loot byte	verified	one	objectlayer/interaction#interacting-through-a-spell	
+0x5f0130	1189	CGPlayer_C::InteractWithNpc		objectlayer	primitive		Walks up to an NPC or starts the service its first matching NPC flag names	verified	one	objectlayer/interaction#talking-to-an-npc	objectlayer::p3_dist2_f32deltas_5f0130, objectlayer::p3_in_range_gate_5f0130
+0x5f05e0	287	CGPlayer_C::InteractWithSpell		objectlayer	primitive		Casts the interaction spell on an object in range, else walks up, and sets the auto-loot byte	verified	one	objectlayer/interaction#interacting-through-a-spell	objectlayer::p3_attack_range_gate_5f05e0
 0x5f0700	133	IsTrivialUnit		objectlayer	primitive		Returns whether a unit that is not a player lies below the active player's level by more than its gray gap	verified	one	objectlayer/interaction#other-units	
 0x5f0790	97	CGPlayer_C::SetLocalStandState		objectlayer	orchestration		Keeps a new local stand state, resuming input for 0 or ending looting and the attack otherwise	verified	one	objectlayer/interaction#stand-state	
 0x5f0800	125	CanSaveTabard		objectlayer	orchestration		Returns 1 while the player's guild record exists and no emblem save is pending	verified	one	objectlayer/party#guild-tabards	
@@ -19756,7 +19756,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f2f50	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds a type handler's base: base vtable, the object, error 0xdb and range 5.0	verified	one	objectlayer/gameobjects#building-the-type-handler	
 0x5f2f80	226			objectlayer	primitive		Decides whether the active player may interact with a game object: reaction, trap lock, flags	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
 0x5f3070	180			objectlayer	primitive		Picks a game object's cursor: its lock type's cursor, Interact or UnableInteract, by usability	verified	one	objectlayer/gameobjects#cursor	
-0x5f3130	678			objectlayer	primitive		Decides whether the active player may use a game object now, giving the error and the use range	verified	one	objectlayer/gameobjects#usable	
+0x5f3130	678			objectlayer	primitive		Decides whether the active player may use a game object now, giving the error and the use range	verified	one	objectlayer/gameobjects#usable	objectlayer::go_canuse_dist2_difftest
 0x5f33e0	627			objectlayer	primitive		Uses a game object: casts the spell that opens it or sends 0xb1, else shows why its lock refuses	verified	one	objectlayer/gameobjects#using-a-game-object	
 0x5f3660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
 0x5f3670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
@@ -19842,12 +19842,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f4cc0	700			objectlayer	primitive		Builds a moving transport's path from TaxiPathNode when its record arrives, then ticks it	verified	one	objectlayer/transports#the-ship-path	
 0x5f4f80	46			objectlayer	orchestration		Reactivates a moving transport: entity, transport list and a tick	verified	one	objectlayer/transports#the-ship-path	
 0x5f4fb0	233			objectlayer	primitive		Deactivates a moving transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
-0x5f50a0	1118			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	
+0x5f50a0	1118			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a ship along its path at a time: stops, speed curve, spline frame, entity, passengers, leg change	verified	one	objectlayer/transports#moving-the-ship	objectlayer::g3_transport_ms_scale, objectlayer::g3_transport_leg_fraction, objectlayer::g3_transport_heading, objectlayer::g3_transport_heading_angle
 0x5f5500	179			objectlayer	primitive		Boards a mover onto a moving transport, flagging it while the entity is not ready	verified	one	objectlayer/transports#passengers	
 0x5f55c0	34			objectlayer	orchestration		Tests a point against a moving transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
 0x5f55f0	68			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the chair handler with five empty seats and range 100.0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
 0x5f5640	40			objectlayer	orchestration		Restores the base vtable of the chair handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5670	226			objectlayer	primitive		Decides whether a chair is usable: in use range and within 3 yards of a seat	verified	one	objectlayer/gameobjecttypes#chairs	
+0x5f5670	226			objectlayer	primitive		Decides whether a chair is usable: in use range and within 3 yards of a seat	verified	one	objectlayer/gameobjecttypes#chairs	objectlayer::diff_interact_range
 0x5f5760	74			objectlayer	primitive		Places a chair's seats when its record arrives	verified	one	objectlayer/gameobjecttypes#chairs	
 0x5f57b0	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the spell focus handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
 0x5f57e0	3			objectlayer	orchestration		Returns true	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
@@ -19867,9 +19867,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f5a40	11			objectlayer	orchestration		Plays a text object's close state 4	verified	one	objectlayer/gameobjecttypes#quest-givers-text-and-mailboxes	
 0x5f5a50	35			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the goober handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
 0x5f5a80	43			objectlayer	orchestration		Destroys the goober handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f5ab0	341			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the transport handler and finds its TransportAnimation rows	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
+0x5f5ab0	341			objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the transport handler and finds its TransportAnimation rows	verified	one	objectlayer/gameobjects#handler-types-11-to-20	objectlayer::g3_transport_ctor_add
 0x5f5c10	33			objectlayer	primitive		Writes a transport's base position	verified	one	objectlayer/transports#the-transport-tick	
-0x5f5c40	45			objectlayer	primitive		Writes a transport's velocity: speed times heading	verified	one	objectlayer/transports#the-transport-tick	
+0x5f5c40	45			objectlayer	primitive		Writes a transport's velocity: speed times heading	verified	one	objectlayer/transports#the-transport-tick	objectlayer::diff_scale_vec3
 0x5f5c70	3			objectlayer	orchestration		Returns false	verified	one	objectlayer/gameobjecttypes#constant-mouseover-and-interaction	
 0x5f5c80	43			objectlayer	orchestration		Destroys the transport handler and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
 0x5f5cb0	188			objectlayer	primitive		Tears a transport handler down: transport list, plane array and passengers	verified	one	objectlayer/transports#the-transports-path	
@@ -19877,9 +19877,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f5da0	41			objectlayer	orchestration		Reactivates a transport: animation reset, entity and transport list	verified	one	objectlayer/transports#the-transports-path	
 0x5f5dd0	233			objectlayer	primitive		Deactivates a transport: drops each passenger into a fall and destroys the entity	verified	one	objectlayer/transports#passengers	
 0x5f5ec0	72			objectlayer	primitive		Returns the first TransportAnimation row of a game object's entry, or -1	verified	one	objectlayer/transports#the-transports-path	
-0x5f5f10	841			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a transport along its animation path and carries its passengers	verified	one	objectlayer/transports#the-transport-tick	
+0x5f5f10	841			objectlayer	primitive	void __thiscall (void *this, uint32_t now, uint32_t elapsed)	Moves a transport along its animation path and carries its passengers	verified	one	objectlayer/transports#the-transport-tick	objectlayer::g3_move_pos_add, objectlayer::g3_move_delta_sub, objectlayer::g3_move_dist2_gate, objectlayer::g3_move_normalize, objectlayer::g3_move_leg_speed
 0x5f6260	20			objectlayer	primitive		Returns the next TransportAnimation row index, wrapping	verified	one	objectlayer/transports#the-transports-path	
-0x5f6280	528			objectlayer	primitive	float * __thiscall (void *this, float *out, uint32_t now)	Returns a transport's path offset at a time, rotated by its quaternion, playing row animations	verified	one	objectlayer/transports#the-transports-path	
+0x5f6280	528			objectlayer	primitive	float * __thiscall (void *this, float *out, uint32_t now)	Returns a transport's path offset at a time, rotated by its quaternion, playing row animations	verified	one	objectlayer/transports#the-transports-path	objectlayer::gameobject_path_eval_difftest, objectlayer::gameobject_path_eval_large_times_difftest
 0x5f6490	175			objectlayer	primitive		Boards a mover onto a transport, flagging it while the model is not loaded	verified	one	objectlayer/transports#passengers	
 0x5f6540	34			objectlayer	orchestration		Tests a point against a transport's entity, 1 without one	verified	one	objectlayer/transports#passengers	
 0x5f6570	28			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the camera handler	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
@@ -19936,7 +19936,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f7750	43			objectlayer	orchestration		Destroys a game object and frees it on bit 0	verified	one	objectlayer/gameobjects#the-game-object	
 0x5f7780	287			objectlayer	primitive		Tears a game object down: record request, handler, transport link and watcher lists	verified	one	objectlayer/gameobjects#the-game-object	
 0x5f78a0	107			objectlayer	orchestration		Hands an arrived game object record to the object its GUID names	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x5f7910	484			objectlayer	primitive		Places a game object's loaded model: world matrix, bounds, world box, collision and art kit	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5f7910	484			objectlayer	primitive		Places a game object's loaded model: world matrix, bounds, world box, collision and art kit	verified	one	objectlayer/gameobjects#world-transform-and-box	objectlayer::go_animate_bounds_difftest
 0x5f7b00	279			objectlayer	primitive	void __fastcall (CM2Model *model, uint32_t artKit)	Puts an art kit on a model: detaches points 0 to 3, then its textures and attached models	verified	one	objectlayer/gameobjecttypes#art-kits	
 0x5f7c20	22			objectlayer	orchestration		Runs the handler's slot 11 for the object's ground pass	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11	
 0x5f7c40	349			objectlayer	primitive		Runs a game object's creation: transform, model callbacks, handler slot 23 and the record request	verified	one	objectlayer/gameobjects#the-game-object-record	
@@ -19989,12 +19989,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f8c40	14			objectlayer	orchestration		Calls the handler's slot 32 as the interface closes the object's frame	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
 0x5f8c50	63			objectlayer	orchestration		Plays an animation event on the loaded model, or keeps it until the model loads	verified	one	objectlayer/gameobjects#watchers-and-messages	
 0x5f8c90	18			objectlayer	orchestration		Hands a game object's world object to the light update	verified	one	objectlayer/gameobjects#object-slots	
-0x5f8cb0	60			objectlayer	primitive		Normalises a 2D vector in place, leaving one shorter than 2^-22	verified	one	objectlayer/transports#moving-the-ship	
-0x5f8cf0	34	ScaleVector3		objectlayer	primitive	float * __fastcall (float *out, const float *v, float s)	Writes s·v	verified	one	camera#unprojection	
+0x5f8cb0	60			objectlayer	primitive		Normalises a 2D vector in place, leaving one shorter than 2^-22	verified	one	objectlayer/transports#moving-the-ship	objectlayer::diff_normalize_vec2
+0x5f8cf0	34	ScaleVector3		objectlayer	primitive	float * __fastcall (float *out, const float *v, float s)	Writes s·v	verified	one	camera#unprojection	objectlayer::vector3_scale_add_difftest
 0x5f8d20	62			objectlayer	orchestration		Stores nine floats	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f8d60	57			objectlayer	orchestration		Stores a 4x4 identity	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f8da0	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/transports#carrying-and-changing-legs	
-0x5f8dc0	463			objectlayer	primitive	float __thiscall (void *path, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	
+0x5f8dc0	463			objectlayer	primitive	float __thiscall (void *path, float t, float span, uint32_t *state, uint32_t accelerates, uint32_t decelerates)	Returns the distance t seconds into a span of constant acceleration and its animation state	verified	one	objectlayer/transports#speed-curve	objectlayer::transport_speed_easing_difftest, objectlayer::transport_speed_easing_special_values_difftest
 0x5f8f90	5	InitGameObjAProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fa0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f8fa0	19	InitGameObjAProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f8fc0	5	InitGameObjAProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f8fd0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -20011,7 +20011,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f90c0	19	InitGameObjAQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f90e0	33			objectlayer	orchestration		Returns row i of a 36-byte store, or 0 out of range	verified	one	objectlayer/transports#the-ship-path	
 0x5f9110	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/transports#the-transports-path	
-0x5f9120	600			objectlayer	primitive	void __thiscall (void *path, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	
+0x5f9120	600			objectlayer	primitive	void __thiscall (void *path, void *points, void *stops, uint32_t leg)	Times a ship path leg: each span by constant acceleration, rounded to ms, with its stops	verified	one	objectlayer/transports#leg-timing	objectlayer::leg_time_difftest, objectlayer::leg_time_special_values_difftest
 0x5f9380	23			objectlayer	orchestration		Frees a leg's stop array	verified	one	objectlayer/transports#the-moving-transport	
 0x5f93a0	304			objectlayer	primitive		Resizes a ship path's legs, making new ones empty with a spline in mode 1	verified	one	objectlayer/transports#the-moving-transport	
 0x5f94d0	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/transports#the-moving-transport	
@@ -20148,23 +20148,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fa700	8	CGUnit_C::ClearLowHealth		objectlayer	primitive		Clears bit 0x2 of +0xc58, the low-health bit	verified	one	objectlayer/unitbody#low-health-and-bleeding	
 0x5fa710	18	CGUnit_C::SetLowHealth		objectlayer	primitive		Sets bit 0x2 of +0xc58 when the unit has a blood levels row	verified	one	objectlayer/unitbody#low-health-and-bleeding	
 0x5fa730	40	CGUnit_C::UpdateTerrainType		objectlayer	orchestration		Stores its world entity's ground TerrainType id at +0xc60, or -1 without one	verified	one	objectlayer/unitbody#liquid-and-swimming	
-0x5fa760	1282	CGUnit_C::EmitWaterRipple		objectlayer	primitive		Leaves a ripple in shallow liquid, along the motion when moving, and schedules the next at +0xc78	verified	one	objectlayer/unitbody#water-ripples-and-swimming	
-0x5fac70	146	CGUnit_C::OnMoverStepped		objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Refreshes the ground terrain type, hands the liquid depth to the swim decision, then places the object	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x5fa760	1282	CGUnit_C::EmitWaterRipple		objectlayer	primitive		Leaves a ripple in shallow liquid, along the motion when moving, and schedules the next at +0xc78	verified	one	objectlayer/unitbody#water-ripples-and-swimming	objectlayer::b1_clamped_reach_difftest, objectlayer::b1_half_reach_difftest, objectlayer::b1_ground_height_gate_difftest, objectlayer::b1_speed_rate_recip_difftest, objectlayer::b1_volume_recip_difftest, objectlayer::b1_pitch_base_difftest, objectlayer::b1_pitch_jitter_difftest, objectlayer::b1_jitter_pc_difftest, objectlayer::b1_jitter_p1c_difftest, objectlayer::b1_height_blend_difftest, objectlayer::b1_material0_scale_difftest, objectlayer::b1_pan_angle_random_difftest, objectlayer::b1_pan_angle_directional_difftest, objectlayer::b1_dist_atten_difftest
+0x5fac70	146	CGUnit_C::OnMoverStepped		objectlayer	primitive	void __thiscall (void *unit, uint32_t time, uint32_t flag)	Refreshes the ground terrain type, hands the liquid depth to the swim decision, then places the object	verified	one	objectlayer/unitbody#liquid-and-swimming	objectlayer::diff_negate_z
 0x5fad10	51	CGUnit_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
-0x5fad50	1137	CGUnit_C::CGUnit_C		objectlayer	primitive		Builds a unit: the object, its CMovement at +0x9a8, 182 watcher lists, its members, vtable 0x80c4f8	verified	one	objectlayer/units#the-unit-object	
+0x5fad50	1137	CGUnit_C::CGUnit_C		objectlayer	primitive		Builds a unit: the object, its CMovement at +0x9a8, 182 watcher lists, its members, vtable 0x80c4f8	verified	one	objectlayer/units#the-unit-object	objectlayer::uh_low_hp_gate_difftest
 0x5fb1d0	43	CGUnit_C::DeletingDestructor		objectlayer	orchestration		Destroys a unit and frees it when bit 0 of the argument is set (vtable slot 0)	verified	one	objectlayer/units#the-unit-object	
 0x5fb200	990	CGUnit_C::BuildCharacterComponent		objectlayer	primitive		Builds the character component from the extra row or player bytes, then dresses its equipment and hands	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x5fb5e0	593	CGUnit_C::~CGUnit_C		objectlayer	primitive		Tears a unit down: sounds, marker, plate, name, models, effects, mover, name queries, CMovement, watchers	verified	one	objectlayer/units#the-unit-object	
 0x5fb840	63	NameQueryCallback_0	idb	objectlayer	orchestration		Releases a named unit's nameplate and refreshes its frames when a name query succeeds	verified	one	objectlayer/unitnames#unit-names	
-0x5fb880	721	CGUnit_C::PostInit		objectlayer	primitive		Sets a new unit up: display, model, sounds, mover size, mount or death, first animation, markers, name	verified	one	objectlayer/units#lifecycle	
+0x5fb880	721	CGUnit_C::PostInit		objectlayer	primitive		Sets a new unit up: display, model, sounds, mover size, mount or death, first animation, markers, name	verified	one	objectlayer/units#lifecycle	objectlayer::uh_ground_snap_gate_difftest
 0x5fbb60	498	CGUnit_C::Release		objectlayer	primitive		Tears a leaving unit's client state down: plate, name, mover, tokens, effects, node, sounds (slot 1)	verified	one	objectlayer/units#lifecycle	
-0x5fbd60	152	CGUnit_C::Reactivate		objectlayer	primitive		Rebuilds a returning unit's name and facings and rechecks low health and loot (slot 2)	verified	one	objectlayer/units#lifecycle	
+0x5fbd60	152	CGUnit_C::Reactivate		objectlayer	primitive		Rebuilds a returning unit's name and facings and rechecks low health and loot (slot 2)	verified	one	objectlayer/units#lifecycle	objectlayer::diff_low_health_ratio
 0x5fbe00	116	CGUnit_C::PostUpdate		objectlayer	orchestration		Refreshes sounds, auras, channel, animation, display, marker, tokens and breath after an update (slot 3)	verified	one	objectlayer/units#lifecycle	
 0x5fbe80	196	CGUnit_C::ReleaseWorldNode		objectlayer	orchestration		Drops the world node at once while the component is not ready, else places and fades it out	verified	one	objectlayer/units#lifecycle	
 0x5fbf50	26	EffectDoneCallback		objectlayer	orchestration		Destroys an effect through 0x6203e0 when its sequence ends cleanly; the twin of 0x5ff270	verified	one	objectlayer/auras#playing-a-visual-kit	
-0x5fbf70	928	CGUnit_C::OnFootstep		objectlayer	primitive		Prints a footprint, shakes the camera and sprays for a footstep near the camera, unless hidden	verified	one	objectlayer/unitanim#model-events	
-0x5fc310	55	CGUnit_C::CacheModelData		objectlayer	primitive		Copies the CreatureModelData footprint texture and sizes (inches over 36) to +0xc5c to +0xc6c	verified	one	objectlayer/unitanim#model-events	
-0x5fc350	55			objectlayer	primitive	uint32_t __thiscall (void *this)	Returns 0 when twice the unit's +0xa30 float is below its current speed, else 1	verified	one	spell/records#range-bonuses-and-modifier	
+0x5fbf70	928	CGUnit_C::OnFootstep		objectlayer	primitive		Prints a footprint, shakes the camera and sprays for a footstep near the camera, unless hidden	verified	one	objectlayer/unitanim#model-events	objectlayer::uh_placement_dist2_difftest, objectlayer::uh_placement_inner_range_difftest, objectlayer::uh_placement_ground_z_difftest, objectlayer::uh_placement_height_gate_difftest
+0x5fc310	55	CGUnit_C::CacheModelData		objectlayer	primitive		Copies the CreatureModelData footprint texture and sizes (inches over 36) to +0xc5c to +0xc6c	verified	one	objectlayer/unitanim#model-events	objectlayer::diff_transform_scale_copy
+0x5fc350	55			objectlayer	primitive	uint32_t __thiscall (void *this)	Returns 0 when twice the unit's +0xa30 float is below its current speed, else 1	verified	one	spell/records#range-bonuses-and-modifier	objectlayer::diff_cast_time_elapsed
 0x5fc390	54	IsTwoHandedWeapon		objectlayer	primitive		Returns whether an item's info is a weapon of subclass 1, 5, 6, 8, 10, 12, 17 or 20 through 0x5fc3d0	verified	one	objectlayer/unitanim#animation-sets	
 0x5fc3f0	1018	CGUnit_C::PlayFollowOnAnimation		objectlayer	primitive		Plays what follows a finished animation through 0x5fc848: its loop, a stand-up, a hold, or a re-pick	verified	one	objectlayer/unitanim#when-a-sequence-ends	
 0x5fc920	542	CGUnit_C::OnAnimationDone		objectlayer	primitive		Handles a sequence's end: death stamp, missiles, lock bits, sheathe stages, then the follow-on animation	verified	one	objectlayer/unitanim#when-a-sequence-ends	
@@ -20181,7 +20181,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fcfd0	24	IsRifleAnimation		objectlayer	primitive		Returns 1 for animations 49, 106 and 110	verified	one	objectlayer/unitanim#animation-sets	
 0x5fcff0	92	CGUnit_C::ResolveDeadAnimation		objectlayer	primitive		Claims a dead or feigning unit: 6 Dead, or 132 Drowned when swimming, unless one already plays	verified	one	objectlayer/unitanim#choosing-the-base-animation	
 0x5fd050	163	CGUnit_C::ResolveSpecialStandAnimation		objectlayer	primitive		Claims bit 0x8 of +0xd58 and stand state 9: 201 Submerge, 202 Submerged, and 127 Birth leaving it	verified	one	objectlayer/unitanim#choosing-the-base-animation	
-0x5fd100	349	CGUnit_C::ResolveMoveAnimation		objectlayer	primitive		Claims a moving unit: swim, fly, backward, stealth walk, sprint, run or walk by flags and speed	verified	one	objectlayer/unitanim#choosing-the-base-animation	
+0x5fd100	349	CGUnit_C::ResolveMoveAnimation		objectlayer	primitive		Claims a moving unit: swim, fly, backward, stealth walk, sprint, run or walk by flags and speed	verified	one	objectlayer/unitanim#choosing-the-base-animation	objectlayer::uh_fall_timer_anim_difftest
 0x5fd260	115	CGUnit_C::ResolveLootAnimation		objectlayer	primitive		Claims a looting unit that shows it: 50 Loot unless 50 or 188 already plays	verified	one	objectlayer/unitanim#choosing-the-base-animation	
 0x5fd2e0	114	CGUnit_C::ResolveCastAnimation		objectlayer	primitive		Claims a channelling or precasting unit with the cast kit's animation from 0x612990	verified	one	objectlayer/unitanim#choosing-the-base-animation	
 0x5fd360	133	CGUnit_C::ResolveReadyAnimation		objectlayer	primitive		Claims an attacking unit: a pending swing +0xd60, 41 swimming, or the weapon's ready animation	verified	one	objectlayer/unitanim#choosing-the-base-animation	
@@ -20202,7 +20202,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fdf80	506	CGUnit_C::UpdateSheatheForAnimation		objectlayer	primitive		Sets the sheathe state the current animation's AnimationData row calls for; nocks ammunition for 112	verified	one	objectlayer/unitanim#playing-an-animation	
 0x5fe180	31	IsRangedAttackAnimation		objectlayer	primitive		Returns 1 for the ranged attack, load and hold animations 46, 49, 105 to 107, 109 to 112	verified	one	objectlayer/unitanim#animation-sets	
 0x5fe1f0	250	CGUnit_C::GetTrackStates		objectlayer	orchestration		Reads the 7-dword states of the mount, body and key-bone tracks	verified	one	objectlayer/unitanim#playing-an-animation	
-0x5fe2f0	2370	CGUnit_C::PlayAnimation		objectlayer	primitive		Plays an animation across the body, upper-body and mount tracks after the state gates, scaling locomotion	verified	one	objectlayer/unitanim#playing-an-animation	
+0x5fe2f0	2370	CGUnit_C::PlayAnimation		objectlayer	primitive		Plays an animation across the body, upper-body and mount tracks after the state gates, scaling locomotion	verified	one	objectlayer/unitanim#playing-an-animation	objectlayer::uh_anim_progress_difftest
 0x5fec40	22	IsLandingAnimation		objectlayer	primitive		Returns 1 for animations 39 and 187	verified	one	objectlayer/unitanim#animation-sets	
 0x5fec60	24	IsSpecialAttackAnimation		objectlayer	primitive		Returns 1 for animations 57, 58 and 118	verified	one	objectlayer/unitanim#animation-sets	
 0x5fec80	31	IsFullBodyAnimation		objectlayer	primitive		Returns 1 for the 33 stand, move, jump, swim and death animations through 0x5feca8	verified	one	objectlayer/unitanim#animation-sets	
@@ -20231,7 +20231,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ff860	492	CGUnit_C::OnPetLoyaltyChanged		objectlayer	primitive		Plays the loyalty rise or fall effects and logs it for the active player's pet	verified	one	objectlayer/units#unit-flags-and-bytes	
 0x5ffa50	178	CGUnit_C::OnMountDisplayChanged		objectlayer	orchestration		Dismounts from an old mount and mounts a new one with the mount-up effect	verified	one	objectlayer/unitdisplay#mounts	
 0x5ffb10	190	CGUnit_C::OnSheatheEvent		objectlayer	orchestration		Moves a hand's weapon between hand and sheath at a model event and plays the sheathe sound	verified	one	objectlayer/unitanim#model-events	
-0x5ffbd0	1870	CGUnit_C::OnModelEvent		objectlayer	orchestration		Dispatches a model event by its four-character tag: footsteps, sounds, sheathe, missiles; logs unknown ones	verified	one	objectlayer/unitanim#model-events	
+0x5ffbd0	1870	CGUnit_C::OnModelEvent		objectlayer	orchestration		Dispatches a model event by its four-character tag: footsteps, sounds, sheathe, missiles; logs unknown ones	verified	one	objectlayer/unitanim#model-events	objectlayer::uh_anim_event_level_band_difftest
 0x600320	120	CGUnit_C::GetModelPath		objectlayer	orchestration		Returns the display's model path (vtable slot 10), or Spells\ErrorCube.mdx after a log line	verified	one	objectlayer/unitdisplay#display-records	
 0x6003a0	57	CGUnit_C::IsLootable		objectlayer	primitive		Returns whether a unit is dead, past its death time and has dynamic flag 0x1	verified	one	objectlayer/units#right-click-and-loot	
 0x6003e0	87	CGUnit_C::ClearTargetIfSelected		objectlayer	orchestration		Stops the active player's attack and clears its target when this unit is the target	verified	one	objectlayer/units#health-death-and-resurrection	
@@ -20248,7 +20248,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x600b10	203	SendSplineDone		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t time, uint32_t splineId, float fraction)	Builds opcode 0x2c9 with a spline id and a float and sends it	inferred	none	collision/status#spline-completion	
 0x600be0	197	SendMoveTimeSkipped		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t skipped)	Sends opcode 0x2ce with the GUID and skipped for the active mover off a live spline and returns 1, else 0	verified	one	collision/mover#heartbeat-and-skipped-time	
 0x600cb0	19	CGUnit_C::GetWorldDisplayFacing		objectlayer	orchestration		Returns the display facing +0xc98 converted to the world through the transport	verified	one	objectlayer/unitmovement#facing	
-0x600cd0	841	CGUnit_C::UpdateDisplayFacing		objectlayer	primitive		Steers the display facing +0xc98: the mover's own, else toward the move or the target, a four-sample average	verified	one	objectlayer/unitmovement#facing	
+0x600cd0	841	CGUnit_C::UpdateDisplayFacing		objectlayer	primitive		Steers the display facing +0xc98: the mover's own, else toward the move or the target, a four-sample average	verified	one	objectlayer/unitmovement#facing	objectlayer::u4_facing_delta_difftest, objectlayer::u4_facing_dead_band_difftest, objectlayer::u4_facing_wrap_pi_delta_difftest, objectlayer::u4_facing_box_apply_difftest
 0x601020	45	CGUnit_C::ResetDisplayFacing		objectlayer	primitive		Sets the display facing +0xc98 from the mover and zeroes the samples +0xc9c to +0xca8	verified	one	objectlayer/unitmovement#facing	
 0x601050	125	CGUnit_C::RotateFacings		objectlayer	primitive	void __thiscall (void *unit, float angle)	Adds a transport's turn to the facings +0xc98 and +0xc94, wrapping each once into 0 to 2π	verified	one	objectlayer/unitmovement#facing	objectlayer::wrap_angle_difftest
 0x6010d0	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
@@ -20313,7 +20313,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x603ff0	102	OnSpecialMountAnim	idb	objectlayer	orchestration		Reads a GUID and plays slot 18, MountSpecial, on that unit unless deep in liquid or the active player	verified	one	objectlayer/units#start-up-and-shutdown	
 0x604060	87	OnUnitReaction	idb	objectlayer	orchestration		Reads opcode 0x13c's GUID and u32 and passes the u32 to the unit's 0x6056e0	verified	one	objectlayer/unitnames#greetings-and-unit-sounds	
 0x6040c0	115	HandlePetActionSoundPacket	idb	objectlayer	orchestration		Reads opcode 0x324's GUID and u32 0 or 1 and calls 0x623a40 with 1 or 2	verified	one	objectlayer/unitnames#greetings-and-unit-sounds	
-0x604140	175	HandlePetDismissSoundPacket	idb	objectlayer	primitive		Plays opcode 0x325's model data sound one yard above its point	verified	one	objectlayer/unitnames#greetings-and-unit-sounds	
+0x604140	175	HandlePetDismissSoundPacket	idb	objectlayer	primitive		Plays opcode 0x325's model data sound one yard above its point	verified	one	objectlayer/unitnames#greetings-and-unit-sounds	objectlayer::pet_dismiss_pos_lift_difftest
 0x6041f0	698	CGUnit_C::RegisterFieldWatchers		objectlayer	primitive		Registers the 25 unit field watchers	verified	one	objectlayer/units#field-watchers	
 0x6044b0	57	CGUnit_C::OnFlagsFieldChanged		objectlayer	orchestration		Passes the old UNIT_FIELD_FLAGS to 0x5ff580	verified	one	objectlayer/units#field-watchers	
 0x6044f0	59	CGUnit_C::OnBytes1Byte3FieldChanged		objectlayer	orchestration		Passes the old byte 3 of UNIT_FIELD_BYTES_1 to 0x5ff800	verified	one	objectlayer/units#field-watchers	
@@ -20322,7 +20322,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6045b0	69	CGUnit_C::OnLevelFieldChanged		objectlayer	orchestration		Calls 0x60cdd0 when UNIT_FIELD_LEVEL differs from the old value	verified	one	objectlayer/units#field-watchers	
 0x604600	96	CGUnit_C::OnEntryChanged		objectlayer	orchestration		Asks the creature cache for the new entry and stores a cached record at +0xb30	verified	one	objectlayer/unitnames#unit-names	
 0x604660	141	CreatureCacheCallback		objectlayer	orchestration		Stores an arrived creature record at +0xb30, releases the plate, signals UNIT_CLASSIFICATION_CHANGED	verified	one	objectlayer/unitnames#unit-names	
-0x6046f0	358	CGUnit_C::OnHealthFieldChanged		objectlayer	primitive		Keeps low health, flashes the plate on loss, handles death and resurrection, fires usable events	verified	one	objectlayer/units#health-death-and-resurrection	
+0x6046f0	358	CGUnit_C::OnHealthFieldChanged		objectlayer	primitive		Keeps low health, flashes the plate on loss, handles death and resurrection, fires usable events	verified	one	objectlayer/units#health-death-and-resurrection	objectlayer::unit_low_health_ratio_difftest
 0x604860	36	CGUnit_C::OnPowerFieldChanged		objectlayer	orchestration		Fires the usable events when a power of the active player changes	verified	one	objectlayer/units#field-watchers	
 0x604890	52	CGUnit_C::OnAuraStateFieldChanged		objectlayer	orchestration		Fires the usable events when the active player's or the target's aura state changes	verified	one	objectlayer/units#field-watchers	
 0x6048d0	51	CGUnit_C::OnFactionFieldChanged		objectlayer	orchestration		Refreshes reactions through 0x606e20 when the faction template changes	verified	one	objectlayer/units#field-watchers	
@@ -20353,7 +20353,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6055e0	17	CGUnit_C::GetCreatureFamily		objectlayer	orchestration		Returns the creature record's family +0x1c, or 0	verified	one	objectlayer/units#creature-records	
 0x605600	17	CGUnit_C::GetCreatureRecord24		objectlayer	orchestration		Returns the creature record's +0x24, or 0	verified	one	objectlayer/units#creature-records	
 0x605620	33	CGUnit_C::GetCreatureRank		objectlayer	orchestration		Returns the creature record's rank +0x20 for a unit without a pet number, else 0	verified	one	objectlayer/units#creature-records	
-0x605650	142	CGUnit_C::IsInDeepLiquid		objectlayer	primitive		Returns whether a liquid surface lies more than half the collision height +0xa5c above the unit's feet	verified	one	objectlayer/unitbody#liquid-and-swimming	
+0x605650	142	CGUnit_C::IsInDeepLiquid		objectlayer	primitive		Returns whether a liquid surface lies more than half the collision height +0xa5c above the unit's feet	verified	one	objectlayer/unitbody#liquid-and-swimming	objectlayer::u4_airborne_reach_gate_difftest
 0x6056e0	43	CGUnit_C::OnAIReaction		objectlayer	primitive		Plays slot 34's sound 8 for reaction 0 or calls 0x623a40(0) for 2	verified	one	objectlayer/unitnames#greetings-and-unit-sounds	
 0x605710	107	CGUnit_C::SetChannelTargets		objectlayer	orchestration		Stores a tracked channel object, fills the chain targets from a list, and refreshes the channel	verified	one	objectlayer/auras#channels	
 0x605780	216	FillUnitChainTargets		objectlayer	primitive		Fills a unit's chain target array at +0xd44 from a GUID list read from its end, skipping its own GUID	verified	one	objectlayer/auras#channels	
@@ -20377,10 +20377,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x606080	28	CGUnit_C::IsPVPFreeForAll	idb	objectlayer	unreached	bool __thiscall (CGUnit_C *this)	Returns bit 7 of the controlling player's PLAYER_FLAGS, the free-for-all flag, or false with no player	verified	one	objectlayer/reaction#contest-free-for-all-and-duel-tests	
 0x6060a0	197	CGUnit_C::IsDuelingWith	idb	objectlayer	unreached	bool __thiscall (CGUnit_C *this, CGUnit_C *other)	Returns true when two player-controlled units' players share a duel arbiter on different nonzero teams	verified	one	objectlayer/reaction#contest-free-for-all-and-duel-tests	
 0x606170	103	CGUnit_C::GetControllingPlayer	idb	objectlayer	primitive	CGPlayer_C *__thiscall (CGUnit_C *this)	Returns the unit its charmer or else creator names, or itself, when that is a player; else null	verified	one	objectlayer/reaction#controlling-player-and-reputation-slot	
-0x6061e0	728	CGUnit_C::UnitReaction	idb	objectlayer	primitive	uint32_t __thiscall (CGUnit_C *this, CGUnit_C *other)	Returns the unit's reaction rank toward another: self, duel, party, free-for-all, reputation, then the templates	verified	one	objectlayer/reaction#unit-toward-unit	
+0x6061e0	728	CGUnit_C::UnitReaction	idb	objectlayer	primitive	uint32_t __thiscall (CGUnit_C *this, CGUnit_C *other)	Returns the unit's reaction rank toward another: self, duel, party, free-for-all, reputation, then the templates	verified	one	objectlayer/reaction#unit-toward-unit	objectlayer::unit_reaction_league_of_arathor_emissary, objectlayer::unit_reaction_tracks_the_reputation_ladder, objectlayer::unit_reaction_reputation_branch_is_gated, objectlayer::unit_reaction_player_to_npc_is_atwar_not_rank, objectlayer::unit_reaction_persuaded_bump_and_clamp, objectlayer::unit_reaction_self_is_friendly
 0x6064c0	101	CGUnit_C::UnitReaction_Corpse	idb	objectlayer	orchestration	uint32_t __thiscall (CGUnit_C *this, CGCorpse_C *corpse)	Returns the unit's template reaction toward a corpse's template, or 3 when either row is missing	verified	one	objectlayer/reaction#corpses-and-game-objects	
 0x606530	259	CGUnit_C::UnitReaction_Unit	idb	objectlayer	primitive	uint32_t __fastcall (uint32_t factionTemplate, CGUnit_C *other)	Returns a faction template's reaction toward a unit: contested guard, forced, reputation, then the templates	verified	one	objectlayer/reaction#faction-toward-a-unit	
-0x606640	166	FactionTemplateReaction		objectlayer	primitive	uint32_t __fastcall (const void *row, const void *other)	Returns 1, 3 or 4 for one FactionTemplate.dbc row toward another, from enemy and friend masks and lists	verified	one	objectlayer/reaction#templates-compared	
+0x606640	166	FactionTemplateReaction		objectlayer	primitive	uint32_t __fastcall (const void *row, const void *other)	Returns 1, 3 or 4 for one FactionTemplate.dbc row toward another, from enemy and friend masks and lists	verified	one	objectlayer/reaction#templates-compared	objectlayer::faction_template_reaction_truth_table, objectlayer::faction_template_reaction_list_mechanics, objectlayer::faction_template_reaction_fuzz, objectlayer::unit_reaction_league_of_arathor_emissary
 0x6066f0	224	CGUnit_C::CanAssist_Unit	idb	objectlayer	primitive	bool __thiscall (CGUnit_C *this, CGUnit_C *other)	Returns whether a unit may assist another: selectable, reaction 4 or more, then the duel, free-for-all or PvP test	verified	one	objectlayer/reaction#assisting-cooperating-and-interacting	
 0x6067d0	22	CGUnit_C::CanAssist_Corpse	idb	objectlayer	orchestration	bool __thiscall (CGUnit_C *this, CGCorpse_C *corpse)	Returns whether the unit's reaction toward a corpse is 4 or more	verified	one	objectlayer/reaction#assisting-cooperating-and-interacting	
 0x6067f0	132	CGUnit_C::CanInteract	idb	objectlayer	primitive	bool __thiscall (CGUnit_C *this, CGUnit_C *other)	Returns whether a unit may interact with a selectable NPC: both reactions 3 or more, the ghost rule	verified	one	objectlayer/reaction#assisting-cooperating-and-interacting	
@@ -20406,39 +20406,39 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x607440	54	CGUnit_C::SetQuestGiverStatus		objectlayer	orchestration		Stores a quest status, hanging its marker when the marker changes	verified	one	objectlayer/unitnames#quest-markers	
 0x607480	57	CGUnit_C::SetQuestMarker		objectlayer	orchestration		Replaces the marker model with an instance of a loaded marker and hangs it	verified	one	objectlayer/unitnames#quest-markers	
 0x6074c0	162	CGUnit_C::AttachQuestMarker		objectlayer	orchestration		Hangs the marker at attachment 29 when mounted, else 18, at unit scale, and animates it	verified	one	objectlayer/unitnames#quest-markers	
-0x607570	326	CGUnit_C::ScaleQuestMarker		objectlayer	primitive		Undoes the parent attachment's scale on the marker model	verified	one	objectlayer/unitnames#quest-markers	
+0x607570	326	CGUnit_C::ScaleQuestMarker		objectlayer	primitive		Undoes the parent attachment's scale on the marker model	verified	one	objectlayer/unitnames#quest-markers	objectlayer::glow_inv_len_difftest
 0x6076c0	72	CGUnit_C::AnimateQuestMarker		objectlayer	orchestration		Plays marker animation 190 while the name shows, else 0	verified	one	objectlayer/unitnames#quest-markers	
-0x607710	235	CGUnit_C::UpdateBreathState		objectlayer	primitive		Sets +0xc58 bit 0x20 deep under a liquid surface or 0x40 in a flagged area, next check in 10 s	verified	one	objectlayer/unitbody#breath	
+0x607710	235	CGUnit_C::UpdateBreathState		objectlayer	primitive		Sets +0xc58 bit 0x20 deep under a liquid surface or 0x40 in a flagged area, next check in 10 s	verified	one	objectlayer/unitbody#breath	objectlayer::attack_range_in_difftest
 0x607800	60	CGUnit_C::SetModelCallbacks		objectlayer	orchestration		Installs the model's sequence-done 0x6078d0 and event 0x607840 callbacks with the unit's GUID	verified	one	objectlayer/unitanim#when-a-sequence-ends	
 0x607840	136	UnitModelEventCallback		objectlayer	orchestration		Finds the unit by GUID and passes a model event with a valid position to 0x5ffbd0	verified	one	objectlayer/unitanim#model-events	
 0x6078d0	68	UnitModelDoneCallback		objectlayer	orchestration		Finds the unit by GUID and passes the model and sequence to 0x5fc920	verified	one	objectlayer/unitanim#when-a-sequence-ends	
-0x607920	131	CGUnit_C::GetFootprintParams		objectlayer	primitive		Returns the footprint texture and scaled sizes of the mount, when ridden, or of the unit	verified	one	objectlayer/unitanim#model-events	
+0x607920	131	CGUnit_C::GetFootprintParams		objectlayer	primitive		Returns the footprint texture and scaled sizes of the mount, when ridden, or of the unit	verified	one	objectlayer/unitanim#model-events	objectlayer::weapon_attach_offset_difftest
 0x6079b0	71	GetMountModelPath		objectlayer	unreached		Returns the mount display's model path, reading through null on a missing row; nothing reaches it	verified	one	objectlayer/unitdisplay#mounts	
-0x607a00	604	CGUnit_C::Mount		objectlayer	primitive		Loads the mount model, seats and scales the body on it, takes its footprints and sound data	verified	one	objectlayer/unitdisplay#mounts	
+0x607a00	604	CGUnit_C::Mount		objectlayer	primitive		Loads the mount model, seats and scales the body on it, takes its footprints and sound data	verified	one	objectlayer/unitdisplay#mounts	objectlayer::unit_mount_scale_difftest
 0x607c60	115	CGUnit_C::GetMountSoundData		objectlayer	orchestration		Returns the mount display's CreatureSoundData row, else its model data's	verified	one	objectlayer/unitdisplay#mounts	
 0x607ce0	181	CGUnit_C::Dismount		objectlayer	orchestration		Detaches the body from the mount, clears the mount model and its sound data, re-picks the animation	verified	one	objectlayer/unitdisplay#mounts	
 0x607da0	256	CGUnit_C::OnModelUpdate		objectlayer	orchestration		Builds a pending character component once the model loads, refreshes the portrait, updates the component (slot 16)	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x607ea0	5			objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
 0x607eb0	19	CGUnit_C::GetWorldBodyFacing		objectlayer	orchestration		Returns the body facing +0xc94 converted to the world through the transport; slot 17 jumps here	verified	one	objectlayer/unitmovement#facing	
-0x607ed0	1565	CGUnit_C::Update		objectlayer	primitive		Runs vtable slot 14: breath, nameplate, target flash, tints, emotes, ripples, effects, facings and spine twist	verified	one	objectlayer/unitbody#the-per-frame-update	
-0x6084f0	99	WrapAngleToPi		objectlayer	primitive		Wraps an angle into −π to π with fmod beyond either end	verified	one	objectlayer/unitmovement#facing	
+0x607ed0	1565	CGUnit_C::Update		objectlayer	primitive		Runs vtable slot 14: breath, nameplate, target flash, tints, emotes, ripples, effects, facings and spine twist	verified	one	objectlayer/unitbody#the-per-frame-update	objectlayer::u4_spin_cast_byte_difftest, objectlayer::u4_turn_step_cap_difftest, objectlayer::u4_lean_smooth_difftest, objectlayer::u4_turn_delta_difftest, objectlayer::u4_turn_apply_step_difftest
+0x6084f0	99	WrapAngleToPi		objectlayer	primitive		Wraps an angle into −π to π with fmod beyond either end	verified	one	objectlayer/unitmovement#facing	objectlayer::angle_wrap_pi_difftest
 0x608560	212	CGUnit_C::PlaceModel		objectlayer	orchestration		Places a swimming unit's model with 0x60a110, others through the base slot 15	verified	one	objectlayer/unitmovement#facing	
 0x608640	145	CGUnit_C::GetNamePosition		objectlayer	primitive		Writes the name position: attachment 29 mounted or 18, else 1.25 heights above the feet	verified	one	objectlayer/unitnames#the-name-block	
-0x6086e0	265	CGUnit_C::UpdateNamePlate		objectlayer	primitive		Takes or moves the unit's nameplate to a screen point, re-sorting it and dropping the chat bubble	verified	one	objectlayer/unitnames#nameplates	
+0x6086e0	265	CGUnit_C::UpdateNamePlate		objectlayer	primitive		Takes or moves the unit's nameplate to a screen point, re-sorting it and dropping the chat bubble	verified	one	objectlayer/unitnames#nameplates	objectlayer::nameplate_pos_changed_difftest
 0x6087f0	127	AllocNamePlate		objectlayer	primitive		Takes a nameplate frame from the free list, else allocates a new 0x518-byte one	verified	one	objectlayer/unitnames#nameplates	
 0x608870	298	SortNamePlate		objectlayer	orchestration		Inserts a nameplate again in the shown list by its distance from (0.4, 0.3)	verified	one	objectlayer/unitnames#nameplates	
-0x6089a0	89	NamePlateSortKey		objectlayer	primitive		Returns the squared distance of a screen point from (0.4, 0.3)	verified	one	objectlayer/unitnames#nameplates	
+0x6089a0	89	NamePlateSortKey		objectlayer	primitive		Returns the squared distance of a screen point from (0.4, 0.3)	verified	one	objectlayer/unitnames#nameplates	objectlayer::dist2_to_anchor_difftest
 0x608a00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x608a10	128	CGUnit_C::ReleaseNamePlate		objectlayer	primitive		Moves the unit's nameplate to the free list and hides it	verified	one	objectlayer/unitnames#nameplates	
 0x608a90	42	CGUnit_C::UpdateNamePlateIcon		objectlayer	orchestration		Sets the nameplate's icon from the unit's GUID	verified	one	objectlayer/unitnames#nameplates	
-0x608ac0	310	CGUnit_C::ShowChatBubble		objectlayer	primitive		Hangs a chat bubble over a plate-less unit within 20 yards when its bubble CVar is on	verified	one	objectlayer/unitnames#chat-bubbles	
+0x608ac0	310	CGUnit_C::ShowChatBubble		objectlayer	primitive		Hangs a chat bubble over a plate-less unit within 20 yards when its bubble CVar is on	verified	one	objectlayer/unitnames#chat-bubbles	objectlayer::bubble_in_range_difftest
 0x608c00	30	CGUnit_C::ReleaseChatBubble		objectlayer	orchestration		Releases the chat bubble +0xe64	verified	one	objectlayer/unitnames#chat-bubbles	
 0x608c20	191	GetModelTopPosition		objectlayer	unreached		Returns the position raised by animation 0's height plus 0.7; nothing reaches it	verified	one	objectlayer/unitnames#chat-bubbles	
 0x608ce0	107	LayoutNamePlates		objectlayer	orchestration		Positions every shown nameplate, then lays out pending frames	verified	one	objectlayer/unitnames#nameplates	
 0x608d50	8	CGUnit_C::PlayMountSpecial		objectlayer	orchestration		Plays 94 MountSpecial; vtable slot 18	verified	one	objectlayer/unitanim#reactions-and-move-animations	
 0x608d60	110	CGUnit_C::RebuildWeaponTrail		objectlayer	orchestration		Releases a hand's weapon trail and makes one on its item model at the sheath attachment key	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x608dd0	35	RebuildBothWeaponTrails		objectlayer	unreached		Rebuilds both hands' weapon trails on the body model; nothing reaches it	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
-0x608e00	311	CGUnit_C::DrawSelectionCircle		objectlayer	primitive		Draws the selection circle at the feet, radius +0xcf0 times scale, in slot 11's colour (slot 12)	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
+0x608e00	311	CGUnit_C::DrawSelectionCircle		objectlayer	primitive		Draws the selection circle at the feet, radius +0xcf0 times scale, in slot 11's colour (slot 12)	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	objectlayer::shadow_quad_difftest
 0x608f40	16	InvalidateNameDescOnly		objectlayer	unreached		Marks the name descriptor dirty; nothing reaches it	verified	one	objectlayer/unitnames#the-name-block	
 0x608f50	691	CGUnit_C::BuildNameText		objectlayer	primitive		Builds the name block: prefixes, PvP name, guild or subname, server label and owner title	verified	one	objectlayer/unitnames#the-name-block	
 0x609210	337	CGUnit_C::GetUnitName	idb	objectlayer	primitive		Names a unit from the name cache, the pet name cache or its creature record, else UNKNOWNOBJECT	verified	one	objectlayer/unitnames#unit-names	
@@ -20447,21 +20447,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6094f0	2908	CheckCasterStateForSpell		objectlayer	primitive		Refuses a cast for the caster's state: cooldowns, power, crowd control, mount, stance, time, place	verified	one	objectlayer/units#caster-checks-for-a-spell	
 0x60a050	97	IsDaytime		objectlayer	orchestration		Returns whether the game clock lies between 5:30 and 21:00	verified	one	objectlayer/units#caster-checks-for-a-spell	
 0x60a0c0	65	CGUnit_C::SetPendingXP		objectlayer	primitive		Stores an XP gain and two arguments at +0xc80, sets +0xc58 bit 0x8 and flushes through 0x6251e0	verified	one	objectlayer/unitnames#damage-and-miss-numbers	
-0x60a110	332	CGUnit_C::BuildSwimTransform		objectlayer	primitive		Builds a swimming unit's model transform from its pitch, slot 17's facing, its scales and its position	verified	one	objectlayer/unitmovement#facing	
+0x60a110	332	CGUnit_C::BuildSwimTransform		objectlayer	primitive		Builds a swimming unit's model transform from its pitch, slot 17's facing, its scales and its position	verified	one	objectlayer/unitmovement#facing	objectlayer::swing_transform_args_difftest
 0x60a260	296	CGUnit_C::UpdateBleed		objectlayer	primitive		Reschedules the bleed time +0xc40 2 to 5 s ahead from the client random; nothing else reads it	verified	one	objectlayer/unitbody#low-health-and-bleeding	
 0x60a390	55	CGUnit_C::GetBloodRecord		objectlayer	orchestration		Returns the UnitBlood row the blood levels row names for the violence level, or null	verified	one	objectlayer/unitdisplay#display-records	
 0x60a3d0	827	CGUnit_C::LaunchSpellMissile		objectlayer	primitive		Launches one spell missile from the unit at a target or point and links it on the unit's list	verified	one	objectlayer/auras#missiles	
 0x60a710	42	IsBowCrossbowOrThrown		objectlayer	primitive		Returns whether an item info is a weapon of subclass 2, 16 or 18: bow, thrown or crossbow	verified	one	objectlayer/unitanim#animation-sets	
-0x60a740	161	CGUnit_C::IsPointAtLiquidSurface		objectlayer	primitive		Returns whether a liquid surface lies from 0.01 below to 2/3 yard above a point	verified	one	objectlayer/unitbody#liquid-and-swimming	
-0x60a7f0	807	CGUnit_C::Tick		objectlayer	primitive		Runs a unit's frame: held missiles, done sounds, loading screen end, nameplate, bleed, drunk sway and auto-move	verified	one	objectlayer/unitbody#the-unit-tick	
-0x60ab20	123	DrunkSway		objectlayer	primitive		Returns a drunk sway angle: drunkenness times 0.75° times the mean of three slow cosines of the time	verified	one	objectlayer/unitbody#drunk-sway	
+0x60a740	161	CGUnit_C::IsPointAtLiquidSurface		objectlayer	primitive		Returns whether a liquid surface lies from 0.01 below to 2/3 yard above a point	verified	one	objectlayer/unitbody#liquid-and-swimming	objectlayer::occlusion_z_gate_difftest
+0x60a7f0	807	CGUnit_C::Tick		objectlayer	primitive		Runs a unit's frame: held missiles, done sounds, loading screen end, nameplate, bleed, drunk sway and auto-move	verified	one	objectlayer/unitbody#the-unit-tick	objectlayer::u5_mount_level_fraction_difftest, objectlayer::u5_move_facing_wrap_difftest, objectlayer::u5_lean_pitch_difftest
+0x60ab20	123	DrunkSway		objectlayer	primitive		Returns a drunk sway angle: drunkenness times 0.75° times the mean of three slow cosines of the time	verified	one	objectlayer/unitbody#drunk-sway	objectlayer::cosine_pulse_difftest
 0x60aba0	62	ClampToHalfPi		objectlayer	primitive		Clamps an angle to -π/2 to π/2	verified	one	objectlayer/unitbody#drunk-sway	
 0x60abe0	558	CGUnit_C::OnDisplayChanged		objectlayer	primitive		Rebuilds the body model, textures, name, auras and mount when the display records change	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x60ae10	200	CGUnit_C::DisplayRecordsChanged		objectlayer	orchestration		Returns 1 when DISPLAYID names other display, extra, model or sound records than the unit holds	verified	one	objectlayer/unitdisplay#display-records	
-0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
+0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	objectlayer::camera_model_scale_difftest
 0x60afb0	540	CGUnit_C::ResolveDisplayRecords		objectlayer	primitive		Resolves the display, extra, model, sound and blood records into +0xb34 to +0xb48, falling back to first rows	verified	one	objectlayer/unitdisplay#display-records	
 0x60b1d0	147	CGUnit_C::OnScaleChanged		objectlayer	orchestration		Resizes the mover for a new scale, sends opcode 0x29b when that fails, rescales the quest marker	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
-0x60b270	426			objectlayer	primitive	uint32_t __thiscall (void *unit, uint32_t flag)	Sizes a unit's mover from its model record and scale through 0x617460 and 0x6174b0	inferred	none	collision/mover#collision-size	
+0x60b270	426			objectlayer	primitive	uint32_t __thiscall (void *unit, uint32_t flag)	Sizes a unit's mover from its model record and scale through 0x617460 and 0x6174b0	inferred	none	collision/mover#collision-size	objectlayer::box_dim_pf_even_difftest
 0x60b420	322	CGUnit_C::OnNPCFlagsChanged		objectlayer	primitive		Closes the window an NPC served when it loses that flag; refreshes the marker for quest and flight flags	verified	one	objectlayer/unitnames#quest-markers	
 0x60b570	10	CGUnit_C::OnEmoteStateChanged		objectlayer	orchestration		Picks the base animation again when UNIT_NPC_EMOTESTATE changes	verified	one	objectlayer/unitanim#emotes	
 0x60b580	10	UpdateBaseAnimationThunk		objectlayer	unreached		Picks the base animation again; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
@@ -20503,8 +20503,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60c9b0	229	CGUnit_C::ReleaseMissilesFromHand		objectlayer	orchestration		Releases the missiles from the $CSL, $CSR or $CST event position, else from the unit	verified	one	objectlayer/auras#missiles	
 0x60caa0	65	CGUnit_C::StartColorPulse		objectlayer	primitive		Starts a colour pulse: start time, colour, hold and fade lengths, and the colour's inverse at +0xd04	verified	one	objectlayer/auras#kit-character-procedures	
 0x60caf0	94	CGUnit_C::StartAlphaFade		objectlayer	orchestration		Starts an alpha fade toward a byte alpha with its timings at +0xd08 to +0xd18	verified	one	objectlayer/auras#kit-character-procedures	
-0x60cb50	158	CGUnit_C::UpdateTint		objectlayer	primitive		Sets the model tint from the colour pulse or the first tint effect when it changes	verified	one	objectlayer/auras#kit-character-procedures	
-0x60cbf0	306	CGUnit_C::GetPulseColor		objectlayer	primitive		Returns the colour pulse's colour: held, then blended out over its fade length, then ended	verified	one	objectlayer/auras#kit-character-procedures	
+0x60cb50	158	CGUnit_C::UpdateTint		objectlayer	primitive		Sets the model tint from the colour pulse or the first tint effect when it changes	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::fade_model_rgb_difftest
+0x60cbf0	306	CGUnit_C::GetPulseColor		objectlayer	primitive		Returns the colour pulse's colour: held, then blended out over its fade length, then ended	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::color_fade_t_difftest
 0x60cd30	69	CGUnit_C::UpdateAlphaFade		objectlayer	orchestration		Ends a timed alpha fade, fading back to slot 27's alpha over its length	verified	one	objectlayer/auras#kit-character-procedures	
 0x60cd80	69			objectlayer	orchestration	uint32_t __thiscall (void *this, uint32_t spellId)	Returns a unit's level times 5, capped at the spell's maximum level times 5; slot 42	verified	one	spell/records#caster-level	
 0x60cdd0	153	CGUnit_C::OnLevelChanged		objectlayer	primitive		Plays the level-up effect on any level change and refreshes the player and the plate	verified	one	objectlayer/units#unit-flags-and-bytes	
@@ -20513,9 +20513,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60d040	213	UnitClearPrecastSpell		objectlayer	orchestration		Clears the precast spell +0xc8c and bit 0x400 when they match; optionally ends chains and effect	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
 0x60d120	33	CGUnit_C::ReleaseAlphaEffects		objectlayer	orchestration		Releases every effect on the alpha list +0xb50	verified	one	objectlayer/auras#kit-character-procedures	
 0x60d150	46	CGUnit_C::ReleaseAlphaEffectsOfSpell		objectlayer	orchestration		Releases the effects on +0xb50 whose spell is the given one	verified	one	objectlayer/auras#kit-character-procedures	
-0x60d180	55	CGUnit_C::RestoreAlpha		objectlayer	primitive		Fades to slot 27's alpha times the first +0xb50 effect's alpha over 1000 ms	verified	one	objectlayer/auras#kit-character-procedures	
+0x60d180	55	CGUnit_C::RestoreAlpha		objectlayer	primitive		Fades to slot 27's alpha times the first +0xb50 effect's alpha over 1000 ms	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::recompute_render_alpha_difftest
 0x60d1c0	270	CGUnit_C::OnChannelSpellChanged		objectlayer	orchestration		Stops the old channel's kits, tints and slots, ends a tracking auto-move or starts the new visual	verified	one	objectlayer/auras#channels	
-0x60d2d0	27	CGUnit_C::GetDisplayAlpha		objectlayer	primitive		Returns the display row's +0x14 over 255, or 1 without a row (vtable slot 27)	verified	one	objectlayer/unitdisplay#display-records	
+0x60d2d0	27	CGUnit_C::GetDisplayAlpha		objectlayer	primitive		Returns the display row's +0x14 over 255, or 1 without a row (vtable slot 27)	verified	one	objectlayer/unitdisplay#display-records	objectlayer::base_render_alpha_difftest
 0x60d2f0	350	CGUnit_C::OnChannelObjectChanged		objectlayer	orchestration		Handles a channel object: a fishing node draws the pole and casts the bobber, a unit is faced	verified	one	objectlayer/auras#channels	
 0x60d450	278	UnitGetSpellVisual		objectlayer	primitive		Builds the visual a unit shows for a spell, filling a ranged spell's gaps from its weapon's visual	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
 0x60d570	5	InitUnitProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d580, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -20524,12 +20524,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60d5b0	19	InitUnitProduct2		objectlayer	primitive	void __cdecl (void)	Stores 0.58333331·−255 = −148.75 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60d5d0	42	CGUnit_C::ReleaseWeaponTrails		objectlayer	primitive		Releases both hands' weapon trails	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x60d600	33	IsCurrentAnimSpellCast		objectlayer	unreached		Returns whether the current animation is 2, 32, 33, 53 or 54; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
-0x60d670	233	CGUnit_C::GetSpellCastTime		objectlayer	primitive		Returns a spell's cast time for the unit: level-scaled base, the cast-speed field, 0x7fffffff for ranged	verified	one	objectlayer/auras#precast-and-spell-visual-choice	
+0x60d670	233	CGUnit_C::GetSpellCastTime		objectlayer	primitive		Returns a spell's cast time for the unit: level-scaled base, the cast-speed field, 0x7fffffff for ranged	verified	one	objectlayer/auras#precast-and-spell-visual-choice	objectlayer::anim_timer_rate_difftest
 0x60d760	5	InitUnitProduct3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d770, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60d770	19	InitUnitProduct3		objectlayer	primitive	void __cdecl (void)	Stores 18·0.027777778 = 0.5 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60d790	5	InitUnitProduct4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60d7a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60d7a0	19	InitUnitProduct4		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x60d7c0	1083	PlayKitCharProcs		objectlayer	primitive		Runs a visual kit's four character procedures: chains, tints, screen tint, trail colour, pulses, fades	verified	one	objectlayer/auras#kit-character-procedures	
+0x60d7c0	1083	PlayKitCharProcs		objectlayer	primitive		Runs a visual kit's four character procedures: chains, tints, screen tint, trail colour, pulses, fades	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::u5_color_field_x1000_difftest, objectlayer::u5_duration_field_difftest, objectlayer::u5_footstep_param_difftest
 0x60dc30	5	InitUnitQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x60dc40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x60dc40	19	InitUnitQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x60dc60	39	CGUnit_C::MoveStart		objectlayer	orchestration		Calls 0x60e990(1,0) and queues a move start on the mover	verified	one	objectlayer/unitmovement#local-movement-commands	
@@ -20586,8 +20586,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60f510	19	IsWoundAnimation		objectlayer	orchestration		Returns whether an animation is 8 to 10, StandWound to CombatCritical	verified	one	objectlayer/auras#playing-a-visual-kit	
 0x60f530	116	CGUnit_C::EndRangedPose		objectlayer	orchestration		Clears the drawn bit 0x4000, detaches the ammo and returns the ranged weapon model to its stand	verified	one	objectlayer/auras#missiles	
 0x60f5b0	71	CGUnit_C::IsCurrentAnimationFlag80		objectlayer	primitive		Returns bit 0x80 of +0xc of the current animation's AnimationData row	verified	one	objectlayer/unitanim#playing-an-animation	
-0x60f600	487	CGUnit_C::UpdateNamePlateVisibility		objectlayer	primitive		Gives a unit a nameplate when visible, switched on for its side and within 20 yards, else releases it	verified	one	objectlayer/unitnames#nameplates	
-0x60f7f0	52	CGUnit_C::GetNamePlateScreenPos		objectlayer	primitive		Projects the name position raised 2/3 yard to the screen	verified	one	objectlayer/unitnames#nameplates	
+0x60f600	487	CGUnit_C::UpdateNamePlateVisibility		objectlayer	primitive		Gives a unit a nameplate when visible, switched on for its side and within 20 yards, else releases it	verified	one	objectlayer/unitnames#nameplates	objectlayer::follow_dist_proceed_difftest
+0x60f7f0	52	CGUnit_C::GetNamePlateScreenPos		objectlayer	primitive		Projects the name position raised 2/3 yard to the screen	verified	one	objectlayer/unitnames#nameplates	objectlayer::follow_anchor_lift_difftest
 0x60f830	87	ShowNamePlates		objectlayer	orchestration		Shows or hides every shown nameplate	verified	one	objectlayer/unitnames#nameplates	
 0x60f890	81	ReleaseAllNamePlates		objectlayer	orchestration		Releases the nameplate of every unit with one	verified	one	objectlayer/unitnames#nameplates	
 0x60f8f0	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
@@ -20596,24 +20596,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60fa20	318	CGUnit_C::CompleteInteractMove		objectlayer	orchestration		Hands a pending loot, game object, mode 9 or NPC target to its action and clears the slot	verified	one	objectlayer/unitmovement#steering-an-auto-move	
 0x60fb60	226	CGUnit_C::StopAutoMove		objectlayer	orchestration		Ends an auto-move: optionally faces the target and releases the commands; mode 3 signals AUTOFOLLOW_END	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
 0x60fc50	107	CGUnit_C::EndPrecast		objectlayer	orchestration		Clears the precast bit 0x400, ends a ranged pose, releases the spell effect, stops a listed auto-move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
-0x60fcc0	459	CGUnit_C::WalkToAttack		objectlayer	primitive		Walks to a target's combat reach in mode 10, at least 5 yards, or faces it when already in reach	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x60fcc0	459	CGUnit_C::WalkToAttack		objectlayer	primitive		Walks to a target's combat reach in mode 10, at least 5 yards, or faces it when already in reach	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	objectlayer::cast_reach_floor_difftest, objectlayer::cast_in_range_difftest, objectlayer::cast_plane_z_difftest
 0x60fe90	49	FreeApproachTriangleLists		objectlayer	orchestration		Frees the static triangle lists 0x60fcc0 fills, at exit	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
 0x60fed0	436	CGUnit_C::StartAutoMoveToObject		objectlayer	primitive		Starts an auto-move toward an object after the mode's checks; follow signals AUTOFOLLOW_BEGIN	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
 0x6100a0	85	CGUnit_C::AutoFace		objectlayer	orchestration		Starts auto-move mode 2 with a facing when 0x60f900 allows	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
-0x610100	431	CGUnit_C::WalkAlongHeading		objectlayer	primitive		Starts auto-move mode 8 toward a clicked point, pitching a swimmer toward it first	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x610100	431	CGUnit_C::WalkAlongHeading		objectlayer	primitive		Starts auto-move mode 8 toward a clicked point, pitching a swimmer toward it first	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	objectlayer::cast_aim_normalize_difftest, objectlayer::cast_aim_key_difftest, objectlayer::cast_aim_endpoint_difftest
 0x6102b0	73	CGUnit_C::WalkToPoint		objectlayer	orchestration		Starts auto-move mode 4 to a point when 0x60f900 allows	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
-0x610300	153	CGUnit_C::WalkToGameObject		objectlayer	primitive		Starts auto-move mode 7 to a game object; its stop distance 0xc4d998 is the argument times 0.9	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
+0x610300	153	CGUnit_C::WalkToGameObject		objectlayer	primitive		Starts auto-move mode 7 to a game object; its stop distance 0xc4d998 is the argument times 0.9	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	objectlayer::interact_arrival_scale_difftest
 0x6103a0	42	CGUnit_C::IsAutoMoving		objectlayer	orchestration		Returns whether the unit is the active mover with an auto-move mode other than 12	verified	one	objectlayer/unitmovement#auto-move-modes	
-0x6103d0	327	CGUnit_C::AutoMoveTurnToward		objectlayer	primitive		Turns toward a facing at the wide or narrow CVar speed, at most a step; false within 0.001	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x610520	389	CGUnit_C::AutoMovePitchToward		objectlayer	primitive		Pitches a swimming auto-mover toward its point; returns whether it is within 0.3927 radians	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x6106b0	1695	CGUnit_C::UpdateAutoMove		objectlayer	primitive		Steers the active mover's auto-move each frame: turn, pitch, arrival by the stop distance, the mode's action	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x610d50	65	IsWithinArrivalDistance		objectlayer	primitive		Returns whether two points lie within 0.002777778 of each other, by squared distance	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x610da0	154	PitchTowardPoint		objectlayer	primitive		Returns the asin of the normalized height difference, or ±π/2 when the horizontal distance is tiny	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x610e40	593	CGUnit_C::GetAutoMoveTarget		objectlayer	primitive		Returns an auto-move's target point and squared distance, horizontal unless swimming, by mode	verified	one	objectlayer/unitmovement#steering-an-auto-move	
-0x6110a0	139	CGUnit_C::CheckAutoMoveRange		objectlayer	primitive		Refuses a target past the mode row's maximum squared distance with message 0x126	verified	one	objectlayer/unitmovement#auto-move-modes	
-0x611130	260	CGUnit_C::StartAutoMove		objectlayer	primitive		Starts an auto-move: checks range and stop distance, stores mode, time, position, target, point and facing	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
-0x611240	407	CGUnit_C::GetAutoMoveStopDistance		objectlayer	primitive		Writes a mode's squared stop distance: a global, the combat reaches or a spell range, by 0x6113d8	verified	one	objectlayer/unitmovement#auto-move-modes	
-0x611400	388	CGUnit_C::DrawAutoMoveTarget		objectlayer	primitive		Draws a pulsing box at a mode 4 or 10 target point, period 500 ms	verified	one	objectlayer/unitmovement#steering-an-auto-move	
+0x6103d0	327	CGUnit_C::AutoMoveTurnToward		objectlayer	primitive		Turns toward a facing at the wide or narrow CVar speed, at most a step; false within 0.001	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::facing_interp_difftest
+0x610520	389	CGUnit_C::AutoMovePitchToward		objectlayer	primitive		Pitches a swimming auto-mover toward its point; returns whether it is within 0.3927 radians	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::pitch_interp_difftest
+0x6106b0	1695	CGUnit_C::UpdateAutoMove		objectlayer	primitive		Steers the active mover's auto-move each frame: turn, pitch, arrival by the stop distance, the mode's action	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::b2_arrival_test_difftest, objectlayer::b2_delta_time_difftest, objectlayer::b2_heading_add_difftest, objectlayer::b2_turn_step_difftest, objectlayer::b2_rng_jitter_gate_difftest, objectlayer::b2_heading_add_field_difftest, objectlayer::b2_turn_step_pi_difftest, objectlayer::b2_facing_error_difftest, objectlayer::b2_speed_from_timer_difftest, objectlayer::b2_range_gate_square_difftest, objectlayer::b2_anim_time_speed_difftest, objectlayer::b2_arrival_cos_threshold_difftest, objectlayer::b2_normalize_zdot_difftest
+0x610d50	65	IsWithinArrivalDistance		objectlayer	primitive		Returns whether two points lie within 0.002777778 of each other, by squared distance	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::dist2_within_threshold_difftest
+0x610da0	154	PitchTowardPoint		objectlayer	primitive		Returns the asin of the normalized height difference, or ±π/2 when the horizontal distance is tiny	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::vec_to_facing_difftest
+0x610e40	593	CGUnit_C::GetAutoMoveTarget		objectlayer	primitive		Returns an auto-move's target point and squared distance, horizontal unless swimming, by mode	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::move_dist_squares_difftest, objectlayer::move_goal_radius_difftest
+0x6110a0	139	CGUnit_C::CheckAutoMoveRange		objectlayer	primitive		Refuses a target past the mode row's maximum squared distance with message 0x126	verified	one	objectlayer/unitmovement#auto-move-modes	objectlayer::u5_in_range_dist2_difftest, objectlayer::u5_in_range_gates_difftest
+0x611130	260	CGUnit_C::StartAutoMove		objectlayer	primitive		Starts an auto-move: checks range and stop distance, stores mode, time, position, target, point and facing	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	objectlayer::move_cast_radius_difftest
+0x611240	407	CGUnit_C::GetAutoMoveStopDistance		objectlayer	primitive		Writes a mode's squared stop distance: a global, the combat reaches or a spell range, by 0x6113d8	verified	one	objectlayer/unitmovement#auto-move-modes	objectlayer::cast_goal_reach_difftest, objectlayer::cast_goal_square_difftest, objectlayer::cast_goal_range_difftest
+0x611400	388	CGUnit_C::DrawAutoMoveTarget		objectlayer	primitive		Draws a pulsing box at a mode 4 or 10 target point, period 500 ms	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::click_ring_pulse_difftest, objectlayer::click_ring_corner_difftest
 0x611590	75	CGUnit_C::IsAutoMovingInModes		objectlayer	primitive		Returns whether the unit is the active mover in an auto-move mode whose bit is in the mask	verified	one	objectlayer/unitmovement#auto-move-modes	
 0x6115e0	128	CGUnit_C::OnAutoMoveTransportChange		objectlayer	primitive	void __thiscall (void *unit, const float *matrix, float angle)	Carries an auto-move's point (mode 4) or facing (modes 2 and 8) through a transport change	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::broadcast_wrap_angle_difftest
 0x611660	7			objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
@@ -20627,7 +20627,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x611b60	399	CGUnit_C::AnimateSheatheChange		objectlayer	primitive		Starts the sheathe animations from the old sheathe state toward the new one	verified	one	objectlayer/unitanim#drawing-and-sheathing	
 0x611cf0	276	CGUnit_C::SetSheatheState		objectlayer	primitive		Changes the sheathe state +0xd40, at once or animated; sends 0x1e0 for the active player	verified	one	objectlayer/unitanim#drawing-and-sheathing	
 0x611e10	468	CGUnit_C::RefreshRangedWeaponModel		objectlayer	primitive		Hangs the ranged weapon at option 17 into +0xd24, gives a bow its string, refits the outfit's ranged slot	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
-0x611ff0	745	CGUnit_C::DrawBowstring		objectlayer	primitive		Draws a bow's string from $WTT to $WTB through the nocking point or the midpoint	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
+0x611ff0	745	CGUnit_C::DrawBowstring		objectlayer	primitive		Draws a bow's string from $WTT to $WTB through the nocking point or the midpoint	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	objectlayer::u5_trail_color_byte_difftest, objectlayer::u5_trail_midpoint_difftest
 0x6122e0	16	CGUnit_C::FlashNamePlate		objectlayer	orchestration		Flashes the unit's nameplate red for 5 seconds	verified	one	objectlayer/unitnames#nameplates	
 0x6122f0	5	InitUnitSquare7Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x612300, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x612300	19	InitUnitSquare7		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
@@ -20652,7 +20652,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x612990	148	CGUnit_C::GetCastVisualAnim		objectlayer	orchestration		Writes the precast or channel kit's animation and returns whether there is one	verified	one	objectlayer/auras#channels	
 0x612a30	271	CGUnit_C::StartChannelVisual		objectlayer	orchestration		Starts a channel's visual: bit 0x10000, facing for a tracking spell, and its channel kit	verified	one	objectlayer/auras#channels	
 0x612b40	56	CGUnit_C::GetPlayerSkillInfo		objectlayer	primitive		Asks 0x5edae0 for a player's two values, else zeroes both	verified	one	objectlayer/units#known-spells-skills-and-prices	
-0x612b80	101	CGUnit_C::GetMerchantDiscount		objectlayer	primitive		Returns a vendor's discount for a player: 0.1 when honored, plus PvP rank steps	verified	one	objectlayer/units#known-spells-skills-and-prices	
+0x612b80	101	CGUnit_C::GetMerchantDiscount		objectlayer	primitive		Returns a vendor's discount for a player: 0.1 when honored, plus PvP rank steps	verified	one	objectlayer/units#known-spells-skills-and-prices	objectlayer::vendor_price_discount_difftest
 0x612bf0	87	CGUnit_C::GetGenderedText		objectlayer	primitive		Returns a script text in its female or male variant by the unit's gender, else its plain one	verified	one	objectlayer/unitnames#unit-names	
 0x612c50	77			objectlayer	primitive	int32_t __thiscall (void *this, int32_t powerType)	Returns the base a percentage cost scales: base mana, base health, 1000 or 100 by power type	verified	one	spell/records#power-cost	
 0x612cc0	11	CGUnit_C::TestNodeOutdoors		objectlayer	orchestration		Returns 0x6706f0's test of the unit's world node	verified	one	objectlayer/units#caster-checks-for-a-spell	
@@ -20725,7 +20725,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x613d70	13			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
 0x613d80	132			objectlayer	orchestration		Runs Object_C.cpp code that calls HandleClose2; not read here	inferred	none		
 0x613e10	217			objectlayer	primitive		Runs Object_C.cpp code that calls SysMsgPrintf, ClntObjMgrGetC8, CreateWorldCallbackObject; not read here	inferred	none		
-0x613ef0	430			objectlayer	primitive		Runs Object_C.cpp code that calls SetVector3, ScaleVector3, SetWorldObjectBounds; not read here	inferred	none		
+0x613ef0	430			objectlayer	primitive		Runs Object_C.cpp code that calls SetVector3, ScaleVector3, SetWorldObjectBounds; not read here	inferred	none		objectlayer::world_model_scale_difftest, objectlayer::world_bounds_sum_difftest
 0x6140a0	30			objectlayer	orchestration		Runs Object_C.cpp code that calls ReleaseWorldObject; not read here	inferred	none		
 0x6140c0	33			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
 0x6140f0	33			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
@@ -20745,7 +20745,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x614490	25			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x6144b0	61			objectlayer	unreached		Runs Object_C.cpp code that calls SysMsgPrintf; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x6144f0	88			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
-0x614550	138			objectlayer	primitive		Runs Object_C.cpp code that calls GetLightState; not read here	inferred	none		
+0x614550	138			objectlayer	primitive		Runs Object_C.cpp code that calls GetLightState; not read here	inferred	none		objectlayer::decal_rgb_difftest
 0x6145e0	88			objectlayer	primitive		Fills slot 1 of the object vtable; its body is not read here	inferred	none		
 0x614640	117			objectlayer	primitive		Fills slot 2 of the object vtable and others; its body is not read here	inferred	none		
 0x6146c0	13			objectlayer	primitive		Fills slot 16 of the object vtable and others; its body is not read here	inferred	none		
@@ -20754,8 +20754,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6149e0	25			objectlayer	orchestration		Runs Object_C.cpp code that calls SMemFree; not read here	inferred	none		
 0x614a00	57			objectlayer	orchestration		Runs Object_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
 0x614a40	70			objectlayer	orchestration		Runs Object_C.cpp code that calls HandleClose, ClntObjMgrClearTypeMirrorHandler; not read here	inferred	none		
-0x614a90	572			objectlayer	primitive		Fills slot 14 of the object vtable and others; its body is not read here	inferred	none		
-0x614cd0	298			objectlayer	primitive		Fills slot 15 of the object vtable and others; its body is not read here	inferred	none		
+0x614a90	572			objectlayer	primitive		Fills slot 14 of the object vtable and others; its body is not read here	inferred	none		objectlayer::obj_anim_interp_difftest
+0x614cd0	298			objectlayer	primitive		Fills slot 15 of the object vtable and others; its body is not read here	inferred	none		objectlayer::f3_render_smooth_active_difftest, objectlayer::f3_render_smooth_delta_difftest, objectlayer::f3_render_smooth_lerp_difftest, objectlayer::f3_render_amp_product_difftest
 0x614e00	116			objectlayer	orchestration		Runs Object_C.cpp code not read here	inferred	none		
 0x614e80	8			objectlayer	primitive		Fills slot 3 of the object vtable and others; its body is not read here	inferred	none		
 0x614e90	10			objectlayer	primitive		Runs Object_C.cpp code not read here	inferred	none		
@@ -21170,18 +21170,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61ce50	49	CMissile::Link		objectlayer	orchestration		Unlinks a missile and pushes it at the head of a list	verified	one	objectlayer/missiles#the-missile-object	
 0x61ce90	5	InitMissileCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61cea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61cea0	11	InitMissileCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x61ceb0	819	CMissile::Launch		objectlayer	primitive		Launches a missile from a point: outcome flags, aim, speed fit, target reaction and flight animation	verified	one	objectlayer/missiles#launch-and-flight-time	
+0x61ceb0	819	CMissile::Launch		objectlayer	primitive		Launches a missile from a point: outcome flags, aim, speed fit, target reaction and flight animation	verified	one	objectlayer/missiles#launch-and-flight-time	objectlayer::missile_traveltime_difftest, objectlayer::missile_traveltime_special_values_difftest
 0x61d1f0	57	CMissile::Unlink		objectlayer	orchestration		Unlinks a missile from its list	verified	one	objectlayer/missiles#the-missile-object	
-0x61d230	1255	CMissile::Aim		objectlayer	primitive		Sets a missile's destination: the target point, a missed point past it, or the lead on a moving unit	verified	one	objectlayer/missiles#aiming-and-leading	
+0x61d230	1255	CMissile::Aim		objectlayer	primitive		Sets a missile's destination: the target point, a missed point past it, or the lead on a moving unit	verified	one	objectlayer/missiles#aiming-and-leading	objectlayer::missile_target_intercept_difftest, objectlayer::missile_target_intercept_special_values_difftest, objectlayer::missile_target_intercept_curved_difftest, objectlayer::missile_target_intercept_curved_special_values_difftest
 0x61d720	74	CMissile::SetOutcomeFlags		objectlayer	primitive		Sets a missile's outcome flags from its outcome code	verified	one	objectlayer/missiles#outcome-flags	
-0x61d790	222	CMissile::FadeOut		objectlayer	primitive		Fades a missed or deflected missile by a smoothstep of its distance to its destination	verified	one	objectlayer/missiles#fading-out	
+0x61d790	222	CMissile::FadeOut		objectlayer	primitive		Fades a missed or deflected missile by a smoothstep of its distance to its destination	verified	one	objectlayer/missiles#fading-out	objectlayer::diff_proximity_smoothstep
 0x61d870	936	CMissile::ArriveWithoutTarget		objectlayer	primitive		Plays a missile's impact on each target GUID and turns it into an impact model	verified	one	objectlayer/missiles#arrival-without-a-target	
 0x61dc20	37	UnitHasAura		objectlayer	primitive	bool __fastcall (CGUnit_C *unit, uint32_t spell)	Returns whether a unit's aura fields hold a spell	verified	one	objectlayer/missiles#arrival-without-a-target	
 0x61dc50	245	CMissile::ArriveHit		objectlayer	orchestration		Plays a missile hit on its target and sticks a bow missile in it	verified	one	objectlayer/missiles#hit-arrival	
-0x61dd50	1149	CMissile::ArriveMiss		objectlayer	primitive		Shows a missile's miss, block, resist, deflection or reflection at its target	verified	one	objectlayer/missiles#misses-resists-and-reflections	
+0x61dd50	1149	CMissile::ArriveMiss		objectlayer	primitive		Shows a missile's miss, block, resist, deflection or reflection at its target	verified	one	objectlayer/missiles#misses-resists-and-reflections	objectlayer::b3_deflect_length, objectlayer::b3_deflect_gates, objectlayer::b3_deflect_gates_special_values, objectlayer::b3_deflect_normalize, objectlayer::b3_deflect_random_angle, objectlayer::b3_deflect_axis_from_mat, objectlayer::b3_deflect_transform_and_move, objectlayer::b3_deflect_full
 0x61e1d0	197	CMissile::Arrive		objectlayer	orchestration		Snaps a missile to its destination and dispatches its arrival by target and hit	verified	one	objectlayer/missiles#arrival	
-0x61e2a0	1300	CMissile::Advance		objectlayer	primitive		Moves a missile one frame toward its destination, or makes it arrive	verified	one	objectlayer/missiles#flight-each-frame	
-0x61e7c0	293	CMissile::StickInUnit		objectlayer	primitive		Attaches a missile to a unit's attachment for a time on its sorted stuck list	verified	one	objectlayer/missiles#stuck-missiles	
+0x61e2a0	1300	CMissile::Advance		objectlayer	primitive		Moves a missile one frame toward its destination, or makes it arrive	verified	one	objectlayer/missiles#flight-each-frame	objectlayer::missile_advance_difftest, objectlayer::missile_advance_special_values_difftest
+0x61e7c0	293	CMissile::StickInUnit		objectlayer	primitive		Attaches a missile to a unit's attachment for a time on its sorted stuck list	verified	one	objectlayer/missiles#stuck-missiles	objectlayer::diff_arrival_scale
 0x61e8f0	64	FreeAllMissiles		objectlayer	orchestration	void __cdecl (void)	Frees every missile in flight and every impact missile	verified	one	objectlayer/missiles#the-missile-object	
 0x61e930	53	FreeFinishedImpactMissiles		objectlayer	orchestration	void __cdecl (void)	Frees the impact missiles whose models have no live particles	verified	one	objectlayer/missiles#stuck-missiles	
 0x61e970	5	InitMissileDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61e980, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21243,7 +21243,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61ee70	19	InitMissileBSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61ee90	5	InitMissileBSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61eea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61eea0	19	InitMissileBSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61eec0	48	CMovement::GetVelocity		objectlayer	primitive		Returns a mover's velocity: its speed times its direction	verified	one	objectlayer/missiles#aiming-and-leading	
+0x61eec0	48	CMovement::GetVelocity		objectlayer	primitive		Returns a mover's velocity: its speed times its direction	verified	one	objectlayer/missiles#aiming-and-leading	objectlayer::missile_scale_vec_difftest
 0x61eef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61ef00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61ef10	5	InitEffectCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61ef20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21316,7 +21316,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61f6f0	106	CEffect::OnModelEvent		objectlayer	primitive		Plays an effect model's $SND sound, or its target's wound animation on $HIT	verified	one	objectlayer/effects#model-events	
 0x61f760	5	InitEffectCopy2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61f770, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61f770	11	InitEffectCopy2		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
-0x61f780	649	DrawFishingLine		objectlayer	primitive		Draws a fishing line of 65 sagging points from the pole's $CCH event to the bobber	verified	one	objectlayer/effects#the-fishing-line	
+0x61f780	649	DrawFishingLine		objectlayer	primitive		Draws a fishing line of 65 sagging points from the pole's $CCH event to the bobber	verified	one	objectlayer/effects#the-fishing-line	objectlayer::effect_beam_trail_difftest, objectlayer::effect_beam_trail_special_values_difftest
 0x61fa10	193	AddLootArtEffect		objectlayer	primitive		Hangs the loot art effect on a unit at attachment 19	verified	one	objectlayer/effects#hard-coded-effects	
 0x61fae0	281	AddHardcodedEffect		objectlayer	primitive		Hangs a hard-coded effect on a unit at its attachment	verified	one	objectlayer/effects#hard-coded-effects	
 0x61fc00	233	PlantHardcodedEffect		objectlayer	primitive		Plants a hard-coded effect at a point	verified	one	objectlayer/effects#hard-coded-effects	
@@ -21333,19 +21333,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6203a0	57	CEffect::Unlink		objectlayer	orchestration		Unlinks an effect from its list	verified	one	objectlayer/effects#the-effect-object	
 0x6203e0	307	CEffect::Stop		objectlayer	primitive		Moves an effect to the dying list, hides it, restores speeds and stops its sound, callbacks and chains	verified	one	objectlayer/effects#stopping-and-draining	
 0x620520	84	CEffect::OnWorldObjectFrame		objectlayer	primitive		Shows a planted effect from its start time and stops it at its end time	verified	one	objectlayer/effects#the-frame-tick	
-0x620580	803	CEffect::Update		objectlayer	primitive		Sets up, moves, ends or stops one effect on its unit's frame	verified	one	objectlayer/effects#the-frame-tick	
+0x620580	803	CEffect::Update		objectlayer	primitive		Sets up, moves, ends or stops one effect on its unit's frame	verified	one	objectlayer/effects#the-frame-tick	objectlayer::f2_effect_track_reresolve_difftest, objectlayer::f2_vec3_half_scale_580_difftest
 0x6208b0	42	StopEffectObjectChains		objectlayer	primitive		Stops the three chain beams in an effect's slots +0x30 to +0x38 and clears them	verified	one	objectlayer/effects#stopping-and-draining	
 0x6208e0	79	StopUnitEffectsAt		objectlayer	orchestration		Stops a unit's effects of one record at one attachment	verified	one	objectlayer/effects#adding-an-effect	
-0x620930	190	CheckEffectMatrix		objectlayer	primitive		Checks a matrix for NaN entries and an empty first row	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x620930	190	CheckEffectMatrix		objectlayer	primitive		Checks a matrix for NaN entries and an empty first row	verified	one	objectlayer/effects#setting-up-once-loaded	objectlayer::diff_vec3_mag2
 0x6209f0	147	ReportFacingTrouble		objectlayer	orchestration		Formats a facing-trouble message into a buffer and drops it	verified	one	objectlayer/effects#setting-up-once-loaded	
 0x620a90	326	BuildPlantedEffectMatrix		objectlayer	orchestration		Builds a planted effect's matrix from its point and its owner's facing and scale	verified	one	objectlayer/effects#setting-up-once-loaded	
-0x620be0	1269	UpdateSpellEffectObject		objectlayer	primitive		Sets up an effect once its model loads: placement, attachment, scale, camera shake and sound	verified	one	objectlayer/effects#setting-up-once-loaded	
+0x620be0	1269	UpdateSpellEffectObject		objectlayer	primitive		Sets up an effect once its model loads: placement, attachment, scale, camera shake and sound	verified	one	objectlayer/effects#setting-up-once-loaded	objectlayer::f2_effect_anchor_add_difftest, objectlayer::f2_vec3_half_scale_be0_difftest, objectlayer::f2_attach_scale_div_difftest
 0x6210e0	33	CEffect::Release		objectlayer	primitive		Releases a reference to an effect and frees it at zero	verified	one	objectlayer/effects#the-effect-object	
 0x621110	5	InitEffectDouble2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621120, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x621120	15	InitEffectDouble2		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x621130	5	InitEffectQuotient4Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621140, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x621140	19	InitEffectQuotient4		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x621160	36	AddVector3		objectlayer	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes a + b	verified	one	camera#unprojection	models::aabsp_segment_clip_difftest, models::aabsp_segment_split_difftest, models::ribbon_segment_emit_difftest
+0x621160	36	AddVector3		objectlayer	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes a + b	verified	one	camera#unprojection	models::aabsp_segment_clip_difftest, models::aabsp_segment_split_difftest, models::ribbon_segment_emit_difftest, objectlayer::vector3_scale_add_difftest
 0x621190	5	InitEffectBProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6211a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6211a0	19	InitEffectBProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6211c0	5	InitEffectBProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6211d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21534,7 +21534,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x622630	355	InventoryResultToError		objectlayer	orchestration	uint32_t __fastcall (uint32_t result)	Maps a server inventory result to an error id through a 67-entry table, ERR_BAG_FULL above it	verified	one	objectlayer/inventory#inventory-results	
 0x6228a0	109	GetItemInSlot		objectlayer	primitive	void *__thiscall (void *list, uint32_t slot)	Returns the item object in a slot, none for a bank slot while no banker is open	verified	one	objectlayer/inventory#searching-the-inventory	
 0x622910	187	CountFreeSlots		objectlayer	primitive	uint32_t __thiscall (void *list)	Counts the empty backpack slots and those of each bag, or every empty slot of a container	verified	one	objectlayer/inventory#searching-the-inventory	
-0x6229d0	128	GetDurabilityPercent		objectlayer	primitive	int32_t __thiscall (void *list)	Returns the equipment's summed durability over its summed maximum, times 100, truncated	verified	one	objectlayer/inventory#searching-the-inventory	
+0x6229d0	128	GetDurabilityPercent		objectlayer	primitive	int32_t __thiscall (void *list)	Returns the equipment's summed durability over its summed maximum, times 100, truncated	verified	one	objectlayer/inventory#searching-the-inventory	objectlayer::f2_durability_percent_difftest
 0x622a50	5	InitUnitSoundDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x622a60, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x622a60	15	InitUnitSoundDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x622a70	5	InitUnitSoundQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x622a80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21608,13 +21608,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x623290	42	AlertSoundAllowed		objectlayer	primitive		Passes the alert vocal once 10 seconds have passed and restarts its clock	verified	one	objectlayer/sounds#vocal-sounds	
 0x6232c0	194	CGUnit_C::OnFoleyEvent		objectlayer	orchestration		Plays a unit's foley on $FD1 to $FD9 and its alert on $FDX	verified	one	objectlayer/sounds#foley-and-the-alert	
 0x623390	166	CGUnit_C::PlayFootstep		objectlayer	primitive		Plays a unit's footstep on $FSD with its terrain, liquid and size flags	verified	one	objectlayer/sounds#footsteps	
-0x623440	79	CGUnit_C::PlayFoley		objectlayer	primitive		Plays one foley sound two yards above a unit	verified	one	objectlayer/sounds#foley-and-the-alert	
+0x623440	79	CGUnit_C::PlayFoley		objectlayer	primitive		Plays one foley sound two yards above a unit	verified	one	objectlayer/sounds#foley-and-the-alert	objectlayer::f2_sound_pos_z_bias_difftest
 0x623490	135	CGUnit_C::PlayVocal		objectlayer	orchestration		Plays a unit's vocal of a kind after its chance and rate limits (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	
 0x623520	238	VocalChancePasses		objectlayer	primitive		Advances the client random state and passes a vocal kind by its chance table	verified	one	objectlayer/sounds#vocal-sounds	
 0x623610	41	CGUnit_C::PlayMaterialSound		objectlayer	orchestration		Plays a unit's material sound from its model data (slot 35)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
 0x623640	112	PlayParryImpact		objectlayer	primitive		Plays a parry or block impact from the attacker's weapon and the victim's item	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
 0x6236b0	44	CGUnit_C::PlayAlert		objectlayer	orchestration		Plays a unit's alert vocal unless it is the active player	verified	one	objectlayer/sounds#foley-and-the-alert	
-0x6236e0	211	CGUnit_C::PlayDeathThud		objectlayer	primitive		Plays a unit's death thud by its size and ground, or its water thud	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
+0x6236e0	211	CGUnit_C::PlayDeathThud		objectlayer	primitive		Plays a unit's death thud by its size and ground, or its water thud	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	objectlayer::diff_land_height
 0x6237c0	21	CGUnit_C::PlaySplash		objectlayer	orchestration		Plays a unit's race splash sound at a point	verified	one	objectlayer/sounds#splashes-and-greetings	
 0x6237e0	30	CGUnit_C::StopLoopSound		objectlayer	orchestration		Stops a unit's loop sound and clears it	verified	one	objectlayer/sounds#the-loop-sound	
 0x623800	112	CGUnit_C::UpdateLoopSound		objectlayer	primitive		Keeps a living creature's loop sound playing, or stops it	verified	one	objectlayer/sounds#the-loop-sound	
@@ -21626,7 +21626,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x623a40	185	CGUnit_C::PlayReaction		objectlayer	orchestration		Plays a creature's aggro, death or other reaction at attachment 17, replacing a lower one	verified	one	objectlayer/sounds#creature-reactions	
 0x623b10	69	GetVocalSoundClass		objectlayer	primitive		Returns a vocal kind's sound class, the large one for a creature flagged 0x20	verified	one	objectlayer/sounds#vocal-sounds	
 0x623b70	25	CGUnit_C::IsLargeVocalCreature		objectlayer	orchestration		Returns whether a creature record's flags have 0x20	verified	one	objectlayer/sounds#vocal-sounds	
-0x623b90	123	CGUnit_C::GetAttachmentPoint		objectlayer	primitive		Returns an attachment position, or the unit position raised by the attachment height	verified	one	objectlayer/sounds#creature-reactions	
+0x623b90	123	CGUnit_C::GetAttachmentPoint		objectlayer	primitive		Returns an attachment position, or the unit position raised by the attachment height	verified	one	objectlayer/sounds#creature-reactions	objectlayer::f2_sound_attach_z_bias_difftest, objectlayer::f2_get_attachment_point_difftest
 0x623c10	111	CGUnit_C::PlayEmoteVoice		objectlayer	primitive		Plays an emote voice at attachment 17 attached to the unit, replacing the last	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
 0x623c80	129	CGUnit_C::PlayTextEmoteVoice		objectlayer	orchestration		Plays a text emote voice for the player or a party member while EmoteSounds is on	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
 0x623d10	39	CGUnit_C::PlaySpiritWolfSound		objectlayer	orchestration		Plays the spirit wolf sound at a unit	verified	one	objectlayer/sounds#death-thud-and-emote-sounds	
@@ -21698,11 +21698,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6246a0	241	PlaySwingAnimation		objectlayer	primitive		Plays an attacker's swing animation by its weapon, and its exertion vocal	verified	one	objectlayer/unitcombat#holding-a-swing	
 0x6247d0	1217	OnCombatModelEvent		objectlayer	primitive		Presents a pending swing on the attacker's $CAH, $AH0 to $AH3, $CPP, $DTH, $BWP and $CSS events	verified	one	objectlayer/unitcombat#combat-model-events	
 0x624ca0	29	IsAvoidedSwingState		objectlayer	orchestration	bool __fastcall (uint32_t state)	Returns whether a victim state is 0, 2 or 6: a miss, dodge or evade	verified	one	objectlayer/unitcombat#combat-model-events	
-0x624cc0	379	PlayBowPull		objectlayer	primitive		Plays a ranged weapon's 160 BowPull to end with the body animation and attaches the ammo	verified	one	objectlayer/unitcombat#the-ranged-reload-pose	
+0x624cc0	379	PlayBowPull		objectlayer	primitive		Plays a ranged weapon's 160 BowPull to end with the body animation and attaches the ammo	verified	one	objectlayer/unitcombat#the-ranged-reload-pose	objectlayer::castbar_anim_speed_difftest
 0x624e40	223	StopAttack		objectlayer	primitive		Ends a unit's attack: clears its target fields, flushes and zeroes its pending swing, faces a victim	verified	one	objectlayer/unitcombat#attack-messages	
 0x624f20	10			objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t value)	Returns its stack argument unchanged	verified	one	spell/go#missile-and-impact-legs	
 0x624f30	213	OnEnvironmentalDamage		objectlayer	primitive		Writes environmental damage, signals the active player's wound and plays the type's kit	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
-0x625010	382	SpillBlood		objectlayer	primitive		Adds a victim's front or back blood effect from its UnitBlood row	verified	one	objectlayer/unitcombat#blood	
+0x625010	382	SpillBlood		objectlayer	primitive		Adds a victim's front or back blood effect from its UnitBlood row	verified	one	objectlayer/unitcombat#blood	objectlayer::diff_blood_spurt_front_back, objectlayer::diff_blood_spurt_front_back_diff_rounding, objectlayer::diff_blood_spurt_dot
 0x625190	66	PresentUnitDeath		objectlayer	orchestration		Writes a unit's death line, shows its pending XP and plays its death animation and sound	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x6251e0	139	ShowPendingXpGain		objectlayer	orchestration		Logs a unit's pending XP gain, floats it over the active player and clears it	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x625270	391	LogHonorGain		objectlayer	primitive		Writes the honor line, floats HK or DK and raises HONOR_GAINED	verified	one	objectlayer/unitcombat#honor	
@@ -21785,7 +21785,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6264b0	38	GetSchoolName		objectlayer	orchestration	const char * __fastcall (uint32_t school)	Returns a school's Resistances name in the client's locale	verified	one	objectlayer/combatlog#names	
 0x6264e0	314	GetCombatLogName		objectlayer	primitive	const char * __fastcall (uint64_t *guid)	Names a combat log object from the object, item, name or creature cache, else UNKNOWNOBJECT	verified	one	objectlayer/combatlog#names	
 0x626620	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x626630	472	ResolveCombatLogPair		objectlayer	primitive		Classifies and resolves a line's source and target and tests the player's range to either	verified	one	objectlayer/combatlog#range	
+0x626630	472	ResolveCombatLogPair		objectlayer	primitive		Classifies and resolves a line's source and target and tests the player's range to either	verified	one	objectlayer/combatlog#range	objectlayer::diff_two_endpoint_a, objectlayer::diff_two_endpoint_b, objectlayer::diff_two_endpoint_dist2, objectlayer::diff_two_endpoint_diffs, objectlayer::diff_two_endpoint_range_sq
 0x626810	59	GetCombatLogRange		objectlayer	orchestration	float __fastcall (uint32_t class)	Returns a relation class's combat log range from its CVar, 100000 or 0	verified	one	objectlayer/combatlog#range	
 0x626850	64	AddCombatLogLine		objectlayer	orchestration		Formats a combat log line and adds it under a chat type, and to a file while logging	verified	one	objectlayer/combatlog#a-line	
 0x626890	83	SignalCombatTextNamed		objectlayer	orchestration		Raises COMBAT_TEXT_UPDATE with a type, a text and a number	verified	one	objectlayer/combatlog#combat-text	
@@ -21812,14 +21812,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x627820	129	GetSpellBuffChatType		objectlayer	orchestration		Returns the spell buff chat type for a source and target class	verified	one	objectlayer/combatlog#the-chat-type	
 0x6278f0	26	GetPowerName		objectlayer	orchestration	const char * __fastcall (uint32_t power)	Returns the global string of a power below 5, else 0	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x627910	30	LogPeriodicPowerDrain		objectlayer	orchestration		Writes a periodic power drain or leech line	verified	one	objectlayer/combatlogmessages#periodic-lines	
-0x627930	842	LogPowerDrain		objectlayer	primitive		Writes a power drain or leech line and raises the power combat text on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
+0x627930	842	LogPowerDrain		objectlayer	primitive		Writes a power drain or leech line and raises the power combat text on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	objectlayer::f3_powerleech_display_amount_difftest
 0x627c80	80	GetPowerLeechKey		objectlayer	orchestration		Returns the SPELLPOWERLEECH key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x627cd0	83	GetPowerDrainKey		objectlayer	orchestration		Returns the SPELLPOWERDRAIN key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x627d30	48	GetSpellChatType		objectlayer	orchestration		Returns the damage or buff chat type of a spell by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
 0x627d60	28	GetPeriodicSpellChatType		objectlayer	orchestration		Returns the periodic damage or buff chat type of a spell by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
 0x627d80	48	GetPeriodicDamageChatType		objectlayer	orchestration		Returns the periodic damage chat type for a target class	verified	one	objectlayer/combatlog#the-chat-type	
-0x627de0	554	LogHappinessDrain		objectlayer	primitive		Writes a pet happiness drain line under 0x19	verified	one	objectlayer/combatlog#the-one-sided-range-test	
-0x628010	228	LogOneSidedLine		objectlayer	primitive		Writes a one-unit line after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x627de0	554	LogHappinessDrain		objectlayer	primitive		Writes a pet happiness drain line under 0x19	verified	one	objectlayer/combatlog#the-one-sided-range-test	objectlayer::diff_range_gate_visible, objectlayer::range_gate_clone_twins, objectlayer::diff_range_gate_dist2
+0x628010	228	LogOneSidedLine		objectlayer	primitive		Writes a one-unit line after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	objectlayer::diff_combat_range_visible
 0x628100	675	LogPeriodicDamage		objectlayer	orchestration		Writes a periodic damage line with trailers and raises RESIST, ABSORB or DAMAGE on the player	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x6283b0	83	GetPeriodicDamageKey		objectlayer	orchestration		Returns the PERIODICAURADAMAGE key for a source and target class	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x628410	414	AppendDamageTrailers		objectlayer	primitive		Appends the glancing, crushing, resist, vulnerable, block and absorb trailers and writes the line	verified	one	objectlayer/combatlog#trailers	
@@ -21836,7 +21836,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x628e60	61	HandleDeathDurabilityLog		objectlayer	orchestration		Handles 0x2bd: writes DURABILITYDAMAGE_DEATH under 0x19	verified	one	objectlayer/combatlogmessages#log-messages	
 0x628ea0	155	HandleEnchantmentLog		objectlayer	orchestration		Handles 0x1d7: passes an item enchantment to its line	verified	one	objectlayer/combatlogmessages#log-messages	
 0x628f40	164	LogItemEnchantment		objectlayer	primitive		Waits for an item and writes its enchantment added or removed line	verified	one	objectlayer/combatlog#item-waits	
-0x628ff0	468	LogEnchantmentRemoved		objectlayer	primitive		Writes an item enchantment removed line and raises ENCHANTMENT_REMOVED	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x628ff0	468	LogEnchantmentRemoved		objectlayer	primitive		Writes an item enchantment removed line and raises ENCHANTMENT_REMOVED	verified	one	objectlayer/combatlog#the-one-sided-range-test	objectlayer::range_gate_clone_twins, objectlayer::diff_range_gate_dist2
 0x6291d0	456	LogEnchantmentAdded		objectlayer	orchestration		Writes an item enchantment added line and raises ENCHANTMENT_ADDED	verified	one	objectlayer/combatlogmessages#log-messages	
 0x6293a0	66	QueueEnchantmentWait		objectlayer	orchestration		Fills an item wait entry for an enchantment line	verified	one	objectlayer/combatlog#item-waits	
 0x6293f0	190	GetFreeItemWait		objectlayer	primitive		Returns a free item wait entry, growing the list by 8	verified	one	objectlayer/combatlog#item-waits	
@@ -21873,7 +21873,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62a9d0	80	GetVsParryKey		objectlayer	orchestration		Returns the VSPARRY key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
 0x62aa20	80	GetVsImmuneKey		objectlayer	orchestration		Returns the VSIMMUNE key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
 0x62aa70	80	GetVsDeflectKey		objectlayer	orchestration		Returns the VSDEFLECT key for a source and target class, none for self	verified	one	objectlayer/combatlogmessages#melee-lines	
-0x62aac0	532	LogEnvironmentalDamage		objectlayer	primitive		Writes an environmental damage line, flashes the victim's nameplate and raises its combat text	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
+0x62aac0	532	LogEnvironmentalDamage		objectlayer	primitive		Writes an environmental damage line, flashes the victim's nameplate and raises its combat text	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	objectlayer::range_gate_clone_twins, objectlayer::diff_range_gate_dist2
 0x62ace0	135	LogSpellCast		objectlayer	primitive		Writes a cast success line for a spell without effect 36, 33 or 59	verified	one	objectlayer/combatlogmessages#casts	
 0x62ad70	28	SpellHasEffect36		objectlayer	primitive	bool __fastcall (void *spell)	Returns whether a spell has effect 36	verified	one	objectlayer/combatlogmessages#casts	
 0x62ad90	35	SpellHasEffect33Or59		objectlayer	primitive	bool __fastcall (void *spell)	Returns whether a spell has effect 33 or 59	verified	one	objectlayer/combatlogmessages#casts	
@@ -21881,13 +21881,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62af30	83	GetSimpleCastKey		objectlayer	orchestration		Returns the SIMPLECAST key for a source and target class	verified	one	objectlayer/combatlogmessages#casts	
 0x62af90	83	GetSimplePerformKey		objectlayer	orchestration		Returns the SIMPLEPERFORM key for a source and target class	verified	one	objectlayer/combatlogmessages#casts	
 0x62aff0	10	SpellIsPerform		objectlayer	primitive	uint32_t __fastcall (void *spell)	Returns bit 4 of a spell's Attributes	verified	one	objectlayer/combatlogmessages#casts	
-0x62b000	387	LogTerseCast		objectlayer	primitive		Writes a SPELLTERSE line and raises SPELL_CAST for the player	verified	one	objectlayer/combatlogmessages#casts	
+0x62b000	387	LogTerseCast		objectlayer	primitive		Writes a SPELLTERSE line and raises SPELL_CAST for the player	verified	one	objectlayer/combatlogmessages#casts	objectlayer::range_gate_clone_twins, objectlayer::diff_range_gate_dist2
 0x62b190	30	GetCastChatType		objectlayer	orchestration		Returns the damage or buff chat type of a cast by its hostility	verified	one	objectlayer/combatlog#the-chat-type	
-0x62b1b0	676	CombatLogSpellCast		objectlayer	primitive		Writes the start of another unit's cast with a cast time	verified	one	objectlayer/combatlogmessages#casts	
+0x62b1b0	676	CombatLogSpellCast		objectlayer	primitive		Writes the start of another unit's cast with a cast time	verified	one	objectlayer/combatlogmessages#casts	objectlayer::diff_quest_range_gate, objectlayer::diff_quest_dist2
 0x62b460	19	SpellIsInstantFor		objectlayer	primitive		Returns whether a unit's cast time of a spell is 0	verified	one	objectlayer/combatlogmessages#casts	
-0x62b480	846	LogAuraChange		objectlayer	primitive		Writes an aura gained or lost line and raises its aura combat text	verified	one	objectlayer/combatlogmessages#auras	
+0x62b480	846	LogAuraChange		objectlayer	primitive		Writes an aura gained or lost line and raises its aura combat text	verified	one	objectlayer/combatlogmessages#auras	objectlayer::f3_combat_log_in_range_difftest
 0x62b7d0	30	GetAuraGoneChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x41, 0x42 or 0x43 for an aura loss by class	verified	one	objectlayer/combatlogmessages#auras	
-0x62b800	685	LogAuraApplication		objectlayer	primitive		Writes an aura stack line for a stacking spell	verified	one	objectlayer/combatlogmessages#auras	
+0x62b800	685	LogAuraApplication		objectlayer	primitive		Writes an aura stack line for a stacking spell	verified	one	objectlayer/combatlogmessages#auras	objectlayer::diff_combat_gate_copied, objectlayer::diff_combat_gate_dist2
 0x62bab0	824			objectlayer	orchestration		Writes the combat log line for a spell miss by its reason and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62be40	83	GetSpellDodgedKey		objectlayer	orchestration		Returns the SPELLDODGED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62bea0	83	GetSpellParriedKey		objectlayer	orchestration		Returns the SPELLPARRIED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
@@ -21898,9 +21898,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62c080	83	GetSpellReflectKey		objectlayer	orchestration		Returns the SPELLREFLECT key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62c0e0	83	GetSpellMissKey		objectlayer	orchestration		Returns the SPELLMISS key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62c140	20	GetDamageShieldChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x3f for class 0 or 1, else 0x40	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
-0x62c160	359	LogUnitDeath		objectlayer	primitive		Writes a unit death or destruction line unless a pending XP gain names it	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
+0x62c160	359	LogUnitDeath		objectlayer	primitive		Writes a unit death or destruction line unless a pending XP gain names it	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	objectlayer::diff_combat_gate_inreg, objectlayer::diff_combat_gate_dist2
 0x62c2d0	71	IsSummonedUnit		objectlayer	primitive	bool __fastcall (CGUnit_C *unit)	Returns whether the spell that created a unit has a summoning or totem first effect	verified	one	objectlayer/combatlogmessages#deaths-and-the-environment	
-0x62c360	643	LogCastFailure		objectlayer	primitive	void __fastcall (void *unit, uint32_t spell, const char *reason)	Writes a unit's cast failure line to the combat log after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	
+0x62c360	643	LogCastFailure		objectlayer	primitive	void __fastcall (void *unit, uint32_t spell, const char *reason)	Writes a unit's cast failure line to the combat log after the one-sided range test	verified	one	objectlayer/combatlog#the-one-sided-range-test	objectlayer::diff_combat_gate_copied_twin, objectlayer::diff_combat_gate_dist2
 0x62c5f0	128	LogFactionStanding		objectlayer	primitive		Writes a reputation increase or decrease line under 0x55 and raises FACTION	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
 0x62c670	252	LogFactionStandingChanged		objectlayer	primitive		Writes a reputation standing change with its label under type 10	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
 0x62c770	457	LogHeal		objectlayer	orchestration		Writes a heal line and raises HEAL or HEAL_CRIT on the player	verified	one	objectlayer/combatlogmessages#heals	
@@ -21909,7 +21909,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62ca00	26	LogDirectPowerGain		objectlayer	orchestration		Writes a direct power gain line	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x62ca20	361	LogDamageShield		objectlayer	primitive		Writes a damage shield line and raises DAMAGE_SHIELD	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
 0x62cb90	80	GetDamageShieldKey		objectlayer	orchestration		Returns the DAMAGESHIELD key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
-0x62cbe0	413	LogInstakill		objectlayer	primitive		Writes an INSTAKILL line	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
+0x62cbe0	413	LogInstakill		objectlayer	primitive		Writes an INSTAKILL line	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	objectlayer::diff_combat_gate_twins, objectlayer::diff_combat_gate_dist2
 0x62cd80	828	LogSpellDamage		objectlayer	orchestration		Writes a spell damage line, or its absorb, block or resist, and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62d0c0	83	GetSpellLogCritKey		objectlayer	orchestration		Returns the SPELLLOGCRIT key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62d120	83	GetSpellLogKey		objectlayer	orchestration		Returns the SPELLLOG key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
@@ -21918,13 +21918,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62d240	407	LogSpellImmune		objectlayer	orchestration		Writes an IMMUNESPELL line while CombatLogPeriodicSpells is on and raises SPELL_IMMUNE	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
 0x62d3e0	83	GetImmuneSpellKey		objectlayer	orchestration		Returns the IMMUNESPELL key for a source and target class	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
 0x62d440	62	LogPetLoyalty		objectlayer	orchestration		Writes PET_LOYALTY_GAIN or PET_LOYALTY_LOSS under 0x19	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
-0x62d480	419	LogAuraDispel		objectlayer	primitive		Writes an AURADISPEL line under 0x45 and raises SPELL_DISPELLED	verified	one	objectlayer/combatlogmessages#auras	
+0x62d480	419	LogAuraDispel		objectlayer	primitive		Writes an AURADISPEL line under 0x45 and raises SPELL_DISPELLED	verified	one	objectlayer/combatlogmessages#auras	objectlayer::diff_combat_gate_twins, objectlayer::diff_combat_gate_dist2
 0x62d630	353	LogAuraStolen		objectlayer	orchestration		Writes an AURASTOLEN line under 0x45 and raises SPELL_DISPELLED	verified	one	objectlayer/combatlogmessages#auras	
 0x62d7a0	83	GetAuraStolenKey		objectlayer	orchestration		Returns the AURASTOLEN key for a source and target class	verified	one	objectlayer/combatlogmessages#auras	
-0x62d800	207	LogFeedPetInRange		objectlayer	primitive		Passes a pet meal to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
-0x62d8d0	207	LogTradeSkillInRange		objectlayer	primitive		Passes a trade skill product to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	
+0x62d800	207	LogFeedPetInRange		objectlayer	primitive		Passes a pet meal to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	objectlayer::diff_combat_defer_visible
+0x62d8d0	207	LogTradeSkillInRange		objectlayer	primitive		Passes a trade skill product to its line after the one-sided range test	verified	one	objectlayer/combatlogmessages#items-pets-and-reputation	objectlayer::diff_combat_defer_visible
 0x62d9a0	65	LogPeriodicDamageIfOn		objectlayer	orchestration		Passes a periodic hit to its line while CombatLogPeriodicSpells is on	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
-0x62d9f0	504	LogExtraAttacks		objectlayer	primitive		Writes an extra attacks line and raises EXTRA_ATTACKS for the player	verified	one	objectlayer/combatlogmessages#casts	
+0x62d9f0	504	LogExtraAttacks		objectlayer	primitive		Writes an extra attacks line and raises EXTRA_ATTACKS for the player	verified	one	objectlayer/combatlogmessages#casts	objectlayer::diff_combat_gate_twins, objectlayer::diff_combat_gate_dist2
 0x62dbf0	30	LogDirectPowerDrain		objectlayer	orchestration		Writes a direct power drain or leech line	verified	one	objectlayer/combatlogmessages#periodic-lines	
 0x62dc10	577	LogOpenLock		objectlayer	primitive		Writes an OPEN_LOCK line naming a game object or an item	verified	one	objectlayer/combatlogmessages#casts	
 0x62de60	413	LogSplitDamage		objectlayer	orchestration		Writes a split damage line and raises SPLIT_DAMAGE	verified	one	objectlayer/combatlogmessages#shields-splits-and-immunities	
@@ -22121,10 +22121,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62f840	19	InitPlayerSoundSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62f860	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x62f870	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x62f880	180	CGPlayer_C::PlayVocal		objectlayer	primitive		Plays a player's vocal two yards up after the player's chances (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	
+0x62f880	180	CGPlayer_C::PlayVocal		objectlayer	primitive		Plays a player's vocal two yards up after the player's chances (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	objectlayer::diff_sound_z_bias
 0x62f940	238	PlayerVocalChancePasses		objectlayer	primitive		Advances the client random state and passes a player vocal kind by its chance table	verified	one	objectlayer/sounds#vocal-sounds	
 0x62fa30	98	CGPlayer_C::PlayMaterialSound		objectlayer	orchestration		Plays the material sound of a player's chest item (slot 35)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
-0x62faa0	201	CGPlayer_C::PlayPrecastSound		objectlayer	primitive		Plays the sound of the spell a player prepares one yard above it	verified	one	objectlayer/sounds#the-precast-sound	
+0x62faa0	201	CGPlayer_C::PlayPrecastSound		objectlayer	primitive		Plays the sound of the spell a player prepares one yard above it	verified	one	objectlayer/sounds#the-precast-sound	objectlayer::diff_svk_z_bias
 0x62fb70	123	CGPlayer_C::GetArmourImpactKind		objectlayer	primitive		Returns a player's armour kind for impact sounds from its chest armour's material (slot 36)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
 0x62fbf0	5	InitResistLogCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62fc00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62fc00	11	InitResistLogCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
@@ -22476,8 +22476,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x637a50	5	InitCollideSq1p5Thunk		collision	orchestration	void __cdecl (void)	Jumps to 0x637a60, a static initializer of the file	verified	one	collision/overview#resolution-file-initializers	
 0x637a60	19	InitCollideSq1p5		collision	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float	verified	one	collision/overview#resolution-file-initializers	
 0x637a80	59	LogPendingXpGain		objectlayer	orchestration		Writes a pending XP gain line	verified	one	objectlayer/combatlogmessages#experience	
-0x637ac0	528	LogExhaustionXpGain		objectlayer	primitive		Writes an XP line with its rest modifier and group bonus or raid penalty	verified	one	objectlayer/combatlogmessages#experience	
-0x637cd0	279	LogXpGainLine		objectlayer	primitive		Writes a plain, group or raid XP line, named or unnamed	verified	one	objectlayer/combatlogmessages#experience	
+0x637ac0	528	LogExhaustionXpGain		objectlayer	primitive		Writes an XP line with its rest modifier and group bonus or raid penalty	verified	one	objectlayer/combatlogmessages#experience	objectlayer::xpgain_rest_gate_difftest
+0x637cd0	279	LogXpGainLine		objectlayer	primitive		Writes a plain, group or raid XP line, named or unnamed	verified	one	objectlayer/combatlogmessages#experience	objectlayer::ot_combatlog_xp_scaled_difftest
 0x637df0	5	InitCombatLogXpCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x637e00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x637e00	11	InitCombatLogXpCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x637e10	18	RegisterXpLogMessage		objectlayer	orchestration		Registers the handler for 0x1d0	verified	one	objectlayer/combatlogmessages#log-messages	
