@@ -83,7 +83,7 @@ Test: none
 `+0x6c`. In `0x59b910` `test al,1` sets `0x4000` and `test al,2` sets `0x100`. The colour is
 `[device+0x324]`, stored `0xff000000` at `0x591b34`. `0x58a970` has 14 call sites, flags 1 or 3 at
 eleven of them; `0x6cd944 cmp [..+0x28],1` gates `0x6cd958`, which binds the target, before
-`0x6cd973 mov ecx,3`. The Direct3D clear `0x5a17d0` is not read.
+`0x6cd973 mov ecx,3`.
 
 ## Unused model light
 
