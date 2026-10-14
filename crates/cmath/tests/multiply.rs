@@ -1,9 +1,13 @@
 //! The matrix products `0x7bdfc0` and `0x7bc6a0` and the dot leaf `0x7bc8c0`, run whole against
 //! `multiply_matrix3`, `multiply_matrix4` and `dot_leaf` on edge matrices (zeros of both signs,
-//! the infinities, NaN) and a fuzz. A NaN result matches any NaN.
+//! the infinities, NaN), a fuzz, and the shared set of edge fills and random non-NaN bit patterns.
+//! A NaN result matches any NaN.
+
+mod common;
 
 use benilla_re_cmath::multiply::{dot_leaf, multiply_matrix3, multiply_matrix4};
 use benilla_re_difftest::{Emu, Wow};
+use common::synth_n;
 
 fn next(s: &mut u32) -> u32 {
     *s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
@@ -79,8 +83,10 @@ fn dot_leaf_difftest() {
     let mut e = Emu::new(&wow);
     let a = e.alloc(0x10);
     let b = e.alloc(0x40);
-    let avs = matrices(4, 0x7bc8_c001, 1500);
-    let bvs = matrices(16, 0x7bc8_c002, 1500);
+    let mut avs = matrices(4, 0x7bc8_c001, 1500);
+    avs.extend(synth_n(4));
+    let mut bvs = matrices(16, 0x7bc8_c002, 1500);
+    bvs.extend(synth_n(16));
     for (k, av) in avs.iter().enumerate() {
         let bv = &bvs[(k * 7 + 1) % bvs.len()];
         put(&mut e, a, av);
@@ -104,8 +110,10 @@ fn multiply_matrix3_difftest() {
     let a = e.alloc(0x30);
     let b = e.alloc(0x30);
     let out = e.alloc(0x30);
-    let avs = matrices(9, 0x7bdf_c001, 1500);
-    let bvs = matrices(9, 0x7bdf_c002, 1500);
+    let mut avs = matrices(9, 0x7bdf_c001, 1500);
+    avs.extend(synth_n(9));
+    let mut bvs = matrices(9, 0x7bdf_c002, 1500);
+    bvs.extend(synth_n(9));
     for (k, av) in avs.iter().enumerate() {
         let bv = &bvs[(k * 5 + 1) % bvs.len()];
         put(&mut e, a, av);
@@ -131,8 +139,10 @@ fn multiply_matrix4_difftest() {
     let a = e.alloc(0x40);
     let b = e.alloc(0x40);
     let out = e.alloc(0x40);
-    let avs = matrices(16, 0x7bc6_a001, 1500);
-    let bvs = matrices(16, 0x7bc6_a002, 1500);
+    let mut avs = matrices(16, 0x7bc6_a001, 1500);
+    avs.extend(synth_n(16));
+    let mut bvs = matrices(16, 0x7bc6_a002, 1500);
+    bvs.extend(synth_n(16));
     for (k, av) in avs.iter().enumerate() {
         let bv = &bvs[(k * 5 + 1) % bvs.len()];
         put(&mut e, a, av);

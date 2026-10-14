@@ -1,10 +1,15 @@
 //! `0x7c22b0` and `0x7c23e0` run whole against `ray_plane` and `point_in_poly`, apart and
-//! chained, and `DominantAxis` (`0x7bf680`) against `dominant_axis`. The axis table `0x7c23e0` reads is zero in the image until the static initializer
-//! `0x7c18d0` runs, so each test writes the six values it stores. A NaN result matches any NaN:
-//! the payload x87 carries through differs from the host's; the hit is compared exactly.
+//! chained, and `DominantAxis` (`0x7bf680`) against `dominant_axis`. The axis table `0x7c23e0`
+//! reads is zero in the image until the static initializer `0x7c18d0` runs, so each test writes the
+//! six values it stores. The dominant axis also runs the shared set of edge fills and random
+//! non-NaN bit patterns. A NaN result matches any NaN: the payload x87 carries through differs
+//! from the host's; the hit is compared exactly.
+
+mod common;
 
 use benilla_re_cmath::raymesh::{dominant_axis, point_in_poly, ray_plane, Plane, Ray};
 use benilla_re_difftest::{Emu, Wow};
+use common::synth_n;
 
 fn next(s: &mut u32) -> u32 {
     *s = s.wrapping_mul(1664525).wrapping_add(1013904223);
@@ -501,5 +506,8 @@ fn dominant_axis_difftest() {
         run(&mut emu, v, &format!("fuzz{i}"));
         let w = [fz8(&mut s), fz8(&mut s), fz8(&mut s)];
         run(&mut emu, w, &format!("fuzz{i}"));
+    }
+    for (i, v) in synth_n(3).iter().enumerate() {
+        run(&mut emu, [v[0], v[1], v[2]], &format!("synth{i}"));
     }
 }

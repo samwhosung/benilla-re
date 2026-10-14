@@ -1,10 +1,14 @@
 //! `RgbToHsv` (`0x7bbc80`), `HsvToRgb` (`0x7bbd60`) and the minor axis `0x7bf700` against the
 //! exe, over every combination of a set of edge channels (both zeros, NaN, the infinities, ties,
-//! the 360 wrap) and a fuzz. A NaN result matches any NaN.
+//! the 360 wrap), a fuzz, and the shared set of edge fills and random non-NaN bit patterns. A NaN
+//! result matches any NaN.
+
+mod common;
 
 use benilla_re_cmath::colour::{hsv_to_rgb, rgb_to_hsv};
 use benilla_re_cmath::raymesh::minor_axis;
 use benilla_re_difftest::{Emu, Wow};
+use common::synth_n;
 
 fn next(s: &mut u32) -> u32 {
     *s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
@@ -96,6 +100,7 @@ fn rgb_to_hsv_difftest() {
             frand(&mut s, 0.0, 1.0),
         ]);
     }
+    cases.extend(synth_n(3).iter().map(|v| [v[0], v[1], v[2]]));
     for c in &cases {
         write3(&mut e, rgb, c);
         e.write(out, &[0xaa; 12]);
@@ -168,6 +173,7 @@ fn hsv_to_rgb_difftest() {
             frand(&mut s, 0.0, 1.0),
         ]);
     }
+    cases.extend(synth_n(3).iter().map(|v| [v[0], v[1], v[2]]));
     for c in &cases {
         write3(&mut e, hsv, c);
         e.write(out, &[0xaa; 12]);
@@ -189,7 +195,9 @@ fn minor_axis_difftest() {
     };
     let mut e = Emu::new(&wow);
     let v = e.alloc(0x10);
-    for c in triples(0x7bf7_0001, 4000, -10.0, 10.0) {
+    let mut cases = triples(0x7bf7_0001, 4000, -10.0, 10.0);
+    cases.extend(synth_n(3).iter().map(|v| [v[0], v[1], v[2]]));
+    for c in cases {
         write3(&mut e, v, &c);
         let bin = e.call(0x7bf700, v as u32, 0, &[]);
         assert_eq!(bin as usize, minor_axis(&c), "minor_axis {c:?}");

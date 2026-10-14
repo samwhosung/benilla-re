@@ -1,4 +1,5 @@
-//! A rotation matrix to a quaternion (`0x7c0190`), by the trace and the largest diagonal.
+//! A rotation matrix to a quaternion (`0x7c0190`), by the trace and the largest diagonal, and a
+//! quaternion's rotation applied on the left of a 4×4 (`0x7bddb0`).
 //!
 //! `__thiscall`: `ecx` = the output quaternion `[x, y, z, w]`, `[ebp+8]` = a row-major 3×3
 //! matrix, element `m[r][c]` at index `r*3 + c`. The constants are 0.5 (`0x3f000000`), 0.0 and
@@ -54,4 +55,49 @@ pub fn matrix_to_quat(m: &[f32; 9]) -> Quat {
     }
 
     out
+}
+
+/// The rotation matrix `0x7bddb0` builds from `q`, row by row: `2z` is stored to an `f32` slot
+/// first, then `2xw`, `2yw`, `2zw`, `2x²`, `2xy`, `2xz` and `2yz` are each stored as `f32`, while
+/// `2y²` stays in the register and `2z²` is used both as the register (`m0`) and as the `f32` store
+/// (`m4`). The entries are `1 − (2z² + 2y²)`, `2xy + 2zw`, `2xz − 2yw`, `2xy − 2zw`, `1 − (2z² +
+/// 2x²)`, `2yz + 2xw`, `2xz + 2yw`, `2yz − 2xw` and `1 − (2y² + 2x²)`, each stored as `f32`.
+fn quaternion_rotation(q: &Quat) -> [f32; 9] {
+    let (x, y, z, w) = (f(q[0]), f(q[1]), f(q[2]), f(q[3]));
+    let tx = 2.0 * x;
+    let ty = 2.0 * y;
+    let tz = f((2.0 * z) as f32);
+    let l2xw = f((tx * w) as f32);
+    let l2yw = f((ty * w) as f32);
+    let l2zw = f((tz * w) as f32);
+    let l2x2 = f((tx * x) as f32);
+    let l2xy = f((ty * x) as f32);
+    let l2xz = f((tz * x) as f32);
+    let l2yz = f((tz * y) as f32);
+    let r2y2 = ty * y;
+    let r2z2 = tz * z;
+    let f2z2 = f((tz * z) as f32);
+    [
+        (1.0 - (r2z2 + r2y2)) as f32,
+        (l2xy + l2zw) as f32,
+        (l2xz - l2yw) as f32,
+        (l2xy - l2zw) as f32,
+        (1.0 - (f2z2 + l2x2)) as f32,
+        (l2yz + l2xw) as f32,
+        (l2xz + l2yw) as f32,
+        (l2yz - l2xw) as f32,
+        (1.0 - (r2y2 + l2x2)) as f32,
+    ]
+}
+
+/// `RotateMatrixByQuaternion` (`0x7bddb0`, `ecx` = the matrix, changed in place, `[ebp+8]` = the
+/// quaternion `[x, y, z, w]`): builds the rotation above in a 4×4 whose fourth row and column are
+/// `(0, 0, 0, 1)`, then replaces the matrix with `rotation · matrix` by `MultiplyMatrix4`.
+#[must_use]
+pub fn quat_mul4(m: &[f32; 16], q: &Quat) -> [f32; 16] {
+    let r = quaternion_rotation(q);
+    let rotation = [
+        r[0], r[1], r[2], 0.0, r[3], r[4], r[5], 0.0, r[6], r[7], r[8], 0.0, 0.0, 0.0, 0.0, 1.0,
+    ];
+    crate::multiply::multiply_matrix4(&rotation, m)
 }

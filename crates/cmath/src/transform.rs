@@ -1,6 +1,6 @@
 //! `TransformPoint` (`0x7bca80`, `systems/collision/falling.md#frame-transform`),
-//! `TransformVector4` (`0x7bcb40`) and `ScaleMatrixRows` (`0x7bdca0`,
-//! `systems/camera.md#orthographic-setup`).
+//! `TransformVector4` (`0x7bcb40`), `ScaleMatrixRows` (`0x7bdca0`,
+//! `systems/camera.md#orthographic-setup`) and `ScaleMatrix` (`0x7bdd00`).
 
 /// `0x7bca80`: `v` times the upper 3×3 of the 4×4 `m` plus its fourth row: `x = ((m8·z + m4·y) +
 /// x·m0) + m12`, `y = ((m9·z + m1·x) + m5·y) + m13`, `z = ((m10·z + m2·x) + m6·y) + m14`, each
@@ -59,4 +59,15 @@ pub fn translate_matrix(m: &mut [f32; 16], t: &[f32; 3]) {
     m[12] = (f(m[8]) * f(t[2]) + f(m[4]) * f(t[1]) + f(t[0]) * f(m[0]) + f(m[12])) as f32;
     m[13] = (f(m[9]) * f(t[2]) + f(m[5]) * f(t[1]) + f(m[1]) * f(t[0]) + f(m[13])) as f32;
     m[14] = (f(m[10]) * f(t[2]) + f(m[6]) * f(t[1]) + f(m[2]) * f(t[0]) + f(m[14])) as f32;
+}
+
+/// `ScaleMatrix` (`0x7bdd00`, `ecx` = the matrix, the scalar on the stack): the first three
+/// entries of rows 0 to 2 of the 4×4 `m` times `s`, in place, each product stored as `f32`. Entry 3
+/// of each row, and row 3, are unchanged.
+pub fn scale_matrix(m: &mut [f32; 16], s: f32) {
+    for row in 0..3 {
+        for v in &mut m[row * 4..row * 4 + 3] {
+            *v = (f64::from(s) * f64::from(*v)) as f32;
+        }
+    }
 }

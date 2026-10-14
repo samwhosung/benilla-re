@@ -1,10 +1,14 @@
 //! `TranslateMatrix` (`0x7bdc40`), the 3×4 matrix applied to a vector (`0x7bcae0`) and the 4×4
 //! rotation about an axis (`0x7bdb00`), run whole against `translate_matrix`,
-//! `transform_mat43_vec3` and `axis_angle_mat4`. A NaN result matches any NaN.
+//! `transform_mat43_vec3` and `axis_angle_mat4`, on edge values, a fuzz, and the shared set of edge
+//! fills and random non-NaN bit patterns. A NaN result matches any NaN.
+
+mod common;
 
 use benilla_re_cmath::rotation::axis_angle_mat4;
 use benilla_re_cmath::transform::{transform_mat43_vec3, translate_matrix};
 use benilla_re_difftest::{Emu, Wow};
+use common::{synth_angles, synth_n};
 
 fn next(s: &mut u32) -> u32 {
     *s = s.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
@@ -78,8 +82,10 @@ fn translate_matrix_difftest() {
     let mut e = Emu::new(&wow);
     let m = e.alloc(0x40);
     let t = e.alloc(0x10);
-    let ms = vectors(16, 0x7bdc_4001, 1500);
-    let ts = vectors(3, 0x7bdc_4002, 1500);
+    let mut ms = vectors(16, 0x7bdc_4001, 1500);
+    ms.extend(synth_n(16));
+    let mut ts = vectors(3, 0x7bdc_4002, 1500);
+    ts.extend(synth_n(3));
     for (k, mv) in ms.iter().enumerate() {
         let tv = &ts[(k * 3 + 1) % ts.len()];
         put(&mut e, m, mv);
@@ -103,8 +109,10 @@ fn transform_mat43_vec3_difftest() {
     let m = e.alloc(0x30);
     let v = e.alloc(0x10);
     let out = e.alloc(0x10);
-    let ms = vectors(12, 0x7bca_e001, 1500);
-    let vs = vectors(3, 0x7bca_e002, 1500);
+    let mut ms = vectors(12, 0x7bca_e001, 1500);
+    ms.extend(synth_n(12));
+    let mut vs = vectors(3, 0x7bca_e002, 1500);
+    vs.extend(synth_n(3));
     for (k, mv) in ms.iter().enumerate() {
         let vv = &vs[(k * 3 + 1) % vs.len()];
         put(&mut e, m, mv);
@@ -131,8 +139,9 @@ fn axis_angle_mat4_difftest() {
     let mut e = Emu::new(&wow);
     let axis = e.alloc(0x10);
     let out = e.alloc(0x40);
-    let axes = vectors(3, 0x7bdb_0001, 1500);
-    let angles = [
+    let mut axes = vectors(3, 0x7bdb_0001, 1500);
+    axes.extend(synth_n(3));
+    let mut angles = vec![
         0.0,
         -0.0,
         0.5,
@@ -144,6 +153,7 @@ fn axis_angle_mat4_difftest() {
         100.0,
         -1234.5,
     ];
+    angles.extend(synth_angles());
     for (k, av) in axes.iter().enumerate() {
         for unit in [false, true] {
             let angle = angles[(k + usize::from(unit)) % angles.len()];

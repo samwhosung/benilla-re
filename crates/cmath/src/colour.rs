@@ -1,4 +1,5 @@
-//! The hue, saturation and value conversions (`0x7bbc80`, `0x7bbd60`). A colour is three `f32`
+//! The hue, saturation and value conversions (`0x7bbc80`, `0x7bbd60`) and the conversions between
+//! three `f32` channels and a packed colour (`0x7bbec0`, `0x7bbf20`). A colour is three `f32`
 //! channels; hue is in degrees.
 
 use crate::raymesh::{dominant_axis, minor_axis};
@@ -68,4 +69,33 @@ pub fn hsv_to_rgb(hsv: &[f32; 3]) -> [f32; 3] {
         4 => [t, p, v],
         _ => [v, p, q],
     }
+}
+
+/// One channel of `0x7bbec0`: `x·255 + 512` at 53 bits stored as `f32`, whose bits shifted right by
+/// 14 and masked with `0xff` are the byte (the float's mantissa holds `x·255` once 512 sets the
+/// exponent).
+fn channel_byte(x: f32) -> u32 {
+    let c = (f64::from(x) * 255.0 + 512.0) as f32;
+    (c.to_bits() >> 14) & 0xff
+}
+
+/// `0x7bbec0` (`ecx` = the packed colour, `[ebp+8]` = the three channels): the little-endian word
+/// whose bytes are blue (from `rgb[2]`), green, red and `0xff`, each channel by `channel_byte`.
+#[must_use]
+pub fn color_pack_rgb(rgb: &[f32; 3]) -> u32 {
+    channel_byte(rgb[2]) | channel_byte(rgb[1]) << 8 | channel_byte(rgb[0]) << 16 | 0xff << 24
+}
+
+/// `0x7bbf20` (`ecx` = the packed colour, `[ebp+8]` = the output): the red, green and blue bytes
+/// (bytes 2, 1 and 0) each converted by `fild` and multiplied at 53 bits by the `f32` `0x3b808081`
+/// (1/255 rounded), stored as `f32`.
+#[must_use]
+pub fn color_unpack_rgb(packed: u32) -> [f32; 3] {
+    let k = f64::from(f32::from_bits(0x3b80_8081));
+    let channel = |byte: u32| (f64::from(byte) * k) as f32;
+    [
+        channel((packed >> 16) & 0xff),
+        channel((packed >> 8) & 0xff),
+        channel(packed & 0xff),
+    ]
 }

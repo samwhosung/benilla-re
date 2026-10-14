@@ -1,5 +1,6 @@
 //! `RsqrtEstimate` (`0x456330`) against the exe, with the magic number the callers pass and with
-//! others, over powers of two, a fuzz of positive values, and the zeros, NaN and infinities.
+//! others, over powers of two, a fuzz of positive values, and the zeros, NaN and infinities, and
+//! over random magic numbers with random bit patterns.
 
 use benilla_re_cmath::rsqrt::rsqrt_estimate;
 use benilla_re_difftest::{Emu, Wow};
@@ -57,5 +58,29 @@ fn fast_inv_sqrt_seed_difftest() {
         let x = (m * 1.0e6) as f32 + f32::from_bits(0x0000_0001);
         run(&mut emu, 0x5f39_97bb, x);
         run(&mut emu, next(&mut s), f32::from_bits(next(&mut s)));
+    }
+
+    // Random magic and random bits, and the magic of the series `0x5fe732f7`. The `fld` of a
+    // signalling NaN quiets it, so a NaN result matches any NaN.
+    let mut run_nan = |magic: u32, idx: u32| {
+        let got = emu.call_f32(0x456330, magic, 0, &[idx]);
+        let ours = rsqrt_estimate(magic, f32::from_bits(idx));
+        if got.is_nan() && ours.is_nan() {
+            return;
+        }
+        assert_eq!(
+            got.to_bits(),
+            ours.to_bits(),
+            "rsqrt({idx:#x}, {magic:#x}): binary={:#010x} ours={:#010x}",
+            got.to_bits(),
+            ours.to_bits()
+        );
+    };
+    run_nan(0x5fe7_32f7, 0x3fff_0000);
+    run_nan(0x5fe7_32f7, 0);
+    run_nan(0, 0xffff_ffff);
+    let mut s = 0x3303_3030u32;
+    for _ in 0..5000 {
+        run_nan(next(&mut s), next(&mut s));
     }
 }
