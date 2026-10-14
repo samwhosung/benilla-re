@@ -739,6 +739,13 @@ EvtTimer	0x001c	4	void *	m_argument	core	Holds the argument passed to the functi
 EvtTimer	0x0020	4	void *	m_functionEx	core	Holds the second form of function, called with two stack arguments	verified	one	core/events#timers
 EvtTimer	0x0028	8	uint32_t[2]	m_exStackArguments	core	Holds the two stack arguments of the second form	verified	one	core/events#timers
 EvtTimer	0x0030	4	void *	m_exArgument	core	Holds the edx argument of the second form	verified	one	core/events#timers
+FfxRenderTarget	0x0000	4	uint32_t	m_handle	ffxeffects	Holds the target texture handle, 0 for the screen	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x0004	4	int32_t	m_allocWidth	ffxeffects	Holds the allocated texture width	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x0008	4	int32_t	m_allocHeight	ffxeffects	Holds the allocated texture height	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x000c	4	int32_t	m_width	ffxeffects	Holds the wanted width	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x0010	4	int32_t	m_height	ffxeffects	Holds the wanted height	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x0014	4	float	m_invAllocWidth	ffxeffects	Holds 1/allocWidth as a float	verified	one	ffxeffects#render-target-allocation
+FfxRenderTarget	0x0018	4	float	m_invAllocHeight	ffxeffects	Holds 1/allocHeight as a float	verified	one	ffxeffects#render-target-allocation
 FriendList	0x0000	1600	FriendSlot[50]	m_friends	net	Holds the 50 friend slots	verified	one	net/friends#friend-list-object
 FriendList	0x0640	4	uint32_t	m_pendingFriendNames	net	Holds the number of friend names not yet in the name cache	verified	one	net/friends#friend-list-object
 FriendList	0x0648	8	uint64_t	m_selectedFriend	net	Holds the guid of the selected friend	verified	one	net/friends#friend-list-object

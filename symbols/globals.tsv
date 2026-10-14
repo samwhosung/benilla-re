@@ -478,6 +478,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x806498	const double	s_double406fe00000000000		ui	Holds the double 255 (0x406fe00000000000)	inferred	none	
 0x806534	const float	s_thirtyTwo		unassigned	Holds 32.0	inferred	none	lighting/precipitation#sand
 0x80653c	const float	s_oneTwentyEight		unassigned	Holds 128.0	verified	one	lighting/clouds#cloud-cover
+0x806540	float	s_minusHalfByte		ffxeffects	Holds -128.0, the lower clamp of the signed wave map byte	verified	one	ffxeffects#wave-map-table
 0x806544	const float	s_float37f5c290		ui	Holds the float 0.000029296876 (0x37f5c290)	inferred	none	
 0x806548	const float	s_float427a8000		ui	Holds the float 62.625 (0x427a8000)	inferred	none	
 0x80654c	float	s_tileSize		terrain	Holds 533.33331 (0x44055555), a tile's side in yards	verified	one	terrain/files#wdl
@@ -914,8 +915,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8112a8	const float	s_float40800000		unassigned	Holds the float 4 (0x40800000)	inferred	none	
 0x8112ac	const float	s_float3fc00000At8112ac		unassigned	Holds the float 1.5 (0x3fc00000)	inferred	none	
 0x8112dc	const float[12]	s_keyframeTable		playername	Holds the crit scale keyframes: start, end, low and high of three segments	verified	one	playername/worldtext#timing-and-scale
-0x811310	const float	s_float42fe0000		unassigned	Holds the float 127 (0x42fe0000)	inferred	none	
+0x811310	float	s_maxSignedByte		ffxeffects	Holds 127.0, the upper clamp of the signed wave map byte	verified	one	ffxeffects#wave-map-table
 0x811314	void *[2]	WORLDTEXTSTRING::vftable		playername	Holds the text record vtable: the deleting destructor and one more slot	verified	one	playername/worldtext#text-record
+0x81147c	float	s_ffxThree		ffxeffects	Holds 3.0, the glow wave screen offset in pixels and the death fade factor	verified	one	ffxeffects#glow-wave-pass
+0x811480	void *[3]	s_box4PassVtable		ffxeffects	Holds the Box4 pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x81148c	void *[3]	FFX::Pass::vftable		ffxeffects	Holds the base pass vtable: deleting destructor and two pure slots	verified	one	ffxeffects#pass-and-effect-objects
+0x811498	void *[3]	s_gauss4PassVtable		ffxeffects	Holds the Gauss4 pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114a4	void *[3]	s_glowPassVtable		ffxeffects	Holds the glow pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114b4	void *[3]	s_glowWavePassVtable		ffxeffects	Holds the glow wave pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114c0	void *[3]	s_deathPassVtable		ffxeffects	Holds the death pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114cc	void *[3]	s_deathCombinerPassVtable		ffxeffects	Holds the combiner death pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114d8	void *[3]	s_waveMapPassVtable		ffxeffects	Holds the wave map base pass vtable: deleting destructor and two pure slots	verified	one	ffxeffects#pass-and-effect-objects
+0x8114e4	void *[3]	s_glowEffectVtable		ffxeffects	Holds the glow effect vtable: deleting destructor, readiness test and render	verified	one	ffxeffects#pass-and-effect-objects
+0x8114f0	void *[3]	s_ffxEffectVtable		ffxeffects	Holds the base effect vtable: deleting destructor, readiness test and render over list A	verified	one	ffxeffects#pass-and-effect-objects
+0x8114fc	void *[3]	s_deathEffectVtable		ffxeffects	Holds the death effect vtable: deleting destructor, readiness test and render over list A	verified	one	ffxeffects#pass-and-effect-objects
 0x811508	const float	s_piConst		lighting	Holds π as a float	verified	one	lighting/celestial#static-tracks
 0x811510	const float[7]	s_skyKeyTimes		lighting	Holds the day fractions 0.2291667, 0.5, 0.8958333, 0.9166667, 0.1666667, and 1.0 the track keys start from	verified	one	lighting/celestial#static-tracks
 0x81152c	const float[6]	s_skyRingAngles		lighting	Holds the sky dome's ring angles over π: 0, 0.17, 0.2, 0.23, 0.24, 0.25	verified	one	lighting/sky#sky-dome
@@ -1819,8 +1832,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86c9dc	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x86c9e0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x86ca0c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x86f1c4	char[60]	s_pathFfxEffects		ffxeffects	Holds the source path of FFXEffects.cpp that the allocation calls pass	verified	one	ffxeffects#wave-map-table
 0x86f200	char[8]	s_textFfxGlow		ffxeffects	Holds the string "ffxGlow"	inferred	none	
+0x86f228	char[15]	s_tagFfxPass		ffxeffects	Holds the type tag .PAVPass@FFX@@ of the pass pointer lists	verified	one	ffxeffects#pass-and-effect-objects
 0x86f238	char[9]	s_textFfxDeath		ffxeffects	Holds the string "ffxDeath"	inferred	none	
+0x86f260	uint16_t[4]	s_stripIndices		ffxeffects	Holds the strip order 0, 3, 1, 2 of a quad	verified	one	ffxeffects#pass-target-and-draw-state
+0x86f268	float	s_one		ffxeffects	Holds 1.0, the flip offset of the full-screen quad	verified	one	ffxeffects#full-screen-quad
 0x86f2ac	char[4]	s_textFfx		ffxeffects	Holds the string "ffx"	inferred	none	
 0x86f2c8	const float	s_dayNightHalf		lighting	Holds 0.5	verified	one	lighting/daynight#time-of-day-to-half-minutes
 0x86f2d0	const uint8_t[256]	s_cloudPermutation		lighting	Holds the cloud noise's 256-entry permutation	inferred	none	lighting/clouds#cloud-noise
@@ -3440,7 +3457,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7f348	uint32_t			cvar	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc7f350	uint32_t			unassigned	Holds a dword that CWorld::Initialize reads and writes; not read here	inferred	none	
 0xc7f354	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc7f360	uint32_t			unassigned	Holds a dword that BeginCurrentFfx, EndCurrentFfx read and write; not read here	inferred	none	
+0xc7f360	void *	s_pixelShadersVar		ffxeffects	Holds the CVar record of pixelShaders	verified	one	ffxeffects#begin-and-end
 0xc7f3b0	uint32_t	s_rippleSlotSelf		terrain	Holds the next ripple slot of the local player's partition	inferred	none	
 0xc7f3b8	uint32_t[512]	s_swatchPixels		terrain	Holds the pixels the swatch callback writes	verified	one	terrain/liquidpass#liquid-swatch-textures
 0xc7fbb8	void *	s_skyGlareTexture		terrain	Holds the sky glare texture the water pass binds	inferred	none	
@@ -3625,16 +3642,36 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce88d0	float	s_playerNameInfinity3		playername	Holds +inf copied by 0x6c7980, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
 0xce88dc	void *[15]	s_rankBadgeTextures		playername	Holds the 15 PvP rank badge textures	verified	one	playername/worldtext#rank-icon-records
 0xce8918	uint32_t[15]	s_filterLists		unassigned	Holds five capacity, count, base triples of word lists: server spam, spam, reserved, profanity, profane names	verified	one	ui/chatfilter#the-word-lists
-0xce89a0	uint32_t			unassigned	Holds a dword that ConstructGlowEffect reads and writes; not read here	inferred	none	
-0xce89c0	float			unassigned	Holds a float its object file's code reads and writes; not read here	inferred	none	
-0xce89c4	int32_t			unassigned	Holds an int32_t its object file's code reads and writes; not read here	inferred	none	
-0xce89c8	int32_t			unassigned	Holds an int32_t its object file's code reads and writes; not read here	inferred	none	
-0xce89cc	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xce8a04	uint32_t			ffxeffects	Holds a dword that FFXInitialize, BeginCurrentFfx, EndCurrentFfx read and write; not read here	inferred	none	
-0xce8ae8	uint32_t			ffxeffects	Holds a dword that ConstructGlowEffect, ConstructDeathEffect, FFXInitialize read and write; not read here	inferred	none	
-0xce8b5c	uint32_t			ffxeffects	Holds a dword that ConstructGlowEffect, ConstructDeathEffect, FFXInitialize read and write; not read here	inferred	none	
-0xce8b98	uint32_t			ffxeffects	Holds a dword that ConstructGlowEffect, ConstructDeathEffect, FFXInitialize read and write; not read here	inferred	none	
-0xce8bb4	uint32_t			unassigned	Holds a dword that FFXInitialize, BeginCurrentFfx, EndCurrentFfx read and write; not read here	inferred	none	
+0xce898c	void *	s_waveMapBuffer		ffxeffects	Holds the allocated wave map table, or null	verified	one	ffxeffects#wave-map-table
+0xce8994	uint32_t	s_waveMapFormat		ffxeffects	Holds the wave map format, 8 or 1, picked by the capability word	verified	one	ffxeffects#wave-map-table
+0xce8998	uint32_t	s_waveMapUsers		ffxeffects	Holds the number of glow wave and wave map passes alive	verified	one	ffxeffects#wave-map-table
+0xce899c	uint8_t	s_waveMapExitFlags		ffxeffects	Holds a bit the wave map exit stub sets	verified	one	ffxeffects#static-initializers
+0xce89a0	FfxRenderTarget	s_waveMapTarget		ffxeffects	Holds the 128 by 128 wave map descriptor	verified	one	ffxeffects#wave-map-table
+0xce89bc	float	s_glowWaveScaleX		ffxeffects	Holds 1.0, the horizontal scale factor of the wave map UV	verified	one	ffxeffects#glow-wave-pass
+0xce89c0	float	s_glowWaveScaleY		ffxeffects	Holds 0.88, the vertical scale factor of the wave map UV	verified	one	ffxeffects#glow-wave-pass
+0xce89c4	int32_t	s_glowWavePeriodA		ffxeffects	Holds 3174, the period in milliseconds of the first wave map scroll	verified	one	ffxeffects#glow-wave-pass
+0xce89c8	int32_t	s_glowWavePeriodB		ffxeffects	Holds 2805, the period in milliseconds of the second wave map scroll	verified	one	ffxeffects#glow-wave-pass
+0xce89cc	float[8]	s_box4Taps		ffxeffects	Holds the four Box4 tap offsets in source texels, written on the first draw	verified	one	ffxeffects#box-and-gauss-passes
+0xce89ec	uint8_t	s_box4TapsFlags		ffxeffects	Holds a bit set once the Box4 taps are written	verified	one	ffxeffects#box-and-gauss-passes
+0xce89f8	uint8_t	s_ffxRectangleMode		ffxeffects	Holds 1 when the rectangle programs are used, set by FFXInitialize	verified	one	ffxeffects#start-and-shutdown
+0xce89fc	void *	s_gxMultisampleVar		ffxeffects	Holds the CVar record of gxMultisample	verified	one	ffxeffects#start-and-shutdown
+0xce8a00	void *	s_ffxRectangleVar		ffxeffects	Holds the CVar record of ffxRectangle	verified	one	ffxeffects#start-and-shutdown
+0xce8a04	void *	s_ffxVar		ffxeffects	Holds the CVar record of ffx	verified	one	ffxeffects#start-and-shutdown
+0xce8a08	float[16]	s_savedView		ffxeffects	Holds the device view matrix saved by a pass and restored after it	verified	one	ffxeffects#pass-target-and-draw-state
+0xce8a48	float[16]	s_savedProjection		ffxeffects	Holds the device projection matrix saved by a pass and restored after it	verified	one	ffxeffects#pass-target-and-draw-state
+0xce8a88	uint32_t[4]	s_stripDrawDesc		ffxeffects	Holds the strip draw descriptor: counts 4 and 0, the words 4 and 0, and type 3	verified	one	ffxeffects#static-initializers
+0xce8a98	float[8]	s_quadOffsets		ffxeffects	Holds the UV offsets of the four quad vertices	verified	one	ffxeffects#full-screen-quad
+0xce8ab8	float[12]	s_quadPositions		ffxeffects	Holds the positions of the four quad vertices	verified	one	ffxeffects#full-screen-quad
+0xce8ae8	FfxRenderTarget	s_quarterTarget		ffxeffects	Holds the quarter-size target descriptor	verified	one	ffxeffects#render-target-allocation
+0xce8b04	FfxRenderTarget	s_quarterTarget2		ffxeffects	Holds the second quarter-size target descriptor, the Gauss4 horizontal output	verified	one	ffxeffects#render-target-allocation
+0xce8b20	FfxRenderTarget	s_halfTarget		ffxeffects	Holds the half-size target descriptor, which no pass reads	verified	one	ffxeffects#render-target-sizes
+0xce8b3c	FfxRenderTarget	s_halfTarget2		ffxeffects	Holds the second half-size target descriptor, which no pass reads	verified	one	ffxeffects#render-target-sizes
+0xce8b58	uint8_t	s_targetExitFlags		ffxeffects	Holds bits the target exit stubs set	verified	one	ffxeffects#static-initializers
+0xce8b5c	FfxRenderTarget	s_fullTarget		ffxeffects	Holds the full-size target descriptor, the scene	verified	one	ffxeffects#render-target-allocation
+0xce8b78	FfxRenderTarget	s_fullTarget2		ffxeffects	Holds the twin of the full-size target descriptor, which no pass reads	verified	one	ffxeffects#render-target-sizes
+0xce8b94	uint8_t	s_screenTargetExitFlags		ffxeffects	Holds a bit the screen target exit stub sets	verified	one	ffxeffects#static-initializers
+0xce8b98	FfxRenderTarget	s_screenTarget		ffxeffects	Holds the screen descriptor: handle 0, the window size and its reciprocals	verified	one	ffxeffects#render-target-sizes
+0xce8bb4	void *	s_currentFfx		ffxeffects	Holds the current full-screen effect, or null	verified	one	ffxeffects#start-and-shutdown
 0xce8c8c	float[8]	s_moonSizeTrack		lighting	Holds the moons' size track, four keys	verified	one	lighting/celestial#celestial-bodies
 0xce8cac	float[8]	s_sunDiscSizeTrack		lighting	Holds the sun disc's size track, four keys	verified	one	lighting/celestial#celestial-bodies
 0xce8ccc	float[6]	s_moon02AzimuthTrack		lighting	Holds moon02's azimuth track, three keys	verified	one	lighting/celestial#static-tracks
