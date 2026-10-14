@@ -14,3 +14,4 @@ benilla-re-difftest = { path = "crates/difftest" }
 benilla-re-fastmath = { path = "crates/fastmath" }
 benilla-re-objectlayer = { path = "crates/objectlayer" }
 benilla-re-random = { path = "crates/random" }
+benilla-re-storm = { path = "crates/storm" }

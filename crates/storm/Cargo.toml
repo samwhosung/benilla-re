@@ -1,0 +1,14 @@
+[package]
+name = "benilla-re-storm"
+description = "The client's MPQ archive set, mounted with the exe's priorities, over WoW.exe 1.12.1.5875's install"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+# The MPQ format and its codecs; the client's mount order is what this crate adds.
+wow-mpq = "=0.6.4"
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
