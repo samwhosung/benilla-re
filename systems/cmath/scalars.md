@@ -3,9 +3,9 @@
 The scalar file of the Tempest math library, `0x455c00` through `0x4567c2`: division by small
 constants, the minimum, median, maximum, range and mean of 3, 5 and 9 integers, normalization of
 vectors of two and three, bit-pattern estimates of reciprocals and roots, splitting a float into a
-whole part and a fraction, and shaping functions. Two routines are live, the normalization of a
-vector of two and the reciprocal square root estimate; the high multiply `0x455c70` in the file's
-middle is derived in `cmath/overview#high-product`. Everything else is reached by nothing.
+whole part and a fraction, and shaping functions. Three routines are live: the normalization of a
+vector of two, the reciprocal square root estimate and the high multiply `0x455c70` in the file's
+middle, derived in `cmath/overview#high-product`. Everything else is reached by nothing.
 
 The file's initializers in the C runtime's run (`0x827564` to `0x82756c`) are the header triple, +∞
 `0x455c00`, 2π `0x456780` and 1/2π `0x4567a0`. The next file starts at `0x4567d0`.
@@ -51,8 +51,8 @@ have none. The test runs `0x456330` whole.
 the sign of that dword. `0x455c80(n)` is `⌊n/3⌋` for unsigned `n` (`n·0xaaaaaaab >> 33`), exact for every
 `n`. `0x455c90(n)` is the high dword of `n·0x55555556`, signed: `⌊n/3⌋`, one lower for a negative multiple
 of 3. Four routines divide by 5 and 9 with shifts: `0x455ca0` is `⌊n/5⌋` for `n` below 84194565,
-`0x455cc0` is `⌈n/5⌉` for `n` between −671088645 and 352630021, `0x455ce0` is `⌊n/9⌋` for `n` below
-603979776, and `0x455d00` is `⌈n/9⌉` for `n` between −301989897 and 301989880. Outside those ranges the
+`0x455cc0` is `⌈n/5⌉` for `n` from −671088644 to 352630020, `0x455ce0` is `⌊n/9⌋` for `n` below
+603979776, and `0x455d00` is `⌈n/9⌉` for `n` from −301989896 to 301989879. Outside those ranges the
 results differ from the exact quotient.
 
 Addresses: `0x455c60`, `0x455c80`, `0x455c90`, `0x455ca0`, `0x455cc0`, `0x455ce0`, `0x455d00`
@@ -90,7 +90,7 @@ sorting over random inputs.
 ## Splitting a float
 
 Four routines split `x` into `⌊x⌋` and a fraction. `0x4563e0` (a double on the stack) and `0x456420`
-(a float) truncate with `__ftol` and subtract 1 when `x` is negative: `edx` receives the integer,
+(a float) truncate with `__ftol` and subtract 1 when `x` is negative: `edx` holds the address of the integer and
 `ecx` the address of the fraction `x − i`. `0x456470` and `0x4564c0` keep the whole part as a double
 or a float. A negative whole number gives a part one too low and a fraction of 1.0.
 
@@ -117,7 +117,10 @@ Proof: one
 Test: none
 
 `0x455c20(x, y)` is a smooth zigzag of the phase `p = x·y`: with `f = p − ⌊p⌋` it is `1 − (6 − 4f)·f²`,
-negated for odd `⌊p⌋`; `0x455bb0`, which lies before this file's +∞ initializer, is the same with `p = x·y − 0.5`. `0x456700` and `0x456740` return `sin(πxy)/(πxy)`, and `0x456720` and `0x456760`
+negated for odd `⌊p⌋`; `0x455bb0` is the same with `p = x·y − 0.5`. It belongs to no object file here: it lies after fastmath's last
+initializer (`0x455ba2`) and before this file's +∞ initializer (`0x455c00`), and a file can have code on both sides of its
+initializers, so position decides nothing; it calls `0x456420` as `0x455c20` does, which favours this file, and nothing ties it
+to fastmath. `0x456700` and `0x456740` return `sin(πxy)/(πxy)`, and `0x456720` and `0x456760`
 `sin(πx)/(πx)`, with no zero guard. `0x456510` is `fcomp; test ah,5; jp`: below gives 0.0 (`0x7ffd74`), else 1.0. `0x4565c0` loads 3.0 from
 `0x80297c` and `0x4566da` loads 2.0 from `0x801628`. `0x456660` multiplies the logarithm by −1.0 (`0x8030a0`) before `__CIpow`. The sine
 routines multiply by π as a double (`0x8030a8`) or a float (`0x8030b0`) and divide `fsin` into the
@@ -143,7 +146,7 @@ Nothing live reaches the file's functions other than `0x455c70` (`cmath/overview
 and `0x456330`. The census is a scan of every `call`, `jmp` and `jcc` target in the listing and of every
 dword of the image for each address; its control is `0x456330`, with two call sites. The routines that
 call others in the file (`0x455de0`, `0x455ee0`, `0x456210`, `0x455c20`, `0x456640`, `0x456660`, `0x4566a0`,
-`0x456540`) are themselves unreached, as is `0x455bb0` in the file before.
+`0x456540`) are themselves unreached. `0x455bb0` is unreached too (placement in `cmath/scalars#shaping-functions`).
 
 Addresses: `0x456330`, `0x455c70`, `0x456280`, `0x455c20`, `0x455c60`, `0x455de0`, `0x455ee0`, `0x456210`, `0x456540`, `0x456640`, `0x456660`, `0x4566a0`, `0x455bb0`
 Confidence: verified

@@ -73,14 +73,11 @@ unit's level (`[[unit+0x110]+0x70]`) above 0, a nonzero byte and `0x606980` true
 ## Glow wave pass
 
 The GlowWave pass (`0x6cb310`, ctor `0x6cb1f0`) is the Glow pass under water with a displacement map
-as a third source. It draws the quad with three UV sets: the wave map's, transformed by `R(10°, Z)
-· S(W/128, 0.88·H/128) · T(p1, p2)` in row-vector order, the scene's and the blur's. `p1` is `(t mod
-3174)/3174` and `p2` is `(t mod 2805)/2805` for the clock `t` in milliseconds. The colour is the Glow
-pass's, but without the player check. It sets two program constants: with `0xce89f8` zero, `screenMtx
-= (3/allocW, 0, 0, 3/allocH)` of the scene target and `blurMtx = (0.75/allocW, 0, 0, 0.75/allocH)`
-of the blur target; with it set, `(3, 0, 0, 3)` and `(0.75, 0, 0, 0.75)`.
+as a third source. Its quad has three UV sets: the wave map's, transformed by `R(10°, Z)
+· S(W/128, 0.88·H/128) · T(p1, p2)` in row-vector order, the scene's and the blur's. `p1` and `p2` are the clock `t` in
+milliseconds mod 3174 and mod 2805, each over its modulus. The colour is Glow's without the `0x467d00` gate: the floor of 84 applies whenever the liquid state `0x672470(0)` is not 0xf, where Glow needs a player.
 
-Addresses: `0x6cb310`, `0x6cb1f0`, `0x42c010`, `0x7bdc40`, `0x7bdca0`, `0x7bdd60`, `0x7bca80`, `0x6cb43a`, `0x6cb443`, `0x6cb467`, `0x6cb4e6`, `0x6cb6fa`, `0x6cb72f`, `0x6cb77a`, `0x6cb7c2`, `0x58b3c0`, `0x58b4d0`, `0xce89bc`, `0xce89c0`, `0xce89c4`, `0xce89c8`
+Addresses: `0x6cb310`, `0x6cb1f0`, `0x42c010`, `0x7bdc40`, `0x7bdca0`, `0x7bdd60`, `0x7bca80`, `0x6cb43a`, `0x6cb443`, `0x6cb467`, `0x6cb4e6`, `0x6cb6fa`, `0x6cb72f`, `0x6cb77a`, `0x6cb7c2`, `0x6cb5d5`, `0x672470`, `0x58b3c0`, `0x58b4d0`, `0xce89bc`, `0xce89c0`, `0xce89c4`, `0xce89c8`, `0x467d00`
 Confidence: verified
 Proof: one
 Test: `ffxeffects::ffx_glow_pass_render_difftest`
@@ -91,8 +88,18 @@ translates by `(p1, p2, 0)`, `0x7bdca0` scales the rows by `sx = W·[0xce89bc]/1
 H·[0xce89c0]/128` with `[0xce89bc] = 1.0` and `[0xce89c0] = 0.88` (`0x6cb48e` to `0x6cb4bd`; `W`
 and `H` are the target's `+0xc` and `+0x10`), and `0x7bdd60` multiplies on the left by the rotation of
 `0x3e32b8c3` (10° as a float) about `(0, 0, 1)`; the wave UVs go through `0x7bca80`. 3.0 is the
-float at `0x81147c`. The constructor `0x6cb1f0` sets `+0x30` to 0, plus 1 when `0xce89f8` is nonzero (`0x6cb21e`) and plus 2 when `caps+0x4c` is 0 (`0x6cb22e`), loads the four programs of `FFXGlowWave.bls` to `+0x34` (`0x58b2e0`) and keeps the constant handles at `+0x44` and `+0x48`. The base constructor clears `caps+0x4c` and no store to it in the device code, `0x58a000` to `0x5a8000`, is outside the OpenGL path (`0x58e5d6`), so on Direct3D the index is 2. The player lookup at `0x6cb58d` is not tested for null: `0x6cb592` adds `0xe68` to
-the result.
+float at `0x81147c`. The constructor `0x6cb1f0` sets `+0x30` to 0, plus 1 when `0xce89f8` is nonzero (`0x6cb21e`) and plus 2 when `caps+0x4c` is 0 (`0x6cb22e`), loads the four programs of `FFXGlowWave.bls` to `+0x34` (`0x58b2e0`) and keeps the constant handles at `+0x44` and `+0x48`. The base constructor clears `caps+0x4c` and no store to it in the device code, `0x58a000` to `0x5a8000`, is outside the OpenGL path (`0x58e5d6`), so on Direct3D the index is 2. The player lookup at `0x6cb58d` is not tested for null (`0x6cb592` adds `0xe68`), and `0x467d00` is not called in `0x6cb310` to `0x6cb7df`; the floor is `and eax,0x54` at `0x6cb5d5`.
+
+## Glow wave constants
+
+The pass sets two program constants: with `0xce89f8` zero, `screenMtx
+= (3/allocW, 0, 0, 3/allocH)` of the scene target and `blurMtx = (0.75/allocW, 0, 0, 0.75/allocH)`
+of the blur target; with it set, `(3, 0, 0, 3)` and `(0.75, 0, 0, 0.75)`.
+
+Addresses: `0xce89f8`, `0x6cb72f`, `0x6cb77a`, `0x6cb7c2`
+Confidence: verified
+Proof: one
+Test: none
 
 ## Wave map table
 

@@ -407,10 +407,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8029cc	const float	s_bytePackBias		unassigned	Holds 512.0, the bias that leaves a byte in a float's low mantissa bits	verified	one	lighting/daynight#colour-band-value
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
 0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
+0x8029d8	float	s_floatInfinity		fastmath	Holds +inf as a float, read only by the initializer 0x454aa0	verified	one	fastmath#static-initializers
+0x8029dc	float	s_floatPi		fastmath	Holds pi as a float, read only by the initializer 0x455b70	verified	one	fastmath#static-initializers
+0x8029e0	double[64]	s_exp2Table		fastmath	Holds 2 to the i/64 for i from 0 to 63, indexed by the top six mantissa bits	verified	one	fastmath#software-exp2
+0x802be0	double[64]	s_log2Reciprocals		fastmath	Holds 64/(64+i) for i from 0 to 63, the multiplier of the mantissa	verified	one	fastmath#software-log2
+0x802de0	double[64]	s_log2Corrections		fastmath	Holds log2((64+i)/64) for i from 0 to 63, added to the exponent	verified	one	fastmath#software-log2
+0x802ff0	double	s_log2Floor		fastmath	Holds 1e-307, the value at or below which log2 returns -inf	verified	one	fastmath#software-log2
+0x802ff8	double[6]	s_log2Coefficients		fastmath	Holds 1/ln 2 divided by 1 to 6, the coefficients c1 to c6 of the log2 polynomial	verified	one	fastmath#software-log2
+0x803028	double[6]	s_exp2Coefficients		fastmath	Holds the six coefficients, c0 to c5, of the polynomial for 2 to the r	verified	one	fastmath#software-exp2
+0x803058	double	s_exp2Bias		fastmath	Holds 1023.0, added to the exponent before the integer split	verified	one	fastmath#software-exp2
 0x803068	const float	s_minusHalf		unassigned	Holds −0.5	inferred	none	lighting/shadows#projected-decals
 0x80306c	float	s_four		objectlayer	Holds 4.0, the multiple of the melee reach an attack start allows	verified	one	objectlayer/playercombat#the-melee-attack
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
+0x803090	double	s_twoPiFloatAsDouble		unassigned	Holds the float 2 pi widened to a double, the modulus of the angle wrap	verified	one	fastmath#angle-wrap
 0x803098	const float	s_scalarInfinitySource		cmath	Holds +inf, the value the scalar file's +inf initializer copies	verified	one	cmath/scalars#header-initializers
 0x80309c	const float	s_scalarPi		cmath	Holds the float pi, which the scalar file's 2 pi initializer doubles	verified	one	cmath/scalars#header-initializers
 0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
@@ -1939,6 +1949,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
 0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
+0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
@@ -2177,6 +2188,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05e10	float[16]	s_catmullRomBasis		spline	Holds the Catmull-Rom basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
 0xb05e50	float	s_splineTwoPi		spline	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	spline#object-file-and-initializers
 0xb05e58	float[16]	s_bezierBasis		spline	Holds the Bezier basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
+0xb05e98	float	s_fastmathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#static-initializers
+0xb05e9c	float	s_fastmathInvTwoPi		fastmath	Holds 1/(2π), set at startup; nothing reads it	verified	one	fastmath#static-initializers
+0xb05ea0	float	s_fastmathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/(2π) initializer	verified	one	fastmath#static-initializers
 0xb05ea4	float	s_scalarInfinity		cmath	Holds +inf, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
 0xb05ea8	float	s_scalarInvTwoPi		cmath	Holds 1/2 pi, set at startup; nothing reads it	verified	one	cmath/scalars#header-initializers
 0xb05eac	float	s_scalarTwoPi		cmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	cmath/scalars#header-initializers

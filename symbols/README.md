@@ -36,7 +36,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   async loads, the violence level, the guild emblem, HTTP fetches
 - `console`: `ConsoleClient.cpp`, the console screen and its output
 - `cvar`: `ConsoleVar.cpp`, the CVar registry and the config file, and the world's options file
-- `fastmath`: the fast logarithm after the spline file
 - `loadingscreen`: `LoadingScreen.cpp`
 - `minimap`: `Minimap.cpp` in `Game\GameClient`
 - `objectalloc`: `ObjectAlloc.cpp`, the object heaps

@@ -242,7 +242,7 @@ The skinned pick takes the bone indices, their stride, the weights, their stride
 bone matrices, the vertex count, the vertices and their stride, then the mode, index count, indices
 and outputs. Each vertex is `0x7bca80` by bone `idx[0]` times its weight byte, plus the next bones
 while the next weight byte is not 0 (four at most), each term and sum stored as float, then
-multiplied by the float `0x8026c8`, 1/255. The scratch buffer `0xc2b970` grows through `0x596ff0` when
+multiplied by the float `0x8026c8`, 1/255. The work buffer `0xc2b970` grows through `0x596ff0` when
 the vertex count exceeds `0xc2b96c`; the first call registers `0x5c5bd0`. `0x5c5d98` is the list count
 (`mul 0xaaaaaaab; shr 1; inc`). `0x5c5a64` rejects `t < 0`; the static pick has no such test. Each
 returns 1 only when the output is not +∞ (`0x5c5bb0`, `0x5c5e0c`).
@@ -285,13 +285,13 @@ calls it.
 
 ## Texel buffer callback
 
-`0x5c5350` is a data callback that three places pass to the texture creation function `0x448450`
-with an 8 by 8 size. With `ecx` 0 it fills the 64 dwords of the buffer `0xc2b860` with the dword at
+`0x5c5350` is a data callback that three places pass to a texture creation function with an 8 by 8
+size: `0x44a929` and `0x5996d6` to `0x448450`, `0x4c0d49` to `0x58aa30` (`call` at `0x4c0d5d`). With `ecx` 0 it fills the 64 dwords of the buffer `0xc2b860` with the dword at
 `[ebp+0x14]`; with `ecx` 1 it stores `4·edx` to the pointer at `[ebp+0x18]` and the buffer's address
 to the pointer at `[ebp+0x1c]`; other values do nothing (`ret 0x18`). The first call clears the
 buffer and registers `0x5c53d0`, a bare `ret`, with `0x409aef`.
 
-Addresses: `0x5c5350`, `0x5c53d0`, `0xc2b860`, `0xc2b960`, `0x448450`, `0x44a929`, `0x4c0d49`, `0x5996d6`, `0x409aef`
+Addresses: `0x5c5350`, `0x5c53d0`, `0xc2b860`, `0xc2b960`, `0x448450`, `0x58aa30`, `0x44a929`, `0x4c0d49`, `0x5996d6`, `0x409aef`
 Confidence: verified
 Proof: one
 Test: none

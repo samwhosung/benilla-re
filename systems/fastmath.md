@@ -110,10 +110,7 @@ occurs once, `0xb05e9c` once (a store) and `0xb05ea0` twice, all in this file.
 
 `0x454ab0` is an arctangent: a polynomial in `t = |x|`, or in `1/|x|` when `|x| > 1`, with the second float
 argument minus the result in that case and the sign of `x` restored. `0x454b30`, `0x454ba0` and `0x454c10`
-are log2 polynomials taking the table value and coefficients on the stack. `0x454e10` compares a double
-3-vector with two others and a limit; `0x454ea0` is the quadratic solver in doubles. `0x454fd0` refines a
-reciprocal per double in blocks of three from the seed `0x7fde61ee`; `0x455260` and `0x4555f0` do the same
-for the reciprocal square root, seed `0x5fe732f7`. `0x455970` and `0x455a50` interpolate a double or float
+are log2 polynomials taking the table value and coefficients on the stack. `0x454e10` is a ray against a sphere at the origin, `0x454ea0` the quadratic solver in doubles, `0x454fd0` a batch reciprocal, `0x455260` a batch square root and `0x4555f0` a batch reciprocal square root, taking blocks of three. `0x455970` and `0x455a50` interpolate a double or float
 table by a Catmull-Rom cubic.
 
 Addresses: `0x454ab0`, `0x454b30`, `0x454ba0`, `0x454c10`, `0x454e10`, `0x454ea0`, `0x454fd0`, `0x455260`, `0x4555f0`, `0x455970`, `0x455a50`, `0x454c80`
@@ -125,3 +122,10 @@ The census is two scans over the whole image: every `e8`/`e9` whose target is th
 address as a dword in any section. For each of the functions but `0x454c80` both find nothing; the control is `0x454d40`,
 which the first finds four times. Each function's meaning is read from its first instructions and constants, not from a
 full walk.
+
+`0x454e10` takes the origin `o` and direction `d` (six doubles) and `r²` on the stack (`ret 0x38`): it returns 1 when
+`|o|² < r²`, 0 when `o·d > 0`, else whether `|o|² − (o·d)² < r²`. `0x454ea0` is the quadratic solver in doubles.
+`0x454fd0` refines a reciprocal per double from the seed `0x7fde61ee`. `0x455260` and `0x4555f0` take the array in `ecx` and
+the count in `edx` and refine in place from the seed `0x5fe732f7`: `0x4555f0` is the batch reciprocal square root and
+`0x455260` the batch square root, each refined result multiplied by its input `x`. The remainder of one or two is `fsqrt` for
+`0x455260` (`0x4555d9`) and `1.0 / fsqrt` for `0x4555f0` (`0x455944`).

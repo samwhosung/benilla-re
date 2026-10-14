@@ -3781,27 +3781,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4549c0	38	DivideVector3		spline	primitive	float * __thiscall (float *this, float divisor)	Multiplies a 3D vector by the reciprocal of a divisor	verified	one	spline#vector-leaves	spline::vec_div_scalar_diff
 0x4549f0	31	Vector3LengthSquared		spline	primitive	float __thiscall (const float *v)	Returns x*x + y*y + z*z of a 3D vector	verified	one	spline#vector-leaves	animation::m2_animate_difftest, gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::billboard_tangent_frame_difftest, models::bspdispatch_normalize_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::emit_shape_plane_difftest, models::emit_shape_spline_difftest, models::prologue_length_difftest, models::render_normalize_difftest, models::ribbon_frame_build_difftest, models::seg_normalize_difftest, models::shadow_normalize_axes_difftest, spline::vec3_len2_diff
 0x454a10	117	IntegerSquareRoot		spline	primitive	uint32_t __fastcall (uint32_t n)	Returns the floor of the square root of n	verified	one	spline#integer-square-root	spline::isqrt_diff
-0x454a90	5			fastmath			Runs its object file code not read here	inferred	none		
-0x454aa0	11			fastmath			Runs its object file code not read here	inferred	none		
-0x454ab0	120			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454b30	104			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454ba0	101			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454c10	104			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454c80	186	FastLog2		fastmath	unreached	double __stdcall (double x)	Returns log2 x from the exponent field, a table and a polynomial	inferred	none		
-0x454d40	196	FastPow2		fastmath			Returns 2 to a double power through a table and a polynomial	inferred	none		
-0x454e10	131			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454ea0	152			fastmath	unreached		Runs its object file code not read here	inferred	none		
-0x454f40	140			fastmath			Runs its object file code not read here	inferred	none		fastmath::quadratic_roots_difftest
-0x454fd0	652			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
-0x455260	909			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
-0x4555f0	884			fastmath	unreached		Runs its object file code that calls 0x455c80; not read here	inferred	none		
-0x455970	216			fastmath	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x455a50	217			fastmath	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x455b30	40			fastmath			Runs its object file code that calls __CIfmod; not read here	inferred	none		fastmath::angle_wrap_diff
-0x455b60	5			fastmath			Runs its object file code not read here	inferred	none		
-0x455b70	15			fastmath			Runs its object file code not read here	inferred	none		
-0x455b80	5			unassigned			Runs its object file code not read here	inferred	none		
-0x455b90	19			unassigned			Runs its object file code not read here	inferred	none		
+0x454a90	5	InitFastmathInfinityThunk		fastmath	orchestration	void __cdecl ()	Jumps to the +inf initializer of the fast maths file	verified	one	fastmath#static-initializers	
+0x454aa0	11	InitFastmathInfinity		fastmath	orchestration	void __cdecl ()	Copies the float +inf into 0xb05e98	verified	one	fastmath#static-initializers	
+0x454ab0	120	FastArctan		fastmath	unreached	float __stdcall (float x, float halfPi)	Returns a polynomial arctangent of x, folding |x| above 1 through the second argument	inferred	none	fastmath#unreached-functions	
+0x454b30	104	FastLog2PolyScaled		fastmath	unreached		Returns the log2 polynomial with table value and coefficients on the stack, times a final argument	inferred	none	fastmath#unreached-functions	
+0x454ba0	101	FastLog2Poly		fastmath	unreached		Returns the log2 polynomial with table value and coefficients on the stack	inferred	none	fastmath#unreached-functions	
+0x454c10	104	FastLog2PolyScaled2		fastmath	unreached		Returns the log2 polynomial with table value and coefficients on the stack, times a final argument	inferred	none	fastmath#unreached-functions	
+0x454c80	186	FastLog2		fastmath	unreached	double __stdcall (double x)	Returns log2 x from the exponent, a 64-entry table and a degree-6 polynomial; -inf at or below 1e-307	verified	one	fastmath#software-log2	
+0x454d40	196	FastPow2		fastmath	primitive	double __stdcall (double x)	Returns 2 to the x from a 64-entry table and a degree-5 polynomial, with the exponent set directly	verified	one	fastmath#software-exp2	fastmath::exp2_diff
+0x454e10	131	RayHitsOriginSphere		fastmath	unreached	bool __stdcall (double ox, double oy, double oz, double dx, double dy, double dz, double r2)	Returns whether a ray meets a sphere centred at the origin	inferred	none	fastmath#unreached-functions	
+0x454ea0	152	QuadraticRootsDouble		fastmath	unreached		Solves a quadratic in doubles and stores both roots	inferred	none	fastmath#unreached-functions	
+0x454f40	140	QuadraticRoots		fastmath	primitive	bool __fastcall (float *t1, float *t2, float a, float b, float c)	Stores the smaller and larger root of a quadratic as floats and returns whether it has two	verified	one	fastmath#quadratic-solver	fastmath::quadratic_roots_difftest
+0x454fd0	652	RefineReciprocalBlocks		fastmath	unreached		Refines a reciprocal per double in blocks of three from the seed 0x7fde61ee	inferred	none	fastmath#unreached-functions	
+0x455260	909	BatchSqrt		fastmath	unreached	void __fastcall (double *values /*ecx*/, int count /*edx*/)	Replaces each double by its square root in blocks of three	inferred	none	fastmath#unreached-functions	
+0x4555f0	884	BatchRsqrt		fastmath	unreached	void __fastcall (double *values /*ecx*/, int count /*edx*/)	Replaces each double by its reciprocal square root in blocks of three	inferred	none	fastmath#unreached-functions	
+0x455970	216	CatmullRomDouble		fastmath	unreached		Interpolates a double table by a Catmull-Rom cubic at a parameter clamped to 0 to 1	inferred	none	fastmath#unreached-functions	
+0x455a50	217	CatmullRomFloat		fastmath	unreached		Interpolates a float table by a Catmull-Rom cubic at a parameter clamped to 0 to 1	inferred	none	fastmath#unreached-functions	
+0x455b30	40	AngleWrap		fastmath	primitive	double __stdcall (float angle)	Returns the angle's remainder modulo 2 pi, plus 2 pi when negative	verified	one	fastmath#angle-wrap	fastmath::angle_wrap_diff
+0x455b60	5	InitFastmathTwoPiThunk		fastmath	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the fast maths file	verified	one	fastmath#static-initializers	
+0x455b70	15	InitFastmathTwoPi		fastmath	primitive	void __cdecl ()	Stores pi plus pi, as a float, in 0xb05ea0	verified	one	fastmath#static-initializers	
+0x455b80	5	InitFastmathInvTwoPiThunk		fastmath	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the fast maths file	verified	one	fastmath#static-initializers	
+0x455b90	19	InitFastmathInvTwoPi		fastmath	primitive	void __cdecl ()	Stores 1 divided by 0xb05ea0 in 0xb05e9c	verified	one	fastmath#static-initializers	
 0x455bb0	70	SmoothWaveShifted		unassigned	unreached	float __stdcall (float x, float y)	Returns a smooth zigzag between -1 and 1 of the phase x times y minus one half	verified	one	cmath/scalars#shaping-functions	
 0x455c00	5	InitScalarInfinityThunk		cmath	orchestration		Jumps to 0x455c10; a static initializer	verified	one	cmath/scalars#header-initializers	
 0x455c10	11	InitScalarInfinity		cmath	orchestration		Copies +inf into a global nothing reads	verified	one	cmath/scalars#header-initializers	
