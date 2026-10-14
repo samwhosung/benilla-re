@@ -6976,9 +6976,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x493070	28	EnterWorldMouselook		ui	orchestration	void __cdecl (void)	Begins the world frame's mouselook and makes it the hovered frame	verified	one	ui/mouseover#mouselook	
 0x493090	27	LeaveWorldMouselook		ui	orchestration	void __cdecl (void)	Ends the world frame's mouselook and asks for a hover pick	verified	one	ui/mouseover#mouselook	
 0x4930b0	29			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x4930d0	233			ui	primitive		Runs GameUI.cpp code that calls 0x4931c0, ClntObjMgrObjectPtr, CGUnit_C::PlayNPCSound and 2 more; not read here	inferred	none		
+0x4930d0	233	SetInteractionTarget		ui	primitive		Stores the interaction GUID and squared range, replacing the range by 196.0 for a player	verified	one	ui/questshare#the-offer-leash	
 0x4931c0	104			ui	primitive		Sets or clears the unit the interaction windows belong to	inferred	none	objectlayer/players#death	
-0x493230	224			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, 0x614ea0 and 1 more; not read here	inferred	none		
+0x493230	224	CheckInteractionLeash		ui	primitive		Closes the open interaction when its object is released, gone or farther than the squared range	verified	one	ui/questshare#the-offer-leash	
 0x493310	557			ui	primitive		Clears the interaction unit and closes the window that belongs to it	inferred	none		
 0x493540	966			ui	primitive		Selects the unit of a guid as the player's target	inferred	none	spell/handlers#spell-start	
 0x493910	398			ui	primitive		Releases a GUID's unit tokens and interface state; not read here	inferred	none	objectlayer/party#the-group-list	
@@ -9994,7 +9994,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dfb60	117	Script::GetAbandonQuestName	idb	ui	orchestration		Implements the Lua function GetAbandonQuestName	inferred	none		
 0x4dfbe0	534	Script::GetAbandonQuestItems	idb	ui	primitive		Implements the Lua function GetAbandonQuestItems	inferred	none		
 0x4dfe00	8	Script::AbandonQuest	idb	ui	orchestration		Implements the Lua function AbandonQuest	inferred	none		
-0x4dfe10	267	Script::IsUnitOnQuest	idb	ui	primitive		Implements the Lua function IsUnitOnQuest	inferred	none		
+0x4dfe10	267	Script::IsUnitOnQuest	idb	ui	primitive		Pushes 1 when the player or a party member holds the quest at a list row, else nil	verified	one	ui/questshare#isunitonquest	
 0x4dff20	215	Script::GetQuestLogQuestText	idb	ui	orchestration		Implements the Lua function GetQuestLogQuestText	inferred	none		
 0x4e0000	265	Script::GetNumQuestLeaderBoards	idb	ui	primitive		Implements the Lua function GetNumQuestLeaderBoards	inferred	none		
 0x4e0110	1727	Script::GetQuestLogLeaderBoard	idb	ui	primitive		Implements the Lua function GetQuestLogLeaderBoard	inferred	none		
@@ -10015,8 +10015,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1070	182	Script::GetQuestLogRewardMoney	idb	ui	primitive		Implements the Lua function GetQuestLogRewardMoney	inferred	none		
 0x4e1130	237	Script::GetQuestLogRewardSpell	idb	ui	orchestration		Implements the Lua function GetQuestLogRewardSpell	inferred	none		
 0x4e1220	137	Script::GetQuestLogRequiredMoney	idb	ui	primitive		Implements the Lua function GetQuestLogRequiredMoney	inferred	none		
-0x4e12b0	129	Script::GetQuestLogPushable	idb	ui	orchestration		Implements the Lua function GetQuestLogPushable	inferred	none		
-0x4e1340	135	Script::QuestLogPushQuest	idb	ui	primitive		Implements the Lua function QuestLogPushQuest	inferred	none		
+0x4e12b0	129	Script::GetQuestLogPushable	idb	ui	orchestration		Pushes 1 when the selected quest is cached and shareable, else nil	verified	one	ui/questshare#whether-a-quest-can-be-shared	
+0x4e1340	135	Script::QuestLogPushQuest	idb	ui	primitive		Sends the selected quest to the party when it is shareable and the player is in a party	verified	one	ui/questshare#whether-a-quest-can-be-shared	
 0x4e13d0	421	Script::GetQuestTimers	idb	ui	primitive		Pushes the time left of each running timed quest in list order	verified	one	ui/questtimers#getquesttimers	
 0x4e1580	111			ui	primitive		Runs its object file code that calls ConsoleWrite, 0x562a40, CGGameUI::DisplayError; not read here	inferred	none		
 0x4e15f0	320	Script::GetQuestIndexForTimer	idb	ui	primitive		Pushes the 1-based list index of the n-th running timed quest, or nil	verified	one	ui/questtimers#getquestindexfortimer	
@@ -11545,12 +11545,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x500ee0	10	SignalQuestGreeting		ui	orchestration		Signals event 0x12c	verified	one	objectlayer/quests#the-greeting-list	
 0x500ef0	376			ui	primitive		Copies a quest's title and rewards for the quest window and signals QUEST_COMPLETE	inferred	none	objectlayer/quests#details-request-and-reward	
 0x501070	187			ui	primitive		Copies a quest's title and required items and signals QUEST_PROGRESS	inferred	none	objectlayer/quests#details-request-and-reward	
-0x501130	241			ui	primitive		Closes the quest frame, answering a shared quest with MSG_QUEST_PUSH_RESULT	inferred	none	objectlayer/quests#quest-giver-messages	
+0x501130	241	ReportQuestDeclined		ui	primitive		Sends the decline result to a sharing player, clears the dialog source and fires QUEST_FINISHED	verified	one	ui/questshare#what-the-client-answers-itself	
 0x501230	107			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x5012a0	127			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
 0x501320	86			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x501380	101			ui	orchestration		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
-0x5013f0	361			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer and 6 more; not read here	inferred	none		
+0x501380	101	AcceptQuestImpl		ui	orchestration		Sends CMSG_QUESTGIVER_ACCEPT_QUEST for the open offer and closes the panel	verified	one	ui/questshare#accepting-and-declining	
+0x5013f0	361	DeclineQuestImpl		ui	primitive		Declines the open offer: reopens the giver's list, reports to a sharer or interacts with an object	verified	one	ui/questshare#accepting-and-declining	
 0x501560	79			ui	orchestration		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x5015b0	159			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x5016c0 and 1 more; not read here	inferred	none		
 0x501650	5			ui	orchestration		Runs QuestFrame.cpp code not read here	inferred	none		
@@ -11563,7 +11563,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x501700	436			ui	primitive		Runs QuestFrame.cpp code that calls SStrCmpI, DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 7 more; not read here	inferred	none		
 0x5018c0	81			ui	orchestration		Runs QuestFrame.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 1 more; not read here	inferred	none		
 0x501920	115			ui	orchestration		Runs QuestFrame.cpp code that calls SStrCmpI; not read here	inferred	none		
-0x5019a0	112			ui	orchestration		Signals QUEST_ACCEPT_CONFIRM with the sharer's name and the title	inferred	none	objectlayer/quests#shared-quests	
+0x5019a0	112	HandleQuestConfirmRequest		ui	orchestration		Stores the pending quest id and fires QUEST_ACCEPT_CONFIRM with the sender's name and the title	verified	one	ui/questshare#the-confirmation-request	
 0x501a10	15	Script::CloseQuest	idb	ui	orchestration		Implements the Lua function CloseQuest	inferred	none		
 0x501a20	16	Script::GetTitleText	idb	ui	orchestration		Implements the Lua function GetTitleText	inferred	none		
 0x501a30	16	Script::GetGreetingText	idb	ui	orchestration		Implements the Lua function GetGreetingText	inferred	none		
@@ -11593,7 +11593,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x501f80	271	Script::GetQuestItemInfo	idb	ui	primitive		Implements the Lua function GetQuestItemInfo	inferred	none		
 0x502090	264	Script::GetQuestItemLink	idb	ui	primitive		Implements the Lua function GetQuestItemLink	inferred	none		
 0x5021a0	16	Script::QuestChooseRewardError	idb	ui	orchestration		Implements the Lua function QuestChooseRewardError	inferred	none		
-0x5021b0	114	Script::ConfirmAcceptQuest	idb	ui	orchestration		Implements the Lua function ConfirmAcceptQuest	inferred	none		
+0x5021b0	114	Script::ConfirmAcceptQuest	idb	ui	orchestration		Sends CMSG_QUEST_CONFIRM_ACCEPT with the pending quest id	verified	one	ui/questshare#the-confirmation-request	
 0x502230	212	Script::GetQuestBackgroundMaterial	idb	ui	primitive		Implements the Lua function GetQuestBackgroundMaterial	inferred	none		
 0x502310	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x502340	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
@@ -19492,7 +19492,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ead30	130	SendQuestGiverRequestReward		objectlayer	orchestration		Sends CMSG_QUESTGIVER_REQUEST_REWARD with the GUID and quest	verified	one	objectlayer/quests#quest-messages-sent	
 0x5eadc0	142	SendQuestGiverChooseReward		objectlayer	orchestration		Sends CMSG_QUESTGIVER_CHOOSE_REWARD with the GUID, quest and choice	verified	one	objectlayer/quests#quest-messages-sent	
 0x5eae50	118	SendQuestGiverCancel		objectlayer	unreached		Sends CMSG_QUESTGIVER_CANCEL with a GUID	verified	one	objectlayer/overview#unreached-functions	
-0x5eaed0	112	SendPushQuestToParty		objectlayer	orchestration		Sends CMSG_PUSHQUESTTOPARTY with a quest	verified	one	objectlayer/quests#quest-messages-sent	
+0x5eaed0	112	SendPushQuestToParty		objectlayer	orchestration		Sends CMSG_PUSHQUESTTOPARTY with a quest id	verified	one	ui/questshare#whether-a-quest-can-be-shared	
 0x5eaf40	112	SendQuestLogRemoveQuest		objectlayer	orchestration		Sends CMSG_QUESTLOG_REMOVE_QUEST with a log slot byte	verified	one	objectlayer/quests#quest-messages-sent	
 0x5eafb0	118	SendQuestGiverStatusQuery		objectlayer	orchestration		Sends CMSG_QUESTGIVER_STATUS_QUERY with a GUID	verified	one	objectlayer/quests#quest-messages-sent	
 0x5eb030	60	QueryQuestGiverStatus		objectlayer	orchestration		Sends the status query for one object's GUID	verified	one	objectlayer/quests#quest-giver-status-refresh	

@@ -2128,6 +2128,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b8	void *	s_cvarDeselectOnClick		ui	Holds the CVar record of deselectOnClick, default 1	verified	one	ui/mouseover#the-nothing-leg
 0xb4e2bc	void *	s_showLootSpamVar		ui	Holds the showLootSpam variable, whose value gates the roll lines and picks the winner line	verified	one	objectlayer/lootroll#the-roll-announcement
+0xb4e2c0	float	s_interactRangeSquared		ui	Holds the squared leash of the open interaction, 196.0 for a player and the opener's range otherwise	verified	one	ui/questshare#the-offer-leash
 0xb4e2c8	uint64_t	s_mouseoverGuid		ui	Holds the GUID of the published mouseover object, 0 for none	verified	one	ui/mouseover#publishing-the-mouseover
 0xb4e2d0	uint64_t	s_interactionTargetGuid		ui	Holds the GUID of the unit the interaction windows belong to	inferred	none	objectlayer/interaction#talking-to-an-npc
 0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
@@ -2383,6 +2384,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0818	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0824	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0828	uint32_t	s_chosenRewardItem		ui	Holds the reward item chosen on the quest frame	inferred	none	objectlayer/quests#quest-completion
+0xbe0840	uint32_t	s_pendingQuestConfirm		ui	Holds the quest id of the last quest confirmation request, never cleared	verified	one	ui/questshare#the-confirmation-request
 0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
 0xbe0b84	uint32_t	s_tokenPluralKey		ui	Holds the number the last counted token printed, the key of a plural token	verified	one	ui/spelltokens#the-plural-key
