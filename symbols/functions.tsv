@@ -10604,13 +10604,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ead90	113			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		ui::geo_4ead90, ui::geo_4eb910
 0x4eae10	229	DrawOutdoorTile		ui	primitive	void __fastcall (void *record, uint32_t index, const uint32_t *colour)	Draws one outdoor tile record through its texture and the circular mask	verified	one	minimap/draw#outdoor-tile-draw	
-0x4eaf00	319	Minimap::ClipBlipRect		ui	primitive	void __thiscall (uint32_t index, float p, float q, float h, float u, float v)	Clips a square to a record of the rectangle table and builds its quad when the overlap has extent	verified	one	ui/minimap#blip-rectangle-clip	
+0x4eaf00	319	Minimap::ClipBlipRect		ui	primitive	void __thiscall (uint32_t index, float p, float q, float h, float u, float v)	Clips a square to a record of the rectangle table and builds its quad when the overlap has extent	verified	one	ui/minimap#blip-rectangle-clip	ui::glue_4ea_4eaf00_bbox_edges
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
 0x4eb0c0	1983			ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnMouseMove, CLayoutFrame::GetRect and 5 more; not read here	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::glue_4eb0c0_range_and_light
 0x4eb880	46	CMinimap::OnLeave		ui	orchestration	void __thiscall (CMinimap *this, uint32_t flag)	Hides the game tooltip, then leaves the minimap frame	verified	one	ui/mouse#enter-and-leave	
 0x4eb8b0	36			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::UpdateScale; not read here	inferred	none		
 0x4eb8e0	34			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4eb910	639	Minimap::BuildBlipQuad		ui	primitive	void __thiscall (const float *clipped, uint32_t index, const float *pq, const float *square, float h, float u, float v)	Writes the four corners, doubled offsets and fractions of a clipped blip rectangle into the object	verified	one	ui/minimap#blip-quad-geometry	
+0x4eb910	639	Minimap::BuildBlipQuad		ui	primitive	void __thiscall (const float *clipped, uint32_t index, const float *pq, float h, const float *square, float u, float v)	Writes the four corners, doubled offsets and fractions of a clipped blip rectangle into the object	verified	one	ui/minimap#blip-quad-geometry	ui::geo_4eb910
 0x4ebb90	97			ui	orchestration		Calls the blip rectangle clip for 512 objects of 0xa4 bytes; the loop is read, the rest not	inferred	none	ui/minimap#blip-rectangle-clip	
 0x4ebc00	589			ui	primitive		Runs MinimapFrame.cpp code that calls _atexit, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none	ui/minimapblips#dots-cadence-and-tooltip	ui::glue_4ebc00_gradient
 0x4ebe50	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
@@ -23398,7 +23398,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a3c0	37	SStrChr	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a3f0	37	SStrChr2	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a420	43	SStrChrR		storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0	verified	one	gx/textures#texture-basename-substitution	
-0x64a450	43	SStr::sub_64A450	idb	storm	boundary		Returns the last occurrence of a character in a string	inferred	none		
+0x64a450	43	SStrChrR	idb	storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0 (a second copy of 0x64a420)	verified	one	gx/textures#texture-file-name-builders	
 0x64a480	56	SStrCmp		storm	orchestration		Compares two strings up to a length through strncmp	verified	one	objectlayer/party#guild-events	
 0x64a4c0	56	SStrCmpI	idb	storm	primitive		Compares two strings ignoring case up to a length	inferred	none	spell/cooldowns#spell-id-by-name	
 0x64a500	150			storm	unreached		Runs its object file code that calls _toupper; not read here	inferred	none		
@@ -28181,7 +28181,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5a70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a90	1			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned			Runs its object file code that calls SStrPrintf, CVar::Register; not read here	inferred	none		
-0x6c5af0	92	OnViolenceLevelChanged		client			Stores the violenceLevel CVar value in 0xce8534, clamped to the region's maximum	inferred	none	spell/visuals#spell-visual-record-choice	
+0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel CVar value in 0xce8534, clamped to the locale maximum, and sets the blood-spurt file name substitution	verified	one	gx/textures#texture-basename-substitution	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b60	10			unassigned			Runs its object file code that calls 0x6c5b70; not read here	inferred	none		
 0x6c5b70	22			unassigned			Runs its object file code not read here	inferred	none		

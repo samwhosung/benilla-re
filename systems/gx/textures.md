@@ -17,7 +17,7 @@ Test: none
 
 ## Texture creation
 
-`0x449d90(name, log, filterIn, force, fileFlag)` returns a handle; `log` is a status object (vtable slot `+0xc` takes severity, format, arguments). A null or empty name, or a null `log`, sets Storm error 0x57 and returns 0. Otherwise it splits the name (`Texture name split`), builds the flags word (`Texture flags word`) and looks the stripped name and flags up in the hash; a hit is returned as it is. A miss tries the candidate files (`Texture name candidates`), caches the loaded texture under the stripped name and flags, and returns it. When every candidate fails it tells `log` and returns the solid texture (`Texture load failure`).
+`0x449d90(name, log, filterIn, force, fileFlag)` returns a handle; `log` is a status object (vtable slot `+0xc` takes severity, format, arguments). A null or empty name, or a null `log`, sets Storm error 0x57 and returns 0. Otherwise it splits the name (`Texture name split`), builds the flags word (`Texture flags word`) and looks the stripped name and flags up in the hash; a hit is returned through `0x41af10`, which adds one to the handle's count at `+4`: the caller owns a new reference. A miss tries the candidate files (`Texture name candidates`), caches the loaded texture under the stripped name and flags, and returns it. When every candidate fails it tells `log` and returns the solid texture (`Texture load failure`).
 
 Addresses: `0x449d90`, `0x449eb0`, `0x449fb0`, `0x44a9c0`, `0x44aa20`, `0x44ab30`, `0x44a900`, `0x90582c`, `0x449db1`, `0x449dec`, `0x449df3`, `0x449e99`, `0x44a260`
 Confidence: verified
@@ -52,11 +52,11 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x449e00` loads `[4*edi + 0x835248]`, `0x449e11` copies it over the split point with no length limit, and `0x449e16` to `0x449e3d` choose `0x44a310` for 1 and `0x44a140` for 0. `0x449e4b` flips `edi` and `0x449e5d` ends the loop after two passes. The copy at `0x449e11` is unbounded and the buffer is 0x104 bytes at `[ebp-0x110]`: a name of 0x100 to 0x103 bytes with no dot four from the end writes the candidate's 5 bytes up to index `len + 4`, past the buffer, over the saved name pointer at `[ebp-0xc]` (the low byte first), which `0x449e65` reads for the message. `0x44a169` and `0x44a399` return 0 on a failed open with no status write.
+`0x449e00` loads `[4*edi + 0x835248]`, `0x449e11` copies it over the split point with no length limit, and `0x449e16` to `0x449e3d` choose `0x44a310` for 1 and `0x44a140` for 0. `0x449e4b` flips `edi` and `0x449e5d` ends the loop after two passes. The copy at `0x449e11` is unbounded and the buffer is 0x104 bytes at `[ebp-0x110]`: a name of 0x100 bytes or more (the copy of the name keeps 0x103 bytes) with no dot four from the end writes the candidate's 5 bytes up to index `len + 4`, past the buffer, over the saved name pointer at `[ebp-0xc]` (the low byte first), which `0x449e65` reads for the message. `0x44a169` and `0x44a399` return 0 on a failed open with no status write.
 
 ## Texture load failure
 
-When both candidates fail, `0x449d90` calls `0x44a0e0` with `log`, the word `texture` and the caller's original name, and returns the solid texture of colour `[0x90582c]`, which is never 0. `0x44a0e0` calls `log` slot `+0xc` with severity 3 and the format `Error loading %s file "%s": %s\n`, the last Storm error text as the third argument. `CStatus::Add` raises the status's highest severity to 3. The name in the message is the argument as the caller wrote it, extension included, not the stripped name.
+When both candidates fail, `0x449d90` calls `0x44a0e0` with `log`, the word `texture` and the caller's original name, and returns the solid texture of colour `[0x90582c]`: an 8 by 8 texture of format 2 (`0x44a900`), the colour `0xff00ff00`. `[0x90582c]` is zero until the static initializer `0x447bf0` calls `0x447c00`, which stores `0xff00ff00`. `0x44a0e0` calls `log` slot `+0xc` with severity 3 and the format `Error loading %s file "%s": %s\n`, the last Storm error text as the third argument, then clears the Storm error with `SErrSetLastError(0)` (`0x44a124`). `CStatus::Add` raises the status's highest severity to 3. The name in the message is the argument as the caller wrote it, extension included, not the stripped name.
 
 Addresses: `0x449e65`, `0x449e70`, `0x449e77`, `0x44a0e0`, `0x44a11c`, `0x41a000`, `0x41a0f6`, `0x90582c`, `0x835654`, `0x83564c`
 Confidence: verified
@@ -85,7 +85,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x449590` has four `call` sites and no `jmp` or stored address: `0x449111` (in `0x4490c0`, which nothing reaches), `0x44963c`, `0x449dcd` and `0x44ac8a` (in `0x44ac70`). `0x44b320` cuts at the last `.` found by `0x64a450` (`0x44b34b`) and appends with `0x64a760` (`0x44b366`, `0x44b380`); `0x47ac57` passes it the type `0x44b2c0` read from the last four characters. The formats are `%s.blp` (`0x525e0f`, the portrait name, `ui/portraittextures#portrait-sink`), `Item\TextureComponents\%s\%s_%s.blp` (`0x476e4c`), `%s%s.blp` (six sites from `0x479a73` to `0x47a1d4`, into a 0x104-byte buffer) and `Interface\Cursor\%s.blp` (`0x523705`, `0x5f87b9`). `0x50338a` and `0x5037b9` append `.BLP` to the emblem name built by `0x47a520`.
+`0x449590` has four `call` sites and no `jmp` or stored address: `0x449111` (in `0x4490c0`, reached only from `0x4499d0` at `0x449a05`; `0x4499d0` has no caller and no stored address), `0x44963c`, `0x449dcd` and `0x44ac8a` (in `0x44ac70`). `0x44b320` cuts at the last `.` found by `0x64a450` (`0x44b34b`) and appends with `0x64a760` (`0x44b366`, `0x44b380`); `0x47ac57` passes it the type `0x44b2c0` read from the last four characters. The formats are `%s.blp` (`0x525e0f`, the portrait name, `ui/portraittextures#portrait-sink`), `Item\TextureComponents\%s\%s_%s.blp` (`0x476e4c`), `%s%s.blp` (six sites from `0x479a73` to `0x47a1d4`, into a 0x104-byte buffer) and `Interface\Cursor\%s.blp` (`0x523705`, `0x5f87b9`). `0x50338a` and `0x5037b9` append `.BLP` to the emblem name built by `0x47a520`.
 
 ## Texture creation variants
 
