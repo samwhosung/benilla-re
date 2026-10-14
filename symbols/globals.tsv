@@ -3918,6 +3918,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf0c3c	uint32_t	s_regionTypeId		ui	Holds the script type id of Region, assigned on first use	verified	one	ui/frames#the-region-type-id
 0xcf0c5c	uint32_t	s_modelTypeId		ui	Holds the model frame type id, assigned from a counter on first use	inferred	none	
 0xcf0cc0	char[4096]	s_fontStringFitBuffer		ui	Holds the text a FontString shortens with ... to fit its box	verified	one	ui/fontstring#size-and-fitting
+0xcf4cd0	void *[2]	s_uiPixelShaders		ui	Holds the two pixel shaders of the interface, slot 0 empty and slot 1 the desaturate shader	verified	one	ui/texture#desaturating
 0xcf4cdc	uint32_t			ui	Holds a dword that Script::SetPortraitToTexture, Script::SetLootPortrait read and write; not read here	inferred	none	
 0xcf4d24	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup

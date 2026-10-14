@@ -29611,10 +29611,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive	bool __stdcall (lua_State *L, int index, bool defaultValue)	Reads a script argument as a flag: nil 0, boolean itself, number truncated, string by first letter or keyword	verified	one	ui/actionuse#reading-a-script-flag	
-0x6f1d60	328			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
+0x6f1d60	328	ParseLengthElement		ui	primitive		Reads a length from val, an AbsValue or a RelValue, converting all but the last	verified	one	ui/backdrop#the-xml-element	
 0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	
-0x6f20a0	806			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, GetScaledScreenAspect and 2 more; not read here	inferred	none		
-0x6f23d0	601			ui	primitive		Runs its object file code that calls 0x6f2cf0, SStrToFloat, __ftol; not read here	inferred	none		
+0x6f20a0	806	ParseInsetsElement		ui	primitive		Reads four insets from attributes or an AbsInset or RelInset child	verified	one	ui/backdrop#the-xml-element	
+0x6f23d0	601	ParseColorElement		ui	primitive		Reads r, g, b and a clamped to 0 to 1 and packs them as alpha, red, green, blue	verified	one	ui/backdrop#the-xml-element	
 0x6f2630	182			ui	orchestration		Runs its object file code that calls 0x6f2cf0, 0x6f1a20, SStrCmpI and 1 more; not read here	inferred	none		
 0x6f26f0	143	FrameXML::AddTextureElement		ui	orchestration	CSimpleTexture * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a texture region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
 0x6f2780	143	FrameXML::AddFontStringElement		ui	orchestration	CSimpleFontString * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a font string region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
@@ -33314,7 +33314,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a4f0	182	CSimpleFrame::SetFrameLevel		ui	orchestration		Moves a frame to a level of at least 0, children of its stratum following when asked	verified	one	ui/methods#what-the-frame-methods-call	
 0x76a5b0	15	CSimpleFrame::Raise		ui	orchestration		Asks the top to raise the frame with the overlap check	verified	one	ui/input#mouse-buttons	
 0x76a5c0	13	CSimpleFrame::Lower		ui	orchestration		Asks the top to lower the frame, which does nothing	verified	one	ui/methods#what-the-frame-methods-call	
-0x76a5d0	90	CSimpleFrame::SetBackdrop		ui	orchestration		Replaces the frame's backdrop object	inferred	none		
+0x76a5d0	90	CSimpleFrame::SetBackdrop		ui	orchestration		Replaces the frame's backdrop object	verified	one	ui/backdrop#the-object	
 0x76a630	34	CSimpleFrame::ResizeByFactor		ui	unreached		Passes a size factor and point to 0x768550; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x76a660	34	CSimpleFrame::ApplyDragDelta		ui	orchestration		Passes a cursor difference and point to 0x768710 on the frame's layout part	verified	one	ui/resizebounds#the-drag	
 0x76a690	128	CSimpleFrame::SetAlpha		ui	orchestration		Stores the alpha byte and, on a change, refreshes the regions and gives every child the same byte	verified	one	ui/visibility#alpha	
@@ -33500,25 +33500,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76fd40	59			ui	primitive		Runs its object file code that calls HandleClose, UnlockScriptObject; not read here	inferred	none		
 0x76fd80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x76fd90	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x76fda0	40			ui	primitive		Runs its object file code that calls 0x58b2b0; not read here	inferred	none		
+0x76fda0	40	LoadUiPixelShaders		ui	primitive		Loads the interface pixel shaders from a name list into the two-slot table	verified	one	ui/texture#desaturating	
 0x76fdd0	32			ui	primitive		Runs its object file code that calls GxShaderRelease; not read here	inferred	none		
 0x76fdf0	41			ui	orchestration		Runs its object file code that calls 0x6f2cf0, CScriptRegion::SetName; not read here	inferred	none		
 0x76fe20	913	CSimpleTexture::LoadXML		ui	primitive		Loads a texture's layout node, template and hidden, then coordinates, colour, gradient, file and blend	verified	one	ui/xmltypes#regions-and-fonts	
 0x7701c0	54	CSimpleTexture::AnchorToParent		ui	primitive	void __thiscall (void *node, void *status)	Pins a parented texture with no anchor point to its parent with SetAllPoints	verified	one	ui/regions#the-implicit-anchor	
-0x770200	245			ui	primitive		Runs its object file code that calls 0x44ac70, CGxTexFlags::CGxTexFlags, TextureCreate and 5 more; not read here	inferred	none		
+0x770200	245	CSimpleTexture::SetTexture		ui	primitive		Loads a texture file with wrap, filter and shader index, or answers 1 for the file already held	verified	one	ui/texture#settexture	
 0x770300	91			ui	orchestration		Runs its object file code that calls CompareHandles, AddHandleRef, HandleClose and 1 more; not read here	inferred	none		
-0x770360	58			ui	orchestration		Runs its object file code that calls 0x44a9c0, HandleClose, 0x77fdf0; not read here	inferred	none		
+0x770360	58	CSimpleTexture::SetSolidColour		ui	orchestration		Replaces the image with the shared 8 by 8 solid image of a colour	verified	one	ui/texture#a-colour-without-a-file	
 0x7703a0	74			ui	orchestration		Runs its object file code that calls 0x44b410, SStrCopy, SStr::sub_64A450; not read here	inferred	none		
-0x7703f0	29			ui	orchestration		Runs its object file code that calls 0x77fdf0; not read here	inferred	none		
+0x7703f0	29	CSimpleTexture::SetBlendMode		ui	orchestration		Stores the blend mode and marks the texture dirty	verified	one	ui/texture#the-quad-record	
 0x770410	165			ui	orchestration		Sets a texture's four corner coordinates from a rectangle	verified	one	ui/slider#a-status-bars-fill	
 0x7704c0	166	StoreTextureCorners		ui	orchestration		Stores eight floats as the four corners and relays out a rect-modifying texture	verified	one	ui/taxiframe#route-line-textures	
 0x770570	64			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7705b0	106	CSimpleTexture::SetVertices		ui	primitive	void __thiscall (float *rect)	Writes the four vertex positions (left top), (left bottom), (right top), (right bottom) with z zero	verified	one	ui/regions#a-region-that-does-not-resolve	
-0x770620	36			ui	orchestration		Runs its object file code that calls 0x58b360; not read here	inferred	none		
-0x770650	29			ui	orchestration		Runs its object file code that calls 0x77fdf0; not read here	inferred	none		
+0x770620	36	GetUiPixelShader		ui	orchestration		Answers the interface pixel shader at an index when it is usable, else 0	verified	one	ui/texture#desaturating	
+0x770650	29	CSimpleTexture::SetPixelShader		ui	orchestration		Stores the pixel-shader slot and marks the texture dirty	verified	one	ui/texture#desaturating	
 0x770670	98	CSimpleTexture::OnFrameSizeChanged		ui	orchestration	void __thiscall (float *oldRect)	Lays out dependents, applies the texture coordinate rule to the rectangle and writes the four vertices	verified	one	ui/regions#a-region-that-does-not-resolve	
 0x7706e0	26	CSimpleTexture::Emit		ui	orchestration	void __thiscall (void *batch)	Appends the texture to a layer batch when it has an image	verified	one	ui/regions#a-region-that-does-not-resolve	
-0x770700	24			ui	orchestration		Runs its object file code that calls GetTextureDeviceObject; not read here	inferred	none		
+0x770700	24	CSimpleTexture::GetDeviceTexture		ui	orchestration		Answers the device texture of the image handle, or 0	verified	one	ui/texture#the-quad-record	
 0x770720	98	CSimpleTexture::GetWidth		ui	primitive	float __thiscall ()	Returns the authored width, or the image's width in texels in layout units when it is 0.0	verified	one	ui/regions#a-textures-size	
 0x770790	99	CSimpleTexture::GetHeight		ui	primitive	float __thiscall ()	Returns the authored height, or the image's height in texels in layout units when it is 0.0	verified	one	ui/regions#a-textures-size	
 0x770800	265			ui	orchestration		Applies a font's changed font, justify, colour, shadow and spacing to a FontString under its masks	verified	one	ui/fontstring#following-a-font	
@@ -33668,12 +33668,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x777130	182	Frame::IsMouseEnabled	idb	ui	orchestration		Implements the Frame method IsMouseEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
 0x7771f0	181	Frame::EnableMouseWheel	idb	ui	orchestration		Implements the Frame method EnableMouseWheel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x7772b0	182	Frame::IsMouseWheelEnabled	idb	ui	orchestration		Implements the Frame method IsMouseWheelEnabled, its pair in the table 0x878ec0	verified	one	ui/mouse#switching-input-kinds	
-0x777370	870	Frame::GetBackdrop	idb	ui	orchestration		Implements the Frame method GetBackdrop, its pair in the table 0x878ec0	inferred	none		
-0x7776e0	1243	Frame::SetBackdrop	idb	ui	orchestration		Implements the Frame method SetBackdrop, its pair in the table 0x878ec0	inferred	none		
-0x777bc0	358	Frame::GetBackdropColor	idb	ui	orchestration		Implements the Frame method GetBackdropColor, its pair in the table 0x878ec0	inferred	none		
-0x777d30	545	Frame::SetBackdropColor	idb	ui	orchestration		Implements the Frame method SetBackdropColor, its pair in the table 0x878ec0	inferred	none		
-0x777f60	358	Frame::GetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method GetBackdropBorderColor, its pair in the table 0x878ec0	inferred	none		
-0x7780d0	545	Frame::SetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method SetBackdropBorderColor, its pair in the table 0x878ec0	inferred	none		
+0x777370	870	Frame::GetBackdrop	idb	ui	orchestration		Implements the Frame method GetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	
+0x7776e0	1243	Frame::SetBackdrop	idb	ui	orchestration		Implements the Frame method SetBackdrop, its pair in the table 0x878ec0	verified	one	ui/backdrop#setbackdrop-from-a-script	
+0x777bc0	358	Frame::GetBackdropColor	idb	ui	orchestration		Implements the Frame method GetBackdropColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	
+0x777d30	545	Frame::SetBackdropColor	idb	ui	orchestration		Implements the Frame method SetBackdropColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#the-two-colours	
+0x777f60	358	Frame::GetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method GetBackdropBorderColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#reading-a-backdrop-back	
+0x7780d0	545	Frame::SetBackdropBorderColor	idb	ui	orchestration		Implements the Frame method SetBackdropBorderColor, its pair in the table 0x878ec0	verified	one	ui/backdrop#the-two-colours	
 0x778300	10	InitFrameMethodHashThunk		ui	orchestration		Builds the Frame method hash table, then registers its exit handler; a static initializer	verified	one	ui/README#static-initializers	
 0x778310	190	InitFrameMethodHash		ui	orchestration		Builds the empty Frame method hash table at 0xcf4d38	verified	one	ui/README#static-initializers	
 0x7783d0	12	RegisterDestroyFrameMethodHash		ui	orchestration		Registers 0x7783e0 with _atexit	verified	one	ui/README#static-initializers	
@@ -33855,16 +33855,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77e5b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77e5c0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x77e5e0	8			ui	primitive		Runs its object file code not read here	inferred	none		
-0x77e5f0	153			ui	orchestration		Runs its object file code that calls 0x41e3a0, 0x77f570; not read here	inferred	none		
+0x77e5f0	153	CSimpleBackdrop::CSimpleBackdrop		ui	orchestration		Builds a backdrop object with no textures, an edge size of 0.025 and opaque white colours	verified	one	ui/backdrop#the-object	
 0x77e690	43			ui	orchestration		Runs its object file code that calls 0x41e330, SMemFree; not read here	inferred	none		
-0x77e6c0	484			ui	orchestration		Runs its object file code that calls 0x6f2cf0, 0x6f1b30, 0x41e3a0 and 6 more; not read here	inferred	none		
+0x77e6c0	484	CSimpleBackdrop::LoadXML		ui	orchestration		Reads the attributes and children of a Backdrop element into the object	verified	one	ui/backdrop#the-xml-element	
 0x77e8b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77e8c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x77e8d0	2025			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, GetBlockPoolData and 5 more; not read here	inferred	none		
-0x77f0c0	833			ui	primitive		Runs its object file code that calls SErrSetLastError, 0x41e4b0, 0x7704c0 and 2 more; not read here	inferred	none		
+0x77e8d0	2025	CSimpleBackdrop::CreatePieces		ui	primitive		Creates and anchors the background and edge textures of a frame	verified	one	ui/backdrop#the-pieces-and-their-anchors	
+0x77f0c0	833	CSimpleBackdrop::SetTexCoords		ui	primitive		Sets the background and edge texture coordinates for a rectangle and applies both colours	verified	one	ui/backdrop#the-edge-file	
 0x77f410	45	CSimpleBackdrop::SetColor		ui	orchestration	void __thiscall (const uint32_t *colour)	Stores a colour in the backdrop object and repaints it	verified	one	ui/tooltipobject#the-game-object-tooltip	
-0x77f440	143			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
-0x77f4d0	151			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x77f440	143	CSimpleBackdrop::SetBorderColor		ui	orchestration		Stores the border colour and repaints the eight edge textures	verified	one	ui/backdrop#the-two-colours	
+0x77f4d0	151	CSimpleBackdrop::ReleasePieces		ui	orchestration		Releases the nine piece textures and clears their pointers	verified	one	ui/backdrop#the-object	
 0x77f570	21			ui	primitive		Runs its object file code not read here	inferred	none		
 0x77f590	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77f5a0	15			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -33877,12 +33877,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77f640	122			ui	orchestration		Runs its object file code that calls CScriptRegion::CScriptRegion, 0x77fd10; not read here	inferred	none		
 0x77f6c0	43			ui	orchestration		Runs its object file code that calls 0x77f6f0, SMemFree; not read here	inferred	none		
 0x77f6f0	85			ui	orchestration		Runs its object file code that calls 0x77fd10, SMemFree; not read here	inferred	none		
-0x77f750	355			ui	primitive		Sets a FontString colour from a colour pointer, skipping a colour it already holds	verified	one	ui/tooltipcontent#the-line-arrays	
-0x77f8c0	77			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x77f750	355	CScriptRegion::SetVertexColor		ui	primitive		Sets a region's vertex colour, skipping a repeat and an opaque white when none is set	verified	one	ui/texture#setting-a-vertex-colour	
+0x77f8c0	77	CScriptRegion::GetVertexColor		ui	orchestration		Copies the vertex colour, or opaque white when it holds no entry	verified	one	ui/texture#two-colour-stores	
 0x77f910	387			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0; not read here	inferred	none		
 0x77faa0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77fab0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x77fac0	405			ui	primitive		Runs its object file code that calls 0x667300, 0x526930, 0x5ce1c0 and 1 more; not read here	inferred	none		
+0x77fac0	405	CScriptRegion::UpdateFrameAlpha		ui	primitive		Folds the owning frame's alpha into the vertex colour array	verified	one	ui/texture#the-frames-alpha-in-the-colour	
 0x77fc60	70	CScriptRegion::Unregister		ui	orchestration		Takes a registered region out of its parent's draw layer list and defers its layout	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fcb0	90	CScriptRegion::Register		ui	orchestration		Links a shown, unregistered region into its visible parent's draw layer list	verified	one	ui/visibility#walking-a-show-or-hide	
 0x77fd10	218	CScriptRegion::SetRegionParent		ui	primitive		Moves a region to a new parent and draw layer, linking it into the new parent's region list	verified	one	ui/frames#what-the-region-list-holds	
@@ -34691,25 +34691,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79a890	188	Texture::GetBlendMode	idb	ui	primitive		Implements the Texture method GetBlendMode	inferred	none		
 0x79a950	256	Texture::SetBlendMode	idb	ui	primitive		Implements the Texture method SetBlendMode	inferred	none		
 0x79aa50	376	Texture::GetVertexColor	idb	ui	primitive		Implements the Texture method GetVertexColor	inferred	none		
-0x79abd0	594	Texture::SetVertexColor	idb	ui	primitive		Implements the Texture method SetVertexColor	inferred	none		
+0x79abd0	594	Texture::SetVertexColor	idb	ui	primitive		Implements the Texture method SetVertexColor	verified	one	ui/texture#setting-a-vertex-colour	
 0x79ae30	806	Texture::SetGradient	idb	ui	primitive		Implements the Texture method SetGradient	inferred	none		
 0x79b160	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x79b170	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Implements the Texture method SetGradientAlpha	inferred	none		
-0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Implements the Texture method SetAlpha	inferred	none		
+0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Implements the Texture method SetAlpha	verified	one	ui/texture#setting-a-vertex-colour	
 0x79b690	222	Texture::GetAlpha	idb	ui	primitive		Implements the Texture method GetAlpha	inferred	none		
 0x79b770	180	Texture::Show	idb	ui	primitive		Implements the Texture method Show	inferred	none		
 0x79b830	180	Texture::Hide	idb	ui	primitive		Implements the Texture method Hide	inferred	none		
 0x79b8f0	178	Texture::IsVisible	idb	ui	primitive		Implements the Texture method IsVisible	inferred	none		
 0x79b9b0	178	Texture::IsShown	idb	ui	primitive		Implements the Texture method IsShown	inferred	none		
 0x79ba70	205	Texture::GetTexture	idb	ui	primitive		Implements the Texture method GetTexture	inferred	none		
-0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Implements the Texture method SetTexture	inferred	none		
+0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Implements the Texture method SetTexture	verified	one	ui/texture#settexture	
 0x79bdf0	190	Texture::GetTexCoord	idb	ui	primitive		Implements the Texture method GetTexCoord	inferred	none		
 0x79beb0	451	Texture::SetTexCoord	idb	ui	primitive		Stores four corner texture coordinates from 4 or 8 numbers	verified	one	ui/taxiframe#route-line-textures	
 0x79c080	159	Texture::SetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method SetTexCoordModifiesRect	inferred	none		
 0x79c120	178	Texture::GetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method GetTexCoordModifiesRect	inferred	none		
-0x79c1e0	224	Texture::SetDesaturated	idb	ui	primitive		Implements the Texture method SetDesaturated	inferred	none		
-0x79c2c0	193	Texture::IsDesaturated	idb	ui	primitive		Implements the Texture method IsDesaturated	inferred	none		
+0x79c1e0	224	Texture::SetDesaturated	idb	ui	primitive		Implements the Texture method SetDesaturated	verified	one	ui/texture#desaturating	
+0x79c2c0	193	Texture::IsDesaturated	idb	ui	primitive		Implements the Texture method IsDesaturated	verified	one	ui/texture#desaturating	
 0x79c390	10			ui	orchestration		Runs its object file code that calls 0x79c3a0; not read here	inferred	none		
 0x79c3a0	190			ui	primitive		Runs its object file code not read here	inferred	none		
 0x79c460	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
