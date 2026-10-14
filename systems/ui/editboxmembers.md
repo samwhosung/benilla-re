@@ -132,4 +132,4 @@ Proof: one
 Test: none
 
 The census is every `call` and `jmp` to `0x77e2e0` in the listing, and every little-endian occurrence of the address in each section of the image: none of either. The same two scans find the callers of
-`0x77e250` (`0x77b3bb`, `0x77b55c`) and the vtable stores of `0x77a8d0`, which is the control.
+`0x77e250` (`0x77b3bb`, `0x77b55c`) and the one vtable slot that holds `0x77a8d0` (`0x81c958`), which is the control.

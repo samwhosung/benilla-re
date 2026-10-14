@@ -12,13 +12,13 @@ raises `Invalid number of randompicks` otherwise; its argument is not checked to
 which must be from 1 to 31 and distinct, into a mask of one bit each (bit `n - 1`) and sends opcode 0x336 with 0 and the mask. With an invalid or repeated number it
 sends nothing and returns 1 without pushing a value, so Lua receives its fourth argument. `CloseLottery()` does nothing. The window's open, `0x4c3eb0`, sends opcode 0x334 and has no caller (`ui/loot#no-walk-away-leash`).
 
-Addresses: `0x4c4220`, `0x4c4210`, `0x4c3eb0`, `0x4c4256`, `0x4c4290`, `0x4c42f8`, `0x4c4301`, `0x4c4310`, `0x4c431b`, `0x4c4332`, `0x4c4334`, `0x4c4342`, `0x4c433e`, `0x4c4365`, `0x4c4373`, `0x4c4400`, `0x4c441b`, `0x4c4420`, `0x4c4427`, `0x4c4495`
+Addresses: `0x4c4220`, `0x4c4210`, `0x4c3eb0`, `0xb71c38`, `0x4c4256`, `0x4c4290`, `0x4c42f8`, `0x4c4301`, `0x4c4310`, `0x4c431b`, `0x4c4332`, `0x4c4334`, `0x4c4342`, `0x4c433e`, `0x4c4365`, `0x4c4373`, `0x4c4400`, `0x4c441b`, `0x4c4420`, `0x4c4427`, `0x4c4495`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4c42f8` loads each pick, `0x4c42fc` and `0x4c4301` bound it to 1 to 31, `0x4c4310` scans the earlier picks and `0x4c431b` to `0x4c4323` set the bit. The invalid return has two exits: `0x4c4342`, from a pick out of range or after a duplicate flagged by an earlier pick, and `0x4c4332`, from a duplicate in the last pick; both end in `mov eax,1`. `0x4c441b` and `0x4c4420` bound the random count.
-`0x4c4365` pushes the opcode 0x336, `0x4c4378` the zero and `0x4c4385` the mask; `0x4c4427`, `0x4c444e` and `0x4c4457` push the opcode, the count and the zero. It passes the kiosk GUID of its two arguments to `SetInteractionTarget` (`0x4930d0`) with a range read from a global, stores the GUID in two globals, writes the opcode into a fresh `CDataStore` with `CDataStore::PutUInt32` (`0x4c3efb`) and sends it with `ClientServices::Send`; no `call`, `jmp` or stored address anywhere in the image reaches it, and the same two scans find the call of `0x4dd2f0` (`0x4db7b7`) as the control.
+`0x4c4365` pushes the opcode 0x336, `0x4c4378` the zero and `0x4c4385` the mask; `0x4c4427`, `0x4c444e` and `0x4c4457` push the opcode, the count and the zero. `0x4c3eb0` (`ret 8`) passes the kiosk GUID of its two arguments to `SetInteractionTarget` (`0x4930d0`) with the range read from `0xb71c38` (`0x4c3eb6`), stores the GUID in two globals, writes the opcode into a fresh `CDataStore` with `CDataStore::PutUInt32` (`0x4c3efb`) and sends it with `ClientServices::Send`; no `call`, `jmp` or stored address anywhere in the image reaches it, and the same two scans find the call of `0x4dd2f0` (`0x4db7b7`) as the control.
 
 ## Prizes
 

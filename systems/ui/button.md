@@ -354,7 +354,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The census is every `call` and `jmp` to each address in the listing and every little-endian occurrence of it in each section of the image: none of either. The same two scans find the call of `0x778e20` (`0x778a6e`) and the vtable store of
+The census is every `call` and `jmp` to each address in the listing and every little-endian occurrence of it in each section of the image: none of either. The same two scans find the four calls of `0x778e20` (`0x778a6e`, `0x778aa4`, `0x778ada`, `0x7810eb`) and the one vtable slot that holds
 `0x77a8d0` (`0x81c958`), which are the controls.
 
 ## Lua methods

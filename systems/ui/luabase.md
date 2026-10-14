@@ -135,10 +135,10 @@ Test: none
 
 `tonumber(v [, base])` takes the base as `__ftol` of the optional number, default 10. Base 10 requires an argument and
 answers its number value when `lua_isnumber` holds, else nil. Another base must be 2 to 36 (`base out of range`) and `v`
-a string: `strtoul` parses it, and the answer is the unsigned value when nothing but white space follows the digits, else
-nil. A string with no digits answers nil.
+a string: `strtoul` (`0x40dd0e`, which calls `_strtoxl` `0x40db09` with the unsigned flag) parses it, and the answer is the unsigned value, loaded as a quad with a zero high dword (`0x702f11`), when nothing but white space follows the digits, else
+nil. A string with no digits answers nil. A leading `-` negates the parsed value modulo 2^32 (`0x40db59`, `0x40dcf4`), so `tonumber("-1", 16)` is 4294967295. An overflow returns 0xffffffff (`0x40dccc`), so `tonumber("fffffffff", 16)` is 4294967295, but with a `-` the overflow value is negated and gives 1. In base 16 a `0x` or `0X` prefix is skipped (`0x40dbc6`).
 
-Addresses: `0x702e30`, `0x702e52`, `0x702ead`, `0x702ec6`, `0x702ed3`, `0x702f02`, `0x702f11`, `0x40dd0e`, `0x73fc64`
+Addresses: `0x702e30`, `0x702e52`, `0x702ead`, `0x702ec6`, `0x702ed3`, `0x702f02`, `0x702f11`, `0x40dd0e`, `0x40db09`, `0x40db59`, `0x40dbc6`, `0x40dccc`, `0x40dcf4`, `0x73fc64`
 Confidence: verified
 Proof: one
 Test: none
@@ -180,24 +180,23 @@ and `lua_pushnumber` and returns 2. `0x703250` passes the `__ftol` result to `0x
 
 `time()` returns the current C time. `time(t)` needs a table with `sec` and `min` (default 0), `hour` (default 12), and
 `day`, `month` and `year` (required: ``field `%s' missing in date table``), and reads `isdst` as a boolean. `month` is
-reduced by 1 and `year` by 1900, `mktime` runs on them, and the answer is the number, or nil for −1. A present field that is
-not a number counts as absent.
+reduced by 1 and `year` by 1900, `mktime` runs on them, and the answer is the number, or nil for −1. Each field is read with `lua_gettable` (`0x6f3a40`, so `__index` is honoured), and a field that is not a number or numeric string (`lua_isnumber`, `0x70370f`) counts as absent; `isdst` is `lua_toboolean`, so it is 0 or 1, never −1.
 
-Addresses: `0x7035a0`, `0x7035b9`, `0x7035fc`, `0x703672`, `0x7036b0`, `0x7036f0`, `0x73f049`, `0x74066b`
+Addresses: `0x7035a0`, `0x7035b9`, `0x7035fc`, `0x703672`, `0x7036b0`, `0x7036f0`, `0x70370f`, `0x6f3a40`, `0x73f049`, `0x74066b`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7035a0` calls `time(0)` (`0x73f049`) when `lua_type(1)` is not above 0, otherwise fills the nine-int `tm` at `[ebp-0x28]`
 through `0x7036f0` (name and default; the default −2 is "required"), reads `isdst` through `0x7036b0`, and calls `_mktime`
-(`0x74066b`) at `0x703672`; `wday` and `yday` stay unset for `mktime` to recompute.
+(`0x74066b`) at `0x703672`; `wday` (`[ebp-0x10]`) and `yday` (`[ebp-0xc]`) are never written, so they hold whatever the stack held; the C runtime's `mktime` is not read here.
 
 ## Date
 
 `date([format [, time]])` takes `%c` and −1 as defaults, uses the current C time for −1, and breaks the time down as UTC when
 the format starts with `!`, local otherwise. The format `*t` answers a table of `sec`, `min`, `hour`, `day`, `month` (+1),
 `year` (+1900), `wday` (+1), `yday` (+1) and `isdst`; any other format goes to `strftime` with a 256-byte buffer, and a 0
-result raises ``` `date' format too long```.
+result raises ``` `date' format too long```. An empty result is also 0, so `date("")` raises it too.
 
 Addresses: `0x7033a0`, `0x7033d6`, `0x7033db`, `0x7033f0`, `0x7033f9`, `0x70340e`, `0x70343c`, `0x703503`, `0x70352c`, `0x703540`, `0x703570`, `0x73f125`, `0x7421da`, `0x4134e3`, `0x872c44`
 Confidence: verified

@@ -702,8 +702,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40d680	821	_memcpy	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40d9b5	317			crt	boundary		Runs its object file code that calls __lock, ___sbh_alloc_block, 0x40f1eb and 4 more; not read here	inferred	none		
 0x40daf2	23	_strtol	idb	crt	boundary		Runs its object file code that calls _strtoxl; not read here	inferred	none		
-0x40db09	517	_strtoxl	idb	crt	boundary		Runs its object file code that calls __isctype, _toupper, __errno; not read here	inferred	none		
-0x40dd0e	23	_strtoul	idb	crt	boundary		Runs its object file code that calls _strtoxl; not read here	inferred	none		
+0x40db09	517	_strtoxl	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base, int flags)	Parses an integer with the C runtime's rules: skips white space, takes a sign, picks the base, and sets overflow, negate and unsigned bits in flags	verified	one	ui/luabase#tonumber	
+0x40dd0e	23	_strtoul	idb	crt	boundary	unsigned long __cdecl (const char *s, char **end, int base)	Calls _strtoxl with the unsigned flag 1	verified	one	ui/luabase#tonumber	
 0x40dd40	188	_strchr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40de00	128	_strstr	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x40de80	56	strncmp		crt	primitive		Compares at most n bytes of two strings, case-sensitive	verified	one	objectlayer/party#guild-events	

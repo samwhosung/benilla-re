@@ -204,13 +204,13 @@ tail hangs below the point. A point the projector rejects as nearer than the nea
 and the bubble sits in the screen's bottom left corner until it is hidden; a point past the screen
 edge is placed as computed.
 
-Addresses: `0x4b1460`, `0x4b14a0`, `0x4b14e4`, `0x4b14f2`, `0x4b14fb`, `0x4b1507`, `0x4b1525`, `0x4b153d`, `0x4b157a`, `0x483ee0`, `0x7666a0`, `0x766750`, `0x767c70`, `0x768ed0`, `0x48377b`
+Addresses: `0x4b1460`, `0x4b14a0`, `0x4b14c7`, `0x468460`, `0x4b14e4`, `0x4b14f2`, `0x4b14fb`, `0x4b1507`, `0x4b1525`, `0x4b153d`, `0x4b157a`, `0x483ee0`, `0x7666a0`, `0x766750`, `0x767c70`, `0x768ed0`, `0x48377b`
 Confidence: verified
 Proof: one
 Test: `ui::glue_4b0_4b14a0_move_gate`
 
 `0x4b1460`, called by the frame driver `0x483460` at `0x48377b`, runs `0x4b14a0` over the live list
-and tail-jumps to `0x768ed0`, the layout pass. `0x4b14a0` zeroes its point (`0x4b14e4`), projects
+and tail-jumps to `0x768ed0`, the layout pass. `0x4b14a0` first looks the speaker up by its GUID (`+0x348`, `+0x34c`) with `ClntObjMgrObjectPtr` (`0x468460`, type mask 8, at `0x4b14c7`) and returns when there is none (`0x4b14ce`); it then zeroes its point (`0x4b14e4`), projects
 `+0x32c` with `0x483ee0` and drops the verdict, then snaps x with `0x7666a0` and y with `0x766750`.
 Each snap returns a value under 2^-22 unchanged and else computes `p = (v / K) · pixels` with the device
 width (`rect[3] − rect[1]`) or height (`rect[2] − rect[0]`), adds `0.9999899864196777` when `p` is above 0,

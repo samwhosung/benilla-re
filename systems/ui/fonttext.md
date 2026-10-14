@@ -53,8 +53,8 @@ Test: `ui::glue_7714f0_scale_mul`, `ui::glue_settled_eps`
 
 `0x772100(x, y)` sets the text offset at `+0x110`, `+0x114` when either differs, and with a built string moves it to
 `(x · scale + left, y · scale + bottom)` of the stored rectangle (`+0x68`, `+0x64`) through `0x44d600`; a button's label
-uses it for its pressed offset. `0x772240(v)` clamps a negative spacing to 0, and when it differs from `+0xf4` by 2^-22 or
-more stores it, zeroes the height measure `+0x100` and rebuilds the built string with `0x7724a0`. `0x773500(word)` stores
+uses it for its pressed offset. `0x772240(v)` clamps a negative spacing to 0 (a NaN skips the clamp: `jp` at `0x772251`), and when it differs from `+0xf4` by 2^-22 or
+more stores it (a NaN difference is neither less nor equal, so `0x772270 jnp` is not taken and the NaN is stored), zeroes the height measure `+0x100` and rebuilds the built string with `0x7724a0`. `0x773500(word)` stores
 the justify word `+0x120` when changed and rebuilds. `0x772460(start, length)` stores the alpha gradient pair at `+0x118`,
 `+0x11c` and answers 1, or with a built string whether `0x44dc40` answers less than 2.
 
@@ -166,7 +166,7 @@ Test: none
 
 `0x7716f0` finds each `|` not followed by `|` or by a digit other than the one `0x64ac60` reads, and for 1 calls `0x771770`, which
 converts the text to UTF-16 into a 0x2000-byte stack buffer (`0x771795`), copies it to `0xcf2cd0` while expanding and converts back to the static `0xcf1cc8`
-(`0x771896`). `0x7718b0(out, index, first, second)` returns `first` or `second`; it tests `ax − 0xac00` against 0xd7a3 and `(ax − 0xac08) % 28 == 0` (`0x7718e5`). Letters
+(`0x771896`). `0x7718b0(out, index, first, second)` returns `first` or `second`; it accepts `0xac00 ≤ ax ≤ 0xd7a3` (`cmp ax,0xac00; jb` at `0x7718c9`, `cmp ax,0xd7a3; ja` at `0x7718cf`) and tests `(ax − 0xac08) % 28 == 0` (`0x7718e5`). Letters
 are lower-cased with `0x40f92b` and index the table at `0x81c6d0` (`0x77197c`); digits index `0x81c6c4`.
 
 ## French escape and digit groups
