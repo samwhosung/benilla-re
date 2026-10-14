@@ -97,6 +97,7 @@ dependencies = [
 name = "benilla-re-camera"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -126,6 +127,7 @@ dependencies = [
 name = "benilla-re-console"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -164,6 +166,7 @@ dependencies = [
 name = "benilla-re-fastmath"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -171,6 +174,7 @@ dependencies = [
 name = "benilla-re-ffxeffects"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -178,6 +182,7 @@ dependencies = [
 name = "benilla-re-font"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -185,6 +190,7 @@ dependencies = [
 name = "benilla-re-gametime"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -192,6 +198,7 @@ dependencies = [
 name = "benilla-re-glue"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -199,6 +206,7 @@ dependencies = [
 name = "benilla-re-gx"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
  "benilla-re-random",
 ]
@@ -232,6 +240,7 @@ dependencies = [
 name = "benilla-re-loadingscreen"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -246,6 +255,7 @@ dependencies = [
 name = "benilla-re-minimap"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -279,6 +289,7 @@ dependencies = [
 name = "benilla-re-playername"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -300,6 +311,7 @@ dependencies = [
 name = "benilla-re-sound"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 
@@ -307,6 +319,7 @@ dependencies = [
 name = "benilla-re-spell"
 version = "0.1.0"
 dependencies = [
+ "benilla-re-cmath",
  "benilla-re-difftest",
 ]
 

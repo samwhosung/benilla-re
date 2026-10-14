@@ -6,7 +6,7 @@
 //! 4×4 matrix, a point through a 3×4 matrix, a matrix's rows scaled, its translation shifted, the
 //! 3×3, 4×4 and 3×4 products, the single-precision 4×4 product `0x754a66`, the two plane-record constructors, the conversions between a
 //! colour's channels and its hue, saturation and value or its packed bytes, the cosine
-//! interpolation, and the reciprocal square root estimate.
+//! interpolation, the reciprocal square root estimate, and the x87 float-to-integer conversions.
 //!
 //! Only the functions another system's crate needs or its tests run are here. The 3×3 helpers
 //! are cmath's rows; the geometry functions from `0x7c0190` to `0x7c46d0` and the matrix routines
@@ -34,3 +34,4 @@ pub mod rsqrt;
 pub mod seg_proj;
 pub mod sphere_box;
 pub mod transform;
+pub mod x87;

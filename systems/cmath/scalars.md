@@ -102,6 +102,25 @@ Test: none
 `__ftol` is `0x40a2b0`. `0x456442` compares `x` with 0.0 and `jp` skips the `dec ecx` for `x ≥ 0` and NaN.
 For −2.0 the parts are −3 and 1.0. `0x455c20` and `0x455bb0` use `0x456420`.
 
+## Float to integer conversions
+
+`__ftol` (`0x40a2b0`) loads a control word set to truncate (`or ah,0xc`), runs `fistp qword [ebp-0xc]`, restores
+the control word, and returns the qword in `edx:eax`. A caller that reads only `eax` takes the low dword: for a
+value outside `i32` the low 32 bits of the integer, and for NaN, an infinity or a value outside `i64` 0, since
+the qword is the integer indefinite `0x8000000000000000`.
+
+Addresses: `0x40a2b0`, `0x40a2c9`, `0x40a2cf`
+Confidence: verified
+Proof: one
+Test: `cmath::ftol_difftest`, `cmath::fistp_difftest`
+
+A bare `fistp` rounds by the control word the client runs, to nearest with ties to even, and stores the
+destination's integer indefinite for NaN, an infinity and a value that does not fit: `0x8000` to a word,
+`0x80000000` to a dword and `0x8000000000000000` to a qword. Rust's `as` saturates and turns NaN into 0, so the
+crates convert through `cmath::x87`. `ftol_difftest` runs `0x40a2b0` for real after a `fld qword`;
+`fistp_difftest` runs `fistp` to a word, a dword and a qword, and the dword form under the truncating control
+word, over NaN, the infinities, the edges of each range and a fuzz of every magnitude.
+
 ## Shaping functions
 
 `0x456510(a, b)` returns 1.0 when `a ≥ b` and 0.0 otherwise. `0x456540(x, lo, hi)` is the difference of two
