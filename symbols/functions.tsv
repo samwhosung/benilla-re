@@ -12315,7 +12315,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x511760	443			uicamera			Runs Camera.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
 0x511920	337			uicamera			Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5105e0, CMovement::GetCurrentSpeed and 1 more; not read here	inferred	none		
 0x511a80	65			uicamera			Runs Camera.cpp code that calls GetCameraLiquid, 0x458650; not read here	inferred	none		
-0x511ad0	237			uicamera			Runs Camera.cpp code that calls CWorld::GetEntityLight; not read here	inferred	none		
+0x511ad0	237	UpdateCameraWaterBits		uicamera			Sets the camera's water depth bits from a unit's depth in liquid and returns the depth	verified	one	objectlayer/swim#camera-water-bits	
 0x511bc0	130			uicamera			Runs Camera.cpp code that calls OsGetAsyncTimeMs, 0x50f060, 0x511a80 and 2 more; not read here	inferred	none		
 0x511c50	16			uicamera			Runs Camera.cpp code that calls 0x50ab70; not read here	inferred	none		
 0x511c60	209			uicamera			Runs Camera.cpp code that calls SMemAlloc, OsGetAsyncTimeMs; not read here	inferred	none		

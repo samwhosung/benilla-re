@@ -81,8 +81,8 @@ which rewrites the word as `local ^ ((local ^ wire) & mask)` with the live mask 
 (contains `0x100`); the create block `0x619320`, which zeroes the word at `0x61936e` and then
 merges; the forced snapshot `0x61a770`, which keeps `local & 0x8a5f8200` and ORs the wire word
 (so `0x100` comes from the wire); and the constructor `0x7c4850`, which zeroes it. The setters
-for the other state changes (root, swim, fall, landing, hover, feather fall) mask other bits, and
-`SetRoot`'s wipe `0xffe07f00` keeps `0x100`.
+for the other state changes mask other bits, and
+`SetRoot`'s wipe `0xffe07f00` keeps `0x100`. A world port rebuilds the unit and takes the bit from the create block; a near teleport keeps it.
 
 Addresses: `0x7c71c0`, `0x7c71d0`, `0x7c71d7`, `0x615f56`, `0x615f84`, `0x617e5c`, `0x617e87`, `0x6180ee`, `0x6180fe`, `0x7c6acb`, `0x618c30`, `0x618dbe`, `0x618df3`, `0x619320`, `0x61936e`, `0x61941f`, `0x61a770`, `0x61a796`, `0x61a799`, `0x61a7a1`, `0x7c4850`, `0x7c489f`, `0x7c7340`, `0x7c734f`
 Confidence: verified

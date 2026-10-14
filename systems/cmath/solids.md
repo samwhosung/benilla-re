@@ -91,7 +91,7 @@ Test: none
 `r` is stored at `0x6dc906` to `0x6dc922` as `edx − ecx`, `a` and `c` at `[ebp-8]` and `[ebp-4]` (`0x6dc93d`, `0x6dc95e`), `b` at
 `[ebp-0xc]`, `d` and `e` over the argument slots `[ebp+0xc]` and `[ebp+8]`, and `f` stays on `st0`. `0x6dc9d2 fabs` takes the
 determinant's magnitude. `0x6dc9fb fcomp [det]` and `0x6dca09 test ah,0x41; jp 0x6dcb59` send `S + T > det` away from the near side. The
-interior leg `0x6dcb0d` takes `1/det`, scales `S` and `T`, and sums the form. Every leg ends at `0x6dcd73 fabs`. The function is not called.
+interior leg `0x6dcb0d` takes `1/det` and stores `s` as a float (`0x6dcb1b`) while `t` stays at 53 bits. Corner legs add `2d` or `2e` to `f` before `a` or `c`. Every leg ends at `0x6dcd73 fabs`. The function is not called.
 
 ## Point to triangle edges
 

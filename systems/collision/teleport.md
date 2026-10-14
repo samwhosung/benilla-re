@@ -23,23 +23,50 @@ Confidence: verified
 Proof: one
 Test: none
 
-The registrations pair `mov edx,handler; mov ecx,opcode` before `call 0x5ab650` at the addresses above.
+The registrations pair `mov edx,handler; mov ecx,opcode` before `call 0x5ab650` at the addresses above. `0x401900` calls `0x495920` (interaction cancel and cast cancel with reason 0x1c)
+and then the loading screen, `0x4072c0` for the form with a transport and `0x406640` for the plain one; the two extra numbers of the transport form are read and not used here.
 `0x401ba5 push 1; mov edx,0x401bc0; xor ecx,ecx; call 0x4200a0` posts the callback with argument 1;
 `0x401e9b xor edx,edx` and `0x401ea4 call 0x401bc0` call it with 0. `0x401de0` does nothing when the map
 equals the current one (`0x468580`). The callback runs on a later scheduler pass than the packet
 dispatch (`core/events`).
 
+## Transfer abort
+
+`0x4019a0` handles `0x40`. It reads a reason byte and, for reason 1, 2, 3 or 5, shows the global string `TRANSFER_ABORT_MAX_PLAYERS`, `TRANSFER_ABORT_NOT_FOUND`,
+`TRANSFER_ABORT_TOO_MANY_INSTANCES` or `TRANSFER_ABORT_ZONE_IN_COMBAT` in the chat frames as a message of type 10. Reason 4 and any other value show nothing. It then writes
+`World transfer aborted...` to the console and ends the loading screen (`0x407e80`).
+
+Addresses: `0x4019a0`, `0x4019aa`, `0x4019b4`, `0x4019b9`, `0x4019c0`, `0x4019c7`, `0x4019ce`, `0x4019d5`, `0x4019f3`, `0x4019f8`, `0x4019ff`, `0x401a04`, `0x401a11`, `0x703bf0`, `0x49a870`, `0x407e80`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4019b3 dec eax; cmp eax,4; ja 0x401a04` leaves a reason of 0 or above 5 at the console line. The jump table behind the function holds `0x4019c0`, `0x4019c7`, `0x4019ce`, `0x401a04` and `0x4019d5`, each of the first
+three and the last loading `ecx` with a string name. `0x4019f3 call 0x703bf0` turns the name into text and `0x4019f8 mov edx,0xa; call 0x49a870` adds it with type 10.
+
+## Neighbouring handlers
+
+The block that binds the transfer handlers binds two more messages, unrelated to transfers. `0x1cb` goes to `0x401800`, which reads a string, shows it as an error message and writes
+it to the console. `0x1cd` goes to `0x401850`, which reads the total time played and the time played at this level, writes `Time played:` and the two formatted times to the console and signals
+event 0x103 with both numbers.
+
+Addresses: `0x401728`, `0x40172a`, `0x401739`, `0x401800`, `0x401818`, `0x401828`, `0x40183b`, `0x401850`, `0x401863`, `0x40186e`, `0x401878`, `0x40188f`, `0x4018df`, `0x4945b0`, `0x63cd00`, `0x63cd50`, `0x49e9d0`, `0x703f50`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x401818 call 0x4191b0` reads a string of at most 0x400 bytes and `0x401828 call 0x4945b0` adds it as an error message; `0x40183b call 0x63cd00` writes it with the format `%s`. In `0x401850`,
+`0x401863` and `0x40186e` read the two numbers, `0x40188f` and `0x4018b7` format them as times for the lines `Total: %s` and `Level: %s`, and `0x4018df call 0x703f50` signals the event (`push 0x103`) with the format `%d%d`.
+
 ## World-port executor
 
-`0x401bc0(sendAck)` runs as one synchronous block and acknowledges last. It flushes the network
-pointers and waits for outstanding reads, frees the pending move events, re-registers the frame
-callback `0x616800`, destroys the object manager (so no local player object exists),
-creates an empty one, arms the loading progress callbacks, blocks in `0x66fbe0` until every read of
+`0x401bc0(sendAck)` runs as one synchronous block and acknowledges last. It marks the connection out of the world and waits for outstanding reads, destroys the movement manager and the object
+manager (so no local player object exists), creates empty ones, arms the loading progress callbacks, blocks in `0x66fbe0` until every read of
 the destination map has finished, stages the arrival transform, and only then sends opcode `0xdc`
 with no body. Nothing builds a packet before that. No tick runs between the arrival of the new world and
 the acknowledgement: the mover is still because nothing integrates, not because a flag holds it.
 
-Addresses: `0x401bc0`, `0x401bcd`, `0x401bd9`, `0x401bde`, `0x401be3`, `0x401bed`, `0x401bf7`, `0x401c22`, `0x401c38`, `0x401c44`, `0x401c5c`, `0x401c65`, `0x401c73`, `0x401ca0`, `0x401ca7`, `0x401cae`, `0x401cd7`, `0x66fbe0`, `0x6941f0`, `0x69447a`, `0x443d30`, `0x443d72`, `0x443d84`, `0x443ddf`, `0x616910`, `0x467700`, `0x464ff0`, `0x4818f0`
+Addresses: `0x401bc0`, `0x401bcd`, `0x401bd4`, `0x401bd9`, `0x401bde`, `0x401be3`, `0x401bed`, `0x401bf7`, `0x401c22`, `0x401c38`, `0x401c44`, `0x401c5c`, `0x401c65`, `0x401c73`, `0x401ca0`, `0x401ca7`, `0x401cae`, `0x401cd7`, `0x66fbe0`, `0x6941f0`, `0x69447a`, `0x443d30`, `0x443d72`, `0x443d84`, `0x443ddf`, `0x616910`, `0x467700`, `0x464ff0`, `0x4818f0`
 Confidence: verified
 Proof: one
 Test: none
@@ -50,6 +77,22 @@ streaming windows (`0x672730`) and calls `0x6941f0`, which calls the wait-all lo
 `0x69447a`. That loop calls only the pending test `0x443e20`, the completion drain `0x443e70`, the
 progress callback (`0x443ddf`) and `0x429d50`. A scan of the executor body finds no other `0x5ab630`
 send.
+
+## World-port teardown order
+
+Before the load, the executor discards the old world in a fixed order. It marks the connection out of the world (`0x5aae70` with 0), waits for outstanding reads (`0x443d30`), destroys the movement
+manager (`0x616910`) and unregisters its frame handler for event 5 (`0x41fd80`), frees the missiles (`0x61e8f0`), destroys the object manager (`0x467700`), unloads the map (`0x66fc40`), resets the weather
+when `0xc6326c` is set (`0x67bac0`), sets the ambience (`0x4586b0`), clears the item and spell cooldowns (`0x6e9ad0`), creates the new object manager (`0x464ff0`), initializes movement (`0x401a40`) and
+signals CANCEL_LOOT_ROLL (`0x61b290`). Then it arms the progress callbacks, loads, and disarms them with null arguments (`0x401c65`, `0x401c6e`).
+
+Addresses: `0x401bc0`, `0x401bd4`, `0x401bd9`, `0x401bde`, `0x401bed`, `0x401bf2`, `0x401bf7`, `0x401bfc`, `0x401c01`, `0x401c0b`, `0x401c12`, `0x401c17`, `0x401c22`, `0x401c27`, `0x401c2c`, `0x401c38`, `0x401c44`, `0x401c5c`, `0x401c65`, `0x401c6e`, `0xc6326c`, `0x5aae70`, `0x443d30`, `0x616910`, `0x41fd80`, `0x61e8f0`, `0x467700`, `0x66fc40`, `0x67bac0`, `0x4586b0`, `0x6e9ad0`, `0x464ff0`, `0x401a40`, `0x61b290`, `0x443620`, `0x66fc70`
+Confidence: verified
+Proof: one
+Test: none
+
+The order is the call order of the straight-line body from `0x401bc0` to `0x401c73`. `0x401bd2 mov ecx,eax` takes the connection from `0x5ab490` and `0x5aae70` stores the 0 pushed at `0x401bca`.
+`0x401c01 mov ecx,[0xc6326c]; cmp ecx,esi; je 0x401c10` guards the weather reset, and `0x401c12` calls `0x4586b0` with 0. The two arming calls pass the callbacks `0x407f70` and `0x407fa0`
+(`0x401c33`, `0x401c3f`). No call in this stretch builds a packet.
 
 ## Near teleport acknowledgement
 

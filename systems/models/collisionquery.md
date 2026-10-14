@@ -92,6 +92,20 @@ visited stack `0xce26e8` holds 0x2000 entries: a full stack sets bit 0 of the co
 returns 1 on all-above or all-below. `0x6bc1e8` first calls `0x6b8c60`, which returns 0 when the cache
 pointer `0xca03e4` is null, which it is unless the console enabled the cache.
 
+## Liquid tiles by class bit
+
+A map object group's liquid tiles join a query only when the class word asks for their type. `0x6b91c0` passes a word with any of 0xf0000 on to `0x6bb170`, which builds a four-entry
+table of 0x10000, 0x20000, 0x40000 and 0x80000 and keeps a tile when the table entry its type picks is in the word. The type is the low nibble of the tile's flag byte, 0xf meaning no
+liquid, masked with 3 to index the table. So the four liquid types are class bits 16 to 19, and water walking asks for 0x30000, the first two.
+
+Addresses: `0x6b91c0`, `0x6b9243`, `0x6bb170`, `0x6bb455`, `0x6bb4a7`, `0x6bb4aa`, `0x6bb4b3`, `0x6bb4b6`, `0x6bb4b9`, `0x6bb4bd`, `0x6315f0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6b9243 test eax,0xf0000` gates the call. `0x6bb455` to `0x6bb46a` store the four constants at `[ebp-0x58]` to `[ebp-0x4c]`. `0x6bb4a7 and eax,0xf` and `0x6bb4aa cmp eax,0xf; je` skip an empty tile,
+`0x6bb4b6 and eax,3` takes the index, and `0x6bb4b9 test [ebp+eax*4-0x58],edx` with `edx` the class word (`0x6bb4b3 mov edx,[ebp+0x14]`) keeps or skips the tile (`je 0x6bb62f`).
+
 ## Group flags on the movement path
 
 No flag of a group header is read between the world trace and the face test. The two queries that do

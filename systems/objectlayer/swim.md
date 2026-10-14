@@ -95,3 +95,18 @@ force argument, then `[CMovement+0xa4]` (null queues) and its bit `0x4` (clear a
 with TYPEMASK_PLAYER (`shr ecx,4; test cl,1`) or health above 0 (`0x5fb8a8`, `0x5fb8ad`), queries
 liquid, compares `depth` with `h·0.75` (`fcompp`, `test ah,0x41`) and applies the same gate before
 `0x61a130`.
+
+## Camera water bits
+
+`0x511ad0(unit)` is a camera method with the same shape as the swim decision and no part in it. It clears bits 0x100000 and 0x200000 of the camera's flags at `+0x90`, takes the unit's
+liquid surface from `0x670630`, and returns `depth = surface − feet z` (0 for no unit or outside liquid). With `t` the camera's threshold at `+0x1c8`, it sets 0x100000 when `depth < t + 2/9`
+and 0x200000 when `t + 2/9 ≤ depth < t + 5/9`; a deeper unit sets neither. The callers are the camera update `0x50ca90`, which discards the result, and the pull-in solver `0x50e8d0`.
+
+Addresses: `0x511ad0`, `0x511ae3`, `0x511b39`, `0x511b58`, `0x511b61`, `0x511b76`, `0x511b83`, `0x511b90`, `0x511ba4`, `0x670630`, `0x50ca90`, `0x50d0a9`, `0x50e8d0`, `0x50eb45`, `0x8089d0`, `0x8089d4`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x511ae3 and ecx,0xffcfffff` clears both bits. `0x511b39 call 0x670630` returns the surface in the local at `[ebp+8]`, and `0x511b58 call [edx+0x14]` is the unit's position. The compare chain is
+`0x511b61 fcom [esi+0x1c8]` (`depth` below `t` jumps to the 0x100000 store at `0x511ba4`), then `0x511b76 fcom [0x8089d0]` (2/9, the same store) and `0x511b83 fcomp [0x8089d4]` (5/9,
+the 0x200000 store at `0x511b90`). `0x50d0a9` is followed by `fstp st(0)` and `0x50eb45` stores the result.
