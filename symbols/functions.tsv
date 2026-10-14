@@ -6147,7 +6147,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47daf0	19	InitUnitFieldsQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47db10	11	UnitWatchedCount		objectlayer	orchestration	uint32_t __cdecl (void)	Returns the unit's watched field count, 3 + 0xa7	verified	one	objectlayer/fields#watched-fields	
 0x47db20	27	UnitWatchedIndex		objectlayer	orchestration	uint32_t __fastcall (uint32_t field)	Returns a field's position in the unit's watched field table	verified	one	objectlayer/fields#watched-fields	
-0x47db40	141			objectlayer	orchestration		Runs its object file code not read here	inferred	none		
+0x47db40	141	CheckEmoteEligible		objectlayer	primitive	uint32_t __thiscall (uint32_t flags, uint32_t mode, uint32_t *standStill)	Tells whether an Emotes row's flags allow the unit to perform it by stand state and movement	verified	one	objectlayer/interaction#emote-eligibility	
 0x47dbd0	5	InitContainerFieldsSquare1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47dbe0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47dbe0	19	InitContainerFieldsSquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47dc00	5	InitContainerFieldsSquare2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47dc10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21989,15 +21989,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62e970	19	InitCombatLogBSquare16		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62e990	5	InitCombatLogBSquare17Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62e9a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62e9a0	19	InitCombatLogBSquare17		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62e9c0	89			objectlayer	unreached		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord; not read here	inferred	none	objectlayer/overview#unreached-functions	
+0x62e9c0	89			objectlayer	unreached		Returns the dword at +0x5c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/overview#unreached-functions	
 0x62ea20	85			objectlayer	orchestration		Returns the dword at +0x0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
 0x62ea80	86			objectlayer	orchestration		Returns the dword at +0x4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
 0x62eae0	86			objectlayer	orchestration		Returns the dword at +0x2c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
 0x62eb40	86			objectlayer	orchestration		Returns the display id, the dword at +0x18 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
 0x62eba0	89			objectlayer	orchestration		Returns the dword at +0x1b0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
 0x62ec00	89			objectlayer	orchestration		Returns the dword at +0x1b4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62ec60	16			objectlayer	unreached		Runs its object file code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x62ec70	132			objectlayer	primitive		Runs its object file code not read here	inferred	none		
+0x62ec60	16			objectlayer	unreached		Returns 1 when the item record's dword at +0x1b4 is above 4	verified	one	objectlayer/overview#unreached-functions	
+0x62ec70	132			objectlayer	primitive	int __thiscall ()	Gives the ItemVisuals id of a weapon's own glow as -1, else of its first enchantment, else 0	verified	one	objectlayer/inventory#enchant-visuals	
 0x62ed00	5	InitCombatLogCCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62ed10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62ed10	11	InitCombatLogCCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x62ed20	5	InitCombatLogCDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62ed30, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	

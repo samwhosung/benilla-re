@@ -186,7 +186,7 @@ slots 0 to 9 of the `GameObjectDisplayInfo` row, a looping sound replacing the r
 `$SND` and `$DSO` play the event's sound; `$SHK` adds the three camera shakes of a
 `SpellEffectCameraShakes` row; `$DSL` starts or moves a looping sound.
 
-Addresses: `0x5f3e20`, `0x5f3e44`, `0x5f3f5b`, `0x5f3fa6`, `0x5f3fe5`, `0x5f4010`, `0x5f404a`, `0x5f4080`, `0x5f40c0`, `0xc0dce4`, `0xc0d80c`, `0x458870`, `0x511d40`
+Addresses: `0x5f3e20`, `0x5f3e44`, `0x5f3f5b`, `0x5f3fa6`, `0x5f3fe5`, `0x5f4010`, `0x5f404a`, `0x5f4080`, `0x5f40c0`, `0x5f8930`, `0x5f8c50`, `0xc0dce4`, `0xc0d80c`, `0x458870`, `0x511d40`
 Confidence: verified
 Proof: one
 Test: none
@@ -196,7 +196,10 @@ Test: none
 0x458830's looping flag: a one-shot goes to `PlaySoundAtArgs(id, a, −1, 1.0)`; a looping one, when
 0x462120 says it is not already playing, stops the old (0x461f80) and starts it with 0x461d80.
 `$SHK` (`0x5f3fa6`) passes each of the row's three shakes and the data to `CameraAddShake`; `$DSL`
-calls 0x461d80 or 0x462000.
+calls 0x461d80 or 0x462000. `0x5f4010`, which reads
+the row's sound columns, is called only from `0x5f3e20`: the custom animation message
+(`0x5f8930`, `0x5f8c50`) plays no sound itself and a sound follows only when the armed clip carries a
+`$GC` event.
 
 ## Art kits
 

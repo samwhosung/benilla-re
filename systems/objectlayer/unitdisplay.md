@@ -152,6 +152,22 @@ one (0x47a070), opening or closing the hand.
 to `$WTB`) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
 `WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both. Slices run `0x612044`-`0x612116` and `0x612221`-`0x612269`.
 
+## Weapon trails
+
+A visual kit's character procedure of type 8 arms the swing trails of the unit's weapons. It
+stores the colour, parameter 0 with parameter 3 in the top byte, at `+0xd1c` and the duration,
+parameter 2, at `+0xd20`. The next `PlayAnimation` passes both to each of the two trail objects at
+`+0xd34` and clears `+0xd20`, so one animation fires one trail. The trails draw their own geometry.
+
+Addresses: `0x60d80a`, `0x60d828`, `0x60d835`, `0x5fe48e`, `0x5fe4a3`, `0x5fe4ac`, `0x5fe4b1`, `0x60e550`, `0x6c69c0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60d80a` truncates the three parameters with `_ftol`; `0x60d828` and `0x60d835` store them. The
+read in `0x5fe48e` skips the pass when the duration is 0; `0x5fe4ac` calls `0x60e550(&colour,
+duration)`, which calls `0x6c69c0` on each trail object that exists.
+
 ## Disarm and the hands
 
 Hands attach through `0x60b770(hand)`, which asks for the hand's weapon without `raw` and returns,

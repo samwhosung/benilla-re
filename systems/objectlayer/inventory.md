@@ -180,6 +180,27 @@ weapon's enchant visual goes on through `0x5eed00(attach, hand)`, from `CGUnit_C
 and `0x5eedc0(record, slot)`, which picks the attachment by the sheathe state and a shield;
 `0x5eed50` attaches `0x62ec70(record)` at the model's child for the point.
 
+## Enchant visuals
+
+A weapon's glow is an `ItemVisuals` id picked once per weapon record. `0x62ec70(record)` returns
+−1 when the weapon's own display row names a visual that exists, so the item's own glow stays;
+otherwise the `ItemVisuals` id of the first of the record's seven enchantments whose
+`SpellItemEnchantment` row has a nonzero `+0x58`, else 0. `0x5eed50(record, point)` puts the id on
+the model child at the attach point unless it is −1, then refreshes the portrait.
+
+Addresses: `0x62ec70`, `0x62ecb5`, `0x62eced`, `0x5eed50`, `0x5eed00`, `0x5eedc0`, `0x479700`, `0x712f00`, `0x491a50`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x62ec70` takes the display id from `0x62eb40`, looks the `ItemDisplayInfo` row up and returns
+−1 when its `+0x58` is in range and the `ItemVisuals` entry is nonzero. `0x62ecb5` starts the
+scan of the seven enchantment ids from `+0xc` of the record; each indexes the enchantment store
+and `0x62eced` returns the first nonzero `+0x58`. `0x5eed50` compares the result with −1, calls
+`CM2Model::FindChild` for the point (`0x712f00`) and `0x479700` on the child. `0x5eed00(record,
+hand)` takes the visible item of slot 15 or 16 for it; `0x5eedc0` picks the point from the sheathe
+state and a shield.
+
 ## Helm and cloak
 
 `0x5ee660` shows the helm on the model and `0x5ee740` hides it; `0x5ee7f0` and `0x5ee8d0` do the

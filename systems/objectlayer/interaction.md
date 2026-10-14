@@ -185,6 +185,26 @@ The text row's `+8` indexes the `Emotes` store `0xc0ddd4` (loader `0x544290`); t
 with the display race and gender while shapeshifted. The sheathe call is `SetSheatheState`; the
 mask at `0x85ff10` is 0x10b.
 
+## Emote eligibility
+
+`0x47db40(flags, mode, out)` decides whether an `Emotes` row, by its flags `+0xc`, may be performed
+by the unit. It refuses, in order: with `mode` set and flag 0x400; flag 0x1 unless the stand state
+is 0; flag 0x80 while the mover swims (0x200000); a sleeping or dead stand state (3 or 7) unless
+flag 0x200 allows it. Flag 0x4000 with any of the movement bits 0x20ff sets `out` to 1, the
+mark that the emote needs standing still. Anything else is eligible.
+
+Addresses: `0x47db40`, `0x47db56`, `0x47db58`, `0x47db65`, `0x47db6c`, `0x47db76`, `0x47db7d`, `0x47db8e`, `0x47db95`, `0x47dbab`, `0x47dbb3`, `0x47dbbc`, `0x5ef5c3`, `0x5ef5ca`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x47db58` tests `dh` for 0x400 (when `mode` is nonzero); `0x47db65` tests 0x1 and `0x47db6c` reads
+the stand state, byte `+0x210` of the unit's fields; `0x47db76` tests the sign bit of the flag
+byte (0x80) and `0x47db7d` the mover's flags `+0x40`; `0x47db8e` tests 0x200 and `0x47db95` the
+stand state against 3 and 7; `0x47dbab` to `0x47dbbc` handle 0x4000. `0x5ef5c3` is the only
+caller, in `SendTextEmote`, which skips the whole emote and its packet when the result is 0
+(`0x5ef5ca`).
+
 ## AFK
 
 `0x5eb740(message)` marks the player AFK: an empty message takes `DEFAULT_AFK_MESSAGE`; the first

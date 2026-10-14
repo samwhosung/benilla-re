@@ -191,6 +191,28 @@ The new mover gets `0x619d50(1)` and `0x514640(now,1)`. Client control is bit 0x
 `0x5fa5f0` reads it, `0x5fa600` sets it and re-picks the camera's mover, and `0x603ea0` (0x159)
 reads a packed GUID and a byte and calls `0x5fa600(byte != 0)`.
 
+## Client control
+
+`0x5fa600(unit, allow)` runs for the unit a client control update names and does three things in
+order. It sets or clears bit 0x400 of `+0xc58`, for any unit. If the unit is the camera's anchor,
+it makes the unit the active mover when the bit is set, or clears the mover to GUID 0 when the bit
+is clear and the unit is the current mover. If the unit is the active player, it stores the bit in
+the control flag `s_playerHasControl` through `SetPlayerControl`, which signals `PLAYER_CONTROL_GAINED`
+or `PLAYER_CONTROL_LOST`.
+
+Addresses: `0x5fa600`, `0x5fa621`, `0x5fa62a`, `0x5fa631`, `0x5fa636`, `0x5fa63c`, `0x5fa64c`, `0x5fa662`, `0x5fa678`, `0x5fa68b`, `0x5fa696`, `0x5fa69d`, `0x5fa6b1`, `0x4958e0`, `0xb4b3e4`, `0x603ea0`
+Confidence: verified
+Proof: one
+Test: none
+
+The bit is stored at `0x5fa636`, before `0x5fa662` reads it back through `IsClientControlled`, so with
+`allow` 0 the read is 0. `0x5fa64c` compares the camera's `+0x88` with the unit's GUID; the clear
+leg (`0x5fa678`, `0x5fa68b`) builds a zero GUID for `0x5fa696` (`SetActiveMover`). `0x5fa69d` is
+the test for the active player and `0x5fa6b1` the call. `0x4958e0` stores the flag when it
+differs; a nonzero flag signals event 0xc5 and a zero flag first runs `0x495920` (clears the cursor,
+cancels the cast) and signals 0xc4, each ending in `FireUsableEvents`. Casting, item use, melee and
+the action buttons test the flag; `0x603ea0` feeds `0x5fa600`.
+
 ## Facing
 
 A unit keeps two facings: the body's at `+0xc94` and the display's at `+0xc98`. The active mover's
@@ -208,6 +230,30 @@ Test: `objectlayer::wrap_angle_difftest`, `objectlayer::angle_wrap_pi_difftest`,
 adds a transport's turn to both facings, wrapping each once into 0 to 2π. `0x6084f0` uses
 `fmod` past ±π. `0x608560` (slot 15) places a swimming unit's model with the pitched transform
 `0x60a110`: scale `[+0x94]·[+0x90]` times the mount's `+0x9c` or the unit's `+0x98`. Slices: u4_facing_delta_difftest `0x600ea5`-`0x600eb3`; u4_facing_dead_band_difftest `0x600ea5`-`0x600ec0`; u4_facing_wrap_pi_delta_difftest `0x600eda`-`0x600f0e`; u4_facing_box_apply_difftest `0x600f7b`-`0x601013`.
+
+## The display facing goal
+
+`0x600cd0` picks the goal the display facing `+0xc98` turns to. The active mover takes its own raw
+facing `+0x9c4` at once. Any other unit takes the first of these that holds: the raw facing when it
+moves (movement flags 0xf), has a stand state, holds an emote state whose `Emotes` row lacks flag
+0x2000, is stunned (0x40000) or is a player-controlled player; the scripted facing `+0xcac` when
+`+0xc58` has bit 0x1; the bearing to its target; the bearing to the active player's target
+when it is that player; the bearing to the active player when the unit is the interaction target;
+else the raw facing.
+
+Addresses: `0x600cd0`, `0x600cee`, `0x600cf5`, `0x600d03`, `0x600d6c`, `0x600d9d`, `0x600da5`, `0x600db5`, `0x600dc3`, `0x600dd7`, `0x600de2`, `0x600deb`, `0x600df6`, `0x600e0e`, `0x600e1c`, `0x600e2a`, `0x600e3f`, `0x600e9e`, `0x600eb0`, `0x6126f0`, `0x47f220`, `0xb4e2d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x600cee` and `0x600cf5` compare the unit's GUID with the active mover and `0x600d03` stores the
+raw facing in `+0xc98`. `0x600d6c` to `0x600d9d` read `UNIT_NPC_EMOTESTATE` (`+0x238`) and the
+row's flags `+0xc` into `bl`. `0x600da5` tests the movement flags, `0x600db5` calls the stand-state
+slot, `0x600dd7` the stunned flag, `0x600de2` and `0x600deb` the scripted facing, `0x600df6` the
+player-controlled flag and player type. `0x600e0e` reads `UNIT_FIELD_TARGET` (`+0x28`), `0x600e1c`
+the active player's target `0x6126f0` (`+0x1d28`, 0 for any other unit) and `0x600e2a` the interaction
+GUID `0xb4e2d0`, with the player from `0x600e3f`. The bearing is `HeadingBetweenPoints` of the two
+positions (`0x600e9e`). A gap under 0.01 (`0x600eb0`) snaps; otherwise the turn averages the samples.
 
 ## Auto-move modes
 
