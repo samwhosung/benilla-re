@@ -1021,7 +1021,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0x811cd0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x811cd0	char *[9]	s_luaTypeNames		ui	Holds the name of each Lua type tag, nil to thread, as used by type	verified	one	ui/luabase#type-and-tostring
 0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	one	ui/luastate#the-library-scripts-see
 0x811f4c	void *[5]	s_scriptObjectVtable		ui	Holds the script object vtable the constructor 0x701ae0 stores	verified	one	ui/script#the-script-object
 0x811f8c	uint32_t[7]	s_m2StageCombineByBlend		models	Holds the texture stage combine value of each blend mode	verified	one	models/render#texture-stages
@@ -2040,6 +2040,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x871404	char[7]	s_textBOTTOM		ui	Holds the string "BOTTOM"	inferred	none	
 0x87145c	char[3]	s_textOn		ui	Holds the string "on"	inferred	none	
 0x871460	char[4]	s_textOff		ui	Holds the string "off"	inferred	none	
+0x871624	char[9]	s_textNoValue		ui	Holds the string "no value", the type name of an absent index	verified	one	ui/luabase#type-and-tostring
 0x8716e0	char[4]	s_textSAt8716e0		unassigned	Holds the string "@%s"	inferred	none	
 0x871896	char[12]	s_textASrcLgcC		unassigned	Holds the string "a\src\lgc.c"	inferred	none	
 0x871938	char[7]	s_stringLibraryName		unassigned	Holds string	verified	one	ui/luastate#the-library-scripts-see
@@ -2055,13 +2056,22 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8722d8	const char *	s_compatChunk		ui	Points to the text of compat.lua, run into each new state	verified	one	ui/luastate#what-a-new-state-holds
 0x8722dc	char[8]	s_argName		ui	Holds arg and the digits of the argument global being set	verified	one	ui/script#running-a-handler
 0x8722e8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x8728a4	char[7]	s_ipairsName		ui	Holds the string "ipairs"	verified	one	ui/luabase#iteration
 0x872990	char[30]	s_eventObjectTag		ui	Holds the allocation tag of the event array, the type name of FrameScript_EventObject	verified	one	ui/script#the-event-table
 0x8729b0	char[60]	s_frameScriptPath		ui	Holds the source path of FrameScript.cpp	verified	one	ui/README#frame-core-object-files
 0x8729ec	char[19]	s_frameScriptMetaName		ui	Holds __framescript_meta, the global holding the object metatable	verified	one	ui/script#the-script-object
 0x872a08	char[24]	s_listenerNodeTag		ui	Holds the allocation tag of a listener node, the type name of EVENTLISTENERNODE	verified	one	ui/script#registering-for-an-event
 0x872a28	char[6]	s_handlerNameFormat		ui	Holds %s:%s, the format of a compiled handler's name	verified	one	ui/script#compiling-a-script-element
 0x872a30	char[32]	s_textUsageSeterrorhandlerErrfunc		ui	Holds the string "Usage: seterrorhandler(errfunc)"	inferred	none	
+0x872a50	char[12]	s_textMetatableKey		ui	Holds the string "__metatable"	verified	one	ui/luabase#metatables
+0x872a5c	char[36]	s_textCannotChangeProtectedMetatable		ui	Holds the string "cannot change a protected metatable"	verified	one	ui/luabase#metatables
+0x872a80	char[22]	s_textNilOrTableExpected		ui	Holds the string "nil or table expected"	verified	one	ui/luabase#metatables
+0x872acc	char[2]	s_getinfoOptionF		ui	Holds the string "f", the getinfo option for the running function	verified	one	ui/luabase#function-environments
+0x872afc	char[7]	s_fenvKey		ui	Holds the string "__fenv", the key of a protected environment	verified	one	ui/luabase#function-environments
+0x872bb8	char[11]	s_textTostringKey		ui	Holds the string "__tostring"	verified	one	ui/luabase#type-and-tostring
+0x872bc4	char[24]	s_textTableTooBigToUnpack		ui	Holds the string "table too big to unpack"	verified	one	ui/luabase#iteration
 0x872bdc	char[18]	s_textAssertionFailed		ui	Holds the string "assertion failed!"	inferred	none	
+0x872c44	char[3]	s_dateTableFormat		ui	Holds the string "*t", the date format that answers a table	verified	one	ui/luabase#date
 0x872c6c	char[3]			ui	Holds a string of 2 characters	inferred	none	
 0x872c70	char[21]	s_textInFunctionSD		ui	Holds the string " in function <%s:%d>"	inferred	none	
 0x872c88	char[15]	s_textInMainChunk		ui	Holds the string " in main chunk"	inferred	none	

@@ -120,6 +120,43 @@ stores it divided by `K1` and `K2` with `0x41ade0` (`0x483a67`, `0x483a86`), cla
 
 `ui::geo_483ee0` runs `0x483ee0` whole, with the matrix transform `0x7bcb40` stubbed to return a chosen clip vector, and `ui::apply_rect_screen` runs `0x76b580` whole.
 
+## Unprojecting a screen point
+
+`0x4813b0` turns a point in the frame's own space into a world ray. With `this` the world frame and the rectangle at
+`+0x390` (`left`, `bottom`, `right`, `top`), it computes `u = (a − bottom) / (top − bottom)` from the first float argument and
+`v = (b − left) / (right − left)` from the second, both rounded to single. It returns 0 when either fraction is below 0 or
+above 1 and writes nothing; a NaN passes both gates. Otherwise it calls `UnprojectScreenPoint` with `u` and `v`, adds the
+three floats at `[camera+8]` (the camera at `[this+0x65b8]`) to both output points, and returns 1. The two outputs are the
+third and fourth arguments, the near point first.
+
+Addresses: `0x4813b0`, `0x4813f0`, `0x4813fb`, `0x481420`, `0x481423`, `0x48144d`, `0x481469`, `0x48148e`, `0x7ad2c0`, `0x7ffd74`, `0x7ff9d8`
+Confidence: verified
+Proof: one
+Test: `ui::glue_481_4813b0_gates`, `ui::glue_481_4813b0_normalize`, `ui::glue_481_4813b0_vec_add`
+
+`__thiscall`, `ret 0x10`. The lower gate compares with 0.0 (`0x7ffd74`) and `test ah,0x5` with `jnp`: only a clear C0 and C2
+or both set (unordered) fall through. The upper gate compares with 1.0 (`0x7ff9d8`), `test ah,0x41` with `je`: a
+clear C0 and C3 (above 1) rejects, equal to 1 and NaN pass. The tests run the gates, the normalisation and the vector
+adds as slices, not the whole function. `PickAtCursor` (`0x481190`) calls it at `0x48130c` with its two output vectors zeroed first.
+
+## Destruction
+
+`0x481d30` is the world frame's destructor body, called by the deleting destructor `0x481d00`. It stores the two vtables
+back, calls `EventSetMouseMode(0, 0)`, zeroes the singleton `0xb4b2bc`, releases the two handles at `0xb4b344` and
+`0xb4b348`, tears down the smart-rect lists (`0x509450`), drains the three object lists at `+0x31c`, `+0x328` and `+0x334`
+(each entry closed with `0x4840d0`, which releases the model at `+0x8` through `HandleClose2` (`0x7103a0`) and unlinks the node, and freed with `SMemFree`), destroys the camera at `+0x65b8` with `CCamera::~CCamera`
+(`0x50c460`) and frees it, calls the virtual destructors of the objects at `0xb4b350` and `0xb4b39c`
+when set, calls `FFXShutdown` (`0x6cd1d0`), unlinks the lists at `+0x330`, `+0x324` and `+0x318` and ends in
+`CSimpleFrame::~CSimpleFrame` (`0x7693b0`).
+
+Addresses: `0x481d00`, `0x481d30`, `0x481d4d`, `0x481d54`, `0x481d7d`, `0x481e12`, `0x481e4e`, `0x481ed3`, `0x420540`, `0x509450`, `0x4840d0`, `0x4840da`, `0x7103a0`, `0x50c460`, `0x6cd1d0`, `0x7693b0`, `0xb4b2bc`
+Confidence: verified
+Proof: one
+Test: none
+
+The singleton is zeroed at `0x481d54` before any list is touched. A list entry is a link whose low bit marks the end; each loop
+pops while the link is neither null nor tagged. Which object lives at `0xb4b350` and `0xb4b39c` is not read here.
+
 ## Turning the interface off
 
 The interface is turned off by hiding `UIParent`: a hide walks `UIParent`'s child list, and the

@@ -6480,7 +6480,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x480df0	600	TracePick		ui	primitive		Traces the terrain and the candidate objects and returns the nearer hit as a pick state	verified	one	ui/worldpick#what-the-pick-returns	ui::glue_geom_480_480a50_480df0_dist_scale, ui::glue_geom_480_480df0_normalize
 0x481050	318	BuildPickFlags		ui	primitive		Builds the pick flag word from the mover or from the pending spell's target word	verified	one	ui/worldpick#the-pick-flags	
 0x481190	535	PickAtCursor		ui	orchestration		Builds the pick ray, traces it with the flag word and caches the picked GUID	verified	one	ui/worldpick#what-the-pick-returns	
-0x4813b0	261			ui	primitive		Runs WorldFrame.cpp code that calls UnprojectScreenPoint; not read here	inferred	none		ui::glue_481_4813b0_gates, ui::glue_481_4813b0_normalize, ui::glue_481_4813b0_vec_add
+0x4813b0	261			ui	primitive	uint32_t __thiscall (float a, float b, float *near_point, float *far_point)	Normalises a point to the frame rectangle and unprojects it to a world ray, or returns 0 outside it	verified	one	ui/worldframe#unprojecting-a-screen-point	ui::glue_481_4813b0_gates, ui::glue_481_4813b0_normalize, ui::glue_481_4813b0_vec_add
 0x4814c0	70			ui	orchestration		Runs WorldFrame.cpp code that calls 0x61ce00; not read here	inferred	none		
 0x481510	40			ui	orchestration		Runs WorldFrame.cpp code that calls 0x620520; not read here	inferred	none		
 0x481540	144			ui	orchestration		Renders one object by GUID for a pass: draws it, or clears its model visible flag	verified	one	terrain/scene#object-election	
@@ -6491,8 +6491,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481900	31			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481920	51			ui	unreached		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481960	915	CGWorldFrame::CGWorldFrame	idb	ui	primitive		Runs WorldFrame.cpp code that calls CSimpleFrame::CSimpleFrame, SetVector3, SplatVector3 and 19 more; not read here	inferred	none	ui/worldframe#class-and-place	
-0x481d00	43			ui	orchestration		Runs WorldFrame.cpp code that calls 0x481d30, SMemFree; not read here	inferred	none	ui/worldframe#overrides	
-0x481d30	431			ui	primitive		Runs WorldFrame.cpp code that calls EventSetMouseMode, HandleClose, 0x509450 and 7 more; not read here	inferred	none		
+0x481d00	43			ui	orchestration	void * __thiscall (uint32_t free_flag)	Runs the world frame destructor body and frees the frame when bit 0 of the flag is set	verified	one	ui/worldframe#destruction	
+0x481d30	431			ui	orchestration	void __thiscall ()	Tears down the world frame: singleton, handles, lists, camera and effects, then the base frame	verified	one	ui/worldframe#destruction	
 0x481ee0	16			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481ef0	16			ui	unreached		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481f00	87	PickObjectUnderCursor		ui	orchestration		Picks the world object under the cursor for the armed click	verified	one	ui/mouseover#clicks-on-the-world	
@@ -6512,7 +6512,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x482d70	292	CGWorldFrame::RenderCallback		ui	orchestration	void __thiscall ()	Pushes identity matrices, runs the world driver, scene render and combat text, and pops them	verified	one	ui/worldframe#drawing-the-world	
 0x482ea0	1184	CGWorldFrame::OnRender		ui	orchestration	void __thiscall (CGWorldFrame *this)	Applies the idle law at the head of the world frame's render callback, then runs its per-frame work	verified	one	ui/idle#the-idle-law	ui::textglue_482_add3, ui::textglue_482_mul_add
 0x483340	235			ui	primitive		Resolves a GUID to a game object, asks its collision candidacy by class, and returns its model and box	verified	one	terrain/entities#entity-gather	ui::textglue_482_gated_triple
-0x483430	32			ui	primitive		Runs its object file code not read here	inferred	none		ui::textglue_482_cos_sin
+0x483430	32			ui	primitive	float * __fastcall (float *out, CGObject *unit)	Writes the unit's facing as a unit vector (cos, sin, 0) and returns the buffer	verified	one	sound/listener#the-listener-follows-the-mover	ui::textglue_482_cos_sin
 0x483450	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x483460	839	RenderWorldFrame		ui	primitive		Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	ui::textglue_482_affine_combine, ui::textglue_482_cmp_ge, ui::textglue_482_delta_is_zero, ui::textglue_482_negate, ui::textglue_482_unit_convert
 0x4837b0	442			ui	primitive		Draws the area decal at the picked position, or tints the placement model	verified	one	ui/groundreticle#the-area-decal	ui::textglue_482_corner_build
@@ -6532,7 +6532,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x483e80	90	CGWorldFrame::BeginMouselook		ui	primitive	void __thiscall (CGWorldFrame *this)	Sets the mouselook bit, hides the nameplates and clears the mouseover	verified	one	ui/mouseover#mouselook	
 0x483ee0	476			ui	primitive		Runs its object file code that calls TransformVector4, ScaleScreenDelta; not read here	inferred	none		ui::geo_483ee0
 0x4840c0	8	SetWorldFrameFlag		ui	primitive		Sets bit 0 of the world frame flag word at +0x3f0	verified	one	ui/smartrect#per-frame-order	
-0x4840d0	74			ui	primitive		Runs its object file code that calls HandleClose2; not read here	inferred	none		
+0x4840d0	74			ui	orchestration	void __thiscall ()	Releases the model at +8 through HandleClose2 and unlinks the node from its list	verified	one	ui/worldframe#destruction	
 0x484120	49			ui	unreached		Runs its object file code that calls HandleClose2, 0x484160; not read here	inferred	none		
 0x484160	54			ui	unreached		Runs its object file code that calls CM2Model::AddRef; not read here	inferred	none		
 0x4841a0	22	SetCameraTarget		ui	orchestration		Passes its argument to the camera set-target call on the camera at +0x65b8	verified	one	ui/gameui#cursor-and-camera	
@@ -30140,35 +30140,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x702860	153	ScriptDebugProfileStop		ui	primitive		Returns the time-stamp counter's advance divided by a thousandth of 0x42c020	verified	one	core/time#counter-rate	
 0x702900	80			ui	orchestration	int __fastcall (lua_State *L)	Serves seterrorhandler: keeps a reference to a function argument as the error handler, raising its usage otherwise	verified	one	ui/luastate#error-handlers	
 0x702950	22			ui	orchestration	int __fastcall (lua_State *L)	Serves geterrorhandler: returns the function seterrorhandler set, or nil	verified	one	ui/luastate#error-handlers	
-0x702970	123			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4cd0, __ftol, 0x6f4bb0 and 4 more; not read here	inferred	none		
-0x7029f0	65			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3cf0, lua_pushnil and 1 more; not read here	inferred	none		
-0x702a40	123			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f3400, 0x6f4b50, 0x6f4810 and 4 more; not read here	inferred	none		
-0x702ac0	38			ui	orchestration		Runs FrameScript.cpp code that calls 0x702af0, 0x702ba0, lua_settop; not read here	inferred	none		
-0x702af0	168			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f3400, 0x6f3350, 0x6f4cd0 and 5 more; not read here	inferred	none		
-0x702ba0	55			ui	primitive		Runs FrameScript.cpp code that calls 0x6f3d50, 0x6f3840, 0x6f3b00 and 1 more; not read here	inferred	none		
-0x702be0	164			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4b50, 0x702af0, 0x702ba0 and 7 more; not read here	inferred	none		
-0x702c90	64			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4b50, lua_settop, 0x6f4450 and 1 more; not read here	inferred	none		
-0x702cd0	198			ui	primitive		Runs FrameScript.cpp code that calls 0x6f3620, 0x6f4b50, 0x6f3400 and 6 more; not read here	inferred	none		
-0x702da0	67			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4b50, 0x6f3840, 0x6f3b00 and 2 more; not read here	inferred	none		
-0x702df0	50			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3400, 0x6f3480 and 1 more; not read here	inferred	none		
-0x702e30	270			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4cd0, __ftol, 0x6f4bb0 and 8 more; not read here	inferred	none		
-0x702f40	310			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f4d60, 0x6f3400 and 9 more; not read here	inferred	none		
-0x7030a0	78			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4b50, 0x6f5050, 0x6f4b20 and 1 more; not read here	inferred	none		
-0x7030f0	55			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3550, 0x6f39f0; not read here	inferred	none		
-0x703130	46			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4b50, 0x6f4bb0, 0x6f3b00; not read here	inferred	none		
-0x703160	58			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4b50, 0x6f4bb0, 0x6f3ea0; not read here	inferred	none		
-0x7031a0	81			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, 0x6f3660, 0x6f4c20 and 2 more; not read here	inferred	none		
-0x703200	67			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f43f0, lua_pushnumber, 0x6f43e0; not read here	inferred	none		
-0x703250	35			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4cd0, __ftol, 0x6f4400; not read here	inferred	none		
+0x702970	123			ui	primitive	int __fastcall (lua_State *L)	Serves error: raises argument 1, with the caller's position prepended for a string at a nonzero level	verified	one	ui/luabase#error-and-assert	
+0x7029f0	65			ui	orchestration	int __fastcall (lua_State *L)	Serves getmetatable: answers nil, the __metatable entry, or the metatable	verified	one	ui/luabase#metatables	
+0x702a40	123			ui	orchestration	int __fastcall (lua_State *L)	Serves setmetatable: sets the metatable of a table unless it has a __metatable entry	verified	one	ui/luabase#metatables	
+0x702ac0	38			ui	orchestration	int __fastcall (lua_State *L)	Serves getfenv: answers the environment of a function or level, or its __fenv entry	verified	one	ui/luabase#function-environments	
+0x702af0	168			ui	primitive	void __fastcall (lua_State *L)	Pushes the function that argument 1 names, a function or a call level, raising on a bad level	verified	one	ui/luabase#function-environments	
+0x702ba0	55			ui	primitive	int __fastcall (lua_State *L)	Pushes the environment of the top function and its __fenv entry, answering whether that entry is set	verified	one	ui/luabase#function-environments	
+0x702be0	164			ui	primitive	int __fastcall (lua_State *L)	Serves setfenv: sets a function's environment or, for level 0, the global table, refusing a protected one	verified	one	ui/luabase#function-environments	
+0x702c90	64			ui	orchestration	int __fastcall (lua_State *L)	Serves next: answers the key and value after a key of a table, or nil	verified	one	ui/luabase#iteration	
+0x702cd0	198			ui	primitive	int __fastcall (lua_State *L)	Serves ipairs: answers the iterator triple for one argument, else the next index and element	verified	one	ui/luabase#iteration	
+0x702da0	67			ui	orchestration	int __fastcall (lua_State *L)	Serves pairs: answers the global next, the table and nil	verified	one	ui/luabase#iteration	
+0x702df0	50			ui	orchestration	int __fastcall (lua_State *L)	Serves type: answers the type name of argument 1	verified	one	ui/luabase#type-and-tostring	
+0x702e30	270			ui	primitive	int __fastcall (lua_State *L)	Serves tonumber: converts argument 1 in base 10 or by strtoul in a base from 2 to 36	verified	one	ui/luabase#tonumber	
+0x702f40	310			ui	orchestration	int __fastcall (lua_State *L)	Serves tostring: answers the __tostring result or a text of argument 1	verified	one	ui/luabase#type-and-tostring	
+0x7030a0	78			ui	primitive	int __fastcall (lua_State *L)	Serves unpack: pushes the elements 1 to n of a table and returns n	verified	one	ui/luabase#iteration	
+0x7030f0	55			ui	orchestration	int __fastcall (lua_State *L)	Serves rawequal: pushes whether arguments 1 and 2 are primitively equal	verified	one	ui/luabase#raw-access	
+0x703130	46			ui	orchestration	int __fastcall (lua_State *L)	Serves rawget: pushes the element of a table without metamethods	verified	one	ui/luabase#raw-access	
+0x703160	58			ui	orchestration	int __fastcall (lua_State *L)	Serves rawset: sets an element of a table without metamethods and returns the table	verified	one	ui/luabase#raw-access	
+0x7031a0	81			ui	orchestration	int __fastcall (lua_State *L)	Serves assert: raises its message when argument 1 is false or nil, else keeps argument 1	verified	one	ui/luabase#error-and-assert	
+0x703200	67			ui	primitive	int __fastcall (lua_State *L)	Serves gcinfo: pushes the collector's two counters shifted right by 10	verified	one	ui/luabase#the-collector-pair	
+0x703250	35			ui	primitive	int __fastcall (lua_State *L)	Serves collectgarbage: sets the collection threshold to the optional argument in kilobytes	verified	one	ui/luabase#the-collector-pair	
 0x703280	98			ui	orchestration	int __fastcall (lua_State *L)	Serves loadstring: compiles argument 1 named by argument 2 or itself, returning the function or nil and the message	verified	one	ui/luastate#how-a-chunk-reaches-the-compiler	
-0x7032f0	68			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4bb0, lua_gettop, lua_pcall and 2 more; not read here	inferred	none		
-0x703340	84			ui	orchestration		Runs FrameScript.cpp code that calls 0x6f4bb0, lua_settop, lua_insert and 3 more; not read here	inferred	none		
-0x7033a0	411			ui	primitive		Runs FrameScript.cpp code that calls 0x6f4c20, 0x6f4cd0, __ftol and 10 more; not read here	inferred	none		
-0x703540	44			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, lua_pushnumber, 0x6f3ea0; not read here	inferred	none		
-0x703570	38			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, 0x6f39f0, 0x6f3ea0; not read here	inferred	none		
-0x7035a0	269			ui	primitive		Runs FrameScript.cpp code that calls 0x6f3400, _time, lua_pushnumber and 6 more; not read here	inferred	none		
-0x7036b0	50			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, lua_gettable, 0x6f3660 and 1 more; not read here	inferred	none		
-0x7036f0	106			ui	orchestration		Runs FrameScript.cpp code that calls lua_pushstring, lua_gettable, 0x6f34d0 and 4 more; not read here	inferred	none		
+0x7032f0	68			ui	orchestration	int __fastcall (lua_State *L)	Serves pcall: calls argument 1 with the rest, answers a success boolean before its results	verified	one	ui/luabase#protected-calls	
+0x703340	84			ui	orchestration	int __fastcall (lua_State *L)	Serves xpcall: calls argument 1 under argument 2 as handler, answers a success boolean before its results	verified	one	ui/luabase#protected-calls	
+0x7033a0	411			ui	primitive	int __fastcall (lua_State *L)	Serves date: formats a time as text or as a table, UTC when the format starts with !	verified	one	ui/luabase#date	
+0x703540	44			ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a number field of the table at the top, the value taken from the stack	verified	one	ui/luabase#date	
+0x703570	38			ui	orchestration	void __fastcall (lua_State *L, const char *name, int value)	Sets a boolean field of the table at the top, the value taken from the stack	verified	one	ui/luabase#date	
+0x7035a0	269			ui	primitive	int __fastcall (lua_State *L)	Serves time: answers the current time, or mktime of a table of date fields	verified	one	ui/luabase#time-from-a-table	
+0x7036b0	50			ui	orchestration	int __fastcall (lua_State *L, const char *name)	Reads the field of the table at the top as a boolean	verified	one	ui/luabase#time-from-a-table	
+0x7036f0	106			ui	primitive	int __fastcall (lua_State *L, const char *name, int default)	Reads a number field of the table at the top as an int, or the default, or raises when the default is -2	verified	one	ui/luabase#time-from-a-table	
 0x703760	609			ui	primitive	int __fastcall (lua_State *L)	Serves debugstack: returns the call stack from a level as text, one line per level with head and tail windows	verified	one	ui/luastate#debugstack	
 0x7039e0	338	FrameScriptInitialize		ui	orchestration		Creates the Lua state in 0xceef74 and installs the metatable, handlers, libraries and compat.lua	verified	one	ui/luastate#what-a-new-state-holds	
 0x703b40	57	FrameScriptCallErrorHandler		ui	orchestration	int __fastcall (lua_State *L)	Calls the function seterrorhandler set with the message and returns its result, or the message	verified	one	ui/luastate#error-handlers	
