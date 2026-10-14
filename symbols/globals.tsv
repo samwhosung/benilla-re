@@ -1696,6 +1696,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x854780	const char[18]	s_scriptAddMoney		ui	Holds the tooltip script name OnTooltipAddMoney whose slot is at +0x454	verified	one	ui/tooltipobject#the-script-slots
 0x854794	const char[17]	s_scriptCleared		ui	Holds the tooltip script name OnTooltipCleared whose slot is at +0x44c	verified	one	ui/tooltipobject#the-script-slots
 0x8547a8	const char[26]	s_scriptSetDefaultAnchor		ui	Holds the tooltip script name OnTooltipSetDefaultAnchor whose slot is at +0x444	verified	one	ui/tooltipobject#the-script-slots
+0x8547c4	char[12]	s_textStatusBarFormat		ui	Holds the string "%sStatusBar", the name format of a tooltip's status bar	verified	one	ui/tooltip#loading-the-template
+0x8547d0	char[12]	s_textTextureFormat		ui	Holds the string "%sTexture%d", the name format of a tooltip's texture	verified	one	ui/tooltip#loading-the-template
+0x8547dc	char[14]	s_textTextRightFormat		ui	Holds the string "%sTextRight%d", the name format of a tooltip's right text	verified	one	ui/tooltip#loading-the-template
+0x8547ec	char[13]	s_textTextLeftFormat		ui	Holds the string "%sTextLeft%d", the name format of a tooltip's left text	verified	one	ui/tooltip#loading-the-template
 0x854820	char[6]	s_textSAt854820		ui	Holds the string " (%s)"	inferred	none	
 0x85496c	const char[7]	s_keyPlayer		ui	Holds the global string key PLAYER of the type word of a player	verified	one	ui/tooltipunit#the-level-line-type-and-template
 0x854974	const char[7]	s_keyCorpse		ui	Holds the global string key CORPSE of the class word of a dead unit	verified	one	ui/tooltipunit#the-class-text
@@ -4293,9 +4297,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf0cc0	char[4096]	s_fontStringFitBuffer		ui	Holds the text a FontString shortens with ... to fit its box	verified	one	ui/fontstring#size-and-fitting
 0xcf1cc4	uint32_t	s_fontStringCount		ui	Holds the number of live font strings, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#creating-and-freeing-a-string
 0xcf1cc8	char[4096]	s_grammarOutput		ui	Holds the text the grammar escape and digit group passes return	verified	one	ui/fonttext#korean-escape
+0xcf2ccc	uint32_t	s_fontStringTypeId		ui	Holds the script type id of FontString, assigned on first use	verified	one	ui/tooltip#loading-the-template
 0xcf2cd0	uint16_t[4096]	s_grammarWork		ui	Holds the UTF-16 text the grammar escape passes build before converting it back	verified	one	ui/fonttext#korean-escape
 0xcf4cd0	void *[2]	s_uiPixelShaders		ui	Holds the two pixel shaders of the interface, slot 0 empty and slot 1 the desaturate shader	verified	one	ui/texture#desaturating
-0xcf4cdc	uint32_t			ui	Holds a dword that Script::SetPortraitToTexture, Script::SetLootPortrait read and write; not read here	inferred	none	
+0xcf4cdc	uint32_t	s_textureTypeId		ui	Holds the script type id of Texture, assigned on first use	verified	one	ui/tooltip#loading-the-template
 0xcf4d10	uint32_t[5]	s_simpleRegionPool		ui	Holds the block pool a deleted font string returns to	verified	one	ui/fonttext#creating-and-freeing-a-string
 0xcf4d24	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
@@ -4303,6 +4308,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
 0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
 0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
+0xcf4e5c	uint32_t	s_statusBarTypeId		ui	Holds the script type id of StatusBar, assigned on first use	verified	one	ui/tooltip#loading-the-template
 0xcf4e78	uint32_t	s_fontObjectCount		ui	Holds the number of live Font objects, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#the-font-object
 0xcf4e80	uint32_t[10]	s_fontTable		ui	Holds the hash table of font records by name, built on first lookup	verified	one	ui/containers#font-table
 0xcf4ea8	uint32_t			ui	Holds a dword that 0x77e4e0 compares an argument with; its writers are not read here	inferred	none	ui/editboxmembers#font-follower-slots

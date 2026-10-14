@@ -18,7 +18,7 @@ Proof: one
 Test: none
 
 `0x4c42f8` loads each pick, `0x4c42fc` and `0x4c4301` bound it to 1 to 31, `0x4c4310` scans the earlier picks and `0x4c431b` to `0x4c4323` set the bit. The invalid return has two exits: `0x4c4342`, from a pick out of range or after a duplicate flagged by an earlier pick, and `0x4c4332`, from a duplicate in the last pick; both end in `mov eax,1`. `0x4c441b` and `0x4c4420` bound the random count.
-`0x4c4365` pushes the opcode 0x336, `0x4c4378` the zero and `0x4c4385` the mask; `0x4c4427`, `0x4c444e` and `0x4c4457` push the opcode, the count and the zero.
+`0x4c4365` pushes the opcode 0x336, `0x4c4378` the zero and `0x4c4385` the mask; `0x4c4427`, `0x4c444e` and `0x4c4457` push the opcode, the count and the zero. It passes the kiosk GUID of its two arguments to `SetInteractionTarget` (`0x4930d0`) with a range read from a global, stores the GUID in two globals, writes the opcode into a fresh `CDataStore` with `CDataStore::PutUInt32` (`0x4c3efb`) and sends it with `ClientServices::Send`; no `call`, `jmp` or stored address anywhere in the image reaches it, and the same two scans find the call of `0x4dd2f0` (`0x4db7b7`) as the control.
 
 ## Prizes
 

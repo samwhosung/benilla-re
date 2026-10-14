@@ -8119,8 +8119,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b62b0	89	LoadBindingFiles		ui	orchestration		Loads the default binding file into set 0 and registers the reader 0x4b6240 for the two cache kinds	verified	one	ui/keybindings#binding-files	
 0x4b6310	409	CopyBindingSet		ui	primitive	void __thiscall (CBindings *this, int from, int to)	Copies one binding set into another, marks it, and signals UPDATE_BINDINGS for the live set	verified	one	ui/keybindings#binding-sets	
 0x4b64b0	103	ChooseBindingSets		ui	primitive		Stores the current set, copies set 0 to 1, set 1 to 2 and set 2 to the live set	verified	one	ui/keybindings#choosing-the-sets	
-0x4b6520	144			ui	orchestration		Runs UIBindings.cpp code that calls SStrPrintf, SStrLen, 0x42a5d0; not read here	inferred	none		
-0x4b65b0	41			ui	orchestration		Runs UIBindings.cpp code that calls 0x4b6520; not read here	inferred	none		
+0x4b6520	144	WriteBindingSetLines		ui	orchestration	void __thiscall (uint32_t set, void *handle)	Writes a bind line, key then command, for every key of a binding set to the file handle	verified	one	ui/keybindings#writing-binding-files	
+0x4b65b0	41	WriteBindingSetIfCurrent		ui	orchestration	void __fastcall (void *unused, void *handle, uint32_t set)	Writes a set to a handle when it is set 1 or the current set, ignoring a handle of -1	verified	one	ui/keybindings#writing-binding-files	
 0x4b65e0	80	WriteBindingSets		ui	primitive		Writes the binding sets that the mask selects to the account data	verified	one	ui/keybindings#writing-binding-files	
 0x4b6630	114	AppendModifierPrefixes		ui	primitive	void __fastcall (uint32_t mask, char **cursor, int *remaining)	Appends ALT-, CTRL- and SHIFT- to a chord string for the held modifiers	verified	one	ui/keybindings#chord-names	
 0x4b66b0	638	BuildKeyChord		ui	primitive	bool __fastcall (void *keyEvent, char *dst, int size)	Builds the chord string of a key event, or fails for an unnamed or oversized one	verified	one	ui/keybindings#key-names	
@@ -8132,9 +8132,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b7890	251	IsValidBindingKey		ui	primitive	bool __fastcall (const char *key)	Answers whether a key string is bindable	verified	one	ui/keybindings#valid-key-strings	
 0x4b7990	444	ExecuteBinding		ui	primitive	bool __thiscall (CBindings *this, const char *chord, bool isDown)	Finds the command of a chord with one modifier fallback and runs it	verified	one	ui/keybindings#dispatch	
 0x4b7b50	304	RunBindingCommand		ui	primitive	bool __thiscall (CBindings *this, const char *name, bool isDown)	Runs a command's script for a press, or for a release when it has runOnUp	verified	one	ui/keybindings#running-a-command	
-0x4b7c80	72			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4b7c80	72	GetBindingNameByOrdinal		ui	orchestration	void __thiscall (uint32_t index, const char **out)	Stores the name of the displayed command with an ordinal through out, leaving it for an unknown ordinal	verified	one	ui/keybindings#binding-functions	
 0x4b7cd0	79			ui	unreached		Runs its object file code not read here	inferred	none		
-0x4b7d20	118			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x4b7d20	118	GetBindingKeyByOrdinal		ui	orchestration	const char * __thiscall (const char *command, uint32_t index)	Returns the key string of a command's key with an ordinal, or 0	verified	one	ui/keybindings#binding-functions	
 0x4b7da0	172			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI; not read here	inferred	none		
 0x4b7e50	119			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4b7ed0	110	LowerKeyIndices		ui	primitive		Lowers by 1 the index of every other key of a command above the changed key's index	verified	one	ui/keybindings#setting-a-binding	
@@ -8725,7 +8725,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c3e70	13			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c3e80	7	CloseLootWindowThunk		ui	orchestration		Loads 1 into cl and jumps to the loot window close 0x4c3f40	verified	one	ui/gameui#interaction-close	
 0x4c3e90	20	ClearLotteryHandlers		ui	orchestration		Clears the handlers for opcodes 0x335 and 0x337	verified	one	ui/gameui#start-up-services-and-events	
-0x4c3eb0	132			ui	unreached		Runs its object file code that calls 0x4930d0, CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
+0x4c3eb0	132	SendLotteryQuery		ui	unreached	void __stdcall (uint32_t guid_lo, uint32_t guid_hi)	Sets the interaction target to the kiosk GUID, stores it and sends opcode 0x334; nothing reaches it	verified	one	ui/lottery#buying	
 0x4c3f40	1	CloseLootWindow		ui	orchestration		Returns at once	verified	one	ui/gameui#interaction-close	
 0x4c3f50	394	GetPrizeItem		ui	primitive		Reads the n-th nonzero prize id and fetches the item record for it	verified	one	ui/lottery#prizes	
 0x4c40e0	81			ui	orchestration		Runs its object file code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord and 1 more; not read here	inferred	none		
@@ -9595,8 +9595,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d5640	112	HandleInitializeFactionsPacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt8, 0x4d5fc0 and 3 more; not read here	inferred	none		
 0x4d56b0	86	HandleSetFactionAtWarPacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt8, 0x4d5fc0 and 1 more; not read here	inferred	none		
 0x4d5710	73	HandleSetFactionVisiblePacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetInt32, 0x4d5a70, 0x4d5fc0 and 1 more; not read here	inferred	none		
-0x4d5760	569	HandleSetFactionStandingPacket	idb	ui	primitive		Runs ReputationInfo.cpp code that calls CDataStore::GetUInt32, CDataStore::GetInt32, 0x4d5620 and 16 more; not read here	inferred	none		
-0x4d59a0	204	HandleSetForcedReactionsPacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetUInt32, 0x4d7110, 0x4d7150 and 4 more; not read here	inferred	none		
+0x4d5760	569	HandleSetFactionStandingPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t event, CDataStore *msg)	Stores each slot's standing from SMSG_SET_FACTION_STANDING, applying visible and at-war rules, then refreshes the player	verified	one	ui/reputationwire#standing-changes	
+0x4d59a0	204	HandleSetForcedReactionsPacket	idb	ui	primitive	uint32_t __stdcall (uint32_t event, CDataStore *msg)	Reads the forced reaction pairs of SMSG_SET_FORCED_REACTIONS into the table and refreshes the player's reaction	verified	one	ui/reputationwire#faction-messages	
 0x4d5a70	425	AddReputationEntry		ui	primitive	bool __fastcall (int32_t slot, bool notify)	Appends a slot's row and, for a non-header, its team header, returning 0 when present	verified	one	ui/reputation#list-membership	
 0x4d5c20	31	AddReputationHeaderKey		ui	primitive	void __fastcall (int32_t key)	Appends a header key and sets every header expanded	verified	one	ui/reputation#header-rows	
 0x4d5c40	380	SortReputationList		ui	primitive	void __cdecl ()	Counts children, sorts headers and rows, recounts the visible rows and signals UPDATE_FACTION	verified	one	ui/reputation#sorting-and-counts	
@@ -9880,7 +9880,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4dd1d0	190	DestroyTable4dd1d0		ui	primitive		Destroys a table: empties it, frees its buckets and frees it when bit 0 of the argument is set	verified	one	ui/containers#hash-tables	
 0x4dd290	56	FreeArrayAndSelf4dd290		ui	orchestration		Frees an array's data and the array when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4dd2d0	22			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4dd2f0	38			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4dd2f0	38	FreeIfFlag4dd2f0		ui	orchestration	void * __thiscall (uint32_t free_flag)	Frees the object with SMemFree when bit 0 of the flag is set and returns it	verified	one	ui/taxi#opening-the-map	
 0x4dd320	56	FreeArrayAndSelf4dd320		ui	orchestration		Frees an array's data and the array when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x4dd360	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4dd370	10	InitCount4dd380Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4dd380, then jumps to 0x4dd3a0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
@@ -13180,7 +13180,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529480	215			ui	primitive		Runs its object file code that calls 0x467d00, ClntObjMgrClearObjectMirrorHandler and 2 more; not read here	inferred	none		
 0x529560	98	CGTooltip::OnUnitHealthChanged		ui	orchestration	uint32_t __cdecl (uint32_t guidLow, uint32_t guidHigh, uint32_t length, void *statusBar)	Sets the tooltip health bar's range and value from the unit and returns 1	verified	one	ui/tooltipunit#the-health-bar	
 0x5295d0	124	CGTooltip::GetScriptSlot		ui	orchestration	uint32_t * __thiscall (const char *name)	Returns the address of the tooltip script slot of a name, else the frame's own lookup	verified	one	ui/tooltipobject#the-script-slots	
-0x529650	737			ui	primitive		Runs Tooltip.cpp code that calls CSimpleFrame::PostLoadXML, 0x536d10, 0x536c80 and 4 more; not read here	inferred	none		
+0x529650	737	CGTooltip::PostLoadXML		ui	orchestration	void __thiscall (XMLNode *node, uint32_t flags)	Ends the frame load, then finds the template's left and right texts, three textures and status bar by name	verified	one	ui/tooltip#loading-the-template	
 0x529940	243			ui	primitive		Runs Tooltip.cpp code that calls 0x536d10, 0x536c80, 0x536910 and 2 more; not read here	inferred	none		
 0x529a40	1152	CGTooltip::AddStudiedCreatureLines		ui	primitive	void __thiscall (void *unit, char *buffer, uint32_t size)	Adds the damage, armor, health, resistance, diet and pet ability lines of a studied creature	verified	one	ui/tooltipunitstatus#the-studied-creature-lines	
 0x529ec0	222	CGTooltip::AddSkinnableLine		ui	primitive	void __thiscall (void *unit, char *buffer, uint32_t size)	Adds the skinnable line, in the skill colour when the interact spell skins	verified	one	ui/tooltipunitstatus#the-skinnable-line	
@@ -13191,7 +13191,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x52ad70	26	QualityColorPointer		ui	primitive	uint32_t * __fastcall (uint32_t quality)	Returns the quality colour pointer, with an index of 7 or more taking entry 1	verified	one	ui/tooltipcontent#the-colours	
 0x52ad90	26	QualityColorEscape		ui	primitive	const char * __fastcall (uint32_t quality)	Returns the inline colour escape string of a quality, with an index of 7 or more taking entry 1	verified	one	ui/tooltipcontent#the-colours	
 0x52adb0	80			ui	orchestration		Formats an item link with its quality colour	inferred	none	objectlayer/quests#quest-completion	
-0x52ae00	238			ui	primitive		Runs Tooltip.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, 0x5d8bc0, 0x52adb0; not read here	inferred	none		
+0x52ae00	238	ItemObjectLink		ui	orchestration	const char * __thiscall ()	Builds the link text of an item object from its entry, quality, name and enchant, suffix and unique numbers	verified	one	ui/tooltip#item-object-link	
 0x52aef0	230	CGTooltip::BuildCorpse		ui	orchestration	void __thiscall (const uint64_t *guid)	Adds the corpse line with the owner's name, or waits for the name cache	verified	one	ui/tooltipobject#the-corpse-tooltip	
 0x52afe0	88	CGTooltip::OnCorpseOwnerName		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the corpse tooltip again from its stored GUID when the owner's name arrives	verified	one	ui/tooltipobject#the-corpse-tooltip	
 0x52b040	85			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, 0x4f0f40, 0x5303b0; not read here	inferred	none		
@@ -13213,7 +13213,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x530270	271			ui	orchestration		Adds a line with a left and a right text while a slot is free and a text is nonempty	verified	one	ui/tooltip#lines	
 0x530380	34	GameTooltipAddGoldDoubleLine		ui	orchestration	void __thiscall (const char *left, const char *right, uint32_t wrap)	Adds a double line with both texts in gold	verified	one	ui/tooltipcontent#the-line-arrays	
 0x5303b0	27			ui	orchestration	void __thiscall (const char *text, uint32_t *colour, uint32_t wrap)	Adds a single left line in a given colour	verified	one	ui/tooltipcontent#the-line-arrays	
-0x5303d0	474			ui	unreached		Runs Tooltip.cpp code that calls GetScaledScreenAspect, MultiplyByScreenScaleX and 4 more; not read here	inferred	none		
+0x5303d0	474	CGTooltip::AddTexture		ui	unreached	void __thiscall (const char *path)	Adds a texture beside the last tooltip line and records its line; nothing reaches it	verified	one	ui/tooltip#unreached-tooltip-code	
 0x5305b0	113			ui	orchestration		Runs Tooltip.cpp code that calls SStrPrintf, 0x771d80, 0x530640; not read here	inferred	none		
 0x530630	16			ui	orchestration		Runs Tooltip.cpp code not read here	inferred	none		
 0x530640	1054	GameTooltipSize		ui	primitive	void __thiscall ()	Sizes the plate from its lines, padding and wrap limit, then re-anchors it	verified	one	ui/tooltipcontent#sizing-the-tooltip	ui::layout_pass_530640
@@ -33763,7 +33763,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a8d0	33	CSimpleEditBox::OnSizeChanged		ui	orchestration	void __thiscall (float *rect, uint32_t flags)	Runs the frame's size callback and lays the label and caret out again	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
 0x77a960	138	CSimpleEditBox::CreateCompositionTexture		ui	orchestration	void __thiscall ()	Creates once the composition texture in colour 0xff202010 and sizes it to the label's line height	verified	one	ui/editboxmembers#candidate-window	
-0x77a9f0	446	CSimpleEditBox::CreateCandidateFrame		ui	primitive	void __thiscall ()	Creates once the candidate message frame at stratum 8 with its background and highlight, ten lines high	verified	one	ui/editboxmembers#candidate-window	ui::glue_77a_77a9f0_height_x10
+0x77a9f0	446	CSimpleEditBox::CreateCandidateFrame		ui	primitive	void __thiscall ()	Creates once the candidate message frame at stratum 8 with its background and highlight, ten line heights wide	verified	one	ui/editboxmembers#candidate-window	ui::glue_77a_77a9f0_height_x10
 0x77abb0	106	CSimpleEditBox::UpdateInputLanguage		ui	orchestration		Classifies the keyboard layout, stores a changed index and runs OnInputLanguageChanged	verified	one	ui/inputlanguage#the-language-index	
 0x77ac30	14	CSimpleEditBox::GetInputLanguageName		ui	orchestration		Returns the name of the language index at +0x3d0	verified	one	ui/inputlanguage#the-language-index	
 0x77ac40	20	CSimpleEditBox::ToggleInputLanguage		ui	orchestration		Asks the input method to switch to native mode when the index is 0, else off	verified	one	ui/inputlanguage#the-language-index	

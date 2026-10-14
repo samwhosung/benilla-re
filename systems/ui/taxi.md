@@ -70,7 +70,7 @@ Test: `ui::glue_geom_4db710_bound_diff`, `ui::glue_geom_4db710_bounds_norm`
 
 The nearest node is looked up with the id bound of `TaxiNodes`, and an id without a row stores null. When
 `WorldMapContinent` has rows, the next step reads the row's continent (`0x4db7ec`) without a null test, so a nearest node
-the table lacks faults the client. Each route line array is emptied by `0x4dd2f0` per segment (`0x4db7b7`).
+the table lacks faults the client. Each route line array is emptied by `0x4dd2f0` per segment (`0x4db7b7`); `0x4dd2f0` frees its object with `SMemFree` when bit 0 of its argument is set and returns it.
 
 ## Which nodes show
 

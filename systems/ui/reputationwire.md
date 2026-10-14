@@ -30,7 +30,7 @@ Test: none
 Each registration is `push 0; mov edx,<handler>; mov ecx,<opcode>; call 0x5ab650` (`0x4d529c` to `0x4d52e0`) and each removal
 `mov ecx,<opcode>; call 0x5ab670` (`0x4d5381` to `0x4d53a9`). The readers are `GetUInt32` (`0x418e30` and `0x418eb0`) and
 `GetUInt8`. The forced reaction list `0x4d59a0` stores the count, grows the array when the count exceeds its capacity,
-reads the pairs in place and then refreshes the active player's reaction (`0x4d5a5e`). The pairs are read by
+reads the pairs in place and then refreshes the active player's reaction (`0x4d5a5e`). The growth runs only when the count passes both the stored count `0xb73694` and the capacity `0xb73690` (`0x4d59b7`, `0x4d59c1`) and rounds the capacity up to a multiple of the table's quantum, `0x4d7110` when none is set (`0x4d59d5`, `0x4d59e6`). The count is stored whether or not it grew (`0x4d5a04`). The pairs are read by
 `objectlayer/reaction#the-active-players-reputation`.
 
 ## Initialize factions

@@ -108,6 +108,46 @@ stores 2.0 from `0x808e7c` at `+0x3b8` (`0x530b10`). `0x530b20` subtracts the fr
 (`0x530be9`); else it compares the time with 2.0 · 0.5 (`0x530bf6`, `0x530c05`), divides it by
 that when below (`0x530c18`), and passes `trunc(· 255)` to slot 0x28 (`0x530c2c`).
 
+## Loading the template
+
+The tooltip's post-load override (`0x529650`, slot 9 of `CGTooltip::vftable`, stored at `0x808f84`) runs the frame's `PostLoadXML` and then finds the template's regions by name. In two passes, the first counting
+and the second storing, it looks up `<name>TextLeft<n>` and `<name>TextRight<n>` for n from 1 as `FontString`s (the name is `<unnamed>` for an unnamed tooltip) until either is missing. Between
+the passes it sizes the three line arrays at `+0x324`, `+0x330` and `+0x33c` to the count; the second pass stores the left and right regions and 0 in the arrays' data (`+0x32c`, `+0x338`, `+0x344`). It then finds `<name>Texture1` to `3`
+into `+0x34c`, `+0x350`, `+0x354` and `<name>StatusBar` into `+0x348`, each by `FindFrameOfType` with that type's id.
+
+Addresses: `0x529650`, `0x529668`, `0x52969b`, `0x5296ad`, `0x529763`, `0x5297c9`, `0x5297f3`, `0x529812`, `0x529821`, `0x529830`, `0x52988d`, `0x5298bd`, `0x5298f2`, `0x529923`, `0x76a2f0`, `0x76c760`, `0x536c80`, `0x536d10`, `0x808f84`, `0xcf2ccc`, `0xcf4cdc`, `0xcf4e5c`
+Confidence: verified
+Proof: one
+Test: none
+
+The formats are `%sTextLeft%d` (`0x8547ec`), `%sTextRight%d` (`0x8547dc`), `%sTexture%d` (`0x8547d0`) and `%sStatusBar` (`0x8547c4`). The pass counter `[ebp+0xc]` makes `0x529674` skip the resize on pass 0; on pass 1 an array whose capacity `+0x328` differs from the count is resized with `0x536c80` or, for 0, freed with `0x536d10`. A type id is assigned on first use: the globals `0xcf2ccc` (FontString), `0xcf4cdc` (Texture) and `0xcf4e5c` (StatusBar) are filled from the last id `0xceef6c`.
+
+## Item object link
+
+`0x52ae00(item)` builds the link text of an item object, or answers 0 for a null object. It reads the item's cached record by the entry at `[[item+8]+0xc]` (quality at `+0x1c` of the record, 1 when none), writes the item's name to a 0x100-byte buffer
+(`0x5d8bc0`) and, unless the item's flag word has bit 3 (wrapped), takes `[block+0x94]`, `[block+0x98]` and, when the object's type mask lacks bit 0x2000, the dword at `+0x40` of its descriptor block. It calls `0x52adb0(entry, quality, enchant, suffix, unique, name)`; a wrapped item passes
+0 for all three numbers.
+
+Addresses: `0x52ae00`, `0x52ae4a`, `0x52ae6f`, `0x52ae7a`, `0x52ae88`, `0x52aea8`, `0x52aeaa`, `0x52aee0`, `0x55ba30`, `0x5d8bc0`, `0x52adb0`, `0xc0e2a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x52ae4a` calls the item cache `0xc0e2a0` through `0x55ba30` with the entry; `0x52ae66` to `0x52ae6c` extract bit 3 of `[[item+0x114]+0x3c]`. The three numbers go to `0x52adb0` as its stack arguments in the order `+0x40` block dword, `[+0x98]`, `[+0x94]` (`0x52aed6` to `0x52aedf`), the name last.
+`0x52aeaa` tests bit 0x2000 of the slot 0 answer of the object at `+0x110`. Where the three numbers land in the link is `0x52adb0`'s format, `ui/auctionlists#item-links-and-time-left`.
+
+## Unreached tooltip code
+
+`0x5303d0(path)` would add a texture beside the last line: with fewer than three textures used (`+0x364`) and at least two lines, it takes the next texture of `+0x34c`, pins it to the last line and the line above with three `SetPoint` calls,
+loads the path into it (`0x770200`), shows it (`0x77fcb0`) and records the line index in `+0x358`. Nothing calls it and no section stores its address.
+
+Addresses: `0x5303d0`, `0x5303da`, `0x5303f8`, `0x53045f`, `0x530476`, `0x5304c7`, `0x530532`, `0x530552`, `0x53056d`, `0x530589`, `0x53059b`, `0x770200`, `0x77fcb0`
+Confidence: verified
+Proof: one
+Test: none
+
+The census is every `call` and `jmp` to `0x5303d0` in the listing and every little-endian occurrence of the address in each section of the image: none of either. The same scans find the 96 calls of `0x5303b0`, the control. Its width call is `call [edx+0x1c]` with a pushed float (`0x53045f`, `0x530532`), slot 7 of the texture's layout part, which is `GetWidth` and takes no argument.
+
 ## Lua methods
 
 `GameTooltip` has 46 methods at `0x854198`, registered by `0x5368a0`, from `AddFontStrings` to

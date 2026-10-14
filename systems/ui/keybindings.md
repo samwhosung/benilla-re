@@ -51,6 +51,8 @@ Test: none
 `0x4b81ae` compares the second argument with `up` (0x847074), `0x4b81e0` calls `0x4b7b50`.
 Each raises its usage text for a bad argument.
 
+`0x4b7c80(index, out)` walks the displayed-command list at `+0x14` of the manager for the node whose `+0x18` equals the ordinal and stores that node's name pointer (`+0x14`) through `out` (`0x4b7cbb`, `0x4b7cc1`); an ordinal that is not found leaves `out` unchanged. `0x4b7d20(name, i)` walks the key list at `+0xb4` for the node whose command (`+0x1c`) matches `name` ignoring case (`0x64a4c0`, limit `0x7fffffff`) and whose ordinal `+0x18` is `i`, and returns its key string (`+0x14`), or 0.
+
 ## Binding sets
 
 `GetCurrentBindingSet` returns the number at `+0xd0` of the manager. The live set is 3. `LoadBindings(set)`

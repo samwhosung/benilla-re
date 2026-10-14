@@ -90,8 +90,8 @@ Test: none
 ## Candidate window
 
 The input method's candidate list is shown in a message frame the box creates once (`0x77a9f0`): `CSimpleMessageFrame`'s constructor (`0x785640`) on a 0x378-byte
-block, stratum 8, following the box's own font with `LEFT` justify and ten label lines high (`10.0` at `0x801624`), and two textures: a background
-`0xff606060` over all its points and a row highlight `0xff808080`. `0x77ad10(hwnd)` fills it. The candidates come from `0x42c500`, and a failure answers 0.
+block, stratum 8, following the box's own font with `LEFT` justify and a width of ten label line heights (`10.0` at `0x801624`, slot 5), and two textures: a background
+`0xff606060` over all its points and a row highlight `0xff808080`. `0x77ad10(hwnd)` fills it from `0x42c500`; a failure answers 0.
 The frame's height becomes `(page + 1) · line + 0.1 · line`, the highlight spans row `selection mod page`, a first line `> %d/%d` (selection + 1, total) is added, and
 each candidate follows as `%d: %s`, last to first; an empty candidate is a space.
 
@@ -100,7 +100,7 @@ Confidence: verified
 Proof: one
 Test: `ui::glue_77a_77a9f0_height_x10`, `ui::glue_77a_77ad10_row_geom`
 
-`ui::glue_77a_77a9f0_height_x10` runs the `fmul` by 10.0 at `0x77aa9d` as a copied-byte island with an appended `fstp`; `ui::glue_77a_77ad10_row_geom` the three float regions of
+`ui::glue_77a_77a9f0_height_x10` runs the `fmul` of the label height by 10.0 at `0x77aa9d` as a copied-byte island with an appended `fstp`; `ui::glue_77a_77ad10_row_geom` the three float regions of
 `0x77ad10` (`0x77ada1` to `0x77adb3`, `0x77ade8` to `0x77adf0`, `0x77ae28` to `0x77ae30`) the same way. `0x77ad10` is called by `0x77afc0` at `0x77b0c1`.
 `0x77a960` creates the composition texture `+0x3d4` once: colour `0xff202010`, blend mode 3, sized to the label's line height through slot 6.
 `0x77e390` and `0x77e3b0` store 1 or 0 at `+0xd0` of the frame `+0x3e0` and jump to its slot 0x88 or 0x84.
