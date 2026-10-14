@@ -12186,9 +12186,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50b290	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
 0x50b2a0	11			uicamera	orchestration		Runs its object file code not read here	inferred	none		
 0x50b2b0	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
-0x50b2c0	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50b2c0	19	InitShakeNearSquared		uicamera	primitive	void __cdecl (void)	Stores the square of 9.0 in the near distance static	verified	one	uicamera/effects#distance-falloff	
 0x50b2e0	5			uicamera	orchestration		Runs its object file code not read here	inferred	none		
-0x50b2f0	19			uicamera	primitive		Runs its object file code not read here	inferred	none		
+0x50b2f0	19	InitShakeFarSquared		uicamera	primitive	void __cdecl (void)	Stores the square of 80.0 in the far distance static	verified	one	uicamera/effects#distance-falloff	
 0x50b310	28	CheckDistanceRange		uicamera	orchestration	bool __stdcall (const char *value)	Accepts a distance from 0 to 50	verified	one	uicamera/cvars#input-and-bobbing-cvars	
 0x50b330	74	CheckCVarRange	idb	uicamera	orchestration	bool __fastcall (const char *value, float low, float high)	Accepts a CVar value inside a range inclusive at both ends, else prints the range	verified	one	uicamera/cvars#input-and-bobbing-cvars	
 0x50b380	49	CheckPitchRange		uicamera	primitive	bool __stdcall (const char *value)	Accepts a pitch of plus or minus 89 degrees	verified	one	uicamera/cvars#input-and-bobbing-cvars	
@@ -12239,7 +12239,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50ca10	54			uicamera	orchestration		Runs its object file code that calls OsGetAsyncTimeMs, 0x50ad10, M2SceneSetTime and 1 more; not read here	inferred	none		
 0x50ca50	53			uicamera	primitive		Runs its object file code that calls HandleClose, HandleClose2; not read here	inferred	none		
 0x50ca90	1593			uicamera	primitive		Runs its object file code that calls CM2Model::IsLoaded, CM2Model::HasAttachment and 12 more; not read here	inferred	none		
-0x50d0f0	546			uicamera	orchestration		Runs its object file code that calls 0x50f8f0, OsGetAsyncTimeMs, 0x50d900 and 8 more; not read here	inferred	none		
+0x50d0f0	546	CCamera::SetTarget		uicamera	orchestration	void __thiscall (CCamera *this, CGObject_C *target)	Switches the followed object, snapping its tilt and drunk bias, or frees the shakes for none	verified	one	uicamera/effects#where-a-shake-lands	
 0x50d320	98	CCamera::SetFovOverride		uicamera	primitive	void __thiscall (CCamera *this, int degrees)	Switches to first person with a given field of view, or restores the third person view	verified	one	uicamera/transitions#field-of-view	
 0x50d390	28			uicamera	orchestration		Runs its object file code not read here	inferred	none		
 0x50d3b0	129	CCamera::EnterAbsoluteFrame		uicamera	primitive	void __thiscall (CCamera *this)	Raises the absolute frame counter and bakes the facing into the yaw offsets on the first	verified	one	uicamera/transitions#relative-and-absolute-frames	
@@ -12253,8 +12253,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50d720	97			uicamera	orchestration		Runs Camera.cpp code that calls 0x455b30; not read here	inferred	none		
 0x50d790	115			uicamera	unreached		Runs Camera.cpp code not read here	inferred	none		
 0x50d810	227			uicamera	primitive		Runs Camera.cpp code not read here	inferred	none		
-0x50d900	697			uicamera	primitive		Runs Camera.cpp code that calls 0x5105a0, TraceWorldSegment; not read here	inferred	none		
-0x50dbc0	508			uicamera	primitive		Runs Camera.cpp code that calls 0x512490; not read here	inferred	none		
+0x50d900	697	CCamera::ProbeSlope		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *unit, uint32_t now)	Measures the ground slope ahead of the unit and stores the tilt angle	verified	one	uicamera/effects#probing-the-slope	
+0x50dbc0	508	CCamera::ArmTerrainTilt		uicamera	primitive	void __thiscall (CCamera *this, CGObject_C *unit, uint32_t now, bool snap)	Sets or arms the ground pitch from the probed angle and the unit's state row	verified	one	uicamera/effects#arming-the-tilt	
 0x50ddc0	50	CameraClipCommand		uicamera	orchestration	uint32_t __stdcall (const char *argument)	Stores the number given, or flips the stored flag, in a word nothing reads	verified	one	uicamera/cvars#cameraclip	
 0x50de00	131	CCamera::PlaceEye		uicamera	primitive	void __thiscall (CCamera *this, float *out, float *pivot, float distance, float *offset)	Places the eye at the pivot minus the distance along the forward vector plus an offset	verified	one	uicamera/view#pitch-units-and-sign	
 0x50de90	1685			uicamera	primitive		Runs Camera.cpp code that calls SplatVector3, SetVector3, BuildLookAtMatrix and 14 more; not read here	inferred	none		
@@ -12288,7 +12288,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x50fee0	561			uicamera	primitive		Runs Camera.cpp code that calls 0x41ade0, ClntObjMgrObjectPtr, 0x510690 and 5 more; not read here	inferred	none		
 0x510120	395	CCamera::ShiftPitch		uicamera	primitive	void __thiscall (CCamera *this, float delta)	Adds an angle to the pitch target, start and live value, clamped	inferred	none	uicamera/transitions#relative-and-absolute-frames	
 0x5102b0	294	CCamera::ShiftYaw		uicamera	primitive	void __thiscall (CCamera *this, float delta)	Adds an angle to the yaw target, start and live value, wrapped	verified	one	uicamera/transitions#relative-and-absolute-frames	
-0x5103e0	442			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, OsGetAsyncTimeMs, GetInputControl and 2 more; not read here	inferred	none		
+0x5103e0	442	CCamera::CommitFacing		uicamera	primitive	void __thiscall (CCamera *this)	Hands the camera yaw and the final pitch to the player's facing and pitch	verified	one	uicamera/effects#committing-the-facing	
 0x5105a0	50	TerrainTiltEnabled		uicamera	primitive	bool __stdcall (CGUnit_C *unit)	Returns whether the unit is a unit or player and cameraTerrainTilt is set	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
 0x5105e0	166	BobbingActive		uicamera	primitive	uint32_t __thiscall (Camera *this, CGUnit_C *unit)	Returns the camera's bobbing bit when the unit may bob and the camera is near	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
 0x510690	91	PivotBiasAllowed		uicamera	primitive	uint32_t __thiscall (Camera *this, CGUnit_C *unit)	Returns the camera's pivot bits when the unit stands and the pitch is level or up	verified	one	uicamera/cvars#bobbing-and-pivot-tests	
@@ -12308,18 +12308,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5111b0	20	CCamera::EndExternalMove		uicamera	primitive	void __thiscall (CCamera *this)	Lowers the absolute frame and clears the Fear bit	verified	one	uicamera/follow#when-it-runs	
 0x5111d0	32	CCamera::BeginExternalMove		uicamera	primitive	void __thiscall (CCamera *this)	Raises the absolute frame and sets the Fear bit	verified	one	uicamera/follow#when-it-runs	
 0x5111f0	87	CCamera::SetExternalMove		uicamera	orchestration	void __thiscall (CCamera *this, bool moved)	Arms the auto-return when the external-move flag flips	verified	one	uicamera/driver#the-per-frame-update	
-0x511250	116			unassigned	primitive		Sets the camera's drunk level	inferred	none	objectlayer/playerfields#drunk-messages	
+0x511250	116	CCamera::SetDrunkFov		uicamera	primitive	bool __thiscall (CCamera *this, float fraction, bool immediate)	Sets or eases the field of view bias to 89 degrees times the drunk fraction	verified	one	uicamera/effects#the-drunk-view	
 0x5112d0	803	CCamera::IntegrateAxes		uicamera	primitive	void __thiscall (CCamera *this, uint32_t now)	Moves the distance, yaw and pitch targets by the active keyboard axes	verified	one	uicamera/driver#the-keyboard-axes	
-0x511610	194			uicamera	orchestration		Runs Camera.cpp code not read here	inferred	none		
-0x5116e0	123			uicamera	primitive		Runs Camera.cpp code that calls __CIpow; not read here	inferred	none		
-0x511760	443			uicamera	primitive		Runs Camera.cpp code that calls OsGetAsyncTimeMs, ClntObjMgrObjectPtr and 6 more; not read here	inferred	none		
-0x511920	337			uicamera	primitive		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x5105e0, CMovement::GetCurrentSpeed and 1 more; not read here	inferred	none		
+0x511610	194	EvaluateShake		uicamera	orchestration	void __stdcall (C3Vector *out, float facing, float amplitude, float time, float frequency, int type, float decay, int axis)	Adds one shake's damped sine to the offset along its axis	verified	one	uicamera/effects#evaluating-one-shake	
+0x5116e0	123	ShakeFalloff		uicamera	primitive	bool __stdcall (const C3Vector *eye, const C3Vector *position, float *amplitude, float near, float nearSquared, float unused, float farSquared)	Cuts a shake's amplitude by distance and answers whether it is in range	verified	one	uicamera/effects#distance-falloff	
+0x511760	443	CCamera::ApplyShakes		uicamera	primitive	void __thiscall (CCamera *this, const C3Vector *eye, C3Vector *offset)	Ages the shake records and adds the loudest on each axis to the offset	verified	one	uicamera/effects#walking-the-shakes	
+0x511920	337	CCamera::ComputeBob		uicamera	primitive	void __thiscall (CCamera *this, C3Vector *out)	Writes the side and vertical bob offsets for the followed unit	verified	one	uicamera/effects#bobbing	
 0x511a80	65	CCamera::UpdateListenerLiquid		uicamera	primitive	void __thiscall (CCamera *this)	Updates the listener's submerged flag when the liquid type at the camera changes	verified	one	uicamera/solver#the-per-frame-outer-call	
 0x511ad0	237	CCamera::ClassifyWaterBand		uicamera	primitive	float __thiscall (CCamera *this, CGUnit_C *unit)	Sets the surface or submerged band bit and returns the liquid surface height above the unit	verified	one	uicamera/solver#the-water-bands	
 0x511bc0	130	CCamera::OnFrame		uicamera	orchestration	uint32_t __fastcall (CCamera *this, CGWorldFrame *frame, uint32_t now)	Sets the clip planes and updates the camera or its cinematic, then the listener liquid	verified	one	uicamera/solver#the-per-frame-outer-call	
 0x511c50	16			uicamera	orchestration		Runs Camera.cpp code that calls 0x50ab70; not read here	inferred	none		
-0x511c60	209			uicamera	primitive		Runs Camera.cpp code that calls SMemAlloc, OsGetAsyncTimeMs; not read here	inferred	none		
-0x511d40	81	CameraAddShake		uicamera	primitive		Adds a camera shake by id at a position to a camera	inferred	none	spell/visuals#camera-shake-groups	
+0x511c60	209	CCamera::AddShakeRecord		uicamera	primitive	void __thiscall (CCamera *this, const C3Vector *position, int type, int axis, float amplitude, float frequency, float duration, float preroll, float decay)	Allocates a shake record, links it at the tail and stamps the clock	verified	one	uicamera/effects#spawning-a-shake	
+0x511d40	81	CameraAddShake		uicamera	primitive	void __stdcall (int id, const C3Vector *position)	Adds the shake a CameraShakes row describes at a position	verified	one	uicamera/effects#spawning-a-shake	
 0x511da0	237	SetCameraTransport		uicamera	primitive	void __thiscall (void *camera, uint64_t transport)	Stores the camera's transport GUID, turning the camera by the old and new transports' facings	inferred	none	collision/world#camera-notices	
 0x511e90	174			uicamera	orchestration		Runs Camera.cpp code that calls ClntObjMgrObjectPtr, 0x7be730; not read here	inferred	none		
 0x511f40	155	CCamera::GetForward		uicamera	primitive	void __thiscall (CCamera *this, float *out)	Returns the first row of the camera's basis	verified	one	uicamera/view#pitch-units-and-sign	

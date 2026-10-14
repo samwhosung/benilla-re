@@ -2241,11 +2241,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0fe0	void *	s_cvarCameraDistanceMaxFactor		uicamera	Holds the CVar record of cameraDistanceMaxFactor	verified	one	uicamera/cvars#final-pitch-and-band-cvars
 0xbe0fe8	void *[18]	s_cvarCameraSmoothViewData		uicamera	Holds the CVar records cameraSmoothViewData<style><axis><Delay or Factor>	verified	one	uicamera/cvars#smoothing-cvars
 0xbe1038	void *	s_cvarCameraSmoothTimeMax		uicamera	Holds the CVar record of cameraSmoothTimeMax	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe103c	float	s_shakeNearSquared		uicamera	Holds 9.0 squared, the squared distance inside which a shake is not cut	verified	one	uicamera/effects#distance-falloff
 0xbe1040	void *	s_cvarMouseInvertPitch		uicamera	Holds the CVar record of mouseInvertPitch	verified	one	uicamera/cvars#input-and-bobbing-cvars
 0xbe104c	void *	s_cvarCameraSmoothYaw		uicamera	Holds the CVar record of cameraSmoothYaw	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1050	void *	s_cvarCameraTerrainTiltTimeMin		uicamera	Holds the CVar record of cameraTerrainTiltTimeMin	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe1054	void *	s_cvarCameraTerrainTiltTimeMax		uicamera	Holds the CVar record of cameraTerrainTiltTimeMax	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe105c	void *	s_cvarCameraSmoothTimeMin		uicamera	Holds the CVar record of cameraSmoothTimeMin	verified	one	uicamera/cvars#final-pitch-and-band-cvars
+0xbe1060	float	s_shakeFarSquared		uicamera	Holds 80.0 squared, the squared distance beyond which a shake is skipped	verified	one	uicamera/effects#distance-falloff
 0xbe1064	void *	s_cvarCameraBobbingLRAmplitude		uicamera	Holds the CVar record of cameraBobbingLRAmplitude	verified	one	uicamera/cvars#input-and-bobbing-cvars
 0xbe1068	void *	s_cvarCameraFoVSmoothSpeed		uicamera	Holds the CVar record of cameraFoVSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe106c	void *	s_cvarCameraDistanceSmoothSpeed		uicamera	Holds the CVar record of cameraDistanceSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
@@ -2384,6 +2386,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0df8c	uint32_t[5]	s_charBaseInfoStore		dbc	Holds the CharBaseInfo.dbc store of 8-byte race and class records	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0dfa0	uint8_t[20]	s_cfgConfigsStore		dbc	Holds the Cfg_Configs.dbc store: records, count, id map, max row and loaded flag	inferred	none	
 0xc0dfb4	uint8_t[20]	s_cfgCategoriesStore		dbc	Holds the Cfg_Categories.dbc store: records, count, index table, highest ordinal and loaded flag	inferred	none	
+0xc0dfc8	uint8_t[20]	s_cameraShakesStore		dbc	Holds the CameraShakes.dbc store: rows, count, id index, highest id and loaded flag	verified	one	uicamera/effects#spawning-a-shake
 0xc0e02c	uint32_t[2]	s_areaTriggerRows		dbc	Holds the AreaTrigger rows, 0x28 bytes each sorted by map, and their count	inferred	none	objectlayer/players#area-triggers
 0xc0e048	uint32_t	s_areaIdMap		unassigned	Holds the AreaTable.dbc rows by id	verified	one	ui/spelltokens#tokens-that-compute-a-value
 0xc0e04c	uint32_t	s_areaMaxId		dbc	Holds the highest AreaTable.dbc id	verified	one	ui/spelltokens#tokens-that-compute-a-value
