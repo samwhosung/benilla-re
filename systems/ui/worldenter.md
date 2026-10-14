@@ -138,6 +138,19 @@ function `0x5afe50` stores the callback for a section whose pending byte is non-
 interface has loaded, so the packet that completes the player's create block can only arrive later.
 The whole of `0x401570` is called from `0x46c236`, the per-frame function.
 
+## Handlers and frames during the load
+
+`0x401570` registers the game's packet handlers in three stretches. The object manager's constructor `0x464ff0`, called at `0x4015f3`, registers 0xa9, 0x1f6 and 0xaa through the connection's setter `0x537a60` (`0x465157`, `0x46516f`, `0x46518c`). The interface initializer `0x48f480` is called at `0x401602`. The body then registers 0x1cb, 0x1cd, 0x3e, 0x3f, 0x40 and 0x236 through `SetMessageHandler` (`0x5ab650`, `0x401734` to `0x401789`).
+Of the 374 calls of `SetMessageHandler`, 358 are in the direct-call closure of `0x401570` and none in that of the interface initializer `0x48fbf0`. The load draws its progress bar with a callback and reads no network or window message.
+
+Addresses: `0x401570`, `0x4015f3`, `0x401602`, `0x464ff0`, `0x465125`, `0x465140`, `0x465157`, `0x46516f`, `0x46518c`, `0x537a60`, `0x5ab650`, `0x401734`, `0x401745`, `0x401756`, `0x401767`, `0x401778`, `0x401789`, `0x48f480`, `0x48fbf0`, `0x48ffd4`, `0x4900ad`, `0x407fd0`, `0x406900`, `0x406920`, `0x406a60`, `0x58a960`, `0x58a96b`, `0x6ef160`, `0x6edd91`
+Confidence: verified
+Proof: one
+Test: none
+
+The closures follow direct calls and jumps only; indirect calls, the device slot among them, are not followed. The 16 sites outside the closure of `0x401570` belong to process start, authentication and the glue screens. `0x48ffd4` installs `0x407fd0` as the `.toc` progress callback (`0x6ef160`) and `0x4900ad` clears it. For each line `0x6edd91` calls it with the fraction.
+It redraws only when the fraction is above the last drawn one (`0x882894`): `0x406900` computes the bar (`0x406920`), draws its quads (`0x406a60`) and calls slot `0x68` of the device with 3 (`0x58a96b`). The direct closure of `0x406900` (713 functions) holds no call of the message pump `0x42c9f0`, the event dispatcher `0x4245b0`, the dequeue `0x5384d0` or the drain handler `0x403620`. The packets that arrive meanwhile wait in the queue (`net/dispatch`).
+
 ## Welcome lines and the guild message
 
 The guild message of the day shows above the realm's welcome lines although it arrives after them. Its

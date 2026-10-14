@@ -393,7 +393,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x406630	7	SetLoadingScreenTip		loadingscreen			Stores the game tip text the loading screen shows	inferred	none		
 0x406640	443	BeginLoadingScreen		loadingscreen			Starts the loading screen for a map	inferred	none		
 0x406800	248	CreateLoadingScreen		loadingscreen			Creates the loading screen object	inferred	none		
-0x406900	28			loadingscreen			Runs its object file code that calls 0x406920, 0x406a60; not read here	inferred	none		
+0x406900	28	DrawLoadingBar		loadingscreen	primitive		Computes the loading bar, draws its quads and calls the device virtual at 0x68 with 3	verified	one	ui/worldenter#handlers-and-frames-during-the-load	
 0x406920	188			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::progress_fraction_difftest
 0x4069e0	111			loadingscreen			Runs its object file code that calls EventRegisterEx; not read here	inferred	none		
 0x406a50	3			loadingscreen			Runs its object file code not read here	inferred	none		
@@ -420,7 +420,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x407e80	237	EndLoadingScreen		loadingscreen			Ends the loading screen and clears its object	inferred	none		
 0x407f70	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
 0x407fa0	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
-0x407fd0	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
+0x407fd0	36	OnLoadProgress		loadingscreen	primitive		Redraws the loading bar when the progress fraction is above the last drawn one	verified	one	ui/worldenter#handlers-and-frames-during-the-load	
 0x408000	479			loadingscreen			Runs its object file code that calls 0x408b40, 0x408a30, 0x408510 and 4 more; not read here	inferred	none		
 0x4081e0	453			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::worldmap_tile_geometry_difftest
 0x4083b0	5			loadingscreen			Runs its object file code not read here	inferred	none		
