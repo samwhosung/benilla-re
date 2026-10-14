@@ -45,8 +45,10 @@ but never reports it.
 ## Packets of a local refusal
 
 The reporter aborts with `0x6e4940(1, !fromServer, reason)` whenever the reported spell is the in-flight one. The
-abort sends `CMSG_CANCEL_CAST` only when no targeting word is up; with a word up it only clears it. Either way it
-pops the slot and resets the cursors, and for a player caster fires the stop event and zeroes the caster guid.
+abort sends `CMSG_CANCEL_CAST` only when a spell is in flight (`0x6e3d30`), `dl` is nonzero (`0x6e496c`) and no
+targeting word is up; with a word up it only clears it. Either way it pops the slot and resets the cursors. For a
+player caster it zeroes the caster guid and fires an event by `cl`: a refusal passes `cl` 1, so `SPELLCAST_FAILED`
+(`SPELLCAST_INTERRUPTED` for 0x23 and 0x24), not `SPELLCAST_STOP`.
 The player's auto-repeat spell is stopped first (`CMSG_CANCEL_AUTO_REPEAT_SPELL`), so no cancel follows. Reason
 0x17 does neither.
 

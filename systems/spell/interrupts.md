@@ -58,8 +58,8 @@ has no other effect (`cancel`, Channel and aura cancels).
 `SpellStopCasting` (`0x6e6e80`) returns one value. If the UI action gate `0x494a50(2)` refuses it returns nil. If an
 auto-repeat spell runs it cancels that (`0x6ea080`), returns the number 1 and does nothing else. Otherwise, with a
 spell in flight (a queued on-next-swing spell holds the slot, `attack`), it aborts with `0x6e4940(0, 1, 0x1c)` and
-returns 1; else nil. The abort sends `CMSG_CANCEL_CAST` only when no targeting word is up (with a word up,
-`0x6e4955` only clears it) and fires `SPELLCAST_STOP` only for a player caster (`0x6e4a04`). The binding never
+returns 1; else nil. The abort sends `CMSG_CANCEL_CAST` only when a spell is in flight, `dl` is nonzero and no targeting word is up (with a
+word up, `0x6e4955` only clears it). With `cl` 0, as here, it fires `SPELLCAST_STOP`, only for a player caster. The binding never
 reaches `0x6e9b70`, and does not read the targeting word itself; the abort does (`0x6e494a`, `0x6e48a0`).
 
 Addresses: `0x6e6e80`, `0x6e6e88`, `0x6e6e91`, `0x6e6e9a`, `0x6e6e9f`, `0x6e6ea8`, `0x6e6eb4`, `0x6e6ec3`, `0x6e6ec8`, `0x6e6edd`, `0x6e6edf`, `0x6f3810`, `0x6f37f0`, `0x494a50`, `0x6e9fd0`, `0x6e3d30`, `0x6ea080`, `0x6e4940`
@@ -76,3 +76,6 @@ call closure is `0x494a50`, `0x6e9fd0`, `0x6ea080`, `0x6e3d30`, `0x6e4940` and t
 Lua truthiness is the caller's: a pushed 1.0 is true and nil is false. The binding `ClearTarget`
 (`0x489ff0`) pushes 1.0 when the selection `0xb4e2d8` is nonzero at entry, else nil, and always clears the
 selection (`0x493540`).
+
+In `0x6e4940`, `0x6e4968` tests the result of `0x6e3d30`, `0x6e496c cmp dl,bl` the send flag, and `0x6e4a37` tests the
+saved `cl` to pick event 0x152, or 0x153 and 0x154.
