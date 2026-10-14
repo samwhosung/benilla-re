@@ -11,11 +11,11 @@ files run from `0x5d3f40` to `0x615710` and from `0x61b130` to `0x630780`, aroun
 Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x6384e0`, after the
 physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and `initializers` for the core,
 `classes` for the hierarchy, `reaction` for unit reactions, `trade` for the trade window, `objectbase`
-for Object_C.cpp, `units`, `unitmovement`, `unitanim`, `sheathing`, `auras`, `unitdisplay`, `unitbody` and
-`unitnames` for Unit_C.cpp, `players`, `playerfields`, `playermessages`, `quests`, `party`,
+for Object_C.cpp, `units`, `unitmovement`, `unitanim`, `sheathing`, `auras`, `unitdisplay`, `unitbody`,
+`unitnames`, `standstate` and `weapontrails` for Unit_C.cpp, `players`, `playerfields`, `playermessages`, `quests`, `party`,
 `inventory`, `interaction` and `playercombat` for Player_C.cpp and Bag_C.cpp, `items` for Item_C.cpp
 and the container, `gameobjects`, `gameobjecttypes` and `transports` for GameObject_C.cpp,
-`corpses`, `dynamicobjects` and `lootroll` for the files of those names, and `missiles`, `effects`,
+`corpses`, `dynamicobjects` and `lootroll` for their files, and `missiles`, `effects`,
 `unitcombat`, `sounds`, `combatlog` and `combatlogmessages` for the missile, effect, combat, sound
 and log files.
 
