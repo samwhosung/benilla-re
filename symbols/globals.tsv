@@ -2507,9 +2507,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe2c60	void *	s_cursorPictureTexture		ui	Holds the texture handle the payload picture is built from	verified	one	ui/cursor#dragging-picture
 0xbe2c70	char[260]	s_customCursorName		ui	Holds the name of the loaded custom cursor	verified	one	ui/worldcursor#custom-cursors
 0xbe2d80	uint32_t[42][1024]	s_cursorImages		ui	Holds the 32 by 32 image of each cursor mode, slot 41 being the named custom cursor	verified	one	ui/cursor#sending-the-picture
+0xc0cdcc	uint32_t[3]	s_pendingPortraits		ui	Holds the list of GUIDs awaiting portrait events: link offset, end link and head	verified	one	ui/portraits#marking-and-draining
 0xc0ce30	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0ce7c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xc0cea4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xc0ce60	uint32_t[10]	s_portraitGuidTable		ui	Holds the hash table of baked portraits by GUID: buckets at +0x1c, mask at +0x24	verified	one	ui/portraits#the-caches
+0xc0ce88	uint32_t[10]	s_portraitDisplayTable		ui	Holds the hash table of baked portraits by display id: buckets at +0x1c, mask at +0x24	verified	one	ui/portraits#the-caches
 0xc0cf18	uint32_t	s_colorSkillYellow		ui	Holds the yellow 0xffffff00 of a skill within 25 to 49 of its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0cf50	uint32_t	s_colorSkillGray		ui	Holds the gray 0xff808080 of a skill 100 or more above its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0cf60	uint32_t	s_tooltipWhite		ui	Holds the white colour 0xffffffff of an ordinary line	verified	one	ui/tooltipcontent#the-colours

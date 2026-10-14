@@ -6942,7 +6942,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491960	98	GetRaidPetGuidForToken		ui	primitive		Returns the pet GUID of a raid roster entry from a 0-based index, 0 out of range	verified	one	ui/unittokens#indexed-tokens	
 0x4919d0	40	RefreshTooltipForUnit		ui	orchestration	void __fastcall (uint64_t *guid)	Rebuilds the tooltip when it still shows the unit the GUID names	verified	one	ui/mouseover#the-tooltip-stays-put	
 0x491a00	65			ui	orchestration		Marks the name of a GUID's unit dirty	inferred	none	objectlayer/playerfields#watchers-on-every-player	
-0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	objectlayer/party#guild-tabards	
+0x491a50	5	RefreshPortrait		ui	orchestration		Jumps to 0x524e10	verified	one	ui/portraits#marking-and-draining	
 0x491a60	1145			ui	primitive		Prints and signals an item received, created or looted	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x491ee0	103			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, 0x491a60; not read here	inferred	none		
 0x491f50	187			ui	primitive		Asks the server for the corpse position through MSG_CORPSE_QUERY	inferred	none	objectlayer/playerfields#player-flag-changes	
@@ -12605,8 +12605,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x519d70	104	Script::UnitIsTrivial	idb	ui	orchestration		Implements the Lua function UnitIsTrivial	inferred	none	ui/unitlevels#trivial-units	
 0x519de0	104	Script::UnitIsCivilian	idb	ui	orchestration		Pushes 1 when the unit is a civilian, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x519e50	149	Script::UnitHasRelicSlot	idb	ui	primitive		Pushes 1 for a player whose class row has a relic slot, else nil	verified	one	ui/unitinfo#unithasrelicslot	
-0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Implements the Lua function SetPortraitTexture	inferred	none		
-0x51a100	21			ui	orchestration		Runs its object file code that calls RefreshPortrait; not read here	inferred	none		
+0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Clears a texture widget and binds the unit's portrait: a bake, a cached bake or a stand-in	verified	one	ui/portraits#setportraittexture	
+0x51a100	21	OnPortraitNameArrived		ui	orchestration		Marks the portrait dirty when the name cache answers	verified	one	ui/portraits#setportraittexture	
 0x51a120	100	Script::HasFullControl	idb	ui	orchestration		Implements the Lua function HasFullControl	inferred	none		
 0x51a190	232	Script::GetComboPoints	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the combo points of a rogue or druid on its combo target, else 0	verified	one	ui/actionuse#combo-points	
 0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Pushes the localised creature type name of a unit, or nil	verified	one	ui/unitinfo#the-creature-type	
@@ -12974,17 +12974,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5249e0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5249f0	359			ui	primitive		Runs its object file code that calls 0x527410, 0x5273d0, 0x527160 and 1 more; not read here	inferred	none		
 0x524b60	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x524b70	341			ui	primitive		Runs its object file code that calls 0x5272d0, 0x527380, 0x5274f0 and 3 more; not read here	inferred	none		
-0x524cd0	308			ui	primitive		Runs PortraitButton.cpp code that calls 0x58a260, 0x58a280, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x524e10	321			ui	primitive		Refreshes the portraits that show a GUID	inferred	none	objectlayer/party#guild-tabards	
-0x524f60	2355			ui	primitive		Runs its object file code that calls 0x5272b0, 0x770300, 0x527360 and 45 more; not read here	inferred	none		
-0x5258a0	513			ui	primitive		Runs its object file code that calls _atexit, 0x5268b0, 0x5a3660 and 7 more; not read here	inferred	none		
+0x524b70	341	ClearPortraitCaches		ui	orchestration		Empties the portrait hash tables and frees the pending and spare nodes	verified	one	ui/portraits#clearing-the-caches	
+0x524cd0	308	DrainPortraitUpdates		ui	orchestration		Signals the portrait events for each pending GUID whose unit is ready or gone	verified	one	ui/portraits#marking-and-draining	
+0x524e10	321	MarkPortraitDirty		ui	orchestration		Queues a GUID for the portrait events and marks its cached portrait dirty	verified	one	ui/portraits#marking-and-draining	
+0x524f60	2355	BakePortrait		ui	orchestration		Draws a unit's model into a cached 64 by 64 texture and binds it to a widget	verified	one	ui/portraits#the-bake	
+0x5258a0	513	LoadPortraitMask		ui	orchestration		Loads the circular alpha template for a portrait of 64 or 128 texels once	verified	one	ui/portraits#the-bake	
 0x525ab0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x525ae0	35			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x525b10	115			ui	orchestration		Runs its object file code that calls M2LightingAddAmbient, M2LightingAddDirectional; not read here	inferred	none		
+0x525b10	115	PortraitLighting		ui	orchestration		Adds a 0.45 grey ambient and a white directional light to the portrait model	verified	one	ui/portraits#the-bake	
 0x525b90	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x525ba0	261			ui	primitive		Runs its object file code that calls 0x770300, SStrPrintf, 0x770200; not read here	inferred	none		
-0x525cb0	117			ui	primitive		Runs its object file code that calls 0x770300, 0x770200; not read here	inferred	none		
+0x525ba0	261	BindPlayerPortraitFallback		ui	orchestration		Binds a player's cached bake, else the stand-in texture for its sex and race	verified	one	ui/portraits#stand-in-portraits	
+0x525cb0	117	BindPetPortraitFallback		ui	orchestration		Binds a display id's cached bake, else the pet stand-in texture	verified	one	ui/portraits#stand-in-portraits	
 0x525d30	589			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmp, 0x527410 and 12 more; not read here	inferred	none		
 0x525f80	50			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x525fc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
