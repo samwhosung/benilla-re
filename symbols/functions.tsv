@@ -10080,25 +10080,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1f30	30			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
 0x4e1f50	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e1f60	53			ui	orchestration		Runs its object file code that calls 0x4e1fa0, 0x4e26a0; not read here	inferred	none		
-0x4e1fa0	97			ui	primitive		Closes the taxi map	inferred	none	objectlayer/interaction#taxis	
-0x4e2010	697			ui	primitive		Runs GossipInfo.cpp code that calls 0x55d530, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 9 more; not read here	inferred	none		
-0x4e22d0	71			ui	orchestration		Runs its object file code that calls 0x4e2010, 0x4e1fa0; not read here	inferred	none		
-0x4e2320	258			ui	primitive		Runs its object file code that calls FrameScript_SignalEvent2, CDataStore::PutUInt32 and 4 more; not read here	inferred	none		
-0x4e2430	46			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4e1fa0	97	SetGossipTarget		ui	primitive		Latches the gossip target GUID, or closes gossip and fires GOSSIP_CLOSED for a zero GUID	verified	one	ui/gossip#the-gossip-message	
+0x4e2010	697	PublishGossipGreeting		ui	primitive		Draws a greeting from the NPC text record by weight and gender column, fires GOSSIP_SHOW	verified	one	ui/gossip#the-greeting	
+0x4e22d0	71	OnNpcTextArrived		ui	orchestration		Rebuilds the greeting when the NPC text arrives, or closes gossip when it failed	verified	one	ui/gossip#the-greeting	
+0x4e2320	258	SelectGossipSlot		ui	primitive		Sends the selected option's index and code, or asks for the code, then resets the slots	verified	one	ui/gossip#selecting-an-option	
+0x4e2430	46	CountGossipAvailableQuests		ui	primitive		Counts the gossip quest rows whose icon is not 3 or 4	verified	one	ui/questgiver#the-split-on-gossip	
 0x4e2460	73			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e24b0	197			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
-0x4e2580	46			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4e2580	46	CountGossipActiveQuests		ui	primitive		Counts the gossip quest rows whose icon is 3 or 4	verified	one	ui/questgiver#the-split-on-gossip	
 0x4e25b0	73			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e2600	156			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x4e26a0	51			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e26e0	274	HandleGossipMessagePacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetGuid, 0x4e1fa0, 0x4e26a0 and 4 more; not read here	inferred	none		
+0x4e26a0	51	ResetGossipOptions		ui	primitive		Sets the index of all 16 gossip option slots to -1	verified	one	ui/gossip#the-gossip-message	
+0x4e26e0	274	HandleGossipMessagePacket	idb	ui	primitive		Handles the gossip message: latches the target, reads options and quests, builds the greeting	verified	one	ui/gossip#the-gossip-message	
 0x4e2800	55	HandleGossipCompletePacket	idb	ui	orchestration		Runs its object file code that calls 0x4e1fa0; not read here	inferred	none		
-0x4e2840	123	HandleGossipPOIPacket	idb	ui	orchestration		Runs its object file code that calls CDataStore::GetInt32, CDataStore::GetFloat and 2 more; not read here	inferred	none		
+0x4e2840	123	HandleGossipPoiPacket	idb	ui	orchestration		Reads a point of interest and stores it in the second static blip	verified	one	ui/gossip#the-gossip-point-of-interest	
 0x4e28c0	16	Script::GetGossipText	idb	ui	orchestration		Implements the Lua function GetGossipText	inferred	none		
-0x4e28d0	93	Script::GetGossipOptions	idb	ui	primitive		Implements the Lua function GetGossipOptions	inferred	none		
+0x4e28d0	93	Script::GetGossipOptions	idb	ui	primitive		Pushes the text and type name of each gossip option in slot order	verified	one	ui/gossip#the-icon-names	
 0x4e2930	115	Script::GetGossipAvailableQuests	idb	ui	primitive		Implements the Lua function GetGossipAvailableQuests	inferred	none		
 0x4e29b0	115	Script::GetGossipActiveQuests	idb	ui	primitive		Implements the Lua function GetGossipActiveQuests	inferred	none		
-0x4e2a30	104	Script::SelectGossipOption	idb	ui	primitive		Implements the Lua function SelectGossipOption	inferred	none		
+0x4e2a30	104	Script::SelectGossipOption	idb	ui	primitive		Selects a gossip option by its 1-based number and optional code	verified	one	ui/gossip#selecting-an-option	
 0x4e2aa0	64	Script::SelectGossipAvailableQuest	idb	ui	orchestration		Implements the Lua function SelectGossipAvailableQuest	inferred	none		
 0x4e2ae0	64	Script::SelectGossipActiveQuest	idb	ui	orchestration		Implements the Lua function SelectGossipActiveQuest	inferred	none		
 0x4e2b20	50	Script::CloseGossip	idb	ui	orchestration		Implements the Lua function CloseGossip	inferred	none		
@@ -11538,17 +11538,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x500ad0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x500af0	193			ui	primitive		Runs its object file code not read here	inferred	none		
 0x500bc0	12			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500bd0	465			ui	primitive		Opens the quest frame on a page with a text for a GUID; not read here	inferred	none	objectlayer/quests#the-greeting-list	
-0x500dc0	118			ui	orchestration		Copies a quest's objective text for the quest window	inferred	none	objectlayer/quests#details-request-and-reward	
-0x500e40	74			ui	primitive		Adds an available quest with its title and level to the greeting	inferred	none	objectlayer/quests#the-greeting-list	
-0x500e90	75			ui	primitive		Adds an active quest with its title and level to the greeting	inferred	none	objectlayer/quests#the-greeting-list	
+0x500bd0	465	SetQuestPanelText		ui	primitive		Expands $ macros in a text and stores it, an empty one as a space, in the buffer of its kind	verified	one	ui/gossip#quest-greetings	
+0x500dc0	118	SetQuestObjectiveText		ui	orchestration		Stores the objective text, leaving an empty source empty	verified	one	ui/gossip#quest-greetings	
+0x500e40	74	AddAvailableQuest		ui	primitive		Appends a quest id, title, level and one-click flag to the available pool	verified	one	ui/questgiver#the-two-pools	
+0x500e90	75	AddActiveQuest		ui	primitive		Appends a quest id, title and level to the active pool	verified	one	ui/questgiver#the-two-pools	
 0x500ee0	10	SignalQuestGreeting		ui	orchestration		Signals event 0x12c	verified	one	objectlayer/quests#the-greeting-list	
 0x500ef0	376			ui	primitive		Copies a quest's title and rewards for the quest window and signals QUEST_COMPLETE	inferred	none	objectlayer/quests#details-request-and-reward	
 0x501070	187			ui	primitive		Copies a quest's title and required items and signals QUEST_PROGRESS	inferred	none	objectlayer/quests#details-request-and-reward	
 0x501130	241	ReportQuestDeclined		ui	primitive		Sends the decline result to a sharing player, clears the dialog source and fires QUEST_FINISHED	verified	one	ui/questshare#what-the-client-answers-itself	
 0x501230	107			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x5012a0	127			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
-0x501320	86			ui	primitive		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x5012a0	127	SelectAvailableQuestImpl		ui	primitive		Sends a query or a complete for an available row, once, and sets the acted latch	verified	one	ui/questgiver#clicking-a-row	
+0x501320	86	SelectActiveQuestImpl		ui	primitive		Sends a complete for an active row, once, and sets the acted latch	verified	one	ui/questgiver#clicking-a-row	
 0x501380	101	AcceptQuestImpl		ui	orchestration		Sends CMSG_QUESTGIVER_ACCEPT_QUEST for the open offer and closes the panel	verified	one	ui/questshare#accepting-and-declining	
 0x5013f0	361	DeclineQuestImpl		ui	primitive		Declines the open offer: reopens the giver's list, reports to a sharer or interacts with an object	verified	one	ui/questshare#accepting-and-declining	
 0x501560	79			ui	orchestration		Runs QuestFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
@@ -11571,14 +11571,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x501a50	16	Script::GetObjectiveText	idb	ui	orchestration		Implements the Lua function GetObjectiveText	inferred	none		
 0x501a60	16	Script::GetProgressText	idb	ui	orchestration		Implements the Lua function GetProgressText	inferred	none		
 0x501a70	16	Script::GetRewardText	idb	ui	orchestration		Implements the Lua function GetRewardText	inferred	none		
-0x501a80	23	Script::GetNumAvailableQuests	idb	ui	orchestration		Implements the Lua function GetNumAvailableQuests	inferred	none		
-0x501aa0	23	Script::GetNumActiveQuests	idb	ui	orchestration		Implements the Lua function GetNumActiveQuests	inferred	none		
+0x501a80	23	Script::GetNumAvailableQuests	idb	ui	orchestration		Pushes the number of available quests	verified	one	ui/questgiver#the-lua-functions	
+0x501aa0	23	Script::GetNumActiveQuests	idb	ui	orchestration		Pushes the number of active quests	verified	one	ui/questgiver#the-lua-functions	
 0x501ac0	105	Script::GetAvailableTitle	idb	ui	primitive		Implements the Lua function GetAvailableTitle	inferred	none		
 0x501b30	105	Script::GetActiveTitle	idb	ui	primitive		Implements the Lua function GetActiveTitle	inferred	none		
 0x501ba0	117	Script::GetAvailableLevel	idb	ui	primitive		Implements the Lua function GetAvailableLevel	inferred	none		
 0x501c20	117	Script::GetActiveLevel	idb	ui	primitive		Implements the Lua function GetActiveLevel	inferred	none		
-0x501ca0	64	Script::SelectAvailableQuest	idb	ui	orchestration		Implements the Lua function SelectAvailableQuest	inferred	none		
-0x501ce0	64	Script::SelectActiveQuest	idb	ui	orchestration		Implements the Lua function SelectActiveQuest	inferred	none		
+0x501ca0	64	Script::SelectAvailableQuest	idb	ui	orchestration		Selects an available quest by its 1-based row	verified	one	ui/questgiver#clicking-a-row	
+0x501ce0	64	Script::SelectActiveQuest	idb	ui	orchestration		Selects an active quest by its 1-based row	verified	one	ui/questgiver#clicking-a-row	
 0x501d20	8	Script::AcceptQuest	idb	ui	orchestration		Implements the Lua function AcceptQuest	inferred	none		
 0x501d30	8	Script::DeclineQuest	idb	ui	orchestration		Implements the Lua function DeclineQuest	inferred	none		
 0x501d40	45	Script::IsQuestCompletable	idb	ui	orchestration		Implements the Lua function IsQuestCompletable	inferred	none		
@@ -19254,7 +19254,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5db8e0	25	InitPlayerFree3		objectlayer	host	void __cdecl (void)	Frees a global block through SMemFree when its pointer is set, at exit	verified	one	objectlayer/initializers#exit-callbacks	
 0x5db900	123	PollMoverZone		objectlayer	primitive		Reports the active mover's, else the active player's, world node to the area list on every tenth call	verified	one	objectlayer/players#area-list-polling	
 0x5db980	371	ReadVendorInventory		objectlayer	primitive		Reads a vendor's list into the 128-entry table 0xc4c4a0 without bounding its count, or prints the refusal	verified	one	objectlayer/inventory#vendors	
-0x5dbb10	387	ReadQuestGiverQuestList		objectlayer	primitive		Reads a quest giver's greeting and up to 255 quests into 32-entry arrays and opens the greeting	verified	one	objectlayer/quests#the-greeting-list	
+0x5dbb10	387	HandleQuestListPacket		objectlayer	primitive		Reads the quest giver's list, bins each row by icon into the two pools and fires QUEST_GREETING	verified	one	ui/questgiver#the-quest-list-message	
 0x5dbca0	113	ReadQuestInvalid		objectlayer	orchestration		Reads why a quest cannot be taken, shows the matching error and calls 0x501130(0, 0)	verified	one	objectlayer/quests#quest-giver-messages	
 0x5dbd50	761	ReadQuestDetails		objectlayer	primitive		Reads a quest's details, choices and rewards into fixed stack arrays and shows them	verified	one	objectlayer/quests#details-request-and-reward	
 0x5dc050	396	ReadQuestRequestItems		objectlayer	primitive		Reads a quest's required items into 6-entry stack arrays and shows the hand-in page	verified	one	objectlayer/quests#details-request-and-reward	
@@ -19316,7 +19316,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5dfb10	143	IsTalentWiperInRange		objectlayer	primitive		Returns 1 while the remembered talent trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
 0x5dfba0	385	CGPlayer_C::PetUnlearnDialog		objectlayer	primitive		Asks to confirm a pet unlearn and its cost, or with 0 accepts within range when the money covers it	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_5df980_clone_family_difftest
 0x5dfd30	143	IsPetUnlearnerInRange		objectlayer	primitive		Returns 1 while the remembered pet trainer exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
-0x5dfdc0	387	BinderDialog		objectlayer	primitive		Asks to confirm binding at the inn's area, or with 0 accepts within range	verified	one	objectlayer/interaction#confirmation-dialogs	
+0x5dfdc0	387	BinderDialog		objectlayer	primitive		Latches a binder in range and fires CONFIRM_BINDER, or sends the bind for a zero GUID	verified	one	ui/gossip#the-innkeeper-bind	
 0x5dff50	143	IsBinderInRange		objectlayer	primitive		Returns 1 while the remembered innkeeper exists within interaction range, NaN failing	verified	one	objectlayer/interaction#confirmation-dialogs	objectlayer::range_gate_clone_family_difftest
 0x5dffe0	118	SendBankerActivate		objectlayer	orchestration		Sends CMSG_BANKER_ACTIVATE (0x1b7) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	
 0x5e0060	118	SendPetitionShowList		objectlayer	orchestration		Sends CMSG_PETITION_SHOWLIST (0x1bb) with the GUID	verified	one	objectlayer/interaction#talking-to-an-npc	

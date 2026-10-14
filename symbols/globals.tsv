@@ -2305,7 +2305,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbb7494	int32_t	s_questClockOffset		ui	Holds the local clock minus the server's at the last sync, 0 until synced	verified	one	ui/questtimers#the-clock
 0xbb7498	uint32_t	s_questTemplatesPending		ui	Holds the number of quest templates asked for and not yet arrived	verified	one	ui/questlog#the-rebuild
 0xbb749c	uint32_t	s_queryTimeDeadline		ui	Holds the local time after which the next time query may be sent, 0 while one is in flight	verified	one	ui/questtimers#the-time-sync
-0xbbb670	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbb74c0	uint8_t[32][524]	s_gossipQuests		ui	Holds the 32 gossip quest rows: id, level, icon and title	verified	one	ui/gossip#the-gossip-message
+0xbbb670	uint32_t	s_gossipTextPending		ui	Holds 1 while the gossip greeting is not available, which refuses option selection	verified	one	ui/gossip#the-greeting
+0xbbb678	char[2048]	s_gossipText		ui	Holds the greeting of the last gossip window shown, never cleared	verified	one	ui/gossip#the-greeting
+0xbbbe90	uint8_t[16][2060]	s_gossipOptions		ui	Holds the 16 gossip option slots: text, server index, coded byte and icon	verified	one	ui/gossip#the-gossip-message
 0xbc3f58	uint64_t	s_trainerWindowGuid		ui	Holds the trainer GUID a trainer list may also open for	inferred	none	objectlayer/inventory#trainers
 0xbc3fa0	uint64_t	s_itemTextGuid		ui	Holds the GUID of the item whose text is open	inferred	none	objectlayer/playermessages#reading-items
 0xbc3fd0	uint32_t			ui	Holds a dword that Script::ItemTextHasNextPage reads and writes; not read here	inferred	none	
@@ -2380,10 +2383,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbde05c	uint32_t			unassigned	Holds a dword that ClearTradeSkillRecast, Script::GetTradeskillRepeatCount read and write; not read here	inferred	none	
 0xbde060	uint32_t			ui	Holds a dword that Script::GetTradeskillRepeatCount reads and writes; not read here	inferred	none	
 0xbde064	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbde068	char[512]	s_questGreetingText		ui	Holds the quest giver's greeting	verified	one	ui/gossip#quest-greetings
+0xbde288	char[1024]	s_questDetailText		ui	Holds the quest details text	verified	one	ui/gossip#quest-greetings
+0xbde690	uint8_t[32][76]	s_activeQuests		ui	Holds the quest giver's active quests: id, level and title	verified	one	ui/questgiver#the-two-pools
+0xbdf0f8	char[1024]	s_questProgressText		ui	Holds the quest progress text	verified	one	ui/gossip#quest-greetings
+0xbdf500	char[1024]	s_questObjectiveText		ui	Holds the quest objective text, empty when the source is	verified	one	ui/gossip#quest-greetings
+0xbdf900	char[88]	s_questTitleText		ui	Holds the quest title text	verified	one	ui/gossip#quest-greetings
+0xbdf958	char[1024]	s_questRewardText		ui	Holds the quest reward text	verified	one	ui/gossip#quest-greetings
+0xbdfe60	uint8_t[32][76]	s_availableQuests		ui	Holds the quest giver's available quests: id, level, title and one-click flag	verified	one	ui/questgiver#the-two-pools
 0xbe0810	uint64_t	s_questFrameGuid		ui	Holds a GUID whose presence turns a player's shared quest details into a busy answer	inferred	none	objectlayer/quests#details-request-and-reward
 0xbe0818	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0824	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0828	uint32_t	s_chosenRewardItem		ui	Holds the reward item chosen on the quest frame	inferred	none	objectlayer/quests#quest-completion
+0xbe0834	uint32_t	s_availableQuestCount		ui	Holds the number of rows in the available quest pool	verified	one	ui/questgiver#the-two-pools
+0xbe0838	uint32_t	s_activeQuestCount		ui	Holds the number of rows in the active quest pool	verified	one	ui/questgiver#the-two-pools
 0xbe0840	uint32_t	s_pendingQuestConfirm		ui	Holds the quest id of the last quest confirmation request, never cleared	verified	one	ui/questshare#the-confirmation-request
 0xbe0844	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe0b80	const char *	s_tokenCursor		ui	Holds the expander's place in the description text	verified	one	ui/spelltokens#the-expander
@@ -2593,6 +2606,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e1b0	uint32_t	s_questCache		dbcache	Holds the quest record cache	inferred	none	objectlayer/quests#quest-completion
 0xc0e1ec	uint32_t	s_guildCache		dbcache	Holds the guild record cache	inferred	none	objectlayer/party#guild-tabards
 0xc0e228	uint32_t	s_nameCache		dbcache	Holds the player name cache	inferred	none	objectlayer/playermessages#resurrection-and-summoning
+0xc0e264	void *	s_npcTextCache		dbcache	Holds the NPC text cache store, npccache.wdb	verified	one	ui/gossip#the-greeting
 0xc0e2a0	void *	s_itemStatsCache		dbcache	Holds the item record cache the loot roll code asks	verified	one	objectlayer/lootroll#starting-a-roll
 0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
