@@ -50,6 +50,27 @@ device rectangle and calls `0x492f70` (`0x4908ad`). The sink `0x494550` compares
 `UIParent` (`0x49456a`), and it calls `0x76ac10(UIParent, v, 1)` (`0x49457a`) and drains the queue
 `0x768ed0`.
 
+## The fullscreen frame scale
+
+`SetupFullscreenScale(frame)` sets the frame's own scale to the smaller of `0.75·a` and 1.0, where `a` is the
+aspect of the `gxResolution` setting while `widescreen` is on and 4/3 otherwise, the same call `frame:SetScale` makes without the force flag. It reads no `uiScale`
+and writes no anchor or size. A non-table argument raises `Usage: SetupFullscreenScale(frame)`, a table
+without a frame behind it `SetupFullscreenScale(): Couldn't find 'this' in frame object`, and any other object
+`SetupFullscreenScale(): Wrong object type, expected frame`. The call returns no value.
+
+Addresses: `0x48c270`, `0x48c282`, `0x48c2b1`, `0x48c2e9`, `0x48c306`, `0x48c30e`, `0x48c31d`, `0x48c323`, `0x48c335`, `0x41ad70`, `0x41ad10`, `0x76ac10`, `0x6f4940`, `0x83e2b8`, `0x8012cc`, `0x8015b8`
+Confidence: verified
+Proof: one
+Test: none
+
+The binding is entry `SetupFullscreenScale` of the pair table at `0x83e2b8`, with no direct caller. It checks the argument
+is a table (`0x48c282`), unwraps element 0 (`0x6f3bc0`, `0x6f3740`), rejects a null pointer (`0x48c2b1`) and
+asks the object's type slot for the frame class id (`0x48c2e9`). `0x41ad70` loads `[0x832a4c]`, which `0x41ad10` sets
+to `a` times `0.75` (`0x8012cc`); `fcomp` against 1.0 (`0x48c30e`) then takes the value when it is below 1.0 and
+1.0 when it is equal, above or not a number (`0x48c31d`). It calls `0x76ac10(value, 0)` (`0x48c323`, `0x48c335`). A
+widescreen window of 16:9 gets 1.0 and a 5:4 window 0.9375; with the widescreen option off the aspect is 4/3 and
+the result is 1.0.
+
 ## The automatic scale
 
 With `useUiScale` off, which is the default, `UIParent` is not left at 1.0. Its scale is 768 over the

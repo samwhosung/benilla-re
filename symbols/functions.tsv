@@ -6775,7 +6775,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48bfd0	249	Script::SetScreenResolution	idb	ui	primitive		Implements the Lua function SetScreenResolution	inferred	none		
 0x48c0d0	355	Script::GetRefreshRates	idb	ui	primitive		Implements the Lua function GetRefreshRates	inferred	none		
 0x48c240	33			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x48c270	232	Script::SetupFullscreenScale	idb	ui	primitive		Implements the Lua function SetupFullscreenScale	inferred	none		
+0x48c270	232	Script::SetupFullscreenScale	idb	ui	primitive		Sets a frame's scale to the smaller of the scaled aspect and 1.0, raising a Lua error for a bad argument	verified	one	ui/uiscale#the-fullscreen-frame-scale	
 0x48c360	125	Script::GetMultisampleFormats	idb	ui	primitive		Implements the Lua function GetMultisampleFormats	inferred	none		
 0x48c3e0	406			ui	primitive		Runs GameUI.cpp code that calls CVar::Lookup, SStrCmpI, CmdLineGetBool and 4 more; not read here	inferred	none		
 0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive		Implements the Lua function GetCurrentMultisampleFormat	inferred	none		
