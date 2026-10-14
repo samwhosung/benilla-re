@@ -51,7 +51,7 @@ Only the first damage slot shows. An armor value above 0 (`+0xf4`) gives `%d` an
 Addresses: `0x4fe3d0`, `0x4fe405`, `0x4fe4a0`, `0x4fe4c0`, `0x4fe4d8`, `0x4fe507`, `0x4fe530`, `0x4fe547`, `0x4fe54f`, `0x4fe57d`, `0x4fe587`, `0x4fe5b6`, `0x4fe5df`, `0x4fe5f6`, `0x4fe610`, `0x4fe641`, `0x4fe674`, `0x4fe689`, `0x4fe6c7`, `0x808120`, `0x82ee00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::luabind_4fde_get_trade_skill_item_stats_quantize`
 
 `0x4fe3d0` compares both bounds with zero. `0x4fe4a0` adds 0.99999 to a positive maximum before the truncation and `0x4fe4c0` subtracts it from a minimum that is not above zero, using the float at `0x808120`. `0x4fe4d8` formats the line. `0x4fe507` tests the weapon class; `0x4fe530` divides the delay by 100 with the reciprocal multiplication `0x51eb851f` and `0x4fe54f` formats `%s %d`. `0x4fe57d` tests the armor and `0x4fe5b6` formats `%d %s`.
 `0x4fe5f6` compares the six resistances and `0x4fe641` picks the sign (`0x2b` plus twice the flag); the per-school loop starts at `0x4fe689` and its format key is `ITEM_RESIST_SINGLE` (`0x4fe6c7`). The school text is `0x82ee00` appended to the name.

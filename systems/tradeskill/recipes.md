@@ -163,9 +163,9 @@ of equal difficulty, level and name compare equal. A pair with a missing spell r
 Addresses: `0x4fd380`, `0x4fd3de`, `0x4fd3f6`, `0x4fd417`, `0x4fd44f`, `0x4fd464`, `0x4fd4a1`, `0x4fd4ad`, `0x4fd4b9`, `0x4fd4e6`, `0x4fd4bb`, `0x4fd4d6`, `0x4fd51b`, `0x4fd528`, `0x4fd506`, `0x64a4c0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4fd380`
 
-`0x4fd3de` to `0x4fd3f6` and `0x4fd40d` to `0x4fd425` set the shown flag of each side; `0x4fd432` to `0x4fd43f` and `0x4fd51b` to `0x4fd528` order the sides by it. `0x4fd44f` orders by group position; `0x4fd464` and `0x4fd506` put the header row first; `0x4fd4ad` compares the difficulty ascending and `0x4fd4e6` (`setl`) the item
+`0x4fd3de` to `0x4fd3f6` and `0x4fd40d` to `0x4fd425` set the shown flag of each side; `0x4fd432` to `0x4fd43f` and `0x4fd51b` to `0x4fd528` order the sides by it. `0x4fd44f` orders by group position; `0x4fd464` and `0x4fd506` put the header row first, and `0x4fd506` returns 1 when the second row is a header too, so two header rows of one group compare as 1 in either order; `0x4fd4ad` compares the difficulty ascending and `0x4fd4e6` (`setl`) the item
 level so the higher level sorts first; `0x4fd4d6` calls the case-blind compare `0x64a4c0` with the spell names. `0x4fd4a1` returns 0 when a spell record is missing.
 
 ## Header order
@@ -176,7 +176,7 @@ of the same class when either subclass row is missing. Rows of the table at `0xc
 Addresses: `0x4fd540`, `0x4fd567`, `0x4fd581`, `0x4fd5a1`, `0x4fd5f3`, `0x4fd604`, `0x4fd624`, `0x4fd639`, `0x4fd630`, `0xc0db90`, `0xc0db94`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4fd540`
 
 `0x4fd567` branches on equal classes and `0x4fd639` (`setg`) orders unequal classes ascending. The scan from `0x4fd581` matches the class and subclass of each side against the rows (`0x4fd5a1`). `0x4fd5f3` and `0x4fd604` select the names and `0x4fd624` compares them; `0x4fd630` returns 0 for a missing row.
 

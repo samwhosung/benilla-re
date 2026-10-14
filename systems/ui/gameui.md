@@ -1,6 +1,6 @@
 # ui: game start-up and shutdown
 
-How the interface session begins and ends. `CGGameUI::InitializeGame` runs when the client enters the game state and `CGGameUI::ShutdownGame` when it leaves it. Each runs the start-up or shutdown of every interface module in a fixed order, around three CVars and the handler that carries 14 server messages. The modules are those of the other docs of this system, listed here with the pair of functions that begin and end their state.
+How the interface session begins and ends. `CGGameUI::InitializeGame` runs when the client enters the game state and `CGGameUI::ShutdownGame` when it leaves it. Each runs the start-up or shutdown of the interface modules in a fixed order, around three CVars and the handler that carries 14 server messages. The modules are those of the other docs of this system, listed here with the pair of functions that begin and end their state.
 
 Roots: `0x48f480`, `0x491180`
 
@@ -95,12 +95,12 @@ Nine modules that talk to the server in a service flow, and the three that have 
 | Craft | none | `0x4f5f00` |
 | Talents | none | `0x4f2ea0` |
 
-Addresses: `0x4a9c40`, `0x4a9d30`, `0x4cc0f0`, `0x4cc300`, `0x4caa80`, `0x4caaf0`, `0x4ba0b0`, `0x4ba1d0`, `0x4c9ee0`, `0x4c9fb0`, `0x4c6d10`, `0x4c6e30`, `0x4c5590`, `0x4c55b0`, `0x4c4be0`, `0x4c4c50`, `0x4c3d20`, `0x4c3e90`, `0x4fc790`, `0x4f5f00`, `0x4f2ea0`
+Addresses: `0x4a9c40`, `0x4a9d30`, `0x4cc0f0`, `0x4cc300`, `0x4caa80`, `0x4caaf0`, `0x4ba0b0`, `0x4ba1d0`, `0x4c9ee0`, `0x4c9fb0`, `0x4c6d10`, `0x4c6e30`, `0x4c5590`, `0x4c55b0`, `0x4c4be0`, `0x4c4c50`, `0x4c3d20`, `0x4c3e90`, `0x4fc790`, `0x4f5f00`, `0x4f2ea0`, `0x4fc750`, `0x4f5ee0`, `0x4909bf`, `0x4909c4`
 Confidence: verified
 Proof: one
 Test: none
 
-Trade skill, craft and talents have no initializer in the start-up list; their lists are built elsewhere (`ui/tradeskill`, `ui/craftverbs`, `ui/talents`) and only the shutdown frees them. The raid shutdown clears the handlers for opcodes 0x321 and 0x322 and frees the 40 roster records.
+Trade skill, craft and talents have no initializer in the start-up list; their lists are built when a window opens (`tradeskill/recipes`, `tradeskill/craft`, `ui/talents`); the shutdown frees them, and `EnterWorldUI` resets the trade skill list (`0x4fc750` at `0x4909bf`) and the craft list (`0x4f5ee0` at `0x4909c4`). The raid shutdown clears the handlers for opcodes 0x321 and 0x322 and frees the 40 roster records.
 
 ## Interaction close
 

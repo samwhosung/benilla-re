@@ -30,6 +30,17 @@ Test: none
 `0x4d2ab0` sizes the arrays when the game starts (`0x48f5e5`): one row for each of the 128 skill slots plus one for each category, and one category record for each category. It allocates `0x14` and `0xc` bytes under the file's path (`0x4d2b09`, `0x4d2b93`; the sizes are pushed at `0x4d2b0e` and `0x4d2b98`), and starts every row with a skill line of 0, a category of 0 and visible
 (`0x4d2b40`). `0x4d2c00` frees the records at shutdown (`0x4911eb`). `0x4d2f74` is the only read of `0xb731cc`.
 
+## Skill slots
+
+The player's field block holds 128 skill slots of 12 bytes from `+0x848`: the skill line id (u16 at `+0`), the step word (u16 at `+2`), the rank (u16 at `+4`), the maximum rank (u16 at `+6`), a signed temporary modifier (s16 at `+8`) and a permanent bonus (u16 at `+0xa`). The list and its Lua functions read only the local player's slots, and add the bonus to the rank and the maximum when these are above 0.
+
+Addresses: `0x4d2d26`, `0x4d2db4`, `0x4d33a8`, `0x4d33db`, `0x4d33ea`, `0x4d389e`, `0x4d3925`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4d2d26` reads the line id at `+0x848` and `0x4d2db4` the rank at `+0x84c`. `0x4d33db` reads the maximum at `+0x84e`, `0x4d33a8` and `0x4d33ea` the bonus at `+0x852`, `0x4d389e` the step word at `+0x84a` and `0x4d3925` the modifier at `+0x850`.
+
 ## Rebuilding the list
 
 `0x4d2cb0` rebuilds the list from the local player and does nothing for another player object. It resets the counts, the selection and the points, and expands every category. It walks the 128 skill slots and keeps a skill when its SkillLine row, its race-class row (`0x6ddf90`) and its category row exist and the race-class flags lack bit `0x2`. A skill with rank 0 stays only when flag bit `0x1` is set,
@@ -51,7 +62,7 @@ The rows sort with `0x4d3070`: the visible rows first, then by category position
 Addresses: `0x4d2ed0`, `0x4d2ee2`, `0x4d2f0c`, `0x4d2f3e`, `0x4d2f74`, `0x4d2f8d`, `0x4d2fa0`, `0x4d2fc8`, `0x4d2fe2`, `0x4d2fec`, `0x4d3000`, `0x4d3038`, `0x4d303b`, `0x4d3070`, `0x4d3095`, `0x4d30cc`, `0x4d30f0`, `0x4d310f`, `0x4d311c`, `0x4d3130`, `0x4d318d`, `0x64a4c0`, `0x703e50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `ui::sortcmp_4d3070`
 
 `0x4d2ee2` copies the row count to the visible count. `0x4d2f0c` writes each category's collapsed flag from the mask. `0x4d2f3e` marks a header row visible; `0x4d2f74` to `0x4d2f8d` decide a skill row; `0x4d2fa0` decrements the count. `0x4d2fc8` sorts the categories with `0x4d3000` and `0x4d2fe2` the rows. The category comparator reads the sort field at `0x4d3038` and `0x4d303b` and returns 1 for an equal pair in either order. In the row comparator,
 `0x4d3095` orders by visibility, `0x4d30cc` finds the two category positions, `0x4d30f0` compares them, `0x4d310f` and `0x4d311c` put a header first, `0x4d3130` compares the untrained flags and `0x4d318d` the names (`0x64a4c0`). `0x4d2fec` raises event 265.
@@ -100,7 +111,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x4d3af5` bounds the index against the row count, `0x4d3b08` pushes the opcode `0x202`, `0x4d3b2f` and `0x4d3b35` append the opcode and the skill line to the data store (`0x418190`), and `0x4d3b40` sends the message (`0x5ab630`). The Lua function returns no value.
+`0x4d3af5` bounds the index against the row count, `0x4d3b08` pushes the opcode `0x202`, `0x4d3b2f` and `0x4d3b35` append the opcode and the skill line to the data store (`0x418190`), and `0x4d3b40` sends the message (`0x5ab630`). The Lua function returns no value; a non-number index raises `Usage: AbandonSkill(index)` (`0x4d3ac7`).
 
 ## Skill points
 
@@ -113,4 +124,4 @@ Proof: one
 Test: none
 
 `0x4d3d46` to `0x4d3d50` return without sending or clearing when the chosen cost `0xb731d0` is 0. `0x4d3409` loads the points chosen, `0x4d3413` asks `0x6de110` for the rank cost, `0x4d344b` tests the budget and `0x4d345b` raises the count. `0x4d3480` mirrors it: `0x4d357a` takes the cost of the current rank and `0x4d358a` and `0x4d358d` lower the count and the total. `0x4d3d0f` subtracts the total. `0x4d3d58` pushes `0x220`; the loop at `0x4d3da0` runs over the visible count and writes each pair (`0x4d3dbe`, `0x4d3dcb`),
-so rows hidden by a collapsed category are not sent. `0x4d3de8` patches the count in place, `0x4d3df3` sends and `0x4d3df8` clears the choices through `0x4d35b0`. `0x4d3f5f` to `0x4d3f76` test the step flags and fetch the step value, `0x4d3faf` compares it with the points, `0x4d3fbc` pushes `0x21f` and `0x4d3fef` sends.
+so rows hidden by a collapsed category are not sent, and `0x4d3df8` then clears the choices of every row through `0x4d35b0`: points staged under a collapsed category are dropped without being sent. `0x4d3de8` patches the count in place and `0x4d3df3` sends. `0x4d3f5f` to `0x4d3f76` test the step flags and fetch the step value, `0x4d3faf` compares it with the points, `0x4d3fbc` pushes `0x21f`; a non-number index raises `Usage: BuySkillTier(index)` (`0x4d3e67`) and `0x4d3fef` sends.

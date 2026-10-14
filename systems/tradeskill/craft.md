@@ -9,12 +9,12 @@ Roots: none, the function rows of this file belong to `ui`
 `0x4f6000` toggles the window for a craft type: the type that is open closes it, and any other type is stored, the selection and the collapse mask reset, the list is built (`0x4f60c0`) and `CRAFT_SHOW` is raised. `CloseCraft` (`0x4f6c00`) sets the type to 0 and raises `CRAFT_CLOSE` through `0x4f5fe0`. `SelectCraft` (`0x4f70f0`) stores the spell id of the row, or 0 for a header or an index out of range, and raises nothing.
 `GetCraftSelectionIndex` (`0x4f7130`) returns the position of the selected spell plus 1, so 0 for none. `GetNumCrafts` (`0x4f6e70`) returns the displayed count.
 
-Addresses: `0x4f6000`, `0x4f6006`, `0x4f6017`, `0x4f601c`, `0x4f6022`, `0x4f602c`, `0x4f6036`, `0x4f6040`, `0x4f6c00`, `0x4f5fe0`, `0x4f5fef`, `0x4f70f0`, `0x4f6050`, `0x4f7130`, `0x4f6080`, `0x4f6e70`, `0xbdcfc8`, `0x4f7127`, `0x4f7137`, `0x4f60c0`
+Addresses: `0x4f6000`, `0x4f6006`, `0x4f6017`, `0x4f601c`, `0x4f6022`, `0x4f602c`, `0x4f6036`, `0x4f6040`, `0x4f6c00`, `0x4f5fe0`, `0x4f5fef`, `0x4f70f0`, `0x4f6050`, `0x4f7130`, `0x4f6080`, `0x4f6e70`, `0xbdcfc8`, `0x4f7127`, `0x4f7137`, `0x4f60c0`, `0xbdcfbc`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4f6006` compares the argument with the open type; `0x4f6017` raises the close event. `0x4f601c` to `0x4f602c` store the type, clear the selection and set the mask to all ones, `0x4f6036` builds the list and `0x4f6040` raises the show event. `0x4f5fef` raises `CRAFT_CLOSE`. The select function `0x4f6050` is called at `0x4f7127`, the index finder `0x4f6080` at `0x4f7137`.
+`0x4f6006` compares the argument with the open type; `0x4f6017` raises the close event. `0x4f601c` to `0x4f602c` store the type, clear the selection (`0xbdcfbc`) and set the mask to all ones, `0x4f6036` builds the list and `0x4f6040` raises the show event. `0x4f5fef` raises `CRAFT_CLOSE`. The select function `0x4f6050` is called at `0x4f7127`, the index finder `0x4f6080` at `0x4f7137`.
 
 ## Name and skill line
 
