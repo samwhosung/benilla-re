@@ -23398,7 +23398,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a3c0	37	SStrChr	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a3f0	37	SStrChr2	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64a420	43	SStrChrR		storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0	verified	one	gx/textures#texture-basename-substitution	
-0x64a450	43	SStrChrR	idb	storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0 (a second copy of 0x64a420)	verified	one	gx/textures#texture-file-name-builders	
+0x64a450	43	SStrChrRCopy	idb	storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0 (a second copy of 0x64a420)	verified	one	gx/textures#texture-file-name-builders	
 0x64a480	56	SStrCmp		storm	orchestration		Compares two strings up to a length through strncmp	verified	one	objectlayer/party#guild-events	
 0x64a4c0	56	SStrCmpI	idb	storm	primitive		Compares two strings ignoring case up to a length	inferred	none	spell/cooldowns#spell-id-by-name	
 0x64a500	150			storm	unreached		Runs its object file code that calls _toupper; not read here	inferred	none		
@@ -28181,7 +28181,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c5a70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5a90	1			unassigned			Runs its object file code not read here	inferred	none		
 0x6c5aa0	74	ViolenceLevelsInitialize	idb	unassigned			Runs its object file code that calls SStrPrintf, CVar::Register; not read here	inferred	none		
-0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel CVar value in 0xce8534, clamped to the locale maximum, and sets the blood-spurt file name substitution	verified	one	gx/textures#texture-basename-substitution	
+0x6c5af0	92	OnViolenceLevelChanged		client	orchestration	bool __stdcall (const char *value, const char *unused)	Stores the violenceLevel value clamped to the locale maximum and sets the blood-spurt name substitution	verified	one	gx/textures#texture-basename-substitution	
 0x6c5b50	6	GetViolenceLevel		client			Returns the stored violenceLevel 0xce8534	inferred	none	spell/visuals#spell-visual-record-choice	
 0x6c5b60	10			unassigned			Runs its object file code that calls 0x6c5b70; not read here	inferred	none		
 0x6c5b70	22			unassigned			Runs its object file code not read here	inferred	none		
