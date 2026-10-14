@@ -9052,22 +9052,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c9ea0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4c9ec0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c9ed0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c9ee0	96	InitMeetingStoneHandlers	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4c9f40	62			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls SMemFree, FrameScript_GetText, SStrDupA; not read here	inferred	none		
-0x4c9f80	35			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls SMemFree; not read here	inferred	none		
-0x4c9fb0	50			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
-0x4c9ff0	116			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls CDataStore::PutUInt32, CDataStore::PutGuid and 1 more; not read here	inferred	none		
-0x4ca070	170			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls FrameScript_GetText, SStrPrintf, SMemFree and 1 more; not read here	inferred	none		
-0x4ca120	154			ui	primitive		Runs MeetingStoneInfo.cpp code that calls ClntObjMgrGetActivePlayer, CGGameUI::DisplayError and 2 more; not read here	inferred	none		
-0x4ca1c0	98			ui	orchestration		Runs MeetingStoneInfo.cpp code that calls CDataStore::PutUInt32, ClientServices::Send; not read here	inferred	none		
-0x4ca230	372	HandleMeetingstoneSetQueuePacket	idb	ui	orchestration		Runs MeetingStoneInfo.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt8 and 10 more; not read here	inferred	none		
-0x4ca3c0	276	HandleMeetingstoneStatusPacket	idb	ui	primitive		Runs its object file code that calls CDataStore::GetUInt8, CGGameUI::DisplayError and 2 more; not read here	inferred	none		
-0x4ca510	91			ui	orchestration		Runs its object file code that calls DBCache::NameCache::GetRecord, CGGameUI::DisplayError; not read here	inferred	none		
-0x4ca570	38	Script::IsInMeetingStoneQueue	idb	ui	orchestration		Implements the Lua function IsInMeetingStoneQueue	inferred	none		
-0x4ca5a0	8	Script::CancelMeetingStoneRequest	idb	ui	orchestration		Implements the Lua function CancelMeetingStoneRequest	inferred	none		
-0x4ca5b0	17	Script::GetMeetingStoneStatusText	idb	ui	orchestration		Implements the Lua function GetMeetingStoneStatusText	inferred	none		
-0x4ca5d0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4ca5f0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c9ee0	96	InitMeetingStoneHandlers	idb	ui	orchestration		Zeroes the queued area and registers the handlers for opcodes 0x295, 0x297, 0x298, 0x299 and 0x2bb	verified	one	ui/meetingstone#entering-and-leaving-the-world	
+0x4c9f40	62	ResetMeetingStoneText		ui	orchestration		Resets the status text to UNKNOWN and sends the status query	verified	one	ui/meetingstone#entering-and-leaving-the-world	
+0x4c9f80	35	FreeMeetingStoneText		ui	orchestration		Frees the status text and sets it null	verified	one	ui/meetingstone#entering-and-leaving-the-world	
+0x4c9fb0	50	ClearMeetingStoneHandlers		ui	orchestration		Clears the five meeting stone message handlers	verified	one	ui/meetingstone#entering-and-leaving-the-world	
+0x4c9ff0	116	SendMeetingStoneJoin		ui	orchestration	void __cdecl SendMeetingStoneJoin(uint64_t stoneGuid)	Sends opcode 0x292 with a meeting stone's GUID	verified	one	ui/meetingstone#joining-a-stone	
+0x4ca070	170	RebuildMeetingStoneText		ui	orchestration		Formats the status text from the queued area's name and replaces the cached text	verified	one	ui/meetingstone#the-status-text	
+0x4ca120	154	CancelMeetingStoneRequestImpl		ui	primitive		Shows the not-leader error or sends opcode 0x293	verified	one	ui/meetingstone#state-and-lua-functions	
+0x4ca1c0	98	SendMeetingStoneStatusQuery		ui	orchestration		Sends opcode 0x296 with no body	verified	one	ui/meetingstone#entering-and-leaving-the-world	
+0x4ca230	372	HandleMeetingstoneSetQueuePacket	idb	ui	orchestration		Stores the queued area, shows the queue message of the status and rebuilds the text	verified	one	ui/meetingstone#the-queue-message	
+0x4ca3c0	276	HandleMeetingstoneStatusPacket	idb	ui	primitive		Shows the meeting stone message of opcode 0x297, 0x298, 0x299 or 0x2bb	verified	one	ui/meetingstone#the-status-messages	
+0x4ca510	91	OnMeetingStoneMemberName		ui	orchestration		Shows the member-added message once the member's name arrives	verified	one	ui/meetingstone#the-status-messages	
+0x4ca570	38	Script::IsInMeetingStoneQueue	idb	ui	orchestration		Pushes 1 when the player is queued at a meeting stone, else nil	verified	one	ui/meetingstone#state-and-lua-functions	
+0x4ca5a0	8	Script::CancelMeetingStoneRequest	idb	ui	orchestration		Cancels the meeting stone request	verified	one	ui/meetingstone#state-and-lua-functions	
+0x4ca5b0	17	Script::GetMeetingStoneStatusText	idb	ui	orchestration		Pushes the meeting stone status text, or nil while unset	verified	one	ui/meetingstone#state-and-lua-functions	
+0x4ca5d0	30	RegisterMeetingStoneFunctions		ui	primitive		Registers the three meeting stone Lua functions	verified	one	ui/meetingstone#state-and-lua-functions	
+0x4ca5f0	24	UnregisterMeetingStoneFunctions		ui	primitive		Unregisters the three meeting stone Lua functions	verified	one	ui/meetingstone#state-and-lua-functions	
 0x4ca610	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ca620	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4ca630	5			ui	orchestration		Runs its object file code not read here	inferred	none		

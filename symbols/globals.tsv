@@ -65,7 +65,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4ad1a0	uint8_t[16]	s_caseIndexes4ad050		ui	Holds the 16 case indexes of the switch in 0x4ad050	inferred	none	
 0x4bdbe8	void *[4]	s_cases4bdb70		ui	Holds the 4 case addresses of the switch in 0x4bdb70	inferred	none	
 0x4bfa08	void *[23]	s_cases4bf720		ui	Holds the 23 case addresses of the switch in 0x4bf720	inferred	none	
-0x4ca3a4	void *[5]	s_cases4ca230		ui	Holds the 5 case addresses of the switch in 0x4ca230	inferred	none	
+0x4ca3a4	void *[5]	s_meetingStoneQueueArms		ui	Holds the five case addresses of the queue message's status switch	verified	one	ui/meetingstone#the-queue-message
+0x4ca4d4	void *[5]	s_meetingStoneMessageArms		ui	Holds the five case addresses of the meeting stone status message switch	verified	one	ui/meetingstone#the-status-messages
+0x4ca4e8	uint8_t[37]	s_meetingStoneMessageMap		ui	Maps the opcodes 0x297 to 0x2bb to the five arms of the status message switch	verified	one	ui/meetingstone#the-status-messages
 0x4cad98	void *[5]	s_cases4cacb0		ui	Holds the 5 case addresses of the switch in 0x4cacb0	inferred	none	
 0x4cadac	uint8_t[11]	s_caseIndexes4cacb0		ui	Holds the 11 case indexes of the switch in 0x4cacb0	inferred	none	
 0x4d0f44	void *[8]	s_guildSortKeyArms		ui	Holds the eight case addresses of the comparator's key switch	verified	one	ui/guild#the-roster-order
@@ -2272,7 +2274,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71ec8	uint32_t	s_worldStateBuckets		ui	Points at the bucket array of the world state table, three dwords a bucket	verified	one	ui/questtext#world-state-numbers
 0xb71ed0	uint32_t	s_worldStateMask		ui	Holds the bucket mask of the world state table, -1 while it is empty	verified	one	ui/questtext#world-state-numbers
 0xb71fcc	uint32_t			ui	Holds a dword that HandleInspectHonorStatsPacket, SetInspectTarget read and write; not read here	inferred	none	
-0xb7203c	uint32_t			ui	Holds a dword that Script::GetMeetingStoneStatusText reads and writes; not read here	inferred	none	
+0xb72038	uint32_t	s_meetingStoneAreaId		ui	Holds the id of the area the player is queued for at a meeting stone, 0 when not queued	verified	one	ui/meetingstone#state-and-lua-functions
+0xb7203c	char *	s_meetingStoneText		ui	Holds the heap status text of the meeting stone queue, null while unset	verified	one	ui/meetingstone#state-and-lua-functions
 0xb72060	uint32_t			ui	Holds a dword that HandleListStabledPetsPacket, Script::SetPetStablePaperdoll read and write; not read here	inferred	none	
 0xb72250	uint32_t			ui	Holds a dword that Script::ClickStablePet, Script::GetSelectedStablePet read and write; not read here	inferred	none	
 0xb72410	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
