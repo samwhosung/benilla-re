@@ -961,6 +961,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81da74	float	s_yardsPerMeter		collision	Holds 1.0936 (0x3f8bfb16), the factor the terminal velocity setters apply	verified	one	collision/falling#unreached-functions
 0x81dda8	uint32_t[20]	s_difficultyGrayGaps		ui	Holds the gray-range gap by the player's level divided by 5, read by the difficulty colour	verified	one	ui/unitlevels#the-gray-range
 0x81de50	void *[40]	s_namePlateVtable		ui	Holds the 40 virtual function slots of the nameplate frame, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
+0x81df88	float	s_plateLowHealthFraction		ui	Holds 0.2, the fill fraction at or below which the auto-colour is red	verified	one	ui/nameplates#bar-colour-and-values
 0x822c18	luaL_reg[9]	bitlib		lua	Pairs the bit library names bnot to mod with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
 0x822c60	luaL_reg[25]	mathlib		lua	Pairs the Lua math library's names with its C functions, ending in a null pair	verified	one	random#the-c-runtime-rand
 0x822d40	luaL_reg[9]	tab_funcs		lua	Pairs the table library names concat to remove with their functions, ending in a null pair	verified	one	ui/luastate#the-library-scripts-see
@@ -3321,9 +3322,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5cd0	float	s_sharedInvTwoPi		collision	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#shared-file-initializers
 0xcf5d00	float	s_movementTwoPi		collision	Holds 2π, written only by the static initializer 0x7c5dd0	verified	one	collision/kinematics#transport-space-transforms
 0xcf5d30	float	s_recordInfinity		unassigned	Holds +∞ from start-up	verified	one	collision/overview#object-files
-0xcf60d0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xcf60c8	uint32_t	s_plateNeutralColor		ui	Holds the yellow ARGB word of a neutral unit's bar	verified	one	ui/nameplates#bar-colour-and-values
+0xcf60d0	uint32_t	s_plateHostileColor		ui	Holds the red ARGB word of a hostile unit's bar and flashing name	verified	one	ui/nameplates#bar-colour-and-values
+0xcf60dc	uint32_t	s_plateFriendColor		ui	Holds the green ARGB word of a friendly non-player unit's bar	verified	one	ui/nameplates#bar-colour-and-values
+0xcf60e8	uint32_t	s_platePlayerColor		ui	Holds the blue ARGB word of a non-hostile player's bar	verified	one	ui/nameplates#bar-colour-and-values
 0xcf60ec	uint32_t[5]	s_difficultyColors		ui	Holds the ARGB words red, orange, yellow, green and gray of the difficulty colour	verified	one	ui/unitlevels#the-difficulty-colour
 0xcf6100	uint8_t	s_difficultyColorsReady		ui	Holds bit 0, set once the five difficulty colours are written	verified	one	ui/unitlevels#the-difficulty-colour
+0xcf6128	uint32_t	s_plateLevelColor		ui	Holds the white ARGB word the level text starts with	verified	one	ui/nameplates#bar-colour-and-values
 0xcf61dc	float	s_skyDrawTenSquared		lighting	Holds 100.0; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts

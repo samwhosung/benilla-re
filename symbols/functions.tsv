@@ -6665,10 +6665,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489420	8	Script::TogglePerformanceValues	idb	ui	orchestration		Implements the Lua function TogglePerformanceValues	inferred	none		
 0x489430	8	Script::ResetPerformanceValues	idb	ui	orchestration		Implements the Lua function ResetPerformanceValues	inferred	none		
 0x489440	3	Script::TogglePlayerBounds	idb	ui	orchestration		Implements the Lua function TogglePlayerBounds	inferred	none		
-0x489450	10	Script::ShowNameplates	idb	ui	orchestration		Implements the Lua function ShowNameplates	inferred	none		
-0x489460	10	Script::HideNameplates	idb	ui	orchestration		Implements the Lua function HideNameplates	inferred	none		
-0x489470	10	Script::ShowFriendNameplates	idb	ui	orchestration		Implements the Lua function ShowFriendNameplates	inferred	none		
-0x489480	10	Script::HideFriendNameplates	idb	ui	orchestration		Implements the Lua function HideFriendNameplates	inferred	none		
+0x489450	10	Script::ShowNameplates	idb	ui	orchestration		Sets bit 0x1 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
+0x489460	10	Script::HideNameplates	idb	ui	orchestration		Clears bit 0x1 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
+0x489470	10	Script::ShowFriendNameplates	idb	ui	orchestration		Sets bit 0x8 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
+0x489480	10	Script::HideFriendNameplates	idb	ui	orchestration		Clears bit 0x8 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
 0x489490	285	Script::SetCursor	idb	ui	primitive		Implements the Lua function SetCursor	verified	one	ui/worldcursor#setcursor	
 0x4895b0	18	Script::ClearCursor	idb	ui	orchestration		Implements the Lua function ClearCursor	verified	one	ui/cursor#cursor-functions	
 0x4895d0	44	Script::CursorHasItem	idb	ui	orchestration		Implements the Lua function CursorHasItem	verified	one	ui/cursor#cursor-functions	
@@ -36543,40 +36543,40 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cb0f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb100	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb110	10			ui	orchestration		Runs its object file code that calls 0x7cb120; not read here	inferred	none		
-0x7cb120	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cb120	11	InitPlayerColor		ui	orchestration		Stores the blue plate colour in 0xcf60e8	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cb130	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7cb140	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb150	10			ui	orchestration		Runs its object file code that calls 0x7cb160; not read here	inferred	none		
-0x7cb160	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cb160	11	InitFriendColor		ui	orchestration		Stores the green plate colour in 0xcf60dc	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cb170	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7cb180	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb190	10			ui	orchestration		Runs its object file code that calls 0x7cb1a0; not read here	inferred	none		
-0x7cb1a0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cb1a0	11	InitNeutralColor		ui	orchestration		Stores the yellow plate colour in 0xcf60c8	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cb1b0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7cb1c0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb1d0	10			ui	orchestration		Runs its object file code that calls 0x7cb1e0; not read here	inferred	none		
-0x7cb1e0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cb1e0	11	InitHostileColor		ui	orchestration		Stores the red plate colour in 0xcf60d0	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cb1f0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7cb200	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cb210	10			ui	orchestration		Runs its object file code that calls 0x7cb220; not read here	inferred	none		
-0x7cb220	11			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cb220	11	InitLevelColor		ui	orchestration		Stores the white level text colour in 0xcf6128	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cb230	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x7cb240	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7cb250	1015			ui	primitive		Runs NamePlateFrame.cpp code that calls CSimpleButton::CSimpleButton, GetBlockPoolData and 17 more; not read here	inferred	none		
-0x7cb650	116			ui	primitive		Runs NamePlateFrame.cpp code that calls 0x778850, SMemFree; not read here	inferred	none		
-0x7cb6d0	373			ui	primitive		Runs NamePlateFrame.cpp code that calls 0x77f750, CGUnit_C::GetUnitName, 0x771d80 and 7 more; not read here	inferred	none		
-0x7cb850	95	NamePlateOnEnter		ui	orchestration	void __thiscall ()	Publishes the plate's unit as the world mouseover, lights the plate and runs the button enter	verified	one	ui/hover#nameplate-and-minimap-notifies	
-0x7cb8b0	91	CGNamePlateFrame::OnLeave		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t flag)	Clears the published mouseover and unhighlights the plate	verified	one	ui/mouse#enter-and-leave	
-0x7cb910	49	CGNamePlateFrame::OnClick		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t action, uint32_t arg)	Selects or interacts with the plate's unit, then runs the button's click	inferred	none	ui/mouseover#clicking-a-nameplate	
-0x7cb950	212			ui	primitive		Runs NamePlateFrame.cpp code that calls __ftol, 0x77f750, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x7cba30	56			ui	orchestration		Returns 0 while targeting a position with no unit bit, else defers to its base method	inferred	none	spell/targeting#flag-word-predicates	
-0x7cba70	40			ui	orchestration	void __thiscall (void *frame)	Stores 5000 at +0x514 and passes 0xffff0000 to a call on the object at +0x4fc	inferred	none	ui/README#nameplate-frame-functions	
-0x7cbaa0	155			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
-0x7cbb40	408			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x7cbce0 and 9 more; not read here	inferred	none		
+0x7cb250	1015	CGNamePlateFrame::CGNamePlateFrame		ui	orchestration		Builds a plate under a parent: border, bar, glow, name, level, skull, raid icon, click mask	verified	one	ui/nameplates#the-parts	
+0x7cb650	116	CGNamePlateFrame::~CGNamePlateFrame		ui	orchestration		Destroys a plate	inferred	none		
+0x7cb6d0	373	CGNamePlateFrame::Bind		ui	orchestration		Binds a plate to a unit: GUID, name, bar, size, anchors, colour, level and raid icon	verified	one	ui/nameplates#name-flash-and-dim	
+0x7cb850	95	NamePlateOnEnter		ui	orchestration	void __thiscall ()	Publishes the plate's unit as the world mouseover, lights the plate and runs the button enter	verified	one	ui/nameplates#scripts-and-mouse	
+0x7cb8b0	91	CGNamePlateFrame::OnLeave		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t flag)	Clears the published mouseover and unhighlights the plate	verified	one	ui/nameplates#scripts-and-mouse	
+0x7cb910	49	CGNamePlateFrame::OnClick		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t action, uint32_t arg)	Selects or interacts with the plate's unit, then runs the button's click	verified	one	ui/nameplates#scripts-and-mouse	
+0x7cb950	212	CGNamePlateFrame::OnUpdate		ui	orchestration		Counts down the flash, sets the name colour and dims the plate unless its unit is the target	verified	one	ui/nameplates#name-flash-and-dim	
+0x7cba30	56	CGNamePlateFrame::OnMouseMove		ui	orchestration		Answers 0 while the pending spell wants a location and not a unit, else the base hit test	verified	one	ui/nameplates#scripts-and-mouse	
+0x7cba70	40	CGNamePlateFrame::Flash		ui	orchestration	void __thiscall (void *frame)	Starts a 5000 ms flash and sets the name colour to red	verified	one	ui/nameplates#name-flash-and-dim	
+0x7cbaa0	155	CGNamePlateFrame::SetBarColor		ui	orchestration		Sets the bar colour from the unit's reaction toward the player and its type	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cbb40	408	CGNamePlateFrame::UpdateLevel		ui	orchestration		Shows the level text or the skull for the unit and colours the level by difficulty	verified	one	ui/nameplates#level-text-and-skull	
 0x7cbce0	111	DisplayedLevel		ui	primitive		Returns a unit's level less the drunk reduction when the player can attack it, at least 1	verified	one	ui/unitlevels#the-level-on-a-plate	
 0x7cbd50	186	DifficultyColor		ui	primitive		Returns the address of the ARGB word for a unit level against a player level	verified	one	ui/unitlevels#the-difficulty-colour	
 0x7cbe10	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7cbe20	156			ui	primitive		Runs its object file code that calls 0x77fc60, 0x770410, 0x77fcb0; not read here	inferred	none		
+0x7cbe20	156	CGNamePlateFrame::SetRaidIcon		ui	orchestration		Crops the raid icon texture to a cell of the 4 by 2 atlas, or hides it for 8 or more	verified	one	ui/nameplates#level-text-and-skull	
 0x7cbec0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cbed0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7cbee0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -36628,15 +36628,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cc300	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7cc320	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7cc330	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x7cc340	59			ui	orchestration		Runs its object file code that calls CSimpleStatusBar::CSimpleStatusBar; not read here	inferred	none		
+0x7cc340	59	CNamePlateHealthBar::CNamePlateHealthBar		ui	orchestration		Builds the bar as a status bar subclass with the auto-colour flag set	verified	one	ui/nameplates#the-parts	
 0x7cc380	43			ui	orchestration		Runs its object file code that calls 0x7cc3b0, SMemFree; not read here	inferred	none		
 0x7cc3b0	31			ui	orchestration		Runs its object file code that calls 0x7cc3d0; not read here	inferred	none		
-0x7cc3d0	126			ui	orchestration		Runs its object file code that calls 0x467d00, 0x7cc5d0, 0x7cc510 and 1 more; not read here	inferred	none		
-0x7cc450	130			ui	primitive		Runs its object file code that calls 0x7832d0; not read here	inferred	none		
-0x7cc4e0	40			ui	orchestration		Runs its object file code that calls 0x77f750; not read here	inferred	none		
-0x7cc510	89			ui	primitive		Runs its object file code that calls ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
-0x7cc570	95			ui	orchestration		Runs HealthBar.cpp code that calls ClntObjMgrObjectPtr, 0x783270; not read here	inferred	none		
-0x7cc5d0	81			unassigned			Runs its object file code that calls ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
+0x7cc3d0	126	CNamePlateHealthBar::Bind		ui	orchestration		Binds the bar to a unit: watchers, range 0 to maximum health, value health	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc450	130	CNamePlateHealthBar::SetValue		ui	orchestration		Sets the value and, while the auto-colour flag is set, colours red at 0.2 or less else green	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc4e0	40	CNamePlateHealthBar::SetStatusBarColor		ui	orchestration		Sets the fill colour and clears the auto-colour flag	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc510	89	CNamePlateHealthBar::WatchUnit		ui	orchestration		Watches the unit's health and maximum health fields	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc570	95	CNamePlateHealthBar::OnFieldChanged		ui	orchestration		Resets the bar range and value from the unit's health fields	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc5d0	81	CNamePlateHealthBar::UnwatchUnit		unassigned	orchestration		Removes the two field watchers	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cc630	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cc640	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7cc650	5			unassigned			Runs its object file code not read here	inferred	none		
