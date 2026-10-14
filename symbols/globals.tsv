@@ -1959,7 +1959,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6f038	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb6f064	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb700ac	uint32_t *	s_indexedSpells		ui	Points at the spells 0x5ec720 looks up by index	inferred	none	objectlayer/playercombat#skills
-0xb700b0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb700b0	uint32_t	s_openLockSpellCapacity		ui	Holds the capacity of the array of learned spell ids whose first effect opens a lock	verified	one	objectlayer/playercombat#the-opener-list
+0xb700b4	uint32_t	s_openLockSpellCount		ui	Holds the count of learned opener spell ids	verified	one	objectlayer/playercombat#the-opener-list
+0xb700b8	uint32_t *	s_openLockSpells		ui	Points to the array of learned opener spell ids in the order the server taught them	verified	one	objectlayer/playercombat#the-opener-list
 0xb700e4	uint32_t[2]	s_interactSpells		ui	Holds the spells for interacting with other objects and with corpses and players	inferred	none	objectlayer/interaction#interacting-through-a-spell
 0xb700f0	uint32_t			ui	Holds a dword that Script::GetSpellName, Script::GetSpellCooldown, Script::IsSpellPassive read and write; not read here	inferred	none	
 0xb71100	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	

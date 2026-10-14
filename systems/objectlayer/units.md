@@ -160,6 +160,25 @@ rise plays effects 8 and 9, a fall 10 and 11; when the charmer, else the creator
 player it logs through 0x62d440(1 or 0). `0x60cdd0` plays effect 5 on any level change, up or
 down, calls 0x5edb60 for a player and refreshes the plate.
 
+## The stunned flag
+
+Bit 0x40000 of `UNIT_FIELD_FLAGS`, stunned, is acted on in thirteen places. The input code stops turning and pitching, a relayed turn or pitch start is
+refused, and the unit cannot toggle its weapons, loot, cast, auto-move to an object or start an attack.
+
+Addresses: `0x5145d2`, `0x5151fe`, `0x51529b`, `0x602b29`, `0x602b89`, `0x600dd7`, `0x5eb4f2`, `0x5ec219`, `0x6099bc`, `0x60ff95`, `0x612ef2`, `0x5ff4ef`, `0x4bd075`, `0x5145b0`
+Confidence: verified
+Proof: one
+Test: none
+
+The tests are `0x5145b0` (not stunned, `not`, `shr 0x12`, `and 1` at `0x5145d2`), the input
+functions `0x5151b0` and `0x515250` (`0x5151fe`, `0x51529b`), the relayed turn and pitch starts
+`0x602b20` and `0x602b80` (`0x602b29`, `0x602b89`), which return 0, the display-facing steer
+`0x600cd0` (`0x600dd7`), the weapon toggle (`0x5eb4f2`), `CanLootNow` (`0x5ec219`), the cast
+validator (`0x6099bc`), `0x60fed0` (`0x60ff95`, message 0x191), `0x612df0` (`0x612ef2`, message 0xa2), the
+flags delta `0x5ff4e0` (`0x5ff4ef`), which re-runs the input tick, and the pet bar's predicate
+`0x4bcf70` (`0x4bd075`). Of the twelve relayed `MSG_MOVE_*` wrappers `0x602a80` to `0x602c20`,
+only the turn and pitch starts test it.
+
 ## Reactions, tokens and groups
 
 `0x606e20` redraws a unit's name and signals `UNIT_FACTION` for it and the units it summons and
@@ -221,6 +240,42 @@ on a live target the player may attack, walking first for the mover (`0x60fcc0`)
 `0x6005d0` hangs the sparkle effect once; `0x600640` plays its animation; `0x600680` removes it.
 `0x6126b0` is looting (the player's loot GUID, else `UNIT_FIELD_FLAGS` 0x400); `0x612710` refuses
 the loot animation for flag bit 28 or, for the player, a fishing node, a live unit or an item.
+
+## Selectability
+
+A unit whose `UNIT_FIELD_FLAGS` has bit 25 cannot be moused over, targeted or given a name plate,
+unless the active player created it. The mouse code asks the object's slot 21, `IsSelectable`; the
+target code asks slot 22, which for units and players jumps to slot 21.
+
+Addresses: `0x60be60`, `0x60be6f`, `0x5f1ec0`, `0x80afcc`, `0x80c54c`, `0x80afd0`, `0x80c550`, `0x482982`, `0x4935ee`, `0x4935f3`, `0x4938fd`, `0x606706`, `0x606835`, `0x6069fa`, `0x60f622`, `0x6066f0`, `0x6067f0`, `0x606980`, `0x60f600`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60be60` shifts the flags right by 25 (`0x60be6f`) and, with the bit set, compares
+`UNIT_FIELD_CREATEDBY` (`+0x20`, `+0x24`) with the active player's GUID. The unit vtable
+`0x80c4f8` and the player vtable `0x80af78` hold it at `+0x54` (`0x80c54c`, `0x80afcc`) and
+`0x5f1ec0`, a jump through slot 21, at `+0x58` (`0x80c550`, `0x80afd0`). The hover handler calls
+slot 21 at `0x482982`; `SetSelection` calls slot 22 at `0x4935ee` and, on a refusal, jumps to its
+epilogue (`0x4938fd`) without storing the selection or sending a message. Five functions test the bit by
+a shift of 25: `0x6066f0` (assist, `0x606706`), `0x6067f0` (interact, `0x606835`), `0x606980` (attack,
+`0x6069fa`), `0x60be60` and the plate gate `0x60f600` (`0x60f622`).
+
+## Player-driven units
+
+`0x5fa550` says whether a unit acts under its own control: a player that no one has charmed, or a
+possessed unit whose possessor is such a unit.
+
+Addresses: `0x5fa550`, `0x5fa566`, `0x5fa571`, `0x5fa582`, `0x5fa599`, `0x5fa5c7`, `0x5fa5e2`, `0x468460`
+Confidence: verified
+Proof: one
+Test: none
+
+With bit 1 of `UNIT_FIELD_FLAGS` clear and any of 0xc00004 set (`0x5fa566`: confused, fleeing and bit 4) it
+returns 0. With bit 24 (possessed) set (`0x5fa582`) it takes the charmer GUID at `+0x10`, else the one at
+`+0x20`, resolves it with mask 8 (`0x5fa599`), returns 0 for no unit and otherwise asks `0x5fa550` of
+that unit. Without bit 24 (`0x5fa5c7`) the unit must be a player with no charmer GUID and bit 0 of
+the flags clear; the result is then 1 (`0x5fa5e2`), else 0. Stunned is not among the bits it tests.
 
 ## Melee attack
 

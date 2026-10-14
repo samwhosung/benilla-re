@@ -135,6 +135,26 @@ without `force` or bit 0x4000 it re-picks only when the direction bits 0xf chang
 a backward or a walking unit re-picks, no direction plays 39 (JumpEnd), and the rest 187
 (JumpLandRun).
 
+## Standing on a movement message
+
+Most movement messages stand a seated unit, end its precast and stop the kits of its spell before
+they are sent. The stops, turns, facing and acknowledgement messages are sent as they are.
+
+Addresses: `0x60e0a0`, `0x60e0bb`, `0x60e0c1`, `0x60e0cd`, `0x60e0d4`, `0x60e0da`, `0x60e139`, `0x60e13d`, `0x60e14b`, `0x60e15d`, `0x60e16d`, `0x60e1b3`, `0x60e1b8`, `0x60e3fc`, `0x60e408`, `0x60be30`, `0x5ed430`, `0x60d040`, `0x614150`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60e0a0(opcode)` indexes the opcodes 0xb7 to 0xe3 through the byte table `0x60e408` into the three
+targets of `0x60e3fc`. Class 0 sends at once (`0x60e1b8`): 0xb7, 0xba, 0xbc, 0xbd, 0xbe, 0xc7, 0xd7,
+0xd8, 0xd9, 0xda and 0xe3, and the opcodes 0xe5, 0xe7, 0xe9, 0xeb, 0x2ad, 0x2cf, 0x2db, 0x2dd and
+0x2df. Class 1 (0xbf, 0xc0, 0xc1, 0xdb) sends only when the mover flags have 0x200000, swimming
+(`0x60e0d4`), and else returns 0. All others, including 0xb5, 0xb6 and 0xbb, take `0x60e139`: when the stand
+state (slot `+0xa4`) is nonzero it calls `SendStandState(0)` (`0x60e14b`, `0x60be30` to `0x5ed430`
+for a player). Then it clears the precast spell `+0xc8c` (`0x60e15d`), stops its kits with force 1
+(`0x60e16d`) and does the same for a channelled spell whose record has bit 3 of `+0x5c` while the
+mover flags have 0x200f (`0x60e1b3`).
+
 ## Local movement commands
 
 The input code moves its unit through these. Each calls `0x60e990` first, which stops an auto-move

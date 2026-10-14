@@ -198,6 +198,22 @@ the one-ended forms keep them at 53 bits. A NaN comparison picks ta for r, and `
 `jne` sends t ≤ x and unordered to the lower form of each `t` test. Its time form and
 `0x5f9120`'s agree only up to rounding: the builder's ta is (1/a)·v.
 
+## The timetable anchor
+
+A transport's position in its timetable is an offset kept at `+0x278` of the game object, set when
+the object is constructed from the server's time field.
+
+Addresses: `0x5f6f30`, `0x5f706e`, `0x5f7077`, `0x5f707d`, `0x5f7080`, `0x5f50cd`, `0x5f6292`
+Confidence: verified
+Proof: one
+Test: none
+
+The constructor `0x5f6f30` tests bit 1 of the descriptor byte `+0xd8` (`0x5f706e`); when it is set it
+stores the descriptor dword `+0xf0` less its time argument at `+0x278` (`0x5f7080`). Inside the
+game object code the offset is read twice, by the moving-transport tick (`0x5f50cd`) and by the
+type 11 evaluator (`0x5f6292`); the constructor clears the fields around it and leaves `+0x278` as
+it was.
+
 ## Moving the ship
 
 Each tick takes t = (now + `+0x278`) mod the period (1 when 0) and the first leg ending after t.

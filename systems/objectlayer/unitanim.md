@@ -45,6 +45,43 @@ The ready animation `0x5fcdc0` maps the main-hand weapon subclass through `0x5fc
 `0x5fd830` is 41 swimming, 120 stealthed, 193 Hover when flying, else 0 Stand. `0x5fce30` allows
 a shuffle while turning, not flying, and not in an emote, cast or ranged animation.
 
+## The airborne hold
+
+A falling unit keeps its animation: the selector returns the keep-current value 208 (0xd0) and
+the play is skipped. The hold ends the moment the fall ends, and no resolver holds a one-shot after it.
+
+Addresses: `0x5fd8b0`, `0x5fd8e8`, `0x5fd8ee`, `0x5fd8f3`, `0x5fd8fe`, `0x5fd901`, `0x5fd906`, `0x5fd914`, `0x5fd919`, `0x5fd926`, `0x5fd9e0`, `0x5fda03`, `0x5fda08`, `0x5fda0d`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5fd8b0` runs the first two resolvers, then tests the unit's own mover flags `+0x9e8`: falling
+(0x2000) with far falling (0x4000) holds (`0x5fd8ee`, `0x5fd8f3`). Else it reads the active mover (`+0x118`): with
+falling clear (`0x5fd901`) the resolvers `0x5fd100` onward run (`0x5fd926`); with falling set the fall
+velocity at `+0xa0` is compared with 0.0 (`0x5fd906`), and only an exact 0 (`0x5fd914`) lets them run, a
+nonzero value or NaN holds with 208 (`0x5fd919`). `0x5fd9e0` skips `0x5fe2f0` for 208 (`0x5fda08`).
+The resolvers after the gate end at the pending request `+0xd64`, then the idle; none tests a sequence still running.
+
+## The shuffle gate
+
+A unit turning on the spot shuffles (animation 11 left, 12 right) only when `0x5fce30` allows it. The
+display-facing step starts a shuffle and can never end one: a shuffle ends when its sequence
+does, and the next pick claims it again while the unit still turns.
+
+Addresses: `0x5fce30`, `0x5fce33`, `0x5fce42`, `0x5fce5d`, `0x5fce79`, `0x5fce84`, `0x5fce8d`, `0x5fce98`, `0x5fcea3`, `0x5fceac`, `0x5fce47`, `0x5fd3f6`, `0x5fd72c`, `0x6084d3`, `0x6084da`, `0x5fdb50`
+Confidence: verified
+Proof: one
+Test: none
+
+The gate returns 0 unless the mover flags have 0x30 (turn left or right) or `+0xd58` has 0x800 or
+0x1000 (`0x5fce33`, `0x5fce42`). It also returns 0 when the mover flags have 0x40200800 (`0x5fce5d`),
+when a spline whose flags `+0x18` lack 0x4 has 0x200 (`0x5fce47`), when the animation playing
+(`0x5fdb50`) is an emote, a spell cast, a thrown, bow or rifle animation (`0x5fce79` to `0x5fcea3`) and when `+0xd58` has 0x4 or 0x8
+(`0x5fceac`). Its callers are `0x5fd3f6`, `0x5fd72c` and the facing step (`0x6084d3`). At
+`0x6084da` the step recomputes the base animation only when the gate allows it, and it clears
+0x800 and 0x1000 before the call, so the frame the turn settles the gate returns 0 and
+nothing recomputes.
+
 ## Playing an animation
 
 `0x5fe2f0(anim)` plays an animation on the body, the upper body or the mount. An unloaded model

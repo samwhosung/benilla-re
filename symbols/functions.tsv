@@ -20730,7 +20730,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6140c0	33	CGObject_C::FreeCastMissiles		objectlayer	orchestration	void __thiscall ()	Frees every missile on the list at +0xac	verified	one	objectlayer/objectbase#destruction	
 0x6140f0	33	CGObject_C::FreeStuckMissiles		objectlayer	orchestration	void __thiscall ()	Frees every missile on the list at +0xb0	verified	one	objectlayer/objectbase#destruction	
 0x614120	43	CGObject_C::ReleaseEffects		objectlayer	orchestration	void __thiscall ()	Unlinks and releases every effect on the list at +0xb4	verified	one	objectlayer/objectbase#destruction	
-0x614150	154			objectlayer	orchestration		Stops a unit's visual kits of a spell, by spell id	inferred	none	spell/failures#player-unit-cleanup	
+0x614150	154	CGUnit_C::StopSpellKits		objectlayer	orchestration	void __thiscall (void *unit, int32_t spell, int32_t force)	Stops the effects of a spell on a unit, sparing state effects unless forced	verified	one	objectlayer/auras#stopping-a-spells-kits	
 0x6141f0	22			objectlayer	orchestration		Stops the effect passed when the second argument is 0	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
 0x614210	181	CGObject_C::StopKitEffects		objectlayer	orchestration	void __thiscall (int visual, int kind)	Stops the effects on the object made from the chosen kit of a SpellVisual row	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
 0x6142e0	24	CGObject_C::SetUpdateField		objectlayer	orchestration	uint32_t __thiscall (CGObject_C *this, uint32_t index, uint32_t value)	Stores a value in field index of the field array, unchecked, and returns 1	verified	one	objectlayer/classes#field-storage	

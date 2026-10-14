@@ -35,6 +35,26 @@ whether `0xc4d770` is set.
 The nodes are `TRADESKILLLINE` (0x28 bytes, `0x5f0ee0`, `0x5f0e90`, `0x5f0fa0`) and
 `PROFICIENCYSPELL` (0x1c, `0x5f10e0`, `0x5f1060`, `0x5f11a0`).
 
+## The opener list
+
+The client keeps a list of the spells it has learned whose first effect opens a lock, in the order the
+server taught them. A lock that a spell opens uses the first spell in that order that is strong
+enough.
+
+Addresses: `0x4b25b0`, `0x4b265e`, `0x4b2665`, `0x4b2670`, `0x4b2689`, `0xb700b0`, `0xb700b4`, `0xb700b8`, `0x408d80`, `0x5f83d0`, `0x5f845d`, `0x5f8470`, `0x5f8476`, `0x5f84a1`, `0x5f84af`, `0x5f84f8`, `0x5f850f`, `0x5f8511`, `0x5f858c`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4b25b0` appends the spell id to the growable array at `0xb700b0` (count `0xb700b4`, data
+`0xb700b8`) through `0x408d80` only when effect 0 is 0x21, `OPEN_LOCK` (`0x4b265e`, `0x4b2665`); the
+learned spell is also marked in the known-spell bitmap, which holds every spell. `0x5f83d0` walks the
+list from index 0 upward (`0x5f845d` to `0x5f8476`) and each spell's three effects (`0x5f84a1`): a match of effect
+0x21 with the lock slot's index (`0x5f84af`) writes the spell id (`0x5f84f8`) and the effect's points and the
+requirement before the comparison (`0x5f850f`); only a satisfied comparison leaves all the loops
+(`0x5f8511`, `0x5f858c`), so a weaker match is overwritten by a later one and the first satisfying
+spell wins.
+
 ## Unlearning a spell
 
 `0x5e9fe0(spell, silent)` removes a spell from its skill line's node and from its tab's array,
