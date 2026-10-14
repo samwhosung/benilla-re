@@ -447,6 +447,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8043e8	void *[36]	CGWorldFrame::vftable		ui	Holds the 36 virtual function slots of CGWorldFrame, which its constructor stores	inferred	none	
 0x804478	const float	s_float41a00000		unassigned	Holds the float 20 (0x41a00000)	inferred	none	
 0x80447c	const float	s_float42da67ae		unassigned	Holds the float 109.2025 (0x42da67ae)	inferred	none	
+0x804480	float	s_oneOver1440		unassigned	Holds 1/1440, the factor from game minutes to a fraction of a day	verified	one	gametime#day-phase
 0x80448c	const float	s_float41200000		ui	Holds the float 10 (0x41200000)	inferred	none	
 0x804490	const float	s_float4131c71c		ui	Holds the float 11.111111 (0x4131c71c)	inferred	none	
 0x804498	const float	s_float41200000At804498		ui	Holds the float 10 (0x41200000)	inferred	none	
@@ -720,6 +721,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e024	float	s_bevelPairScale		collision	Holds 0.6385560 (0x3f237868), one over the length of two perpendicular bevel normals summed	verified	one	collision/walking#slope-thresholds
 0x80e028	float	s_cos89		collision	Holds cos 89°, 0.0174524 (0x3c8ef859), the normal z the ground normal must exceed	verified	one	collision/walking#slope-thresholds
 0x80e2e4	const float	s_epsilon1e6		unassigned	Holds 1e-6, a pooled tolerance; the ray triangle test bounds its determinant with it	verified	one	models/scene#ray-triangle-test
+0x80e448	float	s_timeScaleMax		gametime	Holds 60.0, the clock's highest time scale	verified	one	gametime#time-scale
+0x80e44c	void *[4]	s_gameTimeTableVtable		gametime	Holds the vtable of the clock's callback table: entry free at 0x643bb0, then three more slots	verified	one	gametime#clock-state
+0x80e45c	float	s_timeScaleMin		gametime	Holds 1/60, the clock's default and lowest time scale	verified	one	gametime#time-scale
+0x80e460	float	s_minutesPerDay		unassigned	Holds 1440.0, the game minutes in a day	verified	one	gametime#day-phase
 0x80e4b0	uint32_t[3]	s_auctionDurations		ui	Holds 120, 480 and 1440, the run times the deposit accepts	verified	one	ui/auctionlists#deposit
 0x80e4e0	const uint32_t			storm	Holds a dword that SStrHash reads; not read here	inferred	none	
 0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	inferred	none	
@@ -3492,8 +3497,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8128	float[16]	s_layerChannelSelectors		terrain	Holds the four layer constants: zero, then one in the red, green and blue channel	verified	one	terrain/render#chunk-layer-states
 0xce8270	uint8_t[24]	s_areaReadLock		terrain	Holds the critical section around ADT reads and parses	inferred	none	terrain/files#tile-file-read
 0xce8534	int32_t	s_violenceLevel		client	Holds the violenceLevel CVar value; written by 0x6c5af0	inferred	none	spell/visuals#spell-visual-record-choice
-0xce8538	int32_t			unassigned	Holds an int32_t that SndInterfaceWorldInitialize, Script::GetGameTime, IsDaytime read; not read here	inferred	none	
-0xce853c	int32_t			unassigned	Holds an int32_t that Script::GetGameTime reads; not read here	inferred	none	
+0xce8538	int32_t	s_gameClockMinute		gametime	Holds the clock's minute, the first word of the 0x70-byte game clock object	verified	one	gametime#clock-state
+0xce853c	int32_t	s_gameClockHour		gametime	Holds the clock's hour, the second word of its time	verified	one	gametime#clock-state
+0xce85a8	void *[4]	s_gameTimeCallbacks		unassigned	Holds four time-changed callbacks, 0 when unset, called by the bridge with the hour and minute	verified	one	gametime#server-messages
 0xce86d4	uint32_t	s_trailObjectCount		playername	Counts the live trail objects	verified	one	playername/swing#trail-objects
 0xce86d8	uint8_t[20]	s_trailObjectPool		playername	Holds the block pool of trail objects	verified	one	playername/overview#block-pools
 0xce86ec	uint8_t[20]	s_swingPool		playername	Holds the block pool of swing records	verified	one	playername/overview#block-pools

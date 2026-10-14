@@ -23113,22 +23113,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6432c0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6432e0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6432f0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x643300	228			unassigned			Runs its object file code that calls 0x642300, OsGetAsyncTimeMs; not read here	inferred	none		
+0x643300	228	GameTimeConstruct		gametime	orchestration	void * __thiscall ()	Sets the clock to an unset time, scale 1/60, the tick base and an empty callback table	verified	one	gametime#clock-state	
 0x6433f0	93			unassigned			Runs its object file code that calls 0x643fa0; not read here	inferred	none		
-0x643450	126			unassigned	unreached		Runs its object file code that calls 0x6424c0, 0x6423c0, 0x6424e0 and 1 more; not read here	inferred	none		
-0x6434d0	198			unassigned			Runs its object file code that calls 0x6424c0, 0x6424e0, 0x6423c0 and 1 more; not read here	inferred	none		
-0x6435a0	155			unassigned			Runs its object file code that calls __ftol, 0x643ad0; not read here	inferred	none		
-0x643640	128			unassigned	unreached		Runs its object file code that calls _time, _localtime, 0x642300 and 2 more; not read here	inferred	none		
-0x6436c0	324			unassigned			Runs its object file code that calls 0x6424c0, 0x6424e0, 0x6423c0 and 4 more; not read here	inferred	none		
-0x643810	4			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x643820	102			unassigned			Runs its object file code not read here	inferred	none		
-0x643890	335			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x6424c0, 0x6445a0 and 5 more; not read here	inferred	none		
-0x6439e0	139			unassigned	unreached		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x643a70	85			unassigned			Runs its object file code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x643ad0	83			unassigned			Runs its object file code that calls 0x6424c0, 0x6424e0, 0x6423c0 and 2 more; not read here	inferred	none		
-0x643b30	126			unassigned			Runs its object file code not read here	inferred	none		
-0x643bb0	128			unassigned			Runs its object file code that calls 0x643cb0, SMemFree, 0x643fe0 and 2 more; not read here	inferred	none		
-0x643c30	120			unassigned			Runs its object file code not read here	inferred	none		
+0x643450	126	GameTimeSetOffsets		gametime	unreached	void __thiscall (int minutes, int days, bool force)	Replaces the clock's minute and day offsets and sets the time again	inferred	none	gametime#unreached-functions	
+0x6434d0	198	GameTimeSet		gametime	orchestration	void __thiscall (const WowTime *time, bool force)	Sets the clock's time with its offsets applied; a forced set re-enters the minute	verified	one	gametime#setting-the-time	
+0x6435a0	155	GameTimeUpdate		gametime	primitive	void __thiscall (float dt)	Adds dt times the scale to the minute fraction and advances a minute per whole one	verified	one	gametime#per-frame-advance	gametime::gametime_6435a0_minute_accum
+0x643640	128	GameTimeSetFromHost		gametime	unreached	void __thiscall (bool force)	Sets the clock from the host's local time, forced or by sync	inferred	none	gametime#unreached-functions	
+0x6436c0	324	GameTimeSync		gametime	orchestration	void __thiscall (const WowTime *time, bool force)	Syncs the clock to a server time: advances it forward, or stalls it when it is ahead	verified	one	gametime#server-sync	
+0x643810	4	GameTimeGetScale		gametime	unreached	float __thiscall ()	Returns the clock's time scale	inferred	none	gametime#unreached-functions	
+0x643820	102	GameTimeSetScale		gametime	primitive	void __thiscall (float scale)	Stores the time scale clamped to 1/60 through 60	verified	one	gametime#time-scale	
+0x643890	335	GameTimeAddCallback		gametime	unreached	void * __thiscall (const WowTime *minute, void *callback, void *argument)	Adds a callback for a minute of the day and returns its record	inferred	none	gametime#unreached-functions	
+0x6439e0	139	GameTimeRemoveCallback		gametime	unreached	void __thiscall (void *record)	Unlinks a callback record and frees it	inferred	none	gametime#unreached-functions	
+0x643a70	85	GameTimeGetDayPhase		gametime	primitive	double __thiscall ()	Returns the time of day as a fraction of a day from the tick, scale and minute offset	verified	one	gametime#day-phase	gametime::gametime_643a70_day_phase
+0x643ad0	83	GameTimeAdvanceMinute		gametime	primitive	void __thiscall ()	Advances the clock one minute, rolls the day at midnight and runs the minute's callbacks	verified	one	gametime#one-minute	gametime::gametime_643ad0_advance_offset
+0x643b30	126	GameTimeRunCallbacks		gametime	orchestration	void __thiscall (int minuteOfDay)	Calls each callback registered for a minute of the day with the clock and its argument	verified	one	gametime#one-minute	
+0x643bb0	128	GameTimeFreeEntry		gametime	orchestration	void __stdcall (void *entry)	Frees a callback table entry: its records, then the entry	verified	one	gametime#clock-state	
+0x643c30	120	GameTimeUnlinkEntry		gametime	orchestration	void __thiscall ()	Unlinks the two lists of a callback table entry	verified	one	gametime#clock-state	
 0x643cb0	91			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x643d10	198			unassigned			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x643de0	189			unassigned			Runs its object file code that calls 0x643fa0, 0x6440b0, SMemFree; not read here	inferred	none		
