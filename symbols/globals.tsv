@@ -101,6 +101,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x52ffbc	void *[6]	s_cases52fe90		ui	Holds the 6 case addresses of the switch in 0x52fe90	inferred	none	
 0x531530	void *[9]	s_cases5313e0		ui	Holds the 9 case addresses of the switch in 0x5313e0	inferred	none	
 0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
+0x59a118	void *[5]	s_d3dReadbackFormatCases		gx	Holds the case addresses of the back buffer format switch in 0x599e90 for formats 0x15 to 0x19	verified	one	gx/capture#device-readback
+0x59d334	void *[7]	s_glTexCoordModeHandlers		gx	Holds the case addresses of the OpenGL texture coordinate mode switch in 0x59d120	verified	one	gx/renderstate#opengl-coordinate-modes
+0x59d998	void *[35]	s_glStateHandlers		gx	Holds the case addresses of the OpenGL render state applicator 0x59d350	verified	one	gx/renderstate#render-state-ids
+0x59da24	uint8_t[70]	s_glStateHandlerIndex		gx	Maps a render state id to the index of its OpenGL handler in the jump table 0x59d998	verified	one	gx/renderstate#render-state-ids
+0x5a2d6c	void *[7]	s_d3dTexCoordModeHandlers		gx	Holds the case addresses of the Direct3D texture coordinate mode switch in 0x5a2b40	verified	one	gx/renderstate#texture-coordinate-modes
+0x5a3460	void *[31]	s_d3dStateHandlers		gx	Holds the case addresses of the Direct3D render state applicator 0x5a2f00	verified	one	gx/renderstate#render-state-ids
+0x5a34dc	uint8_t[70]	s_d3dStateHandlerIndex		gx	Maps a render state id to the index of its Direct3D handler in the jump table 0x5a3460	verified	one	gx/renderstate#render-state-ids
 0x5a3b18	const void *[6]	s_tgaTypeCases		image	Holds the case addresses of the TGA image type dispatch	verified	one	image/tga#decoding
 0x5a3b30	const uint8_t[12]	s_tgaTypeIndex		image	Holds the case of each TGA image type 0 to 11	verified	one	image/tga#decoding
 0x5a49d8	const void *[8]	s_bppCases		image	Holds the case addresses of the bits per pixel switch of 0x5a49b0	verified	one	image/mips#level-sizes
@@ -344,6 +351,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7ffd84	void *	s_splineCurveVtable		cmath	Holds the vtable stored at +0x2c of the movement spline object; its first slot reads a count minus 3	inferred	none	collision/world#spline-object
 0x7ffe58	const float	s_twoFiftyFive		ui	Holds 255.0, the alpha scale of Frame:SetAlpha	verified	one	ui/visibility#alpha
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
+0x80108c	uint32_t[52]	s_commandLineOptions		unassigned	Holds 13 command-line option records of id, name, 0 and flags: d3d is id 0, opengl id 5	verified	one	gx/device#backend-selection-and-creation
 0x8012cc	const float	s_threeQuarters		unassigned	Holds 0.75	verified	one	lighting/clouds#cloud-colours
 0x801354	float	s_defaultHandlerPriority		core	Holds 0.0, the priority 0x41fc90 registers with	verified	one	core/events#registration-calls
 0x801360	float	s_millisecondsToSeconds		core	Holds 0.001f (0x3a83126f), the frame time and timer factor	verified	one	core/loop#frame-time
@@ -375,6 +383,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
 0x8022cc	const float	s_float447a0000		unassigned	Holds the float 1000 (0x447a0000)	inferred	none	
+0x80264c	uint32_t[8]	s_blockEdgeByType		gx	Holds the block edge in texels of each pixel type: 1, or 4 for the DXT types	inferred	none	gx/textures#texture-readiness-and-info
+0x802670	uint32_t[8]	s_blockBytesByType		gx	Holds the bytes per block of each pixel type, 0 for the unknown type	inferred	none	gx/textures#texture-readiness-and-info
+0x8026b4	void *[2]	CTexture::vftable		gx	Holds the vtable of CTexture: the deleting destructor and the name getter	verified	one	gx/textures#texture-objects
 0x8026bc	const float	s_twoPow20Inverse		unassigned	Holds 2^-20	verified	one	lighting/sky#sky-dome
 0x8026c8	float	s_oneOver255		models	Holds 1/255, the scale of a byte to a unit value	verified	one	models/render#software-skinning
 0x802700	uint32_t[64]	NTempest::gnoise32_	idb	random	Holds the 64 dwords the state advance and the hashes read	verified	two	random#state-advance
@@ -544,10 +555,35 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x809200	uint32_t[29]	s_inventoryTypeSlotMasks		unassigned	Holds the equipment slot mask of each inventory type, read by 0x5da1d0	verified	one	objectlayer/items#equipment-slots
 0x809274	uint32_t[6]	s_environmentalDamageSchools		objectlayer	Maps an environmental damage type to its school	verified	one	objectlayer/unitcombat#environmental-damage-and-death
 0x80928c	int32_t[9]	s_reputationRankMinimums		objectlayer	Holds the minimum standing of each reputation rank, -42000 to 21000 and 42000, then the bound 43000	verified	one	objectlayer/playercombat#using-an-item
+0x8097a8	int32_t[169]	s_vertexComponentOffsets		gx	Holds each format's component byte offsets in 13 columns, -1 for an absent component	verified	one	gx/draw#vertex-formats
+0x809a5c	char[20]	s_openGlWindowClass		gx	Holds the window class name "GxWindowClassOpenGl"	verified	one	gx/device#opengl-window-and-pixel-formats
+0x809af8	void *[62]	CGxDeviceOpenGl::vftable		gx	Holds the OpenGL device vtable of 62 slots	verified	one	gx/device#device-object
 0x809c00	uint32_t[52]	s_vertexFormats		terrain	Holds the 13 vertex formats: descriptor pointer, element count, stride and usage mask	verified	one	terrain/render#vertex-formats
+0x809d48	uint32_t[9]	s_texBlockEdge		gx	Holds the block edge in texels of each GxTex format: 1 and 4 for formats 5 to 7	verified	one	gx/textures#device-texture-record
+0x809d6c	uint32_t[9]	s_texBlockBytes		gx	Holds the bytes per block of each GxTex format	verified	one	gx/textures#device-texture-record
+0x809d98	float	s_gammaRampScale		gx	Holds 65535.0, the scale of a gamma ramp entry	verified	one	gx/device#gamma-ramp
+0x809da0	void *[62]	CGxDevice::vftable		gx	Holds the base device vtable; unimplemented slots point at the pure-call stub	verified	one	gx/device#device-object
+0x809eac	char[17]	s_textGxWindowClassD3d		gx	Holds the string "GxWindowClassD3d"	verified	one	gx/device#direct3d-window
+0x809ec0	uint32_t[10]	s_d3dFormatCodes		gx	Holds D3DFMT codes by index: R5G6B5, X8R8G8B8, A8R8G8B8, A2R10G10B10, then depth D16, D24X8, D24S8, D32, and 4, 8	verified	one	gx/device#present-parameters
+0x809ef8	void *[62]	CGxDeviceD3d::vftable		gx	Holds the Direct3D device vtable of 62 slots	verified	one	gx/device#device-object
+0x809ffc	float	s_glColourScale		gx	Holds 1/255, the scale of a colour byte to a unit float in the OpenGL paths	verified	one	gx/draw#opengl-draw-preparation
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
+0x80a004	uint32_t[6]	s_glMinFilter		gx	Holds the OpenGL minification filter of each filter mode 0 to 5	verified	one	gx/renderstate#stage-sampler-state
+0x80a01c	uint32_t[6]	s_glMagFilter		gx	Holds the OpenGL magnification filter of each filter mode 0 to 5	verified	one	gx/renderstate#stage-sampler-state
+0x80a034	uint32_t[9]	s_glInternalFormats		gx	Holds the OpenGL internal format of each GxTex format: none, RGBA8, RGBA4, RGB5_A1, RGB5, DXT1, DXT3, DXT5, 0x8709	verified	one	gx/textures#device-texture-upload
+0x80a07c	uint32_t[9]	s_glUploadFormats		gx	Holds the OpenGL pixel format of each GxTex format: BGRA for the 16 and 32-bit formats, RGB for 565	verified	one	gx/textures#device-texture-upload
+0x80a0a0	uint32_t[10]	s_glUploadTypes		gx	Holds the OpenGL pixel type of each GxTex format: 8888 reversed, 4444 reversed, 1555 reversed, 565	verified	one	gx/textures#device-texture-upload
+0x80a100	uint32_t[12]	s_d3dTextureFormatCodes		gx	Holds the D3DFMT code of each GxTex format 0 to 8: none, A8R8G8B8, A4R4G4B4, A1R5G5B5, R5G6B5, DXT1, DXT3, DXT5, V8U8	verified	one	gx/device#capability-block
+0x80a14c	uint32_t[6]	s_d3dTopology		gx	Holds the D3DPT primitive type of each topology 0 to 5	verified	one	gx/draw#draw-call
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
-0x80a2a8	uint32_t[2]	s_cullModeByState		terrain	Holds the Direct3D cull modes 1 (none) and 2 (clockwise) by the culling state	verified	one	terrain/render#face-culling
+0x80a1fc	uint32_t[11]	s_d3dBlendSource		gx	Holds the D3DBLEND source factor of each blend mode 0 to 10	verified	one	gx/renderstate#blend-alpha-and-depth-tables
+0x80a228	uint32_t[11]	s_d3dBlendDest		gx	Holds the D3DBLEND destination factor of each blend mode 0 to 10	verified	one	gx/renderstate#blend-alpha-and-depth-tables
+0x80a254	uint32_t[2]	s_d3dAddressMode		gx	Holds the D3DTADDRESS value for a clear and a set wrap bit: clamp, wrap	verified	one	gx/renderstate#stage-sampler-state
+0x80a25c	uint32_t[6]	s_d3dCombineColourOp		gx	Holds the D3DTOP colour operation of each combine preset 0 to 5	verified	one	gx/renderstate#texture-stage-combine
+0x80a274	uint32_t[6]	s_d3dCombineAlphaOp		gx	Holds the D3DTOP alpha operation of each combine preset 0 to 5	verified	one	gx/renderstate#texture-stage-combine
+0x80a28c	uint32_t[3]	s_d3dFogMode		gx	Holds the D3DFOG mode of each fog mode id: linear, exp, exp2	verified	one	gx/renderstate#cull-fog-and-masks
+0x80a298	uint32_t[4]	s_d3dDepthFunc		gx	Holds the D3DCMP depth function of each depth function id: lessequal, equal, greaterequal, less	verified	one	gx/renderstate#blend-alpha-and-depth-tables
+0x80a2a8	uint32_t[2]	s_d3dCullMode		gx	Holds the D3DCULL value for cull off and on: none, clockwise	verified	one	gx/renderstate#cull-fog-and-masks
 0x80a2d8	void *[4]	StatusSink::vftable		image	Holds the status sink vtable: the deleting destructor and three more slots	verified	one	image/overview#initializers-and-statics
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
 0x80a3f4	void *[14]	s_responseObjectVtable		net	Holds the slots of the response object the world connection notifies	verified	one	net/connection#response-object
@@ -565,6 +601,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a8bc	void *[4]	KerningHash::vftable		font	Holds the vtable of a font's kerning hash	verified	one	font/api#font-object
 0x80a8cc	void *[4]	GlyphHash::vftable		font	Holds the vtable of a font's glyph hash	verified	one	font/api#font-object
 0x80a8ec	const uint32_t			font	Holds a dword its object file's code reads; not read here	inferred	none	
+0x80a924	float	s_infinityB		unassigned	Holds +inf as a float	verified	one	gx/glyphs#static-initializers
 0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	verified	one	terrain/liquid#wave-field
 0x80a930	uint8_t[64]	s_sha1Padding		net	Holds the padding block of 0x80 and 63 zero bytes	verified	one	net/crypto#sha-1-first-context
 0x80aa80	void *[31]	s_dynamicObjectVtable		objectlayer	Holds the dynamic object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
@@ -979,6 +1016,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d7e8	void *[2]	s_propertySetVftable		camera	Holds the camera base's vtable: 0x7acd10, then 0x442a70	verified	one	camera#lifetime
 0x81d7f0	void *[3]	CBaseManaged::vftable		camera	Holds the base property vtable: 0x7acb50, 0x7acb30, 0x7acb40	verified	one	camera#property-updates
 0x81d7fc	void *[4]	s_anglePropertyVftable		camera	Holds the angle property vtable: delete, the scalar evaluate and verify, store	verified	one	camera#property-updates
+0x81d814	float	s_infinity		unassigned	Holds +inf as a float	verified	one	gx/lightning#static-initializers
 0x81d828	float	s_particleSubstep		models	Holds 0.1, the particle substep in seconds	verified	one	models/particles#substeps
 0x81d82c	float	s_particleVelocityPeriod		models	Holds 1/30, the period over which an emitter derives its velocity	verified	one	models/particles#update
 0x81d83c	void *[11]	CParticleEmitter2::vftable		models	Holds the base particle emitter's virtual functions	verified	one	models/particles#emitter-classes
@@ -1012,6 +1050,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e3e0	char[6]	s_textLogin		unassigned	Holds the string "login"	inferred	none	
 0x82e3e8	char[11]	s_textCharselect		unassigned	Holds the string "charselect"	inferred	none	
 0x82e424	const char[5]	s_textPercentSPercentS		charactermodel	Holds the string "%s%s"	verified	one	charactermodel/equipment#item-models
+0x82e42c	char[18]	s_windowTitle		gx	Holds the window title "World of Warcraft"	verified	one	gx/device#opengl-window-and-pixel-formats
 0x82e570	char[2]	s_text0		unassigned	Holds the string "0"	inferred	none	
 0x82e644	char[18]	s_textM2UsePixelShaders		client	Holds the string "M2UsePixelShaders"	inferred	none	
 0x82e67c	char[13]	s_textM2UseShaders		client	Holds the string "M2UseShaders"	inferred	none	
@@ -1043,6 +1082,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
 0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
 0x832f2c	char[51]	s_evtTimerSourcePath		core	Holds the source path of EvtTimer.cpp, the timer allocation tag	verified	one	core/events#timers
+0x832f60	char[14]	s_textScreenshotStamp		unassigned	Holds the time format "%m%d%y_%H%M%S"	verified	one	gx/capture#screenshot-file
 0x832f70	uint32_t	s_idleSleepEnabled		os	Holds 1, the word that lets the pump sleep while the window is inactive	verified	one	core/input#message-filter-and-idle-sleep
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
 0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
@@ -1055,12 +1095,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x833838	uint32_t[256]	s_cp1251Chars		core	Holds the characters for code page 1251 bytes, indexed by the byte	verified	one	core/input#character-codes
 0x833c38	uint32_t[256]	s_cp1254Chars		core	Holds the characters for code page 1254 bytes, indexed by the byte	verified	one	core/input#character-codes
 0x834038	uint32_t[256]	s_cp874Chars		core	Holds the characters for code page 874 bytes, indexed by the byte	verified	one	core/input#character-codes
+0x834c44	char[22]	s_textScreenshotPath		unassigned	Holds the path format "%s\WoWScrnShot_%s.tga"	verified	one	gx/capture#screenshot-file
+0x834c5c	char[12]	s_textScreenshots		unassigned	Holds the string "Screenshots", the screenshot directory	verified	one	gx/capture#screenshot-file
 0x835144	uint16_t			unassigned	Holds a word that SendBugReport, CreateGmTicket, CGUnit_C::GetPvPName read; not read here	inferred	none	
 0x835154	char[3]	s_textD		unassigned	Holds the string "%d"	inferred	none	
 0x835160	char[3]	s_textF		unassigned	Holds the string "%f"	inferred	none	
-0x835248	uint32_t			unassigned	Holds a dword that TextureCreate reads; not read here	inferred	none	
-0x835250	uint32_t			gx	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0x835254	uint32_t			gx	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0x835248	char *[2]	s_textureExtensions		gx	Holds the pointers to the strings ".tga" and ".blp"	verified	one	gx/textures#texture-creation
+0x835250	uint32_t	s_forcedFilterMode		gx	Holds the filter mode that forced textures take; 3 until a setter writes it	verified	one	gx/textures#texture-flags-word
+0x835254	uint32_t	s_forcedAnisotropy		gx	Holds the anisotropy level that forced textures take when the mode is 5; 1 until a setter writes it	verified	one	gx/textures#texture-flags-word
+0x835258	uint32_t[8]	s_texturePixelTypeToFormat		gx	Maps a pixel type code 0 to 7 to its GxTex format: 5, 6, 1, 3, 2, 4, 0, 7	verified	one	gx/textures#format-choice-and-size-limit
+0x835280	char[8][32]	s_gxTexFormatNames		gx	Holds the names GxTex_Unknown to GxTex_Dxt5 in format order, 32 bytes each	verified	one	gx/textures#format-choice-and-size-limit
+0x8354e4	char[53]	s_pathTexture		gx	Holds the source path of Texture.cpp	verified	one	gx/overview#object-files
+0x835604	char[9]	s_textHtexture		gx	Holds the string "HTEXTURE", the tag of texture handles and objects	verified	one	gx/textures#texture-objects
+0x835624	char[15]	s_textUniqueTexture		gx	Holds the string "Unique Texture"	verified	one	gx/textures#texture-creation-variants
+0x835634	char[23]	s_textUniqueTextureNoName		gx	Holds the string "Unique Texture No Name"	verified	one	gx/textures#texture-creation-variants
 0x835708	char[14]	s_textSolidTexture		gx	Holds the string "Solid Texture"	inferred	none	
 0x835a40	uint32_t			unassigned	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
 0x835a44	int32_t	s_soundSubmerged		sound	Holds 1 while the camera is submerged, 0 otherwise, -1 at start and exit	verified	one	sound/ambience#zone-ambience-choice
@@ -1115,6 +1163,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8370a0	char[21]	s_loginEnterPasswordKey		glue	Holds LOGIN_ENTER_PASSWORD, the text key for an empty password	verified	one	glue/flow#login-entry
 0x83711c	char[19]	s_charRenameFailedKey		glue	Holds CHAR_RENAME_FAILED, the rename failure text key	verified	one	glue/flow#rename-request-and-reply
 0x8373b8	luaL_reg[60]	s_glueScriptFunctions		glue	Pairs the 60 glue script names with their functions, which 0x46ddf0 sets as Lua globals	verified	one	glue/script#binding-table-and-registration
+0x837a8c	char[23]	s_textGlueScreenshotFailed		unassigned	Holds the event name "GLUE_SCREENSHOT_FAILED"	verified	one	gx/capture#completion-events
+0x837aa4	char[26]	s_textGlueScreenshotSucceeded		unassigned	Holds the event name "GLUE_SCREENSHOT_SUCCEEDED"	verified	one	gx/capture#completion-events
 0x837c0c	char[14]	s_releaseBuildKey		glue	Holds RELEASE_BUILD, the script text key whose text GetBuildInfo returns second	verified	one	glue/script#screens-build-and-quitting
 0x837c1c	char[11]	s_betaBuildKey		glue	Holds BETA_BUILD, the script text key whose text GetBuildInfo returns first	verified	one	glue/script#screens-build-and-quitting
 0x837c28	char[42]	s_usageSetSavedAccountName		glue	Holds SetSavedAccountName's usage error text	verified	one	glue/script#login-and-account-name
@@ -1198,6 +1248,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x838e30	const char[44]	s_textTexturesGuildEmblemsEmblem02d02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Emblem_%02d_%02d_TU_U"	verified	one	charactermodel/equipment#guild-tabard
 0x838e5c	const char[44]	s_textTexturesGuildEmblemsBorder02d02dTLU		charactermodel	Holds the string "Textures\GuildEmblems\Border_%02d_%02d_TL_U"	verified	one	charactermodel/equipment#guild-tabard
 0x838e88	const char[44]	s_textTexturesGuildEmblemsBorder02d02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Border_%02d_%02d_TU_U"	verified	one	charactermodel/equipment#guild-tabard
+0x838efc	char[46]	s_pathTextureCache		gx	Holds the source path of TextureCache.cpp	verified	one	gx/overview#object-files
 0x838f50	uint32_t[3]	s_corpseWatchedFields		objectlayer	Holds the corpse's watched field indices, 29, 30 and 32	verified	one	objectlayer/fields#watched-fields
 0x838f6c	uint32_t[5]	s_gameObjectWatchedFields		objectlayer	Holds the game object's watched field indices, 3, 8, 17, 18 and 20	verified	one	objectlayer/fields#watched-fields
 0x838f90	uint32_t[295]	s_playerWatchedFields		objectlayer	Holds the 295 player field indices every player watches	verified	one	objectlayer/fields#watched-fields
@@ -1435,6 +1486,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8513b8	char[43]	s_textUsageSetPortraitTextureTextureUnit		ui	Holds the string "Usage: SetPortraitTexture(texture, "unit")"	inferred	none	
 0x852460	char[14]	s_textUPDATEMACROS		ui	Holds the string "UPDATE_MACROS"	inferred	none	
 0x852470	char[18]	s_textEXECUTECHATLINE		ui	Holds the string "EXECUTE_CHAT_LINE"	inferred	none	
+0x853230	char[18]	s_textScreenshotFailed		unassigned	Holds the event name "SCREENSHOT_FAILED"	verified	one	gx/capture#completion-events
+0x853244	char[21]	s_textScreenshotSucceeded		unassigned	Holds the event name "SCREENSHOT_SUCCEEDED"	verified	one	gx/capture#completion-events
 0x85365c	const char *[8]	s_addOnReasonNames		ui	Points to the add-on reason names LOADABLE to INTERFACE_VERSION	verified	one	ui/addons#whether-an-add-on-may-load
 0x85367c	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x853724	char[18]	s_addOnsPrefix		ui	Holds Interface\AddOns\	verified	one	ui/addons#finding-add-ons
@@ -1531,13 +1584,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x859410	char[33]	s_textDBFilesClientNamesProfanityDbc		dbc	Holds the string "DBFilesClient\NamesProfanity.dbc"	inferred	none	
 0x859458	char[32]	s_textDBFilesClientNamesReservedDbc		dbc	Holds the string "DBFilesClient\NamesReserved.dbc"	inferred	none	
 0x859a84	char[31]	s_textDBFilesClientSpamMessagesDbc		dbc	Holds the string "DBFilesClient\SpamMessages.dbc"	inferred	none	
-0x85a83c	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
-0x85ad20	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
-0x85c1f8	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
-0x85c224	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
+0x85a820	uint32_t[3]	s_d3dDisplayFormats		gx	Holds the three adapter display formats the mode enumeration tries: 0x17, 0x16, 0x15	verified	one	gx/device#display-modes
+0x85a82c	uint32_t[4]	s_d3dDepthFormats		gx	Holds the four depth formats the mode enumeration tries: 0x50, 0x4d, 0x4b, 0x47	verified	one	gx/device#display-modes
+0x85a83c	uint32_t[9]	s_d3dSampleCounts		gx	Holds the multisample counts the mode enumeration tries: 0, 2, 4, 6, 8, 10, 12, 14, 16	verified	one	gx/device#display-modes
+0x85a860	char[65]	s_pathCGxDeviceD3d		gx	Holds the source path of CGxDeviceD3d.cpp	verified	one	gx/overview#object-files
+0x85a9ec	char[29]	s_wglGetPixelFormatAttribivArb		gx	Holds the name "wglGetPixelFormatAttribivARB" looked up with wglGetProcAddress	verified	one	gx/device#opengl-window-and-pixel-formats
+0x85aaf8	char[71]	s_pathCGxDeviceOpenGl		gx	Holds the source path of CGxDeviceOpenGl.cpp	verified	one	gx/overview#object-files
+0x85acf0	uint32_t[6]	s_primitiveCountDivisor		gx	Holds the divisor of the primitive count of each topology: 1, 2, 1, 3, 1, 1	verified	one	gx/draw#draw-call
+0x85ad08	uint32_t[6]	s_primitiveCountSubtrahend		gx	Holds the amount subtracted from the primitive count of each topology: 0, 0, 1, 0, 2, 2	verified	one	gx/draw#draw-call
+0x85ad20	uint32_t[11]	s_alphaRefByBlendMode		gx	Holds the default alpha reference of each blend mode 0 to 10: 0, 224, then 1 for modes 2 to 6, then 0	verified	one	gx/renderstate#cache-dirty-list-and-stack
+0x85aea4	char[59]	s_pathCGxDevice		gx	Holds the source path of CGxDevice.cpp	verified	one	gx/overview#object-files
+0x85b260	char[65]	s_pathCGxD3dDevice		gx	Holds the source path of CGxD3dDevice.cpp	verified	one	gx/overview#object-files
+0x85c1f8	uint32_t[11]	s_glBlendSource		gx	Holds the OpenGL source blend factor of each blend mode 0 to 10	verified	one	gx/renderstate#blend-alpha-and-depth-tables
+0x85c224	uint32_t[11]	s_glBlendDest		gx	Holds the OpenGL destination blend factor of each blend mode 0 to 10	verified	one	gx/renderstate#blend-alpha-and-depth-tables
 0x85c250	uint32_t[66]	s_stagePresets		terrain	Holds the six texture stage combine presets of 0x2c bytes	verified	one	terrain/watershade#stage-combine-presets
+0x85c358	uint32_t[3]	s_glFogMode		gx	Holds the OpenGL fog mode of each fog mode id: linear, exp, exp2	verified	one	gx/renderstate#cull-fog-and-masks
+0x85c364	uint32_t[4]	s_glDepthFunc		gx	Holds the OpenGL depth function of each depth function id	verified	one	gx/renderstate#blend-alpha-and-depth-tables
+0x85c434	char[59]	s_pixelFormatMismatch		gx	Holds the message "SetupPixelFormatWGL(): pixelFormat does not match requested"	verified	one	gx/device#opengl-pixel-format-choice
+0x85c470	char[23]	s_textFogExp2Option		gx	Holds the program line "OPTION ARB_fog_exp2;" with its newlines	verified	one	gx/renderstate#opengl-fragment-program-build
+0x85c488	char[22]	s_textFogExpOption		gx	Holds the program line "OPTION ARB_fog_exp;" with its newlines	verified	one	gx/renderstate#opengl-fragment-program-build
+0x85c4a0	char[25]	s_textFogLinearOption		gx	Holds the program line "OPTION ARB_fog_linear;" with its newlines	verified	one	gx/renderstate#opengl-fragment-program-build
+0x85c4bc	char[11]	s_textArbFp10		gx	Holds the string "!!ARBfp1.0", the header of an ARB fragment program	verified	one	gx/renderstate#opengl-fragment-program-build
+0x85c5c0	uint32_t[6]	s_glTopology		gx	Holds the OpenGL primitive mode of each topology 0 to 5	verified	one	gx/draw#draw-call
+0x85c718	char[66]	s_pathCGxD3dTexture		gx	Holds the source path of CGxD3dTexture.cpp	verified	one	gx/overview#object-files
 0x85c7d8	uint32_t[15]	s_filterModes		terrain	Holds the Direct3D magnify, minify and mip filters of each texture filter index	verified	one	terrain/render#texture-detail-bias
 0x85c824	const char[45]	s_tgaSourcePath		image	Holds the source path of tga.cpp	verified	one	image/overview#initializers-and-statics
+0x85c854	char[18]	s_textTrueVision		unassigned	Holds the TGA footer signature "TRUEVISION-XFILE."	verified	one	gx/capture#tga-written
 0x85c868	const int32_t[9]	s_classPitchShift		image	Holds the pitch shift of each conversion class	verified	one	image/mips#pixel-pitch-of-a-source-format
 0x85c88c	const int32_t[9]	s_classPitchFactor		image	Holds the pitch factor of each conversion class	verified	one	image/mips#pixel-pitch-of-a-source-format
 0x85c8b0	const uint8_t[16]	s_nibbleExpand		image	Holds each 4-bit value times 0x11	verified	one	image/convert#palette-to-bgra
@@ -1570,6 +1642,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85f630	const char[58]	s_fontMiscPath		font	Holds the source path of GxuFontMiscClasses.cpp	verified	one	font/overview#object-files
 0x85f674	const char[18]	s_glyphTag		font	Holds the allocation tag of a glyph descriptor	verified	one	font/api#destroying-a-font
 0x85f7f0	const char[53]	s_fontStringPath		font	Holds the source path of GxuFontString.cpp	verified	one	font/overview#object-files
+0x85f8c0	char[54]	s_pathIGxuFontGlyph		gx	Holds the source path of IGxuFontGlyph.cpp	verified	one	gx/overview#object-files
 0x85fb30	char[66]	s_textWorldGenericPassiveDoodadsDeathSkeletonsS		objectlayer	Holds the string "World\Generic\PassiveDoodads\DeathSkeletons\%s%sDeathSkeleton.mdx"	inferred	none	
 0x85fc54	uint32_t[141]	s_damageCalcEntryNames		objectlayer	Holds the damage calculation's entry names in 16-byte records, a string first, the last record cut short	verified	one	objectlayer/playercombat#damage-calculation-log
 0x85fe88	uint32_t[6]	s_saveEmblemErrors		objectlayer	Holds the errors for emblem save results 0 to 5	verified	one	objectlayer/party#guild-tabards
@@ -1917,6 +1990,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87d5d8	char[8]	s_cameraTag		camera	Holds "HCAMERA", the tag of camera allocations and handles	verified	one	camera#lifetime
 0x87d5e8	char[19]	s_propertySlotsTag		camera	Holds ".PAVCBaseManaged@@", the tag of slot array allocations	verified	one	camera#property-updates
 0x87d5fc	float	s_particleDensity		models	Holds the particle density in [0, 1]; 1.0 in the file	verified	one	camera#particle-density
+0x87d6dc	char[55]	s_pathLightning		gx	Holds the source path of Lightning.cpp	verified	one	gx/overview#object-files
 0x87d714	const float[16]	s_particleQuadCorners		models	Holds the four quad corners and their four texture corners	verified	one	models/particles#head-quads
 0x87d894	float	s_terminalVelocity		collision	Holds the fall speed cap, 60.148003 (0x4270978e); its one writer 0x7c6160 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x87d898	float	s_featherFallTerminalVelocity		collision	Holds the cap under flag 0x20000000, 7.0 (0x40e00000); its one writer 0x7c6180 is unreached	verified	one	collision/falling#arc-fields-and-constants
@@ -2009,8 +2083,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884ef8	void *	s_threadRecords		os	Holds the list's last link (sentinel previous) of the registered thread records	verified	one	core/threads#engine-thread-records
 0x884f00	uint32_t	s_threadRecordCount		os	Holds the number of registered thread records	verified	one	core/threads#engine-thread-records
 0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
+0x885604	uint32_t	s_presentSuppressed		unassigned	Holds the flag that skips the frame pass's present block while a movie plays	verified	one	gx/capture#capture-request-and-frame-order
+0x88560c	void *	s_screenshotCallback		unassigned	Holds the completion callback of the pending screenshot request, or 0	verified	one	gx/capture#capture-request-and-frame-order
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
-0x90582c	uint32_t			gx	Holds a dword that TextureCreate reads and writes; not read here	inferred	none	
+0x90582c	uint32_t	s_failedTextureColour		gx	Holds 0xff00ff00, the colour of the solid texture that replaces a texture that failed to load	verified	one	gx/textures#texture-creation
+0x905844	uint32_t[216]	s_mipBufferLists		gx	Holds the lists of free decoded mip buffers, one list per pixel type and size class	inferred	none	gx/textures#texture-readiness-and-info
+0x905be4	char[2097152]	s_textureFileArea		gx	Holds the static 2 MiB area whose slices buffer async texture file reads	verified	one	gx/textures#texture-file-creation
+0xb05bec	uint32_t[75]	s_texturePoolLists		gx	Holds the 25 size-class lists of free pooled device textures, 12 bytes each	verified	one	gx/textures#device-texture-pool
+0xb05d18	uint32_t	s_textureFileBytesUsed		gx	Holds the bytes of the static file area already given to async texture records	verified	one	gx/textures#texture-file-creation
+0xb05d1c	uint32_t	s_bufferedTextureRecords		gx	Counts the async texture records holding a slice of the static file area	verified	one	gx/textures#texture-objects
+0xb05d20	uint32_t	s_pinnedTextureRecords		gx	Counts the async texture records pinned by a wait	verified	one	gx/textures#texture-objects
 0xb05d68	float	s_randomInfinity		random	Holds +inf, set at startup; nothing reads it	verified	one	random#static-initializers
 0xb05d6c	float	s_randomInvTwoPi		random	Holds 1/2π, set at startup; read only by unreached noise	verified	one	random#static-initializers
 0xb05d70	float	s_randomTwoPi		random	Holds 2π, set at startup; read only by unreached noise	verified	one	random#static-initializers
@@ -2180,6 +2262,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4271c	uint32_t	s_compositeCount		charactermodel	Holds the number of full composites done since the last reset; nothing reads it	verified	one	charactermodel/component#update-driver
 0xb42720	void *	s_componentPool		charactermodel	Holds the character component pool record: the pool and a constructed flag byte	verified	one	charactermodel/component#pool-and-statics
 0xb42724	uint8_t	s_compositing		charactermodel	Holds 1 while the group handlers of a composite run	verified	one	charactermodel/component#target-callback
+0xb42764	uint32_t	s_textureCacheLoadCount		gx	Counts texture cache load attempts; cleared by 0x47b1f0	verified	one	gx/textures#texture-cache
 0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
@@ -2267,6 +2350,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e360	uint32_t	s_playTimeWarnDeadline		ui	Holds the clock value at which the remaining billing time ends, 0 when not armed	verified	one	ui/billing#the-warning-timer
 0xb4e364	uint32_t	s_playTimeWarnA		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
 0xb4e368	uint32_t	s_playTimeWarnB		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
+0xb4e36c	uint32_t	s_worldUiAlive		unassigned	Holds non-zero while the world interface exists; the world screenshot callback checks it	inferred	none	gx/capture#completion-events
 0xb4e370	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e374	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e378	uint32_t			unassigned	Holds a dword that ClntObjMgrCreate, Script::IsInInstance read and write; not read here	inferred	none	
@@ -2882,7 +2966,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
 0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
+0xc0ed2c	uint32_t	s_gxVertexCount		gx	Holds the vertex count GxBuildVerticesCounted stores for the draw that follows	inferred	none	gx/draw#interleaving-helper
+0xc0ed38	void *	s_gxDevice		gx	Holds the global graphics device the facade calls	verified	one	gx/device#backend-selection-and-creation
+0xc0ef70	float[3]	s_defaultPointAttenuation		gx	Holds the default point attenuation (1, 0, 0), set by an initializer and used as id 66's default	verified	one	gx/renderstate#point-state
+0xc0f22c	uint32_t	s_defaultTextureColour		gx	Holds 0xff00ff00, the colour of the Direct3D device's default 8 by 8 texture	verified	one	gx/device#direct3d-device-start
+0xc0f2a0	void *	s_pointSpriteEntry		gx	Holds a non-null value when an OpenGL extension that the state reset checks is present	inferred	none	gx/device#opengl-initial-state
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
+0xc0f2e0	void *	s_wglChoosePixelFormatEntry		gx	Holds the entry point the pixel format choice calls with its attribute list	inferred	none	gx/device#opengl-pixel-format-choice
+0xc0f2e8	void *	s_attribivArbEntry		gx	Holds the wglGetPixelFormatAttribivARB entry point	verified	one	gx/device#opengl-window-and-pixel-formats
 0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
 0xc0f548	float	s_tgaInfinity		image	Holds +inf copied by 0x5a35f0, which nothing reads	verified	one	image/overview#initializers-and-statics
 0xc0f54c	float	s_convertInfinity		image	Holds +inf copied by 0x5a4c20, which nothing reads	verified	one	image/overview#initializers-and-statics
@@ -2969,6 +3060,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2ba48	uint16_t[65536]	s_glyphStaging		font	Holds the 256 by 256 texel staging buffer glyphs are baked into	verified	one	font/glyphs#pages-and-cells
 0xc4ba48	float	s_fontRasterInvTwoPi		font	Holds 1/2π stored by 0x5cfce0, which nothing reads	verified	one	font/overview#object-files
 0xc4ba70	float	s_fontRasterTwoPi		font	Holds 2π stored by 0x5cfc90, which nothing reads	verified	one	font/overview#object-files
+0xc4baa8	float	s_glyphInfinity		gx	Holds +inf, copied by the glyph object file's initializer	verified	one	gx/glyphs#static-initializers
+0xc4baac	float	s_glyphInvTwoPi		gx	Holds 1 / 2 pi as a float	verified	one	gx/glyphs#static-initializers
+0xc4bab0	float	s_glyphTwoPi		gx	Holds 2 pi as a float	verified	one	gx/glyphs#static-initializers
 0xc4bab8	uint8_t[896]	s_tradeSlots		objectlayer	Holds 14 64-byte trade item records, the client's 0 to 6 and the partner's 7 to 13	verified	one	objectlayer/trade#trade-state
 0xc4be70	uint32_t[2]	s_tradeMoney		objectlayer	Holds the money offered by the client and by the partner	verified	one	objectlayer/trade#trade-state
 0xc4be78	uint32_t[2]	s_tradeExtendedFlag		objectlayer	Holds the second header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
@@ -3585,7 +3679,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf5758	void *	s_particleGroundCallback		models	Holds the ground height callback the particle snap calls, the world's ground probe	verified	one	models/emission#spawn-space
 0xcf575c	void *	s_particleRegistry		models	Holds the particle emitter registry, created on first use	verified	one	models/particles#registries
 0xcf5760	void *	s_ribbonRegistry		models	Holds the ribbon emitter registry, created on first use	verified	one	models/particles#registries
-0xcf5800	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xcf5768	float[16]	s_lightningIdentity		gx	Holds the identity matrix the bolt render sets as the device view while it draws	verified	one	gx/lightning#static-initializers
+0xcf57a8	uint8_t	s_lightningStaticGuards		gx	Holds the guard bits of the four static objects the bolt render builds on first use	verified	one	gx/lightning#static-initializers
+0xcf57ac	float	s_lightningInfinity		gx	Holds +inf, copied from 0x81d814 by the object file's initializer	verified	one	gx/lightning#static-initializers
+0xcf57b0	uint32_t[2]	s_lightningRandom		gx	Holds the random generator state the lightning bolts draw jitter from, seeded with 0 at start-up	verified	one	gx/lightning#bolt-shape
+0xcf57b8	float	s_lightningInvTwoPi		gx	Holds 1 / 2 pi as a float	verified	one	gx/lightning#static-initializers
+0xcf57c0	float[16]	s_lightningSavedView		gx	Holds the device view matrix the bolt render saves and restores	verified	one	gx/lightning#static-initializers
+0xcf5800	float[16]	s_lightningCameraView		gx	Holds the translation by minus the eye times the saved view that places the bolt's points in view space	verified	one	gx/lightning#static-initializers
+0xcf5840	float[3]	s_lightningNormal		gx	Holds the shared normal (0, 0, 1) of every ribbon vertex	verified	one	gx/lightning#bolt-draw-state
+0xcf584c	uint8_t	s_lightningScratchGuard		gx	Holds the guard bit of the scratch centre line array	verified	one	gx/lightning#static-initializers
+0xcf5850	float	s_lightningTwoPi		gx	Holds 2 pi as a float	verified	one	gx/lightning#static-initializers
+0xcf5854	uint32_t[3]	s_lightningScratchPoints		gx	Holds the count and array of the scratch centre line each bolt update morphs toward	verified	one	gx/lightning#bolt-update
 0xcf5878	float[3]	s_particleNormal		models	Holds the normal every particle vertex takes, the view image of world +z	verified	one	models/particles#particle-view-space
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table

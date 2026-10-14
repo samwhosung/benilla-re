@@ -42,8 +42,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   `NPCText.cpp`
 - `fastmath`: the fast logarithm after the spline file
 - `ffxeffects`: `FFXEffects.cpp`, the full-screen glow and death effects
-- `gx`: the graphics layer: `Texture.cpp`, `TextureCache.cpp`, the `CGxDevice` files,
-  `IGxuFontGlyph.cpp` and `Lightning.cpp`
 - `gxumath`: the Gxu matrix builders: perspective, orthographic, look-at and frustum corners
 - `loadingscreen`: `LoadingScreen.cpp`
 - `minigame`: `Minigame_C.cpp`, the minigame object, and the board file linked after it (0x728b10
