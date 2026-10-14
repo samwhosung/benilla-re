@@ -136,7 +136,7 @@ Proof: one
 Test: `animation::m2_animate_difftest`
 
 `0x714880` runs when either record is set. `rem` is `fild dword` then `fmul [+0x104]` then `fst dword`: the
-product is narrowed once and every later test reads the narrowed value (`0x7148bc`). `x < 0` takes
+product is narrowed once (`0x7148bc`); the sign test reads the register before narrowing (`0x7148bf`) and every later read the narrowed value. `x < 0` takes
 `0x7148cc` (0 times the scale); `x ≤ 1` and unordered take the smoothstep `0x714904`
 (`(3 − 2x)·x·x·scale`, multiplied in that order); `x > 1` takes `0x7148f0` (1 times the scale). The
 equal-clock test is `0x714897`/`0x7148a5`: `+0x98 = +0xc4` and `+0x9c = +0xc8`. The weight is also 0
