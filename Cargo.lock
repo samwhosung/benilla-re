@@ -153,6 +153,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-image"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-lighting"
 version = "0.1.0"
 dependencies = [
