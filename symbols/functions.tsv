@@ -6923,7 +6923,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4908c0	441	EnterWorldUI		ui	orchestration		Fires PLAYER_LOGIN when armed and PLAYER_ENTERING_WORLD, releases chat and rebuilds the interface state	verified	one	ui/worldenter#the-enter-cascade	
 0x490a80	321	LeaveWorldUI		ui	primitive		Clears the world latch, runs 36 interface cleanups and fires PLAYER_LEAVING_WORLD	verified	one	ui/worldenter#leaving-the-world	
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
-0x490ce0	301			ui	primitive		Runs GameUI.cpp code that calls 0x4f5970, UnloadFrameScriptFunctions, 0x5368c0 and 51 more; not read here	inferred	none		
+0x490ce0	301	CGGameUI::UnregisterScriptFunctions		ui	orchestration	void __cdecl ()	Unregisters the frame types, the game C functions of 0x83de68 and 53 files of functions	verified	one	ui/scriptapi#unregistrars	
 0x490e10	75	LayoutCacheWrite		ui	orchestration	void __fastcall (void *unused, HANDLE file, CSimpleTop *top)	Writes a record for every frame of the top's list that passes the saved-frame test	verified	one	ui/layoutcache#which-frames-are-saved	
 0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		ui::glue_4c0_490e60_round_pos_legs
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	primitive		Runs GameUI.cpp code that calls 0x490bd0, 0x524b70, 0x4edb70 and 37 more; not read here	inferred	none		
@@ -7486,8 +7486,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a8f20	512	Script::PositionMiniWorldMapArrowFrame	idb	ui	primitive		Anchors the battleground minimap arrow model like SetPoint, with scaled offsets	verified	one	ui/worldmapmarkers#positioning-an-arrow	ui::luabind_4a8f20_mini_arrow_scale_divide
 0x4a9120	73	Script::ShowWorldMapArrowFrame	idb	ui	orchestration		Shows or hides the world map arrow model like Frame:Show and Frame:Hide	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
 0x4a9170	73	Script::ShowMiniWorldMapArrowFrame	idb	ui	orchestration		Shows or hides the battleground minimap arrow model	verified	one	ui/worldmapmarkers#updating-and-showing-the-arrows	
-0x4a91c0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4a91f0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4a91c0	33	RegisterWorldMapFunctions		ui	orchestration	void __cdecl ()	Registers the 23 world map Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4a91f0	27	UnregisterWorldMapFunctions		ui	orchestration	void __cdecl ()	Unregisters the 23 world map Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4a9210	85			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4a9270	97			ui	primitive		Runs its object file code that calls 0x4088f0, SMemFree; not read here	inferred	none		
 0x4a92e0	38			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -7617,8 +7617,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ac230	327	Script::GetBattlefieldFlagPosition	idb	ui	primitive		Pushes map fractions and the flag token of the carrier for index 1	verified	one	ui/worldmapmarkers#the-flag-carrier	
 0x4ac380	69	Script::CanJoinBattlefieldAsGroup	idb	ui	orchestration		Pushes 1 when the listed map permits group queuing, else nil	verified	one	ui/battlefield#the-list-and-the-selection	
 0x4ac3d0	88	Script::GetBattlefieldMapIconScale	idb	ui	primitive		Pushes the minimap icon scale of the active battleground map, 1.0 by default	verified	one	ui/worldmapmarkers#the-icon-scale	
-0x4ac430	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4ac460	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4ac430	33	RegisterBattlefieldFunctions		ui	orchestration	void __cdecl ()	Registers the 31 battlefield Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4ac460	27	UnregisterBattlefieldFunctions		ui	orchestration	void __cdecl ()	Unregisters the 31 battlefield Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4ac480	10	InitCount4ac490Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4ac490, then jumps to 0x4ac4b0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4ac490	22	InitCount4ac490		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4ac4b0	12	InitCount4ac490Register		ui	orchestration	void __cdecl (void)	Registers 0x4ac4c0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -7971,8 +7971,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b4810	400	Script::CastShapeshiftForm	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Cancels or casts the form bar spell of an index	verified	one	ui/petbar#form-cooldown-and-cast	
 0x4b49a0	266	Script::GetShapeshiftFormCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a form bar spell's cooldown start and duration in seconds and its enable flag	verified	one	ui/petbar#form-cooldown-and-cast	ui::luabind_4b49a0_get_shapeshift_form_cooldown
 0x4b4ab0	130	Script::CastSpellByName	idb	ui	orchestration		Implements the Lua function CastSpellByName	verified	one	ui/macros#castspellbyname	
-0x4b4b40	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4b4b70	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4b4b40	33	RegisterSpellBookFunctions		ui	orchestration	void __cdecl ()	Registers the 19 spell book Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4b4b70	27	UnregisterSpellBookFunctions		ui	orchestration	void __cdecl ()	Unregisters the 19 spell book Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4b4b90	23			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4b4bb0	10	InitCount4b4bc0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4b4bc0, then jumps to 0x4b4be0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4b4bc0	22	InitCount4b4bc0		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
@@ -8147,8 +8147,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b8200	28	Script::GetCurrentBindingSet	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the current binding set number	verified	one	ui/keybindings#binding-sets	
 0x4b8220	59	Script::LoadBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Copies binding set 0 to 2 into the live set	verified	one	ui/keybindings#binding-sets	
 0x4b8260	92	Script::SaveBindings	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stores the live set into set 1 or 2 and makes it current	verified	one	ui/keybindings#binding-sets	
-0x4b82c0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4b82e0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4b82c0	30	RegisterBindingFunctions		ui	orchestration	void __cdecl ()	Registers the 9 key binding Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4b82e0	24	UnregisterBindingFunctions		ui	orchestration	void __cdecl ()	Unregisters the 9 key binding Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4b8300	5	InitDouble4b8310Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b8310, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4b8310	15	InitDouble4b8310		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4b8320	5	InitQuotient4b8330Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4b8330, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8279,8 +8279,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bc080	8	Script::DoReadyCheck	idb	ui	orchestration		Starts a ready check	verified	one	ui/raid#starting-a-ready-check	
 0x4bc090	138	Script::ConfirmReadyCheck	idb	ui	orchestration		Sends the player's ready check answer while a check is running	verified	one	ui/raid#answering-a-ready-check	
 0x4bc120	8	Script::CheckReadyCheckTime	idb	ui	orchestration		Ends the ready check and lists the unanswered members once its time has passed	verified	one	ui/raid#starting-a-ready-check	
-0x4bc130	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4bc160	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4bc130	33	RegisterRaidFunctions		ui	orchestration	void __cdecl ()	Registers the 16 raid Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4bc160	27	UnregisterRaidFunctions		ui	orchestration	void __cdecl ()	Unregisters the 16 raid Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4bc180	5	InitDouble4bc190Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bc190, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4bc190	15	InitDouble4bc190		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4bc1a0	5	InitQuotient4bc1b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bc1b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8404,8 +8404,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4be900	268	Script::GetPetHappiness	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet's happiness bucket, damage percent and loyalty rate	verified	one	ui/petbar#pet-stats	ui::luabind_4be900_pet_happiness
 0x4bea10	243	Script::GetPetFoodTypes	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the names of the food types the pet's family eats	verified	one	ui/petbar#other-pet-functions	
 0x4beb10	119	Script::GetPetIcon	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon string of the pet's creature family, or nil	verified	one	ui/petbar#other-pet-functions	
-0x4beb90	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4bebc0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4beb90	33	RegisterPetFunctions		ui	orchestration	void __cdecl ()	Registers the 28 pet Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4bebc0	27	UnregisterPetFunctions		ui	orchestration	void __cdecl ()	Unregisters the 28 pet Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4bebe0	5	InitDouble4bebf0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bebf0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4bebf0	15	InitDouble4bebf0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4bec00	5	InitQuotient4bec10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4bec10, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8487,8 +8487,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c0790	85	Script::PickupTradeMoney	idb	ui	orchestration		Implements the Lua function PickupTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
 0x4c07f0	34	Script::AddTradeMoney	idb	ui	orchestration		Implements the Lua function AddTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
 0x4c0820	63	Script::SetTradeMoney	idb	ui	orchestration		Implements the Lua function SetTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
-0x4c0860	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4c0880	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c0860	30	RegisterTradeFunctions		ui	orchestration	void __cdecl ()	Registers the 14 trade Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4c0880	24	UnregisterTradeFunctions		ui	orchestration	void __cdecl ()	Unregisters the 14 trade Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c08a0	5	InitDouble4c08b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c08b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c08b0	15	InitDouble4c08b0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c08c0	5	InitQuotient4c08d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c08d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8616,7 +8616,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c1a20	12	InitHashTable4c1960Register		ui	orchestration	void __cdecl (void)	Registers 0x4c1a30 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4c1a30	375	InitHashTable4c1960Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x4c1960 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x4c1bb0	21			ui	orchestration	void __fastcall ()	Registers the LootButton method table with its one method SetSlot	verified	one	ui/loot#the-row-widget	
-0x4c1bd0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c1bd0	10	UnregisterLootButtonMethods		ui	orchestration	void __cdecl ()	Unregisters the 1 LootButton method that 0x4c1bb0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x4c1be0	60			ui	orchestration	void *__thiscall (lua_State *L)	Looks up a LootButton Lua method, else falls back to the button's lookup	verified	one	ui/loot#the-row-widget	
 0x4c1c20	13			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1c30	5	InitDouble4c1c40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c1c40, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8745,8 +8745,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4630	46	Script::GetNextDrawTime	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds until the next lottery draw	inferred	none	ui/lottery#draws	
 0x4c4660	36	Script::GetNumPastDrawResults	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of past lottery draw records	inferred	none	ui/lottery#draws	
 0x4c4690	154	Script::GetPastDrawResult	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the numbers and age of a past lottery draw	inferred	none	ui/lottery#draws	
-0x4c4730	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4c4750	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c4730	30	RegisterLotteryFunctions		ui	orchestration	void __cdecl ()	Registers the 12 lottery Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4c4750	24	UnregisterLotteryFunctions		ui	orchestration	void __cdecl ()	Unregisters the 12 lottery Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c4770	5	InitDouble4c4780Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4780, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c4780	15	InitDouble4c4780		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c4790	5	InitQuotient4c47a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c47a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8808,8 +8808,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c4d50	43	Script::GetMinigameType	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the active minigame, or nil	verified	one	ui/lottery#the-minigame	
 0x4c4d80	109	Script::MakeMinigameMove	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Makes a move in the active minigame	verified	one	ui/lottery#the-minigame	
 0x4c4df0	21	Script::GetMinigameState	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the state of the active minigame	verified	one	ui/lottery#the-minigame	
-0x4c4e10	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4c4e30	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c4e10	30	RegisterMinigameFunctions		ui	orchestration	void __cdecl ()	Registers the 3 minigame Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4c4e30	24	UnregisterMinigameFunctions		ui	orchestration	void __cdecl ()	Unregisters the 3 minigame Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c4e50	5	InitDouble4c4e60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4e60, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c4e60	15	InitDouble4c4e60		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c4e70	5	InitQuotient4c4e80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c4e80, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -8876,8 +8876,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c5870	449	SetWorldState		ui	primitive		Stores a world state value for an id	inferred	none	ui/questtext#world-state-numbers	
 0x4c5a40	44	GetNumWorldStateUI	idb	ui	primitive		Pushes the number of rows in the always-visible world state list	verified	one	ui/worldstate#the-two-functions	
 0x4c5a70	395	GetWorldStateUIInfo	idb	ui	primitive		Pushes the ten values of the index-th list row, or the number 0	verified	one	ui/worldstate#the-two-functions	
-0x4c5c00	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4c5c20	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c5c00	30	RegisterWorldStateFunctions		ui	orchestration	void __cdecl ()	Registers the 2 world state Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4c5c20	24	UnregisterWorldStateFunctions		ui	orchestration	void __cdecl ()	Unregisters the 2 world state Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c5c40	5	InitDouble4c5c50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c5c50, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c5c50	15	InitDouble4c5c50		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c5c60	5	InitQuotient4c5c70Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c5c70, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -9002,8 +9002,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c9780	12	Script::ClearInspectPlayer	idb	ui	orchestration	int __fastcall (lua_State *L)	Clears the inspect target and returns nothing	verified	one	ui/honorinspect#inspect-target	
 0x4c9790	521	Script::GetWeaponEnchantInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns six values for the main-hand and off-hand temporary enchantments: flag, milliseconds left and charges	verified	one	ui/inventory#weapon-enchant-info	
 0x4c99a0	140	Script::HasWandEquipped	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a wand is in the ranged slot, else nil	verified	one	ui/inventoryverbs#using-and-cursor-tests	
-0x4c9a30	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4c9a60	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4c9a30	33	RegisterInventoryFunctions		ui	orchestration	void __cdecl ()	Registers the 27 inventory Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4c9a60	27	UnregisterInventoryFunctions		ui	orchestration	void __cdecl ()	Unregisters the 27 inventory Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4c9a80	26			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c9aa0	30			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c9ac0	10	InitCount4c9ad0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4c9ad0, then jumps to 0x4c9af0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
@@ -9141,8 +9141,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4cb870	473	Script::SetPetStablePaperdoll	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Puts the selected pet's model on a model frame	verified	one	ui/stable#stable-lua-functions	
 0x4cba50	24	StablePaperdollCreatureArrived		ui	orchestration	void __stdcall (uint32_t, uint8_t ok)	Signals PET_STABLE_UPDATE_PAPERDOLL when a requested creature record arrives	verified	one	ui/stable#closing-and-events	
 0x4cba70	346	Script::GetStablePetFoodTypes	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the food type names of a stable pet's family	verified	one	ui/stable#stable-lua-functions	
-0x4cbbd0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4cbbf0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4cbbd0	30	RegisterStableFunctions		ui	orchestration	void __cdecl ()	Registers the 13 stable Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4cbbf0	24	UnregisterStableFunctions		ui	orchestration	void __cdecl ()	Unregisters the 13 stable Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4cbc10	5	InitDouble4cbc20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4cbc20, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4cbc20	15	InitDouble4cbc20		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4cbc30	5	InitQuotient4cbc40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4cbc40, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -9364,8 +9364,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d2360	8	Script::GuildRoster	idb	ui	orchestration		Requests the roster once per 10 seconds	verified	one	ui/guild#notes-and-text	
 0x4d2370	16	Script::GetGuildInfoText	idb	ui	orchestration		Pushes the guild information text	verified	one	ui/guild#notes-and-text	
 0x4d2380	160	Script::SetGuildInfoText	idb	ui	orchestration		Sends a new guild information text	verified	one	ui/guild#notes-and-text	
-0x4d2420	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4d2450	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4d2420	33	RegisterGuildFunctions		ui	orchestration	void __cdecl ()	Registers the 32 guild Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4d2450	27	UnregisterGuildFunctions		ui	orchestration	void __cdecl ()	Unregisters the 32 guild Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4d2470	5	InitDouble4d2480Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d2480, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4d2480	15	InitDouble4d2480		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4d2490	5	InitQuotient4d24a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d24a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -9526,8 +9526,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d4c90	71	Script::StartDuelUnit	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Challenges the unit of a token to a duel	verified	one	ui/duel#starting-a-duel	
 0x4d4ce0	8	Script::AcceptDuel	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the duel challenge	verified	one	ui/duel#a-challenge	
 0x4d4cf0	8	Script::CancelDuel	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the duel challenge	verified	one	ui/duel#a-challenge	
-0x4d4d00	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4d4d20	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4d4d00	30	RegisterDuelFunctions		ui	orchestration	void __cdecl ()	Registers the 4 duel Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4d4d20	24	UnregisterDuelFunctions		ui	orchestration	void __cdecl ()	Unregisters the 4 duel Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4d4d40	5	InitDouble4d4d50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4d50, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4d4d50	15	InitDouble4d4d50		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4d4d60	5	InitQuotient4d4d70Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4d70, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -9755,8 +9755,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4da660	96	Script::GetTrainerSkillLines	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line names of the trainer groups	verified	one	ui/trainerverbs#filter-and-group-getters	
 0x4da6c0	124	Script::CollapseTrainerSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses a trainer skill line, or all of them	verified	one	ui/trainerverbs#filter-and-group-getters	
 0x4da740	123	Script::ExpandTrainerSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands a trainer skill line, or all of them	verified	one	ui/trainerverbs#filter-and-group-getters	
-0x4da7c0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4da7f0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4da7c0	33	RegisterTrainerFunctions		ui	orchestration	void __cdecl ()	Registers the 30 trainer Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4da7f0	27	UnregisterTrainerFunctions		ui	orchestration	void __cdecl ()	Unregisters the 30 trainer Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4da810	10	InitCount4da820Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4da820, then jumps to 0x4da840 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4da820	22	InitCount4da820		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4da840	12	InitCount4da820Register		ui	orchestration	void __cdecl (void)	Registers 0x4da850 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -10028,8 +10028,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e1930	64	Script::AddQuestWatch	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Adds the quest of a row, or the selected quest, to the watch list	verified	one	ui/questlog#quest-watches	
 0x4e1970	64	Script::RemoveQuestWatch	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Removes the quest of a row, or the selected quest, from the watch list	verified	one	ui/questlog#quest-watches	
 0x4e19b0	201	Script::GetQuestIndexForWatch	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the row of the quest in a watch slot, or nil	verified	one	ui/questlogverbs#headers-and-watches-by-row	
-0x4e1a80	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4e1ab0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4e1a80	33	RegisterQuestLogFunctions		ui	orchestration	void __cdecl ()	Registers the 34 quest log Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4e1ab0	27	UnregisterQuestLogFunctions		ui	orchestration	void __cdecl ()	Unregisters the 34 quest log Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4e1ad0	10	InitCount4e1ae0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x4e1ae0, then jumps to 0x4e1b00 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x4e1ae0	22	InitCount4e1ae0		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x4e1b00	12	InitCount4e1ae0Register		ui	orchestration	void __cdecl (void)	Registers 0x4e1b10 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -10102,8 +10102,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e2aa0	64	Script::SelectGossipAvailableQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the available gossip quest row of a number	verified	one	ui/questpanel#gossip-rows	
 0x4e2ae0	64	Script::SelectGossipActiveQuest	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the active gossip quest row of a number	verified	one	ui/questpanel#gossip-rows	
 0x4e2b20	50	Script::CloseGossip	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the gossip dialog	verified	one	ui/questpanel#gossip-rows	
-0x4e2b60	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4e2b80	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4e2b60	30	RegisterGossipFunctions		ui	orchestration	void __cdecl ()	Registers the 8 gossip Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4e2b80	24	UnregisterGossipFunctions		ui	orchestration	void __cdecl ()	Unregisters the 8 gossip Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4e2ba0	5	InitDouble4e2bb0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e2bb0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e2bb0	15	InitDouble4e2bb0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4e2bc0	5	InitQuotient4e2bd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e2bd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10187,8 +10187,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e3b50	8	Script::ItemTextPrevPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows the previous page of the open item text	verified	one	ui/itemtext#moving-between-pages	
 0x4e3b60	8	Script::ItemTextNextPage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Shows the next page of the open item text	verified	one	ui/itemtext#moving-between-pages	
 0x4e3b70	52	Script::CloseItemText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the item text window	verified	one	ui/itemtext#the-source-of-the-text	
-0x4e3bb0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4e3bd0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4e3bb0	30	RegisterItemTextFunctions		ui	orchestration	void __cdecl ()	Registers the 9 item text Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4e3bd0	24	UnregisterItemTextFunctions		ui	orchestration	void __cdecl ()	Unregisters the 9 item text Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4e3bf0	5	InitDouble4e3c00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e3c00, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e3c00	15	InitDouble4e3c00		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4e3c10	5	InitQuotient4e3c20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e3c20, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10263,8 +10263,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e49a0	127	Script::CancelPlayerBuff	idb	ui	orchestration		Cancels a buff record's aura when its slot is a cancelable buff or its spell allows	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
 0x4e4a20	86	Script::GetTrackingTexture	idb	ui	orchestration		Pushes the icon path of the tracking spell, or nil	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
 0x4e4a80	18	Script::CancelTrackingBuff	idb	ui	orchestration		Cancels the tracking spell when one is held	verified	one	ui/auradisplay#cancelplayerbuff-and-tracking	
-0x4e4aa0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4e4ac0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4e4aa0	30	RegisterBuffFunctions		ui	orchestration	void __cdecl ()	Registers the 8 buff Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4e4ac0	24	UnregisterBuffFunctions		ui	orchestration	void __cdecl ()	Unregisters the 8 buff Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4e4ae0	5	InitDouble4e4af0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e4af0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e4af0	15	InitDouble4e4af0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4e4b00	5	InitQuotient4e4b10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e4b10, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10483,8 +10483,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e98c0	432	Script::GetLFGResults	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, level, class, slot entries and comment of a looking-for-group result	verified	one	ui/lfg#reading-results	
 0x4e9a70	48	Script::GetLFGTypes	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the five looking-for-group type names	verified	one	ui/lfg#reading-the-lists	
 0x4e9aa0	306	Script::GetLFGTypeEntries	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the entry names of a looking-for-group type	verified	one	ui/lfg#reading-the-lists	
-0x4e9be0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4e9c10	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4e9be0	33	RegisterPartyFunctions		ui	orchestration	void __cdecl ()	Registers the 16 party Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4e9c10	27	UnregisterPartyFunctions		ui	orchestration	void __cdecl ()	Unregisters the 16 party Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4e9c30	5	InitDouble4e9c40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e9c40, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4e9c40	15	InitDouble4e9c40		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4e9c50	5	InitQuotient4e9c60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4e9c60, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10655,7 +10655,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ef160	12	InitHashTable4ef0a0Register		ui	orchestration	void __cdecl (void)	Registers 0x4ef170 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x4ef170	375	InitHashTable4ef0a0Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x4ef0a0 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x4ef2f0	21			ui	orchestration		Adds the 10 Minimap methods of 0x84c538 to their method hash	verified	one	ui/minimap#lua-methods	
-0x4ef310	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4ef310	10	UnregisterMinimapMethods		ui	orchestration	void __cdecl ()	Unregisters the 10 Minimap methods that 0x4ef2f0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x4ef320	60			ui	orchestration		Pushes a method from the Minimap hash, else through the Frame lookup	verified	one	ui/minimap#lua-methods	
 0x4ef360	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ef370	32			ui	orchestration		Stores its four float arguments in order at the object in ecx and returns it	verified	one	ui/minimap#two-small-helpers	
@@ -10844,8 +10844,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f3200	709	Script::GetTalentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a talent's name, icon, tier, column, rank, maximum rank, flag and required-spell result	verified	one	ui/talents#talent-info	
 0x4f34d0	459	Script::GetTalentPrereqs	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns tier, column and learned flag for each prerequisite of a talent	verified	one	ui/talents#prerequisites	
 0x4f36a0	385	Script::LearnTalent	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the learn request for the next rank of a talent unless it is at maximum	verified	one	ui/talents#learning	
-0x4f3830	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f3850	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4f3830	30	RegisterTalentFunctions		ui	orchestration	void __cdecl ()	Registers the 6 talent Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4f3850	24	UnregisterTalentFunctions		ui	orchestration	void __cdecl ()	Unregisters the 6 talent Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4f3870	5	InitDouble4f3880Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f3880, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f3880	15	InitDouble4f3880		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f3890	5	InitQuotient4f38a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f38a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10920,8 +10920,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f46d0	190	Script::SignPetition	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the signature of the open petition and sets the in-flight latch	verified	one	ui/petition#signing-and-offering	
 0x4f4790	411	Script::OfferPetition	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Offers the open petition to the current target after the checks, showing the offered message at once	verified	one	ui/petition#signing-and-offering	
 0x4f4930	213	Script::RenamePetition	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends a new name for the open petition when it passes the guild name check	verified	one	ui/petition#renaming	
-0x4f4a10	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f4a30	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4f4a10	30	RegisterPetitionFunctions		ui	orchestration	void __cdecl ()	Registers the 8 petition Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4f4a30	24	UnregisterPetitionFunctions		ui	orchestration	void __cdecl ()	Unregisters the 8 petition Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4f4a50	5	InitDouble4f4a60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f4a60, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f4a60	15	InitDouble4f4a60		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f4a70	5	InitQuotient4f4a80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f4a80, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -10986,8 +10986,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f5260	105	Script::BuyGuildCharter	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Buys a charter for a guild name and returns 1 when the name is valid, else nil	verified	one	ui/petition#charter-shop	
 0x4f52d0	41	Script::TurnInGuildCharter	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Starts the charter turn-in for the active player and returns nothing	verified	one	ui/petition#charter-shop	
 0x4f5300	99	Script::GetTabardInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sends the tabard vendor request for the registrar's GUID, then closes the registrar window	verified	one	ui/tabard#starting-a-vendor-visit	
-0x4f5370	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f5390	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4f5370	30	RegisterGuildRegistrarFunctions		ui	orchestration	void __cdecl ()	Registers the 5 guild registrar Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4f5390	24	UnregisterGuildRegistrarFunctions		ui	orchestration	void __cdecl ()	Unregisters the 5 guild registrar Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4f53b0	5	InitDouble4f53c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f53c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f53c0	15	InitDouble4f53c0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f53d0	5	InitQuotient4f53e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f53e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11044,8 +11044,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f58a0	94	CloseTabardFrame		ui	orchestration	void __cdecl ()	Ends the designer preview, releases the vendor target and signals CLOSE_TABARD_FRAME, doing nothing with no GUID	verified	one	ui/tabard#opening-and-closing	
 0x4f5900	8	Script::CloseTabardCreation	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the tabard window and returns nothing	verified	one	ui/tabard#opening-and-closing	
 0x4f5910	50	Script::GetTabardCreationCost	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the tabard cost, 100000 copper	verified	one	ui/tabard#opening-and-closing	
-0x4f5950	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f5970	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4f5950	30	RegisterTabardFunctions		ui	orchestration	void __cdecl ()	Registers the 2 tabard Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4f5970	24	UnregisterTabardFunctions		ui	orchestration	void __cdecl ()	Unregisters the 2 tabard Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4f5990	5	InitDouble4f59a0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f59a0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f59a0	15	InitDouble4f59a0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f59b0	5	InitQuotient4f59c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f59c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11204,8 +11204,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f8690	31			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f86b0	284	Script::PurchaseSlot	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Buys the next bank bag slot	verified	one	ui/inventoryverbs#the-bank	
 0x4f87d0	50	Script::CloseBankFrame	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the bank window	verified	one	ui/inventoryverbs#the-bank	
-0x4f8810	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f8830	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4f8810	30	RegisterBankFunctions		ui	orchestration	void __cdecl ()	Registers the 5 bank Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4f8830	24	UnregisterBankFunctions		ui	orchestration	void __cdecl ()	Unregisters the 5 bank Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4f8850	5	InitDouble4f8860Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8860, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4f8860	15	InitDouble4f8860		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4f8870	5	InitQuotient4f8880Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8880, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11279,8 +11279,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fa460	142	Script::ShowContainerSellCursor	idb	ui	orchestration		Implements the Lua function ShowContainerSellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4fa4f0	374	Script::SetBagPortaitTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a texture to the circular portrait of a bag's icon, clearing it first	verified	one	ui/portraittextures#bag-portrait	
 0x4fa670	290	Script::GetBagName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name of a bag	verified	one	ui/inventoryverbs#bag-names	
-0x4fa7a0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4fa7c0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4fa7a0	30	RegisterContainerFunctions		ui	orchestration	void __cdecl ()	Registers the 11 container Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4fa7c0	24	UnregisterContainerFunctions		ui	orchestration	void __cdecl ()	Unregisters the 11 container Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4fa7e0	5	InitDouble4fa7f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fa7f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4fa7f0	15	InitDouble4fa7f0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4fa800	5	InitQuotient4fa810Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fa810, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11363,8 +11363,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fbd60	638	Script::GetRepairAllCost	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the repair cost of the equipped items, backpack and bag contents and whether any is damaged	verified	one	ui/merchant#repair-all-cost	
 0x4fbfe0	371	Script::RepairAllItems	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends CMSG_REPAIR_ITEM for all items after an equipped-slots affordability check	verified	one	ui/merchant#repair-all	
 0x4fc160	76	Script::GetNumBuybackItems	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the cached buy-back count, or 0 with no vendor	verified	one	ui/merchant#buy-back-reads	
-0x4fc1b0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4fc1e0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x4fc1b0	33	RegisterMerchantFunctions		ui	orchestration	void __cdecl ()	Registers the 18 merchant Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x4fc1e0	27	UnregisterMerchantFunctions		ui	orchestration	void __cdecl ()	Unregisters the 18 merchant Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x4fc200	5	InitDouble4fc210Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc210, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4fc210	15	InitDouble4fc210		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4fc220	5	InitQuotient4fc230Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc230, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11595,8 +11595,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5021a0	16	Script::QuestChooseRewardError	idb	ui	orchestration	int __fastcall (lua_State *L)	Shows the must-choose reward error and returns nothing	verified	one	ui/questmaterial#reward-error	
 0x5021b0	114	Script::ConfirmAcceptQuest	idb	ui	orchestration		Sends CMSG_QUEST_CONFIRM_ACCEPT with the pending quest id	verified	one	ui/questshare#the-confirmation-request	
 0x502230	212	Script::GetQuestBackgroundMaterial	idb	ui	primitive	int __fastcall (lua_State *L)	Returns the page material name of the open quest dialog's source object, or nil	verified	one	ui/questmaterial#quest-background-material	
-0x502310	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x502340	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
+0x502310	33	RegisterQuestFunctions		ui	orchestration	void __cdecl ()	Registers the 31 quest Lua functions from their name and function table	verified	one	ui/scriptapi#registrars	
+0x502340	27	UnregisterQuestFunctions		ui	orchestration	void __cdecl ()	Unregisters the 31 quest Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x502360	10	InitCount502370Thunk		ui	orchestration	void __cdecl (void)	Calls 0x502370, then jumps to 0x502390 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x502370	22	InitCount502370		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x502390	12	InitCount502370Register		ui	orchestration	void __cdecl (void)	Registers 0x5023a0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
@@ -11671,7 +11671,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x503a10	12	InitHashTable503950Register		ui	orchestration	void __cdecl (void)	Registers 0x503a20 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x503a20	375	InitHashTable503950Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x503950 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x503ba0	21			ui	orchestration		Adds the 10 TabardModel methods of 0x84ee40 to their method hash	verified	one	ui/model#lua-methods	
-0x503bc0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x503bc0	10	UnregisterTabardModelMethods		ui	orchestration	void __cdecl ()	Unregisters the 10 TabardModel methods that 0x503ba0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x503bd0	60			ui	orchestration		Pushes a method from the TabardModel hash, else through the PlayerModel lookup	verified	one	ui/model#lua-methods	
 0x503c10	162	TabardModelModelReady		ui	orchestration	void __thiscall (CM2Model *model)	Runs the pane's ready step, then moves the camera target to a point of animation 0's bounds	verified	one	ui/playermodel#tabard-camera-target	ui::glue_503_503c10_offset_scale2
 0x503cc0	5	InitDouble503cd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x503cd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -11746,7 +11746,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x504f10	12	InitHashTable504e50Register		ui	orchestration	void __cdecl (void)	Registers 0x504f20 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x504f20	375	InitHashTable504e50Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x504e50 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x5050a0	21			ui	orchestration		Adds the 3 DressUpModel methods of 0x84f190 to their method hash	verified	one	ui/model#lua-methods	
-0x5050c0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x5050c0	10	UnregisterDressUpModelMethods		ui	orchestration	void __cdecl ()	Unregisters the 3 DressUpModel methods that 0x5050a0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x5050d0	60			ui	orchestration		Pushes a method from the DressUpModel hash, else through the PlayerModel lookup	verified	one	ui/model#lua-methods	
 0x505110	5	InitDouble505120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x505120, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x505120	15	InitDouble505120		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -11833,7 +11833,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5060a0	12	InitHashTable505fe0Register		ui	orchestration	void __cdecl (void)	Registers 0x5060b0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x5060b0	375	InitHashTable505fe0Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x505fe0 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x506230	21			ui	orchestration		Adds the 3 PlayerModel methods of 0x84f1fc to their method hash	verified	one	ui/model#lua-methods	
-0x506250	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x506250	10	UnregisterPlayerModelMethods		ui	orchestration	void __cdecl ()	Unregisters the 3 PlayerModel methods that 0x506230 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x506260	60			ui	orchestration		Pushes a method from the PlayerModel hash, else through the Model lookup	verified	one	ui/model#lua-methods	
 0x5062a0	77	CGCharacterModelBase::OnAnimDone		ui	orchestration	void __fastcall (CM2Model *model, uint32_t key_bone, uint32_t anim_id, uint32_t mode, uint32_t overshoot, CGCharacterModelBase *frame, uint32_t guid_hi)	Arms Stand when a whole-body track completes, or stops the track on another key bone	verified	one	ui/playermodel#stand-is-the-resting-state	
 0x5062f0	5	InitDouble506300Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x506300, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -12624,8 +12624,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51ab30	4072	InitGameEventNames		ui	orchestration		Stores the names of the game events in 0xbe1198, PLAYER_LOGOUT to ADDON_ACTION_FORBIDDEN among them	verified	one	ui/luastate#the-context-word	
 0x51bb20	30	LoadGameScriptFunctions		ui	orchestration		Registers the six shared script functions GetTime to AppendToFile	inferred	none		
 0x51bb40	24	UnloadGameScriptFunctions		ui	orchestration		Unregisters the six shared script functions	inferred	none		
-0x51bb60	38			ui	primitive		Runs its object file code that calls LoadGameScriptFunctions, FrameScriptRegisterFunction; not read here	inferred	none		
-0x51bb90	32			ui	primitive		Runs its object file code that calls UnloadGameScriptFunctions, FrameScript_UnregisterFunction; not read here	inferred	none		
+0x51bb60	38	RegisterUnitFunctions		ui	orchestration	void __cdecl ()	Registers the 6 shared Lua functions, then the 83 unit and PvP Lua functions from their table	verified	one	ui/scriptapi#registrars	
+0x51bb90	32	UnregisterUnitFunctions		ui	orchestration	void __cdecl ()	Unregisters the 6 shared Lua functions, then the 83 unit and PvP Lua functions	verified	one	ui/scriptapi#unregistrars	
 0x51bbb0	209	WatchUnitFields		ui	primitive		Registers a watcher for every named unit field of a unit, and two for a player	verified	one	ui/unittokens#unit-field-events	
 0x51bd50	25	OnUnitFieldChanged		ui	primitive		Signals the event numbered offset / 4 for every token of the changed unit	verified	one	ui/unittokens#unit-field-events	
 0x51bd70	25	OnPlayerBlockChangedA		ui	orchestration		Signals event 0xba for every token of the changed player	verified	one	ui/unittokens#unit-field-events	
@@ -13274,7 +13274,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x536710	12	InitHashTable536650Register		ui	orchestration	void __cdecl (void)	Registers 0x536720 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x536720	375	InitHashTable536650Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x536650 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x5368a0	21			ui	orchestration		Adds the 46 GameTooltip methods of 0x854198 to their method hash	verified	one	ui/tooltip#lua-methods	
-0x5368c0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x5368c0	10	UnregisterGameTooltipMethods		ui	orchestration	void __cdecl ()	Unregisters the 46 GameTooltip methods that 0x5368a0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x5368d0	60			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod, CSimpleFrame::GetScriptMethod; not read here	inferred	none		
 0x536910	23			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x536930	5	InitSquare536940Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x536940, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -33471,7 +33471,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76f6b0	12	InitHashTable76f5f0Register		ui	orchestration	void __cdecl (void)	Registers 0x76f6c0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x76f6c0	375	InitHashTable76f5f0Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x76f5f0 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x76f840	21			ui	orchestration		Adds the 23 Model methods of 0x878948 to their method hash	verified	one	ui/model#lua-methods	
-0x76f860	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x76f860	10	UnregisterModelMethods		ui	orchestration	void __cdecl ()	Unregisters the 23 Model methods that 0x76f840 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x76f870	60			ui	orchestration		Pushes a method from the Model hash, else through the Frame lookup	verified	one	ui/model#lua-methods	
 0x76f8b0	5	InitDouble76f8c0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x76f8c0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x76f8c0	15	InitDouble76f8c0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -33946,7 +33946,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x782ad0	12	InitHashTable782a10Register		ui	orchestration	void __cdecl (void)	Registers 0x782ae0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x782ae0	375	InitHashTable782a10Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x782a10 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x782c60	21			ui	orchestration		Adds the 39 Button methods of 0x879d00 to the Button method hash	verified	one	ui/button#lua-methods	
-0x782c80	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x782c80	10	UnregisterButtonMethods		ui	orchestration	void __cdecl ()	Unregisters the 39 Button methods that 0x782c60 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x782c90	60			ui	orchestration		Pushes a method from the Button hash, else through the Frame lookup	verified	one	ui/button#lua-methods	
 0x782cd0	5	InitDouble782ce0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x782ce0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x782ce0	15	InitDouble782ce0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34341,8 +34341,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78da10	190	InitHashTable78da10		ui	primitive	void __cdecl (void)	Builds an empty hash table in a global: link offset 0xc, a self-linked head, no buckets and a mask of -1	verified	one	ui/initstores#hash-tables	
 0x78dad0	12	InitHashTable78da10Register		ui	orchestration	void __cdecl (void)	Registers 0x78dae0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x78dae0	375	InitHashTable78da10Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x78da10 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
-0x78dc60	21			ui	orchestration		Registers a table of three script functions	inferred	none		
-0x78dc80	10			ui	orchestration		Unregisters the table of three script functions	inferred	none		
+0x78dc60	21	AddMovieFrameMethods		ui	orchestration	void __cdecl ()	Adds the 3 MovieFrame methods of 0x87ab4c to their method hash	verified	one	ui/movieframe#starting-and-stopping	
+0x78dc80	10	UnregisterMovieFrameMethods		ui	orchestration	void __cdecl ()	Unregisters the 3 MovieFrame methods that 0x78dc60 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x78dc90	60			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod, CSimpleFrame::GetScriptMethod; not read here	inferred	none		
 0x78dcd0	5	InitDouble78dce0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78dce0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78dce0	15	InitDouble78dce0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34371,7 +34371,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78ef20	12	InitHashTable78ee60Register		ui	orchestration	void __cdecl (void)	Registers 0x78ef30 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x78ef30	375	InitHashTable78ee60Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x78ee60 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x78f0b0	21			ui	orchestration		Adds the 12 ColorSelect methods of 0x87abb0 to their method hash	verified	one	ui/colorselect#lua-methods	
-0x78f0d0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x78f0d0	10	UnregisterColorSelectMethods		ui	orchestration	void __cdecl ()	Unregisters the 12 ColorSelect methods that 0x78f0b0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x78f0e0	60			ui	orchestration		Pushes a method from the ColorSelect hash, else through the Frame lookup	verified	one	ui/colorselect#lua-methods	
 0x78f120	5	InitDouble78f130Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x78f130, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x78f130	15	InitDouble78f130		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34398,7 +34398,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78ff10	12	InitHashTable78fe50Register		ui	orchestration	void __cdecl (void)	Registers 0x78ff20 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x78ff20	375	InitHashTable78fe50Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x78fe50 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x7900a0	21			ui	orchestration		Adds the 10 StatusBar methods of 0x87b010 to their method hash	verified	one	ui/slider#lua-methods	
-0x7900c0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7900c0	10	UnregisterStatusBarMethods		ui	orchestration	void __cdecl ()	Unregisters the 10 StatusBar methods that 0x7900a0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x7900d0	60			ui	orchestration		Pushes a method from the StatusBar hash, else through the Frame lookup	verified	one	ui/slider#lua-methods	
 0x790110	5	InitDouble790120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x790120, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x790120	15	InitDouble790120		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34425,7 +34425,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x790cf0	12	InitHashTable790c30Register		ui	orchestration	void __cdecl (void)	Registers 0x790d00 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x790d00	375	InitHashTable790c30Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x790c30 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x790e80	21			ui	orchestration		Adds the 10 Slider methods of 0x87b260 to their method hash	verified	one	ui/slider#lua-methods	
-0x790ea0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x790ea0	10	UnregisterSliderMethods		ui	orchestration	void __cdecl ()	Unregisters the 10 Slider methods that 0x790e80 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x790eb0	60			ui	orchestration		Pushes a method from the Slider hash, else through the Frame lookup	verified	one	ui/slider#lua-methods	
 0x790ef0	5	InitDouble790f00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x790f00, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x790f00	15	InitDouble790f00		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34451,7 +34451,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x791a30	12	InitHashTable791970Register		ui	orchestration	void __cdecl (void)	Registers 0x791a40 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x791a40	375	InitHashTable791970Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x791970 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x791bc0	21			ui	orchestration		Adds the 9 ScrollFrame methods of 0x87b3c0 to their method hash	verified	one	ui/scrollframe#lua-methods	
-0x791be0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x791be0	10	UnregisterScrollFrameMethods		ui	orchestration	void __cdecl ()	Unregisters the 9 ScrollFrame methods that 0x791bc0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x791bf0	60			ui	orchestration		Pushes a method from the ScrollFrame hash, else through the Frame lookup	verified	one	ui/scrollframe#lua-methods	
 0x791c30	5	InitDouble791c40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x791c40, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x791c40	15	InitDouble791c40		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34508,7 +34508,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x794000	12	InitHashTable793f40Register		ui	orchestration	void __cdecl (void)	Registers 0x794010 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x794010	375	InitHashTable793f40Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x793f40 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x794190	21			ui	orchestration		Adds the 40 ScrollingMessageFrame methods of 0x87b5c0 to their method hash	verified	one	ui/messageframe#lua-methods	
-0x7941b0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7941b0	10	UnregisterScrollingMessageFrameMethods		ui	orchestration	void __cdecl ()	Unregisters the 40 ScrollingMessageFrame methods that 0x794190 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x7941c0	60			ui	orchestration		Pushes a method from the ScrollingMessageFrame hash, else through the Frame lookup	verified	one	ui/messageframe#lua-methods	
 0x794200	5	InitDouble794210Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x794210, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x794210	15	InitDouble794210		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34551,7 +34551,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7959e0	12	InitHashTable795920Register		ui	orchestration	void __cdecl (void)	Registers 0x7959f0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x7959f0	375	InitHashTable795920Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x795920 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x795b70	21			ui	orchestration		Adds the 26 MessageFrame methods of 0x87b960 to their method hash	verified	one	ui/messageframe#lua-methods	
-0x795b90	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x795b90	10	UnregisterMessageFrameMethods		ui	orchestration	void __cdecl ()	Unregisters the 26 MessageFrame methods that 0x795b70 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x795ba0	60			ui	orchestration		Pushes a method from the MessageFrame hash, else through the Frame lookup	verified	one	ui/messageframe#lua-methods	
 0x795be0	5	InitDouble795bf0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x795bf0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x795bf0	15	InitDouble795bf0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34588,7 +34588,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x796dc0	12	InitHashTable796d00Register		ui	orchestration	void __cdecl (void)	Registers 0x796dd0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x796dd0	375	InitHashTable796d00Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x796d00 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x796f50	21			ui	orchestration		Adds the 19 SimpleHTML methods of 0x87ba80 to their method hash	verified	one	ui/simplehtml#lua-methods	
-0x796f70	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x796f70	10	UnregisterSimpleHTMLMethods		ui	orchestration	void __cdecl ()	Unregisters the 19 SimpleHTML methods that 0x796f50 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x796f80	60			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod, CSimpleFrame::GetScriptMethod; not read here	inferred	none		
 0x796fc0	5	InitDouble796fd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x796fd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x796fd0	15	InitDouble796fd0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34653,7 +34653,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x799920	12	InitHashTable799860Register		ui	orchestration	void __cdecl (void)	Registers 0x799930 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x799930	375	InitHashTable799860Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x799860 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x799ab0	21			ui	orchestration		Adds the 48 EditBox methods of 0x87bb68 to the EditBox method hash	verified	one	ui/editbox#lua-methods	
-0x799ad0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x799ad0	10	UnregisterEditBoxMethods		ui	orchestration	void __cdecl ()	Unregisters the 48 EditBox methods that 0x799ab0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x799ae0	60			ui	orchestration		Pushes a method from the EditBox hash, else through the Frame lookup	verified	one	ui/editbox#lua-methods	
 0x799b20	5	InitDouble799b30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x799b30, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x799b30	15	InitDouble799b30		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34676,7 +34676,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79a410	12	InitHashTable79a350Register		ui	orchestration	void __cdecl (void)	Registers 0x79a420 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x79a420	375	InitHashTable79a350Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x79a350 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x79a5a0	21			ui	orchestration		Adds the 6 CheckButton methods of 0x87bf74 to the CheckButton method hash	verified	one	ui/button#lua-methods	
-0x79a5c0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x79a5c0	10	UnregisterCheckButtonMethods		ui	orchestration	void __cdecl ()	Unregisters the 6 CheckButton methods that 0x79a5a0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x79a5d0	60			ui	orchestration		Pushes a method from the CheckButton hash, else through the Button lookup	verified	one	ui/button#lua-methods	
 0x79a610	5	InitDouble79a620Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x79a620, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x79a620	15	InitDouble79a620		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34715,7 +34715,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79c460	12	InitHashTable79c3a0Register		ui	orchestration	void __cdecl (void)	Registers 0x79c470 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x79c470	375	InitHashTable79c3a0Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x79c3a0 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x79c5f0	21			ui	orchestration		Adds the 22 Texture methods of 0x87c128 to the Texture method hash	verified	one	ui/fontstring#lua-methods	
-0x79c610	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x79c610	10	UnregisterTextureMethods		ui	orchestration	void __cdecl ()	Unregisters the 22 Texture methods that 0x79c5f0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x79c620	60			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod, CScriptRegion::GetScriptMethod; not read here	inferred	none		
 0x79c660	188	FontString::GetDrawLayer	idb	ui	primitive		Implements the FontString method GetDrawLayer, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	
 0x79c720	270	FontString::SetDrawLayer	idb	ui	primitive		Implements the FontString method SetDrawLayer, its pair in the table 0x87c1d8	verified	one	ui/fontstring#lua-methods	
@@ -34754,7 +34754,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79ec60	12	InitHashTable79eba0Register		ui	orchestration	void __cdecl (void)	Registers 0x79ec70 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x79ec70	375	InitHashTable79eba0Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x79eba0 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x79edf0	21			ui	orchestration		Adds the 32 FontString methods of 0x87c1d8 to the FontString method hash	verified	one	ui/fontstring#lua-methods	
-0x79ee10	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x79ee10	10	UnregisterFontStringMethods		ui	orchestration	void __cdecl ()	Unregisters the 32 FontString methods that 0x79edf0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x79ee20	60			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod, CScriptRegion::GetScriptMethod; not read here	inferred	none		
 0x79ee60	5	InitDouble79ee70Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x79ee70, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x79ee70	15	InitDouble79ee70		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -34812,7 +34812,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a0f40	12	InitHashTable7a0e80Register		ui	orchestration	void __cdecl (void)	Registers 0x7a0f50 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x7a0f50	375	InitHashTable7a0e80Exit		ui	primitive	void __cdecl (void)	Empties the hash table that 0x7a0e80 built and frees its bucket array	verified	one	ui/initexits#exit-hash-tables	
 0x7a10d0	21			ui	orchestration		Adds the 22 Font methods of 0x87c7c8 to the Font method hash	verified	one	ui/fontstring#lua-methods	
-0x7a10f0	10			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7a10f0	10	UnregisterFontMethods		ui	orchestration	void __cdecl ()	Unregisters the 22 Font methods that 0x7a10d0 registers	verified	one	ui/scriptapi#method-table-unregistrars	
 0x7a1100	23			ui	orchestration		Runs its object file code that calls FrameScriptPushMethod; not read here	inferred	none		
 0x7a1120	5	InitDouble7a1130Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x7a1130, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x7a1130	15	InitDouble7a1130		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	

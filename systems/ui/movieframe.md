@@ -90,12 +90,12 @@ Test: none
 clears the display three times to black. It returns 1 on success and nil when any step fails. `StopMovie()` ends a playing movie: it destroys the decoder, the audio and the captions, clears the playing and finished flags and runs
 `OnMovieFinished` (`+0x320`). The movie also ends by itself at the last frame or when the audio ends. `EnableSubtitles([flag])` stores the flag (true when absent) at `+0x31c`.
 
-Addresses: `0x78d770`, `0x78d842`, `0x78d820`, `0x78d870`, `0x78d92a`, `0x78d940`, `0x78d9ce`, `0x78d9d3`, `0x78ce40`, `0x78ce4b`, `0x78ce5d`, `0x78ce6f`, `0x78ce77`, `0x78ce81`, `0x78ced0`, `0x78cedd`, `0x78cee4`, `0x78ceeb`, `0x78cf1e`, `0x78cda0`
+Addresses: `0x78d770`, `0x78d842`, `0x78d820`, `0x78d870`, `0x78d92a`, `0x78d940`, `0x78d9ce`, `0x78d9d3`, `0x78ce40`, `0x78ce4b`, `0x78ce5d`, `0x78ce6f`, `0x78ce77`, `0x78ce81`, `0x78ced0`, `0x78cedd`, `0x78cee4`, `0x78ceeb`, `0x78cf1e`, `0x78cda0`, `0x78dc60`, `0x78dc80`, `0x87ab4c`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; the first two end the start on a zero answer. `0x78ce81` sets the playing flag and `0x78cea3` to `0x78ceb7` clear the device. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it.
+`0x78ce4b`, `0x78ce5d`, `0x78ce6f` and `0x78ce77` call the file reader, the decoder start, the audio start and the subtitle loader; the first two end the start on a zero answer. `0x78ce81` sets the playing flag and `0x78cea3` to `0x78ceb7` clear the device. `0x78cedd` to `0x78ceeb` free the decoder, the audio and the captions, and `0x78cf1e` runs the finished handler. `0x78d9ce` reads the flag with `GetScriptFlagArg` and `0x78d9d3` stores it. `0x78dc60` registers the three methods of the table `0x87ab4c` (`StartMovie`, `StopMovie`, `EnableSubtitles`) in the MovieFrame method hash with `FrameScriptRegisterMethods`; `0x78dc80` unregisters them (`ui/scriptapi`).
 
 ## Drawing
 
