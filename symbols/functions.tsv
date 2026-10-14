@@ -12714,8 +12714,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51d580	558	SetAddOnMetadata		ui	primitive		Stores a metadata line by name, keeping a locale-suffixed name only for the client locale	verified	one	ui/addons#add-on-metadata	
 0x51d7b0	24	RegisterFolderAddOn		ui	primitive		Registers a folder not beginning with . and returns 0	verified	one	ui/addons#finding-add-ons	
 0x51d7d0	6	GetInterfaceVersion		ui	orchestration	int (void)	Returns 11200, the interface version add-ons are checked against	verified	one	ui/addons#whether-an-add-on-may-load	
-0x51d7e0	20			ui	unreached		Runs AddOns.cpp code that calls 0x51d800; not read here	inferred	none		
-0x51d800	257			ui	unreached		Runs AddOns.cpp code that calls SFile::Load, SStrTokenize, SStrLen and 3 more; not read here	inferred	none		
+0x51d7e0	20	GetStockInterfaceNumber		ui	unreached		Returns the stock FrameXML interface number, reading it first when it is 0	verified	one	ui/addonfiles#stock-interface-number	
+0x51d800	257	ReadStockInterfaceNumber		ui	unreached		Reads the Interface line of FrameXML.toc into the stock interface number	verified	one	ui/addonfiles#stock-interface-number	
 0x51d910	352	WriteAddonInfo	idb	ui	primitive		Appends the size and the zlib-compressed records of the add-ons declaring Secure to an auth packet	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x51da70	624	ReadAddOnInfoReply		ui	primitive		Applies the realm's add-on reply to each Secure add-on, then rebuilds the sorted name array	verified	one	ui/addons#secure-add-ons	
 0x51dce0	145	WriteAddOnKey		ui	primitive		Writes an add-on's key to its .pub file	verified	one	ui/addons#secure-add-ons	
@@ -12741,16 +12741,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x51ea20	448	SetAddOnEnableState		ui	primitive	void __fastcall (const char *name, const char *character, int state)	Sets an add-on's enabled flag in a character's node, or every node's, marking a changed node	verified	one	ui/addons#reading-the-enable-state	
 0x51ebe0	827	LoadCharacterAddOnState		ui	primitive		Loads a character's add-on enable state from AddOns.txt into its node, or reloads every node for null	verified	one	ui/addons#enable-state	
 0x51ef20	390	SaveAddOnEnableState		ui	primitive		Writes each changed character node to its AddOns.txt	verified	one	ui/addons#enable-state	
-0x51f0b0	194	DropCharacterAddOnState		ui	orchestration		Drops a character's node from AddOns.cpp's add-on state list, or every node for a null name	inferred	none		
+0x51f0b0	194	DropCharacterAddOnState		ui	orchestration		Drops a character's node from the add-on state list, or every node for a null name	verified	one	ui/addonfiles#character-add-on-state	
 0x51f180	17	IsAddOnVersionChecked		ui	orchestration	int (void)	Returns whether the checkAddonVersion CVar is nonzero	verified	one	ui/addons#whether-an-add-on-may-load	
-0x51f1a0	40			ui	orchestration		Runs AddOns.cpp code that calls CVar::Set; not read here	inferred	none		
+0x51f1a0	40	SetAddonVersionCheckCVar		ui	orchestration		Stores 1 or 0 in the checkAddonVersion CVar by its flag	verified	one	ui/addonfiles#version-check-switch	
 0x51f1d0	111			ui	primitive		Runs AddOns.cpp code that calls GetSelectedCharacterName, 0x51e780; not read here	inferred	none		
 0x51f240	957	LoadAddOnByName		ui	primitive	int __fastcall (const char *name, char demand, CStatus *status)	Loads an add-on with its dependencies, files, bindings and saved variables, then signals ADDON_LOADED	verified	one	ui/addons#loading-an-add-on	
 0x51f600	71	LoadAddOnsAtStartup		ui	orchestration	void __fastcall (CStatus *status)	Loads every add-on not loaded on demand, in registration order	verified	one	ui/addons#load-order-and-cycles	
 0x51f650	1002	SaveAddOnVariables		ui	primitive		Writes each loaded add-on's account and character saved variables, deleting files with no names	verified	one	ui/addons#saved-variables-written	
 0x51fa40	257	ResetAddOnRegistry		ui	primitive		Frees the add-on registry, the sorted names and the enable state nodes	verified	one	ui/addons#finding-add-ons	
-0x51fb50	156	MoveAsideLooseInterface		ui	orchestration		Handles loose Interface GlueXML and FrameXML folders under %s.old names, then the Blizzard add-ons	inferred	none		
-0x51fbf0	167			ui	orchestration		Runs AddOns.cpp code that calls SStrPrintf, OsFileExists, 0x42aa80 and 1 more; not read here	inferred	none		
+0x51fb50	156	MoveAsideLooseInterface		ui	orchestration		Moves the loose GlueXML and FrameXML folders and Blizzard add-on folders aside to .old names	verified	one	ui/addonfiles#loose-interface-folders	
+0x51fbf0	167	MoveAsideBlizzardAddOn		ui	orchestration		Moves a Blizzard add-on folder that holds its own .toc aside to a .old name and notes it	verified	one	ui/addonfiles#loose-interface-folders	
 0x51fca0	106			ui	orchestration		Runs AddOns.cpp code that calls SMemFree, 0x521580, 0x521ec0; not read here	inferred	none		
 0x51fd10	182			ui	primitive		Runs AddOns.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x51fdd0	180			ui	primitive		Runs AddOns.cpp code not read here	inferred	none		
