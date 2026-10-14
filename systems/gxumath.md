@@ -171,16 +171,17 @@ under 3·|cross|, ending if a size reaches 0. A 3×3 fit through three corners t
 m3·y + m6` and `v = m1·x + m4·y + m7` for each unrounded projected point, over the shifted sizes.
 
 Addresses: `0x5c5ee0`, `0x5c63d0`, `0x5c4d70`, `0x58a230`, `0x7be0e0`, `0x7be2a0`, `0x7bdfc0`, `0x5c61c8`, `0x5c61ce`, `0x5c61f9`, `0x5c6306`, `0x5c6319`, `0x5c632e`
-Confidence: inferred
-Proof: none
+Confidence: verified
+Proof: one
 Test: none
 
-Read: it returns before the fit when the cross product of `p0 − p1` and `p2 − p1` has length² under 1 (`0x5c61b7`); `0x5c5fd1` copies the 0x38 dwords of the record; `0x5c60cc` to `0x5c60fc` take the area;
+It returns before the fit when the cross product of `p0 − p1` and `p2 − p1` has length² under 1 (`0x5c61b7`); `0x5c5fd1` copies the 0x38 dwords of the record; `0x5c60cc` to `0x5c60fc` take the area;
 `0x5c610d` lowers the coordinates; `0x5c61c8` to `0x5c61ce` is `fsqrt; fadd st,st; fmul 1.5`; the loop
 `0x5c61e6` halves the area; `0x5c61f9` is `shr esi,cl`; the texel pairs at `0x5c6253` are offset by 0.5 away
 from the box centre; `0x5c6306`, `0x5c6319` and `0x5c632e` take the determinant, inverse and product of
-the two 3×3 matrices; the last loop at `0x5c6352` multiplies by the reciprocal sizes. Inferred: that the
-product is a fit through the three corner correspondences, and what the capability words are.
+the two 3×3 matrices; the last loop at `0x5c6352` multiplies by the reciprocal sizes. `0x7bdfc0` is `a·b`
+with `out[3i + j]` row `i` of `a` by column `j` of `b`, so `[x y 1]` of a rounded corner through the product
+gives its texel row: the map is exact at the three corners. The capability words are `gx`'s.
 
 ## Ray and sphere
 
@@ -345,6 +346,8 @@ which the ray code reads; `0x5c6500` stores π + π in `0xc2b964`; `0x5c6520` st
 in `0xc2b858`; `0x5c6660` copies a second +∞ to `0xc2b980`. Nothing reads `0xc2b858` or
 `0xc2b980`, and `0xc2b964` is read only by `0x5c6520`. The first function of the file is `0x5c3cc0`;
 the code below it (`0x5c3c60`, `0x5c3c90`, `0x5c3ca0`) is list code of a file that is not identified.
+`0x5c5350` is part of the file: it touches only `0xc2b860` to `0xc2b960`, which lie between the
+file's own `0xc2b858` and `0xc2b964`, and no font data.
 
 Addresses: `0x5c4390`, `0x5c43a0`, `0x5c64f0`, `0x5c6500`, `0x5c6510`, `0x5c6520`, `0x5c6650`, `0x5c6660`, `0xc2b850`, `0xc2b858`, `0xc2b964`, `0xc2b980`, `0x82aa38`
 Confidence: verified
