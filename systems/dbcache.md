@@ -32,8 +32,8 @@ Proof: one
 Test: none
 
 The constructor calls are `0x554b40` and the nine like it: six pushes (persist flag, owner flag, a dword, opcode, file name,
-tag) and `mov ecx,<store>`. The dword is stored at `+0x34` (`0x55e760`): `0x57` for the item cache (`0x554c47`) and 0 for every other
-cache; nothing in the cache code reads it back. Tags are dwords, so `BOMW` is the bytes `42 4f 4d 57`.
+tag) and `mov ecx,<store>`. Each cache type has its own copy of the constructor, which stores the dword at `+0x34`: `0x57` for the item cache
+(`0x554c47` calls `0x55b0a0`, store `0x55b160`) and 0 for every other cache (the name cache's copy stores it at `0x55e760`); nothing in the cache code reads it back. Tags are dwords, so `BOMW` is the bytes `42 4f 4d 57`.
 
 The file is written by the exit function of each cache (`0x5566d0` for creatures), which the cache's `_atexit` thunk jumps to
 (`0x554b60` registers `0x554b70`, which is `jmp 0x5566d0`). `0x5576d0`, a second writer of the creature file, has no branch or
@@ -109,7 +109,7 @@ Proof: one
 Test: none
 
 The constructor `0x55e6a0` zeroes `+0x14` to `+0x20`, stores the vtable (`0x80917c` for names), sets `+0x24` to −1 and stores its arguments
-(`0x55e74e` to `0x55e770`). The dword goes to `+0x34` at `0x55e760`: `0x57` for the item cache, 0 for the others (the constructor calls, above). Nothing in `0x554b00` to `0x5738c0` reads a node's age, and a hit changes nothing. `0x556ff0`, the creature cache's counterpart of the name removal `0x560170`, has no `e8`, `e9` or dword reference in the image.
+(`0x55e74e` to `0x55e770`). The dword goes to `+0x34` at `0x55e760`; the item cache's copy `0x55b0a0` stores its `0x57` at `0x55b160` (the constructor calls, above). Nothing in `0x554b00` to `0x5738c0` reads a node's age, and a hit changes nothing. `0x556ff0`, the creature cache's counterpart of the name removal `0x560170`, has no `e8`, `e9` or dword reference in the image.
 
 ## Hash growth
 
@@ -278,7 +278,7 @@ The petition's count is a signed dword; the loop runs zero times for 0 or less. 
 
 ## Name cache node
 
-A name node is `0x188` bytes plus an extra, allocated by `0x55e810` with the tag `0x855ec8`. Its record starts at `+0x20` and is `0x148` bytes. The valid byte is `+0x170`, the callback list
+A name node is `0x188` bytes plus an extra, allocated by `0x55e810` with the type name `0x855ec8`. Its record starts at `+0x20` and is `0x148` bytes. The valid byte is `+0x170`, the callback list
 `+0x178`, a skip-from-save flag `+0x180` and the dispatching byte `+0x181`. In the record, `+0x13c` is the sex.
 
 Addresses: `0x55e810`, `0x855ec8`, `0x55fb9f`, `0x55fbeb`, `0x560370`, `0x55e894`, `0x5603e5`, `0x55ee0b`, `0x560033`, `0x517f80`, `0x55ec70`, `0x55fa50`, `0x55fee0`
