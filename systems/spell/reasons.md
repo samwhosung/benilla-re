@@ -44,13 +44,13 @@ but never reports it.
 
 ## Packets of a local refusal
 
-A refusal of the spell in flight cancels it on the wire. The reporter aborts with `0x6e4940(1, !fromServer,
-reason)` when the reported spell is the in-flight spell, so a client refusal sends `CMSG_CANCEL_CAST` with its id,
-unless a targeting word is up (the abort then only clears it). If the reported spell is the player's
-auto-repeat, the reporter first stops that (`CMSG_CANCEL_AUTO_REPEAT_SPELL`, popping the in-flight slot), so no
-cancel follows. Reason 0x17 does neither; a refusal sends no cast. The binder's range failure
-(0x59, 0x76) is such a refusal: it reports after its bind cleared its bits, so the cancel goes only when the word is
-empty, the caster guid is zeroed, and the binder then restores the word.
+The cast request pushes its spell in flight after the validator, so only the refusals that follow the push
+cancel it: the arm's (reasons 9, 0xa, 0x2d) and the binder's range failure (0x59, 0x76). The reporter aborts
+with `0x6e4940(1, !fromServer, reason)` when the reported spell is the in-flight one; that sends
+`CMSG_CANCEL_CAST` unless a targeting word is up, when it only clears the word. For the player's
+auto-repeat spell the reporter first stops the repeat (`CMSG_CANCEL_AUTO_REPEAT_SPELL`, popping the slot), so no
+cancel follows. Reason 0x17 does neither. The binder reports after its bind cleared its bits, so its cancel
+goes only when the word is empty; the abort zeroes the caster guid and the binder restores the word.
 
 Addresses: `0x6e1c67`, `0x6e1c7a`, `0x6e1cd9`, `0x6e1ce1`, `0x6e1cea`, `0x6e2201`, `0x6e2209`, `0x6e220e`, `0x6e2218`, `0x6e4940`, `0x6ea080`, `0x6ea14e`, `0x6ea154`, `0x6ea160`
 Confidence: verified
