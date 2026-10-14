@@ -68,7 +68,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x589dc0` and its target `0x5933c0` (which rounds each float colour to a byte with `+0.5` and `__ftol`) have no caller. Light state is applied before each draw: Direct3D by `0x5a1b60` (`SetLight` slot `+0xcc`, `LightEnable` `+0xd4`), OpenGL by `0x59c820` (`glLightfv`).
+`0x589dc0` has no caller, and its target `0x5933c0` (which rounds each float colour to a byte with `+0.5` and `__ftol`) is called only from `0x589dc0`. Light state is applied before each draw: Direct3D by `0x5a1b60` (`SetLight` slot `+0xcc`, `LightEnable` `+0xd4`), OpenGL by `0x59c820` (`glLightfv`).
 
 ## Lighting at draw time
 

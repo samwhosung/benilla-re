@@ -6,7 +6,7 @@ Roots: `0x589ac0`, `0x589a00`, `0x589ca0`, `0x58b740`, `0x58bc90`, `0x5899f0`, `
 
 ## Backend selection and creation
 
-`0x63a230` (the console's graphics start-up) sets the device type to 1 (Direct3D), then to 0 (OpenGl) when the CVar `gxApi` equals `OpenGl` ignoring case, then to 0 when command-line flag 5 (`-opengl`) is present, then to 1 when flag 0 (`-d3d`) is present. `gxApi` is registered at `0x63a82a` with the default value `direct3d` (`0x864f7c`). It calls `GxDevCreate` (`0x589ac0`) with the type, the window procedure `0x42cfe0` and the format record. `GxDevCreate` allocates and constructs a `CGxDeviceOpenGl` (type 0, `0x58dd70`) or a `CGxDeviceD3d` (type 1, `0x58ba70`), stores it at `0xc0ed38`, and calls its slot `+0x20` with the format and window procedure; on failure it calls slot `+0x18` with 1 and returns 0.
+`0x63a230` (the console's graphics start-up) sets the device type to 1 (Direct3D), then to 0 (OpenGl) when the CVar `gxApi` equals `OpenGl` ignoring case, then to 0 when command-line flag 5 (`-opengl`) is present, then to 1 when flag 0 (`-d3d`) is present. `gxApi` is registered at `0x63a833` with the default value `direct3d` (`0x864f7c`). It calls `GxDevCreate` (`0x589ac0`) with the type, the window procedure `0x42cfe0` and the format record. `GxDevCreate` allocates and constructs a `CGxDeviceOpenGl` (type 0, `0x58dd70`) or a `CGxDeviceD3d` (type 1, `0x58ba70`), stores it at `0xc0ed38`, and calls its slot `+0x20` with the format and window procedure; on failure it calls slot `+0x18` with 1 and returns 0.
 
 Addresses: `0x63a230`, `0x63a3bb`, `0x63a3c9`, `0x63a3d5`, `0x63a3e3`, `0x63a82a`, `0x589ac0`, `0x58dd70`, `0x58ba70`, `0xc0ed38`, `0x419c10`
 Confidence: verified
@@ -138,20 +138,22 @@ The ARB path asks for the number of formats (`0x2000`), then per format window d
 
 ## OpenGL pixel format choice
 
-`0x59dcf0(window, format)` builds an attribute list (draw to window and support OpenGL `0x2010`, `0x2027`, acceleration, pixel type, colour, alpha and depth sizes from the format's bit-depth code, stencil, and multisample count) and passes it to the entry point at `0xc0f2e0`. It checks the format it got with `0x59e070`, which wraps the ARB attribute query for one attribute, and logs `SetupPixelFormatWGL(): pixelFormat does not match requested` through `0x595e70` when a field differs.
+`0x59dcf0(dc, format)` (`ecx` is the device context, `edx` the format record) builds an attribute list for the entry point at `0xc0f2e0` (`wglChoosePixelFormatARB`, called with the list, no float list and room for one format): draw to window `0x2001`, support OpenGL `0x2010`, full acceleration `0x2027` for `0x2003`, double buffer `0x2011`, RGBA pixel type `0x2013`, the red, green and blue sizes (`0x2015`, `0x2017`, `0x2019`), alpha `0x201b`, depth `0x2022` and stencil `0x2023` sizes chosen from the format's bit-depth codes, and, when the multisample extension flag `0xc0f2ac` is set and the format's sample count at `+0x1c` is above 1, sample buffers `0x2041` and samples `0x2042`.
 
-Addresses: `0x59dcf0`, `0x59e070`, `0x595e70`, `0x85c434`, `0xc0f2e0`
-Confidence: inferred
-Proof: none
+Addresses: `0x59dcf0`, `0x59e070`, `0x595e70`, `0x85c434`, `0xc0f2e0`, `0xc0f2e8`, `0xc0f2ac`
+Confidence: verified
+Proof: one
 Test: none
 
-`0x59dcf0` reads the attribute values back one at a time (`0x201b`, `0x2015`, `0x2017`, `0x2019`, `0x2023`, `0x2022`, `0x2042`) and ends with `SetPixelFormat` (`0x59e047`). The reset ends with `glEnable` of capability `0xb57` (colour material) and `0xc11` (scissor), `glColorMaterial(0x408, 0x1602)` and `glPixelStorei(0xcf5, 1)`, unpack alignment 1.
+With the format it got back, `0x59dcf0` asks `0x59e070(dc, format, attribute, &value)` (a wrapper of `wglGetPixelFormatAttribivARB` through `0xc0f2e8`, one attribute) for each field and logs `SetupPixelFormatWGL(): pixelFormat does not match requested` through `0x595e70` when one differs; it returns 0 when the choice fails or a field differs. The fields read back, in order, are, only when the byte at `+7` is 0, alpha `0x201b` (skipped when the format's `+0x24` is 1), red, green and blue; then stencil `0x2023` (unless the format's `+0xc` is 5), depth `0x2022` and samples `0x2042`; when all match, `0x59dcf0` ends with `SetPixelFormat` (`0x59e047`) on a zeroed `0x28`-byte descriptor and returns its result. The reset ends with `glEnable` of capability `0xb57` (colour material) and `0xc11` (scissor), `glColorMaterial(0x408, 0x1602)` and `glPixelStorei(0xcf5, 1)`, unpack alignment 1.
 
 ## OpenGL initial state
 
-`0x59ce30` sets the context's initial state: it clears the shadow cache (`0x59ba70`), loads identity in model-view mode, sets the S and T texture generation planes to zero on every texture unit, enables point-sprite coordinate replacement on each unit when the entry point at `0xc0f2a0` exists, applies the lights (`0x591ef0`), sets a zero light-model ambient, two-sided lighting and separate specular, and enables the client vertex array.
+`0x59ce30` sets the context's initial state: it clears the shadow cache (`0x59ba70`), loads the model-view identity, and on each texture unit sets the R and Q generation planes, eye and object, to `(0, 0, 1, 0)` and `(0, 0, 0, 1)`. When the flag at `0xc0f2a0` is set it enables point-sprite coordinate replacement on each unit. It then applies the lights (`0x591ef0`), sets a zero light-model ambient, separate specular and local viewer, loads the product of two cached matrices through `0x5a0090`, enables the vertex array (`0x8074`), capability `0x8650` when the vertex program flag `0xc0f254` is set, colour material (`0xb57`, `glColorMaterial(0x408, 0x1602)`) and scissor (`0xc11`), and sets unpack alignment 1 (`0xcf5`).
 
-Addresses: `0x59ce30`, `0x59ba70`, `0x591ef0`, `0xc0f2a0`
-Confidence: inferred
-Proof: none
+Addresses: `0x59ce30`, `0x59ba70`, `0x591ef0`, `0x5a0090`, `0xc0f2a0`, `0xc0f254`, `0xc0f3ec`
+Confidence: verified
+Proof: one
 Test: none
+
+The flag at `0xc0f2a0` is 1 when the GL version at `0xc0f3ec` is at least 2.0 (`0x20000`) or the extension `GL_ARB_point_sprite` is listed (`0x59b7a0`), otherwise 0; `0x58e797` copies it to `+0x310` of the device.

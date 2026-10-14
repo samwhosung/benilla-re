@@ -94,7 +94,7 @@ Test: none
 
 ## Texture cache
 
-`0x47ae30(name, flags)` returns a cache entry for a texture file name, creating it on a miss and adding 1 to its count at `+0xbc`. An entry is `0xc8` bytes from a heap of 200 entries (`0x47aca0`), keyed by the hash of the name (`0x64af90`), name at `+0x38` (127 bytes), texture handle at `+0x18`, a failed-load mark at `+0xc4`. `0x47b0c0` loads it through `0x47ac10`, which tries `0x449610` on the name and again on the alternate name of `0x44b320`, marking `+0xc4` on failure. `0x47b010` subtracts 1 and frees the entry at 0 or less.
+`0x47ae30(name, flags)` returns a cache entry for a texture file name, creating it on a miss and adding 1 to its count at `+0xbc`. An entry is `0xc8` bytes from an object heap (`0x47aca0` makes it on first use with `0x463920(size 0xc8, count 0x400)`, which stores the size at `+0x10` and the count at `+0x14`), keyed by the hash of the name (`0x64af90`), name at `+0x38` (127 bytes), texture handle at `+0x18`, a failed-load mark at `+0xc4`. `0x47b0c0` loads it through `0x47ac10`, which tries `0x449610` on the name and again on the alternate name of `0x44b320`, marking `+0xc4` on failure. `0x47b010` subtracts 1 and frees the entry at 0 or less.
 
 Addresses: `0x47ae30`, `0x47aca0`, `0x47ac10`, `0x47b0c0`, `0x47b010`, `0x47b000`, `0x47b120`, `0x47b150`, `0x47b0e0`, `0x47b1f0`
 Confidence: verified
@@ -105,12 +105,14 @@ Test: none
 
 ## Device texture upload
 
-Slot 0 of the device uploads a texture's levels when the texture is bound or touched: `0x59f5b0` (OpenGL, through `0x59f5d0`) and `0x5a0d70` (Direct3D, through `0x5a0a80`). Both ask the texture's update callback (`+0x44`, with the owner at `+0x40`) for each level: mode 0 begins, mode 1 returns a level's pitch and pixels, mode 2 ends; a texture whose flags have bit 7 set is dynamic and is not uploaded here. The first level uploaded is `min([dev+0x31c], levels - 1)`, so that many top levels are skipped, and each next level has half the size down to 1 by 1. A texture with filter mode 0 or 1, or flag bit 6, and without bit 5 gets one level.
+Slot 0 of the device uploads a texture's levels when the texture is bound or touched: `0x59f5b0` (OpenGL, through `0x59f5d0`) and `0x5a0d70` (Direct3D, through `0x5a0a80`). Both ask the texture's update callback (`+0x44`, with the owner at `+0x40`) for each level: mode 0 begins, mode 1 returns a level's pitch and pixels, mode 2 ends; a texture whose flags have bit 7 set is dynamic and is not uploaded here. The first level uploaded is `min([dev+0x31c], levels - 1)`, so that many top levels are skipped, and each next level has half the size down to 1 by 1.
 
-Addresses: `0x59f5b0`, `0x59f5d0`, `0x59f0f0`, `0x59f270`, `0x5a0d70`, `0x5a0a80`, `0x5a4f60`, `0x592050`, `0x80a034`, `0x80a07c`, `0x80a0a0`
+Addresses: `0x59f5b0`, `0x59f5d0`, `0x59f0f0`, `0x59f270`, `0x5a0d70`, `0x5a0a80`, `0x5a0880`, `0x5a4f60`, `0x592050`, `0x80a034`, `0x80a07c`, `0x80a0a0`
 Confidence: verified
 Proof: one
 Test: none
+
+The first level and count come from one rule (`0x5a0880` for Direct3D, inline in `0x59f5d0`). Filter mode (the low three flag bits) 0 or 1, or flag bit 6, with bit 5 clear: one level at full size, first level 0, count 1, no skip. Otherwise the count is `floor(log2(max(width, height))) + 1`, and with bit 5 set it is the first level plus 1: one level, the first after the skip.
 
 OpenGL creates the texture name with `glGenTextures` on first use, binds it (`0x59f0f0`), applies the sampler (`0x59f170`) and, for the compressed formats 5 to 7 when the extension flag `[0xc0f274]` is set, limits `GL_TEXTURE_MAX_LEVEL` (`0x813b`) to the count of halvings until the smaller side is 4 or less; `0x59f270` uploads one level with `glTexSubImage2D`, `glCompressedTexSubImage` or the rectangle variants by the tables at `0x80a034` (internal format), `0x80a07c` (format) and `0x80a0a0` (type), indexed by `GxTex` format. Direct3D locks each level of the texture (`GetSurfaceLevel`, `LockRect` with `0x800`) and copies the rows (`0x5a4f60`). `0x592050` stores the skip count at `+0x31c`.
 

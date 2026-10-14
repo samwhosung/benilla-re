@@ -5806,7 +5806,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47aa90	12			gx	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x47aaa0	359			gx	primitive		Runs its object file code that calls 0x47b6f0, 0x47b4f0, 0x47b530 and 1 more; not read here	inferred	none		
 0x47ac10	131	TextureCacheLoad		gx	orchestration	uint32_t __thiscall ()	Loads a cache entry's texture, retrying with the alternate file name, and marks a failure at +0xc4	verified	one	gx/textures#texture-cache	
-0x47aca0	197	TextureCacheEntryAlloc		gx	orchestration	void * __cdecl ()	Takes a 0xc8-byte cache entry from the 200-entry heap, creating the heap on first use	verified	one	gx/textures#texture-cache	
+0x47aca0	197	TextureCacheEntryAlloc		gx	orchestration	void * __cdecl ()	Takes a 0xc8-byte cache entry from an object heap of 0x400 entries, creating the heap on first use	verified	one	gx/textures#texture-cache	
 0x47ad70	113			gx	orchestration		Runs its object file code that calls HandleClose, 0x47b4f0, 0x47b6c0 and 1 more; not read here	inferred	none		
 0x47adf0	1			gx	unreached		Runs its object file code not read here	inferred	none		
 0x47ae00	35			gx	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -16340,7 +16340,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x589d50	14			gx	orchestration		Runs its object file code that calls 0x5922c0; not read here	inferred	none		
 0x589d60	18			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x589d80	61	SetDeviceLight		gx	orchestration	void __fastcall (uint32_t index, const void *light, float x, float y, float z, uint32_t enabled)	Sets one of the device's four fixed lights and its enable flag; an index of 4 or more fails	verified	one	models/render#lighting-lanes	
-0x589dc0	27	GxLightPack		gx	unreached	void __fastcall (uint32_t index, uint32_t *flags)	Packs a light record's colours through GxLightRecordPack; nothing calls it	verified	one	gx/draw#fixed-lights	
+0x589dc0	27	GxLightPack		gx	unreached	void __fastcall (uint32_t index, uint32_t *outRecord)	Packs a light record's colours through GxLightRecordPack; nothing calls it	verified	one	gx/draw#fixed-lights	
 0x589de0	27	SetDeviceLightEnabled		gx	orchestration	void __fastcall (uint32_t index, uint32_t enabled)	Enables or disables one of the device's four fixed lights, rejecting an index of 4 or more	verified	one	models/lights#fixed-function-lights	
 0x589e00	43	GxRsSetWord		gx	orchestration	void __fastcall (uint32_t id, uint32_t value)	Sets a one-word render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
 0x589e30	39	GxRsSetFloat		gx	orchestration	void __fastcall (uint32_t id, float value)	Sets a float render state through the device, rejecting an id of 0x46 or more	verified	one	gx/renderstate#cache-dirty-list-and-stack	
@@ -16726,7 +16726,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x592fd0	108			gx	orchestration		Runs its object file code that calls 0x58a2a0, 0x58a350; not read here	inferred	none		
 0x593040	751	GxLightRecordUpdate		gx	primitive	void * __thiscall (const void *light)	Copies a light's position, scaled colours and attenuation into the record, setting dirty bits for what changed	verified	one	gx/draw#fixed-lights	gx::color_modulate_matches_binary
 0x593330	143	CGxDevice::SetLight		gx	primitive	void __thiscall (uint32_t index, const void *light, const float *offset)	Copies a light into its record and subtracts the offset from a positional light's position	verified	one	gx/draw#fixed-lights	gx::sub_vec3_matches_binary
-0x5933c0	419	GxLightRecordPack		gx	unreached	void __thiscall (uint32_t index, uint32_t *flags)	Rounds a light record's float colours to bytes with +0.5; nothing calls it	verified	one	gx/draw#fixed-lights	
+0x5933c0	419	GxLightRecordPack		gx	unreached	void __thiscall (uint32_t index, uint32_t *outRecord)	Rounds a light record's float colours to bytes with +0.5; called only from the unreached 0x589dc0	verified	one	gx/draw#fixed-lights	
 0x593570	41	CGxDevice::SetLightEnabled		gx	orchestration	void __thiscall (uint32_t index, uint32_t enabled)	Sets a light record's enable word and its enable dirty bit when it differs	verified	one	gx/draw#fixed-lights	
 0x5935a0	33			gx	primitive		Runs its object file code not read here	inferred	none		
 0x5935d0	71			gx	orchestration		Runs its object file code that calls 0x5935a0; not read here	inferred	none		
@@ -16999,7 +16999,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59ca60	828			gx	host		Runs its object file code that calls MultiplyMatrix4, 0x5a0090, 0x59baa0 and 2 more; not read here	inferred	none		
 0x59cda0	1			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x59cdb0	115			gx	host		Runs its object file code not read here	inferred	none		
-0x59ce30	494	CGxDeviceOpenGl::InitState		gx	host	void __thiscall ()	Sets the context's initial matrix, texture generation, light model and enable state	inferred	none	gx/device#opengl-initial-state	
+0x59ce30	494	CGxDeviceOpenGl::InitState		gx	host	void __thiscall ()	Sets the context's initial matrix, texture generation, light model and enable state	verified	one	gx/device#opengl-initial-state	
 0x59d020	115	CGxDeviceOpenGl::ApplyStageTexture		gx	orchestration	void __thiscall (uint32_t stage, void *texture)	Binds a texture to a stage through its target and applies its sampler and mip upload state, or unbinds it	verified	one	gx/renderstate#stage-sampler-state	
 0x59d0a0	53	CGxDeviceOpenGl::ApplyCombinePreset		gx	orchestration	void __thiscall (uint32_t stage, uint32_t preset)	Selects a stage and applies a combine preset through the cached internal state 0x2b plus the stage	verified	one	gx/renderstate#texture-stage-combine	
 0x59d0e0	58	CGxDeviceOpenGl::ApplyMipBias		gx	orchestration	void __thiscall (uint32_t stage, float bias)	Sets a stage's texture LOD bias when the extension is present	verified	one	gx/renderstate#render-state-ids	
@@ -17007,8 +17007,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x59d350	1606	CGxDeviceOpenGl::ApplyRenderState		gx	orchestration	void __thiscall (uint32_t id)	Applies one render state through OpenGL calls by the jump table 0x59d998	verified	one	gx/renderstate#render-state-ids	gx::color_norm_at_0x59d350_matches_binary
 0x59da70	43			gx	host		Runs its object file code that calls 0x59dcf0, 0x59daa0; not read here	inferred	none		
 0x59daa0	560			gx	host		Runs its object file code that calls 0x595e70; not read here	inferred	none		
-0x59dcf0	871	CGxDeviceOpenGl::ChoosePixelFormat		gx	host	void __thiscall (void *window, const void *format)	Builds the pixel format attribute list, chooses a format, checks it against the request and sets it	inferred	none	gx/device#opengl-pixel-format-choice	
-0x59e070	27	CGxDeviceOpenGl::GetPixelFormatAttrib		gx	orchestration	uint32_t __fastcall (void *dc, uint32_t format, uint32_t attrib, uint32_t *value)	Queries one pixel format attribute through the ARB entry point	inferred	none	gx/device#opengl-pixel-format-choice	
+0x59dcf0	871	CGxDeviceOpenGl::ChoosePixelFormat		gx	host	uint32_t __fastcall (void *dc, const void *format)	Builds the pixel format attribute list, chooses a format, checks it against the request and sets it	verified	one	gx/device#opengl-pixel-format-choice	
+0x59e070	27	CGxDeviceOpenGl::GetPixelFormatAttrib		gx	orchestration	uint32_t __fastcall (void *dc, uint32_t format, uint32_t attrib, uint32_t *value)	Queries one pixel format attribute through the ARB entry point	verified	one	gx/device#opengl-pixel-format-choice	
 0x59e090	22			gx	host		Runs its object file code not read here	inferred	none		
 0x59e0b0	116			gx	primitive		Runs its object file code not read here	inferred	none		
 0x59e130	86			gx	primitive		Runs its object file code that calls 0x59e0b0; not read here	inferred	none		
@@ -18698,7 +18698,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d1100	5	InitFontGlyphInfinityThunk		gx	orchestration	void __cdecl ()	Jumps to 0x5d1110; a static initializer	verified	one	gx/glyphs#static-initializers	
 0x5d1110	11	InitFontGlyphInfinity		gx	orchestration	void __cdecl ()	Copies +inf into the object file's infinity global	verified	one	gx/glyphs#static-initializers	
 0x5d1120	475	GlyphBitmapLoad		gx	orchestration	uint8_t __fastcall (void *face, uint32_t maxRows, uint32_t ch, uint32_t maxWidth, void *out, uint32_t flag, uint32_t pad)	Loads and renders a glyph through the font engine and copies its bitmap into a record under a new buffer	verified	one	gx/glyphs#glyph-bitmap-load	font::rasterize_glyph_difftest
-0x5d1300	88	GlyphLoadRender		gx	orchestration	uint32_t __thiscall (uint32_t ch, uint32_t flag)	Loads a glyph with the flag's load flags and renders it, returning 1 when both calls succeed	verified	one	gx/glyphs#glyph-bitmap-load	
+0x5d1300	88	GlyphLoadRender		gx	orchestration	uint32_t __fastcall (void *face, uint32_t ch, uint32_t flag)	Loads a glyph with the flag's load flags and renders it, returning 1 when both calls succeed	verified	one	gx/glyphs#glyph-bitmap-load	
 0x5d1360	111	GlyphClipOffsets		gx	primitive	void __thiscall (uint32_t *a, uint32_t *b, uint32_t top, uint32_t maxWidth, uint32_t maxRows)	Computes how far a glyph bitmap extends past the line and the width and writes the two clip offsets	inferred	none	gx/glyphs#glyph-bitmap-load	font::glyph_vplace_difftest
 0x5d13d0	5	InitFontGlyphTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d13e0; a static initializer	verified	one	net/layout#object-files	
 0x5d13e0	15	InitFontGlyphTwoPi		gx	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#object-files	

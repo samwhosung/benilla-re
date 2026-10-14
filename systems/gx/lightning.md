@@ -6,14 +6,14 @@ Roots: `0x7b0760`, `0x7b0780`, `0x7b07f0`, `0x7b0950`, `0x7b0a40`, `0x7b0a80`, `
 
 ## Static initializers
 
-The object file's run in the initializer table is `0x7af990` (copies +∞ from `0x81d814` to `0xcf57ac`), `0x7b0c10` (`2π` to `0xcf5850`), `0x7b0c30` (`1 / 2π` to `0xcf57b8`) and `0x7af5c0`, which seeds the generator and registers an empty exit hook with `_atexit`. The render function lazily builds its four static objects on first use, each with an empty exit hook: the identity matrix `0xcf5768` (hook `0x7b06f0`), the saved view `0xcf57c0` (`0x7b06e0`), the camera-relative view `0xcf5800` (`0x7b06d0`) and the normal `(0, 0, 1)` at `0xcf5840` (`0x7b06c0`). The scratch centre line has its own hook, `0x7afc90`.
+The object file's run in the initializer table is `0x7af990` (copies +∞ from `0x81d814` to `0xcf57ac`), `0x7b0c10` (`2π` to `0xcf5850`), `0x7b0c30` (`1 / 2π` to `0xcf57b8`) and `0x7af5c0`, which seeds the generator and registers an empty exit hook with `_atexit`. The render function lazily builds its four static objects on first use, each with an empty exit hook: the identity matrix `0xcf5768` (hook `0x7b06f0`), the saved view `0xcf57c0` (`0x7b06e0`), the camera-relative view `0xcf5800` (`0x7b06d0`) and the normal `(0, 0, 1)` at `0xcf5840` (`0x7b06c0`). The static centre line has its own hook, `0x7afc90`.
 
 Addresses: `0x7af5c0`, `0x7af5d0`, `0x7af5e0`, `0x7af990`, `0x7b0c10`, `0x7b0c30`, `0xcf5768`, `0xcf57c0`, `0xcf5800`, `0x7b06c0`, `0x7b06d0`, `0x7b06e0`, `0x7b06f0`, `0x7afc90`, `0x7af5f0`, `0x7af9a0`, `0x7b0c20`, `0x7b0c40`
 Confidence: verified
 Proof: one
 Test: none
 
-The guard bits are the bytes at `0xcf57a8` (bits 0 to 3 for the four objects) and `0xcf584c` (the scratch array). The generator's seed call is `NTempest::CRndSeed::SetSeed(0xcf57b0, 0)` at `0x7af5d0`.
+The guard bits are the bytes at `0xcf57a8` (bits 0 to 3 for the four objects) and `0xcf584c` (the static array). The generator's seed call is `NTempest::CRndSeed::SetSeed(0xcf57b0, 0)` at `0x7af5d0`.
 
 ## Renderer and bolt objects
 
@@ -23,6 +23,8 @@ Addresses: `0x7b0760`, `0x7b0780`, `0x7b07f0`, `0x7b0950`, `0x7b09c0`, `0x7b0ac0
 Confidence: verified
 Proof: one
 Test: none
+
+Bit 1 survives handle reuse: `DestroyBolt` leaves the bolt's flags alone and `CreateBolt` on a reused handle only ORs in bit 0, so a shown bolt is drawn again without a `ShowBolt`.
 
 The arrays are the centre-line points (count `+0x34`, data `+0x38`, 12 bytes each), the ribbon vertices (`+0x40`, `+0x44`), the texture coordinates (`+0x4c`, `+0x50`, 8 bytes) and the indices (`+0x58`, `+0x5c`, 2 bytes).
 
@@ -52,7 +54,7 @@ The `u` values are `fild(k) * (1 / (vertexCount - 2))` for the even index `k` of
 
 ## Bolt render
 
-`0x7afcb0(handle, eye)` draws an active bolt. It calls the callback, if set, as `callback(argument, handle, &start, &end)` and sets the rebuild bit. It saves the device view matrix, sets the view to the identity and transforms every centre-line point by a translation by `-eye` times the saved view. For each segment it forms the view-space perpendicular `(-dy, dx, 0)`, normalises it unless shorter than 0.001, and scales it by the width `w`. A shared point's vertex pair ends at `point ± (w1 + w2) / 2`; the first and last pairs are set to the end points.
+`0x7afcb0(handle, eye)` draws an active bolt. It calls the callback, if set, as `callback(argument, handle, &start, &end)` and sets the rebuild bit. It saves the device view matrix, sets the view to the identity and transforms every centre-line point by a translation by `-eye` times the saved view. For each segment it forms the view-space perpendicular `(-dy, dx, 0)`, normalises it only when its length is above 0.001, and scales it by the width `w`. A shared point's vertex pair ends at `point ± (w1 + w2) / 2`; the first and last pairs are set to the end points.
 
 Addresses: `0x7afcb0`, `0x58b0b0`, `0x58b050`, `0x7bc6a0`, `0x7bca80`, `0x7ffa24`, `0x801360`
 Confidence: verified
