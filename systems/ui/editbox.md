@@ -85,7 +85,7 @@ the line's edge, or the text's with Ctrl; Shift extends the selection. Up and Do
 a multi-line box and walk the history otherwise. Backspace and Delete remove the selection or one
 character, a word with Ctrl. Ctrl+Insert copies, Shift+Insert pastes, Shift+Delete cuts.
 
-Addresses: `0x77b3cb`, `0x77b3de`, `0x77b3e7`, `0x77b405`, `0x77b40c`, `0x77b422`, `0x77b438`, `0x77b44a`, `0x77b459`, `0x77b46d`, `0x77b622`, `0x77b5f6`, `0x77b499`, `0x77b4d9`, `0x77b64e`, `0x77b675`, `0x77b5c6`, `0x77b56c`, `0x77b519`, `0x77c3c0`, `0x77c310`, `0x77c3f0`, `0x77b730`, `0x77c6b0`, `0x77c7a0`, `0x77c980`, `0x77ca60`, `0xcf4dc4`
+Addresses: `0x77b3cb`, `0x77b3de`, `0x77b3e7`, `0x77b405`, `0x77b40c`, `0x77b422`, `0x77b438`, `0x77b44a`, `0x77b459`, `0x77b46d`, `0x77b622`, `0x77b5f6`, `0x77b499`, `0x77b4d9`, `0x77b64e`, `0x77b675`, `0x77b5c6`, `0x77b56c`, `0x77b519`, `0x77c3c0`, `0x77c310`, `0x77c3f0`, `0x77b730`, `0x77c6b0`, `0x77c7a0`, `0x77c8c0`, `0x77c980`, `0x77ca60`, `0xcf4dc4`
 Confidence: verified
 Proof: one
 Test: none
@@ -93,11 +93,32 @@ Test: none
 Escape (0x200) runs `+0x400` (`0x77b3de`) and `0x77b730(1)`. 0x201 to 0x20b index the table at
 0x77b704 (`0x77b405`): Enter inserts `"\n"` with bit 2 (`0x77b422`), else sets `0xcf4dc4` around
 `+0x3f8` and `0x77b730(0)` (`0x77b438` to `0x77b459`); Tab runs `+0x410` and `0x77b730(3)`. The
-arrows (`0x77b622`, `0x77b5f6`) call `0x77c870`, `0x77c750`, or `0x77c8c0` and `0x77c7a0` with
-Ctrl, passing Shift; `0x77c6b0` moves by characters, `0x77c7a0` over non-spaces then spaces.
-Home and End (`0x77b499`, `0x77b4d9`) call `0x77c980` (back to a `"\n"`) and `0x77c9f0`, or
-`0x77ca60` and `0x77cac0`. Up and Down test bit 2 (`0x77b64e`, `0x77b675`). Backspace calls `0x77c3c0`, or `0x77c3f0` with
-Ctrl; Delete `0x77c2e0`, or `0x77c310` with Ctrl.
+arrows (`0x77b622`, `0x77b5f6`) call `0x77c870`, `0x77c750`, or `0x77c8c0` and `0x77c7a0` with Ctrl,
+passing Shift; `0x77c6b0` moves by characters, `0x77c7a0` over non-spaces then spaces. Home and End
+(`0x77b499`, `0x77b4d9`) call `0x77c980` (back to a `"\n"`) and `0x77c9f0`, or `0x77ca60` and
+`0x77cac0`. Up and Down test bit 2 (`0x77b64e`, `0x77b675`). Backspace calls `0x77c3c0`, or
+`0x77c3f0` with Ctrl; Delete `0x77c2e0`, or `0x77c310` with Ctrl.
+
+## Word steps
+
+A word step tests characters with `iswspace`. Ctrl+Right moves over non-spaces, then over spaces;
+Ctrl+Left moves back over spaces, then over non-spaces, testing the character decoded from the
+byte before the cursor. Ctrl+Delete removes the spaces after the cursor, then the word;
+Ctrl+Backspace removes the spaces before it, then the word, decoding each from the start of the
+character before the cursor.
+
+Addresses: `0x77c7a0`, `0x77c7d3`, `0x77c81b`, `0x77c8c0`, `0x77c8e7`, `0x77c924`, `0x77c310`, `0x77c351`, `0x77c393`, `0x77c3f0`, `0x77c423`, `0x77c443`, `0x77c485`, `0x77bd30`, `0x77c6b0`, `0x77c280`, `0x74006f`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x77c7a0` steps forward with `0x77c6b0` until `_iswspace` (`0x74006f`) holds (`0x77c7d3`), then
+while it holds (`0x77c81b`). `0x77c8c0` decodes `sgetu8` at `+0x32c + cursor − 1` and steps back
+with `0x77c6b0(−1)` while `_iswspace` holds (`0x77c8e7`), then while it fails (`0x77c924`); without
+Shift it empties a selection. `0x77c310` deletes forward with `0x77c280` while `_iswspace` holds
+(`0x77c351`), then while it fails (`0x77c393`). `0x77c3f0` deletes backward the same way
+(`0x77c443`, `0x77c485`), decoding at `0x77bd30(cursor)` (`0x77c423`), the nearest index below
+with a nonzero class entry.
 
 ## Ctrl letter keys
 
@@ -161,9 +182,10 @@ letters exceed it (`0x77c0d0`). It stores the word at `+0x320` when that is 0 (`
 
 A negative letter limit is never met: the trim loop deletes backward from the end until the text
 is empty, and an empty text still has more letters than the limit, so the next insertion of any
-text, `SetText("")` included, never returns.
+text never returns. That includes `SetText("")` on a box with text; on an empty box `SetText`
+returns early, since the texts are equal.
 
-Addresses: `0x77c08d`, `0x77c0d0`, `0x77c0e9`, `0x77c280`, `0x77c2a9`, `0x77bb30`, `0x77bbd7`, `0x799110`, `0x7991f2`
+Addresses: `0x77c08d`, `0x77c0d0`, `0x77c0e9`, `0x77c280`, `0x77c2a9`, `0x77bb30`, `0x77bbd7`, `0x799110`, `0x7991f2`, `0x77be4b`
 Confidence: verified
 Proof: one
 Test: none
@@ -171,29 +193,33 @@ Test: none
 `0x77c08d` skips only a limit of 0. The loop calls `0x77c280(−1)` and `0x77bc80` and repeats on
 `jg` (`0x77c0e9`). At cursor 0, `0x77bb30` with −1 returns 0 at `0x77bbd7` (`cmp ecx,edi; jbe`),
 so `0x77c510` deletes nothing. `SetMaxLetters` (`0x799110`) stores the truncated number as given
-(`0x7991f2`).
+(`0x7991f2`). `0x77be00` returns when `0x64a480` finds the texts equal (`0x77be4b`), before
+inserting.
 
 ## Setting and reading text
 
 `SetText` and `SetNumber` are the same: each takes a string or a number, which Lua turns into its
 string, and raises a usage error otherwise. The box clears the selection, and when the text
-differs it replaces it, without the scripts of typing, then runs `OnTextSet`. `Insert` inserts at
+differs it replaces it, without the scripts of typing, then runs `OnTextSet`. On a `numeric` box
+a text with a non-digit, `SetNumber(0.5)` or `SetNumber(-1)` among them, empties the box, inserts
+nothing and still runs `OnTextSet`. `Insert` inserts at
 the cursor with them. Each passes the current context word, and the box keeps the word of its
 first text. `GetText` returns the text and `GetNumber` its value as a number; both make the box's
 word current (`luastate`, The context word).
 
-Addresses: `0x7984c0`, `0x79854c`, `0x7985ab`, `0x798690`, `0x79871c`, `0x79877b`, `0x798400`, `0x79849e`, `0x7984b0`, `0x77be00`, `0x77be16`, `0x77be4b`, `0x77be56`, `0x77be66`, `0x77be7e`, `0x7985c0`, `0x79865f`, `0x798790`, `0x798852`
+Addresses: `0x7984c0`, `0x79854c`, `0x7985ab`, `0x798690`, `0x79871c`, `0x79877b`, `0x798400`, `0x79849e`, `0x7984b0`, `0x77be00`, `0x77be16`, `0x77be4b`, `0x77be56`, `0x77be66`, `0x77be7e`, `0x77bf6d`, `0x77bf76`, `0x7985c0`, `0x79865f`, `0x798790`, `0x798852`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x7984c0` and `0x798690` test argument 2 with `0x6f3510` (`0x79854c`, `0x79871c`) and pass
-`0x6f3690` of it with `[0xceeac0]` to `0x77be00` (`0x7985ab`, `0x79877b`); only their usage
-strings differ. `0x798400` passes `(text, [0xceeac0], 1, 0)` (`0x79849e`, `0x7984b0`).
-`0x77be00` zeroes a selection (`0x77be16`), returns when `0x64a480` finds the texts equal
-(`0x77be4b`), else empties (`0x77be56`), inserts with scripts off (`0x77be66`) and runs `+0x420`
-(`0x77be7e`). `0x7985c0` and `0x798790` copy `+0x320` into `0xceeac0` when it and `0xceeac4` are
-nonzero (`0x79865f`); `0x798790` converts with `0x64aaa0` (`0x798852`).
+`0x6f3690` of it with `[0xceeac0]` to `0x77be00` (`0x7985ab`, `0x79877b`); only their usage strings
+differ. `0x798400` passes `(text, [0xceeac0], 1, 0)` (`0x79849e`, `0x7984b0`). `0x77be00` zeroes a
+selection (`0x77be16`), returns when `0x64a480` finds the texts equal (`0x77be4b`), else empties
+(`0x77be56`), inserts with scripts off (`0x77be66`) and runs `+0x420` (`0x77be7e`) whatever the
+insert did; `0x77bee0` returns at its first character outside 0x30 to 0x39 (`0x77bf6d`, `0x77bf76`)
+after the box was emptied. `0x7985c0` and `0x798790` copy `+0x320` into `0xceeac0` when it and
+`0xceeac4` are nonzero (`0x79865f`); `0x798790` converts with `0x64aaa0` (`0x798852`).
 
 ## Limits from Lua
 
@@ -323,4 +349,5 @@ The table holds 48 pairs from `SetFontObject` (`0x797090`) to `GetAltArrowKeyMod
 `0x799ab0` calls `0x701d80` with 0x30. `0x799ae0` (slot 2) looks in the `EditBox` hash, then calls
 `0x778590`. The font methods load `+0x324` and call `0x79ef10`, `0x79f210` and their siblings.
 `SetFocus` and `ClearFocus` call `0x77e3d0` and `0x77e410`; `SetNumeric`, `SetPassword` and
-`SetAltArrowKeyMode` set bits 4, 8 and 0x10 through `0x77a650`, `0x77a680` and `0x77a6b0`. No method calls `0x77e360`, the cursor setter.
+`SetAltArrowKeyMode` set bits 4, 8 and 0x10 through `0x77a650`, `0x77a680` and `0x77a6b0`. No method
+calls `0x77e360`, the cursor setter.

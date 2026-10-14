@@ -149,11 +149,12 @@ with the bit test of `0x778d20`; the constructor's `+0x120` is 0x212 (`0x770dd3`
 A press reaches the button only after the frame's own handler declines it, while the button is
 enabled, registered for the button's down or up, and under the mouse. A press registered as a
 down click runs the click at once. Any such press then sets PUSHED unless the state is locked. A
-release clicks only a PUSHED button: when registered as an up click and under the mouse, it runs
-the click, or the double click (next entry). The release then sets NORMAL unless locked. A drag
-start sets NORMAL, unless locked, before the frame's drag.
+release first goes to the frame: one that ends a drag clicks nothing, any other runs `OnMouseUp`
+first. Only a PUSHED button clicks: registered as an up click and under the mouse, it runs the
+click, or the double click (next entry), then sets NORMAL unless locked. A drag start sets
+NORMAL, unless locked, before the frame's drag.
 
-Addresses: `0x779210`, `0x77921f`, `0x77922e`, `0x779240`, `0x77925c`, `0x77926b`, `0x779285`, `0x77929d`, `0x7792b1`, `0x7792d0`, `0x7792df`, `0x7792fc`, `0x77934e`, `0x7793de`, `0x7793f0`, `0x779426`
+Addresses: `0x779210`, `0x77921f`, `0x77922e`, `0x779240`, `0x77925c`, `0x77926b`, `0x779285`, `0x77929d`, `0x7792b1`, `0x7792d0`, `0x7792df`, `0x7792e6`, `0x76c040`, `0x76c08f`, `0x76c0f2`, `0x76c0fb`, `0x7792fc`, `0x77934e`, `0x7793de`, `0x7793f0`, `0x779426`
 Confidence: verified
 Proof: one
 Test: none
@@ -162,9 +163,11 @@ Test: none
 (`0x77922e`). It tests `(b << 8) | b` of the event's button `b` (`+0x14`) against `+0x330`
 (`0x779240`) and the hit test `0x76b020` (`0x77925c`), then `b` alone (`0x77926b`) for slot 0x94
 with `(b, 0)` (`0x779285`), and slot 0x9c with (2, 0) when `+0x32c` is clear (`0x7792b1`). The
-release `0x7792d0` (slot 27) calls `0x76c040` (`0x7792df`), requires state 2 (`0x7792fc`) and `b
-<< 8` in the mask (`0x77934e`), and calls slot 0x9c with (1, 0) (`0x7793de`). `0x7793f0` (slot
-29) ends with `0x76c1e0` (`0x779426`).
+release `0x7792d0` (slot 27) calls `0x76c040` (`0x7792df`) and returns when it answers nonzero
+(`0x7792e6`), which it does after ending a drag (`0x76c08f`) and otherwise runs `+0x158`, the
+frame's `OnMouseUp`, and answers 0 (`0x76c0f2`, `0x76c0fb`); then it requires state 2 (`0x7792fc`)
+and `b << 8` in the mask (`0x77934e`), and calls slot 0x9c with (1, 0) (`0x7793de`). `0x7793f0`
+(slot 29) ends with `0x76c1e0` (`0x779426`).
 
 ## Double click
 
@@ -172,18 +175,21 @@ A release that clicks fires `OnDoubleClick` instead of `OnClick` when the button
 `OnDoubleClick` script, a previous click time is stored, and at most 300 ms have passed since it,
 by the unsigned difference of the millisecond clock. A double click clears the stored time, so a
 third click is a single click; a single click stores the current time. Only the release path can
-double click.
+double click. The time is the button's, not the mouse button's: a left click then a right click
+within 300 ms, both registered as up clicks, runs `OnDoubleClick` with `RightButton`. Hiding the
+button or the mouse leaving it keeps the stored time.
 
-Addresses: `0x77935c`, `0x779363`, `0x77936d`, `0x779375`, `0x77937b`, `0x77938d`, `0x779393`, `0x7793a9`, `0x7793af`, `0x779650`
+Addresses: `0x77935c`, `0x779363`, `0x77936d`, `0x779375`, `0x77937b`, `0x77938d`, `0x779393`, `0x7793a9`, `0x7793af`, `0x779650`, `0x7786da`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x77935c` calls `0x42c010` for the time. `0x779363` tests the script slot `+0x4d4`, `0x779375`
-`jbe` on `+0x334`, and `0x77937b` `cmp ecx,0x12c; ja` on the difference. `0x77938d` calls slot
-0x98 with `(b, 0)` and `0x779393` zeroes `+0x334`; otherwise `0x7793a9` calls slot 0x94 and
-`0x7793af` stores the time. Slot 0x98 is in no other call; `0x779650` mirrors `0x779540` (next
-entry) with `+0x4d4`.
+`jbe` on `+0x334`, and `0x77937b` `cmp ecx,0x12c; ja` on the difference. `0x77938d` calls slot 0x98
+with `(b, 0)` and `0x779393` zeroes `+0x334`; otherwise `0x7793a9` calls slot 0x94 and `0x7793af`
+stores the time. The constructor (`0x7786da`), `0x779393` and `0x7793af` are the only writes of
+`+0x334`, and the compare uses no button. Slot 0x98 is in no other call; `0x779650` mirrors
+`0x779540` (next entry) with `+0x4d4`.
 
 ## Running a click
 
@@ -210,10 +216,11 @@ with `"%s"` and the name (`0x7795e1`), picked by the byte table 0x77960c from `b
 `MiddleButtonDown` 0x2, `RightButtonDown` 0x4, `Button4Down` 0x8, `Button5Down` 0x10, and the `Up`
 names the same bits shifted left by 8, ignoring case. An unknown name adds nothing, and no
 argument registers nothing. `Click(name)` runs slot 0x94 for `LeftButton`, `MiddleButton` or
-`RightButton`, ignoring case; no argument or a non-string means `LeftButton`, and any other
-string 0, which the click names `UNKNOWN`. It does not test the state itself.
+`RightButton`, ignoring case; no argument or a value neither a string nor a number means
+`LeftButton`, and any other string 0, which the click names `UNKNOWN`. A number counts as a
+string, so `Click(1)` compares `"1"` and runs as `UNKNOWN`. It does not test the state itself.
 
-Addresses: `0x782490`, `0x78255e`, `0x782672`, `0x782685`, `0x7826a3`, `0x779730`, `0x7826c0`, `0x782766`, `0x782797`, `0x7827b6`, `0x782802`, `0x78281d`, `0x782826`
+Addresses: `0x782490`, `0x78255e`, `0x782672`, `0x782685`, `0x7826a3`, `0x779730`, `0x7826c0`, `0x782766`, `0x78276b`, `0x78277f`, `0x782797`, `0x7827b6`, `0x782802`, `0x78281d`, `0x782826`
 Confidence: verified
 Proof: one
 Test: none
@@ -221,9 +228,10 @@ Test: none
 `0x782490` loops over arguments 2 onward while `0x6f3510` holds, comparing with `0x64a4c0` from
 `0x78255e` in the order above; the last, `Button5Up`, is `neg; sbb; and 0xfffff000; add 0x1000`
 (`0x782672`). It ORs into a zero local (`0x782685`) and stores through `0x779730` (`0x7826a3`).
-`Click` starts with 1 (`0x782766`); a string is compared with the three names (`0x782797`,
-`0x7827b6`, `0x782802`); a null or empty one gives 0 (`0x78281d`). Every path calls slot 0x94
-with `(b, 1)` (`0x782826`).
+`Click` starts with 1 (`0x782766`) and tests argument 2 with `lua_isstring` (`0x6f3510`,
+`0x78276b`), true for a number, which `lua_tostring` (`0x78277f`) converts; a string is compared
+with the three names (`0x782797`, `0x7827b6`, `0x782802`); a null or empty one gives 0 (`0x78281d`).
+Every path calls slot 0x94 with `(b, 1)` (`0x782826`).
 
 ## Button state from Lua
 
@@ -267,21 +275,24 @@ the button in 0xcf4d98 and 0xcf4d9c and calls slot 4 of `+0x31c` with 0xcf4d90
 `SetChecked(checked, force)` stores the flag unless unchanged and not forced, hides both checked
 textures and, when checked, shows the disabled one if the button is disabled and has it, else the
 checked one. Enabling or disabling refreshes this. A click toggles the check before running the
-button's click, so `Click()` toggles even a disabled check button, which then runs no script.
+button's click, so `Click()` toggles even a disabled check button, which then runs no script. A
+double click does not toggle: the second release of a quick pair runs `OnDoubleClick` alone, so
+the pair toggles once.
 Lua's `SetChecked` reads its argument as a flag with default 1, so no argument checks;
 `GetChecked` returns 1 or nil.
 
-Addresses: `0x785010`, `0x78501a`, `0x7854c0`, `0x7854d0`, `0x785516`, `0x785524`, `0x785538`, `0x785490`, `0x7854aa`, `0x785550`, `0x785566`, `0x785575`, `0x799bf0`, `0x799c77`, `0x799ca0`, `0x799d25`, `0x785230`
+Addresses: `0x785010`, `0x78501a`, `0x7854c0`, `0x7854d0`, `0x785516`, `0x785524`, `0x785538`, `0x785490`, `0x7854aa`, `0x785550`, `0x785566`, `0x785575`, `0x799bf0`, `0x799c77`, `0x799ca0`, `0x799d25`, `0x785230`, `0x779650`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x785010` builds a button (`0x78501a`), zeroes `+0x4dc` to `+0x4e4` and stores 0x81cb80.
-`0x7854c0` returns at `0x7854d0` when the second argument is 0 and the flag equal; it hides
-`+0x4e0` and `+0x4e4` with `0x77fc60` and shows `+0x4e4` when it is set and `+0x328` is 0
-(`0x785524`), else `+0x4e0` (`0x785538`). `0x785490` (slot 0x90) calls `0x779160` then
-`0x7854c0(flag, 1)`. `0x785550` (slot 0x94) calls `0x7854c0(!flag, 0)` then `0x779540`.
-`0x799bf0` pushes 1 as the default (`0x799c77`); `0x799ca0` pushes 1.0 or nil (`0x799d25`).
+`0x785010` builds a button (`0x78501a`), zeroes `+0x4dc` to `+0x4e4` and stores 0x81cb80. `0x7854c0`
+returns at `0x7854d0` when the second argument is 0 and the flag equal; it hides `+0x4e0` and
+`+0x4e4` with `0x77fc60` and shows `+0x4e4` when it is set and `+0x328` is 0 (`0x785524`), else
+`+0x4e0` (`0x785538`). `0x785490` (slot 0x90) calls `0x779160` then `0x7854c0(flag, 1)`. `0x785550`
+(slot 0x94) calls `0x7854c0(!flag, 0)` then `0x779540`. Slot 0x98 of 0x81cb80 is the button's
+`0x779650`. `0x799bf0` pushes 1 as the default (`0x799c77`); `0x799ca0` pushes 1.0 or nil
+(`0x799d25`).
 
 ## Checked textures
 
@@ -291,17 +302,18 @@ to all of the button with blend mode `ADD`. `SetDisabledCheckedTexture` with a p
 checked slot instead of its own: with a checked texture present it loads the path into the
 checked texture and leaves the disabled one unchanged.
 
-Addresses: `0x785330`, `0x785359`, `0x78536f`, `0x785440`, `0x785270`, `0x785295`, `0x7852f8`, `0x785380`, `0x785388`, `0x7853a5`, `0x799e50`, `0x79a140`
+Addresses: `0x785330`, `0x785359`, `0x78536f`, `0x785440`, `0x785270`, `0x785295`, `0x7852f8`, `0x785380`, `0x785388`, `0x7853a5`, `0x799e50`, `0x79a140`, `0x6f1920`, `0x6f1953`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x785330` and `0x785440` delete the old texture, call `0x77fd10(this, 3, 0)` (`0x785359`), store
 `+0x4e0` or `+0x4e4` and call `0x7854c0(flag, 1)` (`0x78536f`). `0x785270` tests `+0x4e0` and
-reloads it (`0x785295`), else creates, sets all points and `0x7703f0(3)` (`0x7852f8`).
-`0x785380` tests `+0x4e0` at `0x785388` and reloads it at `0x7853a5`; its creating path ends in
-`0x785440`. The blend names pair 3 with `ADD` in 0x811abc. `0x799e50` and `0x79a140` call these
-for a string and the installers for a texture or nil.
+reloads it (`0x785295`), else creates, sets all points and `0x7703f0(3)` (`0x7852f8`). `0x785380`
+tests `+0x4e0` at `0x785388` and reloads it at `0x7853a5`; its creating path ends in `0x785440`.
+`0x6f1920` reads the blend names as (value, name) pairs from 0x811aa8 (`0x6f1953`); 3 pairs with
+`ADD` at 0x811ac0. `0x799e50` and `0x79a140` call these for a string and the installers for a
+texture or nil.
 
 ## Lua methods
 

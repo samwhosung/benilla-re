@@ -106,6 +106,24 @@ Test: none
 `0x788610` (`ScrollUp`) calls `0x788b80` at the top (`0x788626`), else `0x788750` (`0x78863e`);
 `0x788650` and `0x788700` likewise; `0x788750` calls `0x788af0` (`0x7888be`).
 
+## Paging
+
+`PageUp` scrolls up one line as many times as lines are shown and then back down one, so a page
+moves one line fewer than are shown. A step that cannot move, at the top or with no lines, ends
+the page at once with no step back. With no lines shown the page is the step back alone: `PageUp`
+moves one line down. `PageDown` is the mirror.
+
+Addresses: `0x7885b0`, `0x7885b4`, `0x7885c3`, `0x7885ca`, `0x7885d4`, `0x7885e0`, `0x7885f3`, `0x7885fa`, `0x788604`, `0x788610`, `0x788619`, `0x78862b`, `0x788643`, `0x792d30`, `0x792e00`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7885b0` loads `+0x34c` (`0x7885b4`) and, while it counts down from nonzero, calls `0x788610`
+(`0x7885c3`) and returns when that answers 0 (`0x7885ca`); after the loop it jumps to `0x788650`
+(`0x7885d4`). `0x7885e0` swaps the two (`0x7885f3`, `0x7885fa`, `0x788604`). `0x788610` answers 0
+when empty (`0x788619`) or at the top (`0x78862b`) and 1 after moving (`0x788643`). `PageUp`
+(`0x792d30`) and `PageDown` (`0x792e00`) call them.
+
 ## GetFading and SetFading
 
 `GetFading` returns the number 1 when fading is on and nil when it is off, for both types.

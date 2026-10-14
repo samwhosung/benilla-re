@@ -1572,14 +1572,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41ad00	11			unassigned			Runs its object file code not read here	inferred	none		
 0x41ad10	65	SetScreenAspect		screencoord	primitive	void __stdcall (float aspect)	Stores the aspect a, a·0.75, and the scales K2 = 1/sqrt(a² + 1) and K1 = a·K2 with K2 unrounded	verified	one	input#click-versus-drag	screencoord::sc_41ad10_set_scale
 0x41ad60	7			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	inferred	none		
+0x41ad70	7	GetScaledScreenAspect		screencoord			Returns the float at 0x832a4c, the aspect times 0.75, in st0	verified	one	glue/script#cursor-and-screen-size	
 0x41ad80	37	ScaleScreenDelta		screencoord	primitive	void __fastcall (float *out_x, float *out_y, float x, float y)	Writes K1·x and K2·y to whichever outputs are not null	verified	one	input#click-versus-drag	screencoord::sc_41ad80_scale_xy
 0x41adb0	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
 0x41ade0	37			screencoord			Runs its object file code not read here	inferred	none		
 0x41ae10	47			screencoord	unreached		Runs its object file code not read here	inferred	none		
-0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	inferred	none		screencoord::sc_41ae40_unscale_x
+0x41ae40	16	DivideByScreenScaleX		screencoord			Returns a float argument divided by the float at 0x832a44, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae40_unscale_x
 0x41ae50	16			screencoord			Runs its object file code not read here	inferred	none		
-0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	inferred	none		screencoord::sc_41ae60_scale_x
+0x41ae60	16	MultiplyByScreenScaleX		screencoord			Returns the float at 0x832a44 times a float argument, in st0	verified	one	glue/script#cursor-and-screen-size	screencoord::sc_41ae60_scale_x
 0x41ae70	16	NDCToDDCHeight		screencoord			Returns the float at 0x832a48 times a float argument, in st0	inferred	none		screencoord::sc_41ae70_scale_y
 0x41ae80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41ae90	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -29598,7 +29598,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1890	31	GetAnchorPointName		ui	primitive		Returns the name of an anchor point index from 0x811a38, or UNKNOWN	verified	one	ui/anchors#point-slots-and-point-names	
 0x6f18b0	69			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x6f1900	31			ui	primitive		Runs its object file code not read here	inferred	none		
-0x6f1920	69			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x6f1920	69			ui	primitive		Looks a blend mode name up, ignoring case, in the five value and name pairs at 0x811aa8	verified	one	ui/button#checked-textures	
 0x6f1970	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f1990	69			ui	orchestration		Maps a justify name, ignoring case, to its bit	verified	one	ui/fontstring#justify	
 0x6f19e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33359,7 +33359,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Runs OnKeyDown with the key's name when visible	inferred	none		
 0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Runs OnKeyUp with the key's name when visible	inferred	none		
 0x76bf70	167	CSimpleFrame::OnMouseDown		ui	orchestration		Arms a drag for a registered button and runs OnMouseDown with the button name	inferred	none	ui/README#starts-the-listing-hides	
-0x76c040	194	CSimpleFrame::OnMouseUp		ui	orchestration		Ends a drag with the drag-stop and receive slots, else runs OnMouseUp with the button name	inferred	none	ui/README#starts-the-listing-hides	
+0x76c040	194	CSimpleFrame::OnMouseUp		ui	orchestration		Ends a drag with the drag-stop and receive slots, else runs OnMouseUp with the button name	verified	one	ui/button#mouse-presses-and-clicks	
 0x76c130	5	FrameInitTwoPiThunk		ui	orchestration		Jumps to 0x76c140; a static initializer	verified	one	ui/README#static-initializers	
 0x76c140	15	FrameInitTwoPi		ui	primitive		Stores 3.1415927 + 3.1415927 as a float in a global	verified	one	ui/README#static-initializers	
 0x76c150	5	FrameInitInvTwoPiThunk		ui	orchestration		Jumps to 0x76c160; a static initializer	verified	one	ui/README#static-initializers	
@@ -33781,7 +33781,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77bb30	335			ui	primitive		Counts the bytes a cursor moves over for a count of characters, skipping escapes	verified	one	ui/editbox#a-negative-letter-limit-hangs	
 0x77bc80	136			ui	primitive		Counts the letters in a byte range of the text	verified	one	ui/editbox#a-negative-letter-limit-hangs	
 0x77bd10	26			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77bd30	25			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x77bd30	25			ui	primitive		Returns the nearest index below a position whose character class entry is nonzero, or -1	verified	one	ui/editbox#word-steps	
 0x77bd50	55			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x77bd90	108			ui	primitive		Runs CSimpleEditBox.cpp code that calls SMemReAlloc; not read here	inferred	none		
 0x77be00	184	CSimpleEditBox::SetText		ui	orchestration		Replaces a different text without the typing scripts, then runs OnTextSet	verified	one	ui/editbox#setting-and-reading-text	
@@ -33793,18 +33793,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77c200	128			ui	orchestration		Inserts a typed character: tab as four spaces, a pipe as two, newline only multi-line	verified	one	ui/editbox#typed-characters	
 0x77c280	84			ui	orchestration		Deletes a count of characters before or after the cursor	verified	one	ui/editbox#a-negative-letter-limit-hangs	
 0x77c2e0	41			ui	orchestration		Deletes the selection, or the character after the cursor	verified	one	ui/editbox#ctrl-letter-keys	
-0x77c310	171			ui	orchestration		Deletes the selection, or the spaces and the word after the cursor	verified	one	ui/editbox#keys	
+0x77c310	171			ui	orchestration		Deletes the selection, or the spaces and the word after the cursor	verified	one	ui/editbox#word-steps	
 0x77c3c0	37			ui	orchestration		Deletes the selection, or the character before the cursor	verified	one	ui/editbox#keys	
-0x77c3f0	175			ui	orchestration		Deletes the selection, or the spaces and the word before the cursor	verified	one	ui/editbox#keys	
+0x77c3f0	175			ui	orchestration		Deletes the selection, or the spaces and the word before the cursor	verified	one	ui/editbox#word-steps	
 0x77c4a0	33			ui	orchestration		Deletes from the start of the text to the cursor	verified	one	ui/editbox#ctrl-letter-keys	
 0x77c4d0	40			ui	orchestration		Deletes from the cursor to the end of the text	verified	one	ui/editbox#ctrl-letter-keys	
 0x77c500	15			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77c510; not read here	inferred	none		
 0x77c510	401			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77bd30, 0x77bd10; not read here	inferred	none		
 0x77c6b0	160			ui	orchestration		Moves the cursor by characters, extending or clearing the selection	verified	one	ui/editbox#keys	
 0x77c750	79			ui	orchestration		Moves the cursor forward one character	verified	one	ui/editbox#keys	
-0x77c7a0	194			ui	orchestration		Moves the cursor past the word and the spaces after it	verified	one	ui/editbox#keys	
+0x77c7a0	194			ui	orchestration		Moves the cursor past the word and the spaces after it	verified	one	ui/editbox#word-steps	
 0x77c870	79			ui	orchestration		Moves the cursor back one character	verified	one	ui/editbox#keys	
-0x77c8c0	183			ui	primitive		Runs CSimpleEditBox.cpp code that calls sgetu8, _iswspace, 0x77c6b0; not read here	inferred	none		
+0x77c8c0	183			ui	primitive		Moves the cursor back over spaces, then over non-spaces, testing the character decoded at the byte before it	verified	one	ui/editbox#word-steps	
 0x77c980	98			ui	orchestration		Moves the cursor back to the start of its line	verified	one	ui/editbox#keys	
 0x77c9f0	105			ui	orchestration		Moves the cursor forward to the end of its line	verified	one	ui/editbox#keys	
 0x77ca60	91			ui	orchestration		Moves the cursor to the start of the text	verified	one	ui/editbox#keys	
@@ -34155,8 +34155,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x788310	289			ui	primitive		Runs CSimpleMessageScrollFrame.cpp code that calls SMemFree, 0x788750; not read here	inferred	none		
 0x788440	24			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls CSimpleFrame::OnFrameShow, 0x788750; not read here	inferred	none		
 0x788460	328			ui	primitive		Counts down each shown line's visible and fade times and fades or hides it, while at the bottom	verified	one	ui/messageframe#fading-a-scrolling-frame	
-0x7885b0	44			ui	orchestration		Scrolls up a page of shown lines	verified	one	ui/messageframe#lua-methods	
-0x7885e0	44			ui	orchestration		Scrolls down a page of shown lines	verified	one	ui/messageframe#lua-methods	
+0x7885b0	44			ui	orchestration		Scrolls up a line as many times as lines are shown, stopping when a step cannot move, then down a line	verified	one	ui/messageframe#paging	
+0x7885e0	44			ui	orchestration		Scrolls down a line as many times as lines are shown, stopping when a step cannot move, then up a line	verified	one	ui/messageframe#paging	
 0x788610	57			ui	orchestration		Scrolls up a line, or re-arms the shown lines at the top	verified	one	ui/messageframe#scrolling-brings-lines-back	
 0x788650	61			ui	orchestration		Scrolls down a line, or re-arms the shown lines at the bottom	verified	one	ui/messageframe#scrolling-brings-lines-back	
 0x788690	49			ui	orchestration		Runs CSimpleMessageScrollFrame.cpp code that calls 0x788750; not read here	inferred	none		
@@ -34268,7 +34268,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b3f0	247	CSimpleColorSelect::LoadXML		ui	orchestration		Loads a ColorSelect's frame node, then its four wheel and value textures	verified	one	ui/xmltypes#elements-and-attributes-by-type	
 0x78b4f0	60	CSimpleColorSelect::GetScriptByName		ui	orchestration		Returns a ColorSelect's handler slot by name, adding OnColorSelect	verified	one	ui/xmltypes#handler-names-by-type	
 0x78b530	78			ui	orchestration		Runs its object file code that calls CSimpleFrame::RemoveRegion; not read here	inferred	none		
-0x78b580	478			ui	primitive		Runs its object file code that calls _atexit, 0x526930, 0x7bbd60 and 6 more; not read here	inferred	none		
+0x78b580	478			ui	primitive		Replaces the colour wheel texture, deleting the old; a texture gets the wheel image, built once, nil leaves none	verified	one	ui/colorselect#a-missing-wheel-faults	
 0x78b760	35			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78b790	25			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x78b7b0	156			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 1 more; not read here	inferred	none		
@@ -34277,7 +34277,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x78b960	128			ui	primitive		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x78b9e0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x78b9f0	156			ui	orchestration		Runs its object file code that calls 0x770200, GetBlockPoolData, 0x76fc40 and 1 more; not read here	inferred	none		
-0x78ba90	73			ui	orchestration		Runs its object file code that calls 0x77fd10, CLayoutFrame::ClearAllPointsThunk, 0x78bcf0; not read here	inferred	none		
+0x78ba90	73			ui	orchestration		Replaces the value thumb texture, deleting the old one, and places it	verified	one	ui/colorselect#a-missing-wheel-faults	
 0x78bae0	189			ui	primitive		Redraws the colour select and runs OnColorSelect with red, green and blue	verified	one	ui/colorselect#reading-the-colour	
 0x78bba0	124			ui	orchestration		Stores the colour at full value and refreshes the value strip	verified	one	ui/colorselect#the-thumbs	
 0x78bc20	197			ui	primitive		Places the wheel thumb by hue and saturation	verified	one	ui/colorselect#the-thumbs	

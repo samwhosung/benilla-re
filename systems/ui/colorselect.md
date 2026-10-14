@@ -34,12 +34,14 @@ numbers (`0x78e9b2`) into `+0x328` (`0x78e9de`) and calls `0x78bae0` (`0x78e9f1`
 ## Reading the colour
 
 `OnColorSelect` gets the colour as red, green and blue, and `GetColorRGB` returns the same three:
-the colour converted back to channels, each made a byte by adding 512 to `v·255` as a float and
-keeping the integer part, then divided by 255. That keeps the fraction to 1/16384 and drops it, so
-a channel can read back one step below what `SetColorRGB` stored. `GetColorHSV` returns the three
-fields as they are.
+the colour converted back to channels, each made a byte by adding 512 to `v·255`, rounding the sum
+to a float and keeping its integer part, then divided by 255. The float holds the sum to the
+nearest 1/16384, so a channel can read back one step below what `SetColorRGB` stored, and one
+within 1/32768 below a whole step reads back as that step. `GetColorHSV` returns the three fields
+as they are. A grey colour has no hue: converting one with saturation 0 stores the hue −1, so after
+`SetColorRGB` of a grey `GetColorHSV` returns −1 as the hue.
 
-Addresses: `0x78bae0`, `0x78bb05`, `0x78bb36`, `0x78bb42`, `0x78bb62`, `0x78bb8f`, `0x7bbec0`, `0x7bbec8`, `0x7bbed4`, `0x7bbee0`, `0x78ed10`, `0x78edda`, `0x78ede6`, `0x78edfa`, `0x78ea00`, `0x7bbd60`, `0x8029cc`, `0x804578`
+Addresses: `0x78bae0`, `0x78bb05`, `0x78bb36`, `0x78bb42`, `0x78bb62`, `0x78bb8f`, `0x7bbec0`, `0x7bbec8`, `0x7bbed4`, `0x7bbeda`, `0x7bbee0`, `0x78ed10`, `0x78edda`, `0x78ede6`, `0x78edfa`, `0x78ea00`, `0x7bbd60`, `0x8029cc`, `0x804578`, `0x7bbc80`, `0x7bbcbe`, `0x7bbccd`
 Confidence: verified
 Proof: one
 Test: none
@@ -47,8 +49,12 @@ Test: none
 `0x78bae0` redraws through `0x78bba0`, `0x78bc20` and `0x78bcf0`; with `+0x338` set (`0x78bb05`)
 it converts with `0x7bbd60` (`0x78bb36`), packs with `0x7bbec0` (`0x78bb42`), multiplies each byte
 by 1/255 as a double (`0x78bb62`) and runs the slot with `"%f%f%f"` (`0x78bb8f`). `0x7bbec0`
-writes 0xff to byte 3 (`0x7bbec8`), adds 512.0 (`0x8029cc`) to each `v·255` (`0x7bbed4`) and
-shifts the float's bits right by 14 (`0x7bbee0`). `0x78ed10` repeats the conversion (`0x78edda` to
+writes 0xff to byte 3 (`0x7bbec8`), adds 512.0 (`0x8029cc`) to each `v·255` (`0x7bbed4`), stores
+the sum with `fstp dword` (`0x7bbeda`), which rounds it to a 24-bit significand, an ulp of 2^−14
+between 512 and 1024, to nearest under the control word 0x027F, and
+shifts the float's bits right by 14 (`0x7bbee0`). `0x7bbc80` stores the value, then the
+saturation, compares it with 0.0 (`0x7bbcbe`) and for 0 writes −1.0 (0xbf800000) to the hue and
+returns (`0x7bbccd`). `0x78ed10` repeats the conversion (`0x78edda` to
 `0x78edfa`); `0x78ea00` pushes `+0x328` to `+0x330`.
 
 ## The thumbs
@@ -65,11 +71,30 @@ Proof: one
 Test: none
 
 `0x78bc20` multiplies the hue by π/180 (`0x7ffaac`, `0x78bc4e`), takes `fsincos` (`0x78bc77`),
-multiplies both by the wheel's width (slot 0x1c, `0x78bc89`) times 0.5 times `+0x32c`
-(`0x78bc9a`), negates both (`0x78bcc2`, `0x78bcd1`) and anchors point 4 to the wheel's point 4
-(`0x78bcdb`). `0x78bcf0` multiplies the wheel's height (slot 0x20, `0x78bd16`) by `+0x330`
-(`0x78bd19`) for point 4 to the strip's point 7 (`0x78bd49`). `0x78bba0` stores `HsvToRgb(h, s, 1)`
-in `+0x334` (`0x78bbe7`, `0x78bbf6`) and refreshes the strip's texture (`0x78bc12`).
+multiplies both by the wheel's width (slot 0x1c, `0x78bc89`) times 0.5 times `+0x32c` (`0x78bc9a`),
+negates both (`0x78bcc2`, `0x78bcd1`) and anchors point 4 to the wheel's point 4 (`0x78bcdb`).
+`0x78bcf0` multiplies the wheel's height (slot 0x20, `0x78bd16`) by `+0x330` (`0x78bd19`) for point
+4 to the strip's point 7 (`0x78bd49`). `0x78bba0` stores `HsvToRgb(h, s, 1)` in `+0x334`
+(`0x78bbe7`, `0x78bbf6`) and refreshes the strip's texture (`0x78bc12`).
+
+## A missing wheel faults
+
+Placing the value thumb tests that the strip and the value thumb exist, but not the wheel whose
+height it reads. A colour select with both and no wheel, never given one or after
+`SetColorWheelTexture(nil)`, faults on its next redraw (`SetColorRGB`, `SetColorHSV`, a press in
+the strip, a new value thumb) by reading address 0x24. A client fault.
+
+Addresses: `0x78bcf0`, `0x78bcff`, `0x78bd09`, `0x78bd0b`, `0x78bd11`, `0x78bc20`, `0x78bc29`, `0x78bc37`, `0x78de90`, `0x78e02c`, `0x78b580`, `0x78b5a9`, `0x78b74f`, `0x78bae0`, `0x78baf8`, `0x78ba90`, `0x78bace`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x78bcf0` returns without `+0x320` or `+0x324` (`0x78bcff`, `0x78bd09`), then loads `+0x318` and
+adds 0x24 (`0x78bd0b`, `0x78bd11`) with no test; `0x78bc20` tests `+0x318` and `+0x31c` first
+(`0x78bc29`, `0x78bc37`). `SetColorWheelTexture` (`0x78de90`) passes nil to `0x78b580`
+(`0x78e02c`), which deletes the old wheel (`0x78b5a9`) and stores 0 (`0x78b74f`). The redraw
+`0x78bae0` reaches `0x78bcf0` at `0x78baf8`, and the value-thumb installer `0x78ba90` at
+`0x78bace`.
 
 ## Dragging
 
