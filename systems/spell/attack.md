@@ -43,13 +43,13 @@ The already-casting refusal exempts a new cast when the in-flight record has `At
 pushes the queued one into the saved slot and its cast result pops it back. Nothing the spell go or start
 handlers do writes either slot; the cast result for the strike, or an abort, clears it.
 
-Addresses: `0x6e4ff5`, `0x6e5002`, `0x6e500b`, `0x6e5026`, `0x6e4d97`, `0x6e4dbe`, `0x6e4ad0`, `0x6e4af8`, `0x6e4b3d`, `0x6e72e7`, `0x6e3d30`, `0x6e5a90`, `0x6e58a2`, `0x6e58bd`, `0x6e4fd3`, `0x6e4fdc`, `0xceca88`, `0xcecaa4`, `0xcecaa8`
+Addresses: `0x6e4ff5`, `0x6e5002`, `0x6e500b`, `0x6e500f`, `0x6e5026`, `0x6e4d97`, `0x6e4dbe`, `0x6e4ad0`, `0x6e4af8`, `0x6e4b3d`, `0x6e72e7`, `0x6e3d30`, `0x6e5a90`, `0x6e58a2`, `0x6e58bd`, `0x6e4fd3`, `0x6e4fdc`, `0xceca88`, `0xcecaa4`, `0xcecaa8`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6e5002 test [edx+0x18],0x404` forces the push for such a spell; the item-object leg at `0x6e500b` is
-reached only with a nonzero item. Of the 15 call sites of the entry `0x6e5a90` that forwards the item
+`0x6e5002 test [edx+0x18],0x404` forces the push for such a spell; both paths reach `0x6e500b`, which tests the
+item, and only a nonzero item continues to the item leg at `0x6e500f`. Of the 15 call sites of the entry `0x6e5a90` that forwards the item
 (`cast`, Cast entries), 13 clear `edx` first; the other two are the item use `0x5d9258` and the game
 object use `0x5f35c0`; the pet bar calls the request with a zero item. `0xceca88` has 14 references in the
 image (the listing and the dword scan agree) and three writes: the push `0x6e4af8`, the pop `0x6e4b3d` and

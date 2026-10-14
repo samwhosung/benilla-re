@@ -69,6 +69,6 @@ A scan of the listing over `0x600000` to `0x630000` for stores and `lea` of disp
 a node register finds the writes of a node's `+0x48`: the constructor `0x61f4c1`, the planted spawners
 `0x61fc4a` and `0x61fd4b`, the loop-sound spawner `0x61ff11` and `0x61ff4f`, the per-frame refresh `0x6205f1`
 (only for a node with bit 0x4000) and the arm pass's own fill `0x62101d`. `0x61fdd0` (`[0x61fdd0, 0x61feb9)`)
-holds none. `0x62101d` follows the vtable call `0x712d50` that resolves the attachment, and it sits 0x20e
+holds none. `0x62101d` follows the vtable call `0x712d50` that resolves the attachment, and it sits 0x20c
 bytes after the shake call. The bit 0x4000 that would make the refresh run first is set only inside the
 kit's `+0x30` block (`0x60f0a4`), after that slot's own record check.

@@ -55,13 +55,12 @@ has no other effect (`cancel`, Channel and aura cancels).
 
 ## Stop casting binding
 
-`SpellStopCasting` (`0x6e6e80`) returns one value, and acts in this order. If the UI action gate
-`0x494a50(2)` refuses it returns nil. If an auto-repeat spell runs it cancels that (`0x6ea080`) and returns the
-number 1, and does nothing else. Otherwise, if a spell is in flight, it aborts with `0x6e4940(0, 1, 0x1c)`,
-which sends `CMSG_CANCEL_CAST` with the in-flight id and fires `SPELLCAST_STOP`, and returns the number 1;
-a queued on-next-swing spell holds the in-flight slot, so it is aborted the same way (`attack`). With
-neither, it returns nil. It reads the in-flight slot and the auto-repeat spell and never the targeting word,
-and never reaches `0x6e9b70`.
+`SpellStopCasting` (`0x6e6e80`) returns one value. If the UI action gate `0x494a50(2)` refuses it returns nil. If an
+auto-repeat spell runs it cancels that (`0x6ea080`), returns the number 1 and does nothing else. Otherwise, with a
+spell in flight (a queued on-next-swing spell holds the slot, `attack`), it aborts with `0x6e4940(0, 1, 0x1c)` and
+returns 1; else nil. The abort sends `CMSG_CANCEL_CAST` only when no targeting word is up (with a word up,
+`0x6e4955` only clears it) and fires `SPELLCAST_STOP` only for a player caster (`0x6e4a04`). The binding never
+reaches `0x6e9b70`, and does not read the targeting word itself; the abort does (`0x6e494a`, `0x6e48a0`).
 
 Addresses: `0x6e6e80`, `0x6e6e88`, `0x6e6e91`, `0x6e6e9a`, `0x6e6e9f`, `0x6e6ea8`, `0x6e6eb4`, `0x6e6ec3`, `0x6e6ec8`, `0x6e6edd`, `0x6e6edf`, `0x6f3810`, `0x6f37f0`, `0x494a50`, `0x6e9fd0`, `0x6e3d30`, `0x6ea080`, `0x6e4940`
 Confidence: verified

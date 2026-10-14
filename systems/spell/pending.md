@@ -13,14 +13,14 @@ Roots: `0x6e54f0`
 
 ## Pending cast fields
 
-Each field below is written where the table says, and no other instruction in the image writes it. The
-system start `0x6e11e0` and the request's `rep stos` zero the whole record, and the start also stores
--1 at `+0x4c`. The bytes `+0x28`, `+0x2c`, `+0x48` to `+0x6c` and `+0xf0` to `+0xf8` are written only by that
-start, and nothing reads them.
+Each field below is written where the table says, besides three zeroings of the whole record: the system start
+`0x6e11e0`, the request's `rep stos` (`0x6e4f80`) and the re-arm's (`0x6e746a`). The start also stores -1 at
+`+0x4c`. The bytes `+0x28`, `+0x2c`, `+0x48` to `+0x6c` and `+0xf0` to `+0xf8` are written only by those
+zeroings and that store, and nothing reads them.
 
 | offset | size | field | written by |
 |---|---|---|---|
-| `+0x00` | 8 | source: the casting item's guid, else the caster's | request `0x6e4fa1`, re-arm `0x6e7465` |
+| `+0x00` | 8 | source: the casting item's guid, else the caster's | request `0x6e4fa1`, re-arm `0x6e747d` |
 | `+0x08` | 8 | the caster's guid | request `0x6e4fb1`, re-arm `0x6e748f` |
 | `+0x10` | 4 | spell id | request `0x6e4f88`, re-arm `0x6e7472` |
 | `+0x14` | 2 | target mask | the binders (next entry), `0x6e5b51` reads it for the rollback |
@@ -30,21 +30,21 @@ start, and nothing reads them.
 | `+0x3c` | 12 | destination point | `0x6e6132` |
 | `+0x70` | 128 | text target | `0x6e5311` |
 
-Addresses: `0xceac48`, `0x6e11e0`, `0x6e121e`, `0x6e127f`, `0x6e4f80`, `0x6e4fa1`, `0x6e4fb1`, `0x6e4f88`, `0x6e7465`, `0x6e748f`, `0x6e7472`, `0x6e5b51`, `0x6e545b`, `0x6e5f3e`, `0x6e6925`, `0x6e6107`, `0x6e6132`, `0x6e5311`
+Addresses: `0xceac48`, `0x6e11e0`, `0x6e121e`, `0x6e127f`, `0x6e4f80`, `0x6e4fa1`, `0x6e4fb1`, `0x6e4f88`, `0x6e747d`, `0x6e748f`, `0x6e7472`, `0x6e746a`, `0x6e5b51`, `0x6e545b`, `0x6e5f3e`, `0x6e6925`, `0x6e6107`, `0x6e6132`, `0x6e5311`
 Confidence: verified
 Proof: one
 Test: none
 
 The scan finds, by offset, the references to `0xceac48` to `0xceacb8` in the listing. `+0x00` and `+0x04`
 are stored by the start (`0x6e121e`, `0x6e1223`), the request (`0x6e4fa1`, `0x6e4fa6`) and the re-arm
-(`0x6e7465`, `0x6e7482`). `+0x08` and `+0x0c` by the request (`0x6e4fb1`, `0x6e4fbf`) and the re-arm
-(`0x6e748f`, `0x6e7494`). `+0x20` and `+0x24` have three writers each: the start, `0x6e5f3e` and `0x6e6925`
+(`0x6e747d`, `0x6e7482`). `+0x08` and `+0x0c` by the request (`0x6e4fb1`, `0x6e4fbf`) and the re-arm
+(`0x6e748f`, `0x6e7494`). `+0x20` and `+0x24` have three stores each: the start's, `0x6e5f3e` and `0x6e6925`
 (`0x6e5f43`, `0x6e692f`). `+0x30` to `+0x44` are written in pairs by the start and the location binder
 (`0x6e6107` to `0x6e614b`). The text offset `+0x70` has one reference, the print at `0x6e5311`.
 `+0x28`, `+0x2c` (`0x6e1270`, `0x6e1275`), `+0x48` and `+0x4c` (`0x6e127a`, `0x6e127f`), `+0x50`, `+0x54`
 (`0x6e122d`, `0x6e1232`), `+0x58` to `+0x64` (`0x6e1260`, `0x6e125b`, `0x6e1251`, `0x6e1256`), `+0x68`,
 `+0x6c` (`0x6e128e`, `0x6e1293`) and `+0xf0` to `+0xf8` (`0x6e1265`, `0x6e126a`, `0x6e1289`) have the start as
-their only reference. The text field's bytes are copied by `SStrPrintf` and sent as 128 bytes.
+their only reference besides the two `rep stos` (`0x6e4f80`, `0x6e746a`). The text field's bytes are copied by `SStrPrintf` and sent as 128 bytes.
 
 ## Target mask bits
 

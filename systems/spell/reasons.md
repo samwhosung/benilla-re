@@ -37,31 +37,32 @@ Test: none
 A scan of the listing for `call 0x6e1a00` and `jmp 0x6e1a00` finds 63 sites (no `jmp`); for each, the
 nearest preceding load of `dl` gives its reason, and two are not constants (`0x609e64` reads `[ebp-0x18]`,
 `0x6e73ac` reads `[ebp-0x1]`). Sites that share a call take two reasons: `0x6e4737` 0x59 or 0x76, `0x6e6089`
-the same, `0x6e5064` 0x2d, 9 or 0xa, `0x6e4195` 0x19 or 0x1a, `0x6e4ec4` 0x12, `0x609dd1` 4, 5 or 0x50 and
+the same, `0x6e5064` 0x2d, 9 or 0xa, `0x6e4195` 0x19 or 0x1a, `0x6e4ec4` 0x12 (0x46 has its own call at `0x6e4eab`), `0x609dd1` 4 or 0x50 (5 is reported at `0x6098d6`) and
 `0x609fbe` 0x4b or 0x55. No site loads 0x5d or 0x5e. The reasons only the server sends include every
 target-state reason (0x65 to 0x75, 0x7f to 0x81) and 0x8e. The client passes 0x1c to its cancels (`cancel`)
 but never reports it.
 
 ## Packets of a local refusal
 
-The cast request pushes its spell in flight after the validator, so only the refusals that follow the push
-cancel it: the arm's (reasons 9, 0xa, 0x2d) and the binder's range failure (0x59, 0x76). The reporter aborts
-with `0x6e4940(1, !fromServer, reason)` when the reported spell is the in-flight one; that sends
-`CMSG_CANCEL_CAST` unless a targeting word is up, when it only clears the word. For the player's
-auto-repeat spell the reporter first stops the repeat (`CMSG_CANCEL_AUTO_REPEAT_SPELL`, popping the slot), so no
-cancel follows. Reason 0x17 does neither. The binder reports after its bind cleared its bits, so its cancel
-goes only when the word is empty; the abort zeroes the caster guid and the binder restores the word.
+The reporter aborts with `0x6e4940(1, !fromServer, reason)` whenever the reported spell is the in-flight one. The
+abort sends `CMSG_CANCEL_CAST` only when no targeting word is up; with a word up it only clears it. Either way it
+pops the slot and resets the cursors, and for a player caster fires the stop event and zeroes the caster guid.
+The player's auto-repeat spell is stopped first (`CMSG_CANCEL_AUTO_REPEAT_SPELL`), so no cancel follows. Reason
+0x17 does neither.
 
 Addresses: `0x6e1c67`, `0x6e1c7a`, `0x6e1cd9`, `0x6e1ce1`, `0x6e1cea`, `0x6e2201`, `0x6e2209`, `0x6e220e`, `0x6e2218`, `0x6e4940`, `0x6ea080`, `0x6ea14e`, `0x6ea154`, `0x6ea160`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x6e1c7a` jumps over the auto-repeat leg for an active player that is missing or not a player. `0x6e1cd9`
-compares `0xceac30` with the spell, `0x6e1ce1` leaves for reason 0x17, and `0x6e1cea` calls `0x6ea080`,
-which pops the in-flight slot when `0xceac30` equals it (`0x6ea154`, `0x6ea160`) before clearing the
-auto-repeat. `0x6e2201 cmp esi,[0xceca88]` follows (`esi` reloaded from the spell id at `0x6e21f4`);
-`0x6e220e` loads the from-server byte and `sete dl`, and `0x6e2218` calls the abort with `cl` 1.
+Reports of the in-flight spell: the item validator (0xa, 0xd, 0x84, 0x90, with the word up), `SpellTargetUnit`
+(0x59), the request's 0x13, 0x82, 0x83 and 0x61 for a pressed spell already in flight (before the same-spell
+bail at `0x6e4d43`), the arm (9, 0xa, 0x2d) and the binder's range failure. Refusals after the bail report a
+spell not yet pushed. `0x6e1c7a` jumps over the auto-repeat leg for an active player that is missing or not a
+player. `0x6e1cd9` compares `0xceac30` with the spell, `0x6e1ce1` leaves for reason 0x17, and `0x6e1cea` calls
+`0x6ea080`, which pops the in-flight slot when `0xceac30` equals it (`0x6ea154`, `0x6ea160`) before clearing the
+auto-repeat. `0x6e2201 cmp esi,[0xceca88]` follows (`esi` reloaded from the spell id at `0x6e21f4`); `0x6e220e`
+loads the from-server byte and `sete dl`, and `0x6e2218` calls the abort with `cl` 1.
 
 ## Failure chat line
 

@@ -115,14 +115,13 @@ Test: none
 
 `0x609808` loads `[desc+0x40]`, the unit's health, and `0x60980d jle 0x609ba1` skips the block. `0x609813`
 tests bit 4 of the type word, `0x609825` loads `[edi+0xe68]` (the player block) and `0x60982b test
-[+0x1028],4` (field 1222, byte 0). The objectlayer's caster-check entry gives this bit as the ghost flag 0x10;
-the bytes test 0x4.
+[+0x1028],4` (field 1222, byte 0).
 
 ## Interrupt flag stance rungs
 
 Four rungs share one shape: each refuses when a spell flag asks for a state the caster lacks, and each is
 an OR of two independent arms. Arm A tests a bit of the spell's aura interrupt flags (`+0x58`); arm B tests
-the same bit of the channel interrupt flags (`+0x5c`) when `AttributesEx` (`+0x1c`) has 0x44. A pass of
+the same bit of the channel interrupt flags (`+0x5c`) when `AttributesEx` (`+0x1c`) has either bit of 0x44 (`and eax,0x44; je`). A pass of
 arm A does not skip arm B.
 
 | reason | bit | state required |
@@ -142,7 +141,7 @@ Test: none
 The aura flags dword is loaded once at `0x609ba1` (`ecx`) and read again at `0x609c05` (`test cl,0x40`),
 and at `0x609d33` (`eax`) and read again at `0x609da2` (`test al,al; jns`, bit 0x80); every path between
 leaves the register intact. The sub-register tests decode from their ModRM bytes: `test ch,2` is bit 0x200
-and `test ah,1` bit 0x100. `0x609bd2` leaves `AttributesEx & 0x44` in `eax`, which `0x609c36` and the
+and `test ah,1` bit 0x100. `0x609bd2 and eax,0x44` leaves the masked `AttributesEx` in `eax`, which `0x609c36` and the
 channel arms reuse (`0x609d6a` recomputes it into `ecx`). `0x609d39` hoists the mask 0x200000 into `edx`,
 `0x609d75` overwrites it and `0x609d9d` restores it. The swim test reads the mover's flags
 `[[edi+0x118]+0x40]`, as a dword at `0x609d46` and as `byte [+0x42] & 0x20` at `0x609d7b`.
@@ -261,15 +260,18 @@ control arms (0x14, 0x64, 0x60, 0x5a, 0x1e, 0x16, each with 0x8d for a named mec
 above water 0x50; moving 0x2e; form 0x3d or 0x56; stealth 0x57; combat 0; caster aura state 0x12;
 reputation 0x8f; indoors 0x52 and outdoors 0x55 or 0x4b; taming 0x17.
 
-Addresses: `0x609549`, `0x609616`, `0x609661`, `0x609842`, `0x609e37`, `0x609ed2`, `0x609f47`, `0x60a02d`
+Addresses: `0x609549`, `0x609616`, `0x609661`, `0x6096a1`, `0x6096e8`, `0x609730`, `0x609761`, `0x6097b8`, `0x6097cc`, `0x6098d6`, `0x609842`, `0x609e37`, `0x609ed2`, `0x609f47`, `0x60a02d`
 Confidence: verified
 Proof: one
 Test: none
 
-The order is the address order of the 40 report calls, read from `dl` before each (`0x60954f` 0x28,
-`0x609616` 0x3c, `0x609667` 0x4d, `0x60983e` 0x61, `0x6098cc` 4 or 5, `0x6098ee` 0x4c, `0x60990a` 0x63,
-the six crowd-control arms from `0x609989`, `0x609bb9` 0x41, `0x609c20` 0x53, `0x609c8c` 0x39, `0x609cbd`
-0x3e, `0x609cea` 0x51, `0x609d1a` 0x54, `0x609d51` 0x58, `0x609dcd` 0x50, `0x609e35` 0x2e, `0x609e9a` 0x57,
-`0x609ed0` 0, `0x609f0b` 0x12, `0x609f45` 0x8f, `0x609f7c` 0x52, `0x609fb4` 0x55, `0x60a02b` 0x17). Every
-rung is reached by falling through from the one above; the only jumps into the run past `0x609ca2` are the
-normal entries from the mount rung, and `0x6098ce` reuses the water rung's report at `0x609dd1`.
+The rungs run in the order above, which is not the order of their report calls in the listing. The three-effect
+loop (`0x6096b3` to `0x6097fc`) runs before the health test, but its reports sit after the 0x61 call
+(`0x609842`): `0x6096e8`, `0x609730`, `0x609761`, `0x6097b8` and `0x6097cc` jump out of the loop to `0x609854`
+(0x32), `0x6098b7` (4 or 5), `0x6098e8` (0x4c), `0x609904` (0x63) and `0x609920` (0x33). Power reports at
+`0x609667` and, for a health cost, `0x6096a1`. The other reports read `dl` before the call: `0x60954f` 0x28,
+`0x609616` 0x3c, `0x60983e` 0x61, the six crowd-control arms from `0x609989`, `0x609bb9` 0x41, `0x609c20` 0x53,
+`0x609c8c` 0x39, `0x609cbd` 0x3e, `0x609cea` 0x51, `0x609d1a` 0x54, `0x609d51` 0x58, `0x609dcd` 0x50, `0x609e35`
+0x2e, `0x609e9a` 0x57, `0x609ed0` 0, `0x609f0b` 0x12, `0x609f45` 0x8f, `0x609f7c` 0x52, `0x609fb4` 0x55,
+`0x60a02b` 0x17. From the 0x61 rung on, each rung is reached by falling through from the one above, and `0x6098ce`
+reuses the water rung's call at `0x609dd1` for reason 4.
