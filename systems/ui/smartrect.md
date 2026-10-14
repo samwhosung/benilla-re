@@ -225,4 +225,4 @@ The first pair stores `2·π` (the float at `0x8086d4`) at `0xbe0b68` and the se
 initializer is a 5-byte `jmp` and a 19-byte body of the form `fld c; fmul c; fstp g`. A dword census of
 `0xbe0b18` to `0xbe0b7c` finds only these stores and the one read of `0xbe0b68`; the list base
 `0xbe0b8c` has the three uses above, and its fields `0xbe0b90` and `0xbe0b94` the further uses listed under the claim lists. `0x508f70` zeroes the first two lists, `0x508ff0` makes the
-worklist `0xbe0bf8` empty, and the exit handlers `0x508fb0` and `0x509030` free the arrays and the nodes.
+worklist `0xbe0bf8` empty, and the exit handlers differ: `0x508fb0` frees the arrays of the two claim lists with `SMemFree`, while `0x509030` and `0x509120` only unlink every entry of the worklist and of the node pool and then their heads, and free nothing.

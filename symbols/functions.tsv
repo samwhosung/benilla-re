@@ -7821,7 +7821,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b0ea0	59	CGChatBubbleFrame::StartFadeIn		ui	primitive	void __thiscall ()	Starts a 250 ms fade in and shows the frame unless it is fading in or in its final fade out	verified	one	ui/chatbubble#fades	
 0x4b0ee0	70	CGChatBubbleFrame::StartFadeOut		ui	primitive	void __thiscall (bool final)	Starts a 250 ms fade out, marking it final when asked	verified	one	ui/chatbubble#fades	
 0x4b0f30	1	InitChatBubbles		ui	orchestration		Returns at once	verified	one	ui/gameui#start-up-display-and-chat	
-0x4b0f40	50	ShutdownChatBubbles		ui	orchestration		Destroys and frees every chat bubble frame and clears the bubble flag byte	verified	one	ui/gameui#start-up-display-and-chat	
+0x4b0f40	50	FreeBubblePool		ui	orchestration		Destroys and frees every bubble on the free list and clears the bubble flag byte	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b0f80	209	RetireAllBubbles		ui	orchestration	void __cdecl ()	Retires every live bubble: releases the speaker's bubble, or hides it and frees it when the speaker is gone	verified	one	ui/chatbubble#the-bubble-lists	
 0x4b1060	757			ui	primitive		Runs ChatBubbleFrame.cpp code that calls GetActiveCamera, 0x4b1de0, ClntObjMgrGetActivePlayer and 10 more; not read here	inferred	none		ui::dist2_4b1060
 0x4b1360	251	InsertBubbleByDistance		ui	primitive	void __thiscall ()	Links a bubble into the live list before the first bubble that is nearer the camera	verified	one	ui/chatbubble#the-bubble-lists	
@@ -11973,67 +11973,67 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x508680	982	DrunkTransformText		ui	primitive		Writes the text a drunk player sends from the source, a strength and a capacity	inferred	none	ui/chatsend#text-steps	ui::glue4fd_508680_garble_noise_minus_one, ui::glue4fd_508680_garble_threshold_quarter
 0x508ad0	24			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x508af0	5	InitDouble508b00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508b00, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508b00	15	InitDouble508b00		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
+0x508b00	15	InitDouble508b00		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 (2π) as a float in the placement file's 2π global	verified	one	ui/initfloats#doubled-constants	
 0x508b10	5	InitQuotient508b20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508b20, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508b20	19	InitQuotient508b20		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
+0x508b20	19	InitQuotient508b20		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global that nothing reads	verified	one	ui/initfloats#quotients	
 0x508b40	10	InitCount508b50Thunk		ui	orchestration	void __cdecl (void)	Calls 0x508b50, then jumps to 0x508b70 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x508b50	22	InitCount508b50		ui	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	ui/initexits#start-up-counts	
 0x508b70	12	InitCount508b50Register		ui	orchestration	void __cdecl (void)	Registers 0x508b80 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x508b80	14	InitCount508b50Exit		ui	primitive	void __cdecl (void)	Counts one user less of that shared count and jumps to 0x5b71d0 when none is left	verified	one	ui/initexits#exit-counts	
 0x508b90	5	InitSquare508ba0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508ba0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508ba0	19	InitSquare508ba0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
+0x508ba0	19	InitSquare508ba0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508bc0	5	InitSquare508bd0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508bd0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508bd0	19	InitSquare508bd0		ui	primitive	void __cdecl (void)	Stores 11.111111 × 11.111111 = 123.45678 as a float in a global	verified	one	ui/initfloats#squares	
+0x508bd0	19	InitSquare508bd0		ui	primitive	void __cdecl (void)	Stores 11.111111 × 11.111111 = 123.45678 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508bf0	5	InitSquare508c00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508c00, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508c00	19	InitSquare508c00		ui	primitive	void __cdecl (void)	Stores 5.5555553 × 5.5555553 = 30.864195 as a float in a global	verified	one	ui/initfloats#squares	
+0x508c00	19	InitSquare508c00		ui	primitive	void __cdecl (void)	Stores 5.5555553 × 5.5555553 = 30.864195 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508c20	5	InitSquare508c30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508c30, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508c30	19	InitSquare508c30		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
+0x508c30	19	InitSquare508c30		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508c50	5	InitSquare508c60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508c60, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508c60	19	InitSquare508c60		ui	primitive	void __cdecl (void)	Stores 5 × 5 = 25 as a float in a global	verified	one	ui/initfloats#squares	
+0x508c60	19	InitSquare508c60		ui	primitive	void __cdecl (void)	Stores 5 × 5 = 25 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508c80	5	InitSquare508c90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508c90, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508c90	19	InitSquare508c90		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
+0x508c90	19	InitSquare508c90		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508cb0	5	InitSquare508cc0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508cc0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508cc0	19	InitSquare508cc0		ui	primitive	void __cdecl (void)	Stores 30 × 30 = 900 as a float in a global	verified	one	ui/initfloats#squares	
+0x508cc0	19	InitSquare508cc0		ui	primitive	void __cdecl (void)	Stores 30 × 30 = 900 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508ce0	5	InitSquare508cf0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508cf0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508cf0	19	InitSquare508cf0		ui	primitive	void __cdecl (void)	Stores 120 × 120 = 14400 as a float in a global	verified	one	ui/initfloats#squares	
+0x508cf0	19	InitSquare508cf0		ui	primitive	void __cdecl (void)	Stores 120 × 120 = 14400 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508d10	5	InitSquare508d20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508d20, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508d20	19	InitSquare508d20		ui	primitive	void __cdecl (void)	Stores 20 × 20 = 400 as a float in a global	verified	one	ui/initfloats#squares	
+0x508d20	19	InitSquare508d20		ui	primitive	void __cdecl (void)	Stores 20 × 20 = 400 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508d40	5	InitSquare508d50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508d50, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508d50	19	InitSquare508d50		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
+0x508d50	19	InitSquare508d50		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508d70	5	InitSquare508d80Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508d80, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508d80	19	InitSquare508d80		ui	primitive	void __cdecl (void)	Stores 0.5 × 0.5 = 0.25 as a float in a global	verified	one	ui/initfloats#squares	
+0x508d80	19	InitSquare508d80		ui	primitive	void __cdecl (void)	Stores 0.5 × 0.5 = 0.25 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508da0	5	InitSquare508db0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508db0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508db0	19	InitSquare508db0		ui	primitive	void __cdecl (void)	Stores 3 × 3 = 9 as a float in a global	verified	one	ui/initfloats#squares	
+0x508db0	19	InitSquare508db0		ui	primitive	void __cdecl (void)	Stores 3 × 3 = 9 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508dd0	5	InitSquare508de0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508de0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508de0	19	InitSquare508de0		ui	primitive	void __cdecl (void)	Stores 100 × 100 = 10000 as a float in a global	verified	one	ui/initfloats#squares	
+0x508de0	19	InitSquare508de0		ui	primitive	void __cdecl (void)	Stores 100 × 100 = 10000 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508e00	5	InitStore508e10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508e10, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508e10	11	InitStore508e10		ui	orchestration	void __cdecl (void)	Stores 5 as a float in a global	verified	one	ui/initstores#immediate-stores	
+0x508e10	11	InitStore508e10		ui	orchestration	void __cdecl (void)	Stores 5 as a float in a global of the placement file that nothing reads	verified	one	ui/initstores#immediate-stores	
 0x508e20	5	InitSquare508e30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508e30, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508e30	19	InitSquare508e30		ui	primitive	void __cdecl (void)	Stores 50 × 50 = 2500 as a float in a global	verified	one	ui/initfloats#squares	
+0x508e30	19	InitSquare508e30		ui	primitive	void __cdecl (void)	Stores 50 × 50 = 2500 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508e50	5	InitSquare508e60Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508e60, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508e60	19	InitSquare508e60		ui	primitive	void __cdecl (void)	Stores 100 × 100 = 10000 as a float in a global	verified	one	ui/initfloats#squares	
+0x508e60	19	InitSquare508e60		ui	primitive	void __cdecl (void)	Stores 100 × 100 = 10000 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508e80	5	InitSquare508e90Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508e90, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508e90	19	InitSquare508e90		ui	primitive	void __cdecl (void)	Stores 40 × 40 = 1600 as a float in a global	verified	one	ui/initfloats#squares	
+0x508e90	19	InitSquare508e90		ui	primitive	void __cdecl (void)	Stores 40 × 40 = 1600 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508eb0	5	InitSquare508ec0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508ec0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508ec0	19	InitSquare508ec0		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global	verified	one	ui/initfloats#squares	
+0x508ec0	19	InitSquare508ec0		ui	primitive	void __cdecl (void)	Stores 1.5 × 1.5 = 2.25 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508ee0	5	InitSquare508ef0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508ef0, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508ef0	19	InitSquare508ef0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global	verified	one	ui/initfloats#squares	
+0x508ef0	19	InitSquare508ef0		ui	primitive	void __cdecl (void)	Stores 10 × 10 = 100 as a float in a global of the placement file that nothing reads	verified	one	ui/initfloats#squares	
 0x508f10	5	InitQuotient508f20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508f20, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508f20	19	InitQuotient508f20		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
+0x508f20	19	InitQuotient508f20		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global that nothing reads	verified	one	ui/initfloats#quotients	
 0x508f40	5	InitInfinity508f50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x508f50, a static initializer	verified	one	ui/initthunks#jump-thunks	
-0x508f50	11	InitInfinity508f50		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
+0x508f50	11	InitInfinity508f50		ui	orchestration	void __cdecl (void)	Copies +inf (0x7f800000) into a global of the placement file that nothing reads	verified	one	ui/initstores#infinity-copies	
 0x508f60	10	InitZero508f70Thunk		ui	orchestration	void __cdecl (void)	Calls 0x508f70, then jumps to 0x508fa0 to register its exit callback	verified	one	ui/initthunks#call-thunks	
-0x508f70	34	InitZero508f70		ui	orchestration	void __cdecl (void)	Zeroes 32 bytes, 2 records of 16 bytes	verified	one	ui/initstores#zero-fills	
+0x508f70	34	InitZero508f70		ui	orchestration	void __cdecl (void)	Zeroes the first two placement claim lists: 2 records of 16 bytes	verified	one	ui/initstores#zero-fills	
 0x508fa0	12	InitZero508f70Register		ui	orchestration	void __cdecl (void)	Registers 0x508fb0 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
-0x508fb0	47	InitZero508f70Exit		ui	primitive	void __cdecl (void)	Releases the storage behind what 0x508f70 set up, through SMemFree	verified	one	ui/initexits#exit-releases	
+0x508fb0	47	InitZero508f70Exit		ui	primitive	void __cdecl (void)	Frees the arrays of the first two placement claim lists through SMemFree	verified	one	ui/initexits#exit-releases	
 0x508fe0	10	InitListHead508ff0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x508ff0, then jumps to 0x509020 to register its exit callback	verified	one	ui/initthunks#call-thunks	
-0x508ff0	34	InitListHead508ff0		ui	primitive	void __cdecl (void)	Builds an empty list head with link offset 0x0, a self-linked head and a marked end link	verified	one	ui/initstores#list-heads	
+0x508ff0	34	InitListHead508ff0		ui	primitive	void __cdecl (void)	Makes the placement worklist an empty list head with link offset 0	verified	one	ui/initstores#list-heads	
 0x509020	12	InitListHead508ff0Register		ui	orchestration	void __cdecl (void)	Registers 0x509030 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
-0x509030	145	InitListHead508ff0Exit		ui	primitive	void __cdecl (void)	Unlinks every entry of the list that 0x508ff0 built, then its head	verified	one	ui/initexits#exit-lists	
+0x509030	145	InitListHead508ff0Exit		ui	primitive	void __cdecl (void)	Unlinks every entry of the placement worklist, then its head; frees nothing	verified	one	ui/initexits#exit-lists	
 0x5090d0	10	InitListHead5090e0Thunk		ui	orchestration	void __cdecl (void)	Calls 0x5090e0, then jumps to 0x509110 to register its exit callback	verified	one	ui/initthunks#call-thunks	
-0x5090e0	34	InitListHead5090e0		ui	primitive	void __cdecl (void)	Builds an empty list head with link offset 0x0, a self-linked head and a marked end link	verified	one	ui/initstores#list-heads	
+0x5090e0	34	InitListHead5090e0		ui	primitive	void __cdecl (void)	Makes the placement node pool an empty list head with link offset 0	verified	one	ui/initstores#list-heads	
 0x509110	12	InitListHead5090e0Register		ui	orchestration	void __cdecl (void)	Registers 0x509120 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
-0x509120	145	InitListHead5090e0Exit		ui	primitive	void __cdecl (void)	Unlinks every entry of the list that 0x5090e0 built, then its head	verified	one	ui/initexits#exit-lists	
+0x509120	145	InitListHead5090e0Exit		ui	primitive	void __cdecl (void)	Unlinks every entry of the placement node pool, then its head; frees nothing	verified	one	ui/initexits#exit-lists	
 0x5091c0	81	PushRectUp		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle up until it rests on the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
 0x509220	197	FindOverlapDepth		ui	primitive	bool __fastcall (int list, RECT *rect, int direction, float *depth)	Finds the first claimed rectangle that strictly overlaps and stores the depth to push in a direction	verified	one	ui/smartrect#pushes-and-the-overlap-test	
 0x509300	81	PushRectLeft		ui	primitive	RECT * __fastcall (RECT *out, int list, RECT rect)	Moves the rectangle left until it rests against the first claimed rectangle it overlaps	verified	one	ui/smartrect#pushes-and-the-overlap-test	
