@@ -2463,7 +2463,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc9e35c	uint32_t[8]	s_wdtHeader		terrain	Holds the WDT's 32-byte map header; bit 0 of its first dword marks a one-object map	verified	one	terrain/files#wdt
 0xc9e384	uint8_t	s_mapIsOneObject		terrain	Holds 1 when the WDT names one map object for the whole map	inferred	none	
 0xc9e388	uint32_t	s_useSse		terrain	Holds 1 when the processor has SSE, set at map start-up	verified	one	terrain/queries#chunk-height
-0xca03e4	void *	s_aaBspLeafCache		models	Holds the BSP leaf cache's slot table, freed with a BSP tree	verified	one	models/overview#object-files
+0xca03e4	void *	s_bspNodeCache		models	Holds the BSP node cache, null unless the console enables it	inferred	none	models/collisionquery#box-descent-and-face-test
 0xca03e8	uint32_t	s_aaBspLeafCacheVictim		models	Holds the counter whose low three bits pick the leaf cache slot to replace	verified	one	models/overview#object-files
 0xca05f0	uint8_t	s_footprintPools		terrain	Begins the footprint ring pools	inferred	none	
 0xca7d70	void *	s_sceneDefList		terrain	Holds the scene's placement list	inferred	none	
@@ -2494,6 +2494,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcbe320	uint32_t	s_portalWindowCount		terrain	Holds the count of the portal flood's windows	inferred	none	
 0xcbe324	uint8_t	s_portalWindowList		terrain	Begins the portal flood's window list	inferred	none	
 0xcde5ac	uint32_t	s_portalInsideLeg		terrain	Holds 1 while the inside visibility pass runs	inferred	none	
+0xcde648	uint16_t[8192]	s_wmoKeptFaces		models	Holds the indices of the faces a WMO box query kept, in order	verified	one	models/collisionquery#box-descent-and-face-test
+0xce26e0	uint32_t	s_wmoVisitedCount		models	Holds the count of entries in the visited-face stack 0xce26e8	verified	one	models/collisionquery#box-descent-and-face-test
+0xce26e8	uint16_t[8192]	s_wmoVisitedFaces		models	Holds the face indices a WMO box query has marked visited, to clear their visited bit	verified	one	models/collisionquery#box-descent-and-face-test
+0xce66fc	uint32_t	s_wmoKeptCount		models	Holds the count of entries in the kept-face array 0xcde648	verified	one	models/collisionquery#box-descent-and-face-test
 0xce8270	uint8_t[24]	s_areaReadLock		terrain	Holds the critical section around ADT reads and parses	inferred	none	terrain/files#tile-file-read
 0xce8534	int32_t	s_violenceLevel		client	Holds the violenceLevel CVar value; written by 0x6c5af0	inferred	none	spell/visuals#spell-visual-record-choice
 0xce8538	int32_t			unassigned	Holds an int32_t that SndInterfaceWorldInitialize, Script::GetGameTime, IsDaytime read; not read here	inferred	none	
