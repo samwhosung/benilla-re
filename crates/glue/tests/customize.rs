@@ -80,14 +80,29 @@ fn char_customize_clamp_difftest() {
     let frame = e.alloc(0x40) + 0x20; // ebp: the value at [ebp-0x4]
     let stack = e.alloc(0x40) + 0x20;
 
+    // -0.0, NaN, the infinities, the least subnormals and the floats beside 1.
+    let probes = [
+        -0.0,
+        f32::NAN,
+        f32::from_bits(0xffc0_0001),
+        f32::INFINITY,
+        f32::NEG_INFINITY,
+        f32::from_bits(0x8000_0001),
+        f32::from_bits(0x0000_0001),
+        f32::from_bits(0x3f7f_ffff),
+        f32::from_bits(0x3f80_0001),
+    ];
     let mut s: u32 = 0x4d09_0001;
     for i in 0..8000u32 {
-        let value = match (next(&mut s) >> 8) % 5 {
-            0 => -(fuzz_unit(&mut s, 2.0)),    // below 0
-            1 => fuzz_unit(&mut s, 1.0),       // inside
-            2 => 1.0 + fuzz_unit(&mut s, 2.0), // above 1
-            3 => 0.0,                          // exactly 0
-            _ => 1.0,                          // exactly 1
+        let value = match probes.get(i as usize) {
+            Some(&probe) => probe,
+            None => match (next(&mut s) >> 8) % 5 {
+                0 => -(fuzz_unit(&mut s, 2.0)),    // below 0
+                1 => fuzz_unit(&mut s, 1.0),       // inside
+                2 => 1.0 + fuzz_unit(&mut s, 2.0), // above 1
+                3 => 0.0,                          // exactly 0
+                _ => 1.0,                          // exactly 1
+            },
         };
         e.write_u32(frame - 0x4, value.to_bits());
         e.set_reg(RegisterX86::EBP, frame);

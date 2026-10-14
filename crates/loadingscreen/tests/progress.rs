@@ -38,3 +38,37 @@ fn progress_fraction_difftest() {
         );
     }
 }
+
+/// -0.0 and NaN: a sum that is exactly -0 stays -0, and a NaN gives 1.0. The -0 sum takes a phase
+/// of -2^-149 (its half rounds to -0 in the `f32` store) with both inputs -0.
+#[test]
+fn progress_fraction_signed_zero_and_nan_difftest() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let tiny = f32::from_bits(0x8000_0001);
+    let cases = [
+        (tiny, -0.0, -0.0),
+        (0.0, -0.0, -0.0),
+        (-0.0, -0.0, -0.0),
+        (0.0, f32::NAN, 0.0),
+        (0.0, 0.0, f32::NAN),
+        (tiny, f32::NAN, f32::NAN),
+        (0.0, f32::INFINITY, f32::NEG_INFINITY),
+        (0.0, f32::NEG_INFINITY, 0.0),
+        (0.0, 1.0, 1.0),
+    ];
+    for (phase, a, b) in cases {
+        e.write_u32(g::PROGRESS_PHASE, phase.to_bits());
+        e.write_u32(g::PROGRESS_A, a.to_bits());
+        e.write_u32(g::PROGRESS_B, b.to_bits());
+        e.write_u32(g::BAR_FILL, 0xdead_beef);
+        e.call(PROGRESS_FRACTION, 0, 0, &[]);
+        assert_f32(
+            e.read_f32(g::BAR_FILL),
+            progress_fraction(phase, a, b),
+            &format!("phase={phase} a={a} b={b}"),
+        );
+    }
+}

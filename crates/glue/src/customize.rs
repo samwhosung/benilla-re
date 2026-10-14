@@ -13,10 +13,16 @@ pub fn color_channel(byte: u8) -> f32 {
 
 /// The alpha of `ApplyCharSelectGhostKit` (`0x4727f0`, `0x4728a4` to `0x47293e`) passed to
 /// `CM2Model::SetAlpha` (`0x710cb0`): 0.0 for a value below 0, 1.0 for a value above 1, else the value
-/// unchanged, NaN included (`systems/glue/select.md#ghost-kit`).
+/// unchanged, NaN and -0 included (`systems/glue/select.md#ghost-kit`).
+#[allow(clippy::manual_clamp)] // the compares keep the exe's NaN and -0
 pub fn clamp01(value: f32) -> f32 {
-    // `f32::clamp` has these cases: below 0 gives 0, above 1 gives 1, and NaN stays NaN.
-    value.clamp(0.0, 1.0)
+    if value < 0.0 {
+        0.0
+    } else if value > 1.0 {
+        1.0
+    } else {
+        value
+    }
 }
 
 /// The pet scale of `BuildCharSelectModel` (`0x472950`, `0x472dc6`) when the pet's family has no

@@ -64,7 +64,7 @@ stored one (or a NaN) and then repaints; the loaders call them as progress callb
 Addresses: `0x406920`, `0x406900`, `0x407f70`, `0x407fa0`, `0x407fd0`, `0x882be4`, `0x882894`, `0x882bd0`, `0x882df4`, `0x443620`, `0x66fc70`, `0x6ef160`, `0x443d30`
 Confidence: verified
 Proof: one
-Test: `loadingscreen::progress_fraction_difftest`
+Test: `loadingscreen::progress_fraction_difftest`, `loadingscreen::progress_fraction_signed_zero_and_nan_difftest`
 
 `0x406926` zeroes the fraction; `fcomp` of `P` with 0 and `test ah,0x44; jnp` (`0x406947`) select
 the unphased weights when `P` equals 0. The sum is `(A·wA + base) + B·wB` in 53-bit precision, stored

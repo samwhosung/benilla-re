@@ -13,7 +13,8 @@ const HALF: f32 = f32::from_bits(0x3f00_0000);
 /// `phase` is `0x882894`, `input_a` `0x882bd0` and `input_b` `0x882df4`; the result goes to
 /// `0x882be4`. When `phase != 0`: `base = phase * 0.5` and weights (0.35, 0.15); else `base = 0` and
 /// weights (0.70, 0.30). `f = (input_a * wA + base) + input_b * wB`, then `f < 0` gives 0 and
-/// `f >= 1` gives 1. The intermediates are `f64`; the `base` and `f` stores round to `f32`.
+/// anything not below 1 gives 1, NaN included; -0 stays -0 (`0x406993` to `0x4069db`: an ordered
+/// compare of 0 with `f`, then of `f` with 1, `test ah,5; jp`). The intermediates are `f64`; the `base` and `f` stores round to `f32`.
 pub fn progress_fraction(phase: f32, input_a: f32, input_b: f32) -> f32 {
     let phased = phase != 0.0;
     let base = if phased {
@@ -28,5 +29,11 @@ pub fn progress_fraction(phase: f32, input_a: f32, input_b: f32) -> f32 {
     };
     let t1 = input_a as f64 * wa as f64 + base as f64; // A·wA then + base (fadd order)
     let f = (t1 + input_b as f64 * wb as f64) as f32; // + B·wB, fstp m32
-    f.clamp(0.0, 1.0) // the exe: f < 0 gives 0, f >= 1 gives 1
+    if f < 0.0 {
+        0.0
+    } else if f < 1.0 {
+        f
+    } else {
+        1.0
+    }
 }

@@ -310,7 +310,7 @@ fn channel_2d_position_synth() {
     d.emu.stub(0x7bb0e0, xform as u32, 1); // applies it: returns our result
     d.emu.stub(0x7fdb56, 0, 3); // FSOUND_3D_SetAttributes: args[1] is the position
     let listeners = [[0.0f32, 0.0, 0.0], [12.0, -7.0, 3.0]];
-    let elevs = [0.0f32, 0.25, 0.5, 0.75, 1.0, -0.3, 1.4, f32::NAN];
+    let elevs = [0.0f32, -0.0, 0.25, 0.5, 0.75, 1.0, -0.3, 1.4, f32::NAN];
     let offsets = [[10.0f32, 0.0], [3.0, 4.0], [-8.0, 6.0], [1.0, -20.0]];
     let xforms = synth_vec3();
     for &l in &listeners {
