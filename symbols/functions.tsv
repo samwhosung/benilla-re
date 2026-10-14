@@ -3833,7 +3833,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x456280	37			unassigned			Runs its object file code not read here	inferred	none		
 0x4562b0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x4562f0	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x456330	25	RsqrtEstimate		cmath			Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	cmath::fast_inv_sqrt_seed_difftest
+0x456330	25	RsqrtEstimate		cmath	primitive		Returns the float whose bits are ecx less half the argument's bits, a reciprocal square root estimate	verified	one	lighting/clouds#cloud-colours	cmath::fast_inv_sqrt_seed_difftest
 0x456350	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456370	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x456380	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
@@ -28896,7 +28896,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc1f0	98			unassigned			Runs its object file code that calls CDataStore::GetGuid, CDataStore::GetCString, CDataStore::GetUInt32; not read here	inferred	none		
 0x6dc260	46			unassigned			Runs its object file code that calls 0x4181f0, CDataStore::PutCString; not read here	inferred	none		
 0x6dc290	48			unassigned			Runs its object file code that calls CDataStore::GetUInt32, CDataStore::GetCString; not read here	inferred	none		
-0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Intersects two 2D segments, writing the line intersection when they do not cross	inferred	none		
+0x6dc2c0	259	IntersectSegments2D		unassigned	unreached		Intersects two 2D segments, writing the line intersection when they do not cross	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
 0x6dc3d0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3e0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x6dc3f0	114			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
@@ -28904,9 +28904,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6dc4e0	81			unassigned	unreached		Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc540	81			unassigned			Runs its object file code that calls 0x6dc470; not read here	inferred	none		
 0x6dc5a0	498			unassigned			Runs its object file code not read here	inferred	none		lighting::ray_box_clip_difftest
-0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	inferred	none		
-0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	inferred	none		
-0x6dc900	1147	SegmentSegmentDistanceSquared		unassigned	unreached		Returns the squared distance between two segments, each given by a point and a direction	inferred	none		
+0x6dc7a0	110	DoesSphereTouchBox		unassigned	unreached		Returns 1 when a sphere reaches a box: the squared clamp distance at most the squared radius	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x6dc810	239	ClassifyBoxAgainstPlane		unassigned	unreached		Classifies a box against a plane as in front, behind or straddling	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x6dc900	1147	SegmentSegmentDistanceSquared		unassigned	unreached		Returns the squared distance between two segments, each given by a point and a direction	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
 0x6dcd80	10			unassigned	unreached		Runs its object file code that calls 0x6dc5a0; not read here	inferred	none		
 0x6dcd90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6dcda0	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -32637,18 +32637,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x760bb0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x760bc0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x760bd0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x760be0	212	SoftFloatMul		cmath		float * __fastcall (float *out, const float *a, const float *b)	Multiplies two floats with integer instructions, truncating the significand	verified	one	spell/records#software-floats	
-0x760cc0	58			cmath			Runs its object file code that calls 0x760f40, SoftFloatMul; not read here	inferred	none		
+0x760be0	212	SoftFloatMul		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Multiplies two floats with integer instructions, truncating the significand	verified	one	spell/records#software-floats	
+0x760cc0	58			cmath	orchestration		Runs its object file code that calls 0x760f40, SoftFloatMul; not read here	inferred	none		
 0x760d00	286			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x760e20	279	SoftFloatAdd		cmath		float * __fastcall (float *out, const float *a, const float *b)	Adds two floats with integer instructions, aligning by arithmetic shifts and truncating	verified	one	spell/records#software-floats	
-0x760f40	98			cmath			Runs its object file code not read here	inferred	none		
-0x760fb0	134	SoftFloatFloor		cmath		float * __fastcall (float *out, const float *x)	Rounds a float toward negative infinity with integer instructions	verified	one	spell/records#software-floats	
-0x761040	126	SoftFloatCeil		cmath		float * __fastcall (float *out, const float *x)	Rounds a float toward positive infinity with integer instructions; zero gives 1.0	verified	one	spell/records#software-floats	
+0x760e20	279	SoftFloatAdd		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Adds two floats with integer instructions, aligning by arithmetic shifts and truncating	verified	one	spell/records#software-floats	
+0x760f40	98			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x760fb0	134	SoftFloatFloor		cmath	primitive	float * __fastcall (float *out, const float *x)	Rounds a float toward negative infinity with integer instructions	verified	one	spell/records#software-floats	
+0x761040	126	SoftFloatCeil		cmath	primitive	float * __fastcall (float *out, const float *x)	Rounds a float toward positive infinity with integer instructions; zero gives 1.0	verified	one	spell/records#software-floats	
 0x7610c0	52			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x761100	88			cmath	unreached		Runs its object file code that calls 0x760d00; not read here	inferred	none		
-0x761160	36	SoftFloatRoundHalfUp		cmath		float * __fastcall (float *out, const float *x)	Returns the software floor of the software sum of a float and 0.5	verified	one	spell/records#software-floats	
+0x761160	36	SoftFloatRoundHalfUp		cmath	orchestration	float * __fastcall (float *out, const float *x)	Returns the software floor of the software sum of a float and 0.5	verified	one	spell/records#software-floats	
 0x761190	201			cmath	unreached		Runs its object file code that calls 0x760f40, SoftFloatMul, 0x761100 and 2 more; not read here	inferred	none		
-0x761260	112	SoftFloatFromInt		cmath		float * __fastcall (float *out, int32_t value)	Converts an integer to a float with integer instructions, dropping bits below the 24th	verified	one	spell/records#software-floats	
+0x761260	112	SoftFloatFromInt		cmath	primitive	float * __fastcall (float *out, int32_t value)	Converts an integer to a float with integer instructions, dropping bits below the 24th	verified	one	spell/records#software-floats	
 0x7612d0	80			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x761320	337			cmath	unreached		Runs its object file code that calls 0x7612d0, 0x761480, 0x761100 and 4 more; not read here	inferred	none		
 0x761480	37			cmath	unreached		Runs its object file code not read here	inferred	none		
@@ -32669,175 +32669,175 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x761e60	403			cmath	unreached		Runs its object file code that calls 0x7612d0, SoftFloatFromInt, 0x760d00; not read here	inferred	none		
 0x762000	424			cmath	unreached		Runs its object file code that calls 0x7612d0, SoftFloatFromInt, SoftFloatAdd and 1 more; not read here	inferred	none		
 0x7621b0	334			cmath	unreached		Runs its object file code that calls 0x760f40, SoftFloatMul, SoftFloatAdd and 2 more; not read here	inferred	none		
-0x762300	5			cmath			Runs its object file code not read here	inferred	none		
-0x762310	15			cmath			Runs its object file code not read here	inferred	none		
-0x762320	5			cmath			Runs its object file code not read here	inferred	none		
-0x762330	19			cmath			Runs its object file code not read here	inferred	none		
+0x762300	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762310	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x762320	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762330	19			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x762350	131			cmath	unreached		Runs its object file code that calls 0x760cc0, 0x7621b0, 0x760d00; not read here	inferred	none		
 0x7623e0	15			cmath	unreached		Runs its object file code that calls 0x4181f0; not read here	inferred	none		
 0x7623f0	32			cmath	unreached		Runs its object file code that calls CDataStore::GetUInt32; not read here	inferred	none		
 0x762410	1			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x762420	1			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x762430	5			cmath			Runs its object file code not read here	inferred	none		
-0x762440	11			cmath			Runs its object file code not read here	inferred	none		
-0x762450	10			cmath			Runs its object file code that calls 0x762460; not read here	inferred	none		
-0x762460	11			cmath			Runs its object file code not read here	inferred	none		
-0x762470	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762480	1			cmath			Runs its object file code not read here	inferred	none		
-0x762490	10			cmath			Runs its object file code that calls 0x7624a0; not read here	inferred	none		
-0x7624a0	15			cmath			Runs its object file code not read here	inferred	none		
-0x7624b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7624c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7624d0	10			cmath			Runs its object file code that calls 0x7624e0; not read here	inferred	none		
-0x7624e0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7624f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762500	1			cmath			Runs its object file code not read here	inferred	none		
-0x762510	10			cmath			Runs its object file code that calls InitSoftFloatMinusOne; not read here	inferred	none		
-0x762520	13	InitSoftFloatMinusOne		cmath		void __cdecl (void)	Stores the software float of -1 in its global; a static initializer	verified	one	spell/records#software-floats	
-0x762530	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762540	1			cmath			Runs its object file code not read here	inferred	none		
-0x762550	10			cmath			Runs its object file code that calls 0x762560; not read here	inferred	none		
-0x762560	11			cmath			Runs its object file code not read here	inferred	none		
-0x762570	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762580	1			cmath			Runs its object file code not read here	inferred	none		
-0x762590	10			cmath			Runs its object file code that calls 0x7625a0; not read here	inferred	none		
-0x7625a0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7625b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7625c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7625d0	10			cmath			Runs its object file code that calls InitSoftFloatZero; not read here	inferred	none		
-0x7625e0	12	InitSoftFloatZero		cmath		void __cdecl (void)	Stores the software float of 0 in its global; a static initializer	verified	one	spell/records#software-floats	
-0x7625f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762600	1			cmath			Runs its object file code not read here	inferred	none		
-0x762610	10			cmath			Runs its object file code that calls 0x762620; not read here	inferred	none		
-0x762620	11			cmath			Runs its object file code not read here	inferred	none		
-0x762630	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762640	1			cmath			Runs its object file code not read here	inferred	none		
-0x762650	10			cmath			Runs its object file code that calls 0x762660; not read here	inferred	none		
-0x762660	11			cmath			Runs its object file code not read here	inferred	none		
-0x762670	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762680	1			cmath			Runs its object file code not read here	inferred	none		
-0x762690	10			cmath			Runs its object file code that calls 0x7626a0; not read here	inferred	none		
-0x7626a0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7626b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7626c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7626d0	10			cmath			Runs its object file code that calls InitSoftFloatHundredth; not read here	inferred	none		
-0x7626e0	11	InitSoftFloatHundredth		cmath		void __cdecl (void)	Stores 0x3c23d70a, 0.01, in its global; a static initializer	verified	one	spell/records#modifier-appliers	
-0x7626f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762700	1			cmath			Runs its object file code not read here	inferred	none		
-0x762710	10			cmath			Runs its object file code that calls 0x762720; not read here	inferred	none		
-0x762720	11			cmath			Runs its object file code not read here	inferred	none		
-0x762730	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762740	1			cmath			Runs its object file code not read here	inferred	none		
-0x762750	10			cmath			Runs its object file code that calls 0x762760; not read here	inferred	none		
-0x762760	11			cmath			Runs its object file code not read here	inferred	none		
-0x762770	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762780	1			cmath			Runs its object file code not read here	inferred	none		
-0x762790	10			cmath			Runs its object file code that calls 0x7627a0; not read here	inferred	none		
-0x7627a0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7627b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7627c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7627d0	10			cmath			Runs its object file code that calls 0x7627e0; not read here	inferred	none		
-0x7627e0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7627f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762800	1			cmath			Runs its object file code not read here	inferred	none		
-0x762810	10			cmath			Runs its object file code that calls 0x762820; not read here	inferred	none		
-0x762820	11			cmath			Runs its object file code not read here	inferred	none		
-0x762830	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762840	1			cmath			Runs its object file code not read here	inferred	none		
-0x762850	10			cmath			Runs its object file code that calls 0x762860; not read here	inferred	none		
-0x762860	11			cmath			Runs its object file code not read here	inferred	none		
-0x762870	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762880	1			cmath			Runs its object file code not read here	inferred	none		
-0x762890	10			cmath			Runs its object file code that calls 0x7628a0; not read here	inferred	none		
-0x7628a0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7628b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7628c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7628d0	10			cmath			Runs its object file code that calls 0x7628e0; not read here	inferred	none		
-0x7628e0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7628f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762900	1			cmath			Runs its object file code not read here	inferred	none		
-0x762910	10			cmath			Runs its object file code that calls 0x762920; not read here	inferred	none		
-0x762920	11			cmath			Runs its object file code not read here	inferred	none		
-0x762930	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762940	1			cmath			Runs its object file code not read here	inferred	none		
-0x762950	10			cmath			Runs its object file code that calls 0x762960; not read here	inferred	none		
-0x762960	11			cmath			Runs its object file code not read here	inferred	none		
-0x762970	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762980	1			cmath			Runs its object file code not read here	inferred	none		
-0x762990	10			cmath			Runs its object file code that calls 0x7629a0; not read here	inferred	none		
-0x7629a0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7629b0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7629c0	1			cmath			Runs its object file code not read here	inferred	none		
-0x7629d0	10			cmath			Runs its object file code that calls 0x7629e0; not read here	inferred	none		
-0x7629e0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7629f0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762a00	1			cmath			Runs its object file code not read here	inferred	none		
-0x762a10	10			cmath			Runs its object file code that calls 0x762a20; not read here	inferred	none		
-0x762a20	11			cmath			Runs its object file code not read here	inferred	none		
-0x762a30	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762a40	1			cmath			Runs its object file code not read here	inferred	none		
-0x762a50	10			cmath			Runs its object file code that calls 0x762a60; not read here	inferred	none		
-0x762a60	11			cmath			Runs its object file code not read here	inferred	none		
-0x762a70	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762a80	1			cmath			Runs its object file code not read here	inferred	none		
-0x762a90	10			cmath			Runs its object file code that calls 0x762aa0; not read here	inferred	none		
-0x762aa0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762ab0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762ac0	1			cmath			Runs its object file code not read here	inferred	none		
-0x762ad0	10			cmath			Runs its object file code that calls 0x762ae0; not read here	inferred	none		
-0x762ae0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762af0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762b00	1			cmath			Runs its object file code not read here	inferred	none		
-0x762b10	10			cmath			Runs its object file code that calls 0x762b20; not read here	inferred	none		
-0x762b20	11			cmath			Runs its object file code not read here	inferred	none		
-0x762b30	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762b40	1			cmath			Runs its object file code not read here	inferred	none		
-0x762b50	10			cmath			Runs its object file code that calls 0x762b60; not read here	inferred	none		
-0x762b60	11			cmath			Runs its object file code not read here	inferred	none		
-0x762b70	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762b80	1			cmath			Runs its object file code not read here	inferred	none		
-0x762b90	10			cmath			Runs its object file code that calls 0x762ba0; not read here	inferred	none		
-0x762ba0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762bb0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762bc0	1			cmath			Runs its object file code not read here	inferred	none		
-0x762bd0	10			cmath			Runs its object file code that calls InitSoftFloatHalf; not read here	inferred	none		
-0x762be0	11	InitSoftFloatHalf		cmath		void __cdecl (void)	Stores 0x3f000000, 0.5, in its global; a static initializer	verified	one	spell/records#software-floats	
-0x762bf0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762c00	1			cmath			Runs its object file code not read here	inferred	none		
-0x762c10	10			cmath			Runs its object file code that calls 0x762c20; not read here	inferred	none		
-0x762c20	11			cmath			Runs its object file code not read here	inferred	none		
-0x762c30	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762c40	1			cmath			Runs its object file code not read here	inferred	none		
-0x762c50	10			cmath			Runs its object file code that calls 0x762c60; not read here	inferred	none		
-0x762c60	11			cmath			Runs its object file code not read here	inferred	none		
-0x762c70	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762c80	1			cmath			Runs its object file code not read here	inferred	none		
-0x762c90	10			cmath			Runs its object file code that calls 0x762ca0; not read here	inferred	none		
-0x762ca0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762cb0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762cc0	1			cmath			Runs its object file code not read here	inferred	none		
-0x762cd0	10			cmath			Runs its object file code that calls 0x762ce0; not read here	inferred	none		
-0x762ce0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762cf0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762d00	1			cmath			Runs its object file code not read here	inferred	none		
-0x762d10	10			cmath			Runs its object file code that calls 0x762d20; not read here	inferred	none		
-0x762d20	11			cmath			Runs its object file code not read here	inferred	none		
-0x762d30	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762d40	1			cmath			Runs its object file code not read here	inferred	none		
-0x762d50	10			cmath			Runs its object file code that calls 0x762d60; not read here	inferred	none		
-0x762d60	11			cmath			Runs its object file code not read here	inferred	none		
-0x762d70	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762d80	1			cmath			Runs its object file code not read here	inferred	none		
-0x762d90	10			cmath			Runs its object file code that calls 0x762da0; not read here	inferred	none		
-0x762da0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762db0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762dc0	1			cmath			Runs its object file code not read here	inferred	none		
-0x762dd0	10			cmath			Runs its object file code that calls 0x762de0; not read here	inferred	none		
-0x762de0	11			cmath			Runs its object file code not read here	inferred	none		
-0x762df0	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x762e00	1			cmath			Runs its object file code not read here	inferred	none		
-0x762e10	10			cmath			Runs its object file code that calls InitSoftFloatOne; not read here	inferred	none		
-0x762e20	15	InitSoftFloatOne		cmath		void __cdecl (void)	Stores the software float of 1 in its global; a static initializer	verified	one	spell/records#software-floats	
+0x762430	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762440	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762450	10			cmath	orchestration		Runs its object file code that calls 0x762460; not read here	inferred	none		
+0x762460	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762470	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762480	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762490	10			cmath	orchestration		Runs its object file code that calls 0x7624a0; not read here	inferred	none		
+0x7624a0	15			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7624b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7624c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7624d0	10			cmath	orchestration		Runs its object file code that calls 0x7624e0; not read here	inferred	none		
+0x7624e0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7624f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762500	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762510	10			cmath	orchestration		Runs its object file code that calls InitSoftFloatMinusOne; not read here	inferred	none		
+0x762520	13	InitSoftFloatMinusOne		cmath	orchestration	void __cdecl (void)	Stores the software float of -1 in its global; a static initializer	verified	one	spell/records#software-floats	
+0x762530	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762540	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762550	10			cmath	orchestration		Runs its object file code that calls 0x762560; not read here	inferred	none		
+0x762560	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762570	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762580	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762590	10			cmath	orchestration		Runs its object file code that calls 0x7625a0; not read here	inferred	none		
+0x7625a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7625b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7625c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7625d0	10			cmath	orchestration		Runs its object file code that calls InitSoftFloatZero; not read here	inferred	none		
+0x7625e0	12	InitSoftFloatZero		cmath	orchestration	void __cdecl (void)	Stores the software float of 0 in its global; a static initializer	verified	one	spell/records#software-floats	
+0x7625f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762600	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762610	10			cmath	orchestration		Runs its object file code that calls 0x762620; not read here	inferred	none		
+0x762620	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762630	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762640	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762650	10			cmath	orchestration		Runs its object file code that calls 0x762660; not read here	inferred	none		
+0x762660	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762670	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762680	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762690	10			cmath	orchestration		Runs its object file code that calls 0x7626a0; not read here	inferred	none		
+0x7626a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7626b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7626c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7626d0	10			cmath	orchestration		Runs its object file code that calls InitSoftFloatHundredth; not read here	inferred	none		
+0x7626e0	11	InitSoftFloatHundredth		cmath	orchestration	void __cdecl (void)	Stores 0x3c23d70a, 0.01, in its global; a static initializer	verified	one	spell/records#modifier-appliers	
+0x7626f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762700	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762710	10			cmath	orchestration		Runs its object file code that calls 0x762720; not read here	inferred	none		
+0x762720	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762730	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762740	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762750	10			cmath	orchestration		Runs its object file code that calls 0x762760; not read here	inferred	none		
+0x762760	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762770	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762780	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762790	10			cmath	orchestration		Runs its object file code that calls 0x7627a0; not read here	inferred	none		
+0x7627a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7627b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7627c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7627d0	10			cmath	orchestration		Runs its object file code that calls 0x7627e0; not read here	inferred	none		
+0x7627e0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7627f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762800	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762810	10			cmath	orchestration		Runs its object file code that calls 0x762820; not read here	inferred	none		
+0x762820	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762830	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762840	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762850	10			cmath	orchestration		Runs its object file code that calls 0x762860; not read here	inferred	none		
+0x762860	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762870	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762880	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762890	10			cmath	orchestration		Runs its object file code that calls 0x7628a0; not read here	inferred	none		
+0x7628a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7628b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7628c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7628d0	10			cmath	orchestration		Runs its object file code that calls 0x7628e0; not read here	inferred	none		
+0x7628e0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7628f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762900	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762910	10			cmath	orchestration		Runs its object file code that calls 0x762920; not read here	inferred	none		
+0x762920	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762930	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762940	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762950	10			cmath	orchestration		Runs its object file code that calls 0x762960; not read here	inferred	none		
+0x762960	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762970	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762980	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762990	10			cmath	orchestration		Runs its object file code that calls 0x7629a0; not read here	inferred	none		
+0x7629a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7629b0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7629c0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7629d0	10			cmath	orchestration		Runs its object file code that calls 0x7629e0; not read here	inferred	none		
+0x7629e0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7629f0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762a00	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762a10	10			cmath	orchestration		Runs its object file code that calls 0x762a20; not read here	inferred	none		
+0x762a20	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762a30	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762a40	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762a50	10			cmath	orchestration		Runs its object file code that calls 0x762a60; not read here	inferred	none		
+0x762a60	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762a70	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762a80	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762a90	10			cmath	orchestration		Runs its object file code that calls 0x762aa0; not read here	inferred	none		
+0x762aa0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762ab0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762ac0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762ad0	10			cmath	orchestration		Runs its object file code that calls 0x762ae0; not read here	inferred	none		
+0x762ae0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762af0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762b00	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762b10	10			cmath	orchestration		Runs its object file code that calls 0x762b20; not read here	inferred	none		
+0x762b20	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762b30	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762b40	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762b50	10			cmath	orchestration		Runs its object file code that calls 0x762b60; not read here	inferred	none		
+0x762b60	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762b70	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762b80	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762b90	10			cmath	orchestration		Runs its object file code that calls 0x762ba0; not read here	inferred	none		
+0x762ba0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762bb0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762bc0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762bd0	10			cmath	orchestration		Runs its object file code that calls InitSoftFloatHalf; not read here	inferred	none		
+0x762be0	11	InitSoftFloatHalf		cmath	orchestration	void __cdecl (void)	Stores 0x3f000000, 0.5, in its global; a static initializer	verified	one	spell/records#software-floats	
+0x762bf0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762c00	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762c10	10			cmath	orchestration		Runs its object file code that calls 0x762c20; not read here	inferred	none		
+0x762c20	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762c30	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762c40	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762c50	10			cmath	orchestration		Runs its object file code that calls 0x762c60; not read here	inferred	none		
+0x762c60	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762c70	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762c80	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762c90	10			cmath	orchestration		Runs its object file code that calls 0x762ca0; not read here	inferred	none		
+0x762ca0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762cb0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762cc0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762cd0	10			cmath	orchestration		Runs its object file code that calls 0x762ce0; not read here	inferred	none		
+0x762ce0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762cf0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762d00	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762d10	10			cmath	orchestration		Runs its object file code that calls 0x762d20; not read here	inferred	none		
+0x762d20	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762d30	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762d40	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762d50	10			cmath	orchestration		Runs its object file code that calls 0x762d60; not read here	inferred	none		
+0x762d60	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762d70	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762d80	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762d90	10			cmath	orchestration		Runs its object file code that calls 0x762da0; not read here	inferred	none		
+0x762da0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762db0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762dc0	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762dd0	10			cmath	orchestration		Runs its object file code that calls 0x762de0; not read here	inferred	none		
+0x762de0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762df0	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x762e00	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x762e10	10			cmath	orchestration		Runs its object file code that calls InitSoftFloatOne; not read here	inferred	none		
+0x762e20	15	InitSoftFloatOne		cmath	orchestration	void __cdecl (void)	Stores the software float of 1 in its global; a static initializer	verified	one	spell/records#software-floats	
 0x762e30	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x762e40	1			unassigned			Runs its object file code not read here	inferred	none		
 0x762e50	10			unassigned			Runs its object file code that calls 0x762e60; not read here	inferred	none		
@@ -35698,64 +35698,64 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bc010	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7bc020	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7bc040	71			unassigned			Runs its object file code not read here	inferred	none		
-0x7bc090	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bc0a0	11			cmath			Runs its object file code not read here	inferred	none		
+0x7bc090	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bc0a0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7bc0b0	239			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc1a0	239			cmath			Runs its object file code not read here	inferred	none		
-0x7bc290	206			cmath			Runs its object file code not read here	inferred	none		
+0x7bc1a0	239			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bc290	206			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7bc360	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc430	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc500	206			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc5d0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	cmath::multiply_matrix4_difftest, gx::lightningrender_strip_difftest
-0x7bc8c0	29			cmath			Runs its object file code not read here	inferred	none		cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
-0x7bc8e0	204			cmath			Runs its object file code not read here	inferred	none		
+0x7bc8c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
+0x7bc8e0	204			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7bc9b0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bca80	93	TransformPoint		cmath		float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	terrain::liquid_hit_flush_difftest, terrain::horizon_insert, gx::lightningrender_strip_difftest, models::m2_light_coord_finalize_difftest, models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
-0x7bcae0	93			cmath			Runs its object file code not read here	inferred	none		cmath::transform_mat43_vec3_difftest
-0x7bcb40	140	TransformVector4		cmath		float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	terrain::portal_screen_rect_difftest, models::particle_quad_expand_stretched_difftest
+0x7bca80	93	TransformPoint		cmath	primitive	float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	terrain::liquid_hit_flush_difftest, terrain::horizon_insert, gx::lightningrender_strip_difftest, models::m2_light_coord_finalize_difftest, models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest
+0x7bcae0	93			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::transform_mat43_vec3_difftest
+0x7bcb40	140	TransformVector4		cmath	primitive	float * __fastcall (float *out, const float *v, const float *m)	Multiplies a four-component row vector by a 4x4 matrix	inferred	none	models/emission#spawn-space	terrain::portal_screen_rect_difftest, models::particle_quad_expand_stretched_difftest
 0x7bcbd0	140			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bcc60	109	TransformPointInPlace		cmath		float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	models::ribbonbasis_difftest
+0x7bcc60	109	TransformPointInPlace		cmath	primitive	float * __fastcall (float *out, float *v, const float *m)	Replaces v with v times the upper 3×3 of a 4×4 matrix plus its fourth row, and copies it to out	verified	one	collision/falling#frame-transform	models::ribbonbasis_difftest
 0x7bccd0	213			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bcdb0	61			cmath	unreached		Runs its object file code that calls 0x7bc290; not read here	inferred	none		
 0x7bcdf0	61			cmath	unreached		Runs its object file code that calls 0x7bc500; not read here	inferred	none		
-0x7bce30	61			cmath			Runs its object file code that calls MultiplyMatrix4; not read here	inferred	none		
+0x7bce30	61			cmath	primitive		Runs its object file code that calls MultiplyMatrix4; not read here	inferred	none		
 0x7bce70	61			cmath	unreached		Runs its object file code that calls 0x7bc8e0; not read here	inferred	none		
 0x7bceb0	61			cmath	unreached		Runs its object file code that calls 0x7bccd0; not read here	inferred	none		
 0x7bcef0	156			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bcf90	201	Determinant4		cmath		float __thiscall (const float *m)	Returns the determinant of a 4x4 matrix by cofactors	inferred	none	models/scene#segment-collision	
+0x7bcf90	201	Determinant4		cmath	primitive	float __thiscall (const float *m)	Returns the determinant of a 4x4 matrix by cofactors	inferred	none	models/scene#segment-collision	
 0x7bd060	815			cmath	unreached		Runs its object file code that calls 0x7bc040; not read here	inferred	none		
-0x7bd390	815			cmath			Runs its object file code that calls 0x7bc040; not read here	inferred	none		
-0x7bd6c0	50	InvertMatrix4WithDeterminant		cmath		float * __thiscall (const float *m, float *out, float det)	Writes the inverse of a 4x4 matrix given its determinant	inferred	none	models/scene#segment-collision	
-0x7bd700	280	InvertRigidMatrix		cmath		void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
-0x7bd820	347	InvertAffineMatrix		cmath			Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	
+0x7bd390	815			cmath	primitive		Runs its object file code that calls 0x7bc040; not read here	inferred	none		
+0x7bd6c0	50	InvertMatrix4WithDeterminant		cmath	primitive	float * __thiscall (const float *m, float *out, float det)	Writes the inverse of a 4x4 matrix given its determinant	inferred	none	models/scene#segment-collision	
+0x7bd700	280	InvertRigidMatrix		cmath	primitive	void __thiscall (const float *m, float *out)	Writes the rigid inverse of a 4×4 matrix: its 3×3 transposed, then translated by −t times that	verified	one	collision/contact#facet-gather	
+0x7bd820	347	InvertAffineMatrix		cmath	primitive		Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	
 0x7bd980	372			cmath	unreached		Runs its object file code that calls 0x5f8d20, 0x7be6d0, ScaleMatrixRows and 1 more; not read here	inferred	none		
-0x7bdb00	311			cmath			Runs its object file code not read here	inferred	none		cmath::axis_angle_mat4_difftest
+0x7bdb00	311			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::axis_angle_mat4_difftest
 0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	cmath::translate_matrix_difftest
 0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	terrain::liquid_tex_matrix_difftest
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	
-0x7bdd60	75	RotateMatrix		cmath		void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
+0x7bdd60	75	RotateMatrix		cmath	primitive	void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
 0x7bddb0	333	RotateMatrixByQuaternion		cmath	primitive	void __thiscall (float *m, const float *q)	Multiplies a matrix on the left by the rotation matrix of a quaternion (x, y, z, w)	verified	one	models/animation#texture-transforms	
-0x7bdf00	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bdf10	15			cmath			Runs its object file code not read here	inferred	none		
-0x7bdf20	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bdf30	19			cmath			Runs its object file code not read here	inferred	none		
-0x7bdf50	104			cmath			Runs its object file code not read here	inferred	none		gx::lightningrender_strip_difftest
-0x7bdfc0	247			cmath			Runs its object file code not read here	inferred	none		cmath::multiply_matrix3_difftest
-0x7be0c0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7be0d0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7be0e0	63	Matrix3Determinant		cmath		float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
+0x7bdf00	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bdf10	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bdf20	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bdf30	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bdf50	104			cmath	orchestration		Runs its object file code not read here	inferred	none		gx::lightningrender_strip_difftest
+0x7bdfc0	247			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::multiply_matrix3_difftest
+0x7be0c0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7be0d0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7be0e0	63	Matrix3Determinant		cmath	primitive	float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
 0x7be120	183			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be1e0	183	Matrix3Adjugate		cmath		float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
-0x7be2a0	121	InvertMatrix3		cmath		float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3
+0x7be1e0	183	Matrix3Adjugate		cmath	primitive	float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
+0x7be2a0	121	InvertMatrix3		cmath	primitive	float *__thiscall (const float *m, float *out, float determinant)	Writes a 3x3 matrix's adjugate scaled by 1/determinant	verified	one	collision/airborne#crease-helpers	cmath::inv3
 0x7be320	199			cmath	unreached		Runs its object file code that calls 0x7be610; not read here	inferred	none		
 0x7be3f0	159			cmath	unreached		Runs its object file code that calls 0x7be6d0; not read here	inferred	none		
-0x7be490	282	BuildAxisRotation		cmath		float * __fastcall (float *out, const float *axis, float angle, uint8_t axisIsUnit)	Builds a rotation matrix about an axis by an angle, normalizing the axis unless told it is unit	verified	one	models/emission#spline-spawn	models::particle_quad_expand_tiled_rotated_difftest
+0x7be490	282	BuildAxisRotation		cmath	primitive	float * __fastcall (float *out, const float *axis, float angle, uint8_t axisIsUnit)	Builds a rotation matrix about an axis by an angle, normalizing the axis unless told it is unit	verified	one	models/emission#spline-spawn	models::particle_quad_expand_tiled_rotated_difftest
 0x7be5b0	87			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7be610	86			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7be670	86			cmath			Runs its object file code not read here	inferred	none		
-0x7be6d0	82			cmath			Runs its object file code not read here	inferred	none		
-0x7be730	57			cmath			Runs its object file code that calls BuildAxisRotation, 0x7bdfc0; not read here	inferred	none		
+0x7be670	86			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7be6d0	82			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7be730	57			cmath	orchestration		Runs its object file code that calls BuildAxisRotation, 0x7bdfc0; not read here	inferred	none		
 0x7be770	225			cmath	unreached		Runs its object file code that calls 0x7bdfc0; not read here	inferred	none		
 0x7be860	47			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7be890	41			cmath	unreached		Runs its object file code not read here	inferred	none		
@@ -35772,155 +35772,155 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf030	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf1b0	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
 0x7bf330	374			cmath	unreached		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf4b0	374			cmath			Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
-0x7bf630	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf640	15			cmath			Runs its object file code not read here	inferred	none		
-0x7bf650	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf660	19			cmath			Runs its object file code not read here	inferred	none		
-0x7bf680	81	DominantAxis		cmath		uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component in magnitude	inferred	none		cmath::dominant_axis_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest, models::wmo_mocv_barycentric_color_difftest
-0x7bf6e0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf6f0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7bf700	92			cmath			Runs its object file code not read here	inferred	none		cmath::minor_axis_difftest
-0x7bf760	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf770	15			cmath			Runs its object file code not read here	inferred	none		
-0x7bf780	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf790	19			cmath			Runs its object file code not read here	inferred	none		
-0x7bf7b0	135			cmath			Runs its object file code not read here	inferred	none		
-0x7bf840	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf850	11			cmath			Runs its object file code not read here	inferred	none		
-0x7bf860	278			cmath			Runs its object file code not read here	inferred	none		
-0x7bf980	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf990	15			cmath			Runs its object file code not read here	inferred	none		
-0x7bf9a0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bf9b0	19			cmath			Runs its object file code not read here	inferred	none		
-0x7bf9d0	86			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa30	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa40	11			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa50	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa60	15			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa70	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bfa80	19			cmath			Runs its object file code not read here	inferred	none		
-0x7bfaa0	119			cmath			Runs its object file code that calls 0x7bfb40; not read here	inferred	none		
-0x7bfb20	5			cmath			Runs its object file code not read here	inferred	none		
-0x7bfb30	11			cmath			Runs its object file code not read here	inferred	none		
-0x7bfb40	72			cmath			Runs its object file code not read here	inferred	none		
-0x7bfb90	82			cmath			Runs its object file code that calls 0x7bfaa0; not read here	inferred	none		
+0x7bf4b0	374			cmath	primitive		Runs its object file code that calls 0x7bdfc0, 0x5f8d20; not read here	inferred	none		
+0x7bf630	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf640	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf650	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf660	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf680	81	DominantAxis		cmath	primitive	uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component by magnitude, a tie going to the later axis	verified	one	cmath/geometry#dominant-axis-and-bounds	cmath::dominant_axis_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest, models::wmo_mocv_barycentric_color_difftest
+0x7bf6e0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf6f0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf700	92			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::minor_axis_difftest
+0x7bf760	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf770	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf780	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf790	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf7b0	135			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf840	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf850	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf860	278			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf980	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf990	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf9a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bf9b0	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bf9d0	86			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bfa30	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfa40	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfa50	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfa60	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bfa70	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfa80	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bfaa0	119			cmath	primitive		Runs its object file code that calls 0x7bfb40; not read here	inferred	none		
+0x7bfb20	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfb30	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7bfb40	72			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7bfb90	82			cmath	primitive		Runs its object file code that calls 0x7bfaa0; not read here	inferred	none		
 0x7bfc20	16			cmath	unreached		Runs its object file code that calls 0x7bfb40; not read here	inferred	none		
-0x7bfc30	106			cmath			Runs its object file code that calls 0x7c0080, 0x7c0090, 0x7bfca0 and 3 more; not read here	inferred	none		
-0x7bfca0	61			cmath			Runs its object file code that calls 0x7c0070, 0x7c0060, SMemFree; not read here	inferred	none		
-0x7bfce0	49			cmath			Runs its object file code that calls 0x7bfc30; not read here	inferred	none		
-0x7bfd20	43			cmath			Runs its object file code that calls SortedHeapDestruct, SMemFree; not read here	inferred	none		
+0x7bfc30	106			cmath	primitive		Runs its object file code that calls 0x7c0080, 0x7c0090, 0x7bfca0 and 3 more; not read here	inferred	none		
+0x7bfca0	61			cmath	orchestration		Runs its object file code that calls 0x7c0070, 0x7c0060, SMemFree; not read here	inferred	none		
+0x7bfce0	49			cmath	orchestration		Runs its object file code that calls 0x7bfc30; not read here	inferred	none		
+0x7bfd20	43			cmath	orchestration		Runs its object file code that calls SortedHeapDestruct, SMemFree; not read here	inferred	none		
 0x7bfd50	77			cmath	unreached		Runs its object file code that calls 0x7c0070, 0x7c0060, 0x7bfc30 and 1 more; not read here	inferred	none		
 0x7bfda0	76			cmath	unreached		Runs its object file code that calls 0x7bfca0, 0x7c0070, 0x7c0060 and 2 more; not read here	inferred	none		
-0x7bfdf0	22	SortedHeapDestruct		cmath			Destroys a sorted record container and restores its base vtable	inferred	none		
+0x7bfdf0	22	SortedHeapDestruct		cmath	orchestration		Destroys a sorted record container and restores its base vtable	inferred	none		
 0x7bfe10	43			cmath	unreached		Runs its object file code that calls 0x4100f0; not read here	inferred	none		
 0x7bfe40	45			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bfe70	43			cmath	unreached		Runs its object file code that calls 0x4100f0; not read here	inferred	none		
 0x7bfea0	45			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bfed0	75			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bff20	129			cmath			Runs its object file code that calls 0x7c0070, 0x7c0060, SMemReAlloc and 2 more; not read here	inferred	none		
+0x7bff20	129			cmath	primitive		Runs its object file code that calls 0x7c0070, 0x7c0060, SMemReAlloc and 2 more; not read here	inferred	none		
 0x7bffb0	39			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bffe0	25			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7c0000	55			cmath			Runs its object file code not read here	inferred	none		
+0x7c0000	55			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c0040	31			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7c0060	6			cmath			Runs cmemblock.cpp code not read here	inferred	none		
-0x7c0070	6			cmath			Runs its object file code not read here	inferred	none		
-0x7c0080	3			cmath			Runs its object file code not read here	inferred	none		
-0x7c0090	3			cmath			Runs its object file code not read here	inferred	none		
-0x7c00a0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c00b0	15			cmath			Runs its object file code not read here	inferred	none		
-0x7c00c0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c00d0	19			cmath			Runs its object file code not read here	inferred	none		
-0x7c00f0	40			cmath			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x7c0120	77	Matrix3ToQuaternion		unassigned	primitive	float * __thiscall (float *out, const float *m)	Transposes a 3x3 matrix into a temporary and converts it to a quaternion	inferred	none	models/particles#model-particles	
-0x7c0170	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c0180	11			cmath			Runs its object file code not read here	inferred	none		
-0x7c0190	293	MatrixToQuaternion		unassigned	primitive		Converts a 3x3 rotation matrix to a quaternion by the trace or the largest diagonal	inferred	none		cmath::matrix_quat_difftest
-0x7c02c0	85	QuaternionFromAxisAngle		unassigned	unreached		Builds a quaternion from an angle and an axis	inferred	none		
-0x7c0320	138	QuaternionToAxisAngle		unassigned	unreached		Writes a quaternion's angle and axis	inferred	none		
-0x7c03b0	157	InvertQuaternion		unassigned	unreached		Writes a quaternion's conjugate over its squared norm	inferred	none		
-0x7c0450	160	QuaternionExp		unassigned	unreached		Writes the quaternion exponential of a rotation vector	inferred	none		
-0x7c04f0	119	QuaternionLog		unassigned	unreached		Writes the quaternion logarithm as a rotation vector	inferred	none		
-0x7c0570	328	SlerpQuaternions		unassigned	unreached		Interpolates two quaternions spherically	inferred	none		
-0x7c06c0	627	SquadControlPoints		unassigned	unreached		Writes the two squad control quaternions around a key	inferred	none		
-0x7c0940	536	SquadControlPoint		unassigned	unreached		Writes one squad control quaternion to both outputs	inferred	none		
-0x7c0b60	1798	EvaluateSquadSegment		unassigned	unreached		Evaluates a squad spline segment of quaternions	inferred	none		
-0x7c1270	86	SquadBlend		unassigned	unreached		Blends four quaternions by nested spherical interpolation	inferred	none		
-0x7c12d0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c12e0	15			cmath			Runs its object file code not read here	inferred	none		
-0x7c12f0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1300	19			cmath			Runs its object file code not read here	inferred	none		
+0x7c0060	6			cmath	orchestration		Runs cmemblock.cpp code not read here	inferred	none		
+0x7c0070	6			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c0080	3			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c0090	3			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c00a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c00b0	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c00c0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c00d0	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c00f0	40			cmath	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x7c0120	77	Matrix3ToQuaternion		cmath	primitive	float * __thiscall (float *out, const float *m)	Copies a 3x3 matrix transposed into a local and converts it to a quaternion through 0x7c0190	verified	one	cmath/quaternions#matrix-to-quaternion	
+0x7c0170	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c0180	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c0190	293	MatrixToQuaternion		cmath	primitive	void __thiscall (float *out, const float *m)	Converts a row-major 3x3 rotation matrix to a quaternion by the trace and the largest diagonal	verified	one	cmath/quaternions#matrix-to-quaternion	cmath::matrix_quat_difftest
+0x7c02c0	85	QuaternionFromAxisAngle		cmath	unreached	void __thiscall (float *out, float angle, const float *axis)	Builds a quaternion from an angle and an axis	verified	one	cmath/quaternions#axis-angle-and-conjugate	
+0x7c0320	138	QuaternionToAxisAngle		cmath	unreached	void __thiscall (const float *q, float *angle, float *axis)	Writes a quaternion's angle and axis	verified	one	cmath/quaternions#axis-angle-and-conjugate	
+0x7c03b0	157	InvertQuaternion		cmath	unreached	void __thiscall (const float *q, float *out)	Writes a quaternion's conjugate over its squared norm, the identity below 2^-22	verified	one	cmath/quaternions#axis-angle-and-conjugate	
+0x7c0450	160	QuaternionExp		cmath	unreached		Writes the quaternion exponential of a rotation vector	verified	one	cmath/quaternions#exponential-and-logarithm	
+0x7c04f0	119	QuaternionLog		cmath	unreached		Writes the quaternion logarithm as a rotation vector	verified	one	cmath/quaternions#exponential-and-logarithm	
+0x7c0570	328	SlerpQuaternions		cmath	unreached		Interpolates two quaternions spherically along the shorter arc	verified	one	cmath/quaternions#slerp	
+0x7c06c0	627	SquadControlPoints		cmath	unreached		Writes the two squad control quaternions around a key	inferred	none	cmath/quaternions#squad	
+0x7c0940	536	SquadControlPoint		cmath	unreached		Writes one squad control quaternion to both outputs	inferred	none	cmath/quaternions#squad	
+0x7c0b60	1798	EvaluateSquadSegment		cmath	unreached		Evaluates a squad spline segment of quaternions	inferred	none	cmath/quaternions#squad	
+0x7c1270	86	SquadBlend		cmath	unreached		Blends four quaternions by nested spherical interpolation	inferred	none	cmath/quaternions#squad	
+0x7c12d0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c12e0	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c12f0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1300	19			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7c1320	32			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7c1340	47	ConjugateQuaternion		unassigned	unreached		Writes a quaternion with its vector part negated	inferred	none		
+0x7c1340	47	ConjugateQuaternion		cmath	unreached	void __thiscall (const float *q, float *out)	Writes a quaternion with its vector part negated	verified	one	cmath/quaternions#axis-angle-and-conjugate	
 0x7c1370	38			cmath	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x7c13a0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c13b0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7c13c0	29			cmath			Runs its object file code not read here	inferred	none		
+0x7c13a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c13b0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c13c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7c13e0	29			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7c1400	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1410	15			cmath			Runs its object file code not read here	inferred	none		
-0x7c1420	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1430	19			cmath			Runs its object file code not read here	inferred	none		
-0x7c1450	282			cmath			Runs its object file code that calls SetVector3, MaxVector3; not read here	inferred	none		
-0x7c1570	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1580	11			cmath			Runs its object file code not read here	inferred	none		
+0x7c1400	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1410	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c1420	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1430	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c1450	282	BoundsOfPoints		cmath	primitive		Writes the minimum and maximum corners of n points of stride 12, or zeros for none	verified	one	cmath/geometry#dominant-axis-and-bounds	
+0x7c1570	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1580	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c1590	279			cmath	unreached		Runs its object file code that calls SetVector3, MaxVector3; not read here	inferred	none		
 0x7c16b0	403			cmath	unreached		Runs its object file code that calls SplatVector3, SetVector3; not read here	inferred	none		
-0x7c1850	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1860	15			cmath			Runs its object file code not read here	inferred	none		
-0x7c1870	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c1880	19			cmath			Runs its object file code not read here	inferred	none		
-0x7c18a0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c18b0	11			cmath			Runs its object file code not read here	inferred	none		
-0x7c18c0	10			cmath			Runs its object file code that calls 0x7c18d0; not read here	inferred	none		
-0x7c18d0	45			cmath			Runs its object file code not read here	inferred	none		
-0x7c1900	12			cmath			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7c1910	1			cmath			Runs its object file code not read here	inferred	none		
-0x7c1920	451	ClipSegmentToBox		unassigned	unreached		Clips a segment against a box, writing the entry parameter and point	inferred	none		
-0x7c1af0	321	IntersectRaySphere		unassigned	unreached		Intersects a ray with a sphere, the near root outside and the exit root inside	inferred	none		
-0x7c1c40	390	IntersectRaySphereAlgebraic		unassigned	unreached		Intersects a ray with a sphere by the quadratic, the near root only	inferred	none		
-0x7c1dd0	601	ClassifyPointAgainstBox		unassigned	unreached		Tests a point and radius against a box in one of four modes	inferred	none		
-0x7c2040	601	ClassifyCircleAgainstBox		unassigned	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none		cmath::sphere_aabb_difftest
-0x7c22b0	299	IntersectRayPlane		unassigned	primitive		Intersects a ray with a plane, writing the parameter and the point when their pointers are set	inferred	none		cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
-0x7c23e0	272	PointInPolygonProjected		unassigned	primitive		Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	inferred	none		cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest
-0x7c24f0	289	IsPointInIndexedPolygon16		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	inferred	none		
-0x7c2620	279	IsPointInIndexedPolygon32		unassigned	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	inferred	none		
-0x7c2740	139	IntersectRayPolygonTriangle		unassigned	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	inferred	none		
-0x7c27d0	530	IntersectRayTriangleInline		unassigned	unreached		Intersects a ray with a triangle of three stored vertices, with a slack	inferred	none		
-0x7c29f0	581	IntersectRayTriangleIndexed		unassigned	primitive	bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	models/scene#ray-triangle-test	cmath::intersect_difftest
-0x7c2c40	580	IntersectRayTriangle		cmath		uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle and returns its fraction	inferred	none		cmath::intersect_difftest, terrain::dda_cell_intersect_difftest, terrain::dda_cell_intersect_first_difftest
-0x7c2e90	525	IntersectRayTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle of three stored vertices	inferred	none		
-0x7c30a0	577	IntersectRayIndexedTriangleFront		unassigned	unreached		Intersects a ray with the front of a triangle by 16-bit vertex indices	inferred	none		
-0x7c32f0	147	IsPointInCone		unassigned	unreached		Returns 1 when a point lies within a capped cone along an axis	inferred	none		
-0x7c3390	1000	SweepSphereAgainstCapsule		unassigned	unreached		Returns the time a moving sphere meets a capsule's axis	inferred	none		
-0x7c3780	1160	DoBoxesOverlap		unassigned	unreached		Returns 1 when two oriented boxes overlap on all fifteen separating axes	inferred	none		
-0x7c3c10	272	DoSegmentsCross2D		unassigned	unreached		Returns 1 when two 2D segments cross	inferred	none		
-0x7c3d20	264	IntersectSegments2DPoint		unassigned	unreached		Intersects two 2D segments, writing the intersection point	inferred	none		
-0x7c3e30	510	DoTrianglesOverlap		unassigned	unreached		Returns 1 when two triangles overlap	inferred	none		
-0x7c4030	90	DoesSegmentCrossTriangle2D		unassigned	unreached		Returns 1 when a 2D segment crosses an edge of a triangle	inferred	none		
-0x7c4090	185	IsPointInTriangle2D		unassigned	unreached		Returns 1 when a 2D point lies inside a triangle	inferred	none		
-0x7c4150	328	DoCoplanarTrianglesOverlap		unassigned	unreached		Returns 1 when two coplanar triangles overlap	inferred	none		
-0x7c42a0	5			cmath			Runs its object file code not read here	inferred	none		
-0x7c42b0	15			cmath			Runs its object file code not read here	inferred	none		
-0x7c42c0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7c42d0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7c42f0	66	BuildRotationMatrix2		unassigned	unreached		Writes the 2x2 rotation [[cos, sin], [-sin, cos]] of an angle	inferred	none		
-0x7c4340	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7c4350	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7c4360	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7c4370	15			unassigned			Runs its object file code not read here	inferred	none		
-0x7c4380	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7c4390	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7c43b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7c43c0	11			unassigned			Runs its object file code not read here	inferred	none		
-0x7c43d0	310	LineLineGap		unassigned	unreached		Returns the closest distance between two lines	inferred	none		
-0x7c4510	281	ClosestLineParameters		unassigned	unreached		Writes the parameters of the closest points of two lines	inferred	none		
-0x7c4630	145	PointLineDistance		unassigned	unreached		Returns the distance from a point to a line	inferred	none		
-0x7c46d0	266	PointSegmentDistanceSquared		unassigned	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	inferred	none		cmath::seg_proj_difftest, models::aabsp_nearest_dist_difftest
-0x7c47e0	5	InitGeometryTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
-0x7c47f0	15	InitGeometryTwoPi		unassigned	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
-0x7c4800	5	InitGeometryInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	
-0x7c4810	19	InitGeometryInvTwoPi		unassigned	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	collision/overview#object-files	
+0x7c1850	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1860	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c1870	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1880	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c18a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c18b0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c18c0	10			cmath	orchestration		Calls 0x7c18d0, a static initializer	verified	one	cmath/geometry#point-in-polygon	
+0x7c18d0	45	InitPolygonAxisPairs		cmath	orchestration		Stores the kept axis pairs of the point in polygon test	verified	one	cmath/geometry#point-in-polygon	
+0x7c1900	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7c1910	1			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c1920	451	ClipSegmentToBox		cmath	unreached		Clips a segment against a box, writing the entry parameter and point	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c1af0	321	IntersectRaySphere		cmath	unreached		Intersects a ray with a sphere, the near root outside and the exit root inside	verified	one	cmath/geometry#ray-and-sphere	
+0x7c1c40	390	IntersectRaySphereAlgebraic		cmath	unreached		Intersects a ray with a sphere by the quadratic, the near root only	inferred	none	cmath/geometry#ray-and-sphere	
+0x7c1dd0	601	ClassifyPointAgainstBox		cmath	unreached		Tests a point and radius against a box in one of four modes	inferred	none	cmath/geometry#circle-and-point-against-a-box	
+0x7c2040	601	ClassifyCircleAgainstBox		cmath	primitive		Tests a circle against a box in x and y, one of four tests chosen by an argument	inferred	none	cmath/geometry#circle-and-point-against-a-box	cmath::sphere_aabb_difftest
+0x7c22b0	299	IntersectRayPlane		cmath	primitive	uint8_t __thiscall (const float *ray, const float *plane, float *outT, float *outPoint, float eps)	Intersects a ray with a plane, writing the parameter and the point when their pointers are set	verified	one	cmath/geometry#ray-and-plane	cmath::ray_plane_difftest, cmath::raymesh_composed_difftest
+0x7c23e0	272	PointInPolygonProjected		cmath	primitive	uint8_t __thiscall (const float *point, const float *verts, uint32_t n, uint32_t axis)	Returns 1 when a point lies inside a polygon projected along a dominant axis, by crossing count	verified	one	cmath/geometry#point-in-polygon	cmath::point_in_poly_difftest, cmath::raymesh_composed_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest
+0x7c24f0	289	IsPointInIndexedPolygon16		cmath	unreached		Returns 1 when a point lies inside a polygon given by 16-bit vertex indices	verified	one	cmath/geometry#point-in-polygon	
+0x7c2620	279	IsPointInIndexedPolygon32		cmath	unreached		Returns 1 when a point lies inside a polygon given by 32-bit vertex indices	verified	one	cmath/geometry#point-in-polygon	
+0x7c2740	139	IntersectRayPolygonTriangle		cmath	unreached		Intersects a ray with a triangle through 0x7c22b0 and 0x7c23e0	verified	one	cmath/geometry#point-in-polygon	
+0x7c27d0	530	IntersectRayTriangleInline		cmath	unreached		Intersects a ray with a triangle of three stored vertices, with a slack	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
+0x7c29f0	581	IntersectRayTriangleIndexed		cmath	primitive	bool __fastcall (const float *ray, const float *vertices, const uint16_t *tri, float *t, float *uv, float eps)	Tests a ray against an indexed triangle, two-sided, and writes its parameter and barycentrics	verified	one	cmath/geometry#ray-and-triangle	cmath::intersect_difftest
+0x7c2c40	580	IntersectRayTriangle		cmath	primitive	uint8_t __fastcall (const float *origin, const float *dir, const float *v0, const float *v1, const float *v2, float *t)	Intersects a ray with a triangle by 32-bit vertex indices, as 0x7c29f0	verified	one	cmath/geometry#ray-and-triangle	cmath::intersect_difftest, terrain::dda_cell_intersect_difftest, terrain::dda_cell_intersect_first_difftest
+0x7c2e90	525	IntersectRayTriangleFront		cmath	unreached		Intersects a ray with the front of a triangle of three stored vertices	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
+0x7c30a0	577	IntersectRayIndexedTriangleFront		cmath	unreached		Intersects a ray with the front of a triangle by 16-bit vertex indices	inferred	none	cmath/geometry#other-triangle-and-polygon-rays	
+0x7c32f0	147	IsPointInCone		cmath	unreached		Returns 1 when a point lies within a capped cone along an axis	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c3390	1000	SweepSphereAgainstCapsule		cmath	unreached		Returns the time a moving sphere meets a capsule's axis	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c3780	1160	DoBoxesOverlap		cmath	unreached		Returns 1 when two oriented boxes overlap on all fifteen separating axes	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c3c10	272	DoSegmentsCross2D		cmath	unreached		Returns 1 when two 2D segments cross	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c3d20	264	IntersectSegments2DPoint		cmath	unreached		Intersects two 2D segments, writing the intersection point	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c3e30	510	DoTrianglesOverlap		cmath	unreached		Returns 1 when two triangles overlap	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4030	90	DoesSegmentCrossTriangle2D		cmath	unreached		Returns 1 when a 2D segment crosses an edge of a triangle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4090	185	IsPointInTriangle2D		cmath	unreached		Returns 1 when a 2D point lies inside a triangle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4150	328	DoCoplanarTrianglesOverlap		cmath	unreached		Returns 1 when two coplanar triangles overlap	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c42a0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c42b0	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c42c0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c42d0	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c42f0	66	BuildRotationMatrix2		cmath	unreached		Writes the 2x2 rotation [[cos, sin], [-sin, cos]] of an angle	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4340	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c4350	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c4360	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c4370	15			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c4380	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c4390	19			cmath	primitive		Runs its object file code not read here	inferred	none		
+0x7c43b0	5			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c43c0	11			cmath	orchestration		Runs its object file code not read here	inferred	none		
+0x7c43d0	310	LineLineGap		cmath	unreached		Returns the closest distance between two lines	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4510	281	ClosestLineParameters		cmath	unreached		Writes the parameters of the closest points of two lines	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c4630	145	PointLineDistance		cmath	unreached		Returns the distance from a point to a line	inferred	none	cmath/geometry#distances-sweeps-and-overlaps	
+0x7c46d0	266	PointSegmentDistanceSquared		cmath	primitive		Returns the squared distance from a point to a segment and writes the clamped parameter	verified	one	cmath/geometry#point-to-segment	cmath::seg_proj_difftest, models::aabsp_nearest_dist_difftest
+0x7c47e0	5	InitGeometryTwoPiThunk		cmath	orchestration	void __cdecl (void)	Jumps to 0x7c47f0, a static initializer of the file	verified	one	collision/overview#object-files	
+0x7c47f0	15	InitGeometryTwoPi		cmath	primitive	void __cdecl (void)	Stores 2π as π + π in floats, 6.2831855 (0x40c90fdb)	verified	one	collision/overview#object-files	
+0x7c4800	5	InitGeometryInvTwoPiThunk		cmath	orchestration	void __cdecl (void)	Jumps to 0x7c4810, a static initializer of the file	verified	one	collision/overview#object-files	
+0x7c4810	19	InitGeometryInvTwoPi		cmath	primitive	void __cdecl (void)	Stores 1/2π, 0.15915494 (0x3e22f983), from the 2π its file computed first	verified	one	collision/overview#object-files	
 0x7c4830	5	InitSharedAInfinityThunk		collision	orchestration	void __cdecl (void)	Jumps to 0x7c4840, a static initializer of the file	verified	one	collision/overview#shared-file-initializers	
 0x7c4840	11	InitSharedAInfinity		collision	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#shared-file-initializers	
 0x7c4850	220	CMovement::InitState		collision	orchestration	CMovement * __thiscall (CMovement *this, const float *position, float facing, const uint64_t *owner)	Stores the position and facing as live and anchor values, zeroes the kinematic fields and stamps the clock	verified	one	collision/kinematics#shared-constructor	

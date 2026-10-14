@@ -259,6 +259,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
 0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3140	uint8_t[9]	s_pointYCaseIndex		ui	Holds the case of each anchor point for the y getter: 0, 0, 0, 1, 1, 1, 2, 2, 2	verified	one	ui/anchors#relative-point-coordinates
+0x7c229c	void *[4]	s_circleBoxModeCases		cmath	Holds the four mode case addresses of the circle against a box test 0x7c2040	verified	one	cmath/geometry#circle-and-point-against-a-box
 0x7c5468	void *[5]	s_displacementCases		collision	Holds the five case labels of the displacement dispatcher 0x7c5360	verified	one	collision/kinematics#displacement-dispatcher
 0x7c547c	uint8_t[15]	s_displacementCaseIndex		collision	Holds the case index for modes 1 to 15 of the displacement dispatcher	verified	one	collision/kinematics#displacement-dispatcher
 0x7ff310	const void *			unassigned	Holds a function address that OsGetTickCount, OsGetCachedUnixTime, DestroyTimeManager read; not read here	inferred	none	
@@ -832,6 +833,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d888	void *[11]	s_planeEmitterVftable		models	Holds the plane emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d8b4	void *[11]	s_sphereEmitterVftable		models	Holds the sphere emitter's virtual functions	verified	one	models/particles#emitter-classes
 0x81d8e0	void *[11]	s_splineEmitterVftable		models	Holds the spline emitter's virtual functions	verified	one	models/particles#emitter-classes
+0x81d994	const uint32_t[3]	s_nextAxis		cmath	Holds 1, 2, 0, the next axis of each axis for the matrix to quaternion conversion	verified	one	cmath/quaternions#matrix-to-quaternion
+0x81d9a0	const float	s_quaternionEpsilon		cmath	Holds 2^-21, the sine bound under which the quaternion functions copy	verified	one	cmath/quaternions#exponential-and-logarithm
 0x81d9bc	const float	s_rayTriangleNegEpsilon		cmath	Holds -1e-6, the lower determinant bound of the ray triangle test	verified	one	models/scene#ray-triangle-test
 0x81da58	float	s_gravity		collision	Holds g, 19.291105 (0x419a542f) yards per second squared, down-positive	verified	one	collision/falling#arc-fields-and-constants
 0x81da5c	float	s_negInvGravity		collision	Holds -1/g, -0.051837362 (0xbd54536a)	verified	one	collision/falling#arc-fields-and-constants
@@ -2692,6 +2695,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf58e8	float	s_particleCameraDistance		models	Holds the distance from the last updated emitter to the camera	verified	one	models/particles#update
 0xcf58f0	float[128]	s_particleNoise		models	Holds 128 uniform values in [0, 1) the particle code draws from	verified	one	models/cache#noise-table
 0xcf5b68	float[16]	s_particleViewMatrix		models	Holds the matrix an emitter's draw takes particle positions into view space with	verified	one	models/particles#particle-view-space
+0xcf5c7c	uint32_t[6]	s_polygonAxisPairs		cmath	Holds the two kept axes of each dropped axis for the polygon test, set by 0x7c18d0	verified	one	cmath/geometry#point-in-polygon
 0xcf5ca4	float	s_geometryInvTwoPi		unassigned	Holds 1/2π, 0.15915494, from start-up	verified	one	collision/overview#object-files
 0xcf5ca8	float	s_geometryTwoPi		unassigned	Holds 2π, 6.2831855, from start-up	verified	one	collision/overview#object-files
 0xcf5cc0	float	s_sharedInfinity		collision	Holds +∞ from start-up	verified	one	collision/overview#shared-file-initializers

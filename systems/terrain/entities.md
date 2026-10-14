@@ -122,3 +122,25 @@ in the movement object files (`0x615730` to `0x61b110`, `0x6307a0` to `0x637a60`
 file), and the ones in `0x6106b0`, `0x60e0a0` and `0x611130` are unit code outside the mover. The control is
 that the same scan finds the tests that read the stand state elsewhere. `0x5ed570` is stored in the player
 vtable at `0x80b01c` and `0x60be50` at `0x80c59c`.
+
+## Gather class bits
+
+The class word of a world query selects which gather legs run. In `0x6aaab0`, any of 0xf0 in the low
+byte selects the map object group facets, any of 0xf0000 the map-object liquid, any of 0xf0000f the
+doodad leg `0x6abc40` and any of 0xf00000 the entity leg `0x6abe60`. In the chunk gather `0x6aadc0`, any
+of 0xf00 selects the terrain grid, bit 16 + i the liquid layer i, and the same two masks the doodads
+and entities. Bit 0x4000 picks the filtered leg of the world query (`0x6721f0`). The mover's word,
+0x100111, runs groups, terrain, doodads and entities but not liquid; water walking adds 0x30000 and a
+ghost 0x8000, which only the entity leg reads.
+
+Addresses: `0x6aac5c`, `0x6aacba`, `0x6aad37`, `0x6aad4c`, `0x6aad58`, `0x6aad6d`, `0x6aaedf`, `0x6ab3f7`, `0x6ab418`, `0x6ab48f`, `0x6ab4bb`, `0x6abc4c`, `0x6abcc7`, `0x6abccf`, `0x6721f0`, `0x6315f0`
+Confidence: verified
+Proof: one
+Test: none
+
+The tests are quoted above as `test al,0xf0` (`0x6aac5c`), `test eax,0xf0000` (`0x6aacba`), `test
+eax,0xf0000f` (`0x6aad37`), `test eax,0xf00000` (`0x6aad58`), `test ah,0xf` (`0x6aaedf`) and, in the chunk
+gather, the same two doodad and entity tests at `0x6ab48f` and `0x6ab4bb`. A doodad record with an owner id
+is taken by the 0xf00000 group and one without by the low nibble (`0x6abcc7`, `0x6abccf`). The bits
+`0x1000` and `0x2000` have no reader in the closure of the word's functions (`collision/contact#collision-class-mask`
+builds it).
