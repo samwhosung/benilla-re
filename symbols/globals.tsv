@@ -1936,7 +1936,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42424	uint32_t			charactermodel	Holds a dword that UnequipCharacterSlot reads and writes; not read here	inferred	none	
 0xb42450	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4b2bc	void *	s_worldFrame		ui	Points to the world frame	verified	one	ui/hover#freelook-and-the-removal
-0xb4b32c	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
+0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b350	void *	s_normalFfx		ui	Holds the fog effect restored when the ghost state clears	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b3b0	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
@@ -2238,10 +2238,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	one	ui/addons#the-order-lua-sees
 0xbe1bd0	uint32_t			ui	Holds a dword that LoadCharacterAddOnState reads and writes; not read here	inferred	none	
 0xbe1c28	uint32_t[256]	s_cursorPictureBuffer		ui	Holds the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture
-0xbe2c2c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe2c2c	uint32_t	s_cursorMode		ui	Holds the mode of the cursor shown now	verified	one	ui/worldcursor#setting-the-mode
 0xbe2c48	uint32_t	s_cursorPictureState		ui	Holds 0 for no payload picture, else 1, 2 or 3 by the picture's source	verified	one	ui/cursor#dragging-picture
-0xbe2c4c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe2c4c	uint32_t	s_cursorBaseMode		ui	Holds the mode the cursor rests on, 1 at load	verified	one	ui/worldcursor#setting-the-mode
 0xbe2c60	void *	s_cursorPictureTexture		ui	Holds the texture handle the payload picture is built from	verified	one	ui/cursor#dragging-picture
+0xbe2c70	char[260]	s_customCursorName		ui	Holds the name of the loaded custom cursor	verified	one	ui/worldcursor#custom-cursors
 0xbe2d80	uint32_t[42][1024]	s_cursorImages		ui	Holds the 32 by 32 image of each cursor mode, slot 41 being the named custom cursor	verified	one	ui/cursor#sending-the-picture
 0xc0ce30	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0ce7c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	

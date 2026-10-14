@@ -6486,7 +6486,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481540	144			ui	orchestration		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr, 0x614ea0, 0x4815d0 and 1 more; not read here	inferred	none		
 0x4815d0	419			ui	orchestration		Runs WorldFrame.cpp code that calls 0x614f40, SMemAlloc, 0x481780 and 5 more; not read here	inferred	none		
 0x481780	16			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
-0x481790	338			ui	orchestration		Sets the world cursor from the pick result, the targeting cursor included	inferred	none	spell/targeting#the-targeting-cursor	
+0x481790	338	CGWorldFrame::OnUpdate		ui	orchestration	void __thiscall (CGWorldFrame *this, uint32_t time)	Picks under the pointer and sets the cursor mode when the world is the mouse focus	verified	one	ui/worldcursor#the-world-update	
 0x4818f0	12	GetActiveCamera		ui	orchestration	void * __cdecl (void)	Returns the camera object whose +0x88 holds the GUID it follows	inferred	none	collision/world#camera-notices	
 0x481900	31			ui	orchestration		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481920	51			ui	unreached		Runs WorldFrame.cpp code not read here	inferred	none		
@@ -6497,12 +6497,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x481ef0	16			ui	unreached		Runs WorldFrame.cpp code not read here	inferred	none		
 0x481f00	87	PickObjectUnderCursor		ui	orchestration		Picks the world object under the cursor for the armed click	inferred	none	input#mouse-commands	
 0x481f60	301	DispatchWorldClick		ui	orchestration		Runs world click action 1 or 4 on the object picked at the press	inferred	none	input#click-versus-drag	
-0x482090	94	WorldFramePublishPick		ui	orchestration	void __thiscall (uint32_t lo, uint32_t hi)	Publishes a changed world pick before it stores it	verified	one	ui/hover#world-hover-and-its-tooltip	
+0x482090	94	CGWorldFrame::PublishMouseover		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, uint64_t guid)	Stores the mouseover GUID and reports it when it changes	verified	one	ui/worldcursor#classifying-a-hovered-object	
 0x4820f0	264			ui	orchestration		Places the area reticle and the targeting cursor over a picked position	inferred	none	spell/targeting#the-targeting-cursor	
-0x482200	1241			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 14 more; not read here	inferred	none		
-0x4826e0	90			ui	orchestration		Runs WorldFrame.cpp code that calls 0x5f8760, 0x523c20, 0x5f8790 and 2 more; not read here	inferred	none		
-0x482740	394			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, SetVector3 and 8 more; not read here	inferred	none		
-0x4828d0	309			ui	orchestration		Sets the targeting cursor over a hovered object from 0x6e6460	inferred	none	spell/targeting#the-targeting-cursor	
+0x482200	1241	CGWorldFrame::ClassifyHoveredUnit		ui	primitive	void __thiscall (CGWorldFrame *this, CGUnit_C *unit)	Sets the cursor mode for a hovered unit from its flags, state and distance	verified	one	ui/worldcursor#units-charm-and-interaction	
+0x4826e0	90	CGWorldFrame::ClassifyHoveredGameObject		ui	orchestration	void __thiscall (CGWorldFrame *this, CGGameObject_C *object)	Sets the cursor mode a game object gives, or the custom cursor for 41	verified	one	ui/worldcursor#corpses-and-game-objects	
+0x482740	394	CGWorldFrame::ClassifyHoveredCorpse		ui	primitive	void __thiscall (CGWorldFrame *this, CGCorpse_C *corpse)	Sets the cursor mode for a hovered corpse from its loot and skin state	verified	one	ui/worldcursor#corpses-and-game-objects	
+0x4828d0	309	CGWorldFrame::ClassifyHoveredObject		ui	orchestration	void __thiscall (CGWorldFrame *this, void *pick, int x, int y)	Sets the cursor mode for the picked object and publishes it as the mouseover	verified	one	ui/worldcursor#classifying-a-hovered-object	
 0x482aa0	34			ui	orchestration		Runs WorldFrame.cpp code that calls CSimpleFrame::OnMouseMove, GetInputControl; not read here	inferred	none		
 0x482ad0	316	StampLightState		ui	primitive		Writes the frame's clock, player, camera, far clip and weather density into the light state	verified	one	lighting/daynight#light-state	
 0x482c10	132			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrGetActivePlayer, SetShowOwnModel and 2 more; not read here	inferred	none		
@@ -6669,7 +6669,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489460	10	Script::HideNameplates	idb	ui	orchestration		Implements the Lua function HideNameplates	inferred	none		
 0x489470	10	Script::ShowFriendNameplates	idb	ui	orchestration		Implements the Lua function ShowFriendNameplates	inferred	none		
 0x489480	10	Script::HideFriendNameplates	idb	ui	orchestration		Implements the Lua function HideFriendNameplates	inferred	none		
-0x489490	285	Script::SetCursor	idb	ui	primitive		Implements the Lua function SetCursor	inferred	none		
+0x489490	285	Script::SetCursor	idb	ui	primitive		Implements the Lua function SetCursor	verified	one	ui/worldcursor#setcursor	
 0x4895b0	18	Script::ClearCursor	idb	ui	orchestration		Implements the Lua function ClearCursor	verified	one	ui/cursor#cursor-functions	
 0x4895d0	44	Script::CursorHasItem	idb	ui	orchestration		Implements the Lua function CursorHasItem	verified	one	ui/cursor#cursor-functions	
 0x489600	38	Script::CursorHasSpell	idb	ui	orchestration		Implements the Lua function CursorHasSpell	verified	one	ui/cursor#cursor-functions	
@@ -6730,8 +6730,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ab70	44	Script::GetCursorMoney	idb	ui	orchestration		Implements the Lua function GetCursorMoney	verified	one	ui/cursormoney#money-functions	
 0x48aba0	19	Script::DropCursorMoney	idb	ui	orchestration		Implements the Lua function DropCursorMoney	verified	one	ui/cursormoney#money-functions	
 0x48abc0	160	Script::PickupPlayerMoney	idb	ui	orchestration		Implements the Lua function PickupPlayerMoney	verified	one	ui/cursormoney#money-functions	
-0x48ac60	13	Script::ShowInspectCursor	idb	ui	orchestration		Implements the Lua function ShowInspectCursor	inferred	none		
-0x48ac70	8	Script::ResetCursor	idb	ui	orchestration		Implements the Lua function ResetCursor	inferred	none		
+0x48ac60	13	Script::ShowInspectCursor	idb	ui	orchestration		Implements the Lua function ShowInspectCursor	verified	one	ui/worldcursor#setting-the-mode	
+0x48ac70	8	Script::ResetCursor	idb	ui	orchestration		Implements the Lua function ResetCursor	verified	one	ui/worldcursor#setting-the-mode	
 0x48ac80	228	Script::HasSoulstone	idb	ui	orchestration		Implements the Lua function HasSoulstone	inferred	none		
 0x48ad70	285	Script::UseSoulstone		ui	orchestration		Implements the Lua function UseSoulstone	inferred	none	spell/cancel#who-cancels-a-cast	
 0x48ae90	88	Script::HasKey	idb	ui	orchestration		Implements the Lua function HasKey	inferred	none		
@@ -6856,7 +6856,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d780	290	Script::SetPortraitToTexture	idb	ui	primitive		Implements the Lua function SetPortraitToTexture	inferred	none		
 0x48d8b0	23			ui	orchestration		Runs GameUI.cpp code that calls lua_pushstring; not read here	inferred	none		
 0x48d8d0	130	Script::GetGMTicketCategories	idb	ui	primitive		Implements the Lua function GetGMTicketCategories	inferred	none		
-0x48d960	322	Script::DropItemOnUnit	idb	ui	primitive		Implements the Lua function DropItemOnUnit	inferred	none		
+0x48d960	322	Script::DropItemOnUnit	idb	ui	primitive		Implements the Lua function DropItemOnUnit	verified	one	ui/cursor#dropping-an-item-on-a-unit	
 0x48dab0	18	Script::RestartGx	idb	ui	orchestration		Implements the Lua function RestartGx	inferred	none		
 0x48dad0	8	Script::RestoreVideoDefaults	idb	ui	orchestration		Implements the Lua function RestoreVideoDefaults	inferred	none		
 0x48dae0	88	Script::GetBindLocation	idb	ui	orchestration		Implements the Lua function GetBindLocation	inferred	none		
@@ -12881,7 +12881,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523680	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x5236a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5236b0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5236c0	197			ui	primitive		Runs its object file code that calls _sprintf, TextureCreateFromFile, 0x44ae00 and 2 more; not read here	inferred	none		
+0x5236c0	197	LoadCursorImages		ui	primitive	void __cdecl (void)	Loads the 42 cursor images, sets both modes to Point and sends the image	verified	one	ui/worldcursor#cursor-modes	
 0x523790	130	SendCursorImage		ui	orchestration	void __cdecl (void)	Sends the cursor image the mode and payload picture choose to the device	verified	one	ui/cursor#sending-the-picture	
 0x523820	26	FreeCursorPictureTexture		ui	orchestration	void __cdecl (void)	Frees the payload picture's texture handle	verified	one	ui/cursor#dragging-picture	
 0x523840	385	BuildCursorPicture		ui	primitive	void __cdecl (void)	Scales a 64 by 64 icon to the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture	
@@ -12890,13 +12890,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523a70	186	SetCursorPictureFromItem		ui	orchestration	void __stdcall (uint64_t guid)	Sets the payload picture to an item's icon	verified	one	ui/cursor#dragging-picture	
 0x523b30	178	SetCursorPictureFromDisplayId		ui	orchestration	void __fastcall (uint32_t displayId)	Sets the payload picture to an item display's icon	verified	one	ui/cursor#dragging-picture	
 0x523bf0	25	RestoreCursorModePicture		ui	orchestration	void __cdecl (void)	Ends the payload picture and sends the mode's image again	verified	one	ui/cursor#clearing-the-cursor	
-0x523c10	6			ui	unreached		Runs its object file code not read here	inferred	none		
-0x523c20	20			ui	orchestration		Sets the current cursor index and refreshes the cursor when it changes	inferred	none	spell/cast#targeting-refusal-or-cursor	
-0x523c40	207			ui	orchestration		Runs its object file code that calls SStrCmpI, TextureCreateFromFile, 0x44ae00 and 4 more; not read here	inferred	none		
+0x523c10	6	GetCursorMode		ui	unreached	uint32_t __cdecl (void)	Returns the shown cursor mode	verified	one	ui/worldcursor#setting-the-mode	
+0x523c20	20	SetCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Shows a cursor mode and sends its image when it changes	verified	one	ui/worldcursor#setting-the-mode	
+0x523c40	207	SetCustomCursor		ui	orchestration	uint32_t __fastcall (const char *name)	Loads a named 32 by 32 cursor as mode 41, returning 1 when it is shown	verified	one	ui/worldcursor#custom-cursors	
 0x523d10	6	GetDefaultCursor		ui	orchestration	uint32_t __cdecl (void)	Returns the default cursor index	verified	one	ui/tooltipitemfoot#the-sell-price	
-0x523d20	7			ui	orchestration		Stores the default cursor index	verified	one	spell/cast#targeting-refusal-or-cursor	
-0x523d30	11			ui	orchestration		Sets the shown cursor to the base cursor through 0x523c20	inferred	none	spell/targeting#the-targeting-cursor	
-0x523d40	55			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
+0x523d20	7	SetBaseCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Stores the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
+0x523d30	11	ShowBaseCursor		ui	orchestration	void __cdecl (void)	Shows the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
+0x523d40	55	CursorModeFromName		ui	primitive	uint32_t __fastcall (const char *name)	Returns the first cursor mode whose name matches, 0 for none	verified	one	ui/worldcursor#custom-cursors	
 0x523d80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x523d90	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x523da0	5			ui	orchestration		Runs its object file code not read here	inferred	none		

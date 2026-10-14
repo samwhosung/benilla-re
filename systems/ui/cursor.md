@@ -228,3 +228,24 @@ Test: none
 returns the GUID, container GUID and source slot without a kind test. `0x4896e3` and `0x4896ef` send 255 and -1
 to auto-equip; `0x489781` compares the source slot with 0x13. The swap `0x489757` takes the cursor GUID, the
 container GUID and source slot, the player's GUID and the slot.
+
+## Dropping an item on a unit
+
+`DropItemOnUnit(unit)` needs a string or number argument (usage error `DropItemOnUnit("unit")` otherwise) and
+returns nothing on every path. It does nothing unless an item is on the cursor and the unit token names a unit.
+For another player who can cooperate with the active player (same faction group) it first handles trade: the open
+trade partner gets the item in a trade slot, and with no trade open the call asks to trade (opcode 0x116). The
+payload stays. Then, for the player's pet (the charm, else the summon), it tries to feed it
+(`spell/cast#cast-entries`) and, when that returns true, clears the cursor with `ClearCursor(1, 1)`. A refusal
+leaves the cursor alone. There is no distance test.
+
+Addresses: `0x48d960`, `0x494c60`, `0x515940`, `0x606ba0`, `0x5da2c0`, `0x4bfc50`, `0x5d3fb0`, `0x6ea1e0`, `0xb71728`, `0xb714a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x48d975` raises the usage error; `0x48d98f` reads the item GUID and `0x48d9aa` stops without an item. `0x48d9be` resolves the
+unit and `0x48d9db` requires a unit type. `0x48d9e4` tests the player type bit; `0x48d9f5` excludes the active player and
+`0x48da1f` calls `CanCooperate`. `0x48da36` compares with the trade partner pair `0xb71728`: equal goes to
+`0x4bfc50` (`0x48da50`), a zero pair to `0x5d3fb0` with 1 and the GUID (`0x48da62`). `0x48da6c` and `0x48da79` compare with the
+pet GUID pair `0xb714a0`, `0x48da86` calls the feed routine and `0x48da96` clears.
