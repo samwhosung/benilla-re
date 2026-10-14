@@ -1941,29 +1941,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b39c	void *	s_ghostFfx		ui	Holds the fog effect the ghost state switches to	inferred	none	objectlayer/playerfields#ghost-state
 0xb4b3b0	float			ui	Holds a float its object file's code reads and writes; not read here	inferred	none	
 0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip
+0xb4b3c8	uint64_t	s_cursorItemContainerGuid		ui	Holds the GUID of the container the item payload came from	verified	one	ui/cursor#payload-kinds
 0xb4b3e4	uint32_t	s_playerHasControl		ui	Holds 1 while the player controls the character; 0 at load, written by 0x4958e0 and two stores of 1	verified	one	spell/checks#lost-control-exemption
 0xb4b3f4	uint8_t			ui	Holds a byte that CGGameUI::Initialize, CGGameUI::Reload read and write; not read here	inferred	none	
+0xb4b400	uint32_t	s_cursorItemSourceSlot		ui	Holds the slot the item payload came from	verified	one	ui/cursor#payload-kinds
 0xb4b404	uint32_t			ui	Holds a dword that Script::GetRealZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
-0xb4b40c	uint32_t			ui	Holds a dword that Script::DeleteCursorItem, CGGameUI::SetCursorItem read and write; not read here	inferred	none	
+0xb4b40c	uint32_t	s_cursorItemSplitCount		ui	Holds the split count of the item payload, 0 for a whole stack	verified	one	ui/cursor#payload-kinds
 0xb4b410	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
-0xb4b41c	uint32_t			ui	Holds a dword that CGGameUI::SetCursorVirtualItem, GetCursorAmmo read and write; not read here	inferred	none	
-0xb4b420	uint32_t			ui	Holds a dword that CGGameUI::SetCursorVirtualItem, CGGameUI::GetCursorVirtualItem read and write; not read here	inferred	none	
+0xb4b41c	uint32_t	s_cursorPreviewEntry		ui	Holds the entry of the preview payload, nonzero for kinds 5, 7 and 9	verified	one	ui/cursor#payload-kinds
+0xb4b420	uint32_t	s_cursorPreviewIndex		ui	Holds the index of the preview payload, the vendor row for kind 5	verified	one	ui/cursor#payload-kinds
 0xb4b440	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
 0xb4b444	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
 0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
 0xb4b498	uint32_t			ui	Holds a dword that CGGameUI::DisplayError reads and writes; not read here	inferred	none	
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4c0f0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb4d8ec	uint32_t			ui	Holds a dword that CGGameUI::SetCursorVirtualItem reads and writes; not read here	inferred	none	
+0xb4d8ec	uint32_t	s_cursorPreviewDisplayId		ui	Holds the display id of the preview payload	verified	one	ui/cursor#payload-kinds
 0xb4d8f8	uint32_t			ui	Holds a dword that Script::AssistUnit, Script::AssistByName, CGGameUI::Initialize read and write; not read here	inferred	none	
-0xb4d900	uint32_t	s_cursorType		ui	Holds what the cursor holds, 9 for ammo	inferred	none	objectlayer/inventory#moving-items
+0xb4d900	uint32_t	s_cursorType		ui	Holds the kind of payload the cursor holds, 0 for none	verified	one	ui/cursor#payload-kinds
 0xb4d904	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4d90c	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4d918	float			ui	Holds a float that Script::CanInspect, Script::CheckInteractDistance read and write; not read here	inferred	none	
-0xb4da24	uint32_t			ui	Holds a dword that CGGameUI::SetCursorItem, CGGameUI::SetCursorVirtualItem read and write; not read here	inferred	none	
+0xb4d920	char[260]	s_coinIconPath		ui	Holds the coin icon path GetCoinIcon returns	verified	one	ui/cursormoney#coin-icons
+0xb4da24	uint32_t	s_cursorGridShown		ui	Holds 1 when a pick-up showed the action or pet bar grid	verified	one	ui/cursor#payload-kinds
 0xb4da28	uint32_t			ui	Holds a dword that Script::GetMinimapZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
-0xb4e248	uint32_t			ui	Holds a dword that CGGameUI::SetCursorItem reads and writes; not read here	inferred	none	
+0xb4e248	uint64_t	s_cursorItemGuid		ui	Holds the GUID of the item payload	verified	one	ui/cursor#payload-kinds
 0xb4e260	uint8_t			ui	Holds a byte that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4e274	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e278	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -1978,11 +1981,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e2d8	uint64_t	s_targetGuid		ui	Holds the selected target's GUID, which the checks read when given none	inferred	none	spell/checks#usability-predicate
 0xb4e2e0	uint32_t			ui	Holds a dword that Script::TargetLastTarget reads and writes; not read here	inferred	none	
 0xb4e2e8	uint32_t			unassigned	Holds a dword that Script::TargetLastEnemy reads and writes; not read here	inferred	none	
-0xb4e2f0	uint32_t			ui	Holds a dword that Script::GetCursorMoney, Script::DropCursorMoney read and write; not read here	inferred	none	
-0xb4e2f4	uint32_t			ui	Holds a dword that GetCursorSpell reads and writes; not read here	inferred	none	
-0xb4e2f8	uint32_t			ui	Holds a dword that Script::PickupPetAction, Script::TogglePetAutocast read and write; not read here	inferred	none	
-0xb4e2fc	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb4e300	uint32_t			ui	Holds a dword that Script::ClickStablePet reads and writes; not read here	inferred	none	
+0xb4e2f0	uint32_t	s_cursorMoney		ui	Holds the copper amount of the money payload	verified	one	ui/cursormoney#the-money-payload
+0xb4e2f4	uint32_t	s_cursorSpell		ui	Holds the spell id of the spell payload	verified	one	ui/cursor#payload-kinds
+0xb4e2f8	uint32_t	s_cursorPetAction		ui	Holds the action word of the pet action payload	verified	one	ui/cursor#payload-kinds
+0xb4e2fc	uint32_t	s_cursorMacro		ui	Holds the macro id of the macro payload	verified	one	ui/cursor#payload-kinds
+0xb4e300	uint32_t	s_cursorStablePet		ui	Holds the stable index of the stabled pet payload	verified	one	ui/cursor#payload-kinds
 0xb4e304	uint32_t	s_autoScaleWidth		ui	Holds the window width the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
 0xb4e308	uint32_t	s_autoScaleHeight		ui	Holds the window height the automatic scale was last computed for	verified	one	ui/uiscale#the-automatic-scale
 0xb4e30c	float	s_configuredAspect		ui	Holds the aspect the interface last applied, 4/3 until set	verified	one	ui/uiscale#applying-a-scale
@@ -2230,8 +2233,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe1b90	uint32_t	s_numAddOnNames		ui	Counts the names in the sorted add-on array	verified	one	ui/addons#the-order-lua-sees
 0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	one	ui/addons#the-order-lua-sees
 0xbe1bd0	uint32_t			ui	Holds a dword that LoadCharacterAddOnState reads and writes; not read here	inferred	none	
+0xbe1c28	uint32_t[256]	s_cursorPictureBuffer		ui	Holds the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture
 0xbe2c2c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe2c48	uint32_t	s_cursorPictureState		ui	Holds 0 for no payload picture, else 1, 2 or 3 by the picture's source	verified	one	ui/cursor#dragging-picture
 0xbe2c4c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe2c60	void *	s_cursorPictureTexture		ui	Holds the texture handle the payload picture is built from	verified	one	ui/cursor#dragging-picture
+0xbe2d80	uint32_t[42][1024]	s_cursorImages		ui	Holds the 32 by 32 image of each cursor mode, slot 41 being the named custom cursor	verified	one	ui/cursor#sending-the-picture
 0xc0ce30	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0ce7c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xc0cea4	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	

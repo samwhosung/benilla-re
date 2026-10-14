@@ -62,7 +62,7 @@ string and the record's basename, or leaves an empty string.
 icon path (the icon directory plus the basename; nil when there is no basename), the body and 1 or nil for the
 local flag. A missing index returns four nils and a non-number raises a usage error. `GetMacroIndexByName(name)`
 returns the position plus 1, or 0 for none. `PickupMacro(index)` puts the macro on the cursor
-(`ui/cursor#the-payload`); an unknown index does nothing. `DeleteMacro(index)` removes the macro, clears every
+(`ui/cursor#payload-pictures-by-kind`); an unknown index does nothing. `DeleteMacro(index)` removes the macro, clears every
 action slot that holds it and rebuilds the order. `DeleteMacro` does nothing when the kind 7 check fails (`ui/luastate#the-context-word`).
 
 Addresses: `0x4f1710`, `0x4f1760`, `0x4f1b30`, `0x4f1ae0`, `0x4f1850`, `0x4f1340`, `0x4f1b90`, `0x4f1bb0`, `0x494f80`, `0x494a50`

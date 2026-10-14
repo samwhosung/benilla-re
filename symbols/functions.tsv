@@ -6670,12 +6670,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489470	10	Script::ShowFriendNameplates	idb	ui	orchestration		Implements the Lua function ShowFriendNameplates	inferred	none		
 0x489480	10	Script::HideFriendNameplates	idb	ui	orchestration		Implements the Lua function HideFriendNameplates	inferred	none		
 0x489490	285	Script::SetCursor	idb	ui	primitive		Implements the Lua function SetCursor	inferred	none		
-0x4895b0	18	Script::ClearCursor	idb	ui	orchestration		Implements the Lua function ClearCursor	inferred	none		
-0x4895d0	44	Script::CursorHasItem	idb	ui	orchestration		Implements the Lua function CursorHasItem	inferred	none		
-0x489600	38	Script::CursorHasSpell	idb	ui	orchestration		Implements the Lua function CursorHasSpell	inferred	none		
-0x489630	38	Script::CursorHasMoney	idb	ui	orchestration		Implements the Lua function CursorHasMoney	inferred	none		
-0x489660	334	Script::EquipCursorItem	idb	ui	primitive		Implements the Lua function EquipCursorItem	inferred	none		
-0x4897b0	311	Script::DeleteCursorItem	idb	ui	primitive		Implements the Lua function DeleteCursorItem	inferred	none		
+0x4895b0	18	Script::ClearCursor	idb	ui	orchestration		Implements the Lua function ClearCursor	verified	one	ui/cursor#cursor-functions	
+0x4895d0	44	Script::CursorHasItem	idb	ui	orchestration		Implements the Lua function CursorHasItem	verified	one	ui/cursor#cursor-functions	
+0x489600	38	Script::CursorHasSpell	idb	ui	orchestration		Implements the Lua function CursorHasSpell	verified	one	ui/cursor#cursor-functions	
+0x489630	38	Script::CursorHasMoney	idb	ui	orchestration		Implements the Lua function CursorHasMoney	verified	one	ui/cursormoney#money-functions	
+0x489660	334	Script::EquipCursorItem	idb	ui	primitive		Implements the Lua function EquipCursorItem	verified	one	ui/cursor#cursor-functions	
+0x4897b0	311	Script::DeleteCursorItem	idb	ui	primitive		Implements the Lua function DeleteCursorItem	verified	one	ui/cursor#delete_item_confirm	
 0x4898f0	101	Script::EquipPendingItem	idb	ui	orchestration		Implements the Lua function EquipPendingItem	inferred	none		
 0x489960	101	Script::CancelPendingEquip	idb	ui	orchestration		Implements the Lua function CancelPendingEquip	inferred	none		
 0x4899d0	109	Script::TargetUnit	idb	ui	orchestration		Implements the Lua function TargetUnit	inferred	none		
@@ -6693,7 +6693,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489e00	192	Script::FollowUnit	idb	ui	orchestration		Implements the Lua function FollowUnit	inferred	none		
 0x489ec0	302	Script::FollowByName	idb	ui	orchestration		Implements the Lua function FollowByName	inferred	none		
 0x489ff0	74	Script::ClearTarget	idb	ui	primitive		Implements the Lua function ClearTarget	inferred	none		
-0x48a040	43	Script::AutoEquipCursorItem	idb	ui	orchestration		Implements the Lua function AutoEquipCursorItem	inferred	none		
+0x48a040	43	Script::AutoEquipCursorItem	idb	ui	orchestration		Implements the Lua function AutoEquipCursorItem	verified	one	ui/cursor#cursor-functions	
 0x48a070	41	Script::ToggleSheath	idb	ui	orchestration		Implements the Lua function ToggleSheath	inferred	none		
 0x48a0a0	26	Script::GetZoneText	idb	ui	orchestration		Implements the Lua function GetZoneText	inferred	none		
 0x48a0c0	26	Script::GetRealZoneText	idb	ui	orchestration		Implements the Lua function GetRealZoneText	inferred	none		
@@ -6727,9 +6727,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ab40	15	Script::CancelLogout	idb	ui	orchestration		Implements the Lua function CancelLogout	inferred	none		
 0x48ab50	15	Script::ForceLogout	idb	ui	orchestration		Implements the Lua function ForceLogout	inferred	none		
 0x48ab60	10	Script::ForceQuit	idb	ui	orchestration		Implements the Lua function ForceQuit	inferred	none		
-0x48ab70	44	Script::GetCursorMoney	idb	ui	orchestration		Implements the Lua function GetCursorMoney	inferred	none		
-0x48aba0	19	Script::DropCursorMoney	idb	ui	orchestration		Implements the Lua function DropCursorMoney	inferred	none		
-0x48abc0	160	Script::PickupPlayerMoney	idb	ui	orchestration		Implements the Lua function PickupPlayerMoney	inferred	none		
+0x48ab70	44	Script::GetCursorMoney	idb	ui	orchestration		Implements the Lua function GetCursorMoney	verified	one	ui/cursormoney#money-functions	
+0x48aba0	19	Script::DropCursorMoney	idb	ui	orchestration		Implements the Lua function DropCursorMoney	verified	one	ui/cursormoney#money-functions	
+0x48abc0	160	Script::PickupPlayerMoney	idb	ui	orchestration		Implements the Lua function PickupPlayerMoney	verified	one	ui/cursormoney#money-functions	
 0x48ac60	13	Script::ShowInspectCursor	idb	ui	orchestration		Implements the Lua function ShowInspectCursor	inferred	none		
 0x48ac70	8	Script::ResetCursor	idb	ui	orchestration		Implements the Lua function ResetCursor	inferred	none		
 0x48ac80	228	Script::HasSoulstone	idb	ui	orchestration		Implements the Lua function HasSoulstone	inferred	none		
@@ -6849,7 +6849,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d3f0	189	Script::GetXPExhaustion	idb	ui	primitive		Implements the Lua function GetXPExhaustion	inferred	none		
 0x48d4b0	11	Script::GetTimeToWellRested	idb	ui	orchestration		Implements the Lua function GetTimeToWellRested	inferred	none		
 0x48d4c0	17	Script::GMRequestPlayerInfo	idb	ui	orchestration		Implements the Lua function GMRequestPlayerInfo	inferred	none		
-0x48d4e0	88	Script::GetCoinIcon	idb	ui	orchestration		Implements the Lua function GetCoinIcon	inferred	none		
+0x48d4e0	88	Script::GetCoinIcon	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the icon path a copper amount shows	verified	one	ui/cursormoney#coin-icons	
 0x48d540	437	Script::GetZonePVPInfo	idb	ui	primitive		Implements the Lua function GetZonePVPInfo	inferred	none		
 0x48d700	100	Script::TogglePVP	idb	ui	orchestration		Implements the Lua function TogglePVP	inferred	none		
 0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration		Implements the Lua function ConfirmBindOnUse	inferred	none		
@@ -7004,27 +7004,27 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494970	126			ui	orchestration		Runs GameUI.cpp code that calls SStrCmpI, SMemFree, SStrDupA; not read here	inferred	none		
 0x4949f0	83			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4925d0 and 1 more; not read here	inferred	none		
 0x494a50	247	CheckActivePlayer		ui	orchestration		Answers whether an action of a kind may run; kinds 0 and 11 refuse a nonzero context and signal	verified	one	ui/protected#protected-action-gate	
-0x494b60	256	CGGameUI::SetCursorItem	idb	ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x495190 and 6 more; not read here	inferred	none		
-0x494c60	26			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x494c80	49			ui	orchestration		Returns the cursor's item with its bag and slot	inferred	none	objectlayer/interaction#world-clicks	
-0x494cc0	87			ui	orchestration		Runs GameUI.cpp code that calls 0x495190, SndInterfacePlayInterfaceSound, 0x5239d0; not read here	inferred	none		
-0x494d20	196			ui	orchestration		Runs GameUI.cpp code that calls 0x4e6870, 0x4e6990, 0x495190 and 3 more; not read here	inferred	none		
-0x494df0	22			ui	primitive		Drops what the cursor holds when it holds a spell	inferred	none	objectlayer/playercombat#unlearning-a-spell	
+0x494b60	256	CGGameUI::SetCursorItem	idb	ui	primitive	void __fastcall (uint32_t slot, uint32_t unlock, uint64_t guid, uint64_t containerGuid, uint32_t count)	Puts an item on the cursor, first clearing what it held	verified	one	ui/cursor#item-and-preview-setters	
+0x494c60	26	GetCursorItemGuid		ui	orchestration	uint64_t __cdecl (void)	Returns the item payload's GUID, 0 for any other kind	verified	one	ui/cursor#cursor-functions	
+0x494c80	49	GetCursorItemInfo		ui	orchestration	void __fastcall (uint64_t *guid, uint64_t *containerGuid, uint32_t *slot)	Returns the item payload's GUID, source container and slot without a kind test	verified	one	ui/cursor#cursor-functions	
+0x494cc0	87	SetCursorMoney		ui	orchestration	void __fastcall (uint32_t amount)	Puts an amount of money on the cursor, or clears it for 0	verified	one	ui/cursormoney#the-money-payload	
+0x494d20	196	SetCursorSpell		ui	orchestration	void __fastcall (uint32_t spellId)	Puts a spell on the cursor with its icon as the picture	verified	one	ui/cursor#payload-pictures-by-kind	
+0x494df0	22	ClearCursorIfSpell		ui	primitive	void __cdecl (void)	Drops the cursor when it holds a spell	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494e10	6	GetCursorSpell		ui	orchestration		Returns a ui global dword the unlearn compares with the spell	verified	one	objectlayer/playercombat#unlearning-a-spell	
-0x494e20	285			ui	primitive		Runs GameUI.cpp code that calls 0x4bce50, 0x4bce60, SStrPrintf and 5 more; not read here	inferred	none		
+0x494e20	285	SetCursorPetAction		ui	primitive	void __fastcall (uint32_t actionWord)	Puts a pet action on the cursor with its icon as the picture	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494f60	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
-0x494f80	107			ui	orchestration		Runs GameUI.cpp code that calls 0x4f0fd0, 0x495190, SndInterfacePlayInterfaceSound and 2 more; not read here	inferred	none		
+0x494f80	107	SetCursorMacro		ui	orchestration	void __fastcall (uint32_t macroId)	Puts a macro on the cursor when it has an icon	verified	one	ui/cursor#payload-pictures-by-kind	
 0x494ff0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
-0x495010	190			ui	primitive		Runs GameUI.cpp code that calls 0x495190, 0x556aa0, SndInterfacePlayInterfaceSound and 1 more; not read here	inferred	none		
+0x495010	190	SetCursorStablePet		ui	primitive	void __fastcall (int32_t stableIndex)	Puts a stabled pet on the cursor with its family icon	verified	one	ui/cursor#payload-pictures-by-kind	
 0x4950d0	22			ui	unreached		Runs GameUI.cpp code not read here	inferred	none		
-0x4950f0	122	CGGameUI::SetCursorVirtualItem	idb	ui	orchestration		Runs GameUI.cpp code that calls 0x495190, CGActionBar::ShowGrid, 0x523b30 and 2 more; not read here	inferred	none		
+0x4950f0	122	CGGameUI::SetCursorVirtualItem	idb	ui	orchestration	void __fastcall (uint32_t entry, uint32_t displayId, uint32_t index, uint32_t mode)	Puts a preview payload of kind 5, 7 or 9 on the cursor	verified	one	ui/cursor#item-and-preview-setters	
 0x495170	6	GetCursorAmmo		ui	orchestration		Returns a ui global dword, the cursor ammo entry	verified	one	objectlayer/inventory#moving-items	
 0x495180	16	CGGameUI::GetCursorVirtualItem	idb	ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x495190	321			ui	primitive		Drops what the cursor holds, by the kind it holds	inferred	none		
-0x495300	209			ui	orchestration		Asks to confirm destroying an item, or refuses one that cannot be destroyed	inferred	none	objectlayer/interaction#world-clicks	
-0x4953e0	62			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, FrameScript_SignalEvent; not read here	inferred	none		
-0x495420	62			ui	primitive		Clears an item's lock bit and signals ITEM_LOCK_CHANGED	inferred	none	objectlayer/playerfields#inventory-and-money-changes	
-0x495460	297			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, FrameScript_SignalEvent; not read here	inferred	none		
+0x495190	321	ClearCursor		ui	primitive	void __fastcall (uint32_t unlock, uint32_t signalMoney)	Drops the cursor's payload by kind and signals CURSOR_UPDATE	verified	one	ui/cursor#clearing-the-cursor	
+0x495300	209	ConfirmDestroyCursorItem		ui	orchestration	void __cdecl (void)	Signals DELETE_ITEM_CONFIRM for the cursor item, or refuses an undestroyable one	verified	one	ui/cursor#delete_item_confirm	
+0x4953e0	62	LockItem		ui	primitive	void __stdcall (uint64_t guid)	Sets an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
+0x495420	62	UnlockItem		ui	primitive	void __stdcall (uint64_t guid)	Clears an item's pending-operation lock and signals ITEM_LOCK_CHANGED	verified	one	ui/cursor#the-item-lock	
+0x495460	297	UnlockAllItems		ui	primitive	void __cdecl (void)	Clears the lock of every item the player holds and signals ITEM_LOCK_CHANGED once	verified	one	ui/cursor#the-item-lock	
 0x495590	696			ui	primitive		Runs the game interface frame update, first zeroing the context nesting count	verified	one	ui/luastate#the-context-word	
 0x495850	72			ui	orchestration		Signals PLAYER_DEAD for the active player	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x4958a0	61			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, SetActiveMover; not read here	inferred	none		
@@ -8484,9 +8484,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c06f0	10	Script::CancelTradeAccept	idb	ui	orchestration		Implements the Lua function CancelTradeAccept	inferred	none		
 0x4c0700	67	Script::GetPlayerTradeMoney	idb	ui	primitive		Implements the Lua function GetPlayerTradeMoney	inferred	none		
 0x4c0750	50	Script::GetTargetTradeMoney	idb	ui	orchestration		Implements the Lua function GetTargetTradeMoney	inferred	none		
-0x4c0790	85	Script::PickupTradeMoney	idb	ui	orchestration		Implements the Lua function PickupTradeMoney	inferred	none		
-0x4c07f0	34	Script::AddTradeMoney	idb	ui	orchestration		Implements the Lua function AddTradeMoney	inferred	none		
-0x4c0820	63	Script::SetTradeMoney	idb	ui	orchestration		Implements the Lua function SetTradeMoney	inferred	none		
+0x4c0790	85	Script::PickupTradeMoney	idb	ui	orchestration		Implements the Lua function PickupTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
+0x4c07f0	34	Script::AddTradeMoney	idb	ui	orchestration		Implements the Lua function AddTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
+0x4c0820	63	Script::SetTradeMoney	idb	ui	orchestration		Implements the Lua function SetTradeMoney	verified	one	ui/cursormoney#trade-money-from-the-cursor	
 0x4c0860	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4c0880	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c08a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -12882,14 +12882,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5236a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5236b0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5236c0	197			ui	primitive		Runs its object file code that calls _sprintf, TextureCreateFromFile, 0x44ae00 and 2 more; not read here	inferred	none		
-0x523790	130			ui	orchestration		Copies the cursor image chosen by the current state into the device and refreshes it through 0x58b5c0	inferred	none		
-0x523820	26			ui	orchestration		Runs its object file code that calls HandleClose; not read here	inferred	none		
-0x523840	385			ui	primitive		Runs its object file code that calls HandleClose, 0x523790, 0x44ae00 and 1 more; not read here	inferred	none		
-0x5239d0	87			ui	orchestration		Runs its object file code that calls 0x6c62d0, TextureCreateFromFile, HandleClose and 1 more; not read here	inferred	none		
-0x523a30	58			ui	orchestration		Runs its object file code that calls TextureCreateFromFile, HandleClose; not read here	inferred	none		
-0x523a70	186			ui	orchestration		Runs Cursor.cpp code that calls ClntObjMgrObjectPtr, ClientDBStringLookup, 0x5d8af0 and 4 more; not read here	inferred	none		
-0x523b30	178			ui	orchestration		Runs its object file code that calls ClientDBStringLookup, SStrPrintf, TextureCreateFromFile and 2 more; not read here	inferred	none		
-0x523bf0	25			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x523790	130	SendCursorImage		ui	orchestration	void __cdecl (void)	Sends the cursor image the mode and payload picture choose to the device	verified	one	ui/cursor#sending-the-picture	
+0x523820	26	FreeCursorPictureTexture		ui	orchestration	void __cdecl (void)	Frees the payload picture's texture handle	verified	one	ui/cursor#dragging-picture	
+0x523840	385	BuildCursorPicture		ui	primitive	void __cdecl (void)	Scales a 64 by 64 icon to the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture	
+0x5239d0	87	SetCursorPictureCoin		ui	orchestration	void __fastcall (uint32_t amount)	Sets the payload picture to the coin icon an amount shows	verified	one	ui/cursor#dragging-picture	
+0x523a30	58	SetCursorPictureFromPath		ui	orchestration	void __fastcall (const char *path)	Sets the payload picture to the texture a path names	verified	one	ui/cursor#dragging-picture	
+0x523a70	186	SetCursorPictureFromItem		ui	orchestration	void __stdcall (uint64_t guid)	Sets the payload picture to an item's icon	verified	one	ui/cursor#dragging-picture	
+0x523b30	178	SetCursorPictureFromDisplayId		ui	orchestration	void __fastcall (uint32_t displayId)	Sets the payload picture to an item display's icon	verified	one	ui/cursor#dragging-picture	
+0x523bf0	25	RestoreCursorModePicture		ui	orchestration	void __cdecl (void)	Ends the payload picture and sends the mode's image again	verified	one	ui/cursor#clearing-the-cursor	
 0x523c10	6			ui	unreached		Runs its object file code not read here	inferred	none		
 0x523c20	20			ui	orchestration		Sets the current cursor index and refreshes the cursor when it changes	inferred	none	spell/cast#targeting-refusal-or-cursor	
 0x523c40	207			ui	orchestration		Runs its object file code that calls SStrCmpI, TextureCreateFromFile, 0x44ae00 and 4 more; not read here	inferred	none		
@@ -28204,7 +28204,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
 0x6c6260	59			unassigned	primitive		Splits copper into copper, silver and gold	inferred	none	objectlayer/quests#quest-completion	
 0x6c62a0	34			unassigned	unreached		Runs its object file code that calls CurrencyMultiplier; not read here	inferred	none		
-0x6c62d0	194			unassigned			Runs its object file code that calls ClientDBStringLookup, SStrPrintf, SStrPack; not read here	inferred	none		
+0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
 0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c63d0	8	LootDestroy	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c63e0	5			unassigned			Runs its object file code not read here	inferred	none		
