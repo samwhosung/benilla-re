@@ -71,6 +71,31 @@ its animation, or one with flag 0x4 freeze the tracks. `0x5fdba0` plays a track 
 0x20 or a swing while attacking draws them, and 112 nocks the ammunition. `0x60f5b0` tests 0x80 of
 the row's `+0xc`.
 
+## Mounted animation
+
+A mounted unit's body holds Mount (91) as its base animation for as long as the mount model
+exists, and a requested animation splits by its set. `0x607a00` arms Mount on the body when the
+mount is made. In `0x5fe2f0`, a mount model at `+0xdc` takes the branch at `0x5fe7b5`: a
+full-body animation (`0x5fec80`) is armed on the mount model, an upper-body animation
+(`0x5fed90`) on the body's key bone, and the body's base track is set to 91 at `0x5fe809`, unless
+it already plays it. A cast clip such as SpellCastOmni (54) is upper-body, so it plays as a torso
+overlay on the Mount pose and never reaches the mount.
+
+Addresses: `0x607a00`, `0x607b40`, `0x607b44`, `0x5fe2f0`, `0x5fe7b5`, `0x5fe809`, `0x5feb90`, `0x5febcb`, `0x5febea`, `0x5fec06`, `0x5fec80`, `0x5fed90`, `0x5fd260`, `0x5fd26e`, `0x7121a0`, `0x5fdba0`, `0x5fdcdb`, `0x5fdceb`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x607b40` pushes 0x5b and `0x607b44` calls `PlayAnimation` on `+0xd8` with key bone -1. The
+full-body set is 33 ids: 0, 1, 3 to 6, 8 to 13, 37 to 45, 92 to 95, 119, 120, 127, 131, 132, 135,
+143 and 187; the upper-body set holds 95 ids from 2 to 195, including 54 and 123 (UseStandingLoop)
+and not 91. `0x5feb90` tests the mount model again: unless the mount track is -1 or equals the
+animation it last played, `0x5febcb` plays it on the mount model. The key-bone track and the
+forced base track are committed through `0x5fdba0` at `0x5febea` and `0x5fec06`; it plays on the
+body model `+0xd8` (`0x5fdceb`), on the key bone `+0xd5c` for the first and bone -1 for the second,
+and plays nothing for a key-bone track when the model has no key bone (`0x5fdccd`). Base-animation legs that need an unmounted
+body, such as the loot kneel (`0x5fd26e`), decline when `+0xdc` is set; no resolver returns 91.
+
 ## The ranged shot cycle
 
 A ranged shot's attack animation ends in the default branch of `0x5fc3f0`, which re-picks the base

@@ -86,6 +86,26 @@ not `IsDeadOrGhost`, mover flags without 0x2000, `UNIT_FIELD_FLAGS` without 0x40
 mode 6 only when `r² < d²`. `0x5df460(byte)` sets the auto-loot byte `+0x1d30` and, with a held
 GUID, calls `0x4c1fa0(0)`. `0x5ed5f0` holds a GUID as the loot target and plays animation 0x32. Slices: loot_range_5df130_difftest `0x5df1a0`-`0x5df1d4`; interact_reach_5df2a0_difftest `0x5df301`-`0x5df389`; p3_interact_reach_sq_5ec110 `0x5ec142`-`0x5ec17e`; p3_interact_in_range_5ec110 `0x5ec196`-`0x5ec1c1`.
 
+## The loot target
+
+The active player's loot target is a GUID at `+0x1d28`. Five sites set it: `LootUnit`
+(`0x5df253`), `LootCorpse` (`0x5df40d`), a loot response that accepts its source (`0x5ebb60`),
+`SetLootTarget` (`0x5ed5fb`) and `OpenItem` (`0x5edcc0`). Six clear it: the player constructor
+(`0x5dd403`), the loot window's close (`0x48f2c9`), the player notice that names the target
+(`0x5e3a84`), two legs of the loot response (`0x5eb9d2`, `0x5ebad4`) and the loot release
+response (`0x5ec0d4`). The base animation kneels the active player while it is set; another unit
+kneels on unit flag 0x400.
+
+Addresses: `0x5df253`, `0x5df40d`, `0x5ebb60`, `0x5ed5fb`, `0x5edcc0`, `0x5dd403`, `0x48f2c9`, `0x5e3a84`, `0x5eb9d2`, `0x5ebad4`, `0x5ec0d4`, `0x6126b0`, `0x612710`, `0x5fd260`, `0x5fd266`, `0x5fd270`
+Confidence: verified
+Proof: one
+Test: none
+
+Each site stores both dwords. `0x5eb9d2` stores the zero in `esi` and `0x5ebad4` the zero of `xor eax,eax`
+(after error 0x83). `0x5fd260` declines the kneel (anim 50) with a mount model (`0x5fd266`) or bit
+0x40 of `+0xd58` clear (`0x5fd270`), then needs `0x6126b0` (`IsLooting`: the latch for the active
+player, flag 0x400 for others) and `0x612710` (`ShowsLootAnimation`).
+
 ## Interacting through a spell
 
 `0x5f05e0(object, walk, set, value)` interacts with a corpse or player through the spell at
