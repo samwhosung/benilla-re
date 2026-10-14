@@ -6525,7 +6525,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x483d20	121	CGWorldFrame::OnMouseWheel		ui	orchestration	uint32_t __thiscall (CGWorldFrame *this, void *wheelEvent)	Runs the binding of a wheel notch as a press and a release	verified	one	ui/keybindings#key-press-and-release	
 0x483da0	45			ui	unreached		Runs its object file code not read here	inferred	none		
 0x483dd0	53			ui	unreached		Runs its object file code that calls 0x6424c0; not read here	inferred	none		
-0x483e10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x483e10	5	WorldFrameDrainFadingModels		ui	orchestration		Jumps to CWorld::DrainFadingModels	verified	one	ui/gameui#cursor-and-camera	
 0x483e20	27			ui	unreached		Runs its object file code not read here	inferred	none		
 0x483e40	40			ui	unreached		Runs its object file code not read here	inferred	none		
 0x483e70	14	CGWorldFrame::EndMouselook		ui	primitive	void __thiscall (CGWorldFrame *this)	Clears the mouselook bit and shows the nameplates	verified	one	ui/mouseover#mouselook	
@@ -6755,7 +6755,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b710	3	OnSummonerNameArrived		ui	orchestration		Does nothing when the summoner's name arrives	verified	one	ui/summon#the-lua-functions	
 0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration		Pushes the name of the summon's zone, or the empty string	verified	one	ui/summon#the-lua-functions	
 0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
-0x48b820	135			ui	primitive		Runs GameUI.cpp code that calls ScaleScreenDelta, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		ui::luabind_48b_cursor_position
+0x48b820	135	GetCursorPositionLua		ui	primitive		Pushes the scaled cursor x and y, each times the scaled aspect and 1024 divided by the screen scale	verified	one	ui/gameui#cursor-and-camera	
 0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server to sit, or to stand when the player is not standing	verified	one	ui/groupverbs#small-sends	
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stops the cinematic narration	verified	one	ui/groupverbs#small-sends	
@@ -6891,7 +6891,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48eb70	104	Script::PartialPlayTime	idb	ui	primitive		Pushes 1 when the player's flags have bit 12 set, else nil	verified	one	ui/billing#partial-play-and-no-play	
 0x48ebe0	104	Script::NoPlayTime	idb	ui	primitive		Pushes 1 when the player's flags have bit 13 set, else nil	verified	one	ui/billing#partial-play-and-no-play	
 0x48ec50	56	GetBillingTimeRested		ui	orchestration		Pushes the billing rest time of the session as one unsigned number	verified	one	ui/billing#the-rest-time	
-0x48ec90	58			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4841a0; not read here	inferred	none		
+0x48ec90	58	SetCameraTargetByGuid		ui	orchestration		Sets the world frame camera target to the object of a GUID, the active player when it is 0	verified	one	ui/gameui#cursor-and-camera	
 0x48ecd0	149			ui	primitive		Starts a cinematic sequence, hiding the cursor and scheduling its first shot	verified	one	uicamera/cinematic#starting-a-sequence	
 0x48ed70	91	BeginCinematicUI		ui	orchestration		Pauses zone music if it plays, sets the in-cinematic flag, hides the cursor and starts the 0.25-second fade	verified	one	ui/screenfade#starting-a-fade	
 0x48edd0	32			ui	orchestration		Signals CINEMATIC_START and plays the first shot, or ends the cinematic	verified	one	uicamera/cinematic#starting-a-sequence	
@@ -6928,7 +6928,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490e60	799			ui	primitive		Runs GameUI.cpp code that calls CLayoutFrame::GetRect, CLayoutFrame::Resize, SStrPrintf and 5 more; not read here	inferred	none		ui::glue_4c0_490e60_round_pos_legs
 0x491180	505	CGGameUI::ShutdownGame	idb	ui	orchestration		Runs the shutdown of every interface module in order, resets three CVars and clears 14 message handlers	verified	one	ui/gameui#game-shutdown	
 0x491380	22	CGGameUI::Reload	idb	ui	orchestration	void __fastcall ()	Sets the reload byte 0xb4b3f4 when the protected-action gate allows tag 10	verified	one	ui/bindings#reloading-the-interface	
-0x4913a0	16			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x4913a0	16	DrainWorldFadingModels		ui	orchestration		Drains the fading models of the world frame when one exists	verified	one	ui/gameui#cursor-and-camera	
 0x4913b0	451	LoadFlatSavedVariables		ui	primitive		Sets string and float globals from the flat SavedVariables.lua lines and signals VARIABLES_LOADED	verified	one	ui/addons#saved-variables-read	
 0x491580	79	GetFlatSavedVariablesPath		ui	orchestration		Builds the account's SavedVariables.lua path, creating its folder	verified	one	ui/addons#saved-variables-read	
 0x4915d0	343	AddFlatSavedVariable		ui	primitive		Adds a name to the list the flat saved variables write	verified	one	ui/addons#saved-variables-written	
@@ -6947,8 +6947,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x491ee0	103			ui	orchestration		Runs GameUI.cpp code that calls SMemFree, 0x491a60; not read here	inferred	none		
 0x491f50	187	QueryCorpse		ui	orchestration		Resets the corpse cache and asks the server for a ghost's corpse position	verified	one	ui/deathui#the-corpse-location	
 0x492010	124	CacheCorpseLocation		ui	orchestration	void __fastcall (uint32_t map, float *position, uint32_t extra)	Caches the corpse's map and position and sets the corpse blip on that map, else clears it	verified	one	ui/deathui#the-corpse-location	
-0x492090	49			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
-0x4920d0	24			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x492090	49	GetCorpseMarker		ui	orchestration		Copies the corpse display map, its position and its map id to its three pointer arguments	verified	one	ui/gameui#interface-state-helpers	
+0x4920d0	24	SetCorpseGuid		ui	orchestration		Stores a corpse GUID	verified	one	ui/gameui#interface-state-helpers	
 0x4920f0	58	SetCorpseInRange		ui	primitive		Signals the corpse range event when the in-range state changes	verified	one	ui/deathui#corpse-range-events	
 0x492130	138	CheckCorpseRange		ui	primitive		Compares the player's distance to the cached corpse with the range and updates the state	verified	one	ui/deathui#corpse-range-events	ui::glue_492_492130_sqdist_radius
 0x4921c0	201	SetAreaSpiritHealer		ui	primitive	void __stdcall SetAreaSpiritHealer(uint64_t guid)	Adopts a spirit healer GUID, cancelling the old resurrection and querying the new healer	verified	one	ui/popups#the-area-spirit-healer	
@@ -6979,7 +6979,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4930d0	233	SetInteractionTarget		ui	primitive		Stores the interaction GUID and squared range, replacing the range by 196.0 for a player	verified	one	ui/questshare#the-offer-leash	ui::glue_492_4930d0_threshold_fold
 0x4931c0	104			ui	primitive		Sets or clears the unit the interaction windows belong to	inferred	none	objectlayer/players#death	
 0x493230	224	CheckInteractionLeash		ui	primitive		Closes the open interaction when its object is released, gone or farther than the squared range	verified	one	ui/questshare#the-offer-leash	ui::dist2_493230
-0x493310	557			ui	primitive		Clears the interaction unit and closes the window that belongs to it	inferred	none		
+0x493310	557	ClearInteractionTarget		ui	orchestration		Clears the interaction target and closes the window of the first module that stored its GUID	verified	one	ui/gameui#interaction-close	
 0x493540	966	CGGameUI::SelectTarget		ui	primitive	void __stdcall (uint64_t guid)	Selects, or with GUID 0 clears, the player's target and sends CMSG_SET_SELECTION	verified	one	ui/targeting#setting-the-target	
 0x493910	398	CGGameUI::ReleaseTarget		ui	primitive	void __stdcall (uint32_t sendSelection, uint64_t guid)	Releases the old target: loot window, light, token flag, melee attack, and the selection message on a clear	verified	one	ui/targeting#releasing-the-old-target	
 0x493aa0	443	CGGameUI::ClosestObjectMatch	idb	ui	primitive	uint64_t __fastcall (const char *name, uint32_t typeMask, uint32_t mode, uint32_t exactOnly, float maxDistance)	Returns the GUID of the party member, raid member or nearby object that best matches a name	verified	one	ui/targeting#matching-a-name	
@@ -6996,7 +6996,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4945e0	18	HighlightMouseoverObject		ui	orchestration	void __fastcall (CGObject_C *object)	Sets highlight bit 1 on an object that has a model	verified	one	ui/mouseover#the-publisher	
 0x494600	164	SignalUnitCombat		ui	primitive		Signals UNIT_COMBAT for each unit token of a GUID with an action, a hit word, an amount and a school	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x4946b0	27	SignalUnitCombatWound		ui	orchestration		Signals UNIT_COMBAT with WOUND, an amount, a school and marks	verified	one	objectlayer/playercombat#non-melee-damage	
-0x4946d0	77			ui	orchestration		Runs GameUI.cpp code that calls SignalUnitCombat; not read here	inferred	none		
+0x4946d0	77	SignalSwingRecord		ui	orchestration		Calls SignalUnitCombat with a swing record's GUID, three values and the event name of its kind	verified	one	ui/gameui#interface-state-helpers	
 0x494720	28			ui	orchestration		Passes a miss reason below 12, mapped through a table, with a guid to the UI	inferred	none	spell/go#inline-miss-report	
 0x494740	33	SignalUnitCombatHeal		ui	primitive		Signals UNIT_COMBAT with HEAL and the critical mark 0x80 when its byte is set	verified	one	objectlayer/playercombat#spell-combat-log-messages	
 0x494770	3	SignalUnitCombatEnergize		ui	orchestration		Returns at once, dropping its stack argument	verified	one	objectlayer/playercombat#spell-combat-log-messages	
@@ -7032,18 +7032,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495920	24			ui	orchestration		Clears the cursor, then cancels the cast with failed and send set	verified	one	spell/cancel#who-cancels-a-cast	
 0x495940	137	CGGameUI::RegisterFrameFactories	idb	ui	orchestration		Registers the eight game frame types, WorldFrame one-shot	verified	one	ui/framexml#frame-types	
 0x4959d0	43	CGWorldFrame::Create	idb	ui	orchestration		Creates the world frame under a parent	verified	one	ui/framexml#frame-types	
-0x495a00	40	CGMinimapFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGMinimapFrame::CGMinimapFrame; not read here	inferred	none		
+0x495a00	40	CGMinimapFrame::Create	idb	ui	orchestration		Allocates 0x344 bytes under MinimapFrame.h and constructs a Minimap under the parent	verified	one	ui/gameui#frame-factories	
 0x495a30	70	CreateLootButton		ui	orchestration	void *__fastcall (CSimpleFrame *parent)	Allocates a LootButton, a button of 0x4e0 bytes with one slot dword, and installs its vtables	verified	one	ui/loot#the-row-widget	
 0x495a80	34			ui	orchestration		Locks or releases a button's highlight, then refreshes its label font	verified	one	ui/button#button-state-from-lua	
-0x495ab0	53			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x495ab0	53	LootButtonIsA		ui	orchestration		Answers 1 for the LootButton, Button, Frame and Region type ids	verified	one	ui/gameui#interface-state-helpers	
 0x495af0	110	LootButtonIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is LootButton or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
 0x495b60	6	LootButtonGetTypeName		ui	orchestration	const char * __thiscall ()	Returns the type name LootButton	verified	one	ui/widgettype#type-chains	
 0x495b70	43	DeletingDestructor495b70		ui	orchestration		Destroys the object through 0x778850 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x495ba0	40	CGTaxiRouteFrame::Create	idb	ui	orchestration	void *__fastcall (void *parent)	Allocates 0x314 bytes and constructs a route frame under the parent	verified	one	ui/taxiframe#class-and-size	
-0x495bd0	40	CGCharacterModelBase::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGCharacterModelBase::CGCharacterModelBase; not read here	inferred	none		
-0x495c00	40	CGDressUpModelFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGDressUpModelFrame::CGDressUpModelFrame; not read here	inferred	none		
-0x495c30	40	CGTabardModelFrame::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGTabardModelFrame::CGTabardModelFrame; not read here	inferred	none		
-0x495c60	40	CGTooltip::Create	idb	ui	orchestration		Runs GameUI.cpp code that calls SMemAlloc, CGTooltip::CGTooltip; not read here	inferred	none		
+0x495bd0	40	CGCharacterModelBase::Create	idb	ui	orchestration		Allocates 0x3f8 bytes under CharacterModelBase.h and constructs a PlayerModel under the parent	verified	one	ui/gameui#frame-factories	
+0x495c00	40	CGDressUpModelFrame::Create	idb	ui	orchestration		Allocates 0x410 bytes under DressUpModelFrame.h and constructs a DressUpModel under the parent	verified	one	ui/gameui#frame-factories	
+0x495c30	40	CGTabardModelFrame::Create	idb	ui	orchestration		Allocates 0x410 bytes under TabardModelFrame.h and constructs a TabardModel under the parent	verified	one	ui/gameui#frame-factories	
+0x495c60	40	CGTooltip::Create	idb	ui	orchestration		Allocates 0x460 bytes under Tooltip.h and constructs a GameTooltip under the parent	verified	one	ui/gameui#frame-factories	
 0x495c90	102	CanResetInstances		ui	primitive	uint32_t __cdecl (void)	Answers whether the ownership flag, the current map and the last instance map allow a reset	verified	one	ui/groupverbs#instances	
 0x495d00	13	ClearLastInstance		ui	orchestration	void __cdecl (void)	Forgets the last instance map and its time	verified	one	ui/groupverbs#instances	
 0x495d10	64	RecordMapChange		ui	primitive	void __stdcall (uint32_t now, uint32_t map)	Records the map change, keeping the left instance map and the time	verified	one	ui/groupverbs#instances	
@@ -7065,7 +7065,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496440	37	GetCurrentSurveyId		ui	orchestration	int __cdecl (void)	Returns the survey id the current locale's survey row names	verified	one	ui/serviceverbs#gm-surveys	
 0x496470	49			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
 0x4964b0	84	GetSurveyQuestionText		ui	orchestration	const char * __fastcall (uint32_t index)	Returns the text of survey question 1 to 10 in the current locale, or null	verified	one	ui/serviceverbs#gm-surveys	
-0x496510	88			ui	primitive		Runs GameUI.cpp code that calls SMemFree; not read here	inferred	none		
+0x496510	88	ClearSurveyAnswers		ui	primitive		Frees the ten survey answers and the comment and zeroes the ten answer ranks	verified	one	ui/gameui#interface-state-helpers	
 0x496570	101	SetSurveyAnswer		ui	orchestration	void __fastcall (uint32_t question, uint8_t rank, const char *comment)	Stores the rank byte and a copy of the comment for a survey question	verified	one	ui/serviceverbs#gm-surveys	
 0x4965e0	72	SetSurveyComment		ui	orchestration	void __fastcall (const char *comment)	Stores a copy of the final survey comment	verified	one	ui/serviceverbs#gm-surveys	
 0x496630	227	SendSurvey		ui	primitive	void __cdecl (void)	Sends the survey id, the ten answers and the comment, then clears them	verified	one	ui/serviceverbs#gm-surveys	
