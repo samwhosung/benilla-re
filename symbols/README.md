@@ -43,9 +43,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `ffxeffects`: `FFXEffects.cpp`, the full-screen glow and death effects
 - `gxumath`: the Gxu matrix builders: perspective, orthographic, look-at and frustum corners
 - `loadingscreen`: `LoadingScreen.cpp`
-- `minigame`: `Minigame_C.cpp`, the minigame object, and the board file linked after it (0x728b10
-  to 0x728ef3): its +∞ initializer `0x728b10`, the shared header's constants and the board check
-  `0x728b80`, which only `Minigame_C.cpp`'s `0x728740` calls
 - `minimap`: `Minimap.cpp` in `Game\GameClient`
 - `objectalloc`: `ObjectAlloc.cpp`, the object heaps
 - `os`: the engine's Windows layer outside `core`'s time and window files: CPU and system queries,

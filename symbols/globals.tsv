@@ -978,6 +978,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81209c	const float[3]	s_luminanceWeights		models	Holds 0.072169, 0.212671 and 0.71516, the blue, red and green luminance weights	verified	one	models/lights#spherical-harmonic-terms
 0x8120a8	const float[8]	s_shPackWeights		models	Holds the irradiance weights that pack the harmonic terms into seven constant vectors	verified	one	models/lights#harmonic-constants
 0x812330	const uint16_t			unassigned	Holds a word its object file's code reads; not read here	inferred	none	
+0x8126b4	void *[3]	s_minigameVtable		minigame	Holds the object's vtable: state read 0x728700, move check 0x728740, board push 0x728770	verified	one	minigame#the-object
 0x81c378	const float	s_inputPriority		ui	Holds 1.0, the priority of the top's input handlers	verified	one	ui/input#the-handlers
 0x81c380	void *[11]	CSimpleTop::vftable		ui	Holds the vtable of CSimpleTop	verified	one	ui/strata#construction-and-teardown
 0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	one	ui/anchors#edge-resolution-from-points
@@ -1398,6 +1399,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x847fe4	char[22]	s_textINVMiscQuestionMark		unassigned	Holds the string "INV_Misc_QuestionMark"	inferred	none	
 0x848140	char[32]	s_textUsageRollOnLootIdRollType		ui	Holds the string "Usage: RollOnLoot(id, rollType)"	inferred	none	
 0x848160	char[37]	s_textUsageConfirmLootRollIdRollType		ui	Holds the string "Usage: ConfirmLootRoll(id, rollType)"	inferred	none	
+0x848384	char *[2]	s_minigameTypeNames		ui	Holds the minigame type name table: TicTacToe in slot 0 and null in slot 1	verified	one	minigame#lua-queries
 0x8484d0	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x848894	char[47]	s_textInvalidInventorySlotInGetInventorySlotInfo		ui	Holds the string "Invalid inventory slot in GetInventorySlotInfo"	inferred	none	
 0x848984	char[48]	s_textInvalidInventorySlotIn		ui	Holds the string "Invalid inventory slot in GetInventoryItemCount"	inferred	none	
@@ -1898,6 +1900,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x873184	uint32_t[6]	s_m2KindPriority		models	Holds the transparent sort priority of each element kind	verified	one	models/scene#batch-grouping
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
 0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
 0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
@@ -2531,8 +2534,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71ba0	int32_t	s_lootMoney		ui	Holds the loot window's money in copper, 0 for none and -1 once the coin row is taken	verified	one	ui/loot#loot-state
 0xb71bbc	uint32_t	s_lootType		ui	Holds the loot type of the open window, 3 for fishing loot	verified	one	ui/loot#loot-state
 0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once the auto-loot sweep has handled the coin row of this source	verified	one	ui/loot#auto-loot
+0xb71e5c	void *	s_minigame		minigame	Holds the current minigame object, null before a setup packet	verified	one	minigame#the-object
 0xb71e74	uint32_t[4]	s_worldStateUiList		ui	Holds the always-visible world state row ids: capacity, count, data and chunk size	verified	one	ui/worldstate#the-list-builder
-0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state
+0xb71e7c	uint32_t			ui	Holds a dword that Script::GetWorldStateUIInfo reads and writes; not read here	inferred	none	
+0xb71e84	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71ea8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71ec8	uint32_t	s_worldStateBuckets		ui	Points at the bucket array of the world state table, three dwords a bucket	verified	one	ui/questtext#world-state-numbers
 0xb71ed0	uint32_t	s_worldStateMask		ui	Holds the bucket mask of the world state table, -1 while it is empty	verified	one	ui/questtext#world-state-numbers
@@ -3659,6 +3664,48 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf04c4	uint8_t	s_m2TextureCenterGuard		models	Holds bit 1 once the texture transform centre is built	verified	one	models/animation#texture-transforms
 0xcf04c8	void *	s_m2SkinVertices		models	Holds the vertex skinning routine the CPU features select	verified	one	models/render#software-skinning
 0xcf04d0	float	s_m2LightLinkGridScale		models	Holds the scale from world units to a light grid cell when a light links into the grid	verified	one	models/lights#scene-light-grid
+0xcf050c	float	s_minigameSquareCf050c		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0510	float	s_minigameSquareCf0510		minigame	Holds the square of 1.5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0514	float	s_minigameInfinity		minigame	Holds +inf, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0518	float	s_minigameSquareCf0518		minigame	Holds the square of 120, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0520	float	s_minigameSquareCf0520		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0524	float	s_minigameInvTwoPi		minigame	Holds 1/2 pi, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0528	float	s_minigameSquareCf0528		minigame	Holds the square of 5.55556, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf052c	float	s_minigameFiveCf052c		minigame	Holds 5.0, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0530	float	s_minigameSquareCf0530		minigame	Holds the square of 20, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0534	float	s_minigameSquareCf0534		minigame	Holds the square of 50, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0538	float	s_minigameSquareCf0538		minigame	Holds the square of 3, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf053c	float	s_minigameSquareCf053c		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0540	float	s_minigameSquareCf0540		minigame	Holds the square of 0.5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0544	float	s_minigameSquareCf0544		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0548	float	s_minigameSquareCf0548		minigame	Holds the square of 100, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf054c	float	s_minigameTwoPi		minigame	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	minigame#constants-nothing-reads
+0xcf0550	float	s_minigameSquareCf0550		minigame	Holds the square of 100, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0554	float	s_minigameSquareCf0554		minigame	Holds the square of 5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0558	float	s_minigameSquareCf0558		minigame	Holds the square of 11.1111, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf055c	float	s_minigameSquareCf055c		minigame	Holds the square of 30, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0560	float	s_minigameSquareCf0560		minigame	Holds the square of 40, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0564	float	s_minigameSquareCf0564		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0568	float	s_minigameSquareCf0568		minigame	Holds the square of 1.5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf056c	float	s_minigameInfinityB		minigame	Holds +inf, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0570	float	s_minigameSquareCf0570		minigame	Holds the square of 120, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0574	float	s_minigameSquareCf0574		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0578	float	s_minigameInvTwoPiB		minigame	Holds 1/2 pi, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf057c	float	s_minigameSquareCf057c		minigame	Holds the square of 5.55556, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0580	float	s_minigameFiveCf0580		minigame	Holds 5.0, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0584	float	s_minigameSquareCf0584		minigame	Holds the square of 20, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0588	float	s_minigameSquareCf0588		minigame	Holds the square of 50, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf058c	float	s_minigameSquareCf058c		minigame	Holds the square of 3, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0590	float	s_minigameSquareCf0590		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0594	float	s_minigameSquareCf0594		minigame	Holds the square of 0.5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf0598	float	s_minigameSquareCf0598		minigame	Holds the square of 10, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf059c	float	s_minigameSquareCf059c		minigame	Holds the square of 100, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf05a0	float	s_minigameTwoPiB		minigame	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	minigame#constants-nothing-reads
+0xcf05a4	float	s_minigameSquareCf05a4		minigame	Holds the square of 100, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf05a8	float	s_minigameSquareCf05a8		minigame	Holds the square of 5, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf05ac	float	s_minigameSquareCf05ac		minigame	Holds the square of 11.1111, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf05b0	float	s_minigameSquareCf05b0		minigame	Holds the square of 30, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf05b4	float	s_minigameSquareCf05b4		minigame	Holds the square of 40, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
 0xcf06e4	uint32_t			ui	Holds a dword that LcdInitialize, LcdShutdown, UpdateKeyboardLcd read and write; not read here	inferred	none	
 0xcf0a3c	float	s_softFloatZero		cmath	Holds 0.0, set by 0x7625e0; the floor and ceil read it	verified	one	spell/records#software-floats
 0xcf0a40	float	s_softFloatOne		cmath	Holds 1.0, set by 0x762e20; the ceil reads it	verified	one	spell/records#software-floats

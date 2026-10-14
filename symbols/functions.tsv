@@ -30645,102 +30645,102 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x724970	14113			unassigned			Runs its object file code that calls 0x4100f0, 0x724970, 0x728290 and 1 more; not read here	inferred	none		
 0x728290	123			unassigned			Runs its object file code not read here	inferred	none		
 0x728310	390			unassigned			Runs its object file code not read here	inferred	none		
-0x7284a0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7284b0	11			minigame			Runs its object file code not read here	inferred	none		
-0x7284c0	10			minigame			Runs its object file code that calls 0x7284d0; not read here	inferred	none		
-0x7284d0	22			minigame			Runs its object file code not read here	inferred	none		
-0x7284f0	12			minigame			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x728500	14			minigame			Runs its object file code not read here	inferred	none		
-0x728510	5			minigame			Runs its object file code not read here	inferred	none		
-0x728520	15			minigame			Runs its object file code not read here	inferred	none		
-0x728530	5			minigame			Runs its object file code not read here	inferred	none		
-0x728540	19			minigame			Runs its object file code not read here	inferred	none		
-0x728560	119			minigame			Runs Minigame_C.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x7285e0	86			minigame			Runs its object file code that calls CDataStore::GetUInt8, CDataStore::GetGuid, 0x419aa0; not read here	inferred	none		
-0x728640	15			minigame			Runs its object file code that calls ClientServices::Send; not read here	inferred	none		
-0x728650	169			minigame			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutGuid and 2 more; not read here	inferred	none		
-0x728700	52			minigame			Runs its object file code that calls CDataStore::GetUInt8; not read here	inferred	none		
-0x728740	44			minigame			Runs its object file code that calls 0x728b80; not read here	inferred	none		
-0x728770	74			minigame			Runs its object file code that calls 0x6f2f30, lua_pushnumber; not read here	inferred	none		
-0x7287c0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7287d0	19			minigame			Runs its object file code not read here	inferred	none		
-0x7287f0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728800	19			minigame			Runs its object file code not read here	inferred	none		
-0x728820	5			minigame			Runs its object file code not read here	inferred	none		
-0x728830	19			minigame			Runs its object file code not read here	inferred	none		
-0x728850	5			minigame			Runs its object file code not read here	inferred	none		
-0x728860	19			minigame			Runs its object file code not read here	inferred	none		
-0x728880	5			minigame			Runs its object file code not read here	inferred	none		
-0x728890	19			minigame			Runs its object file code not read here	inferred	none		
-0x7288b0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7288c0	19			minigame			Runs its object file code not read here	inferred	none		
-0x7288e0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7288f0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728910	5			minigame			Runs its object file code not read here	inferred	none		
-0x728920	19			minigame			Runs its object file code not read here	inferred	none		
-0x728940	5			minigame			Runs its object file code not read here	inferred	none		
-0x728950	19			minigame			Runs its object file code not read here	inferred	none		
-0x728970	5			minigame			Runs its object file code not read here	inferred	none		
-0x728980	19			minigame			Runs its object file code not read here	inferred	none		
-0x7289a0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7289b0	19			minigame			Runs its object file code not read here	inferred	none		
-0x7289d0	5			minigame			Runs its object file code not read here	inferred	none		
-0x7289e0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728a00	5			minigame			Runs its object file code not read here	inferred	none		
-0x728a10	19			minigame			Runs its object file code not read here	inferred	none		
-0x728a30	5			minigame			Runs its object file code not read here	inferred	none		
-0x728a40	11			minigame			Runs its object file code not read here	inferred	none		
-0x728a50	5			minigame			Runs its object file code not read here	inferred	none		
-0x728a60	19			minigame			Runs its object file code not read here	inferred	none		
-0x728a80	5			minigame			Runs its object file code not read here	inferred	none		
-0x728a90	19			minigame			Runs its object file code not read here	inferred	none		
-0x728ab0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728ac0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728ae0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728af0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728b10	5			minigame			Runs its object file code not read here	inferred	none		
-0x728b20	11			minigame			Runs its object file code not read here	inferred	none		
-0x728b30	5			minigame			Runs its object file code not read here	inferred	none		
-0x728b40	15			minigame			Runs its object file code not read here	inferred	none		
-0x728b50	5			minigame			Runs its object file code not read here	inferred	none		
-0x728b60	19			minigame			Runs its object file code not read here	inferred	none		
-0x728b80	48			minigame			Runs its object file code not read here	inferred	none		
-0x728bb0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728bc0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728be0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728bf0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728c10	5			minigame			Runs its object file code not read here	inferred	none		
-0x728c20	19			minigame			Runs its object file code not read here	inferred	none		
-0x728c40	5			minigame			Runs its object file code not read here	inferred	none		
-0x728c50	19			minigame			Runs its object file code not read here	inferred	none		
-0x728c70	5			minigame			Runs its object file code not read here	inferred	none		
-0x728c80	19			minigame			Runs its object file code not read here	inferred	none		
-0x728ca0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728cb0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728cd0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728ce0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728d00	5			minigame			Runs its object file code not read here	inferred	none		
-0x728d10	19			minigame			Runs its object file code not read here	inferred	none		
-0x728d30	5			minigame			Runs its object file code not read here	inferred	none		
-0x728d40	19			minigame			Runs its object file code not read here	inferred	none		
-0x728d60	5			minigame			Runs its object file code not read here	inferred	none		
-0x728d70	19			minigame			Runs its object file code not read here	inferred	none		
-0x728d90	5			minigame			Runs its object file code not read here	inferred	none		
-0x728da0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728dc0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728dd0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728df0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728e00	19			minigame			Runs its object file code not read here	inferred	none		
-0x728e20	5			minigame			Runs its object file code not read here	inferred	none		
-0x728e30	11			minigame			Runs its object file code not read here	inferred	none		
-0x728e40	5			minigame			Runs its object file code not read here	inferred	none		
-0x728e50	19			minigame			Runs its object file code not read here	inferred	none		
-0x728e70	5			minigame			Runs its object file code not read here	inferred	none		
-0x728e80	19			minigame			Runs its object file code not read here	inferred	none		
-0x728ea0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728eb0	19			minigame			Runs its object file code not read here	inferred	none		
-0x728ed0	5			minigame			Runs its object file code not read here	inferred	none		
-0x728ee0	19			minigame			Runs its object file code not read here	inferred	none		
+0x7284a0	5	InitMinigameInfinityThunk		minigame	orchestration	void __cdecl ()	Jumps to the +inf initializer of Minigame_C.cpp	verified	one	minigame#constants-nothing-reads	
+0x7284b0	11	InitMinigameInfinity		minigame	orchestration	void __cdecl ()	Copies the float +inf into 0xcf0514	verified	one	minigame#constants-nothing-reads	
+0x7284c0	10	InitMinigameUnitCount		minigame	orchestration	void __cdecl ()	Counts the file's static initializers in the shared unit count and registers the release at exit	verified	one	minigame#constants-nothing-reads	
+0x7284d0	22	AcquireUnitCount		minigame	primitive	void __cdecl ()	Increments the shared unit count 0xc2a3c4 and tail-calls the first-use setup on the first	verified	one	minigame#constants-nothing-reads	
+0x7284f0	12	RegisterUnitCountRelease		minigame	orchestration	void __cdecl ()	Registers 0x728500 to run at exit	verified	one	minigame#constants-nothing-reads	
+0x728500	14	ReleaseUnitCount		minigame	primitive	void __cdecl ()	Decrements the shared unit count and tail-calls the last-use teardown at 0	verified	one	minigame#constants-nothing-reads	
+0x728510	5	InitMinigameTwoPiThunk		minigame	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of Minigame_C.cpp	verified	one	minigame#constants-nothing-reads	
+0x728520	15	InitMinigameTwoPi		minigame	primitive	void __cdecl ()	Stores pi plus pi, as a float, in 0xcf054c	verified	one	minigame#constants-nothing-reads	
+0x728530	5	InitMinigameInvTwoPiThunk		minigame	orchestration	void __cdecl ()	Jumps to the 1/2 pi initializer of Minigame_C.cpp	verified	one	minigame#constants-nothing-reads	
+0x728540	19	InitMinigameInvTwoPi		minigame	primitive	void __cdecl ()	Stores 1 divided by 0xcf054c in 0xcf0524	verified	one	minigame#constants-nothing-reads	
+0x728560	119	MinigameCreate		minigame	primitive	MinigameObject * __fastcall (int type, uint32_t idLow, uint32_t idHigh)	Allocates the 0x70-byte minigame object for type 1 and returns it, or null for any other type	verified	one	minigame#the-object	
+0x7285e0	86	MinigameReadSetup		minigame	primitive	void __thiscall (CDataStore *packet)	Reads a setup packet into the object: status, two 64-bit values, 64 board bytes and a winner byte	verified	one	minigame#setup-packet	
+0x728640	15	MinigameSendPacket		minigame	orchestration	void __fastcall (CDataStore *packet)	Sends a data store through ClientServices::Send	verified	one	minigame#making-a-move	
+0x728650	169	MinigameMakeMove		minigame	orchestration	void __thiscall (uint8_t moveType, int param)	Sends CMSG 0x2f8 with the game id, a byte and a cell when the cell is empty	verified	one	minigame#making-a-move	
+0x728700	52	MinigameReadState		minigame	primitive	void __thiscall (CDataStore *packet)	Reads nine board cells and a byte from a state packet	verified	one	minigame#state-packet	
+0x728740	44	MinigameCheckMove		minigame	orchestration	bool __thiscall (uint8_t moveType, int cell)	Returns whether a cell is empty, checking the move through 0x728b80	verified	one	minigame#move-check	
+0x728770	74	MinigamePushBoard		minigame	primitive	int __thiscall (lua_State *L)	Pushes the nine board cells to Lua as numbers and returns 9	verified	one	minigame#lua-queries	
+0x7287c0	5	InitMinigameCf0544Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0544	verified	one	minigame#constants-nothing-reads	
+0x7287d0	19	InitMinigameCf0544		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0544	verified	one	minigame#constants-nothing-reads	
+0x7287f0	5	InitMinigameCf0558Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0558	verified	one	minigame#constants-nothing-reads	
+0x728800	19	InitMinigameCf0558		minigame	primitive	void __cdecl ()	Stores the square of 11.1111 in 0xcf0558	verified	one	minigame#constants-nothing-reads	
+0x728820	5	InitMinigameCf0528Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0528	verified	one	minigame#constants-nothing-reads	
+0x728830	19	InitMinigameCf0528		minigame	primitive	void __cdecl ()	Stores the square of 5.55556 in 0xcf0528	verified	one	minigame#constants-nothing-reads	
+0x728850	5	InitMinigameCf053cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf053c	verified	one	minigame#constants-nothing-reads	
+0x728860	19	InitMinigameCf053c		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf053c	verified	one	minigame#constants-nothing-reads	
+0x728880	5	InitMinigameCf0554Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0554	verified	one	minigame#constants-nothing-reads	
+0x728890	19	InitMinigameCf0554		minigame	primitive	void __cdecl ()	Stores the square of 5 in 0xcf0554	verified	one	minigame#constants-nothing-reads	
+0x7288b0	5	InitMinigameCf050cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf050c	verified	one	minigame#constants-nothing-reads	
+0x7288c0	19	InitMinigameCf050c		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf050c	verified	one	minigame#constants-nothing-reads	
+0x7288e0	5	InitMinigameCf055cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf055c	verified	one	minigame#constants-nothing-reads	
+0x7288f0	19	InitMinigameCf055c		minigame	primitive	void __cdecl ()	Stores the square of 30 in 0xcf055c	verified	one	minigame#constants-nothing-reads	
+0x728910	5	InitMinigameCf0518Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0518	verified	one	minigame#constants-nothing-reads	
+0x728920	19	InitMinigameCf0518		minigame	primitive	void __cdecl ()	Stores the square of 120 in 0xcf0518	verified	one	minigame#constants-nothing-reads	
+0x728940	5	InitMinigameCf0530Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0530	verified	one	minigame#constants-nothing-reads	
+0x728950	19	InitMinigameCf0530		minigame	primitive	void __cdecl ()	Stores the square of 20 in 0xcf0530	verified	one	minigame#constants-nothing-reads	
+0x728970	5	InitMinigameCf0520Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0520	verified	one	minigame#constants-nothing-reads	
+0x728980	19	InitMinigameCf0520		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0520	verified	one	minigame#constants-nothing-reads	
+0x7289a0	5	InitMinigameCf0540Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0540	verified	one	minigame#constants-nothing-reads	
+0x7289b0	19	InitMinigameCf0540		minigame	primitive	void __cdecl ()	Stores the square of 0.5 in 0xcf0540	verified	one	minigame#constants-nothing-reads	
+0x7289d0	5	InitMinigameCf0538Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0538	verified	one	minigame#constants-nothing-reads	
+0x7289e0	19	InitMinigameCf0538		minigame	primitive	void __cdecl ()	Stores the square of 3 in 0xcf0538	verified	one	minigame#constants-nothing-reads	
+0x728a00	5	InitMinigameCf0548Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0548	verified	one	minigame#constants-nothing-reads	
+0x728a10	19	InitMinigameCf0548		minigame	primitive	void __cdecl ()	Stores the square of 100 in 0xcf0548	verified	one	minigame#constants-nothing-reads	
+0x728a30	5	InitMinigameCf052cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf052c	verified	one	minigame#constants-nothing-reads	
+0x728a40	11	InitMinigameCf052c		minigame	orchestration	void __cdecl ()	Stores 5.0 in 0xcf052c	verified	one	minigame#constants-nothing-reads	
+0x728a50	5	InitMinigameCf0534Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0534	verified	one	minigame#constants-nothing-reads	
+0x728a60	19	InitMinigameCf0534		minigame	primitive	void __cdecl ()	Stores the square of 50 in 0xcf0534	verified	one	minigame#constants-nothing-reads	
+0x728a80	5	InitMinigameCf0550Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0550	verified	one	minigame#constants-nothing-reads	
+0x728a90	19	InitMinigameCf0550		minigame	primitive	void __cdecl ()	Stores the square of 100 in 0xcf0550	verified	one	minigame#constants-nothing-reads	
+0x728ab0	5	InitMinigameCf0560Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0560	verified	one	minigame#constants-nothing-reads	
+0x728ac0	19	InitMinigameCf0560		minigame	primitive	void __cdecl ()	Stores the square of 40 in 0xcf0560	verified	one	minigame#constants-nothing-reads	
+0x728ae0	5	InitMinigameCf0510Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0510	verified	one	minigame#constants-nothing-reads	
+0x728af0	19	InitMinigameCf0510		minigame	primitive	void __cdecl ()	Stores the square of 1.5 in 0xcf0510	verified	one	minigame#constants-nothing-reads	
+0x728b10	5	InitMinigameInfinityThunkB		minigame	orchestration	void __cdecl ()	Jumps to the +inf initializer of the board file	verified	one	minigame#constants-nothing-reads	
+0x728b20	11	InitMinigameInfinityB		minigame	orchestration	void __cdecl ()	Copies the float +inf into 0xcf056c	verified	one	minigame#constants-nothing-reads	
+0x728b30	5	InitMinigameTwoPiThunkB		minigame	orchestration	void __cdecl ()	Jumps to the 2 pi initializer of the board file	verified	one	minigame#constants-nothing-reads	
+0x728b40	15	InitMinigameTwoPiB		minigame	primitive	void __cdecl ()	Stores pi plus pi, as a float, in 0xcf05a0	verified	one	minigame#constants-nothing-reads	
+0x728b50	5	InitMinigameInvTwoPiThunkB		minigame	orchestration	void __cdecl ()	Jumps to the 1/2 pi initializer of the board file	verified	one	minigame#constants-nothing-reads	
+0x728b60	19	InitMinigameInvTwoPiB		minigame	primitive	void __cdecl ()	Stores 1 divided by 0xcf05a0 in 0xcf0578	verified	one	minigame#constants-nothing-reads	
+0x728b80	48	MinigameMoveLegal		minigame	primitive	bool __thiscall (int index)	Returns whether an index from 0 to 9 names a board byte equal to 0xFF	verified	one	minigame#move-check	minigame::minigame_move_legal_difftest
+0x728bb0	5	InitMinigameCf0598Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0598	verified	one	minigame#constants-nothing-reads	
+0x728bc0	19	InitMinigameCf0598		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0598	verified	one	minigame#constants-nothing-reads	
+0x728be0	5	InitMinigameCf05acThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf05ac	verified	one	minigame#constants-nothing-reads	
+0x728bf0	19	InitMinigameCf05ac		minigame	primitive	void __cdecl ()	Stores the square of 11.1111 in 0xcf05ac	verified	one	minigame#constants-nothing-reads	
+0x728c10	5	InitMinigameCf057cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf057c	verified	one	minigame#constants-nothing-reads	
+0x728c20	19	InitMinigameCf057c		minigame	primitive	void __cdecl ()	Stores the square of 5.55556 in 0xcf057c	verified	one	minigame#constants-nothing-reads	
+0x728c40	5	InitMinigameCf0590Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0590	verified	one	minigame#constants-nothing-reads	
+0x728c50	19	InitMinigameCf0590		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0590	verified	one	minigame#constants-nothing-reads	
+0x728c70	5	InitMinigameCf05a8Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf05a8	verified	one	minigame#constants-nothing-reads	
+0x728c80	19	InitMinigameCf05a8		minigame	primitive	void __cdecl ()	Stores the square of 5 in 0xcf05a8	verified	one	minigame#constants-nothing-reads	
+0x728ca0	5	InitMinigameCf0564Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0564	verified	one	minigame#constants-nothing-reads	
+0x728cb0	19	InitMinigameCf0564		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0564	verified	one	minigame#constants-nothing-reads	
+0x728cd0	5	InitMinigameCf05b0Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf05b0	verified	one	minigame#constants-nothing-reads	
+0x728ce0	19	InitMinigameCf05b0		minigame	primitive	void __cdecl ()	Stores the square of 30 in 0xcf05b0	verified	one	minigame#constants-nothing-reads	
+0x728d00	5	InitMinigameCf0570Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0570	verified	one	minigame#constants-nothing-reads	
+0x728d10	19	InitMinigameCf0570		minigame	primitive	void __cdecl ()	Stores the square of 120 in 0xcf0570	verified	one	minigame#constants-nothing-reads	
+0x728d30	5	InitMinigameCf0584Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0584	verified	one	minigame#constants-nothing-reads	
+0x728d40	19	InitMinigameCf0584		minigame	primitive	void __cdecl ()	Stores the square of 20 in 0xcf0584	verified	one	minigame#constants-nothing-reads	
+0x728d60	5	InitMinigameCf0574Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0574	verified	one	minigame#constants-nothing-reads	
+0x728d70	19	InitMinigameCf0574		minigame	primitive	void __cdecl ()	Stores the square of 10 in 0xcf0574	verified	one	minigame#constants-nothing-reads	
+0x728d90	5	InitMinigameCf0594Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0594	verified	one	minigame#constants-nothing-reads	
+0x728da0	19	InitMinigameCf0594		minigame	primitive	void __cdecl ()	Stores the square of 0.5 in 0xcf0594	verified	one	minigame#constants-nothing-reads	
+0x728dc0	5	InitMinigameCf058cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf058c	verified	one	minigame#constants-nothing-reads	
+0x728dd0	19	InitMinigameCf058c		minigame	primitive	void __cdecl ()	Stores the square of 3 in 0xcf058c	verified	one	minigame#constants-nothing-reads	
+0x728df0	5	InitMinigameCf059cThunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf059c	verified	one	minigame#constants-nothing-reads	
+0x728e00	19	InitMinigameCf059c		minigame	primitive	void __cdecl ()	Stores the square of 100 in 0xcf059c	verified	one	minigame#constants-nothing-reads	
+0x728e20	5	InitMinigameCf0580Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0580	verified	one	minigame#constants-nothing-reads	
+0x728e30	11	InitMinigameCf0580		minigame	orchestration	void __cdecl ()	Stores 5.0 in 0xcf0580	verified	one	minigame#constants-nothing-reads	
+0x728e40	5	InitMinigameCf0588Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0588	verified	one	minigame#constants-nothing-reads	
+0x728e50	19	InitMinigameCf0588		minigame	primitive	void __cdecl ()	Stores the square of 50 in 0xcf0588	verified	one	minigame#constants-nothing-reads	
+0x728e70	5	InitMinigameCf05a4Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf05a4	verified	one	minigame#constants-nothing-reads	
+0x728e80	19	InitMinigameCf05a4		minigame	primitive	void __cdecl ()	Stores the square of 100 in 0xcf05a4	verified	one	minigame#constants-nothing-reads	
+0x728ea0	5	InitMinigameCf05b4Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf05b4	verified	one	minigame#constants-nothing-reads	
+0x728eb0	19	InitMinigameCf05b4		minigame	primitive	void __cdecl ()	Stores the square of 40 in 0xcf05b4	verified	one	minigame#constants-nothing-reads	
+0x728ed0	5	InitMinigameCf0568Thunk		minigame	orchestration	void __cdecl ()	Jumps to the initializer of 0xcf0568	verified	one	minigame#constants-nothing-reads	
+0x728ee0	19	InitMinigameCf0568		minigame	primitive	void __cdecl ()	Stores the square of 1.5 in 0xcf0568	verified	one	minigame#constants-nothing-reads	
 0x728f00	10			ui	orchestration		Runs its object file code that calls 0x728f10; not read here	inferred	none		
 0x728f10	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x728f30	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
