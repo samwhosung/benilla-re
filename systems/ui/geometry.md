@@ -110,7 +110,7 @@ from its four floats (`0x4a726f` to `0x4a7289`); both products use the argument 
 horizontal result is `f6/62.625 + 0.5 − b·(1/(62.625·533.33))·s` and the vertical one `f7/41.75 + 0.5 − a·(1/(41.75·533.33))·s`.
 `0x4a72b0` returns the horizontal result and one minus the vertical one; `0x4a7360` returns both unchanged. The two
 projections do not invert `0x4a7100`: its offset term is `f6·533.33` where the inverse of this formula has `f6·533.33 / s`, so a round trip
-closes only when `s` is 1 or `f6` is 0.
+closes only when `s` is 1, or when `f6` is 0 on the horizontal axis and `f7` is 0 on the vertical one.
 
 Addresses: `0x4a72b0`, `0x4a72b6`, `0x4a72c9`, `0x4a72d8`, `0x4a72de`, `0x4a72e6`, `0x4a72f5`, `0x4a72fb`, `0x4a7303`, `0x4a7305`, `0x4a730e`, `0x4a7320`, `0x4a7360`, `0x4a7393`, `0x4a73b3`, `0x4a73d1`, `0x4a73d5`, `0x806554`, `0x806558`, `0x7ff9d8`
 Confidence: verified

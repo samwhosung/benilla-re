@@ -36,8 +36,12 @@ and then sets the valid bit (`0x764294`). `0x6f1eb0` converts an attribute with 
 The layout part of every frame and region has a vtable of eleven slots: 0 the rectangle-changed
 callback, 1 the destructor, 2 the XML load, 3 the default anchor target, 4 set scale, 5 set width, 6 set
 height, 7 get width, 8 get height, 9 a mirror test that answers 0 and 0xa the resolver of a relative
-frame's name. Only slots 0, 7 and 8 differ by class: the plain frame keeps `0x768420` and `0x768410`,
-and the callback is `0x76b580`.
+frame's name. Slots 1 and 2 differ by class in every table: slot 1, the destructor, is a different function in each of
+the 31 eleven-slot tables, and slot 2, the XML load, is one of a few loaders that several classes share (the
+plain `0x769820`, the model `0x76cac0`, `0x7788c0`, `0x782ef0`, `0x767800`, `0x770f40`) or the class's own. Slot 0
+is the rectangle-changed callback, `0x76b580` in most tables and a class's own in the rest, and slots 7 and 8 are the
+plain frame's `0x768420` and `0x768410` or a class's own. The font string's two tables also replace slots 4, 5 and 6
+with `0x772ca0`, `0x772830` and `0x772860`.
 
 Addresses: `0x81c400`, `0x81c46c`, `0x81c718`, `0x81c778`, `0x81c6ec`, `0x81c74c`, `0x81cec4`, `0x81c5d8`, `0x768420`, `0x768410`, `0x770720`, `0x770790`, `0x772930`, `0x772a60`, `0x76d080`, `0x76d0d0`, `0x770670`, `0x772d40`, `0x76c700`, `0x76c6e0`, `0x46ff60`, `0x7671a0`, `0x767573`, `0x767579`
 Confidence: verified
@@ -48,7 +52,9 @@ The edge resolvers read the size with `mov eax,[esi]; call [eax+0x1c]` (`0x76757
 `[eax+0x20]`. Of the 34 vtables stored at `+0x24` by a constructor (a census of `mov [reg+0x24], 0x8xxxxx`),
 the width and height slots differ from the plain pair in the texture's `0x81c6ec`, the font string's
 `0x81c74c` and `0x81cec4`, and the five model tables `0x803934`, `0x808234`, `0x80837c`, `0x8084cc` and `0x81c5d8`
-(`modelview`); the others are 2-entry tables of the font object. Slot 9 is `0x46ff60`, `xor eax,eax; ret`.
+(`modelview`). Of the other 26, 23 keep the plain pair, `0x81c8b4` and `0x81cb20` are font tables that do not have the eleven-slot layout, and
+`0x81c7a4` is the font object's base table: three slots followed by floats (`0x7f800000`, `0x40490fdb`,
+`0x41200000`, repeated). Slot 9 is `0x46ff60`, `xor eax,eax; ret`.
 
 ## A texture's size
 

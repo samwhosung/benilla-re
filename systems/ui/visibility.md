@@ -144,8 +144,11 @@ base then builds the `ScrollChild` through `0x6ee280` (`0x786bf4`).
 number names a global frame (no `$parent` expansion), a table must hold a frame, and a missing
 argument raises `Couldn't find region named`. A parent that is the frame or one of its descendants
 raises `Would create a loop parenting to %s`. The change is slot 0x14, which no class overrides, so it
-is `0x76ab10`: the same parent does nothing; otherwise a visible frame is hidden before and shown after,
-and the frame takes the new parent's stratum, level plus one and scale, or 3, 0 and 1.0 for nil.
+is `0x76ab10`: the same parent does nothing; otherwise a visible frame is hidden before (`0x76ab3d`) and shown after only if the new parent is nil or
+itself visible (`[parent+0xd4]`, `0x76abe5` to `0x76abf7`). The frame takes the new parent's stratum, level plus one
+and scale, or 3, 0 and 1.0 for nil. `0x76ab10` also calls `0x76a400` on the frame, passing it the parent's
+`0x2000` bit (`0x76ab92` to `0x76aba0`), or 0 for nil (`0x76abc7`), and that call hands the bit to the whole subtree
+(`draworder`).
 The frame's existing children keep their levels.
 
 Addresses: `0x7a1550`, `0x7a15e5`, `0x7a15ee`, `0x7a1606`, `0x7a1637`, `0x7a167c`, `0x7a177f`, `0x7a1781`, `0x7a1785`, `0x7a1794`, `0x7a17dc`, `0x76ab10`, `0x76ab20`, `0x76ab65`, `0x76aba3`, `0x76a470`, `0x76a4f0`, `0x76a554`, `0x76c760`, `0x774560`

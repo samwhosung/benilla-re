@@ -14,9 +14,10 @@ Roots: `0x7657d0`, `0x765920`, `0x76fb00`, `0x7731a0`, `0x7731d0`, `0x76b3a0`, `
 
 ## Level lists
 
-A list is a header of three dwords: the link offset, the first link and a tagged pointer to the last
-object, and a member's link is two dwords at the offset: the next link and the previous object.
-A low bit of 1 on a pointer marks the terminator. The insert takes a mode and a reference: mode 1
+A list is a header of three dwords: the link offset, the terminator's next pointer (the head, header+4)
+and its previous pointer (the tail, header+8, tagged), and a member's link is two dwords at the offset: the
+next link and the previous link. A low bit of 1 on a pointer marks the terminator. Every list in these docs
+uses these names: a walk starts at the tail, the dword at header+8, and follows previous links, `[link+4]`. The insert takes a mode and a reference: mode 1
 inserts before the reference, any other after it, and a null reference means the terminator, so mode
 2 puts a member at the head and mode 1 at the tail. A frame is linked at the head of its level.
 
@@ -80,7 +81,7 @@ A batch holds three arrays and drains them in this order: first the quads of eve
 sorted by texture handle, then the text of every font string, in the order the frames were walked,
 then the registered render callbacks. So within one level and layer every texture draws before any
 text and the textures' order is by handle, not by frame or declaration; only text keeps the frame
-order and, within a frame, the order the regions were declared.
+order and, within a frame, the order the regions were last registered.
 
 Addresses: `0x76fb00`, `0x76fb0b`, `0x76fb13`, `0x76fb20`, `0x76fb75`, `0x76fbdb`, `0x76fc03`, `0x76fc08`, `0x76fc0f`, `0x76fc14`, `0x76fc2e`, `0x773080`, `0x7730e5`, `0x7730f2`, `0x772fd0`, `0x773110`, `0x772e50`, `0x7706e0`, `0x5c1d60`, `0x5c1e60`, `0x5c1ef0`
 Confidence: verified
@@ -97,12 +98,18 @@ one on layer 0 (`worldframe`). `qsort` is not stable, so equal handles may swap.
 
 ## Regions within a frame
 
-A frame keeps a list of regions for each draw layer, and a region is added at the head and drawn
-from the tail, so regions of one layer come out in declaration order. There is no finer sort. A
+A frame keeps a list of regions for each draw layer, and a region is linked at the head when it is
+registered and drawn from the tail, so regions of one layer come out in the order of their last registration,
+oldest first, not the order of declaration. `0x77fcb0` registers a region (it links with `0x76a860` at
+`0x77fcf9`, only if `[region+0xc4]` is nonzero, the owning frame `[region+0x9c]` has `[frame+0xd4]` nonzero and the
+region is not registered already, `[region+0xc8]`) and `0x77fc60` unregisters it (it unlinks with `0x76a910`, `0x77fc95`).
+Hiding and showing a texture or font string (`0x76feab`, `0x76febc`; `0x770ff0`, `0x771001`) and giving it a
+new draw layer unregister and register it, so the region moves to the end of its layer, drawn last. There is no
+finer sort. A
 frame's layers are enabled by five switches, set for layers 0 to 3 by the constructor and clear for
 HIGHLIGHT; a region on a disabled layer is not drawn.
 
-Addresses: `0x76b3a0`, `0x76b3a6`, `0x76b3ad`, `0x76b3b6`, `0x76b3db`, `0x76b3e1`, `0x76b3e4`, `0x76a860`, `0x76a88a`, `0x76a8f3`, `0x77fcf9`, `0x769322`, `0x76932e`, `0x76933e`, `0x811a80`, `0x811a84`, `0x6f18b0`, `0x6f1900`
+Addresses: `0x77fc60`, `0x77fc95`, `0x77fcb0`, `0x76a910`, `0x76feab`, `0x76febc`, `0x770ff0`, `0x771001`, `0x76b3a0`, `0x76b3a6`, `0x76b3ad`, `0x76b3b6`, `0x76b3db`, `0x76b3e1`, `0x76b3e4`, `0x76a860`, `0x76a88a`, `0x76a8f3`, `0x77fcf9`, `0x769322`, `0x76932e`, `0x76933e`, `0x811a80`, `0x811a84`, `0x6f18b0`, `0x6f1900`
 Confidence: verified
 Proof: one
 Test: none
@@ -110,7 +117,7 @@ Test: none
 `0x76b3a0(batch, layer)` reads the switch at `+0x198 + 4·layer` (`0x76b3a6`), returns for zero, and walks
 the layer's list at `+0x1c0 + 12·layer` from the last link, calling region slot 0x28 (`0x76b3e1`). The constructor stores 1 at
 `+0x198` to `+0x1a4` and 0 at `+0x1a8` (`0x769322` to `0x76933e`). `0x76a860(region, layer)` takes two
-arguments and its insert has no comparator; its only caller is `0x77fcf9`. The layer names are the pairs at
+arguments and its insert has no comparator; its only caller is `0x77fcf9`, and `0x76a910(region, layer)` is its inverse. The layer names are the pairs at
 `0x811a80`: BACKGROUND 0, BORDER 1, ARTWORK 2, OVERLAY 3, HIGHLIGHT 4.
 
 ## Frames that draw themselves
@@ -129,5 +136,5 @@ Test: none
 five layers dirty when `a` is set and recurses with `(a, −1)` over the children. `0x786ce0` calls it with
 `(0, 0)` on the old scroll child and `(1, 1)` on the new. The ScrollFrame's draw calls the child's
 slot 0x40 at `0x78754c`. `0x76b3f0` uses the frame's own mask `+0x1f8` and batches from `+0x1fc`, and
-reads the children from `[frame+0x300]`, the same head-to-tail walk `GetChildren` makes. `SetParent` passes the
+reads the children from `[frame+0x300]`, a tail-to-head walk (previous links) in creation order, the walk `GetChildren` makes. `SetParent` passes the
 parent's `0x2000` to a new child (`0x76ab10`).

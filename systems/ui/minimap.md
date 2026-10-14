@@ -148,7 +148,7 @@ of the ninth alone. A missing attribute takes `Interface\Minimap\Rotating-Minima
 `Interface\Minimap\MinimapArrow.mdx`, and a model that does not load logs `Invalid minimapArrowModel in Minimap.xml`
 or `Invalid minimapPlayerModel in Minimap.xml`.
 
-Addresses: `0x4edbc0`, `0x4ede4e`, `0x4ede66`, `0x4ede72`, `0x4edef5`, `0x4edefb`, `0x4edf1f`, `0x4edfa2`, `0x4edfae`, `0x76c8e0`, `0x4ee170`, `0x4ee1b7`, `0x4ee204`, `0x4ee260`, `0x4ee269`, `0x4ee2b0`, `0x4ee2c5`, `0x4ee2d5`, `0x4ee2f6`, `0x4ee306`, `0x707350`, `0x6f2cf0`
+Addresses: `0x4edbc0`, `0x4ede3f`, `0x4ede48`, `0x4ede8b`, `0x4ede9e`, `0x4edeaf`, `0x4edece`, `0x4edee0`, `0x4edf38`, `0x4edf7b`, `0x4edfd1`, `0x4ede4e`, `0x4ede66`, `0x4ede72`, `0x4edef5`, `0x4edefb`, `0x4edf1f`, `0x4edfa2`, `0x4edfae`, `0x76c8e0`, `0x4ee170`, `0x4ee1b7`, `0x4ee204`, `0x4ee260`, `0x4ee269`, `0x4ee2b0`, `0x4ee2c5`, `0x4ee2d5`, `0x4ee2f6`, `0x4ee306`, `0x707350`, `0x6f2cf0`
 Confidence: verified
 Proof: one
 Test: none
@@ -159,6 +159,30 @@ the minimap as parent (`0x4ede72`, `0x4edf1f`, `0x4edfae`). `0x4ee2b0` reads eac
 `0x4ee2fd`) and falls back to the default string (`0x4ee2d5`, `0x4ee306`). `0x4ee170` creates a model from the file with
 `0x707350` and loops over the five and the three (`0x4ee1b7`, `0x4ee204`); `0x4ee260` sets the file on the single child
 at `+0x338` (`0x4ee269`).
+
+The constructor stores the minimap's level plus 3 at `+0x334` (`0x4ede3f` to `0x4ede48`) and relevels each of the five of the first group to
+that minus 1, the minimap's level plus 2, with `0x76a4f0(level, 0)` (`0x4edee0`); the three of the second group are not relevelled. Each of those
+eight is anchored CENTER to the minimap's CENTER with offsets 0 and 0 through `0x767c70(4, minimap, 4, 0, 0, 1)` (`0x4ede8b`, `0x4edf38`),
+given the size `[0xbc7970]` through slots 5 and 6 (`0x4ede9e`, `0x4edeaf`), and hidden through slot 0x84 (`0x4edece`, `0x4edf7b`). The
+ninth is anchored the same way with offsets 0.001 and 0.001 (`0x3a83126f`, `0x4edfd1`) and the constructor makes no hide call on it.
+
+## Two small helpers
+
+`0x4ef370` is a `__thiscall` that stores its four float arguments in order at `[ecx]`, `[ecx+4]`, `[ecx+8]` and `[ecx+0xc]` as plain dwords and returns `ecx`
+(`ret 0x10`, `0x4ef37b` to `0x4ef389`). It has two callers: `0x4eb962`, which passes four differences of a rectangle and a point (`0x4eb93f` to `0x4eb95c`),
+and `0x76b119`.
+
+`0x4ead90(out, i, a, b, c, d)` (`ret 0x18`, `ecx` unused) takes the pair of floats `t0 = [0xbc7810 + 24·i]` and `t1 = [0xbc7814 + 24·i]` and writes four floats at `out`:
+`out[0] = 2·(a − t1)`, `out[1] = 2·(b − t0)`, `out[2] = 2·(c − t1)` and `out[3] = 2·(d − t0)`. The rounding is uneven. `a − t1` is stored to a float
+(`0x4eadc5`) before it is doubled, as is `d − t0` (`0x4eaddd`), so outputs 0 and 3 are doubled from a value rounded to float. `b − t0` and `c − t1` stay
+in x87 registers at the control word's 53-bit precision and are doubled there, then rounded once to float on the store (`0x4eadeb`, `0x4eadf0`).
+The two orders differ only where float rounding is uneven in scale, below the float normal range, because doubling is exact otherwise. Its one caller is `0x4eb9fe` in `0x4eb910`, which copies a four-float rectangle from `[ebp+8]` as the last four arguments.
+What fills the 24-byte records at `0xbc7810`, and the rest of `0x4eb910` and `0x4eaf00`, were not read.
+
+Addresses: `0x4ef370`, `0x4ef37b`, `0x4ef389`, `0x4eb962`, `0x76b119`, `0x4ead90`, `0x4eadc5`, `0x4eaddd`, `0x4eadeb`, `0x4eadf0`, `0x4eb9fe`, `0xbc7810`
+Confidence: verified
+Proof: one
+Test: none
 
 ## Lua methods
 

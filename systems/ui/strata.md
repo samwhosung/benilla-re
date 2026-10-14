@@ -129,14 +129,16 @@ overlap check, when the rectangle of the frame being moved or sized changes. Eac
 frame's nearest toplevel self or ancestor. Setting the toplevel flag raises nothing, a raise never
 changes the stratum, and `Lower` does nothing.
 
-Addresses: `0x76a5b0`, `0x76a5c0`, `0x7652a0`, `0x775a50`, `0x775b0a`, `0x775b20`, `0x775b61`, `0x775b3d`, `0x76aeec`, `0x766392`, `0x7652d7`, `0x764a4c`, `0x775440`, `0x76a3c0`, `0x765010`, `0x7650f0`
+Addresses: `0x76a5b0`, `0x76a5c0`, `0x7652a0`, `0x775a50`, `0x775a91`, `0x775ad6`, `0x775afd`, `0x775b0a`, `0x775b20`, `0x775b61`, `0x775b3d`, `0x76aeec`, `0x766392`, `0x7652d7`, `0x764a4c`, `0x775440`, `0x76a3c0`, `0x765010`, `0x7650f0`
 Confidence: verified
 Proof: one
 Test: none
 
 A census of `call` and `jmp` to `0x76a5b0` finds `0x7652d7` (the start of a move or size), `0x766392`
 (the mouse press, before `OnMouseDown` and the capture), `0x76aeec` (a show, after the children and
-before `OnShow`, when bit 1 of `+0xb4` is set) and the binder's `0x775b0a`; to `0x7650f0` itself,
+before `OnShow`, when bit 1 of `+0xb4` is set) and the binder `0x775a50`, which calls it at four sites: `0x775b0a`, the live raise, and
+`0x775a91`, `0x775ad6` and `0x775afd`, each after a `luaL_error` (`0x775a87`, `0x775acc`, `0x775af3`) with `xor ecx,ecx`, so never reached because
+`luaL_error` does not return. That is seven callers in all. To `0x7650f0` itself,
 `0x764a4c` (without the check), `0x76a5b9` and the unreached `0x7650d6`. `0x76a5b0` is `push 1; push ecx; mov
 ecx,[ecx+0xa0]; call 0x7650f0`, `0x76a5c0` ends in `0x7652a0`, which is `xor eax,eax; ret 4`. `Frame:SetToplevel`
 passes mask 1 to `0x76a3c0` (`0x7754d8`), which only sets or clears bits. `0x7650f0` never stores `+0xc0`. Mouse release

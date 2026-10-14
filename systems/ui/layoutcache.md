@@ -50,7 +50,7 @@ Test: none
 The formats are `Frame: %s\n`, `FrameLevel: %d\n`, `X: %d\n`, `Y: %d\n`, `W: %d\n` and `H: %d\n`, each
 formatted into 128 bytes by `0x64a7f0` and written by `0x42a5d0`. The frame's rectangle comes from
 `0x768320` on its layout part; when that fails the writer lays the frame out with `0x7680e0(1)` and retries
-once, and a second failure ends the record, and the root's rectangle is read with no retry. Each number is `0x41ad70·1024`,
+once, and a second failure ends the record without writing a line (`0x490f00`), and the root's rectangle is read with no retry; if that read fails the record ends the same way (`0x490f17`). Both rectangle reads come before the `Frame:` line, so a failed frame leaves nothing in the file. Each number is `0x41ad70·1024`,
 multiplied by the edge over the frame's effective scale `+0x7c` and divided by `K1` (`0x41ae40`). `X`
 and `Y` round half away from zero (`fcom 0.0; test ah,5; jp` then `fadd` or `fsub` 0.5, `0x40a2b0`
 truncates). `W` and `H` always add 0.5, so an inverted rectangle truncates toward zero. `Y` is measured from the

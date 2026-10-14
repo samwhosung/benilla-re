@@ -11,7 +11,8 @@ Roots: `0x4d2ed0`, `0x4d3000`, `0x4d3070`, `0x4fd180`, `0x4fd380`, `0x4fd540`
 
 The skill list sorts its group records first. A group record starts with a category id. The comparator looks both ids up in the category table, and
 orders the groups by the dword at `+0x28` of the category record, ascending; two equal keys answer 1, never 0. An id below 0 or above the table's
-maximum has no record, and the comparator faults on a missing one.
+maximum has no record, and an id inside the range whose slot is null has none either: the comparator loads the slot unchecked
+(`0x4d3024`), and it faults on a missing one.
 
 Addresses: `0x4d2ed0`, `0x4d2fbf`, `0x4d2fc8`, `0x4d3000`, `0x4d3009`, `0x4d300d`, `0x4d3024`, `0x4d302b`, `0x4d3038`, `0x4d3040`, `0x4d3042`, `0x4d305c`, `0x73f727`
 Confidence: verified

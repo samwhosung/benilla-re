@@ -37,8 +37,9 @@ a record is `root + 0xd10 + (stratum + 9·kind)·0x1c` (`0x764ac3`); it stores t
 nonzero stores the frame at `[root + 4·code + 0x84]` (`0x765fa2`) and stops; it answers 1 when nothing took the key. `0x765fd0`
 reads that slot (`0x765fde`) and calls `[vt+0x64]`, answering 0 whatever the frame returned (`0x766028`). With no
 frame it answers 1, except for code `0x212`, which has no key down and is offered to the walk `0x765f10`
-(`0x766048`). The slot is written elsewhere only at `0x76605b`, on the leg where the slot is already null, so a release
-leaves it set and the slot is the last taker of the code. The slots `0x46ff80` and `0x46ff90` of the base are `xor eax,eax; ret 4`.
+(`0x766048`). The slot is written elsewhere only at `0x76605b`, which stores 0 on the leg where the slot is already null, so a release
+with a frame in the slot leaves it set and the slot is the last taker of the code. On that null leg for code `0x212` the walk `0x765f10` may first store a frame at
+`0x765fa2`, and `0x76605b` then clears it. The slots `0x46ff80` and `0x46ff90` of the base are `xor eax,eax; ret 4`.
 Four instructions address the slot, `0x765fa2`, `0x765fde`, `0x76605b` and `0x76607b`.
 
 ## The test a frame makes

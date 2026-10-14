@@ -19,10 +19,10 @@ Roots: `0x509ec0`, `0x509520`, `0x509500`, `0x5094e0`, `0x509420`, `0x509450`, `
 Three lists of rectangles (ids 0 to 2) are kept at `0xbe0b8c`, 16 bytes each: capacity, count,
 array, a growth step. List 0 holds the nameplates and list 1 the combat text; list 2 is never
 claimed into. Claiming appends a rectangle to the list; resetting sets the count to 0 and keeps the
-array. The lists are cleared by the world scene render, not at start-up, once per frame and
-producer.
+array. The counts are zeroed at start-up (`0x5094e0`, called from `0x40166b`) and again by the world scene
+render: list 0 only in a frame whose `[render+0x3f0]` bit 0 is set (`0x48363c`), list 1 every frame.
 
-Addresses: `0xbe0b8c`, `0x509660`, `0x509671`, `0x50967e`, `0x50a160`, `0x509500`, `0x509502`, `0x509512`, `0x5094e0`, `0x40166b`, `0x483640`, `0x483774`, `0x509228`, `0x509450`
+Addresses: `0xbe0b8c`, `0xbe0b90`, `0xbe0b94`, `0x508f70`, `0x509455`, `0x5094ad`, `0x481d7d`, `0x509660`, `0x509671`, `0x50967e`, `0x50a160`, `0x509500`, `0x509502`, `0x509512`, `0x5094e0`, `0x40166b`, `0x483640`, `0x483774`, `0x509228`, `0x509450`
 Confidence: verified
 Proof: one
 Test: none
@@ -31,9 +31,15 @@ Test: none
 array with `0x50a160` to the new count rounded up to a multiple of the step (16 from the claim that
 needs 16, before that the largest power of two not above the new count), then copies the rectangle in at `count` and
 increments it. `0x509500` stores 0 in the count for an id of 0 to 2 (`0x509502` to `0x509512`).
-`0x5094e0` clears lists 0 and 1 and its one call is at start-up (`0x40166b`). The per-frame resets are
+`0x5094e0` stores 0 in the count of lists 0 and 1 (its base `0xbe0b90` is the first count) and its one call is at start-up (`0x40166b`). The per-frame resets are
 `0x483640` (list 0) and `0x483774` (list 1) in the scene render. A census of the base `0xbe0b8c` finds
-three uses: the overlap test, the reset and the claim.
+three uses: the overlap test (`0x509226`), the reset (`0x50950c`) and the claim (`0x509667`). The
+list bytes are also reached through `0xbe0b90` (the count, `0x5094e0`) and `0xbe0b94` (the array pointer: `0x509450`
+at `0x5094ad`, and the initializer `0x508f70` that starts at `0xbe0b94` and zeroes the capacity, count and array of
+both lists). `0x509450`, called once from `0x481d7d` inside the world frame code `0x481d30`, frees the
+worklist `0xbe0bf8` (the nodes from the tail `[0xbe0bfc]`, `0x509455` to `0x509479`), the node pool `0xbe0c38`
+(`0x509480` to `0x5094ab`) and the arrays of lists 0 and 1, then zeroes the capacity, count and array of each
+(`0x5094ad` to `0x5094d6`); list 2 has no array to free.
 
 ## The placement search
 
@@ -127,8 +133,10 @@ Test: none
 `0x509ec0(id, plate, root, point, flag)` reads the plate's width and height through layout slots 7 and
 8 (`0x509ed0`, `0x509eda`), builds `top = point.y`, `left = point.x − halfW`, `bottom = point.y − height`,
 `right = point.x + halfW`, normalises it with `0x509e20`, solves with `0x509720` and clamps. `0x509e20`
-moves a rectangle wholly inside `[0, K1] × [0, K2]` keeping its size, in the order top, bottom, left,
-right. The second normalisation (`0x50a010`) changes only the claimed copy, and the anchor uses the unnormalised clamped
+moves a rectangle inside `[0, K1] × [0, K2]` keeping its size, in the order top, bottom, left,
+right, each clamp after the one before. It lands wholly inside only when the rectangle fits the screen:
+if it is taller than `K2` the bottom clamp, applied last on that axis, wins (bottom 0, top `h`), and if it is
+wider than `K1` the right clamp wins. A NaN compares as no overshoot and clamps nothing. The second normalisation (`0x50a010`) changes only the claimed copy, and the anchor uses the unnormalised clamped
 values (`0x50a026`), so a plate pinned to the bottom claims a rectangle up to `halfH` above where it
 draws. `0x50a021` clears the points and `0x50a044` calls `0x767c70(1 or 4, root, 6, x, y, 1)`, TOP for
 a zero flag and CENTER for a nonzero one. `0x509720` returns the changed flag, the centre x
@@ -157,7 +165,7 @@ desired place next frame.
 
 ## Per frame order
 
-Per frame the scene render clears list 0, seats every nameplate in the active list's order, clears list 1,
+Per frame the scene render clears list 0 when the nameplate pass runs (below), seats every nameplate in the active list's order, clears list 1,
 and the combat text pass then seats the strings in their slot order. The first seated rectangle is not
 moved; later ones move off it. The nameplate pass runs only when its dirty bit `[render+0x3f0]` bit 0
 is set, and it clears the bit; a frame with no new or moved plate does not clear or re-seat.
@@ -187,5 +195,5 @@ Test: none
 The first pair stores `2·π` (the float at `0x8086d4`) at `0xbe0b68` and the second `1.0 / [0xbe0b68]` at `0xbe0b38`; `0x508f50` copies the +∞ at `0x808748` to `0xbe0bbc`. Each other
 initializer is a 5-byte `jmp` and a 19-byte body of the form `fld c; fmul c; fstp g`. A dword census of
 `0xbe0b18` to `0xbe0b7c` finds only these stores and the one read of `0xbe0b68`; the list base
-`0xbe0b8c` has the three uses above. `0x508f70` zeroes the first two lists, `0x508ff0` makes the
+`0xbe0b8c` has the three uses above, and its fields `0xbe0b90` and `0xbe0b94` the further uses listed under the claim lists. `0x508f70` zeroes the first two lists, `0x508ff0` makes the
 worklist `0xbe0bf8` empty, and the exit handlers `0x508fb0` and `0x509030` free the arrays and the nodes.

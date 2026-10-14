@@ -97,8 +97,9 @@ those of a layer list. `0x76c2e0` stores `+0xf8` and switches layer 4 on or off 
 ## Child and region lists
 
 A frame keeps its child frames and its regions in two lists of the same shape, headers at `+0x2fc` and `+0x1b4`,
-and appends to the tail, so a walk from the head visits them in creation order. A list node is 12 bytes: the previous
-link, the next link and the object. A link's low bit marks the end of the list, so an empty list holds a tagged
+and links each new member at the head, so a walk from the tail, following previous links, visits them in creation
+order (the convention of `draworder`: the head is the terminator's next pointer, header+4, and the tail is its
+previous pointer, header+8). A list node is 12 bytes: the next link, the previous link and the object. A link's low bit marks the end of the list, so an empty list holds a tagged
 pointer to its own header, never 0. Attaching a frame to the parent it already has changes nothing and does not
 move it to the end.
 
@@ -107,11 +108,13 @@ Confidence: verified
 Proof: one
 Test: none
 
-The constructor stores the header's own address in its tail slot and the same address or 1 in the head slot
-(`0x769221`, `0x769223`, `0x76922c`; `0x7692c2`, `0x7692c4`, `0x7692c7`). `0x76a750` loads the tail (`0x76a7c6`),
-points the new node's previous link at it and its next link at the tail's old next (`0x76a7cc`, `0x76a7d1`), links
-the tail forward (`0x76a7d4`) and becomes the tail (`0x76a7d7`); with an empty list the tail is the header and its
-next slot is the head. `0x76aa20` does the same for children. Each has one call site, `0x77fd6e` and `0x76abdb`.
+The constructor stores the header's own address in the head slot, the terminator's next pointer, and the same address
+or 1 in the tail slot, its previous pointer (`0x769221`, `0x769223`, `0x76922c`; `0x7692c2`, `0x7692c4`, `0x7692c7`).
+`0x76a750` loads the head (`0x76a7c6`), points the new node's next link at it and its previous link at the head's
+old previous (`0x76a7cc`, `0x76a7d1`), links the head's previous to the new node (`0x76a7d4`) and becomes the head
+(`0x76a7d7`); with an empty list the old head is the terminator. This is a head insert, as `0x7668c0` mode 2 and
+`0x76a860` make, so the last member added is nearest the head and a walk that starts at the tail and steps by
+previous links sees the first member added first. `0x76aa20` does the same for children. Each has one call site, `0x77fd6e` and `0x76abdb`.
 
 ## Reading the lists from Lua
 

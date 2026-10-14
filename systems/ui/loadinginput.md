@@ -2,27 +2,28 @@
 
 What the player's input does while the loading screen is up and after it drops: which of the interface's handlers
 the screen's veto starves, what the world frame still does at the frozen cursor, why nothing is pumped during
-the blocking stretch, what a movement key held through a map change does, and which cursor shows. The screen, its
-layer and the veto are in `loadingscreen/screen`; the transfer packets are in `collision/teleport`.
+the blocking stretch, what a movement key held through a map change does, and which cursor shows. The screen's
+veto is derived below (`0x4069e0` registers it, `0x406a50` is it); the transfer packets are in `collision/teleport`.
 
 Roots: `0x765bf0`, `0x7660d0`, `0x481790`, `0x4908c0`
 
 ## What the veto starves
 
-The top frame registers its input handlers on twelve categories, and the screen's veto stops five of them: characters
+The top frame registers its input handlers on twelve categories, and the screen's veto, `0x406a50` (`xor eax,eax; ret`), registered by `0x4069e0`
+on categories 1, 8, 0xa, 0xb and 0xc (`0x4069f1`, `0x406a07`, `0x406a1d`, `0x406a33` and `0x406a49`: each `push 0x41000000; push 0; mov edx,0x406a50; mov ecx,category; call 0x41fca0`), stops five of them: characters
 (1), key down (8), key repeat (0xa), button down (0xb) and the mouse move (0xc). The move handler of the top is the
 hover pick `0x7660d0`, so while the screen is up the pointer position the top holds and the frame it hovers do not
-change. Key up (9), button up (0xe), the wheel (0x10), the relative move (0xd) and the input-method change (0x1b) pass, so
+change. Key up (9), button up (0xe), the wheel (0x10), the relative move (0xd), the input-method change (0x1b), the activation change (2) and the window size (0x1c) pass, so
 a release still completes what began before the screen: the vetoed events starve every binding and every frame, never
 the held-key tables, which the dispatcher updates before it walks the handlers.
 
-Addresses: `0x765bf0`, `0x765c04`, `0x765c1b`, `0x765c32`, `0x765c48`, `0x765c5f`, `0x765c76`, `0x765c8c`, `0x765ca3`, `0x765cba`, `0x765cd0`, `0x765cfe`, `0x7660d0`, `0x4245b0`, `0x4245d2`, `0x4245db`, `0x424710`, `0x4246ad`
+Addresses: `0x765bf0`, `0x765c04`, `0x765c1b`, `0x765c32`, `0x765c48`, `0x765c5f`, `0x765c76`, `0x765c8c`, `0x765ca3`, `0x765cba`, `0x765cd0`, `0x765cdd`, `0x765ce7`, `0x765cfe`, `0x7665c0`, `0x4069e0`, `0x4069f1`, `0x406a07`, `0x406a1d`, `0x406a33`, `0x406a49`, `0x406a50`, `0x7660d0`, `0x4245b0`, `0x4245d2`, `0x4245db`, `0x424710`, `0x4246ad`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x765bf0` registers `0x765df0` for category 1, `0x765e80` for 0x1b, `0x765f10` for 8, `0x765fd0` for 9, `0x766070` for 0xa,
-`0x7660d0` for 0xc, `0x766250` for 0xd, `0x7662c0` for 0xb, `0x766420` for 0xe, `0x7664f0` for 0x10 and `0x766650` for 2, each through
+`0x7660d0` for 0xc, `0x766250` for 0xd, `0x7662c0` for 0xb, `0x766420` for 0xe, `0x7664f0` for 0x10, `0x7665c0` for 0x1c (`0x765ce7`) and `0x766650` for 2, twelve registrations, each through
 `0x41fca0` (`0x765c04` to `0x765cfe`). `0x4245b0` runs the held-state update `0x424710` before the handler walk (`0x4245d2`,
 `0x4245db`), and the walk stops at a zero answer (`0x4246ad`).
 

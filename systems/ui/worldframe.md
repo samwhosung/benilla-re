@@ -67,7 +67,7 @@ press. A release goes to the capture and runs the Lua script, then the binding w
 unless the release ends a drag of the frame itself. A wheel notch is consumed by a Lua `OnMouseWheel` script
 and otherwise runs the binding down and up.
 
-Addresses: `0x483c40`, `0x483c4b`, `0x483c50`, `0x483c62`, `0x483c7e`, `0x483c93`, `0x483cb0`, `0x483cbb`, `0x483d20`, `0x483d2b`, `0x483d40`, `0x483d6f`, `0x483d82`, `0x76bf70`, `0x76c011`, `0x76c040`, `0x76c08f`, `0x76c180`, `0x76c1c1`, `0x492c20`, `0x492c77`, `0x4b6aa0`, `0x4b7990`, `0x7662c0`, `0x7663e9`, `0x7663f4`, `0x7663f7`, `0x766420`, `0x7664a4`
+Addresses: `0x483c40`, `0x483c4b`, `0x483c50`, `0x483c62`, `0x483c7e`, `0x483c93`, `0x483cb0`, `0x483cbb`, `0x483d20`, `0x483d2b`, `0x483d40`, `0x483d47`, `0x483d6f`, `0x483d82`, `0x76bf70`, `0x76c011`, `0x76c040`, `0x76c08f`, `0x76c180`, `0x76c1c1`, `0x492c20`, `0x492c77`, `0x4b6aa0`, `0x4b7990`, `0x7662c0`, `0x7663e9`, `0x7663f4`, `0x7663f7`, `0x766420`, `0x7664a4`
 Confidence: verified
 Proof: one
 Test: none
@@ -77,7 +77,7 @@ never taken; then `0x492c20`, which ends in `xor eax,eax` (`0x492c77`) on every 
 `0x4b6aa0` builds `BUTTONn` and `0x4b7990` runs it with 1 (`0x483c93`). The press handler `0x7662c0` stores the capture
 before the call (`0x7663e9`) and overwrites the answer with 1 afterwards (`0x7663f7`). The release
 `0x766420` sends to the capture alone (`0x7664a4`). The base release `0x76c040` returns 1 when it
-ended a drag (`0x76c08f`), which skips the binding. The base wheel `0x76c180` returns 1 after firing a script (`0x76c1c1`).
+ended a drag (`0x76c08f`), which skips the binding. The base wheel `0x76c180` returns 1 after firing a script (`0x76c1c1`). When it returns 0, `0x483d20` reads the event's dword at `[+0x2c]` (`0x483d40`) and, if it is 0, returns 1 without running a binding (`0x483d47`); otherwise it builds the binding name with `0x4b6aa0` and runs it down and up (`0x483d6f`, `0x483d82`).
 
 ## Drawing the world
 

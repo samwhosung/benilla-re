@@ -59,7 +59,7 @@ valid (`0x777b9e`), `0x77f0c0` computes the texture coordinates at once (`0x777b
 argument 2, or a new one, and returns it. The keys are `bgFile`, `edgeFile` (empty strings when unset), `tile`
 (the number 1, or nil when tiling is off), `tileSize`, `edgeSize` and `insets`, with lengths converted back to interface units.
 `GetBackdropColor` and `GetBackdropBorderColor` return the four components `r`, `g`, `b`, `a` as the
-byte over 255, or nothing without a backdrop.
+byte times the float `0x3b80806e` (0.00392156, at `0x81c6b4`), not divided by 255, so 255 reads back as 0.9999978 and not 1.0, or nothing without a backdrop.
 
 Addresses: `0x777370`, `0x777401`, `0x777415`, `0x777421`, `0x777426`, `0x77743a`, `0x77744f`, `0x7774ec`, `0x7776cc`, `0x777bc0`, `0x777c68`, `0x777c78`, `0x777d1c`, `0x777f60`, `0x41ae40`
 Confidence: verified

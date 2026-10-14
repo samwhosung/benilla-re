@@ -12,7 +12,7 @@ Roots: `0x7755b0`, `0x775680`, `0x776830`
 ## Draw layers
 
 `EnableDrawLayer(name)` and `DisableDrawLayer(name)` switch one of the five layers on or off. A layer name that is
-missing or not recognised, ignoring case, means ARTWORK. A switch changes what the frame's regions draw at once:
+missing, not a string or not recognised, ignoring case, means ARTWORK. A switch changes what the frame's regions draw at once:
 the frame marks its own batches dirty when it draws itself, otherwise the level that holds it.
 
 Addresses: `0x7755b0`, `0x775640`, `0x775647`, `0x775662`, `0x77566d`, `0x775680`, `0x77573d`, `0x76a710`, `0x76a717`, `0x76a722`, `0x76a730`, `0x76a742`, `0x76a990`, `0x76a999`, `0x76a9a2`, `0x76a9c6`, `0x6f18b0`, `0x811a80`
