@@ -91,8 +91,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403200	624			client			Runs Client.cpp code that calls SStrTokenize, SStrCmpI, 0x44cc80 and 2 more; not read here	inferred	none		
 0x4034d0	46			client			Runs Client.cpp code that calls SStrToFloat, 0x589c00; not read here	inferred	none		
 0x403500	104			client			Runs Client.cpp code that calls 0x64ac60, 0x589c70, 0x589c20 and 1 more; not read here	inferred	none		
-0x403570	49			client			Runs Client.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
-0x4035b0	49			client			Runs Client.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
+0x403570	49			client			Stores the profanityFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
+0x4035b0	49			client			Stores the spamFilter value in its mirror and prints that it is enabled or disabled	verified	one	ui/chatfilter#the-two-options	
 0x4035f0	21	ReloadUiCommand		client			Handles the reloadUI console command: requests a glue rebuild and calls the UI's reload	inferred	none		
 0x403610	5			client			Runs Client.cpp code not read here	inferred	none		
 0x403620	20	PollNet	idb	client		uint32_t __cdecl (void)	Polls every NetClient's event queue through 0x5b3db0, then runs one more poll, and returns 1	verified	one	net/dispatch#main-thread-drain	
@@ -7203,7 +7203,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49e540	297	HandleInstanceResetFailedPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, SStrCopy, SStrPrintf and 2 more; not read here	inferred	none		
 0x49e670	74	HandleUpdateLastInstancePacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, ClntObjMgrGetMapID, GetUnixTime and 1 more; not read here	inferred	none		
 0x49e6c0	32	HandleUpdateInstanceOwnershipPacket	idb	ui	orchestration		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x495d50; not read here	inferred	none		
-0x49e6e0	406	HandleExpectedSpamRecordsPacket	idb	ui	primitive		Runs ChatFrame.cpp code that calls CDataStore::GetInt32, 0x4a3cc0, 0x4a2ff0 and 6 more; not read here	inferred	none		
+0x49e6e0	406	HandleExpectedSpamRecordsPacket	idb	ui	primitive		Handles opcode 0x332: compiles the server's spam strings into the server list	verified	one	ui/chatfilter#the-servers-spam-list	
 0x49e880	25	ParseChannelKey		ui	orchestration		Returns the name of the joined slot a decimal argument names, or the argument when it parses to 0	verified	one	ui/channelverbs#leavechannelbyname	
 0x49e8a0	108			ui	primitive		Runs ChatFrame.cpp code that calls 0x49a870; not read here	inferred	none		
 0x49e910	122			ui	orchestration		Runs ChatFrame.cpp code that calls DBCache::NameCache::GetRecord, 0x49e8a0; not read here	inferred	none		
@@ -7271,8 +7271,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a1920	235	Script::GetSavedInstanceInfo	idb	ui	primitive		Implements the Lua function GetSavedInstanceInfo	inferred	none		
 0x4a1a10	33	RegisterChatScriptFunctions		ui	primitive		Registers the 50 Lua functions of the table at 0x843618	verified	one	ui/chatwindows#chat-script-functions	
 0x4a1a40	27			ui	primitive		Runs ChatFrame.cpp code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
-0x4a1a60	564			ui	primitive		Replaces profane words in a string	inferred	none	objectlayer/party#guild-events	
-0x4a1ca0	911			ui	primitive		Runs ChatFrame.cpp code that calls SStrHashHT, 0x4a4360, SMemFree and 6 more; not read here	inferred	none		
+0x4a1a60	564	MaskProfanity		ui	primitive		Overwrites each match of a profanity pattern with the next mask characters and returns whether any matched	verified	one	ui/chatfilter#masking	
+0x4a1ca0	911	MatchSpam		ui	primitive		Returns whether the text matches a spam pattern of the spam list or the server's list, leaving it unchanged	verified	one	ui/chatfilter#the-spam-predicate	
 0x4a2030	266			ui	primitive		Runs ChatFrame.cpp code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4a2140	10			ui	orchestration		Runs ChatFrame.cpp code that calls 0x4a2150; not read here	inferred	none		
 0x4a2150	22			ui	primitive		Runs ChatFrame.cpp code not read here	inferred	none		
