@@ -11,7 +11,7 @@ Roots: `0x490770`, `0x4907f0`, `0x492f70`, `0x494550`, `0x494590`
 
 ## The two options
 
-`uiScale` (default `1.0`) and `useUiScale` (default `0`) are registered with flags 5 and a change
+`uiScale` (default `1.0`) and `useUiScale` (default `0`) are registered with category 5 and a change
 callback each, `0x490770` and `0x4907f0`. Each callback also runs when the option is registered with a
 value already set. The options are the pair stored at `0xb4e2b0` (`uiScale`) and `0xb4e2b4`
 (`useUiScale`).
@@ -22,7 +22,7 @@ Proof: one
 Test: none
 
 The register call `0x63db90` takes the name in `ecx` (`0x8430cc` `uiScale`, `0x8430c0` `useUiScale`), the
-default string (`0x82e92c` `1.0`, `0x82e570` `0`), flags 5 and the callback. A call stores its result in
+default string (`0x82e92c` `1.0`, `0x82e570` `0`), category 5 and the callback. A call stores its result in
 the next call's argument block: `0x48fcd7` stores `uiScale`'s handle and `0x48fcfb` `useUiScale`'s.
 `0x63db90` stores the callback at `+0xbc` and calls it when the option already exists
 (`0x63dc3d` to `0x63dc58`).

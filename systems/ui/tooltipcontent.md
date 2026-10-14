@@ -177,3 +177,24 @@ adds `0x808e6c` (2.0) for every shown line after the first (`0x530995`) and each
 (10.24, `0x5309e4`, `0x530a0c`); width is `2·pad + [+0x3bc] + widest` (`0x5309f4`) and the plate is sized by
 slots 0x14 and 0x18 (`0x530a2e`, `0x530a39`). Anchor mode 6 is not re-anchored (`0x530a3c`); the others
 are, with `0x52fe90(0)` (`0x530a49`), and the layout is invalidated (`0x530a52`).
+
+## Appending text
+
+`GameTooltip:AppendText(text)` is `0x531e30`. The receiver must be a table whose `this` is a game tooltip; the text
+must be a string or a number, else it raises `Usage: AppendText("text")`. It returns nothing. `0x5305b0` does the work: with
+no lines it does nothing. Otherwise it formats the old text of the first left line and the new text as `%s%s` into a
+256-byte buffer, truncated silently, sets that as the line's text with the format-code pass on (`0x771d80` with 1),
+and sizes the tooltip again (`0x530640`). The first line is the target whatever the line count; an empty first line
+gives `(null)` followed by the text.
+
+Addresses: `0x531e30`, `0x5305b0`, `0x5305bc`, `0x5305cc`, `0x5305e2`, `0x5305f5`, `0x53060e`, `0x530615`, `0x771d80`, `0x64a7f0`, `0x64a820`, `0x6697d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5305c4 je` leaves with no lines. `0x5305cc mov eax,[eax]` with no index reads element 0 of the left array at `+0x32c`,
+and `0x5305ce` reads its text pointer at `+0xf0`; an empty or null text is passed on as null (`0x5305dd`).
+`0x5305e2` pushes the new text before the old, so the old text comes first in `%s%s`; the buffer is
+`sub esp,0x100` with limit `0x100` and `0x64a820` ends the string at limit - 1 when the result does not fit, so the
+cut can fall inside a colour escape. With `[0xc53f10]` set, which `0x64edfe` does at start-up, the formatter is
+`0x6697d0` and prints a null `%s` as `(null)`. `0x5305b0` has one caller, `0x531ed5`, in the binding.

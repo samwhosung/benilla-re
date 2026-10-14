@@ -181,10 +181,10 @@ The point goes through `CMovement::WorldToTransport` and `WalkToPoint`. Objects 
 ## Taxis
 
 0x1a9 reads a mode; with mode set, a GUID, the current node and four 64-bit masks of known nodes.
-Fewer than two known nodes show `ERR_TAXINOPATHS` and close the map; else the map opens. Mode 0
+Fewer than two known nodes show `ERR_TAXINOPATHS` and clear the gossip target; else the map opens (`ui/taxi`). Mode 0
 prints each known node's id and name to the console. 0x1ab marks a flight master with 4 when its
-node is unknown and 0 when known. 0x1ae shows the activation result: 0 starts the flight, 1 to 12
-show errors, 13 and above nothing.
+node is unknown and 0 when known. 0x1ae shows the activation result: 0 closes the map, 1 to 12
+show errors, 13 and above nothing (`ui/taxiroute#activation-replies`).
 
 Addresses: `0x5ece60`, `0x5ecdd0`, `0x5ed1e0`, `0x85fedc`, `0x5ed020`, `0x5ed0a0`, `0x5ed130`, `0x5eb170`
 Confidence: verified
@@ -192,7 +192,7 @@ Proof: one
 Test: none
 
 Node `64·k + b + 1` is bit b of mask k, named from `TaxiNodes` (`0xc0d6b8`) as "[%02d]: %s". The
-map is `0x4db710`, the close `0x4e1fa0`, the flight `0x4dc0f0`; the marker is
+map is `0x4db710`, the gossip clear `0x4e1fa0`, the map close `0x4dc0f0`; the marker is
 `CGUnit_C::SetQuestMarker`. The senders: `0x5ed020` 0x1ac (GUID), `0x5ed0a0` 0x1ad (GUID, two u32),
 `0x5ed130` 0x312 (GUID, a u32, the node count, then a u32 per node); `0x5eb170` sends 0x1aa with
 a unit's GUID for `CGUnit_C::RefreshQuestGiverStatus`.
@@ -324,7 +324,7 @@ are fields 1104 and 1105, bit `type − 1`, 0 for a player not active. The lock 
 | `0x5efea0` | the relation of a GUID's unit, or a game object's creator, to the player, 0 to 9 |
 | `0x5efe00` | the player's faction side: 0 Horde, 1 Alliance, −1 neither |
 | `0x5efe60` | the gendered `PVP_RANK_%d_%d` text of a rank for that side |
-| `0x5efcd0` | a stat's base, effective, positive and negative values |
+| `0x5efcd0` | a resistance's base, effective, positive and negative values |
 | `0x5ec4c0`, `0x5ec890` | a race's male or female display id, which `0x5ec480` resolves to a model record; the race's `ChrRaces` row `+0x20` |
 | `0x5ed5b0` | the gender: `PLAYER_BYTES_3` byte 0 for the active player, else `UNIT_FIELD_BYTES_0` byte 2 |
 | `0x5ed630` | the first carried item with an on-use spell of effect 0x5e, for `Script::UseSoulstone` |
@@ -338,6 +338,7 @@ Test: none
 `0x5efea0`: self 0 (1 for its game object); another player 6 when both can attack, 2 a party
 member, 4 else; a unit whose charmer or creator is the player 1, a party member 3, another
 player 7 or 5; no owner 8; nothing 9. The side tests `FactionTemplate` `+0xc` bits 0x4 then 0x2.
-`0x5efcd0` takes base as effective less `PLAYER_FIELD_POSSTAT0` (`0x5efd40`) and `NEGSTAT0`
-(`0x5efda0`) and clamps a negative effective to 0. `0x5ed650` tests the item record's five spells
+`0x5efcd0` takes the base as the resistance field less the positive and negative resistance buff mods
+(`0x5efd40`, `0x5efda0`: the player-block words at `+0xf9c` and `+0xfb8`) and sets a negative field to 0 in its two
+raw copies, leaving the base as computed (`ui/unitstats#resistances-and-armor`). `0x5ed650` tests the item record's five spells
 (`+0x11c`) for trigger 0 (`+0x130`) and an effect 0x5e among the three.
