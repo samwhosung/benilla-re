@@ -76,7 +76,7 @@ Proof: one
 Test: none
 
 An entry stores the row id, x, y and two flag words (`+0xc`, `+0x10`). `0x4a79b0` projects the row (`+0x10`, `+0x14` under the map id at `+0x1c`) only when the row's flags (`+0x20`) allow the displayed level: bit 0x10 for the world, 0x8 for a continent, 0x4 for a zone or a direct area. The icon is the row's `+0x8` unless the entry is not the gossip marker, the flags have bit 0x80 clear and the zone is not -1 or the continent is -2: then it is 15.
-The name is the row's locale string at `+0x28` and the description the one at `+0x4c`. The gossip marker (`objectlayer/interaction`, `gossip#the-map-marker`) is appended with the flag at `+0x10` set.
+The name is the row's locale string at `+0x28` and the description the one at `+0x4c`. The gossip marker (`objectlayer/interaction`, `ui/gossip#the-gossip-point-of-interest`) is appended with the flag at `+0x10` set.
 
 ## The exploration test
 

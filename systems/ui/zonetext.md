@@ -50,7 +50,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x494780` has the one caller `0x67e645`. A change of the real zone name also asks for a refresh of the zone chat channels (`0x49a210` through `0x494931`; `chatchannels#the-zone-channels`) when the player is not in a cinematic and has no pending cinematic. The first commit of a session sees an old zone id of 0, so it always fires `ZONE_CHANGED_NEW_AREA`.
+`0x494780` has the one caller `0x67e645`. A change of the real zone name also asks for a refresh of the zone chat channels (`0x49a210` through `0x494931`; `ui/chatchannels#the-zone-walk`) when the player is not in a cinematic and has no pending cinematic. The first commit of a session sees an old zone id of 0, so it always fires `ZONE_CHANGED_NEW_AREA`.
 
 ## The text functions
 

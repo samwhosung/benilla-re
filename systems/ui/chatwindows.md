@@ -211,7 +211,7 @@ Test: none
 The five state arms are the jump table entries. `NAME` tokenizes straight into the record with size
 0x20 (`0x4990f7`); `COLOR` stores four integers at `+0x8a`, `+0x89`, `+0x88`, `+0x8b` (`0x4991b9` and the
 three after it). `LOCKED`, `DOCKED` and `SHOWN` are plain dword stores (`0x499290`, `0x4992df`,
-`0x49932c`). The `ZONECHANNELS` arm walks the ChatChannels rows (`ui/chatchannels#chat-channel-rows`), taking the shortcut at
+`0x49932c`). The `ZONECHANNELS` arm walks the ChatChannels rows (`ui/chatchannels#chatchannels-rows`), taking the shortcut at
 `+0x30` plus the locale, skips a name the window holds, fills the first null slot or doubles both
 arrays and appends, and stores the row id in the id array. A `MESSAGES` word compares against the 68
 group names (`0x499631` to `0x499651`) and stores 1 at `0xb4fe70 + window*0x98 + i`.

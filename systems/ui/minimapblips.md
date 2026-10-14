@@ -139,7 +139,7 @@ levels run from `L + 1` (−2) to `L + 5` (corpse). The sequence calls sit below
 (`0x4ed2e0`, `0x4ed2e2`); the rotation loop `0x4ed404` to `0x4ed4b3` (`fsincos`, `0x4ed452`, `0x4ed4f7`)
 does not. With the byte `0xbc8300` set only records whose `+0x44` is set get an arrow (`0x4ed308`). Ids 165
 to 168 are GroupArrow, Arrow, CorpseArrow and GuideArrow; the model's two-step id lookup
-(`models#playing-an-animation`) maps each to a sequence that shows one of its quads.
+(`models/animation#playing-an-animation`) maps each to a sequence that shows one of its quads.
 
 ## Party and pet arrows
 

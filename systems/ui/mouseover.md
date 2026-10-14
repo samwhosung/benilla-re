@@ -223,7 +223,7 @@ is offered. A bag with items in it shows error 0x2b, and an empty bag equipped i
 dead active player shows 0x7e. With a trade open, the trade partner gets the payload in the trade window and anyone
 else shows 0xc4; with none open the click asks to trade (opcode 0x116). For a unit that is the player's pet an item
 payload feeds it (`ui/cursor#dropping-an-item-on-a-unit`). Any unit also plays its greeting
-(`objectlayer/unitnames#greetings-and-u`).
+(`objectlayer/unitnames#greetings-and-unit-sounds`).
 
 Addresses: `0x4925d0`, `0x4bfc50`, `0x5d3fb0`, `0x6ea1e0`, `0x60c270`, `0x493540`, `0x496720`, `0x5da2c0`, `0xb71728`
 Confidence: verified

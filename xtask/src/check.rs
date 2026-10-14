@@ -88,6 +88,8 @@ pattern!(LISTED_SYSTEM, r"^- `([a-z][a-z0-9]*)`: \S");
 /// The image's virtual addresses: the base 0x400000 up to base plus `SizeOfImage` (0x906000).
 const IMAGE: std::ops::Range<u64> = 0x400000..0xd06000;
 pattern!(INLINE_CODE, r"`[^`]*`");
+pattern!(CITED_ANCHOR, r"`([A-Za-z][A-Za-z0-9_/]*)#([a-z0-9_-]+)`");
+pattern!(LINKED_ANCHOR, r"\]\(([^)#\s]*)#([a-z0-9_-]+)\)");
 pattern!(HEADING, r"(?m)^## (.+)$");
 pattern!(ROOTS, r"(?ms)^Roots: (.+?)(?:\n\n|\z)");
 pattern!(
@@ -604,6 +606,7 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
     let mut doc_tests = Vec::new();
     for doc in &docs {
         check_doc(doc, &functions, &mut doc_tests, &mut p);
+        check_citations(doc, &anchors, &mut p);
     }
 
     // A system doc's addresses and a row's meaning cite the table: each has a row. Every other
@@ -982,6 +985,71 @@ fn method_name(name: &str) -> bool {
     own.strip_prefix('~').unwrap_or(own) == class
         && STRUCT_NAME.is_match(scope)
         && METHOD_NAME.is_match(&format!("{scope}::X"))
+}
+
+/// Every entry a doc cites in its prose resolves: `` `doc#anchor` `` (a bare doc name is first
+/// read inside the citing doc's system) and `[text](file.md#anchor)` (relative to the doc).
+fn check_citations(doc: &Doc, anchors: &HashMap<String, String>, p: &mut Problems) {
+    let system = doc.key.split('/').next().unwrap_or_default();
+    let folder = doc.path.rsplit_once('/').map_or("", |(dir, _)| dir);
+    let mut in_code = false;
+    for (index, line) in doc.text.split('\n').enumerate() {
+        if line.starts_with("```") {
+            in_code = !in_code;
+        }
+        if in_code {
+            continue;
+        }
+        let place = format!("{}:{}", doc.path, index + 1);
+        for cited in CITED_ANCHOR.captures_iter(line) {
+            let (target, anchor) = (&cited[1], &cited[2]);
+            let found = if target.contains('/') || target == "METHOD" {
+                anchors.contains_key(&format!("{target}#{anchor}"))
+            } else {
+                anchors.contains_key(&format!("{system}/{target}#{anchor}"))
+                    || anchors.contains_key(&format!("{target}#{anchor}"))
+            };
+            if !found {
+                p.add(&place, format!("{target}#{anchor} cites no entry"));
+            }
+        }
+        for linked in LINKED_ANCHOR.captures_iter(line) {
+            let (file, anchor) = (&linked[1], &linked[2]);
+            if file.contains("://") {
+                continue;
+            }
+            let key = if file.is_empty() {
+                Some(doc.key.clone())
+            } else {
+                linked_key(folder, file)
+            };
+            let found = key.is_some_and(|key| anchors.contains_key(&format!("{key}#{anchor}")));
+            if !found {
+                p.add(&place, format!("{file}#{anchor} links to no entry"));
+            }
+        }
+    }
+}
+
+/// The anchor key of a Markdown file linked from a doc in `folder`: `systems/<key>.md`, or `METHOD`.
+fn linked_key(folder: &str, file: &str) -> Option<String> {
+    let mut parts: Vec<&str> = folder.split('/').filter(|s| !s.is_empty()).collect();
+    for part in file.split('/') {
+        match part {
+            "." | "" => {}
+            ".." => {
+                parts.pop()?;
+            }
+            name => parts.push(name),
+        }
+    }
+    let path = parts.join("/");
+    if path == "METHOD.md" {
+        return Some("METHOD".to_string());
+    }
+    path.strip_prefix("systems/")?
+        .strip_suffix(".md")
+        .map(str::to_string)
 }
 
 fn check_doc(

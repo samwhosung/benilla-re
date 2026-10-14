@@ -211,7 +211,7 @@ signals event 0x123. `DeleteCursorItem` (`0x4897b0`) does the same test (`0x4898
 `ClearCursor()` runs `ClearCursor(1, 1)` and returns 1 result without pushing one. `CursorHasItem()` returns
 the number 1 for kinds 1 and 9 and nil otherwise; `CursorHasSpell()` for kind 3; `CursorHasMoney()` for
 kind 2. None returns a boolean. `AutoEquipCursorItem()` calls the player's equip-from-cursor routine with 0
-(`objectlayer/inventory#bind-on-equip`).
+(`objectlayer/inventory#bind-on-equip-confirmation`).
 
 `EquipCursorItem(slot)` needs a number (usage error otherwise) and an item on the cursor. A slot argument of 0
 or 256 auto-equips. A slot holding the cursor item only clears the cursor. If `CheckItemForSlot` accepts the

@@ -146,7 +146,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-The same movement test (`test dh,0x12`) is inline in `Jump` (`0x513cee`) and `ToggleRun` (`0x513dc1`). `UNIT_FIELD_FLAGS` bit 0x40000 is read through `not; shr 0x12; and 1`. The `+0x40` word is signed 32-bit, as the `UnitHealth` function clamps it (`unitplayer`, `party#reading-a-member-without-its-object`).
+The same movement test (`test dh,0x12`) is inline in `Jump` (`0x513cee`) and `ToggleRun` (`0x513dc1`). `UNIT_FIELD_FLAGS` bit 0x40000 is read through `not; shr 0x12; and 1`. The `+0x40` word is signed 32-bit, as the `UnitHealth` function clamps it (`unitplayer`, `ui/party#reading-a-member-without-its-object`).
 
 ## Mouse turning and the camera
 

@@ -349,4 +349,4 @@ and so the first parameter of the packer; `0x6c4c6f push 1` is the creator's for
 `0x6c4c77` its call. `0x6b503e` to `0x6b5066` (exterior) and `0x6b53e3` to `0x6b540b` (interior) read
 the stage flags (`0x58ade0`), compute `(~flags >> 3)` into bits 3 and 4 and write them back with
 `0x58ad30`; the materials' words are `[esi]`. The reference alpha comes only from the blend state
-(`groupdraw#interior-batch-states`).
+(`terrain/groupdraw#interior-batch-states`).

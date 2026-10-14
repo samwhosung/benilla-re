@@ -94,7 +94,7 @@ Confidence: verified
 Proof: one
 Test: none
 
-`0x711a20` returns the sequence length at `+0x4` and the move speed at `+0x8` (`unitanim#animation-rate`). The rate
+`0x711a20` returns the sequence length at `+0x4` and the move speed at `+0x8` (`objectlayer/unitanim#animation-rate`). The rate
 `GetCurrentSpeed / moveSpeed` is stored at `0x5fe54d` before the length test `0x5fe547 cmp [ebp-0x160],edi`, so a zero length keeps
 the rate and skips the phase. `0x5fe5f8 jbe` skips a zero current length; `0x5fe60b div esi` and `0x5fe60f div ecx` are the
 unsigned steps.
@@ -198,7 +198,7 @@ Test: none
 With the key bone already armed, `0x5fe912` sends a mask-path move request to bone 0 alone (`0x5fe930`). The unmasked entries
 `0x5feae6 call 0x5fcc10` with `0x5feaed jne 0x5fe919`, and `0x5feaf3 call 0x5fcbb0` with the `jne 0x5fe919` after it, test bone 0's current id with no check of the key bone.
 `0x5fe927` sets the key enable and `0x5fe92e rep movsd` copies the seven dwords of bone 0's current state (`ebp-0xb4`) to `ebp-0x5c`. The
-sets are in `unitanim#animation-sets`.
+sets are in `objectlayer/unitanim#animation-sets`.
 
 ## Demotion
 
@@ -240,7 +240,7 @@ other than 15 (HandsClosed), and not a sheathe stage that continues, the unit ca
 which fades the held pose out over 150 ms (`playback#stopping-a-bone`) and leaves the bone to inherit bone 0's time. For key bone −1
 or 26 it clears bits 0x70 of `+0xd58`, sets 0x10 or 0x40, restores the sheathe when bit 0x8000 is set, picks the base animation again
 through `PlayFollowOnAnimation` and sets 0x70. A reason-1 call from a replaced play runs only the handler's common prefix and
-the small table of `unitanim#when-a-sequence-ends`.
+the small table of `objectlayer/unitanim#when-a-sequence-ends`.
 
 Addresses: `0x5fc920`, `0x5fc9ff`, `0x5fca62`, `0x5fca65`, `0x5fca6a`, `0x5fca6f`, `0x5fca78`, `0x5fca7d`, `0x5fca98`, `0x5fcaad`, `0x5fcab8`, `0x5fcacb`, `0x5fcad7`, `0x5fcae6`, `0x5fcb2b`, `0x5fcb30`, `0x6078d0`, `0x607800`, `0x711bb0`, `0x70a280`, `0x719370`, `0x7194bc`, `0x7194f5`, `0x7194fe`
 Confidence: verified
@@ -269,4 +269,4 @@ Test: none
 
 The watchdog test is `0x71949e mov eax,[edi+0xac]; cmp eax,[ebp-4]` against the clamped end, and it does not read the sequence flag.
 `0x5fe697 mov [ebp-0x74],0xffffffff` is the request's variation. `0x607800` installs `0x6078d0` on the body model, with the unit's
-GUID. The follow-on pick `0x5fc3f0` is `unitanim#when-a-sequence-ends`.
+GUID. The follow-on pick `0x5fc3f0` is `objectlayer/unitanim#when-a-sequence-ends`.

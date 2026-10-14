@@ -103,7 +103,7 @@ Test: none
 `0x76d120` calls the base `SetAlpha` (`0x76a690`) and, with a model, passes `movzx [frame+0xc8]` times
 1/255 (`0x8026c8`) to `0x710cb0` (`0x76d139` to `0x76d150`). `SetModel` does the same at `0x76cd5e` to
 `0x76cd77`. The model folds the value into its instance alpha, which `0x714260` multiplies by the
-caller's factor, 1.0 on this path (`models#sequence-time`).
+caller's factor, 1.0 on this path (`models/animation#sequence-time`).
 
 ## The frame's light
 
@@ -174,7 +174,7 @@ with `test ah,5; jp` (`0x76ef28` to `0x76eff3`), packs them (`0x76effc`) and ors
 through `0x6f23d0` at `+0x384` with bit 0 of `+0x380` (`0x76cc4b`, `0x76cc51`). The callback `0x76d680`
 quantises each colour byte as `trunc(v·255 + 0.5)` clamped, and calls `0x71c110(collector, colour,
 near, far)`; the batch step turns fog on for a lit material only if the collector's range reciprocal
-`+0x18c` is positive (`0x70bb24`, `models#lighting-and-fog`).
+`+0x18c` is positive (`0x70bb24`, `models/render#lighting-and-fog`).
 
 ## Texture transform sense
 
@@ -190,7 +190,7 @@ Confidence: verified
 Proof: one
 Test: `animation::m2_animate_difftest`
 
-`0x7bddb0` forms `Q` (`models#texture-transforms`) and multiplies it on the left of the matrix; p is
+`0x7bddb0` forms `Q` (`models/animation#texture-transforms`) and multiplies it on the left of the matrix; p is
 (0.5, 0.5). In `v'` the term in `u` carries `s` and the term in `v` carries `c`. The
 element `Q[0][1] = 2xy + 2zw` and `Q[1][0] = 2xy − 2zw` give, for the row vector `(u, v)`,
 `u' = c·u − s·v` and `v' = s·u + c·v`: with z = w = √½ the point (1, 0.5) about (0.5, 0.5) goes to

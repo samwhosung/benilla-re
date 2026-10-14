@@ -533,6 +533,22 @@ fn plants() -> Vec<Plant> {
             edit(DOC, "add eax, [ecx+4]\n", "# demo\n"),
             &[],
         ),
+        // Citations in prose.
+        plant(
+            "a cited entry that exists, by bare doc name and by link",
+            edit(DOC, "returns the sum.\n", "returns the sum (`demo#state-advance`, [here](demo.md#state-advance)).\n"),
+            &[],
+        ),
+        plant(
+            "a cited entry that does not exist",
+            edit(DOC, "returns the sum.\n", "returns the sum (`demo#state-step`).\n"),
+            &["systems/demo.md:12: demo#state-step cites no entry"],
+        ),
+        plant(
+            "a link to an entry that does not exist",
+            edit(DOC, "returns the sum.\n", "returns the sum ([there](../other/demo.md#state-advance)).\n"),
+            &["systems/demo.md:12: ../other/demo.md#state-advance links to no entry"],
+        ),
         // The tables' headers.
         plant(
             "a table's header",
