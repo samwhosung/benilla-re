@@ -210,6 +210,25 @@ Test: none
 `0x49a810`, `0x49a830` and `0x49a850` into a 0x1e000-byte block, counts them, then compresses into
 `n + n/1000 + 13` bytes of stack with `0x6605a0`.
 
+## GM ticket requests
+
+The ticket create message (0x205, `0x5ef740(category, text)`) carries a u8 category, the u32 map, three position floats, the text
+and the string "Reserved for future use". For category 2 it adds a u32 line count, a u32 per line with the seconds since the line
+was logged, a u32 size before compression and the compressed block as raw bytes with no length of its own; an empty log writes
+size 0 and no block. The update message (0x207) is a u8 type and the text. 0x211, 0x217 and 0x21a have no body. Texts are cut to
+1999 characters; an empty text shows `ERR_TICKET_NO_TEXT` and sends nothing.
+
+Addresses: `0x5ef740`, `0x5ef83d`, `0x5ef851`, `0x5ef85a`, `0x5ef869`, `0x5ef896`, `0x5ef8a5`, `0x5ef8aa`, `0x5ef936`, `0x5ef956`, `0x5ef961`, `0x5ef97e`, `0x5ef9c4`, `0x5ef9d1`, `0x5efac0`, `0x5efb21`, `0x5efb2d`, `0x5efb3c`, `0x5efbb0`, `0x5efc20`, `0x48cfc0`, `0x4294c0`, `0x6605a0`, `0x64a5a0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ef740` ignores `ecx`. The widths come from the writers: `0x418070` one byte, `0x418190` and `0x4181f0` four, `0x4183d0` a
+float, `0x418430` a string with its terminator, `0x418c10` raw bytes. `0x4294c0` is `time(NULL)` and `0x5ef956` subtracts the
+line stamp from it. The log is 60 slots, the copy bound is 0x7d0 including the terminator (`0x64a5a0`), and `0x6605a0` is a zlib compress call with
+the library version "1.1.3". `0x5ef978` skips the block when the text is empty. `0x5efbb0`, `0x5efc20` and `0x48cfc0` run only the
+opcode write and the send. The reply 0x212 with status 6 reads the text, a u8 category, three floats and two u8 in that order.
+
 ## Mirror timers
 
 0x1d9 starts a timer: type, value, max, scale, a paused byte and a spell; it signals
