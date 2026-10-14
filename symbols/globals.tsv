@@ -31,7 +31,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4712e0	void *[5]	s_countCustomizationCases		glue	Holds the five case addresses of the customization count 0x471270, skin to facial hair	verified	one	glue/create#randomizing-and-counts
 0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
 0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
-0x494b54	const uint8_t[12]	s_actionCheckCases		ui	Maps the action kinds 0 to 11 of 0x494a50 to its three cases	verified	one	ui/luastate#the-context-word
+0x494b48	void *[3]	s_protectedGateArms		ui	Holds the three arm addresses of the action gate 0x494a50: refuse, flags test, continue	verified	one	ui/protected#protected-action-gate
+0x494b54	uint8_t[12]	s_protectedGateTagArm		ui	Holds the arm index of each action gate tag 0 to 11	verified	one	ui/protected#protected-action-gate
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
 0x496888	void *[4]	s_cases496720		ui	Holds the 4 case addresses of the switch in 0x496720	inferred	none	
 0x49afe0	void *[5]	s_cases49a870		ui	Holds the 5 case addresses of the switch in 0x49a870	inferred	none	
@@ -523,6 +524,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c418	const float	s_float428c0000		objectlayer	Holds the float 70 (0x428c0000)	inferred	none	
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
+0x80c484	const float	s_sprintSpeedThreshold		objectlayer	Holds 11.0, the speed from which the moving animation is Sprint	verified	one	collision/walkmode#moving-animation-choice
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization
@@ -1541,6 +1543,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x879828	char[26]	s_textFrameSIsNotResizable		ui	Holds the string "Frame %s is not resizable"	inferred	none	
 0x879844	char[37]	s_textFrameSIsNotMovableOrResizable		ui	Holds the string "Frame %s is not movable or resizable"	inferred	none	
 0x879b78	char[13]	s_textIgnoreArrows		ui	Holds the string "ignoreArrows"	inferred	none	
+0x879c8c	char[15]	s_onEnterPressed		ui	Holds the script name OnEnterPressed of an edit box	verified	one	ui/protected#input-event-flags
 0x879cac	char[3]	s_editBoxPipeText		ui	Holds ||, the text an edit box inserts for a typed pipe	verified	one	ui/editbox#typed-characters
 0x879cb0	char[5]	s_editBoxTabText		ui	Holds the four spaces an edit box inserts for a tab character	verified	one	ui/editbox#typed-characters
 0x879d00	uint32_t[78]	s_buttonMethods		ui	Holds the 39 pairs of a name and a function of the Button methods	verified	one	ui/button#lua-methods
@@ -1970,7 +1973,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb711b8	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb711e4	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb711ec	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
-0xb71290	uint32_t			ui	Holds a dword that CGGameUI::Initialize, CheckActivePlayer, Script::GetNumBindings read and write; not read here	inferred	none	
+0xb71290	void *	s_bindings		ui	Holds the key binding object of 0xdc bytes that 0x4b6050 builds, whose +0xd8 is 1 while a binding runs	verified	one	ui/protected#input-event-flags
 0xb712a8	uint8_t			unassigned	Holds a byte that Script::UninviteFromRaid, CGGameUI::ClosestObjectMatch read and write; not read here	inferred	none	
 0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
 0xb713f4	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame, HandleRaidReadyCheckPacket read and write; not read here	inferred	none	

@@ -87,3 +87,26 @@ Times are client clock values (`0x42c010`) in milliseconds: the input queue stam
 `0x42d7bb` in `0x42d780`, and `0x42b8b0` scales the counter to 1000 per second. `0x5144c0`
 releases every held command through `0x514b70`, and `0x514b40` asks `0x514ae0`, both at the
 current clock.
+
+## Toggle run
+
+The Lua function `ToggleRun` (`0x513d50`, bound in the table `0x8500b8`) flips the walk mode of the
+unit the client is driving, and refuses silently, returning no result, in this order: the action
+gate `0x494a50(0)` returns 0 (`ui/protected`); the GUID at `0xc4da98` does not resolve with type
+mask 8; the unit's health dword is not above 0 (signed); a movement spline exists and its bit
+`0x4` is clear; health again; its movement flags have `0x1000` or `0x200`; its stand state is 7
+(dead). Otherwise it calls `0x60e080` with the input clock `0xcf0bc8`
+(`collision/walkmode#walk-toggle-request`).
+
+Addresses: `0x513d50`, `0x513d52`, `0x513d59`, `0x513d77`, `0x513d7e`, `0x513d8e`, `0x513d93`, `0x513da5`, `0x513da9`, `0x513db6`, `0x513dc1`, `0x513dc4`, `0x513dc6`, `0x513dcd`, `0x513dd2`, `0xc4da98`, `0xcf0bc8`, `0x468460`, `0x60e080`, `0x850340`, `0x8500b8`
+Confidence: verified
+Proof: one
+Test: none
+
+The unit is `0x468460` (mask in `ecx` = 8) on the GUID pair `0xc4da98`/`0xc4da9c`, the unit the
+client moves (`objectlayer/unitmovement#the-active-mover`), so a controlled non-player unit is
+toggled. `[unit+0x110]` is the field block plus `0x18` (`0x5fad25`, `0x5fad28`): `+0x40` is field
+22 (health) and `+0x210` field 138 (the stand state byte). The tests are `jle` after `test esi,esi`
+(`0x513d93`, `0x513db6`), `je` on `test BYTE [spline+0x18],4` (`0x513da5`, `0x513da9`), `test bh,0x12`
+on `CMovement+0x40` through `[unit+0x118]` (`0x513dc1`) and `cmp BYTE [desc+0x210],7`
+(`0x513dc6`). A spline pointer of 0 skips its test.

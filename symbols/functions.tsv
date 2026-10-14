@@ -7003,7 +7003,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x494780	491			ui	primitive		Runs GameUI.cpp code that calls 0x4a6650, SStrCmpI, SMemFree and 6 more; not read here	inferred	none		
 0x494970	126			ui	orchestration		Runs GameUI.cpp code that calls SStrCmpI, SMemFree, SStrDupA; not read here	inferred	none		
 0x4949f0	83			ui	orchestration		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4925d0 and 1 more; not read here	inferred	none		
-0x494a50	247	CheckActivePlayer		ui	orchestration		Answers whether an action of a kind may run; kinds 0 and 11 refuse a nonzero context and signal	verified	one	ui/luastate#the-context-word	
+0x494a50	247	CheckActivePlayer		ui	orchestration		Answers whether an action of a kind may run; kinds 0 and 11 refuse a nonzero context and signal	verified	one	ui/protected#protected-action-gate	
 0x494b60	256	CGGameUI::SetCursorItem	idb	ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x495190 and 6 more; not read here	inferred	none		
 0x494c60	26			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x494c80	49			ui	orchestration		Returns the cursor's item with its bag and slot	inferred	none	objectlayer/interaction#world-clicks	
@@ -8130,7 +8130,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b6f70	1297			ui	primitive		Runs UIBindings.cpp code that calls SFile::Load, 0x661dd0, 0x6f2a30 and 15 more; not read here	inferred	none		
 0x4b7490	1020			ui	primitive		Runs UIBindings.cpp code that calls CheckActivePlayer, SStrCmpI, 0x4b7890 and 10 more; not read here	inferred	none		
 0x4b7890	251			ui	primitive		Runs its object file code that calls SStrCmp, sgetu8; not read here	inferred	none		
-0x4b7990	444			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI, SStrChr and 2 more; not read here	inferred	none		
+0x4b7990	444			ui	primitive		Finds a key binding by command name and runs it with the executing flag set and the Lua context zeroed	verified	one	ui/protected#input-event-flags	
 0x4b7b50	304			ui	primitive		Runs its object file code that calls SStrHashHT, SStrCmpI, FrameScript::GetContext and 5 more; not read here	inferred	none		
 0x4b7c80	72			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4b7cd0	79			ui	unreached		Runs its object file code not read here	inferred	none		
@@ -12404,7 +12404,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x513bb0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x513bc0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x513bd0	376	Script::Jump		input	orchestration		Implements the Lua function Jump	inferred	none	spell/cancel#who-cancels-a-cast	
-0x513d50	140	Script::ToggleRun	idb	input	orchestration		Implements the Lua function ToggleRun	inferred	none		
+0x513d50	140	Script::ToggleRun	idb	input	orchestration	int __cdecl (lua_State *L)	Implements the Lua function ToggleRun	verified	one	input#toggle-run	
 0x513de0	62	Script::ToggleAutoRun	idb	input	primitive		Implements the Lua function ToggleAutoRun	inferred	none		
 0x513e20	42	Script::MoveForwardStart	idb	input	orchestration		Implements the Lua function MoveForwardStart	inferred	none		
 0x513e50	42	Script::MoveForwardStop	idb	input	orchestration		Implements the Lua function MoveForwardStop	inferred	none		
@@ -20252,8 +20252,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x601020	45	CGUnit_C::ResetDisplayFacing		objectlayer	primitive		Sets the display facing +0xc98 from the mover and zeroes the samples +0xc9c to +0xca8	verified	one	objectlayer/unitmovement#facing	
 0x601050	125	CGUnit_C::RotateFacings		objectlayer	primitive	void __thiscall (void *unit, float angle)	Adds a transport's turn to the facings +0xc98 and +0xc94, wrapping each once into 0 to 2π	verified	one	objectlayer/unitmovement#facing	objectlayer::wrap_angle_difftest
 0x6010d0	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x6010e0	538	DispatchMoveSpeedOpcode		objectlayer	primitive		Sends opcodes 0xcd to 0xd8 to the own-relay or relay speed handler by the sender GUID	inferred	none	collision/handlers#speed-changes	
-0x601360	168	DispatchSplineSpeedOpcode		objectlayer	orchestration		Sends opcodes 0x2fe to 0x303 to the spline speed setters	inferred	none	collision/handlers#speed-changes	
+0x6010e0	538	DispatchMoveSpeedOpcode		objectlayer	primitive		Sends opcodes 0xcd to 0xd8 to the own-relay or relay speed handler by the sender GUID	verified	one	collision/walkmode#walk-speed-families	
+0x601360	168	DispatchSplineSpeedOpcode		objectlayer	orchestration		Sends opcodes 0x2fe to 0x303 to the spline speed setters	verified	one	collision/walkmode#walk-speed-families	
 0x601420	240	DispatchSplineMoveOpcode		objectlayer	orchestration		Runs the mover toggle for spline opcodes 0x304 to 0x31a through 0x601544, then re-picks the animation; 0 for others	verified	one	objectlayer/unitmovement#spline-toggles	
 0x601560	27	CGUnit_C::OnMoveTimeSkipped		objectlayer	orchestration		Passes a skipped time to the mover's 0x61ab90 and returns 1	verified	one	objectlayer/unitmovement#movement-message-handlers	
 0x601580	705	CGUnit_C::OnMoveEvent	idb	objectlayer	primitive		Sends a relayed movement opcode to its handler with the async clock and the parsed status	inferred	none	collision/handlers#facing-and-pitch	
@@ -33727,7 +33727,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779760	34			ui	unreached		Runs its object file code not read here	inferred	none		
 0x779790	125	CSimpleButton::SetState		ui	orchestration		Stores the lock and, for a new state, swaps to that state's texture when it has one and refreshes the label	verified	one	ui/button#setting-the-state	
 0x779810	115	CSimpleButton::UpdateLabel		ui	orchestration		Offsets the label for PUSHED and gives it the disabled, highlight or normal font by state	verified	one	ui/button#the-label-and-its-fonts	
-0x779890	6			ui	orchestration		Returns the flag that a button click is running from the mouse	verified	one	ui/button#running-a-click	
+0x779890	6	IsButtonClickRunning		ui	orchestration	uint32_t __cdecl (void)	Returns the flag that a button click is running from the mouse	verified	one	ui/button#running-a-click	
 0x7798a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x7798b0	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7798c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -33839,7 +33839,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77e3b0	29			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x77e3d0	51	CSimpleEditBox::SetFocus		ui	orchestration		Moves the keyboard focus to a visible edit box, running the old box's loss and the new one's gain	verified	one	ui/editbox#keyboard-focus	
 0x77e410	30	CSimpleEditBox::ClearFocus		ui	orchestration		Clears the keyboard focus when this box holds it, running its loss	verified	one	ui/editbox#keyboard-focus	
-0x77e430	6			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x77e430	6	IsEnterScriptRunning		ui	orchestration	uint32_t __cdecl (void)	Returns the flag that is 1 while an edit box runs its enter script	verified	one	ui/protected#input-event-flags	
 0x77e440	79			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x77e490	8			ui	primitive		Runs its object file code not read here	inferred	none		
 0x77e4a0	4			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -36693,8 +36693,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7ccb10	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7ccb30	54			unassigned	unreached		Runs its object file code that calls 0x7fdc00; not read here	inferred	none		
 0x7ccb70	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
-0x7ccb90	113			unassigned			Runs its object file code not read here	inferred	none		
-0x7ccc10	121			unassigned			Runs its object file code not read here	inferred	none		
+0x7ccb90	113	IsMoveOpcodeWithCounter		unassigned	orchestration	uint32_t __fastcall (uint32_t opcode)	Returns 1 for the 13 movement opcodes whose message carries a u32 counter, 0xf0 among them	verified	one	collision/knockback#knockback-acknowledgement	
+0x7ccc10	121	IsMoveOpcodeWithGuid		unassigned	orchestration	uint32_t __fastcall (uint32_t opcode)	Returns 1 for the 14 movement opcodes whose message carries a raw GUID, 0xf0 among them	verified	one	collision/knockback#knockback-acknowledgement	
 0x7ccc90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7ccca0	11			unassigned			Runs its object file code not read here	inferred	none		
 0x7cccb0	41			unassigned			Runs its object file code not read here	inferred	none		
