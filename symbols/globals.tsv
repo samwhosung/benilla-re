@@ -2775,6 +2775,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71730	uint32_t[2]	s_tradeAccepted		ui	Holds the accept flags of the trade: the player's, then the partner's	verified	one	ui/trade#accept-flags
 0xb71740	uint32_t	s_tradeOwnMoney		ui	Holds the copper the player has put into the trade window	verified	one	ui/trade#a-refused-offer-slot
 0xb71748	uint32_t	s_tradeDone		ui	Holds 1 when the closing trade completed	verified	one	ui/trade#opening-and-closing-the-window
+0xb71760	uint32_t	s_screenFadeLayer		ui	Holds the handle of the fade layer	verified	one	ui/screenfade#fade-state
+0xb71770	void *	s_screenFadeTexture		ui	Holds the 8 by 8 texture of the fade quad	verified	one	ui/screenfade#fade-state
+0xb7179c	uint32_t	s_screenFadeArgument		ui	Holds the argument passed to the fade callback in ecx	verified	one	ui/screenfade#fade-state
+0xb717a0	uint8_t	s_screenFadeFinished		ui	Holds 1 after the frame that drew the fade at its end value	verified	one	ui/screenfade#fade-state
+0xb717b4	uint32_t	s_screenFadeStart		ui	Holds the millisecond clock at the first drawn frame of the fade	verified	one	ui/screenfade#fade-state
+0xb717bc	float	s_screenFadeSeconds		ui	Holds the duration of the running fade in seconds	verified	one	ui/screenfade#fade-state
+0xb717c0	void *	s_screenFadeCallback		ui	Holds the function to call when the fade ends, or null	verified	one	ui/screenfade#fade-state
+0xb717f4	uint32_t	s_screenFadeMode		ui	Holds 0 for no fade, 2 while the screen darkens and 1 while it lightens	verified	one	ui/screenfade#fade-state
+0xb71834	uint8_t	s_screenFadeActive		ui	Holds 1 while a screen fade layer exists	verified	one	ui/screenfade#fade-state
+0xb71835	uint8_t	s_screenFadeClockStarted		ui	Holds 1 once the fade has drawn a frame and set its start time	verified	one	ui/screenfade#fade-state
 0xb71840	char[260]	s_lootIconPath		ui	Holds the icon path text the loot window builds for a row or the coin row	verified	one	ui/loot#loot-lua-reads
 0xb71968	uint8_t[448]	s_lootRows		ui	Holds the 16 loot rows of 0x1c bytes the window reads, packed from the wire entries	verified	one	ui/loot#loot-state
 0xb71b44	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	

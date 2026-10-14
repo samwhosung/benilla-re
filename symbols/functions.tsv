@@ -6893,7 +6893,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ec50	56	GetBillingTimeRested		ui	orchestration		Pushes the billing rest time of the session as one unsigned number	verified	one	ui/billing#the-rest-time	
 0x48ec90	58			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4841a0; not read here	inferred	none		
 0x48ecd0	149			ui	primitive		Starts a cinematic sequence, hiding the cursor and scheduling its first shot	verified	one	uicamera/cinematic#starting-a-sequence	
-0x48ed70	91			ui	primitive		Runs GameUI.cpp code that calls 0x460410, SndInterfacePauseZoneMusic, SetCursorShown and 3 more; not read here	inferred	none		
+0x48ed70	91	BeginCinematicUI		ui	orchestration		Pauses zone music if it plays, sets the in-cinematic flag, hides the cursor and starts the 0.25-second fade	verified	one	ui/screenfade#starting-a-fade	
 0x48edd0	32			ui	orchestration		Signals CINEMATIC_START and plays the first shot, or ends the cinematic	verified	one	uicamera/cinematic#starting-a-sequence	
 0x48edf0	423			ui	primitive		Plays the shot in the shot row through the camera object	verified	one	uicamera/cinematic#playing-a-shot	ui::dist2_48edf0
 0x48efa0	25			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -8539,16 +8539,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c0cd0	19	InitQuotient4c0cd0		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x4c0cf0	5	InitInfinity4c0d00Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c0d00, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c0d00	11	InitInfinity4c0d00		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x4c0d10	226			ui	orchestration		Runs its object file code that calls 0x4c0eb0, CGxTexFlags::CGxTexFlags, 0x58aa30 and 2 more; not read here	inferred	none		
-0x4c0e00	155			ui	orchestration		Runs its object file code that calls EventRegisterEx; not read here	inferred	none		
-0x4c0ea0	3			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c0eb0	40			ui	orchestration		Runs its object file code that calls HandleClose, GxTexDestroy, 0x4c0ee0; not read here	inferred	none		
-0x4c0ee0	105			ui	orchestration		Runs its object file code that calls EventUnregister; not read here	inferred	none		
-0x4c0f50	760			ui	primitive		Runs its object file code that calls _atexit, OsGetAsyncTimeMs, 0x589f40 and 7 more; not read here	inferred	none		ui::glue_4c0_4c0f50_tick_band
+0x4c0d10	226	StartScreenFade		ui	orchestration		Replaces any fade with one that darkens the screen over the given seconds and then calls a callback	verified	one	ui/screenfade#starting-a-fade	
+0x4c0e00	155	RegisterFadeEvents		ui	orchestration		Registers the no-op handler 0x4c0ea0 for event categories 1, 8, 9, 10, 11, 14 and 12 at priority 8.0	verified	one	ui/screenfade#starting-a-fade	
+0x4c0ea0	3	FadeEventStub		ui	orchestration		Returns 0	verified	one	ui/screenfade#starting-a-fade	
+0x4c0eb0	40	StopScreenFade		ui	orchestration		Closes the fade layer, destroys its texture, unregisters its handlers and clears the active bytes	verified	one	ui/screenfade#ending-a-fade	
+0x4c0ee0	105	UnregisterFadeEvents		ui	orchestration		Unregisters the no-op handler from event categories 1, 8, 10, 9, 11, 14 and 12	verified	one	ui/screenfade#ending-a-fade	
+0x4c0f50	760	DrawScreenFade		ui	primitive		Draws the fade quad with an alpha from the elapsed time and runs the callback after the last frame	verified	one	ui/screenfade#drawing-a-fade	
 0x4c1250	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1260	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1270	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4c1280	64			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4c1280	64	ReverseScreenFade		ui	orchestration		Turns an active fade around to lighten the screen over the given seconds and then call a callback	verified	one	ui/screenfade#ending-a-fade	
 0x4c12c0	5	InitDouble4c12d0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c12d0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x4c12d0	15	InitDouble4c12d0		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x4c12e0	5	InitQuotient4c12f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4c12f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
