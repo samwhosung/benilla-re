@@ -122,7 +122,8 @@ Test: `lighting::rain_density_param_set_difftest`, `lighting::wl_update_dt_accum
 `0x6749e0(x)` stores x in `+0xd0`, picks `[0x80ffac]` or `[0x80ffa8]` by byte 0 (`0x6749ec`),
 stores K·P·x in `+0xcc` (`0x674a0d`) and P·`[0x80ffa4]` (1/6144, `0x674a13`) in `+0xb4`
 (`0x674a19`), which the close compares at `0x675a7f`. It takes
-x − 0.5 (`0x674a2f`), keeps it when above 0, doubles it, multiplies by K and Q and passes it to
+x − 0.5 (`0x674a2f`), keeps it when it is 0 or above, or NaN (`fcomp` of 0 against it, `test
+ah,0x41`, `jne`), else takes 0, doubles it, multiplies by K and Q and passes it to
 `0x67a980`, which stores the mist rate (`0x674a62`).
 The tests run `0x6756a0` from `0x675863` to `0x67588d` and from `0x675944` to `0x675976`.
 
@@ -227,15 +228,17 @@ Proof: one
 Test: `lighting::snow_alpha_pack_difftest`, `lighting::snow_basis_difftest`, `lighting::snow_density_param_set_difftest`, `lighting::snow_exp2_arg_difftest`, `lighting::snow_exp2_blend_difftest`, `lighting::snow_field_lerp_difftest`, `lighting::snow_final_recip_difftest`, `lighting::snow_flake_center_difftest`, `lighting::snow_flake_gate_difftest`, `lighting::snow_min_select_scale_difftest`, `lighting::snow_normalize_scale_difftest`, `lighting::snow_record_distance_difftest`, `lighting::snow_tri_vertices_difftest`, `lighting::snow_wind_deflect_difftest`, `lighting::snowfl_add_base_difftest`, `lighting::snowfl_add_offset_difftest`, `lighting::snowfl_angle1_difftest`, `lighting::snowfl_cam_global_difftest`, `lighting::snowfl_cell_delta_difftest`, `lighting::snowfl_drift_difftest`, `lighting::snowfl_drift_vel_difftest`, `lighting::snowfl_lifetime_difftest`, `lighting::snowfl_mtx_scale_difftest`, `lighting::snowfl_phase_difftest`, `lighting::snowfl_pos_seed_difftest`, `lighting::snowfl_sincos_difftest`, `lighting::snowfl_sky_rot_difftest`, `lighting::snowfl_sub_drift_difftest`, `lighting::snowfl_vel_drift_scale_difftest`, `lighting::snowfl_vel_flag_scale_difftest`, `lighting::snowfl_vel_z_scale_difftest`, `lighting::snowfl_world_scale_difftest`
 
 `0x6776c0` stores K·P·x in `+0xa0` and P/6144 in `+0x94`. The flake constants are read at
-`0x6777fe` to `0x6778ec`; the point size is the smaller of 24 and the device's limit. The snow
-update allocates 0x30030-byte packets of 6144 flakes of 0x20 bytes (`0x6784d2`) and closes at 6144
-(`0x6785c3`). It copies the
-camera eye (`0x6781c4`) and the manager's `+0x50` (`0x6781e6`) for `0x677750`, which adds 1.75
-times the latter and the eye (`0x677a61`, `0x677aaf`). The block from `0x6781fc` to `0x67846f`,
-run only with `+0x74` set, subtracts the box height times a blend from the eye's z (`0x67845f`);
-the blend, from the player's path through `0x5fefc0` with 200, 2350 and an exponential at rate 0.1,
-and the flake's landing are not read here.
-The tests run `0x677750` in 18 slices between `0x67775d` and `0x677d05`; `0x677ff0` in 8 slices between `0x6780d8` and `0x678572`; `0x678960` in 5 slices between `0x678adf` and `0x678fe2`.
+`0x6777fe` to `0x6778ec`; the point size is the smaller of 24 and the device's limit. The update
+allocates 0x30030-byte packets of 6144 flakes of 0x20 bytes (`0x6784d2`) and closes at 6144
+(`0x6785c3`). It copies the eye (`0x6781c4`) and the manager's `+0x50` (`0x6781e6`) for `0x677750`, which adds
+1.75 times the latter and the eye (`0x677a61`, `0x677aaf`). The block from `0x6781fc` to `0x67846f`,
+run with `+0x74` set, a player spline and its `+0x24` float b above 0,
+subtracts the box height times a blend t from the eye's z (`0x67845f`). `0x678270` takes u =
+clamp(((a − d/m) + 2350)/b, 0, 1), a the spline's `+0x20` float (`0x5fefe0`), d the eye's distance
+from the manager's `+0x68` point, m its `+0x7c` and d/m 0 for |m| < 0.001. `0x453420` gives the
+spline tangent at u, normalized and scaled by m, and w is its z; the block ends unless w < −10
+(`0x67839f`). t = clamp((e^(−w/10) − e)/(e^2.25 − e), 0, 1) with the exponentials of `0x454d40`
+(`0x678405`): 0 at w = −10 and 1 at −22.5. Landing is not read. The tests run slices of `0x677750`, `0x677ff0`, `0x678960`.
 
 ## Sand
 

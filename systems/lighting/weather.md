@@ -149,8 +149,10 @@ The tests run `0x67c150` in 6 slices between `0x67c37b` and `0x67c674`.
 Particles land on a cached height grid: 5 × 5 tiles around the camera's chunk, each tile one chunk
 of 32 × 32 cells, 1/0.96 yards a cell. A cell starts empty (FLT_MAX) and is filled on first use
 with the surface height within 200 below the point, or the point's height less 200 when nothing is
-hit. A point outside the grid has no height. When the camera changes chunk the grid recentres,
-keeping the tiles it still covers.
+hit. A point outside the grid has no height. A segment test walks the cells from its first point to
+its second and stops at the first cell whose height is above the segment there, returning that
+point with the cell's height. When the camera changes chunk the grid recentres, keeping the tiles it
+still covers.
 
 Addresses: `0x67c900`, `0x67c7b0`, `0x67c770`, `0x67c820`, `0x67ca00`, `0x67ca90`, `0x67cb60`, `0x67ce50`, `0x67cfe0`, `0x67c980`, `0x67c9b0`, `0x67d820`, `0x67c7f0`, `0x6b7070`, `0x810038`, `0x80ff70`, `0x80ff8c`, `0x80ff90`, `0x810008`
 Confidence: verified
@@ -161,7 +163,12 @@ The table `0x810038` holds `0x67cfe0` (bounds), `0x67ce50` (recentre), `0x67cb60
 `0x67ca00` (height), `0x67d820` and `0x67c980`. `0x67ca00` takes the chunk as floor(0.03·p) and
 `0x67c820` the cell as the low byte of bits(0.96·d + 512) >> 14. `0x67c7f0` calls `0x6b7070` with
 200 and falls back to z − 200 (`0x810008`). `0x67ce50` moves matching tiles, then refills the
-rest with `0x67c7b0`. How `0x67cb60` walks a segment is not read.
+rest with `0x67c7b0`. `0x67cb60(p0, p1, out)` (`ret 0xc`) copies p0 to out and takes both cells
+as floor(0.96·p) less the grid's `+0x20` and `+0x24`, the y product stored as f32 first. It makes
+n = max(|Δx|, |Δy|, 1) + 1 passes with Bresenham error steps, the longer axis (`0x7c13c0`) driving.
+A pass returns p0 and 0 when the cell is outside 0 to 159 on an axis; otherwise out = p0 + (p1 −
+p0)·i/n and `0x67ca90` gives the cell's height. A z below it (`fcomp`, `test ah,5`, `jnp`) makes it
+out.z and the result 1. At i = n out becomes p1; after n the result is 0.
 The tests run `0x67ce50` from `0x67ce56` to `0x67ce96`.
 
 ## Weather visibility
