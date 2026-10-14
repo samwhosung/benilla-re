@@ -529,6 +529,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x80c5bc	const float	s_stopNearSquared		collision	Holds 9.0, the squared distance under which a stop-form move flushes at its point	verified	one	collision/ride#monster-move-body
 0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
 0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
@@ -2443,6 +2444,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc89f40	uint32_t	s_traceCellCount		terrain	Counts the cells a segment walk listed	verified	one	terrain/trace#terrain-walk
 0xc89f44	uint8_t	s_terrainShaderFlagA		terrain	Holds 1 when a terrain shader set is in use, which selects the combined chunk texture	verified	one	terrain/chunk#mcnk-header
 0xc89f50	uint32_t[8192]	s_wdtTiles		terrain	Holds the WDT's 64x64 tile entries of two dwords: flags and the pending ADT read	verified	one	terrain/files#wdt
+0xc91f54	void *	s_entityFacetCallback		terrain	Holds the callback 0x483340 that resolves an entity record to a game object model and box	verified	one	terrain/entities#entity-gather
 0xc91f78	char[256]	s_mapDirectory		terrain	Holds the map's directory, World\Maps\ and the map name	verified	one	terrain/files#map-load
 0xc92078	CMapAreaLow *[4096]	s_lowDetailTiles		terrain	Holds each tile's low-detail tile from the WDL, or null	verified	one	terrain/files#wdl
 0xc9607c	uint8_t	s_groupLiquidShaderFlag		terrain	Holds a shader flag the map load sets	inferred	none	

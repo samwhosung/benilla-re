@@ -6511,7 +6511,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x482d40	45			ui	orchestration		Runs WorldFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
 0x482d70	292			ui	orchestration		Runs WorldFrame.cpp code that calls GetDeviceProjection, GetDeviceView, 0x482ea0 and 4 more; not read here	inferred	none		
 0x482ea0	1184			ui	primitive		Runs WorldFrame.cpp code that calls OsGetAsyncTimeMs, ClientServices::GetCurrent and 33 more; not read here	inferred	none		
-0x483340	235			ui	primitive		Runs WorldFrame.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x483340	235			ui	primitive		Resolves a GUID to a game object, asks its collision candidacy by class, and returns its model and box	verified	one	terrain/entities#entity-gather	
 0x483430	32			ui	primitive		Runs its object file code not read here	inferred	none		
 0x483450	1			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x483460	839	RenderWorldFrame		ui	primitive		Renders the world; calls 0x6ecb20 and then 0x6eca20	inferred	none	spell/visuals#frame-update	
