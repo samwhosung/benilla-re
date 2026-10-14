@@ -138,6 +138,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-font"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-gametime"
 version = "0.1.0"
 dependencies = [

@@ -18362,13 +18362,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c1f00	101			unassigned			Runs its object file code that calls 0x5c3930; not read here	inferred	none		
 0x5c1f70	213			unassigned			Runs its object file code that calls 0x5c3ca0, 0x5c3930; not read here	inferred	none		
 0x5c2050	32			unassigned			Runs its object file code that calls 0x5c6940; not read here	inferred	none		
-0x5c2070	273			unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight and 3 more; not read here	inferred	none		
+0x5c2070	273			unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight and 3 more; not read here	inferred	none		font::font_textblock_height_difftest
 0x5c2190	42	GxuFontGetMaxCharsWithinWidth	idb	unassigned			Runs its object file code that calls InternalGetMaxCharsWithinWidth; not read here	inferred	none		
-0x5c21c0	339			unassigned			Runs its object file code that calls GxuFontGetOneToOneHeight, __ftol, 0x5c7260; not read here	inferred	none		
-0x5c2320	259			unassigned			Runs its object file code that calls __alloca_probe, InternalGetMaxCharsWithinWidth; not read here	inferred	none		
-0x5c2430	263			unassigned			Runs its object file code that calls GxuFontGetOneToOneHeight, GxuDetermineQuotedCode, 0x5c7260; not read here	inferred	none		
-0x5c2540	67	GxuFontGetOneToOneHeight	idb	unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetPixelSize; not read here	inferred	none		
-0x5c2590	329			unassigned			Runs its object file code that calls GxuDetermineQuotedCode, SStrPrintf; not read here	inferred	none		
+0x5c21c0	339			unassigned			Runs its object file code that calls GxuFontGetOneToOneHeight, __ftol, 0x5c7260; not read here	inferred	none		font::font_height_fit_difftest
+0x5c2320	259			unassigned			Runs its object file code that calls __alloca_probe, InternalGetMaxCharsWithinWidth; not read here	inferred	none		font::font_width_fit_difftest
+0x5c2430	263			unassigned			Runs its object file code that calls GxuFontGetOneToOneHeight, GxuDetermineQuotedCode, 0x5c7260; not read here	inferred	none		font::line_break_enumerate_difftest
+0x5c2540	67	GxuFontGetOneToOneHeight	idb	unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetPixelSize; not read here	inferred	none		font::one_to_one_height_difftest
+0x5c2590	329			unassigned			Runs its object file code that calls GxuDetermineQuotedCode, SStrPrintf; not read here	inferred	none		font::strip_control_codes_difftest
 0x5c2700	66			unassigned	unreached		Runs its object file code that calls SStrPrintf; not read here	inferred	none		
 0x5c2750	26			unassigned			Runs its object file code that calls SErrSetLastError, 0x5ccb40; not read here	inferred	none		
 0x5c2770	19			unassigned			Runs its object file code that calls SErrSetLastError, 0x5ccb10; not read here	inferred	none		
@@ -18378,8 +18378,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c27d0	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x5c27e0	14			unassigned			Runs its object file code that calls 0x5cd420; not read here	inferred	none		
 0x5c27f0	28			unassigned			Runs its object file code that calls 0x5cd4d0; not read here	inferred	none		
-0x5c2810	737	GxuDetermineQuotedCode	idb	unassigned			Runs its object file code that calls sgetu8, _strtol; not read here	inferred	none		
-0x5c2b50	380			unassigned			Runs its object file code that calls _atexit, GxCapsWindowSize, __ftol and 1 more; not read here	inferred	none		
+0x5c2810	737	GxuDetermineQuotedCode	idb	unassigned			Runs its object file code that calls sgetu8, _strtol; not read here	inferred	none		font::decode_quoted_code_difftest
+0x5c2b50	380			unassigned			Runs its object file code that calls _atexit, GxCapsWindowSize, __ftol and 1 more; not read here	inferred	none		font::viewport_pixel_dims_difftest
 0x5c2cd0	1			unassigned			Runs its object file code not read here	inferred	none		
 0x5c2ce0	1886			unassigned			Runs its object file code that calls 0x5cdf40, OsGetAsyncTimeMs, 0x5c3440 and 17 more; not read here	inferred	none		
 0x5c3440	69			unassigned			Runs its object file code not read here	inferred	none		
@@ -18455,20 +18455,20 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c6860	34			unassigned			Runs its object file code not read here	inferred	none		
 0x5c6890	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x5c68a0	155			unassigned			Runs its object file code not read here	inferred	none		
-0x5c6940	523			unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight, 0x5c7010 and 8 more; not read here	inferred	none		
-0x5c6b70	217	CGxFont::GetCharAdvance	idb	unassigned			Runs its object file code that calls GxuDetermineQuotedCode, CGxFont::ComputeStepFixedWidth and 3 more; not read here	inferred	none		
-0x5c6c50	725	InternalGetMaxCharsWithinWidth	idb	unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight, 0x5c7010 and 9 more; not read here	inferred	none		
+0x5c6940	523			unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight, 0x5c7010 and 8 more; not read here	inferred	none		font::text_extent_measure_difftest
+0x5c6b70	217	CGxFont::GetCharAdvance	idb	unassigned			Runs its object file code that calls GxuDetermineQuotedCode, CGxFont::ComputeStepFixedWidth and 3 more; not read here	inferred	none		font::char_advance_difftest
+0x5c6c50	725	InternalGetMaxCharsWithinWidth	idb	unassigned			Runs its object file code that calls SErrSetLastError, GxuFontGetOneToOneHeight, 0x5c7010 and 9 more; not read here	inferred	none		font::wrap_max_chars_difftest
 0x5c6f40	19			font			Runs GxuFontUtil.cpp code that calls SMemAlloc; not read here	inferred	none		
 0x5c6f60	23			font			Runs GxuFontUtil.cpp code that calls SMemFree; not read here	inferred	none		
 0x5c6f80	32			font			Runs GxuFontUtil.cpp code that calls SMemReAlloc; not read here	inferred	none		
-0x5c6fa0	99	ScreenToPixelHeight	idb	font			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x5c7010	99			font			Runs its object file code that calls __ftol; not read here	inferred	none		
-0x5c7080	34			font			Runs its object file code not read here	inferred	none		
+0x5c6fa0	99	ScreenToPixelHeight	idb	font			Runs its object file code that calls __ftol; not read here	inferred	none		font::screen_to_pixel_height_difftest
+0x5c7010	99			font			Runs its object file code that calls __ftol; not read here	inferred	none		font::screen_to_pixel_width_difftest
+0x5c7080	34			font			Runs its object file code not read here	inferred	none		font::pixel_to_screen_height_difftest
 0x5c70b0	424			font			Runs its object file code that calls 0x58b060, GxCapsGet, floor and 2 more; not read here	inferred	none		
 0x5c7260	148			font			Runs its object file code that calls 0x5c7300, 0x5c7470; not read here	inferred	none		
-0x5c7300	343			font			Runs its object file code that calls GxuDetermineQuotedCode, CGxFont::NewCodeDesc and 6 more; not read here	inferred	none		
-0x5c7470	753			font			Runs its object file code that calls GxuFontGetOneToOneHeight, 0x5c7010, ceil and 10 more; not read here	inferred	none		
-0x5c7780	684			font			Runs its object file code that calls _iswspace; not read here	inferred	none		
+0x5c7300	343			font			Runs its object file code that calls GxuDetermineQuotedCode, CGxFont::NewCodeDesc and 6 more; not read here	inferred	none		font::measure_run_fixedwidth_difftest
+0x5c7470	753			font			Runs its object file code that calls GxuFontGetOneToOneHeight, 0x5c7010, ceil and 10 more; not read here	inferred	none		font::measure_run_proportional_difftest
+0x5c7780	684			font			Runs its object file code that calls _iswspace; not read here	inferred	none		font::line_break_class_ascii_difftest, font::line_break_class_cjk_difftest
 0x5c7d90	5			font			Runs its object file code not read here	inferred	none		
 0x5c7da0	15			font			Runs its object file code not read here	inferred	none		
 0x5c7db0	5			font			Runs its object file code not read here	inferred	none		
@@ -18483,9 +18483,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c7f20	5			font			Runs its object file code not read here	inferred	none		
 0x5c7f30	32			font			Runs GxuFontMiscClasses.cpp code that calls SMemFree; not read here	inferred	none		
 0x5c7f50	42			font			Runs GxuFontMiscClasses.cpp code that calls 0x5c7f30; not read here	inferred	none		
-0x5c7f80	134			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		
-0x5c8010	30			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		
-0x5c8030	29			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		
+0x5c7f80	134			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		font::glyph_uv_rect_difftest
+0x5c8010	30			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		font::cell_free_after_difftest
+0x5c8030	29			font			Runs GxuFontMiscClasses.cpp code not read here	inferred	none		font::cell_free_before_difftest
 0x5c8050	343			font			Runs GxuFontMiscClasses.cpp code that calls 0x5c8010, 0x5c96e0, 0x5c95b0 and 2 more; not read here	inferred	none		
 0x5c81b0	802			font			Runs GxuFontMiscClasses.cpp code that calls SMemAlloc, 0x5c7f00, 0x5c96a0 and 6 more; not read here	inferred	none		
 0x5c84e0	123			font			Runs GxuFontMiscClasses.cpp code that calls 0x5c8590, SMemFree, 0x5c95a0 and 2 more; not read here	inferred	none		
@@ -18493,7 +18493,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c8590	146			font			Runs GxuFontMiscClasses.cpp code that calls 0x5c93c0, 0x5260c0, SMemFree; not read here	inferred	none		
 0x5c8630	152			font			Runs GxuFontMiscClasses.cpp code that calls 0x5c8560, SMemAlloc; not read here	inferred	none		
 0x5c86d0	61			font			Runs its object file code that calls 0x5c8590, SMemFree; not read here	inferred	none		
-0x5c8710	1115			font			Runs its object file code that calls ScreenToPixelHeight, 0x5c7010, floor and 8 more; not read here	inferred	none		
+0x5c8710	1115			font			Runs its object file code that calls ScreenToPixelHeight, 0x5c7010, floor and 8 more; not read here	inferred	none		font::glyph_quad_emit_difftest
 0x5c8b70	707			font			Runs its object file code that calls GetDeviceProjection, GetDeviceView, 0x589f40 and 7 more; not read here	inferred	none		
 0x5c8e40	251			font			Runs its object file code that calls 0x5c9770, 0x5c9980, 0x5c9b70 and 1 more; not read here	inferred	none		
 0x5c8f40	152			font			Runs its object file code that calls GxBufUnlock, 0x58a010, 0x5c9330 and 4 more; not read here	inferred	none		
@@ -18528,13 +18528,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c9f40	11			font			Runs its object file code not read here	inferred	none		
 0x5c9f50	66			font			Runs its object file code that calls 0x5cdc00; not read here	inferred	none		
 0x5c9fa0	143			font			Runs its object file code that calls sgetu8; not read here	inferred	none		
-0x5ca030	300			font			Runs its object file code that calls 0x5d0370, 0x5caea0, ScreenToPixelHeight and 3 more; not read here	inferred	none		
+0x5ca030	300			font			Runs its object file code that calls 0x5d0370, 0x5caea0, ScreenToPixelHeight and 3 more; not read here	inferred	none		font::font_raster_metrics_difftest
 0x5ca160	105			font			Runs its object file code that calls 0x5d0370, GxuFontGetPixelSize, 0x7ce760 and 1 more; not read here	inferred	none		
 0x5ca1d0	109			font			Runs its object file code that calls SStrPrintf, 0x5ca740, 0x5d0390 and 2 more; not read here	inferred	none		
 0x5ca240	111			font			Runs its object file code that calls 0x5ca2b0; not read here	inferred	none		
-0x5ca2b0	29			font			Runs its object file code not read here	inferred	none		
-0x5ca2d0	467	CGxFont::ComputeStep	idb	font			Runs its object file code that calls 0x5d0370, 0x7ce960, 0x7ce830 and 6 more; not read here	inferred	none		
-0x5ca4b0	563	CGxFont::ComputeStepFixedWidth	idb	font			Runs its object file code that calls 0x5c96e0, 0x5cc080, 0x5cc290 and 3 more; not read here	inferred	none		
+0x5ca2b0	29			font			Runs its object file code not read here	inferred	none		font::glyph_metric_outline_bias_difftest
+0x5ca2d0	467	CGxFont::ComputeStep	idb	font			Runs its object file code that calls 0x5d0370, 0x7ce960, 0x7ce830 and 6 more; not read here	inferred	none		font::compute_step_difftest
+0x5ca4b0	563	CGxFont::ComputeStepFixedWidth	idb	font			Runs its object file code that calls 0x5c96e0, 0x5cc080, 0x5cc290 and 3 more; not read here	inferred	none		font::compute_step_fixedwidth_difftest
 0x5ca6f0	61			font			Runs its object file code that calls 0x5ca760, 0x5ca030, 0x5ccb80; not read here	inferred	none		
 0x5ca730	8			font			Runs its object file code not read here	inferred	none		
 0x5ca740	30			font			Runs its object file code that calls 0x5d0390; not read here	inferred	none		
@@ -18544,9 +18544,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5caa20	424			font			Runs its object file code that calls 0x5ca740, GxTexDestroy, 0x5cb620 and 15 more; not read here	inferred	none		
 0x5cabd0	691	CGxFont::NewCodeDesc	idb	font			Runs its object file code that calls 0x5c7f00, 0x5ca160, 0x5c7f20 and 13 more; not read here	inferred	none		
 0x5cae90	7	GxuFontGetPixelSize	idb	font			Runs its object file code not read here	inferred	none		
-0x5caea0	77			font			Runs its object file code that calls 0x5c7080; not read here	inferred	none		
+0x5caea0	77			font			Runs its object file code that calls 0x5c7080; not read here	inferred	none		font::min_metric_screen_height_difftest
 0x5caef0	393			font	unreached		Runs its object file code that calls 0x5d0370, SStrPrintf, 0x5cf640 and 1 more; not read here	inferred	none		
-0x5cb080	90			font			Runs its object file code that calls ceil, ScreenToPixelHeight, GxuFontGetPixelSize; not read here	inferred	none		
+0x5cb080	90			font			Runs its object file code that calls ceil, ScreenToPixelHeight, GxuFontGetPixelSize; not read here	inferred	none		font::glyph_width_scaled_difftest
 0x5cb0e0	135			font			Runs its object file code that calls 0x5c96e0, 0x5c96a0, SMemFree; not read here	inferred	none		
 0x5cb170	105			font			Runs its object file code that calls 0x5c7f20, 0x5c96a0, 0x5cb870 and 1 more; not read here	inferred	none		
 0x5cb1e0	226			font			Runs its object file code that calls SMemAlloc, 0x5c7f00; not read here	inferred	none		
@@ -18596,30 +18596,30 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ccb00	11			font			Runs its object file code not read here	inferred	none		
 0x5ccb10	36			font			Runs its object file code that calls 0x5cdf70; not read here	inferred	none		
 0x5ccb40	61			font			Runs its object file code that calls 0x5cdef0; not read here	inferred	none		
-0x5ccb80	82			font			Runs its object file code that calls GxuFontGetOneToOneHeight, 0x5cdef0; not read here	inferred	none		
-0x5ccbe0	1726			font			Runs its object file code that calls 0x5ce1c0, ScreenToPixelHeight, GxuFontGetPixelSize and 19 more; not read here	inferred	none		
+0x5ccb80	82			font			Runs its object file code that calls GxuFontGetOneToOneHeight, 0x5cdef0; not read here	inferred	none		font::resolve_clamp_size_difftest
+0x5ccbe0	1726			font			Runs its object file code that calls 0x5ce1c0, ScreenToPixelHeight, GxuFontGetPixelSize and 19 more; not read here	inferred	none		font::glyph_quad_build_difftest
 0x5cd2c0	1			font			Runs its object file code not read here	inferred	none		
 0x5cd2d0	64			font	unreached		Runs its object file code that calls GxuFontCreateString; not read here	inferred	none		
-0x5cd310	211			font			Runs its object file code that calls 0x5ce2b0; not read here	inferred	none		
+0x5cd310	211			font			Runs its object file code that calls 0x5ce2b0; not read here	inferred	none		font::hyperlink_region_rect_difftest
 0x5cd3f0	42			font			Runs its object file code that calls 0x5c9fa0, 0x5cdef0; not read here	inferred	none		
 0x5cd420	64			font			Runs its object file code that calls 0x5cdc20; not read here	inferred	none		
 0x5cd460	48			font			Runs its object file code not read here	inferred	none		
 0x5cd490	51			font			Runs its object file code not read here	inferred	none		
-0x5cd4d0	370			font			Runs its object file code that calls 0x5cdef0, 0x5cd6a0, __ftol and 2 more; not read here	inferred	none		
+0x5cd4d0	370			font			Runs its object file code that calls 0x5cdef0, 0x5cd6a0, __ftol and 2 more; not read here	inferred	none		font::selection_highlight_fade_difftest
 0x5cd650	64			font			Runs its object file code that calls 0x5cdef0; not read here	inferred	none		
 0x5cd690	3			font	unreached		Runs its object file code not read here	inferred	none		
 0x5cd6a0	40			font			Runs its object file code that calls 0x5cd3f0, 0x5cdc20; not read here	inferred	none		
-0x5cd6d0	344	CGxString::Initialize	idb	font			Runs GxuFontString.cpp code that calls SStrLen, SMemFree, SMemAlloc and 2 more; not read here	inferred	none		
+0x5cd6d0	344	CGxString::Initialize	idb	font			Runs GxuFontString.cpp code that calls SStrLen, SMemFree, SMemAlloc and 2 more; not read here	inferred	none		font::cgxstring_size_clamp_difftest
 0x5cd830	273	CGxString::GetNewString	idb	font			Runs GxuFontString.cpp code that calls SMemAlloc, 0x5cda00, 0x5c9700; not read here	inferred	none		
 0x5cd950	151	CGxString::Recycle	idb	font			Runs GxuFontString.cpp code not read here	inferred	none		
 0x5cd9f0	5			font			Runs GxuFontString.cpp code not read here	inferred	none		
 0x5cda00	209			font			Runs GxuFontString.cpp code not read here	inferred	none		
 0x5cdae0	274			font			Runs GxuFontString.cpp code that calls 0x5c84e0, SMemFree, 0x5ce150; not read here	inferred	none		
 0x5cdc00	31			font			Runs its object file code not read here	inferred	none		
-0x5cdc20	713			font			Runs its object file code that calls ScreenToPixelHeight, __ftol, GxuDetermineQuotedCode and 6 more; not read here	inferred	none		
+0x5cdc20	713			font			Runs its object file code that calls ScreenToPixelHeight, __ftol, GxuDetermineQuotedCode and 6 more; not read here	inferred	none		font::string_layout_lines_difftest
 0x5cdef0	78			font			Runs its object file code that calls 0x5c84e0; not read here	inferred	none		
 0x5cdf40	36			font			Runs its object file code not read here	inferred	none		
-0x5cdf70	274			font			Runs its object file code that calls __ftol, floor; not read here	inferred	none		
+0x5cdf70	274			font			Runs its object file code that calls __ftol, floor; not read here	inferred	none		font::anchor_justify_snap_difftest
 0x5ce090	45			font			Runs its object file code not read here	inferred	none		
 0x5ce0c0	81			font			Runs its object file code that calls 0x5c8710; not read here	inferred	none		
 0x5ce120	46			font	unreached		Runs its object file code that calls SStrLen, 0x5c2050; not read here	inferred	none		
@@ -18636,16 +18636,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ce390	144			font			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x5ce420	5			font			Runs its object file code not read here	inferred	none		
 0x5ce430	11			font			Runs its object file code not read here	inferred	none		
-0x5ce440	1217			font			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
-0x5ce910	286			font			Runs its object file code not read here	inferred	none		
-0x5cea30	2030			font			Runs its object file code that calls __alloca_probe; not read here	inferred	none		
-0x5cf220	237			font			Runs its object file code not read here	inferred	none		
+0x5ce440	1217			font			Runs its object file code that calls __alloca_probe; not read here	inferred	none		font::glyph_blit_outline_difftest
+0x5ce910	286			font			Runs its object file code not read here	inferred	none		font::glyph_blit_mono_difftest
+0x5cea30	2030			font			Runs its object file code that calls __alloca_probe; not read here	inferred	none		font::glyph_blit_aa_outline_difftest
+0x5cf220	237			font			Runs its object file code not read here	inferred	none		font::glyph_blit_argb4444_difftest
 0x5cf310	72			font			Runs its object file code that calls 0x5ce440, 0x5cea30, 0x5ce910 and 1 more; not read here	inferred	none		
-0x5cf360	361			font			Runs its object file code that calls 0x5cb0e0, 0x5cfd00, SMemReAlloc and 4 more; not read here	inferred	none		
+0x5cf360	361			font			Runs its object file code that calls 0x5cb0e0, 0x5cfd00, SMemReAlloc and 4 more; not read here	inferred	none		font::texcache_set_cellsize_difftest
 0x5cf4d0	68			font			Runs its object file code that calls CGxTexFlags::CGxTexFlags, 0x58aa30; not read here	inferred	none		
 0x5cf520	127			font			Runs its object file code that calls 0x5cf5f0; not read here	inferred	none		
 0x5cf5a0	74			font			Runs its object file code that calls 0x5c81b0; not read here	inferred	none		
-0x5cf5f0	65			font			Runs its object file code that calls 0x5cf310; not read here	inferred	none		
+0x5cf5f0	65			font			Runs its object file code that calls 0x5cf310; not read here	inferred	none		font::atlas_texel_addr_difftest
 0x5cf640	1494			font	unreached		Runs its object file code that calls GetDeviceView, GetDeviceProjection, 0x58b210 and 26 more; not read here	inferred	none		
 0x5cfc20	1			font	unreached		Runs its object file code not read here	inferred	none		
 0x5cfc30	1			font	unreached		Runs its object file code not read here	inferred	none		
@@ -18696,9 +18696,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d0ff0	264			unassigned			Runs its object file code that calls 0x5d0df0, 0x5d0660, SMemReAlloc and 3 more; not read here	inferred	none		
 0x5d1100	5			unassigned			Runs its object file code not read here	inferred	none		
 0x5d1110	11			unassigned			Runs its object file code not read here	inferred	none		
-0x5d1120	475			gx			Runs IGxuFontGlyph.cpp code that calls SErrSetLastError, 0x7ce960, 0x5d1300 and 2 more; not read here	inferred	none		
+0x5d1120	475			gx			Runs IGxuFontGlyph.cpp code that calls SErrSetLastError, 0x7ce960, 0x5d1300 and 2 more; not read here	inferred	none		font::rasterize_glyph_difftest
 0x5d1300	88			gx			Runs its object file code that calls 0x7ce960, 0x7cdb40, 0x7cec20; not read here	inferred	none		
-0x5d1360	111			gx			Runs its object file code not read here	inferred	none		
+0x5d1360	111			gx			Runs its object file code not read here	inferred	none		font::glyph_vplace_difftest
 0x5d13d0	5	InitFontGlyphTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d13e0; a static initializer	verified	one	net/layout#object-files	
 0x5d13e0	15	InitFontGlyphTwoPi		gx	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#object-files	
 0x5d13f0	5	InitFontGlyphInvTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d1400; a static initializer	verified	one	net/layout#object-files	
