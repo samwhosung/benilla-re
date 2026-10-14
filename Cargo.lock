@@ -181,6 +181,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-glue"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-gx"
 version = "0.1.0"
 dependencies = [
@@ -245,6 +252,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-net"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+ "num-bigint",
+]
+
+[[package]]
 name = "benilla-re-objectlayer"
 version = "0.1.0"
 dependencies = [
@@ -275,6 +290,13 @@ dependencies = [
 
 [[package]]
 name = "benilla-re-sound"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
+name = "benilla-re-spell"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",
