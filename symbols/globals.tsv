@@ -2843,7 +2843,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb731c8	uint32_t	s_skillExpandedMask		ui	Holds the mask of expanded skill categories, a clear bit is collapsed	verified	one	ui/skillverbs#order-and-visibility
 0xb731cc	uint32_t	s_skillHideUnlearned		ui	Holds the flag that hides unlearned skills, never set	verified	one	ui/skillverbs#order-and-visibility
 0xb731d0	int32_t	s_skillPointsStaged		ui	Holds the cost of the skill ups staged and not yet accepted	verified	one	ui/skillverbs#staged-skill-ups
-0xb73240	uint32_t			ui	Holds a dword that CGDuelInfo::OnDuelRequested, CGDuelInfo::OnDuelComplete read and write; not read here	inferred	none	
+0xb73240	uint64_t	s_duelFlagGuid		ui	Holds the GUID of the duel flag object of the current duel, or 0	verified	one	ui/duel#a-challenge
+0xb73248	uint32_t	s_duelCountdownSeconds		ui	Holds the seconds left of the duel countdown	verified	one	ui/duel#countdown-and-result
 0xb73254	uint32_t	s_reputationEntryCapacity		ui	Holds the capacity of the entry pointer array, 97 once allocated	verified	one	ui/reputation#display-entries-and-headers
 0xb73258	void **	s_reputationEntries		ui	Points to the array of 97 list entries of 20 bytes	verified	one	ui/reputation#display-entries-and-headers
 0xb73290	uint32_t[256]	s_reputationSlots		ui	Holds 64 reputation slots of 16 bytes: faction id, server flag byte, base standing and wire standing	verified	one	ui/reputation#reputation-slots

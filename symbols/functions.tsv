@@ -9508,24 +9508,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d46d0	19	InitSkillHalfOver10		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4d46f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d4700	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4710	103	CGDuelInfo::InitializeGame	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
-0x4d4780	60			ui	orchestration		Runs its object file code that calls ClientServices::ClearMessageHandler; not read here	inferred	none		
+0x4d4710	103	CGDuelInfo::InitializeGame	idb	ui	orchestration		Installs the six duel message handlers	verified	one	ui/duel#messages	
+0x4d4780	60	ClearDuelHandlers		ui	orchestration		Clears the six duel message handlers	verified	one	ui/duel#messages	
 0x4d47c0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d47d0	56			ui	orchestration		Runs its object file code that calls KillGameTimer; not read here	inferred	none		
-0x4d4810	28			ui	orchestration		Runs its object file code that calls CastSpellAsActivePlayer; not read here	inferred	none		
-0x4d4830	119			ui	orchestration		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutGuid, ClientServices::Send; not read here	inferred	none		
-0x4d48b0	119			ui	orchestration		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutGuid, ClientServices::Send; not read here	inferred	none		
-0x4d4930	145			ui	primitive		Runs its object file code that calls FrameScript_GetText, SStrPrintf, 0x49a870 and 1 more; not read here	inferred	none		
-0x4d49d0	203	CGDuelInfo::OnDuelRequested	idb	ui	orchestration		Runs DuelInfo.cpp code that calls CDataStore::GetGuid, ClntObjMgrGetActivePlayer and 7 more; not read here	inferred	none		
-0x4d4aa0	18	CGDuelInfo::OnDuelOutOfBounds	idb	ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
-0x4d4ac0	18	CGDuelInfo::OnDuelInBounds	idb	ui	orchestration		Runs its object file code that calls FrameScript_SignalEvent; not read here	inferred	none		
-0x4d4ae0	50	CGDuelInfo::OnDuelCountdown	idb	ui	primitive		Runs its object file code that calls CDataStore::GetUInt32, 0x4d4930; not read here	inferred	none		
-0x4d4b20	123	CGDuelInfo::OnDuelComplete	idb	ui	primitive		Runs its object file code that calls CDataStore::GetUInt8, CGGameUI::DisplayError and 2 more; not read here	inferred	none		
-0x4d4ba0	154	CGDuelInfo::OnDuelWinner	idb	ui	orchestration		Runs its object file code that calls CDataStore::GetUInt8, CDataStore::GetCString and 3 more; not read here	inferred	none		
-0x4d4c40	67	Script::StartDuel	idb	ui	primitive		Implements the Lua function StartDuel	inferred	none		
-0x4d4c90	71	Script::StartDuelUnit	idb	ui	primitive		Implements the Lua function StartDuelUnit	inferred	none		
-0x4d4ce0	8	Script::AcceptDuel	idb	ui	orchestration		Implements the Lua function AcceptDuel	inferred	none		
-0x4d4cf0	8	Script::CancelDuel	idb	ui	orchestration		Implements the Lua function CancelDuel	inferred	none		
+0x4d47d0	56	ClearDuelState		ui	orchestration		Clears the current duel and kills the countdown timer	verified	one	ui/duel#countdown-and-result	
+0x4d4810	28	CastDuelSpell		ui	orchestration		Casts the duel spell on a GUID for the active player	verified	one	ui/duel#starting-a-duel	
+0x4d4830	119	SendDuelAccepted		ui	orchestration		Sends CMSG_DUEL_ACCEPTED with the current duel flag GUID	verified	one	ui/duel#a-challenge	
+0x4d48b0	119	SendDuelCancelled		ui	orchestration		Sends CMSG_DUEL_CANCELLED with the current duel flag GUID	verified	one	ui/duel#a-challenge	
+0x4d4930	145	ProcessDuelCountdown		ui	primitive		Prints the remaining duel countdown seconds and re-arms the timer	verified	one	ui/duel#countdown-and-result	
+0x4d49d0	203	CGDuelInfo::OnDuelRequested	idb	ui	orchestration		Handles SMSG_DUEL_REQUESTED: accepts as challenger, cancels an ignored one or signals DUEL_REQUESTED	verified	one	ui/duel#a-challenge	
+0x4d4aa0	18	CGDuelInfo::OnDuelOutOfBounds	idb	ui	orchestration		Handles SMSG_DUEL_OUTOFBOUNDS by signalling DUEL_OUTOFBOUNDS	verified	one	ui/duel#messages	
+0x4d4ac0	18	CGDuelInfo::OnDuelInBounds	idb	ui	orchestration		Handles SMSG_DUEL_INBOUNDS by signalling DUEL_INBOUNDS	verified	one	ui/duel#messages	
+0x4d4ae0	50	CGDuelInfo::OnDuelCountdown	idb	ui	orchestration		Handles SMSG_DUEL_COUNTDOWN by storing the seconds and starting the countdown	verified	one	ui/duel#countdown-and-result	
+0x4d4b20	123	CGDuelInfo::OnDuelComplete	idb	ui	orchestration		Handles SMSG_DUEL_COMPLETE by ending the duel and signalling DUEL_FINISHED	verified	one	ui/duel#countdown-and-result	
+0x4d4ba0	154	CGDuelInfo::OnDuelWinner	idb	ui	orchestration		Handles SMSG_DUEL_WINNER by printing the winner line	verified	one	ui/duel#countdown-and-result	
+0x4d4c40	67	Script::StartDuel	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Challenges the player whose name matches to a duel	verified	one	ui/duel#starting-a-duel	
+0x4d4c90	71	Script::StartDuelUnit	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Challenges the unit of a token to a duel	verified	one	ui/duel#starting-a-duel	
+0x4d4ce0	8	Script::AcceptDuel	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the duel challenge	verified	one	ui/duel#a-challenge	
+0x4d4cf0	8	Script::CancelDuel	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Declines the duel challenge	verified	one	ui/duel#a-challenge	
 0x4d4d00	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4d4d20	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4d4d40	5			ui	orchestration		Runs its object file code not read here	inferred	none		
