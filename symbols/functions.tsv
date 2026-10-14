@@ -9415,97 +9415,97 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d2960	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4d2980	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d2990	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d29b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d29c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d29d0	10			ui	orchestration		Runs its object file code that calls 0x4d29e0; not read here	inferred	none		
-0x4d29e0	18			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d2a00	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4d2a10	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4d2a40	10			ui	orchestration		Runs its object file code that calls 0x4d2a50; not read here	inferred	none		
-0x4d2a50	18			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d2a70	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4d2a80	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4d2ab0	326			ui	primitive		Runs SkillInfo.cpp code that calls 0x4d4650, 0x4d4190, SMemAlloc and 2 more; not read here	inferred	none		
-0x4d2c00	132			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4d2c90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4d29b0	5	InitSkillInfinityThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d29c0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d29c0	11	InitSkillInfinity		ui	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	tradeskill/overview#static-objects	
+0x4d29d0	10	InitSkillRows		ui	orchestration	void __cdecl (void)	Runs 0x4d29e0 and registers the destructor 0x4d2a10	verified	one	tradeskill/overview#static-objects	
+0x4d29e0	18	InitSkillRowsBody		ui	orchestration	void __cdecl (void)	Empties the skill row array	verified	one	tradeskill/overview#static-objects	
+0x4d2a00	12	InitSkillRowsAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4d2a10 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4d2a10	47	InitSkillRowsDtor		ui	orchestration	void __cdecl (void)	Frees the skill row records and the array buffer	verified	one	tradeskill/overview#static-objects	
+0x4d2a40	10	InitSkillCategories		ui	orchestration	void __cdecl (void)	Runs 0x4d2a50 and registers the destructor 0x4d2a80	verified	one	tradeskill/overview#static-objects	
+0x4d2a50	18	InitSkillCategoriesBody		ui	orchestration	void __cdecl (void)	Empties the skill category array	verified	one	tradeskill/overview#static-objects	
+0x4d2a70	12	InitSkillCategoriesAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4d2a80 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4d2a80	47	InitSkillCategoriesDtor		ui	orchestration	void __cdecl (void)	Frees the skill category records and the array buffer	verified	one	tradeskill/overview#static-objects	
+0x4d2ab0	326	InitSkillLists		ui	primitive	void __cdecl (void)	Sizes the skill row and category arrays and fills them with empty records	verified	one	tradeskill/skills#list-state	
+0x4d2c00	132	FreeSkillLists		ui	orchestration	void __cdecl (void)	Frees every skill row and category record	verified	one	tradeskill/skills#list-state	
+0x4d2c90	5	RebuildSkillListThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d2cb0, which rebuilds the skill list	verified	one	tradeskill/skills#rebuilding-the-list	
 0x4d2ca0	1			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d2cb0	531			ui	primitive		Rebuilds the interface's skill list from the player's skills	inferred	none	objectlayer/playerfields#skill-changes	
-0x4d2ed0	295			ui	primitive		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4d3000	98	CompareSkillGroups		ui	orchestration		Orders skill group records by the order key of their category, equal keys answering 1	verified	one	ui/listorder#skill-groups	
-0x4d3070	332			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		ui::sortcmp_4d3070
-0x4d31c0	66			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d3210	85			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d3270	83			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d32d0	427			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 4 more; not read here	inferred	none		
-0x4d3480	292			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 4 more; not read here	inferred	none		
-0x4d35b0	46			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d35e0	44	Script::GetNumSkillLines	idb	ui	orchestration		Implements the Lua function GetNumSkillLines	inferred	none		
-0x4d3610	1177	Script::GetSkillLineInfo	idb	ui	primitive		Implements the Lua function GetSkillLineInfo	inferred	none		
-0x4d3ab0	191	Script::AbandonSkill	idb	ui	primitive		Implements the Lua function AbandonSkill	inferred	none		
-0x4d3b70	85	Script::CollapseSkillHeader	idb	ui	primitive		Implements the Lua function CollapseSkillHeader	inferred	none		
-0x4d3bd0	85	Script::ExpandSkillHeader	idb	ui	primitive		Implements the Lua function ExpandSkillHeader	inferred	none		
-0x4d3c30	64	Script::AddSkillUp	idb	ui	orchestration		Implements the Lua function AddSkillUp	inferred	none		
-0x4d3c70	64	Script::RemoveSkillUp	idb	ui	orchestration		Implements the Lua function RemoveSkillUp	inferred	none		
-0x4d3cb0	142	Script::GetAdjustedSkillPoints	idb	ui	primitive		Implements the Lua function GetAdjustedSkillPoints	inferred	none		
-0x4d3d40	232	Script::AcceptSkillUps	idb	ui	primitive		Implements the Lua function AcceptSkillUps	inferred	none		
-0x4d3e30	18	Script::CancelSkillUps	idb	ui	orchestration		Implements the Lua function CancelSkillUps	inferred	none		
-0x4d3e50	458	Script::BuySkillTier	idb	ui	primitive		Implements the Lua function BuySkillTier	inferred	none		
-0x4d4020	97	Script::SetSelectedSkill	idb	ui	primitive		Implements the Lua function SetSelectedSkill	inferred	none		
-0x4d4090	80	Script::GetSelectedSkill	idb	ui	primitive		Implements the Lua function GetSelectedSkill	inferred	none		
-0x4d40e0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4d4100	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
-0x4d4120	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4130	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4140	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4150	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4d2cb0	531	RebuildSkillList		ui	primitive	void __cdecl (void)	Rebuilds the skill rows and categories from the local player's 128 skill slots	verified	one	tradeskill/skills#rebuilding-the-list	
+0x4d2ed0	295	OrderSkillList		ui	primitive	void __cdecl (void)	Sets the visible flags and count from the collapse mask, sorts the categories and rows and raises SKILL_LINES_CHANGED	verified	one	tradeskill/skills#order-and-visibility	
+0x4d3000	98	CompareSkillCategories		ui	primitive	int __cdecl (void **a, void **b)	Orders skill categories by the sort field of their SkillLineCategory row	verified	one	tradeskill/skills#order-and-visibility	
+0x4d3070	332	CompareSkillRows		ui	primitive	int __cdecl (void **a, void **b)	Orders skill rows by visibility, category position, header first, trained first and name	verified	one	tradeskill/skills#order-and-visibility	
+0x4d31c0	66	IsSkillCategoryCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns the collapsed flag of the category of a skill row	verified	one	tradeskill/skills#skill-rows	
+0x4d3210	85	CollapseSkillCategory		ui	orchestration	void __fastcall (uint32_t row)	Clears the collapse bit of the category of a skill row and reorders the list	verified	one	tradeskill/skills#collapse-and-expand	
+0x4d3270	83	ExpandSkillCategory		ui	orchestration	void __fastcall (uint32_t row)	Sets the collapse bit of the category of a skill row and reorders the list	verified	one	tradeskill/skills#collapse-and-expand	
+0x4d32d0	427	AddSkillPoint		ui	primitive	void __fastcall (uint32_t row)	Adds one chosen skill point to a skill row when the maximum and the point budget allow	verified	one	tradeskill/skills#skill-points	
+0x4d3480	292	RemoveSkillPoint		ui	primitive	void __fastcall (uint32_t row)	Removes one chosen skill point from a skill row and refunds its cost	verified	one	tradeskill/skills#skill-points	
+0x4d35b0	46	ClearSkillPoints		ui	primitive	void __cdecl (void)	Zeroes the chosen points of every row and the total cost	verified	one	tradeskill/skills#skill-points	
+0x4d35e0	44	Script::GetNumSkillLines	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the visible count of the skill list	verified	one	tradeskill/skills#skill-rows	
+0x4d3610	1177	Script::GetSkillLineInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 12 or 13 values of a skill list row	verified	one	tradeskill/skills#skill-rows	
+0x4d3ab0	191	Script::AbandonSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the message that abandons the skill of a row	verified	one	tradeskill/skills#abandon	
+0x4d3b70	85	Script::CollapseSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the category of a skill row or every category	verified	one	tradeskill/skills#collapse-and-expand	
+0x4d3bd0	85	Script::ExpandSkillHeader	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the category of a skill row or every category	verified	one	tradeskill/skills#collapse-and-expand	
+0x4d3c30	64	Script::AddSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Adds a chosen skill point to the skill of a row	verified	one	tradeskill/skills#skill-points	
+0x4d3c70	64	Script::RemoveSkillUp	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Removes a chosen skill point from the skill of a row	verified	one	tradeskill/skills#skill-points	
+0x4d3cb0	142	Script::GetAdjustedSkillPoints	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill points not yet spent on chosen points	verified	one	tradeskill/skills#skill-points	
+0x4d3d40	232	Script::AcceptSkillUps	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the chosen skill points of the visible rows and clears them	verified	one	tradeskill/skills#skill-points	
+0x4d3e30	18	Script::CancelSkillUps	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Clears the chosen skill points	verified	one	tradeskill/skills#skill-points	
+0x4d3e50	458	Script::BuySkillTier	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends the message that buys the next step of the skill of a row	verified	one	tradeskill/skills#skill-points	
+0x4d4020	97	Script::SetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the skill line of the row at an index	verified	one	tradeskill/skills#selection	
+0x4d4090	80	Script::GetSelectedSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected skill among the visible rows	verified	one	tradeskill/skills#selection	
+0x4d40e0	30	RegisterSkillFunctions		ui	orchestration	void __cdecl (void)	Registers the 13 Lua functions of the skills tab	verified	one	tradeskill/overview#lua-function-tables	
+0x4d4100	24	UnregisterSkillFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 13 Lua functions of the skills tab	verified	one	tradeskill/overview#lua-function-tables	
+0x4d4120	5	InitSkillTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4130, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4130	15	InitSkillTwoPi		ui	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	tradeskill/overview#static-objects	
+0x4d4140	5	InitSkillInvTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4150, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4150	19	InitSkillInvTwoPi		ui	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	tradeskill/overview#static-objects	
 0x4d4170	23			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4d4190	133			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4d4220	133			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x4d42b0	10			ui	orchestration		Runs its object file code that calls 0x4d42c0; not read here	inferred	none		
-0x4d42c0	22			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d42e0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4d42f0	14			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4300	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4310	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4330	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4340	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4360	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4370	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4390	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d43a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d43c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d43d0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d43f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4400	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4420	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4430	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4450	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4460	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4480	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4490	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d44b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d44c0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d44e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d44f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4510	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4520	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4540	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4550	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4570	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4580	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4590	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d45a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d45c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d45d0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d45f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4600	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d4620	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d4630	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4d42b0	10	InitSkillUseCount		ui	orchestration	void __cdecl (void)	Runs 0x4d42c0 and registers the destructor 0x4d42f0	verified	one	tradeskill/overview#static-objects	
+0x4d42c0	22	InitSkillUseCountBody		ui	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	one	tradeskill/overview#static-objects	
+0x4d42e0	12	InitSkillUseCountAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4d42f0 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4d42f0	14	InitSkillUseCountDtor		ui	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	tradeskill/overview#static-objects	
+0x4d4300	5	InitSkillSquare10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4310, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4310	19	InitSkillSquare10		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4330	5	InitSkillSquare11p111111Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4340, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4340	19	InitSkillSquare11p111111		ui	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4360	5	InitSkillSquare5p5555553Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4370, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4370	19	InitSkillSquare5p5555553		ui	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4390	5	InitSkillSquare10BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d43a0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d43a0	19	InitSkillSquare10B		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d43c0	5	InitSkillSquare5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d43d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d43d0	19	InitSkillSquare5		ui	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d43f0	5	InitSkillSquare10CThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4400, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4400	19	InitSkillSquare10C		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4420	5	InitSkillSquare30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4430, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4430	19	InitSkillSquare30		ui	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4450	5	InitSkillSquare120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4460, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4460	19	InitSkillSquare120		ui	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4480	5	InitSkillSquare20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4490, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4490	19	InitSkillSquare20		ui	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d44b0	5	InitSkillSquare10DThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d44c0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d44c0	19	InitSkillSquare10D		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d44e0	5	InitSkillSquare0p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d44f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d44f0	19	InitSkillSquare0p5		ui	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4510	5	InitSkillSquare3Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4520, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4520	19	InitSkillSquare3		ui	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4540	5	InitSkillSquare100Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4550, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4550	19	InitSkillSquare100		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4570	5	InitSkillFiveThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4580, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4580	11	InitSkillFive		ui	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4590	5	InitSkillSquare50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d45a0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d45a0	19	InitSkillSquare50		ui	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d45c0	5	InitSkillSquare100BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d45d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d45d0	19	InitSkillSquare100B		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d45f0	5	InitSkillSquare40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4600, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4600	19	InitSkillSquare40		ui	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d4620	5	InitSkillSquare1p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d4630, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d4630	19	InitSkillSquare1p5		ui	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4d4650	56			ui	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4d4690	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d46a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4d46c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4d46d0	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4d4690	5	InitSkillSquare10EThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d46a0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d46a0	19	InitSkillSquare10E		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4d46c0	5	InitSkillHalfOver10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4d46d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4d46d0	19	InitSkillHalfOver10		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4d46f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d4700	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4d4710	103	CGDuelInfo::InitializeGame	idb	ui	orchestration		Runs its object file code that calls ClientServices::SetMessageHandler; not read here	inferred	none		
@@ -11094,104 +11094,104 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f5d90	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4f5db0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f5dc0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f5de0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f5df0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f5e00	10			ui	orchestration		Runs its object file code that calls 0x4f5e10; not read here	inferred	none		
-0x4f5e10	23			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f5e30	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4f5e40	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4f5e70	10			ui	orchestration		Runs its object file code that calls 0x4f5e80; not read here	inferred	none		
-0x4f5e80	23			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f5ea0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4f5eb0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x4f5de0	5	InitCraftInfinityThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f5df0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f5df0	11	InitCraftInfinity		ui	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	tradeskill/overview#static-objects	
+0x4f5e00	10	InitCraftRows		ui	orchestration	void __cdecl (void)	Runs 0x4f5e10 and registers the destructor 0x4f5e40	verified	one	tradeskill/overview#static-objects	
+0x4f5e10	23	InitCraftRowsBody		ui	orchestration	void __cdecl (void)	Empties the craft row array	verified	one	tradeskill/overview#static-objects	
+0x4f5e30	12	InitCraftRowsAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4f5e40 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4f5e40	47	InitCraftRowsDtor		ui	orchestration	void __cdecl (void)	Frees the craft row array buffer	verified	one	tradeskill/overview#static-objects	
+0x4f5e70	10	InitCraftHeaders		ui	orchestration	void __cdecl (void)	Runs 0x4f5e80 and registers the destructor 0x4f5eb0	verified	one	tradeskill/overview#static-objects	
+0x4f5e80	23	InitCraftHeadersBody		ui	orchestration	void __cdecl (void)	Empties the craft header array	verified	one	tradeskill/overview#static-objects	
+0x4f5ea0	12	InitCraftHeadersAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4f5eb0 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4f5eb0	47	InitCraftHeadersDtor		ui	orchestration	void __cdecl (void)	Frees the craft header array buffer	verified	one	tradeskill/overview#static-objects	
 0x4f5ee0	28			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f5f00	216			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4f5fe0	20			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4f5fe0	20	CloseCraftWindow		ui	orchestration	void __cdecl (void)	Sets the craft type to 0 and raises CRAFT_CLOSE	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f6000	69			ui	orchestration		Toggles the craft window: closes it with CRAFT_CLOSE for the current profession, else opens it with CRAFT_SHOW	inferred	none	spell/cast#cast-attempt-refusals	
-0x4f6050	38			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f6080	54			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4f6050	38	SelectCraftRow		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of a craft row as the selection, or 0 for a header or a bad index	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f6080	54	FindSelectedCraftRow		ui	primitive	int32_t __cdecl (void)	Returns the index of the row holding the selected craft spell, or -1	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f60c0	1381	BuildCraftList		ui	primitive	void __cdecl ()	Builds the craft window rows and headers from the craft list of the current type	verified	one	ui/craft#craft-lists	
 0x4f6630	353	SortCraftList		ui	primitive	void __cdecl ()	Recounts the craft headers and sorts them and the rows	verified	one	ui/craft#craft-order	ui::listorder_craft_beast_training_e2e
 0x4f67a0	381	CompareCraftRows		ui	primitive	int __cdecl (void **a, void **b)	Orders craft rows by group, bucket and name	verified	one	ui/craft#craft-order	ui::sortcmp_4f67a0
 0x4f6920	413	CompareCraftRowsTrain		ui	primitive	int __cdecl (void **a, void **b)	Orders beast training rows by group, bucket, name and spell level	verified	one	ui/craft#craft-order	ui::sortcmp_4f6920
 0x4f6ac0	105	CompareCraftGroups		ui	orchestration	int __cdecl (void **a, void **b)	Orders craft group headers by the skill line's display name	verified	one	ui/craft#craft-order	
-0x4f6b30	66			ui	primitive		Runs CraftInfo.cpp code not read here	inferred	none		
-0x4f6b80	88			ui	primitive		Runs CraftInfo.cpp code not read here	inferred	none		
-0x4f6be0	21			ui	orchestration		Runs CraftInfo.cpp code that calls 0x4f6630; not read here	inferred	none		
-0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration		Implements the Lua function CloseCraft	inferred	none		
-0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration		Implements the Lua function GetCraftName	inferred	none		
-0x4f6c90	23	Script::GetCraftButtonToken	idb	ui	orchestration		Implements the Lua function GetCraftButtonToken	inferred	none		
-0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive		Implements the Lua function GetCraftDisplaySkillLine	inferred	none		
-0x4f6e70	23	Script::GetNumCrafts	idb	ui	orchestration		Implements the Lua function GetNumCrafts	inferred	none		
-0x4f6e90	605	Script::GetCraftInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a craft row's name, rank, bucket, availability and costs	verified	one	ui/craft#craft-rows	
-0x4f70f0	64	Script::SelectCraft	idb	ui	orchestration		Implements the Lua function SelectCraft	inferred	none		
-0x4f7130	42	Script::GetCraftSelectionIndex	idb	ui	primitive		Implements the Lua function GetCraftSelectionIndex	inferred	none		
+0x4f6b30	66	FindCraftHeaderPosition		ui	primitive	int32_t __fastcall (uint32_t row)	Returns the header position of a craft header row, or -1 for any other row	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f6b80	88	IsCraftHeaderCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns 1 when the collapse bit of the craft header row is clear, else 0	verified	one	tradeskill/craft#craft-rows	
+0x4f6be0	21	SetCraftCollapseMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the craft collapse mask, recounts and sorts the list and raises CRAFT_UPDATE	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f6c00	8	Script::CloseCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the craft window and returns no value	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f6c10	114	Script::GetCraftName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name of the spell stored for the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
+0x4f6c90	23	Script::GetCraftButtonToken	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the button word of the open craft type	verified	one	tradeskill/craft#name-and-skill-line	
+0x4f6cb0	441	Script::GetCraftDisplaySkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the skill line of the enchanting list	verified	one	tradeskill/craft#name-and-skill-line	
+0x4f6e70	23	Script::GetNumCrafts	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the craft list	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f6e90	605	Script::GetCraftInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seven values of a craft row: name, rank text, difficulty, available count, cost and level	verified	one	tradeskill/craft#craft-rows	
+0x4f70f0	64	Script::SelectCraft	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the craft row at an index	verified	one	tradeskill/craft#open-close-and-selection	
+0x4f7130	42	Script::GetCraftSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected craft row plus 1	verified	one	tradeskill/craft#open-close-and-selection	
 0x4f7160	165	Script::GetCraftIcon	idb	ui	primitive		Implements the Lua function GetCraftIcon	inferred	none		
-0x4f7210	142	Script::GetCraftSkillLine	idb	ui	primitive		Implements the Lua function GetCraftSkillLine	inferred	none		
-0x4f72a0	371	Script::GetCraftItemLink	idb	ui	primitive		Implements the Lua function GetCraftItemLink	inferred	none		
-0x4f7420	169	Script::GetCraftNumReagents	idb	ui	primitive		Implements the Lua function GetCraftNumReagents	inferred	none		
-0x4f74d0	568	Script::GetCraftReagentInfo	idb	ui	primitive		Implements the Lua function GetCraftReagentInfo	inferred	none		
-0x4f7710	19			ui	orchestration		Runs its object file code that calls 0x4f60c0; not read here	inferred	none		
-0x4f7730	370	Script::GetCraftReagentItemLink	idb	ui	primitive		Implements the Lua function GetCraftReagentItemLink	inferred	none		
-0x4f78b0	474	Script::GetCraftSpellFocus	idb	ui	primitive		Implements the Lua function GetCraftSpellFocus	inferred	none		
-0x4f7a90	372	Script::GetCraftDescription	idb	ui	primitive		Implements the Lua function GetCraftDescription	inferred	none		
-0x4f7c10	124	Script::CollapseCraftSkillLine	idb	ui	primitive		Implements the Lua function CollapseCraftSkillLine	inferred	none		
-0x4f7c90	123	Script::ExpandCraftSkillLine	idb	ui	primitive		Implements the Lua function ExpandCraftSkillLine	inferred	none		
-0x4f7d10	93	Script::DoCraft	idb	ui	primitive		Implements the Lua function DoCraft	inferred	none		
-0x4f7d70	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x4f7da0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
-0x4f7dc0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7dd0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7de0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7df0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7e10	10			ui	orchestration		Runs its object file code that calls 0x4f7e20; not read here	inferred	none		
-0x4f7e20	22			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7e40	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4f7e50	14			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7e60	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7e70	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4f7210	142	Script::GetCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line name of the group of a craft row	verified	one	tradeskill/craft#name-and-skill-line	
+0x4f72a0	371	Script::GetCraftItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the enchant link or the created item link of a craft row	verified	one	tradeskill/craft#reagents-and-links	
+0x4f7420	169	Script::GetCraftNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a craft row	verified	one	tradeskill/craft#reagents-and-links	
+0x4f74d0	568	Script::GetCraftReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed count and owned count of a craft reagent	verified	one	tradeskill/craft#reagents-and-links	
+0x4f7710	19	OnCraftItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the craft list when an item record arrives	verified	one	tradeskill/craft#reagents-and-links	
+0x4f7730	370	Script::GetCraftReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of a reagent of a craft row	verified	one	tradeskill/craft#reagents-and-links	
+0x4f78b0	474	Script::GetCraftSpellFocus	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the spell focus and totem tools of a craft row as name and flag pairs	verified	one	tradeskill/craft#spell-focus-and-description	
+0x4f7a90	372	Script::GetCraftDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a craft row	verified	one	tradeskill/craft#spell-focus-and-description	
+0x4f7c10	124	Script::CollapseCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the group of a craft header row or every group	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f7c90	123	Script::ExpandCraftSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the group of a craft header row or every group	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f7d10	93	Script::DoCraft	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts the spell of a craft row once	verified	one	tradeskill/craft#collapse-and-cast	
+0x4f7d70	33	RegisterCraftFunctions		ui	orchestration	void __cdecl (void)	Registers the 19 Lua functions of the craft window	verified	one	tradeskill/overview#lua-function-tables	
+0x4f7da0	27	UnregisterCraftFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 19 Lua functions of the craft window	verified	one	tradeskill/overview#lua-function-tables	
+0x4f7dc0	5	InitCraftTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7dd0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7dd0	15	InitCraftTwoPi		ui	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	tradeskill/overview#static-objects	
+0x4f7de0	5	InitCraftInvTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7df0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7df0	19	InitCraftInvTwoPi		ui	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	tradeskill/overview#static-objects	
+0x4f7e10	10	InitCraftUseCount		ui	orchestration	void __cdecl (void)	Runs 0x4f7e20 and registers the destructor 0x4f7e50	verified	one	tradeskill/overview#static-objects	
+0x4f7e20	22	InitCraftUseCountBody		ui	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	one	tradeskill/overview#static-objects	
+0x4f7e40	12	InitCraftUseCountAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4f7e50 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4f7e50	14	InitCraftUseCountDtor		ui	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	tradeskill/overview#static-objects	
+0x4f7e60	5	InitCraftSquare10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7e70, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7e70	19	InitCraftSquare10		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4f7e90	226			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x4f7f80	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7f90	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7fb0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7fc0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f7fe0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f7ff0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8010	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8020	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8040	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8050	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8070	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8080	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f80a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f80b0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f80d0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f80e0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8100	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8110	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8130	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8140	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8160	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8170	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8190	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f81a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f81c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f81d0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f81e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f81f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8210	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8220	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8240	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8250	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8270	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8280	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4f7f80	5	InitCraftSquare11p111111Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7f90, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7f90	19	InitCraftSquare11p111111		ui	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f7fb0	5	InitCraftSquare5p5555553Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7fc0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7fc0	19	InitCraftSquare5p5555553		ui	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f7fe0	5	InitCraftSquare10BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f7ff0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f7ff0	19	InitCraftSquare10B		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8010	5	InitCraftSquare5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8020, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8020	19	InitCraftSquare5		ui	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8040	5	InitCraftSquare10CThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8050, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8050	19	InitCraftSquare10C		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8070	5	InitCraftSquare30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8080, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8080	19	InitCraftSquare30		ui	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f80a0	5	InitCraftSquare120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f80b0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f80b0	19	InitCraftSquare120		ui	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f80d0	5	InitCraftSquare20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f80e0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f80e0	19	InitCraftSquare20		ui	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8100	5	InitCraftSquare10DThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8110, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8110	19	InitCraftSquare10D		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8130	5	InitCraftSquare0p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8140, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8140	19	InitCraftSquare0p5		ui	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8160	5	InitCraftSquare3Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8170, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8170	19	InitCraftSquare3		ui	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8190	5	InitCraftSquare100Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f81a0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f81a0	19	InitCraftSquare100		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f81c0	5	InitCraftFiveThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f81d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f81d0	11	InitCraftFive		ui	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f81e0	5	InitCraftSquare50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f81f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f81f0	19	InitCraftSquare50		ui	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8210	5	InitCraftSquare100BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8220, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8220	19	InitCraftSquare100B		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8240	5	InitCraftSquare40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8250, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8250	19	InitCraftSquare40		ui	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8270	5	InitCraftSquare1p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8280, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8280	19	InitCraftSquare1p5		ui	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4f82a0	133			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x4f8330	31			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4f8350	133			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x4f83e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f83f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4f8410	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f8420	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4f83e0	5	InitCraftSquare10EThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f83f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f83f0	19	InitCraftSquare10E		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x4f8410	5	InitCraftHalfOver10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4f8420, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4f8420	19	InitCraftHalfOver10		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x4f8440	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f8450	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4f8460	34			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
@@ -11413,117 +11413,117 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fc600	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4fc620	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4fc630	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4fc650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc660	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc670	10			ui	orchestration		Runs its object file code that calls 0x4fc680; not read here	inferred	none		
-0x4fc680	23			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc6a0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4fc6b0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4fc6e0	10			ui	orchestration		Runs its object file code that calls 0x4fc6f0; not read here	inferred	none		
-0x4fc6f0	23			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc710	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4fc720	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4fc750	33			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc780	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc790	210			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4fc870	25			ui	orchestration		Runs its object file code that calls ClearTradeSkillRecast; not read here	inferred	none		
-0x4fc890	71			ui	primitive		Runs its object file code that calls 0x55c0c0; not read here	inferred	none		
-0x4fc8e0	41			ui	primitive		Runs its object file code that calls 0x4fca20; not read here	inferred	none		
-0x4fc910	150			ui	orchestration		Toggles the trade-skill window: TRADE_SKILL_CLOSE for the current skill, else TRADE_SKILL_SHOW when a count is nonzero	inferred	none	spell/cast#cast-attempt-refusals	
-0x4fc9b0	38			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4fc9e0	54			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4fca20	1884			ui	primitive		Rebuilds the trade skill window's list; not read here	inferred	none	objectlayer/playercombat#learning-a-spell	
-0x4fd180	510			ui	primitive		Runs its object file code that calls _qsort; not read here	inferred	none		
-0x4fd380	442			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		ui::sortcmp_4fd380
-0x4fd540	265			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		ui::sortcmp_4fd540
-0x4fd650	75			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4fd6a0	98			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4fd710	26			ui	orchestration		Runs its object file code that calls 0x4fd180; not read here	inferred	none		
-0x4fd730	26			ui	orchestration		Runs its object file code that calls 0x4fd180; not read here	inferred	none		
-0x4fd750	26			ui	orchestration		Runs its object file code that calls 0x4fd180; not read here	inferred	none		
-0x4fd770	22			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x4fc650	5	InitTradeSkillInfinityThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc660, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4fc660	11	InitTradeSkillInfinity		ui	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	tradeskill/overview#static-objects	
+0x4fc670	10	InitTradeSkillRows		ui	orchestration	void __cdecl (void)	Runs 0x4fc680 and registers the destructor 0x4fc6b0	verified	one	tradeskill/overview#static-objects	
+0x4fc680	23	InitTradeSkillRowsBody		ui	orchestration	void __cdecl (void)	Empties the recipe row array	verified	one	tradeskill/overview#static-objects	
+0x4fc6a0	12	InitTradeSkillRowsAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4fc6b0 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4fc6b0	47	InitTradeSkillRowsDtor		ui	orchestration	void __cdecl (void)	Frees the recipe row array buffer	verified	one	tradeskill/overview#static-objects	
+0x4fc6e0	10	InitTradeSkillHeaders		ui	orchestration	void __cdecl (void)	Runs 0x4fc6f0 and registers the destructor 0x4fc720	verified	one	tradeskill/overview#static-objects	
+0x4fc6f0	23	InitTradeSkillHeadersBody		ui	orchestration	void __cdecl (void)	Empties the header array	verified	one	tradeskill/overview#static-objects	
+0x4fc710	12	InitTradeSkillHeadersAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x4fc720 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x4fc720	47	InitTradeSkillHeadersDtor		ui	orchestration	void __cdecl (void)	Frees the header array buffer	verified	one	tradeskill/overview#static-objects	
+0x4fc750	33	ResetTradeSkillState		ui	orchestration	void __cdecl (void)	Zeroes the selection, the row and header counts, the last built line and the repeat spell	verified	one	tradeskill/recipes#list-state	
+0x4fc780	5	CancelTradeSkillRequestsThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4fc890, which cancels the pending item requests	verified	one	tradeskill/recipes#created-item	
+0x4fc790	210	FreeTradeSkillLists		ui	orchestration	void __cdecl (void)	Frees every row and header, both arrays and the open line, and zeroes the counts	verified	one	tradeskill/recipes#list-state	
+0x4fc870	25	CloseTradeSkillWindow		ui	orchestration	void __cdecl (void)	Stores 0 as the open line, clears the repeat latch and raises TRADE_SKILL_CLOSE	verified	one	tradeskill/recipes#open-close-and-selection	
+0x4fc890	71	CancelTradeSkillRequests		ui	primitive	void __cdecl (void)	Cancels the item request callback of every row by spell id and zeroes the pending count	verified	one	tradeskill/recipes#created-item	
+0x4fc8e0	41	OnPendingItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the list with flag 1 when the last pending item record arrives	verified	one	tradeskill/recipes#created-item	
+0x4fc910	150	ToggleTradeSkill		ui	orchestration	void __fastcall (uint32_t skillLine)	Closes the window of the open skill line, or opens one for another and raises TRADE_SKILL_SHOW	verified	one	tradeskill/recipes#open-close-and-selection	
+0x4fc9b0	38	SelectTradeSkillRow		ui	orchestration	void __fastcall (uint32_t index)	Stores the spell id of a row as the selection, or 0 for a header or a bad index	verified	one	tradeskill/recipes#open-close-and-selection	
+0x4fc9e0	54	FindSelectedTradeSkillRow		ui	primitive	int32_t __cdecl (void)	Returns the index of the row holding the selected spell id, or -1	verified	one	tradeskill/recipes#open-close-and-selection	
+0x4fca20	1884	BuildTradeSkillList		ui	primitive	void __fastcall (uint32_t rebuildHeaders)	Rebuilds the profession list from the local player and the open skill line	verified	one	tradeskill/recipes#building-the-list	
+0x4fd180	510	FilterAndSortTradeSkillList		ui	primitive	void __fastcall (uint32_t deriveFlags)	Sets the visible flags and the displayed count from the masks, then sorts the headers and the rows	verified	one	tradeskill/recipes#filter-and-visibility	
+0x4fd380	442	CompareTradeSkillRows		ui	primitive	int __cdecl (void **a, void **b)	Orders rows by shown group, group position, header first, difficulty, item level and name	verified	one	tradeskill/recipes#row-order	
+0x4fd540	265	CompareTradeSkillHeaders		ui	primitive	int __cdecl (void **a, void **b)	Orders headers by item class and the case-blind ItemSubClass name	verified	one	tradeskill/recipes#header-order	
+0x4fd650	75	FindTradeSkillHeaderPosition		ui	primitive	int32_t __fastcall (uint32_t row)	Returns the header position of a header row, or -1 for any other row	verified	one	tradeskill/recipes#filter-masks	
+0x4fd6a0	98	IsTradeSkillHeaderCollapsed		ui	primitive	uint32_t __fastcall (uint32_t row)	Returns 1 when the collapse bit of the header row is clear, else 0	verified	one	tradeskill/recipes#filter-masks	
+0x4fd710	26	SetTradeSkillSubclassMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the subclass filter mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
+0x4fd730	26	SetTradeSkillSlotMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the slot filter mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
+0x4fd750	26	SetTradeSkillCollapseMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the collapse mask, refilters the list and raises TRADE_SKILL_UPDATE	verified	one	tradeskill/recipes#filter-masks	
+0x4fd770	22	LatchTradeSkillRecast		ui	orchestration	void __fastcall (uint32_t spell, uint32_t count)	Stores the repeat spell and count and raises UPDATE_TRADESKILL_RECAST	verified	one	tradeskill/cast#repeat-latch	
 0x4fd790	30	ClearTradeSkillRecast		ui	orchestration	void __cdecl (void)	Clears the trade-skill repeat spell when one is set and fires UPDATE_TRADESKILL_RECAST	verified	one	spell/failures#reporter-inputs-and-first-effects	
-0x4fd7b0	60			ui	orchestration		Runs the post-cast step of a repeated trade skill cast for a spell id	inferred	none	spell/go#player-cast-tail	
-0x4fd7f0	8	Script::CloseTradeSkill	idb	ui	orchestration		Implements the Lua function CloseTradeSkill	inferred	none		
-0x4fd800	23	Script::GetNumTradeSkills	idb	ui	orchestration		Implements the Lua function GetNumTradeSkills	inferred	none		
-0x4fd820	400	Script::GetTradeSkillInfo	idb	ui	primitive		Implements the Lua function GetTradeSkillInfo	inferred	none		
-0x4fd9b0	64	Script::SelectTradeSkill	idb	ui	orchestration		Implements the Lua function SelectTradeSkill	inferred	none		
-0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive		Implements the Lua function GetTradeSkillSelectionIndex	inferred	none		
-0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive		Implements the Lua function GetTradeSkillCooldown	inferred	none		ui::glue4fd_4fda20_tradeskill_cooldown
+0x4fd7b0	60	OnTradeSkillCastDone		ui	orchestration	void __fastcall (uint32_t spell)	Counts down the repeat and casts the spell again, or clears the latch	verified	one	tradeskill/cast#repeat-latch	
+0x4fd7f0	8	Script::CloseTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the profession window and returns no value	verified	one	tradeskill/recipes#open-close-and-selection	
+0x4fd800	23	Script::GetNumTradeSkills	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the displayed count of the profession list	verified	one	tradeskill/bindings#list-and-selection	
+0x4fd820	400	Script::GetTradeSkillInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, difficulty word, available count and expanded flag of a profession row	verified	one	tradeskill/bindings#list-and-selection	
+0x4fd9b0	64	Script::SelectTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the profession row at an index	verified	one	tradeskill/bindings#list-and-selection	
+0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the selected profession row plus 1	verified	one	tradeskill/bindings#list-and-selection	
+0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds left of the cooldown of a profession recipe, or nil	verified	one	tradeskill/bindings#row-values	
 0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive		Implements the Lua function GetTradeSkillIcon	inferred	none		
 0x4fdc30	21	OnTradeSkillItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the trade skill window's list when an item template arrives	verified	one	ui/spellbook#recipe-icons	
-0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive		Implements the Lua function GetTradeSkillNumMade	inferred	none		
-0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive		Implements the Lua function GetTradeSkillLine	inferred	none		
-0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive		Implements the Lua function GetTradeSkillItemStats	inferred	none		ui::luabind_4fde_get_trade_skill_item_stats_quantize
-0x4ff3c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4ff3d0	15			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ff3e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4ff3f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ff410	246	Script::GetTradeSkillItemLink	idb	ui	primitive		Implements the Lua function GetTradeSkillItemLink	inferred	none		
-0x4ff510	169	Script::GetTradeSkillNumReagents	idb	ui	primitive		Implements the Lua function GetTradeSkillNumReagents	inferred	none		
-0x4ff5c0	568	Script::GetTradeSkillReagentInfo	idb	ui	primitive		Implements the Lua function GetTradeSkillReagentInfo	inferred	none		
-0x4ff800	370	Script::GetTradeSkillReagentItemLink	idb	ui	primitive		Implements the Lua function GetTradeSkillReagentItemLink	inferred	none		
-0x4ff980	470	Script::GetTradeSkillTools	idb	ui	primitive		Implements the Lua function GetTradeSkillTools	inferred	none		
-0x4ffb60	181	Script::GetTradeSkillSubClasses	idb	ui	primitive		Implements the Lua function GetTradeSkillSubClasses	inferred	none		
-0x4ffc20	79	Script::GetTradeSkillInvSlots	idb	ui	primitive		Implements the Lua function GetTradeSkillInvSlots	inferred	none		
-0x4ffc70	275	Script::SetTradeSkillSubClassFilter	idb	ui	primitive		Implements the Lua function SetTradeSkillSubClassFilter	inferred	none		
-0x4ffd90	195	Script::GetTradeSkillSubClassFilter	idb	ui	primitive		Implements the Lua function GetTradeSkillSubClassFilter	inferred	none		
-0x4ffe60	356	Script::SetTradeSkillInvSlotFilter	idb	ui	primitive		Implements the Lua function SetTradeSkillInvSlotFilter	inferred	none		
-0x4fffd0	238	Script::GetTradeSkillInvSlotFilter	idb	ui	primitive		Implements the Lua function GetTradeSkillInvSlotFilter	inferred	none		
-0x5000c0	124	Script::CollapseTradeSkillSubClass	idb	ui	primitive		Implements the Lua function CollapseTradeSkillSubClass	inferred	none		
-0x500140	123	Script::ExpandTradeSkillSubClass	idb	ui	primitive		Implements the Lua function ExpandTradeSkillSubClass	inferred	none		
-0x5001c0	112	Script::GetFirstTradeSkill	idb	ui	primitive		Implements the Lua function GetFirstTradeSkill	inferred	none		
-0x500230	71	Script::GetTradeskillRepeatCount	idb	ui	orchestration		Implements the Lua function GetTradeskillRepeatCount	inferred	none		
-0x500280	159	Script::DoTradeSkill	idb	ui	primitive		Implements the Lua function DoTradeSkill	inferred	none		
-0x500320	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
-0x500350	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
-0x500370	10			ui	orchestration		Runs its object file code that calls 0x500380; not read here	inferred	none		
-0x500380	22			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5003a0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x5003b0	14			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5003c0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5003d0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5003f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500400	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500420	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500430	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500450	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500460	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500480	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500490	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5004b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5004c0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5004e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5004f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500510	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500520	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500540	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500550	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500570	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500580	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5005a0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5005b0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5005d0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5005e0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500600	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500610	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500630	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500640	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500660	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500680	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500690	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5006b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5006c0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5006e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5006f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x500710	226			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x500800	226			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x5008f0	133			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x500980	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x500990	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x5009b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5009c0	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the least and greatest number of items a profession recipe makes	verified	one	tradeskill/bindings#row-values	
+0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, rank and maximum rank of the open skill line	verified	one	tradeskill/bindings#row-values	
+0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the tooltip lines of the item a profession recipe creates	verified	one	tradeskill/itemstats#entry-and-gates	
+0x4ff3c0	5	InitTradeSkillTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ff3d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4ff3d0	15	InitTradeSkillTwoPi		ui	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	tradeskill/overview#static-objects	
+0x4ff3e0	5	InitTradeSkillInvTwoPiThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x4ff3f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x4ff3f0	19	InitTradeSkillInvTwoPi		ui	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	tradeskill/overview#static-objects	
+0x4ff410	246	Script::GetTradeSkillItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of the item a profession recipe creates	verified	one	tradeskill/bindings#item-links	
+0x4ff510	169	Script::GetTradeSkillNumReagents	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of reagents of a profession recipe	verified	one	tradeskill/bindings#reagents	
+0x4ff5c0	568	Script::GetTradeSkillReagentInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, needed count and owned count of a recipe reagent	verified	one	tradeskill/bindings#reagents	
+0x4ff800	370	Script::GetTradeSkillReagentItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the link of a reagent of a profession recipe	verified	one	tradeskill/bindings#item-links	
+0x4ff980	470	Script::GetTradeSkillTools	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the spell focus and totem tools of a profession recipe as name and flag pairs	verified	one	tradeskill/bindings#tools	
+0x4ffb60	181	Script::GetTradeSkillSubClasses	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the subclass name of every profession header	verified	one	tradeskill/bindings#subclasses-and-slots	
+0x4ffc20	79	Script::GetTradeSkillInvSlots	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Pushes the slot name of every inventory slot bit of the profession list	verified	one	tradeskill/bindings#subclasses-and-slots	
+0x4ffc70	275	Script::SetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the subclass filter of a profession header	verified	one	tradeskill/bindings#filter-functions	
+0x4ffd90	195	Script::GetTradeSkillSubClassFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether the subclass filter shows a profession header	verified	one	tradeskill/bindings#filter-functions	
+0x4ffe60	356	Script::SetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets the inventory slot filter of a profession slot	verified	one	tradeskill/bindings#filter-functions	
+0x4fffd0	238	Script::GetTradeSkillInvSlotFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether the slot filter shows a profession slot	verified	one	tradeskill/bindings#filter-functions	
+0x5000c0	124	Script::CollapseTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses the group of a profession header row or every group	verified	one	tradeskill/bindings#collapse-functions	
+0x500140	123	Script::ExpandTradeSkillSubClass	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands the group of a profession header row or every group	verified	one	tradeskill/bindings#collapse-functions	
+0x5001c0	112	Script::GetFirstTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the position of the first displayed profession recipe, or 0	verified	one	tradeskill/bindings#list-and-selection	
+0x500230	71	Script::GetTradeskillRepeatCount	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the remaining repeat count when the selected spell is latched, else 1	verified	one	tradeskill/cast#repeat-latch	
+0x500280	159	Script::DoTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Casts a profession recipe, latching a repeat count above 1	verified	one	tradeskill/cast#dotradeskill	
+0x500320	33	RegisterTradeSkillFunctions		ui	orchestration	void __cdecl (void)	Registers the 26 Lua functions of the profession window	verified	one	tradeskill/overview#lua-function-tables	
+0x500350	27	UnregisterTradeSkillFunctions		ui	orchestration	void __cdecl (void)	Unregisters the 26 Lua functions of the profession window	verified	one	tradeskill/overview#lua-function-tables	
+0x500370	10	InitTradeSkillUseCount		ui	orchestration	void __cdecl (void)	Runs 0x500380 and registers the destructor 0x5003b0	verified	one	tradeskill/overview#static-objects	
+0x500380	22	InitTradeSkillUseCountBody		ui	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	one	tradeskill/overview#static-objects	
+0x5003a0	12	InitTradeSkillUseCountAtExit		ui	orchestration	void __cdecl (void)	Registers the destructor 0x5003b0 with _atexit	verified	one	tradeskill/overview#static-objects	
+0x5003b0	14	InitTradeSkillUseCountDtor		ui	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	tradeskill/overview#static-objects	
+0x5003c0	5	InitTradeSkillSquare10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5003d0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5003d0	19	InitTradeSkillSquare10		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5003f0	5	InitTradeSkillSquare11p111111Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500400, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500400	19	InitTradeSkillSquare11p111111		ui	primitive	void __cdecl (void)	Stores 11.111111 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500420	5	InitTradeSkillSquare5p5555553Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500430, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500430	19	InitTradeSkillSquare5p5555553		ui	primitive	void __cdecl (void)	Stores 5.5555553 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500450	5	InitTradeSkillSquare10BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500460, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500460	19	InitTradeSkillSquare10B		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500480	5	InitTradeSkillSquare5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500490, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500490	19	InitTradeSkillSquare5		ui	primitive	void __cdecl (void)	Stores 5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5004b0	5	InitTradeSkillSquare10CThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5004c0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5004c0	19	InitTradeSkillSquare10C		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5004e0	5	InitTradeSkillSquare30Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5004f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5004f0	19	InitTradeSkillSquare30		ui	primitive	void __cdecl (void)	Stores 30 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500510	5	InitTradeSkillSquare120Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500520, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500520	19	InitTradeSkillSquare120		ui	primitive	void __cdecl (void)	Stores 120 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500540	5	InitTradeSkillSquare20Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500550, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500550	19	InitTradeSkillSquare20		ui	primitive	void __cdecl (void)	Stores 20 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500570	5	InitTradeSkillSquare10DThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500580, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500580	19	InitTradeSkillSquare10D		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5005a0	5	InitTradeSkillSquare0p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5005b0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5005b0	19	InitTradeSkillSquare0p5		ui	primitive	void __cdecl (void)	Stores 0.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5005d0	5	InitTradeSkillSquare3Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5005e0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5005e0	19	InitTradeSkillSquare3		ui	primitive	void __cdecl (void)	Stores 3 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500600	5	InitTradeSkillSquare100Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500610, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500610	19	InitTradeSkillSquare100		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500630	5	InitTradeSkillFiveThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500640, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500640	11	InitTradeSkillFive		ui	orchestration	void __cdecl (void)	Stores the float 5.0 in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500650	5	InitTradeSkillSquare50Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500660, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500660	19	InitTradeSkillSquare50		ui	primitive	void __cdecl (void)	Stores 50 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500680	5	InitTradeSkillSquare100BThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500690, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500690	19	InitTradeSkillSquare100B		ui	primitive	void __cdecl (void)	Stores 100 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5006b0	5	InitTradeSkillSquare40Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5006c0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5006c0	19	InitTradeSkillSquare40		ui	primitive	void __cdecl (void)	Stores 40 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5006e0	5	InitTradeSkillSquare1p5Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5006f0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5006f0	19	InitTradeSkillSquare1p5		ui	primitive	void __cdecl (void)	Stores 1.5 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x500710	226	TradeSkillRowsGrow		ui	primitive	void __thiscall (void *array, uint32_t extra, uint32_t round)	Grows the recipe row pointer array by a count, rounded to its granularity	verified	one	tradeskill/recipes#records	
+0x500800	226	TradeSkillHeadersGrow		ui	primitive	void __thiscall (void *array, uint32_t extra, uint32_t round)	Grows the header pointer array by a count, rounded to its granularity	verified	one	tradeskill/recipes#records	
+0x5008f0	133	TradeSkillRowsSetCapacity		ui	primitive	void __thiscall (void *array, uint32_t capacity)	Reallocates the recipe row pointer array to a capacity, copying the pointers that fit	verified	one	tradeskill/recipes#records	
+0x500980	5	InitTradeSkillSquare10EThunk		ui	orchestration	void __cdecl (void)	Jumps to 0x500990, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x500990	19	InitTradeSkillSquare10E		ui	primitive	void __cdecl (void)	Stores 10 squared as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
+0x5009b0	5	InitTradeSkillHalfOver10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x5009c0, a static initializer	verified	one	tradeskill/overview#static-objects	
+0x5009c0	19	InitTradeSkillHalfOver10		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	tradeskill/overview#static-objects	
 0x5009e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5009f0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x500a00	5			ui	orchestration		Runs its object file code not read here	inferred	none		
