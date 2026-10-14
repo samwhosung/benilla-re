@@ -86,17 +86,17 @@ Test: none
 
 ## Turning with the mouse
 
-`0x50fee0(dx, dy)` turns the camera by a mouse step. It sets mode bit 6. Each pointer delta is divided by 0.8 and 0.6 (`0x41ade0`); the
-yaw step is `cameraYawMoveSpeed` in radians times `dx` times 0.00125 and the pitch step is `cameraPitchMoveSpeed` in radians times `dy` times
+`0x50fee0(dx, dy)` turns the camera by a mouse step. It sets mode bit 6. The event's offsets arrive multiplied by the aspect constants `K1` and `K2` (`0x766fb1`; `input#click-versus-drag`), and `0x41ade0` divides them out, leaving the pixel offsets. The
+yaw step is `cameraYawMoveSpeed` in radians times `dx` times 0.00125 (1/800) and the pitch step is `cameraPitchMoveSpeed` in radians times `dy` times
 1/600. The yaw is shifted by the negative of its step, the pitch by its step; `mouseInvertYaw` and `mouseInvertPitch`, when nonzero, flip the sign of the matching step.
-A positive `dy` therefore looks down. The caller is the input control's motion handler `0x514400`, which also commits the facing (`uicamera/effects#committing-the-facing`).
+A positive pitch step looks down (`uicamera/view#pitch-units-and-sign`). The caller is the input control's motion handler `0x514400`, which also commits the facing (`uicamera/effects#committing-the-facing`).
 
-Addresses: `0x50fee0`, `0x5102b0`, `0x510120`, `0x50d720`, `0x41ade0`, `0x514400`
+Addresses: `0x50fee0`, `0x5102b0`, `0x510120`, `0x50d720`, `0x41ade0`, `0x41ad80`, `0x766f70`, `0x514400`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x50fef0` to `0x50ff1b` read the speeds from `0xbe0f78` and `0xbe1094`. `0x50ff2d` converts the deltas (divisors 0x832a44 and 0x832a48). `0x50ff49` multiplies `dx` by 0x808ac4 and `0x50ff67` `dy` by 0x808ac0, after the degree to radian factor 0x7ffaac. `0x50ff4f` and `0x50ff74` set the pitch sign from `mouseInvertPitch` (`0xbe1040`), `0x50ff86` and `0x50ff8f` the yaw sign from `mouseInvertYaw` (`0xbe1084`). `0x5100ef` to `0x5100fd` shift the yaw with `0x5102b0` and `0x510102` calls `0x50d720`, which clamps the pitch to plus or minus 89 degrees and wraps the yaw and flip bias with `0x455b30`.
+`0x50fef0` to `0x50ff1b` read the speeds from `0xbe0f78` and `0xbe1094`. `0x50ff2d` calls `0x41ade0`, which divides by the words 0x832a44 and 0x832a48 that `0x41ad80` multiplied by. `0x50ff49` multiplies `dx` by 0x808ac4 and `0x50ff67` `dy` by 0x808ac0, after the degree to radian factor 0x7ffaac. `0x50ff4f` and `0x50ff74` set the pitch sign from `mouseInvertPitch` (`0xbe1040`), `0x50ff86` and `0x50ff8f` the yaw sign from `mouseInvertYaw` (`0xbe1084`). `0x5100ef` to `0x5100fd` shift the yaw with `0x5102b0` and `0x510102` calls `0x50d720`, which clamps the pitch to plus or minus 89 degrees and wraps the yaw and flip bias with `0x455b30`.
 
 ## Looking past level
 

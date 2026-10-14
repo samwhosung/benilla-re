@@ -110,6 +110,18 @@ Test: none
 the start time `+0x238` and `0x511a01` scales by 0.001. The phase is the product `r * t`, so a speed change jumps the phase. `0x511a56` doubles the rate for the vertical term.
 The bob starts and stops on the edge of the movement commands: `uicamera/transitions#bob-decay`.
 
+## Starting and stopping the bob
+
+The input control sets the camera's bob bit when a movement command becomes active and clears it when none is, whatever the unit's speed. The commands that count are move forward, move backward, strafe left and right, auto-run, the bits 0x100000 and 0x400000, or the
+primary mouse command (bit 0) held with either the secondary mouse command (bit 1) or a turn key (0x300). `0x511170` acts only on an edge; it starts the bob, stamps the time and clears the bit and arms the decay on the opposite edge. The bob is therefore armed even with `cameraBobbing` off; the CVar only gates what `0x5105e0` lets through.
+
+Addresses: `0x514840`, `0x514b70`, `0x511170`, `0x5110f0`, `0x511110`, `0x5105e0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x514840` (press) and `0x514b70` (release) both end in the same test on the new command word at `+0x04`: `0x5149ad` and `0x514c90` test the mask 0x5010f0 (0x10, 0x20, 0x40, 0x80, 0x1000, 0x100000 and 0x400000); `0x5149b6` to `0x5149c3` and `0x514c97` to `0x514ca6` test bit 0 with bit 1 or 0x300. `0x5149d5` and `0x514cc1` call `0x511170` with the result. `0x511170` calls `0x5110f0` on a rising flag and `0x511110` on a falling one and does nothing otherwise.
+
 ## Probing the slope
 
 Every 100 milliseconds `0x50d900(unit, now)` measures the ground ahead of a unit. With the tilt off (`0x5105a0` false) it stores 0 at `+0xa0`. Otherwise it casts a ray 10/3 yards forward along the facing from 5/3 yards above the feet,
