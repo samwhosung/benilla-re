@@ -9718,43 +9718,43 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d8c90	21	SetTrainerStateFilter		ui	orchestration	void __fastcall (uint32_t mask)	Stores the state filter, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
 0x4d8cb0	21	SetTrainerSkillLineFilter		ui	orchestration	void __fastcall (uint32_t mask)	Stores the skill-line filter, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
 0x4d8cd0	21	SetTrainerExpandedMask		ui	orchestration	void __fastcall (uint32_t mask)	Stores the expanded mask, runs the finalizer and signals TRAINER_UPDATE	verified	one	ui/trainerlist#filters	
-0x4d8cf0	90	Script::OpenTrainer	idb	ui	orchestration		Implements the Lua function OpenTrainer	inferred	none		
-0x4d8d50	52	Script::CloseTrainer	idb	ui	orchestration		Implements the Lua function CloseTrainer	inferred	none		
+0x4d8cf0	90	Script::OpenTrainer	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Asks the server for the trainer list with the player's own GUID	verified	one	ui/trainerverbs#opening-and-the-type-tests	
+0x4d8d50	52	Script::CloseTrainer	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the trainer window	verified	one	ui/trainerverbs#opening-and-the-type-tests	
 0x4d8d90	44	Script::GetNumTrainerServices	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the visible trainer row count	verified	one	ui/trainer#index-law	
 0x4d8dc0	149	Script::GetTrainerServiceInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a row's name, rank, state name and expanded flag	verified	one	ui/trainer#index-law	
 0x4d8e60	64	Script::SelectTrainerService	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Selects the trainer service at an index and returns nothing	verified	one	ui/trainer#selection	
-0x4d8ea0	38	Script::IsTradeskillTrainer	idb	ui	orchestration		Implements the Lua function IsTradeskillTrainer	inferred	none		
-0x4d8ed0	51	Script::IsTalentTrainer	idb	ui	primitive		Implements the Lua function IsTalentTrainer	inferred	none		
+0x4d8ea0	38	Script::IsTradeskillTrainer	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the open trainer is a tradeskill trainer, else nil	verified	one	ui/trainerverbs#opening-and-the-type-tests	
+0x4d8ed0	51	Script::IsTalentTrainer	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when no trainer is open or the type is 1, else nil	verified	one	ui/trainerverbs#opening-and-the-type-tests	
 0x4d8f10	42	Script::GetTrainerSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based array position of the selected service, 0 for none	verified	one	ui/trainer#selection	
-0x4d8f40	16	Script::GetTrainerGreetingText	idb	ui	orchestration		Implements the Lua function GetTrainerGreetingText	inferred	none		
-0x4d8f50	481	Script::GetTrainerServiceIcon	idb	ui	primitive		Implements the Lua function GetTrainerServiceIcon	inferred	none		
+0x4d8f40	16	Script::GetTrainerGreetingText	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the trainer greeting text	verified	one	ui/trainerverbs#opening-and-the-type-tests	
+0x4d8f50	481	Script::GetTrainerServiceIcon	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the icon path of a trainer service	verified	one	ui/trainerverbs#icon	
 0x4d9140	19	OnTrainerItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Refreshes the trainer list when an item template arrives	verified	one	ui/spellbook#trainer-icons	
-0x4d9160	399	Script::GetTrainerServiceSkillLine	idb	ui	primitive		Implements the Lua function GetTrainerServiceSkillLine	inferred	none		
-0x4d92f0	170	Script::GetTrainerServiceCost	idb	ui	primitive		Implements the Lua function GetTrainerServiceCost	inferred	none		
-0x4d93a0	111	Script::GetTrainerServiceLevelReq	idb	ui	primitive		Implements the Lua function GetTrainerServiceLevelReq	inferred	none		
-0x4d9410	494	Script::GetTrainerServiceSkillReq	idb	ui	primitive		Implements the Lua function GetTrainerServiceSkillReq	inferred	none		
+0x4d9160	399	Script::GetTrainerServiceSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line name of the ability a trainer service teaches	verified	one	ui/trainerverbs#skill-line-name	
+0x4d92f0	170	Script::GetTrainerServiceCost	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the money and the two point costs of a trainer service	verified	one	ui/trainerverbs#cost-and-level	
+0x4d93a0	111	Script::GetTrainerServiceLevelReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the required level of a trainer service	verified	one	ui/trainerverbs#cost-and-level	
+0x4d9410	494	Script::GetTrainerServiceSkillReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill name, value and whether the player meets a trainer service requirement	verified	one	ui/trainerverbs#skill-requirement	
 0x4d9600	131	Script::GetTrainerServiceNumAbilityReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of required abilities of a trainer service	verified	one	ui/trainer#required-abilities	
 0x4d9690	5			ui	orchestration		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
 0x4d96a0	15			ui	primitive		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
 0x4d96b0	5			ui	orchestration		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
 0x4d96c0	19			ui	primitive		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
 0x4d96e0	579	Script::GetTrainerServiceAbilityReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a required ability's name and rank text and whether it is known	verified	one	ui/trainer#required-abilities	
-0x4d9930	513	Script::GetTrainerServiceStepReq	idb	ui	primitive		Implements the Lua function GetTrainerServiceStepReq	inferred	none		
-0x4d9b40	616	Script::GetTrainerServiceDescription	idb	ui	primitive		Implements the Lua function GetTrainerServiceDescription	inferred	none		
+0x4d9930	513	Script::GetTrainerServiceStepReq	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the step requirement of a trainer service, always nil	verified	one	ui/trainerverbs#skill-requirement	
+0x4d9b40	616	Script::GetTrainerServiceDescription	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the expanded description of a trainer service	verified	one	ui/trainerverbs#description	
 0x4d9db0	19			ui	orchestration		Runs its object file code that calls 0x4d7d40; not read here	inferred	none		
-0x4d9dd0	148	Script::IsTrainerServiceSkillStep	idb	ui	primitive		Implements the Lua function IsTrainerServiceSkillStep	inferred	none		
-0x4d9e70	251	Script::IsTrainerServiceLearnSpell	idb	ui	primitive		Implements the Lua function IsTrainerServiceLearnSpell	inferred	none		
-0x4d9f70	192	Script::IsTrainerServiceTradeSkill	idb	ui	primitive		Implements the Lua function IsTrainerServiceTradeSkill	inferred	none		
-0x4da030	465	Script::GetTrainerServiceStepIncrease	idb	ui	primitive		Implements the Lua function GetTrainerServiceStepIncrease	inferred	none		
+0x4d9dd0	148	Script::IsTrainerServiceSkillStep	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service teaches a skill step, else nil	verified	one	ui/trainerverbs#row-kind-tests	
+0x4d9e70	251	Script::IsTrainerServiceLearnSpell	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns whether a trainer service teaches a learn spell and a pet spell	verified	one	ui/trainerverbs#row-kind-tests	
+0x4d9f70	192	Script::IsTrainerServiceTradeSkill	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service teaches a trade skill ability, else nil	verified	one	ui/trainerverbs#row-kind-tests	
+0x4da030	465	Script::GetTrainerServiceStepIncrease	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill potential increase text of a trainer service	verified	one	ui/trainerverbs#row-kind-tests	
 0x4da210	75	Script::BuyTrainerService	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Buys one trainer service, or every visible one for an index of 0 or less	verified	one	ui/trainer#index-law	
 0x4da260	295	Script::SetTrainerServiceTypeFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets, clears or isolates a state bit of the trainer filter, or all	verified	one	ui/trainerlist#filters	
 0x4da390	91	TrainerFilterBit		ui	primitive	uint32_t __fastcall (const char *name)	Maps available, unavailable or used to its filter bit, or 6 for another name	verified	one	ui/trainerlist#filters	
-0x4da3f0	275	Script::SetTrainerSkillLineFilter	idb	ui	primitive		Implements the Lua function SetTrainerSkillLineFilter	inferred	none		
-0x4da510	128	Script::GetTrainerServiceTypeFilter	idb	ui	primitive		Implements the Lua function GetTrainerServiceTypeFilter	inferred	none		
-0x4da590	195	Script::GetTrainerSkillLineFilter	idb	ui	primitive		Implements the Lua function GetTrainerSkillLineFilter	inferred	none		
-0x4da660	96	Script::GetTrainerSkillLines	idb	ui	primitive		Implements the Lua function GetTrainerSkillLines	inferred	none		
-0x4da6c0	124	Script::CollapseTrainerSkillLine	idb	ui	primitive		Implements the Lua function CollapseTrainerSkillLine	inferred	none		
-0x4da740	123	Script::ExpandTrainerSkillLine	idb	ui	primitive		Implements the Lua function ExpandTrainerSkillLine	inferred	none		
+0x4da3f0	275	Script::SetTrainerSkillLineFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a trainer skill line filter bit, alone or with the others	verified	one	ui/trainerverbs#setting-the-skill-line-filter	
+0x4da510	128	Script::GetTrainerServiceTypeFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer service state is shown, else nil	verified	one	ui/trainerverbs#filter-and-group-getters	
+0x4da590	195	Script::GetTrainerSkillLineFilter	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a trainer skill line is shown, else nil	verified	one	ui/trainerverbs#filter-and-group-getters	
+0x4da660	96	Script::GetTrainerSkillLines	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the skill line names of the trainer groups	verified	one	ui/trainerverbs#filter-and-group-getters	
+0x4da6c0	124	Script::CollapseTrainerSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Collapses a trainer skill line, or all of them	verified	one	ui/trainerverbs#filter-and-group-getters	
+0x4da740	123	Script::ExpandTrainerSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Expands a trainer skill line, or all of them	verified	one	ui/trainerverbs#filter-and-group-getters	
 0x4da7c0	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4da7f0	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4da810	10			ui	orchestration		Runs its object file code that calls 0x4da820; not read here	inferred	none		
