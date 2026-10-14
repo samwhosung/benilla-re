@@ -6920,8 +6920,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x490720	77			ui	orchestration		Runs GameUI.cpp code that calls SStrToFloat, ConsolePrintf; not read here	inferred	none		
 0x490770	115	UiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies a new uiScale text to UIParent when useUiScale is on, capped for narrow windows	verified	one	ui/uiscale#applying-a-scale	
 0x4907f0	203	UseUiScaleChanged		ui	primitive	uint8_t __thiscall (const char *value, void *userdata)	Applies the uiScale value when useUiScale turns on, else the automatic scale	verified	one	ui/uiscale#applying-a-scale	
-0x4908c0	441			ui	orchestration		Runs GameUI.cpp code that calls SuppressInterfaceSounds, ClntObjMgrGetActivePlayer and 51 more; not read here	inferred	none		
-0x490a80	321			ui	primitive		Resets interface state on the player's release, among it the trade and loot windows	inferred	none	objectlayer/players#release-and-reactivation	
+0x4908c0	441	EnterWorldUI		ui	orchestration		Fires PLAYER_LOGIN when armed and PLAYER_ENTERING_WORLD, releases chat and rebuilds the interface state	verified	one	ui/worldenter#the-enter-cascade	
+0x490a80	321	LeaveWorldUI		ui	primitive		Clears the world latch, runs 36 interface cleanups and fires PLAYER_LEAVING_WORLD	verified	one	ui/worldenter#leaving-the-world	
 0x490bd0	270	CGGameUI::Shutdown		ui	primitive		Leaves the world, signals PLAYER_LOGOUT, writes the saved variables and destroys the interface	verified	one	ui/addons#saved-variables-written	
 0x490ce0	301			ui	primitive		Runs GameUI.cpp code that calls 0x4f5970, UnloadFrameScriptFunctions, 0x5368c0 and 51 more; not read here	inferred	none		
 0x490e10	75			ui	orchestration		Runs GameUI.cpp code that calls 0x490e60; not read here	inferred	none		

@@ -23,6 +23,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x465e78	void *[8]	s_createHookJumpTable		objectlayer	Holds the create notify's cases for type ids 0 to 7, each calling the type's create hook	verified	one	objectlayer/update#notify-pass
 0x466084	void *[6]	s_createPassJumpTable		objectlayer	Holds the create pass's six cases for block types 0 to 5	verified	one	objectlayer/update#block-types
 0x46767c	uint8_t[129]	s_destroyIndexTable		objectlayer	Maps a type mask minus 1 to the destroy handler's case: the eight masks to the destructor call	verified	one	objectlayer/update#destroy-object
+0x467ac8	void *[3]	s_cases467800		ui	Holds the two destructor arms and the skip arm of the manager's destruction 0x467800	verified	one	ui/worldenter#a-world-transfer
+0x467ad4	uint8_t[129]	s_destroyTypeMap		ui	Maps an object type value to the destructor arm or the skip arm of the manager's destruction	verified	one	ui/worldenter#a-world-transfer
 0x46aaac	void *[4]	s_glueSignatureJumpTable		glue	Holds the four case addresses of the glue build's switch on the signature check's answer	verified	one	glue/manager#signature-and-digest-check
 0x46b7a8	void *[12]	s_statusDialogClickCases		glue	Holds the case addresses of the status-dialog click 0x46b720 for screen states 0 to 11	verified	one	glue/flow#screen-states
 0x46c2ac	void *[5]	s_logonStateCases		glue	Holds the case addresses of the per-frame update's logon arm for logon states 5 to 9	verified	one	glue/flow#logon-arm
@@ -2096,6 +2098,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b410	uint32_t			unassigned	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4b41c	uint32_t	s_cursorPreviewEntry		ui	Holds the entry of the preview payload, nonzero for kinds 5, 7 and 9	verified	one	ui/cursor#payload-kinds
 0xb4b420	uint32_t	s_cursorPreviewIndex		ui	Holds the index of the preview payload, the vendor row for kind 5	verified	one	ui/cursor#payload-kinds
+0xb4b424	uint8_t	s_worldEntered		ui	Holds 1 from the enter cascade to the leave function, the once-per-world latch	verified	one	ui/worldenter#the-enter-cascade
 0xb4b440	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
 0xb4b444	uint32_t			ui	Holds a dword that Script::GetMultisampleFormats, Script::GetCurrentMultisampleFormat read and write; not read here	inferred	none	
 0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
@@ -2113,7 +2116,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4da28	uint32_t			ui	Holds a dword that Script::GetMinimapZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
 0xb4e248	uint64_t	s_cursorItemGuid		ui	Holds the GUID of the item payload	verified	one	ui/cursor#payload-kinds
-0xb4e260	uint8_t			ui	Holds a byte that CGGameUI::Initialize reads and writes; not read here	inferred	none	
+0xb4e260	uint8_t	s_loginArmed		ui	Holds 1 from the interface initializer until the enter cascade fires PLAYER_LOGIN	verified	one	ui/worldenter#arming-player_login
 0xb4e264	void *	s_cinematicSequenceRow		ui	Holds the CinematicSequences row being played	verified	one	uicamera/cinematic#starting-a-sequence
 0xb4e268	uint32_t	s_cinematicSequenceSound		ui	Holds the handle of the sequence's own sound	verified	one	uicamera/cinematic#starting-a-sequence
 0xb4e26c	uint32_t	s_cinematicShotIndex		ui	Holds the index of the playing shot in the sequence row	verified	one	uicamera/cinematic#stepping-and-ending
