@@ -11,5 +11,6 @@ license = "MIT OR Apache-2.0"
 benilla-re-cmath = { path = "crates/cmath" }
 benilla-re-collision = { path = "crates/collision" }
 benilla-re-difftest = { path = "crates/difftest" }
+benilla-re-fastmath = { path = "crates/fastmath" }
 benilla-re-objectlayer = { path = "crates/objectlayer" }
 benilla-re-random = { path = "crates/random" }

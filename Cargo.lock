@@ -146,6 +146,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-lighting"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-cmath",
+ "benilla-re-difftest",
+ "benilla-re-fastmath",
+ "benilla-re-random",
+]
+
+[[package]]
 name = "benilla-re-minigame"
 version = "0.1.0"
 dependencies = [
