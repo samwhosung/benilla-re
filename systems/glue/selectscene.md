@@ -129,8 +129,9 @@ measured from the six `UI_<Race>.m2` of the install (MD20 version 256).
 
 No race or sex enters any facing path of the exe. The race term is in the scene file: the attachment
 bone of `UI_Human` carries a constant rotation of −16.5 degrees about +Z (keys at 0 and 33 on global
-sequence 1, quaternion (0, 0, −0.14349, 0.98965)) and a uniform scale of 0.97; `UI_Tauren`'s bone
-scales by 1.04; the other four bones are identity. The authored camera sits 18.181 degrees off the
+sequence 1, quaternion (0, 0, −0.14349, 0.98965)) and a uniform scale of 0.97, as does the pet's bone 5;
+`UI_Tauren`'s bone scales by 1.04 and the pet's by 0.7324; the other four scenes' bones are identity.
+The authored camera sits 18.181 degrees off the
 stand spot's +X axis in Human and within 1.6 degrees of it in the rest, so a client that composes
 the attachment's position only leaves Human 18 degrees turned.
 
