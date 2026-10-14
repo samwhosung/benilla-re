@@ -410,6 +410,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804518	const uint32_t			ui	Holds a dword that Script::SetWorldDetail reads; not read here	inferred	none	
 0x804524	const float			ui	Holds the first float of a table that Script::GetWorldDetail, Script::SetWorldDetail read; not read here	inferred	none	
 0x804550	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x804554	float	s_shotUnloadRange		ui	Holds 30.0, the camera distance beyond which a new cinematic shot unloads the areas	verified	one	ui/distancegates#thresholds
+0x804558	float	s_shotEndRange		ui	Holds 30.0, the camera distance beyond which the end of a cinematic unloads the areas	verified	one	ui/distancegates#thresholds
 0x804570	const float	s_float3f9fbe77		unassigned	Holds the float 1.248 (0x3f9fbe77)	inferred	none	
 0x804578	const double	s_double3f70101010101010		ui	Holds the double 0.00392156862745098 (0x3f70101010101010)	inferred	none	
 0x804580	const float	s_float3f8ccccd		ui	Holds the float 1.1 (0x3f8ccccd)	inferred	none	
@@ -2129,6 +2131,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4da28	uint32_t			ui	Holds a dword that Script::GetMinimapZoneText, CGGameUI::ShutdownGame read and write; not read here	inferred	none	
 0xb4da40	char[2048]	s_lastDisplayedMessage		ui	Holds the text DisplayError last formatted; empty at load	inferred	none	spell/failures#display-log-and-events
 0xb4e248	uint64_t	s_cursorItemGuid		ui	Holds the GUID of the item payload	verified	one	ui/cursor#payload-kinds
+0xb4e258	float	s_interactRange3Squared		ui	Holds 10 squared, the range of CheckInteractDistance index 3	verified	one	ui/distancegates#thresholds
 0xb4e260	uint8_t	s_loginArmed		ui	Holds 1 from the interface initializer until the enter cascade fires PLAYER_LOGIN	verified	one	ui/worldenter#arming-player_login
 0xb4e264	void *	s_cinematicSequenceRow		ui	Holds the CinematicSequences row being played	verified	one	uicamera/cinematic#starting-a-sequence
 0xb4e268	uint32_t	s_cinematicSequenceSound		ui	Holds the handle of the sequence's own sound	verified	one	uicamera/cinematic#starting-a-sequence
@@ -2137,6 +2140,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e274	uint32_t	s_cinematicNarration		ui	Holds the handle of the shot's own sound	verified	one	uicamera/cinematic#playing-a-shot
 0xb4e278	uint32_t	s_cinematicMusicPaused		ui	Holds 1 when the cinematic paused the music and must restore it	verified	one	uicamera/cinematic#starting-a-sequence
 0xb4e284	float[3]	s_corpsePosition		ui	Holds the cached corpse position x, y and z	verified	one	ui/deathui#the-corpse-location
+0xb4e29c	float	s_interactRange2Squared		ui	Holds 11.11 squared, the range of CheckInteractDistance index 2	verified	one	ui/distancegates#thresholds
+0xb4e2a0	float	s_interactRange4Squared		ui	Holds 30 squared, the range of CheckInteractDistance index 4	verified	one	ui/distancegates#thresholds
 0xb4e2ac	float	s_corpseRangeSquared		ui	Holds 1600.0, the squared range of the corpse range events	verified	one	ui/deathui#corpse-range-events
 0xb4e2b0	void *	s_uiScaleOption		ui	Points to the uiScale option's record	verified	one	ui/uiscale#the-two-options
 0xb4e2b4	void *	s_useUiScaleOption		ui	Points to the useUiScale option's record	verified	one	ui/uiscale#the-two-options
@@ -2182,6 +2187,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e37c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e3c0	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
 0xb4e3c4	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
+0xb4e3cc	float[4]	s_interactRangesSquared		ui	Holds the squared ranges of CheckInteractDistance indices 1 to 4, copied at the first call	verified	one	ui/distancegates#thresholds
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e4	uint32_t	s_forbiddenSignalGuard		ui	Holds 1 while 0x494a50 signals a forbidden action	verified	one	ui/luastate#the-context-word
