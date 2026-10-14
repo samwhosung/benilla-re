@@ -510,7 +510,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a8b0	const float	s_oneOver65536		unassigned	Holds 1/65536	verified	one	lighting/celestial#celestial-bodies
 0x80a8ec	const uint32_t			font	Holds a dword its object file's code reads; not read here	inferred	none	
 0x80a92c	const float	s_float3c800000		unassigned	Holds the float 0.015625 (0x3c800000)	verified	one	terrain/liquid#wave-field
-0x80a930	uint8_t[64]	s_sha1Padding		net	Holds the padding block of 0x80 and 63 zero bytes	verified	one	net/login#sha-1-first-context
+0x80a930	uint8_t[64]	s_sha1Padding		net	Holds the padding block of 0x80 and 63 zero bytes	verified	one	net/crypto#sha-1-first-context
 0x80aa80	void *[31]	s_dynamicObjectVtable		objectlayer	Holds the dynamic object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ab80	void *[31]	CGCorpse_C::vftable		objectlayer	Holds the corpse vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80abfc	const float	s_float3f2aaaab		unassigned	Holds the float 0.6666667 (0x3f2aaaab)	inferred	none	

@@ -13,7 +13,7 @@ compression, right after IGxuFontGlyph.cpp's last initializer. Of the 1,146 func
 runs, 552 are those initializers and their thunks, and 81 are unreached. The closure is not yet
 complete: 18 of its 321 primitives have a bit-exact test.
 
-The system's other docs are `wire`, `dispatch`, `session` and `login`.
+The system's other docs are `wire`, `threads`, `dispatch`, `messages`, `session`, `connection`, `login`, `logonlink`, `crypto`, `friends` and `accountdata`.
 
 Roots: `0x536eb0`, `0x5380c0`, `0x5a9e00`, `0x5d3b20`
 

@@ -585,9 +585,29 @@ CharacterSelectionDisplay	0x010a	1	uint8_t	m_newCharacter	glue	Holds 1 for a cha
 CharacterSelectionDisplay	0x0110	4	void *	m_component	glue	Holds the built character component, null until the select build makes it; the record destructor zeroes it	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0114	4	void *	m_petModel	glue	Holds the pet's model, null until built; the destructor releases it without clearing	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0118	1	uint8_t	m_rebuildModel	glue	Holds 1 for a new or entered record; the select screen clears it when it builds the model	inferred	none	glue/flow#enter-world
+ClientConnection	0x0004	64	char[64]	m_account	net	Holds the account name copied from the logon object when it authenticates	verified	one	net/session#session-key
+ClientConnection	0x0044	4	uint32_t	m_loginServerId	net	Holds the dword from the logon link that the auth session packet sends	verified	one	net/session#session-challenge
+ClientConnection	0x0048	40	uint8_t[40]	m_sessionKey	net	Holds the 40-byte session key that arms the header cipher	verified	one	net/session#session-key
+ClientConnection	0x0070	4	uint32_t	m_netState	net	Holds the connection state: 2 idle, 5 connecting, 6 connected, 7 closing	verified	one	net/session#connecting
+ClientConnection	0x0074	3312	void *[828]	m_handlers	net	Holds the packet handler of each opcode, null for none	verified	one	net/dispatch#handler-tables
+ClientConnection	0x0d64	3312	void *[828]	m_handlerContexts	net	Holds the context each handler is called with	verified	one	net/dispatch#handler-tables
+ClientConnection	0x1a54	4	void *	m_eventQueue	net	Holds the queue of events the network thread hands to the main thread	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x1a58	4	void *	m_wowConnection	net	Holds the WowConnection that carries the socket	verified	one	net/dispatch#network-thread-handoff
+ClientConnection	0x1a5c	4	uint32_t	m_refCount	net	Holds the references: one per queued event and one for the poll in progress; zero on a marked client deletes it	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x1a60	4	uint32_t	m_deleting	net	Holds 1 once the connection is marked for deletion	verified	one	net/dispatch#main-thread-drain
+ClientConnection	0x1a64	4	uint32_t	m_lastPingTime	net	Holds the clock of the last ping or of connecting	verified	one	net/session#ping-and-latency
+ClientConnection	0x1a68	4	uint32_t	m_pingSequence	net	Holds the sequence number of the last ping sent	verified	one	net/session#ping-and-latency
+ClientConnection	0x1a6c	64	uint32_t[16]	m_latencySamples	net	Holds the ring of latency samples	verified	one	net/session#ping-and-latency
+ClientConnection	0x1aac	4	uint32_t	m_sampleRead	net	Holds the read index of the sample ring	verified	one	net/session#ping-and-latency
+ClientConnection	0x1ab0	4	uint32_t	m_sampleWrite	net	Holds the write index of the sample ring	verified	one	net/session#ping-and-latency
+ClientConnection	0x1ab4	4	uint32_t	m_bytesSent	net	Holds the bytes sent since connecting	verified	one	net/session#ping-sequence-and-statistics
+ClientConnection	0x1ab8	4	uint32_t	m_bytesReceived	net	Holds the bytes received since connecting	verified	one	net/session#ping-sequence-and-statistics
+ClientConnection	0x1abc	4	uint32_t	m_connectTime	net	Holds the time the connection came up	verified	one	net/session#ping-sequence-and-statistics
+ClientConnection	0x1ac0	28	uint8_t[28]	m_statsLock	net	Holds the lock around the ping and byte statistics	verified	one	net/session#ping-sequence-and-statistics
 ClientConnection	0x1adc	4	void *	m_response	net	Holds the response object the connection notifies of replies	verified	one	net/connection#response-object
 ClientConnection	0x1ae4	4	uint32_t	m_characterCount	net	Holds the number of character records read from the last character list	verified	one	net/connection#character-list-packet
 ClientConnection	0x1ae8	4	void *	m_characters	net	Holds the array of 0x110-byte character records	verified	one	net/connection#character-list-packet
+ClientConnection	0x1aec	1	uint8_t	m_authenticated	net	Holds 1 after an auth response of AUTH_OK; nothing reads it	verified	one	net/session#session-response
 ClientConnection	0x1af0	4	uint32_t	m_queuePosition	net	Holds the queue position the last wait-queue auth result carried	verified	one	net/connection#response-object
 ClientConnection	0x1af4	4	uint32_t	m_billingTimeRemaining	net	Holds the billing time remaining, read from the auth response by 0x5b41b0	inferred	none	glue/script#billing
 ClientConnection	0x1af8	4	uint32_t	m_billingTimeRested	net	Holds the billing rested time, read from the auth response by 0x5b41b0	inferred	none	glue/script#billing

@@ -104,8 +104,10 @@ calls `0x538040` for each client; that tail-jumps to `0x5384d0` with the queue a
 `0x538529`, `jmp [eax*4+0x538610]` on the type less `0x12`, five entries, reached only while the
 client's `+0x1a60` is zero; type `0x16` sets it. `0x538597` calls `0x537ff0` unless a `0x16` node set the local flag at `0x53855f`.
 Slot 12, `0x537c50`, adds the length plus 2 to `0xc0d468`, requires `+0x70 == 6` (`0x537c71`), wraps
-the data in a data store and calls `0x537aa0` (`0x537ca0`). The client's `+0x1a5c` counts nodes
-in flight; when it drops to zero on a marked client, the drain calls the client's slot 0 with 1.
+the data in a data store and calls `0x537aa0` (`0x537ca0`). The client's `+0x1a5c` is a reference count: one per
+queued node and one for the poll in progress (`0x5384f1`); each handled node and the end of the poll
+release one (`0x53856b`, `0x5385a4`), and when it reaches zero on a marked client the poll calls the
+client's slot 0 with 1.
 
 ## Realm connection messages
 

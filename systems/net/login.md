@@ -236,127 +236,23 @@ whole.
 
 ## Reconnect
 
-With a kept session key the logon object sends the reconnect challenge (`0x02`) instead. Its
-reply carries a 16-byte challenge; the proof (`0x03`) sends `R1 = MD5(account ‖ time)`,
-`SHA1(account ‖ R1 ‖ challenge ‖ K)` and `SHA1(R1 ‖ C)`, and a zero reply hands the kept key back.
+With a kept session key the logon object sends the reconnect challenge instead of a logon: `0x02`, `0x02`, then the logon challenge body. The reply is a result byte, a 16-byte seed and a 16-byte checksum salt; a non-zero result, or a reply that does not hold the two values, is malformed and the link disconnects. The link keeps the seed, enters state 5 and gives the salt to the logon object, which answers with the proof below. The reply to the proof is a result byte: non-zero, as `0xff` from 16 up, enters state 2 and reports it; zero enters state 6 and hands the key back.
 
-Addresses: `0x5b2134`, `0x5bb6d0`, `0x5bae00`, `0x5baec0`, `0x5bbcb7`
-Confidence: inferred
-Proof: none
-Test: none
-
-`0x5b2134` tests the logon object's `+0xc` and calls `0x5bb6d0` with the key at `+0x54`. The rest is
-one reading of the reconnect branch of `0x5bbad0` from `0x5bbcb7` and of the two handlers, not
-recorded here at the instruction level.
-
-## SHA-1 overwrites its input
-
-The client's SHA-1 (`0x5d1db0` family: init, update, transform, final) keeps its 16-word
-message schedule in the 64-byte block it is given, so a transformed block is left holding
-schedule words. The update hands the transform the caller's own bytes for every full 64-byte
-block that follows the context's buffered bytes; those spans of the caller's buffer are
-overwritten. A short input, or the part copied into the context's buffer, is not. The hash
-itself is SHA-1 by its constants; its rounds are not recorded here.
-
-Addresses: `0x5d1db0`, `0x5d1de0`, `0x5d1ec0`, `0x5d32b0`, `0x5d1e48`, `0x5d1e69`, `0x5d233f`, `0x5d2386`
-Confidence: verified
-Proof: one
-Test: `net::sha1_family_b`, `net::sha1_prng_next`, `net::sha1_prng_seed`, `net::srp6_client_session`, `net::srp6_credential_hash`, `net::srp6_file_hmac`, `net::srp6_interleave`
-
-`0x5d1db0` stores `0x67452301`, `0xefcdab89`, `0x98badcfe`, `0x10325476` and `0xc3d2e1f0` and zeroes
-the 64-bit bit count at `+0x14`. `0x5d1de0` fills the buffer at `+0x1c` and transforms it
-(`0x5d1e48`, `edx` the buffer), then calls the transform with `edx` pointing into the caller's
-data (`0x5d1e63`, `0x5d1e69`) for each further 64 bytes. In `0x5d1ec0`, `edx` is the block: from
-the seventeenth word on, each schedule word is stored back into it, `mov [edx],esi` at
-`0x5d233f`, `mov [edx+0x4],esi` at `0x5d2386` and so on. The round additions use `0x5a827999` and
-`0x6ed9eba1`, and the subtraction forms of `0x8f1bbcdc` and `0xca62c1d6`.
-`sha1_family_b`, `sha1_prng_next`, `sha1_prng_seed`, `srp6_client_session`, `srp6_credential_hash`,
-`srp6_file_hmac` and `srp6_interleave` run `0x5d1db0`, `0x5d1de0`, `0x5d1ec0` and `0x5d32b0` whole.
-
-## Logon link events
-
-The link tells the logon object when it connects, cannot connect and disconnects, through slots of the vtable `0x80a5d4`. A dial that fails, by a socket error or an empty address list, runs the link's slot 3 (`0x5bb360`): it releases the connection and calls the logon object's slot 2, `0x5b1b70`. That reports `LOGIN_STATE_FAILED` (5) with `LOGIN_SERVER_DOWN` (`0x0c`) to the listener, then calls slot 1, `0x5b1bd0`, which reports `LOGIN_STATE_DISCONNECTED` (11) with code 0. When the byte `+4` is clear, so the link never reached the post-proof state, `0x5b1bd0` also marks `+8` and calls slot 10 with `0xff`, which reports state 5 with code `0x14`. It then clears `+5` and `+4` and returns false. `0x5b3320` disconnects the link when `+5` is set.
-
-Addresses: `0x5bb360`, `0x5b1b70`, `0x5b1bd0`, `0x5b1af0`, `0x5b3320`, `0x5bb3d0`, `0x5b2c90`, `0x5b2dea`, `0x5b1bb2`, `0x5b1bb7`, `0x5b1c15`, `0x5b1c29`, `0x5b1c30`, `0x5b1c38`
+Addresses: `0x5b2134`, `0x5bb6d0`, `0x5bae00`, `0x5baec0`, `0x5bae94`, `0x5baf0b`, `0x5baf3c`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5b1bb2` is listener slot 4 with (5, `0x0c`) and the strings `LOGIN_STATE_FAILED` and `LOGIN_SERVER_DOWN`; `0x5b1c12` the same call with (`0x0b`, 0) and `LOGIN_STATE_DISCONNECTED`. `0x5b1c15` tests `[esi+4]`; `0x5b1c29` stores 1 at `+8` and `0x5b1c30` is `call [edx+0x28]` with `0xff`, 0, 0. In `0x5b2c90` the byte `0xff` less 3 indexes `0x5b2ea4` (value 9, `0x5b2dea`), which reports (5, `0x14`). `0x5bb360` calls the slot at `0x5bb390` (`call [eax+8]`) after `0x5bb2c0`. `0x5b1af0` stores 1 at `+4`; the link's timer `0x5bb3d0` calls it in state 6 (`0x5bb3f8` to `0x5bb400`). `0x5b2c90` with `+0xc` set, a reconnect, empties the realm holder, calls its slot 5 with 1 and disconnects the link, whatever the result.
+`0x5b2134` tests the logon object's `+0xc` and calls `0x5bb6d0` with the account and the key (`+0xd`, `+0x54`), which enters state 3, upper-cases the account into `+0x19c`, copies the key to `+0x1fc` and sends. `0x5bae00` needs 17 bytes before it starts, reads the result byte (`0x5bae2d`; non-zero returns 1) and two borrowed 16-byte slices (`0x5bae4e`, `0x5bae5b`), returns 1 when the cursor passed the end (`0x5bae66`), copies the first to `+0x1dc`, sets state 5 (`0x5bae94`) and calls the owner's slot 5 with the second (`0x5baea9`). `0x5baec0` stores state 2 and calls slot 11 with the result for a non-zero byte (`0x5baf0b`, `0x5baf15` to `0x5baf19`), else state 6 and slot 11 with `+0x1fc` and 40 (`0x5baf3c`).
 
-## Realm list packet
+## Reconnect proof
 
-`CMD_REALM_LIST` (`0x10`) is answered with a u16 size and then, counted by that size, a u32, a count byte, the records and a u16. Each record is a u32, a byte, two C strings of up to 255 characters, a float and three bytes. The link waits for the whole size, checks that the bytes it read after the size field equal it, and hands the store, set at the count byte, to the logon object's slot 13, `0x5b2230`. A wrong size returns 1, the malformed code, and the link disconnects.
+The reconnect proof is `0x03`, `R1 = MD5(account ‖ unix time as a dword)` (16 bytes), `R2 = SHA-1(account ‖ R1 ‖ seed ‖ K)` (20, `K` the kept 40-byte key), `R3 = SHA-1(R1 ‖ C)` (20, with `C` 20 zero bytes on a reconnect), the count of key records, and the records of the logon proof.
 
-Addresses: `0x5ba8d0`, `0x5ba8fd`, `0x5ba9c9`, `0x5ba9e7`, `0x5ba9eb`, `0x5b2230`
+Addresses: `0x5bbad0`, `0x5bbcb7`, `0x5bbd06`, `0x5bbd24`, `0x5bbd7c`, `0x5bbd92`, `0x5bbdc6`, `0x4294c0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x5ba8d0` needs 2 bytes, reads the size (`0x418db0`, `0x5ba903`) and needs that many more (`0x5ba90e`), returning 0, incomplete, otherwise. It reads the u32 and the count, then per record `0x418fb0`, `0x418cb0`, two `0x4191b0` with cap `0x100`, `0x419130` and three `0x418cb0` (`0x5ba950` to `0x5ba9b3`); `0x5ba9c9` reads the tail u16 and `0x5ba9e7` compares the distance from the saved cursor with the size. `0x5ba9eb` restores the cursor to the count byte, calls `[owner+0x34]` and restores the end.
+In `0x5bbad0`, `0x5bbcb7` hashes the account (`strlen`, `0x661dd0`) and the time (`0x4294c0` is `time(0)`) into R1; `0x5bbd06` puts `0x03` and R1; `0x5bbd24` to `0x5bbd7c` hash the account, R1, `+0x1dc` (16) and `+0x1fc` (40) into R2; `0x5bbd92` to `0x5bbdc6` hash R1 and the argument into R3, which `0x5b1c98` makes 20 zeros.
 
-## Realm record fill
-
-`0x5b2230` empties the holder, sizes it to the count, and for record `i` stores: `i` at `+0`, the u32 at `+4`, the byte at `+8`, the name at `+9` (256 bytes), the address at `+0x109` (32 bytes), the float at `+0x12c` and the three bytes at `+0x130`, `+0x131` and `+0x132` (`glue/realms` rewrites three population values). Each name is cleaned: a character of `"*/:<>?\|` becomes a space, and trailing such characters, spaces and dots are cut. It then reads a u16 into the holder's `+0x10` and calls the holder's slot 5 with 0 when the store was read exactly to its end; otherwise it empties the holder and passes 4. A null packet passes 4 through `0x5b2560`.
-
-Addresses: `0x5b2230`, `0x5b2274`, `0x5b2321`, `0x5b2370`, `0x5b23dd`, `0x5b23f4`, `0x5b2420`, `0x5b242b`, `0x5b3360`, `0x5b24b0`, `0x5b2560`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x5b227a` reads the count and `0x5b2286` calls `0x5b3360`; `0x5b22b9` to `0x5b2319` read the fields in the order above. `0x5b2321` `cmp ecx,[edi+0x10]; ja` stops on a read past the end. `0x5b2376` to `0x5b2396` classify each name byte: `byte - 0x20` indexes the table `0x5b2450` (up to `0x7c`) and the jump table `0x5b2444`; the characters `"*/:<>?\|` reach `0x5b2391`, which stores a space. `0x5b23a6` loops `0x5b24b0(char, 1)` from the end, which is 0 for those characters, for space and for dot. `0x5b23dd` reads the tail; `0x5b23f4` is the call of the store's end check (`[edi]+0x14`) and `0x5b2420` the success call.
-
-## Logon checksum
-
-The checksum the logon proof carries is `ChecksumExecutables`, an HMAC-SHA-1 keyed by the 16-byte checksum salt the server sent. It hashes, in this order, the whole contents of `WoW.exe`, `fmod.dll`, `ijl15.dll`, `dbghelp.dll` and `unicows.dll`, each opened by that name in the current directory. A file that does not exist, does not open, or is not read in full adds nothing. The 20-byte result goes to the proof, which sends `SHA-1(A ‖ result)`. On a reconnect the checksum is 20 zero bytes and no file is read. With the salt `BA A3 1E 99 A0 0B 21 57 FC 37 3F B3 69 CD D2 F1` and the five stock files of this build the construction gives `95EDB27C7823B363CBDDAB56A392E7CB73FCCA20`.
-
-Addresses: `0x5b1170`, `0x5b1c70`, `0x5b1f40`, `0x5b1c7b`, `0x5b1c98`, `0x5bbad0`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x5b1170(salt, length, out)` fills two 64-byte blocks with `0x36` and `0x5c`, xors the salt into both (`0x5b11a5` to `0x5b11b3`), starts a SHA-1 with the inner block (`0x5b11be` to `0x5b11d2`) and loops the five names of the table `0x85def0` (`0x5b11e0` to `0x5b127c`, stride 4, bound `0x14`): exists (`0x42a4e0`), open (`0x42a460` for reading), size (`0x42a670`), read (`0x42a520`), and update only when the read count equals the size (`0x5b1248`). It finishes the inner hash, hashes the outer block and the 20 inner bytes, and copies 5 dwords to the output. A key longer than 64 bytes would overflow the blocks; the caller passes 16. `0x5b1c70` tests the reconnect byte `+0xc` first (`0x5b1c7b`) and then calls `0x5bbad0` with 20 zero bytes (`0x5b1c98`). The salt is kept at `+0x19c` otherwise.
-
-## Pin challenge
-
-When the logon challenge carries a non-zero security byte, the logon object keeps a pin grid and a salt. `0x5b1ed0(flag, seed, salt)` stores the flag at `+0x1ac`; with the flag set it fills the 10-byte grid at `+0x1ae` from the 32-bit seed and copies the 16-byte salt to `+0x1b8`. The grid is a permutation of 0 to 9: its `i`th entry is the remaining digit at index `seed mod (10 − i)`, after which the seed is divided by `10 − i`. The checksum salt callback then reports state 7, the pin state, when the flag is set, and 9, the checksum state, when it is not.
-
-Addresses: `0x5b1ed0`, `0x5b1e70`, `0x5b1c70`, `0x5b1cd7`, `0x5b1edb`, `0x5b1eec`, `0x4100f0`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x5b1edb` stores the flag; `0x5b1ee7` calls `0x5b1e70`; `0x5b1eec` to `0x5b1f08` copy 16 bytes to `+0x1b8`. `0x5b1e70` writes 0 to 9 into a local array, then 10 times: `div` the seed by the count left (`0x5b1e97`), store the digit at the remainder to the grid, and close the gap with `0x4100f0` (`0x5b1eb1`). `0x5b1cd7` is `lea eax,[eax+eax*1+7]` on `sete` of the flag: 9 for 0, 7 otherwise.
-
-## Pin proof
-
-`0x5b3120(count, positions)` turns the pin positions into ASCII digits, seeds a local random pool with the clock, draws a 16-byte client salt into `+0x1c8`, stores `SHA-1(client salt ‖ SHA-1(server salt ‖ digits))` at `+0x1d8`, and reports state 9. The logon proof sends the salt and the hash when the flag at `+0x1ac` is set, taking their addresses from `0x5b1f10`.
-
-Addresses: `0x5b3120`, `0x5b31e0`, `0x5b1f10`, `0x5b3147`, `0x5b3163`, `0x5b3177`, `0x5b318f`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`.
-
-## SHA-1 first context
-
-The logon checksum and the pin hash use a second SHA-1 implementation. Its context is a 64-bit bit count (low dword `+0`, high `+4`), five state words from `+8`, and a 64-byte buffer from `+0x1c`. Init zeroes the count and loads the five standard words. Update adds 8 per byte to the count, tops up the buffer, compresses whole blocks straight from the caller's bytes, and buffers the rest. Final saves the count big-endian, pads with `0x80` and zeros to 56 bytes modulo 64, adds the count, and writes the five state words big-endian.
-
-Addresses: `0x5d1a40`, `0x5d1a80`, `0x5d1b30`, `0x5d1b60`, `0x80a930`, `0x5d1ad3`, `0x5d1af8`
-Confidence: verified
-Proof: one
-Test: none
-
-`0x5d1a40` stores 0, 0 and the words at `+8` to `+0x18`. `0x5d1a80` multiplies the length by 8 into the count (`0x5d1a97`, `0x5d1a9f`), takes `(count >> 3) & 0x3f` as the buffered length, and calls `0x5d1420` with `ecx` the state and `edx` the block, for the filled buffer (`0x5d1ad3`) and for each further block of the caller's data (`0x5d1af8`). `0x5d1b60` writes the count to a local (`0x5d1b74`), updates with `0x80a930`, a block of `0x80` and 63 zero bytes, for `(55 − (count >> 3)) mod 64 + 1` bytes, then with the 8 count bytes, and stores the words with the loop at `0x5d1bc0`. `0x5d1b30` updates with a C string's bytes. The users are `0x5b1170` and `0x5b31e0`; every other hash in net uses `0x5d1db0`.
-
-## SHA-1 first compression
-
-The compression `0x5d1420` copies the block big-endian into a local array of 80 words and expands it, so the caller's block is read and not written, unlike `0x5d1ec0`. Its code carries the four round constants `0x5a827999`, `0x6ed9eba1`, `0x8f1bbcdc` and `0xca62c1d6`, each in five instructions. The rounds themselves are not read.
-
-Addresses: `0x5d1420`, `0x5d1431`, `0x5d1461`, `0x5d1487`, `0x5d1a35`
-Confidence: inferred
-Proof: none
-Test: none
-
-`0x5d1431` to `0x5d1458` build each word from four bytes with shifts and ors into `[ebp+esi*4-0x158]` for 16 words; `0x5d1461` to `0x5d1485` extend to 80 with the rotate-left-1 of four earlier words xored; `0x5d1487` loads the five state words. The function ends at `0x5d1a35` after storing the five sums back to the state. Whether every round matches SHA-1 is a lead for a bit-exact test.
