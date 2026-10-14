@@ -12535,8 +12535,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515f50	17	Script::ReadFile	idb	ui	orchestration		Implements the Lua function ReadFile	inferred	none		
 0x515f70	17	Script::DeleteFile	idb	ui	orchestration		Implements the Lua function DeleteFile	inferred	none		
 0x515f90	17	Script::AppendToFile	idb	ui	orchestration		Implements the Lua function AppendToFile	inferred	none		
-0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Pushes 1 for a selectable held unit or a roster member, else nil	verified	one	ui/unitplayer#what-else-answers-in-the-window	
-0x516030	57	Script::UnitIsVisible	idb	ui	orchestration		Implements the Lua function UnitIsVisible	inferred	none		
+0x515fb0	122	Script::UnitExists	idb	ui	orchestration		Pushes 1 for a selectable held unit or a roster member, else nil	verified	one	ui/unitinfo#unitexists	
+0x516030	57	Script::UnitIsVisible	idb	ui	orchestration		Pushes 1 when the token names a held unit object, else nil	verified	one	ui/unitinfo#unitisvisible	
 0x516070	222	Script::UnitIsUnit	idb	ui	primitive		Implements the Lua function UnitIsUnit	inferred	none		
 0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Implements the Lua function UnitIsPlayer	inferred	none		
 0x5161c0	79	Script::UnitIsCorpse	idb	ui	orchestration		Implements the Lua function UnitIsCorpse	inferred	none		
@@ -12545,7 +12545,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInParty	inferred	none		
 0x516350	83	Script::UnitInRaid	idb	ui	orchestration		Pushes 1 when a unit is a raid member, else nil	verified	one	ui/raid#group-leader-and-membership	
 0x5163b0	83	Script::UnitPlayerOrPetInRaid	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInRaid	inferred	none		
-0x516410	79	Script::UnitPlayerControlled	idb	ui	primitive		Implements the Lua function UnitPlayerControlled	inferred	none		
+0x516410	79	Script::UnitPlayerControlled	idb	ui	primitive		Pushes 1 when UNIT_FIELD_FLAGS bit 3 is set, else nil	verified	one	ui/unitinfo#flag-predicates	
 0x516460	214	Script::UnitIsPVP	idb	ui	primitive		Implements the Lua function UnitIsPVP	inferred	none		
 0x516540	227	Script::UnitIsPVPFreeForAll	idb	ui	primitive		Implements the Lua function UnitIsPVPFreeForAll	inferred	none		
 0x516630	429	Script::UnitFactionGroup	idb	ui	primitive		Implements the Lua function UnitFactionGroup	inferred	none		
@@ -12555,9 +12555,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516a70	306	Script::UnitCanCooperate	idb	ui	orchestration		Pushes 1 when two units can cooperate by reaction or the roster fallback, else nil	verified	one	ui/unitplayer#friend-and-cooperation-fallbacks	
 0x516bb0	149	Script::UnitCanAssist	idb	ui	orchestration		Implements the Lua function UnitCanAssist	inferred	none		
 0x516c50	149	Script::UnitCanAttack	idb	ui	orchestration		Implements the Lua function UnitCanAttack	inferred	none		
-0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Implements the Lua function UnitIsCharmed	inferred	none		
-0x516d40	79	Script::UnitIsPlusMob	idb	ui	primitive		Implements the Lua function UnitIsPlusMob	inferred	none		
-0x516d90	72	Script::UnitClassification	idb	ui	orchestration		Implements the Lua function UnitClassification	inferred	none		
+0x516cf0	73	Script::UnitIsCharmed	idb	ui	primitive		Pushes 1 when UNIT_FIELD_CHARMEDBY is nonzero, else nil	verified	one	ui/unitinfo#flag-predicates	
+0x516d40	79	Script::UnitIsPlusMob	idb	ui	primitive		Pushes 1 when UNIT_FIELD_FLAGS bit 6 is set, else nil	verified	one	ui/unitinfo#flag-predicates	
+0x516d90	72	Script::UnitClassification	idb	ui	orchestration		Pushes the classification word for the creature rank, normal for no unit	verified	one	ui/unitinfo#classification	
 0x516de0	82	Script::IsInGuild	idb	ui	orchestration		Pushes 1 when the player has a guild id, else nil	verified	one	ui/guild#rank-rights	
 0x516e40	89	Script::IsGuildLeader	idb	ui	orchestration		Pushes 1 when the player's guild rank is 0, else nil	verified	one	ui/guild#rank-rights	
 0x516ea0	86	Script::IsResting	idb	ui	primitive		Implements the Lua function IsResting	inferred	none		
@@ -12589,7 +12589,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x518600	516	Script::UnitStat	idb	ui	primitive		Implements the Lua function UnitStat	inferred	none		
 0x518810	248	Script::UnitAttackBothHands	idb	ui	primitive		Implements the Lua function UnitAttackBothHands	inferred	none		
 0x518910	634	Script::UnitRangedDamage	idb	ui	primitive		Implements the Lua function UnitRangedDamage	inferred	none		
-0x518b90	132	Script::UnitRangedAttack	idb	ui	orchestration		Implements the Lua function UnitRangedAttack	inferred	none		
+0x518b90	132	Script::UnitRangedAttack	idb	ui	orchestration		Pushes the ranged skill with permanent bonus and the temporary bonus	verified	one	ui/unitinfo#unitrangedattack	
 0x518c20	545	Script::UnitDamage	idb	ui	primitive		Implements the Lua function UnitDamage	inferred	none		
 0x518e50	290	Script::UnitAttackSpeed	idb	ui	primitive		Implements the Lua function UnitAttackSpeed	inferred	none		
 0x518f80	308	Script::UnitAttackPower	idb	ui	primitive		Implements the Lua function UnitAttackPower	inferred	none		
@@ -12600,16 +12600,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x519500	862	Script::UnitBuff	idb	ui	primitive		Implements the Lua function UnitBuff	inferred	none		
 0x519860	134			ui	primitive		Runs ScriptEvents.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x5198f0	928	Script::UnitDebuff	idb	ui	primitive		Implements the Lua function UnitDebuff	inferred	none		
-0x519c90	108	Script::UnitIsTapped	idb	ui	orchestration		Implements the Lua function UnitIsTapped	inferred	none		
-0x519d00	108	Script::UnitIsTappedByPlayer	idb	ui	orchestration		Implements the Lua function UnitIsTappedByPlayer	inferred	none		
+0x519c90	108	Script::UnitIsTapped	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x4 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
+0x519d00	108	Script::UnitIsTappedByPlayer	idb	ui	orchestration		Pushes 1 when UNIT_DYNAMIC_FLAGS bit 0x8 is set, else nil	verified	one	ui/unitinfo#tapped-and-the-dynamic-flags	
 0x519d70	104	Script::UnitIsTrivial	idb	ui	orchestration		Implements the Lua function UnitIsTrivial	inferred	none		
-0x519de0	104	Script::UnitIsCivilian	idb	ui	orchestration		Implements the Lua function UnitIsCivilian	inferred	none		
-0x519e50	149	Script::UnitHasRelicSlot	idb	ui	primitive		Implements the Lua function UnitHasRelicSlot	inferred	none		
+0x519de0	104	Script::UnitIsCivilian	idb	ui	orchestration		Pushes 1 when the unit is a civilian, else nil	verified	one	ui/unitinfo#flag-predicates	
+0x519e50	149	Script::UnitHasRelicSlot	idb	ui	primitive		Pushes 1 for a player whose class row has a relic slot, else nil	verified	one	ui/unitinfo#unithasrelicslot	
 0x519ef0	527	Script::SetPortraitTexture	idb	ui	primitive		Implements the Lua function SetPortraitTexture	inferred	none		
 0x51a100	21			ui	orchestration		Runs its object file code that calls RefreshPortrait; not read here	inferred	none		
 0x51a120	100	Script::HasFullControl	idb	ui	orchestration		Implements the Lua function HasFullControl	inferred	none		
 0x51a190	232	Script::GetComboPoints	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the combo points of a rogue or druid on its combo target, else 0	verified	one	ui/actionuse#combo-points	
-0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Implements the Lua function UnitCreatureType	inferred	none		
+0x51a280	130	Script::UnitCreatureType	idb	ui	orchestration		Pushes the localised creature type name of a unit, or nil	verified	one	ui/unitinfo#the-creature-type	
 0x51a310	130	Script::UnitCreatureFamily	idb	ui	orchestration		Implements the Lua function UnitCreatureFamily	inferred	none		
 0x51a3a0	268	Script::GetResSicknessDuration	idb	ui	primitive		Implements the Lua function GetResSicknessDuration	inferred	none		
 0x51a4b0	149	Script::GetPVPSessionStats	idb	ui	orchestration		Implements the Lua function GetPVPSessionStats	inferred	none		
