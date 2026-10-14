@@ -107,6 +107,22 @@ and `+8`, and stores `stringBase + offset` at `+4` (`0x579e2e` to `0x579e34`). `
 file's kind at `[file+0]` and jumps through `0x6485d8` (`0x6484b9`): kind 0 `_fread`, 1 `0x6476e0`, 2 and 3 the archive read
 `0x656b40`, 4 the zip read `0x668750`.
 
+## Spell visual columns that are read
+
+No reader found touches three columns of the spell visual tables: the effect name's `+0x0c`, the kit's `+0x04` and the visual's `+0x20`. Each table's `Read` fills every column, so they are loaded and unused.
+
+Addresses: `0xc0d730`, `0xc0d744`, `0xc0d758`, `0x61fdd0`, `0x5d52f0`, `0x5d53cf`, `0x5d57c0`, `0x60edf0`, `0x60d7c0`, `0x60a3d0`, `0x60d450`
+Confidence: inferred
+Proof: none
+Test: none
+
+`SpellVisual` has 16 fields in 64 bytes (store `0xc0d730`, id index `0xc0d738`), `SpellVisualKit` 35 in 140 (`0xc0d744`, `0xc0d74c`) and `SpellVisualEffectName` 5 in 20 (`0xc0d758`, `0xc0d760`, largest id `0xc0d764`).
+The effect constructor `0x61fdd0` reads the effect name's `+0x08`, the model path (`0x61fe5e`), and keeps the record at `+0x20` of the effect (`0x61fe0c`); `CGDynamicObject_C::ModelLoaded` (`0x5d52f0`)
+reads `+0x10` as the divisor of the object's radius (`0x5d53cf`), the record coming from `0x5d57c0`. Neither, nor the 21 loads of `0xc0d760`, reads `+0x0c`. The kit player `0x60edf0` reads `+0x08` (`0x60ee57`),
+`+0x0c` to `+0x30` (`0x60f01d` for the last), `+0x34` (`0x60ee3d`) and `+0x38` (`0x60ee2e`), and passes the record to `0x60d7c0` (`0x60f358`), which takes `+0x3c` on; it never reads `+0x04`.
+The missile launcher `0x60a3d0` reads the visual's `+0x1c` (`0x60a409`), `+0x24` (`0x60a523`) and `+0x28` (`0x60a510`) and not `+0x20`, which the merge `0x60d450` only copies (`0x60d518` to `0x60d522`).
+The absences are of the readers named: callees past them were not read. Column meanings are in `systems/spell/shakes.md` and `systems/objectlayer/auras.md`.
+
 ## Localized strings
 
 A localized string is eight offset columns followed by a flags column, nine dwords. `Read` stores the eight offsets as pointers at the

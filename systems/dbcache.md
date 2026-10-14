@@ -12,7 +12,7 @@ Roots: `0x554ff0`, `0x554f50`, `0x555740`, `0x55f080`, `0x560e30`, `0x562a40`, `
 ## Caches that are saved
 
 Nine caches persist their records. Each is constructed at start-up with a four-character file tag, a file name, the query
-opcode and two flags, and its store address is the base of an object of `0x3c` bytes.
+opcode, a dword and two flags, and its store address is the base of an object of `0x3c` bytes.
 
 | store | file | tag | query opcode | record bytes | version |
 |---|---|---|---|---|---|
@@ -24,7 +24,7 @@ opcode and two flags, and its store address is the base of an object of `0x3c` b
 | `0xc0e1b0` | `questcache.wdb` | `TSQW` | `0x5c` | `0x18dc` | 3 |
 | `0xc0e174` | `pagetextcache.wdb` | `XTPW` | `0x5a` | `0x404` | 1 |
 | `0xc0e0c0` | `itemtextcache.wdb` | `XTIW` | `0x243` | `0x1f40` | 1 |
-| `0xc0e084` | `wowcache.wdb` | `NDRW` | 0 | 8 | `0x6ca120()` |
+| `0xc0e084` | `wowcache.wdb` | `NDRW` | 0 | 8 | 1 |
 
 Addresses: `0x554b40`, `0x556060`, `0x5566d0`, `0x558180`, `0x559c10`, `0x55b650`, `0x55d120`, `0x562630`, `0x564320`, `0x569570`, `0x56b040`, `0xc0e354`, `0xc0e318`, `0xc0e2dc`, `0xc0e2a0`, `0xc0e264`, `0xc0e1b0`, `0xc0e174`, `0xc0e0c0`, `0xc0e084`
 Confidence: verified
@@ -32,9 +32,51 @@ Proof: one
 Test: none
 
 The constructor calls are `0x554b40` and the nine like it: six pushes (persist flag, owner flag, a dword, opcode, file name,
-tag) and `mov ecx,<store>`. Each cache has two routines that write the file, the exit function (`0x5566d0` for creatures) and another
-(`0x5576d0`); both write `[tag][5875 (0x16f3)][locale tag][record size][version]` with `CDataStore::PutUInt32`, the size and version being the
-last two pushes (`0x5567cc`); the wow cache writes `0x6ca120()` as its version. Tags are dwords, so `BOMW` is the bytes `42 4f 4d 57`.
+tag) and `mov ecx,<store>`. The dword is stored at `+0x34` (`0x55e760`): `0x57` for the item cache (`0x554c47`) and 0 for every other
+cache; nothing in the cache code reads it back. Tags are dwords, so `BOMW` is the bytes `42 4f 4d 57`.
+
+The file is written by the exit function of each cache (`0x5566d0` for creatures), which the cache's `_atexit` thunk jumps to
+(`0x554b60` registers `0x554b70`, which is `jmp 0x5566d0`). `0x5576d0`, a second writer of the creature file, has no branch or
+dword reference in the image (control: `0x5566d0` has the thunk's `jmp`), so it never runs. The saved file is in the next two entries.
+
+## The .wdb file
+
+A file is a 20-byte header, then the records. The header is five dwords: the tag, the build `0x16f3`, the locale tag `[0xc2a2a4]`,
+the record size of the cache's type and the version. The path is `WDB/<file name>`, the directory made first (`0x42a960`).
+The body is a sequence of entries `{key, size, record}`, the key a dword, `size` the length of the encoded record, and ends with two zero
+dwords.
+
+Addresses: `0x5566d0`, `0x5576d0`, `0x5567cc`, `0x5567d9`, `0x5567e8`, `0x5567f2`, `0x5568f9`, `0x7c8080`, `0x5568ac`, `0x417e10`, `0x6ca120`, `0x56b162`
+Confidence: verified
+Proof: one
+Test: none
+
+The save writes the header from `0x5567a9` on with `CDataStore::PutUInt32`: the tag (`0x5567c7`), the build push `0x16f3` (`0x5567cc`), the locale
+(`0x5567d9`), the record size push (`0x5567e8`, `0x34` for creatures) and the version push (`0x5567f2`, 1 for creatures). The wow cache's version
+push is the call `0x6ca120` (`0x56b162`; its load compares the file's with the call at `0x56bff3`), which is `mov eax,1; ret`, so its version is 1; the item cache's is 5, the quest cache's 3 and the
+others' 1 (the table above). A failed open for writing (`0x556721`) is logged and the save skips the writing.
+Per node, walking the list at `+0xc`, an entry is written only when the valid byte `+0x50` is set and the byte `+0x60` is clear (`0x556861` to `0x55686b`): the key
+copy `+0x4c`, a zero size, the record encoded by the type's writer (`0x7c8080` for creatures), and the size patched in place by `0x417e10(position 4,
+length − 8)` at `0x5568ac`. `0x7c8080` puts the four names and the subname as strings, seven dwords, and two flag bytes as 0 or 1. The two zero dwords are written at `0x5568f9` to `0x55691d`, then the file is closed.
+
+## Loading a .wdb file
+
+The load returns at once for a cache whose persist byte is 0. Otherwise it reads the 20-byte header and compares the tag, the build, the locale, the record size and the
+version with its own. Any difference closes the file and leaves the cache empty; the file stays on disk. The body is read entry by entry until a key of 0, each record decoded by the
+type's reader into a node found or created for the key, with the valid byte `+0x50` set. A short read clears the nodes already loaded.
+
+Addresses: `0x5572b0`, `0x557342`, `0x557390`, `0x5573ae`, `0x5573c6`, `0x5573e7`, `0x55742e`, `0x5574be`, `0x55761a`, `0x557665`, `0x56bff3`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5572b0` is the creature cache's load; each cache's has its own constants. It opens the file and reads
+the 20 bytes (`0x557342`, short read: close and return). It compares the tag with `+0x28` (`0x557390`), the build with `0x16f3` (`0x5573ae`), the locale
+with `[0xc2a2a4]` (`0x5573c6`), the record size with the type's (`0x34`, `0x5573e7`) and the version (1, `0x55742e`). Any difference closes the file and
+returns with the cache empty, and nothing is deleted from disk. The body is read entry by entry: eight bytes (key, size), and a key of 0 ends the file (`0x5574be`, `0x55761a`).
+Otherwise the size bytes are read (a size above `0x4000` makes a larger buffer) and decoded by the type's reader into a node found or created for the key, the valid byte
+`+0x50` is set and `+0x4c` takes the key. A short read of an entry, or of its record, sets an error byte, and the cache then clears every node it has loaded
+(`0x557665` to `0x5576a4`).
 
 ## Caches that are not saved
 
@@ -55,9 +97,9 @@ calls the load function of each of the thirteen caches; the four that are not sa
 
 ## Cache objects and nodes
 
-A cache object holds: the vtable at `+0`; a list of all nodes at `+8`; a chain counter at `+0x10`; a bucket array at `+0x1c` of
-`mask + 1` heads of 12 bytes; the mask at `+0x24` (−1 until the first node); the tag at `+0x28`; the file name at `+0x2c`; the query opcode at
-`+0x30`; the owner flag at `+0x38`; the persist flag at `+0x39`. A node holds its key at `+0`, the
+A cache object holds: the vtable at `+0`; a list of all nodes at `+8`; a chain counter at `+0x10`; a bucket array at `+0x1c`
+of `mask + 1` 12-byte heads; the mask at `+0x24` (−1 until the first node); the tag at `+0x28`; the file name at `+0x2c`; the query opcode at
+`+0x30`; a dword at `+0x34`; the owner flag at `+0x38`; the persist flag at `+0x39`. A node holds its key at `+0`, the
 hash chain link at `+4`, the list link at `+0xc`, the record from `+0x18`, a copy of the key at `+0x4c`, a valid byte at `+0x50`, a callback list at `+0x5c` and a
 dispatching byte at `+0x61`. The hash is `key & mask`.
 
@@ -67,7 +109,7 @@ Proof: one
 Test: none
 
 The constructor `0x55e6a0` zeroes `+0x14` to `+0x20`, stores the vtable (`0x80917c` for names), sets `+0x24` to −1 and stores its arguments
-(`0x55e74e` to `0x55e770`). Nothing in `0x554b00` to `0x5738c0` reads a node's age, and a hit changes nothing. `0x556ff0`, the creature cache's counterpart of the name removal `0x560170`, has no `e8`, `e9` or dword reference in the image.
+(`0x55e74e` to `0x55e770`). The dword goes to `+0x34` at `0x55e760`: `0x57` for the item cache, 0 for the others (the constructor calls, above). Nothing in `0x554b00` to `0x5738c0` reads a node's age, and a hit changes nothing. `0x556ff0`, the creature cache's counterpart of the name removal `0x560170`, has no `e8`, `e9` or dword reference in the image.
 
 ## Hash growth
 
@@ -159,7 +201,7 @@ Test: `dbcache::dbcache_creature`, `dbcache::dbcache_gameobject`, `dbcache::dbca
 
 The tests run each decoder whole against the exe's own code: `0x7c8120` creature, `0x7c87c0` game object, `0x7c8dc0` item name, `0x7c9640` item, `0x7c9fa0` NPC text, `0x62f260` guild,
 `0x6dbf60` quest, `0x7cabd0` page text, `0x6dc290` pet name, `0x7c7a30` petition, `0x6dc1f0` name, and the item text inside `0x569d00`. The sizes are the pushes of the saving
-functions (`0x5567cc` and the like).
+functions (`0x5567e8` and the like).
 
 ## Creature and game object
 
@@ -199,6 +241,17 @@ Test: `dbcache::dbcache_guild`, `dbcache::dbcache_quest`
 
 Strings are read without a bound (`0x7fffffff`), so a field's size is the layout.
 
+## Quest record dwords
+
+`+0x24` is the id of the quest that follows; `+0x34` is the item the quest hands out; `+0x8c` is a column nothing reads.
+
+Addresses: `0x5dc4d7`, `0x5dc6d7`, `0x5dc751`, `0x4e00ce`, `0x4e04fa`, `0x6dc05f`, `0x562286`, `0x562da9`, `0x6dbe5c`
+Confidence: inferred
+Proof: none
+Test: none
+
+`+0x24` is only tested for zero: `0x5dc4d7` and `0x5dc751`, in the quest-complete readers `0x5dc400` and `0x5dc710`, print message `0x8a` with the title (`+0x9c`) when it is 0, and `0x5dc6d7` turns it into 0 or 1. Where the install's `questcache.wdb` has it set, the value is another quest's id. `+0x34` is compared with each required item id (`0x4e00ce` in `GetNumQuestLeaderBoards`, `0x4e04fa` in `GetQuestLogLeaderBoard`): a required item equal to it is not counted as an objective line. `+0x8c` is read by the decoder (`0x6dc05f`), zeroed by the record clear (`0x562286`), moved by the node copy (`0x562da9`) and put by the file writer (`0x6dbe5c`); no instruction in the 42 functions that call `0x562a40`, nor in the code around them (`0x4de510` to `0x4e1600`, `0x4e8c80` to `0x4e9bd0`, `0x5dc400` to `0x5ddf30`, `0x5e5ad0` to `0x5e5ea0`), reads it. The control, `+0x24`, shows three reads in the same ranges.
+
 ## Pages, pets and item texts
 
 Page text (`0x7cabd0`, `0x404`): a string of up to `0x400` bytes at `+0`, a dword at `+0x400`. Pet name (`0x6dc290`, `0x58`): a dword at `+0x50`, a string of up to `0x50` bytes at `+0`, a dword at `+0x54`. Item name
@@ -222,6 +275,23 @@ Proof: one
 Test: `dbcache::dbcache_name`, `dbcache::dbcache_petition`
 
 The petition's count is a signed dword; the loop runs zero times for 0 or less. The three trailing name dwords are in the wire's order, which is not the order of the unit update fields.
+
+## Name cache node
+
+A name node is `0x188` bytes plus an extra, allocated by `0x55e810` with the tag `0x855ec8`. Its record starts at `+0x20` and is `0x148` bytes. The valid byte is `+0x170`, the callback list
+`+0x178`, a skip-from-save flag `+0x180` and the dispatching byte `+0x181`. In the record, `+0x13c` is the sex.
+
+Addresses: `0x55e810`, `0x855ec8`, `0x55fb9f`, `0x55fbeb`, `0x560370`, `0x55e894`, `0x5603e5`, `0x55ee0b`, `0x560033`, `0x517f80`, `0x55ec70`, `0x55fa50`, `0x55fee0`
+Confidence: verified
+Proof: one
+Test: none
+
+The allocator calls `SMemAlloc` with `0x188` plus the extra and the type name `.?AUDBCACHEHASH@?$DBCache@VNameCache@@_KVCHashKeyGUID@@@@` (`0x55e820` to `0x55e82e`). It clears the
+record with `rep stos` of `0x52` dwords (`0x55e884`); `+0x180` and `+0x181` start 0 (`0x55e894`, `0x55e89a`). In the record the name is at `+0`, the server name at `+0x30`, the guid at `+0x130` and the three
+dwords at `+0x138`, `+0x13c` and `+0x140`: race, sex and class, in the order the handler reads them (`0x5551f6`, `0x5551ff`, `0x55520c`). `UnitSex` (`0x517e90`) reads `+0x13c` at `0x517f80` and indexes
+the float table `0x808be4` with it. Both save routines (`0x55ec70`, the exit function, and the unreached `0x55fee0`) test the valid byte and then `+0x180` (`0x55ee0b`, `0x560033`) and write the node only
+when `+0x180` is 0. `0x560370` sets it (`0x5603e5`) on the node whose guid matches, and the names handler calls it when the guid's top four bits are 9 (`0x555245`). The names cache has persist 0, so neither save runs.
+The load `0x55fa50` returns at once for the same reason; past that test it compares the file header's record size with `0x148` (`0x55fb9f`) and the version with 4 (`0x55fbeb`), and closes the file on a difference.
 
 ## Name cache writers
 
