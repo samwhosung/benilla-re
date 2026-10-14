@@ -6973,7 +6973,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492e90	218			ui	primitive		Runs GameUI.cpp code that calls 0x494550, 0x4901e0, CGGameUI::Reload and 2 more; not read here	inferred	none		
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	
 0x493050	19			ui	orchestration		Runs GameUI.cpp code that calls GetInputControl, 0x514490; not read here	inferred	none		
-0x493070	28			ui	orchestration		Runs GameUI.cpp code that calls 0x483e80, CSimpleTop::SetMouseFocus; not read here	verified	one	ui/hover#freelook-and-the-removal	
+0x493070	28			ui	orchestration		Makes the world frame the hovered one: runs 0x483e80 on it, then CSimpleTop::SetMouseFocus	verified	one	ui/hover#freelook-and-the-removal	
 0x493090	27			ui	orchestration		Runs GameUI.cpp code that calls 0x483e70; not read here	inferred	none		
 0x4930b0	29			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4930d0	233			ui	primitive		Runs GameUI.cpp code that calls 0x4931c0, ClntObjMgrObjectPtr, CGUnit_C::PlayNPCSound and 2 more; not read here	inferred	none		
@@ -11643,7 +11643,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x502740	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x502760	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x502770	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x502780	35	CGTabardModelFrame::CGTabardModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	verified	one	ui/playermodel#pane-classes	
+0x502780	35	CGTabardModelFrame::CGTabardModelFrame	idb	ui	orchestration		Constructs a TabardModel frame: runs the base constructor, then stores the TabardModel tables	verified	one	ui/playermodel#pane-classes	
 0x5027b0	61			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5027f0	132			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x502880	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11726,7 +11726,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x504190	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x5041b0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5041c0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x5041d0	45	CGDressUpModelFrame::CGDressUpModelFrame	idb	ui	orchestration		Runs its object file code that calls CGCharacterModelBase::CGCharacterModelBase; not read here	verified	one	ui/playermodel#pane-classes	
+0x5041d0	45	CGDressUpModelFrame::CGDressUpModelFrame	idb	ui	orchestration		Constructs a DressUpModel frame: runs the base constructor, zeroes +0x3f8, stores the DressUpModel tables	verified	one	ui/playermodel#pane-classes	
 0x504200	61			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x504240	132			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x5042d0	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11809,7 +11809,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x505630	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x505650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x505660	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x505680	249	CGCharacterModelBase::CGCharacterModelBase	idb	ui	orchestration		Runs its object file code that calls CSimpleModel::CSimpleModel, M2LightSetType and 2 more; not read here	verified	one	ui/modelanim#the-frames-light	
+0x505680	249	CGCharacterModelBase::CGCharacterModelBase	idb	ui	orchestration		Constructs the model frame base: zeroes the pane fields, stores the PlayerModel tables, enables a directional light	verified	one	ui/playermodel#pane-classes	
 0x505780	53			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x5057c0	110			ui	orchestration		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x505830	6			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -13188,8 +13188,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x529fe0	2613	CGTooltip::BuildUnit		ui	primitive	uint32_t __thiscall (const uint64_t *guid)	Adds the lines of a unit tooltip for a unit in sight, or a party member or party pet record	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x52aa20	747	CGTooltip::BuildGameObject		ui	primitive	void __thiscall (const uint64_t *guid)	Adds the name, backdrop tint, handler lines and lock lines of a game object tooltip	verified	one	ui/tooltipobject#the-game-object-tooltip	
 0x52ad10	88	CGTooltip::OnLockKeyItem		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the game object tooltip again from its stored GUID when the key item arrives	verified	one	ui/tooltipobject#the-game-object-lock-lines	
-0x52ad70	26	QualityColorPointer		ui	primitive	uint32_t * __cdecl (uint32_t quality)	Returns the quality colour pointer, with the index clamped to 6	verified	one	ui/tooltipcontent#the-colours	
-0x52ad90	26	QualityColorEscape		ui	primitive	const char * __cdecl (uint32_t quality)	Returns the inline colour escape string of a quality	verified	one	ui/tooltipcontent#the-colours	
+0x52ad70	26	QualityColorPointer		ui	primitive	uint32_t * __fastcall (uint32_t quality)	Returns the quality colour pointer, with an index of 7 or more taking entry 1	verified	one	ui/tooltipcontent#the-colours	
+0x52ad90	26	QualityColorEscape		ui	primitive	const char * __fastcall (uint32_t quality)	Returns the inline colour escape string of a quality, with an index of 7 or more taking entry 1	verified	one	ui/tooltipcontent#the-colours	
 0x52adb0	80			ui	orchestration		Formats an item link with its quality colour	inferred	none	objectlayer/quests#quest-completion	
 0x52ae00	238			ui	primitive		Runs Tooltip.cpp code that calls DBCache_ItemStats_C_int_HASHKEY_INT_::GetRecord, 0x5d8bc0, 0x52adb0; not read here	inferred	none		
 0x52aef0	230	CGTooltip::BuildCorpse		ui	orchestration	void __thiscall (const uint64_t *guid)	Adds the corpse line with the owner's name, or waits for the name cache	verified	one	ui/tooltipobject#the-corpse-tooltip	

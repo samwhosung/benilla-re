@@ -127,7 +127,7 @@ transform alone, whose scale is uniform.
 ## The facing cancels
 
 On a plain `Model` with a live authored camera, `SetFacing` does not rotate the picture. The camera's up
-vector is exactly (0, 0, 1) for every camera a model frame can show, which is the axis the root
+vector is exactly (0, 0, 1) while the published roll is 0, which is the axis the root
 transform rotates about, so the camera frame turns with the geometry. The only trace is one frame of lag
 at a change: the paint reads the eye and target published on the previous paint before it rebuilds the
 root transform. With a frozen or stale camera, a nonzero published roll, or no camera, the facing shows.
@@ -139,7 +139,8 @@ Test: none
 
 `0x7ac640` builds up as `(sin yaw · sin roll, −cos yaw · sin roll, cos roll)` (`camera#view-and-projection`).
 Nothing writes a camera's yaw (property 6, `+0x164`), so it stays 0 and up is `(0, −sin roll, cos
-roll)`; the model's roll track is one key of 0 in every model the interface shows, so up is (0, 0, 1).
+roll)`, and the published roll is the camera's roll track unchanged (`0x718c35`), so up is (0, 0, 1)
+whenever that track is 0. Which models carry a nonzero roll track is install data and not derived here.
 `0x76d1fe` sets the rotation axis to (0, 0, 1). The paint reads the eye and target (`0x76d411`,
 `0x76d421`), builds the view (`0x76d42d`), rebuilds the root transform through slot 38 (`0x76d5ea`) and
 only then runs the scene, whose publish (`0x707839`) stores the new eye. The model's matrix starts as
@@ -277,12 +278,15 @@ and leaves the scale unchanged. Other frame types ignore the attribute. The game
 model frames and a world-map arrow with the same constructor and stores a scale into each after
 construction: 0.6 into eight minimap widgets, and `G48 · 5/3` into the minimap's player arrow and the
 world-map arrow, which the root transform multiplies in again, giving `s = (G48 · 5/3)² · layoutScale`,
-0.668 at 16:9.
+0.668 at 16:9, while the aspect is unchanged since the widget was built.
 
 Addresses: `0x76cac0`, `0x76cb36`, `0x76cb54`, `0x76cb5c`, `0x76cb61`, `0x76cb69`, `0x76de72`, `0x76c938`, `0x4a7a80`, `0x4a7ae3`, `0x4edbc0`, `0x4edeba`, `0x4edf67`, `0x4edfec`
 Confidence: verified
 Proof: one
 Test: none
+
+The stored scale is computed once at construction (`0x41ae70(1.0)` times `5/3`, stored at `0x4edfec` and
+`0x4a7ae3`); the paint reads G48 afresh, so after an aspect change the square fails.
 
 The attribute name string occurs once in the image, with one reference at `0x76cb36`. `0x76cac0` runs
 with the geometry base as `this`, so its `fstp [edi+0x37c]` at `0x76cb61` is frame `+0x3a0`; the check

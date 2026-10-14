@@ -61,15 +61,17 @@ Test: none
 Each initializer is a single `mov` of the literal into the global: `0x528e50` gold, `0x528e90` white,
 `0x528ed0` and `0x529190` red, `0x528fd0` pure red, `0x528f50` green, `0x528f10` gray, `0x529050`
 cream; `0x5291d0` to `0x52920c` fill the quality entries. White is never rewritten by a builder. A quality
-index is clamped to 6 by `0x52ad70`, which returns the pointer, and `0x52ad90` returns the matching inline
-escape string for chat text.
+index in `ecx` (both take it in `ecx` and no stack argument) is tested as unsigned against 7 (`cmp ecx,7; jb`):
+an index of 7 or more, negatives included, takes entry 1, white. `0x52ad70` returns the address of the
+dword at `0xc0d3c8` + 4·index, and `0x52ad90` returns the matching inline escape string for chat text from
+the table at `0x854124`.
 
 ## The line bindings
 
 `AddLine(text, r, g, b, wrap)`, `AddDoubleLine(left, right, rL, gL, bL, rR, gR, bR, wrap)` and
 `SetText(text, r, g, b, a, wrap)` read their colour only when the red argument is a number: if it is not,
 the whole colour stays gold. A given red takes green and blue without their own test, so a missing one is
-0.0. Each component is clamped to [0, 1], scaled by 255 and rounded half up. `AddLine` and `AddDoubleLine`
+0.0. Each component is clamped to [0, 1], and NaN becomes 1.0. Each is then scaled by 255 and rounded half up. `AddLine` and `AddDoubleLine`
 force alpha to 0xff; `SetText` reads alpha at its own index 6 with default 1.0 and clears the tooltip first.
 A wrap argument is read as a boolean; a number is truncated toward zero.
 
@@ -77,6 +79,10 @@ Addresses: `0x531630`, `0x531840`, `0x531b90`, `0x6f3400`, `0x6f3510`, `0x6f34d0
 Confidence: verified
 Proof: one
 Test: none
+
+The clamp is an `fcom` against 0.0 (`0x7ffd74`) and 1.0 (`0x7ff9d8`) with a `jp` on `test ah,5` after each
+(red of `AddLine`: `0x531720`, `0x531736`). An unordered compare sets C0 and C2, so `jp` is taken on both:
+NaN is neither below 0 nor below 1. Every other component of the three bindings uses the same two tests.
 
 Index 1 is the tooltip, checked as a table with a widget and the class tag; a bad one raises through
 `0x6f4940`, which does not return. The text is index 2 for all three, read when `lua_isstring` (`0x6f3510`)

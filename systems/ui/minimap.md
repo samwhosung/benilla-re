@@ -32,15 +32,15 @@ height times that. Without numbers it uses the player's position. A spell waitin
 at the ground there (a trace from 100,000 to −100,000, raised by 8) and no ping is sent. Otherwise, in a
 party or raid it sends message 0x1d5 with X then Y, and in any case it applies the ping itself.
 
-Addresses: `0x4eeca0`, `0x4eecf3`, `0x4eecf8`, `0x4eed0b`, `0x4eed1f`, `0x4eedcc`, `0x4eedeb`, `0x4eedf7`, `0x4eee21`, `0x4eee31`, `0x4eee48`, `0x4eee67`, `0x4eee74`, `0x4eeeac`, `0x4eeeb3`, `0x4eeed6`, `0x4eeee9`, `0x4eef05`, `0x4eef15`, `0x4eef26`, `0x4eef98`, `0x4eefb5`, `0x4eef31`, `0x4eef4f`, `0x4eef5b`, `0x4eef67`, `0x4eef72`
+Addresses: `0x4eeca0`, `0x4eecf3`, `0x4eecf8`, `0x4eed0b`, `0x4eed1f`, `0x4eedcc`, `0x4eede6`, `0x4eedeb`, `0x4eedf7`, `0x4eee11`, `0x4eee1c`, `0x4eee21`, `0x4eee31`, `0x4eee48`, `0x4eee67`, `0x4eee74`, `0x4eeeac`, `0x4eeeb3`, `0x4eeed6`, `0x4eeee9`, `0x4eef05`, `0x4eef15`, `0x4eef26`, `0x4eef98`, `0x4eefb5`, `0x4eef31`, `0x4eef4f`, `0x4eef5b`, `0x4eef67`, `0x4eef72`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4eecf3` takes the radius from `0x6da9b0` and `0x4eecf8` doubles it. If the active player object is
 missing nothing happens (`0x4eecdf`). Arguments 2 and 3 are read only when both are numbers (`0x4eed0b`,
-`0x4eed1f`); the offsets start at 0.0. The first is converted with `0x41ae60` and negated (`0x4eedeb`), the
-second is not (`0x4eedf7`); slot 0x1c, `GetWidth`, divides the second (`0x4eee21`) and slot 0x20,
+`0x4eed1f`); the offsets start at 0.0. Both go through `0x41ae60` (`0x4eede6`, `0x4eee11`); only the first
+is then negated (`0x4eedeb`), and the second is stored as converted (`0x4eee1c`); slot 0x1c, `GetWidth`, divides the second (`0x4eee21`) and slot 0x20,
 `GetHeight`, the first (`0x4eee31`); each is multiplied by the diameter and the player's position added
 (`0x4eee48`). With `0x6e48a0` and `0x6e6320` true (`0x4eee67`, `0x4eee74`) it traces from 100000.0 to
 −100000.0 (`0x4eeeac`, `0x4eeeb3`) with `0x672170` (`0x4eeed6`), adds 8.0 (`0x4eeee9`) and calls
