@@ -1,0 +1,84 @@
+name	fn	checked	usage
+UnitExists	0x515fb0		
+UnitIsVisible	0x516030		
+UnitIsUnit	0x516070	1:string,2:string	Usage: UnitIsUnit("unit", "otherUnit")
+UnitIsPlayer	0x516150		
+UnitIsCorpse	0x5161c0		
+UnitIsPartyLeader	0x516210		
+UnitInParty	0x516290		
+UnitPlayerOrPetInParty	0x5162f0		
+UnitInRaid	0x516350		
+UnitPlayerOrPetInRaid	0x5163b0		
+UnitPlayerControlled	0x516410		
+UnitIsPVP	0x516460	1:string	Usage: UnitIsPVP("unit")
+UnitIsPVPFreeForAll	0x516540	1:string	Usage: UnitIsPVPFreeForAll("unit")
+UnitFactionGroup	0x516630	1:string	Usage: UnitFactionGroup("unit")
+UnitReaction	0x5167e0	1:string,2:string	Usage: UnitReaction("unit", "otherUnit")
+UnitIsEnemy	0x516890	1:string,2:string	Usage: UnitIsEnemy("unit", "otherUnit")
+UnitIsFriend	0x516930	1:string,2:string	Usage: UnitIsFriend("unit", "otherUnit")
+UnitCanCooperate	0x516a70	1:string,2:string	Usage: UnitCanCooperate("unit", "otherUnit")
+UnitCanAssist	0x516bb0	1:string,2:string	Usage: UnitCanAssist("unit", "otherUnit")
+UnitCanAttack	0x516c50	1:string,2:string	Usage: UnitCanAttack("unit", "otherUnit")
+UnitIsCharmed	0x516cf0		
+UnitIsPlusMob	0x516d40		
+UnitClassification	0x516d90		
+UnitName	0x517020	1:string	Usage: UnitName("unit")
+UnitPVPName	0x5172b0	1:string	Usage: UnitPVPName("unit")
+UnitXP	0x517350	1:string	Usage: UnitXP("unit")
+UnitXPMax	0x517410	1:string	Usage: UnitXPMax("unit")
+UnitHealth	0x5174d0	1:string	Usage: UnitHealth("unit")
+UnitHealthMax	0x5175b0	1:string	Usage: UnitHealthMax("unit")
+UnitMana	0x517670	1:string	Usage: UnitMana("unit")
+UnitManaMax	0x5177e0	1:string	Usage: UnitManaMax("unit")
+UnitPowerType	0x517940	1:string	Usage: UnitPowerType("unit")
+UnitOnTaxi	0x517a40	1:string	Usage: UnitOnTaxi("unit")
+UnitIsDead	0x517ac0	1:string	Usage: UnitIsDead("unit")
+UnitIsGhost	0x517b90	1:string	Usage: UnitIsGhost("unit")
+UnitIsDeadOrGhost	0x517c70	1:string	Usage: UnitIsDeadOrGhost("unit")
+UnitIsConnected	0x517d50	1:string	Usage: UnitIsConnected("unit")
+UnitAffectingCombat	0x517e10	1:string	Usage: UnitAffectingCombat("unit")
+UnitSex	0x517e90	1:string	Usage: UnitSex("unit")
+UnitLevel	0x517fc0	1:string	Usage: UnitLevel("unit")
+GetMoney	0x518160		
+UnitRace	0x518200	1:string	Usage: UnitRace("unit")
+UnitClass	0x518350	1:string	Usage: UnitClass("unit")
+UnitResistance	0x5184a0	1:string,2:number	Usage: UnitResistance("unit", resistanceIndex)
+UnitStat	0x518600	1:string,2:number	Usage: UnitStat("unit", statIndex)
+UnitAttackBothHands	0x518810	1:string	Usage: UnitAttackBothHands("unit")
+UnitDamage	0x518c20	1:string	Usage: UnitDamage("unit")
+UnitRangedDamage	0x518910	1:string	Usage: UnitRangedDamage("unit")
+UnitRangedAttack	0x518b90	1:string	Usage: UnitRangedAttack("unit")
+UnitAttackSpeed	0x518e50	1:string	Usage: UnitAttackSpeed("unit")
+UnitAttackPower	0x518f80	1:string	Usage: UnitAttackPower("unit")
+UnitRangedAttackPower	0x5190c0	1:string	Usage: UnitAttackPower("unit")
+UnitDefense	0x519200	1:string	Usage: UnitDefense("unit")
+UnitArmor	0x5192e0	1:string	Usage: UnitArmor("unit")
+UnitCharacterPoints	0x519420	1:string	Usage: UnitCharacterPoints("unit")
+UnitBuff	0x519500	1:string,2:number	Usage: UnitBuff("unit", index [,raidFilter])
+UnitDebuff	0x5198f0	1:string,2:number	Usage: UnitDebuff("unit", index [,raidFilter])
+UnitIsTapped	0x519c90	1:string	Usage: UnitIsTapped("unit")
+UnitIsTappedByPlayer	0x519d00	1:string	Usage: UnitIsTappedByPlayer("unit")
+UnitIsTrivial	0x519d70	1:string	Usage: UnitIsTrivial("unit")
+UnitIsCivilian	0x519de0	1:string	Usage: UnitIsCivilian("unit")
+UnitHasRelicSlot	0x519e50	1:string	Usage: UnitHasRelicSlot("unit")
+SetPortraitTexture	0x519ef0	2:string	Usage: SetPortraitTexture(texture, "unit")
+HasFullControl	0x51a120		
+GetComboPoints	0x51a190		
+IsInGuild	0x516de0		
+IsGuildLeader	0x516e40		
+IsResting	0x516ea0		
+GetDodgeChance	0x516f00		
+GetBlockChance	0x516f60		
+GetParryChance	0x516fc0		
+UnitCreatureType	0x51a280	1:string	Usage: UnitCreatureType("unit")
+UnitCreatureFamily	0x51a310	1:string	Usage: UnitCreatureFamily("unit")
+GetResSicknessDuration	0x51a3a0		
+GetPVPSessionStats	0x51a4b0		
+GetPVPYesterdayStats	0x51a550		
+GetPVPThisWeekStats	0x51a620		
+GetPVPLastWeekStats	0x51a6c0		
+GetPVPLifetimeStats	0x51a7c0		
+UnitPVPRank	0x51a8a0	1:string	Usage: UnitPVPRank("unit")
+GetPVPRankInfo	0x51a930	1:number,2:number,2:string	Usage: GetPVPRankInfo(rank [, unit])
+GetPVPRankProgress	0x51aa90		
+GetInspectPVPRankProgress	0x51ab00		

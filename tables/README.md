@@ -189,3 +189,16 @@ contract; in brief:
 | `kinds` | The kinds of the returned values, one alternative per path: `(number,string?)`. `string?` is a string or nil. |
 | `kinds_conf` | `agree` (independently cross-checked at every return), `unverified` or `unknown`. |
 | `notes` | `stack-leak`, `variadic`, `name-not-unique`, `delegated-push`, `iteration-cap`, `cfg-truncated`, `indirect-branch`; `;`-separated. |
+
+## unit_gates.tsv
+
+How each of the 83 unit functions checks its arguments (83 rows). `../tools/tables/unit_gates.py`
+opens with the contract. A function without a check takes a missing or nil argument without an
+error.
+
+| column | meaning |
+|---|---|
+| `name` | The Lua name, in table order. |
+| `fn` | The C function. |
+| `checked` | The checked arguments, `,`-separated: `1:string` for `lua_isstring` (a number passes) and `1:number` for `lua_isnumber`, by Lua stack index. Empty for none. |
+| `usage` | Every `Usage:` string the function pushes for its error, `\|`-separated. Empty for none. |
