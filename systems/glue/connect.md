@@ -39,10 +39,10 @@ A queued connect shows one dialog, the `CANCEL` dialog `ConnectToRealm` opened w
 argument `CHANGE_REALM` relabels the button. The text is one of six: `QUEUE_TIME_LEFT_UNKNOWN`,
 `QUEUE_TIME_LEFT_SECONDS` or `QUEUE_TIME_LEFT`, each also with `NAME` when `realmName` is non-empty.
 The status text before it is empty, because `GetStatus` returns the empty string while the queue's
-operation is incomplete, so the dialog gains a leading blank line and `AUTH_WAIT_QUEUE` is never
-shown. The G15 display draws the `QUEUE_*` keys without `NAME` from the raw estimate.
+operation is incomplete, so the two estimate legs gain a leading blank line and `AUTH_WAIT_QUEUE` is never
+shown; the unknown leg shows its text alone. The G15 display draws the `QUEUE_*` keys without `NAME` from the raw estimate.
 
-Addresses: `0x46b210`, `0x46b26c`, `0x46bc52`, `0x46bcb8`, `0x46bdd7`, `0x46bdfc`, `0x5aa991`, `0x5aa9e9`, `0x5aa400`, `0x5aa420`, `0x5ab280`, `0x5ab29b`, `0x5ab2a6`, `0x46ae50`, `0x72a8d0`
+Addresses: `0x46b210`, `0x46b26c`, `0x46bc52`, `0x46bcb8`, `0x46bdd7`, `0x46bdfc`, `0x5aa991`, `0x5aa9e9`, `0x5aa400`, `0x5aa420`, `0x5ab280`, `0x5ab29b`, `0x5ab2a6`, `0x46ae50`, `0x72a8d0`, `0x72b000`
 Confidence: verified
 Proof: one
 Test: none
@@ -51,7 +51,9 @@ Test: none
 `0x5aa9e9` to `0x5aaa05` lies after that test. `0x5ab280`, the listener's slot `+8`, reaches
 `0x5aa400` (op 0x0a, status 0x1b) at `0x5ab29b`, which clears the flag, then `0x46ae50` at `0x5ab2a6`.
 `0x46bc52 cmp [ebp-8],0x1b` picks the queue legs and `0x46bcb8 jle` the unknown estimate.
-`GlueDialog.lua` uses a second argument of `UPDATE_STATUS_DIALOG` as the button text.
+`GlueDialog.lua` uses a second argument of `UPDATE_STATUS_DIALOG` as the button text. The keyboard display `0x72a8d0` picks
+`QUEUE_TIME_LEFT` for an estimate over 60000 ms (`0x72b000`), the `SECONDS` key for a smaller nonzero one and
+`UNKNOWN` for 0.
 
 ## Queue cancel
 

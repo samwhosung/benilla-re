@@ -92,7 +92,9 @@ CharBaseInfo store, records 8 bytes apart, race byte `+0`, class byte `+1`. Pass
 edi,3; jne` (`0x4706e3`), `cmp byte [ecx+1],8; je` skip (`0x4706e8`); pass two repeats it at
 `0x47075b` and `0x470760`. `0x470700` compares with `0xb42080`; 0 calls `0x471a70`, which frees
 the data, and clears the cells. The id is looked up in the ChrClasses store `0xc0deec`,
-else 0 (`0x470781`).
+else 0 (`0x470781`). The shipped file has 41 rows, so 40 entries
+remain across the lists, by race id: 1 `1 2 4 5 8 9`, 2 `1 3 4 7 9`, 3 `1 2 3 4 5`, 4 `1 3 4 5 11`, 5 `1 4 5 8 9`, 6 `1 3 7 11`, 7 `1 4 8 9`,
+8 `1 3 4 5 7 8`.
 
 ## Five customization draws
 

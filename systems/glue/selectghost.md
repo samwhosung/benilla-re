@@ -48,7 +48,9 @@ Test: none
 
 `0x6d48b0` returns `0xce9b60`, so `[esi+0x110]` is the light state's glow value. The writers
 among its 41 callers are `0x46fa6e` (`0x8380b4`, 0.30f) and `0x472fef`, `0x473007`; the readers
-are `0x6cb0e2`, `0x6cb557` and `0x6cb9e1`. Each float has one reference, its read. `0x6cc130`
+are `0x6cb0e2`, `0x6cb557` and `0x6cb9e1`. The light table builder `0x6d2260` also stores to it by absolute
+address (`0x6d231f`, `0x6d263d`, `0x6d2789`); it is called from the world's light update, and no function of
+the glue band calls it. Each float has one reference, its read. `0x6cc130`
 and `0x6cc690` each have two call sites, `0x46a71e`, `0x46a74d` and the world's `0x481c63`,
 `0x481c8d`; `0x6cde60` six. `0x472a6d jne 0x472fba` sends a built record to the swap.
 

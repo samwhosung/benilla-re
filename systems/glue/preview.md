@@ -117,4 +117,4 @@ Test: none
 The material arrays are read from the six `.m2` files (header `+0x84` count, `+0x88` offset, four
 bytes each: flags, blend mode). `0x70bb00 test [ecx],1` clears the lit flag `[batch+0x3328]` and
 `0x70bb0a` also clears it for the blend modes whose entry at `0x811fa8` is 0. The law that the
-lit flag selects is in `models`. Which batches draw each material was not read.
+lit flag selects is in `models`. Which batches draw each material is not read here.

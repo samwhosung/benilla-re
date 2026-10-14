@@ -149,7 +149,9 @@ Azimuth and elevation are the first camera's eye (`posBase`) seen from attachmen
 The bones are roots whose pivots equal the attachment positions; their flags are 0 or 0x200, so
 `0x714961 test cl,7` never takes the billboard leg. The loader `0x706a50` rewrites an `.mdx` or
 `.mdl` extension to `.m2` and refuses any other, so the scripts' `.mdx` names resolve to `.m2`
-files. Each scene has one camera, and `SetCamera(0)` indexes it raw.
+files. Each scene has one camera, and `SetCamera(0)` indexes it raw. The frame's own `SetFacing` (`ui`) turns
+the scene model, and no GlueXML file calls it. With the bone yaw dropped, the total angle between Human's
+forward and the line to the camera goes from 12.937 to 22.126 degrees; its elevation is 12.829.
 
 ## Pet model chain
 
@@ -171,7 +173,8 @@ receives the record. `0x472a44` and `0x472a49` detach after the index test (`0x4
 `0x472971`); `0x7130a0` walks the scene's child list and releases each child whose `+0x1d0` equals
 the id and `0x713020` unlinks it and releases it through `0x7103a0`, which `0x71300d` (`0x710390`)
 balanced at the attach. `0x473700` releases `+0x114` but zeroes only `+0x110`. `0x473ad0`'s fallback path copies whole
-records and destroys the source's models.
+records and destroys the source's models. Of the 23 shipped `CreatureFamily` rows, 22 have levels 1 and 60; row 28 has levels
+0 and 0, so its scale is NaN.
 
 ## Pet textures
 
