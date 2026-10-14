@@ -2579,13 +2579,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e360	uint32_t	s_playTimeWarnDeadline		ui	Holds the clock value at which the remaining billing time ends, 0 when not armed	verified	one	ui/billing#the-warning-timer
 0xb4e364	uint32_t	s_playTimeWarnA		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
 0xb4e368	uint32_t	s_playTimeWarnB		ui	Holds a word of the play time warning that start-up zeroes and the poller reads and writes	verified	one	ui/billing#the-warning-timer
-0xb4e36c	uint32_t	s_worldUiAlive		unassigned	Holds non-zero while the world interface exists; the world screenshot callback checks it	inferred	none	gx/capture#completion-events
+0xb4e36c	uint32_t	s_gameUiReady		ui	Holds 1 once the game interface is built, cleared at shutdown	verified	one	ui/cvarverbs#performance-display-and-screenshots
 0xb4e370	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e374	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e378	uint32_t			unassigned	Holds a dword that ClntObjMgrCreate, Script::IsInInstance read and write; not read here	inferred	none	
 0xb4e37c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb4e3c0	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
 0xb4e3c4	uint32_t			ui	Holds a dword that Script::BindEnchant, Script::ReplaceEnchant read and write; not read here	inferred	none	
+0xb4e3c8	uint32_t	s_scriptCvarCount		ui	Holds the number of CVars RegisterCVar has registered; the 31st is refused	verified	one	ui/cvarverbs#writing-cvars-from-lua
 0xb4e3cc	float[4]	s_interactRangesSquared		ui	Holds the squared ranges of CheckInteractDistance indices 1 to 4, copied at the first call	verified	one	ui/distancegates#thresholds
 0xb4e3dc	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
 0xb4e3e0	uint32_t			ui	Holds a dword that Script::LoadAddOn reads and writes; not read here	inferred	none	
@@ -2682,6 +2683,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6f038	uint32_t	s_liveBubbleHead		ui	Holds the first live chat bubble, the farthest from the camera, with bit 0 set for none	verified	one	ui/chatbubble#the-bubble-lists
 0xb6f064	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb6f098	uint32_t[1024]	s_petBookSpells		unassigned	Holds the pet's spell book, a spell id per slot	verified	one	ui/spellbook#spell-book-lists
+0xb70098	uint32_t	s_stuckSpellId		ui	Holds the spell id Stuck casts, stored when a learned spell record has +0xf4 equal 0x54	verified	one	ui/cvarverbs#performance-display-and-screenshots
 0xb700ac	uint32_t *	s_indexedSpells		ui	Points at the spells 0x5ec720 looks up by index	inferred	none	objectlayer/playercombat#skills
 0xb700b0	uint32_t	s_openLockSpellCapacity		ui	Holds the capacity of the array of learned spell ids whose first effect opens a lock	verified	one	objectlayer/playercombat#the-opener-list
 0xb700b4	uint32_t	s_openLockSpellCount		ui	Holds the count of learned opener spell ids	verified	one	objectlayer/playercombat#the-opener-list

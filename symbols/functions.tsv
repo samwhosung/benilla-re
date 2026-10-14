@@ -6623,48 +6623,48 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x484ca0	14184			ui	orchestration		Runs its object file code that calls 0x488410; not read here	inferred	none		
 0x488410	38			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x488440	84	Script::FrameXML_Debug	idb	ui	orchestration		Sets the FrameXML trace level from a number argument and returns the level	verified	one	ui/framexml#the-load-status-and-its-log	
-0x4884a0	44			ui	orchestration		Runs its object file code that calls lua_pushstring; not read here	inferred	none		
+0x4884a0	44	GameScriptGetBuildInfo		ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the strings 1.12.1, 5875 and Sep 19 2006	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x4884d0	8	Script::ReloadUI	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Requests an interface reload through 0x491380 and returns nothing	verified	one	ui/bindings#reloading-the-interface	
 0x4884e0	87	Script::RegisterForSave	idb	ui	orchestration		Adds a name to the flat saved variables, raising unless the context word is 0	verified	one	ui/addons#saved-variables-written	
-0x488540	68	Script::SetLayoutMode	idb	ui	orchestration		Implements the Lua function SetLayoutMode	inferred	none		
-0x488590	47	Script::IsShiftKeyDown	idb	ui	orchestration		Implements the Lua function IsShiftKeyDown	inferred	none		
-0x4885c0	50	Script::IsControlKeyDown	idb	ui	orchestration		Implements the Lua function IsControlKeyDown	inferred	none		
-0x488600	50	Script::IsAltKeyDown	idb	ui	orchestration		Implements the Lua function IsAltKeyDown	inferred	none		
-0x488640	1196	Script::SetConsoleKey	idb	ui	primitive		Implements the Lua function SetConsoleKey	inferred	none		
-0x488af0	3	Script::GetDebugStats	idb	ui	orchestration		Implements the Lua function GetDebugStats	inferred	none		
-0x488b00	154	Script::RegisterCVar	idb	ui	primitive		Implements the Lua function RegisterCVar	inferred	none		
-0x488ba0	104	Script::GetCVar	idb	ui	orchestration		Implements the Lua function GetCVar	inferred	none		
-0x488c10	211	Script::SetCVar	idb	ui	primitive		Implements the Lua function SetCVar	inferred	none		
-0x488cf0	122	Script::GetCVarDefault	idb	ui	orchestration		Implements the Lua function GetCVarDefault	inferred	none		
-0x488d70	83	Script::GetWorldDetail	idb	ui	primitive		Implements the Lua function GetWorldDetail	verified	one	cvar/options#world-detail-verbs	
-0x488dd0	225	Script::SetWorldDetail	idb	ui	orchestration		Implements the Lua function SetWorldDetail	verified	one	cvar/options#world-detail-verbs	
-0x488ec0	15	Script::GetWaterDetail	idb	ui	orchestration		Implements the Lua function GetWaterDetail	inferred	none		
-0x488ed0	35	Script::SetWaterDetail	idb	ui	orchestration		Implements the Lua function SetWaterDetail	inferred	none		
-0x488f00	36	Script::GetFarclip	idb	ui	orchestration		Implements the Lua function GetFarclip	inferred	none		
-0x488f30	126	Script::SetFarclip	idb	ui	orchestration		Implements the Lua function SetFarclip	inferred	none		
-0x488fb0	42	Script::GetTerrainMip	idb	ui	primitive		Implements the Lua function GetTerrainMip	verified	one	cvar/options#mip-verbs	
-0x488fe0	124	Script::SetTerrainMip	idb	ui	primitive		Implements the Lua function SetTerrainMip	verified	one	cvar/options#mip-verbs	
-0x489060	36	Script::GetDoodadAnim	idb	ui	orchestration		Implements the Lua function GetDoodadAnim	inferred	none		
-0x489090	126	Script::SetDoodadAnim	idb	ui	orchestration		Implements the Lua function SetDoodadAnim	inferred	none		
-0x489110	36	Script::GetTexLodBias	idb	ui	orchestration		Implements the Lua function GetTexLodBias	inferred	none		
-0x489140	126	Script::SetTexLodBias	idb	ui	orchestration		Implements the Lua function SetTexLodBias	inferred	none		
+0x488540	68	Script::SetLayoutMode	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stores its numeric argument, or 1, in the top frame's layout mode field	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
+0x488590	47	Script::IsShiftKeyDown	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the Shift key is held, else nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
+0x4885c0	50	Script::IsControlKeyDown	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the Control key is held, else nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
+0x488600	50	Script::IsAltKeyDown	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the Alt key is held, else nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
+0x488640	1196	Script::SetConsoleKey	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Stores the key code a key name maps to as the console key	verified	one	ui/cvarverbs#the-console-key	
+0x488af0	3	Script::GetDebugStats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns no values	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x488b00	154	Script::RegisterCVar	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Registers a script CVar once, with category 9, up to 30 of them	verified	one	ui/cvarverbs#writing-cvars-from-lua	
+0x488ba0	104	Script::GetCVar	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns a script-readable CVar's current text	verified	one	ui/cvarverbs#reading-cvars-from-lua	
+0x488c10	211	Script::SetCVar	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a script-writable CVar and signals CVAR_UPDATE when given a token	verified	one	ui/cvarverbs#writing-cvars-from-lua	
+0x488cf0	122	Script::GetCVarDefault	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns a script-readable CVar's default text, or nil	verified	one	ui/cvarverbs#reading-cvars-from-lua	
+0x488d70	83	Script::GetWorldDetail	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the world detail index 0 to 2 that the smallCull CVar matches	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488dd0	225	Script::SetWorldDetail	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets frillDensity and smallCull from a world detail index 0 to 2	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488ec0	15	Script::GetWaterDetail	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number 0	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488ed0	35	Script::SetWaterDetail	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Checks for a numeric argument and changes nothing	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488f00	36	Script::GetFarclip	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the farclip CVar as a number	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488f30	126	Script::SetFarclip	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sets the farclip CVar from a number	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488fb0	42	Script::GetTerrainMip	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 minus the shadowLevel CVar	verified	one	ui/cvarverbs#the-detail-verbs	
+0x488fe0	124	Script::SetTerrainMip	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets shadowLevel to 1 minus its argument	verified	one	ui/cvarverbs#the-detail-verbs	
+0x489060	36	Script::GetDoodadAnim	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the doodadAnim CVar as a number	verified	one	ui/cvarverbs#the-detail-verbs	
+0x489090	126	Script::SetDoodadAnim	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sets the doodadAnim CVar from a number	verified	one	ui/cvarverbs#the-detail-verbs	
+0x489110	36	Script::GetTexLodBias	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the texLodBias CVar as a number	verified	one	ui/cvarverbs#the-detail-verbs	
+0x489140	126	Script::SetTexLodBias	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Sets the texLodBias CVar from a number	verified	one	ui/cvarverbs#the-detail-verbs	
 0x4891c0	42	Script::GetGamma	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1.0 minus the gamma option	verified	one	ui/videoverbs#gamma	
 0x4891f0	132	Script::SetGamma	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Stores 1.0 minus its argument in the gamma option, or raises the usage error	verified	one	ui/videoverbs#gamma	
-0x489280	42	Script::GetBaseMip	idb	ui	primitive		Implements the Lua function GetBaseMip	verified	one	cvar/options#mip-verbs	
-0x4892b0	127	Script::SetBaseMip	idb	ui	primitive		Implements the Lua function SetBaseMip	verified	one	cvar/options#mip-verbs	
-0x489330	3	Script::ToggleTris	idb	ui	orchestration		Implements the Lua function ToggleTris	inferred	none		
-0x489340	3	Script::TogglePortals	idb	ui	orchestration		Implements the Lua function TogglePortals	inferred	none		
-0x489350	3	Script::ToggleCollision	idb	ui	orchestration		Implements the Lua function ToggleCollision	inferred	none		
-0x489360	3	Script::ToggleCollisionDisplay	idb	ui	orchestration		Implements the Lua function ToggleCollisionDisplay	inferred	none		
-0x489370	20	Script::Stuck	idb	ui	orchestration		Implements the Lua function Stuck	inferred	none		
+0x489280	42	Script::GetBaseMip	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1.0 minus the baseMip CVar	verified	one	ui/cvarverbs#the-detail-verbs	
+0x4892b0	127	Script::SetBaseMip	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets baseMip to the integer of 1.0 minus its argument	verified	one	ui/cvarverbs#the-detail-verbs	
+0x489330	3	Script::ToggleTris	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns at once and changes nothing	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x489340	3	Script::TogglePortals	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns at once and changes nothing	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x489350	3	Script::ToggleCollision	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns at once and changes nothing	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x489360	3	Script::ToggleCollisionDisplay	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns at once and changes nothing	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x489370	20	Script::Stuck	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Casts the spell remembered for Stuck on the active player	verified	one	ui/cvarverbs#performance-display-and-screenshots	
 0x489390	19	Script::Logout	idb	ui	orchestration		Requests a logout, honouring the pending latch	verified	one	ui/popups#logout-and-quit	
 0x4893b0	19	Script::Quit	idb	ui	orchestration		Requests a logout that is reported as a quit	verified	one	ui/popups#logout-and-quit	
-0x4893d0	13			ui	orchestration		Runs its object file code that calls 0x442a10; not read here	inferred	none		
-0x4893e0	28	Script::GetFramerate	idb	ui	orchestration		Implements the Lua function GetFramerate	inferred	none		
-0x489400	20	Script::TogglePerformanceDisplay	idb	ui	primitive		Implements the Lua function TogglePerformanceDisplay	inferred	none		
-0x489420	8	Script::TogglePerformanceValues	idb	ui	orchestration		Implements the Lua function TogglePerformanceValues	inferred	none		
-0x489430	8	Script::ResetPerformanceValues	idb	ui	orchestration		Implements the Lua function ResetPerformanceValues	inferred	none		
-0x489440	3	Script::TogglePlayerBounds	idb	ui	orchestration		Implements the Lua function TogglePlayerBounds	inferred	none		
+0x4893d0	13	GameScriptScreenshot		ui	orchestration	uint32_t __fastcall (lua_State *L)	Installs the screenshot result hook 0x4930b0	verified	one	ui/cvarverbs#performance-display-and-screenshots	
+0x4893e0	28	Script::GetFramerate	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the smoothed frame rate as a number	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x489400	20	Script::TogglePerformanceDisplay	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Flips the performance display switch	verified	one	ui/cvarverbs#performance-display-and-screenshots	
+0x489420	8	Script::TogglePerformanceValues	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Calls a function that returns at once	verified	one	ui/cvarverbs#performance-display-and-screenshots	
+0x489430	8	Script::ResetPerformanceValues	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Calls a function that returns at once	verified	one	ui/cvarverbs#performance-display-and-screenshots	
+0x489440	3	Script::TogglePlayerBounds	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns at once and changes nothing	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x489450	10	Script::ShowNameplates	idb	ui	orchestration		Sets bit 0x1 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
 0x489460	10	Script::HideNameplates	idb	ui	orchestration		Clears bit 0x1 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
 0x489470	10	Script::ShowFriendNameplates	idb	ui	orchestration		Sets bit 0x8 of the nameplate switches, taking no argument	verified	one	ui/nameplates#the-nameplate-switches	
@@ -6756,7 +6756,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b720	67	Script::GetSummonConfirmAreaName	idb	ui	orchestration		Pushes the name of the summon's zone, or the empty string	verified	one	ui/summon#the-lua-functions	
 0x48b770	176	Script::ConfirmSummon	idb	ui	orchestration		Sends opcode 0x2ac with the latched summoner GUID	verified	one	ui/summon#answering	
 0x48b820	135			ui	primitive		Runs GameUI.cpp code that calls ScaleScreenDelta, GetScaledScreenAspect, DivideByScreenScaleX and 1 more; not read here	inferred	none		ui::luabind_48b_cursor_position
-0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration		Implements the Lua function GetNetStats	inferred	none		
+0x48b8b0	104	Script::GetNetStats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the incoming and outgoing KB/s and the latency in milliseconds	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48b920	69	Script::SitOrStand	idb	ui	orchestration		Implements the Lua function SitOrStand	inferred	none		
 0x48b970	10	Script::StopCinematic	idb	ui	orchestration		Implements the Lua function StopCinematic	inferred	none		
 0x48b980	119	Script::RunScript	idb	ui	primitive		Runs argument 1 as a chunk with the context word set to the RunScript word	verified	one	ui/luastate#the-context-word	
@@ -6783,9 +6783,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48c7b0	264	Script::RandomRoll	idb	ui	orchestration		Implements the Lua function RandomRoll	inferred	none		
 0x48c8c0	100	Script::OpeningCinematic	idb	ui	orchestration		Implements the Lua function OpeningCinematic	inferred	none		
 0x48c930	38	Script::InCinematic	idb	ui	orchestration		Implements the Lua function InCinematic	inferred	none		
-0x48c960	18	Script::IsWindowsClient	idb	ui	orchestration		Implements the Lua function IsWindowsClient	inferred	none		
-0x48c980	11	Script::IsMacClient	idb	ui	orchestration		Implements the Lua function IsMacClient	inferred	none		
-0x48c990	11	Script::IsLinuxClient	idb	ui	orchestration		Implements the Lua function IsLinuxClient	inferred	none		
+0x48c960	18	Script::IsWindowsClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number 1	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x48c980	11	Script::IsMacClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
+0x48c990	11	Script::IsLinuxClient	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns nil	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48c9a0	41	Script::GetGMTicket	idb	ui	orchestration		Implements the Lua function GetGMTicket	inferred	none		
 0x48c9d0	130	Script::NewGMTicket	idb	ui	orchestration		Implements the Lua function NewGMTicket	inferred	none		
 0x48ca60	130	Script::UpdateGMTicket	idb	ui	orchestration		Implements the Lua function UpdateGMTicket	inferred	none		
@@ -6854,7 +6854,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d700	100	Script::TogglePVP	idb	ui	orchestration		Implements the Lua function TogglePVP	inferred	none		
 0x48d770	8	Script::ConfirmBindOnUse	idb	ui	orchestration		Implements the Lua function ConfirmBindOnUse	inferred	none		
 0x48d780	290	Script::SetPortraitToTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a texture, named by a global or given as a table, to the circular portrait of a path	verified	one	ui/portraittextures#portrait-by-name	
-0x48d8b0	23			ui	orchestration		Runs GameUI.cpp code that calls lua_pushstring; not read here	inferred	none		
+0x48d8b0	23	GameScriptGetLocale		ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the current locale's name	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48d8d0	130	Script::GetGMTicketCategories	idb	ui	primitive		Implements the Lua function GetGMTicketCategories	inferred	none		
 0x48d960	322	Script::DropItemOnUnit	idb	ui	primitive		Implements the Lua function DropItemOnUnit	verified	one	ui/cursor#dropping-an-item-on-a-unit	
 0x48dab0	18	Script::RestartGx	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Runs the console command gxRestart with history on	verified	one	ui/videoverbs#restarting-the-display	
@@ -6868,12 +6868,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48ddc0	88	Script::ShowingCloak	idb	ui	primitive		Implements the Lua function ShowingCloak	inferred	none		
 0x48de20	77	Script::ShowHelm	idb	ui	orchestration		Implements the Lua function ShowHelm	inferred	none		
 0x48de70	77	Script::ShowCloak	idb	ui	orchestration		Implements the Lua function ShowCloak	inferred	none		
-0x48dec0	22	Script::SetEuropeanNumbers	idb	ui	orchestration		Implements the Lua function SetEuropeanNumbers	inferred	none		
+0x48dec0	22	Script::SetEuropeanNumbers	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Stores its flag, true when absent, as the number formatting switch	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x48dee0	60	Script::GetAreaSpiritHealerTime	idb	ui	primitive		Pushes the whole seconds left until the spirit healer resurrects the player	verified	one	ui/popups#the-area-spirit-healer	
 0x48df20	8	Script::AcceptAreaSpiritHeal	idb	ui	orchestration		Sends the accept request for the spirit healer in range	verified	one	ui/popups#the-area-spirit-healer	
 0x48df30	8	Script::CancelAreaSpiritHeal	idb	ui	orchestration		Cancels the spirit healer resurrection aura	verified	one	ui/popups#the-area-spirit-healer	
-0x48df40	71	Script::GetMouseFocus	idb	ui	orchestration		Implements the Lua function GetMouseFocus	inferred	none		
-0x48df90	24	Script::GetRealmName	idb	ui	orchestration		Implements the Lua function GetRealmName	inferred	none		
+0x48df40	71	Script::GetMouseFocus	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the frame the top frame holds under the mouse, or nil	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
+0x48df90	24	Script::GetRealmName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the realm CVar's text	verified	one	ui/cvarverbs#build-realm-platform-and-rate	
 0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Implements the Lua function GetItemQualityColor	inferred	none		ui::luabind_48dfb0_quality_color
 0x48e070	726	Script::GetItemInfo	idb	ui	primitive		Implements the Lua function GetItemInfo	inferred	none		
 0x48e350	50			ui	orchestration		Returns the count of the sorted add-on names	verified	one	ui/addons#the-in-game-add-on-functions	
@@ -6975,7 +6975,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	one	ui/keyscripts#deactivating-the-window	
 0x493070	28	EnterWorldMouselook		ui	orchestration	void __cdecl (void)	Begins the world frame's mouselook and makes it the hovered frame	verified	one	ui/mouseover#mouselook	
 0x493090	27	LeaveWorldMouselook		ui	orchestration	void __cdecl (void)	Ends the world frame's mouselook and asks for a hover pick	verified	one	ui/mouseover#mouselook	
-0x4930b0	29			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x4930b0	29	OnScreenshotDone		ui	orchestration	void __fastcall (uint32_t succeeded)	Signals SCREENSHOT_SUCCEEDED or SCREENSHOT_FAILED once the interface is up	verified	one	ui/cvarverbs#performance-display-and-screenshots	
 0x4930d0	233	SetInteractionTarget		ui	primitive		Stores the interaction GUID and squared range, replacing the range by 196.0 for a player	verified	one	ui/questshare#the-offer-leash	ui::glue_492_4930d0_threshold_fold
 0x4931c0	104			ui	primitive		Sets or clears the unit the interaction windows belong to	inferred	none	objectlayer/players#death	
 0x493230	224	CheckInteractionLeash		ui	primitive		Closes the open interaction when its object is released, gone or farther than the squared range	verified	one	ui/questshare#the-offer-leash	ui::dist2_493230
@@ -33539,7 +33539,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7718b0	229			ui	primitive		Runs CSimpleRender.cpp code that calls tolower; not read here	inferred	none		
 0x7719a0	445			ui	primitive		Runs CSimpleRender.cpp code that calls __alloca_probe, SUniConvertUTF8to16, 0x771b60 and 1 more; not read here	inferred	none		
 0x771b60	145			ui	primitive		Runs CSimpleRender.cpp code not read here	inferred	none		
-0x771c40	7			ui	orchestration		Runs CSimpleRender.cpp code not read here	inferred	none		
+0x771c40	7	SetEuropeanNumberFlag		ui	orchestration	void __fastcall (uint32_t flag)	Stores the European number formatting switch	verified	one	ui/cvarverbs#modifier-keys-and-layout-mode	
 0x771c50	302			ui	primitive		Runs CSimpleRender.cpp code not read here	inferred	none		
 0x771d80	312	CSimpleFontString::SetText		ui	orchestration		Sets a FontString's text, expanding the grammar escapes when asked, and lays it out again	verified	one	ui/fontstring#setting-the-text	
 0x771ec0	575			ui	primitive		Fits a FontString's text to a box, appending ... while backing off one character at a time	verified	one	ui/fontstring#size-and-fitting	ui::textglue_add_reload, ui::textglue_linecount_scale, ui::textglue_scale_mul, ui::textglue_settled_poseps

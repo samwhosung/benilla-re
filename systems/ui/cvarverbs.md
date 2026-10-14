@@ -30,8 +30,8 @@ null (`0x488d5e`). Registration sets bit 31 at `0x63dc78` and `0x63ddb4` when th
 ## Writing CVars from Lua
 
 `SetCVar("name", value [, token])` writes the text of `value`, or `0` when it is missing, through `CVar::Set` with the
-callback flag on, and returns no value. It raises `Usage: SetCVar("cvar", value [, "scriptCvar")` for a non-string name,
-the not-found error, and `"%s" is read-only` when bit 2 of the flag word is set. When the third argument is a string or a
+callback flag on, and returns no value. It raises `Usage: SetCVar("cvar", value [, "scriptCvar")` for a non-string name, the not-found error,
+and `"%s" is read-only` when flag bit 2 is set. When the third argument is a string or a
 number it then signals `CVAR_UPDATE` (event 312) with the token as `arg1` and the written text as `arg2`; two arguments
 signal nothing. `RegisterCVar("name" [, default])` registers a script CVar once: an existing name is left alone, a new one
 gets flags 0, category 9 and the default text, or `0`; the thirty-first registration raises `Attempted to register too
@@ -131,25 +131,29 @@ a learned spell's record word `+0xf4` equals 0x54.
 
 ## The console key
 
-`SetConsoleKey("name")` chooses the key that opens the console, by storing a key code at `0x864554`. A single digit or
-letter gives its upper-case character code. `F` and a digit give `0x2ff` plus the number, so `F1` is `0x300`. `NUMPAD`, spaces and a
-digit give the digit's character code plus 0xd0 (`NUMPAD0` is `0x100`). Anything else not in the lists below, and any
-non-string argument, gives `0x30e`.
+`SetConsoleKey("name")` chooses the key that opens the console by storing a key code at 0x864554. A one-character name is
+its own character code, with a lower-case letter made upper case, so `a` and `A` give 0x41. `F` and a digit give `0x2ff` plus the
+number after the F, so `F1` is `0x300`. A name that starts with `NUMPAD`, then spaces, then a digit gives the digit's character code plus
+0xd0 (`NUMPAD0` is `0x100`). Any other name in the table, whole and ignoring case, gives its code. No match, and any non-string
+argument, gives `0x30e`.
 
 | name | code | name | code | name | code |
 |---|---|---|---|---|---|
-| `PLUS`, `+` | `0x10a` | `ESCAPE` | `0x200` | `INSERT` | `0x208` |
-| `MINUS`, `-` | `0x10b` | `ENTER` | `0x201` | `DELETE` | `0x209` |
-| `MULTIPLY`, `*` | `0x10c` | `BACKSPACE` | `0x202` | `HOME` | `0x20a` |
-| `DIVIDE`, `/` | `0x10d` | `TAB` | `0x203` | `END` | `0x20b` |
-| `DECIMAL`, `.` | `0x10e` | `LEFT`, `UP` | `0x204`, `0x205` | `PAGEUP`, `PAGEDOWN` | `0x20c`, `0x20d` |
-| `EQUALS`, `=` | `0x30c` | `RIGHT`, `DOWN` | `0x206`, `0x207` | `NUMLOCK`, `PRINTSCREEN` | `0x20f`, `0x212` |
+| `NUMPAD` and `PLUS` or `+` | `0x10a` | `ESCAPE` | `0x200` | `INSERT` | `0x208` |
+| `NUMPAD` and `MINUS` or `-` | `0x10b` | `ENTER` | `0x201` | `DELETE` | `0x209` |
+| `NUMPAD` and `MULTIPLY` or `*` | `0x10c` | `BACKSPACE` | `0x202` | `HOME` | `0x20a` |
+| `NUMPAD` and `DIVIDE` or `/` | `0x10d` | `TAB` | `0x203` | `END` | `0x20b` |
+| `NUMPAD` and `DECIMAL` or `.` | `0x10e` | `LEFT`, `UP` | `0x204`, `0x205` | `PAGEUP`, `PAGEDOWN` | `0x20c`, `0x20d` |
+| `NUMPAD` and `EQUALS` or `=` | `0x30c` | `RIGHT`, `DOWN` | `0x206`, `0x207` | `NUMLOCK`, `PRINTSCREEN` | `0x20f`, `0x212` |
 
-Addresses: `0x488640`, `0x488670`, `0x4886e3`, `0x4886f7`, `0x48870a`, `0x488748`, `0x48875b`, `0x488820`, `0x4888a0`, `0x488ada`, `0x488adf`, `0x488ae1`, `0x63cb00`, `0x64a4c0`
+Addresses: `0x488640`, `0x488670`, `0x488677`, `0x4886a7`, `0x4886ca`, `0x4886f7`, `0x48870a`, `0x488758`, `0x48876e`, `0x48888c`, `0x488ada`, `0x488adf`, `0x488ae1`, `0x63cb00`, `0x64a4c0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x48864a` loads the default `0x30e` into `edi`, and every path ends at `0x488adf`, which passes `edi` to `0x63cb00`
-(`mov [0x864554],ecx`). The NUMPAD names follow a `SStrCmpI` of the first six characters (`0x488715`) and then compare
-the rest. The names beyond NUMPAD are compared with `SStrCmpI` and the length limit `0x7fffffff` in the order of the table.
+(`mov [0x864554],ecx`). A one-character name is decided at `0x488677` to `0x4886bd`: digits and every character other than a
+lower-case letter are stored as they are. `0x4886ca` upper-cases the first character and tests for `F` and a digit
+(`0x4886f7` adds 0x2ff to the number). The `NUMPAD` test is `SStrCmpI` over six characters (`0x488715`), `0x488758` adds 0xd0 to a digit, and the
+remaining names, compared after the prefix and spaces (`0x48876e` on), are the first six rows of the left column. `0x48888c`
+starts the whole-name list.
