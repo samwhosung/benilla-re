@@ -7579,8 +7579,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4aacc0	125	HandleGroupJoinedBattlegroundPacket	idb	ui	orchestration		Shows the deserter, named map or generic message for a group battleground join result	verified	one	ui/battlefield#other-messages	
 0x4aad40	203	HandleBattlegroundPlayerPositionsPacket	idb	ui	primitive		Reads the 0x2e9 packet: teammate guids and positions and the flag carrier	verified	one	ui/worldmapmarkers#the-position-packet	
 0x4aae10	209	HandleBattlegroundPlayerJoinedOrLeftPacket	idb	ui	orchestration		Shows the joined or left message for a battleground player by the arrival opcode	verified	one	ui/battlefield#other-messages	
-0x4aaef0	226			ui	primitive		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPack and 2 more; not read here	inferred	none		
-0x4aafe0	157			ui	orchestration		Runs BattlefieldInfo.cpp code that calls DBCache::NameCache::GetRecord, SStrCopy, SStrPrintf and 1 more; not read here	inferred	none		
+0x4aaef0	226	OnBattlefieldNameJoined		ui	primitive		Shows ERR_BG_PLAYER_JOINED_SS with the name and its realm without spaces and tabs	verified	one	ui/battlefield#player-notices	
+0x4aafe0	157	OnBattlefieldNameLeft		ui	orchestration		Shows ERR_BG_PLAYER_LEFT_S with the name and its realm joined by a dash	verified	one	ui/battlefield#player-notices	
 0x4ab080	44	Script::GetNumBattlefields	idb	ui	orchestration		Pushes the number of listed battleground instances	verified	one	ui/battlefield#the-list-and-the-selection	
 0x4ab0b0	310	Script::GetBattlefieldInfo	idb	ui	primitive		Pushes nine values describing the battlemaster's map and the bracket levels, or none	verified	one	ui/battlefield#the-list-and-the-selection	
 0x4ab1f0	148	Script::GetBattlefieldInstanceInfo	idb	ui	orchestration		Pushes the instance id at a 1-based list index, or nothing	verified	one	ui/battlefield#the-list-and-the-selection	
@@ -8248,8 +8248,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ba360	495	HandleRaidReadyCheckPacket	idb	ui	primitive		Handles a ready check message: the leader stores an answer, a member starts the check	verified	one	ui/raid#answering-a-ready-check	
 0x4ba550	150			ui	primitive		Leaves the raid roster, clears the raid target table and signals RAID_TARGET_UPDATE	verified	one	ui/raid#the-raid-target-table	
 0x4ba5f0	1754			ui	primitive		Rebuilds the raid roster from member GUIDs, flags and online bytes	inferred	none	objectlayer/party#the-group-list	
-0x4bacd0	91			ui	orchestration		Runs RaidInfo.cpp code that calls DBCache::NameCache::GetRecord, CGGameUI::DisplayError; not read here	inferred	none		
-0x4bad30	91			ui	orchestration		Runs RaidInfo.cpp code that calls DBCache::NameCache::GetRecord, CGGameUI::DisplayError; not read here	inferred	none		
+0x4bacd0	91	OnRaidMemberNameAdded		ui	orchestration		Shows ERR_RAID_MEMBER_ADDED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
+0x4bad30	91	OnRaidMemberNameRemoved		ui	orchestration		Shows ERR_RAID_MEMBER_REMOVED_S with the name when the name cache answers	verified	one	ui/raid#roster-change-notices	
 0x4bad90	38			ui	primitive		Runs RaidInfo.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4badc0	206			ui	primitive		Updates a player's raid token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
 0x4bae90	65			ui	primitive		Runs RaidInfo.cpp code not read here	inferred	none		
@@ -33616,9 +33616,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x773f60	288	Frame::GetRegions	idb	ui	orchestration		Implements the Frame method GetRegions, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
 0x774080	242	Frame::GetNumChildren	idb	ui	orchestration		Implements the Frame method GetNumChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
 0x774180	288	Frame::GetChildren	idb	ui	orchestration		Implements the Frame method GetChildren, its pair in the table 0x878ec0	verified	one	ui/frames#reading-the-lists-from-lua	
-0x7742a0	188	Frame::GetFrameStrata	idb	ui	orchestration		Implements the Frame method GetFrameStrata, its pair in the table 0x878ec0	inferred	none		
+0x7742a0	188	Frame::GetFrameStrata	idb	ui	orchestration		Pushes the name of the frame stratum, UNKNOWN for an index outside the eight	verified	one	ui/framemethods#strata-level-and-texture-alpha	
 0x774360	310	Frame::SetFrameStrata	idb	ui	orchestration		Implements the Frame method SetFrameStrata, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
-0x7744a0	187	Frame::GetFrameLevel	idb	ui	orchestration		Implements the Frame method GetFrameLevel, its pair in the table 0x878ec0	inferred	none		
+0x7744a0	187	Frame::GetFrameLevel	idb	ui	orchestration		Pushes the frame level as a number	verified	one	ui/framemethods#strata-level-and-texture-alpha	
 0x774560	279	Frame::SetFrameLevel	idb	ui	orchestration		Implements the Frame method SetFrameLevel, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x774680	256	Frame::HasScript		ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the frame has the named script, else nil	verified	one	ui/framemethods#types-scripts-and-identity	
 0x774780	327	Frame::GetScript		ui	orchestration		Returns the function in a frame's handler slot, nil for none, adopting a nonzero context word	verified	one	ui/framexml#script-elements	
@@ -34697,7 +34697,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79b170	11	InitInfinity79b170		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x79b180	1019	Texture::SetGradientAlpha	idb	ui	primitive		Implements the Texture method SetGradientAlpha	inferred	none		ui::luabind_79a_pack_color_pair
 0x79b580	265	Texture::SetAlpha	idb	ui	primitive		Implements the Texture method SetAlpha	inferred	none		ui::luabind_79a_set_alpha
-0x79b690	222	Texture::GetAlpha	idb	ui	primitive		Implements the Texture method GetAlpha	inferred	none		ui::luabind_79a_get_alpha
+0x79b690	222	Texture::GetAlpha	idb	ui	primitive		Pushes the alpha byte of the texture's vertex colour times 1/255 as a double	verified	one	ui/framemethods#strata-level-and-texture-alpha	
 0x79b770	180	Texture::Show	idb	ui	primitive		Implements the Texture method Show	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79b830	180	Texture::Hide	idb	ui	primitive		Implements the Texture method Hide	verified	one	ui/texture#showing-and-hiding-a-texture	
 0x79b8f0	178	Texture::IsVisible	idb	ui	primitive		Implements the Texture method IsVisible	verified	one	ui/texture#showing-and-hiding-a-texture	

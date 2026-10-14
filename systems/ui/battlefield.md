@@ -214,3 +214,15 @@ Test: none
 Events by site: `BATTLEFIELDS_SHOW` (`0x4aa7d1`), `BATTLEFIELDS_CLOSED` (`0x4aa15b`), `UPDATE_BATTLEFIELD_STATUS` (`0x4aab05`),
 `UPDATE_BATTLEFIELD_SCORE` (`0x4aa308`) and `WORLD_MAP_NAME_UPDATE` (`0x4ac195`, the callback `0x4ac190` registered at
 `0x4ac108`); none carries an argument. The messages are the ids of `tables/messages.tsv`.
+
+## Player notices
+
+The handlers of the battleground join and leave packets ask the name cache for the player and pass `0x4aaef0` (joined) or `0x4aafe0` (left) as the callback. A joined notice shows `ERR_BG_PLAYER_JOINED_SS` (message 444) and a left notice `ERR_BG_PLAYER_LEFT_S` (445) with the player's name; when the cache record has a realm name (the byte at `+0x30`), the left notice reads `name-realm` and the joined notice appends `-` and the realm with its spaces and tabs removed.
+
+Addresses: `0x4aaef0`, `0x4aafe0`, `0x55f080`, `0x496720`, `0x4aae2f`, `0x4aae36`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4aae2f` and `0x4aae36` push the callbacks. `0x4aaf35` tests the realm byte; `0x4aaf5f` packs the `-` (0x844808) and `0x4aaf8a` to `0x4aafa8` copy the realm without 0x20 and 0x9; `0x4aafbb` pushes id 0x1bc and the buffer for both `%s`. `0x4ab040` formats `%s-%s` for the left notice and `0x4ab067` pushes 0x1bd.
+

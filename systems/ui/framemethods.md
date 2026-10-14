@@ -106,3 +106,15 @@ Test: none
 calls slot `+0x14` (set parent) with the frame, and `0x7739f2` passes bit 2 of the frame's layout flags to
 `SetDeferResize`. The Lua object is fetched with `lua_rawgeti` after binding its reference with `0x701bd0`. `GetTitleRegion` pushes nil at
 `0x7738f4`.
+
+## Strata, level and texture alpha
+
+`Frame:GetFrameStrata()` pushes the name of the stratum index at `+0xc0` of the frame, `UNKNOWN` for an index outside the eight. `Frame:GetFrameLevel()` pushes the level at `+0xc4` as a number. `Texture:GetAlpha()` pushes the alpha byte of the texture's vertex colour times 1/255, as a double. All three check the receiver as the other methods do and push one value.
+
+Addresses: `0x7742a0`, `0x7744a0`, `0x79b690`, `0x6f1820`, `0x77f8c0`, `0x804578`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x77433f` loads `[frame+0xc0]` into `ecx` for `GetFrameStrataName` and `0x77434e` pushes the returned name with `lua_pushstring`. `0x77453f` is `fild [frame+0xc4]` and `0x77454d` `lua_pushnumber`. `0x79b740` calls `CScriptRegion::GetVertexColor`, `0x79b745` loads the byte at `+3`, `0x79b754` multiplies by the double at `0x804578`, 0.00392156862745098.
+

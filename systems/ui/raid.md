@@ -138,3 +138,15 @@ Test: none
 `GetRaidTargetIndex` raises `Usage: GetRaidTargetIndex(unit)` for a non-string and returns nil rather than 0, so the stock frame hides the icon. `0x608a90` refreshes a unit's nameplate icon; its atlas lookup uses the 0-based
 index (`nameplates`). The clear sits in the group list handler (`0x5e6a40`): when the raid flag byte is clear (`0x5e6e6b`) it calls `0x4ba550` (`0x5e6ebb`), else `0x4ba5f0`. The writers of the table are the start-up fill `0x4ba0dc`,
 the mode clear and the entry stores of `0x4ba220`, and the clear of `0x4ba550`; `SetRaidTargetIconTexture` is not an engine function.
+
+## Roster change notices
+
+When the group list adds or removes a raid member, the roster asks the name cache for the member's name and passes `0x4bacd0` (added) or `0x4bad30` (removed) as the completion callback. Each takes the GUID and a found byte; with the byte set and the name record found it shows `ERR_RAID_MEMBER_ADDED_S` (message 406) or `ERR_RAID_MEMBER_REMOVED_S` (407) with the record's name through `CGGameUI::DisplayError`, and otherwise shows nothing.
+
+Addresses: `0x4bacd0`, `0x4bad30`, `0x55f080`, `0x496720`, `0x4ba738`, `0x4ba7d7`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4ba738` and `0x4ba7d7` push the callbacks. Each looks the GUID up with `GetRecord` on the name cache `0xc0e228` and pushes message id 0x196 or 0x197 (`0x4bad15`, `0x4bad75`) and the record, whose first bytes are the name.
+
