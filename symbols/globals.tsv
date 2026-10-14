@@ -101,6 +101,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x52ffbc	void *[6]	s_cases52fe90		ui	Holds the 6 case addresses of the switch in 0x52fe90	inferred	none	
 0x531530	void *[9]	s_cases5313e0		ui	Holds the 9 case addresses of the switch in 0x5313e0	inferred	none	
 0x538610	void *[5]	s_netEventJumpTable		net	Holds the five case addresses the event drain jumps to for node types 0x12 to 0x16	verified	one	net/dispatch#main-thread-drain
+0x5a3b18	const void *[6]	s_tgaTypeCases		image	Holds the case addresses of the TGA image type dispatch	verified	one	image/tga#decoding
+0x5a3b30	const uint8_t[12]	s_tgaTypeIndex		image	Holds the case of each TGA image type 0 to 11	verified	one	image/tga#decoding
+0x5a49d8	const void *[8]	s_bppCases		image	Holds the case addresses of the bits per pixel switch of 0x5a49b0	verified	one	image/mips#level-sizes
+0x5a80b8	const void *[3]	s_decodeDxtCases		image	Holds the case addresses of the DXT switch of 0x5a7f00	verified	one	image/blp#decoding-one-level
+0x5a80c4	const uint8_t[8]	s_decodeDxtIndex		image	Holds the case of each format 0 to 7 in the DXT switch of 0x5a7f00	verified	one	image/blp#decoding-one-level
+0x5a81f8	const void *[8]	s_levelSizeCases		image	Holds the case addresses of the format switch of 0x5a8140	verified	one	image/mips#level-byte-size-and-pitch
+0x5a86f0	const void *[3]	s_stage1DxtCases		image	Holds the case addresses of the DXT switch of 0x5a8590	verified	one	image/blp#level-pointers-without-copies
+0x5a86fc	const uint8_t[8]	s_stage1DxtIndex		image	Holds the case of each format 0 to 7 in the DXT switch of 0x5a8590	verified	one	image/blp#level-pointers-without-copies
 0x5aa854	void *[11]	s_statusEventJumpTable		net	Holds the case addresses of the status reporter's first switch	inferred	none	net/layout#starts-the-listing-hides
 0x5aa880	void *[39]	s_statusEventJumpTable2		net	Holds the case addresses of the status reporter's second switch	inferred	none	net/layout#starts-the-listing-hides
 0x5aae08	void *[6]	s_charLoginFailedJumpTable		net	Holds the case addresses that map a character login failure byte to a status code	inferred	none	net/layout#starts-the-listing-hides
@@ -539,6 +547,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a000	const float	s_sixtyFiveK		unassigned	Holds 65536.0	verified	one	lighting/celestial#celestial-bodies
 0x80a1e8	float	s_minMeleeReach		objectlayer	Holds 5.0, the least melee reach	verified	one	objectlayer/interaction#looting
 0x80a2a8	uint32_t[2]	s_cullModeByState		terrain	Holds the Direct3D cull modes 1 (none) and 2 (clockwise) by the culling state	verified	one	terrain/render#face-culling
+0x80a2d8	void *[4]	StatusSink::vftable		image	Holds the status sink vtable: the deleting destructor and three more slots	verified	one	image/overview#initializers-and-statics
 0x80a398	void *[23]	ClientConnection::vftable		net	Holds ClientConnection's vtable, NetClient's with the event and result slots overridden	verified	one	net/dispatch#dispatch
 0x80a3f4	void *[14]	s_responseObjectVtable		net	Holds the slots of the response object the world connection notifies	verified	one	net/connection#response-object
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
@@ -1524,8 +1533,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85c224	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
 0x85c250	uint32_t[66]	s_stagePresets		terrain	Holds the six texture stage combine presets of 0x2c bytes	verified	one	terrain/watershade#stage-combine-presets
 0x85c7d8	uint32_t[15]	s_filterModes		terrain	Holds the Direct3D magnify, minify and mip filters of each texture filter index	verified	one	terrain/render#texture-detail-bias
-0x85c9b0	const uint8_t[4]	s_paletteCoverageMasks		image	Holds the 2-bit coverage slot masks 3, 0xc, 0x30 and 0xc0 of the palette converter	verified	one	charactermodel/composite#source-planes
-0x85c9c8	const uint32_t[2]	s_alphaNibbleShifts		image	Holds the shifts 2 and 6 that take the top two bits of a 4-bit alpha	verified	one	charactermodel/composite#source-planes
+0x85c824	const char[45]	s_tgaSourcePath		image	Holds the source path of tga.cpp	verified	one	image/overview#initializers-and-statics
+0x85c868	const int32_t[9]	s_classPitchShift		image	Holds the pitch shift of each conversion class	verified	one	image/mips#pixel-pitch-of-a-source-format
+0x85c88c	const int32_t[9]	s_classPitchFactor		image	Holds the pitch factor of each conversion class	verified	one	image/mips#pixel-pitch-of-a-source-format
+0x85c8b0	const uint8_t[16]	s_nibbleExpand		image	Holds each 4-bit value times 0x11	verified	one	image/convert#palette-to-bgra
+0x85c8c0	const uint8_t[2]	s_bitAlpha		image	Holds the alpha of a 1-bit alpha value: 0x00 and 0xff	verified	one	image/convert#palette-to-bgra
+0x85c8c4	const uint16_t[2]	s_alpha444Bit		image	Holds the two words the RGB444 depth 1 alpha merge indexes by bit value	verified	one	image/convert#alpha-merge-into-16-bits
+0x85c8c8	const uint32_t[10]	s_blpFormatClasses		image	Holds the conversion class of each format or alpha type number	verified	one	image/blp#format-classes
+0x85c9b0	const uint8_t[4]	s_alphaFieldMasks		image	Holds the masks of the four 2-bit alpha fields in a byte	verified	one	image/convert#alpha-merge-into-16-bits
+0x85c9b4	const int32_t[3]	s_alphaFieldShifts		image	Holds the shifts of the 2-bit alpha fields	verified	one	image/convert#alpha-merge-into-16-bits
+0x85c9c8	const uint8_t[8]	s_alphaNibbleShifts		image	Holds the nibble shifts of the depth 4 alpha merge	verified	one	image/convert#alpha-merge-into-16-bits
+0x85c9d0	const char[48]	s_blpSourcePath		image	Holds the source path of blp.cpp	verified	one	image/overview#initializers-and-statics
 0x85cae8	char *[83]	s_errorCodeTokens	idb	net	Holds the 83 status code names, RESPONSE_SUCCESS to CHAR_NAME_SUCCESS, the localization keys	verified	one	net/session#session-status
 0x85cc34	uint32_t			net	Holds a dword that IsAllowedLaunchUrl reads; not read here	inferred	none	
 0x85d5b0	char[5]	s_textI		net	Holds the string "(%i)"	inferred	none	
@@ -2854,6 +2872,26 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
 0xc0f3e4	uint32_t	s_textureUnitCount		terrain	Holds the count of texture units the device has	verified	one	terrain/watershade#stage-combine-presets
+0xc0f548	float	s_tgaInfinity		image	Holds +inf copied by 0x5a35f0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0f54c	float	s_convertInfinity		image	Holds +inf copied by 0x5a4c20, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0f550	float	s_convertInfinity2		image	Holds +inf copied by 0x5a4f00, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0f554	float	s_convertInvTwoPi		image	Holds 1/2π stored by 0x5a4f40, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0f558	uint32_t	s_convertMatrixReady		image	Holds 1 once the conversion matrix is filled	verified	one	image/convert#conversion-matrix
+0xc0f560	void *[324]	s_convertMatrix		image	Holds the converter of each source class, destination class and submode	verified	one	image/convert#conversion-matrix
+0xc0fa70	float	s_convertTwoPi		image	Holds 2π stored by 0x5a4f20, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0fa78	float	s_blpInfinity		image	Holds +inf copied by 0x5a7890, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0fa7c	float	s_blpInvTwoPi		image	Holds 1/2π stored by 0x5a78d0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0fa80	uint16_t[192]	s_dxtInterpTable		image	Holds the DXT interpolation values for 5 and 6-bit channels	verified	one	image/convert#dxt-interpolation-table
+0xc0fc00	float	s_blpTwoPi		image	Holds 2π stored by 0x5a78b0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0fc08	float	s_blpInfinity2		image	Holds +inf copied by 0x5a80f0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc0fc10	uint8_t[24624]	s_fsErrorRgb444		image	Holds the error rows of the RGB444 dither	verified	one	image/convert#dithered-16-bit-palettes
+0xc15c40	uint32_t[4]	s_readBuffer		image	Holds the shared BLP read buffer: capacity, last size, data and alignment	verified	one	image/blp#opening-a-file
+0xc15c50	float	s_paletteInvTwoPi		image	Holds 1/2π stored by 0x5a9de0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc15c54	uint32_t[5]	s_statusSink		image	Holds the BLP reader's status sink: vtable 0x80a2d8 and an empty list	verified	one	image/overview#initializers-and-statics
+0xc15c68	uint8_t[24624]	s_fsErrorRgb565A2		image	Holds the error rows of the RGB565 plus alpha dither	verified	one	image/convert#dithered-16-bit-palettes
+0xc1bc98	uint8_t[24624]	s_fsErrorRgb555		image	Holds the error rows of the RGB555 dither	verified	one	image/convert#dithered-16-bit-palettes
+0xc21cc8	float	s_paletteTwoPi		image	Holds 2π stored by 0x5a9dc0, which nothing reads	verified	one	image/overview#initializers-and-statics
+0xc21cd0	uint8_t[24624]	s_fsErrorRgb565		image	Holds the error rows of the RGB565 dither	verified	one	image/convert#dithered-16-bit-palettes
 0xc27d08	char[64]	s_logonAccountName		net	Holds the account name the logon authenticated with	verified	one	net/connection#status-text-and-names
 0xc27d80	SelectedCharacterRecord	s_selectedCharacter		net	Holds the selected character's list entry from the last EnterWorld, empty before it	verified	one	ui/unitplayer#the-selected-character-record
 0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	one	net/connection#telemetry-record
@@ -3557,5 +3595,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf76fc	uint32_t	s_contextHandlesWrapped		core	Holds 1 once the context handle counter has wrapped to 0	verified	one	core/scheduler#context-insert
 0xcf7700	uint8_t[96]	s_contextTableLocks		core	Holds the read-write locks of the context table's eight buckets	verified	one	core/loop#contexts
 0xcf7760	uint8_t[96]	s_contextTableBuckets		core	Holds the eight bucket lists of the context table, 12 bytes each	verified	one	core/scheduler#context-insert
+0xcf78a1	uint8_t	s_dxt1Rgb565GuardA		image	Holds a guard bit of the DXT1 to RGB565 driver's statics	verified	one	image/convert#dxt-drivers
+0xcf78a2	uint8_t	s_dxt1Rgb565GuardB		image	Holds the guard bit of the DXT1 driver's palette static	verified	one	image/convert#dxt-drivers
+0xcf78a8	uint16_t[4]	s_dxt1Palette		image	Holds the four colours of the block the DXT1 to RGB565 driver is writing	verified	one	image/convert#dxt-drivers
+0xcf78b0	uint8_t	s_dxt1Rgb565GuardC		image	Holds a guard bit of the DXT1 block decoder's statics	verified	one	image/convert#dxt-drivers
 0xcfa128	uint8_t	s_skillLineRecAllocatorBuilt		spell	Holds bit 0 once the ability node pool is built; default 0, written by 0x6e0830	verified	one	spell/tables#ability-node-pool
 0xcfa140	uint32_t[5]	s_skillLineRecAllocator		spell	Holds the ability node pool: element size, per block, in use, block list, free list	verified	one	spell/tables#ability-node-pool
