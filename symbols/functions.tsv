@@ -6657,8 +6657,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489350	3	Script::ToggleCollision	idb	ui	orchestration		Implements the Lua function ToggleCollision	inferred	none		
 0x489360	3	Script::ToggleCollisionDisplay	idb	ui	orchestration		Implements the Lua function ToggleCollisionDisplay	inferred	none		
 0x489370	20	Script::Stuck	idb	ui	orchestration		Implements the Lua function Stuck	inferred	none		
-0x489390	19	Script::Logout	idb	ui	orchestration		Implements the Lua function Logout	inferred	none		
-0x4893b0	19	Script::Quit	idb	ui	orchestration		Implements the Lua function Quit	inferred	none		
+0x489390	19	Script::Logout	idb	ui	orchestration		Requests a logout, honouring the pending latch	verified	one	ui/popups#logout-and-quit	
+0x4893b0	19	Script::Quit	idb	ui	orchestration		Requests a logout that is reported as a quit	verified	one	ui/popups#logout-and-quit	
 0x4893d0	13			ui	orchestration		Runs its object file code that calls 0x442a10; not read here	inferred	none		
 0x4893e0	28	Script::GetFramerate	idb	ui	orchestration		Implements the Lua function GetFramerate	inferred	none		
 0x489400	20	Script::TogglePerformanceDisplay	idb	ui	primitive		Implements the Lua function TogglePerformanceDisplay	inferred	none		
@@ -6718,15 +6718,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48a9d0	43	Script::DeclineResurrect	idb	ui	orchestration		Implements the Lua function DeclineResurrect	inferred	none		
 0x48aa00	38	Script::ResurrectHasSickness	idb	ui	orchestration		Implements the Lua function ResurrectHasSickness	inferred	none		
 0x48aa30	38	Script::ResurrectHasTimer	idb	ui	orchestration		Implements the Lua function ResurrectHasTimer	inferred	none		
-0x48aa60	8	Script::BeginTrade	idb	ui	orchestration		Implements the Lua function BeginTrade	inferred	none		
-0x48aa70	8	Script::CancelTrade	idb	ui	orchestration		Implements the Lua function CancelTrade	inferred	none		
+0x48aa60	8	Script::BeginTrade	idb	ui	orchestration		Sends the trade request	verified	one	ui/popups#the-trade-enchant-clash	
+0x48aa70	8	Script::CancelTrade	idb	ui	orchestration		Sends the trade cancel	verified	one	ui/popups#the-trade-enchant-clash	
 0x48aa80	41	Script::AcceptGroup	idb	ui	orchestration		Implements the Lua function AcceptGroup	inferred	none		
 0x48aab0	41	Script::DeclineGroup	idb	ui	orchestration		Implements the Lua function DeclineGroup	inferred	none		
 0x48aae0	41	Script::AcceptGuild	idb	ui	orchestration		Implements the Lua function AcceptGuild	inferred	none		
 0x48ab10	41	Script::DeclineGuild	idb	ui	orchestration		Implements the Lua function DeclineGuild	inferred	none		
-0x48ab40	15	Script::CancelLogout	idb	ui	orchestration		Implements the Lua function CancelLogout	inferred	none		
-0x48ab50	15	Script::ForceLogout	idb	ui	orchestration		Implements the Lua function ForceLogout	inferred	none		
-0x48ab60	10	Script::ForceQuit	idb	ui	orchestration		Implements the Lua function ForceQuit	inferred	none		
+0x48ab40	15	Script::CancelLogout	idb	ui	orchestration		Cancels a pending logout	verified	one	ui/popups#logout-and-quit	
+0x48ab50	15	Script::ForceLogout	idb	ui	orchestration		Sends a forced logout request that ignores the pending latch	verified	one	ui/popups#logout-and-quit	
+0x48ab60	10	Script::ForceQuit	idb	ui	orchestration		Posts the close event of the current context with quit code 0 and sends nothing	verified	one	ui/popups#logout-and-quit	
 0x48ab70	44	Script::GetCursorMoney	idb	ui	orchestration		Implements the Lua function GetCursorMoney	verified	one	ui/cursormoney#money-functions	
 0x48aba0	19	Script::DropCursorMoney	idb	ui	orchestration		Implements the Lua function DropCursorMoney	verified	one	ui/cursormoney#money-functions	
 0x48abc0	160	Script::PickupPlayerMoney	idb	ui	orchestration		Implements the Lua function PickupPlayerMoney	verified	one	ui/cursormoney#money-functions	
@@ -6749,7 +6749,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48b520	127	Script::GetDamageBonusStat	idb	ui	primitive		Implements the Lua function GetDamageBonusStat	inferred	none		
 0x48b5a0	60	Script::GetReleaseTimeRemaining	idb	ui	primitive		Implements the Lua function GetReleaseTimeRemaining	inferred	none		
 0x48b5e0	62	Script::GetCorpseRecoveryDelay	idb	ui	primitive		Implements the Lua function GetCorpseRecoveryDelay	inferred	none		
-0x48b620	62	Script::GetInstanceBootTimeRemaining	idb	ui	primitive		Implements the Lua function GetInstanceBootTimeRemaining	inferred	none		
+0x48b620	62	Script::GetInstanceBootTimeRemaining	idb	ui	primitive		Pushes the whole seconds left of the instance boot countdown, 0 when idle	verified	one	ui/popups#the-instance-boot-countdown	
 0x48b660	62	Script::GetSummonConfirmTimeLeft	idb	ui	primitive		Implements the Lua function GetSummonConfirmTimeLeft	inferred	none		
 0x48b6a0	101	Script::GetSummonConfirmSummoner	idb	ui	orchestration		Implements the Lua function GetSummonConfirmSummoner	inferred	none		
 0x48b710	3			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -6838,12 +6838,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48d0c0	84	Script::AcceptXPLoss	idb	ui	orchestration		Implements the Lua function AcceptXPLoss	inferred	none		
 0x48d120	80	Script::CheckSpiritHealerDist	idb	ui	orchestration		Implements the Lua function CheckSpiritHealerDist	inferred	none		
 0x48d170	80	Script::CheckTalentMasterDist	idb	ui	orchestration		Implements the Lua function CheckTalentMasterDist	inferred	none		
-0x48d1c0	80	Script::CheckPetUntrainerDist	idb	ui	orchestration		Implements the Lua function CheckPetUntrainerDist	inferred	none		
+0x48d1c0	80	Script::CheckPetUntrainerDist	idb	ui	orchestration		Pushes 1 when the remembered pet trainer is in interaction range, else nil	verified	one	ui/popups#pet-unlearn	
 0x48d210	80	Script::CheckBinderDist	idb	ui	orchestration		Implements the Lua function CheckBinderDist	inferred	none		
 0x48d260	121	Script::RetrieveCorpse	idb	ui	orchestration		Implements the Lua function RetrieveCorpse	inferred	none		
 0x48d2e0	26	Script::BindEnchant	idb	ui	orchestration		Implements the Lua function BindEnchant	inferred	none		
 0x48d300	47	Script::ReplaceEnchant	idb	ui	orchestration		Implements the Lua function ReplaceEnchant	inferred	none		
-0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Calls 0x6e6900 and returns no Lua results	verified	one	spell/targeting#binding-the-trade-slot	
+0x48d330	8	Script::ReplaceTradeEnchant	idb	ui	orchestration		Applies the pending enchant to the trade slot	verified	one	ui/popups#the-trade-enchant-clash	
 0x48d340	13	Script::NotWhileDeadError	idb	ui	orchestration		Implements the Lua function NotWhileDeadError	inferred	none		
 0x48d350	155	Script::GetRestState	idb	ui	orchestration		Implements the Lua function GetRestState	inferred	none		
 0x48d3f0	189	Script::GetXPExhaustion	idb	ui	primitive		Implements the Lua function GetXPExhaustion	inferred	none		
@@ -6862,16 +6862,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48dae0	88	Script::GetBindLocation	idb	ui	orchestration		Implements the Lua function GetBindLocation	inferred	none		
 0x48db40	249	Script::GetVideoCaps	idb	ui	orchestration		Implements the Lua function GetVideoCaps	inferred	none		
 0x48dc40	85	Script::ConfirmTalentWipe	idb	ui	orchestration		Implements the Lua function ConfirmTalentWipe	inferred	none		
-0x48dca0	85	Script::ConfirmPetUnlearn	idb	ui	orchestration		Implements the Lua function ConfirmPetUnlearn	inferred	none		
+0x48dca0	85	Script::ConfirmPetUnlearn	idb	ui	orchestration		Confirms the pet unlearn at the remembered trainer	verified	one	ui/popups#pet-unlearn	
 0x48dd00	84	Script::ConfirmBinder	idb	ui	orchestration		Implements the Lua function ConfirmBinder	inferred	none		
 0x48dd60	88	Script::ShowingHelm	idb	ui	primitive		Implements the Lua function ShowingHelm	inferred	none		
 0x48ddc0	88	Script::ShowingCloak	idb	ui	primitive		Implements the Lua function ShowingCloak	inferred	none		
 0x48de20	77	Script::ShowHelm	idb	ui	orchestration		Implements the Lua function ShowHelm	inferred	none		
 0x48de70	77	Script::ShowCloak	idb	ui	orchestration		Implements the Lua function ShowCloak	inferred	none		
 0x48dec0	22	Script::SetEuropeanNumbers	idb	ui	orchestration		Implements the Lua function SetEuropeanNumbers	inferred	none		
-0x48dee0	60	Script::GetAreaSpiritHealerTime	idb	ui	primitive		Implements the Lua function GetAreaSpiritHealerTime	inferred	none		
-0x48df20	8	Script::AcceptAreaSpiritHeal	idb	ui	orchestration		Implements the Lua function AcceptAreaSpiritHeal	inferred	none		
-0x48df30	8	Script::CancelAreaSpiritHeal	idb	ui	orchestration		Implements the Lua function CancelAreaSpiritHeal	inferred	none		
+0x48dee0	60	Script::GetAreaSpiritHealerTime	idb	ui	primitive		Pushes the whole seconds left until the spirit healer resurrects the player	verified	one	ui/popups#the-area-spirit-healer	
+0x48df20	8	Script::AcceptAreaSpiritHeal	idb	ui	orchestration		Sends the accept request for the spirit healer in range	verified	one	ui/popups#the-area-spirit-healer	
+0x48df30	8	Script::CancelAreaSpiritHeal	idb	ui	orchestration		Cancels the spirit healer resurrection aura	verified	one	ui/popups#the-area-spirit-healer	
 0x48df40	71	Script::GetMouseFocus	idb	ui	orchestration		Implements the Lua function GetMouseFocus	inferred	none		
 0x48df90	24	Script::GetRealmName	idb	ui	orchestration		Implements the Lua function GetRealmName	inferred	none		
 0x48dfb0	186	Script::GetItemQualityColor	idb	ui	primitive		Implements the Lua function GetItemQualityColor	inferred	none		
@@ -6951,11 +6951,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4920d0	24			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x4920f0	58			ui	primitive		Runs GameUI.cpp code not read here	inferred	none		
 0x492130	138			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4920f0; not read here	inferred	none		
-0x4921c0	201			ui	primitive		Cancels the spirit healer aura state and queries an area spirit healer for a GUID	inferred	none	objectlayer/interaction#talking-to-an-npc	
-0x492290	75			ui	primitive		Runs GameUI.cpp code that calls 0x4923b0, OsGetAsyncTimeMs, FrameScript_SignalEvent; not read here	inferred	none		
-0x4922e0	33			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x492310	138			ui	primitive		Runs GameUI.cpp code that calls 0x4923b0, CDataStore::PutUInt32, CDataStore::PutGuid and 1 more; not read here	inferred	none		
-0x4923a0	10			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
+0x4921c0	201	SetAreaSpiritHealer		ui	primitive	void __stdcall SetAreaSpiritHealer(uint64_t guid)	Adopts a spirit healer GUID, cancelling the old resurrection and querying the new healer	verified	one	ui/popups#the-area-spirit-healer	
+0x492290	75	OnAreaSpiritHealerTime		ui	primitive	void __stdcall OnAreaSpiritHealerTime(uint32_t ms, uint64_t guid)	Stores the resurrection deadline for the cached healer and signals AREA_SPIRIT_HEALER_IN_RANGE	verified	one	ui/popups#the-area-spirit-healer	
+0x4922e0	33	GetAreaSpiritHealerMs		ui	primitive		Returns the milliseconds left until the resurrection, 0 when unset or past	verified	one	ui/popups#the-area-spirit-healer	
+0x492310	138	SendAreaSpiritHealAccept		ui	primitive		Refreshes the healer scan and sends opcode 0x2e3 with the cached healer GUID	verified	one	ui/popups#the-area-spirit-healer	
+0x4923a0	10	CancelAreaSpiritHealAura		ui	primitive		Cancels aura 2584 on the player	verified	one	ui/popups#the-area-spirit-healer	
 0x4923b0	260			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4921c0 and 1 more; not read here	inferred	none		
 0x4924c0	190			ui	primitive		Runs GameUI.cpp code that calls ClntObjMgrObjectPtr, CGUnit_C::CanAssist_Unit, 0x4921c0; not read here	inferred	none		
 0x492580	76			ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
@@ -7049,15 +7049,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x495d10	64			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x495d50	7			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x495d60	1026	ValidateSpellItemTarget		ui	primitive	void __fastcall (int suppress, uint32_t guidLow, uint32_t guidHigh)	Checks a clicked item against the pending spell's enchant and prospecting effects, then binds it with 0x6e5b40	verified	one	spell/itemtarget#item-click-validator	
-0x496170	204			ui	orchestration		Binds the trade slot through 0x6e6900 unless the spell would replace the slot's enchantment	inferred	none	spell/targeting#binding-the-trade-slot	
+0x496170	204	CheckTradeEnchantClash		ui	primitive		Signals TRADE_REPLACE_ENCHANT when the pending enchant would replace one, else applies it	verified	one	ui/popups#the-trade-enchant-clash	
 0x496240	7	SetRestStart		ui	orchestration		Stores its argument as the rest start time	verified	one	objectlayer/playermessages#error-notices	
 0x496250	36	ArmReleaseTimer		ui	primitive		Stores now plus a delay as the release time, or 1 for a zero delay, and clears its flag	verified	one	objectlayer/players#death	
 0x496280	18	ClearReleaseTimer		ui	orchestration		Clears the release time and sets its flag	verified	one	objectlayer/players#death	
 0x4962a0	47			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
 0x4962d0	67			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
 0x496320	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
-0x496340	51			ui	primitive		Arms a delay from now for the raid-only notice; not read here	inferred	none	objectlayer/playermessages#error-notices	
-0x496380	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
+0x496340	51	SetInstanceBootDeadline		ui	primitive	void __fastcall SetInstanceBootDeadline(int32_t delayMs)	Stores the boot deadline from a delay and signals INSTANCE_BOOT_START, or clears it and signals STOP	verified	one	ui/popups#the-instance-boot-countdown	
+0x496380	32	GetInstanceBootMs		ui	primitive		Returns the milliseconds left until the instance boot, 0 when unset or past	verified	one	ui/popups#the-instance-boot-countdown	
 0x4963a0	56			ui	primitive		Keeps a summon's zone, expiry and summoner and signals CONFIRM_SUMMON	inferred	none	objectlayer/playermessages#resurrection-and-summoning	
 0x4963e0	32			ui	primitive		Runs GameUI.cpp code that calls OsGetAsyncTimeMs; not read here	inferred	none		
 0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party member record of a GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
@@ -8474,7 +8474,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4bfd70	65	CGTradeInfo::GetGameError	idb	ui	primitive		Runs TradeFrame.cpp code not read here	inferred	none		
 0x4bfdc0	33	Script::CloseTrade	idb	ui	orchestration		Implements the Lua function CloseTrade	inferred	none		
 0x4bfdf0	644	Script::ClickTradeButton	idb	ui	primitive		Implements the Lua function ClickTradeButton	inferred	none		
-0x4c0080	102	Script::ClickTargetTradeButton	idb	ui	primitive		Implements the Lua function ClickTargetTradeButton	inferred	none		
+0x4c0080	102	Script::ClickTargetTradeButton	idb	ui	primitive		Clicks a slot of the target's trade window; slot 7 checks the enchant clash	verified	one	ui/popups#the-trade-enchant-clash	
 0x4c00f0	582	Script::GetTradeTargetItemInfo	idb	ui	primitive		Implements the Lua function GetTradeTargetItemInfo	inferred	none		
 0x4c0340	24			ui	orchestration		Runs TradeFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
 0x4c0360	238	Script::GetTradeTargetItemLink	idb	ui	primitive		Implements the Lua function GetTradeTargetItemLink	inferred	none		

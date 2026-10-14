@@ -2152,11 +2152,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4e314	uint32_t	s_zoneId		ui	Holds the player's zone, read into party records and the binder dialog	inferred	none	objectlayer/party#the-party-member-record
 0xb4e318	uint32_t	s_subZoneId		ui	Holds the player's area, which the binder dialog prefers	inferred	none	objectlayer/interaction#confirmation-dialogs
 0xb4e328	uint32_t			ui	Holds a dword that Script::RetrieveCorpse reads and writes; not read here	inferred	none	
-0xb4e330	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb4e338	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb4e330	uint64_t	s_areaSpiritHealerGuid		ui	Holds the GUID of the spirit healer in range, 0 for none	verified	one	ui/popups#the-area-spirit-healer
+0xb4e338	uint32_t	s_areaSpiritHealerDeadline		ui	Holds the clock value at which the spirit healer resurrection happens, 0 when unset	verified	one	ui/popups#the-area-spirit-healer
 0xb4e33c	uint32_t			ui	Holds the rest start time 0x496240 stores; nothing reads it	verified	one	objectlayer/playermessages#error-notices
 0xb4e340	uint32_t	s_releaseTime		ui	Holds the time the release timer ends, 0 when off	verified	one	objectlayer/players#death
-0xb4e34c	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
+0xb4e34c	uint32_t	s_instanceBootDeadline		ui	Holds the clock value at which the player is removed from the instance, 0 when unset	verified	one	ui/popups#the-instance-boot-countdown
 0xb4e350	uint32_t			ui	Holds a dword that CGGameUI::Initialize reads and writes; not read here	inferred	none	
 0xb4e354	uint32_t			ui	Holds a dword that Script::GetSummonConfirmAreaName reads and writes; not read here	inferred	none	
 0xb4e358	uint32_t			ui	Holds a dword that Script::GetSummonConfirmSummoner, Script::ConfirmSummon read and write; not read here	inferred	none	
@@ -2269,6 +2269,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb714b0	uint32_t	s_petAttackLatch		ui	Holds 1 while the pet attack command is active, 0 at load	verified	one	ui/petbar#pet-state
 0xb7150c	uint32_t	s_tradeWindowState		ui	Holds a trade window state that the trade-slot bind requires nonzero	inferred	none	spell/targeting#binding-the-trade-slot
 0xb715a0	uint32_t			ui	Holds a dword that TradeInfoSetTargetItems, Script::GetTradeTargetItemLink read and write; not read here	inferred	none	
+0xb715d8	uint32_t	s_targetTradeEnchantId		ui	Holds the enchantment id of the item in the target's seventh trade slot	verified	one	ui/popups#the-trade-enchant-clash
 0xb716d0	uint32_t			ui	Holds a dword that CGTradeInfo::SetTradePartner, TradeInfoClearPlayerItem read and write; not read here	inferred	none	
 0xb71728	uint32_t			ui	Holds a dword that Script::DropItemOnUnit, CGTradeInfo::SetTradePartner read and write; not read here	inferred	none	
 0xb71730	uint32_t			ui	Holds a dword that CGTradeInfo::PlayerAccept, CGTradeInfo::TargetAccept read and write; not read here	inferred	none	
