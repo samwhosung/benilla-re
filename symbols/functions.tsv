@@ -29615,7 +29615,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f1eb0	486	XmlReadDimension		ui	primitive	uint32_t __fastcall (XmlNode *node, float *x, float *y, void *report)	Reads x and y from a node's attributes or its AbsDimension child, in layout units	verified	one	ui/modelview#model-unit-to-pixel	
 0x6f20a0	806	ParseInsetsElement		ui	primitive		Reads four insets from attributes or an AbsInset or RelInset child	verified	one	ui/backdrop#the-xml-element	
 0x6f23d0	601	ParseColorElement		ui	primitive		Reads r, g, b and a clamped to 0 to 1 and packs them as alpha, red, green, blue	verified	one	ui/backdrop#the-xml-element	
-0x6f2630	182			ui	orchestration		Runs its object file code that calls 0x6f2cf0, 0x6f1a20, SStrCmpI and 1 more; not read here	inferred	none		
+0x6f2630	182	ParseGradientElement		ui	orchestration		Reads a gradient orientation and its minimum and maximum colours	verified	one	ui/texture#a-gradient-element	
 0x6f26f0	143	FrameXML::AddTextureElement		ui	orchestration	CSimpleTexture * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a texture region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
 0x6f2780	143	FrameXML::AddFontStringElement		ui	orchestration	CSimpleFontString * __thiscall (void *parentFrame, XmlNode *node, CStatus *status)	Builds a font string region from its XML node, loads it and gives it the implicit anchor	verified	one	ui/regions#where-it-applies	
 0x6f2810	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -34706,8 +34706,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x79bb40	687	Texture::SetTexture	idb	ui	primitive		Implements the Texture method SetTexture	verified	one	ui/texture#settexture	
 0x79bdf0	190	Texture::GetTexCoord	idb	ui	primitive		Implements the Texture method GetTexCoord	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79beb0	451	Texture::SetTexCoord	idb	ui	primitive		Stores four corner texture coordinates from 4 or 8 numbers	verified	one	ui/texture#reading-the-image-and-the-coordinates	
-0x79c080	159	Texture::SetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method SetTexCoordModifiesRect	inferred	none		
-0x79c120	178	Texture::GetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method GetTexCoordModifiesRect	inferred	none		
+0x79c080	159	Texture::SetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method SetTexCoordModifiesRect	verified	one	ui/texture#reading-the-image-and-the-coordinates	
+0x79c120	178	Texture::GetTexCoordModifiesRect	idb	ui	primitive		Implements the Texture method GetTexCoordModifiesRect	verified	one	ui/texture#reading-the-image-and-the-coordinates	
 0x79c1e0	224	Texture::SetDesaturated	idb	ui	primitive		Implements the Texture method SetDesaturated	verified	one	ui/texture#desaturating	
 0x79c2c0	193	Texture::IsDesaturated	idb	ui	primitive		Implements the Texture method IsDesaturated	verified	one	ui/texture#desaturating	
 0x79c390	10			ui	orchestration		Runs its object file code that calls 0x79c3a0; not read here	inferred	none		

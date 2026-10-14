@@ -49,6 +49,20 @@ dwords with the colour (`0x5c53b1` to `0x5c53b9`), and `0x44a946` compares the a
 (`0x77012d`) logs (`0x770156`) and calls `0x770360` with `0xff00ff00` (`0x77016a`, `0x770171`). `<Gradient>` calls `0x77f910`
 (`0x7700f2`).
 
+## A gradient element
+
+A `<Gradient>` child reads `orientation` (`HORIZONTAL` or `VERTICAL`, ignoring case) and the children `MinColor` and `MaxColor`, each parsed like a `<Color>`. An absent or
+empty orientation is `HORIZONTAL`, and an unknown one logs `Unknown orientation %s in element %s` and is also `HORIZONTAL`. A colour whose child is missing stays
+0, which is transparent black. The element applies the same corner colours as `SetGradient` (`Gradients`).
+
+Addresses: `0x76fe20`, `0x7700b8`, `0x7700c3`, `0x7700d8`, `0x7700de`, `0x7700f2`, `0x6f2630`, `0x6f2638`, `0x6f2645`, `0x6f2659`, `0x6f266c`, `0x6f269e`, `0x6f26ad`, `0x6f26c0`, `0x6f26ce`, `0x6f1a20`, `0x6f23d0`, `0x77f910`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7700c3` matches the child name `Gradient`; `0x7700d8` zeroes the two colour words and `0x7700de` calls `0x6f2630`, which zeroes the orientation (`0x6f263f`), reads the attribute (`0x6f2645`), maps it with
+`0x6f1a20` (`0x6f2659`), logs the unknown name (`0x6f266c`) and walks the children comparing `MinColor` (`0x6f269e`) and `MaxColor` (`0x6f26c0`) with `0x6f23d0` (`0x6f26ad`, `0x6f26ce`). The loader then calls `0x77f910` (`0x7700f2`).
+
 ## Texture coordinates in XML
 
 A `<TexCoords>` child gives `left`, `right`, `top` and `bottom` (defaults 0, 1, 0, 1) and sets the eight coordinates
@@ -215,7 +229,7 @@ from a rectangle, and `SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)` sets
 `Usage: %s:SetTexCoord(minX, maxX, minY, maxY) or SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)`. When `SetTexCoordModifiesRect` is on, a change of coordinates
 recomputes the vertices from the resolved rectangle.
 
-Addresses: `0x79ba70`, `0x79bafe`, `0x79bb0c`, `0x7703a0`, `0x44b410`, `0x64a450`, `0x79bdf0`, `0x79be86`, `0x79bead`, `0x79beb0`, `0x79bf58`, `0x79bff9`, `0x79c065`, `0x770410`, `0x7704c0`, `0x770462`, `0x770498`, `0x79c080`, `0x79c113`, `0x44a9ae`
+Addresses: `0x79ba70`, `0x79bafe`, `0x79bb0c`, `0x7703a0`, `0x44b410`, `0x64a450`, `0x79bdf0`, `0x79be86`, `0x79bead`, `0x79beb0`, `0x79bf58`, `0x79bff9`, `0x79c065`, `0x770410`, `0x7704c0`, `0x770462`, `0x770498`, `0x79c080`, `0x79c113`, `0x79c120`, `0x44a9ae`
 Confidence: verified
 Proof: one
 Test: none
