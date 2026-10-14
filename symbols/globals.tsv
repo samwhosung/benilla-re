@@ -453,6 +453,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803bf8	const int32_t[120]	s_bodySlotColumns		charactermodel	Holds the default cell column of each body slot and composite group, -1 for none	verified	one	charactermodel/equipment#layer-choosers
 0x804328	const float	s_float40b1c71c		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
 0x80439c	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x8043b8	void *[11]	CGWorldFrame::Layout::vftable		ui	Holds the layout vtable of CGWorldFrame, stored at +0x24; its callback and destructor thunk differ from the base	verified	one	ui/worldframe#overrides
 0x8043e8	void *[36]	CGWorldFrame::vftable		ui	Holds the 36 virtual function slots of CGWorldFrame, which its constructor stores	inferred	none	
 0x804478	const float	s_float41a00000		unassigned	Holds the float 20 (0x41a00000)	inferred	none	
 0x80447c	const float	s_float42da67ae		unassigned	Holds the float 109.2025 (0x42da67ae)	inferred	none	
