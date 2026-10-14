@@ -109,3 +109,16 @@ screen functions divide G48 (width: G44) by the reader and multiply by `0.75a ·
 (`modelview#model-unit-to-pixel`).
 
 Bit-exact coverage: `ui::luabind_48b_screen_getters` covers the whole of `0x494590`.
+
+## SetupFullscreenScale
+
+`SetupFullscreenScale(frame)` sets the frame's own scale to the screen aspect scale when that is below 1 and to 1 otherwise. A
+non-frame argument raises `SetupFullscreenScale(): Wrong object type, expected frame`, an unresolved one `SetupFullscreenScale(): Couldn't find 'this' in frame object`, and a
+missing one `Usage: SetupFullscreenScale(frame)`. The aspect scale is the aspect times 0.75, so it is 1 at 4:3 and wider screens give 1.
+
+Addresses: `0x48c270`, `0x48c306`, `0x48c30e`, `0x48c323`, `0x48c335`, `0x41ad70`, `0x76ac10`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x48c306` calls `GetScaledScreenAspect` and `0x48c30e` compares it with the double 1.0; `jp` after `test ah,5` jumps for equal or greater to the store of 1.0 at `0x48c330`, and the less case reaches `SetFrameScale` with the aspect at `0x48c323`.

@@ -136,3 +136,16 @@ Proof: one
 Test: none
 
 A row is 0x1c bytes at `0xbdd118`: the item id at `+4`, the display id at `+8`, the number available at `+0xc`, the price at `+0x10` and the bundle quantity at `+0x18`. `0x4fb245` to `0x4fb265` push the price, the quantity and the number available in that order. `0x4fb2a3` calls `CanUseItem`. `0x4fb6e8` tests the quantity and `0x4fb71c` loads the stack size at `+0x60`. `0x4fb8f7` caps the quantity at 255 and `0x4fb93c` calls `SendBuyItem`.
+
+## Pending equips
+
+`EquipPendingItem(index)` and `CancelPendingEquip(index)` answer the bind-on-equip confirmation parked at that index (`objectlayer/inventory`,
+"Bind-on-equip confirmation"): the first accepts it and the second releases it. Each raises `Usage: <name>(index)` for a non-number and
+does nothing without a player; the index is truncated, not shifted.
+
+Addresses: `0x4898f0`, `0x489919`, `0x48994b`, `0x489960`, `0x4899bb`, `0x5e1be0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x489935` pushes 1 and `0x4899a5` pushes 0 as the second argument of `AnswerBindConfirm` (`0x48994b` and `0x4899bb`); the truncated index is the first.

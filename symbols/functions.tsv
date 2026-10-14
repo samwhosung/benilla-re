@@ -6676,8 +6676,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x489630	38	Script::CursorHasMoney	idb	ui	orchestration		Implements the Lua function CursorHasMoney	verified	one	ui/cursormoney#money-functions	
 0x489660	334	Script::EquipCursorItem	idb	ui	primitive		Implements the Lua function EquipCursorItem	verified	one	ui/cursor#cursor-functions	
 0x4897b0	311	Script::DeleteCursorItem	idb	ui	primitive		Implements the Lua function DeleteCursorItem	verified	one	ui/cursor#delete_item_confirm	
-0x4898f0	101	Script::EquipPendingItem	idb	ui	orchestration		Implements the Lua function EquipPendingItem	inferred	none		
-0x489960	101	Script::CancelPendingEquip	idb	ui	orchestration		Implements the Lua function CancelPendingEquip	inferred	none		
+0x4898f0	101	Script::EquipPendingItem	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Accepts the bind-on-equip confirmation parked at an index	verified	one	ui/inventoryverbs#pending-equips	
+0x489960	101	Script::CancelPendingEquip	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Releases the bind-on-equip confirmation parked at an index	verified	one	ui/inventoryverbs#pending-equips	
 0x4899d0	109	Script::TargetUnit	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the unit a token names	verified	one	ui/targeting#target-by-token	
 0x489a40	59	CGGameUI::Target	idb	ui	orchestration	void __thiscall (const uint64_t *guid)	Selects a GUID when its unit object exists or it names a raid member or pet	verified	one	ui/targeting#target-by-token	
 0x489a80	27	Script::TargetNearestEnemy	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the next nearby enemy	verified	one	ui/targeting#cycling-through-nearby-units	
@@ -6775,7 +6775,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x48bfd0	249	Script::SetScreenResolution	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Writes the chosen list entry to gxResolution and runs gxRestart when it differs	verified	one	ui/videoverbs#choosing-a-resolution	
 0x48c0d0	355	Script::GetRefreshRates	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the sorted distinct refresh rates of the modes of a resolution list entry	verified	one	ui/videoverbs#the-refresh-rates	
 0x48c240	33	CompareRefreshRates		ui	primitive	int __cdecl (const int *a, const int *b)	Orders two refresh rates ascending for the qsort of GetRefreshRates	verified	one	ui/videoverbs#the-refresh-rates	
-0x48c270	232	Script::SetupFullscreenScale	idb	ui	primitive		Sets a frame's scale to the smaller of the scaled aspect and 1.0, raising a Lua error for a bad argument	verified	one	ui/uiscale#the-fullscreen-frame-scale	
+0x48c270	232	Script::SetupFullscreenScale	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a frame scale to the screen aspect scale, at most 1	verified	one	ui/uiscale#setupfullscreenscale	
 0x48c360	125	Script::GetMultisampleFormats	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the colour bits, depth bits and samples of every multisample list entry	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c3e0	406	BuildMultisampleList		ui	primitive	void __cdecl (void)	Fills the multisample list once with the distinct colour, depth and sample triples of the device formats	verified	one	ui/videoverbs#the-multisample-verbs	
 0x48c580	185	Script::GetCurrentMultisampleFormat	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based list index of the gx colour, depth and multisample options, or 1 on a miss	verified	one	ui/videoverbs#the-multisample-verbs	
@@ -7221,7 +7221,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x49fb30	172	Script::GetNumLaguages	idb	ui	primitive		Pushes the number of languages the active player understands	verified	one	ui/chatlanguage#language-functions	
 0x49fbe0	236	Script::GetLanguageByIndex	idb	ui	primitive		Pushes the name of the n-th language the active player understands	verified	one	ui/chatlanguage#language-functions	
 0x49fcd0	94	Script::GetDefaultLanguage	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the active player's race language name, or nothing without a player or a language	verified	one	ui/bindings#default-language	
-0x49fd30	267	Script::DoEmote	idb	ui	primitive		Implements the Lua function DoEmote	inferred	none		
+0x49fd30	267	Script::DoEmote	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Performs the text emote of a token on the target or a named player	verified	one	ui/chatemote#doemote	
 0x49fe40	7	Script::LoggingChat	idb	ui	orchestration		Calls the logging setter for the chat log	verified	one	ui/chatwindows#chat-logging	
 0x49fe50	146	SetLoggingFlag		ui	orchestration		Sets or reads the chat or combat logging flag, opens the log, and pushes 1 or nil	verified	one	ui/chatwindows#chat-logging	
 0x49fef0	10	Script::LoggingCombat	idb	ui	orchestration		Calls the logging setter for the combat log	verified	one	ui/chatwindows#chat-logging	
@@ -7476,7 +7476,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a86d0	62	Script::GetCorpseMapPosition	idb	ui	orchestration		Pushes the normalised map position of the cached corpse	verified	one	ui/worldmap#unit-and-corpse-positions	
 0x4a8710	44	Script::GetNumMapLandmarks	idb	ui	orchestration		Pushes the number of map landmarks	verified	one	ui/worldmap#the-landmarks	
 0x4a8740	430	Script::GetMapLandmarkInfo	idb	ui	primitive		Pushes name, description, icon index, x and y of a map landmark	verified	one	ui/worldmap#the-landmarks	
-0x4a88f0	219	Script::GetWorldLocMapPosition	idb	ui	orchestration		Implements the Lua function GetWorldLocMapPosition	inferred	none		
+0x4a88f0	219	Script::GetWorldLocMapPosition	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the map position of a world position on a continent	verified	one	ui/worldmap#getworldlocmapposition	
 0x4a89d0	44	Script::GetNumMapOverlays	idb	ui	orchestration		Pushes the number of map overlays	verified	one	ui/worldmap#the-overlays	
 0x4a8a00	423	Script::GetMapOverlayInfo	idb	ui	primitive		Pushes the path, size, offsets and map point of a map overlay	verified	one	ui/worldmap#the-overlays	
 0x4a8bb0	171	Script::CreateWorldMapArrowFrame	idb	ui	primitive		Creates the world map arrow model once under the given frame	verified	one	ui/worldmapmarkers#the-arrow-frame	
@@ -7605,7 +7605,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4abd00	181	Script::GetBattlefieldStatInfo	idb	ui	primitive		Pushes the text, icon and tooltip of a score board column, or three nils	verified	one	ui/worldstate#the-scoreboard-columns	
 0x4abdc0	159	Script::GetBattlefieldStatData	idb	ui	primitive		Pushes one stat word of a score row	verified	one	ui/battlefield#scores-and-stats	
 0x4abe60	140	Script::LeaveBattlefield	idb	ui	primitive		Sends opcode 0x2e1 to leave the battleground once it has ended	verified	one	ui/battlefield#joining-and-leaving	
-0x4abef0	8	Script::RequestBattlefieldPositions	idb	ui	orchestration		Implements the Lua function RequestBattlefieldPositions	inferred	none		
+0x4abef0	8	Script::RequestBattlefieldPositions	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Requests the battlefield positions, at most once per 5 seconds	verified	one	ui/battlefield#joining-and-leaving	
 0x4abf00	135	Script::GetNumBattlefieldPositions	idb	ui	primitive		Pushes the count of stored teammates outside the player's party and raid	verified	one	ui/worldmapmarkers#teammate-positions	
 0x4abf90	510	Script::GetBattlefieldPosition	idb	ui	primitive		Pushes map fractions and name of the index-th teammate outside party and raid	verified	one	ui/worldmapmarkers#teammate-positions	
 0x4ac190	13	OnWorldMapNameArrived		ui	orchestration		Signals WORLD_MAP_NAME_UPDATE when a teammate's name reaches the name cache	verified	one	ui/worldmapmarkers#teammate-positions	
@@ -8610,7 +8610,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c17f0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4c1800	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4c1820	81	LootButton::OnClick		ui	orchestration	void __thiscall (uint32_t button, uint32_t scripted)	Runs the button click, then takes the row unless a modifier key is down or the click was scripted	verified	one	ui/loot#the-row-click	
-0x4c1880	198	LootButton::SetSlot	idb	ui	primitive		Implements the LootButton method SetSlot	inferred	none		
+0x4c1880	198	LootButton::SetSlot	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Stores the slot of a loot button from a 1-based index	verified	one	ui/loot#the-row-widget	
 0x4c1950	10			ui	orchestration		Runs its object file code that calls 0x4c1960; not read here	inferred	none		
 0x4c1960	190			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4c1a20	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -11450,7 +11450,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fd9b0	64	Script::SelectTradeSkill	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Selects the profession row of a number	verified	one	ui/tradeskill#opening-and-closing	
 0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the 1-based row of the selected profession spell, or 0	verified	one	ui/tradeskill#opening-and-closing	
 0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the seconds left of a recipe cooldown, or nil	verified	one	ui/tradeskill#reading-a-row	
-0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive		Implements the Lua function GetTradeSkillIcon	inferred	none		
+0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the icon path of the item a recipe creates	verified	one	ui/spellbook#recipe-icons	
 0x4fdc30	21	OnTradeSkillItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the trade skill window's list when an item template arrives	verified	one	ui/spellbook#recipe-icons	
 0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the lowest and highest number a recipe makes	verified	one	ui/tradeskill#reading-a-row	
 0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the open skill line name, the player rank and the maximum	verified	one	ui/tradeskill#the-windows-line	

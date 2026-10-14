@@ -122,3 +122,15 @@ The axes are swapped: `u` follows world Y and `v` world X. `0x4a7870` takes the 
 A unit in another map, or a map different from the displayed continent's, gives 0 and 0. `GetPlayerMapPosition` raises `Usage: GetPlayerMapPosition("player")` for a non-string.
 
 `ui::geo_4a7360` runs `0x4a7360` whole on seeded map state.
+
+## GetWorldLocMapPosition
+
+`GetWorldLocMapPosition(continent, x, y)` returns the map position, as two numbers, of the world position (`x`, `y`) on a continent: it passes the
+three numbers to `ProjectWorldPosition` and pushes the two floats it writes. A non-number raises `Usage: GetWorldLocMapPosition(continent, x, y)`.
+
+Addresses: `0x4a88f0`, `0x4a8949`, `0x4a895c`, `0x4a896b`, `0x4a8986`, `0x4a898b`, `0x4a89ac`, `0x4a7360`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x4a8949` reads the continent (truncated), `0x4a895c` the third argument and `0x4a896b` the second as floats, and `0x4a8986` calls `ProjectWorldPosition`; `0x4a89ac` returns 2.

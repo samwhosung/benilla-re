@@ -189,13 +189,13 @@ the GUID; the instance id is the list entry or 0. `AcceptBattlefieldPort(index, 
 negative slot), only once a score message reported the end. `RequestBattlefieldScoreData` sends 0x2e0 and
 `RequestBattlefieldPositions` 0x2e9, each at most once per 5000 ms.
 
-Addresses: `0x4a9f60`, `0x4a9f94`, `0x4a9f9c`, `0x4a9fa0`, `0x4a9fa8`, `0x4a9fbf`, `0x4a9fea`, `0x4aa00b`, `0x4aa01f`, `0x4aa03b`, `0x4aa04c`, `0x4ab290`, `0x4ab3b0`, `0x4ab429`, `0x4ab8c0`, `0x4ab91f`, `0x4abe60`, `0x4abe66`, `0x4abe72`, `0x4abe99`, `0x4ab990`, `0x4aa170`, `0x4aa190`, `0x4aa5c0`, `0x4aa600`, `0xb6ebc8`, `0xb6ebe0`
+Addresses: `0x4a9f60`, `0x4a9f94`, `0x4a9f9c`, `0x4a9fa0`, `0x4a9fa8`, `0x4a9fbf`, `0x4a9fea`, `0x4aa00b`, `0x4aa01f`, `0x4aa03b`, `0x4aa04c`, `0x4ab290`, `0x4ab3b0`, `0x4ab429`, `0x4ab8c0`, `0x4ab91f`, `0x4abe60`, `0x4abe66`, `0x4abe72`, `0x4abe99`, `0x4ab990`, `0x4aa170`, `0x4aa190`, `0x4aa5c0`, `0x4aa600`, `0x4abef0`, `0xb6ebc8`, `0xb6ebe0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x4aa170` reads the clock, returns when `0xb6ebc8` is nonzero and `now - stamp` is negative, else sends and stores
-`now + 0x1388`; `0x4aa5c0` does the same with `0xb6ebe0`. The ended flag `0xb6ebcc` has two readers (`LeaveBattlefield` and
+`now + 0x1388`; `0x4aa5c0` does the same with `0xb6ebe0`, and `RequestBattlefieldPositions()` (`0x4abef0`) is a call to it. The ended flag `0xb6ebcc` has two readers (`LeaveBattlefield` and
 `GetBattlefieldWinner`) and one writer, so a leave before the first log message sends nothing. The slot test is signed with no upper bound; its writers keep the value
 in -1 to 2.
 
