@@ -627,6 +627,22 @@ CSimpleTop	0x1128	4	void *	m_mouseDownCallback	ui	Holds the host function offere
 CSimpleTop	0x112c	4	void *	m_mouseMoveCallback	ui	Holds the host function offered each mouse move	verified	one	ui/input#mouse-move-and-the-hover-pick
 CSimpleTop	0x1130	4	void *	m_sizeCallback	ui	Holds the host function the size handler calls	verified	one	ui/strata#construction-and-teardown
 CSimpleTop	0x1134	4	void *	m_focusLostCallback	ui	Holds the host function the lost-capture handler calls	verified	one	ui/strata#construction-and-teardown
+CVar	0x0000	4	uint32_t	m_hash	cvar	Holds the hash of the name	verified	one	cvar/registry#cvar-record
+CVar	0x0004	8	uint32_t[2]	m_bucketLink	cvar	Holds the link in the hash bucket chain	verified	one	cvar/registry#cvar-record
+CVar	0x000c	8	uint32_t[2]	m_listLink	cvar	Holds the link in the list of all records	verified	one	cvar/registry#cvar-record
+CVar	0x0014	4	char *	m_name	cvar	Holds the name, a duplicate of the registered text	verified	one	cvar/registry#cvar-record
+CVar	0x0018	4	uint32_t	m_category	cvar	Holds the category id	verified	one	cvar/registry#cvar-record
+CVar	0x001c	4	uint32_t	m_flags	cvar	Holds the flag bits: 0 saved, 1 latched, 2 read-only, 31 script-visible	verified	one	cvar/registry#cvar-record
+CVar	0x0020	4	char *	m_value	cvar	Holds the value text	verified	one	cvar/registry#cvar-record
+CVar	0x0024	4	float	m_floatValue	cvar	Holds the value as a float	verified	one	cvar/registry#cvar-record
+CVar	0x0028	4	int32_t	m_intValue	cvar	Holds the value as an integer	verified	one	cvar/registry#cvar-record
+CVar	0x002c	4	uint32_t	m_changeCount	cvar	Holds the number of accepted sets	verified	one	cvar/registry#cvar-record
+CVar	0x0030	4	char *	m_default	cvar	Holds the default text	verified	one	cvar/registry#cvar-record
+CVar	0x0034	4	char *	m_reset	cvar	Holds the reset text	verified	one	cvar/registry#cvar-record
+CVar	0x0038	4	char *	m_latched	cvar	Holds the latched text applied by Update	verified	one	cvar/registry#cvar-record
+CVar	0x003c	128	char[128]	m_help	cvar	Holds the help line	verified	one	cvar/registry#cvar-record
+CVar	0x00bc	4	void *	m_callback	cvar	Holds the change callback	verified	one	cvar/registry#cvar-record
+CVar	0x00c0	4	void *	m_callbackArg	cvar	Holds the argument passed to the callback	verified	one	cvar/registry#cvar-record
 CharacterSelectionDisplay	0x0000	8	uint64_t	m_guid	glue	Holds the character guid, which the world entry sends	verified	one	glue/flow#two-phase-world-entry
 CharacterSelectionDisplay	0x0008	48	char[48]	m_name	glue	Holds the character's name; the rename applier copies at most 48 bytes into it	verified	one	glue/select#the-roster
 CharacterSelectionDisplay	0x0038	4	uint32_t	m_mapId	glue	Holds the character map, passed to the loading screen and to ClientInitializeGame	verified	one	glue/flow#two-phase-world-entry
