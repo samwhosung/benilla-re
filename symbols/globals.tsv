@@ -1242,9 +1242,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
-0x84506c	uint32_t			unassigned	Holds a dword that CGGameUI::HandlePacket, Script::GetCurrentMapContinent read and write; not read here	inferred	none	
-0x845070	uint32_t			unassigned	Holds a dword that CGGameUI::HandlePacket, Script::GetCurrentMapZone read and write; not read here	inferred	none	
-0x845074	uint32_t			unassigned	Holds a dword that CGGameUI::HandlePacket reads and writes; not read here	inferred	none	
+0x84506c	int32_t	s_mapContinent		unassigned	Holds the selected continent index, -1 for the world view, -2 for a direct area	verified	one	ui/worldmap#the-selection
+0x845070	int32_t	s_mapZone		unassigned	Holds the selected zone index within the continent, -1 for none	verified	one	ui/worldmap#the-selection
+0x845074	int32_t	s_mapDirectArea		unassigned	Holds the WorldMapArea row id of the selected instance map, -1 for none	verified	one	ui/worldmap#the-selection
 0x845374	char[26]	s_textInterfaceWorldMapSZmp		ui	Holds the string "Interface\WorldMap\%s.zmp"	inferred	none	
 0x8453c0	char[35]	s_textInterfaceMinimapMinimapArrowMdx		ui	Holds the string "Interface\Minimap\MinimapArrow.mdx"	inferred	none	
 0x8457cc	int32_t	s_bgActiveSlot		ui	Holds the queue slot of the active battleground, -1 for none	verified	one	ui/battlefield#caches-and-lifecycle
@@ -2224,8 +2224,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6e5e4	uint8_t	s_zoneRefreshRetry		ui	Holds 1 when the guild recruitment cascade could not act and the next zone walk runs it	verified	one	ui/chatchannels#walk-rows-not-held
 0xb6e5ec	uint8_t	s_guildNamesComposed		ui	Holds 1 once the guild recruitment names are composed	verified	one	ui/channelverbs#guild-recruitment-cascade
 0xb6e5f0	uint32_t	s_maskIndex		ui	Holds the index of the next mask character, advanced by each masked byte and wrapped at 8	verified	one	ui/chatfilter#masking
-0xb6e630	uint32_t			ui	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	
-0xb6e664	uint32_t			ui	Holds a dword that Script::GetMapContinents, Script::GetMapZones read and write; not read here	inferred	none	
+0xb6e608	uint32_t[3]	s_orphanAreas		ui	Holds the capacity, count and data of the WorldMapArea ids that belong to no continent	verified	one	ui/worldmap#the-lists
+0xb6e628	uint32_t[4]	s_mapOverlayList		ui	Holds the WorldMapOverlay row ids shown on the map: count, capacity, data and granularity	verified	one	ui/worldmap#the-overlays
+0xb6e648	uint32_t[4]	s_mapLandmarkList		ui	Holds the landmark entries of 20 bytes: count, capacity, data and granularity	verified	one	ui/worldmap#the-landmarks
+0xb6e664	uint32_t	s_continentCount		ui	Holds the number of continent records	verified	one	ui/worldmap#the-selection
+0xb6e668	void *	s_continents		ui	Points at the continent records of 0x10024 bytes: map id, own row, zone count, zone ids	verified	one	ui/worldmap#the-selection
+0xb6e6b0	uint32_t	s_mapLandmarkCount		ui	Holds the number of landmarks GetNumMapLandmarks returns	verified	one	ui/worldmap#the-landmarks
+0xb6e6b4	uint32_t	s_mapOverlayCount		ui	Holds the number of overlays GetNumMapOverlays returns	verified	one	ui/worldmap#the-overlays
 0xb6e6ec	uint32_t[9]	s_bgStatColumns		ui	Holds the WorldStateUI row ids of the active battleground's stat columns	verified	one	ui/battlefield#the-status-message
 0xb6e854	float	s_bgLeashSquared		ui	Holds the squared walk-away radius of the battlemaster list, 5.5555553 yards squared	verified	one	ui/battlefield#the-list-message
 0xb6e860	uint32_t[4]	s_bgInstanceList		ui	Holds the battleground instance id array: capacity, count, data pointer and growth state	verified	one	ui/battlefield#caches-and-lifecycle
@@ -2543,7 +2548,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
 0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message
-0xc0d5bc	uint32_t			unassigned	Holds a dword that Script::UpdateMapHighlight, Script::GetMapOverlayInfo read and write; not read here	inferred	none	
+0xc0d58c	uint32_t[5]	s_worldMapOverlayStore		dbc	Holds the WorldMapOverlay.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-overlays
+0xc0d5a0	uint32_t[5]	s_worldMapContinentStore		dbc	Holds the WorldMapContinent.dbc store: records of 0x34 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#unit-and-corpse-positions
+0xc0d5b4	uint32_t[5]	s_worldMapAreaStore		dbc	Holds the WorldMapArea.dbc store: records of 32 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-lists
 0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
 0xc0d67c	uint32_t[5]	s_terrainTypeStore		terrain	Holds the TerrainType.dbc store: rows, count, the table by id at +0x8 and the id bound at +0xc	verified	one	terrain/footprints#footprint-spawn
 0xc0d6a4	uint32_t[5]	s_taxiPathNodeStore		dbc	Holds the TaxiPathNode.dbc store: records and count	verified	one	objectlayer/transports#the-ship-path
@@ -2651,8 +2658,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e02c	uint32_t[2]	s_areaTriggerRows		dbc	Holds the AreaTrigger rows, 0x28 bytes each sorted by map, and their count	inferred	none	objectlayer/players#area-triggers
 0xc0e048	uint32_t	s_areaIdMap		unassigned	Holds the AreaTable.dbc rows by id	verified	one	ui/spelltokens#tokens-that-compute-a-value
 0xc0e04c	uint32_t	s_areaMaxId		dbc	Holds the highest AreaTable.dbc id	verified	one	ui/spelltokens#tokens-that-compute-a-value
-0xc0e054	uint32_t			unassigned	Holds a dword that StaticDBLoadAll reads and writes; not read here	inferred	none	
-0xc0e058	uint32_t			unassigned	Holds a dword that StaticDBLoadAll reads and writes; not read here	inferred	none	
+0xc0e054	uint32_t[5]	s_areaPoiStore		dbc	Holds the AreaPOI.dbc store: records of 0x74 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-landmarks
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index that picks a localized string column	inferred	none	spell/handlers#channel-start-and-update

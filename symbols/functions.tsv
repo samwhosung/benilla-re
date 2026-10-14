@@ -7431,18 +7431,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a5ca0	18			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a5cc0	12			ui	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
 0x4a5cd0	47			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x4a5d00	1668			ui	primitive		Runs its object file code that calls 0x4a9270, 0x4a96b0, 0x4a92e0 and 12 more; not read here	inferred	none		
-0x4a6390	154			ui	orchestration		Runs its object file code that calls SStrCmp; not read here	inferred	none		
+0x4a5d00	1668	BuildMapLists		ui	orchestration		Builds the continent records, their sorted zone ids and the orphan area ids from WorldMapArea	verified	one	ui/worldmap#the-lists	
+0x4a6390	154	CompareZoneNames		ui	primitive		Compares two WorldMapArea ids by the name of their area	verified	one	ui/worldmap#the-lists	
 0x4a6430	37			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrSetObjectMirrorHandler; not read here	inferred	none		
 0x4a6460	36			ui	orchestration		Runs its object file code that calls 0x4a67a0; not read here	inferred	none		
 0x4a6490	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
 0x4a64b0	240			ui	primitive		Runs its object file code that calls 0x4088f0, 0x4a9210, SMemFree; not read here	inferred	none		
 0x4a65a0	60			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a65e0	106			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a6650	331			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4a67a0 and 1 more; not read here	inferred	none		
-0x4a67a0	1360			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4a79b0 and 7 more; not read here	inferred	none		
-0x4a6cf0	94			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a6d50	273			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		
+0x4a6650	331	SelectCurrentZone		ui	orchestration		Selects the map, continent and zone of the active player, or an orphan map, or the world	verified	one	ui/worldmap#the-resolver	
+0x4a67a0	1360	SetMap		ui	orchestration		Stores the continent, zone and direct area, rebuilds the landmark and overlay lists, signals WORLD_MAP_UPDATE	verified	one	ui/worldmap#the-selection	
+0x4a6cf0	94	GetSelectedAreaName		ui	primitive		Returns the name field of the selected WorldMapArea row, 0 for none	verified	one	ui/worldmap#the-getters	
+0x4a6d50	273	GetSelectedTextureHeight		ui	primitive		Returns the map texture height from the selected row's tile counts or rectangle	verified	one	ui/worldmap#the-getters	
 0x4a6e70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a6e80	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a6e90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -7450,35 +7450,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a6ec0	567			ui	primitive		Runs its object file code that calls __ftol; not read here	inferred	none		
 0x4a7100	418			ui	unreached		Runs its object file code not read here	inferred	none		
 0x4a72b0	104			ui	primitive		Runs its object file code that calls 0x4a7320; not read here	inferred	none		
-0x4a7320	64			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a7360	478			ui	primitive		Runs its object file code that calls 0x4a7320; not read here	inferred	none		
-0x4a7540	212			ui	primitive		Runs its object file code that calls 0x4a67a0, 0x4a6ec0; not read here	inferred	none		
-0x4a7620	191			ui	primitive		Runs its object file code that calls 0x4a6ec0; not read here	inferred	none		
+0x4a7320	64	FindWorldMapContinent		ui	primitive		Returns the WorldMapContinent row for a map id, or 0	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a7360	478	ProjectWorldPosition		ui	primitive		Normalises a world position to the displayed map for a map id	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a7540	212	DrillMap		ui	primitive		Selects the continent or zone whose rectangle holds the cursor	verified	one	ui/worldmap#hover-and-click	
+0x4a7620	191	FindHoveredArea		ui	primitive		Returns the WorldMapArea id under the cursor, 0 for none	verified	one	ui/worldmap#hover-and-click	
 0x4a76e0	385			ui	unreached		Runs its object file code that calls 0x4a7100, OsGetAsyncTimeMs, CDataStore::PutUInt32 and 5 more; not read here	inferred	none		
-0x4a7870	233			ui	orchestration		Runs WorldMap.cpp code that calls ClntObjMgrObjectPtr, 0x5ea700, 0x4a7360 and 1 more; not read here	inferred	none		
-0x4a7960	79			ui	orchestration		Runs WorldMap.cpp code that calls 0x492090, 0x4a7360; not read here	inferred	none		
-0x4a79b0	120			ui	orchestration		Runs WorldMap.cpp code that calls 0x4a7360; not read here	inferred	none		
+0x4a7870	233	GetUnitMapPosition		ui	orchestration		Returns a unit's normalised map position from its object or its group record	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a7960	79	ProjectCorpsePosition		ui	orchestration		Projects the cached corpse position under its display map id	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a79b0	120	ProjectAreaPoi		ui	primitive		Projects an AreaPOI row onto the displayed map when its flags allow the level	verified	one	ui/worldmap#the-landmarks	
 0x4a7a30	68			ui	unreached		Runs WorldMap.cpp code that calls 0x4a7360; not read here	inferred	none		
 0x4a7a80	148			ui	primitive		Creates the world map arrow's model frame once and sets its scale to G48 times 5/3	verified	one	ui/modelview#model-scale-from-xml	
 0x4a7b20	87			ui	primitive		Runs WorldMap.cpp code not read here	inferred	none		
 0x4a7b80	148			ui	primitive		Runs WorldMap.cpp code that calls SMemAlloc, CSimpleModel::CSimpleModel, NDCToDDCHeight and 1 more; not read here	inferred	none		
 0x4a7c20	189			ui	orchestration		Runs WorldMap.cpp code that calls CM2Model::IsLoaded, 0x4a7b20, GetActiveCamera and 1 more; not read here	inferred	none		
-0x4a7ce0	44	Script::GetMapContinents	idb	ui	primitive		Implements the Lua function GetMapContinents	inferred	none		
-0x4a7d10	146	Script::GetMapZones	idb	ui	primitive		Implements the Lua function GetMapZones	inferred	none		
-0x4a7db0	111	Script::SetMapZoom	idb	ui	primitive		Implements the Lua function SetMapZoom	inferred	none		
-0x4a7e20	8	Script::SetMapToCurrentZone	idb	ui	orchestration		Implements the Lua function SetMapToCurrentZone	inferred	none		
-0x4a7e30	145	Script::GetMapInfo	idb	ui	primitive		Implements the Lua function GetMapInfo	inferred	none		
-0x4a7ed0	36	Script::GetCurrentMapContinent	idb	ui	primitive		Implements the Lua function GetCurrentMapContinent	inferred	none		
-0x4a7f00	36	Script::GetCurrentMapZone	idb	ui	primitive		Implements the Lua function GetCurrentMapZone	inferred	none		
-0x4a7f30	110	Script::ProcessMapClick	idb	ui	orchestration		Implements the Lua function ProcessMapClick	inferred	none		
-0x4a7fa0	1645	Script::UpdateMapHighlight	idb	ui	primitive		Implements the Lua function UpdateMapHighlight	inferred	none		
-0x4a8610	183	Script::GetPlayerMapPosition	idb	ui	orchestration		Implements the Lua function GetPlayerMapPosition	inferred	none		
-0x4a86d0	62	Script::GetCorpseMapPosition	idb	ui	orchestration		Implements the Lua function GetCorpseMapPosition	inferred	none		
-0x4a8710	44	Script::GetNumMapLandmarks	idb	ui	orchestration		Implements the Lua function GetNumMapLandmarks	inferred	none		
-0x4a8740	430	Script::GetMapLandmarkInfo	idb	ui	primitive		Implements the Lua function GetMapLandmarkInfo	inferred	none		
+0x4a7ce0	44	Script::GetMapContinents	idb	ui	primitive		Pushes the continent names and returns their count	verified	one	ui/worldmap#the-getters	
+0x4a7d10	146	Script::GetMapZones	idb	ui	primitive		Pushes the zone names of a continent and returns their count	verified	one	ui/worldmap#the-getters	
+0x4a7db0	111	Script::SetMapZoom	idb	ui	primitive		Selects continent minus one and zone minus one	verified	one	ui/worldmap#the-getters	
+0x4a7e20	8	Script::SetMapToCurrentZone	idb	ui	orchestration		Selects the active player's map and pushes nothing	verified	one	ui/worldmap#the-resolver	
+0x4a7e30	145	Script::GetMapInfo	idb	ui	primitive		Pushes the selected area name, texture height and its power-of-two round-up	verified	one	ui/worldmap#the-getters	
+0x4a7ed0	36	Script::GetCurrentMapContinent	idb	ui	primitive		Pushes the selected continent index plus one	verified	one	ui/worldmap#the-getters	
+0x4a7f00	36	Script::GetCurrentMapZone	idb	ui	primitive		Pushes the selected zone index plus one	verified	one	ui/worldmap#the-getters	
+0x4a7f30	110	Script::ProcessMapClick	idb	ui	orchestration		Drills into the map area under the cursor, pushing nothing	verified	one	ui/worldmap#hover-and-click	
+0x4a7fa0	1645	Script::UpdateMapHighlight	idb	ui	primitive		Pushes the eight values of the area or overlay under the cursor	verified	one	ui/worldmap#hover-and-click	
+0x4a8610	183	Script::GetPlayerMapPosition	idb	ui	orchestration		Pushes the normalised map position of the player or a group member	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a86d0	62	Script::GetCorpseMapPosition	idb	ui	orchestration		Pushes the normalised map position of the cached corpse	verified	one	ui/worldmap#unit-and-corpse-positions	
+0x4a8710	44	Script::GetNumMapLandmarks	idb	ui	orchestration		Pushes the number of map landmarks	verified	one	ui/worldmap#the-landmarks	
+0x4a8740	430	Script::GetMapLandmarkInfo	idb	ui	primitive		Pushes name, description, icon index, x and y of a map landmark	verified	one	ui/worldmap#the-landmarks	
 0x4a88f0	219	Script::GetWorldLocMapPosition	idb	ui	orchestration		Implements the Lua function GetWorldLocMapPosition	inferred	none		
-0x4a89d0	44	Script::GetNumMapOverlays	idb	ui	orchestration		Implements the Lua function GetNumMapOverlays	inferred	none		
-0x4a8a00	423	Script::GetMapOverlayInfo	idb	ui	primitive		Implements the Lua function GetMapOverlayInfo	inferred	none		
+0x4a89d0	44	Script::GetNumMapOverlays	idb	ui	orchestration		Pushes the number of map overlays	verified	one	ui/worldmap#the-overlays	
+0x4a8a00	423	Script::GetMapOverlayInfo	idb	ui	primitive		Pushes the path, size, offsets and map point of a map overlay	verified	one	ui/worldmap#the-overlays	
 0x4a8bb0	171	Script::CreateWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function CreateWorldMapArrowFrame	inferred	none		
 0x4a8c60	171	Script::CreateMiniWorldMapArrowFrame	idb	ui	primitive		Implements the Lua function CreateMiniWorldMapArrowFrame	inferred	none		
 0x4a8d10	8	Script::UpdateWorldMapArrowFrames	idb	ui	orchestration		Implements the Lua function UpdateWorldMapArrowFrames	inferred	none		
@@ -7538,7 +7538,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4a99f0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4a9a10	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a9a20	19			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4a9a40	75			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4a9a40	75	IsAreaExplored		ui	primitive		Returns whether the explored bit of an area bit number is set in a player block	verified	one	ui/worldmap#the-exploration-test	
 0x4a9a90	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a9aa0	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4a9ab0	10			ui	orchestration		Runs its object file code that calls 0x4a9ac0; not read here	inferred	none		
