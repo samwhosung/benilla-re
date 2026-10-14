@@ -110,9 +110,9 @@ heap node when it changed, and the cost in `+0x54`, setting `+0x58` to whether i
 `+0x50` by at least `+0x50 >> 3`. When no other scheduler call is in flight and the slot's credit
 or `+0x58` is set, it swaps `+0x50` for `+0x54` in the slot's sum and looks for a slot whose sum
 plus this cost is below the current slot's. Found, the context moves there (accounts follow, a
-nonzero credit drops by 1) and that slot's event is set. Else `+0x58`
-clears, the mean is recomputed and the credit clears when `+0x50` is at most the mean. The context
-enters a heap.
+nonzero credit drops by 1) and that slot's event is set. Else a set
+`+0x58` clears with the mean recomputed, and the credit clears when `+0x50` is at most the mean. The
+context enters a heap.
 
 Addresses: `0x421570`, `0x421860`, `0x422720`, `0x422b50`, `0x659aa0`
 Confidence: verified
