@@ -395,6 +395,14 @@ impl<'a> Emu<'a> {
         }
     }
 
+    /// Maps `size` zeroed bytes at `va` (page aligned), for state the exe reaches at a fixed
+    /// address: the thread information block that `fs:0` reads is page 0.
+    pub fn map(&mut self, va: u64, size: u64) {
+        self.uc
+            .mem_map(va, size, Prot::ALL)
+            .unwrap_or_else(|e| panic!("map {va:#x} ({size:#x}): {e:?}"));
+    }
+
     /// Reserves `n` zeroed, 16-byte-aligned bytes in the scratch arena and returns their address.
     pub fn alloc(&mut self, n: u64) -> u64 {
         let p = self.scratch_next;
