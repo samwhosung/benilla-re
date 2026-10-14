@@ -305,3 +305,58 @@ Proof: one
 Test: none
 
 `0x5b227a` reads the count and `0x5b2286` calls `0x5b3360`; `0x5b22b9` to `0x5b2319` read the fields in the order above. `0x5b2321` `cmp ecx,[edi+0x10]; ja` stops on a read past the end. `0x5b2376` to `0x5b2396` classify each name byte: `byte - 0x20` indexes the table `0x5b2450` (up to `0x7c`) and the jump table `0x5b2444`; the characters `"*/:<>?\|` reach `0x5b2391`, which stores a space. `0x5b23a6` loops `0x5b24b0(char, 1)` from the end, which is 0 for those characters, for space and for dot. `0x5b23dd` reads the tail; `0x5b23f4` is the call of the store's end check (`[edi]+0x14`) and `0x5b2420` the success call.
+
+## Logon checksum
+
+The checksum the logon proof carries is `ChecksumExecutables`, an HMAC-SHA-1 keyed by the 16-byte checksum salt the server sent. It hashes, in this order, the whole contents of `WoW.exe`, `fmod.dll`, `ijl15.dll`, `dbghelp.dll` and `unicows.dll`, each opened by that name in the current directory. A file that does not exist, does not open, or is not read in full adds nothing. The 20-byte result goes to the proof, which sends `SHA-1(A ‖ result)`. On a reconnect the checksum is 20 zero bytes and no file is read. With the salt `BA A3 1E 99 A0 0B 21 57 FC 37 3F B3 69 CD D2 F1` and the five stock files of this build the construction gives `95EDB27C7823B363CBDDAB56A392E7CB73FCCA20`.
+
+Addresses: `0x5b1170`, `0x5b1c70`, `0x5b1f40`, `0x5b1c7b`, `0x5b1c98`, `0x5bbad0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5b1170(salt, length, out)` fills two 64-byte blocks with `0x36` and `0x5c`, xors the salt into both (`0x5b11a5` to `0x5b11b3`), starts a SHA-1 with the inner block (`0x5b11be` to `0x5b11d2`) and loops the five names of the table `0x85def0` (`0x5b11e0` to `0x5b127c`, stride 4, bound `0x14`): exists (`0x42a4e0`), open (`0x42a460` for reading), size (`0x42a670`), read (`0x42a520`), and update only when the read count equals the size (`0x5b1248`). It finishes the inner hash, hashes the outer block and the 20 inner bytes, and copies 5 dwords to the output. A key longer than 64 bytes would overflow the blocks; the caller passes 16. `0x5b1c70` tests the reconnect byte `+0xc` first (`0x5b1c7b`) and then calls `0x5bbad0` with 20 zero bytes (`0x5b1c98`). The salt is kept at `+0x19c` otherwise.
+
+## Pin challenge
+
+When the logon challenge carries a non-zero security byte, the logon object keeps a pin grid and a salt. `0x5b1ed0(flag, seed, salt)` stores the flag at `+0x1ac`; with the flag set it fills the 10-byte grid at `+0x1ae` from the 32-bit seed and copies the 16-byte salt to `+0x1b8`. The grid is a permutation of 0 to 9: its `i`th entry is the remaining digit at index `seed mod (10 − i)`, after which the seed is divided by `10 − i`. The checksum salt callback then reports state 7, the pin state, when the flag is set, and 9, the checksum state, when it is not.
+
+Addresses: `0x5b1ed0`, `0x5b1e70`, `0x5b1c70`, `0x5b1cd7`, `0x5b1edb`, `0x5b1eec`, `0x4100f0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5b1edb` stores the flag; `0x5b1ee7` calls `0x5b1e70`; `0x5b1eec` to `0x5b1f08` copy 16 bytes to `+0x1b8`. `0x5b1e70` writes 0 to 9 into a local array, then 10 times: `div` the seed by the count left (`0x5b1e97`), store the digit at the remainder to the grid, and close the gap with `0x4100f0` (`0x5b1eb1`). `0x5b1cd7` is `lea eax,[eax+eax*1+7]` on `sete` of the flag: 9 for 0, 7 otherwise.
+
+## Pin proof
+
+`0x5b3120(count, positions)` turns the pin positions into ASCII digits, seeds a local random pool with the clock, draws a 16-byte client salt into `+0x1c8`, stores `SHA-1(client salt ‖ SHA-1(server salt ‖ digits))` at `+0x1d8`, and reports state 9. The logon proof sends the salt and the hash when the flag at `+0x1ac` is set, taking their addresses from `0x5b1f10`.
+
+Addresses: `0x5b3120`, `0x5b31e0`, `0x5b1f10`, `0x5b3147`, `0x5b3163`, `0x5b3177`, `0x5b318f`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`.
+
+## SHA-1 first context
+
+The logon checksum and the pin hash use a second SHA-1 implementation. Its context is a 64-bit bit count (low dword `+0`, high `+4`), five state words from `+8`, and a 64-byte buffer from `+0x1c`. Init zeroes the count and loads the five standard words. Update adds 8 per byte to the count, tops up the buffer, compresses whole blocks straight from the caller's bytes, and buffers the rest. Final saves the count big-endian, pads with `0x80` and zeros to 56 bytes modulo 64, adds the count, and writes the five state words big-endian.
+
+Addresses: `0x5d1a40`, `0x5d1a80`, `0x5d1b30`, `0x5d1b60`, `0x80a930`, `0x5d1ad3`, `0x5d1af8`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5d1a40` stores 0, 0 and the words at `+8` to `+0x18`. `0x5d1a80` multiplies the length by 8 into the count (`0x5d1a97`, `0x5d1a9f`), takes `(count >> 3) & 0x3f` as the buffered length, and calls `0x5d1420` with `ecx` the state and `edx` the block, for the filled buffer (`0x5d1ad3`) and for each further block of the caller's data (`0x5d1af8`). `0x5d1b60` writes the count to a local (`0x5d1b74`), updates with `0x80a930`, a block of `0x80` and 63 zero bytes, for `(55 − (count >> 3)) mod 64 + 1` bytes, then with the 8 count bytes, and stores the words with the loop at `0x5d1bc0`. `0x5d1b30` updates with a C string's bytes. The users are `0x5b1170` and `0x5b31e0`; every other hash in net uses `0x5d1db0`.
+
+## SHA-1 first compression
+
+The compression `0x5d1420` copies the block big-endian into a local array of 80 words and expands it, so the caller's block is read and not written, unlike `0x5d1ec0`. Its code carries the four round constants `0x5a827999`, `0x6ed9eba1`, `0x8f1bbcdc` and `0xca62c1d6`, each in five instructions. The rounds themselves are not read.
+
+Addresses: `0x5d1420`, `0x5d1431`, `0x5d1461`, `0x5d1487`, `0x5d1a35`
+Confidence: inferred
+Proof: none
+Test: none
+
+`0x5d1431` to `0x5d1458` build each word from four bytes with shifts and ors into `[ebp+esi*4-0x158]` for 16 words; `0x5d1461` to `0x5d1485` extend to 80 with the rotate-left-1 of four earlier words xored; `0x5d1487` loads the five state words. The function ends at `0x5d1a35` after storing the five sums back to the state. Whether every round matches SHA-1 is a lead for a bit-exact test.
