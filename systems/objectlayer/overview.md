@@ -9,15 +9,15 @@ and the update packet. Ten small files, `0x47bee0` to `0x480360`, hold 64-bit co
 type's field counts, the watched-field tables and the movement codec. The `Object/ObjectClient`
 files run from `0x5d3f40` to `0x615710` and from `0x61b130` to `0x630780`, around the physics'
 Movement.cpp (`collision`). UnitCombatLogXP_C.cpp runs from `0x637a80` to `0x6384e0`, after the
-physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and
-`initializers` for the core, `classes` for the hierarchy, `reaction` for how units react to one
-another, `trade` for the trade window, and `units`, `unitmovement`, `unitanim`, `auras`,
-`unitdisplay`, `unitbody` and `unitnames` for Unit_C.cpp, `players`, `playerfields`,
-`playermessages`, `quests`, `party`, `inventory`, `interaction` and `playercombat` for Player_C.cpp
-and Bag_C.cpp, `items` for Item_C.cpp and the container, and `gameobjects`, `gameobjecttypes` and
-`transports` for GameObject_C.cpp; `missiles`, `effects`, `unitcombat`, `sounds`, `combatlog`
-and `combatlogmessages` for the missile, effect, combat, sound and log files; the other object
-files have no topic of their own.
+physics' resolution layer. The topics are `manager`, `update`, `fields`, `movement` and `initializers` for the core,
+`classes` for the hierarchy, `reaction` for unit reactions, `trade` for the trade window, `objectbase`
+for Object_C.cpp, `units`, `unitmovement`, `unitanim`, `sheathing`, `auras`, `unitdisplay`, `unitbody` and
+`unitnames` for Unit_C.cpp, `players`, `playerfields`, `playermessages`, `quests`, `party`,
+`inventory`, `interaction` and `playercombat` for Player_C.cpp and Bag_C.cpp, `items` for Item_C.cpp
+and the container, `gameobjects`, `gameobjecttypes` and `transports` for GameObject_C.cpp,
+`corpses`, `dynamicobjects` and `lootroll` for the files of those names, and `missiles`, `effects`,
+`unitcombat`, `sounds`, `combatlog` and `combatlogmessages` for the missile, effect, combat, sound
+and log files.
 
 Roots: `0x4651a0`, `0x4672f0`, `0x4674a0`, `0x468460`, `0x468550`
 

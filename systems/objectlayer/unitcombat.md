@@ -148,6 +148,21 @@ only tests for a row; this one reads `+0x4` to `+0x10` (`0x6250fc`, `0x625105`),
 other readers are its load, set-up and teardown `0x53eb20`. The row's five strings `+0x14` to
 `+0x24`, the ground splat textures, are never read, and no creature or display flag gates the spurt. Slices: diff_blood_spurt_front_back, diff_blood_spurt_front_back_diff_rounding `0x6250b6`-`0x6250d7`; diff_blood_spurt_dot `0x6250b6`-`0x6250d2`.
 
+## Suppressed wound animations
+
+A creature whose type flags have 0x8 plays no wound flinch and no parry animation, still bleeds, and
+still makes its injury sound.
+
+Addresses: `0x6125f0`, `0x60ea70`, `0x60ea9f`, `0x60ec00`, `0x60ec1f`, `0x62462c`, `0x624649`, `0x624666`, `0x623490`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6125f0` returns bit 3 of the record's flags `+0x14`, or 0 without a record. It has two callers: the
+wound flinch `0x60ea70` (`0x60ea9f`) and the parry animation `0x60ec00` (`0x60ec1f`), which maps the
+unit's own main-hand weapon to the animations 20 to 23. The pain sound of `0x624530` goes
+through slot 34 `0x623490` at `0x62462c`, `0x624649` and `0x624666`; the only creature flag that path reads is bit 5, which picks the sound class (`sounds`).
+
 ## Combat model events
 
 The attacker's model events present its swing. `$CAH` plays the weapon impact sound of a damaging

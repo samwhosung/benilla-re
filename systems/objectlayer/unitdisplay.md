@@ -78,6 +78,21 @@ offset 0x2f0, gives bytes 0 to 3 at `+0x14` to `+0x17` as skin (`0x5fb4bc`), fac
 style (`0x5fb4d0`) and hair color (`0x5fb4da`), and byte 0 at `+0x18` as facial hair (`0x5fb4e4`). The
 record is handed to the component by `0x476b90`.
 
+## Model data flags
+
+The flags word `+0x4` of a unit's `CreatureModelData` row is tested at four places, none of
+which decides whether the model is drawn.
+
+Addresses: `0x5fc0dd`, `0x5fc0e1`, `0x600003`, `0x600007`, `0x5fb3d3`, `0x5fb3d7`, `0x60adc7`, `0x60add2`, `0x60b198`, `0x60b1a2`
+Confidence: verified
+Proof: one
+Test: none
+
+Bit 0x1 skips the footstep ground effect (`0x5fc0dd`, `0x5fc0e1`), bit 0x2 the breath puff of the `$BTH`
+event (`0x600003`, `0x600007`), bit 0x4 allows the character bake (`0x5fb3d3`, `0x5fb3d7`) and bit 0x8
+sets bit 0x20000 of `+0xd58`, clearing it otherwise (`0x60adc7`, `0x60b198`). All four go through the row
+cached at `+0xb3c`.
+
 ## The display alpha
 
 A unit's alpha comes from its display row. The rebuild of a display ends by fading the unit over
