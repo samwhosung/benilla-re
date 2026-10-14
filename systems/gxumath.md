@@ -4,8 +4,8 @@ The graphics maths layer: the matrix builders the interface and the world draw t
 frustum and screen-projection code beside them, and picking, decal and image routines that
 nothing in this build calls.
 
-It is one object file, `0x5c3cc0` through `0x5c6660`, with the C runtime's initializer slots
-`0x82aa38` to `0x82aa44`. A matrix is 16 floats, row-major: element (row r, column c) is float `4r + c`,
+It is one object file, `0x5c3cc0` through `0x5c6640`, with the C runtime's initializer slots
+`0x82aa38` to `0x82aa40`. A matrix is 16 floats, row-major: element (row r, column c) is float `4r + c`,
 and a point is a row vector the matrix multiplies on the right, so `0x7bcb40` gives `x·m0 + y·m4 +
 z·m8 + w·m12` first. The file calls `cmath` for the 4×4 determinant, inverse,
 product, vector transform and translation, `spline` for the three-vector constructor `0x4549a0`,
@@ -13,7 +13,7 @@ and `gx` for the device getters. A failed argument check calls `0x64e850` with 0
 the output alone.
 
 Roots: `0x5c3cc0`, `0x5c3d90`, `0x5c3e70`, `0x5c43b0`, `0x5c4f30`, `0x5c6540`, `0x5c5350`, and
-the static initializers `0x5c4390`, `0x5c64f0`, `0x5c6510` and `0x5c6650`.
+the static initializers `0x5c4390`, `0x5c64f0` and `0x5c6510`.
 
 ## Perspective matrix
 
@@ -342,15 +342,14 @@ box starts at corner 0 and a NaN corner replaces the bound. None of the three ha
 
 ## Object file and initializers
 
-The initializer run is four slots, `0x82aa38` to `0x82aa44`. `0x5c43a0` copies +∞ into `0xc2b850`,
+The initializer run is three slots, `0x82aa38` to `0x82aa40`. `0x5c43a0` copies +∞ into `0xc2b850`,
 which the ray code reads; `0x5c6500` stores π + π in `0xc2b964`; `0x5c6520` stores `1/0xc2b964`
-in `0xc2b858`; `0x5c6660` copies a second +∞ to `0xc2b980`. Nothing reads `0xc2b858` or
-`0xc2b980`, and `0xc2b964` is read only by `0x5c6520`. The first function of the file is `0x5c3cc0`;
+in `0xc2b858`. Nothing reads `0xc2b858`, and `0xc2b964` is read only by `0x5c6520`. The first function of the file is `0x5c3cc0`;
 the code below it (`0x5c3c60`, `0x5c3c90`, `0x5c3ca0`) is list code of a file that is not identified.
 `0x5c5350` is part of the file: it touches only `0xc2b860` to `0xc2b960`, which lie between the
 file's own `0xc2b858` and `0xc2b964`, and no font data.
 
-Addresses: `0x5c4390`, `0x5c43a0`, `0x5c64f0`, `0x5c6500`, `0x5c6510`, `0x5c6520`, `0x5c6650`, `0x5c6660`, `0xc2b850`, `0xc2b858`, `0xc2b964`, `0xc2b980`, `0x82aa38`
+Addresses: `0x5c4390`, `0x5c43a0`, `0x5c64f0`, `0x5c6500`, `0x5c6510`, `0x5c6520`, `0xc2b850`, `0xc2b858`, `0xc2b964`, `0x82aa38`
 Confidence: verified
 Proof: one
 Test: none
@@ -358,7 +357,7 @@ Test: none
 Each slot holds a `jmp` thunk to its body 16 bytes on. A scan of the listing and of every dword of
 the image for each global finds `0xc2b850` only at `0x5c43a5`, `0x5c53e6`, `0x5c5566`, `0x5c57a6`,
 `0x5c5bf6` and `0x5c5e0c`, the others only where named above and in the pick buffer's setup. Slot
-`0x82aa44` is followed by `0x82aa48`, which opens another file.
+`0x82aa44` holds `0x5c6650`, the first initializer of the next file.
 
 ## Unreached code
 

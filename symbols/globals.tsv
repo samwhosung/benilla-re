@@ -551,7 +551,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808acc	const float	s_float3fc90fdb		unassigned	Holds the float 1.5707964 (0x3fc90fdb)	inferred	none	
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
-0x808bf4	const float	s_drunkLevelScale		ffxeffects	Holds 5.0, the levels a full drunk byte takes off the level UnitLevel shows	verified	one	ffxeffects/passes#drunk-byte-readers
+0x808bf4	float	s_five		ui	Holds 5.0, the factor of the drunk level reduction	verified	one	ui/unitlevels#unitlevel
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
 0x808e6c	const float	s_tooltipLineGap		ui	Holds 2.0, the gap in FrameXML units between shown tooltip lines	verified	one	ui/tooltipcontent#sizing-the-tooltip
 0x808e70	const float	s_tooltipColumnGap		ui	Holds 38.4, the gap between a line's left and right texts	verified	one	ui/tooltipcontent#sizing-the-tooltip
@@ -3186,7 +3186,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2b96c	uint32_t	s_pickVertexCount		gxumath	Holds the vertex count the skinned pick scratch buffer was last sized to	verified	one	gxumath#mesh-ray-picks
 0xc2b970	float *	s_pickVertexBuffer		gxumath	Holds the skinned pick scratch buffer of three floats per vertex	verified	one	gxumath#mesh-ray-picks
 0xc2b974	uint32_t[3]	s_fontRegistry		font	Holds the list of fonts: count, head and tail	verified	one	font/overview#static-objects
-0xc2b980	float	s_gxuInfinity2		gxumath	Holds +inf, written by 0x5c6660 and never read	verified	one	gxumath#object-file-and-initializers
+0xc2b980	float	s_fontUtilInfinity		font	Holds +inf copied by 0x5c6660, which nothing reads	verified	one	font/overview#object-files
 0xc2b984	float	s_fontUtilInvTwoPi		font	Holds 1/2π stored by 0x5c7dc0, which nothing reads	verified	one	font/overview#object-files
 0xc2b988	uint32_t[3]	s_stringPool		font	Holds the pool list of free strings: count, head and tail	verified	one	font/overview#static-objects
 0xc2b994	uint32_t[3]	s_stringList		font	Holds the global list of strings: count, head and tail	verified	one	font/overview#static-objects

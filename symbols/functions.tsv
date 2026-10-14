@@ -3719,7 +3719,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4534f0	114	SetSplineControlPoints		spline	host	void __thiscall (void *curve, const float *points, uint32_t n)	Resizes the control point array to n points and copies them in	verified	one	spline#control-point-storage	
 0x453570	5	ExtractNoSplinePoints		spline	orchestration	uint32_t __thiscall (void *curve, float t, float *out, uint32_t max)	Returns 0 without extracting; slot 8 of the base and Bezier curves	verified	one	spline#curve-objects	
 0x453580	145	EvaluateCubicPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a cubic basis at t	verified	one	spline#point-and-derivative-kernels	spline::eval_point_cubic_diff
-0x453620	32	SplineBasisWeight		spline	primitive	double __fastcall (uint32_t degree, const float *row, float t)	Returns the Horner polynomial of a coefficient row at t	verified	one	spline#point-and-derivative-kernels	spline::basis_weight_diff
+0x453620	32	EvaluateBasisPolynomial		spline	primitive	double __fastcall (uint32_t degree, const float *row, float t)	Returns the Horner polynomial of a coefficient row at t	verified	one	spline#point-and-derivative-kernels	spline::basis_weight_diff
 0x453640	131	EvaluateQuadraticPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a quadratic basis at t	verified	one	spline#point-and-derivative-kernels	spline::eval_point_quad_diff
 0x4536d0	131	EvaluateLinearPoint		spline	unreached	void __thiscall (void *curve, uint32_t seg, float t, const float *table, float *out)	Writes the sum of four control points weighted by a linear basis at t	verified	one	spline#unreached-code	
 0x453760	209	SplineSegmentArcLength		spline	primitive	double __thiscall (void *curve, uint32_t seg, const float *table)	Returns the length of a segment as 20 chords	verified	one	spline#arc-length-and-parameter	spline::arc_length_diff
@@ -3756,7 +3756,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x454130	81	InitCatmullRomSecondDerivativeBasis		spline	orchestration		Stores the Catmull-Rom second derivative basis into 0xb05db4	verified	one	spline#basis-tables	
 0x454190	12	RegisterCatmullRomSecondDerivativeBasisExit		spline	orchestration		Registers the empty exit stub 0x4541a0 with _atexit	verified	one	spline#basis-tables	
 0x4541a0	1	CatmullRomSecondDerivativeBasisExit		spline	orchestration		Returns; the exit stub of the Catmull-Rom second derivative basis	verified	one	spline#basis-tables	
-0x4541b0	147	EvaluateCatmullRomPoint		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the point of Catmull-Rom segment seg at f: the chord in mode 0, else the cubic	verified	one	spline#catmull-rom-segments	spline::linear_pos_diff
+0x4541b0	147	EvaluateCurvePosition		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the point of Catmull-Rom segment seg at f: the chord in mode 0, else the cubic	verified	one	spline#catmull-rom-segments	spline::linear_pos_diff
 0x454250	163	EvaluateCatmullRomDerivative		spline	primitive	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the derivative of Catmull-Rom segment seg at f	verified	one	spline#catmull-rom-segments	
 0x454300	29	EvaluateCatmullRomSecondDerivative		spline	unreached	void __thiscall (void *curve, uint32_t seg, float f, float *out)	Writes the second derivative of Catmull-Rom segment seg at f	verified	one	spline#unreached-code	
 0x454320	94	CatmullRomSegmentLength		spline	primitive	double __thiscall (void *curve, uint32_t seg)	Returns the chord length of segment seg in mode 0, else its arc length	verified	one	spline#catmull-rom-segments	spline::seg_length_diff
@@ -18442,8 +18442,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5c65c0	45	SubtractVector4		gxumath	unreached	float * __fastcall (float *out, const float *a, const float *b)	Stores the difference of two vectors of four floats	verified	one	gxumath#vector-helpers	
 0x5c65f0	33	CopyMatrixColumn2		gxumath	unreached	float * __thiscall (float *out)	Copies elements 2, 6, 10 and 14 of a matrix, its third column, to the pointer on the stack	verified	one	gxumath#vector-helpers	
 0x5c6620	33	CopyMatrixColumn3		gxumath	unreached	float * __thiscall (float *out)	Copies elements 3, 7, 11 and 15 of a matrix, its fourth column, to the pointer on the stack	verified	one	gxumath#vector-helpers	
-0x5c6650	5	InitGxuInfinity2Thunk		gxumath	orchestration		Jumps to 0x5c6660; a static initializer	verified	one	gxumath#object-file-and-initializers	
-0x5c6660	11	InitGxuInfinity2		gxumath	orchestration		Copies +inf into 0xc2b980, which nothing reads	verified	one	gxumath#object-file-and-initializers	
+0x5c6650	5	InitFontUtilInfinityThunk		font	orchestration		Jumps to 0x5c6660; a static initializer	verified	one	font/overview#object-files	
+0x5c6660	11	InitFontUtilInfinity		font	orchestration	void __cdecl (void)	Copies +inf into 0xc2b980	verified	one	font/overview#object-files	
 0x5c6670	10	InitFontRegistryThunk		font	orchestration		Calls 0x5c6680 and registers 0x5c66c0 with _atexit; a static initializer	verified	one	font/overview#static-objects	
 0x5c6680	34	InitFontRegistry		font	orchestration	void __cdecl (void)	Makes the font registry 0xc2b974 an empty list	verified	one	font/overview#static-objects	
 0x5c66b0	12	RegisterDestroyFontRegistry		font	orchestration	void __cdecl (void)	Registers 0x5c66c0 with _atexit	inferred	none	font/overview#static-objects	
