@@ -168,9 +168,11 @@ CGTooltip	0x0370	8	uint32_t[2]	m_objectGuid	ui	Holds the GUID of the game object
 CGTooltip	0x0380	8	uint32_t[2]	m_itemGuid	ui	Holds the item GUID the item builder was given, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x0388	8	uint32_t[2]	m_corpseGuid	ui	Holds the GUID of the corpse the tooltip describes, low then high	verified	one	ui/tooltipobject#the-corpse-tooltip
 CGTooltip	0x0398	4	uint32_t	m_itemEntry	ui	Holds the item entry of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x039c	4	uint32_t	m_spellId	ui	Holds the spell id of the last spell build	verified	one	ui/tooltipspell#the-builders-arguments
 CGTooltip	0x03a0	4	uint32_t	m_nameOnly	ui	Holds the nameOnly argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x03a4	4	uint32_t	m_equippedHeader	ui	Holds the equipped header argument of the last item build	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 CGTooltip	0x03a8	8	uint32_t[2]	m_setOwnerGuid	ui	Holds the GUID of the unit whose gear counts for an item set, low then high	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGTooltip	0x03b0	4	int32_t	m_pendingItems	ui	Holds the number of item cache answers a spell tooltip waits for	verified	one	ui/tooltipspell#rebuilding-after-a-cache-answers
 CGTooltip	0x03d0	28	uint32_t[7]	m_enchantIds	ui	Holds the seven enchantment ids an item without an object shows	verified	one	ui/tooltipenchant#enchantment-ids
 CGTooltip	0x0408	4	uint32_t	m_cooldownMs	ui	Holds the remaining cooldown of the item in milliseconds	verified	one	ui/tooltipitemreq#the-cooldown-line
 CGTooltip	0x040c	4	uint32_t	m_proposedEnchantSpell	ui	Holds the spell id of the enchantment proposed in a trade	verified	one	ui/tooltipenchant#proposed-enchantment

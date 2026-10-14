@@ -7939,8 +7939,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b3300	764			ui	primitive		Runs SpellBookFrame.cpp code that calls GetCursorSpell, 0x4b3260, 0x495190 and 10 more; not read here	inferred	none		
 0x4b3600	235			ui	primitive		Runs SpellBookFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
 0x4b36f0	373			ui	primitive		Runs SpellBookFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4b3870	164			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4b3920	40			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4b3870	164	IsCastableAura		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether the spell is in the known-spell set or the pet list and avoids five aura effects	verified	one	ui/tooltipbuff#auras-of-other-units	
+0x4b3920	40	IsInSpellList		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether a spell id is in a counted array of spell ids	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x4b3950	192			ui	primitive		Runs its object file code that calls SStrCopy, SStr::sub_64A450, sgetu8 and 1 more; not read here	inferred	none		
 0x4b3a10	346			ui	primitive		Runs its object file code that calls SStrCmpI; not read here	inferred	none		
 0x4b3b70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -9707,7 +9707,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d85c0	409			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
 0x4d8760	240			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
 0x4d8850	340			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
-0x4d89b0	20			ui	orchestration		Runs ClassTrainerFrame.cpp code not read here	inferred	none		
+0x4d89b0	20	GetTrainerServiceRow		ui	primitive	void * __fastcall (uint32_t index)	Returns the trainer service row of an index, or 0 past the count	verified	one	ui/tooltipbuff#trainer-services	
 0x4d89d0	148			ui	orchestration		Runs ClassTrainerFrame.cpp code that calls 0x4d89b0, CDataStore::PutUInt32 and 2 more; not read here	inferred	none		
 0x4d8a70	35			ui	primitive		Runs ClassTrainerFrame.cpp code that calls 0x4d89d0; not read here	inferred	none		
 0x4d8aa0	169			ui	primitive		Runs ClassTrainerFrame.cpp code that calls FrameScript_GetText; not read here	inferred	none		
@@ -10251,8 +10251,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e4170	539			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr, 0x4e44b0 and 1 more; not read here	inferred	none		
 0x4e4390	32	SetAuraDuration		ui	primitive		Stores now plus a duration for an aura slot below 0x30	verified	one	objectlayer/playermessages#notices	
 0x4e43b0	115			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e4430	23			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4e4450	50			ui	primitive		Runs its object file code that calls 0x4e4430, OsGetAsyncTimeMs; not read here	inferred	none		
+0x4e4430	23	GetBuffRecord		ui	primitive	void * __fastcall (int32_t index)	Returns the 16-byte buff record of an index below 48, else 0	verified	one	ui/tooltipbuff#the-time-left-on-buffs	
+0x4e4450	50	GetBuffTimeLeft		ui	primitive	uint32_t __fastcall (int32_t index)	Returns the milliseconds until a buff ends, or 0 once past	verified	one	ui/tooltipbuff#the-time-left-on-buffs	
 0x4e4490	17			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4e44b0	282			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4e45d0	365	Script::GetPlayerBuff	idb	ui	primitive		Implements the Lua function GetPlayerBuff	inferred	none		
@@ -11964,10 +11964,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x506f60	11			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x506f70	298			ui	primitive		Runs QuestTextParser.cpp code that calls ClntObjMgrObjectPtr, DBCache::NameCache::GetRecord and 4 more; not read here	inferred	none		
 0x5070a0	1264			ui	primitive		Runs QuestTextParser.cpp code that calls SStrCopy, CGUnit_C::GetUnitName, 0x64b480 and 10 more; not read here	inferred	none		
-0x5075f0	279			ui	primitive		Runs QuestTextParser.cpp code that calls SStrChr, GetSpellLevel, SStrLen and 2 more; not read here	inferred	none		
-0x507710	2511			ui	primitive		Runs QuestTextParser.cpp code that calls SStrChr, SStrCopy, 0x64ac60 and 18 more; not read here	inferred	none		
-0x508180	277			ui	primitive		Runs QuestTextParser.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
-0x5082a0	247			ui	primitive		Runs QuestTextParser.cpp code that calls SStrChr, FrameScriptGetPluralIndex, SStrLen and 1 more; not read here	inferred	none		
+0x5075f0	279	ExpandSpellText		ui	primitive	uint32_t __thiscall (char *out, uint32_t size, uint32_t pet, uint32_t level, uint32_t aura, uint32_t stack, uint32_t unmodified)	Copies a spell description with every dollar token expanded and returns 1 when none failed	verified	one	ui/spelltokens#the-expander	
+0x507710	2511	ExpandSpellToken		ui	primitive	uint32_t __thiscall (void *spell, uint32_t level, uint32_t stack, uint32_t pet, uint32_t unmodified)	Expands the token at the text cursor into the buffer and returns 0 when it cannot	verified	one	ui/spelltokens#the-token-syntax	
+0x508180	277	ExpandGenderToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size)	Appends the male or female form of a dollar g token by the active player's gender	verified	one	ui/spelltokens#gendered-text	
+0x5082a0	247	ExpandPluralToken		ui	primitive	uint32_t __fastcall (char *out, uint32_t size, uint32_t key)	Appends the singular or plural form of a dollar l token by the plural index of the key	verified	one	ui/spelltokens#plural-text	
 0x5083a0	386			ui	primitive		Runs QuestTextParser.cpp code that calls SStrChr, SStrLen, SStrPack and 4 more; not read here	inferred	none		
 0x508560	286			ui	primitive		Runs its object file code that calls SStrChr, SStrLen, SStrPack and 3 more; not read here	inferred	none		
 0x508680	982			ui	primitive		Runs its object file code that calls 0x64b4a0, SStrCopy, 0x508ad0 and 5 more; not read here	inferred	none		
@@ -13195,17 +13195,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x52aef0	230	CGTooltip::BuildCorpse		ui	orchestration	void __thiscall (const uint64_t *guid)	Adds the corpse line with the owner's name, or waits for the name cache	verified	one	ui/tooltipobject#the-corpse-tooltip	
 0x52afe0	88	CGTooltip::OnCorpseOwnerName		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the corpse tooltip again from its stored GUID when the owner's name arrives	verified	one	ui/tooltipobject#the-corpse-tooltip	
 0x52b040	85			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, 0x4f0f40, 0x5303b0; not read here	inferred	none		
-0x52b0a0	752			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 8 more; not read here	inferred	none		
-0x52b390	695			ui	primitive		Runs Tooltip.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 5 more; not read here	inferred	none		
+0x52b0a0	752	CGTooltip::BuildPassiveTalent		ui	primitive	void __thiscall (void *talent)	Adds a talent tooltip with the current and next rank descriptions, without the spell builder	verified	one	ui/tooltipspell#talent-tooltips	
+0x52b390	695	CGTooltip::AddTalentRequirements		ui	primitive	uint32_t __thiscall (void *talent)	Adds the red lines for the prerequisites a talent lacks and returns 1 when none is missing	verified	one	ui/tooltipspell#the-talent-lines	
 0x52b650	11946	CGTooltip::BuildItem		ui	primitive	uint32_t __thiscall (int entry, uint64_t *rec, uint64_t *item, int nameOnly, int header, int valid, int rebuild, int ownLo, int ownHi)	Adds the lines of an item tooltip from its record and the tooltip's instance fields, returning 1 for a timed line	verified	one	ui/tooltipitem#the-builders-arguments	
 0x52e530	141	CGTooltip::OnCacheAnswer		ui	orchestration	void __stdcall (CGTooltip *tooltip, uint8_t found)	Rebuilds an item tooltip from its kept fields when a cache answers, then sizes it	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild	
 0x52e5c0	76	CompareSetBonuses		ui	primitive	int __cdecl (const uint8_t *a, const uint8_t *b)	Orders two item set bonus slots by the members they need, then by slot number	verified	one	ui/tooltipitemreq#set-bonus-lines	
-0x52e610	4531			ui	primitive		Runs Tooltip.cpp code that calls 0x530050, ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 26 more; not read here	inferred	none		
-0x52f820	83			ui	primitive		Runs Tooltip.cpp code that calls 0x52e610, 0x530640; not read here	inferred	none		
-0x52f880	247			ui	orchestration		Runs Tooltip.cpp code that calls 0x530050, 0x530380, 0x5075f0 and 1 more; not read here	inferred	none		
-0x52f980	203			ui	primitive		Runs Tooltip.cpp code that calls floor; not read here	inferred	none		
+0x52e610	4531	CGTooltip::BuildSpell		ui	primitive	uint32_t __thiscall (uint32_t spell, uint32_t compact, uint32_t cooldownMs, uint32_t pet, uint32_t showRank, void *talent, uint32_t rebuild)	Adds the lines of a spell tooltip, returning 1 when it shows the cooldown line	verified	one	ui/tooltipspell#the-builders-arguments	
+0x52f820	83	CGTooltip::OnSpellItemAnswer		ui	primitive	void __stdcall (CGTooltip *tooltip, uint8_t found)	Builds the spell tooltip again from its stored spell id when the last item answer arrives	verified	one	ui/tooltipspell#rebuilding-after-a-cache-answers	
+0x52f880	247	CGTooltip::BuildAura		ui	orchestration	void __thiscall (uint32_t spell, uint32_t level, uint32_t stack, uint32_t unused)	Adds the name, dispel type and description of an aura tooltip	verified	one	ui/tooltipbuff#the-aura-tooltip	
+0x52f980	203	IsWholeDuration		ui	primitive	uint32_t __cdecl (float ms, float tolerance)	Returns whether a duration is a whole number of its largest unit within a tolerance	verified	one	ui/spelltokens#tokens-that-compute-a-value	
 0x52fa50	375	FormatDuration		ui	primitive	char * __thiscall (uint32_t ms, const char *prefix, const char *extra, uint32_t round_up)	Formats a duration in milliseconds as days, hours, minutes or seconds through a global string	verified	one	ui/tooltipcontent#durations	
-0x52fbd0	350			ui	primitive		Runs Tooltip.cpp code that calls SStrPrintf, FrameScript_GetText; not read here	inferred	none		
+0x52fbd0	350	FormatDurationFloat		ui	primitive	void __thiscall (float ms, const char *prefix, const char *extra)	Formats a duration with the unit and the unrounded count through the global string of the prefix	verified	one	ui/spelltokens#tokens-that-compute-a-value	
 0x52fd30	264	CGTooltip::FormatUnitOwner		ui	primitive	void __thiscall (char *out, uint32_t size)	Writes the owner title line of a charmed or created unit, or nothing without an owner	verified	one	ui/tooltipunit#the-subtitle-and-owner-lines	
 0x52fe90	300			ui	orchestration		Anchors a tooltip to its owner by its mode	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
 0x52ffe0	97			ui	orchestration		Sets a tooltip's owner, mode and offsets and anchors it	verified	one	ui/tooltip#setowner-and-the-anchor-modes	
@@ -13255,7 +13255,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x534620	904	GameTooltip::SetBagItem	idb	ui	primitive		Implements the GameTooltip method SetBagItem, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x5349b0	265	GameTooltip::SetUnit	idb	ui	primitive		Implements the GameTooltip method SetUnit, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x534ac0	809	GameTooltip::SetUnitBuff	idb	ui	primitive		Implements the GameTooltip method SetUnitBuff, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
-0x534df0	58			ui	primitive		Runs Tooltip.cpp code not read here	inferred	none		
+0x534df0	58	IsVisibleAura		ui	primitive	uint32_t __fastcall (void *spell)	Returns whether an aura spell is shown: not hidden by attribute bit 7, ex bit 0x10000000 or effects 44, 45 and 151	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x534e30	830	GameTooltip::SetUnitDebuff	idb	ui	primitive		Implements the GameTooltip method SetUnitDebuff, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x535170	571	GameTooltip::SetTalent	idb	ui	primitive		Implements the GameTooltip method SetTalent, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
 0x5353b0	270	GameTooltip::SetSendMailItem	idb	ui	primitive		Implements the GameTooltip method SetSendMailItem, its pair in the table 0x854198	verified	one	ui/tooltip#lua-methods	
