@@ -83,7 +83,7 @@ Test: none
 
 ## Notice kinds
 
-`0x72b670` stores an empty notice of kind 2 and `0x72b6c0(text)` one of kind 3, the auction bidder notice; `0x72b620` stores a whisper as kind 1. Each shows screen 5, sets the notice deadline `0xcf0708` to now plus `[0x874064]`, 30,000 ms, and clears `0x874068`.
+`0x72b670` stores an empty notice of kind 2 and `0x72b6c0(text)` one of kind 3, the auction bidder notice; `0x72b620` stores a whisper as kind 1. Each shows screen 5, sets the notice deadline `0xcf0708` to the current time plus `[0x874064]`, 30,000 ms, and clears `0x874068`.
 
 Addresses: `0x72b670`, `0x72b696`, `0x72b6aa`, `0x72b6b0`, `0x72b6c0`, `0x72b6e6`, `0x72b620`, `0x72b646`, `0x874064`, `0x874068`, `0xcf0708`
 Confidence: verified

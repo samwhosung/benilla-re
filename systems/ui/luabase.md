@@ -178,7 +178,7 @@ and `lua_pushnumber` and returns 2. `0x703250` passes the `__ftol` result to `0x
 
 ## Time from a table
 
-`time()` returns the C time of now. `time(t)` needs a table with `sec` and `min` (default 0), `hour` (default 12), and
+`time()` returns the current C time. `time(t)` needs a table with `sec` and `min` (default 0), `hour` (default 12), and
 `day`, `month` and `year` (required: ``field `%s' missing in date table``), and reads `isdst` as a boolean. `month` is
 reduced by 1 and `year` by 1900, `mktime` runs on them, and the answer is the number, or nil for −1. A present field that is
 not a number counts as absent.
@@ -194,7 +194,7 @@ through `0x7036f0` (name and default; the default −2 is "required"), reads `is
 
 ## Date
 
-`date([format [, time]])` takes `%c` and −1 as defaults, uses the C time of now for −1, and breaks the time down as UTC when
+`date([format [, time]])` takes `%c` and −1 as defaults, uses the current C time for −1, and breaks the time down as UTC when
 the format starts with `!`, local otherwise. The format `*t` answers a table of `sec`, `min`, `hour`, `day`, `month` (+1),
 `year` (+1900), `wday` (+1), `yday` (+1) and `isdst`; any other format goes to `strftime` with a 256-byte buffer, and a 0
 result raises ``` `date' format too long```.
