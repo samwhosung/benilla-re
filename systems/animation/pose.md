@@ -52,8 +52,7 @@ With flags `& 6` equal to 2, each of the three rows of the working matrix is rep
 by its length when the length is not below 2^-22. With 4, row `k` becomes the world matrix row `k`
 (`+0xfc`, `+0x10c`, `+0x11c`) times `sqrt(|row k|² / |world row k|²)`, or times 1.0 when
 `|world row k|² ≤ 1e-5` or is not a number. With 6, the rows are the world matrix rows. With 0, the rows are
-unchanged. The squared lengths are summed as `(x² + y²) + z²` for world rows 0 and 1, `(y² + z²) + x²` for
-world row 2, `(x² + z²) + y²` for working row 0 and `(z² + y²) + x²` for working rows 1 and 2.
+unchanged.
 
 Addresses: `0x7149a7`, `0x7149ad`, `0x7149b0`, `0x714a04`, `0x714a0d`, `0x714a12`, `0x714a18`, `0x714a6e`, `0x714a96`, `0x714ab9`, `0x714abb`, `0x714abf`, `0x714bd6`, `0x714bdb`, `0x714be3`, `0x714bf4`, `0x714bf6`, `0x714c8c`, `0x4549f0`
 Confidence: verified
@@ -62,12 +61,13 @@ Test: none
 
 The squared lengths of leg 4 are summed as `(x² + y²) + z²` for world rows 0 and 1, `(y² + z²) + x²` for
 world row 2, `(x² + z²) + y²` for working row 0 and `(z² + y²) + x²` for working rows 1 and 2.
+The squared lengths of leg 4 are summed as `(x² + y²) + z²` for world rows 0 and 1, `(y² + z²) + x²` for
+world row 2, `(x² + z²) + y²` for working row 0 and `(z² + y²) + x²` for working rows 1 and 2.
 `and eax,6; sub eax,2; je` selects 2, a second `sub eax,2; je` selects 4, a third `jne` leaves 6 to
 fall into `0x714a18`. The rows of 2 use `0x4549f0` (`(x² + y²) + z²`), `fsqrt`, `fabs` and
 `fcomp 2^-22; test ah,5; jnp`, which skips only when the length is below 2^-22: a length equal to it or
-not a number is normalized. The scale `1/len` is `fdivr 1.0` at 53 bits, each component narrowed after
-`fmul`. Leg 4 compares `fcom 1e-5; test ah,0x41; jne` and divides with `fdivrp` (`local / world`) before
-`fsqrt`; the ratio stays at 53 bits for the three stores of the row.
+not a number is normalized. The scale `1/len` is `fdivr 1.0` at 53 bits. Leg 4 compares `fcom 1e-5; test ah,0x41; jne`
+and divides with `fdivrp` (`local / world`) before `fsqrt`; the ratio stays at 53 bits for the row's stores.
 
 ## Local matrix route
 
