@@ -8968,23 +8968,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c7ed0	10	PutItemInBackpackWorker		ui	orchestration	uint32_t __fastcall ()	Calls the bag worker with the backpack's slot 0xff	verified	one	ui/bags#putting-an-item-in-a-bag	
 0x4c7ee0	433	RecomputeInventoryAlerts		ui	primitive	void __fastcall ()	Recomputes the 12 inventory alert statuses and signals UPDATE_INVENTORY_ALERTS	verified	one	ui/inventory#equipment-alert-rules	
 0x4c80a0	168	RequestInspectHonor		ui	primitive	void __cdecl ()	Sends the honor request for the target unless data is held, pending or no target	verified	one	ui/honorinspect#inspect-honor-request	
-0x4c8150	91	Script::KeyRingButtonIDToInvSlotID	idb	ui	primitive		Implements the Lua function KeyRingButtonIDToInvSlotID	inferred	none		
+0x4c8150	91	Script::KeyRingButtonIDToInvSlotID	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the inventory slot of a key ring button	verified	one	ui/inventoryverbs#using-and-cursor-tests	
 0x4c81b0	228	Script::GetInventorySlotInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Finds a paper doll slot by name without case and returns its number, icon and ranged flag	verified	one	ui/bags#slot-names	
-0x4c82a0	579	Script::GetInventoryItemTexture	idb	ui	orchestration		Implements the Lua function GetInventoryItemTexture	inferred	none		
+0x4c82a0	579	Script::GetInventoryItemTexture	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon path of the item a unit wears in a slot	verified	one	ui/inventoryverbs#texture-quality-and-link	
 0x4c84f0	37			ui	orchestration		Runs PaperDollInfoFrame.cpp code that calls FrameScript_SignalEvent2; not read here	inferred	none		
 0x4c8520	104	ReadInventorySlotArg		ui	primitive	uint32_t __fastcall (lua_State *L, int32_t *out, int32_t index)	Reads a Lua slot number as a 0-based inventory slot, refusing numbers outside the slot bands	verified	one	ui/bags#slot-arguments	
-0x4c8590	232	Script::GetInventoryItemBroken	idb	ui	orchestration		Implements the Lua function GetInventoryItemBroken	inferred	none		
+0x4c8590	232	Script::GetInventoryItemBroken	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the item in a slot is broken, else nil	verified	one	ui/inventoryverbs#broken-and-cooldown	
 0x4c8680	592	Script::GetInventoryItemCount	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a stack count, an ammunition total or a bag's contents count for a unit's inventory slot	verified	one	ui/inventory#item-counts	
-0x4c88d0	398	Script::GetInventoryItemQuality	idb	ui	orchestration		Implements the Lua function GetInventoryItemQuality	inferred	none		
-0x4c8a60	430	Script::GetInventoryItemCooldown	idb	ui	primitive		Implements the Lua function GetInventoryItemCooldown	inferred	none		ui::luabind_4c8a60_get_inventory_item_cooldown
-0x4c8c10	385	Script::GetInventoryItemLink	idb	ui	orchestration		Implements the Lua function GetInventoryItemLink	inferred	none		
+0x4c88d0	398	Script::GetInventoryItemQuality	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the quality of the item a unit wears in a slot	verified	one	ui/inventoryverbs#texture-quality-and-link	
+0x4c8a60	430	Script::GetInventoryItemCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the start, duration and enable value of a worn item cooldown	verified	one	ui/inventoryverbs#broken-and-cooldown	
+0x4c8c10	385	Script::GetInventoryItemLink	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the item link of the item a unit wears in a slot	verified	one	ui/inventoryverbs#texture-quality-and-link	
 0x4c8da0	64	Script::PickupInventoryItem	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Clicks an inventory slot through the slot worker 0x4c7300 and returns nothing	verified	one	ui/bags#pickup-of-an-inventory-slot	
-0x4c8de0	125	Script::UseInventoryItem	idb	ui	orchestration		Implements the Lua function UseInventoryItem	inferred	none		
+0x4c8de0	125	Script::UseInventoryItem	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Uses the item in an inventory slot on the target or the player	verified	one	ui/inventoryverbs#using-and-cursor-tests	
 0x4c8e60	157	Script::IsInventoryItemLocked	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the item at an inventory slot has its lock bit set, else nil	verified	one	ui/inventory#item-lock-query	
 0x4c8f00	105	Script::PutItemInBag	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Drops the held item on the bag at a slot, returning 1 when a container took the click	verified	one	ui/bags#putting-an-item-in-a-bag	
 0x4c8f70	45	Script::PutItemInBackpack	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Drops the held item on the backpack through the bag worker, returning 1 or nil	verified	one	ui/bags#putting-an-item-in-a-bag	
 0x4c8fa0	69	Script::PickupBagFromSlot	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Picks up the bag at a bag slot through the bag pickup worker and returns nothing	verified	one	ui/bags#picking-up-a-bag	
-0x4c8ff0	191	Script::CursorCanGoInSlot	idb	ui	orchestration		Implements the Lua function CursorCanGoInSlot	inferred	none		
+0x4c8ff0	191	Script::CursorCanGoInSlot	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the cursor item can go in a slot, else nil	verified	one	ui/inventoryverbs#using-and-cursor-tests	
 0x4c90b0	157	Script::ShowInventorySellCursor	idb	ui	orchestration		Implements the Lua function ShowInventorySellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4c9150	468	Script::SetInventoryPortaitTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Clears a texture, then fails to resolve its unit because it reads the token from argument 1	verified	one	ui/portraittextures#inventory-portrait	
 0x4c9330	307	Script::GetGuildInfo	idb	ui	primitive		Pushes the guild name, rank name and rank of a unit that is a player in a cached guild	verified	one	ui/guild#the-units-guild	
@@ -9001,7 +9001,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4c9620	343	Script::GetInspectHonorData	idb	ui	orchestration	int __fastcall (lua_State *L)	Returns the 12 cached inspect honor values	verified	one	ui/honorinspect#inspect-honor-functions	
 0x4c9780	12	Script::ClearInspectPlayer	idb	ui	orchestration	int __fastcall (lua_State *L)	Clears the inspect target and returns nothing	verified	one	ui/honorinspect#inspect-target	
 0x4c9790	521	Script::GetWeaponEnchantInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns six values for the main-hand and off-hand temporary enchantments: flag, milliseconds left and charges	verified	one	ui/inventory#weapon-enchant-info	
-0x4c99a0	140	Script::HasWandEquipped	idb	ui	primitive		Implements the Lua function HasWandEquipped	inferred	none		
+0x4c99a0	140	Script::HasWandEquipped	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a wand is in the ranged slot, else nil	verified	one	ui/inventoryverbs#using-and-cursor-tests	
 0x4c9a30	33			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4c9a60	27			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4c9a80	26			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11199,11 +11199,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f84b0	30			ui	orchestration		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrClearObjectMirrorHandler; not read here	inferred	none		
 0x4f84d0	87			ui	primitive		Opens the bank for a banker	inferred	none	objectlayer/playermessages#item-push-bank-and-binding	
 0x4f8530	118	Script::BankButtonIDToInvSlotID	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Maps a bank button id to an inventory slot: id + 59 with a numeric second argument, else id + 39	verified	one	ui/bags#bank-button-ids	
-0x4f85b0	118	Script::GetNumBankSlots	idb	ui	orchestration		Implements the Lua function GetNumBankSlots	inferred	none		
-0x4f8630	96	Script::GetBankSlotCost	idb	ui	orchestration		Implements the Lua function GetBankSlotCost	inferred	none		
+0x4f85b0	118	Script::GetNumBankSlots	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the bought bank bag slots and whether all are bought	verified	one	ui/inventoryverbs#the-bank	
+0x4f8630	96	Script::GetBankSlotCost	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the price of the next bank bag slot	verified	one	ui/inventoryverbs#the-bank	
 0x4f8690	31			ui	orchestration		Runs its object file code not read here	inferred	none		
-0x4f86b0	284	Script::PurchaseSlot	idb	ui	primitive		Implements the Lua function PurchaseSlot	inferred	none		
-0x4f87d0	50	Script::CloseBankFrame	idb	ui	orchestration		Implements the Lua function CloseBankFrame	inferred	none		
+0x4f86b0	284	Script::PurchaseSlot	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Buys the next bank bag slot	verified	one	ui/inventoryverbs#the-bank	
+0x4f87d0	50	Script::CloseBankFrame	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the bank window	verified	one	ui/inventoryverbs#the-bank	
 0x4f8810	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4f8830	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4f8850	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11268,17 +11268,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4f9410	110	RaiseBagOpen		ui	primitive	void __stdcall (uint64_t container)	Raises BAG_OPEN with 0 for the player or each cache index 1 to 10 holding the container	verified	one	ui/bags#backpack-and-keyring-events	
 0x4f9480	90			ui	orchestration		Runs ContainerFrame.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, 0x4f9370; not read here	inferred	none		
 0x4f94e0	124	Script::ContainerIDToInventoryID	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Maps a container id to an inventory slot: id + 19 below 5, id + 59 from 5	verified	one	ui/bags#container-ids	
-0x4f9560	263	Script::GetContainerNumSlots	idb	ui	primitive		Implements the Lua function GetContainerNumSlots	inferred	none		
-0x4f9670	427	Script::GetContainerItemInfo	idb	ui	orchestration		Implements the Lua function GetContainerItemInfo	inferred	none		
+0x4f9560	263	Script::GetContainerNumSlots	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the number of slots of a bag	verified	one	ui/inventoryverbs#bag-contents	
+0x4f9670	427	Script::GetContainerItemInfo	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon, count, lock, quality and readable flag of a bag item	verified	one	ui/inventoryverbs#bag-contents	
 0x4f9820	266	ResolveContainerSlot		ui	primitive	uint32_t __fastcall (lua_State *L, void **container, int32_t *slot, int32_t *bankFlag)	Turns a Lua bag index and slot into a container list, an internal slot and the bank flag	verified	one	ui/bags#using-a-container-item	
-0x4f9930	124	Script::GetContainerItemLink	idb	ui	orchestration		Implements the Lua function GetContainerItemLink	inferred	none		
-0x4f99b0	379	Script::GetContainerItemCooldown	idb	ui	primitive		Implements the Lua function GetContainerItemCooldown	inferred	none		ui::glue_4f99b0_cooldown_seconds
+0x4f9930	124	Script::GetContainerItemLink	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the item link of a bag item	verified	one	ui/inventoryverbs#bag-contents	
+0x4f99b0	379	Script::GetContainerItemCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the start, duration and enable value of a bag item cooldown	verified	one	ui/inventoryverbs#container-cooldown-and-splitting	
 0x4f9b30	1085	Script::PickupContainerItem		ui	primitive		Passes a container item to 0x495d60 while the flag word wants an item	inferred	none	spell/targeting#flag-word-predicates	
-0x4f9f70	358	Script::SplitContainerItem	idb	ui	primitive		Implements the Lua function SplitContainerItem	inferred	none		
+0x4f9f70	358	Script::SplitContainerItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Puts part of a bag stack on the cursor	verified	one	ui/inventoryverbs#container-cooldown-and-splitting	
 0x4fa0e0	889	Script::UseContainerItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Uses a bag item: repair, bank store, bank deposit, sell, auto-equip or the use ladder	verified	one	ui/bags#using-a-container-item	
 0x4fa460	142	Script::ShowContainerSellCursor	idb	ui	orchestration		Implements the Lua function ShowContainerSellCursor	verified	one	ui/merchantcursor#bag-and-sheet-sell-cursors	
 0x4fa4f0	374	Script::SetBagPortaitTexture	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sets a texture to the circular portrait of a bag's icon, clearing it first	verified	one	ui/portraittextures#bag-portrait	
-0x4fa670	290	Script::GetBagName	idb	ui	primitive		Implements the Lua function GetBagName	inferred	none		
+0x4fa670	290	Script::GetBagName	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name of a bag	verified	one	ui/inventoryverbs#bag-names	
 0x4fa7a0	30			ui	primitive		Runs its object file code that calls FrameScriptRegisterFunction; not read here	inferred	none		
 0x4fa7c0	24			ui	primitive		Runs its object file code that calls FrameScript_UnregisterFunction; not read here	inferred	none		
 0x4fa7e0	5			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -11344,15 +11344,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fafd0	234	RebuildBuybackList		ui	primitive	void __fastcall ()	Rebuilds the buy-back slot cache from inventory slots 69 to 80, sorted by their timestamps	verified	one	ui/merchant#buy-back-list	
 0x4fb0c0	47	CompareBuybackTimestamps		ui	primitive	int __cdecl (const uint32_t *a, const uint32_t *b)	Compares two buy-back entries by their first dword, the timestamp, ascending	verified	one	ui/merchant#buy-back-list	
 0x4fb0f0	43			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4fb120	8	Script::CloseMerchant	idb	ui	orchestration		Implements the Lua function CloseMerchant	inferred	none		
-0x4fb130	23	Script::GetMerchantNumItems	idb	ui	orchestration		Implements the Lua function GetMerchantNumItems	inferred	none		
-0x4fb150	441	Script::GetMerchantItemInfo	idb	ui	primitive		Implements the Lua function GetMerchantItemInfo	inferred	none		
+0x4fb120	8	Script::CloseMerchant	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Closes the vendor window	verified	one	ui/inventoryverbs#vendor-stock	
+0x4fb130	23	Script::GetMerchantNumItems	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of vendor items	verified	one	ui/inventoryverbs#vendor-stock	
+0x4fb150	441	Script::GetMerchantItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, price, quantity, stock and usability of a vendor item	verified	one	ui/inventoryverbs#vendor-stock	
 0x4fb310	595	Script::GetBuybackItemInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the name, icon, price, count, available and usable values of a buy-back slot	verified	one	ui/merchant#buy-back-reads	
 0x4fb570	13	BuybackItemArrived		ui	orchestration	void __stdcall (uint32_t, uint8_t)	Signals MERCHANT_UPDATE when a buy-back item record has arrived	verified	one	ui/merchant#buy-back-reads	
-0x4fb580	239	Script::GetMerchantItemLink	idb	ui	primitive		Implements the Lua function GetMerchantItemLink	inferred	none		
-0x4fb670	228	Script::GetMerchantItemMaxStack	idb	ui	primitive		Implements the Lua function GetMerchantItemMaxStack	inferred	none		
+0x4fb580	239	Script::GetMerchantItemLink	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the item link of a vendor item	verified	one	ui/inventoryverbs#vendor-stock	
+0x4fb670	228	Script::GetMerchantItemMaxStack	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the stack size a vendor item can be bought in	verified	one	ui/inventoryverbs#vendor-stock	
 0x4fb760	240	Script::PickupMerchantItem	idb	ui	primitive		Implements the Lua function PickupMerchantItem	verified	one	ui/merchantcursor#picking-up-a-merchant-item	
-0x4fb850	247	Script::BuyMerchantItem	idb	ui	primitive		Implements the Lua function BuyMerchantItem	inferred	none		
+0x4fb850	247	Script::BuyMerchantItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Buys a quantity of a vendor item	verified	one	ui/inventoryverbs#vendor-stock	
 0x4fb950	295	Script::BuybackItem	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Sends CMSG_BUYBACK_ITEM with the vendor and the absolute slot of a buy-back index	verified	one	ui/merchant#buying-back	
 0x4fba80	45	Script::CanMerchantRepair	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when the open vendor repairs, else nil	verified	one	ui/merchant#repair-capability	
 0x4fbab0	244	Script::ShowMerchantSellCursor	idb	ui	primitive		Implements the Lua function ShowMerchantSellCursor	verified	one	ui/merchantcursor#merchant-sell-cursors	
