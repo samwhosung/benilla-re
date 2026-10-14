@@ -25,6 +25,7 @@ your own copy of 1.12.1.5875 and refuse any other build.
   [objectlayer](systems/objectlayer) (the update packet, objects, fields, reaction, units),
   [spell](systems/spell), [glue](systems/glue) (the login and character screens),
   [ui](systems/ui) (the frame and layout core),
+  [sound](systems/sound) (the FMOD engine, sound entries, music, ambience and object sounds),
   [camera](systems/camera.md), [input](systems/input.md) and [random](systems/random.md).
   The rest of the client is open work in the issue tracker.
 - **`tables/`**: facts a program reads (opcode handlers, events and their fire sites, CVars,

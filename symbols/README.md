@@ -62,7 +62,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   threads), `OsTcp.cpp`, `OsURLDownload.cpp`, `OsClipboard.cpp` and `OsISoundCache.cpp`
 - `playername`: `PlayerName.cpp`, the unit names drawn in the world (`UnitNamePlayer` and the like)
 - `screencoord`: the screen aspect and scale helpers
-- `sound`: the `SoundInterface` files and the glue music
 - `spline`: the movement spline file
 - `sysmsg`: `SysMessage.cpp`, the system message printers
 - `uicamera`: `UIUtil\Camera.cpp`, the player's world camera
