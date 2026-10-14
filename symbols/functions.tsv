@@ -394,25 +394,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x406640	443	BeginLoadingScreen		loadingscreen			Starts the loading screen for a map	inferred	none		
 0x406800	248	CreateLoadingScreen		loadingscreen			Creates the loading screen object	inferred	none		
 0x406900	28			loadingscreen			Runs its object file code that calls 0x406920, 0x406a60; not read here	inferred	none		
-0x406920	188			loadingscreen			Runs its object file code not read here	inferred	none		
+0x406920	188			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::progress_fraction_difftest
 0x4069e0	111			loadingscreen			Runs its object file code that calls EventRegisterEx; not read here	inferred	none		
 0x406a50	3			loadingscreen			Runs its object file code not read here	inferred	none		
-0x406a60	611			loadingscreen			Runs its object file code that calls 0x58b060, 0x58af60, 0x58a970 and 9 more; not read here	inferred	none		
+0x406a60	611			loadingscreen			Runs its object file code that calls 0x58b060, 0x58af60, 0x58a970 and 9 more; not read here	inferred	none		loadingscreen::aspect_fit_ortho_difftest
 0x406cd0	20			loadingscreen			Runs its object file code that calls 0x406f20, 0x406cf0; not read here	inferred	none		
 0x406cf0	304			loadingscreen			Runs its object file code that calls 0x406e20, _atexit, 0x58a2a0 and 5 more; not read here	inferred	none		
 0x406e20	240			loadingscreen			Runs its object file code that calls 0x6548b0, CGxTexFlags::CGxTexFlags, TextureCreate and 1 more; not read here	inferred	none		
 0x406f10	1			loadingscreen			Runs its object file code not read here	inferred	none		
 0x406f20	142			loadingscreen			Runs its object file code that calls 0x58a2a0, GetTextureDeviceObject, 0x589e80 and 3 more; not read here	inferred	none		
 0x406fb0	410			loadingscreen			Runs its object file code that calls __alloca_probe, GetTextureDeviceObject, 0x589e80 and 4 more; not read here	inferred	none		
-0x407150	347			loadingscreen			Runs its object file code that calls _atexit, GxRsSet, 0x58a2a0 and 4 more; not read here	inferred	none		
+0x407150	347			loadingscreen			Runs its object file code that calls _atexit, GxRsSet, 0x58a2a0 and 4 more; not read here	inferred	none		loadingscreen::progress_bar_quad_difftest
 0x4072b0	1			loadingscreen			Runs its object file code not read here	inferred	none		
 0x4072c0	303			loadingscreen			Runs LoadingScreen.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 4 more; not read here	inferred	none		
 0x4073f0	29			loadingscreen			Runs LoadingScreen.cpp code that calls 0x4075a0, 0x4074b0, 0x407410; not read here	inferred	none		
 0x407410	151			loadingscreen			Runs LoadingScreen.cpp code that calls HandleClose, 0x408560, SMemFree; not read here	inferred	none		
 0x4074b0	236			loadingscreen			Runs LoadingScreen.cpp code that calls CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		
-0x4075a0	818			loadingscreen			Runs LoadingScreen.cpp code that calls 0x407da0, 0x4a72b0, __alloca_probe and 11 more; not read here	inferred	none		
+0x4075a0	818			loadingscreen			Runs LoadingScreen.cpp code that calls 0x407da0, 0x4a72b0, __alloca_probe and 11 more; not read here	inferred	none		loadingscreen::route_tessellate_segs_difftest
 0x4078e0	22	SplatVector3		loadingscreen	orchestration	float * __thiscall (float *this, float v)	Stores one float in all three components	verified	one	camera#unprojection	models::portal_seg_normalize_difftest
-0x407900	895			loadingscreen			Runs LoadingScreen.cpp code not read here	inferred	none		
+0x407900	895			loadingscreen			Runs LoadingScreen.cpp code not read here	inferred	none		loadingscreen::route_endpoint_quads_difftest
 0x407c80	286			loadingscreen			Runs LoadingScreen.cpp code that calls EvaluateSplinePoint; not read here	inferred	none		
 0x407da0	59			loadingscreen			Runs LoadingScreen.cpp code not read here	inferred	none		
 0x407de0	139			loadingscreen			Runs LoadingScreen.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 3 more; not read here	inferred	none		
@@ -422,7 +422,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x407fa0	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
 0x407fd0	36			loadingscreen			Runs its object file code that calls 0x406900; not read here	inferred	none		
 0x408000	479			loadingscreen			Runs its object file code that calls 0x408b40, 0x408a30, 0x408510 and 4 more; not read here	inferred	none		
-0x4081e0	453			loadingscreen			Runs its object file code not read here	inferred	none		
+0x4081e0	453			loadingscreen			Runs its object file code not read here	inferred	none		loadingscreen::worldmap_tile_geometry_difftest
 0x4083b0	5			loadingscreen			Runs its object file code not read here	inferred	none		
 0x4083c0	58			unassigned	primitive		Runs code the arrival calls on a transport; not read here	inferred	none	objectlayer/players#arrival-in-the-world	
 0x408400	23			loadingscreen			Runs its object file code that calls SMemFree; not read here	inferred	none		
