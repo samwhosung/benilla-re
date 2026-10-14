@@ -440,7 +440,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	
 0x808de4	const float	s_sixtyFour		unassigned	Holds 64.0	verified	one	lighting/clouds#cloud-cover
-0x808e7c	const float	s_float40000000		ui	Holds the float 2 (0x40000000)	inferred	none	
+0x808e7c	const float	s_float40000000		ui	Holds 2.0, the seconds a GameTooltip takes to fade out	verified	one	ui/tooltip#fading-out
 0x808e88	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
@@ -751,9 +751,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811a80	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811a84	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811aa8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x811ad0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x811ad0	const uint32_t[12]	s_justifyNames		ui	Holds six pairs of a justify bit and its name, LEFT 1 to BOTTOM 0x20	verified	one	ui/fontstring#justify
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x811b10	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
 0x811b30	const uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x811cd0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811e28	uint32_t[72]	s_frameScriptBaseLibrary		ui	Holds 36 pairs of a name and a function, setglobal to debugstack, the script base library	verified	one	ui/luastate#the-library-scripts-see
@@ -1145,7 +1145,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84bff4	char[27]	s_textUsageGetActionTextSlot		ui	Holds the string "Usage: GetActionText(slot)"	inferred	none	
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
-0x84c538	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x84c538	uint32_t[20]	s_minimapMethods		ui	Holds the 10 pairs of a name and a function of the Minimap methods	verified	one	ui/minimap#lua-methods
 0x84c768	char[44]	s_textInterfaceMinimapRotatingMinimapArrowMdx		ui	Holds the string "Interface\Minimap\Rotating-MinimapArrow.mdx"	inferred	none	
 0x84c7f0	char[10]	s_textUnnamed		ui	Holds the string "<unnamed>"	inferred	none	
 0x84c988	uint32_t			ui	Holds a dword that Script::GetMacroInfo, Script::GetMacroIconInfo read; not read here	inferred	none	
@@ -1170,12 +1170,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84e838	char[43]	s_textBadInvTypeInGetTradeSkillInvSlotFilter		ui	Holds the string "Bad inv type in GetTradeSkillInvSlotFilter"	inferred	none	
 0x84eda4	char[50]	s_textInvalidRewardChoiceInGetQuestRewardChoice		ui	Holds the string "Invalid reward choice in GetQuestReward([choice])"	inferred	none	
 0x84edd8	char[54]	s_textInvalidQuestItemInGetQuestItemInfoType		ui	Holds the string "Invalid quest item in GetQuestItemInfo("type", index)"	inferred	none	
-0x84ee40	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x84ee40	uint32_t[20]	s_tabardModelMethods		ui	Holds the 10 pairs of a name and a function of the TabardModel methods	verified	one	ui/model#lua-methods
 0x84efc8	char[41]	s_textUsageSGetUpperEmblemTextureTexture		ui	Holds the string "Usage: %s:GetUpperEmblemTexture(texture)"	inferred	none	
 0x84f010	char[64]	s_textSGetUpperEmblemTextureWrongObjectType		ui	Holds the string "%s:GetUpperEmblemTexture(): Wrong object type, expected texture"	inferred	none	
 0x84f050	char[67]	s_textSGetUpperEmblemTextureCouldnTFindThisIn		ui	Holds the string "%s:GetUpperEmblemTexture(): Couldn't find 'this' in texture object"	inferred	none	
-0x84f190	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x84f1fc	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x84f190	uint32_t[6]	s_dressUpModelMethods		ui	Holds the 3 pairs of a name and a function of the DressUpModel methods	verified	one	ui/model#lua-methods
+0x84f1fc	uint32_t[6]	s_playerModelMethods		ui	Holds the 3 pairs of a name and a function of the PlayerModel methods	verified	one	ui/model#lua-methods
 0x84f398	char[5]	s_text1f		ui	Holds the string "%.1f"	inferred	none	
 0x84f484	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f488	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
@@ -1241,7 +1241,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x854124	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x854158	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x85416c	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
-0x854198	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x854198	uint32_t[92]	s_gameTooltipMethods		ui	Holds the 46 pairs of a name and a function of the GameTooltip methods	verified	one	ui/tooltip#lua-methods
 0x8546dc	char[11]	s_textCffe6cc80		unassigned	Holds the string "|cffe6cc80"	inferred	none	
 0x854820	char[6]	s_textSAt854820		ui	Holds the string " (%s)"	inferred	none	
 0x8549c8	char[31]	s_textSHitemDDDDHSHS		ui	Holds the string "%s|Hitem:%d:%d:%d:%d|h[%s]|h%s"	inferred	none	
@@ -1524,7 +1524,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x878874	char[56]	s_scriptRegionPath		ui	Holds the source path of CScriptRegion.cpp	verified	one	ui/README#frame-core-object-files
 0x8788ac	char[4]	s_topName		ui	Holds Top, what $parent becomes when no ancestor is named	verified	one	ui/frames#names-and-lookup-by-name
 0x8788b0	char[8]	s_parentPrefix		ui	Holds $parent, the name prefix replaced by an ancestor's name	verified	one	ui/frames#names-and-lookup-by-name
-0x878948	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x878948	uint32_t[46]	s_modelMethods		ui	Holds the 23 pairs of a name and a function of the Model methods	verified	one	ui/model#lua-methods
 0x878b44	char[23]	s_textInvalidModelFileS		ui	Holds the string "Invalid model file: %s"	inferred	none	
 0x878c00	char[122]	s_textUsageSSetLightEnabledOmniDirXDirYDirZ		ui	Holds a string that opens "Usage: %s:SetLight(enabled[, omni, dirX, dirY, dirZ, ambIntensity[, ambR, ambG, ambB], dir…"	inferred	none	
 0x878cf0	uint32_t			ui	Holds a dword that Script::SetPortraitTexture, Texture::SetTexture read; not read here	inferred	none	
@@ -1538,9 +1538,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x879828	char[26]	s_textFrameSIsNotResizable		ui	Holds the string "Frame %s is not resizable"	inferred	none	
 0x879844	char[37]	s_textFrameSIsNotMovableOrResizable		ui	Holds the string "Frame %s is not movable or resizable"	inferred	none	
 0x879b78	char[13]	s_textIgnoreArrows		ui	Holds the string "ignoreArrows"	inferred	none	
-0x879cac	char[3]			ui	Holds the string "||"	inferred	none	
-0x879cb0	char[5]			ui	Holds the string "    "	inferred	none	
-0x879d00	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x879cac	char[3]	s_editBoxPipeText		ui	Holds ||, the text an edit box inserts for a typed pipe	verified	one	ui/editbox#typed-characters
+0x879cb0	char[5]	s_editBoxTabText		ui	Holds the four spaces an edit box inserts for a tab character	verified	one	ui/editbox#typed-characters
+0x879d00	uint32_t[78]	s_buttonMethods		ui	Holds the 39 pairs of a name and a function of the Button methods	verified	one	ui/button#lua-methods
 0x87a100	char[36]	s_textUsageSSetFontStringFontstring		ui	Holds the string "Usage: %s:SetFontString(fontstring)"	inferred	none	
 0x87a124	char[59]	s_textSSetFontStringWrongObjectTypeExpected		ui	Holds the string "%s:SetFontString(): Wrong object type, expected fontstring"	inferred	none	
 0x87a160	char[55]	s_textSSetFontStringCouldnTFindThisInFontstring		ui	Holds the string "%s:SetFontString(): Couldn't find 'this' in fontstring"	inferred	none	
@@ -1561,29 +1561,29 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87a9a0	char[3]	s_textN		ui	Holds the string "|n"	inferred	none	
 0x87ab4c	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
 0x87ab8c	char[33]	s_textUsageSStartMovieFilename		ui	Holds the string "Usage: %s:StartMovie("filename")"	inferred	none	
-0x87abb0	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87abb0	uint32_t[24]	s_colorSelectMethods		ui	Holds the 12 pairs of a name and a function of the ColorSelect methods	verified	one	ui/colorselect#lua-methods
 0x87ad10	char[47]	s_textUsageSSetColorWheelTextureTextureOrNil		ui	Holds the string "Usage: %s:SetColorWheelTexture(texture or nil)"	inferred	none	
 0x87adc0	char[65]	s_textUsageSSetColorWheelThumbTextureTextureOr		ui	Holds the string "Usage: %s:SetColorWheelThumbTexture(texture or "texture" or nil)"	inferred	none	
 0x87ae90	char[47]	s_textUsageSSetColorValueTextureTextureOrNil		ui	Holds the string "Usage: %s:SetColorValueTexture(texture or nil)"	inferred	none	
 0x87af40	char[65]	s_textUsageSSetColorValueThumbTextureTextureOr		ui	Holds the string "Usage: %s:SetColorValueThumbTexture(texture or "texture" or nil)"	inferred	none	
-0x87b010	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87b010	uint32_t[20]	s_statusBarMethods		ui	Holds the 10 pairs of a name and a function of the StatusBar methods	verified	one	ui/slider#lua-methods
 0x87b1a0	char[71]	s_textUsageSSetStatusBarTextureTextureOrTexture		ui	Holds the string "Usage: %s:SetStatusBarTexture(texture or "texture" or nil [, "layer"])"	inferred	none	
 0x87b1e8	char[60]	s_textSSetCheckedTextureWrongObjectTypeExpected		ui	Holds the string "%s:SetCheckedTexture(): Wrong object type, expected texture"	inferred	none	
 0x87b224	char[56]	s_textSSetCheckedTextureCouldnTFindThisInTexture		ui	Holds the string "%s:SetCheckedTexture(): Couldn't find 'this' in texture"	inferred	none	
-0x87b260	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87b260	uint32_t[20]	s_sliderMethods		ui	Holds the 10 pairs of a name and a function of the Slider methods	verified	one	ui/slider#lua-methods
 0x87b2f0	char[55]	s_textUsageSSetThumbTextureTextureOrTextureOrNil		ui	Holds the string "Usage: %s:SetThumbTexture(texture or "texture" or nil)"	inferred	none	
-0x87b3c0	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x87b5c0	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x87b960	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x87ba80	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87b3c0	uint32_t[18]	s_scrollFrameMethods		ui	Holds the 9 pairs of a name and a function of the ScrollFrame methods	verified	one	ui/scrollframe#lua-methods
+0x87b5c0	uint32_t[80]	s_scrollingMessageFrameMethods		ui	Holds the 40 pairs of a name and a function of the ScrollingMessageFrame methods	verified	one	ui/messageframe#lua-methods
+0x87b960	uint32_t[52]	s_messageFrameMethods		ui	Holds the 26 pairs of a name and a function of the MessageFrame methods	verified	one	ui/messageframe#lua-methods
+0x87ba80	uint32_t[38]	s_simpleHTMLMethods		ui	Holds the 19 pairs of a name and a function of the SimpleHTML methods	verified	one	ui/simplehtml#lua-methods
 0x87bb40	char[39]	s_textUsageSSetHyperlinkFormatFormat		ui	Holds the string "Usage: %s:SetHyperlinkFormat("format")"	inferred	none	
-0x87bb68	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87bb68	uint32_t[96]	s_editBoxMethods		ui	Holds the 48 pairs of a name and a function of the EditBox methods	verified	one	ui/editbox#lua-methods
 0x87bce8	char[19]	s_textGetAltArrowKeyMode		unassigned	Holds the string "GetAltArrowKeyMode"	inferred	none	
-0x87bf74	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87bf74	uint32_t[12]	s_checkButtonMethods		ui	Holds the 6 pairs of a name and a function of the CheckButton methods	verified	one	ui/button#lua-methods
 0x87c0a0	char[68]	s_textSSetDisabledCheckedTextureWrongObjectType		ui	Holds the string "%s:SetDisabledCheckedTexture(): Wrong object type, expected texture"	inferred	none	
 0x87c0e8	char[64]	s_textSSetDisabledCheckedTextureCouldnTFindThis		ui	Holds the string "%s:SetDisabledCheckedTexture(): Couldn't find 'this' in texture"	inferred	none	
-0x87c128	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
-0x87c1d8	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87c128	uint32_t[44]	s_textureMethods		ui	Holds the 22 pairs of a name and a function of the Texture methods	verified	one	ui/fontstring#lua-methods
+0x87c1d8	uint32_t[64]	s_fontStringMethods		ui	Holds the 32 pairs of a name and a function of the FontString methods	verified	one	ui/fontstring#lua-methods
 0x87c41c	char[13]	s_textGetDrawLayer		unassigned	Holds the string "GetDrawLayer"	inferred	none	
 0x87c42c	char[32]	s_textUsageSSetDrawLayerLayer		ui	Holds the string "Usage: %s:SetDrawLayer("layer")"	inferred	none	
 0x87c538	char[101]	s_textUsageSSetTexCoordMinXMaxXMinYMaxYOr		ui	Holds the string "Usage: %s:SetTexCoord(minX, maxX, minY, maxY) or SetTexCoord(ULx, ULy, LLx, LLy, URx, URy, LRx, LRy)"	inferred	none	
@@ -1593,7 +1593,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87c708	char[30]	s_textUsageSSetSpacingSpacing		ui	Holds the string "Usage: %s:SetSpacing(spacing)"	inferred	none	
 0x87c77c	char[33]	s_textUsageSSetJustifyHJustify		ui	Holds the string "Usage: %s:SetJustifyH("justify")"	inferred	none	
 0x87c7a0	char[33]	s_textUsageSSetJustifyVJustify		ui	Holds the string "Usage: %s:SetJustifyV("justify")"	inferred	none	
-0x87c7c8	uint32_t			ui	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x87c7c8	uint32_t[44]	s_fontMethods		ui	Holds the 22 pairs of a name and a function of the Font methods	verified	one	ui/fontstring#lua-methods
 0x87c9b8	uint32_t[38]	s_regionMethods		ui	Holds the 19 pairs of a name and a function of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0x87cb14	char[52]	s_textSSetParentWouldCreateALoopParentingToS		ui	Holds the string "%s:SetParent(): Would create a loop parenting to %s"	inferred	none	
 0x87cb48	char[48]	s_textSSetParentCouldnTFindRegionNamedS		ui	Holds the string "%s:SetParent(): Couldn't find region named '%s'"	inferred	none	
@@ -2624,10 +2624,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf0c1c	uint32_t	s_frameCount		ui	Counts the CSimpleFrame objects that exist	verified	one	ui/frames#construction
 0xcf0c3c	uint32_t	s_regionTypeId		ui	Holds the script type id of Region, assigned on first use	verified	one	ui/frames#the-region-type-id
 0xcf0c5c	uint32_t	s_modelTypeId		ui	Holds the model frame type id, assigned from a counter on first use	inferred	none	
+0xcf0cc0	char[4096]	s_fontStringFitBuffer		ui	Holds the text a FontString shortens with ... to fit its box	verified	one	ui/fontstring#size-and-fitting
 0xcf4cdc	uint32_t			ui	Holds a dword that Script::SetPortraitToTexture, Script::SetLootPortrait read and write; not read here	inferred	none	
 0xcf4d24	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
-0xcf4dc8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xcf4d88	uint32_t	s_buttonTypeId		ui	Holds the script type id of Button, assigned on first use	verified	one	ui/button#construction-and-the-type
+0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
+0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
+0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates
