@@ -37,9 +37,9 @@ The logon checksum and the pin hash use a second SHA-1 implementation. Its conte
 Addresses: `0x5d1a40`, `0x5d1a80`, `0x5d1b30`, `0x5d1b60`, `0x80a930`, `0x5d1ad3`, `0x5d1af8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::sha1_family_a`, `net::hmac_sha1`, `net::checksum_proof`
 
-`0x5d1a40` stores 0, 0 and the words at `+8` to `+0x18`. `0x5d1a80` multiplies the length by 8 into the count (`0x5d1a97`, `0x5d1a9f`), takes `(count >> 3) & 0x3f` as the buffered length, and calls `0x5d1420` with `ecx` the state and `edx` the block, for the filled buffer (`0x5d1ad3`) and for each further block of the caller's data (`0x5d1af8`). `0x5d1b60` writes the count to a local (`0x5d1b74`), updates with `0x80a930`, a block of `0x80` and 63 zero bytes, for `(55 − (count >> 3)) mod 64 + 1` bytes, then with the 8 count bytes, and stores the words with the loop at `0x5d1bc0`. `0x5d1b30` updates with a C string's bytes. The users are `0x5b1170` and `0x5b31e0`; every other hash in net uses `0x5d1db0`.
+`0x5d1a40` stores 0, 0 and the words at `+8` to `+0x18`. `0x5d1a80` multiplies the length by 8 into the count (`0x5d1a97`, `0x5d1a9f`), takes `(count >> 3) & 0x3f` as the buffered length, and calls `0x5d1420` with `ecx` the state and `edx` the block, for the filled buffer (`0x5d1ad3`) and for each further block of the caller's data (`0x5d1af8`). `0x5d1b60` writes the count to a local (`0x5d1b74`), updates with `0x80a930`, a block of `0x80` and 63 zero bytes, for `(55 − (count >> 3)) mod 64 + 1` bytes, then with the 8 count bytes, and stores the words with the loop at `0x5d1bc0`. `0x5d1b30` updates with a C string's bytes. The users are `0x5b1170` and `0x5b31e0`; every other hash in net uses `0x5d1db0`. `net::sha1_family_a` runs `0x5d1a40`, `0x5d1a80` and `0x5d1b60` whole, with `0x5d1420` inside them; `net::hmac_sha1` and `net::checksum_proof` run them under `0x5b1170` and `0x5b31e0`.
 
 ## SHA-1 first compression
 
@@ -48,6 +48,7 @@ The compression `0x5d1420` copies the block big-endian into a local array of 80 
 Addresses: `0x5d1420`, `0x5d1431`, `0x5d1461`, `0x5d1487`, `0x5d1a35`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `net::sha1_family_a`
 
-`0x5d1431` to `0x5d1458` build each word from four bytes with shifts and ors into `[ebp+esi*4-0x158]` for 16 words; `0x5d1461` to `0x5d1485` extend to 80 with the rotate-left-1 of four earlier words xored; `0x5d1487` loads the five state words. The function ends at `0x5d1a35` after storing the five sums back to the state. Whether every round matches SHA-1 is a lead for a bit-exact test.
+`0x5d1431` to `0x5d1458` build each word from four bytes with shifts and ors into `[ebp+esi*4-0x158]` for 16 words; `0x5d1461` to `0x5d1485` extend to 80 with the rotate-left-1 of four earlier words xored; `0x5d1487` loads the five state words. The function ends at `0x5d1a35` after storing the five sums back to the state. Whether every round matches SHA-1 is a lead for a bit-exact test. `net::sha1_family_a` runs `0x5d1420` inside the whole hash and compares its digest with SHA-1.
+

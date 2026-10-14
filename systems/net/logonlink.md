@@ -57,9 +57,9 @@ The checksum the logon proof carries is `ChecksumExecutables`, an HMAC-SHA-1 key
 Addresses: `0x5b1170`, `0x5b1c70`, `0x5b1f40`, `0x5b1c7b`, `0x5b1c98`, `0x5bbad0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::hmac_sha1`
 
-`0x5b1170(salt, length, out)` fills two 64-byte blocks with `0x36` and `0x5c`, xors the salt into both (`0x5b11a5` to `0x5b11b3`), starts a SHA-1 with the inner block (`0x5b11be` to `0x5b11d2`) and loops the five names of the table `0x85def0` (`0x5b11e0` to `0x5b127c`, stride 4, bound `0x14`): exists (`0x42a4e0`), open (`0x42a460` for reading), size (`0x42a670`), read (`0x42a520`), and update only when the read count equals the size (`0x5b1248`). It finishes the inner hash, hashes the outer block and the 20 inner bytes, and copies 5 dwords to the output. A key longer than 64 bytes would overflow the blocks; the caller passes 16. `0x5b1c70` tests the reconnect byte `+0xc` first (`0x5b1c7b`) and then calls `0x5bbad0` with 20 zero bytes (`0x5b1c98`). The salt is kept at `+0x19c` otherwise.
+`0x5b1170(salt, length, out)` fills two 64-byte blocks with `0x36` and `0x5c`, xors the salt into both (`0x5b11a5` to `0x5b11b3`), starts a SHA-1 with the inner block (`0x5b11be` to `0x5b11d2`) and loops the five names of the table `0x85def0` (`0x5b11e0` to `0x5b127c`, stride 4, bound `0x14`): exists (`0x42a4e0`), open (`0x42a460` for reading), size (`0x42a670`), read (`0x42a520`), and update only when the read count equals the size (`0x5b1248`). It finishes the inner hash, hashes the outer block and the 20 inner bytes, and copies 5 dwords to the output. A key longer than 64 bytes would overflow the blocks; the caller passes 16. `0x5b1c70` tests the reconnect byte `+0xc` first (`0x5b1c7b`) and then calls `0x5bbad0` with 20 zero bytes (`0x5b1c98`). The salt is kept at `+0x19c` otherwise. `net::hmac_sha1` runs `0x5b1170` whole with the file-exists call stubbed to 0, so it checks the HMAC framing and not which files are read.
 
 ## Pin challenge
 
@@ -68,9 +68,9 @@ When the logon challenge carries a non-zero security byte, the logon object keep
 Addresses: `0x5b1ed0`, `0x5b1e70`, `0x5b1c70`, `0x5b1cd7`, `0x5b1edb`, `0x5b1eec`, `0x4100f0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::pin_shuffle`
 
-`0x5b1edb` stores the flag; `0x5b1ee7` calls `0x5b1e70`; `0x5b1eec` to `0x5b1f08` copy 16 bytes to `+0x1b8`. `0x5b1e70` writes 0 to 9 into a local array, then 10 times: `div` the seed by the count left (`0x5b1e97`), store the digit at the remainder to the grid, and close the gap with `0x4100f0` (`0x5b1eb1`). `0x5b1cd7` is `lea eax,[eax+eax*1+7]` on `sete` of the flag: 9 for 0, 7 otherwise.
+`0x5b1edb` stores the flag; `0x5b1ee7` calls `0x5b1e70`; `0x5b1eec` to `0x5b1f08` copy 16 bytes to `+0x1b8`. `0x5b1e70` writes 0 to 9 into a local array, then 10 times: `div` the seed by the count left (`0x5b1e97`), store the digit at the remainder to the grid, and close the gap with `0x4100f0` (`0x5b1eb1`). `0x5b1cd7` is `lea eax,[eax+eax*1+7]` on `sete` of the flag: 9 for 0, 7 otherwise. `net::pin_shuffle` runs `0x5b1e70` whole.
 
 ## Pin proof
 
@@ -79,6 +79,7 @@ Test: none
 Addresses: `0x5b3120`, `0x5b31e0`, `0x5b1f10`, `0x5b3147`, `0x5b3163`, `0x5b3177`, `0x5b318f`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::checksum_proof`
 
-`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`.
+`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`. `net::checksum_proof` runs `0x5b31e0` whole.
+
