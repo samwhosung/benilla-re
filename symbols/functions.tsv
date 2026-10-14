@@ -46,17 +46,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401570	646	ClientInitializeGame	idb	client			Initializes the game systems, among them the spell tables through 0x6dda50	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x401800	78	NotifyHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetCString, CGGameUI::AddErrorMessage, ConsoleWriteA; not read here	inferred	none		
 0x401850	163	PlayedTimeHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetInt32, ConsolePrintf, 0x49e9d0 and 1 more; not read here	inferred	none		
-0x401900	152	TransferPendingHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetInt32, CDataStore::GetUInt32, 0x495920 and 3 more; not read here	inferred	none		
+0x401900	152	TransferPendingHandler	idb	client			Reads the destination map, cancels interaction and casts, and raises the loading screen	verified	one	collision/teleport#far-transfer-handlers	
 0x4019a0	127	TransferAbortedHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetUInt8, FrameScript_GetText, 0x49a870 and 2 more; not read here	inferred	none		
 0x401a40	187	MovementInit	idb	client		void __cdecl (void)	Runs 0x616860 on the movement log path and registers 0x616800 as the handler of event 5	verified	one	collision/mover#initialisation-and-teardown	
-0x401b00	189	NewWorldHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetUInt32, CDataStore::GetFloat, ConsoleWrite and 1 more; not read here	inferred	none		
+0x401b00	189	NewWorldHandler	idb	client			Reads the new world's map, position and facing, checks the map, and posts the world-port executor with an ack	verified	one	collision/teleport#far-transfer-handlers	
 0x401bc0	325	LoadNewWorld	idb	client			Calls 0x616910 and then unregisters 0x616800 from event 5, among other teardown	verified	one	collision/mover#initialisation-and-teardown	
 0x401d10	12			client			Runs Client.cpp code not read here	inferred	none		
 0x401d20	74			client			Runs Client.cpp code not read here	inferred	none		
 0x401d70	8			client			Runs Client.cpp code not read here	inferred	none		
 0x401d80	5			client			Runs Client.cpp code not read here	inferred	none		
 0x401d90	68			client			Runs Client.cpp code that calls SMemFree; not read here	inferred	none		
-0x401de0	212	HandleLoginVerifyWorldPacket	idb	client			Runs Client.cpp code that calls CDataStore::GetUInt32, CDataStore::GetFloat and 3 more; not read here	inferred	none		
+0x401de0	212	HandleLoginVerifyWorldPacket	idb	client			Reads map, position and facing and, for another map, calls the world-port executor without an ack	verified	one	collision/teleport#far-transfer-handlers	
 0x401ec0	26			client	orchestration		Runs another tick function on its argument, then polls the area list; returns 1	inferred	none	objectlayer/players#area-list-polling	
 0x401ee0	443	ClientDestroyGame	idb	client			Shuts the game systems down, among them the spell tables through 0x6dde30	inferred	none	spell/tables#teardown-at-shutdown	
 0x4020a0	26			client	unreached		Runs Client.cpp code that calls CWorld::GetAreaIdAt; not read here	inferred	none		
