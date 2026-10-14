@@ -29,6 +29,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x46e998	void *[4]	s_realmCompareJumpTable		glue	Holds the realm comparator's case addresses for sort keys 0 to 3	verified	one	glue/realms#the-realm-comparator
 0x47106c	void *[5]	s_cycleCustomizationCases		glue	Holds the five case addresses of the customization cycle 0x470f80, skin to facial hair	verified	one	glue/create#cycling-a-customization
 0x4712e0	void *[5]	s_countCustomizationCases		glue	Holds the five case addresses of the customization count 0x471270, skin to facial hair	verified	one	glue/create#randomizing-and-counts
+0x478c68	void *[12]	s_unequipSlotJumps		charactermodel	Holds the arm of the unequip by equipment slot	verified	one	charactermodel/equipment#entry-points
+0x478c98	const uint8_t[19]	s_unequipSlotArms		charactermodel	Maps an equipment slot to an arm of the unequip jump table	verified	one	charactermodel/equipment#entry-points
+0x478d74	void *[12]	s_equipSlotJumps		charactermodel	Holds the arm of the equip by equipment slot	verified	one	charactermodel/equipment#entry-points
+0x478da4	const uint8_t[19]	s_equipSlotArms		charactermodel	Maps an equipment slot to an arm of the equip jump table	verified	one	charactermodel/equipment#entry-points
+0x478ec8	void *[15]	s_displayIdJumps		charactermodel	Holds the arm of the display id read by inventory type	verified	one	charactermodel/overview#unreached-code
+0x478f04	const uint8_t[27]	s_displayIdArms		charactermodel	Maps an inventory type to an arm of the display id jump table	verified	one	charactermodel/overview#unreached-code
+0x478fb8	void *[13]	s_unequipTypeJumps		charactermodel	Holds the arm of the unequip by inventory type	verified	one	charactermodel/equipment#entry-points
+0x478fec	const uint8_t[25]	s_unequipTypeArms		charactermodel	Maps an inventory type to an arm of the unequip jump table	verified	one	charactermodel/equipment#entry-points
+0x47911c	void *[15]	s_equipTypeJumps		charactermodel	Holds the arm of the equip by inventory type	verified	one	charactermodel/equipment#entry-points
+0x479158	const uint8_t[27]	s_equipTypeArms		charactermodel	Maps an inventory type to an arm of the equip jump table	verified	one	charactermodel/equipment#entry-points
+0x47a0a8	void *[5]	s_sheathAttachJumps		charactermodel	Holds the arm of the sheath attachment by sheathe type	verified	one	charactermodel/equipment#held-items
 0x480850	uint8_t[121]	s_worldPickTypeCaseTable		ui	Maps an object type mask less 9 to the four cases of 0x480780: unit, player, game object, corpse, else 4	verified	one	spell/targeting#object-pick-filters
 0x4901c8	const uint32_t[4]	s_signatureAnswerCases		ui	Holds the four case addresses CGGameUI::Initialize jumps through on the FrameXML signature answer	verified	one	ui/framexml#building-the-game-interface
 0x492ab8	void *[4]	s_hoverKindArms		ui	Holds the four arms of the mouseover kind switch of 0x492890	verified	one	ui/tooltipobject#the-publisher
@@ -364,7 +375,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803934	void *[11]	s_simpleModelFfxInnerVftable		glue	Holds CSimpleModelFFX's second vtable, stored at +0x24; it differs from CSimpleModel's at slot 1	verified	one	glue/select#the-modelffx-frame
 0x803960	void *[40]	CSimpleModelFFX::vftable		glue	Holds CSimpleModelFFX's vtable; slots 12 and 17 are 0x46fa60 and 0x46fa90	verified	one	glue/select#the-modelffx-frame
 0x803a78	float	s_radiansToDegrees		glue	Holds the f32 57.29578 (0x42652ee1) that turns the select facing into degrees	verified	one	glue/select#facing-in-degrees
-0x803bf8	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x803bf8	const int32_t[120]	s_bodySlotColumns		charactermodel	Holds the default cell column of each body slot and composite group, -1 for none	verified	one	charactermodel/equipment#layer-choosers
 0x804328	const float	s_float40b1c71c		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
 0x80439c	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x8043e8	void *[36]	CGWorldFrame::vftable		ui	Holds the 36 virtual function slots of CGWorldFrame, which its constructor stores	inferred	none	
@@ -936,6 +947,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82e280	char[3]	s_textS		unassigned	Holds the string "%s"	inferred	none	
 0x82e3e0	char[6]	s_textLogin		unassigned	Holds the string "login"	inferred	none	
 0x82e3e8	char[11]	s_textCharselect		unassigned	Holds the string "charselect"	inferred	none	
+0x82e424	const char[5]	s_textPercentSPercentS		charactermodel	Holds the string "%s%s"	verified	one	charactermodel/equipment#item-models
 0x82e570	char[2]	s_text0		unassigned	Holds the string "0"	inferred	none	
 0x82e644	char[18]	s_textM2UsePixelShaders		client	Holds the string "M2UsePixelShaders"	inferred	none	
 0x82e67c	char[13]	s_textM2UseShaders		client	Holds the string "M2UseShaders"	inferred	none	
@@ -1098,10 +1110,28 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8387f0	char[36]	s_usageRenameCharacter		glue	Holds the usage error of RenameCharacter	verified	one	glue/select#script-functions
 0x838814	char[41]	s_usageSetCharacterSelectFacing		glue	Holds the usage error of SetCharacterSelectFacing	verified	one	glue/select#script-functions
 0x838848	uint8_t[256]	s_surveyArchiveKey		glue	Holds the 256-byte public key the survey archive's signature is checked with	verified	one	glue/downloads#running-the-survey
+0x838a94	const char *[8]	s_sectionDirNames		charactermodel	Holds the directory names of the eight texture groups, ArmUpperTexture to FootTexture	verified	one	charactermodel/component#texture-path-names
+0x838ab4	const char *[3]	s_sexLetters		charactermodel	Holds the strings M, F and U	verified	one	charactermodel/component#texture-path-names
+0x838ae4	const uint8_t[4]	s_coverageMasks		charactermodel	Holds the 2-bit coverage masks 3, 0xc, 0x30 and 0xc0	verified	one	charactermodel/composite#key-kernel
+0x838ae8	const uint32_t[4]	s_coverageShifts		charactermodel	Holds the coverage shifts 0, 2, 4 and 6	verified	one	charactermodel/composite#blend-kernel
+0x838af8	const uint32_t[4]	s_blendWeights		charactermodel	Holds the blend weights 0, 0x5555, 0xaaaa and 0x10000	verified	one	charactermodel/composite#blend-kernel
+0x838be4	const char[20]	s_textCCharacterComponent		charactermodel	Holds the string "CCharacterComponent", the pool name	verified	one	charactermodel/component#pool-and-statics
+0x838c3c	const char[36]	s_textItemTextureComponentsFormat		charactermodel	Holds the string "Item\TextureComponents\%s\%s_%s.blp"	verified	one	charactermodel/component#texture-path-names
+0x838cbc	const char[9]	s_textPercentSPercentSBlp		charactermodel	Holds the string "%s%s.blp"	verified	one	charactermodel/equipment#item-models
+0x838cc8	const char[14]	s_textHelmModelFormat		charactermodel	Holds the string "%s%s_%s%s.mdx"	verified	one	charactermodel/geosets#helm-mask
+0x838cd8	const char[28]	s_headModelDir		charactermodel	Holds the head model directory Item\ObjectComponents\Head\	verified	one	charactermodel/geosets#helm-mask
+0x838cf4	const char[28]	s_capeModelDir		charactermodel	Holds the cape texture directory Item\ObjectComponents\Cape\	verified	one	charactermodel/equipment#item-models
 0x838d10	const char[30]	s_quiverModelDir		objectlayer	Holds the quiver model directory Item\ObjectComponents\Quiver\	verified	one	objectlayer/unitdisplay#the-quiver
+0x838d30	const char[32]	s_shoulderModelDir		charactermodel	Holds the shoulder model directory Item\ObjectComponents\Shoulder\	verified	one	charactermodel/equipment#item-models
 0x838d50	const char[30]	s_weaponModelDir		objectlayer	Holds the weapon model directory Item\ObjectComponents\Weapon\	verified	one	objectlayer/unitdisplay#the-ammo-model
 0x838d70	const char[28]	s_ammoModelDir		objectlayer	Holds the ammo model directory Item\ObjectComponents\Ammo\	verified	one	objectlayer/unitdisplay#the-ammo-model
+0x838d8c	const char[30]	s_shieldModelDir		charactermodel	Holds the shield model directory Item\ObjectComponents\Shield\	verified	one	charactermodel/equipment#held-items
+0x838dac	const char[43]	s_textTexturesGuildEmblemsBackground02dTLU		charactermodel	Holds the string "Textures\GuildEmblems\Background_%02d_TL_U"	verified	one	charactermodel/equipment#guild-tabard
 0x838dd8	char[43]	s_textTexturesGuildEmblemsBackground02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Background_%02d_TU_U"	inferred	none	
+0x838e04	const char[44]	s_textTexturesGuildEmblemsEmblem02d02dTLU		charactermodel	Holds the string "Textures\GuildEmblems\Emblem_%02d_%02d_TL_U"	verified	one	charactermodel/equipment#guild-tabard
+0x838e30	const char[44]	s_textTexturesGuildEmblemsEmblem02d02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Emblem_%02d_%02d_TU_U"	verified	one	charactermodel/equipment#guild-tabard
+0x838e5c	const char[44]	s_textTexturesGuildEmblemsBorder02d02dTLU		charactermodel	Holds the string "Textures\GuildEmblems\Border_%02d_%02d_TL_U"	verified	one	charactermodel/equipment#guild-tabard
+0x838e88	const char[44]	s_textTexturesGuildEmblemsBorder02d02dTUU		charactermodel	Holds the string "Textures\GuildEmblems\Border_%02d_%02d_TU_U"	verified	one	charactermodel/equipment#guild-tabard
 0x838f50	uint32_t[3]	s_corpseWatchedFields		objectlayer	Holds the corpse's watched field indices, 29, 30 and 32	verified	one	objectlayer/fields#watched-fields
 0x838f6c	uint32_t[5]	s_gameObjectWatchedFields		objectlayer	Holds the game object's watched field indices, 3, 8, 17, 18 and 20	verified	one	objectlayer/fields#watched-fields
 0x838f90	uint32_t[295]	s_playerWatchedFields		objectlayer	Holds the 295 player field indices every player watches	verified	one	objectlayer/fields#watched-fields
@@ -2006,8 +2036,27 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb421f4	uint16_t	s_surveyResultSize		glue	Holds the kept survey result's size, at most 1000; written by 0x473f10, cleared by 0x473e30	verified	one	glue/downloads#running-the-survey
 0xb42260	void *	s_patchFile		glue	Holds the patch download file, or null	verified	one	glue/downloads#patch-download
 0xb42264	uint8_t	s_deletePatchAfterList		glue	Holds 1 when prepatch.lst asked to delete wow-patch.mpq; cleared by 0x4749f0, set by 0x474830	verified	one	glue/downloads#applying-the-patch
-0xb42424	uint32_t			charactermodel	Holds a dword that UnequipCharacterSlot reads and writes; not read here	inferred	none	
-0xb42450	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb422d0	float	s_charHundred		charactermodel	Holds 10.0 squared, set by a static initializer	verified	one	charactermodel/overview#static-initializers
+0xb422d4	float	s_charTwentieth		charactermodel	Holds 0.5 / 10.0, set by a static initializer	verified	one	charactermodel/overview#static-initializers
+0xb422d8	void **	s_compositeMips		charactermodel	Holds the mip pointer table of the 256 x 256 composite target	verified	one	charactermodel/component#pool-and-statics
+0xb422dc	float	s_charInfinity		charactermodel	Holds +∞, copied from the shared constant by the first static initializer	verified	one	charactermodel/overview#static-initializers
+0xb422e0	uint32_t[3]	s_pendingList		charactermodel	Holds the list of components whose sections are still loading: link offset, sentinel and tagged head	verified	one	charactermodel/overview#static-initializers
+0xb422ec	float	s_charInvTwoPi		charactermodel	Holds 1 divided by the 2π set just before	verified	one	charactermodel/overview#static-initializers
+0xb422f0	char *	s_modelPathCursor		charactermodel	Holds the address in the path buffer 0xb42510 that names are copied to, which is its start	verified	one	charactermodel/component#pool-and-statics
+0xb422f4	void *[10]	s_groupHandlers		charactermodel	Holds the ten composite group handlers, one per tile	verified	one	charactermodel/composite#group-handlers
+0xb4231c	void *	s_customizationGrid		charactermodel	Holds the CharSections grid: 5 entries of 8 bytes per race and sex	verified	one	charactermodel/customization#grid-build
+0xb42424	void *[10]	s_groupChoosers		charactermodel	Holds the layer chooser of each composite group; slots 8 and 9 are empty stubs	verified	one	charactermodel/equipment#layer-choosers
+0xb4244c	uint32_t *	s_facialHairCounts		charactermodel	Holds the count of facial hair style rows per race and sex	verified	one	charactermodel/customization#grid-build
+0xb42450	int32_t[40]	s_compositeTiles		charactermodel	Holds the ten composite tile rectangles: x, y, width and height	verified	one	charactermodel/composite#tile-table
+0xb424f0	uint8_t[16]	s_charTextureStatus		charactermodel	Holds the status object every texture load of the object file passes, built by 0x475dc0	verified	one	charactermodel/overview#static-initializers
+0xb42504	float	s_charTwoPi		charactermodel	Holds 2π as π + π, set by the second static initializer	verified	one	charactermodel/overview#static-initializers
+0xb42508	char *	s_texturePathCursor		charactermodel	Holds the address in the path buffer 0xb42618 that names are copied to, which is its start	verified	one	charactermodel/component#pool-and-statics
+0xb4250c	uint32_t	s_customizationGroupCount		charactermodel	Holds the number of race and sex groups of the customization grid	verified	one	charactermodel/customization#grid-build
+0xb42510	char[264]	s_modelPathBuffer		charactermodel	Holds the section texture or model path being loaded	verified	one	charactermodel/component#pool-and-statics
+0xb42618	char[260]	s_texturePathBuffer		charactermodel	Holds the item texture path being loaded	verified	one	charactermodel/component#pool-and-statics
+0xb4271c	uint32_t	s_compositeCount		charactermodel	Holds the number of full composites done since the last reset; nothing reads it	verified	one	charactermodel/component#update-driver
+0xb42720	void *	s_componentPool		charactermodel	Holds the character component pool record: the pool and a constructed flag byte	verified	one	charactermodel/component#pool-and-statics
+0xb42724	uint8_t	s_compositing		charactermodel	Holds 1 while the group handlers of a composite run	verified	one	charactermodel/component#target-callback
 0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
@@ -2428,6 +2477,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0db40	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex, StaticDBLoadAll read and write; not read here	inferred	none	
 0xc0db44	uint32_t			unassigned	Holds a dword that Script::GetNumLaguages, Script::GetLanguageByIndex read and write; not read here	inferred	none	
 0xc0db48	uint32_t			unassigned	Holds a dword that Script::GetDefaultLanguage reads and writes; not read here	inferred	none	
+0xc0db70	uint32_t	s_itemVisualsIdMap		dbc	Holds the ItemVisuals.dbc rows by id	verified	one	charactermodel/equipment#item-models
+0xc0db74	uint32_t	s_itemVisualsMaxId		dbc	Holds the highest ItemVisuals.dbc id	verified	one	charactermodel/equipment#item-models
+0xc0db84	uint32_t	s_itemVisualEffectsIdMap		dbc	Holds the ItemVisualEffects.dbc rows by id	verified	one	charactermodel/equipment#item-models
+0xc0db88	uint32_t	s_itemVisualEffectsMaxId		dbc	Holds the highest ItemVisualEffects.dbc id	verified	one	charactermodel/equipment#item-models
 0xc0db90	uint32_t[2]	s_itemSubClassRows		dbc	Holds the ItemSubClass.dbc rows and their count, 0x74 bytes each	verified	one	objectlayer/playercombat#learning-a-spell
 0xc0dba4	uint32_t	s_itemSubClassMaskRows		dbc	Holds the ItemSubClassMask.dbc rows, 0x30 bytes each	verified	one	ui/tooltipspellreq#the-required-item
 0xc0dba8	uint32_t	s_itemSubClassMaskCount		dbc	Holds the number of ItemSubClassMask.dbc rows	verified	one	ui/tooltipspellreq#the-required-item
@@ -2463,7 +2516,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dec4	uint8_t[20]	s_cinematicCameraStore		dbc	Holds the CinematicCamera.dbc store	inferred	none	
 0xc0ded8	uint32_t[5]	s_chrRacesStore		dbc	Holds the ChrRaces.dbc store: records, count, id map by record +0x00, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0deec	uint32_t[5]	s_chrClassesStore		dbc	Holds the ChrClasses.dbc store, loaded by 0x542360	verified	one	spell/records#record-lookups
+0xc0df28	uint32_t	s_charFacialHairRows		dbc	Holds the CharacterFacialHairStyles.dbc rows, 0x28 bytes each	verified	one	charactermodel/customization#facial-hair
+0xc0df2c	uint32_t	s_charFacialHairCount		dbc	Holds the number of CharacterFacialHairStyles.dbc rows	verified	one	charactermodel/customization#facial-hair
 0xc0df50	uint8_t[20]	s_charStartOutfitStore		dbc	Holds the CharStartOutfit.dbc store: records, count, id index and maximum id	inferred	none	
+0xc0df64	uint32_t	s_charSectionsRows		dbc	Holds the CharSections.dbc rows, 0x28 bytes each	verified	one	charactermodel/customization#grid-build
+0xc0df68	uint32_t	s_charSectionsCount		dbc	Holds the number of CharSections.dbc rows	verified	one	charactermodel/customization#grid-build
+0xc0df6c	uint32_t	s_charSectionsIdMap		dbc	Holds the CharSections.dbc rows by id	verified	one	charactermodel/customization#grid-lookup
+0xc0df70	uint32_t	s_charSectionsMaxId		dbc	Holds the highest CharSections.dbc id	verified	one	charactermodel/customization#grid-lookup
+0xc0df78	uint32_t	s_charHairGeosetsRows		dbc	Holds the CharHairGeosets.dbc rows, 0x18 bytes each	verified	one	charactermodel/customization#hair
+0xc0df7c	uint32_t	s_charHairGeosetsCount		dbc	Holds the number of CharHairGeosets.dbc rows	verified	one	charactermodel/customization#hair
 0xc0df8c	uint32_t[5]	s_charBaseInfoStore		dbc	Holds the CharBaseInfo.dbc store of 8-byte race and class records	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0dfa0	uint8_t[20]	s_cfgConfigsStore		dbc	Holds the Cfg_Configs.dbc store: records, count, id map, max row and loaded flag	inferred	none	
 0xc0dfb4	uint8_t[20]	s_cfgCategoriesStore		dbc	Holds the Cfg_Categories.dbc store: records, count, index table, highest ordinal and loaded flag	inferred	none	

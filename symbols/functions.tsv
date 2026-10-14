@@ -5667,138 +5667,138 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x475b20	19	InitGlueSquare162		glue	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	glue/layout#static-initializers	
 0x475b40	5	InitGlueTwentieth18Thunk		glue	orchestration	void __cdecl (void)	Jumps to 0x475b50; a static initializer	verified	one	glue/layout#static-initializers	
 0x475b50	19	InitGlueTwentieth18		glue	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	glue/layout#static-initializers	
-0x475b70	5			unassigned			Runs its object file code not read here	inferred	none		
-0x475b80	11			unassigned			Runs its object file code not read here	inferred	none		
-0x475b90	5			unassigned			Runs its object file code not read here	inferred	none		
-0x475ba0	15			unassigned			Runs its object file code not read here	inferred	none		
-0x475bb0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x475bc0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x475be0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x475bf0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x475c10	5			unassigned			Runs its object file code not read here	inferred	none		
-0x475c20	19			unassigned			Runs its object file code not read here	inferred	none		
-0x475c40	10			unassigned			Runs its object file code that calls 0x475c50; not read here	inferred	none		
-0x475c50	314			unassigned			Runs its object file code not read here	inferred	none		
-0x475d90	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x475da0	1			unassigned			Runs its object file code not read here	inferred	none		
-0x475db0	10			unassigned			Runs its object file code that calls 0x475dc0; not read here	inferred	none		
-0x475dc0	54			unassigned			Runs its object file code not read here	inferred	none		
-0x475e00	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x475e10	10			unassigned			Runs its object file code not read here	inferred	none		
-0x475e20	10			unassigned			Runs its object file code that calls 0x475e30; not read here	inferred	none		
-0x475e30	34			unassigned			Runs its object file code not read here	inferred	none		
-0x475e60	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x475e70	165			unassigned			Runs its object file code not read here	inferred	none		
-0x475f20	15			unassigned			Runs its object file code not read here	inferred	none		
-0x475f30	126			unassigned			Runs its object file code that calls 0x47b200, 0x476eb0, 0x476f30; not read here	inferred	none		
-0x475fb0	79	NewCharacterComponent		charactermodel			Takes a character component from its pool and returns it, or null	inferred	none		
-0x476000	27	DeleteCharacterComponent		charactermodel			Tears a character component down and returns it to its pool	inferred	none		
-0x476020	1686			charactermodel			Runs CharacterComponent.cpp code that calls SMemAlloc, ObjectAllocAddHeap, 0x4766d0 and 3 more; not read here	inferred	none		
-0x4766c0	16			charactermodel			Runs CharacterComponent.cpp code not read here	inferred	none		
-0x4766d0	1			charactermodel			Runs CharacterComponent.cpp code not read here	inferred	none		
-0x4766e0	287			charactermodel			Runs CharacterComponent.cpp code that calls SMemFree, 0x44b110, 0x47ae00 and 1 more; not read here	inferred	none		
-0x476800	1			charactermodel			Runs its object file code not read here	inferred	none		
-0x476810	327			charactermodel			Runs its object file code that calls 0x47a900, 0x47a950; not read here	inferred	none		charactermodel::region_base_table
-0x476960	340			charactermodel	unreached		Runs its object file code that calls 0x47a900, 0x47a950, InitCharacterComponent; not read here	inferred	none		
-0x476ac0	199			charactermodel			Runs its object file code that calls HandleClose, HandleClose2, 0x47a970 and 1 more; not read here	inferred	none		
-0x476b90	273	InitCharacterComponent		charactermodel			Sets a character component up from a create record	inferred	none		
-0x476cb0	356			charactermodel			Runs its object file code that calls HandleClose2, 0x47b000, HandleClose; not read here	inferred	none		
-0x476e20	135			charactermodel			Runs its object file code that calls SStrPrintf, 0x648a10, 0x47ae30; not read here	inferred	none		charactermodel::cm_fanout_h_equip_filename
-0x476eb0	128			charactermodel			Runs its object file code that calls 0x47b150; not read here	inferred	none		
-0x476f30	315			charactermodel			Runs its object file code that calls 0x476e20, 0x47b150; not read here	inferred	none		
-0x477070	116			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		
-0x4770f0	121			charactermodel			Runs its object file code that calls 0x47b120, 0x47b150, 0x477460; not read here	inferred	none		
-0x477170	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x4771b0	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x4771f0	32			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477210	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		charactermodel::region_select_face
-0x477280	103			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		charactermodel::region_select_hair
-0x4772f0	106			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477360	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x4773a0	90			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477400	49			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477440	32			charactermodel			Runs its object file code that calls 0x477070, 0x4770f0; not read here	inferred	none		
-0x477460	140			charactermodel			Runs its object file code that calls 0x477c80, 0x477db0, 0x477f20; not read here	inferred	none		
-0x4774f0	33			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::occupancy
-0x477520	817			charactermodel			Runs its object file code that calls 0x47a880, 0x47a8a0, CM2Model::SetGeosetRange and 1 more; not read here	inferred	none		
-0x477860	516	UpdateCharacterComponent		charactermodel			Updates a character component's model from its state; glue passes 1	inferred	none		
-0x477a70	60			charactermodel			Runs its object file code that calls 0x477b50; not read here	inferred	none		charactermodel::cm_fanout_h_texture_layer_case1
-0x477ab0	160			charactermodel			Runs its object file code not read here	inferred	none		
-0x477b50	80			charactermodel			Runs its object file code that calls 0x4420b0, 0x476eb0, 0x476f30; not read here	inferred	none		
-0x477ba0	125			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		
-0x477c20	94			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::charsec_predicate
-0x477c80	299			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_copy
-0x477db0	367			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_masked
-0x477f20	572			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::cm_fanout_f_blit_blend
-0x478160	182			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_base_skin_texid
-0x478220	190			charactermodel			Runs its object file code that calls 0x477c20, CGxTexFlags::CGxTexFlags, TextureCreate and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_face_texid
-0x4782e0	258			charactermodel			Runs its object file code that calls 0x47b010, 0x477c20, 0x47ae30 and 1 more; not read here	inferred	none		charactermodel::cm_fanout_g_region_layer_slot_off, charactermodel::cm_fanout_g_region_layer_dirty_mask
-0x4783f0	205	SetCharacterHairColor		charactermodel			Sets a character component's hair colour index	inferred	none		
-0x4784c0	119	SetCharacterHairStyle		charactermodel			Sets a character component's hair style index	inferred	none		
-0x478540	103			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::geoset_variation_count
-0x4785b0	163	SetCharacterFace		charactermodel			Sets a character component's face index	inferred	none		
-0x478660	214	SetCharacterFacialHair		charactermodel			Sets a character component's facial hair index	inferred	none		charactermodel::geoset_base_select
-0x478740	66			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::region_record_lookup
-0x478790	354	SetCharacterSkinColor		charactermodel			Sets a character component's skin colour index	inferred	none		
-0x478900	94			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		charactermodel::cm_fanout_g_attach_cache_store
-0x478960	318	UnequipCharacterSlot		charactermodel			Removes the item from one of a character component's 12 outfit slots	inferred	none		charactermodel::cm_fanout_g_equip_slot_index, charactermodel::cm_fanout_g_equip_slot0_region
-0x478aa0	45			charactermodel			Runs its object file code that calls 0x478ad0; not read here	inferred	none		
-0x478ad0	256			charactermodel			Runs its object file code that calls 0x47a380, 0x4799a0, 0x479d10 and 2 more; not read here	inferred	none		charactermodel::cm_fanout_g_equip_item_slot_index, charactermodel::cm_fanout_g_equip_validity_index
-0x478bd0	150			charactermodel	primitive		Unequips one or several character model slots for an equipment slot; not read here	inferred	none	objectlayer/inventory#helm-and-cloak	charactermodel::dispatch_478bd0
-0x478cb0	194	SetCharacterComponentItem		charactermodel			Puts an item display on one equipment slot of a character component	inferred	none		charactermodel::dispatch_478cb0
-0x478dc0	263			charactermodel	unreached		Runs its object file code not read here	inferred	none		
-0x478f20	150			charactermodel			Runs its object file code that calls UnequipCharacterSlot; not read here	inferred	none		charactermodel::dispatch_478f20
-0x479010	268	EquipCharacterDisplay		charactermodel			Equips an item display id in an inventory type's slot of a character component	inferred	none		charactermodel::dispatch_479010
-0x479180	63			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		charactermodel::cm_fanout_h_region_layer_clear
-0x4791c0	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x479210	116			charactermodel			Runs its object file code that calls 0x4774f0, 0x478900, 0x479180; not read here	inferred	none		
-0x479290	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x4792e0	3			charactermodel			Runs its object file code not read here	inferred	none		
-0x4792f0	3			charactermodel			Runs its object file code not read here	inferred	none		
-0x479300	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x479350	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x4793a0	67			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x4793f0	300			charactermodel			Runs its object file code that calls 0x4774f0, 0x479180, 0x478900; not read here	inferred	none		charactermodel::cm_fanout_c_boots_region_decision
-0x479520	81			charactermodel			Runs its object file code that calls 0x478900, 0x479180; not read here	inferred	none		
-0x479580	209			charactermodel			Runs its object file code that calls CGxTexFlags::CGxTexFlags, TextureCreate and 4 more; not read here	inferred	none		
-0x479660	67	PlayHandKeyBoneAnimations		charactermodel			Calls CM2Model::PlayAnimation with animation 15 on the 5 finger key bones of one hand, ids 8-12 or 13-17	inferred	none		charactermodel::cm_fanout_h_hand_grip_arm
-0x4796b0	67	ClearHandKeyBoneAnimations		charactermodel			Calls CM2Model::PlayAnimation with animation -1 on the 5 finger key bones of one hand, ids 8-12 or 13-17	inferred	none		charactermodel::cm_fanout_h_hand_grip_release
-0x479700	174			charactermodel			Runs its object file code that calls CM2Model::DetachChildren, CM2Model::GetScene and 3 more; not read here	inferred	none		
-0x4797b0	263	ApplyCreatureDisplay		charactermodel			Applies a CreatureDisplayInfo row's textures to a model, given its CreatureModelData row	inferred	none		
-0x4798c0	219			charactermodel			Runs its object file code that calls CM2Model::GetScene, CreateModelFromPath and 9 more; not read here	inferred	none		
-0x4799a0	409			charactermodel			Runs its object file code that calls strrchr, SStrPrintf, 0x4798c0; not read here	inferred	none		charactermodel::cm_fanout_h_helmet_geoset_flags, charactermodel::cm_fanout_h_helmet_head_gate
-0x479b40	257			charactermodel			Runs its object file code that calls CGxTexFlags::CGxTexFlags, SStrPrintf, TextureCreate and 3 more; not read here	inferred	none		
-0x479c50	186			charactermodel			Runs its object file code that calls SStrPrintf, 0x4798c0; not read here	inferred	none		
-0x479d10	359			charactermodel			Runs its object file code that calls SStrPrintf, 0x4798c0; not read here	inferred	none		
-0x479e80	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
-0x479ec0	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
-0x479f00	59			charactermodel			Runs its object file code that calls AttachItemModel; not read here	inferred	none		
-0x479f40	294			charactermodel			Runs its object file code that calls SStrPrintf, CM2Model::GetScene, CreateModelFromPath and 7 more; not read here	inferred	none		charactermodel::cm_fanout_c_weapon_attach_table
-0x47a070	54			charactermodel			Runs its object file code not read here	inferred	none		charactermodel::attach_slot, charactermodel::cm_fanout_c_attach_slot
-0x47a0c0	367	AttachItemModel		charactermodel			Hangs an item's model at a model's hand or shield attachment for an equipment slot	inferred	none		charactermodel::cm_fanout_c_race_attach_pair
-0x47a230	223			charactermodel			Runs its object file code that calls CM2Model::DetachAt, CM2Model::SetEmissiveColor and 2 more; not read here	inferred	none		
-0x47a310	110	SetCharacterModelOption		charactermodel			Applies a numbered option to a character model; the outfit dress passes 15 and 16	inferred	none		charactermodel::cm_fanout_c_shoulder_attach_pair
-0x47a380	82			charactermodel			Runs its object file code that calls 0x4796b0, CM2Model::IsLoaded, CM2Model::HasAttachment and 1 more; not read here	inferred	none		charactermodel::cm_fanout_c_attach_install_select
-0x47a3e0	29	CountHairStyles		charactermodel			Returns the hair style count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_a
-0x47a400	55	CountHairColors		charactermodel			Returns the hair colour count of a race, sex and hair style, 0 for a style off the grid	inferred	none		charactermodel::charsec_b
-0x47a440	34	CountSkinColors		charactermodel			Returns the skin colour count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_c
-0x47a470	33			charactermodel	unreached		Runs its object file code not read here	inferred	none		
-0x47a4a0	32	CountFaces		charactermodel			Returns the face count of a race and sex from the customization grid	inferred	none		charactermodel::charsec_e
-0x47a4c0	13	CountFacialHairStyles		charactermodel			Returns the dword at index sex + 2*race of a global table, the facial hair count of a race and sex	inferred	none		charactermodel::raceid_index
-0x47a4d0	65			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
-0x47a520	73			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
-0x47a570	73			charactermodel			Runs its object file code that calls SStrPrintf; not read here	inferred	none		
-0x47a5c0	79			charactermodel			Runs its object file code that calls 0x47b010; not read here	inferred	none		
-0x47a610	584	SetCharacterComponentEmblem		charactermodel			Applies a guild tabard's five emblem values to a character component	inferred	none		
-0x47a860	31			unassigned			Runs its object file code that calls 0x47a5c0; not read here	inferred	none		
-0x47a880	25			unassigned			Runs its object file code that calls CM2Model::SetGeosetRange; not read here	inferred	none		
-0x47a8a0	22			unassigned			Runs its object file code that calls CM2Model::SetGeosetRange; not read here	inferred	none		
-0x47a8c0	29			unassigned	unreached		Runs its object file code that calls CM2Model::SetGeosetRange; not read here	inferred	none		
-0x47a8e0	17			unassigned			Runs its object file code that calls CM2Model::BuildBatches; not read here	inferred	none		
-0x47a900	18			unassigned			Runs its object file code not read here	inferred	none		
-0x47a920	34			unassigned			Runs its object file code that calls 0x47b010; not read here	inferred	none		
-0x47a950	28			unassigned			Runs its object file code not read here	inferred	none		
-0x47a970	42			unassigned			Runs its object file code that calls 0x47b010; not read here	inferred	none		
+0x475b70	5	InitCharInfinityThunk		charactermodel	orchestration	void __cdecl (void)	Jumps to 0x475b80; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475b80	11	InitCharInfinity		charactermodel	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	charactermodel/overview#static-initializers	
+0x475b90	5	InitCharTwoPiThunk		charactermodel	orchestration	void __cdecl (void)	Jumps to 0x475ba0; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475ba0	15	InitCharTwoPi		charactermodel	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	charactermodel/overview#static-initializers	
+0x475bb0	5	InitCharInvTwoPiThunk		charactermodel	orchestration	void __cdecl (void)	Jumps to 0x475bc0; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475bc0	19	InitCharInvTwoPi		charactermodel	primitive	void __cdecl (void)	Stores 1 divided by the 2π set just before as a float in a global	verified	one	charactermodel/overview#static-initializers	
+0x475be0	5	InitCharHundredThunk		charactermodel	orchestration	void __cdecl (void)	Jumps to 0x475bf0; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475bf0	19	InitCharHundred		charactermodel	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	charactermodel/overview#static-initializers	
+0x475c10	5	InitCharTwentiethThunk		charactermodel	orchestration	void __cdecl (void)	Jumps to 0x475c20; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475c20	19	InitCharTwentieth		charactermodel	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	charactermodel/overview#static-initializers	
+0x475c40	10	InitCompositeTileTable		charactermodel	orchestration	void __cdecl (void)	Fills the composite tile table, then registers its empty exit routine; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475c50	314	FillCompositeTiles		charactermodel	primitive	void __cdecl (void)	Stores the ten composite tile rectangles in the tile table	verified	one	charactermodel/composite#tile-table	
+0x475d90	12	RegisterCompositeTileExit		charactermodel	orchestration	void __cdecl (void)	Registers the empty 0x475da0 with atexit	verified	one	charactermodel/overview#static-initializers	
+0x475da0	1	CompositeTileExit		charactermodel	orchestration	void __cdecl (void)	Returns at once; the exit routine of the tile table	verified	one	charactermodel/overview#static-initializers	
+0x475db0	10	InitCharTextureStatusThunk		charactermodel	orchestration	void __cdecl (void)	Builds the static texture status, then registers its exit routine; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475dc0	54	InitCharTextureStatus		charactermodel	primitive	void __cdecl (void)	Builds the static status object that the file's texture loads pass	verified	one	charactermodel/overview#static-initializers	
+0x475e00	12	RegisterCharTextureStatusExit		charactermodel	orchestration	void __cdecl (void)	Registers 0x475e10 with atexit	verified	one	charactermodel/overview#static-initializers	
+0x475e10	10	CharTextureStatusExit		charactermodel	orchestration	void __cdecl (void)	Destroys the static texture status object	verified	one	charactermodel/overview#static-initializers	
+0x475e20	10	InitPendingListThunk		charactermodel	orchestration	void __cdecl (void)	Makes the pending component list, then registers its exit routine; a static initializer	verified	one	charactermodel/overview#static-initializers	
+0x475e30	34	InitPendingList		charactermodel	primitive	void __cdecl (void)	Makes the pending list of components empty	verified	one	charactermodel/overview#static-initializers	
+0x475e60	12	RegisterPendingListExit		charactermodel	orchestration	void __cdecl (void)	Registers 0x475e70 with atexit	verified	one	charactermodel/overview#static-initializers	
+0x475e70	165	PendingListExit		charactermodel	primitive	void __cdecl (void)	Unlinks every remaining entry of the pending list at exit	verified	one	charactermodel/overview#static-initializers	
+0x475f20	15	ResetCharLoadCounters		charactermodel	orchestration	void __cdecl (void)	Zeroes the composite count, then the section load counter	verified	one	charactermodel/component#load-budget-and-pump	
+0x475f30	126	PumpPendingComponents		charactermodel	orchestration	void __cdecl (void)	Polls the sections of each pending component while the load counter is under 0x100 and unlinks it	verified	one	charactermodel/component#load-budget-and-pump	
+0x475fb0	79	NewCharacterComponent		charactermodel	orchestration	void * __cdecl (void)	Takes a character component from its pool and returns it, or null	verified	one	charactermodel/component#create-build-and-delete	
+0x476000	27	DeleteCharacterComponent		charactermodel	orchestration	void __thiscall (void *this)	Tears a character component down and returns it to its pool	verified	one	charactermodel/component#create-build-and-delete	
+0x476020	1686	InitCharacterComponents		charactermodel	primitive	bool __cdecl (void)	Makes the component pool and the tables, then builds the CharSections grid and the facial hair counts	verified	one	charactermodel/component#pool-and-statics	
+0x4766c0	16	ClearGridEntry		charactermodel	orchestration	void __thiscall (void *this)	Zeroes a customization grid entry's count and record pointer	verified	one	charactermodel/component#pool-and-statics	
+0x4766d0	1	CharPathPrefixStub		charactermodel	orchestration	void __cdecl (void)	Returns at once; the path prefix routine the init calls	verified	one	charactermodel/component#pool-and-statics	
+0x4766e0	287	ShutdownCharacterComponents		charactermodel	host	bool __cdecl (void)	Frees the customization grid, the facial hair counts, the composite target table and the pool	verified	one	charactermodel/component#pool-and-statics	
+0x476800	1	CharShutdownStub		charactermodel	orchestration	void __cdecl (void)	Returns at once; the routine the shutdown calls	verified	one	charactermodel/component#pool-and-statics	
+0x476810	327	ConstructCharacterComponent		charactermodel	orchestration	void * __thiscall (void *this)	Sets a new component's flags, geoset bases and cell grids to their defaults	verified	one	charactermodel/component#component-object	charactermodel::region_base_table
+0x476960	340	ConstructCharacterComponentFrom		charactermodel	unreached	void * __thiscall (void *this, void *descriptor)	Sets a new component's defaults and builds it from a descriptor	verified	one	charactermodel/overview#unreached-code	
+0x476ac0	199	DestroyCharacterComponent		charactermodel	orchestration	void __thiscall (void *this)	Releases a component's target, model and cells and unlinks it from the pending list	verified	one	charactermodel/component#create-build-and-delete	
+0x476b90	273	InitCharacterComponent		charactermodel	primitive	bool __thiscall (void *this, void *descriptor)	Sets a character component up from a create record	verified	one	charactermodel/component#create-build-and-delete	
+0x476cb0	356	CloneCharacterComponent		charactermodel	orchestration	bool __thiscall (void *this, void *model, void *source)	Copies another component's appearance, cells and items onto a new model	verified	one	charactermodel/component#clone	
+0x476e20	135	BuildSectionTexture		charactermodel	primitive	void * __thiscall (void *this, void *record, uint32_t group)	Names an item record's section texture, falling back to the sex letter, and makes its cell	verified	one	charactermodel/component#texture-path-names	charactermodel::cm_fanout_h_equip_filename
+0x476eb0	128	LoadSkinSections		charactermodel	orchestration	bool __thiscall (void *this, bool force)	Polls the skin cells and returns 0 while one is loading, else clears the sections pending flag	verified	one	charactermodel/component#section-loading	
+0x476f30	315	LoadEquipmentSections		charactermodel	orchestration	bool __thiscall (void *this, bool force)	Makes the missing equipment cells and polls or forces their loads	verified	one	charactermodel/component#section-loading	
+0x477070	116	BlitSkinTile		charactermodel	orchestration	void __thiscall (void *this, uint32_t group)	Blits the skin cell onto a group's tile, reading it at the tile's own place	verified	one	charactermodel/composite#blit-helpers	
+0x4770f0	121	BlitOverlayTile		charactermodel	orchestration	void __thiscall (void *this, uint32_t group, void *cell)	Blits an overlay cell onto a group's tile from its own origin	verified	one	charactermodel/composite#blit-helpers	
+0x477170	49	BlitArmUpperGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the two equipment cells onto the upper arm tile	verified	one	charactermodel/composite#group-handlers	
+0x4771b0	49	BlitArmLowerGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the seven equipment cells onto the lower arm tile	verified	one	charactermodel/composite#group-handlers	
+0x4771f0	32	BlitHandGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the equipment cell onto the hand tile	verified	one	charactermodel/composite#group-handlers	
+0x477210	103	BlitFaceUpperGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin for a non-base skin colour, then the face, facial hair and hair cells, onto the upper face tile	verified	one	charactermodel/composite#group-handlers	charactermodel::region_select_face
+0x477280	103	BlitFaceLowerGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin for a non-base skin colour, then the face, facial hair and hair cells, onto the lower face tile	verified	one	charactermodel/composite#group-handlers	charactermodel::region_select_hair
+0x4772f0	106	BlitTorsoUpperGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin, the underwear when the leading cells are empty, and the five equipment cells onto the upper torso tile	verified	one	charactermodel/composite#group-handlers	
+0x477360	49	BlitTorsoLowerGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the five equipment cells onto the lower torso tile	verified	one	charactermodel/composite#group-handlers	
+0x4773a0	90	BlitLegUpperGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin, the underwear when the leading cells are empty, and the three equipment cells onto the upper leg tile	verified	one	charactermodel/composite#group-handlers	
+0x477400	49	BlitLegLowerGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the six equipment cells onto the lower leg tile	verified	one	charactermodel/composite#group-handlers	
+0x477440	32	BlitFootGroup		charactermodel	orchestration	void __thiscall (void *this)	Blits the skin and the equipment cell onto the foot tile	verified	one	charactermodel/composite#group-handlers	
+0x477460	140	BlitByFormat		charactermodel	orchestration	void __thiscall (void *this, void *src, uint32_t format, void *dstPos, void *srcPos, void *size, void *desc)	Copies the positions and size to its frame and calls the replace, key or blend kernel by format	verified	one	charactermodel/composite#blit-helpers	
+0x4774f0	33	HasGeosetGroup		charactermodel	primitive	bool __thiscall (void *this, void *record, uint32_t group)	Returns whether an item record has a nonzero value for a geoset group	verified	one	charactermodel/geosets#geoset-pass	charactermodel::occupancy
+0x477520	817	SelectGeosets		charactermodel	primitive	void __thiscall (void *this)	Hides every geoset, shows the bases and the ranges the worn items select, and rebuilds the batches	verified	one	charactermodel/geosets#geoset-pass	
+0x477860	516	UpdateCharacterComponent		charactermodel	orchestration	bool __thiscall (void *this, bool force)	Updates a character component's model from its state; glue passes 1	verified	one	charactermodel/component#update-driver	
+0x477a70	60	CompositeTargetCallback		charactermodel	orchestration		Composites again on a restore event and answers a mip request with a pitch and a pointer	verified	one	charactermodel/component#target-callback	charactermodel::cm_fanout_h_texture_layer_case1
+0x477ab0	160	QueueCharacterComponent		charactermodel	orchestration	void __thiscall (void *this)	Links a component that has a dirty mask or a rebuild into the pending list	verified	one	charactermodel/component#load-budget-and-pump	
+0x477b50	80	RecompositeAll		charactermodel	orchestration	void __thiscall (void *this)	Marks a full rebuild, forces the loads and runs every group handler	verified	one	charactermodel/component#target-callback	
+0x477ba0	125	ReleaseEquipmentCells		charactermodel	orchestration	void __thiscall (void *this)	Releases the equipment cells whose record is set	verified	one	charactermodel/component#update-driver	
+0x477c20	94	HasCustomizationRow		charactermodel	primitive	bool __thiscall (void *this, int32_t section, int32_t variation, int32_t colour)	Returns whether the grid has a row for the race, sex, section, variation and colour	verified	one	charactermodel/customization#grid-lookup	charactermodel::charsec_predicate
+0x477c80	299	BlitReplace		charactermodel	primitive	void __stdcall (void *src, void *dst, void *dstPos, void *srcPos, void *size, void *desc)	Copies a rectangle of 16-bit pixels into every mip level of the composite	verified	one	charactermodel/composite#replace-kernel	charactermodel::cm_fanout_f_blit_copy
+0x477db0	367	BlitKeyed		charactermodel	primitive	void __stdcall (void *src, void *dst, void *dstPos, void *srcPos, void *size, void *desc)	Copies the pixels of a rectangle whose 2-bit coverage is not 0 into every mip level	verified	one	charactermodel/composite#key-kernel	charactermodel::cm_fanout_f_blit_masked
+0x477f20	572	BlitBlended		charactermodel	primitive	void __stdcall (void *src, void *dst, void *dstPos, void *srcPos, void *size, void *desc)	Blends a rectangle into every mip level by its 2-bit coverage in thirds	verified	one	charactermodel/composite#blend-kernel	charactermodel::cm_fanout_f_blit_blend
+0x478160	182	ApplyBodySkin		charactermodel	orchestration	void __thiscall (void *this)	Loads the skin row's second texture name and binds it as replaceable type 8	verified	one	charactermodel/customization#skin	charactermodel::cm_fanout_g_base_skin_texid
+0x478220	190	BindHairTexture		charactermodel	orchestration	void __thiscall (void *this, uint32_t variation)	Loads a hair variation's first texture name and binds it as replaceable type 6	verified	one	charactermodel/customization#hair	charactermodel::cm_fanout_g_face_texid
+0x4782e0	258	MakeSectionCell		charactermodel	orchestration	void __thiscall (void *this, int32_t section, uint32_t sub, int32_t record, int32_t colour, uint32_t group)	Loads one texture name of a CharSections row into a skin cell and marks its group dirty	verified	one	charactermodel/customization#section-cell	charactermodel::cm_fanout_g_region_layer_slot_off, charactermodel::cm_fanout_g_region_layer_dirty_mask
+0x4783f0	205	SetCharacterHairColor		charactermodel	orchestration	void __thiscall (void *this, int32_t colour, bool detail)	Sets a character component's hair colour index	verified	one	charactermodel/customization#hair	
+0x4784c0	119	SetCharacterHairStyle		charactermodel	orchestration	void __thiscall (void *this, int32_t style)	Sets a character component's hair style index	verified	one	charactermodel/customization#hair	
+0x478540	103	LookupHairGeoset		charactermodel	primitive	int32_t __thiscall (void *appearance)	Returns the hair geoset of the race, sex and style, 1 when no row gives a positive one	verified	one	charactermodel/customization#hair	charactermodel::geoset_variation_count
+0x4785b0	163	SetCharacterFace		charactermodel	orchestration	void __thiscall (void *this, int32_t face, bool detail)	Sets a character component's face index	verified	one	charactermodel/customization#face	
+0x478660	214	SetCharacterFacialHair		charactermodel	orchestration	void __thiscall (void *this, int32_t style, bool detail)	Sets a character component's facial hair index	verified	one	charactermodel/customization#facial-hair	charactermodel::geoset_base_select
+0x478740	66	FindFacialHairRow		charactermodel	primitive	void * __thiscall (void *appearance)	Returns the facial hair style row of the race, sex and style, or null	verified	one	charactermodel/customization#facial-hair	charactermodel::region_record_lookup
+0x478790	354	SetCharacterSkinColor		charactermodel	orchestration	void __thiscall (void *this, int32_t skin, bool detail)	Sets a character component's skin colour index	verified	one	charactermodel/customization#skin	
+0x478900	94	StoreEquipmentRecord		charactermodel	primitive	void __thiscall (void *this, uint32_t group, void *record, int32_t column)	Stores an item record on an equipment cell unless baked or already the same texture	verified	one	charactermodel/equipment#cell-store	charactermodel::cm_fanout_g_attach_cache_store
+0x478960	318	UnequipCharacterSlot		charactermodel	orchestration	void __thiscall (void *this, uint32_t bodySlot)	Removes the item from one of a character component's 12 outfit slots	verified	one	charactermodel/equipment#unequip	charactermodel::cm_fanout_g_equip_slot_index, charactermodel::cm_fanout_g_equip_slot0_region
+0x478aa0	45	EquipBodySlotById		charactermodel	orchestration	void __thiscall (void *this, uint32_t bodySlot, int32_t displayId)	Looks up an item display record and equips it on a body slot	verified	one	charactermodel/equipment#entry-points	
+0x478ad0	256	EquipBodySlot		charactermodel	orchestration	void __thiscall (void *this, uint32_t bodySlot, void *record)	Stores a display record on a body slot and runs its helm, shoulder, cloak, quiver or layer choosers	verified	one	charactermodel/equipment#entry-points	charactermodel::cm_fanout_g_equip_item_slot_index, charactermodel::cm_fanout_g_equip_validity_index
+0x478bd0	150	UnequipEquipmentSlot		charactermodel	orchestration	void __thiscall (void *this, uint32_t equipSlot)	Unequips the body slot of an equipment slot	verified	one	charactermodel/equipment#entry-points	charactermodel::dispatch_478bd0
+0x478cb0	194	SetCharacterComponentItem		charactermodel	orchestration	void __thiscall (void *this, uint32_t equipSlot, int32_t displayId)	Puts an item display on one equipment slot of a character component	verified	one	charactermodel/equipment#entry-points	charactermodel::dispatch_478cb0
+0x478dc0	263	GetEquippedDisplayId		charactermodel	unreached	int32_t __thiscall (void *this, uint32_t invType)	Returns the display id worn in the slot of an inventory type, or 0	verified	one	charactermodel/overview#unreached-code	
+0x478f20	150	UnequipByInventoryType		charactermodel	orchestration	void __thiscall (void *this, uint32_t invType)	Unequips the body slot of an inventory type	verified	one	charactermodel/equipment#entry-points	charactermodel::dispatch_478f20
+0x479010	268	EquipCharacterDisplay		charactermodel	orchestration	void __thiscall (void *this, uint32_t invType, int32_t displayId)	Equips an item display id in an inventory type's slot of a character component	verified	one	charactermodel/equipment#entry-points	charactermodel::dispatch_479010
+0x479180	63	ClearEquipmentCell		charactermodel	primitive	void __thiscall (void *this, uint32_t group, int32_t column)	Releases an equipment cell and clears its record	verified	one	charactermodel/equipment#cell-store	charactermodel::cm_fanout_h_region_layer_clear
+0x4791c0	67	ChooseArmUpperCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the upper arm cell of a body slot's item	verified	one	charactermodel/equipment#layer-choosers	
+0x479210	116	ChooseArmLowerCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the lower arm cell, using column 6 for hands and 5 for a chest with a sleeve geoset	verified	one	charactermodel/equipment#layer-choosers	
+0x479290	67	ChooseHandCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the hand cell of a body slot's item	verified	one	charactermodel/equipment#layer-choosers	
+0x4792e0	3	UnusedGroup8Chooser		charactermodel	orchestration	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Returns at once; the chooser table's slot 8	verified	one	charactermodel/equipment#layer-choosers	
+0x4792f0	3	UnusedGroup9Chooser		charactermodel	orchestration	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Returns at once; the chooser table's slot 9	verified	one	charactermodel/equipment#layer-choosers	
+0x479300	67	ChooseTorsoUpperCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the upper torso cell of a body slot's item	verified	one	charactermodel/equipment#layer-choosers	
+0x479350	67	ChooseTorsoLowerCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the lower torso cell of a body slot's item	verified	one	charactermodel/equipment#layer-choosers	
+0x4793a0	67	ChooseLegUpperCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the upper leg cell of a body slot's item	verified	one	charactermodel/equipment#layer-choosers	
+0x4793f0	300	ChooseLegLowerCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the lower leg cell, ranking robes over boots over trousers	verified	one	charactermodel/equipment#layer-choosers	charactermodel::cm_fanout_c_boots_region_decision
+0x479520	81	ChooseFootCell		charactermodel	primitive	void __thiscall (void *this, uint32_t bodySlot, void *record, bool store)	Sets or clears the foot cell, clearing it for races whose flag bit 1 is set	verified	one	charactermodel/equipment#layer-choosers	
+0x479580	209	LoadBakedSkin		charactermodel	orchestration	bool __thiscall (void *this)	Loads the baked skin texture of a component and binds it as replaceable type 1	verified	one	charactermodel/component#baked-skin	
+0x479660	67	CloseHand		charactermodel	orchestration	void __fastcall (void *model, uint32_t hand)	Plays HandsClosed on the finger key bones of a hand	verified	one	charactermodel/equipment#hand-grips	charactermodel::cm_fanout_h_hand_grip_arm
+0x4796b0	67	OpenHand		charactermodel	orchestration	void __fastcall (void *model, uint32_t hand)	Stops the animation on the finger key bones of a hand	verified	one	charactermodel/equipment#hand-grips	charactermodel::cm_fanout_h_hand_grip_release
+0x479700	174	AttachItemVisuals		charactermodel	orchestration	void __fastcall (void *model, int32_t visualId)	Attaches the effect models of an item visual at attachments 0 to 4	verified	one	charactermodel/equipment#item-models	
+0x4797b0	263	ApplyCreatureDisplay		charactermodel	orchestration	void __fastcall (void *model, void *display, void *modelData)	Applies a CreatureDisplayInfo row's textures to a model, given its CreatureModelData row	verified	one	charactermodel/equipment#creature-skins	
+0x4798c0	219	AttachItemModelFile		charactermodel	orchestration	void __fastcall (void *model, uint32_t attachId, const char *modelPath, const char *texturePath, int32_t visualId)	Loads an item model and texture and attaches it, closing the hand at attachments 1 and 2	verified	one	charactermodel/equipment#item-models	
+0x4799a0	409	ApplyHelmetModel		charactermodel	primitive	void __thiscall (void *this)	Attaches the worn helm model and replaces the geoset bases its race-masked hide row names	verified	one	charactermodel/geosets#helm-mask	charactermodel::cm_fanout_h_helmet_geoset_flags, charactermodel::cm_fanout_h_helmet_head_gate
+0x479b40	257	ApplyCloakTexture		charactermodel	orchestration	void __thiscall (void *this)	Loads the cloak texture of the worn record and binds it as replaceable type 2	verified	one	charactermodel/equipment#item-models	
+0x479c50	186	AttachQuiverModel		charactermodel	orchestration	void __thiscall (void *this)	Attaches the worn quiver model at attachment 0x1a	verified	one	charactermodel/equipment#item-models	
+0x479d10	359	AttachShoulderModels		charactermodel	orchestration	void __thiscall (void *this)	Attaches the worn shoulder models at attachments 6 and 5	verified	one	charactermodel/equipment#item-models	
+0x479e80	59	AttachMainHandItem		charactermodel	orchestration	void __thiscall (void *this, int32_t displayId)	Stores a main hand display record and attaches its model	verified	one	charactermodel/equipment#held-items	
+0x479ec0	59	AttachOffHandWeapon		charactermodel	orchestration	void __thiscall (void *this, int32_t displayId)	Stores an off hand weapon display record and attaches its model	verified	one	charactermodel/equipment#held-items	
+0x479f00	59	AttachShield		charactermodel	orchestration	void __thiscall (void *this, int32_t displayId)	Stores a shield display record and attaches its model	verified	one	charactermodel/equipment#held-items	
+0x479f40	294	CreateLooseItemModel		charactermodel	orchestration	void * __fastcall (void *model, void *record, uint32_t kind)	Makes a model for an ammo or weapon record, binds its texture and returns it	verified	one	charactermodel/equipment#item-models	charactermodel::cm_fanout_c_weapon_attach_table
+0x47a070	54	GetSheathAttachment		charactermodel	primitive	int32_t __fastcall (uint32_t sheatheType, bool handFlag)	Returns the sheath attachment id of a sheathe type, or -1	verified	one	charactermodel/equipment#held-items	charactermodel::attach_slot, charactermodel::cm_fanout_c_attach_slot
+0x47a0c0	367	AttachItemModel		charactermodel	orchestration	int32_t __fastcall (void *model, void *record, uint32_t slot, uint32_t sheatheType, bool sheathed, bool shield, bool ranged)	Hangs an item's model at a model's hand or shield attachment for an equipment slot	verified	one	charactermodel/equipment#held-items	charactermodel::cm_fanout_c_race_attach_pair
+0x47a230	223	DetachAllItemModels		charactermodel	orchestration	void __thiscall (void *model)	Detaches every item attachment and resets the model's colours and alpha	verified	one	charactermodel/equipment#held-items	
+0x47a310	110	DetachHeldItemSlot		charactermodel	orchestration	void __fastcall (void *model, uint32_t slot, uint32_t sheatheType, bool shield)	Detaches the hand and sheath attachments of a held item slot	verified	one	charactermodel/equipment#held-items	charactermodel::cm_fanout_c_shoulder_attach_pair
+0x47a380	82	DetachAttachment		charactermodel	orchestration	void __fastcall (void *model, int32_t attachId)	Opens the hand of an attachment and detaches what hangs there	verified	one	charactermodel/equipment#held-items	charactermodel::cm_fanout_c_attach_install_select
+0x47a3e0	29	CountHairStyles		charactermodel	primitive	int32_t __fastcall (uint32_t race, uint32_t sex)	Returns the hair style count of a race and sex from the customization grid	verified	one	charactermodel/customization#grid-lookup	charactermodel::charsec_a
+0x47a400	55	CountHairColors		charactermodel	primitive	int32_t __fastcall (uint32_t race, uint32_t sex, int32_t style)	Returns the hair colour count of a race, sex and hair style, 0 for a style off the table	verified	one	charactermodel/customization#grid-lookup	charactermodel::charsec_b
+0x47a440	34	CountSkinColors		charactermodel	primitive	int32_t __fastcall (uint32_t race, uint32_t sex)	Returns the skin colour count of a race and sex from the customization grid	verified	one	charactermodel/customization#grid-lookup	charactermodel::charsec_c
+0x47a470	33	CountSkinRows		charactermodel	unreached	int32_t __fastcall (uint32_t race, uint32_t sex)	Returns the colour count of skin variation 0 of a race and sex	verified	one	charactermodel/overview#unreached-code	
+0x47a4a0	32	CountFaces		charactermodel	primitive	int32_t __fastcall (uint32_t race, uint32_t sex)	Returns the face count of a race and sex from the customization grid	verified	one	charactermodel/customization#grid-lookup	charactermodel::charsec_e
+0x47a4c0	13	CountFacialHairStyles		charactermodel	primitive	int32_t __fastcall (uint32_t race, uint32_t sex)	Returns the facial hair count of a race and sex from a dword table	verified	one	charactermodel/customization#grid-lookup	charactermodel::raceid_index
+0x47a4d0	65	FormatEmblemBackgroundPath		charactermodel	orchestration	void __fastcall (uint32_t half, uint32_t colour, char *buffer, uint32_t size)	Formats the tabard background texture path for the upper or lower half	verified	one	charactermodel/equipment#guild-tabard	
+0x47a520	73	FormatEmblemPath		charactermodel	orchestration	void __fastcall (uint32_t half, uint32_t style, uint32_t colour, char *buffer, uint32_t size)	Formats the tabard emblem texture path for the upper or lower half	verified	one	charactermodel/equipment#guild-tabard	
+0x47a570	73	FormatEmblemBorderPath		charactermodel	orchestration	void __fastcall (uint32_t half, uint32_t style, uint32_t colour, char *buffer, uint32_t size)	Formats the tabard border texture path for the upper or lower half	verified	one	charactermodel/equipment#guild-tabard	
+0x47a5c0	79	ClearEmblemCells		charactermodel	primitive	void __thiscall (void *this, uint32_t first)	Releases the tabard cells of columns first-1 down to 2 in groups 3 and 4	verified	one	charactermodel/equipment#cell-store	
+0x47a610	584	SetCharacterComponentEmblem		charactermodel	orchestration	void __thiscall (void *this, uint32_t emblemStyle, uint32_t emblemColour, uint32_t borderStyle, uint32_t borderColour, uint32_t backgroundColour)	Applies a guild tabard's five emblem values to a character component	verified	one	charactermodel/equipment#guild-tabard	
+0x47a860	31	ClearTabardPreview		charactermodel	orchestration	void __thiscall (void *this)	Clears the tabard preview flag and the emblem cells	verified	one	charactermodel/equipment#guild-tabard	
+0x47a880	25	HideGeosetRange		charactermodel	orchestration	void __thiscall (void *this, uint32_t low, uint32_t high)	Hides the model's geosets whose ids lie in a range	verified	one	charactermodel/geosets#geoset-pass	
+0x47a8a0	22	ShowGeoset		charactermodel	orchestration	void __thiscall (void *this, uint32_t id)	Shows the model's geoset with an id	verified	one	charactermodel/geosets#geoset-pass	
+0x47a8c0	29	ShowGeosetBase		charactermodel	unreached	void __thiscall (void *this, uint32_t index)	Shows the geoset in a component's base slot	verified	one	charactermodel/overview#unreached-code	
+0x47a8e0	17	CommitGeosets		charactermodel	orchestration	void __thiscall (void *this)	Rebuilds the model's batches and clears the geoset dirty flag	verified	one	charactermodel/geosets#geoset-pass	
+0x47a900	18	ClearSkinRow		charactermodel	orchestration	void * __thiscall (void *row)	Zeroes a row of eight skin cells	verified	one	charactermodel/component#component-object	
+0x47a920	34	ReleaseSkinRow		charactermodel	orchestration	void __thiscall (void *row)	Releases and clears the first seven skin cells of a row	verified	one	charactermodel/component#create-build-and-delete	
+0x47a950	28	ClearEquipmentRow		charactermodel	orchestration	void * __thiscall (void *row)	Zeroes a row of eight equipment cells and their eight records	verified	one	charactermodel/component#component-object	
+0x47a970	42	ReleaseEquipmentRow		charactermodel	orchestration	void __thiscall (void *row)	Releases the first seven equipment cells of a row and clears them and their records	verified	one	charactermodel/component#create-build-and-delete	
 0x47a9a0	5			gx			Runs its object file code not read here	inferred	none		
 0x47a9b0	11			gx			Runs its object file code not read here	inferred	none		
 0x47a9c0	10			gx			Runs its object file code that calls 0x47a9d0; not read here	inferred	none		

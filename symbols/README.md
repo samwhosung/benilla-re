@@ -32,7 +32,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `base`: Blizzard's base library files, `engine\Source\Base`: `CDataStore` (packet buffers),
   handles, `FileCache.cpp`, thread properties (`Prop.cpp`), `RCString.cpp`, `CDataRecycler.cpp`,
   `CDataAllocator.cpp` and `MsgBuffer.cpp`
-- `charactermodel`: `CharacterComponent.cpp`, a character's skin, hair, face and equipment
 - `client`: `Client.cpp`, the game's start-up and shutdown, and small client files: `Status.cpp`,
   async loads, the violence level, the guild emblem, HTTP fetches
 - `console`: `ConsoleClient.cpp`, the console screen and its output
