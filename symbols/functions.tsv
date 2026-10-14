@@ -1839,10 +1839,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x422710	16	SchedulerWorkerExit		core	unreached		Releases a worker's slot and its thread record	inferred	none	core/loop#unreached-functions	
 0x422720	290	GrowHeapArrayTo		core	primitive		Raises a heap array's count to index + 1, growing its capacity to a quantum multiple, zeroing on request	verified	one	core/scheduler#growable-arrays	
 0x422850	266	ReserveHeapArray		core	primitive		Sets a heap array's count, growing its capacity to a quantum multiple only when it must	verified	one	core/scheduler#growable-arrays	
-0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	core/scheduler#growable-arrays	
+0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/scheduler#growable-arrays	
 0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *node, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	one	core/loop#scheduler-heap	core::heap_key_le_matches_binary
-0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *heap, uint32_t nodeOffset)	Zeroes a heap array's four dwords and stores the element-to-node offset as the fifth	verified	one	core/scheduler#growable-arrays	
-0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	core/scheduler#growable-arrays	
+0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *heap, uint32_t nodeOffset)	Zeroes a heap array's four dwords and stores the element-to-node offset as the fifth	verified	two	core/scheduler#growable-arrays	
+0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/scheduler#growable-arrays	
 0x4229c0	23	FreeThreadArrayStorage		core	orchestration		Frees the thread array's storage, tagged .PAVSThread@@, when it is not null	verified	one	core/scheduler#growable-arrays	
 0x4229e0	102	EvtContextLink::DeletingDestructor		core	orchestration		Stores 0x801370, unlinks the link at +4, frees this when bit 0 is set and returns it	verified	one	core/scheduler#context-vtables	
 0x422a50	102	EvtContextBase::DeletingDestructor		core	orchestration		Stores 0x801370, unlinks the link at +4, frees this when bit 0 is set and returns it	verified	one	core/scheduler#context-vtables	
@@ -1857,10 +1857,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x422d80	17	GetListEndLink		core	orchestration		Returns its argument, or the sentinel link for 0	verified	one	core/scheduler#intrusive-lists	
 0x422da0	226	GrowThreadArrayBy		core	primitive		Raises the thread array's capacity for count + add, as 0x422b50 does	verified	one	core/scheduler#growable-arrays	
 0x422e90	226	GrowContextArrayBy		core	primitive		Raises the context array's capacity for count + add, as 0x422b50 does	verified	one	core/scheduler#growable-arrays	
-0x422f80	16	ClearContextLink		core	orchestration		Clears a link, two dwords	verified	one	core/scheduler#intrusive-lists	
-0x422f90	12	InitEndLink		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
-0x422fa0	12	InitMessageList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
-0x422fb0	12	InitKeyList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
+0x422f80	16	ClearContextLink		core	orchestration		Clears a link, two dwords	verified	two	core/scheduler#intrusive-lists	
+0x422f90	12	InitEndLink		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	two	core/scheduler#intrusive-lists	
+0x422fa0	12	InitMessageList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	two	core/scheduler#intrusive-lists	
+0x422fb0	12	InitKeyList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	two	core/scheduler#intrusive-lists	
 0x422fc0	41	GetSlotListLink		core	orchestration		Returns the link of the element after a link, the sentinel at the end	verified	one	core/scheduler#intrusive-lists	
 0x422ff0	57	GetThreadArrayQuantum		core	primitive		Returns 64 (stored as the quantum) for sizes of 64 and up, else the highest power of two not above the size	verified	one	core/scheduler#growable-arrays	
 0x423030	31	RoundUpToMultiple		core	primitive		Rounds a size up to a multiple of a quantum	verified	one	core/scheduler#growable-arrays	
@@ -2238,7 +2238,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b550	48	HasInvalidFileNameChar		unassigned	unreached		Returns 1 when a string holds a character that a file name may not, else 0	verified	one	core/time#file-name-helpers	
 0x42b580	118	IsValidFileName		unassigned	unreached		Returns 1 when a file name has no such character and no reserved device name before its last dot	verified	one	core/time#file-name-helpers	
 0x42b600	66	GetWindowsFontsDirectory		unassigned	unreached		Writes the Windows directory, a backslash if missing, and fonts\ into a buffer	verified	one	core/time#file-name-helpers	
-0x42b650	31	FormatFontsDirectory		unassigned	orchestration		Formats base\Fonts into a buffer of a given size	verified	one	core/time#file-name-helpers	
+0x42b650	31	FormatFontsPath		unassigned	orchestration	void __userpurge (char *name@<ecx>, char *buffer@<edx>, uint32_t size)	Formats Fonts\<file name> into a buffer of a given size	verified	one	core/time#file-name-helpers	
 0x42b670	5	InitFileNameTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#file-name-helpers	
 0x42b680	15	InitFileNameTwoPi		unassigned	primitive	void __cdecl (void)	Stores pi + pi as a float in the object file's 2pi global	verified	one	core/time#file-name-helpers	
 0x42b690	5	InitFileNameInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#file-name-helpers	
@@ -2823,7 +2823,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4371e0	237	UnregisterEngineThread		os			Unregisters the calling thread: clears its slot, closes its handle, unlinks and frees its record	verified	one	core/threads#engine-thread-records	
 0x4372d0	7			os	unreached		Runs OsCall.cpp code not read here	inferred	none		
 0x4372e0	32			os	unreached		Runs OsCall.cpp code that calls OsTlsGetValue; not read here	inferred	none		
-0x437300	235	CreateNameObject		os			Builds a name object of 0x45a8 bytes with a copied name and links it at the head of the name list	verified	one	core/threads#context-binding	
+0x437300	235	CreateNameObject		os			Builds a name object of 0x45a8 bytes with a copied name and links it at the end of the name list	verified	one	core/threads#context-binding	
 0x4373f0	5			os			Runs its object file code not read here	inferred	none		
 0x437400	11			os			Runs its object file code not read here	inferred	none		
 0x437410	179	DestroyNameObject		os			Clears a name object's thread tie and entries, then frees it	verified	one	core/threads#context-binding	

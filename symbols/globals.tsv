@@ -1916,9 +1916,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884e9c	uint32_t	s_guiFilterEnabled		os	Holds 0, the word that enables the message filter 0x42e3d0	verified	one	core/input#message-filter-and-idle-sleep
 0x884ecc	void *	s_threadLock		os	Holds the thread list's critical section, created on first use	verified	one	core/threads#engine-thread-records
 0x884ef0	uint32_t	s_threadRecordSlot		os	Holds the TLS slot of the thread records	verified	one	core/threads#engine-thread-records
-0x884ef8	void *	s_threadRecords		os	Holds the head of the registered thread record list	verified	one	core/threads#engine-thread-records
+0x884ef8	void *	s_threadRecords		os	Holds the list's last link (sentinel previous) of the registered thread records	verified	one	core/threads#engine-thread-records
 0x884f00	uint32_t	s_threadRecordCount		os	Holds the number of registered thread records	verified	one	core/threads#engine-thread-records
-0x884f0c	void *	s_nameObjects		os	Holds the head of the name object list	verified	one	core/threads#context-binding
+0x884f0c	void *	s_nameObjects		os	Holds the list's last link (sentinel previous) of the name objects	verified	one	core/threads#context-binding
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t			gx	Holds a dword that TextureCreate reads and writes; not read here	inferred	none	
 0xb05d68	float	s_randomInfinity		random	Holds +inf, set at startup; nothing reads it	verified	one	random#static-initializers

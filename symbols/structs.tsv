@@ -37,11 +37,11 @@ ClientLink	548	0x80a7dc	net	Holds the logon link: its connection, state, receive
 DictionaryRecord	8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
 EvtContext	532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
 EvtHandler	24		core	Holds a registered handler: its link, function, argument, priority and skip flag	verified	two	core/events#handler-records
-FriendList	1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
-FriendSlot	32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
 EvtKeyDown	12		core	Holds a held-key record: its list link and the key code	verified	one	core/events#held-keys-and-repeats
 EvtThread	56		core	Holds a scheduler slot: its list link, thread count, load, event and heap of contexts	verified	one	core/scheduler#slot-acquire-and-release
 EvtTimer	56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	one	core/events#timers
+FriendList	1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
+FriendSlot	32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
 ITEMCOOLDOWNHASHNODE	36		spell	Holds one item-cooldown hash node: key, slot link, node-list link and payload	verified	one	spell/cooldowns#item-cooldown-table
 LightningObject	80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
 LightningObject::Bolt	16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
@@ -83,7 +83,7 @@ SpellRec	692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-loo
 SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
 SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
 TRADESKILLLINE	40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
-WhoResult	160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
 TimeManager	2016		core	Holds the calibration state of the clock: scale, offset, thread, samples and rate estimates	verified	one	core/time#calibration-thread
+WhoResult	160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
 WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
 luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

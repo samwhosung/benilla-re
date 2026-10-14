@@ -82,17 +82,18 @@ comes before `0x41f5a0` (`0x403bd3`). The init's calls are `0x41f550` with `ecx`
 `0x437060(name)` registers the calling thread. Under the thread lock it counts the registration
 and allocates the TLS slot for the first; a record already in the slot is unlinked and freed. The
 new 0x189c-byte record holds the thread id at `+0x08`, a duplicate of the thread handle at `+0x0c`
-and the text `name [id]` at `+0x181c`, and goes in the TLS slot and at the head of the record list.
+and the text `name [id]` at `+0x181c`, and goes in the TLS slot and at the end of the record list.
 `0x4371e0` undoes it: it empties the slot, zeroes the bound object's `+0x08`, closes the handle,
-unlinks and frees the record, and frees the slot when the count reaches 0. The loop registers as
-`Engine <thread id in hex>` after the start gate opens and unregisters after its last iteration.
+unlinks and frees the record, and frees the slot when the count reaches 0.
 
 Addresses: `0x437060`, `0x4371e0`, `0x436d60`, `0x436d70`, `0x436d80`, `0x436db0`, `0x64bbd0`, `0x884ecc`, `0x884ef0`, `0x884ef8`, `0x884f00`
 Confidence: verified
 Proof: one
 Test: none
 
-The lock is the dword `0x884ecc`: while it is null, `0x437071` to `0x437082` spin on
+The loop registers as `Engine <thread id in hex>` after the start gate opens and unregisters after
+its last iteration. Client fault: when the record allocation at `0x437112` fails, `esi` is 0 and
+`0x437145` stores the thread id to `[esi+0x08]`, a write to the null page. The lock is the dword `0x884ecc`: while it is null, `0x437071` to `0x437082` spin on
 `InterlockedExchange` of a flag, create a critical section in static storage, store its address
 there and clear the flag. The count is bumped at `0x4370b8` to `0x4370c2`, with `TlsAlloc` (`0x436d60`) at
 `0x4370c9`. The allocation is `0x6462e0(0x189c, source file, line 0xe5, 8)`; the duplicate is
@@ -108,16 +109,16 @@ to it: under the thread lock it stores the record in the object's `+0x08` and th
 record's `+0x14`. `0x437560(object)` clears both. Both return at once for a null object, with no
 registration, or with no record for the thread. The loop passes `+0x20c` every iteration and at
 teardown. The constructor builds the object only when bit 0 of its third argument is set, named
-`Context: interactive = %u, idleTime = %u`; `WinMain` passes 0, so these calls do nothing.
-`0x437300` builds it (0x45a8 bytes, name at `+0x4528`, `+0x0c` set to -1, at the head of the list
-`0x884f0c`); `0x437410` frees it.
+`Context: interactive = %u, idleTime = %u`; the application init `0x402350` passes 0 (`0x402812`), so these calls do nothing.
+`0x437300` builds it; `0x437410` frees it.
 
 Addresses: `0x4374d0`, `0x437560`, `0x437300`, `0x437410`, `0x422090`, `0x884f0c`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x4374d9` to `0x4374f0` return for a zero count or object or a missing record; `0x437544` and
+`0x437300` builds the object at 0x45a8 bytes, name at `+0x4528`, `+0x0c` set to -1, at the end of the
+list `0x884f0c`. `0x4374d9` to `0x4374f0` return for a zero count or object or a missing record; `0x437544` and
 `0x437547` are the two stores. `0x437591` to `0x43759d` let the unbind proceed when either side is
 set, and `0x4375f4` to `0x4375fb` clear both. The constructor's test is `test bl,1` at `0x4220b6`
 and the format push at `0x4220c7`; `0x4220e6` calls `0x437300`. `0x437300` clears the first 8 bytes of

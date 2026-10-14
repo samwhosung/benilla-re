@@ -30,7 +30,8 @@ when it is the first or its thread count is below the pick's (`jae` at `0x4210c4
 counts), and the scan stops at a null entry (`0x4210ca`). `0x421100` calls `0x659a70` with both
 stack arguments 0: its manual-reset and initial-state flags. The heap fields are four zero dwords
 and 0x30 (`0x421109` to `0x421114`), and `0x421155` links the slot at the end of the list, before the sentinel.
-`0x4211ac` adds the thread. In `0x4211d0`, `dec [ebx+0x0c]` (`0x42120d`) gates the rest. The loop
+`0x4211ac` adds the thread. Client fault: when the allocation fails, `esi` stays 0 (`0x4210f4`
+jumps to `0x421124`), and the stores at `0x42116b` to `0x421177` write through it, to the null page. In `0x4211d0`, `dec [ebx+0x0c]` (`0x42120d`) gates the rest. The loop
 at `0x421254` takes the root out with `0x421f40(heap, 0)` until the count at `+0x28` is 0 and
 appends each context to a local array grown by `0x422e90`; `0x4212b6` to `0x4212d2` destroy and
 free the slot. The array is walked from its end (`0x4212f4`): lock, run state 0 to 1 (`0x42130d`),
@@ -38,7 +39,7 @@ the current context set as the loop does, then `0x420e60` (`0x42133d`).
 
 ## Polling mode
 
-`0x883f0c` is the polling flag, stored by `0x4219d0` from its second argument. `WinMain` passes 0
+`0x883f0c` is the polling flag, stored by `0x4219d0` from its second argument. the application init `0x402350` passes 0 (`0x4027f1`)
 and nothing else writes it. Set, the loop sleeps through `0x43f050` instead of on the slot's event,
 100 ms when no context is due, and takes the timeout result without waiting; `0x422030` sets only
 the shutdown event; and `0x421cb0` starts one helper thread per processor at `0x421f00` while it
@@ -85,16 +86,16 @@ at `0x421401` to `0x421408`.
 gives a context without a handle the next value of `0xcf76f8` (0 is skipped, and after a wrap any
 value still in the table), files it at the end of bucket `handle & 7`, sets its due time to the
 clock, inserts it in the slot's heap, sets the slot's event, and adds the cost `+0x50` to the
-slot's sum and 1 to its count. With no slot it destroys the context through its virtual destructor
-and returns 0. The bucket locks are `0xcf7700` and the lists `0xcf7760`; a lookup locks with mode 0,
-an insert with mode 1.
+slot's sum and 1 to its count With no slot it destroys the context through its virtual destructor
+and returns 0.
 
 Addresses: `0x4222a0`, `0x422c90`, `0x420830`, `0x658890`, `0x658b50`, `0xcf76e0`, `0xcf76f8`, `0xcf76fc`, `0xcf7700`, `0xcf7760`, `0x421840`
 Confidence: verified
 Proof: one
 Test: none
 
-The slot scan is `0x4222c4` to `0x4222f6`; `jae` at `0x4222ea` keeps the first of equal sums. The
+The slot's mean is recomputed as sum / count (`0x4224b0`). The bucket locks are `0xcf7700` and the
+lists `0xcf7760`; a lookup locks with mode 0, an insert with mode 1. The slot scan is `0x4222c4` to `0x4222f6`; `jae` at `0x4222ea` keeps the first of equal sums. The
 counter is incremented at `0x42231a` under the lock `0xcf76e0`; reaching 0 sets `0xcf76fc`
 (`0x422322`) and repeats, and once it is set `0x42232e` checks the bucket (mode 0 at `0x42234c`,
 the walk by `0x420830`, `+0x0c` compared at `0x422370`). The insert is mode 1 at `0x4223bc` and
@@ -169,7 +170,7 @@ Proof: one
 Test: none
 
 `0x422f80` zeroes a link. `0x422f90` stores the sentinel's previous pointer as its own address and
-its next as that address or 1; `0x422fa0` and `0x422fb0` are the same code. `0x4237a0` is the unlink: it writes `[next
+its next as that address with bit 0 set; `0x422fa0` and `0x422fb0` are the same code. `0x4237a0` is the unlink: it writes `[next
 link] = previous` and `[previous + 4] = next` (`0x4237c3`, `0x4237ca`), then zeroes the link. The
 next link is the masked pointer when bit 0 is set or the pointer is null (`0x4237b3`), else the
 pointer plus the distance from the previous link's element (`0x4237b8` to `0x4237c0`).
@@ -185,7 +186,7 @@ table bucket (`+0x04` the previous link, `+0x08` the next context), `+0x0c` the 
 walk compares, `+0x208` the thread property array, `+0x20c` the name object, and `+0x210` bit 1 of
 the constructor's third argument. The constructor stores 0 at `+0x28`, and nothing else in the
 event library touches that word of a context. The array comes from `0x41db30` (`core/threads`) and
-the name object from `0x437300` only when bit 0 of the third argument is set; `WinMain` passes 0,
+the name object from `0x437300` only when bit 0 of the third argument is set; the application init `0x402350` passes 0 (`0x402812`),
 so `+0x20c` and `+0x210` are 0.
 
 Addresses: `0x422090`, `0x41db30`, `0x437300`, `0x420e60`, `0x4221e9`, `0x422227`, `0x422230`, `0x422236`
@@ -207,7 +208,7 @@ The deleting destructor `0x423240` frees a context's parts and then, when bit 0 
 set, the context. In order: every handler record of the 29 lists (`0x423670` then free), the
 messages (`0x4236d0`), the held keys (`0x423740`), the timer records from index 1 (each with its
 heap node removed by `0x4233d0`), the property array (`0x41db70`), the name object (`0x437410`),
-the timer heap and arrays, the three list heads, the 29 handler list heads through `0x4044b0`, its
+the timer heap and arrays, the held-key and message list heads (`0x4235c0` on `+0x1c8`, then `0x423530` on `+0x1b8`), the 29 handler list heads through `0x4044b0`, its
 own heap node (removed from a heap if still in one), the lock, and the context table link
 (`0x4237a0`). The vtables it installs are in `Context vtables`.
 

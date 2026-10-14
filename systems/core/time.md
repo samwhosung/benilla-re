@@ -185,19 +185,21 @@ clock file ends at `0x42c180` or runs on through it.
 
 ## File name helpers
 
-The stretch from `0x42b530` to `0x42b6a0` holds a file of four font-file helpers, not part of
+The stretch from `0x42b530` to `0x42b6a0` holds a file of four file-name helpers, not part of
 `TimeManager.cpp`. `0x42b550` returns 1 for a string with a character of the set `\*/:><|&+^?"`.
 `0x42b580` returns 1 for a file name with none of them whose part before its last dot differs,
 ignoring case, from `nul`, `con`, `prn`, `aux`, `com1` to `com9` and `lpt1` to `lpt9`.
 `0x42b600(buffer, size)` writes the Windows directory, a backslash if missing, and `fonts\`.
-`0x42b650(buffer, size, base)` formats `base\Fonts`. Only `0x42b650` is called from outside the
-stretch, by the fonts set-up at `0x442b00`.
+`0x42b650` takes the file name in `ecx`, the buffer in `edx` and the size on the stack, and writes
+`Fonts\<file name>`. Only `0x42b650` is called from outside the
+stretch, by the fonts set-up at `0x442b00`, which passes `FRIZQT__.TTF` (`0x442b19`).
 
 Addresses: `0x42b550`, `0x42b580`, `0x42b600`, `0x42b650`, `0x42b530`, `0x42b540`, `0x42b670`, `0x42b680`, `0x42b690`, `0x42b6a0`, `0x442b00`, `0x64a3f0`, `0x64a420`, `0x64a4c0`
 Confidence: verified
 Proof: one
 Test: none
 
+`0x42b650` is `SStrPrintf(edx, [esp+4], "%s\%s", "Fonts", ecx)` (pushes at `0x42b656` to `0x42b663`).
 `0x42b550` loops `SStrChr2(set, char)` (`0x64a3f0`) over the string with the set at `ecx`
 (`0x42b560` to `0x42b565`). `0x42b580` calls it, finds the last dot with `0x64a420` (`0x42b5a0`),
 copies up to it with `SStrCopy` (`0x42b5c1`, at most 0x104 bytes) and compares with each of the 22

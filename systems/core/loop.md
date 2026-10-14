@@ -82,7 +82,7 @@ Test: none
 `WAIT_OBJECT_0` (`0x420c6f`, `0x420c76`). The sleep is `due − now` from `0x421430`'s context,
 0 when negative (`0x420c97`, `jns`), −1 (infinite) with no context, on the event `0x421560`
 returns (`0x420cc8`). Only a result of `0x102`, `WAIT_TIMEOUT`, runs the tick (`0x420cf8`). With
-`0x883f0c` set, the loop would pump through `0x43f050` and force `0x102`; `WinMain` passes 0.
+`0x883f0c` set, the loop would pump through `0x43f050` and force `0x102`; the application init `0x402350` passes 0.
 The run-state test at `0x420d7e` sends a state-1 context to `0x421370` and `0x420e60`.
 
 ## One tick
@@ -108,7 +108,7 @@ client gets 0x11 every tick. The current context is set by `0x41db50(+0x208)` an
 +0x0c)` (`0x420cd3` to `0x420ce3`), which `0x41db90(0)` reads back, and cleared by `0x41db50(0)` at
 `0x420dec`. The calls of `0x4374d0` (`0x420cee`) and `0x437560` (`0x420de5`) pass `+0x20c`, which is
 0 here: the constructor fills it only when bit 0 of its third argument is set (`0x4220b6`), and
-`WinMain` passes 0 (`0x402812`), so both return at once.
+the application init `0x402350` passes 0 (`0x402812`), so both return at once.
 
 ## Next due time
 
