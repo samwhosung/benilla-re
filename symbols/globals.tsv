@@ -2047,16 +2047,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb6effc	uint8_t			ui	Holds a byte its object file's code reads and writes; not read here	inferred	none	
 0xb6f038	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb6f064	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb6f098	uint32_t[1024]	s_petSpellBook		ui	Holds the spell id of each pet spellbook entry	verified	one	ui/tooltipspell#who-passes-what
+0xb6f098	uint32_t[1024]	s_petBookSpells		unassigned	Holds the pet's spell book, a spell id per slot	verified	one	ui/spellbook#spell-book-lists
 0xb700ac	uint32_t *	s_indexedSpells		ui	Points at the spells 0x5ec720 looks up by index	inferred	none	objectlayer/playercombat#skills
 0xb700b0	uint32_t	s_openLockSpellCapacity		ui	Holds the capacity of the array of learned spell ids whose first effect opens a lock	verified	one	objectlayer/playercombat#the-opener-list
 0xb700b4	uint32_t	s_openLockSpellCount		ui	Holds the count of learned opener spell ids	verified	one	objectlayer/playercombat#the-opener-list
 0xb700b8	uint32_t *	s_openLockSpells		ui	Points to the array of learned opener spell ids in the order the server taught them	verified	one	objectlayer/playercombat#the-opener-list
 0xb700e4	uint32_t[2]	s_interactSpells		ui	Holds the spells for interacting with other objects and with corpses and players	inferred	none	objectlayer/interaction#interacting-through-a-spell
 0xb700f0	uint32_t[1024]	s_spellBook		ui	Holds the spell id of each player spellbook entry	verified	one	ui/tooltipspell#who-passes-what
+0xb710fc	uint32_t *	s_knownSpellBits		unassigned	Points at the bitset of every known spell id	verified	one	ui/spellbook#spell-book-lists
 0xb71100	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0xb71174	uint32_t			ui	Holds a dword that Script::HasPetSpells reads and writes; not read here	inferred	none	
+0xb71160	void **	s_bookTabs		unassigned	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
+0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
+0xb71170	uint32_t	s_bookTabCount		unassigned	Holds the number of tabs in the book	verified	one	ui/spellbook#spell-book-lists
+0xb71174	uint32_t	s_petBookSpellCount		ui	Holds the number of spells in the pet's book	verified	one	ui/spellbook#spell-book-lists
 0xb711b8	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb711e4	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
 0xb711ec	uint32_t			ui	Holds a dword that CGTutorial::InitializeGame, CGTutorial::OnTutorialFlags read and write; not read here	inferred	none	
@@ -2104,7 +2108,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb73240	uint32_t			ui	Holds a dword that CGDuelInfo::OnDuelRequested, CGDuelInfo::OnDuelComplete read and write; not read here	inferred	none	
 0xb73294	uint8_t			ui	Holds a byte that HandleSetFactionAtWarPacket, HandleSetFactionVisiblePacket read and write; not read here	inferred	none	
 0xb73764	uint32_t			ui	Holds a dword that Script::GetNumFactions, Script::GetSelectedFaction read and write; not read here	inferred	none	
-0xb73a08	uint32_t			ui	Holds a dword that Script::IsTradeskillTrainer, Script::IsTalentTrainer read and write; not read here	inferred	none	
+0xb73a08	uint32_t	s_trainerType		ui	Holds the trainer type dword of the open trainer list; 2 marks a profession trainer	verified	one	ui/spellbook#trainer-icons
 0xb73a0c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb73a10	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb73a18	uint32_t			ui	Holds a dword that Script::GetNumTrainerServices reads and writes; not read here	inferred	none	

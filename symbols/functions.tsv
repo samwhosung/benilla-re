@@ -7919,25 +7919,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b21c0	288			ui	primitive		Runs its object file code that calls FreeUint32Array, ReallocUint32Array, 0x4088f0 and 4 more; not read here	inferred	none		
 0x4b22e0	188			ui	primitive		Runs its object file code that calls SMemFree, FreeUint32Array; not read here	inferred	none		
 0x4b23a0	333			ui	primitive		Runs its object file code that calls SMemFree, 0x4b4b90, 0x4088f0; not read here	inferred	none		
-0x4b24f0	130			ui	primitive		Runs its object file code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 2 more; not read here	inferred	none		
-0x4b2580	46			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4b25b0	1535			ui	primitive		Adds a spell to the spell book's display list; not read here	inferred	none	objectlayer/playercombat#learning-a-spell	
+0x4b24f0	130	GetSpellTabPosition		ui	primitive	uint32_t __fastcall (uint32_t spellId)	Returns the position of a spell's tab in the tab list, or the tab count when absent	verified	one	ui/spellbook#tabs	
+0x4b2580	46	CountBookSpellsBeforeTab		ui	primitive	uint32_t __fastcall (uint32_t tab)	Sums the spell counts of the tabs before a tab, 0 for tab 0 or a tab past the count	verified	one	ui/spellbook#tabs	
+0x4b25b0	1535	AddSpellToBook		ui	primitive	void __fastcall (uint32_t spellId, bool live, uint32_t oldId)	Marks a spell known, prints its learn line and enters it in its tab of the book	verified	one	ui/spellbook#adding-a-spell	
 0x4b2bb0	152			ui	primitive		Runs SpellBookFrame.cpp code not read here	inferred	none		
 0x4b2c50	760			ui	primitive		Removes a spell from the spell book's display list; not read here	inferred	none	objectlayer/playercombat#unlearning-a-spell	
 0x4b2f50	32	ReplaceSpellInBook		ui	orchestration		Calls 0x4b2c50(old, 1) and then 0x4b25b0(new, 1, old)	verified	one	objectlayer/playercombat#spell-book-messages	
 0x4b2f70	22			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
 0x4b2f90	50			ui	primitive		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b2fd0	100			ui	orchestration		Sorts the spell book's lists; not read here	inferred	none	objectlayer/quests#quest-giver-status-refresh	
-0x4b3040	121			ui	orchestration		Runs SpellBookFrame.cpp code that calls SStrCmp; not read here	inferred	none		
-0x4b30c0	228			ui	primitive		Runs SpellBookFrame.cpp code that calls 0x4b24f0, SStrCmp, 0x4b3c30; not read here	inferred	none		
+0x4b2fd0	100	SortSpellBook		ui	orchestration	void __fastcall (bool sortBook, bool sortPet)	Sorts the tab list and book, or the pet book, then signals SPELLS_CHANGED	verified	one	ui/spellbook#book-order	
+0x4b3040	121	CompareBookTabs		ui	primitive	int __cdecl (void **a, void **b)	Orders two tab nodes: General first, then by SkillLine name	verified	one	ui/spellbook#book-order	
+0x4b30c0	228	CompareBookSpells		ui	primitive	int __cdecl (uint32_t *a, uint32_t *b)	Orders two book spells by tab position, name, numeric rank and rank string	verified	one	ui/spellbook#book-order	
 0x4b31b0	15	FireCooldownEvents		ui	orchestration	void __cdecl (void)	Signals ACTIONBAR_UPDATE_COOLDOWN, then SPELL_UPDATE_COOLDOWN	verified	one	spell/records#global-cooldown-start	
 0x4b31c0	144	FireUsableEvents		ui	orchestration		Refreshes the action and spell usable state, signalling ACTIONBAR_UPDATE_USABLE on a change, then SPELL_UPDATE_USABLE	verified	one	spell/cooldowns#cooldown-events-fired	
 0x4b3250	15			ui	orchestration		Calls a game UI function, then fires CURRENT_SPELL_CAST_CHANGED	verified	one	spell/cast#the-in-flight-spell	
-0x4b3260	123			ui	orchestration		Runs SpellBookFrame.cpp code that calls GetCursorSpell, 0x495190, 0x4bd160 and 2 more; not read here	inferred	none		
+0x4b3260	123	PickupBookSpell		ui	orchestration	void __fastcall (uint32_t index, bool pet)	Puts a book spell on the cursor, or drops a held copy of it back	inferred	none	ui/spellbook#casting-a-book-spell	
 0x4b32e0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
 0x4b32f0	10			ui	orchestration		Runs SpellBookFrame.cpp code not read here	inferred	none		
-0x4b3300	764			ui	primitive		Runs SpellBookFrame.cpp code that calls GetCursorSpell, 0x4b3260, 0x495190 and 10 more; not read here	inferred	none		
-0x4b3600	235			ui	primitive		Runs SpellBookFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr and 1 more; not read here	inferred	none		
+0x4b3300	764	CastBookSpell		ui	primitive	void __fastcall (uint32_t index, bool pet, uint64_t target)	Casts a book spell, toggles it off, stops targeting for it or swaps the held spell	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b3600	235	IsBookSpellCurrent		ui	primitive	bool __fastcall (uint32_t index, bool pet)	Answers whether a book spell's trade skill or form is the current one	verified	one	ui/spellbook#checked-spells	
 0x4b36f0	373			ui	primitive		Runs SpellBookFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4b3870	164	IsCastableAura		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether the spell is in the known-spell set or the pet list and avoids five aura effects	verified	one	ui/tooltipbuff#auras-of-other-units	
 0x4b3920	40	IsInSpellList		ui	primitive	uint32_t __fastcall (uint32_t spell)	Returns whether a spell id is in a counted array of spell ids	verified	one	ui/tooltipbuff#auras-of-other-units	
@@ -7949,23 +7949,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4b3ba0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4b3bc0	46			ui	orchestration		Runs its object file code that calls 0x4b3950; not read here	inferred	none		
 0x4b3bf0	60			ui	unreached		Runs its object file code that calls 0x4b3a10; not read here	inferred	none		
-0x4b3c30	119			ui	primitive		Runs its object file code that calls SStrLen, 0x6c9c30; not read here	inferred	none		
-0x4b3cb0	44	Script::GetNumSpellTabs	idb	ui	orchestration		Implements the Lua function GetNumSpellTabs	inferred	none		
-0x4b3ce0	353	Script::GetSpellTabInfo	idb	ui	primitive		Implements the Lua function GetSpellTabInfo	inferred	none		
-0x4b3e50	109	Script::GetSpellTexture	idb	ui	orchestration		Implements the Lua function GetSpellTexture	inferred	none		
-0x4b3ec0	144			ui	primitive		Runs its object file code that calls 0x6f34d0, lua_isstring, 0x6f3620 and 3 more; not read here	inferred	none		
-0x4b3f50	134			ui	orchestration		Runs its object file code that calls 0x4e6990; not read here	inferred	none		
-0x4b3fe0	191	Script::GetSpellName	idb	ui	orchestration		Implements the Lua function GetSpellName	inferred	none		
-0x4b40a0	214	Script::GetSpellCooldown	idb	ui	primitive		Implements the Lua function GetSpellCooldown	inferred	none		
-0x4b4180	191	Script::GetSpellAutocast	idb	ui	primitive		Implements the Lua function GetSpellAutocast	inferred	none		
-0x4b4240	93	Script::ToggleSpellAutocast	idb	ui	orchestration		Implements the Lua function ToggleSpellAutocast	inferred	none		
-0x4b42a0	71	Script::PickupSpell	idb	ui	orchestration		Implements the Lua function PickupSpell	inferred	none		
-0x4b42f0	116	Script::CastSpell	idb	ui	orchestration		Implements the Lua function CastSpell	inferred	none		
-0x4b4370	107	Script::IsCurrentCast	idb	ui	orchestration		Implements the Lua function IsCurrentCast	inferred	none		
-0x4b43e0	12	Script::UpdateSpells	idb	ui	orchestration		Implements the Lua function UpdateSpells	inferred	none		
-0x4b43f0	18	Script::PlayerHasSpells	idb	ui	orchestration		Implements the Lua function PlayerHasSpells	inferred	none		
-0x4b4410	194	Script::HasPetSpells	idb	ui	orchestration		Implements the Lua function HasPetSpells	inferred	none		
-0x4b44e0	162	Script::IsSpellPassive	idb	ui	orchestration		Implements the Lua function IsSpellPassive	inferred	none		
+0x4b3c30	119	ParseSpellRank		ui	primitive	uint32_t __fastcall (const void *spellRec)	Returns the first run of digits of a spell's rank string, else its spell level	verified	one	ui/spellbook#book-order	
+0x4b3cb0	44	Script::GetNumSpellTabs	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the number of spell book tabs	verified	one	ui/spellbook#tabs	
+0x4b3ce0	353	Script::GetSpellTabInfo	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a tab's name, icon path, offset and spell count	verified	one	ui/spellbook#tab-info	
+0x4b3e50	109	Script::GetSpellTexture	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the icon path of a book slot's spell, or nil	verified	one	ui/spellbook#book-icons	
+0x4b3ec0	144	ReadBookSlotArgs		ui	primitive	bool __fastcall (lua_State *L, uint32_t *index, uint32_t *pet)	Reads a 1-based slot and a book type from Lua; fails outside 0 to 1023	verified	one	ui/spellbook#spell-book-lists	
+0x4b3f50	134	GetBookSpellIconPath		ui	orchestration	const char * __fastcall (uint32_t index, uint32_t pet)	Returns the icon path of a book slot's spell, the attack or ranged helper's for those spells	verified	one	ui/spellbook#book-icons	
+0x4b3fe0	191	Script::GetSpellName	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns the name and rank strings of a book slot's spell	verified	one	ui/spellbook#getspellname	
+0x4b40a0	214	Script::GetSpellCooldown	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns a book spell's cooldown start and duration in seconds and its enable flag	verified	one	ui/spellbook#book-spell-functions	
+0x4b4180	191	Script::GetSpellAutocast	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet autocast allowed and enabled flags of a book spell, as 1 or nil	verified	one	ui/spellbook#book-spell-functions	
+0x4b4240	93	Script::ToggleSpellAutocast	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Toggles the autocast of a pet-book spell	verified	one	ui/spellbook#book-spell-functions	
+0x4b42a0	71	Script::PickupSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Picks up a book spell onto the cursor	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b42f0	116	Script::CastSpell	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Casts a book spell, on the player when the self flag is set	inferred	none	ui/spellbook#casting-a-book-spell	
+0x4b4370	107	Script::IsCurrentCast	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a book spell is the current trade skill or form, else nil	verified	one	ui/spellbook#checked-spells	
+0x4b43e0	12	Script::UpdateSpells	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Signals SPELLS_CHANGED without sorting	verified	one	ui/spellbook#book-order	
+0x4b43f0	18	Script::PlayerHasSpells	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1	verified	one	ui/spellbook#book-spell-functions	
+0x4b4410	194	Script::HasPetSpells	idb	ui	primitive	uint32_t __fastcall (lua_State *L)	Returns the pet spell count and the class's pet token, or nil, nil	verified	one	ui/spellbook#book-spell-functions	
+0x4b44e0	162	Script::IsSpellPassive	idb	ui	orchestration	uint32_t __fastcall (lua_State *L)	Returns 1 when a book spell is passive, else nil	verified	one	ui/spellbook#book-spell-functions	
 0x4b4590	44	Script::GetNumShapeshiftForms	idb	ui	orchestration		Implements the Lua function GetNumShapeshiftForms	inferred	none		
 0x4b45c0	577	Script::GetShapeshiftFormInfo	idb	ui	primitive		Returns a form-bar entry's icon, name, active and castable values to Lua	inferred	none	spell/checks#usability-callers-and-events	
 0x4b4810	400	Script::CastShapeshiftForm	idb	ui	primitive		Implements the Lua function CastShapeshiftForm	inferred	none		
@@ -9707,7 +9707,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d85c0	409			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
 0x4d8760	240			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
 0x4d8850	340			ui	primitive		Runs ClassTrainerFrame.cpp code that calls SStrCmp; not read here	inferred	none		
-0x4d89b0	20	GetTrainerServiceRow		ui	primitive	void * __fastcall (uint32_t index)	Returns the trainer service row of an index, or 0 past the count	verified	one	ui/tooltipbuff#trainer-services	
+0x4d89b0	20	GetTrainerService		ui	orchestration	void * __fastcall (uint32_t index)	Returns the trainer service record at an index, or null past the count	verified	one	ui/spellbook#trainer-icons	
 0x4d89d0	148			ui	orchestration		Runs ClassTrainerFrame.cpp code that calls 0x4d89b0, CDataStore::PutUInt32 and 2 more; not read here	inferred	none		
 0x4d8a70	35			ui	primitive		Runs ClassTrainerFrame.cpp code that calls 0x4d89d0; not read here	inferred	none		
 0x4d8aa0	169			ui	primitive		Runs ClassTrainerFrame.cpp code that calls FrameScript_GetText; not read here	inferred	none		
@@ -9728,7 +9728,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4d8f10	42	Script::GetTrainerSelectionIndex	idb	ui	primitive		Implements the Lua function GetTrainerSelectionIndex	inferred	none		
 0x4d8f40	16	Script::GetTrainerGreetingText	idb	ui	orchestration		Implements the Lua function GetTrainerGreetingText	inferred	none		
 0x4d8f50	481	Script::GetTrainerServiceIcon	idb	ui	primitive		Implements the Lua function GetTrainerServiceIcon	inferred	none		
-0x4d9140	19			ui	orchestration		Runs ClassTrainerFrame.cpp code that calls 0x4d7d40; not read here	inferred	none		
+0x4d9140	19	OnTrainerItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Refreshes the trainer list when an item template arrives	verified	one	ui/spellbook#trainer-icons	
 0x4d9160	399	Script::GetTrainerServiceSkillLine	idb	ui	primitive		Implements the Lua function GetTrainerServiceSkillLine	inferred	none		
 0x4d92f0	170	Script::GetTrainerServiceCost	idb	ui	primitive		Implements the Lua function GetTrainerServiceCost	inferred	none		
 0x4d93a0	111	Script::GetTrainerServiceLevelReq	idb	ui	primitive		Implements the Lua function GetTrainerServiceLevelReq	inferred	none		
@@ -11451,7 +11451,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4fd9f0	42	Script::GetTradeSkillSelectionIndex	idb	ui	primitive		Implements the Lua function GetTradeSkillSelectionIndex	inferred	none		
 0x4fda20	190	Script::GetTradeSkillCooldown	idb	ui	primitive		Implements the Lua function GetTradeSkillCooldown	inferred	none		
 0x4fdae0	330	Script::GetTradeSkillIcon	idb	ui	primitive		Implements the Lua function GetTradeSkillIcon	inferred	none		
-0x4fdc30	21			ui	orchestration		Runs its object file code that calls 0x4fca20; not read here	inferred	none		
+0x4fdc30	21	OnTradeSkillItemRecord		ui	orchestration	uint32_t __stdcall (void *record, bool ready)	Rebuilds the trade skill window's list when an item template arrives	verified	one	ui/spellbook#recipe-icons	
 0x4fdc50	234	Script::GetTradeSkillNumMade	idb	ui	primitive		Implements the Lua function GetTradeSkillNumMade	inferred	none		
 0x4fdd40	383	Script::GetTradeSkillLine	idb	ui	primitive		Implements the Lua function GetTradeSkillLine	inferred	none		
 0x4fdec0	5310	Script::GetTradeSkillItemStats	idb	ui	primitive		Implements the Lua function GetTradeSkillItemStats	inferred	none		
