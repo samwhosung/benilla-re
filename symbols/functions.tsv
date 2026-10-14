@@ -22638,14 +22638,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x638ff0	41	RegenerateFontStrings	idb	console			Runs ConsoleClient.cpp code that calls GenerateNodeString; not read here	inferred	none		
 0x639020	145	GenerateNodeString	idb	console			Runs ConsoleClient.cpp code that calls TextBlockGetFontPtr, GxuFontDestroyString, GxuFontCreateString; not read here	inferred	none		
 0x6390c0	53	ConsoleCommand::CharSpacing	idb	console			Runs ConsoleClient.cpp code that calls SStrToFloat, RegenerateFontStrings; not read here	inferred	none		
-0x639100	307	ConsoleCommand_DefaultSettings	idb	console			Runs ConsoleClient.cpp code that calls NTempest::CImVector::Set, SStrCopy, HandleClose and 3 more; not read here	inferred	none		
+0x639100	307	ConsoleCommand_DefaultSettings	idb	console			Runs ConsoleClient.cpp code that calls NTempest::CImVector::Set, SStrCopy, HandleClose and 3 more; not read here	inferred	none		console::font_metrics_reset_difftest
 0x639240	13			console			Runs ConsoleClient.cpp code not read here	inferred	none		
 0x639250	170			console			Runs ConsoleClient.cpp code that calls SStrLen, __alloca_probe, SStrCopy and 2 more; not read here	inferred	none		
 0x639300	161	ConsoleCommand_CurrentSettings	idb	console			Runs ConsoleClient.cpp code that calls SStrPrintf, ConsoleWrite; not read here	inferred	none		
 0x6393b0	490			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 3 more; not read here	inferred	none		
 0x6395a0	22			console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x6395c0	150	ConsoleCommandConsoleLines		console			Implements the console command consolelines: the console's height in lines	inferred	none		
-0x639660	150	ConsoleCommand_FontSize	idb	console			Runs ConsoleClient.cpp code that calls SStrToFloat, HandleClose, NDCToDDCHeight and 2 more; not read here	inferred	none		
+0x6395c0	150	ConsoleCommandConsoleLines		console			Implements the console command consolelines: the console's height in lines	inferred	none		console::line_spacing_set_difftest
+0x639660	150	ConsoleCommand_FontSize	idb	console			Runs ConsoleClient.cpp code that calls SStrToFloat, HandleClose, NDCToDDCHeight and 2 more; not read here	inferred	none		console::font_size_set_difftest
 0x639700	196	ConsoleCommand_Font	idb	console			Runs ConsoleClient.cpp code that calls SStrPack, NDCToDDCHeight, TextBlockGenerateFont and 3 more; not read here	inferred	none		
 0x6397d0	192			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 1 more; not read here	inferred	none		
 0x639890	192			console			Runs ConsoleClient.cpp code that calls _sscanf, ConsoleWrite, ConsoleCommandWriteHelp and 1 more; not read here	inferred	none		
@@ -22663,7 +22663,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63a220	1			console			Runs ConsoleClient.cpp code not read here	inferred	none		
 0x63a230	1260			console			Runs ConsoleClient.cpp code that calls 0x58b5e0, CVar::Register, 0x641260 and 29 more; not read here	inferred	none		
 0x63a720	725			console			Runs ConsoleClient.cpp code that calls CVar::Register, SStrPrintf; not read here	inferred	none		
-0x63aa00	936			console			Runs ConsoleClient.cpp code that calls _sscanf, 0x5899c0, 0x496d70 and 5 more; not read here	inferred	none		
+0x63aa00	936			console			Runs ConsoleClient.cpp code that calls _sscanf, 0x5899c0, 0x496d70 and 5 more; not read here	inferred	none		console::resolution_validate_difftest
 0x63adb0	139			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
 0x63ae40	139			console			Runs ConsoleClient.cpp code that calls 0x64ac60, ConsoleWrite; not read here	inferred	none		
 0x63aed0	263			console			Runs ConsoleClient.cpp code that calls 0x64ac60, SStrPrintf, ConsoleWrite; not read here	inferred	none		
@@ -22682,24 +22682,24 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x63b380	74			console			Runs ConsoleClient.cpp code not read here	inferred	none		
 0x63b3d0	99			console			Runs ConsoleClient.cpp code not read here	inferred	none		
 0x63b440	26			console			Runs ConsoleClient.cpp code that calls 0x589ba0; not read here	inferred	none		
-0x63b460	352	ConsoleScreenInitialize	idb	console			Initializes the console screen and installs the confirm-close callback 0x63c9a0	inferred	none	core/input#close-and-quit	
+0x63b460	352	ConsoleScreenInitialize	idb	console			Initializes the console screen and installs the confirm-close callback 0x63c9a0	inferred	none	core/input#close-and-quit	console::console_scale_init_difftest
 0x63b5c0	41			console			Runs ConsoleClient.cpp code that calls 0x63b5f0, 0x63b710; not read here	inferred	none		
 0x63b5f0	287			console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 4 more; not read here	inferred	none		
 0x63b710	230			console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x58a2a0 and 3 more; not read here	inferred	none		
-0x63b800	390	PaintText	idb	console			Runs ConsoleClient.cpp code that calls GetInputLine, 0x5c1f00, 0x5c2770 and 5 more; not read here	inferred	none		
-0x63b990	270	DrawCaret	idb	console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 4 more; not read here	inferred	none		
+0x63b800	390	PaintText	idb	console			Runs ConsoleClient.cpp code that calls GetInputLine, 0x5c1f00, 0x5c2770 and 5 more; not read here	inferred	none		console::paint_text_layout_difftest
+0x63b990	270	DrawCaret	idb	console			Runs ConsoleClient.cpp code that calls 0x589f40, GxRsSet, 0x589e30 and 4 more; not read here	inferred	none		console::draw_caret_difftest
 0x63baa0	296	GetInputLine	idb	console			Runs ConsoleClient.cpp code that calls SMemAlloc, SStrCopy, 0x638d10 and 2 more; not read here	inferred	none		
 0x63bbd0	187	EnforceMaxLines	idb	console			Runs ConsoleClient.cpp code that calls SMemFree, GxuFontDestroyString, 0x63cfb0 and 1 more; not read here	inferred	none		
 0x63bc90	177			console			Runs ConsoleClient.cpp code that calls EventRegisterEx; not read here	inferred	none		
-0x63bd50	317			console			Runs ConsoleClient.cpp code that calls ConsoleCommandExecute, ScrnLayerSetRect; not read here	inferred	none		
+0x63bd50	317			console			Runs ConsoleClient.cpp code that calls ConsoleCommandExecute, ScrnLayerSetRect; not read here	inferred	none		console::slide_animate_difftest
 0x63be90	79	OnChar	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, PasteInInputLine, ResetHighlight; not read here	inferred	none		
 0x63bee0	397	PasteInInputLine	idb	console			Runs ConsoleClient.cpp code that calls SStrLen, GetInputLine, ReserveInputSpace and 6 more; not read here	inferred	none		
 0x63c070	51	ResetHighlight	idb	console			Runs ConsoleClient.cpp code not read here	inferred	none		
-0x63c0b0	368	OnMouseDown	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, ResetHighlight, GetLineAtMousePosition and 3 more; not read here	inferred	none		
-0x63c220	99	GetLineAtMousePosition	idb	console			Runs ConsoleClient.cpp code that calls __ftol; not read here	inferred	none		
+0x63c0b0	368	OnMouseDown	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, ResetHighlight, GetLineAtMousePosition and 3 more; not read here	inferred	none		console::mouse_down_drag_difftest
+0x63c220	99	GetLineAtMousePosition	idb	console			Runs ConsoleClient.cpp code that calls __ftol; not read here	inferred	none		console::line_at_mouse_difftest
 0x63c290	299	UpdateHighlight	idb	console			Runs ConsoleClient.cpp code that calls TextBlockGetFontPtr, SStrLen, GxuFontGetMaxCharsWithinWidth; not read here	inferred	none		
 0x63c3c0	50	OnMouseUp	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown; not read here	inferred	none		
-0x63c400	128	OnMouseMove	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, UpdateHighlight; not read here	inferred	none		
+0x63c400	128	OnMouseMove	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, UpdateHighlight; not read here	inferred	none		console::mouse_move_drag_difftest
 0x63c480	788	OnKeyDown	idb	console			Runs ConsoleClient.cpp code that calls ResetHighlight, EventIsKeyDown, GetInputLine and 17 more; not read here	inferred	none		
 0x63c7c0	149	MoveLinePtr	idb	console			Runs ConsoleClient.cpp code not read here	inferred	none		
 0x63c860	213	OnKeyDownRepeat	idb	console			Runs ConsoleClient.cpp code that calls EventIsKeyDown, GetInputLine, MoveLinePtr and 7 more; not read here	inferred	none		

@@ -115,6 +115,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-console"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+]
+
+[[package]]
 name = "benilla-re-core"
 version = "0.1.0"
 dependencies = [
