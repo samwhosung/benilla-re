@@ -34,13 +34,14 @@ holds a map-scale value. The squared length of `+0xfc`'s translation, stored in 
 Addresses: `0x71439b`, `0x7143e2`, `0x714943`, `0x714953`, `0x7151ba`, `0x7151c4`, `0x7143a0`, `0x70dd7f`, `0x707772`, `0x7077e0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x714389` to `0x71439b` pass the parent matrix and `+0xbc` to the product; a root's parent matrix is `+0x9c` of its scene (`0x714037`
 `add eax,0x9c`, `0x7077f7 push edi`). The constructor writes the identity into `+0xbc` (`0x70dd7f`, `0x70dd85`, `0x70dd8b`). A bone with
 no parent reads `&+0xfc` (`0x714943`), any other `palette + parent·0x40` (`0x714953`); the keyless leg copies the parent matrix (`0x7151c4`).
 The scene walk skips every instance with a parent (`0x707772` `mov eax,[esi+0x1cc]; test; jne`), so children are reached only
 through the parent's attached-children step.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Identity device transforms
 

@@ -22,7 +22,7 @@ from `lo` for `d < 500`, and bisects otherwise.
 Addresses: `0x713d50`, `0x713d5c`, `0x713d75`, `0x713d7b`, `0x713d96`, `0x713db5`, `0x713dc2`, `0x713dc9`, `0x713dd3`, `0x713de1`, `0x713de8`, `0x713df1`, `0x713dff`, `0x713e06`, `0x713e21`, `0x713e43`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_search_difftest`, `animation::m2_track_sample_byte_difftest`, `animation::m2_track_sample_float_difftest`, `animation::m2_track_sample_quat_difftest`
 
 All compares are unsigned. The hint `k` is read without a bound check, and the forward and backward scans
 do not clamp it to the window. On the forward leg a hint below `lo` scans forward from there and one at or above `hi` is
@@ -32,6 +32,11 @@ before the time (`0x713dcb`, `0x713dd3`: equal times advance); the backward scan
 reading `ts[lo]` (`0x713dec`). The bisection takes `mid = (lo + hi) >> 1`; `t < ts[mid]` sets `hi = mid − 1`;
 otherwise `lo = mid + 1` and `t < ts[mid+1]` ends it at `mid`. A window that collapses ends at the last
 `lo` (`0x713e43`), and `hi = mid − 1` wraps when `mid` is 0.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_search_difftest` runs
+`0x713d50` whole. `animation::m2_track_sample_byte_difftest` runs `0x71ae90` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_float_difftest` runs `0x71af20` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_quat_difftest` runs `0x713ea0` whole, which searches with
+`0x713d50` and blends with `0x74d11a`.
 
 ## Key fraction
 
@@ -44,12 +49,17 @@ and `fstp dword` rounds once more to a float. Two equal stamps divide by zero, w
 Addresses: `0x713e45`, `0x713e48`, `0x713e4e`, `0x713e51`, `0x713e56`, `0x713e64`, `0x713e6e`, `0x713e79`, `0x713e7c`, `0x713e87`, `0x713e90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_search_difftest`, `animation::m2_track_sample_byte_difftest`, `animation::m2_track_sample_float_difftest`, `animation::m2_track_sample_quat_difftest`
 
 `0x713e4e cmp edx,edi; jae 0x713e87` stores `{k, k, 0}` at `0x713e8b` to `0x713e90`. `0x713e64 sub esi,eax` and
 the zero stored at `ebp-4` (`0x713e6b`) make the numerator a qword read by `fild qword`; the denominator
 is `fidiv dword` of `ecx − eax` at `0x713e79`. A numerator at or above 2^31 therefore divides as a large
 positive value.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_search_difftest` runs
+`0x713d50` whole. `animation::m2_track_sample_byte_difftest` runs `0x71ae90` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_float_difftest` runs `0x71af20` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_quat_difftest` runs `0x713ea0` whole, which searches with
+`0x713d50` and blends with `0x74d11a`.
 
 ## Sampling block
 
@@ -63,7 +73,7 @@ fetched and stored, and the first is kept.
 Addresses: `0x7159c6`, `0x715a39`, `0x715a3f`, `0x715a4a`, `0x715a50`, `0x715a74`, `0x715abf`, `0x715ad0`, `0x715ea3`, `0x715eb0`, `0x715eb4`, `0x715ef6`, `0x716454`, `0x71648f`, `0x7164f2`, `0x71ae90`, `0x71aec6`, `0x71af20`, `0x71af7b`, `0x71afca`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_sample_byte_difftest`, `animation::m2_track_sample_float_difftest`
 
 The bone state is the bone's own for a bone track, bone 0's for colour, transparency, texture frame, texture
 transform and camera tracks, and the state of the bone the record names for light, ribbon, particle and attachment tracks.
@@ -72,6 +82,9 @@ The weight test is `fld 0.0; fcomp [state+0x10c]; test ah,0x44; jnp skip`: `0x44
 value `@ +0xc`, the second `{k, k+1, fraction} @ +0x10` for 4-byte and smaller values (`+0x18` for
 vectors) and the second value after it (`+0x1c`, `+0x24`). Texture frames fetch a word at `k` even
 when the interpolation word is not 0 (`0x715ea8`).
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_sample_byte_difftest` runs
+`0x71ae90` whole, which searches with `0x713d50`. `animation::m2_track_sample_float_difftest` runs
+`0x71af20` whole, which searches with `0x713d50`.
 
 ## Value codecs
 
@@ -84,13 +97,14 @@ A byte or a word is the value at `k`. The step form of a vector or scalar copies
 Addresses: `0x7159d1`, `0x7159f4`, `0x715a02`, `0x715b2f`, `0x715b4e`, `0x715b51`, `0x715ced`, `0x715d0a`, `0x715d3c`, `0x715d61`, `0x71aff0`, `0x71b010`, `0x717f26`, `0x717f34`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The interpolation word is read as `cmp word [track],0`: 0 selects the step form and any other value the linear form
 at every vector, scalar and fixed-point site outside the camera loop. Bone tracks (rotation, scale, translation), the colour, light,
 ribbon, particle and texture transform tracks have no other test, so a bone track with the word 2 or 3
 still interpolates linearly. `0x71aff0(this, i)` returns `[this+4] + 2i`, and `0x71b010` copies one
 word; the fixed-point sites call them for both keys.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Vector Hermite
 
@@ -103,7 +117,7 @@ With `v0`, `out0` from the key at `k` and `v1`, `in1` from `k+1`, the Hermite re
 Addresses: `0x716b4c`, `0x716b51`, `0x716b86`, `0x716b9e`, `0x716bbb`, `0x716bc7`, `0x716bd2`, `0x716bdb`, `0x716bfb`, `0x716c1d`, `0x716cf1`, `0x716d1d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The dispatch is `movzx edx,word [esi]; dec; je 0x716cf1` (linear), `dec; je 0x716c41` (Bézier), `dec; jne
 0x716d1d`. Hermite spills `A` at `ebp-4` and `B` at `ebp-0xc`; `h00` goes to `ebp+0x14` and `h10`, computed
@@ -111,6 +125,7 @@ from the 53-bit `t³`, `t²` and `t`, to `ebp+0x10`; `h01` and `h11` stay on the
 `0x716bdb` to `0x716bfb`, y from `0x716bfe`, z from `0x716c1d`. Linear at `0x716cf1` is `a + (b − a) · t` on
 the values. Six blocks share this shape: two vector tracks and the scalar roll, each with a second block for the
 blend search.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Vector Bézier
 
@@ -123,12 +138,13 @@ two at 53 bits.
 Addresses: `0x716c41`, `0x716c4c`, `0x716c57`, `0x716c70`, `0x716c7c`, `0x716c8e`, `0x716c96`, `0x716cb0`, `0x716cb3`, `0x716cd2`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x716c4c` stores `C` at `ebp+0x10`, `0x716c57` stores `D` at `ebp-0xc`, `0x716c70` narrows `B0` to
 `ebp+0x14`, and `0x716c7c` stores `E` at `ebp-4`. `0x716c81` multiplies `t²` by 6.0 and `0x716c87 fsubr` takes
 `E` minus it; `0x716c8a` adds `3t` and `0x716c90` forms `B2` from the spills. The x accumulate is
 `0x716c96` to `0x716cb0`: `B0·v0`, `B3·v1`, `B1·out0`, `B2·in1`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Scalar cubics
 
@@ -141,11 +157,12 @@ with `B1 = (3t³ − 6t²) + 3t`, `B2 = f32(3t²) − 3t³`, `B0 = ((f32(3t²) �
 Addresses: `0x7173cc`, `0x7173d9`, `0x7173ec`, `0x717408`, `0x717419`, `0x717445`, `0x71745d`, `0x717466`, `0x71748c`, `0x7174bf`, `0x7174c6`, `0x7174d9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The step form copies the float at `k·12` (`0x7173d9`). The Hermite block `0x717419` to `0x71745d` never stores
 an intermediate. The Bézier block spills only `f32(3t²)` at `ebp+0x10` (`0x71748c`). The second sample for the
 blend uses the same code with the state's `+0x10` triple (`0x71751e` onward) and `value2` at `+0x1c`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Rotation sample
 
@@ -159,12 +176,14 @@ quaternion blend `0x74d114(value, value, temporary, weight)`.
 Addresses: `0x713ea0`, `0x713ec2`, `0x713ecc`, `0x713ed2`, `0x713ef7`, `0x713f0c`, `0x713f3f`, `0x713f41`, `0x713f58`, `0x713f5b`, `0x713f7d`, `0x713f9c`, `0x713fa1`, `0x713fd7`, `0x713fe3`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_sample_quat_difftest`
 
 The keys are 16 bytes (`shl eax,4`), the track values at `[track+0x18]`. `0x713ecc cmp word [edi],0` and
 `jne 0x713ef7` separate the copy at `0x713ed2` from the lerp. The blend leg's gate is `0x713f47 fcomp
 [ebx+0x10c]; test ah,0x44; jnp` and `0x713f5b cmp word [ecx+2],0xffff`. The call pushes the weight,
 the temporary's address, the value address twice (`0x713fd7` to `0x713fe3`).
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_sample_quat_difftest` runs
+`0x713ea0` whole, which searches with `0x713d50` and blends with `0x74d11a`.
 
 ## Quaternion blend
 
@@ -177,7 +196,7 @@ component, the sum at 53 bits.
 Addresses: `0x74d114`, `0x74d11a`, `0x74d123`, `0x74d147`, `0x74d152`, `0x74d15b`, `0x74d165`, `0x74d170`, `0x74d17d`, `0x74d190`, `0x74d192`, `0x74d199`, `0x74d1a3`, `0x74d1b2`, `0x74d1b7`, `0x74d1bc`, `0x74d1f6`, `0x876588`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_sample_quat_difftest`, `animation::sample_quat_slerp_difftest`
 
 The slot `0x876588` holds this body unless a 3DNow set replaces it (`models/animation#dispatched-matrix-math`). The dot
 sums in the order given (`0x74d12b` to `0x74d145`). `fcom 0.0; test ah,1; jne` picks `s = −1.0` (`0xbf800000`).
@@ -185,6 +204,9 @@ sums in the order given (`0x74d12b` to `0x74d145`). `fcom 0.0; test ah,1; jne` p
 f32(c))` and the spills of `θ` (`0x74d192`) and `inv` (`0x74d199`) are floats. `fsin` runs at 53 bits on `θ·(1 − t)`
 with `1 − t` the 53-bit register of `0x74d123`. `fsin` and `fpatan` give the full-precision value the instruction
 approximates, which differs by processor.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_sample_quat_difftest` runs
+`0x713ea0` whole, which searches with `0x713d50` and blends with `0x74d11a`.
+`animation::sample_quat_slerp_difftest` runs `0x74d11a` whole.
 
 ## No pose filter
 
@@ -197,9 +219,10 @@ smoothstep weight are the only mixing, and they mix two clocks of the same pass.
 Addresses: `0x713d50`, `0x713db5`, `0x714d26`, `0x714e02`, `0x714fc0`, `0x714f6a`, `0x714d3f`, `0x71491b`, `0x714923`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The rotation block `0x714d26 cmp eax,[ebx+0x8c]; jbe 0x714d3f` skips the sample but still builds the matrix from
 the stored quaternion at `+0x3c`; the scale (`0x714e02`, `0x714f6a`) and translation (`0x714fc0`) blocks do the
 same with `+0x74` and `+0xc`. `0x713db5 mov ebx,[eax]` reads `out[0]` before anything else in the search reads `out`.
 The weight is 0 at `0x714923` once the fade has ended, so no sample leaves a trace after that.
+`animation::m2_animate_difftest` runs `0x714260` whole.

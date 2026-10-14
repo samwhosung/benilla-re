@@ -24,7 +24,7 @@ sequence.
 Addresses: `0x711bf0`, `0x711c22`, `0x711c35`, `0x711c71`, `0xc0e070`, `0xc0e074`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_bone_classify_difftest`
 
 The playable table is header `+0x30`, counted at `+0x2c`; the lookup is `+0x28`, counted at
 `+0x24`. The animation rows come from `0xc0e070` with the highest id at `0xc0e074`; a row's flags
@@ -32,6 +32,7 @@ are `+0x14` and its fallback `+0x18`. Two counters start at 1 and 0; flag 0x10 a
 the second and negates the first, flag 0x20 adds it and zeroes it. The result flag is 0 for a
 positive first counter, 1 for a negative one, else 3 when the second is positive and 2 otherwise.
 A visited array of 0xd0 dwords stops loops. The default is chosen first: `0x711c22` reads entry 0 of the lookup and `0x711c35` entry `0x93` without comparing the index with the count at `+0x24`, which the walk's own test does check (`0x711c71`), so a lookup shorter than 0x94 entries is read past its end.
+`animation::m2_bone_classify_difftest` runs `0x711bf0` whole.
 
 ## Playing an animation
 
@@ -77,13 +78,14 @@ stamp. A paused instance moves both stamps forward by the pause.
 Addresses: `0x714260`, `0x714585`, `0x7145a1`, `0x7145e9`, `0x71462a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The stamps are bone `+0xa8` and `+0xac`, the speed `+0xb0`, the offset `+0xb8`; the products are
 `fild` of the 32-bit difference times the float speed, truncated by `__ftol`, and the modulo is
 unsigned. The result goes to `+0x98` with the sequence at `+0x9c`. A bone without a sequence copies
 its parent's slot, or bone 0's; the blend slot `+0xc4` works the same and ends when the fade end
 passes.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Blend weight
 
@@ -96,11 +98,12 @@ either slot inherits its parent's weight.
 Addresses: `0x714260`, `0x714880`, `0x714909`, `0x71491b`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 At `0x7148b3`: `fild rem; fmul +0x104; fst w`; compare with 0.0 and 1.0; `fld w; fadd st,st;
 fsubr 3.0; fmul w; fmul w; fmul +0x108; fstp +0x10c`. The rate `+0x104` and scale `+0x108` are
 written by `0x7121a0`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Key lookup
 
@@ -115,7 +118,7 @@ range's last key the pair runs into the next range's first key.
 Addresses: `0x713d50`, `0x713dff`, `0x713e4e`, `0x713ea0`, `0x71af20`, `0x71ae90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_track_search_difftest`, `animation::m2_track_sample_byte_difftest`, `animation::m2_track_sample_float_difftest`, `animation::m2_track_sample_quat_difftest`
 
 A range with `lo ≥ hi` returns `{lo, lo, 0}`. The global time is instance `+0x64[gs]`. The windows
 compare `t − times[k]` unsigned with 500 and 0xfffffe0c. The binary search halves with `(lo +
@@ -123,6 +126,11 @@ hi) >> 1` and stops when `t < times[m+1]`. The step from the first key is `0x713
 `0x713e4e` compares `k + 1` with the track's time count, not the range's end. `0x713ea0`
 interpolates each quaternion component as `(v1 − v0)·s + v0`; its blend toward the blend slot's
 sample goes through `0x74d114` (`Dispatched matrix math`). `0x71af20` lerps floats both ways.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_track_search_difftest` runs
+`0x713d50` whole. `animation::m2_track_sample_byte_difftest` runs `0x71ae90` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_float_difftest` runs `0x71af20` whole, which searches with
+`0x713d50`. `animation::m2_track_sample_quat_difftest` runs `0x713ea0` whole, which searches with
+`0x713d50` and blends with `0x74d11a`.
 
 ## Bone transform
 
@@ -137,7 +145,7 @@ a float for x and y but not for z, and multiplies by its parent.
 Addresses: `0x714260`, `0x714961`, `0x714a96`, `0x714ab9`, `0x714caf`, `0x7151b0`, `0x74b6b5`, `0x74a7c0`
 Confidence: verified
 Proof: one
-Test: `models::m2_decal_projection_difftest`
+Test: `animation::m2_animate_difftest`, `models::m2_decal_projection_difftest`
 
 The flags are bone record `+0x4` or'd with the runtime flags `+0xf4`. Flag 4's factor is `fdivrp`
 (`de f1`) at `0x714ab9`, `|parent row|²` over `|world row|²`, then `fsqrt`; the 1e-5 test is
@@ -149,6 +157,7 @@ their results are not transcribed. Scale samples `+0x44` and scales the rows; tr
 track is sampled only when it has more keys than the first-update gate `+0x8c` allows.
 
 Of `0x74a7c0`, `m2_decal_projection_difftest` runs `0x74a7c0`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Dispatched matrix math
 
@@ -186,6 +195,26 @@ under an exception scope: its body runs from `0x74fa8a` through `0x74fac2`, `0x7
 `0x74fad4` and `0x74fadb` through `0x74fb2a`, and its scope-table handler `0x74fac4` through
 `0x74facf` returns to `0x74fad6`.
 
+## Original matrix product
+
+`0x74a7c6(out, b, c)` multiplies two row-major 4×4 matrices as `out = b · c`. It is the product's entry
+in the table that `0x74fb49` copies over the slots, and the call to `0x750930` that follows the copy
+stores `0x7507bb` in the slot `0x876504`, so after the first call the slot never holds it, and no call,
+jump or other store names it.
+
+Addresses: `0x74a7c6`, `0x74fb49`, `0x74fba5`, `0x750930`, `0x75094d`, `0x7507bb`, `0x876504`, `0x876620`, `0x74a7c0`
+Confidence: inferred
+Proof: none
+Test: `animation::m2_matmul4x4_difftest`
+
+`0x74fb9b` to `0x74fba3` copy 74 dwords from `0x876620`, and `0x74fba5 call 0x750930` follows;
+`0x75094d` stores `0x7507bb` at `[eax+0xc]`. The dword at `0x876620 + 0xc` is `0x74a7c6`. A scan of the
+image for that dword finds this one occurrence (the control, `0x74b6bb`, also occurs once, in the table),
+and the listing has no `call` or `jmp` to `0x74a7c6`, against 37 to the thunk `0x74a7c0`. The body is not
+read instruction by instruction: `animation::m2_matmul4x4_difftest` runs it whole and finds each output
+element equal to a four-term sum from `k = 3` down to 0 at 53 bits, narrowed once, and an output that
+aliases an input equal to the disjoint one.
+
 ## Billboards
 
 A bone with flag 8, 0x10, 0x20 or 0x40 replaces its rotation with one facing the view: 8 replaces
@@ -213,10 +242,11 @@ attachments take the time of the bone their record names. The families are `anim
 Addresses: `0x714260`, `0x811610`, `0xcf043c`, `0x71aff0`, `0x71b010`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The 16-bit scale is the float at `0x811610`. The centre is the static at `0xcf043c`, built once
 under a guard bit. The sampling block of every track is `animation/tracks#sampling-block`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Instance colours
 
@@ -230,12 +260,13 @@ parent's and adds its emissive to the parent's.
 Addresses: `0x714260`, `0x7142cc`, `0x714309`, `0x71433b`, `0x71434c`, `0x714160`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x7142cc` is `fld A.x; fmul +0x184`, then `+0x188 · A.y` and `+0x18c · A.z`, stored at `+0x1a0`;
 `0x714309` adds `B` to `+0x190` to `+0x198` into `+0x1ac`; `0x71433b` multiplies the alpha argument
 by `+0x180` into `+0x19c` (`0x71434c`). `0x714000` passes the parent's three fields (`0x714160`).
 The scene passes the identities (`Animate pass`).
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Global sequence time
 
@@ -246,11 +277,12 @@ sequence sample at that time (`Key lookup`).
 Addresses: `0x714352`, `0x714370`, `0x714375`, `0x70eae1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x70eae1` stores scene `+0xc` at instance `+0x68` when it is initialized on a scene. `0x714360`
 walks header `+0x14` lengths at `+0x18`: `clock − +0x68` (`0x714370`), `div` by the length
 (`0x714375`), the remainder stored at `+0x64[i]`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Texture transforms
 
@@ -265,7 +297,7 @@ time.
 Addresses: `0x715f45`, `0x715fdb`, `0x716005`, `0x716010`, `0x716048`, `0x716052`, `0x7161e0`, `0x716216`, `0x716384`, `0xcf043c`, `0x7bdc40`, `0x7bdca0`, `0x7bddb0`, `0x7bc6a0`
 Confidence: verified
 Proof: one
-Test: `cmath::quat_mul4`
+Test: `animation::m2_animate_difftest`, `cmath::quat_mul4`
 
 The centre is built once under bit 1 of `0xcf04c4` (`0x715f45`). The gates are the time counts of
 the tracks at transform `+0x1c`, `+0x38` and `+0x0` (`0x715fdb`, `0x716052`, `0x716216`). `0x7bdc40`
@@ -276,6 +308,7 @@ and blend toward the blend slot when bone 0's weight is nonzero and the track ha
 sequence. The state is `+0xb0[i]` (0x98 bytes), the matrix `+0xb4[i]`.
 
 `cmath::quat_mul4` runs `0x7bddb0` whole.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Ensure animated
 
@@ -286,10 +319,12 @@ attachment offset, as its own parent matrix, and the parent's colours and alpha.
 Addresses: `0x714000`, `0x714260`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_bone_propagate_difftest`
 
 The test is `+0x40 != scene+0x10`. The offset moves the translation by `((m20·z + m10·y) +
 m00·x) + m30` per column. Without a resolved attachment the parent's world matrix is used.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_bone_propagate_difftest` runs
+`0x714000` whole, with `0x714260` stubbed.
 
 ## Update and events
 

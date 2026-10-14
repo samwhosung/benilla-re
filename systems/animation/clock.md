@@ -54,13 +54,14 @@ with base `lo`. Set with `hi − now ≤ 0` it is the clamp leg. The time goes t
 Addresses: `0x714530`, `0x714555`, `0x714577`, `0x714585`, `0x71458c`, `0x71458e`, `0x714597`, `0x7145a1`, `0x7145e5`, `0x7145e9`, `0x7145eb`, `0x7145f1`, `0x714633`, `0x714639`, `0x714642`, `0x714648`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `start` and `end` are `r+0x4` and `r+0x8`. The flag test `0x714585` takes `je 0x7145f1` for a clear bit,
 and `0x7145f1` is the loop leg, so a clear flag loops. A set flag takes the clamp leg only when
 `0x714597 sub; test; jg` finds `hi ≤ now`. When `lo > now` the leg sets `ecx = lo` at `0x7145eb`, so
 the loop numerator is 0. The tests at `0x714597`/`0x7145a1`, `0x7145e5`/`0x7145e9` are signed, on
 differences that wrap. The three stores at `0x714639`, `0x714642` and `0x714648` end every non-inherit path.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Loop and clamp legs
 
@@ -73,13 +74,14 @@ the float speed with no narrowing, then `__ftol`, which truncates toward zero.
 Addresses: `0x7145ab`, `0x7145ae`, `0x7145b4`, `0x7145b9`, `0x7145bf`, `0x7145d7`, `0x7145f7`, `0x7145f9`, `0x71460a`, `0x71460d`, `0x714613`, `0x714623`, `0x71462a`, `0x71462c`, `0x714631`, `0x40a2b0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The loop leg's divisor is `end − start` (`0x714626 sub ecx,edx` with `edx = start`) and the remainder is
 rebased on `start` (`0x71462c`), not on the cursors. `0x714628 xor edx,edx; 0x71462a div ecx` is
 unsigned, so a negative `s` divides as a large unsigned value. The degenerate case `0x7145f7 cmp edx,eax;
 0x7145ff jle 0x714631` stores `start`. The clamp leg's tests are `0x7145bf jns` (for `s ≥ 0`) and
 `0x7145d7 cmp eax,edx; 0x7145d9 jle`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Blend clock
 
@@ -92,12 +94,13 @@ reaches its end, before the weight is chosen.
 Addresses: `0x7146b2`, `0x7146b8`, `0x7146c1`, `0x7146cb`, `0x7146d7`, `0x7146e6`, `0x7146f2`, `0x714711`, `0x714714`, `0x71471f`, `0x714790`, `0x714792`, `0x714799`, `0x71479f`, `0x7147a5`, `0x7147b1`, `0x7147b7`, `0x7147b9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The blend leg mirrors the primary leg instruction for instruction (`0x7146f4` to `0x714797`) on the
 blend fields. `0x7147b1 sub ecx,[esi+0x100]` leaves the sign for `js 0x714820`; only a non-negative
 difference reaches `0x7147b9`. The pause slide has added to `+0xd4` and `+0xd8` before the record is read
 (`kernel#pause-slide`).
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Inherited clocks
 
@@ -111,12 +114,13 @@ time, and one stored after hands them the previous pass's.
 Addresses: `0x71455b`, `0x714650`, `0x714654`, `0x714657`, `0x714661`, `0x71468c`, `0x71468e`, `0x7146bb`, `0x7147c5`, `0x7147cc`, `0x7147cf`, `0x7147df`, `0x7147fe`, `0x714800`, `0x714808`, `0x714814`, `0x71481a`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The primary leg compares the parent word with `[ebp+0x14]`, the bone count. The blend leg reloads the
 count from header `+0x34` (`0x7147cc`), since the primary leg stores its record pointer in that slot. The primary leg's bone
 0 case is `0x71468c jbe 0x7146b2`, which writes nothing. The blend leg's is `0x7147fe jbe 0x714808`,
 which copies the primary time and slot into the blend fields.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Weight selection
 
@@ -129,7 +133,7 @@ the smoothstep of `models/animation#blend-weight` on `x = f32(float(rem) · [+0x
 Addresses: `0x714820`, `0x714826`, `0x71482b`, `0x714834`, `0x71483b`, `0x71484c`, `0x71485e`, `0x714863`, `0x714880`, `0x714883`, `0x714891`, `0x714897`, `0x7148a3`, `0x7148b1`, `0x7148b3`, `0x7148bc`, `0x7148bf`, `0x7148e3`, `0x714904`, `0x71491b`, `0x714923`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x714880` runs when either record is set. `rem` is `fild dword` then `fmul [+0x104]` then `fst dword`: the
 product is narrowed once and every later test reads the narrowed value (`0x7148bc`). `x < 0` takes
@@ -137,3 +141,4 @@ product is narrowed once and every later test reads the narrowed value (`0x7148b
 (`(3 − 2x)·x·x·scale`, multiplied in that order); `x > 1` takes `0x7148f0` (1 times the scale). The
 equal-clock test is `0x714897`/`0x7148a5`: `+0x98 = +0xc4` and `+0x9c = +0xc8`. The weight is also 0
 for a bone whose blend slot was just cleared, since `rem ≤ 0` holds.
+`animation::m2_animate_difftest` runs `0x714260` whole.

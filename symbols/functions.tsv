@@ -3779,7 +3779,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x454980	20	Vector2LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y of a 2D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	spline::vec2_len2_diff
 0x4549a0	26	SetVector3		spline	orchestration	float * __thiscall (float *this, float x, float y, float z)	Stores three floats	verified	one	camera#unprojection	gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::aabsp_segment_clip_difftest, models::aabsp_segment_split_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::cmapobj_seg_hit_difftest, models::emit_shape_plane_difftest, models::emit_shape_sphere_difftest, models::emit_shape_spline_difftest, models::mliq_ray_normalize_difftest, models::portal_seg_normalize_difftest, models::ribbon_frame_build_difftest, models::ribbon_segment_emit_difftest, models::wmo_bounding_sphere_difftest
 0x4549c0	38	DivideVector3		spline		float * __thiscall (float *this, float divisor)	Multiplies a 3D vector by the reciprocal of a divisor	verified	one	models/lights#dominant-light	models::camera_facing_basis_difftest, spline::vec_div_scalar_diff
-0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::billboard_tangent_frame_difftest, models::bspdispatch_normalize_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::emit_shape_plane_difftest, models::emit_shape_spline_difftest, models::prologue_length_difftest, models::render_normalize_difftest, models::ribbon_frame_build_difftest, models::seg_normalize_difftest, models::shadow_normalize_axes_difftest, spline::vec3_len2_diff
+0x4549f0	31	Vector3LengthSquared		spline		float __thiscall (const float *v)	Returns x·x + y·y + z·z of a 3D vector	verified	one	collision/walking#horizontal-push-out-from-a-wall	animation::m2_animate_difftest, gx::lightning_segment_subdivide_difftest, gx::lightningrender_strip_difftest, models::billboard_tangent_frame_difftest, models::bspdispatch_normalize_difftest, models::burst_velocity_difftest, models::camera_facing_basis_difftest, models::emit_shape_plane_difftest, models::emit_shape_spline_difftest, models::prologue_length_difftest, models::render_normalize_difftest, models::ribbon_frame_build_difftest, models::seg_normalize_difftest, models::shadow_normalize_axes_difftest, spline::vec3_len2_diff
 0x454a10	117			unassigned			Runs its object file code not read here	inferred	none		spline::isqrt_diff
 0x454a90	5			fastmath			Runs its object file code not read here	inferred	none		
 0x454aa0	11			fastmath			Runs its object file code not read here	inferred	none		
@@ -30405,7 +30405,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x711bb0	25	CM2Model::SetDoneCallback		models	orchestration		Stores an instance's animation-done callback and its two arguments	verified	one	animation/hosts#doodad-model	
 0x711bd0	5	InitM2ModelInfinityThunk		models	orchestration		Jumps to 0x711be0; a static initializer	verified	one	models/overview#shared-header-constants	
 0x711be0	11	InitM2ModelInfinity		models	orchestration		Copies +inf into the object file's infinity global	verified	one	models/overview#shared-header-constants	
-0x711bf0	289	CM2Model::ResolveAnimationId		models	primitive		Maps an animation id to one the model has, following the fallback chain, with reverse and hold flags	verified	one	models/animation#animation-id-resolution	
+0x711bf0	289	CM2Model::ResolveAnimationId		models	primitive		Maps an animation id to one the model has, following the fallback chain, with reverse and hold flags	verified	one	models/animation#animation-id-resolution	animation::m2_bone_classify_difftest
 0x711d20	68	CM2Model::HasKeyBone		models	orchestration		Returns whether an instance's model has a key bone id	inferred	none		
 0x711d70	92	CM2Model::GetKeyBonePivot		models	unreached		Copies a key bone's pivot; nothing reaches it	verified	one	models/overview#unreached-code	
 0x711dd0	133	CM2Model::GetKeyBonePosition		models	unreached		Returns a key bone's pivot transformed by its bone and the scene; nothing reaches it	verified	one	models/overview#unreached-code	
@@ -30459,14 +30459,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7137c0	1203	CM2Model::GatherCollisionFacets		models	primitive		Transforms the model's collision vertices and emits the triangles that touch a box as facets	inferred	none	models/model#collision-facets	models::shadow_normalize_axes_difftest, models::shadow_transform_normal_difftest
 0x713c80	43	CM2Model::GetHitTestMode		models	unreached		Returns an instance's hit-test mode and its two arguments; nothing reaches it	verified	one	models/model#hit-test-mode	
 0x713cb0	146	CM2Model::SetHitTestMode		models	orchestration		Links an instance into or out of its scene's hit-test list with a mode and two arguments	verified	one	models/model#hit-test-mode	
-0x713d50	334	CM2Model::FindKey		models	primitive		Finds the key pair around a time in a track's range and the fraction between them	verified	one	models/animation#key-lookup	
-0x713ea0	337	M2SampleRotation		models	primitive		Samples a rotation track at a bone's times, blending toward the blend slot's rotation	verified	one	models/animation#key-lookup	
-0x714000	521	CM2Model::EnsureAnimated		models	primitive		Animates an instance this frame if it has not been, through its parent when attached	verified	one	models/animation#ensure-animated	
+0x713d50	334	CM2Model::FindKey		models	primitive		Finds the key pair around a time in a track's range and the fraction between them	verified	one	models/animation#key-lookup	animation::m2_animate_difftest, animation::m2_track_sample_byte_difftest, animation::m2_track_sample_float_difftest, animation::m2_track_sample_quat_difftest, animation::m2_track_search_difftest
+0x713ea0	337	M2SampleRotation		models	primitive		Samples a rotation track at a bone's times, blending toward the blend slot's rotation	verified	one	models/animation#key-lookup	animation::m2_animate_difftest, animation::m2_track_sample_quat_difftest
+0x714000	521	CM2Model::EnsureAnimated		models	primitive		Animates an instance this frame if it has not been, through its parent when attached	verified	one	models/animation#ensure-animated	animation::m2_bone_propagate_difftest
 0x714210	5	InitM2ModelTwoPiThunk		models	orchestration		Jumps to 0x714220; a static initializer	verified	one	models/overview#shared-header-constants	
 0x714220	15	InitM2ModelTwoPi		models	primitive		Stores π + π as a float in the object file's 2π global	verified	one	models/overview#shared-header-constants	
 0x714230	5	InitM2ModelInvTwoPiThunk		models	orchestration		Jumps to 0x714240; a static initializer	verified	one	models/overview#shared-header-constants	
 0x714240	19	InitM2ModelInvTwoPi		models	primitive		Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	models/overview#shared-header-constants	
-0x714260	17703	CM2Model::Animate		models	primitive		Computes an instance's bone matrices and animated colours, textures, lights, emitters and children	verified	one	models/animation#sequence-time	
+0x714260	17703	CM2Model::Animate		models	primitive		Computes an instance's bone matrices and animated colours, textures, lights, emitters and children	verified	one	models/animation#sequence-time	animation::m2_animate_difftest
 0x7187e0	1	M2TextureCenterAtexit		models	orchestration		Returns; the exit hook of the texture transform centre constant	inferred	none		
 0x7187f0	116	CM2Model::TransformEmitters		models	orchestration	void __thiscall (CM2Model *this, const float *matrix)	Transforms every particle and ribbon vertex of an instance by a matrix	verified	one	models/model#reference-frame	
 0x718870	150	CM2Model::SetReferenceFrame		models	orchestration	void __thiscall (CM2Model *this, const float *frame)	Sets or clears a loaded instance's reference frame, moving its emitters into or out of it, then its children's	verified	one	models/model#reference-frame	
@@ -30491,11 +30491,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71ada0	57	M2TextureArrayQuantum		models	primitive		Returns the growth quantum of a texture handle array for a count	inferred	none		
 0x71ade0	31	M2TextureArrayRoundUp		models	primitive		Rounds a count up to a multiple of a quantum	inferred	none		
 0x71ae00	133	M2TextureArrayRealloc		models	host		Reallocates a texture handle array to an exact capacity	inferred	none		
-0x71ae90	131	M2SampleByteTrack		models	orchestration		Samples a byte track at a time, stepping without interpolation	verified	one	models/animation#key-lookup	
-0x71af20	199	M2SampleFloatTrack		models	primitive		Samples a float track at a bone's times, blending toward the blend slot's value	verified	one	models/animation#key-lookup	
-0x71aff0	16	M2TrackValueAddress		models	orchestration		Returns the address of a 16-bit value in a track's value array	verified	one	animation/tracks#value-codecs	
+0x71ae90	131	M2SampleByteTrack		models	orchestration		Samples a byte track at a time, stepping without interpolation	verified	one	models/animation#key-lookup	animation::m2_animate_difftest, animation::m2_track_sample_byte_difftest
+0x71af20	199	M2SampleFloatTrack		models	primitive		Samples a float track at a bone's times, blending toward the blend slot's value	verified	one	models/animation#key-lookup	animation::m2_animate_difftest, animation::m2_track_sample_float_difftest
+0x71aff0	16	M2TrackValueAddress		models	orchestration		Returns the address of a 16-bit value in a track's value array	verified	one	animation/tracks#value-codecs	animation::m2_animate_difftest
 0x71b000	13	M2TextureStateInitialize		models	primitive		Sets the low five flag bits of a texture state and clears its count	inferred	none		
-0x71b010	18	M2CopyWord		models	orchestration		Copies a 16-bit value	verified	one	animation/tracks#value-codecs	
+0x71b010	18	M2CopyWord		models	orchestration		Copies a 16-bit value	verified	one	animation/tracks#value-codecs	animation::m2_animate_difftest
 0x71b030	5	InitM2ModelTenSquaredThunk		models	orchestration		Jumps to 0x71b040; a static initializer	verified	one	models/overview#shared-header-constants	
 0x71b040	19	InitM2ModelTenSquared		models	primitive		Stores 10.0 · 10.0 as a float in an object-file global	verified	one	models/overview#shared-header-constants	
 0x71b060	5	InitM2ModelHalfTenthThunk		models	orchestration		Jumps to 0x71b070; a static initializer	verified	one	models/overview#shared-header-constants	
@@ -32048,8 +32048,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74a758	49			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a789	36			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x74a7ad	19	MultiplyMatrixFirstCall		d3dx			Selects the math routines, then jumps through the matrix product slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-frame	models::m2_decal_projection_difftest
-0x74a7c6	568			d3dx			Runs its object file code not read here	inferred	none		
+0x74a7c0	6	MultiplyMatrixDispatch		d3dx			Jumps through a pointer to the matrix product routine	verified	one	animation/kernel#world-matrix-and-frame	animation::m2_animate_difftest, models::m2_decal_projection_difftest
+0x74a7c6	568	MultiplyMatrixOriginal		d3dx			Multiplies two row-major 4x4 matrices; the original entry of the product slot, which the first call replaces	inferred	none	models/animation#original-matrix-product	animation::m2_animate_difftest, animation::m2_matmul4x4_difftest
 0x74a9fe	34			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa20	42			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74aa4a	19			d3dx			Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
@@ -32088,8 +32088,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74b59b	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74b5a1	257			d3dx			Runs its object file code that calls 0x7497eb; not read here	inferred	none		
 0x74b6a2	19	MatrixFromQuaternionFirstCall		d3dx			Selects the math routines, then jumps through the quaternion matrix slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74b6b5	6	MatrixFromQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion-to-matrix routine	verified	one	animation/pose#rotation-leg	
-0x74b6bb	228	MatrixFromQuaternionDefault		d3dx			Builds a rotation matrix from a quaternion; the default routine	verified	one	animation/pose#rotation-leg	
+0x74b6b5	6	MatrixFromQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion-to-matrix routine	verified	one	animation/pose#rotation-leg	animation::m2_animate_difftest
+0x74b6bb	228	MatrixFromQuaternionDefault		d3dx			Builds a rotation matrix from a quaternion; the default routine	verified	one	animation/pose#rotation-leg	animation::m2_animate_difftest, animation::m2_quat_to_mat4_difftest
 0x74b79f	91			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74b7fa	48			d3dx	unreached		Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
 0x74b82a	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
@@ -32155,8 +32155,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x74d04e	6			d3dx			Runs its object file code not read here	inferred	none		
 0x74d054	154			d3dx			Runs its object file code that calls 0x74924c; not read here	inferred	none		
 0x74d0ee	38	BlendQuaternionFirstCall		d3dx			Selects the math routines, then calls the quaternion blend slot	inferred	none	models/animation#dispatched-matrix-math	
-0x74d114	6	BlendQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion blend routine	verified	one	animation/tracks#quaternion-blend	
-0x74d11a	229	BlendQuaternionDefault		d3dx			Blends two quaternions by a weight; the default routine	verified	one	animation/tracks#quaternion-blend	
+0x74d114	6	BlendQuaternionDispatch		d3dx			Jumps through a pointer to the quaternion blend routine	verified	one	animation/tracks#quaternion-blend	animation::m2_animate_difftest, animation::m2_track_sample_quat_difftest
+0x74d11a	229	BlendQuaternionDefault		d3dx			Blends two quaternions by a weight; the default routine	verified	one	animation/tracks#quaternion-blend	animation::m2_animate_difftest, animation::m2_track_sample_quat_difftest, animation::sample_quat_slerp_difftest
 0x74d1ff	44			d3dx	unreached		Runs its object file code that calls SelectMathRoutines; not read here	inferred	none		
 0x74d22b	6			d3dx	unreached		Runs its object file code not read here	inferred	none		
 0x74d231	89			d3dx			Runs its object file code that calls BlendQuaternionDispatch; not read here	inferred	none		
@@ -35708,8 +35708,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bc430	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc500	206			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bc5d0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	cmath::multiply_matrix4_difftest, gx::lightningrender_strip_difftest
-0x7bc8c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
+0x7bc6a0	542	MultiplyMatrix4		cmath	primitive	float * __fastcall (float *out, const float *a, const float *b)	Writes the row-major product a·b of two 4×4 matrices to out and returns out	verified	one	models/animation#texture-transforms	animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, cmath::multiply_matrix4_difftest, gx::lightningrender_strip_difftest
+0x7bc8c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, cmath::dot_leaf_difftest, gx::lightningrender_strip_difftest
 0x7bc8e0	204			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::mat4_mul_scalar
 0x7bc9b0	204			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7bca80	93	TransformPoint		cmath	primitive	float * __fastcall (float *out, const float *v, const float *m)	Writes v times the upper 3×3 of a row-major 4×4 matrix plus its fourth row to out	verified	one	collision/falling#frame-transform	terrain::liquid_hit_flush_difftest, terrain::horizon_insert, gx::lightningrender_strip_difftest, models::m2_light_coord_finalize_difftest, models::particle_quad_expand_difftest, models::particle_quad_expand_rotated_difftest, models::particle_quad_expand_stretched_difftest, models::particle_quad_expand_tiled_difftest, models::particle_quad_expand_tiled_rotated_difftest, cmath::transform_point4
@@ -35732,16 +35732,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bd820	347	InvertAffineMatrix		cmath	primitive		Writes the inverse of a 4×4 matrix, through a fast path when its second argument is within 2^-20 of 1	inferred	none	collision/kinematics#transport-space-transforms	cmath::mat4_affine_invert_uscale
 0x7bd980	372			cmath	unreached		Runs its object file code that calls 0x5f8d20, 0x7be6d0, ScaleMatrixRows and 1 more; not read here	inferred	none		
 0x7bdb00	311			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::axis_angle_mat4_difftest
-0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	cmath::translate_matrix_difftest
-0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	terrain::liquid_tex_matrix_difftest, cmath::mat34_scale3_rows
+0x7bdc40	90	TranslateMatrix		cmath	primitive	void __thiscall (float *matrix, const float *t)	Adds t[0]·row0 + t[1]·row1 + t[2]·row2 to row 3	verified	one	camera#orthographic-setup	animation::m2_animate_difftest, cmath::translate_matrix_difftest
+0x7bdca0	82	ScaleMatrixRows		cmath	primitive	void __thiscall (float *matrix, const float *s)	Multiplies the matrix's first three rows by s[0], s[1], s[2]	verified	one	camera#orthographic-setup	animation::m2_animate_difftest, terrain::liquid_tex_matrix_difftest, cmath::mat34_scale3_rows
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	cmath::mat34_scale3
 0x7bdd60	75	RotateMatrix		cmath	primitive	void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
-0x7bddb0	333	RotateMatrixByQuaternion		cmath	primitive	void __thiscall (float *m, const float *q)	Multiplies a matrix on the left by the rotation matrix of a quaternion (x, y, z, w)	verified	one	models/animation#texture-transforms	cmath::quat_mul4
+0x7bddb0	333	RotateMatrixByQuaternion		cmath	primitive	void __thiscall (float *m, const float *q)	Multiplies a matrix on the left by the rotation matrix of a quaternion (x, y, z, w)	verified	one	models/animation#texture-transforms	animation::m2_animate_difftest, cmath::quat_mul4
 0x7bdf00	5			cmath	orchestration		Jumps to 0x7bdf10, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bdf10	15			cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c0c	verified	one	cmath/geometry#static-constants	
 0x7bdf20	5			cmath	orchestration		Jumps to 0x7bdf30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7bdf30	19			cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c0c, at 0xcf5c08	verified	one	cmath/geometry#static-constants	
-0x7bdf50	104			cmath	orchestration		Runs its object file code not read here	inferred	none		gx::lightningrender_strip_difftest
+0x7bdf50	104			cmath	orchestration		Runs its object file code not read here	inferred	none		animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, gx::lightningrender_strip_difftest
 0x7bdfc0	247			cmath	primitive		Runs its object file code not read here	inferred	none		cmath::multiply_matrix3_difftest
 0x7be0c0	5			cmath	orchestration		Jumps to 0x7be0d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
 0x7be0d0	11			cmath	orchestration		Stores +infinity at 0xcf5c10, the first constant of its file	verified	one	cmath/geometry#static-constants	

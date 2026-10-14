@@ -24,11 +24,13 @@ function at one, and the model particles of `UpdateAfterAnimate` at one.
 Addresses: `0x714260`, `0x714271`, `0x714280`, `0x718775`, `0x71877c`, `0x718780`, `0x707662`, `0x7077b6`, `0x707824`, `0x714069`, `0x714158`, `0x71417e`, `0x71875c`, `0x7191b2`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`, `animation::m2_bone_propagate_difftest`
 
 Both gates jump to `0x718780`, which pops only `ebx`, since `esi` and `edi` are pushed after them
 (`0x714291`). The normal exit `0x718775` loads the scene `+0x10` and stores it at `0x71877c`. A call
 census of `e8` targets gives eight sites, listed above; no section stores the address.
+`animation::m2_animate_difftest` runs `0x714260` whole. `animation::m2_bone_propagate_difftest` runs
+`0x714000` whole, with `0x714260` stubbed.
 
 ## Parent-driven state
 
@@ -42,12 +44,13 @@ rounded to a float once.
 Addresses: `0x714260`, `0x71429c`, `0x7142a1`, `0x7142a5`, `0x7142b8`, `0x7142bb`, `0x7142c1`, `0x7143a0`, `0x7143ac`, `0x7143b2`, `0x7143c0`, `0x7143e2`, `0x710c50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x71429c` skips both writes without a parent. `SetVisible` (`0x710c50`) stores its argument at
 `+0x1d8` for an attached instance and at `+0x50` for a top-level one, so the pass derives a child's
 `+0x50` from the two. The sum is `fld c; fld b; fld a`, then `a·a`, `b·b`, add, `c·c`, add, one
 `fstp dword` at `0x7143e2`. The scene reads `+0x84` for its depth keys (`models/scene#element-depth-keys`).
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## World matrix and frame
 
@@ -60,11 +63,12 @@ element loops when it is 0.
 Addresses: `0x714389`, `0x71438c`, `0x71438d`, `0x714393`, `0x714399`, `0x71439a`, `0x71439b`, `0x7143ee`, `0x714463`, `0x71451c`, `0x714527`, `0x74a7c0`, `0x754a66`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The pushes at `0x71438c`, `0x714399` and `0x71439a` leave the destination on top, then `+0xbc`, then
 the parent matrix, and the routines behind `0x74a7c0` take `(out, a, b)` in that order: the SSE2 product
 `0x754a66` reads `[ebp+8]` as the destination (`Dispatched matrix math` in `models/animation`). The working matrix is rewritten per bone by the parent matrix legs (`pose`).
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Pause slide
 
@@ -78,13 +82,14 @@ not moved.
 Addresses: `0x710bf0`, `0x710c00`, `0x7143ee`, `0x7143f1`, `0x714503`, `0x714508`, `0x714512`, `0x714519`, `0x714561`, `0x71456b`, `0x714571`, `0x7146c1`, `0x7146cb`, `0x7146d1`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `SetPaused(on)` (`0x710c00`) stores 0 for off and otherwise the scene clock, or 1 when the clock is 0.
 The slide is `[ebp-4]`, zeroed at `0x714503`. The `je` at `0x714506` tests the old stamp and `0x71450e`
 the clock, as the `cmp` and `je` show. The adds are gated on the live stamp `[ebx+0x4c]` (`0x714564`),
 not on `delta`. On the first pass after a pause the stamp still holds the pause time, so `delta` is the
 whole pause so far. The setter and getter are called only from the object layer's game object state code: `0x5f38e2`, `0x5f3b03`, `0x5f3dfe`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Arrays the pass walks
 
@@ -108,7 +113,7 @@ track on its key count against the first-update gate `+0x8c`.
 Addresses: `0x714260`, `0x71451c`, `0x715966`, `0x715c87`, `0x715e46`, `0x715f25`, `0x7163bc`, `0x716ad9`, `0x71763e`, `0x717d6a`, `0x7185e3`, `0x717d4d`, `0x717d53`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The loops run in the table's order, the bone loop first. Each loop's tail adds the two strides
 and compares the index with the header count (`0x715c60`, `0x715e1d`, `0x715efe`, `0x716389`,
@@ -118,6 +123,7 @@ that `models/model#instance-arrays` and `models/shared` derive; the bones' and e
 `pose` and `elements`. The first-update gate is 0 until `UpdateAfterAnimate` first ends and 1 after
 (`models/animation#pushing-animated-state`). A track with `count ≤ gate` is not sampled, so a
 one-key track is sampled on the first pass only and keeps its state value afterwards.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Attached children
 
@@ -131,7 +137,7 @@ matrix and the instance's `+0x1a0`, `+0x1ac` and `+0x19c`.
 Addresses: `0x7185e3`, `0x7185ed`, `0x718602`, `0x718608`, `0x718638`, `0x718657`, `0x718668`, `0x71866e`, `0x718684`, `0x7186a1`, `0x7186ba`, `0x7186eb`, `0x718716`, `0x718756`, `0x71875c`, `0x718764`, `0x71ae90`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The attachment record is header `+0x108` at 0x30 bytes (`0x7186a1`): bone word `+0x4`, offset `+0x8`,
 `+0xc`, `+0x10`, byte track `+0x14`, key count `+0x20`. The instance's `+0x1c8` payload is 0x20 per
@@ -139,3 +145,4 @@ attachment with the sampled byte at `+0xc`. `rep movsd` of 16 dwords copies the 
 Each translation component is a three-term sum at 53 bits plus the matrix translation, narrowed at
 `0x7186eb`, `0x718716` and `0x718756`. Without `+0x1c8` the pass ends at `0x7185ed`. The child walk follows
 `+0x1dc` and then each child's `+0x1e4`.
+`animation::m2_animate_difftest` runs `0x714260` whole.

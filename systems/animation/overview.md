@@ -36,7 +36,8 @@ gets its clock, then its matrix, then the billboard stage. The element loops fol
 Addresses: `0x714260`, `0x7143ee`, `0x714530`, `0x714d0f`, `0x7151f9`, `0x715966`, `0x7185e3`, `0x718775`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The bone loop runs from `0x7143ee` (pause slide) through the clock legs `0x714530`, the matrix steps from `0x714d0f` and the billboard
 stage `0x7151f9`. The element loops start at `0x715966`, the children at `0x7185e3`, and the exit that stores the scene frame is `0x718775`.
+`animation::m2_animate_difftest` runs `0x714260` whole.

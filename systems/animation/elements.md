@@ -32,7 +32,7 @@ block reads.
 Addresses: `0x715966`, `0x715983`, `0x715c87`, `0x715ca0`, `0x715e46`, `0x715e60`, `0x715f25`, `0x7163bc`, `0x7163e0`, `0x716ad9`, `0x716b00`, `0x71763e`, `0x717660`, `0x717d6a`, `0x717d90`, `0x7185e3`, `0x718602`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 The sites of each track, with the bone that supplies the clock: colours `0x7159c6` and `0x715b21` (bone 0 through
 `[+0x90]`), texture transforms `0x71607f`, `0x71623d` and the quaternion `0x715ff9`, lights `0x71641b`
@@ -42,6 +42,7 @@ The sites of each track, with the bone that supplies the clock: colours `0x7159c
 (the byte and six scalars, each with a blend search; the other four scalars use `0x71af20`, the attachment
 byte `0x71ae90` and the rotation `0x713ea0`). The ten particle scalars are
 at `+0x34`, `+0x50`, `+0x6c`, `+0x88`, `+0xa4`, `+0xc0`, `+0xdc`, `+0xf8`, `+0x114` and `+0x130`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Element states
 
@@ -63,7 +64,7 @@ quaternion state 0x38 bytes. The records are 0x50 (colours), 0x20 (transparency,
 Addresses: `0x715b0f`, `0x715b21`, `0x716551`, `0x716649`, `0x716814`, `0x71692f`, `0x71644c`, `0x716f76`, `0x7173cc`, `0x7176c2`, `0x7177b1`, `0x717933`, `0x717ab8`, `0x717baf`, `0x717cc2`, `0x717dfb`, `0x7185ba`, `0x717e94`, `0x717eb0`, `0x717ec9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 A state's first triple is the `{k, k+1, fraction}` of the search. The out pointer of each call gives the
 offsets: `esi+0x30` at `0x715b0f` for the colours' 16-bit track, `edi+0x30` (`0x716551`), `edi` (`0x716649`),
@@ -71,6 +72,7 @@ offsets: `esi+0x30` at `0x715b0f` for the colours' 16-bit track, `edi+0x30` (`0x
 and `edi+0x60` (`0x7173cc`) for cameras, `esi+0xb0` (`0x7176c2`), `esi` (`0x7177b1`), `esi+0x30` (`0x717933`), `esi+0x50`,
 `esi+0x70` and `esi+0x90` for ribbons, and `edi+0x140` (`0x717dfb`) plus the scalars' `edi+0x20·i` for particles.
 The light object is embedded at `state+0x104` and the camera object is the pointer at `state+0x80`.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Light loop
 
@@ -84,7 +86,7 @@ light's ambient colour becomes `f32((intensity · alpha) · colour[i])` per comp
 Addresses: `0x7163fc`, `0x716404`, `0x71640d`, `0x716415`, `0x7164f2`, `0x7164fa`, `0x716504`, `0x716506`, `0x71650e`, `0x71678a`, `0x716793`, `0x7167bd`, `0x7167ce`, `0x716a67`, `0x716a73`, `0x716aa6`, `0x716aa9`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x7163fc` loads the enabled word; `0x716404 je 0x716506` and `0x716415 je 0x7164f2` (no visibility keys)
 reach the test at `0x7164f2`: enabled, then the byte `[edi+0xec]`, and both nonzero continue at `0x716514`.
@@ -92,6 +94,7 @@ Otherwise `0x716506` reads `[ebx+0x8c]` and `0x71650e jne 0x716aa9` skips the re
 `fld [edi+0x3c]; fmul [ebx+0x19c]`, the product kept at 53 bits, then `fmul` by each colour component with an
 `fstp dword` spill and the stores to `[edi+0x134]` to `[edi+0x13c]`; `0x716a67` does the same into
 `[edi+0x140]` onward from `[edi+0x8c]`. The stores sit in the colour tracks' branches.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Particle states
 
@@ -104,9 +107,10 @@ once the first-update gate is 1. The emitter list is `[+0x3d4]`, an array of emi
 Addresses: `0x717d6f`, `0x717dca`, `0x717dfb`, `0x717e94`, `0x717e9e`, `0x717eb0`, `0x717eb8`, `0x717ebb`, `0x717ecf`, `0x717ed5`, `0x717ee7`, `0x7b5f60`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x717e94` loads the byte and `0x717e9e` the instance flag; `0x717eb0` stores the first flag and `0x717ebb`
 calls `CParticleEmitter2::HasLiveParticles` on `[[+0x3d4] + 4i]` only when it is 0. `0x717ee7 jne 0x7185b1` skips the
 scalars for a disabled record once `+0x8c` is nonzero. The byte track's blend leg stores the second byte
 at `+0x15c` and does not blend.
+`animation::m2_animate_difftest` runs `0x714260` whole.

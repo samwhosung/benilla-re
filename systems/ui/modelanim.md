@@ -188,7 +188,7 @@ and `v'` swaps the roles of `s` and `c`.
 Addresses: `0x7bddb0`, `0x7bc6a0`, `0x713ea0`, `0x713ec7`, `0x713f05`, `0x713f3c`, `0x715fdb`, `0x716010`, `0x716048`, `0x7161e0`, `0x716384`
 Confidence: verified
 Proof: one
-Test: none
+Test: `animation::m2_animate_difftest`
 
 `0x7bddb0` forms `Q` (`models#texture-transforms`) and multiplies it on the left of the matrix; p is
 (0.5, 0.5). In `v'` the term in `u` carries `s` and the term in `v` carries `c`. The
@@ -196,6 +196,7 @@ element `Q[0][1] = 2xy + 2zw` and `Q[1][0] = 2xy − 2zw` give, for the row vect
 `u' = c·u − s·v` and `v' = s·u + c·v`: with z = w = √½ the point (1, 0.5) about (0.5, 0.5) goes to
 (0.5, 1.0). The key sampler `0x713ea0` copies an interpolation-0 key (`0x713ed2`) and otherwise computes
 `(v1 − v0)·f + v0` per component (`0x713f05` to `0x713f3c`) with no normalisation after it.
+`animation::m2_animate_difftest` runs `0x714260` whole.
 
 ## Texture wrap flags
 
