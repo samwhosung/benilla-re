@@ -6395,7 +6395,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x47fc40	28			objectlayer	unreached		Runs its object file code that calls OsGetAsyncTimeMs; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fc60	222			objectlayer	unreached		Runs its object file code that calls OsGetAsyncTimeMs; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x47fd40	340			objectlayer	unreached		Runs its object file code that calls SMemAlloc, SMemReAlloc, SMemFree; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x47fea0	49			objectlayer	primitive		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
+0x47fea0	49	TSArray::SetCount		objectlayer	primitive	void __thiscall (void *array, int32_t count)	Stores the count and resizes the buffer to four bytes per element	verified	one	objectlayer/manager#table-and-array-code	
 0x47fee0	5	InitMirrorSquare19Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47fef0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x47fef0	19	InitMirrorSquare19		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x47ff10	5	InitMirrorSquare20Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x47ff20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -22058,7 +22058,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62f210	19	InitCombatLogCSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62f230	5	InitCombatLogCSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f240, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62f240	19	InitCombatLogCSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62f260	147			objectlayer	primitive		Runs its object file code not read here	inferred	none		
+0x62f260	147	CGuildRecord::Read		objectlayer	primitive	void __thiscall (void *record, CDataStore *stream)	Reads a guild record: id, name, ten rank names and five emblem values	verified	one	objectlayer/party#the-guild-record	
 0x62f300	5	InitPlayerSoundCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f310, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62f310	11	InitPlayerSoundCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x62f320	5	InitPlayerSoundDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f330, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	

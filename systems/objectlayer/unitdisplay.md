@@ -61,6 +61,23 @@ component from the extra row (race, gender, skin, face, hair, facial hair; textu
 has flag 0x4, from its bytes. Equipment: 19 slots for a native player display, else the extra's
 ten item displays `+0x20` to `+0x44`, then both hands (`0x60b770`).
 
+## Player appearance bytes
+
+A player's character component takes its look from three fields: race and gender from
+`UNIT_FIELD_BYTES_0`, skin, face, hair style and hair color from `PLAYER_BYTES` (field 193), and
+facial hair from `PLAYER_BYTES_2` (field 194).
+
+Addresses: `0x5fb200`, `0x5fb4a2`, `0x5fb4ac`, `0x5fb4b6`, `0x5fb4bc`, `0x5fb4c6`, `0x5fb4d0`, `0x5fb4da`, `0x5fb4e4`, `0x476b90`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5fb200` reads bytes 0 and 2 of the unit descriptor at `+0x78` and `+0x7a` (`0x5fb4a2`,
+`0x5fb4ac`) as race and gender. The player block pointer `+0xe68` (`0x5fb4b6`), the descriptor from
+offset 0x2f0, gives bytes 0 to 3 at `+0x14` to `+0x17` as skin (`0x5fb4bc`), face (`0x5fb4c6`), hair
+style (`0x5fb4d0`) and hair color (`0x5fb4da`), and byte 0 at `+0x18` as facial hair (`0x5fb4e4`). The
+record is handed to the component by `0x476b90`.
+
 ## The display alpha
 
 A unit's alpha comes from its display row. The rebuild of a display ends by fading the unit over
@@ -205,6 +222,19 @@ Test: none
 class 2, subclass 2 (`0x611edf`). The callback reads the bow's event positions `$WTT` and `$WTB`
 through `0x7131b0` and joins them to a middle point by two lines: the unit's attachment 35 while
 bit 0x4000 of `+0xd58` is set (`0x6121b8`), else the midpoint of the two ends.
+
+## The shield and unarmed animations
+
+A shield is not held while the unit plays an unarmed ready or attack animation.
+
+Addresses: `0x60b770`, `0x60b8c9`, `0x60b8d9`, `0x60b6e0`, `0x60b590`, `0x60b632`, `0x5fdb50`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60b770` calls `0x60b6e0` with the current animation (`0x5fdb50`) at `0x60b8c9`; for the ids 16, 20,
+25, 117 and 118 it clears the in-hand flag of a shield (inventory type 14) at `0x60b8d9`. `0x60b590`
+asks the same question at `0x60b632`.
 
 ## Weapon trails
 

@@ -294,7 +294,7 @@ unlink and free.
 A hash table is a vtable `0x803600`, a list, a bucket array and a mask, −1 until used. The code
 inserts, rehashes and frees its buckets, and grows the arrays behind them.
 
-Addresses: `0x468d30`, `0x469810`, `0x4699f0`, `0x469080`, `0x469290`, `0x468c30`, `0x468fe0`, `0x4691e0`, `0x469c20`, `0x469dc0`, `0x469d60`, `0x469da0`, `0x4686c0`, `0x4686f0`, `0x468a60`, `0x4687f0`, `0x468c00`, `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0`, `0x469b30`, `0x803600`
+Addresses: `0x468d30`, `0x469810`, `0x4699f0`, `0x469080`, `0x469290`, `0x468c30`, `0x468fe0`, `0x4691e0`, `0x469c20`, `0x469dc0`, `0x469d60`, `0x469da0`, `0x4686c0`, `0x4686f0`, `0x468a60`, `0x4687f0`, `0x468c00`, `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0`, `0x469b30`, `0x47fea0`, `0x47fd40`, `0x803600`
 Confidence: verified
 Proof: one
 Test: none
@@ -306,4 +306,6 @@ power of two (at most 0x15) and up to a multiple. `0x4686c0`, `0x4686f0`, `0x468
 `0x4687f0` are slots 0 to 3 of the table vtable: a deleting destructor, a `CGObject_C` factory
 that builds the six watcher lists, and two destructors of the table. `0x468c00` reads three
 floats from a packet, and `0x468fd0`, `0x469b70`, `0x469c10`, `0x469bc0` and `0x469b30` zero, set
-up or free small members.
+up or free small members. `0x47fea0(count)` stores the count at `this` and resizes the buffer at
+`this+8` to four bytes per element with `SMemReAlloc` (allocation tag 0x82f25c) when a buffer exists or the
+count is not 0; `0x47fd40` and the `ui` code at `0x4a96b0` call it.

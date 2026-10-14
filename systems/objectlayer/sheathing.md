@@ -79,9 +79,10 @@ available (`0x5eb68d`).
 Whenever an animation is requested, `0x5fdf80` forces the sheathe state from the weapon-flag word
 of the requested animation's `AnimationData` row. Flag 0x4 stows, flag 0x10 stows except in
 the ranged state for nine fire and load animations, and flag 0x20 draws melee. A mounted unit is
-stowed, and a unit with an attack target is drawn.
+stowed, and a unit with an attack target is drawn. The thrown wind-up, animation 108, is stowed
+too; the weapon stays in hand because the local cast plays its kit (`0x6e5898`) before it draws (`0x6e5930`).
 
-Addresses: `0x5fdf80`, `0x5fdf89`, `0x5fdfab`, `0x5fdfb9`, `0x5fdfc7`, `0x5fdfd9`, `0x5fdfe5`, `0x5fe005`, `0x5fe02d`, `0x5fe04c`, `0x5fe061`, `0x5fe073`, `0x5fe07f`, `0x5fe0d7`, `0x5fe0f9`, `0x5fe10c`, `0x5fe118`, `0x5fe124`, `0x5fe13b`, `0x5fe147`, `0x5fe16e`, `0x5fe180`, `0x5fdb50`, `0xc0e070`, `0xc0e074`
+Addresses: `0x5fdf80`, `0x5fdf89`, `0x5fdfab`, `0x5fdfb9`, `0x5fdfc7`, `0x5fdfd9`, `0x5fdfe5`, `0x5fe005`, `0x5fe02d`, `0x5fe04c`, `0x5fe061`, `0x5fe073`, `0x5fe07f`, `0x5fe0d7`, `0x5fe0f9`, `0x5fe10c`, `0x5fe118`, `0x5fe124`, `0x5fe13b`, `0x5fe147`, `0x5fe16e`, `0x5fe180`, `0x6e5898`, `0x6e5930`, `0x5fdb50`, `0xc0e070`, `0xc0e074`
 Confidence: verified
 Proof: one
 Test: none

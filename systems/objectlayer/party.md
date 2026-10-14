@@ -190,6 +190,22 @@ event `PLAYER_GUILD_UPDATE`, and redraws the tabard. `0x5e0830` reapplies the ta
 `0x5e07d0` rebuilds the character component, both then calling `0x491a50`, which jumps to
 `0x524e10`; `0x5e09f0` returns the guild's name for the name text.
 
+## The guild record
+
+A guild's cache record holds its id, its name, ten rank names and five emblem values, read in
+that order from a stream.
+
+Addresses: `0x62f260`, `0x62f26e`, `0x62f27b`, `0x62f295`, `0x62f2af`, `0x62f2e7`, `0x5552a3`, `0x5612f6`, `0x561963`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x62f260(stream)` fills the record at `this`: a u32 at `+0` (`0x62f26e`), a string of at most 0x60
+bytes at `+4` (`0x62f27b`), ten strings of at most 0x40 bytes from `+0x64`, 0x40 apart (`0x62f295`),
+and five int32 at `+0x2e4`, `+0x2e8`, `+0x2ec`, `+0x2f0` and `+0x2f4` (`0x62f2af` to `0x62f2e7`), the
+emblem of the tabard section. The callers are the guild info reply (`0x5552a3`) and the two
+cache routines (`0x5612f6`, `0x561963`).
+
 ## Petitions
 
 `0x5e5050` handles six petition opcodes for the active player. 0x1bc lists a vendor's charters: a u8
