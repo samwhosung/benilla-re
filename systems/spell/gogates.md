@@ -72,3 +72,23 @@ type word of a game object is `0x21` (bits 0 and 5, `objectlayer`, Object types)
 for it. The player tail dereferences the caster with no test (`0x6e83da lea ecx,[esi+0xc48]`, `0x6e8402
 call 0x6131a0`) but is reached only when the second guid equals the active player's guid, and the active
 player has a unit; `0x468550` answers 0 when there is no object manager.
+
+## Empty target lists
+
+A go with no hit and no miss plays little. The instant impact returns at once on an empty hit list, and
+has no fallback to a location. The missile launcher, with an empty list and a source or destination point in
+the target mask, launches one missile at the point (`go`, Missile launch). The dest-point effect needs neither
+list nor the destination flag: it reads the destination vector of the decoded target block whenever the
+caster and the visual's two fields allow, and the block is zeroed before it is decoded, so a go without
+a destination plants the effect at the origin.
+
+Addresses: `0x6e8bf0`, `0x6e8c0f`, `0x6e8a98`, `0x6e8a9e`, `0x6e8aa2`, `0x6e8abc`, `0x6e8ba2`, `0x6e8bd4`, `0x6e8118`, `0x6e813b`, `0x6e7bef`, `0x7e4ed0`, `0x60a3d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6e8c0d test ecx,ecx; jbe 0x6e8c99` is the hit count test of `0x6e8bf0`; the function reads the mask
+nowhere. `0x6e8aa2 test al,0x60; setne cl` latches the points; with a zero list head (`0x6e8abc`, `0x6e8ac0 je
+0x6e8ba2`) and `cl` nonzero, `0x6e8bd4` calls `0x60a3d0` once. The effect's destination arguments are the
+three dwords at `[ebp-0x134]`, which is `+0x3c` of the target block at `[ebp-0x170]` (`0x6e8118`), and the
+decoder `0x7e4ed0` stores them only for mask bit 0x40; the caller zeroes the block first (`go`, Spell go packet).
