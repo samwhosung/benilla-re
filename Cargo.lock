@@ -199,6 +199,7 @@ dependencies = [
  "benilla-re-collision",
  "benilla-re-difftest",
  "benilla-re-objectlayer",
+ "benilla-re-random",
  "wow-mpq",
 ]
 

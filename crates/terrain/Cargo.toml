@@ -10,6 +10,7 @@ publish = false
 benilla-re-cmath.workspace = true
 benilla-re-collision.workspace = true
 benilla-re-objectlayer.workspace = true
+benilla-re-random.workspace = true
 
 [dev-dependencies]
 benilla-re-difftest.workspace = true
