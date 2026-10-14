@@ -1290,7 +1290,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x83dc2c	uint32_t	s_reticleState		ui	Holds which ground target decal is drawn, 0 acceptable, 1 unacceptable, 3 none	verified	one	ui/mouse#enter-and-leave
 0x83ddb0	const char *[29]	s_invTypeKeys		ui	Holds the global string key of each inventory type, empty for type 0	verified	one	ui/tooltipitemhead#the-slot-and-type-line
 0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
-0x83de28	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x83de28	const char *[9]	s_victimStateActions		ui	Holds the UNIT_COMBAT action words of victim states 0 to 8, MISS to DEFLECT	verified	one	objectlayer/playercombat#the-unit-combat-event
 0x83de4c	uint32_t			ui	Holds a dword that CGGameUI::InitializeGame, CGGameUI::ShutdownGame read; not read here	inferred	none	
 0x83de58	uint32_t			ui	Holds a dword that Script::IsInInstance reads; not read here	inferred	none	
 0x83de68	uint32_t[432]	s_gameScriptFunctions		ui	Holds the 216 pairs of a name and a C function the game registers as globals	verified	one	ui/luastate#the-c-function-contract
@@ -1347,6 +1347,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8432d4	const char[25]	s_soundNeutralUnit		ui	Holds the interface sound name GAMEHIGHLIGHTNEUTRALUNIT played for a neutral or unfriendly hover target	verified	one	ui/tooltipobject#the-publisher
 0x8432f0	const char[26]	s_soundFriendlyUnit		ui	Holds the interface sound name GAMEHIGHLIGHTFRIENDLYUNIT played for a friendly hover target	verified	one	ui/tooltipobject#the-publisher
 0x84330c	const char[25]	s_soundHostileUnit		ui	Holds the interface sound name GAMEHIGHLIGHTHOSTILEUNIT played for a hostile hover target	verified	one	ui/tooltipobject#the-publisher
+0x84333c	const char[11]	s_unitCombatFormat		ui	Holds the UNIT_COMBAT event format %s%s%s%d%d	verified	one	objectlayer/playercombat#the-unit-combat-event
 0x843414	char[11]	s_textLootButton		ui	Holds the string "LootButton"	inferred	none	
 0x8435fc	uint32_t	s_chatDisplayHold		ui	Holds 1 while chat lines are queued instead of shown, from start-up to world entry	verified	one	ui/chatevents#the-display-latch
 0x843600	uint32_t	s_profanityFilterOn		unassigned	Holds the profanityFilter value, 1 in the file	verified	one	ui/chatfilter#the-two-options

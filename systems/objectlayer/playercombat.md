@@ -273,6 +273,28 @@ caster, spell, damage, school, absorbed, resisted)`, direct `0x62cd80` with bloc
 flags too. The debug byte reads two floats for hit flag 0x1 and two for 0x4 and passes them to
 `0x630200`, which returns at once.
 
+## The unit combat event
+
+One function raises `UNIT_COMBAT` (event 0xb6): `0x494600(unit, action, amount, type, hit flags)` signals
+it once per unit token of the unit (`ui/unittokens`) with the token, the action, a descriptor chosen from the
+amount and the flags, the amount and the type. With no token nothing is signalled. Four wrappers feed it, and only
+these four: `0x4946b0` the action `WOUND`, `0x4946d0` the melee record's victim state, `0x494720` the spell miss
+type with amount, type and flags 0, and `0x494740` `HEAL` with type 0 and flag 0x80 for a critical heal.
+
+Addresses: `0x494600`, `0x494604`, `0x494617`, `0x49461d`, `0x494629`, `0x494634`, `0x49463f`, `0x49464b`, `0x494656`, `0x49465e`, `0x494681`, `0x494686`, `0x49468b`, `0x4946b0`, `0x4946d0`, `0x494706`, `0x494720`, `0x494729`, `0x494740`, `0x494746`, `0x49474a`, `0x84333c`, `0x83de28`, `0x86582c`
+Confidence: verified
+Proof: one
+Test: none
+
+With a positive amount the flags choose `CRITICAL` (0x80), `GLANCING` (0x4000) or `CRUSHING` (0x8000), else an
+empty string; with an amount of 0 or less they choose `ABSORB` (0x20), `BLOCK` (0x800) or `RESIST` (0x40), else
+empty. `0x49465e` hands the token lister the address of the flags slot as its count. The format is `%s%s%s%d%d`
+(`0x84333c`). The melee wrapper reads the record's GUID at `+0x8`, damage `+0x14`, school `+0x18`, hit info `+0x10` and
+victim state `+0xa4`, indexing nine actions from `0x83de28`: MISS, WOUND, DODGE, PARRY, INTERRUPT, BLOCK, EVADE, IMMUNE,
+DEFLECT. The miss wrapper accepts types 0 to 11 from `0x86582c`: NONE, MISS, RESIST, DODGE, PARRY, BLOCK, EVADE, IMMUNE,
+IMMUNE, DEFLECT, ABSORB, REFLECT, and returns for any other. The melee and damage callers pass the school as type; the miss and heal
+wrappers pass 0. No `ENERGIZE` string exists; `0x494770` returns at once.
+
 ## Damage calculation log
 
 0x27c prints "DMG: '%s' attacks '%s' sourceType=%d, spell='%s'" with the two units' names

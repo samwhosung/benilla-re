@@ -116,6 +116,49 @@ Test: none
 bit 4 of the type mask, 0x10. `0x605fc0` bounds the id by `[0xc0dd54]`, reads `[0xc0dd50]`, and
 `setge` on `[row+0x4]` (`0x605fdd`).
 
+## Ranks that surface
+
+The reaction of a unit toward the active player never reads 7. `0x606439` caps the template leg at 6 and
+the persuaded rise applies only below 5, so Revered and Exalted both give 6 and the palette entry for 7 is reached
+only by a forced reaction on the player's own leg. For a human warrior at zero standing, the shipped data
+makes a faction with a reputation slot give its rank: 52 of the 106 templates that name such a faction
+differ from the template comparison, among them Wildhammer Clan, Wintersaber Trainers, Stormpike Guard,
+Silverwing Sentinels and The League of Arathor, which give 3 where the comparison gives 4.
+
+Addresses: `0x6061e0`, `0x606439`, `0x6064a5`, `0x606530`, `0x606640`, `0x6063e9`, `0x4d63a0`, `0x4d63dd`
+Confidence: verified
+Proof: one
+Test: `objectlayer::unit_reaction_persuaded_bump_and_clamp`, `objectlayer::unit_reaction_league_of_arathor_emissary`
+
+The shipped `Faction.dbc` has 190 rows, 54 with a reputation index (0 to 54, 49 unused), and
+`FactionTemplate.dbc` 314 rows, 106 of them naming such a faction. The base for a human warrior is the last
+matching triple of the row (`ui/reputation#base-standing-pick`): The League of Arathor, the Silverwing Sentinels,
+the Stormpike Guard and the Wintersaber Trainers 0, Wildhammer Clan 150, Booty Bay 500, Stormwind 4000 and
+Timbermaw Hold -3500. Their ranks are 3 for all but the last two, 4 for Stormwind and 1 for Timbermaw Hold.
+`0x4d63dd` returns 3 for a total of 0, `0x606439` is a `min` with 6 and `0x6064a5` keeps the rise to a
+rank below 5. Of the 314 templates, 116 have bit 0 of the enemy mask and 160 give 1 toward the player
+template; 35 differ between the two directions, 21 more hostile from the player's side and 14 from the unit's.
+
+## Who asks which way
+
+`0x6061e0` has 33 call sites in 21 functions, all `call`. Most ask a unit's reaction toward the active
+player or a second unit, and several ask both ways, so the asymmetry is used on purpose. The nameplate colour
+asks the unit toward the player: 1 or less is red, a player is blue, 4 or more green, the rest yellow. The
+Lua functions pass one token's reaction toward the other: `UnitReaction` adds 1, `UnitIsEnemy` tests 1 or less and
+`UnitIsFriend` 4 or more. A vendor's price discount asks the vendor toward the player and adds 0.1 at 5 or more.
+`CanAttack`, the tooltip builder and the greeting sound ask both ways.
+
+Addresses: `0x6061e0`, `0x7cbaa0`, `0x7cbacf`, `0x7cbad4`, `0x7cbafd`, `0x7cbb02`, `0x516839`, `0x51683e`, `0x5168e5`, `0x5168ea`, `0x5169d2`, `0x5169d7`, `0x612b80`, `0x612b93`, `0x612b98`, `0x801620`, `0x606980`, `0x606aab`, `0x606ab8`, `0x52a2d9`, `0x52a342`, `0x60c270`, `0x60c2d9`, `0x60c2ea`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x7cbacc` pushes the player and `0x7cbacd` takes the unit as `this`; the second call at `0x7cbafd` comes after the
+player-type test (`0x7cbaea`). `0x516839` is followed by `inc eax`. `0x5168ea` and `0x5169d7` compare with 1 and 4.
+`0x612b86` keeps the player in `edi` and `0x612b8a` the vendor as `this`; `0x612b98` compares with 5 and
+`0x801620` holds 0.1. `0x52a2d9` and `0x52a342` swap the two objects, and so do `0x60c2d9` and `0x60c2ea`, which
+both need 3 or more.
+
 ## Corpses and game objects
 
 A unit's reaction toward a corpse compares the unit's template with the corpse's, through the

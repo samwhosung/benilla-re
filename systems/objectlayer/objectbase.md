@@ -90,6 +90,26 @@ Test: none
 halved by `ScaleVector3(0.5)`; without a loaded body it is (0, 0, 0). `0x615030` resolves the GUID
 with mask 1 and returns 1 so the enumeration goes on.
 
+## The display scale terms
+
+Of the scale factors of the node transform, the code from `0x5d0000` to `0x630000` writes `+0x98` once, in
+the constructor, as 1.0. A unit's own `CreatureDisplayInfo` scale is therefore not part of its transform: its
+size comes from `OBJECT_FIELD_SCALE_X` at `+0x90`. A mount's display scale reaches the matrix as `+0x9c`.
+The same product is built at `0x613fbf`, `0x60a1ff`, `0x614d71` and `0x61e882`. `+0x94` is the speed
+multiplier of a running spell effect, clamped to 0.75 to 2.0 (`0x62019d`) and restored to 1.0 (`0x620865`).
+
+Addresses: `0x613a1f`, `0x613fbf`, `0x613fee`, `0x60a1ff`, `0x60a22d`, `0x614d71`, `0x614db1`, `0x61e882`, `0x61e897`, `0x607a75`, `0x607b49`, `0x7bdd00`, `0x62019d`, `0x620865`, `0x5dd496`, `0x5dd49c`
+Confidence: verified
+Proof: one
+Test: none
+
+The scan covers every `mov`, `fst` and `fstp` to `[reg+0x98]`: 52 in the image, two in that span, `0x613a1f` and the
+speed block of `0x619320` (`0x61935a`, the movement object's own `+0x98`). Each of the four sites loads `+0x9c`
+when a mount model exists at `+0xdc` and `+0x98` otherwise, multiplies by `+0x94` and `+0x90`, and `0x7bdd00`
+scales the 3x3 block of the matrix only. `0x607a00` stores the mount display's `+0x10` in `+0x9c`
+(`0x607a75`) and builds the rider's compensation `+0x98` over `+0x9c` (`0x607b49`). A player's constructor seeds `+0x9c` with
+field 7 of its race row (`0x5dd496`, `0x5dd49c`): 1.0, 1.1, 1.0, 1.2, 1.0, 0.75, 0.8, 1.0 for races 1 to 8 in the shipped file.
+
 ## Showing an object
 
 `0x613af0` sets bit 0x4 of `+0xe4`, then fades to slot 27's alpha over 2000 ms when slot 26 is

@@ -34,6 +34,40 @@ row or the sound row differs from those held. `0x600320` prints `NOCREATUREDISPL
 `0x60c6e0` gives its baked texture name `+0x48`. `0x60a390` picks the
 `UnitBlood` row (0xc0d620) at `+0x4 + 4·level` of the blood levels row, by the violence level.
 
+## Creatures that animate out of sight
+
+A unit the scene elects for pass 2 (out of the frustum) is neither drawn nor animated, except a
+creature whose record flags `+0x14` have 0x20: `0x607da0` links its model into the animation worklist
+anyway, so it plays its clips and fires their events and sounds.
+
+Addresses: `0x607da0`, `0x607e1e`, `0x607e22`, `0x607e26`, `0x607e2f`, `0x607e43`, `0x623b70`, `0x710b90`, `0x683dd0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x607e1e` compares the pass argument with 2 and `0x607e26` calls `0x623b70`, which reads the creature
+record `+0xb30` and tests `+0x14` for 0x20. The model is the mount at `+0xdc` when there is one, else the body
+at `+0xd8` (`0x607e2f`, `0x607e39`), and `0x607e43` calls `0x710b90` with 1. The election is in
+`terrain/scene#object-election`; the sound flag of `0x623b70` is in `sounds`.
+
+## The shipped display tables
+
+`CreatureDisplayInfo.dbc` has 12 fields in 48 bytes and `CreatureDisplayInfoExtra.dbc` 19 in 76. The
+extra row holds the race, sex, skin, face, hair style, hair colour and facial hair (fields 1 to 7), ten
+item display ids (8 to 17) and the baked texture name (18). Of the 10534 display rows, 6984 name an extra
+row; 6939 extra rows exist and 6931 carry a baked name. Of the 6984, 147 also have a texture name in
+fields 6 to 8, which `ApplyCreatureDisplay` reads and the character component does not.
+
+Addresses: `0x60afb0`, `0x5fb200`, `0x60c690`, `0x60c6a0`, `0x60c6c0`, `0x60c6e0`, `0x4797b0`
+Confidence: verified
+Proof: one
+Test: none
+
+The counts are read from the shipped files. A sample of 40 baked names each opened as a `BLP2` file
+under `Textures\BakedNpcTextures\`. `0x5fb200` reads the extra row at `+0x4` to `+0x1c` and loops over
+`+0x20` to `+0x44`; `0x60c6e0` reads `+0x48`. Neither `0x60afb0` nor `0x5fb200` reads display fields
+6 to 8. The unit hands its display row (`+0xb34`) and model row (`+0xb3c`) to `0x4797b0` (`0x5fb986`).
+
 ## Changing the display
 
 `0x60abe0` rebuilds the body when `0x60ae10` sees a new record set. It dismounts, stops the unit's
@@ -93,6 +127,26 @@ event (`0x600003`, `0x600007`), bit 0x4 allows the character bake (`0x5fb3d3`, `
 sets bit 0x20000 of `+0xd58`, clearing it otherwise (`0x60adc7`, `0x60b198`). All four go through the row
 cached at `+0xb3c`.
 
+## A model with nothing to draw
+
+A unit whose model has no geometry is not hidden by any flag: it submits no draw commands because the
+scene's batch loop runs once per texture unit of the selected model view. `InvisibleStalker`, the model
+of display rows 11686 and 13069, has 0 vertices, 0 textures and four views with no submeshes and no
+texture units. No `UNIT_FIELD_FLAGS` bit and no `CreatureModelData` flag reaches the draw decision, and
+the display alpha only hides a unit at 0.
+
+Addresses: `0x707680`, `0x707a2b`, `0x707a33`, `0x707a72`, `0x707a7f`, `0x70808d`, `0x466a20`, `0x613e10`, `0x6044b0`, `0x5ff580`, `0x60d2d0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x707a72` loads the view's texture-unit count `+0x20` and `0x707a7f jbe 0x70808d` leaves the loop for a count of 0.
+The create dispatcher `0x466a20` runs `0x613e10` for units, players, game objects, dynamic objects and corpses
+alike, on the one world scene. The change handler of `UNIT_FIELD_FLAGS`, `0x6044b0`, reaches `0x5ff580`, which
+only attaches and detaches equipment models. The shipped file has 430 `CreatureModelData` rows and
+`InvisibleStalker.m2` (row 1731, flags 3, collision box 0.7778 by 2.438) has a zero render box and a collision box of
+that size. Rows 11686 and 13069 have scale 1.0 and 0.01 and alpha 255.
+
 ## The display alpha
 
 A unit's alpha comes from its display row. The rebuild of a display ends by fading the unit over
@@ -133,6 +187,28 @@ display's `+0x8` sound row, else the model data's `+0x34`; `0x60c480` returns `+
 selection from the body, clears `+0xb44` and resets the camera. `0x5ffa50` also refreshes the unit
 sounds, the quest marker and the name. `0x6079b0`, which nothing reaches, returns the mount's model
 path and reads through a null row when the display or model is missing. Slices: unit_mount_scale_difftest `0x607ae0`-`0x607b8c`.
+
+## The mount poof
+
+A unit that gets a nonzero mount display plays the hard-coded effect "Mount Poof" (kind 6) once, from
+any distance, after its mount model is built. It hangs on the rider's body model at attachment 0x13 and
+ends with its model's clip. A dismount to 0 plays none. A running poof is replaced by the next one on
+the unit and destroyed by a model rebuild, which builds the mount again without a poof.
+
+Addresses: `0x5ffa50`, `0x5ffa6c`, `0x5ffa7f`, `0x5ffa87`, `0x5ffa8b`, `0x5ffa9c`, `0x5ffacb`, `0x5ffad2`, `0x5ffad9`, `0x5fbf50`, `0x6203e0`, `0x6203f1`, `0x620580`, `0x62058f`, `0x620be0`, `0x620c78`, `0x620e16`, `0x620e2d`, `0x61fae0`, `0x6208e0`, `0x60abe0`, `0x60ac10`, `0x60adfa`, `0x60ae06`, `0x607a00`, `0x608046`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ffa50` runs `0x607ce0` when the old display is nonzero (`0x5ffa6c`), then skips the build and the
+effect when the new one is 0 (`0x5ffa87`); it tests no unit identity and no distance. The effect is made
+with callback `0x5fbf50` (`0x5ffac2`), which destroys the effect (`0x6203e0`) when its second argument is
+0, the clip-finished notice, and ignores the replaced notice, 1. `0x6203e0` sets flags 0x900 on the
+effect and the per-tick `0x620580` skips an effect with 0x900 (`0x62058f`). With flags 0 the tick
+takes the attachment leg: `0x620c78` loads the body model and `0x620e2d` finds attachment 0x13 on it
+every tick. `0x60abe0` destroys every effect on the unit (`0x60ac10` loop) and, when the mount display is
+still above 0, ends in `0x607a00` (`0x60ae06`). The effect model `DruidMorph_Impact_Base` has one clip
+of 100 to 2900 ms, so the poof lasts 2.8 s. `0x607a00` and `0x607ce0` do not touch the unit's effects.
 
 ## Selection circle and colour
 
