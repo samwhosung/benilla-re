@@ -2217,6 +2217,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4becc	uint32_t	s_tradeInitiateFlag		objectlayer	Holds the flag the caller gave the trade request	verified	one	objectlayer/trade#trade-state
 0xc4bed0	uint64_t	s_tradeTarget		objectlayer	Holds the trade partner's GUID	verified	one	objectlayer/trade#trade-state
 0xc4bed8	int32_t[2]	s_tradeExtendedHeader		objectlayer	Holds the third header dword of each side's last extended trade status	verified	one	objectlayer/trade#trade-state
+0xc4bfa4	uint32_t[8]	s_corpseFacets		objectlayer	Holds the two arrays the ground normal query fills: triangle records and a second list, 256 entries each	verified	one	objectlayer/corpses#the-ground-normal
+0xc4c000	char[260]	s_corpseModelPath		objectlayer	Holds the skeleton model path 0x5d6700 formats for a corpse	verified	one	objectlayer/corpses#the-corpses-model-path
 0xc4c1d0	uint64_t	s_bindConfirmTargetGuid		objectlayer	Holds the target of an item use waiting for its bind confirmation	verified	one	objectlayer/items#item-use-gates
 0xc4c1f4	uint8_t[44]	s_inventoryIconCache		objectlayer	Holds the inventory icon hash table by display id	verified	one	objectlayer/items#inventory-icons
 0xc4c240	uint64_t	s_bindConfirmItemGuid		objectlayer	Holds the item whose use waits for its bind confirmation	verified	one	objectlayer/items#item-use-gates

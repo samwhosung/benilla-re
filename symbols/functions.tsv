@@ -18913,39 +18913,39 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5f10	41			objectlayer	primitive		Fills slot 5 of the dynamic object vtable; its body is not read here	inferred	none		
 0x5d5f40	10			objectlayer	orchestration		Returns the float at +0x20 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
 0x5d5f50	7			objectlayer	orchestration		Returns the float at +0x194 of its object	verified	one	objectlayer/overview#small-bodies	
-0x5d5f60	53			objectlayer	orchestration		Runs Corpse_C.cpp code that calls ClntObjMgrSetTypeMirrorHandler; not read here	inferred	none		
-0x5d5fa0	54			objectlayer	orchestration		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
-0x5d5fe0	54			objectlayer	orchestration		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr; not read here	inferred	none		
+0x5d5f60	53	RegisterCorpseWatchers		objectlayer	orchestration	void __cdecl ()	Puts the flags and dynamic flags watchers on every corpse	verified	one	objectlayer/corpses#field-watchers	
+0x5d5fa0	54	OnCorpseFlagsChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Rebuilds the corpse whose flags changed	verified	one	objectlayer/corpses#field-watchers	
+0x5d5fe0	54	OnCorpseDynamicFlagsChanged		objectlayer	orchestration	int __stdcall (uint32_t lo, uint32_t hi, uint32_t *old, void *arg)	Updates the loot sparkle of the corpse whose dynamic flags changed	verified	one	objectlayer/corpses#field-watchers	
 0x5d6020	45			objectlayer	unreached		Runs Corpse_C.cpp code that calls ClntObjMgrClearTypeMirrorHandler; not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d6050	175			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		
-0x5d6100	43			objectlayer	orchestration		Fills slot 0 of the corpse vtable; its body is not read here	inferred	none		
-0x5d6130	207			objectlayer	primitive		Runs Corpse_C.cpp code that calls DeleteCharacterComponent; not read here	inferred	none		
+0x5d6050	175	CGCorpse_C::CGCorpse_C		objectlayer	primitive	void * __thiscall (void *fields, void *movement)	Builds a corpse: lists, members, vtable, and the create message's position and facing	verified	one	objectlayer/corpses#members-and-fields	
+0x5d6100	43	CGCorpse_C::DeletingDestructor		objectlayer	orchestration	void * __thiscall (uint32_t flags)	Destroys the corpse and frees it when bit 0 is set	verified	one	objectlayer/corpses#members-and-fields	
+0x5d6130	207	CGCorpse_C::~CGCorpse_C		objectlayer	orchestration	void __thiscall ()	Deletes the component, removes the sparkle, unlinks the watcher lists and runs the base destructor	verified	one	objectlayer/corpses#members-and-fields	
 0x5d6200	5	InitCorpseCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d6210, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d6210	11	InitCorpseCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d6220	51	CGCorpse_C::SetFieldPointers		objectlayer	primitive	void __thiscall (CGCorpse_C *this, uint32_t *fields, uint32_t *copy)	Stores the storage, then points +0x110 at field 6 and +0x114 past the object section's watch copy	verified	one	objectlayer/classes#field-storage	
-0x5d6260	729			objectlayer	primitive		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr, ClntObjMgrGetActivePlayer, NewCharacterComponent; not read here	inferred	none		
-0x5d6540	101			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		objectlayer::dy_corpse_submerged_difftest
-0x5d65b0	68			objectlayer	orchestration		Fills slot 1 of the corpse vtable; its body is not read here	inferred	none		
-0x5d6600	114			objectlayer	orchestration		Fills slot 2 of the corpse vtable; its body is not read here	inferred	none		
+0x5d6260	729	CGCorpse_C::OnCreate		objectlayer	orchestration	void __thiscall (uint32_t time, void *movement, uint32_t flag)	Builds and dresses the character component, sets the pose, adds the sparkle and publishes the player's own corpse	verified	one	objectlayer/corpses#dressing-the-body	
+0x5d6540	101	IsSubmergedAt		objectlayer	primitive	uint8_t __fastcall (void *node, const float *position)	Tells whether the node's liquid stands more than 2/3 above the position's height	verified	one	objectlayer/corpses#the-pose	objectlayer::dy_corpse_submerged_difftest
+0x5d65b0	68	CGCorpse_C::Deactivate		objectlayer	orchestration	void __thiscall ()	Clears the published own corpse, removes the sparkle, fades the node out and deactivates	verified	one	objectlayer/corpses#the-players-own-corpse	
+0x5d6600	114	CGCorpse_C::Reactivate		objectlayer	orchestration	void __thiscall ()	Reactivates, clears the normal's latch, adds the sparkle and node and publishes the own corpse	verified	one	objectlayer/corpses#the-players-own-corpse	
 0x5d6680	41			objectlayer	unreached		Runs Corpse_C.cpp code that calls CGObject_C::SetUpdateField; not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d66b0	39			objectlayer	unreached		Runs Corpse_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d66e0	20			objectlayer	unreached		Runs Corpse_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x5d6700	211			objectlayer	orchestration		Fills slot 10 of the corpse vtable; its body is not read here	inferred	none		
-0x5d67e0	101			objectlayer	orchestration		Fills slot 16 of the corpse vtable; its body is not read here	inferred	none		
-0x5d6850	98			objectlayer	primitive		Fills slot 13 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_half_render_radius_difftest
-0x5d68c0	742			objectlayer	primitive		Fills slot 8 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_center_inv_difftest, objectlayer::dy_corpse_center_component_difftest, objectlayer::dy_corpse_center_x_difftest
-0x5d6bb0	49			objectlayer	orchestration		Runs Corpse_C.cpp code that calls SMemFree; not read here	inferred	none		
-0x5d6bf0	237			objectlayer	primitive		Fills slot 24 of the corpse vtable; its body is not read here	inferred	none		
-0x5d6ce0	120			objectlayer	orchestration		Runs Corpse_C.cpp code that calls UpdateCharacterComponent, ReleaseWorldObject; not read here	inferred	none		
-0x5d6d60	125			objectlayer	orchestration		Runs Corpse_C.cpp code that calls DeleteCharacterComponent, CreateModelFromPath, HandleClose2; not read here	inferred	none		
-0x5d6de0	58			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		
-0x5d6e20	13			objectlayer	primitive		Runs Corpse_C.cpp code not read here	inferred	none		
-0x5d6e30	75			objectlayer	orchestration		Runs Corpse_C.cpp code that calls CreateModelFromPath, ModelAttach; not read here	inferred	none		
-0x5d6e80	56			objectlayer	orchestration		Runs Corpse_C.cpp code that calls HandleClose2; not read here	inferred	none		
-0x5d6ec0	205			objectlayer	orchestration		Runs Corpse_C.cpp code that calls SetCharacterComponentEmblem, SMemAlloc, GetGuildEmblem; not read here	inferred	none		
-0x5d6f90	67			objectlayer	orchestration		Runs Corpse_C.cpp code that calls ClntObjMgrObjectPtr, SMemFree; not read here	inferred	none		
-0x5d6fe0	308			objectlayer	primitive		Fills slot 12 of the corpse vtable; its body is not read here	inferred	none		objectlayer::dy_corpse_decal_box_difftest
-0x5d7120	42			objectlayer	orchestration		Runs Corpse_C.cpp code not read here	inferred	none		
+0x5d6700	211	CGCorpse_C::GetModelPath		objectlayer	primitive	const char * __thiscall ()	Gives the skeleton path of a skeleton or the display id's model path	verified	one	objectlayer/corpses#the-corpses-model-path	
+0x5d67e0	101	CGCorpse_C::IsDrawn		objectlayer	orchestration	uint32_t __thiscall (uint32_t pass)	Tells whether the corpse draws in a pass: the base test, the submerged skeleton and the component update	verified	one	objectlayer/corpses#the-pose	
+0x5d6850	98	CGCorpse_C::ModelLoaded		objectlayer	primitive	void __thiscall (void *model)	Plays Drowned or Dead and stores half the bounding-sphere radius as the decal radius	verified	one	objectlayer/corpses#the-pose	objectlayer::dy_corpse_half_render_radius_difftest
+0x5d68c0	742	CGCorpse_C::GetGroundNormal		objectlayer	primitive	float * __thiscall (float *out)	Works out once the mean up-facing triangle normal under the corpse and returns it	verified	one	objectlayer/corpses#the-ground-normal	objectlayer::dy_corpse_center_inv_difftest, objectlayer::dy_corpse_center_component_difftest, objectlayer::dy_corpse_center_x_difftest
+0x5d6bb0	49	FreeCorpseFacets		objectlayer	orchestration	void __cdecl ()	Frees the corpse facet arrays at exit	verified	one	objectlayer/corpses#members-and-fields	
+0x5d6bf0	237	CGCorpse_C::Interact		objectlayer	orchestration	void __thiscall (int shift)	Loots a lootable corpse or clicks the interact spell on a corpse the player cannot assist	verified	one	objectlayer/corpses#right-clicking-a-corpse	
+0x5d6ce0	120	CGCorpse_C::FadeOutNode		objectlayer	orchestration	void __thiscall ()	Fades the node out when the component is ready, else releases it	verified	one	objectlayer/corpses#fading-out-the-node	
+0x5d6d60	125	CGCorpse_C::Rebuild		objectlayer	orchestration	void __thiscall (uint32_t old)	Replaces the corpse's component, model and node after its flags change	verified	one	objectlayer/corpses#field-watchers	
+0x5d6de0	58	CGCorpse_C::OnDynamicFlagsChanged		objectlayer	orchestration	void __thiscall (uint32_t old)	Adds or removes the loot sparkle when the lootable bit changed	verified	one	objectlayer/corpses#field-watchers	
+0x5d6e20	13	CGCorpse_C::IsLootable		objectlayer	primitive	uint32_t __thiscall ()	Returns bit 0 of the dynamic flags	verified	one	objectlayer/corpses#field-watchers	
+0x5d6e30	75	CGCorpse_C::AddLootSparkle		objectlayer	orchestration	void __thiscall ()	Makes the Loot Art model once and attaches it at attachment 19	verified	one	objectlayer/corpses#the-loot-sparkle	
+0x5d6e80	56	CGCorpse_C::RemoveLootSparkle		objectlayer	orchestration	void __thiscall ()	Detaches and closes the loot sparkle	verified	one	objectlayer/corpses#the-loot-sparkle	
+0x5d6ec0	205	CGCorpse_C::SetGuildEmblem		objectlayer	orchestration	void __thiscall (int retry)	Installs the owner's guild emblem on the component, asking the name cache again once on a miss	verified	one	objectlayer/corpses#the-guild-emblem	
+0x5d6f90	67	OnCorpseEmblemReady		objectlayer	orchestration		Resolves the corpse and retries the emblem once, then frees the request	verified	one	objectlayer/corpses#the-guild-emblem	
+0x5d6fe0	308	CGCorpse_C::DrawDecal		objectlayer	orchestration	void __thiscall ()	Projects the grey ground decal around the corpse	verified	one	objectlayer/corpses#the-ground-decal	objectlayer::dy_corpse_decal_box_difftest
+0x5d7120	42	CGCorpse_C::GetRaceTemplate		objectlayer	primitive	uint32_t __thiscall ()	Returns the faction template of the corpse's race, or 0	verified	one	objectlayer/corpses#members-and-fields	
 0x5d7150	5	InitContainerDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7160, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7160	15	InitContainerDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d7170	5	InitContainerQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7180, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -19004,9 +19004,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d7640	19	InitContainerSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d7660	5	InitContainerSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7670, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7670	19	InitContainerSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d7690	41			objectlayer	primitive		Fills slot 5 of the corpse vtable; its body is not read here	inferred	none		
+0x5d7690	41	CGCorpse_C::GetPosition		objectlayer	primitive	float * __thiscall (float *out)	Copies the corpse's position field into the output	verified	one	objectlayer/corpses#members-and-fields	
 0x5d76c0	10			objectlayer	orchestration		Returns the float at +0x8 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
-0x5d76d0	28			objectlayer	orchestration		Fills slot 21 of the corpse vtable; its body is not read here	inferred	none		
+0x5d76d0	28	CGCorpse_C::IsMouseoverable		objectlayer	primitive	uint32_t __thiscall ()	Tells whether the mouse may pick the corpse: not a skeleton, or one with loot	verified	one	objectlayer/corpses#selection-and-the-mouse	
 0x5d76f0	54			objectlayer	primitive		Points a container's slot section and watch copy past the item's	verified	one	objectlayer/items#the-container	
 0x5d7730	148			objectlayer	primitive	CGContainer_C * __thiscall (CGContainer_C *this, uint32_t time, void *block)	Builds a container: the item, 74 more watcher lists and the slot list	verified	one	objectlayer/items#the-container	
 0x5d77d0	187			objectlayer	primitive		Destroys a container and frees it on bit 0	verified	one	objectlayer/items#the-container	
