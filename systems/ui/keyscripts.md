@@ -37,7 +37,7 @@ a record is `root + 0xd10 + (stratum + 9·kind)·0x1c` (`0x764ac3`); it stores t
 nonzero stores the frame at `[root + 4·code + 0x84]` (`0x765fa2`) and stops; it answers 1 when nothing took the key. `0x765fd0`
 reads that slot (`0x765fde`) and calls `[vt+0x64]`, answering 0 whatever the frame returned (`0x766028`). With no
 frame it answers 1, except for code `0x212`, which has no key down and is offered to the walk `0x765f10`
-(`0x766048`). The slot is written elsewhere only at `0x76605b`, on the leg where it was already null, so a release
+(`0x766048`). The slot is written elsewhere only at `0x76605b`, on the leg where the slot is already null, so a release
 leaves it set and the slot is the last taker of the code. The slots `0x46ff80` and `0x46ff90` of the base are `xor eax,eax; ret 4`.
 Four instructions address the slot, `0x765fa2`, `0x765fde`, `0x76605b` and `0x76607b`.
 
@@ -100,7 +100,7 @@ and two writers, `0x77e3d0` and `0x77e410`. `0x77b160` declines at `0x77b172` (n
 Typing does not stop movement by clearing anything. The focused box takes the key down, so the
 walk never reaches the world frame and no binding starts. Nothing a focus change runs touches the
 movement bits, and a key already held is released by its key up, which goes to the world frame
-that took the press, whoever has the focus now. A shown frame with a key script, such as the world map,
+that took the press, whoever holds the focus at the release. A shown frame with a key script, such as the world map,
 takes new key downs and nothing else. A held key never fires its binding twice: the world frame's repeat goes to
 a base slot that does nothing.
 
