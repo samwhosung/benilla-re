@@ -36,7 +36,21 @@ your own copy of 1.12.1.5875 and refuse any other build.
   Ported so far: `core`, `camera`, `random`, `screencoord`, `fastmath`, `gametime`, `sysmsg` and
   `minigame`; the rest follow ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 - **`tools/`**: the listing the findings cite (`tools/disasm.sh`), a Ghidra project with this
-  repo's names, signatures and types applied (`tools/ghidra/setup.sh`), and the table generators.
+  repo's names, signatures and types applied (`tools/ghidra/setup.sh`, and
+  `tools/ghidra/decompile.sh` to decompile from it), the table generators, and the instruments
+  below. Each opens with what it does and how far its answer goes.
+  - `tools/callers.py`: every call, jump and stored address that names an address, with controls.
+  - `tools/closure.py`: a system's closure walked from its roots, and what in it lacks a class,
+    a reading or a test.
+  - `tools/clones.py`: functions whose bytes match once the addresses in them are masked.
+  - `tools/class-tags.py`: the compiler's decorated type names and the code that uses each.
+  - `tools/coverage.py`: which instructions of each function the bit-exact tests ran.
+  - `tools/fst-live.py`: where a float is stored with `fst` and then used unrounded.
+  - `tools/event-args.py`: the `SignalEvent2` sites whose format reads more than the caller
+    pushed.
+  - `tools/idb-names.py`: the community names of `vmangos/idb`, for `cargo xtask census --fill`.
+  - `tools/capture/BenillaReCapture`: an addon that measures, in the running client, what the
+    emulator cannot (glyph widths, `math.random` draws), for the tests that read such a file.
 
 ## How to trust it
 
