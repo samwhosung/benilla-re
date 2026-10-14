@@ -1451,6 +1451,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x85c224	uint32_t			gx	Holds a dword its object file's code reads; not read here	inferred	none	
 0x85c250	uint32_t[66]	s_stagePresets		terrain	Holds the six texture stage combine presets of 0x2c bytes	verified	one	terrain/watershade#stage-combine-presets
 0x85c7d8	uint32_t[15]	s_filterModes		terrain	Holds the Direct3D magnify, minify and mip filters of each texture filter index	verified	one	terrain/render#texture-detail-bias
+0x85c9b0	const uint8_t[4]	s_paletteCoverageMasks		image	Holds the 2-bit coverage slot masks 3, 0xc, 0x30 and 0xc0 of the palette converter	verified	one	charactermodel/composite#source-planes
+0x85c9c8	const uint32_t[2]	s_alphaNibbleShifts		image	Holds the shifts 2 and 6 that take the top two bits of a 4-bit alpha	verified	one	charactermodel/composite#source-planes
 0x85cae8	char *[83]	s_errorCodeTokens	idb	net	Holds the 83 status code names, RESPONSE_SUCCESS to CHAR_NAME_SUCCESS, the localization keys	verified	one	net/session#session-status
 0x85cc34	uint32_t			net	Holds a dword that IsAllowedLaunchUrl reads; not read here	inferred	none	
 0x85d5b0	char[5]	s_textI		net	Holds the string "(%i)"	inferred	none	

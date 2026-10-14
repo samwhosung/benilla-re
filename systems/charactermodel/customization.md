@@ -107,3 +107,22 @@ Test: none
 
 `0x478667 test ebx,ebx; jl` and `0x478681 cmp ebx,eax; jg` bound the style. `0x47868b` stores `+0x30`. `0x478697` to `0x4786bb` add the bases; `0x4786c1` sets `+0x0a`. The three geoset ints are tested at `0x4786c8`, `0x4786cc` and `0x4786d3`, the cell pair at `0x4786da` to `0x4786ec`, and
 `0x4786f2 call 0x478220` pushes 1. `0x478740` scans rows of 0x28 bytes by count `[0xc0df2c]` and returns null when none matches (`0x47877d`).
+
+## Replaceable texture types
+
+The file binds five kinds of replaceable texture to a character model, by the type `0x710ec0(model, type, texture)` takes. A call binds every texture record of the model with that type.
+
+| type | bound to | site |
+|---|---|---|
+| 1 | composite target, baked skin | `0x477970`, `0x479622` |
+| 2 | item model and cloak textures | `0x479935`, `0x479c1a`, `0x47a045` |
+| 6 | hair | `0x4782cc` |
+| 8 | extra skin | `0x478204` |
+| 11 to 13 | creature skins | `0x479891` |
+
+Addresses: `0x710ec0`, `0x477970`, `0x479622`, `0x479935`, `0x479c1a`, `0x47a045`, `0x4782cc`, `0x478204`, `0x479891`, `0x5f7ba5`, `0x7101d6`, `0x76d05c`
+Confidence: verified
+Proof: one
+Test: none
+
+A scan of the listing finds eleven calls to `0x710ec0`. Nine push the types above: a literal 1, 2, 6 or 8 before the call (`push 0x1` at `0x477970`, `push 0x6` at `0x4782cc`, `push 0x8` at `0x478204`), or `lea edx,[edi+0xb]` with `edi` below 3 (`0x4798a1 cmp edi,3`) at `0x479891` and `lea ecx,[edi+0xb]` at `0x5f7ba5`. The other two pass a variable type: the deferred-call replay at `0x7101d6` and `0x76d05c`. No call pushes a literal 7.

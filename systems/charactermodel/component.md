@@ -119,14 +119,14 @@ call `0x47ae30` at `0x476e9d` runs once.
 full rebuild it picks geosets; with a mask and no rebuild it loads the sections and, when they are all ready, composites the dirty groups; a full rebuild needs, unless `force`, a load counter under 0x100, and
 returns 0 when any section is not ready. A composite creates the target on first use, runs the handler of every set bit, and uploads each handled tile on an incremental pass or the whole target on a full one.
 
-Addresses: `0x477860`, `0x477520`, `0x476eb0`, `0x476f30`, `0x47b200`, `0x449cc0`, `0x44acf0`, `0x58ac70`, `0x58ad00`, `0x710ec0`, `0x477ba0`, `0x4778cd`, `0x4778fd`, `0x4779d5`, `0x477a2b`, `0x477a4a`, `0xb4271c`
+Addresses: `0x477860`, `0x477520`, `0x476eb0`, `0x476f30`, `0x47b200`, `0x449cc0`, `0x44acf0`, `0x58ac70`, `0x58ad00`, `0x710ec0`, `0x477ba0`, `0x4778cd`, `0x4778fd`, `0x4779d5`, `0x477a2b`, `0x477a4a`, `0xb4271c`, `0x607da0`, `0x607e7c`, `0x4815d0`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x477866` tests `+0x3c`; `0x47787b` to `0x477898` split on the mask and `+0x08`; `0x4778cd call 0x47b200` and `0x4778d2 cmp eax,0x100; jge 0x477a5c` return 0. The target is made at `0x47793e call 0x449cc0` (256 × 256), bound as model
 texture type 1 (`0x477970 call 0x710ec0`). The handler call is `0x477999 call [ebx*4+0xb422f4]`. A full pass uploads once (`0x477a2b`), clears `+0x08`, `+0x10`, counts a composite in `0xb4271c`
-(`0x477a4a`; nothing reads it) and runs `0x477ba0`, which releases the equipment cells whose record is set, as the records stay and the cells reload on the next composite. The flag `0xb42724` is 1 while handlers run.
+(`0x477a4a`; nothing reads it) and runs `0x477ba0`, which releases the equipment cells whose record is set, as the records stay and the cells reload on the next composite. The flag `0xb42724` is 1 while handlers run. The unit model update `0x607da0` calls the driver with `force` 0 (`0x607e7c`) and answers 0 when it returns 0 (`0x607e81`), which `0x4815d0` tests at `0x48161d`, so a unit whose first composite waits is not drawn.
 
 ## Target callback
 

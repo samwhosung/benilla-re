@@ -135,13 +135,13 @@ hand 1, in `0x4798c0`. `0x47a39d` opens through `0x4796b0`.
 `0x47a610(emblem style, emblem color, border style, border color, background color)` fills the tabard cells of groups 3 and 4 from the guild emblem files `Textures\GuildEmblems\Background_%02d_TU_U`, `Border_%02d_%02d_TU_U` and `Emblem_%02d_%02d_TU_U` for group 3, and the `_TL_U` names for group 4, as columns 2 (background), 3 (border) and 4 (emblem) of the row, loaded as kind 9.
 It first clears columns 4 to 2 with `0x47a5c0(4)` and marks groups 3 and 4 dirty. The path builders are `0x47a4d0` (background), `0x47a570` (border) and `0x47a520` (emblem). `0x47a860` clears the tabard preview flag `+0x0c` and the same cells.
 
-Addresses: `0x47a610`, `0x47a4d0`, `0x47a520`, `0x47a570`, `0x47a860`, `0x47a5c0`, `0x838dd8`, `0x838dac`, `0x838e30`, `0x838e04`, `0x838e88`, `0x838e5c`, `0x47a616`, `0x47a653`, `0x47a6a9`, `0x47a706`, `0x47a761`, `0x47a7c2`, `0x47a81d`, `0x47a84b`
+Addresses: `0x47a610`, `0x47a4d0`, `0x47a520`, `0x47a570`, `0x47a860`, `0x47a5c0`, `0x838dd8`, `0x838dac`, `0x838e30`, `0x838e04`, `0x838e88`, `0x838e5c`, `0x47a616`, `0x47a653`, `0x47a6a9`, `0x47a706`, `0x47a761`, `0x47a7c2`, `0x47a81d`, `0x47a84b`, `0x6d6d20`, `0x472ca4`, `0x504852`, `0x5d648a`, `0x5e075c`
 Confidence: verified
 Proof: one
 Test: none
 
 The arguments are read as `ebp+0x18` background color, `ebp+0x14`/`ebp+0x10` border color and style, `ebp+0xc`/`ebp+8` emblem color and style (`0x47a61f`, `0x47a6d0`, `0x47a6d3`, `0x47a78c`, `0x47a78f`). The loads are `0x47a653` (background, group 3), `0x47a6a9` (group 4), `0x47a706`, `0x47a761` (emblem) and `0x47a7c2`, `0x47a81d` (border). Each path builder writes an empty string for a type other than 3 and 4 and formats with `0x64a7f0`. `0x47a84b`
-ORs `0x18` into `+0x10`. The seven callers pass the five guild emblem fields in the order of the guild cache record. `0x47a860` is called from `0x5e0857`.
+ORs `0x18` into `+0x10`. Four of the seven callers test bit 0 of the tabard display's `+0x24` first (`0x472ca4`, `0x504852`, `0x5d648a`, `0x5e075c`) and fetch the fields with `0x6d6d20`, which fails when any of the five cache values (`+0x2e4` to `+0x2f4`) is -1. `0x47a860` is called from `0x5e0857`.
 
 ## Creature skins
 

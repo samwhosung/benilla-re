@@ -46,16 +46,16 @@ Test: none
 ## Blit helpers
 
 `0x477070(group)` blits the skin cell `+0x188` onto the tile of `group`: source and destination positions are both the tile's top-left, and the size is the tile's. `0x4770f0(group, cell)` blits an overlay cell with the source position at 0, 0, the destination at the tile's top-left
-and the tile's size. Both ask for the cell's data with `0x47b120` and its descriptor with `0x47b150` (forced), skip a cell with no data, and hand the data, the descriptor's format dword, both positions, the size and the descriptor to `0x477460`.
+and the tile's size. Both ask for the cell's data with `0x47b120` and its descriptor with `0x47b150` (forced), skip a cell with no data, and hand the data, the descriptor's format dword, both positions, the size and the descriptor to `0x477460`, which calls the kernel for the format: 0 replace, 1 key, any other value blend.
 
-Addresses: `0x477070`, `0x4770f0`, `0x477460`, `0x47b120`, `0x47b150`, `0x4770d7`, `0x477155`
+Addresses: `0x477070`, `0x4770f0`, `0x477460`, `0x47b120`, `0x47b150`, `0x4770d7`, `0x477155`, `0x44b430`, `0x44ae70`, `0x4498c4`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x477070` pushes the tile address twice (`0x4770ce`, `0x4770cf`) as destination and source position, so a skin source is read at the tile's own place in the image; `0x4770f0` builds a zero source position on its frame (`0x477155 mov [ebp-8],esi`)
-and the tile's top-left as destination (`0x477147`). The descriptor dwords are `{width, height, ?, mip count, ?, format}`, copied from the cell's `+0x1c` to `+0x30`; the last is the format that `0x477460` switches on. `0x477460` copies the three position and size pairs to its frame so
-the kernels can halve them, then calls by format: 0 `0x477c80`, 1 `0x477db0`, anything else `0x477f20`.
+and the tile's top-left as destination (`0x477147`). `0x47b150` fills the cell's six descriptor dwords once, through `0x44b430`: width and height (image `+0x144`, `+0x148`), image `+0x118`, the mip count `1 + floor(log2(max(w, h)))` from `0x44ae70`, bit 0 of image `+0x110` and the format, image `+0x11c`, which the BLP loader sets from the header's alpha depth (`0x4498c4`).
+`0x477460` copies the three position and size pairs to its frame so the kernels can halve them, then calls by format: 0 `0x477c80`, 1 `0x477db0`, anything else `0x477f20`.
 
 ## Replace kernel
 
@@ -95,3 +95,28 @@ Test: none
 
 `0x477ff8 mov cl,[ecx*4+0x838ae8]` reads the shift from a dword table `0, 2, 4, 6`, `0x478001 shr edx,cl` applies it, and `0x478005 jbe` skips level 0. `0x47800b cmp edx,2; jbe` sends 1 and 2 to the blend and `0x478010 cmp edx,3; jne` skips other values, while 3 copies at `0x478019`.
 `0x47802c mov edx,[ecx+0x838af8]` is `SW` and `0x478032 mov edi,0x838b04; sub edi,ecx` points `DW` at `0x838b04 - 4·v`, which is `SW[3 - v]`. The multiplies are `0x47804c`, `0x478055`, `0x478064`, `0x47806f`, `0x478072`, `0x47807c`, and each field is shifted right 16 and masked at `0x478082` to `0x4780a0`.
+
+## Oversized sources
+
+A source larger than its tile is cropped and never scaled. Each kernel reads the top-left `size.w × size.h` block of every source level from the source position, and an overlay's position is 0, 0. A key or blend source also reads its coverage plane for the tile's
+size, so its layout is right only for a source authored at the tile's width. The loop runs for the source's level count and indexes the target's table by the same level number. The texture service halves a source whose side exceeds the device's texture size limit before the blit.
+
+Addresses: `0x477c80`, `0x477db0`, `0x477f20`, `0x448b60`, `0x4498f1`, `0x58a230`, `0x477d94`
+Confidence: verified
+Proof: one
+Test: none
+
+The kernels step the level through the source's mip count (`0x477d90 mov edi,[edx+0xc]`, `0x477d94 cmp eax,edi`) and take the destination row from `dstPos` and the source row from `srcPos`, with no scaling. `0x4498f1 call 0x448b60` halves the loaded width and height while either exceeds the device limit, the dword at `+0x60` of the device caps from `0x58a230`
+(`0x448ba7`, `0x448bab`, `0x448baf`), counting the halvings. The routine applies no floor at 256 to that limit.
+
+## Source planes
+
+The palette converter `0x5a9a80` writes the layout the key and blend kernels read: the 16-bit colour rows, then the 2-bit coverage plane. A colour is the palette entry rounded to the nearest 5, 6 and 5 bit levels with the error of each pixel spread to its neighbours in sixteenths, 7 to the next pixel and 3, 5 and 1 to the next row. The coverage of a pixel is the top two bits of an 8-bit alpha, the top two bits of each 4-bit alpha nibble, or a 1-bit alpha as 0 or 2. Four pixels share a byte, in the slots with masks `03 0c 30 c0`.
+
+Addresses: `0x5a9a80`, `0x5a8ce0`, `0x5a9b6b`, `0x5a9b71`, `0x5a9b77`, `0x5a9c04`, `0x5a9cd2`, `0x5a9d1e`, `0x5a9d57`, `0x85c9b0`, `0x85c9c8`
+Confidence: verified
+Proof: one
+Test: none
+
+The rounding adds `0x40000` to red and blue and `0x20000` to green (`0x5a9b71`, `0x5a9b77`, `0x5a9b6b`) and masks, shifting by 19, 18 and 19 bits, and each result is clamped to 31, 63 and 31. The error scale is `sar 4` of the carried error (`0x5a9b44`), the weights 7 (`0x5a9c04`), 5 and 3 (`0x5a9c19` to `0x5a9c36`) and the stored 1.
+`0x5a9cd2 shr bl,6` takes the 8-bit alpha's top bits; the 4-bit branch (`0x5a9cf8`) shifts by 2 or 6 from `0x85c9c8` and the 1-bit branch (`0x5a9d57`) shifts left once. The mask bytes at `0x85c9b0` are `03 0c 30 c0`, the kernels' table `0x838ae4`. `0x5a8ce0` calls this converter among five others.

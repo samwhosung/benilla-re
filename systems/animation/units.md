@@ -196,7 +196,7 @@ Proof: one
 Test: none
 
 With the key bone already armed, `0x5fe912` sends a mask-path move request to bone 0 alone (`0x5fe930`). The unmasked entries
-`0x5feae0 call 0x5fcc10; jne 0x5fe919` and `0x5feaf3 call 0x5fcbb0; jne 0x5fe919` test bone 0's current id with no check of the key bone.
+`0x5feae6 call 0x5fcc10` with `0x5feaed jne 0x5fe919`, and `0x5feaf3 call 0x5fcbb0` with the `jne 0x5fe919` after it, test bone 0's current id with no check of the key bone.
 `0x5fe927` sets the key enable and `0x5fe92e rep movsd` copies the seven dwords of bone 0's current state (`ebp-0xb4`) to `ebp-0x5c`. The
 sets are in `unitanim#animation-sets`.
 
