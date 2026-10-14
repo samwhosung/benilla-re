@@ -95,13 +95,16 @@ one, and signals `PLAYERBANKSLOTS_CHANGED` for slots 39 to 68. A money change pl
 `LOOTWINDOWCOINSOUND`, signals `PLAYER_MONEY`, refreshes quest-giver statuses, and lowers the
 player's trade offer to the money left when the offer is larger.
 
-Addresses: `0x5ddcf0`, `0x5ddf30`, `0x5d4760`
+Addresses: `0x5ddcf0`, `0x5ddd4e`, `0x5ddd55`, `0x5ddd69`, `0x703e50`, `0x5ddf30`, `0x5d4760`
 Confidence: verified
 Proof: one
 Test: none
 
 `0x5ddcf0` takes the slot as `(offset − 0x4a8) >> 3`, the current GUID from the inventory list (0
-past its count) and calls `0x495420` with it. `0x5ddf30` calls `0x4d7d40`, then `0x5eb070`, then
+past its count) and calls `0x495420` with it at `0x5ddd4e` when it differs from the old GUID the callback receives, so
+the arriving item is the one unlocked. `0x5ddd55` tests the slot against 0x27 to 0x3e, the 24 bank slots, and
+the last test against 0x3f to 0x44, the six bank bags; `0x5ddd69` signals event 0x15b with no arguments
+through `FrameScript_SignalEvent`. `0x5ddf30` calls `0x4d7d40`, then `0x5eb070`, then
 `TradeSubtractMoney(offer − money)` when `TradeGetPlayerMoney` (`0x5d4760`) exceeds the money.
 
 ## Combo points, form and far sight

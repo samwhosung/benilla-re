@@ -71,6 +71,49 @@ its animation, or one with flag 0x4 freeze the tracks. `0x5fdba0` plays a track 
 0x20 or a swing while attacking draws them, and 112 nocks the ammunition. `0x60f5b0` tests 0x80 of
 the row's `+0xc`.
 
+## The ranged shot cycle
+
+A ranged shot's attack animation ends in the default branch of `0x5fc3f0`, which re-picks the base
+animation. A drawn ranged weapon (`+0xd40` equal to 2, bit 0x200 of `+0xd58`) makes `0x5fd460`
+claim the pick with the load animation of the weapon's item subclass: 105 for a bow, 106 for a gun
+or crossbow, 112 for a thrown weapon, 111 for a wand, else 25. The end of 105 plays 109 and the end
+of 106 plays 110; the ends of 109, 110, 111 and 112 replay 109, 110 or 111 while the unit has a
+ranged model (`+0xd24`) and is channelling or holds the auto-repeat bits, else re-pick.
+
+Addresses: `0x5fc3f0`, `0x5fc45a`, `0x5fc5bc`, `0x5fc5e9`, `0x5fc601`, `0x5fc62e`, `0x5fc646`, `0x5fc673`, `0x5fd460`, `0x5fd48f`, `0x5fd4fe`, `0x5fd508`
+Confidence: verified
+Proof: one
+Test: none
+
+The attack ids 46, 49 and 107 have the default case of the index table at 0x5fc848 (`0x5fc45a`,
+`UpdateBaseAnimation(-1)`); 105 and 106 are cases 11 and 12 of the jump table at 0x5fc7ec, which push
+0x6d and 0x6e (`0x5fc5e9`, `0x5fc62e`). The cases of 109 (`0x5fc5bc`), 110 (`0x5fc601`) and 111 and
+112 (`0x5fc646`) need `+0xd24`, then the channel field (`[fields+0x228]`) or bit 0x600, 0x400 and
+0x400 of `+0xd58`, and push 0x6d, 0x6e and 0x6f. `0x5fd460` starts by testing `+0xd40` and bit 0x200;
+`0x5fd48f` loads the hand 2 item record, its class byte 2, and maps subclass − 2 through a byte table
+(0x5fd530) and the jump table at 0x5fd51c to the stores of 0x69, 0x6a, 0x70, 0x6f; `0x5fd4fe` leaves 25.
+
+## Animation rate
+
+`0x5fe2f0` gives a moving animation a playback rate: the unit's current speed over what the
+model's sequence covers at its size. The rate starts at 1.0 and stays there unless the requested
+id is one of the 15 move animations and the divisor is above zero. The divisor is the length of the
+first row of the model's base matrix, `√(m00² + m01² + m02²)`, times the sequence's move speed, read
+from the mount model when there is one, else the body.
+
+Addresses: `0x5fe2f0`, `0x5fe4be`, `0x5fe50a`, `0x5fe515`, `0x5fe520`, `0x5fe528`, `0x5fe53c`, `0x5fe541`, `0x5fe54d`, `0x5fe685`, `0x5fee80`, `0x711a20`, `0x7c4c90`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5fe4be` seeds 1.0. `0x5fe50a` calls `CM2Model::GetSequenceInfo(id, 0)` on the model of the
+`+0xdc` else `+0xd8`; its record's `+0x8` is the first-row length times the resolved sequence's
+`+0xc`. `0x5fe515` and `0x5fe520` skip the rate for a divisor that is zero, below zero or not a
+number; `0x5fe528` skips it for an id outside the move set. `0x5fe53c` takes `GetCurrentSpeed(movement, 0)`
+and `0x5fe541` divides; `0x5fe54d` stores the rate even when the sequence length is 0. `0x5fe685`
+hands the rate to the animation descriptor. The base matrix is set from `+0x90 · +0x94` and `+0x98`
+(`+0x9c` mounted), so a scaled unit's rate carries its scale (`objectbase`).
+
 ## Animation sets
 
 Byte-table switches and comparisons sort animations into the sets the player and the resolvers
@@ -143,6 +186,28 @@ sprays. The print's sizes come from `0x607920`: the mount's `+0xcc0` and scaled 
 `CreatureModelData` row. `0x5ffb10(hand, bit)` takes the hand's item and the sheathe state
 before or after the change by `+0xd58`, re-attaches the weapon and plays the sheathe sound
 0x458530. `0x607840` drops events whose position is not a number. Slices: uh_placement_dist2_difftest `0x5fbfdb`-`0x5fc015`; uh_placement_inner_range_difftest `0x5fc0b3`-`0x5fc0c1`; uh_placement_ground_z_difftest `0x5fc157`-`0x5fc197`; uh_placement_height_gate_difftest `0x5fc157`-`0x5fc172`.
+
+## Event points
+
+The dispatcher `0x5ffbd0` reads an event's tag at `[ebx+0x8]`, its data at `[ebx+0xc]` and its world point at
+`[ebx+0x10]`. The footprint tags (`$BR0` to `$WL3`), the terrain footstep of `$FSD`, `$ESD`, the
+connecting swing of `$CSS`, `$SHL`, `$SHR` and the missile tags `$CST`, `$CSL` and `$CSR` use that
+point. `$TRD` plays at the unit's position plus 1.0 in z, and the foley of `$FSD` and the sounds
+of `$FD1` to `$FD9` at its position plus 2.0. `$CSD` carries the data as a voice id and plays at
+attachment 17, and a missed `$CSS` plays at attachment 1. `$BTH` and `$DTH` take no point.
+
+Addresses: `0x5ffbd0`, `0x5ffc82`, `0x5ffe32`, `0x5fff44`, `0x5fff5a`, `0x5fffca`, `0x600139`, `0x5ffeca`, `0x5ffeed`, `0x5fffad`, `0x5fbf70`, `0x623390`, `0x6239f0`, `0x62faa0`, `0x623c10`, `0x623b90`, `0x60c940`
+Confidence: verified
+Proof: one
+Test: none
+
+The arms load `[ebx+0x10]` at `0x5ffc82`, `0x5ffe32` (the `$.R` and `$.L` footprints, passed to
+`0x5fbf70`), `0x5fff44` (`0x623390`), `0x5fff5a` (`0x6239f0`), `0x5fffca` and `0x600143` (`0x60c940`).
+The `$TRD` arm `0x5ffeca` tests the player type bit and calls `0x62faa0`, which adds 1.0 to
+`GetPosition` (slot 5, `fadd` of the float 1.0); the arm at `0x5ffeed` passes `[ebx+0xc]` to
+`0x623c10`, which calls `0x623b90(17)`, the attachment's position or the unit's plus the table
+height. The `$FD` sounds add 2.0 (`sounds`). The model queue computes the point once for an event
+(`models/animation`), so every arm that reads it sees the same value.
 
 ## Emotes
 

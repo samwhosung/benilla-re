@@ -61,6 +61,24 @@ component from the extra row (race, gender, skin, face, hair, facial hair; textu
 has flag 0x4, from its bytes. Equipment: 19 slots for a native player display, else the extra's
 ten item displays `+0x20` to `+0x44`, then both hands (`0x60b770`).
 
+## The display alpha
+
+A unit's alpha comes from its display row. The rebuild of a display ends by fading the unit over
+1000 ms to the row's alpha byte over 255 (slot 27, 1.0 without a row), times the alpha of the
+first effect on the list `+0xb50` when there is one. The same fade restores the alpha when such an
+effect ends. A player is a unit, so a player in a creature display takes the row's alpha.
+
+Addresses: `0x60abe0`, `0x60ad9f`, `0x60d180`, `0x60d2d0`, `0x614f80`, `0x60d219`, `0x5ff2b2`, `0x60d9de`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x60ad9f` is the call to `RestoreAlpha` (`0x60d180`) in the rebuild; `0x60d180` calls slot 27
+(`0x60d2d0`: `fild [row+0x14]`, `fmul` 1/255), multiplies by `[+0xb50]+0x78` when the list is not
+empty and calls `FadeTo(alpha, 0x3e8)`. The other callers are `0x5ff2b2`, `0x60d219` and `0x60d9de`
+(`auras`). Slot 27 is the same function in the unit and player tables; no code tests the object
+type.
+
 ## Mounts
 
 The `UNIT_FIELD_MOUNTDISPLAYID` watcher passes the old id to `0x5ffa50`, which dismounts from the
@@ -133,6 +151,27 @@ one (0x47a070), opening or closing the hand.
 `0x611e10` uses option 17, keeps the model at `+0xd24`, gives a bow `0x611ff0` (a line from `$WTT`
 to `$WTB`) and lets the active player face its target. `0x608d60` rebuilds a hand's trail at `+0xd34` (0x6c6920, a
 `WTOBJECT`); `0x60ba00` and `0x60d5d0` release them, `0x60e550` passes them arguments. `0x608dd0`, which nothing reaches, rebuilds both. Slices run `0x612044`-`0x612116` and `0x612221`-`0x612269`.
+
+## Disarm and the hands
+
+Hands attach through `0x60b770(hand)`, which asks for the hand's weapon without `raw` and returns,
+attaching nothing, when the weapon is hidden by disarm. The flags watcher redoes the hands when the
+disarm bit 0x200000 changes. A unit that holds a class 2 item in the main hand, is now disarmed and
+has a weapon drawn (`+0xd40` not 0) loses the main-hand attachment (`0x47a310`, equipment slot
+0xf); every other change re-hangs the hand through `0x60b770(0)`. The ranged weapon is never hidden.
+
+Addresses: `0x5ff580`, `0x5ff614`, `0x5ff623`, `0x5ff63e`, `0x5ff65d`, `0x5ff676`, `0x5ff67d`, `0x5ff690`, `0x5ff695`, `0x5ff699`, `0x5ff6a5`, `0x60b770`, `0x60b791`, `0x60b79e`, `0x47a310`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x5ff614` and `0x5ff619` run the block only when 0x200000 is in the changed bits. `0x5ff629` calls
+slot 38 (`GetWeapon(0, 1)`, the true main hand); `0x5ff631` and `0x5ff636` pass on to the off hand
+unless it is a class 2 item; `0x5ff63e` tests the flag, `0x5ff65d` the drawn state, and `0x5ff676`
+detaches. `0x5ff695` repeats the block for the off hand but pushes slot 0x10 at `0x5ff699`, an
+equipment index that slot 38 does not know: a player returns none, so `0x5ff6a5` leaves the block
+dead, and a creature reads past its virtual item block. `0x60b791` calls slot 38 and `0x60b79e`
+returns on none.
 
 ## Shapeshift forms
 

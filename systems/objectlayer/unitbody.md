@@ -78,6 +78,25 @@ standing, with no slot 41 state, sets 0x800 or 0x1000 by the turn's sign; `0x608
 animation through `0x5fce30` when the wanted shuffle, 11 for left and 12 for right, or none,
 differs from the playing one. Slices: u4_lean_smooth_difftest `0x60809a`-`0x6080f6`.
 
+## Rendered facing
+
+A unit's model is drawn at the body facing `+0xc94`, not at the mover's facing. The world node
+that culls the unit takes slot 6, the mover's facing `+0x1c` (`0x5f1f30`); the model's own base
+transform takes slot 17 (`0x607ea0`), the body facing `+0xc94`, both converted to the world through
+the transport. Slot 15 (`0x608560`) places the model: a swimmer moving forward or back gets the
+swim transform, anything else the ground conform of [objectbase](objectbase.md#ground-conform).
+
+Addresses: `0x607ea0`, `0x607eb0`, `0x5f1f30`, `0x608560`, `0x614cd0`, `0x614dd8`, `0x613ef0`, `0x7c4ae0`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x607ea0` jumps to `0x607eb0`, which pushes `[+0xc94]` and calls `TransportFacingToWorld` on the
+movement at `+0x9a8`. `0x5f1f30` does the same with `[[+0x118]+0x1c]`. `0x608560` tests the
+movement flags `[+0x118]+0x40` for 0x200000 and the low two bits and jumps to `0x608622` and
+`0x614cd0` otherwise; the conform reads slot 17 at `0x614dd8`, and `0x613ef0` slot 6 for the node's
+rotation. The bone counter-twist of the previous entry brings the head back to the display facing.
+
 ## Low health and bleeding
 
 `UNIT_FIELD_HEALTH` sets bit 0x2 of `+0xc58` through `0x5fa710` when the unit has blood levels;

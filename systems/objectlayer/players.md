@@ -149,7 +149,8 @@ Test: none
 
 `0x5ec999` takes `now − [0xc4c270]` and skips when it is negative (`js`). `0x5ec9b6` stores
 `now + 0xfa0` before `DisplayError`. `0x5ecdb0` writes `ecx` to `0xc4d758` and the time to
-`0xc4c270`. `0x5ea800` sets state 0 when an attack starts (`playercombat`).
+`0xc4c270`. `0x5ea800` sets state 0 each time the attacker state of the active player's own swing arrives
+(`unitcombat`, `playercombat`).
 
 ## Death
 
