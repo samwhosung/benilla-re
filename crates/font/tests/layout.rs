@@ -111,6 +111,20 @@ fn fuzz_signed(s: &mut u32, hi: f32) -> f32 {
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────────
 
+/// Wrap widths whose pixel count is NaN, infinite, past `i32` or past `i64`: `__ftol` returns the
+/// low dword of its qword, 0 for the indefinite.
+const WIDE_WRAP: [f32; 9] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e7,
+    -1.0e7,
+    4.0e6,
+    1.0e17,
+];
+
 #[test]
 fn resolve_clamp_size_difftest() {
     // 0x5ccb80: thiscall ecx=this. flags&4 clear ⇒ [+0x18] (preset) is the resolved size; the clamp
@@ -410,6 +424,30 @@ fn anchor_justify_snap_difftest() {
             assert_f32(bin.1, ours.1, &format!("ajs[{i}].y w={view_w} h={view_h}"));
             assert_f32(bin.2, ours.2, &format!("ajs[{i}].z w={view_w} h={view_h}"));
         }
+        // Wrap widths whose pixel count is NaN, infinite, past `i32` or past `i64`.
+        for &wrap_width in &WIDE_WRAP {
+            for jv in 0..3u32 {
+                let st = AnchorState {
+                    anchor_x: 0.3,
+                    anchor_y: 0.6,
+                    anchor_z: 0.1,
+                    n: 3,
+                    flags: 0,
+                    justify_v: jv,
+                    justify_h: 0,
+                    pos_x: 0.25,
+                    pos_y: 0.75,
+                    clamped_size: 0.05,
+                    wrap_width,
+                };
+                let bin = run(&mut e, this, &st);
+                let ours = anchor_justify_snap(&st, view_w, view_h);
+                let tag = format!("ajs wide wrap={wrap_width} jv={jv} h={view_h}");
+                assert_f32(bin.0, ours.0, &format!("{tag}.x"));
+                assert_f32(bin.1, ours.1, &format!("{tag}.y"));
+                assert_f32(bin.2, ours.2, &format!("{tag}.z"));
+            }
+        }
     }
 }
 
@@ -500,11 +538,19 @@ fn selection_highlight_fade_difftest() {
     }
 
     let mut s: u32 = 0x5cd4_d001;
-    for i in 0..3000u32 {
+    // The cases after the first 3000 have `endCol == 0`: the divide gives +inf (or NaN for a base
+    // alpha of 0), and `__ftol` returns the low dword of its qword, 0, for either.
+    for i in 0..3100u32 {
         let count = ((next(&mut s) >> 20) % 200 + 1) as i32; // 1..200 cells
         let start = ((next(&mut s) >> 20) % 60) as i32; // 0..59
-        let end = ((next(&mut s) >> 20) % 60 + 1) as i32; // 1..60 (endCol >= 1)
-        let base = (next(&mut s) >> 24) as u8;
+        let mut end = ((next(&mut s) >> 20) % 60 + 1) as i32; // 1..60
+        let mut base = (next(&mut s) >> 24) as u8;
+        if i >= 3000 {
+            end = 0;
+            if i % 4 == 0 {
+                base = 0;
+            }
+        }
         e.write_u32(page + P_VERT_COUNT, count as u32 + 8); // vertcount >= cell count
         e.write_u32(this + S_SEL_COUNT, count as u32);
         e.write(this + S_ALPHA_BYTE, &[base]); // +0x2f base alpha byte
@@ -843,9 +889,12 @@ fn string_layout_lines_difftest() {
             for &fflags in &[0u32, 0x1, 0x8] {
                 e.write_u32(font + F_FLAGS_180, fflags);
                 for &jv in &[0u32, 1, 2] {
-                    for i in 0..200u32 {
+                    for i in 0..200u32 + WIDE_WRAP.len() as u32 {
                         let clamped = fuzz_unit(&mut s, 0.2) + 0.01;
-                        let wrap = fuzz_unit(&mut s, 0.2);
+                        let mut wrap = fuzz_unit(&mut s, 0.2);
+                        if let Some(&w) = WIDE_WRAP.get((i as usize).wrapping_sub(200)) {
+                            wrap = w;
+                        }
                         let box_bottom = fuzz_unit(&mut s, 1.6);
                         let px = ((next(&mut s) >> 24) % 60 + 4) as i32;
                         let adv = ((next(&mut s) >> 18) % 200) as i32;

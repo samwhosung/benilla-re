@@ -97,6 +97,18 @@ fn viewport_pixel_dims_difftest() {
         ([100.0, 100.0, 99.0, 640.0], "negative ext_h"),
         ([0.0, 0.0, 1080.0, 1920.0], "1920x1080"),
         ([1.9, 0.1, 482.9, 640.1], "trunc both"),
+        // NaN, the infinities and extents past `i32` and `i64`: `__ftol` returns the low dword of
+        // its qword, 0 for the indefinite, and a zero extent takes the default.
+        ([0.0, 0.0, f32::NAN, 640.0], "ext_h NaN"),
+        ([0.0, 0.0, 480.0, f32::NAN], "ext_w NaN"),
+        ([f32::NEG_INFINITY, 0.0, 480.0, 640.0], "ext_h +inf"),
+        ([0.0, f32::INFINITY, 480.0, 640.0], "ext_w -inf"),
+        ([0.0, 0.0, 3.0e9, 5.0e9], "extents past i32"),
+        ([0.0, 0.0, 1.0e30, -1.0e30], "extents past i64"),
+        (
+            [0.0, 0.0, 4_294_967_296.0, 8_589_934_592.0],
+            "extents 2^32 and 2^33",
+        ),
     ] {
         check_viewport(&mut e, rect, r, tag);
     }
@@ -199,6 +211,16 @@ fn font_raster_metrics_difftest() {
             (32.0 / shf, "32px(cap edge)"),
             (32.5 / shf, "tie 32.5→cap32"),
             (100.0 / shf, "big→cap32"),
+            // NaN, the infinities, and sizes whose pixel height passes `i32` and `i64`: `__ftol`
+            // returns the low dword of its qword, 0 for the indefinite. The `load_param`
+            // conversion takes a render height of at most 32, so only the pixel size reaches one.
+            (f32::NAN, "req NaN"),
+            (f32::INFINITY, "req +inf"),
+            (f32::NEG_INFINITY, "req -inf"),
+            (1.0e30, "req 1e30"),
+            (-1.0e30, "req -1e30"),
+            (4.0e6, "req past i32 px"),
+            (-4.0e6, "req past -i32 px"),
         ] {
             for &flags in &[0u32, 0x1, 0x4, 0x8, 0x9, 0xd] {
                 check_raster(

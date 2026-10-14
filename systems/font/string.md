@@ -93,7 +93,8 @@ A newline token is a line of its own (`count++`, `baseline −= lineStep`). Othe
 cursor` or `bytes == 0 && *next == 0`; the horizontal offset is `ScreenToPixelWidth(raw, −offset)` with
 `offset` the line width for justification 2, half of it for 1 and 0 otherwise; it emits the line at origin
 `(offset, baseline, originZ)`, increments the count, lowers the baseline by `lineStep`, and stops after one
-line for flag bit 1. The test runs the layout through the real measure and quad build.
+line for flag bit 1. `wrapPx` has a zero high dword (`0x5cdcf2`) for `fild qword`, so a negative count reads as unsigned. The test runs
+the layout through the real measure and quad build.
 
 ## One glyph quad
 

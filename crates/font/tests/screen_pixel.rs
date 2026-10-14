@@ -17,6 +17,20 @@ const ONE_TO_ONE_HEIGHT: u64 = 0x5c2540;
 
 const RES: &[i32] = &[480, 600, 768, 1024, 1200];
 
+/// Sizes whose product with the screen size is NaN, infinite, past `i32` or past `i64`: `__ftol`
+/// returns the low dword of its qword, 0 for the indefinite.
+const WIDE: [f32; 9] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e7,
+    -1.0e7,
+    4.0e6,
+    1.0e17,
+];
+
 #[test]
 fn screen_to_pixel_height_difftest() {
     let Some(wow) = Wow::load() else {
@@ -38,6 +52,14 @@ fn screen_to_pixel_height_difftest() {
                 bin,
                 screen_to_pixel_height(false, v, h),
                 &format!("s2ph tie h={h} v={v}"),
+            );
+        }
+        for &v in &WIDE {
+            let bin = e.call_f32(SCREEN_TO_PIXEL_HEIGHT, 0, 0, &[v.to_bits()]);
+            assert_f32(
+                bin,
+                screen_to_pixel_height(false, v, h),
+                &format!("s2ph wide h={h} v={v}"),
             );
         }
         for i in 0..2000u32 {
@@ -68,6 +90,14 @@ fn screen_to_pixel_width_difftest() {
     let mut s: u32 = 0x5c70_0001;
     for &w in RES {
         e.write_u32(g::SCREEN_W, w as u32);
+        for &v in &WIDE {
+            let bin = e.call_f32(SCREEN_TO_PIXEL_WIDTH, 0, 0, &[v.to_bits()]);
+            assert_f32(
+                bin,
+                screen_to_pixel_width(false, v, w),
+                &format!("s2pw wide w={w} v={v}"),
+            );
+        }
         for i in 0..2000u32 {
             let v = fuzz_unit(&mut s, 4.0) - 2.0;
             let bin = e.call_f32(SCREEN_TO_PIXEL_WIDTH, 0, 0, &[v.to_bits()]);

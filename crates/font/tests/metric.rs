@@ -243,6 +243,20 @@ fn compute_step_difftest() {
     }
 }
 
+/// Metrics that are NaN, infinite, past `i32` and `i64`, or exactly 2^32 and 2^33: `__ftol` returns
+/// the low dword of its qword, 0 for the indefinite and for the powers of two.
+const WIDE_METRICS: [f32; 9] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    3.0e9,
+    -3.0e9,
+    4_294_967_296.0,
+    8_589_934_592.0,
+];
+
 #[test]
 fn compute_step_fixedwidth_difftest() {
     // 0x5ca4b0 glyph-found centering branch. Kern hash EMPTY (font[0x60]=-1) → the top lookup is
@@ -275,11 +289,17 @@ fn compute_step_fixedwidth_difftest() {
     for &flags in &[0u32, FLAG_OUTLINE] {
         e.write_u32(font + F_FLAGS, flags);
         let outline = flags & FLAG_OUTLINE != 0;
-        for i in 0..1200u32 {
+        for i in 0..1200u32 + 2 * WIDE_METRICS.len() as u32 {
             let r = (next(&mut s) >> 8) % 56 + 8; // raster px 8..63
-            let m1 = fuzz_unit(&mut s, r as f32 + 6.0); // span [0, R+) to hit m1>=R sometimes
-            let m2 = fuzz_unit(&mut s, r as f32 + 6.0);
-            let g2_present = next(&mut s) >> 20 & 1 != 0;
+            let mut m1 = fuzz_unit(&mut s, r as f32 + 6.0); // span [0, R+) to hit m1>=R sometimes
+            let mut m2 = fuzz_unit(&mut s, r as f32 + 6.0);
+            let mut g2_present = next(&mut s) >> 20 & 1 != 0;
+            // The wide metrics, first as g1 and then as g2, with the other glyph present at 3.0.
+            if let Some(k) = (i as usize).checked_sub(1200) {
+                let bad = WIDE_METRICS[k / 2];
+                g2_present = true;
+                (m1, m2) = if k % 2 == 0 { (bad, 3.0) } else { (3.0, bad) };
+            }
 
             e.write_u32(font + F_RASTER_PX, r);
             e.write_u32(desc_a + D_STEP_METRIC, m1.to_bits());

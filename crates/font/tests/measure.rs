@@ -240,7 +240,7 @@ fn text_extent_measure_difftest() {
     let mut e = Emu::new(&wow);
     let w = setup(&mut e);
     let mut s: u32 = 0x5c69_4001;
-    for i in 0..6000u32 {
+    for i in 0..6000u32 + WIDE_FRAC.len() as u32 {
         let c = gen_case(&mut s);
         let (width, adv, k) = apply(&mut e, &w, &c);
         let bytes = build_text(&mut s, &mut e, &w, c.g, 9);
@@ -293,6 +293,34 @@ fn text_extent_measure_difftest() {
     }
 }
 
+/// Box widths whose pixel threshold is NaN, infinite, past `i32` or past `i64`: `__ftol` returns the
+/// low dword of its qword, 0 for the indefinite.
+const WIDE_FRAC: [f32; 9] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e7,
+    1.0e5,
+    -1.0e7,
+    1.0e17,
+];
+
+/// Line gaps whose pixel gap is NaN, infinite, past `i32` or past `i64`: `__ftol` returns the low
+/// dword of its qword, 0 for the indefinite.
+const WIDE_GAP: [f32; 9] = [
+    f32::NAN,
+    f32::INFINITY,
+    f32::NEG_INFINITY,
+    1.0e30,
+    -1.0e30,
+    1.0e7,
+    -1.0e7,
+    1.0e17,
+    -1.0e17,
+];
+
 #[test]
 fn wrap_max_chars_difftest() {
     let Some(wow) = Wow::load() else {
@@ -312,7 +340,10 @@ fn wrap_max_chars_difftest() {
             fuzz_unit(&mut s, 0.6)
         };
         let extra = fuzz_signed(&mut s, 4.0);
-        let box_frac = fuzz_unit(&mut s, 1.5);
+        let mut box_frac = fuzz_unit(&mut s, 1.5);
+        if let Some(&f) = WIDE_FRAC.get((i as usize).wrapping_sub(6000)) {
+            box_frac = f;
+        }
         let max_bytes = bytes.len() as i32 + 4;
 
         e.write_u32(w.o0, 0); // outWidth
@@ -519,6 +550,8 @@ fn font_width_fit_difftest() {
     let mut e = Emu::new(&wow);
     let w = setup(&mut e);
     let mut s: u32 = 0x5c23_2001;
+    // The wrap threshold inside runs at the constant width 10000.0, so `box_w` never reaches its
+    // `__ftol`; NaN and out-of-range inputs are probed in `wrap_max_chars_difftest`.
     for i in 0..6000u32 {
         let c = gen_case(&mut s);
         let (width, adv, k) = apply(&mut e, &w, &c);
@@ -578,14 +611,17 @@ fn font_textblock_height_difftest() {
     let mut e = Emu::new(&wow);
     let w = setup(&mut e);
     let mut s: u32 = 0x5c20_7001;
-    for i in 0..6000u32 {
+    for i in 0..6000u32 + WIDE_GAP.len() as u32 {
         let c = gen_case(&mut s);
         let (width, adv, k) = apply(&mut e, &w, &c);
         let bytes = build_text(&mut s, &mut e, &w, c.g, 9);
         let flags = next(&mut s) & 0xd6;
         let size = fuzz_unit(&mut s, 0.4) + 0.001; // size > 0 (sensible block height)
         let box_w = fuzz_unit(&mut s, 1.0) + 0.05;
-        let gap = fuzz_signed(&mut s, 0.3);
+        let mut gap = fuzz_signed(&mut s, 0.3);
+        if let Some(&g) = WIDE_GAP.get((i as usize).wrapping_sub(6000)) {
+            gap = g;
+        }
 
         e.write_u32(w.state, 0); // *state = 0
         let bin = e.call_f32(
@@ -631,7 +667,7 @@ fn font_height_fit_difftest() {
     let mut e = Emu::new(&wow);
     let w = setup(&mut e);
     let mut s: u32 = 0x5c21_c001;
-    for i in 0..6000u32 {
+    for i in 0..6000u32 + WIDE_GAP.len() as u32 {
         let c = gen_case(&mut s);
         let (width, adv, k) = apply(&mut e, &w, &c);
         let bytes = build_text(&mut s, &mut e, &w, c.g, 9);
@@ -639,7 +675,10 @@ fn font_height_fit_difftest() {
         let line_h = fuzz_unit(&mut s, 0.2) + 0.001;
         let wrap_w = fuzz_unit(&mut s, 1.0) + 0.05;
         let box_h = fuzz_unit(&mut s, 1.5) + 0.001;
-        let gap = fuzz_signed(&mut s, 0.3);
+        let mut gap = fuzz_signed(&mut s, 0.3);
+        if let Some(&g) = WIDE_GAP.get((i as usize).wrapping_sub(6000)) {
+            gap = g;
+        }
         let p6 = 1; // non-zero (guard)
         let p7 = 0u32; // extraSpacing pinned 0
 

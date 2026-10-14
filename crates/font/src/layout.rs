@@ -208,8 +208,8 @@ pub struct SelectionFill {
 /// write `bVar2`, and on odd `i` fade `bVar2 = if bVar4 < bVar2 { bVar2 - bVar4 } else { 0 }`.
 /// Return (`5cd615`): `2` if `fourStart >= cellCount`, else `(cellCount < fourStart + 4*endCol)`.
 ///
-/// `end_col` must be `>= 1`: `endCol == 0` makes the binary's `bVar2/endCol` divide-by-zero and
-/// `__ftol(±inf)` produce `0x8000_0000` (a platform CRT edge outside the diffed domain).
+/// `endCol == 0` divides by zero: `bVar2/endCol` is +inf (NaN for a base alpha of 0), and `__ftol`
+/// returns the low dword of its qword, 0, for either, so the fade step is 0.
 pub fn selection_highlight_fade(
     start_col: i32,
     end_col: i32,
@@ -658,8 +658,10 @@ pub fn string_layout_lines(ctx: &FontCtx, text: &[u8], s: &LayoutState) -> Layou
         )
     } else {
         // 5cdcdc: wrapPx = __ftol(screenH·wrap + 0.99999).
+        // The result goes to `[ebp-0x3c]` with a zero high dword (`5cdcef`, `5cdcf2`), and `fild
+        // qword` reads it back zero-extended, so a negative count reads as a `u32`.
         let wrap_px =
-            ftol(f64::from(s.screen_h) * f64::from(s.wrap_width) + f64::from(C_CEIL_BIAS));
+            ftol(f64::from(s.screen_h) * f64::from(s.wrap_width) + f64::from(C_CEIL_BIAS)) as u32;
         // 5cdd01: lineStepFrac = wrapPx / screenH (fild wrapPx; fdiv by the screenH still on st1).
         let frac = (f64::from(wrap_px) / f64::from(s.screen_h)) as f32;
         // 5cdd08: lineStep = ScreenToPixelHeight(false, clampedSize) + (f32)wrapPx.

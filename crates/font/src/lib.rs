@@ -21,10 +21,4 @@ pub mod raster;
 pub mod screen_pixel;
 pub mod setup;
 
-/// The CRT `__ftol` (`0x40a2b0`): truncates an x87 `st0` toward zero to `i32`. Rust's `as i32` already
-/// truncates toward zero (and saturates out of range, where `__ftol` yields `0x80000000`; every
-/// tested input domain stays in range, which the tests' fuzz bounds assert).
-#[inline]
-pub fn ftol(x: f64) -> i32 {
-    x as i32
-}
+pub use benilla_re_cmath::x87::ftol;
