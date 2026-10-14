@@ -6972,7 +6972,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *record)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/hover#world-hover-and-its-tooltip	
 0x492e90	218			ui	primitive		Runs GameUI.cpp code that calls 0x494550, 0x4901e0, CGGameUI::Reload and 2 more; not read here	inferred	none		
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	
-0x493050	19			ui	orchestration		Runs GameUI.cpp code that calls GetInputControl, 0x514490; not read here	inferred	none		
+0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	one	ui/keyscripts#deactivating-the-window	
 0x493070	28	EnterWorldMouselook		ui	orchestration	void __cdecl (void)	Begins the world frame's mouselook and makes it the hovered frame	verified	one	ui/mouseover#mouselook	
 0x493090	27	LeaveWorldMouselook		ui	orchestration	void __cdecl (void)	Ends the world frame's mouselook and asks for a hover pick	verified	one	ui/mouseover#mouselook	
 0x4930b0	29			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
@@ -33190,7 +33190,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x766420	208	CSimpleTop::OnMouseUp		ui	orchestration		Handles category 0xe: ends a move or size, or releases the pressed frame	verified	one	ui/input#the-handlers	
 0x7664f0	195	CSimpleTop::OnMouseWheel		ui	orchestration		Handles category 0x10: offers the wheel to hit frames of the wheel lists from stratum 8 down	verified	one	ui/input#the-handlers	
 0x7665c0	134	CSimpleTop::OnWindowSize		ui	orchestration		Handles category 0x1c: refreshes the fonts and every frame's regions, then the host's size callback	inferred	none	ui/input#the-handlers	
-0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	inferred	none	ui/input#the-handlers	
+0x766650	68	CSimpleTop::OnActivationChange		ui	orchestration		Handles category 2, the window's activation change: calls a window-code function, then the host's callback at +0x1134	verified	one	ui/keyscripts#deactivating-the-window	
 0x7666a0	162	PixelAlignX		ui	primitive		Rounds a horizontal size to a whole number of screen pixels	inferred	none		
 0x766750	162	PixelAlignY		ui	primitive		Rounds a vertical size to a whole number of screen pixels	inferred	none		
 0x766800	5	TopInitTwoPiThunk		ui	orchestration		Jumps to 0x766810; a static initializer	verified	one	ui/README#static-initializers	
@@ -33356,9 +33356,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76b660	54	CSimpleFrame::OnSizeChanged		ui	orchestration		Runs the OnSizeChanged script with the width and height	inferred	none		
 0x76b6a0	76	CSimpleFrame::OnEnter		ui	orchestration		Shows the +0xa4 frame, switches layer 4 on and runs OnEnter	verified	one	ui/hover#entering-and-leaving	
 0x76b6f0	109	CSimpleFrame::OnLeave		ui	orchestration		Hides the +0xa4 frame, switches layer 4 off, may end a drag and runs OnLeave	verified	one	ui/hover#entering-and-leaving	
-0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as text when visible	inferred	none		
-0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Runs OnKeyDown with the key's name when visible	inferred	none		
-0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Runs OnKeyUp with the key's name when visible	inferred	none		
+0x76b760	97	CSimpleFrame::OnChar		ui	orchestration		Runs OnChar with the character as UTF-8 text when visible and the script is set	verified	one	ui/keyscripts#the-test-a-frame-makes	
+0x76b7d0	615	CSimpleFrame::OnKeyDown		ui	orchestration		Takes a key down when visible and OnKeyDown or OnKeyUp is set, running OnKeyDown with the key name	verified	one	ui/keyscripts#the-test-a-frame-makes	
+0x76bba0	605	CSimpleFrame::OnKeyUp		ui	orchestration		Takes a key up when visible and OnKeyUp is set, running it with the key name	verified	one	ui/keyscripts#the-test-a-frame-makes	
 0x76bf70	167	CSimpleFrame::OnMouseDown		ui	orchestration		Arms a drag for a registered button and runs OnMouseDown with the button name	inferred	none	ui/README#starts-the-listing-hides	
 0x76c040	194	CSimpleFrame::OnMouseUp		ui	orchestration		Ends a drag with the drag-stop and receive slots, else runs OnMouseUp with the button name	verified	one	ui/button#mouse-presses-and-clicks	
 0x76c130	5	FrameInitTwoPiThunk		ui	orchestration		Jumps to 0x76c140; a static initializer	verified	one	ui/README#static-initializers	
@@ -33770,10 +33770,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77ac60	164	CSimpleEditBox::GetCompositionSpan		ui	primitive	void __thiscall (void)	Computes the composition span with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77ad10	568			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x42c500, SMemFree, 0x77a9f0 and 7 more; not read here	inferred	none		
 0x77af50	100			ui	orchestration		Switches the input method and runs OnEditFocusGained or OnEditFocusLost, then marks the cursor	verified	one	ui/editbox#keyboard-focus	
-0x77afc0	384			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77e3d0, 0x42c310, sgetu8 and 8 more; not read here	inferred	none		
+0x77afc0	384	CSimpleEditBox::OnInputLanguage		ui	primitive		Handles the input method event of a box that holds or takes the focus, inserting its text	inferred	none	ui/keyscripts#the-edit-box-in-the-walk	
 0x77b160	1340	CSimpleEditBox::OnKeyDown		ui	orchestration		Takes a key for the focused box and runs its editing, scripts and history	verified	one	ui/editbox#which-box-takes-a-key	
 0x77b730	64			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77b770	75			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77e3d0; not read here	inferred	none		
+0x77b770	75	CSimpleEditBox::OnKeyRepeat		ui	orchestration		Forwards a key repeat to the box's own key down when it holds or takes the focus	verified	one	ui/keyscripts#the-edit-box-in-the-walk	
 0x77b7c0	55			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77e3d0; not read here	inferred	none		
 0x77b800	143	CSimpleEditBox::OnMouseDown		ui	orchestration		Places the cursor at a press and focuses the box	verified	one	ui/editbox#which-box-takes-a-key	
 0x77b890	45			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnMouseUp; not read here	inferred	none		
