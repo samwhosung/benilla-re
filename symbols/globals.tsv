@@ -2554,8 +2554,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once the auto-loot sweep has handled the coin row of this source	verified	one	ui/loot#auto-loot
 0xb71e5c	void *	s_minigame		minigame	Holds the current minigame object, null before a setup packet	verified	one	minigame#the-object
 0xb71e74	uint32_t[4]	s_worldStateUiList		ui	Holds the always-visible world state row ids: capacity, count, data and chunk size	verified	one	ui/worldstate#the-list-builder
-0xb71e7c	uint32_t			ui	Holds a dword that Script::GetWorldStateUIInfo reads and writes; not read here	inferred	none	
-0xb71e84	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state
 0xb71ea8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71ec8	uint32_t	s_worldStateBuckets		ui	Points at the bucket array of the world state table, three dwords a bucket	verified	one	ui/questtext#world-state-numbers
 0xb71ed0	uint32_t	s_worldStateMask		ui	Holds the bucket mask of the world state table, -1 while it is empty	verified	one	ui/questtext#world-state-numbers
@@ -2883,10 +2882,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
+0xc0d53c	uint32_t[5]	s_zoneMusicStore		dbc	Holds the ZoneMusic table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d550	uint32_t[5]	s_zoneIntroMusicTableStore		dbc	Holds the ZoneIntroMusicTable table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d564	uint32_t[5]	s_worldStateUiStore		dbc	Holds the WorldStateUI.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/battlefield#the-status-message
+0xc0d578	uint32_t[5]	s_worldSafeLocsStore		dbc	Holds the WorldSafeLocs table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d58c	uint32_t[5]	s_worldMapOverlayStore		dbc	Holds the WorldMapOverlay.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-overlays
 0xc0d5a0	uint32_t[5]	s_worldMapContinentStore		dbc	Holds the WorldMapContinent.dbc store: records of 0x34 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#unit-and-corpse-positions
 0xc0d5b4	uint32_t[5]	s_worldMapAreaStore		dbc	Holds the WorldMapArea.dbc store: records of 32 bytes, count, id map, max id and loaded flag	verified	one	ui/worldmap#the-lists
+0xc0d5c8	uint32_t[5]	s_weaponSwingSounds2Store		dbc	Holds the WeaponSwingSounds2 table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d5dc	uint32_t[5]	s_weaponImpactSoundsStore		dbc	Holds the WeaponImpactSounds table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d5f0	uint32_t[5]	s_wMOAreaTableStore		dbc	Holds the WMOAreaTable table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d604	uint32_t[5]	s_vocalUISoundsStore		dbc	Holds the VocalUISounds table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d618	uint32_t[5]	s_unitBloodStore		dbc	Holds the UnitBlood table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d62c	uint32_t[5]	s_unitBloodLevelsStore		dbc	Holds the UnitBloodLevels table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0d640	uint32_t[5]	s_uISoundLookupsStore		dbc	Holds the UISoundLookups table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d654	uint32_t[5]	s_transportAnimationStore		dbc	Holds the TransportAnimation.dbc store: records and count	verified	one	objectlayer/transports#the-transports-path
 0xc0d668	uint32_t[5]	s_terrainTypeSoundsStore		dbc	Holds the TerrainTypeSounds table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d67c	uint32_t[5]	s_terrainTypeStore		terrain	Holds the TerrainType.dbc store: rows, count, the table by id at +0x8 and the id bound at +0xc	verified	one	terrain/footprints#footprint-spawn
@@ -2931,6 +2940,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d938	uint32_t[5]	s_skillLineCategoryStore		dbc	Holds the SkillLineCategory table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d94c	uint32_t[5]	s_skillLineAbilityStore		dbc	Holds the SkillLineAbility.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0d960	uint32_t[5]	s_skillCostsDataStore		dbc	Holds the SkillCostsData.dbc store: records, count, id map, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
+0xc0d974	uint32_t[5]	s_sheatheSoundLookupsStore		dbc	Holds the SheatheSoundLookups table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0d988	uint32_t[5]	s_serverMessagesStore		dbc	Holds the ServerMessages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatserver#server-message
 0xc0d9a4	uint32_t			unassigned	Holds a dword that PlaySpellSchoolSound reads and writes; not read here	inferred	none	
 0xc0d9b0	uint32_t[5]	s_questSortStore		dbc	Holds the QuestSort.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/questlog#the-order-of-the-rows
@@ -2954,6 +2964,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dab4	uint32_t[5]	s_mailTemplateStore		dbc	Holds the MailTemplate table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0dac8	uint32_t[5]	s_lockTypeStore		dbc	Holds the LockType.dbc store	verified	one	objectlayer/gameobjects#cursor
 0xc0dadc	uint32_t[5]	s_lockStore		dbc	Holds the Lock.dbc store	verified	one	objectlayer/gameobjects#locks
+0xc0daf0	uint32_t[5]	s_loadingScreenTaxiSplinesStore		dbc	Holds the LoadingScreenTaxiSplines table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0db04	uint32_t[5]	s_loadingScreensStore		dbc	Holds the LoadingScreens table store: records, count, id map, largest id, loaded flag	inferred	none	
+0xc0db18	uint32_t[5]	s_liquidTypeStore		dbc	Holds the LiquidType table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0db2c	uint32_t[5]	s_lfgDungeonsStore		dbc	Holds the LfgDungeons.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/lfg#the-type-lists
 0xc0db40	uint32_t[5]	s_languagesStore		dbc	Holds the Languages.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
 0xc0db54	uint32_t[5]	s_languageWordsStore		dbc	Holds the LanguageWords.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatlanguage#languagewords-and-languages
@@ -2994,7 +3007,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dd70	uint32_t[2]	s_exhaustionRecords		dbc	Holds the Exhaustion.dbc records and their count	verified	one	ui/rested#exhaustion-table
 0xc0dd78	uint32_t	s_exhaustionById		dbc	Holds the Exhaustion.dbc rows by id	verified	one	ui/rested#exhaustion-table
 0xc0dd7c	int32_t	s_exhaustionMaxId		dbc	Holds the highest Exhaustion.dbc id, -1 before loading	verified	one	ui/rested#exhaustion-table
+0xc0dd84	uint32_t[5]	s_environmentalDamageStore		dbc	Holds the EnvironmentalDamage table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0dd98	uint32_t[5]	s_emotesTextStore		dbc	Holds the EmotesText.dbc store: records, count, id map, maximum id and loaded flag	verified	one	ui/chatemote#the-sentence-column
+0xc0ddac	uint32_t[5]	s_emotesTextSoundStore		dbc	Holds the EmotesTextSound table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0ddc0	uint32_t[5]	s_emotesTextDataStore		dbc	Holds the EmotesTextData.dbc store: records, count, id map, maximum id and loaded flag	verified	one	ui/chatemote#the-template-fallback
 0xc0ddd4	uint32_t[5]	s_emotesStore		dbc	Holds the Emotes.dbc store: its record table by id at +0x08 and the id bound at +0x0c	verified	one	objectlayer/interaction#text-emotes
 0xc0dde8	uint32_t[5]	s_durabilityQualityStore		dbc	Holds the DurabilityQuality.dbc store	verified	one	objectlayer/items#repair-cost
@@ -3014,6 +3029,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0dec4	uint8_t[20]	s_cinematicCameraStore		dbc	Holds the CinematicCamera.dbc store	inferred	none	
 0xc0ded8	uint32_t[5]	s_chrRacesStore		dbc	Holds the ChrRaces.dbc store: records, count, id map by record +0x00, max id and loaded flag	verified	one	spell/tables#startup-build-of-the-indexes
 0xc0deec	uint32_t[5]	s_chrClassesStore		dbc	Holds the ChrClasses.dbc store, loaded by 0x542360	verified	one	spell/records#record-lookups
+0xc0df00	uint32_t[5]	s_chatProfanityStore		dbc	Holds the ChatProfanity table store: records, count, id map, largest id, loaded flag	inferred	none	
 0xc0df14	uint32_t[5]	s_chatChannelsStore		dbc	Holds the ChatChannels.dbc store: records, count, id map, max id and loaded flag	verified	one	ui/chatchannels#chatchannels-rows
 0xc0df28	uint32_t	s_charFacialHairRows		dbc	Holds the CharacterFacialHairStyles.dbc rows, 0x28 bytes each	verified	one	charactermodel/customization#facial-hair
 0xc0df2c	uint32_t	s_charFacialHairCount		dbc	Holds the number of CharacterFacialHairStyles.dbc rows	verified	one	charactermodel/customization#facial-hair
@@ -3040,17 +3056,19 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0e070	void *	s_animationDataRows		dbc	Holds the animation table's rows indexed by id	verified	one	models/animation#animation-id-resolution
 0xc0e074	uint32_t	s_animationDataMaxId		dbc	Holds the highest id of the animation table	verified	one	models/animation#animation-id-resolution
 0xc0e080	uint32_t	s_localeIndex		client	Holds the locale index that picks a localized string column	inferred	none	spell/handlers#channel-start-and-update
-0xc0e0c0	uint32_t	s_itemTextCache		ui	Holds the item text record cache	verified	one	ui/mail#reading-a-mails-text
-0xc0e0fc	uint32_t	s_petitionCache		dbcache	Holds the petition record cache charters look up	inferred	none	objectlayer/party#petitions
-0xc0e174	uint32_t			unassigned	Holds data whose address ReceivePageText takes; not read here	inferred	none	
-0xc0e1b0	uint32_t	s_questCache		dbcache	Holds the quest record cache	inferred	none	objectlayer/quests#quest-completion
-0xc0e1ec	uint32_t	s_guildCache		dbcache	Holds the guild record cache	inferred	none	objectlayer/party#guild-tabards
-0xc0e228	uint32_t	s_nameCache		dbcache	Holds the player name cache	inferred	none	objectlayer/playermessages#resurrection-and-summoning
+0xc0e084	uint8_t[60]	s_wowCache		dbcache	Holds the wow cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e0c0	uint8_t[60]	s_itemTextCache		dbcache	Holds the item text cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e0fc	uint8_t[60]	s_petitionCache		dbcache	Holds the petition cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
+0xc0e138	uint8_t[60]	s_petNameCache		dbcache	Holds the pet name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
+0xc0e174	uint8_t[60]	s_pageTextCache		dbcache	Holds the page text cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e1b0	uint8_t[60]	s_questCache		dbcache	Holds the quest cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e1ec	uint8_t[60]	s_guildCache		dbcache	Holds the guild cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
+0xc0e228	uint8_t[60]	s_nameCache		dbcache	Holds the names cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-not-saved
 0xc0e264	void *	s_npcTextCache		dbcache	Holds the NPC text cache store, npccache.wdb	verified	one	ui/gossip#the-greeting
-0xc0e2a0	void *	s_itemStatsCache		dbcache	Holds the item record cache the loot roll code asks	verified	one	objectlayer/lootroll#starting-a-roll
-0xc0e2dc	uint32_t	s_itemNameCache		ui	Holds the item name cache that item set member names are asked of	verified	one	ui/tooltipitemreq#item-set-lines
-0xc0e318	uint32_t	s_gameObjectCache		dbcache	Holds the game object record cache	inferred	none	objectlayer/quests#quest-updates
-0xc0e354	uint32_t	s_creatureCache		dbcache	Holds the creature record cache	inferred	none	objectlayer/quests#quest-updates
+0xc0e2a0	uint8_t[60]	s_itemCache		dbcache	Holds the item cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e2dc	uint8_t[60]	s_itemNameCache		dbcache	Holds the item name cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e318	uint8_t[60]	s_gameObjectCache		dbcache	Holds the game object cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
+0xc0e354	uint8_t[60]	s_creatureCache		dbcache	Holds the creature cache object: nodes, hash buckets, file tag and name, opcode and flags	verified	one	dbcache#caches-that-are-saved
 0xc0e5b0	float	s_gameObjectDisplayInfoInvTwoPi		dbc	Holds 1/2 pi, set at startup by the record file; nothing reads it	verified	one	dbc#record-files
 0xc0e5b4	float	s_gameObjectDisplayInfoTwoPi		dbc	Holds 2 pi, set at startup by the record file; nothing reads it	verified	one	dbc#record-files
 0xc0e5b8	float	s_gameObjectDisplayInfoInfinity		dbc	Holds +inf, set at startup by the record file; nothing reads it	verified	one	dbc#record-files
@@ -3106,6 +3124,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a124	uint32_t	s_whoResultTotal		net	Holds the server total of the last who reply	verified	one	net/friends#who-list-reply
 0xc2a128	void *	s_whoThresholdSource		net	Holds a pointer nothing writes; when set, its +0x28 dword replaces the threshold of 3	verified	one	net/friends#who-list-reply
 0xc2a12c	uint32_t	s_whoToUI		net	Holds the SetWhoToUI flag that sends who replies to the frame	verified	one	net/friends#who-list-reply
+0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the four bytes of the configured country and language packed into a dword	verified	one	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
 0xc2a3b8	uint32_t	s_latencyMin		net	Holds the least simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
@@ -3297,7 +3316,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc521e8	void *	s_pathAliasTable		storm	Holds the hash table of path aliases a name is checked against when the open flags ask for it	inferred	none	storm/mount#loose-files
 0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
 0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	one	storm/mount#loose-files
-0xc52560	double			storm	Holds the first double of a table that SStrToFloat reads; not read here	inferred	none	
+0xc52560	double[200]	s_pow10Table		storm	Holds k times 10 to the power -(r+1) at row r, column k, for the string-to-double conversion	verified	one	core/threads#string-conversion-table
 0xc52ba0	uint32_t	s_pow10TableBuilt		storm	Holds 1 once the power table is built	verified	one	core/threads#string-conversion-table
 0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines
 0xc53fbc	uint32_t *	s_cryptTable		storm	Holds the crypt table, 0x500 dwords built at first use	verified	one	storm/format#name-hash
