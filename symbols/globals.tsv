@@ -255,6 +255,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7102e8	void *[10]	s_m2DeferredCallTable		models	Holds the jump targets that replay deferred calls of kinds 0 to 9	verified	one	models/model#deferred-calls
 0x718788	void *[5]	s_m2BillboardTable		models	Holds the jump targets of the billboard cases	inferred	none	models/animation#billboards
 0x71879c	uint8_t[57]	s_m2BillboardIndex		models	Maps a bone's billboard flags minus 8 to a billboard case	inferred	none	models/animation#billboards
+0x768c44	void *[9]	s_dragGripArms		ui	Holds the nine grip arms of 0x768710, one per anchor point	verified	one	ui/resizebounds#the-drag
 0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
 0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
@@ -1546,6 +1547,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x878440	char[33]	s_relativeFrameMissing		ui	Holds the error the XML anchors report for a relativeTo name that finds no frame	verified	one	ui/anchors#construction-and-the-xml-anchors
 0x878500	char[55]	s_layoutFramePath		ui	Holds the source path of CLayoutFrame.cpp	verified	one	ui/README#frame-core-object-files
 0x878540	char[29]	s_frameNodeTag		ui	Holds the allocation tag of a dependent node, the type name of CLayoutFrame's FRAMENODE	verified	one	ui/anchors#dependents
+0x878590	const char[10]	s_tagMaxResize		ui	Holds the XML element name maxResize of a frame's maximum size	verified	one	ui/resizebounds#the-xml-element
+0x87859c	const char[10]	s_tagMinResize		ui	Holds the XML element name minResize of a frame's minimum size	verified	one	ui/resizebounds#the-xml-element
+0x8785a8	const char[13]	s_tagResizeBounds		ui	Holds the XML element name ResizeBounds of a frame's resize bounds	verified	one	ui/resizebounds#the-xml-element
 0x8785b8	char[55]	s_simpleFramePath		ui	Holds the source path of CSimpleFrame.cpp	verified	one	ui/README#frame-core-object-files
 0x8786a8	char[33]	s_inheritedNodeNotFound		ui	Holds the message for an inherits name that finds no template	verified	one	ui/framexml#templates
 0x8786cc	char[11]	s_textFontString		ui	Holds the string "FontString"	inferred	none	

@@ -33167,10 +33167,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x765010	217	RaiseFrameUnderCursor		ui	unreached		Raises the toplevel ancestor of the topmost hit frame of strata 7 to 0; nothing reaches it	verified	one	ui/README#unreached-functions	
 0x7650f0	421	CSimpleTop::RaiseFrame		ui	orchestration		Raises a frame's toplevel ancestor above its stratum's levels when overlapped, checking overlap on request	verified	one	ui/strata#raising-a-frame	
 0x7652a0	5	CSimpleTop::LowerFrame		ui	orchestration		Returns 0 without changing anything; what Frame:Lower calls	verified	one	ui/strata#raising-a-frame	
-0x7652b0	111	CSimpleTop::StartMovingOrSizing		ui	orchestration		Records the frame, kind, point and cursor of a move or size and raises the frame	inferred	none	ui/input#moving-and-sizing	
+0x7652b0	111	CSimpleTop::StartMovingOrSizing		ui	orchestration		Records the frame, kind, point and cursor of a move or size and raises the frame	verified	one	ui/resizebounds#the-drag	
 0x765320	358	CSimpleTop::StartMovingOrSizingAt		ui	primitive		Chooses a sizing point by the cursor's third of the frame, else the centre, and starts the move or size	inferred	none	ui/input#moving-and-sizing	
 0x765490	274	CSimpleTop::StartModifierDrag		ui	orchestration		Starts moving or sizing the toplevel ancestor of the topmost hit frame of strata 7 to 0	inferred	none	ui/input#mouse-buttons	
-0x7655b0	133	CSimpleTop::UpdateMovingOrSizing		ui	primitive		Applies the cursor difference since the last move to the frame being moved or sized	inferred	none	ui/input#mouse-move-and-the-hover-pick	
+0x7655b0	133	CSimpleTop::UpdateMovingOrSizing		ui	primitive		Applies the cursor difference since the last move to the frame being moved or sized	verified	one	ui/resizebounds#the-drag	
 0x765640	15	CSimpleTop::StopMovingOrSizing		ui	orchestration		Clears the frame being moved or sized and the kind	verified	one	ui/input#mouse-buttons	
 0x765650	377	CSimpleTop::OnLayerUpdate		ui	orchestration		Deletes queued objects, drains the layout queue, runs every visible frame's update slot in order	verified	one	ui/strata#the-update-pass	
 0x7657d0	332	CSimpleTop::OnLayerRender		ui	orchestration		Sets the orthographic projection and draws each stratum's levels, refreshing overlap bits and batches	verified	one	ui/strata#the-update-pass	
@@ -33275,9 +33275,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7683f0	29	CLayoutFrame::SetHeight		ui	orchestration		Stores the height, clears flag 8 and lays the frame out	verified	one	ui/anchors#size-scale-and-stored-rectangle	
 0x768410	4	CLayoutFrame::GetHeight		ui	orchestration		Returns the height +0x54	verified	one	ui/anchors#size-scale-and-stored-rectangle	
 0x768420	4	CLayoutFrame::GetWidth		ui	orchestration		Returns the width +0x50	verified	one	ui/anchors#size-scale-and-stored-rectangle	
-0x768430	287	CLayoutFrame::PinToParentOffset		ui	primitive		Anchors a point to the parent at the frame's current offset and sets the given size	inferred	none	ui/input#moving-and-sizing	
+0x768430	287	CLayoutFrame::PinToParentOffset		ui	primitive		Anchors a point to the parent at the frame's current offset and sets the given size	verified	one	ui/resizebounds#the-drag	
 0x768550	409	CLayoutFrame::ResizeByFactor		ui	unreached		Scales a frame's size about a point, clamped to its resize bounds; nothing live reaches it	verified	one	ui/README#starts-the-listing-hides	
-0x768710	1331	CLayoutFrame::ApplyDragDelta		ui	primitive		Moves or resizes a frame by a cursor difference at a point, clamped to its resize bounds	inferred	none	ui/README#starts-the-listing-hides	
+0x768710	1331	CLayoutFrame::ApplyDragDelta		ui	primitive		Moves or resizes a frame by a cursor difference at a point, clamped to its resize bounds	verified	one	ui/resizebounds#the-drag	
 0x768c70	77	CLayoutFrame::IsPointInRect		ui	orchestration		Answers whether a point lies in the valid rectangle, all four edges inclusive and NaN outside	verified	one	ui/input#mouse-buttons	
 0x768cc0	47	CLayoutFrame::SetClampedToScreen		ui	orchestration		Sets or clears flag 0x10 and lays the frame out	verified	one	ui/anchors#size-scale-and-stored-rectangle	
 0x768cf0	44	CLayoutFrame::OnFrameSizeChanged		ui	orchestration		Lays out every dependent frame	verified	one	ui/anchors#resolving-and-the-changed-callback	
@@ -33315,7 +33315,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x76a5c0	13	CSimpleFrame::Lower		ui	orchestration		Asks the top to lower the frame, which does nothing	verified	one	ui/methods#what-the-frame-methods-call	
 0x76a5d0	90	CSimpleFrame::SetBackdrop		ui	orchestration		Replaces the frame's backdrop object	inferred	none		
 0x76a630	34	CSimpleFrame::ResizeByFactor		ui	unreached		Passes a size factor and point to 0x768550; nothing reaches it	verified	one	ui/README#unreached-functions	
-0x76a660	34	CSimpleFrame::ApplyDragDelta		ui	orchestration		Passes a cursor difference and point to 0x768710 on the frame's layout part	inferred	none		
+0x76a660	34	CSimpleFrame::ApplyDragDelta		ui	orchestration		Passes a cursor difference and point to 0x768710 on the frame's layout part	verified	one	ui/resizebounds#the-drag	
 0x76a690	128	CSimpleFrame::SetAlpha		ui	orchestration		Stores the alpha byte and, on a change, refreshes the regions and gives every child the same byte	verified	one	ui/visibility#alpha	
 0x76a710	27	CSimpleFrame::EnableDrawLayer		ui	orchestration		Switches a draw layer on and marks it dirty	inferred	none		
 0x76a730	27	CSimpleFrame::DisableDrawLayer		ui	orchestration		Switches a draw layer off and marks it dirty	inferred	none		
@@ -33564,10 +33564,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x772930	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetWidth, 0x772890, GetScaledScreenAspect and 1 more; not read here	inferred	none		
 0x7729b0	170			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, CLayoutFrame::GetWidth, 0x771ec0 and 2 more; not read here	inferred	none		
 0x772a60	113			ui	primitive		Runs its object file code that calls CLayoutFrame::GetHeight, 0x7729b0, GetScaledScreenAspect and 1 more; not read here	inferred	none		
-0x772ae0	119			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44d670; not read here	inferred	none		
+0x772ae0	119	MeasureRunWidth		ui	primitive	float __thiscall (const char *text, int32_t bytes)	Measures the width of a byte range of the label's text, escapes giving none	verified	one	ui/editboxmarkup#how-the-box-draws-and-measures	
 0x772b60	87			ui	primitive		Runs its object file code that calls 0x7727b0, 0x44db50; not read here	inferred	none		
 0x772bc0	101			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44d860; not read here	inferred	none		
-0x772c30	101			ui	primitive		Runs its object file code that calls SStrLen, 0x7727b0, 0x44da50; not read here	inferred	none		
+0x772c30	101	CountGlyphsFromRight		ui	primitive	int32_t __thiscall (float x)	Counts the glyphs that fit from the right edge of the line to a point	verified	one	ui/editboxmarkup#faults	
 0x772ca0	122			ui	primitive		Runs its object file code that calls CLayoutFrame::SetLayoutScale, 0x772790, SStrCopy and 3 more; not read here	inferred	none		
 0x772d20	24			ui	orchestration		Runs its object file code that calls CLayoutFrame::Resize; not read here	inferred	none		
 0x772d40	191			ui	primitive		Runs its object file code that calls CLayoutFrame::OnFrameSizeChanged, 0x44d600, 0x772e00 and 2 more; not read here	inferred	none		
@@ -33645,16 +33645,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x775b20	197	Frame::Lower	idb	ui	orchestration		Implements the Frame method Lower, its pair in the table 0x878ec0	verified	one	ui/methods#what-the-frame-methods-call	
 0x775bf0	342	Frame::GetHitRectInsets	idb	ui	orchestration		Implements the Frame method GetHitRectInsets, its pair in the table 0x878ec0	inferred	none	ui/methods#coordinates-the-methods-convert	
 0x775d50	463	Frame::SetHitRectInsets	idb	ui	orchestration		Implements the Frame method SetHitRectInsets, its pair in the table 0x878ec0	inferred	none	ui/methods#coordinates-the-methods-convert	
-0x775f20	252	Frame::GetMinResize	idb	ui	orchestration		Implements the Frame method GetMinResize, its pair in the table 0x878ec0	inferred	none		
-0x776020	369	Frame::SetMinResize	idb	ui	orchestration		Implements the Frame method SetMinResize, its pair in the table 0x878ec0	inferred	none	ui/methods#coordinates-the-methods-convert	
-0x7761a0	252	Frame::GetMaxResize	idb	ui	orchestration		Implements the Frame method GetMaxResize, its pair in the table 0x878ec0	inferred	none		
-0x7762a0	369	Frame::SetMaxResize	idb	ui	orchestration		Implements the Frame method SetMaxResize, its pair in the table 0x878ec0	inferred	none	ui/methods#coordinates-the-methods-convert	
+0x775f20	252	Frame::GetMinResize	idb	ui	orchestration		Implements the Frame method GetMinResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-lua-methods	
+0x776020	369	Frame::SetMinResize	idb	ui	orchestration		Implements the Frame method SetMinResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
+0x7761a0	252	Frame::GetMaxResize	idb	ui	orchestration		Implements the Frame method GetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-lua-methods	
+0x7762a0	369	Frame::SetMaxResize	idb	ui	orchestration		Implements the Frame method SetMaxResize, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-four-bounds	
 0x776420	166	Frame::SetMovable	idb	ui	orchestration		Implements the Frame method SetMovable, its pair in the table 0x878ec0	inferred	none		
 0x7764d0	179	Frame::IsMovable		ui	orchestration		Implements the Frame method IsMovable, its pair in the table 0x878ec0	inferred	none		
 0x776590	166	Frame::SetResizable	idb	ui	orchestration		Implements the Frame method SetResizable, its pair in the table 0x878ec0	inferred	none		
 0x776640	179	Frame::IsResizable	idb	ui	orchestration		Implements the Frame method IsResizable, its pair in the table 0x878ec0	inferred	none		
 0x776700	303	Frame::StartMoving	idb	ui	orchestration		Implements the Frame method StartMoving, its pair in the table 0x878ec0	inferred	none		
-0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	inferred	none		
+0x776830	350	Frame::StartSizing	idb	ui	orchestration		Implements the Frame method StartSizing, its pair in the table 0x878ec0	verified	one	ui/resizebounds#the-drag	
 0x776990	184	Frame::StopMovingOrSizing	idb	ui	orchestration		Implements the Frame method StopMovingOrSizing, its pair in the table 0x878ec0	inferred	none		
 0x776a50	240	Frame::SetUserPlaced	idb	ui	orchestration		Implements the Frame method SetUserPlaced, its pair in the table 0x878ec0	inferred	none		
 0x776b40	179	Frame::IsUserPlaced	idb	ui	orchestration		Implements the Frame method IsUserPlaced, its pair in the table 0x878ec0	inferred	none		
@@ -33758,7 +33758,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a750	36			ui	orchestration		Runs the frame's show, then focuses an autoFocus box when nothing holds the focus	verified	one	ui/editbox#keyboard-focus	
 0x77a780	16			ui	orchestration		Runs the frame's hide, then clears the box's focus	verified	one	ui/editbox#keyboard-focus	
 0x77a790	193			ui	primitive		Flushes the box's changes and blinks the caret of the focused box	verified	one	ui/editbox#text-changes-and-their-scripts	
-0x77a860	100			ui	primitive		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnMouseMove, 0x77d0d0, 0x77cd10 and 1 more; not read here	inferred	none		
+0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	void __thiscall (void *event)	Moves the cursor and the selection under a drag with the point's glyph index	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77a8d0	33			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnSizeChanged, 0x77b8c0; not read here	inferred	none		
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
 0x77a960	138			ui	orchestration		Runs CSimpleEditBox.cpp code that calls GetBlockPoolData, 0x76fc40, 0x770360 and 2 more; not read here	inferred	none		
@@ -33766,7 +33766,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77abb0	106			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x42c1a0, 0x77ac30, FrameScriptExecuteVarArgs; not read here	inferred	none		
 0x77ac30	14			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x77ac40	20			ui	orchestration		Runs CSimpleEditBox.cpp code not read here	inferred	none		
-0x77ac60	164			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x42c320, 0x77a960, 0x77bb30; not read here	inferred	none		
+0x77ac60	164	CSimpleEditBox::GetCompositionSpan		ui	primitive	void __thiscall (void)	Computes the composition span with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77ad10	568			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x42c500, SMemFree, 0x77a9f0 and 7 more; not read here	inferred	none		
 0x77af50	100			ui	orchestration		Switches the input method and runs OnEditFocusGained or OnEditFocusLost, then marks the cursor	verified	one	ui/editbox#keyboard-focus	
 0x77afc0	384			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77e3d0, 0x42c310, sgetu8 and 8 more; not read here	inferred	none		
@@ -33777,10 +33777,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77b800	143	CSimpleEditBox::OnMouseDown		ui	orchestration		Places the cursor at a press and focuses the box	verified	one	ui/editbox#which-box-takes-a-key	
 0x77b890	45			ui	orchestration		Runs CSimpleEditBox.cpp code that calls CSimpleFrame::OnMouseUp; not read here	inferred	none		
 0x77b8c0	463			ui	primitive		Lays the label and the caret out inside the insets	verified	one	ui/editbox#multi-line-and-the-labels-justify	
-0x77ba90	160			ui	primitive		Runs CSimpleEditBox.cpp code that calls GxuDetermineQuotedCode; not read here	inferred	none		
+0x77ba90	160	CSimpleEditBox::RebuildTokenClasses		ui	primitive	void __thiscall (void)	Rebuilds the per-byte token class array of the text with every escape enabled	verified	one	ui/editboxmarkup#which-escapes-are-on	
 0x77bb30	335			ui	primitive		Counts the bytes a cursor moves over for a count of characters, skipping escapes	verified	one	ui/editbox#a-negative-letter-limit-hangs	
 0x77bc80	136			ui	primitive		Counts the letters in a byte range of the text	verified	one	ui/editbox#a-negative-letter-limit-hangs	
-0x77bd10	26			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
+0x77bd10	26	CSimpleEditBox::NextTokenStart		ui	primitive	uint32_t __thiscall (uint32_t index)	Returns the index of the token after the one at an index	verified	one	ui/editboxmarkup#boundaries-and-letters	
 0x77bd30	25			ui	primitive		Returns the nearest index below a position whose character class entry is nonzero, or -1	verified	one	ui/editbox#word-steps	
 0x77bd50	55			ui	primitive		Runs CSimpleEditBox.cpp code not read here	inferred	none		
 0x77bd90	108			ui	primitive		Runs CSimpleEditBox.cpp code that calls SMemReAlloc; not read here	inferred	none		
@@ -33798,8 +33798,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77c3f0	175			ui	orchestration		Deletes the selection, or the spaces and the word before the cursor	verified	one	ui/editbox#word-steps	
 0x77c4a0	33			ui	orchestration		Deletes from the start of the text to the cursor	verified	one	ui/editbox#ctrl-letter-keys	
 0x77c4d0	40			ui	orchestration		Deletes from the cursor to the end of the text	verified	one	ui/editbox#ctrl-letter-keys	
-0x77c500	15			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77c510; not read here	inferred	none		
-0x77c510	401			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77bd30, 0x77bd10; not read here	inferred	none		
+0x77c500	15	CSimpleEditBox::Clear		ui	orchestration	void __thiscall (void)	Deletes the whole text through 0x77c510	verified	one	ui/editboxmarkup#deleting-through-a-link	
+0x77c510	401	CSimpleEditBox::DeleteRange		ui	primitive	void __thiscall (int32_t low, int32_t high)	Deletes a byte range after moving each end out of a hyperlink, and clears the selection	verified	one	ui/editboxmarkup#deleting-through-a-link	
 0x77c6b0	160			ui	orchestration		Moves the cursor by characters, extending or clearing the selection	verified	one	ui/editbox#keys	
 0x77c750	79			ui	orchestration		Moves the cursor forward one character	verified	one	ui/editbox#keys	
 0x77c7a0	194			ui	orchestration		Moves the cursor past the word and the spaces after it	verified	one	ui/editbox#word-steps	
@@ -33809,7 +33809,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77c9f0	105			ui	orchestration		Moves the cursor forward to the end of its line	verified	one	ui/editbox#keys	
 0x77ca60	91			ui	orchestration		Moves the cursor to the start of the text	verified	one	ui/editbox#keys	
 0x77cac0	93			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77c6b0; not read here	inferred	none		
-0x77cb20	309			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x77bd50, 0x77bc80, 0x77bb30 and 2 more; not read here	inferred	none		
+0x77cb20	309	CSimpleEditBox::MoveLine		ui	primitive	void __thiscall (int32_t direction, int32_t extend)	Moves the cursor to the line above or below with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77cc60	18			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77cb20; not read here	inferred	none		
 0x77cc80	18			ui	orchestration		Runs CSimpleEditBox.cpp code that calls 0x77cb20; not read here	inferred	none		
 0x77cca0	66	CSimpleEditBox::HighlightText		ui	orchestration		Selects from a start to an end, an end past the text or before the start meaning the end	verified	one	ui/editbox#selection	
@@ -33821,8 +33821,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77cf40	139	CSimpleEditBox::AddHistoryLine		ui	orchestration		Stores a line at the history position and advances it around the ring	verified	one	ui/editbox#history	
 0x77cfd0	95			ui	orchestration		Sets the text to the nearest stored history line after the history position	verified	one	ui/editbox#history	
 0x77d030	154			ui	orchestration		Sets the text to the nearest stored history line before the history position	verified	one	ui/editbox#history	
-0x77d0d0	591			ui	primitive		Runs CSimpleEditBox.cpp code that calls CLayoutFrame::GetRect, 0x7727b0, PixelAlignY and 4 more; not read here	inferred	none		
-0x77d320	177			ui	primitive		Runs CSimpleEditBox.cpp code that calls 0x772c30, 0x77bb30, 0x772bc0; not read here	inferred	none		
+0x77d0d0	591	CSimpleEditBox::GetIndexAtPoint		ui	primitive	void __thiscall (float x, float y, int32_t *index)	Finds the byte index of the glyph under a point with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
+0x77d320	177	CSimpleEditBox::MeasureWindow		ui	primitive	void __thiscall (void)	Measures the visible window of the text with non-atomic link steps	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
 0x77d3e0	240			ui	orchestration		Applies the text, selection and cursor changes in order, then runs OnTextChanged	verified	one	ui/editbox#text-changes-and-their-scripts	
 0x77d4d0	1142			ui	primitive		Rebuilds the label's visible text and sizes a multi-line box to its text	verified	one	ui/editbox#text-changes-and-their-scripts	
 0x77d950	294			ui	orchestration		Places and shows the selection textures over the selected text	verified	one	ui/editbox#selection	
