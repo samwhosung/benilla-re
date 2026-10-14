@@ -178,10 +178,10 @@ kind 1 passes three colour channels to `0x710cf0`, kind 14 a clamped value to `0
 otherwise it passes the row's path to `0x707350` and a non-null result, with the model and the
 attachment, to `0x712f70`, then to `0x7103a0`.
 
-Addresses: `0x4727f0`, `0x4727f6`, `0x47280f`, `0x472780`, `0x472795`, `0x472799`, `0x4728af`, `0x4728d3`
+Addresses: `0x4727f0`, `0x4727f6`, `0x47280f`, `0x472780`, `0x472795`, `0x472799`, `0x4728af`, `0x4728d3`, `0x4728ec`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::char_customize_clamp_difftest`, `glue::char_customize_color_difftest`
 
 `0x4727f6` compares the store's largest id with 0x3dd (`jl`); `0x47280f` reads index entry
 0xf74/4 = 989. The calls from `0x472823` push 0x14, 0x22, 0x13, 0x15, 0x16, 0x11, 0x17, 0x18,
@@ -191,6 +191,8 @@ each `fild`, `fmul` by the f32 1/255 (`0x3b808081`) and `fstp` to f32, are red, 
 `0x710cf0` (`0x472939`). Alpha: `fcomp` 0.0, `test ah,5; jp` at `0x4728af` stores 0 only for a
 value below 0 (C0 alone); `fcomp` 1.0, `test ah,0x41; jne` at `0x4728d3` keeps any value not
 above 1, NaN included, else 1.0; then `0x710cb0`.
+`char_customize_clamp_difftest` runs `0x4728a4` to `0x47293e`; `char_customize_color_difftest` runs
+`0x4728ec` to `0x472939`.
 
 ## The pet
 
@@ -206,7 +208,7 @@ diag(s, s, s, 1).
 Addresses: `0x472d6b`, `0x472d9c`, `0x472e4f`, `0x472dc6`, `0x472e05`, `0x472e6e`, `0x472e87`, `0x472f94`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::charcreate_blend_frame_interp_difftest`, `glue::charcreate_blend_scale_product_difftest`
 
 `0x472d6b` `jbe` skips id 0; `0x472d7d` and `0x472d9c` read the two rows, `0x472e20` releases,
 `0x472e4f` stores the new model; `0x472dc0` skips the rest without one. `0x472dc6` `fld
@@ -215,6 +217,8 @@ Test: none
 `fld max; fsub min; fmulp; fadd min` at 53-bit precision, and one `fstp` to f32 at `0x472e87`.
 `0x472f09` calls `0x4797b0(model, display row, model row)`; `0x472f15` to `0x472f85` store the
 matrix, s at entries 0, 5 and 10, 1.0 at 15, zero elsewhere, for `0x710620` (`0x472f94`).
+`charcreate_blend_frame_interp_difftest` runs `0x472e73` to `0x472e8a`;
+`charcreate_blend_scale_product_difftest` runs `0x472dc6` to `0x472dd7`.
 
 ## Glow pass and attachment
 
@@ -361,13 +365,15 @@ about (0, 0, 1), with no translation and scale 1 (`0x710650`). It never turns th
 Addresses: `0x473650`, `0x473670`, `0x47369f`, `0x4736ae`, `0x4730e0`, `0x4730ed`, `0x473179`, `0xb4217c`, `0x803a78`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::lua_deg2rad_difftest`, `glue::lua_rad2deg_difftest`
 
 `0x473650` `fld dword [0xb4217c]`, `fmul dword [0x803a78]`, `fstp qword` for `lua_pushnumber`. `0x47369f` multiplies the double from `lua_tonumber` by the pooled f32 and
 `fstp`s an f32 as `0x4730e0`'s argument; `0x4736ae` `mov eax,1`. `0x4730ed` `je` on a zero
 counter, `0x4730f6` stores, `0x473102` `jbe` on count 0. `0x473179` calls `0x710650(model,
 &(0,0,0), facing, &(0,0,1), &(1,1,1))` on `+0x110`'s `+0x38`. The image holds three occurrences
 of `0xb4217c`: the stores `0x472a61` and `0x4730f6`, and this read.
+`lua_deg2rad_difftest` runs `0x47369a` to `0x4736a9`; `lua_rad2deg_difftest` runs `0x473650` to
+`0x473662`.
 
 ## The ModelFFX frame
 

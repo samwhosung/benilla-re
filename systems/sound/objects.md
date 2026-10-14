@@ -34,11 +34,12 @@ at the position. Equal distance plays. A NaN distance plays.
 Addresses: `0x458380`, `0x458391`, `0x4583a9`, `0x4583b0`, `0x4583be`, `0x45840b`, `0x458414`, `0x458424`, `0x458437`, `0x803140`, `0x803144`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::env_sound_audible`
 
 The radius is `[0x803144]` (50.0) or `[0x803140]` (20.0), squared in the register and stored as a
 float; `fcomp` with `test ah,0x41; je` skips only `d² > r²`. The play is `0x458890(9, id, pos, −1,
 1.0)`; the caller is `0x62342a`.
+`env_sound_audible` runs `0x458380` whole.
 
 ## Material and sheathe sounds
 
@@ -49,15 +50,16 @@ columns 5 and 6; a row whose column 4 is 0 fills every material, else the one in
 and third bytes 2.0 yards above the position, on bus 0, from column 5's array when `first` is set.
 Column 2 is not read.
 
-Addresses: `0x4584e0`, `0x4584fe`, `0x45851d`, `0x45c490`, `0x45c4f6`, `0x45c5ec`, `0x45c5f1`, `0x45c619`, `0x458530`, `0x45856a`, `0x4585bd`, `0x4585c7`, `0x4585cb`, `0x801628`, `0xb061e0`
+Addresses: `0x4584e0`, `0x4584fe`, `0x45851d`, `0x45c490`, `0x45c4f6`, `0x45c5ec`, `0x45c5f1`, `0x45c619`, `0x458530`, `0x45856a`, `0x4585bd`, `0x4585c7`, `0x4585cb`, `0x801628`, `0xb061e0`, `0x4585d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sound_emit_pos_z2`
 
 `0x4584fe` reads Material `+8`; the height is `fadd [0x801628]` (2.0). `0x45c4f6` keys the table by
 row `+4`; `0x45c5f1` tests `+0x10`, filling with `+0x14` and `+0x18`, else stores them at index
 `+0xc` when below the size. `0x458530` keys by the item's first byte and indexes by its third,
 bounded (`0x4585cb`); `first` nonzero takes the `+0x18` array.
+`sound_emit_pos_z2` runs `0x4584e0` whole and `0x4585d0` to `0x4585f7`.
 
 ## Weapon impact sounds
 
@@ -71,13 +73,14 @@ and plays 2.0 yards higher.
 Addresses: `0x45cb60`, `0x45cb68`, `0x45cba3`, `0x45cc40`, `0x45cc65`, `0x457ec0`, `0x457ef2`, `0x457f0b`, `0x457e80`, `0x457e8f`, `0x457ea5`, `0x457dc0`, `0x457de6`, `0x457dfd`, `0x457e29`, `0xb06224`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sound_emit_pos_z2`
 
 The table holds `0x53f880()` subclasses of 0xa0 bytes; entry `(sub, kind)` is four dwords, normal and
 critical for type 0 then type 1 (`0x45cc65`). `0x457e80` returns subclass byte 1 and type
 `0x5d9a50(byte 2) != 0`, or `0x53f8a0()` and type 0 without a weapon. The dword index is
 `critical + 2·(type + 2·(kind + 10·sub))` (`0x457ef2`). Neither the build nor the plays bound the
 subclass.
+`sound_emit_pos_z2` runs `0x457e12` to `0x457e3d`.
 
 ## Swing, miss, deflect and absorb sounds
 
@@ -90,10 +93,11 @@ bus 0.
 Addresses: `0x45cb00`, `0x45cb36`, `0x45cb3d`, `0x45cb4f`, `0x457f60`, `0x457f63`, `0x457f74`, `0x457f91`, `0x459250`, `0x457f20`, `0x458610`, `0xb06bd4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sound_emit_pos_z2`
 
 The index is `(critical != 0) + 2·type` (`0x45cb49`, `0x457f8d`). `0x459250` takes `0xb05fb0` (1H)
 when `cl` is set, else `0xb05fac`. The named ids come from `interface#named-sounds`.
+`sound_emit_pos_z2` runs `0x457f20` and `0x458610` whole.
 
 ## Spell school sounds
 
@@ -139,7 +143,7 @@ held or a ramp runs, so only the return ramp picks them up.
 Addresses: `0x457960`, `0x457970`, `0x45798c`, `0x457999`, `0x4579cb`, `0x4579e6`, `0x4579ba`, `0x4579d6`, `0x4579f7`, `0x457a0d`, `0x457a22`, `0x457a37`, `0x457a50`, `0x457a80`, `0x457a92`, `0x457aa4`, `0x457ac4`, `0x45908c`, `0x45909f`, `0x457430`, `0xb05f34`, `0xb05f88`, `0xb05fc0`, `0x7ffa24`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::music_volume_fade`
 
 The down ramp's start is the clock stored raw in `[0xb05fc0]` (`0x45909f`): a first fill at clock 0
 stores 0, which reads as no ramp, so that fill gets no duck. `0x457960(now)` starts the
@@ -148,3 +152,4 @@ past the duration (`jle`) it applies the target (`V · 0.5` at `0x4579cb`, the C
 and clears the start. The value is `start + (T − start) · (e / d)` with `e / d` from `fild`/`fidiv`
 in the register. `[0x7ffa24]` is 0.5. `0x457430` returns true for a non-null slot or a running ramp.
 At world teardown `0x457cc0` destroys every slot's sound and frees the registry.
+`music_volume_fade` runs `0x457960` whole.

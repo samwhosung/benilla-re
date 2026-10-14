@@ -227,13 +227,15 @@ setter with the origin, axis `(0, 0, 1)` and scale `(1, 1, 1)`, and returns its 
 Addresses: `0x471910`, `0x471919`, `0x471930`, `0x47195f`, `0x471966`, `0x47196e`, `0x470a50`, `0x470a59`, `0x470abc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::lua_deg2rad_difftest`, `glue::lua_rad2deg_difftest`
 
 `0x471919` `fmul dword` 57.29578 (`0x42652ee1`) on the stored float, then `fstp qword`: a product
 of two floats is exact at 53 bits. `0x47195f` multiplies `lua_tonumber`'s double by
 0.017453292 (`0x3c8efa35`), rounding to 53 bits, and `0x471966` `fstp dword`. `0x470a59`
 stores before any test; `0x470abc` calls `0x710650` on the character's `+0x38` with those three
 vectors and the angle. `0x47196e` returns 1 with nothing pushed.
+`lua_deg2rad_difftest` runs `0x47195a` to `0x471969`; `lua_rad2deg_difftest` runs `0x471910` to
+`0x471922`.
 
 ## Frame and background
 

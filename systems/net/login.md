@@ -107,7 +107,7 @@ salt empty or longer than 32 bytes, `B` shorter than 31, `N` under 256 bits, `B 
 Addresses: `0x5d3650`, `0x5d3590`, `0x5d3874`, `0x5d3895`, `0x5d38c2`, `0x5d3970`, `0x5d3981`, `0x5d39cc`, `0x5d3a0b`
 Confidence: inferred
 Proof: none
-Test: none
+Test: `net::srp6_client_session`, `net::srp6_credential_hash`
 
 The step order and every hash are read at the bytes; the operation each Storm call performs is
 read from its structure, not its arithmetic, which leaves the entry `inferred`. `0x5d3590` sets
@@ -120,6 +120,7 @@ little-endian bytes, zero-padded. `0x5d3970` and `0x5d3981` compare `B` with `N`
 multiplies `x` by `u`, and `a` is added. `0x5d3a0b` interleaves `S` into `+0x20`; `M1` is stored at
 `+0x48`. Big numbers convert little-endian: byte `i` is bits `8(i mod 4)` of word `i/4`
 (`0x665910`, at `0x665970`). Return 0, −1 or −2.
+`srp6_client_session` runs `0x5d3650` whole; `srp6_credential_hash` runs `0x5d3590` whole.
 
 ## Session key interleave
 
@@ -131,13 +132,14 @@ what remains, the even-indexed bytes are hashed to `G` and the odd-indexed bytes
 Addresses: `0x5d3360`, `0x5d3375`, `0x5d337e`, `0x5d33a3`, `0x5d33d0`, `0x5d33f0`, `0x5d3423`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::srp6_client_session`, `net::srp6_interleave`
 
 `0x5d3375` `cmp byte [ebx],0; jne` with `inc ebx; dec eax` skips zeros from the buffer's first
 byte; `0x5d337e` `test al,1` drops one more. `0x5d33a3` gathers bytes `2i`, `0x5d33f0` bytes
 `2i + 1`, each hashed with SHA-1 over half the length; `0x5d33d0` and `0x5d3423` store the digests
 at even and odd offsets of the 40-byte output. `ret 4`: output in `ecx`, input in `edx`, length
 on the stack.
+`srp6_client_session` and `srp6_interleave` run `0x5d3360` whole.
 
 ## Logon proof
 
@@ -146,10 +148,10 @@ In state 4 the client sends `0x01`, `A` (32), `M1` (20), the checksum hash
 byte; a non-zero security byte adds 16 and 20 bytes from the logon object. `C` is the 20-byte
 checksum the logon object passes in. A reconnect sends `0x03` instead (Reconnect).
 
-Addresses: `0x5bbad0`, `0x5bbb38`, `0x5bbb4e`, `0x5bbb62`, `0x5bbb76`, `0x5bbbae`, `0x5bbbce`, `0x5bbc80`
+Addresses: `0x5bbad0`, `0x5bbb38`, `0x5bbb4e`, `0x5bbb62`, `0x5bbb76`, `0x5bbbae`, `0x5bbbce`, `0x5bbc80`, `0x5b1170`, `0x5bba80`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::hmac_sha1`, `net::srp6_file_hmac`
 
 `0x5bbb38` `cmp [edi+0x80],4`. `0x5bbb4e` puts 1; `0x5bbb62` 32 bytes from `+0x84`, the SRP
 object's `A`; `0x5bbb76` 20 from `+0xcc`, its `M1`; `0x5bbb7b` to `0x5bbbae` hash `A` and the 20 bytes
@@ -159,6 +161,7 @@ owner's slot 7, and a non-zero one adds 16 and 20 bytes. The argument comes from
 which the login screen calls with the checksum of `0x5b1170` over the salt that slot 5
 (`0x5b1c70`) kept at `+0x19c`; on a reconnect, slot 5 calls `0x5bbad0` with 20 zero bytes
 (`0x5b1c98`).
+`hmac_sha1` runs `0x5b1170` whole; `srp6_file_hmac` runs `0x5bba80` whole.
 
 ## Proof reply
 
@@ -220,7 +223,7 @@ is seeded at startup with the client clock and is the one SRP6 draws `a` from.
 Addresses: `0x5d1c70`, `0x5d1cf0`, `0x5b8000`, `0x5b7ff0`, `0xc2a428`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::sha1_prng_next`, `net::sha1_prng_seed`, `net::srp6_client_session`
 
 `0x5d1c70`: `_time(&t)` into `[ebp-0xc]`, `_srand(s)`, `_rand()` into `[ebp-0x4]`, SHA-1 over the
 12 bytes, the digest to `+0x00` and copied to `+0x14`, `+0x28` to `+0x3c` zeroed, `ret 4`.
@@ -228,6 +231,8 @@ Test: none
 each, into `+0x28` and sets the count to 20. `0x5b8000`, a static initializer reached through
 `0x5b7ff0`, calls `0x5d1c70` on `0xc2a428` with the clock; the only other reference to `0xc2a428`
 is the push at `0x5babae` before the SRP6 call.
+`sha1_prng_next` and `srp6_client_session` run `0x5d1cf0` whole; `sha1_prng_seed` runs `0x5d1c70`
+whole.
 
 ## Reconnect
 
@@ -256,7 +261,7 @@ itself is SHA-1 by its constants; its rounds are not recorded here.
 Addresses: `0x5d1db0`, `0x5d1de0`, `0x5d1ec0`, `0x5d32b0`, `0x5d1e48`, `0x5d1e69`, `0x5d233f`, `0x5d2386`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::sha1_family_b`, `net::sha1_prng_next`, `net::sha1_prng_seed`, `net::srp6_client_session`, `net::srp6_credential_hash`, `net::srp6_file_hmac`, `net::srp6_interleave`
 
 `0x5d1db0` stores `0x67452301`, `0xefcdab89`, `0x98badcfe`, `0x10325476` and `0xc3d2e1f0` and zeroes
 the 64-bit bit count at `+0x14`. `0x5d1de0` fills the buffer at `+0x1c` and transforms it
@@ -265,3 +270,5 @@ data (`0x5d1e63`, `0x5d1e69`) for each further 64 bytes. In `0x5d1ec0`, `edx` is
 the seventeenth word on, each schedule word is stored back into it, `mov [edx],esi` at
 `0x5d233f`, `mov [edx+0x4],esi` at `0x5d2386` and so on. The round additions use `0x5a827999` and
 `0x6ed9eba1`, and the subtraction forms of `0x8f1bbcdc` and `0xca62c1d6`.
+`sha1_family_b`, `sha1_prng_next`, `sha1_prng_seed`, `srp6_client_session`, `srp6_credential_hash`,
+`srp6_file_hmac` and `srp6_interleave` run `0x5d1db0`, `0x5d1de0`, `0x5d1ec0` and `0x5d32b0` whole.

@@ -24,10 +24,10 @@ A world packet starts with its size `N`, the count of opcode and body bytes, big
 first byte. The client sends the opcode as four bytes little-endian and reads it as two bytes
 little-endian. It applies the same size rule in both directions.
 
-Addresses: `0x5b5630`, `0x5b5450`, `0x5b65f0`, `0x5b56da`, `0x5b5712`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`
+Addresses: `0x5b5630`, `0x5b5450`, `0x5b65f0`, `0x5b56da`, `0x5b5712`, `0x5b674d`, `0x5b6765`, `0x5b677b`, `0x537aa0`, `0x537b10`, `0x5b5495`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::header_decode`, `net::header_encode`
 
 `0x5b56da` `cmp eax,0x7fff; jg` picks the form for the length of the data store's bytes. The
 three-byte form shifts by `0x10` and ORs `0x80` (`0x5b5712`, `0x5b5718`); the two-byte form
@@ -42,6 +42,7 @@ On receive, `0x5b674d` `test al,al; jns` takes the two-byte form when the top bi
 Every opcode the client builds goes in through the data store's 32-bit put, as in
 `0x5b407f`/`0x5b4087` (`0x1ed`) and `0x537e49` (`0x1dc`). The receive side reads 16 bits:
 `0x537abe` in the dispatcher and `0x537b46` in the network thread's data hook.
+`header_decode` runs `0x5b6730` to `0x5b6789`; `header_encode` runs `0x5b5495` to `0x5b54f0`.
 
 ## Header cipher
 
@@ -59,7 +60,7 @@ The index and feedback carry over from packet to packet. Arming zeroes both stat
 Addresses: `0x5b5630`, `0x5b5842`, `0x5b59d2`, `0x5b65f0`, `0x5b6848`, `0x5b73c0`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::cipher_recv_direct`, `net::cipher_recv_roundtrip`, `net::cipher_send`
 
 The state is a run of bytes in `WowConnection`: `+0x120` armed, `+0x121`/`+0x122` the send
 index and feedback, `+0x123` the send span, `+0x124`/`+0x125` the receive index and
@@ -77,6 +78,8 @@ both opcode bytes pass through this loop exactly once.
 
 `0x5b73c0` takes the connection's lock, zeroes `+0x121`, `+0x122`, `+0x124` and `+0x125`, and stores
 its argument in `+0x120`.
+`cipher_recv_direct` runs `0x5b6848` to `0x5b68a8`; `cipher_recv_roundtrip` and `cipher_send` run
+`0x5b5842` to `0x5b5896`.
 
 ## Arming the cipher
 

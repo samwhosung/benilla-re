@@ -74,11 +74,12 @@ Both draws advance the client's shared generator.
 Addresses: `0x458c60`, `0x458c69`, `0x458d45`, `0x458d4a`, `0x458d58`, `0x458d62`, `0x458d6d`, `0x458da0`, `0x458dc1`, `0x458e95`, `0x458e9a`, `0x458ea6`, `0x835a70`, `0x8029d0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::variation_pitch`, `sound::variation_volume`
 
 `0x458d50` loads `n` with `fild`, `fmul [0x8029d0]` (0.01), `fadd [def+0x78]`, then `fmul m`; the
 clamp tests `fcom 0` with `test ah,0x41` and `fcom 1.0` with `test ah,5`. The frequency is `imul`
 by `[0x835a70]` (22050, a `.data` value nothing writes) and division by 100 through `0x51eb851f`.
+`variation_pitch` runs `0x458c60` and `0x458da0` whole; `variation_volume` runs `0x458c60` whole.
 
 ## Playing by id
 
@@ -109,12 +110,13 @@ same function in two files, return 1 when it plays or is culled and 0 when it fa
 Addresses: `0x45cf00`, `0x45cf2e`, `0x45cf3b`, `0x45cf79`, `0x45cf95`, `0x45cfa4`, `0x45cfd0`, `0x45cdf0`, `0x45ce3e`, `0x458ed0`, `0x458efb`, `0x458890`, `0x45cfe0`, `0x458870`, `0x4588d0`, `0x458f90`, `0x459230`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sound_audible_distance`, `sound::sound_emit_pos_z2`
 
 `0x45cdf0(pos, c)` is `d² < c·c` against the listener (`fcompp`, `test ah,0x41`, `jne` false), so a
 NaN is refused. `0x458ed0` calls `Sound::SetPosition(pos, NULL)`, `SetCutoffDistanceSquared(+0x84)`
 and `0x7a5e80(+0x80, 100000.0)`. `0x458f90(id, index, pos)` and `0x459230(id, pos, index)` differ
 in argument order; both pass keep 1.
+`sound_audible_distance` runs `0x45cdf0` whole; `sound_emit_pos_z2` runs `0x458870` whole.
 
 ## Looped plays
 

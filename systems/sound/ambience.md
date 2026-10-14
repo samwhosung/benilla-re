@@ -77,12 +77,13 @@ over 5.0 s when its class goes away, changes speed, or is past the first two.
 Addresses: `0x462b40`, `0x462b50`, `0x462b6d`, `0x462ba1`, `0x462bdb`, `0x462c26`, `0x462c32`, `0x462c58`, `0x462da0`, `0x462daa`, `0x462db5`, `0x4627c0`, `0x4627ef`, `0x46280a`, `0x462830`, `0x4628ce`, `0x4628fd`, `0x46293f`, `0x462780`, `0x4627a4`, `0x462a40`, `0x462a7f`, `0x462aa3`, `0xb2306c`, `0xb230b8`, `0x803560`, `0x80355c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::source_pos_compose`
 
 `FindNearestLiquid` gets the player's world node, 9.0 (`0x41100000`) and the two twelve-slot
 arrays; slot `i` is class `i & 3` and speed `(i >> 2) & 3`. `0x462a40` fills group `type` speed
 `(col2 >> 2) & 3` with the SoundEntries row of column 3. `0x462da0` stops a group once two play. The
 open is `Sound::Play3DLooped(0, file, 8, 0, 1)` with `SetVolume2(0)` and `0x7a5730(5.0, 255)`.
+`source_pos_compose` runs `0x462830` whole.
 
 ## Water sound placement
 
@@ -94,12 +95,14 @@ once; coming back up starts them at full volume without the fade, once.
 Addresses: `0x462960`, `0x4629a1`, `0x4629f6`, `0x462c65`, `0x462ca6`, `0x462cb5`, `0x462d4a`, `0x462e10`, `0x462e2e`, `0x462e37`, `0xb2326c`, `0x803568`, `0x7ff9d0`, `0x803550`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::group_update_radius_clamp`, `sound::source_pos_compose`, `sound::source_slew`
 
 The snap test is `d² ≤ 1/36` (`0x7ff9d0`, `test ah,0x41; jp`); the step is `min(√d², [0x803568])`
 along the unit offset. The radius is `√(2 · 4.1666665²)`, computed once (`0x462c65`). `0x462e10`
 clears all four groups at once on submerging and sets bit 0x2 of `0xb2326c`; surfacing with 0x2
 set adds bit 0x1, which skips `SetVolume2(0)` and the fade until the next frame clears it.
+`group_update_radius_clamp` runs `0x462c65` to `0x462c82` and `0x462c82` to `0x462cf5`;
+`source_pos_compose` and `source_slew` run `0x462960` whole.
 
 ## Water sound switches
 
@@ -128,12 +131,13 @@ handle's id.
 Addresses: `0x461d80`, `0x461d99`, `0x461def`, `0x461e40`, `0x461e60`, `0x461e93`, `0x461ebd`, `0x461f1e`, `0x461a60`, `0x461af3`, `0x462000`, `0x4620c2`, `0x461f80`, `0x461d20`, `0x461fc0`, `0x461fdc`, `0x462120`, `0xb06dd8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::first_slot_farther_than_query`
 
 An entry is 0xe10 bytes: 256 positions, a used and a moved byte per slot, the id (`+0xe00`,
 negated after a failed open), the sound (`+0xe04`) and the slot it plays at (`+0xe08`). `0x461fc0`
 checks the entry index but its slot test only runs for a negative slot (`0x461fdc`), so any slot
 below 0x10000 passes. `0x462000` marks the slot used and moved when the position differs.
+`first_slot_farther_than_query` runs `0x461a60` whole.
 
 ## Emitter pump
 
@@ -146,10 +150,11 @@ sounding while its sound plays and is not cut off by distance.
 Addresses: `0x461990`, `0x4619c0`, `0x4619cf`, `0x4619ef`, `0x461b40`, `0x461b61`, `0x461b9d`, `0x461bd7`, `0x461bfd`, `0x461c33`, `0x461c3a`, `0x461c58`, `0x461c71`, `0x461c7c`, `0x461ca0`, `0x461cf6`, `0x461980`, `0x461a20`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::nearest_active_point`
 
 `cmp edi,4; jl` (`0x4619c0`); `edi` grows only when `0x461b40` returns true at `0x461c85`. The open
 is `Sound::Play3DLooped(0, file, 0, 0, 1)` with the volume, `0x458ed0` at the slot and the channel
 reverb. `0x461ca0` keeps the first strict minimum. A cutoff of 0 is never cut
 (`engine#distance-cutoff`). `0x461980` registers the pump; `0x461a20` unregisters it and destroys
 every entry's sound.
+`nearest_active_point` runs `0x461ca0` whole.

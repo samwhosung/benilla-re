@@ -295,10 +295,10 @@ So `x ≈ 768·a·fx`, `y ≈ 768·fy`, the width `≈ 768·a` and the height `�
 1024.0 and 767.9999427795418. `ShowCursor` (`0x46db60`) and `HideCursor` (`0x46db70`) call the
 cursor switch `0x58b590` with 1 and 0.
 
-Addresses: `0x46dad0`, `0x46dd30`, `0x46dd80`, `0x41ad10`, `0x832a44`, `0x832a48`, `0x832a4c`, `0xcf0bd8`, `0x41ad80`, `0x41ad70`, `0x41ae40`, `0x41ae60`, `0x41ae70`, `0x46db17`, `0x46db3b`, `0x46db60`, `0x46db70`, `0x58b590`
+Addresses: `0x46dad0`, `0x46dd30`, `0x46dd80`, `0x41ad10`, `0x832a44`, `0x832a48`, `0x832a4c`, `0xcf0bd8`, `0x41ad80`, `0x41ad70`, `0x41ae40`, `0x41ae60`, `0x41ae70`, `0x46db17`, `0x46db3b`, `0x46db60`, `0x46db70`, `0x58b590`, `0x46db05`, `0x46dd44`, `0x46dd94`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::lua_model_scale_difftest`
 
 `0x46dad0` passes `[[0xcf0bd8]+0x1118]` and `+0x111c` to `0x41ad80`, which stores `K1·fx` and
 `K2·fy` as floats. `0x41ad70` loads `A` from `0x832a4c`; `fmul` by 1024.0 and by the float are exact
@@ -310,6 +310,8 @@ steps. `0x41ad10` stores `a·0.75` rounded to float at `0x832a4c` (`fstp dword`,
 scales at `0x832a44` and `0x832a48`; a scan of the image for the dword `0x832a4c` finds only that
 store and `0x41ad70`'s `fld dword`, and the same scan finds the nine uses of `0x832a48`; the
 examples apply its arithmetic. `0x58b590` calls slot `+0xec` of the device object with the argument.
+`lua_model_scale_difftest` runs `0x46db05` to `0x46db17`, `0x46dd44` to `0x46dd56` and `0x46dd94` to
+`0x46dda6`.
 
 ## Billing
 

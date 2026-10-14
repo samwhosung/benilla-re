@@ -11,7 +11,7 @@ big-number helpers. The files of the first two runs open their code with their s
 the third run's code has one, the +∞ `0x5d3b20` near its end, and starts at `0x5d1420`, the SHA-1
 compression, right after IGxuFontGlyph.cpp's last initializer. Of the 1,146 functions in the three
 runs, 552 are those initializers and their thunks, and 81 are unreached. The closure is not yet
-complete: none of its 321 primitives has a bit-exact test.
+complete: 18 of its 321 primitives have a bit-exact test.
 
 The system's other docs are `wire`, `dispatch`, `session` and `login`.
 

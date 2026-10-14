@@ -99,12 +99,14 @@ frequency set, 0x4000000 looped, 0x8000000 3D, and one bit per list: 0x10000000 
 Addresses: `0x7a530f`, `0x7a5555`, `0x7a532d`, `0x7a5b2b`, `0x7a5b4d`, `0x7a5dcc`, `0x7a5e4c`, `0x7a6742`, `0x7a6930`, `0x7a6960`, `0x7a5870`, `0x7a601c`, `0x7a60fe`, `0x7a61ce`, `0x7a629e`, `0x7a5a23`, `0x7a5095`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_volume_mix`, `sound::source_3d_attrs`, `sound::volume_ramp_scale`
 
 `0x7a530f` keeps `flags & 0xff`; `0x7a5555` adds 0x4000000 for a looped open and `0x7a532d`
 0x8000000 for mode 0x1000. Each setter ORs its bit where the address shows. `0x7a5870` returns bit
 0x100000, `0x7a6960` bit 0x10000. Bits 0x2, 0x8 and 0x10 choose the category in
 `Volume of a sound`; 0x4 is read by the end and cutoff handling.
+`channel_volume_mix` and `volume_ramp_scale` run `0x7a5dc0` whole; `source_3d_attrs` runs `0x7a5b10`
+whole.
 
 ## Opening a stream
 
@@ -162,12 +164,14 @@ panning lists and sets reason 2; `Sound::Resume` restores them and clears it.
 Addresses: `0x7a65a0`, `0x7a5ac0`, `0x7a5880`, `0x7a5900`, `0x7a6720`, `0x7a6860`, `0x7a6620`, `0x7a663c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_set_volume`, `sound::channel_volume_mix`, `sound::source_3d_attrs`, `sound::volume_ramp_scale`
 
 `0x7a65a0` rejects a reason outside 0 to 3. `0x7a6860(this, silent)` applies the stored position
 and velocity, counts the bus, sets the stored frequency, then either `FSOUND_SetVolume(ch, 0)` when
 `silent`, a mute for a non-music sound with the switch off, or `Sound::UpdateVolume`; it mutes again
 while the window is inactive and restarts a fade's clock. `Sound::IsSuspended` is bit 2 of `+0x88`.
+`channel_set_volume`, `channel_volume_mix`, `source_3d_attrs` and `volume_ramp_scale` run `0x7a6720`
+whole.
 
 ## Volume of a sound
 
@@ -182,12 +186,14 @@ a level back as the low byte of the float `v · 255 + 512.5`: it rounds, wraps o
 Addresses: `0x7a5dc0`, `0x7a5ded`, `0x7a5dfc`, `0x7a5e0b`, `0x7a5e1d`, `0x7a5e26`, `0x7a5da0`, `0x7a59e0`, `0x7a5d70`, `0x87cef4`, `0x87cef8`, `0x87cefc`, `0x7ffe58`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_volume_curve`, `sound::channel_volume_mix`, `sound::channel_volume_rate_stream`, `sound::volume_ramp_scale`
 
 `test al,2` loads `[0x87cef8]`, `test al,8` `[0x87cefc]`, `test al,0x10` skips the factor, else
 `[0x87cef4]`; then `fmul [esi+0x78]`, `fmul [0x7ffe58]` and `__ftol` (`0x7a5e1d` to `0x7a5e26`). The
 categories' file values (1.0, 0.5, 0.5) are replaced at start-up by the CVar handlers. `0x7a5d70`
 adds `0x81d72c` (512.5) and returns `(bits >> 14) & 0xff`.
+`channel_volume_curve` and `channel_volume_rate_stream` run `0x7a5d70` whole; `channel_volume_mix`
+runs `0x7a5dc0` whole; `volume_ramp_scale` runs `0x7a5da0` and `0x7a5dc0` whole.
 
 ## Category volumes
 
@@ -200,13 +206,14 @@ records with flag 0x4 but stopping their streams; turning them on clears reason 
 Addresses: `0x7a6390`, `0x7a6400`, `0x7a6480`, `0x7a6500`, `0x7a6560`, `0x7a6570`, `0x7a67a0`, `0x7a6660`, `0x87cf00`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sfx_master_volume`
 
 Each setter's three compares send v < 0 to 0 and v ≥ 1 or NaN to 1 (`fcomp`, `test ah,0x41/5`).
 `0x7a6660(key)` walks the every-sound list. `0x7a6570(off)` stores `[0x87cf00] = (off != 0)` when it
 changes and tail-calls `0x7a67a0` with `[0x87cf00] == 1`; `0x7a67a0` skips flag 0x2, applies
 reason 1 to `flags & 0x4000008`, and when turning off stops (`0x7a5950`, flag 0x4) or destroys the
 rest. The CVar handler passes `off` as the CVar being 0 (`interface#cvar-handlers`).
+`sfx_master_volume` runs `0x7a6500` whole.
 
 ## Fades
 
@@ -221,12 +228,14 @@ passes `ftol(v · 255)`. `0x7a5a50(seconds)` fades out from the current level at
 Addresses: `0x7a5730`, `0x7a575b`, `0x7a5777`, `0x7a57b0`, `0x7a5a50`, `0x7a5a67`, `0x7a5a85`, `0x7a5a10`, `0x7a5a23`, `0x7a5700`, `0x7a5fc0`, `0x7a6030`, `0x8022cc`, `0x801448`, `0x801620`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_set_volume`, `sound::channel_volume_rate_stream`, `sound::volume_to_byte`
 
 The threshold is `fcomp [0x801620]` (0.1) with `test ah,5` (`0x7a575b`, `0x7a5a67`): a NaN takes
 the fade path. The rates multiply by `[0x8022cc]` (1000.0) and `[0x801448]` (−1000.0) and are stored
 as floats at `+0x48`. `0x7a5fc0` links the fade list and sets bit 31; `0x7a6030` sets the volume to
 the stored level `+0x44`, unlinks and clears it. `0x7a5a10` ORs 0x20000 when `0x7a5a50` returns 1.
+`channel_set_volume` runs `0x7a5730` whole; `channel_volume_rate_stream` runs `0x7a5a50` whole;
+`volume_to_byte` runs `0x7a57b0` whole.
 
 ## The fade pump
 
@@ -240,12 +249,13 @@ otherwise.
 Addresses: `0x7a4c20`, `0x7a4c5c`, `0x7a4c9b`, `0x7a4ca9`, `0x7a4cb8`, `0x7a4cbd`, `0x7a4d18`, `0x7a4d2a`, `0x7a4d38`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::ramp_step`
 
 The elapsed time is the 32-bit difference of `OsGetAsyncTimeMs` readings, zero-extended and loaded
 with `fild qword`, times the float rate, truncated by `__ftol`. A rate below 0 (`test ah,5` falls
 through) is a fade out (`add esi,[ebx+0x44]`, `jg` keeps fading); a rate above 0 clamps at
 `cmp esi,[ebx+0x44]; jl`. The next link is read before a sound is released.
+`ramp_step` runs `0x7a4c20` whole.
 
 ## Positions and the listener
 
@@ -260,12 +270,15 @@ of FMOD's. `0x7a5e80(min, max)` sets `FSOUND_Sample_SetMinMaxDistance` on the st
 Addresses: `0x7a5b10`, `0x7a5b82`, `0x7a5bc8`, `0x7a5eb0`, `0x7a5f1f`, `0x7a5f50`, `0x7a5e80`, `0x7a5e40`, `0x7a5bf0`, `0x7a5bf6`, `0x7a5fa0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::env_sound_audible`, `sound::first_slot_farther_than_query`, `sound::listener_3d_attrs`, `sound::listener_get_attrs`, `sound::max_distance_cull`, `sound::sound_audible_distance`, `sound::source_3d_attrs`
 
 `0x7a5b82` loads `pos.y`, `fchs`, and stores it first, then `pos.z` and `pos.x`; the velocity and the
 listener's vectors follow the same pattern. `0x7a5f1f` turns a null velocity into a null argument
 (`neg; sbb; and`). `0x7a5f50` stores `−f.x` at `+4`, `f.z` at `+0` and `f.y` at `+8`. The ui's
 world frame feeds the listener (`0x483218`).
+`env_sound_audible`, `first_slot_farther_than_query`, `listener_get_attrs`, `max_distance_cull` and
+`sound_audible_distance` run `0x7a5f50` whole; `listener_3d_attrs` runs `0x7a5eb0` whole;
+`source_3d_attrs` runs `0x7a5b10` whole.
 
 ## Sounds that follow objects
 
@@ -274,14 +287,15 @@ for GUID 0. Each frame, when a position callback is installed, the pump asks it 
 each listed sound's GUID and, on success, stores it and calls `FSOUND_3D_SetAttributes` with no
 velocity. The interface installs and removes the callback (`entries#playing-at-a-position`).
 
-Addresses: `0x7a57e0`, `0x7a4d50`, `0x7a4da4`, `0x7a60a0`, `0x7a6110`, `0xcf55fc`
+Addresses: `0x7a57e0`, `0x7a4d50`, `0x7a4da4`, `0x7a60a0`, `0x7a6110`, `0xcf55fc`, `0x7a4dae`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::sibling_remap_flip`
 
 `0x7a57e0` tests flag 0x8000000, stores `+0x68` and `+0x6c` and calls `0x7a60a0` or `0x7a6110`.
 `0x7a4d50` returns at once when `[0xcf55fc]` is null and skips sounds without a channel; the call
 `call [0xcf55fc]` (`0x7a4da4`) takes the out vector in `ecx` and the GUID on the stack.
+`sibling_remap_flip` runs `0x7a4dae` to `0x7a4ddf`.
 
 ## Distance cutoff
 
@@ -296,7 +310,7 @@ which leaving re-arms. A cut-off sound coming back resumes, restarting its strea
 Addresses: `0x7a5ca0`, `0x7a5cca`, `0x7a5d14`, `0x7a506e`, `0x7a5d1a`, `0x7a5d32`, `0x7a5000`, `0x7a5071`, `0x7a507e`, `0x7a508e`, `0x7a50ac`, `0x7a50d2`, `0x7a50e6`, `0x7a50f2`, `0x7a517d`, `0x7a5102`, `0x7a510e`, `0x7a515d`, `0x7a516f`, `0x7a5196`, `0x7a6240`, `0x7a62b0`, `0x804588`, `0x81d728`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_dist_update`, `sound::max_distance_cull`
 
 `0x7a5cca` `jnp` takes `c == 0` only. The pump stores `d²` as a float and compares it with `c·c` in
 the register (`0x7a506e`, `fld d²; fcompp`, `test ah,0x41; jne`): only `d² > c²` is out of range.
@@ -306,6 +320,7 @@ near state, which `SetNearCutoff` (`0x7a6930`) stores at `0x7a517d`; `0x7a6960` 
 while it is set. `0x804588` is 0.9 and `0x81d728` 0.10000002. `de f1` at `0x7a515d` is `fdivrp`
 computing `v / k`; the store at `0x7a516f` happens only when the value differs from `+0x78`, which
 sets the reapply flag. A cutoff of 0 is never listed, so its sound is never cut.
+`channel_dist_update` runs `0x7a5000` whole; `max_distance_cull` runs `0x7a5ca0` whole.
 
 ## Panning list
 
@@ -317,12 +332,13 @@ that was on the list before.
 Addresses: `0x7a4e00`, `0x7a5c20`, `0x7a6170`, `0x7a61e0`, `0x7a5900`, `0x7a592b`, `0x808acc`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::channel_2d_position_synth`
 
 The angle is clamp(`+0x4c`, 0, 1) · `[0x808acc]` (π/2); the direction is skipped when both
 horizontal offsets are under 0.001. The rotation axis is the direction crossed with (0, 0, 1),
 built by `0x7bbab0` and applied by `0x7bb0e0`. `0x7a61ce` in `0x7a6170` is the only store of flag
 0x20000000; `0x7a6170` is called from `0x7a5c20` and from `0x7a5936` under that saved flag.
+`channel_2d_position_synth` runs `0x7a4e00` whole.
 
 ## The frame pump
 
@@ -331,10 +347,10 @@ the listener position, the panning list, the cutoff list and `FSOUND_Update`. FM
 puts a stream's sound on the ended list under the engine lock; the pump stops a flag-0x4 sound's
 stream and keeps its record (its owner sees it stopped) and releases any other.
 
-Addresses: `0x7a4850`, `0x7a4ad0`, `0x7a4b21`, `0x7a4b4a`, `0x7a53c0`, `0x7a6920`, `0x7a4b60`, `0x7a4bcf`, `0x7a5810`, `0x7a5950`
+Addresses: `0x7a4850`, `0x7a4ad0`, `0x7a4b21`, `0x7a4b4a`, `0x7a53c0`, `0x7a6920`, `0x7a4b60`, `0x7a4bcf`, `0x7a5810`, `0x7a5950`, `0x7a4b26`
 Confidence: verified
 Proof: one
-Test: none
+Test: `sound::pump_listener_flip`
 
 `0x7a4850` returns 1. `0x7a53c0` (`ret 0x10`) links its fourth argument on the list at
 `0xcf558c` between `SCritSect::Enter` and `Leave`, calls the empty `0x7a6920` and returns 0. `0x7a4b60` tests `[edi+0x38]` bit
@@ -342,6 +358,7 @@ Test: none
 stopped, else `FSOUND_IsPlaying`. `Sound::Stop3` clears the end callback, frees the channel
 (`FSOUND_SetReserved(ch, FALSE)`, `FSOUND_StopSound`), stops and closes the stream and leaves every
 list but the every-sound list.
+`pump_listener_flip` runs `0x7a4b26` to `0x7a4b3d`.
 
 ## Window focus
 

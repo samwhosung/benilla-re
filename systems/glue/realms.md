@@ -88,7 +88,7 @@ through a null array.
 Addresses: `0x46e510`, `0x46e530`, `0x46e5b8`, `0x46e5d4`, `0x46e60b`, `0x46e62d`, `0x46e708`, `0x46e713`, `0x46e71d`, `0x46e73d`, `0x46bf96`, `0x46c0e2`, `0x5b42a0`, `0x837e98`, `0x837e9c`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::realm_load_stats_difftest`
 
 `0x46bf96` and `0x46c0e2` are the two calls. `0x46e530` stores 0 at each `+0x18`; a null holder is
 created first, as `0x5ab930` does. `0x46e5a9` reads `+0x131`; a zero loads `[[0xb41f7c]]`, the first
@@ -100,6 +100,7 @@ statistics and `0x46e750`, the scan at `0x46e708` stops at the first category of
 `0x46e713` stores its index. `0x46e71d` tests the word at `ClientConnection` `+0x1ae4`, the count of
 the character list at `+0x1ae0` that `0x5b42a0` fills; non-zero, or `0x837e9c ≠ −1`, signals 9, else
 10 (`0x46e73d`).
+`realm_load_stats_difftest` runs `0x46e510` whole.
 
 ## Population statistics
 
@@ -116,7 +117,7 @@ population makes both NaN, and the band then reads 0 for every realm without a s
 Addresses: `0x46e510`, `0x46e586`, `0x46e5e3`, `0x46e672`, `0x46e684`, `0x46e69f`, `0x46e6c4`, `0x46e6c9`, `0x46e6d7`, `0x8038d8`, `0xb41fb0`, `0xb41fb4`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::realm_load_stats_difftest`
 
 `0x46e586` zeroes the sum.
 
@@ -135,6 +136,7 @@ Test: none
 loaded by `fild qword` with the high dword 0, so they are exact. In the second loop `fld st(0); fmul
 st,st(1)` squares, `fadd [ebp-0x4]` adds the float accumulator (0 at the start), and `fstp` rounds
 it to float. The NaN consequence is the band's unordered path.
+`realm_load_stats_difftest` runs `0x46e510` whole.
 
 ## The load band
 
@@ -157,7 +159,7 @@ and Medium by sign.
 Addresses: `0x46ec60`, `0x46ec67`, `0x46ec7c`, `0x46ec8a`, `0x46eca4`, `0x46ecac`, `0x46ecc7`, `0x46eccf`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::realm_load_classify_difftest`
 
 `0x46ec67` `test al,0x20` loads −3.0 (`0xc0400000`); `0x46ec7c` `test al,0x40` loads −2.0;
 `0x46ec8a` `test al,al; jns` loads 2.0 for bit `0x80`. `0x46eca4` is `fcomp` of `m − d` with p and
@@ -165,6 +167,7 @@ Test: none
 (`0xbf800000`); below, equal and unordered go on. `0x46ecc7` compares `m + d` with p and `0x46eccf`
 `test ah,5; jp`: only C0 alone, `m + d < p`, falls through to 1.0 (`0x3f800000`); greater, equal and
 unordered (C0 and C2 set) jump to the zeroed local. The six values are the only returns.
+`realm_load_classify_difftest` runs `0x46ec60` whole.
 
 ## Sort records
 
@@ -369,12 +372,13 @@ character list load at `0x472556` (0, when the list has characters); the rebuild
 Addresses: `0x837e98`, `0x837e9c`, `0x46e713`, `0x46ea3e`, `0x46f188`, `0x46f407`, `0x46ea52`, `0x46f1d1`, `0x472556`, `0x46e72a`, `0x47253d`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::realm_load_stats_difftest`
 
 Every little-endian occurrence in the image of `0x837e98`: `0x46e714`, `0x46ea40`, `0x46f189`,
 `0x46f409`; of `0x837e9c`: `0x46e72c`, `0x46ea54`, `0x46f1ca`, `0x46f1d3`, `0x47253f`, `0x472558`.
 Each lies inside the instruction the claim lists. Control: the same scan finds `0x837ea0` at
 `0x46f48b`. The file holds `ff ff ff ff` at both.
+`realm_load_stats_difftest` runs `0x46e510` whole.
 
 ## Script functions
 

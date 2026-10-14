@@ -195,10 +195,10 @@ positive and equal the event's; otherwise it stores them, gets the aspect, gives
 is a frame, scale 1.0 forced and updates the layout, and, when the aspect differs from `0xb41e24` by 0.01 or more
 or the difference is NaN, stores it and requests a rebuild (`0xb41d8c`).
 
-Addresses: `0x46ab40`, `0x46abe0`, `0x46a7f2`, `0x46a808`, `0x46a812`, `0x46a81c`, `0x46a828`, `0x46abfe`, `0x46ac51`, `0x46ac66`, `0x46ac71`, `0x46ac76`, `0xb41e1c`, `0xb41e20`, `0xb41e24`, `0x7665c0`
+Addresses: `0x46ab40`, `0x46abe0`, `0x46a7f2`, `0x46a808`, `0x46a812`, `0x46a81c`, `0x46a828`, `0x46abfe`, `0x46ac51`, `0x46ac66`, `0x46ac71`, `0x46ac76`, `0xb41e1c`, `0xb41e20`, `0xb41e24`, `0x7665c0`, `0x46ab97`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::glue_aspect_difftest`, `glue::glue_init_viewport_difftest`, `glue::glue_onresize_difftest`
 
 Width is `__ftol(r[3] − r[1])`, height `__ftol(r[2] − r[0])` of `0x58a250`'s rectangle. `0x46ab40`:
 `fild` width, `fidiv` height, at 53 bits, stored as a float at `0x46a81c`. `0x7665c0`, on category
@@ -209,6 +209,8 @@ stores. `0x76c760("GlueParent")` must be a frame;
 `test ah,5`, `jnp`: less skips; greater, equal and unordered store. The startup's call
 (`0x46a4ee`) passes the window's size (`0x58a240`); each store it makes is overwritten by the
 build that follows.
+`glue_aspect_difftest` runs `0x46ab97` to `0x46ab9e`; `glue_init_viewport_difftest` runs `0x46a7f7`
+to `0x46a817`; `glue_onresize_difftest` runs `0x46ac5b` to `0x46ac86`.
 
 ## Rebuild requests
 
@@ -220,13 +222,14 @@ the glue is suspended; either way it clears the flag.
 Addresses: `0xb41d8c`, `0x4035f0`, `0x46ac76`, `0x46a7e0`, `0x46b97f`, `0x46b98b`, `0x46b993`, `0x46b99d`, `0x46b9ac`
 Confidence: verified
 Proof: one
-Test: none
+Test: `glue::glue_onresize_difftest`
 
 A census finds five references: stores of 1 at `0x4035f0` and `0x46ac76`, stores of 0 at
 `0x46a7e0` and `0x46b9ac`, and the test at `0x46b97f`. `0x4035f0` is the handler the startup
 registers with the console command `reloadUI`. In `0x46b930`, `0x46b977` skips the block for a
 state other than 0; `0x46b98b` skips the rebuild while `0xb41d94` is set; `0x46b9a7` calls
 `0x46b840` with the current screen's name.
+`glue_onresize_difftest` runs `0x46ac5b` to `0x46ac86`.
 
 ## Suspend
 

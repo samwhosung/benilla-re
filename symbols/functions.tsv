@@ -582,8 +582,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40a1a4	20	_finite	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when x is finite	inferred	none	collision/mover#position-validity	
 0x40a1b8	46	_isnan	idb	crt	boundary	int __cdecl (double x)	Returns nonzero when x is NaN	inferred	none	collision/mover#local-player-step	
 0x40a1e6	146	__fpclass	idb	crt	boundary		Runs its object file code that calls __sptype; not read here	inferred	none		
-0x40a280	47	__alloca_probe	idb	crt	boundary		Allocates eax bytes on the stack, touching each page	inferred	none	spell/go#spell-go-packet	
-0x40a2b0	39	__ftol	idb	crt	boundary		Converts st0 to a 64-bit integer by truncation and returns its low dword	verified	one	camera#angle-properties	
+0x40a280	47	__alloca_probe	idb	crt	boundary		Allocates eax bytes on the stack, touching each page	inferred	none	spell/go#spell-go-packet	net::srp6_client_session, net::srp6_interleave
+0x40a2b0	39	__ftol	idb	crt	boundary		Converts st0 to a 64-bit integer by truncation and returns its low dword	verified	one	camera#angle-properties	glue::char_customize_color_difftest, glue::glue_init_viewport_difftest, sound::channel_volume_mix, sound::ramp_step, sound::volume_to_byte, spell::spellvisual_timeline_difftest
 0x40a2d7	9	__purecall		crt			Ends the process with runtime error 25, a pure virtual call	inferred	none		
 0x40a2e0	45	__cinit	idb	crt	boundary	void __cdecl (void)	Runs the C and C++ static initializer tables through __initterm	verified	one	random#static-initializers	
 0x40a30d	17	_exit	idb	crt	boundary		Runs its object file code that calls _doexit; not read here	inferred	none		
@@ -753,7 +753,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40ff70	92	__fltout2	idb	crt	boundary		Runs its object file code that calls ___dtold, 0x4116fd and 1 more; not read here	inferred	none		
 0x40ffcc	182	___dtold	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x410090	88	_memset	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x4100f0	821			crt	boundary		Runs its object file code not read here	inferred	none		
+0x4100f0	821			crt	boundary		Runs its object file code not read here	inferred	none		net::pin_shuffle
 0x410425	9	__fptrap	idb	crt	boundary		Runs its object file code that calls __amsg_exit; not read here	inferred	none		
 0x41042e	36			crt	unreached		Runs its object file code that calls __lock, __unlock; not read here	inferred	none		
 0x410452	6			crt	unreached		Runs its object file code not read here	inferred	none		
@@ -848,9 +848,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4149f9	320	_cvtdate	idb	crt	boundary		Runs its object file code not read here	inferred	none		
 0x414b39	275	___crtGetLocaleInfoW	idb	crt	unreached		Runs its object file code that calls __alloca_probe; not read here	inferred	none		
 0x414c4c	286	___crtGetLocaleInfoA	idb	crt	unreached		Runs its object file code that calls __alloca_probe; not read here	inferred	none		
-0x414d70	104	__aulldiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x414d70	104	__aulldiv	idb	crt	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x414de0	117	__aullrem	idb	crt	boundary		Runs its object file code not read here	inferred	none		
-0x414e60	52	__allmul	idb	crt	boundary		Runs its object file code not read here	inferred	none		
+0x414e60	52	__allmul	idb	crt	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x414e94	33			crt	boundary		Runs its object file code that calls __lock, _getenv, __unlock; not read here	inferred	none		
 0x414eb5	125	_getenv	idb	crt	boundary		Runs its object file code that calls ___wtomb_environ, _strlen, __mbsnbicoll; not read here	inferred	none		
 0x414f32	63	__mbsnbicoll	idb	crt	boundary		Runs its object file code that calls ___crtCompareStringA; not read here	inferred	none		
@@ -2109,9 +2109,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x428f70	15	InitTimerTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/events#static-initializers	
 0x428f80	5	InitTimerInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x428f90; a static initializer	verified	one	core/events#static-initializers	
 0x428f90	19	InitTimerInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/events#static-initializers	
-0x428fb0	266	SetUint32ArrayCount		core	primitive	void __thiscall (void *array, uint32_t count)	Sets an array's count, growing its capacity to a quantum multiple	verified	one	core/events#shared-arrays	
+0x428fb0	266	SetUint32ArrayCount		core	primitive	void __thiscall (void *array, uint32_t count)	Sets an array's count, growing its capacity to a quantum multiple	verified	one	core/events#shared-arrays	net::srp6_client_session
 0x4290c0	290	GrowTimerArrayTo		core	primitive		Grows the timer array to hold an index, rounding the capacity to its quantum	verified	one	core/events#timers	
-0x4291f0	226	AddUint32ArrayCount		core	primitive	void __thiscall (void *array, uint32_t count, uint32_t zero)	Adds to an array's count, growing its capacity to a quantum multiple and zeroing when asked	verified	one	core/events#shared-arrays	
+0x4291f0	226	AddUint32ArrayCount		core	primitive	void __thiscall (void *array, uint32_t count, uint32_t zero)	Adds to an array's count, growing its capacity to a quantum multiple and zeroing when asked	verified	one	core/events#shared-arrays	net::srp6_client_session
 0x4292e0	57	GetUint32ArrayQuantum		core	primitive	uint32_t __thiscall (void *array, uint32_t size)	Returns the largest power of two not above a size below 64, else 64, and 1 for 0	verified	one	core/events#shared-arrays	
 0x429320	31	RoundUpToQuantum		core	primitive	uint32_t __thiscall (void *array, uint32_t size, uint32_t quantum)	Rounds a size up to a multiple of a quantum	verified	one	core/events#shared-arrays	
 0x429340	133	ReallocUint32Array		core	orchestration	void __thiscall (void *array, uint32_t capacity)	Reallocates an array's storage to a capacity, copying the elements	verified	one	core/events#shared-arrays	
@@ -3924,15 +3924,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x457770	194	SndInterfaceWorldInitialize	idb	sound	orchestration		Registers the world CVars and starts zone music, ambience, water, emitters, the frame handler and emote sounds	verified	one	sound/interface#world-start-and-teardown	
 0x457840	125	SoundInterfaceRegisterWorldCVars	idb	sound	orchestration		Registers the four world sound CVars and the ambience pair	verified	one	sound/interface#sound-cvars	
 0x4578c0	151	SoundFrameHandler		sound	orchestration		Recomputes the night flag from the game clock, ends a finished intro and runs the duck each frame	verified	one	sound/interface#day-and-night	
-0x457960	226	StepSoundDuck		sound	primitive		Steps the server-sound duck ramp of the Sound factor for the frame's time	verified	one	sound/objects#the-duck	
+0x457960	226	StepSoundDuck		sound	primitive		Steps the server-sound duck ramp of the Sound factor for the frame's time	verified	one	sound/objects#the-duck	sound::music_volume_fade
 0x457a50	131	UpdateServerSoundRegistry		sound	primitive		Drops ended or cut-off server sounds from the registry and starts the duck's return ramp when empty	verified	one	sound/objects#the-duck	
 0x457ae0	473	BuildEmoteSounds		sound	primitive		Builds the EmotesTextSound table of sounds by emote, race and gender	verified	one	sound/interface#emote-sounds	
 0x457cc0	150	SndInterfaceWorldShutdown		sound	primitive		Stops the world's music, ambience, water, emitters and intro, frees emote tables and server sounds	verified	one	sound/interface#world-start-and-teardown	
 0x457d60	87	FreeEmoteSounds		sound	orchestration		Frees the emote sound record and pointer arrays	verified	one	sound/interface#world-start-and-teardown	
-0x457dc0	179	PlayWeaponImpactOnItem		sound	primitive		Plays a weapon's impact sound for the struck item's kind 2.0 yards above a position	verified	one	sound/objects#weapon-impact-sounds	
+0x457dc0	179	PlayWeaponImpactOnItem		sound	primitive		Plays a weapon's impact sound for the struck item's kind 2.0 yards above a position	verified	one	sound/objects#weapon-impact-sounds	sound::sound_emit_pos_z2
 0x457e80	58	GetWeaponImpactKey		sound	primitive		Returns a weapon's impact subclass and type, or the unarmed subclass and type 0	verified	one	sound/objects#weapon-impact-sounds	
 0x457ec0	95	PlayWeaponImpact		sound	orchestration		Plays the impact table's sound for a weapon, kind and critical flag on bus 10	verified	one	sound/objects#weapon-impact-sounds	
-0x457f20	60	PlayShieldImpact		sound	primitive		Plays ShieldWoodImpact 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
+0x457f20	60	PlayShieldImpact		sound	primitive		Plays ShieldWoodImpact 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
 0x457f60	70	PlayWeaponSwing		sound	orchestration		Plays the swing table's sound for a type and critical flag on bus 6, at 0.5 when quiet	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
 0x457fb0	54	SndInterfacePlayItemSound	idb	sound	orchestration		Plays a live item's ItemGroupSounds or wrapped-item sound of a kind	verified	one	sound/interface#item-sounds	
 0x457ff0	62	PlayItemDisplaySound		sound	orchestration		Plays the ItemGroupSounds sound of a kind for an item display id	verified	one	sound/interface#item-sounds	
@@ -3943,11 +3943,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458220	5	InitSndIfInvTwoPiThunk		sound	orchestration	void __cdecl (void)	Jumps to 0x458230; a static initializer	verified	one	sound/overview#shared-header-constants	
 0x458230	19	InitSndIfInvTwoPi		sound	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	sound/overview#shared-header-constants	
 0x458250	290	SndInterfacePlayVocalUISound	idb	sound	primitive		Plays the spoken error line for a gender and error, switching to the fed-up line on repeats	verified	one	sound/interface#error-speech	
-0x458380	201	PlayFootstep		sound	primitive		Plays a footstep sound at a position within 20 yards of the listener, or 50 when far	verified	one	sound/objects#footstep-sounds	
+0x458380	201	PlayFootstep		sound	primitive		Plays a footstep sound at a position within 20 yards of the listener, or 50 when far	verified	one	sound/objects#footstep-sounds	sound::env_sound_audible
 0x458450	142	GetFootstepSound		sound	primitive		Returns the footstep table's dry or wet sound for a footstep id and terrain type, or 0	verified	one	sound/objects#footstep-table	
-0x4584e0	79	PlayMaterialSound		sound	primitive		Plays a Material row's sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	
-0x458530	216	PlaySheatheSound		sound	primitive		Plays an item's sheathe or unsheathe sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	
-0x458610	60	PlayAbsorbSound		sound	primitive		Plays AbsorbGetHit 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	
+0x4584e0	79	PlayMaterialSound		sound	primitive		Plays a Material row's sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	sound::sound_emit_pos_z2
+0x458530	216	PlaySheatheSound		sound	primitive		Plays an item's sheathe or unsheathe sound 2.0 yards above a position on bus 0	verified	one	sound/objects#material-and-sheathe-sounds	sound::sound_emit_pos_z2
+0x458610	60	PlayAbsorbSound		sound	primitive		Plays AbsorbGetHit 2.0 yards above a position on bus 0	verified	one	sound/objects#swing-miss-deflect-and-absorb-sounds	sound::sound_emit_pos_z2
 0x458650	38	SetSoundSubmerged		sound	orchestration		Stores the submerged state and on a change swaps the ambience, water sounds and reverb	verified	one	sound/interface#state-the-other-files-read	
 0x458680	33	SetSoundGhost		sound	orchestration		Stores the ghost state and on a change restarts the zone music and refreshes the ambience	verified	one	sound/interface#state-the-other-files-read	
 0x4586b0	20	SetWeatherAmbience		sound	orchestration		Keeps the weather message's ambience sound and refreshes the ambience when it changes	verified	one	sound/interface#state-the-other-files-read	
@@ -3959,7 +3959,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458810	24	UnloadSoundScriptFunctions		sound	primitive		Unregisters the four Lua sound functions	verified	one	sound/interface#lua-sound-functions	
 0x458830	30	GetSoundDefFlag200		sound	primitive		Stores bit 0x200 of a definition's flags and returns whether the definition exists	verified	one	sound/entries#definition-queries	
 0x458850	23	SndInterfacePlaySound	idb	sound	primitive		Plays a sound id on bus 0 and returns whether it played	verified	one	sound/entries#playing-by-id	
-0x458870	27	PlaySoundAtArgs		sound	orchestration		Plays a sound id at a position on bus 0	verified	one	sound/entries#playing-at-a-position	
+0x458870	27	PlaySoundAtArgs		sound	orchestration		Plays a sound id at a position on bus 0	verified	one	sound/entries#playing-at-a-position	sound::sound_emit_pos_z2
 0x458890	55	PlaySoundAtPosition		sound	orchestration		Plays a sound id at a position unless culled; returns 1 when played or culled	verified	one	sound/entries#playing-at-a-position	
 0x4588d0	23	PlaySoundAtArgsBus2		sound	orchestration		Plays a sound id at a position on bus 2	verified	one	sound/entries#playing-at-a-position	
 0x4588f0	10	PlayAmbienceLoop		sound	orchestration		Opens a sound id as a 2D ambience loop	verified	one	sound/entries#looped-plays	
@@ -3973,8 +3973,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x458be0	11	InstallSoundPositionCallback		sound	orchestration		Installs the object position callback in the engine	verified	one	sound/entries#sounds-that-follow-objects	
 0x458bf0	86	GetSoundObjectPosition		sound	orchestration		Finds an object by GUID and returns its position; returns whether it exists	verified	one	sound/entries#sounds-that-follow-objects	
 0x458c50	11	RemoveSoundPositionCallback		sound	orchestration		Removes the engine's object position callback	verified	one	sound/entries#sounds-that-follow-objects	
-0x458c60	315	GetSoundDefPlayVolume		sound	primitive		Returns a definition's play volume with its random variation, scaled and clamped to [0, 1]	verified	one	sound/entries#volume-and-pitch-of-a-play	
-0x458da0	297	ApplySoundDefVolumePitch		sound	primitive		Sets a sound's play volume and, with flag 0x400, a random frequency	verified	one	sound/entries#volume-and-pitch-of-a-play	
+0x458c60	315	GetSoundDefPlayVolume		sound	primitive		Returns a definition's play volume with its random variation, scaled and clamped to [0, 1]	verified	one	sound/entries#volume-and-pitch-of-a-play	sound::variation_pitch, sound::variation_volume
+0x458da0	297	ApplySoundDefVolumePitch		sound	primitive		Sets a sound's play volume and, with flag 0x400, a random frequency	verified	one	sound/entries#volume-and-pitch-of-a-play	sound::variation_pitch
 0x458ed0	62	ApplySoundDefDistances		sound	orchestration		Sets a sound's position, cutoff and minimum and maximum distances	verified	one	sound/entries#playing-at-a-position	
 0x458f10	36	ApplySoundDefReverb		sound	orchestration		Passes the definition's channel reverb record to the engine when SoundReverb is on	verified	one	sound/entries#channel-reverb	
 0x458f40	11	GetSoundDefDupeFlag		sound	primitive		Returns bit 5 of a definition's flags, the duplicate check	verified	one	sound/entries#playing-by-id	
@@ -4217,7 +4217,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x45cc80	277	UnloadSoundDefinitions		sound	primitive		Returns every definition to the pool and frees the definition tables and string block	verified	one	sound/entries#loading-and-unloading	
 0x45cda0	20	GetSoundDefinition		sound	orchestration		Returns the definition of a sound id, or null past the array	verified	one	sound/entries#sound-definitions	
 0x45cdc0	34	GetReverbRecord		sound	primitive		Returns a valid channel reverb record by index, or null	verified	one	sound/entries#channel-reverb	
-0x45cdf0	109	IsWithinListenerDistance		sound	primitive		Returns whether a position lies strictly within a distance of the listener	verified	one	sound/entries#playing-at-a-position	
+0x45cdf0	109	IsWithinListenerDistance		sound	primitive		Returns whether a position lies strictly within a distance of the listener	verified	one	sound/entries#playing-at-a-position	sound::sound_audible_distance
 0x45ce60	152	InternalPlaySound	idb	sound	primitive		Opens a sound id held on a bus with its flags, sets volume and pitch and unpauses it	verified	one	sound/entries#playing-by-id	
 0x45cf00	224	InternalPlaySoundAt		sound	primitive		Opens a sound id at a position unless beyond its cutoff, with volume, distances and reverb	verified	one	sound/entries#playing-at-a-position	
 0x45cfe0	55	PlaySoundAtPosition2		sound	orchestration		Plays a sound id at a position unless culled; returns 1 when played or culled	verified	one	sound/entries#playing-at-a-position	
@@ -4515,10 +4515,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x461980	15	SoundInterfaceDoodadInitialize	idb	sound	orchestration		Registers the emitter pump	verified	one	sound/ambience#emitter-pump	
 0x461990	130	EmitterPump		sound	primitive		Serves the emitter entries in order, fading every one after the fourth that sounds	verified	one	sound/ambience#emitter-pump	
 0x461a20	55	EmitterShutdown		sound	primitive		Unregisters the emitter pump and destroys every entry's sound	verified	one	sound/ambience#emitter-pump	
-0x461a60	182	FindFartherEmitterSlot		sound	primitive		Returns the first used slot farther from the listener than a position, or -1	verified	one	sound/ambience#emitters	
+0x461a60	182	FindFartherEmitterSlot		sound	primitive		Returns the first used slot farther from the listener than a position, or -1	verified	one	sound/ambience#emitters	sound::first_slot_farther_than_query
 0x461b20	24	FindFreeEmitterSlot		sound	unreached		Returns an emitter entry's first unused slot, or 0	verified	one	sound/overview#unreached-code	
 0x461b40	346	ServeEmitterEntry		sound	primitive		Opens or moves an emitter entry's loop at its nearest position; returns whether it sounds	verified	one	sound/ambience#emitter-pump	
-0x461ca0	128	NearestEmitterSlot		sound	primitive		Returns the used slot nearest the listener, the first of equals	verified	one	sound/ambience#emitter-pump	
+0x461ca0	128	NearestEmitterSlot		sound	primitive		Returns the used slot nearest the listener, the first of equals	verified	one	sound/ambience#emitter-pump	sound::nearest_active_point
 0x461d20	96	FreeEmitterSlot		sound	primitive		Frees an emitter slot; with none left, clears the id and fades the sound over 3.0 s	verified	one	sound/ambience#emitters	
 0x461d80	222	AddEmitter		sound	primitive		Registers a looping sound's position and returns its handle, or 0	verified	one	sound/ambience#emitters	
 0x461e60	274	FindEmitterSlot		sound	primitive		Finds or takes the entry of a sound id and a slot for a position; returns the entry or null	verified	one	sound/ambience#emitters	
@@ -4592,13 +4592,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x462740	58	ExitWaterSoundGroups		sound	primitive	void __cdecl (void)	Ends the vector arrays of the four water groups	verified	one	sound/overview#static-objects	
 0x462780	64	LIQUIDINFO::StopSound	idb	sound	orchestration		Fades a water group's playing loop over 5.0 s, or destroys it at once	verified	one	sound/ambience#water-sounds	
 0x4627c0	108	UpdateWaterGroup		sound	primitive		Starts or keeps a water group's loop at its lowest present speed, or stops it; returns whether it plays	verified	one	sound/ambience#water-sounds	
-0x462830	300	StartWaterLoop		sound	primitive		Opens a water group's SoundWaterType sound as a 3D loop fading in over 5.0 s	verified	one	sound/ambience#water-sounds	
-0x462960	223	PlaceWaterLoop		sound	primitive		Moves a water loop toward the liquid's offset by at most 1/6 yard per frame	verified	one	sound/ambience#water-sound-placement	
+0x462830	300	StartWaterLoop		sound	primitive		Opens a water group's SoundWaterType sound as a 3D loop fading in over 5.0 s	verified	one	sound/ambience#water-sounds	sound::source_pos_compose
+0x462960	223	PlaceWaterLoop		sound	primitive		Moves a water loop toward the liquid's offset by at most 1/6 yard per frame	verified	one	sound/ambience#water-sound-placement	sound::source_pos_compose, sound::source_slew
 0x462a40	174	InitializeWaterAmbiences	idb	sound	primitive		Registers MapWaterSounds and the frame handler and fills the water groups from SoundWaterType	verified	one	sound/ambience#water-sounds	
 0x462af0	29	ToggleCallback	idb	sound	orchestration		Clears the water sounds when MapWaterSounds is set to 0; returns 1	verified	one	sound/ambience#water-sound-switches	
 0x462b10	34	ClearAllSounds	idb	sound	primitive		Stops the loops of the four water groups	verified	one	sound/ambience#water-sound-switches	
 0x462b40	11	WaterSoundFrameEvent		sound	orchestration		Runs the water sound step for the frame; returns 1	verified	one	sound/ambience#water-sounds	
-0x462b50	646	UpdateWaterSounds		sound	primitive		Finds the nearest liquids and serves the water groups	verified	one	sound/ambience#water-sounds	
+0x462b50	646	UpdateWaterSounds		sound	primitive		Finds the nearest liquids and serves the water groups	verified	one	sound/ambience#water-sounds	sound::group_update_radius_clamp
 0x462de0	42	WaterSoundShutdown		sound	orchestration		Unregisters the water handler, disables the switch and destroys the loops	verified	one	sound/ambience#water-sound-switches	
 0x462e10	48	SetWaterSubmerged		sound	primitive		Destroys the water loops on submerging and marks a silent-free restart on surfacing	verified	one	sound/ambience#water-sound-placement	
 0x462e40	66	SetWaterSoundsOff		sound	primitive		Stores the ambience-off count for the water sounds and clears them when off	verified	one	sound/ambience#water-sound-switches	
@@ -4681,7 +4681,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x463900	10	ReleaseGlobalsLock	idb	objectalloc			Runs its object file code not read here	inferred	none		
 0x463910	1			objectalloc			Runs its object file code not read here	inferred	none		
 0x463920	216	ObjectAllocAddHeap	idb	objectalloc			Creates an object pool for blocks of a size and a name, storing the size at +0x10 and the count at +0x14	inferred	none		
-0x463a00	4			objectalloc			Runs its object file code not read here	inferred	none		
+0x463a00	4			objectalloc			Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x463a10	65			objectalloc	unreached		Runs its object file code that calls SCritSect::Enter, SErrSetLastError and 2 more; not read here	inferred	none		
 0x463a60	147	ObjectAllocNew		objectalloc			Takes a block from a pool and returns its handle	inferred	none	objectlayer/manager#allocating-and-reusing	
 0x463b00	46	ObjectFree	idb	objectalloc			Returns a block to its pool by handle	inferred	none	objectlayer/manager#allocating-and-reusing	
@@ -4933,11 +4933,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x46a610	209	QueueConsoleLine		glue	orchestration	void __cdecl (const char *format, ...)	Formats a line into a new node and appends it to the console queue under its lock while the manager runs	verified	one	glue/manager#console-line-queue	
 0x46a6f0	115	CreateGlueEffects		glue	orchestration	void __cdecl (void)	Starts the effect system and builds the glue's glow and death effects, once until 0x46a770 clears the guard	verified	one	glue/manager#glue-effect-pair	
 0x46a770	54	DestroyGlueEffects		glue	orchestration	void __cdecl (void)	Deletes the glue's glow and death effects and shuts the effect system down when 0x46a6f0 built them	verified	one	glue/manager#glue-effect-pair	
-0x46a7b0	762	CGlueMgr::Resume	idb	glue	primitive	void __fastcall (uint32_t resetScript)	Builds the glue screens: size, top, cursor, script functions, event names, signed GlueXML load, FRAMES_LOADED	verified	one	glue/manager#glue-build	
+0x46a7b0	762	CGlueMgr::Resume	idb	glue	primitive	void __fastcall (uint32_t resetScript)	Builds the glue screens: size, top, cursor, script functions, event names, signed GlueXML load, FRAMES_LOADED	verified	one	glue/manager#glue-build	glue::glue_init_viewport_difftest
 0x46aac0	113	DeleteLogStatus		glue	orchestration	void * __thiscall (void *this, uint32_t flags)	Writes a log status's lines to its log, closes the log, destroys the status and frees it when flags bit 0 is set	verified	one	glue/manager#load-log-status	
-0x46ab40	98	GetScreenAspect		glue	primitive	float __cdecl (void)	Returns gxResolution's width over height while widescreen is on, else 4/3	verified	one	input#click-versus-drag	
+0x46ab40	98	GetScreenAspect		glue	primitive	float __cdecl (void)	Returns gxResolution's width over height while widescreen is on, else 4/3	verified	one	input#click-versus-drag	glue::glue_aspect_difftest
 0x46abb0	35	LoadGlueScriptFunctions		glue	orchestration	void __cdecl (void)	Registers the seven script function tables of the glue screens	verified	one	glue/manager#script-function-groups	
-0x46abe0	175	CheckGlueScreenSize		glue	primitive	uint32_t __fastcall (const void *sizeEvent)	Stores a new screen size, lays GlueParent out again and requests a rebuild when the aspect moves by 0.01 or more	verified	one	glue/manager#screen-size-and-aspect	
+0x46abe0	175	CheckGlueScreenSize		glue	primitive	uint32_t __fastcall (const void *sizeEvent)	Stores a new screen size, lays GlueParent out again and requests a rebuild when the aspect moves by 0.01 or more	verified	one	glue/manager#screen-size-and-aspect	glue::glue_onresize_difftest
 0x46ac90	77	CGlueMgr::Suspend	idb	glue	orchestration	void __cdecl (void)	Tears the glue screens down: effects, character data, top, cursor, script functions and opcode 0x2c8's handler	verified	one	glue/manager#suspend	
 0x46ace0	35	UnloadScriptFunctions	idb	glue	orchestration	void __cdecl (void)	Unregisters the seven script function tables 0x46abb0 registers, in the same order	verified	one	glue/manager#script-function-groups	
 0x46ad10	148	ShutdownGlueManager		glue	orchestration	void __cdecl (void)	Waits for the alert fetch, suspends the glue, unregisters 0x46b930 and frees the queued console lines	verified	one	glue/manager#shutdown	
@@ -5079,7 +5079,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x46d9e0	36	Script::SetAddonVersionCheck	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Sets checkAddonVersion to 1 or 0 by a flag argument read by 0x6f1c10, default 1	verified	one	glue/script#add-on-list	
 0x46da10	50	Script::GetScriptMemory	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the scriptMemory CVar in KB divided by 1024, truncated toward zero	verified	one	glue/script#script-memory	
 0x46da50	114	Script::SetScriptMemory	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Sets scriptMemory to a number argument in MB times 1024, wrapping at 32 bits, as decimal text	verified	one	glue/script#script-memory	
-0x46dad0	135	Script::GetCursorPosition	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the cursor on the screen root, about 768·aspect times its x fraction and 768 times its y	verified	one	glue/script#cursor-and-screen-size	
+0x46dad0	135	Script::GetCursorPosition	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the cursor on the screen root, about 768·aspect times its x fraction and 768 times its y	verified	one	glue/script#cursor-and-screen-size	glue::lua_model_scale_difftest
 0x46db60	13	Script::ShowCursor	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Calls 0x58b590 with 1 and returns nothing	verified	one	glue/script#cursor-and-screen-size	
 0x46db70	10	Script::HideCursor	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Calls 0x58b590 with 0 and returns nothing	verified	one	glue/script#cursor-and-screen-size	
 0x46db80	56	Script::SetMovieSubtitles	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Sets the movieSubtitle CVar to 1 or 0 by a flag argument read by 0x6f1c10, default 1	verified	one	glue/script#movie-resolution-and-subtitles	
@@ -5087,8 +5087,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x46dbf0	74	Script::GetBillingTimeRemaining	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Returns the session's +0x1af4 unsigned, or 0 when bit 1 of +0x1afc is set	verified	one	glue/script#billing	
 0x46dc40	173	Script::GetBillingPlan	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the plan code from bits 0x16 of the session's +0x1afc, then its bits 5 and 3	verified	one	glue/script#billing	
 0x46dcf0	56	Script::GetBillingTimeRested	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Returns the session's +0x1af8 unsigned	verified	one	glue/script#billing	
-0x46dd30	66	Script::GetScreenWidth	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the screen root width from the scales 0x832a44 and 0x832a4c, about 768 times the aspect	verified	one	glue/script#cursor-and-screen-size	
-0x46dd80	66	Script::GetScreenHeight	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the screen root height from the scales 0x832a44, 0x832a48 and 0x832a4c, about 768	verified	one	glue/script#cursor-and-screen-size	
+0x46dd30	66	Script::GetScreenWidth	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the screen root width from the scales 0x832a44 and 0x832a4c, about 768 times the aspect	verified	one	glue/script#cursor-and-screen-size	glue::lua_model_scale_difftest
+0x46dd80	66	Script::GetScreenHeight	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the screen root height from the scales 0x832a44, 0x832a48 and 0x832a4c, about 768	verified	one	glue/script#cursor-and-screen-size	glue::lua_model_scale_difftest
 0x46ddd0	32	Script::SurveyNotificationDone	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Sends a pending survey result for a true flag, clears the survey, returns 1 with nothing pushed	verified	one	glue/script#screenshot-patch-and-survey	
 0x46ddf0	33	RegisterGlueScriptFunctions		glue	orchestration	void __cdecl (void)	Sets the 60 functions of 0x8373b8 as Lua globals of their names through 0x704120	verified	one	glue/script#binding-table-and-registration	
 0x46de20	27	UnregisterGlueScriptFunctions		glue	orchestration	void __cdecl (void)	Sets each of the 60 names of 0x8373b8 to nil through 0x704160	verified	one	glue/script#binding-table-and-registration	
@@ -5148,12 +5148,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x46e450	5	InitGlueInfinity3Thunk		glue	orchestration	void __cdecl (void)	Jumps to 0x46e460; a static initializer	verified	one	glue/layout#static-initializers	
 0x46e460	11	InitGlueInfinity3		glue	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	glue/layout#static-initializers	
 0x46e470	159	FreeRealmCategories		glue	host	void __cdecl (void)	Frees every realm category, its index array and the category array, and zeroes the array globals	verified	one	glue/realms#the-category-set	
-0x46e510	566	RebuildRealmList		glue	primitive	void __cdecl (void)	Refills the categories from the realm holder, computes the load statistics, sorts, and raises the list	verified	one	glue/realms#the-list-rebuild	
+0x46e510	566	RebuildRealmList		glue	primitive	void __cdecl (void)	Refills the categories from the realm holder, computes the load statistics, sorts, and raises the list	verified	one	glue/realms#the-list-rebuild	glue::realm_load_stats_difftest
 0x46e750	59	SortRealmCategories		glue	orchestration	void __cdecl (void)	Sorts each category's holder indices with qsort and the realm comparator	verified	one	glue/realms#the-realm-comparator	
 0x46e790	519	CompareRealms		glue	primitive	int32_t __cdecl (const uint32_t *a, const uint32_t *b)	Compares two holder realms by the four sort records, the first key that does not tie deciding	verified	one	glue/realms#the-realm-comparator	
 0x46e9b0	111	SetRealmSortKey		glue	primitive	void __fastcall (uint32_t key)	Toggles or moves a sort key to the front, re-sorts every category and signals OPEN_REALM_LIST	verified	one	glue/realms#sort-records	
 0x46ea20	563	SuggestRealm		glue	primitive	void __fastcall (uint32_t category, int32_t pvp, int32_t rp)	Stores the preferred category and type, then signals SUGGEST_REALM with a fitting realm or OPEN_REALM_LIST	verified	one	glue/realms#the-realm-suggestion	
-0x46ec60	133	GetRealmLoadBand		glue	primitive	float __fastcall (const RealmInfo *realm)	Returns a realm's load band: a sentinel flag's value, else -1, 0 or 1 against the mean and spread	verified	one	glue/realms#the-load-band	
+0x46ec60	133	GetRealmLoadBand		glue	primitive	float __fastcall (const RealmInfo *realm)	Returns a realm's load band: a sentinel flag's value, else -1, 0 or 1 against the mean and spread	verified	one	glue/realms#the-load-band	glue::realm_load_classify_difftest
 0x46ecf0	22	Script::RequestRealmList	idb	glue	orchestration	int32_t __fastcall (lua_State *L)	Passes its optional flag to the glue manager's realm list request and returns no values	verified	one	glue/realms#script-functions	
 0x46ed10	8	Script::CancelRealmListQuery	idb	glue	orchestration	int32_t __fastcall (lua_State *L)	Calls the glue manager's realm query cancel and returns no values	verified	one	glue/realms#script-functions	
 0x46ed20	8	Script::RealmListDialogCancelled	idb	glue	orchestration	int32_t __fastcall (lua_State *L)	Calls the glue manager's realm dialog cancel and returns no values	verified	one	glue/realms#script-functions	
@@ -5347,8 +5347,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x471820	98	Script::HasCharCustomization	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns 1 when a 1-based customization has more than one choice, else nil	verified	one	glue/create#query-functions	
 0x471890	103	Script::CycleCharCustomization	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Moves a 1-based customization by a delta	verified	one	glue/create#command-functions	
 0x471900	8	Script::RandomizeCharCustomization	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Redraws the create character's five customizations	verified	one	glue/create#command-functions	
-0x471910	29	Script::GetCharacterCreateFacing	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the create facing in degrees, the stored float times 57.29578 as a double	verified	one	glue/create#facing-in-degrees	
-0x471930	69	Script::SetCharacterCreateFacing	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Stores a facing in degrees as float radians and returns its last argument	verified	one	glue/create#facing-in-degrees	
+0x471910	29	Script::GetCharacterCreateFacing	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Returns the create facing in degrees, the stored float times 57.29578 as a double	verified	one	glue/create#facing-in-degrees	glue::lua_rad2deg_difftest
+0x471930	69	Script::SetCharacterCreateFacing	idb	glue	primitive	uint32_t __fastcall (lua_State *L)	Stores a facing in degrees as float radians and returns its last argument	verified	one	glue/create#facing-in-degrees	glue::lua_deg2rad_difftest
 0x471980	84	Script::GetRandomName	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Returns a generated name of 4 to 10 bytes that passes the name check, retrying until one does	verified	one	glue/create#random-name-acceptance	
 0x4719e0	52	Script::CreateCharacter	idb	glue	orchestration	uint32_t __fastcall (lua_State *L)	Sends the create request for the name argument, or opens the status dialog when the name fails	verified	one	glue/create#the-create-request	
 0x471a20	33	RegisterCreateScriptFunctions		glue	orchestration	void __cdecl (void)	Registers the 24 create functions of the table 0x8380f8 as Lua globals	verified	one	glue/create#registration-and-teardown	
@@ -5425,8 +5425,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4725f0	335	ApplyCharacterRename		glue	primitive	void __thiscall (const char *name, uint64_t guid)	Moves a renamed character's WTF folders and add-on state to the new name, renames its record and clears flag 0x4000	verified	one	glue/select#forced-rename-applier	
 0x472740	53	SelectCharSelectRecord		glue	primitive	void __fastcall (int32_t index)	Stores an index clamped to the roster, else 0, builds its model and fires UPDATE_SELECTED_CHARACTER with it plus 1	verified	one	glue/select#selecting-a-character	
 0x472780	100	AttachKitEffect		glue	orchestration	void __fastcall (void *model, int32_t effect, uint32_t attachment)	Loads a SpellVisualEffectName row's model through 0x707350 and passes it with an attachment id to 0x712f70	verified	one	glue/select#ghost-kit	
-0x4727f0	351	ApplyCharSelectGhostKit		glue	primitive	void __fastcall (void *model)	Applies SpellVisualKit row 989's effect models, tint and alpha to the select character's model	verified	one	glue/select#ghost-kit	
-0x472950	1855	BuildCharSelectModel		glue	primitive	void __cdecl (void)	Builds the selected record's character, equipment and pet models once, sets the glow pass and attaches them	verified	one	glue/select#select-model-build	
+0x4727f0	351	ApplyCharSelectGhostKit		glue	primitive	void __fastcall (void *model)	Applies SpellVisualKit row 989's effect models, tint and alpha to the select character's model	verified	one	glue/select#ghost-kit	glue::char_customize_clamp_difftest, glue::char_customize_color_difftest
+0x472950	1855	BuildCharSelectModel		glue	primitive	void __cdecl (void)	Builds the selected record's character, equipment and pet models once, sets the glow pass and attaches them	verified	one	glue/select#select-model-build	glue::charcreate_blend_frame_interp_difftest, glue::charcreate_blend_scale_product_difftest
 0x473090	77	CharSelectSequenceEnd		glue	orchestration	void __fastcall (void *model, int32_t sequence, int32_t a, int32_t b, int32_t c, int32_t d, int32_t e)	Restarts a select model's starting sequence, or replays the ended one, when a sequence ends	verified	one	glue/select#select-model-build	
 0x4730e0	164	SetCharSelectFacing		glue	orchestration	void __stdcall (float facing)	Stores the facing and turns the selected character's model to it, once a model has been built	verified	one	glue/select#facing-in-degrees	
 0x473190	44	UpdateCharSelectScene		glue	orchestration	void __cdecl (void)	Calls the selected record's component update with 1 when the record is on the roster and has one	verified	one	glue/select#script-functions	
@@ -5439,8 +5439,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4734c0	95	Script::DeleteCharacter	idb	glue	primitive	int __fastcall (lua_State *L)	Hands a 1-based roster record's guid to the glue manager's delete; returns nothing	verified	one	glue/select#script-functions	
 0x473520	278	Script::RenameCharacter	idb	glue	primitive	int __fastcall (lua_State *L)	Requests a forced rename of a flagged record, or fires FORCE_RENAME_CHARACTER for its own name; returns 1, nil or none	verified	one	glue/select#script-functions	
 0x473640	8	Script::UpdateSelectionCustomizationScene	idb	glue	orchestration	int __fastcall (lua_State *L)	Runs the selected component's update through 0x473190; returns nothing	verified	one	glue/select#script-functions	
-0x473650	29	Script::GetCharacterSelectFacing	idb	glue	primitive	int __fastcall (lua_State *L)	Returns the select facing in degrees, the radians times the f32 57.29578	verified	one	glue/select#facing-in-degrees	
-0x473670	69	Script::SetCharacterSelectFacing	idb	glue	primitive	int __fastcall (lua_State *L)	Sets the select facing from degrees times the f32 0.017453292 and returns its last argument	verified	one	glue/select#facing-in-degrees	
+0x473650	29	Script::GetCharacterSelectFacing	idb	glue	primitive	int __fastcall (lua_State *L)	Returns the select facing in degrees, the radians times the f32 57.29578	verified	one	glue/select#facing-in-degrees	glue::lua_rad2deg_difftest
+0x473670	69	Script::SetCharacterSelectFacing	idb	glue	primitive	int __fastcall (lua_State *L)	Sets the select facing from degrees times the f32 0.017453292 and returns its last argument	verified	one	glue/select#facing-in-degrees	glue::lua_deg2rad_difftest
 0x4736c0	30	RegisterCharSelectScriptFunctions		glue	orchestration	void __cdecl (void)	Registers the 11 character select script functions of 0x838578	verified	one	glue/select#script-functions	
 0x4736e0	24	UnregisterCharSelectScriptFunctions		glue	orchestration	void __cdecl (void)	Unregisters the 11 character select script functions of 0x838578	verified	one	glue/select#script-functions	
 0x473700	45	DestroyCharSelectRecord		glue	orchestration	void __thiscall (CharacterSelectionDisplay *this)	Releases a roster record's pet model and destroys its character component, zeroing the component pointer	verified	one	glue/select#roster-teardown	
@@ -13005,7 +13005,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x526670	190			ui	primitive		Runs its object file code that calls 0x5272b0, 0x526a90, 0x526ce0 and 1 more; not read here	inferred	none		
 0x526730	190			ui	primitive		Runs its object file code that calls 0x527360, 0x527320, 0x526f80 and 1 more; not read here	inferred	none		
 0x5267f0	190			ui	primitive		Runs its object file code that calls 0x527410, 0x5273d0, 0x5271f0 and 1 more; not read here	inferred	none		
-0x5268b0	119			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x5268b0	119			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		net::srp6_client_session
 0x526930	226			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x526a20	41			ui	primitive		Runs its object file code not read here	inferred	none		
 0x526a50	60			ui	primitive		Runs its object file code not read here	inferred	none		
@@ -17668,7 +17668,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b1140	14	ReleaseChecksumTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	inferred	none		
 0x5b1150	5	InitCopy7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1160; a static initializer	verified	one	net/layout#static-initializers	
 0x5b1160	11	InitCopy7		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
-0x5b1170	371	ChecksumExecutables		net	primitive	void __fastcall (const uint8_t *key, uint32_t keyLength, uint8_t digest[20])	Writes the HMAC-SHA1 under a key of the whole bytes of WoW.exe, fmod.dll, ijl15.dll, dbghelp.dll and unicows.dll	inferred	none	net/login#logon-proof	
+0x5b1170	371	ChecksumExecutables		net	primitive	void __fastcall (const uint8_t *key, uint32_t keyLength, uint8_t digest[20])	Writes the HMAC-SHA1 under a key of the whole bytes of WoW.exe, fmod.dll, ijl15.dll, dbghelp.dll and unicows.dll	inferred	none	net/login#logon-proof	net::hmac_sha1
 0x5b12f0	5	InitDouble7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1300; a static initializer	verified	one	net/layout#static-initializers	
 0x5b1300	15	InitDouble7		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b1310	5	InitQuotient10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1320; a static initializer	verified	one	net/layout#static-initializers	
@@ -17765,7 +17765,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b1bd0	115	LoginOnDisconnected		net	orchestration	bool __thiscall (void *this)	Reports LOGIN_STATE_DISCONNECTED (11); an unexpected disconnect also passes auth result 0xff to the result handler	inferred	none		
 0x5b1c50	22	LoginForwardToOwner		net	orchestration	bool __thiscall (void *this, void *buffer)	Passes a buffer to the owner's second virtual method and returns its result	inferred	none		
 0x5b1c70	444	HandleChecksumSalt		net	orchestration	void __thiscall (void *this, const uint8_t *salt)	Sends the proof with a zero checksum when reconnecting; else keeps the 16-byte salt and reports state 9, or 7 with a PIN	inferred	none	net/login#logon-proof	
-0x5b1e70	88	DecodePinGridOrder		net	primitive	void __thiscall (void *this, uint32_t seed)	Writes the digits 0-9 into the PIN grid in the order the seed encodes, taking seed mod 10, 9, ..., 1 as picks	verified	one	net/layout#starts-the-listing-hides	
+0x5b1e70	88	DecodePinGridOrder		net	primitive	void __thiscall (void *this, uint32_t seed)	Writes the digits 0-9 into the PIN grid in the order the seed encodes, taking seed mod 10, 9, ..., 1 as picks	verified	one	net/layout#starts-the-listing-hides	net::pin_shuffle
 0x5b1ed0	64	SetPinChallenge		net	orchestration	void __thiscall (void *this, uint8_t pin_enabled, uint32_t grid_seed, const uint8_t *pin_salt)	Stores the challenge PIN flag and, when set, builds the PIN grid from its seed and keeps the 16-byte PIN salt	inferred	none		
 0x5b1f10	40	GetPinProof		net	orchestration	void __thiscall (void *this, uint8_t *out_enabled, const uint8_t **out_salt, const uint8_t **out_hash)	Returns the PIN flag and pointers to the PIN client salt and PIN hash the logon proof sends	inferred	none		
 0x5b1f40	97	SendLogonProof		net	orchestration	void __thiscall (void *this, const uint8_t *checksum)	Sends the logon proof with the 20-byte file checksum and reports state 2 (handshaking), when the link is connected	inferred	none	net/login#logon-proof	
@@ -17789,7 +17789,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b3030	116	WaitForLogonResult		net	unreached	bool __thiscall (void *this, uint32_t unused, void *out)	Sleeps until the logon result is set, then copies the account and session key out on success or zeroes the output	inferred	none	net/layout#unreached-functions	
 0x5b30b0	105	SetAccountAndPassword		net	orchestration	void __thiscall (void *this, const char *account, const char *password)	Copies the account name, wipes and frees the previous password, and keeps a copy of the new one	inferred	none		
 0x5b3120	183	ComputePinProof		net	primitive	void __thiscall (void *this, int32_t count, const uint8_t *digits)	Turns PIN digits into text, draws a random 16-byte client salt, hashes it with the PIN salt and reports state 9	inferred	none	random#the-c-runtime-rand	
-0x5b31e0	108	HashPinWithSalts		net	orchestration	void __fastcall (const uint8_t *pin_salt, const uint8_t *client_salt, const char *pin, uint8_t *out)	Writes SHA1(client salt, SHA1(PIN salt, PIN text)) into out, both salts 16 bytes	inferred	none		
+0x5b31e0	108	HashPinWithSalts		net	orchestration	void __fastcall (const uint8_t *pin_salt, const uint8_t *client_salt, const char *pin, uint8_t *out)	Writes SHA1(client salt, SHA1(PIN salt, PIN text)) into out, both salts 16 bytes	inferred	none		net::checksum_proof
 0x5b3250	94	DestroyLogon		net	orchestration	void __thiscall (void *this)	Wipes and frees the stored password, drops the owner and destroys the logon link	inferred	none		
 0x5b32b0	109	ConstructLogon		net	orchestration	void * __thiscall (void *this, void *owner)	Clears the logon flags, keeps the owner and creates the 0x224-byte logon link around itself	inferred	none		
 0x5b3320	19	CancelLogon		net	orchestration	void __thiscall (void *this)	Disconnects the logon link when the logon is connected	inferred	none		
@@ -17939,17 +17939,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b5250	288	WowConnection::Init		net	orchestration	void __thiscall (WowConnection *this, void *consumer, uint32_t arg)	Resets a connection: one reference, queue limit 100000, state 0 then 1, consumer stored, cipher off, framed receive	inferred	none		
 0x5b5370	48	WowConnection::Disconnect		net	orchestration	void __thiscall (WowConnection *this)	Moves a connected connection with an open socket from state 5 to state 7 under its lock, which stops sends	inferred	none	net/session#disconnecting	
 0x5b53a0	168	WowConnection::HandleClose		net	orchestration	void __thiscall (WowConnection *this)	Handles a close event: closes the socket, sets state 6, reports the disconnect to the consumer, drops the socket	inferred	none		
-0x5b5450	325	WowConnection::AllocSendBuffer		net	primitive	void * __thiscall (WowConnection *this, const void *data, int32_t len, uint8_t raw)	Allocates a buffer of data behind a big-endian length: 2 bytes to 0x7fff, else 3 with 0x80 set; raw adds no header	verified	one	net/wire#size-header	
+0x5b5450	325	WowConnection::AllocSendBuffer		net	primitive	void * __thiscall (WowConnection *this, const void *data, int32_t len, uint8_t raw)	Allocates a buffer of data behind a big-endian length: 2 bytes to 0x7fff, else 3 with 0x80 set; raw adds no header	verified	one	net/wire#size-header	net::header_encode
 0x5b55a0	98	WowConnection::CloneSendBuffer		net	orchestration	void * __thiscall (WowConnection *this, const void *buffer, int32_t len)	Copies a stack-built send buffer and its framed bytes into a pooled buffer	inferred	none		
 0x5b5610	21	WowConnection::FreeSendBuffer		net	orchestration	void __thiscall (WowConnection *this, void *buffer)	Returns a send or delayed-receive buffer to the data-store pool, sized by its stored length	inferred	none		
-0x5b5630	1201	WowConnection::Send		net	primitive	uint32_t __thiscall (WowConnection *this, CDataStore *msg, int32_t headroom)	Frames a message, enciphers its header, sends it and queues what send did not take; returns 0 all sent, 1 part, 2 none	verified	one	net/wire#size-header	
+0x5b5630	1201	WowConnection::Send		net	primitive	uint32_t __thiscall (WowConnection *this, CDataStore *msg, int32_t headroom)	Frames a message, enciphers its header, sends it and queues what send did not take; returns 0 all sent, 1 part, 2 none	verified	one	net/wire#size-header	net::cipher_recv_roundtrip, net::cipher_send
 0x5b5af0	727	WowConnection::SendPair		net	unreached	uint32_t __thiscall (WowConnection *this, CDataStore *first, uint32_t unused, CDataStore *second)	Sends two data stores as one frame whose length counts both: the first behind a header, the second through 0x5b5dd0	inferred	none	net/layout#unreached-functions	
-0x5b5dd0	719	WowConnection::SendRaw		net	primitive	uint32_t __thiscall (WowConnection *this, uint8_t *data, int32_t len, uint8_t noCipher)	Sends prebuilt bytes, enciphering the header and opcode span unless noCipher; queues what is unsent; returns 0, 1 or 2	inferred	none		
+0x5b5dd0	719	WowConnection::SendRaw		net	primitive	uint32_t __thiscall (WowConnection *this, uint8_t *data, int32_t len, uint8_t noCipher)	Sends prebuilt bytes, enciphering the header and opcode span unless noCipher; queues what is unsent; returns 0, 1 or 2	inferred	none		net::encipher_send_frame
 0x5b60a0	305	WowConnection::CompleteConnect		net	host	void __thiscall (WowConnection *this)	Finishes a connect from SO_ERROR: on error closes and reports failure; else state 5, records both addresses, reports it	inferred	none		
 0x5b61e0	331	WowConnection::AcceptConnections		net	host	void __thiscall (WowConnection *this)	Accepts up to 1000 pending sockets, drops those the accept filter rejects, wraps each in a new connection, reports it	inferred	none		
 0x5b6330	62	MarkSocketOpen		net	primitive	void __fastcall (int32_t socket)	Sets the socket bit in the open-socket bitset under its lock; a negative socket is ignored	inferred	none		
 0x5b6370	625	WowConnection::HandleWritable		net	host	void __thiscall (WowConnection *this)	Handles a writable event: finishes a connect in state 2, else sends queued buffers in chunks of at most 1024 bytes	inferred	none		
-0x5b65f0	1167	WowConnection::ReadFramedMessages		net	primitive	void __thiscall (WowConnection *this)	Reads frames: decodes the 2- or 3-byte big-endian length, deciphers header and opcode bytes, hands each body on	verified	one	net/wire#size-header	
+0x5b65f0	1167	WowConnection::ReadFramedMessages		net	primitive	void __thiscall (WowConnection *this)	Reads frames: decodes the 2- or 3-byte big-endian length, deciphers header and opcode bytes, hands each body on	verified	one	net/wire#size-header	net::cipher_recv_direct, net::header_decode
 0x5b6a80	315	WowConnection::ReadRawData		net	host	void __thiscall (WowConnection *this)	Reads unframed bytes in 4096-byte blocks, passing each to the consumer, for up to 5 ms or until state 7	inferred	none		
 0x5b6bc0	118	WowConnection::HandleReadable		net	orchestration	void __thiscall (WowConnection *this)	Handles a readable event: accepts in state 3; in state 5 reads frames or raw data by the receive mode	inferred	none		
 0x5b6c40	51	WowConnection::HandleException		net	orchestration	void __thiscall (WowConnection *this)	Handles an exception event: in state 2 finishes the connect through 0x5b60a0	inferred	none		
@@ -18132,7 +18132,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bb6d0	321	ClientLink::SendReconnectChallenge		net	orchestration	void __thiscall (ClientLink *this, const void *info)	Sets state 3, keeps the upper-cased account and the 40-byte session key, and sends the reconnect challenge	verified	one	net/login#logon-challenge	
 0x5bb820	307	ClientLink::SendSurveyResult		net	orchestration	void __thiscall (ClientLink *this, uint16_t length, const void *data)	Sends command 0x04 with the survey id from the logon proof, a zero error byte and a u16-length blob	inferred	none		
 0x5bb960	280	ClientLink::SendSurveyFailed		net	orchestration	void __thiscall (ClientLink *this)	Sends command 0x04 with the survey id from the logon proof, error byte 1 and an empty blob	inferred	none		
-0x5bba80	77	HashCdKeyProof		net	orchestration	void __stdcall (const void *key, const void *a, uint32_t a_len, const void *b, uint32_t b_len, uint8_t *out)	Writes SHA-1 of a, then b, then the 20 bytes at key+0xc	inferred	none	net/login#logon-proof	
+0x5bba80	77	HashCdKeyProof		net	orchestration	void __stdcall (const void *key, const void *a, uint32_t a_len, const void *b, uint32_t b_len, uint8_t *out)	Writes SHA-1 of a, then b, then the 20 bytes at key+0xc	inferred	none	net/login#logon-proof	net::srp6_file_hmac
 0x5bbad0	1099	ClientLink::SendProof		net	orchestration	void __thiscall (ClientLink *this, const uint8_t *checksum)	Sends the logon proof in state 4, else the reconnect proof, each with its checksum hash and CD-key hashes	verified	one	net/login#logon-proof	
 0x5bbf20	296	ClientLink::SendXferReply		net	orchestration	void __thiscall (ClientLink *this, uint8_t accept, uint32_t offset_lo, uint32_t offset_hi)	Sends command 0x34 to refuse a transfer, 0x32 to accept it from the start, or 0x33 with a u64 offset to resume it	inferred	none		
 0x5bc050	240	ClientLink::SendXferCancel		net	orchestration	void __thiscall (ClientLink *this)	Sends command 0x34 alone	inferred	none		
@@ -18703,48 +18703,48 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d13e0	15	InitFontGlyphTwoPi		gx	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#object-files	
 0x5d13f0	5	InitFontGlyphInvTwoPiThunk		gx	orchestration	void __cdecl (void)	Jumps to 0x5d1400; a static initializer	verified	one	net/layout#object-files	
 0x5d1400	19	InitFontGlyphInvTwoPi		gx	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#object-files	
-0x5d1420	1558	Sha1Transform		net	primitive	void __fastcall (uint32_t *state, const uint8_t *block)	Runs the SHA-1 compression of one 64-byte block into five state words	inferred	none		
-0x5d1a40	49	Sha1Init		net	orchestration	void __thiscall (void *ctx)	Zeroes a SHA-1 context's bit count and loads the five initial state words	inferred	none		
-0x5d1a80	169	Sha1Update		net	primitive	void __thiscall (void *ctx, const void *data, uint32_t length)	Adds bytes to a SHA-1 context: grows the bit count, fills and compresses the buffer, compresses whole blocks in place	inferred	none		
-0x5d1b30	37	Sha1UpdateString		net	orchestration	void __thiscall (void *ctx, const char *str)	Adds a NUL-terminated string's bytes, without the terminator, to a SHA-1 context	inferred	none		
-0x5d1b60	122	Sha1Final		net	primitive	void __thiscall (void *ctx, uint8_t *digest)	Pads a SHA-1 context with 0x80 and zeros to 56 mod 64, adds the big-endian bit count, writes the 20-byte digest	inferred	none		
+0x5d1420	1558	Sha1Transform		net	primitive	void __fastcall (uint32_t *state, const uint8_t *block)	Runs the SHA-1 compression of one 64-byte block into five state words	inferred	none		net::checksum_proof, net::hmac_sha1, net::sha1_family_a
+0x5d1a40	49	Sha1Init		net	orchestration	void __thiscall (void *ctx)	Zeroes a SHA-1 context's bit count and loads the five initial state words	inferred	none		net::checksum_proof, net::hmac_sha1, net::sha1_family_a
+0x5d1a80	169	Sha1Update		net	primitive	void __thiscall (void *ctx, const void *data, uint32_t length)	Adds bytes to a SHA-1 context: grows the bit count, fills and compresses the buffer, compresses whole blocks in place	inferred	none		net::checksum_proof, net::hmac_sha1, net::sha1_family_a
+0x5d1b30	37	Sha1UpdateString		net	orchestration	void __thiscall (void *ctx, const char *str)	Adds a NUL-terminated string's bytes, without the terminator, to a SHA-1 context	inferred	none		net::checksum_proof
+0x5d1b60	122	Sha1Final		net	primitive	void __thiscall (void *ctx, uint8_t *digest)	Pads a SHA-1 context with 0x80 and zeros to 56 mod 64, adds the big-endian bit count, writes the 20-byte digest	inferred	none		net::checksum_proof, net::hmac_sha1, net::sha1_family_a
 0x5d1be0	46	Sha1Digest		net	unreached	void __fastcall (uint8_t *digest, const void *data, uint32_t length)	Writes the SHA-1 digest of a byte buffer	inferred	none	net/layout#unreached-functions	
 0x5d1c10	55	Sha1DigestString		net	unreached	void __fastcall (uint8_t *digest, const char *str)	Writes the SHA-1 digest of a NUL-terminated string without its terminator	inferred	none	net/layout#unreached-functions	
 0x5d1c50	23	Sha1HashAbc		net	unreached	void __cdecl (void)	Hashes the string "abc" with the one-shot SHA-1 at 0x5d1c10 into a stack buffer and discards the digest	inferred	none	net/layout#unreached-functions	
-0x5d1c70	119	SeedRandomPool		net	orchestration	void * __thiscall (void *pool, uint32_t seed)	Seeds rand with its argument, then sets a random pool's seed digest to SHA-1 of the time, the seed and one rand draw	verified	one	net/login#random-pool	
-0x5d1cf0	192	DrawRandomPoolBytes		net	primitive	void __thiscall (void *pool, uint8_t *out, uint32_t count)	Copies count bytes from a random pool, refilling its 20-byte block with SHA-1 of seed, last block and seed when spent	verified	one	net/login#random-pool	
-0x5d1db0	43	SHA1_Init	idb	net	orchestration	void __fastcall (SHA1_CTX *ctx)	Sets a SHA-1 context to the standard initial state words and a zero bit count	verified	one	net/login#sha-1-overwrites-its-input	
-0x5d1de0	209	SHA1_Update	idb	net	primitive	void __fastcall (SHA1_CTX *ctx, const void *data, uint32_t len)	Adds bytes to a SHA-1 context: advances the 64-bit bit count, buffers a partial block, compresses each full block	verified	one	net/login#sha-1-overwrites-its-input	
-0x5d1ec0	5097	SHA1_Transform	idb	net	primitive	void __fastcall (uint32_t *state, uint32_t *block)	Compresses one 64-byte big-endian block into the five SHA-1 state words, overwriting the block with schedule words	verified	one	net/login#sha-1-overwrites-its-input	
-0x5d32b0	171	SHA1_Final	idb	net	primitive	void __fastcall (uint8_t *digest, SHA1_CTX *ctx)	Pads a SHA-1 context with 0x80, zeros and the big-endian bit count, then writes the 20-byte big-endian digest	verified	one	net/login#sha-1-overwrites-its-input	
-0x5d3360	224	Srp6InterleaveSessionKey		net	primitive	uint8_t * __fastcall (uint8_t *key, const uint8_t *s, uint32_t len)	Drops S's leading zero bytes (one more if odd), SHA-1s its even and odd bytes apart and interleaves them into 40 bytes	verified	one	net/login#session-key-interleave	
+0x5d1c70	119	SeedRandomPool		net	orchestration	void * __thiscall (void *pool, uint32_t seed)	Seeds rand with its argument, then sets a random pool's seed digest to SHA-1 of the time, the seed and one rand draw	verified	one	net/login#random-pool	net::sha1_prng_seed
+0x5d1cf0	192	DrawRandomPoolBytes		net	primitive	void __thiscall (void *pool, uint8_t *out, uint32_t count)	Copies count bytes from a random pool, refilling its 20-byte block with SHA-1 of seed, last block and seed when spent	verified	one	net/login#random-pool	net::sha1_prng_next, net::srp6_client_session
+0x5d1db0	43	SHA1_Init	idb	net	orchestration	void __fastcall (SHA1_CTX *ctx)	Sets a SHA-1 context to the standard initial state words and a zero bit count	verified	one	net/login#sha-1-overwrites-its-input	net::sha1_family_b, net::sha1_prng_next, net::sha1_prng_seed, net::srp6_client_session, net::srp6_credential_hash, net::srp6_file_hmac, net::srp6_interleave
+0x5d1de0	209	SHA1_Update	idb	net	primitive	void __fastcall (SHA1_CTX *ctx, const void *data, uint32_t len)	Adds bytes to a SHA-1 context: advances the 64-bit bit count, buffers a partial block, compresses each full block	verified	one	net/login#sha-1-overwrites-its-input	net::sha1_family_b, net::sha1_prng_next, net::sha1_prng_seed, net::srp6_client_session, net::srp6_credential_hash, net::srp6_file_hmac, net::srp6_interleave
+0x5d1ec0	5097	SHA1_Transform	idb	net	primitive	void __fastcall (uint32_t *state, uint32_t *block)	Compresses one 64-byte big-endian block into the five SHA-1 state words, overwriting the block with schedule words	verified	one	net/login#sha-1-overwrites-its-input	net::sha1_family_b, net::sha1_prng_next, net::sha1_prng_seed, net::srp6_client_session, net::srp6_credential_hash, net::srp6_file_hmac, net::srp6_interleave
+0x5d32b0	171	SHA1_Final	idb	net	primitive	void __fastcall (uint8_t *digest, SHA1_CTX *ctx)	Pads a SHA-1 context with 0x80, zeros and the big-endian bit count, then writes the 20-byte big-endian digest	verified	one	net/login#sha-1-overwrites-its-input	net::sha1_family_b, net::sha1_prng_next, net::sha1_prng_seed, net::srp6_client_session, net::srp6_credential_hash, net::srp6_file_hmac, net::srp6_interleave
+0x5d3360	224	Srp6InterleaveSessionKey		net	primitive	uint8_t * __fastcall (uint8_t *key, const uint8_t *s, uint32_t len)	Drops S's leading zero bytes (one more if odd), SHA-1s its even and odd bytes apart and interleaves them into 40 bytes	verified	one	net/login#session-key-interleave	net::srp6_client_session, net::srp6_interleave
 0x5d3440	323	Srp6MakeVerifier		net	unreached	int32_t __thiscall (void *srp, uint8_t *n, uint32_t nLen, uint8_t *g, uint32_t gLen, uint8_t *salt, uint32_t sLen, uint8_t *v, uint32_t vLen, void *pool)	Draws a salt from a random pool and writes the verifier g^x mod N, x being SHA-1 of the salt and the credential hash	inferred	none	net/layout#unreached-functions	
-0x5d3590	189	Srp6SetCredentials		net	primitive	int32_t __thiscall (void *srp, const char *account, const char *password)	Stores SHA-1 of the account and of account:password, and starts the server-proof hash; returns -1 on a null string	verified	one	net/login#srp6-client	
-0x5d3650	1152	Srp6ClientComputeProof		net	primitive	int32_t __thiscall (void *srp, uint8_t *n, uint32_t nLen, uint8_t *g, uint32_t gLen, uint8_t *salt, uint32_t sLen, uint8_t *b, uint32_t bLen, void *pool)	Computes A, the 40-byte key K and proof M1 from N, g, salt and B; returns -1 on bad input, -2 when B is 0 or not below N	verified	one	net/login#srp6-client	
+0x5d3590	189	Srp6SetCredentials		net	primitive	int32_t __thiscall (void *srp, const char *account, const char *password)	Stores SHA-1 of the account and of account:password, and starts the server-proof hash; returns -1 on a null string	verified	one	net/login#srp6-client	net::srp6_credential_hash
+0x5d3650	1152	Srp6ClientComputeProof		net	primitive	int32_t __thiscall (void *srp, uint8_t *n, uint32_t nLen, uint8_t *g, uint32_t gLen, uint8_t *salt, uint32_t sLen, uint8_t *b, uint32_t bLen, void *pool)	Computes A, the 40-byte key K and proof M1 from N, g, salt and B; returns -1 on bad input, -2 when B is 0 or not below N	verified	one	net/login#srp6-client	net::srp6_client_session
 0x5d3ad0	69	Srp6VerifyServerProof		net	orchestration	int32_t __thiscall (void *srp, const uint8_t *m2, uint32_t len)	Finishes the hash of A, M1 and K and compares it with the server's M2; returns 0 on a match, -2 when len is not 20	verified	one	net/login#proof-reply	
 0x5d3b20	5	InitCopy17Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5d3b30; a static initializer	verified	one	net/layout#static-initializers	
 0x5d3b30	11	InitCopy17		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
-0x5d3b40	34	BigNumberFromUint32		net	orchestration	void * __fastcall (uint32_t value)	Allocates a Storm big number holding a 32-bit value	inferred	none		
-0x5d3b70	39	BigNumberFromBytes		net	orchestration	void * __fastcall (const uint8_t *bytes, uint32_t len)	Allocates a Storm big number from little-endian bytes	inferred	none		
-0x5d3ba0	69	BigNumberToBytes		net	primitive	uint32_t __fastcall (void *num, uint8_t *out, uint32_t size)	Writes a big number as little-endian bytes into a buffer, zero-filling it to size; returns the bytes written	inferred	none		
-0x5d3bf0	8	BigNumberCompare		net	orchestration	int32_t __fastcall (void *a, void *b)	Returns 1, 0 or -1 as a big number is greater than, equal to or less than another	inferred	none		
-0x5d3c00	58	BigNumberCompareUint32		net	orchestration	int32_t __fastcall (void *a, uint32_t b)	Returns 1, 0 or -1 as a big number is greater than, equal to or less than a 32-bit value	inferred	none		
+0x5d3b40	34	BigNumberFromUint32		net	orchestration	void * __fastcall (uint32_t value)	Allocates a Storm big number holding a 32-bit value	inferred	none		net::srp6_client_session
+0x5d3b70	39	BigNumberFromBytes		net	orchestration	void * __fastcall (const uint8_t *bytes, uint32_t len)	Allocates a Storm big number from little-endian bytes	inferred	none		net::srp6_client_session
+0x5d3ba0	69	BigNumberToBytes		net	primitive	uint32_t __fastcall (void *num, uint8_t *out, uint32_t size)	Writes a big number as little-endian bytes into a buffer, zero-filling it to size; returns the bytes written	inferred	none		net::srp6_client_session
+0x5d3bf0	8	BigNumberCompare		net	orchestration	int32_t __fastcall (void *a, void *b)	Returns 1, 0 or -1 as a big number is greater than, equal to or less than another	inferred	none		net::srp6_client_session
+0x5d3c00	58	BigNumberCompareUint32		net	orchestration	int32_t __fastcall (void *a, uint32_t b)	Returns 1, 0 or -1 as a big number is greater than, equal to or less than a 32-bit value	inferred	none		net::srp6_client_session
 0x5d3c40	18	BigNumberShiftLeft		net	unreached	void __fastcall (void *out, void *a, uint32_t bits)	Sets a big number to another shifted left by a bit count	inferred	none	net/layout#unreached-functions	
-0x5d3c60	18	BigNumberAdd		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the sum of two others	inferred	none		
-0x5d3c80	60	BigNumberAddUint32		net	orchestration	void __fastcall (void *out, void *a, uint32_t b)	Sets a big number to another plus a 32-bit value	inferred	none		
-0x5d3cc0	18	BigNumberSub		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the difference of two others	inferred	none		
+0x5d3c60	18	BigNumberAdd		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the sum of two others	inferred	none		net::srp6_client_session
+0x5d3c80	60	BigNumberAddUint32		net	orchestration	void __fastcall (void *out, void *a, uint32_t b)	Sets a big number to another plus a 32-bit value	inferred	none		net::srp6_client_session
+0x5d3cc0	18	BigNumberSub		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the difference of two others	inferred	none		net::srp6_client_session
 0x5d3ce0	60	BigNumberSubUint32		net	unreached	void __fastcall (void *out, void *a, uint32_t b)	Sets a big number to another minus a 32-bit value	inferred	none	net/layout#unreached-functions	
-0x5d3d20	18	BigNumberMul		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the product of two others	inferred	none		
+0x5d3d20	18	BigNumberMul		net	orchestration	void __fastcall (void *out, void *a, void *b)	Sets a big number to the product of two others	inferred	none		net::srp6_client_session
 0x5d3d40	60	BigNumberMulUint32		net	unreached	void __fastcall (void *out, void *a, uint32_t b)	Sets a big number to another times a 32-bit value	inferred	none	net/layout#unreached-functions	
 0x5d3d80	60	BigNumberDivUint32		net	unreached	void __fastcall (void *out, void *a, uint32_t b)	Sets a big number to the quotient of another by a 32-bit value	inferred	none	net/layout#unreached-functions	
-0x5d3dc0	18	BigNumberMod		net	orchestration	void __fastcall (void *out, void *a, void *m)	Sets a big number to another modulo a third	inferred	none		
+0x5d3dc0	18	BigNumberMod		net	orchestration	void __fastcall (void *out, void *a, void *m)	Sets a big number to another modulo a third	inferred	none		net::srp6_client_session
 0x5d3de0	139	BigNumberModUint32		net	unreached	uint32_t __fastcall (void *a, uint32_t m)	Returns a big number modulo a 32-bit value	inferred	none	net/layout#unreached-functions	
 0x5d3e70	33	BigNumberMulMod		net	unreached	void __fastcall (void *out, void *a, void *b, void *m)	Sets a big number to the product of two others modulo a fourth	inferred	none	net/layout#unreached-functions	
-0x5d3ea0	22	BigNumberPowMod		net	orchestration	void __fastcall (void *out, void *base, void *exp, void *m)	Sets a big number to a base raised to an exponent modulo a modulus	inferred	none		
+0x5d3ea0	22	BigNumberPowMod		net	orchestration	void __fastcall (void *out, void *base, void *exp, void *m)	Sets a big number to a base raised to an exponent modulo a modulus	inferred	none		net::srp6_client_session
 0x5d3ec0	64	BigNumberPowModUint32		net	unreached	void __fastcall (void *out, void *base, uint32_t exp, void *m)	Sets a big number to a base raised to a 32-bit exponent modulo a modulus	inferred	none	net/layout#unreached-functions	
 0x5d3f00	7	BigNumberIsPrime		net	unreached	int32_t __fastcall (void *a)	Returns Storm's primality verdict on a big number	inferred	none	net/layout#unreached-functions	
-0x5d3f10	7	BigNumberFree		net	orchestration	void __fastcall (void *num)	Frees a Storm big number	inferred	none		
-0x5d3f20	21	BigNumberBitLength		net	orchestration	uint32_t __fastcall (void *num)	Returns the bit length of a big number	verified	one	net/layout#object-files	
+0x5d3f10	7	BigNumberFree		net	orchestration	void __fastcall (void *num)	Frees a Storm big number	inferred	none		net::srp6_client_session
+0x5d3f20	21	BigNumberBitLength		net	orchestration	uint32_t __fastcall (void *num)	Returns the bit length of a big number	verified	one	net/layout#object-files	net::srp6_client_session
 0x5d3f40	5	InitTradeCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d3f50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d3f50	11	InitTradeCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d3f60	12	Trade_C_GetTradeTarget	idb	objectlayer	orchestration	uint64_t __cdecl (void)	Returns the trade partner's GUID held in 0xc4bed0	verified	one	objectlayer/trade#trade-state	
@@ -24044,13 +24044,13 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x661d10	41			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661d40	60			storm	boundary		Runs its object file code not read here	inferred	none		
 0x661d80	17			storm	boundary		Runs its object file code not read here	inferred	none		
-0x661da0	36	MD5Init		storm			Starts an MD5 context	inferred	none		
-0x661dd0	190			storm	boundary		Runs its object file code that calls 0x661f00; not read here	inferred	none		
-0x661e90	105	MD5Final		storm			Finishes an MD5 context into a 16-byte digest and clears it	inferred	none		
-0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		
-0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		
-0x662810	72			storm	boundary		Runs its object file code not read here	inferred	none		
-0x662860	100			storm	boundary		Computes a CRC-32 over a buffer, flag 1 starting at 0xffffffff and flag 4 inverting the result	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x661da0	36	MD5Init		storm			Starts an MD5 context	inferred	none		storm::md5
+0x661dd0	190			storm	boundary		Runs its object file code that calls 0x661f00; not read here	inferred	none		storm::md5
+0x661e90	105	MD5Final		storm			Finishes an MD5 context into a 16-byte digest and clears it	inferred	none		storm::md5
+0x661f00	2251			storm	boundary		Runs its object file code that calls 0x662810; not read here	inferred	none		storm::md5
+0x6627d0	64			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
+0x662810	72			storm	boundary		Runs its object file code not read here	inferred	none		storm::md5
+0x662860	100			storm	boundary		Computes a CRC-32 over a buffer, flag 1 starting at 0xffffffff and flag 4 inverting the result	verified	one	ui/addons#the-auth-packets-add-on-block	storm::crc32
 0x6628d0	26			storm	boundary		Returns the CRC-32 of a buffer through 0x662860 with a start value and flags	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x6628f0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x662900	11			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -24082,28 +24082,28 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x663250	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x663260	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x663270	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x663280	22			storm	boundary		Runs its object file code that calls 0x6632a0; not read here	inferred	none		
-0x6632a0	358			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
+0x663280	22			storm	boundary		Runs its object file code that calls 0x6632a0; not read here	inferred	none		net::srp6_client_session
+0x6632a0	358			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
 0x663410	22			storm	unreached		Runs its object file code that calls 0x663430; not read here	inferred	none		
 0x663430	311			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x663570	231			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, GetUint32ArrayQuantum, ReallocUint32Array; not read here	inferred	none		
-0x663660	18			storm	boundary		Runs its object file code that calls 0x663680; not read here	inferred	none		
-0x663680	179			storm	boundary		Runs its object file code not read here	inferred	none		
+0x663570	231			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, GetUint32ArrayQuantum, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x663660	18			storm	boundary		Runs its object file code that calls 0x663680; not read here	inferred	none		net::srp6_client_session
+0x663680	179			storm	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x663740	122			storm	unreached		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
 0x6637c0	20			storm	unreached		Runs its object file code that calls 0x6637e0; not read here	inferred	none		
 0x6637e0	343			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x663940	129			storm	boundary		Runs its object file code that calls SMemFree, 0x463a00; not read here	inferred	none		
+0x663940	129			storm	boundary		Runs its object file code that calls SMemFree, 0x463a00; not read here	inferred	none		net::srp6_client_session
 0x6639d0	54			storm	unreached		Runs its object file code that calls 0x663a10; not read here	inferred	none		
-0x663a10	866			storm	boundary		Runs its object file code that calls 0x667200, SetUint32ArrayCount, 0x663e20 and 12 more; not read here	inferred	none		
-0x663d80	157			storm	boundary		Runs its object file code that calls ReallocUint32Array; not read here	inferred	none		
-0x663e20	120			storm	boundary		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
+0x663a10	866			storm	boundary		Runs its object file code that calls 0x667200, SetUint32ArrayCount, 0x663e20 and 12 more; not read here	inferred	none		net::srp6_client_session
+0x663d80	157			storm	boundary		Runs its object file code that calls ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x663e20	120			storm	boundary		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		net::srp6_client_session
 0x663ea0	420			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, __allmul, __aulldiv and 3 more; not read here	inferred	none		
-0x664050	119			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6640d0	311			storm	boundary		Runs its object file code that calls __allmul, AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x664210	344			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x664370	106			storm	boundary		Runs its object file code that calls ReallocUint32Array; not read here	inferred	none		
-0x6643e0	369			storm	boundary		Runs its object file code that calls 0x6670d0, GetUint32ArrayQuantum, ReallocUint32Array; not read here	inferred	none		
-0x664560	349			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
+0x664050	119			storm	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
+0x6640d0	311			storm	boundary		Runs its object file code that calls __allmul, AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x664210	344			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x664370	106			storm	boundary		Runs its object file code that calls ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x6643e0	369			storm	boundary		Runs its object file code that calls 0x6670d0, GetUint32ArrayQuantum, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x664560	349			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
 0x6646c0	30			storm	unreached		Runs its object file code that calls 0x6646e0; not read here	inferred	none		
 0x6646e0	287			storm	unreached		Runs its object file code that calls 0x665360, 0x6632a0, 0x663a10 and 8 more; not read here	inferred	none		
 0x664800	295			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
@@ -24113,22 +24113,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x664af0	773			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, 0x664e00, 0x663ea0 and 10 more; not read here	inferred	none		
 0x664e00	121			storm	unreached		Runs its object file code that calls GetUint32ArrayQuantum, ReallocUint32Array; not read here	inferred	none		
 0x664e80	115			storm	unreached		Runs its object file code not read here	inferred	none		
-0x664f00	77			storm	boundary		Runs its object file code that calls 0x664f50, 0x663a10; not read here	inferred	none		
-0x664f50	515			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6670d0, AddUint32ArrayCount and 1 more; not read here	inferred	none		
-0x665160	511			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6654c0, 0x664f00 and 3 more; not read here	inferred	none		
+0x664f00	77			storm	boundary		Runs its object file code that calls 0x664f50, 0x663a10; not read here	inferred	none		net::srp6_client_session
+0x664f50	515			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6670d0, AddUint32ArrayCount and 1 more; not read here	inferred	none		net::srp6_client_session
+0x665160	511			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6654c0, 0x664f00 and 3 more; not read here	inferred	none		net::srp6_client_session
 0x665360	346			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x6654c0	215			storm	boundary		Runs its object file code that calls RoundUpToQuantum, ReallocUint32Array, GetUint32ArrayQuantum; not read here	inferred	none		
-0x6655a0	530			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6670d0, 0x6657c0 and 2 more; not read here	inferred	none		
-0x6657c0	84			storm	boundary		Runs its object file code that calls __allmul; not read here	inferred	none		
-0x665820	197			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x6658f0	22			storm	boundary		Runs its object file code that calls 0x665910; not read here	inferred	none		
-0x665910	329			storm	boundary		Loads a big number from little-endian bytes: byte i into bits 8(i mod 4) of word i/4	verified	one	net/login#srp6-client	
+0x6654c0	215			storm	boundary		Runs its object file code that calls RoundUpToQuantum, ReallocUint32Array, GetUint32ArrayQuantum; not read here	inferred	none		net::srp6_client_session
+0x6655a0	530			storm	boundary		Runs its object file code that calls SetUint32ArrayCount, 0x6670d0, 0x6657c0 and 2 more; not read here	inferred	none		net::srp6_client_session
+0x6657c0	84			storm	boundary		Runs its object file code that calls __allmul; not read here	inferred	none		net::srp6_client_session
+0x665820	197			storm	boundary		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		net::srp6_client_session
+0x6658f0	22			storm	boundary		Runs its object file code that calls 0x665910; not read here	inferred	none		net::srp6_client_session
+0x665910	329			storm	boundary		Loads a big number from little-endian bytes: byte i into bits 8(i mod 4) of word i/4	verified	one	net/login#srp6-client	net::srp6_client_session
 0x665a60	18			storm	unreached		Runs its object file code that calls 0x665a80; not read here	inferred	none		
 0x665a80	54			storm	unreached		Runs its object file code that calls 0x664370, 0x6640d0, 0x664800; not read here	inferred	none		
 0x665ac0	26			storm	unreached		Runs its object file code that calls 0x665ae0; not read here	inferred	none		
 0x665ae0	70			storm	unreached		Runs its object file code that calls 0x665b30, 0x665910; not read here	inferred	none		
 0x665b30	95			storm	unreached		Runs its object file code not read here	inferred	none		
-0x665b90	18			storm	boundary		Runs its object file code that calls 0x665820; not read here	inferred	none		
+0x665b90	18			storm	boundary		Runs its object file code that calls 0x665820; not read here	inferred	none		net::srp6_client_session
 0x665bb0	26			storm	unreached		Runs its object file code that calls 0x664930; not read here	inferred	none		
 0x665bd0	20			storm	unreached		Runs its object file code that calls 0x664800; not read here	inferred	none		
 0x665bf0	26			storm	unreached		Runs its object file code that calls 0x665c10; not read here	inferred	none		
@@ -24139,17 +24139,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x665e30	15			storm	unreached		Runs its object file code that calls 0x664a70; not read here	inferred	none		
 0x665e40	18			storm	unreached		Runs its object file code that calls 0x664af0; not read here	inferred	none		
 0x665e60	15			storm	unreached		Runs its object file code that calls 0x664e00; not read here	inferred	none		
-0x665e70	54			storm	boundary		Runs its object file code that calls 0x663a10; not read here	inferred	none		
-0x665eb0	26			storm	boundary		Runs its object file code that calls 0x664f50; not read here	inferred	none		
+0x665e70	54			storm	boundary		Runs its object file code that calls 0x663a10; not read here	inferred	none		net::srp6_client_session
+0x665eb0	26			storm	boundary		Runs its object file code that calls 0x664f50; not read here	inferred	none		net::srp6_client_session
 0x665ed0	30			storm	unreached		Runs its object file code that calls 0x664f00; not read here	inferred	none		
-0x665ef0	123			storm	boundary		Runs SBig.cpp code that calls SMemAlloc; not read here	inferred	none		
+0x665ef0	123			storm	boundary		Runs SBig.cpp code that calls SMemAlloc; not read here	inferred	none		net::srp6_client_session
 0x665f70	18			storm	unreached		Runs its object file code that calls 0x665f90; not read here	inferred	none		
 0x665f90	277			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
 0x6660b0	22			storm	unreached		Runs its object file code that calls 0x6660d0; not read here	inferred	none		
 0x6660d0	311			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
 0x666210	26			storm	unreached		Runs its object file code that calls 0x666230; not read here	inferred	none		
 0x666230	335			storm	unreached		Runs its object file code that calls SMemReAlloc, 0x664f50, 0x6673e0; not read here	inferred	none		
-0x666380	30			storm	boundary		Runs its object file code that calls 0x665160; not read here	inferred	none		
+0x666380	30			storm	boundary		Runs its object file code that calls 0x665160; not read here	inferred	none		net::srp6_client_session
 0x6663a0	26			storm	unreached		Runs its object file code that calls 0x6663c0; not read here	inferred	none		
 0x6663c0	654			storm	unreached		Runs its object file code that calls SetUint32ArrayCount, 0x6670d0, 0x664f50 and 6 more; not read here	inferred	none		
 0x666650	18			storm	unreached		Runs its object file code that calls 0x665360; not read here	inferred	none		
@@ -24158,11 +24158,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x666690	22			storm	unreached		Runs its object file code that calls 0x6643e0; not read here	inferred	none		
 0x6666b0	22			storm	unreached		Runs its object file code that calls 0x664560; not read here	inferred	none		
 0x6666d0	22			storm	unreached		Runs its object file code that calls 0x6655a0; not read here	inferred	none		
-0x6666f0	22			storm	boundary		Runs its object file code that calls 0x664210; not read here	inferred	none		
+0x6666f0	22			storm	boundary		Runs its object file code that calls 0x664210; not read here	inferred	none		net::srp6_client_session
 0x666710	219			storm	unreached		Runs its object file code that calls 0x6667f0, 0x59fc50, 0x667420 and 2 more; not read here	inferred	none		
-0x6667f0	12			storm	boundary		Runs its object file code not read here	inferred	none		
-0x666800	247			storm	boundary		Runs its object file code that calls 0x5268b0; not read here	inferred	none		
-0x666900	76			storm	boundary		Runs its object file code that calls 0x6667f0; not read here	inferred	none		
+0x6667f0	12			storm	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
+0x666800	247			storm	boundary		Runs its object file code that calls 0x5268b0; not read here	inferred	none		net::srp6_client_session
+0x666900	76			storm	boundary		Runs its object file code that calls 0x6667f0; not read here	inferred	none		net::srp6_client_session
 0x666950	51			storm	unreached		Runs its object file code that calls 0x6667f0; not read here	inferred	none		
 0x666990	219			storm	unreached		Runs its object file code that calls 0x666a70, 0x4469c0, 0x446a00 and 2 more; not read here	inferred	none		
 0x666a70	302			storm	unreached		Runs its object file code that calls 0x667220, 0x663ea0, 0x667300 and 3 more; not read here	inferred	none		
@@ -24178,12 +24178,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x666f50	22			storm	unreached		Runs its object file code not read here	inferred	none		
 0x666f70	22			storm	unreached		Runs its object file code that calls 0x666f90; not read here	inferred	none		
 0x666f90	311			storm	unreached		Runs its object file code that calls AddUint32ArrayCount, ReallocUint32Array; not read here	inferred	none		
-0x6670d0	290			storm	boundary		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x667200	18			storm	boundary		Runs its object file code not read here	inferred	none		
+0x6670d0	290			storm	boundary		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		net::srp6_client_session
+0x667200	18			storm	boundary		Runs its object file code not read here	inferred	none		net::srp6_client_session
 0x667220	102			storm	unreached		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
 0x667290	98			storm	boundary		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
 0x667300	216			storm	boundary		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6673e0	49			storm	boundary		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		
+0x6673e0	49			storm	boundary		Runs its object file code that calls SMemReAlloc; not read here	inferred	none		net::srp6_client_session
 0x667420	31			storm	boundary		Runs its object file code not read here	inferred	none		
 0x667440	58			storm	boundary		Runs its object file code that calls __alloca_probe, __vsnprintf; not read here	inferred	none		
 0x667480	5			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -29146,12 +29146,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6e3050	66	StartOrRemoveSpellCooldown		spell	orchestration	void __fastcall (int32_t spell, uint32_t time, uint32_t pet, uint32_t remove)	Starts or removes a spell's records on a list through 0x6e1790 and fires the cooldown and usable events	verified	one	spell/cooldowns#starting-or-removing-a-spell	
 0x6e30a0	140	FindSpellIdByName		spell	unreached	int32_t __fastcall (const char *name)	Returns the id of the first spell whose localized name matches ignoring case, else -1; only unreached code calls it	verified	one	spell/cooldowns#spell-id-by-name	
 0x6e3130	121	GetSpellLevel		spell	primitive	uint32_t __fastcall (uint32_t spellId, uint32_t pet)	Returns the player's or pet's vtable slot 42 for a spell divided by 5, or 0 with no unit	verified	one	spell/records#caster-level	
-0x6e31b0	335	GetSpellPowerCost		spell	primitive	int32_t __fastcall (uint32_t spellId, uint32_t pet)	Computes a spell's power cost from level, percentage, the school cost fields and op 14	verified	one	spell/records#power-cost	
+0x6e31b0	335	GetSpellPowerCost		spell	primitive	int32_t __fastcall (uint32_t spellId, uint32_t pet)	Computes a spell's power cost from level, percentage, the school cost fields and op 14	verified	one	spell/records#power-cost	spell::spell_power_cost_difftest
 0x6e3300	57	GetSpellPowerPerSecond		spell	primitive	int32_t __fastcall (uint32_t spellId, uint32_t pet)	Computes a spell's power per second from its level terms, with no modifier	verified	one	spell/records#power-cost	
-0x6e3340	317	GetSpellCastTime		spell	primitive	int32_t __fastcall (uint32_t spellId, uint32_t pet, uint32_t allowNegative)	Computes a spell's cast time from its cast-time row, op 10 and the caster's cast-speed float	verified	one	spell/records#cast-time	
-0x6e3480	726	Spell_C::GetMinMaxRange	idb	spell	primitive	void __fastcall (void *caster, uint32_t spellId, float *minRange, float *maxRange, void *target)	Computes a spell's minimum and maximum range from its range row, reaches, motion, ranged item and op 5	verified	one	spell/records#range	
-0x6e3760	156	GetSpellEffectPointsInt		spell	primitive	void __fastcall (const void *spell, uint32_t effect, int32_t *min, int32_t *max, uint32_t level, uint32_t pet, uint32_t unmodified)	Converts the bounds 0x6e3800 returns to integers through fistp and a halving shift	verified	one	spell/records#effect-amount-as-integers	
-0x6e3800	693	GetSpellEffectPoints		spell	primitive	void __fastcall (const void *spell, uint32_t effect, float *min, float *max, uint32_t level, uint32_t pet, uint32_t unmodified)	Computes an effect's minimum and maximum amount in software floats, with modifiers and 1/128 rounding	verified	one	spell/records#effect-amount-formula	
+0x6e3340	317	GetSpellCastTime		spell	primitive	int32_t __fastcall (uint32_t spellId, uint32_t pet, uint32_t allowNegative)	Computes a spell's cast time from its cast-time row, op 10 and the caster's cast-speed float	verified	one	spell/records#cast-time	spell::spell_cast_time_difftest
+0x6e3480	726	Spell_C::GetMinMaxRange	idb	spell	primitive	void __fastcall (void *caster, uint32_t spellId, float *minRange, float *maxRange, void *target)	Computes a spell's minimum and maximum range from its range row, reaches, motion, ranged item and op 5	verified	one	spell/records#range	spell::spell_minmax_range_arms_difftest, spell::spell_minmax_range_difftest
+0x6e3760	156	GetSpellEffectPointsInt		spell	primitive	void __fastcall (const void *spell, uint32_t effect, int32_t *min, int32_t *max, uint32_t level, uint32_t pet, uint32_t unmodified)	Converts the bounds 0x6e3800 returns to integers through fistp and a halving shift	verified	one	spell/records#effect-amount-as-integers	spell::spell_minmax_radius_difftest
+0x6e3800	693	GetSpellEffectPoints		spell	primitive	void __fastcall (const void *spell, uint32_t effect, float *min, float *max, uint32_t level, uint32_t pet, uint32_t unmodified)	Computes an effect's minimum and maximum amount in software floats, with modifiers and 1/128 rounding	verified	one	spell/records#effect-amount-formula	spell::spell_effect_amount_difftest
 0x6e3b80	76	ClassifySpellEffect		spell	primitive	uint8_t __fastcall (uint32_t effect, uint32_t aura, uint8_t *integral)	Returns whether an effect takes a damage op and sets whether its amount rounds to integers	verified	one	spell/records#effect-classes	
 0x6e3d10	6	GetCastSpellId		spell	orchestration	uint32_t __cdecl (void)	Returns the in-flight spell id held at 0xceca88	verified	one	spell/checks#cast-state-accessors	
 0x6e3d20	6	GetCastItemGuidPtr		spell	orchestration	uint64_t * __cdecl (void)	Returns the address of 0xcecab0, the GUID of the item the in-flight cast came from	verified	one	spell/checks#cast-state-accessors	
@@ -29163,7 +29163,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6e40e0	692	CheckSpellEquippedItem		spell	primitive	uint8_t __fastcall (void *caster, const void *rec, uint8_t checkAmmo, uint8_t report)	Refuses a spell whose required item is not equipped (0x19 to 0x1b) or whose ammo is not carried (0x2f)	verified	one	spell/checks#equipped-item-and-ammo	
 0x6e43a0	160	MatchEquippedAmmoItem		spell	orchestration	uint32_t __fastcall (void *item, void *ctx)	Accepts a carried projectile of the context's ammo type and entry, storing it in the context	verified	one	spell/checks#equipped-item-and-ammo	
 0x6e4440	775	CheckSpellTargetRange		spell	primitive	uint8_t __fastcall (void *caster, const void *rec, uint64_t guid, uint8_t report)	Refuses a target a relation admits when it is out of range (0x59) or too close (0x76)	verified	one	spell/checks#range-pre-check	
-0x6e47b0	178	IsTargetInSpellRange		spell	primitive	uint8_t __fastcall (void *caster, void *target, uint32_t id, uint8_t *tooFar)	Compares the squared caster-target distance with the spell's squared minimum and maximum range	verified	one	spell/checks#range-compare	
+0x6e47b0	178	IsTargetInSpellRange		spell	primitive	uint8_t __fastcall (void *caster, void *target, uint32_t id, uint8_t *tooFar)	Compares the squared caster-target distance with the spell's squared minimum and maximum range	verified	one	spell/checks#range-compare	spell::spell_range_check_difftest
 0x6e4870	42	TestSpellAttributesAndFlags		spell	orchestration	uint8_t __fastcall (const void *rec, uint32_t flags)	Returns a bit from AttributesEx, AttributesEx2 and a flags word that gates the chain-target fill	verified	one	spell/checks#chain-fill-predicate	
 0x6e48a0	13	IsSpellTargeting		spell	orchestration	uint32_t __cdecl (void)	Returns 1 while the targeting word 0xcecac0 is nonzero	verified	one	spell/checks#targeting-state-predicates	
 0x6e48b0	42	IsSpellTargetingForOtherCaster		spell	orchestration	uint32_t __cdecl (void)	Returns 1 while targeting for a caster other than the active player	verified	one	spell/checks#targeting-state-predicates	
@@ -29194,21 +29194,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6e6260	112	SpellTargetCanPickCorpse		spell	primitive	uint8_t __fastcall (void *corpse)	Returns whether the world pick may take a corpse under flag bits 0x8000 or 0x200	verified	one	spell/targeting#object-pick-filters	
 0x6e62d0	16	SpellTargetWantsGameObject		spell	primitive	uint8_t __cdecl (void)	Returns whether the flag word has any of 0x4800	verified	one	spell/targeting#flag-word-predicates	
 0x6e62e0	50	SpellTargetCanPickGameObject		spell	primitive	uint8_t __fastcall (void *gameObject)	Returns whether the world pick may take a game object: flag 0x4800, the type and 0x5f8260	verified	one	spell/targeting#object-pick-filters	
-0x6e6320	16	SpellTargetWantsLocation		spell	primitive	uint8_t __cdecl (void)	Returns whether the flag word has any of 0x60	verified	one	spell/targeting#flag-word-predicates	
+0x6e6320	16	SpellTargetWantsLocation		spell	primitive	uint8_t __cdecl (void)	Returns whether the flag word has any of 0x60	verified	one	spell/targeting#flag-word-predicates	spell::spell_target_in_range_difftest
 0x6e6330	19	SpellTargetWantsItem		spell	primitive	uint8_t __cdecl (void)	Returns whether the flag word has any of 0x4010	verified	one	spell/targeting#flag-word-predicates	
-0x6e6350	268	GetSpellTargetAreaRadius		spell	primitive	float __cdecl (void)	Returns the larger level-scaled radius of the pending spell's first two effects after modifier 6	verified	one	spell/targeting#area-reticle-radius	
-0x6e6460	939	SpellCanTargetObject		spell	primitive	uint8_t __fastcall (const uint64_t *guid, uint8_t checkRange)	Returns whether an object would bind to the flag word and, with checkRange, is within the spell's range	verified	one	spell/targeting#testing-an-object-without-binding	
-0x6e6810	218	SpellTargetLocationInRange		spell	primitive	uint8_t __fastcall (const float *position, uint8_t checkRange)	Returns whether a position target is wanted and, with checkRange, within the spell's range of the caster	verified	one	spell/targeting#location-range-test	
+0x6e6350	268	GetSpellTargetAreaRadius		spell	primitive	float __cdecl (void)	Returns the larger level-scaled radius of the pending spell's first two effects after modifier 6	verified	one	spell/targeting#area-reticle-radius	spell::spell_range_for_caster_difftest
+0x6e6460	939	SpellCanTargetObject		spell	primitive	uint8_t __fastcall (const uint64_t *guid, uint8_t checkRange)	Returns whether an object would bind to the flag word and, with checkRange, is within the spell's range	verified	one	spell/targeting#testing-an-object-without-binding	spell::spell_objs_dist_sq_difftest
+0x6e6810	218	SpellTargetLocationInRange		spell	primitive	uint8_t __fastcall (const float *position, uint8_t checkRange)	Returns whether a position target is wanted and, with checkRange, within the spell's range of the caster	verified	one	spell/targeting#location-range-test	spell::spell_target_in_range_difftest
 0x6e68f0	12	SpellTargetWantsString		spell	unreached	uint32_t __cdecl (void)	Returns bit 13 (0x2000) of the flag word	verified	one	spell/targeting#unreached-functions	
 0x6e6900	104	BindSpellTargetTradeSlot		spell	primitive	uint32_t __cdecl (void)	Binds trade slot 6 as an item target and sends the cast when the word empties	verified	one	spell/targeting#binding-the-trade-slot	
 0x6e6970	6	GetSpellPlacementModel		spell	orchestration	void * __cdecl (void)	Returns the placement preview model 0xceca8c	verified	one	spell/targeting#placement-model-and-rotation	
 0x6e6980	67	GetSpellPlacementFacing		spell	orchestration	float __cdecl (void)	Returns the placement facing, taking the caster's facing unless the placement is rotatable	verified	one	spell/targeting#placement-model-and-rotation	
 0x6e69d0	6	IsSpellPlacementRotatable		spell	orchestration	uint8_t __cdecl (void)	Returns the rotatable-placement flag 0xceca90	verified	one	spell/targeting#placement-model-and-rotation	
-0x6e69e0	50	RotateSpellPlacement		spell	primitive	void __cdecl (void)	Adds pi/2 to the placement facing, wrapping by 2pi at or above 2pi	verified	one	spell/targeting#placement-model-and-rotation	
+0x6e69e0	50	RotateSpellPlacement		spell	primitive	void __cdecl (void)	Adds pi/2 to the placement facing, wrapping by 2pi at or above 2pi	verified	one	spell/targeting#placement-model-and-rotation	spell::spell_reticle_angle_difftest
 0x6e6a20	160	ShowPetTameFailure		spell	primitive	void __fastcall (uint8_t reason)	Shows ERR_TAME_FAILED with the PETTAME_ text of a reason, PETTAME_UNKNOWNERROR outside 1 to 11	verified	one	spell/failures#pet-tame-failure	
 0x6e6af0	62	ApplySpellModifierInt		spell	primitive	void __fastcall (const void *spell, int32_t *value, uint32_t op)	Applies a spell's summed modifiers for an op to an integer, flat first, then percent over 100	verified	one	spell/records#modifier-appliers	
-0x6e6b30	188	GetSpellModifiers		spell	primitive	uint8_t __fastcall (const void *spell, uint32_t op, int32_t *flat, int32_t *pct)	Sums the flat and percent modifier cells of a spell's family-mask bits for an op	verified	one	spell/records#modifier-sums	
-0x6e6bf0	50	ApplySpellModifierFloat		spell	primitive	void __fastcall (const void *spell, float *value, uint32_t op)	Applies a spell's summed modifiers for an op to a float on the x87	verified	one	spell/records#modifier-appliers	
+0x6e6b30	188	GetSpellModifiers		spell	primitive	uint8_t __fastcall (const void *spell, uint32_t op, int32_t *flat, int32_t *pct)	Sums the flat and percent modifier cells of a spell's family-mask bits for an op	verified	one	spell/records#modifier-sums	spell::spell_range_for_caster_difftest
+0x6e6bf0	50	ApplySpellModifierFloat		spell	primitive	void __fastcall (const void *spell, float *value, uint32_t op)	Applies a spell's summed modifiers for an op to a float on the x87	verified	one	spell/records#modifier-appliers	spell::spell_mod_float_difftest, spell::spell_range_for_caster_difftest
 0x6e6c30	99	ApplySpellModifierSoftFloat		spell	orchestration	void __fastcall (const void *spell, float *value, uint32_t op)	Applies a spell's summed modifiers for an op to a float through the software float routines	verified	one	spell/records#modifier-appliers	
 0x6e6ca0	34	SetClassSpellFamily		spell	primitive	void __fastcall (uint32_t classId)	Copies a class record's spell family into the global the modifier sums compare	verified	one	spell/records#talent-modifier-tables	
 0x6e6cd0	38	Script::SpellIsTargeting	idb	spell	orchestration	int __fastcall (lua_State *L)	Returns 1 to Lua while the flag word is nonzero, else nil	verified	one	spell/targeting#lua-targeting-functions	
@@ -29366,8 +29366,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eb830	10	DestroyShardPool		spell	orchestration	void __cdecl (void)	Jumps to 0x7603f0 on the shard pool 0xcee8f0; registered with _atexit	verified	one	spell/visuals#static-lists-and-pools	
 0x6eb840	13	BlizzardObject::DrawCallback		spell	orchestration	uint32_t __fastcall (BlizzardObject *object, uint32_t unused, uint32_t a, uint32_t b, uint32_t c)	Calls 0x6ebee0 on the emitter in ecx and returns 1; the world object callback 0x6eb930 installs	verified	one	spell/visuals#shard-model-start-and-end	
 0x6eb850	212	BlizzardObject::~BlizzardObject		spell	orchestration	void __thiscall (BlizzardObject *this)	Closes and frees every shard, releases the world object +0x10c, unlinks the shard list and the emitter	verified	one	spell/visuals#shard-model-start-and-end	
-0x6eb930	405	BlizzardObject::Initialize		spell	primitive	void __thiscall (BlizzardObject *this, const float *position, const char *path, float radius, float rate)	Stores position, radius, path and the spellEffectLevel-scaled rate and creates the world object with its box	verified	one	spell/visuals#emitter-initialization	
-0x6ebad0	822	BlizzardObject::Update		spell	primitive	uint32_t __thiscall (BlizzardObject *this)	Accumulates frame time times rate, spawns a shard per whole unit, returns 0 once the rate is 0.0 and no shard is left	verified	one	spell/visuals#shard-emission-rate	
+0x6eb930	405	BlizzardObject::Initialize		spell	primitive	void __thiscall (BlizzardObject *this, const float *position, const char *path, float radius, float rate)	Stores position, radius, path and the spellEffectLevel-scaled rate and creates the world object with its box	verified	one	spell/visuals#emitter-initialization	spell::spellvisual_quality_scale_difftest
+0x6ebad0	822	BlizzardObject::Update		spell	primitive	uint32_t __thiscall (BlizzardObject *this)	Accumulates frame time times rate, spawns a shard per whole unit, returns 0 once the rate is 0.0 and no shard is left	verified	one	spell/visuals#shard-emission-rate	spell::spellvisual_emitter_difftest
 0x6ebe10	25	Shard::Shard		spell	orchestration	Shard * __thiscall (Shard *this)	Zeroes a shard's link, position and model and its started flag, leaving the start time	verified	one	spell/visuals#shard-model-start-and-end	
 0x6ebe30	49	ShardModelEventCallback		spell	primitive	void __stdcall (uint32_t tag, uint32_t a, uint32_t b, uint32_t c, uint32_t d, uint32_t e)	Counts each call in 0xcee944 and plays a sound through 0x458870 for $SND when the count is a multiple of 4	verified	one	spell/visuals#shard-model-start-and-end	
 0x6ebe70	103	ShardModelDoneCallback		spell	orchestration	void __stdcall (uint32_t a, uint32_t status, uint32_t c, Shard *shard, uint32_t shardHigh)	Closes the shard's model, unlinks it and returns it to the pool 0xcee8f0 when its second argument is 0	verified	one	spell/visuals#shard-model-start-and-end	
@@ -29390,16 +29390,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ec440	12	RegisterReturnVoidSpellVisualsB		spell	orchestration	void __cdecl (void)	Registers 0x6ec450 with _atexit	verified	one	spell/layout#static-initializers	
 0x6ec450	1	ReturnVoidSpellVisualsB		spell	orchestration	void __cdecl (void)	Returns; registered with _atexit by 0x6ec440	verified	one	spell/visuals#static-lists-and-pools	
 0x6ec460	641	LightningObject::Update		spell	primitive	uint32_t __thiscall (LightningObject *this, uint32_t now)	Shows, hides, places and expires each hop's bolt; returns 0 when a non-persistent chain reaches its end	verified	one	spell/visuals#chain-update-per-frame	
-0x6ec6f0	138	GetLightningCasterPoint		spell	primitive	float * __fastcall (float *out, void *unit)	Writes a caster's beam end: its $CSL event, else its position raised by +0x90 times +0xbc times 0.75	verified	one	spell/visuals#chain-endpoints	
+0x6ec6f0	138	GetLightningCasterPoint		spell	primitive	float * __fastcall (float *out, void *unit)	Writes a caster's beam end: its $CSL event, else its position raised by +0x90 times +0xbc times 0.75	verified	one	spell/visuals#chain-endpoints	spell::spellvisual_attach_height_difftest
 0x6ec780	240	GetSpellImpactPoint		spell	primitive	float * __fastcall (float *out, void *unit, uint32_t spellId)	Writes the unit's attachment the spell visual names through 0x860a18, else 0x22 for an unknown spell, else its position	verified	one	spell/visuals#chain-endpoints	
-0x6ec870	155	UpdateSpellScreenTint		spell	primitive	void __thiscall (uint32_t *tint, uint32_t now)	Passes the tint colour and its fade-in, hold or fade-out level to 0x6d45c0, ending it at t3	verified	one	spell/visuals#screen-tint	
-0x6ec910	97	StartSpellScreenTint		spell	primitive	void __fastcall (const uint32_t *colour, uint32_t spellId, float fraction)	Starts the tint 0xcee8d4: fade in over fraction of the cast time, hold to the cast time, fade out over 100 ms	verified	one	spell/visuals#screen-tint	
+0x6ec870	155	UpdateSpellScreenTint		spell	primitive	void __thiscall (uint32_t *tint, uint32_t now)	Passes the tint colour and its fade-in, hold or fade-out level to 0x6d45c0, ending it at t3	verified	one	spell/visuals#screen-tint	spell::spellvisual_intensity_difftest
+0x6ec910	97	StartSpellScreenTint		spell	primitive	void __fastcall (const uint32_t *colour, uint32_t spellId, float fraction)	Starts the tint 0xcee8d4: fade in over fraction of the cast time, hold to the cast time, fade out over 100 ms	verified	one	spell/visuals#screen-tint	spell::spellvisual_timeline_difftest
 0x6ec980	158	LightningObject::InitBolts		spell	primitive	void __thiscall (LightningObject *this, void *caster, const uint64_t *targets, uint32_t count, const void *chainRecord)	Stores the targets' GUIDs reversed after the caster and gives hop i its endpoints and staggered start and end	verified	one	spell/visuals#chain-hop-table	
-0x6eca20	252	SpellVisualsUpdate		spell	primitive	void __cdecl (void)	Updates every chain, the renderer with the elapsed seconds, the tint and every emitter, removing the finished ones	verified	one	spell/visuals#frame-update	
+0x6eca20	252	SpellVisualsUpdate		spell	primitive	void __cdecl (void)	Updates every chain, the renderer with the elapsed seconds, the tint and every emitter, removing the finished ones	verified	one	spell/visuals#frame-update	spell::spellvisual_fade_clock_difftest
 0x6ecb20	21	SpellVisualsRenderLightning		spell	orchestration	void __cdecl (void)	Renders the lightning renderer's bolts through 0x7b0a80 with the world camera's position	verified	one	spell/visuals#frame-update	
 0x6ecb40	67	PlaySpellEffectCameraShakes		spell	primitive	void __fastcall (int32_t groupId, const float *position)	Adds each nonzero shake of a SpellEffectCameraShakes record to the active camera at a position	verified	one	spell/visuals#camera-shake-groups	
 0x6ecb90	50	PlayChainEffect		spell	orchestration	void __fastcall (void *caster, uint32_t chain, uint32_t strands, uint32_t flag, uint32_t spell, uint64_t *targets, uint32_t n, void **slots, uint32_t cap)	Calls 0x6ecbd0 with its arguments reordered unless the caster or the target count is 0	verified	one	spell/visuals#chain-effect-creation	
-0x6ecbd0	548	CreateLightningObjects		spell	primitive	void __fastcall (void *caster, const uint64_t *targets, uint32_t n, uint32_t spell, int32_t chainId, uint32_t strands, uint8_t flag, void **slots, int32_t cap)	Creates up to three chains of a SpellChainEffects record over a caster and its targets	verified	one	spell/visuals#chain-effect-creation	
+0x6ecbd0	548	CreateLightningObjects		spell	primitive	void __fastcall (void *caster, const uint64_t *targets, uint32_t n, uint32_t spell, int32_t chainId, uint32_t strands, uint8_t flag, void **slots, int32_t cap)	Creates up to three chains of a SpellChainEffects record over a caster and its targets	verified	one	spell/visuals#chain-effect-creation	spell::spellvisual_chain_duration_difftest
 0x6ece00	16	ClearLightningLink		spell	orchestration	uint32_t * __thiscall (uint32_t *link)	Zeroes a chain's two link dwords and returns the link	verified	one	spell/visuals#list-and-array-helpers	
 0x6ece10	23	LightningObject::Stop		spell	orchestration	void __thiscall (LightningObject *this)	Ends a chain now, clears its persistent flag and releases a reference	verified	one	spell/visuals#chain-lifetime	
 0x6ece30	233	CreateBlizzardObject		spell	primitive	BlizzardObject * __fastcall (const float *position, uint32_t unused, float radius, uint32_t modelIndex, float rate)	Takes an emitter from the pool, links it at the tail and initializes it with the shard model 0x870e24[index]	verified	one	spell/visuals#area-shard-emitter-creation	
@@ -34952,12 +34952,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a48a0	54	SoundCheckFmodCall		sound	host		Returns 0 for a call that succeeded, else logs it and returns FMOD's error	verified	one	sound/engine#fmod-set-up-sequence	
 0x7a48e0	309	ReadSoundParams		sound	primitive		Stores the device parameter defaults and reads them through the getters	verified	one	sound/engine#device-initialization	
 0x7a4a20	173	Sound::Shutdown		sound	host		Releases every sound and closes FMOD, the file cache and the log	verified	one	sound/engine#shutdown	
-0x7a4ad0	131	Sound::Update	idb	sound	host		Runs the ended, fade and object lists, the listener, panning and cutoff lists and FSOUND_Update	verified	one	sound/engine#the-frame-pump	
+0x7a4ad0	131	Sound::Update	idb	sound	host		Runs the ended, fade and object lists, the listener, panning and cutoff lists and FSOUND_Update	verified	one	sound/engine#the-frame-pump	sound::pump_listener_flip
 0x7a4b60	183	Sound::ProcessStopList	idb	sound	primitive		Stops or releases each sound on the ended list	verified	one	sound/engine#the-frame-pump	
-0x7a4c20	299	Sound::ProcessFadeList	idb	sound	primitive		Steps each fading sound's level and ends finished fades	verified	one	sound/engine#the-fade-pump	
-0x7a4d50	165	Sound::ProcessUpdateList	idb	sound	host		Moves each object-following sound to its object's position through the callback	verified	one	sound/engine#sounds-that-follow-objects	
-0x7a4e00	512	Sound::ProcessPanningList	idb	sound	host		Places each panned sound at unit distance from the listener by its pan	verified	one	sound/engine#panning-list	
-0x7a5000	461	Sound::ProcessCutoffList	idb	sound	primitive		Cuts off, resumes or scales each listed sound by its distance from the listener	verified	one	sound/engine#distance-cutoff	
+0x7a4c20	299	Sound::ProcessFadeList	idb	sound	primitive		Steps each fading sound's level and ends finished fades	verified	one	sound/engine#the-fade-pump	sound::ramp_step
+0x7a4d50	165	Sound::ProcessUpdateList	idb	sound	host		Moves each object-following sound to its object's position through the callback	verified	one	sound/engine#sounds-that-follow-objects	sound::sibling_remap_flip
+0x7a4e00	512	Sound::ProcessPanningList	idb	sound	host		Places each panned sound at unit distance from the listener by its pan	verified	one	sound/engine#panning-list	sound::channel_2d_position_synth
+0x7a5000	461	Sound::ProcessCutoffList	idb	sound	primitive		Cuts off, resumes or scales each listed sound by its distance from the listener	verified	one	sound/engine#distance-cutoff	sound::channel_dist_update
 0x7a51d0	184	Sound::Create		sound	primitive		Takes a sound record from the pool, links it on the every-sound list and hashes its name	verified	one	sound/engine#the-sound-object	
 0x7a5290	303	Sound::Play	idb	sound	host		Opens a file as a stream on a bus, makes its record and starts it unless held	verified	one	sound/engine#opening-a-stream	
 0x7a53c0	140	SoundStreamEndCallback		sound	primitive		Links an ended stream's sound on the ended list under the engine lock; returns 0	verified	one	sound/engine#the-frame-pump	
@@ -34967,8 +34967,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a5620	91	Sound::Play2DLooped	idb	sound	primitive		Opens a file as a 2D loop, or once for a count of 1	verified	one	sound/engine#opening-a-stream	
 0x7a5680	118	Sound::Play3DLooped	idb	sound	primitive		Opens a file as a 3D loop, or once for a count of 1	verified	one	sound/engine#opening-a-stream	
 0x7a5700	41	Sound::Stop	idb	sound	orchestration		Destroys the sound a slot points at and clears the slot	verified	one	sound/engine#fades	
-0x7a5730	119	Sound::FadeIn		sound	primitive		Fades a sound in from silence to a level over a time, or reapplies its volume below 0.1 s	verified	one	sound/engine#fades	
-0x7a57b0	37	Sound::FadeInVolume		sound	primitive		Fades a sound in to a volume over a time	verified	one	sound/engine#fades	
+0x7a5730	119	Sound::FadeIn		sound	primitive		Fades a sound in from silence to a level over a time, or reapplies its volume below 0.1 s	verified	one	sound/engine#fades	sound::channel_set_volume
+0x7a57b0	37	Sound::FadeInVolume		sound	primitive		Fades a sound in to a volume over a time	verified	one	sound/engine#fades	sound::volume_to_byte
 0x7a57e0	46	Sound::Set3DUpdateHandle	idb	sound	primitive		Puts a 3D sound on the object list with a GUID, or takes it off for 0	verified	one	sound/engine#sounds-that-follow-objects	
 0x7a5810	42	Sound::IsPlaying		sound	host		Returns whether a sound plays: true while suspended, false without a channel	verified	one	sound/engine#the-frame-pump	
 0x7a5840	35	Sound::IsFadingOut		sound	unreached		Returns whether a sound is on the fade list with a falling level	verified	one	sound/engine#unreached-engine-code	
@@ -34978,21 +34978,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a5950	137	Sound::Stop3	idb	sound	host		Frees a sound's channel and stream and takes it off every list but the every-sound list	verified	one	sound/engine#the-sound-object	
 0x7a59e0	38	Sound::UpdateVolume	idb	sound	orchestration		Reapplies a sound's stored volume, or level 0 while fading	verified	one	sound/engine#volume-of-a-sound	
 0x7a5a10	58	Sound::Stop2	idb	sound	primitive		Fades a sound out and releases it at silence, or releases it now	verified	one	sound/engine#fades	
-0x7a5a50	104	Sound::FadeOut		sound	primitive		Fades a sound out over a time, or stops its stream at once below 0.1 s	verified	one	sound/engine#fades	
+0x7a5a50	104	Sound::FadeOut		sound	primitive		Fades a sound out over a time, or stops its stream at once below 0.1 s	verified	one	sound/engine#fades	sound::channel_volume_rate_stream
 0x7a5ac0	18	Sound::SetPaused	idb	sound	orchestration		Sets or clears a sound's held pause reason	verified	one	sound/engine#pause-reasons	
 0x7a5ae0	10	Sound::GetLengthMs		sound	unreached		Returns the stream's length in milliseconds	verified	one	sound/engine#unreached-engine-code	
 0x7a5af0	23	Sound::SetTimeMs		sound	unreached		Seeks the stream to a time in milliseconds	verified	one	sound/engine#unreached-engine-code	
-0x7a5b10	218	Sound::SetPosition	idb	sound	host		Stores a 3D sound's position and velocity and passes them to FMOD with a channel	verified	one	sound/engine#positions-and-the-listener	
+0x7a5b10	218	Sound::SetPosition	idb	sound	host		Stores a 3D sound's position and velocity and passes them to FMOD with a channel	verified	one	sound/engine#positions-and-the-listener	sound::source_3d_attrs
 0x7a5bf0	38	Sound::SetChannelReverb		sound	host		Passes channel reverb properties to FMOD for a 3D sound with a channel	verified	one	sound/engine#positions-and-the-listener	
 0x7a5c20	113	Sound::SetPan		sound	unreached		Stores a pan and puts the sound on the panning list	verified	one	sound/engine#panning-list	
-0x7a5ca0	196	Sound::SetCutoffDistanceSquared	idb	sound	primitive		Stores a 3D sound's cutoff distance and joins or leaves the cutoff list	verified	one	sound/engine#distance-cutoff	
-0x7a5d70	47	Sound::GetVolumeLevel		sound	primitive		Returns a sound's volume as a level, the low byte of v · 255 + 512.5	verified	one	sound/engine#volume-of-a-sound	
-0x7a5da0	25	Sound::SetVolume	idb	sound	primitive		Sets a sound's volume from a level 0 to 255	verified	one	sound/engine#volume-of-a-sound	
-0x7a5dc0	120	Sound::SetVolume2	idb	sound	host		Stores a sound's volume and sets its channel's volume through its category factor and gain	verified	one	sound/engine#volume-of-a-sound	
+0x7a5ca0	196	Sound::SetCutoffDistanceSquared	idb	sound	primitive		Stores a 3D sound's cutoff distance and joins or leaves the cutoff list	verified	one	sound/engine#distance-cutoff	sound::max_distance_cull
+0x7a5d70	47	Sound::GetVolumeLevel		sound	primitive		Returns a sound's volume as a level, the low byte of v · 255 + 512.5	verified	one	sound/engine#volume-of-a-sound	sound::channel_volume_curve, sound::channel_volume_rate_stream
+0x7a5da0	25	Sound::SetVolume	idb	sound	primitive		Sets a sound's volume from a level 0 to 255	verified	one	sound/engine#volume-of-a-sound	sound::volume_ramp_scale
+0x7a5dc0	120	Sound::SetVolume2	idb	sound	host		Stores a sound's volume and sets its channel's volume through its category factor and gain	verified	one	sound/engine#volume-of-a-sound	sound::channel_volume_mix, sound::volume_ramp_scale
 0x7a5e40	56	Sound::SetFrequency		sound	host		Stores a sound's frequency and sets it on its channel	verified	one	sound/engine#positions-and-the-listener	
 0x7a5e80	47	Sound::SetMinMaxDistance		sound	host		Sets the minimum and maximum distance of a 3D sound's sample	verified	one	sound/engine#positions-and-the-listener	
-0x7a5eb0	159	Sound::SetListener		sound	host		Maps and passes the listener's position, velocity, forward and up vectors to FMOD	verified	one	sound/engine#positions-and-the-listener	
-0x7a5f50	77	Sound::GetListenerPosition		sound	host		Reads the listener position back from FMOD in world axes	verified	one	sound/engine#positions-and-the-listener	
+0x7a5eb0	159	Sound::SetListener		sound	host		Maps and passes the listener's position, velocity, forward and up vectors to FMOD	verified	one	sound/engine#positions-and-the-listener	sound::listener_3d_attrs
+0x7a5f50	77	Sound::GetListenerPosition		sound	host		Reads the listener position back from FMOD in world axes	verified	one	sound/engine#positions-and-the-listener	sound::env_sound_audible, sound::first_slot_farther_than_query, sound::listener_get_attrs, sound::max_distance_cull, sound::sound_audible_distance
 0x7a5fa0	11	Sound::SetReverb		sound	host		Passes world reverb properties to FMOD	verified	one	sound/engine#positions-and-the-listener	
 0x7a5fb0	7	Sound::GetReverb		sound	unreached		Reads the world reverb properties from FMOD	verified	one	sound/engine#unreached-engine-code	
 0x7a5fc0	101	Sound::AddToFadeList		sound	primitive		Links a sound on the fade list and sets its flag	verified	one	sound/engine#fades	
@@ -35014,12 +35014,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6390	112	Sound::SetSoundVolume	idb	sound	orchestration		Clamps and stores the Sound factor and reapplies the Sound category's channels	verified	one	sound/engine#category-volumes	
 0x7a6400	121	Sound::SetMusicVolume	idb	sound	orchestration		Clamps and stores the Music factor and reapplies the music channels	verified	one	sound/engine#category-volumes	
 0x7a6480	121	Sound::SetAmbienceVolume	idb	sound	orchestration		Clamps and stores the Ambience factor and reapplies the ambience channels	verified	one	sound/engine#category-volumes	
-0x7a6500	105	Sound::SetMasterVolume	idb	sound	host		Clamps the master volume and passes its level to FSOUND_SetSFXMasterVolume	verified	one	sound/engine#category-volumes	
+0x7a6500	105	Sound::SetMasterVolume	idb	sound	host		Clamps the master volume and passes its level to FSOUND_SetSFXMasterVolume	verified	one	sound/engine#category-volumes	sound::sfx_master_volume
 0x7a6570	34	Sound::SetMasterSoundEffects	idb	sound	orchestration		Stores the sound-effects off state when it changes and applies it to every sound	verified	one	sound/engine#category-volumes	
 0x7a65a0	184	Sound::SetPauseReason		sound	host		Sets or clears one pause reason and pauses, resumes or starts the channel on a change	verified	one	sound/engine#pause-reasons	
 0x7a6660	61	Sound::UpdateSoundVolumes	idb	sound	primitive		Reapplies the volume of every sound whose category bits match a key	verified	one	sound/engine#category-volumes	
 0x7a66a0	115	Sound::DupeCheckFailed	idb	sound	orchestration		Returns whether an open fails its bus cap or duplicate check	verified	one	sound/engine#bus-caps-and-duplicates	
-0x7a6720	13	Sound::IsSuspended	idb	sound	primitive		Returns whether a sound's suspend reason is set	verified	one	sound/engine#pause-reasons	
+0x7a6720	13	Sound::IsSuspended	idb	sound	primitive		Returns whether a sound's suspend reason is set	verified	one	sound/engine#pause-reasons	sound::channel_set_volume, sound::channel_volume_mix, sound::source_3d_attrs, sound::volume_ramp_scale
 0x7a6730	40	Sound::IncrementCategory		sound	primitive		Counts a sound on its bus once and flags it counted	verified	one	sound/engine#bus-caps-and-duplicates	
 0x7a6760	45	Sound::DecrementCategory	idb	sound	primitive		Uncounts a sound from its bus, not below 0	verified	one	sound/engine#bus-caps-and-duplicates	
 0x7a6790	6	Sound::GetMixRate		sound	unreached		Returns the stored output rate	verified	one	sound/engine#unreached-engine-code	
