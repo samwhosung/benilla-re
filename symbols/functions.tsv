@@ -10603,7 +10603,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4eaa90	629	ClassifyObjectDot		ui	primitive	uint32_t __fastcall (void *list, uint32_t guid_lo, uint32_t guid_hi)	Classifies an object into a dot cell, or skips it, and appends its dot	verified	one	ui/minimapblips#object-dots	ui::dist2_4eaa90
 0x4ead10	119			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ead90	113			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		ui::geo_4ead90, ui::geo_4eb910
-0x4eae10	229			ui	orchestration		Runs MinimapFrame.cpp code that calls GetTextureDeviceObject, 0x589e80, GxRsSet and 3 more; not read here	inferred	none		
+0x4eae10	229	DrawOutdoorTile		ui	primitive	void __fastcall (void *record, uint32_t index, const uint32_t *colour)	Draws one outdoor tile record through its texture and the circular mask	verified	one	minimap/draw#outdoor-tile-draw	
 0x4eaf00	319			ui	primitive		Runs MinimapFrame.cpp code that calls 0x4eb910; not read here	inferred	none		ui::glue_4ea_4eaf00_bbox_edges
 0x4eb040	123			ui	orchestration		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnFrameUpdate, CM2Model::IsLoaded and 4 more; not read here	inferred	none		
 0x4eb0c0	1983			ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::OnMouseMove, CLayoutFrame::GetRect and 5 more; not read here	verified	one	ui/mouse#what-the-pointer-is-tested-against	ui::glue_4eb0c0_range_and_light
@@ -10617,17 +10617,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ebe60	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ebe70	45			ui	orchestration		Runs MinimapFrame.cpp code that calls SimpleFrameRegisterLayer, RegisterLayerCallback; not read here	inferred	none		
 0x4ebea0	10			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ebeb0	108			ui	primitive		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ebf20	367			ui	primitive		Runs MinimapFrame.cpp code that calls GetTextureDeviceObject, CGxTexFlags::CGxTexFlags and 6 more; not read here	inferred	none		ui::glue_4ebf20_zoom_span
-0x4ec090	929			ui	primitive		Runs MinimapFrame.cpp code that calls GetDeviceProjection, BuildOrthoMatrix and 15 more; not read here	inferred	none		ui::glue_4ec090_scale_neg
-0x4ec440	1006			ui	primitive		Runs MinimapFrame.cpp code that calls GetDeviceProjection, BuildOrthoMatrix and 14 more; not read here	inferred	none		ui::glue_4ec440_scale_recip
-0x4ec830	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
-0x4ec840	257			ui	primitive		Runs MinimapFrame.cpp code that calls 0x58b060, 0x589d30, 0x58af60 and 4 more; not read here	inferred	none		
+0x4ebeb0	108	SortInteriorTiles		ui	primitive	void __fastcall (void **head)	Links the drawable interior tile records into a list by ascending distance	verified	one	minimap/draw#tile-order	
+0x4ebf20	367	DrawInteriorTile		ui	primitive	void __fastcall (void *record, const uint32_t *colour)	Draws one interior tile as a strip on its box corners with texture coordinates inset by half a texel	verified	one	minimap/draw#interior-tile-quad	
+0x4ec090	929	CompositeInteriorTiles		ui	primitive	void __fastcall (const uint32_t *colour)	Renders the sorted interior tiles into the bound target through an orthographic view of 1.5 radii	verified	one	minimap/draw#composite-pass	
+0x4ec440	1006	BlitInteriorTarget		ui	primitive	void __stdcall (float radius, const float *offset, const uint32_t *colour)	Draws the interior target through the circular mask as one quad shifted by the player movement	verified	one	minimap/draw#interior-blit	
+0x4ec830	1	InitBlitQuadDtor		ui	orchestration	void __cdecl (void)	Returns at once as the exit handler of the blit quad	verified	one	minimap/draw#blit-quad-and-offset	
+0x4ec840	257	RedrawInteriorTarget		ui	primitive	void __fastcall (uint32_t mode)	Clears the interior target to black with the frame alpha and composites the tiles into it when the mode is 1	verified	one	minimap/draw#interior-target	
 0x4ec950	3755	MinimapFrameRender		ui	primitive		Draws the minimap each frame: map, landmark icons, arrows, dots and the player arrow	inferred	none	ui/minimapblips#the-rim-arrows	ui::glue_4ec950_rotate, ui::glue_4ec950_scale_loop, ui::glue_4ec950_unproject
 0x4ed800	1			ui	orchestration		Runs MinimapFrame.cpp code not read here	inferred	none		
 0x4ed810	434	LoadMinimapTextures		ui	host	void __cdecl ()	Loads the mask, landmark icon and dot icon textures and builds the icon lattice	verified	one	ui/minimap#minimap-textures	ui::geo_4ed810
-0x4ed9d0	164			ui	orchestration		Runs MinimapFrame.cpp code that calls 0x5ea700, 0x6d8e10, GxCapsGet and 2 more; not read here	inferred	none		
-0x4eda80	239			ui	primitive		Runs MinimapFrame.cpp code that calls 0x6d92c0, HandleClose, GxTexDestroy and 2 more; not read here	inferred	none		
+0x4ed9d0	164	CreateInteriorTarget		ui	orchestration	void __cdecl (void)	Builds the blip candidates, sets the initial radius and creates the 256 by 256 interior target texture	verified	one	minimap/draw#interior-target	
+0x4eda80	239	ShutdownMinimap		ui	orchestration	void __cdecl (void)	Resets the minimap, releases the tile textures, the interior target and the blip arrays and clears the active flag	verified	one	minimap/draw#interior-target	
 0x4edb70	68	ReleaseMinimapTextures		ui	host	void __cdecl ()	Releases the three texture handles and zeroes them	verified	one	ui/minimap#minimap-textures	
 0x4edbc0	1085	CGMinimapFrame::CGMinimapFrame	idb	ui	primitive		Runs MinimapFrame.cpp code that calls CSimpleFrame::CSimpleFrame, CSimpleFrame::EnableEvent and 5 more; not read here	inferred	none	ui/minimapblips#blip-sizes	ui::glue_4edbc0_unit_scale_spread
 0x4ee000	45			ui	orchestration		Runs its object file code not read here	inferred	none		
@@ -10703,7 +10703,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4ef770	5			ui	orchestration		Runs its object file code not read here	inferred	none		
 0x4ef780	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4ef7a0	33			ui	primitive		Runs its object file code not read here	inferred	none		
-0x4ef7d0	132			ui	primitive		Runs its object file code not read here	inferred	none		
+0x4ef7d0	132	BlendColor		ui	primitive	void __fastcall (uint32_t *colour, uint32_t t, const uint32_t *source)	Moves each colour channel toward a source colour by t over 256 and keeps the alpha	verified	one	minimap/draw#draw-tint	
 0x4ef860	348			ui	primitive		Runs its object file code that calls __ehvec_dtor, SMemReAlloc, SMemAlloc and 1 more; not read here	inferred	none		
 0x4ef9c0	57			ui	primitive		Runs its object file code not read here	inferred	none		
 0x4efa00	154			ui	primitive		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
@@ -28779,118 +28779,118 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6d8420	46	ShutdownShadows		lighting	host	void __cdecl (void)	Releases the blob and ramp textures	inferred	none	lighting/shadows#shadow-textures	
 0x6d8450	212	OnShadowLodChanged		lighting	host		Stores shadowLOD 0 or 1 and at 1 refills the ramp textures	verified	one	lighting/shadows#shadow-settings	
 0x6d8530	146	OnShadowBiasChanged		lighting	orchestration		Stores shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings	
-0x6d85d0	10			minimap			Runs its object file code that calls 0x6d85e0; not read here	inferred	none		
-0x6d85e0	22			minimap			Runs its object file code not read here	inferred	none		
-0x6d8600	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8610	14			minimap			Runs its object file code not read here	inferred	none		
-0x6d8620	5			minimap			Runs its object file code not read here	inferred	none		
-0x6d8630	19			minimap			Runs its object file code not read here	inferred	none		
-0x6d8650	5			minimap			Runs its object file code not read here	inferred	none		
-0x6d8660	19			minimap			Runs its object file code not read here	inferred	none		
-0x6d8680	5			minimap			Runs its object file code not read here	inferred	none		
-0x6d8690	25			minimap			Runs its object file code not read here	inferred	none		
-0x6d86b0	5			minimap			Runs its object file code not read here	inferred	none		
-0x6d86c0	25			minimap			Runs its object file code not read here	inferred	none		
-0x6d86e0	10			minimap			Runs its object file code that calls 0x6d86f0; not read here	inferred	none		
-0x6d86f0	31			minimap			Runs its object file code not read here	inferred	none		
-0x6d8710	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8720	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d8730	10			minimap			Runs its object file code that calls 0x6d8740; not read here	inferred	none		
-0x6d8740	13			minimap			Runs its object file code not read here	inferred	none		
-0x6d8750	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8760	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d8770	10			minimap			Runs its object file code that calls 0x6d8780; not read here	inferred	none		
-0x6d8780	13			minimap			Runs its object file code not read here	inferred	none		
-0x6d8790	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d87a0	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d87b0	10			minimap			Runs its object file code that calls 0x6d87c0; not read here	inferred	none		
-0x6d87c0	161			minimap			Runs its object file code not read here	inferred	none		
-0x6d8870	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8880	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d8890	10			minimap			Runs its object file code that calls 0x6d88a0; not read here	inferred	none		
-0x6d88a0	161			minimap			Runs its object file code not read here	inferred	none		
-0x6d8950	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8960	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d8970	10			minimap			Runs its object file code that calls 0x6d8980; not read here	inferred	none		
-0x6d8980	61			minimap			Runs its object file code not read here	inferred	none		
-0x6d89c0	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d89d0	1			minimap			Runs its object file code not read here	inferred	none		
-0x6d89e0	10			minimap			Runs its object file code that calls 0x6d89f0; not read here	inferred	none		
-0x6d89f0	32			minimap			Runs its object file code that calls 0x573ac0; not read here	inferred	none		
-0x6d8a10	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8a20	32			minimap			Runs its object file code that calls 0x573ad0; not read here	inferred	none		
-0x6d8a40	10			minimap			Runs its object file code that calls 0x6d8a50; not read here	inferred	none		
-0x6d8a50	18			minimap			Runs its object file code not read here	inferred	none		
-0x6d8a70	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8a80	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8aa0	10			minimap			Runs its object file code that calls 0x6d8ab0; not read here	inferred	none		
-0x6d8ab0	18			minimap			Runs its object file code not read here	inferred	none		
-0x6d8ad0	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ae0	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8b00	10			minimap			Runs its object file code that calls 0x6d8b10; not read here	inferred	none		
-0x6d8b10	18			minimap			Runs its object file code not read here	inferred	none		
-0x6d8b30	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8b40	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8b60	10			minimap			Runs its object file code that calls 0x6d8b70; not read here	inferred	none		
-0x6d8b70	23			minimap			Runs its object file code not read here	inferred	none		
-0x6d8b90	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ba0	25			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6d8bc0	10			minimap			Runs its object file code that calls 0x6d8bd0; not read here	inferred	none		
-0x6d8bd0	190			minimap			Runs its object file code not read here	inferred	none		
-0x6d8c90	12			minimap			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6d8ca0	359			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db400 and 1 more; not read here	inferred	none		
+0x6d85d0	10	InitMmUseCount		minimap	orchestration	void __cdecl (void)	Runs 0x6d85e0 and registers the destructor 0x6d8610	verified	one	minimap/overview#static-objects	
+0x6d85e0	22	InitMmUseCountBody		minimap	orchestration	void __cdecl (void)	Counts the file as one more user of a shared object and calls 0x5b71c0 on the first	verified	one	minimap/overview#static-objects	
+0x6d8600	12	InitMmUseCountAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8610 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8610	14	InitMmUseCountDtor		minimap	orchestration	void __cdecl (void)	Drops the user count and calls 0x5b71d0 when it reaches zero	verified	one	minimap/overview#static-objects	
+0x6d8620	5	InitMmHalfTileXThunk		minimap	orchestration	void __cdecl (void)	Jumps to 0x6d8630, a static initializer	verified	one	minimap/overview#static-objects	
+0x6d8630	19	InitMmHalfTileX		minimap	primitive	void __cdecl (void)	Stores 533.3333 times 0.5 as the half tile width	verified	one	minimap/overview#static-objects	
+0x6d8650	5	InitMmHalfTileYThunk		minimap	orchestration	void __cdecl (void)	Jumps to 0x6d8660, a static initializer	verified	one	minimap/overview#static-objects	
+0x6d8660	19	InitMmHalfTileY		minimap	primitive	void __cdecl (void)	Stores 533.3333 times 0.5 as the half tile height	verified	one	minimap/overview#static-objects	
+0x6d8680	5	InitMmOriginXThunk		minimap	orchestration	void __cdecl (void)	Jumps to 0x6d8690, a static initializer	verified	one	minimap/overview#static-objects	
+0x6d8690	25	InitMmOriginX		minimap	primitive	void __cdecl (void)	Stores 533.3333 times 64 times 0.5, the map origin x	verified	one	minimap/overview#static-objects	
+0x6d86b0	5	InitMmOriginYThunk		minimap	orchestration	void __cdecl (void)	Jumps to 0x6d86c0, a static initializer	verified	one	minimap/overview#static-objects	
+0x6d86c0	25	InitMmOriginY		minimap	primitive	void __cdecl (void)	Stores 533.3333 times 64 times 0.5, the map origin y	verified	one	minimap/overview#static-objects	
+0x6d86e0	10	InitMmPosition		minimap	orchestration	void __cdecl (void)	Runs 0x6d86f0 and registers the destructor 0x6d8720	verified	one	minimap/overview#static-objects	
+0x6d86f0	31	InitMmPositionBody		minimap	orchestration	void __cdecl (void)	Zeroes the cached player position	verified	one	minimap/overview#static-objects	
+0x6d8710	12	InitMmPositionAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8720 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8720	1	InitMmPositionDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d8730	10	InitMmTileFirst		minimap	orchestration	void __cdecl (void)	Runs 0x6d8740 and registers the destructor 0x6d8760	verified	one	minimap/overview#static-objects	
+0x6d8740	13	InitMmTileFirstBody		minimap	orchestration	void __cdecl (void)	Zeroes the cached indices of the first tile of the window	verified	one	minimap/overview#static-objects	
+0x6d8750	12	InitMmTileFirstAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8760 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8760	1	InitMmTileFirstDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d8770	10	InitMmTileLast		minimap	orchestration	void __cdecl (void)	Runs 0x6d8780 and registers the destructor 0x6d87a0	verified	one	minimap/overview#static-objects	
+0x6d8780	13	InitMmTileLastBody		minimap	orchestration	void __cdecl (void)	Zeroes the cached indices of the last tile of the window	verified	one	minimap/overview#static-objects	
+0x6d8790	12	InitMmTileLastAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d87a0 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d87a0	1	InitMmTileLastDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d87b0	10	InitMmOrientation		minimap	orchestration	void __cdecl (void)	Runs 0x6d87c0 and registers the destructor 0x6d8880	verified	one	minimap/overview#static-objects	
+0x6d87c0	161	InitMmOrientationBody		minimap	orchestration	void __cdecl (void)	Stores the identity in the orientation matrix	verified	one	minimap/overview#static-objects	
+0x6d8870	12	InitMmOrientationAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8880 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8880	1	InitMmOrientationDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d8890	10	InitMmSecondMatrix		minimap	orchestration	void __cdecl (void)	Runs 0x6d88a0 and registers the destructor 0x6d8960	verified	one	minimap/overview#static-objects	
+0x6d88a0	161	InitMmSecondMatrixBody		minimap	orchestration	void __cdecl (void)	Stores the identity in the second matrix	verified	one	minimap/overview#static-objects	
+0x6d8950	12	InitMmSecondMatrixAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8960 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8960	1	InitMmSecondMatrixDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d8970	10	InitMmWindowBounds		minimap	orchestration	void __cdecl (void)	Runs 0x6d8980 and registers the destructor 0x6d89d0	verified	one	minimap/overview#static-objects	
+0x6d8980	61	InitMmWindowBoundsBody		minimap	orchestration	void __cdecl (void)	Zeroes the six bounds of the interior window	verified	one	minimap/overview#static-objects	
+0x6d89c0	12	InitMmWindowBoundsAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d89d0 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d89d0	1	InitMmWindowBoundsDtor		minimap	orchestration	void __cdecl (void)	Returns at once	verified	one	minimap/overview#static-objects	
+0x6d89e0	10	InitMmStaticBlips		minimap	orchestration	void __cdecl (void)	Runs 0x6d89f0 and registers the destructor 0x6d8a20	verified	one	minimap/overview#static-objects	
+0x6d89f0	32	InitMmStaticBlipsBody		minimap	orchestration	void __cdecl (void)	Constructs the three static blip records with 0x573ac0	verified	one	minimap/overview#static-objects	
+0x6d8a10	12	InitMmStaticBlipsAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8a20 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8a20	32	InitMmStaticBlipsDtor		minimap	orchestration	void __cdecl (void)	Destroys the three static blip records with 0x573ad0	verified	one	minimap/overview#static-objects	
+0x6d8a40	10	InitMmCandidateArray		minimap	orchestration	void __cdecl (void)	Runs 0x6d8a50 and registers the destructor 0x6d8a80	verified	one	minimap/overview#static-objects	
+0x6d8a50	18	InitMmCandidateArrayBody		minimap	orchestration	void __cdecl (void)	Empties the candidate pointer array	verified	one	minimap/overview#static-objects	
+0x6d8a70	12	InitMmCandidateArrayAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8a80 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8a80	25	InitMmCandidateArrayDtor		minimap	orchestration	void __cdecl (void)	Frees the candidate array buffer	verified	one	minimap/overview#static-objects	
+0x6d8aa0	10	InitMmFlagArrayA		minimap	orchestration	void __cdecl (void)	Runs 0x6d8ab0 and registers the destructor 0x6d8ae0	verified	one	minimap/overview#static-objects	
+0x6d8ab0	18	InitMmFlagArrayABody		minimap	orchestration	void __cdecl (void)	Empties the first candidate flag array	verified	one	minimap/overview#static-objects	
+0x6d8ad0	12	InitMmFlagArrayAAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8ae0 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8ae0	25	InitMmFlagArrayADtor		minimap	orchestration	void __cdecl (void)	Frees the flag array buffer	verified	one	minimap/overview#static-objects	
+0x6d8b00	10	InitMmFlagArrayB		minimap	orchestration	void __cdecl (void)	Runs 0x6d8b10 and registers the destructor 0x6d8b40	verified	one	minimap/overview#static-objects	
+0x6d8b10	18	InitMmFlagArrayBBody		minimap	orchestration	void __cdecl (void)	Empties the second candidate flag array	verified	one	minimap/overview#static-objects	
+0x6d8b30	12	InitMmFlagArrayBAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8b40 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8b40	25	InitMmFlagArrayBDtor		minimap	orchestration	void __cdecl (void)	Frees the flag array buffer	verified	one	minimap/overview#static-objects	
+0x6d8b60	10	InitMmInRangeArray		minimap	orchestration	void __cdecl (void)	Runs 0x6d8b70 and registers the destructor 0x6d8ba0	verified	one	minimap/overview#static-objects	
+0x6d8b70	23	InitMmInRangeArrayBody		minimap	orchestration	void __cdecl (void)	Empties the in-range blip array	verified	one	minimap/overview#static-objects	
+0x6d8b90	12	InitMmInRangeArrayAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8ba0 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8ba0	25	InitMmInRangeArrayDtor		minimap	orchestration	void __cdecl (void)	Frees the in-range array buffer	verified	one	minimap/overview#static-objects	
+0x6d8bc0	10	InitMmCatalog		minimap	orchestration	void __cdecl (void)	Runs 0x6d8bd0 and registers the destructor 0x6d8ca0	verified	one	minimap/overview#static-objects	
+0x6d8bd0	190	InitMmCatalogBody		minimap	orchestration	void __cdecl (void)	Builds the empty tile catalog table: vtable 0x811720, list offset 0xc, mask -1	verified	one	minimap/overview#static-objects	
+0x6d8c90	12	InitMmCatalogAtExit		minimap	orchestration	void __cdecl (void)	Registers the destructor 0x6d8ca0 with _atexit	verified	one	minimap/overview#static-objects	
+0x6d8ca0	359	InitMmCatalogDtor		minimap	orchestration	void __cdecl (void)	Unlinks every record from the list and the buckets and frees the bucket vector	verified	one	minimap/overview#static-objects	
 0x6d8e10	560	BuildBlipCandidates		minimap	orchestration	void __fastcall (uint32_t continent)	Collects the AreaPOI rows of a continent and the three static records into the candidate array	verified	one	ui/minimapblips#blip-candidates	
-0x6d9040	629			minimap			Runs its object file code that calls SStrPrintf, 0x6485f0, SStrTokenize and 13 more; not read here	inferred	none		
-0x6d92c0	215			minimap			Runs its object file code that calls 0x6db5d0; not read here	inferred	none		
-0x6d93a0	1770	UpdateMinimap		minimap	primitive		Runs the minimap's update, which expires and clears the gossip marker	inferred	none	ui/minimapblips#clearing-the-gossip-marker	minimap::minimap_update_snap_difftest
+0x6d9040	629	LoadMd5Catalog		minimap	orchestration	void __cdecl (void)	Reads md5translate.trs and fills the catalog with name and file pairs	verified	one	minimap/tiles#tile-catalog	
+0x6d92c0	215	ResetMinimap		minimap	orchestration	void __cdecl (void)	Clears the cached position, indices and group words and empties the catalog	verified	one	minimap/update#reset	
+0x6d93a0	1770	UpdateMinimap		minimap	primitive	uint8_t __thiscall (void *node, uint32_t map, const float *pos, float *offset, float *scale, void *records, void *state, uint32_t flag)	Runs the per-frame update: marker expiry, indoor state, interior window or outdoor tiles, and the blip pass	verified	one	minimap/update#frame-update	minimap::minimap_update_snap_difftest
 0x6d9a90	884	PlaceBlips		minimap	primitive	void __cdecl ()	Splits the candidates into in-range icons and at most 3 ranked direction arrows with bearings	verified	one	ui/minimapblips#placing-the-blips	
-0x6d9e10	31			minimap			Runs its object file code not read here	inferred	none		
-0x6d9e30	152			minimap			Runs its object file code not read here	inferred	none		minimap::blip_lod_distance_difftest
-0x6d9ed0	633			minimap			Runs its object file code that calls 0x6da150, SStrPrintf, SStrHashHT and 8 more; not read here	inferred	none		
-0x6da150	48			minimap			Runs its object file code not read here	inferred	none		
-0x6da180	430			minimap			Runs its object file code that calls CWorld::GetEntityGroupBox, RotateMatrix; not read here	inferred	none		minimap::orientation_renormalize_difftest
-0x6da330	69			minimap			Runs its object file code that calls CWorld::GetEntityGroupName, SStrLen, SStrCopy and 1 more; not read here	inferred	none		
-0x6da380	445			minimap			Runs its object file code that calls 0x6d9a90, 0x6da540, 0x6da5e0 and 1 more; not read here	inferred	none		minimap::world_to_screen_scale_difftest
-0x6da540	97			minimap			Runs its object file code that calls __ftol; not read here	inferred	none		minimap::world_to_tile_difftest
-0x6da5b0	44			minimap			Runs its object file code not read here	inferred	none		minimap::tile_to_world_difftest
-0x6da5e0	453			minimap			Runs its object file code that calls HandleClose, 0x6da7b0, SysMsgPrintf and 3 more; not read here	inferred	none		
-0x6da7b0	294			minimap			Runs its object file code that calls SStrPrintf, SStrHashHT, SStrCmpI and 1 more; not read here	inferred	none		
+0x6d9e10	31	ClearTileKeys		minimap	orchestration	void __fastcall (void *records)	Sets the key word of all 512 tile records to -1	verified	one	minimap/tiles#interior-tiles	
+0x6d9e30	152	TileLodDistance		minimap	primitive	void *__fastcall (void *records, uint32_t group, const float *desc, float bias)	Finds the record of an interior tile and sets its distance; returns the record or 0	verified	one	minimap/tiles#interior-tiles	minimap::blip_lod_distance_difftest
+0x6d9ed0	633	LoadInteriorTile		minimap	primitive	void __fastcall (void *records, uint32_t group, const float *desc, float bias, const char *name)	Loads an interior tile texture into a free record and sets its key, bounds and distance	verified	one	minimap/tiles#interior-tiles	
+0x6da150	48	ClaimTileSlot		minimap	orchestration	void *__fastcall (void *records)	Returns the first tile record without bit 2 after setting it, or 0	verified	one	minimap/tiles#interior-tiles	
+0x6da180	430	UpdateOrientation		minimap	primitive	void __fastcall (void *node)	Refreshes the orientation matrices, renormalizes the first and turns it by 90 degrees about Z	verified	one	minimap/coordinates#orientation-basis	minimap::orientation_renormalize_difftest
+0x6da330	69	BuildInteriorName		minimap	orchestration	void __fastcall (void *node)	Writes the current WMO path without World\ and the extension to the world name buffer	verified	one	minimap/tiles#tile-names	
+0x6da380	445	WorldToScreenScale		minimap	primitive	uint32_t __fastcall (uint32_t map, const float *pos, float *offset, float *scale, void *records)	Prepares the outdoor tile block and outputs the offset and scale that place it	verified	one	minimap/coordinates#screen-scale	minimap::world_to_screen_scale_difftest
+0x6da540	97	WorldToTile		minimap	primitive	int32_t *__fastcall (int32_t *out, const float *world)	Writes the tile row and column of a world position	verified	one	minimap/coordinates#world-and-tile-maps	minimap::world_to_tile_difftest
+0x6da5b0	44	TileToWorld		minimap	primitive	float *__fastcall (float *out, const int32_t *tile)	Writes the world position of a tile corner	verified	one	minimap/coordinates#world-and-tile-maps	minimap::tile_to_world_difftest
+0x6da5e0	453	LoadOutdoorTiles		minimap	orchestration	void __fastcall (const int32_t *base, uint32_t changed, void *records)	Reuses or loads the four tile textures of the outdoor block	verified	one	minimap/tiles#outdoor-tile-window	
+0x6da7b0	294	BuildTilePath		minimap	orchestration	void __fastcall (const int32_t *tile, char *out, uint32_t size)	Builds the file path of an outdoor tile from the catalog, or leaves it empty	verified	one	minimap/tiles#tile-names	
 0x6da8e0	158	SetZoomIndex		minimap	primitive	void __fastcall (uint32_t index)	Stores a zoom index of at most 5 in the active cell and its option	verified	one	ui/minimap#the-zoom-radius	
 0x6da980	20	GetZoomIndex		minimap	orchestration	uint32_t __cdecl ()	Returns the active zoom index, indoor or outdoor	verified	one	ui/minimap#the-zoom-radius	
 0x6da9a0	6	GetZoomLevelCount		minimap	orchestration	uint32_t __cdecl ()	Returns 6, the number of zoom levels	verified	one	ui/minimap#the-zoom-radius	
 0x6da9b0	73	GetZoomRadius		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards for the active index and indoor state	verified	one	ui/minimap#the-zoom-radius	minimap::zoom_to_scale_difftest
-0x6daa00	23			minimap			Runs its object file code not read here	inferred	none		
+0x6daa00	23	TakeIconList		minimap	orchestration	void *__fastcall (uint32_t *changed)	Returns the in-range blip list and hands out and clears its change flag	verified	one	ui/minimapblips#placing-the-blips	
 0x6daa20	327	BuildArrowList		minimap	orchestration	uint32_t __fastcall (void *list)	Rebuilds the arrow records when dirty, else only refreshes their bearings, and reports a rebuild	verified	one	ui/minimapblips#the-arrow-list	
 0x6dab70	73	GetZoomRadiusDraw		minimap	primitive	float __cdecl ()	Returns the zoom radius in yards, the body the draw uses	verified	one	ui/minimap#the-zoom-radius	minimap::zoom_to_scale_difftest
-0x6dabc0	78			minimap			Runs its object file code not read here	inferred	none		
+0x6dabc0	78	PlaceBlipsForWorldState		minimap	orchestration	void __fastcall (uint32_t id)	Runs the blip pass when a landmark with the world state id has a position	verified	one	ui/minimapblips#blip-candidates	
 0x6dac10	155	SetStaticBlip		minimap	orchestration	void __fastcall (uint32_t slot, uint32_t flags, float x, float y, uint32_t icon, int32_t rank, const char *name)	Fills a static blip record, starts the gossip marker's lifetime and places the blips	verified	one	ui/minimapblips#setting-a-static-blip	
 0x6dacb0	28	SetQuestBlip		minimap	orchestration	void __fastcall (int32_t rank, const char *name, float x, float y)	Sets static blip 0, the selected quest's marker, with icon 5 and no flags	verified	one	ui/minimapblips#setting-a-static-blip	
 0x6dacd0	47	SetCorpseBlip		minimap	orchestration	void __stdcall (float x, float y)	Sets static blip 2, the corpse marker, with icon 7, flag 2 and rank -1	verified	one	ui/minimapblips#setting-a-static-blip	
-0x6dad00	6			minimap			Runs its object file code not read here	inferred	none		
+0x6dad00	6	GetGossipBlip		minimap	orchestration	void *__cdecl (void)	Returns the address of the static gossip blip record	verified	one	ui/minimapblips#setting-a-static-blip	
 0x6dad10	699	PlacePartyBlips		minimap	primitive	void __fastcall (void *records)	Fills the five party and pet records with an arrow or in-range dot flag and a bearing	verified	one	ui/minimapblips#party-and-pet-arrows	
-0x6dafd0	106			minimap			Runs its object file code that calls SMemFree, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
-0x6db040	182			minimap			Runs its object file code that calls SMemAlloc; not read here	inferred	none		
-0x6db100	189			minimap			Runs its object file code that calls 0x6db5d0, 0x6db400, SMemFree; not read here	inferred	none		
-0x6db1c0	190			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, 0x6db500 and 1 more; not read here	inferred	none		
-0x6db280	133			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db310	226			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db400	136			minimap			Runs its object file code not read here	inferred	none		
-0x6db490	108			minimap			Runs its object file code not read here	inferred	none		
-0x6db500	135			minimap			Runs its object file code that calls 0x6db610, 0x6db5d0, SMemFree; not read here	inferred	none		
-0x6db590	56			minimap			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6db5d0	60			minimap			Runs its object file code not read here	inferred	none		
-0x6db610	25			minimap			Runs its object file code not read here	inferred	none		
-0x6db630	181			minimap			Runs its object file code not read here	inferred	none		
-0x6db6f0	57			minimap			Runs its object file code not read here	inferred	none		
-0x6db730	31			minimap			Runs its object file code not read here	inferred	none		
-0x6db750	146			minimap			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x6db7f0	41			minimap			Runs its object file code not read here	inferred	none		
-0x6db820	483			minimap			Runs its object file code that calls 0x6dba10, 0x6dba90, 0x6dba40 and 4 more; not read here	inferred	none		
-0x6dba10	33			minimap			Runs its object file code not read here	inferred	none		
-0x6dba40	77			minimap			Runs its object file code not read here	inferred	none		
-0x6dba90	12			minimap			Runs its object file code not read here	inferred	none		
-0x6dbaa0	316			minimap			Runs its object file code that calls 0x6dbbe0, 0x6db5d0, 0x6db7f0; not read here	inferred	none		
-0x6dbbe0	264			minimap			Runs its object file code that calls 0x6dba40, 0x6db5d0, SMemReAlloc and 3 more; not read here	inferred	none		
+0x6dafd0	106	Md5NameFreeNode		minimap	orchestration	void __thiscall (void *table, void *node)	Frees a catalog record after unlinking its links	verified	one	minimap/overview#containers	
+0x6db040	182	Md5NameAllocNode		minimap	orchestration	void *__thiscall (void *table, void *bucket, uint32_t extra, uint32_t flags)	Allocates a zeroed catalog record and links it first in the bucket	verified	one	minimap/overview#containers	
+0x6db100	189	Md5NameTableClear		minimap	orchestration	void __thiscall (void *table)	Unlinks every record, sets the mask to -1 and frees the bucket vector	verified	one	minimap/overview#containers	
+0x6db1c0	190	Md5NameTableDeletingDtor		minimap	orchestration	void *__thiscall (void *table, uint32_t flags)	Unlinks the records and buckets, frees the vector and, with bit 0 of the argument, the table	verified	one	minimap/overview#containers	
+0x6db280	133	PoiArraySetCapacity		minimap	orchestration	void __thiscall (void *array, uint32_t capacity)	Reallocates a pointer array to a capacity, copying the pointers that fit	verified	one	minimap/overview#array-and-list-helpers	
+0x6db310	226	PoiArrayGrow		minimap	primitive	void __thiscall (void *array, uint32_t extra, uint32_t round)	Grows a pointer array by a count, rounded to a multiple of its granularity of at most 0x40	verified	one	minimap/overview#array-and-list-helpers	
+0x6db400	136	Md5BucketDrain		minimap	orchestration	void __fastcall (void *bucket)	Unlinks every object of a bucket and then its terminator	verified	one	minimap/overview#containers	
+0x6db490	108	Md5ListSetLinkOffset		minimap	orchestration	void __thiscall (void *list, int32_t offset)	Unlinks every object of a list and stores a new link offset	verified	one	minimap/overview#array-and-list-helpers	
+0x6db500	135	Md5BucketsFree		minimap	orchestration	void __thiscall (void *vector)	Empties every bucket and frees the bucket vector	verified	one	minimap/overview#containers	
+0x6db590	56	PoiDirArrayDtor		minimap	orchestration	void *__thiscall (void *array, uint32_t flags)	Frees an arrow record array's buffer and, with bit 0 of the argument, the array	verified	one	minimap/overview#array-and-list-helpers	
+0x6db5d0	60	Md5LinkUnlink		minimap	orchestration	void __fastcall (void *link)	Unlinks a link from its neighbours and zeroes both of its words	verified	one	minimap/overview#containers	
+0x6db610	25	Md5LinkGet		minimap	orchestration	void *__thiscall (void *list, void *object)	Returns an object's link in a list, the terminator for 0	verified	one	minimap/overview#containers	
+0x6db630	181	Md5LinkNode		minimap	orchestration	void __thiscall (void *list, void *node, uint32_t mode, void *dest)	Unlinks a node and links it after a destination for mode 1, else before it	verified	one	minimap/overview#containers	
+0x6db6f0	57	Md5Granularity		minimap	primitive	uint32_t __thiscall (void *vector, uint32_t size)	Returns the largest power of two not above a size, or stores and returns 8 for 8 and up	verified	one	minimap/overview#array-and-list-helpers	
+0x6db730	31	RoundUpToUnitB		minimap	primitive	uint32_t __stdcall (uint32_t value, uint32_t unit)	Rounds a value up to a multiple of a unit	verified	one	minimap/overview#array-and-list-helpers	
+0x6db750	146	PoiDirArraySetCapacity		minimap	orchestration	void __thiscall (void *array, uint32_t capacity)	Reallocates the arrow record array to a capacity of 0x4c-byte records, copying those that fit	verified	one	minimap/overview#array-and-list-helpers	
+0x6db7f0	41	Md5LinkBackSlot		minimap	orchestration	void *__thiscall (void *link, int32_t offset)	Returns the slot that holds the next link's back pointer, resolving a negative offset from the link	verified	one	minimap/overview#containers	
+0x6db820	483	Md5TableRehash		minimap	primitive	uint32_t __thiscall (void *table, uint32_t bucket)	Counts the chain of a bucket and doubles the bucket count when the counter passes 13	verified	one	minimap/overview#containers	
+0x6dba10	33	Md5ListInit		minimap	orchestration	void __fastcall (void *list)	Makes a list empty	verified	one	minimap/overview#array-and-list-helpers	
+0x6dba40	77	Md5BucketChainDrain		minimap	orchestration	void __fastcall (void *bucket)	Unlinks every object of a bucket chain	verified	one	minimap/overview#array-and-list-helpers	
+0x6dba90	12	Md5ListReset		minimap	orchestration	void __fastcall (void *list)	Points a list terminator at itself	verified	one	minimap/overview#array-and-list-helpers	
+0x6dbaa0	316	Md5BucketsResize		minimap	primitive	void __thiscall (void *vector, uint32_t count)	Sets the bucket count, rounding the capacity up and making new buckets empty	verified	one	minimap/overview#array-and-list-helpers	
+0x6dbbe0	264	Md5BucketsRealloc		minimap	primitive	void __thiscall (void *vector, uint32_t capacity)	Reallocates the bucket buffer to a capacity, copying the buckets that fit	verified	one	minimap/overview#array-and-list-helpers	
 0x6dbcf0	616			unassigned			Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutFloat, CDataStore::PutCString; not read here	inferred	none		
 0x6dbf60	536	QuestCacheRead		unassigned		void __thiscall (CDataStore *stream)	Reads a quest record: dwords, floats, four texts, objective groups and four objective texts	verified	one	dbcache#guild-and-quest	dbcache::dbcache_quest
 0x6dc180	98			unassigned			Runs its object file code that calls CDataStore::PutGuid, CDataStore::PutCString, 0x4181f0; not read here	inferred	none		

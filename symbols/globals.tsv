@@ -995,6 +995,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8116cc	const float	s_float442d9c72		unassigned	Holds the float 694.44446 (0x442d9c72)	inferred	none	
 0x8116d0	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x8116e8	const float			unassigned	Holds the first float of a table its object file's code reads; not read here	inferred	none	
+0x811700	int32_t[8]	s_blockOffsets		minimap	Holds the row and column offsets of the four tiles of the outdoor block: (0,0), (1,0), (1,1), (0,1)	verified	one	minimap/tiles#outdoor-tile-window
+0x811720	void *[4]	s_md5TableVtable		minimap	Holds the four slots of the catalog table: free node, allocate node, deleting destructor, clear	verified	one	minimap/overview#containers
 0x811730	const float	s_float3f4ccccd		unassigned	Holds the float 0.8 (0x3f4ccccd)	inferred	none	
 0x811818	void *[4]	s_raceClassInfoTableVtable		spell	Holds the race-class table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
 0x811828	void *[4]	s_skillCostsInfoTableVtable		spell	Holds the skill-cost table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
@@ -1514,6 +1516,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84c150	int32_t	s_partyLeaderIndex		ui	Holds the party slot of the group leader, -1 for the player or a leader outside the party	verified	one	ui/party#the-group-leader
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
+0x84c51c	uint16_t[4]	s_outdoorStripIndices		ui	Holds the strip index order 0, 1, 2, 3 of the outdoor tile draw	verified	one	minimap/draw#outdoor-tile-draw
+0x84c524	uint16_t[4]	s_tileStripIndices		ui	Holds the strip index order 0, 1, 3, 2 of the interior tile draw	verified	one	minimap/draw#interior-tile-quad
+0x84c52c	uint16_t[4]	s_blitStripIndices		ui	Holds the strip index order 0, 1, 3, 2 of the interior blit	verified	one	minimap/draw#blit-quad-and-offset
+0x84c534	float	s_oneThird		ui	Holds one third, the scale of the interior target coordinates	verified	one	minimap/draw#blit-quad-and-offset
 0x84c538	uint32_t[20]	s_minimapMethods		ui	Holds the 10 pairs of a name and a function of the Minimap methods	verified	one	ui/minimap#lua-methods
 0x84c69c	char[11]	s_textGreyColorStart		ui	Holds the string |cffb0b0b0 that opens a grey tooltip run	verified	one	ui/minimapblips#dots-cadence-and-tooltip
 0x84c6a8	char[31]	s_textInterfaceMinimapObjectIcons		ui	Holds the string Interface\Minimap\ObjectIcons	verified	one	ui/minimap#minimap-textures
@@ -1951,9 +1957,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86f538	const char[18]	s_moonPath		lighting	Holds the path Textures\moon.blp	verified	one	lighting/celestial#body-objects
 0x86f54c	const char[23]	s_sunCenterPath		lighting	Holds the path Textures\sunCenter.blp	verified	one	lighting/celestial#body-objects
 0x86f5b4	uint32_t	s_shadowLod		lighting	Holds shadowLOD, 1 until the setting stores 0 or 1; written by 0x6d8450	verified	one	lighting/shadows#shadow-settings
-0x86f694	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0x86f698	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
-0x86f69c	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0x86f690	float	s_gridBias		minimap	Holds 0.5, the bias the interior window snap subtracts before rounding	verified	one	minimap/update#interior-window
+0x86f694	int32_t	s_minimapMap		minimap	Holds the map the minimap shows, -1 for none	verified	one	minimap/coordinates#screen-scale
+0x86f698	uint32_t	s_zoomOutdoor		minimap	Holds the outdoor zoom index, 0 to 5, copied from the minimapZoom option	verified	one	minimap/coordinates#screen-scale
+0x86f69c	uint32_t	s_zoomIndoor		minimap	Holds the indoor zoom index, 0 to 5, copied from the minimapInsideZoom option	verified	one	minimap/update#interior-window
+0x86f6a0	int32_t	s_interiorId		minimap	Holds the third word of the interior identity the minimap shows, -1 for none	verified	one	minimap/update#indoor-state
+0x86f6a4	const char *[3]	s_tileStrings		minimap	Holds the tile directory Textures\Minimap and the outdoor and interior tile name formats	verified	one	minimap/tiles#tile-names
+0x86f6b4	float	s_quarterTurn		minimap	Holds 90.0, the angle the orientation is turned about Z	verified	one	minimap/coordinates#orientation-basis
+0x86f6b8	float	s_screenDenomA		minimap	Holds 1066.667, the divisor of the outdoor offset and scale	verified	one	minimap/coordinates#screen-scale
+0x86f6bc	float	s_screenDenomB		minimap	Holds 1066.667, the divisor of the outdoor x offset	verified	one	minimap/coordinates#screen-scale
+0x86f7d4	char[58]	s_pathMinimap		minimap	Holds the source path of Minimap.cpp	verified	one	minimap/overview#object-file
 0x86f840	char[52]	s_raceClassInfoListTag		spell	Holds the allocation tag of the race-class slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth
 0x86f87c	char[53]	s_skillCostsInfoListTag		spell	Holds the allocation tag of the skill-cost slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth
 0x86f8bc	char[51]	s_skillLineRecListTag		spell	Holds the allocation tag of the ability slot arrays, the TSExplicitList type name	verified	one	spell/tables#slot-array-growth
@@ -2880,18 +2893,30 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc7810	float[2]	s_rectOriginPair		ui	Holds the first pair of floats of a table of 24-byte records that 0x4ead90 indexes; its extent was not read	verified	one	ui/minimap#two-small-helpers
 0xbc787c	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
 0xbc7880	float			ui	Holds a float that Minimap::GetPingPosition reads and writes; not read here	inferred	none	
+0xbc7938	float[12]	s_blitQuad		ui	Holds the four corners (-1,-1), (-1,1), (1,1) and (1,-1) of the interior blit quad	verified	one	minimap/draw#blit-quad-and-offset
 0xbc7968	void *	s_minimapMaskTexture		ui	Points to the mask texture handle the minimap draws through	verified	one	ui/minimap#minimap-textures
 0xbc7970	float	s_minimapDiscSize		ui	Holds the frozen disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc81e4	uint32_t[5]	s_hoverDotMasks		ui	Holds the bit masks of the dots of each cell the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbc822c	void *	s_minimapBlipTexture		ui	Points to the dot icon texture handle	verified	one	ui/minimap#minimap-textures
+0xbc8260	uint8_t	s_blitQuadInit		ui	Holds bit 0 once the blit quad has been written	verified	one	minimap/draw#blit-quad-and-offset
+0xbc8264	uint32_t	s_minimapActive		ui	Holds 1 from the interior target creation until the minimap shuts down	verified	one	minimap/draw#interior-target
 0xbc8274	float	s_discHalfSize		ui	Holds half the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc827c	void *	s_minimapIconTexture		ui	Points to the landmark icon texture handle	verified	one	ui/minimap#minimap-textures
 0xbc82a8	float			ui	Holds a float that CGMinimapFrame::CGMinimapFrame reads and writes; not read here	inferred	none	
 0xbc82b0	uint8_t[80]	s_dotCells		ui	Holds the five dot cell records of 16 bytes: capacity, count, array and growth	verified	one	ui/minimapblips#object-dots
-0xbc8300	uint8_t			ui	Holds a byte its object file's code reads; not read here	inferred	none	
+0xbc8300	uint8_t	s_minimapIndoor		ui	Holds 1 while the minimap draws the interior target and 0 while it draws the outdoor tiles	verified	one	minimap/draw#draw-families
+0xbc8304	void *	s_interiorTarget		ui	Holds the 256 by 256 texture the interior tiles are composited into	verified	one	minimap/draw#interior-target
+0xbc8308	uint8_t	s_interiorTargetDirty		ui	Holds 1 after an interior rebuild until the next frame marks the target for redraw	verified	one	minimap/draw#draw-families
+0xbc830c	float	s_interiorRadius		ui	Holds the interior view radius in yards, 10.0 at first and then the indoor zoom table entry	verified	one	minimap/draw#composite-pass
+0xbc8310	float[3]	s_compositePosition		ui	Holds the position the interior target is composited about	verified	one	minimap/draw#composite-pass
+0xbc831c	float[3]	s_minimapPlayerPosition		ui	Holds the player position the blit shifts the interior target by	verified	one	minimap/draw#blit-quad-and-offset
+0xbc8328	float[16]	s_orientationCopy		ui	Holds the copy of the orientation matrix the interior draw rotates by	verified	one	minimap/draw#composite-pass
+0xbc8368	float[16]	s_worldToModelCopy		ui	Holds the copy of the second matrix the interior draw carries positions through	verified	one	minimap/draw#composite-pass
+0xbc83a8	uint8_t[83968]	s_tileRecords		ui	Holds the 512 tile records of 0xa4 bytes, the first four of which the outdoor draw uses	verified	one	minimap/draw#draw-families
 0xbdcbac	uint32_t	s_hoverIconMask		ui	Holds the bit mask of the landmark icons the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcbb0	uint32_t	s_hoverArrowMask		ui	Holds the bit mask of the rim arrows the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
 0xbdcbb4	uint32_t	s_hoverPartyMask		ui	Holds the bit mask of the party dots the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
+0xbdcbb8	void *	s_minimapFrame		ui	Points to the minimap frame object, whose alpha byte at +0xc8 colours the tiles	verified	one	minimap/draw#composite-states
 0xbdcbec	uint32_t[2]	s_macroLastIds		ui	Holds the last macro id handed out in each scope	verified	one	ui/macros#macro-records
 0xbdcbf8	uint32_t	s_macrosDirty		ui	Holds 1 when the macros need saving	verified	one	ui/macros#macro-files
 0xbdcc00	uint32_t[2]	s_macroCounts		ui	Holds the number of macros in each scope	verified	one	ui/macros#macro-records
@@ -3820,12 +3845,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca7e2c	void *	s_mapObjectDefPool		terrain	Holds the pool of WMAPOBJDEF records	verified	one	terrain/overview#map-pools
 0xca7e30	void *	s_chunkLiquidPool		terrain	Holds the pool of WCHUNKLIQUID records	verified	one	terrain/overview#map-pools
 0xca7e34	void *	s_soundEmitterPool		terrain	Holds the pool of WSOUNDEMITTER records	verified	one	terrain/overview#map-pools
+0xca7eac	uint32_t	s_visitPass		models	Holds the visit pass counter that the portal flood stamps groups with	verified	one	minimap/interior#interior-query
 0xca7eb8	void *	s_extWaterProgram		terrain	Holds the MapObjExtWater0 pixel program	verified	one	terrain/groupdraw#group-liquid-mesh
-0xca7ebc	float			models	Holds a float that CMapObj::FootprintCells, InitMapObjEighteenOverThirtySix read and write; not read here	inferred	none	
+0xca7ebc	float	s_texelYards		models	Holds 0.5, the yards of one interior tile texel	verified	one	minimap/interior#group-tile-grid
 0xca7ecc	uint32_t	s_mapObjLightLod		terrain	Holds the mapObjLightLOD console value 0 to 2; 1 adds the specular pass of interior batches	verified	one	terrain/groupdraw#interior-group-batches
+0xca7ed0	uint8_t	s_bleedReady		models	Holds bit 0 once the tile bleed has been computed	verified	one	minimap/interior#tile-edge-bleed
 0xca7ed8	void *	s_metalProgram		terrain	Holds the MapObjMetal pixel program	verified	one	terrain/groupdraw#interior-group-batches
 0xca7edc	float[3]	s_portalCameraPoint		terrain	Holds the camera position in the space of the map object the portal flood runs in	verified	one	terrain/portals#camera-inside-a-map-object
 0xca7ee8	void *	s_transDiffuseProgram		terrain	Holds the MapObjTransDiffuse pixel program	verified	one	terrain/groupdraw#interior-group-batches
+0xca7eec	float	s_tileSpan		models	Holds 128.0, the yards covered by the widest interior tile	verified	one	minimap/interior#group-tile-grid
 0xca7ef0	float[4]	s_portalViewPlane		terrain	Holds the plane through the camera across the view axis: unit normal then offset	verified	one	terrain/portals#camera-inside-a-map-object
 0xca7f00	uint32_t	s_groupFogFlag		terrain	Holds the flag the group liquid pass sets around its fog	inferred	none	
 0xca7f10	uint8_t[256]	s_groupLiquidRamp		terrain	Holds the map object liquid's depth to alpha ramp	inferred	none	
@@ -3841,7 +3869,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xca8080	uint32_t	s_skyboxState		terrain	Holds the sky box state the map object frame publishes	inferred	none	
 0xca8088	void *	s_envMetalProgram		terrain	Holds the MapObjEnvMetal pixel program	verified	one	terrain/groupdraw#interior-group-batches
 0xca808c	uint8_t	s_metalProgramsOn		terrain	Holds 1 when pixel shaders and specular are on and the MapObjMetal program is available	verified	one	terrain/watershade#pixel-program-gates
-0xca8098	float			models	Holds a float that CMapObj::FootprintCells reads and writes; not read here	inferred	none	
+0xca8098	float	s_tileBleed		models	Holds 1.0, the yards the outer cells of a group grid grow by	verified	one	minimap/interior#tile-edge-bleed
 0xca809c	uint8_t	s_mapObjOverbrightOn		terrain	Holds the mapObjOverbright console variable, default on	verified	one	terrain/watershade#pixel-program-gates
 0xca80b8	void *	s_specularProgram		terrain	Holds the MapObjSpecular pixel program	verified	one	terrain/groupdraw#interior-group-batches
 0xca80bd	uint8_t	s_specularProgramsOn		terrain	Holds 1 when the map object pixel programs the group draw uses are available	verified	one	terrain/groupdraw#interior-group-batches
@@ -4000,6 +4028,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcea610	float	s_shadowBoxDown		lighting	Holds 5/3, the blob shadow's downward stretch	inferred	none	lighting/shadows#blob-shadow
 0xcea614	float	s_shadowInfinity		lighting	Holds +inf; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcea620	float	s_shadowBias		lighting	Holds shadowBias from 0 to 1	verified	one	lighting/shadows#shadow-settings
+0xcea628	uint32_t[10]	s_md5Table		minimap	Holds the catalog table object: vtable, list, chain counter, bucket vector and mask	verified	one	minimap/overview#containers
 0xcea650	float[3]	s_arrowBearings		minimap	Holds the bearings of the kept direction-arrow candidates	verified	one	ui/minimapblips#placing-the-blips
 0xcea65c	uint32_t[3]	s_arrowCandidateIndices		minimap	Holds the candidate indices of the kept direction arrows	verified	one	ui/minimapblips#placing-the-blips
 0xcea670	void **	s_inRangeBlips		minimap	Points to the in-range landmark records the icon loop draws	verified	one	ui/minimapblips#placing-the-blips
@@ -4009,8 +4038,20 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcea760	uint8_t[116]	s_staticBlipQuest		minimap	Holds static blip record 0, the selected quest's marker	verified	one	ui/minimapblips#blip-candidates
 0xcea7d4	uint8_t[116]	s_staticBlipGossip		minimap	Holds static blip record 1, the gossip marker	verified	one	ui/minimapblips#blip-candidates
 0xcea848	uint8_t[116]	s_staticBlipCorpse		minimap	Holds static blip record 2, the corpse marker	verified	one	ui/minimapblips#blip-candidates
-0xcea8bc	uint32_t	s_blipDirtyMask		minimap	Holds the dirty bits of the minimap update; bit 0 is set when the zoom table changes	verified	one	ui/minimap#the-zoom-radius
-0xceaa60	uint8_t			unassigned	Holds a byte its object file's code reads and writes; not read here	inferred	none	
+0xcea8bc	uint32_t	s_blipDirtyMask		minimap	Holds the dirty bits of the update: bit 0 the tile window must be rebuilt, bit 1 the interior tiles are loaded	verified	one	minimap/update#frame-update
+0xcea8c0	char[260]	s_interiorName		minimap	Holds the world name of the current interior, without World\ and the extension	verified	one	minimap/tiles#tile-names
+0xcea9c4	float[6]	s_interiorWindow		minimap	Holds the interior window bounds: min x, y, z then max x, y, z	verified	one	minimap/update#interior-window
+0xcea9e0	float[16]	s_secondMatrix		minimap	Holds the second matrix the node returns, identity at first	verified	one	minimap/update#interior-window
+0xceaa20	float[16]	s_orientation		minimap	Holds the orientation matrix of the node, turned by 90 degrees; identity at first	verified	one	minimap/coordinates#orientation-basis
+0xceaa60	uint8_t	s_interiorFlag		minimap	Holds 1 while the node is in an interior; it selects the zoom table	verified	one	minimap/update#indoor-state
+0xceaa64	uint32_t[2]	s_cachedGroupWords		minimap	Holds the first two words of the interior identity last built	verified	one	minimap/update#indoor-state
+0xceaa6c	int32_t[2]	s_tileLastIndices		minimap	Holds the row and column of the last tile of the cached outdoor block	verified	one	minimap/coordinates#screen-scale
+0xceaa74	int32_t[2]	s_tileFirstIndices		minimap	Holds the row and column of the first tile of the cached outdoor block	verified	one	minimap/coordinates#screen-scale
+0xceaa7c	float[3]	s_cachedPosition		minimap	Holds the player position the last update sampled; the largest float after a reset	verified	one	minimap/update#frame-update
+0xceaa88	float	s_originY		minimap	Holds the map origin y, 17066.666	verified	one	minimap/coordinates#tile-grid
+0xceaa8c	float	s_originX		minimap	Holds the map origin x, 17066.666	verified	one	minimap/coordinates#tile-grid
+0xceaa90	float	s_halfTileY		minimap	Holds half a tile height, 266.667	verified	one	minimap/coordinates#tile-grid
+0xceaa94	float	s_halfTileX		minimap	Holds half a tile width, 266.667	verified	one	minimap/coordinates#tile-grid
 0xceaaa4	uint32_t	s_gossipBlipExpiry		minimap	Holds the Unix time at which the gossip marker expires, or 0	verified	one	ui/minimapblips#setting-a-static-blip
 0xceaaa8	uint32_t	s_blipCandidateCount		minimap	Holds the number of candidate records	verified	one	ui/minimapblips#blip-candidates
 0xceaaac	uint32_t	s_arrowCount		minimap	Holds the number of kept direction arrows, at most 3	verified	one	ui/minimapblips#placing-the-blips

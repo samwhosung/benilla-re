@@ -34,7 +34,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
   `CDataAllocator.cpp` and `MsgBuffer.cpp`
 - `client`: `Client.cpp`, the game's start-up and shutdown, and small client files: `Status.cpp`,
   async loads, the violence level, the guild emblem, HTTP fetches
-- `minimap`: `Minimap.cpp` in `Game\GameClient`
 - `objectalloc`: `ObjectAlloc.cpp`, the object heaps
 - `os`: the engine's Windows layer outside `core`'s time and window files: CPU and system queries,
   file calls, `OsIME.cpp` and the IME initializer file after it, `OsGui.cpp`, `OsCall.cpp` (engine
