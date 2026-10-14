@@ -401,26 +401,32 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x802990	float	s_six		terrain	Holds 6.0	verified	one	terrain/waterfx#ripple-emission
 0x802998	float	s_oneSixteenth		terrain	Holds 0.0625	verified	one	terrain/lod#chunk-mesh-tables
 0x8029b0	const float	s_quarter		ui	Holds 0.25, a factor of the sizing point choice	inferred	none	ui/input#moving-and-sizing
+0x8029b8	const double	s_fourDouble		fastmath	Holds 4.0, the factor of the quadratic discriminant in doubles	verified	one	fastmath#double-precision-helpers
 0x8029c0	const float	s_positiveInfinity		spline	Holds +inf, the value the file's +inf initializer copies	verified	one	spline#object-file-and-initializers
 0x8029c4	const float	s_splinePi		spline	Holds the float pi, which the file's 2 pi initializer doubles	verified	one	spline#object-file-and-initializers
 0x8029c8	const float	s_splineChordStep		spline	Holds 0.05, the parameter step of the 20 chords of a segment length	verified	one	spline#arc-length-and-parameter
 0x8029cc	const float	s_bytePackBias		unassigned	Holds 512.0, the bias that leaves a byte in a float's low mantissa bits	verified	one	lighting/daynight#colour-band-value
 0x8029d0	float	s_pointZeroOne		terrain	Holds 0.01, a shared constant; the liquid queries use it as their depth margin	verified	one	terrain/queries#liquid-status
 0x8029d4	const float	s_layoutEpsilon		ui	Holds 2^-22, the change below which a point, scale or alpha setter does nothing	verified	one	ui/anchors#absolute-and-relative-points
-0x8029d8	float	s_floatInfinity		fastmath	Holds +inf as a float, read only by the initializer 0x454aa0	verified	one	fastmath#static-initializers
-0x8029dc	float	s_floatPi		fastmath	Holds pi as a float, read only by the initializer 0x455b70	verified	one	fastmath#static-initializers
-0x8029e0	double[64]	s_exp2Table		fastmath	Holds 2 to the i/64 for i from 0 to 63, indexed by the top six mantissa bits	verified	one	fastmath#software-exp2
-0x802be0	double[64]	s_log2Reciprocals		fastmath	Holds 64/(64+i) for i from 0 to 63, the multiplier of the mantissa	verified	one	fastmath#software-log2
-0x802de0	double[64]	s_log2Corrections		fastmath	Holds log2((64+i)/64) for i from 0 to 63, added to the exponent	verified	one	fastmath#software-log2
-0x802ff0	double	s_log2Floor		fastmath	Holds 1e-307, the value at or below which log2 returns -inf	verified	one	fastmath#software-log2
-0x802ff8	double[6]	s_log2Coefficients		fastmath	Holds 1/ln 2 divided by 1 to 6, the coefficients c1 to c6 of the log2 polynomial	verified	one	fastmath#software-log2
-0x803028	double[6]	s_exp2Coefficients		fastmath	Holds the six coefficients, c0 to c5, of the polynomial for 2 to the r	verified	one	fastmath#software-exp2
-0x803058	double	s_exp2Bias		fastmath	Holds 1023.0, added to the exponent before the integer split	verified	one	fastmath#software-exp2
+0x8029d8	const float	s_fastMathInfinitySource		fastmath	Holds +inf, the value the file's +inf initializer copies	verified	one	fastmath#header-initializers
+0x8029dc	const float	s_fastMathPi		fastmath	Holds the float pi, which the file's 2 pi initializer doubles	verified	one	fastmath#header-initializers
+0x8029e0	const double[64]	s_pow2Table		fastmath	Holds 2^(i/64) for i 0 to 63, the table of the power of two	verified	one	fastmath#power-of-two
+0x802be0	const double[64]	s_log2ReciprocalTable		fastmath	Holds 1/(1 + i/64) for i 0 to 63, the reciprocals of the logarithm	verified	one	fastmath#logarithm
+0x802de0	const double[64]	s_log2Table		fastmath	Holds log2(1 + i/64) for i 0 to 63, the table of the logarithm	verified	one	fastmath#logarithm
+0x802fe0	const float[4]	s_arctanCoefficients		fastmath	Holds the four coefficients of the arctangent estimate	verified	one	fastmath#arctangent-and-wave
+0x802ff0	const double	s_logMinimum		fastmath	Holds 1e-307, the least argument the logarithms compute	verified	one	fastmath#logarithm
+0x802ff8	const double[6]	s_log2SeriesCoefficients		fastmath	Holds log2(e)/j for j 1 to 6, the series of the logarithm	verified	one	fastmath#logarithm
+0x803028	const double[6]	s_pow2Coefficients		fastmath	Holds the six coefficients of the polynomial of the power of two	verified	one	fastmath#power-of-two
+0x803058	const double	s_exponentBias		fastmath	Holds 1023.0, the exponent bias the power of two adds	verified	one	fastmath#power-of-two
+0x803060	const double	s_minusHalfDouble		fastmath	Holds -0.5, the factor of the quadratic roots in doubles	verified	one	fastmath#double-precision-helpers
 0x803068	const float	s_minusHalf		unassigned	Holds −0.5	inferred	none	lighting/shadows#projected-decals
 0x80306c	float	s_four		objectlayer	Holds 4.0, the multiple of the melee reach an attack start allows	verified	one	objectlayer/playercombat#the-melee-attack
+0x803070	const double	s_onePointFiveDouble		fastmath	Holds 1.5, a coefficient of the table interpolation and the root steps	verified	one	fastmath#double-precision-helpers
+0x803078	const double	s_halfDouble		fastmath	Holds 0.5, a coefficient of the table interpolation and the root steps	verified	one	fastmath#double-precision-helpers
+0x803080	const double	s_twoPointFiveDouble		fastmath	Holds 2.5, a coefficient of the table interpolation	verified	one	fastmath#double-precision-helpers
 0x803088	const float	s_twoPointFive		unassigned	Holds 2.5	verified	one	lighting/celestial#disc-draw
 0x80308c	float	s_onePointFive		objectlayer	Holds 1.5, the bind point radius factor	verified	one	objectlayer/interaction#the-bind-point
-0x803090	double	s_twoPiFloatAsDouble		unassigned	Holds the float 2 pi widened to a double, the modulus of the angle wrap	verified	one	fastmath#angle-wrap
+0x803090	const double	s_twoPiDouble		fastmath	Holds the float 2 pi widened to a double, the divisor of the angle wrap	verified	one	fastmath#angle-wrap
 0x8030a0	const float	s_minusOne		unassigned	Holds −1.0	verified	one	lighting/sky#sky-colours
 0x8030bc	const float	s_sndIfInfinitySource		sound	Holds +inf, the value the interface file's infinity initializer copies	verified	one	sound/overview#shared-header-constants
 0x803140	const float	s_footstepNearRadius		sound	Holds 20.0, the footstep radius	verified	one	sound/objects#footstep-sounds
@@ -1944,7 +1950,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8732ac	char[34]	s_m2StallFormat		models	Holds the message logged when an instance waits for its file	verified	one	models/model#load-state
 0x873c40	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x874020	char[53]	s_pathMinigameC		minigame	Holds the source path of Minigame_C.cpp, the tag of the object's allocation	verified	one	minigame#the-object
-0x875e90	double	s_doubleInfinity		unassigned	Holds +inf as a double, the result log2 and exp2 return at their limits	verified	one	fastmath#software-exp2
+0x875e90	const double	s_doubleInfinity		fastmath	Holds +inf as a double, the overflow value of the power of two	verified	one	fastmath#power-of-two
 0x8764f8	void *[74]	s_mathRoutineSlots		d3dx	Holds the math routine slots the dispatch thunks jump through	verified	one	models/animation#dispatched-matrix-math
 0x876620	void *[74]	s_mathRoutineDefaults		d3dx	Holds the default math routines copied into the slots	verified	one	models/animation#dispatched-matrix-math
 0x87674c	uint32_t	s_mathRoutineSet		d3dx	Holds which routine set was chosen, 0xffff before the first call	verified	one	models/animation#dispatched-matrix-math
@@ -2183,9 +2189,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb05e10	float[16]	s_catmullRomBasis		spline	Holds the Catmull-Rom basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
 0xb05e50	float	s_splineTwoPi		spline	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	spline#object-file-and-initializers
 0xb05e58	float[16]	s_bezierBasis		spline	Holds the Bezier basis: four rows of cubic coefficients, set at startup	verified	one	spline#basis-tables
-0xb05e98	float	s_fastmathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#static-initializers
-0xb05e9c	float	s_fastmathInvTwoPi		fastmath	Holds 1/(2π), set at startup; nothing reads it	verified	one	fastmath#static-initializers
-0xb05ea0	float	s_fastmathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/(2π) initializer	verified	one	fastmath#static-initializers
+0xb05e98	float	s_fastMathInfinity		fastmath	Holds +inf, set at startup; nothing reads it	verified	one	fastmath#header-initializers
+0xb05e9c	float	s_fastMathInvTwoPi		fastmath	Holds 1/2 pi, set at startup; nothing reads it	verified	one	fastmath#header-initializers
+0xb05ea0	float	s_fastMathTwoPi		fastmath	Holds 2 pi, set at startup; read only by the 1/2 pi initializer	verified	one	fastmath#header-initializers
 0xb05ebc	uint32_t[4]	s_emoteSoundPointers		sound	Holds the emote sound pointer array: capacity, count, buffer and granularity	verified	one	sound/interface#emote-sounds
 0xb05ee0	float	s_sndIfInfinity		sound	Holds +inf, the interface file's infinity	verified	one	sound/overview#shared-header-constants
 0xb05ee4	uint32_t			sound	Holds a dword that SndInterfacePlayVocalUISound reads and writes; not read here	inferred	none	
