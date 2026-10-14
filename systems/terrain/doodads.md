@@ -87,7 +87,7 @@ multiplies the radius by `+0x30` and `0x6953a0` stores it at `+0x68`; the boxes 
 ## Group doodads
 
 `0x695aa0` makes the defs of a map object group. For each doodad index of the group it takes only
-those in no doodad set or in the object's current set, makes the def with `0x694e90`, links it into
+those in the first doodad set or in the object's current set, and none outside every set; it makes the def with `0x694e90`, links it into
 the group's doodad list and sets its light flags: an interior group's def gets bit 2 unless it has
 bit 4; any other group's def gets bit 4, bit 2 cleared and intensity 1.0. It then sets bit 3 of the
 group's flags.
@@ -97,7 +97,9 @@ Confidence: inferred
 Proof: none
 Test: none
 
-`ret 8`. The set test is `0x6a4fb0` against the object's `+0x124` (`0x695aec`); the def is
+`ret 8`. `0x6a4fb0` returns the 0-based index of the set whose range holds the doodad index, or 0xffffffff
+(`0x6a500d`) for an index in no set; a 0 passes (`0x695aea`), anything else must equal the object's `+0x124`
+(`0x695aec`). `0x6953e0` stores 0 there (`0x6954a7`), `0x695650` the record's word `+0x3a` (`0x695753`). The def is
 `0x694e90(index, record, path, id + 1, matrix)` (`0x695b1e`). `0x695b94` tests the object's `+0xc`
 bit 2; `0x695ba4` and `0x695bb3` set the flags; `0x695bea` ORs bit 3 into the group's flags.
 

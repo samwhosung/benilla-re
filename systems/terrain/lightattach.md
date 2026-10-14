@@ -146,12 +146,14 @@ object's space and samples that face, tracing nothing. Both attach lanes pass a 
 samples the face and point its lane found. The def's twin `0x6a8410` moves both ends of its 1.5 above and 1760 below
 trace separately.
 
-Addresses: `0x69e4c0`, `0x69e4c8`, `0x69e4da`, `0x69e4ea`, `0x69e4f0`, `0x69e4f8`, `0x69e515`, `0x69e57d`, `0x69e584`, `0x69e594`, `0x69e5b5`, `0x6a4cc0`, `0x6a4dc0`, `0x6a8410`, `0x6a8bb4`, `0x6a8c6f`, `0x6a845d`, `0x6a8481`, `0x7ff9d8`, `0x80c4e8`, `0x80308c`, `0x80fec8`
+Addresses: `0x69e4c0`, `0x69e4c8`, `0x69e4da`, `0x69e4ea`, `0x69e4f0`, `0x69e4f8`, `0x69e515`, `0x69e57d`, `0x69e584`, `0x69e594`, `0x69e5b5`, `0x6a4cc0`, `0x6a4ceb`, `0x6a4cfe`, `0x6a4dc0`, `0x6a4dd8`, `0x6a8410`, `0x6a8bb4`, `0x6a8c6f`, `0x6a845d`, `0x6a8481`, `0x7ff9d8`, `0x80c4e8`, `0x80308c`, `0x80fec8`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x69e4da jne 0x69e584` takes the second leg for a face pointer. The first leg's single transform is at
+The samplers refuse a group flagged 0x48 (`0x6a4ceb`, `0x6a4dd8`). `0x6a4cc0` traces one group with class word 0 and mask 8
+(`0x6a4cfe`), which with the visited bit rejects faces flagged 8 or 0x80, and takes the colour of the nearest
+hit; `0x6a4dc0` samples the face given. `0x69e4da jne 0x69e584` takes the second leg for a face pointer. The first leg's single transform is at
 `0x69e4f0`, and `fadd 1.0` and `fsub 12.0` (`0x69e4f8`, `0x69e515`) act on the transformed z, so they follow the
 object's own up axis. Of the dispatches of the bake slot (offset `0x10`) in the light node band only `0x6a8bb4` and
 `0x6a8c6f` exist, and both push a pointer. `0x6a8410` adds 1.5 and subtracts 1760 before its two transforms
