@@ -1299,6 +1299,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84bd10	luaL_reg[21]	s_actionFunctions		unassigned	Pairs the 21 action bar Lua names with their functions	verified	one	ui/actionbar#action-slots
 0x84bf58	char[30]	s_textInterfaceButtonsSpellReset		ui	Holds the string "Interface\Buttons\Spell-Reset"	inferred	none	
 0x84bff4	char[27]	s_textUsageGetActionTextSlot		ui	Holds the string "Usage: GetActionText(slot)"	inferred	none	
+0x84c150	int32_t	s_partyLeaderIndex		ui	Holds the party slot of the group leader, -1 for the player or a leader outside the party	verified	one	ui/party#the-group-leader
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
 0x84c538	uint32_t[20]	s_minimapMethods		ui	Holds the 10 pairs of a name and a function of the Minimap methods	verified	one	ui/minimap#lua-methods

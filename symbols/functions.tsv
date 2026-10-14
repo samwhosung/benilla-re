@@ -7060,8 +7060,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x496380	32	GetInstanceBootMs		ui	primitive		Returns the milliseconds left until the instance boot, 0 when unset or past	verified	one	ui/popups#the-instance-boot-countdown	
 0x4963a0	56	LatchSummonRequest		ui	primitive	void __stdcall LatchSummonRequest(uint64_t summoner)	Stores the summoner, zone and deadline of a summon request and signals CONFIRM_SUMMON	verified	one	ui/summon#the-request	
 0x4963e0	32	GetSummonMsLeft		ui	primitive		Returns the milliseconds left to answer the summon, 0 when unset or past	verified	one	ui/summon#the-lua-functions	
-0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party member record of a GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
-0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the record at +0x80 of the online party member whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
+0x496400	22	GPartyInfo::GetRemoteStats	idb	ui	orchestration		Returns the party or raid record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
+0x496420	22	GetPartyPetRecord		ui	orchestration	void * __thiscall (const uint64_t *guid)	Returns the party or raid pet record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
 0x496440	37			ui	orchestration		Runs GameUI.cpp code not read here	inferred	none		
 0x496470	49			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
 0x4964b0	84			ui	orchestration		Runs GameUI.cpp code that calls 0x496440; not read here	inferred	none		
@@ -10447,14 +10447,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e80a0	243	CGPartyInfo::IsMemberOrPet	idb	ui	primitive		Runs PartyFrame.cpp code that calls ClntObjMgrGetActivePlayer, ClntObjMgrObjectPtr; not read here	inferred	none		
 0x4e81a0	43			ui	orchestration		Runs PartyFrame.cpp code that calls 0x467d00; not read here	inferred	none		
 0x4e81d0	116			ui	primitive		Runs PartyFrame.cpp code that calls 0x467d00, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4e8250	124			ui	primitive		Stores the party leader and signals PARTY_LEADER_CHANGED when it changes	inferred	none	objectlayer/party#group-notices	
-0x4e82d0	437			ui	primitive		Stores a party member's GUID, online state and record and asks for its stats	inferred	none	objectlayer/party#the-group-list	
-0x4e8490	13			ui	orchestration		Runs PartyFrame.cpp code that calls FrameScript_SignalEvent; not read here	inferred	none		
-0x4e84a0	302			ui	primitive		Clears the party, releasing the members' tokens; not read here	inferred	none	objectlayer/party#group-notices	
-0x4e85d0	250			ui	primitive		Updates a player's party token and record and asks for its stats; not read here	inferred	none	objectlayer/players#destruction	
+0x4e8250	124	SetGroupLeader		ui	primitive	void __stdcall SetGroupLeader(uint64_t guid)	Stores the group leader GUID, finds its party slot and signals PARTY_LEADER_CHANGED	verified	one	ui/party#the-group-leader	
+0x4e82d0	437	AddPartyMember		ui	primitive	void __stdcall AddPartyMember(uint64_t guid) /* ecx = online, edx = old record */	Stores a party member's GUID and record, tags its object and asks for its stats and name	verified	one	ui/party#a-members-record	
+0x4e8490	13	OnPartyMemberName		ui	orchestration		Signals PARTY_MEMBERS_CHANGED when a party member's name arrives	verified	one	ui/party#a-members-record	
+0x4e84a0	302	ClearParty		ui	primitive	void __fastcall ClearParty(int32_t notify)	Releases the members' tokens, empties the party slots and zeroes the leader	verified	one	ui/party#the-group-leader	
+0x4e85d0	250	UpdatePartyMemberRecord		ui	primitive	int32_t __stdcall UpdatePartyMemberRecord(int32_t withPet) /* ecx = player, edx = mode */	Snapshots a member's object into its record and asks for its stats, or signals PARTY_MEMBER_ENABLE	verified	one	ui/party#asking-for-stats	
 0x4e86d0	28	CountPartyMembers		ui	primitive		Counts the nonzero GUIDs of the four party slots	verified	one	objectlayer/party#group-notices	
 0x4e86f0	282			ui	primitive		Stores the loot method, master and threshold and shows the changes	inferred	none	objectlayer/party#the-group-list	
-0x4e8820	61			ui	primitive		Returns the party member record of a GUID, or 0 through the four GUIDs at 0xbc6f48	verified	one	ui/tooltipunit#who-the-builder-describes	
+0x4e8820	61	FindPartyMemberRecord		ui	primitive	void *__fastcall FindPartyMemberRecord(const uint64_t *guid)	Returns the party record of a GUID, or 0	verified	one	ui/party#tables-and-the-party-functions	
 0x4e8860	86	FindPartyPetRecord		ui	primitive	void * __thiscall (const uint64_t *guid)	Returns the pet part at +0x80 of the online party member record whose pet has the GUID, or 0	verified	one	ui/tooltipunit#who-the-builder-describes	
 0x4e88c0	247	SendLookingForGroupSlots		ui	primitive	void __fastcall SendLookingForGroupSlots(const uint32_t *slots, const char *comment)	Stores changed slots and a changed comment and sends opcode 0x200	verified	one	ui/lfg#the-slots-packet	
 0x4e89c0	346	RecountLfgTypes		ui	primitive		Counts and sorts the eligible LfgDungeons entries per type and signals UPDATE_LFG_TYPES	verified	one	ui/lfg#the-type-lists	
@@ -10467,10 +10467,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4e8f60	8	OnLfgQuestTitleThunk		ui	orchestration		Forwards a quest title answer to OnLfgQuestTitle	verified	one	ui/lfg#the-results	
 0x4e8f70	44	HandleSetDungeonDifficultyPacket	idb	ui	orchestration		Runs PartyFrame.cpp code that calls CDataStore::GetUInt8, CGGameUI::DisplayError; not read here	inferred	none		
 0x4e8fa0	170			ui	primitive		Runs PartyFrame.cpp code that calls CountPartyMembers, 0x4e81a0, ClntObjMgrObjectPtr; not read here	inferred	none		
-0x4e9050	50	Script::GetNumPartyMembers	idb	ui	orchestration		Implements the Lua function GetNumPartyMembers	inferred	none		
-0x4e9090	102	Script::GetPartyMember	idb	ui	primitive		Implements the Lua function GetPartyMember	inferred	none		
-0x4e9100	36	Script::GetPartyLeaderIndex	idb	ui	primitive		Implements the Lua function GetPartyLeaderIndex	inferred	none		
-0x4e9130	76	Script::IsPartyLeader	idb	ui	primitive		Implements the Lua function IsPartyLeader	inferred	none		
+0x4e9050	50	Script::GetNumPartyMembers	idb	ui	orchestration		Pushes the number of other party members	verified	one	ui/party#tables-and-the-party-functions	
+0x4e9090	102	Script::GetPartyMember	idb	ui	primitive		Pushes 1 when party slot n (1 to 4) holds a member, else nil	verified	one	ui/party#tables-and-the-party-functions	
+0x4e9100	36	Script::GetPartyLeaderIndex	idb	ui	primitive		Pushes the 1-based party slot of the leader, 0 for the player	verified	one	ui/party#the-group-leader	
+0x4e9130	76	Script::IsPartyLeader	idb	ui	primitive		Pushes 1 when the player is the nonzero group leader, else nil	verified	one	ui/party#the-group-leader	
 0x4e9180	41	Script::LeaveParty	idb	ui	orchestration		Implements the Lua function LeaveParty	inferred	none		
 0x4e91b0	207	Script::GetLootMethod	idb	ui	primitive		Implements the Lua function GetLootMethod	inferred	none		
 0x4e92a0	574	Script::SetLootMethod	idb	ui	primitive		Implements the Lua function SetLootMethod	inferred	none		
@@ -12540,7 +12540,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x516070	222	Script::UnitIsUnit	idb	ui	primitive		Implements the Lua function UnitIsUnit	inferred	none		
 0x516150	111	Script::UnitIsPlayer	idb	ui	orchestration		Implements the Lua function UnitIsPlayer	inferred	none		
 0x5161c0	79	Script::UnitIsCorpse	idb	ui	orchestration		Implements the Lua function UnitIsCorpse	inferred	none		
-0x516210	123	Script::UnitIsPartyLeader	idb	ui	orchestration		Implements the Lua function UnitIsPartyLeader	inferred	none		
+0x516210	123	Script::UnitIsPartyLeader	idb	ui	orchestration		Pushes 1 for a unit that is a group leader by its player flag or the leader GUID, else nil	verified	one	ui/party#unitispartyleader	
 0x516290	83	Script::UnitInParty	idb	ui	orchestration		Implements the Lua function UnitInParty	inferred	none		
 0x5162f0	83	Script::UnitPlayerOrPetInParty	idb	ui	orchestration		Implements the Lua function UnitPlayerOrPetInParty	inferred	none		
 0x516350	83	Script::UnitInRaid	idb	ui	orchestration		Pushes 1 when a unit is a raid member, else nil	verified	one	ui/raid#group-leader-and-membership	
@@ -12569,16 +12569,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5172b0	157	Script::UnitPVPName	idb	ui	primitive		Implements the Lua function UnitPVPName	inferred	none		
 0x517350	181	Script::UnitXP	idb	ui	primitive		Implements the Lua function UnitXP	inferred	none		
 0x517410	181	Script::UnitXPMax	idb	ui	primitive		Implements the Lua function UnitXPMax	inferred	none		
-0x5174d0	215	Script::UnitHealth	idb	ui	primitive		Implements the Lua function UnitHealth	inferred	none		
-0x5175b0	182	Script::UnitHealthMax	idb	ui	orchestration		Implements the Lua function UnitHealthMax	inferred	none		
-0x517670	360	Script::UnitMana	idb	ui	primitive		Implements the Lua function UnitMana	inferred	none		
-0x5177e0	344	Script::UnitManaMax	idb	ui	primitive		Implements the Lua function UnitManaMax	inferred	none		
-0x517940	245	Script::UnitPowerType	idb	ui	orchestration		Implements the Lua function UnitPowerType	inferred	none		
+0x5174d0	215	Script::UnitHealth	idb	ui	primitive		Pushes a unit's health from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
+0x5175b0	182	Script::UnitHealthMax	idb	ui	orchestration		Pushes a unit's maximum health from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
+0x517670	360	Script::UnitMana	idb	ui	primitive		Pushes a unit's power from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
+0x5177e0	344	Script::UnitManaMax	idb	ui	primitive		Pushes a unit's maximum power from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
+0x517940	245	Script::UnitPowerType	idb	ui	orchestration		Pushes a unit's power type from its object, else from its party or pet record	verified	one	ui/party#reading-a-member-without-its-object	
 0x517a40	113	Script::UnitOnTaxi	idb	ui	primitive		Implements the Lua function UnitOnTaxi	inferred	none		
-0x517ac0	204	Script::UnitIsDead	idb	ui	primitive		Implements the Lua function UnitIsDead	inferred	none		
-0x517b90	209	Script::UnitIsGhost	idb	ui	primitive		Implements the Lua function UnitIsGhost	inferred	none		
-0x517c70	215	Script::UnitIsDeadOrGhost	idb	ui	primitive		Implements the Lua function UnitIsDeadOrGhost	inferred	none		
-0x517d50	188	Script::UnitIsConnected	idb	ui	orchestration		Implements the Lua function UnitIsConnected	inferred	none		
+0x517ac0	204	Script::UnitIsDead	idb	ui	primitive		Pushes 1 when a unit is dead, else nil	verified	one	ui/party#reading-a-member-without-its-object	
+0x517b90	209	Script::UnitIsGhost	idb	ui	primitive		Pushes 1 when a unit is a ghost, else nil	verified	one	ui/party#reading-a-member-without-its-object	
+0x517c70	215	Script::UnitIsDeadOrGhost	idb	ui	primitive		Pushes 1 when a unit is dead or a ghost, else nil	verified	one	ui/party#reading-a-member-without-its-object	
+0x517d50	188	Script::UnitIsConnected	idb	ui	orchestration		Pushes 1 when a unit is connected, else nil	verified	one	ui/party#reading-a-member-without-its-object	
 0x517e10	113	Script::UnitAffectingCombat	idb	ui	primitive		Implements the Lua function UnitAffectingCombat	inferred	none		
 0x517e90	290	Script::UnitSex	idb	ui	orchestration		Implements the Lua function UnitSex	inferred	none		
 0x517fc0	404	Script::UnitLevel	idb	ui	primitive		Implements the Lua function UnitLevel	inferred	none		
@@ -29221,7 +29221,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6e6f10	24	UnregisterSpellTargetingScripts		spell	orchestration	void __cdecl (void)	Unregisters the five Lua targeting functions of 0x86f950	verified	one	spell/cast#small-spell-helpers	
 0x6e6f30	257	CancelNextSwingSpells		spell	orchestration	void __cdecl (void)	Cancels an on-next-swing spell in flight and sends CMSG_CANCEL_CAST for one in the saved slot	verified	one	spell/cancel#cancelling-next-swing-spells	
 0x6e7040	233	Spell_C::CancelAura	idb	spell	orchestration	void __fastcall (uint32_t spell)	Clears the spell locally and sends CMSG_CANCEL_AURA, unless its AttributesEx gate refuses	verified	one	spell/cancel#channel-and-aura-cancels	
-0x6e7130	17	GetPowerDisplayDivisor		spell	primitive	int32_t __fastcall (int32_t powerType)	Returns the power type's display divisor from 0x86f978, 1 for a negative type, unbounded above	verified	one	spell/cast#small-spell-helpers	
+0x6e7130	17	GetPowerDisplayDivisor		spell	primitive	int32_t __fastcall (int32_t powerType)	Returns the display divisor of a power type, 1 for a negative type	verified	one	ui/party#reading-a-member-without-its-object	
 0x6e7150	474	Spell_C::SystemInitialize	idb	spell	orchestration	void __cdecl (void)	Registers the 22 spell message handlers and the autoSelfCast CVar, and zeroes the cast slots and modifier tables	verified	one	spell/handlers#system-initialization-and-teardown	
 0x6e7330	434	CastResultHandler	idb	spell	orchestration	int __fastcall (void *context, uint32_t opcode, uint32_t time, void *msg)	Handles SMSG_CAST_RESULT: reports a failure, clears the saved and in-flight slots and casts the next spell	verified	one	spell/handlers#cast-result	
 0x6e74f0	85	SpellDelayed	idb	spell	orchestration	int __fastcall (void *context, uint32_t opcode, uint32_t time, void *msg)	Handles SMSG_SPELL_DELAYED: fires SPELLCAST_DELAYED with the delay when the guid is the player	verified	one	spell/handlers#cast-delayed	
