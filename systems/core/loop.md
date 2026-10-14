@@ -216,24 +216,6 @@ element and re-inserts it after a key change, `0x421f40` removes at an index, `0
 and `0x421840` refreshes a node's owner and index. The tests run `0x422970`, `0x421430` and
 `0x421860` whole.
 
-## Slots and threads
-
-The scheduler's other machinery serves more than one thread or slot, which this build never
-has: slot creation and release, load accounting and migration, thread records and teardown. Its
-growable arrays round their capacity up to a multiple of a quantum: the largest power of two not
-above the size for sizes below 64, else 64, and 1 for size 0.
-
-Addresses: `0x421080`, `0x4211d0`, `0x421370`, `0x421570`, `0x422720`, `0x422850`, `0x422b50`, `0x422da0`, `0x422e90`, `0x422ff0`, `0x423030`, `0x423050`, `0x4230e0`, `0x423120`, `0x423140`, `0x422ac0`, `0x4229c0`, `0x4229e0`, `0x422a50`, `0x422c90`, `0x422d80`, `0x422fc0`, `0x4233d0`, `0x4234d0`, `0x420830`, `0x420980`, `0x421f00`, `0x423530`, `0x4235c0`, `0x423650`, `0x423670`, `0x4236d0`, `0x423740`, `0x4237a0`, `0x4237e0`
-Confidence: inferred
-Proof: none
-Test: none
-
-`0x421f00`, a thread entry that pumps until its event is set, is started only when polling. The
-context destructor clears its lists through the helpers listed. The quantum loop is `x & (x − 1)`
-repeated until zero, keeping the last nonzero value (`0x422ff3` to `0x423010`): the highest set bit.
-The rest was read only for its calls and stores; the derivations of the multi-slot paths are not
-kept.
-
 ## Static initializers
 
 The scheduler's object files run 12 static initializers from the C runtime table. Each file

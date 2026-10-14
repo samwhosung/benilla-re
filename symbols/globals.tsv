@@ -317,6 +317,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801360	float	s_millisecondsToSeconds		core	Holds 0.001f (0x3a83126f), the frame time and timer factor	verified	one	core/loop#frame-time
 0x801364	void *[1]	EvtContext::vftable		core	Holds the context vtable: the deleting destructor 0x423240	verified	one	core/loop#start-and-stop
 0x801368	void *[1]	s_heapNodeVtable		core	Holds the heap node vtable: the comparator 0x422970	verified	one	core/loop#scheduler-heap
+0x80136c	void *[1]	s_contextBaseVtable		core	Holds the vtable of a context under construction: the deleting destructor 0x4229e0	verified	one	core/scheduler#context-vtables
+0x801370	void *[1]	s_contextRootVtable		core	Holds the vtable a context ends its destruction with: the deleting destructor 0x422a50	verified	one	core/scheduler#context-vtables
+0x801374	void *[1]	s_pureVirtualVtable		core	Holds a vtable of the pure virtual stub 0x40a2d7, stored in heap nodes being removed	verified	one	core/scheduler#context-vtables
 0x8013b0	void *[7]	s_inputObserverVtable		core	Holds the input observer vtable, which only the unreached 0x425430 stores	verified	one	core/events#observer-classes
 0x8013cc	void *[2]	s_inputEventVtableA		core	Holds an interface input event vtable the interface code stores	inferred	none	core/events#observer-classes
 0x8013f4	void *[2]	s_inputEventVtableF		core	Holds an interface input event vtable the interface code stores	inferred	none	core/events#observer-classes
@@ -985,6 +988,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	input#click-versus-drag
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	input#click-versus-drag
 0x832a4c	float	s_screenAspectScaled		screencoord	Holds the aspect times 0.75 rounded to float, stored by 0x41ad10; 1.0 in the file	verified	one	glue/script#cursor-and-screen-size
+0x832cc0	int32_t	s_schedulerCallGuard		core	Holds -1 plus the number of scheduler calls in flight	verified	one	core/scheduler#load-accounting
 0x832dac	char[17]	s_evtKeyDownTag		core	Holds the EvtKeyDown type tag, the allocation tag of held-key records	verified	one	core/events#held-keys-and-repeats
 0x832de4	char[17]	s_evtHandlerTag		core	Holds the EvtHandler type tag, the allocation tag of handler records	verified	one	core/events#handler-records
 0x832e00	char[3]	s_uint32ArrayTag		core	Holds .I, the allocation tag of the shared dword arrays	verified	one	core/events#shared-arrays
@@ -1856,12 +1860,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882e10	uint32_t			loadingscreen	Holds a dword that SetLoadingScreenTip, BeginLoadingScreen, EndLoadingScreen read and write; not read here	inferred	none	
 0x883ec0	int32_t	s_engineThreadPriority		core	Holds the thread priority saved at scheduler start, restored each loop iteration	verified	one	core/loop#the-loop
 0x883ec4	void *	s_startEvent		core	Holds the start gate event the loop waits on before running	verified	one	core/loop#the-loop
-0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	inferred	none	core/loop#static-initializers
+0x883ecc	uint32_t[4]	s_schedulerThreads		core	Holds the array of extra loop threads: capacity, count, storage, quantum	verified	one	core/scheduler#growable-arrays
 0x883ee8	void *[2]	s_slotListEnd		core	Holds the slot list's end link	verified	one	core/loop#static-initializers
 0x883ef0	uint32_t	s_interactiveContexts		core	Holds the count of live interactive contexts	verified	one	core/loop#contexts
 0x883ef4	uint8_t[24]	s_slotLock		core	Holds the critical section guarding the slots	verified	one	core/loop#shutdown-event
 0x883f0c	uint32_t	s_schedulerPolling		core	Holds the polling flag; 0 in this build	verified	one	core/loop#startup-and-shutdown
 0x883f10	uint32_t	s_slotCount		core	Holds the number of scheduler slots, a power of two	verified	one	core/loop#startup-and-shutdown
+0x883f14	void *	s_slotLocks		core	Holds the array of one critical section per slot, its count stored before it	verified	one	core/scheduler#slot-acquire-and-release
 0x883f18	void **	s_slots		core	Holds the slot record pointer of each slot	verified	one	core/loop#shutdown-event
 0x883f20	uint32_t	s_mainSlot		core	Holds the slot the main thread's loop serves	verified	one	core/loop#startup-and-shutdown
 0x883f24	void *	s_shutdownEvent		core	Holds the shutdown event; the loop leaves when it is set	verified	one	core/loop#the-loop
@@ -3247,7 +3252,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf60d0	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf61dc	float	s_skyDrawTenSquared		lighting	Holds 100.0; written at start-up	verified	one	lighting/overview#shared-header-constants
 0xcf76cc	uint32_t	s_contextTableGuard		core	Holds the guard bit of the context table's one-time setup	verified	one	core/loop#static-initializers
+0xcf76e0	uint8_t[24]	s_contextHandleLock		core	Holds the critical section guarding the context handle counter	verified	one	core/scheduler#context-insert
 0xcf76f8	uint32_t	s_nextContextHandle		core	Holds the last context handle given out	verified	one	core/loop#contexts
+0xcf76fc	uint32_t	s_contextHandlesWrapped		core	Holds 1 once the context handle counter has wrapped to 0	verified	one	core/scheduler#context-insert
 0xcf7700	uint8_t[96]	s_contextTableLocks		core	Holds the read-write locks of the context table's eight buckets	verified	one	core/loop#contexts
+0xcf7760	uint8_t[96]	s_contextTableBuckets		core	Holds the eight bucket lists of the context table, 12 bytes each	verified	one	core/scheduler#context-insert
 0xcfa128	uint8_t	s_skillLineRecAllocatorBuilt		spell	Holds bit 0 once the ability node pool is built; default 0, written by 0x6e0830	verified	one	spell/tables#ability-node-pool
 0xcfa140	uint32_t[5]	s_skillLineRecAllocator		spell	Holds the ability node pool: element size, per block, in use, block list, free list	verified	one	spell/tables#ability-node-pool

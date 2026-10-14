@@ -628,6 +628,7 @@ EvtContext	0x0000	4	void **	__vfptr	core	Holds the vtable 0x801364	verified	one	
 EvtContext	0x0004	8	void *[2]	m_tableLink	core	Holds the context's link in its context table bucket	verified	one	core/loop#contexts
 EvtContext	0x000c	4	uint32_t	m_handle	core	Holds the context's handle, its key in the context table	verified	one	core/loop#contexts
 EvtContext	0x0010	24	uint8_t[24]	m_lock	core	Holds the critical section guarding the run state, messages and timers	verified	one	core/loop#one-tick
+EvtContext	0x0028	4	uint32_t	m_reserved	core	Holds 0 from the constructor; the event library reads it nowhere	verified	one	core/scheduler#context-fields
 EvtContext	0x002c	4	uint32_t	m_runState	core	Holds 0 running, 1 closing, 2 torn down	verified	two	core/loop#start-and-stop
 EvtContext	0x0030	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	one	core/loop#scheduler-heap
 EvtContext	0x003c	4	uint32_t	m_dueTime	core	Holds the clock time the context is next due, the heap key	verified	two	core/loop#next-due-time
@@ -645,6 +646,9 @@ EvtContext	0x01c8	12	uint32_t[3]	m_heldKeys	core	Holds the held-key list head	ve
 EvtContext	0x01d4	16	uint32_t[4]	m_timerTable	core	Holds the array of timer records by id	verified	one	core/events#timers
 EvtContext	0x01e4	16	uint32_t[4]	m_freeTimerIds	core	Holds the array of timer ids free for reuse	verified	one	core/events#timers
 EvtContext	0x01f4	20	uint32_t[5]	m_timerHeap	core	Holds the heap of timers ordered by due time	verified	one	core/events#timers
+EvtContext	0x0208	4	void *	m_threadProps	core	Holds the property array the calling thread carries while the context runs	verified	one	core/scheduler#context-fields
+EvtContext	0x020c	4	void *	m_nameObject	core	Holds the name object, null unless the constructor was told to build one	verified	one	core/scheduler#context-fields
+EvtContext	0x0210	4	uint32_t	m_flagBit	core	Holds bit 1 of the constructor's third argument	verified	one	core/scheduler#context-fields
 EvtHandler	0x0000	8	void *[2]	m_link	core	Holds the record's link in its category list	verified	two	core/events#handler-records
 EvtHandler	0x0008	4	void *	m_handler	core	Holds the function, called as fastcall(payload, argument)	verified	two	core/events#handler-records
 EvtHandler	0x000c	4	void *	m_argument	core	Holds the argument passed in edx	verified	two	core/events#handler-records
@@ -663,6 +667,26 @@ FriendSlot	0x0008	8	uint64_t	m_guid	net	Holds the friend guid, zero for an empty
 FriendSlot	0x0010	4	uint32_t	m_level	net	Holds the friend level	verified	one	net/friends#friend-list-object
 FriendSlot	0x0014	4	uint32_t	m_class	net	Holds the friend class id	verified	one	net/friends#friend-list-object
 FriendSlot	0x0018	4	uint32_t	m_area	net	Holds the friend area id	verified	one	net/friends#friend-list-object
+EvtKeyDown	0x0000	8	void *[2]	m_link	core	Holds the record's link in the held-key list	verified	one	core/events#held-keys-and-repeats
+EvtKeyDown	0x0008	4	uint32_t	m_key	core	Holds the key code	verified	one	core/events#held-keys-and-repeats
+EvtThread	0x0000	8	void *[2]	m_link	core	Holds the slot's link in the slot list	verified	one	core/scheduler#slot-acquire-and-release
+EvtThread	0x0008	4	uint32_t	m_index	core	Holds the slot's index in the slot table	verified	one	core/scheduler#slot-acquire-and-release
+EvtThread	0x000c	4	uint32_t	m_threads	core	Holds the number of loop threads serving the slot	verified	one	core/scheduler#slot-acquire-and-release
+EvtThread	0x0010	4	uint32_t	m_load	core	Holds the sum of the costs of the slot's contexts	verified	one	core/scheduler#load-accounting
+EvtThread	0x0014	4	uint32_t	m_meanLoad	core	Holds the load divided by the context count, 0 when empty	verified	one	core/scheduler#load-accounting
+EvtThread	0x0018	4	uint32_t	m_contexts	core	Holds the number of contexts the slot holds	verified	one	core/scheduler#load-accounting
+EvtThread	0x001c	4	uint32_t	m_credit	core	Holds how many contexts the slot may hand to a lighter slot	verified	one	core/scheduler#load-accounting
+EvtThread	0x0020	4	void *	m_event	core	Holds the auto-reset event that wakes the slot's loop thread	verified	one	core/scheduler#slot-acquire-and-release
+EvtThread	0x0024	20	uint32_t[5]	m_heap	core	Holds the min-heap of contexts: capacity, count, storage, quantum, element offset 0x30	verified	one	core/scheduler#slot-acquire-and-release
+EvtTimer	0x0000	4	uint32_t	m_id	core	Holds the timer id, its index in the timer table	verified	one	core/events#timers
+EvtTimer	0x0004	12	void *[3]	m_heapNode	core	Holds the heap node: vtable 0x801368, owning heap and index	verified	one	core/events#timers
+EvtTimer	0x0010	4	uint32_t	m_dueTime	core	Holds the clock time the timer fires, the heap key	verified	one	core/events#timers
+EvtTimer	0x0014	4	float	m_delaySeconds	core	Holds the delay times 0.001f, passed to the function	verified	one	core/events#timers
+EvtTimer	0x0018	4	void *	m_function	core	Holds the function called as fastcall(&{delay, now}, argument)	verified	one	core/events#timers
+EvtTimer	0x001c	4	void *	m_argument	core	Holds the argument passed to the function in edx	verified	one	core/events#timers
+EvtTimer	0x0020	4	void *	m_functionEx	core	Holds the second form of function, called with two stack arguments	verified	one	core/events#timers
+EvtTimer	0x0028	8	uint32_t[2]	m_exStackArguments	core	Holds the two stack arguments of the second form	verified	one	core/events#timers
+EvtTimer	0x0030	4	void *	m_exArgument	core	Holds the edx argument of the second form	verified	one	core/events#timers
 ITEMCOOLDOWNHASHNODE	0x0000	4	uint32_t	m_hashVal	spell	Holds the key whose low bits pick the slot	verified	one	spell/cooldowns#item-cooldown-table-internals
 ITEMCOOLDOWNHASHNODE	0x0004	8	void *[2]	m_linkToSlot	spell	Holds the node's link in its slot list	verified	one	spell/cooldowns#item-cooldown-table
 ITEMCOOLDOWNHASHNODE	0x000c	8	void *[2]	m_linkToFull	spell	Holds the node's link in the table's node list	verified	one	spell/cooldowns#item-cooldown-table
@@ -1052,14 +1076,12 @@ SphereParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds minimum radius, ma
 SplineParticleEmitter	0x0000	656	CParticleEmitter2	m_base	models	Holds the base emitter	verified	one	models/emission#spline-spawn
 SplineParticleEmitter	0x0290	20	float[5]	m_shape	models	Holds base rate, start and end parameters, spread and offset	verified	one	models/emission#spline-spawn
 SplineParticleEmitter	0x02a4	4	uint32_t	m_spawnAtEnd	models	Holds 1 after the end parameter changes, until the next spawn	verified	one	models/emission#spline-spawn
-<<<<<<< HEAD
 WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/friends#who-list-reply
 WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/friends#who-list-reply
 WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/friends#who-list-reply
 WhoResult	0x0094	4	uint32_t	m_race	net	Holds the race id	verified	one	net/friends#who-list-reply
 WhoResult	0x0098	4	uint32_t	m_class	net	Holds the class id	verified	one	net/friends#who-list-reply
 WhoResult	0x009c	4	uint32_t	m_zone	net	Holds the area id	verified	one	net/friends#who-list-reply
-=======
 TimeManager	0x0000	8	double	m_secondsPerTick	core	Holds the seconds per counter tick, 0.001 at construction	verified	one	core/time#counter-switch
 TimeManager	0x0008	8	double	m_offsetSeconds	core	Holds the offset in seconds, 0 at construction	verified	one	core/time#counter-switch
 TimeManager	0x0010	4	void *	m_thread	core	Holds the calibration thread's handle	verified	one	core/time#time-manager-lifetime
@@ -1070,7 +1092,6 @@ TimeManager	0x0020	4	uint32_t	m_multiCore	core	Holds the multi-core bit; nonzero
 TimeManager	0x0028	1936	uint8_t[1936]	m_samples	core	Holds 121 samples of 16 bytes: counter low and high dwords, GetTickCount, padding	verified	one	core/time#calibration-thread
 TimeManager	0x07b8	4	uint32_t	m_sampleIndex	core	Holds the index of the newest sample	verified	one	core/time#calibration-thread
 TimeManager	0x07c0	32	uint64_t[4]	m_estimates	core	Holds the counter rate estimates over 1, 4, 20 and 120 samples	verified	one	core/time#calibration-thread
->>>>>>> da25d63 (core/time: the stretch before TimeManager.cpp is a file-name helper file; TimeManager fields)
 WowConnection	0x0010	4	uint32_t	m_state	net	Holds the socket state: 5 connected, 6 closed, 7 closing	verified	one	net/wire#sending
 WowConnection	0x001c	4	uint8_t *	m_recvBuffer	net	Holds the receive buffer	verified	one	net/wire#receive-loop
 WowConnection	0x0020	4	uint32_t	m_recvFill	net	Holds the count of bytes in the receive buffer	verified	one	net/wire#receive-loop

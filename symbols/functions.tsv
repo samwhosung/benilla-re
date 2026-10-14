@@ -154,7 +154,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x404460	19			unassigned			Runs its object file code not read here	inferred	none		
 0x404480	5			unassigned			Runs its object file code not read here	inferred	none		
 0x404490	19			unassigned			Runs its object file code not read here	inferred	none		
-0x4044b0	49	__ehvec_dtor		crt	boundary		Calls a destructor on each element of an array, last first	inferred	none	camera#unprojection	
+0x4044b0	49	__ehvec_dtor		crt	boundary		Calls a destructor on each element of an array, last first	verified	one	core/scheduler#context-destruction	
 0x4044f0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x404500	19			unassigned			Runs its object file code not read here	inferred	none		
 0x404520	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -584,7 +584,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x40a1e6	146	__fpclass	idb	crt	boundary		Runs its object file code that calls __sptype; not read here	inferred	none		
 0x40a280	47	__alloca_probe	idb	crt	boundary		Allocates eax bytes on the stack, touching each page	inferred	none	spell/go#spell-go-packet	net::srp6_client_session, net::srp6_interleave
 0x40a2b0	39	__ftol	idb	crt	boundary		Converts st0 to a 64-bit integer by truncation and returns its low dword	verified	one	camera#angle-properties	glue::char_customize_color_difftest, glue::glue_init_viewport_difftest, sound::channel_volume_mix, sound::ramp_step, sound::volume_to_byte, spell::spellvisual_timeline_difftest
-0x40a2d7	9	__purecall		crt			Ends the process with runtime error 25, a pure virtual call	inferred	none		
+0x40a2d7	9	__purecall		crt			Ends the process with runtime error 25, a pure virtual call	verified	one	core/scheduler#context-vtables	
 0x40a2e0	45	__cinit	idb	crt	boundary	void __cdecl (void)	Runs the C and C++ static initializer tables through __initterm	verified	one	random#static-initializers	
 0x40a30d	17	_exit	idb	crt	boundary		Runs its object file code that calls _doexit; not read here	inferred	none		
 0x40a31e	17	__exit	idb	crt	boundary		Runs its object file code that calls _doexit; not read here	inferred	none		
@@ -1783,11 +1783,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4207f0	15	InitEventTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/loop#static-initializers	
 0x420800	5	InitEventInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x420810; a static initializer	verified	one	core/loop#static-initializers	
 0x420810	19	InitEventInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/loop#static-initializers	
-0x420830	24	GetBucketListHead		core	orchestration		Returns a node's link, or the bucket's end link for a null node	inferred	none	core/loop#slots-and-threads	
+0x420830	24	GetElementLinkAt4		core	orchestration		Returns the link at +4 of an element, or the sentinel link for 0	verified	one	core/scheduler#intrusive-lists	
 0x420850	95	InitContextTable		core	orchestration	void __cdecl (void)	Builds the context table lock and its eight buckets once, under the guard bit 0xcf76cc	verified	one	core/loop#static-initializers	
 0x4208b0	12	RegisterDestroyContextTable		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	one	core/loop#static-initializers	
 0x4208c0	190	DestroyContextTable		core	orchestration	void __cdecl (void)	Unlinks every context table entry and destroys the bucket and table locks once	verified	one	core/loop#static-initializers	
-0x420980	41	GetContextTableLink		core	orchestration		Returns the link a table node's link points at, or the end link marked by bit 0	inferred	none	core/loop#slots-and-threads	
+0x420980	41	GetContextTableLink		core	orchestration		Returns the link of the element after a link, the sentinel at the end	verified	one	core/scheduler#intrusive-lists	
 0x4209b0	5	InitSchedInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x4209c0; a static initializer	verified	one	core/loop#static-initializers	
 0x4209c0	11	InitSchedInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/loop#static-initializers	
 0x4209d0	10	StaticInitSlotLock		core	orchestration	void __cdecl (void)	Calls 0x4209e0 and registers 0x4209f0 with _atexit; a static initializer	verified	one	core/loop#static-initializers	
@@ -1817,7 +1817,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x420f70	113	ContextUpdateFrameTime		core	primitive	void __fastcall (EvtContext *context)	Dispatches category 5 with {(now - [+0x40]) · 0.001f, now} and stores now in +0x40	verified	two	core/loop#one-tick	core::dt_seconds_matches_binary
 0x420ff0	54	ContextTick		core	orchestration	void __fastcall (EvtContext *context)	Dispatches category 6 with a null payload unless the run state is 1	verified	two	core/loop#one-tick	
 0x421030	67	ContextAfterFrame		core	orchestration	void __fastcall (EvtContext *context)	Clears flag 4 and dispatches category 0x11 when it was set, unless the run state is 1	verified	two	core/loop#one-tick	
-0x421080	336	AcquireSlot		core	orchestration	uint32_t __cdecl (void)	Returns the least-used slot index, creating its slot record when empty, and counts a user	inferred	none	core/loop#slots-and-threads	
+0x421080	336	AcquireSlot		core	orchestration	uint32_t __cdecl (void)	Returns the slot index a loop thread serves, building a slot when the entry is empty	verified	one	core/scheduler#slot-acquire-and-release	
 0x4211d0	404	ReleaseSlot		core	orchestration	void __fastcall (uint32_t slot)	Drops a slot user; at zero frees the slot and tears down each context left in it	verified	two	core/loop#the-loop	
 0x421370	185	RemoveContextLoad		core	orchestration	void __fastcall (uint32_t slot, EvtContext *context)	Takes a context's cost off its slot's load and recomputes the slot's average	verified	two	core/loop#start-and-stop	
 0x421430	303	PopDueContext		core	orchestration	EvtContext *__fastcall (uint32_t slot)	Removes and returns the root of a slot's heap, the context due soonest, or null	verified	two	core/loop#the-loop	core::heap_pop_min_matches_binary
@@ -1828,7 +1828,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4219d0	597	InitScheduler		core	orchestration	void __fastcall (uint32_t threads, uint32_t polling)	Builds the slots for a power-of-two thread count, creates slot 0 and starts the extra loop threads	verified	two	core/loop#startup-and-shutdown	
 0x421c30	122	DeleteSlotArray		core	unreached		Destroys an array of slot locks and frees it	inferred	none	core/loop#unreached-functions	
 0x421cb0	580	DestroyScheduler		core	orchestration	void __cdecl (void)	Stops the loop threads and frees the slots, their locks and the thread array	verified	two	core/loop#startup-and-shutdown	
-0x421f00	50	PollUntilSignaled		core	orchestration		Pumps through 0x43f050 every 100 ms until its event is set; a polling-mode thread entry	inferred	none	core/loop#slots-and-threads	
+0x421f00	50	PollUntilSignaled		core	orchestration		Calls 0x43f050 with 100 until the event it is given is signaled; a polling-mode helper thread entry	verified	one	core/scheduler#polling-mode	
 0x421f40	240	RemoveHeapNodeAt		core	orchestration	void __thiscall (void *heap, uint32_t index)	Removes the node at an index from a heap and sifts the last node into its place	verified	one	core/loop#scheduler-heap	
 0x422030	90	StopScheduler		core	host	void __cdecl (void)	Sets the shutdown event 0x883f24 and, unless polling, every slot's wake event	verified	two	core/loop#start-and-stop	
 0x422090	516	EvtContext::EvtContext		core	orchestration		Allocates and builds a context, registers its start and stop handlers at 1000.0 and schedules it	verified	two	core/loop#contexts	
@@ -1837,51 +1837,51 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x422500	60	SchedulerWorkerThreadProc		core	unreached		Registers a worker thread and runs 0x422540	inferred	none	core/loop#unreached-functions	
 0x422540	464	SchedulerWorkerLoop		core	unreached		Runs the frame loop's body for a worker thread's slot	inferred	none	core/loop#unreached-functions	
 0x422710	16	SchedulerWorkerExit		core	unreached		Releases a worker's slot and its thread record	inferred	none	core/loop#unreached-functions	
-0x422720	290	GrowHeapArrayTo		core	primitive		Grows a heap's pointer array to hold an index, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
-0x422850	266	ReserveHeapArray		core	primitive		Reserves a heap's pointer array to a count, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
-0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	two	core/loop#contexts	
+0x422720	290	GrowHeapArrayTo		core	primitive		Raises a heap array's count to index + 1, growing its capacity to a quantum multiple, zeroing on request	verified	one	core/scheduler#growable-arrays	
+0x422850	266	ReserveHeapArray		core	primitive		Sets a heap array's count, growing its capacity to a quantum multiple only when it must	verified	one	core/scheduler#growable-arrays	
+0x422960	16	ClearFourDwords		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	core/scheduler#growable-arrays	
 0x422970	25	HeapNodeIsNotLater		core	primitive	uint32_t __thiscall (void *node, void *other)	Returns 1 when (int32)(node due - other due) is at most 0, the heap order	verified	one	core/loop#scheduler-heap	core::heap_key_le_matches_binary
-0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *heap, uint32_t nodeOffset)	Clears a heap header and stores its node offset	verified	two	core/loop#contexts	
-0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx, as 0x422960 does	verified	two	core/loop#contexts	
-0x4229c0	23	FreeThreadArrayStorage		core	orchestration		Frees an array's storage, tagged .PAVSThread@@	inferred	none	core/loop#slots-and-threads	
-0x4229e0	102	EvtContextLink::DeletingDestructor		core	orchestration		Unlinks a context's table link and frees it when bit 0 of the argument is set	inferred	none	core/loop#slots-and-threads	
-0x422a50	102	EvtContextBase::DeletingDestructor		core	orchestration		Unlinks a context's table link and frees it when bit 0 of the argument is set	inferred	none	core/loop#slots-and-threads	
-0x422ac0	137	DestroySlotRecord		core	orchestration		Detaches a slot's heap nodes, frees its array, closes its event and unlinks it	inferred	none	core/loop#slots-and-threads	
-0x422b50	226	GrowHeapArrayBy		core	primitive		Grows a heap's pointer array by a count, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
+0x422990	28	InitTimerHeap		core	orchestration	void __thiscall (void *heap, uint32_t nodeOffset)	Zeroes a heap array's four dwords and stores the element-to-node offset as the fifth	verified	one	core/scheduler#growable-arrays	
+0x4229b0	16	ClearFourDwordsCopy		core	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	core/scheduler#growable-arrays	
+0x4229c0	23	FreeThreadArrayStorage		core	orchestration		Frees the thread array's storage, tagged .PAVSThread@@, when it is not null	verified	one	core/scheduler#growable-arrays	
+0x4229e0	102	EvtContextLink::DeletingDestructor		core	orchestration		Stores 0x801370, unlinks the link at +4, frees this when bit 0 is set and returns it	verified	one	core/scheduler#context-vtables	
+0x422a50	102	EvtContextBase::DeletingDestructor		core	orchestration		Stores 0x801370, unlinks the link at +4, frees this when bit 0 is set and returns it	verified	one	core/scheduler#context-vtables	
+0x422ac0	137	DestroySlotRecord		core	orchestration		Clears a slot heap's node owners, frees its storage, closes its event and unlinks the slot	verified	one	core/scheduler#slot-acquire-and-release	
+0x422b50	226	GrowHeapArrayBy		core	primitive		Raises a heap array's capacity for count + add, rounding on request, and leaves the count	verified	one	core/scheduler#growable-arrays	
 0x422c40	5	InitSchedTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c50; a static initializer	verified	one	core/loop#static-initializers	
 0x422c50	15	InitSchedTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/loop#static-initializers	
 0x422c60	5	InitSchedInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x422c70; a static initializer	verified	one	core/loop#static-initializers	
 0x422c70	19	InitSchedInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/loop#static-initializers	
-0x422c90	177	InsertBucketNode		core	orchestration		Links a node into a context table bucket list	inferred	none	core/loop#slots-and-threads	
+0x422c90	177	LinkNode		core	orchestration		Unlinks a node, then links it after a reference link in mode 1, else before it	verified	one	core/scheduler#intrusive-lists	
 0x422d50	33	InitHandlerList		core	orchestration		Makes an empty handler list: link offset 0 and an end link marked by bit 0	verified	two	core/events#handler-records	
-0x422d80	17	GetListEndLink		core	orchestration		Returns a node's link, or the list's end link for a null node	inferred	none	core/loop#slots-and-threads	
-0x422da0	226	GrowThreadArrayBy		core	primitive		Grows the thread array by a count, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
-0x422e90	226	GrowContextArrayBy		core	primitive		Grows a context pointer array by a count, rounding the capacity to its quantum	inferred	none	core/loop#slots-and-threads	
-0x422f80	16	ClearContextLink		core	orchestration		Clears two dwords, the context's table link	verified	two	core/loop#contexts	
-0x422f90	12	InitEndLink		core	orchestration		Points a list's end link at itself, marked by bit 0	verified	two	core/loop#contexts	
-0x422fa0	12	InitMessageList		core	orchestration		Points a list's end link at itself, marked by bit 0	verified	two	core/loop#contexts	
-0x422fb0	12	InitKeyList		core	orchestration		Points a list's end link at itself, marked by bit 0	verified	two	core/loop#contexts	
-0x422fc0	41	GetSlotListLink		core	orchestration		Returns the link a slot's link points at, or the end link marked by bit 0	inferred	none	core/loop#slots-and-threads	
-0x422ff0	57	GetThreadArrayQuantum		core	primitive		Returns the largest power of two not above a size below 64, else 64, and 1 for 0	inferred	none	core/loop#slots-and-threads	
-0x423030	31	RoundUpToMultiple		core	primitive		Rounds a size up to a multiple of a quantum	inferred	none	core/loop#slots-and-threads	
-0x423050	133	ReallocThreadArray		core	orchestration		Reallocates the thread array to a capacity, copying the elements	inferred	none	core/loop#slots-and-threads	
-0x4230e0	57	GetContextArrayQuantum		core	primitive		Returns the largest power of two not above a size below 64, else 64, and 1 for 0	inferred	none	core/loop#slots-and-threads	
-0x423120	31	RoundUpToMultiple2		core	primitive		Rounds a size up to a multiple of a quantum	inferred	none	core/loop#slots-and-threads	
-0x423140	133	ReallocContextArray		core	orchestration		Reallocates a context pointer array to a capacity, copying the elements	inferred	none	core/loop#slots-and-threads	
+0x422d80	17	GetListEndLink		core	orchestration		Returns its argument, or the sentinel link for 0	verified	one	core/scheduler#intrusive-lists	
+0x422da0	226	GrowThreadArrayBy		core	primitive		Raises the thread array's capacity for count + add, as 0x422b50 does	verified	one	core/scheduler#growable-arrays	
+0x422e90	226	GrowContextArrayBy		core	primitive		Raises the context array's capacity for count + add, as 0x422b50 does	verified	one	core/scheduler#growable-arrays	
+0x422f80	16	ClearContextLink		core	orchestration		Clears a link, two dwords	verified	one	core/scheduler#intrusive-lists	
+0x422f90	12	InitEndLink		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
+0x422fa0	12	InitMessageList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
+0x422fb0	12	InitKeyList		core	orchestration		Points a list's sentinel link at itself, marked by bit 0	verified	one	core/scheduler#intrusive-lists	
+0x422fc0	41	GetSlotListLink		core	orchestration		Returns the link of the element after a link, the sentinel at the end	verified	one	core/scheduler#intrusive-lists	
+0x422ff0	57	GetThreadArrayQuantum		core	primitive		Returns 64 (stored as the quantum) for sizes of 64 and up, else the highest power of two not above the size	verified	one	core/scheduler#growable-arrays	
+0x423030	31	RoundUpToMultiple		core	primitive		Rounds a size up to a multiple of a quantum	verified	one	core/scheduler#growable-arrays	
+0x423050	133	ReallocThreadArray		core	orchestration		Sets the thread array's capacity exactly, keeping the smaller of capacity and count elements	verified	one	core/scheduler#growable-arrays	
+0x4230e0	57	GetContextArrayQuantum		core	primitive		Returns 64 (stored as the quantum) for sizes of 64 and up, else the highest power of two not above the size	verified	one	core/scheduler#growable-arrays	
+0x423120	31	RoundUpToMultiple2		core	primitive		Rounds a size up to a multiple of a quantum	verified	one	core/scheduler#growable-arrays	
+0x423140	133	ReallocContextArray		core	orchestration		Sets the context array's capacity exactly, keeping the smaller of capacity and count elements	verified	one	core/scheduler#growable-arrays	
 0x4231d0	95	InitContextTableAgain		core	orchestration	void __cdecl (void)	Repeats 0x420850 under the same guard bit, then registers 0x4208c0 with _atexit	verified	one	core/events#static-initializers	
 0x423230	12	RegisterDestroyContextTable2		core	orchestration	void __cdecl (void)	Registers 0x4208c0 with _atexit	verified	one	core/events#static-initializers	
 0x423240	399	EvtContext::DeletingDestructor		core	orchestration		Frees a context's handlers, messages, held keys and timers, then the context when bit 0 is set	verified	two	core/loop#start-and-stop	
-0x4233d0	250	RemoveTimerHeapNode		core	orchestration		Removes a node from the timer heap and sifts the last node into its place	inferred	none	core/loop#slots-and-threads	
-0x4234d0	62	DestroyTimerHeap		core	orchestration		Detaches every timer heap node and frees the heap array	inferred	none	core/loop#slots-and-threads	
+0x4233d0	250	RemoveHeapNode		core	orchestration		Removes a node from the heap that owns it and sifts the last element into its place	verified	one	core/scheduler#context-destruction	
+0x4234d0	62	DestroyTimerHeap		core	orchestration		Clears the owner and index of every timer heap node and frees the heap array	verified	one	core/scheduler#context-destruction	
 0x423510	23	FreeUint32Array		core	orchestration	void __thiscall (void *array)	Frees an array's storage, tagged .I	verified	one	core/events#shared-arrays	
-0x423530	136	ClearHandlerList		core	orchestration		Unlinks every record of a list	inferred	none	core/loop#slots-and-threads	
-0x4235c0	136	ClearMessageList		core	orchestration		Unlinks every message of a list	inferred	none	core/loop#slots-and-threads	
-0x423650	23	FreeTimerArray		core	orchestration		Frees the timer array's storage, tagged .PAUEvtTimer@@	inferred	none	core/loop#slots-and-threads	
-0x423670	91	DeleteHandlerRecord		core	orchestration		Unlinks a handler record and frees it when bit 0 of the argument is set	inferred	none	core/loop#slots-and-threads	
-0x4236d0	101	DeleteMessage		core	orchestration		Unlinks a message and frees it when bit 0 of the argument is set	inferred	none	core/loop#slots-and-threads	
-0x423740	91	DeleteKeyRecord		core	orchestration		Unlinks a held-key record and frees it when bit 0 of the argument is set	inferred	none	core/loop#slots-and-threads	
-0x4237a0	60	UnlinkContextListNode		core	orchestration		Unlinks a node from its list and clears its link	inferred	none	core/loop#slots-and-threads	
-0x4237e0	136	ClearKeyList		core	orchestration		Unlinks every record of the held-key list	inferred	none	core/loop#slots-and-threads	
+0x423530	136	ClearMessageList		core	orchestration		Unlinks every message of a message list	verified	one	core/scheduler#context-destruction	
+0x4235c0	136	ClearKeyList		core	orchestration		Unlinks every record of the held-key list	verified	one	core/scheduler#context-destruction	
+0x423650	23	FreeTimerArray		core	orchestration		Frees the timer array's storage when it is not null	verified	one	core/scheduler#context-destruction	
+0x423670	91	DeleteHandlerRecord		core	orchestration		Unlinks a handler record and frees it when bit 0 of the argument is set	verified	one	core/scheduler#context-destruction	
+0x4236d0	101	DeleteMessage		core	orchestration		Unlinks a message and frees it when bit 0 of the argument is set	verified	one	core/scheduler#context-destruction	
+0x423740	91	DeleteKeyRecord		core	orchestration		Unlinks a held-key record and frees it when bit 0 of the argument is set	verified	one	core/scheduler#context-destruction	
+0x4237a0	60	UnlinkContextListNode		core	orchestration		Unlinks a link from its list and clears it	verified	one	core/scheduler#intrusive-lists	
+0x4237e0	136	ClearHandlerList		core	orchestration		Unlinks every record of a handler list	verified	one	core/scheduler#context-destruction	
 0x423870	5	InitQueueInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x423880; a static initializer	verified	one	core/events#static-initializers	
 0x423880	11	InitQueueInfinity		core	orchestration	void __cdecl (void)	Copies +inf into the object file's infinity global	verified	one	core/events#static-initializers	
 0x423890	10	StaticInitCursorRect		core	orchestration	void __cdecl (void)	Calls 0x4238a0 and registers 0x4238d0 with _atexit; a static initializer	verified	one	core/events#static-initializers	
