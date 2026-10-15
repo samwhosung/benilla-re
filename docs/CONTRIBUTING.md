@@ -97,6 +97,19 @@ every pull request:
 cargo xtask check
 ```
 
+CI (`.github/workflows/ci.yml`) runs five things on every pull request and every push to main, and
+a pull request should pass the same five before it is opened:
+
+```
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+cargo xtask check
+cargo xtask site "$RUNNER_TEMP/site"     # any empty folder: the site builds
+```
+
+`cargo xtask check --exe` is not in CI, as it needs a client; a reviewer runs it on their own.
+
 It checks the symbol table and every Markdown file against the formats in `symbols/README.md`
 and `systems/README.md` (columns, sorting, names, classes, confidence and proof, the text limits,
 every `finding` resolving to an entry that mentions its row's address, every cited address
@@ -124,6 +137,16 @@ The tests build the Unicorn emulator from source, which needs CMake and a C comp
 `brew install cmake` on macOS, `sudo apt install cmake build-essential` on Linux. Without the exe
 `cargo test --workspace` builds and runs them, and each test that needs the exe skips with one
 line; CI runs it that way.
+
+To iterate on one test, run only it, in the same profile (a few seconds once built, against
+several minutes for the whole `check --exe`):
+
+```
+BENILLA_RE_REQUIRE_EXE=1 cargo test -p benilla-re-cmath --profile exetest --test mul_high
+```
+
+`-p` takes the package (`benilla-re-<crate>`) and `--test` the file under `crates/<crate>/tests/`
+without `.rs`. Run `check --exe` once before the pull request.
 
 A transcription can pass in a debug build and fail in an optimized one: the optimizer may fold a
 float compare so that `-0.0` or NaN comes out differently. `exetest` (in `Cargo.toml`) inherits
@@ -196,7 +219,10 @@ results bit for bit. A function whose row is `unreached` gets neither.
   entry's derivation says which.
 - Cover every regime the code distinguishes, with a deterministic probe at each threshold.
 - When the test passes against the exe, add it to the row's `test` column and the entry's `Test`
-  line as `crate::test_fn`: the crate's directory name and the function's name. That name only
+  line as `crate::test_fn`: the crate's directory name and the function's name. The `test` column
+  takes the names bare, separated by `, `: `cmath::mul_high32_difftest`. The `Test` line of an
+  entry takes each name in backticks, separated by `, ` (a doc is Markdown): ``Test:
+  `cmath::mul_high32_difftest`, `cmath::other_test` ``, or `Test: none`. That name only
   reaches a test that is a top-level function of a file in `crates/<crate>/tests/`, never one
   inside a module. The row's confidence and proof stay as the reading left them (`METHOD.md`,
   Confidence and proof).
@@ -213,6 +239,26 @@ results bit for bit. A function whose row is `unreached` gets neither.
 
 The emulator is `unicorn-engine` (GPL-2.0), used as a test dependency only; nothing that ships
 links it.
+
+## Opening a pull request
+
+1. Fork the repo and branch from main. One branch is one piece of work: one system or one
+   mechanism (Review, below).
+2. Commit in logical pieces, and say in the message what changed and why.
+3. Run the five checks of CI (The check, above). With your exe, run `cargo xtask check --exe` too.
+4. Open the pull request. The description gives:
+   - the claim, in a sentence or two;
+   - the evidence: the addresses that decide it, with the instructions where they decide a point;
+   - the test, and that it bites: it fails when the reimplementation or the claim is wrong (a
+     deliberately wrong version failed it, and where);
+   - the check results: which of the five passed, and the last line of `check --exe`.
+5. If `check --exe` cannot be fully green with only the exe, say what is missing and what ran. The
+   tests that read the install's `Data` folder skip without it and the summary line counts them;
+   say that count, so the reviewer reruns those. A check you could not run at all (no GNU objdump,
+   no Rust toolchain for it) is named, never left out.
+6. If the claim spreads (Adding a finding, step 4), write `Second reading wanted` and give the
+   second reader the addresses and the question alone, not your derivation. A `two` proof is
+   claimed only after that reading.
 
 ## Review
 

@@ -320,7 +320,7 @@ fn plants() -> Vec<Plant> {
         plant(
             "a test's format",
             edit(F, "\tdemo::demo_advance\n", "\tdemo_advance\n"),
-            &["symbols/functions.tsv:4: test 'demo_advance' is not crate::test_fn"],
+            &["symbols/functions.tsv:4: test 'demo_advance' is not crate::test_fn names, bare and separated by ', ' (no backticks)"],
         ),
         plant(
             "a signature's length",
@@ -559,7 +559,7 @@ fn plants() -> Vec<Plant> {
         plant(
             "an entry's Test line",
             edit(DOC, CTOR_SHAPE, "Addresses: `0x402040`\nConfidence: verified\nProof: two\nTest: demo::demo_ctor\n"),
-            &["systems/demo.md:38: Test is none or a list of `crate::test_fn`"],
+            &["systems/demo.md:38: Test is none or `crate::test_fn` names, each in backticks, separated by ', ', as in Test: `cmath::a`, `cmath::b` (the test column takes them bare)"],
         ),
         plant(
             "a claim's length",

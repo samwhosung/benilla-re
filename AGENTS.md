@@ -16,8 +16,9 @@ Read, in this order:
 To look something up, grep before you read the bytes: `symbols/functions.tsv` (a row per function:
 name, system, signature, meaning, confidence, the finding behind it), `symbols/globals.tsv`,
 `tables/` (opcodes, events, CVars, Lua bindings, messages, calls) and the docs under `systems/`.
-`cargo xtask census --why <address>` says what reaches an address; `tools/callers.py` lists its
-callers.
+`cargo xtask census --why <address>` says what reaches an address; `tools/callers.py ADDRESS
+--control ADDRESS` lists every call, jump and stored use of it, and refuses to run without a
+control, an address the same scans are known to find.
 
 The rules an agent most often breaks here:
 
@@ -33,8 +34,11 @@ The rules an agent most often breaks here:
   (`docs/METHOD.md`, "Checklist: reading the bytes").
 - **Never commit anything from the install.** Not the exe, not data files, not interface code.
   Names and facts read from them are fine; their contents are not.
-- **Run the checks.** `cargo xtask check` must report 0 problems, and `cargo xtask check --exe`
-  too when you change a row's size, a table or a test. A pull request runs `check` in CI.
+- **Run the checks.** CI runs `cargo fmt --all -- --check`, `cargo clippy --workspace
+  --all-targets -- -D warnings`, `cargo test --workspace`, `cargo xtask check` (0 problems) and
+  `cargo xtask site <dir>`; run the same before a pull request. `cargo xtask check --exe` too
+  when you change a row's size, a table or a test (`BENILLA_RE_REQUIRE_EXE=1 cargo test
+  -p benilla-re-<crate> --profile exetest --test <file>` runs one test of it in seconds).
 
 The rest of the root: `crates/` the reimplementations and their bit-exact tests, `tools/` the
 generators and instruments, `xtask/` the checks, the site and the exports.
