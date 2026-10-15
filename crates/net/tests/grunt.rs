@@ -5,8 +5,9 @@ mod common;
 
 use benilla_re_difftest::Emu;
 use benilla_re_net::{
-    can_read, cmd_auth_logon_challenge, cmd_realm_list, cmd_xfer_initiate, on_data, pending_expire,
-    put_challenge_body, Arg, ChallengeRecord, DataStore, Fetch, LinkCall, OnDataEnd, LINK_COMMANDS,
+    can_read, cmd_auth_logon_challenge, cmd_grunt_auth_verify, cmd_realm_list, cmd_xfer_initiate,
+    on_data, pending_expire, put_challenge_body, Arg, ChallengeRecord, DataStore, Fetch, LinkCall,
+    OnDataEnd, LINK_COMMANDS,
 };
 use common::{Lcg, Wow};
 
@@ -714,5 +715,40 @@ fn grunt_pending_expire() {
             None => vec![],
         };
         assert_eq!(calls, want_calls, "{ctx}: the calls");
+    }
+}
+
+/// `ServerLink::CmdGruntAuthVerify` whole on stores from empty to past a whole command, length
+/// bytes from 0 to `0x1f`, `0x20` and above, and cursors at the start and inside: the result and
+/// the cursor.
+#[test]
+fn grunt_auth_verify() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow, 0);
+    let mut g = Lcg(0xa0e1_0001);
+    for case in 0..6000 {
+        let len = [0u8, 1, 0x10, 0x1f, 0x20, 0x21, 0xff][(g.next() >> 16) as usize % 7];
+        let lead = (g.next() >> 16) as usize % 3;
+        let mut bytes = fill(&mut g, lead);
+        bytes.push(len);
+        bytes.extend(fill(&mut g, usize::from(len) + 0x24));
+        let keep = match g.next() >> 30 {
+            0 => (g.next() >> 16) as usize % (bytes.len() + 1),
+            1 => bytes.len() - 1,
+            _ => bytes.len() + (g.next() >> 30) as usize,
+        };
+        bytes.resize(keep, 0x5a);
+        r.load(&bytes, lead.min(bytes.len()) as u32);
+        let got = r.e.call(0x5b9630, r.link as u32, 0, &[r.store as u32]);
+        let mut m = plain(&bytes, lead.min(bytes.len()) as u32);
+        let want = cmd_grunt_auth_verify(&mut m);
+        assert_eq!(
+            (got, r.read()),
+            (want, m.read),
+            "case {case} len {len:#x} {} bytes",
+            bytes.len()
+        );
     }
 }

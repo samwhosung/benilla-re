@@ -103,3 +103,14 @@ Proof: one
 Test: `net::grunt_pending_expire`
 
 `0x5b84c3` stores the link offset 0 and `0x5b84bb` to `0x5b84c0` make the empty list. In `0x5b8650`, `0x5b86a7` skips a zero time and `0x5b86b6` (`cmp ecx,[edi+4]; jb`) stops the walk; `0x5b86bd` unlinks the node and `0x5b86d9` to `0x5b86e4` link it at the local list's tail, at the same bytes. `0x5b86e7` reads the next node from those bytes, which now hold the local list's end, marked by bit 0. `0x5b8719` calls `[[edi]]` with the node and `0x5b874b` frees it. `0x5b84e0` has the one caller `0x5ba000`, and no stored address.
+
+## Server link commands
+
+A live start-up initializer, `0x5b88a0`, fills the logon server's command table `0x85e2f0`: seven 16-byte entries of a handler, a zero, the command byte and a name. Its one reader is `ServerLink::OnData` (`0x5b9b50`), which nothing live reaches (`layout`, Unreached functions), so no handler in it runs in the client. `0x5b9630`, command `0x10`, reads a length byte and, below `0x20`, that many bytes of name and 16 and 20 bytes more, keeping none: 0 while the store lacks the bytes, 1 for a long name, else 2. `0x5b8c40`, command `0x21`, builds the server's hello reply from the realm source at `+0x108` and logs it; no test runs it, since it needs a server's realm source that no client object provides.
+
+Addresses: `0x5b88a0`, `0x85e2f0`, `0x5b9b50`, `0x5b9bcb`, `0x5b9630`, `0x5b9665`, `0x5b967c`, `0x5b96c4`, `0x5b8c40`, `0x5b8d14`
+Confidence: verified
+Proof: one
+Test: `net::grunt_auth_verify`
+
+`0x5b88aa` stores `0x5b9630` with the byte `0x10` (`0x5b8900`), and `0x5b88c8` stores `0x5b8c40` with `0x21` (`0x5b8945`). The table's address is read only at `0x5b9bc2` and `0x5b9bcb`, inside `0x5b9b50`, whose one stored copy is the `ServerLink` vtable slot `0x80a79c`. In `0x5b9630`, `0x5b9642` and `0x5b967c` are `0x5b90d0` with 1 and the length plus `0x24`; `0x5b9665` returns 1 at `0x20` or more; three `0x419400` reads follow, and `0x5b96c4` returns 1 when the cursor passed the size, else 2. `0x5b8d14` calls slot 4 of the object at `+0x108`.

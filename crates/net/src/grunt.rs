@@ -367,3 +367,29 @@ pub fn pending_expire(times: &[u32], force: bool, now: u32, timeout: u32) -> Opt
     }
     None
 }
+
+/// `ServerLink::CmdGruntAuthVerify` (`0x5b9630`), a server's handler: a length byte, then that
+/// many bytes of name, 16 and 20 bytes, all read and dropped. 0 while the store lacks the
+/// length byte or the rest, 1 for a length of `0x20` or more, which reads no further; else 2,
+/// or 1 if the reads ran past the size.
+pub fn cmd_grunt_auth_verify(s: &mut DataStore) -> u32 {
+    if !can_read(s, 1) {
+        return 0;
+    }
+    let len = s.get(1).map_or(0, |v| v[0]);
+    if len >= 0x20 {
+        return 1;
+    }
+    if !can_read(s, u32::from(len) + 0x24) {
+        return 0;
+    }
+    for n in [usize::from(len), 16, 20] {
+        let mut buf = vec![0u8; n];
+        s.get_data(&mut buf, false);
+    }
+    if s.size < s.read {
+        1
+    } else {
+        2
+    }
+}
