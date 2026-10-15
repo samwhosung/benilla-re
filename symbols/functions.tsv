@@ -35699,8 +35699,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bc010	5	InitColourInvTwoPiThunk		unassigned			Jumps to 0x7bc020; a static initializer	verified	one	cmath/matrices#header-initializers	
 0x7bc020	19	InitColourInvTwoPi		unassigned			Stores 1 over the π + π global as a float	verified	one	cmath/matrices#header-initializers	
 0x7bc040	71	Determinant3FromEntries		unassigned	primitive		Leaves the determinant of nine floats on the stack in st0 at 53 bits	verified	one	cmath/matrices#determinants-and-inverses	cmath::det3
-0x7bc090	5	InitMatrix4Copy1Thunk		cmath	orchestration		Jumps to 0x7bc0a0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bc0a0	11	InitMatrix4Copy1		cmath	orchestration		Stores +infinity at 0xcf5c04, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7bc090	5	InitCmathFile01Copy1Thunk		cmath	orchestration		Jumps to 0x7bc0a0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bc0a0	11	InitCmathFile01Copy1		cmath	orchestration		Stores +infinity at 0xcf5c04, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7bc0b0	239	CompareMatrix4Equal		cmath	unreached		Compares the 16 entries of two 4×4 matrices	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bc1a0	239	CompareMatrix4		cmath	orchestration		Returns in al whether any of the 16 entries of two matrices differs under the float compare	verified	one	cmath/matrices#sum-scalar-and-product	cmath::mat4_ne
 0x7bc290	206	AddMatrix4		cmath	primitive		Stores the entrywise sum of two 4×4 matrices	verified	one	cmath/matrices#sum-scalar-and-product	cmath::mat4_add
@@ -35737,14 +35737,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bdd00	86	ScaleMatrix		cmath	primitive	void __thiscall (float *m, float s)	Multiplies the upper-left 3x3 of a 4x4 matrix by a float, each product stored	verified	one	terrain/files#doodad-placements	cmath::mat34_scale3
 0x7bdd60	75	RotateMatrix		cmath	primitive	void __thiscall (float *matrix, float angle, const float *axis, uint32_t normalized)	Multiplies a matrix on the left by the rotation about an axis by an angle	verified	one	collision/world#transport-matrix	
 0x7bddb0	333	RotateMatrixByQuaternion		cmath	primitive	void __thiscall (float *m, const float *q)	Multiplies a matrix on the left by the rotation matrix of a quaternion (x, y, z, w)	verified	one	models/animation#texture-transforms	animation::m2_animate_difftest, cmath::quat_mul4
-0x7bdf00	5	InitMatrix4Double1Thunk		cmath	orchestration		Jumps to 0x7bdf10, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bdf10	15	InitMatrix4Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c0c	verified	one	cmath/geometry#static-constants	
-0x7bdf20	5	InitMatrix4Quotient1Thunk		cmath	orchestration		Jumps to 0x7bdf30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bdf30	19	InitMatrix4Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c0c, at 0xcf5c08	verified	one	cmath/geometry#static-constants	
+0x7bdf00	5	InitCmathFile01Double1Thunk		cmath	orchestration		Jumps to 0x7bdf10, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bdf10	15	InitCmathFile01Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c0c	verified	one	cmath/geometry#static-constants	
+0x7bdf20	5	InitCmathFile01Quotient1Thunk		cmath	orchestration		Jumps to 0x7bdf30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bdf30	19	InitCmathFile01Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c0c, at 0xcf5c08	verified	one	cmath/geometry#static-constants	
 0x7bdf50	104	Matrix4FromFloats		cmath	orchestration		Stores sixteen floats from the stack into a 4×4 matrix	verified	one	cmath/matrices#sum-scalar-and-product	animation::m2_animate_difftest, animation::m2_bone_propagate_difftest, gx::lightningrender_strip_difftest
 0x7bdfc0	247	MultiplyMatrix3		cmath	primitive		Stores the product of two 3×3 matrices	verified	one	cmath/matrices#three-by-three-matrices	cmath::multiply_matrix3_difftest
-0x7be0c0	5	InitMatrix3Copy1Thunk		cmath	orchestration		Jumps to 0x7be0d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7be0d0	11	InitMatrix3Copy1		cmath	orchestration		Stores +infinity at 0xcf5c10, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7be0c0	5	InitCmathFile02Copy1Thunk		cmath	orchestration		Jumps to 0x7be0d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7be0d0	11	InitCmathFile02Copy1		cmath	orchestration		Stores +infinity at 0xcf5c10, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7be0e0	63	Matrix3Determinant		cmath	primitive	float __thiscall (const float *m)	Returns the determinant of a 3x3 matrix	verified	one	collision/airborne#crease-helpers	cmath::det3b
 0x7be120	183	Matrix3Cofactors		cmath	unreached		Stores the 3×3 cofactor matrix with eighteen products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7be1e0	183	Matrix3Adjugate		cmath	primitive	float * __thiscall (const float *m, float *out)	Writes the adjugate of a 3×3 matrix, its cofactors transposed	verified	one	collision/airborne#crease-helpers	cmath::adj3t
@@ -35774,36 +35774,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bf1b0	374	BuildEulerBasis3		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bf330	374	BuildEulerBasis4		cmath	unreached		Builds a 3×3 basis from three angles by three fsincos and two products	inferred	none	cmath/matrices#unreached-matrix-code	
 0x7bf4b0	374	BuildYawPitchRollBasis		cmath	primitive	void __thiscall (float *dest, float yaw, float pitch, float roll)	Builds the transpose of Rz(yaw), Ry(pitch), Rx(roll) multiplied in that order	verified	one	uicamera/view#pitch-units-and-sign	cmath::euler_to_mat3_f
-0x7bf630	5	InitMatrix3Double1Thunk		cmath	orchestration		Jumps to 0x7bf640, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf640	15	InitMatrix3Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c18	verified	one	cmath/geometry#static-constants	
-0x7bf650	5	InitMatrix3Quotient1Thunk		cmath	orchestration		Jumps to 0x7bf660, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf660	19	InitMatrix3Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c18, at 0xcf5c14	verified	one	cmath/geometry#static-constants	
+0x7bf630	5	InitCmathFile02Double1Thunk		cmath	orchestration		Jumps to 0x7bf640, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf640	15	InitCmathFile02Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c18	verified	one	cmath/geometry#static-constants	
+0x7bf650	5	InitCmathFile02Quotient1Thunk		cmath	orchestration		Jumps to 0x7bf660, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf660	19	InitCmathFile02Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c18, at 0xcf5c14	verified	one	cmath/geometry#static-constants	
 0x7bf680	81	DominantAxis		cmath	primitive	uint32_t __thiscall (const float *v)	Returns the index of a vector's largest component by magnitude, a tie going to the later axis	verified	one	cmath/geometry#dominant-axis-and-bounds	cmath::dominant_axis_difftest, terrain::portal_screen_rect_difftest, models::aabsp_nearest_dist_difftest, models::wmo_mocv_barycentric_color_difftest
-0x7bf6e0	5	InitAxisCopy1Thunk		cmath	orchestration		Jumps to 0x7bf6f0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf6f0	11	InitAxisCopy1		cmath	orchestration		Stores +infinity at 0xcf5c1c, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7bf6e0	5	InitCmathFile03Copy1Thunk		cmath	orchestration		Jumps to 0x7bf6f0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf6f0	11	InitCmathFile03Copy1		cmath	orchestration		Stores +infinity at 0xcf5c1c, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7bf700	92	MinorAxis		cmath	primitive		Returns the index of the component of a vector with the least magnitude	verified	one	cmath/matrices#axis-index-and-planes	cmath::minor_axis_difftest
-0x7bf760	5	InitAxisDouble1Thunk		cmath	orchestration		Jumps to 0x7bf770, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf770	15	InitAxisDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c24	verified	one	cmath/geometry#static-constants	
-0x7bf780	5	InitAxisQuotient1Thunk		cmath	orchestration		Jumps to 0x7bf790, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf790	19	InitAxisQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c24, at 0xcf5c20	verified	one	cmath/geometry#static-constants	
+0x7bf760	5	InitCmathFile03Double1Thunk		cmath	orchestration		Jumps to 0x7bf770, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf770	15	InitCmathFile03Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c24	verified	one	cmath/geometry#static-constants	
+0x7bf780	5	InitCmathFile03Quotient1Thunk		cmath	orchestration		Jumps to 0x7bf790, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf790	19	InitCmathFile03Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c24, at 0xcf5c20	verified	one	cmath/geometry#static-constants	
 0x7bf7b0	135	FillPlaneRecordWithScalar		cmath	primitive		Stores the plane record (0, 0, 1, -s) with a scalar in every point coordinate	verified	one	cmath/matrices#axis-index-and-planes	cmath::scalar_bcast_struct13
-0x7bf840	5	InitPlaneCopy1Thunk		cmath	orchestration		Jumps to 0x7bf850, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf850	11	InitPlaneCopy1		cmath	orchestration		Stores +infinity at 0xcf5c28, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7bf840	5	InitCmathFile04Copy1Thunk		cmath	orchestration		Jumps to 0x7bf850, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf850	11	InitCmathFile04Copy1		cmath	orchestration		Stores +infinity at 0xcf5c28, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7bf860	278	BuildPlaneFromPoints		cmath	primitive		Stores the unit normal and distance of the plane through three points, then the points	verified	one	cmath/matrices#axis-index-and-planes	cmath::plane_from_3pts
-0x7bf980	5	InitPlaneDouble1Thunk		cmath	orchestration		Jumps to 0x7bf990, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf990	15	InitPlaneDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c30	verified	one	cmath/geometry#static-constants	
-0x7bf9a0	5	InitPlaneQuotient1Thunk		cmath	orchestration		Jumps to 0x7bf9b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bf9b0	19	InitPlaneQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c30, at 0xcf5c2c	verified	one	cmath/geometry#static-constants	
+0x7bf980	5	InitCmathFile04Double1Thunk		cmath	orchestration		Jumps to 0x7bf990, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf990	15	InitCmathFile04Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c30	verified	one	cmath/geometry#static-constants	
+0x7bf9a0	5	InitCmathFile04Quotient1Thunk		cmath	orchestration		Jumps to 0x7bf9b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bf9b0	19	InitCmathFile04Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c30, at 0xcf5c2c	verified	one	cmath/geometry#static-constants	
 0x7bf9d0	86			cmath	primitive		Runs its object file code not read here	inferred	none		
-0x7bfa30	5	InitColour8Copy1Thunk		cmath	orchestration		Jumps to 0x7bfa40, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bfa40	11	InitColour8Copy1		cmath	orchestration		Stores +infinity at 0xcf5c34, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7bfa50	5	InitColour8Double1Thunk		cmath	orchestration		Jumps to 0x7bfa60, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bfa60	15	InitColour8Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c3c	verified	one	cmath/geometry#static-constants	
-0x7bfa70	5	InitColour8Quotient1Thunk		cmath	orchestration		Jumps to 0x7bfa80, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bfa80	19	InitColour8Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c3c, at 0xcf5c38	verified	one	cmath/geometry#static-constants	
+0x7bfa30	5	InitCmathFile05Copy1Thunk		cmath	orchestration		Jumps to 0x7bfa40, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bfa40	11	InitCmathFile05Copy1		cmath	orchestration		Stores +infinity at 0xcf5c34, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7bfa50	5	InitCmathFile05Double1Thunk		cmath	orchestration		Jumps to 0x7bfa60, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bfa60	15	InitCmathFile05Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c3c	verified	one	cmath/geometry#static-constants	
+0x7bfa70	5	InitCmathFile05Quotient1Thunk		cmath	orchestration		Jumps to 0x7bfa80, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bfa80	19	InitCmathFile05Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c3c, at 0xcf5c38	verified	one	cmath/geometry#static-constants	
 0x7bfaa0	119			cmath	primitive		Runs its object file code that calls 0x7bfb40; not read here	inferred	none		
-0x7bfb20	5	InitSortedHeapCopy1Thunk		cmath	orchestration		Jumps to 0x7bfb30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7bfb30	11	InitSortedHeapCopy1		cmath	orchestration		Stores +infinity at 0xcf5c40, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7bfb20	5	InitCmathFile06Copy1Thunk		cmath	orchestration		Jumps to 0x7bfb30, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7bfb30	11	InitCmathFile06Copy1		cmath	orchestration		Stores +infinity at 0xcf5c40, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7bfb40	72			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7bfb90	82			cmath	primitive		Runs its object file code that calls 0x7bfaa0; not read here	inferred	none		
 0x7bfc20	16			cmath	unreached		Runs its object file code that calls 0x7bfb40; not read here	inferred	none		
@@ -35828,14 +35828,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c0070	6			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c0080	3			cmath	orchestration		Runs its object file code not read here	inferred	none		
 0x7c0090	3			cmath	orchestration		Runs its object file code not read here	inferred	none		
-0x7c00a0	5	InitSortedHeapDouble1Thunk		cmath	orchestration		Jumps to 0x7c00b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c00b0	15	InitSortedHeapDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c48	verified	one	cmath/geometry#static-constants	
-0x7c00c0	5	InitSortedHeapQuotient1Thunk		cmath	orchestration		Jumps to 0x7c00d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c00d0	19	InitSortedHeapQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c48, at 0xcf5c44	verified	one	cmath/geometry#static-constants	
+0x7c00a0	5	InitCmathFile06Double1Thunk		cmath	orchestration		Jumps to 0x7c00b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c00b0	15	InitCmathFile06Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c48	verified	one	cmath/geometry#static-constants	
+0x7c00c0	5	InitCmathFile06Quotient1Thunk		cmath	orchestration		Jumps to 0x7c00d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c00d0	19	InitCmathFile06Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c48, at 0xcf5c44	verified	one	cmath/geometry#static-constants	
 0x7c00f0	40			cmath	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x7c0120	77	Matrix3ToQuaternion		cmath	primitive	float * __thiscall (float *out, const float *m)	Copies a 3x3 matrix transposed into a local and converts it to a quaternion through 0x7c0190	verified	one	cmath/quaternions#matrix-to-quaternion	
-0x7c0170	5	InitQuaternionCopy1Thunk		cmath	orchestration		Jumps to 0x7c0180, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c0180	11	InitQuaternionCopy1		cmath	orchestration		Stores +infinity at 0xcf5c4c, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c0170	5	InitCmathFile07Copy1Thunk		cmath	orchestration		Jumps to 0x7c0180, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c0180	11	InitCmathFile07Copy1		cmath	orchestration		Stores +infinity at 0xcf5c4c, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7c0190	293	MatrixToQuaternion		cmath	primitive	void __thiscall (float *out, const float *m)	Converts a row-major 3x3 rotation matrix to a quaternion by the trace and the largest diagonal	verified	one	cmath/quaternions#matrix-to-quaternion	cmath::matrix_quat_difftest
 0x7c02c0	85	QuaternionFromAxisAngle		cmath	unreached	void __thiscall (float *out, float angle, const float *axis)	Builds a quaternion from an angle and an axis	verified	one	cmath/quaternions#axis-angle-and-conjugate	
 0x7c0320	138	QuaternionToAxisAngle		cmath	unreached	void __thiscall (const float *q, float *angle, float *axis)	Writes a quaternion's angle and axis	verified	one	cmath/quaternions#axis-angle-and-conjugate	
@@ -35847,32 +35847,32 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c0940	536	SquadControlPoint		cmath	unreached		Writes one squad control quaternion to both outputs	inferred	none	cmath/quaternions#squad	
 0x7c0b60	1798	EvaluateSquadSegment		cmath	unreached		Evaluates a squad spline segment of quaternions	inferred	none	cmath/quaternions#squad	
 0x7c1270	86	SquadBlend		cmath	unreached		Blends four quaternions by nested spherical interpolation	inferred	none	cmath/quaternions#squad	
-0x7c12d0	5	InitQuaternionDouble1Thunk		cmath	orchestration		Jumps to 0x7c12e0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c12e0	15	InitQuaternionDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c54	verified	one	cmath/geometry#static-constants	
-0x7c12f0	5	InitQuaternionQuotient1Thunk		cmath	orchestration		Jumps to 0x7c1300, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1300	19	InitQuaternionQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c54, at 0xcf5c50	verified	one	cmath/geometry#static-constants	
+0x7c12d0	5	InitCmathFile07Double1Thunk		cmath	orchestration		Jumps to 0x7c12e0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c12e0	15	InitCmathFile07Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c54	verified	one	cmath/geometry#static-constants	
+0x7c12f0	5	InitCmathFile07Quotient1Thunk		cmath	orchestration		Jumps to 0x7c1300, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1300	19	InitCmathFile07Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c54, at 0xcf5c50	verified	one	cmath/geometry#static-constants	
 0x7c1320	32			cmath	unreached		Runs its object file code not read here	inferred	none		
 0x7c1340	47	ConjugateQuaternion		cmath	unreached	void __thiscall (const float *q, float *out)	Writes a quaternion with its vector part negated	verified	one	cmath/quaternions#axis-angle-and-conjugate	
 0x7c1370	38			cmath	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x7c13a0	5	InitVector2ICopy1Thunk		cmath	orchestration		Jumps to 0x7c13b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c13b0	11	InitVector2ICopy1		cmath	orchestration		Stores +infinity at 0xcf5c58, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c13a0	5	InitCmathFile08Copy1Thunk		cmath	orchestration		Jumps to 0x7c13b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c13b0	11	InitCmathFile08Copy1		cmath	orchestration		Stores +infinity at 0xcf5c58, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7c13c0	29			cmath	primitive		Runs its object file code not read here	inferred	none		
 0x7c13e0	29			cmath	unreached		Runs its object file code not read here	inferred	none		
-0x7c1400	5	InitVector2IDouble1Thunk		cmath	orchestration		Jumps to 0x7c1410, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1410	15	InitVector2IDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c60	verified	one	cmath/geometry#static-constants	
-0x7c1420	5	InitVector2IQuotient1Thunk		cmath	orchestration		Jumps to 0x7c1430, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1430	19	InitVector2IQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c60, at 0xcf5c5c	verified	one	cmath/geometry#static-constants	
+0x7c1400	5	InitCmathFile08Double1Thunk		cmath	orchestration		Jumps to 0x7c1410, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1410	15	InitCmathFile08Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c60	verified	one	cmath/geometry#static-constants	
+0x7c1420	5	InitCmathFile08Quotient1Thunk		cmath	orchestration		Jumps to 0x7c1430, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1430	19	InitCmathFile08Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c60, at 0xcf5c5c	verified	one	cmath/geometry#static-constants	
 0x7c1450	282	BoundsOfPoints		cmath	primitive		Writes the minimum and maximum corners of n points of stride 12, or zeros for none	verified	one	cmath/geometry#dominant-axis-and-bounds	
-0x7c1570	5	InitBoundsCopy1Thunk		cmath	orchestration		Jumps to 0x7c1580, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1580	11	InitBoundsCopy1		cmath	orchestration		Stores +infinity at 0xcf5c64, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c1570	5	InitCmathFile09Copy1Thunk		cmath	orchestration		Jumps to 0x7c1580, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1580	11	InitCmathFile09Copy1		cmath	orchestration		Stores +infinity at 0xcf5c64, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7c1590	279			cmath	unreached		Runs its object file code that calls SetVector3, MaxVector3; not read here	inferred	none		
 0x7c16b0	403	BoundsOfIndexedPoints		cmath	unreached		Writes the bounds of the points an index list names	verified	one	cmath/geometry#dominant-axis-and-bounds	
-0x7c1850	5	InitBoundsDouble1Thunk		cmath	orchestration		Jumps to 0x7c1860, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1860	15	InitBoundsDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c6c	verified	one	cmath/geometry#static-constants	
-0x7c1870	5	InitBoundsQuotient1Thunk		cmath	orchestration		Jumps to 0x7c1880, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c1880	19	InitBoundsQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c6c, at 0xcf5c68	verified	one	cmath/geometry#static-constants	
-0x7c18a0	5	InitIntersectCopy1Thunk		cmath	orchestration		Jumps to 0x7c18b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c18b0	11	InitIntersectCopy1		cmath	orchestration		Stores +infinity at 0xcf5c70, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c1850	5	InitCmathFile09Double1Thunk		cmath	orchestration		Jumps to 0x7c1860, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1860	15	InitCmathFile09Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c6c	verified	one	cmath/geometry#static-constants	
+0x7c1870	5	InitCmathFile09Quotient1Thunk		cmath	orchestration		Jumps to 0x7c1880, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c1880	19	InitCmathFile09Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c6c, at 0xcf5c68	verified	one	cmath/geometry#static-constants	
+0x7c18a0	5	InitCmathFile10Copy1Thunk		cmath	orchestration		Jumps to 0x7c18b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c18b0	11	InitCmathFile10Copy1		cmath	orchestration		Stores +infinity at 0xcf5c70, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7c18c0	10	InitPolygonAxisPairsThunk		cmath	orchestration		Calls 0x7c18d0, a static initializer	verified	one	cmath/geometry#point-in-polygon	
 0x7c18d0	45	InitPolygonAxisPairs		cmath	orchestration		Stores the kept axis pairs of the point in polygon test	verified	one	cmath/geometry#point-in-polygon	
 0x7c1900	12			cmath	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -35901,19 +35901,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c4030	90	DoesSegmentCrossTriangle2D		cmath	unreached		Returns 1 when a 2D segment crosses an edge of a triangle	inferred	none	cmath/geometry#triangles-in-the-plane	
 0x7c4090	185	IsPointInTriangle2D		cmath	unreached		Returns 1 when a 2D point lies inside a triangle	inferred	none	cmath/geometry#triangles-in-the-plane	
 0x7c4150	328	DoCoplanarTrianglesOverlap		cmath	unreached		Returns 1 when two coplanar triangles overlap	inferred	none	cmath/geometry#triangles-in-the-plane	
-0x7c42a0	5	InitIntersectDouble1Thunk		cmath	orchestration		Jumps to 0x7c42b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c42b0	15	InitIntersectDouble1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c78	verified	one	cmath/geometry#static-constants	
-0x7c42c0	5	InitIntersectQuotient1Thunk		cmath	orchestration		Jumps to 0x7c42d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c42d0	19	InitIntersectQuotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c78, at 0xcf5c74	verified	one	cmath/geometry#static-constants	
+0x7c42a0	5	InitCmathFile10Double1Thunk		cmath	orchestration		Jumps to 0x7c42b0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c42b0	15	InitCmathFile10Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c78	verified	one	cmath/geometry#static-constants	
+0x7c42c0	5	InitCmathFile10Quotient1Thunk		cmath	orchestration		Jumps to 0x7c42d0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c42d0	19	InitCmathFile10Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c78, at 0xcf5c74	verified	one	cmath/geometry#static-constants	
 0x7c42f0	66	BuildRotationMatrix2		cmath	unreached		Writes the 2x2 rotation [[cos, sin], [-sin, cos]] of an angle	verified	one	cmath/geometry#rotation-of-an-angle	
-0x7c4340	5	InitRotation2Copy1Thunk		cmath	orchestration		Jumps to 0x7c4350, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c4350	11	InitRotation2Copy1		cmath	orchestration		Stores +infinity at 0xcf5c94, the first constant of its file	verified	one	cmath/geometry#static-constants	
-0x7c4360	5	InitRotation2Double1Thunk		cmath	orchestration		Jumps to 0x7c4370, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c4370	15	InitRotation2Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c9c	verified	one	cmath/geometry#static-constants	
-0x7c4380	5	InitRotation2Quotient1Thunk		cmath	orchestration		Jumps to 0x7c4390, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c4390	19	InitRotation2Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c9c, at 0xcf5c98	verified	one	cmath/geometry#static-constants	
-0x7c43b0	5	InitGeometryCopy1Thunk		cmath	orchestration		Jumps to 0x7c43c0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
-0x7c43c0	11	InitGeometryCopy1		cmath	orchestration		Stores +infinity at 0xcf5ca0, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c4340	5	InitCmathFile11Copy1Thunk		cmath	orchestration		Jumps to 0x7c4350, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c4350	11	InitCmathFile11Copy1		cmath	orchestration		Stores +infinity at 0xcf5c94, the first constant of its file	verified	one	cmath/geometry#static-constants	
+0x7c4360	5	InitCmathFile11Double1Thunk		cmath	orchestration		Jumps to 0x7c4370, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c4370	15	InitCmathFile11Double1		cmath	primitive		Stores 2π as π + π in floats, 6.2831855, at 0xcf5c9c	verified	one	cmath/geometry#static-constants	
+0x7c4380	5	InitCmathFile11Quotient1Thunk		cmath	orchestration		Jumps to 0x7c4390, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c4390	19	InitCmathFile11Quotient1		cmath	primitive		Stores 1/2π, 0.15915494, from the 2π at 0xcf5c9c, at 0xcf5c98	verified	one	cmath/geometry#static-constants	
+0x7c43b0	5	InitCmathFile12Copy1Thunk		cmath	orchestration		Jumps to 0x7c43c0, a static initializer of its file	verified	one	cmath/geometry#static-constants	
+0x7c43c0	11	InitCmathFile12Copy1		cmath	orchestration		Stores +infinity at 0xcf5ca0, the first constant of its file	verified	one	cmath/geometry#static-constants	
 0x7c43d0	310	SegmentLineDistance		cmath	unreached		Returns the distance between the line through a segment and a line given by an origin and a direction	inferred	none	cmath/geometry#lines	
 0x7c4510	281	ClosestLineParameters		cmath	unreached		Writes the parameters of the closest points of two lines	inferred	none	cmath/geometry#lines	
 0x7c4630	145	PointLineDistance		cmath	unreached		Returns the distance from a point to a line	inferred	none	cmath/geometry#lines	
