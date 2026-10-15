@@ -368,6 +368,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "benilla-re-warden"
+version = "0.1.0"
+dependencies = [
+ "benilla-re-difftest",
+ "benilla-re-storm",
+ "flate2",
+ "num-bigint",
+ "sha1",
+]
+
+[[package]]
 name = "bindgen"
 version = "0.71.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

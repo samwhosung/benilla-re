@@ -1,0 +1,18 @@
+[package]
+name = "benilla-re-warden"
+description = "The client's side of Warden in WoW.exe 1.12.1.5875: the module decoder and loader, reimplemented and tested against the exe"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+# The library routines the module decoder calls: the exe's own copies are Storm's RC4, SHA-1, big
+# numbers and zlib, and the decoder cites them rather than re-reading them.
+flate2 = "1"
+num-bigint = "0.4"
+sha1 = "0.10"
+
+[dev-dependencies]
+benilla-re-difftest.workspace = true
+benilla-re-storm.workspace = true
