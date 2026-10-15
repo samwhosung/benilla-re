@@ -202,7 +202,7 @@ fn names_of_forty_eight_characters_pass_whole() {
     );
     assert!(text.contains(&format!("void BRE_CDECL {plain}(void);")));
     assert!(text.contains(&format!(
-        "void BRE_THISCALL {}__{}(void *this);",
+        "void BRE_THISCALL {}__{}(void *this_);",
         "B".repeat(23),
         "C".repeat(23)
     )));
@@ -258,15 +258,13 @@ fn a_prototype_the_header_cannot_state_is_left_out_and_counted() {
         "Thing *BRE_FASTCALL Fine(Thing *thing, lua_State *L);",
         "typedef struct lua_State lua_State;",
         "void BRE_CDECL Variadic(const char *format, ...);",
-        "void VariadicThis(void *this, ...); /* __thiscall, variadic */",
-        "void BRE_THISCALL Decorated__dtor(void *this);",
+        "void BRE_THISCALL Decorated__dtor(void *this_);",
         "void BRE_CDECL Names(int a, int a_, int register_, Thing *Thing_);",
         "void BRE_THISCALL Empty(void);",
         "#define BRE_ADDR_Fine 0x401000",
         "typedef Thing *(BRE_FASTCALL *BRE_FN_Fine)(Thing *thing, lua_State *L);",
-        "typedef void (*BRE_FN_VariadicThis)(void *this, ...);",
-        "typedef void (BRE_THISCALL *BRE_FN_Decorated__dtor)(void *this);",
-        "typedef void (BRE_FASTCALL *BRE_FNX_Decorated__dtor)(void *this, void *bre_edx);",
+        "typedef void (BRE_THISCALL *BRE_FN_Decorated__dtor)(void *this_);",
+        "typedef void (BRE_FASTCALL *BRE_FNX_Decorated__dtor)(void *this_, void *bre_edx);",
         "typedef void (BRE_CDECL *BRE_FN_Names)(int a, int a_, int register_, Thing *Thing_);",
     ] {
         assert!(text.contains(expected), "{expected}");
@@ -288,9 +286,11 @@ fn a_prototype_the_header_cannot_state_is_left_out_and_counted() {
             ("name is not a C identifier", 1),
             ("signature holds a comment", 1),
             ("signature is not RET CONVENTION (PARAMETERS)", 2),
+            ("variadic outside __cdecl", 1),
         ]
     );
-    assert_eq!(made.report.prototypes, 6);
+    assert!(!text.contains("VariadicThis"));
+    assert_eq!(made.report.prototypes, 5);
 }
 
 #[test]
@@ -375,31 +375,61 @@ fn clang() -> bool {
         .is_ok_and(|o| o.status.success())
 }
 
-/// Compiles the header with every layout assertion on, for a 32-bit x86 target.
-fn compile(dir: &Path, header: &str, target: &str) -> (bool, String) {
+/// One compile of the header: the language, the flags and what comes before the include.
+struct Job<'a> {
+    compiler: &'a str,
+    lang: &'a str,
+    flags: &'a [&'a str],
+    before: &'a str,
+}
+
+/// Compiles the header with every layout assertion on.
+fn compile(dir: &Path, header: &str, job: &Job) -> (bool, String) {
     std::fs::write(dir.join("benilla-re.h"), header).unwrap();
     // A call through an address, as injected code makes it, and a global's address.
+    let plain_msvc = job.flags.contains(&"-DBRE_CDECL=__cdecl");
+    let call = if !plain_msvc {
+        "BRE_FN_CDataStore__GetUInt8 put = (BRE_FN_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n\
+         BRE_FNX_CDataStore__GetUInt8 put_x = (BRE_FNX_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n"
+    } else {
+        "BRE_FNX_CDataStore__GetUInt8 put_x = (BRE_FNX_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n"
+    };
+    let file = if job.lang == "c" {
+        "check.c"
+    } else {
+        "check.cpp"
+    };
     std::fs::write(
-        dir.join("check.c"),
-        "#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n\
-         BRE_FN_CDataStore__GetUInt8 put = (BRE_FN_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n\
-         BRE_FNX_CDataStore__GetUInt8 put_x = (BRE_FNX_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n\
-         _Static_assert(BRE_ADDR_CDataStore__GetUInt8 == 0x418cb0, \"address\");\n",
+        dir.join(file),
+        format!(
+            "{}\n#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n{call}\
+             BRE_ASSERT(BRE_ADDR_CDataStore__GetUInt8 == 0x418cb0, \"address\");\n",
+            job.before
+        ),
     )
     .unwrap();
-    let output = Command::new("clang")
-        .args(["-fsyntax-only", "-Wall", "-Werror", "-x", "c"])
-        .arg(format!("--target={target}"))
+    let output = Command::new(job.compiler)
+        .args(["-fsyntax-only", "-Wall", "-Werror", "-x", job.lang])
+        .args(job.flags)
         .arg("-I")
         .arg(dir)
-        .arg(dir.join("check.c"))
+        .arg(dir.join(file))
         .output()
-        .expect("clang runs");
+        .expect("the compiler runs");
     (
         output.status.success(),
         String::from_utf8_lossy(&output.stderr).into_owned(),
     )
 }
+
+/// What the Windows SDK declares of the names the table also declares, the SDK's way.
+const SDK_STUB: &str = "\
+typedef struct tagRECT { long left, top, right, bottom; } RECT;\n\
+__declspec(dllimport) unsigned long __stdcall GetACP(void);\n\
+double __cdecl ceil(double);\n\
+int __cdecl _finite(double);\n\
+int __cdecl _isnan(double);\n\
+#define cdecl _cdecl\n";
 
 fn scratch(name: &str) -> PathBuf {
     let dir = std::env::temp_dir().join(format!("benilla-re-export-{}-{name}", std::process::id()));
@@ -416,15 +446,87 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
     }
     let text = &built().files["benilla-re.h"];
     let dir = scratch("clang");
-    // The GNU spelling of the conventions and the Microsoft one, both for 32-bit x86.
-    for target in ["i386-pc-linux-gnu", "i686-pc-windows-msvc"] {
-        let (ok, errors) = compile(&dir, text, target);
-        assert!(
-            ok,
-            "{target}:\n{}",
-            errors.lines().take(20).collect::<Vec<_>>().join("\n")
-        );
+    let mut failures = Vec::new();
+    let mut run = |job: Job| {
+        let (ok, errors) = compile(&dir, text, &job);
+        if !ok {
+            failures.push(format!(
+                "{} {} {:?}:\n{}",
+                job.compiler,
+                job.lang,
+                job.flags,
+                errors.lines().take(8).collect::<Vec<_>>().join("\n")
+            ));
+        }
+    };
+    // The Microsoft spelling for 32-bit x86, as C and as C++, with each way a compiler of that
+    // family is told to accept Microsoft's language, with and without the prototypes, and after
+    // an SDK that declares the same names.
+    for lang in ["c", "c++"] {
+        for mode in [
+            "-fno-ms-extensions",
+            "-fms-extensions",
+            "-fms-compatibility",
+        ] {
+            for prototypes in ["-DBENILLA_RE_PROTOTYPES", "-DBRE_NO_PROTOTYPES"] {
+                for before in ["", SDK_STUB] {
+                    if before == SDK_STUB && prototypes == "-DBENILLA_RE_PROTOTYPES" {
+                        continue;
+                    }
+                    run(Job {
+                        compiler: "clang",
+                        lang,
+                        flags: &[
+                            "--target=i686-pc-windows-msvc",
+                            "-fdeclspec",
+                            mode,
+                            prototypes,
+                        ],
+                        before,
+                    });
+                }
+            }
+        }
+        // Plain MSVC has no __thiscall outside a member: the header leaves those out.
+        run(Job {
+            compiler: "clang",
+            lang,
+            flags: &[
+                "--target=i686-pc-windows-msvc",
+                "-DBRE_CDECL=__cdecl",
+                "-DBRE_STDCALL=__stdcall",
+                "-DBRE_FASTCALL=__fastcall",
+                "-DBENILLA_RE_PROTOTYPES",
+            ],
+            before: "",
+        });
     }
+    // The GNU spelling, with a `cdecl` macro as mingw's headers define it.
+    run(Job {
+        compiler: "clang",
+        lang: "c",
+        flags: &["--target=i386-pc-linux-gnu", "-DBENILLA_RE_PROTOTYPES"],
+        before: "#define cdecl _cdecl\n",
+    });
+    // The real headers of mingw, when this machine has them.
+    for (compiler, lang) in [
+        ("i686-w64-mingw32-gcc", "c"),
+        ("i686-w64-mingw32-g++", "c++"),
+    ] {
+        if Command::new(compiler)
+            .arg("--version")
+            .output()
+            .is_ok_and(|o| o.status.success())
+        {
+            run(Job {
+                compiler,
+                lang,
+                flags: &[],
+                before: "#include <windows.h>\n#include <math.h>\n#include <stdlib.h>",
+            });
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
     // The control: a wrong offset and a wrong size each fail the same compile.
     for (from, to) in [
         (
@@ -437,13 +539,44 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
         ),
     ] {
         assert_eq!(text.matches(from).count(), 1, "{from}");
-        let (ok, errors) = compile(&dir, &text.replacen(from, to, 1), "i386-pc-linux-gnu");
+        let job = Job {
+            compiler: "clang",
+            lang: "c",
+            flags: &["--target=i386-pc-linux-gnu"],
+            before: "",
+        };
+        let (ok, errors) = compile(&dir, &text.replacen(from, to, 1), &job);
         assert!(
             !ok && errors.contains("static assertion failed"),
             "{from}: {errors}"
         );
     }
     let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
+fn an_sdk_type_is_declared_with_the_sdk_tag_and_prototypes_are_opt_in() {
+    let made = generate(
+        &symbols(
+            &[s("Thing", 4, "")],
+            &[f("Thing", 0, 4, "uint32_t", "m_a")],
+            &[func(
+                0x401000,
+                "Take",
+                "void __cdecl (RECT *rect, Thing *this)",
+            )],
+            &[],
+        ),
+        &origin(),
+    )
+    .unwrap();
+    let text = &made.text;
+    assert!(text.contains("typedef struct tagRECT RECT;"));
+    assert!(text.contains("void BRE_CDECL Take(RECT *rect, Thing *this_);"));
+    let guard = text.find("#ifdef BENILLA_RE_PROTOTYPES").unwrap();
+    assert!(guard < text.find("BRE_CDECL Take(").unwrap());
+    assert!(text.contains("__cdecl__"));
+    assert!(!text.contains("__attribute__((cdecl))"));
 }
 
 #[test]

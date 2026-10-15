@@ -230,6 +230,15 @@ fn split_signature(signature: &str) -> Option<Signature> {
     })
 }
 
+/// SDK types the header can declare opaquely, with the tag the SDK gives each: the typedef must
+/// repeat the tag, or it redefines the SDK's after `windows.h`.
+const SDK_TAGS: [(&str, &str); 4] = [
+    ("RECT", "tagRECT"),
+    ("POINT", "tagPOINT"),
+    ("SIZE", "tagSIZE"),
+    ("MSG", "tagMSG"),
+];
+
 /// The state of one export of the header.
 struct Writer<'a> {
     by_name: HashMap<&'a str, usize>,
@@ -463,8 +472,10 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
             ));
         }
     }
-    let mut prototypes = Vec::new();
-    let mut pointers = Vec::new();
+    // Prototypes and pointer types: the ones of any compiler, then the `__thiscall` ones.
+    let (mut prototypes, mut this_prototypes) = (Vec::new(), Vec::new());
+    let (mut pointers, mut this_pointers, mut fastcall_pointers) =
+        (Vec::new(), Vec::new(), Vec::new());
     {
         let t = &symbols.functions;
         let (address, name, signature) = (
@@ -485,10 +496,16 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
             match prototype(&mut writer, n, &row[signature]) {
                 Ok(proto) => {
                     writer.report.prototypes += 1;
-                    prototypes.push(format!("/* {a} */ {}", proto.line));
+                    let line = format!("/* {a} */ {}", proto.line);
                     addresses.push(format!("#define BRE_ADDR_{} {a}", proto.c));
-                    pointers.push(proto.pointer);
-                    pointers.extend(proto.fastcall_pointer);
+                    if proto.thiscall {
+                        this_prototypes.push(line);
+                        this_pointers.push(proto.pointer);
+                    } else {
+                        prototypes.push(line);
+                        pointers.push(proto.pointer);
+                    }
+                    fastcall_pointers.extend(proto.fastcall_pointer);
                 }
                 Err(reason) => writer.leave_out(&reason, a, n),
             }
@@ -499,12 +516,15 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
 
     let mut h = String::new();
     banner(&mut h, origin);
-    h.push_str("/* BRE-TYPES-BEGIN */\n");
+    h.push_str("#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n/* BRE-TYPES-BEGIN */\n");
     for s in &structs {
         let _ = writeln!(h, "typedef struct {0} {0};", s.c);
     }
     for name in &writer.report.opaque {
-        let _ = writeln!(h, "typedef struct {name} {name};");
+        let _ = match SDK_TAGS.iter().find(|(sdk, _)| sdk == name) {
+            Some((_, tag)) => writeln!(h, "typedef struct {tag} {name};"),
+            None => writeln!(h, "typedef struct {name} {name};"),
+        };
     }
     h.push_str("\n#pragma pack(push, 1)\n");
     for &i in &order {
@@ -538,10 +558,19 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
     for line in &globals {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str("\n/* Functions */\n");
+    h.push_str(
+        "\n/* Functions: prototypes, behind BENILLA_RE_PROTOTYPES. The functions are in WoW.exe, so\n \
+         * none can be linked; a call goes through BRE_FN_name and BRE_ADDR_name below. */\n\
+         #ifdef BENILLA_RE_PROTOTYPES\n",
+    );
     for line in &prototypes {
         let _ = writeln!(h, "{line}");
     }
+    h.push_str("#ifdef BRE_HAS_THISCALL\n");
+    for line in &this_prototypes {
+        let _ = writeln!(h, "{line}");
+    }
+    h.push_str("#endif\n#endif\n");
     h.push_str(
         "\n/* Addresses: BRE_ADDR_<name>, the virtual address of a function or a global */\n",
     );
@@ -551,9 +580,18 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
     h.push_str(
         "\n/* Function pointer types: BRE_FN_<name> has the function's convention;\n \
          * BRE_FNX_<name>, for a __thiscall function, is the __fastcall form that passes the dead\n \
-         * edx second */\n",
+         * edx second. Where BRE_HAS_THISCALL is not defined, only BRE_FNX_<name> exists for a\n \
+         * __thiscall function. */\n",
     );
     for line in &pointers {
+        let _ = writeln!(h, "{line}");
+    }
+    h.push_str("#ifdef BRE_HAS_THISCALL\n");
+    for line in &this_pointers {
+        let _ = writeln!(h, "{line}");
+    }
+    h.push_str("#endif\n");
+    for line in &fastcall_pointers {
         let _ = writeln!(h, "{line}");
     }
     h.push('\n');
@@ -565,7 +603,7 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
         structs.len(),
         writer.report.omitted_total()
     );
-    h.push_str("#endif\n");
+    h.push_str("\n#ifdef __cplusplus\n}\n#endif\n#endif\n");
     Ok(Header {
         text: h,
         report: writer.report,
@@ -583,6 +621,8 @@ struct Proto {
     /// For a `__thiscall` function with a parameter: the `__fastcall` form of the same call, with
     /// `this` first and the dead `edx` second.
     fastcall_pointer: Option<String>,
+    /// Whether the convention is `__thiscall`, which MSVC spells only on a member function.
+    thiscall: bool,
 }
 
 fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, String> {
@@ -625,6 +665,12 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
         texts.push((*p, decl.clone()));
         decls.push(decl);
     }
+    if variadic && parts.convention != "__cdecl" {
+        return Err("variadic outside __cdecl".to_string());
+    }
+    if variadic && texts.is_empty() {
+        return Err("variadic without a named parameter".to_string());
+    }
     if !writer.used.insert(c.clone()) {
         return Err("name used twice".to_string());
     }
@@ -652,9 +698,9 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
         params.push(rendered);
     }
     let mut list = params.join(", ");
-    if variadic && !params.is_empty() {
+    if variadic {
         list.push_str(", ...");
-    } else if !variadic && params.is_empty() {
+    } else if params.is_empty() {
         list.push_str("void");
     }
     let ret = cdecl::mangled(&parts.ret);
@@ -665,17 +711,6 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
         let convention = convention.map(|m| format!("{m} ")).unwrap_or_default();
         format!("typedef {ret}{star}({convention}*BRE_{tag}_{c})({list});")
     };
-    if variadic && parts.convention != "__cdecl" {
-        return Ok(Proto {
-            line: format!(
-                "{ret}{star}{c}({list}); /* {}, variadic */",
-                parts.convention
-            ),
-            pointer: pointer_to(None, &list, "FN"),
-            fastcall_pointer: None,
-            c,
-        });
-    }
     let macro_name = keyword(&parts.convention);
     let fastcall_pointer = (parts.convention == "__thiscall" && !variadic && !params.is_empty())
         .then(|| {
@@ -687,6 +722,7 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
         line: format!("{ret}{star}{macro_name} {c}({list});"),
         pointer: pointer_to(Some(macro_name), &list, "FN"),
         fastcall_pointer,
+        thiscall: parts.convention == "__thiscall",
         c,
     })
 }
@@ -714,7 +750,13 @@ fn banner(h: &mut String, origin: &Origin) {
  *   address and a pointer type with its convention; a global has its address. Where a compiler
  *   has no __thiscall, BRE_FNX_name is the same call as a __fastcall with `this` first and the
  *   unused edx second.
- * - The header is C.
+ * - Define BENILLA_RE_PROTOTYPES for the free prototypes. They are off by default: the
+ *   functions are in WoW.exe and cannot be linked, and a prototype of a name the SDK or the C
+ *   library also declares (GetACP, ceil, _isnan) collides with it after <windows.h>.
+ * - A function that takes variable arguments under __stdcall or __thiscall, which no compiler
+ *   can call as written, has no prototype and no pointer type; its address is in the table.
+ * - The header is C and C++. MSVC takes no __thiscall outside a member function, so there it has
+ *   no __thiscall prototype and no BRE_FN_ type for one; BRE_FNX_ is there.
  */
 #ifndef BENILLA_RE_H
 #define BENILLA_RE_H
@@ -729,21 +771,30 @@ fn banner(h: &mut String, origin: &Origin) {
 #    define BRE_CDECL __cdecl
 #    define BRE_STDCALL __stdcall
 #    define BRE_FASTCALL __fastcall
-#    define BRE_THISCALL __thiscall
+#    if defined(__clang__)
+#      define BRE_THISCALL __thiscall
+#      define BRE_HAS_THISCALL
+#    endif
 #  elif defined(__i386__)
-#    define BRE_CDECL __attribute__((cdecl))
-#    define BRE_STDCALL __attribute__((stdcall))
-#    define BRE_FASTCALL __attribute__((fastcall))
-#    define BRE_THISCALL __attribute__((thiscall))
+#    define BRE_CDECL __attribute__((__cdecl__))
+#    define BRE_STDCALL __attribute__((__stdcall__))
+#    define BRE_FASTCALL __attribute__((__fastcall__))
+#    define BRE_THISCALL __attribute__((__thiscall__))
+#    define BRE_HAS_THISCALL
 #  else
 #    define BRE_CDECL
 #    define BRE_STDCALL
 #    define BRE_FASTCALL
 #    define BRE_THISCALL
+#    define BRE_HAS_THISCALL
 #  endif
 #endif
 
-#define BRE_ASSERT(condition, message) _Static_assert(condition, message)
+#ifdef __cplusplus
+#  define BRE_ASSERT(condition, message) static_assert(condition, message)
+#else
+#  define BRE_ASSERT(condition, message) _Static_assert(condition, message)
+#endif
 
 ",
         size = origin.exe_size,
