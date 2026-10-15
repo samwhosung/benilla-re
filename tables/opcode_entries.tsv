@@ -47,7 +47,7 @@ opcode	name	role	site	function	entries	basis
 0x061	SMSG_CREATURE_QUERY_RESPONSE	handler	0x554ffc	0x5550e0	dbcache#handlers	opcode
 0x062	CMSG_WHO	send	0x5af168	0x5aebb0	net/friends#who-query-packet	opcode
 0x063	SMSG_WHO	handler	0x5adc98	0x5adf60	net/friends#who-list-reply	opcode
-0x064	CMSG_WHOIS	send	0x5adf1f	0x5adee0	net/server#social-messages	opcode
+0x064	CMSG_WHOIS	send	0x5adf1f	0x5adee0	net/server#formats-vmangos-reads|net/server#social-messages	opcode
 0x065	SMSG_WHOIS	handler	0x5adca8	0x5adda0	net/server#social-messages	opcode
 0x066	CMSG_FRIEND_LIST	send	0x5ad373	0x5ad340	net/friends#friend-requests	opcode
 0x067	SMSG_FRIEND_LIST	handler	0x5adcc8	0x5add80	net/friends#friend-list-packet	opcode
@@ -97,7 +97,7 @@ opcode	name	role	site	function	entries	basis
 0x091	CMSG_GUILD_MOTD	send	0x48b2e0	0x48b270	ui/groupverbs#guild-verbs	opcode
 0x092	SMSG_GUILD_EVENT	handler	0x5e337f	0x5e7180	objectlayer/party#guild-events	opcode
 0x093	SMSG_GUILD_COMMAND_RESULT	handler	0x5e3390	0x5e7520	objectlayer/party#guild-notices	opcode
-0x095	CMSG_MESSAGECHAT	send	0x49f72a	0x49f1e0	net/server#chat-sends|ui/chatsend#the-chat-packet	opcode
+0x095	CMSG_MESSAGECHAT	send	0x49f72a	0x49f1e0	net/server#formats-vmangos-reads|net/server#chat-sends|ui/chatsend#the-chat-packet	opcode
 0x095	CMSG_MESSAGECHAT	send	0x49faff	0x49f920	net/server#chat-sends|ui/chatsend#sendaddonmessage	opcode
 0x095	CMSG_MESSAGECHAT	send	0x5eb801	0x5eb740	objectlayer/interaction#afk|ui/chatsend#the-chat-packet	opcode
 0x095	CMSG_MESSAGECHAT	send	0x5eb8d0	0x5eb830	objectlayer/interaction#afk|ui/chatsend#the-chat-packet	opcode
@@ -126,8 +126,8 @@ opcode	name	role	site	function	entries	basis
 0x0a7	CMSG_CHANNEL_ANNOUNCEMENTS	send	0x4a07ba	0x4a07b0	ui/channeladmin#commands-naming-a-channel	opcode
 0x0a8	CMSG_CHANNEL_MODERATE	send	0x4a07da	0x4a07d0	ui/channeladmin#commands-naming-a-channel	opcode
 0x0a9	SMSG_UPDATE_OBJECT	handler	0x465157	0x4651a0	objectlayer/update#update-packet|objectlayer/update#block-types	function
-0x0aa	SMSG_DESTROY_OBJECT	handler	0x465191	0x4674a0	objectlayer/update#destroy-object|ui/selection#clearing-the-selection	function
-0x0ab	CMSG_USE_ITEM	send	0x6e5872	0x6e54f0	spell/cast#cast-request-packets	opcode
+0x0aa	SMSG_DESTROY_OBJECT	handler	0x465191	0x4674a0	objectlayer/update#destroy-object	opcode
+0x0ab	CMSG_USE_ITEM	send	0x6e5872	0x6e54f0	spell/cast#cast-request-packets|spell/cast#item-use-fields	opcode
 0x0ac	CMSG_OPEN_ITEM	send	0x5edd26	0x5edc80	objectlayer/inventory#opening-and-wrapping-items	opcode
 0x0ac	CMSG_OPEN_ITEM	send	0x5eddcd	0x5edd60	objectlayer/inventory#opening-and-wrapping-items	opcode
 0x0ad	CMSG_READ_ITEM	send	0x5ec54e	0x5ec500	objectlayer/playermessages#reading-items	opcode
@@ -170,7 +170,7 @@ opcode	name	role	site	function	entries	basis
 0x0c6	MSG_MOVE_TELEPORT_CHEAT	send	0x404cdc	0x404a60		unread
 0x0c7	MSG_MOVE_TELEPORT_ACK	handler	0x6035d0	0x603f90	collision/teleport#near-teleport-acknowledgement|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x60308d	0x602fb0	collision/teleport#near-teleport-acknowledgement|objectlayer/unitmovement#relayed-move-events	opcode
-0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x60e2b5	0x60e0a0	collision/teleport#near-teleport-acknowledgement|objectlayer/moveemitter#emitter-routing|objectlayer/moveemitter#emitter-tail|objectlayer/unitmovement#standing-on-a-movement-message	opcode
+0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x60e2b5	0x60e0a0	collision/teleport#near-teleport-acknowledgement|net/server#formats-vmangos-reads|objectlayer/moveemitter#emitter-routing|objectlayer/moveemitter#emitter-tail|objectlayer/unitmovement#standing-on-a-movement-message	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x61651f	0x615c30	collision/replay#replay-cases-20-to-38|collision/teleport#near-teleport-acknowledgement	opcode
 0x0c7	MSG_MOVE_TELEPORT_ACK	send	0x618519	0x618080	collision/eventapply#flush-dispatcher|collision/events#mode-toggle-tags	opcode
 0x0c9	MSG_MOVE_FALL_LAND	handler	0x6035c0	0x603bb0	collision/selfmove#self-addressed-move|objectlayer/unitmovement#movement-message-handlers	opcode
@@ -189,7 +189,7 @@ opcode	name	role	site	function	entries	basis
 0x0d8	MSG_MOVE_SET_TURN_RATE	handler	0x603530	0x603ae0	objectlayer/unitmovement#movement-message-handlers	opcode
 0x0d9	MSG_MOVE_TOGGLE_COLLISION_CHEAT	handler	0x6034c0	0x603bb0	collision/selfmove#self-addressed-move|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0da	MSG_MOVE_SET_FACING	handler	0x6034a0	0x603bb0	collision/knockback#knockback-messages|collision/selfmove#self-addressed-move|collision/walkmode#walk-mode-messages|objectlayer/unitmovement#movement-message-handlers	function
-0x0da	MSG_MOVE_SET_FACING	send	0x615fd2	0x615c30	collision/replay#replay-cases-0-to-19	opcode
+0x0da	MSG_MOVE_SET_FACING	send	0x615fd2	0x615c30	collision/replay#replay-cases-0-to-19|objectlayer/standstate#a-seated-body-turns	opcode
 0x0db	MSG_MOVE_SET_PITCH	handler	0x6034b0	0x603bb0	collision/selfmove#self-addressed-move|objectlayer/unitmovement#movement-message-handlers	opcode
 0x0db	MSG_MOVE_SET_PITCH	send	0x615bee	0x615bc0	collision/events#pitch-mode-and-swim-tags|collision/replay#replay-cases-0-to-19	opcode
 0x0dc	MSG_MOVE_WORLDPORT_ACK	send	0x401cd7	0x401bc0	collision/teleport#world-port-executor	opcode
@@ -256,7 +256,7 @@ opcode	name	role	site	function	entries	basis
 0x117	CMSG_BEGIN_TRADE	send	0x5d4116	0x5d40e0	objectlayer/trade#outgoing-trade-messages|ui/popups#the-trade-enchant-clash|ui/trade#answering-a-trade-request|ui/trade#starting-a-trade	opcode
 0x118	CMSG_BUSY_TRADE	send	0x5d4186	0x5d4150	objectlayer/trade#outgoing-trade-messages|ui/trade#answering-a-trade-request|ui/trade#starting-a-trade	opcode
 0x119	CMSG_IGNORE_TRADE	send	0x5d41f6	0x5d41c0	objectlayer/trade#outgoing-trade-messages|ui/trade#answering-a-trade-request|ui/trade#starting-a-trade	opcode
-0x11a	CMSG_ACCEPT_TRADE	send	0x5d4274	0x5d4230	net/server#trade-sends|objectlayer/trade#outgoing-trade-messages	opcode
+0x11a	CMSG_ACCEPT_TRADE	send	0x5d4274	0x5d4230	net/server#formats-vmangos-reads|net/server#trade-sends|objectlayer/trade#outgoing-trade-messages	opcode
 0x11b	CMSG_UNACCEPT_TRADE	send	0x5d42d6	0x5d42a0	objectlayer/trade#outgoing-trade-messages	opcode
 0x11c	CMSG_CANCEL_TRADE	send	0x5d4346	0x5d4310	objectlayer/trade#outgoing-trade-messages|ui/popups#the-trade-enchant-clash|ui/trade#opening-and-closing-the-window|ui/trade#starting-a-trade	opcode
 0x11d	CMSG_SET_TRADE_ITEM	send	0x5d444e	0x5d4380	net/server#trade-sends|objectlayer/trade#outgoing-trade-messages	opcode
@@ -269,7 +269,7 @@ opcode	name	role	site	function	entries	basis
 0x122	SMSG_INITIALIZE_FACTIONS	handler	0x4d529c	0x4d5640	ui/reputationwire#faction-messages	opcode
 0x123	SMSG_SET_FACTION_VISIBLE	handler	0x4d52be	0x4d5710	ui/reputationwire#faction-messages	opcode
 0x124	SMSG_SET_FACTION_STANDING	handler	0x4d52cf	0x4d5760	ui/reputationwire#faction-messages	opcode
-0x125	CMSG_SET_FACTION_ATWAR	send	0x4d60be	0x4d5fd0	ui/reputation#reputation-slots|ui/reputation#flag-bits|ui/reputationwire#faction-requests	function
+0x125	CMSG_SET_FACTION_ATWAR	send	0x4d60be	0x4d5fd0	ui/reputationwire#faction-requests	opcode
 0x127	SMSG_SET_PROFICIENCY	handler	0x5e32a2	0x5e7b70	objectlayer/playermessages#other-small-handlers	opcode
 0x128	CMSG_SET_ACTION_BUTTON	send	0x4e5964	0x4e58e0	ui/actionbar#slot-changed	opcode
 0x129	SMSG_ACTION_BUTTONS	handler	0x5e314e	0x5e6680	objectlayer/playercombat#spell-book-messages	opcode
@@ -278,9 +278,9 @@ opcode	name	role	site	function	entries	basis
 0x12c	SMSG_SUPERCEDED_SPELL	handler	0x5e312c	0x5e6330	objectlayer/playercombat#spell-book-messages|ui/trainerlist#when-states-are-re-evaluated	opcode
 0x12e	CMSG_CAST_SPELL	send	0x6e5872	0x6e54f0	spell/cast#cast-request-packets	opcode
 0x12f	CMSG_CANCEL_CAST	send	0x6095e7	0x6094f0	spell/castgates#cooldown-rungs	opcode
-0x12f	CMSG_CANCEL_CAST	send	0x6e49ab	0x6e4940	spell/cancel#cancelling-a-cast	opcode
-0x12f	CMSG_CANCEL_CAST	send	0x6e6ff3	0x6e6f30	spell/cancel#cancelling-next-swing-spells	opcode
-0x130	SMSG_CAST_RESULT	handler	0x6e715f	0x6e7330	spell/handlers#cast-result	opcode
+0x12f	CMSG_CANCEL_CAST	send	0x6e49ab	0x6e4940	spell/cancel#cancelling-a-cast|spell/interrupts#movement-commands-cancel-a-cast|spell/interrupts#stop-casting-binding|spell/reasons#packets-of-a-local-refusal	opcode
+0x12f	CMSG_CANCEL_CAST	send	0x6e6ff3	0x6e6f30	spell/cancel#who-cancels-a-cast|spell/cancel#cancelling-next-swing-spells	opcode
+0x130	SMSG_CAST_RESULT	handler	0x6e715f	0x6e7330	spell/failures#reporter-inputs-and-first-effects|spell/handlers#cast-result	opcode
 0x131	SMSG_SPELL_START	handler	0x6e716f	0x6e7640	spell/handlers#start-and-go-dispatch|spell/visuals#precast-visual-at-cast-start	opcode
 0x132	SMSG_SPELL_GO	handler	0x6e717f	0x6e7640	spell/handlers#start-and-go-dispatch	opcode
 0x133	SMSG_SPELL_FAILURE	handler	0x6e718f	0x6e8d80	spell/failures#spell-failure-packets	opcode
@@ -291,11 +291,11 @@ opcode	name	role	site	function	entries	basis
 0x138	SMSG_PET_CAST_FAILED	handler	0x6e719f	0x6e8eb0	spell/failures#pet-cast-failure-packet	opcode
 0x139	MSG_CHANNEL_START	handler	0x6e721f	0x6e7550	spell/handlers#channel-start-and-update	opcode
 0x13a	MSG_CHANNEL_UPDATE	handler	0x6e722f	0x6e75f0	spell/handlers#channel-start-and-update	opcode
-0x13b	CMSG_CANCEL_CHANNELLING	send	0x6e9bb2	0x6e9b70	spell/cancel#channel-and-aura-cancels	opcode
+0x13b	CMSG_CANCEL_CHANNELLING	send	0x6e9bb2	0x6e9b70	spell/cancel#channel-and-aura-cancels|spell/interrupts#movement-cancels-a-channel	opcode
 0x13c	SMSG_AI_REACTION	handler	0x603710	0x604060	objectlayer/unitnames#greetings-and-unit-sounds	opcode
-0x13d	CMSG_SET_SELECTION	send	0x49388d	0x493540	objectlayer/interaction#mounted-cursor-and-selection|ui/targeting#setting-the-target|ui/targeting#releasing-the-old-target	opcode
-0x13d	CMSG_SET_SELECTION	send	0x493a64	0x493910	ui/targeting#releasing-the-old-target	opcode
-0x141	CMSG_ATTACKSWING	send	0x5ecd3c	0x5ecb70	objectlayer/playercombat#the-melee-attack	opcode
+0x13d	CMSG_SET_SELECTION	send	0x49388d	0x493540	objectlayer/interaction#mounted-cursor-and-selection|ui/selection#selecting-stops-the-swing|ui/targeting#setting-the-target|ui/targeting#releasing-the-old-target	opcode
+0x13d	CMSG_SET_SELECTION	send	0x493a64	0x493910	ui/selection#selecting-stops-the-swing|ui/targeting#releasing-the-old-target	opcode
+0x141	CMSG_ATTACKSWING	send	0x5ecd3c	0x5ecb70	objectlayer/playercombat#the-melee-attack|ui/selection#selecting-stops-the-swing	opcode
 0x142	CMSG_ATTACKSTOP	send	0x6243a9	0x624370	objectlayer/playercombat#the-melee-attack|ui/selection#selecting-stops-the-swing	opcode
 0x143	SMSG_ATTACKSTART	handler	0x62552c	0x6255b0	objectlayer/unitcombat#attack-messages	opcode
 0x144	SMSG_ATTACKSTOP	handler	0x62553d	0x6255b0	objectlayer/unitcombat#attack-messages	opcode
@@ -329,8 +329,8 @@ opcode	name	role	site	function	entries	basis
 0x167	SMSG_DUEL_REQUESTED	handler	0x4d471c	0x4d49d0	ui/duel#a-challenge	function
 0x168	SMSG_DUEL_OUTOFBOUNDS	handler	0x4d472d	0x4d4aa0	ui/duel#messages	opcode
 0x169	SMSG_DUEL_INBOUNDS	handler	0x4d473e	0x4d4ac0	ui/duel#messages	opcode
-0x16a	SMSG_DUEL_COMPLETE	handler	0x4d4760	0x4d4b20	ui/duel#countdown-and-result	function
-0x16b	SMSG_DUEL_WINNER	handler	0x4d4771	0x4d4ba0	ui/duel#countdown-and-result	function
+0x16a	SMSG_DUEL_COMPLETE	handler	0x4d4760	0x4d4b20	ui/duel#countdown-and-result	opcode
+0x16b	SMSG_DUEL_WINNER	handler	0x4d4771	0x4d4ba0	ui/duel#countdown-and-result	opcode
 0x16c	CMSG_DUEL_ACCEPTED	send	0x4d487b	0x4d4830	ui/duel#a-challenge	opcode
 0x16d	CMSG_DUEL_CANCELLED	send	0x4d48fb	0x4d48b0	ui/duel#a-challenge	opcode
 0x16e	SMSG_MOUNTRESULT	handler	0x5e301c	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#error-notices	opcode
@@ -338,15 +338,15 @@ opcode	name	role	site	function	entries	basis
 0x171	CMSG_MOUNTSPECIAL_ANIM	send	0x60df27	0x60dea0	objectlayer/unitmovement#local-movement-commands	opcode
 0x172	SMSG_MOUNTSPECIAL_ANIM	handler	0x603700	0x603ff0	objectlayer/units#start-up-and-shutdown	opcode
 0x173	SMSG_PET_TAME_FAILURE	handler	0x6e71ff	0x6e97e0	spell/failures#pet-tame-failure	opcode
-0x174	CMSG_PET_SET_ACTION	send	0x4bcb63	0x4bc9a0	ui/petbar#pet-events|ui/petbar#picking-up-and-dropping-pet-actions	function
+0x174	CMSG_PET_SET_ACTION	send	0x4bcb63	0x4bc9a0	ui/petbar#picking-up-and-dropping-pet-actions	opcode
 0x174	CMSG_PET_SET_ACTION	send	0x4bcc77	0x4bcbb0	ui/petbar#pet-autocast	opcode
 0x175	CMSG_PET_ACTION	send	0x4b3533	0x4b3300	ui/spellbook#casting-a-book-spell	opcode
 0x175	CMSG_PET_ACTION	send	0x4bd4a4	0x4bd1d0	ui/petbar#pressing-a-pet-action	opcode
 0x176	CMSG_PET_ABANDON	send	0x4bd79f	0x4bd740	ui/petbar#abandon-and-rename	opcode
 0x177	CMSG_PET_RENAME	send	0x4bd947	0x4bd840	ui/petbar#abandon-and-rename	opcode
 0x178	SMSG_PET_NAME_INVALID	handler	0x5e34a0	0x5e38c0	objectlayer/playermessages#the-notice-handler|objectlayer/playermessages#error-notices	opcode
-0x179	SMSG_PET_SPELLS	handler	0x4bc6b6	0x4bd990	ui/petbar#the-pet-spell-message|ui/trainerlist#when-states-are-re-evaluated	opcode
-0x17a	SMSG_PET_MODE	handler	0x4bc6c6	0x4bdb10	ui/petbar#pet-mode-and-feedback-messages	function
+0x179	SMSG_PET_SPELLS	handler	0x4bc6b6	0x4bd990	ui/petbar#the-pet-spell-message|ui/spellbook#who-signals-spells_changed|ui/trainerlist#when-states-are-re-evaluated	opcode
+0x17a	SMSG_PET_MODE	handler	0x4bc6c6	0x4bdb10	ui/petbar#pet-mode-and-feedback-messages	opcode
 0x17b	CMSG_GOSSIP_HELLO	send	0x5df518	0x5df4d0	objectlayer/interaction#talking-to-an-npc|ui/questshare#accepting-and-declining	opcode
 0x17c	CMSG_GOSSIP_SELECT_OPTION	send	0x4e23ef	0x4e2320	ui/gossip#selecting-an-option	opcode
 0x17d	SMSG_GOSSIP_MESSAGE	handler	0x4e1efc	0x4e26e0	ui/gossip#the-gossip-message	opcode
@@ -358,14 +358,14 @@ opcode	name	role	site	function	entries	basis
 0x184	CMSG_QUESTGIVER_HELLO	send	0x501526	0x5013f0	ui/questshare#accepting-and-declining	opcode
 0x184	CMSG_QUESTGIVER_HELLO	send	0x5df598	0x5df550	objectlayer/interaction#talking-to-an-npc	opcode
 0x185	SMSG_QUESTGIVER_QUEST_LIST	handler	0x5e31e7	0x5e59b0	objectlayer/quests#quest-giver-messages|ui/questgiver#the-quest-list-message	opcode
-0x186	CMSG_QUESTGIVER_QUERY_QUEST	send	0x5eabd4	0x5eab80	objectlayer/quests#quest-messages-sent|ui/questgiver#clicking-a-row	opcode
+0x186	CMSG_QUESTGIVER_QUERY_QUEST	send	0x5eabd4	0x5eab80	objectlayer/quests#quest-messages-sent|ui/questgiver#clicking-a-row|ui/questpanel#gossip-rows	opcode
 0x188	SMSG_QUESTGIVER_QUEST_DETAILS	handler	0x5e3209	0x5e59b0	objectlayer/quests#quest-giver-messages|ui/questshare#a-shared-offer-and-an-npcs	opcode
 0x189	CMSG_QUESTGIVER_ACCEPT_QUEST	send	0x5eac64	0x5eac10	objectlayer/quests#quest-messages-sent|ui/questshare#accepting-and-declining	opcode
-0x18a	CMSG_QUESTGIVER_COMPLETE_QUEST	send	0x5eacf4	0x5eaca0	objectlayer/quests#quest-messages-sent|ui/questgiver#clicking-a-row	opcode
+0x18a	CMSG_QUESTGIVER_COMPLETE_QUEST	send	0x5eacf4	0x5eaca0	objectlayer/quests#quest-messages-sent|ui/questgiver#clicking-a-row|ui/questpanel#gossip-rows	opcode
 0x18b	SMSG_QUESTGIVER_REQUEST_ITEMS	handler	0x5e321a	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
-0x18c	CMSG_QUESTGIVER_REQUEST_REWARD	send	0x5ead84	0x5ead30	objectlayer/quests#quest-messages-sent	opcode
+0x18c	CMSG_QUESTGIVER_REQUEST_REWARD	send	0x5ead84	0x5ead30	objectlayer/quests#quest-messages-sent|ui/questpanel#completing-and-choosing	opcode
 0x18d	SMSG_QUESTGIVER_OFFER_REWARD	handler	0x5e322b	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
-0x18e	CMSG_QUESTGIVER_CHOOSE_REWARD	send	0x5eae20	0x5eadc0	objectlayer/quests#quest-messages-sent	opcode
+0x18e	CMSG_QUESTGIVER_CHOOSE_REWARD	send	0x5eae20	0x5eadc0	objectlayer/quests#quest-messages-sent|ui/questpanel#completing-and-choosing	opcode
 0x18f	SMSG_QUESTGIVER_QUEST_INVALID	handler	0x5e31f8	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
 0x190	CMSG_QUESTGIVER_CANCEL	send	0x5eae98	0x5eae50	objectlayer/overview#unreached-functions	function
 0x191	SMSG_QUESTGIVER_QUEST_COMPLETE	handler	0x5e323c	0x5e59b0	objectlayer/quests#quest-giver-messages	opcode
@@ -439,7 +439,7 @@ opcode	name	role	site	function	entries	basis
 0x1d9	SMSG_START_MIRROR_TIMER	handler	0x5e358e	0x5e7990	objectlayer/playermessages#mirror-timers	opcode
 0x1da	SMSG_PAUSE_MIRROR_TIMER	handler	0x5e359f	0x5e7990	objectlayer/playermessages#mirror-timers	opcode
 0x1db	SMSG_STOP_MIRROR_TIMER	handler	0x5e35b0	0x5e7990	objectlayer/playermessages#mirror-timers	opcode
-0x1dc	CMSG_PING	send	0x537ea7	0x537e10	net/session#ping-and-latency	opcode
+0x1dc	CMSG_PING	send	0x537ea7	0x537e10	net/session#ping-and-latency|net/session#ping-sequence-and-statistics	opcode
 0x1de	SMSG_CLEAR_COOLDOWN	handler	0x6e71df	0x6e9670	spell/cooldowns#cooldown-event-clear-and-cheat	opcode
 0x1df	SMSG_GAMEOBJECT_PAGETEXT	handler	0x5f882c	0x5f88c0	objectlayer/gameobjects#watchers-and-messages	opcode
 0x1e0	CMSG_SETSHEATHED	send	0x611dbc	0x611cf0	objectlayer/sheathing#the-sheathe-setter|objectlayer/unitanim#drawing-and-sheathing	opcode
@@ -459,7 +459,7 @@ opcode	name	role	site	function	entries	basis
 0x1f3	SMSG_PLAY_SPELL_VISUAL	handler	0x6e723f	0x6e98d0	spell/handlers#small-spell-handlers	opcode
 0x1f4	CMSG_ZONEUPDATE	send	0x67e986	0x67e940	terrain/zones#zone-update-message	opcode
 0x1f5	SMSG_PARTYKILLLOG	handler	0x626d92	0x628890	objectlayer/combatlogmessages#log-messages	opcode
-0x1f6	SMSG_COMPRESSED_UPDATE_OBJECT	handler	0x465174	0x4672f0	objectlayer/update#compressed-update	function
+0x1f6	SMSG_COMPRESSED_UPDATE_OBJECT	handler	0x465174	0x4672f0	objectlayer/update#compressed-update	opcode
 0x1f8	SMSG_EXPLORATION_EXPERIENCE	handler	0x5e34b1	0x5e38c0	objectlayer/playermessages#level-up-and-exploration	opcode
 0x1fb	MSG_RANDOM_ROLL	handler	0x5e35f4	0x5e38c0	objectlayer/playermessages#dice-rolls	opcode
 0x1fb	MSG_RANDOM_ROLL	send	0x48c871	0x48c7b0	ui/groupverbs#small-sends	opcode
@@ -504,7 +504,7 @@ opcode	name	role	site	function	entries	basis
 0x234	CMSG_GUILD_SET_PUBLIC_NOTE	send	0x4d16b3	0x4d15e0	ui/guild#notes-and-text	opcode
 0x235	CMSG_GUILD_SET_OFFICER_NOTE	send	0x4d17d3	0x4d1700	ui/guild#notes-and-text	opcode
 0x236	SMSG_LOGIN_VERIFY_WORLD	handler	0x401789	0x401de0	collision/teleport#far-transfer-handlers	opcode
-0x238	CMSG_SEND_MAIL	send	0x4aea6c	0x4ae800	net/server#mail-sends|ui/mailsend#sending	opcode
+0x238	CMSG_SEND_MAIL	send	0x4aea6c	0x4ae800	net/server#formats-vmangos-reads|net/server#mail-sends|ui/mailsend#sending	opcode
 0x239	SMSG_SEND_MAIL_RESULT	handler	0x4acad0	0x4ad050	ui/mail#mail-results	opcode
 0x23a	CMSG_GET_MAIL_LIST	send	0x4aeb51	0x4aeab0	ui/mail#mail-packets|ui/mail#opening-the-inbox	opcode
 0x23b	SMSG_MAIL_LIST_RESULT	handler	0x4acae1	0x4ad1b0	ui/mail#the-list-packet	opcode
@@ -560,11 +560,11 @@ opcode	name	role	site	function	entries	basis
 0x269	SMSG_CORPSE_RECLAIM_DELAY	handler	0x48f4af	0x48f690	ui/deathui#the-reclaim-delay|ui/gameui#game-start-up	opcode
 0x26a	CMSG_SET_ACTIVE_MOVER	send	0x6007ea	0x6006e0	objectlayer/unitmovement#the-active-mover	opcode
 0x26b	CMSG_PET_CANCEL_AURA	send	0x4b3434	0x4b3300	ui/spellbook#casting-a-book-spell	opcode
-0x26b	CMSG_PET_CANCEL_AURA	send	0x4bd2ad	0x4bd1d0	objectlayer/interaction#clicking-while-mounted|spell/cast#cast-entries|spell/records#global-cooldown-start|ui/petbar#pet-events|ui/petbar#pressing-a-pet-action	function
-0x26d	CMSG_CANCEL_AUTO_REPEAT_SPELL	send	0x6ea0d9	0x6ea080	spell/cancel#auto-repeat-stop	opcode
+0x26b	CMSG_PET_CANCEL_AURA	send	0x4bd2ad	0x4bd1d0	ui/petbar#pressing-a-pet-action	opcode
+0x26d	CMSG_CANCEL_AUTO_REPEAT_SPELL	send	0x6ea0d9	0x6ea080	spell/cancel#auto-repeat-stop|spell/reasons#packets-of-a-local-refusal	opcode
 0x26f	MSG_LIST_STABLED_PETS	handler	0x4caa8c	0x4cab10	ui/stable#the-list-message	opcode
 0x26f	MSG_LIST_STABLED_PETS	send	0x4bd7ec	0x4bd740	ui/petbar#abandon-and-rename	opcode
-0x26f	MSG_LIST_STABLED_PETS	send	0x4cad50	0x4cacb0	ui/stable#the-result-message|ui/stable#closing-and-events	function
+0x26f	MSG_LIST_STABLED_PETS	send	0x4cad50	0x4cacb0	ui/stable#the-result-message	opcode
 0x26f	MSG_LIST_STABLED_PETS	send	0x5e02e8	0x5e02a0	objectlayer/interaction#talking-to-an-npc	opcode
 0x270	CMSG_STABLE_PET	send	0x4caec2	0x4cae50	ui/stable#stable-requests	opcode
 0x270	CMSG_STABLE_PET	send	0x4cb59a	0x4cb420	ui/stable#click-and-drag	opcode
@@ -644,7 +644,7 @@ opcode	name	role	site	function	entries	basis
 0x2b1	MSG_MOVE_WATER_WALK	handler	0x603750	0x603bb0	collision/selfmove#self-addressed-move|collision/walkmode#walk-mode-messages|objectlayer/unitmovement#movement-message-handlers	opcode
 0x2b3	CMSG_SELF_RES	send	0x48ae05	0x48ad70	ui/deathui#soulstone-and-self-resurrection	opcode
 0x2b4	SMSG_FEIGN_DEATH_RESISTED	handler	0x6e729f	0x6e9800	spell/handlers#small-spell-handlers	opcode
-0x2b7	SMSG_DUEL_COUNTDOWN	handler	0x4d474f	0x4d4ae0	ui/duel#countdown-and-result	function
+0x2b7	SMSG_DUEL_COUNTDOWN	handler	0x4d474f	0x4d4ae0	ui/duel#countdown-and-result	opcode
 0x2b8	SMSG_AREA_TRIGGER_MESSAGE	handler	0x48f50f	0x48f690	ui/gameui#game-start-up	opcode
 0x2b9	CMSG_TOGGLE_HELM	send	0x4052b2	0x405250		unread
 0x2b9	CMSG_TOGGLE_HELM	send	0x5ee708	0x5ee660	objectlayer/inventory#helm-and-cloak	opcode
@@ -670,7 +670,7 @@ opcode	name	role	site	function	entries	basis
 0x2cb	SMSG_INSTANCE_SAVE_CREATED	handler	0x4e7e52	0x4e7e60		unread
 0x2cc	SMSG_RAID_INSTANCE_INFO	handler	0x49868a	0x49e070		unread
 0x2cd	CMSG_REQUEST_RAID_INFO	send	0x4a189b	0x4a1850	ui/groupverbs#instances	opcode
-0x2ce	CMSG_MOVE_TIME_SKIPPED	send	0x600c67	0x600be0	collision/mover#heartbeat-and-skipped-time|collision/timeskip#skipped-time-effects|net/server#movement-sends-and-cadence	opcode
+0x2ce	CMSG_MOVE_TIME_SKIPPED	send	0x600c67	0x600be0	collision/mover#heartbeat-and-skipped-time|collision/timeskip#skipped-time-effects|net/server#formats-vmangos-reads|net/server#movement-sends-and-cadence	opcode
 0x2cf	CMSG_MOVE_FEATHER_FALL_ACK	send	0x6162b1	0x615c30	collision/replay#replay-cases-20-to-38	opcode
 0x2cf	CMSG_MOVE_FEATHER_FALL_ACK	send	0x618270	0x618080	collision/events#mode-toggle-tags	opcode
 0x2cf	CMSG_MOVE_FEATHER_FALL_ACK	send	0x6182b3	0x618080	collision/events#mode-toggle-tags	opcode
@@ -743,8 +743,8 @@ opcode	name	role	site	function	entries	basis
 0x30e	SMSG_SPLINE_MOVE_SET_WALK_MODE	handler	0x603830	0x603c80	collision/walkmode#walk-mode-messages|objectlayer/unitmovement#movement-message-handlers	opcode
 0x312	CMSG_ACTIVATETAXIEXPRESS	send	0x5ed1aa	0x5ed130	objectlayer/interaction#taxis|ui/taxiroute#taking-a-node	opcode
 0x313	SMSG_SET_FACTION_ATWAR	handler	0x4d52ad	0x4d56b0	ui/reputationwire#faction-messages	opcode
-0x317	CMSG_SET_FACTION_INACTIVE	send	0x4d6176	0x4d60f0	ui/reputation#reputation-slots|ui/reputation#flag-bits|ui/reputationwire#faction-requests	function
-0x318	CMSG_SET_WATCHED_FACTION	send	0x4d62b4	0x4d6240	ui/reputationlua#watched-faction	opcode
+0x317	CMSG_SET_FACTION_INACTIVE	send	0x4d6176	0x4d60f0	ui/reputationwire#faction-requests	opcode
+0x318	CMSG_SET_WATCHED_FACTION	send	0x4d62b4	0x4d6240	ui/reputationlua#watched-faction|ui/reputationwire#faction-requests	opcode
 0x319	MSG_MOVE_TIME_SKIPPED	handler	0x6035e0	0x603b40	collision/timeskip#skipped-time-received|objectlayer/unitmovement#movement-message-handlers	opcode
 0x31a	SMSG_SPLINE_MOVE_ROOT	handler	0x603780	0x603c80	objectlayer/unitmovement#movement-message-handlers	opcode
 0x31c	SMSG_INVALIDATE_PLAYER	handler	0x5550d9	0x555600	dbcache#handlers	opcode

@@ -8,7 +8,7 @@ laid end to end from 0x86faa0 (`SPELL_FAILED_UNKNOWN`) up to 0x870b64 (`SPELL_FA
 reason 0): the string at the k-th place from the top is reason k, and the lowest is the key for any
 byte above 0x90, 0x91 in this table. The generator reads the run and checks that it holds 146
 strings starting at the two ends it names, and that the jump table's immediates agree with the
-tiling: the pair for reason r, at 0x6e23f6 + 6r, holds the address of the string r places below the top.
+tiling, and that the jump table at 0x6e2764 sends reason r to that pair: the pair for reason r, at 0x6e23f6 + 6r, holds the address of the string r places below the top.
 """
 
 import sys
@@ -17,6 +17,7 @@ from lib import Image, addr, note, parse_args, write_table
 
 LOW, TOP = 0x86FAA0, 0x870B64
 JUMPS = 0x6E23F6
+TABLE = 0x6E2764
 LAST = 0x90
 
 
@@ -41,6 +42,10 @@ def main():
         at = JUMPS + 6 * r
         if img.u8(at) != 0xB8 or img.u32(at + 1) != int(rows[r][2], 16):
             sys.exit('reason 0x%x: the switch does not return its string' % r)
+    # the dispatch table: slot r holds the address of the pair for reason r
+    for r in range(LAST + 1):
+        if img.u32(TABLE + 4 * r) != JUMPS + 6 * r:
+            sys.exit('reason 0x%x: the jump table does not pick its pair' % r)
     note('%d reasons, the switch agrees with the run' % len(rows))
     write_table(['reason', 'key', 'address'], rows, args.out)
 
