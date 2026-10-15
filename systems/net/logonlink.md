@@ -32,12 +32,17 @@ Test: `net::grunt_realm_list`
 
 `0x5b2230` empties the holder, sizes it to the count, and for record `i` stores: `i` at `+0`, the u32 at `+4`, the byte at `+8`, the name at `+9` (256 bytes), the address at `+0x109` (32 bytes), the float at `+0x12c` and the three bytes at `+0x130`, `+0x131` and `+0x132` (`glue/realms` rewrites three population values). Each name is cleaned: a character of `"*/:<>?\|` becomes a space, and trailing such characters, spaces and dots are cut. It then reads a u16 into the holder's `+0x10` and calls the holder's slot 5 with 0 when the store was read exactly to its end; otherwise it empties the holder and passes 4. A null packet passes 4 through `0x5b2560`.
 
-Addresses: `0x5b2230`, `0x5b2274`, `0x5b2321`, `0x5b2370`, `0x5b23dd`, `0x5b23f4`, `0x5b2420`, `0x5b242b`, `0x5b3360`, `0x5b24b0`, `0x5b2560`
+Addresses: `0x5b2230`, `0x5b2274`, `0x5b2321`, `0x5b2370`, `0x5b23dd`, `0x5b23f4`, `0x5b2420`, `0x5b242b`, `0x5b3360`, `0x5b24b0`, `0x5b2560`, `0x5b2590`, `0x5b25b9`, `0x5b26f0`, `0x5b28c8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::realm_list_fill`, `net::realm_list_result`, `net::realm_name_char`
 
-`0x5b227a` reads the count and `0x5b2286` calls `0x5b3360`; `0x5b22b9` to `0x5b2319` read the fields in the order above. `0x5b2321` `cmp ecx,[edi+0x10]; ja` stops on a read past the end. `0x5b2376` to `0x5b2396` classify each name byte: `byte - 0x20` indexes the table `0x5b2450` (up to `0x7c`) and the jump table `0x5b2444`; the characters `"*/:<>?\|` reach `0x5b2391`, which stores a space. `0x5b23a6` loops `0x5b24b0(char, 1)` from the end, which is 0 for those characters, for space and for dot. `0x5b23dd` reads the tail; `0x5b23f4` is the call of the store's end check (`[edi]+0x14`) and `0x5b2420` the success call.
+`0x5b227a` reads the count and `0x5b2286` calls `0x5b3360`; `0x5b22b9` to `0x5b2319` read the fields in the order above. `0x5b2321` `cmp ecx,[edi+0x10]; ja` stops on a read past the end. `0x5b2376` to `0x5b2396` classify each name byte: `byte - 0x20` indexes the table `0x5b2450` (up to `0x7c`) and the jump table `0x5b2444`; the characters `"*/:<>?\|` reach `0x5b2391`, which stores a space. `0x5b23a6` loops `0x5b24b0(char, 1)` from the end, which is 0 for those characters, for space and for dot. `0x5b23dd` reads the tail; `0x5b23f4` is the call of the store's end check (`[edi]+0x14`) and `0x5b2420` the success call. A record whose reads run past the end is left uncleaned, and the
+whole array is then emptied. With no byte left the count is stale stack. `0x5b2560(result, store)` empties the array and passes a nonzero result to slot 5
+(`0x5b2590`); for 0 it runs its own copy of the fill, trimming with inline tables
+(`0x5b26f0`). Its callers, `0x5b242b` and `0x5b28c8`, pass 4 and 2 with no store, so that copy
+never runs, and `0x5b25b9` is dead: the array is empty when it compares the count. The tests run
+the three functions whole but for `0x5b25b9`, and `0x5b24b0` over every byte.
 
 ## File transfer
 
@@ -76,10 +81,14 @@ Test: `net::pin_shuffle`
 
 `0x5b3120(count, positions)` turns the pin positions into ASCII digits, seeds a local random pool with the clock, draws a 16-byte client salt into `+0x1c8`, stores `SHA-1(client salt ‖ SHA-1(server salt ‖ digits))` at `+0x1d8`, and reports state 9. The logon proof sends the salt and the hash when the flag at `+0x1ac` is set, taking their addresses from `0x5b1f10`.
 
-Addresses: `0x5b3120`, `0x5b31e0`, `0x5b1f10`, `0x5b3147`, `0x5b3163`, `0x5b3177`, `0x5b318f`
+Addresses: `0x5b3120`, `0x5b31e0`, `0x5b1f10`, `0x5b3147`, `0x5b3163`, `0x5b3177`, `0x5b318f`, `0x5b3152`, `0x5b31cc`
 Confidence: verified
 Proof: one
-Test: `net::checksum_proof`
+Test: `net::checksum_proof`, `net::logon_pin_proof`
 
-`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`. `net::checksum_proof` runs `0x5b31e0` whole.
+`0x5b3147` adds `0x30` to each position; `0x5b3163` seeds with the clock `0x42c010`; `0x5b3177` draws 16 bytes with `0x5d1cf0`; `0x5b318f` calls `0x5b31e0`, whose two hashes are `0x5b31ef` to `0x5b3212` (inner: server salt, then digits) and `0x5b321a` to `0x5b323f` (outer: client salt, then the inner digest). `0x5b1f10` returns the flag and the addresses of `+0x1c8` and `+0x1d8`. `net::checksum_proof` runs `0x5b31e0` whole. The digits sit in a 12-byte stack buffer and
+`0x5b3152` puts their NUL at the count, so a count above 11 overruns it; a position of `0xd0`
+makes a NUL digit, and the hash stops there. `0x5b31cc` reports state 9 through the holder's slot
+4 with the names `LOGIN_STATE_CHECKSUM` and `LOGIN_OK`. `net::logon_pin_proof` runs `0x5b3120`
+whole for counts 0 to 11, the clock and the C runtime's time and `rand` stubbed.
 

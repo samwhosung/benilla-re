@@ -35,7 +35,7 @@ null when `i` is at or past its count.
 Addresses: `0x5b2230`, `0x5b22b7`, `0x5b232d`, `0x5b2342`, `0x5b2357`, `0x5ab930`, `0x5ab97a`, `0xc28118`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::realm_list_fill`
 
 The parser takes `esi = [holder+0xc] + i·0x134` and stores the index byte at `+0x00` (`0x5b22b7`),
 then passes `+0x04`, `+0x08`, `+0x09` (limit 0x100), `+0x109` (limit 0x20), `+0x12c`, `+0x130`,
@@ -45,7 +45,8 @@ then passes `+0x04`, `+0x08`, `+0x09` (limit 0x100), `+0x109` (limit 0x20), `+0x
 types are the loads in this file: `fadd dword [+0x12c]` (`0x46e5ee`), `movzx` of `+0x130`
 (`0x46ef4e`), `test byte [+0x8]` (`0x46ea7c`), a dword load of `+0x4` (`0x46ea98`), a byte load of
 `+0x131` (`0x46e5a9`). `0x5ab930` returns null when `index ≥ [holder+8]` unsigned (`0x5ab97a`),
-else `[holder+0xc] + index·0x134`.
+else `[holder+0xc] + index·0x134`. `net::realm_list_fill` runs `0x5b2230` whole; `0x5ab930` has
+no test.
 
 ## The category set
 

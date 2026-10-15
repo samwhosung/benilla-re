@@ -212,10 +212,10 @@ non-zero dword from the proof. Other results become `LOGIN_STATE_FAILED` (5) wit
 
 Result `0x0a` moves to `LOGIN_STATE_DOWNLOADFILE` (6).
 
-Addresses: `0x5b2c90`, `0x5b2cf9`, `0x5b2d00`, `0x5b2e16`, `0x5b2e38`, `0x5b2e78`, `0x5b2ea4`, `0x5b2920`
+Addresses: `0x5b2c90`, `0x5b2cf9`, `0x5b2d00`, `0x5b2e16`, `0x5b2e38`, `0x5b2e78`, `0x5b2ea4`, `0x5b2920`, `0x5b2ce5`, `0x5b2c9e`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::logon_result`
 
 `0x5b2cf9` indexes the byte table `0x5b2ea4` with the result less 3 (253 entries; a larger index
 goes to the default) into the 11-entry jump table `0x5b2e78`; it is slot 10 of the logon object's
@@ -223,7 +223,11 @@ vtable `0x80a5d4`. Results 4 and 5 share `0x5b2d00`:
 code 7 when `+0x1ac` is zero; otherwise `+0x1ad` counts the failures and the code is 8 for the
 first two and 9 after (`cmp al,3; sbb; add 9`). `0x5b2e16` handles 0 and `0x0e`: the copy to
 `+0x54` at `0x5b2e38` caps the length at `0x28`. The names are the strings `0x5b2920` logs through
-its tables `0x5b2c00` (states) and `0x5b2c40` (18 codes).
+its tables `0x5b2c00` (states) and `0x5b2c40` (18 codes). The result is a dword: 1, 2 and any value
+past 255 take the default, and `0x5b2ce5` sets `+8` to 1 for every failure. The failure count is
+a byte, so after 255 failures the next is the first again. During a reconnect (`0x5b2c9e`) it
+only empties the realm array, calls the holder's slot 5 with 1 and drops the link. The test runs
+`0x5b2c90` whole over results 0 to `0x10f` and past.
 
 ## Random pool
 
