@@ -712,6 +712,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80ada0	void *	s_itemSecondaryVtable		objectlayer	Holds the item's one-slot vtable at +0x110	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ada8	void *[31]	CGItem_C::vftable		objectlayer	Holds the item vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
 0x80ae24	void *	s_itemPureVtable		objectlayer	Holds the one-slot pure-call vtable the item constructor stores at +0x110 first	verified	one	objectlayer/classes#secondary-and-member-vtables
+0x80ae48	float	s_interactRange		objectlayer	Holds 5.5555553, the NPC interaction range squared into 0xc4c28c	verified	one	net/server#interaction-and-inspect-ranges
 0x80ae54	float	s_bindPointRadius		objectlayer	Holds 10.0, the bind point radius before its factor	verified	one	objectlayer/interaction#the-bind-point
 0x80ae90	float	s_spiritHealerXpFraction		objectlayer	Holds 0.05, the next level's experience fraction the spirit healer shows	verified	one	objectlayer/interaction#confirmation-dialogs
 0x80ae98	uint32_t[20]	s_grayLevelGaps		objectlayer	Holds the level gap below which a unit is trivial, by the player's level over 5	verified	one	objectlayer/interaction#other-units
