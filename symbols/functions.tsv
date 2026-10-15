@@ -1525,14 +1525,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x419cc0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x419ce0	10			unassigned			Runs its object file code that calls 0x41dae0; not read here	inferred	none		
 0x419cf0	15			unassigned			Runs its object file code that calls 0x41b7d0, 0x41db00; not read here	inferred	none		
-0x419d00	5			unassigned			Runs its object file code not read here	inferred	none		
-0x419d10	11			unassigned			Runs its object file code not read here	inferred	none		
-0x419d20	5			unassigned			Runs its object file code not read here	inferred	none		
-0x419d30	5			unassigned			Runs its object file code not read here	inferred	none		
-0x419d40	5			unassigned			Runs its object file code not read here	inferred	none		
-0x419d50	15			unassigned			Runs its object file code not read here	inferred	none		
-0x419d60	5			unassigned			Runs its object file code not read here	inferred	none		
-0x419d70	19			unassigned			Runs its object file code not read here	inferred	none		
+0x419d00	5			client			Runs its object file code not read here	inferred	none		
+0x419d10	11			client			Runs its object file code not read here	inferred	none		
+0x419d20	5			client			Runs its object file code not read here	inferred	none		
+0x419d30	5			client			Runs its object file code not read here	inferred	none		
+0x419d40	5			client			Runs its object file code not read here	inferred	none		
+0x419d50	15			client			Runs its object file code not read here	inferred	none		
+0x419d60	5			client			Runs its object file code not read here	inferred	none		
+0x419d70	19			client			Runs its object file code not read here	inferred	none		
 0x419d90	5			client			Runs its object file code not read here	inferred	none		
 0x419da0	11			client			Runs its object file code not read here	inferred	none		
 0x419db0	10			client			Runs its object file code that calls 0x419dc0; not read here	inferred	none		
@@ -2233,16 +2233,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42b470	124			unassigned	unreached		Runs its object file code that calls SStrCopy, 0x42b3d0, SStr::sub_64A450; not read here	inferred	none		
 0x42b4f0	11			unassigned	unreached		Runs its object file code that calls OsPathGetRootChars; not read here	inferred	none		
 0x42b500	48			unassigned	unreached		Runs its object file code that calls SStrChr2; not read here	inferred	none		
-0x42b530	5	InitFileNameInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b540; a static initializer	verified	one	core/time#file-name-helpers	
-0x42b540	11	InitFileNameInfinity		unassigned	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/time#file-name-helpers	
-0x42b550	48	HasInvalidFileNameChar		unassigned	unreached		Returns 1 when a string holds a character that a file name may not, else 0	verified	one	core/time#file-name-helpers	
-0x42b580	118	IsValidFileName		unassigned	unreached		Returns 1 when a file name has no such character and no reserved device name before its last dot	verified	one	core/time#file-name-helpers	
-0x42b600	66	GetWindowsFontsDirectory		unassigned	unreached		Writes the Windows directory, a backslash if missing, and fonts\ into a buffer	verified	one	core/time#file-name-helpers	
-0x42b650	31	FormatFontsPath		unassigned	orchestration	void __userpurge (char *name@<ecx>, char *buffer@<edx>, uint32_t size)	Formats Fonts\<file name> into a buffer of a given size	verified	one	core/time#file-name-helpers	
-0x42b670	5	InitFileNameTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#file-name-helpers	
-0x42b680	15	InitFileNameTwoPi		unassigned	primitive	void __cdecl (void)	Stores pi + pi as a float in the object file's 2pi global	verified	one	core/time#file-name-helpers	
-0x42b690	5	InitFileNameInvTwoPiThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#file-name-helpers	
-0x42b6a0	19	InitFileNameInvTwoPi		unassigned	primitive	void __cdecl (void)	Stores 1 / 2pi as a float in the object file's 1/2pi global	verified	one	core/time#file-name-helpers	
+0x42b530	5	InitFileNameInfinityThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b540; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b540	11	InitFileNameInfinity		core	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	core/time#file-name-helpers	
+0x42b550	48	HasInvalidFileNameChar		core	unreached		Returns 1 when a string holds a character that a file name may not, else 0	verified	one	core/time#file-name-helpers	
+0x42b580	118	IsValidFileName		core	unreached		Returns 1 when a file name has no such character and no reserved device name before its last dot	verified	one	core/time#file-name-helpers	
+0x42b600	66	GetWindowsFontsDirectory		core	unreached		Writes the Windows directory, a backslash if missing, and fonts\ into a buffer	verified	one	core/time#file-name-helpers	
+0x42b650	31	FormatFontsPath		core	orchestration	void __userpurge (char *name@<ecx>, char *buffer@<edx>, uint32_t size)	Formats Fonts\<file name> into a buffer of a given size	verified	one	core/time#file-name-helpers	
+0x42b670	5	InitFileNameTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b680; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b680	15	InitFileNameTwoPi		core	primitive	void __cdecl (void)	Stores pi + pi as a float in the object file's 2pi global	verified	one	core/time#file-name-helpers	
+0x42b690	5	InitFileNameInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42b6a0; a static initializer	verified	one	core/time#file-name-helpers	
+0x42b6a0	19	InitFileNameInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2pi as a float in the object file's 1/2pi global	verified	one	core/time#file-name-helpers	
 0x42b6c0	42	CreateTimeManager		core	orchestration	void __cdecl (void)	Allocates and builds the time manager, then calls Sleep(0)	verified	one	core/time#time-manager-lifetime	
 0x42b6f0	91	DestroyTimeManager		core	orchestration	void __cdecl (void)	Signals the calibration thread and waits up to 20 ms for it to free the time manager	verified	one	core/time#time-manager-lifetime	
 0x42b750	22	OsGetClockCounter		core	host	uint64_t __cdecl (void)	Returns the time-stamp counter in mode 1, else GetTickCount	verified	two	core/time#the-millisecond-clock	
@@ -12401,8 +12401,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x513b60	19			unassigned			Runs its object file code not read here	inferred	none		
 0x513b80	5			unassigned			Runs its object file code not read here	inferred	none		
 0x513b90	19			unassigned			Runs its object file code not read here	inferred	none		
-0x513bb0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x513bc0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x513bb0	5			input	orchestration		Runs its object file code not read here	inferred	none		
+0x513bc0	11			input	orchestration		Runs its object file code not read here	inferred	none		
 0x513bd0	376	Script::Jump		input	orchestration		Implements the Lua function Jump	inferred	none	spell/cancel#who-cancels-a-cast	
 0x513d50	140	Script::ToggleRun	idb	input	orchestration	int __cdecl (lua_State *L)	Implements the Lua function ToggleRun	verified	one	input#toggle-run	
 0x513de0	62	Script::ToggleAutoRun	idb	input	primitive		Toggles command bit 0x1000 (autorun) by inverting its current state	verified	one	input#the-commands	
@@ -12461,12 +12461,12 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x515250	137	CInputControl::PitchGate		input	primitive		Returns whether the body may take the camera pitch: alive, standing, mouse turn held	verified	one	input#mouse-turning-and-the-camera	
 0x5152e0	79	CInputControl::HandOffFacing		input	primitive		Gives the camera facing to the body when the yaw gate holds, then clears bit 0x40000	verified	one	input#mouse-turning-and-the-camera	
 0x515330	84	CInputControl::HandOffPitch		input	primitive		Gives the camera pitch to the body when the pitch gate holds, then clears bit 0x80000	verified	one	input#mouse-turning-and-the-camera	ui::glue_503_515330_negate
-0x515390	5			unassigned			Runs its object file code not read here	inferred	none		
-0x5153a0	15			unassigned			Runs its object file code not read here	inferred	none		
-0x5153b0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x5153c0	19			unassigned			Runs its object file code not read here	inferred	none		
-0x5153e0	5			unassigned			Runs its object file code not read here	inferred	none		
-0x5153f0	19			unassigned			Runs its object file code not read here	inferred	none		
+0x515390	5			input	orchestration		Runs its object file code not read here	inferred	none		
+0x5153a0	15			input	primitive		Runs its object file code not read here	inferred	none		
+0x5153b0	5			input	orchestration		Runs its object file code not read here	inferred	none		
+0x5153c0	19			input	primitive		Runs its object file code not read here	inferred	none		
+0x5153e0	5			input	orchestration		Runs its object file code not read here	inferred	none		
+0x5153f0	19			input	primitive		Runs its object file code not read here	inferred	none		
 0x515410	5			unassigned			Runs its object file code not read here	inferred	none		
 0x515420	19			unassigned			Runs its object file code not read here	inferred	none		
 0x515440	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -25369,7 +25369,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x689a30	19	InitOptHalfOver10		cvar	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in an object-file global	verified	one	cvar/overview#shared-header-constants	
 0x689a50	5	InitDbcInfinityThunkVideoHardware		dbc	orchestration	void __cdecl ()	Jumps to the +inf initializer of the VideoHardware record file	inferred	none		
 0x689a60	11	InitDbcInfinityVideoHardware		dbc	orchestration	void __cdecl ()	Copies the float +inf into a word of the data section	inferred	none		
-0x689a70	6	GetVideoHardwarePath		unassigned	primitive	const char * __cdecl (void)	Returns the path of VideoHardware.dbc	verified	one	console/hardware#hardware-table	
+0x689a70	6	GetVideoHardwarePath		dbc	primitive	const char * __cdecl (void)	Returns the path of VideoHardware.dbc	verified	one	console/hardware#hardware-table	
 0x689a80	3	VideoHardwareRecConstruct		dbc	orchestration	VideoHardwareRec * __thiscall ()	Returns the record it is called on and does nothing else	inferred	none		
 0x689a90	1	VideoHardwareRecDestruct		dbc	orchestration	void __thiscall ()	Returns at once; the record has no destructor work	inferred	none		
 0x689aa0	804	VideoHardwareRecRead		dbc	primitive	bool __thiscall (void *file, const char *stringBase)	Reads one VideoHardware record column by column from the file and rebases its string offsets	inferred	none		
@@ -29639,9 +29639,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2cd0	32			ui	unreached		Runs XMLTree.cpp code not read here	inferred	none		
 0x6f2cf0	73	GetXMLAttribute		ui	primitive	const char * __thiscall (XMLNode *this, const char *name)	Returns the value of the first attribute matching a name ignoring case, or null	verified	one	ui/framexml#xml-trees	
 0x6f2d40	211			ui	primitive		Runs XMLTree.cpp code that calls SStrCmpI, SMemReAlloc, SStrDupA and 1 more; not read here	inferred	none		
-0x6f2e20	69			unassigned			Runs its object file code not read here	inferred	none		
-0x6f2e70	5			unassigned			Runs its object file code not read here	inferred	none		
-0x6f2e80	15			unassigned			Runs its object file code not read here	inferred	none		
+0x6f2e20	69			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x6f2e70	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x6f2e80	15			ui	primitive		Runs its object file code not read here	inferred	none		
 0x6f2e90	5			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ea0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x6f2ec0	106			unassigned	unreached		Runs its object file code that calls luaD_growstack; not read here	inferred	none		
@@ -36636,14 +36636,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cc4e0	40	CNamePlateHealthBar::SetStatusBarColor		ui	orchestration		Sets the fill colour and clears the auto-colour flag	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cc510	89	CNamePlateHealthBar::WatchUnit		ui	orchestration		Watches the unit's health and maximum health fields	verified	one	ui/nameplates#bar-colour-and-values	
 0x7cc570	95	CNamePlateHealthBar::OnFieldChanged		ui	orchestration		Resets the bar range and value from the unit's health fields	verified	one	ui/nameplates#bar-colour-and-values	
-0x7cc5d0	81	CNamePlateHealthBar::UnwatchUnit		unassigned	orchestration		Removes the two field watchers	verified	one	ui/nameplates#bar-colour-and-values	
-0x7cc630	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc640	15			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc650	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc660	19			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc680	8			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc690	5			unassigned			Runs its object file code not read here	inferred	none		
-0x7cc6a0	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7cc5d0	81	CNamePlateHealthBar::UnwatchUnit		ui	orchestration		Removes the two field watchers	verified	one	ui/nameplates#bar-colour-and-values	
+0x7cc630	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cc640	15			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7cc650	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cc660	19			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7cc680	8			ui	primitive		Runs its object file code not read here	inferred	none		
+0x7cc690	5			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x7cc6a0	19			ui	primitive		Runs its object file code not read here	inferred	none		
 0x7cc6c0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7cc6d0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7cc6f0	5			unassigned			Runs its object file code not read here	inferred	none		
