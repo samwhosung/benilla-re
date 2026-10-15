@@ -38,6 +38,26 @@ without initializers has no run: it is bounded by the source paths its code pass
 callers. One stretch of code between two runs can hold several files, as WardenClient.cpp
 (0x6c9f8e) and FFXEffects.cpp (0x6cbed2) share the stretch after slot `0x82cd78`.
 
+A row's system is its object file's, and a row stays `unassigned` until its file is proved. Three
+proofs settle it:
+
+- **A source path.** A function that passes a `.cpp` or `.c` path (`__FILE__` in an assertion or an
+  allocation) is in that file; the path's directory gives the system. A header's path names no
+  file, since headers are inlined anywhere.
+- **An initializer run.** The functions of one run are one file's: its +∞ thunk and initializer and
+  the functions that read the file's own copies of the header's constants. A file proved only by
+  its run takes the one system that the evidence inside its stretch agrees on, and never a system
+  with a doc, which lists its own object files.
+- **A stretch.** Code is contiguous per object file, so the functions between the first and the
+  last that a path or a run proves to be one file's are that file's. A stretch is not used when it
+  overlaps another file's, or holds a row of another system.
+
+Two functions of one system with an unproved function between them settle nothing: the stretch
+can hold another system's file. The library code the client links is owned by its library
+(`../symbols/README.md`, "One row per address"): the community database names the C runtime's
+functions, and a function that passes a `DBFilesClient\` file name is a DBC record file's.
+`cargo xtask census --assign` applies the rule to every row that has no system.
+
 ### Roots
 
 The functions through which anything outside the system enters it:

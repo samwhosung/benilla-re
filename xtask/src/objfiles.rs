@@ -1,28 +1,29 @@
 //! The object file, and so the system, of every function start (`systems/README.md`, "Object
 //! files"; `symbols/README.md`, "One row per address").
 //!
-//! The evidence, strongest first:
+//! A function's system is its object file's, and a file is proved by the first of these that
+//! applies; nothing else settles it:
 //!
 //! - a row's own system, for a row this pass does not fill;
 //! - a span a written system's doc lists by address (`DECLARED`);
-//! - a source path the function passes (`__FILE__` in an assertion or an allocation), mapped to
-//!   its system by the directory and file rules in `RULES`; a header's path names no file, since
-//!   headers are inlined anywhere;
-//! - the span of one path: code is contiguous per object file, so every function between the
-//!   first and the last that pass the same `.cpp` path is that file's, unless a row inside belongs
-//!   to another system;
+//! - a source path the function itself passes (`__FILE__` in an assertion or an allocation),
+//!   mapped to its system by the directory and file rules in `RULES`; a header's path names no
+//!   file, since headers are inlined anywhere;
 //! - an initializer run: the C runtime's table `0x827000` lists each file's static initializers
 //!   in link order, a file that includes the shared maths header opening its run with its +∞
 //!   initializer. That initializer, its thunk and the functions that read the file's own copies of
-//!   the header's constants are one file's, and so is everything between them; that span is the
-//!   system of the evidence inside it, when the evidence agrees;
+//!   the header's constants are one file's;
+//! - a stretch: code is contiguous per object file, so every function between the first and the
+//!   last that a path or a run proves to be one file's is that file's too, unless a function in
+//!   the stretch is proved another's. The file's system is the path's, or for a file only a run
+//!   proves, the one system the evidence inside the stretch agrees on, and never a system with a
+//!   written doc, which lists its own object files;
 //! - the C runtime's own names in the community database (`_malloc`, `__aulldiv`), whose
 //!   functions are the `crt` library's;
-//! - a DBC file name (`DBFilesClient\…`), which only the DBC stores' loaders pass;
-//! - neighbours: a function between two functions of one system, with no evidence of another
-//!   between them, is that system's.
+//! - a DBC file name (`DBFilesClient\…`), which only the DBC stores' loaders pass.
 //!
-//! What none of these settles is `unassigned`.
+//! Two files of one system with a function between them prove nothing about it: the stretch can
+//! hold a file of another system. What none of these settles is `unassigned`.
 
 use crate::bodies::{Image, Listing, IMMEDIATE};
 use regex::Regex;
@@ -151,11 +152,10 @@ pub enum Source {
     Row,
     Declared,
     Path,
-    PathSpan,
+    Stretch,
     Run,
     Library,
     DbcName,
-    Neighbours,
 }
 
 impl Source {
@@ -164,11 +164,10 @@ impl Source {
             Source::Row => "row",
             Source::Declared => "a doc's span",
             Source::Path => "path",
-            Source::PathSpan => "path span",
+            Source::Stretch => "stretch",
             Source::Run => "initializer run",
             Source::Library => "runtime name",
             Source::DbcName => "DBC file name",
-            Source::Neighbours => "neighbours",
         }
     }
 }
@@ -319,76 +318,112 @@ pub fn assign(
             );
         }
     }
-    // Each path's span.
-    let spans: Vec<(&String, u32, u32)> = paths
-        .iter()
-        .filter_map(|(p, fs)| Some((p, *fs.first()?, *fs.last()?)))
-        .collect();
-    for (k, &(path, low, high)) in spans.iter().enumerate() {
-        let Some(system) = system_of_path(path) else {
-            continue;
-        };
-        let overlap = spans.iter().enumerate().find(|&(j, &(other, l, h))| {
-            j != k && file_name(other) != file_name(path) && l <= high && low <= h
-        });
-        if let Some((_, (other, _, _))) = overlap {
-            conflicts.push(format!(
-                "{} ({low:#x} to {high:#x}) overlaps {}; its span is not used",
-                file_name(path),
-                file_name(other)
-            ));
-            continue;
-        }
-        let i = starts.partition_point(|&a| a < low);
-        let j = starts.partition_point(|&a| a <= high);
-        let foreign = starts[i..j]
-            .iter()
-            .find(|a| rows.get(a).is_some_and(|s| *s != system));
-        if let Some(a) = foreign {
-            conflicts.push(format!(
-                "{} ({low:#x} to {high:#x}) holds the {} row {a:#x}; its span is not used",
-                file_name(path),
-                rows[a]
-            ));
-            continue;
-        }
-        for &a in &starts[i..j] {
-            files.entry(a).or_insert_with(|| file_name(path));
-            owners.entry(a).or_insert(Owner {
-                system: system.to_string(),
-                source: Source::PathSpan,
-            });
+    // The object file of each function a path or a run proves, then the stretch of each file.
+    let mut file_of: BTreeMap<u32, String> = BTreeMap::new();
+    for (&function, set) in &own_paths {
+        if let (1, Some(path)) = (set.len(), set.iter().next()) {
+            file_of.insert(function, file_name(path));
         }
     }
-
-    // The initializer runs. A run's +∞ initializer and the functions that read the run's own
-    // copies of the header's constants are one file's, so every function between the first and
-    // the last of them is that file's: its system, when the evidence inside agrees.
+    let path_spans = file_spans(&file_of);
     let runs = initializer_runs(listing, image, &operands);
+    let mut run_files: BTreeSet<String> = BTreeSet::new();
     for members in &runs {
         let (Some(&low), Some(&high)) = (members.first(), members.last()) else {
             continue;
         };
         let i = starts.partition_point(|&a| a < low);
         let j = starts.partition_point(|&a| a <= high);
-        let systems: BTreeSet<&str> = starts[i..j]
+        // The files already proved inside the run's stretch, or whose stretch holds a member.
+        let mut named: BTreeSet<&String> =
+            starts[i..j].iter().filter_map(|a| file_of.get(a)).collect();
+        for m in members {
+            named.extend(
+                path_spans
+                    .iter()
+                    .filter(|(_, &(l, h))| l <= *m && *m <= h)
+                    .map(|(f, _)| f),
+            );
+        }
+        if named.len() > 1 {
+            continue;
+        }
+        let file = match named.iter().next() {
+            Some(f) => (*f).clone(),
+            None => {
+                let f = format!("the run at {low:#x}");
+                run_files.insert(f.clone());
+                f
+            }
+        };
+        for &m in members {
+            file_of.entry(m).or_insert_with(|| file.clone());
+        }
+    }
+    let runs_count = runs.len();
+    let run_members: BTreeSet<u32> = runs.iter().flatten().copied().collect();
+    let spans = file_spans(&file_of);
+    for (file, &(low, high)) in &spans {
+        let overlap = spans
             .iter()
-            .filter_map(|a| owners.get(a))
-            .map(|o| o.system.as_str())
+            .find(|&(other, &(l, h))| other != file && l <= high && low <= h);
+        if let Some((other, _)) = overlap {
+            conflicts.push(format!(
+                "{file} ({low:#x} to {high:#x}) overlaps {other}; its stretch is not used"
+            ));
+            continue;
+        }
+        let i = starts.partition_point(|&a| a < low);
+        let j = starts.partition_point(|&a| a <= high);
+        // A file's system: its paths', or for a file only a run proves, the one system the
+        // evidence inside agrees on, and never a written system's: its doc lists its files.
+        let by_path: BTreeSet<Option<&str>> = starts[i..j]
+            .iter()
+            .filter(|a| own_paths.contains_key(a))
+            .flat_map(|a| own_paths[a].iter().map(|p| system_of_path(p)))
             .collect();
-        let barred = barriers.range(low..=high).next().is_some();
-        if systems.len() == 1 && !barred {
-            let system = systems.into_iter().next().expect("one system").to_string();
-            // A written system lists its own object files; a run adds none to it.
-            if documented.contains(&system) {
-                continue;
+        let system = if run_files.contains(file) {
+            let inside: BTreeSet<&str> = starts[i..j]
+                .iter()
+                .filter_map(|a| owners.get(a))
+                .map(|o| o.system.as_str())
+                .collect();
+            let barred = barriers.range(low..=high).next().is_some();
+            match inside.iter().next() {
+                Some(&s) if inside.len() == 1 && !barred && !documented.contains(s) => {
+                    s.to_string()
+                }
+                _ => continue,
             }
-            for &a in &starts[i..j] {
-                owners.entry(a).or_insert(Owner {
-                    system: system.clone(),
-                    source: Source::Run,
-                });
+        } else {
+            match by_path.iter().next() {
+                Some(Some(s)) if by_path.len() == 1 => s.to_string(),
+                _ => continue,
             }
+        };
+        let foreign = starts[i..j]
+            .iter()
+            .find(|a| rows.get(a).is_some_and(|s| *s != system));
+        if let Some(a) = foreign {
+            conflicts.push(format!(
+                "{file} ({low:#x} to {high:#x}) holds the {} row {a:#x}; its stretch is not used",
+                rows[a]
+            ));
+            continue;
+        }
+        for &a in &starts[i..j] {
+            files.entry(a).or_insert_with(|| file.clone());
+            let source = if own_paths.contains_key(&a) {
+                Source::Path
+            } else if run_members.contains(&a) {
+                Source::Run
+            } else {
+                Source::Stretch
+            };
+            owners.entry(a).or_insert(Owner {
+                system: system.clone(),
+                source,
+            });
         }
     }
 
@@ -412,40 +447,24 @@ pub fn assign(
         });
     }
 
-    // Neighbours: between two settled functions of one system.
-    let mut settled: Vec<(u32, String)> = owners
-        .iter()
-        .map(|(&a, o)| (a, o.system.clone()))
-        .chain(barriers.iter().map(|&a| (a, String::new())))
-        .collect();
-    settled.sort();
-    for &a in &starts {
-        if owners.contains_key(&a) || barriers.contains(&a) {
-            continue;
-        }
-        let i = settled.partition_point(|s| s.0 < a);
-        let (Some(before), Some(after)) = (i.checked_sub(1).map(|k| &settled[k]), settled.get(i))
-        else {
-            continue;
-        };
-        if before.1 == after.1 && !before.1.is_empty() {
-            let system = before.1.clone();
-            owners.insert(
-                a,
-                Owner {
-                    system,
-                    source: Source::Neighbours,
-                },
-            );
-        }
-    }
     owners.retain(|a, o| o.source == Source::Row || !thunks.contains(a));
     Owners {
         owners,
         files,
         conflicts,
-        runs: runs.len(),
+        runs: runs_count,
     }
+}
+
+/// The first and last function of each file in `file_of`.
+fn file_spans(file_of: &BTreeMap<u32, String>) -> BTreeMap<String, (u32, u32)> {
+    let mut spans: BTreeMap<String, (u32, u32)> = BTreeMap::new();
+    for (&a, f) in file_of {
+        let span = spans.entry(f.clone()).or_insert((a, a));
+        span.0 = span.0.min(a);
+        span.1 = span.1.max(a);
+    }
+    spans
 }
 
 /// The last component of a path: `Player_C.cpp`.
@@ -594,5 +613,75 @@ mod tests {
             "?_Get_deleter@_Ref_count_base@std@@UBEPAXABVtype_info@@@Z"
         ));
         assert!(!crt("SStrCopy"));
+    }
+
+    /// A one-section image at 0x401000 holding `data` at its offset 0x1000.
+    fn image(data: &[(u32, &str)]) -> Vec<u8> {
+        let mut bytes = vec![0u8; 0x200 + 0x2000];
+        bytes[0x3c..0x40].copy_from_slice(&0x80u32.to_le_bytes());
+        bytes[0x86..0x88].copy_from_slice(&1u16.to_le_bytes());
+        bytes[0x94..0x96].copy_from_slice(&0xe0u16.to_le_bytes());
+        bytes[0x80 + 52..0x80 + 56].copy_from_slice(&0x400000u32.to_le_bytes());
+        let header = 0x80 + 24 + 0xe0;
+        bytes[header + 8..header + 12].copy_from_slice(&0x2000u32.to_le_bytes());
+        bytes[header + 12..header + 16].copy_from_slice(&0x1000u32.to_le_bytes());
+        bytes[header + 16..header + 20].copy_from_slice(&0x2000u32.to_le_bytes());
+        bytes[header + 20..header + 24].copy_from_slice(&0x200u32.to_le_bytes());
+        for (address, text) in data {
+            let at = 0x200 + (address - 0x401000) as usize;
+            bytes[at..at + text.len()].copy_from_slice(text.as_bytes());
+        }
+        bytes
+    }
+
+    const GAME_UI: &str = r"E:\build\buildWoW\WoW\Source\Ui\GameUI.cpp";
+    const OTHER_UI: &str = r"E:\build\buildWoW\WoW\Source\Ui\Other.cpp";
+
+    /// Functions of 0x10 bytes from 0x401000, each a `push` of the string at the address given.
+    fn owners_of_pushes(pushes: &[Option<u32>]) -> Owners {
+        let mut text = String::new();
+        let mut extents = Vec::new();
+        for (i, push) in pushes.iter().enumerate() {
+            let at = 0x401000 + 0x10 * i as u32;
+            extents.push((at, at + 0x10));
+            match push {
+                Some(string) => text.push_str(&format!("  {at:x}:\tpush   0x{string:x}\n")),
+                None => text.push_str(&format!("  {at:x}:\tnop\n")),
+            }
+        }
+        let listing = Listing::parse(text.as_bytes()).expect("a listing");
+        let bytes = image(&[(0x402000, GAME_UI), (0x402100, OTHER_UI)]);
+        let image = Image::new(&bytes).expect("an image");
+        assign(
+            &listing,
+            &image,
+            &extents,
+            &HashMap::new(),
+            &HashMap::new(),
+            &BTreeSet::new(),
+            &BTreeSet::new(),
+        )
+    }
+
+    #[test]
+    fn a_stretch_is_settled_only_between_functions_of_one_file() {
+        let (a, b) = (Some(0x402000), Some(0x402100));
+        // File A, an unproved function, file A again, an unproved function, file B.
+        let owners = owners_of_pushes(&[a, None, a, None, b]);
+        let of = |i: u32| owners.owners.get(&(0x401000 + 0x10 * i));
+        assert!(matches!(of(0), Some(o) if o.system == "ui" && o.source == Source::Path));
+        assert!(matches!(of(1), Some(o) if o.system == "ui" && o.source == Source::Stretch));
+        assert!(matches!(of(2), Some(o) if o.system == "ui" && o.source == Source::Path));
+        assert!(matches!(of(4), Some(o) if o.system == "ui" && o.source == Source::Path));
+        // Two files of one system around it prove nothing about it.
+        assert!(of(3).is_none());
+    }
+
+    #[test]
+    fn overlapping_files_settle_nothing_between_them() {
+        let (a, b) = (Some(0x402000), Some(0x402100));
+        let owners = owners_of_pushes(&[a, b, None, a, b]);
+        assert!(owners.owners.get(&0x401020).is_none());
+        assert!(!owners.conflicts.is_empty());
     }
 }

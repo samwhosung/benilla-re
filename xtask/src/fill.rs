@@ -138,64 +138,82 @@ pub struct Summary {
     pub runs: usize,
 }
 
-/// Fills the unread rows of `symbols/functions.tsv` under `root`.
-pub fn fill(
-    root: &Path,
-    census: &Census,
-    listing: &Listing,
-    bytes: &[u8],
-    idb: &HashMap<u32, String>,
-) -> io::Result<Summary> {
-    let table = root.join("symbols").join("functions.tsv");
-    let text = std::fs::read_to_string(&table)?;
+/// The columns of `symbols/functions.tsv` the fill reads and writes.
+struct Columns {
+    address: usize,
+    size: usize,
+    name: usize,
+    from: usize,
+    system: usize,
+    class: usize,
+    meaning: usize,
+}
+
+impl Columns {
+    fn of(header: &str) -> Columns {
+        let columns: Vec<&str> = header.split('\t').collect();
+        let at = |name: &str| columns.iter().position(|c| *c == name).expect("a column");
+        Columns {
+            address: at("address"),
+            size: at("size"),
+            name: at("name"),
+            from: at("name_from"),
+            system: at("system"),
+            class: at("class"),
+            meaning: at("meaning"),
+        }
+    }
+}
+
+/// The rows of `symbols/functions.tsv` under `root`, by address.
+fn read_rows(root: &Path, c: &Columns) -> io::Result<(String, BTreeMap<u32, Vec<String>>)> {
+    let text = std::fs::read_to_string(root.join("symbols").join("functions.tsv"))?;
     let mut lines = text.lines();
     let header = lines.next().unwrap_or_default().to_string();
-    let columns: Vec<&str> = header.split('\t').collect();
-    let column = |name: &str| columns.iter().position(|c| *c == name).expect("a column");
-    let (address_at, size_at, name_at, from_at, system_at, class_at, meaning_at) = (
-        column("address"),
-        column("size"),
-        column("name"),
-        column("name_from"),
-        column("system"),
-        column("class"),
-        column("meaning"),
-    );
     let mut rows: BTreeMap<u32, Vec<String>> = BTreeMap::new();
     for line in lines.filter(|l| !l.is_empty()) {
         let cells: Vec<String> = line.split('\t').map(str::to_string).collect();
-        let address = u32::from_str_radix(cells[address_at].trim_start_matches("0x"), 16)
+        let address = u32::from_str_radix(cells[c.address].trim_start_matches("0x"), 16)
             .map_err(io::Error::other)?;
         rows.insert(address, cells);
     }
-    let targets: Vec<u32> = rows
-        .iter()
-        .filter(|(_, c)| {
-            c[meaning_at] == UNREAD && c[name_at].is_empty() && c[system_at] == "unassigned"
-        })
-        .map(|(&a, _)| a)
-        .collect();
-    let target_set: HashSet<u32> = targets.iter().copied().collect();
+    Ok((header, rows))
+}
 
-    // Systems.
-    let image = Image::new(bytes).ok_or_else(|| io::Error::other("no section table"))?;
-    let extents: Vec<(u32, u32)> = rows
-        .iter()
-        .filter_map(|(&a, c)| Some((a, a + c[size_at].parse::<u32>().ok()?)))
-        .collect();
-    let known: HashMap<u32, String> = rows
-        .iter()
-        .filter(|(a, c)| !target_set.contains(a) && c[system_at] != "unassigned")
-        .map(|(&a, c)| (a, c[system_at].clone()))
-        .collect();
-    let documented: std::collections::BTreeSet<String> = std::fs::read_dir(root.join("systems"))?
+/// The systems with a doc under `systems/`.
+fn documented_systems(root: &Path) -> io::Result<std::collections::BTreeSet<String>> {
+    Ok(std::fs::read_dir(root.join("systems"))?
         .filter_map(|e| e.ok())
         .filter_map(|e| {
             let name = e.file_name().to_string_lossy().to_string();
             let key = name.strip_suffix(".md").unwrap_or(&name).to_string();
             (key != "README").then_some(key)
         })
+        .collect())
+}
+
+/// The system of every function the object-file rule settles, with the rows in `fill` (the rows
+/// being completed) left out of the evidence.
+fn owners_of(
+    root: &Path,
+    rows: &BTreeMap<u32, Vec<String>>,
+    c: &Columns,
+    fill: &HashSet<u32>,
+    listing: &Listing,
+    bytes: &[u8],
+    idb: &HashMap<u32, String>,
+) -> io::Result<objfiles::Owners> {
+    let image = Image::new(bytes).ok_or_else(|| io::Error::other("no section table"))?;
+    let extents: Vec<(u32, u32)> = rows
+        .iter()
+        .filter_map(|(&a, r)| Some((a, a + r[c.size].parse::<u32>().ok()?)))
         .collect();
+    let known: HashMap<u32, String> = rows
+        .iter()
+        .filter(|(a, r)| !fill.contains(a) && r[c.system] != "unassigned")
+        .map(|(&a, r)| (a, r[c.system].clone()))
+        .collect();
+    let documented = documented_systems(root)?;
     let imports = imports(bytes);
     let thunks: std::collections::BTreeSet<u32> = extents
         .iter()
@@ -207,7 +225,104 @@ pub fn fill(
                 .is_some_and(|slot| imports.contains_key(&slot))
         })
         .collect();
-    let owners = objfiles::assign(listing, &image, &extents, &known, idb, &documented, &thunks);
+    Ok(objfiles::assign(
+        listing,
+        &image,
+        &extents,
+        &known,
+        idb,
+        &documented,
+        &thunks,
+    ))
+}
+
+/// What `--assign` did, for the report.
+#[derive(Default)]
+pub struct Assigned {
+    pub unassigned: usize,
+    pub settled: BTreeMap<&'static str, usize>,
+    pub systems: BTreeMap<String, usize>,
+    pub conflicts: Vec<String>,
+}
+
+/// Settles the system of every row that has none, by the object-file rule, leaving every other
+/// cell alone except the class, which a system with a doc requires and the census gives.
+pub fn assign_unassigned(
+    root: &Path,
+    census: &Census,
+    listing: &Listing,
+    bytes: &[u8],
+    idb: &HashMap<u32, String>,
+) -> io::Result<Assigned> {
+    let table = root.join("symbols").join("functions.tsv");
+    let text = std::fs::read_to_string(&table)?;
+    let header = text.lines().next().unwrap_or_default().to_string();
+    let c = Columns::of(&header);
+    let (_, mut rows) = read_rows(root, &c)?;
+    let targets: HashSet<u32> = rows
+        .iter()
+        .filter(|(_, r)| r[c.system] == "unassigned")
+        .map(|(&a, _)| a)
+        .collect();
+    let owners = owners_of(root, &rows, &c, &targets, listing, bytes, idb)?;
+    let documented = documented_systems(root)?;
+    let mut out = Assigned {
+        unassigned: targets.len(),
+        conflicts: owners.conflicts.clone(),
+        ..Assigned::default()
+    };
+    for &a in &targets {
+        let Some(owner) = owners.owners.get(&a).filter(|o| o.system != "unassigned") else {
+            continue;
+        };
+        let row = rows.get_mut(&a).expect("a target row");
+        row[c.system] = owner.system.clone();
+        if documented.contains(&owner.system) && row[c.class].is_empty() {
+            let class = census.starts.get(&a).map_or("", |s| s.class);
+            row[c.class] = class.to_string();
+        }
+        *out.settled.entry(owner.source.word()).or_default() += 1;
+        *out.systems.entry(owner.system.clone()).or_default() += 1;
+    }
+    let mut text = header;
+    text.push('\n');
+    for cells in rows.values() {
+        text.push_str(&cells.join("\t"));
+        text.push('\n');
+    }
+    std::fs::write(&table, text)?;
+    Ok(out)
+}
+
+/// Fills the unread rows of `symbols/functions.tsv` under `root`.
+pub fn fill(
+    root: &Path,
+    census: &Census,
+    listing: &Listing,
+    bytes: &[u8],
+    idb: &HashMap<u32, String>,
+) -> io::Result<Summary> {
+    let table = root.join("symbols").join("functions.tsv");
+    let header = std::fs::read_to_string(&table)?
+        .lines()
+        .next()
+        .unwrap_or_default()
+        .to_string();
+    let c = Columns::of(&header);
+    let (_, mut rows) = read_rows(root, &c)?;
+    let (name_at, from_at, system_at, class_at, meaning_at) =
+        (c.name, c.from, c.system, c.class, c.meaning);
+    let targets: Vec<u32> = rows
+        .iter()
+        .filter(|(_, c)| {
+            c[meaning_at] == UNREAD && c[name_at].is_empty() && c[system_at] == "unassigned"
+        })
+        .map(|(&a, _)| a)
+        .collect();
+    let target_set: HashSet<u32> = targets.iter().copied().collect();
+    let documented = documented_systems(root)?;
+    let imports = imports(bytes);
+    let owners = owners_of(root, &rows, &c, &target_set, listing, bytes, idb)?;
 
     // Names.
     let mut taken: HashSet<String> = rows

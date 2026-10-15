@@ -18,7 +18,7 @@ use std::process::ExitCode;
 
 const USAGE: &str = "\
 usage: cargo xtask check [--exe]
-       cargo xtask census [--all | --write | --why <address> | --fill [--idb <names.tsv>]]
+       cargo xtask census [--all | --write | --why <address> | --fill [--idb <names.tsv>] | --assign [--idb <names.tsv>]]
        cargo xtask cited <benilla checkout> [--write]
        cargo xtask listing <GNU objdump> <output>
        cargo xtask site <output directory>
@@ -37,6 +37,11 @@ census --write
               tools/disasm.sh after it, and again until the census finds nothing new
 census --fill gives each row --write added its system, a name, a meaning and its class;
               --idb names the community names, address<TAB>func<TAB>name lines
+census --assign
+              settles the system of every row that has none, by the object-file rule of
+              systems/README.md (a path the function passes, an initializer run, a stretch
+              between two functions of one file) and sets the class a system with a doc requires;
+              prints how many rows each kind of evidence settled and how many stay unassigned
 site          writes the address website into the directory, from the symbol table, the docs and
               tables/; runs anywhere, with no exe
 cited         lists the client addresses a benilla tree cites that no row or doc here backs;
@@ -57,6 +62,8 @@ fn main() -> ExitCode {
         ["census", "--write"] => census(&root, false, None, true),
         ["census", "--fill"] => fill(&root, None),
         ["census", "--fill", "--idb", names] => fill(&root, Some(Path::new(names))),
+        ["census", "--assign"] => assign(&root, None),
+        ["census", "--assign", "--idb", names] => assign(&root, Some(Path::new(names))),
         ["census", "--why", address] => {
             match u32::from_str_radix(address.trim_start_matches("0x"), 16) {
                 Ok(address) => census(&root, false, Some(address), false),
@@ -188,6 +195,45 @@ fn fill(root: &Path, idb: Option<&Path>) -> std::io::Result<bool> {
         show_static(&summary.sources),
         show_static(&summary.names)
     );
+    Ok(true)
+}
+
+fn assign(root: &Path, idb: Option<&Path>) -> std::io::Result<bool> {
+    let exe = exe::locate(root);
+    if exe::identify(&exe)? != exe::Identity::Reference {
+        eprintln!("xtask: {} is not WoW.exe 1.12.1.5875", exe.display());
+        return Ok(false);
+    }
+    let checked = check::run(&tree::Disk::new(root))?;
+    let listing = bodies::Listing::read(&root.join("dumps").join("disasm.txt"))?;
+    let bytes = std::fs::read(&exe)?;
+    let rows: Vec<u32> = exe::functions(&checked).iter().map(|f| f.address).collect();
+    let census = census::run(&listing, &bytes, &rows)
+        .ok_or_else(|| std::io::Error::other("the census did not settle"))?;
+    let names = match idb {
+        Some(path) => fill::read_idb(path)?,
+        None => Default::default(),
+    };
+    let done = fill::assign_unassigned(root, &census, &listing, &bytes, &names)?;
+    for line in &done.conflicts {
+        println!("conflict\t{line}");
+    }
+    let settled: usize = done.settled.values().sum();
+    let by = |m: &std::collections::BTreeMap<&str, usize>| {
+        m.iter()
+            .map(|(k, v)| format!("{v} by {k}"))
+            .collect::<Vec<_>>()
+            .join(", ")
+    };
+    println!(
+        "{} rows had no system; settled {settled} ({}); {} stay unassigned",
+        done.unassigned,
+        by(&done.settled),
+        done.unassigned - settled
+    );
+    for (system, n) in &done.systems {
+        println!("  {n} {system}");
+    }
     Ok(true)
 }
 
