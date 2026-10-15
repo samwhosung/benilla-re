@@ -26,15 +26,16 @@ your own copy of 1.12.1.5875 and refuse any other build.
   [spell](systems/spell), [glue](systems/glue) (the login and character screens),
   [ui](systems/ui) (the frame and layout core),
   [sound](systems/sound) (the FMOD engine, sound entries, music, ambience and object sounds),
-  [camera](systems/camera.md), [input](systems/input.md) and [random](systems/random.md).
+  [camera](systems/camera.md), [input](systems/input.md), [random](systems/random.md) and
+  [warden](systems/warden) (the server's anticheat channel: the messages, the module loader and cache).
   The rest of the client is open work in the issue tracker.
 - **`tables/`**: facts a program reads (opcode handlers, events and their fire sites, CVars,
   Lua bindings, the message catalogue, DBC stores and layouts), each rebuilt from your exe by a
   generator in `tools/tables/`.
 - **`crates/`**: reimplementations of the client's computations in Rust, a crate per system, each
   tested bit for bit by running the exe's own code beside it in an emulator (`crates/difftest`).
-  Ported so far: `core`, `camera`, `random`, `screencoord`, `fastmath`, `gametime`, `sysmsg` and
-  `minigame`; the rest follow ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
+  Ported so far: `core`, `camera`, `random`, `screencoord`, `fastmath`, `gametime`, `sysmsg`, `minigame`
+  and `warden`; the rest follow ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 - **`tools/`**: the listing the findings cite (`tools/disasm.sh`), a Ghidra project with this
   repo's names, signatures and types applied (`tools/ghidra/setup.sh`, and
   `tools/ghidra/decompile.sh` to decompile from it), the table generators, the scripts
