@@ -4,9 +4,12 @@
 //! - `ghidra/`: the Ghidra scripts `tools/ghidra/setup.sh` runs, with the tables they read.
 //! - `ida/benilla_re.py`, `binja/benilla_re.py`: scripts for IDA 9 and Binary Ninja that apply
 //!   the names, types and comments to the reader's own program.
-//! - `bundle/`: the tables as TSV and as one `benilla-re.json` (`bundle`), and `signature`, each
-//!   function row's byte pattern with its name (`signature.rs`).
+//! - `bundle/`: the tables as TSV and as one `benilla-re.json` (`bundle`), their READMEs, and
+//!   `signature.tsv`, each function row's byte pattern with its name (`signature.rs`).
 //! - `x64dbg/WoW.exe.dd32`: the labels and comments as an x64dbg database (`x64dbg`).
+//! - `docs/` and `systems/`: the Markdown a `finding` cell names, so that it resolves offline.
+//! - `README.md`: where to start, from `tools/export/README.md` with the build and the commit
+//!   filled in (`readme`).
 //!
 //! The scripts are read from `tools/`; every output is a function of the tree, so the same tree
 //! writes the same bytes.
@@ -14,6 +17,7 @@
 mod bundle;
 pub(crate) mod cdecl;
 mod header;
+mod readme;
 mod table;
 mod x64dbg;
 
@@ -30,7 +34,8 @@ pub use table::Table;
 pub const SYMBOLS: [&str; 4] = ["functions", "globals", "structs", "fields"];
 
 /// Files of `tools/` the export copies, as `(source, output)`.
-const SCRIPTS: [(&str, &str); 5] = [
+const SCRIPTS: [(&str, &str); 6] = [
+    ("tools/export/README.md", "README.md"),
     ("tools/ghidra/ApplySymbols.java", "ghidra/ApplySymbols.java"),
     (
         "tools/ghidra/CreateFunctions.java",
@@ -41,14 +46,29 @@ const SCRIPTS: [(&str, &str); 5] = [
     ("tools/export/benilla_re_binja.py", "binja/benilla_re.py"),
 ];
 
+/// The repository and the site, as `benilla-re.json` and the README give them.
+pub const REPO: &str = crate::site::REPO;
+pub const SITE: &str = "https://samwhosung.github.io/benilla-re/";
+
+/// Docs of the tree the export carries, as `(source, output)`: the specs, and the READMEs that
+/// say what the columns of the bundle's tables mean.
+const DOCS: [(&str, &str); 4] = [
+    ("docs/METHOD.md", "docs/METHOD.md"),
+    ("docs/CONTRIBUTING.md", "docs/CONTRIBUTING.md"),
+    ("symbols/README.md", "bundle/symbols/README.md"),
+    ("tables/README.md", "bundle/tables/README.md"),
+];
+
 /// What the export reads.
 pub struct Sources {
     /// `symbols/<name>.tsv`, in `SYMBOLS` order.
     pub symbols: Vec<(String, String)>,
     /// `tables/<name>.tsv`, by name.
     pub tables: Vec<(String, String)>,
-    /// The scripts, by output path.
+    /// The scripts and the README template, by output path.
     pub scripts: Vec<(String, String)>,
+    /// The Markdown docs, by output path: `docs/`, `systems/` and the tables' READMEs.
+    pub docs: Vec<(String, String)>,
     pub origin: Origin,
 }
 
@@ -69,6 +89,26 @@ fn tsv_files(dir: &Path) -> io::Result<Vec<(String, String)>> {
                 .expect("a file name")
                 .to_string();
             out.push((name, fs::read_to_string(&path)?));
+        }
+    }
+    out.sort();
+    Ok(out)
+}
+
+/// The Markdown files under `dir` (relative to `root`), recursively, as `(path, text)` sorted by path.
+fn markdown_files(root: &Path, dir: &str) -> io::Result<Vec<(String, String)>> {
+    let mut out = Vec::new();
+    let mut pending = vec![dir.to_string()];
+    while let Some(folder) = pending.pop() {
+        for entry in fs::read_dir(root.join(&folder))? {
+            let entry = entry?;
+            let name = entry.file_name().to_string_lossy().into_owned();
+            let path = format!("{folder}/{name}");
+            if entry.file_type()?.is_dir() {
+                pending.push(path);
+            } else if name.ends_with(".md") {
+                out.push((path.clone(), fs::read_to_string(root.join(&path))?));
+            }
         }
     }
     out.sort();
@@ -122,10 +162,23 @@ pub fn read(root: &Path, symbols_dir: Option<&Path>) -> Result<Sources, String> 
         // Every other table holds 5875's addresses, which the folder's rows do not have.
         tables.clear();
     }
+    let mut docs = Vec::new();
+    for (source, output) in DOCS {
+        if symbols_dir.is_some() && output == "bundle/tables/README.md" {
+            continue;
+        }
+        let path = root.join(source);
+        docs.push((
+            output.to_string(),
+            fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?,
+        ));
+    }
+    docs.extend(markdown_files(root, "systems").map_err(io)?);
     Ok(Sources {
         symbols,
         tables,
         scripts,
+        docs,
         origin: Origin {
             exe_size: exe::size(),
             exe_sha256: exe::sha256().to_string(),
@@ -170,12 +223,20 @@ pub fn build(sources: &Sources) -> Result<Built, String> {
         x64dbg::database(&symbols.functions, &symbols.globals)?,
     );
     for (path, text) in &sources.scripts {
+        let text = if path == "README.md" {
+            readme::fill(text, &sources.origin)
+        } else {
+            text.clone()
+        };
+        files.insert(path.clone(), text);
+    }
+    for (path, text) in &sources.docs {
         files.insert(path.clone(), text.clone());
     }
     if let Some((_, text)) = sources.tables.iter().find(|(name, _)| name == "signatures") {
         let functions = parsed.get("functions").ok_or("no functions table")?;
         files.insert(
-            "bundle/signature".to_string(),
+            "bundle/signature.tsv".to_string(),
             signature_file(functions, text)?,
         );
     }
@@ -185,7 +246,7 @@ pub fn build(sources: &Sources) -> Result<Built, String> {
     })
 }
 
-/// `bundle/signature`: `address`, `name`, `pattern` and `unique` of every function row, from the
+/// `bundle/signature.tsv`: `address`, `name`, `pattern` and `unique` of every function row, from the
 /// signatures table and the names in the functions table. A row with no name is `FUN_` and its
 /// address, as the other exports name it.
 fn signature_file(functions: &Table, signatures: &str) -> Result<String, String> {

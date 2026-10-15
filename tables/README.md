@@ -41,7 +41,9 @@ the function rows, the exe and `dumps/disasm.txt`, and `cargo xtask check --exe`
 
 ## opcodes.tsv
 
-Every network message the client registers a handler for (387 rows, 207 distinct handlers).
+Every network message the client registers a handler for (387 rows, 207 distinct handlers): the
+handler table, the messages the client receives. The messages it sends are in `opcode_sends.tsv`
+and `opcode_entries.tsv`.
 
 | column | meaning |
 |---|---|

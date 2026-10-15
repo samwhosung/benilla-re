@@ -5,6 +5,8 @@
 //! { "schema": 1,
 //!   "exe": { "name": "WoW.exe", "version": "1.12.1.5875", "size": N, "sha256": "..." },
 //!   "commit": "...",
+//!   "repo": "https://github.com/samwhosung/benilla-re",
+//!   "site": "https://samwhosung.github.io/benilla-re/",
 //!   "tables": { "symbols/functions": { "columns": [...], "rows": [[...], ...] }, ... } }
 //! ```
 //!
@@ -42,6 +44,8 @@ pub fn json(origin: &Origin, tables: &[(String, Table)]) -> String {
         );
     }
     let _ = writeln!(out, "\"commit\": {},", string(&origin.commit));
+    let _ = writeln!(out, "\"repo\": {},", string(super::REPO));
+    let _ = writeln!(out, "\"site\": {},", string(super::SITE));
     out.push_str("\"tables\": {\n");
     for (i, (path, table)) in tables.iter().enumerate() {
         let _ = writeln!(out, "{}: {{", string(path));
@@ -120,6 +124,8 @@ mod tests {
         assert_eq!(value["exe"]["size"], 4775986);
         assert_eq!(value["exe"]["sha256"], "ab".repeat(32));
         assert_eq!(value["commit"], "0123abc");
+        assert_eq!(value["repo"], "https://github.com/samwhosung/benilla-re");
+        assert_eq!(value["site"], "https://samwhosung.github.io/benilla-re/");
         assert_eq!(
             files_of(&text).unwrap(),
             [

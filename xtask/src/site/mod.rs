@@ -9,6 +9,7 @@ mod resolve;
 use crate::check::Checked;
 use crate::tree::Tree;
 use markdown::Linker;
+pub use markdown::REPO;
 use model::Model;
 use pages::Pages;
 use resolve::Spans;

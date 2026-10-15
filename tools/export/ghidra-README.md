@@ -1,7 +1,8 @@
 # benilla-re for Ghidra
 
 Two Ghidra scripts and the tables they read, to name and type your own copy of `WoW.exe`
-1.12.1.5875. The scripts are the ones `tools/ghidra/setup.sh` runs; this folder needs no checkout.
+1.12.1.5875. This folder needs no checkout. (`tools/ghidra/setup.sh`, which builds a whole project
+in one command, is part of the repository's checkout and is not in this export.)
 
 - `CreateFunctions.java` creates the functions `symbols/functions.tsv` lists that analysis missed,
   and gives each the row's body.
@@ -15,6 +16,10 @@ Two Ghidra scripts and the tables they read, to name and type your own copy of `
 You need Ghidra 12.1 or later and a JDK 21 or later. Check your exe first: it must be 4,775,986
 bytes with SHA-256 `b4756d38ef207c02ed651f4952bd89a70b4857b73a33413339e1b285b28d2dc7`. Any other
 build has other addresses.
+
+`analyzeHeadless` is not on the `PATH` with a Homebrew or a zip install of Ghidra: it is
+`<ghidra install>/support/analyzeHeadless` (`analyzeHeadless.bat` on Windows), where the install
+is the folder that holds `support/`. Homebrew puts it under `$(brew --prefix ghidra)/libexec`.
 
 Import and analyse in one headless run, then run the two scripts in a second run with analysis
 off, from this folder. Give `-scriptPath` and the tables' folder as absolute paths: `analyzeHeadless`
@@ -48,6 +53,9 @@ applied.
 over two rows because the first jumps to the second, the second's start becomes a function and
 the first ends at it. It prints a `size` line for each function whose body differs from its row's
 size, and a total.
+
+A row with no name stays as Ghidra names it (`FUN_...`), so the named count in the summary is
+below the row count.
 
 `ApplySymbols` prints one `FAIL [reason]` line for each row it could not apply, then a summary:
 the rows, the names and signatures found in the program, and the failures by reason. A type the

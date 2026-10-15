@@ -69,9 +69,11 @@ export        writes the symbol table as files other tools start from, the same 
               for the same tree: benilla-re.h (a C header of the structs, prototypes and
               globals), ghidra/ (the Ghidra scripts and the tables they read), ida/ and
               binja/ (a script each, applying the names, types and comments), x64dbg/ (a
-              database of labels and comments), and bundle/ (the symbols/ and tables/ TSVs,
-              and one benilla-re.json holding them all, and signature, the byte patterns);
-              needs no exe; --symbols reads the symbol tables from a folder, as `match` writes
+              database of labels and comments), bundle/ (the symbols/ and tables/ TSVs with
+              their READMEs, one benilla-re.json holding them all, and signature.tsv, the
+              byte patterns), docs/ and systems/ (the Markdown a finding names), and a
+              README.md that says where to start; needs no exe;
+              --symbols reads the symbol tables from a folder, as `match` writes
 signatures    writes tables/signatures.tsv: each function row's masked byte pattern, from your
               WoW.exe and dumps/disasm.txt
 match         finds the function rows in another build's executable sections by their patterns
