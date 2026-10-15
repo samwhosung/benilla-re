@@ -748,6 +748,49 @@ pub fn write(
 mod tests {
     use super::*;
 
+    /// A one-section image at 0x401000 whose bytes from 0x402000 are `data`.
+    fn image_with(data: &[(u32, Vec<u8>)]) -> Vec<u8> {
+        let mut bytes = vec![0u8; 0x200 + 0x2000];
+        bytes[0x3c..0x40].copy_from_slice(&0x80u32.to_le_bytes());
+        bytes[0x86..0x88].copy_from_slice(&1u16.to_le_bytes());
+        bytes[0x94..0x96].copy_from_slice(&0xe0u16.to_le_bytes());
+        bytes[0x80 + 52..0x80 + 56].copy_from_slice(&0x400000u32.to_le_bytes());
+        let header = 0x80 + 24 + 0xe0;
+        bytes[header + 8..header + 12].copy_from_slice(&0x2000u32.to_le_bytes());
+        bytes[header + 12..header + 16].copy_from_slice(&0x1000u32.to_le_bytes());
+        bytes[header + 16..header + 20].copy_from_slice(&0x2000u32.to_le_bytes());
+        bytes[header + 20..header + 24].copy_from_slice(&0x200u32.to_le_bytes());
+        for (address, text) in data {
+            let at = 0x200 + (address - 0x401000) as usize;
+            bytes[at..at + text.len()].copy_from_slice(text);
+        }
+        bytes
+    }
+
+    #[test]
+    fn a_vtable_class_is_read_from_its_locator_without_overflow() {
+        let word = |v: u32| v.to_le_bytes().to_vec();
+        // A locator at 0x402100 whose type descriptor at 0x402200 names `CFoo`.
+        let good = image_with(&[
+            (0x40200c, word(0x402100)),
+            (0x40210c, word(0x402200)),
+            (0x402208, b".?AVCFoo@@\0".to_vec()),
+        ]);
+        let image = Image::new(&good).expect("an image");
+        assert_eq!(
+            vtable_class(&image, 0x402010).as_deref(),
+            Some("CFoo::vftable")
+        );
+        // The dword before the vtable is 0xfffffff8: the locator plus 12 wraps, and no class is read.
+        let wrapped = image_with(&[(0x40200c, word(0xffff_fff8))]);
+        let image = Image::new(&wrapped).expect("an image");
+        assert_eq!(vtable_class(&image, 0x402010), None);
+        // A descriptor at 0xfffffffc: its name at +8 wraps too.
+        let wrapped = image_with(&[(0x40200c, word(0x402100)), (0x40210c, word(0xffff_fffc))]);
+        let image = Image::new(&wrapped).expect("an image");
+        assert_eq!(vtable_class(&image, 0x402010), None);
+    }
+
     #[test]
     fn each_use_is_read_from_its_instruction() {
         let a = 0x801360;
