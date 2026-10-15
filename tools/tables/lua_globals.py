@@ -10,10 +10,13 @@ Captured tables). This generator takes the capture and the interface folders by 
                                  `["name"]` and `["t"]` (the Lua type)
     BENILLA_RE_INTERFACE_DIRS    the interface folders, joined with the platform's path separator:
                                  the shipped UI's extracted folder, and the folder holding the
-                                 extracted `Blizzard_*` addons; every `.lua` and `.xml` under
-                                 each is read
-    --drop NAME                  a global of the capturing addon (its holder frame, saved variable
-                                 and slash token), repeated; the instrument, not the client
+                                 extracted `Blizzard_*` addons. A folder with one `.toc` is an
+                                 addon; a folder without one holds addon folders. Only the files
+                                 the `.toc` lists and the `<Script file>` and `<Include file>`
+                                 references of the XML reach are read.
+    --drop NAME                  a global of the capturing addon, repeated: its saved variable, its
+                                 holder table and its slash-command token. The instrument, not
+                                 the client. Each must be in the capture, or the run stops.
 
 or `--capture PATH` and `--interface DIR` (repeated) in their place; `-o PATH` writes the table
 there instead of standard output.
@@ -74,15 +77,20 @@ XML_SCRIPT = re.compile(
 
 
 def captured_globals(path):
-    """The capture's globals as (name, Lua type)."""
-    recs, cur_t, inside = [], None, False
+    """The capture's globals as (name, Lua type). The section is the `["globals"] = {` table at
+    one tab of indent; its `["count"]`, where present, must equal the records read."""
+    recs, cur_t, inside, count = [], None, False, None
     with open(path, encoding='utf-8', errors='replace') as f:
         for line in f:
             if not inside:
-                inside = line.strip() == '["globals"] = {'
+                inside = line.rstrip('\r\n') == '\t["globals"] = {'
                 continue
-            if '["count"]' in line:
+            if line.rstrip('\r\n') == '\t},':
                 break
+            m = re.match(r'\t\t\["count"\] = (\d+),', line)
+            if m:
+                count = int(m.group(1))
+                continue
             m = re.match(r'\s*\["t"\] = "([^"]*)",', line)
             if m:
                 cur_t = m.group(1)
@@ -91,20 +99,94 @@ def captured_globals(path):
             if m:
                 recs.append((m.group(1), cur_t))
                 cur_t = None
+    if count is not None and count != len(recs):
+        sys.exit('lua_globals: the capture says %d globals and holds %d' % (count, len(recs)))
     return recs
 
 
+XML_REF = re.compile(r'<(?:Script|Include)\s+file\s*=\s*"([^"]+)"', re.I)
+
+
+def _norm(base, ref):
+    """`ref` (backslashes allowed) relative to the folder `base`, as a normal path."""
+    return os.path.normpath(os.path.join(base, ref.replace('\\', '/').strip()))
+
+
+def _find(path):
+    """`path`, or the file of that name in its folder that differs only in case; None if none."""
+    if os.path.isfile(path):
+        return path
+    here, name = os.path.split(path)
+    try:
+        for n in os.listdir(here):
+            if n.lower() == name.lower() and os.path.isfile(os.path.join(here, n)):
+                return os.path.join(here, n)
+    except OSError:
+        pass
+    return None
+
+
+def _toc(folder):
+    """The `.toc` file in `folder`, or None."""
+    tocs = sorted(n for n in os.listdir(folder) if n.lower().endswith('.toc'))
+    return os.path.join(folder, tocs[0]) if len(tocs) == 1 else None
+
+
+def interface_roots(dirs):
+    """The addon folders: a folder holding one `.toc`, or each subfolder that does."""
+    roots = []
+    for d in dirs:
+        d = os.path.normpath(d)
+        if _toc(d):
+            roots.append(d)
+            continue
+        for n in sorted(os.listdir(d)):
+            sub = os.path.join(d, n)
+            if os.path.isdir(sub) and _toc(sub):
+                roots.append(sub)
+    return roots
+
+
 def corpus(dirs):
-    """Every `.lua` and `.xml` under the folders, as {path: text}, read in sorted order."""
-    files = {}
-    for root in dirs:
+    """The files the interface loads, as {path: text}, in load order: each addon's `.toc` lists
+    the files, an XML file lists more with `<Script file>` and `<Include file>`, and a
+    reference is followed from the folder of the file that holds it. A file on disk that no
+    reference reaches is not read, so an extra file cannot add a name; the paths left out go to
+    standard error. A referenced file that is missing stops the run."""
+    files, loaded = {}, set()
+    roots = interface_roots(dirs)
+    if not roots:
+        sys.exit('lua_globals: no folder under %s holds a .toc' % ', '.join(dirs))
+    for root in roots:
+        toc = _toc(root)
+        with open(toc, 'rb') as f:
+            lines = f.read().decode('utf-8', 'replace').splitlines()
+        queue = [_norm(root, l) for l in lines if l.strip() and not l.lstrip().startswith('#')]
+        while queue:
+            ref = queue.pop(0)
+            path = _find(ref)
+            if path is None:
+                sys.exit('lua_globals: %s is referenced and not on disk' % ref)
+            key = os.path.normcase(path)
+            if key in loaded or not path.lower().endswith(('.lua', '.xml')):
+                continue
+            loaded.add(key)
+            with open(path, 'rb') as f:
+                text = f.read().decode('utf-8', 'replace')
+            files[path] = text
+            if path.lower().endswith('.xml'):
+                queue = [_norm(os.path.dirname(path), r) for r in XML_REF.findall(text)] + queue
+    skipped = []
+    for root in roots:
         for here, subs, names in os.walk(root):
             subs.sort()
-            for n in sorted(names):
-                if n.lower().endswith(('.lua', '.xml')):
-                    p = os.path.join(here, n)
-                    with open(p, 'rb') as f:
-                        files[p] = f.read().decode('utf-8', 'replace')
+            skipped += [os.path.join(here, n) for n in sorted(names)
+                        if n.lower().endswith(('.lua', '.xml'))
+                        and os.path.normcase(os.path.join(here, n)) not in loaded]
+    if skipped:
+        print('lua_globals: %d files no reference reaches, not read: %s'
+              % (len(skipped), ', '.join(skipped[:10]) + (' ...' if len(skipped) > 10 else '')),
+              file=sys.stderr)
     return files
 
 
@@ -171,7 +253,11 @@ def main():
     files = corpus(dirs)
     defined, suffixes = definitions(files)
     drop = set(args.drop)
-    recs = [(n, t) for n, t in captured_globals(args.capture) if n not in drop]
+    every = captured_globals(args.capture)
+    absent = drop - {n for n, _ in every}
+    if absent:
+        sys.exit('lua_globals: --drop names not in the capture: %s' % ', '.join(sorted(absent)))
+    recs = [(n, t) for n, t in every if n not in drop]
     if not recs or not defined:
         sys.exit('lua_globals: the capture holds %d globals and the interface %d definitions'
                  % (len(recs), len(defined)))
