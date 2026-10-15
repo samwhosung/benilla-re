@@ -1136,7 +1136,9 @@ mod tests {
         let moved = Table::parse("functions", &files["symbols/functions.tsv"]).unwrap();
         let rows: HashMap<&str, &Vec<String>> =
             moved.rows.iter().map(|r| (r[0].as_str(), r)).collect();
-        assert!(rows.contains_key(format!("{:#08x}", twin.address).as_str()));
+        // The twin's row sits where the swapped row was. The swapped row is in conflict: a
+        // caller of it sends it to an address its pattern refutes.
+        assert!(rows.contains_key(format!("{:#08x}", swapped_a.address).as_str()));
         assert_eq!(moved.rows.len(), stages[2].1.found);
         let report = &files["match.tsv"];
         let line = |s: &Signature| {
@@ -1153,7 +1155,8 @@ mod tests {
         assert_eq!(line(patched), "missing");
         // The copy's pattern matches twice; only one of the two lies between its neighbours.
         assert_eq!(line(copied), format!("{:#08x}", copied.address));
-        assert_eq!(line(swapped_a), format!("{:#08x}", twin.address));
+        assert_eq!(line(swapped_a), "conflict");
+        assert_eq!(line(twin), format!("{:#08x}", swapped_a.address));
     }
 
     #[test]
