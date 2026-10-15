@@ -69,6 +69,7 @@ public class CreateFunctions extends GhidraScript {
                 if (getInstructionAt(target) == null) disassemble(target);
                 i.addOperandReference(0, target, RefType.COMPUTED_JUMP, SourceType.USER_DEFINED);
             }
+            if (k == 0) continue;
             println("CreateFunctions: followed the " + k + "-entry jump table at " + toAddr(table)
                     + " from " + i.getAddress() + " in " + f.getName());
             changed = true;
@@ -94,36 +95,55 @@ public class CreateFunctions extends GhidraScript {
         for (String[] c : rows) starts.add(Long.parseLong(c[0].substring(2), 16));
         println("CreateFunctions: functions after analysis: "
                 + currentProgram.getFunctionManager().getFunctionCount());
-        int total = rows.size(), found = 0, created = 0, failed = 0, sizeDiffers = 0;
+        int total = rows.size(), found = 0, created = 0, failed = 0, sizeDiffers = 0, split = 0;
+        // First every row's start becomes a function, then the bodies are repaired and checked, so
+        // that a function never meets a start that is not yet one.
+        List<String[]> made = new ArrayList<>();
         for (String[] c : rows) {
             Address a = toAddr(Long.parseLong(c[0].substring(2), 16));
-            long size = Long.parseLong(c[1]);
             Function f = getFunctionAt(a);
             if (f != null) {
                 found++;
-            } else {
-                Function inside = getFunctionContaining(a);
-                if (inside != null) {
-                    println("CreateFunctions: FAIL " + c[0] + " " + c[2] + ": inside " + inside.getName()
-                            + " at " + inside.getEntryPoint());
-                    failed++;
-                    continue;
-                }
-                if (getInstructionAt(a) == null) {
-                    // Data or nothing in the way: clear it, then disassemble.
-                    if (getDataAt(a) != null) {
-                        clearListing(a);
-                    }
-                    disassemble(a);
-                }
-                f = createFunction(a, null);
-                if (f == null) {
-                    println("CreateFunctions: FAIL " + c[0] + " " + c[2] + ": createFunction returned null");
-                    failed++;
-                    continue;
-                }
-                created++;
+                made.add(c);
+                continue;
             }
+            // Analysis can make one function over two rows, when the code of the first jumps to the
+            // second: the first function is made again after the second, and stops at it.
+            Function inside = getFunctionContaining(a);
+            Address earlier = null;
+            if (inside != null) {
+                earlier = inside.getEntryPoint();
+                removeFunction(inside);
+            }
+            if (getInstructionAt(a) == null) {
+                // Data or nothing in the way: clear it, then disassemble.
+                if (getDataAt(a) != null) {
+                    clearListing(a);
+                }
+                disassemble(a);
+            }
+            f = createFunction(a, null);
+            if (f == null) {
+                println("CreateFunctions: FAIL " + c[0] + " " + c[2] + ": createFunction returned null");
+                failed++;
+            } else {
+                created++;
+                made.add(c);
+            }
+            if (earlier != null) {
+                if (createFunction(earlier, null) == null) {
+                    println("CreateFunctions: FAIL " + earlier + ": not made again after the split at " + a);
+                    failed++;
+                } else {
+                    println("CreateFunctions: split " + earlier + " at " + a);
+                    split++;
+                }
+            }
+        }
+        for (String[] c : made) {
+            Address a = toAddr(Long.parseLong(c[0].substring(2), 16));
+            long size = Long.parseLong(c[1]);
+            Function f = getFunctionAt(a);
             repair(f, a.getOffset(), size, starts);
             // The size of the row runs to the end of the last instruction.
             long end = f.getBody().getMaxAddress().getOffset() - f.getEntryPoint().getOffset() + 1;
@@ -134,7 +154,7 @@ public class CreateFunctions extends GhidraScript {
             }
         }
         println("CreateFunctions: rows=" + total + " already_functions=" + found + " created=" + created
-                + " failed=" + failed + " repaired=" + repairs + " size_differs=" + sizeDiffers);
+                + " split=" + split + " failed=" + failed + " repaired=" + repairs + " size_differs=" + sizeDiffers);
         println("CreateFunctions: functions in the program now: "
                 + currentProgram.getFunctionManager().getFunctionCount());
     }
