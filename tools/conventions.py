@@ -8,6 +8,8 @@ sides of the call.
     tools/conventions.py --apply          rewrite the signatures in symbols/functions.tsv
     tools/conventions.py --older FILE     with --apply: an older functions.tsv whose names fill
                                           the slots a change of convention moved
+    tools/conventions.py --fill           with --apply: give a registered row with no signature
+                                          its registration's signature
     tools/conventions.py --test           run the built-in checks
 
 The body, from dumps/disasm.txt, walked over every path from the entry (a jump table's cases
@@ -1462,7 +1464,57 @@ def build_all(args, original=None):
         if a in resolved:
             dec = resolved[a]
         results.append((row, reg, ss, dec))
+    rows.registered = (callbacks, az, L, labels)
     return rows, structs, results
+
+
+def unpaired(rows, L, labels):
+    """Addresses a direct call of a register function passes that no function row starts at."""
+    seen = {}
+    for kind, fn, how in REGISTERERS:
+        target = next((r['address'] for r in rows.rows if r['name'] == fn), None)
+        for i, mn in enumerate(L.mn):
+            if target is None or mn != 'call' or L.ops[i] != ['0x%x' % target]:
+                continue
+            j, pushes = i - 1, 0
+            while j >= 0 and i - j <= 8 and L.mn[j] not in ('call', 'ret', 'jmp'):
+                ops = L.ops[j]
+                v = int(ops[-1], 16) if ops and HEX.match(ops[-1]) else None
+                if how == 'edx' and L.mn[j] == 'mov' and ops[0] == 'edx' and v:
+                    if v not in rows.at:
+                        seen[v] = kind
+                    break
+                if how == 'push2' and L.mn[j] == 'push':
+                    pushes += 1
+                    if pushes == 2:
+                        if v and v not in rows.at:
+                            seen[v] = kind
+                        break
+                if L.addrs[j] in labels:
+                    break
+                j -= 1
+    return seen
+
+
+def fill_empty(rows, structs):
+    """Edits giving each empty-signature row the signature its registration gives, and the
+    registered rows left alone with the reason."""
+    callbacks, az, L, _ = rows.registered
+    edits, left = {}, []
+    for a, kind in sorted(callbacks.items()):
+        row = rows.at.get(a)
+        if row is None or row['signature']:
+            continue
+        what, pops, fixed, _ = CALLBACKS[kind]
+        if a not in L.at:
+            left.append((a, 'no instruction at the address'))
+            continue
+        reg = az.analyze(a)
+        if reg.rets and reg.rets != {pops}:
+            left.append((a, 'a return pops %s, registered as %s' % (sorted(reg.rets), what)))
+            continue
+        edits[a] = '%s __fastcall (%s)' % (fixed[0] or 'uint32_t', fixed[1])
+    return edits, left
 
 
 def main():
@@ -1476,6 +1528,8 @@ def main():
     ap.add_argument('--apply', action='store_true', help='rewrite symbols/functions.tsv')
     ap.add_argument('--check', action='store_true',
                     help='list every row whose signature disagrees with its verdict')
+    ap.add_argument('--fill', action='store_true',
+                    help='with --apply: fill the empty signature of a registered row')
     ap.add_argument('--test', action='store_true')
     args = ap.parse_args()
     if args.test:
@@ -1540,6 +1594,21 @@ def main():
             if len(c) > 7 and c[0].startswith('0x') and int(c[0], 16) in edits:
                 c[6] = edits[int(c[0], 16)][0]
                 lines[k] = '\t'.join(c)
+        if args.fill:
+            fills, left = fill_empty(rows, structs)
+            for k, line in enumerate(lines[1:], 1):
+                c = line.split('\t')
+                if len(c) > 7 and c[0].startswith('0x') and int(c[0], 16) in fills:
+                    c[6] = fills[int(c[0], 16)]
+                    lines[k] = '\t'.join(c)
+            kinds = {}
+            for a in fills:
+                kinds[rows.registered[0][a]] = kinds.get(rows.registered[0][a], 0) + 1
+            print('filled %d: %s' % (len(fills), sorted(kinds.items())))
+            for a, why in left:
+                print('not written %s: %s' % (addr(a), why))
+            for a, kind in sorted(unpaired(rows, *rows.registered[2:]).items()):
+                print('not paired %s: registered as %s, no function row' % (addr(a), kind))
         path.write_text('\n'.join(lines), encoding='utf-8')
         for a, (_, notes) in sorted(edits.items()):
             for n in notes:
