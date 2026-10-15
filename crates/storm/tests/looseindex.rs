@@ -73,6 +73,11 @@ const TREE: &[&str] = &[
     "D\\hidden2.txt",
     "data2\\",
     "data2\\seen.txt",
+    "data\\",
+    "data\\low.txt",
+    "dat\\",
+    "dat\\low2.txt",
+    "Lower.mpq",
     "Sound\\",
     "Sound\\s.wav",
     "WTF\\",
@@ -109,10 +114,11 @@ struct Install {
 }
 
 impl Install {
-    fn new() -> Install {
+    /// The tree under `root`, a folder path without its trailing backslash.
+    fn new(root: &str) -> Install {
         let mut dirs: BTreeMap<String, Vec<String>> = BTreeMap::new();
         let mut files = HashSet::new();
-        let root = BASE.trim_end_matches('\\').to_string();
+        let root = root.to_string();
         dirs.insert(root.clone(), vec![".".into(), "..".into()]);
         for p in TREE {
             let is_dir = p.ends_with('\\');
@@ -169,9 +175,9 @@ fn read_cstr(emu: &Emu, va: u64) -> String {
 }
 
 /// Sets up the emulator: globals, the table, the stubs over `install`.
-fn setup<'a>(wow: &'a Wow, install: Rc<Install>, st: Rc<RefCell<Handles>>) -> Emu<'a> {
+fn setup<'a>(wow: &'a Wow, base: &str, install: Rc<Install>, st: Rc<RefCell<Handles>>) -> Emu<'a> {
     let mut emu = Emu::new(wow);
-    write_cstr(&mut emu, G_BASE_PATH, BASE);
+    write_cstr(&mut emu, G_BASE_PATH, base);
     write_cstr(&mut emu, G_DATA_DIR, "Data\\");
     emu.write_u32(G_EXTRA_FLAGS, 0);
     emu.write(G_KEEP_FLAGS, &[0]);
@@ -276,10 +282,26 @@ fn resolve_matches_index() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let install = Rc::new(Install::new());
+    compare(&wow, BASE, BASE.trim_end_matches('\\'), 18);
+}
+
+/// The same with a base path that does not list: the exe walks `.` and then `.Data\`, so the
+/// install's `Data` folder is not walked at all.
+#[test]
+fn index_falls_back_to_dot() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    compare(&wow, "C:\\Gone\\", ".", 14);
+}
+
+/// Builds the index in the exe for base path `base` over the tree rooted at `root`, and compares
+/// every name and flag value with `LooseIndex`, which must hold more than `min_keys` keys.
+fn compare(wow: &Wow, base: &str, root: &str, min_keys: usize) {
+    let install = Rc::new(Install::new(root));
     let st = Rc::new(RefCell::new(Handles::default()));
-    let mut emu = setup(&wow, install.clone(), st.clone());
-    let model = LooseIndex::build(install.as_ref(), BASE);
+    let mut emu = setup(wow, base, install.clone(), st.clone());
+    let model = LooseIndex::build(install.as_ref(), base);
 
     let name_va = emu.alloc(0x400);
     let out = emu.alloc(0x104);
@@ -313,6 +335,10 @@ fn resolve_matches_index() {
             "Dat\\hidden.txt",
             "D\\hidden2.txt",
             "data2\\seen.txt",
+            "data\\low.txt",
+            "dat\\low2.txt",
+            "low.txt",
+            "Lower",
             "Data\\deep.txt",
             "model",
             "patch",
@@ -365,7 +391,11 @@ fn resolve_matches_index() {
             checked += 1;
         }
     }
-    assert!(model.len() > 15, "the model indexed {} keys", model.len());
+    assert!(
+        model.len() > min_keys,
+        "the model indexed {} keys",
+        model.len()
+    );
     eprintln!(
         "{checked} resolves compared over {} index keys",
         model.len()
@@ -376,48 +406,114 @@ const OPEN_EX: u64 = 0x6477c0;
 const FILE_RECORD_CTOR: u64 = 0x647290;
 const FILE_RECORD_DTOR: u64 = 0x6472d0;
 const FOPEN: u64 = 0x647db0;
+const FREAD: u64 = 0x740c97;
 const ARCHIVE_OPEN: u64 = 0x655670;
+const ARCHIVE_FILE_OPEN: u64 = 0x656690;
+const ARCHIVE_CLOSE: u64 = 0x653780;
 
-/// `SFile::OpenEx(0, name, 1, &file)` on a name the index holds and the archives hold too, with
-/// the disk open failing: `fopen` (`0x647db0`, `ret 4`) for a plain and a `.bz` entry, the archive
-/// open (`0x655670`, `ret 0x10`) for a `.MPQ` entry. The open fails and the archive walk is never
-/// called. With `fopen` succeeding the plain entry opens as kind 2, the walk again not called.
-/// The file record's constructor (`0x647290`, `ret 4`) is stubbed to return its `this`, and its
-/// destructor (`0x6472d0`, `ret`) to do nothing.
+/// How each stubbed disk call answers in one case of `index_hit_has_no_fallback`.
+#[derive(Clone, Copy, Default)]
+struct DiskAnswers {
+    /// `fopen`'s `FILE *`, 0 for a failure.
+    fopen: u32,
+    /// The second word of the 24-byte header `fread` fills.
+    magic: u32,
+    /// Whether the archive open succeeds.
+    archive: bool,
+}
+
+/// `SFile::OpenEx(0, name, 1, &file)` on names the index holds, one of which the archives hold too,
+/// with each disk open failing in turn: `fopen` (`0x647db0`, `ret 4`) for a plain entry
+/// (`0x647865`) and a `.bz` entry (`0x6478d5`); a `.bz` header whose magic is not `BZ00`, read by
+/// `fread` (`0x740c97`, `__cdecl`; `0x647964`); the archive open (`0x655670`, `ret 0x10`) of a
+/// `.MPQ` entry (`0x647a63`); and the open of the name inside it (`0x656690`, `ret 0x10`;
+/// `0x647a94`), the archive then closed (`0x653780`, `ret 4`). Each open returns 0 and the archive
+/// walk is never called. With `fopen` succeeding the plain entry opens as kind 2, again without
+/// the walk. The file record's constructor (`0x647290`, `ret 4`) is stubbed to return its `this`,
+/// and its destructor (`0x6472d0`, `ret`) to do nothing.
 #[test]
 fn index_hit_has_no_fallback() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let install = Rc::new(Install::new());
+    let install = Rc::new(Install::new(BASE.trim_end_matches('\\')));
     let st = Rc::new(RefCell::new(Handles::default()));
-    let mut emu = setup(&wow, install, st.clone());
+    let mut emu = setup(&wow, BASE, install, st.clone());
     emu.stub_fn(FILE_RECORD_CTOR, 1, |io| io.reg(RegisterX86::ECX) as u32);
     emu.stub(FILE_RECORD_DTOR, 0, 0);
-    emu.stub(ARCHIVE_OPEN, 0, 4);
-    let fopen_result = Rc::new(RefCell::new(0u32));
+    emu.stub(ARCHIVE_FILE_OPEN, 0, 4);
+    emu.stub(ARCHIVE_CLOSE, 0, 1);
+    let answers = Rc::new(RefCell::new(DiskAnswers::default()));
     {
-        let r = fopen_result.clone();
-        emu.stub_fn(FOPEN, 1, move |_| *r.borrow());
+        let a = answers.clone();
+        emu.stub_fn(FOPEN, 1, move |_| a.borrow().fopen);
+    }
+    {
+        let a = answers.clone();
+        emu.stub_fn(FREAD, 0, move |io| {
+            let mut header = [0u8; 0x18];
+            header[4..8].copy_from_slice(&a.borrow().magic.to_le_bytes());
+            io.write(u64::from(io.arg(0)), &header);
+            0x18
+        });
+    }
+    {
+        let a = answers.clone();
+        emu.stub_fn(ARCHIVE_OPEN, 4, move |io| {
+            if !a.borrow().archive {
+                return 0;
+            }
+            io.write_u32(u64::from(io.arg(3)), 0x7300_1000);
+            1
+        });
     }
     let name_va = emu.alloc(0x400);
     let file = emu.alloc(4);
-    for (name, ok) in [
-        ("Interface\\AddOns\\Foo\\Foo.toc", 0u32),
-        ("Interface\\AddOns\\Foo\\art.blp", 0),
-        ("Interface\\AddOns\\Foo\\pack", 0),
-        ("Interface\\AddOns\\Foo\\Foo.toc", 0x7300_0000),
+    let bz00 = u32::from_le_bytes(*b"BZ00");
+    let file_ok = 0x7300_0000;
+    let fail = |fopen, magic, archive| DiskAnswers {
+        fopen,
+        magic,
+        archive,
+    };
+    for (name, case, expect) in [
+        ("Interface\\AddOns\\Foo\\Foo.toc", fail(0, 0, false), 0),
+        ("Interface\\AddOns\\Foo\\art.blp", fail(0, 0, false), 0),
+        (
+            "Interface\\AddOns\\Foo\\art.blp",
+            fail(file_ok, bz00 ^ 1, false),
+            0,
+        ),
+        ("Interface\\AddOns\\Foo\\pack", fail(0, 0, false), 0),
+        ("Interface\\AddOns\\Foo\\pack", fail(0, 0, true), 0),
+        (
+            "Interface\\AddOns\\Foo\\Foo.toc",
+            fail(file_ok, 0, false),
+            2,
+        ),
     ] {
-        *fopen_result.borrow_mut() = ok;
+        *answers.borrow_mut() = case;
         st.borrow_mut().walk_flags.clear();
+        emu.clear_calls();
         write_cstr(&mut emu, name_va, name);
         emu.write_u32(file, 0xdead);
         let r = emu.call(OPEN_EX, 0, 0, &[0, name_va as u32, 1, file as u32]);
-        let expect = if ok == 0 { 0 } else { 2 };
-        assert_eq!(r, expect, "{name}: OpenEx with fopen returning {ok:#x}");
+        assert_eq!(r, expect, "{name}: OpenEx");
         assert!(
             st.borrow().walk_flags.is_empty(),
             "{name}: an index hit never reaches the archive walk"
         );
+        if case.archive {
+            assert!(
+                emu.calls().iter().any(|c| c.addr == ARCHIVE_FILE_OPEN),
+                "{name}: the open inside the archive ran"
+            );
+        }
+        if case.magic != 0 {
+            assert!(
+                emu.calls().iter().any(|c| c.addr == FREAD),
+                "{name}: the header was read"
+            );
+        }
     }
 }
