@@ -547,7 +547,7 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
         let job = Job {
             compiler: "clang",
             lang: "c",
-            flags: &["--target=i386-pc-linux-gnu"],
+            flags: &["--target=i386-pc-linux-gnu", "-ffreestanding"],
             before: "",
         };
         let (ok, errors) = compile(&dir, &text.replacen(from, to, 1), &job);
