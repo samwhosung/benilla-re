@@ -13333,55 +13333,55 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x536eb0	5	InitCopy1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536ec0; a static initializer	verified	one	net/layout#static-initializers	
 0x536ec0	11	InitCopy1		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x536ed0	5	InitDouble1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536ee0; a static initializer	verified	one	net/layout#static-initializers	
-0x536ee0	15	InitDouble1		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x536ee0	15	InitDouble1		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x536ef0	5	InitQuotient1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536f00; a static initializer	verified	one	net/layout#static-initializers	
-0x536f00	19	InitQuotient1		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x536f00	19	InitQuotient1		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x536f20	10	InitCountUnit1Thunk		net	orchestration	void __cdecl (void)	Calls 0x536f30, then jumps to 0x536f50; a static initializer	verified	one	net/layout#static-initializers	
-0x536f30	22	InitCountUnit1		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x536f30	22	InitCountUnit1		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x536f50	12	NetClientRegisterNetRefRelease		net	orchestration	void __cdecl (void)	Registers 0x536f60 with atexit	inferred	none		
-0x536f60	14	NetClientReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	inferred	none		
+0x536f60	14	NetClientReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x536f70	5	InitSquare1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536f80; a static initializer	verified	one	net/layout#static-initializers	
-0x536f80	19	InitSquare1		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x536f80	19	InitSquare1		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x536fa0	5	InitSquare2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536fb0; a static initializer	verified	one	net/layout#static-initializers	
-0x536fb0	19	InitSquare2		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x536fb0	19	InitSquare2		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x536fd0	5	InitSquare3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x536fe0; a static initializer	verified	one	net/layout#static-initializers	
-0x536fe0	19	InitSquare3		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x536fe0	19	InitSquare3		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537000	5	InitSquare4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537010; a static initializer	verified	one	net/layout#static-initializers	
-0x537010	19	InitSquare4		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537010	19	InitSquare4		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537030	5	InitSquare5Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537040; a static initializer	verified	one	net/layout#static-initializers	
-0x537040	19	InitSquare5		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537040	19	InitSquare5		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537060	5	InitSquare6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537070; a static initializer	verified	one	net/layout#static-initializers	
-0x537070	19	InitSquare6		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537070	19	InitSquare6		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537090	5	InitSquare7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5370a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5370a0	19	InitSquare7		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5370a0	19	InitSquare7		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5370c0	5	InitSquare8Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5370d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5370d0	19	InitSquare8		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5370d0	19	InitSquare8		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5370f0	5	InitSquare9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537100; a static initializer	verified	one	net/layout#static-initializers	
-0x537100	19	InitSquare9		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537100	19	InitSquare9		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537120	5	InitSquare10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537130; a static initializer	verified	one	net/layout#static-initializers	
-0x537130	19	InitSquare10		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537130	19	InitSquare10		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537150	5	InitSquare11Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537160; a static initializer	verified	one	net/layout#static-initializers	
-0x537160	19	InitSquare11		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537160	19	InitSquare11		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537180	5	InitSquare12Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537190; a static initializer	verified	one	net/layout#static-initializers	
-0x537190	19	InitSquare12		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537190	19	InitSquare12		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5371b0	5	InitSquare13Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5371c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5371c0	19	InitSquare13		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5371c0	19	InitSquare13		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5371e0	5	InitFive1Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5371f0; a static initializer	verified	one	net/layout#static-initializers	
 0x5371f0	11	InitFive1		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x537200	5	InitSquare14Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537210; a static initializer	verified	one	net/layout#static-initializers	
-0x537210	19	InitSquare14		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537210	19	InitSquare14		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537230	5	InitSquare15Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537240; a static initializer	verified	one	net/layout#static-initializers	
-0x537240	19	InitSquare15		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537240	19	InitSquare15		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537260	5	InitSquare16Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537270; a static initializer	verified	one	net/layout#static-initializers	
-0x537270	19	InitSquare16		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x537270	19	InitSquare16		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537290	5	InitSquare17Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5372a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5372a0	19	InitSquare17		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5372a0	19	InitSquare17		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5372c0	5	InitSquare18Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5372d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5372d0	19	InitSquare18		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5372d0	19	InitSquare18		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5372f0	5	InitQuotient2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x537300; a static initializer	verified	one	net/layout#static-initializers	
-0x537300	19	InitQuotient2		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	
+0x537300	19	InitQuotient2		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x537320	10	InitListHead1Thunk		net	orchestration	void __cdecl (void)	Calls 0x537330, then jumps to 0x537360; a static initializer	verified	one	net/layout#static-initializers	
-0x537330	34	InitListHead1		net	primitive	void __cdecl (void)	Makes a global list empty: its head points at itself, marked by bit 0	verified	one	net/layout#static-initializers	
+0x537330	34	InitListHead1		net	primitive	void __cdecl (void)	Makes a global list empty: its head points at itself, marked by bit 0	verified	one	net/layout#static-initializers	net::initializer_constants
 0x537360	12	RegisterDestroyNetClientList		net	orchestration	void __cdecl (void)	Registers 0x537370 with atexit	inferred	none	net/layout#static-initializers	
 0x537370	145	DestroyNetClientList		net	orchestration	void __cdecl (void)	Unlinks every node from the global NetClient list and clears its sentinel, freeing nothing	inferred	none	net/layout#static-initializers	
 0x537410	217	NetClient::NetClient	idb	net	orchestration	NetClient * __thiscall (NetClient *this)	Builds a NetClient: lock, NetClient vtable, zeroed state and counters, and a node for it at the tail of the global list	inferred	none		
@@ -13428,49 +13428,49 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5380c0	5	InitCopy2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5380d0; a static initializer	verified	one	net/layout#static-initializers	
 0x5380d0	11	InitCopy2		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5380e0	5	InitDouble2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5380f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5380f0	15	InitDouble2		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5380f0	15	InitDouble2		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538100	5	InitQuotient3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538110; a static initializer	verified	one	net/layout#static-initializers	
-0x538110	19	InitQuotient3		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x538110	19	InitQuotient3		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538130	10	InitCountUnit2Thunk		net	orchestration	void __cdecl (void)	Calls 0x538140, then jumps to 0x538160; a static initializer	verified	one	net/layout#static-initializers	
-0x538140	22	InitCountUnit2		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x538140	22	InitCountUnit2		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x538160	12	NetInternalRegisterNetRefRelease		net	orchestration	void __cdecl (void)	Registers 0x538170 with atexit	inferred	none		
-0x538170	14	NetInternalReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	inferred	none		
+0x538170	14	NetInternalReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x538180	5	InitSquare19Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538190; a static initializer	verified	one	net/layout#static-initializers	
-0x538190	19	InitSquare19		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538190	19	InitSquare19		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5381b0	5	InitSquare20Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5381c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5381c0	19	InitSquare20		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5381c0	19	InitSquare20		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5381e0	5	InitSquare21Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5381f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5381f0	19	InitSquare21		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5381f0	19	InitSquare21		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538210	5	InitSquare22Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538220; a static initializer	verified	one	net/layout#static-initializers	
-0x538220	19	InitSquare22		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538220	19	InitSquare22		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538240	5	InitSquare23Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538250; a static initializer	verified	one	net/layout#static-initializers	
-0x538250	19	InitSquare23		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538250	19	InitSquare23		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538270	5	InitSquare24Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538280; a static initializer	verified	one	net/layout#static-initializers	
-0x538280	19	InitSquare24		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538280	19	InitSquare24		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5382a0	5	InitSquare25Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5382b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5382b0	19	InitSquare25		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5382b0	19	InitSquare25		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5382d0	5	InitSquare26Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5382e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5382e0	19	InitSquare26		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5382e0	19	InitSquare26		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538300	5	InitSquare27Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538310; a static initializer	verified	one	net/layout#static-initializers	
-0x538310	19	InitSquare27		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538310	19	InitSquare27		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538330	5	InitSquare28Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538340; a static initializer	verified	one	net/layout#static-initializers	
-0x538340	19	InitSquare28		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538340	19	InitSquare28		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538360	5	InitSquare29Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538370; a static initializer	verified	one	net/layout#static-initializers	
-0x538370	19	InitSquare29		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538370	19	InitSquare29		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538390	5	InitSquare30Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5383a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5383a0	19	InitSquare30		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5383a0	19	InitSquare30		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5383c0	5	InitSquare31Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5383d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5383d0	19	InitSquare31		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5383d0	19	InitSquare31		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5383f0	5	InitFive2Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538400; a static initializer	verified	one	net/layout#static-initializers	
 0x538400	11	InitFive2		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x538410	5	InitSquare32Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538420; a static initializer	verified	one	net/layout#static-initializers	
-0x538420	19	InitSquare32		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538420	19	InitSquare32		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538440	5	InitSquare33Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538450; a static initializer	verified	one	net/layout#static-initializers	
-0x538450	19	InitSquare33		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538450	19	InitSquare33		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x538470	5	InitSquare34Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x538480; a static initializer	verified	one	net/layout#static-initializers	
-0x538480	19	InitSquare34		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x538480	19	InitSquare34		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5384a0	5	InitSquare35Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5384b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5384b0	19	InitSquare35		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5384b0	19	InitSquare35		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5384d0	319	NETEVENTQUEUE::Poll	idb	net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Dispatches queued events in order under the lock, pings when no destroy came, frees all events, deletes a doomed client	verified	one	net/dispatch#main-thread-drain	
 0x538630	47	NETEVENTQUEUE::NETEVENTQUEUE	idb	net	orchestration	NETEVENTQUEUE * __thiscall (NETEVENTQUEUE *this, NetClient *owner)	Builds an empty event queue owned by a client: lock at +0x04, empty list with sentinel at +0x20	inferred	none		
 0x538660	156	NETEVENTQUEUE::~NETEVENTQUEUE		net	orchestration	void __thiscall (NETEVENTQUEUE *this)	Frees every queued event, unlinks the list, and destroys the lock	inferred	none		
@@ -17271,57 +17271,57 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5a9e00	5	InitCopy3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9e10; a static initializer	verified	one	net/layout#static-initializers	
 0x5a9e10	11	InitCopy3		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5a9e20	5	InitDouble3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9e30; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9e30	15	InitDouble3		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9e30	15	InitDouble3		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9e40	5	InitQuotient4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9e50; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9e50	19	InitQuotient4		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9e50	19	InitQuotient4		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9e70	5	InitSquare36Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9e80; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9e80	19	InitSquare36		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9e80	19	InitSquare36		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9ea0	5	InitQuotient5Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9eb0; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9eb0	19	InitQuotient5		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9eb0	19	InitQuotient5		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9ed0	5	InitSquare37Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9ee0; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9ee0	19	InitSquare37		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9ee0	19	InitSquare37		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9f00	5	InitSquare38Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9f10; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9f10	19	InitSquare38		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9f10	19	InitSquare38		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9f30	5	InitSquare39Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9f40; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9f40	19	InitSquare39		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9f40	19	InitSquare39		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9f60	5	InitSquare40Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9f70; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9f70	19	InitSquare40		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9f70	19	InitSquare40		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9f90	5	InitSquare41Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9fa0; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9fa0	19	InitSquare41		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9fa0	19	InitSquare41		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9fc0	5	InitSquare42Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5a9fd0; a static initializer	verified	one	net/layout#static-initializers	
-0x5a9fd0	19	InitSquare42		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5a9fd0	19	InitSquare42		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5a9ff0	5	InitSquare43Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa000; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa000	19	InitSquare43		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa000	19	InitSquare43		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa020	5	InitSquare44Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa030; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa030	19	InitSquare44		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa030	19	InitSquare44		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa050	5	InitSquare45Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa060; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa060	19	InitSquare45		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa060	19	InitSquare45		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa080	5	InitSquare46Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa090; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa090	19	InitSquare46		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa090	19	InitSquare46		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa0b0	5	InitSquare47Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa0c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa0c0	19	InitSquare47		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa0c0	19	InitSquare47		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa0e0	5	InitSquare48Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa0f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa0f0	19	InitSquare48		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa0f0	19	InitSquare48		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa110	5	InitSquare49Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa120; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa120	19	InitSquare49		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa120	19	InitSquare49		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa140	5	InitFive3Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa150; a static initializer	verified	one	net/layout#static-initializers	
 0x5aa150	11	InitFive3		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5aa160	5	InitSquare50Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa170; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa170	19	InitSquare50		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa170	19	InitSquare50		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa190	5	InitSquare51Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa1a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa1a0	19	InitSquare51		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa1a0	19	InitSquare51		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa1c0	5	InitSquare52Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa1d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa1d0	19	InitSquare52		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa1d0	19	InitSquare52		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa1f0	5	InitSquare53Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5aa200; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa200	19	InitSquare53		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5aa200	19	InitSquare53		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5aa220	10	InitCountUnit3Thunk		net	orchestration	void __cdecl (void)	Calls 0x5aa230, then jumps to 0x5aa250; a static initializer	verified	one	net/layout#static-initializers	
-0x5aa230	22	InitCountUnit3		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5aa230	22	InitCountUnit3		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5aa250	12	ClientServicesRegisterNetRefRelease		net	orchestration	void __cdecl (void)	Registers 0x5aa260 with atexit	inferred	none		
-0x5aa260	14	ClientServicesReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	inferred	none		
+0x5aa260	14	ClientServicesReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the network library reference count and tail-calls the empty 0x5b71d0 when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5aa270	10	InitZeroTripleThunk		net	orchestration	void __cdecl (void)	Calls 0x5aa280, then jumps on; a static initializer	verified	one	net/layout#static-initializers	
 0x5aa280	31	InitZeroTriple		net	orchestration	void __cdecl (void)	Zeroes three consecutive global dwords at startup	verified	one	net/layout#static-initializers	
 0x5aa2a0	12	ClientServicesRegisterExitFlag		net	orchestration	void __cdecl (void)	Registers 0x5aa2b0 with atexit	inferred	none		
-0x5aa2b0	21	ClientServicesSetExitFlag		net	primitive	void __cdecl (void)	Sets bit 0 of a static flag byte at exit	inferred	none		
+0x5aa2b0	21	ClientServicesSetExitFlag		net	primitive	void __cdecl (void)	Sets bit 0 of a static flag byte at exit	verified	one	net/layout#static-initializers	net::exit_flag
 0x5aa2d0	151	LoadTelemetryCdKeyInfo		net	orchestration	void __cdecl (void)	Clears the CD-key info record, then fills it from a 28-byte telemetry.dat in base.MPQ and marks it present	verified	one	net/connection#telemetry-record	
 0x5aa370	95	ClientConnection::ClientConnection		net	orchestration	ClientConnection * __thiscall (ClientConnection *this, void *response)	Builds the RealmConnection base with the response object, clears the operation record, and installs its vtable	inferred	none		
 0x5aa3d0	43	ClientConnection::DeletingDestructor		net	orchestration	ClientConnection * __thiscall (ClientConnection *this, uint32_t flags)	Runs the RealmConnection destructor 0x5b3c20 and frees the object when flag bit 0 is set	inferred	none		
@@ -17418,53 +17418,53 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ac5a0	5	InitCopy4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac5b0; a static initializer	verified	one	net/layout#static-initializers	
 0x5ac5b0	11	InitCopy4		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5ac5c0	5	InitDouble4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac5d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac5d0	15	InitDouble4		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac5d0	15	InitDouble4		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac5e0	5	InitQuotient6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac5f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac5f0	19	InitQuotient6		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac5f0	19	InitQuotient6		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac610	5	InitSquare54Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac620; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac620	19	InitSquare54		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac620	19	InitSquare54		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac640	5	InitSquare55Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac650; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac650	19	InitSquare55		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac650	19	InitSquare55		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac670	5	InitSquare56Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac680; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac680	19	InitSquare56		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac680	19	InitSquare56		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac6a0	5	InitSquare57Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac6b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac6b0	19	InitSquare57		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac6b0	19	InitSquare57		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac6d0	5	InitSquare58Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac6e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac6e0	19	InitSquare58		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac6e0	19	InitSquare58		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac700	5	InitSquare59Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac710; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac710	19	InitSquare59		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac710	19	InitSquare59		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac730	5	InitSquare60Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac740; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac740	19	InitSquare60		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac740	19	InitSquare60		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac760	5	InitSquare61Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac770; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac770	19	InitSquare61		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac770	19	InitSquare61		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac790	5	InitSquare62Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac7a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac7a0	19	InitSquare62		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac7a0	19	InitSquare62		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac7c0	5	InitSquare63Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac7d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac7d0	19	InitSquare63		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac7d0	19	InitSquare63		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac7f0	5	InitSquare64Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac800; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac800	19	InitSquare64		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac800	19	InitSquare64		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac820	5	InitSquare65Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac830; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac830	19	InitSquare65		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac830	19	InitSquare65		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac850	5	InitSquare66Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac860; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac860	19	InitSquare66		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac860	19	InitSquare66		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac880	5	InitFive4Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac890; a static initializer	verified	one	net/layout#static-initializers	
 0x5ac890	11	InitFive4		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5ac8a0	5	InitSquare67Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac8b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac8b0	19	InitSquare67		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac8b0	19	InitSquare67		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac8d0	5	InitSquare68Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac8e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac8e0	19	InitSquare68		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac8e0	19	InitSquare68		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac900	5	InitSquare69Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac910; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac910	19	InitSquare69		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac910	19	InitSquare69		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac930	5	InitSquare70Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac940; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac940	19	InitSquare70		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac940	19	InitSquare70		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac960	5	InitSquare71Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac970; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac970	19	InitSquare71		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac970	19	InitSquare71		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac990	5	InitQuotient7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5ac9a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac9a0	19	InitQuotient7		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	
+0x5ac9a0	19	InitQuotient7		net	primitive	void __cdecl (void)	Stores 0.5 / 10 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5ac9c0	10	InitCountUnit4Thunk		net	orchestration	void __cdecl (void)	Calls 0x5ac9d0, then jumps to 0x5ac9f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5ac9d0	22	InitCountUnit4		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5ac9d0	22	InitCountUnit4		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5ac9f0	12	FriendListRegisterNetRefRelease		net	orchestration	void __cdecl (void)	Registers 0x5aca00 to run at exit	inferred	none		
-0x5aca00	14	FriendListReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the shared static reference count and jumps to an empty release when it reaches zero	inferred	none		
+0x5aca00	14	FriendListReleaseNetRef		net	primitive	void __cdecl (void)	Decrements the shared static reference count and jumps to an empty release when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5aca10	98	FriendList::FriendList	idb	net	orchestration	FriendList * __thiscall (FriendList *this)	Clears the 50 friend slots, the 25 ignore guids, both selections and both pending name counts	verified	one	net/friends#friend-list-object	
 0x5aca80	47	FriendList::~FriendList		net	orchestration	void __thiscall (FriendList *this)	Frees the name strings of the 50 friend slots	inferred	none		
 0x5acab0	873	FriendList::HandleStatus		net	primitive	void __thiscall (FriendList *this, uint32_t result, uint64_t guid, CDataStore *msg)	Applies a friend or ignore result to the lists and shows its ERR_FRIEND or ERR_IGNORE message once the name is known	verified	one	net/friends#friend-status-result	
@@ -17556,49 +17556,49 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5aff40	35	ArmAccountDataSaveTimer		net	orchestration	void __fastcall (uint32_t index)	Restarts a section's 30-second save timer	verified	one	net/accountdata#section-reads-and-writes	
 0x5aff70	39	CancelAccountDataSaveTimer		net	orchestration	void __fastcall (uint32_t index)	Kills a section's save timer when one is armed and clears it	verified	one	net/accountdata#section-reads-and-writes	
 0x5affa0	5	InitDouble5Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5affb0; a static initializer	verified	one	net/layout#static-initializers	
-0x5affb0	15	InitDouble5		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5affb0	15	InitDouble5		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5affc0	5	InitQuotient8Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5affd0; a static initializer	verified	one	net/layout#static-initializers	
-0x5affd0	19	InitQuotient8		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5affd0	19	InitQuotient8		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5afff0	5	InitSquare72Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0000; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0000	19	InitSquare72		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0000	19	InitSquare72		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0020	5	InitSquare73Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0030; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0030	19	InitSquare73		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0030	19	InitSquare73		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0050	5	InitSquare74Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0060; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0060	19	InitSquare74		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0060	19	InitSquare74		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0080	5	InitSquare75Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0090; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0090	19	InitSquare75		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0090	19	InitSquare75		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b00b0	5	InitSquare76Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b00c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b00c0	19	InitSquare76		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b00c0	19	InitSquare76		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b00e0	5	InitSquare77Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b00f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b00f0	19	InitSquare77		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b00f0	19	InitSquare77		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0110	5	InitSquare78Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0120; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0120	19	InitSquare78		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0120	19	InitSquare78		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0140	5	InitSquare79Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0150; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0150	19	InitSquare79		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0150	19	InitSquare79		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0170	5	InitSquare80Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0180; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0180	19	InitSquare80		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0180	19	InitSquare80		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b01a0	5	InitSquare81Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b01b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b01b0	19	InitSquare81		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b01b0	19	InitSquare81		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b01d0	5	InitSquare82Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b01e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b01e0	19	InitSquare82		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b01e0	19	InitSquare82		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0200	5	InitSquare83Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0210; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0210	19	InitSquare83		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0210	19	InitSquare83		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0230	5	InitSquare84Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0240; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0240	19	InitSquare84		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0240	19	InitSquare84		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0260	5	InitFive5Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0270; a static initializer	verified	one	net/layout#static-initializers	
 0x5b0270	11	InitFive5		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b0280	5	InitSquare85Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0290; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0290	19	InitSquare85		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0290	19	InitSquare85		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b02b0	5	InitSquare86Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b02c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b02c0	19	InitSquare86		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b02c0	19	InitSquare86		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b02e0	5	InitSquare87Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b02f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b02f0	19	InitSquare87		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b02f0	19	InitSquare87		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0310	5	InitSquare88Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0320; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0320	19	InitSquare88		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0320	19	InitSquare88		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0340	10	InitCountUnit5Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b0350, then jumps to 0x5b0370; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0350	22	InitCountUnit5		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b0350	22	InitCountUnit5		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b0370	12	RegisterDownloadFileTuExit		net	orchestration	void __cdecl (void)	Registers 0x5b0380 with atexit; a static initializer	inferred	none		
-0x5b0380	14	ReleaseDownloadFileTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	inferred	none		
+0x5b0380	14	ReleaseDownloadFileTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b0390	5	InitCopy6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b03a0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b03a0	11	InitCopy6		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b03b0	10	InitCriticalSection1Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b03c0, then jumps to 0x5b03d0; a static initializer	verified	one	net/layout#static-initializers	
@@ -17624,142 +17624,142 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b0bc0	288	DownloadFileFeed		net	primitive	uint32_t __thiscall (void *this, const void *data, uint32_t size)	Writes data at the received offset, advances it, writes the trailer per MiB and checks the MD5 at the end	inferred	none		
 0x5b0ce0	124	DownloadFileProgress		net	primitive	float __thiscall (void *this)	Returns the received byte count over the total, both as unsigned 64-bit, or 0 when the total is 0	inferred	none		
 0x5b0d60	5	InitDouble6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0d70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0d70	15	InitDouble6		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0d70	15	InitDouble6		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0d80	5	InitQuotient9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0d90; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0d90	19	InitQuotient9		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0d90	19	InitQuotient9		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0db0	5	InitSquare89Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0dc0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0dc0	19	InitSquare89		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0dc0	19	InitSquare89		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0de0	5	InitSquare90Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0df0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0df0	19	InitSquare90		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0df0	19	InitSquare90		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0e10	5	InitSquare91Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0e20; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0e20	19	InitSquare91		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0e20	19	InitSquare91		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0e40	5	InitSquare92Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0e50; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0e50	19	InitSquare92		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0e50	19	InitSquare92		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0e70	5	InitSquare93Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0e80; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0e80	19	InitSquare93		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0e80	19	InitSquare93		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0ea0	5	InitSquare94Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0eb0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0eb0	19	InitSquare94		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0eb0	19	InitSquare94		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0ed0	5	InitSquare95Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0ee0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0ee0	19	InitSquare95		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0ee0	19	InitSquare95		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0f00	5	InitSquare96Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0f10; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0f10	19	InitSquare96		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0f10	19	InitSquare96		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0f30	5	InitSquare97Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0f40; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0f40	19	InitSquare97		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0f40	19	InitSquare97		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0f60	5	InitSquare98Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0f70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0f70	19	InitSquare98		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0f70	19	InitSquare98		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0f90	5	InitSquare99Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0fa0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0fa0	19	InitSquare99		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0fa0	19	InitSquare99		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0fc0	5	InitSquare100Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b0fd0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b0fd0	19	InitSquare100		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b0fd0	19	InitSquare100		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b0ff0	5	InitSquare101Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1000; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1000	19	InitSquare101		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1000	19	InitSquare101		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1020	5	InitFive6Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1030; a static initializer	verified	one	net/layout#static-initializers	
 0x5b1030	11	InitFive6		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b1040	5	InitSquare102Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1050; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1050	19	InitSquare102		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1050	19	InitSquare102		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1070	5	InitSquare103Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1080; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1080	19	InitSquare103		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1080	19	InitSquare103		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b10a0	5	InitSquare104Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b10b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b10b0	19	InitSquare104		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b10b0	19	InitSquare104		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b10d0	5	InitSquare105Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b10e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b10e0	19	InitSquare105		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b10e0	19	InitSquare105		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1100	10	InitCountUnit6Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b1110, then jumps to 0x5b1130; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1110	22	InitCountUnit6		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b1110	22	InitCountUnit6		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b1130	12	RegisterChecksumTuExit		net	orchestration	void __cdecl (void)	Registers 0x5b1140 with atexit; a static initializer	inferred	none		
-0x5b1140	14	ReleaseChecksumTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	inferred	none		
+0x5b1140	14	ReleaseChecksumTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b1150	5	InitCopy7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1160; a static initializer	verified	one	net/layout#static-initializers	
 0x5b1160	11	InitCopy7		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b1170	371	ChecksumExecutables		net	primitive	void __fastcall (const uint8_t *key, uint32_t keyLength, uint8_t digest[20])	Writes the HMAC-SHA1 under a key of the whole bytes of WoW.exe, fmod.dll, ijl15.dll, dbghelp.dll and unicows.dll	verified	one	net/logonlink#logon-checksum	net::hmac_sha1
 0x5b12f0	5	InitDouble7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1300; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1300	15	InitDouble7		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1300	15	InitDouble7		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1310	5	InitQuotient10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1320; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1320	19	InitQuotient10		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1320	19	InitQuotient10		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1340	5	InitSquare106Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1350; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1350	19	InitSquare106		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1350	19	InitSquare106		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1370	5	InitSquare107Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1380; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1380	19	InitSquare107		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1380	19	InitSquare107		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b13a0	5	InitSquare108Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b13b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b13b0	19	InitSquare108		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b13b0	19	InitSquare108		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b13d0	5	InitSquare109Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b13e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b13e0	19	InitSquare109		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b13e0	19	InitSquare109		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1400	5	InitSquare110Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1410; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1410	19	InitSquare110		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1410	19	InitSquare110		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1430	5	InitSquare111Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1440; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1440	19	InitSquare111		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1440	19	InitSquare111		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1460	5	InitSquare112Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1470; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1470	19	InitSquare112		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1470	19	InitSquare112		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1490	5	InitSquare113Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b14a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b14a0	19	InitSquare113		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b14a0	19	InitSquare113		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b14c0	5	InitSquare114Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b14d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b14d0	19	InitSquare114		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b14d0	19	InitSquare114		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b14f0	5	InitSquare115Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1500; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1500	19	InitSquare115		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1500	19	InitSquare115		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1520	5	InitSquare116Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1530; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1530	19	InitSquare116		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1530	19	InitSquare116		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1550	5	InitSquare117Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1560; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1560	19	InitSquare117		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1560	19	InitSquare117		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1580	5	InitSquare118Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1590; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1590	19	InitSquare118		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1590	19	InitSquare118		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b15b0	5	InitFive7Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b15c0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b15c0	11	InitFive7		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b15d0	5	InitSquare119Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b15e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b15e0	19	InitSquare119		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b15e0	19	InitSquare119		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1600	5	InitSquare120Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1610; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1610	19	InitSquare120		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1610	19	InitSquare120		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1630	5	InitSquare121Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1640; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1640	19	InitSquare121		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1640	19	InitSquare121		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1660	5	InitSquare122Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1670; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1670	19	InitSquare122		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1670	19	InitSquare122		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1690	10	InitCountUnit7Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b16a0, then jumps to 0x5b16c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b16a0	22	InitCountUnit7		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b16a0	22	InitCountUnit7		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b16c0	12	RegisterSquaredConstantsTuExit		net	orchestration	void __cdecl (void)	Registers 0x5b16d0 with atexit; a static initializer	inferred	none		
-0x5b16d0	14	ReleaseSquaredConstantsTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	inferred	none		
+0x5b16d0	14	ReleaseSquaredConstantsTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b16e0	5	InitCopy8Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b16f0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b16f0	11	InitCopy8		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b1700	5	InitDouble8Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1710; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1710	15	InitDouble8		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1710	15	InitDouble8		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1720	5	InitQuotient11Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1730; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1730	19	InitQuotient11		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1730	19	InitQuotient11		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1750	10	InitCountUnit8Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b1760, then jumps to 0x5b1780; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1760	22	InitCountUnit8		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b1760	22	InitCountUnit8		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b1780	12	RegisterLoginTuExit		net	orchestration	void __cdecl (void)	Registers 0x5b1790 with atexit; a static initializer	inferred	none		
-0x5b1790	14	ReleaseLoginTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	inferred	none		
+0x5b1790	14	ReleaseLoginTuCount		net	primitive	void __cdecl (void)	Decrements the shared static-init count and runs the empty terminator when it reaches zero	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b17a0	5	InitSquare123Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b17b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b17b0	19	InitSquare123		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b17b0	19	InitSquare123		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b17d0	5	InitSquare124Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b17e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b17e0	19	InitSquare124		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b17e0	19	InitSquare124		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1800	5	InitSquare125Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1810; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1810	19	InitSquare125		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1810	19	InitSquare125		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1830	5	InitSquare126Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1840; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1840	19	InitSquare126		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1840	19	InitSquare126		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1860	5	InitSquare127Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1870; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1870	19	InitSquare127		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1870	19	InitSquare127		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1890	5	InitSquare128Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b18a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b18a0	19	InitSquare128		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b18a0	19	InitSquare128		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b18c0	5	InitSquare129Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b18d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b18d0	19	InitSquare129		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b18d0	19	InitSquare129		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b18f0	5	InitSquare130Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1900; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1900	19	InitSquare130		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1900	19	InitSquare130		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1920	5	InitSquare131Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1930; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1930	19	InitSquare131		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1930	19	InitSquare131		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1950	5	InitSquare132Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1960; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1960	19	InitSquare132		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1960	19	InitSquare132		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1980	5	InitSquare133Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1990; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1990	19	InitSquare133		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1990	19	InitSquare133		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b19b0	5	InitSquare134Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b19c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b19c0	19	InitSquare134		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b19c0	19	InitSquare134		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b19e0	5	InitSquare135Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b19f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b19f0	19	InitSquare135		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b19f0	19	InitSquare135		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1a10	5	InitFive8Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1a20; a static initializer	verified	one	net/layout#static-initializers	
 0x5b1a20	11	InitFive8		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b1a30	5	InitSquare136Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1a40; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1a40	19	InitSquare136		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1a40	19	InitSquare136		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1a60	5	InitSquare137Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1a70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1a70	19	InitSquare137		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1a70	19	InitSquare137		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1a90	5	InitSquare138Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1aa0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1aa0	19	InitSquare138		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1aa0	19	InitSquare138		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1ac0	5	InitSquare139Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b1ad0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b1ad0	19	InitSquare139		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b1ad0	19	InitSquare139		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b1af0	6	LoginExpectDisconnect		net	orchestration	bool __thiscall (void *this)	Marks the login link's coming disconnect as expected and returns true	verified	one	net/logonlink#logon-link-events	
 0x5b1b00	97	LoginOnConnected		net	orchestration	bool __thiscall (void *this, const void *address)	Marks the login link connected and reports LOGIN_STATE_CONNECTED (10) with the peer as address:port	inferred	none		
 0x5b1b70	82	LoginOnConnectFailed		net	orchestration	bool __thiscall (void *this)	Reports LOGIN_STATE_FAILED (5) with LOGIN_SERVER_DOWN (0xc), then runs the disconnect, returning false	verified	one	net/logonlink#logon-link-events	
@@ -17801,51 +17801,51 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b3520	5	InitCopy9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3530; a static initializer	verified	one	net/layout#static-initializers	
 0x5b3530	11	InitCopy9		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b3540	5	InitDouble9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3550; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3550	15	InitDouble9		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3550	15	InitDouble9		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3560	5	InitQuotient12Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3570; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3570	19	InitQuotient12		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3570	19	InitQuotient12		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3590	10	InitCountUnit9Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b35a0, then jumps to 0x5b35c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b35a0	22	InitCountUnit9		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b35a0	22	InitCountUnit9		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b35c0	12	RealmConnectionRegisterCounterRelease		net	orchestration	void __cdecl (void)	Registers the release of the shared initialisation counter with atexit	inferred	none		
-0x5b35d0	14	RealmConnectionReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared initialisation counter and runs its empty final release when it reaches 0	inferred	none		
+0x5b35d0	14	RealmConnectionReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared initialisation counter and runs its empty final release when it reaches 0	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b35e0	5	InitSquare140Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b35f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b35f0	19	InitSquare140		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b35f0	19	InitSquare140		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3610	5	InitSquare141Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3620; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3620	19	InitSquare141		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3620	19	InitSquare141		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3640	5	InitSquare142Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3650; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3650	19	InitSquare142		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3650	19	InitSquare142		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3670	5	InitSquare143Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3680; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3680	19	InitSquare143		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3680	19	InitSquare143		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b36a0	5	InitSquare144Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b36b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b36b0	19	InitSquare144		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b36b0	19	InitSquare144		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b36d0	5	InitSquare145Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b36e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b36e0	19	InitSquare145		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b36e0	19	InitSquare145		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3700	5	InitSquare146Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3710; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3710	19	InitSquare146		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3710	19	InitSquare146		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3730	5	InitSquare147Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3740; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3740	19	InitSquare147		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3740	19	InitSquare147		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3760	5	InitSquare148Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3770; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3770	19	InitSquare148		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3770	19	InitSquare148		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3790	5	InitSquare149Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b37a0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b37a0	19	InitSquare149		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b37a0	19	InitSquare149		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b37c0	5	InitSquare150Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b37d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b37d0	19	InitSquare150		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b37d0	19	InitSquare150		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b37f0	5	InitSquare151Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3800; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3800	19	InitSquare151		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3800	19	InitSquare151		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3820	5	InitSquare152Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3830; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3830	19	InitSquare152		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3830	19	InitSquare152		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3850	5	InitFive9Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3860; a static initializer	verified	one	net/layout#static-initializers	
 0x5b3860	11	InitFive9		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b3870	5	InitSquare153Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3880; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3880	19	InitSquare153		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3880	19	InitSquare153		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b38a0	5	InitSquare154Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b38b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b38b0	19	InitSquare154		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b38b0	19	InitSquare154		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b38d0	5	InitSquare155Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b38e0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b38e0	19	InitSquare155		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b38e0	19	InitSquare155		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3900	5	InitSquare156Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b3910; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3910	19	InitSquare156		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b3910	19	InitSquare156		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b3930	10	InitListHead2Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b3940, then jumps to 0x5b3970; a static initializer	verified	one	net/layout#static-initializers	
-0x5b3940	34	InitListHead2		net	primitive	void __cdecl (void)	Makes a global list empty: its head points at itself, marked by bit 0	verified	one	net/layout#static-initializers	
+0x5b3940	34	InitListHead2		net	primitive	void __cdecl (void)	Makes a global list empty: its head points at itself, marked by bit 0	verified	one	net/layout#static-initializers	net::initializer_constants
 0x5b3970	12	RegisterRealmConnectionListReset		net	orchestration	void __cdecl (void)	Registers the global realm connection list's reset with atexit	inferred	none		
 0x5b3980	169	ResetRealmConnectionList		net	orchestration	void __fastcall (uint32_t arg1)	Unlinks every node of the global realm connection list once and clears its head	inferred	none		
 0x5b3a30	10	InitCriticalSection2Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b3a40, then jumps to 0x5b3a50; a static initializer	verified	one	net/layout#static-initializers	
@@ -17881,45 +17881,45 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b48e0	5	InitCopy10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b48f0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b48f0	11	InitCopy10		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b4900	10	InitCountUnit10Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b4910, then jumps to 0x5b4930; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4910	22	InitCountUnit10		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b4910	22	InitCountUnit10		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b4930	12	WowConnectionRegisterCounterRelease		net	orchestration	void __cdecl (void)	Registers the release of the shared initialisation counter with atexit	inferred	none		
-0x5b4940	14	WowConnectionReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared initialisation counter and runs its empty final release when it reaches 0	inferred	none		
+0x5b4940	14	WowConnectionReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared initialisation counter and runs its empty final release when it reaches 0	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b4950	5	InitSquare157Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4960; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4960	19	InitSquare157		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4960	19	InitSquare157		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4980	5	InitSquare158Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4990; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4990	19	InitSquare158		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4990	19	InitSquare158		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b49b0	5	InitSquare159Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b49c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b49c0	19	InitSquare159		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b49c0	19	InitSquare159		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b49e0	5	InitSquare160Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b49f0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b49f0	19	InitSquare160		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b49f0	19	InitSquare160		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4a10	5	InitSquare161Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4a20; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4a20	19	InitSquare161		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4a20	19	InitSquare161		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4a40	5	InitSquare162Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4a50; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4a50	19	InitSquare162		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4a50	19	InitSquare162		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4a70	5	InitSquare163Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4a80; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4a80	19	InitSquare163		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4a80	19	InitSquare163		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4aa0	5	InitSquare164Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4ab0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4ab0	19	InitSquare164		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4ab0	19	InitSquare164		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4ad0	5	InitSquare165Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4ae0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4ae0	19	InitSquare165		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4ae0	19	InitSquare165		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4b00	5	InitSquare166Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4b10; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4b10	19	InitSquare166		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4b10	19	InitSquare166		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4b30	5	InitSquare167Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4b40; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4b40	19	InitSquare167		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4b40	19	InitSquare167		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4b60	5	InitSquare168Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4b70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4b70	19	InitSquare168		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4b70	19	InitSquare168		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4b90	5	InitSquare169Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4ba0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4ba0	19	InitSquare169		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4ba0	19	InitSquare169		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4bc0	5	InitFive10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4bd0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b4bd0	11	InitFive10		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b4be0	5	InitSquare170Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4bf0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4bf0	19	InitSquare170		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4bf0	19	InitSquare170		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4c10	5	InitSquare171Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4c20; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4c20	19	InitSquare171		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4c20	19	InitSquare171		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4c40	5	InitSquare172Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4c50; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4c50	19	InitSquare172		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4c50	19	InitSquare172		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4c70	5	InitSquare173Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b4c80; a static initializer	verified	one	net/layout#static-initializers	
-0x5b4c80	19	InitSquare173		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b4c80	19	InitSquare173		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b4ca0	10	InitCriticalSection3Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b4cb0, then jumps to 0x5b4cc0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b4cb0	10	InitCriticalSection3		net	orchestration	void __cdecl (void)	Constructs a global critical section by a tail call to 0x657990	verified	one	net/layout#static-initializers	
 0x5b4cc0	12	RegisterSocketTableLockDelete		net	orchestration	void __cdecl (void)	Registers the deletion of the open-socket table lock with atexit	inferred	none		
@@ -17962,10 +17962,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b6ec0	224	WowConnection::Listen		net	unreached	uint8_t __thiscall (WowConnection *this, uint16_t port, uint8_t loopback)	Opens a non-blocking socket listening on the port, backlog 10000, state 3; returns 0 when one is open or on failure	inferred	none	net/layout#unreached-functions	
 0x5b6fa0	41	WowConnection::StopListening		net	unreached	void __thiscall (WowConnection *this)	Closes the socket of a listening connection (state 3) and removes it from the network engine	inferred	none	net/layout#unreached-functions	
 0x5b6fd0	5	InitDouble10Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b6fe0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b6fe0	15	InitDouble10		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b6fe0	15	InitDouble10		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b6ff0	86	WowConnection::FormatPeerAddress		net	unreached	char * __thiscall (WowConnection *this, char *buf, uint32_t size)	Prints the peer address and port as %d.%d.%d.%d:%u into a buffer and returns the buffer	inferred	none	net/layout#unreached-functions	
 0x5b7050	5	InitQuotient13Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7060; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7060	19	InitQuotient13		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7060	19	InitQuotient13		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7080	191	WowConnection::InitOsNet	idb	net	host	uint32_t __fastcall (void *acceptFilter, void *engineArg, uint32_t threadCount, uint32_t platformArg)	Clears the open-socket bitset, creates the buffer pools, keeps the accept filter, starts the engine on up to 32 threads	inferred	none		
 0x5b7140	86	DestroyOsNet		net	host	void __cdecl (void)	Sets the shutdown flag, stops and destroys the network engine, frees it, and tears down the data-store pools	inferred	none		
 0x5b71a0	16	StopOsNet		net	unreached	void __cdecl (void)	Stops the network engine threads when the engine exists	inferred	none	net/layout#unreached-functions	
@@ -18001,63 +18001,63 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5b7a70	71	FixedBufferDestroy		net	unreached	void __thiscall (void *this, uint8_t **data, uint32_t *base, uint32_t *alloc)	Frees heap data when the store is not on its fixed buffer, then zeroes data, base and capacity	inferred	none	net/layout#unreached-functions	
 0x5b7ac0	5	ReturnZeroPopOneArg		net	unreached	uint32_t __stdcall (uint32_t ignored)	Returns 0 and discards one stack argument	inferred	none	net/layout#unreached-functions	
 0x5b7ad0	5	InitDouble11Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7ae0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7ae0	15	InitDouble11		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7ae0	15	InitDouble11		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7af0	5	InitQuotient14Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7b00; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7b00	19	InitQuotient14		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7b00	19	InitQuotient14		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7b20	5	InitCopy12Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7b30; a static initializer	verified	one	net/layout#static-initializers	
 0x5b7b30	11	InitCopy12		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b7b40	5	InitDouble12Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7b50; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7b50	15	InitDouble12		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7b50	15	InitDouble12		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7b60	5	InitQuotient15Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7b70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7b70	19	InitQuotient15		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7b70	19	InitQuotient15		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7b90	19	Lerp		net	unreached	float __stdcall (float a, float b, float t)	Returns a + (b - a)·t in st0	inferred	none	net/layout#unreached-functions	
 0x5b7bb0	41	CosineInterpolate		net	primitive	float __stdcall (float a, float b, float t)	Returns a + (b - a)·(1 - cos(π·t))/2 in st0	verified	one	net/layout#shared-helpers	cmath::cmath_cosine_smoothstep
 0x5b7be0	5	InitCopy13Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7bf0; a static initializer	verified	one	net/layout#static-initializers	
 0x5b7bf0	11	InitCopy13		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5b7c00	5	InitDouble13Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7c10; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7c10	15	InitDouble13		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7c10	15	InitDouble13		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7c20	5	InitQuotient16Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7c30; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7c30	19	InitQuotient16		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7c30	19	InitQuotient16		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7c50	10	InitCountUnit11Thunk		net	orchestration	void __cdecl (void)	Calls 0x5b7c60, then jumps to 0x5b7c80; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7c60	22	InitCountUnit11		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5b7c60	22	InitCountUnit11		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5b7c80	12	RegisterNetCounterReleaseAtExit		net	orchestration	void __cdecl (void)	Registers 0x5b7c90 with atexit	inferred	none		
-0x5b7c90	14	ReleaseNetSharedCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	inferred	none		
+0x5b7c90	14	ReleaseNetSharedCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5b7ca0	5	InitSquare174Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7cb0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7cb0	19	InitSquare174		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7cb0	19	InitSquare174		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7cd0	5	InitSquare175Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7ce0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7ce0	19	InitSquare175		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7ce0	19	InitSquare175		net	primitive	void __cdecl (void)	Stores 11.1111 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7d00	5	InitSquare176Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7d10; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7d10	19	InitSquare176		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7d10	19	InitSquare176		net	primitive	void __cdecl (void)	Stores 5.55556 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7d30	5	InitSquare177Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7d40; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7d40	19	InitSquare177		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7d40	19	InitSquare177		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7d60	5	InitSquare178Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7d70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7d70	19	InitSquare178		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7d70	19	InitSquare178		net	primitive	void __cdecl (void)	Stores 5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7d90	5	InitSquare179Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7da0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7da0	19	InitSquare179		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7da0	19	InitSquare179		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7dc0	5	InitSquare180Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7dd0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7dd0	19	InitSquare180		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7dd0	19	InitSquare180		net	primitive	void __cdecl (void)	Stores 30 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7df0	5	InitSquare181Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7e00; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7e00	19	InitSquare181		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7e00	19	InitSquare181		net	primitive	void __cdecl (void)	Stores 120 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7e20	5	InitSquare182Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7e30; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7e30	19	InitSquare182		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7e30	19	InitSquare182		net	primitive	void __cdecl (void)	Stores 20 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7e50	5	InitSquare183Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7e60; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7e60	19	InitSquare183		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7e60	19	InitSquare183		net	primitive	void __cdecl (void)	Stores 10 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7e80	5	InitSquare184Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7e90; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7e90	19	InitSquare184		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7e90	19	InitSquare184		net	primitive	void __cdecl (void)	Stores 0.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7eb0	5	InitSquare185Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7ec0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7ec0	19	InitSquare185		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7ec0	19	InitSquare185		net	primitive	void __cdecl (void)	Stores 3 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7ee0	5	InitSquare186Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7ef0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7ef0	19	InitSquare186		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7ef0	19	InitSquare186		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7f10	5	InitFive11Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7f20; a static initializer	verified	one	net/layout#static-initializers	
 0x5b7f20	11	InitFive11		net	orchestration	void __cdecl (void)	Stores 5.0 as a float in a global	verified	one	net/layout#static-initializers	
 0x5b7f30	5	InitSquare187Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7f40; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7f40	19	InitSquare187		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7f40	19	InitSquare187		net	primitive	void __cdecl (void)	Stores 50 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7f60	5	InitSquare188Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7f70; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7f70	19	InitSquare188		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7f70	19	InitSquare188		net	primitive	void __cdecl (void)	Stores 100 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7f90	5	InitSquare189Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7fa0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7fa0	19	InitSquare189		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7fa0	19	InitSquare189		net	primitive	void __cdecl (void)	Stores 40 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7fc0	5	InitSquare190Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b7fd0; a static initializer	verified	one	net/layout#static-initializers	
-0x5b7fd0	19	InitSquare190		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	
+0x5b7fd0	19	InitSquare190		net	primitive	void __cdecl (void)	Stores 1.5 squared as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5b7ff0	5	InitGlobalRandomPoolThunk		net	orchestration	void __cdecl (void)	Jumps to 0x5b8000; a static initializer	verified	one	net/layout#static-initializers	
 0x5b8000	17	InitGlobalRandomPool		net	orchestration	void __cdecl (void)	Builds the global random pool with the client clock as its seed	verified	one	net/layout#static-initializers	
 0x5b8020	36	GruntTimerThreadProc		net	host	uint32_t __stdcall (void *timers)	Runs a timer queue: waits on its event for the delay 0x5b8050 returns until the event is signalled; returns 1	inferred	none		
@@ -18158,9 +18158,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bc970	5	InitCopy14Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bc980; a static initializer	verified	one	net/layout#static-initializers	
 0x5bc980	11	InitCopy14		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5bc990	10	InitCountUnit12Thunk		net	orchestration	void __cdecl (void)	Calls 0x5bc9a0, then jumps to 0x5bc9c0; a static initializer	verified	one	net/layout#static-initializers	
-0x5bc9a0	22	InitCountUnit12		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5bc9a0	22	InitCountUnit12		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5bc9c0	12	NetPlatformRegisterCounterRelease		net	orchestration	void __cdecl (void)	Registers 0x5bc9d0 with atexit	inferred	none		
-0x5bc9d0	14	NetPlatformReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	inferred	none		
+0x5bc9d0	14	NetPlatformReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5bc9e0	40	WowConnectionNet::PlatformInit	idb	net	host	void __thiscall (WowConnectionNet *this, uint8_t useOsLayer)	Records whether the shared OS service layer is used, starting it with flags 7 if so, else starting Winsock 2.2	inferred	none		
 0x5bca10	17	StartWinsock		net	host	int32_t __cdecl (void)	Starts Winsock version 2.2 into a static WSADATA and returns its result	inferred	none		
 0x5bca30	24	WowConnectionNet::PlatformDestroy		net	host	void __thiscall (WowConnectionNet *this)	Releases the shared OS service layer with flags 7 when 0x5bc9e0 started it, and does nothing otherwise	inferred	none		
@@ -18175,17 +18175,17 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5bd170	578	FatalSocketError		net	host	void __fastcall (const char *message, uint32_t unused)	Formats the last Winsock error as text and shows it after the message as a fatal application error	inferred	none		
 0x5bd470	1	WowConnectionNet::PlatformStop		net	orchestration	void __thiscall (WowConnectionNet *this)	Returns at once; 0x5bda30 calls it before waking the select thread	inferred	none		
 0x5bd480	5	InitDouble14Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bd490; a static initializer	verified	one	net/layout#static-initializers	
-0x5bd490	15	InitDouble14		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5bd490	15	InitDouble14		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5bd4a0	5	InitQuotient17Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bd4b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5bd4b0	19	InitQuotient17		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5bd4b0	19	InitQuotient17		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5bd4d0	31	AlignUpToMultiple		net	primitive	uint32_t __thiscall (void *this, uint32_t value, uint32_t multiple)	Returns value rounded up to the next multiple	inferred	none		
 0x5bd4f0	133	ReallocConnectionArray		net	host	void __thiscall (void *this, uint32_t capacity)	Sets a connection-pointer array's capacity, resizing its block or moving the kept entries to a new one	inferred	none		
 0x5bd580	5	InitCopy15Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5bd590; a static initializer	verified	one	net/layout#static-initializers	
 0x5bd590	11	InitCopy15		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5bd5a0	10	InitCountUnit13Thunk		net	orchestration	void __cdecl (void)	Calls 0x5bd5b0, then jumps to 0x5bd5d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5bd5b0	22	InitCountUnit13		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	
+0x5bd5b0	22	InitCountUnit13		net	primitive	void __cdecl (void)	Counts one more unit in a shared global and calls 0x5b71c0 on the first	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_counters
 0x5bd5d0	12	WowConnectionNetRegisterCounterRelease		net	orchestration	void __cdecl (void)	Registers 0x5bd5e0 with atexit	inferred	none		
-0x5bd5e0	14	WowConnectionNetReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	inferred	none		
+0x5bd5e0	14	WowConnectionNetReleaseCounter		net	primitive	void __cdecl (void)	Decrements the shared static counter and at zero tail-jumps to the empty shared teardown	verified	one	net/layout#static-initializers	net::initializer_counters
 0x5bd5f0	239	WowConnectionNet::WowConnectionNet	idb	net	host	WowConnectionNet * __thiscall (WowConnectionNet *this, uint32_t threadCount, void (*threadInit)(void))	Builds the engine: a stop event, 32 worker slots with event and lock, the connection list, two queues, two semaphores	inferred	none		
 0x5bd6e0	178	WowConnectionNet::Add		net	orchestration	void __thiscall (WowConnectionNet *this, WowConnection *conn)	Appends a connection to the select list under the engine lock when it is not listed yet, then calls 0x5bca60	inferred	none		
 0x5bd7a0	199	WowConnectionNet::~WowConnectionNet		net	host	void __thiscall (WowConnectionNet *this)	Closes the engine's semaphores and events, unlinks its queued nodes and listed connections, and destroys its locks	inferred	none		
@@ -18206,15 +18206,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5be130	41	GetNextNetEventLink		net	unreached	void * __thiscall (void *this, int32_t linkOffset)	Returns the link an event node's link points at, or the list head marked by its low bit	inferred	none	net/layout#unreached-functions	
 0x5be160	60	UnlinkNetEventNode		net	orchestration	void __thiscall (void *this)	Unlinks an event-queue node and clears its link	inferred	none		
 0x5be1a0	5	InitDouble15Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5be1b0; a static initializer	verified	one	net/layout#static-initializers	
-0x5be1b0	15	InitDouble15		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5be1b0	15	InitDouble15		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5be1c0	5	InitQuotient18Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5be1d0; a static initializer	verified	one	net/layout#static-initializers	
-0x5be1d0	19	InitQuotient18		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5be1d0	19	InitQuotient18		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5be1f0	5	InitCopy16Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5be200; a static initializer	verified	one	net/layout#static-initializers	
 0x5be200	11	InitCopy16		net	orchestration	void __cdecl (void)	Copies the constant +inf into a global	verified	one	net/layout#static-initializers	
 0x5be210	5	InitDouble16Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5be220; a static initializer	verified	one	net/layout#static-initializers	
-0x5be220	15	InitDouble16		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	
+0x5be220	15	InitDouble16		net	primitive	void __cdecl (void)	Stores 3.14159 + 3.14159 as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5be230	5	InitQuotient19Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5be240; a static initializer	verified	one	net/layout#static-initializers	
-0x5be240	19	InitQuotient19		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	
+0x5be240	19	InitQuotient19		net	primitive	void __cdecl (void)	Stores 1 divided by a global set just before as a float in a global	verified	one	net/layout#static-initializers	net::initializer_constants, net::initializer_formulas
 0x5be260	59	AddressListNode::AddressListNode		net	unreached	AddressListNode * __thiscall (AddressListNode *this, uint32_t ip, uint16_t port, const char *name)	Builds an address node: unlinked, IPv4 address, port, and a copy of the name	inferred	none	net/layout#unreached-functions	
 0x5be2a0	84	AddressListNode::~AddressListNode		net	unreached	void __thiscall (AddressListNode *this)	Frees an address node's name and unlinks it	inferred	none	net/layout#unreached-functions	
 0x5be300	92	AddressList::AddressList		net	unreached	AddressList * __thiscall (AddressList *this, const char *path, int32_t maxLines, uint8_t addLocal, uint16_t localPort)	Builds an address list from a file path, line limit, add-local flag and local port, then loads the file	inferred	none	net/layout#unreached-functions	

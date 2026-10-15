@@ -10,6 +10,7 @@
 mod cipher;
 mod digest;
 mod framing;
+mod initializers;
 mod login;
 mod login_proof;
 mod prng;
@@ -20,6 +21,7 @@ mod srp_session;
 pub use cipher::*;
 pub use digest::*;
 pub use framing::*;
+pub use initializers::*;
 pub use login::*;
 pub use login_proof::*;
 pub use prng::*;
