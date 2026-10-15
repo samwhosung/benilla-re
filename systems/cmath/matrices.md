@@ -238,7 +238,8 @@ The census is a scan of every `call`, `jmp` and `jcc` target in the listing and 
 the image for each address; the control is `0x7bc040`, found at 36 call sites. The only callers of
 these routines are other routines of the list (the wrappers call the sum, difference and product; the
 builders call `0x7bb990`, `0x7be6d0` and `0x7bdca0`). Their names come from the operations in
-their bodies: the compares are 12 or 16 `fcomp`, the sums 12 or 16 `fadd`, the scalar forms one `fld [ebp+0x8]`
-per entry with `fadd`, `fsub` or `fmul` of the entry of `edx`, stored to `ecx`, the Euler builders three
+their bodies: the compares are 12 or 16 `fcomp`, the sums 12 or 16 `fadd`, the scalar sums and products one `fld [ebp+0x8]`
+per entry with `fadd` or `fmul` of the entry of `edx`, the scalar differences the entry then `fsub [ebp+0x8]`
+(`0x7badd6`, `0x7bc5d6`), each stored to `ecx`, the Euler builders three
 `fsincos` and two `0x7bdfc0` products, the extractors `fpatan` pairs and the C runtime's `asin`; the
 semantics are not read through.

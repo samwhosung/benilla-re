@@ -3,7 +3,7 @@
 The value types the Tempest math library's routines take: vectors, matrices, a quaternion, boxes,
 spheres, planes, facets, rays, segments, cones and colours. Each is a packed run of floats (a
 colour is four bytes) with no vtable, and each layout is read from the routines that build and use
-it. A matrix is stored row by row for a row vector multiplied on the right, so its last row holds the
+it. A matrix is stored row by row for a row vector on the left, v·M, so its last row holds the
 translation. Five types are named by the image itself, through the type names its growable arrays
 pass as allocation tags; the others take the names a later build's public symbols give the same
 layouts, in the `NTempest` namespace the image gives the library's own types, or descriptive
@@ -55,8 +55,8 @@ x, y, z, w; the name is from a later build.
 
 ## Matrices
 
-`NTempest::C44Matrix` is 16 floats, row by row: entry (r, c) at float `4r + c`. A point is a row vector
-multiplied on the right, `x' = x·m0 + y·m4 + z·m8 + m12`, so row 3 holds the translation. `NTempest::C33Matrix`
+`NTempest::C44Matrix` is 16 floats, row by row: entry (r, c) at float `4r + c`. A point is a row vector on the
+left, v·M, `x' = x·m0 + y·m4 + z·m8 + m12`, so row 3 holds the translation. `NTempest::C33Matrix`
 is nine floats, entry (r, c) at `3r + c`. `NTempest::C34Matrix` is a `NTempest::C33Matrix` followed by a translation row
 at `+0x24`. `Matrix2x2` is four floats, row by row; its one builder `0x7c42f0` writes the rotation
 `[[cos, sin], [−sin, cos]]`.
@@ -77,16 +77,21 @@ for the 2×2 is known, so its name is descriptive.
 
 ## Quaternions
 
-`NTempest::C4Quaternion` is four floats: the vector part x, y, z, then the scalar w.
+`NTempest::C4Quaternion` is four floats: the vector part x, y, z, then the scalar w. `0x7c0190`
+forms `x = (m21 − m12)·k`, the formula for a matrix acting on column vectors; its one caller,
+`0x7c0120`, transposes the stored `NTempest::C33Matrix` first, so the pair gives
+`x = (m12 − m21)·k` of the row-vector matrix, and y and z alike.
 
-Addresses: `0x7c0190`, `0x7c01bf`, `0x7c01d0`, `0x7c1340`, `0x7c135e`, `0x7c03b0`
+Addresses: `0x7c0120`, `0x7c0129`, `0x7c0158`, `0x7c0162`, `0x7c0190`, `0x7c01bf`, `0x7c01d0`, `0x7c1340`, `0x7c135e`, `0x7c03b0`
 Confidence: verified
 Proof: one
 Test: none
 
 In the trace leg of `0x7c0190` the scalar `0.5·√(t + 1)` is stored at `+0xc` (`0x7c01bf`) and `(m21 − m12)·k` at
 `+0` (`0x7c01d0`). `0x7c1340` negates `+0`, `+4` and `+8` and copies `+0xc` (`0x7c135e`), and `0x7c03b0` writes the
-identity as 1.0 at `+0xc`. The wowdev wiki documents `C4Quaternion` with the scalar last; the name is from a later
+identity as 1.0 at `+0xc`. `0x7c0120` copies `+0`, `+0xc`, `+0x18`, `+4`, `+0x10`, `+0x1c`, `+8`, `+0x14`
+and `+0x20` into a local in that order (`0x7c0129` to `0x7c0158`) and passes it (`0x7c0162`); the census of
+`0x7c0190` finds no other call and no stored address. The wowdev wiki documents `C4Quaternion` with the scalar last; the name is from a later
 build.
 
 ## Boxes, spheres and planes
@@ -107,7 +112,8 @@ six dwords, minimum first, to the box (`0x7c1560`); `0x7c1920` tests a coordinat
 `origin·n` (`0x7c22f1`). `0x7bf860` copies its three points to `+0x10`, `+0x1c` and `+0x28` (`0x7bf870`, `0x7bf888`,
 `0x7bf89e`) and stores `d = −(n·p0)` at `+0xc` (`0x7bf96d`); `0x7c2740` passes the facet to `0x7c22b0` as a plane and
 `+0x10` to `0x7c23e0` as three vertices (`0x7c2786`). The 52-byte facet arrays (Type names) match. The wowdev wiki
-documents `CAaBox`, `CAaSphere` and `C4Plane` with these layouts; those names are from a later build.
+documents `CAaBox`, `CAaSphere` and `C4Plane` with these layouts; those names are from a later build. The image names
+`C4Plane` but ties no layout to it, so its match with this layout rests on that documentation.
 
 ## Rays and segments
 

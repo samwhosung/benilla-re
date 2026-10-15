@@ -74,7 +74,7 @@ M2Sequence		68		models	Holds a sequence record of an MD20 file: time range, flag
 M2Submesh		32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
 M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
 M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
-Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#cones-and-oriented-boxes
+Matrix2x2		16		cmath	Holds a 2×2 matrix of floats row by row	verified	one	cmath/types#matrices
 MovementGlobals		312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
 NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
 NTempest::C2Vector		8		cmath	Holds a vector of two floats: x, y	verified	one	cmath/types#vectors
@@ -83,7 +83,7 @@ NTempest::C34Matrix	later-build	48		cmath	Holds a rotation with a translation: a
 NTempest::C3Ray	later-build	24		cmath	Holds a ray: its origin, then its direction	verified	one	cmath/types#rays-and-segments
 NTempest::C3Segment	later-build	24		cmath	Holds a segment: its start point, then its end point	verified	one	cmath/types#rays-and-segments
 NTempest::C3Vector		12		cmath	Holds a vector of three floats: x, y, z	verified	one	cmath/types#vectors
-NTempest::C44Matrix	later-build	64		cmath	Holds a 4×4 matrix of floats row by row for a row vector on the left; row 3 holds the translation	verified	one	cmath/types#matrices
+NTempest::C44Matrix	later-build	64		cmath	Holds a 4×4 matrix of floats row by row for a row vector on the left, v·M; row 3 holds the translation	verified	one	cmath/types#matrices
 NTempest::C4Plane	later-build	16		cmath	Holds a plane: the unit normal n, then d, so that n·p + d is 0 on the plane	verified	one	cmath/types#boxes-spheres-and-planes
 NTempest::C4Quaternion	later-build	16		cmath	Holds a quaternion: x, y and z, then the scalar w	verified	one	cmath/types#quaternions
 NTempest::C4Vector	later-build	16		cmath	Holds a vector of four floats: x, y, z, w	verified	one	cmath/types#vectors

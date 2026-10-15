@@ -76,7 +76,8 @@ One convention, the client's own C++ style:
 - **Community names** from `vmangos/idb` (1.12.1.5875) are used verbatim, decorations included
   (`_WinMain@16`), once checked at the bytes, with `idb` in `name_from`. A community name the
   bytes contradict is not used.
-- **Later builds.** A struct the image does not name may take the name a later build's public
+- **Later builds.** A struct the image does not name, or names without tying a layout to the
+  name, may take the name a later build's public
   symbols give the type, as the wowdev wiki's Common Types page documents them (`C44Matrix`,
   `CAaBox`), only when the size and field order match what the functions over it build and use
   here, with `later-build` in `name_from`. A type of the math library takes the `NTempest`
