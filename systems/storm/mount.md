@@ -1,10 +1,12 @@
 # storm: mounting the archives
 
-The client mounts its MPQ archives once, early in start-up, and resolves every asset name through one
-priority-ordered list of them. The mounter is `0x403740`; the resolver is `0x6549a0`. `format.md` has the archive
-format and the name hash.
+The client mounts its MPQ archives once, early in start-up, into one priority-ordered list. An open
+resolves its name in `0x647e60`: when the caller's flags ask for it, first in an index of the loose files on
+disk below the install folder and its `Data` folder, then in the archive list, whose walk is `0x6549a0`. The
+mounter is `0x403740`; the index's builder is `0x646ea0`. `format.md` has the archive format and the name hash.
 
-Roots: `0x6549a0`, `0x6477a0`, `0x6477c0`, `0x648dd0`, `0x648ef0`
+Roots: `0x6549a0`, `0x6477a0`, `0x6477c0`, `0x648dd0`, `0x648ef0`, `0x648a10`, `0x648a30`, `0x646fc0`,
+`0x648be0`, `0x648c20`, `0x6488b0`, `0x648920`, `0x6466c0`, `0x6467a0`
 
 ## Patch archives
 
@@ -105,19 +107,144 @@ parent and prefix are `+0x174` and `+0x178` (`0x654aea`, `0x654b03`); the joiner
 
 ## Loose files
 
-A name that starts with two backslashes, has a colon in its second place, or is opened while `0xc5251d` is set,
-goes to the disk-path builder `0x648180`. `0xc5251d` has one writer, in `0x646fa0`, which nothing calls. Any other name
-reaches the archive walk with the disk probe of `0x6549a0` (`0x654b59`) disabled: the callers of `0x654920` clear
-flag bits 0 and 1 when the byte `0x865b44` is 0, which the start-up `0x402210` sets (`0x40221a`) before any open.
+`0x647e60(name, flags)` adds the bits of `0x865b40`, which start-up sets to 0 (`0x648be0(0)`) before anything
+opens. A name that starts with two backslashes, has a colon second, or is opened while `0xc5251d` is set goes to
+the disk-path builder `0x648180`; the one writer of `0xc5251d`, `0x646fa0`, has no caller. Any other name builds
+the loose-file index if it is not built, asks it when flag bit 0 or 1 is set, and only on a miss walks the
+archives (`0x654920`) with bits 0 and 1 cleared, since start-up clears `0x865b44` (`0x648c20`). So the walk's own
+disk probe (`0x654b59`) never runs.
 
-Addresses: `0x647e60`, `0x648180`, `0x646fa0`, `0x64811f`, `0x648c20`, `0x402210`, `0x654b59`
+Addresses: `0x647e60`, `0x647e72`, `0x647ebc`, `0x647ec1`, `0x648116`, `0x64811f`, `0x648180`, `0x646fa0`, `0x648be0`, `0x648c20`, `0x402210`, `0x865b40`, `0x865b44`, `0xc5251d`, `0x654b59`
+Confidence: verified
+Proof: one
+Test: `storm::resolve_matches_index`
+
+`0x647e72` is `or ebx,[0x865b40]`; `0x648be0` stores 0 there, then 1 for argument bit 0 and ORs 2 for bit 1
+(`0x648be8` to `0x648c02`); `0x402210` calls it with 0 after `0x648c20` (`0x40221a`, `0x40221f`), and `0x402120`
+calls `0x402210` (`0x40215b`) before `0x402350` (`0x4021db`). `0x647e8d` loads `0xc5251d`; `0x647e9a` to `0x647ea9`
+test the backslashes and the colon. `0x647eb3` tests the built byte `0xc5251c` and `0x647ebc` calls `0x646ea0`
+whatever the flags; `0x647ec1` `test bl,3` sends 0 straight to `0x648116`. `0x648116` to `0x64811f` clear the bits
+when `0x865b44` is 0, and `0x64840c` does the same in `0x648180`. The test runs `0x647e60` whole with the
+callees named in its header stubbed.
+
+## Loose-file index
+
+`0x646ea0` walks the base path `0xc52418`, or `.` when it does not list, then that string with `0xc520c8` (`Data\`)
+appended, and marks the index built. `0x646910` skips `.`, `..` and any folder whose path below the walked folder
+is a prefix of `Data\` (case-sensitive: `Data`, `Dat`, `Da`, `D`), walks the other folders, and enters every
+regular file: the key is its path below the walked folder, the value its full path. A last extension `.bz` or
+`.MPQ` (any case) is cut from the key, as kind 1 or 2; any other file is kind 0. A key's first entry stays: the
+base folder's before `Data\`'s, then listing order. The third folder `0xc52310` stays empty.
+
+Addresses: `0x646ea0`, `0x646910`, `0x646d90`, `0x6674a0`, `0x667580`, `0x6676a0`, `0x6488b0`, `0x648920`, `0x6489a0`, `0x6466d0`, `0xc521cc`, `0xc521e8`, `0xc521f0`, `0xc52418`, `0xc520c8`, `0xc52310`, `0xc5251c`
+Confidence: verified
+Proof: one
+Test: `storm::resolve_matches_index`
+
+`0x646eb1` and `0x646ec2` open the listing; `0x646ed8` copies the base path to `0xc521f8`; `0x646f13` appends `0xc520c8`;
+`0x646f41` tests `0xc52310`, whose one writer `0x6489a0` has no caller; `0x646f8a` stores 1 in `0xc5251c`. In `0x646910`: `0x6469c0` and `0x6469d8` compare `.` and
+`..` with `SStrCmp`; `0x646a04` stats; `0x646a14` tests `0x4000` and `0x646a6a` `0x8000` of `st_mode` (`+6`); `0x646a2f`
+is `SStrCmp(rel, 0xc520c8, strlen(rel))`; `0x646a58` recurses. `0x646a78` finds the path's last dot; `0x646aab` and
+`0x646bc7` compare `.bz` and `.MPQ` with `SStrCmpI`, `0x646ab8` and `0x646bd4` cut there; `0x646bad`, `0x646ca5` and
+`0x646d4a` store kinds 1, 2 and 0 at `+0x1c`, the value at `+0x18`, the key at `+0x14`; a key already present frees
+the new value (`0x646d66`). `0x6488b0` stores the base path with a trailing backslash; start-up passes it the
+command-line value of `0x419c20(1)`, or the exe's folder (`0x42b2e0`: `GetModuleFileNameW` cut after its last
+backslash) when that is empty (`0x402226` to `0x402255`). `0x648920` stores `Data\` (`0x40228c`, `0x4022a7`).
+Folders are listed through `FindFirstFileW` and `FindNextFileW`, since Storm's wide option `0xc53f14` is set at
+start-up (`0x402141`), and entries are stated through `_wstat` or `_stat`.
+
+## Index lifetime
+
+The index lives from the first open that reaches `0x647e60` until `0x646fc0` empties it and clears the built byte;
+the next open builds it again. The client calls `0x646fc0` when it has written a saved-variables file
+(`0x491865`, `0x51fa31`) or a character's `AddOns.txt` (`0x51f09d`), or moved loose interface folders aside
+(`0x51fbe3`); Storm's shutdown `0x648d10` empties it too. A file added in between is not found until the next
+build; one removed in between is found and fails to open. `0x647040`, which nothing calls, empties the index and
+marks it built.
+
+Addresses: `0x646fc0`, `0x647040`, `0x648d10`, `0x491730`, `0x51ef20`, `0x51f650`, `0x51fb50`, `0xc5251c`, `0xc521cc`, `0x6466c0`, `0x6466d0`, `0x646790`, `0x6467a0`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x647e9a` to `0x647ea9` test the doubled backslash and the colon; `0x647e8d` loads `0xc5251d`. `0x648116` to `0x64811f`
-and `0x64840c` to `0x648415` clear the bits when `0x865b44` is 0, and `0x6548d0` gives the third caller `0x6548b0` flag 0 while an archive is open; the callers that pass flag 1, `0x78c39f`, `0x7a8860`,
-`0x7a88db` and `0x7a8b86`, first go through a path-alias hash table at `0xc521e8`, whose writers are not read here.
+`0x646fc0` unlinks (`0x646fe5`) and deletes (`0x64701d`) every node and stores 0 in `0xc5251c` (`0x64702f`); `0x647040` is the same
+loop ending in 1 (`0x6470af`); `0x648d10` ends with the loop and 0 (`0x648d5e` to `0x648dc2`). Each caller tests a
+written or moved count before the call (`0x491863`, `0x51f09b`, `0x51fa2f`). The census of `e8`, `e9` and stored
+dwords finds these four callers of `0x646fc0`, none of `0x647040` and one of `0x648d10` (`0x64cc09`); the control,
+`0x648dd0`, has its 3. The table `0xc521cc` is built empty by the static initializer `0x6466c0` (body `0x6466d0`,
+mask 0xffffffff at `0x646782`) and freed at exit by `0x6467a0`, which `0x646790` registers with `_atexit`.
+
+## Index lookup and open
+
+A probe finds an entry whose `SStrHashHT` hash and key equal the name's, the key compared by `SStrCmpI`; the hash
+reads `/` as `\` and the compare does not, so a name with `/` never matches. Flag bit 1 first probes the part after the last backslash, a file directly in the base folder or
+`Data\`; then bit 0 or 1 probes the whole name. A hit returns the full path and the kind. `SFile::OpenEx` opens
+kind 0 with `fopen(path, "rb")`, kind 1 the same way and checks `BZ00` in its 24-byte header, kind 2 as an
+archive holding the name's last component. A failed open returns 0 without the archives. A third probe never
+changes the result.
+
+Addresses: `0x647e60`, `0x647ed7`, `0x647f37`, `0x647f89`, `0x64802c`, `0x648110`, `0x64b3f0`, `0x64a4c0`, `0x6477c0`, `0x64783d`, `0x647865`, `0x6478d5`, `0x647964`, `0x647a63`, `0x647a94`, `0x647d9c`
+Confidence: verified
+Proof: one
+Test: `storm::resolve_matches_index`, `storm::index_hit_has_no_fallback`
+
+The bucket is `hash & [0xc521f0]` (`0x647f07`). `0x647ed7` is `SStrChrR(name, '\')`; `0x647f37` and `0x647fdb` compare the key at `+0x14`; a hit copies `+0x18`
+(`0x647f68`) and stores `+0x1c` as the kind (`0x647f75`). `0x64803b` compares `0xc521f8` with `0xc52418`; the third
+probe (`0x64802c`), of the base path joined to the name, runs only when they differ, and its hit falls through to `0x648110` and the archive walk, which overwrites the kind on a hit and returns 0 on a
+miss. `0x6477fc` calls `0x647e60`; `0x64783d` jumps through `0x647d9c` (kinds 0 to 4: `0x647844`, `0x647894`,
+`0x647a30`, `0x647ab2`, `0x647b45`). A null `FILE` sends kind 0 to `0x647c64` (`0x647865`) and kind 1 to
+`0x6478d5`; a wrong magic sends kind 1 to `0x647981` (`0x647964`); a failed archive or file open sends kind 2 to
+`0x647c64` (`0x647a63`, `0x647a94`). Each returns 0 without calling `0x654920`. The tests run `0x647e60` and
+`0x6477c0` with the file system and the archive walk stubbed, 726 name and flag cases against `LooseIndex`.
+
+## Which opens ask the index
+
+An open asks the index only with flag bit 0 or 1. `SFile::Open`, `0x6485f0` and `0x648a10` pass 0, and so do the DBC tables,
+the terrain files, the minimap catalog, movie subtitles, `VideoHardware` and the telemetry read. These pass 1 or 3:
+
+| entry | flags | opens |
+|---|---|---|
+| `SFile::Load` for interface and settings files | 1 | `.toc`, `.xml`, `.lua`, bindings, saved variables, `AddOns.txt`, `Config.wtf` |
+| `0x648a30` from the add-on loader | 1 | existence of an add-on's `.toc`, bindings and saved variables |
+| `0x5d0060`, a font face | 3 | the font file: its bare name first, then its path |
+| `CSimpleTexture::SetTexture`, `Minimap` texture methods, model frame `ReplaceTexture` | 1 | interface textures through `0x449d90` |
+| `0x449610` from the cursor code | 1 | the cursors and the dragged picture |
+| `CreateModelFromPath` | flags bit 2 | the `.m2` and its textures |
+| the sound callbacks `0x7a8770`, `0x7a8ab0` | 1 | every file FMOD opens |
+| `ReadMovieAvi` | 1 | the movie `.avi` |
+
+The texture cache `0x47ac10` and the other callers of `0x449d90` pass 0.
+
+Addresses: `0x6477a0`, `0x6485f0`, `0x648620`, `0x648a30`, `0x648a10`, `0x5d0121`, `0x449d90`, `0x449e20`, `0x770281`, `0x4ee5e4`, `0x76d03d`, `0x449610`, `0x707368`, `0x706afd`, `0x71d4fa`, `0x71da72`, `0x7a45e4`, `0x7a8860`, `0x78c39f`, `0x47ac30`
+Confidence: verified
+Proof: one
+Test: none
+
+`0x6477a0` and `0x6485f0` push 0 as the flags. The census of `e8` and `e9` to the open entries finds 156 calls of
+`SFile::Open`, 11 of `0x6477c0`, 23 of `0x648620`, 6 of `0x6485f0`, 7 of `0x648a30` and 1 of `0x648a10`, with no stored address;
+the flags of each were read at the call. `0x449d90` passes its third stack argument as `edx` (`0x449e20`), which
+`0x44a310` and `0x5a3660` turn into flag `edx != 0`. `0x707368` passes `flags & 4` to `0x706afd`; `0x71d4fa` keeps
+it as bit 1 of the shared model's `+8`, which `0x71da64` pushes for its textures. `0x7a45e4` registers the
+sound callbacks with `FSOUND_File_SetCallbacks`. Model creations whose flags come from a call before the push
+were not traced one by one.
+
+## Hash-table string hash
+
+`SStrHashHT` (`0x64b3f0`) copies at most the first 1023 bytes of a string, raising `a` to `z` by 0x20 and turning
+`/` into `\`, and returns `bjhash(copy, length, 0)`. `bjhash` (`0x64b1d0`) is Bob Jenkins' `lookup2`: `a` and `b`
+start at 0x9e3779b9 and `c` at the initial value; each 12-byte block adds three little-endian words and mixes;
+then `c` gains the length, the last 0 to 11 bytes are added (`c` from its second byte up), and a last mix returns `c`.
+
+Addresses: `0x64b3f0`, `0x64b1d0`, `0x64b3c0`
+Confidence: verified
+Proof: one
+Test: `storm::str_hash_ht`
+
+`0x64b411` stops the copy at 0x3ff bytes; `0x64b419` to `0x64b42d` fold the case and the slash; `0x64b440` pushes the
+initial value 0 with the length in `edx`. `0x64b1df` loads 0x9e3779b9; the block loop runs `len / 12` times
+(`0xaaaaaaab`, `0x64b1f2`); `0x64b2e6` adds the length; `0x64b2ee` jumps through the table `0x64b3c0` for the tail.
+The shifts of the mix are 13, 8, 13, 12, 16, 5, 3, 10, 15. The test runs `0x64b3f0` whole, `bjhash` inside it,
+over every length to 40, the 1023-byte cap and a fuzz.
 
 ## Start-up order
 
