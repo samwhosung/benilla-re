@@ -836,7 +836,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x414197	134	_x64toa@20	idb	crt	unreached		Runs its object file code that calls __aullrem, __aulldiv; not read here	inferred	none		
 0x41421d	27	__ui64toa	idb	crt	unreached		Runs its object file code that calls _x64toa@20; not read here	inferred	none		
 0x414240	208	__strcmpi	idb	crt	boundary		Runs its object file code that calls __lock, 0x40f99a, __unlock; not read here	inferred	none		
-0x414310	257	__strnicmp	idb	crt	boundary		Runs its object file code that calls __lock, 0x40f99a, __unlock; not read here	inferred	none		
+0x414310	257	__strnicmp	idb	crt	boundary		Compares up to n bytes of two strings without case; with no locale set it folds A to Z and orders the bytes unsigned	verified	one	net/friends#strings-without-case	net::friends_compare
 0x414411	139	_atol	idb	crt	boundary		Runs its object file code that calls __isctype; not read here	inferred	none		
 0x41449c	11	_atoi	idb	crt	boundary		Runs its object file code that calls _atol; not read here	inferred	none		
 0x4144a7	186	__atoi64	idb	crt	unreached		Runs its object file code that calls __isctype, __allmul; not read here	inferred	none		
@@ -17500,9 +17500,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5adee0	113	SendWhoisRequest		net	orchestration	uint32_t __fastcall (const char *name, const char *args)	Sends opcode 0x64 with the command argument string	inferred	none		
 0x5adf60	499	OnWhoList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Stores opcode 0x63 results, sorts them, then fires WHO_LIST_UPDATE or prints them to chat	verified	one	net/friends#who-list-reply	
 0x5ae160	336	PrintWhoResultLine		net	orchestration	void __fastcall (const char *name, const char *guild, uint32_t level, uint32_t classId, uint32_t raceId, uint32_t zoneId)	Adds one who result to chat as WHO_LIST_FORMAT, or WHO_LIST_GUILD_FORMAT when it has a guild	verified	one	net/friends#who-list-reply	
-0x5ae2b0	31	OnIgnoreList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes opcode 0x6b message to 0x5af530 when the friend list exists	inferred	none		
+0x5ae2b0	31	OnIgnoreList	idb	net	orchestration	uint32_t __fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore *msg)	Passes opcode 0x6b message to 0x5af530 when the friend list exists	verified	one	net/friends#ignore-list-packet	
 0x5ae2d0	124	ShutdownFriendList		net	orchestration	void __cdecl (void)	Clears the six social message handlers and the whois command, then destroys the friend list	inferred	none		
-0x5ae350	319	FriendList::ReadFriendList		net	primitive	void __thiscall (FriendList *this, CDataStore *msg)	Replaces the friend slots from opcode 0x67 list and requests each name	verified	one	net/friends#friend-list-packet	
+0x5ae350	319	FriendList::ReadFriendList		net	primitive	void __thiscall (FriendList *this, CDataStore *msg)	Replaces the friend slots from opcode 0x67 list and requests each name	verified	one	net/friends#friend-list-packet	net::friends_read_list
 0x5ae490	22	FriendList::CountFriends		net	orchestration	uint32_t __thiscall (FriendList *this)	Returns the number of friend slots before the first empty one	verified	one	net/friends#friend-script-functions	
 0x5ae4b0	26	FriendList::GetFriendSlot		net	orchestration	void * __thiscall (FriendList *this, uint32_t index)	Returns the friend slot at an index of at most 50, else null	verified	one	net/friends#friend-script-functions	
 0x5ae4d0	56	FriendList::SetSelectedFriend		net	orchestration	void __thiscall (FriendList *this, uint32_t index)	Stores the guid of the friend slot at an index of at most 50 as the selection, else clears it	inferred	none		
@@ -17518,22 +17518,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ae7e0	41	FriendList::RemoveFriendByIndex		net	orchestration	void __thiscall (FriendList *this, uint32_t index)	Sends the remove-friend message for a friend slot index below 50 whose GUID is set	inferred	none		
 0x5ae810	54	FriendList::IsFriend		net	orchestration	bool __thiscall (FriendList *this, uint64_t guid)	Returns whether one of the 50 friend slots holds a GUID	verified	one	net/friends#friend-script-functions	
 0x5ae850	28	FriendList::SortFriends		net	orchestration	void __thiscall (FriendList *this)	Sorts the 50 friend slots with 0x5ae870 and signals FRIENDLIST_UPDATE	verified	one	net/friends#friend-status-result	
-0x5ae870	148	CompareFriends		net	primitive	int __cdecl (const void *a, const void *b)	Orders friend slots: empty last, then nonzero status first, then names without case, a missing name last	inferred	none		
+0x5ae870	148	CompareFriends		net	primitive	int __cdecl (const void *a, const void *b)	Orders friend slots: empty last, then a zero online byte last, then names without case, a missing name last	verified	one	net/friends#friend-order	net::friends_compare
 0x5ae910	34	FriendList::SortIgnores		net	orchestration	void __thiscall (FriendList *this)	Sorts the 25 ignore GUIDs with 0x5ae940 and signals IGNORELIST_UPDATE	verified	one	net/friends#friend-status-result	
 0x5ae940	189	CompareIgnoredByName		net	orchestration	int __cdecl (const uint64_t *a, const uint64_t *b)	Orders ignore GUIDs: zero last, then cached names without case, an uncached name last	inferred	none		
 0x5aea00	94	FriendList::ClearFriendSlot		net	orchestration	void __thiscall (FriendList *this, uint64_t guid)	Zeroes the GUID of the friend slot holding it and frees its name string	verified	one	net/friends#friend-status-result	
 0x5aea60	86	FriendList::FindOrAddFriendSlot		net	orchestration	int32_t __thiscall (FriendList *this, uint64_t guid)	Returns the friend slot holding a GUID, else claims the first empty slot for it with status 0	verified	one	net/friends#friend-status-result	
 0x5aeac0	105	FriendList::SetFriendName		net	orchestration	void __thiscall (FriendList *this, uint64_t guid, const char *name)	Replaces the name string of the friend slot holding a GUID with a heap copy	verified	one	net/friends#friend-status-result	
 0x5aeb30	62	FriendList::SetFriendStatus		net	orchestration	void __thiscall (FriendList *this, uint64_t guid, uint8_t status)	Stores the online byte of the friend slot holding a GUID	verified	one	net/friends#friend-status-result	
-0x5aeb70	27	FriendList::DecrementPendingFriendNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending friend-name count and sorts the friends when it reaches zero	verified	one	net/friends#friend-status-result	
-0x5aeb90	27	FriendList::DecrementPendingIgnoreNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending ignore-name count and sorts the ignores when it reaches zero	inferred	none		
+0x5aeb70	27	FriendList::DecrementPendingFriendNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending friend-name count and sorts the friends when it reaches zero	verified	one	net/friends#pending-names	net::friends_pending_counts
+0x5aeb90	27	FriendList::DecrementPendingIgnoreNames		net	primitive	void __thiscall (FriendList *this)	Decrements the pending ignore-name count and sorts the ignores when it reaches zero	verified	one	net/friends#pending-names	net::friends_pending_counts
 0x5aebb0	1512	FriendList::SendWhoQuery		net	primitive	void __thiscall (FriendList *this, const char *filter)	Parses a /who filter into levels, name, guild, race and class masks, zones and terms and sends opcode 0x62	verified	one	net/friends#who-query-tags	
 0x5af1a0	342	FriendList::AddOrDelIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Sends opcode 0x6d with the GUID of the ignored player whose cached name matches, else opcode 0x6c with the name	inferred	none		
 0x5af300	242	FriendList::AddIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Shows game error 0x111 with the name when it is already ignored, else sends opcode 0x6c with the name	inferred	none		
 0x5af400	167	FriendList::DelIgnore		net	orchestration	void __thiscall (FriendList *this, const char *name)	Sends the remove-ignore message for the ignored player whose cached name matches, or shows game error 0x110	inferred	none		
 0x5af4b0	113	FriendList::SendDelIgnore		net	orchestration	void __stdcall (uint64_t guid)	Sends opcode 0x6d with a GUID	inferred	none		
-0x5af530	156	FriendList::ReadIgnoreList		net	primitive	void __thiscall (FriendList *this, CDataStore *msg)	Replaces the ignore list from a u8 count and that many GUIDs, counting names not yet cached, sorting when none pend	inferred	none		
-0x5af5d0	124	FriendList::AddIgnoreSlot		net	primitive	void __thiscall (FriendList *this, uint64_t guid, uint32_t lookUpName)	Stores a GUID in the first empty ignore slot and, when asked, looks its name up and sorts once no names pend	inferred	none		
+0x5af530	156	FriendList::ReadIgnoreList		net	primitive	void __thiscall (FriendList *this, CDataStore *msg)	Replaces the ignore list from a u8 count and that many GUIDs, counting names not yet cached, sorting when none pend	verified	one	net/friends#ignore-list-packet	net::friends_ignore_list
+0x5af5d0	124	FriendList::AddIgnoreSlot		net	primitive	void __thiscall (FriendList *this, uint64_t guid, uint32_t lookUpName)	Stores a GUID in the first empty ignore slot and, when asked, looks its name up and sorts once no names pend	verified	one	net/friends#ignore-list-packet	net::friends_ignore_list
 0x5af650	85	FriendList::RemoveIgnoreSlot		net	orchestration	void __thiscall (FriendList *this, uint64_t guid)	Zeroes the ignore slot holding a GUID and sorts the ignores when no names pend	inferred	none		
 0x5af6b0	343	OpenAccountDataFile		net	host	void * __fastcall (bool accountWide, const char *fileName, bool write)	Opens a file under WTF\Account\<account> or <account>\<realm>\<character> for reading, or creates it for writing	verified	one	net/accountdata#section-files	
 0x5af810	5	InitCopy5Thunk		net	orchestration	void __cdecl (void)	Jumps to 0x5af820; a static initializer	verified	one	net/layout#static-initializers	
@@ -23400,7 +23400,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64a420	43	SStrChrR		storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0	verified	one	gx/textures#texture-basename-substitution	
 0x64a450	43	SStrChrRCopy	idb	storm	boundary	char * __fastcall (const char *string, char c)	Returns the last occurrence of a character in a string, or 0 (a second copy of 0x64a420)	verified	one	gx/textures#texture-file-name-builders	
 0x64a480	56	SStrCmp		storm	orchestration		Compares two strings up to a length through strncmp	verified	one	objectlayer/party#guild-events	
-0x64a4c0	56	SStrCmpI	idb	storm	primitive		Compares two strings ignoring case up to a length	inferred	none	spell/cooldowns#spell-id-by-name	
+0x64a4c0	56	SStrCmpI	idb	storm	primitive		Compares two strings ignoring case up to a length	verified	one	net/friends#strings-without-case	net::friends_compare
 0x64a500	150			storm	unreached		Runs its object file code that calls _toupper; not read here	inferred	none		
 0x64a5a0	123	SStrCopy	idb	storm	boundary		Copies a string up to a length	inferred	none	collision/mover#initialisation-and-teardown	
 0x64a620	75	SStrDupA	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SMemAlloc; not read here	inferred	none		

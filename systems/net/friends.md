@@ -24,9 +24,55 @@ Test: none
 Addresses: `0x5ae350`, `0x5add80`, `0x5ae37e`, `0x5ae3df`, `0x5ae3ee`, `0x5ae438`, `0x5ae475`, `0x5ae850`, `0x5ace70`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::friends_read_list`
 
 `0x5ae366` to `0x5ae384` loop over 50 slots stepping `0x20` from `+4`, the name pointer, free (`0x646430`) and zero it. `0x5ae393` reads the count; `0x5ae3a7` `cmp [ebp+0xb],0x32; jae` stops at 50 records. The reads are `0x4190b0`, `0x418cb0` then `0x418e30` three times (`0x5ae3f6`, `0x5ae401`, `0x5ae40c`). `0x5ae438` is `0x55f080` with the callback `0x5ace70` and the message id `0x1d1`; a non-null result is copied with `0x64a620`, a null one increments `+0x640` (`0x5ae459`). `0x5ae47b` tests `+0x640`.
+
+The pending count is not reset: a lookup still unanswered from an earlier list keeps it above zero, and the sort then waits for that answer. Records past the 50th are left unread. A packet shorter than its count leaves the reads on stale stack; the test reads whole packets.
+
+## Ignore list packet
+
+`SMSG_IGNORE_LIST` (`0x6b`) replaces the ignores: `0x5ae2b0` passes it to `0x5af530` when the friend list exists. `0x5af530` zeroes the 25 guids and reads a count byte and that many guids, with no cap. Each is stored by `0x5af5d0` without a lookup, then looked up with the callback `0x5acf40`; a miss adds to `+0x718`, which is not reset first. With nothing pending at the end the ignores sort (`0x5ae910`). `0x5af5d0(guid, look_up)` stores the guid in the first slot whose guid is 0, or does nothing when all 25 are taken; with `look_up` set it also looks the name up, counts a miss and sorts when nothing is pending. A guid past the 25th is dropped but still looked up and counted.
+
+Addresses: `0x5ae2b0`, `0x5af530`, `0x5af5d0`, `0x5af548`, `0x5af578`, `0x5af59a`, `0x5af5a3`, `0x5af5e0`, `0x5af5eb`, `0x5af60c`, `0x5af627`, `0x5ae910`, `0x5acf40`
+Confidence: verified
+Proof: one
+Test: `net::friends_ignore_list`
+
+`0x5af548` is `rep stos` of `0x32` dwords from `+0x650`. The loop compares its index with the count byte (`0x5af5ad` to `0x5af5b0`) and nothing else. `0x5af578` calls `0x5af5d0` with a zero flag; `0x5af59a` is `0x55f080` with `0x5acf40`, the id `0x1d1` and a copy of the guid on the stack; `0x5af5a3` increments `+0x718`. `0x5af5e0` to `0x5af5ee` test each guid's two dwords for zero, 25 times (`cmp eax,0x19`), and return on none. `0x5af60c` tests the flag, `0x5af627` looks up, and `0x5af636` tests `+0x718` only on that path.
+
+## Pending names
+
+`0x5aeb70` and `0x5aeb90` are the name cache callbacks' last step for a friend and an ignore. Each takes one from its pending count, `+0x640` or `+0x718`, when that is not 0, and sorts its list when the count reaches 0 (`0x5ae850`, `0x5ae910`). A count of 0 stays 0 and nothing sorts.
+
+Addresses: `0x5aeb70`, `0x5aeb90`, `0x5ae850`, `0x5ae910`, `0x5aceb6`, `0x5acf97`
+Confidence: verified
+Proof: one
+Test: `net::friends_pending_counts`
+
+`0x5aeb76` `test eax,eax; je` returns on 0; `0x5aeb7a` decrements and stores; `0x5aeb85` tail-jumps to `0x5ae850` when the result is 0. `0x5aeb90` is the same on `+0x718` with `0x5ae910`. The callers are `0x5ace70` (`0x5aceb6`) and `0x5acf40` (`0x5acf97`).
+
+## Friend order
+
+`0x5ae850` sorts the 50 slots with `qsort` and the comparator `0x5ae870`. A slot with guid 0 goes last, two such are equal. Then, when the online bytes differ, the one that is 0 goes last; two different non-zero bytes give `-1` both ways, but the byte is only written 0 or 1. Then the names compare without case through `0x64a4c0` with no bound (Strings without case); a missing name goes last, two missing are equal.
+
+Addresses: `0x5ae850`, `0x5ae870`, `0x5ae884`, `0x5ae8b5`, `0x5ae8ce`, `0x5ae8e6`, `0x5ae8f4`
+Confidence: verified
+Proof: one
+Test: `net::friends_compare`
+
+`0x5ae876` to `0x5ae8b2` test the two guids for zero. `0x5ae8b5` compares the bytes at `+0`; on a difference `0x5ae8f4` returns `(a == 0) * 2 - 1`. `0x5ae8b9` to `0x5ae8f3` handle the names at `+4`, calling `0x64a4c0` with `0x7fffffff` at `0x5ae8ce`.
+
+## Strings without case
+
+`SStrCmpI` (`0x64a4c0`, `(a, b, n)`) calls `__strnicmp` (`0x414310`) for two non-null strings, and otherwise sets error `0x57` and returns the first pointer less the second. `__strnicmp` runs its C locale path, since the locale word `0x883b08` stays 0: `A` to `Z` fold to lower case, the first pair that differs decides `-1` or 1 unsigned, and a NUL in either string or the bound ends the compare; a bound of 0 is equal.
+
+Addresses: `0x64a4c0`, `0x64a4d5`, `0x414310`, `0x41432d`, `0x41434a`, `0x414365`, `0x410c71`, `0x4109d6`
+Confidence: verified
+Proof: one
+Test: `net::friends_compare`
+
+`0x64a4c7` and `0x64a4cf` test the pointers and `0x64a4d5` calls `0x64e850` with `0x57`. In `0x414310`, `0x41432d` tests `[0x883b08]`; `0x41434a` to `0x41435c` add `0x20` to a byte from `0x41` to `0x5a`; `0x414365` to `0x41437a` turn the last pair into 0, `-1` or 1 from an unsigned compare. The one write to the locale words, `0x410c71` in `__setlocale_set_cat` (`0x410c1c`), is reached only from `_setlocale` (`0x4109d6`, the calls at `0x410a25`, `0x410b1e`, `0x410bb3`), and a scan of `call` and `jmp` and of the image for `0x4109d6` as a dword finds nothing.
 
 ## Friend status result
 

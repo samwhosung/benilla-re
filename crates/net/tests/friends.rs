@@ -1,0 +1,453 @@
+//! The friend and ignore lists (`systems/net/friends.md`), each function run whole beside the
+//! model.
+
+mod common;
+
+use benilla_re_difftest::Emu;
+use benilla_re_net::{
+    compare_friends, strnicmp, DataStore, Fetch, FriendCall, FriendList, FriendSlot,
+};
+use common::{Lcg, Wow};
+
+const READ_FRIEND_LIST: u64 = 0x5ae350;
+const READ_IGNORE_LIST: u64 = 0x5af530;
+const ADD_IGNORE_SLOT: u64 = 0x5af5d0;
+const DEC_FRIENDS: u64 = 0x5aeb70;
+const DEC_IGNORES: u64 = 0x5aeb90;
+const COMPARE_FRIENDS: u64 = 0x5ae870;
+const STRNICMP: u64 = 0x414310;
+const SSTRCMPI: u64 = 0x64a4c0;
+const SERR_SET_LAST_ERROR: u64 = 0x64e850;
+const FRIENDS_DONE: u64 = 0x5ae850;
+const IGNORES_DONE: u64 = 0x5ae910;
+const NAME_LOOKUP: u64 = 0x55f080;
+const SSTRDUPA: u64 = 0x64a620;
+const SMEMFREE: u64 = 0x646430;
+const DUP_BASE: u64 = 0x5000_0000;
+const DUP_STRIDE: u64 = 0x40;
+/// The name the cache returns for a guid whose low bit is set.
+const NAME: u32 = 0x00c0_ffee;
+
+struct Rig<'a> {
+    e: Emu<'a>,
+    fl: u64,
+    store: u64,
+    buf: u64,
+    /// The lookup island's log: a count, then four dwords a call.
+    log: u64,
+}
+
+impl<'a> Rig<'a> {
+    fn new(wow: &'a Wow) -> Rig<'a> {
+        let mut e = Emu::new(wow);
+        let fl = e.alloc(0x728);
+        let store = e.alloc(0x20);
+        let buf = e.alloc(0x1000);
+        let log = e.alloc(0x2000);
+        let cnt = log as u32;
+        let base = cnt + 0x10;
+        let mut c = vec![0xa1];
+        c.extend_from_slice(&cnt.to_le_bytes());
+        c.extend_from_slice(&[0xc1, 0xe0, 0x04, 0x05]);
+        c.extend_from_slice(&base.to_le_bytes());
+        for (i, off) in [(0x04u8, 0x00u8), (0x08, 0x04), (0x0c, 0x08), (0x10, 0x0c)] {
+            c.extend_from_slice(&[0x8b, 0x4c, 0x24, i]);
+            if off == 0 {
+                c.extend_from_slice(&[0x89, 0x08]);
+            } else {
+                c.extend_from_slice(&[0x89, 0x48, off]);
+            }
+        }
+        c.extend_from_slice(&[0xff, 0x05]);
+        c.extend_from_slice(&cnt.to_le_bytes());
+        c.extend_from_slice(&[0x8b, 0x44, 0x24, 0x04, 0xa8, 0x01, 0x74, 0x08, 0xb8]);
+        c.extend_from_slice(&NAME.to_le_bytes());
+        c.extend_from_slice(&[0xc2, 0x18, 0x00, 0x31, 0xc0, 0xc2, 0x18, 0x00]);
+        let island = e.alloc(0x80);
+        e.write(island, &c);
+        let rel = (island as u32).wrapping_sub(NAME_LOOKUP as u32 + 5);
+        let mut jmp = vec![0xe9];
+        jmp.extend_from_slice(&rel.to_le_bytes());
+        e.write(NAME_LOOKUP, &jmp);
+        e.stub_alloc(SSTRDUPA, DUP_BASE, DUP_STRIDE, 3);
+        e.stub(SMEMFREE, 1, 4);
+        e.stub(FRIENDS_DONE, 0, 0);
+        e.stub(IGNORES_DONE, 0, 0);
+        Rig {
+            e,
+            fl,
+            store,
+            buf,
+            log,
+        }
+    }
+
+    fn put(&mut self, f: &FriendList) {
+        for (k, s) in f.slots.iter().enumerate() {
+            let a = self.fl + 0x20 * k as u64;
+            self.e.write(a, &[s.online, s.status, 0xa5, 0xa5]);
+            self.e.write_u32(a + 4, s.name);
+            self.e.write(a + 8, &s.guid.to_le_bytes());
+            self.e.write_u32(a + 0x10, s.level);
+            self.e.write_u32(a + 0x14, s.class);
+            self.e.write_u32(a + 0x18, s.area);
+        }
+        self.e.write_u32(self.fl + 0x640, f.friends_pending);
+        for (k, g) in f.ignores.iter().enumerate() {
+            self.e
+                .write(self.fl + 0x650 + 8 * k as u64, &g.to_le_bytes());
+        }
+        self.e.write_u32(self.fl + 0x718, f.ignores_pending);
+        self.e.write_u32(self.log, 0);
+        self.e.reset_bump(DUP_BASE);
+        self.e.clear_calls();
+    }
+
+    fn get(&self) -> FriendList {
+        let mut f = FriendList {
+            slots: [FriendSlot::default(); 50],
+            friends_pending: self.e.read_u32(self.fl + 0x640),
+            ignores: [0; 25],
+            ignores_pending: self.e.read_u32(self.fl + 0x718),
+        };
+        for (k, s) in f.slots.iter_mut().enumerate() {
+            let a = self.fl + 0x20 * k as u64;
+            let b = self.e.read(a, 2);
+            let g = self.e.read(a + 8, 8);
+            *s = FriendSlot {
+                online: b[0],
+                status: b[1],
+                name: self.e.read_u32(a + 4),
+                guid: u64::from_le_bytes(g.try_into().unwrap()),
+                level: self.e.read_u32(a + 0x10),
+                class: self.e.read_u32(a + 0x14),
+                area: self.e.read_u32(a + 0x18),
+            };
+        }
+        for (k, g) in f.ignores.iter_mut().enumerate() {
+            let v = self.e.read(self.fl + 0x650 + 8 * k as u64, 8);
+            *g = u64::from_le_bytes(v.try_into().unwrap());
+        }
+        f
+    }
+
+    fn load_store(&mut self, bytes: &[u8]) {
+        self.e.write(self.buf, bytes);
+        let len = bytes.len() as u32;
+        for (i, v) in [0x7ff9e4u32, self.buf as u32, 0, len.max(1), len, 0]
+            .into_iter()
+            .enumerate()
+        {
+            self.e.write_u32(self.store + 4 * i as u64, v);
+        }
+    }
+
+    /// The calls in the model's terms: the stubs in order, then the lookups the island logged
+    /// placed where the model has them by comparing the two lists separately.
+    fn calls(&self) -> (Vec<FriendCall>, Vec<FriendCall>) {
+        let stubs = self
+            .e
+            .calls()
+            .iter()
+            .filter_map(|c| match c.addr {
+                SMEMFREE => Some(FriendCall::Free(c.args[0])),
+                FRIENDS_DONE => Some(FriendCall::FriendsDone),
+                IGNORES_DONE => Some(FriendCall::IgnoresDone),
+                _ => None,
+            })
+            .collect();
+        let n = self.e.read_u32(self.log);
+        let lookups = (0..u64::from(n))
+            .map(|i| {
+                let a = self.log + 0x10 + 0x10 * i;
+                let lo = self.e.read_u32(a);
+                let hi = self.e.read_u32(a + 4);
+                let at = u64::from(self.e.read_u32(a + 8));
+                let cb = self.e.read_u32(a + 12);
+                let slot = (self.fl..self.fl + 0x640)
+                    .contains(&at)
+                    .then(|| ((at - self.fl - 8) / 0x20) as usize);
+                FriendCall::Lookup {
+                    guid: u64::from(lo) | (u64::from(hi) << 32),
+                    slot,
+                    ignore: cb == 0x5acf40,
+                }
+            })
+            .collect();
+        (stubs, lookups)
+    }
+}
+
+fn split(calls: Vec<FriendCall>) -> (Vec<FriendCall>, Vec<FriendCall>) {
+    calls
+        .into_iter()
+        .partition(|c| !matches!(c, FriendCall::Lookup { .. }))
+}
+
+fn guid(g: &mut Lcg) -> u64 {
+    match g.next() >> 29 {
+        0 => 0,
+        1 => u64::from(g.next()),
+        _ => u64::from(g.next()) | (u64::from(g.next()) << 32),
+    }
+}
+
+fn list(g: &mut Lcg) -> FriendList {
+    let mut f = FriendList {
+        slots: [FriendSlot::default(); 50],
+        friends_pending: [0u32, 0, 1, 3][(g.next() >> 16) as usize % 4],
+        ignores: [0; 25],
+        ignores_pending: [0u32, 0, 1, 2][(g.next() >> 16) as usize % 4],
+    };
+    for s in f.slots.iter_mut() {
+        *s = FriendSlot {
+            online: (g.next() >> 31) as u8,
+            status: (g.next() >> 24) as u8,
+            name: if g.next() >> 30 == 0 {
+                0
+            } else {
+                0x6000_0000 | (g.next() >> 8)
+            },
+            guid: guid(g),
+            level: g.next(),
+            class: g.next(),
+            area: g.next(),
+        };
+    }
+    let full = (g.next() >> 16) as usize % 27;
+    for (k, x) in f.ignores.iter_mut().enumerate() {
+        *x = if k < full { guid(g) | 1 } else { 0 };
+    }
+    f
+}
+
+fn plain(bytes: &[u8]) -> DataStore {
+    let mut m = DataStore::new(Fetch::Heap);
+    m.data = bytes.to_vec();
+    m.alloc = (bytes.len() as u32).max(1);
+    m.size = bytes.len() as u32;
+    m
+}
+
+/// `FriendList::ReadFriendList` whole on lists of 0 to 60 records, statuses 0 and not, names in
+/// the cache or not: every slot, the pending count, the names freed, the lookups with the slot
+/// each fills, and the sort when nothing is pending.
+#[test]
+fn friends_read_list() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let mut g = Lcg(0xf41e_0001);
+    for case in 0..1500 {
+        let mut f = list(&mut g);
+        let count = [0u8, 1, 3, 49, 50, 51, 60][(g.next() >> 16) as usize % 7];
+        let mut bytes = vec![count];
+        for _ in 0..count {
+            bytes.extend(guid(&mut g).to_le_bytes());
+            let st = if g.next() >> 30 == 0 {
+                0
+            } else {
+                (g.next() >> 24) as u8 | 1
+            };
+            bytes.push(st);
+            if st != 0 {
+                for _ in 0..3 {
+                    bytes.extend(g.next().to_le_bytes());
+                }
+            }
+        }
+        r.put(&f);
+        r.load_store(&bytes);
+        r.e.call(READ_FRIEND_LIST, r.fl as u32, 0, &[r.store as u32]);
+        let mut n = 0;
+        let calls = f.read_friend_list(
+            &mut plain(&bytes),
+            |gd| gd & 1 == 1,
+            || {
+                n += 1;
+                (DUP_BASE + DUP_STRIDE * (n - 1)) as u32
+            },
+        );
+        let ctx = format!("case {case} count {count}");
+        assert_eq!(r.get(), f, "{ctx}: list");
+        assert_eq!(r.calls(), split(calls), "{ctx}: calls");
+    }
+}
+
+/// `FriendList::ReadIgnoreList` and `FriendList::AddIgnoreSlot` whole: lists of 0 to 30 guids,
+/// past the 25 slots, guids of 0, names in the cache or not, pending counts that start above 0,
+/// and a single add with and without its lookup into lists from empty to full.
+#[test]
+fn friends_ignore_list() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let mut g = Lcg(0x1d40_0001);
+    for case in 0..1500 {
+        let mut f = list(&mut g);
+        let ctx = format!("case {case}");
+        if case % 2 == 0 {
+            let count = [0u8, 1, 5, 24, 25, 26, 30][(g.next() >> 16) as usize % 7];
+            let mut bytes = vec![count];
+            for _ in 0..count {
+                bytes.extend(guid(&mut g).to_le_bytes());
+            }
+            r.put(&f);
+            r.load_store(&bytes);
+            r.e.call(READ_IGNORE_LIST, r.fl as u32, 0, &[r.store as u32]);
+            let calls = f.read_ignore_list(&mut plain(&bytes), |gd| gd & 1 == 1);
+            assert_eq!(r.get(), f, "{ctx}: list");
+            assert_eq!(r.calls(), split(calls), "{ctx}: calls");
+        } else {
+            let gd = guid(&mut g);
+            let named = g.next() >> 31 == 0;
+            r.put(&f);
+            let flag = if named { g.next() | 1 } else { 0 };
+            r.e.call(
+                ADD_IGNORE_SLOT,
+                r.fl as u32,
+                0,
+                &[gd as u32, (gd >> 32) as u32, flag],
+            );
+            let mut calls = Vec::new();
+            f.add_ignore_slot(gd, named, |x| x & 1 == 1, &mut calls);
+            assert_eq!(r.get(), f, "{ctx}: add");
+            assert_eq!(r.calls(), split(calls), "{ctx}: add calls");
+        }
+    }
+}
+
+/// `DecrementPendingFriendNames` and `DecrementPendingIgnoreNames` from 0, 1, 2 and the top: the
+/// count and the sort at zero.
+#[test]
+fn friends_pending_counts() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let mut g = Lcg(0xdec0_0001);
+    for &n in &[0u32, 1, 2, 3, 0x7fff_ffff, 0x8000_0000, 0xffff_ffff] {
+        for ignores in [false, true] {
+            let mut f = list(&mut g);
+            if ignores {
+                f.ignores_pending = n;
+            } else {
+                f.friends_pending = n;
+            }
+            r.put(&f);
+            r.e.call(
+                if ignores { DEC_IGNORES } else { DEC_FRIENDS },
+                r.fl as u32,
+                0,
+                &[],
+            );
+            let done = if ignores {
+                f.decrement_ignores_pending()
+            } else {
+                f.decrement_friends_pending()
+            };
+            let ctx = format!("{n:#x} ignores {ignores}");
+            assert_eq!(r.get(), f, "{ctx}: counts");
+            let want = match (done, ignores) {
+                (false, _) => vec![],
+                (true, false) => vec![FriendCall::FriendsDone],
+                (true, true) => vec![FriendCall::IgnoresDone],
+            };
+            assert_eq!(r.calls().0, want, "{ctx}: sort");
+        }
+    }
+}
+
+/// A name for the comparator: mixed case, the characters around `A`, `Z`, `a`, `z` and `@`, `[`,
+/// bytes at and above `0x80`, often a prefix of another.
+fn name(g: &mut Lcg) -> Vec<u8> {
+    const PICK: &[u8] = b"aAbBzZ@[`{_0 \x7f\x80\xc8\xff";
+    let n = (g.next() >> 16) as usize % 6;
+    (0..n)
+        .map(|_| PICK[(g.next() >> 16) as usize % PICK.len()])
+        .collect()
+}
+
+/// `CompareFriends` whole on pairs of slots: empty and full, online and offline bytes that
+/// differ in any way, and names present or missing that differ in case, length and high bytes;
+/// `__strnicmp` on the same names with bounds 0, 1, 3 and none; and `SStrCmpI`, which calls it
+/// for two strings and otherwise sets error `0x57` and returns the first pointer less the second.
+#[test]
+fn friends_compare() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let a = e.alloc(0x20);
+    let b = e.alloc(0x20);
+    let sa = e.alloc(0x20);
+    let sb = e.alloc(0x20);
+    e.stub(SERR_SET_LAST_ERROR, 0, 1);
+    let mut g = Lcg(0xc0f4_0001);
+    for case in 0..6000 {
+        let na = name(&mut g);
+        let nb = if g.next() >> 30 == 0 {
+            na.to_ascii_uppercase()
+        } else {
+            name(&mut g)
+        };
+        let mut za = na.clone();
+        za.push(0);
+        let mut zb = nb.clone();
+        zb.push(0);
+        e.write(sa, &za);
+        e.write(sb, &zb);
+        let has_a = g.next() >> 29 != 0;
+        let has_b = g.next() >> 29 != 0;
+        let slot = |g: &mut Lcg, has: bool, at: u64| FriendSlot {
+            online: [0u8, 1, 2, 0x80][(g.next() >> 16) as usize % 4],
+            status: 0,
+            name: if has { at as u32 } else { 0 },
+            guid: if g.next() >> 29 == 0 {
+                0
+            } else {
+                guid(g) | (1 << 40)
+            },
+            ..FriendSlot::default()
+        };
+        let x = slot(&mut g, has_a, sa);
+        let y = slot(&mut g, has_b, sb);
+        for (s, at) in [(&x, a), (&y, b)] {
+            e.write(at, &[s.online, s.status, 0, 0]);
+            e.write_u32(at + 4, s.name);
+            e.write(at + 8, &s.guid.to_le_bytes());
+        }
+        let got = e.call(COMPARE_FRIENDS, 0, 0, &[a as u32, b as u32]) as i32;
+        let want = compare_friends(&x, &y, has_a.then_some(&na[..]), has_b.then_some(&nb[..]));
+        assert_eq!(got, want, "case {case} {x:?} {y:?} {na:02x?} {nb:02x?}");
+        for n in [0u32, 1, 3, 0x7fff_ffff] {
+            let got = e.call(STRNICMP, 0, 0, &[sa as u32, sb as u32, n]) as i32;
+            assert_eq!(
+                got,
+                strnicmp(&na, &nb, n),
+                "strnicmp {na:02x?} {nb:02x?} {n}"
+            );
+            e.clear_calls();
+            let pa = if has_a { sa as u32 } else { 0 };
+            let pb = if has_b { sb as u32 } else { 0 };
+            let got = e.call(SSTRCMPI, 0, 0, &[pa, pb, n]);
+            let errors: Vec<u32> = e.calls().iter().map(|c| c.args[0]).collect();
+            if has_a && has_b {
+                assert_eq!(
+                    got as i32,
+                    strnicmp(&na, &nb, n),
+                    "SStrCmpI {na:02x?} {nb:02x?} {n}"
+                );
+                assert!(errors.is_empty());
+            } else {
+                assert_eq!(
+                    (got, errors),
+                    (pa.wrapping_sub(pb), vec![0x57]),
+                    "SStrCmpI null"
+                );
+            }
+        }
+    }
+}
