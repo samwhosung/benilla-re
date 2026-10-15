@@ -31,3 +31,5 @@ jobs:
         run: cargo test --workspace
       - name: The check
         run: cargo xtask check
+      - name: The site builds
+        run: cargo xtask site "$RUNNER_TEMP/site"

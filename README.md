@@ -54,6 +54,34 @@ your own copy of 1.12.1.5875 and refuse any other build.
     and rigs inside the client's process that record the player's movement and a function's
     calls.
 
+## The address site
+
+`cargo xtask site <out dir>` writes a static website from `symbols/`, `systems/`, the spec docs
+and `tables/`; it needs no exe, and the same input writes the same bytes. `.github/workflows/pages.yml`
+builds it on every push to main and deploys it to GitHub Pages. It is plain HTML with one
+stylesheet and one script, and it reads on a phone and in a dark theme.
+
+Addresses are written `0x` and lowercase hex, and every page URL is built from the address alone:
+
+- `<site>/?0x5e6850` goes to the row that holds the address: a row's own address, an instruction
+  inside a function (`start <= a < start + size`) or a byte inside a global's extent. An
+  instruction lands on `<site>/a/5e6850.html#0x5e6853`, the function's page with the
+  instruction named. This is the link for any address a comment cites.
+- `<site>/a/<six lowercase hex digits>.html` is the page of the row that starts there, for
+  example `a/5e6850.html`. Use it when the address is known to be a row's start.
+- `<site>/t/<struct>.html` is a struct (`::` written `--`), `<site>/s/<system>.html` a system,
+  `<site>/d/<doc path without .md>.html` a doc (`d/systems/random.html`, `d/METHOD.html`) and
+  `<site>/tb/<table>.html` a table.
+
+An address page has the row's name, signature or type, meaning, confidence and proof, the claim
+of the finding it links to, its callers and callees, and its test. A system page has its docs'
+overviews, the coverage counts (named, verified, proof two, tested), its closure and its rows. The
+search box finds names and addresses from `index.json`, loaded in the browser.
+
+Callers and callees come from `tables/calls.tsv`, which `cargo xtask check --exe` regenerates from
+the listing: the direct calls and jumps by a bare address. A function reached through a register,
+a slot or a stored address shows none for that path.
+
 ## How to trust it
 
 [METHOD.md](METHOD.md) says what counts as evidence: the binary decides, every claim states its
