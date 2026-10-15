@@ -23,43 +23,11 @@ settle, and with `--all` every site. The control is that every site the table li
 """
 
 import csv
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / 'tables'))
-from lib import ROOT, Disasm, addr, parse_args  # noqa: E402
-
-SIGNAL2 = 0x703F50
-CLEANUP = re.compile(r'^(?:add\s+esp,0x([0-9a-f]+)|lea\s+esp,\[esp\+0x([0-9a-f]+)\])$')
-DIRECTIVE = re.compile(r'%([a-zA-Z])')
-
-
-def declared(fmt):
-    return sum(2 if d == 'f' else 1 for d in DIRECTIVE.findall(fmt))
-
-
-def cleanup(dis, k):
-    for j in range(k + 1, min(k + 8, len(dis.ins))):
-        _, _, mn, ops = dis.ins[j]
-        m = CLEANUP.match('%s %s' % (mn, ops.replace(' ', '')) if mn == 'add'
-                          else '%s %s' % (mn, ops))
-        if m:
-            return int(m.group(1) or m.group(2), 16)
-        if mn in ('call', 'ret') or mn.startswith('j'):
-            return None
-    return None
-
-
-def pushes(dis, k):
-    n = 0
-    for j in range(k - 1, max(k - 40, -1), -1):
-        _, _, mn, _ = dis.ins[j]
-        if mn in ('call', 'ret') or mn.startswith('j'):
-            break
-        if mn == 'push':
-            n += 1
-    return n
+from lib import ROOT, SIGNAL2, Disasm, addr, declared, parse_args, signal2_passed  # noqa: E402
 
 
 def main():
@@ -83,19 +51,11 @@ def main():
         k = dis.at[a]
         want_n = declared(r['arg_format'])
         name = r['event_names'] or r['event_ids']
-        if dis.ins[k][2] == 'jmp':
-            manual.append('%s %s: a tail jump; the values are its caller\'s' % (r['site'], name))
+        got = signal2_passed(dis, k, want_n)
+        if got is None:
+            manual.append('%s %s: no count; a tail jump or no pushes' % (r['site'], name))
             continue
-        n = cleanup(dis, k)
-        if n is not None and n // 4 - 2 <= want_n:
-            have, via = n // 4 - 2, 'add esp,0x%x' % n
-        else:
-            have = pushes(dis, k) - 2
-            via = ('%d pushes, cleanup 0x%x shared' % (have + 2, n) if n is not None
-                   else '%d pushes, no cleanup' % (have + 2))
-            if have < 0:
-                manual.append('%s %s: %s' % (r['site'], name, via))
-                continue
+        have, via = got
         line = '%s %s %r declares %d, passes %d (%s)' % (r['site'], name, r['arg_format'],
                                                        want_n, have, via)
         lines.append(line)

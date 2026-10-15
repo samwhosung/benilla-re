@@ -15,6 +15,7 @@ import argparse
 import bisect
 import csv
 import hashlib
+import re
 import struct
 import sys
 from pathlib import Path
@@ -258,6 +259,68 @@ class Functions:
             return 'no function row'
         name = (' ' + row['name']) if row['name'] else ''
         return '%s%s (%s)' % (addr(row['address']), name, row['system'])
+
+
+SIGNAL2 = 0x703F50
+_CLEANUP = re.compile(r'^(?:add\s+esp,0x([0-9a-f]+)|lea\s+esp,\[esp\+0x([0-9a-f]+)\])$')
+_DIRECTIVE = re.compile(r'%([a-zA-Z])')
+
+
+def declared(fmt):
+    """The dwords a SignalEvent2 format declares: one per directive, two for `%f`."""
+    return sum(2 if d == 'f' else 1 for d in _DIRECTIVE.findall(fmt))
+
+
+def _cleanup(dis, k):
+    """The size of the first `add esp,N` or `lea esp,[esp+N]` after instruction k, before any
+    other call, jump or return; None if there is none."""
+    for j in range(k + 1, min(k + 8, len(dis.ins))):
+        _, _, mn, ops = dis.ins[j]
+        m = _CLEANUP.match('%s %s' % (mn, ops.replace(' ', '')) if mn == 'add'
+                           else '%s %s' % (mn, ops))
+        if m:
+            return int(m.group(1) or m.group(2), 16)
+        if mn in ('call', 'ret') or mn.startswith('j'):
+            return None
+    return None
+
+
+def _pushes(dis, k):
+    """The pushes walking back from instruction k to the previous call, jump or return."""
+    n = 0
+    for j in range(k - 1, max(k - 40, -1), -1):
+        _, _, mn, _ = dis.ins[j]
+        if mn in ('call', 'ret') or mn.startswith('j'):
+            break
+        if mn == 'push':
+            n += 1
+    return n
+
+
+def signal2_passed(dis, k, want):
+    """What the caller of the SignalEvent2 call at instruction k passed, as (values, how), or
+    None for a tail jump or a site with no count. `want` is the dwords its format declares.
+
+    The first cleanup after the call frees the id, the format and the values, so the values are
+    N/4 - 2 dwords. A cleanup larger than the format accounts for is shared with an earlier call
+    MSVC did not clean up separately; then the count is the pushes back to the previous call.
+    """
+    if dis.ins[k][2] == 'jmp':
+        return None
+    n = _cleanup(dis, k)
+    if n is not None and n // 4 - 2 <= want:
+        return n // 4 - 2, 'add esp,0x%x' % n
+    have = _pushes(dis, k) - 2
+    if have < 0:
+        return None
+    return have, ('%d pushes, cleanup 0x%x shared' % (have + 2, n) if n is not None
+                  else '%d pushes, no cleanup' % (have + 2))
+
+
+def read_tsv(path):
+    """The rows of a table as dicts, keyed by its header."""
+    with open(path, newline='', encoding='utf-8') as f:
+        return list(csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE))
 
 
 def parse_args(doc, disasm=False, extra=None):
