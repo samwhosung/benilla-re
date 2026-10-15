@@ -37,6 +37,12 @@ any other build.
 - **Writing another client**: the [systems](systems/README.md) index, and the crates, which
   reimplement the client's computations and are tested bit for bit against its own code.
 
+Slash commands and most of what the interface does (`/who`, the chat frame, the spellbook) are
+written in the interface code, FrameXML and GlueXML in the player's own install, which calls the
+Lua API the exe serves. A question about `/who` starts in that code and comes here for the engine
+side: the Lua function in [bindings](tables/bindings.tsv), the opcode it sends, the event it
+fires.
+
 ## What is here
 
 - **`symbols/`**: one row per function, global, struct and field: its name, owning system,
@@ -126,15 +132,20 @@ of another row.
 a function is `CDataStore::PutInt8` and not `FUN_00514ae0`. It needs no exe, and the same tree
 writes the same bytes.
 
+- `README.md`: where to start for each tool, the build the files fit (version, size, SHA-256),
+  the commit, and how a `finding` cell maps to a file and to the site.
 - `benilla-re.h`: a C header of every struct at its table offsets (packed, with explicit
-  `_pad` members for the gaps and `__vfptr` where a vtable exists), the prototypes whose types it
-  can state (behind `BENILLA_RE_PROTOTYPES`, as no function can be linked), and the globals. It
-  compiles as C and as C++. `::` is written `__`. For a call from injected code, each function
-  has `BRE_ADDR_<name>` (its address) and `BRE_FN_<name>` (a pointer type with its calling
-  convention, MSVC keywords under `_MSC_VER` and attributes for clang and gcc on i386), a
-  `__thiscall` one also `BRE_FNX_<name>`, the `__fastcall` form with a dead `edx`; each global has
-  its `BRE_ADDR_<name>`. Compile with `-DBENILLA_RE_LAYOUT_CHECK` to assert every size and
-  offset. A row it cannot state is left out and counted in the export's output.
+  `_pad` members for the gaps and `__vfptr` where a vtable exists), and the declarations of the
+  functions and globals whose types it can state. It compiles as C and as C++. `::` is written
+  `__`. For code that runs in the client's process, each function has `BRE_ADDR_<name>` (its
+  address) and `BRE_FN_<name>` (a pointer type with its calling convention, MSVC keywords under
+  `_MSC_VER` and attributes for clang and gcc on i386), a `__thiscall` one also `BRE_FNX_<name>`,
+  the `__fastcall` form with a dead `edx`; each global has `BRE_ADDR_<name>` and
+  `BRE_G_<name>`, the global as an lvalue of its type. The top comment shows a call and a global
+  read. The plain declarations (`extern` globals and prototypes) are behind
+  `-DBENILLA_RE_PROTOTYPES`, as nothing in `WoW.exe` can be linked. Compile with
+  `-DBENILLA_RE_LAYOUT_CHECK` to assert every size and offset. A row it cannot state is left out
+  and counted in the export's output.
 - `ghidra/`: `ApplySymbols.java` and `CreateFunctions.java` with the tables they read, and a
   README for running them on your own program.
 - `ida/benilla_re.py` for IDA 9 and `binja/benilla_re.py` for Binary Ninja: each loads the
@@ -144,16 +155,21 @@ writes the same bytes.
   They read `bundle/benilla-re.json` and `benilla-re.h` from beside them and need no checkout.
 - `x64dbg/WoW.exe.dd32`: an x64dbg database of labels and comments for module `wow.exe`, to
   copy into x64dbg's `db` folder.
-- `bundle/`: `symbols/` and `tables/` as TSV, and `benilla-re.json`: `schema` (1), `exe` (name,
-  version, `size`, `sha256`), `commit`, and `tables`, a map from a table's path
-  (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
+- `bundle/`: `symbols/` and `tables/` as TSV, each with its `README.md` (what every column
+  means), and `benilla-re.json`: `schema` (1), `exe` (name, version, `size`, `sha256`), `commit`,
+  `repo` and `site` (the repository's and the site's URLs), and `tables`, a map from a table's
+  path (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
+  `repo` and `site` are additions to schema 1; a reader that ignores unknown keys is unaffected.
+- `docs/` (`METHOD.md`, `CONTRIBUTING.md`) and `systems/` (every system doc): the Markdown a
+  `finding` cell names, so that `net/friends#who-query-tags` is the file
+  `systems/net/friends.md` at its heading, and on the site `d/systems/net/friends.html`.
 - With `--symbols <dir>`, a folder rebased onto another build (Other builds), the export has the
   folder's `symbols/` only: the other tables (opcodes, cvars, bindings, the call tables) hold
   5875's addresses and are left out, `exe` has `size` and `sha256` null and `rebased` true, and
   the header says the addresses are matches, not proof. The scripts apply such a bundle to any
   build and say so.
-- `bundle/signature`: one line per function row, `address`, `name`, `pattern`, `unique`: the
-  masked bytes below.
+- `bundle/signature.tsv`: one line per function row, `address`, `name`, `pattern`, `unique`: the
+  masked bytes below. The row's other columns are in `tables/signatures.tsv`.
 
 ## Other builds
 
@@ -164,7 +180,8 @@ on where the code sits. Wildcards cover the rel32 of a `call`, `jmp` or conditio
 leaves the function (a rel8 that leaves it too, with or without a prefix), and every four-byte
 operand that holds an address in the image (a global, a string, a vtable, a jump table and its
 entries, of any length). The 5875 image has no `.reloc` section, so the decoded
-instructions (`dumps/disasm.txt`) supply them. A pattern is cut to the shortest prefix, at least
+instructions in the listing supply them (`dumps/disasm.txt`, which your clone lacks until
+`tools/disasm.sh` writes it from your exe). A pattern is cut to the shortest prefix, at least
 16 bytes, that occurs once in the executable sections; a body that is shorter, or whose whole
 body occurs more than once, keeps all of it. `unique` says which. A pattern has at least one
 fixed byte. The table also holds each row's `size`, its `calls`, and a `body`: the masked bytes
@@ -262,7 +279,8 @@ proof `one` is one reading of the bytes, proof `two` is two independent readings
 
 Names, findings, corrections and checks are welcome: [CONTRIBUTING.md](docs/CONTRIBUTING.md) covers
 the setup and how a change is judged, and [AGENTS.md](AGENTS.md) is the short version for a
-coding agent working here.
+coding agent working here. A gap or a wrong finding is an issue, and needs no exe
+([CONTRIBUTING.md](docs/CONTRIBUTING.md), "Report a gap or a wrong finding").
 
 ## License
 
