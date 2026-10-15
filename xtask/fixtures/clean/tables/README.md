@@ -86,3 +86,31 @@ Every registered message.
 | `handler` | The function. |
 | `site` | The registering call. |
 | `path` | `A` or `B`. |
+
+## opcode_sends.tsv
+
+Every send of an opcode.
+
+| column | meaning |
+|---|---|
+| `opcode` | The message id, or `?`. |
+| `name` | The message name. |
+| `site` | The send call. |
+| `function` | The function that holds it. |
+| `put` | The instruction that supplies the opcode. |
+| `send` | `A` or `B`. |
+| `notes` | Notes, `;`-separated. |
+
+## opcode_entries.tsv
+
+The entries that cover each handler and send.
+
+| column | meaning |
+|---|---|
+| `opcode` | The message id. |
+| `name` | The message name. |
+| `role` | `handler` or `send`. |
+| `site` | The registration or send call. |
+| `function` | The handler or the function that holds the send. |
+| `entries` | The entries, `<doc>#<anchor>`, `|`-separated. |
+| `basis` | `opcode`, `function` or `unread`. |

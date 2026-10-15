@@ -45,9 +45,9 @@ any other build.
 - **`systems/`**: what each system does, one entry per mechanism, each with the addresses that
   decide it and its derivation; [systems/README.md](systems/README.md) lists them and the doc
   format.
-- **`tables/`**: facts a program reads (opcode handlers, events and their fire sites, CVars,
-  Lua bindings, the message catalogue, DBC stores and layouts, direct calls), each rebuilt from
-  your exe by a generator in `tools/tables/`.
+- **`tables/`**: facts a program reads (opcode handlers, send sites and the entries that cover
+  them, events and their fire sites, CVars, Lua bindings, the message catalogue, DBC stores and
+  layouts, direct calls), each rebuilt from your exe by a generator in `tools/tables/`.
 - **`crates/`**: reimplementations of the client's computations in Rust, a crate per system, each
   tested bit for bit by running the exe's own code beside it in an emulator (`crates/difftest`).
 - **`tools/`**: the listing the findings cite (`tools/disasm.sh`), a Ghidra project with this
@@ -100,8 +100,10 @@ Addresses are written `0x` and lowercase hex, and every page URL is built from t
   - `<site>/cvar/<name>.html` is a CVar with its default, flags, help text and callback
     (`cvar/M2UseZFill.html`); `cvar/index.html` lists them.
   - `<site>/op/<0x and three lowercase hex digits>.html` is an opcode with its handler
-    (`op/0x03a.html`); `op/index.html` lists them. A `name` column in `tables/opcodes.tsv`, once
-    the table has one, shows on the page, the index and in the search.
+    (`op/0x03a.html`); `op/index.html` lists them. The `name` column of `tables/opcodes.tsv` shows
+    on the page, the index and in the search. An opcode the client sends and registers no handler
+    for (`tables/opcode_sends.tsv`) has a page too, and every opcode page lists its send sites and
+    the entries that cover it (`tables/opcode_entries.tsv`).
   - Any other byte in a name is written `%XX`.
 
 An address page has the row's name, signature or type, meaning, confidence and proof, the claim

@@ -1,0 +1,6 @@
+opcode	name	role	site	function	entries	basis
+0x001	SMSG_DEMO	handler	0x402010	0x402000	demo#state-advance	function
+0x001	SMSG_DEMO	send	0x402030	0x402000	demo#state-advance	function
+0x0aa	CMSG_DEMO_SEND	send	0x402010	0x402000	demo#state-advance	opcode
+0x0aa	CMSG_DEMO_SEND	send	0x402020	0x402000	demo#state-advance	opcode
+0x0bb	CMSG_DEMO_OTHER	send	0x402030	0x402000		unread

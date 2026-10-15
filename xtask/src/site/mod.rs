@@ -266,7 +266,11 @@ mod tests {
         assert!(page.contains("CDemo::Advance"));
         assert!(page.contains("href=\"0x002.html\""));
         assert!(page.contains("through the wrapper"));
-        assert!(!site["op/index.html"].contains("<th>name</th>"));
+        let handled = site["op/index.html"]
+            .split("<h2>Sent only")
+            .next()
+            .unwrap_or("");
+        assert!(!handled.contains("<th>name</th>"));
     }
 
     #[test]
@@ -293,6 +297,40 @@ mod tests {
             .expect("others")
             .iter()
             .any(|o| o[0] == "0x001 CMSG_DEMO" && o[1] == "op/0x001.html"));
+    }
+
+    #[test]
+    fn an_opcode_only_sent_has_a_page_with_its_sites_and_entries() {
+        let site = built();
+        let page = &site["op/0x0aa.html"];
+        assert!(page.contains("network message the client sends"));
+        assert!(page.contains("Opcode 0x0aa CMSG_DEMO_SEND"));
+        assert!(page.contains("Sent at <span class=\"dim\">2</span>"));
+        assert!(page.contains("href=\"../a/402000.html#0x402010\""));
+        assert!(page.contains("via-register"));
+        assert!(page.contains("href=\"../d/systems/demo.html#state-advance\""));
+        assert!(page.contains("opcode</span>"));
+        assert!(site["op/0x0bb.html"].contains("no entry"));
+        assert!(site["op/0x0bb.html"].contains("unread"));
+        let index = &site["op/index.html"];
+        assert!(index.contains("Sent only <span class=\"dim\">2</span>"));
+        assert!(index.contains("href=\"0x0aa.html\""));
+        assert!(!site.contains_key("op/%3F.html"));
+        let json: serde_json::Value = serde_json::from_str(&site["index.json"]).expect("json");
+        assert!(json["o"]
+            .as_array()
+            .expect("others")
+            .iter()
+            .any(|o| o[0] == "0x0aa CMSG_DEMO_SEND" && o[1] == "op/0x0aa.html"));
+    }
+
+    #[test]
+    fn a_handled_opcode_page_lists_where_the_client_sends_it() {
+        let site = built();
+        let page = &site["op/0x001.html"];
+        assert!(page.contains("Sent at <span class=\"dim\">1</span>"));
+        assert!(page.contains("handler at"));
+        assert!(page.contains("send at"));
     }
 
     #[test]

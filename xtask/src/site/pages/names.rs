@@ -118,6 +118,10 @@ pub struct Names<'a> {
     pub event: Option<(View<'a>, Vec<Group<'a>>)>,
     pub cvar: Option<(View<'a>, Vec<Group<'a>>)>,
     pub op: Option<(View<'a>, Vec<Group<'a>>)>,
+    /// The opcodes the client sends and registers no handler for, from `opcode_sends`.
+    pub sent: Option<(View<'a>, Vec<Group<'a>>)>,
+    sends: Option<View<'a>>,
+    entries: Option<View<'a>>,
     sites: Option<View<'a>>,
 }
 
@@ -128,11 +132,25 @@ impl<'a> Names<'a> {
             let groups = group(&view, column, keep, fold);
             Some((view, groups))
         };
+        let op = make("opcodes", "opcode", &|_| true, false);
+        let handled: HashSet<&str> = op
+            .iter()
+            .flat_map(|(_, groups)| groups.iter().map(|g| g.name))
+            .collect();
+        let sent = make(
+            "opcode_sends",
+            "opcode",
+            &|n| n != "?" && !handled.contains(n),
+            false,
+        );
         Names {
             lua: make("bindings", "name", &|_| true, true),
             event: make("events", "name", &|_| true, true),
             cvar: make("cvars", "name", &|n| n != "?", true),
-            op: make("opcodes", "opcode", &|_| true, false),
+            op,
+            sent,
+            sends: View::of(model, "opcode_sends"),
+            entries: View::of(model, "opcode_entries"),
             sites: View::of(model, "event_sites"),
         }
     }
@@ -158,6 +176,7 @@ impl<'a> Names<'a> {
         add(&self.event, "event", "event");
         add(&self.cvar, "cvar", "CVar");
         add(&self.op, "op", "opcode");
+        add(&self.sent, "op", "opcode");
         out
     }
 }
@@ -322,6 +341,9 @@ impl Pages<'_> {
         if let Some((view, groups)) = &self.names.op {
             out.push(self.op_index(view, groups));
             out.extend(groups.iter().map(|g| self.op_page(view, g)));
+        }
+        if let Some((view, groups)) = &self.names.sent {
+            out.extend(groups.iter().map(|g| self.op_sent_page(view, g)));
         }
         out
     }
@@ -731,11 +753,106 @@ not a count of what the caller pushed. {}.</p>\n",
             "<p class=\"dim\">{}.</p>\n",
             Self::columns_link(root, "opcodes")
         ));
+        b.push_str(&self.op_extras(g.name, root));
         b.push_str(&self.cited(&tokens, root));
         (
             path.clone(),
             shell(&path, &format!("opcode {}", g.name), &b),
         )
+    }
+
+    /// The page of an opcode the client sends and registers no handler for.
+    fn op_sent_page(&self, v: &View, g: &Group) -> (String, String) {
+        let path = format!("op/{}.html", g.stem);
+        let root = "../";
+        let name = v.get(g.rows[0], "name");
+        let mut b = format!(
+            "<h1>Opcode {}{}</h1>\n<p class=\"sub\">network message the client sends</p>\n",
+            escape(g.name),
+            if name.is_empty() {
+                String::new()
+            } else {
+                format!(" {}", escape(name))
+            }
+        );
+        b.push_str(&self.op_extras(g.name, root));
+        b.push_str(&format!(
+            "<p class=\"dim\">{}.</p>\n",
+            Self::columns_link(root, "opcode_sends")
+        ));
+        b.push_str(&self.cited(&[g.name.to_lowercase()], root));
+        (
+            path.clone(),
+            shell(&path, &format!("opcode {}", g.name), &b),
+        )
+    }
+
+    /// Where the client sends an opcode, and the entries that cover its handler and its sends.
+    fn op_extras(&self, code: &str, root: &str) -> String {
+        let mut out = String::new();
+        if let Some(sends) = &self.names.sends {
+            let rows: Vec<&Vec<String>> = sends
+                .rows
+                .iter()
+                .filter(|r| sends.get(r, "opcode") == code)
+                .collect();
+            if !rows.is_empty() {
+                out.push_str(&format!(
+                    "<h2>Sent at <span class=\"dim\">{}</span></h2>\n<ul>\n",
+                    rows.len()
+                ));
+                for r in rows {
+                    let notes = sends.get(r, "notes");
+                    out.push_str(&format!(
+                        "<li>{}{}</li>\n",
+                        self.places(sends.get(r, "site"), root),
+                        if notes.is_empty() {
+                            String::new()
+                        } else {
+                            format!(" {}", dim(notes))
+                        }
+                    ));
+                }
+                out.push_str("</ul>\n");
+            }
+        }
+        if let Some(entries) = &self.names.entries {
+            let rows: Vec<&Vec<String>> = entries
+                .rows
+                .iter()
+                .filter(|r| entries.get(r, "opcode") == code)
+                .collect();
+            if !rows.is_empty() {
+                out.push_str("<h2>Entries</h2>\n<ul>\n");
+                for r in rows {
+                    let links: Vec<String> = entries
+                        .get(r, "entries")
+                        .split('|')
+                        .filter_map(|e| e.split_once('#'))
+                        .map(|(doc, anchor)| {
+                            format!(
+                                "<a href=\"{root}d/systems/{doc}.html#{anchor}\">{}</a>",
+                                escape(&anchor.replace('-', " "))
+                            )
+                        })
+                        .collect();
+                    let basis = entries.get(r, "basis");
+                    out.push_str(&format!(
+                        "<li>{} at {}: {} {}</li>\n",
+                        escape(entries.get(r, "role")),
+                        self.places(entries.get(r, "site"), root),
+                        if links.is_empty() {
+                            "no entry".to_string()
+                        } else {
+                            links.join(", ")
+                        },
+                        dim(basis)
+                    ));
+                }
+                out.push_str("</ul>\n");
+            }
+        }
+        out
     }
 
     fn op_index(&self, v: &View, groups: &[Group]) -> (String, String) {
@@ -765,6 +882,31 @@ not a count of what the caller pushed. {}.</p>\n",
             ));
         }
         b.push_str("</table></div>\n");
+        if let Some((sv, sent)) = self.names.sent.as_ref().filter(|(_, g)| !g.is_empty()) {
+            let named = sv.has("name");
+            b.push_str(&format!(
+                "<h2>Sent only <span class=\"dim\">{}</span></h2>\n\
+<p>Messages the client sends and registers no handler for. {}.</p>\n\
+<div class=\"scroll\"><table>\n<tr><th>opcode</th>{}<th>send sites</th></tr>\n",
+                sent.len(),
+                Self::columns_link(root, "opcode_sends"),
+                if named { "<th>name</th>" } else { "" }
+            ));
+            for g in sent {
+                b.push_str(&format!(
+                    "<tr><td><a href=\"{}.html\"><code>{}</code></a></td>{}<td>{}</td></tr>\n",
+                    g.stem,
+                    escape(g.name),
+                    if named {
+                        format!("<td>{}</td>", escape(sv.get(g.rows[0], "name")))
+                    } else {
+                        String::new()
+                    },
+                    g.rows.len()
+                ));
+            }
+            b.push_str("</table></div>\n");
+        }
         (path.clone(), shell(&path, "Opcodes", &b))
     }
 }
