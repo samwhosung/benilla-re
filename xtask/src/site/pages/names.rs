@@ -536,13 +536,9 @@ has one page for all of them. {}.</p>\n",
             sites.len()
         ));
         if sites.is_empty() {
-            b.push_str(&format!(
-                "<p class=\"dim\">No call to the dispatcher names this event. {}</p>\n",
-                self.linker.text(
-                    "An event fired through the wrapper 0x515e50 has no site of its own.",
-                    root
-                )
-            ));
+            b.push_str(
+                "<p class=\"dim\">No fire site names this event; the doc entry ui/script, Events no site fires, gives the census.</p>\n",
+            );
         } else if let Some(s) = &self.names.sites {
             b.push_str(
                 "<div class=\"scroll\"><table>\n<tr><th>site</th><th>dispatcher</th><th>argument format</th><th>other events at the site</th></tr>\n",

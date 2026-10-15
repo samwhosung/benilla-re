@@ -132,19 +132,20 @@ than in `events.tsv`. Columns as in `events.tsv`.
 ## event_sites.tsv
 
 Every call or tail jump to `FrameScript_SignalEvent 0x703e50` or `FrameScript_SignalEvent2 0x703f50` (485
-sites, 149 of them `SignalEvent2`).
+sites, 149 of them `SignalEvent2`; no other code references either function).
+`../tools/tables/event_sites.py` opens with the contract: it walks back from each site to every
+definition of the id, through the callers of a function whose parameter it is and the
+registrations of a watcher callback, and stops, listing them, if any site's id is left unresolved.
 
 | column | meaning |
 |---|---|
 | `site` | The `call` or `jmp`. |
 | `dispatcher` | `SignalEvent` (id in `ecx`, no arguments) or `SignalEvent2` (id and a printf-style format on the stack, then the arguments). |
-| `event_ids` | Every id that reaches the site along any path, ascending, `|`-separated; `?` where the id is a parameter or a table lookup. |
+| `event_ids` | Every id that reaches the site along any path, ascending, `|`-separated. |
 | `event_names` | The names, in the same order; empty where an id has no name. |
 | `arg_format` | The format string `SignalEvent2` is given: a declaration, not a count of what the caller pushed. Empty for `SignalEvent`. |
 | `space` | `glue` for a site in glue's object files (`0x46a260` to `0x475b50`), named from `glue_events.tsv`; otherwise `game`, named from `events.tsv`. |
-
-An event with no row here may still be fired: the unit-field events reach the dispatcher through
-a wrapper, `0x515e50`, which is the `?` row at `0x515e7a`.
+| `notes` | How a computed id reaches the site, `;`-separated; empty for an id that is a constant in the site's function. `table-<T>`: an entry of the dword table `T` at an index the code bounds (`0x49b199` reads `0x8062e0` at the chat types 0 to 93). `through-<F>`: a register parameter of `F`, the values every call to `F` passes (`0x515e7a`, the unit-token fan-out `0x515e50`). `watch-arg-<F>`: the argument a field watcher callback `F` is registered with (`0x5de4c1` in `0x5de4b0`). `watch-offset-<F>`: the field offset a watcher callback `F` is registered on, divided by 4 (`0x51bd50`). `byte-plus-<K>`: K plus a byte the code does not bound, whose values `event_ids` leaves out (a unit's power type, 17 + type and 23 + type). |
 
 ## chat_types.tsv
 
@@ -290,7 +291,7 @@ from it.
 
 ## event_args.tsv
 
-The arguments each event hands to Lua (394 rows, one per event name in `events.tsv`).
+The arguments each event hands to Lua (394 rows, one per event name in `events.tsv`; 388 with a producer).
 `../tools/tables/event_args.py` opens with the contract. A shape is a printf-style format: `%s`
 a string, `%d` and `%f` numbers; `()` is no values.
 
@@ -298,9 +299,9 @@ a string, `%d` and `%f` numbers; `()` is no values.
 |---|---|
 | `name` | The event name. Sorted. |
 | `ids` | Every id of the name that a producer reaches or `events.tsv` holds, ascending, `\|`-separated. |
-| `producers` | `signal` (a `SignalEvent` site), `signal2` (a `SignalEvent2` site, its format is the shape), `unit-field-bridge` (the watch on each named id below `0xb6`, shape `%s`) and `token-fanout` (a call to `0x515e50` with a literal id, shape `%s`); sorted, `\|`-separated. |
+| `producers` | `signal` (a `SignalEvent` site), `signal2` (a `SignalEvent2` site, its format is the shape), `unit-field-bridge` (the watch on each named id below `0xb6`, shape `%s`) and `token-fanout` (a call to `0x515e50` with a literal id, shape `%s`); sorted, `\|`-separated. The ids of the fan-out's own site, `0x515e7a`, are credited to the last two. |
 | `arg_formats` | Each distinct shape of the producers, sorted, `\|`-separated; `?` where no producer reaches the name. An event with two shapes carries both; which one fires depends on the transition. |
-| `conf` | `exact`: every producer's shape is known. `advisory`: a site's format declares more values than its caller pushes, which hands Lua whatever lies above the last push. `none`: no producer reaches the name here, which is not a claim it has none. |
+| `conf` | `exact`: every producer's shape is known. `advisory`: a site's format declares more values than its caller pushes, which hands Lua whatever lies above the last push. `none`: no fire site reaches the name (`../systems/ui/script.md`, "Events no site fires"). |
 | `note` | For `advisory`, each site and the counts it declares and passes; joined with `; `. |
 
 A site that `event_sites.tsv` gives several ids contributes its shape to each named id. A site in

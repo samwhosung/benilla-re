@@ -6,7 +6,8 @@ One row per event name in events.tsv. A producer is one of four things:
   signal             a `FrameScript_SignalEvent 0x703e50` site (id in `ecx`, no arguments): zero
                      Lua values, written `()`.
   signal2            a `FrameScript_SignalEvent2 0x703f50` site: the site's format string, from
-                     event_sites.tsv, is the shape.
+                     event_sites.tsv, is the shape. Its ids are the ones event_sites.tsv gives
+                     it, computed ones included (the chat type table, a watcher's argument).
   unit-field-bridge  `0x51bbb0` registers a watch for every named event id below the bound of
                      its loop (`cmp esi,0xb6` before the `jl` to the loop head); the watch
                      callback `0x51bd50` calls `0x515e50`, which fans out over the unit tokens
@@ -14,6 +15,11 @@ One row per event name in events.tsv. A producer is one of four things:
   token-fanout       a call or tail jump to `0x515e50` with a literal id in `edx`: the same
                      fan-out, shape `%s`. An id computed from a byte (`0x11 + n`, `0x17 + n`) is
                      not read.
+
+The fan-out's own site, `0x515e7a` in `0x515e50`, is the one row of event_sites.tsv whose ids
+come through `0x515e50`'s parameter (note `through-0x515e50`). Its ids are credited to the two
+fan-out producers above, not to `signal2`, and the generator stops unless they are exactly the
+named ids the two producers reach: two readings of one set.
 
 `ids` is every id of the name that a producer reaches or the name table holds, ascending and
 `|`-separated. A site that event_sites.tsv gives several ids contributes its shape to each
@@ -23,8 +29,9 @@ producer reaches the name.
 
 `conf` is `exact` (every producer's shape is known), `advisory` (a contributing site's format
 declares more values than its caller pushes, found as tools/event-args.py finds it; the script
-reads whatever lies above the last push) or `none` (no producer reaches the name here, which does
-not mean it has none). `note` says which sites declare more than they push, `;`-separated.
+reads whatever lies above the last push) or `none` (no fire site reaches the name: event_sites.py
+resolves every site's id or stops). `note` says which sites declare more than they push,
+`;`-separated.
 """
 
 import re
@@ -91,10 +98,13 @@ def main():
         if text and text not in e['notes']:
             e['notes'].append(text)
 
-    glue = 0
+    glue, through = 0, set()
     for r in read_tsv(Path(args.tables) / 'event_sites.tsv'):
         if r['space'] == 'glue':
             glue += 1
+            continue
+        if 'through-%s' % addr(FANOUT) in r['notes'].split(';'):
+            through.update(int(e) for e in r['event_ids'].split('|') if int(e) in names)
             continue
         two = r['dispatcher'] == 'SignalEvent2'
         fmt = (r['arg_format'] or NONE) if two else NONE
@@ -114,12 +124,15 @@ def main():
                 add(name, int(eid), 'signal2' if two else 'signal', fmt, text)
 
     bound = bridge_bound(dis)
-    for eid, name in names.items():
-        if eid < bound:
-            add(name, eid, 'unit-field-bridge', '%s')
-    for eid in sorted(fanout_ids(dis)):
-        if eid in names:
-            add(names[eid], eid, 'token-fanout', '%s')
+    fanout = {eid for eid in fanout_ids(dis) if eid in names}
+    bridge = {eid for eid in names if eid < bound}
+    if through != bridge | fanout:
+        raise SystemExit('event_args: control failed: the fan-out site gives %s, the producers %s'
+                         % (sorted(through ^ (bridge | fanout)), 'differ there'))
+    for eid in sorted(bridge):
+        add(names[eid], eid, 'unit-field-bridge', '%s')
+    for eid in sorted(fanout):
+        add(names[eid], eid, 'token-fanout', '%s')
     for eid, name in names.items():
         add(name, eid, None, None)
 
