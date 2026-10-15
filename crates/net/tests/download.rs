@@ -133,7 +133,7 @@ impl<'a> Rig<'a> {
         });
         let d = disk.clone();
         e.stub_fn(slots[1], 5, move |c| {
-            let i = which(files, (c.reg(RegisterX86::ECX) as u32));
+            let i = which(files, c.reg(RegisterX86::ECX) as u32);
             let got = d.borrow_mut().files[i]
                 .as_mut()
                 .and_then(|f| f.read(c.arg(1), c.arg(2), c.arg(3)));
@@ -148,7 +148,7 @@ impl<'a> Rig<'a> {
         });
         let d = disk.clone();
         e.stub_fn(slots[2], 4, move |c| {
-            let i = which(files, (c.reg(RegisterX86::ECX) as u32));
+            let i = which(files, c.reg(RegisterX86::ECX) as u32);
             let src = c.read(u64::from(c.arg(0)), c.arg(3) as usize);
             let ok = d.borrow_mut().files[i]
                 .as_mut()
@@ -157,7 +157,7 @@ impl<'a> Rig<'a> {
         });
         let d = disk.clone();
         e.stub_fn(slots[4], 1, move |c| {
-            let i = which(files, (c.reg(RegisterX86::ECX) as u32));
+            let i = which(files, c.reg(RegisterX86::ECX) as u32);
             let n = d.borrow_mut().files[i].as_mut().map_or(0, |f| f.size());
             let out = u64::from(c.arg(0));
             c.write(out, &n.to_le_bytes());
@@ -165,7 +165,7 @@ impl<'a> Rig<'a> {
         });
         let d = disk.clone();
         e.stub_fn(slots[5], 2, move |c| {
-            let i = which(files, (c.reg(RegisterX86::ECX) as u32));
+            let i = which(files, c.reg(RegisterX86::ECX) as u32);
             let ok = d.borrow_mut().files[i]
                 .as_mut()
                 .is_some_and(|f| f.set_size(c.arg(0), c.arg(1)));
@@ -178,7 +178,7 @@ impl<'a> Rig<'a> {
         };
         let d = disk.clone();
         e.stub_fn(FILE_EXISTS, 0, move |c| {
-            let partial = partial_path(c, (c.reg(RegisterX86::ECX) as u32));
+            let partial = partial_path(c, c.reg(RegisterX86::ECX) as u32);
             u32::from(d.borrow().exists(partial))
         });
         let (d, l) = (disk.clone(), log.clone());
@@ -329,7 +329,7 @@ fn download_release_chain() {
         let l = log.clone();
         e.stub_fn(slot, 1, move |c| {
             assert_eq!(c.arg(0), 1, "the deleting flag");
-            l.borrow_mut().push((c.reg(RegisterX86::ECX) as u32));
+            l.borrow_mut().push(c.reg(RegisterX86::ECX) as u32);
             0
         });
     }
