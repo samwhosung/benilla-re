@@ -38,3 +38,25 @@ Proof: one
 Test: none
 
 `0x5bdc18` pushes `0x1f4` and `0x5bdc23` waits on the semaphore at `+0x634`; a non-zero result jumps to the return (`0x5bdc2a`). `0x5bdc3f` stores the bits in `+0xe0`; the slot scan at `0x5bdc53` to `0x5bdc74` takes the first slot whose connection field `+0x1c` is zero, stores the connection (`0x5bdc8c`) and sets the event at `+0x20` (`0x5bdc97`). In `0x5bdb50`, `0x5bdb80` waits `0x3e8` on the slot event and loops while it times out; `0x5bdb96` tests the stop flag `+0x24`; `0x5bdbb2` calls `0x5bdae0` with the connection and the bits. `0x5bdaf2` to `0x5bdb1d` test bits 1, 2, 4 and 8; `0x5bdb29` takes `+0xe0` again under the lock `+0x610` and loops when it is not zero. `0x5bdbf4` calls `0x5bcad0`, the wake byte.
+
+## Random address pick
+
+`ConnectToRandomAddress` (`0x5bc2b0`, entries, count, callback) dials one of `count` 16-byte socket addresses. It seeds a random state with the clock's seconds, advances it once with the steps of `0x4531e0` written inline (`random`), and takes entry `acc mod count`, passing its address and its port, put in host order by `0x43f4d0`, to `ClientLink::ConnectToAddress` (`0x5bc250`). A null list or a count of 0 calls the callback's slot 3 with three zeros instead. `AlignUpToMultiple` (`0x5bd4d0`, value, multiple) rounds the value up to a multiple, the add wrapping.
+
+Addresses: `0x5bc2b0`, `0x5bc2d1`, `0x5bc2da`, `0x5bc392`, `0x5bc3a5`, `0x5bc3b2`, `0x5bc3cb`, `0x5bd4d0`, `0x5bcdc6`
+Confidence: verified
+Proof: one
+Test: `net::address_random_pick`, `net::address_align_up`
+
+`0x5bc2d1` is `GetUnixTime` and `0x5bc2da` `NTempest::CRndSeed::SetSeed` into a local state; `0x5bc2df` to `0x5bc38b` are the lane steps (4, 12, 24, 28 with the moduli `0xbc`, `0xd4`, `0xec`, `0xf4`), the four byte-offset reads of `0x802700`, the rotations by 1, 2 and 3 and the add to the seed. `0x5bc392` is `div` by the count; the remainder times 16 indexes the entries. `0x5bd4d0` is `div` and, for a nonzero remainder, `sub ecx,edx; add esi,ecx`; a multiple of 0 faults; `0x5bcdc6` is its caller in the select loop. The tests run both whole, the clock, `ntohs` and the dial stubbed.
+
+## Socket bitmap and callback bracket
+
+`MarkSocketOpen` (`0x5b6330`, socket in `ecx`) sets bit `fd & 31` of word `fd >> 5` of the bitmap `[0xc2a378]`, under the lock `0xc2a354`; a negative socket does nothing. `WowConnection::BeginCallback` (`0x5b7260`) adds one to the running callbacks at `+0xb4` and records the thread at `+0xb8`; `EndCallback` (`0x5b7290`) subtracts one and, when `+0xbc` holds a value, moves it to `+0x14` and clears `+0xbc`, whatever the count. Both run under the connection's lock `+0x9c`.
+
+Addresses: `0x5b6330`, `0x5b6335`, `0x5b6359`, `0xc2a378`, `0xc2a354`, `0x5b7080`, `0x5b7260`, `0x5b7290`, `0x5b72b6`
+Confidence: verified
+Proof: one
+Test: `net::connection_mark_socket`, `net::connection_callback_bracket`
+
+`0x5b6335` is `jl` on the socket; `0x5b6349` to `0x5b6360` index the word and `shl edx,cl` the bit (`0x5b6359`). The platform start `0x5b7080` sizes the bitmap to `0x800` words and zeroes it (`0x5b70c5`). `0x5b7271` is `inc [esi+0xb4]` and `0x5b727f` stores `GetCurrentThreadId`; `0x5b72ad` decrements and `0x5b72b6` skips the move for a zero `+0xbc`. The tests run the three functions whole for sockets 0 to 1023 and negative ones, and depths 0, 1, 2 and the wrap.

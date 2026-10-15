@@ -274,6 +274,7 @@ name = "benilla-re-net"
 version = "0.1.0"
 dependencies = [
  "benilla-re-difftest",
+ "benilla-re-random",
  "num-bigint",
 ]
 

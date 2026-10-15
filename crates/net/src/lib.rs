@@ -7,7 +7,9 @@
 
 #![forbid(unsafe_code)]
 
+mod addresslist;
 mod cipher;
+mod connection;
 mod datastore;
 mod digest;
 mod framing;
@@ -22,7 +24,9 @@ mod srp;
 mod srp_helpers;
 mod srp_session;
 
+pub use addresslist::*;
 pub use cipher::*;
+pub use connection::*;
 pub use datastore::*;
 pub use digest::*;
 pub use framing::*;

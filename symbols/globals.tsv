@@ -3684,6 +3684,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2a2a4	uint32_t	s_localeTag		dbc	Holds the four bytes of the configured country and language packed into a dword	verified	one	dbc#localized-strings
 0xc2a2d0	uint32_t[3]	s_netClientList		net	Holds the list of NetClients the poll walks; its head word is at +8	verified	one	net/dispatch#main-thread-drain
 0xc2a314	uint8_t[24]	s_netClientListLock		net	Holds the critical section around the NetClient list	inferred	none	net/dispatch#main-thread-drain
+0xc2a354	uint8_t[24]	s_socketBitmapLock		net	Holds the lock over the open-socket bitmap	verified	one	net/threads#socket-bitmap-and-callback-bracket
+0xc2a378	uint32_t *	s_openSocketBits		net	Points at the open-socket bitmap, 0x800 words the platform start sizes and zeroes	verified	one	net/threads#socket-bitmap-and-callback-bracket
 0xc2a3b8	uint32_t	s_latencyMin		net	Holds the least simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
 0xc2a3bc	uint32_t	s_latencyMax		net	Holds the greatest simulated delay in milliseconds; zero-filled and never written	verified	one	net/wire#simulated-latency
 0xc2a3c4	uint32_t	s_initUnitCount		net	Counts the object files whose static initializers ran the shared unit count	inferred	none	net/layout#shared-helpers
