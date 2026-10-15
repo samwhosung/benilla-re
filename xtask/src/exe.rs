@@ -149,6 +149,22 @@ pub fn run(root: &Path, checked: &Checked) -> io::Result<Outcome> {
         problems.extend(found);
     }
 
+    if listing_path.exists() {
+        let listing = Listing::read(&listing_path)?;
+        let text = signature_table(checked, &listing, &exe)?;
+        if fs::read_to_string(root.join("tables").join("signatures.tsv"))
+            .ok()
+            .as_deref()
+            != Some(text.as_str())
+        {
+            problems.push(problem(
+                "tables/signatures.tsv:1",
+                "differs from what `cargo xtask signatures` writes from the exe",
+            ));
+        }
+        summary.push(format!("{} signatures", text.lines().count() - 1));
+    }
+
     let (found, regenerated) = tables::regenerate(&root, &exe)?;
     summary.push(format!("{regenerated} tables regenerated"));
     problems.extend(found);
@@ -175,6 +191,18 @@ pub fn functions(checked: &Checked) -> Vec<bodies::Function> {
             })
         })
         .collect()
+}
+
+/// The text of `tables/signatures.tsv` for the function rows, from the exe and the listing.
+pub fn signature_table(checked: &Checked, listing: &Listing, exe: &Path) -> io::Result<String> {
+    let bytes = fs::read(exe)?;
+    let pe = crate::signature::Pe::parse(&bytes).map_err(io::Error::other)?;
+    let rows: Vec<(u32, u32)> = functions(checked)
+        .iter()
+        .map(|f| (f.address, f.size))
+        .collect();
+    let signatures = crate::signature::generate(&pe, listing, &rows).map_err(io::Error::other)?;
+    Ok(crate::signature::table(&signatures))
 }
 
 /// Writes `dumps/disasm.txt` with `tools/disasm.sh`; a problem if it fails.

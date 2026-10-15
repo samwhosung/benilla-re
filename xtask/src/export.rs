@@ -4,7 +4,8 @@
 //! - `ghidra/`: the Ghidra scripts `tools/ghidra/setup.sh` runs, with the tables they read.
 //! - `ida/benilla_re.py`, `binja/benilla_re.py`: scripts for IDA 9 and Binary Ninja that apply
 //!   the names, types and comments to the reader's own program.
-//! - `bundle/`: the tables as TSV and as one `benilla-re.json` (`bundle`).
+//! - `bundle/`: the tables as TSV and as one `benilla-re.json` (`bundle`), and `signature`, each
+//!   function row's byte pattern with its name (`signature.rs`).
 //! - `x64dbg/WoW.exe.dd32`: the labels and comments as an x64dbg database (`x64dbg`).
 //!
 //! The scripts are read from `tools/`; every output is a function of the tree, so the same tree
@@ -23,10 +24,10 @@ use std::fs;
 use std::io;
 use std::path::Path;
 use std::process::Command;
-use table::Table;
+pub use table::Table;
 
 /// The `symbols/` tables, in the order the bundle lists them.
-const SYMBOLS: [&str; 4] = ["functions", "globals", "structs", "fields"];
+pub const SYMBOLS: [&str; 4] = ["functions", "globals", "structs", "fields"];
 
 /// Files of `tools/` the export copies, as `(source, output)`.
 const SCRIPTS: [(&str, &str); 5] = [
@@ -97,11 +98,12 @@ fn commit(root: &Path) -> Result<String, String> {
 }
 
 /// Reads the tree.
-pub fn read(root: &Path) -> Result<Sources, String> {
+pub fn read(root: &Path, symbols_dir: Option<&Path>) -> Result<Sources, String> {
     let io = |e: io::Error| e.to_string();
     let mut symbols = Vec::new();
     for name in SYMBOLS {
-        let path = root.join("symbols").join(format!("{name}.tsv"));
+        let dir = symbols_dir.map_or_else(|| root.join("symbols"), Path::to_path_buf);
+        let path = dir.join(format!("{name}.tsv"));
         symbols.push((
             name.to_string(),
             fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?,
@@ -115,9 +117,14 @@ pub fn read(root: &Path) -> Result<Sources, String> {
             fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?,
         ));
     }
+    let mut tables = tsv_files(&root.join("tables")).map_err(io)?;
+    if symbols_dir.is_some() {
+        // The signatures are those of 5875's addresses, which the folder's rows do not have.
+        tables.retain(|(name, _)| name != "signatures");
+    }
     Ok(Sources {
         symbols,
-        tables: tsv_files(&root.join("tables")).map_err(io)?,
+        tables,
         scripts,
         origin: Origin {
             exe_size: exe::size(),
@@ -164,15 +171,49 @@ pub fn build(sources: &Sources) -> Result<Built, String> {
     for (path, text) in &sources.scripts {
         files.insert(path.clone(), text.clone());
     }
+    if let Some((_, text)) = sources.tables.iter().find(|(name, _)| name == "signatures") {
+        let functions = parsed.get("functions").ok_or("no functions table")?;
+        files.insert(
+            "bundle/signature".to_string(),
+            signature_file(functions, text)?,
+        );
+    }
     Ok(Built {
         files,
         report: header.report,
     })
 }
 
+/// `bundle/signature`: `address`, `name`, `pattern` and `unique` of every function row, from the
+/// signatures table and the names in the functions table. A row with no name is `FUN_` and its
+/// address, as the other exports name it.
+fn signature_file(functions: &Table, signatures: &str) -> Result<String, String> {
+    let address = functions.column("address")?;
+    let name = functions.column("name")?;
+    let names: BTreeMap<&str, &str> = functions
+        .rows
+        .iter()
+        .map(|r| (r[address].as_str(), r[name].as_str()))
+        .collect();
+    let table = Table::parse("tables/signatures.tsv", signatures)?;
+    let mut out = String::from("address\tname\tpattern\tunique\n");
+    for row in &table.rows {
+        let Some(&n) = names.get(row[0].as_str()) else {
+            continue;
+        };
+        let n = if n.is_empty() {
+            format!("FUN_{:0>8}", row[0].trim_start_matches("0x"))
+        } else {
+            n.to_string()
+        };
+        out.push_str(&format!("{}\t{n}\t{}\t{}\n", row[0], row[2], row[1]));
+    }
+    Ok(out)
+}
+
 /// Writes the export under `out`.
-pub fn run(root: &Path, out: &Path) -> io::Result<bool> {
-    let built = read(root)
+pub fn run(root: &Path, out: &Path, symbols_dir: Option<&Path>) -> io::Result<bool> {
+    let built = read(root, symbols_dir)
         .and_then(|sources| build(&sources))
         .map_err(io::Error::other)?;
     for (path, text) in &built.files {

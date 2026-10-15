@@ -9,7 +9,9 @@ mod export;
 mod fill;
 mod globals;
 mod listing;
+mod matcher;
 mod objfiles;
+mod signature;
 mod site;
 mod tables;
 mod tree;
@@ -25,7 +27,9 @@ usage: cargo xtask check [--exe]
        cargo xtask vendored <benilla checkout> [--strict]
        cargo xtask listing <GNU objdump> <output>
        cargo xtask site <output directory>
-       cargo xtask export <output directory>
+       cargo xtask export <output directory> [--symbols <symbols folder>]
+       cargo xtask signatures
+       cargo xtask match <exe> <output directory>
 
 check         the symbol table and the system docs against their formats; runs anywhere
 check --exe   also identifies WoW/WoW.exe (or $BENILLA_RE_WOW_EXE), checks every function
@@ -65,7 +69,13 @@ export        writes the symbol table as files other tools start from, the same 
               globals), ghidra/ (the Ghidra scripts and the tables they read), ida/ and
               binja/ (a script each, applying the names, types and comments), x64dbg/ (a
               database of labels and comments), and bundle/ (the symbols/ and tables/ TSVs,
-              and one benilla-re.json holding them all); needs no exe
+              and one benilla-re.json holding them all, and signature, the byte patterns);
+              needs no exe; --symbols reads the symbol tables from a folder, as `match` writes
+signatures    writes tables/signatures.tsv: each function row's masked byte pattern, from your
+              WoW.exe and dumps/disasm.txt
+match         finds the function rows in another build's executable sections by their patterns
+              and writes match.tsv (found, missing or ambiguous per row) and a symbols/ folder
+              rebased onto that build, into the output directory; reads no 5875 exe
 ";
 
 fn main() -> ExitCode {
@@ -96,7 +106,12 @@ fn main() -> ExitCode {
         ["cited", benilla, "--strict"] => cited(&root, Path::new(benilla), false, true),
         ["vendored", benilla] => vendored::run(&root, Path::new(benilla), false),
         ["vendored", benilla, "--strict"] => vendored::run(&root, Path::new(benilla), true),
-        ["export", out] => export::run(&root, Path::new(out)),
+        ["export", out] => export::run(&root, Path::new(out), None),
+        ["export", out, "--symbols", dir] => {
+            export::run(&root, Path::new(out), Some(Path::new(dir)))
+        }
+        ["signatures"] => signatures(&root),
+        ["match", build, out] => matcher::run(&root, Path::new(build), Path::new(out)),
         ["listing", objdump, out] => listing(&root, Path::new(objdump), Path::new(out)),
         ["site", out] => site(&root, Path::new(out)),
         _ => {
@@ -256,6 +271,20 @@ fn assign(root: &Path, idb: Option<&Path>) -> std::io::Result<bool> {
     for (system, n) in &done.systems {
         println!("  {n} {system}");
     }
+    Ok(true)
+}
+
+fn signatures(root: &Path) -> std::io::Result<bool> {
+    let exe = exe::locate(root);
+    if exe::identify(&exe)? != exe::Identity::Reference {
+        eprintln!("xtask: {} is not WoW.exe 1.12.1.5875", exe.display());
+        return Ok(false);
+    }
+    let checked = check::run(&tree::Disk::new(root))?;
+    let listing = bodies::Listing::read(&root.join("dumps").join("disasm.txt"))?;
+    let text = exe::signature_table(&checked, &listing, &exe)?;
+    std::fs::write(root.join("tables").join("signatures.tsv"), &text)?;
+    println!("{} signatures", text.lines().count() - 1);
     Ok(true)
 }
 

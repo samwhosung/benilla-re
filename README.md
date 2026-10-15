@@ -145,6 +145,39 @@ writes the same bytes.
 - `bundle/`: `symbols/` and `tables/` as TSV, and `benilla-re.json`: `schema` (1), `exe` (name,
   version, `size`, `sha256`), `commit`, and `tables`, a map from a table's path
   (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
+- `bundle/signature`: one line per function row, `address`, `name`, `pattern`, `unique`: the
+  masked bytes below.
+
+## Other builds
+
+Every row is keyed to 1.12.1.5875, but a function's bytes are mostly the same in a modified
+1.12 client, in 1.12.2 and 1.12.3, and in 1.6 to 1.11. `tables/signatures.tsv` gives each
+function row a pattern: the body's bytes, hex and spaced, with `??` for each byte that depends
+on where the code sits. Wildcards cover the rel32 of a `call`, `jmp` or conditional jump that
+leaves the function, and every four-byte operand that holds an address in the image (a global, a
+string, a vtable, a jump-table entry). The 5875 image has no `.reloc` section, so the decoded
+instructions (`dumps/disasm.txt`) supply them. A pattern is cut to the shortest prefix, at least
+16 bytes, that occurs once in the executable sections; a body that is shorter, or whose whole
+body occurs more than once, keeps all of it. `unique` says which.
+
+```
+cargo xtask match <exe> <out>
+```
+
+reads any PE, searches its executable sections for every pattern, and writes `<out>/match.tsv`
+(`address` in 5875, `name`, `found`: the address in that build, `missing`, or `ambiguous` for two
+or more matches or a shared address) and `<out>/symbols/`, the tables with each found function at
+its new address and the others left out. Structs and fields are copied; globals have no pattern,
+so that table is empty. `cargo xtask export <dir> --symbols <out>/symbols` writes the header, the
+scripts' inputs and the database from it. It needs no 5875 exe, only the checkout.
+
+On 5875 itself 15,076 of the 37,967 rows have a unique pattern and the matcher finds all 15,076 at
+their own address. The other 22,891 are indistinguishable by their bytes (the `jmp` thunks, the
+static initializers, the one-line accessors) and report `ambiguous`. A test patches, swaps and
+copies bodies in the 5875 image and checks the found, missing and ambiguous counts. No other
+build has been run through it yet; a count from one belongs here. A found row is a match of
+bytes, not a proof that the function is the same: a changed body can still match, and a row's
+`size` is 5875's.
 
 ## How to trust it
 
