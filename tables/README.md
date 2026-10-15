@@ -14,7 +14,8 @@ python3 tools/tables/<name>.py -o tables/<name>.tsv
 The generators are Python 3 with the standard library only. They read `WoW/WoW.exe` (they refuse
 any other build, by size and SHA-256) and, for the ones that read instructions, `dumps/disasm.txt`,
 which `regen.sh` writes with `../tools/disasm.sh` when it is missing. Each run twice gives
-byte-identical output. Options on every generator: `--exe PATH`, `--disasm PATH`, `-o PATH`.
+byte-identical output. Options on every generator: `--exe PATH`, `--disasm PATH`, `--tables DIR` (where a generator that
+reads other tables finds them), `-o PATH`.
 
 `cargo xtask vendored <benilla checkout>` compares the copies a consumer keeps with these files
 (Vendored copies, below).
@@ -150,7 +151,7 @@ row where the run cannot go on.
 | `script_hidden` | The fifth stack argument: 0 for a variable Lua can read, 1 for one it cannot. `CVar::Register` sets flag bit 31 when it is 0, and the script lookup `0x63dec0` finds only records with that bit. |
 | `callback_arg` | The argument passed to the callback. |
 | `record` | The global that receives the returned record; empty if the result is not stored, `|`-joined if two stores follow. |
-| `help` | The help text; empty for none. |
+| `help` | The help text; empty for no help pointer and for a pointer to the empty string (the `CombatLogRange` rows point at 0x882748, `""`). |
 | `notes` | `<field>-computed` (not a constant at the site), `<field>-not-a-string`, `default-conditional`, `record-ambiguous`, `looped` (one of several registrations at the site), `name-built` (the name is made in a buffer, so `name_address` is empty). |
 
 ## dbc_stores.tsv
@@ -250,14 +251,14 @@ a string, `%d` and `%f` numbers; `()` is no values.
 | `producers` | `signal` (a `SignalEvent` site), `signal2` (a `SignalEvent2` site, its format is the shape), `unit-field-bridge` (the watch on each named id below `0xb6`, shape `%s`) and `token-fanout` (a call to `0x515e50` with a literal id, shape `%s`); sorted, `\|`-separated. |
 | `arg_formats` | Each distinct shape of the producers, sorted, `\|`-separated; `?` where no producer reaches the name. An event with two shapes carries both; which one fires depends on the transition. |
 | `conf` | `exact`: every producer's shape is known. `advisory`: a site's format declares more values than its caller pushes, which hands Lua whatever lies above the last push. `none`: no producer reaches the name here, which is not a claim it has none. |
-| `note` | For `advisory`, each site and the counts it declares and passes; `;`-separated. |
+| `note` | For `advisory`, each site and the counts it declares and passes; joined with `; `. |
 
 A site that `event_sites.tsv` gives several ids contributes its shape to each named id. A site in
 the glue space is left out: its ids name other events.
 
 ## verb_events.tsv
 
-The events a Lua verb fires (49 rows). `../tools/tables/verb_events.py` opens with the contract: a
+The events a Lua verb fires (50 rows). `../tools/tables/verb_events.py` opens with the contract: a
 verb is a `bindings.tsv` row outside the glue object files and not a getter, and a site belongs
 to the function row that holds it. A floor, not a census.
 
@@ -301,22 +302,36 @@ addons) defines. It is a capture of the running client's `_G` in the world, unio
 global the interface files define. The generator is `../tools/tables/lua_globals.py`; its header
 carries the attribution rules.
 
+The capture: sha256 `ce7f68773860bfaff6e9b8300c250ccc8f69ae107df4d459469b466179046d75`, a
+saved-variables file written on 2026-06-20 by an addon that walks `_G` once the player is in the
+world. Its `meta` records client build 1.12.1.5875 and locale `enUS`; it holds 19,572 globals.
+The capture does not record which load-on-demand windows were open; a name only the interface
+files define is a `lod` row. A later write of the same
+file (sha256 `4ba3f3c33ebf37c95e14e56daf6ba5cc4d9eccec939047f1e1be524e1341c14d`) holds the
+same 19,572 names and yields the same table.
+
+Three of its globals are the addon's own, so the instrument and not the client, and are dropped
+with `--drop`: its saved variable (the one top-level table of the capture file), its holder
+table (a global the addon keeps its state in), and its slash-command token
+(`SLASH_<token>1`). The generator stops if a dropped name is not in the capture. 19,569 names
+remain.
+
 Regenerate:
 
 ```
 BENILLA_RE_GLOBALS_CAPTURE=<capture file> \
 BENILLA_RE_INTERFACE_DIRS=<framexml folder>:<addons folder> \
-python3 tools/tables/lua_globals.py --drop <holder frame> --drop <saved variable> \
+python3 tools/tables/lua_globals.py --drop <saved variable> --drop <holder table> \
     --drop <slash token> -o tables/lua_globals.tsv
 ```
 
-The capture is a saved-variables file written by an addon that walks `_G` in the world. The
-globals of that addon (its holder frame, its saved variable and its slash token) are the
-instrument, not the client, and are dropped with `--drop`. The folders hold the extracted
-interface: every `.lua` and `.xml` under each is read, and the addons are the twelve folders the
-client ships inside its archives, with only the files their `.toc` and XML reach. The
-load-on-demand addons' windows may not have been opened, so every name the interface files define
-that the capture lacks is a row with type `lod`.
+The folders hold the extracted `enUS` interface: the FrameXML folder with its `FrameXML.toc`, and
+a folder of the twelve `Blizzard_*` addons, each with its `.toc`. Reading follows the `.toc` and
+the XML references from each addon's root, as the client loads them (219 files); a file on disk
+that nothing references is not read and is listed on standard error, so an extra file in an
+extraction cannot add a row (`Bindings.xml` is one such file in FrameXML: its names are key-binding
+commands, not globals). A referenced file that is missing stops the run. Every name the
+interface files define that the capture lacks is a row with type `lod` (1,986 rows).
 
 | column | meaning |
 |---|---|
@@ -328,8 +343,11 @@ that the capture lacks is a row with type `lod`.
 
 A consumer that keeps copies of these tables pins a commit of this repo and keeps each copy byte
 for byte equal to the table at that commit. `cargo xtask vendored <checkout>` checks a checkout of
-such a consumer: its `reference/PIN` names the commit, and each file under its `reference/` whose
-name is a table here is compared with `git show <commit>:tables/<name>`. It lists each file as
-`same`, `differs` or `missing` (the pinned commit has no table of that name), and says whether the pin is behind
-`main`. With `--strict` it exits nonzero when any file differs. A checkout with no `reference/PIN`
-is reported as having none, and the command exits cleanly.
+such a consumer: its `reference/PIN` holds the commit as 40 hex digits (a branch or tag name moves
+and is refused), and each file under its `reference/` whose name is a table here is compared with
+`git show <commit>:tables/<name>`. It lists each file as `same`, `differs` or `missing` (the pinned
+commit has no table of that name), and says whether the pin is behind `origin/main` (else `main`).
+With `--strict` it exits nonzero when any file differs or is missing, and when no file matched a
+table. A checkout with no `reference/PIN` is reported as having none, and the command exits
+cleanly. `.gitattributes` marks `tables/*.tsv` and `symbols/*.tsv` as `-text`, so a checkout never
+rewrites their line endings; a copy must not either.
