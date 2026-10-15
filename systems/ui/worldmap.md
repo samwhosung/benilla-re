@@ -121,6 +121,8 @@ Test: `ui::geo_4a7360`
 The axes are swapped: `u` follows world Y and `v` world X. `0x4a7870` takes the position of the unit object when it is a player and projects it under the active player's map id; with no object it reads the group record `0x496400` finds unless its status has bit 0x20, with the zone word at `+0x14` giving the map id through `AreaTable` and the signed words at `+0x16` and `+0x18` giving x and y.
 A unit in another map, or a map different from the displayed continent's, gives 0 and 0. `GetPlayerMapPosition` raises `Usage: GetPlayerMapPosition("player")` for a non-string.
 
+`0xc0d5a0` is the `WorldMapContinent` store, five dwords laid out in `dbc`: `0x4a7320` reads the records from it and the count from `0xc0d5a4` (`0x4a7322`, `0x4a732e`) and steps 0x34 bytes a row (`0x4a7335`, `0x4a7341`), the file's record size.
+
 `ui::geo_4a7360` runs `0x4a7360` whole on seeded map state.
 
 ## GetWorldLocMapPosition

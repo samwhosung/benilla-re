@@ -123,5 +123,5 @@ Of the offsets read off the group pointer on the chain, `0x6a3b10` reads none, `
 `+0x164`, `0x6b91c0` reads `+0xc4`, `+0xc8`, `+0xd0`, `+0x44` and `+0x90`, and `0x6b8e50` `+0xc8`,
 `+0xd0` and `+0xd4`. `0x6a389f test [esi+0x10],eax` takes the caller's mask from `[ebp+0x18]`;
 `0x6a905c test [eax+0x10],8` is the attach query's fixed test and shows the scan can see such a gate.
-The two-sided segment-triangle test `0x7c29f0` has three callers (`0x6bc764`, `0x6b8acf`, `0x709fc5`),
+The two-sided ray-triangle test `0x7c29f0` has three callers (`0x6bc764`, `0x6b8acf`, `0x709fc5`),
 none on this path, and `0x7c2e90` has none.
