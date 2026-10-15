@@ -228,6 +228,30 @@ pub fn assign(
     documented: &BTreeSet<String>,
     thunks: &BTreeSet<u32>,
 ) -> Owners {
+    assign_in(
+        listing,
+        image,
+        extents,
+        rows,
+        idb,
+        documented,
+        thunks,
+        INITIALIZERS,
+    )
+}
+
+/// `assign` over the initializer table `table`.
+#[allow(clippy::too_many_arguments)]
+fn assign_in(
+    listing: &Listing,
+    image: &Image,
+    extents: &[(u32, u32)],
+    rows: &HashMap<u32, String>,
+    idb: &HashMap<u32, String>,
+    documented: &BTreeSet<String>,
+    thunks: &BTreeSet<u32>,
+    table: (u32, u32),
+) -> Owners {
     let starts: Vec<u32> = extents.iter().map(|e| e.0).collect();
     let mut owners: BTreeMap<u32, Owner> = BTreeMap::new();
     let mut files: HashMap<u32, String> = HashMap::new();
@@ -326,7 +350,7 @@ pub fn assign(
         }
     }
     let path_spans = file_spans(&file_of);
-    let runs = initializer_runs(listing, image, &operands);
+    let runs = initializer_runs(listing, image, &operands, table);
     let mut run_files: BTreeSet<String> = BTreeSet::new();
     for members in &runs {
         let (Some(&low), Some(&high)) = (members.first(), members.last()) else {
@@ -346,6 +370,10 @@ pub fn assign(
             );
         }
         if named.len() > 1 {
+            conflicts.push(format!(
+                "the run at {low:#x} to {high:#x} crosses {} files; it is not used",
+                named.len()
+            ));
             continue;
         }
         let file = match named.iter().next() {
@@ -502,16 +530,19 @@ fn infinity_constant(listing: &Listing, image: &Image, address: u32) -> Option<u
 
 /// The initializer table's runs, in link order: for each, the functions of the file that opens
 /// it, the one with the +∞ initializer: its +∞ thunk and initializer, and the functions that read
-/// its own copies of the header's +∞, π and 10. A run's later thunks can be another file's, one
+/// its own copies of the header's +∞, π and 10, each only while no other file's +∞ lies at or
+/// below it after the run's own: the next literal is often the next file's +∞. A run's later
+/// thunks can be another file's, one
 /// without the header, and are left out.
 fn initializer_runs(
     listing: &Listing,
     image: &Image,
     operands: &HashMap<u32, Vec<u32>>,
+    table: (u32, u32),
 ) -> Vec<Vec<u32>> {
-    let mut runs: Vec<Vec<u32>> = Vec::new();
-    let mut slot = INITIALIZERS.0;
-    while slot < INITIALIZERS.1 {
+    let mut opened: Vec<(u32, u32, u32)> = Vec::new();
+    let mut slot = table.0;
+    while slot < table.1 {
         let thunk = image.dword(slot).unwrap_or(0);
         slot += 4;
         if thunk == 0 || !listing.contains(thunk) {
@@ -526,19 +557,30 @@ fn initializer_runs(
                 break;
             }
         }
-        let Some((initializer, c)) = targets
+        if let Some((initializer, c)) = targets
             .iter()
             .find_map(|&t| Some((t, infinity_constant(listing, image, t)?)))
-        else {
-            continue;
-        };
-        let mut members: BTreeSet<u32> = [thunk, initializer].into_iter().collect();
-        for constant in [c, c + 4, c + 8] {
-            members.extend(operands.get(&constant).into_iter().flatten().copied());
+        {
+            opened.push((thunk, initializer, c));
         }
-        runs.push(members.into_iter().collect());
     }
-    runs
+    let infinities: BTreeSet<u32> = opened.iter().map(|o| o.2).collect();
+    opened
+        .iter()
+        .map(|&(thunk, initializer, c)| {
+            let mut members: BTreeSet<u32> = [thunk, initializer].into_iter().collect();
+            members.extend(operands.get(&c).into_iter().flatten().copied());
+            for constant in [c + 4, c + 8] {
+                // The next constant at or below this one that is another file's +inf ends the
+                // run's own copies.
+                if infinities.range(c + 1..=constant).next().is_some() {
+                    break;
+                }
+                members.extend(operands.get(&constant).into_iter().flatten().copied());
+            }
+            members.into_iter().collect()
+        })
+        .collect()
 }
 
 #[cfg(test)]
@@ -616,7 +658,7 @@ mod tests {
     }
 
     /// A one-section image at 0x401000 holding `data` at its offset 0x1000.
-    fn image(data: &[(u32, &str)]) -> Vec<u8> {
+    fn image(data: &[(u32, &[u8])]) -> Vec<u8> {
         let mut bytes = vec![0u8; 0x200 + 0x2000];
         bytes[0x3c..0x40].copy_from_slice(&0x80u32.to_le_bytes());
         bytes[0x86..0x88].copy_from_slice(&1u16.to_le_bytes());
@@ -629,7 +671,7 @@ mod tests {
         bytes[header + 20..header + 24].copy_from_slice(&0x200u32.to_le_bytes());
         for (address, text) in data {
             let at = 0x200 + (address - 0x401000) as usize;
-            bytes[at..at + text.len()].copy_from_slice(text.as_bytes());
+            bytes[at..at + text.len()].copy_from_slice(text);
         }
         bytes
     }
@@ -650,7 +692,10 @@ mod tests {
             }
         }
         let listing = Listing::parse(text.as_bytes()).expect("a listing");
-        let bytes = image(&[(0x402000, GAME_UI), (0x402100, OTHER_UI)]);
+        let bytes = image(&[
+            (0x402000, GAME_UI.as_bytes()),
+            (0x402100, OTHER_UI.as_bytes()),
+        ]);
         let image = Image::new(&bytes).expect("an image");
         assign(
             &listing,
@@ -683,5 +728,96 @@ mod tests {
         let owners = owners_of_pushes(&[a, b, None, a, b]);
         assert!(!owners.owners.contains_key(&0x401020));
         assert!(!owners.conflicts.is_empty());
+    }
+
+    /// Two files' initializer runs: each file's thunk jumps to its +∞ initializer, which stores
+    /// the constant at `c`. The first file's constants are at 0x402300; `next` is where the second
+    /// file's +∞ lies.
+    fn two_runs(next: u32) -> Vec<Vec<u32>> {
+        let mut text = String::new();
+        for (thunk, init, c) in [
+            (0x401000u32, 0x401010u32, 0x402300u32),
+            (0x401100, 0x401110, next),
+        ] {
+            text.push_str(&format!("  {thunk:x}:\tjmp    0x{init:x}\n"));
+            text.push_str(&format!("  {init:x}:\tmov    eax,ds:0x{c:x}\n"));
+            text.push_str(&format!("  {:x}:\tmov    ds:0x403000,eax\n", init + 5));
+            text.push_str(&format!("  {:x}:\tret\n", init + 10));
+        }
+        let listing = Listing::parse(text.as_bytes()).expect("a listing");
+        let infinity = 0x7f80_0000u32.to_le_bytes();
+        let table: Vec<u8> = [0x401000u32, 0x401100]
+            .iter()
+            .flat_map(|t| t.to_le_bytes())
+            .collect();
+        let bytes = image(&[(0x402300, &infinity), (next, &infinity), (0x402200, &table)]);
+        let image = Image::new(&bytes).expect("an image");
+        // Functions reading the constants at 0x402304 and 0x402308.
+        let operands: HashMap<u32, Vec<u32>> =
+            [(0x402304, vec![0x401040]), (0x402308, vec![0x401050])]
+                .into_iter()
+                .collect();
+        initializer_runs(&listing, &image, &operands, (0x402200, 0x402208))
+    }
+
+    #[test]
+    fn a_run_keeps_its_own_constants() {
+        let runs = two_runs(0x402320);
+        assert_eq!(runs[0], [0x401000, 0x401010, 0x401040, 0x401050]);
+    }
+
+    #[test]
+    fn a_run_ends_at_the_next_files_infinity() {
+        // The second file's +∞ is the first file's third constant, or its second: the readers
+        // of it are the second file's.
+        let runs = two_runs(0x402308);
+        assert_eq!(runs[0], [0x401000, 0x401010, 0x401040]);
+        let runs = two_runs(0x402304);
+        assert_eq!(runs[0], [0x401000, 0x401010]);
+    }
+
+    #[test]
+    fn a_run_across_a_proved_file_is_a_conflict() {
+        // File A's functions at 0x401000 and 0x401050 hold file B's at 0x401030; A's run has a
+        // member on each side of it.
+        let lines = [
+            (0x401000, "push   0x402000"),
+            (0x401010, "jmp    0x401020"),
+            (0x401020, "mov    eax,ds:0x402300"),
+            (0x401025, "mov    ds:0x403000,eax"),
+            (0x40102a, "ret"),
+            (0x401030, "push   0x402100"),
+            (0x401040, "mov    eax,ds:0x402304"),
+            (0x401050, "push   0x402000"),
+        ];
+        let text: String = lines
+            .iter()
+            .map(|(a, t)| format!("  {a:x}:\t{t}\n"))
+            .collect();
+        let listing = Listing::parse(text.as_bytes()).expect("a listing");
+        let extents: Vec<(u32, u32)> = [0x401000, 0x401010, 0x401020, 0x401030, 0x401040, 0x401050]
+            .iter()
+            .map(|&a| (a, a + 0x10))
+            .collect();
+        let infinity = 0x7f80_0000u32.to_le_bytes();
+        let bytes = image(&[
+            (0x402000, GAME_UI.as_bytes()),
+            (0x402100, OTHER_UI.as_bytes()),
+            (0x402300, &infinity),
+            (0x402200, &0x401010u32.to_le_bytes()),
+        ]);
+        let image = Image::new(&bytes).expect("an image");
+        let owners = assign_in(
+            &listing,
+            &image,
+            &extents,
+            &HashMap::new(),
+            &HashMap::new(),
+            &BTreeSet::new(),
+            &BTreeSet::new(),
+            (0x402200, 0x402204),
+        );
+        assert!(owners.conflicts.iter().any(|c| c.contains("crosses")));
+        assert!(!owners.owners.contains_key(&0x401020));
     }
 }
