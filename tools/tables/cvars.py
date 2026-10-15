@@ -21,7 +21,20 @@ elsewhere) is `?` in the table and named in `notes`; nothing is guessed. A defau
 condition (`mov R,A; jcc L; mov R,B; L:`) is listed as `A|B`, both arms, and noted
 `default-conditional`.
 
-Columns that hold an address are `name_address`, `default_address`, `callback` and `record`.
+A registration made by a loop or from a table (`mov ecx,[esi+T]`, a name built by string appends
+from several tables) has no constant at its site. For each function that holds a site with an
+unresolved argument, `walk.py` runs the function's instructions from its start with concrete
+registers and memory, reading tables from the image, and records every call to `CVar::Register`
+with its arguments read at the call: one row per call, the same `site` on each, noted `looped`
+where a site registers more than once. A function whose run leaves a name or a default unknown
+keeps the static rows.
+A run that stops (a branch on a value only the running client knows, an instruction it does not
+model) or that reads an image address some instruction in the listing writes leaves that
+function's rows as the static pass has them. A row's text arguments (name, help, default) are
+read where the pointers point at the call, so a name built in a stack buffer is the built name.
+
+Columns that hold an address are `name_address`, `default_address`, `callback` and `record`. A name built in a buffer has no
+address: `name_address` is empty and `notes` says `name-built`.
 `flags`, `category`, `script_hidden` and `callback_arg` are decimal. A null help text or
 callback is an empty cell.
 """
@@ -29,10 +42,12 @@ callback is an empty cell.
 import re
 import sys
 
-from lib import Disasm, Image, addr, note, parse_args, write_table
+from lib import Disasm, Functions, Image, addr, note, parse_args, write_table
+from walk import Unknown, Walk
 
 REGISTER = 0x63DB90
 BACK = 640
+STACK = 0xF00000
 VOLATILE = ('eax', 'ecx', 'edx')
 GPR = ('eax', 'ebx', 'ecx', 'edx', 'esi', 'edi', 'ebp')
 ABS = re.compile(r'^(?:\w+ PTR )?ds:0x([0-9a-f]+)$')
@@ -137,6 +152,71 @@ def analyse(w):
     return pushes, reg_arg(w, 'ecx'), reg_arg(w, 'edx')
 
 
+WRITERS = ('mov', 'add', 'sub', 'and', 'or', 'xor', 'inc', 'dec', 'neg', 'not', 'shl', 'shr',
+           'sar', 'xchg', 'adc', 'sbb', 'fstp', 'fst', 'fistp', 'stos', 'movs')
+CONST = re.compile(r'0x([0-9a-f]+)')
+
+
+def written(dis, spans):
+    """The addresses of instructions whose memory destination holds a constant inside a span."""
+    hits = []
+    for a, _, mn, ops in dis.ins:
+        if mn not in WRITERS or ',' not in ops and mn not in ('inc', 'dec', 'neg', 'not'):
+            continue
+        dest = ops.split(',', 1)[0]
+        if '[' not in dest and 'ds:' not in dest:
+            continue
+        for m in CONST.finditer(dest):
+            v = int(m.group(1), 16)
+            if v >= 0x400000 and any(lo - 3 <= v <= hi for lo, hi in spans):
+                hits.append(a)
+                break
+    return hits
+
+
+def spans_of(reads):
+    spans, lo, hi = [], None, None
+    for r in sorted(reads):
+        if lo is None or r > hi + 8:
+            if lo is not None:
+                spans.append((lo, hi))
+            lo = r
+        hi = r
+    if lo is not None:
+        spans.append((lo, hi))
+    return spans
+
+
+def walk_function(dis, img, start):
+    """Every `CVar::Register` call a run of the function at `start` makes, as
+    {site: [dict of the arguments]}, or the reason the run could not be trusted."""
+    w = Walk(dis, img, start)
+    found = {}
+
+    def on_call(w, site, target):
+        if target != REGISTER:
+            return False
+        esp = w.reg['esp']
+        arg = [w.read_mem(esp + 4 * i, 4) for i in range(6)]
+        ecx, edx = w.reg['ecx'], w.reg['edx']
+        text = lambda p: '' if p == 0 else w.cstring(p)  # noqa: E731
+        found.setdefault(site, []).append(dict(
+            name_ptr=ecx, name=text(ecx), help=text(edx), flags=arg[0], default_ptr=arg[1],
+            default=text(arg[1]), callback=arg[2], category=arg[3], hidden=arg[4], cbarg=arg[5]))
+        w.reg['esp'] = (esp + 0x18) & 0xFFFFFFFF
+        w.reg['eax'] = w.reg['ecx'] = w.reg['edx'] = None
+        return True
+
+    try:
+        w.run(on_call)
+    except Unknown as e:
+        return 'stopped: %s' % e
+    w.reads = {r for r in w.reads if img.section_of(r) not in (None, '.text')}
+    if written(dis, spans_of(w.reads)):
+        return 'a table it reads is written'
+    return found
+
+
 def main():
     args = parse_args(__doc__, disasm=True)
     img, dis = Image(args.exe), Disasm(args.disasm)
@@ -202,7 +282,42 @@ def main():
             unresolved += 1
         rows.append((addr(site), name, name_addr, default, default_addr, flags, callback,
                      category, hidden, cbarg, record, help_, ';'.join(notes)))
-    note('%d registrations, %d with a computed argument' % (len(rows), unresolved))
+    fns, walked, looped = Functions(), {}, 0
+    out = []
+    for row in rows:
+        site = int(row[0], 16)
+        if '?' not in row[1:11] or '-computed' not in row[12] and '-not-a-string' not in row[12]:
+            out.append(row)
+            continue
+        start = fns.holding(site)['address']
+        if start not in walked:
+            walked[start] = walk_function(dis, img, start)
+        got = walked[start]
+        if isinstance(got, str) or site not in got:
+            if isinstance(got, str):
+                note('%s: %s' % (addr(start), got))
+            out.append(row)
+            continue
+        if any(r['name'] is None or r['default'] is None for r in got[site]):
+            out.append(row)
+            continue
+        many = len(got[site]) > 1
+        for r in got[site]:
+            cb = '?' if r['callback'] is None else (addr(r['callback']) if r['callback'] else '')
+            built = r['name_ptr'] >= STACK
+            notes = (['looped'] if many else []) + (['name-built'] if built else [])
+            out.append((row[0], r['name'], '' if built else addr(r['name_ptr']), r['default'],
+                        addr(r['default_ptr']) if r['default_ptr'] else '',
+                        *(('?' if r[k] is None else str(r[k]))
+                          for k in ('flags',)), cb,
+                        *(('?' if r[k] is None else str(r[k]))
+                          for k in ('category', 'hidden', 'cbarg')),
+                        '' if many else row[10], r['help'] or '', ';'.join(notes)))
+            looped += 1
+    rows = out
+    unresolved = sum(1 for r in rows if '?' in r[1:12])
+    note('%d registrations, %d with a computed argument, %d from walked loops'
+         % (len(rows), unresolved, looped))
     write_table(['site', 'name', 'name_address', 'default', 'default_address', 'flags',
                  'callback', 'category', 'script_hidden', 'callback_arg', 'record', 'help',
                  'notes'], rows, args.out)
