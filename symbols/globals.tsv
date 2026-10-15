@@ -2745,7 +2745,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b39c	void *	s_ghostFfx		ui	Holds the death effect the world frame builds and the ghost state makes current	verified	one	ffxeffects/objects#start-and-shutdown
 0xb4b3a0	float[3]	s_reticlePosition		ui	Holds the picked ground position the reticle is drawn at	verified	one	ui/groundreticle#the-reticle-state
 0xb4b3b0	float	s_reticleRadius		ui	Holds the half-extent of the area decal, 0 when out of range	verified	one	ui/groundreticle#the-reticle-state
-0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the GameTooltip frame the engine fills	verified	one	ui/minimapblips#dots-cadence-and-tooltip
+0xb4b3c4	void *	s_gameTooltipFrame		ui	Points to the frame named GameTooltip, which the engine builds mouseover tooltips in	verified	one	ui/mouseover#tooltips-by-object-type
 0xb4b3c8	uint64_t	s_cursorItemContainerGuid		ui	Holds the GUID of the container the item payload came from	verified	one	ui/cursor#payload-kinds
 0xb4b3d0	uint32_t	s_resolutionListCapacity		ui	Holds the capacity of the screen resolution list, in entries	verified	one	ui/videoverbs#the-resolution-list
 0xb4b3d4	uint32_t	s_resolutionListCount		ui	Holds the number of entries in the screen resolution list; 0 until a resolution verb builds it	verified	one	ui/videoverbs#the-resolution-list
@@ -2769,7 +2769,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb4b440	uint32_t	s_multisampleListCount		ui	Holds the number of entries in the multisample format list; 0 until a multisample verb builds it	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b444	void *	s_multisampleListData		ui	Points to the multisample format list, 12-byte colour bits, depth bits and samples triples	verified	one	ui/videoverbs#the-multisample-verbs
 0xb4b448	uint32_t	s_multisampleListQuantum		ui	Holds the growth quantum of the multisample format list; 0 until it first grows	verified	one	ui/videoverbs#the-multisample-verbs
-0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, which the interface scale is set on	verified	one	ui/uiscale#applying-a-scale
+0xb4b44c	void *	s_uiParent		ui	Points to the frame named UIParent, found at interface start; the scale and the game tooltip's owner use it	verified	one	ui/worldframe#turning-the-interface-off
 0xb4b45c	uint8_t[10]	s_surveyAnswerRank		ui	Holds the rank kept for each of the ten survey questions	verified	one	ui/serviceverbs#gm-surveys
 0xb4b498	uint32_t			ui	Holds a dword that CGGameUI::DisplayError reads and writes; not read here	inferred	none	
 0xb4be70	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
@@ -2957,7 +2957,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb700b4	uint32_t	s_openLockSpellCount		ui	Holds the count of learned opener spell ids	verified	one	objectlayer/playercombat#the-opener-list
 0xb700b8	uint32_t *	s_openLockSpells		ui	Points to the array of learned opener spell ids in the order the server taught them	verified	one	objectlayer/playercombat#the-opener-list
 0xb700e4	uint32_t[2]	s_interactSpells		ui	Holds the spells for interacting with other objects and with corpses and players	inferred	none	objectlayer/interaction#interacting-through-a-spell
-0xb700f0	uint32_t[1024]	s_spellBook		ui	Holds the spell id of each player spellbook entry	verified	one	ui/tooltipspell#who-passes-what
+0xb700f0	uint32_t[1024]	s_bookSpells		ui	Holds the player's spell book, a spell id per slot	verified	one	ui/spellbook#spell-book-lists
 0xb710fc	uint32_t *	s_knownSpellBits		unassigned	Points at the bitset of every known spell id	verified	one	ui/spellbook#spell-book-lists
 0xb71100	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xb71104	uint32_t	s_formSpellCount		unassigned	Holds the number of spells on the form bar	verified	one	ui/petbar#form-list
@@ -3262,7 +3262,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbdd060	uint64_t[10]	s_containerGuids		ui	Holds the GUIDs of the ten bag slots the windows know: equipped bags 1 to 4, then bank bags 5 to 10	verified	one	ui/bags#bag-events
 0xbdd118	uint8_t[128][28]	s_merchantRows		ui	Holds the open vendor's item rows, slot number first and item entry next	verified	one	ui/merchantcursor#grabbing-a-merchant-row
 0xbddf24	uint32_t[12]	s_buybackSlots		ui	Holds the inventory slot of each buy-back item	verified	one	ui/merchantcursor#merchant-sell-cursors
-0xbddfa0	uint32_t[2]	s_merchantItems		ui	Holds the open merchant's item table pointer and count; both zero when no merchant is open	verified	one	ui/tooltipitemfoot#the-sell-price
+0xbddfa0	uint64_t	s_merchantGuid		ui	Holds the GUID of the open vendor, 0 when none is open	verified	one	ui/merchant#repair-capability
 0xbddfa8	uint32_t	s_merchantItemCount		ui	Holds the number of rows of the open vendor	verified	one	ui/merchantcursor#grabbing-a-merchant-row
 0xbddfac	uint32_t	s_buybackCount		ui	Holds the number of items the vendor will buy back	verified	one	ui/merchantcursor#merchant-sell-cursors
 0xbddfb8	uint32_t[4]	s_tradeSkillRowArray		ui	Holds the growable array of recipe row pointers: capacity, count, data, chunk	verified	one	tradeskill/recipes#list-state
@@ -3334,7 +3334,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe0bfc	void *	s_worklistTail		ui	Holds the tail link of the placement worklist, from which the next node is taken	verified	one	ui/smartrect#the-placement-search
 0xbe0c18	void *	s_showSmartRectsCVar		ui	Holds the handle of the showsmartrects CVar, which nothing reads	verified	one	ui/smartrect#per-frame-order
 0xbe0c38	void *	s_nodePool		ui	Holds the head of the pool of placement nodes that are free for reuse	verified	one	ui/smartrect#the-placement-search
-0xbe0cc0	void *	s_cvarFarclip		uicamera	Holds the CVar record of farclip	verified	one	uicamera/solver#the-per-frame-outer-call
+0xbe0cc0	void *	s_cvarFarclip		uicamera	Holds the CVar record of farclip, whose float at +0x24 the camera copies each frame	verified	one	uicamera/solver#the-per-frame-outer-call
 0xbe0cd0	void *	s_cvarCameraDive		uicamera	Holds the CVar record of cameraDive	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe0cd4	void *	s_cvarCameraHeightSmoothSpeed		uicamera	Holds the CVar record of cameraHeightSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe0ce4	void *	s_cvarCameraPitchSmoothSpeed		uicamera	Holds the CVar record of cameraPitchSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
@@ -3378,7 +3378,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe106c	void *	s_cvarCameraDistanceSmoothSpeed		uicamera	Holds the CVar record of cameraDistanceSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1070	void *	s_cvarCameraYawSmoothSpeed		uicamera	Holds the CVar record of cameraYawSmoothSpeed	verified	one	uicamera/cvars#smoothing-speed-cvars
 0xbe1074	void *	s_cvarCamerasmooth		uicamera	Holds the CVar record of camerasmooth	verified	one	uicamera/cvars#smoothing-speed-cvars
-0xbe1078	void *	s_cvarNearclip		uicamera	Holds the CVar record of nearclip	verified	one	terrain/world#distance-settings
+0xbe1078	void *	s_cvarNearclip		uicamera	Holds the CVar record of nearclip, whose float at +0x24 the camera copies each frame	verified	one	terrain/world#distance-settings
 0xbe1084	void *	s_cvarMouseInvertYaw		uicamera	Holds the CVar record of mouseInvertYaw	verified	one	uicamera/cvars#input-and-bobbing-cvars
 0xbe1088	void *	s_cvarCameraWaterCollision		uicamera	Holds the CVar record of cameraWaterCollision	verified	one	uicamera/cvars#terrain-water-and-pivot-cvars
 0xbe1094	void *	s_cvarCameraYawMoveSpeed		uicamera	Holds the CVar record of cameraYawMoveSpeed	verified	one	uicamera/cvars#input-and-bobbing-cvars

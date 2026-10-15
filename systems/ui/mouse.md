@@ -81,6 +81,8 @@ Test: `ui::dist2_76b320`, `ui::point_in_rect`
 `0x482aa0`, the minimap's `0x4eb0c0`, `0x77a860`, `0x789ba0`, `0x78bd80` and the nameplate's `0x7cba30`, each of which
 calls `0x76b320`. `0x76b020` reads `+0x60` bit 0 and the rectangle at `+0xd8` to `+0xe4` only.
 
+`0x77a860` is the edit box's slot at `+0x3c` of its vtable `0x81c910`. It returns 0 when `0x76b320` does; otherwise, with the drag flag `+0x364` set, it asks `0x77d0d0` for the glyph index at the event's point (`+0x24`, `+0x28`), extends the selection by that index less the cursor `+0x36c` (`0x77cd10`), sets the cursor to the index (`0x77e360`) and returns 1.
+
 `ui::dist2_76b320` runs the slice `0x76b34c` to `0x76b370` after running the initializer `0x76b300` that sets the threshold.
 
 `ui::point_in_rect` runs `0x76b020` whole.

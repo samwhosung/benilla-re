@@ -65,14 +65,14 @@ While a merchant window is open, an item the player owns shows what the merchant
 when the record's sell price (`+0x28`) is 0. The builder does not draw coins: it runs the script handler
 stored at the tooltip's `+0x454` with the amount in copper, and does nothing without a handler. The item
 needs a real GUID. One held directly by the player must be in the backpack or a later slot, not equipped
-nor in a bag slot; one in a bag qualifies. The default cursor index must not be 0x11.
+nor in a bag slot; one in a bag qualifies. The base cursor mode must not be 0x11.
 
 Addresses: `0x52e376`, `0x52e37e`, `0x52e384`, `0x52e390`, `0x52e396`, `0x52e39b`, `0x52e3a4`, `0x52e3b4`, `0x52e3ba`, `0x52e3c4`, `0x52e3f3`, `0x52e40f`, `0x52e418`, `0x52e47c`, `0x52e48c`, `0x52e496`, `0x52e4a7`, `0x523d10`, `0x7026f0`, `0xbddfa0`, `0x835154`
 Confidence: verified
 Proof: one
 Test: none
 
-The gates are a nonzero item GUID at p3 (`0x52e37e`), a merchant table at `0xbddfa0` (`0x52e384`,
+The gates are a nonzero item GUID at p3 (`0x52e37e`), a nonzero vendor GUID at `0xbddfa0` (`0x52e384`,
 `0x52e390`) and `0x523d10() != 0x11` (`0x52e396`, `0x52e39b`). An object whose container is the player (the
 GUID at `flds+0x8` against the player's, `0x52e3ba`, `0x52e3c4`) is looked up in the player's slot list
 at `+0x1d3c` of count `+0x1d38` (`0x52e3f3`); a slot below 0x17 (`0x52e40f`) or none leaves without a price.

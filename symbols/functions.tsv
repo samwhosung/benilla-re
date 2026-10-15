@@ -6961,7 +6961,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492580	76	HandleGroundClick		ui	orchestration		Binds a clicked position through 0x6e60f0 for a click record whose +0xc is 1	inferred	none	spell/targeting#binding-a-clicked-location	
 0x4925d0	591	SelectObjectByClick		ui	primitive	void __stdcall (uint64_t guid)	Offers the payload to the clicked object, then makes it the target	verified	one	ui/mouseover#selecting-by-click	
 0x492820	112	InteractWithObjectByClick		ui	orchestration	void __stdcall (uint64_t guid)	Makes the clicked object the target and runs its interact virtual	verified	one	ui/mouseover#interacting-by-click	
-0x492890	552	PublishWorldMouseover		ui	orchestration	void __stdcall (uint32_t new_lo, uint32_t new_hi, uint32_t prev_lo, uint32_t prev_hi)	Fades the game tooltip when a mouseover ends and re-owns it to UIParent	verified	one	ui/hover#world-hover-and-its-tooltip	
+0x492890	552	PublishWorldMouseover		ui	orchestration	void __stdcall (uint64_t newGuid, uint64_t previousGuid)	Clears the old mouseover, stores the new one and builds its tooltip by object type	verified	one	ui/mouseover#the-publisher	
 0x492b50	163	WorldButtonHook		ui	primitive	uint32_t __thiscall (void *this)	Clears the payload on a right press or sends the press to the world frame in mouselook	verified	one	ui/mouseover#the-world-input-hook	
 0x492c00	31	WorldMouseDeltaHook		ui	orchestration	uint32_t __thiscall (void *this)	Turns the camera for a mouse delta event and consumes it	verified	one	ui/mouseover#mouselook-and-the-pointer-feed	
 0x492c20	90	CancelTargetingOrRotatePlacement		ui	orchestration		Rotates the placement or stops targeting for a world input whose +0x14 is 4	verified	one	ui/mouseover#the-right-button	
@@ -6969,7 +6969,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x492c90	73	WorldClickGround		ui	orchestration	void __thiscall (void *this)	Clears a payload by action, then tries the ground cast or the ground click	verified	one	ui/mouseover#payloads-on-the-world	
 0x492ce0	68	WorldClickObject		ui	orchestration	void __thiscall (void *this)	Clears a preview payload, then selects or interacts with the clicked object	verified	one	ui/mouseover#payloads-on-the-world	
 0x492d30	318	WorldClickNothing		ui	primitive	void __thiscall (void *this)	Handles a click on nothing: clears or confirms the payload, walks, deselects	verified	one	ui/mouseover#the-nothing-leg	ui::glue_492_492d30_sqlen_edge
-0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *this)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/hover#world-hover-and-its-tooltip	
+0x492e70	21	PublishMouseoverRecord		ui	orchestration	void __thiscall (uint32_t *this)	Passes the four dwords of a record to the world mouseover publisher	verified	one	ui/mouseover#publishing-the-mouseover	
 0x492e90	218	OnDisplaySizeChanged		ui	primitive	uint32_t __thiscall (void *this)	Applies the interface scale for a new window size, then signals DISPLAY_SIZE_CHANGED or reloads the interface	verified	one	ui/videoverbs#after-a-size-change	
 0x492f70	223	ApplyAutoUiScale		ui	primitive	void __fastcall (uint32_t width, uint32_t height, uint32_t force)	Sets UIParent to 768 over the height, capped for narrow windows and at least 0.9	verified	one	ui/uiscale#the-automatic-scale	ui::glue_492_492f70_recip_unit
 0x493050	19	OnWindowActivation		ui	orchestration		Releases the held movement directions on a deactivation and answers 1	verified	one	ui/keyscripts#deactivating-the-window	
@@ -12893,7 +12893,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x523c10	6	GetCursorMode		ui	unreached	uint32_t __cdecl (void)	Returns the shown cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523c20	20	SetCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Shows a cursor mode and sends its image when it changes	verified	one	ui/worldcursor#setting-the-mode	
 0x523c40	207	SetCustomCursor		ui	orchestration	uint32_t __fastcall (const char *name)	Loads a named 32 by 32 cursor as mode 41, returning 1 when it is shown	verified	one	ui/worldcursor#custom-cursors	
-0x523d10	6	GetDefaultCursor		ui	orchestration	uint32_t __cdecl (void)	Returns the default cursor index	verified	one	ui/tooltipitemfoot#the-sell-price	
+0x523d10	6	GetBaseCursorMode		ui	orchestration	uint32_t __cdecl (void)	Returns the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523d20	7	SetBaseCursorMode		ui	orchestration	void __fastcall (uint32_t mode)	Stores the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523d30	11	ShowBaseCursor		ui	orchestration	void __cdecl (void)	Shows the base cursor mode	verified	one	ui/worldcursor#setting-the-mode	
 0x523d40	55	CursorModeFromName		ui	primitive	uint32_t __fastcall (const char *name)	Returns the first cursor mode whose name matches, 0 for none	verified	one	ui/worldcursor#custom-cursors	
@@ -33759,7 +33759,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x77a750	36	CSimpleEditBox::OnFrameShow		ui	orchestration		Runs the frame's show, then focuses an autoFocus box when nothing holds the focus	verified	one	ui/editbox#keyboard-focus	
 0x77a780	16	CSimpleEditBox::OnFrameHide		ui	orchestration		Runs the frame's hide, then clears the box's focus	verified	one	ui/editbox#keyboard-focus	
 0x77a790	193	CSimpleEditBox::OnFrameUpdate		ui	primitive		Flushes the box's changes and blinks the caret of the focused box	verified	one	ui/editbox#text-changes-and-their-scripts	ui::glue_77a_77a790_fill_accumulate
-0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	void __thiscall (CSimpleEditBox *this, void *event)	Moves the cursor and the selection under a drag with the point's glyph index	verified	one	ui/editboxmarkup#where-a-step-is-atomic	
+0x77a860	100	CSimpleEditBox::OnMouseMove		ui	primitive	uint32_t __thiscall (CSimpleEditBox *this, void *event)	Answers the base hit test and, under a drag, moves the selection and cursor to the glyph at the point	verified	one	ui/mouse#what-the-pointer-is-tested-against	
 0x77a8d0	33	CSimpleEditBox::OnSizeChanged		ui	orchestration	void __thiscall (CSimpleEditBox *this, float *rect, uint32_t flags)	Runs the frame's size callback and lays the label and caret out again	verified	one	ui/editboxmembers#slots-and-listeners	
 0x77a900	93	CSimpleEditBox::OnChar		ui	orchestration		Takes a typed character for the focused box and inserts it	verified	one	ui/editbox#which-box-takes-a-key	
 0x77a960	138	CSimpleEditBox::CreateCompositionTexture		ui	orchestration	void __thiscall (CSimpleEditBox *this)	Creates once the composition texture in colour 0xff202010 and sizes it to the label's line height	verified	one	ui/editboxmembers#candidate-window	
@@ -36565,7 +36565,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7cb250	1015	CGNamePlateFrame::CGNamePlateFrame		ui	orchestration		Builds a plate under a parent: border, bar, glow, name, level, skull, raid icon, click mask	verified	one	ui/nameplates#the-parts	
 0x7cb650	116	CGNamePlateFrame::~CGNamePlateFrame		ui	orchestration		Destroys a plate	inferred	none		
 0x7cb6d0	373	CGNamePlateFrame::Bind		ui	orchestration		Binds a plate to a unit: GUID, name, bar, size, anchors, colour, level and raid icon	verified	one	ui/nameplates#name-flash-and-dim	ui::glue_7cb6d0_scale6
-0x7cb850	95	NamePlateOnEnter		ui	orchestration	void __thiscall (void *this)	Publishes the plate's unit as the world mouseover, lights the plate and runs the button enter	verified	one	ui/nameplates#scripts-and-mouse	
+0x7cb850	95	CGNamePlateFrame::OnEnter		ui	orchestration	void __thiscall (CGNamePlateFrame *this)	Publishes the plate's unit as the world mouseover, lights the plate and runs the button enter	verified	one	ui/hover#nameplate-and-minimap-notifies	
 0x7cb8b0	91	CGNamePlateFrame::OnLeave		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t flag)	Clears the published mouseover and unhighlights the plate	verified	one	ui/nameplates#scripts-and-mouse	
 0x7cb910	49	CGNamePlateFrame::OnClick		ui	orchestration	void __thiscall (CGNamePlateFrame *this, uint32_t action, uint32_t arg)	Selects or interacts with the plate's unit, then runs the button's click	verified	one	ui/nameplates#scripts-and-mouse	
 0x7cb950	212	CGNamePlateFrame::OnUpdate		ui	orchestration		Counts down the flash, sets the name colour and dims the plate unless its unit is the target	verified	one	ui/nameplates#name-flash-and-dim	ui::glue_7cb950_scale1000

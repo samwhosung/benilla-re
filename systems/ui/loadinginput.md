@@ -39,7 +39,7 @@ Test: none
 
 `0x481790` returns to its tail unless the top's hovered frame at `+0x7c` is the world frame (`0x4817ae`, `0x4817b1`). It reads the stored point at
 `+0x1118` and `+0x111c` (`0x4817c5`, `0x4817cb`), calls the pick `0x481190` (`0x48184a`), and for an answer of 0 sets cursor 0x16 with a spell
-target pending (`0x481855` to `0x481863`) and the default cursor `0x523d30` without one (`0x481875`). Nothing in it reads the screen's state. `0x481190` returns before tracing when the flag word is 0
+target pending (`0x481855` to `0x481863`) and the base cursor `0x523d30` without one (`0x481875`). Nothing in it reads the screen's state. `0x481190` returns before tracing when the flag word is 0
 (`0x4812c1`, `0x4812c8`); `0x481050` ORs `0x5c` in only when the local player's object resolves (`0x481063` to `0x4810e6`),
 and the object manager that holds it is destroyed by `0x467700` at `0x401bf7` in the transfer's deferred body.
 
@@ -86,7 +86,7 @@ frame's repeat slot, the base stub `0x46ff90`. The held tables are cleared only 
 
 The cursor shown over the screen is the device cursor, composited with the frame, so it appears over the opaque
 screen and over the hand-painted frames. The transfer announcement sets it to the plain pointer, index 1, as both the
-current and the default cursor before the screen goes up, and nothing sets it again on a frame. The device's
+current and the base cursor before the screen goes up, and nothing sets it again on a frame. The device's
 show and hide is reached from mouselook, the cinematics, the glue cursor calls and the end of leaving the world, never from the screen itself.
 
 Addresses: `0x401900`, `0x40194c`, `0x495920`, `0x495927`, `0x495932`, `0x6e4940`, `0x6e49f0`, `0x6e49f5`, `0x6e49ff`, `0x523d20`, `0x523c20`, `0x523d30`, `0x523790`, `0x58b590`, `0x46db65`, `0x46db72`, `0x48ed94`, `0x48f189`, `0x50fdf7`, `0x50fe4c`, `0x764da6`, `0x490bb6`, `0x490bbb`
@@ -95,7 +95,7 @@ Proof: one
 Test: none
 
 `0x401900` calls `0x495920` (`0x40194c`), which calls `0x495190` and `0x6e4940` (`0x495927`, `0x495932`). The tail of `0x6e4940`
-stores 1 as the default cursor with `0x523d20` (`0x6e49f5`) and sets cursor 1 with `0x523c20` (`0x6e49ff`), which does nothing when the
+stores 1 as the base cursor mode with `0x523d20` (`0x6e49f5`) and sets cursor 1 with `0x523c20` (`0x6e49ff`), which does nothing when the
 index is unchanged. The shape loader `0x523790` has six references, all in the cursor module. The device's show and hide `0x58b590` has eight
 callers: the glue cursor pair (`0x46db65`, `0x46db72`), the cinematic start and stop (`0x48ed94`, `0x48f189`), mouselook
 (`0x50fdf7`, `0x50fe4c`), `0x764da6`, and the end of leave-world, which shows the cursor (`0x490bb6`, `0x490bbb`); none is in the screen.

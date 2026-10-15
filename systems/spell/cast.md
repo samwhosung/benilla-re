@@ -230,7 +230,7 @@ Test: none
 `0x6e504b test ch,0x2` on `Attributes`; `0x6e5050` loads the spell for the report and `0x6e5057`
 zeroes the word. `0x6e507b` reads the word's low
 byte, `jns` skips; `0x6e50a3` picks 0x0a, then 0x09 for a zero `0xb4e2d8`. Keys: MAINHAND_EMPTY,
-BAD_TARGETS, BAD_IMPLICIT_TARGETS (`failures`). `0x523d20(2)` sets the default cursor and
+BAD_TARGETS, BAD_IMPLICIT_TARGETS (`failures`). `0x523d20(2)` sets the base cursor mode and
 `0x523c20(0x16)` the current one (`0x6e50b0`, `0x6e50ba`); the names table gives index 2 Cast and
 22 UnableCast. The effect scan is `0x6e50e0` to `0x6e510c`. `0x6e5124` builds the key, the spell id
 low and its sign ORed with 0xb0000000 high, and asks the game-object cache for `EffectMiscValue[i]`

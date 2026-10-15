@@ -119,8 +119,8 @@ The slot 0x50 values of the vtables that hold the pairs `0x76ad50`/`0x76ae10`, `
 Leaving the world frame publishes a cleared world mouseover and resets the cursor. The world pick runs only
 while the world frame is the top's hover. On a change of the pick the previous pair is published first
 and the new pair stored after. The publisher fades the game tooltip out when a previous mouseover, or failing
-that a published one, is nonzero, and later gives the tooltip back to `UIParent` with the cursor anchor and
-zero offsets: the fade first, the new owner second.
+that a published one, is nonzero. For a game object whose floating-tooltip test holds, it then gives the tooltip
+to `UIParent` with the cursor anchor and zero offsets (`ui/mouseover`): the fade first, the new owner second.
 
 Addresses: `0x483b10`, `0x483b1d`, `0x483b22`, `0x483b32`, `0x483b46`, `0x483b58`, `0x483b5d`, `0x523d30`, `0x492e70`, `0x492890`, `0x4928ba`, `0x4928c6`, `0x4928e8`, `0x492901`, `0x492909`, `0x492a1e`, `0x4817a8`, `0x4817b1`, `0x482090`, `0x4820ad`, `0x4820cf`, `0xb4e2c8`, `0xb4b3c4`, `0xb4b44c`, `0x83dc2c`, `0x530ae0`, `0x530ae3`
 Confidence: verified
@@ -163,13 +163,13 @@ leave hides the tooltip at once, before the base leave, on every leave, with no 
 the minimap's set of hovered elements: when the cursor comes back onto the same blips the probe finds the
 set unchanged and shows nothing until the set changes or a probe outside the rectangle clears it.
 
-Addresses: `0x7cb850`, `0x7cb869`, `0x7cb87e`, `0x7cb8a5`, `0x7cb8b0`, `0x7cb8bf`, `0x7cb8ca`, `0x7cb8e1`, `0x7cb8ff`, `0x4eb880`, `0x4eb886`, `0x4eb898`, `0x4eb8a4`, `0x4eb0c0`, `0x4eb0e7`, `0x4eb12b`, `0x4eb133`, `0x4eb4b1`, `0x4eb4f1`, `0x4eb507`, `0x4eb546`, `0x4eb54c`, `0x4eb561`, `0x4eb567`, `0x4ed9d0`, `0x4eda51`, `0xbc81e4`, `0xbdcbac`, `0xbdcbb0`, `0xbdcbb4`
+Addresses: `0x7cb850`, `0x7cb869`, `0x7cb874`, `0x7cb87e`, `0x7cb8a5`, `0x7cb8b0`, `0x7cb8bf`, `0x7cb8ca`, `0x7cb8e1`, `0x7cb8ff`, `0x4eb880`, `0x4eb886`, `0x4eb898`, `0x4eb8a4`, `0x4eb0c0`, `0x4eb0e7`, `0x4eb12b`, `0x4eb133`, `0x4eb4b1`, `0x4eb4f1`, `0x4eb507`, `0x4eb546`, `0x4eb54c`, `0x4eb561`, `0x4eb567`, `0x4ed9d0`, `0x4eda51`, `0xbc81e4`, `0xbdcbac`, `0xbdcbb0`, `0xbdcbb4`
 Confidence: verified
 Proof: one
 Test: none
 
-`0x7cb850` calls `0x492890(lo, hi, 0, 0)` with the plate's GUID at `+0x4e8` (`0x7cb869`) and `0x779490`
-(`0x7cb8a5`); `0x7cb8b0` calls it with four zeros (`0x7cb8bf`) and `0x7794e0` (`0x7cb8ff`). `0x4eb880` loads the
+`0x7cb850` calls `0x492890(lo, hi, 0, 0)` with the plate's GUID at `+0x4e8` (`0x7cb869`), shows the glow region at
+`+0x4f0` (`0x7cb874`, `0x7cb87e`) and calls `0x779490` (`0x7cb8a5`); `0x7cb8b0` calls it with four zeros (`0x7cb8bf`) and `0x7794e0` (`0x7cb8ff`). `0x4eb880` loads the
 tooltip (`0x4eb886`), stores 0 at `+0xd0` and calls slot 0x84 (`0x4eb898`) and then `0x76b6f0` (`0x4eb8a4`);
 it has no branch. The probe `0x4eb0c0` starts with the base probe `0x76b320` (`0x4eb0e7`). The set cells
 `0xbc81e4` (five dwords), `0xbdcbac`, `0xbdcbb0` and `0xbdcbb4` are written only inside it, apart from the five-dword
