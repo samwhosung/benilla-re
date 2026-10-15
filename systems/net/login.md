@@ -25,10 +25,10 @@ disconnects. The commands, by byte: `0x00` logon challenge, `0x01` logon proof, 
 challenge, `0x03` reconnect proof, `0x10` realm list, `0x30` transfer initiate, `0x31` transfer
 data.
 
-Addresses: `0x5bb0e0`, `0x5bb132`, `0x5bb15b`, `0x5bb17d`, `0x5bb1df`, `0x5b87b0`, `0x85e278`
+Addresses: `0x5bb0e0`, `0x5bb132`, `0x5bb15b`, `0x5bb17d`, `0x5bb1df`, `0x5b87b0`, `0x85e278`, `0x5b90d0`, `0x5bb16e`, `0x5bb197`, `0x5bb1f8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::grunt_on_data`, `net::grunt_can_read`
 
 `0x85e278` holds 16-byte entries {command byte, name, handler, `this` offset}; the first entry's
 byte and name are in the file and `0x5b87b0`, a static initializer, stores the rest: handlers
@@ -38,6 +38,12 @@ needs one byte (`0x5b90d0`), searches the table linearly (`0x5bb132` to `0x5bb14
 the handler at `0x5bb15b`. Result 0 keeps the bytes from the command's start (`0x5bb1ed`
 onwards); 2 loops; 1 or no match logs at `0x5bb17d` and calls `0x5bb290`, which closes the
 connection (`0x5bb1df`).
+
+A result 2 marks the cursor; one above 2 reads on unmarked (`0x5bb16e`). On 0, or with no
+byte left, `0x5bb1f8` borrows the bytes from the mark, resets the plain store (slot 6) and
+appends them again. A bad command dumps `min(size − cursor, 128)` bytes (`0x5bb197`). `0x5b90d0`
+is `cursor <= size && size − cursor >= n`. The test runs `0x5bb0e0` whole, each handler
+replaced by one that consumes a chosen count.
 
 ## Logon challenge
 
@@ -58,10 +64,10 @@ password are upper-cased first. A reconnect sends the same body after `0x02`, `0
 | address | 4 | the socket's local address |
 | account | 1 + n | length, then the upper-cased bytes |
 
-Addresses: `0x5b20e0`, `0x5bb540`, `0x5bb460`, `0x5bb6d0`, `0x5bb5f9`, `0x5bb605`, `0x5bb523`
+Addresses: `0x5b20e0`, `0x5bb540`, `0x5bb460`, `0x5bb6d0`, `0x5bb5f9`, `0x5bb605`, `0x5bb523`, `0x5bb501`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::grunt_challenge_body`
 
 `0x5b20e0` fills the record: `0x00576f57` at `0x5b20f6`, `0x429f40()` (`0x00783836`) and
 `0x429f50()` (`0x0057696e`), bytes 1, `0xc`, 1 (`0x5b210d` to `0x5b211a`), `0x16f3` at `0x5b211e`,
@@ -70,7 +76,10 @@ on failure. `0x5bb540` stores the account at `+0x19c`, upper-cases it and a copy
 with `0x64b460`, hashes both (`0x5d3590`), writes `0x00` and `0x03` (`0x5bb5f9`, `0x5bb605`), calls
 `0x5bb460` and sends; it then zeroes the password copy. `0x5bb460` writes the fields in the order
 above, the address from `+0x7c`, and patches the size at `0x5bb523` as the bytes after it.
-`0x5bb6d0` writes `0x02`, `0x02`.
+`0x5bb6d0` writes `0x02`, `0x02`. The account's length is `SStrLen`'s low byte (`0x5bb501`), and
+only that many bytes follow, so an account of 256 characters or more goes out cut to its length
+modulo 256. The test runs `0x5bb460` whole, appending to stores that hold 0 to 19 bytes, with
+accounts of 0 to 300 characters.
 
 ## Challenge reply
 
@@ -81,10 +90,10 @@ a non-zero security byte adds a dword and 16 bytes. The client keeps `B`, runs S
 success reports the security fields and then the checksum salt; a failed SRP6 reports result 5.
 A non-zero first byte is malformed.
 
-Addresses: `0x5baa20`, `0x5baa57`, `0x5baa77`, `0x5babdf`, `0x5bac05`, `0x5bac16`, `0x5bac58`
+Addresses: `0x5baa20`, `0x5baa57`, `0x5baa77`, `0x5babdf`, `0x5bac05`, `0x5bac16`, `0x5bac58`, `0x5bab91`, `0x5bac36`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::grunt_logon_challenge_reply`
 
 Each read is guarded by `0x5b90d0`, which returns 1 when the store holds that many unread
 bytes; a shortfall returns 0. `0x5baa57` tests the first byte, `0x5baa77` the result. The reads
@@ -93,7 +102,11 @@ security byte, then a dword and `0x10` when it is set. A cursor past the end ret
 (`0x5bab91`). `B` is copied to `+0x1dc`; `0x5babdf` calls `0x5d3650(N, |N|, g, |g|, salt, 32, B,
 32, 0xc2a428)` on `+0x84`. Success sets state 4 and calls the owner's slots 6 and 5
 (`0x5bac05`, `0x5bac16`); failure sets state 2 and calls slot 10 with 5. `0x5bac58` `cmp al,0x10;
-jb` keeps results below 16.
+jb` keeps results below 16. Slot 6's first argument is the dword the security byte was read
+into, whose upper three bytes are stale stack. The test runs `0x5baa20` whole but for the two
+returns of 1 past the end (`0x5bab91`, `0x5bac36`), which the byte counts each read is guarded
+by leave unreachable on the link's store; the replies fail, succeed, carry the security fields or
+not and stop at every length, and the proof succeeds and fails.
 
 ## SRP6 client
 
