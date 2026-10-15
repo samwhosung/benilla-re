@@ -23,13 +23,17 @@ already hold the connection:
 a global store between the pair and the call; they are listed below by the address of each mov,
 and the scan checks that it finds the same pair.
 
+The name column is the opcode's name in vmangos's `Opcodes_1_12_1.h`, from the committed input
+tools/tables/opcode_names.tsv (opcode, name, the line in that file). The client holds no names. An
+opcode vmangos does not list has an empty name.
+
 Both handler tables hold 828 entries (0x537600 zero-fills 0x33c dwords at each base), so 0x33b is
 the last expressible opcode.
 """
 
 import sys
 
-from lib import Image, addr, note, parse_args, write_table
+from lib import Image, addr, note, opcode_names, parse_args, write_table
 
 REGISTRAR = 0x5AB650
 INNER = 0x537A60
@@ -105,8 +109,10 @@ def main():
          '%d distinct handlers; %d unresolved'
          % (len(rows), adjacent, hand, len(direct), len(set(ops)),
             len({r[1] for r in rows}), len(rejects)))
-    write_table(['opcode', 'handler', 'site', 'path'],
-                [('0x%03x' % op, addr(h), addr(s), p) for op, h, s, p in rows], args.out)
+    names = opcode_names()
+    write_table(['opcode', 'name', 'handler', 'site', 'path'],
+                [('0x%03x' % op, names.get('0x%03x' % op, ''), addr(h), addr(s), p)
+                 for op, h, s, p in rows], args.out)
     return 1 if rejects else 0
 
 

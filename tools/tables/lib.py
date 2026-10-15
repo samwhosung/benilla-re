@@ -324,6 +324,18 @@ def read_tsv(path):
         return list(csv.DictReader(f, delimiter='\t', quoting=csv.QUOTE_NONE))
 
 
+def opcode_names():
+    """The opcode names, from tools/tables/opcode_names.tsv: opcode (as `0x` and three hex digits)
+    to name. The file holds vmangos's `Opcodes_1_12_1.h` enum, one row per entry with its line;
+    the client holds no names."""
+    out = {}
+    lines = (ROOT / 'tools' / 'tables' / 'opcode_names.tsv').read_text(encoding='utf-8').splitlines()
+    for line in lines[1:]:
+        code, name, _ = line.split('\t')
+        out[code] = name
+    return out
+
+
 def parse_args(doc, disasm=False, extra=None):
     ap = argparse.ArgumentParser(description=doc)
     ap.add_argument('--exe', default=str(ROOT / 'WoW' / 'WoW.exe'))

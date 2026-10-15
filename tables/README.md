@@ -43,9 +43,54 @@ Every network message the client registers a handler for (387 rows, 207 distinct
 | column | meaning |
 |---|---|
 | `opcode` | The message id, `0x000` to `0x33b` (the handler tables hold 828 entries). Sorted. |
+| `name` | The message's name in vmangos's `Opcodes_1_12_1.h` (`src/game/Server/Protocol/`), from the committed input `../tools/tables/opcode_names.tsv`, which holds each entry's line in that file. The client holds no names. Empty where vmangos lists none. |
 | `handler` | The function that runs when the message arrives. Several opcodes may share one. |
 | `site` | The `call` that registers it. |
 | `path` | `A`: through the wrapper `0x5ab650`; `B`: a direct call to `NetClient::SetMessageHandler 0x537a60`. |
+
+## opcode_sends.tsv
+
+Every place the client puts an opcode into an outgoing packet and sends it (394 rows, 310 distinct
+opcodes). `../tools/tables/opcode_sends.py` opens with the contract: it reads the function that
+holds each call to `ClientServices::Send 0x5ab630`, `NetClient::Send 0x5379a0` or the minigame's
+`0x728640`, follows the opcode written first into the packet's store, and resolves an opcode passed
+as an argument through its callers.
+
+| column | meaning |
+|---|---|
+| `opcode` | The message id, or `?` where the opcode is computed at run time or not read. Sorted, `?` last. |
+| `name` | The name, as in `opcodes.tsv`. |
+| `site` | The send call; for a note `through-<address>`, the call to that function that passes the opcode. |
+| `function` | The function row that holds the site. |
+| `put` | The instruction that supplies the opcode; empty for `?`. |
+| `send` | `A` for `ClientServices::Send`, `B` for the direct send. |
+| `notes` | `;`-separated: `via-register`, `through-<address>`, `cache-object` (the opcode is the one a cache's constructor passes), `hand-resolved`, `opcode-not-constant`, `store-not-built-here`, `unreached` (the function is unreached). |
+
+## opcode_entries.tsv
+
+For each handler registration and each send, the entries of `../systems/` that cover the code (781 rows).
+`../tools/tables/opcode_entries.py` opens with the contract.
+
+| column | meaning |
+|---|---|
+| `opcode` | As in `opcode_sends.tsv`. Sorted, `?` last, then `role`, then `site`. |
+| `name` | The name. |
+| `role` | `handler` for a row of `opcodes.tsv`, `send` for a row of `opcode_sends.tsv`. |
+| `site` | The registration call or the send call. |
+| `function` | The handler, or the function that holds the send. |
+| `entries` | The covering entries as `<doc>#<anchor>`, `\|`-separated, the doc relative to `systems/` without `.md`; empty for `unread`. |
+| `basis` | `opcode`: the listed entries cover the function and name the opcode; `function`: they cover the function and none names the opcode; `unread`: no entry covers the function. |
+
+## spell_failed.tsv
+
+The cast failure reasons (146 rows): the reason byte the client reports for a refused or failed cast
+and the GlobalStrings key it shows. `../tools/tables/spell_failed.py` opens with the contract.
+
+| column | meaning |
+|---|---|
+| `reason` | The reason byte, `0x00` to `0x91`. `0x91` is the key any byte above `0x90` shows. Sorted. |
+| `key` | The GlobalStrings key, `SPELL_FAILED_` and a name. |
+| `address` | The key's string. |
 
 ## messages.tsv
 
