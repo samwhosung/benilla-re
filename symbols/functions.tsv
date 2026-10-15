@@ -9980,7 +9980,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4df3c0	175			ui	orchestration		Runs its object file code that calls 0x562a40, SStrCmpI; not read here	inferred	none		
 0x4df470	12	IsSelectedQuestExpiryLatched		ui	orchestration		Tests the expiry latch of the selected quest's row	verified	one	ui/questlogverbs#selected-quest-text	
 0x4df480	40	IsQuestExpiryLatched		ui	primitive		Returns whether a row's expiry latch is set	verified	one	ui/questtimers#getquesttimers	
-0x4df4b0	64	IsQuestDone		ui	primitive		Returns whether a quest is completed	inferred	none	objectlayer/quests#quest-updates	
+0x4df4b0	64	IsQuestExpiryLatched		ui	primitive		Answers whether the quest has a non-header display row with its expiry latch set; 0 when the quest is not listed	inferred	none	objectlayer/quests#quest-updates	
 0x4df4f0	81	LatchQuestExpiry		ui	primitive		Sets a row's expiry latch unless its quest can be turned in, calls 0x5eb070 and returns 1; else returns 0	verified	one	ui/questtimers#getquesttimers	
 0x4df550	42	LatchQuestExpiryByQuest		ui	primitive		Marks a timed quest failed	inferred	none	objectlayer/quests#quest-updates	
 0x4df580	560	CanTurnInQuest		ui	primitive		Tells whether a quest can be handed in, from its complete bit and its objectives	verified	one	ui/questobjectives#the-turn-in-test	
@@ -23803,7 +23803,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x659520	588			storm	unreached		Runs SLock.cpp code that calls 0x667440, CSRWLock::Leave; not read here	inferred	none		
 0x659770	387			storm	boundary		Runs SLock.cpp code that calls 0x667440; not read here	inferred	none		
 0x659900	40			storm	unreached		Runs SLock.cpp code not read here	inferred	none		
-0x659930	9	SHandleInit		storm	boundary		Stores 0 at ecx, an empty handle	verified	one	core/threads#host-calls	
+0x659930	9	ZeroHandleSlot		storm	boundary		Stores 0 at ecx, an empty handle	verified	one	core/threads#host-calls	
 0x659940	22			storm	unreached		Runs SLock.cpp code that calls 0x659900; not read here	inferred	none		
 0x659960	5	SHandleCloseThunk		storm	boundary		Jumps to 0x6599a0, which closes the handle at ecx and zeroes it	verified	one	core/threads#host-calls	
 0x659970	29			storm	unreached		Runs SLock.cpp code that calls SHandleClose, 0x659900; not read here	inferred	none		
@@ -34134,7 +34134,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x787630	19	InitQuotient787630		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x787650	5	InitInfinity787660Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x787660, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x787660	11	InitInfinity787660		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x787670	635	ConstructSimpleMessageScrollFrame		ui	primitive		Constructs a message scroll frame: runs the base constructor, then stores three tables, at +0, +0x24 and +0x338	verified	one	ui/xmltypes#handler-names-by-type	
+0x787670	635	CSimpleMessageScrollFrame::CSimpleMessageScrollFrame		ui	primitive		Constructs a message scroll frame: runs the base constructor, then stores three tables, at +0, +0x24 and +0x338	verified	one	ui/xmltypes#handler-names-by-type	
 0x7878f0	22	FreeLineRecordText		ui	orchestration	void __thiscall ()	Frees the text of a scroll frame line record when set	verified	one	ui/messagemembers#scroll-frame-teardown	
 0x787910	45	IsTypeId787910		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x787940	89	ScrollingMessageFrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is ScrollingMessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
