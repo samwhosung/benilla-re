@@ -38,7 +38,6 @@ these, a system with a doc, a library, or `unassigned`; the check holds the tabl
 - `os`: the engine's Windows layer outside `core`'s time and window files: CPU and system queries,
   file calls, `OsIME.cpp` and the IME initializer file after it, `OsGui.cpp`, `OsCall.cpp` (engine
   threads), `OsTcp.cpp`, `OsURLDownload.cpp`, `OsClipboard.cpp` and `OsISoundCache.cpp`
-- `warden`: `WardenClient.cpp`, the client of the server's Warden modules
 
 ## Names
 

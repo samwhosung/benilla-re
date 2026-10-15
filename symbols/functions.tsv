@@ -28368,35 +28368,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c9f30	16			unassigned			Runs its object file code not read here	inferred	none		
 0x6c9f40	22			unassigned	unreached		Runs its object file code that calls 0x6c9ff0; not read here	inferred	none		
 0x6c9f60	28			unassigned			Runs its object file code that calls 0x6ca010; not read here	inferred	none		
-0x6c9f80	26			warden			Runs WardenClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x6c9fa0	67			warden	unreached		Runs WardenClient.cpp code not read here	inferred	none		
-0x6c9ff0	22			warden			Runs WardenClient.cpp code that calls 0x6ca010; not read here	inferred	none		
-0x6ca010	83			warden			Runs WardenClient.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x6ca070	68			warden			Runs WardenClient.cpp code that calls 0x4181f0, CDataStore::PutInt8; not read here	inferred	none		
-0x6ca0c0	94			warden			Runs WardenClient.cpp code that calls CDataStore::GetUInt32, SMemAlloc, CDataStore::GetUInt8; not read here	inferred	none		
-0x6ca120	6	WowCacheFileVersion		warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache#the-wdb-file	
-0x6ca130	10			warden			Runs WardenClient.cpp code that calls 0x6ca140; not read here	inferred	none		
-0x6ca140	10			warden			Runs WardenClient.cpp code not read here	inferred	none		
-0x6ca150	12			warden			Runs WardenClient.cpp code that calls _atexit; not read here	inferred	none		
-0x6ca160	10			warden			Runs WardenClient.cpp code not read here	inferred	none		
-0x6ca170	5			warden			Runs WardenClient.cpp code not read here	inferred	none		
-0x6ca180	11			warden			Runs WardenClient.cpp code not read here	inferred	none		
-0x6ca190	66			warden			Runs WardenClient.cpp code that calls SCritSect::Enter, OsGetAsyncTimeMs, ActivateNextModule; not read here	inferred	none		
-0x6ca1e0	105	ActivateNextModule	idb	warden			Runs WardenClient.cpp code that calls 0x6ca290, 0x7a7de0, ClientServices::GetCurrent and 2 more; not read here	inferred	none		
-0x6ca250	60			warden			Runs WardenClient.cpp code that calls 0x7a7d80, SMemFree; not read here	inferred	none		
-0x6ca290	86			warden			Runs WardenClient.cpp code that calls 0x7a7d80, SMemFree; not read here	inferred	none		
-0x6ca2f0	105	InitWardenHandler	idb	warden			Runs WardenClient.cpp code that calls SCritSect::Enter, 0x6ca640, 0x6ca360 and 4 more; not read here	inferred	none		
-0x6ca360	596			warden			Runs WardenClient.cpp code that calls SMemAlloc, 0x66ec20, 0x66ecc0 and 9 more; not read here	inferred	none		
-0x6ca5c0	115	HandleWardenDataPacket	idb	warden			Runs WardenClient.cpp code that calls SCritSect::Enter, CDataStore::GetDataInSitu and 2 more; not read here	inferred	none		
-0x6ca640	87			warden			Runs WardenClient.cpp code that calls SCritSect::Enter, 0x6ca250, 0x6ca290 and 2 more; not read here	inferred	none		
-0x6ca6a0	195			warden			Runs WardenClient.cpp code that calls CDataStore::PutUInt32, CDataStore::PutInt8, ClientServices::Send; not read here	inferred	none		
-0x6ca770	157			warden			Runs WardenClient.cpp code that calls 0x6ca810, 0x56b430, 0x6ca250 and 1 more; not read here	inferred	none		
-0x6ca810	38			warden			Runs WardenClient.cpp code not read here	inferred	none		
-0x6ca840	118			warden			Runs WardenClient.cpp code that calls 0x56c5f0, 0x6c9f60, 0x56b6f0 and 1 more; not read here	inferred	none		
-0x6ca8c0	28			warden			Runs WardenClient.cpp code that calls SMemAlloc; not read here	inferred	none		
-0x6ca8e0	28			warden			Runs WardenClient.cpp code that calls SMemFree; not read here	inferred	none		
-0x6ca900	91			warden			Runs WardenClient.cpp code that calls SMemFree, SMemAlloc; not read here	inferred	none		
-0x6ca960	112			warden			Runs WardenClient.cpp code that calls SMemFree; not read here	inferred	none		
+0x6c9f80	26	FreeWardenBuffer		warden	host	void __thiscall (WardenBuffer *this)	Frees the data of a buffer when it has any	verified	one	warden/cache#the-cache-record	
+0x6c9fa0	67	WardenBuffersEqual		warden	unreached	bool __thiscall (WardenBuffer *this, const WardenBuffer *other)	Compares two buffers by length and bytes, equal when both lack data or both match	verified	one	warden/overview#unreached-code	
+0x6c9ff0	22	AssignWardenBuffer		warden	orchestration	WardenBuffer * __thiscall (WardenBuffer *this, const WardenBuffer *other)	Copies another buffer's bytes into this one through 0x6ca010 without freeing its own	verified	one	warden/cache#the-cache-record	
+0x6ca010	83	SetWardenBuffer		warden	host	WardenBuffer * __thiscall (WardenBuffer *this, uint32_t size, const void *data)	Copies size bytes of data into a new allocation, or empties the buffer for a null data pointer	verified	one	warden/cache#the-cache-record	
+0x6ca070	68	WriteWardenBuffer		warden	orchestration	void __thiscall (WardenBuffer *this, CDataStore *store)	Puts the length as a dword, then each byte, in a data store	verified	one	warden/cache#the-cache-record	warden::record_writer
+0x6ca0c0	94	ReadWardenBuffer		warden	orchestration	void __thiscall (WardenBuffer *this, CDataStore *store)	Reads a dword length and that many bytes from a data store into a new allocation	verified	one	warden/cache#the-cache-record	warden::record_reader, warden::record_reader_short_stores
+0x6ca120	6	GetWowCacheVersion		warden	primitive	int __cdecl ()	Returns 1, the version of the wow cache file	verified	one	dbcache#the-wdb-file	
+0x6ca130	10	InitWardenCritSect1Thunk		warden	orchestration	void __cdecl (void)	Calls 0x6ca140, then jumps to 0x6ca150; a static initializer	verified	one	warden/overview#static-initializers	
+0x6ca140	10	InitWardenCritSect1		warden	orchestration	void __cdecl (void)	Constructs the critical section at 0xce8958	verified	one	warden/overview#static-initializers	
+0x6ca150	12	RegisterDestroyWardenCritSect1		warden	orchestration	void __cdecl (void)	Registers 0x6ca160 with atexit	verified	one	warden/overview#static-initializers	
+0x6ca160	10	DestroyWardenCritSect1		warden	orchestration	void __cdecl (void)	Deletes the critical section at 0xce8958; an exit function	verified	one	warden/overview#static-initializers	
+0x6ca170	5	InitWardenClientTable1Thunk		warden	orchestration	void __cdecl (void)	Jumps to 0x6ca180; a static initializer	verified	one	warden/overview#static-initializers	
+0x6ca180	11	InitWardenClientTable1		warden	orchestration	void __cdecl (void)	Stores the service table address 0x811434 in 0xce8954	verified	one	warden/overview#static-initializers	
+0x6ca190	66	WardenTick		warden	primitive	void __cdecl (void)	Passes the milliseconds since the last tick to the active module's tick, then activates the next module	verified	one	warden/wire#the-tick	warden::tick_whole
+0x6ca1e0	105	ActivateNextModule	idb	warden	orchestration	bool __cdecl (void)	Replaces the active module with the pending one: unloads, calls its export 1, starts it with the session key	verified	one	warden/wire#activating-a-module	
+0x6ca250	60	FreePendingModule		warden	orchestration	void __cdecl (void)	Unloads the pending module and frees its object	verified	one	warden/wire#activating-a-module	
+0x6ca290	86	UnloadActiveModule		warden	orchestration	void __cdecl (void)	Calls the active module's unload, unloads its image and frees its object	verified	one	warden/wire#activating-a-module	
+0x6ca2f0	105	InitWardenHandler	idb	warden	orchestration	bool __cdecl (void)	Shuts any module down, loads and starts the built-in module, registers the 0x2e6 handler	verified	one	warden/overview#globals-and-lifetime	
+0x6ca360	596	LoadWardenModule		warden	primitive	WardenModule * __fastcall (const uint8_t *blob, uint32_t length, const uint8_t *key)	Decrypts, signature-checks, inflates and loads a module blob, returning its object or null	verified	one	warden/modules#decoding-a-module	warden::decoder_real_signature, warden::decoder_after_the_signature, warden::decoder_loader_failure, warden::signature_name_loop
+0x6ca5c0	115	HandleWardenDataPacket	idb	warden	primitive	uint32_t __fastcall (void *context, uint32_t opcode, uint32_t time, CDataStore *store)	Hands the rest of a 0x2e6 message to the active module, then activates the next module	verified	one	warden/wire#the-servers-message	warden::handler_whole
+0x6ca640	87	ShutdownWardenHandler		warden	orchestration	void __cdecl (void)	Frees both modules and the handover buffer and clears the 0x2e6 handler	verified	one	warden/overview#globals-and-lifetime	
+0x6ca6a0	195	WardenSendPacket		warden	orchestration	void __stdcall (const uint8_t *bytes, uint32_t length)	Sends the bytes as message 0x2e7; service 0	verified	one	warden/wire#the-clients-message	
+0x6ca770	157	WardenLoadCachedModule		warden	orchestration	bool __stdcall (const uint8_t *id, const uint8_t *key)	Looks an id up in the module cache and decodes its record into the pending module; service 1	verified	one	warden/wire#the-service-table	
+0x6ca810	38	CopyWardenId		warden	orchestration	uint32_t * __thiscall (uint32_t *this, const uint32_t *id)	Copies a 16-byte id of four dwords	verified	one	warden/wire#the-service-table	
+0x6ca840	118	WardenStoreModule		warden	orchestration	void __stdcall (const uint8_t *id, const void *bytes, uint32_t length)	Removes the id from the module cache and stores a copy of the bytes under it; service 2	verified	one	warden/wire#the-service-table	
+0x6ca8c0	28	WardenAlloc		warden	host	void * __stdcall (uint32_t size)	Allocates size bytes through SMemAlloc; service 3	verified	one	warden/wire#the-service-table	
+0x6ca8e0	28	WardenFree		warden	host	int __stdcall (void *pointer)	Frees a block through SMemFree; service 4	verified	one	warden/wire#the-service-table	
+0x6ca900	91	WardenStashBuffer		warden	host	void __stdcall (const void *bytes, uint32_t length)	Replaces the handover buffer with a copy of the bytes; service 5	verified	one	warden/wire#the-handover-buffer	warden::handover_buffer
+0x6ca960	112	WardenTakeBuffer		warden	host	bool __stdcall (void *destination, uint32_t *length)	Copies out up to the length of the handover buffer, stores the count and frees it; service 6	verified	one	warden/wire#the-handover-buffer	warden::handover_buffer
 0x6ca9d0	85	ConstructBox4Pass		ffxeffects	orchestration		Builds a Box4 downsample pass: the base, its vtable and its program from FFXBox4.bls	verified	one	ffxeffects/objects#pass-and-effect-objects	
 0x6caa30	43	DeleteBox4Pass		ffxeffects	orchestration		Destroys a Box4 downsample pass and frees it when bit 0 of flags is set	verified	one	ffxeffects/objects#pass-and-effect-objects	
 0x6caa60	42	DestroyBox4Pass		ffxeffects	orchestration		Releases the program handles of a Box4 downsample pass and restores the base vtable	verified	one	ffxeffects/objects#pass-and-effect-objects	
@@ -35088,9 +35088,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a77b0	236	OsClipboardGetString	idb	os			Runs OsClipboard.cpp code that calls 0x589c90, GetACP, __alloca_probe and 2 more; not read here	inferred	none		
 0x7a78a0	23			os			Runs OsClipboard.cpp code that calls SMemFree; not read here	inferred	none		
 0x7a78c0	260	OsClipboardPutString	idb	unassigned			Runs its object file code that calls 0x589c90, SStrLen, __alloca_probe and 2 more; not read here	inferred	none		
-0x7a79d0	939			unassigned			Runs its object file code that calls _sprintf, SErrDisplayAppFatal, 0x7a7d80; not read here	inferred	none		
-0x7a7d80	95			unassigned			Runs its object file code not read here	inferred	none		
-0x7a7de0	49			unassigned			Runs its object file code not read here	inferred	none		
+0x7a79d0	939	LoadModuleImage		os	primitive	bool __thiscall (WardenModule *this, const uint8_t *image, uint32_t length)	Maps a decompressed module: unpacks its runs, relocates, links its imports and protects its sections	verified	one	warden/modules#loading-an-image	warden::loader_whole, warden::loader_library_missing, warden::loader_alloc_failed, warden::loader_header_too_large, warden::loader_long_relocation_leaves_the_image
+0x7a7d80	95	UnloadModuleImage		os	host	void __thiscall (WardenModule *this)	Frees the libraries a module loaded, last first, and tries to release its image	verified	one	warden/modules#unloading-and-exports	warden::loader_whole
+0x7a7de0	49	GetModuleExport		os	primitive	void * __thiscall (WardenModule *this, uint32_t ordinal)	Returns the address of the module export with the given ordinal, or null	verified	one	warden/modules#unloading-and-exports	warden::loader_whole
 0x7a7e20	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7a7e30	11			unassigned			Runs its object file code not read here	inferred	none		
 0x7a7e40	5			unassigned			Runs its object file code not read here	inferred	none		

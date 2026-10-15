@@ -1036,6 +1036,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8112dc	const float[12]	s_keyframeTable		playername	Holds the crit scale keyframes: start, end, low and high of three segments	verified	one	playername/worldtext#timing-and-scale
 0x811310	float	s_maxSignedByte		ffxeffects	Holds 127.0, the upper clamp of the signed wave map byte	verified	one	ffxeffects/passes#wave-map-table
 0x811314	void *[2]	WORLDTEXTSTRING::vftable		playername	Holds the text record vtable: the deleting destructor and one more slot	verified	one	playername/worldtext#text-record
+0x811320	const uint8_t[10]	s_wardenNameTable		warden	Holds the module name, each byte times 0xb9 modulo 256 giving Maiev.mod, ended by a zero product	verified	one	warden/modules#the-signature-check
+0x811330	const uint8_t[256]	s_wardenModulus		warden	Holds the RSA modulus, little-endian, that the module signature is checked against	verified	one	warden/modules#the-signature-check
+0x811430	const uint32_t	s_wardenExponent		warden	Holds the RSA public exponent 0x10001	verified	one	warden/modules#the-signature-check
+0x811434	void *[7]	WardenClient::vftable		warden	Holds the seven services a module calls: send, load, store, alloc, free, stash and take	verified	one	warden/wire#the-service-table
 0x81147c	float	s_ffxThree		ffxeffects	Holds 3.0, the glow wave screen offset in pixels and the death fade factor	verified	one	ffxeffects/passes#glow-wave-pass
 0x811480	void *[3]	s_box4PassVtable		ffxeffects	Holds the Box4 pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects/objects#pass-and-effect-objects
 0x81148c	void *[3]	FFX::Pass::vftable		ffxeffects	Holds the base pass vtable: deleting destructor and two pure slots	verified	one	ffxeffects/objects#pass-and-effect-objects
@@ -2136,6 +2140,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86c9dc	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x86c9e0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x86ca0c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x86ddb0	const uint8_t[4787]	s_wardenModuleBlob		warden	Holds the built-in module, RC4-encrypted, with its signature tail	verified	one	warden/embedded#the-built-in-module
+0x86f064	const uint8_t[16]	s_wardenModuleKey		warden	Holds the RC4 key of the built-in module	verified	one	warden/embedded#the-built-in-module
+0x86f074	const char[62]	s_wardenSourcePath		warden	Holds the source path WardenClient.cpp that the file passes to its allocations	verified	one	warden/overview#globals-and-lifetime
 0x86f1c4	char[60]	s_pathFfxEffects		ffxeffects	Holds the source path of FFXEffects.cpp that the allocation calls pass	verified	one	ffxeffects/passes#wave-map-table
 0x86f200	char[8]	s_textFfxGlow		ffxeffects	Holds the string "ffxGlow"	inferred	none	
 0x86f228	char[15]	s_tagFfxPass		ffxeffects	Holds the type tag .PAVPass@FFX@@ of the pass pointer lists	verified	one	ffxeffects/objects#pass-and-effect-objects
@@ -4268,6 +4275,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce88d0	float	s_playerNameInfinity3		playername	Holds +inf copied by 0x6c7980, which nothing reads	verified	one	playername/overview#infinity-copies-and-pools
 0xce88dc	void *[15]	s_rankBadgeTextures		playername	Holds the 15 PvP rank badge textures	verified	one	playername/worldtext#rank-icon-records
 0xce8918	uint32_t[15]	s_filterLists		unassigned	Holds five capacity, count, base triples of word lists: server spam, spam, reserved, profanity, profane names	verified	one	ui/chatfilter#the-word-lists
+0xce8954	WardenClient	s_wardenClient		warden	Holds the pointer to the service table; the object a module receives	verified	one	warden/overview#globals-and-lifetime
+0xce8958	uint8_t[24]	s_wardenLock		warden	Holds the critical section that guards the module state	verified	one	warden/overview#globals-and-lifetime
+0xce8974	WardenModule *	s_pendingModule		warden	Holds the module loaded and waiting to start, or null	verified	one	warden/overview#globals-and-lifetime
+0xce8978	WardenModule *	s_activeModule		warden	Holds the running module, or null	verified	one	warden/overview#globals-and-lifetime
+0xce897c	void *	s_moduleObject		warden	Holds the object the running or starting module returned; its first dword is the module table	verified	one	warden/overview#globals-and-lifetime
+0xce8980	uint8_t *	s_handoverData		warden	Holds the bytes one module left for the next, or null	verified	one	warden/overview#globals-and-lifetime
+0xce8984	uint32_t	s_handoverSize		warden	Holds the length of the handover buffer	verified	one	warden/overview#globals-and-lifetime
+0xce8988	uint32_t	s_lastTickMs		warden	Holds the clock reading, in ms, of the last tick	verified	one	warden/overview#globals-and-lifetime
 0xce898c	void *	s_waveMapBuffer		ffxeffects	Holds the allocated wave map table, or null	verified	one	ffxeffects/passes#wave-map-table
 0xce8994	uint32_t	s_waveMapFormat		ffxeffects	Holds the wave map format, 8 or 1, picked by the capability word	verified	one	ffxeffects/passes#wave-map-table
 0xce8998	uint32_t	s_waveMapUsers		ffxeffects	Holds the number of glow wave and wave map passes alive	verified	one	ffxeffects/passes#wave-map-table

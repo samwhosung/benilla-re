@@ -1266,6 +1266,22 @@ WORLDTEXTSTRING	0x003c	64	char[64]	m_text	playername	Holds the text	verified	one
 WORLDTEXTSTRING	0x007c	4	uint32_t	m_iconValue	playername	Holds the rank icon value of a category 5 text	verified	one	playername/worldtext#text-record
 WTOBJECT	0x0000	4	SWING *	m_swing	playername	Holds the swing record, 0 while none	verified	one	playername/swing#trail-objects
 WTOBJECT	0x0004	4	void *	m_model	playername	Holds the model the trail follows	verified	one	playername/swing#trail-objects
+WardenBuffer	0x0000	4	uint32_t	m_size	warden	Holds the length of the data	verified	one	warden/cache#the-cache-record
+WardenBuffer	0x0004	4	uint8_t *	m_data	warden	Holds the data, a copy the buffer owns, or null	verified	one	warden/cache#the-cache-record
+WardenClient	0x0000	4	void **	__vfptr	warden	Holds the service table 0x811434	verified	one	warden/wire#the-service-table
+WardenModule	0x0000	4	void *	m_imageBase	warden	Holds the base of the mapped image, or 0	verified	one	warden/modules#loading-an-image
+WardenModule	0x0004	4	uint32_t	m_imageSize	warden	Holds the size of the image	verified	one	warden/modules#loading-an-image
+WardenModule	0x0008	4	uint32_t	m_libraryCount	warden	Holds the number of import libraries loaded, which the unloader frees	verified	one	warden/modules#loading-an-image
+WardenModuleHeader	0x0000	4	uint32_t	m_imageSize	warden	Holds the size of the image	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0004	4	uint32_t	m_unread	warden	Holds a dword the loader copies and never reads	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0008	4	uint32_t	m_relocationOffset	warden	Holds the offset of the relocation stream	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x000c	4	uint32_t	m_relocationCount	warden	Holds the number of relocation entries	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0010	4	uint32_t	m_exportOffset	warden	Holds the offset of the export table	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0014	4	uint32_t	m_exportCount	warden	Holds the number of exports	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0018	4	uint32_t	m_exportBase	warden	Holds the ordinal of the first export	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x001c	4	uint32_t	m_importOffset	warden	Holds the offset of the import table	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0020	4	uint32_t	m_importCount	warden	Holds the number of import libraries	verified	one	warden/modules#the-module-image
+WardenModuleHeader	0x0024	4	uint32_t	m_sectionCount	warden	Holds the number of 12-byte section entries after the header	verified	one	warden/modules#the-module-image
 WhoResult	0x0000	48	char[48]	m_name	net	Holds the player name	verified	one	net/friends#who-list-reply
 WhoResult	0x0030	96	char[96]	m_guild	net	Holds the guild name	verified	one	net/friends#who-list-reply
 WhoResult	0x0090	4	uint32_t	m_level	net	Holds the level	verified	one	net/friends#who-list-reply
