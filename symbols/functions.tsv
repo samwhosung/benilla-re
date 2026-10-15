@@ -498,7 +498,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4091a0	17			unassigned			Runs its object file code not read here	inferred	none		
 0x4091c0	17			unassigned			Runs its object file code not read here	inferred	none		
 0x4091e0	17			unassigned			Runs its object file code not read here	inferred	none		
-0x409200	186			unassigned	unreached		Copies a message into a slot of ten display records with its colour and time; nothing calls it	verified	one	sysmsg#display-callback-registration	
+0x409200	186	StoreDisplayMessage		unassigned	unreached		Copies a message into a slot of ten display records with its colour and time; nothing calls it	verified	one	sysmsg#display-callback-registration	
 0x4092c0	419			unassigned			Runs its object file code that calls OsGetAsyncTimeMs, GxuFontDestroyString and 6 more; not read here	inferred	none		
 0x409470	5			unassigned			Runs its object file code not read here	inferred	none		
 0x409480	15			unassigned			Runs its object file code not read here	inferred	none		
@@ -2269,7 +2269,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42c160	15	InitClockTwoPi		core	primitive	void __cdecl (void)	Stores π + π as a float in the object file's 2π global	verified	one	core/time#static-initializers	
 0x42c170	5	InitClockInvTwoPiThunk		core	orchestration	void __cdecl (void)	Jumps to 0x42c180; a static initializer	verified	one	core/time#static-initializers	
 0x42c180	19	InitClockInvTwoPi		core	primitive	void __cdecl (void)	Stores 1 / 2π as a float in the object file's 1/2π global	verified	one	core/time#static-initializers	
-0x42c1a0	167			unassigned			Classifies the active input method and keyboard layout as 0 roman, 1 Japanese, 2 Korean or 3 Chinese	verified	one	ui/inputlanguage#the-language-index	
+0x42c1a0	167	ClassifyInputLanguage		unassigned			Classifies the active input method and keyboard layout as 0 roman, 1 Japanese, 2 Korean or 3 Chinese	verified	one	ui/inputlanguage#the-language-index	
 0x42c250	16			unassigned			Runs its object file code that calls 0x42c260; not read here	inferred	none		
 0x42c260	171			unassigned			Runs its object file code that calls OsGuiGetWindow, ImmGetContext, ImmGetCompositionStringA and 3 more; not read here	inferred	none		
 0x42c310	16			unassigned			Runs its object file code that calls 0x42c260; not read here	inferred	none		
@@ -3208,7 +3208,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x442950	103			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4429c0	26	ScrnLayerSetRect	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x4429e0	4			unassigned			Runs its object file code not read here	inferred	none		
-0x4429f0	4			unassigned	primitive		Stores a dword at +0x2c of the object it is given	inferred	none		
+0x4429f0	4	StoreDwordAt2c		unassigned	primitive		Stores a dword at +0x2c of the object it is given	inferred	none		
 0x442a00	7			unassigned			Runs its object file code not read here	inferred	none		
 0x442a10	7			unassigned			Runs its object file code not read here	inferred	none		
 0x442a20	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -28203,7 +28203,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c61e0	56			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x6c6220	8	CurrencyMultiplier	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x6c6230	35			unassigned			Runs its object file code not read here	inferred	none		
-0x6c6260	59			unassigned	primitive		Splits copper into copper, silver and gold	inferred	none	objectlayer/quests#quest-completion	
+0x6c6260	59	SplitCopper		unassigned	primitive		Splits copper into copper, silver and gold	inferred	none	objectlayer/quests#quest-completion	
 0x6c62a0	34			unassigned	unreached		Runs its object file code that calls CurrencyMultiplier; not read here	inferred	none		
 0x6c62d0	194	FormatCoinIconPath		unassigned		void __fastcall (int32_t amount, char *dest, uint32_t size)	Formats the coin icon path an amount shows	verified	one	ui/cursormoney#coin-icons	
 0x6c63a0	41	LootInitialize	idb	unassigned			Runs its object file code not read here	inferred	none		
@@ -28339,9 +28339,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6c91a0	929			unassigned			Runs its object file code that calls 0x6c9e40, 0x4a2ff0, 0x71fba0 and 1 more; not read here	inferred	none		
 0x6c9550	128			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6c95d0	240			unassigned	unreached		Runs its object file code that calls 0x6c96c0, SUniConvertUTF8to16, 0x6c9e00 and 2 more; not read here	inferred	none		
-0x6c96c0	939			unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	
+0x6c96c0	939	ValidateNameText		unassigned			Validates a UTF-8 name against its charset and three word lists; returns a code from 0 to 0xd	verified	one	glue/enterworld#character-name-check	
 0x6c9a70	100			unassigned			Runs its object file code not read here	inferred	none		
-0x6c9ae0	80			unassigned			Validates a character name with no extra characters and all word lists on; code 2 when over 12, 8 or 6 units	verified	one	glue/enterworld#character-name-check	
+0x6c9ae0	80	ValidateCharacterName		unassigned			Validates a character name with no extra characters and all word lists on; code 2 when over 12, 8 or 6 units	verified	one	glue/enterworld#character-name-check	
 0x6c9b30	63			unassigned	unreached		Runs its object file code that calls 0x6c96c0; not read here	inferred	none		
 0x6c9b70	61			unassigned			Runs its object file code that calls 0x6c96c0; not read here	inferred	none		
 0x6c9bb0	86			unassigned	unreached		Runs its object file code that calls 0x6c9c50, 0x6c9d80, 0x6c9d10; not read here	inferred	none		
@@ -35691,8 +35691,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7bbd40	5	InitColourInfinityThunk		unassigned			Jumps to 0x7bbd50; a static initializer	verified	one	cmath/matrices#header-initializers	
 0x7bbd50	11	InitColourInfinity		unassigned			Copies +inf into a global	verified	one	cmath/matrices#header-initializers	
 0x7bbd60	316	HsvToRgb		unassigned			Converts hue, saturation and value back to three channels in [0, 1]	verified	one	lighting/daynight#underwater-tint	cmath::hsv_to_rgb_difftest, ui::colorselect_hsv_roundtrip_chain
-0x7bbec0	95			unassigned	primitive		Packs three unit values into bytes through a 512.0 bias, with 0xff alpha	verified	one	ui/colorselect#reading-the-colour	cmath::color_pack_rgb, ui::colorselect_hsv_roundtrip_chain
-0x7bbf20	68			unassigned	primitive		Unpacks three bytes into unit values times 1/255	verified	one	ui/colorselect#setting-the-colour	cmath::color_unpack_rgb, ui::colorselect_hsv_roundtrip_chain
+0x7bbec0	95	PackColorBytes		unassigned	primitive		Packs three unit values into bytes through a 512.0 bias, with 0xff alpha	verified	one	ui/colorselect#reading-the-colour	cmath::color_pack_rgb, ui::colorselect_hsv_roundtrip_chain
+0x7bbf20	68	UnpackColorBytes		unassigned	primitive		Unpacks three bytes into unit values times 1/255	verified	one	ui/colorselect#setting-the-colour	cmath::color_unpack_rgb, ui::colorselect_hsv_roundtrip_chain
 0x7bbf70	118			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x7bbff0	5	InitColourTwoPiThunk		unassigned			Jumps to 0x7bc000; a static initializer	verified	one	cmath/matrices#header-initializers	
 0x7bc000	15	InitColourTwoPi		unassigned			Stores π + π as a float in a global	verified	one	cmath/matrices#header-initializers	
@@ -36079,7 +36079,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c78b0	19	InitSharedPoint05		collision	primitive	void __cdecl (void)	Stores 0.5/10 = 0.05 as a float	verified	one	collision/overview#shared-file-initializers	
 0x7c78d0	5	InitRecordInfinityThunk		unassigned	orchestration	void __cdecl (void)	Jumps to 0x7c78e0, a static initializer of the file	verified	one	collision/overview#object-files	
 0x7c78e0	11	InitRecordInfinity		unassigned	orchestration	void __cdecl (void)	Copies +∞ (0x7f800000) from a constant into its global	verified	one	collision/overview#object-files	
-0x7c78f0	308			unassigned	primitive		Writes a petition record to a data store	inferred	none	objectlayer/party#group-and-guild-messages-sent	
+0x7c78f0	308	WritePetitionRecord		unassigned	primitive		Writes a petition record to a data store	inferred	none	objectlayer/party#group-and-guild-messages-sent	
 0x7c7a30	313	ReadPetitionRecord		unassigned	primitive	void __thiscall (void *record, CDataStore *store)	Reads a petition record from a data store, copying its strings with no capacity	verified	one	objectlayer/party#reading-a-petition-record	dbcache::dbcache_petition
 0x7c7b70	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7c7b80	15			unassigned			Runs its object file code not read here	inferred	none		
