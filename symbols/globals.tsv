@@ -1036,10 +1036,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8112dc	const float[12]	s_keyframeTable		playername	Holds the crit scale keyframes: start, end, low and high of three segments	verified	one	playername/worldtext#timing-and-scale
 0x811310	float	s_maxSignedByte		ffxeffects	Holds 127.0, the upper clamp of the signed wave map byte	verified	one	ffxeffects/passes#wave-map-table
 0x811314	void *[2]	WORLDTEXTSTRING::vftable		playername	Holds the text record vtable: the deleting destructor and one more slot	verified	one	playername/worldtext#text-record
-0x811320	const uint8_t[10]	s_wardenNameTable		warden	Holds the module name, each byte times 0xb9 modulo 256 giving Maiev.mod, ended by a zero product	verified	one	warden/modules#the-signature-check
-0x811330	const uint8_t[256]	s_wardenModulus		warden	Holds the RSA modulus, little-endian, that the module signature is checked against	verified	one	warden/modules#the-signature-check
-0x811430	const uint32_t	s_wardenExponent		warden	Holds the RSA public exponent 0x10001	verified	one	warden/modules#the-signature-check
-0x811434	void *[7]	WardenClient::vftable		warden	Holds the seven services a module calls: send, load, store, alloc, free, stash and take	verified	one	warden/wire#the-service-table
+0x811320	const uint8_t[10]	s_wardenNameTable		warden	Holds the module name, each byte times 0xb9 modulo 256 giving Maiev.mod, ended by a zero product	verified	two	warden/modules#the-signature-check
+0x811330	const uint8_t[256]	s_wardenModulus		warden	Holds the RSA modulus, little-endian, that the module signature is checked against	verified	two	warden/modules#the-signature-check
+0x811430	const uint32_t	s_wardenExponent		warden	Holds the RSA public exponent 0x10001	verified	two	warden/modules#the-signature-check
+0x811434	void *[7]	WardenClient::vftable		warden	Holds the seven services a module calls: send, load, store, alloc, free, stash and take	verified	two	warden/wire#the-service-table
 0x81147c	float	s_ffxThree		ffxeffects	Holds 3.0, the glow wave screen offset in pixels and the death fade factor	verified	one	ffxeffects/passes#glow-wave-pass
 0x811480	void *[3]	s_box4PassVtable		ffxeffects	Holds the Box4 pass vtable: deleting destructor, readiness test and render	verified	one	ffxeffects/objects#pass-and-effect-objects
 0x81148c	void *[3]	FFX::Pass::vftable		ffxeffects	Holds the base pass vtable: deleting destructor and two pure slots	verified	one	ffxeffects/objects#pass-and-effect-objects
@@ -1204,6 +1204,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d680	void *[39]	CSimpleHyperlinkedFrame::vftable		ui	Holds the vtable of the hyperlinked frame base, with its three hyperlink firers at +0x90	verified	one	ui/hyperlinks#the-two-classes
 0x81d728	const float	s_cutoffFadeFraction		sound	Holds 0.10000002, the fraction of the cutoff the distance gain fades over	verified	one	sound/engine#distance-cutoff
 0x81d72c	const float	s_volumeLevelBias		sound	Holds 512.5, the bias that reads a volume back as a level	verified	one	sound/engine#volume-of-a-sound
+0x81d760	const int32_t[3]	s_loadModuleImageScope		os	Holds the loader's exception scope: -1, the filter 0x7a7d42 and the handler 0x7a7d48	verified	one	warden/modules#faults-while-loading
 0x81d7a0	const float	s_infinityCameraProperty		camera	Holds +inf, 0x7f800000, the literal that InitCameraPropertyInfinity copies at start-up	verified	one	camera#object-files-and-initializers
 0x81d7a8	const float	s_infinityCamera		camera	Holds +inf, 0x7f800000, the literal that InitCameraInfinity copies at start-up	verified	one	camera#object-files-and-initializers
 0x81d7ac	const float	s_piCamera		camera	Holds pi, which the camera 2 pi initializer doubles and the default field of view initializer reads	verified	one	camera#object-files-and-initializers
@@ -2140,8 +2141,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x86c9dc	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0x86c9e0	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0x86ca0c	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
-0x86ddb0	const uint8_t[4787]	s_wardenModuleBlob		warden	Holds the built-in module, RC4-encrypted, with its signature tail	verified	one	warden/embedded#the-built-in-module
-0x86f064	const uint8_t[16]	s_wardenModuleKey		warden	Holds the RC4 key of the built-in module	verified	one	warden/embedded#the-built-in-module
+0x86ddb0	const uint8_t[4787]	s_wardenModuleBlob		warden	Holds the built-in module, RC4-encrypted, with its signature tail	verified	two	warden/embedded#the-built-in-module
+0x86f064	const uint8_t[16]	s_wardenModuleKey		warden	Holds the RC4 key of the built-in module	verified	two	warden/embedded#the-built-in-module
 0x86f074	const char[62]	s_wardenSourcePath		warden	Holds the source path WardenClient.cpp that the file passes to its allocations	verified	one	warden/overview#globals-and-lifetime
 0x86f1c4	char[60]	s_pathFfxEffects		ffxeffects	Holds the source path of FFXEffects.cpp that the allocation calls pass	verified	one	ffxeffects/passes#wave-map-table
 0x86f200	char[8]	s_textFfxGlow		ffxeffects	Holds the string "ffxGlow"	inferred	none	
