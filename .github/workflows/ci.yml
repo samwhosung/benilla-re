@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6.1.0
       - name: Toolchain
-        run: rustup toolchain install stable --profile minimal --component clippy,rustfmt
+        run: rustup toolchain install && rustc -V
       - name: Format
         run: cargo fmt --all -- --check
       - name: Lint

@@ -90,7 +90,7 @@ JDK 21 or later.
 ### The check
 
 One command checks what the repo claims. It is Rust: install a toolchain with rustup, and
-`rust-toolchain.toml` picks the stable one. Without the exe it runs anywhere, and CI runs it on
+`rust-toolchain.toml` pins the version, the one CI runs. Without the exe it runs anywhere, and CI runs it on
 every pull request:
 
 ```

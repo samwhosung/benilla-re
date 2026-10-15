@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6.1.0
       - name: Toolchain
-        run: rustup toolchain install stable --profile minimal
+        run: rustup toolchain install && rustc -V
       - name: Build the site
         run: cargo xtask site site-out
       - uses: actions/configure-pages@v6.0.0
