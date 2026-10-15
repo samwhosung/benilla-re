@@ -1,7 +1,7 @@
 # dbcache
 
 The client's caches of records the server streams: creatures, game objects, items, quests, names, guilds, pages,
-pets and petitions. `DBCache.cpp`, `0x554b00` to `0x5738c0`, holds thirteen cache objects of one template,
+pets and petitions. `DBCache.cpp`, `0x554b10` through `0x5737b0`, holds thirteen cache objects of one template,
 `DBCache<T>`; the record files `CreatureStats.cpp`, `GameObjectStats.cpp`, `ItemName.cpp`, `ItemStats.cpp` and `NPCText.cpp` (`0x7c8120`
 on) hold five of the twelve record decoders. A caller asks a cache for a record by id; on a miss the cache sends a
 query and keeps the caller's callback; the server's response is decoded into a node, the callbacks run, and nine

@@ -34,18 +34,38 @@ use std::sync::LazyLock;
 const INITIALIZERS: (u32, u32) = (0x827000, 0x82e030);
 
 /// The object files the docs list by address where no path or row bounds them: `ui`'s runs
-/// (`systems/ui/README.md`) and the minigame's board file (`symbols/README.md`). A span is that
-/// system's; a span whose end the doc leaves open is one address, its first function.
+/// (`systems/ui/README.md`), the minigame's board file (`symbols/README.md`), and the object-file
+/// spans of `gx` (`systems/gx/overview.md`), `lighting` (`systems/lighting/overview.md`), `cmath`
+/// (`systems/cmath/overview.md`), `dbcache` (`systems/dbcache.md`) and `font`
+/// (`systems/font/overview.md`). A span is that system's; a span whose end the doc leaves open is
+/// one address, its first function. The spans are ordered by start.
 const DECLARED: &[(u32, u32, &str)] = &[
+    (0x4477d0, 0x44bfa0, "gx"),
+    (0x44c040, 0x44ca10, "gx"),
+    (0x455c00, 0x4567c2, "cmath"),
+    (0x47a9a0, 0x47bec0, "gx"),
     (0x480380, 0x509ff0, "ui"),
     (0x515880, 0x536ea0, "ui"),
+    (0x554b10, 0x5737b0, "dbcache"),
+    (0x5894c0, 0x5a35d0, "gx"),
+    (0x5c1560, 0x5c3c90, "font"),
+    (0x5c6650, 0x5cfdef, "font"),
+    (0x5d1100, 0x5d1400, "gx"),
+    (0x674560, 0x67e350, "lighting"),
+    (0x6cdf50, 0x6d6c20, "lighting"),
+    (0x6d6df0, 0x6d8530, "lighting"),
     (0x6ed930, 0x6ed930, "ui"),
     (0x701940, 0x706430, "ui"),
     (0x728b10, 0x728ef3, "minigame"),
     (0x728f00, 0x730bbf, "ui"),
+    (0x760be0, 0x762e20, "cmath"),
     (0x764160, 0x7a3a80, "ui"),
+    (0x7af5c0, 0x7b0d90, "gx"),
+    (0x7bc090, 0x7c4810, "cmath"),
+    (0x7c8120, 0x7c8120, "dbcache"),
     (0x7cb0f0, 0x7cc310, "ui"),
     (0x7cc320, 0x7cc320, "ui"),
+    (0x7e4f90, 0x7e6670, "lighting"),
 ];
 
 /// Directory and file rules: the system a source path's object file belongs to. First match wins.

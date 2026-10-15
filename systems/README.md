@@ -38,9 +38,13 @@ without initializers has no run: it is bounded by the source paths its code pass
 callers. One stretch of code between two runs can hold several files, as WardenClient.cpp
 (0x6c9f8e) and FFXEffects.cpp (0x6cbed2) share the stretch after slot `0x82cd78`.
 
-A row's system is its object file's, and a row stays `unassigned` until its file is proved. Three
+A row's system is its object file's, and a row stays `unassigned` until its file is proved. Four
 proofs settle it:
 
+- **A listed span.** A system's doc lists its object files by the addresses of their first and last
+  function, with the bytes that bound them: the functions between are that system's. A span whose
+  end the doc leaves open covers its first function only. A span that holds a row of another
+  system is not used.
 - **A source path.** A function that passes a `.cpp` or `.c` path (`__FILE__` in an assertion or an
   allocation) is in that file; the path's directory gives the system. A header's path names no
   file, since headers are inlined anywhere.
