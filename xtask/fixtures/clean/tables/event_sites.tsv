@@ -1,0 +1,4 @@
+site	dispatcher	event_ids	event_names	arg_format	space
+0x402010	SignalEvent2	0|3	DEMO_TICK|DEMO_DONE	%d	game
+0x402020	SignalEvent	3	DEMO_DONE		game
+0x402030	SignalEvent	0	DEMO_TICK		glue

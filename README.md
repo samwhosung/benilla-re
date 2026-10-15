@@ -57,7 +57,8 @@ your own copy of 1.12.1.5875 and refuse any other build.
 ## The address site
 
 `cargo xtask site <out dir>` writes a static website from `symbols/`, `systems/`, the spec docs
-and `tables/`; it needs no exe, and the same input writes the same bytes. `.github/workflows/pages.yml`
+and `tables/`; it needs no exe, empties the folder first (and refuses one that does not hold a
+previous site), and the same input writes the same bytes. `.github/workflows/pages.yml`
 builds it on every push to main and deploys it to GitHub Pages. It is plain HTML with one
 stylesheet and one script, and it reads on a phone and in a dark theme.
 
@@ -71,16 +72,33 @@ Addresses are written `0x` and lowercase hex, and every page URL is built from t
   example `a/5e6850.html`. Use it when the address is known to be a row's start.
 - `<site>/t/<struct>.html` is a struct (`::` written `--`), `<site>/s/<system>.html` a system,
   `<site>/d/<doc path without .md>.html` a doc (`d/systems/random.html`, `d/METHOD.html`) and
-  `<site>/tb/<table>.html` a table.
+  `<site>/tb/<table>.html` a table (one over 5,000 rows shows its first 200 and links the file).
+  A system with many rows continues on `<site>/s/<system>/2.html`, `3.html` and so on.
+- For a name, not an address:
+  - `<site>/lua/<name>.html` is a Lua function, from `tables/bindings.tsv` (`lua/GetItemInfo.html`);
+    `lua/index.html` lists them by registrar table. A name registered in several tables is one
+    page. Two names that differ only by case share no file: the one with a capital writes it
+    `~` and the lowercase letter (`Lower` is `lua/~lower.html`).
+  - `<site>/event/<NAME>.html` is an event with its fire sites (`event/UNIT_HEALTH.html`);
+    `event/index.html` lists them.
+  - `<site>/cvar/<name>.html` is a CVar with its default, flags, help text and callback
+    (`cvar/M2UseZFill.html`); `cvar/index.html` lists them.
+  - `<site>/op/<0x and three lowercase hex digits>.html` is an opcode with its handler
+    (`op/0x03a.html`); `op/index.html` lists them. A `name` column in `tables/opcodes.tsv`, once
+    the table has one, shows on the page, the index and in the search.
+  - Any other byte in a name is written `%XX`.
 
 An address page has the row's name, signature or type, meaning, confidence and proof, the claim
-of the finding it links to, its callers and callees, and its test. A system page has its docs'
+of the finding it links to, its callers and callees, and its test. A name page has the table's
+row, and the doc entries that cite its address. A system page has its docs'
 overviews, the coverage counts (named, verified, proof two, tested), its closure and its rows. The
 search box finds names and addresses from `index.json`, loaded in the browser.
 
-Callers and callees come from `tables/calls.tsv`, which `cargo xtask check --exe` regenerates from
-the listing: the direct calls and jumps by a bare address. A function reached through a register,
-a slot or a stored address shows none for that path.
+Callers and callees come from `tables/calls.tsv`, which `cargo xtask check --exe` rebuilds and
+compares with the committed file: the direct calls and jumps by a bare address. A function reached
+through a register, a slot or a stored address shows none for that path. The table also leaves out
+a function's calls to itself, calls and jumps to code that has no row, and jumps into the middle
+of another row.
 
 ## How to trust it
 

@@ -16,8 +16,18 @@ static CITED: LazyLock<Regex> =
 static WORD: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r"[A-Za-z_][A-Za-z0-9_:]*").expect("a valid pattern"));
 
+/// A table with more rows than this shows only its first rows; the file has the rest.
+const HEAVY_TABLE: usize = 5000;
+const SHOWN_OF_HEAVY: usize = 200;
+/// Rows of each kind on one page of a system.
+const PER_PAGE: usize = 500;
+
+pub mod names;
+
 pub struct Pages<'a> {
     pub model: &'a Model,
+    pub names: names::Names<'a>,
+    cites: names::Cites,
     pub linker: Linker<'a>,
     struct_names: HashSet<&'a str>,
     findings: RefCell<HashMap<(String, String), String>>,
@@ -44,21 +54,22 @@ fn percent(part: usize, whole: usize) -> String {
     if whole == 0 {
         return "–".into();
     }
-    format!("{part} ({}%)", part * 100 / whole)
+    match part * 100 / whole {
+        0 if part > 0 => format!("{part} (<1%)"),
+        pct => format!("{part} ({pct}%)"),
+    }
 }
 
-fn coverage_row(label: &str, c: &Coverage, tests: bool) -> String {
+/// A coverage row. `tested_of` is the number of rows a test can cover (the functions), or
+/// `None` where the kind has none.
+fn coverage_row(label: &str, c: &Coverage, tested_of: Option<usize>) -> String {
     format!(
         "<tr><th>{label}</th><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
         c.rows,
         percent(c.named, c.rows),
         percent(c.verified, c.rows),
         percent(c.proof_two, c.rows),
-        if tests {
-            percent(c.tested, c.rows)
-        } else {
-            "–".into()
-        }
+        tested_of.map_or_else(|| "–".into(), |of| percent(c.tested, of))
     )
 }
 
@@ -86,11 +97,11 @@ impl Counts {
     fn table(&self) -> String {
         format!(
             "<div class=\"scroll\"><table class=\"cov\">\n{COVERAGE_HEAD}{}{}{}{}{}</table></div>\n",
-            coverage_row("functions", &self.functions, true),
-            coverage_row("globals", &self.globals, false),
-            coverage_row("structs", &self.structs, false),
-            coverage_row("fields", &self.fields, false),
-            coverage_row("all", &self.total(), true),
+            coverage_row("functions", &self.functions, Some(self.functions.rows)),
+            coverage_row("globals", &self.globals, None),
+            coverage_row("structs", &self.structs, None),
+            coverage_row("fields", &self.fields, None),
+            coverage_row("all", &self.total(), Some(self.functions.rows)),
         )
     }
 }
@@ -134,6 +145,8 @@ impl<'a> Pages<'a> {
     pub fn new(model: &'a Model, linker: Linker<'a>) -> Pages<'a> {
         Pages {
             model,
+            names: names::Names::new(model),
+            cites: names::Cites::new(model),
             linker,
             struct_names: model.structs.iter().map(|s| s.name.as_str()).collect(),
             findings: RefCell::new(HashMap::new()),
@@ -514,17 +527,29 @@ impl<'a> Pages<'a> {
         let root = "../";
         let mut b = format!(
             "<h1>tables/{}.tsv <span class=\"dim\">{} rows</span></h1>\n\
-<p class=\"sub\"><a href=\"{REPO}/blob/main/tables/{}.tsv\">source</a> · <a href=\"{root}d/tables/README.html\">what the columns mean</a></p>\n\
-<div class=\"scroll\"><table>\n<tr>",
+<p class=\"sub\"><a href=\"{REPO}/blob/main/tables/{}.tsv\">source</a> · <a href=\"{root}d/tables/README.html#{}\">what the columns mean</a></p>\n",
             escape(&table.name),
             table.rows.len(),
-            escape(&table.name)
+            escape(&table.name),
+            slug(&format!("{}.tsv", table.name))
         );
+        let shown = if table.rows.len() > HEAVY_TABLE {
+            b.push_str(&format!(
+                "<p class=\"dim\">The first {SHOWN_OF_HEAVY} rows of {} are shown. The whole table is \
+<a href=\"{REPO}/blob/main/tables/{}.tsv\">the file</a>.</p>\n",
+                table.rows.len(),
+                escape(&table.name)
+            ));
+            SHOWN_OF_HEAVY
+        } else {
+            table.rows.len()
+        };
+        b.push_str("<div class=\"scroll\"><table>\n<tr>");
         for h in &table.header {
             b.push_str(&format!("<th>{}</th>", escape(h)));
         }
         b.push_str("</tr>\n");
-        for row in &table.rows {
+        for row in table.rows.iter().take(shown) {
             b.push_str("<tr>");
             for cell in row {
                 b.push_str(&format!("<td>{}</td>", self.linker.text(cell, root)));
@@ -588,8 +613,8 @@ impl<'a> Pages<'a> {
         (reached, boundary)
     }
 
-    pub fn system(&self, system: &str, counts: &Counts) -> (String, String) {
-        let path = format!("s/{system}.html");
+    /// The pages of a system: its first page, then any further pages of rows.
+    pub fn system(&self, system: &str, counts: &Counts) -> Vec<(String, String)> {
         let root = "../";
         let mut b = format!("<h1>{}</h1>\n", escape(system));
         b.push_str(&counts.table());
@@ -645,64 +670,108 @@ reached only that way is not counted.</p>\n",
                 b.push_str(&self.address_list(&boundary, root));
             }
         }
-        b.push_str(&format!(
-            "<h2>Functions <span class=\"dim\">{}</span></h2>\n<div class=\"scroll\"><table>\n\
-<tr><th>address</th><th>name</th><th>class</th><th>confidence</th><th>test</th><th>closure</th></tr>\n",
-            functions.len()
-        ));
-        for i in functions {
-            b.push_str(&format!(
-                "<tr><td><code>0x{:06x}</code></td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
-                i.address,
-                self.item_link(i, root),
-                escape(&i.class),
-                Self::proof_html(&i.confidence, &i.proof),
-                if i.test.is_empty() { "" } else { "✓" },
-                if reached.contains(&i.address) { "✓" } else { "" }
-            ));
-        }
-        b.push_str("</table></div>\n");
         let globals: Vec<&Item> = self
             .model
             .items
             .iter()
             .filter(|i| i.system == system && !i.is_function)
             .collect();
-        if !globals.is_empty() {
-            b.push_str(&format!(
-                "<h2>Globals <span class=\"dim\">{}</span></h2>\n<div class=\"scroll\"><table>\n\
-<tr><th>address</th><th>name</th><th>type</th><th>confidence</th></tr>\n",
-                globals.len()
-            ));
-            for i in globals {
-                b.push_str(&format!(
-                    "<tr><td><code>0x{:06x}</code></td><td>{}</td><td><code>{}</code></td><td>{}</td></tr>\n",
-                    i.address,
-                    self.item_link(i, root),
-                    self.type_html(&i.shape, root),
-                    Self::proof_html(&i.confidence, &i.proof)
-                ));
-            }
-            b.push_str("</table></div>\n");
-        }
         let structs: Vec<_> = self
             .model
             .structs
             .iter()
             .filter(|s| s.system == system)
             .collect();
-        if !structs.is_empty() {
-            b.push_str("<h2>Structs</h2>\n<ul class=\"cols\">\n");
-            for s in structs {
-                b.push_str(&format!(
-                    "<li><a href=\"{root}{}\">{}</a></li>\n",
-                    struct_page(&s.name),
-                    escape(&s.name)
-                ));
+        let count = functions
+            .len()
+            .div_ceil(PER_PAGE)
+            .max(globals.len().div_ceil(PER_PAGE))
+            .max(1);
+        let page_path = |n: usize| {
+            if n == 1 {
+                format!("s/{system}.html")
+            } else {
+                format!("s/{system}/{n}.html")
             }
-            b.push_str("</ul>\n");
+        };
+        let head = b;
+        let mut out = Vec::new();
+        for n in 1..=count {
+            let path = page_path(n);
+            let root = root_for(&path);
+            let mut b = if n == 1 {
+                head.clone()
+            } else {
+                format!(
+                    "<h1>{} <span class=\"dim\">rows, page {n} of {count}</span></h1>\n",
+                    escape(system)
+                )
+            };
+            if count > 1 {
+                b.push_str("<p class=\"dim\">Rows, in pages of at most 500 of each kind: ");
+                for k in 1..=count {
+                    if k == n {
+                        b.push_str(&format!("{k} "));
+                    } else {
+                        b.push_str(&format!("<a href=\"{root}{}\">{k}</a> ", page_path(k)));
+                    }
+                }
+                b.push_str("</p>\n");
+            }
+            let from = (n - 1) * PER_PAGE;
+            let slice = |len: usize| from.min(len)..(from + PER_PAGE).min(len);
+            let fs = &functions[slice(functions.len())];
+            if !fs.is_empty() || n == 1 {
+                b.push_str(&format!(
+                    "<h2>Functions <span class=\"dim\">{}</span></h2>\n<div class=\"scroll\"><table>\n\
+<tr><th>address</th><th>name</th><th>class</th><th>confidence</th><th>test</th><th>closure</th></tr>\n",
+                    functions.len()
+                ));
+                for i in fs {
+                    b.push_str(&format!(
+                        "<tr><td><code>0x{:06x}</code></td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>\n",
+                        i.address,
+                        self.item_link(i, &root),
+                        escape(&i.class),
+                        Self::proof_html(&i.confidence, &i.proof),
+                        if i.test.is_empty() { "" } else { "✓" },
+                        if reached.contains(&i.address) { "✓" } else { "" }
+                    ));
+                }
+                b.push_str("</table></div>\n");
+            }
+            let gs = &globals[slice(globals.len())];
+            if !gs.is_empty() {
+                b.push_str(&format!(
+                    "<h2>Globals <span class=\"dim\">{}</span></h2>\n<div class=\"scroll\"><table>\n\
+<tr><th>address</th><th>name</th><th>type</th><th>confidence</th></tr>\n",
+                    globals.len()
+                ));
+                for i in gs {
+                    b.push_str(&format!(
+                        "<tr><td><code>0x{:06x}</code></td><td>{}</td><td><code>{}</code></td><td>{}</td></tr>\n",
+                        i.address,
+                        self.item_link(i, &root),
+                        self.type_html(&i.shape, &root),
+                        Self::proof_html(&i.confidence, &i.proof)
+                    ));
+                }
+                b.push_str("</table></div>\n");
+            }
+            if n == 1 && !structs.is_empty() {
+                b.push_str("<h2>Structs</h2>\n<ul class=\"cols\">\n");
+                for s in &structs {
+                    b.push_str(&format!(
+                        "<li><a href=\"{root}{}\">{}</a></li>\n",
+                        struct_page(&s.name),
+                        escape(&s.name)
+                    ));
+                }
+                b.push_str("</ul>\n");
+            }
+            out.push((path.clone(), shell(&path, system, &b)));
         }
-        (path.clone(), shell(&path, system, &b))
+        out
     }
 
     pub fn front(&self, by_system: &BTreeMap<String, Counts>, all: &Counts) -> (String, String) {
@@ -713,11 +782,12 @@ reached only that way is not counted.</p>\n",
 <code>?0x5e6850</code> after this page's address for the row that holds it.</p>\n\
 <p id=\"resolve\" class=\"at\" hidden></p>\n",
         );
+        b.push_str(&self.name_links());
         b.push_str("<h2>Coverage</h2>\n");
         b.push_str(&all.table());
         b.push_str(
             "<p class=\"dim\">Named: the row has a name. Verified: read at the bytes. Proof two: two independent readings. \
-Tested: a bit-exact test runs the function. <a href=\"d/METHOD.html\">The method</a> says what each means.</p>\n",
+Tested: a bit-exact test runs the function; the share is of the functions. <a href=\"d/METHOD.html\">The method</a> says what each means.</p>\n",
         );
         b.push_str(
             "<h2 id=\"systems\">Systems</h2>\n<div class=\"scroll\"><table>\n\
@@ -738,7 +808,7 @@ Tested: a bit-exact test runs the function. <a href=\"d/METHOD.html\">The method
                 percent(t.named, t.rows),
                 percent(t.verified, t.rows),
                 percent(t.proof_two, t.rows),
-                percent(t.tested, t.rows),
+                percent(t.tested, c.functions.rows),
                 if docs == 0 { String::new() } else { docs.to_string() }
             ));
         }
@@ -824,6 +894,8 @@ mod tests {
     #[test]
     fn percent_is_whole_numbers_and_a_dash_for_nothing() {
         assert_eq!(percent(1, 3), "1 (33%)");
+        assert_eq!(percent(99, 20000), "99 (<1%)");
+        assert_eq!(percent(0, 5), "0 (0%)");
         assert_eq!(percent(0, 0), "–");
     }
 }

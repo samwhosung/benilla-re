@@ -1,0 +1,4 @@
+name	fn	pair	table	table_kind	argc	argc_conf	arity	arity_conf	kinds	kinds_conf	notes
+Advance	0x402000	0x500014	0x500000	global	1	exact	1	exact	(number)	agree	
+Lower	0x402040	0x500014	0x500000	global	0	lower-bound	?	unknown	?	unknown	variadic
+lower	0x402100	0x500014	0x500000	global	0	exact	0	exact	()	agree	
