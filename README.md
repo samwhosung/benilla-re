@@ -158,7 +158,8 @@ proof `one` is one reading of the bytes, proof `two` is two independent readings
 ## Contributing
 
 Names, findings, corrections and checks are welcome: [CONTRIBUTING.md](CONTRIBUTING.md) covers
-the setup and how a change is judged.
+the setup and how a change is judged, and [AGENTS.md](AGENTS.md) is the short version for a
+coding agent working here.
 
 ## License
 
