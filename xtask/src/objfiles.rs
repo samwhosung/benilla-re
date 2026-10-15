@@ -681,7 +681,7 @@ mod tests {
     fn overlapping_files_settle_nothing_between_them() {
         let (a, b) = (Some(0x402000), Some(0x402100));
         let owners = owners_of_pushes(&[a, b, None, a, b]);
-        assert!(owners.owners.get(&0x401020).is_none());
+        assert!(!owners.owners.contains_key(&0x401020));
         assert!(!owners.conflicts.is_empty());
     }
 }
