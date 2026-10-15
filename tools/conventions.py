@@ -21,7 +21,7 @@ inside the row's extent, a `jmp` to another row as a tail call):
     read before it is written or a call takes it from the top of the stack;
   - the object test: the value ecx came in with, followed through register copies, offsets and
     frame slots, is the base of a memory operand (a string operation's esi or edi too), or of an
-    `lea` with a field offset, or is returned in eax, in the body or in a callee it is passed
+    `lea` or an `add` of a field offset (4 or more) or an `inc` whose result is pushed, or is returned in eax, in the body or in a callee it is passed
     to;
   - the `ret N` of every return, a tail target's included, and the stack words read.
 
@@ -31,12 +31,27 @@ instructions:
   - ecx and edx are `loaded` (written and not read again before the call: a temporary is not a
     load), `not` loaded (a `call` that writes the register comes first), or `unknown` (the block
     starts at a label, after a `ret` or `jmp`, at the caller's entry where the register is the
-    caller's own, or at the limit);
+    caller's own, or at the limit); ecx is also `live` when the code after the call reads it
+    before writing it;
   - ecx is loaded as a constant (zero or a small integer), the address of a global, an `lea`, or
     otherwise;
   - the words pushed in the block and the `add esp,N` right after the call.
 
-The rules, per row:
+A function reached through a pointer has the type of the pointer's registration, whatever its body
+reads:
+  - a row in a table of (name, function) pairs, or the function a direct call of
+    FrameScriptRegisterFunction passes in edx, is a Lua C function: `int __fastcall (lua_State
+    *L)`, the state in ecx (luaD_precall: `mov ecx,esi; call edi`);
+  - the function a direct call of ConsoleCommandRegister passes in edx is a console handler,
+    `__fastcall (const char *name, const char *args)` with its own return type, the name in ecx
+    and the arguments in edx (ConsoleCommandExecute: `mov edx,[ebp-4]; mov ecx,[ebp-8]; call
+    [ebx+0x18]`);
+  - the function ClientServices::SetMessageHandler or NetClient::SetMessageHandler is given is a
+    message handler, `__fastcall (void *param, uint32_t opcode, uint32_t time, CDataStore
+    *msg)` with its own return type: the dispatcher at 0x537ac3 loads the registered parameter
+    into ecx and the opcode into edx, pushes the time and the message, and returns `ret 8`.
+
+The rules, per row, for the rest:
   - edx read by the body: __fastcall, ecx a parameter when read, else `unused`. A caller that
     leaves edx undefined, or no caller that loads it, is a disagreement.
   - edx not read and loaded by every caller: __fastcall, edx `unused`.
@@ -48,20 +63,27 @@ The rules, per row:
     otherwise __fastcall with one register parameter. Where the next stack parameter could take edx, the signature gives edx an
     `unused` parameter.
   - ecx read and edx loaded by some callers: a disagreement among callers.
-  - neither read: __thiscall when every caller loads ecx, or most do and none leaves it undefined
-    (not only constants), or the function is a class method in a vtable; else __stdcall when a return pops bytes, else __cdecl. With no
-    return, or no stack parameters and `ret`, the signature's own __stdcall or __cdecl stays.
+  - neither read: __thiscall when every caller loads ecx (the constants alone do not count) and
+    none reads ecx again after the call, which means the value is the caller's own; a method of
+    the callee's class that writes nothing to ecx before the call passes its own `this` and
+    counts as a load; or the
+    function is a class method in a vtable. With no direct caller, the convention of the older
+    signature (the `--older` table, else the current one) stays when it is __fastcall or
+    __thiscall: a pointer the tool cannot see may pass the registers. Otherwise __stdcall when a
+    return pops bytes, else __cdecl. With no return, or no stack parameters and `ret`, the
+    signature's own __stdcall or __cdecl stays. A function the callers call with neither register
+    loaded loses its register parameters; its stack parameters stay.
   - returns that pop different bytes, and callers that clean the bytes the body pops, are
     disagreements.
 A disagreement is listed and left alone; tools/conventions-resolved.tsv holds the rows a reader
-settled at the bytes, each with the reason.
+settled at the bytes, each with the reason, and its verdict replaces the tool's.
 
 How far the answer goes: a function with no direct call is decided by its body alone (vtable and
 callback calls are not seen). Of a call site only its own block is read; a register set earlier,
 or left by a callee the tool cannot follow, is `unknown`. A register loaded for another use and
 untouched until the call reads as loaded. An integer pointer the body uses only through a store
 to a global, or a string in ecx, looks like an integer, or an object, by the test above. The
-stack words are the `ret N` of the body; for __cdecl the existing list stays, minus placeholders.
+stack words are the `ret N` of the body; for __cdecl the stack part of the existing list stays.
 
 Names: the stack parameters keep the names of their slots (the first list of names whose words
 are the `ret N` bytes; the older table's first where a change of convention may have slid them).
@@ -575,7 +597,15 @@ class Analyzer:
             (taint.add if ops[0] in st.taint else taint.discard)(('s', st.eo - 4))
         elif mn in ('add', 'sub') and len(ops) == 2 and ops[0] in st.taint \
                 and HEX.match(ops[1]):
-            pass                    # an offset into the same object
+            if mn == 'add' and 4 <= int(ops[1], 16) < 0x10000:
+                reg.deref = True    # the address of a field, as `lea` takes it
+            # an offset into the same object
+        elif mn == 'inc' and len(ops) == 1 and ops[0] in st.taint:
+            # a step into the same object; passed on, it is an address
+            k = self.L.at[a]
+            if any(self.L.mn[j] == 'push' and self.L.ops[j] == ops for j in range(
+                    k + 1, min(k + 4, len(self.L.mn)))):
+                reg.deref = True
         elif mn == 'lea' and len(ops) == 2 and ops[0] in GP32 and self.field_of_tainted(
                 ops[1], st):
             taint.add(ops[0])
@@ -719,7 +749,7 @@ class Analyzer:
 # ----------------------------------------------------------------------------------- call sites
 
 class Site:
-    __slots__ = ('addr', 'ecx', 'edx', 'pushes', 'cleanup', 'ecx_kind', 'caller')
+    __slots__ = ('addr', 'ecx', 'edx', 'pushes', 'cleanup', 'ecx_kind', 'caller', 'live_ecx', 'own')
 
 
 def block_facts(L, i, labels, rows, az, window=16):
@@ -784,6 +814,8 @@ def block_facts(L, i, labels, rows, az, window=16):
     s.edx = state['edx'] or 'unknown'
     # cleanup right after the call
     s.cleanup = None
+    s.live_ecx = ecx_live_after(L, i)
+    s.own = class_of_caller(L, i, entry, row['name'] if row else None)
     if i + 1 < len(L.addrs):
         mn, ops = L.mn[i + 1], L.ops[i + 1]
         if mn == 'add' and ops and ops[0] == 'esp':
@@ -792,6 +824,35 @@ def block_facts(L, i, labels, rows, az, window=16):
             except ValueError:
                 pass
     return s
+
+
+def class_of_caller(L, i, entry, name):
+    """The class of the method that holds the `call` at index i when nothing in it writes ecx
+    before the call (ecx is the method's own `this`), else ''."""
+    m = CLASS_RE.match(name or '')
+    if not m or entry not in L.at:
+        return ''
+    for j in range(L.at[entry], i):
+        if 'ecx' in effect(L.mn[j], L.ops[j], L.rep[j]).writes:
+            return ''
+        if L.mn[j] == 'call':
+            return ''
+    return m.group(1)
+
+
+def ecx_live_after(L, i, window=16):
+    """Whether the code after the `call` at index i reads ecx before it writes it: the caller keeps
+    a value of its own there, so a load before the call is not an argument."""
+    for j in range(i + 1, min(i + 1 + window, len(L.addrs))):
+        mn = L.mn[j]
+        if mn in ('call', 'jmp', 'int3') or mn.startswith('ret'):
+            return False
+        e = effect(mn, L.ops[j], L.rep[j])
+        if 'ecx' in e.reads:
+            return True
+        if 'ecx' in e.writes:
+            return False
+    return False
 
 
 def ecx_kind(mn, ops):
@@ -817,8 +878,9 @@ class Verdict:
     """A convention and the use of each register parameter; `conv` is None for a disagreement,
     with its reason in `why`."""
 
-    def __init__(self, conv, ecx=None, edx=None, why='', basis=''):
+    def __init__(self, conv, ecx=None, edx=None, why='', basis='', fixed=None):
         self.conv, self.ecx, self.edx, self.why, self.basis = conv, ecx, edx, why, basis
+        self.fixed = fixed      # the callback type a registration gives, else None
 
     def __repr__(self):
         return 'Verdict(%s,%s,%s,%s)' % (self.conv, self.ecx, self.edx, self.why)
@@ -828,20 +890,34 @@ def hexlist(sites):
     return ' '.join('%#x' % s.addr for s in sites[:4])
 
 
+# The types a registration gives: the Lua C function (the state in ecx, the result count in eax)
+# and the console command handler (the command name in ecx, its arguments in edx).
+LUA_CFUNCTION = ('int', 'lua_State *L')
+CONSOLE_HANDLER = (None, 'const char *name, const char *args')
+NET_HANDLER = (None, 'void *param, uint32_t opcode, uint32_t time, CDataStore *msg')
+# kind: (what it is, the bytes its return pops, its type, whether edx is a parameter)
+CALLBACKS = {
+    'lua': ('a Lua C function', 0, LUA_CFUNCTION, None),
+    'console': ('a console command', 0, CONSOLE_HANDLER, 'used'),
+    'net': ('a message handler', 8, NET_HANDLER, 'used'),
+}
+
+
 def decide(reg, sites, name, vslot=False, current=None, current_words=None, typed=False,
-           text=False, variadic=False):
+           text=False, variadic=False, callback=None, older=None):
     """The verdict for one body and its call sites; see the header for the rules."""
     e = reg.read['ecx'] is not None
     d = reg.read['edx'] is not None
     n = len(sites)
     loaded_d = [s for s in sites if s.edx == 'loaded']
-    loaded_c0 = [s for s in sites if s.ecx == 'loaded']
     not_d = [s for s in sites if s.edx == 'not']
-    # every caller loads ecx, or most do and none leaves it undefined
-    c_all = n > 0 and all(s.ecx == 'loaded' for s in sites) or (
-        n > 0 and len(loaded_c0) * 2 > n and not any(s.ecx == 'not' for s in sites))
-    d_all = n > 0 and len(loaded_d) == n
     cls = bool(CLASS_RE.match(name or ''))
+    # every caller loads ecx and none keeps a value of its own in it past the call
+    # (a method that passes its own `this` on to a method of its class loads nothing)
+    own = class_of(name) if cls else None
+    c_all = n > 0 and all(
+        (s.ecx == 'loaded' or own and s.own == own) and not s.live_ecx for s in sites)
+    d_all = n > 0 and len(loaded_d) == n
     loaded_c = [s for s in sites if s.ecx == 'loaded']
     integer = bool(loaded_c) and all(s.ecx_kind == 'const' for s in loaded_c)
     obj = cls or (not integer and not text and (reg.deref or typed or any(
@@ -851,6 +927,13 @@ def decide(reg, sites, name, vslot=False, current=None, current_words=None, type
         if e or d:
             return Verdict(None, why='a variadic function reads a register')
         return Verdict('__cdecl', basis='variadic')
+    if callback:
+        # reached through a pointer: the type it is registered as decides, whatever the body reads
+        kind, pops_n, fixed, edx_ = CALLBACKS[callback]
+        if reg.rets and reg.rets != {pops_n}:
+            return Verdict(None, why='registered as %s, a return pops %s'
+                           % (kind, sorted(reg.rets)))
+        return Verdict('__fastcall', 'used', edx_, basis='registered as ' + kind, fixed=fixed)
     if len(reg.rets) > 1:
         return Verdict(None, why='returns pop different bytes: %s' % sorted(reg.rets))
     pops = next(iter(reg.rets)) if reg.rets else None
@@ -885,6 +968,11 @@ def decide(reg, sites, name, vslot=False, current=None, current_words=None, type
         return Verdict(None, why='every caller loads ecx with a constant, body ignores it')
     if vslot and cls:
         return Verdict('__thiscall', 'unused', None, basis='vtable slot of a class')
+    kept = older or current
+    if not n and kept in ('__fastcall', '__thiscall'):
+        # reached by a pointer the tool does not see: the registers stay as the signature has them
+        return Verdict(kept, 'kept', 'kept' if kept == '__fastcall' else None,
+                       basis='no direct caller, reads neither register')
     if not reg.rets and not reg.tails:
         # nothing returns: __stdcall and __cdecl look the same, so the signature's stays
         return Verdict(current if current in ('__cdecl', '__stdcall') else '__cdecl',
@@ -1077,6 +1165,9 @@ def compose(row, cur, orig, dec, reg, structs, no_args=False):
     names between slots)."""
     ret, cconv, cparams = cur
     notes = []
+    if dec.fixed:
+        # a registered callback has the type of its registration
+        return '%s __fastcall (%s)' % (dec.fixed[0] or ret, dec.fixed[1]), notes
     k = next(iter(reg.rets)) // 4 if len(reg.rets) == 1 else None
     cnamed, cstack = layout(cur, dec, k, structs)
     onamed, ostack = layout(orig, dec, k, structs) if orig else ({}, None)
@@ -1092,12 +1183,16 @@ def compose(row, cur, orig, dec, reg, structs, no_args=False):
     if dec.conv == '__cdecl' or k is None:
         # no ret to count: every existing parameter except a register placeholder stays
         if dec.conv == '__cdecl':
-            stack = [p for p in cparams if param_name(p) not in ('this', 'unused')
-                     and not (is_arg(p) and p in cnamed.values())]
-            if cconv in ('__cdecl', '__stdcall'):
+            # no register is loaded: a register parameter of the older convention is dropped
+            regconv = orig[1] if orig and orig[1] in ('__fastcall', '__thiscall') else (
+                cconv if cconv in ('__fastcall', '__thiscall') else None)
+            if regconv:
+                stack = list(ostack if orig and orig[1] == regconv else cstack)
+                notes.append('register parameters of the %s dropped' % regconv)
+            else:
                 stack = list(cparams)
-            if no_args and cconv not in ('__cdecl', '__stdcall') and '...' not in cparams:
-                # a register parameter nothing reads, and no caller pushes a word
+            if no_args and regconv and '...' not in cparams:
+                # nothing reads a stack word and no caller pushes one
                 stack = []
                 notes.append('no register or stack parameter is read or pushed')
         else:
@@ -1152,8 +1247,16 @@ def compose(row, cur, orig, dec, reg, structs, no_args=False):
                 r'^[A-Z][\w:]*\s*\*$', param_type(first)):
             regs = [join_type(param_type(first)) + 'this']
     elif dec.conv == '__fastcall':
-        regs = [unused(0) if dec.ecx == 'unused' else existing(0)]
-        if dec.edx == 'used':
+        def kept(i):
+            return next((m[i] for m in order if i in m), None)
+
+        if dec.ecx == 'kept':
+            regs = [kept(0) or unused(0)]
+        else:
+            regs = [unused(0) if dec.ecx == 'unused' else existing(0)]
+        if dec.edx == 'kept' and kept(1):
+            regs.append(kept(1))
+        elif dec.edx == 'used':
             regs.append(existing(1))
         elif dec.edx == 'unused':
             regs.append(unused(1))
@@ -1246,7 +1349,66 @@ def vtable_slots(img, rows, text):
     return found
 
 
-def build_all(args):
+def lua_registered(img, rows):
+    """Addresses of rows that sit in a table of (name, function) pairs: two or more pairs in a
+    row, or one followed by a pair of zeros, in a data section."""
+    starts = set(rows.starts)
+    found = set()
+    for name, (lo, hi, _) in img.sections.items():
+        if name == '.text':
+            continue
+        a = lo + (-lo) % 4
+        run = []
+        while a + 8 <= hi:
+            if img.u32(a + 4) in starts and img.cstr(img.u32(a)):
+                run.append(img.u32(a + 4))
+                a += 8
+                continue
+            if len(run) > 1 or run and img.u32(a) == 0 == img.u32(a + 4):
+                found.update(run)
+            run = []
+            a += 4
+    return found
+
+
+# The register functions and where a direct call passes the function: `edx` is a `mov edx,imm`;
+# `push2` is the second `push imm` back from the call.
+REGISTERERS = (('lua', 'FrameScriptRegisterFunction', 'edx'),
+               ('console', 'ConsoleCommandRegister', 'edx'),
+               ('net', 'ClientServices::SetMessageHandler', 'edx'),
+               ('net', 'NetClient::SetMessageHandler', 'push2'))
+
+
+def registered_by_call(L, rows, labels):
+    """The functions the direct calls of the register functions pass, by kind."""
+    out = {kind: set() for kind, _, _ in REGISTERERS}
+    for kind, fn, how in REGISTERERS:
+        target = next((r['address'] for r in rows.rows if r['name'] == fn), None)
+        if target is None:
+            continue
+        for i, mn in enumerate(L.mn):
+            if mn != 'call' or L.ops[i] != ['0x%x' % target]:
+                continue
+            j, pushes = i - 1, 0
+            while j >= 0 and i - j <= 8 and L.mn[j] not in ('call', 'ret', 'jmp'):
+                ops = L.ops[j]
+                v = int(ops[-1], 16) if ops and HEX.match(ops[-1]) else None
+                if how == 'edx' and L.mn[j] == 'mov' and ops[0] == 'edx' and v in rows.at:
+                    out[kind].add(v)
+                    break
+                if how == 'push2' and L.mn[j] == 'push':
+                    pushes += 1
+                    if pushes == 2:
+                        if v in rows.at:
+                            out[kind].add(v)
+                        break
+                if L.addrs[j] in labels:
+                    break
+                j -= 1
+    return out
+
+
+def build_all(args, original=None):
     rows = Functions()
     img = Image(args.exe)
     L = Listing(args.disasm)
@@ -1270,6 +1432,11 @@ def build_all(args):
             structs[c[0]] = int(c[1])
     STRUCT_NAMES.update(structs)
     vslots = vtable_slots(img, rows, img.text)
+    by_call = registered_by_call(L, rows, labels)
+    lua = lua_registered(img, rows) | by_call['lua']
+    callbacks = {a: 'lua' for a in lua}
+    callbacks.update({a: 'net' for a in by_call['net']})
+    callbacks.update({a: 'console' for a in by_call['console']})
     resolved = load_resolved(ROOT / 'tools' / 'conventions-resolved.tsv')
     results = []
     for row in rows.rows:
@@ -1289,9 +1456,10 @@ def build_all(args):
                                              param_type(first[0])) is not None
             text = bool(first) and re.match(r'^(const )?(w?char)\s*\*+$',
                                             param_type(first[0])) is not None
+        old = (original or {}).get(a)
         dec = decide(reg, ss, row['name'], a in vslots, cp[1] if cp else None, cw, typed, text,
-                     bool(cp) and '...' in cp[2])
-        if dec.conv is None and a in resolved:
+                     bool(cp) and '...' in cp[2], callbacks.get(a), old[1] if old else None)
+        if a in resolved:
             dec = resolved[a]
         results.append((row, reg, ss, dec))
     return rows, structs, results
@@ -1312,7 +1480,6 @@ def main():
     args = ap.parse_args()
     if args.test:
         return selftest()
-    rows, structs, results = build_all(args)
     original = {}
     if args.older:
         with open(args.older, encoding='utf-8') as f:
@@ -1320,6 +1487,7 @@ def main():
             for line in f:
                 c = line.rstrip('\n').split('\t')
                 original[int(c[0], 16)] = parse_sig(c[6])
+    rows, structs, results = build_all(args, original)
     counts, report, edits, bad = {}, [], {}, []
     for row, reg, ss, dec in results:
         cur = parse_sig(row['signature'])
@@ -1496,6 +1664,12 @@ def selftest():
     check('an offset into the object', r.deref, True)
     _, r = region('1000: lea ecx,[ecx+0x10]\n1003: mov eax,DWORD PTR [ecx]\n1005: ret', {0x1000: 8})
     check('a field address is the object', r.deref, True)
+    _, r = region('1000: mov esi,ecx\n1002: add esi,0x4\n1005: push esi\n1006: ret', {0x1000: 8})
+    check('a field address by add', r.deref, True)
+    _, r = region('1000: mov esi,ecx\n1002: add esi,0x1\n1005: push esi\n1006: ret', {0x1000: 8})
+    check('a small offset is arithmetic', r.deref, False)
+    _, r = region('1000: mov esi,ecx\n1002: inc esi\n1003: push esi\n1004: ret', {0x1000: 8})
+    check('a stepped address passed on', r.deref, True)
     _, r = region('1000: push ebp\n1001: mov ebp,esp\n1003: push ecx\n1004: mov DWORD PTR [ebp-0x4],ecx\n'
                   '1007: mov eax,DWORD PTR [ebp-0x4]\n100a: mov eax,DWORD PTR [eax+0x4]\n'
                   '100d: pop ecx\n100e: pop ebp\n100f: ret', {0x1000: 0x20})
@@ -1544,12 +1718,14 @@ def selftest():
         r.deref = deref
         return r
 
-    def sites(n, ecx='loaded', edx='unknown', kind='other', cleanup=None):
+    def sites(n, ecx='loaded', edx='unknown', kind='other', cleanup=None, live=False, own=''):
         out = []
         for k in range(n):
             s = Site()
             s.addr, s.ecx, s.edx, s.ecx_kind, s.cleanup, s.pushes = 0x5000 + k, ecx, edx, kind, \
                 cleanup, 0
+            s.live_ecx = live
+            s.own = own
             out.append(s)
         return out
 
@@ -1582,8 +1758,27 @@ def selftest():
     check('cdecl', d(reg_of(), [], 'X'), ('__cdecl', None, None))
     check('every caller loads ecx, body ignores it', d(reg_of(), sites(2), 'X'),
           ('__thiscall', 'unused', None))
-    check('most callers load ecx', d(reg_of(), sites(3) + sites(1, ecx='unknown'), 'X'),
+    check('most callers load ecx is not every caller',
+          d(reg_of(), sites(3) + sites(1, ecx='unknown'), 'X'), ('__cdecl', None, None))
+    check('a method of the class passes its own this on',
+          d(reg_of(), sites(2) + sites(1, ecx='unknown', own='C'), 'C::f'),
           ('__thiscall', 'unused', None))
+    check('a method of another class does not',
+          d(reg_of(), sites(2) + sites(1, ecx='unknown', own='D'), 'C::f'),
+          ('__cdecl', None, None))
+    check('a caller that keeps its own ecx passes none',
+          d(reg_of(), sites(2) + sites(1, live=True), 'X'), ('__cdecl', None, None))
+    check('no caller: the registers stay', d(reg_of(), [], 'X', current='__fastcall'),
+          ('__fastcall', 'kept', 'kept'))
+    check('no caller, a thiscall stays', d(reg_of(), [], 'X', current='__thiscall'),
+          ('__thiscall', 'kept', None))
+    check('no caller, a stack return is read', d(reg_of(rets=(8,)), [], 'X', current='__cdecl'),
+          ('__stdcall', None, None))
+    check('a Lua C function', d(reg_of(rets=(0,)), [], 'X', current='__cdecl', callback='lua'),
+          ('__fastcall', 'used', None))
+    check('a console handler', d(reg_of(rets=(0,)), [], 'X', callback='console'),
+          ('__fastcall', 'used', 'used'))
+    check('a Lua C function that pops', d(reg_of(rets=(4,)), [], 'X', callback='lua'), ('?',))
     check('one caller leaves ecx undefined', d(reg_of(), sites(3) + sites(1, ecx='not'), 'X'),
           ('__cdecl', None, None))
     check('constant in ecx, body ignores it', d(reg_of(), sites(1, kind='const'), 'X'), ('?',))
@@ -1606,8 +1801,25 @@ def selftest():
     check('a register parameter nothing reads is dropped from a __cdecl',
           comp('void * __fastcall (uint32_t index)', None, Verdict('__cdecl'), (0,), 'f', True),
           'void * __cdecl (void)')
-    check('a __cdecl keeps its list without that evidence',
-          comp('void * __fastcall (uint32_t index)', None, Verdict('__cdecl'), (0,), 'f'),
+    check('a callback has its registration type',
+          comp('uint32_t __thiscall (void *this)', None,
+               Verdict('__fastcall', 'used', None, fixed=LUA_CFUNCTION), (0,), 'Script::F'),
+          'int __fastcall (lua_State *L)')
+    check('a handler keeps its return type',
+          comp('uint32_t __cdecl (const char *a, const char *b)', None,
+               Verdict('__fastcall', 'used', 'used', fixed=CONSOLE_HANDLER), (0,), 'F'),
+          'uint32_t __fastcall (const char *name, const char *args)')
+    check('callers load neither register: they are dropped',
+          comp('void __cdecl (uint32_t index, uint32_t a)', 'void __fastcall (uint32_t index, '
+               'uint32_t unused, uint32_t a)', Verdict('__cdecl'), (0,), 'f'),
+          'void __cdecl (uint32_t a)')
+    check('the registers stay with their names',
+          comp('void __cdecl (uint32_t index, uint32_t unused, uint32_t a)',
+               'void __fastcall (uint32_t index, uint32_t unused, uint32_t a)',
+               Verdict('__fastcall', 'kept', 'kept'), (4,), 'f'),
+          'void __fastcall (uint32_t index, uint32_t unused, uint32_t a)')
+    check('a __cdecl keeps its list',
+          comp('void * __cdecl (uint32_t index)', None, Verdict('__cdecl'), (0,), 'f'),
           'void * __cdecl (uint32_t index)')
 
     check('class A: names stay in their stack slots',

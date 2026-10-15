@@ -6,4 +6,10 @@ address	convention	ecx	edx	reason
 0x55f080	__thiscall	used		edx is set by two callers of 102 for another use; the callers load ecx with the address of a global
 0x5afae0	__fastcall	used		one caller of two zeroes edx for another use; ecx is a table index
 0x5fa6d0	__thiscall	used		edx is the zero of a division at the one caller that sets it; ecx is dereferenced
-0x63b460	__cdecl			the one caller zeroes ecx for the call before; the body writes ecx first
+0x63b460	__cdecl			the one caller zeroes ecx at 0x402856 again right before the call, so the zero is no argument; the body writes ecx first at 0x63b466
+0x4774f0	__thiscall	unused		23 of 26 callers load ecx with the model; the other three are past the 16-instruction view of a load (0x477589, 0x477654) or pass the caller's own ecx (0x47921d)
+0x586810	__thiscall	used		the one caller loads ecx with the record address as the siblings' callers do; the body hands ecx to SFile::Read as the buffer (0x58681e), which the object test does not follow
+0x587070	__thiscall	unused		three callers load ecx with a record; the fourth, 0x7ccd9a, is a jump target reached after the `lea ecx,[ebp-0x50]` at 0x7ccd7c; the body is a bare `ret` like the 150 record destructors
+0x59f170	__thiscall	unused		three callers load ecx; the fourth, 0x59f7f0, follows the load at 0x59f7dd past the view
+0x615070	__thiscall	unused		two callers load ecx; the third, 0x611549, follows the load at 0x6114b3 past the view
+0x72c030	__thiscall	unused		two callers load ecx; the third, 0x729bfe, follows the load at 0x729bf0 past a label
