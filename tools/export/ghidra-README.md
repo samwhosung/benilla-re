@@ -31,8 +31,12 @@ On a program already imported and analysed, run the two scripts alone with
 their one argument, so they run headless; the Script Manager passes none.
 
 Pass `keep` after the folder (`-postScript ApplySymbols.java symbols keep`) on a program that
-already has names of its own: an item whose name is not Ghidra's default keeps its name and its
-type, and takes ours as a repeatable comment. Without it every row is applied.
+already has names of its own: an item whose name somebody set (user-defined or imported, not
+Ghidra's default, analysis or AI) keeps its name and its type, and takes ours as a block of its
+repeatable comment; the rest of the comment stays. Every name the script applies leaves a
+`benilla-re: <name>` line in that comment, and with `keep` a later run, with a newer table, names
+again the items whose name is still the one that line records. Without `keep` every row is
+applied.
 
 ## What it prints
 

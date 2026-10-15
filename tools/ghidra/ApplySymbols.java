@@ -3,8 +3,12 @@
 //   functions.tsv            names (Class::Method as namespaces), signatures where given, and a
 //                            plate comment with the meaning, the confidence and the finding
 //   globals.tsv              labels, their types, and a plate comment
-// Arguments: the symbols directory, and optionally `keep`. With `keep`, an item whose name is not
-// Ghidra's own default keeps its name and its type, and takes ours as a repeatable comment.
+// Arguments: the symbols directory, and optionally `keep`. With `keep`, an item whose name somebody
+// set (source user-defined or imported, not default, analysis or AI) keeps its name and its type,
+// and takes ours as a block of its repeatable comment; the rest of the comment stays.
+// Every name this script applies leaves a `benilla-re: <name>` line in the repeatable comment. An
+// item whose name is still the one that line records was named by an earlier run, so `keep` names
+// it again from the newer table.
 // Prints one FAIL line per row it could not apply and, last, a verification that every row's name
 // is the name in the program.
 //
@@ -136,10 +140,47 @@ public class ApplySymbols extends GhidraScript {
         return (doc.equals("METHOD") ? "METHOD.md" : "systems/" + doc + ".md") + rest;
     }
 
-    // An item that keeps its name: ours goes in a repeatable comment.
-    private void commentKept(Address a, String name, String text) {
+    private static final String MARK = "benilla-re:";
+
+    // A comment as {the text outside our block, the name our block records or null}. Our block runs
+    // from its `benilla-re:` line to the next empty line.
+    private static String[] splitComment(String existing) {
+        if (existing == null) existing = "";
+        String[] lines = existing.split("\n", -1);
+        for (int start = 0; start < lines.length; start++) {
+            if (!lines[start].startsWith(MARK)) continue;
+            int end = start;
+            while (end < lines.length && !lines[end].isEmpty()) end++;
+            List<String> rest = new ArrayList<>(Arrays.asList(lines).subList(0, start));
+            rest.addAll(Arrays.asList(lines).subList(end, lines.length));
+            return new String[] {
+                String.join("\n", rest).replaceAll("^\n+|\n+$", ""),
+                lines[start].substring(MARK.length()).trim()
+            };
+        }
+        return new String[] {existing.replaceAll("^\n+|\n+$", ""), null};
+    }
+
+    // Whether an earlier run named the item: its name is still the one the run recorded.
+    private static boolean named(String[] parts, String current) {
+        return parts[1] != null && !parts[1].isEmpty() && parts[1].equals(current);
+    }
+
+    // Whether `keep` leaves the item's name and type alone.
+    private boolean keeps(SourceType source, String[] parts, String current) {
+        return keep && (source == SourceType.USER_DEFINED || source == SourceType.IMPORTED)
+                && !named(parts, current);
+    }
+
+    private String repeatable(Address a) {
+        return currentProgram.getListing().getComment(CommentType.REPEATABLE, a);
+    }
+
+    // Writes our block after the text of the repeatable comment that is not ours.
+    private void writeBlock(Address a, String[] parts, String name, String text) {
+        String block = MARK + " " + (name.isEmpty() ? "(no name)" : name) + (text.isEmpty() ? "" : "\n" + text);
         currentProgram.getListing().setComment(a, CommentType.REPEATABLE,
-                "benilla-re: " + (name.isEmpty() ? "(no name)" : name) + "\n" + text);
+                parts[0].isEmpty() ? block : parts[0] + "\n\n" + block);
     }
 
     private String comment(String[] c, int meaning, int confidence, int proof, int finding) {
@@ -239,9 +280,10 @@ public class ApplySymbols extends GhidraScript {
             Function f = getFunctionAt(a);
             if (f == null) { fail("function " + c[0] + " " + c[2] + ": no function"); continue; }
             try {
-                if (keep && f.getSymbol().getSource() != SourceType.DEFAULT) {
+                String[] parts = splitComment(repeatable(a));
+                if (keeps(f.getSymbol().getSource(), parts, f.getName(true))) {
                     kept.add(a.getOffset());
-                    commentKept(a, c[2], comment(c, 7, 8, 9, 10));
+                    writeBlock(a, parts, c[2], comment(c, 7, 8, 9, 10));
                     continue;
                 }
                 if (!c[2].isEmpty()) {
@@ -255,6 +297,7 @@ public class ApplySymbols extends GhidraScript {
                     if (why != null) fail("signature " + c[0] + " " + c[2] + ": " + why); else sigs++;
                 }
                 setPlateComment(a, comment(c, 7, 8, 9, 10));
+                if (!c[2].isEmpty()) writeBlock(a, parts, c[2], "");
             } catch (Exception e) {
                 fail("function " + c[0] + " " + c[2] + ": " + e);
             }
@@ -272,9 +315,10 @@ public class ApplySymbols extends GhidraScript {
             try {
                 if (!currentProgram.getMemory().contains(a)) { fail("global " + c[0] + " " + c[2] + ": not in memory"); continue; }
                 Symbol existing = symtab.getPrimarySymbol(a);
-                if (keep && existing != null && existing.getSource() != SourceType.DEFAULT) {
+                String[] parts = splitComment(repeatable(a));
+                if (existing != null && keeps(existing.getSource(), parts, existing.getName(true))) {
                     kept.add(a.getOffset());
-                    commentKept(a, c[2], comment(c, 5, 6, 7, 8));
+                    writeBlock(a, parts, c[2], comment(c, 5, 6, 7, 8));
                     continue;
                 }
                 DataType dt = type(c[1]);
@@ -291,6 +335,7 @@ public class ApplySymbols extends GhidraScript {
                 createData(a, dt);
                 typed++;
                 setPlateComment(a, comment(c, 5, 6, 7, 8));
+                if (!c[2].isEmpty()) writeBlock(a, parts, c[2], "");
             } catch (Exception e) {
                 fail("global " + c[0] + " " + c[2] + ": " + e);
             }
