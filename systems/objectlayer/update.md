@@ -42,7 +42,7 @@ at `+0xb0` and gets its vtable slot 3 (`+0x0c`). The handler returns 1.
 Addresses: `0x4651a0`, `0x418eb0`, `0x418cb0`, `0x4651b2`, `0x4651c1`, `0x4651dc`, `0x4651e1`, `0x4651e9`, `0x4651f7`, `0x46520e`, `0x465222`, `0x46522d`, `0x465290`, `0x4652ff`, `0x466010`, `0x465ec0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::update_handler_dispatch`
 
 `0x4651b2` reads the count (`0x418eb0`), `0x4651c1` the flag into `ebx` (`0x418cb0`); the cursor `+0x14` is saved in
 `[ebp-0x8]`. `0x4651e1` compares the next byte with 4: equal calls `0x465ec0` and sets `edi` to 1;
@@ -68,7 +68,7 @@ consumes nothing more in either, so the next byte is read as the next block's ty
 Addresses: `0x466010`, `0x466084`, `0x465314`, `0x46524d`, `0x466044`, `0x465fd0`, `0x465ea0`
 Confidence: verified
 Proof: one
-Test: none
+Test: `objectlayer::update_handler_dispatch`
 
 The notify table `0x465314` holds `0x46526f`, `0x465266`, `0x465254`, `0x465254`, `0x46527e`,
 `0x46527e`; the pass table `0x466084` holds `0x466062`, `0x466057`, `0x46604b`, `0x46604b`,

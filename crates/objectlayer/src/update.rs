@@ -114,3 +114,48 @@ pub fn values_block(
         Some(reactivated) => (g, ValuesBlock::Applied { reactivated }),
     }
 }
+
+/// The calls `ObjectUpdateHandler` makes for the blocks; each may move the cursor.
+pub trait UpdateBlocks {
+    /// `ProcessOutOfRangeObjects` (`0x465ec0`), for an out-of-range first block.
+    fn out_of_range(&mut self, s: &mut DataStore);
+    /// `ObjectCreatePass` (`0x466010`) over blocks `start..count`, with the pass flag.
+    fn pass(&mut self, s: &mut DataStore, time: u32, count: u32, start: u32, flag: bool);
+    /// The notify pass's handler for a block of type 0 to 5 (`0x465314`): 0 `0x465330`, 1
+    /// `0x465ea0`, 2 and 3 `0x465c50` (told whether the type is 3), 4 and 5 `0x465fd0`.
+    fn notify(&mut self, s: &mut DataStore, time: u32, ty: u8);
+}
+
+/// `ObjectUpdateHandler` (`0x4651a0`, `(time, store)`) on a store that holds its header: a u32
+/// block count and a flag byte. The first block's type byte is read; for 4 the out-of-range
+/// list is handled and the passes start at block 1, else the cursor goes back. A nonzero flag
+/// runs the flagged pass, after which the cursor is put back; the second pass follows. The
+/// notify pass then reads each block's type from block 0, calling its handler for types up to
+/// 5 and nothing more for others. The reactivated objects' slot 3 follows (not modelled here);
+/// the handler returns 1.
+pub fn update_handler(s: &mut DataStore, time: u32, blocks: &mut impl UpdateBlocks) -> u32 {
+    let count = s.get_u32().unwrap_or(0);
+    let flag = s.get_u8().unwrap_or(0);
+    let start = s.pos;
+    let mut first = 0;
+    if s.get_u8().unwrap_or(0) == 4 {
+        blocks.out_of_range(s);
+        first = 1;
+    } else {
+        s.pos = start;
+    }
+    if flag != 0 {
+        let at = s.pos;
+        blocks.pass(s, time, count, first, true);
+        s.pos = at;
+    }
+    blocks.pass(s, time, count, first, false);
+    s.pos = start;
+    for _ in 0..count {
+        let ty = s.get_u8().unwrap_or(0);
+        if ty <= 5 {
+            blocks.notify(s, time, ty);
+        }
+    }
+    1
+}

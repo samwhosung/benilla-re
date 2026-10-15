@@ -7,7 +7,8 @@ mod common;
 use benilla_re_difftest::{Emu, Wow};
 use benilla_re_objectlayer::datastore::DataStore;
 use benilla_re_objectlayer::update::{
-    flagged_guid, near_objects, out_of_range, skip_values_block, values_block, ValuesBlock,
+    flagged_guid, near_objects, out_of_range, skip_values_block, update_handler, values_block,
+    UpdateBlocks, ValuesBlock,
 };
 use common::next;
 
@@ -328,5 +329,187 @@ fn update_values_block() {
                 assert_eq!(calls, want_calls, "{ctx}: calls");
             }
         }
+    }
+}
+
+/// Replaces the function at `at` with code that logs, in `0x20` bytes from `log + 0x20` counted
+/// at `log`: `tag`, `ecx`, `edx`, three stack arguments and the store's cursor (`store`); adds
+/// `bump` to the cursor; and returns popping `pop` dwords, with `eax` 0 for the out-of-range
+/// list (tag 10), as `0x465ec0` returns.
+fn log_island(e: &mut Emu, at: u64, log: u64, store: u64, tag: u32, bump: u8, pop: u16) {
+    let cnt = log as u32;
+    let cur = store as u32 + 0x14;
+    let mut c = vec![0x50, 0x53, 0xa1]; // push eax; push ebx; mov eax,[cnt]
+    c.extend(cnt.to_le_bytes());
+    c.extend([0xc1, 0xe0, 0x05, 0x05]); // shl eax,5; add eax,base
+    c.extend((cnt + 0x20).to_le_bytes());
+    c.extend([0xc7, 0x00]); // mov dword [eax],tag
+    c.extend(tag.to_le_bytes());
+    c.extend([0x89, 0x48, 0x04, 0x89, 0x50, 0x08]); // mov [eax+4],ecx; mov [eax+8],edx
+    for (src, dst) in [(0x0cu8, 0x0cu8), (0x10, 0x10), (0x14, 0x14)] {
+        c.extend([0x8b, 0x5c, 0x24, src, 0x89, 0x58, dst]); // mov ebx,[esp+src]; mov [eax+dst],ebx
+    }
+    c.extend([0x8b, 0x1d]); // mov ebx,[cursor]
+    c.extend(cur.to_le_bytes());
+    c.extend([0x89, 0x58, 0x18, 0x83, 0xc3, bump, 0x89, 0x1d]); // mov [eax+0x18],ebx; add ebx,bump; mov [cursor],ebx
+    c.extend(cur.to_le_bytes());
+    c.extend([0xff, 0x05]); // inc dword [cnt]
+    c.extend(cnt.to_le_bytes());
+    c.extend([0x5b, 0x58]); // pop ebx; pop eax
+    if tag == 10 {
+        c.extend([0x31, 0xc0]); // xor eax,eax: `ProcessOutOfRangeObjects` returns 0
+    }
+    c.push(0xc2);
+    c.extend((4 * pop).to_le_bytes());
+    let island = e.alloc(0x80);
+    e.write(island, &c);
+    let mut j = vec![0xe9];
+    j.extend((island as u32).wrapping_sub(at as u32 + 5).to_le_bytes());
+    e.write(at, &j);
+}
+
+/// The calls `ObjectUpdateHandler` makes, as the islands log them: `(tag, ecx, edx, args, cursor)`.
+type Logged = (u32, u32, u32, [u32; 3], u32);
+
+/// The model's side of the islands: the same logs, the same cursor moves.
+struct Recorder {
+    store: u32,
+    calls: Vec<Logged>,
+}
+
+impl UpdateBlocks for Recorder {
+    fn out_of_range(&mut self, s: &mut DataStore) {
+        self.calls.push((10, self.store, 0, [0; 3], s.pos));
+        s.pos += 5;
+    }
+    fn pass(&mut self, s: &mut DataStore, time: u32, count: u32, start: u32, flag: bool) {
+        self.calls
+            .push((11, time, count, [start, self.store, u32::from(flag)], s.pos));
+        s.pos += 3;
+    }
+    fn notify(&mut self, s: &mut DataStore, time: u32, ty: u8) {
+        let (tag, ecx, edx, args) = match ty {
+            0 => (20, self.store, 0, [0, 0, 0]),
+            1 => (21, self.store, 0, [0; 3]),
+            2 | 3 => (22, time, self.store, [u32::from(ty == 3), 0, 0]),
+            _ => (24, self.store, 0, [0; 3]),
+        };
+        self.calls.push((tag, ecx, edx, args, s.pos));
+    }
+}
+
+/// `ObjectUpdateHandler` whole, its block handlers replaced by code that logs their registers,
+/// arguments and the cursor and moves the cursor as a handler would: counts from 0 to 6, the
+/// header flag 0, 1 and other values, an out-of-range first block or not, every block type from
+/// 0 to 7, and 0 to 3 reactivated objects on the manager's list, each of which gets slot 3 once
+/// and leaves the list.
+#[test]
+fn update_handler_dispatch() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let log = r.e.alloc(0x2000);
+    let (st, lg) = (r.store, log);
+    log_island(&mut r.e, 0x465ec0, lg, st, 10, 5, 0);
+    log_island(&mut r.e, 0x466010, lg, st, 11, 3, 3);
+    log_island(&mut r.e, 0x465330, lg, st, 20, 0, 2);
+    log_island(&mut r.e, 0x465ea0, lg, st, 21, 0, 0);
+    log_island(&mut r.e, 0x465c50, lg, st, 22, 0, 1);
+    log_island(&mut r.e, 0x465fd0, lg, st, 24, 0, 0);
+    let nodes = r.e.alloc(0x200);
+    for k in 0..3u64 {
+        let vt = r.e.alloc(0x20);
+        let slot = r.e.alloc(0x10);
+        log_island(&mut r.e, slot, lg, st, 30 + k as u32, 0, 0);
+        r.e.write_u32(vt + 0xc, slot as u32);
+        r.e.write_u32(nodes + 0x40 * k, vt as u32);
+    }
+    let mut s = 0x0bd8_0001u32;
+    for case in 0..3000 {
+        let count = (next(&mut s) >> 16) % 7;
+        let flag = [0u8, 0, 1, 0x80][(next(&mut s) >> 16) as usize % 4];
+        let mut bytes = count.to_le_bytes().to_vec();
+        bytes.push(flag);
+        let oor = next(&mut s) >> 30 == 0;
+        for i in 0..count {
+            bytes.push(if i == 0 && oor {
+                4
+            } else {
+                ((next(&mut s) >> 16) % 8) as u8
+            });
+        }
+        bytes.extend([0x5a; 16]);
+        let time = next(&mut s);
+        // The reactivated list at the manager's `+0xb0`: link offset, last link, first node.
+        let off = [0x1cu32, 0x10][(next(&mut s) >> 31) as usize];
+        let n = (next(&mut s) >> 16) % 4;
+        let term = r.mgr + 0xb4;
+        let mut prev = term;
+        for k in 0..u64::from(n) {
+            let node = nodes + 0x40 * k;
+            let link = node + u64::from(off);
+            r.e.write_u32(link, prev as u32);
+            r.e.write_u32(if prev == term { term + 4 } else { prev + 4 }, node as u32);
+            prev = link;
+        }
+        r.e.write_u32(
+            if prev == term { term + 4 } else { prev + 4 },
+            term as u32 | 1,
+        );
+        r.e.write_u32(term, prev as u32);
+        r.e.write_u32(r.mgr + 0xb0, off);
+        r.load(&bytes);
+        r.e.write_u32(log, 0);
+        let ret = r.e.call(0x4651a0, 0, 0, &[time, r.store as u32]);
+        let got: Vec<Logged> = (0..u64::from(r.e.read_u32(log)))
+            .map(|i| {
+                let a = log + 0x20 + 0x20 * i;
+                let w = |o: u64| r.e.read_u32(a + o);
+                let mut e = (w(0), w(4), w(8), [w(0xc), w(0x10), w(0x14)], w(0x18));
+                // Only the arguments each call has are compared, and `dl` for the values notify.
+                let keep = match e.0 {
+                    10 | 21 | 24 => 0,
+                    11 => 3,
+                    20 => 2,
+                    22 => 1,
+                    _ => 0,
+                };
+                for v in e.3.iter_mut().skip(keep) {
+                    *v = 0;
+                }
+                match e.0 {
+                    20 => e.2 &= 0xff,
+                    10 | 21 | 24 => e.2 = 0,
+                    _ => {}
+                }
+                if e.0 >= 30 {
+                    e = (e.0, e.1, 0, [0; 3], 0);
+                }
+                e
+            })
+            .collect();
+        let mut m = DataStore::new(&bytes);
+        let mut rec = Recorder {
+            store: r.store as u32,
+            calls: Vec::new(),
+        };
+        let want_ret = update_handler(&mut m, time, &mut rec);
+        let mut want = rec.calls;
+        for k in 0..n {
+            want.push((30 + k, (nodes + 0x40 * u64::from(k)) as u32, 0, [0; 3], 0));
+        }
+        let ctx = format!("case {case} {bytes:02x?} off {off} reactivated {n}");
+        assert_eq!(got, want, "{ctx}");
+        assert_eq!(
+            (ret, r.cursor()),
+            (want_ret, m.pos),
+            "{ctx}: return and cursor"
+        );
+        assert_eq!(
+            r.e.read_u32(term + 4),
+            term as u32 | 1,
+            "{ctx}: the list emptied"
+        );
     }
 }
