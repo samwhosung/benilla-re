@@ -42,7 +42,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x401520	16	EventSetTimerWrapper		client	orchestration		Passes its delay, handler and argument to EventSetTimer and returns the timer id	inferred	none	objectlayer/players#area-triggers	
 0x401530	24			client	unreached		Runs its object file code that calls EventSetTimerEx; not read here	inferred	none		
 0x401550	16	KillGameTimer		client	orchestration		Passes its argument to EventKillTimer	verified	one	objectlayer/players#world-entry-and-exit	
-0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	verified	one	core/close#tail-and-exit	
+0x401560	11	QuitWithCode		client			Stores a quit code at 0x882738 and closes the current context	verified	one	core/close#tail	
 0x401570	646	ClientInitializeGame	idb	client			Initializes the game systems, among them the spell tables through 0x6dda50	inferred	none	spell/tables#startup-build-of-the-indexes	
 0x401800	78	NotifyHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetCString, CGGameUI::AddErrorMessage, ConsoleWriteA; not read here	inferred	none		
 0x401850	163	PlayedTimeHandler	idb	client			Runs Client.cpp code that calls CDataStore::GetInt32, ConsolePrintf, 0x49e9d0 and 1 more; not read here	inferred	none		
@@ -73,7 +73,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4022d0	74			client			Runs Client.cpp code that calls 0x402320, OsFileExists; not read here	inferred	none		
 0x402320	37			client			Runs Client.cpp code that calls SStrPrintf; not read here	inferred	none		
 0x402350	1253	InitializeGlobal	idb	client			Initializes the client's systems, then the event library and its interactive context	inferred	none	core/loop#startup-and-shutdown	
-0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	verified	one	core/close#confirm-close-callback	
+0x402840	437	ClientContextStart		client			Handles the context's start event; installs the confirm-close callback through 0x63b460	verified	two	core/close#confirm-close-callback	
 0x402a00	23			client			Runs Client.cpp code that calls EventSetTimer; not read here	inferred	none		
 0x402a20	106	CacheUpdateHandler	idb	client			Runs Client.cpp code that calls OsGetAsyncTimeMs, 0x448ec0, SysMsgAdd and 2 more; not read here	inferred	none		
 0x402a90	1			client			Runs Client.cpp code not read here	inferred	none		
@@ -105,7 +105,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x403ae0	21			client			Runs Client.cpp code that calls SStrCmpI; not read here	inferred	none		
 0x403b00	147			client			Runs Client.cpp code that calls 0x402320, 0x648dd0, 0x64df50 and 1 more; not read here	inferred	none		
 0x403ba0	17			client			Runs Client.cpp code that calls 0x64fdc0; not read here	inferred	none		
-0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	one	core/close#tail-and-exit	
+0x403bc0	167	DestroyGlobal		client			Shuts down time, the event library and the console, deletes RunOnce.wtf and saves the config	verified	two	core/close#tail	
 0x403c70	40			client			Runs Client.cpp code that calls 0x648ef0; not read here	inferred	none		
 0x403ca0	555			client			Runs Client.cpp code that calls SStrPrintf, 0x467d10, ClntObjMgrEmptyHook and 11 more; not read here	inferred	none		
 0x403ed0	119			client			Runs its object file code that calls SStrPack, CWorld::GetEntityAreaId, FormatAreaName; not read here	inferred	none		
