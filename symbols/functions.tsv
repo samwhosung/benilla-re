@@ -20165,7 +20165,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5fbf50	26	EffectDoneCallback		objectlayer	orchestration		Destroys an effect through 0x6203e0 when its sequence ends cleanly; the twin of 0x5ff270	verified	one	objectlayer/auras#playing-a-visual-kit	
 0x5fbf70	928	CGUnit_C::OnFootstep		objectlayer	primitive		Prints a footprint, shakes the camera and sprays for a footstep near the camera, unless hidden	verified	one	objectlayer/unitanim#model-events	objectlayer::uh_placement_dist2_difftest, objectlayer::uh_placement_inner_range_difftest, objectlayer::uh_placement_ground_z_difftest, objectlayer::uh_placement_height_gate_difftest
 0x5fc310	55	CGUnit_C::CacheModelData		objectlayer	primitive		Copies the CreatureModelData footprint texture and sizes (inches over 36) to +0xc5c to +0xc6c	verified	one	objectlayer/unitanim#model-events	objectlayer::diff_transform_scale_copy
-0x5fc350	55			objectlayer	primitive	uint32_t __thiscall (void *this)	Returns 0 when twice the unit's +0xa30 float is below its current speed, else 1	verified	one	spell/records#range-bonuses-and-modifier	objectlayer::diff_cast_time_elapsed
+0x5fc350	55	CGUnit_C::IsMovingAtWalkSpeed		objectlayer	primitive	uint32_t __thiscall (void *this)	Returns 0 when twice the unit's +0xa30 float is below its current speed, else 1	verified	one	spell/records#range-bonuses-and-modifier	objectlayer::diff_cast_time_elapsed
 0x5fc390	54	IsTwoHandedWeapon		objectlayer	primitive		Returns whether an item's info is a weapon of subclass 1, 5, 6, 8, 10, 12, 17 or 20 through 0x5fc3d0	verified	one	objectlayer/unitanim#animation-sets	
 0x5fc3f0	1018	CGUnit_C::PlayFollowOnAnimation		objectlayer	primitive		Plays what follows a finished animation through 0x5fc848: its loop, a stand-up, a hold, or a re-pick	verified	one	objectlayer/unitanim#when-a-sequence-ends	
 0x5fc920	542	CGUnit_C::OnAnimationDone		objectlayer	primitive		Handles a sequence's end: death stamp, missiles, lock bits, sheathe stages, then the follow-on animation	verified	one	objectlayer/unitanim#when-a-sequence-ends	
@@ -20252,7 +20252,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x600cd0	841	CGUnit_C::UpdateDisplayFacing		objectlayer	primitive		Steers the display facing +0xc98: the mover's own, else toward the move or the target, a four-sample average	verified	one	objectlayer/unitmovement#facing	objectlayer::u4_facing_delta_difftest, objectlayer::u4_facing_dead_band_difftest, objectlayer::u4_facing_wrap_pi_delta_difftest, objectlayer::u4_facing_box_apply_difftest
 0x601020	45	CGUnit_C::ResetDisplayFacing		objectlayer	primitive		Sets the display facing +0xc98 from the mover and zeroes the samples +0xc9c to +0xca8	verified	one	objectlayer/unitmovement#facing	
 0x601050	125	CGUnit_C::RotateFacings		objectlayer	primitive	void __thiscall (void *unit, float angle)	Adds a transport's turn to the facings +0xc98 and +0xc94, wrapping each once into 0 to 2π	verified	one	objectlayer/unitmovement#facing	objectlayer::wrap_angle_difftest
-0x6010d0	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x6010d0	3	UnitNoOpOneArg		objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x6010e0	538	DispatchMoveSpeedOpcode		objectlayer	primitive		Sends opcodes 0xcd to 0xd8 to the own-relay or relay speed handler by the sender GUID	verified	one	collision/walkmode#walk-speed-families	
 0x601360	168	DispatchSplineSpeedOpcode		objectlayer	orchestration		Sends opcodes 0x2fe to 0x303 to the spline speed setters	verified	one	collision/walkmode#walk-speed-families	
 0x601420	240	DispatchSplineMoveOpcode		objectlayer	orchestration		Runs the mover toggle for spline opcodes 0x304 to 0x31a through 0x601544, then re-picks the animation; 0 for others	verified	one	objectlayer/unitmovement#spline-toggles	
@@ -20262,7 +20262,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x602130	140	UnpackSplineOffset		objectlayer	primitive		Subtracts a packed offset, three signed 11, 11 and 10-bit fields times 0.25, from a reference point	verified	one	objectlayer/unitmovement#monster-moves	objectlayer::move_event_packed_delta
 0x6021c0	1124	AnchorSplinePath		objectlayer	primitive		Anchors a monster path at a position: empties a lone point within 1/36 yard, else prepends it or cuts passed points	inferred	none	objectlayer/unitmovement#monster-moves	objectlayer::anchor_region_a_difftest, objectlayer::anchor_region_b_difftest, objectlayer::anchor_region_c_difftest, objectlayer::anchor_region_d_difftest, objectlayer::anchor_region_e_difftest, objectlayer::anchor_region_f_difftest
 0x602630	21	DotVector3		objectlayer	primitive	float __fastcall (const float *a, const float *b)	Returns (a.z·b.z + a.y·b.y) + a.x·b.x, unrounded	verified	one	collision/airborne#triangle-class-tests	objectlayer::dot3_difftest, terrain::plane_offset_negate_difftest, terrain::side_plane_d_negate_difftest, terrain::scene_dot_negate_difftest, terrain::wmo_plane_offset_negate_difftest
-0x602650	22			objectlayer	unreached		Passes its argument to 0x6188c0 on the unit's movement at +0x9a8; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
+0x602650	22	CGUnit_C::SetMovementSplineFlag31		objectlayer	unreached		Passes its argument to 0x6188c0 on the unit's movement at +0x9a8; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
 0x602670	119	CGUnit_C::QueueKnockBack		objectlayer	orchestration		Reads a knockback's direction and two speeds and queues it on the mover through 0x617a30	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x6026f0	110	CGUnit_C::OnKnockBack	idb	objectlayer	orchestration		Reads a knockback's direction and two speeds and applies it on the mover through 0x617a60	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602760	26	CGUnit_C::OnHover		objectlayer	orchestration		Applies a relayed hover change on the mover through 0x61a6b0	verified	one	objectlayer/unitmovement#relayed-move-events	
@@ -20282,18 +20282,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x602c40	32	CGUnit_C::PlayFallAnimation		objectlayer	orchestration	void __thiscall (void *unit)	Plays 40 Fall for a unit with falling bit 0x4000 and health above 0	verified	one	objectlayer/unitanim#reactions-and-move-animations	
 0x602c60	104	CGUnit_C::UpdateLandingAnimation		objectlayer	primitive		Picks a landing's animation: re-picks the base, or plays 39 (JumpEnd) or 187 (JumpLandRun) by direction	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602cd0	41	SendOpcode2ca		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t time)	Sends opcode 0x2ca through 0x600a30 when byte +0xc58 has bit 7, else returns 0	inferred	none	collision/handlers#opcode-0x2ca-report	
-0x602d00	299			objectlayer	primitive		Handles a landing: reads the fall height from 0x7c60c0 and tests it against thresholds	inferred	none	collision/falling#fall-height-from-the-apex	
+0x602d00	299	CGUnit_C::OnLand		objectlayer	primitive		Handles a landing: reads the fall height from 0x7c60c0 and tests it against thresholds	inferred	none	collision/falling#fall-height-from-the-apex	
 0x602e30	30	CGUnit_C::OnSetRunMode	idb	objectlayer	orchestration		Applies a relayed run or walk mode on the mover through 0x617e30	verified	one	objectlayer/unitmovement#relayed-move-events	
-0x602e50	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
+0x602e50	5	CGUnit_C::OnRelayedOpcodeC8		objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x602e60	26	CGUnit_C::OnToggleGravityCheat	idb	objectlayer	orchestration		Applies a relayed gravity toggle on the mover through 0x619c50	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602e80	103	CGUnit_C::FaceObject		objectlayer	orchestration		Sets the mover's facing toward the object a GUID names through 0x47f220 and 0x6198e0	verified	one	objectlayer/unitmovement#monster-moves	
 0x602ef0	26	CGUnit_C::OnSetFacing	idb	objectlayer	orchestration		Applies a relayed facing on the mover through 0x619910	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602f10	26	CGUnit_C::OnSetPitch	idb	objectlayer	orchestration		Applies a relayed pitch on the mover through 0x619960	verified	one	objectlayer/unitmovement#relayed-move-events	
-0x602f30	93			objectlayer	unreached		Flushes the unit's queue and places it through 0x618680; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
+0x602f30	93	CGUnit_C::FlushMovementAndPlace		objectlayer	unreached		Flushes the unit's queue and places it through 0x618680; nothing reaches it	inferred	none	collision/eventapply#unreached-functions	
 0x602f90	26	CGUnit_C::OnTeleport	idb	objectlayer	orchestration		Applies a relayed teleport on the mover through 0x6186b0	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x602fb0	268	CGUnit_C::OnForcedTeleport		objectlayer	orchestration		Reads a movement status: queues a teleport on the mover, or with the manager's +0xc8 set answers with opcode 0xc7	verified	one	objectlayer/unitmovement#relayed-move-events	
 0x6030c0	321	CGUnit_C::UpdateSwimState		objectlayer	primitive	void __thiscall (CGUnit_C *this, uint32_t time, uint32_t inLiquid, float depth, uint32_t force)	Starts or stops swimming from the liquid depth, the collision height and the unit flags with a 1/36 band	verified	one	objectlayer/swim#swim-decision	objectlayer::move_event_pitch_rate, objectlayer::move_event_pitch_thresh
-0x603210	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
+0x603210	8	UnitSetFieldStub		objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x603220	39	CopyIntoUnitFields		objectlayer	unreached		Copies n bytes into the unit fields; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
 0x603250	31	MapSmallCode		objectlayer	unreached		Maps 0, 1 to 3 and others to 0, 0x18, 0xc0, 0x18 or -1; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
 0x603280	313	RegisterUnitCVars		objectlayer	orchestration		Registers the nine unit CVars, from PetMeleeDamage to CombatLogPeriodicSpells	verified	one	objectlayer/units#start-up-and-shutdown	
@@ -20360,11 +20360,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x605780	216	FillUnitChainTargets		objectlayer	primitive		Fills a unit's chain target array at +0xd44 from a GUID list read from its end, skipping its own GUID	verified	one	objectlayer/auras#channels	
 0x605860	254	CGUnit_C::OnDied		objectlayer	primitive		Clears a dying unit's attack target, cast, target selection, marker, sound and auto-move	verified	one	objectlayer/units#health-death-and-resurrection	
 0x605960	1003	CGUnit_C::GetSelectionColor		objectlayer	primitive		Picks the selection colour: target flash, attack, PvP and party for players' units, else dead grey or reaction	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
-0x605d50	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x605d60	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x605d70	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x605d80	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x605d90	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x605d50	1	ExitPartyPvpColor		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x605d60	1	ExitPartyColor		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x605d70	1	ExitFriendlyPlayerColor		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x605d80	1	ExitUnusedLightRedColor		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x605d90	1	ExitReactionColors		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x605da0	139	CGUnit_C::VirtualComponentChanged	idb	objectlayer	orchestration		Hangs a virtual item slot's model at its model option or clears it, then rebuilds the hand's trail	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x605e30	175	CGUnit_C::GetVirtualItem	idb	objectlayer	orchestration		Returns a virtual item slot's info bytes, null without a display or for a weapon a disarm hides (slot 38)	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
 0x605ee0	47	CGUnit_C::GetVirtualItemRecord		objectlayer	orchestration		Returns the ItemDisplayInfo row of a virtual item slot, or null (slot 39)	verified	one	objectlayer/unitdisplay#hand-items-and-weapons	
@@ -20419,7 +20419,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x607c60	115	CGUnit_C::GetMountSoundData		objectlayer	orchestration		Returns the mount display's CreatureSoundData row, else its model data's	verified	one	objectlayer/unitdisplay#mounts	
 0x607ce0	181	CGUnit_C::Dismount		objectlayer	orchestration		Detaches the body from the mount, clears the mount model and its sound data, re-picks the animation	verified	one	objectlayer/unitdisplay#mounts	
 0x607da0	256	CGUnit_C::OnModelUpdate		objectlayer	orchestration		Builds a pending character component once the model loads, refreshes the portrait, updates the component (slot 16)	verified	one	objectlayer/unitdisplay#changing-the-display	
-0x607ea0	5			objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
+0x607ea0	5	CGUnit_C::GetRenderFacing		objectlayer	orchestration		Jumps to 0x607eb0	verified	one	objectlayer/overview#small-bodies	
 0x607eb0	19	CGUnit_C::GetWorldBodyFacing		objectlayer	orchestration		Returns the body facing +0xc94 converted to the world through the transport; slot 17 jumps here	verified	one	objectlayer/unitmovement#facing	
 0x607ed0	1565	CGUnit_C::Update		objectlayer	primitive		Runs vtable slot 14: breath, nameplate, target flash, tints, emotes, ripples, effects, facings and spine twist	verified	one	objectlayer/unitbody#the-per-frame-update	objectlayer::u4_spin_cast_byte_difftest, objectlayer::u4_turn_step_cap_difftest, objectlayer::u4_lean_smooth_difftest, objectlayer::u4_turn_delta_difftest, objectlayer::u4_turn_apply_step_difftest
 0x6084f0	99	WrapAngleToPi		objectlayer	primitive		Wraps an angle into −π to π with fmod beyond either end	verified	one	objectlayer/unitmovement#facing	objectlayer::angle_wrap_pi_difftest
@@ -20429,7 +20429,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6087f0	127	AllocNamePlate		objectlayer	primitive		Takes a nameplate frame from the free list, else allocates a new 0x518-byte one	verified	one	objectlayer/unitnames#nameplates	
 0x608870	298	SortNamePlate		objectlayer	orchestration		Inserts a nameplate again in the shown list by its distance from (0.4, 0.3)	verified	one	objectlayer/unitnames#nameplates	
 0x6089a0	89	NamePlateSortKey		objectlayer	primitive		Returns the squared distance of a screen point from (0.4, 0.3)	verified	one	objectlayer/unitnames#nameplates	objectlayer::dist2_to_anchor_difftest
-0x608a00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x608a00	1	ExitNamePlateSortPoint		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x608a10	128	CGUnit_C::ReleaseNamePlate		objectlayer	primitive		Moves the unit's nameplate to the free list and hides it	verified	one	objectlayer/unitnames#nameplates	
 0x608a90	42	CGUnit_C::UpdateNamePlateIcon		objectlayer	orchestration		Sets the nameplate's icon from the unit's GUID	verified	one	objectlayer/unitnames#nameplates	
 0x608ac0	310	CGUnit_C::ShowChatBubble		objectlayer	primitive		Hangs a chat bubble over a plate-less unit within 20 yards when its bubble CVar is on	verified	one	objectlayer/unitnames#chat-bubbles	objectlayer::bubble_in_range_difftest
@@ -20462,7 +20462,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60aee0	207	CGUnit_C::ComputeSelectionRadius		objectlayer	primitive		Sets +0xcf0 from a model's animation 0 or model bounds, 1.2 when flat	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	objectlayer::camera_model_scale_difftest
 0x60afb0	540	CGUnit_C::ResolveDisplayRecords		objectlayer	primitive		Resolves the display, extra, model, sound and blood records into +0xb34 to +0xb48, falling back to first rows	verified	one	objectlayer/unitdisplay#display-records	
 0x60b1d0	147	CGUnit_C::OnScaleChanged		objectlayer	orchestration		Resizes the mover for a new scale, sends opcode 0x29b when that fails, rescales the quest marker	verified	one	objectlayer/unitdisplay#selection-circle-and-colour	
-0x60b270	426			objectlayer	primitive	uint32_t __thiscall (void *unit, uint32_t flag)	Sizes a unit's mover from its model record and scale through 0x617460 and 0x6174b0	inferred	none	collision/mover#collision-size	objectlayer::box_dim_pf_even_difftest
+0x60b270	426	CGUnit_C::UpdateCollisionSize		objectlayer	primitive	uint32_t __thiscall (void *unit, uint32_t flag)	Sizes a unit's mover from its model record and scale through 0x617460 and 0x6174b0	inferred	none	collision/mover#collision-size	objectlayer::box_dim_pf_even_difftest
 0x60b420	322	CGUnit_C::OnNPCFlagsChanged		objectlayer	primitive		Closes the window an NPC served when it loses that flag; refreshes the marker for quest and flight flags	verified	one	objectlayer/unitnames#quest-markers	
 0x60b570	10	CGUnit_C::OnEmoteStateChanged		objectlayer	orchestration		Picks the base animation again when UNIT_NPC_EMOTESTATE changes	verified	one	objectlayer/unitanim#emotes	
 0x60b580	10	UpdateBaseAnimationThunk		objectlayer	unreached		Picks the base animation again; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
@@ -20491,10 +20491,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60c6a0	25	CGUnit_C::GetDisplayRace		objectlayer	orchestration		Returns the extra row's race, else UNIT_FIELD_BYTES_0 byte 0	verified	one	objectlayer/unitdisplay#display-records	
 0x60c6c0	25	CGUnit_C::GetDisplayGender		objectlayer	orchestration		Returns the extra row's gender, else UNIT_FIELD_BYTES_0 byte 2	verified	one	objectlayer/unitdisplay#display-records	
 0x60c6e0	17	CGUnit_C::GetBakedTextureName		objectlayer	orchestration		Returns the extra row's baked texture name +0x48, or null without one	verified	one	objectlayer/unitdisplay#display-records	
-0x60c700	10			objectlayer	unreached		Returns the dword at +0x10 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
-0x60c710	10			objectlayer	unreached		Returns the dword at +0x14 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
-0x60c720	10			objectlayer	unreached		Returns the dword at +0x18 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
-0x60c730	10			objectlayer	unreached		Returns the dword at +0x1c of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
+0x60c700	10	CGUnit_C::GetDisplayFace		objectlayer	unreached		Returns the dword at +0x10 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
+0x60c710	10	CGUnit_C::GetDisplayHairStyle		objectlayer	unreached		Returns the dword at +0x14 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
+0x60c720	10	CGUnit_C::GetDisplayHairColor		objectlayer	unreached		Returns the dword at +0x18 of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
+0x60c730	10	CGUnit_C::GetDisplayFacialHair		objectlayer	unreached		Returns the dword at +0x1c of the block its +0xb38 points to	verified	one	objectlayer/overview#small-bodies	
 0x60c740	128	CGUnit_C::KnowsSpell		objectlayer	primitive		Returns whether the active player or the pet bar's unit knows a spell	verified	one	objectlayer/units#known-spells-skills-and-prices	
 0x60c7c0	113	CGUnit_C::FindSkillLineAbility		objectlayer	primitive		Finds a spell's skill line ability for a creature's family lines or a unit's race and class	verified	one	objectlayer/units#known-spells-skills-and-prices	
 0x60c840	131	CGUnit_C::GetSpellRequiredLevel		objectlayer	orchestration		Raises a spell's base level to its skill's SkillRaceClassInfo level; false without an ability	verified	one	objectlayer/units#known-spells-skills-and-prices	
@@ -20507,7 +20507,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60cb50	158	CGUnit_C::UpdateTint		objectlayer	primitive		Sets the model tint from the colour pulse or the first tint effect when it changes	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::fade_model_rgb_difftest
 0x60cbf0	306	CGUnit_C::GetPulseColor		objectlayer	primitive		Returns the colour pulse's colour: held, then blended out over its fade length, then ended	verified	one	objectlayer/auras#kit-character-procedures	objectlayer::color_fade_t_difftest
 0x60cd30	69	CGUnit_C::UpdateAlphaFade		objectlayer	orchestration		Ends a timed alpha fade, fading back to slot 27's alpha over its length	verified	one	objectlayer/auras#kit-character-procedures	
-0x60cd80	69			objectlayer	orchestration	uint32_t __thiscall (void *this, uint32_t spellId)	Returns a unit's level times 5, capped at the spell's maximum level times 5; slot 42	verified	one	spell/records#caster-level	
+0x60cd80	69	CGUnit_C::GetSpellSkillLevel		objectlayer	orchestration	uint32_t __thiscall (void *this, uint32_t spellId)	Returns a unit's level times 5, capped at the spell's maximum level times 5; slot 42	verified	one	spell/records#caster-level	
 0x60cdd0	153	CGUnit_C::OnLevelChanged		objectlayer	primitive		Plays the level-up effect on any level change and refreshes the player and the plate	verified	one	objectlayer/units#unit-flags-and-bytes	
 0x60ce70	431	CGUnit_C::OnModelLoaded		objectlayer	primitive		Sets a loaded model's transport frame, key bone and quest marker, checks a mount's attachment (slot 13)	verified	one	objectlayer/unitdisplay#changing-the-display	
 0x60d020	26	UnitSetPrecastSpell		objectlayer	primitive		Stores a spell id at a unit's +0xc8c and sets 0x400 in +0xd58	verified	one	objectlayer/units#caster-checks-for-a-spell	
@@ -20591,7 +20591,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x60f7f0	52	CGUnit_C::GetNamePlateScreenPos		objectlayer	primitive		Projects the name position raised 2/3 yard to the screen	verified	one	objectlayer/unitnames#nameplates	objectlayer::follow_anchor_lift_difftest
 0x60f830	87	ShowNamePlates		objectlayer	orchestration		Shows or hides every shown nameplate	verified	one	objectlayer/unitnames#nameplates	
 0x60f890	81	ReleaseAllNamePlates		objectlayer	orchestration		Releases the nameplate of every unit with one	verified	one	objectlayer/unitnames#nameplates	
-0x60f8f0	6			objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
+0x60f8f0	6	GetAutoMoveMode		objectlayer	orchestration		Returns a global dword	verified	one	objectlayer/overview#small-bodies	
 0x60f900	62	CGUnit_C::CanAutoInteract		objectlayer	orchestration		Returns whether the unit is alive, the active mover and the AutoInteract CVar is on	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move	
 0x60f940	186	CGUnit_C::OnAutoMoveArrived		objectlayer	orchestration		Stores the target in the mode's pending slot and stops, or stops the walk, by 0x60f9fc	verified	one	objectlayer/unitmovement#steering-an-auto-move	
 0x60fa20	318	CGUnit_C::CompleteInteractMove		objectlayer	orchestration		Hands a pending loot, game object, mode 9 or NPC target to its action and clears the slot	verified	one	objectlayer/unitmovement#steering-an-auto-move	
@@ -20617,7 +20617,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x611400	388	CGUnit_C::DrawAutoMoveTarget		objectlayer	primitive		Draws a pulsing box at a mode 4 or 10 target point, period 500 ms	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::click_ring_pulse_difftest, objectlayer::click_ring_corner_difftest
 0x611590	75	CGUnit_C::IsAutoMovingInModes		objectlayer	primitive		Returns whether the unit is the active mover in an auto-move mode whose bit is in the mask	verified	one	objectlayer/unitmovement#auto-move-modes	
 0x6115e0	128	CGUnit_C::OnAutoMoveTransportChange		objectlayer	primitive	void __thiscall (void *unit, const float *matrix, float angle)	Carries an auto-move's point (mode 4) or facing (modes 2 and 8) through a transport change	verified	one	objectlayer/unitmovement#steering-an-auto-move	objectlayer::broadcast_wrap_angle_difftest
-0x611660	7			objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
+0x611660	7	GetTurnCommandFacing		objectlayer	orchestration		Returns a global float	verified	one	objectlayer/overview#small-bodies	
 0x611670	36	GetCreatorIfUnowned		objectlayer	unreached		Returns the creator GUID of a unit with no charmer or summoner; only 0x6116a0 calls it	verified	one	objectlayer/units#unreached-unit-code	
 0x6116a0	61	IsCreatedByPlayerOrParty		objectlayer	unreached		Returns whether an unowned unit's creator is the active player or a party member; nothing reaches it	verified	one	objectlayer/units#unreached-unit-code	
 0x6116e0	131	CGUnit_C::IsPlayerOrHunterPet		objectlayer	primitive		Returns whether a unit is a player or the active hunter's charm or summon with a pet number	verified	one	objectlayer/units#reactions-tokens-and-groups	
@@ -20646,7 +20646,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x612630	30	CGUnit_C::ReleaseSpellEffect		objectlayer	orchestration		Releases the spell effect +0xb4c and clears it	verified	one	objectlayer/auras#channels	
 0x612650	93	CGUnit_C::CreateSpellEffect		objectlayer	orchestration		Creates the spell effect +0xb4c for a target GUID once, when a model hangs at the body's attachment 1	verified	one	objectlayer/auras#channels	
 0x6126b0	57	CGUnit_C::IsLooting		objectlayer	primitive		Returns whether the player has a loot GUID, or another unit has UNIT_FIELD_FLAGS 0x400	verified	one	objectlayer/units#right-click-and-loot	
-0x6126f0	32			objectlayer	orchestration		Returns the 64-bit value at +0x1d28 of the active player, else 0	verified	one	spell/cast#cast-attempt-refusals	
+0x6126f0	32	CGUnit_C::GetLootGuid		objectlayer	orchestration		Returns the 64-bit value at +0x1d28 of the active player, else 0	verified	one	spell/cast#cast-attempt-refusals	
 0x612710	145	CGUnit_C::ShowsLootAnimation		objectlayer	primitive		Returns whether looting plays the loot animation: not flag bit 28, a fishing node, a live unit or item	verified	one	objectlayer/units#right-click-and-loot	
 0x6127b0	256	CGUnit_C::OnStandStateChanged		objectlayer	primitive		Applies a stand state: sheathes, plays Submerge, death or Birth, else re-picks the animation	verified	one	objectlayer/units#stand-states	
 0x6128b0	219	CGUnit_C::ShowDamageNumber		objectlayer	primitive		Floats a damage number for the player's or pet's hit, gold for spells, by the damage CVars	verified	one	objectlayer/unitnames#damage-and-miss-numbers	
@@ -20655,7 +20655,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x612b40	56	CGUnit_C::GetPlayerSkillInfo		objectlayer	primitive		Asks 0x5edae0 for a player's two values, else zeroes both	verified	one	objectlayer/units#known-spells-skills-and-prices	
 0x612b80	101	CGUnit_C::GetMerchantDiscount		objectlayer	primitive		Returns a vendor's discount: 0.1 at reaction 5, plus 0.05 at honor rank 6 and 8 for a PvP vendor	verified	one	objectlayer/vendordiscount#the-discount	objectlayer::vendor_price_discount_difftest
 0x612bf0	87	CGUnit_C::GetGenderedText		objectlayer	primitive		Returns a script text in its female or male variant by the unit's gender, else its plain one	verified	one	objectlayer/unitnames#unit-names	
-0x612c50	77			objectlayer	primitive	int32_t __thiscall (void *this, int32_t powerType)	Returns the base a percentage cost scales: base mana, base health, 1000 or 100 by power type	verified	one	spell/records#power-cost	
+0x612c50	77	CGUnit_C::GetPowerCostBase		objectlayer	primitive	int32_t __thiscall (void *this, int32_t powerType)	Returns the base a percentage cost scales: base mana, base health, 1000 or 100 by power type	verified	one	spell/records#power-cost	
 0x612cc0	11	CGUnit_C::TestNodeOutdoors		objectlayer	orchestration		Returns 0x6706f0's test of the unit's world node	verified	one	objectlayer/units#caster-checks-for-a-spell	
 0x612cd0	282	CGUnit_C::RefreshAuraVisibility		objectlayer	primitive		Shows or clears the aura slots whose spell needs a vision bit in a mask, then signals UNIT_AURA	verified	one	objectlayer/auras#showing-an-auras-slot	
 0x612df0	939	CGUnit_C::CanStartMeleeAttack		objectlayer	primitive		Checks a melee start against the attacker's state and settles an attackable target, else shows why	verified	one	objectlayer/units#melee-attack	
@@ -20702,18 +20702,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6135c0	5	InitUnitSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6135d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6135d0	19	InitUnitSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6135f0	23	FreeUint64Array		objectlayer	orchestration		Frees a uint64 array's data when present, tagged ._K	inferred	none	spell/visuals#chain-lifetime	
-0x613610	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
-0x613650	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x613660	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x613670	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x613680	33			objectlayer	orchestration		Gives the unit's level times five and 0 through its two outputs	verified	one	objectlayer/classes#unit-vtable-extension	
-0x6136b0	33			objectlayer	orchestration		Gives the unit's level times five and 0 through its second and third outputs	verified	one	objectlayer/classes#unit-vtable-extension	
-0x6136e0	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
-0x613710	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
-0x613750	144			objectlayer	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	objectlayer/objectbase#constructor-and-members	
-0x6137e0	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
-0x613810	60			objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
-0x613850	41			objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613610	60	UnlinkMoverLink		objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613650	3	CGUnit_C::AppendAfkTag		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x613660	3	CGUnit_C::AppendDndTag		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x613670	3	CGUnit_C::AppendGmTag		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x613680	33	CGUnit_C::GetDefenseSkill		objectlayer	orchestration		Gives the unit's level times five and 0 through its two outputs	verified	one	objectlayer/classes#unit-vtable-extension	
+0x6136b0	33	CGUnit_C::GetWeaponSkill		objectlayer	orchestration		Gives the unit's level times five and 0 through its second and third outputs	verified	one	objectlayer/classes#unit-vtable-extension	
+0x6136e0	41	GetNamePlateLink		objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613710	60	UnlinkNamePlateLink		objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613750	144	ResizeGuidArray		objectlayer	primitive		Resizes an array of 8-byte entries, copying the kept ones when it must move	verified	one	objectlayer/objectbase#constructor-and-members	
+0x6137e0	41	GetMoverLink		objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613810	60	UnlinkMoveEventLink		objectlayer	orchestration		Unlinks a node from its list and clears its link	verified	one	objectlayer/objectbase#constructor-and-members	
+0x613850	41	GetMoveEventLink		objectlayer	primitive		Returns the node a link points at, or the end link marked by bit 0	verified	one	objectlayer/objectbase#constructor-and-members	
 0x613880	133	CGObject_C::SetType		objectlayer	orchestration	void __thiscall (CGObject_C *this, uint32_t type)	Stores the type id at +0x14 and, for ids 0 to 7, the type mask in field 2	verified	one	objectlayer/classes#type-id-and-mask	
 0x613930	77			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x613980	19	CGObject_C::SetStorage		objectlayer	orchestration	void __thiscall (CGObject_C *this, uint32_t *fields, uint32_t *copy)	Stores the field array pointer at +0x8 and the watch copy pointer at +0xc	verified	one	objectlayer/classes#field-storage	
@@ -20732,11 +20732,11 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6140f0	33	CGObject_C::FreeStuckMissiles		objectlayer	orchestration	void __thiscall ()	Frees every missile on the list at +0xb0	verified	one	objectlayer/objectbase#destruction	
 0x614120	43	CGObject_C::ReleaseEffects		objectlayer	orchestration	void __thiscall ()	Unlinks and releases every effect on the list at +0xb4	verified	one	objectlayer/objectbase#destruction	
 0x614150	154	CGUnit_C::StopSpellKits		objectlayer	orchestration	void __thiscall (void *unit, int32_t spell, int32_t force)	Stops the effects of a spell on a unit, sparing state effects unless forced	verified	one	objectlayer/auras#stopping-a-spells-kits	
-0x6141f0	22			objectlayer	orchestration		Stops the effect passed when the second argument is 0	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
+0x6141f0	22	StopEffectOnModelDone		objectlayer	orchestration		Stops the effect passed when the second argument is 0	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
 0x614210	181	CGObject_C::StopKitEffects		objectlayer	orchestration	void __thiscall (int visual, int kind)	Stops the effects on the object made from the chosen kit of a SpellVisual row	verified	one	objectlayer/objectbase#stopping-effects-by-kit	
 0x6142e0	24	CGObject_C::SetUpdateField		objectlayer	orchestration	uint32_t __thiscall (CGObject_C *this, uint32_t index, uint32_t value)	Stores a value in field index of the field array, unchecked, and returns 1	verified	one	objectlayer/classes#field-storage	
 0x614300	36			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
-0x614330	3			objectlayer	unreached		Returns 0	verified	one	objectlayer/overview#small-bodies	
+0x614330	3	ObjectReturnZero		objectlayer	unreached		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x614340	58			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x614380	68			objectlayer	unreached		Runs Object_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x6143d0	55			objectlayer	unreached		Runs Object_C.cpp code that calls SysMsgPrintf; not read here	inferred	none	objectlayer/overview#unreached-functions	
@@ -21189,7 +21189,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61e980	15	InitMissileDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61e990	5	InitMissileQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61e9a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61e9a0	19	InitMissileQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x61e9c0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x61e9c0	1	DestroyAaBox		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61e9d0	5	InitMissileProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61e9e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61e9e0	19	InitMissileProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61ea00	5	InitMissileProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61ea10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21245,8 +21245,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61ee90	5	InitMissileSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61eea0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61eea0	19	InitMissileSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x61eec0	48	CMovement::GetVelocity		objectlayer	primitive		Returns a mover's velocity: its speed times its direction	verified	one	objectlayer/missiles#aiming-and-leading	objectlayer::missile_scale_vec_difftest
-0x61eef0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x61ef00	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x61eef0	1	InitMissiles		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x61ef00	1	ShutdownMissiles		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x61ef10	5	InitMissileBCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61ef20, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x61ef20	11	InitMissileBCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x61ef30	5	InitMissileBDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x61ef40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21310,7 +21310,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x61f470	32	GetHardcodedEffectRecord		objectlayer	orchestration	void * __fastcall (uint32_t slot)	Returns the SpellVisualEffectName record of a hard-coded effect slot	verified	one	objectlayer/effects#hard-coded-effects	
 0x61f490	129	CEffect::CEffect		objectlayer	orchestration		Zeroes an effect, sets its attachment to -1 and its reference count to 1	verified	one	objectlayer/effects#the-effect-object	
 0x61f520	118	CEffect::~CEffect		objectlayer	orchestration		Closes an effect's model and line model, unlinks it, releases its world object and stops its sound and chains	verified	one	objectlayer/effects#the-effect-object	
-0x61f5a0	5			objectlayer	orchestration		Jumps to 0x61f5b0	verified	one	objectlayer/overview#small-bodies	
+0x61f5a0	5	InitEffects		objectlayer	orchestration		Jumps to 0x61f5b0	verified	one	objectlayer/overview#small-bodies	
 0x61f5b0	143	FindHardcodedEffects		objectlayer	primitive	void __cdecl (void)	Stores the SpellVisualEffectName row id of each hard-coded effect name	verified	one	objectlayer/effects#hard-coded-effects	
 0x61f640	64	FreeEffectLists		objectlayer	orchestration	void __cdecl (void)	Releases every effect on the timed and dying lists	verified	one	objectlayer/effects#stopping-and-draining	
 0x61f680	108	DrainDyingEffects		objectlayer	primitive	void __cdecl (void)	Releases dying effects whose models hold no live particles, and timed ones past their time	verified	one	objectlayer/effects#stopping-and-draining	
@@ -21439,18 +21439,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6219a0	19	InitEffectBSquare34		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x6219c0	5	InitEffectBSquare35Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x6219d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x6219d0	19	InitEffectBSquare35		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x6219f0	22			objectlayer	unreached		Returns the name of a semantic data id below 87	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621a10	59			objectlayer	unreached		Returns the semantic data id of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621a50	10			objectlayer	unreached		Returns the kind of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621a60	10			objectlayer	unreached		Returns the boolean flag of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621a70	23			objectlayer	unreached		Returns the name of a game object type below 31	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621a90	59			objectlayer	unreached		Returns the game object type of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621ad0	23			objectlayer	unreached		Returns a game object type's data column count	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621af0	14			objectlayer	unreached		Returns a game object type's semantic id for a column	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621b00	52			objectlayer	primitive	int32_t __fastcall (uint32_t type, uint32_t id)	Returns the data column a type uses for a semantic id, or -1	verified	one	objectlayer/gameobjects#the-game-object-record	
-0x621b40	14			objectlayer	unreached		Returns an entry of a game object type's second array	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621b50	3			objectlayer	unreached		Returns 0	verified	one	objectlayer/gameobjects#unreached-game-object-code	
-0x621b60	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x6219f0	22	GetGameObjectDataName		objectlayer	unreached		Returns the name of a semantic data id below 87	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a10	59	FindGameObjectDataId		objectlayer	unreached		Returns the semantic data id of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a50	10	GetGameObjectDataKind		objectlayer	unreached		Returns the kind of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a60	10	GetGameObjectDataFlag		objectlayer	unreached		Returns the boolean flag of a semantic data id	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a70	23	GetGameObjectTypeName		objectlayer	unreached		Returns the name of a game object type below 31	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621a90	59	FindGameObjectType		objectlayer	unreached		Returns the game object type of a name, or -1	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621ad0	23	GetGameObjectTypeColumnCount		objectlayer	unreached		Returns a game object type's data column count	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621af0	14	GetGameObjectTypeColumnDataId		objectlayer	unreached		Returns a game object type's semantic id for a column	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621b00	52	FindGameObjectTypeColumn		objectlayer	primitive	int32_t __fastcall (uint32_t type, uint32_t id)	Returns the data column a type uses for a semantic id, or -1	verified	one	objectlayer/gameobjects#the-game-object-record	
+0x621b40	14	GetGameObjectTypeSecondEntry		objectlayer	unreached		Returns an entry of a game object type's second array	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621b50	3	GameObjectTypeReturnZero		objectlayer	unreached		Returns 0	verified	one	objectlayer/gameobjects#unreached-game-object-code	
+0x621b60	1	ShutdownGameObjectTables		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x621b70	5	InitGameObjTablesCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621b80, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x621b80	11	InitGameObjTablesCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x621b90	5	InitGameObjTablesDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x621ba0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -21701,14 +21701,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x624ca0	29	IsAvoidedSwingState		objectlayer	orchestration	bool __fastcall (uint32_t state)	Returns whether a victim state is 0, 2 or 6: a miss, dodge or evade	verified	one	objectlayer/unitcombat#combat-model-events	
 0x624cc0	379	PlayBowPull		objectlayer	primitive		Plays a ranged weapon's 160 BowPull to end with the body animation and attaches the ammo	verified	one	objectlayer/unitcombat#the-ranged-reload-pose	objectlayer::castbar_anim_speed_difftest
 0x624e40	223	StopAttack		objectlayer	primitive		Ends a unit's attack: clears its target fields, flushes and zeroes its pending swing, faces a victim	verified	one	objectlayer/unitcombat#attack-messages	
-0x624f20	10			objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t value)	Returns its stack argument unchanged	verified	one	spell/go#missile-and-impact-legs	
+0x624f20	10	CGUnit_C::MapMissReason		objectlayer	orchestration	uint32_t __thiscall (void *unit, uint32_t value)	Returns its stack argument unchanged	verified	one	spell/go#missile-and-impact-legs	
 0x624f30	213	OnEnvironmentalDamage		objectlayer	primitive		Writes environmental damage, signals the active player's wound and plays the type's kit	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x625010	382	SpillBlood		objectlayer	primitive		Adds a victim's front or back blood effect from its UnitBlood row	verified	one	objectlayer/unitcombat#blood	objectlayer::diff_blood_spurt_front_back, objectlayer::diff_blood_spurt_front_back_diff_rounding, objectlayer::diff_blood_spurt_dot
 0x625190	66	PresentUnitDeath		objectlayer	orchestration		Writes a unit's death line, shows its pending XP and plays its death animation and sound	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x6251e0	139	ShowPendingXpGain		objectlayer	orchestration		Logs a unit's pending XP gain, floats it over the active player and clears it	verified	one	objectlayer/unitcombat#environmental-damage-and-death	
 0x625270	391	LogHonorGain		objectlayer	primitive		Writes the honor line, floats HK or DK and raises HONOR_GAINED	verified	one	objectlayer/unitcombat#honor	
 0x625400	71	GetParryItem		objectlayer	orchestration		Returns a victim's parrying weapon, or its blocking shield or weapon	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
-0x625450	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
+0x625450	3	CGUnit_C::GetChestItemData		objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
 0x625460	146	GetDrawnWeapon		objectlayer	primitive		Returns a hand's weapon while weapons are drawn, optionally only with its model loaded	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
 0x625500	24	GetUnitSoundSize		objectlayer	orchestration		Returns a unit's sound size class from its display or model data	verified	one	objectlayer/unitcombat#weapon-and-sound-helpers	
 0x625520	141	RegisterUnitCombatMessages		objectlayer	orchestration		Registers the unit combat handler for eight opcodes, then the combat log handlers	verified	one	objectlayer/unitcombat#attack-messages	
@@ -21785,7 +21785,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x626490	25	InitCombatLogFree1		objectlayer	host	void __cdecl (void)	Frees a global block through SMemFree when its pointer is set, at exit	verified	one	objectlayer/initializers#exit-callbacks	
 0x6264b0	38	GetSchoolName		objectlayer	orchestration	const char * __fastcall (uint32_t school)	Returns a school's Resistances name in the client's locale	verified	one	objectlayer/combatlog#names	
 0x6264e0	314	GetCombatLogName		objectlayer	primitive	const char * __fastcall (uint64_t *guid)	Names a combat log object from the object, item, name or creature cache, else UNKNOWNOBJECT	verified	one	objectlayer/combatlog#names	
-0x626620	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x626620	3	OnCombatLogNameArrived		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x626630	472	ResolveCombatLogPair		objectlayer	primitive		Classifies and resolves a line's source and target and tests the player's range to either	verified	one	objectlayer/combatlog#range	objectlayer::diff_two_endpoint_a, objectlayer::diff_two_endpoint_b, objectlayer::diff_two_endpoint_dist2, objectlayer::diff_two_endpoint_diffs, objectlayer::diff_two_endpoint_range_sq
 0x626810	59	GetCombatLogRange		objectlayer	orchestration	float __fastcall (uint32_t class)	Returns a relation class's combat log range from its CVar, 100000 or 0	verified	one	objectlayer/combatlog#range	
 0x626850	64	AddCombatLogLine		objectlayer	orchestration		Formats a combat log line and adds it under a chat type, and to a file while logging	verified	one	objectlayer/combatlog#a-line	
@@ -21889,7 +21889,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62b480	846	LogAuraChange		objectlayer	primitive		Writes an aura gained or lost line and raises its aura combat text	verified	one	objectlayer/combatlogmessages#auras	objectlayer::f3_combat_log_in_range_difftest
 0x62b7d0	30	GetAuraGoneChatType		objectlayer	orchestration	uint32_t __fastcall (uint32_t class)	Returns 0x41, 0x42 or 0x43 for an aura loss by class	verified	one	objectlayer/combatlogmessages#auras	
 0x62b800	685	LogAuraApplication		objectlayer	primitive		Writes an aura stack line for a stacking spell	verified	one	objectlayer/combatlogmessages#auras	objectlayer::diff_combat_gate_copied, objectlayer::diff_combat_gate_dist2
-0x62bab0	824			objectlayer	orchestration		Writes the combat log line for a spell miss by its reason and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
+0x62bab0	824	LogSpellMiss		objectlayer	orchestration		Writes the combat log line for a spell miss by its reason and raises its combat text	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62be40	83	GetSpellDodgedKey		objectlayer	orchestration		Returns the SPELLDODGED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62bea0	83	GetSpellParriedKey		objectlayer	orchestration		Returns the SPELLPARRIED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
 0x62bf00	83	GetSpellBlockedKey		objectlayer	orchestration		Returns the SPELLBLOCKED key for a source and target class	verified	one	objectlayer/combatlogmessages#spell-damage-and-misses	
@@ -21990,15 +21990,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62e970	19	InitCombatLogSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62e990	5	InitCombatLogSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62e9a0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62e9a0	19	InitCombatLogSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62e9c0	89			objectlayer	unreached		Returns the dword at +0x5c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/overview#unreached-functions	
-0x62ea20	85			objectlayer	orchestration		Returns the dword at +0x0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62ea80	86			objectlayer	orchestration		Returns the dword at +0x4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62eae0	86			objectlayer	orchestration		Returns the dword at +0x2c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62eb40	86			objectlayer	orchestration		Returns the display id, the dword at +0x18 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62eba0	89			objectlayer	orchestration		Returns the dword at +0x1b0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62ec00	89			objectlayer	orchestration		Returns the dword at +0x1b4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
-0x62ec60	16			objectlayer	unreached		Returns 1 when the item record's dword at +0x1b4 is above 4	verified	one	objectlayer/overview#unreached-functions	
-0x62ec70	132			objectlayer	primitive	int __thiscall ()	Gives the ItemVisuals id of a weapon's own glow as -1, else of its first enchantment, else 0	verified	one	objectlayer/inventory#enchant-visuals	
+0x62e9c0	89	GetItemDescRecordDword5c		objectlayer	unreached		Returns the dword at +0x5c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/overview#unreached-functions	
+0x62ea20	85	GetItemDescClass		objectlayer	orchestration		Returns the dword at +0x0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62ea80	86	GetItemDescSubClass		objectlayer	orchestration		Returns the dword at +0x4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62eae0	86	GetItemDescInventoryType		objectlayer	orchestration		Returns the dword at +0x2c of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62eb40	86	GetItemDescDisplayId		objectlayer	orchestration		Returns the display id, the dword at +0x18 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62eba0	89	GetItemDescMaterial		objectlayer	orchestration		Returns the dword at +0x1b0 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62ec00	89	GetItemDescRecordDword1b4		objectlayer	orchestration		Returns the dword at +0x1b4 of the item record of the entry held at +0x8, or 0	verified	one	objectlayer/playercombat#hand-weapons	
+0x62ec60	16	ItemDescRecordDword1b4IsAbove4		objectlayer	unreached		Returns 1 when the item record's dword at +0x1b4 is above 4	verified	one	objectlayer/overview#unreached-functions	
+0x62ec70	132	GetItemDescVisual		objectlayer	primitive	int __thiscall ()	Gives the ItemVisuals id of a weapon's own glow as -1, else of its first enchantment, else 0	verified	one	objectlayer/inventory#enchant-visuals	
 0x62ed00	5	InitCombatLogCCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62ed10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62ed10	11	InitCombatLogCCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x62ed20	5	InitCombatLogCDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62ed30, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -22120,8 +22120,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x62f810	19	InitPlayerSoundSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x62f830	5	InitPlayerSoundSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x62f840, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x62f840	19	InitPlayerSoundSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x62f860	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x62f870	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x62f860	1	InitPlayerSound		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x62f870	1	ShutdownPlayerSound		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x62f880	180	CGPlayer_C::PlayVocal		objectlayer	primitive		Plays a player's vocal two yards up after the player's chances (slot 34)	verified	one	objectlayer/sounds#vocal-sounds	objectlayer::diff_sound_z_bias
 0x62f940	238	PlayerVocalChancePasses		objectlayer	primitive		Advances the client random state and passes a player vocal kind by its chance table	verified	one	objectlayer/sounds#vocal-sounds	
 0x62fa30	98	CGPlayer_C::PlayMaterialSound		objectlayer	orchestration		Plays the material sound of a player's chest item (slot 35)	verified	one	objectlayer/sounds#weapon-and-armour-sounds	
@@ -22188,16 +22188,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x630120	5	InitResistLogSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x630130, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x630130	19	InitResistLogSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x630150	18	RegisterIgnoredMessage		objectlayer	orchestration		Registers the handler for 0x1d6	verified	one	objectlayer/combatlogmessages#log-messages	
-0x630170	58			objectlayer	orchestration		Handles opcode 0x1d6 by reading its body into a local and discarding it	verified	one	spell/cast#small-spell-helpers	
+0x630170	58	IgnoreMessage1d6		objectlayer	orchestration		Handles opcode 0x1d6 by reading its body into a local and discarding it	verified	one	spell/cast#small-spell-helpers	
 0x6301b0	10	ClearIgnoredMessage		objectlayer	orchestration		Clears the handler for 0x1d6	verified	one	objectlayer/combatlogmessages#log-messages	
-0x6301c0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x6301d0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x6301e0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x6301f0	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x630200	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x630210	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x630220	3			objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
-0x630230	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x6301c0	1	LogSwingHook		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x6301d0	3	LogPeriodicHealHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x6301e0	3	LogPeriodicDamageHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x6301f0	3	ReadSpellLogMissHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x630200	3	ReadSpellNonMeleeDamageHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x630210	3	HandleProcResistLogHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x630220	3	LogDamageShieldHook		objectlayer	orchestration		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x630230	1	CombatLogSpellHook		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x630240	5	InitCombatLogDCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x630250, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x630250	11	InitCombatLogDCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x630260	5	InitCombatLogDDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x630270, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
