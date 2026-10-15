@@ -366,8 +366,8 @@ fn the_export_has_a_readme_the_docs_and_the_columns_docs() {
     for expected in [
         "https://github.com/samwhosung/benilla-re",
         "https://samwhosung.github.io/benilla-re/?0x5e6853",
-        "d/systems/net/friends.html#who-query-tags",
-        "systems/net/friends.md",
+        "d/systems/net/who.html#who-query-tags",
+        "systems/net/who.md",
         "`db` folder",
         "<ghidra install>/support/analyzeHeadless",
         "`signature.tsv`",
@@ -390,7 +390,7 @@ fn the_export_has_a_readme_the_docs_and_the_columns_docs() {
         "docs/METHOD.md",
         "docs/CONTRIBUTING.md",
         "systems/README.md",
-        "systems/net/friends.md",
+        "systems/net/who.md",
     ] {
         assert!(files.contains_key(path), "{path}");
     }

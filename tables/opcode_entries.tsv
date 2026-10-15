@@ -54,7 +54,7 @@ opcode	name	role	site	function	entries	basis
 0x068	SMSG_FRIEND_STATUS	handler	0x5adcd8	0x5add30	net/friends#friend-status-result	opcode
 0x069	CMSG_ADD_FRIEND	send	0x5ae6b9	0x5ae670	net/friends#friend-requests	opcode
 0x06a	CMSG_DEL_FRIEND	send	0x5ae7a3	0x5ae760	net/server#social-messages	opcode
-0x06b	SMSG_IGNORE_LIST	handler	0x5adce8	0x5ae2b0	net/server#social-messages	opcode
+0x06b	SMSG_IGNORE_LIST	handler	0x5adce8	0x5ae2b0	net/friends#ignore-list-packet|net/server#social-messages	opcode
 0x06c	CMSG_ADD_IGNORE	send	0x5af251	0x5af1a0	net/server#social-messages	opcode
 0x06c	CMSG_ADD_IGNORE	send	0x5af3ab	0x5af300	net/server#social-messages	opcode
 0x06d	CMSG_DEL_IGNORE	send	0x5af2c4	0x5af1a0	net/server#social-messages	opcode
