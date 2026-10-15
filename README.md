@@ -145,6 +145,11 @@ writes the same bytes.
 - `bundle/`: `symbols/` and `tables/` as TSV, and `benilla-re.json`: `schema` (1), `exe` (name,
   version, `size`, `sha256`), `commit`, and `tables`, a map from a table's path
   (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
+- With `--symbols <dir>`, a folder rebased onto another build (Other builds), the export has the
+  folder's `symbols/` only: the other tables (opcodes, cvars, bindings, the call tables) hold
+  5875's addresses and are left out, `exe` has `size` and `sha256` null and `rebased` true, and
+  the header says the addresses are matches, not proof. The scripts apply such a bundle to any
+  build and say so.
 - `bundle/signature`: one line per function row, `address`, `name`, `pattern`, `unique`: the
   masked bytes below.
 
@@ -154,11 +159,14 @@ Every row is keyed to 1.12.1.5875, but a function's bytes are mostly the same in
 1.12 client, in 1.12.2 and 1.12.3, and in 1.6 to 1.11. `tables/signatures.tsv` gives each
 function row a pattern: the body's bytes, hex and spaced, with `??` for each byte that depends
 on where the code sits. Wildcards cover the rel32 of a `call`, `jmp` or conditional jump that
-leaves the function, and every four-byte operand that holds an address in the image (a global, a
-string, a vtable, a jump-table entry). The 5875 image has no `.reloc` section, so the decoded
+leaves the function (a rel8 that leaves it too, with or without a prefix), and every four-byte
+operand that holds an address in the image (a global, a string, a vtable, a jump table and its
+entries, of any length). The 5875 image has no `.reloc` section, so the decoded
 instructions (`dumps/disasm.txt`) supply them. A pattern is cut to the shortest prefix, at least
 16 bytes, that occurs once in the executable sections; a body that is shorter, or whose whole
-body occurs more than once, keeps all of it. `unique` says which.
+body occurs more than once, keeps all of it. `unique` says which. A pattern has at least one
+fixed byte. The table also holds each row's `size`, its `calls`, and a `body`: the masked bytes
+through the last call site, when the pattern stops before it.
 
 ```
 cargo xtask match <exe> <out>
@@ -174,37 +182,68 @@ database from it. It needs no 5875 exe, only the checkout.
 
 A pattern alone leaves most rows ambiguous, so the matcher builds on what it has found, in steps:
 
-1. **Pattern**: the row's pattern occurs once.
-2. **Calls**: a found function's body in the build has, at the offsets its 5875 body has them, a
-   `call` or `jmp` whose 5875 target is row X. X is at the address that instruction goes to,
-   when X's pattern matches there. `signatures.tsv` lists each row's call offsets and targets.
+1. **Pattern**: the row's pattern occurs once, and the row is `unique`. A row that is not unique
+   in 5875 is never found by pattern, however few places it matches in the build: its twin may
+   be what is left.
+2. **Calls**: a found function whose whole `body` matches where it was found has, at the offsets
+   its 5875 body has them, a `call` or `jmp` whose 5875 target is row X. X is at the address
+   that instruction goes to, when X's pattern matches there and has at least 6 fixed bytes.
    Repeated until nothing new is found.
 3. **Order**: the found rows whose addresses rise with 5875's bound the rows between them (a
-   found row off that rising run moved, and bounds nothing). A row with exactly one address its
-   pattern matches between its bounds is found there, and so are several rows between two bounds
-   that have exactly one way to take rising addresses. Alternates with step 2 until nothing new is
-   found.
+   found row off that rising run moved, and bounds nothing). A row with at least 6 fixed bytes
+   and exactly one address its pattern matches between its bounds, outside the extent (5875's
+   `size`) of every found row, is found there, and so are several rows between two bounds that
+   have exactly one way to take rising addresses. Rows in one gap with equal patterns are never
+   placed by order. Alternates with step 2 until nothing new is found.
+
+`match.tsv`'s `via` says how much a placement is worth:
+
+- `pattern`: the row's own bytes, unique in 5875 and found once in the build. The strongest, and
+  still bytes and position: a changed body can keep a prefix that matches.
+- `call`: a found function's call goes there and the row's pattern matches there. Weaker: it
+  trusts the found function's call offsets and the row's bytes at one address. A short pattern
+  or a rewritten caller can send it to another function.
+- `order`: the row's neighbours bound it and its pattern matches once between them. Weakest: it
+  trusts that the build keeps 5875's order and sizes. A deleted function can give its name to
+  another function that looks like it, and a pattern of 6 fixed bytes is little evidence.
 
 A row with several candidates left stays `ambiguous`. Two rows claiming one address, a row claimed
 at two addresses, a claimed address that its pattern refutes, and two rows in one gap that fall
 out of order are `conflict`: reported and left out, with what was found from them, not resolved.
 
-On 5875 itself 15,076 of the 37,967 rows have a unique pattern and the matcher finds all 15,076
-at their own address. The other 22,891 are indistinguishable by their bytes (the `jmp` thunks,
+On 5875 itself 14,383 of the 37,967 rows have a unique pattern and the matcher finds all 14,383
+at their own address. The other 23,584 are indistinguishable by their bytes (the `jmp` thunks,
 the static initializers, the one-line accessors). After each step:
 
 | step | found | of which new | ambiguous | conflict | at a wrong address |
 |---|---|---|---|---|---|
-| pattern | 15,076 | 15,076 | 22,891 | 0 | 0 |
-| calls | 18,729 | 3,653 | 19,238 | 0 | 0 |
-| order | 34,364 | 15,635 (15,454 by order, 181 by calls) | 3,603 | 0 | 0 |
+| pattern | 14,383 | 14,383 | 23,584 | 0 | 0 |
+| calls | 17,254 | 2,871 | 20,713 | 0 | 0 |
+| order | 21,243 | 3,989 (3,986 by order, 3 by calls) | 16,724 | 0 | 0 |
 
-Tests patch, swap and copy bodies in the 5875 image and check the counts at each step (the
-swapped pair is found at each other's address by pattern; the callers of a swapped row send it
-to an address its pattern refutes, and are reported as conflicts), and small images check each
-step and each refusal. No other build has been run through it yet; a count from one belongs
-here. A found row is a match of bytes and position, not a proof that the function is the same: a
-changed body can still match, a call can move with a changed caller, and a row's `size` is 5875's.
+Nine synthetic builds of 5875 test it (`xtask/src/builds.py`, run by the matcher's tests; the
+fast test makes three, `cargo test -p xtask -- --ignored` all nine): the same bytes shifted by
+an odd amount, with odd padding, with 60 neighbour pairs swapped, with 12 functions duplicated,
+with 200 calls sent into the middle of a function, with 200 thunk calls sent to another thunk,
+with 300 functions deleted, with 100 callees given a new prologue, and unchanged. Each is
+checked against where every function is in it:
+
+| build | right | wrong | conflict | ambiguous |
+|---|---|---|---|---|
+| unchanged | 21,243 | 0 | 0 | 16,724 |
+| shifted | 21,243 | 0 | 0 | 16,724 |
+| padded | 21,243 | 0 | 0 | 16,724 |
+| 60 pairs swapped | 21,238 | 0 | 2 | 16,727 |
+| 12 duplicated | 21,242 | 0 | 0 | 16,725 |
+| 200 calls into a function | 21,114 | 0 | 126 | 16,727 |
+| 200 thunk calls swapped | 21,243 | 0 | 0 | 16,724 |
+| 300 deleted | 21,128 | 0 | 33 | 16,806 |
+| 100 new prologues | 21,214 | 0 | 28 | 16,725 |
+
+These builds change what a compiler would not, and no real second build has been run through
+the matcher yet. A found row is a match of bytes and position, not a proof that the function is
+the same: a changed body can still match, a call can move with a changed caller, and a row's
+`size` is 5875's. Take `call` and `order` rows as leads to check, and `pattern` rows as likely.
 
 ## How to trust it
 

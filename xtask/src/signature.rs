@@ -13,7 +13,10 @@
 //! - every four-byte operand whose value is an address in the image: a global, a string, a
 //!   vtable, a jump table;
 //! - in the bytes the listing leaves out after a jump, every aligned dword that is an address in
-//!   the image: the jump table.
+//!   the image: the jump table, of any length.
+//!
+//! A pattern with no fixed byte is refused. `MIN_FIXED` is how many fixed bytes a pattern needs
+//! before the matcher places its row by anything weaker than the pattern itself.
 
 use crate::bodies::Listing;
 use regex::Regex;
@@ -27,9 +30,25 @@ const EXECUTE: u32 = 0x2000_0000;
 const LONGEST: u32 = 15;
 /// A pattern is at least this long when the body is.
 pub const MINIMUM: usize = 16;
+/// The fewest fixed bytes a pattern has for the matcher to place its row by a call or by order.
+///
+/// In 5875, 10,758 rows have 4 or fewer: the one-instruction thunks (`e9 ?? ?? ?? ??`), `ret`,
+/// and the stubs of two or three instructions. Such a pattern matches hundreds of unrelated
+/// places in a second build, and a place chosen for it is a guess. The next counts are 5 (95
+/// rows), 6 (357) and 7 (5,802 static initializers, which begin with a `mov` of a global and
+/// end in a `jmp`), so the data has its break below 6: the rows above it have a body a few
+/// instructions long that other code seldom repeats. On the synthetic builds of the matcher's
+/// tests no wrong placement appears at 2 or more; 6 is the bar taken for what the tests do not
+/// reach.
+pub const MIN_FIXED: usize = 6;
 
 /// A pattern: a byte, or `None` for a wildcard.
 pub type Pattern = Vec<Option<u8>>;
+
+/// How many bytes of the pattern are fixed.
+pub fn fixed(pattern: &[Option<u8>]) -> usize {
+    pattern.iter().filter(|b| b.is_some()).count()
+}
 
 /// One section of a PE: where it is mapped, its flags and the bytes the file holds for it.
 pub struct Section<'a> {
@@ -235,6 +254,14 @@ const PREFIXES: [&str; 8] = [
     "rep", "repz", "repnz", "repe", "repne", "lock", "data16", "addr16",
 ];
 
+/// The instruction prefix bytes: operand size, address size, `rep`, `lock`, and the branch hints.
+const BYTE_PREFIXES: [u8; 7] = [0x66, 0x67, 0xf2, 0xf3, 0xf0, 0x2e, 0x3e];
+
+/// Whether the opcode byte is a `jcc`, `jmp`, `loop` or `jcxz` with a rel8.
+fn is_rel8(opcode: u8) -> bool {
+    matches!(opcode, 0x70..=0x7f | 0xeb | 0xe0..=0xe3)
+}
+
 fn is_branch(mnemonic: &str) -> bool {
     mnemonic == "call"
         || mnemonic == "jmp"
@@ -277,7 +304,7 @@ pub fn mask(pe: &Pe, listing: &Listing, start: u32, size: u32) -> Option<Pattern
             }
         }
         let code = &body[lo..hi.min(lo + LONGEST as usize)];
-        if is_branch(mnemonic) {
+        if is_branch(mnemonic) && DIRECT.is_match(operands) {
             if let Some(target) = DIRECT
                 .captures(operands)
                 .and_then(|c| u32::from_str_radix(&c[1], 16).ok())
@@ -290,8 +317,15 @@ pub fn mask(pe: &Pe, listing: &Listing, start: u32, size: u32) -> Option<Pattern
                     };
                     if let Some(at) = rel32 {
                         wild(&mut pattern, at, at + 4);
-                    } else if code.len() == 2 {
-                        wild(&mut pattern, lo + 1, lo + 2);
+                    } else {
+                        let opcode = code
+                            .iter()
+                            .position(|b| !BYTE_PREFIXES.contains(b))
+                            .unwrap_or(code.len());
+                        if code.len() == opcode + 2 && is_rel8(code[opcode]) {
+                            let last = lo + code.len() - 1;
+                            wild(&mut pattern, last, last + 1);
+                        }
                     }
                 }
             }
@@ -313,7 +347,8 @@ pub fn mask(pe: &Pe, listing: &Listing, start: u32, size: u32) -> Option<Pattern
                 }
             }
         }
-        if (hi - lo) as u32 > LONGEST {
+        let table_jump = mnemonic == "jmp" && operands.contains('*');
+        if (hi - lo) as u32 > LONGEST || (table_jump && hi - lo > 4) {
             for at in lo..hi.saturating_sub(3) {
                 if (start + at as u32).is_multiple_of(4) {
                     let v = u32::from_le_bytes(body[at..at + 4].try_into().ok()?);
@@ -335,6 +370,12 @@ pub struct Signature {
     /// The pattern occurs once in the executable sections.
     pub unique: bool,
     pub pattern: Pattern,
+    /// The row's size in 5875: the extent a found row holds in a build.
+    pub size: u32,
+    /// The masked body through the end of its last call site, when the pattern stops before that;
+    /// empty when the pattern covers it. The matcher uses a row's call sites only where this
+    /// matches too.
+    pub body: Pattern,
     /// The direct calls and jumps whose target is another function row: the offset of the
     /// instruction in the body and the 5875 address it goes to. Only `call`, `jmp` and
     /// conditional jumps with a rel32.
@@ -375,7 +416,7 @@ pub fn read_pattern(text: &str) -> Result<Pattern, String> {
         .collect()
 }
 
-pub const HEADER: &str = "address\tunique\tpattern\tcalls\n";
+pub const HEADER: &str = "address\tunique\tpattern\tsize\tbody\tcalls\n";
 
 /// The calls of the body `[start, start + size)` to the addresses in `rows`: `(offset, target)`.
 pub fn call_sites(
@@ -444,6 +485,9 @@ pub fn generate(pe: &Pe, listing: &Listing, rows: &[(u32, u32)]) -> Result<Vec<S
         if !scanner.matches_at(&whole, address) {
             return Err(format!("{address:#08x}: its own pattern does not match it"));
         }
+        if fixed(&whole) == 0 {
+            return Err(format!("{address:#08x}: its pattern has no fixed byte"));
+        }
         let unique = *seen
             .entry(whole.clone())
             .or_insert_with(|| scanner.find(&whole, 2).len() == 1);
@@ -460,12 +504,25 @@ pub fn generate(pe: &Pe, listing: &Listing, rows: &[(u32, u32)]) -> Result<Vec<S
             }
             length = low;
         }
+        let calls = call_sites(pe, listing, address, size, &addresses)
+            .ok_or_else(|| format!("{address:#08x}: the body is not in the listing"))?;
+        let through = calls
+            .iter()
+            .map(|&(o, _)| o as usize + 5)
+            .max()
+            .unwrap_or(0);
+        let through = through.min(whole.len());
         out.push(Signature {
             address,
             unique,
             pattern: whole[..length].to_vec(),
-            calls: call_sites(pe, listing, address, size, &addresses)
-                .ok_or_else(|| format!("{address:#08x}: the body is not in the listing"))?,
+            size,
+            body: if through > length {
+                whole[..through].to_vec()
+            } else {
+                Vec::new()
+            },
+            calls,
         });
     }
     Ok(out)
@@ -477,10 +534,12 @@ pub fn table(signatures: &[Signature]) -> String {
     for s in signatures {
         let _ = writeln!(
             out,
-            "{:#08x}\t{}\t{}\t{}",
+            "{:#08x}\t{}\t{}\t{}\t{}\t{}",
             s.address,
             if s.unique { "yes" } else { "no" },
             show(&s.pattern),
+            s.size,
+            show(&s.body),
             s.calls
                 .iter()
                 .map(|(o, t)| format!("{o:x}:{t:x}"))
@@ -500,9 +559,16 @@ pub fn parse(text: &str) -> Result<Vec<Signature>, String> {
     let mut out = Vec::new();
     for (i, line) in lines.enumerate() {
         let cells: Vec<&str> = line.split('\t').collect();
-        let [address, unique, pattern, calls] = cells[..] else {
-            return Err(format!("signatures:{}: not four cells", i + 2));
+        let [address, unique, pattern, size, body, calls] = cells[..] else {
+            return Err(format!("signatures:{}: not six cells", i + 2));
         };
+        let pattern = read_pattern(pattern).map_err(|e| format!("signatures:{}: {e}", i + 2))?;
+        if fixed(&pattern) == 0 {
+            return Err(format!(
+                "signatures:{}: the pattern has no fixed byte",
+                i + 2
+            ));
+        }
         out.push(Signature {
             address: u32::from_str_radix(address.trim_start_matches("0x"), 16)
                 .map_err(|_| format!("signatures:{}: bad address", i + 2))?,
@@ -511,7 +577,15 @@ pub fn parse(text: &str) -> Result<Vec<Signature>, String> {
                 "no" => false,
                 _ => return Err(format!("signatures:{}: unique is yes or no", i + 2)),
             },
-            pattern: read_pattern(pattern).map_err(|e| format!("signatures:{}: {e}", i + 2))?,
+            pattern,
+            size: size
+                .parse()
+                .map_err(|_| format!("signatures:{}: bad size", i + 2))?,
+            body: if body.is_empty() {
+                Vec::new()
+            } else {
+                read_pattern(body).map_err(|e| format!("signatures:{}: {e}", i + 2))?
+            },
             calls: calls
                 .split(' ')
                 .filter(|c| !c.is_empty())
@@ -540,6 +614,7 @@ mod tests {
         assert_eq!(show(&p), "55 8b ?? 00");
         assert!(read_pattern("5").is_err());
         assert!(read_pattern("zz").is_err());
+        assert_eq!(fixed(&p), 3);
     }
 
     #[test]
@@ -549,12 +624,16 @@ mod tests {
                 address: 0x401000,
                 unique: true,
                 pattern: read_pattern("e8 ?? ?? ?? ??").unwrap(),
+                size: 20,
+                body: read_pattern("e8 ?? ?? ?? ?? 90 e8 ?? ?? ?? ??").unwrap(),
                 calls: vec![(0, 0x401010), (0x1a, 0x4098c0)],
             },
             Signature {
                 address: 0x401010,
                 unique: false,
                 pattern: read_pattern("c3").unwrap(),
+                size: 1,
+                body: Vec::new(),
                 calls: vec![],
             },
         ];
@@ -581,5 +660,36 @@ mod tests {
         assert_eq!(scanner.find(&p("?? 09"), 9), [0x1008]);
         assert_eq!(scanner.find(&p("02 ?? 04 05"), 1), [0x1001]);
         assert!(scanner.find(&p("07 08 02 09 04 05 06 07 08"), 9).is_empty());
+    }
+
+    #[test]
+    fn a_prefixed_short_branch_and_a_short_jump_table_are_masked() {
+        let mut data = vec![
+            0x2e, 0x74, 0x7f, 0xff, 0x24, 0x85, 0x0c, 0x10, 0, 0, 0x90, 0x90,
+        ];
+        data.extend_from_slice(&[0x00, 0x10, 0, 0, 0x03, 0x10, 0, 0]);
+        let section = Section {
+            va: 0x1000,
+            flags: EXECUTE,
+            data: &data,
+        };
+        let pe = Pe {
+            base: 0x1000,
+            image_size: 0x100,
+            sections: vec![section],
+        };
+        let text = "1000:\tje 0x1082\n1003:\tjmp DWORD PTR [eax*4+0x100c]\n";
+        let listing = Listing::parse(text.as_bytes()).unwrap();
+        let pattern = mask(&pe, &listing, 0x1000, 0x14).unwrap();
+        assert_eq!(
+            show(&pattern),
+            "2e 74 ?? ff 24 85 ?? ?? ?? ?? 90 90 ?? ?? ?? ?? ?? ?? ?? ??"
+        );
+    }
+
+    #[test]
+    fn a_table_with_a_pattern_of_no_fixed_byte_is_refused() {
+        let text = format!("{HEADER}0x401000\tyes\t?? ??\t2\t\t\n");
+        assert!(parse(&text).unwrap_err().contains("no fixed byte"));
     }
 }

@@ -12,22 +12,24 @@
 //!
 //! A row is found in three steps, each building on the last:
 //!
-//! 1. Pattern: its pattern occurs once.
-//! 2. Calls: a found function's body in the build has, at the offsets its 5875 body has them,
-//!    a `call` or `jmp` whose 5875 target is row X; X is at the address that instruction goes
-//!    to in the build, when X's pattern matches there. Repeated until nothing new is found.
+//! 1. Pattern: its pattern occurs once and the row is `unique` in 5875.
+//! 2. Calls: a found function whose whole `body` matches where it was found has, at the offsets
+//!    its 5875 body has them, a `call` or `jmp` whose 5875 target is row X; X is at the address
+//!    that instruction goes to, when X's pattern matches there and has `MIN_FIXED` fixed bytes.
+//!    Repeated until nothing new is found.
 //! 3. Order: the found rows whose addresses rise with 5875's bound the rows between them. A row
-//!    with exactly one address its pattern matches between its bounds is found there; so are
-//!    several rows between two bounds that have exactly one way to take rising addresses. This
-//!    alternates with step 2 until nothing new is found.
+//!    with `MIN_FIXED` fixed bytes and exactly one address its pattern matches between its
+//!    bounds, outside the 5875 extent of every found row, is found there; so are several rows
+//!    between two bounds that have exactly one way to take rising addresses. Rows in a gap with
+//!    equal patterns are left out. This alternates with step 2 until nothing new is found.
 //!
 //! Nothing is guessed. A row still with several candidates is `ambiguous`. A conflict is
 //! reported and its rows are left out, with whatever was found from them: two rows claiming one
 //! address; one row claimed at two addresses; a claimed address its pattern refutes, or that
 //! differs from where its pattern found it; two rows in the same gap taking one address or
 //! falling out of order. Steps 2 and 3 take a found row's body to be the build's at the same
-//! offsets, so a changed body can send a call elsewhere; the pattern check of step 2 and the
-//! conflicts are the guard.
+//! offsets, so a changed body can send a call elsewhere; the body check of step 2, the callee's
+//! pattern and the conflicts are the guard. `call` and `order` are weaker than `pattern`.
 //!
 //! The build is any PE; its executable sections are searched, and nothing else of it is read.
 
@@ -141,13 +143,19 @@ impl<'a, 'b> Matcher<'a, 'b> {
         let unique = signatures
             .iter()
             .map(|s| {
-                *cache
-                    .entry(&s.pattern)
-                    .or_insert_with(|| match scanner.find(&s.pattern, 2)[..] {
+                let found = *cache.entry(&s.pattern).or_insert_with(|| {
+                    match scanner.find(&s.pattern, 2)[..] {
                         [] => Found::Missing,
                         [at] => Found::At(at),
                         _ => Found::Ambiguous,
-                    })
+                    }
+                });
+                // A pattern that is not unique in 5875 is no evidence by itself, however
+                // few places it matches in the build.
+                match (s.unique, found) {
+                    (false, Found::At(_)) => Found::Ambiguous,
+                    _ => found,
+                }
             })
             .collect();
         Matcher {
@@ -214,6 +222,18 @@ impl<'a, 'b> Matcher<'a, 'b> {
                 (all.len() < CANDIDATES).then_some(all)
             })
             .as_ref()
+    }
+
+    /// Whether the body of `row` through its last call site matches at `address`: the call
+    /// offsets of a row are read only where its bytes are the ones they were taken from.
+    fn body_matches(&self, row: usize, address: u32) -> bool {
+        let sig = &self.signatures[row];
+        sig.body.is_empty() || self.scanner.matches_at(&sig.body, address)
+    }
+
+    /// Whether the pattern of `row` has enough fixed bytes to place it by a call or by order.
+    fn firm(&self, row: usize) -> bool {
+        signature::fixed(&self.signatures[row].pattern) >= signature::MIN_FIXED
     }
 
     /// Where the call at `site` of the function at `at` goes in the build, if its bytes there
@@ -286,11 +306,14 @@ impl<'a, 'b> Matcher<'a, 'b> {
             let mut claims: BTreeMap<usize, BTreeMap<u32, usize>> = BTreeMap::new();
             for (caller, a) in at.iter().enumerate() {
                 let Some(a) = *a else { continue };
+                if self.signatures[caller].calls.is_empty() || !self.body_matches(caller, a) {
+                    continue;
+                }
                 for &(site, old) in &self.signatures[caller].calls {
                     let Some(&x) = self.row_of.get(&old) else {
                         continue;
                     };
-                    if poisoned.contains_key(&x) {
+                    if poisoned.contains_key(&x) || !self.firm(x) {
                         continue;
                     }
                     if let Some(t) = self.target(a, site) {
@@ -370,6 +393,17 @@ impl<'a, 'b> Matcher<'a, 'b> {
             .filter_map(|(i, a)| a.map(|a| (i, a)))
             .collect();
         let anchors = rising(&found);
+        // The extent each found row holds, by its address.
+        let extents: BTreeMap<u32, u32> = found
+            .iter()
+            .map(|&(i, a)| (a, a.saturating_add(self.signatures[i].size)))
+            .collect();
+        let inside = |c: u32| {
+            extents
+                .range(..c)
+                .next_back()
+                .is_some_and(|(_, &end)| c < end)
+        };
         let mut out = Vec::new();
         for gap in 1..anchors.len() {
             let (low, high) = (anchors[gap - 1], anchors[gap]);
@@ -379,6 +413,7 @@ impl<'a, 'b> Matcher<'a, 'b> {
                 if placed.is_some()
                     || poisoned.contains_key(&row)
                     || self.unique[row] == Found::Missing
+                    || !self.firm(row)
                 {
                     continue;
                 }
@@ -389,12 +424,22 @@ impl<'a, 'b> Matcher<'a, 'b> {
                             .iter()
                             .copied()
                             .take_while(|&c| c < high.1)
-                            .filter(|c| !taken.contains_key(c))
+                            .filter(|&c| !taken.contains_key(&c) && !inside(c))
                             .collect(),
                     )),
                     None => open = false,
                 }
             }
+            // Rows with one pattern cannot be told apart by their bytes, so order alone does
+            // not place them.
+            let patterns = rows
+                .iter()
+                .map(|(row, _)| &self.signatures[*row].pattern)
+                .fold(HashMap::<&signature::Pattern, usize>::new(), |mut m, p| {
+                    *m.entry(p).or_default() += 1;
+                    m
+                });
+            rows.retain(|(row, _)| patterns[&self.signatures[*row].pattern] == 1);
             if !rows.is_empty() {
                 out.push((open, rows));
             }
@@ -770,6 +815,8 @@ mod tests {
             address,
             unique,
             pattern: signature::read_pattern(pattern).unwrap(),
+            size: pattern.split(' ').count() as u32,
+            body: Vec::new(),
             calls: calls.to_vec(),
         }
     }
@@ -830,13 +877,13 @@ mod tests {
         assert_eq!(by_order.found[2], Found::At(0x1060));
         assert_eq!(by_order.via[2], Some(Via::Order));
         assert!(by_order.conflicts.is_empty());
-        // Without the call step, B and C are two rows with two addresses and one rising way:
-        // the same answer, from the order alone.
+        // Without the call step, B and C are two rows with one pattern in one gap: their bytes
+        // do not tell them apart, so order alone places neither.
         let mut only = signatures.clone();
         only[0].calls.clear();
         let found = Matcher::new(&pe, &only).locate(Stage::Order).found;
-        assert_eq!(found[1], Found::At(0x1040));
-        assert_eq!(found[2], Found::At(0x1060));
+        assert_eq!(found[1], Found::Ambiguous);
+        assert_eq!(found[2], Found::Ambiguous);
     }
 
     #[test]
@@ -1126,6 +1173,19 @@ mod tests {
         let sources = crate::export::read(&root(), Some(&dir.join("symbols"))).unwrap();
         let built = crate::export::build(&sources).unwrap();
         assert!(!built.files.contains_key("bundle/signature"));
+        // Nothing that holds 5875's addresses or its exe identity goes out as the build's.
+        assert!(built.files.keys().all(|p| !p.starts_with("bundle/tables/")));
+        let bundle: serde_json::Value =
+            serde_json::from_str(&built.files["bundle/benilla-re.json"]).unwrap();
+        assert_eq!(bundle["exe"]["rebased"], true);
+        assert!(bundle["exe"]["sha256"].is_null());
+        assert!(bundle["tables"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .all(|k| k.starts_with("symbols/")));
+        assert!(!built.files["benilla-re.h"].contains("SHA-256"));
+        assert!(built.files["benilla-re.h"].contains("rebased"));
         assert!(built.files["benilla-re.h"].contains("struct"));
         let out = dir.join("export");
         for (path, text) in &built.files {
@@ -1194,8 +1254,208 @@ mod tests {
                 .unwrap()
                 .clone();
             // The committed calls name every row; these name the sampled ones.
+            let all = c.calls.len();
             c.calls.retain(|(_, t)| sampled.contains(t));
+            if c.calls.len() != all {
+                // The body runs through the last call site, which the sample moves.
+                c.body = s.body.clone();
+            }
             assert_eq!(s, &c, "{:#08x}", s.address);
         }
+    }
+
+    #[test]
+    fn a_pattern_not_unique_in_5875_is_never_found_by_pattern() {
+        let mut image = Image::new();
+        image.put(0x1040, &TWIN);
+        let pe = image.pe();
+        let signatures = vec![sig(0x402000, false, "55 8b ec 33 c0 c3", &[])];
+        let found = Matcher::new(&pe, &signatures).locate(Stage::Order);
+        assert_eq!(found.found, [Found::Ambiguous]);
+    }
+
+    #[test]
+    fn a_caller_whose_body_differs_does_not_place_its_callee() {
+        let mut signatures = rows();
+        // The pattern is the prefix; the body runs through the call and the byte after it.
+        signatures[0].pattern = signature::read_pattern("55 8b ec e8").unwrap();
+        signatures[0].body = signature::read_pattern("55 8b ec e8 ?? ?? ?? ?? c3 00").unwrap();
+        let image = image();
+        let found = Matcher::new(&image.pe(), &signatures).locate(Stage::Calls);
+        assert_eq!(found.via[1], Some(Via::Call));
+        // The same caller with another byte after the call: its call offsets are not read.
+        let mut other = Image::new();
+        other.caller(0x1000, 0x1040, 1);
+        other.put(0x1040, &TWIN);
+        other.put(0x1060, &TWIN);
+        other.put(0x1080, &[0x55, 0x8b, 0xec, 0x83, 0xec, 0x10, 0xc3]);
+        let found = Matcher::new(&other.pe(), &signatures).locate(Stage::Calls);
+        assert_eq!(found.found[0], Found::At(0x1000));
+        assert_eq!(found.found[1], Found::Ambiguous);
+    }
+
+    #[test]
+    fn a_callee_with_few_fixed_bytes_is_not_placed_by_a_call_or_by_order() {
+        let mut signatures = rows();
+        signatures[1].pattern = signature::read_pattern("33 c0 c3").unwrap();
+        signatures[2].pattern = signature::read_pattern("33 c0 c3").unwrap();
+        signatures[3].pattern = signature::read_pattern("83 ec 10 c3").unwrap();
+        let image = image();
+        let found = Matcher::new(&image.pe(), &signatures).locate(Stage::Order);
+        assert_eq!(found.found[1], Found::Ambiguous);
+        assert_eq!(found.found[2], Found::Ambiguous);
+    }
+
+    #[test]
+    fn a_candidate_inside_a_found_row_is_dropped() {
+        let build = |size_of_first: u32| {
+            let mut image = image();
+            image.put(0x1020, &TWIN);
+            // One row between the neighbours, with the body of the twins in three places.
+            let mut signatures = rows();
+            signatures.remove(2);
+            signatures[0].calls.clear();
+            signatures[0].size = size_of_first;
+            image.put(0x1060, &[0xcc; 6]);
+            let pe = image.pe();
+            Matcher::new(&pe, &signatures).locate(Stage::Order).found[1]
+        };
+        assert_eq!(build(0x10), Found::Ambiguous);
+        assert_eq!(build(0x30), Found::At(0x1040));
+    }
+
+    /// How a match of a synthetic build comes out against what the build holds.
+    #[derive(Debug, Default)]
+    struct Score {
+        right: usize,
+        wrong: Vec<String>,
+        conflict: usize,
+        ambiguous: usize,
+        missing: usize,
+    }
+
+    /// Makes the synthetic builds `names` (`src/builds.py`), matches each and scores it. `None`
+    /// to skip.
+    fn score_builds(names: &[&str]) -> Option<Vec<(String, Score)>> {
+        let bytes = reference()?;
+        let listing = root().join("dumps/disasm.txt");
+        if !listing.exists() || !python_runs() {
+            assert!(
+                std::env::var_os(exe::REQUIRE_VARIABLE).is_none(),
+                "needs dumps/disasm.txt and python3"
+            );
+            println!("skipped: no dumps/disasm.txt or python3");
+            return None;
+        }
+        let dir = std::env::temp_dir().join(format!("xtask-builds-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let run = std::process::Command::new("python3")
+            .arg("-I")
+            .arg(Path::new(env!("CARGO_MANIFEST_DIR")).join("src/builds.py"))
+            .arg(root())
+            .arg(&dir)
+            .args(names)
+            .output()
+            .unwrap();
+        assert!(
+            run.status.success(),
+            "{}",
+            String::from_utf8_lossy(&run.stderr)
+        );
+        let signatures = committed();
+        let _ = bytes;
+        let mut out = Vec::new();
+        for name in names {
+            let image = std::fs::read(dir.join(format!("{name}.exe"))).unwrap();
+            let pe = Pe::parse(&image).unwrap();
+            let truth: HashMap<u32, Option<u32>> =
+                std::fs::read_to_string(dir.join(format!("{name}.truth")))
+                    .unwrap()
+                    .lines()
+                    .map(|l| {
+                        let (a, t) = l.split_once('\t').unwrap();
+                        (
+                            u32::from_str_radix(a, 16).unwrap(),
+                            u32::from_str_radix(t, 16).ok(),
+                        )
+                    })
+                    .collect();
+            assert_eq!(truth.len(), signatures.len());
+            let outcome = Matcher::new(&pe, &signatures).locate(Stage::Order);
+            let mut score = Score::default();
+            for (i, s) in signatures.iter().enumerate() {
+                match outcome.found[i] {
+                    Found::At(a) if truth[&s.address] == Some(a) => score.right += 1,
+                    Found::At(a) => score.wrong.push(format!(
+                        "{name}: {:#08x} at {a:#08x}, should be {:?} ({:?})",
+                        s.address, truth[&s.address], outcome.via[i]
+                    )),
+                    Found::Conflict => score.conflict += 1,
+                    Found::Ambiguous => score.ambiguous += 1,
+                    Found::Missing => score.missing += 1,
+                }
+            }
+            out.push((name.to_string(), score));
+        }
+        let _ = std::fs::remove_dir_all(&dir);
+        Some(out)
+    }
+
+    fn python_runs() -> bool {
+        std::process::Command::new("python3")
+            .arg("--version")
+            .output()
+            .is_ok_and(|o| o.status.success())
+    }
+
+    fn assert_no_wrong_placement(scores: &[(String, Score)]) {
+        for (name, s) in scores {
+            println!(
+                "{name}: right {}, wrong {}, conflict {}, ambiguous {}, missing {}",
+                s.right,
+                s.wrong.len(),
+                s.conflict,
+                s.ambiguous,
+                s.missing
+            );
+            assert!(
+                s.wrong.is_empty(),
+                "{:#?}",
+                &s.wrong[..s.wrong.len().min(20)]
+            );
+            assert!(s.right > 10_000, "{name}: only {} found", s.right);
+        }
+    }
+
+    /// The builds that once put names at wrong addresses: bodies reordered, calls sent to another
+    /// thunk, functions gone.
+    #[test]
+    fn a_changed_build_gets_no_wrong_placement() {
+        let Some(scores) = score_builds(&["reorder", "thunkswap", "removed"]) else {
+            return;
+        };
+        assert_no_wrong_placement(&scores);
+    }
+
+    /// All nine synthetic builds.
+    #[test]
+    #[ignore = "several minutes; run with --ignored"]
+    fn every_synthetic_build_gets_no_wrong_placement() {
+        let all = [
+            "base",
+            "shift",
+            "padding",
+            "reorder",
+            "duplicate",
+            "midcall",
+            "thunkswap",
+            "removed",
+            "calleeprologue",
+        ];
+        let Some(scores) = score_builds(&all) else {
+            return;
+        };
+        assert_no_wrong_placement(&scores);
     }
 }
