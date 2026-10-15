@@ -12,7 +12,7 @@ sha256_of() {
 }
 
 check_exe() {
-  [ -f "$EXE" ] || { echo "error: $EXE not found; copy your 1.12.1 WoW.exe there (CONTRIBUTING.md, Setup)" >&2; return 1; }
+  [ -f "$EXE" ] || { echo "error: $EXE not found; copy your 1.12.1 WoW.exe there (docs/CONTRIBUTING.md, Setup)" >&2; return 1; }
   local size sum
   size=$(wc -c < "$EXE" | tr -d ' ')
   if [ "$size" != "$EXE_SIZE" ]; then

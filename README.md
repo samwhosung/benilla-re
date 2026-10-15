@@ -87,7 +87,7 @@ Addresses are written `0x` and lowercase hex, and every page URL is built from t
 - `<site>/a/<six lowercase hex digits>.html` is the page of the row that starts there, for
   example `a/5e6850.html`. Use it when the address is known to be a row's start.
 - `<site>/t/<struct>.html` is a struct (`::` written `--`), `<site>/s/<system>.html` a system,
-  `<site>/d/<doc path without .md>.html` a doc (`d/systems/random.html`, `d/METHOD.html`) and
+  `<site>/d/<doc path without .md>.html` a doc (`d/systems/random.html`, `d/docs/METHOD.html`) and
   `<site>/tb/<table>.html` a table (one over 5,000 rows shows its first 200 and links the file).
   A system with many rows continues on `<site>/s/<system>/2.html`, `3.html` and so on.
 - For a name, not an address:
@@ -247,7 +247,7 @@ the same: a changed body can still match, a call can move with a changed caller,
 
 ## How to trust it
 
-[METHOD.md](METHOD.md) says what counts as evidence: the binary decides, every claim states its
+[METHOD.md](docs/METHOD.md) says what counts as evidence: the binary decides, every claim states its
 confidence and proof, and a contradiction is settled at the bytes. `cargo xtask check` holds the
 repo to it: the formats, every address a doc cites having a row, every row's finding naming its
 address, and every row of a written system having a class; with `--exe`, every function's size
@@ -258,7 +258,7 @@ proof `one` is one reading of the bytes, proof `two` is two independent readings
 
 ## Contributing
 
-Names, findings, corrections and checks are welcome: [CONTRIBUTING.md](CONTRIBUTING.md) covers
+Names, findings, corrections and checks are welcome: [CONTRIBUTING.md](docs/CONTRIBUTING.md) covers
 the setup and how a change is judged, and [AGENTS.md](AGENTS.md) is the short version for a
 coding agent working here.
 

@@ -7,7 +7,7 @@ routines and cubic table interpolation. The logarithm and exponential use no `f2
 so their results do not depend on the CPU. Of its functions only `0x454d40`, `0x454f40` and `0x455b30` are called. The file's three
 static initializers store +∞, 2π and 1/2π in `0xb05e98`, `0xb05ea0` and `0xb05e9c`, and nothing
 reads them. The next file opens at `0x455c00` with an initializer of its own; `0x455bb0` and
-the code after it are not this file's. The x87 runs at 53 bits (`METHOD.md`).
+the code after it are not this file's. The x87 runs at 53 bits (`docs/METHOD.md`).
 
 Roots: `0x454d40`, `0x454f40`, `0x455b30`, and the initializers `0x454a90`, `0x455b60`, `0x455b80`
 

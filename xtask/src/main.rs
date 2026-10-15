@@ -36,7 +36,7 @@ check --exe   also identifies WoW/WoW.exe (or $BENILLA_RE_WOW_EXE), checks every
               row's body against dumps/disasm.txt (written when missing), regenerates the
               tables, runs every test with BENILLA_RE_REQUIRE_EXE=1, and requires each test
               the table and the docs name to pass
-census        finds every function start in .text by METHOD.md, Completeness, against
+census        finds every function start in .text by docs/METHOD.md, Completeness, against
               dumps/disasm.txt; prints each start with no row (its size, how it was found,
               whether live code reaches it, its class), what it turned down, and its controls;
               --all prints the rows' starts too, --why the chain that reaches an address
@@ -132,13 +132,13 @@ fn main() -> ExitCode {
 }
 
 /// The repo root: the nearest directory, from where the command runs upwards, that holds
-/// `METHOD.md` and `symbols/`. Found at run time, so a binary built in one checkout checks the
+/// `docs/METHOD.md` and `symbols/`. Found at run time, so a binary built in one checkout checks the
 /// checkout it is run in.
 fn root() -> PathBuf {
     let start = std::env::current_dir().expect("the current directory reads");
     start
         .ancestors()
-        .find(|dir| dir.join("METHOD.md").is_file() && dir.join("symbols").is_dir())
+        .find(|dir| dir.join("docs/METHOD.md").is_file() && dir.join("symbols").is_dir())
         .map(Path::to_path_buf)
         .unwrap_or_else(|| {
             eprintln!(

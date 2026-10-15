@@ -1,7 +1,7 @@
 // Post-script, run on the project tools/ghidra/setup.sh builds: decompiles the functions at the
 // given addresses, in order, into one C file, with this repo's names, signatures and types applied.
 // An address inside a function decompiles the function that holds it. Decompiler output is a lead
-// for reading the bytes, never a derivation (METHOD.md, The binary decides). Arguments: the output
+// for reading the bytes, never a derivation (docs/METHOD.md, The binary decides). Arguments: the output
 // file, then one or more addresses (0x hex).
 //
 // @category benilla

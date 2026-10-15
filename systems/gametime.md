@@ -157,5 +157,5 @@ Confidence: inferred
 Proof: none
 Test: none
 
-Census: the two scans of `METHOD.md` over the image for each address: no `e8`/`e9` target and no dword; the
+Census: the two scans of `docs/METHOD.md` over the image for each address: no `e8`/`e9` target and no dword; the
 control is `0x643ad0` with six calls. The meanings are read from the first instructions only.

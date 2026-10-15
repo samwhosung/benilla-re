@@ -57,7 +57,7 @@ static int child(void) {
         int armed = 0;
         for (int i = 0; i < NF; i++) armed += funcs[i][0] == 0xcc;
         if (armed == NF) {
-            /* The client's control word (METHOD.md, The harness) must survive the hooks; bit 6
+            /* The client's control word (docs/METHOD.md, The harness) must survive the hooks; bit 6
              * is reserved and changes no result. */
             unsigned short cw = 0x023f;
             __asm__ volatile("fldcw %0" : : "m"(cw));

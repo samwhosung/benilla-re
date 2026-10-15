@@ -96,8 +96,8 @@ fn doc_title(text: &str, fallback: &str) -> String {
 /// The spec docs the site renders besides `systems/`.
 const SPEC_DOCS: [&str; 6] = [
     "README.md",
-    "METHOD.md",
-    "CONTRIBUTING.md",
+    "docs/METHOD.md",
+    "docs/CONTRIBUTING.md",
     "symbols/README.md",
     "systems/README.md",
     "tables/README.md",

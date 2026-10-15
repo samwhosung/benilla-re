@@ -6,9 +6,9 @@ its confidence stated, never what it probably does.
 
 Read, in this order:
 
-1. `METHOD.md`: what counts as evidence, confidence and proof, and the checklists for reading the
+1. `docs/METHOD.md`: what counts as evidence, confidence and proof, and the checklists for reading the
    bytes. Binding for every change.
-2. `CONTRIBUTING.md`: the setup (your own exe at `WoW/WoW.exe`, the listing, the checks) and how
+2. `docs/CONTRIBUTING.md`: the setup (your own exe at `WoW/WoW.exe`, the listing, the checks) and how
    a name, a finding or a test is added.
 3. `symbols/README.md` and `systems/README.md`: the formats of a row and of a finding, the naming
    rule, and how a function's system is proved.
@@ -30,7 +30,7 @@ The rules an agent most often breaks here:
 - **Read the instruction, not the mnemonic you expect.** The x87 compare flags and `jp`, the
   operand order of `fsubr` and `fdivr` from the opcode bytes, `fst` against `fstp`, `ret N`,
   padding and false starts, and the listing going out of step after a jump table
-  (`METHOD.md`, "Checklist: reading the bytes").
+  (`docs/METHOD.md`, "Checklist: reading the bytes").
 - **Never commit anything from the install.** Not the exe, not data files, not interface code.
   Names and facts read from them are fine; their contents are not.
 - **Run the checks.** `cargo xtask check` must report 0 problems, and `cargo xtask check --exe`
@@ -39,4 +39,4 @@ The rules an agent most often breaks here:
 The rest of the root: `crates/` the reimplementations and their bit-exact tests, `tools/` the
 generators and instruments, `xtask/` the checks, the site and the exports.
 
-@METHOD.md
+@docs/METHOD.md

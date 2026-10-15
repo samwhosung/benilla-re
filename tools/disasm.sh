@@ -28,7 +28,7 @@ find_objdump() {
 }
 
 OD=$(find_objdump) || {
-  echo "error: no GNU objdump with the pei-i386 target found; see CONTRIBUTING.md, Setup" >&2; exit 1; }
+  echo "error: no GNU objdump with the pei-i386 target found; see docs/CONTRIBUTING.md, Setup" >&2; exit 1; }
 echo "using $("$OD" --version | head -1) at $OD"
 
 mkdir -p "$ROOT/dumps"

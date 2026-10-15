@@ -196,7 +196,7 @@ public class ApplySymbols extends GhidraScript {
         int h = finding.indexOf('#');
         String doc = h < 0 ? finding : finding.substring(0, h);
         String rest = h < 0 ? "" : finding.substring(h);
-        return (doc.equals("METHOD") ? "METHOD.md" : "systems/" + doc + ".md") + rest;
+        return (doc.equals("METHOD") ? "docs/METHOD.md" : "systems/" + doc + ".md") + rest;
     }
 
     private static final String MARK = "benilla-re:";

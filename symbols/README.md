@@ -22,7 +22,7 @@ Library code the client links is owned by its library: `crt` (the MSVC C runtime
 (Blizzard's Storm library), `lua` (Lua 5.0), `zlib` (zlib 1.2.2) and `d3dx` (Direct3D 9's D3DX
 math routines and their dispatch). A correction edits the row in place. A row is never
 duplicated to record a second opinion: a disagreement is settled at the bytes first
-(`../METHOD.md`).
+(`../docs/METHOD.md`).
 
 ## Systems without a doc
 
@@ -86,7 +86,7 @@ function with no name at the tool's own `FUN_00514ae0`.
 | `finding` | Where the derivation is: a doc under `../systems/` without `.md`, `#`, and the entry's anchor, for example `random#state-advance`; `METHOD#the-harness` for the facts the harness rests on. The entry mentions the row's address. |
 
 Confidence and proof are separate on purpose: every row states both, so `verified` is never a
-default and never says how strongly. The full rules are in `../METHOD.md`.
+default and never says how strongly. The full rules are in `../docs/METHOD.md`.
 
 An anchor is the GitHub slug of the entry's heading: lowercase, spaces to hyphens, punctuation
 dropped (`## State advance` is `#state-advance`). Renaming a heading means changing every row
@@ -107,7 +107,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
 | `test` | The bit-exact tests that run this function against the exe, whole or a slice, `crate::test_fn` separated by `, `: a top-level test function of a file under `crates/<crate>/tests/` (`../CONTRIBUTING.md`, Adding a test). Empty when there is none. |
 
-A function row's address is a function start (`../METHOD.md`, Completeness). Its body is every
+A function row's address is a function start (`../docs/METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
 `jcc` and `jmp`, and by the entries of a jump table it indexes. A path ends at `ret`, at an
 indirect `jmp` that is not a table jump, at a tail call: a `jmp` to an address with a row of its

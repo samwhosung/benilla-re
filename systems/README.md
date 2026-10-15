@@ -113,7 +113,7 @@ Test: none
   which instructions.
 - **Derivation.** Instruction addresses, opcodes and constants, in the order that proves the
   claim. Quote at most a few instructions; never paste a listing. A census states its pattern,
-  where it searched, its count and its control (`../METHOD.md`).
+  where it searched, its count and its control (`../docs/METHOD.md`).
 
 An entry that settles a configuration another entry decided reconciles both in the same change.
 A correction rewrites the entry; the wrong version stays only in git.
@@ -148,5 +148,5 @@ doc under `systems/` except this one.
 | history | `previously`, `used to`, `no longer`, `originally`, `corrected`, `was wrong` | the doc states the current fact; git holds the past |
 | first person | `we`, `our`, `I` | the claim is about the client, not the reader |
 | entry shape | the four lines `Addresses`, `Confidence`, `Proof`, `Test` with valid values | the table and the docs share one vocabulary |
-| addresses | every address in a system doc resolves to a row; one in a spec doc (`METHOD.md`, `CONTRIBUTING.md`, the READMEs) lies inside the image | a citation without a row cannot be looked up; a spec doc's addresses are examples and pointers |
+| addresses | every address in a system doc resolves to a row; one in a spec doc (`docs/METHOD.md`, `docs/CONTRIBUTING.md`, the READMEs) lies inside the image | a citation without a row cannot be looked up; a spec doc's addresses are examples and pointers |
 | anchors | no two headings in one doc share an anchor | a link must reach one entry |

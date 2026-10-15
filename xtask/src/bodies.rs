@@ -1,5 +1,5 @@
 //! Every function row against the disassembly `tools/disasm.sh` writes: that the row's address
-//! starts a function (`METHOD.md`, Completeness) and that its size is its body's, by the rule in
+//! starts a function (`docs/METHOD.md`, Completeness) and that its size is its body's, by the rule in
 //! `symbols/README.md`. The exe supplies the jump tables.
 
 use crate::check::Problem;

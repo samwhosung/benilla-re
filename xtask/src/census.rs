@@ -1,4 +1,4 @@
-//! `cargo xtask census`: every function start in `.text` by the rules of `METHOD.md`,
+//! `cargo xtask census`: every function start in `.text` by the rules of `docs/METHOD.md`,
 //! Completeness, each with its body's size by the rule in `symbols/README.md`, whether live code
 //! reaches it, and the class its body gives it. `--write` adds a row for each start with none and
 //! sets each row's size to its body's; `--fill` completes the rows it added (`fill.rs`).
@@ -30,7 +30,7 @@
 //! A start whose body the check refuses (another entry or a dead instruction inside its extent,
 //! or code above falling through into it) can hold no row; it is listed as refused.
 //!
-//! Whether anything reaches a start is the two scans of `METHOD.md`: every `e8` or `e9` byte that
+//! Whether anything reaches a start is the two scans of `docs/METHOD.md`: every `e8` or `e9` byte that
 //! starts an instruction of `.text` and whose rel32 lands on it, and every little-endian
 //! occurrence of its address in `.text`, `.rdata` and `.data`, inside one instruction in code and
 //! at even offsets in data, outside the import tables, whose dwords are relative addresses of

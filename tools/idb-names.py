@@ -10,8 +10,8 @@ kind `func` for a function start and `data` for anything else, sorted by address
 line. IDA's own labels (`sub_`, `loc_`, `dword_` and the rest) and FLIRT's `unknown_libname_` carry
 no one's judgement and are left out.
 
-A community name is a lead (METHOD.md, The binary decides): a row takes one only once the bytes
-agree (CONTRIBUTING.md, Adding a name), and `census --fill` drops those the bytes contradict.
+A community name is a lead (docs/METHOD.md, The binary decides): a row takes one only once the bytes
+agree (docs/CONTRIBUTING.md, Adding a name), and `census --fill` drops those the bytes contradict.
 The file is derived from a third party's database, so it goes under `dumps/` and is never
 committed.
 """

@@ -7,7 +7,7 @@
 //! A matrix is sixteen `f32`, row-major as `cmath` reads it (`m[4 * row + column]`); a vector of three
 //! is `[f32; 3]`. The x87 runs at 53-bit precision, so an operation rounds to `f64` and a store to
 //! `f32` is `as f32`. The one transcendental, `fptan` in the perspective builder, is the host's
-//! tangent (`METHOD.md`).
+//! tangent (`docs/METHOD.md`).
 #![forbid(unsafe_code)]
 
 pub mod frustum;

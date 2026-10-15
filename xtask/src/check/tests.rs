@@ -83,12 +83,12 @@ fn plants() -> Vec<Plant> {
             &["symbols/fields.tsv:1: missing"],
         ),
         plant(
-            "METHOD.md is missing",
+            "docs/METHOD.md is missing",
             |f: &mut Files| {
-                f.remove("METHOD.md");
+                f.remove("docs/METHOD.md");
             },
             &[
-                "METHOD.md:1: missing",
+                "docs/METHOD.md:1: missing",
                 "symbols/functions.tsv:2: finding METHOD#the-harness does not resolve to an entry",
             ],
         ),

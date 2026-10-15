@@ -19,9 +19,9 @@ starts the client under Wine with a rig, with an OpenGL tracer, or with nothing.
   stack arguments, the result in `eax`, `edx` and `st0`, and for a call on the active player's
   mover, its position and flags before and after.
 
-A capture is an observation (`METHOD.md`, The binary decides). It can refute a reading or choose
+A capture is an observation (`docs/METHOD.md`, The binary decides). It can refute a reading or choose
 between two, and it shows what a run did; the mechanism still comes from the bytes. Nothing a
-rig writes is committed (`CONTRIBUTING.md`, Setup).
+rig writes is committed (`docs/CONTRIBUTING.md`, Setup).
 
 ## Files
 
@@ -262,7 +262,7 @@ override `opengl32=n,b`, and after the client exits moves into `CAPTURE_OUT` eac
 for the client (`WoW*.trace`, any case) written during the run in `WOW_DIR` or the prefix's
 `drive_c`; another program's traces stay where they are. The client draws through the API the CVar `gxApi` names, `direct3d` by default
 (`tables/cvars.tsv`). Under Wine a Direct3D client's calls reach `opengl32` only as Wine's
-translation of them, so such a trace is read through that layer (`METHOD.md`, Checklist:
+translation of them, so such a trace is read through that layer (`docs/METHOD.md`, Checklist:
 observations); `SET gxApi "opengl"` in `WTF/Config.wtf` makes the trace the client's own OpenGL
 calls. Quit the client from its menu: a killed process leaves no finished trace.
 

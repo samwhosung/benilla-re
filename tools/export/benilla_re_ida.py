@@ -129,7 +129,7 @@ def finding_path(finding):
     if not finding:
         return ""
     doc, _, anchor = finding.partition("#")
-    path = "METHOD.md" if doc == "METHOD" else "systems/" + doc + ".md"
+    path = "docs/METHOD.md" if doc == "METHOD" else "systems/" + doc + ".md"
     return path + ("#" + anchor if anchor else "")
 
 

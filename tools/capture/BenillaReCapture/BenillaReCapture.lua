@@ -18,7 +18,7 @@
     meta, probes                the run's settings, and each probe's code point and encoding.
 
   It needs a world login only because addons load there; nothing it measures depends on the
-  server. The file comes from a run of the real client and is never committed (METHOD.md, The
+  server. The file comes from a run of the real client and is never committed (docs/METHOD.md, The
   harness). The client keeps SavedVariables in memory until it writes them, so the queue is capped
   (CFG.max_sizes, CFG.pair_max_sizes): an unbounded run exhausts the 32-bit client, and a file cut
   off mid-write stops the next start until it is deleted.

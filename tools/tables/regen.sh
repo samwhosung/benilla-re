@@ -9,7 +9,7 @@ root=$(cd "$(dirname "$0")/../.." && pwd)
 cd "$root"
 out=${1:-tables}
 exe=${BENILLA_RE_WOW_EXE:-WoW/WoW.exe}
-[ -f "$exe" ] || { echo "regen: $exe not found; see CONTRIBUTING.md, Setup" >&2; exit 1; }
+[ -f "$exe" ] || { echo "regen: $exe not found; see docs/CONTRIBUTING.md, Setup" >&2; exit 1; }
 [ -f dumps/disasm.txt ] || tools/disasm.sh
 mkdir -p "$out"
 for name in opcodes opcode_sends spell_failed messages events glue_events event_sites cvars dbc_stores dbc_schemas bindings chat_types chat_groups channel_notices unit_gates tutorial_triggers calls event_args verb_events glue_surface; do

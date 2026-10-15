@@ -1,5 +1,5 @@
 //! Runs `WoW.exe` 1.12.1.5875's own code in the Unicorn x86-32 emulator on chosen inputs, so a
-//! reimplementation can be compared with the client bit for bit (`METHOD.md#the-harness`).
+//! reimplementation can be compared with the client bit for bit (`docs/METHOD.md#the-harness`).
 //!
 //! The exe is the reader's own and is never in the repo. [`Wow::load`] finds it at
 //! `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe` in the repo, refuses any other build by its SHA-256,
@@ -45,11 +45,11 @@ fn identity(key: &str) -> &'static str {
         .unwrap_or_else(|| panic!("tools/exe.env sets {key}"))
 }
 
-/// The repo root: the nearest directory above this crate that holds `METHOD.md` and `symbols/`.
+/// The repo root: the nearest directory above this crate that holds `docs/METHOD.md` and `symbols/`.
 pub fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .ancestors()
-        .find(|dir| dir.join("METHOD.md").is_file() && dir.join("symbols").is_dir())
+        .find(|dir| dir.join("docs/METHOD.md").is_file() && dir.join("symbols").is_dir())
         .expect("the crate lives inside the benilla-re repo")
         .to_path_buf()
 }
@@ -344,7 +344,7 @@ impl<'a> Emu<'a> {
         uc.mem_map(SCRATCH_BASE, SCRATCH_SIZE, Prot::ALL)
             .expect("map scratch");
         // The client's x87 control word is 0x023F; 0x027F differs only in reserved bit 6. WinMain (0x404100) calls
-        // __control87(0x9001F, 0xFFFFFFFF), 53-bit precision (METHOD.md#the-harness).
+        // __control87(0x9001F, 0xFFFFFFFF), 53-bit precision (docs/METHOD.md#the-harness).
         uc.reg_write(RegisterX86::FPCW, 0x027F)
             .expect("set FPCW=PC_53");
         uc.reg_write(RegisterX86::MXCSR, MXCSR_DEFAULT)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The places where a float is stored and then used at full precision (METHOD.md, Checklist:
+"""The places where a float is stored and then used at full precision (docs/METHOD.md, Checklist:
 reading the bytes, on `fst`).
 
     tools/fst-live.py [ADDRESS ...] [--system NAME]

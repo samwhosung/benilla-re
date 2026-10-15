@@ -78,7 +78,7 @@ pub fn mul_add(a: f32, b: f32, acc: f32) -> f32 {
 
 /// The function at `0x483430` (`0x48343a` to `0x48344b`): an angle from a virtual call becomes
 /// `fcos` into `+0`, `fsin` into `+4` and 0.0 into `+8`. The x87 transcendentals differ by CPU, so a
-/// test compares with the host's functions structurally (`METHOD.md#the-harness`).
+/// test compares with the host's functions structurally (`docs/METHOD.md#the-harness`).
 pub fn cos_sin(angle: f32) -> [f32; 3] {
     let a = f64::from(angle);
     [a.cos() as f32, a.sin() as f32, 0.0]

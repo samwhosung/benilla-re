@@ -1,6 +1,6 @@
 // Post-script (after analysis): creates every function of symbols/functions.tsv that analysis did
 // not make, at its address, and makes each one's body the row's (symbols/README.md): it removes
-// any function analysis started inside a row's extent, which METHOD.md (Completeness) rules out,
+// any function analysis started inside a row's extent, which docs/METHOD.md (Completeness) rules out,
 // and follows the jump tables analysis left unresolved, as `cargo xtask check --exe` does. Prints one line
 // per row that could not be made a function and one per repair, and checks each function's size
 // against the row's. Argument: the symbols directory.

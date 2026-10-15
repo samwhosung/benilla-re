@@ -379,7 +379,7 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
             anchors.insert(format!("{}#{}", doc.key, slug(title)), body.to_string());
         }
     }
-    let method = read(tree, "METHOD.md", &mut p)?;
+    let method = read(tree, "docs/METHOD.md", &mut p)?;
     if let Some(text) = &method {
         for (title, body, _) in sections(text) {
             anchors.insert(format!("METHOD#{}", slug(title)), body.to_string());
@@ -1052,7 +1052,7 @@ fn linked_key(folder: &str, file: &str) -> Option<String> {
         }
     }
     let path = parts.join("/");
-    if path == "METHOD.md" {
+    if path == "docs/METHOD.md" {
         return Some("METHOD".to_string());
     }
     path.strip_prefix("systems/")?

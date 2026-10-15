@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""The census of every reference to an address, with controls (METHOD.md, Completeness and
+"""The census of every reference to an address, with controls (docs/METHOD.md, Completeness and
 Checklist: proof by absence).
 
     tools/callers.py ADDRESS [ADDRESS ...] --control ADDRESS [ADDRESS ...]
 
-For each address it runs the two scans METHOD.md names and prints one line per site:
+For each address it runs the two scans docs/METHOD.md names and prints one line per site:
 
   direct  every `call`, `jmp` or conditional jump in the listing (dumps/disasm.txt) whose target
           is the address, short forms included, each with the function row that holds it. An `e8`
@@ -20,7 +20,7 @@ For each address it runs the two scans METHOD.md names and prints one line per s
 
 The address may be a function or a global: for a global the stored scan is the census of every
 instruction that names it by its absolute address (a load, a store, a `push`, a `lea`); an access
-through a pointer computed into a register is outside both scans, as METHOD.md warns.
+through a pointer computed into a register is outside both scans, as docs/METHOD.md warns.
 
 A zero is evidence only beside a control that the same scans find, so the tool refuses to run
 without `--control`, runs each control in the same pass, and says for each arm whether a control

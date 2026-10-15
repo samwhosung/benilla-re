@@ -10,7 +10,7 @@ remove the file before a fresh run.
 With BENILLA_RE_COVERAGE_OUT set, the harness (crates/difftest) appends the address of every
 block the emulator runs, once, and for code a test copies into scratch memory it records the
 .text addresses those bytes came from. A test of a slice says which instructions it covers
-(METHOD.md, The harness); this reads that record back against the listing.
+(docs/METHOD.md, The harness); this reads that record back against the listing.
 
 An instruction ran when the record holds an address inside it, or when an instruction before it
 in the same function ran and nothing between ends a block: the emulator runs a block from its

@@ -17,7 +17,7 @@ set -euo pipefail
 check_exe
 
 HEADLESS=$(find_headless) || {
-  echo "error: Ghidra 12.x not found; set GHIDRA_INSTALL_DIR (CONTRIBUTING.md, Setup)" >&2; exit 1; }
+  echo "error: Ghidra 12.x not found; set GHIDRA_INSTALL_DIR (docs/CONTRIBUTING.md, Setup)" >&2; exit 1; }
 
 PROJECT_DIR="$ROOT/dumps/ghidra"
 PROJECT=benilla-re

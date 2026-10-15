@@ -207,7 +207,7 @@ impl<'a> Pages<'a> {
     fn doc_of_finding<'b>(&self, finding: &'b str) -> Option<(&'a Doc, &'b str)> {
         let (key, anchor) = finding.split_once('#')?;
         let path = if key == "METHOD" {
-            "METHOD.md".to_string()
+            "docs/METHOD.md".to_string()
         } else {
             format!("systems/{key}.md")
         };
@@ -787,7 +787,7 @@ reached only that way is not counted.</p>\n",
         b.push_str(&all.table());
         b.push_str(
             "<p class=\"dim\">Named: the row has a name. Verified: read at the bytes. Proof two: two independent readings. \
-Tested: a bit-exact test runs the function; the share is of the functions. <a href=\"d/METHOD.html\">The method</a> says what each means.</p>\n",
+Tested: a bit-exact test runs the function; the share is of the functions. <a href=\"d/docs/METHOD.html\">The method</a> says what each means.</p>\n",
         );
         b.push_str(
             "<h2 id=\"systems\">Systems</h2>\n<div class=\"scroll\"><table>\n\

@@ -670,7 +670,7 @@ fn textglue_482_gated_triple() {
 /// (8) 0x483430 cos/sin — verbatim island (bytes 0x48343a..0x48344b):
 ///   fld st(0); fcos; mov[esi+8],0; mov eax,esi; fstp[esi]; fsin; fstp[esi+4].
 /// We pre-load st0 = angle, point esi at a 3-f32 buffer, run the verbatim bytes; read cos,sin,0.
-/// A transcendental: compared structurally with the host's functions (`METHOD.md#the-harness`).
+/// A transcendental: compared structurally with the host's functions (`docs/METHOD.md#the-harness`).
 #[test]
 fn textglue_482_cos_sin() {
     let Some(wow) = Wow::load() else {

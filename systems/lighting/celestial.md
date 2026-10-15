@@ -74,7 +74,7 @@ Test: `lighting::dn_sun_dir_difftest`
 The polar track's result is stored as a float (`0x6d3b17`), the azimuth's stays in st0. `fsin` of
 the stored polar, `fcos` of the azimuth times it to `+0x168` (`0x6d3b36`), `fsin` of the azimuth
 times it to `+0x16c` (`0x6d3b42`), `fcos` of the polar to `+0x170` (`0x6d3b4f`), each a float.
-`fsin` and `fcos` approximate by CPU (`METHOD.md`).
+`fsin` and `fcos` approximate by CPU (`docs/METHOD.md`).
 
 ## Celestial bodies
 

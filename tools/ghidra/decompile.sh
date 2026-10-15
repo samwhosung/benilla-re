@@ -2,7 +2,7 @@
 # Decompiles functions with the project tools/ghidra/setup.sh built, this repo's names, signatures
 # and types applied, into one C file (default dumps/ghidra/decompiled.c), and prints it. An address
 # inside a function decompiles the function that holds it. The project is opened read-only, so
-# nothing is saved to it. Decompiler output is a lead, never a derivation (METHOD.md).
+# nothing is saved to it. Decompiler output is a lead, never a derivation (docs/METHOD.md).
 #
 # Usage: tools/ghidra/decompile.sh [-o FILE] ADDRESS [ADDRESS ...]
 # BENILLA_RE_GHIDRA_PROJECT_DIR and BENILLA_RE_GHIDRA_PROJECT name another project than
@@ -16,7 +16,7 @@ OUT="$ROOT/dumps/ghidra/decompiled.c"
 if [ "${1:-}" = "-o" ]; then OUT="$2"; shift 2; fi
 [ $# -ge 1 ] || { echo "usage: tools/ghidra/decompile.sh [-o FILE] ADDRESS [ADDRESS ...]" >&2; exit 2; }
 HEADLESS=$(find_headless) || {
-  echo "error: Ghidra 12.x not found; set GHIDRA_INSTALL_DIR (CONTRIBUTING.md, Setup)" >&2; exit 1; }
+  echo "error: Ghidra 12.x not found; set GHIDRA_INSTALL_DIR (docs/CONTRIBUTING.md, Setup)" >&2; exit 1; }
 PROJECT_DIR="${BENILLA_RE_GHIDRA_PROJECT_DIR:-$ROOT/dumps/ghidra}"
 PROJECT="${BENILLA_RE_GHIDRA_PROJECT:-benilla-re}"
 [ -f "$PROJECT_DIR/$PROJECT.gpr" ] || {
