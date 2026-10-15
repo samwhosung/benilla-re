@@ -148,7 +148,7 @@ Classes:
   arithmetic, bit manipulation or table lookup on values, beyond loading, storing, comparing and
   computing addresses, makes a function primitive, however thin. Every primitive in a closure
   needs a bit-exact `test` before its system is complete; most have none yet
-  ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
+  ([#87](https://github.com/samwhosung/benilla-re/issues/87)).
 - `orchestration`: calls other functions and moves values (loads, stores, compares, branches) and
   computes nothing of its own. Its contract is its call order and arguments, which its finding
   states.

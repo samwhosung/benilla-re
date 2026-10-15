@@ -69,8 +69,8 @@ the commit message says what was wrong and where.
 A system is understood when its closure is (`systems/README.md`): every function its roots reach
 has a row with a class, every struct field its functions touch has a row, every branch is
 accounted for, and every primitive has a bit-exact test. No system meets this yet: tests cover a
-few primitives, and the rest come as the reference crates are ported
-([#4](https://github.com/samwhosung/benilla-re/issues/4)).
+few primitives, and the rest are open work
+([#87](https://github.com/samwhosung/benilla-re/issues/87)).
 
 The closure is only as good as its roots, and a walk of direct calls misses code. Look for:
 
