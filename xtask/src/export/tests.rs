@@ -177,10 +177,22 @@ fn arrays_and_function_pointers_carry_their_name_inside() {
         "typedef struct CCamera CCamera;",
         "#define BRE_ADDR_Apply 0x401000",
         "#define BRE_ADDR_s_hooks 0x801000",
+        "#define BRE_G_s_hooks (*(void (*(*)[4])(void))BRE_ADDR_s_hooks)",
+        "#define BRE_G_s_names (*(const char *(*)[3])BRE_ADDR_s_names)",
+        "#define BRE_G_s_grid (*(char (*)[8][4])BRE_ADDR_s_grid)",
+        "#define BRE_G_s_scale (*(const float *)BRE_ADDR_s_scale)",
+        "#define BRE_G_s_cameras (*(CCamera ***)BRE_ADDR_s_cameras)",
         "typedef void (BRE_CDECL *BRE_FN_Apply)(void (*callback)(int, int), uint8_t digest[16], uint32_t *out[6]);",
     ] {
         assert!(text.contains(expected), "{expected}");
     }
+    // The declarations of the globals are behind the prototypes' guard; the accessors are not.
+    let guard = text.find("#ifdef BENILLA_RE_PROTOTYPES").unwrap();
+    let end = guard + text[guard..].find("#endif\n#endif\n").unwrap();
+    let declared = text.find("extern const float s_scale;").unwrap();
+    let accessor = text.find("#define BRE_G_s_scale").unwrap();
+    assert!(guard < declared && declared < end);
+    assert!(accessor > end);
 }
 
 #[test]
@@ -347,6 +359,89 @@ fn a_bundle_of_the_tree_round_trips_to_its_rows() {
 }
 
 #[test]
+fn the_export_has_a_readme_the_docs_and_the_columns_docs() {
+    let files = &built().files;
+    let readme = &files["README.md"];
+    for expected in [
+        "https://github.com/samwhosung/benilla-re",
+        "https://samwhosung.github.io/benilla-re/?0x5e6853",
+        "d/systems/net/friends.html#who-query-tags",
+        "systems/net/friends.md",
+        "`db` folder",
+        "<ghidra install>/support/analyzeHeadless",
+        "`signature.tsv`",
+    ] {
+        assert!(readme.contains(expected), "{expected}");
+    }
+    assert!(!readme.contains("{{"));
+    // Every folder and file the README names is in the export.
+    for path in [
+        "benilla-re.h",
+        "ida/benilla_re.py",
+        "binja/benilla_re.py",
+        "ghidra/README.md",
+        "x64dbg/WoW.exe.dd32",
+        "bundle/benilla-re.json",
+        "bundle/signature.tsv",
+        "bundle/symbols/README.md",
+        "bundle/tables/README.md",
+        "bundle/tables/opcode_sends.tsv",
+        "docs/METHOD.md",
+        "docs/CONTRIBUTING.md",
+        "systems/README.md",
+        "systems/net/friends.md",
+    ] {
+        assert!(files.contains_key(path), "{path}");
+    }
+    assert!(!files.contains_key("bundle/signature"));
+    let json: serde_json::Value = serde_json::from_str(&files["bundle/benilla-re.json"]).unwrap();
+    assert_eq!(json["repo"], "https://github.com/samwhosung/benilla-re");
+    assert_eq!(json["site"], "https://samwhosung.github.io/benilla-re/");
+}
+
+#[test]
+fn every_finding_of_a_function_row_is_a_doc_of_the_export() {
+    let files = &built().files;
+    let functions = Table::parse(
+        "symbols/functions.tsv",
+        &std::fs::read_to_string(root().join("symbols/functions.tsv")).unwrap(),
+    )
+    .unwrap();
+    let finding = functions.column("finding").unwrap();
+    let mut docs = std::collections::BTreeSet::new();
+    for row in &functions.rows {
+        if let Some((doc, _)) = row[finding].split_once('#') {
+            docs.insert(doc.to_string());
+        }
+    }
+    assert!(docs.len() > 100);
+    for doc in docs {
+        let path = if doc == "METHOD" {
+            "docs/METHOD.md".to_string()
+        } else {
+            format!("systems/{doc}.md")
+        };
+        assert!(files.contains_key(&path), "{doc}: no {path}");
+    }
+}
+
+#[test]
+fn the_signature_file_has_a_row_for_every_function_row_with_the_name_or_a_fun_name() {
+    let files = &built().files;
+    let signature = &files["bundle/signature.tsv"];
+    let mut lines = signature.lines();
+    assert_eq!(lines.next(), Some("address\tname\tpattern\tunique"));
+    let rows: Vec<Vec<&str>> = lines.map(|l| l.split('\t').collect()).collect();
+    let functions = Table::parse("f", &files["bundle/symbols/functions.tsv"]).unwrap();
+    assert_eq!(rows.len(), functions.rows.len());
+    for row in &rows {
+        assert_eq!(row.len(), 4);
+        assert!(row[3] == "yes" || row[3] == "no");
+        assert!(!row[1].is_empty());
+    }
+}
+
+#[test]
 fn the_same_tree_exports_the_same_bytes() {
     let again = build(&read(&root(), None).unwrap()).unwrap();
     assert_eq!(&again.files, &built().files);
@@ -397,6 +492,21 @@ fn compile(dir: &Path, header: &str, job: &Job) -> (bool, String) {
     } else {
         "BRE_FNX_CDataStore__GetUInt8 put_x = (BRE_FNX_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n"
     };
+    // Every shape of global: a scalar, an array, a two-dimensional array and an array of function
+    // pointers, read and written through the accessor.
+    let globals = "void bre_globals(void) {\n\
+         uint32_t sent = BRE_G_s_netBytesSent;\n\
+         uint32_t first = BRE_G_s_netClientList[0];\n\
+         uint8_t cell = BRE_G_s_chatTypeInfo[1][2];\n\
+         void (*hook)(void) = BRE_G___xc_a[0];\n\
+         BRE_G_s_netBytesSent = sent + first + cell;\n\
+         (void)hook;\n\
+         }\n";
+    let layout = if job.flags.contains(&"-DBRE_NO_LAYOUT_CHECK") {
+        ""
+    } else {
+        "#define BENILLA_RE_LAYOUT_CHECK\n"
+    };
     let file = if job.lang == "c" {
         "check.c"
     } else {
@@ -405,14 +515,28 @@ fn compile(dir: &Path, header: &str, job: &Job) -> (bool, String) {
     std::fs::write(
         dir.join(file),
         format!(
-            "{}\n#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n{call}\
-             BRE_ASSERT(BRE_ADDR_CDataStore__GetUInt8 == 0x418cb0, \"address\");\n",
+            "{}\n{layout}#include \"benilla-re.h\"\n{call}\
+             BRE_ASSERT(BRE_ADDR_CDataStore__GetUInt8 == 0x418cb0, \"address\");\n\
+             {globals}",
             job.before
         ),
     )
     .unwrap();
     let output = Command::new(job.compiler)
-        .args(["-fsyntax-only", "-Wall", "-Werror", "-x", job.lang])
+        .args([
+            "-fsyntax-only",
+            "-Wall",
+            "-Wextra",
+            "-pedantic",
+            "-Werror",
+            "-x",
+            job.lang,
+        ])
+        .arg(if job.lang == "c" {
+            "-std=c11"
+        } else {
+            "-std=c++17"
+        })
         .args(job.flags)
         .arg("-I")
         .arg(dir)
@@ -516,6 +640,24 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
         ],
         before: "#define cdecl _cdecl\n",
     });
+    // The GNU spelling for Windows, with and without the prototypes and the layout assertions.
+    for lang in ["c", "c++"] {
+        for prototypes in ["-DBENILLA_RE_PROTOTYPES", "-DBRE_NO_PROTOTYPES"] {
+            for layout in ["-DBRE_LAYOUT_ON", "-DBRE_NO_LAYOUT_CHECK"] {
+                run(Job {
+                    compiler: "clang",
+                    lang,
+                    flags: &[
+                        "--target=i686-w64-windows-gnu",
+                        "-ffreestanding",
+                        prototypes,
+                        layout,
+                    ],
+                    before: "",
+                });
+            }
+        }
+    }
     // The real headers of mingw, when this machine has them.
     for (compiler, lang) in [
         ("i686-w64-mingw32-gcc", "c"),
@@ -558,6 +700,31 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
             !ok && errors.contains("static assertion failed"),
             "{from}: {errors}"
         );
+    }
+    // The control: without the prototypes a global is not declared, so a bare use of its name fails
+    // to compile and its accessor is the way to read it.
+    std::fs::write(
+        dir.join("bare.c"),
+        "#include \"benilla-re.h\"\nuint32_t read(void) { return s_netBytesSent; }\n",
+    )
+    .unwrap();
+    for (flag, declared) in [
+        ("-DBRE_NO_PROTOTYPES", false),
+        ("-DBENILLA_RE_PROTOTYPES", true),
+    ] {
+        let output = Command::new("clang")
+            .args([
+                "-fsyntax-only",
+                "--target=i386-pc-linux-gnu",
+                "-ffreestanding",
+                flag,
+            ])
+            .arg("-I")
+            .arg(&dir)
+            .arg(dir.join("bare.c"))
+            .output()
+            .expect("clang runs");
+        assert_eq!(output.status.success(), declared, "{flag}");
     }
     let _ = std::fs::remove_dir_all(&dir);
 }

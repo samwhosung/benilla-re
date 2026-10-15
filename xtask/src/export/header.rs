@@ -433,6 +433,7 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
 
     // Globals and prototypes.
     let mut globals = Vec::new();
+    let mut accessors = Vec::new();
     let mut addresses = Vec::new();
     {
         let t = &symbols.globals;
@@ -471,6 +472,17 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
             globals.push(format!(
                 "/* {a} */ extern {};",
                 cdecl::with_name(&row[ty], &decl, &c)
+            ));
+            // The global as an lvalue of its own type: a pointer to the whole object, so an array
+            // or a function pointer needs its declarator in parentheses.
+            let pointer = if row[ty].contains(['[', '(']) {
+                "(*)"
+            } else {
+                "*"
+            };
+            accessors.push(format!(
+                "#define BRE_G_{c} (*({})BRE_ADDR_{c})",
+                cdecl::with_name(&row[ty], &decl, pointer)
             ));
         }
     }
@@ -556,27 +568,36 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
         }
     }
     h.push_str("#endif\n\n");
-    h.push_str("/* Globals */\n");
+    h.push_str(
+        "/* Declarations, behind BENILLA_RE_PROTOTYPES. The globals and functions are in WoW.exe, so\n \
+         * none can be linked: read a global through BRE_G_name and call a function through\n \
+         * BRE_FN_name and BRE_ADDR_name, below. */\n\
+         #ifdef BENILLA_RE_PROTOTYPES\n\n/* Globals */\n",
+    );
     for line in &globals {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str(
-        "\n/* Functions: prototypes, behind BENILLA_RE_PROTOTYPES. The functions are in WoW.exe, so\n \
-         * none can be linked; a call goes through BRE_FN_name and BRE_ADDR_name below. */\n\
-         #ifdef BENILLA_RE_PROTOTYPES\n",
-    );
+    h.push_str("\n/* Functions */\n");
     for line in &prototypes {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str("#ifdef BRE_HAS_THISCALL\n");
+    h.push_str(THISCALL_BEGIN);
     for line in &this_prototypes {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str("#endif\n#endif\n");
+    h.push_str(THISCALL_END);
+    h.push_str("#endif\n");
     h.push_str(
         "\n/* Addresses: BRE_ADDR_<name>, the virtual address of a function or a global */\n",
     );
     for line in &addresses {
+        let _ = writeln!(h, "{line}");
+    }
+    h.push_str(
+        "\n/* Global accessors: BRE_G_<name> is the global at BRE_ADDR_<name>, as an lvalue of its\n \
+         * type. Valid in code running inside the client's process. */\n",
+    );
+    for line in &accessors {
         let _ = writeln!(h, "{line}");
     }
     h.push_str(
@@ -588,11 +609,11 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
     for line in &pointers {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str("#ifdef BRE_HAS_THISCALL\n");
+    h.push_str(THISCALL_BEGIN);
     for line in &this_pointers {
         let _ = writeln!(h, "{line}");
     }
-    h.push_str("#endif\n");
+    h.push_str(THISCALL_END);
     for line in &fastcall_pointers {
         let _ = writeln!(h, "{line}");
     }
@@ -729,6 +750,18 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
     })
 }
 
+/// The `__thiscall` declarations. GCC under `-pedantic` warns that the attribute is for a member
+/// function, though it applies it to a plain function type as MSVC's keyword does.
+const THISCALL_BEGIN: &str = "#ifdef BRE_HAS_THISCALL\n\
+    #if defined(__GNUC__) && !defined(__clang__)\n\
+    #pragma GCC diagnostic push\n\
+    #pragma GCC diagnostic ignored \"-Wattributes\"\n\
+    #endif\n";
+const THISCALL_END: &str = "#if defined(__GNUC__) && !defined(__clang__)\n\
+    #pragma GCC diagnostic pop\n\
+    #endif\n\
+    #endif\n";
+
 fn banner(h: &mut String, origin: &Origin) {
     let client = if origin.rebased {
         "WoW.exe 1.12.1.5875, with the function addresses rebased onto\n * another build by byte patterns (`cargo xtask match`): a match of bytes and position,\n * not a proof that the function is the same, and a global has no address here"
@@ -756,13 +789,20 @@ fn banner(h: &mut String, origin: &Origin) {
  *   sits at its table offset. Define BENILLA_RE_LAYOUT_CHECK to assert every size and offset.
  * - A type the tables name but do not define is declared and left incomplete.
  * - Each prototype and global carries its address in the comment before it.
- * - For a call from injected code, `((BRE_FN_name)BRE_ADDR_name)(args)`: every function has its
- *   address and a pointer type with its convention; a global has its address. Where a compiler
- *   has no __thiscall, BRE_FNX_name is the same call as a __fastcall with `this` first and the
- *   unused edx second.
- * - Define BENILLA_RE_PROTOTYPES for the free prototypes. They are off by default: the
- *   functions are in WoW.exe and cannot be linked, and a prototype of a name the SDK or the C
- *   library also declares (GetACP, ceil, _isnan) collides with it after <windows.h>.
+ * - For code that runs inside the client's process (a DLL, a loader), a call is
+ *   `((BRE_FN_name)BRE_ADDR_name)(args)`: every function has its address and a pointer type with
+ *   its convention. A global is `BRE_G_name`, an lvalue of its type at `BRE_ADDR_name`. Where a
+ *   compiler has no __thiscall, BRE_FNX_name is the same call as a __fastcall with `this` first
+ *   and the unused edx second. For example:
+ *
+ *       #include \"benilla-re.h\"
+ *       uint32_t length = ((BRE_FN_SStrLen)BRE_ADDR_SStrLen)(\"hello\");  // a call
+ *       uint32_t sent = BRE_G_s_netBytesSent;                          // a global read
+ *
+ * - Define BENILLA_RE_PROTOTYPES for the free declarations of the functions and globals. They
+ *   are off by default: they are in WoW.exe and cannot be linked, so a use of one fails at link
+ *   time (use BRE_G_name for a global), and a prototype of a name the SDK or the C library also
+ *   declares (GetACP, ceil, _isnan) collides with it after <windows.h>.
  * - A function that takes variable arguments under __stdcall or __thiscall, which no compiler
  *   can call as written, has no prototype and no pointer type; its address is in the table.
  * - The header is C and C++. MSVC takes no __thiscall outside a member function, so there it has
