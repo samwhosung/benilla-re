@@ -1,0 +1,23 @@
+name: A wrong finding
+description: A row, an entry or a table says something the client does not do.
+body:
+  - type: input
+    id: where
+    attributes:
+      label: The row or the entry
+      description: The address, or the doc and anchor (net/friends#who-query-tags), or the page on the site.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it says, and what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: The instruction the entry misreads, or a run of the client that contradicts it (docs/METHOD.md says what counts). Label a guess as one.
+    validations:
+      required: true

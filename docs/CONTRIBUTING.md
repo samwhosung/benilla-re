@@ -139,6 +139,23 @@ cites that has neither a row nor a mention in a doc here: a report. With `--stri
 nonzero when any address has neither, the standing check that everything benilla cites is
 backed here.
 
+## Report a gap or a wrong finding
+
+A gap (a function, a field or a behaviour the repo does not cover) or a finding you think is wrong
+goes in an issue at `https://github.com/samwhosung/benilla-re/issues`; the two forms there ask for
+what follows. No exe is needed to file one.
+
+- **The address or the behaviour.** A client address (`0x5e6853`) or, where you have no address,
+  what the client does that you want explained.
+- **What you expected**, and what the repo says instead, or that it says nothing.
+- **Where it shows**: the row, the entry and its anchor, the page on the site, or the behaviour of
+  a client or a server.
+- **Evidence for a finding that is wrong.** `METHOD.md` says what counts: the instruction that the
+  entry misreads, or a run of the client that contradicts it. A guess, a decompiler's output or
+  another project's name is a lead and is labelled so.
+
+One defect to an issue. A pull request that fixes it says `Fixes #N`.
+
 ## Adding a name
 
 1. Find the function's row in `symbols/functions.tsv`, or add one in address order. Check that

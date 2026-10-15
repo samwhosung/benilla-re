@@ -1,0 +1,24 @@
+name: A gap
+description: The repo does not cover a function, a field or a behaviour of the 1.12.1 client.
+body:
+  - type: input
+    id: address
+    attributes:
+      label: Address or behaviour
+      description: A client address (0x5e6853), or what the client does that you want explained.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected to find
+      description: What you looked for, and where you looked (the site search, a table, a system doc).
+    validations:
+      required: true
+  - type: textarea
+    id: shows
+    attributes:
+      label: Where it shows
+      description: The client or server behaviour, the tool, or the build you read it in. No exe is needed.
+    validations:
+      required: false
