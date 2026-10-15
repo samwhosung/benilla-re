@@ -501,11 +501,16 @@ fn clang_compiles_the_header_and_every_layout_assertion_holds() {
             before: "",
         });
     }
-    // The GNU spelling, with a `cdecl` macro as mingw's headers define it.
+    // The GNU spelling, with a `cdecl` macro as mingw's headers define it. Freestanding, so the
+    // compile needs no 32-bit C library headers on the machine that runs it.
     run(Job {
         compiler: "clang",
         lang: "c",
-        flags: &["--target=i386-pc-linux-gnu", "-DBENILLA_RE_PROTOTYPES"],
+        flags: &[
+            "--target=i386-pc-linux-gnu",
+            "-ffreestanding",
+            "-DBENILLA_RE_PROTOTYPES",
+        ],
         before: "#define cdecl _cdecl\n",
     });
     // The real headers of mingw, when this machine has them.
