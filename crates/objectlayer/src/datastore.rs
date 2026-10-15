@@ -46,6 +46,30 @@ impl<'a> DataStore<'a> {
         Some(v)
     }
 
+    /// Reads a byte (`0x418cb0`).
+    pub fn get_u8(&mut self) -> Option<u8> {
+        if !self.gate(1) {
+            return None;
+        }
+        let v = self.buf[self.pos as usize];
+        self.pos += 1;
+        Some(v)
+    }
+
+    /// Reads a packed guid (`CDataStore::GetPackGuid`, `0x642ed0`): a mask byte, then one byte
+    /// for each set bit `k`, in increasing `k`, ORed in at bits `8k`. The store holds every byte
+    /// the mask names: a failed read leaves stale stack in the mask or the byte.
+    pub fn get_pack_guid(&mut self) -> u64 {
+        let mask = self.get_u8().unwrap_or(0);
+        let mut g = 0u64;
+        for k in 0..8 {
+            if mask & (1 << k) != 0 {
+                g |= u64::from(self.get_u8().unwrap_or(0)) << (8 * k);
+            }
+        }
+        g
+    }
+
     /// Reads a float by its bits (`0x419130`).
     pub fn get_f32(&mut self) -> Option<f32> {
         self.get_u32().map(f32::from_bits)

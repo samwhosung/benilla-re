@@ -47,6 +47,7 @@ pub mod unitm2_fp;
 pub mod unitm3_fp;
 pub mod unitm4_fp;
 pub mod unitm5_fp;
+pub mod update;
 pub mod updatefields;
 pub mod vector3;
 pub mod x87;
