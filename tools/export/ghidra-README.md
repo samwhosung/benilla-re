@@ -16,21 +16,25 @@ You need Ghidra 12.1 or later and a JDK 21 or later. Check your exe first: it mu
 bytes with SHA-256 `b4756d38ef207c02ed651f4952bd89a70b4857b73a33413339e1b285b28d2dc7`. Any other
 build has other addresses.
 
-Import it and run both scripts in one headless pass, from this folder:
+Import and analyse in one headless run, then run the two scripts in a second run with analysis
+off, from this folder. Give `-scriptPath` and the tables' folder as absolute paths: `analyzeHeadless`
+starts in its own folder, so a relative path is not found. Analysis after a script removes code at
+a few row starts, which is why the scripts get their own run.
 
 ```
 analyzeHeadless <project folder> <project name> -import <path to WoW.exe> \
-    -processor x86:LE:32:default -cspec windows \
-    -scriptPath . \
-    -postScript CreateFunctions.java symbols \
-    -postScript ApplySymbols.java symbols
+    -processor x86:LE:32:default -cspec windows
+
+analyzeHeadless <project folder> <project name> -process WoW.exe -noanalysis \
+    -scriptPath "$PWD" \
+    -postScript CreateFunctions.java "$PWD/symbols" \
+    -postScript ApplySymbols.java "$PWD/symbols"
 ```
 
-On a program already imported and analysed, run the two scripts alone with
-`-process WoW.exe -noanalysis` in place of `-import ...`. The scripts take the tables' folder as
+The second command can run again on the same project. The scripts take the tables' folder as
 their one argument, so they run headless; the Script Manager passes none.
 
-Pass `keep` after the folder (`-postScript ApplySymbols.java symbols keep`) on a program that
+Pass `keep` after the folder (`-postScript ApplySymbols.java "$PWD/symbols" keep`) on a program that
 already has names of its own: an item whose name somebody set (user-defined or imported, not
 Ghidra's default, analysis or AI) keeps its name and its type, and takes ours as a block of its
 repeatable comment; the rest of the comment stays. Every name the script applies leaves a
@@ -40,7 +44,16 @@ applied.
 
 ## What it prints
 
-One `ApplySymbols: FAIL` line for each row it could not apply, then a verification of every
-name against the program and a failure count. A signature fails when it names a type
-`symbols/structs.tsv` does not define or is written for the `__userpurge` convention; the row keeps
-its name and comment. A row whose address is no function in your analysis is skipped.
+`CreateFunctions` prints one line per function it splits off: where analysis made one function
+over two rows because the first jumps to the second, the second's start becomes a function and
+the first ends at it. It prints a `size` line for each function whose body differs from its row's
+size, and a total.
+
+`ApplySymbols` prints one `FAIL [reason]` line for each row it could not apply, then a summary:
+the rows, the names and signatures found in the program, and the failures by reason. A type the
+tables name but never define (`lua_State`, `CDataStore`) becomes an empty struct, so pointers to
+it apply; the C builtins, the stdint types, `bool`, `...` and the SDK's `RECT`, `POINT`, `SIZE` and
+`MSG` are known. A row keeps its name and comment when its signature fails. Two reasons are
+defects of the table: `signature outside the grammar` (a name, a comment or a register note in
+the prototype) and `__thiscall without this` (a `__thiscall` row whose first parameter is not
+`this`); the summary marks them. A `__thiscall` row with no parameters applies as it is.

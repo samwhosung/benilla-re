@@ -9,8 +9,9 @@
 // Every name this script applies leaves a `benilla-re: <name>` line in the repeatable comment. An
 // item whose name is still the one that line records was named by an earlier run, so `keep` names
 // it again from the newer table.
-// Prints one FAIL line per row it could not apply and, last, a verification that every row's name
-// is the name in the program.
+// Prints one FAIL line per row it could not apply, with its reason in brackets, and, last, a
+// summary: the rows, the names and signatures in the program, and the failures by reason. The
+// reasons "signature outside the grammar" and "__thiscall without this" are defects of the table.
 //
 // @category benilla
 
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 public class ApplySymbols extends GhidraScript {
 
     private static final Pattern FUNC_POINTER =
-            Pattern.compile("^(.+?)\\s*\\((\\*+)(?:\\[(\\d+)\\])?(\\w*)\\)\\s*\\(.*\\)$");
+            Pattern.compile("^(.+?)\\s*\\((?:__\\w+\\s*)?(\\*+)(?:\\[(\\d+)\\])?(\\w*)\\)\\s*\\(.*\\)$");
     private static final Pattern ARRAY = Pattern.compile("^(.*?)\\s*\\[(\\d+)\\]$");
     private static final Pattern SIGNATURE = Pattern.compile("^(.+?)\\s*\\b(__\\w+)\\s+\\((.*)\\)$");
     private static final Pattern PARAM = Pattern.compile("^(.*?)([A-Za-z_]\\w*)$");
@@ -39,12 +40,21 @@ public class ApplySymbols extends GhidraScript {
     private SymbolTable symtab;
     private final Map<String, Structure> structs = new TreeMap<>();
     private int failures = 0;
+    private final Map<String, Integer> reasons = new TreeMap<>();
+    private final Map<String, DataType> opaque = new TreeMap<>();
+    private int thiscallBare = 0;
+    private final Set<Long> applied = new HashSet<>();
     private boolean keep = false;
     private final Set<Long> kept = new HashSet<>();
 
-    private void fail(String what) {
+    // Reasons that are defects of the table, outside what the importer can apply (issue 81).
+    private static final Set<String> TABLE_DEFECT = new HashSet<>(Arrays.asList(
+            "signature outside the grammar", "__thiscall without this"));
+
+    private void fail(String reason, String what) {
         failures++;
-        println("ApplySymbols: FAIL " + what);
+        reasons.merge(reason, 1, Integer::sum);
+        println("ApplySymbols: FAIL [" + reason + "] " + what);
     }
 
     private List<String[]> read(String dir, String file) throws Exception {
@@ -61,20 +71,62 @@ public class ApplySymbols extends GhidraScript {
 
     // ---- types ----
 
-    private DataType baseType(String name) {
+    private static final Pattern HANDLE_NAME = Pattern.compile("^(H[A-Z0-9]+|\\w+_CFunction)$");
+    private static final Pattern IDENT = Pattern.compile("^[A-Za-z_]\\w*(::[A-Za-z_]\\w*)*$");
+
+    // The C types of the table that are not structs: the builtins, the stdint family and the
+    // names the header's includes define.
+    private DataType builtin(String name) {
         switch (name) {
             case "void": return VoidDataType.dataType;
+            case "bool": return BooleanDataType.dataType;
             case "char": return CharDataType.dataType;
-            case "int": case "int32_t": return IntegerDataType.dataType;
-            case "unsigned int": case "uint32_t": return UnsignedIntegerDataType.dataType;
-            case "int8_t": return SignedByteDataType.dataType;
-            case "uint8_t": return ByteDataType.dataType;
-            case "int16_t": case "short": return ShortDataType.dataType;
-            case "uint16_t": case "unsigned short": return UnsignedShortDataType.dataType;
+            case "signed char": case "int8_t": return SignedByteDataType.dataType;
+            case "unsigned char": case "uint8_t": return ByteDataType.dataType;
+            case "short": case "int16_t": return ShortDataType.dataType;
+            case "unsigned short": case "uint16_t": return UnsignedShortDataType.dataType;
+            case "int": case "int32_t": case "long": case "intptr_t": case "ptrdiff_t":
+                return IntegerDataType.dataType;
+            case "unsigned": case "unsigned int": case "uint32_t": case "unsigned long":
+            case "uintptr_t": case "size_t":
+                return UnsignedIntegerDataType.dataType;
+            case "long long": case "int64_t": return LongLongDataType.dataType;
+            case "unsigned long long": case "uint64_t": return UnsignedLongLongDataType.dataType;
+            case "wchar_t": return UnsignedShortDataType.dataType;
             case "float": return FloatDataType.dataType;
             case "double": return DoubleDataType.dataType;
-            default: return structs.get(name);
+            case "va_list": return pointerTo(VoidDataType.dataType);
+            default:
+                // A handle or a callback typedef of the SDK or the client: a pointer.
+                return HANDLE_NAME.matcher(name).matches() ? pointerTo(VoidDataType.dataType) : null;
         }
+    }
+
+    private static CategoryPath categoryOf(String name) {
+        List<String> q = qualifier(name);
+        return q.isEmpty() ? CategoryPath.ROOT : new CategoryPath(CategoryPath.ROOT, q);
+    }
+
+    // A type the table names but does not define, as an empty struct, so that pointers to it
+    // work. Null when the name is no type name.
+    private DataType opaqueType(String name) {
+        if (!IDENT.matcher(name).matches()) return null;
+        DataType dt = opaque.get(name);
+        if (dt == null) {
+            StructureDataType s = new StructureDataType(categoryOf(name), leaf(name), 0, dtm);
+            s.setDescription("opaque: named by the table, not defined");
+            dt = dtm.addDataType(s, DataTypeConflictHandler.KEEP_HANDLER);
+            opaque.put(name, dt);
+        }
+        return dt;
+    }
+
+    private DataType baseType(String name, boolean viaPointer) {
+        name = name.replaceFirst("^(struct|union|enum)\\s+", "");
+        DataType dt = builtin(name);
+        if (dt == null) dt = structs.get(name);
+        if (dt == null && viaPointer) dt = opaqueType(name);
+        return dt;
     }
 
     private DataType pointerTo(DataType dt) {
@@ -82,6 +134,12 @@ public class ApplySymbols extends GhidraScript {
     }
 
     private DataType type(String t) {
+        return type(t, false);
+    }
+
+    // The type of a declaration's type text. `viaPointer` lets a name the table never defines
+    // stand as an opaque struct, which only a pointer to it can use.
+    private DataType type(String t, boolean viaPointer) {
         t = t.trim().replaceFirst("^const\\s+", "").replaceAll("\\s+", " ");
         Matcher fp = FUNC_POINTER.matcher(t);
         if (fp.matches()) {
@@ -94,14 +152,15 @@ public class ApplySymbols extends GhidraScript {
         }
         Matcher ar = ARRAY.matcher(t);
         if (ar.matches()) {
-            DataType el = type(ar.group(1));
+            DataType el = type(ar.group(1), viaPointer);
             return el == null ? null : new ArrayDataType(el, Integer.parseInt(ar.group(2)), el.getLength());
         }
         if (t.endsWith("*")) {
-            DataType to = type(t.substring(0, t.length() - 1));
+            DataType to = type(t.substring(0, t.length() - 1), true);
             return to == null ? null : pointerTo(to);
         }
-        return baseType(t.trim());
+        t = t.replaceFirst("\\s+const$", "");
+        return baseType(t.trim(), viaPointer);
     }
 
     // ---- names ----
@@ -163,7 +222,9 @@ public class ApplySymbols extends GhidraScript {
 
     // Whether an earlier run named the item: its name is still the one the run recorded.
     private static boolean named(String[] parts, String current) {
-        return parts[1] != null && !parts[1].isEmpty() && parts[1].equals(current);
+        // An import's thunk keeps the library's namespace, so a name without one matches the leaf.
+        return parts[1] != null && !parts[1].isEmpty()
+                && (parts[1].equals(current) || !parts[1].contains("::") && parts[1].equals(leaf(current)));
     }
 
     // Whether `keep` leaves the item's name and type alone.
@@ -203,19 +264,40 @@ public class ApplySymbols extends GhidraScript {
             s.setDescription(c[4]);
             structs.put(c[0], (Structure) dtm.addDataType(s, DataTypeConflictHandler.REPLACE_HANDLER));
         }
+        sdkStructs();
         int fields = 0;
         for (String[] c : frows) {
             Structure s = structs.get(c[0]);
-            if (s == null) { fail("field " + c[0] + "::" + c[4] + ": no struct"); continue; }
+            if (s == null) { fail("field without struct", "field " + c[0] + "::" + c[4]); continue; }
             DataType dt = type(c[3]);
-            if (dt == null) { fail("field " + c[0] + "::" + c[4] + ": unknown type " + c[3]); continue; }
+            if (dt == null) { fail("unknown type", "field " + c[0] + "::" + c[4] + ": " + c[3]); continue; }
             int off = Integer.decode(c[1]);
             int size = Integer.parseInt(c[2]);
-            if (dt.getLength() != size) { fail("field " + c[0] + "::" + c[4] + ": " + c[3] + " is " + dt.getLength() + " bytes, row says " + size); continue; }
+            if (dt.getLength() != size) { fail("field size", "field " + c[0] + "::" + c[4] + ": " + c[3] + " is " + dt.getLength() + " bytes, row says " + size); continue; }
             s.replaceAtOffset(off, dt, size, c[4], c[6]);
             fields++;
         }
         println("ApplySymbols: structs=" + structs.size() + " fields=" + fields);
+    }
+
+    // The SDK structs the table passes by value, unless the table defines them.
+    private void sdkStructs() {
+        String[][] defs = {
+            {"RECT", "int left", "int top", "int right", "int bottom"},
+            {"POINT", "int x", "int y"},
+            {"SIZE", "int cx", "int cy"},
+            {"MSG", "void * hwnd", "unsigned int message", "unsigned int wParam", "int lParam",
+                "unsigned int time", "POINT pt"},
+        };
+        for (String[] d : defs) {
+            if (structs.containsKey(d[0])) continue;
+            StructureDataType s = new StructureDataType(CategoryPath.ROOT, d[0], 0, dtm);
+            for (int i = 1; i < d.length; i++) {
+                int sp = d[i].lastIndexOf(' ');
+                s.add(type(d[i].substring(0, sp)), d[i].substring(sp + 1), null);
+            }
+            structs.put(d[0], (Structure) dtm.addDataType(s, DataTypeConflictHandler.REPLACE_HANDLER));
+        }
     }
 
     // ---- functions ----
@@ -233,18 +315,36 @@ public class ApplySymbols extends GhidraScript {
         return out;
     }
 
-    // Returns null when applied, else the reason.
-    private String applySignature(Function f, String sig, boolean hasClass) throws Exception {
+    // The parts of a signature: return type, convention, parameters. Null outside the grammar.
+    private String[] parseSignature(String sig) {
+        if (sig.contains("/*") || sig.contains("@")) return null;
         Matcher m = SIGNATURE.matcher(sig);
-        if (!m.matches()) return "cannot parse signature " + sig;
-        DataType ret = type(m.group(1));
-        if (ret == null) return "unknown return type " + m.group(1);
-        String conv = m.group(2);
+        if (!m.matches()) return null;
+        return new String[] {m.group(1), m.group(2), m.group(3)};
+    }
+
+    private static final Pattern THIS = Pattern.compile("(^|[\\s*])this$");
+
+    // Returns null when applied, else {reason, detail}.
+    private String[] applySignature(Function f, String sig, String rowName) throws Exception {
+        String[] parts = parseSignature(sig);
+        if (parts == null) return new String[] {"signature outside the grammar", sig};
+        DataType ret = type(parts[0]);
+        if (ret == null) return new String[] {"unknown type", "return type " + parts[0]};
+        String conv = parts[1];
         List<Variable> params = new ArrayList<>();
-        List<String> ps = splitParams(m.group(3));
+        List<String> ps = splitParams(parts[2]);
         if (ps.size() == 1 && ps.get(0).equals("void")) ps.clear();
-        if (conv.equals("__thiscall") && !ps.isEmpty()) {
-            ps.remove(0); // `this` is the convention's own parameter
+        boolean varargs = !ps.isEmpty() && ps.get(ps.size() - 1).equals("...");
+        if (varargs) ps.remove(ps.size() - 1);
+        if (conv.equals("__thiscall")) {
+            if (ps.isEmpty()) {
+                thiscallBare++;
+            } else if (THIS.matcher(ps.get(0)).find()) {
+                ps.remove(0); // `this` is the convention's own parameter
+            } else {
+                return new String[] {"__thiscall without this", sig};
+            }
         }
         int n = 0;
         for (String p : ps) {
@@ -262,14 +362,31 @@ public class ApplySymbols extends GhidraScript {
                 ty = p;
                 name = "param_" + (n + 1);
             }
+            // A parameter declared as an array is a pointer to its element.
+            Matcher arr = Pattern.compile("^(.*?)(\\w+)\\s*\\[\\d*\\]$").matcher(p);
+            if (!fp.matches() && arr.matches()) {
+                ty = arr.group(1).trim() + " *";
+                name = arr.group(2);
+            }
             DataType dt = type(ty);
-            if (dt == null) return "unknown parameter type " + ty;
+            if (dt == null || dt.getLength() == 0) return new String[] {"unknown type", "parameter type " + ty};
+            if (name.isEmpty()) name = "param_" + (n + 1);
             params.add(new ParameterImpl(name, dt, currentProgram));
             n++;
+        }
+        // A function of one jump is a thunk, and a thunk takes its target's convention and
+        // parameters; the row's signature is the function's own. An import's thunk stays one.
+        if (f.isThunk() && !f.getThunkedFunction(true).isExternal()) {
+            List<String> q = qualifier(rowName);
+            Namespace own = q.isEmpty() ? currentProgram.getGlobalNamespace() : namespace(q);
+            f.setThunkedFunction(null);
+            f.setParentNamespace(own);
+            if (!rowName.isEmpty()) f.setName(leaf(rowName), SourceType.USER_DEFINED);
         }
         f.setCallingConvention(conv);
         f.updateFunction(conv, new ReturnParameterImpl(ret, currentProgram),
                 params, Function.FunctionUpdateType.DYNAMIC_STORAGE_FORMAL_PARAMS, true, SourceType.USER_DEFINED);
+        f.setVarArgs(varargs);
         return null;
     }
 
@@ -278,11 +395,12 @@ public class ApplySymbols extends GhidraScript {
         for (String[] c : read(dir, "functions.tsv")) {
             Address a = toAddr(Long.parseLong(c[0].substring(2), 16));
             Function f = getFunctionAt(a);
-            if (f == null) { fail("function " + c[0] + " " + c[2] + ": no function"); continue; }
+            if (f == null) { fail("no function", "function " + c[0] + " " + c[2]); continue; }
             try {
                 String[] parts = splitComment(repeatable(a));
                 if (keeps(f.getSymbol().getSource(), parts, f.getName(true))) {
                     kept.add(a.getOffset());
+                    println("ApplySymbols: kept " + c[0] + " " + f.getName(true) + " (row " + c[2] + ")");
                     writeBlock(a, parts, c[2], comment(c, 7, 8, 9, 10));
                     continue;
                 }
@@ -293,13 +411,13 @@ public class ApplySymbols extends GhidraScript {
                     named++;
                 }
                 if (!c[6].isEmpty()) {
-                    String why = applySignature(f, c[6], !qualifier(c[2]).isEmpty());
-                    if (why != null) fail("signature " + c[0] + " " + c[2] + ": " + why); else sigs++;
+                    String[] why = applySignature(f, c[6], c[2]);
+                    if (why != null) fail(why[0], "signature " + c[0] + " " + c[2] + ": " + why[1]); else { sigs++; applied.add(a.getOffset()); }
                 }
                 setPlateComment(a, comment(c, 7, 8, 9, 10));
                 if (!c[2].isEmpty()) writeBlock(a, parts, c[2], "");
             } catch (Exception e) {
-                fail("function " + c[0] + " " + c[2] + ": " + e);
+                fail("exception", "function " + c[0] + " " + c[2] + ": " + e);
             }
         }
         println("ApplySymbols: functions named=" + named + " signatures=" + sigs);
@@ -313,17 +431,18 @@ public class ApplySymbols extends GhidraScript {
         for (String[] c : read(dir, "globals.tsv")) {
             Address a = toAddr(Long.parseLong(c[0].substring(2), 16));
             try {
-                if (!currentProgram.getMemory().contains(a)) { fail("global " + c[0] + " " + c[2] + ": not in memory"); continue; }
+                if (!currentProgram.getMemory().contains(a)) { fail("global not in memory", "global " + c[0] + " " + c[2]); continue; }
                 Symbol existing = symtab.getPrimarySymbol(a);
                 String[] parts = splitComment(repeatable(a));
                 if (existing != null && keeps(existing.getSource(), parts, existing.getName(true))) {
                     kept.add(a.getOffset());
+                    println("ApplySymbols: kept " + c[0] + " " + existing.getName(true) + " (row " + c[2] + ")");
                     writeBlock(a, parts, c[2], comment(c, 5, 6, 7, 8));
                     continue;
                 }
                 DataType dt = type(c[1]);
-                if (dt == null) { fail("global " + c[0] + " " + c[2] + ": unknown type " + c[1]); continue; }
-                if (getInstructionContaining(a) != null) { fail("global " + c[0] + " " + c[2] + ": code at the address"); continue; }
+                if (dt == null) { fail("unknown type", "global " + c[0] + " " + c[2] + ": " + c[1]); continue; }
+                if (getInstructionContaining(a) != null) { fail("global over code", "global " + c[0] + " " + c[2]); continue; }
                 if (!c[2].isEmpty()) {
                     List<String> q = qualifier(c[2]);
                     Symbol s = symtab.createLabel(a, leaf(c[2]),
@@ -337,7 +456,7 @@ public class ApplySymbols extends GhidraScript {
                 setPlateComment(a, comment(c, 5, 6, 7, 8));
                 if (!c[2].isEmpty()) writeBlock(a, parts, c[2], "");
             } catch (Exception e) {
-                fail("global " + c[0] + " " + c[2] + ": " + e);
+                fail("exception", "global " + c[0] + " " + c[2] + ": " + e);
             }
         }
         println("ApplySymbols: globals named=" + named + " typed=" + typed);
@@ -345,31 +464,39 @@ public class ApplySymbols extends GhidraScript {
 
     // ---- verification ----
 
+    // The number of parameters Ghidra shows for an applied signature: `this` is the convention's
+    // own, and `...` is no parameter.
+    private int expectedParameters(String sig) {
+        String[] parts = parseSignature(sig);
+        List<String> ps = splitParams(parts[2]);
+        if (ps.size() == 1 && ps.get(0).equals("void")) ps.clear();
+        if (!ps.isEmpty() && ps.get(ps.size() - 1).equals("...")) ps.remove(ps.size() - 1);
+        int n = ps.size();
+        // `this` is a parameter of the program's function, listed or not.
+        if (parts[1].equals("__thiscall")) n = n > 0 ? n : 1;
+        return n;
+    }
+
     private void verify(String dir) throws Exception {
-        int fOk = 0, fRows = 0, fNamed = 0, gOk = 0, gRows = 0, gNamed = 0;
+        int fRows = 0, fNamed = 0, fOk = 0, sRows = 0, sOk = 0, gRows = 0, gNamed = 0, gOk = 0;
         for (String[] c : read(dir, "functions.tsv")) {
             fRows++;
-            if (c[2].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
-            fNamed++;
-            Function f = getFunctionAt(toAddr(Long.parseLong(c[0].substring(2), 16)));
-            if (f != null && f.getName(true).equals(c[2])) fOk++;
-            else println("ApplySymbols: MISMATCH function " + c[0] + ": row " + c[2] + ", program " + (f == null ? "none" : f.getName(true)));
+            long off = Long.parseLong(c[0].substring(2), 16);
+            Function f = getFunctionAt(toAddr(off));
+            if (!c[2].isEmpty() && !kept.contains(off)) {
+                fNamed++;
+                if (f != null && (f.getName(true).equals(c[2]) || f.isThunk() && f.getName().equals(c[2]))) fOk++;
+                else println("ApplySymbols: MISMATCH function " + c[0] + ": row " + c[2] + ", program " + (f == null ? "none" : f.getName(true)));
+            }
+            if (!c[6].isEmpty() && applied.contains(off)) {
+                sRows++;
+                if (f != null && f.getParameterCount() == expectedParameters(c[6])
+                        && f.getCallingConventionName().equals(parseSignature(c[6])[1])) sOk++;
+                else println("ApplySymbols: MISMATCH signature " + c[0] + ": row " + c[6] + ", program "
+                        + (f == null ? "none" : f.getPrototypeString(true, true) + " [" + f.getCallingConventionName() + ", "
+                        + f.getParameterCount() + " parameters]"));
+            }
         }
-        int sOk = 0, sRows = 0, shown = 0;
-        for (String[] c : read(dir, "functions.tsv")) {
-            if (c[6].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
-            sRows++;
-            Function f = getFunctionAt(toAddr(Long.parseLong(c[0].substring(2), 16)));
-            Matcher m = SIGNATURE.matcher(c[6]);
-            List<String> ps = splitParams(m.matches() ? m.group(3) : "");
-            int expected = (ps.size() == 1 && ps.get(0).equals("void")) ? 0 : ps.size();
-            if (f != null && f.getParameterCount() == expected
-                    && f.getCallingConventionName().equals(m.group(2))) sOk++;
-            else println("ApplySymbols: MISMATCH signature " + c[0] + ": row " + c[6] + ", program "
-                    + (f == null ? "none" : f.getPrototypeString(true, false)));
-            if (c[2].contains("::") && shown++ < 3) println("ApplySymbols: sample " + f.getPrototypeString(true, false));
-        }
-        println("ApplySymbols: verified signatures " + sOk + "/" + sRows);
         for (String[] c : read(dir, "globals.tsv")) {
             gRows++;
             if (c[2].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
@@ -378,9 +505,24 @@ public class ApplySymbols extends GhidraScript {
             if (s != null && s.getName(true).equals(c[2])) gOk++;
             else println("ApplySymbols: MISMATCH global " + c[0] + ": row " + c[2] + ", program " + (s == null ? "none" : s.getName(true)));
         }
-        println("ApplySymbols: kept " + kept.size() + " items with names of their own");
-        println("ApplySymbols: verified functions " + fOk + "/" + fNamed + " named rows (" + fRows
-                + " rows), globals " + gOk + "/" + gNamed + " named rows (" + gRows + " rows), failures " + failures);
+        int sigRows = 0, defects = 0;
+        for (String[] c : read(dir, "functions.tsv")) if (!c[6].isEmpty()) sigRows++;
+        println("ApplySymbols: summary");
+        println("ApplySymbols:   function rows " + fRows + ", with a signature " + sigRows + ", global rows " + gRows);
+        println("ApplySymbols:   kept " + kept.size() + " items with names of their own");
+        println("ApplySymbols:   function names in the program " + fOk + "/" + fNamed);
+        println("ApplySymbols:   signatures applied " + applied.size() + ", in the program " + sOk + "/" + sRows
+                + " (parameter count and convention)");
+        println("ApplySymbols:   global names in the program " + gOk + "/" + gNamed);
+        println("ApplySymbols:   __thiscall rows without parameters, applied as they are " + thiscallBare);
+        println("ApplySymbols:   opaque types made " + opaque.size());
+        println("ApplySymbols:   failures " + failures);
+        for (Map.Entry<String, Integer> e : reasons.entrySet()) {
+            boolean defect = TABLE_DEFECT.contains(e.getKey());
+            if (defect) defects += e.getValue();
+            println("ApplySymbols:     " + e.getValue() + " " + e.getKey() + (defect ? " (table defect)" : ""));
+        }
+        println("ApplySymbols:   failures that are table defects " + defects + ", others " + (failures - defects));
     }
 
     @Override
