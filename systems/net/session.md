@@ -128,7 +128,7 @@ most 15, or 0; the rates are kilobytes per second since connecting.
 Addresses: `0x537ff0`, `0x537e10`, `0x537e80`, `0x537e85`, `0x537e87`, `0x537d60`, `0x537dd6`, `0x537de8`, `0x537b90`, `0x537bcf`, `0x537f20`, `0x537fce`, `0x537fd2`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::netclient_idle`, `net::netclient_ping`, `net::netclient_pong`, `net::netclient_stats`
 
 `0x537ff0` adds `−30000` to `now − [+0x1a64]` and pings unless the sign is set. `0x537e10` stores
 the clock at `+0x1a64`, puts `0x1dc` and `++[+0x1a68]`; in state 6, `0x537e80` `cmp eax,ebx` and
@@ -139,7 +139,9 @@ stores at `+0x1a6c + 4w`, advances `w` mod 16, and `0x537de8` advances the read 
 when they meet, so the ring holds 15. `0x537b90`, the connect hook, zeroes both indices and the
 byte counts and stamps `+0x1a64` (`0x537bcf`). `0x537f20` divides the sum by the count with `div`
 (`0x537fce`) or returns 0 (`0x537fd2`); each rate is bytes times `1/1024` over milliseconds times
-`0.001`.
+`0.001`. The tests run the four functions whole: the idle check at the 30-second threshold and
+the sign boundary, the ping at every write index in and out of state 6, the pong at every pair of
+indices, and the statistics over every pair of indices and elapsed times of 0, 1 and the wrap.
 
 ## Disconnecting
 
@@ -163,9 +165,13 @@ which stores 2 and calls `0x46c540` (`0x537d20`).
 
 `CMSG_PING` sequence numbers are not reset when the session connects, and the idle check pings before there is a connection, so the first ping a server receives can carry a number above 1: a ping sent in any other state than 6 still counts and is dropped by `NetClient::Send`. `GetNetStats` returns, through three out parameters, the bytes received and the bytes sent, each times 1/1024 over the seconds since connecting, and the latency. The seconds are the clock less the time recorded when the connection came up, times 0.001; with none elapsed the quotient follows the x87 rules. Pings, pongs, the connect hook and `GetNetStats` all run under the connection's statistics lock `+0x1ac0`.
 
-Addresses: `0x537b90`, `0x537ff0`, `0x537e10`, `0x537d60`, `0x537f20`, `0x537b34`, `0x5379c6`, `0x537bcf`, `0x537e74`
+Addresses: `0x537b90`, `0x537ff0`, `0x537e10`, `0x537d60`, `0x537f20`, `0x537b34`, `0x5379c6`, `0x537bcf`, `0x537e74`, `0x537fb5`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::netclient_ping`, `net::netclient_stats`
 
-`0x537b90` stores the node's time at `+0x1abc`, zeroes `+0x1ab8`, `+0x1ab4`, `+0x1aac` and `+0x1ab0`, and stamps `+0x1a64`; it never writes `+0x1a68`. `0x537ff0` runs for every polled client and pings once `now − [+0x1a64] ≥ 30000`, where `+0x1a64` is 0 until the first ping or connect. `0x537e10` increments `+0x1a68` before its state test at `0x537e74`. `0x537f20` takes `+0x1ac0` (`0x537f33`), scales `now − [+0x1abc]` by `0x801360` and the two byte counts (`+0x1ab8` received, `+0x1ab4` sent) by `0x8090d8`, divides, and stores the received rate through the first argument, the sent rate through the second and the mean through the third (`0x537f80`, `0x537f96`, `0x537fd7`). `0x537d60` and `0x537e10` take the same lock (`0x537d70`, `0x537e3f`).
+`0x537b90` stores the node's time at `+0x1abc`, zeroes `+0x1ab8`, `+0x1ab4`, `+0x1aac` and `+0x1ab0`, and stamps `+0x1a64`; it never writes `+0x1a68`. `0x537ff0` runs for every polled client and pings once `now − [+0x1a64] ≥ 30000`, where `+0x1a64` is 0 until the first ping or connect. `0x537e10` increments `+0x1a68` before its state test at `0x537e74`. `0x537f20` takes `+0x1ac0` (`0x537f33`), scales `now − [+0x1abc]` by `0x801360` and the two byte counts (`+0x1ab8` received, `+0x1ab4` sent) by `0x8090d8`, divides, and stores the received rate through the first argument, the sent rate through the second and the mean through the third (`0x537f80`, `0x537f96`, `0x537fd7`). The seconds are a 64-bit
+integer load of the elapsed dword, so a clock before the connect time reads as nearly 4.3 million
+seconds; with none elapsed a rate is `+∞`, or NaN with no bytes. The mean's loop wraps its index
+at 16 and stops there when the write index is 0 (`0x537fb5`), and its sum is a dword that
+wraps. `0x537d60` and `0x537e10` take the same lock (`0x537d70`, `0x537e3f`).

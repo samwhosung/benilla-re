@@ -92,17 +92,19 @@ Connecting disarms the cipher. In the normal exchange the first packet is
 from the logon server is the key. With no challenge within 30 seconds of connecting, the
 keepalive sends `CMSG_PING` first, in clear, and arms the cipher.
 
-Addresses: `0x5379a0`, `0x5379e0`, `0x537a20`, `0x537a50`, `0x537820`, `0x537893`, `0x538597`, `0x537ff0`
+Addresses: `0x5379a0`, `0x5379e0`, `0x537a20`, `0x537a50`, `0x537820`, `0x537893`, `0x538597`, `0x537ff0`, `0x5379b6`, `0x5379c6`
 Confidence: verified
 Proof: two
-Test: none
+Test: `net::netclient_send`
 
 `0x5379e0` tests `+0x120` after the send at `0x5379c1`; the arming block stores `0x537a50`'s
 result (`lea eax,[ecx+0x48]`) at `+0x128`, `0x28` at `+0x127`, 4 at `+0x123` and 2 at `+0x126`,
 and calls `0x5b73c0(1)` at `0x537a20`. `NetClient::Connect` (`0x537820`) calls `0x5b73c0(0)` at
 `0x537893` before it dials. The key's writers are in `session`, Session key. Every poll of the
 queue calls the keepalive `0x537ff0` (`0x538597`, `dispatch`), whose clock starts at connecting;
-its ping goes through `NetClient::Send` in state 6 like any packet.
+its ping goes through `NetClient::Send` in state 6 like any packet. A packet with no bytes left
+to read is dropped too (`0x5379b6`); a sent one adds those bytes to `0xc0d45c` and `+0x1ab4`
+(`0x5379c6`). The test runs `0x5379a0` whole, `WowConnection::Send` recorded.
 
 ## Sending
 
