@@ -19355,9 +19355,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5e1ad0	112	SendAutoStoreLootItem		objectlayer	orchestration		Sends CMSG_AUTOSTORE_LOOT_ITEM (0x108) with the loot slot	verified	one	objectlayer/inventory#moving-items	
 0x5e1b40	152	CGPlayer_C::StoreLootInSlot		objectlayer	orchestration		Sends CMSG_STORE_LOOT_IN_SLOT (0x109) with the bag index, slot and loot slot	verified	one	objectlayer/inventory#moving-items	
 0x5e1be0	338	CGPlayer_C::AnswerBindConfirm		objectlayer	primitive		Replays an accepted parked move confirmed, or releases both slots' items, and frees the entry	verified	one	objectlayer/inventory#bind-on-equip-confirmation	
-0x5e1d40	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5e1d40	1	PlayerNoOp		objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5e1d50	145	SendSellItem		objectlayer	orchestration		Sends CMSG_SELL_ITEM (0x1a0) with the vendor, the item and the count	verified	one	objectlayer/inventory#vendors	
-0x5e1df0	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
+0x5e1df0	8	PlayerSetFieldStub		objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x5e1e00	39	CGPlayer_C::CopyPlayerFields		objectlayer	unreached		Copies a length of bytes into the player fields	verified	one	objectlayer/overview#unreached-functions	
 0x5e1e30	37	GetFieldBlockOffset		objectlayer	unreached	int32_t __fastcall (uint32_t kind)	Returns 0, 0x18, 0xc0, 0x18 or 0x2f0 for kinds 0 to 4, else −1	verified	one	objectlayer/overview#unreached-functions	
 0x5e1e70	17	GetProficiencyMask		objectlayer	orchestration	uint32_t __fastcall (uint8_t itemClass)	Returns the proficiency mask the server set for an item class below 16, else 0	verified	one	objectlayer/playercombat#using-an-item	
@@ -19478,8 +19478,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5ea520	168	CGPlayer_C::GetSkillTotal		objectlayer	primitive	int32_t __thiscall (CGPlayer_C *this, uint32_t skill)	Returns a skill's base plus temporary bonus, 0 when negative or unknown	verified	one	objectlayer/playercombat#skills	
 0x5ea5d0	186	CGPlayer_C::GetSkillSpell		objectlayer	primitive	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns the weapon-skill spell of a hand's weapon for a spell needing one, else the spell	verified	one	objectlayer/playercombat#skills	
 0x5ea690	104	CGPlayer_C::GetSpellSkillLevel		objectlayer	orchestration	uint32_t __thiscall (CGPlayer_C *this, uint32_t spell)	Returns a spell's skill line total, capped at five times its max level (vtable slot 42)	verified	one	objectlayer/playercombat#skills	
-0x5ea700	5			objectlayer	orchestration		Jumps to 0x468580	verified	one	objectlayer/overview#small-bodies	
-0x5ea710	3			objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
+0x5ea700	5	GetCurrentMapId		objectlayer	orchestration		Jumps to 0x468580	verified	one	objectlayer/overview#small-bodies	
+0x5ea710	3	PlayerNoOpEightArgs		objectlayer	unreached		Returns at once, dropping its stack arguments	verified	one	objectlayer/overview#small-bodies	
 0x5ea720	214	CGPlayer_C::CheckItemForSlot		objectlayer	primitive		Refuses a non-empty bag outside the bag slots, else asks the item's check with the class's ranged rule	verified	one	objectlayer/playercombat#using-an-item	
 0x5ea800	180	CGPlayer_C::OnAttackStart		objectlayer	primitive		Resets the attack error and stops the attack when the target is beyond four times the melee reach	verified	one	objectlayer/playercombat#the-melee-attack	objectlayer::reach_gate_5ea800_difftest
 0x5ea8c0	112	CGPlayer_C::SendLootMoney		objectlayer	primitive		Sends CMSG_LOOT_MONEY (0x15e) while a loot is held	verified	one	objectlayer/inventory#loot	
@@ -19648,16 +19648,16 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f0e00	19	InitPlayerSquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f0e20	5	InitPlayerQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f0e30, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f0e30	19	InitPlayerQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f0e50	60			objectlayer	primitive		Unlinks a node from its intrusive list and clears its links	verified	one	objectlayer/inventory#item-timers	
+0x5f0e50	60	UnlinkPendingExpirationNode		objectlayer	primitive		Unlinks a node from its intrusive list and clears its links	verified	one	objectlayer/inventory#item-timers	
 0x5f0e90	65	DeleteTradeSkillLine		objectlayer	orchestration		Frees a TRADESKILLLINE node's spell array, unlinks it and frees it	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f0ee0	191	NewTradeSkillLine		objectlayer	primitive		Allocates and links a zeroed TRADESKILLLINE node of 0x28 bytes plus extra	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f0fa0	189	ClearTradeSkillLines		objectlayer	primitive		Unlinks every TRADESKILLLINE node of a table and frees its bucket array	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f1060	117	DeleteProficiencySpell		objectlayer	orchestration		Unlinks a PROFICIENCYSPELL node and frees it	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f10e0	179	NewProficiencySpell		objectlayer	primitive		Allocates and links a zeroed PROFICIENCYSPELL node of 0x1c bytes plus extra	verified	one	objectlayer/playercombat#learning-a-spell	
 0x5f11a0	189	ClearProficiencySpells		objectlayer	primitive		Unlinks every PROFICIENCYSPELL node of a table and frees its bucket array	verified	one	objectlayer/playercombat#learning-a-spell	
-0x5f1260	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f1270	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5f1280	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5f1260	1	TrainerListLocalDtorA		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5f1270	1	TrainerListLocalDtorB		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5f1280	1	TrainerListLocalDtorC		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5f1290	10	InitPlayerCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5f12a0, then jumps to 0x5f12c0 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f12a0	22	InitPlayerCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x5f12c0	12	InitGameObjRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x5f12d0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
@@ -19698,60 +19698,60 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f15e0	19	InitPlayerSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5f1600	5	InitPlayerSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f1610, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f1610	19	InitPlayerSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5f1630	190			objectlayer	primitive		Destroys the trade skill table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f16f0	190			objectlayer	primitive		Destroys the proficiency table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f17b0	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f17f0	255			objectlayer	primitive		Empties the trade skill table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f18f0	372			objectlayer	primitive		Inserts a node into a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1a70	33			objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1aa0	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1b30	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1b40	135			objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1bd0	255			objectlayer	primitive		Empties the proficiency table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1cd0	33			objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1d00	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1d90	108			objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1e00	16			objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1e10	135			objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1ea0	6			objectlayer	orchestration		Returns 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1eb0	5			objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1ec0	5			objectlayer	orchestration		Jumps through slot 21 of its object's vtable	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1ed0	8			objectlayer	orchestration		Returns a unit's name	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1ee0	37			objectlayer	primitive		Returns 0 for a unit with UNIT_FIELD_FLAGS 0x2 or byte +0x213 bit 0x2, else 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f10	30			objectlayer	orchestration		Writes a unit's world position through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f30	16			objectlayer	orchestration		Returns a unit's world facing through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f40	26			objectlayer	orchestration		Writes a unit's world up vector	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f60	13			objectlayer	orchestration		Returns the GUID at +0x9e0 of a unit	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f70	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f80	7			objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1f90	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f1fd0	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2010	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2040	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2060	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f20b0	483			objectlayer	primitive		Doubles a hash table's buckets and rehashes when a lookup walks more than 13 nodes, up to 0x2000	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f22a0	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f22c0	33			objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f22f0	181			objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f23b0	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2400	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2410	31			objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2430	133			objectlayer	primitive		Grows a player's InitialSpellStruct array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f24c0	31			objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f24e0	144			objectlayer	primitive		Grows a player's GUILDUPDATETIMESTAMP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2570	146			objectlayer	primitive		Grows a player's ITEMSWAP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2610	17			objectlayer	orchestration		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2630	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2660	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2690	491			objectlayer	primitive		Moves a hash table's nodes into a resized bucket array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2880	176			objectlayer	primitive		Unlinks and frees the nodes of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2930	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2940	316			objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2a80	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2a90	316			objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2bd0	319			objectlayer	primitive		Grows a bucket array by a count, rounding the capacity to its quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2d10	264			objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2e20	264			objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1630	190	DestroyTradeSkillTable		objectlayer	primitive		Destroys the trade skill table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f16f0	190	DestroyProficiencyTable		objectlayer	primitive		Destroys the proficiency table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f17b0	60	UnlinkPendingExpirationLink		objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f17f0	255	EmptyTradeSkillTable		objectlayer	primitive		Empties the trade skill table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f18f0	372	InsertTradeSkillNode		objectlayer	primitive		Inserts a node into a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1a70	33	InitTradeSkillBucket		objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1aa0	136	ClearTradeSkillList		objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1b30	16	ClearTradeSkillBucketArray		objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1b40	135	DestroyTradeSkillBuckets		objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1bd0	255	EmptyProficiencyTable		objectlayer	primitive		Empties the proficiency table, unlinking its nodes or deleting them when the argument is 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1cd0	33	InitProficiencyBucket		objectlayer	primitive		Makes an empty bucket list marked 0xdddddddd	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1d00	136	ClearProficiencyList		objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1d90	108	SetProficiencyListLinkOffset		objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1e00	16	ClearProficiencyBucketArray		objectlayer	orchestration		Zeroes four dwords at ecx and returns ecx	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1e10	135	DestroyProficiencyBuckets		objectlayer	primitive		Unlinks and frees every bucket list of a hash table	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ea0	6	CGUnit_C::IsPickable		objectlayer	orchestration		Returns 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1eb0	5	CGUnit_C::IsCollidable		objectlayer	orchestration		Returns 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ec0	5	CGUnit_C::CanSelect		objectlayer	orchestration		Jumps through slot 21 of its object's vtable	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ed0	8	CGUnit_C::GetName		objectlayer	orchestration		Returns a unit's name	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1ee0	37	CGUnit_C::ShouldFadeIn		objectlayer	primitive		Returns 0 for a unit with UNIT_FIELD_FLAGS 0x2 or byte +0x213 bit 0x2, else 1	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f10	30	CGUnit_C::GetPosition		objectlayer	orchestration		Writes a unit's world position through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f30	16	CGUnit_C::GetFacing		objectlayer	orchestration		Returns a unit's world facing through its mover	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f40	26	CGUnit_C::GetGroundNormal		objectlayer	orchestration		Writes a unit's world up vector	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f60	13	CGUnit_C::GetTransportGuid		objectlayer	orchestration		Returns the GUID at +0x9e0 of a unit	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f70	7	CGPlayer_C::GetInventory		objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f80	7	CGPlayer_C::GetInventoryBlock		objectlayer	orchestration		Returns the address of +0x1d38 of its object	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1f90	60	UnlinkTradeSkillLink		objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f1fd0	60	UnlinkProficiencyLink		objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2010	41	GetPendingExpirationLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2040	25	TradeSkillNodeLink		objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2060	77	UnlinkTradeSkillListAll		objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f20b0	483	GrowProficiencyTableOnLongChain		objectlayer	primitive		Doubles a hash table's buckets and rehashes when a lookup walks more than 13 nodes, up to 0x2000	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22a0	25	ProficiencyNodeLink		objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22c0	33	InitProficiencyListNoOffset		objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f22f0	181	LinkProficiencyNode		objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f23b0	77	UnlinkProficiencyListAll		objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2400	12	InitPendingExpirationListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2410	31	RoundInitialSpellCountToStep		objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2430	133	GrowInitialSpellArray		objectlayer	primitive		Grows a player's InitialSpellStruct array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f24c0	31	RoundGuildStampCountToStep		objectlayer	primitive		Rounds a size up to a multiple of a quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f24e0	144	GrowGuildUpdateTimestampArray		objectlayer	primitive		Grows a player's GUILDUPDATETIMESTAMP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2570	146	GrowItemSwapArray		objectlayer	primitive		Grows a player's ITEMSWAP array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2610	17	MirrorHandlerNodeLink		objectlayer	orchestration		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2630	41	GetTradeSkillLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2660	41	GetProficiencyLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2690	491	RehashTradeSkillTable		objectlayer	primitive		Moves a hash table's nodes into a resized bucket array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2880	176	DestroyTradeSkillBucket		objectlayer	primitive		Unlinks and frees the nodes of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2930	12	InitTradeSkillListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2940	316	ResizeTradeSkillBuckets		objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2a80	12	InitProficiencyListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2a90	316	ResizeProficiencyBuckets		objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2bd0	319	GrowTradeSkillBuckets		objectlayer	primitive		Grows a bucket array by a count, rounding the capacity to its quantum	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2d10	264	ReallocTradeSkillBuckets		objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2e20	264	ReallocProficiencyBuckets		objectlayer	primitive		Reallocates a bucket array, moving each bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2f30	5	InitGameObjCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5f2f40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5f2f40	11	InitGameObjCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5f2f50	37			objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds a type handler's base: base vtable, the object, error 0xdb and range 5.0	verified	one	objectlayer/gameobjects#building-the-type-handler	
