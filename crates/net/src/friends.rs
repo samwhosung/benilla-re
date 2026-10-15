@@ -447,3 +447,124 @@ pub fn compare_friends(
         (Some(_), None) => -1,
     }
 }
+
+/// A who result as the comparator reads it: the name at `+0`, the guild at `+0x30`, and the
+/// level, race, class and zone dwords at `+0x90` to `+0x9c`.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct WhoRecord {
+    pub name: Vec<u8>,
+    pub guild: Vec<u8>,
+    pub level: u32,
+    pub race: u32,
+    pub class: u32,
+    pub zone: u32,
+}
+
+/// A DBC table's localized names as the comparator reaches them: the largest id and the rows,
+/// `None` for an id with no row.
+pub struct NameTable<'a> {
+    pub max_id: i32,
+    pub rows: &'a [Option<&'a [u8]>],
+}
+
+impl NameTable<'_> {
+    /// The row's name for an id from 0 to the largest, compared as signed; `None` otherwise.
+    pub fn name(&self, id: u32) -> Option<&[u8]> {
+        let i = id as i32;
+        if i < 0 || i > self.max_id {
+            return None;
+        }
+        self.rows[i as usize]
+    }
+}
+
+/// `CompareWhoResults` (`0x5ada00`): walks the seven `(key, descending)` pairs of the sort chain
+/// (`0xc2817c`) and returns the first non-zero comparison, negated when its pair's direction is
+/// not 0, or 0. Keys: 0 the zone's name, 1 the level as signed dwords (1 or `-1`), 2 the class's
+/// name, 4 the name, 5 the race's name, 6 the guild; 3 and any key above 6 tie. The names
+/// compare with [`strnicmp`] and no bound; an id with no row on either side ties.
+pub fn compare_who(
+    a: &WhoRecord,
+    b: &WhoRecord,
+    chain: &[(u32, u32); 7],
+    zones: &NameTable,
+    classes: &NameTable,
+    races: &NameTable,
+) -> i32 {
+    let rows = |t: &NameTable, x: u32, y: u32| match (t.name(x), t.name(y)) {
+        (Some(p), Some(q)) => strnicmp(p, q, 0x7fff_ffff),
+        _ => 0,
+    };
+    for &(key, descending) in chain {
+        let c = match key {
+            0 => rows(zones, a.zone, b.zone),
+            1 => match (a.level as i32).cmp(&(b.level as i32)) {
+                std::cmp::Ordering::Equal => 0,
+                std::cmp::Ordering::Less => -1,
+                std::cmp::Ordering::Greater => 1,
+            },
+            2 => rows(classes, a.class, b.class),
+            4 => strnicmp(&a.name, &b.name, 0x7fff_ffff),
+            5 => rows(races, a.race, b.race),
+            6 => strnicmp(&a.guild, &b.guild, 0x7fff_ffff),
+            _ => 0,
+        };
+        if c != 0 {
+            return if descending != 0 { c.wrapping_neg() } else { c };
+        }
+    }
+    0
+}
+
+/// A console line `ReverseWhoisResponseHandler` writes.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum WhoisLine {
+    /// `RWhoIs failed` (`0x85dc58`) in colour 3.
+    Failed,
+    /// `Not found` (`0x85dc4c`) in colour 4.
+    NotFound,
+    /// `Account: %s` (`0x85dc3c`), through `ConsolePrintf`.
+    Account(Vec<u8>),
+    /// A character's name (`%s`, `0x85dc34`) in colour 4 at the index, else 0.
+    Character { name: Vec<u8>, colour: u32 },
+}
+
+/// The C string in a buffer the store filled.
+fn text(buf: &[u8]) -> Vec<u8> {
+    buf.iter().take_while(|&&c| c != 0).copied().collect()
+}
+
+/// `ReverseWhoisResponseHandler` (`0x5adde0`), `SMSG_RWHOIS`: a signed count, `-1` for a failure
+/// and 0 for none; for a positive count, each account is a C string of up to 64 bytes, a
+/// character count and an index, then the characters' C strings of up to 48 bytes, the one at
+/// the index in colour 4. Each dword is zeroed before its read, so a short packet reads zeros,
+/// and a name the store cannot give, or one that fills its buffer, is empty.
+pub fn reverse_whois(s: &mut DataStore) -> Vec<WhoisLine> {
+    let mut lines = Vec::new();
+    let dword = |s: &mut DataStore| dword(s).unwrap_or(0) as i32;
+    let count = dword(s);
+    if count == -1 {
+        lines.push(WhoisLine::Failed);
+        return lines;
+    }
+    if count == 0 {
+        lines.push(WhoisLine::NotFound);
+        return lines;
+    }
+    for _ in 0..count.max(0) {
+        let mut account = [0u8; 0x40];
+        s.get_cstring(&mut account, false);
+        lines.push(WhoisLine::Account(text(&account)));
+        let n = dword(s);
+        let index = dword(s);
+        for i in 0..n.max(0) {
+            let mut name = [0u8; 0x30];
+            s.get_cstring(&mut name, false);
+            lines.push(WhoisLine::Character {
+                name: text(&name),
+                colour: if i == index { 4 } else { 0 },
+            });
+        }
+    }
+    lines
+}

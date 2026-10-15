@@ -205,17 +205,17 @@ The comparator `0x5ada00` walks the chain and returns the first non-zero compari
 Addresses: `0x5ada00`, `0x5ada40`, `0x5ada58`, `0x5ada7b`, `0x5adadf`, `0x5adb40`, `0x5adb99`, `0x5adbb2`, `0x5adbc4`, `0x5adbd8`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::friends_who_compare`
 
 `0x5ada40` jumps through `0x5adbd8` on the key. The string keys call `0x64a4c0` on the texts at `+0` and `+0x30` with the bound `0x7fffffff`. Level compares the dwords at `+0x90` (`0x5ada58`): equal ties, otherwise `setge` gives 1 or `-1`. Class, race and zone use `ChrClasses` (`0xc0def4`, name `+0x14`), `ChrRaces` (`0xc0dee0`, `+0x44`) and `AreaTable` (`0xc0e048`, `+0x2c`) rows: a negative id, an id above the table's last, or a null row gives 0 for that side (`0x5ada7b`, `0x5adadf`, `0x5adb40`) and `0x5adbb2` goes to the next slot. `0x5adbc4` negates the result when the slot's direction is non-zero.
 
 ## Reverse whois
 
-`SMSG_RWHOIS` (`0x1fe`) is a u32 count: `-1` writes `RWhoIs failed` and 0 writes `Not found` to the console. Otherwise each of the `count` accounts is a C string of up to 64 bytes written as `Account: <name>`, a u32 character count, a u32 index, and that many character names (up to 48 bytes), each written on a line of its own; the character whose position equals the index is written in console colour 4 and the others in colour 0.
+`SMSG_RWHOIS` (`0x1fe`) is a u32 count: `-1` writes `RWhoIs failed` and 0 writes `Not found` to the console. Otherwise each of the `count` accounts is a C string of up to 64 bytes written as `Account: <name>`, a u32 character count, a u32 index, and that many character names (up to 48 bytes), each written on a line of its own; the character whose position equals the index is written in console colour 4 and the others in colour 0. The counts and the index are zeroed before each read, so a short packet reads 0; a name that is cut short, or that fills its buffer before its NUL, is written empty.
 
 Addresses: `0x5adde0`, `0x5ade03`, `0x5ade23`, `0x5ade66`, `0x5adeb6`, `0x63cd00`, `0x63cd50`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::friends_reverse_whois`
 
-The first read is `0x418eb0`; the tests are `cmp eax,-1` (`0x5addfe`) and `cmp eax,esi` against 0 (`0x5ade1f`). The account is `0x4191b0` with cap `0x40` and goes to `0x63cd50` (`Account: %s`); the count and index are two `0x418e30` reads; each name is `0x4191b0` with cap `0x30` to `0x63cd00` with the colour `(index != i ? 0 : -1) & 4` (`0x5adea5` to `0x5adead`).
+The first read is `0x418eb0`; the tests are `cmp eax,-1` (`0x5addfe`) and `cmp eax,esi` against 0 (`0x5ade1f`). The account is `0x4191b0` with cap `0x40` and goes to `0x63cd50` (`Account: %s`); the count and index are two `0x418e30` reads; each name is `0x4191b0` with cap `0x30` to `0x63cd00` with the colour `(index != i ? 0 : -1) & 4` (`0x5adea5` to `0x5adead`). `0x5addf3`, `0x5ade74` and `0x5ade82` zero the dwords before their reads, and `0x4191b0` writes 0 at the buffer's start when its read ends past the store (`systems/net/messages.md`).

@@ -5,7 +5,8 @@ mod common;
 
 use benilla_re_difftest::{Emu, RegisterX86};
 use benilla_re_net::{
-    compare_friends, strnicmp, DataStore, Fetch, FriendCall, FriendList, FriendSlot,
+    compare_friends, compare_who, reverse_whois, strnicmp, DataStore, Fetch, FriendCall,
+    FriendList, FriendSlot, NameTable, WhoRecord, WhoisLine,
 };
 use common::{Lcg, Wow};
 
@@ -17,6 +18,10 @@ const GAME_ERROR: u64 = 0x496720;
 const DEC_FRIENDS: u64 = 0x5aeb70;
 const DEC_IGNORES: u64 = 0x5aeb90;
 const COMPARE_FRIENDS: u64 = 0x5ae870;
+const COMPARE_WHO: u64 = 0x5ada00;
+const REVERSE_WHOIS: u64 = 0x5adde0;
+const CONSOLE_WRITE: u64 = 0x63cd00;
+const CONSOLE_PRINTF: u64 = 0x63cd50;
 const STRNICMP: u64 = 0x414310;
 const SSTRCMPI: u64 = 0x64a4c0;
 const SERR_SET_LAST_ERROR: u64 = 0x64e850;
@@ -530,5 +535,245 @@ fn friends_compare() {
                 );
             }
         }
+    }
+}
+
+/// A pool of strings in the emulator, refilled each case.
+struct Pool {
+    base: u64,
+    at: u64,
+}
+
+impl Pool {
+    fn put(&mut self, e: &mut Emu, bytes: &[u8]) -> u32 {
+        let a = self.at;
+        e.write(a, bytes);
+        e.write(a + bytes.len() as u64, &[0]);
+        self.at += (bytes.len() as u64 + 4) & !3;
+        a as u32
+    }
+}
+
+/// `CompareWhoResults` whole on pairs of records under random sort chains: every key 0 to 6, keys
+/// above it, both directions and other non-zero ones; names and guilds that differ in case, length
+/// and high bytes; levels across the sign boundary; and race, class and zone ids of `-1`, 0, the
+/// table's largest, one past it and rows that are missing, with the locale picking one of eight
+/// names a row holds.
+#[test]
+fn friends_who_compare() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut e = Emu::new(&wow);
+    let ra = e.alloc(0xa0);
+    let rb = e.alloc(0xa0);
+    let mut pool = Pool {
+        base: e.alloc(0x2_0000),
+        at: 0,
+    };
+    // The tables: index pointer, largest id; the name's offset in a row.
+    let tables = [(0xc0e048u64, 0x2cu64), (0xc0def4, 0x14), (0xc0dee0, 0x44)];
+    let mut g = Lcg(0x3e40_0001);
+    for case in 0..6000 {
+        pool.at = pool.base;
+        let locale = (g.next() >> 16) % 8;
+        e.write_u32(0xc0e080, locale);
+        let mut names: Vec<Vec<Option<Vec<u8>>>> = Vec::new();
+        let mut maxes = Vec::new();
+        for &(table, off) in &tables {
+            let max_id = [-1i32, 0, 3, 9][(g.next() >> 16) as usize % 4];
+            let rows: Vec<Option<Vec<u8>>> = (0..=max_id)
+                .map(|_| (g.next() >> 30 != 0).then(|| name(&mut g)))
+                .collect();
+            let index = pool.at;
+            pool.at += 4 * (rows.len() as u64 + 1);
+            for (i, row) in rows.iter().enumerate() {
+                let at = match row {
+                    None => 0,
+                    Some(n) => {
+                        let r = pool.at;
+                        pool.at += 0x80;
+                        for l in 0..8 {
+                            let decoy = [b'q', b'0' + l as u8];
+                            let p = if l == locale {
+                                pool.put(&mut e, n)
+                            } else {
+                                pool.put(&mut e, &decoy)
+                            };
+                            e.write_u32(r + off + 4 * u64::from(l), p);
+                        }
+                        r as u32
+                    }
+                };
+                e.write_u32(index + 4 * i as u64, at);
+            }
+            e.write_u32(table, index as u32);
+            e.write_u32(table + 4, max_id as u32);
+            names.push(rows);
+            maxes.push(max_id);
+        }
+        let mut chain = [(0u32, 0u32); 7];
+        for (k, c) in chain.iter_mut().enumerate() {
+            let key = if g.next() >> 29 == 0 {
+                [7u32, 8, 0xffff_ffff][(g.next() >> 16) as usize % 3]
+            } else {
+                (g.next() >> 16) % 7
+            };
+            let dir = [0u32, 0, 1, 0x100, 0x8000_0000][(g.next() >> 16) as usize % 5];
+            *c = (key, dir);
+            e.write_u32(0xc2817c + 8 * k as u64, key);
+            e.write_u32(0xc28180 + 8 * k as u64, dir);
+        }
+        let id = |g: &mut Lcg, t: usize| -> u32 {
+            match g.next() >> 29 {
+                0 => 0xffff_ffff,
+                1 => 0x8000_0000,
+                2 => (maxes[t] + 1) as u32,
+                3 => maxes[t].max(0) as u32,
+                _ => (g.next() >> 16) % (maxes[t].max(0) as u32 + 1),
+            }
+        };
+        let record = |g: &mut Lcg, e: &mut Emu, at: u64| {
+            let r = WhoRecord {
+                name: name(g),
+                guild: name(g),
+                level: [0u32, 1, 60, 0x7fff_ffff, 0x8000_0000, 0xffff_ffff]
+                    [(g.next() >> 16) as usize % 6],
+                race: id(g, 2),
+                class: id(g, 1),
+                zone: id(g, 0),
+            };
+            e.write(at, &[0xa5; 0xa0]);
+            e.write(at, &r.name);
+            e.write(at + r.name.len() as u64, &[0]);
+            e.write(at + 0x30, &r.guild);
+            e.write(at + 0x30 + r.guild.len() as u64, &[0]);
+            for (k, v) in [r.level, r.race, r.class, r.zone].into_iter().enumerate() {
+                e.write_u32(at + 0x90 + 4 * k as u64, v);
+            }
+            r
+        };
+        let a = record(&mut g, &mut e, ra);
+        let b = if g.next() >> 30 == 0 {
+            let mut b = a.clone();
+            b.name = b.name.to_ascii_uppercase();
+            e.write(rb, &e.read(ra, 0xa0));
+            e.write(rb, &b.name);
+            b
+        } else {
+            record(&mut g, &mut e, rb)
+        };
+        let got = e.call(COMPARE_WHO, 0, 0, &[ra as u32, rb as u32]) as i32;
+        let rows: Vec<Vec<Option<&[u8]>>> = names
+            .iter()
+            .map(|t| t.iter().map(|r| r.as_deref()).collect())
+            .collect();
+        let table = |t: usize| NameTable {
+            max_id: maxes[t],
+            rows: &rows[t],
+        };
+        let want = compare_who(&a, &b, &chain, &table(0), &table(1), &table(2));
+        assert_eq!(got, want, "case {case} {chain:?} {a:?} {b:?}");
+    }
+}
+
+/// Replaces a console writer with code that logs each call in `0x80` bytes from `log + 0x20`,
+/// counted at `log`: the format, the colour (`-1` for `ConsolePrintf`, which has none) and 64
+/// bytes of the string argument, read while the caller's buffer holds it.
+fn console_island(e: &mut Emu, at: u64, log: u64, printf: bool) {
+    let cnt = log as u32;
+    let mut c = vec![0x56, 0x57, 0xa1];
+    c.extend(cnt.to_le_bytes());
+    c.extend([0xc1, 0xe0, 0x07, 0x05]);
+    c.extend((cnt + 0x20).to_le_bytes());
+    c.extend([0x89, 0xc7, 0x8b, 0x4c, 0x24, 0x0c, 0x89, 0x0f]);
+    let mut skip = None;
+    if printf {
+        c.extend([
+            0xc7, 0x47, 0x04, 0xff, 0xff, 0xff, 0xff, 0x8b, 0x74, 0x24, 0x10,
+        ]);
+    } else {
+        c.extend([0x8b, 0x4c, 0x24, 0x10, 0x89, 0x4f, 0x04, 0x81, 0x3f]);
+        c.extend(0x85dc34u32.to_le_bytes());
+        c.extend([0x75, 0x00]);
+        skip = Some(c.len());
+        c.extend([0x8b, 0x74, 0x24, 0x14]);
+    }
+    c.extend([0x8d, 0x7f, 0x08, 0xb9, 0x40, 0x00, 0x00, 0x00, 0xf3, 0xa4]);
+    if let Some(k) = skip {
+        c[k - 1] = (c.len() - k) as u8;
+    }
+    c.extend([0xff, 0x05]);
+    c.extend(cnt.to_le_bytes());
+    c.extend([0x5f, 0x5e, 0xc3]);
+    let island = e.alloc(0x80);
+    e.write(island, &c);
+    let rel = (island as u32).wrapping_sub(at as u32 + 5);
+    let mut jmp = vec![0xe9];
+    jmp.extend(rel.to_le_bytes());
+    e.write(at, &jmp);
+}
+
+/// `ReverseWhoisResponseHandler` whole on counts of `-1`, 0, negative and 1 to 3 accounts, each
+/// with `-1` to 4 characters and an index inside, outside and negative; names empty, long and
+/// past their 64 and 48 byte buffers; and packets cut anywhere: every console line in order.
+#[test]
+fn friends_reverse_whois() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let log = r.e.alloc(0x8000);
+    console_island(&mut r.e, CONSOLE_WRITE, log, false);
+    console_island(&mut r.e, CONSOLE_PRINTF, log, true);
+    let mut g = Lcg(0x4e01_0001);
+    let text = |g: &mut Lcg, cap: usize| -> Vec<u8> {
+        let n = [0usize, 1, 5, cap - 1, cap, cap + 3][(g.next() >> 16) as usize % 6];
+        (0..n)
+            .map(|_| b'a' + ((g.next() >> 16) % 26) as u8)
+            .collect()
+    };
+    for case in 0..3000 {
+        let count = [-1i32, 0, -5, 1, 2, 3][(g.next() >> 16) as usize % 6];
+        let mut bytes = count.to_le_bytes().to_vec();
+        for _ in 0..count.max(0) {
+            bytes.extend(text(&mut g, 0x40));
+            bytes.push(0);
+            let n = [-1i32, 0, 1, 2, 4][(g.next() >> 16) as usize % 5];
+            let index = [-1i32, 0, 1, 3, 9][(g.next() >> 16) as usize % 5];
+            bytes.extend(n.to_le_bytes());
+            bytes.extend(index.to_le_bytes());
+            for _ in 0..n.max(0) {
+                bytes.extend(text(&mut g, 0x30));
+                bytes.push(0);
+            }
+        }
+        if g.next() >> 30 == 0 {
+            let cut = (g.next() >> 8) as usize % (bytes.len() + 1);
+            bytes.truncate(cut);
+        }
+        r.load_store(&bytes);
+        r.e.write_u32(log, 0);
+        let ret = r.e.call(REVERSE_WHOIS, 0, 0, &[0x1fe, r.store as u32]);
+        let got: Vec<WhoisLine> = (0..u64::from(r.e.read_u32(log)))
+            .map(|i| {
+                let a = log + 0x20 + 0x80 * i;
+                let s: Vec<u8> =
+                    r.e.read(a + 8, 0x40)
+                        .into_iter()
+                        .take_while(|&c| c != 0)
+                        .collect();
+                match (r.e.read_u32(a), r.e.read_u32(a + 4)) {
+                    (0x85dc58, 3) => WhoisLine::Failed,
+                    (0x85dc4c, 4) => WhoisLine::NotFound,
+                    (0x85dc3c, 0xffff_ffff) => WhoisLine::Account(s),
+                    (0x85dc34, colour) => WhoisLine::Character { name: s, colour },
+                    other => panic!("console call {other:x?}"),
+                }
+            })
+            .collect();
+        let want = reverse_whois(&mut plain(&bytes));
+        assert_eq!(ret, 1);
+        assert_eq!(got, want, "case {case} {bytes:02x?}");
     }
 }
