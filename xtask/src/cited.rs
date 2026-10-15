@@ -1,5 +1,6 @@
 //! `cargo xtask cited <benilla>`: the client addresses a benilla tree cites that this repo backs
-//! with neither a row nor a mention in a doc. A report, never a failure.
+//! with neither a row nor a mention in a doc. A report; with `--strict` it fails when any address
+//! has neither, which is the standing check that every address benilla cites is backed here.
 //!
 //! An address is recognised as `0x5e6850`, `FUN_005e6850` or `DAT_00c81768` (with any leading
 //! underscores, as in `_DAT_008029d4`), and kept only when it is one benilla writes as a
@@ -185,8 +186,14 @@ fn char_literal_end(b: &[u8], i: usize) -> Option<usize> {
     }
 }
 
-/// Prints the report for the benilla checkout at `benilla`.
-/// Prints the report and returns the addresses with neither a row nor a doc mention.
+/// Whether the run passes: always for a report, and with `strict` only when no address has
+/// neither a row nor a doc mention.
+pub fn passes(missing: &[u64], strict: bool) -> bool {
+    !strict || missing.is_empty()
+}
+
+/// Prints the report for the benilla checkout at `benilla` and returns the addresses with neither
+/// a row nor a doc mention.
 pub fn run(checked: &Checked, benilla: &Path) -> io::Result<Vec<u64>> {
     let mut mentioned = HashSet::new();
     for text in checked
@@ -310,5 +317,31 @@ fn f() {
         let found = scan("crates/x/assets/a.xml", xml, &mut dropped);
         assert_eq!(found, [(0x6d2914, 1), (0x410012, 2)]);
         assert_eq!(dropped, Dropped::default());
+    }
+
+    #[test]
+    fn strict_fails_only_for_an_address_with_neither_a_row_nor_a_mention() {
+        use crate::check;
+        use crate::tree::{load, Memory};
+        let fixture = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("fixtures/clean");
+        let checked = check::run(&Memory(load(&fixture))).expect("the fixture checks");
+        let benilla = std::env::temp_dir().join(format!("cited-test-{}", std::process::id()));
+        let source = benilla.join("crates/x/src");
+        std::fs::create_dir_all(&source).expect("a scratch tree");
+        // 0x401000 has a row in the fixture; 0x401f00 has none and no doc names it.
+        std::fs::write(source.join("lib.rs"), "// 0x401000 is backed\n").expect("written");
+        let backed = run(&checked, &benilla).expect("a report");
+        std::fs::write(
+            source.join("lib.rs"),
+            "// 0x401000 is backed, 0x401f00 is not\n",
+        )
+        .expect("written");
+        let unbacked = run(&checked, &benilla).expect("a report");
+        std::fs::remove_dir_all(&benilla).expect("cleaned up");
+        assert_eq!(backed, Vec::<u64>::new());
+        assert_eq!(unbacked, vec![0x401f00]);
+        assert!(passes(&backed, true) && passes(&backed, false));
+        assert!(passes(&unbacked, false));
+        assert!(!passes(&unbacked, true));
     }
 }

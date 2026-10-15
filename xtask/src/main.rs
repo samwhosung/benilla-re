@@ -19,7 +19,7 @@ use std::process::ExitCode;
 const USAGE: &str = "\
 usage: cargo xtask check [--exe]
        cargo xtask census [--all | --write | --why <address> | --fill [--idb <names.tsv>] | --assign [--idb <names.tsv>]]
-       cargo xtask cited <benilla checkout> [--write]
+       cargo xtask cited <benilla checkout> [--write | --strict]
        cargo xtask listing <GNU objdump> <output>
        cargo xtask site <output directory>
 
@@ -45,7 +45,9 @@ census --assign
 site          writes the address website into the directory, from the symbol table, the docs and
               tables/; runs anywhere, with no exe
 cited         lists the client addresses a benilla tree cites that no row or doc here backs;
-              --write adds a globals.tsv row for each such data address and code table
+              --write adds a globals.tsv row for each such data address and code table;
+              --strict exits nonzero when any address has neither, the standing check that
+              every address benilla cites is backed here (the report alone never fails)
 listing       writes the disassembly of WoW/WoW.exe (or $BENILLA_RE_WOW_EXE) the findings
               cite, as tools/disasm.sh does, with that objdump
 ";
@@ -73,8 +75,9 @@ fn main() -> ExitCode {
                 }
             }
         }
-        ["cited", benilla] => cited(&root, Path::new(benilla), false),
-        ["cited", benilla, "--write"] => cited(&root, Path::new(benilla), true),
+        ["cited", benilla] => cited(&root, Path::new(benilla), false, false),
+        ["cited", benilla, "--write"] => cited(&root, Path::new(benilla), true, false),
+        ["cited", benilla, "--strict"] => cited(&root, Path::new(benilla), false, true),
         ["listing", objdump, out] => listing(&root, Path::new(objdump), Path::new(out)),
         ["site", out] => site(&root, Path::new(out)),
         _ => {
@@ -237,7 +240,7 @@ fn assign(root: &Path, idb: Option<&Path>) -> std::io::Result<bool> {
     Ok(true)
 }
 
-fn cited(root: &Path, benilla: &Path, write: bool) -> std::io::Result<bool> {
+fn cited(root: &Path, benilla: &Path, write: bool, strict: bool) -> std::io::Result<bool> {
     let checked = check::run(&tree::Disk::new(root))?;
     let missing = cited::run(&checked, benilla)?;
     if write {
@@ -252,7 +255,7 @@ fn cited(root: &Path, benilla: &Path, write: bool) -> std::io::Result<bool> {
         let added = globals::write(root, &checked, &listing, &bytes, &addresses)?;
         println!("added {added} rows to symbols/globals.tsv");
     }
-    Ok(true)
+    Ok(cited::passes(&missing, strict))
 }
 
 fn listing(root: &Path, objdump: &Path, out: &Path) -> std::io::Result<bool> {
