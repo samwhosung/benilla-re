@@ -22,6 +22,8 @@ pub struct Origin {
     pub exe_size: u64,
     pub exe_sha256: String,
     pub commit: String,
+    /// The addresses are matches found in another build, not 5875's.
+    pub rebased: bool,
 }
 
 /// What the header holds and what it leaves out.
@@ -728,12 +730,20 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, 
 }
 
 fn banner(h: &mut String, origin: &Origin) {
+    let client = if origin.rebased {
+        "WoW.exe 1.12.1.5875, with the function addresses rebased onto\n * another build by byte patterns (`cargo xtask match`): a match of bytes and position,\n * not a proof that the function is the same, and a global has no address here"
+            .to_string()
+    } else {
+        format!(
+            "WoW.exe 1.12.1.5875 (size {},\n * SHA-256 {}),",
+            origin.exe_size, origin.exe_sha256
+        )
+    };
     let _ = write!(
         h,
         "\
 /*
- * benilla-re: the structs, globals and functions of WoW.exe 1.12.1.5875 (size {size},
- * SHA-256 {sha}),
+ * benilla-re: the structs, globals and functions of {client}
  * as the symbol table at commit
  * {commit}
  * names them.
@@ -797,8 +807,6 @@ fn banner(h: &mut String, origin: &Origin) {
 #endif
 
 ",
-        size = origin.exe_size,
-        sha = origin.exe_sha256,
         commit = origin.commit
     );
 }

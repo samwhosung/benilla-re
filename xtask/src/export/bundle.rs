@@ -8,6 +8,9 @@
 //!   "tables": { "symbols/functions": { "columns": [...], "rows": [[...], ...] }, ... } }
 //! ```
 //!
+//! A bundle made from a rebased symbols folder (`cargo xtask match`) has `"size": null,
+//! "sha256": null, "rebased": true` and no `tables/` entries, which hold 5875's addresses.
+//!
 //! A table is its file without the `.tsv`, in a map keyed by its path. Every cell is a string, as
 //! in the file, so a table prints back to the file's bytes.
 
@@ -26,12 +29,18 @@ fn string(s: &str) -> String {
 pub fn json(origin: &Origin, tables: &[(String, Table)]) -> String {
     let mut out = String::new();
     let _ = writeln!(out, "{{\n\"schema\": {SCHEMA},");
-    let _ = writeln!(
-        out,
-        "\"exe\": {{\"name\": \"WoW.exe\", \"version\": \"1.12.1.5875\", \"size\": {}, \"sha256\": {}}},",
-        origin.exe_size,
-        string(&origin.exe_sha256)
-    );
+    if origin.rebased {
+        out.push_str(
+            "\"exe\": {\"name\": \"WoW.exe\", \"version\": \"1.12.1.5875\", \"size\": null, \"sha256\": null, \"rebased\": true},\n",
+        );
+    } else {
+        let _ = writeln!(
+            out,
+            "\"exe\": {{\"name\": \"WoW.exe\", \"version\": \"1.12.1.5875\", \"size\": {}, \"sha256\": {}}},",
+            origin.exe_size,
+            string(&origin.exe_sha256)
+        );
+    }
     let _ = writeln!(out, "\"commit\": {},", string(&origin.commit));
     out.push_str("\"tables\": {\n");
     for (i, (path, table)) in tables.iter().enumerate() {
@@ -93,6 +102,7 @@ mod tests {
             exe_size: 4775986,
             exe_sha256: "ab".repeat(32),
             commit: "0123abc".to_string(),
+            rebased: false,
         }
     }
 

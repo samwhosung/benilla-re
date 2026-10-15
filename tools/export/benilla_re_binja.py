@@ -144,6 +144,12 @@ def comment_of(row):
 def check_exe(bv, document):
     """True when the view holds the exe the table describes."""
     want = document["exe"]
+    if want.get("rebased"):
+        print(
+            "benilla-re: this table was rebased onto another build by byte patterns; each\n"
+            "  address is a match of bytes and position, not a proof that the function is the same"
+        )
+        return True
     try:
         raw = bv.parent_view or bv
         size = raw.length

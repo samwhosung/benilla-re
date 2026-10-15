@@ -20,6 +20,7 @@ fn origin() -> Origin {
         exe_size: 1,
         exe_sha256: "0".repeat(64),
         commit: "test".to_string(),
+        rebased: false,
     }
 }
 

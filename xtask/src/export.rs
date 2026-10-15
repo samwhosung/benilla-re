@@ -119,8 +119,8 @@ pub fn read(root: &Path, symbols_dir: Option<&Path>) -> Result<Sources, String> 
     }
     let mut tables = tsv_files(&root.join("tables")).map_err(io)?;
     if symbols_dir.is_some() {
-        // The signatures are those of 5875's addresses, which the folder's rows do not have.
-        tables.retain(|(name, _)| name != "signatures");
+        // Every other table holds 5875's addresses, which the folder's rows do not have.
+        tables.clear();
     }
     Ok(Sources {
         symbols,
@@ -130,6 +130,7 @@ pub fn read(root: &Path, symbols_dir: Option<&Path>) -> Result<Sources, String> 
             exe_size: exe::size(),
             exe_sha256: exe::sha256().to_string(),
             commit: commit(root)?,
+            rebased: symbols_dir.is_some(),
         },
     })
 }

@@ -42,6 +42,10 @@ FUNCTIONS = rows("functions")
 GLOBALS = rows("globals")
 with open(os.path.join(OUT, "bundle", "benilla-re.json"), encoding="utf-8") as handle:
     EXE = json.load(handle)["exe"]
+# A rebased bundle names no file: the scripts apply it to any build and say what it is.
+REBASED = bool(EXE.get("rebased"))
+if REBASED:
+    EXE = {"size": 1, "sha256": "00" * 32}
 
 # The addresses the header states, from the header itself.
 STATED = {}
@@ -323,7 +327,10 @@ def ida():
     # A database of another file is refused.
     over["ida_nalt"].retrieve_input_file_size = lambda: 1
     code, text = run(over["script"], over["script"].main)
-    expect(code == 1 and "SHA-256" in text, "IDA: another file is refused")
+    expect(
+        REBASED or (code == 1 and "SHA-256" in text),
+        "IDA: another file is refused",
+    )
 
 
 # ---- Binary Ninja ----
@@ -445,7 +452,10 @@ def binja_run(overwrite, preexisting, view=None, edit=None):
     view = view or View()
     os.environ.pop("BENILLA_RE_FORCE", None)
     code, text = run(script, lambda: script.apply(view))
-    expect(code == 1 and "SHA-256" in text, "Binja: another file is refused\n" + text)
+    expect(
+        REBASED or (code == 1 and "SHA-256" in text),
+        "Binja: another file is refused\n" + text,
+    )
     os.environ["BENILLA_RE_FORCE"] = "1"
     code, text = run(script, lambda: script.apply(view))
     expect(code == 0, "Binja: apply returned %r\n%s" % (code, text))
@@ -557,4 +567,5 @@ def binja_exit():
     print("Binja exits only when headless")
 
 
-binja_exit()
+if not REBASED:  # the stand-in view is refused as another file, which a rebased bundle never does
+    binja_exit()
