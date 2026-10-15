@@ -24,7 +24,8 @@ fn origin() -> Origin {
     }
 }
 
-const STRUCTS: &str = "name\tsize\tvtable\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
+const STRUCTS: &str =
+    "name\tname_from\tsize\tvtable\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
 const FIELDS: &str =
     "struct\toffset\tsize\ttype\tname\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
 const FUNCTIONS: &str = "address\tsize\tname\tname_from\tsystem\tclass\tsignature\tmeaning\tconfidence\tproof\tfinding\ttest\n";
@@ -33,7 +34,7 @@ const GLOBALS: &str =
 
 /// A struct row.
 fn s(name: &str, size: u32, vtable: &str) -> String {
-    format!("{name}\t{size}\t{vtable}\tx\tHolds a thing\tverified\tone\tx#y\n")
+    format!("{name}\t\t{size}\t{vtable}\tx\tHolds a thing\tverified\tone\tx#y\n")
 }
 
 /// A field row.

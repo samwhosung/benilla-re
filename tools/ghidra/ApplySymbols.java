@@ -259,8 +259,8 @@ public class ApplySymbols extends GhidraScript {
         for (String[] c : srows) {
             List<String> q = qualifier(c[0]);
             CategoryPath cat = q.isEmpty() ? CategoryPath.ROOT : new CategoryPath(CategoryPath.ROOT, q);
-            StructureDataType s = new StructureDataType(cat, leaf(c[0]), Integer.parseInt(c[1]), dtm);
-            s.setDescription(c[4]);
+            StructureDataType s = new StructureDataType(cat, leaf(c[0]), Integer.parseInt(c[2]), dtm);
+            s.setDescription(c[5]);
             structs.put(c[0], (Structure) dtm.addDataType(s, DataTypeConflictHandler.REPLACE_HANDLER));
         }
         sdkStructs();

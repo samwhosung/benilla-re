@@ -408,6 +408,13 @@ impl<'a> Pages<'a> {
             s.confidence,
             Self::proof_html(&s.confidence, &s.proof)
         ));
+        match s.name_from.as_str() {
+            "idb" => b.push_str("<dt>Name from</dt><dd>the community database (idb)</dd>\n"),
+            "later-build" => {
+                b.push_str("<dt>Name from</dt><dd>a later build's public symbols</dd>\n")
+            }
+            _ => {}
+        }
         if !s.finding.is_empty() {
             b.push_str(&format!(
                 "<dt>Finding</dt><dd>{}</dd>\n",

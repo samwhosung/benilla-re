@@ -27,6 +27,7 @@ pub struct Item {
 
 pub struct Struct {
     pub name: String,
+    pub name_from: String,
     pub size: String,
     pub vtable: String,
     pub system: String,
@@ -150,6 +151,7 @@ impl Model {
             .iter()
             .map(|r| Struct {
                 name: r.get("name").into(),
+                name_from: r.get("name_from").into(),
                 size: r.get("size").into(),
                 vtable: r.get("vtable").into(),
                 system: r.get("system").into(),

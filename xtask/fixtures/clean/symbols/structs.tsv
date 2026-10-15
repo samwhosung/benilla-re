@@ -1,4 +1,4 @@
-name	size	vtable	system	meaning	confidence	proof	finding
-CDemo	8	0x500000	demo	Holds a demo state: the vtable and a counter	verified	one	demo#state-advance
-CSpare	4		demo	Holds a spare dword	inferred	none	
-luaL_reg	8		lua	Pairs a name with a C function in a Lua library table	inferred	none	
+name	name_from	size	vtable	system	meaning	confidence	proof	finding
+CDemo		8	0x500000	demo	Holds a demo state: the vtable and a counter	verified	one	demo#state-advance
+CSpare		4		demo	Holds a spare dword	inferred	none	
+luaL_reg		8		lua	Pairs a name with a C function in a Lua library table	inferred	none	

@@ -1428,10 +1428,11 @@ def build_all(args, original=None):
                 sites.setdefault(t, []).append(i)
     structs = {}
     with open(ROOT / 'symbols' / 'structs.tsv', encoding='utf-8') as f:
-        next(f)
+        head = next(f).rstrip('\n').split('\t')
+        name, size = head.index('name'), head.index('size')
         for line in f:
             c = line.rstrip('\n').split('\t')
-            structs[c[0]] = int(c[1])
+            structs[c[name]] = int(c[size])
     STRUCT_NAMES.update(structs)
     vslots = vtable_slots(img, rows, img.text)
     by_call = registered_by_call(L, rows, labels)

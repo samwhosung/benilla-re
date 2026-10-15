@@ -1,115 +1,115 @@
-name	size	vtable	system	meaning	confidence	proof	finding
-AccountDataSection	44		net	Holds an account data section: scope, file names, pending byte, read callback, save timer and cached digest	verified	one	net/accountdata#section-table
-BlizzardObject	324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
-CBaseManaged	28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
-CCamera	368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
-CEffect	144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
-CFrameStrataNode	284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
-CGCharacterModelBase	1016	0x8084f8	ui	Holds a character pane: a CSimpleModel, the unit GUID, the turn latch and deadline and the display record	verified	one	ui/playermodel#pane-fields
-CGContainer_C	2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/classes#class-sizes-and-pools
-CGGameObject_C	784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/classes#class-sizes-and-pools
-CGItem_C	1172	0x80ada8	objectlayer	Holds an item: the object, its field pointers, watcher lists, flags, cached record bytes and expiries	verified	one	objectlayer/classes#class-sizes-and-pools
-CGObject_C	308	0x803640	objectlayer	Holds an object the server described: its storage, pool handle, type, GUID key, hold count and flags	verified	one	objectlayer/classes#class-sizes-and-pools
-CGPlayer_C	11340	0x80af78	objectlayer	Holds a player other than the active one, whose heap block is 26648 bytes; the unit plus the player section	verified	one	objectlayer/classes#class-sizes-and-pools
-CGTooltip	1120	0x808f60	ui	Holds a GameTooltip: the frame, its owner and anchor, its lines and the fields a rebuild needs	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
-CGUnit_C	5120	0x80c4f8	objectlayer	Holds a unit: the object, the unit members with their field pointers, the unit fields and watch copy	verified	one	objectlayer/classes#class-sizes-and-pools
-CGxFont	592		font	Holds a font: its face, glyph and kerning caches, atlas pages and metrics	verified	one	font/api#font-object
-CGxMonitorMode	16		console	Names a device display mode: width, height, format word and refresh rate	verified	one	console/display#format-validation
-CGxString	196		font	Holds a string: text, size, box, justification, colours and layout	verified	one	font/string#string-object
-CGxStringBatch	52		font	Holds the strings of one flush, grouped by font	verified	one	font/api#batches
-CHARCODEDESC	112		font	Holds a cached glyph: its atlas cell, metrics and UV rectangle	verified	one	font/glyphs#finding-or-making-a-glyph
-CInputControl	28		input	Holds the world input state: held commands, travel sums, times and the armed click	verified	one	input#input-state
-CLayoutFrame	116	0x81c400	ui	Holds a laid-out object's anchor points, dependents, flags, rectangle, size, scale and queue link	verified	one	ui/anchors#construction-and-the-xml-anchors
-CM2Model	1064		models	Holds a model instance: its scene, shared model, transforms, animation state and children	verified	one	models/model#instance-object
-CM2Shared	356		models	Holds a model file: its fixed-up data, view, textures, shader ids and buffers	verified	one	models/shared#shared-model-object
-CMapObj	2036		models	Holds a map object in 0x7f4 fixed bytes the allocation extends: root file, chunk pointers, counts, bounds and groups	verified	one	models/wmo#root-file-chunks
-CMapObjGroup	368		models	Holds a map object group: its header fields, chunk pointers and counts, file data and parse state	verified	one	models/wmo#group-header
-CMirrorHandler	48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
-CMissile	144		objectlayer	Holds a spell missile: model, GUIDs, spell, speed, position, destination, flags, sound, outcome arrays and list link	verified	one	objectlayer/missiles#the-missile-object
-CMovement	352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
-CONSOLECOMMAND	36		console	Names the console command record: hash, links, name, handler, help and category	verified	one	console/commands#command-records
-CONSOLELINE	36		console	Names the console line record: links, text, length, capacity, cursor, floor, class and string	verified	one	console/screen#line-records
-CParticle2	32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
-CParticleEmitter2	656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter
-CPlayerMoveEvent	80		collision	Holds one queued movement event: list link, time, tag, pose, status snapshot, payload and flags	verified	one	collision/events#event-node
-CRibbonEmitter	360		models	Holds a ribbon emitter: its edge ring, node frames, texture cell, materials, colour and heights	verified	one	models/ribbons#ribbon-ring
-CScriptRegion	160	0x81c580	ui	Holds a script object part, a CLayoutFrame at +0x24, a name and a parent	verified	one	ui/frames#vtables-and-the-two-parts
-CSimpleFrame	788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, flags, scripts, regions, layers and children	verified	one	ui/frames#construction
-CSimpleModel	988	0x81c608	ui	Holds a Model frame: a CSimpleFrame, its scene, model, camera, light, position, facing, scale, fog and bounding box	verified	one	ui/modelview#model-frame-fields
-CSimpleModelFFX	988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
-CSimpleTop	4408	0x81c380	ui	Holds the interface root: strata records, input lists, key takers, hover, pressed and moving frames	verified	one	ui/strata#construction-and-teardown
-CVar	196		cvar	Names the setting record: hash, links, name, category, flags, value, default, reset, latched, help and callback	verified	one	cvar/registry#cvar-record
-CharacterSelectionDisplay	288		glue	Holds one character-list record: the session character record in its first 0x110 bytes, then the select screen state	verified	one	glue/flow#enter-world
-ChatChannel	160		ui	Holds one joined channel: slot number, name, member list, ChatChannels id, instance number and state	verified	one	ui/chatchannels#joined-channel-slots
-ChatMessageGroup	12		ui	Holds a message group: its name, whether a new second window shows it and the file version that added it	verified	one	ui/chatwindows#message-groups-of-a-window
-ChatWindow	152		ui	Holds one chat window: name, group flags, channel name and id arrays, size, colour, locked, docked and shown	verified	one	ui/chatwindows#window-records
-ClientConnection	6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
-ClientLink	548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
-DYNAMICELEMENTVERT	24		loadingscreen	Holds one route vertex: position, texture coordinates and colour	verified	one	loadingscreen/route#route-ribbon
-DictionaryRecord	8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
-EvtContext	532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
-EvtHandler	24		core	Holds a registered handler: its link, function, argument, priority and skip flag	verified	two	core/events#handler-records
-EvtKeyDown	12		core	Holds a held-key record: its list link and the key code	verified	one	core/events#held-keys-and-repeats
-EvtThread	56		core	Holds a scheduler slot: its list link, thread count, load, event and heap of contexts	verified	one	core/scheduler#slot-acquire-and-release
-EvtTimer	56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	one	core/events#timers
-FfxRenderTarget	28		ffxeffects	Holds a full-screen effect target: handle, allocated and wanted size and the reciprocals of the allocation	verified	one	ffxeffects/targets#render-target-allocation
-FriendList	1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
-FriendSlot	32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
-GuildMemberInfo	344		ui	Holds one guild roster member: GUID, name, level, class, zone, rank, presence, notes and last-online days	verified	one	ui/guild#the-member-record
-ITEMCOOLDOWNHASHNODE	36		spell	Holds one item-cooldown hash node: key, slot link, node-list link and payload	verified	one	spell/cooldowns#item-cooldown-table
-LOADINGSCREENTAXIPATHINFO	8		loadingscreen	Holds a leg's first and last stop node ids	verified	one	loadingscreen/route#taxi-leg-table
-LightningObject	80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
-LightningObject::Bolt	16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
-M2Bone	108		models	Holds a bone record of an MD20 file: key bone id, flags, parent, three tracks and pivot	verified	one	models/records#bone-record
-M2BoneState	280		models	Holds a bone state: three track states, the primary and blend slots, the fade and the active list link	verified	one	animation/clock#bone-state
-M2Cache	4152		models	Holds the model cache: features, shared model buckets, release list, helper thread and shaders	verified	one	models/cache#cache-object
-M2Element	64		models	Holds one drawable of a scene frame: its kind, instance, batch, depth keys and shader ids	verified	one	models/scene#element-collection
-M2Header	340		models	Holds an MD20 file header: magic, version and the count and offset of every array	verified	one	models/shared#header-fixup
-M2Light	108		models	Holds a light: type, position, direction, colours, attenuation and scene link	verified	one	models/lights#light-object
-M2Lighting	436		models	Holds the lights an instance draws with: nearest point lights, sums, harmonic terms, fog, clip plane	verified	one	models/lights#lighting-record
-M2ParticleRecord	504		models	Holds a particle emitter record of an MD20 file: flags, bone, tracks, gradients and motion terms	verified	one	models/emission#particle-record
-M2Scene	7532		models	Holds a scene: clock, model lists, light grid, elements, draw lists and queued callbacks	verified	one	models/scene#scene-object
-M2Sequence	68		models	Holds a sequence record of an MD20 file: time range, flags, variation data, repeats, blend time and bounds	verified	one	models/records#sequence-record
-M2Submesh	32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
-M2TextureUnit	24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
-M2View	44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
-MovementGlobals	312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
-NETEVENTQUEUENODE	24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
-NTempest::CRndSeed	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
-ObjectManager	224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
-OsThreadRecord	6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
-PATHINFO	16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
-PLAYERNAMEDESC	56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
-PROFICIENCYSPELL	28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
-PendingSpellCast	256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields
-PlaneParticleEmitter	672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
-PlayerPendingItemExpiration	24		objectlayer	Holds an enchantment time waiting for its item: list link, item GUID, slot and time	verified	one	objectlayer/inventory#item-timers
-RACECLASSINFO	32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
-RealmCategory	28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
-RealmInfo	308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
-SKILLCOSTSINFO	32		spell	Holds a skill-cost index node: cost-set id, two links, and a run of SkillCostsData rows	verified	one	spell/tables#startup-build-of-the-indexes
-SKILLLINEREC	28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race
-SOUNDDEFINITION	152		sound	Holds a SoundEntries row's sound definition: ten file slots, volume, flags, distances, weights and picks	verified	one	sound/entries#sound-definitions
-SPELLHISTORY	48		spell	Holds one spell-history record: link, spell, item, three timers and a held flag	verified	one	spell/cooldowns#history-record-layout
-SWING	1560		playername	Holds a weapon trail: a ring of 128 points, colour, lifetime and times	verified	one	playername/swing#trail-objects
-SWorldTextIcon	24		playername	Holds a queued rank icon: pixel position, size, colour and texture	verified	one	playername/worldtext#rank-icon-records
-SelectedCharacterRecord	272		ui	Holds the character list entry copied when the player enters the world: name, race, class, sex and level	verified	one	ui/unitplayer#the-selected-character-record
-Shard	32		spell	Holds one shard: link, position, model, start time and started flag	verified	one	spell/visuals#shard-model-start-and-end
-Sound	144		sound	Holds a playing stream: six list links, channel, stream, flags, fade, position, GUID, volume, bus and pauses	verified	one	sound/engine#the-sound-object
-SpellCastTimesRec	16		dbc	Holds one SpellCastTimes.dbc row: id, base, per-level and minimum cast time in ms	inferred	none	spell/records#cast-time
-SpellDurationRec	16		dbc	Holds one SpellDuration.dbc row: id, duration, per-level duration and maximum in ms	inferred	none	spell/records#duration
-SpellRangeRec	88		dbc	Holds one SpellRange.dbc row: id, minimum and maximum range, flags and names	inferred	none	spell/records#range
-SpellRec	692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-lookups
-SphereParticleEmitter	676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
-SplineParticleEmitter	720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
-TRADESKILLLINE	40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
-TimeManager	2016		core	Holds the calibration state of the clock: scale, offset, thread, samples and rate estimates	verified	one	core/time#calibration-thread
-WORLDTEXTSTRING	128	0x811314	playername	Holds a floating text: category, position, colour, start time and string	verified	one	playername/worldtext#text-record
-WTOBJECT	8		playername	Holds a trail object: its swing record and its model	verified	one	playername/swing#trail-objects
-WardenBuffer	8		warden	Holds a length and a data pointer; the record the module cache keeps	verified	one	warden/cache#the-cache-record
-WardenClient	4	0x811434	warden	Holds the service table pointer that a module receives	verified	two	warden/wire#the-service-table
-WardenModule	12		warden	Holds a loaded module: its image base, its size and its count of libraries	verified	one	warden/modules#loading-an-image
-WardenModuleHeader	40		warden	Holds the ten dwords that open a decompressed module image	verified	two	warden/modules#the-module-image
-WhoResult	160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
-WowConnection	304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
-luaL_reg	8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	
+name	name_from	size	vtable	system	meaning	confidence	proof	finding
+AccountDataSection		44		net	Holds an account data section: scope, file names, pending byte, read callback, save timer and cached digest	verified	one	net/accountdata#section-table
+BlizzardObject		324		spell	Holds an area shard emitter: link, model path, world object, position, radius, accumulator, rate and shard list	verified	one	spell/visuals#area-shard-emitter-creation
+CBaseManaged		28	0x81d7f0	camera	Holds a property's header: vtable, update-list link, type, flags and producer	verified	one	camera#property-updates
+CCamera		368	0x81d7c0	camera	Holds a camera: the property slots and update list, then nine properties	verified	one	camera#lifetime
+CEffect		144		objectlayer	Holds a spell effect model: model, GUIDs, spell, records, attachment, sound, flags, times, references and link	verified	one	objectlayer/effects#the-effect-object
+CFrameStrataNode		284		ui	Holds one level of a stratum: its frame lists, update cursor, five batches and dirty layers	verified	one	ui/strata#strata-records-and-level-nodes
+CGCharacterModelBase		1016	0x8084f8	ui	Holds a character pane: a CSimpleModel, the unit GUID, the turn latch and deadline and the display record	verified	one	ui/playermodel#pane-fields
+CGContainer_C		2676	0x80ac88	objectlayer	Holds a container: the item, 74 more watcher lists and its slot list	verified	one	objectlayer/classes#class-sizes-and-pools
+CGGameObject_C		784	0x80c330	objectlayer	Holds a game object: the object, watcher lists, type handler, record, world matrix and box, state	verified	one	objectlayer/classes#class-sizes-and-pools
+CGItem_C		1172	0x80ada8	objectlayer	Holds an item: the object, its field pointers, watcher lists, flags, cached record bytes and expiries	verified	one	objectlayer/classes#class-sizes-and-pools
+CGObject_C		308	0x803640	objectlayer	Holds an object the server described: its storage, pool handle, type, GUID key, hold count and flags	verified	one	objectlayer/classes#class-sizes-and-pools
+CGPlayer_C		11340	0x80af78	objectlayer	Holds a player other than the active one, whose heap block is 26648 bytes; the unit plus the player section	verified	one	objectlayer/classes#class-sizes-and-pools
+CGTooltip		1120	0x808f60	ui	Holds a GameTooltip: the frame, its owner and anchor, its lines and the fields a rebuild needs	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
+CGUnit_C		5120	0x80c4f8	objectlayer	Holds a unit: the object, the unit members with their field pointers, the unit fields and watch copy	verified	one	objectlayer/classes#class-sizes-and-pools
+CGxFont		592		font	Holds a font: its face, glyph and kerning caches, atlas pages and metrics	verified	one	font/api#font-object
+CGxMonitorMode		16		console	Names a device display mode: width, height, format word and refresh rate	verified	one	console/display#format-validation
+CGxString		196		font	Holds a string: text, size, box, justification, colours and layout	verified	one	font/string#string-object
+CGxStringBatch		52		font	Holds the strings of one flush, grouped by font	verified	one	font/api#batches
+CHARCODEDESC		112		font	Holds a cached glyph: its atlas cell, metrics and UV rectangle	verified	one	font/glyphs#finding-or-making-a-glyph
+CInputControl		28		input	Holds the world input state: held commands, travel sums, times and the armed click	verified	one	input#input-state
+CLayoutFrame		116	0x81c400	ui	Holds a laid-out object's anchor points, dependents, flags, rectangle, size, scale and queue link	verified	one	ui/anchors#construction-and-the-xml-anchors
+CM2Model		1064		models	Holds a model instance: its scene, shared model, transforms, animation state and children	verified	one	models/model#instance-object
+CM2Shared		356		models	Holds a model file: its fixed-up data, view, textures, shader ids and buffers	verified	one	models/shared#shared-model-object
+CMapObj		2036		models	Holds a map object in 0x7f4 fixed bytes the allocation extends: root file, chunk pointers, counts, bounds and groups	verified	one	models/wmo#root-file-chunks
+CMapObjGroup		368		models	Holds a map object group: its header fields, chunk pointers and counts, file data and parse state	verified	one	models/wmo#group-header
+CMirrorHandler		48		objectlayer	Holds one field watcher: the watched byte range, its copy offset, the callback and its argument	verified	one	objectlayer/fields#watcher-records
+CMissile		144		objectlayer	Holds a spell missile: model, GUIDs, spell, speed, position, destination, flags, sound, outcome arrays and list link	verified	one	objectlayer/missiles#the-missile-object
+CMovement		352		collision	Holds a unit's movement: the shared kinematics to +0xab, then collision size, relay timing, event queue and unit	verified	one	collision/mover#construction
+CONSOLECOMMAND		36		console	Names the console command record: hash, links, name, handler, help and category	verified	one	console/commands#command-records
+CONSOLELINE		36		console	Names the console line record: links, text, length, capacity, cursor, floor, class and string	verified	one	console/screen#line-records
+CParticle2		32		models	Holds one particle: position, gradient byte, velocity and age	verified	one	models/particles#particle-life
+CParticleEmitter2		656	0x81d83c	models	Holds a model particle emitter: its particles, parameters, gradients, matrices and flags	verified	one	models/emission#record-to-emitter
+CPlayerMoveEvent		80		collision	Holds one queued movement event: list link, time, tag, pose, status snapshot, payload and flags	verified	one	collision/events#event-node
+CRibbonEmitter		360		models	Holds a ribbon emitter: its edge ring, node frames, texture cell, materials, colour and heights	verified	one	models/ribbons#ribbon-ring
+CScriptRegion		160	0x81c580	ui	Holds a script object part, a CLayoutFrame at +0x24, a name and a parent	verified	one	ui/frames#vtables-and-the-two-parts
+CSimpleFrame		788	0x81c498	ui	Holds a frame: a CScriptRegion and its strata, flags, scripts, regions, layers and children	verified	one	ui/frames#construction
+CSimpleModel		988	0x81c608	ui	Holds a Model frame: a CSimpleFrame, its scene, model, camera, light, position, facing, scale, fog and bounding box	verified	one	ui/modelview#model-frame-fields
+CSimpleModelFFX		988	0x803960	glue	Holds a ModelFFX frame: a CSimpleModel whose show hook and layer-2 draw add the current full-screen effect	verified	one	glue/select#the-modelffx-frame
+CSimpleTop		4408	0x81c380	ui	Holds the interface root: strata records, input lists, key takers, hover, pressed and moving frames	verified	one	ui/strata#construction-and-teardown
+CVar		196		cvar	Names the setting record: hash, links, name, category, flags, value, default, reset, latched, help and callback	verified	one	cvar/registry#cvar-record
+CharacterSelectionDisplay		288		glue	Holds one character-list record: the session character record in its first 0x110 bytes, then the select screen state	verified	one	glue/flow#enter-world
+ChatChannel		160		ui	Holds one joined channel: slot number, name, member list, ChatChannels id, instance number and state	verified	one	ui/chatchannels#joined-channel-slots
+ChatMessageGroup		12		ui	Holds a message group: its name, whether a new second window shows it and the file version that added it	verified	one	ui/chatwindows#message-groups-of-a-window
+ChatWindow		152		ui	Holds one chat window: name, group flags, channel name and id arrays, size, colour, locked, docked and shown	verified	one	ui/chatwindows#window-records
+ClientConnection		6948	0x80a398	net	Holds the world session: a RealmConnection with the status the screens poll	verified	one	net/session#session-status
+ClientLink		548	0x80a7dc	net	Holds the logon link: its connection, state, receive buffer, SRP6 object and owner	verified	one	net/login#logon-commands
+DYNAMICELEMENTVERT		24		loadingscreen	Holds one route vertex: position, texture coordinates and colour	verified	one	loadingscreen/route#route-ribbon
+DictionaryRecord		8		glue	Holds a name generator key of up to three bytes and the times it was seen	verified	one	glue/create#name-statistics
+EvtContext		532	0x801364	core	Holds a scheduled context: its run state, due time, flags, handler lists, messages, held input and timers	verified	one	core/loop#contexts
+EvtHandler		24		core	Holds a registered handler: its link, function, argument, priority and skip flag	verified	two	core/events#handler-records
+EvtKeyDown		12		core	Holds a held-key record: its list link and the key code	verified	one	core/events#held-keys-and-repeats
+EvtThread		56		core	Holds a scheduler slot: its list link, thread count, load, event and heap of contexts	verified	one	core/scheduler#slot-acquire-and-release
+EvtTimer		56		core	Holds a timer: its id, heap node, due time, delay and the functions to call	verified	one	core/events#timers
+FfxRenderTarget		28		ffxeffects	Holds a full-screen effect target: handle, allocated and wanted size and the reciprocals of the allocation	verified	one	ffxeffects/targets#render-target-allocation
+FriendList		1832		net	Holds the 50 friend slots, the 25 ignore guids, the pending name counts and the selections	verified	one	net/friends#friend-list-object
+FriendSlot		32		net	Holds a friend: online byte, status flags, name, guid, level, class and area	verified	one	net/friends#friend-list-object
+GuildMemberInfo		344		ui	Holds one guild roster member: GUID, name, level, class, zone, rank, presence, notes and last-online days	verified	one	ui/guild#the-member-record
+ITEMCOOLDOWNHASHNODE		36		spell	Holds one item-cooldown hash node: key, slot link, node-list link and payload	verified	one	spell/cooldowns#item-cooldown-table
+LOADINGSCREENTAXIPATHINFO		8		loadingscreen	Holds a leg's first and last stop node ids	verified	one	loadingscreen/route#taxi-leg-table
+LightningObject		80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
+LightningObject::Bolt		16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
+M2Bone		108		models	Holds a bone record of an MD20 file: key bone id, flags, parent, three tracks and pivot	verified	one	models/records#bone-record
+M2BoneState		280		models	Holds a bone state: three track states, the primary and blend slots, the fade and the active list link	verified	one	animation/clock#bone-state
+M2Cache		4152		models	Holds the model cache: features, shared model buckets, release list, helper thread and shaders	verified	one	models/cache#cache-object
+M2Element		64		models	Holds one drawable of a scene frame: its kind, instance, batch, depth keys and shader ids	verified	one	models/scene#element-collection
+M2Header		340		models	Holds an MD20 file header: magic, version and the count and offset of every array	verified	one	models/shared#header-fixup
+M2Light		108		models	Holds a light: type, position, direction, colours, attenuation and scene link	verified	one	models/lights#light-object
+M2Lighting		436		models	Holds the lights an instance draws with: nearest point lights, sums, harmonic terms, fog, clip plane	verified	one	models/lights#lighting-record
+M2ParticleRecord		504		models	Holds a particle emitter record of an MD20 file: flags, bone, tracks, gradients and motion terms	verified	one	models/emission#particle-record
+M2Scene		7532		models	Holds a scene: clock, model lists, light grid, elements, draw lists and queued callbacks	verified	one	models/scene#scene-object
+M2Sequence		68		models	Holds a sequence record of an MD20 file: time range, flags, variation data, repeats, blend time and bounds	verified	one	models/records#sequence-record
+M2Submesh		32		models	Holds a submesh record of a view: id, vertex, index and bone ranges, and the depth key centre	verified	one	models/records#submesh-record
+M2TextureUnit		24		models	Holds a texture unit record of a view: flags, priority, submesh, colour, material and lookup starts	verified	one	models/records#texture-unit-record
+M2View		44		models	Holds a view record of an MD20 file: vertex lookup, indices, bone bytes, submeshes, units and palette size	verified	one	models/records#view-record
+MovementGlobals		312		collision	Holds the movement manager: log path and files, the mover list, the tick clock and the heartbeat deadline	verified	one	collision/mover#movement-manager
+NETEVENTQUEUENODE		24		net	Holds one queued network event: link, type, time, data copy and length	verified	one	net/dispatch#network-thread-handoff
+NTempest::CRndSeed	idb	8		random	Holds a random state: an accumulator and four lane indices	verified	two	random#state-and-seeding
+ObjectManager		224		objectlayer	Holds the object manager: the live and released GUID tables, the reuse and object lists, the active player	verified	one	objectlayer/manager#manager-block
+OsThreadRecord		6300		os	Holds a registered thread: its list link, id, handle, bound name object and display name	verified	one	core/threads#engine-thread-records
+PATHINFO		16		loadingscreen	Holds one taxi path's leg list: capacity, count, buffer and granularity of pair indices	verified	one	loadingscreen/route#taxi-leg-table
+PLAYERNAMEDESC		56		playername	Holds a unit's name text, colour, GUID, flags and four world texts	verified	one	playername/plates#name-record-layout
+PROFICIENCYSPELL		28		objectlayer	Holds one weapon proficiency's node in the player's proficiency hash table	verified	one	objectlayer/playercombat#learning-a-spell
+PendingSpellCast		256		spell	Holds the pending cast request: source, caster and spell, the target mask, the targets and the text	verified	one	spell/pending#pending-cast-fields
+PlaneParticleEmitter		672	0x81d888	models	Holds a plane emitter: the base emitter and its area and spreads	verified	one	models/emission#plane-spawn
+PlayerPendingItemExpiration		24		objectlayer	Holds an enchantment time waiting for its item: list link, item GUID, slot and time	verified	one	objectlayer/inventory#item-timers
+RACECLASSINFO		32		spell	Holds a race-class index node: skill line, two links, and a run of SkillRaceClassInfo rows	verified	one	spell/tables#startup-build-of-the-indexes
+RealmCategory		28		glue	Holds a realm category: its Cfg_Categories id and row and the holder indices of its realms	verified	one	glue/realms#the-category-set
+RealmInfo		308		net	Holds one realm of the logon server's realm list: type, flags, name, address, population and counts	verified	one	glue/realms#the-realm-record
+SKILLCOSTSINFO		32		spell	Holds a skill-cost index node: cost-set id, two links, and a run of SkillCostsData rows	verified	one	spell/tables#startup-build-of-the-indexes
+SKILLLINEREC		28		spell	Holds an ability index node: spell, two links, race, class and a SkillLineAbility row	verified	one	spell/tables#spell-ability-index-by-race
+SOUNDDEFINITION		152		sound	Holds a SoundEntries row's sound definition: ten file slots, volume, flags, distances, weights and picks	verified	one	sound/entries#sound-definitions
+SPELLHISTORY		48		spell	Holds one spell-history record: link, spell, item, three timers and a held flag	verified	one	spell/cooldowns#history-record-layout
+SWING		1560		playername	Holds a weapon trail: a ring of 128 points, colour, lifetime and times	verified	one	playername/swing#trail-objects
+SWorldTextIcon		24		playername	Holds a queued rank icon: pixel position, size, colour and texture	verified	one	playername/worldtext#rank-icon-records
+SelectedCharacterRecord		272		ui	Holds the character list entry copied when the player enters the world: name, race, class, sex and level	verified	one	ui/unitplayer#the-selected-character-record
+Shard		32		spell	Holds one shard: link, position, model, start time and started flag	verified	one	spell/visuals#shard-model-start-and-end
+Sound		144		sound	Holds a playing stream: six list links, channel, stream, flags, fade, position, GUID, volume, bus and pauses	verified	one	sound/engine#the-sound-object
+SpellCastTimesRec		16		dbc	Holds one SpellCastTimes.dbc row: id, base, per-level and minimum cast time in ms	inferred	none	spell/records#cast-time
+SpellDurationRec		16		dbc	Holds one SpellDuration.dbc row: id, duration, per-level duration and maximum in ms	inferred	none	spell/records#duration
+SpellRangeRec		88		dbc	Holds one SpellRange.dbc row: id, minimum and maximum range, flags and names	inferred	none	spell/records#range
+SpellRec		692		dbc	Holds one Spell.dbc row	inferred	none	spell/records#record-lookups
+SphereParticleEmitter		676	0x81d8b4	models	Holds a sphere emitter: the base emitter, its radii and spreads	verified	one	models/emission#sphere-spawn
+SplineParticleEmitter		720	0x81d8e0	models	Holds a spline emitter: the base emitter, its rate, parameter range, spread and spline	verified	one	models/emission#spline-spawn
+TRADESKILLLINE		40		objectlayer	Holds one skill line's node in the player's trade-skill hash table	verified	one	objectlayer/playercombat#learning-a-spell
+TimeManager		2016		core	Holds the calibration state of the clock: scale, offset, thread, samples and rate estimates	verified	one	core/time#calibration-thread
+WORLDTEXTSTRING		128	0x811314	playername	Holds a floating text: category, position, colour, start time and string	verified	one	playername/worldtext#text-record
+WTOBJECT		8		playername	Holds a trail object: its swing record and its model	verified	one	playername/swing#trail-objects
+WardenBuffer		8		warden	Holds a length and a data pointer; the record the module cache keeps	verified	one	warden/cache#the-cache-record
+WardenClient		4	0x811434	warden	Holds the service table pointer that a module receives	verified	two	warden/wire#the-service-table
+WardenModule		12		warden	Holds a loaded module: its image base, its size and its count of libraries	verified	one	warden/modules#loading-an-image
+WardenModuleHeader		40		warden	Holds the ten dwords that open a decompressed module image	verified	two	warden/modules#the-module-image
+WhoResult		160		net	Holds a who result: name, guild, level, race, class and zone	verified	one	net/friends#who-list-reply
+WowConnection		304		net	Holds one socket connection: state, handler, receive buffer, send queue and header cipher	verified	one	net/wire#header-cipher
+luaL_reg		8		lua	Pairs a function's name with its C function in a Lua library table	inferred	none	

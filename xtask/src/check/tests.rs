@@ -75,7 +75,7 @@ const DOC: &str = "systems/demo.md";
 const STEP: &str = "0x500030\tfloat\ts_step\t\tdemo\tHolds 8.0, the step\tinferred\tnone\t\n";
 const HELPER: &str =
     "0x402100\t8\tUnusedHelper\t\tdemo\tunreached\t\tReturns zero\tinferred\tnone\tdemo#unreached-functions\t\n";
-const SPARE: &str = "CSpare\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\n";
+const SPARE: &str = "CSpare\t\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\n";
 const COUNTER: &str =
     "CDemo\t0x0004\t4\tuint32_t\tm_counter\tdemo\tHolds the counter\tverified\tone\tdemo#state-advance\n";
 const FUNC: &str =
@@ -128,7 +128,7 @@ fn plants() -> Vec<Plant> {
         ),
         plant(
             "a struct appears twice",
-            edit(S, SPARE, "CSpare\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\nCSpare\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\n"),
+            edit(S, SPARE, "CSpare\t\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\nCSpare\t\t4\t\tdemo\tHolds a spare dword\tinferred\tnone\t\n"),
             &[
                 "symbols/structs.tsv:4: out of order or duplicate key",
                 "symbols/structs.tsv:4: struct CSpare appears twice",
@@ -254,7 +254,7 @@ fn plants() -> Vec<Plant> {
         ),
         plant(
             "a struct's common columns",
-            edit(S, SPARE, "CSpare\t4\t\tdemo\tHolds a spare dword\tverified\tone\t\n"),
+            edit(S, SPARE, "CSpare\t\t4\t\tdemo\tHolds a spare dword\tverified\tone\t\n"),
             &["symbols/structs.tsv:3: verified needs a finding"],
         ),
         plant(
@@ -285,7 +285,7 @@ fn plants() -> Vec<Plant> {
         ),
         plant(
             "a struct's name",
-            edit(S, "CSpare\t4\t", "CSpare_\t4\t"),
+            edit(S, "CSpare\t\t4\t", "CSpare_\t\t4\t"),
             &["symbols/structs.tsv:3: struct name 'CSpare_' breaks the naming rule"],
         ),
         plant(
@@ -425,12 +425,17 @@ fn plants() -> Vec<Plant> {
         ),
         plant(
             "a struct's size",
-            edit(S, "CSpare\t4\t", "CSpare\tfour\t"),
+            edit(S, "CSpare\t\t4\t", "CSpare\t\tfour\t"),
             &["symbols/structs.tsv:3: size 'four' is not a positive decimal"],
         ),
         plant(
+            "a struct's name source",
+            edit(S, "CSpare\t\t4\t", "CSpare\tguess\t4\t"),
+            &["symbols/structs.tsv:3: name_from is idb, later-build or empty"],
+        ),
+        plant(
             "a struct's vtable",
-            edit(S, "CSpare\t4\t\t", "CSpare\t4\t0x500100\t"),
+            edit(S, "CSpare\t\t4\t\t", "CSpare\t\t4\t0x500100\t"),
             &["symbols/structs.tsv:3: vtable 0x500100 is not a row of globals.tsv"],
         ),
         plant(

@@ -76,6 +76,10 @@ One convention, the client's own C++ style:
 - **Community names** from `vmangos/idb` (1.12.1.5875) are used verbatim, decorations included
   (`_WinMain@16`), once checked at the bytes, with `idb` in `name_from`. A community name the
   bytes contradict is not used.
+- **Later builds.** A struct the image does not name may take the name a later build's public
+  symbols give the type, as the wowdev wiki's Common Types page documents them (`C44Matrix`,
+  `CAaBox`), only when the size and field order match what the functions over it build and use
+  here, with `later-build` in `name_from`. A type with no such match gets a descriptive name.
 
 A name is unique among functions and globals, and a field's name is unique within its struct.
 The exports (`cargo xtask export`, and the Ghidra apply `../tools/ghidra/setup.sh`) leave a
@@ -87,7 +91,7 @@ function with no name at the tool's own `FUN_00514ae0`.
 |---|---|
 | `address` | `0x` and exactly six lowercase hex digits: `0x514ae0`. The virtual address in the exe, never a file offset or an RVA. |
 | `name` | As above. Empty only when the meaning is unknown. |
-| `name_from` | `idb` for a community name; empty for a name given here. |
+| `name_from` | `idb` for a community name; `later-build` for a struct named from a later build (Names); empty for a name given here. |
 | `system` | The owning system: a lowercase word naming a doc under `../systems/`, a library, or a system without a doc (above). `unassigned` when the row's object file is not yet identified, or its owner is not; ownership is never guessed. |
 | `meaning` | One line starting with a verb: what the thing does or holds. |
 | `confidence` | `verified`: read at the bytes, the derivation recorded in `finding`. `inferred`: a lead, not settled. |
@@ -235,7 +239,7 @@ Pooled literals (`1.0f` and the like) get a row only when a finding cites their 
 
 ## structs.tsv
 
-`name  size  vtable  system  meaning  confidence  proof  finding`
+`name  name_from  size  vtable  system  meaning  confidence  proof  finding`
 
 | column | values |
 |---|---|

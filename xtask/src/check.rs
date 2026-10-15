@@ -175,6 +175,7 @@ impl Kind {
             ],
             Kind::Structs => &[
                 "name",
+                "name_from",
                 "size",
                 "vtable",
                 "system",
@@ -525,6 +526,9 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
 
     for row in &structs_rows {
         let place = row.place();
+        if !matches!(row.get("name_from"), "" | "idb" | "later-build") {
+            p.add(&place, "name_from is idb, later-build or empty");
+        }
         let library = LIBRARIES.contains(&row.get("system"));
         let rule = if library { &LIBRARY_NAME } else { &STRUCT_NAME };
         if !rule.is_match(row.get("name")) {
