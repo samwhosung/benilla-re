@@ -27,18 +27,8 @@ pub fn read_f64(emu: &Emu, va: u64) -> f64 {
     f64::from_bits(u64::from_le_bytes(b.try_into().unwrap()))
 }
 
-/// The install's `Data` folder as a fixture: `BENILLA_RE_WOW_DATA`, else `WoW/Data` in the repo. A
-/// test without it prints one skip line and returns, even under `BENILLA_RE_REQUIRE_EXE`.
+/// The install's `Data` folder (`benilla_re_difftest::data_dir`): a test without it skips with one
+/// line, and fails under `BENILLA_RE_REQUIRE_DATA`.
 pub fn data_fixture() -> Option<std::path::PathBuf> {
-    let dir = match std::env::var_os(benilla_re_difftest::DATA_VARIABLE) {
-        Some(path) if !path.is_empty() => std::path::PathBuf::from(path),
-        _ => benilla_re_difftest::repo_root().join("WoW").join("Data"),
-    };
-    if dir.is_dir() {
-        return Some(dir);
-    }
-    let thread = std::thread::current();
-    let test = thread.name().unwrap_or("test");
-    eprintln!("skip {test}: no install data at {}", dir.display());
-    None
+    benilla_re_difftest::data_dir()
 }

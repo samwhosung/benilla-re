@@ -135,9 +135,8 @@ struct Oracle<'a> {
 }
 
 impl<'a> Oracle<'a> {
-    fn new(wow: &'a Wow) -> Oracle<'a> {
+    fn new(wow: &'a Wow, rows: &[Row]) -> Oracle<'a> {
         let mut emu = Emu::new(wow);
-        let rows = read_language_words().expect("LanguageWords.dbc");
         // A non-NULL active player: `0x468550` reads the GUID out of `[0xb41414]+0xc0`, and
         // `0x468460` resolves it. Only non-NULL-ness matters to `0x49b560`.
         let ctx = emu.alloc(0x200);
@@ -145,7 +144,7 @@ impl<'a> Oracle<'a> {
         emu.write_u32(ctx + 0xc0, 0x1234_5678);
         emu.write_u32(ctx + 0xc4, 0x0000_0001);
         emu.stub(OBJMGR_GET, FAKE_PLAYER, 3);
-        build_index(&mut emu, &rows);
+        build_index(&mut emu, rows);
         Oracle { emu }
     }
     /// Walk every bucket chain and return `(langId, wordLen) -> candidate count`.
@@ -180,12 +179,14 @@ fn lang_scramble_index_matches_dbc() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let rows = read_language_words().expect("LanguageWords.dbc");
+    let Some(rows) = read_language_words() else {
+        return;
+    };
     let mut want: BTreeMap<(u32, u32), u32> = BTreeMap::new();
     for r in &rows {
         *want.entry((r.lang, r.word.len() as u32)).or_default() += 1;
     }
-    let mut o = Oracle::new(&wow);
+    let mut o = Oracle::new(&wow, &rows);
     assert_eq!(
         o.index_histogram(),
         want,
@@ -259,7 +260,10 @@ fn lang_scramble_golden_vectors() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let mut o = Oracle::new(&wow);
+    let Some(rows) = read_language_words() else {
+        return;
+    };
+    let mut o = Oracle::new(&wow, &rows);
     for (lang, skill, input, want) in GOLDEN {
         let got = o.g(*lang, *skill, input);
         assert_eq!(&got, want, "lang={lang} skill={skill} input={input:?}");
@@ -274,11 +278,14 @@ fn lang_scramble_is_deterministic_across_sessions() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let mut a = Oracle::new(&wow);
+    let Some(rows) = read_language_words() else {
+        return;
+    };
+    let mut a = Oracle::new(&wow, &rows);
     let first: Vec<String> = GOLDEN.iter().map(|(l, s, i, _)| a.g(*l, *s, i)).collect();
     let again: Vec<String> = GOLDEN.iter().map(|(l, s, i, _)| a.g(*l, *s, i)).collect();
     assert_eq!(first, again, "same emulator, repeated call");
-    let mut b = Oracle::new(&wow);
+    let mut b = Oracle::new(&wow, &rows);
     let fresh: Vec<String> = GOLDEN.iter().map(|(l, s, i, _)| b.g(*l, *s, i)).collect();
     assert_eq!(first, fresh, "fresh emulator");
 }
@@ -290,7 +297,10 @@ fn lang_scramble_print_table() {
     let Some(wow) = Wow::load() else {
         return;
     };
-    let mut o = Oracle::new(&wow);
+    let Some(rows) = read_language_words() else {
+        return;
+    };
+    let mut o = Oracle::new(&wow, &rows);
     for (lang, skill, input, _) in GOLDEN {
         println!(
             "| {lang} | {skill} | `{input}` | `{}` |",

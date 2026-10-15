@@ -54,6 +54,10 @@ no exe, no MPQ, no extracted file, no disassembly or decompiler dump (`dumps/` i
    already built. The log, with every row it could not apply, is `dumps/ghidra/setup.log`.
    `tools/ghidra/decompile.sh 0x514ae0` decompiles functions from it without opening Ghidra.
 
+6. Optional: to run the tests that read the game's file formats (archives, DBC, M2, WMO, ADT),
+   copy or link the install's `Data` folder to `WoW/Data` (or set `BENILLA_RE_WOW_DATA` to it).
+   Without it those tests skip, and `cargo xtask check --exe` says how many.
+
 `dumps/` is ignored by git and holds only what the scripts regenerate from your exe. Nothing in
 it is ever committed.
 
@@ -112,7 +116,9 @@ a function and has its body's size. It regenerates every table into a
 scratch directory and requires each byte for byte. It runs
 `cargo test --workspace --profile exetest` with `BENILLA_RE_REQUIRE_EXE=1`, and requires every test that a row's `test` or an entry's `Test` line
 names to appear as passed. It needs GNU objdump (above), Python 3, bash for `tools/disasm.sh`, a
-POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK.
+POSIX `sh` for `tools/tables/regen.sh`, and Rust; not Ghidra or a JDK. The tests that read the
+install's `Data` folder skip when it is absent, and the summary counts them; set
+`BENILLA_RE_REQUIRE_DATA=1` to make a missing `Data` fail them instead.
 
 The tests build the Unicorn emulator from source, which needs CMake and a C compiler:
 `brew install cmake` on macOS, `sudo apt install cmake build-essential` on Linux. Without the exe
@@ -180,8 +186,11 @@ results bit for bit. A function whose row is `unreached` gets neither.
 - `Wow::load()` finds the exe at `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe`, and refuses any other
   build by its SHA-256. Without it a test prints one skip line and returns, unless
   `BENILLA_RE_REQUIRE_EXE` is set (to `1`): then it panics. `cargo xtask check --exe` sets it, so
-  a skip there fails the check and is never a pass. `data_dir()` finds the install the same way,
-  at `BENILLA_RE_WOW_DATA`, else `WoW/Data`.
+  a skip there fails the check and is never a pass. `data_dir()` finds the install's `Data` folder
+  at `BENILLA_RE_WOW_DATA`, else `WoW/Data`; a test without it prints a skip line and returns,
+  unless `BENILLA_RE_REQUIRE_DATA` is set (to `1`), and the test's name goes to the file
+  `BENILLA_RE_SKIP_LOG` names, which `check --exe` counts. A test that reads the install calls
+  `data_dir()` before anything else, so it skips whole.
 - A file from a client run or a third party is read with `fixture("BENILLA_RE_…")`, which skips
   without it even under `BENILLA_RE_REQUIRE_EXE`; no row or entry names such a test.
 

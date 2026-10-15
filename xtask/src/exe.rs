@@ -41,6 +41,10 @@ pub fn sha256() -> &'static str {
 pub const EXE_VARIABLE: &str = "BENILLA_RE_WOW_EXE";
 /// Set (to `1`), a test that needs the exe and cannot find it panics instead of skipping.
 pub const REQUIRE_VARIABLE: &str = "BENILLA_RE_REQUIRE_EXE";
+/// Set (to `1`), a test that needs the install's `Data` folder and cannot find it panics.
+const REQUIRE_DATA_VARIABLE: &str = "BENILLA_RE_REQUIRE_DATA";
+/// Names the file in which each test that skips for want of `Data` appends its name.
+const SKIP_LOG_VARIABLE: &str = "BENILLA_RE_SKIP_LOG";
 
 /// Where the exe is: `$BENILLA_RE_WOW_EXE` when set, else `WoW/WoW.exe` in the repo.
 pub fn locate(root: &Path) -> PathBuf {
@@ -233,6 +237,9 @@ const TEST_PROFILE: &str = "exetest";
 /// test passed.
 fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Problem>, String)> {
     let cargo = env::var_os("CARGO").unwrap_or_else(|| OsString::from("cargo"));
+    let skip_log = root.join("target").join("xtask").join("data-skips.log");
+    fs::create_dir_all(skip_log.parent().expect("a folder"))?;
+    fs::write(&skip_log, "")?;
     let (reader, writer) = io::pipe()?;
     let mut command = Command::new(cargo);
     command
@@ -247,6 +254,7 @@ fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Prob
         ])
         .env(REQUIRE_VARIABLE, "1")
         .env(EXE_VARIABLE, exe)
+        .env(SKIP_LOG_VARIABLE, &skip_log)
         .stdout(writer.try_clone()?)
         .stderr(writer);
     let mut child = command.spawn()?;
@@ -287,14 +295,18 @@ fn run_tests(root: &Path, exe: &Path, checked: &Checked) -> io::Result<(Vec<Prob
         }
     }
     let (ok, failed, ignored) = run.totals();
-    Ok((
-        problems,
-        format!(
-            "{ok} tests passed, {failed} failed, {ignored} ignored; {passed} of {} named tests \
-             passed",
-            named.len()
-        ),
-    ))
+    let mut summary = format!(
+        "{ok} tests passed, {failed} failed, {ignored} ignored; {passed} of {} named tests passed",
+        named.len()
+    );
+    let skipped = fs::read_to_string(&skip_log)?.lines().count();
+    if skipped > 0 {
+        summary.push_str(&format!(
+            "; {skipped} tests skipped for want of the install's Data folder (copy it to \
+             WoW/Data, or set BENILLA_RE_WOW_DATA; {REQUIRE_DATA_VARIABLE}=1 forbids the skip)"
+        ));
+    }
+    Ok((problems, summary))
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

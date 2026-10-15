@@ -4,7 +4,8 @@
 //! The exe is the reader's own and is never in the repo. [`Wow::load`] finds it at
 //! `BENILLA_RE_WOW_EXE`, else at `WoW/WoW.exe` in the repo, refuses any other build by its SHA-256,
 //! and returns `None` with one skip line when it is absent; with `BENILLA_RE_REQUIRE_EXE=1` it
-//! panics instead, so a skip can never pass as a test.
+//! panics instead, so a skip can never pass as a test. The install's `Data` folder is optional the
+//! same way: [`data_dir`] skips without it, and panics only under `BENILLA_RE_REQUIRE_DATA=1`.
 
 use object::{Object, ObjectSection};
 use sha2::{Digest, Sha256};
@@ -30,8 +31,13 @@ const EMU_INSTR_BUDGET: usize = 200_000_000;
 pub const EXE_VARIABLE: &str = "BENILLA_RE_WOW_EXE";
 /// Names the install's `Data` folder in place of `WoW/Data`.
 pub const DATA_VARIABLE: &str = "BENILLA_RE_WOW_DATA";
-/// Set (to `1`), a test that cannot find the exe or the install panics instead of skipping.
+/// Set (to `1`), a test that cannot find the exe panics instead of skipping.
 pub const REQUIRE_VARIABLE: &str = "BENILLA_RE_REQUIRE_EXE";
+/// Set (to `1`), a test that cannot find the install's `Data` folder panics instead of skipping.
+pub const REQUIRE_DATA_VARIABLE: &str = "BENILLA_RE_REQUIRE_DATA";
+/// Names a file to which each test that skips for want of the `Data` folder appends its name, one
+/// per line, so a runner can count them (`cargo xtask check --exe` sets it).
+pub const SKIP_LOG_VARIABLE: &str = "BENILLA_RE_SKIP_LOG";
 /// Names a file to which every executed basic-block address is appended once.
 pub const COVERAGE_VARIABLE: &str = "BENILLA_RE_COVERAGE_OUT";
 
@@ -54,9 +60,18 @@ pub fn repo_root() -> PathBuf {
         .to_path_buf()
 }
 
-/// Whether a test that cannot find the exe or the install must fail instead of skipping.
+fn set(variable: &str) -> bool {
+    std::env::var(variable).is_ok_and(|value| !value.is_empty() && value != "0")
+}
+
+/// Whether a test that cannot find the exe must fail instead of skipping.
 pub fn required() -> bool {
-    std::env::var(REQUIRE_VARIABLE).is_ok_and(|value| !value.is_empty() && value != "0")
+    set(REQUIRE_VARIABLE)
+}
+
+/// Whether a test that cannot find the install's `Data` folder must fail instead of skipping.
+pub fn data_required() -> bool {
+    set(REQUIRE_DATA_VARIABLE)
 }
 
 /// Prints the one skip line for the running test, or panics when skipping is forbidden.
@@ -93,18 +108,37 @@ pub fn fixture(variable: &str) -> Option<Vec<u8>> {
 }
 
 /// The install's `Data` folder: `BENILLA_RE_WOW_DATA`, else `WoW/Data` in the repo. `None` with
-/// one skip line when it is absent; under `BENILLA_RE_REQUIRE_EXE` a missing install panics.
+/// one skip line when it is absent, and the test's name appended to `BENILLA_RE_SKIP_LOG`; under
+/// `BENILLA_RE_REQUIRE_DATA` a missing folder panics. The folder is optional because the exe
+/// alone runs every other test.
 pub fn data_dir() -> Option<PathBuf> {
     let dir = match std::env::var_os(DATA_VARIABLE) {
         Some(path) if !path.is_empty() => PathBuf::from(path),
         _ => repo_root().join("WoW").join("Data"),
     };
     if dir.is_dir() {
-        Some(dir)
-    } else {
-        skip(&format!("no install data at {}", dir.display()));
-        None
+        return Some(dir);
     }
+    let thread = std::thread::current();
+    let test = thread.name().unwrap_or("test");
+    assert!(
+        !data_required(),
+        "{test}: no install data at {}, and {REQUIRE_DATA_VARIABLE} forbids skipping",
+        dir.display()
+    );
+    eprintln!("skip {test}: no install data at {}", dir.display());
+    if let Some(log) = std::env::var_os(SKIP_LOG_VARIABLE).filter(|p| !p.is_empty()) {
+        use std::io::Write;
+        if let Ok(mut file) = std::fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(log)
+        {
+            // One write per line, so lines from parallel test processes do not interleave.
+            let _ = file.write_all(format!("{test}\n").as_bytes());
+        }
+    }
+    None
 }
 
 /// Where the exe is: `BENILLA_RE_WOW_EXE` when set, else `WoW/WoW.exe` in the repo.
