@@ -194,6 +194,8 @@ key of 0 and `0x4b305e` +1 for a second key of 0. `0x4b310c` and `0x4b3115` are 
 (`n = 10n + digit`) and falls back to `[rec+0x74]` at `0x4b3c94`.
 
 Bit-exact coverage: `ui::sortcmp_4b30c0` covers `0x4b30c0` to `0x4b30e2`, `0x4b30e6` to `0x4b30f6`, `0x4b30fa` to `0x4b31a3` of `0x4b30c0`.
+`UpdateSpells` is two `xor`s, the call to `0x4b2fd0` (`0x4b43e4`), `xor eax,eax` and `ret` at `0x4b43eb`: it reads no argument, returns no
+value and does nothing else; its end, 0x4b43ec, is the first of four padding bytes before `0x4b43f0`.
 
 ## Who signals SPELLS_CHANGED
 

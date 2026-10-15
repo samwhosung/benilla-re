@@ -167,6 +167,9 @@ Test: none
 calls `0x63e060` on fourteen CVars. `0x639b80`, `0x639bc0` and `0x639c00` set a CVar from a float, an integer
 or a flag. The quality values are the words at `0xc4e678` to `0xc4e6b0`, filled by `0x641820`; `0x639a60` sets `farclip`, `lodDist`, `shadowLevel`, `frillDensity`, `fullAlpha`, `doodadAnim`, `trilinear`, `MaxLights`, `pixelShaders`, `specular`, `waterLOD`, `particleDensity`, `unitDrawDist`, `SmallCull`, `DistCull` and `baseMip` from them. `0x63cb10` stores the
 window title in `0xc4ec58` and sets it (`0x435a50`).
+`0x639ec0` loads the records `[0xc4ea90]`, `[0xc4ea84]`, `[0xc4eac4]`, `[0xc4e9e0]`, `[0xc4e9a0]`, `[0xc4ea94]`, `[0xc4eb88]`, `[0xc4e838]`,
+`[0xc4eab8]`, `[0xc4eacc]`, `[0xc4eab0]`, `[0xc4e9dc]`, `[0xc4ec0c]` and `[0xc4eab4]`, all `gx` settings, and calls `0x63e060` on each, the last by the
+tail jump at `0x639f55`. Its end, 0x639f5a, is the first padding byte before `0x639f60`.
 
 ## Override string
 

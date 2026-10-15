@@ -190,3 +190,5 @@ row setter `0x488410` (`ret 0x14`: key, kind, sound name, voice id, chat type). 
 sets the default kind 2, voice 0x44, chat type 10 and sound `NONE`. The groups for 0x16c to 0x17f run from `0x487c1e`;
 `0x487cff push 2` is the last error and `0x487d13 push 0` the first chat line. The chat route `0x49a870` passes chat
 type 10 on to `0x49b0b0`, which maps it to event 238 (`CHAT_MSG_SYSTEM`) through its chat type table; its colour is the interface's.
+The initializer's last call is the row setter at `0x4883ff`, then three pops and `ret` at `0x488407`; its end, 0x488408, is the first of
+eight padding bytes before `0x488410`.

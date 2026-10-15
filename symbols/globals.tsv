@@ -3870,6 +3870,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4e6f8	uint32_t	s_blinkPhase		console	Holds the caret blink phase; its only reader feeds its own toggle	verified	one	console/screen#paint
 0xc4e6fc	uint32_t[14]	s_fallbackFormat		console	Holds the second fixed device format, 800 x 600 until the desktop mode replaces its size	verified	one	console/display#device-format-record
 0xc4e738	char[256]	s_completionPrefix		console	Holds the typed text the Tab completion cycles through	verified	one	console/screen#keys
+0xc4e838	CVar *	s_gxWindowCVar		console	Holds the record of the gxWindow setting	verified	one	console/display#restart-and-defaults
 0xc4e848	char[260]	s_fontPath		console	Holds the path of the console font, Fonts\ARIALN.ttf at first	verified	one	console/commands#screen-commands
 0xc4e954	CVar *	s_gxOverrideCVar		console	Holds the record of the gxOverride setting	verified	one	console/display#display-cvars
 0xc4e958	uint8_t	s_stockSizesBuilt		console	Holds the flag that the stock size list is built	verified	one	console/display#format-validation
