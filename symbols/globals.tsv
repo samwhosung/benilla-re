@@ -19,6 +19,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x42e084	uint8_t[19]	s_frameDoubleClickIndex		core	Holds the case index of 0x42e000 for hit tests 2 to 20	verified	one	core/input#window-frame
 0x42e170	void *[6]	s_frameReleaseCases		core	Holds the case addresses of the frame release 0x42e0a0	verified	one	core/input#window-frame
 0x42e188	uint8_t[19]	s_frameReleaseIndex		core	Holds the case index of 0x42e0a0 for hit tests 2 to 20	verified	one	core/input#window-frame
+0x4647c8	void *[9]	s_cases464700		objectlayer	Holds the 9 case addresses of the switch in 0x464700	inferred	none	objectlayer/manager#trace-lines
 0x464e98	void *[7]	s_watcherFreeJumpTable		objectlayer	Holds the cases of 0x464c40 for type ids 1 to 7, each walking its sections' watcher lists	verified	one	objectlayer/manager#releasing-an-object
 0x465314	void *[6]	s_updateNotifyJumpTable		objectlayer	Holds the notify pass's six cases for block types 0 to 5	verified	one	objectlayer/update#block-types
 0x4656b4	void *[8]	s_sectionOffsetJumpTable		objectlayer	Holds the cases of 0x465690, one per section, returning each section's byte offset	verified	one	objectlayer/fields#field-counts-and-sections
@@ -32,6 +33,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x46767c	uint8_t[129]	s_destroyIndexTable		objectlayer	Maps a type mask minus 1 to the destroy handler's case: the eight masks to the destructor call	verified	one	objectlayer/update#destroy-object
 0x467ac8	void *[3]	s_cases467800		ui	Holds the two destructor arms and the skip arm of the manager's destruction 0x467800	verified	one	ui/worldenter#a-world-transfer
 0x467ad4	uint8_t[129]	s_destroyTypeMap		ui	Maps an object type value to the destructor arm or the skip arm of the manager's destruction	verified	one	ui/worldenter#a-world-transfer
+0x468224	void *[7]	s_cases4680c0		objectlayer	Holds the 7 case addresses of the switch in 0x4680c0	inferred	none	objectlayer/manager#watcher-copy-offsets
 0x46aaac	void *[4]	s_glueSignatureJumpTable		glue	Holds the four case addresses of the glue build's switch on the signature check's answer	verified	one	glue/manager#signature-and-digest-check
 0x46b7a8	void *[12]	s_statusDialogClickCases		glue	Holds the case addresses of the status-dialog click 0x46b720 for screen states 0 to 11	verified	one	glue/flow#screen-states
 0x46c2ac	void *[5]	s_logonStateCases		glue	Holds the case addresses of the per-frame update's logon arm for logon states 5 to 9	verified	one	glue/flow#logon-arm
@@ -60,6 +62,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x494b48	void *[3]	s_protectedGateArms		ui	Holds the three arm addresses of the action gate 0x494a50: refuse, flags test, continue	verified	one	ui/protected#protected-action-gate
 0x494b54	uint8_t[12]	s_protectedGateTagArm		ui	Holds the arm index of each action gate tag 0 to 11	verified	one	ui/protected#protected-action-gate
 0x494f40	void *[7]	s_cases494e20		ui	Holds the 7 case addresses of the switch in 0x494e20	inferred	none	
+0x4952d4	void *[10]	s_cases495190		ui	Holds the 10 case addresses of the switch in 0x495190	inferred	none	ui/cursor#clearing-the-cursor
 0x496888	void *[4]	s_cases496720		ui	Holds the 4 case addresses of the switch in 0x496720	inferred	none	
 0x499a64	void *[5]	s_cases498a60		ui	Holds the five line-state arms of the settings loader 0x498a60	verified	one	ui/chatwindows#settings-file-reader
 0x49a6dc	void *[2]	s_cases49a6c0		ui	Holds the keep and skip arms of the history type test 0x49a6c0	verified	one	ui/chatevents#the-history-ring
@@ -74,6 +77,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4acfec	void *[6]	s_cases4ace70		ui	Holds the 6 case addresses of the switch in 0x4ace70	inferred	none	
 0x4ad17c	void *[9]	s_cases4ad050		ui	Holds the 9 case addresses of the switch in 0x4ad050	inferred	none	
 0x4ad1a0	uint8_t[16]	s_caseIndexes4ad050		ui	Holds the 16 case indexes of the switch in 0x4ad050	inferred	none	
+0x4b6930	void *[3]	s_cases4b66b0		ui	Holds the 3 case addresses of the switch in 0x4b66b0	inferred	none	ui/keybindings#key-names
+0x4b693c	uint8_t[12]	s_caseIndexes4b66b0		ui	Holds the 12 case indexes of the switch in 0x4b66b0	inferred	none	ui/keybindings#key-names
+0x4b6948	void *[8]	s_cases4b66b0At4b6948		ui	Holds the 8 case addresses of the switch in 0x4b66b0	inferred	none	ui/keybindings#key-names
+0x4b6968	uint8_t[248]	s_caseIndexes4b66b0At4b6968		ui	Holds the 248 case indexes of the switch in 0x4b66b0	inferred	none	ui/keybindings#key-names
+0x4b6a60	void *[13]	s_cases4b66b0At4b6a60		ui	Holds the 13 case addresses of the switch in 0x4b66b0	inferred	none	ui/keybindings#key-names
+0x4b6c28	void *[6]	s_cases4b6aa0		ui	Holds the 6 case addresses of the switch in 0x4b6aa0	inferred	none	ui/keybindings#mouse-names
+0x4b6c40	uint8_t[16]	s_caseIndexes4b6aa0		ui	Holds the 16 case indexes of the switch in 0x4b6aa0	inferred	none	ui/keybindings#mouse-names
 0x4bdbe8	void *[4]	s_cases4bdb70		ui	Holds the 4 case addresses of the switch in 0x4bdb70	inferred	none	
 0x4bfa08	void *[23]	s_cases4bf720		ui	Holds the 23 case addresses of the switch in 0x4bf720	inferred	none	
 0x4ca3a4	void *[5]	s_meetingStoneQueueArms		ui	Holds the five case addresses of the queue message's status switch	verified	one	ui/meetingstone#the-queue-message
@@ -84,6 +94,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x4cc7b4	void *[14]	s_auctionResultCases		ui	Holds the 14 case addresses of the auction command result switch 0x4cc460	verified	one	ui/auctionmessages#command-result
 0x4cdc48	void *[8]	s_auctionSortCases		ui	Holds the 8 case addresses of the auction comparator 0x4cd940, one per sort column	verified	one	ui/auctionlists#sort-columns
 0x4d0f44	void *[8]	s_guildSortKeyArms		ui	Holds the eight case addresses of the comparator's key switch	verified	one	ui/guild#the-roster-order
+0x4e57c4	void *[2]	s_cases4e56f0		ui	Holds the 2 case addresses of the switch in 0x4e56f0	inferred	none	ui/actionbar#range
 0x4e880c	void *[5]	s_lootMethodMessageCases		ui	Holds the 5 case addresses of the loot method message switch in 0x4e86f0	verified	one	ui/masterloot#the-groups-loot-settings
 0x4e9280	void *[5]	s_lootMethodNameCases		ui	Holds the 5 case addresses that pick the method name string in 0x4e91b0	verified	one	ui/masterloot#reading-the-loot-settings
 0x4ff380	uint32_t[5]	s_bindingJumpTable		ui	Holds the five jump targets of the item bonding value	verified	one	tradeskill/itemstats#quality-binding-and-uniqueness
@@ -232,6 +243,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x6113d8	void *[8]	s_stopDistanceCases		objectlayer	Holds the 8 case addresses of the switch in 0x611240, modes 3 to 10	verified	one	objectlayer/unitmovement#auto-move-modes
 0x612ca0	void *[6]	s_powerCostBaseJumpTable		objectlayer	Holds the 6 case addresses of the switch in 0x612c50	verified	one	objectlayer/overview#switch-tables
 0x613908	void *[8]	s_typeMaskJumpTable		objectlayer	Holds the cases of 0x613880 for type ids 0 to 7, each storing the type mask in field 2	verified	one	objectlayer/classes#type-id-and-mask
+0x6142c8	void *[5]	s_cases614210		objectlayer	Holds the 5 case addresses of the switch in 0x614210	inferred	none	objectlayer/objectbase#stopping-effects-by-kit
 0x616580	void *[39]	s_replayCases		collision	Holds the 39 case addresses of the event replay 0x615c30, for event types 0 to 38	verified	one	collision/replay#replay-cases-0-to-19
 0x61804c	void *[2]	s_rootFilterCases		collision	Holds the two cases of 0x618030: 0x618043, which returns 0, and 0x618046, which returns 1	verified	one	collision/events#root-filter
 0x618054	uint8_t[29]	s_rootFilterIndex		collision	Holds the case index of 0x618030 for tags 0 to 28: 0 for 0 to 7, 18, 19 and 28, else 1	verified	one	collision/events#root-filter
@@ -334,10 +346,17 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x72a444	const uint8_t[9]	s_lcdEnterArmIndex		ui	Maps a class byte from 1 to 9 to an arm of the in-world setup 0x72a370	verified	one	ui/lcd#entering-and-leaving-the-world
 0x72b210	const void *[3]	s_lcdStatusArms		ui	Holds the three arms of the status element lookup 0x72b150, one per class group	verified	one	ui/lcd#status-readouts
 0x72b21c	const uint8_t[9]	s_lcdStatusArmIndex		ui	Maps a class byte from 1 to 9 to an arm of the status element lookup 0x72b150	verified	one	ui/lcd#status-readouts
+0x7686ec	void *[9]	s_cases768550		ui	Holds the 9 case addresses of the switch in 0x768550	inferred	none	ui/README#starts-the-listing-hides
 0x768c44	void *[9]	s_dragGripArms		ui	Holds the nine grip arms of 0x768710, one per anchor point	verified	one	ui/resizebounds#the-drag
+0x76c018	void *[6]	s_cases76bf70		ui	Holds the 6 case addresses of the switch in 0x76bf70	inferred	none	ui/README#starts-the-listing-hides
 0x771bf4	const void *[2]	s_latinVowelArms		ui	Holds the two arms of the vowel test 0x771b60, a vowel and the Latin-1 range test	verified	one	ui/fonttext#french-escape-and-digit-groups
 0x771bfc	const uint8_t[53]	s_latinVowelArmIndex		ui	Maps a character from A to U to an arm of the vowel test, 0 for each ASCII vowel	verified	one	ui/fonttext#french-escape-and-digit-groups
+0x77960c	uint8_t[16]	s_caseIndexes779540		ui	Holds the 16 case indexes of the switch in 0x779540	inferred	none	ui/button#running-a-click
 0x77ac1c	void *[4]	s_cases77abb0		ui	Holds the arms that map a classified language to the edit box's language index	verified	one	ui/inputlanguage#the-language-index
+0x77b69c	void *[12]	s_cases77b160		ui	Holds the 12 case addresses of the switch in 0x77b160	inferred	none	ui/editbox#ctrl-letter-keys
+0x77b6cc	uint8_t[56]	s_caseIndexes77b160		ui	Holds the 56 case indexes of the switch in 0x77b160	inferred	none	ui/editbox#ctrl-letter-keys
+0x77b704	void *[11]	s_cases77b160At77b704		ui	Holds the 11 case addresses of the switch in 0x77b160	inferred	none	ui/editbox#keys
+0x78aac4	uint8_t[116]	s_caseIndexes78a7b0		ui	Holds the 116 case indexes of the switch in 0x78a7b0	inferred	none	ui/simplehtml#whitespace-in-a-block
 0x7a3054	void *[3]	s_pointXCases		ui	Holds the three case addresses of the relative point x getter	verified	one	ui/anchors#relative-point-coordinates
 0x7a3060	uint8_t[9]	s_pointXCaseIndex		ui	Holds the case of each anchor point for the x getter: 0, 1, 2 repeated	verified	one	ui/anchors#relative-point-coordinates
 0x7a3134	void *[3]	s_pointYCases		ui	Holds the three case addresses of the relative point y getter	verified	one	ui/anchors#relative-point-coordinates
@@ -348,6 +367,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x7c5468	void *[5]	s_displacementCases		collision	Holds the five case labels of the displacement dispatcher 0x7c5360	verified	one	collision/kinematics#displacement-dispatcher
 0x7c547c	uint8_t[15]	s_displacementCaseIndex		collision	Holds the case index for modes 1 to 15 of the displacement dispatcher	verified	one	collision/kinematics#displacement-dispatcher
 0x7ff310	const void *			unassigned	Holds a function address that OsGetTickCount, OsGetCachedUnixTime, DestroyTimeManager read; not read here	inferred	none	
+0x7ff6f8	const void *	s_importSetsockopt		unassigned	Holds the import address of setsockopt, WSOCK32 ordinal 21	verified	one	net/wire#disabling-nagle
+0x7ff8b8	const uint32_t[68]	s_commandLineSwitches		client	Holds 17 command line switch records of 16 bytes: a word, the switch id, its name and a zero	verified	one	console/screen#console-key
 0x7ff9c8	const float	s_floatbce38e39		unassigned	Holds the float -0.027777778 (0xbce38e39)	inferred	none	
 0x7ff9d0	const float	s_float3ce38e39		unassigned	Holds the float 0.027777778 (0x3ce38e39)	inferred	none	
 0x7ff9d8	const float	s_float3f800000		unassigned	Holds the float 1 (0x3f800000)	inferred	none	
@@ -368,6 +389,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x800188	const uint32_t			unassigned	Holds a dword that __NMSG_WRITE reads; not read here	inferred	none	
 0x80108c	uint32_t[52]	s_commandLineOptions		unassigned	Holds 13 command-line option records of id, name, 0 and flags: d3d is id 0, opengl id 5	verified	one	gx/device#backend-selection-and-creation
 0x8012cc	const float	s_threeQuarters		unassigned	Holds 0.75	verified	one	lighting/clouds#cloud-colours
+0x80131c	void *[12]	s_baseObjectVtable		unassigned	Holds the 12 slots of a base vtable that object destructors store back into their object	verified	one	ui/initexits#other-exits
 0x801354	float	s_defaultHandlerPriority		core	Holds 0.0, the priority 0x41fc90 registers with	verified	one	core/events#registration-calls
 0x801360	float	s_millisecondsToSeconds		core	Holds 0.001f (0x3a83126f), the frame time and timer factor	verified	one	core/loop#frame-time
 0x801364	void *[1]	EvtContext::vftable		core	Holds the context vtable: the deleting destructor 0x423240	verified	one	core/loop#start-and-stop
@@ -383,6 +405,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x801430	void *[4]	s_eventRegVtable		core	Holds the registration vtable, stored by 0x4265b0, 0x427990 and 0x428470	verified	one	core/events#observer-classes
 0x801448	const float	s_minusThousand		unassigned	Holds -1000.0, the fade-out rate's scale	verified	one	sound/engine#fades
 0x801490	const uint8_t			os	Holds a byte its object file's code reads; not read here	inferred	none	
+0x8015a8	const float	s_infinityClock		unassigned	Holds +inf, 0x7f800000, the literal the clock file copies at start-up	verified	one	core/time#static-initializers
+0x8015ac	const float	s_piClock		core	Holds pi, 0x40490fdb, which the clock file doubles into 2 pi at start-up	verified	one	core/time#static-initializers
 0x8015b8	double	s_oneDouble		core	Holds 1.0 as a double, a pooled constant many systems read	verified	one	core/time#counter-switch
 0x8015c0	double	s_calibrationLimitA		core	Holds 0.016, a mode-1 calibration threshold	verified	one	core/time#calibration-thread
 0x8015c8	double	s_calibrationLimitB		core	Holds 0.06, a mode-1 calibration threshold	verified	one	core/time#calibration-thread
@@ -394,6 +418,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8015f8	double	s_calibrationLimitH		core	Holds 0.002, the 20-sample tolerance	verified	one	core/time#calibration-thread
 0x801600	double	s_calibrationLimitI		core	Holds 0.000333, the 120-sample tolerance	verified	one	core/time#calibration-thread
 0x801608	double	s_thousandthDouble		core	Holds 0.001 as a double, a pooled constant many systems read	verified	one	core/time#unreached-functions
+0x801610	const float	s_infinityIme		unassigned	Holds +inf, 0x7f800000, the literal the IME file copies at start-up	verified	one	core/input#static-initializers
+0x801618	const float	s_infinityInput		unassigned	Holds +inf, 0x7f800000, the literal the input window file copies at start-up	verified	one	core/input#static-initializers
+0x80161c	const float	s_piInput		unassigned	Holds pi, 0x40490fdb, which the input window file doubles into 2 pi at start-up	verified	one	core/input#static-initializers
 0x801620	float	s_mouseSpeedMin		core	Holds 0.1, the lowest mouse speed setting and the factor 0x42cd60 returns it with	verified	one	core/input#mouse-speed-and-num-lock
 0x801624	float	s_mouseSpeedScale		core	Holds 10.0, the mouse speed setting's factor to the Windows speed	verified	one	core/input#mouse-speed-and-num-lock
 0x801628	float	s_mouseSpeedMax		core	Holds 2.0, the highest mouse speed setting	verified	one	core/input#mouse-speed-and-num-lock
@@ -453,6 +480,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803568	const float	s_oneSixth		unassigned	Holds 1/6	verified	one	lighting/precipitation#rain-draw
 0x803600	void *	s_guidHashTableVtable		objectlayer	Holds the vtable the manager's two GUID hash tables carry	inferred	none	objectlayer/manager#manager-block
 0x803640	void *[31]	CGObject_C::vftable		objectlayer	Holds the base object vtable, 31 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x8036c8	const float	s_glueSquareBase		glue	Holds 10.0, the operand the glue file squares at start-up	verified	one	glue/layout#static-initializers
 0x803740	uint8_t[180]	s_authUrlKeys		glue	Holds five 36-byte rows of a status code and its URL key, AUTH_BANNED (28) to AUTH_PARENTAL_CONTROL (33)	verified	one	glue/flow#world-connect-failure
 0x8037f4	void *[5]	s_logStatusVtable		glue	Holds the vtable of the load-log status: 0x46aac0, then the four later slots of CStatus	verified	one	glue/manager#load-log-status
 0x803808	void *[6]	s_loginListenerVftable		net	Holds the vtable of the session's login listener, whose slot 4 takes the session key	inferred	none	net/session#session-key
@@ -463,8 +491,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x803960	void *[40]	CSimpleModelFFX::vftable		glue	Holds CSimpleModelFFX's vtable; slots 12 and 17 are 0x46fa60 and 0x46fa90	verified	one	glue/select#the-modelffx-frame
 0x803a78	float	s_radiansToDegrees		glue	Holds the f32 57.29578 (0x42652ee1) that turns the select facing into degrees	verified	one	glue/select#facing-in-degrees
 0x803bf8	const int32_t[120]	s_bodySlotColumns		charactermodel	Holds the default cell column of each body slot and composite group, -1 for none	verified	one	charactermodel/equipment#layer-choosers
+0x803df0	const float	s_infinityGuid		unassigned	Holds +inf, 0x7f800000, the literal the GUID file copies at start-up	verified	one	objectlayer/overview#object-files
 0x804328	const float	s_float40b1c71c		ui	Holds the float 5.5555553 (0x40b1c71c)	inferred	none	
-0x80439c	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x80439c	const uint32_t[2]	s_skinFactionCursors		ui	Holds cursor modes 20 and 19, the faction skin cursors within reach, by the player side	verified	one	ui/worldcursor#units-loot-skin-and-attack
+0x8043a4	const uint32_t[2]	s_skinFactionCursorsFar		ui	Holds cursor modes 40 and 39, the faction skin cursors beyond reach, by the player side	verified	one	ui/worldcursor#units-loot-skin-and-attack
 0x8043b8	void *[11]	CGWorldFrame::Layout::vftable		ui	Holds the layout vtable of CGWorldFrame, stored at +0x24; its callback and destructor thunk differ from the base	verified	one	ui/worldframe#overrides
 0x8043e8	void *[36]	CGWorldFrame::vftable		ui	Holds the 36 virtual function slots of CGWorldFrame, which its constructor stores	inferred	none	ui/hover#the-notifies-by-class
 0x804478	const float	s_float41a00000		unassigned	Holds the float 20 (0x41a00000)	inferred	none	
@@ -482,6 +512,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x804510	const float	s_float42240000		ui	Holds the float 41 (0x42240000)	verified	one	cvar/defaults#formatted-defaults
 0x804518	const uint32_t[3]	s_worldDetailFrill		ui	Holds the frillDensity of world detail levels 0 to 2: 16, 32, 48	verified	one	cvar/options#world-detail-verbs
 0x804524	const float[3]	s_worldDetailCull		ui	Holds the smallCull of world detail levels 0 to 2: 0.07, 0.04, 0.01	verified	one	cvar/options#world-detail-verbs
+0x804530	const uint32_t[8]	s_formatFieldTable		ui	Holds the 8 dwords 16, 24, 24, 30, 16, 24, 24 and 32 that the multisample list maps format fields through	verified	one	ui/videoverbs#the-multisample-verbs
 0x804550	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x804554	float	s_shotUnloadRange		ui	Holds 30.0, the camera distance beyond which a new cinematic shot unloads the areas	verified	one	ui/distancegates#thresholds
 0x804558	float	s_shotEndRange		ui	Holds 30.0, the camera distance beyond which the end of a cinematic unloads the areas	verified	one	ui/distancegates#thresholds
@@ -517,8 +548,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8065ec	const float	s_mailRangeYards		ui	Holds 5.5555553, the mailbox walk-away range in yards, squared into the range cell	verified	one	ui/mail#opening-and-closing
 0x8066dc	void *[11]	s_bubbleLayoutVtable		ui	Holds the vtable of the layout part embedded at +0x24 of a chat bubble frame	inferred	none	
 0x806708	void *[36]	CGChatBubbleFrame::vftable		ui	Holds the chat bubble frame's vtable, 36 slots; slot 0 is the destructor 0x4b0bb0	verified	one	ui/chatbubble#bubble-frame
+0x806798	const float	s_chatBubbleRangeSquared		unassigned	Holds 400.0, the squared distance that ShowChatBubble compares with	verified	one	ui/chatbubble#the-update-gates
 0x80679c	const float	s_float3e4ccccd		unassigned	Holds the float 0.2 (0x3e4ccccd)	verified	one	terrain/liquid#wave-field
+0x806908	void *[13]	s_statusListVtable		ui	Holds the 13 slots of the vtable that the status list head object at 0xb7124c stores	verified	one	ui/initstores#list-heads
 0x806b10	const float	s_float42c80000		unassigned	Holds the float 100 (0x42c80000)	inferred	none	
+0x806cb8	void *[4]	s_hashTableVtable		ui	Holds the free node, new node, destroy and empty slots that the hash table initializers store	verified	one	ui/initstores#hash-tables
 0x806eb8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/inventory#inventory-alerts
 0x806fe8	float	s_auctionRangeYards		ui	Holds 5.5555553, the radius in yards squared into the auctioneer walk-away range	verified	one	ui/auction#opening-and-closing
 0x807024	float	s_auctionCancelFeeRate		ui	Holds 0.05, the fraction of the current bid CancelAuction needs in coin	verified	one	ui/auctionlists#cancelling
@@ -563,28 +597,42 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8087d8	const float	s_float00000000At8087d8		ui	Holds the float 0 (0x00000000)	verified	one	ui/smartrect#pushes-by-region
 0x8087e0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/smartrect#the-placement-search
 0x808870	const uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
+0x80891c	const float	s_cameraHalfTurn		uicamera	Holds pi, the half turn the camera facing filter wraps its error by	verified	one	uicamera/driver#smoothing-the-facing
 0x80899c	const float	s_float3fc00000		uicamera	Holds the float 1.5 (0x3fc00000)	inferred	none	
 0x8089a0	const float	s_float3f000000		uicamera	Holds the float 0.5 (0x3f000000)	inferred	none	
 0x8089a4	const float	s_float42480000		uicamera	Holds the float 50 (0x42480000)	inferred	none	
 0x8089a8	const float	s_float00000000At8089a8		uicamera	Holds the float 0 (0x00000000)	inferred	none	
 0x8089ac	const float	s_float3e2aaaabAt8089ac		uicamera	Holds the float 0.16666667 (0x3e2aaaab)	inferred	none	
 0x8089b0	const float	s_float3fea6e99		uicamera	Holds the float 1.8315002 (0x3fea6e99)	inferred	none	
+0x8089b8	const float	s_cameraFovMax		uicamera	Holds 3.1241393, 179 degrees, the upper clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
+0x8089bc	const float	s_cameraFovMin		uicamera	Holds 0.0, the lower clamp of the camera field of view	verified	one	uicamera/transitions#field-of-view
+0x8089c0	const float	s_cameraSlopeLimit		uicamera	Holds 0.349066, the limit the camera probe clamps its slope to, plus and minus	verified	one	uicamera/effects#probing-the-slope
 0x8089c8	const float	s_float41700000		uicamera	Holds the float 15 (0x41700000)	inferred	none	
 0x8089cc	const float	s_float3f555555		uicamera	Holds the float 0.8333333 (0x3f555555)	inferred	none	
 0x8089d0	const float	s_float3e638e39		uicamera	Holds the float 0.22222222 (0x3e638e39)	inferred	none	
 0x8089d4	const float	s_float3f0e38e4		uicamera	Holds the float 0.5555556 (0x3f0e38e4)	inferred	none	
 0x8089d8	const float	s_float3fc6d3f2		uicamera	Holds the float 1.553343 (0x3fc6d3f2)	inferred	none	
 0x8089dc	const float	s_floatbfc6d3f2		uicamera	Holds the float -1.553343 (0xbfc6d3f2)	inferred	none	
+0x808a00	const float	s_cameraGlideDistance		uicamera	Holds 1/9, which the camera compares the solved distance difference with before it sets the glide bit	verified	one	uicamera/driver#pull-in-and-the-glide-back
 0x808a04	const float	s_float3de38e39		uicamera	Holds the float 0.11111111 (0x3de38e39)	inferred	none	
 0x808a08	const float	s_float40e66666		uicamera	Holds the float 7.2 (0x40e66666)	inferred	none	
+0x808a0c	const float	s_shakeNearRadius		uicamera	Holds 9.0, the near shake distance that its initializer squares	verified	one	uicamera/effects#distance-falloff
+0x808a10	const float	s_shakeFarRadius		uicamera	Holds 80.0, the far shake distance that its initializer squares	verified	one	uicamera/effects#distance-falloff
+0x808a28	const float	s_facingThresholdLow		uicamera	Holds 0.09, a threshold the camera facing filter compares its error with	verified	one	uicamera/driver#smoothing-the-facing
+0x808a2c	const float	s_facingThresholdHigh		uicamera	Holds 0.2617994, 15 degrees, a threshold the camera facing filter compares its error with	verified	one	uicamera/driver#smoothing-the-facing
 0x808a34	const float	s_float40555555		uicamera	Holds the float 3.3333333 (0x40555555)	inferred	none	
 0x808a38	const float	s_float3fd55555At808a38		uicamera	Holds the float 1.6666666 (0x3fd55555)	inferred	none	
 0x808a40	const float			uicamera	Holds the first float of a table its object file's code reads; not read here	inferred	none	
+0x808a9c	void *[4]	s_cameraAccessorVtable		uicamera	Holds the GetFov, GetForward, GetLeft and GetUp slots of the vtable that the CCamera constructor stores	verified	one	uicamera/view#pitch-units-and-sign
 0x808aac	const float	s_point99		unassigned	Holds 0.99	verified	one	lighting/sky#sky-pass
 0x808ab0	const float	s_float3dc71c72		uicamera	Holds the float 0.097222224 (0x3dc71c72)	inferred	none	
 0x808ab4	const float	s_float40e38e39		uicamera	Holds the float 7.111111 (0x40e38e39)	inferred	none	
 0x808ab8	const float	s_float3e8e38e4		uicamera	Holds the float 0.2777778 (0x3e8e38e4)	inferred	none	
+0x808abc	const float	s_cameraFadeThreshold		uicamera	Holds 1/360, which the camera fade compares with before its smoothstep	verified	one	uicamera/driver#the-self-fade
+0x808ac0	const float	s_mouseTurnScaleY		uicamera	Holds 1/600, the factor MouseTurn multiplies the vertical mouse movement by	verified	one	uicamera/driver#turning-with-the-mouse
+0x808ac4	const float	s_mouseTurnScaleX		uicamera	Holds 0.00125, the factor MouseTurn multiplies the horizontal mouse movement by	verified	one	uicamera/driver#turning-with-the-mouse
 0x808acc	const float	s_float3fc90fdb		unassigned	Holds the float 1.5707964 (0x3fc90fdb)	inferred	none	
+0x808ad0	const double	s_shakeFalloffBase		unassigned	Holds 0.7 as a double, the base of the power in the shake falloff	verified	one	uicamera/effects#distance-falloff
 0x808b5c	float	s_dragTravel		input	Holds 8.0, the travel either sum must reach for a slow release to count as a drag	verified	two	input#click-versus-drag
 0x808be4	const float			ui	Holds the first float of a table that Script::UnitSex reads; not read here	inferred	none	ui/unitplayer#the-four-readers
 0x808bf4	float	s_five		ui	Holds 5.0, the factor of the drunk level reduction	verified	one	ui/unitlevels#unitlevel
@@ -598,6 +646,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x808e88	const uint32_t[37]	s_statOrder		ui	Holds the 37 stat types in display order: 4, 3, 7, 5, 6, 1, 0, 8, 9, 2, 10 and then 26 zeros	verified	one	ui/tooltipitemstats#stat-lines
 0x808f60	void *[36]	CGTooltip::vftable		ui	Holds the 36 virtual function slots of CGTooltip, which its constructor stores	verified	one	ui/tooltipitem#fields-kept-for-a-rebuild
 0x808ff0	const float	s_msPerMinute		ui	Holds 60000.0, the milliseconds in a minute	verified	one	ui/tooltipspell#the-cast-time-and-recast-line
+0x80906c	const float	s_netSquareBase		net	Holds 10.0, the operand the net layout file squares at start-up	verified	one	net/layout#static-initializers
 0x809070	void *[17]	NetClient::vftable		net	Holds NetClient's vtable: 17 slots, data hook at 1, queued events at 12 to 15	verified	one	net/dispatch#dispatch
 0x8090d8	float	s_placementScaleUnit		terrain	Holds 1/1024 (0x3a800000), the unit of an MDDF scale	verified	one	terrain/files#doodad-placements
 0x80912c	const char[4]	s_textAU		unassigned	Holds the string "@aU"	inferred	none	
@@ -640,6 +689,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80a5d4	void *[14]	s_logonVftable		net	Holds the logon object's vtable: the link's callbacks, slot 10 the logon result	verified	one	net/login#logon-results
 0x80a658	void *[23]	RealmConnection::vftable		net	Holds RealmConnection's vtable, six slots of it pure virtual	verified	one	net/dispatch#dispatch
 0x80a700	double	s_latencyScale		net	Holds -1/32768, the factor that scales rand() into the simulated delay	verified	one	net/wire#simulated-latency
+0x80a714	const float	s_cosineInterpolationPi		net	Holds pi, the factor of the angle in the cosine interpolation	verified	one	uicamera/driver#the-self-fade
 0x80a778	void *[1]	s_serverLinkTimerVftable		net	Holds the vtable of ServerLink's timer, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a77c	void *[1]	s_serverLinkPendingVftable		net	Holds the vtable of ServerLink's pending requests, stored only by the unreached ServerLink code	verified	one	net/layout#unreached-functions
 0x80a780	void *[10]	s_serverLinkVftable		net	Holds ServerLink's vtable, stored only by its unreached constructor and destructor	verified	one	net/layout#unreached-functions
@@ -674,8 +724,11 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80b044	void *[4]	s_playerMemberVtableB		objectlayer	Holds a four-slot vtable the player constructor stores at +0x1c74	verified	one	objectlayer/classes#secondary-and-member-vtables
 0x80b054	float	s_corpseLootRangeSq		objectlayer	Holds 25.0, the squared distance beyond which a corpse loot walks up	verified	one	objectlayer/interaction#looting
 0x80b058	float	s_meleeReachBonus		objectlayer	Holds 4/3, added to the two combat reaches	verified	one	objectlayer/interaction#looting
+0x80b07c	const float	s_questGiverObjectValue		objectlayer	Holds 5.5555553, which five game object constructors, quest giver and text among them, store at +0xc	verified	one	objectlayer/gameobjects#handler-types-0-to-10
 0x80b084	float	s_defaultUseRange		objectlayer	Holds 5.0, the use range a game object handler starts with	verified	one	objectlayer/gameobjects#building-the-type-handler
+0x80b088	const float	s_binderObjectValue		objectlayer	Holds 10.0, which the binder game object constructor stores at +0xc and an initializer squares	verified	one	objectlayer/gameobjects#handler-types-0-to-10
 0x80b0a0	float	s_chairSeatRange		objectlayer	Holds 3.0, the range a chair's use gives	verified	one	objectlayer/gameobjecttypes#chairs
+0x80b0b0	const float	s_chairObjectValue		objectlayer	Holds 100.0, which the chair game object constructors store at +0xc and an initializer squares	verified	one	objectlayer/gameobjects#handler-types-0-to-10
 0x80b0e0	int32_t[8]	s_animEventStates		objectlayer	Holds the state of each animation event 0 to 7: -1, 0, 8, 9, 10, 11, 12, 0	verified	one	objectlayer/gameobjecttypes#animation-events
 0x80b100	void *[34]	s_gameObjectHandlerVtable		objectlayer	Holds the base game object handler vtable	verified	one	objectlayer/gameobjecttypes#handler-slots-0-to-11
 0x80b188	void *[34]	s_staticHandlerVtable		objectlayer	Holds the vtable of the static handler for guard posts and unknown types	verified	one	objectlayer/gameobjects#handler-types-21-to-30
@@ -714,20 +767,42 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c408	const float	s_facingSendDeadBand		objectlayer	Holds 0.1, the change in facing or pitch that sends a set-facing or set-pitch message	verified	one	objectlayer/moveemitter#facing-and-pitch-throttle
 0x80c414	const float	s_float41500000		objectlayer	Holds the float 13 (0x41500000)	inferred	none	
 0x80c418	const float	s_float428c0000		objectlayer	Holds the float 70 (0x428c0000)	inferred	none	
+0x80c44c	const float	s_breathHeightBase		objectlayer	Holds 5.0, which the breath state test adds to the scaled unit height	verified	one	objectlayer/unitbody#breath
 0x80c450	float	s_pathPointReachedSq		objectlayer	Holds 0.0007716049, (1/36)², under which a path point counts as the unit's position	verified	one	objectlayer/unitmovement#monster-moves
 0x80c454	uint32_t[8]	s_questStatusMarkers		objectlayer	Maps quest statuses 0 to 7 to marker models 0, 3, 0, 2, 7, 1, 6, 6	verified	one	objectlayer/unitnames#quest-markers
 0x80c484	const float	s_sprintSpeedThreshold		objectlayer	Holds 11.0, the speed from which the moving animation is Sprint	verified	one	collision/walkmode#moving-animation-choice
 0x80c488	const float	s_drunkEffectThreshold		ffxeffects	Holds 0.5, the drunk fraction from which an effect kind of 0x60001a changes	verified	one	ffxeffects/passes#drunk-byte-readers
 0x80c48c	uint32_t[12]	s_missWordKinds		objectlayer	Holds the name descriptor kind of each miss outcome: 6, then 3, with ABSORB 1	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0x80c4bc	const float	s_drunkSwayDegrees		objectlayer	Holds 0.013089970, 0.75 degrees in radians, the drunk sway angle per unit of drunkenness	verified	one	objectlayer/unitbody#drunk-sway
+0x80c4c0	const float	s_autoMoveWalkYards		objectlayer	Holds 3.0, which times 1.5 gives the 4.5 yards beyond which mode 3 starts walking, before the speed scale	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c4c8	const float	s_autoMoveHeightTolerance		objectlayer	Holds 0.5, the height in yards the auto move stop test ignores	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c4d0	const float	s_autoMoveSpeedBase		objectlayer	Holds 7.0, the speed divided by which the auto move distances scale	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c4d4	const float	s_swimPitchFullHeight		objectlayer	Holds 0.86602, the heading height part from which a swimmer pitches to +-pi/2	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c4d8	const float	s_swimPitchStartHeight		objectlayer	Holds 0.17364, the heading height part from which a swimmer pitches to its arcsine	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c4dc	const float	s_autoMoveStallYards		objectlayer	Holds 1/360, the yards a forward walk must move to avoid the auto move stop	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
 0x80c4e8	const float	s_twelve		unassigned	Holds 12.0	verified	one	lighting/celestial#celestial-bodies
 0x80c4ec	const float	s_fmodVersion		unassigned	Holds 3.75, the FMOD version the engine requires	verified	one	sound/engine#device-initialization
+0x80c4f0	const float	s_rippleSizeScale		objectlayer	Holds 0.65, one of the factors that mix into a water ripple size	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x80c4f4	float	s_smallEpsilon		terrain	Holds 0.0001, the least squared length a direction is normalized from and a hit compare margin	verified	one	terrain/portals#camera-inside-a-map-object
 0x80c4f8	void *[46]	CGUnit_C::vftable		objectlayer	Holds the unit vtable, 46 slots	verified	one	objectlayer/classes#constructors-and-final-vtables
+0x80c5b0	const float	s_footprintRangeSquared		objectlayer	Holds 625.0, the squared distance within which a footstep sprays particles	verified	one	objectlayer/unitanim#model-events
+0x80c5b4	const float	s_footstepRangeSquared		objectlayer	Holds 2500.0, the squared distance within which a footstep prints a footprint	verified	one	objectlayer/unitanim#model-events
 0x80c5bc	const float	s_stopNearSquared		collision	Holds 9.0, the squared distance under which a stop-form move flushes at its point	verified	one	collision/ride#monster-move-body
 0x80c5c0	const float	s_point4		unassigned	Holds 0.4	verified	one	lighting/celestial#disc-draw
 0x80c5c4	float	s_facetFacingBound		collision	Holds -1e-5 (0xb727c5ac), the n·dir at or below which a facet faces against the motion	verified	one	collision/contact#nearest-facet-per-face
 0x80c5c8	const float	s_rectEpsilon		ui	Holds 1e-5, the edge change below which a resolved rectangle counts as unchanged	verified	one	ui/anchors#resolving-and-the-changed-callback
 0x80c5d0	const float	s_onePointTwoFive		unassigned	Holds 1.25	verified	one	lighting/celestial#static-tracks
+0x80c5d4	const float	s_drunkCosineMean		objectlayer	Holds 0.333333, the factor that takes the mean of the three drunk sway cosines	verified	one	objectlayer/unitbody#drunk-sway
+0x80c5d8	const float	s_drunkRateC		objectlayer	Holds 0.195, the rate of the third drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
+0x80c5dc	const float	s_drunkRateB		objectlayer	Holds 0.154, the rate of the second drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
+0x80c5e0	const float	s_drunkRateA		objectlayer	Holds 0.093, the rate of the first drunk sway cosine	verified	one	objectlayer/unitbody#drunk-sway
+0x80c5e4	const float	s_negHalfPi		unassigned	Holds -pi/2, the lower clamp of a pitch	verified	one	objectlayer/unitbody#drunk-sway
+0x80c5f8	const double	s_oneDegreeRadians		objectlayer	Holds pi/180 as a double, from which the auto move stop threshold cos 1 degree is built	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c600	const float	s_autoMoveBackAngleHigh		objectlayer	Holds 3.8397243, 220 degrees, the far bound of the angle off the facing that stops a walk	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c604	const float	s_autoMoveBackAngleLow		objectlayer	Holds 2.7925267, 160 degrees, the near bound of the angle off the facing that stops a walk	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c608	const float	s_autoMoveTurnChance		objectlayer	Holds 0.07, the bound that the mode 3 random fraction times its factor must top to drop bit 1	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
+0x80c60c	const float	s_infinityObject		objectlayer	Holds +inf, 0x7f800000, the literal the Object_C file copies at start-up	verified	one	collision/overview#object-files
+0x80c610	const float	s_piObject		objectlayer	Holds pi, 0x40490fdb, which the Object_C file doubles into 2 pi and its update reads	verified	one	collision/overview#object-files
 0x80c698	const float	s_float3a03126f		unassigned	Holds the float 0.0005 (0x3a03126f)	inferred	none	
 0x80c6a0	const double	s_double3f5d7dbf40000000		objectlayer	Holds the double 0.0017999999690800905 (0x3f5d7dbf40000000)	inferred	none	
 0x80c6a8	const float	s_float3eb6e48a		unassigned	Holds the float 0.35721236 (0x3eb6e48a)	inferred	none	
@@ -737,6 +812,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80c73c	float	s_collisionRadiusCap		collision	Holds 0.54071623 (0x3f0a6c61), the cap on half width over scale in 0x617460	verified	one	collision/mover#collision-size
 0x80c740	float	s_collisionRadiusCapInverse		collision	Holds 1.8493990 (0x3fecb91b), the reciprocal of 0x80c73c	verified	one	collision/mover#collision-size
 0x80c744	const float	s_float3a4a4588		unassigned	Holds the float 0.00077160494 (0x3a4a4588)	inferred	none	
+0x80c854	const float	s_missileSpeedCap		objectlayer	Holds 100.0, the cap the missile launch applies to the distance over time quotient	verified	one	objectlayer/missiles#launch-and-flight-time
+0x80c85c	const float	s_missileFadeRatio		objectlayer	Holds 0.7, the alpha factor a missile fade uses when flag 0x8 is clear	verified	one	objectlayer/missiles#fading-out
 0x80c968	int32_t[14]	s_hardcodedEffectAttachments		objectlayer	Holds the attachment each hard-coded effect hangs at, 37 for none	verified	one	objectlayer/effects#hard-coded-effects
 0x80c9a8	const float	s_floatbf000000		objectlayer	Holds the float -0.5 (0xbf000000)	inferred	none	
 0x80c9fc	uint8_t[1392]	s_gameObjectDataNames		objectlayer	Holds 87 semantic data ids of 16 bytes: name, kind, boolean flag, next id	verified	one	objectlayer/gameobjects#the-game-object-record
@@ -777,6 +854,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x80e5a0	const double	s_double4024000000000000		unassigned	Holds the double 10 (0x4024000000000000)	inferred	none	
 0x80fa1c	uint32_t[12]	s_codecTable		storm	Holds six mask and function pairs of the codecs: 0x40, 0x80, 0x20, 0x01, 0x02, 0x10	verified	one	storm/format#codecs
 0x80fe28	const float	s_infinity1		terrain	Holds +inf, 0x7f800000, the literal one terrain file copies at start-up	verified	one	terrain/statics#static-initializers
+0x80fe30	const float	s_terrainSquareBase		terrain	Holds 10.0, the operand the terrain file squares at start-up	verified	one	terrain/statics#static-initializers
 0x80febc	float	s_farBandStart		terrain	Holds 0.96, the depth range start of the far-band pass	inferred	none	
 0x80fec0	const float	s_skyDepthFar		unassigned	Holds 0.98, the far end of the sky's depth slice	verified	one	lighting/sky#sky-pass
 0x80fec4	const float	s_skyDepthSpan		unassigned	Holds 0.005, the sky depth slice's width	verified	one	lighting/celestial#glare-draw
@@ -1011,10 +1089,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x811720	void *[4]	s_md5TableVtable		minimap	Holds the four slots of the catalog table: free node, allocate node, deleting destructor, clear	verified	one	minimap/overview#containers
 0x811730	const float	s_float3f4ccccd		unassigned	Holds the float 0.8 (0x3f4ccccd)	inferred	none	
 0x811734	const float	s_tileScale		minimap	Holds 0.001875, the reciprocal of the tile size, that the world-to-tile map multiplies by	verified	one	minimap/coordinates#tile-grid
+0x8117f0	const float	s_spellSquareBase		spell	Holds 120.0, the operand a spell table initializer squares at start-up	verified	one	spell/layout#static-initializers
 0x811818	void *[4]	s_raceClassInfoTableVtable		spell	Holds the race-class table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
 0x811828	void *[4]	s_skillCostsInfoTableVtable		spell	Holds the skill-cost table's delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
 0x811838	void *[4]	s_skillLineRecPoolTableVtable		spell	Holds the ability table's pooled delete, make and destroy slots and the base clear	verified	one	spell/tables#node-vtables
 0x811848	void *[4]	s_skillLineRecTableVtable		spell	Holds the ability table's base delete, make, destroy and clear slots	verified	one	spell/tables#node-vtables
+0x8118d4	const float	s_spellRangeScale		spell	Holds 100.0, which GetMinMaxRange loads and a spell file initializer squares	verified	one	spell/records#range
 0x8118dc	uint32_t[5]	s_noPowerMessageIds		spell	Holds the NO_POWER message ids of power types 0 to 4: 0x11f, 0x120, 0x121, 0x122, 0x168	verified	one	spell/failures#item-power-and-form-arms
 0x8118f0	uint32_t[5]	s_petNoPowerMessageIds		spell	Holds the pet's NO_POWER message ids of power types 0 to 4, equal to the player's	verified	one	spell/failures#pet-failure-messages
 0x811904	void *[4]	s_itemCooldownTableVtable		spell	Holds the item-cooldown table vtable: delete node, new node, deleting destructor, clear	verified	one	spell/cooldowns#item-cooldown-table
@@ -1023,7 +1103,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8119f8	uint32_t[16]	s_frameStrataNames		ui	Holds eight pairs of a stratum index and its name, BACKGROUND 1 to TOOLTIP 8	verified	one	ui/strata#strata-and-their-names
 0x811a38	uint32_t[18]	s_anchorPointNames		ui	Holds nine pairs of an anchor point index and its name	verified	one	ui/anchors#point-slots-and-point-names
 0x811a80	uint32_t[10]	s_drawLayerNames		ui	Holds five pairs of a draw layer index and its name, BACKGROUND 0 to HIGHLIGHT 4	verified	one	ui/draworder#regions-within-a-frame
-0x811aa8	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
+0x811aa8	const uint32_t[10]	s_blendModeNames		ui	Holds five pairs of a blend mode and its name: DISABLE 0, BLEND 2, ALPHAKEY 1, ADD 3 and MOD 4	verified	one	ui/button#checked-textures
 0x811ad0	const uint32_t[12]	s_justifyNames		ui	Holds six pairs of a justify bit and its name, LEFT 1 to BOTTOM 0x20	verified	one	ui/fontstring#justify
 0x811b00	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x811b10	const uint32_t[6]	s_fontFlagNames		ui	Holds three pairs of a font flag and its name: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont
@@ -1045,6 +1125,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8126b4	void *[3]	s_minigameVtable		minigame	Holds the object's vtable: state read 0x728700, move check 0x728740, board push 0x728770	verified	one	minigame#the-object
 0x818878	const float[3]	s_saturationWeights		ui	Holds 0.7154, 0.0721 and 0.2125 that the x87 colour saturation routine 0x74d794 multiplies green, blue and red by	verified	one	ui/texture#the-saturation-weights-in-the-exe
 0x818a28	const float[4]	s_saturationWeights3dnow		ui	Holds 0.2125, 0.7154 and 0.0721, then 0, as the pairs the 3DNow saturation code 0x75e12b multiplies by	verified	one	ui/texture#the-saturation-weights-in-the-exe
+0x81c370	const float	s_infinityTop		unassigned	Holds +inf, 0x7f800000, the literal that TopInitInfinity copies at start-up	verified	one	ui/README#static-initializers
 0x81c378	const float	s_inputPriority		ui	Holds 1.0, the priority of the top's input handlers	verified	one	ui/input#the-handlers
 0x81c380	void *[11]	CSimpleTop::vftable		ui	Holds the vtable of CSimpleTop	verified	one	ui/strata#construction-and-teardown
 0x81c3b8	uint32_t[3]	s_centerXPoints		ui	Holds the anchor points 1, 4, 7 that fix a horizontal centre	verified	one	ui/anchors#edge-resolution-from-points
@@ -1085,6 +1166,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81c9b0	const uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	ui/backdrop#the-object
 0x81c9c8	void *[11]	s_simpleRegionLayoutVtable		ui	Holds the layout vtable stored at +0x24 of a region base, before a texture or font string replaces it	verified	one	ui/regions#the-region-base
 0x81c9f4	void *[11]	s_simpleRegionVtable		ui	Holds the vtable a region base stores at +0x0 while it is built or torn down, its slot 0 being 0x77f6c0	verified	one	ui/regions#the-region-base
+0x81ca68	void *[39]	CSimpleStatusBar::vftable		ui	Holds the 39 virtual function slots of CSimpleStatusBar, which its constructor stores	inferred	none	
 0x81cb20	uint32_t[13]	s_fontTableB		ui	Holds the ten slots and three floats of a font table stored at +0x24, not an eleven-slot layout vtable	verified	one	ui/regions#the-layout-vtable
 0x81cb54	void *[11]	s_simpleCheckboxLayoutVtable		ui	Holds the layout vtable of a check button, stored at +0x24	verified	one	ui/button#button-teardown-and-text-colour-slots
 0x81cb80	void *[40]	CSimpleCheckbox::vftable		ui	Holds the 40 virtual function slots of CSimpleCheckbox, which its constructor stores	verified	one	ui/hover#the-notifies-by-class
@@ -1097,10 +1179,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81cd10	void *[11]	s_simpleScrollFrameLayoutVtable		ui	Holds the vtable of a scroll frame's layout part, stored at +0x24	verified	one	ui/scrollframe#teardown
 0x81cd40	void *[14]	s_scrollFrameVtableHead		ui	Holds the first 14 virtual slots of the vtable a scroll frame stores at +0x0, slot 0 being its destructor	verified	one	ui/scrollframe#teardown
 0x81cd78	const char[4]	s_textQx		unassigned	Holds the string "@qx"	inferred	none	
+0x81cddc	const float	s_messageFrameDefault364		ui	Holds 10.0, which the message frame factory stores at +0x364	verified	one	ui/messageframe#construction
+0x81cde0	const float	s_messageFrameDefault368		ui	Holds 3.0, which the message frame factory stores at +0x368	verified	one	ui/messageframe#construction
 0x81cde4	void *[1]	s_scrollFrameSubSlot		ui	Holds the one slot, 0x788020, of the table a scroll message frame keeps at +0x338	verified	one	ui/messagemembers#scroll-frame-teardown
 0x81cde8	void *[11]	s_scrollFrameLayoutVtable		ui	Holds the vtable of a scroll message frame's layout part, stored at +0x24	verified	one	ui/messagemembers#scroll-frame-teardown
 0x81ce18	void *[39]	CSimpleMessageScrollFrame::vftable		ui	Holds the virtual function slots of CSimpleMessageScrollFrame, which its constructor stores	verified	one	ui/messagemembers#scroll-frame-teardown
 0x81cec4	void *[11]	s_messageLineLayoutVtable		ui	Holds the layout vtable of a message frame's line object, which shares the font string's size slots	verified	one	ui/regions#the-layout-vtable
+0x81cf60	void *[36]	CSimpleSlider::vftable		ui	Holds the 36 virtual function slots of CSimpleSlider, which its constructor stores	inferred	none	
+0x81d030	void *[39]	CSimpleHTML::vftable		ui	Holds the 39 virtual function slots of CSimpleHTML, which its constructor stores	inferred	none	
+0x81d0d0	const float	s_colorWheelPi		ui	Holds pi, which the colour wheel adds to the arc tangent of a pick offset	verified	one	ui/colorselect#dragging
+0x81d108	void *[36]	CSimpleColorSelect::vftable		ui	Holds the 36 virtual function slots of CSimpleColorSelect, which its constructor stores	inferred	none	
 0x81d560	const float	s_regionMethodsInfinityConst		ui	Holds +inf, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d564	const float	s_regionMethodsPiConst		ui	Holds pi, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
 0x81d568	const float	s_regionMethodsTenConst		ui	Holds 10.0, the region methods' copy of the shared header's constant	verified	one	ui/README#frame-core-object-files
@@ -1112,6 +1200,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d680	void *[39]	CSimpleHyperlinkedFrame::vftable		ui	Holds the vtable of the hyperlinked frame base, with its three hyperlink firers at +0x90	verified	one	ui/hyperlinks#the-two-classes
 0x81d728	const float	s_cutoffFadeFraction		sound	Holds 0.10000002, the fraction of the cutoff the distance gain fades over	verified	one	sound/engine#distance-cutoff
 0x81d72c	const float	s_volumeLevelBias		sound	Holds 512.5, the bias that reads a volume back as a level	verified	one	sound/engine#volume-of-a-sound
+0x81d7a0	const float	s_infinityCameraProperty		unassigned	Holds +inf, 0x7f800000, the literal that InitCameraPropertyInfinity copies at start-up	verified	one	camera#object-files-and-initializers
+0x81d7a8	const float	s_infinityCamera		camera	Holds +inf, 0x7f800000, the literal that InitCameraInfinity copies at start-up	verified	one	camera#object-files-and-initializers
+0x81d7ac	const float	s_piCamera		camera	Holds pi, which the camera 2 pi initializer doubles and the default field of view initializer reads	verified	one	camera#object-files-and-initializers
 0x81d7b0	float	s_defaultDistance		camera	Holds 100.0, the default distance and eye x	verified	one	camera#properties
 0x81d7b4	float	s_defaultFarClip		camera	Holds 5000.0, the default far clip	verified	one	camera#properties
 0x81d7b8	float	s_defaultNearClip		camera	Holds 8.0, the default near clip	verified	one	camera#properties
@@ -1122,6 +1213,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x81d7e8	void *[2]	s_propertySetVftable		camera	Holds the camera base's vtable: 0x7acd10, then 0x442a70	verified	one	camera#lifetime
 0x81d7f0	void *[3]	CBaseManaged::vftable		camera	Holds the base property vtable: 0x7acb50, 0x7acb30, 0x7acb40	verified	one	camera#property-updates
 0x81d7fc	void *[4]	s_anglePropertyVftable		camera	Holds the angle property vtable: delete, the scalar evaluate and verify, store	verified	one	camera#property-updates
+0x81d80c	const float	s_infinityParticleRegistry		unassigned	Holds +inf, 0x7f800000, the literal the particle registry file copies at start-up	verified	one	camera#object-files-and-initializers
+0x81d810	const float	s_piParticleRegistry		unassigned	Holds pi, which the particle registry 2 pi initializer doubles at start-up	verified	one	camera#object-files-and-initializers
 0x81d814	float	s_infinity		unassigned	Holds +inf as a float	verified	one	gx/lightning#static-initializers
 0x81d828	float	s_particleSubstep		models	Holds 0.1, the particle substep in seconds	verified	one	models/particles#substeps
 0x81d82c	float	s_particleVelocityPeriod		models	Holds 1/30, the period over which an emitter derives its velocity	verified	one	models/particles#update
@@ -1192,6 +1285,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x82f1a4	char[47]	s_pathLoadingScreen		loadingscreen	Holds the source path of LoadingScreen.cpp	verified	one	loadingscreen/overview#object-file
 0x82f230	char[24]	s_typeTagC3Vector		spline	Holds the C3Vector type name, the allocation tag of the control point array	verified	one	spline#control-point-storage
 0x82f250	char[3]	s_typeTagFloat		spline	Holds the allocation tag .M of the segment length list	verified	one	spline#control-point-storage
+0x82f25c	char[3]	s_textDotH		unassigned	Holds the string ".H", the allocation tag of the dword array buffers	verified	one	objectlayer/manager#table-and-array-code
 0x832a40	float	s_screenAspect		screencoord	Holds the configured display aspect a, stored by 0x41ad10	verified	one	ui/regions#layout-space-and-units
 0x832a44	float	s_screenScaleX		screencoord	Holds K1 = a/sqrt(a² + 1) for the display aspect a; 0.8 in the file	verified	one	screencoord#screen-scale-state
 0x832a48	float	s_screenScaleY		screencoord	Holds K2 = 1/sqrt(a² + 1) for the display aspect a; 0.6 in the file	verified	one	screencoord#screen-scale-state
@@ -1207,6 +1301,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x833124	char[29]	s_invalidFunctionPointer		os	Holds Invalid function pointer: %p	verified	one	ui/luastate#the-c-function-contract
 0x833184	const char[2]	s_backslash		unassigned	Holds the string "\\"	verified	one	sound/entries#file-paths
 0x833188	char[3]	s_dotDot		unassigned	Holds two dots, the name of a parent folder	verified	one	ui/framexml#loading-one-file
+0x833190	char *[22]	s_reservedFileNames		unassigned	Holds the 22 reserved device names nul, con, prn, aux, com1 on that file name validation rejects	verified	one	core/time#file-name-helpers
 0x8332c0	uint64_t	s_cpuTicksPerSecond		core	Holds the counter rate; 10^9 by default, then the calibrated rate	verified	one	core/time#the-millisecond-clock
 0x8332c8	double	s_clockScale		core	Holds the clock's milliseconds per counter tick; 1.0 at startup	verified	one	core/time#the-millisecond-clock
 0x833394	char[21]	s_typeOsIMECandidate		ui	Holds the RTTI name of the input method candidate record, an allocation tag	verified	one	ui/editboxmembers#candidate-window
@@ -1218,6 +1313,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x834038	uint32_t[256]	s_cp874Chars		core	Holds the characters for code page 874 bytes, indexed by the byte	verified	one	core/input#character-codes
 0x834c44	char[22]	s_textScreenshotPath		unassigned	Holds the path format "%s\WoWScrnShot_%s.tga"	verified	one	gx/capture#screenshot-file
 0x834c5c	char[12]	s_textScreenshots		unassigned	Holds the string "Screenshots", the screenshot directory	verified	one	gx/capture#screenshot-file
+0x835140	char[3]	s_textWt		unassigned	Holds the string "wt", the mode OpenFallLog opens its log file with	verified	one	collision/kinematics#unreached-functions
 0x835144	uint16_t			unassigned	Holds a word that SendBugReport, CreateGmTicket, CGUnit_C::GetPvPName read; not read here	inferred	none	
 0x835154	char[3]	s_textD		unassigned	Holds the string "%d"	inferred	none	
 0x835160	char[3]	s_textF		unassigned	Holds the string "%f"	inferred	none	
@@ -1244,6 +1340,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x835a4c	uint8_t			sound	Holds a byte that SoundReverbHandler reads and writes; not read here	inferred	none	
 0x835a50	uint32_t			sound	Holds a dword that LoadSoundScriptFunctions, UnloadSoundScriptFunctions read; not read here	inferred	none	
 0x835a70	uint32_t	s_soundBaseFrequency		sound	Holds 22050, the base of a definition's random frequency; nothing writes it	verified	one	sound/entries#volume-and-pitch-of-a-play
+0x835b6c	char[12]	s_textEnableMusic		unassigned	Holds the string "EnableMusic", the CVar the cinematic loader reads	verified	one	uicamera/cinematic#starting-a-sequence
 0x835c08	char[4]	s_textMusicVolumeDefault		sound	Holds "0.4", MusicVolume's default	verified	one	sound/interface#sound-cvars
 0x835c6c	char[2]	s_textFour		unassigned	Holds "4", the default of SoundRolloffFactor and SoundMemoryCache	verified	one	sound/interface#sound-cvars
 0x835d38	char[3]	s_textTwelve		sound	Holds "12", the default of the two channel count CVars	verified	one	sound/interface#sound-cvars
@@ -1273,6 +1370,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8364e0	int32_t	s_waterSoundsOff		sound	Holds the water sounds' off state, above 0 while ambience is off, -1 after teardown	verified	one	sound/ambience#water-sound-switches
 0x836708	char *[8]	s_objectPoolNames		objectlayer	Holds the class name of each type's object pool	verified	one	objectlayer/classes#class-sizes-and-pools
 0x836728	uint32_t[8]	s_objectPoolBlockCounts		objectlayer	Holds each type's object pool block count	verified	one	objectlayer/classes#class-sizes-and-pools
+0x8367b8	char[19]	s_textRememberingCorpse		objectlayer	Holds the string "Remembering corpse" that TraceRememberObject prints	verified	one	objectlayer/manager#trace-lines
+0x836854	char[19]	s_textRememberingObject		objectlayer	Holds the string "Remembering object" that TraceRememberObject prints	verified	one	objectlayer/manager#trace-lines
+0x836868	char[18]	s_textForgettingCorpse		objectlayer	Holds the string "Forgetting corpse" that TraceForgetObject prints	verified	one	objectlayer/manager#trace-lines
+0x8368fc	char[18]	s_textForgettingObject		objectlayer	Holds the string "Forgetting object" that TraceForgetObject prints	verified	one	objectlayer/manager#trace-lines
 0x836b24	int32_t	s_logonResult		glue	Holds the last reported logon result, default -1; written by 0x46afb0 and 0x46b0f0	verified	one	glue/flow#logon-state-dialogs
 0x836b28	int32_t	s_logonState		glue	Holds the last reported logon state, default -1; written by 0x46afb0, 0x46b0f0 and the PIN arm of 0x46b930	verified	one	glue/flow#logon-state-dialogs
 0x836b2c	int32_t	s_shownLogonResult		glue	Holds the logon result the dialog last showed, default -1; written by 0x46afb0 and 0x46b140	verified	one	glue/flow#logon-state-dialogs
@@ -1383,7 +1484,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x839430	uint32_t[643]	s_activePlayerWatchedFields		objectlayer	Holds the 643 further player field indices only the active player watches	verified	one	objectlayer/fields#watched-fields
 0x83a3c8	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x83b880	uint8_t[320]	s_gameObjectFieldInfo		unassigned	Holds the 16 game object field descriptors of 20 bytes: name, index, count, type, flags	verified	one	objectlayer/gameobjects#the-game-object
+0x83dc24	char *[2]	s_reticleTexturePaths		unassigned	Holds the paths of the acceptable and the unacceptable ground reticle textures	verified	one	ui/groundreticle#the-decal-passes
 0x83dc2c	uint32_t	s_reticleState		ui	Holds which ground target decal is drawn, 0 acceptable, 1 unacceptable, 3 none	verified	one	ui/mouse#enter-and-leave
+0x83dc30	char[52]	s_textSpellShadowUnacceptable		unassigned	Holds the unacceptable ground reticle texture path, Interface\SpellShadow\Spell-Shadow-Unacceptable.blp	verified	one	ui/groundreticle#the-decal-passes
+0x83dc64	char[50]	s_textSpellShadowAcceptable		unassigned	Holds the acceptable ground reticle texture path, Interface\SpellShadow\Spell-Shadow-Acceptable.blp	verified	one	ui/groundreticle#the-decal-passes
 0x83ddb0	const char *[29]	s_invTypeKeys		ui	Holds the global string key of each inventory type, empty for type 0	verified	one	ui/tooltipitemhead#the-slot-and-type-line
 0x83de24	const char *	s_runScriptContext		ui	Points to the empty string, the context word RunScript runs under	verified	one	ui/luastate#the-context-word
 0x83de28	const char *[9]	s_victimStateActions		ui	Holds the UNIT_COMBAT action words of victim states 0 to 8, MISS to DEFLECT	verified	one	objectlayer/playercombat#the-unit-combat-event
@@ -1459,6 +1563,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8445b4	char[15]	s_textPVPRANKDD		unassigned	Holds the string "PVP_RANK_%d_%d"	inferred	none	
 0x8445c8	char[7]	s_textDSAt8445c8		ui	Holds the string "%d. %s"	inferred	none	
 0x844608	char[21]	s_textSSSSSSDDSD		ui	Holds the string "%s%s%s%s%s%s%d%d%s%d"	inferred	none	
+0x844808	char[2]	s_textDash		unassigned	Holds the string "-" that the battlefield code packs between a name and its realm	verified	one	ui/battlefield#player-notices
 0x84480c	const char[3]	s_listSeparator		unassigned	Holds the string comma and space that joins the names of a list	verified	one	ui/tooltipitemreq#race-and-class-lines
 0x844864	char[9]	s_textDSAt844864		ui	Holds the string "[%d]: %s"	inferred	none	
 0x844afc	char[17]	s_textUnknownLanguage		ui	Holds the string "Unknown language"	inferred	none	
@@ -1487,11 +1592,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x846b04	void *[8]	s_tutorialFunctions		ui	Holds the 4 name and function pairs of the tutorial Lua functions, TutorialsEnabled to ResetTutorials	verified	one	ui/scriptapi#function-tables
 0x846b68	char[14]	s_textTutorialPopup		ui	Holds the string "TutorialPopup"	inferred	none	
 0x846bd0	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
+0x846bd4	uint32_t[6]	s_modifierBits		unassigned	Holds the modifier bit index and prefix string of SHIFT-, CTRL- and ALT-, which 0x4b6630 walks downward	verified	one	ui/keybindings#chord-names
+0x846bec	uint32_t[6]	s_modifierPrefixes		ui	Holds the prefix strings SHIFT-, CTRL- and ALT- with their lengths 6, 5 and 4, which the key strip loop walks	verified	one	ui/keybindings#valid-key-strings
 0x846c04	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x846c20	uint32_t			ui	Holds a dword its object file's code reads; not read here	inferred	none	
 0x846c84	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x846c88	void *[18]	s_bindingFunctions		ui	Holds the 9 name and function pairs of the key binding Lua functions, GetNumBindings to SaveBindings	verified	one	ui/scriptapi#function-tables
+0x846e3c	char[6]	s_textBind		ui	Holds the string "bind ", the line prefix that ParseBindingSet compares	verified	one	ui/keybindings#binding-files
 0x846e44	char[24]	s_textWTFDefaultBindingsWtf		ui	Holds the string "WTF\DefaultBindings.wtf"	inferred	none	
+0x846e5c	char[13]	s_bindLineFormat		ui	Holds the format "bind %s %s" and a line break that WriteBindingSetLines writes	verified	one	ui/keybindings#writing-binding-files
 0x846e80	char[6]	s_textSHIFT		ui	Holds the string "SHIFT"	inferred	none	
 0x846e88	char[5]	s_textCTRL		ui	Holds the string "CTRL"	inferred	none	
 0x846e90	char[4]	s_textALT		ui	Holds the string "ALT"	inferred	none	
@@ -1500,6 +1609,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x846f98	char[8]	s_textWindows		ui	Holds the string "windows"	inferred	none	
 0x846fd8	char[25]	s_textCouldnTParseXMLInS		ui	Holds the string "Couldn't parse XML in %s"	inferred	none	
 0x846ff4	char[17]	s_textCouldnTOpenS		ui	Holds the string "Couldn't open %s"	inferred	none	
+0x847074	char[3]	s_textUp		ui	Holds the string "up", which RunBinding compares its second argument with	verified	one	ui/keybindings#binding-functions
 0x847240	void *[32]	s_raidFunctions		ui	Holds the 16 name and function pairs of the raid Lua functions, GetNumRaidMembers to CheckReadyCheckTime	verified	one	ui/scriptapi#function-tables
 0x847490	const char[15]	s_keyPlayerOffline		ui	Holds the global string key PLAYER_OFFLINE of the offline party member line	verified	one	ui/tooltipunit#the-offline-and-faction-lines
 0x8474a0	char[32]	s_textUsageGetRaidRosterInfoIndex		ui	Holds the string "Usage: GetRaidRosterInfo(index)"	inferred	none	
@@ -1532,6 +1642,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x849064	uint32_t[8]	s_auctionOwnerSortOrder		ui	Holds 5, 3, 2, 0, 6, 1, 4, 7, the starting sort columns of the owner list	verified	one	ui/auction#session-state
 0x849084	uint32_t[8]	s_auctionBidderSortOrder		ui	Holds 5, 3, 2, 0, 6, 1, 4, 7, the starting sort columns of the bidder list	verified	one	ui/auction#session-state
 0x8490a8	void *[46]	s_auctionFunctions		ui	Holds the 23 name and function pairs of the auction Lua functions	verified	one	ui/auction#lua-functions
+0x84963c	char[37]	s_textUsageSetSelectedAuctionItemIndex		ui	Holds the usage text of SetSelectedAuctionItem, raised only by CancelAuction	verified	one	ui/auctionlists#cancelling
 0x84966c	int32_t	s_guildStagedRank		ui	Holds the staged rank index of the rank control functions, -1 for none	verified	one	ui/guild#rank-control
 0x849670	uint32_t[26]	s_guildRankFlags		ui	Holds thirteen pairs of a rights mask and its staged value, in flag order	verified	one	ui/guild#rank-control
 0x8496d8	void *[64]	s_guildFunctions		ui	Holds the 32 name and function pairs of the guild Lua functions, GetNumGuildMembers to SetGuildInfoText	verified	one	ui/scriptapi#function-tables
@@ -1563,6 +1674,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84bf58	char[30]	s_textInterfaceButtonsSpellReset		ui	Holds the string "Interface\Buttons\Spell-Reset"	inferred	none	
 0x84bff4	char[27]	s_textUsageGetActionTextSlot		ui	Holds the string "Usage: GetActionText(slot)"	inferred	none	
 0x84c150	int32_t	s_partyLeaderIndex		ui	Holds the party slot of the group leader, -1 for the player or a leader outside the party	verified	one	ui/party#the-group-leader
+0x84c154	char *[6]	s_lfgTypeNames		ui	Holds the LFG type names None, Dungeon, Raid, Quest, Zone and Battleground	verified	one	ui/lfg#reading-the-lists
 0x84c170	void *[32]	s_partyFunctions		ui	Holds the 16 name and function pairs of the party Lua functions, GetNumPartyMembers to GetLFGTypeEntries	verified	one	ui/scriptapi#function-tables
 0x84c36c	char[28]	s_textDebugOnlyLockNoticeS		ui	Holds the string "(Debug-Only Lock Notice) %s"	inferred	none	
 0x84c42c	char[53]	s_textUsageSetLootMethodMethodMasterThreshold		ui	Holds the string "Usage: SetLootMethod("method" [,master][,threshold])"	inferred	none	
@@ -1585,6 +1697,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84cb74	char[63]	s_textUsageCreateMacroNameIconIndexBodyLocal		ui	Holds the string "Usage: CreateMacro(name, iconIndex, body, local, perCharacter)"	inferred	none	
 0x84cbb4	char[40]	s_textCreateMacroFailedNoNameSpecified		ui	Holds the string "CreateMacro() failed, no name specified"	inferred	none	
 0x84cbdc	char[45]	s_textCreateMacroFailedAlreadyHaveDMacros		ui	Holds the string "CreateMacro() failed, already have %d macros"	inferred	none	
+0x84cc44	char[49]	s_textUsageEditMacro		ui	Holds the usage text of EditMacro, raised when argument 1 is not a number	verified	one	ui/macros#editing-a-macro
 0x84ccf0	void *[12]	s_talentFunctions		ui	Holds the 6 name and function pairs of the talent Lua functions, GetNumTalentTabs to LearnTalent	verified	one	ui/scriptapi#function-tables
 0x84cea0	void *[16]	s_petitionFunctions		ui	Holds the 8 name and function pairs of the petition Lua functions, ClosePetition to RenamePetition	verified	one	ui/scriptapi#function-tables
 0x84cf8c	char[8]	s_textCharter		ui	Holds the string "charter"	inferred	none	
@@ -1632,19 +1745,36 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x84f354	const char[29]	s_keyPointsSpread		ui	Holds the global string key SPELL_POINTS_SPREAD_TEMPLATE of an amount range printed as decimals	verified	one	ui/spelltokens#effect-amounts
 0x84f374	const char[33]	s_keyIntPointsSpread		ui	Holds the global string key INT_SPELL_POINTS_SPREAD_TEMPLATE of an amount range printed as integers	verified	one	ui/spelltokens#effect-amounts
 0x84f398	char[5]	s_text1f		ui	Holds the string "%.1f"	verified	one	ui/spelltokens#tokens-that-read-a-record-field
+0x84f454	char *[5]	s_cameraViewSuffixes		unassigned	Holds the CVar name suffixes of the five camera views: none, then A to D	verified	one	uicamera/cvars#saved-view-cvars
+0x84f468	char *[3]	s_cameraAxisNames		uicamera	Holds the axis names Distance, Pitch and Yaw of the camera view CVars	verified	one	uicamera/cvars#saved-view-cvars
+0x84f474	uint32_t[3]	s_cameraAxisAngleFlags		uicamera	Holds 0, 1 and 1: whether a camera view axis is an angle scaled by pi/180	verified	one	uicamera/follow#gates
 0x84f484	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f488	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84f4c4	char *[2]	s_smoothSuffixesAB		uicamera	Holds the suffixes Delay and Factor of the smoothing CVar families A and B	verified	one	uicamera/cvars#smoothing-cvars
+0x84f4cc	char *[3]	s_smoothStyles		uicamera	Holds the smoothing styles Never, Smart and Always	verified	one	uicamera/cvars#smoothing-cvars
+0x84f4d8	char *[7]	s_smoothStatesA		uicamera	Holds the seven family A smoothing states Idle, Stop, Track, Move, Strafe, Turn and Fear	verified	one	uicamera/cvars#smoothing-cvars
 0x84f4f4	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84f4f8	char *[42]	s_smoothDefaultsA		uicamera	Holds the 42 default strings of family A, style first, state next, delay before factor	verified	one	uicamera/cvars#smoothing-cvars
+0x84f5a0	char *[18]	s_smoothDefaultsB		uicamera	Holds the 18 default strings of family B, by style, axis and suffix	verified	one	uicamera/cvars#smoothing-cvars
 0x84f5e8	uint32_t			uicamera	Holds data whose address its object file's code takes; not read here	inferred	none	
+0x84f610	char *[3]	s_tiltSuffixes		uicamera	Holds the suffixes Absorb, Delay and Factor of the terrain tilt CVars	verified	one	uicamera/cvars#smoothing-cvars
 0x84f620	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f788	const char *	s_cameraSettingsFileName		uicamera	Holds the pointer to the camera settings file name	verified	one	uicamera/view#the-settings-file
+0x84f78c	uint32_t	s_cameraClipWord		uicamera	Holds the word the cameraClip command sets or flips, 1 at load, which nothing reads	verified	one	uicamera/cvars#cameraclip
+0x84f790	void *[3]	s_cameraViewChecks		uicamera	Holds the check functions 0x50b310, 0x50b380 and 0x50b3c0 of the distance, pitch and yaw view CVars	verified	one	uicamera/cvars#saved-view-cvars
 0x84f7a0	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
 0x84f848	uint32_t			uicamera	Holds a dword its object file's code reads; not read here	inferred	none	
+0x84fa00	char[20]	s_textCameraSettingsTxt		unassigned	Holds the string "camera-settings.txt", the file name the camera settings load from	verified	one	uicamera/view#the-settings-file
 0x84fad4	char[4]	s_text00		unassigned	Holds the string "0.0"	inferred	none	
 0x84fb48	char[4]	s_text01		unassigned	Holds the string "0.1"	inferred	none	
 0x84fbd0	char[5]	s_text150		uicamera	Holds the string "15.0"	inferred	none	
+0x84fc0c	char[4]	s_textFiveZero		uicamera	Holds the string "5.0" that two camera CVar registrations push	verified	one	uicamera/waterbands#repeated-crossings
+0x84fdc0	char[7]	s_textCamera		uicamera	Holds the string "camera", the prefix of the camera view CVar names	verified	one	uicamera/cvars#saved-view-cvars
 0x84fdc8	char[11]	s_textCameraView		uicamera	Holds the string "cameraView"	inferred	none	
 0x84ffb0	char[9]	s_textNearclip		unassigned	Holds the string "nearclip"	inferred	none	
+0x84ffec	char[12]	s_textCameraPitch		uicamera	Holds the string "cameraPitch", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
+0x84fff8	char[15]	s_textCameraDistance		uicamera	Holds the string "cameraDistance", a key that LoadSettings compares each settings line with	verified	one	uicamera/view#reading-the-file
+0x8500a0	char[15]	s_textCameraViewS		unassigned	Holds the format "Camera view %s" that SetView prints with the view name	inferred	none	uicamera/driver#setting-a-view
 0x8500b8	void *[52]	s_bindingCommands		input	Pairs the 26 movement and mouse binding commands' names with their handlers	verified	one	input#mouse-commands
 0x850340	char[53]	s_inputControlSourcePath		input	Holds the source path the object file asserts with, ending InputControl.cpp	verified	one	input#input-state
 0x850378	char[51]	s_inputControlTag		input	Holds the path ending InputControl.h, the allocation tag of CInputControl	verified	one	input#input-state
@@ -1839,13 +1969,16 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8604bc	char[31]	s_textTrainerServiceDUnavailable		objectlayer	Holds the string "Trainer service %d unavailable"	inferred	none	
 0x860708	char[24]	s_textReservedForFutureUse		objectlayer	Holds the string "Reserved for future use"	inferred	none	
 0x8607e4	uint32_t[13]	s_gameObjectStateAnims		objectlayer	Holds the animation of each family A state: 0x91, 0x93, 0x94, 0x95, 0x92, 0x96 to 0x9d	verified	one	objectlayer/gameobjecttypes#animation-states
-0x860818	char *[9]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 8, Closed to Despawn	verified	one	objectlayer/gameobjecttypes#animation-states
+0x860818	char *[13]	s_gameObjectStateNames		objectlayer	Holds the names of states 0 to 12: Closed to Despawn for states 0 to 8, null for 9 to 12	verified	one	objectlayer/gameobjecttypes#animation-states
 0x860850	char[4]	s_textOm3		unassigned	Holds the string "om3"	inferred	none	
 0x860a18	uint32_t[11]	s_spellVisualAttachments		objectlayer	Holds the attachment ids a SpellVisual record's +0x24 indexes: 20, 34, 19, 21, 22, 17, 23, 24, 25, 15, 16	verified	one	spell/visuals#chain-endpoints
 0x860a4c	uint8_t[4]	s_rippleMovingKinds		objectlayer	Holds 0, 0, 1, 0: 0x5fa760's ripple kinds 0 to 3, 1 for the moving kind that follows the motion	verified	one	objectlayer/unitbody#water-ripples-and-swimming
 0x860a50	uint32_t[2]	s_virtualItemModelOptions		objectlayer	Holds model options 15 and 16 for virtual item slots 0 and 1; 0x605da0 reads slot 2's from 0x860a58	verified	one	objectlayer/unitdisplay#hand-items-and-weapons
 0x860a58	uint8_t[132]	s_autoMoveModes		objectlayer	Holds 11 auto-move mode rows of 12 bytes: enabled, a maximum squared distance, two flag bytes	verified	one	objectlayer/unitmovement#auto-move-modes
 0x860adc	uint32_t	s_precastStopModes		objectlayer	Holds 1, the auto-move mode mask 0x60fc50 tests before it stops an auto-move	verified	one	objectlayer/unitmovement#starting-and-ending-auto-move
+0x860c9c	char[21]	s_textSpellsErrorCubeMdx		unassigned	Holds the model path Spells\ErrorCube.mdx that GetModelPath returns for an invalid display record	verified	one	objectlayer/unitdisplay#display-records
+0x860f9c	char[6]	s_guildNameFormat		objectlayer	Holds the format "\n<%s>" that BuildNameText appends the guild name with	verified	one	objectlayer/unitnames#the-name-block
+0x860fa4	char[14]	s_textUnknownBeing		objectlayer	Holds the string "Unknown Being", the name GetUnitName returns when the name text is empty	verified	one	objectlayer/unitnames#unit-names
 0x8613e4	char[23]	s_playerMoveEventTag		collision	Holds the type name of CPlayerMoveEvent, the allocation tag of its nodes	verified	one	collision/events#event-node
 0x8613fc	char[26]	s_invalidMoverText		collision	Holds "Mover at invalid position", the console line a NaN position prints	verified	one	collision/mover#local-player-step
 0x861418	char[62]	s_movementSourcePath		collision	Holds the source path of Movement.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
@@ -1853,6 +1986,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8617b8	const char *[14]	s_hardcodedEffectNames		objectlayer	Holds the names of the 14 hard-coded effects	verified	one	objectlayer/effects#hard-coded-effects
 0x861808	char[29]	s_textHARDCODEDMeetingStoneJoin		unassigned	Holds the string "HARDCODED Meeting Stone Join"	inferred	none	
 0x8618e0	char[24]	s_textHARDCODEDUnitLevelUp		unassigned	Holds the string "HARDCODED Unit Level Up"	inferred	none	
+0x861ac4	char[54]	s_missingAttachmentFormat		objectlayer	Holds the message printed when a spell effect object lacks an attachment point	verified	one	objectlayer/effects#setting-up-once-loaded
 0x8621e4	char[5]	s_textAttribute		ui	Holds text, the XML attribute name	verified	one	ui/xmltypes#the-text-attribute
 0x862234	char[5]	s_textTrue		ui	Holds the string "true"	inferred	none	
 0x8626d4	uint32_t[13]	s_unitVocalChance		objectlayer	Holds per vocal kind the highest roll out of 101 that lets a unit's vocal play	verified	one	objectlayer/sounds#vocal-sounds
@@ -1862,6 +1996,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x8628f8	uint32_t[10]	s_meleeOutcomeLogged		objectlayer	Marks the victim states a melee swing writes a line for without damage	verified	one	objectlayer/combatlogmessages#melee-lines
 0x862920	const char *[47]	s_combatTextTypeNames		objectlayer	Holds the type names COMBAT_TEXT_UPDATE carries, INTERRUPT to HONOR_GAINED	verified	one	objectlayer/combatlog#combat-text
 0x8629e0	const char *[20]	s_combatLogRangeCVars		objectlayer	Holds each relation class's range CVar name and default	verified	one	objectlayer/combatlog#range
+0x862e00	char[20]	s_textCombatDeathLogRange		objectlayer	Holds the string "CombatDeathLogRange", the CVar name the combat log code looks up	verified	one	objectlayer/combatlog#the-one-sided-range-test
 0x862e14	char[3]	s_text60		objectlayer	Holds the string "60"	inferred	none	
 0x86424c	uint32_t[13]	s_playerVocalChance		objectlayer	Holds per vocal kind the highest roll out of 101 that lets a player's vocal play	verified	one	objectlayer/sounds#vocal-sounds
 0x8642e8	char[64]	s_movementCSourcePath		collision	Holds the source path of Movement_C.cpp, passed with a line number to the allocator	verified	one	collision/overview#object-files
@@ -2263,6 +2398,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x87d714	const float[16]	s_particleQuadCorners		models	Holds the four quad corners and their four texture corners	verified	one	models/particles#head-quads
 0x87d894	float	s_terminalVelocity		collision	Holds the fall speed cap, 60.148003 (0x4270978e); its one writer 0x7c6160 is unreached	verified	one	collision/falling#arc-fields-and-constants
 0x87d898	float	s_featherFallTerminalVelocity		collision	Holds the cap under flag 0x20000000, 7.0 (0x40e00000); its one writer 0x7c6180 is unreached	verified	one	collision/falling#arc-fields-and-constants
+0x87d89c	char[7]	s_textFall		unassigned	Holds the string "__fall", the log name OpenFallLog opens	verified	one	collision/kinematics#unreached-functions
 0x87d9cc	float			unassigned	Holds a float its object file's code reads; not read here	inferred	none	
 0x87d9d0	float			ui	Holds a float its object file's code reads; not read here	inferred	none	
 0x881c70	const char[29]	s_starModelPath		lighting	Holds the path of the star model	verified	one	lighting/celestial#body-objects
@@ -2273,6 +2409,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x882504	uint32_t	s_startupStringsIndex		client	Points at Startup_Strings.dbc's records indexed by id	inferred	none	
 0x882508	uint32_t	s_startupStringsMaxId		client	Holds Startup_Strings.dbc's largest id	inferred	none	
 0x88250c	uint32_t	s_startupStringsLoaded		dbc	Holds 1 once Startup_Strings is loaded	verified	one	dbc#startup-strings
+0x88262c	uint32_t	s_newWorldMapId		client	Holds the map id of the world being entered, which NewWorldHandler reads from the packet	verified	one	ui/worldenter#a-world-transfer
 0x882630	uint32_t			unassigned	Holds a dword that ClientRegisterConsoleCommands reads and writes; not read here	inferred	none	
 0x882640	uint32_t			unassigned	Holds a dword that ClientRegisterConsoleCommands, Script::SetMovieSubtitles read and write; not read here	inferred	none	
 0x882654	uint32_t			unassigned	Holds a dword that ClientRegisterConsoleCommands, Script::GetScriptMemory read and write; not read here	inferred	none	
@@ -2353,6 +2490,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x884c78	void *	s_timeManager		core	Holds the time manager while it lives	verified	one	core/time#time-manager-lifetime
 0x884c80	uint32_t	s_clockMode		core	Holds the clock counter: 0 GetTickCount, 1 the time-stamp counter	verified	one	core/time#the-millisecond-clock
 0x884c88	double	s_clockOffset		core	Holds the clock's offset in milliseconds; 0 at startup	verified	one	core/time#the-millisecond-clock
+0x884ca0	uint32_t			os	Holds a dword its object file's code reads and writes; not read here	inferred	none	core/input#static-initializers
+0x884ca8	uint32_t			unassigned	Holds a dword its object file's code reads and writes; not read here	inferred	none	core/input#static-initializers
 0x884cb0	uint32_t	s_savedMouseSpeed		core	Holds the Windows mouse speed saved at startup	verified	one	core/input#mouse-speed-and-num-lock
 0x884cb4	uint32_t	s_mouseSpeed		core	Holds the Windows mouse speed applied while the window is active	verified	one	core/input#mouse-speed-and-num-lock
 0x884cc0	uint32_t[80]	s_inputRing		core	Holds the 16 input records of five dwords: kind, three values, time	verified	one	core/input#the-ring
@@ -2384,6 +2523,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x888888	uint32_t			unassigned	Holds a dword no instruction names directly; not read here	inferred	none	
 0x90582c	uint32_t	s_failedTextureColour		gx	Holds 0xff00ff00, the colour of the solid texture that replaces a texture that failed to load	verified	one	gx/textures#texture-creation
 0x905844	uint32_t[216]	s_mipBufferLists		gx	Holds the lists of free decoded mip buffers, one list per pixel type and size class	inferred	none	gx/textures#texture-readiness-and-info
+0x905bc4	uint32_t	s_textureHashMask		gx	Holds the bucket mask of the texture hash table, -1 until it is built	verified	one	gx/textures#texture-creation
 0x905bd4	const char *	s_blpBasenameReplaced		gx	Holds the BLP file name to replace, or null; written by TextureSetBasenameSubstitution	verified	one	gx/textures#texture-basename-substitution
 0x905bd8	const char *	s_blpBasenameReplacement		gx	Holds the file name that replaces the BLP file name of 0x905bd4	verified	one	gx/textures#texture-basename-substitution
 0x905be4	char[2097152]	s_textureFileArea		gx	Holds the static 2 MiB area whose slices buffer async texture file reads	verified	one	gx/textures#texture-file-creation
@@ -2463,6 +2603,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb06d54	uint32_t[4]	s_zoneIntroTimes		sound	Holds the zone intro time array: capacity, count, buffer and granularity	verified	one	sound/overview#static-objects
 0xb06d9c	uint8_t	s_zoneIntroBlocked		sound	Holds a byte that refuses every intro while set; only 0 is written	verified	one	sound/music#zone-intro-music
 0xb06dc8	void *	s_zoneIntro		sound	Holds the zone intro's sound	verified	one	sound/music#zone-intro-music
+0xb06dcc	uint32_t			sound	Holds a dword that ZoneIntroFrameHandler, ZoneIntroShutdown, SetAreaMusic read and write; not read here	inferred	none	sound/music#zone-intro-music
 0xb06dd8	uint32_t			unassigned	Holds a dword its object file's code reads; not read here	inferred	none	
 0xb2306c	void *	s_mapWaterSoundsCVar		sound	Holds the MapWaterSounds CVar	verified	one	sound/ambience#water-sounds
 0xb230b8	uint32_t			unassigned	Holds data whose address InitializeWaterAmbiences, ClearAllSounds take; not read here	inferred	none	
@@ -2484,6 +2625,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb41d14	uint32_t	s_queueOldestTime		glue	Holds the oldest queue sample time, 0 until eight samples; written by 0x46ae50, zeroed by 0x5aab20	verified	one	glue/flow#queue-history
 0xb41d18	uint32_t[7]	s_queuePositions		glue	Holds the seven newest queue positions, newest first; written by 0x46ae50 and 0x46b930, zeroed by 0x5aab20	verified	one	glue/flow#queue-history
 0xb41d34	uint32_t	s_queueOldestPosition		glue	Holds the oldest queue position; written by 0x46ae50, zeroed by 0x5aab20	verified	one	glue/flow#queue-history
+0xb41d54	float	s_glueSquare		glue	Holds the square of 10.0 that the glue file stores at start-up	verified	one	glue/layout#static-initializers
 0xb41d70	uint32_t[3]	s_consoleQueue		glue	Holds the console line queue's list head: link offset 0 and the terminator link	verified	one	glue/manager#console-line-queue
 0xb41d7c	uint32_t	s_patchProgressTime		glue	Holds the time of the last patch progress update; written by 0x474610 and 0x474b70	verified	one	glue/downloads#patch-download
 0xb41d84	void *	s_glueTop		glue	Holds the glue build's CSimpleTop, null until a build; 0x46ac90 deletes it and clears it	verified	one	glue/manager#glue-build
@@ -2578,10 +2720,13 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb42764	uint32_t	s_textureCacheLoadCount		gx	Counts texture cache load attempts; cleared by 0x47b1f0	verified	one	gx/textures#texture-cache
 0xb4b2b4	uint32_t *	s_soundListenerAtCharacter		ui	Holds the SoundListenerAtCharacter variable record, stored by the world frame constructor	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b2bc	void *	s_worldFrame		ui	Holds the world frame, stored by its constructor	verified	one	ui/mouseover#the-world-input-hook
+0xb4b2c4	float	s_halfProduct480410		ui	Holds 0.5, the product 18 x 0.027777778 that InitProduct480410 stores at start-up	verified	one	ui/initfloats#products
+0xb4b2e8	float[16]	s_identityMatrix4804f0		ui	Holds the 4 by 4 identity matrix that 0x4804f0 stores at start-up	verified	one	ui/initstores#constant-tables
 0xb4b32c	float	s_unitInteractRangeSq		ui	Holds the squared distance past which a unit's cursor is the unable form	verified	one	ui/worldcursor#units-charm-and-interaction
 0xb4b334	float[3]	s_listenerUp		ui	Holds the listener up vector (0, 0, 1), stored on the first listener update	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b344	void *[2]	s_reticleTextures		ui	Holds the acceptable and unacceptable ground reticle texture handles	verified	one	ui/groundreticle#the-decal-passes
 0xb4b350	void *	s_normalFfx		ui	Holds the glow effect the world frame builds and restores when the ghost state clears	verified	one	ffxeffects/objects#start-and-shutdown
+0xb4b354	float	s_ratioProduct4803b0		ui	Holds 0.5833333, the product -21 x -0.027777778 that InitProduct4803b0 stores at start-up	verified	one	ui/initfloats#products
 0xb4b36c	uint8_t	s_listenerUpInit		ui	Holds bit 0 set once the up vector is stored	verified	one	sound/listener#the-listener-follows-the-mover
 0xb4b39c	void *	s_ghostFfx		ui	Holds the death effect the world frame builds and the ghost state makes current	verified	one	ffxeffects/objects#start-and-shutdown
 0xb4b3a0	float[3]	s_reticlePosition		ui	Holds the picked ground position the reticle is drawn at	verified	one	ui/groundreticle#the-reticle-state
@@ -2805,6 +2950,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71108	uint32_t *	s_formSpells		unassigned	Points at the form bar's sorted spell ids	verified	one	ui/petbar#form-list
 0xb71110	uint32_t[3]	s_dispelTypes		ui	Holds capacity, count and data of the dispel types of the player's known dispel spells	verified	one	ui/auradisplay#the-per-slot-display-test
 0xb71130	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	ui/spellbook#adding-a-spell
+0xb71148	uint32_t[3]	s_spellRecordList		ui	Holds the capacity, count and data pointer of a list of 8-byte spell records that AddSpellToBook updates	inferred	none	
 0xb71160	void **	s_bookTabs		unassigned	Points at the tab nodes of the book, each a skill line key and a spell count	verified	one	ui/spellbook#spell-book-lists
 0xb7116c	uint32_t	s_bookSpellCount		unassigned	Holds the number of spells in the player's book	verified	one	ui/spellbook#spell-book-lists
 0xb71170	uint32_t	s_bookTabCount		unassigned	Holds the number of tabs in the book	verified	one	ui/spellbook#spell-book-lists
@@ -2815,6 +2961,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb711d8	uint32_t	s_tutorialTimerHandle		ui	Holds the handle of the game timer that runs ProcessTutorialTimers, 0 when none	verified	one	ui/tutorials#the-delayed-trigger
 0xb711e4	uint32_t	s_tutorialAckedBits		ui	Holds the bit count of the acknowledged tutorial set, 0 until the server sends it	verified	one	ui/tutorials#the-two-bit-sets
 0xb711e8	uint32_t[3]	s_tutorialAcked		ui	Holds capacity, dword count and data of the acknowledged tutorial set	verified	one	ui/tutorials#the-two-bit-sets
+0xb7124c	uint32_t[5]	s_statusList		ui	Holds a static CStatus object: the vtable 0x806908, then a list head with link offset 8 and its end links	verified	one	ui/initexits#exit-calls
 0xb71290	void *	s_bindings		ui	Holds the key binding object of 0xdc bytes that 0x4b6050 builds, whose +0xd8 is 1 while a binding runs	verified	one	ui/protected#input-event-flags
 0xb712a8	void *[40]	s_raidRoster		ui	Holds the pointers to the 40 raid roster records of 0x160 bytes	verified	one	ui/raid#the-roster-record
 0xb71368	uint64_t[8]	s_raidTargetGuids		ui	Holds the GUID of the unit carrying each of the eight raid target icons	verified	one	ui/raid#the-raid-target-table
@@ -2822,6 +2969,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb713e8	uint64_t	s_raidSelectionGuid		ui	Holds the GUID of the selected raid roster member, 0 for none	verified	one	ui/groupverbs#the-raid-roster-verbs
 0xb713f0	uint32_t			ui	Holds a dword that CGRaidInfo::InitializeGame reads and writes; not read here	inferred	none	
 0xb713f4	uint32_t	s_readyCheckDeadline		ui	Holds the clock value at which the running ready check ends, 0 when none	verified	one	ui/raid#starting-a-ready-check
+0xb71428	uint32_t	s_petBarSpellCount		ui	Holds the raw spell count of the pet bar, which ClearPetBar zeroes	verified	one	ui/petbar#pet-state
 0xb71438	uint32_t[10]	s_petBar		ui	Holds the ten pet bar slot words	verified	one	ui/petbar#pet-state
 0xb71468	uint32_t	s_petModeState		ui	Holds the pet mode word: reaction byte, command byte and server bit 27	verified	one	ui/petbar#pet-state
 0xb714a0	uint64_t	s_petBarGuid		ui	Holds the guid of the pet whose spells the pet bar holds	inferred	none	spell/cooldowns#spell-cooldown-packet
@@ -2857,7 +3005,14 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb71ba0	int32_t	s_lootMoney		ui	Holds the loot window's money in copper, 0 for none and -1 once the coin row is taken	verified	one	ui/loot#loot-state
 0xb71bbc	uint32_t	s_lootType		ui	Holds the loot type of the open window, 3 for fishing loot	verified	one	ui/loot#loot-state
 0xb71bc4	uint32_t	s_lootCoinShown		ui	Holds 1 once the auto-loot sweep has handled the coin row of this source	verified	one	ui/loot#auto-loot
+0xb71bd4	uint32_t	s_lotteryVendorClock		ui	Holds the clock value IsVendorActive waits to pass before it returns the vendor dword	inferred	none	ui/lottery#prizes
+0xb71bdc	uint32_t	s_lotteryNextDrawTime		ui	Holds the time of the next lottery draw, which GetNextDrawTime reports as seconds from now	inferred	none	ui/lottery#draws
+0xb71be8	int32_t[3]	s_lotteryMoneyPrizes		ui	Holds the three money prizes of the lottery window	inferred	none	ui/lottery#prizes
+0xb71bf4	int32_t	s_lotteryJackpot		ui	Holds the jackpot of the lottery window	inferred	none	ui/lottery#prizes
+0xb71bf8	uint32_t[4]	s_lotteryPrizeItems		ui	Holds up to four prize item ids of the lottery window	inferred	none	ui/lottery#prizes
 0xb71c38	uint32_t			ui	Holds the range argument that 0x4c3eb0 passes to SetInteractionTarget	verified	one	ui/lottery#buying
+0xb71c50	uint32_t[24]	s_lotteryDrawRecords		ui	Holds the four past draw records of 0x18 bytes	inferred	none	ui/lottery#draws
+0xb71df0	uint32_t	s_lotteryVendorActive		ui	Holds the dword IsVendorActive returns once the clock has passed 0xb71bd4	inferred	none	ui/lottery#prizes
 0xb71e5c	void *	s_minigameObject		ui	Points to the active minigame object, or null	verified	one	ui/lottery#the-minigame
 0xb71e74	uint32_t[4]	s_worldStateUiList		ui	Holds the always-visible world state row ids: capacity, count, data and chunk size	verified	one	ui/worldstate#the-list-builder
 0xb71e84	uint32_t			ui	Holds a signed value the defence channel refresh tests before it updates the world states; not read here	inferred	none	ui/chatchannels#defence-channel-state
@@ -2955,6 +3110,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xb73764	uint32_t	s_reputationVisibleCount		ui	Holds the number of visible list entries, what GetNumFactions returns	verified	one	ui/reputation#sorting-and-counts
 0xb73768	int32_t	s_selectedFaction		ui	Holds the selected faction id, 0 for none	verified	one	ui/reputationlua#collapse-and-selection
 0xb737b0	void **	s_trainerServices		ui	Holds the array of pointers to the trainer service records	verified	one	ui/trainer#trainer-state
+0xb737b8	char[512]	s_trainerGreeting		ui	Holds the trainer greeting text that GetTrainerGreetingText returns	verified	one	ui/trainerverbs#opening-and-the-type-tests
 0xb739c0	void **	s_trainerGroups		ui	Holds the array of trainer group headers	verified	one	ui/trainer#trainer-state
 0xb73a00	uint64_t	s_trainerGuid		ui	Holds the GUID of the open trainer, 0 for none	verified	one	ui/trainer#trainer-state
 0xb73a08	uint32_t	s_trainerType		ui	Holds the trainer type dword of the open trainer list; 2 marks a profession trainer	verified	one	ui/spellbook#trainer-icons
@@ -3038,7 +3194,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbc7968	void *	s_minimapMaskTexture		ui	Points to the mask texture handle the minimap draws through	verified	one	ui/minimap#minimap-textures
 0xbc7970	float	s_minimapDiscSize		ui	Holds the frozen disc size in layout units	verified	one	ui/minimapblips#blip-sizes
 0xbc81e4	uint32_t[5]	s_hoverDotMasks		ui	Holds the bit masks of the dots of each cell the cursor is over	verified	one	ui/hover#nameplate-and-minimap-notifies
+0xbc81f8	float[12]	s_minimapSquareCornersA		ui	Holds the four corners of a square, plus and minus h by plus and minus h at 0, as 12 floats	verified	one	ui/initstores#constant-tables
 0xbc822c	void *	s_minimapBlipTexture		ui	Points to the dot icon texture handle	verified	one	ui/minimap#minimap-textures
+0xbc8230	float[12]	s_minimapSquareCornersB		ui	Holds the four corners of a second square, plus and minus h by plus and minus h at 0, as 12 floats	verified	one	ui/initstores#constant-tables
 0xbc8260	uint8_t	s_blitQuadInit		ui	Holds bit 0 once the blit quad has been written	verified	one	minimap/draw#blit-quad-and-offset
 0xbc8264	uint32_t	s_minimapActive		ui	Holds 1 from the interior target creation until the minimap shuts down	verified	one	minimap/draw#interior-target
 0xbc8274	float	s_discHalfSize		ui	Holds half the disc size in layout units	verified	one	ui/minimapblips#blip-sizes
@@ -3128,6 +3286,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe083c	int32_t	s_questWantedMoney		ui	Holds the money the open quest panel asks the player to hand over	verified	one	ui/questpanel#item-records
 0xbe0840	uint32_t	s_pendingQuestConfirm		ui	Holds the quest id of the last quest confirmation request, never cleared	verified	one	ui/questshare#the-confirmation-request
 0xbe0844	uint32_t	s_questPanelActed		ui	Holds 1 once the open quest panel has sent its answer	verified	one	ui/questpanel#panel-state
+0xbe0a50	float[16]	s_identityMatrix506880		ui	Holds the 4 by 4 identity matrix that 0x506880 stores at start-up	verified	one	ui/initstores#constant-tables
 0xbe0a9c	uint32_t[4]	s_taxiRouteFrameLines		ui	Holds the route frame's line array: capacity, count, buffer and grow step, zero in every write	verified	one	ui/taxiframe#module-state
 0xbe0b14	void *	s_taxiRouteFrame		ui	Holds the last constructed route frame, cleared by its destructor and never read	verified	one	ui/taxiframe#module-state
 0xbe0b18	float	s_smartRectSquare18		ui	Holds a constant squared by the object file's static initializer; nothing reads it	verified	one	ui/smartrect#static-initializers
@@ -3220,10 +3379,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xbe1198	const char *	s_eventNames		ui	Holds the first event name pointer; the names follow in event order and index 0x150 is UPDATE_MOUSEOVER_UNIT	verified	one	ui/tooltipobject#the-publisher
 0xbe160c	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xbe17b8	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
+0xbe1b48	uint32_t	s_stockInterfaceNumber		ui	Holds the interface number of the stock FrameXML.toc, which nothing reads	verified	one	ui/addonfiles#stock-interface-number
 0xbe1b64	uint32_t[3]	s_addOnList		ui	Holds the add-on list: its link offset, its sentinel link and its head	verified	one	ui/addons#finding-add-ons
 0xbe1b90	uint32_t	s_numAddOnNames		ui	Counts the names in the sorted add-on array	verified	one	ui/addons#the-order-lua-sees
 0xbe1b94	uint32_t	s_addOnNames		ui	Points to the add-on names sorted by title	verified	one	ui/addons#the-order-lua-sees
 0xbe1bd0	uint32_t			ui	Holds a dword that LoadCharacterAddOnState reads and writes; not read here	inferred	none	
+0xbe1bd8	uint32_t	s_addOnStateListEnd		ui	Holds the end link of the add-on state list: the address of its head with bit 0 set	verified	one	ui/addonfiles#character-add-on-state
 0xbe1c28	uint32_t[256]	s_cursorPictureBuffer		ui	Holds the 32 by 32 payload picture	verified	one	ui/cursor#dragging-picture
 0xbe2c2c	uint32_t	s_cursorMode		ui	Holds the mode of the cursor shown now	verified	one	ui/worldcursor#setting-the-mode
 0xbe2c48	uint32_t	s_cursorPictureState		ui	Holds 0 for no payload picture, else 1, 2 or 3 by the picture's source	verified	one	ui/cursor#dragging-picture
@@ -3237,6 +3398,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0ce88	uint32_t[10]	s_portraitDisplayTable		ui	Holds the hash table of baked portraits by display id: buckets at +0x1c, mask at +0x24	verified	one	ui/portraits#the-caches
 0xc0ceb8	void *	s_portraitFree		ui	Holds the head of the free list of portrait list nodes	verified	one	ui/paperdoll#draining-the-pending-list
 0xc0cf18	uint32_t	s_colorSkillYellow		ui	Holds the yellow 0xffffff00 of a skill within 25 to 49 of its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
+0xc0cf20	uint32_t[10]	s_tooltipMethodHash		ui	Holds the hash table of the 46 tooltip methods: vtable, list, chain counter, bucket vector and mask	verified	one	ui/tooltip#lua-methods
 0xc0cf50	uint32_t	s_colorSkillGray		ui	Holds the gray 0xff808080 of a skill 100 or more above its requirement	verified	one	ui/tooltipitemhead#the-skill-colours
 0xc0cf60	uint32_t	s_tooltipWhite		ui	Holds the white colour 0xffffffff of an ordinary line	verified	one	ui/tooltipcontent#the-colours
 0xc0cf68	char[1024]	s_auctionLinkBuffer		ui	Holds the item link text built by 0x52adb0, shared by every caller	verified	one	ui/auctionlists#item-links-and-time-left
@@ -3252,6 +3414,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0d3e4	uint32_t	s_setSortRow		ui	Holds the item set row whose bonus slots the comparator 0x52e5c0 orders	verified	one	ui/tooltipitemreq#set-bonus-lines
 0xc0d3e8	uint32_t	s_tooltipGold		ui	Holds the gold colour 0xffffd200, the default name and description colour	verified	one	ui/tooltipcontent#the-colours
 0xc0d420	uint32_t	s_colorSkillGreen		ui	Holds the green 0xff40c040 of a skill 50 to 99 above its requirement and of a lock with a key	verified	one	ui/tooltipitemhead#the-skill-colours
+0xc0d430	float	s_netSquare		net	Holds the square of 10.0 that InitSquare18 stores at start-up	verified	one	net/layout#static-initializers
 0xc0d45c	uint32_t	s_netBytesSent		net	Counts the opcode and body bytes NetClient::Send has sent, over all connections	verified	one	net/wire#sending
 0xc0d468	uint32_t	s_netBytesReceived		net	Counts the bytes dispatched on the main thread, two more per packet than its opcode and body	verified	one	net/dispatch#main-thread-drain
 0xc0d46c	uint32_t	s_netMessagesDispatched		net	Counts the packets the dispatcher has handled	verified	one	net/dispatch#dispatch
@@ -3451,7 +3614,10 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc0f22c	uint32_t	s_defaultTextureColour		gx	Holds 0xff00ff00, the colour of the Direct3D device's default 8 by 8 texture	verified	one	gx/device#direct3d-device-start
 0xc0f23c	uint32_t	s_pixelFormatArbFlag		gx	Holds 1 when WGL_ARB_pixel_format is listed	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f254	uint32_t	s_vertexProgramFlag		gx	Holds 1 when GL_NV_vertex_program is listed	verified	one	gx/device#opengl-initial-state
+0xc0f274	uint32_t	s_textureMaxLevelExtension		gx	Holds the flag that lets OpenGL limit GL_TEXTURE_MAX_LEVEL for compressed texture formats	verified	one	gx/textures#device-texture-upload
+0xc0f284	void *	s_drawRangeElementsEntry		gx	Holds the glDrawRangeElements entry point, null when the extension is missing	verified	one	gx/draw#draw-call
 0xc0f2a0	uint32_t	s_pointSpriteFlag		gx	Holds 1 when the GL version is 2.0 or later or GL_ARB_point_sprite is listed	verified	one	gx/device#opengl-initial-state
+0xc0f2a4	uint32_t	s_pointParameterExtension		gx	Holds the flag under which the OpenGL point parameter call is used for render state ids 0x42 to 0x44	verified	one	gx/renderstate#point-state
 0xc0f2ac	uint32_t	s_multisampleFlag		gx	Holds 1 when GL_ARB_multisample is listed	verified	one	gx/device#opengl-pixel-format-choice
 0xc0f2b8	uint32_t	s_combineExtensionOn		terrain	Holds 1 when the combine texture environment extension is available	verified	one	terrain/watershade#stage-combine-presets
 0xc0f2e0	void *	s_wglChoosePixelFormatEntry		gx	Holds the entry point the pixel format choice calls with its attribute list	verified	one	gx/device#opengl-pixel-format-choice
@@ -3483,6 +3649,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc27e90	uint8_t[32]	s_telemetryRecord		net	Holds the 32-byte record built from telemetry.dat that the logon proof appends	verified	one	net/connection#telemetry-record
 0xc27eb8	uint32_t			net	Holds data whose address ClientConnection::PollStatus takes; not read here	inferred	none	
 0xc27fb8	uint8_t[308]	s_selectedRealm		net	Holds the selected realm's 308-byte record; its address text is at +0x109	verified	one	net/session#connecting
+0xc28114	void *	s_clientServices		unassigned	Holds the client services object, at +0x1ad8 of which ClntObjMgrCreate stores the object block	verified	one	objectlayer/manager#manager-block
 0xc28118	void *	s_realmList		net	Holds the realm list the realm selection searches	verified	one	net/session#connecting
 0xc2811c	uint8_t	s_logonRebuild		net	Holds the byte that makes the next logon destroy and rebuild the logon object	verified	one	net/connection#starting-the-logon
 0xc28120	uint32_t	s_loginSession		net	Holds the login session, null until 0x5ab4b0 creates it	inferred	none	
@@ -3552,6 +3719,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc2ba40	float	s_fontRasterInfinity		font	Holds +inf copied by 0x5ce430, which nothing reads	verified	one	font/overview#object-files
 0xc2ba48	uint16_t[65536]	s_glyphStaging		font	Holds the 256 by 256 texel staging buffer glyphs are baked into	verified	one	font/glyphs#pages-and-cells
 0xc4ba48	float	s_fontRasterInvTwoPi		font	Holds 1/2π stored by 0x5cfce0, which nothing reads	verified	one	font/overview#object-files
+0xc4ba4c	uint32_t			font	Holds a dword that AtlasPage::Dump reads and writes; not read here	inferred	none	objectlayer/trade#trade-state
 0xc4ba70	float	s_fontRasterTwoPi		font	Holds 2π stored by 0x5cfc90, which nothing reads	verified	one	font/overview#object-files
 0xc4baa8	float	s_glyphInfinity		gx	Holds +inf, copied by the glyph object file's initializer	verified	one	gx/glyphs#static-initializers
 0xc4baac	float	s_glyphInvTwoPi		gx	Holds 1 / 2 pi as a float	verified	one	gx/glyphs#static-initializers
@@ -3568,6 +3736,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4c000	char[260]	s_corpseModelPath		objectlayer	Holds the skeleton model path 0x5d6700 formats for a corpse	verified	one	objectlayer/corpses#the-corpses-model-path
 0xc4c1d0	uint64_t	s_bindConfirmTargetGuid		objectlayer	Holds the target of an item use waiting for its bind confirmation	verified	one	objectlayer/items#item-use-gates
 0xc4c1f4	uint8_t[44]	s_inventoryIconCache		objectlayer	Holds the inventory icon hash table by display id	verified	one	objectlayer/items#inventory-icons
+0xc4c234	uint8_t			objectlayer	Holds a byte its object file's code reads; not read here	inferred	none	objectlayer/items#inventory-icons
 0xc4c240	uint64_t	s_bindConfirmItemGuid		objectlayer	Holds the item whose use waits for its bind confirmation	verified	one	objectlayer/items#item-use-gates
 0xc4c25c	uint32_t	s_bindZone		objectlayer	Holds the bind point's zone	verified	one	objectlayer/interaction#the-bind-point
 0xc4c264	uint32_t	s_areaTriggerEnd		objectlayer	Holds the end row of the current map's area triggers	verified	one	objectlayer/players#area-triggers
@@ -3650,6 +3819,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4d9c0	float	s_autoMoveStopDistanceSq		objectlayer	Holds the squared stop distance 0x611240 writes for 0x611130	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9c4	float	s_followStopDistanceSq		objectlayer	Holds 3² = 9, the squared stop distance of mode 3, written by 0x60e6e0	verified	one	objectlayer/unitmovement#auto-move-modes
 0xc4d9cc	void *	s_petMeleeDamageCVar		objectlayer	Holds the PetMeleeDamage CVar record, read before a pet's melee damage number	verified	one	objectlayer/unitnames#damage-and-miss-numbers
+0xc4d9d0	float	s_autoMoveStopCosine		objectlayer	Holds cos 1 degree, built from 0x80c5f8, which the auto move stop test compares the heading height part with	verified	one	objectlayer/unitmovement#arrival-height-and-stalls
 0xc4d9d8	void *[16]	s_questMarkerModels		objectlayer	Holds eight pairs of a loaded marker model and its path, filled by 0x5fa430 and loaded by 0x603a00	verified	one	objectlayer/unitnames#quest-markers
 0xc4da20	uint64_t	s_pendingSpellTargetGuid		objectlayer	Holds the target an arrived mode 9 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da28	uint64_t	s_pendingTalkGuid		objectlayer	Holds the NPC an arrived mode 5 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
@@ -3660,6 +3830,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc4da50	float[2]	s_namePlateSortPoint		objectlayer	Holds the screen point (0.4, 0.3) 0x6089a0 measures plates from, set on first use	verified	one	objectlayer/unitnames#nameplates
 0xc4da78	uint64_t	s_pendingLootGuid		objectlayer	Holds the corpse an arrived mode 6 walk hands to 0x60fa20	verified	one	objectlayer/unitmovement#steering-an-auto-move
 0xc4da80	uint32_t	s_deadUnitColor		objectlayer	Holds 0xff7f7f7f from 0x5fa160, the grey 0x605960 gives a dead unit that no player controls	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
+0xc4da84	float[3]	s_autoMoveLastPosition		objectlayer	Holds the position of the unit at the last frame, which the auto move stop test measures distance from	inferred	none	objectlayer/unitmovement#arrival-height-and-stalls
 0xc4da98	uint64_t	s_activeMoverGuid		objectlayer	Holds the GUID of the unit this client moves; 0x6006e0 switches it and 0x6006b0 clears it	verified	one	objectlayer/unitmovement#the-active-mover
 0xc4daa0	uint32_t	s_targetFlashTime		objectlayer	Holds the time 0x607ed0 last turned the target flash's sweep	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
 0xc4daa4	uint32_t	s_targetFlashRising		objectlayer	Holds the sweep direction 0x607ed0 flips every 500 ms; nonzero sweeps the green byte up	verified	one	objectlayer/unitdisplay#selection-circle-and-colour
@@ -3790,6 +3961,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc5a470	uint32_t	s_worldMode		terrain	Holds the world mode read from an option object at start-up	inferred	none	
 0xc5a474	uint32_t	s_batchCount		terrain	Holds the count of batch headers in use	verified	one	terrain/collide#triangle-batches
 0xc5a480	float[32]	s_layerScrollOffsets		terrain	Holds eight 16-byte records of two scroll offsets, a zero and a pad, for animated chunk layers	verified	one	terrain/world#world-frame
+0xc62508	float	s_infinityTerrain1		unassigned	Holds +inf, copied from 0x80fe28 by the first terrain file initializer	verified	one	terrain/statics#static-initializers
 0xc62510	float	s_worldFrameSeconds		terrain	Holds the frame time in seconds; written by 0x66fcc0	inferred	none	spell/visuals#shard-emission-rate
 0xc62520	float[6]	s_nearBox		terrain	Holds the box around the position of half-size 150: minimum x, y, z then maximum	verified	one	terrain/mapupdate#map-object-update
 0xc62550	uint8_t[992]	s_triangleBatches		terrain	Holds the 31 triangle batch headers of 0x20 bytes the world queries fill	verified	one	terrain/collide#triangle-batches
@@ -3820,6 +3992,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc7b2c4	uint32_t	s_simpleDoodads		terrain	Holds the simple doodad switch	inferred	none	
 0xc7b2c8	uint32_t	s_frameCounter		terrain	Holds the world frame counter, incremented once a frame	verified	one	terrain/world#world-frame
 0xc7b2e4	uint32_t[4]	s_reloadWindow		terrain	Holds the outer window copied for the forced reload: minimum a, minimum b, maximum a, maximum b	verified	one	terrain/mapupdate#forced-reload
+0xc7b2f4	float	s_terrainSquare		terrain	Holds the square of 10.0 that the terrain file stores at start-up	verified	one	terrain/statics#static-initializers
 0xc7b2fc	uint32_t	s_alphaRef		terrain	Holds the alpha reference of the detail doodad draw, 128 at start-up	verified	one	terrain/world#detail-doodad-and-alpha-settings
 0xc7b358	uint32_t[8]	s_walkableFacetList		terrain	Holds the private facet list the walkable-only query gathers into	verified	one	terrain/collide#world-triangle-query
 0xc7b378	uint32_t	s_batchIndexCursor		terrain	Holds the next free slot of the batch index pool	verified	one	terrain/collide#triangle-batches
@@ -4061,6 +4234,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce26e8	uint16_t[8192]	s_wmoVisitedFaces		models	Holds the face indices a WMO box query has marked visited, to clear their visited bit	verified	one	models/collisionquery#box-descent-and-face-test
 0xce66e8	uint32_t	s_liquidGroupSeen		terrain	Holds 1 once the portal flood has met a group with liquid	verified	one	terrain/portals#group-callback
 0xce66fc	uint32_t	s_wmoKeptCount		models	Holds the count of entries in the kept-face array 0xcde648	verified	one	models/collisionquery#box-descent-and-face-test
+0xce68d0	float[1024]	s_detailPlanes		terrain	Holds 256 planes of 16 bytes, four per cell of the 8 by 8 detail grid, made at start-up	verified	one	terrain/detail#detail-doodad-scatter
 0xce78f8	uint32_t[512]	s_scatterPicks		terrain	Holds the scatter's picked cells, column then row, eight bytes each	verified	one	terrain/detail#detail-doodad-scatter
 0xce8128	float[16]	s_layerChannelSelectors		terrain	Holds the four layer constants: zero, then one in the red, green and blue channel	verified	one	terrain/render#chunk-layer-states
 0xce8270	uint8_t[24]	s_areaReadLock		terrain	Holds the critical section around ADT reads and parses	inferred	none	terrain/files#tile-file-read
@@ -4123,6 +4297,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce8b94	uint8_t	s_screenTargetExitFlags		ffxeffects	Holds a bit the screen target exit stub sets	verified	one	ffxeffects/overview#static-initializers
 0xce8b98	FfxRenderTarget	s_screenTarget		ffxeffects	Holds the screen descriptor: handle 0, the window size and its reciprocals	verified	one	ffxeffects/targets#render-target-sizes
 0xce8bb4	void *	s_currentFfx		ffxeffects	Holds the current full-screen effect, or null	verified	one	ffxeffects/objects#start-and-shutdown
+0xce8c34	uint32_t			lighting	Holds a dword that InitSky, GetGlareOcclusion, DrawGlare read and write; not read here	inferred	none	lighting/celestial#glare-occlusion
 0xce8c8c	float[8]	s_moonSizeTrack		lighting	Holds the moons' size track, four keys	verified	one	lighting/celestial#celestial-bodies
 0xce8cac	float[8]	s_sunDiscSizeTrack		lighting	Holds the sun disc's size track, four keys	verified	one	lighting/celestial#celestial-bodies
 0xce8ccc	float[6]	s_moon02AzimuthTrack		lighting	Holds moon02's azimuth track, three keys	verified	one	lighting/celestial#static-tracks
@@ -4144,6 +4319,9 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce98e8	uint8_t[184]	s_clouds		lighting	Holds the cloud object: threshold, override, octaves, texture and buffers	verified	one	lighting/celestial#glare-occlusion
 0xce99a0	uint8_t[48]	s_skyDome		lighting	Holds the sky dome: its arrays and counts	verified	one	lighting/fog#dead-fog-modifiers
 0xce99d0	uint32_t	s_fogModifierColour		lighting	Holds the fog modifier colour, used only under a flag nothing sets	verified	one	lighting/clouds#cloud-dome
+0xce99d4	float	s_fogModifierScale		lighting	Holds the fog modifier value that ScaleFogColourModifier subtracts from 1 to scale each channel	inferred	none	lighting/fog#dead-fog-modifiers
+0xce99d8	float	s_fogModifierDuration		lighting	Holds the fog modifier duration that BuildSceneFog divides the elapsed clock by	inferred	none	lighting/fog#dead-fog-modifiers
+0xce99e8	float	s_fogModifierStart		lighting	Holds the fog modifier start clock that BuildSceneFog subtracts from the clock	inferred	none	lighting/fog#dead-fog-modifiers
 0xce99f8	uint32_t	s_fogModifierFlags		lighting	Holds the fog modifier flags, which code only clears	verified	one	lighting/clouds#cloud-dome
 0xce99fc	uint8_t[40]	s_skyboxTable		lighting	Holds the skybox hash table, its bucket mask at +0x24	verified	one	lighting/tables#skybox-models
 0xce9a24	float[4]	s_nightTrack2		lighting	Holds the second night fraction track, two keys	verified	one	lighting/daynight#night-fraction
@@ -4161,6 +4339,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xce9d20	float[13]	s_deadSkyVectors		lighting	Holds π/2 three times, 1e-7, zeros and π less each; nothing reads them	verified	one	lighting/overview#static-objects
 0xce9d54	void *	s_skyboxScene		lighting	Holds the skybox model scene	verified	one	lighting/sky#sky-shutdown
 0xce9d58	uint32_t	s_skyboxSceneTime		lighting	Holds the skybox scene's last time in milliseconds	verified	one	lighting/tables#skybox-models
+0xce9d5c	uint32_t	s_skyInitialized		lighting	Holds the flag that InitSky sets and ShutdownSky clears after it destroys the discs, glares and stars	verified	one	lighting/sky#sky-shutdown
 0xce9d60	uint32_t[5]	s_lightStore		lighting	Holds the Light.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/overview#static-objects
 0xce9d74	uint32_t[5]	s_lightParamsStore		lighting	Holds the LightParams.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/tables#table-stores
 0xce9d88	uint32_t[5]	s_lightFloatBandStore		lighting	Holds the LightFloatBand.dbc store: records, count, id map, largest id, loaded	verified	one	lighting/tables#table-stores
@@ -4179,10 +4358,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcea628	uint32_t[10]	s_md5Table		minimap	Holds the catalog table object: vtable, list, chain counter, bucket vector and mask	verified	one	minimap/overview#containers
 0xcea650	float[3]	s_arrowBearings		minimap	Holds the bearings of the kept direction-arrow candidates	verified	one	ui/minimapblips#placing-the-blips
 0xcea65c	uint32_t[3]	s_arrowCandidateIndices		minimap	Holds the candidate indices of the kept direction arrows	verified	one	ui/minimapblips#placing-the-blips
+0xcea668	uint32_t[2]	s_inRangeBlipsHeader		minimap	Holds the capacity and count of the in-range blip array whose data pointer is s_inRangeBlips	verified	one	minimap/overview#static-objects
 0xcea670	void **	s_inRangeBlips		minimap	Points to the in-range landmark records the icon loop draws	verified	one	ui/minimapblips#placing-the-blips
+0xcea67c	uint32_t[2]	s_arrowCandidateFlagsHeader		minimap	Holds the capacity and count of the arrow candidate flag array whose data pointer follows	verified	one	minimap/overview#static-objects
 0xcea684	uint32_t *	s_arrowCandidateFlags		minimap	Points to the per-candidate flags that mark a direction-arrow candidate	verified	one	ui/minimapblips#placing-the-blips
+0xcea688	uint32_t[2]	s_inRangeFlagsHeader		minimap	Holds the capacity and count of the in-range flag array whose data pointer follows	verified	one	minimap/overview#static-objects
 0xcea690	uint32_t *	s_inRangeFlags		minimap	Points to the per-candidate flags that mark an in-range landmark	verified	one	ui/minimapblips#placing-the-blips
+0xcea694	uint32_t[2]	s_blipCandidatesHeader		minimap	Holds the capacity and count of the blip candidate array whose data pointer follows	verified	one	minimap/overview#static-objects
 0xcea69c	void **	s_blipCandidates		minimap	Points to the candidate record pointers: matching AreaPOI rows then the three static records	verified	one	ui/minimapblips#blip-candidates
+0xcea6a0	char[192]	s_staticBlipNames		minimap	Holds the names of the three static blip records, 0x40 bytes each	verified	one	ui/minimapblips#blip-candidates
 0xcea760	uint8_t[116]	s_staticBlipQuest		minimap	Holds static blip record 0, the selected quest's marker	verified	one	ui/minimapblips#blip-candidates
 0xcea7d4	uint8_t[116]	s_staticBlipGossip		minimap	Holds static blip record 1, the gossip marker	verified	one	ui/minimapblips#blip-candidates
 0xcea848	uint8_t[116]	s_staticBlipCorpse		minimap	Holds static blip record 2, the corpse marker	verified	one	ui/minimapblips#blip-candidates
@@ -4206,6 +4390,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xceaab0	uint32_t	s_arrowListDirty		minimap	Holds 1 when the arrow list must be rebuilt	verified	one	ui/minimapblips#setting-a-static-blip
 0xceab2c	uint8_t	s_skillLineRecAllocatorDestroyed		spell	Holds bit 0 once the ability node pool is freed at exit; default 0, written by 0x6e0870	verified	one	spell/tables#ability-node-pool
 0xceab3c	uint32_t[10]	s_raceClassInfoTable		spell	Holds the race-class index; zero by default, built by 0x6dd2c0 and filled by 0x6dda50	verified	one	spell/tables#hash-table-layout
+0xceab64	float	s_spellSquare		spell	Holds the square of 120.0 that SpellTablesInitSquare9 stores at start-up	verified	one	spell/layout#static-initializers
 0xceab80	uint32_t[10]	s_skillCostsInfoTable		spell	Holds the skill-cost index; zero by default, built by 0x6dd510 and filled by 0x6dda50	verified	one	spell/tables#hash-table-layout
 0xceabec	uint32_t[10]	s_skillLineRecTable		spell	Holds the ability index; zero by default, built by 0x6dd760 and filled through 0x6ddbe0	verified	one	spell/tables#hash-table-layout
 0xceac30	uint32_t	s_autoRepeatSpellId		spell	Holds the auto-repeat spell id; 0 at load, written by 0x6e54f0, 0x6ea080 and 0x6e7150	verified	one	spell/cast#after-the-send
@@ -4238,8 +4423,12 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcee94c	uint32_t[3]	s_lightningObjects		spell	Holds the chain list: link offset 0, then the terminator link	verified	one	spell/visuals#static-lists-and-pools
 0xcee96c	uint32_t[3]	s_blizzardObjects		spell	Holds the emitter list: link offset 0, then the terminator link	verified	one	spell/visuals#static-lists-and-pools
 0xcee9a8	void *	s_spellEffectLevelCVar		spell	Holds the spellEffectLevel CVar record; written by 0x6ec0e0 and cleared by 0x6ec130	verified	one	spell/visuals#startup-and-shutdown
+0xcee9b8	void *	s_tocProgressCallback		ui	Holds the progress callback that LoadTocFile calls with the count of lines loaded	verified	one	ui/framexml#running-a-toc
+0xcee9bc	uint32_t	s_staticObject6ef780		ui	Holds the first dword of the static object that 0x6eda90 destroys through 0x6ef780 at exit	verified	one	ui/initexits#exit-calls
 0xcee9d8	uint32_t	s_frameFactoryBuckets		ui	Points to the bucket array of the frame type factory table	verified	one	ui/framexml#creating-a-frame-from-xml
+0xcee9e8	uint32_t	s_staticObject6ed970		ui	Holds the first dword of the static object that 0x6ed960 destroys through 0x6ed970 at exit	verified	one	ui/initexits#exit-calls
 0xcee9fc	uint32_t	s_tocLinesLoaded		ui	Counts the toc lines loaded, for the progress callback	verified	one	ui/framexml#running-a-toc
+0xceea00	uint32_t	s_staticObject6ef430		ui	Holds the first dword of the static object that 0x6eda50 destroys through 0x6ef430 at exit	verified	one	ui/initexits#exit-calls
 0xceea1c	uint32_t	s_xmlTemplateBuckets		ui	Points to the bucket array of the XML template table	verified	one	ui/framexml#templates
 0xceea30	uint32_t	s_frameXMLDebugLevel		ui	Holds the FrameXML trace level FrameXML_Debug sets, 0 by default	verified	one	ui/framexml#the-load-status-and-its-log
 0xceea3c	uint32_t	s_tocLinesTotal		ui	Holds the total of toc lines for the progress callback	verified	one	ui/framexml#running-a-toc
@@ -4302,6 +4491,7 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf05ac	float	s_minigameSquareCf05ac		minigame	Holds the square of 11.1111, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
 0xcf05b0	float	s_minigameSquareCf05b0		minigame	Holds the square of 30, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
 0xcf05b4	float	s_minigameSquareCf05b4		minigame	Holds the square of 40, set at startup; nothing reads it	verified	one	minigame#constants-nothing-reads
+0xcf062c	uint32_t	s_staticObject728ff0		ui	Holds the first dword of the static object that 0x728fd0 destroys through 0x728ff0 at exit	verified	one	ui/initexits#exit-calls
 0xcf0638	void *	s_lcdElementTree		ui	Holds the root of the tree of LCD text elements by id	verified	one	ui/lcd#ready-test-and-element-lookup
 0xcf063c	uint32_t[3]	s_lcdNoticeArray		ui	Holds the array of notice records: capacity, count and data	verified	one	ui/lcd#notice-ring
 0xcf0650	char[40]	s_lcdKind3Template		ui	Holds the localized template of a kind 3 notice, copied in by LcdInitialize	verified	one	ui/lcd#notice-ring
@@ -4337,19 +4527,24 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xcf2cd0	uint16_t[4096]	s_grammarWork		ui	Holds the UTF-16 text the grammar escape passes build before converting it back	verified	one	ui/fonttext#korean-escape
 0xcf4cd0	void *[2]	s_uiPixelShaders		ui	Holds the two pixel shaders of the interface, slot 0 empty and slot 1 the desaturate shader	verified	one	ui/texture#desaturating
 0xcf4cdc	uint32_t	s_textureTypeId		ui	Holds the script type id of Texture, assigned on first use	verified	one	ui/tooltip#loading-the-template
+0xcf4ce0	uint32_t	s_allocatorPool76f9f0		ui	Holds the first dword of the CDataAllocatorPool that 0x76f9f0 builds and 0x76fa20 destroys at exit	verified	one	ui/initexits#exit-calls
+0xcf4cf4	float[3]	s_vectorZ		ui	Holds the vector (0, 0, 1.0) that 0x76fab0 stores at start-up	verified	one	ui/initstores#constant-tables
 0xcf4d10	uint32_t[5]	s_simpleRegionPool		ui	Holds the block pool a deleted font string returns to	verified	one	ui/fonttext#creating-and-freeing-a-string
 0xcf4d24	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	ui/cvarverbs#modifier-keys-and-layout-mode
 0xcf4d38	uint32_t[10]	s_frameMethodHash		ui	Holds the hash table of the Frame methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf4d88	uint32_t	s_buttonTypeId		ui	Holds the script type id of Button, assigned on first use	verified	one	ui/button#construction-and-the-type
+0xcf4d90	uint32_t[4]	s_buttonEvent		ui	Holds the static event object of the button handlers: vtable 0x81c898, 0, the state and the button	verified	one	ui/button#entering-and-leaving
 0xcf4da0	uint32_t	s_buttonMouseClick		ui	Holds 1 while the mouse runs a button's click scripts	verified	one	ui/button#running-a-click
 0xcf4dc4	uint32_t	s_editBoxEnterPressed		ui	Holds 1 while a single-line edit box runs OnEnterPressed	verified	one	ui/editbox#keys
 0xcf4dc8	CSimpleEditBox *	s_focusedEditBox		ui	Holds the edit box with the keyboard focus, or null	verified	one	ui/editbox#keyboard-focus
+0xcf4e14	uint32_t[10]	s_buttonMethodHash		ui	Holds the hash table of the 39 Button methods: vtable, list, chain counter, bucket vector and mask	verified	one	ui/button#lua-methods
 0xcf4e5c	uint32_t	s_statusBarTypeId		ui	Holds the script type id of StatusBar, assigned on first use	verified	one	ui/tooltip#loading-the-template
 0xcf4e78	uint32_t	s_fontObjectCount		ui	Holds the number of live Font objects, counted up by their constructor and down by their destructor	verified	one	ui/fonttext#the-font-object
 0xcf4e80	uint32_t[10]	s_fontTable		ui	Holds the hash table of font records by name, built on first lookup	verified	one	ui/containers#font-table
 0xcf4ea8	uint32_t			ui	Holds a dword that 0x77e4e0 compares an argument with; its writers are not read here	inferred	none	ui/editboxmembers#font-follower-slots
 0xcf4ecc	uint32_t	s_checkButtonTypeId		ui	Holds the script type id of CheckButton, assigned on first use	verified	one	ui/button#button-method-helper-and-type-test
 0xcf511c	uint32_t	s_divxInstanceCounter		ui	Counts the DivX decoder instances created for movie frames	verified	one	ui/movieframe#the-decoder
+0xcf53b4	uint32_t[10]	s_checkButtonMethodHash		ui	Holds the hash table of the 6 CheckButton methods: vtable, list, chain counter, bucket vector and mask	verified	one	ui/button#lua-methods
 0xcf5400	uint32_t			ui	Holds a dword its object file's code reads and writes; not read here	inferred	none	
 0xcf54b4	uint32_t[10]	s_regionMethodHash		ui	Holds the hash table of the Region methods	verified	one	ui/methods#method-tables-and-lookup
 0xcf550c	float	s_layoutUndefined		ui	Holds +inf, the value of an edge or point the layout cannot resolve	verified	one	ui/anchors#relative-point-coordinates
