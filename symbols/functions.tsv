@@ -4823,7 +4823,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x468fe0	135	DestroyObjectBuckets		objectlayer	orchestration		Empties a table's bucket lists and frees the bucket array	verified	one	objectlayer/manager#table-and-array-code	
 0x469070	12	InitMirrorHandlerListEnd		objectlayer	orchestration		Makes a bare list node, its end link marked by bit 0	verified	one	objectlayer/manager#list-code	
 0x469080	337	ShrinkObjectTable		objectlayer	primitive		Shrinks a table to four buckets, rehashing its nodes	verified	one	objectlayer/manager#table-and-array-code	
-0x4691e0	176	DestroyObjectBucket		objectlayer	orchestration		Empties a bucket's lists and frees the array when asked	verified	one	objectlayer/manager#table-and-array-code	
+0x4691e0	176	DestroyObjectBucket		objectlayer	orchestration		Unlinks the nodes of a bucket's two lists and frees the bucket itself on bit 0	verified	one	objectlayer/manager#table-and-array-code	
 0x469290	535	GrowObjectTableOnLongChain		objectlayer	primitive		Checks a table's chain credit and rehashes it when due	verified	one	objectlayer/manager#table-and-array-code	
 0x4694b0	12	InitObjectListEnd		objectlayer	orchestration		Makes a bare list node, its end link marked by bit 0	verified	one	objectlayer/manager#list-code	
 0x4694c0	5	InitObjMgrSquare1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x4694d0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -4867,10 +4867,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x469b30	49	FreeCurveBuffers		objectlayer	orchestration		Frees two members	verified	one	objectlayer/manager#table-and-array-code	
 0x469b70	61	ClearMovementStatus		objectlayer	orchestration		Zeroes the dwords of a 0x50-byte movement status except the one at +4	verified	one	objectlayer/manager#table-and-array-code	
 0x469bb0	1	DestroyMovementStatus		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x469bc0	69	InitMovementSplineRecord		objectlayer	orchestration		Zeroes a 0x68-byte object's members, stores a vtable at +0x2c and sets +0x54 to 1	verified	one	objectlayer/manager#table-and-array-code	
+0x469bc0	69	InitMovementSplineRecord		objectlayer	orchestration		Zeroes a movement spline record's members through +0x68, stores a vtable at +0x2c and sets +0x54 to 1	verified	one	objectlayer/manager#table-and-array-code	
 0x469c10	16	ClearCurveLengthArray		objectlayer	orchestration		Zeroes four dwords	verified	one	objectlayer/manager#table-and-array-code	
 0x469c20	319	GrowObjectBuckets		objectlayer	primitive		Grows an array to a capacity, reallocating and moving its entries	verified	one	objectlayer/manager#table-and-array-code	
-0x469d60	57	ClampBucketGrowthStep		objectlayer	primitive		Rounds a size down to a power of two, at most 0x15	verified	one	objectlayer/manager#table-and-array-code	
+0x469d60	57	ClampBucketGrowthStep		objectlayer	primitive		Rounds a count down to a power of two, at least 1; from 0x15 up stores 0x15 at this+0xc and returns it	verified	one	objectlayer/manager#table-and-array-code	
 0x469da0	31	RoundBucketCountToStep		objectlayer	primitive		Rounds a size up to a multiple	verified	one	objectlayer/manager#table-and-array-code	
 0x469dc0	264	ReallocObjectBuckets		objectlayer	primitive		Grows an array to a capacity with SMemReAlloc, moving its entries	verified	one	objectlayer/manager#table-and-array-code	
 0x469ed0	3	CGObject_C::GetInventory		objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
@@ -4880,7 +4880,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x469f20	30	CGObject_C::GetGroundNormal		objectlayer	orchestration		Writes the vector (0, 0, 1) to its argument	verified	one	objectlayer/classes#base-slots-0-to-10	
 0x469f40	5	CGObject_C::GetTransportGuid		objectlayer	orchestration		Returns the GUID 0 in edx:eax	verified	one	objectlayer/classes#base-slots-0-to-10	
 0x469f50	3	CGObject_C::GetModelPath		objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x469f60	21	CGObject_C::GetSelectionColor		objectlayer	orchestration		Writes −1 to its argument and returns 1	verified	one	objectlayer/classes#base-slots-11-to-20	
+0x469f60	21	CGObject_C::GetSelectionColor		objectlayer	orchestration		Writes -1 to its argument and returns 1	verified	one	objectlayer/classes#base-slots-11-to-20	
 0x469f80	1	CGObject_C::DrawSelectionCircle		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x469f90	5	CGObject_C::GetRenderFacing		objectlayer	orchestration		Jumps through slot 6 of its object's vtable	verified	one	objectlayer/overview#small-bodies	
 0x469fa0	1	CGObject_C::PlayMountSpecial		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
@@ -19152,7 +19152,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5da250	16	ItemRecordDword1b4IsAbove4		objectlayer	unreached		Returns whether the record dword +0x1b4 of an item is above 4	verified	one	objectlayer/items#unreached-item-code	
 0x5da260	64	GetItemRecord		objectlayer	orchestration		Returns an item's record, or 0	verified	one	objectlayer/items#record-getters	
 0x5da2a0	22	ItemSecondaryGetRecordFlags		objectlayer	primitive		Returns the flags of an item's record through its secondary vtable	verified	one	objectlayer/items#record-getters	
-0x5da2c0	103	CGItem_C::IsBound		objectlayer	primitive		Returns whether an item is bound: flags bit 0 or a binding enchantment	verified	one	objectlayer/items#item-use-gates	
+0x5da2c0	103	CGItem_C::IsBound		objectlayer	primitive		Returns whether an item is bound: flags bit 0, else a binding enchantment unless the record flags have 0x2000	verified	one	objectlayer/items#item-use-gates	
 0x5da330	450	CGItem_C::GetRepairCost		objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	objectlayer::item_randprop_delta_difftest
 0x5da500	101	ItemRecordDword1c8IsSet		objectlayer	orchestration		Returns whether the record dword +0x1c8 is non-zero	verified	one	objectlayer/items#record-getters	
 0x5da570	101	ItemRecordDword1ccIsSet		objectlayer	orchestration		Returns whether the record dword +0x1cc is non-zero	verified	one	objectlayer/items#record-getters	
@@ -19744,7 +19744,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f2630	41	GetTradeSkillLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2660	41	GetProficiencyLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2690	491	RehashTradeSkillTable		objectlayer	primitive		Moves a hash table's nodes into a resized bucket array	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
-0x5f2880	176	DestroyTradeSkillBucket		objectlayer	primitive		Unlinks and frees the nodes of a bucket list	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
+0x5f2880	176	DestroyTradeSkillBucket		objectlayer	primitive		Unlinks the nodes of a bucket's two lists and frees the bucket itself on bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2930	12	InitTradeSkillListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2940	316	ResizeTradeSkillBuckets		objectlayer	primitive		Sets a bucket array's count, rounding the capacity to its quantum below 21 elements	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
 0x5f2a80	12	InitProficiencyListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/gameobjecttypes#shared-template-and-inline-code	
@@ -19796,7 +19796,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f4280	11	AnimatedHandlerGetStateName		objectlayer	unreached		Returns the name of a family A handler's state	verified	one	objectlayer/gameobjects#unreached-game-object-code	
 0x5f4290	42	ConstructDoorHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the door handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
 0x5f42c0	43	DestroyDoorHandler		objectlayer	orchestration		Destroys the door handler through the family A destructor and frees it on bit 0	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
-0x5f42f0	100	DoorIsNotMoving		objectlayer	orchestration		Returns whether a door is not moving and so may be used	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
+0x5f42f0	100	DoorIsNotMoving		objectlayer	orchestration		Returns whether a door may be used: no autoClose, else not in state 1 if it starts open or 3 if closed	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
 0x5f4360	55	DoorHandlerCanUse		objectlayer	orchestration		Decides whether a door is usable, refusing a moving one with error 0xe3	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
 0x5f43a0	40	DoorHandlerSetState		objectlayer	orchestration		Sets a door's state and stores whether it now collides	verified	one	objectlayer/gameobjecttypes#doors-and-buttons	
 0x5f43d0	42	ConstructButtonHandler		objectlayer	orchestration	void * __thiscall (void *this, CGGameObject_C *go)	Builds the button handler	verified	one	objectlayer/gameobjects#handler-types-0-to-10	
@@ -19833,7 +19833,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f4940	5	MapObjectHandlerOnDeactivate		objectlayer	orchestration		Jumps to 0x5f4950	verified	one	objectlayer/transports#map-objects	
 0x5f4950	24	DestroyMapObjectEntity		objectlayer	orchestration		Destroys a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
 0x5f4970	59	CreateMapObjectEntity		objectlayer	orchestration		Creates a map object handler's world entity	verified	one	objectlayer/transports#map-objects	
-0x5f49b0	68	OnTransportEntityAnimationDone		objectlayer	orchestration		Chains a transport entity's animations when one ends: 0xa2 to 0xa3, 0xa4 to 0, others replay	verified	one	objectlayer/transports#map-objects	
+0x5f49b0	68	OnTransportEntityAnimationDone		objectlayer	orchestration		Chains a transport entity's animations when one ends: 0xa2 to 0xa3, 0xa4 to 0, 0 and 0xa3 stop, others replay	verified	one	objectlayer/transports#map-objects	
 0x5f4ab0	142	ConstructMovingTransportHandler		objectlayer	primitive	void * __thiscall (void *this, CGGameObject_C *go)	Builds the moving transport handler, path and position from the fields	verified	one	objectlayer/gameobjects#handler-types-11-to-20	
 0x5f4b40	33	MovingTransportHandlerGetPosition		objectlayer	primitive		Writes a moving transport's position	verified	one	objectlayer/transports#the-moving-transport	
 0x5f4b70	4	MovingTransportHandlerGetFacing		objectlayer	orchestration		Returns the float at +0x50 of its object	verified	one	objectlayer/transports#the-moving-transport	
@@ -19968,7 +19968,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f8630	38	CGGameObject_C::HasFloatingTooltip		objectlayer	primitive		Returns whether a game object's floatingTooltip column is set	verified	one	objectlayer/gameobjects#object-slots	
 0x5f8660	80	CGGameObject_C::Interact		objectlayer	orchestration		Interacts with a game object, storing the auto-loot choice first	verified	one	objectlayer/gameobjects#using-a-game-object	
 0x5f86b0	171	CGGameObject_C::TryUse		objectlayer	orchestration		Uses a game object in range, else walks to it or shows the use error	verified	one	objectlayer/gameobjects#using-a-game-object	
-0x5f8760	46	CGGameObject_C::GetCursor		objectlayer	primitive		Returns cursor 0x29 for an interactable object with a record cursor name, else the handler's cursor	verified	one	objectlayer/gameobjects#cursor	
+0x5f8760	46	CGGameObject_C::GetCursor		objectlayer	primitive		Returns cursor 0x29 for an interactable object whose record names a cursor, 0 if not, else the handler's cursor	verified	one	objectlayer/gameobjects#cursor	
 0x5f8790	97	FormatGameObjectCursorFile		objectlayer	orchestration		Formats the cursor file of a record's cursor name, with Unable when the object is not usable	verified	one	objectlayer/gameobjects#cursor	
 0x5f8800	11	CGGameObject_C::IsInteractable		objectlayer	orchestration		Asks the handler whether the object is interactable	verified	one	objectlayer/gameobjects#interactable-and-mouseover	
 0x5f8810	16	CGGameObject_C::IsUsable		objectlayer	orchestration		Asks the handler whether the object is usable, without error or range	verified	one	objectlayer/gameobjects#cursor	
@@ -20096,7 +20096,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5f9fb0	27	CGGameObject_C::GetFacing		objectlayer	orchestration		Returns a game object's facing through its handler, or from the fields	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f9fd0	26	CGGameObject_C::GetVelocity		objectlayer	orchestration		Fills an out vector with a game object's velocity through its handler and returns it	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5f9ff0	18	CGGameObject_C::GetPath		objectlayer	orchestration		Returns the handler's path, or 0 without a handler	verified	one	objectlayer/gameobjecttypes#handler-slots-24-to-35	
-0x5fa010	26	CGGameObject_C::IsPickable		objectlayer	orchestration		Returns whether a game object collides or its handler says mouseover	verified	one	objectlayer/gameobjects#world-transform-and-box	
+0x5fa010	26	CGGameObject_C::IsPickable		objectlayer	orchestration		Returns the collide flag at +0x284 when set, else 1 when slot 21 says mouseoverable, else 0	verified	one	objectlayer/gameobjects#world-transform-and-box	
 0x5fa030	22	CGGameObject_C::ContainsPoint		objectlayer	orchestration		Tests a point against a game object through its handler's slot 21	verified	one	objectlayer/gameobjecttypes#handler-slots-12-to-23	
 0x5fa050	29	CGGameObject_C::GetWorldMatrix		objectlayer	orchestration		Copies a game object's world matrix	verified	one	objectlayer/gameobjects#world-transform-and-box	
 0x5fa070	5	CGGameObject_C::GetName		objectlayer	orchestration		Jumps to 0x5f8100	verified	one	objectlayer/overview#small-bodies	
