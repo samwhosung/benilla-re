@@ -99,7 +99,7 @@ The digits go through `SStrToInt`; `E` negates the key (`neg ecx`, `0x50754f`); 
 is -1 while empty (`0x4c5382`) and a miss returns 0. The setter `0x4c5870` has two call sites, both in the packet
 handler `0x48f690` (`0x48f9c4`, `0x48f9f1`), registered for both opcodes at `0x48f515` to `0x48f52f`.
 The setter saves `edx` at `0x4c5884` and stores it at `+0x18` of the record (`0x4c5a20`) without a test, so a zero is stored; a key
-found at `0x4c58b9` jumps from `0x4c58bb` to `0x4c5a1d` and overwrites in place. It ends with `ret` at `0x4c5a30`; its end, 0x4c5a31, is the first padding byte.
+found at `0x4c58b9` jumps from `0x4c58bb` to `0x4c5a1d` and overwrites in place. It ends with `ret` at `0x4c5a30`; its end, `0x4c5a31`, is the first padding byte.
 
 ## Where it runs
 

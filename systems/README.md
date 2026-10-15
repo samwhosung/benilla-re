@@ -125,7 +125,9 @@ fields are written `+0x14` with the struct named nearby. Every address in a syst
 to a row of the table. A pooled constant is cited by value (`2π as f32, 0x40c90fdb`) unless its address
 matters. A constant that would read as an address, six hex digits after `0x`, is written in
 decimal or without backticks. A range is written by its first and last function, never by an end
-address that belongs to no row.
+address that belongs to no row. A function's end, and the padding bytes after it, are written in
+backticks as any address is: the check accepts an address that lies less than 16 bytes past the
+end of the nearest row before it.
 
 ## Rules the check enforces
 

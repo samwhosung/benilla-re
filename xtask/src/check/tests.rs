@@ -495,6 +495,16 @@ fn plants() -> Vec<Plant> {
             &["systems/demo.md:44: 0x600000 resolves to no row"],
         ),
         plant(
+            "a system doc's address in the padding after a function",
+            edit(DOC, "Nothing reaches `0x402100`.", "Nothing reaches `0x402100`; it ends at `0x402108` and `0x40210f` pads."),
+            &[],
+        ),
+        plant(
+            "a system doc's address 16 bytes past a function",
+            edit(DOC, "Nothing reaches `0x402100`.", "Nothing reaches `0x402100` or `0x402118`."),
+            &["systems/demo.md:44: 0x402118 resolves to no row"],
+        ),
+        plant(
             "a meaning's address without a row",
             edit(G, "Holds 8.0, the step", "Holds 8.0, the step 0x600000 reads"),
             &["symbols/globals.tsv:4: meaning cites 0x600000, which resolves to no row"],

@@ -169,7 +169,7 @@ or a flag. The quality values are the words at `0xc4e678` to `0xc4e6b0`, filled 
 window title in `0xc4ec58` and sets it (`0x435a50`).
 `0x639ec0` loads the records `[0xc4ea90]`, `[0xc4ea84]`, `[0xc4eac4]`, `[0xc4e9e0]`, `[0xc4e9a0]`, `[0xc4ea94]`, `[0xc4eb88]`, `[0xc4e838]`,
 `[0xc4eab8]`, `[0xc4eacc]`, `[0xc4eab0]`, `[0xc4e9dc]`, `[0xc4ec0c]` and `[0xc4eab4]`, all `gx` settings, and calls `0x63e060` on each, the last by the
-tail jump at `0x639f55`. Its end, 0x639f5a, is the first padding byte before `0x639f60`.
+tail jump at `0x639f55`. Its end, `0x639f5a`, is the first padding byte before `0x639f60`.
 
 ## Override string
 

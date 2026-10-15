@@ -275,6 +275,14 @@ impl Extents {
         }
         false
     }
+
+    /// Whether an address lies in the padding after a function: no row holds it and it is less
+    /// than 16 bytes past the end of the nearest row before it. A system doc writes a function's
+    /// end and its padding bytes in backticks like any address.
+    pub fn pads(&self, address: u64) -> bool {
+        let i = self.spans.partition_point(|&(start, _)| start <= address);
+        i > 0 && self.reach[i - 1] <= address && address - self.reach[i - 1] < 16
+    }
 }
 
 /// What the check read, and the problems it found.
@@ -653,7 +661,7 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
             for cited in CITED.captures_iter(line) {
                 let address = &cited[1];
                 let value = u64::from_str_radix(&address[2..], 16).expect("six hex digits");
-                if system_doc && !extents.contains(value) {
+                if system_doc && !extents.contains(value) && !extents.pads(value) {
                     p.add(&place, format!("{address} resolves to no row"));
                 } else if !system_doc && !IMAGE.contains(&value) {
                     p.add(

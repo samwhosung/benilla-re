@@ -110,7 +110,7 @@ each, are `0x81c3d0` {0,3,6} for left (`0x7673d0`, bit 1), `0x81c3e8` {2,5,8} fo
 (`0x767430`).
 
 `ui::layout_767_span` runs the span operations of the six edge resolvers, from the `fmul` to the `fstp`, as copies of the exe's own bytes asserted equal to the source. `ui::layout_composed_resolve` runs the six resolvers and the point scans for real, through `0x767a20`.
-`0x7675b0` is the last of the six and ends at 0x767616; ten padding bytes follow, and 0x76761f is the last of them, before `0x767620`.
+`0x7675b0` is the last of the six and ends at `0x767616`; ten padding bytes follow, and `0x76761f` is the last of them, before `0x767620`.
 
 ## Edge resolution from size
 
