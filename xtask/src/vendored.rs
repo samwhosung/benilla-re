@@ -41,8 +41,8 @@ pub enum Report {
         files: Vec<(String, Status)>,
         /// Commits on `origin/main` (else `main`) that the pin lacks, when this repo has a `main`.
         behind: Option<usize>,
-        /// Tables whose bytes differ between the pin and that branch.
-        changed: Option<usize>,
+        /// The vendored tables whose bytes differ between the pin and that branch, by file name.
+        changed: Option<Vec<String>>,
     },
 }
 
@@ -121,12 +121,22 @@ pub fn compare(repo: &Path, consumer: &Path) -> io::Result<Report> {
         Some(m) => count(&["rev-list", "--count", &format!("{commit}..{m}")])?,
         None => None,
     };
+    // Only the tables the consumer vendors: a table it does not copy is no concern of its pin.
     let changed = match main {
-        Some(m) => git(
-            repo,
-            &["diff", "--name-only", &commit, m, "--", "tables/*.tsv"],
-        )?
-        .map(|o| String::from_utf8_lossy(&o).lines().count()),
+        Some(m) if !files.is_empty() => {
+            let mut args = vec!["diff".to_string(), "--name-only".into(), commit.clone()];
+            args.extend([m.to_string(), "--".into()]);
+            args.extend(files.iter().map(|(name, _)| format!("tables/{name}")));
+            let args: Vec<&str> = args.iter().map(String::as_str).collect();
+            git(repo, &args)?.map(|o| {
+                String::from_utf8_lossy(&o)
+                    .lines()
+                    .filter_map(|l| l.strip_prefix("tables/"))
+                    .map(str::to_string)
+                    .collect()
+            })
+        }
+        Some(_) => Some(Vec::new()),
         None => None,
     };
     Ok(Report::Pinned {
@@ -164,8 +174,15 @@ pub fn run(repo: &Path, consumer: &Path, strict: bool) -> io::Result<bool> {
             );
             match (behind, changed) {
                 (Some(0), _) => println!("the pin is at main"),
+                (Some(n), Some(t)) if t.is_empty() => println!(
+                    "the pin is {n} commits behind main; none of the tables you vendor differ \
+                     between the pin and main"
+                ),
                 (Some(n), Some(t)) => println!(
-                    "the pin is {n} commits behind main; {t} tables differ between the pin and main"
+                    "the pin is {n} commits behind main; {} vendored tables differ between the \
+                     pin and main: {}",
+                    t.len(),
+                    t.join(", ")
                 ),
                 _ => println!("this repo has no main to compare the pin with"),
             }
@@ -231,6 +248,10 @@ mod tests {
 
         // Main moves on: a table changes.
         fs::write(repo.join("tables/a.tsv"), "x\n9\n").expect("a table");
+        // A table the consumer does not vendor changes too, and is not counted.
+        fs::write(repo.join("tables/d.tsv"), "x\n4\n").expect("a table");
+        fs::write(repo.join("tables/b.tsv"), "x\n5\n").expect("a table");
+        run_git(&repo, &["add", "tables"]);
         run_git(&repo, &["commit", "-q", "-am", "second"]);
 
         let Report::Pinned {
@@ -250,7 +271,13 @@ mod tests {
                 ("c.tsv".to_string(), Status::Missing),
             ]
         );
-        assert_eq!((behind, changed), (Some(1), Some(1)));
+        assert_eq!(
+            (behind, changed),
+            (
+                Some(1),
+                Some(vec!["a.tsv".to_string(), "b.tsv".to_string()])
+            )
+        );
         let report = compare(&repo, &consumer).expect("a report");
         assert!(passes(&report, false));
         assert!(!passes(&report, true));
