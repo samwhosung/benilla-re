@@ -16,7 +16,7 @@ Roots: `0x71d5e0`, `0x71d610`
 | offset | holds |
 |---|---|
 | `+0x000`, `+0x004` | reference count, cache |
-| `+0x008` | flags: 1 loaded, 2 asynchronous |
+| `+0x008` | flags: 1 loaded, 2 the open flag the load was given |
 | `+0x00c` | read request while loading |
 | `+0x010` | instances waiting for the load (link `+0x1c`/`+0x20` in the instance) |
 | `+0x014`, `+0x018`, `+0x01c` | release list links, release time |
@@ -40,9 +40,8 @@ data through `0x71f9d0`.
 
 ## Loading
 
-`Load(file, async)` records the asynchronous flag, allocates a buffer of the file's size and starts
-a read request whose completion closes the file and finishes the load; a synchronous load reads at
-once. Finishing fixes up the header, initializes the view, sets the loaded flag and initializes
+`Load(file, loose)` records `loose != 0` as flag 2, allocates a buffer of the file's size and queues
+a read request whose completion closes the file and finishes the load, whatever the flag (`0x71d590`). Finishing fixes up the header, initializes the view, sets the loaded flag and initializes
 every instance that was waiting. An instance added after the load initializes at once.
 
 Addresses: `0x71d4e0`, `0x71d5e0`, `0x71d610`, `0x71d640`, `0x71d5a0`, `0x71f9a0`, `0x70ebd0`
@@ -104,7 +103,8 @@ is its `+0x28`; ties keep the later view. `+0x160` is `0x10000` divided by the v
 lowered to the view's bone count divided by each submesh's `+0xc`, at least 1. Materials are header
 `+0x88`; the test sets bit 0 of the flags when the blend word is 5 or more. A texture record whose
 name length `+0x8` exceeds 1 calls `TextureCreate` (`0x449d90`) with its flag bits 1 and 2 moved to
-bits 8 and 0x10 of the cache's texture settings, asynchronous when the load is.
+bits 8 and 0x10 of the cache's texture settings and flag 2 of `+0x8` as the open flag, so the textures may come
+from loose files exactly when the model file could (`0x71da5e`).
 
 ## Device buffers
 

@@ -116,7 +116,7 @@ disk probe (`0x654b59`) never runs.
 
 Addresses: `0x647e60`, `0x647e72`, `0x647ebc`, `0x647ec1`, `0x648116`, `0x64811f`, `0x648180`, `0x646fa0`, `0x648be0`, `0x648c20`, `0x402210`, `0x865b40`, `0x865b44`, `0xc5251d`, `0x654b59`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::resolve_matches_index`
 
 `0x647e72` is `or ebx,[0x865b40]`; `0x648be0` stores 0 there, then 1 for argument bit 0 and ORs 2 for bit 1
@@ -130,16 +130,16 @@ callees named in its header stubbed.
 ## Loose-file index
 
 `0x646ea0` walks the base path `0xc52418`, or `.` when it does not list, then that string with `0xc520c8` (`Data\`)
-appended, and marks the index built. `0x646910` skips `.`, `..` and any folder whose path below the walked folder
-is a prefix of `Data\` (case-sensitive: `Data`, `Dat`, `Da`, `D`), walks the other folders, and enters every
-regular file: the key is its path below the walked folder, the value its full path. A last extension `.bz` or
+appended (`.Data\` in the fallback, so `Data` is then not walked), and marks the index built. `0x646910` skips
+`.`, `..` and folders whose path below the walked folder is a prefix of `Data\` (case-sensitive), walks the
+others, and enters every regular file: the key is its path below the walked folder, the value its full path. A last extension `.bz` or
 `.MPQ` (any case) is cut from the key, as kind 1 or 2; any other file is kind 0. A key's first entry stays: the
-base folder's before `Data\`'s, then listing order. The third folder `0xc52310` stays empty.
+base folder's before `Data\`'s, then listing order. A third folder, `0xc52310`, stays empty.
 
 Addresses: `0x646ea0`, `0x646910`, `0x646d90`, `0x6674a0`, `0x667580`, `0x6676a0`, `0x6488b0`, `0x648920`, `0x6489a0`, `0x6466d0`, `0xc521cc`, `0xc521e8`, `0xc521f0`, `0xc52418`, `0xc520c8`, `0xc52310`, `0xc5251c`
 Confidence: verified
-Proof: one
-Test: `storm::resolve_matches_index`
+Proof: two
+Test: `storm::resolve_matches_index`, `storm::index_falls_back_to_dot`
 
 `0x646eb1` and `0x646ec2` open the listing; `0x646ed8` copies the base path to `0xc521f8`; `0x646f13` appends `0xc520c8`;
 `0x646f41` tests `0xc52310`, whose one writer `0x6489a0` has no caller; `0x646f8a` stores 1 in `0xc5251c`. In `0x646910`: `0x6469c0` and `0x6469d8` compare `.` and
@@ -164,7 +164,7 @@ marks it built.
 
 Addresses: `0x646fc0`, `0x647040`, `0x648d10`, `0x491730`, `0x51ef20`, `0x51f650`, `0x51fb50`, `0xc5251c`, `0xc521cc`, `0x6466c0`, `0x6466d0`, `0x646790`, `0x6467a0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x646fc0` unlinks (`0x646fe5`) and deletes (`0x64701d`) every node and stores 0 in `0xc5251c` (`0x64702f`); `0x647040` is the same
@@ -185,17 +185,18 @@ changes the result.
 
 Addresses: `0x647e60`, `0x647ed7`, `0x647f37`, `0x647f89`, `0x64802c`, `0x648110`, `0x64b3f0`, `0x64a4c0`, `0x6477c0`, `0x64783d`, `0x647865`, `0x6478d5`, `0x647964`, `0x647a63`, `0x647a94`, `0x647d9c`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::resolve_matches_index`, `storm::index_hit_has_no_fallback`
 
-The bucket is `hash & [0xc521f0]` (`0x647f07`). `0x647ed7` is `SStrChrR(name, '\')`; `0x647f37` and `0x647fdb` compare the key at `+0x14`; a hit copies `+0x18`
+The bucket is `hash & [0xc521f0]` (`0x647f07`); a bucket's first word, 4, places an entry's chain links at `+0x4`
+and `+0x8`, and the table's list of all entries links at `+0xc` and `+0x10`. `0x647ed7` is `SStrChrR(name, '\')`; `0x647f37` and `0x647fdb` compare the key at `+0x14`; a hit copies `+0x18`
 (`0x647f68`) and stores `+0x1c` as the kind (`0x647f75`). `0x64803b` compares `0xc521f8` with `0xc52418`; the third
 probe (`0x64802c`), of the base path joined to the name, runs only when they differ, and its hit falls through to `0x648110` and the archive walk, which overwrites the kind on a hit and returns 0 on a
 miss. `0x6477fc` calls `0x647e60`; `0x64783d` jumps through `0x647d9c` (kinds 0 to 4: `0x647844`, `0x647894`,
 `0x647a30`, `0x647ab2`, `0x647b45`). A null `FILE` sends kind 0 to `0x647c64` (`0x647865`) and kind 1 to
 `0x6478d5`; a wrong magic sends kind 1 to `0x647981` (`0x647964`); a failed archive or file open sends kind 2 to
 `0x647c64` (`0x647a63`, `0x647a94`). Each returns 0 without calling `0x654920`. The tests run `0x647e60` and
-`0x6477c0` with the file system and the archive walk stubbed, 726 name and flag cases against `LooseIndex`.
+`0x6477c0` with the file system and the archive walk stubbed, 822 name and flag cases on each of two installs against `LooseIndex`.
 
 ## Which opens ask the index
 
@@ -205,24 +206,30 @@ the terrain files, the minimap catalog, movie subtitles, `VideoHardware` and the
 | entry | flags | opens |
 |---|---|---|
 | `SFile::Load` for interface and settings files | 1 | `.toc`, `.xml`, `.lua`, bindings, saved variables, `AddOns.txt`, `Config.wtf` |
-| `0x648a30` from the add-on loader | 1 | existence of an add-on's `.toc`, bindings and saved variables |
+| `0x648a30` from the add-on loader and `CGGameUI::Initialize` | 1 | existence of an add-on's `.toc`, bindings and saved variables, and of `Interface\FrameXML\Bindings.xml` |
 | `0x5d0060`, a font face | 3 | the font file: its bare name first, then its path |
 | `CSimpleTexture::SetTexture`, `Minimap` texture methods, model frame `ReplaceTexture` | 1 | interface textures through `0x449d90` |
 | `0x449610` from the cursor code | 1 | the cursors and the dragged picture |
 | `CreateModelFromPath` | flags bit 2 | the `.m2` and its textures |
 | the sound callbacks `0x7a8770`, `0x7a8ab0` | 1 | every file FMOD opens |
 | `ReadMovieAvi` | 1 | the movie `.avi` |
+| `GetPortraitAlphaMask`, `SetPortraitTexture` through `0x5a3660` and `0x5a7b40` | 1 | the portrait masks and portraits |
+| the texture updates `0x448840` and `0x44a260`, and `0x4493a0` | bit 0x2 of the texture's `+0x110` | a texture's re-read, by its first open's flag |
 
-The texture cache `0x47ac10` and the other callers of `0x449d90` pass 0.
+The texture cache `0x47ac10` calls `0x449610` with 0; the other callers of `0x449d90` and the tabard emblems'
+`0x5a7b40` pass 0.
 
-Addresses: `0x6477a0`, `0x6485f0`, `0x648620`, `0x648a30`, `0x648a10`, `0x5d0121`, `0x449d90`, `0x449e20`, `0x770281`, `0x4ee5e4`, `0x76d03d`, `0x449610`, `0x707368`, `0x706afd`, `0x71d4fa`, `0x71da72`, `0x7a45e4`, `0x7a8860`, `0x78c39f`, `0x47ac30`
+Addresses: `0x6477a0`, `0x6485f0`, `0x648620`, `0x648a30`, `0x648a10`, `0x48fff9`, `0x52594f`, `0x525a00`, `0x525e37`, `0x5033eb`, `0x449418`, `0x5d0121`, `0x449d90`, `0x449e20`, `0x770281`, `0x4ee5e4`, `0x76d03d`, `0x449610`, `0x707368`, `0x706afd`, `0x71d4fa`, `0x71da72`, `0x7a45e4`, `0x7a8860`, `0x78c39f`, `0x47ac30`
 Confidence: verified
-Proof: one
+Proof: two
 Test: none
 
 `0x6477a0` and `0x6485f0` push 0 as the flags. The census of `e8` and `e9` to the open entries finds 156 calls of
 `SFile::Open`, 11 of `0x6477c0`, 23 of `0x648620`, 6 of `0x6485f0`, 7 of `0x648a30` and 1 of `0x648a10`, with no stored address;
-the flags of each were read at the call. `0x449d90` passes its third stack argument as `edx` (`0x449e20`), which
+the flags of each were read at the call, and through `0x5a7b40` and `0x5a3660`, which pass their caller's. Bit 0x2
+of `+0x110` is set by the three texture opens (`0x4496a8`, `0x44a1d0`, `0x44a3d7`) and passed by `0x4488e4` and
+`0x44a2d6`; `0x4491f0` gives it to `0x4493a0`'s probe (`0x449418`), and `0x4490c0` is reached only from `0x4499d0`,
+which nothing calls. `0x449d90` passes its third stack argument as `edx` (`0x449e20`), which
 `0x44a310` and `0x5a3660` turn into flag `edx != 0`. `0x707368` passes `flags & 4` to `0x706afd`; `0x71d4fa` keeps
 it as bit 1 of the shared model's `+8`, which `0x71da64` pushes for its textures. `0x7a45e4` registers the
 sound callbacks with `FSOUND_File_SetCallbacks`. Model creations whose flags come from a call before the push
@@ -237,7 +244,7 @@ then `c` gains the length, the last 0 to 11 bytes are added (`c` from its second
 
 Addresses: `0x64b3f0`, `0x64b1d0`, `0x64b3c0`
 Confidence: verified
-Proof: one
+Proof: two
 Test: `storm::str_hash_ht`
 
 `0x64b411` stops the copy at 0x3ff bytes; `0x64b419` to `0x64b42d` fold the case and the slash; `0x64b440` pushes the

@@ -42,8 +42,8 @@ writer uses: `0x710b90` for `+0x20`, `0x707680` for `+0x24` and `+0x28`, `0x70a2
 
 ## Model creation
 
-`0x707350(path, flags)` asks the cache for the file's shared model, asynchronously when flags bit
-4 is set. When that fails it loads `Spells\ErrorCube.mdx` synchronously instead. It allocates a
+`0x707350(path, flags)` asks the cache for the file's shared model with `flags & 4` as the open flag,
+which lets the file and its textures come from loose files on disk (`storm/mount#which-opens-ask-the-index`). When that fails it loads `Spells\ErrorCube.mdx` with open flag 0 instead. It allocates a
 0x428-byte instance, constructs it and initializes it on the scene; a failed initialization
 destroys the instance and returns 0. The lookup's own reference is released either way.
 `0x707400(source, flags)` does the same with the source instance's shared model, and the new
@@ -55,7 +55,7 @@ Proof: one
 Test: none
 
 The allocation passes line 0x92 in `0x707350` and 0xaf in `0x707400`. The fallback pushes the
-string `Spells\ErrorCube.mdx` and 0 for the asynchronous flag before a second `0x706a50`.
+string `Spells\ErrorCube.mdx` and 0 for the open flag before a second `0x706a50`.
 `0x70ea00` receives the scene, the shared model, the source (0 from a path) and the flags.
 `0x71d480` runs on the shared model before the return.
 

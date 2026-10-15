@@ -100,14 +100,14 @@ The callbacks take `(mode, ...)`: mode 0 starts an update, 1 asks for a level's 
 
 ## Texture file creation
 
-`0x449610(path, format, deferred)` opens `path` with the extension `.blp` appended (`0x83524c`) after splitting it with `0x449590` through `SFile::OpenEx(0, name, deferred != 0, &handle)`, returns 0 when it fails, and otherwise allocates a `CTexture`, copies the name, stores `format` at `+0x118` and `0` at `+0x120`, and takes an async record from `0x4438b0`: record `+0` the file, `+8` its size, `+0xc` the texture, `+0x10` the completion callback `0x4497f0`. When the file's size fits in what remains of 2 MiB (counter `0xb05d18`) the record's buffer is the next slice of the static area at `0x905be4` and `0x443ae0` queues the read; otherwise the record joins the waiting list. `0x44a310` does the same for a name that already carries its extension, with callback `0x44a500`.
+`0x449610(path, format, loose)` opens `path` split by `0x449590` with `.blp` (`0x83524c`) appended through `SFile::OpenEx(0, name, loose != 0, &handle)` (`storm/mount#loose-files`), returns 0 on failure, else allocates a `CTexture`, sets bit 0x2 of `+0x110` for `loose`, copies the name, stores `format` at `+0x118` and `0` at `+0x120`, and takes an async record from `0x4438b0`: record `+0` the file, `+8` its size, `+0xc` the texture, `+0x10` the completion callback `0x4497f0`. When the file's size fits in what remains of 2 MiB (counter `0xb05d18`) the record's buffer is the next slice of the static area at `0x905be4` and `0x443ae0` queues the read; otherwise the record joins the waiting list. `0x44a310` does the same for a name with its extension, callback `0x44a500`.
 
 Addresses: `0x449610`, `0x44a310`, `0x4497f0`, `0x44a500`, `0x4438b0`, `0x443ae0`, `0x448c10`, `0x449840`, `0x44a560`, `0x448840`, `0x448920`, `0x4489a0`, `0x905be4`, `0xb05d18`
 Confidence: verified
 Proof: one
 Test: none
 
-The callbacks decode once the bytes are in memory. `0x4497f0` calls `0x449840`, which opens the buffer as BLP (`0x5a83b0`), sets bit 0 of `+0x110` when the alpha depth is 0, drops mip levels with `0x448b60`, allocates the decoded buffer through `0x44af90` and decodes into it (`0x5a8430`); the file is then closed and the record freed. `0x44a500` runs `0x44a560`, which does the same but creates the device texture with `0x448450` and uploads through `GxTexUpdateRect`; on failure it substitutes the solid texture. `0x448c10` gives the waiting records buffer slices up to the budget.
+`0x4496a8` sets the `+0x110` bit. The callbacks decode once the bytes are in memory. `0x4497f0` calls `0x449840`, which opens the buffer as BLP (`0x5a83b0`), sets bit 0 of `+0x110` when the alpha depth is 0, drops mip levels with `0x448b60`, allocates the decoded buffer through `0x44af90` and decodes into it (`0x5a8430`); the file is then closed and the record freed. `0x44a500` runs `0x44a560`, which does the same but creates the device texture with `0x448450` and uploads through `GxTexUpdateRect`; on failure it substitutes the solid texture. `0x448c10` gives the waiting records buffer slices up to the budget.
 
 ## Texture flags word
 

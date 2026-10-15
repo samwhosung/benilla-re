@@ -125,7 +125,7 @@ loads each byte with `movsx` (`0x706b68`), calls `tolower` (`0x40f92b`), whose C
 is `div` by 0x3fd (`0x706b8a`). The chain
 walk continues while the node's hash `+0x12c` is lower, or equal with `SStrCmpI(node+0x20, name)`
 negative. A new node is allocated with line 0x19d, constructed by `0x71d2c0`, loaded by
-`0x71d4e0(file, async)` and given the name at `+0x20` and the hash at `+0x12c`.
+`0x71d4e0(file, loose)` and given the name at `+0x20` and the hash at `+0x12c`.
 
 ## Release and eviction
 
