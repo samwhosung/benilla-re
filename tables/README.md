@@ -215,3 +215,16 @@ opens with the contract. A tutorial has a number from 0 to 49; the interface see
 | `verb` | `fire` for `0x4b5390` (set the fire-once bit and signal `TUTORIAL_TRIGGER`), `ack` for `0x4b54c0` (set both bits and tell the server). |
 | `tutorials` | The numbers that reach the site, `\|`-separated; `?` where the walk cannot name one (a table read or a parameter). |
 | `delay_ms` | For `fire`, the delay that reaches the site: 0 fires now; empty for `ack`. |
+
+## calls.tsv
+
+The direct calls and tail jumps out of each function (23,354 rows). `../tools/tables/calls.py`
+opens with the contract. A function with no callee has no row; the callers of a function are the
+rows whose `callees` hold it. A call through a register or a memory slot, and a function reached
+only by a stored address, are not in it. The address site generates its caller and callee lists
+from it.
+
+| column | meaning |
+|---|---|
+| `function` | The function row. Sorted. |
+| `callees` | The other function rows its extent calls, jumps or branches to by a bare address, once each, in address order, `\|`-separated. |
