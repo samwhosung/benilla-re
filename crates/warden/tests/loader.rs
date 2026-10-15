@@ -202,7 +202,7 @@ fn loader_whole() {
             image::load(&b.blob, &mut host).unwrap_or_else(|e| panic!("case {case}: {e:?}"));
         let (eax, obj) = rig.run(&b.blob);
         assert_eq!(eax, 1, "case {case}: loader result");
-        let got_image = rig.emu.read(rig.region, b.size as usize);
+        let got_image = rig.emu.read(rig.region, model.image.len());
         assert_eq!(got_image, model.image, "case {case}: image");
         assert_eq!(
             (
@@ -325,22 +325,242 @@ fn loader_header_too_large() {
     }
 }
 
+/// A module blob built by hand: ten header dwords, section entries `(address, size, protection)`,
+/// and one copy run that fills `flat` from the first section's address to its end.
+fn blob(header: [u32; 9], sections: &[(u32, u32, u32)], flat: &[u8]) -> Vec<u8> {
+    let start = sections[0].0 as usize;
+    let mut out = Vec::new();
+    for h in header {
+        out.extend_from_slice(&h.to_le_bytes());
+    }
+    out.extend_from_slice(&(sections.len() as u32).to_le_bytes());
+    for &(a, n, p) in sections {
+        for v in [a, n, p] {
+            out.extend_from_slice(&v.to_le_bytes());
+        }
+    }
+    let run = flat.len() - start;
+    assert!(run <= 0xffff);
+    out.extend_from_slice(&(run as u16).to_le_bytes());
+    out.extend_from_slice(&flat[start..]);
+    out
+}
+
+fn put(flat: &mut [u8], at: u32, v: u32) {
+    flat[at as usize..at as usize + 4].copy_from_slice(&v.to_le_bytes());
+}
+
+/// An address in page 0, which the rig maps: a relocation can reach it by wrapping past 2^32.
+const PAGE0: u32 = 0x800;
+
 #[test]
-fn loader_long_relocation_leaves_the_image() {
-    // A relocation entry whose first byte has bit 7 set reads four big-endian bytes with the top
-    // bit kept: an offset of at least 0x80000000, past any image.
-    let mut rng = Rng(0x10a6_f0f0);
-    let mut b = build(&mut rng, 0);
-    let reloc_rva = u32::from_le_bytes(b.blob[8..12].try_into().unwrap());
-    b.blob[12..16].copy_from_slice(&1u32.to_le_bytes());
-    let sections = u32::from_le_bytes(b.blob[0x24..0x28].try_into().unwrap()) as usize;
-    // The stream sits in the first copy run, which starts at the first section's address.
-    let first_run = 0x28 + 12 * sections;
-    let at = first_run + 2 + (reloc_rva - 0x1000) as usize;
-    b.blob[at..at + 4].copy_from_slice(&[0x80, 0x00, 0x10, 0x00]);
-    let mut host = CountingHost::new(0x7200_0000, false);
-    assert_eq!(
-        image::load(&b.blob, &mut host).unwrap_err(),
-        LoadError::OutOfImage
+fn loader_relocation_forms() {
+    // Header: size, unread, relocation stream, count, export table, export count, first ordinal,
+    // import table, import count (the section count follows).
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut rig = rig(&wow, false, false);
+    let base = rig.region as u32;
+    let size = 0x8200u32;
+    let reloc = 0x100u32;
+    // The long form is `0x80000000` or more, and the client adds the base modulo 2^32: an offset
+    // that lands in page 0.
+    let long = PAGE0.wrapping_sub(base);
+    assert!(long >= 0x8000_0000);
+    let mut flat = vec![0u8; size as usize];
+    let mut stream = Vec::new();
+    stream.extend_from_slice(&[0x00, 0x80]); // short: 0x80
+    stream.extend_from_slice(&[0x7f, 0x10]); // short, first byte 0x7f: 0x80 + 0x7f10
+    stream.extend_from_slice(&long.to_be_bytes()); // long: page 0
+    stream.extend_from_slice(&[0x00, 0x20]); // short after a long: page 0 + 0x20
+    flat[reloc as usize..reloc as usize + stream.len()].copy_from_slice(&stream);
+    let inside = [(0x80u32, 0x1111_1111u32), (0x7f90, 0x2222_2222)];
+    for &(at, v) in &inside {
+        put(&mut flat, at, v);
+    }
+    let outside = [(PAGE0, 0x3333_3333u32), (PAGE0 + 0x20, 0x4444_4444)];
+    for &(at, v) in &outside {
+        rig.emu.write_u32(u64::from(at), v);
+    }
+    let b = blob(
+        [size, 0, reloc, 4, 0, 0, 0, 0, 0],
+        &[(0x40, 0x100, 2)],
+        &flat,
     );
+    let (eax, obj) = rig.run(&b);
+    assert_eq!(eax, 1);
+    for &(at, v) in &inside {
+        assert_eq!(
+            rig.emu.read_u32(rig.region + u64::from(at)),
+            v.wrapping_add(base),
+            "image dword {at:#x}"
+        );
+    }
+    for &(at, v) in &outside {
+        assert_eq!(
+            rig.emu.read_u32(u64::from(at)),
+            v.wrapping_add(base),
+            "page 0 dword {at:#x}"
+        );
+    }
+    // The stream itself and every other dword of the image are untouched.
+    let got = rig.emu.read(rig.region, size as usize);
+    let mut want = flat.clone();
+    want[..0x28].copy_from_slice(&b[..0x28]);
+    for &(at, v) in &inside {
+        put(&mut want, at, v.wrapping_add(base));
+    }
+    assert_eq!(got[0x28..], want[0x28..]);
+    assert_eq!(
+        (rig.emu.read_u32(obj), rig.emu.read_u32(obj + 4)),
+        (base, size)
+    );
+    assert_eq!(
+        rig.events(),
+        vec![
+            Ev::Alloc(size),
+            Ev::Protect(base + 0x40, 0x100, 2),
+            Ev::Free(base + reloc, size - reloc, 0x8000)
+        ]
+    );
+}
+
+#[test]
+fn loader_run_past_the_image_end() {
+    // A copy run is not clamped to the image size: bytes past `size` land in the rest of the
+    // page `VirtualAlloc` committed. The model keeps those pages.
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut rig = rig(&wow, false, false);
+    let base = rig.region as u32;
+    let size = 0x1800u32;
+    let mut flat: Vec<u8> = (0..size + 0x100).map(|i| (i * 7 + 1) as u8).collect();
+    flat[..0x40].fill(0);
+    let b = blob(
+        [size, 0, 0x1000, 0, 0, 0, 0, 0, 0],
+        &[(0x40, 0x100, 2)],
+        &flat,
+    );
+    let (eax, _) = rig.run(&b);
+    assert_eq!(eax, 1);
+    let got = rig.emu.read(rig.region, 0x2000);
+    assert_eq!(got[0x1800..0x1900], flat[0x1800..0x1900]);
+    assert!(got[0x1900..].iter().all(|&x| x == 0));
+    assert_eq!(got[0x40..0x1800], flat[0x40..0x1800]);
+    let mut host = CountingHost::new(base, false);
+    let model = image::load(&b, &mut host).unwrap();
+    assert_eq!(model.image.len(), 0x2000);
+    assert_eq!(model.image[0x28..], got[0x28..]);
+}
+
+#[test]
+fn loader_library_fails_after_some_load() {
+    // `LoadLibraryA` fails on its `k`th call (k = 0: never). The module object keeps the count of
+    // libraries loaded so far, and the unloader frees that many, last first.
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut rig = rig(&wow, false, false);
+    let base = rig.region as u32;
+    let size = 0x1000u32;
+    let names = ["a.dll", "b.dll", "c.dll"];
+    let mut flat = vec![0u8; size as usize];
+    for (i, n) in names.iter().enumerate() {
+        let at = 0x140 + 0x10 * i as u32;
+        flat[at as usize..at as usize + n.len()].copy_from_slice(n.as_bytes());
+        put(&mut flat, 0x100 + 8 * i as u32, at);
+        put(&mut flat, 0x104 + 8 * i as u32, 0x200 + 0x10 * i as u32);
+        put(&mut flat, 0x200 + 0x10 * i as u32, 0x170); // by name
+        put(&mut flat, 0x204 + 0x10 * i as u32, 0x8000_0003); // by ordinal 3
+    }
+    flat[0x170..0x174].copy_from_slice(b"Foo\0");
+    let b = blob(
+        [size, 0, 0x300, 0, 0, 0, 0, 0x100, 3],
+        &[(0x40, 0x100, 2)],
+        &flat,
+    );
+    // The stub: count the call, log the name pointer, return `0x70000000 + 0x1000 * n`, or 0 on
+    // call `k`.
+    let counter = rig.emu.alloc(4) as u32;
+    let log = rig.emu.alloc(0x20) as u32;
+    for k in 0..=4u32 {
+        // Each stub is new code: the emulator keeps what it has translated.
+        let code = rig.emu.alloc(0x40);
+        let mut c = vec![0xa1];
+        c.extend_from_slice(&counter.to_le_bytes()); // mov eax,[counter]
+        c.push(0x40); // inc eax
+        c.push(0xa3);
+        c.extend_from_slice(&counter.to_le_bytes()); // mov [counter],eax
+        c.extend_from_slice(&[0x8b, 0x4c, 0x24, 0x04]); // mov ecx,[esp+4]
+        c.extend_from_slice(&[0x89, 0x0c, 0x85]);
+        c.extend_from_slice(&(log - 4).to_le_bytes()); // mov [eax*4+log-4],ecx
+        c.push(0x3d);
+        c.extend_from_slice(&k.to_le_bytes()); // cmp eax,k
+        c.extend_from_slice(&[0x74, 0x0b]); // je fail
+        c.extend_from_slice(&[0xc1, 0xe0, 0x0c]); // shl eax,12
+        c.push(0x05);
+        c.extend_from_slice(&0x7000_0000u32.to_le_bytes()); // add eax,0x70000000
+        c.extend_from_slice(&[0xc2, 0x04, 0x00]); // ret 4
+        c.extend_from_slice(&[0x31, 0xc0, 0xc2, 0x04, 0x00]); // fail: xor eax,eax; ret 4
+        rig.emu.write(code, &c);
+        rig.emu.write_u32(IAT_LOAD_LIBRARY, code as u32);
+        rig.emu.write_u32(u64::from(counter), 0);
+        let (eax, obj) = rig.run(&b);
+        let calls = rig.emu.read_u32(u64::from(counter));
+        let loaded = if k == 0 { 3 } else { k - 1 };
+        let asked = if k == 0 { 3 } else { k.min(3) };
+        // The log is indexed from 1 at `log - 4 + 4n`; read it back by call number.
+        let asked_names: Vec<Vec<u8>> = (1..=asked)
+            .map(|n| cstr(&rig.emu, rig.emu.read_u32(u64::from(log - 4 + 4 * n))))
+            .collect();
+        assert_eq!(calls, asked, "k={k}: calls");
+        let want_names: Vec<Vec<u8>> = (0..asked as usize)
+            .map(|i| names[i].as_bytes().to_vec())
+            .collect();
+        assert_eq!(asked_names, want_names, "k={k}: library names");
+        let mut want = vec![Ev::Alloc(size)];
+        for i in 0..loaded {
+            let handle = 0x7000_0000 + 0x1000 * (i + 1);
+            want.push(Ev::ProcName(handle, b"Foo".to_vec()));
+            want.push(Ev::ProcOrdinal(handle, 3));
+        }
+        if loaded == 3 {
+            want.push(Ev::Protect(base + 0x40, 0x100, 2));
+            want.push(Ev::Free(base + 0x300, size - 0x300, 0x8000));
+        } else {
+            for i in (0..loaded as usize).rev() {
+                want.push(Ev::ModuleHandle(names[i].as_bytes().to_vec()));
+                want.push(Ev::FreeLibrary(HANDLE));
+            }
+            want.push(Ev::Free(base, size, 0x8000));
+        }
+        assert_eq!(rig.events(), want, "k={k}: calls made");
+        assert_eq!(eax, u32::from(loaded == 3), "k={k}: result");
+        if loaded == 3 {
+            assert_eq!(rig.emu.read_u32(obj + 8), 3, "k={k}: library count");
+        } else {
+            assert_eq!(
+                (
+                    rig.emu.read_u32(obj),
+                    rig.emu.read_u32(obj + 4),
+                    rig.emu.read_u32(obj + 8)
+                ),
+                (0, 0, 0),
+                "k={k}: object after unload"
+            );
+        }
+        // Each library that loaded has its slots filled, in call order; the others keep theirs.
+        for i in 0..3u32 {
+            let slot = rig.region + 0x200 + 0x10 * u64::from(i);
+            if i < loaded {
+                assert_eq!(rig.emu.read_u32(slot), FIRST + STRIDE * 2 * i, "k={k}");
+                assert_eq!(rig.emu.read_u32(slot + 4), FIRST + STRIDE * (2 * i + 1));
+            } else {
+                assert_eq!(rig.emu.read_u32(slot), 0x170, "k={k}");
+                assert_eq!(rig.emu.read_u32(slot + 4), 0x8000_0003);
+            }
+        }
+    }
 }

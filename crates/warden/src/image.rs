@@ -1,8 +1,12 @@
 //! The module image loader `0x7a79d0`, its unloader `0x7a7d80` and the entry lookup `0x7a7de0`
 //! (`systems/warden/modules.md`).
 //!
-//! The loader runs over the decompressed module. A run of the client's checks that the client does
-//! not make is an [`LoadError::OutOfImage`] here: the client writes or reads past the image.
+//! The loader runs over the decompressed module and makes no bounds check. It allocates `size`
+//! bytes, which Windows rounds up to whole pages, so an access past `size` inside the last page
+//! succeeds and the model gives it. An access outside the committed pages is a
+//! [`LoadError::Outside`]: the client reads or writes other process memory, or faults; the
+//! loader runs inside an exception handler (`0x7a79d3` to `0x7a79e6`, scope table `0x81d760`,
+//! filter `0x7a7d42` always handles) and a fault ends in the unloader and a return of 0.
 
 /// What the loader asks of the process: `VirtualAlloc`, `LoadLibraryA` and `GetProcAddress`.
 pub trait Host {
@@ -30,7 +34,8 @@ pub struct Protect {
 #[derive(Debug, PartialEq, Eq)]
 pub struct Loaded {
     pub base: u32,
-    /// The image as it stands when the loader returns, `size` bytes.
+    /// The committed pages as they stand when the loader returns: `size` rounded up to a multiple
+    /// of `0x1000`.
     pub image: Vec<u8>,
     /// The module object's library count, `+8`.
     pub libraries: u32,
@@ -50,31 +55,33 @@ pub enum LoadError {
     /// `LoadLibraryA` returned null; `libraries` libraries had been loaded and are freed by the
     /// unloader.
     LibraryMissing { libraries: u32 },
-    /// A read or write of the client's lands outside the blob or the image.
-    OutOfImage,
+    /// A read or write of the client's lands outside the blob or the committed pages. What the
+    /// client does there depends on the process: memory it can reach is read or written, memory it
+    /// cannot faults and the load fails.
+    Outside,
 }
 
 fn u32_at(b: &[u8], at: u32) -> Result<u32, LoadError> {
     let at = at as usize;
     b.get(at..at + 4)
         .map(|s| u32::from_le_bytes([s[0], s[1], s[2], s[3]]))
-        .ok_or(LoadError::OutOfImage)
+        .ok_or(LoadError::Outside)
 }
 
 fn put_u32(b: &mut [u8], at: u32, v: u32) -> Result<(), LoadError> {
     let at = at as usize;
     b.get_mut(at..at + 4)
-        .ok_or(LoadError::OutOfImage)?
+        .ok_or(LoadError::Outside)?
         .copy_from_slice(&v.to_le_bytes());
     Ok(())
 }
 
 fn cstr(b: &[u8], at: u32) -> Result<&[u8], LoadError> {
-    let tail = b.get(at as usize..).ok_or(LoadError::OutOfImage)?;
+    let tail = b.get(at as usize..).ok_or(LoadError::Outside)?;
     let n = tail
         .iter()
         .position(|&c| c == 0)
-        .ok_or(LoadError::OutOfImage)?;
+        .ok_or(LoadError::Outside)?;
     Ok(&tail[..n])
 }
 
@@ -89,11 +96,11 @@ pub fn load(blob: &[u8], host: &mut dyn Host) -> Result<Loaded, LoadError> {
         return Err(LoadError::HeaderTooLarge { message });
     }
     let base = host.alloc(size).ok_or(LoadError::AllocFailed)?;
-    let mut image = vec![0u8; size as usize];
-    let header = blob.get(..0x28).ok_or(LoadError::OutOfImage)?;
+    let mut image = vec![0u8; (size as usize).next_multiple_of(0x1000)];
+    let header = blob.get(..0x28).ok_or(LoadError::Outside)?;
     image
         .get_mut(..0x28)
-        .ok_or(LoadError::OutOfImage)?
+        .ok_or(LoadError::Outside)?
         .copy_from_slice(header);
     let mut libraries = 0u32;
 
@@ -102,24 +109,24 @@ pub fn load(blob: &[u8], host: &mut dyn Host) -> Result<Loaded, LoadError> {
     let table = 0x28u32;
     let mut src = table
         .checked_add(section_count.wrapping_mul(12))
-        .ok_or(LoadError::OutOfImage)?;
+        .ok_or(LoadError::Outside)?;
     let mut dst = u32_at(blob, table)?;
     let mut copy = true;
     while dst < size {
         let len = {
             let s = blob
                 .get(src as usize..src as usize + 2)
-                .ok_or(LoadError::OutOfImage)?;
+                .ok_or(LoadError::Outside)?;
             u32::from(u16::from_le_bytes([s[0], s[1]]))
         };
         src += 2;
         if copy {
             let from = blob
                 .get(src as usize..(src + len) as usize)
-                .ok_or(LoadError::OutOfImage)?;
+                .ok_or(LoadError::Outside)?;
             image
                 .get_mut(dst as usize..(dst + len) as usize)
-                .ok_or(LoadError::OutOfImage)?
+                .ok_or(LoadError::Outside)?
                 .copy_from_slice(from);
             src += len;
         }
@@ -135,15 +142,15 @@ pub fn load(blob: &[u8], host: &mut dyn Host) -> Result<Loaded, LoadError> {
     let mut offset = 0u32;
     let mut i = 0u32;
     while i < u32_at(&image, 0xc)? {
-        let b0 = *image.get(p as usize).ok_or(LoadError::OutOfImage)?;
+        let b0 = *image.get(p as usize).ok_or(LoadError::Outside)?;
         if b0 & 0x80 != 0 {
             let be = image
                 .get(p as usize..p as usize + 4)
-                .ok_or(LoadError::OutOfImage)?;
+                .ok_or(LoadError::Outside)?;
             offset = u32::from_be_bytes([be[0], be[1], be[2], be[3]]);
             p += 4;
         } else {
-            let b1 = *image.get(p as usize + 1).ok_or(LoadError::OutOfImage)?;
+            let b1 = *image.get(p as usize + 1).ok_or(LoadError::Outside)?;
             offset = offset
                 .wrapping_add(u32::from(b0) << 8)
                 .wrapping_add(u32::from(b1));
