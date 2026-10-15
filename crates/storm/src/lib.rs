@@ -7,15 +7,20 @@
 //! patch over an earlier one.
 //!
 //! The crate also holds two of Storm's routines whose output the client sends or checks: MD5
-//! ([`md5`]) and CRC-32 ([`crc32`]).
+//! ([`md5`]) and CRC-32 ([`crc32`]); the string hash of Storm's hash tables ([`str_hash_ht`]); and
+//! the loose-file index the open path asks before the archives ([`LooseIndex`]).
 
 #![forbid(unsafe_code)]
 
 mod crc32;
+mod looseindex;
 mod md5;
+mod strhash;
 
 pub use crc32::crc32;
+pub use looseindex::{LooseEntry, LooseIndex, LooseKind, LooseSource, Resolved, DATA_DIR};
 pub use md5::md5;
+pub use strhash::{lookup2, str_hash_ht};
 
 use std::path::{Path, PathBuf};
 use wow_mpq::{FileEntry, PatchChain, Result};
