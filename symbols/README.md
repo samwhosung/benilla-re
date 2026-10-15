@@ -70,9 +70,8 @@ One convention, the client's own C++ style:
   bytes contradict is not used.
 
 A name is unique among functions and globals, and a field's name is unique within its struct.
-The one export is the Ghidra apply (`../tools/ghidra/setup.sh`), which leaves a function with no
-name at Ghidra's own `FUN_00514ae0`; imports for IDA and Binary Ninja are
-[#7](https://github.com/samwhosung/benilla-re/issues/7).
+The exports (`cargo xtask export`, and the Ghidra apply `../tools/ghidra/setup.sh`) leave a
+function with no name at the tool's own `FUN_00514ae0`.
 
 ## Common columns
 
@@ -212,7 +211,7 @@ does not name is written as its named base followed by its own fields.
 | columns | the headers above, in order, every row complete | parallel edits must merge |
 | sorting | byte order of the keys above | parallel edits must merge |
 | `meaning` | 120 characters, one line, verb first, no final period | a cell is a gloss; the finding holds the detail |
-| `name` | 48 characters, the naming rule | applied to Ghidra as an identifier, and to the exports of [#7](https://github.com/samwhosung/benilla-re/issues/7) |
+| `name` | 48 characters, the naming rule | applied to Ghidra as an identifier, and to the exports |
 | `signature` | 160 characters | one prototype, no commentary |
 | banned in `meaning` | `?`, `TODO`, `probably`, `maybe`, `seems`, `likely` | a guess is `inferred`, said in the confidence column |
 | `verified` | needs `one` or `two`, and a `finding` | provenance is the point of the label |

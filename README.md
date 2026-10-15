@@ -37,8 +37,8 @@ your own copy of 1.12.1.5875 and refuse any other build.
   `minigame`; the rest follow ([#4](https://github.com/samwhosung/benilla-re/issues/4)).
 - **`tools/`**: the listing the findings cite (`tools/disasm.sh`), a Ghidra project with this
   repo's names, signatures and types applied (`tools/ghidra/setup.sh`, and
-  `tools/ghidra/decompile.sh` to decompile from it), the table generators, and the instruments
-  below. Each opens with what it does and how far its answer goes.
+  `tools/ghidra/decompile.sh` to decompile from it), the table generators, the scripts
+  `cargo xtask export` packages (below), and the instruments below. Each opens with what it does and how far its answer goes.
   - `tools/callers.py`: every call, jump and stored address that names an address, with controls.
   - `tools/closure.py`: a system's closure walked from its roots, and what in it lacks a class,
     a reading or a test.
@@ -99,6 +99,26 @@ compares with the committed file: the direct calls and jumps by a bare address. 
 through a register, a slot or a stored address shows none for that path. The table also leaves out
 a function's calls to itself, calls and jumps to code that has no row, and jumps into the middle
 of another row.
+
+## Start from the names
+
+`cargo xtask export <out dir>` writes the symbol table as files to start a session from, so that
+a function is `CDataStore::PutInt8` and not `FUN_00514ae0`. It needs no exe, and the same tree
+writes the same bytes.
+
+- `benilla-re.h`: a C header of every struct at its table offsets (packed, with explicit
+  `_pad` members for the gaps and `__vfptr` where a vtable exists), the prototypes whose types it
+  can state, and the globals. `::` is written `__`. Compile with `-DBENILLA_RE_LAYOUT_CHECK` to
+  assert every size and offset. A row it cannot state is left out and counted in the export's
+  output.
+- `ghidra/`: `ApplySymbols.java` and `CreateFunctions.java` with the tables they read, and a
+  README for running them on your own program.
+- `ida/benilla_re.py` for IDA 9 and `binja/benilla_re.py` for Binary Ninja: each loads the
+  header's types, then creates, names, types and comments every function and global. They read
+  `bundle/benilla-re.json` and `benilla-re.h` from beside them and need no checkout.
+- `bundle/`: `symbols/` and `tables/` as TSV, and `benilla-re.json`: `schema` (1), `exe` (name,
+  version, `size`, `sha256`), `commit`, and `tables`, a map from a table's path
+  (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.
 
 ## How to trust it
 

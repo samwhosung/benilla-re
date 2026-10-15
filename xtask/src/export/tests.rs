@@ -1,0 +1,469 @@
+//! The export's controls: the header generator on small tables, and the outputs of the real tree
+//! (the bundle's rows, the header compiled by clang, the scripts run against a stand-in API).
+
+use super::header::{generate, Origin, Symbols};
+use super::table::Table;
+use super::{build, read, Built};
+use std::path::{Path, PathBuf};
+use std::process::Command;
+use std::sync::OnceLock;
+
+fn root() -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .expect("xtask sits in the repo")
+        .to_path_buf()
+}
+
+fn origin() -> Origin {
+    Origin {
+        exe_size: 1,
+        exe_sha256: "0".repeat(64),
+        commit: "test".to_string(),
+    }
+}
+
+const STRUCTS: &str = "name\tsize\tvtable\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
+const FIELDS: &str =
+    "struct\toffset\tsize\ttype\tname\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
+const FUNCTIONS: &str = "address\tsize\tname\tname_from\tsystem\tclass\tsignature\tmeaning\tconfidence\tproof\tfinding\ttest\n";
+const GLOBALS: &str =
+    "address\ttype\tname\tname_from\tsystem\tmeaning\tconfidence\tproof\tfinding\n";
+
+/// A struct row.
+fn s(name: &str, size: u32, vtable: &str) -> String {
+    format!("{name}\t{size}\t{vtable}\tx\tHolds a thing\tverified\tone\tx#y\n")
+}
+
+/// A field row.
+fn f(owner: &str, offset: u32, size: u32, ty: &str, name: &str) -> String {
+    format!("{owner}\t{offset:#06x}\t{size}\t{ty}\t{name}\tx\tHolds a field\tverified\tone\tx#y\n")
+}
+
+/// A function row.
+fn func(address: u32, name: &str, signature: &str) -> String {
+    format!("{address:#08x}\t4\t{name}\t\tx\t\t{signature}\tCalls\tverified\tone\tx#y\t\n")
+}
+
+/// A global row.
+fn global(address: u32, ty: &str, name: &str) -> String {
+    format!("{address:#08x}\t{ty}\t{name}\t\tx\tHolds\tverified\tone\tx#y\n")
+}
+
+fn table(head: &str, rows: &[String]) -> Table {
+    Table::parse("t.tsv", &format!("{head}{}", rows.concat())).expect("a table")
+}
+
+fn symbols(
+    structs: &[String],
+    fields: &[String],
+    functions: &[String],
+    globals: &[String],
+) -> Symbols {
+    Symbols {
+        structs: table(STRUCTS, structs),
+        fields: table(FIELDS, fields),
+        functions: table(FUNCTIONS, functions),
+        globals: table(GLOBALS, globals),
+    }
+}
+
+fn header(
+    structs: &[String],
+    fields: &[String],
+    functions: &[String],
+    globals: &[String],
+) -> String {
+    generate(&symbols(structs, fields, functions, globals), &origin())
+        .expect("a header")
+        .text
+}
+
+#[test]
+fn gaps_and_the_tail_are_padding_and_a_vtable_is_a_member() {
+    let text = header(
+        &[s("Thing", 24, "0x801000")],
+        &[
+            f("Thing", 8, 4, "uint32_t", "m_a"),
+            f("Thing", 16, 2, "uint16_t", "m_b"),
+        ],
+        &[],
+        &[],
+    );
+    let body: Vec<&str> = text
+        .lines()
+        .skip_while(|l| !l.starts_with("struct Thing {"))
+        .skip(1)
+        .take_while(|l| *l != "};")
+        .collect();
+    let members: Vec<&str> = body
+        .iter()
+        .map(|l| l.split(" /*").next().unwrap().trim())
+        .collect();
+    assert_eq!(
+        members,
+        [
+            "void **__vfptr;",
+            "uint8_t _pad0004[4];",
+            "uint32_t m_a;",
+            "uint8_t _pad000c[4];",
+            "uint16_t m_b;",
+            "uint8_t _pad0012[6];",
+        ]
+    );
+    for expected in [
+        "BRE_ASSERT(sizeof(struct Thing) == 24, \"Thing size\");",
+        "BRE_ASSERT(offsetof(struct Thing, m_b) == 0x10, \"Thing.m_b offset\");",
+        "BRE_ASSERT(offsetof(struct Thing, __vfptr) == 0x0, \"Thing.__vfptr offset\");",
+        "sizeof(((struct Thing *)0)->m_a) == 4",
+        "#pragma pack(push, 1)",
+    ] {
+        assert!(text.contains(expected), "{expected}");
+    }
+}
+
+#[test]
+fn a_member_at_offset_zero_holds_the_vtable_and_comes_after_what_it_holds() {
+    let text = header(
+        &[s("Derived", 12, "0x801010"), s("Base", 8, "0x801000")],
+        &[
+            f("Base", 0, 4, "void **", "__vfptr"),
+            f("Derived", 0, 8, "Base", "m_base"),
+            f("Derived", 8, 4, "uint32_t", "m_x"),
+        ],
+        &[],
+        &[],
+    );
+    assert_eq!(text.matches("__vfptr;").count(), 1, "only Base has one");
+    let base = text.find("struct Base {").expect("Base is defined");
+    let derived = text.find("struct Derived {").expect("Derived is defined");
+    assert!(base < derived);
+    assert!(text.contains("    Base m_base;"));
+}
+
+#[test]
+fn arrays_and_function_pointers_carry_their_name_inside() {
+    let text = header(
+        &[s("Thing", 36, "")],
+        &[
+            f("Thing", 0, 16, "uint8_t[16]", "m_digest"),
+            f("Thing", 16, 8, "void *[2]", "m_links"),
+            f("Thing", 24, 12, "float[3]", "m_position"),
+        ],
+        &[func(
+            0x401000,
+            "Apply",
+            "void __cdecl (void (*callback)(int, int), uint8_t digest[16], uint32_t *out[6])",
+        )],
+        &[
+            global(0x801000, "void (*[4])(void)", "s_hooks"),
+            global(0x801010, "const char *[3]", "s_names"),
+            global(0x801020, "char[8][4]", "s_grid"),
+            global(0x801040, "const float", "s_scale"),
+            global(0x801050, "CCamera **", "s_cameras"),
+        ],
+    );
+    for expected in [
+        "uint8_t m_digest[16];",
+        "void *m_links[2];",
+        "float m_position[3];",
+        "extern void (*s_hooks[4])(void);",
+        "extern const char *s_names[3];",
+        "extern char s_grid[8][4];",
+        "extern const float s_scale;",
+        "extern CCamera **s_cameras;",
+        "void BRE_CDECL Apply(void (*callback)(int, int), uint8_t digest[16], uint32_t *out[6]);",
+        "typedef struct CCamera CCamera;",
+    ] {
+        assert!(text.contains(expected), "{expected}");
+    }
+}
+
+#[test]
+fn names_of_forty_eight_characters_pass_whole() {
+    let plain = "A".repeat(48);
+    let method = format!("{}::{}", "B".repeat(23), "C".repeat(23));
+    assert_eq!(method.len(), 48);
+    let text = header(
+        &[],
+        &[],
+        &[
+            func(0x401000, &plain, "void __cdecl (void)"),
+            func(0x401010, &method, "void __thiscall (void *this)"),
+        ],
+        &[global(
+            0x801000,
+            "uint32_t",
+            &format!("s_{}", "d".repeat(46)),
+        )],
+    );
+    assert!(text.contains(&format!("void BRE_CDECL {plain}(void);")));
+    assert!(text.contains(&format!(
+        "void BRE_THISCALL {}__{}(void *this);",
+        "B".repeat(23),
+        "C".repeat(23)
+    )));
+    assert!(text.contains(&format!("extern uint32_t s_{};", "d".repeat(46))));
+}
+
+#[test]
+fn a_prototype_the_header_cannot_state_is_left_out_and_counted() {
+    let made = generate(
+        &symbols(
+            &[s("Thing", 4, "")],
+            &[f("Thing", 0, 4, "uint32_t", "m_a")],
+            &[
+                func(
+                    0x401000,
+                    "Fine",
+                    "Thing * __fastcall (Thing *thing, lua_State *L)",
+                ),
+                func(0x401010, "ByValue", "void __cdecl (HSLOG log)"),
+                func(0x401020, "Commented", "void __cdecl (/* four */ int x)"),
+                func(0x401030, "NoConvention", "void (int x)"),
+                func(0x401040, "_WinMain@16", "int __stdcall (void)"),
+                func(
+                    0x401050,
+                    "Decorated::~Decorated",
+                    "void __thiscall (void *this)",
+                ),
+                func(
+                    0x401060,
+                    "Variadic",
+                    "void __cdecl (const char *format, ...)",
+                ),
+                func(
+                    0x401070,
+                    "VariadicThis",
+                    "void __thiscall (void *this, ...)",
+                ),
+                func(
+                    0x401080,
+                    "Names",
+                    "void __cdecl (int a, int a, int register, Thing *Thing)",
+                ),
+                func(0x401090, "Userpurge", "void __userpurge (char *name@<ecx>)"),
+                func(0x4010a0, "Empty", "void __thiscall ()"),
+            ],
+            &[],
+        ),
+        &origin(),
+    )
+    .unwrap();
+    let text = &made.text;
+    for expected in [
+        "Thing *BRE_FASTCALL Fine(Thing *thing, lua_State *L);",
+        "typedef struct lua_State lua_State;",
+        "void BRE_CDECL Variadic(const char *format, ...);",
+        "void VariadicThis(void *this, ...); /* __thiscall, variadic */",
+        "void BRE_THISCALL Decorated__dtor(void *this);",
+        "void BRE_CDECL Names(int a, int a_, int register_, Thing *Thing_);",
+        "void BRE_THISCALL Empty(void);",
+    ] {
+        assert!(text.contains(expected), "{expected}");
+    }
+    assert!(
+        !text.contains("HSLOG"),
+        "an incomplete type by value is left out"
+    );
+    let omitted: Vec<(&str, usize)> = made
+        .report
+        .omitted
+        .iter()
+        .map(|(reason, rows)| (reason.as_str(), rows.len()))
+        .collect();
+    assert_eq!(
+        omitted,
+        [
+            ("incomplete type by value", 1),
+            ("name is not a C identifier", 1),
+            ("signature holds a comment", 1),
+            ("signature is not RET CONVENTION (PARAMETERS)", 2),
+        ]
+    );
+    assert_eq!(made.report.prototypes, 6);
+}
+
+#[test]
+fn a_field_of_an_unknown_type_by_value_is_bytes() {
+    let text = header(
+        &[s("Thing", 12, "")],
+        &[f("Thing", 4, 8, "Unknown", "m_x")],
+        &[],
+        &[],
+    );
+    assert!(text.contains("uint8_t m_x[8];"));
+    assert!(!text.contains("sizeof(((struct Thing *)0)->m_x)"));
+}
+
+#[test]
+fn a_field_that_overlaps_or_overruns_is_an_error() {
+    for fields in [
+        vec![
+            f("T", 0, 4, "uint32_t", "m_a"),
+            f("T", 2, 4, "uint32_t", "m_b"),
+        ],
+        vec![f("T", 6, 4, "uint32_t", "m_a")],
+    ] {
+        let symbols = symbols(&[s("T", 8, "")], &fields, &[], &[]);
+        assert!(generate(&symbols, &origin()).is_err());
+    }
+}
+
+/// The export of this tree, built once.
+fn built() -> &'static Built {
+    static BUILT: OnceLock<Built> = OnceLock::new();
+    BUILT.get_or_init(|| build(&read(&root()).expect("the tree reads")).expect("the tree exports"))
+}
+
+#[test]
+fn a_bundle_of_the_tree_round_trips_to_its_rows() {
+    let built = built();
+    let json = &built.files["bundle/benilla-re.json"];
+    let files = super::bundle::files_of(json).expect("the bundle reads");
+    assert!(files.len() >= 18, "{} tables", files.len());
+    for (path, text) in &files {
+        let source = std::fs::read_to_string(root().join(path)).expect("a table of the tree");
+        assert_eq!(text, &source, "{path}");
+        assert_eq!(&built.files[&format!("bundle/{path}")], &source, "{path}");
+    }
+    let value: serde_json::Value = serde_json::from_str(json).unwrap();
+    assert_eq!(value["schema"], 1);
+    assert_eq!(value["exe"]["size"], crate::exe::size());
+    assert_eq!(value["exe"]["sha256"], crate::exe::sha256());
+    assert!(value["commit"].as_str().is_some_and(|c| c.len() >= 40));
+}
+
+#[test]
+fn the_same_tree_exports_the_same_bytes() {
+    let again = build(&read(&root()).unwrap()).unwrap();
+    assert_eq!(&again.files, &built().files);
+}
+
+#[test]
+fn the_ghidra_folder_holds_the_tools_own_scripts_and_the_tables_they_read() {
+    let built = built();
+    for (source, output) in [
+        ("tools/ghidra/ApplySymbols.java", "ghidra/ApplySymbols.java"),
+        (
+            "tools/ghidra/CreateFunctions.java",
+            "ghidra/CreateFunctions.java",
+        ),
+    ] {
+        let text = std::fs::read_to_string(root().join(source)).unwrap();
+        assert_eq!(built.files[output], text);
+    }
+    for name in ["functions", "globals", "structs", "fields"] {
+        let text = std::fs::read_to_string(root().join(format!("symbols/{name}.tsv"))).unwrap();
+        assert_eq!(built.files[&format!("ghidra/symbols/{name}.tsv")], text);
+    }
+}
+
+fn clang() -> bool {
+    Command::new("clang")
+        .arg("--version")
+        .output()
+        .is_ok_and(|o| o.status.success())
+}
+
+/// Compiles the header with every layout assertion on, for a 32-bit x86 target.
+fn compile(dir: &Path, header: &str, target: &str) -> (bool, String) {
+    std::fs::write(dir.join("benilla-re.h"), header).unwrap();
+    std::fs::write(
+        dir.join("check.c"),
+        "#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n",
+    )
+    .unwrap();
+    let output = Command::new("clang")
+        .args(["-fsyntax-only", "-Wall", "-Werror", "-x", "c"])
+        .arg(format!("--target={target}"))
+        .arg("-I")
+        .arg(dir)
+        .arg(dir.join("check.c"))
+        .output()
+        .expect("clang runs");
+    (
+        output.status.success(),
+        String::from_utf8_lossy(&output.stderr).into_owned(),
+    )
+}
+
+fn scratch(name: &str) -> PathBuf {
+    let dir = std::env::temp_dir().join(format!("benilla-re-export-{}-{name}", std::process::id()));
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).unwrap();
+    dir
+}
+
+#[test]
+fn clang_compiles_the_header_and_every_layout_assertion_holds() {
+    if !clang() {
+        println!("skipped: no clang on the PATH");
+        return;
+    }
+    let text = &built().files["benilla-re.h"];
+    let dir = scratch("clang");
+    // The GNU spelling of the conventions and the Microsoft one, both for 32-bit x86.
+    for target in ["i386-pc-linux-gnu", "i686-pc-windows-msvc"] {
+        let (ok, errors) = compile(&dir, text, target);
+        assert!(
+            ok,
+            "{target}:\n{}",
+            errors.lines().take(20).collect::<Vec<_>>().join("\n")
+        );
+    }
+    // The control: a wrong offset and a wrong size each fail the same compile.
+    for (from, to) in [
+        (
+            "BRE_ASSERT(offsetof(struct CCamera, m_slots) == 0x10,",
+            "BRE_ASSERT(offsetof(struct CCamera, m_slots) == 0x11,",
+        ),
+        (
+            "BRE_ASSERT(sizeof(struct CCamera) == 368,",
+            "BRE_ASSERT(sizeof(struct CCamera) == 369,",
+        ),
+    ] {
+        assert_eq!(text.matches(from).count(), 1, "{from}");
+        let (ok, errors) = compile(&dir, &text.replacen(from, to, 1), "i386-pc-linux-gnu");
+        assert!(
+            !ok && errors.contains("static assertion failed"),
+            "{from}: {errors}"
+        );
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
+fn the_ida_and_binary_ninja_scripts_walk_every_row_against_stand_in_apis() {
+    if !Command::new("python3")
+        .arg("--version")
+        .output()
+        .is_ok_and(|o| o.status.success())
+    {
+        println!("skipped: no python3 on the PATH");
+        return;
+    }
+    let dir = scratch("scripts");
+    for (path, text) in &built().files {
+        let target = dir.join(path);
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        std::fs::write(target, text).unwrap();
+    }
+    let output = Command::new("python3")
+        .arg("-I")
+        .arg(Path::new(env!("CARGO_MANIFEST_DIR")).join("src/export/scripts_test.py"))
+        .arg(&dir)
+        .output()
+        .expect("python3 runs");
+    let said = String::from_utf8_lossy(&output.stdout);
+    assert!(
+        output.status.success(),
+        "{said}{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(
+        said.contains("IDA ok") && said.contains("Binja ok"),
+        "{said}"
+    );
+    let _ = std::fs::remove_dir_all(&dir);
+}

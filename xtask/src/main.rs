@@ -5,6 +5,7 @@ mod census;
 mod check;
 mod cited;
 mod exe;
+mod export;
 mod fill;
 mod globals;
 mod listing;
@@ -22,6 +23,7 @@ usage: cargo xtask check [--exe]
        cargo xtask cited <benilla checkout> [--write | --strict]
        cargo xtask listing <GNU objdump> <output>
        cargo xtask site <output directory>
+       cargo xtask export <output directory>
 
 check         the symbol table and the system docs against their formats; runs anywhere
 check --exe   also identifies WoW/WoW.exe (or $BENILLA_RE_WOW_EXE), checks every function
@@ -50,6 +52,12 @@ cited         lists the client addresses a benilla tree cites that no row or doc
               every address benilla cites is backed here (the report alone never fails)
 listing       writes the disassembly of WoW/WoW.exe (or $BENILLA_RE_WOW_EXE) the findings
               cite, as tools/disasm.sh does, with that objdump
+export        writes the symbol table as files other tools start from, the same bytes
+              for the same tree: benilla-re.h (a C header of the structs, prototypes and
+              globals), ghidra/ (the Ghidra scripts and the tables they read), ida/ and
+              binja/ (a script each, applying the names, types and comments), and bundle/
+              (the symbols/ and tables/ TSVs, and one benilla-re.json holding them all);
+              needs no exe
 ";
 
 fn main() -> ExitCode {
@@ -78,6 +86,7 @@ fn main() -> ExitCode {
         ["cited", benilla] => cited(&root, Path::new(benilla), false, false),
         ["cited", benilla, "--write"] => cited(&root, Path::new(benilla), true, false),
         ["cited", benilla, "--strict"] => cited(&root, Path::new(benilla), false, true),
+        ["export", out] => export::run(&root, Path::new(out)),
         ["listing", objdump, out] => listing(&root, Path::new(objdump), Path::new(out)),
         ["site", out] => site(&root, Path::new(out)),
         _ => {
