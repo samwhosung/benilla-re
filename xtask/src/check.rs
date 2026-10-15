@@ -735,7 +735,7 @@ fn read_table(tree: &dyn Tree, kind: Kind, p: &mut Problems) -> io::Result<Vec<R
 }
 
 /// Every `## ` heading with the text up to the next one and the heading's line number.
-fn sections(text: &str) -> Vec<(&str, &str, usize)> {
+pub(crate) fn sections(text: &str) -> Vec<(&str, &str, usize)> {
     let headings: Vec<_> = HEADING.captures_iter(text).collect();
     let mut found = Vec::new();
     for (i, heading) in headings.iter().enumerate() {
@@ -768,7 +768,7 @@ fn words(text: &str) -> usize {
     text.split_whitespace().count()
 }
 
-fn type_size(ty: &str, structs: &HashMap<&str, &Row>) -> Option<u64> {
+pub(crate) fn type_size(ty: &str, structs: &HashMap<&str, &Row>) -> Option<u64> {
     let ty = ty.trim();
     if let Some(found) = FUNCTION_POINTERS.captures(ty) {
         return found[1].parse::<u64>().ok()?.checked_mul(4);

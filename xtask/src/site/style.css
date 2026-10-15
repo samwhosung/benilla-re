@@ -1,0 +1,39 @@
+:root{color-scheme:light dark;--bg:#fff;--fg:#1b1f24;--dim:#5b6570;--line:#d8dde3;--link:#0b5cad;--code:#f1f3f5;--ok:#1a7f37;--warn:#9a6700}
+@media (prefers-color-scheme:dark){:root{--bg:#14171a;--fg:#d9dee3;--dim:#8c97a3;--line:#2c3239;--link:#6cb0f5;--code:#1f2429;--ok:#4cc26a;--warn:#d4a72c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--link)}
+header{display:flex;flex-wrap:wrap;gap:.4rem 1rem;align-items:center;padding:.6rem 1rem;border-bottom:1px solid var(--line)}
+header .brand{font-weight:700;text-decoration:none;color:var(--fg)}
+.search{position:relative;flex:1 1 14rem}
+#q{width:100%;padding:.35rem .6rem;font:inherit;color:var(--fg);background:var(--code);border:1px solid var(--line);border-radius:6px}
+#hits{position:absolute;left:0;right:0;z-index:5;margin:0;padding:0;list-style:none;background:var(--bg);border:1px solid var(--line);border-radius:6px;max-height:70vh;overflow:auto}
+#hits:empty{display:none}
+#hits li a{display:block;padding:.3rem .6rem;text-decoration:none;overflow-wrap:anywhere}
+#hits li a:hover,#hits li a:focus{background:var(--code)}
+main{max-width:62rem;margin:0 auto;padding:1rem}
+h1{font-size:1.5rem;margin:.4rem 0;overflow-wrap:anywhere}
+h2{font-size:1.2rem;margin:1.6rem 0 .5rem}
+h3{font-size:1.05rem}
+.sub,.dim{color:var(--dim)}
+code,pre{font:.9em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);border-radius:4px}
+code{padding:.05em .3em;overflow-wrap:anywhere}
+pre{padding:.6rem;overflow-x:auto}
+pre code{padding:0;background:none}
+dl{display:grid;grid-template-columns:max-content 1fr;gap:.3rem 1rem}
+dt{color:var(--dim)}
+dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.verified{color:var(--ok)}
+.inferred{color:var(--warn)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;font-size:.92rem}
+th,td{padding:.25rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cov td{text-align:right}
+.cols{columns:18rem;padding-left:1.2rem}
+.cols li{break-inside:avoid;overflow-wrap:anywhere}
+.finding{margin-top:1.5rem;padding:.2rem 1rem 1rem;border:1px solid var(--line);border-radius:8px}
+.at{padding:.4rem .6rem;border-left:4px solid var(--link);background:var(--code)}
+.md img{max-width:100%}
+.md table{display:block;overflow-x:auto}
+a.addr{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.92em}
+@media (max-width:40rem){dl{grid-template-columns:1fr}dt{margin-top:.4rem}}

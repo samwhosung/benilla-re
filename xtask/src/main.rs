@@ -9,6 +9,7 @@ mod fill;
 mod globals;
 mod listing;
 mod objfiles;
+mod site;
 mod tables;
 mod tree;
 
@@ -20,6 +21,7 @@ usage: cargo xtask check [--exe]
        cargo xtask census [--all | --write | --why <address> | --fill [--idb <names.tsv>]]
        cargo xtask cited <benilla checkout> [--write]
        cargo xtask listing <GNU objdump> <output>
+       cargo xtask site <output directory>
 
 check         the symbol table and the system docs against their formats; runs anywhere
 check --exe   also identifies WoW/WoW.exe (or $BENILLA_RE_WOW_EXE), checks every function
@@ -35,6 +37,8 @@ census --write
               tools/disasm.sh after it, and again until the census finds nothing new
 census --fill gives each row --write added its system, a name, a meaning and its class;
               --idb names the community names, address<TAB>func<TAB>name lines
+site          writes the address website into the directory, from the symbol table, the docs and
+              tables/; runs anywhere, with no exe
 cited         lists the client addresses a benilla tree cites that no row or doc here backs;
               --write adds a globals.tsv row for each such data address and code table
 listing       writes the disassembly of WoW/WoW.exe (or $BENILLA_RE_WOW_EXE) the findings
@@ -65,6 +69,7 @@ fn main() -> ExitCode {
         ["cited", benilla] => cited(&root, Path::new(benilla), false),
         ["cited", benilla, "--write"] => cited(&root, Path::new(benilla), true),
         ["listing", objdump, out] => listing(&root, Path::new(objdump), Path::new(out)),
+        ["site", out] => site(&root, Path::new(out)),
         _ => {
             eprint!("{USAGE}");
             return ExitCode::from(2);
@@ -216,5 +221,26 @@ fn listing(root: &Path, objdump: &Path, out: &Path) -> std::io::Result<bool> {
     let checked = check::run(&tree::Disk::new(root))?;
     let starts: Vec<u32> = exe::functions(&checked).iter().map(|f| f.address).collect();
     println!("{}", listing::write(&starts, &exe, objdump, out)?);
+    Ok(true)
+}
+
+fn site(root: &Path, out: &Path) -> std::io::Result<bool> {
+    let tree = tree::Disk::new(root);
+    let checked = check::run(&tree)?;
+    if !checked.problems.is_empty() {
+        eprintln!(
+            "xtask: the check finds {} problems; fix them before writing the site",
+            checked.problems.len()
+        );
+        return Ok(false);
+    }
+    std::fs::create_dir_all(out)?;
+    let report = site::build(&tree, &checked, &mut site::Sink::disk(out))?;
+    println!(
+        "{} pages, {} bytes of HTML, written to {}",
+        report.pages,
+        report.bytes,
+        out.display()
+    );
     Ok(true)
 }
