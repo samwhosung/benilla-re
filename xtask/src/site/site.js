@@ -13,8 +13,10 @@
     return loading;
   }
 
-  function hex(n) { return '0x' + ('000000' + n.toString(16)).slice(-6); }
-  function page(row) { return 'a/' + ('000000' + row[0].toString(16)).slice(-6) + '.html'; }
+  // Six digits at least, never cut.
+  function digits(n) { var s = n.toString(16); return s.length < 6 ? ('00000' + s).slice(-6) : s; }
+  function hex(n) { return '0x' + digits(n); }
+  function page(row) { return 'a/' + digits(row[0]) + '.html'; }
 
   // The row with start <= a < start + size: the nearest start at or below a, else an earlier
   // row that reaches it.
@@ -41,19 +43,30 @@
     return m ? parseInt(m[1], 16) : null;
   }
 
-  // ?0x5e6850 goes to the row that holds the address.
-  var query = addressOf(decodeURIComponent(location.search.slice(1)));
-  if (query !== null) {
-    load().then(function () {
-      var to = target(query);
-      var note = document.getElementById('resolve');
-      if (to) {
-        location.replace(to);
-      } else if (note) {
+  // ?0x5e6850 goes to the row that holds the address; the 0x is optional and anything after
+  // an & is ignored.
+  var raw = '';
+  try { raw = decodeURIComponent(location.search.slice(1)).split('&')[0].trim(); } catch (e) { raw = ''; }
+  if (raw !== '') {
+    var parsed = /^(?:0x)?([0-9a-f]{1,8})$/i.exec(raw);
+    var note = document.getElementById('resolve');
+    if (!parsed) {
+      if (note) {
         note.hidden = false;
-        note.textContent = 'No row holds ' + hex(query) + '.';
+        note.textContent = raw.slice(0, 40) + ' is not an address.';
       }
-    });
+    } else {
+      var query = parseInt(parsed[1], 16);
+      load().then(function () {
+        var to = target(query);
+        if (to) {
+          location.replace(to);
+        } else if (note) {
+          note.hidden = false;
+          note.textContent = 'No row holds ' + hex(query) + '.';
+        }
+      });
+    }
   }
 
   // An address page opened at an instruction says where it is.
@@ -64,7 +77,9 @@
     var a = parseInt(location.hash.slice(3), 16);
     if (start !== null && a >= start) {
       at.hidden = false;
-      at.textContent = hex(a) + ' is the instruction at +0x' + (a - start).toString(16) + ' of this row.';
+      var sub = document.querySelector('.sub');
+      var unit = sub && sub.textContent.indexOf('global') === 0 ? 'byte' : 'instruction';
+      at.textContent = hex(a) + ' is the ' + unit + ' at +0x' + (a - start).toString(16) + ' of this row.';
     }
   }
 

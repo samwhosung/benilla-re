@@ -224,6 +224,36 @@ fn listing(root: &Path, objdump: &Path, out: &Path) -> std::io::Result<bool> {
     Ok(true)
 }
 
+/// Empties `out` so no page of a deleted row survives, and refuses a folder that does not hold a
+/// previous site (an `index.html`, an `index.json` and a `.nojekyll`).
+fn clear_output(out: &Path) -> std::io::Result<bool> {
+    if out.exists() {
+        let empty = out.is_dir() && std::fs::read_dir(out)?.next().is_none();
+        let previous = ["index.html", "index.json", ".nojekyll"]
+            .iter()
+            .all(|f| out.join(f).is_file());
+        if !empty && !previous {
+            eprintln!(
+                "xtask: {} is not empty and does not look like a site output; give an empty or new folder",
+                out.display()
+            );
+            return Ok(false);
+        }
+        if !empty {
+            for entry in std::fs::read_dir(out)? {
+                let path = entry?.path();
+                if path.is_dir() {
+                    std::fs::remove_dir_all(&path)?;
+                } else {
+                    std::fs::remove_file(&path)?;
+                }
+            }
+        }
+    }
+    std::fs::create_dir_all(out)?;
+    Ok(true)
+}
+
 fn site(root: &Path, out: &Path) -> std::io::Result<bool> {
     let tree = tree::Disk::new(root);
     let checked = check::run(&tree)?;
@@ -234,7 +264,9 @@ fn site(root: &Path, out: &Path) -> std::io::Result<bool> {
         );
         return Ok(false);
     }
-    std::fs::create_dir_all(out)?;
+    if !clear_output(out)? {
+        return Ok(false);
+    }
     let report = site::build(&tree, &checked, &mut site::Sink::disk(out))?;
     println!(
         "{} pages, {} bytes of HTML, written to {}",
@@ -243,4 +275,35 @@ fn site(root: &Path, out: &Path) -> std::io::Result<bool> {
         out.display()
     );
     Ok(true)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn scratch(name: &str) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!("xtask-site-{name}-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        dir
+    }
+
+    #[test]
+    fn a_previous_site_output_is_cleared_and_another_folder_is_refused() {
+        let dir = scratch("clear");
+        std::fs::create_dir_all(dir.join("a")).expect("a folder");
+        for f in ["index.html", "index.json", ".nojekyll", "a/old.html"] {
+            std::fs::write(dir.join(f), "x").expect("a file");
+        }
+        assert!(clear_output(&dir).expect("clears"));
+        assert!(dir.is_dir());
+        assert_eq!(std::fs::read_dir(&dir).expect("reads").count(), 0);
+
+        std::fs::write(dir.join("notes.txt"), "keep").expect("a file");
+        assert!(!clear_output(&dir).expect("refuses"));
+        assert!(dir.join("notes.txt").is_file());
+        std::fs::remove_dir_all(&dir).expect("removes");
+
+        assert!(clear_output(&dir).expect("makes a new folder"));
+        std::fs::remove_dir_all(&dir).expect("removes");
+    }
 }
