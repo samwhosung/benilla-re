@@ -1477,15 +1477,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x418310	90			base	unreached		Runs its object file code not read here	inferred	none		
 0x418370	90	CDataStore::PutGuid	idb	base			Appends a 64-bit value, low dword first, to a data store	verified	one	spell/cast#cast-request-packets	
 0x4183d0	88	CDataStore::PutFloat		base			Appends a 32-bit float to a data store	verified	one	spell/cast#cast-request-packets	
-0x418430	53	CDataStore::PutCString	idb	base			Runs its object file code that calls SErrSetLastError, SStrLen, CDataStore::PutData; not read here	inferred	none		
+0x418430	53	CDataStore::PutCString	idb	base			Runs its object file code that calls SErrSetLastError, SStrLen, CDataStore::PutArray; not read here	inferred	none		
 0x418470	245			base	unreached		Runs its object file code that calls SErrSetLastError, 0x41a550, 0x41a660; not read here	inferred	none		
-0x418570	267	CDataStore::PutData		base			Appends a given number of raw bytes to a data store	verified	one	spell/cast#cast-request-packets	
+0x418570	267	CDataStore::PutArray	idb	base			Appends a given number of raw bytes to a data store	verified	one	spell/cast#cast-request-packets	
 0x418680	271			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418790	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4188b0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x4189d0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x418af0	276			base	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x418c10	20	CDataStore::PutBytes		base			Appends a count of bytes to a data store through PutData	verified	one	ui/addons#the-auth-packets-add-on-block	
+0x418c10	20	CDataStore::PutData	idb	base			Appends a count of bytes to a data store through PutArray	verified	one	ui/addons#the-auth-packets-add-on-block	
 0x418c30	120			base	unreached		Runs its object file code not read here	inferred	none		
 0x418cb0	120	CDataStore::GetUInt8	idb	base		CDataStore *__thiscall (CDataStore *this, uint8_t *out)	Reads one byte at the cursor and advances it; a short store moves the cursor past its end and leaves out unwritten	verified	one	spell/failures#spell-failure-packets	
 0x418d30	123	CDataStore::GetInt16	idb	base	primitive		Reads a 16-bit value from a data store	inferred	none	objectlayer/party#party-member-stats	
@@ -16478,7 +16478,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x58b580	11			gx	unreached		Runs its object file code not read here	inferred	none		
 0x58b590	18	SetCursorShown		gx	orchestration		Calls slot +0xec of the device object with a show flag	inferred	none		
 0x58b5b0	14			gx	orchestration		Runs its object file code not read here	inferred	none		
-0x58b5c0	21	SetDeviceCursorHotspot		gx	orchestration		Sets the device cursor hotspot to its two register arguments through slot 61 of the global device object	inferred	none		
+0x58b5c0	21	SetDeviceCursorPair		gx	orchestration		Passes its two register arguments to slot 61 of the global device, which stores them and refreshes the cursor texture	inferred	none		
 0x58b5e0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b5f0	5			gx	orchestration		Runs its object file code not read here	inferred	none		
 0x58b600	16			gx	orchestration		Runs its object file code that calls 0x595df0; not read here	inferred	none		
@@ -33544,7 +33544,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x771d80	312	CSimpleFontString::SetText		ui	orchestration		Sets a FontString's text, expanding the grammar escapes when asked, and lays it out again	verified	one	ui/fontstring#setting-the-text	
 0x771ec0	575	CSimpleFontString::FitText		ui	primitive		Fits a FontString's text to a box, appending ... while backing off one character at a time	verified	one	ui/fontstring#size-and-fitting	ui::textglue_add_reload, ui::textglue_linecount_scale, ui::textglue_scale_mul, ui::textglue_settled_poseps
 0x772100	119	CSimpleFontString::SetTextOffset		ui	primitive	void __thiscall (float x, float y)	Stores the text offset and moves a built string to it times the layout scale from the rectangle corner	verified	one	ui/fonttext#text-offset-and-spacing	ui::textglue_scale_offset
-0x772180	189	CSimpleFontString::UpdateFrameAlpha		ui	primitive		Draws a FontString's colour and, with a shadow, its shadow pass at the scaled offset	verified	one	ui/fontstring#shadow	ui::textglue_scale_mul
+0x772180	189	CSimpleFontString::UpdateFrameAlpha		ui	primitive		Passes the alpha-scaled colour to its font, and with a shadow the shadow colour and scaled offset	verified	one	ui/fontstring#shadow	ui::textglue_scale_mul
 0x772240	88	CSimpleFontString::SetSpacing		ui	primitive	void __thiscall (float spacing)	Clamps a negative spacing to 0, stores a changed one and rebuilds the string	verified	one	ui/fonttext#text-offset-and-spacing	ui::textglue_settled_eps
 0x7722a0	231	CSimpleFontString::ApplyShadow		ui	primitive		Sets the shadow bit and passes the shadow colour and offset to the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
 0x772390	38	CSimpleFontString::ClearShadow		ui	primitive		Clears the shadow bit and tells the attached font	verified	one	ui/fontmethods#shadow-offsets-and-spacing	
@@ -33724,8 +33724,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x779620	40	RestoreBase779620		ui	orchestration		Restores the base vtable and frees the object when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x779650	177	CSimpleButton::RunDoubleClick		ui	orchestration		Runs the C++ listener and OnDoubleClick with the button's name, on an enabled button	verified	one	ui/button#double-click	
 0x779730	16	CSimpleButton::RegisterForClicks		ui	orchestration		Stores the click mask	verified	one	ui/button#registerforclicks-and-click	
-0x779740	25	CSimpleButton::SetClickListener		ui	unreached	void __thiscall (uint32_t a, uint32_t b)	Stores two dwords at +0x314 and +0x318; nothing reaches it	verified	one	ui/button#unreached-button-code	
-0x779760	34	CSimpleButton::SetHoverListener		ui	unreached	void __thiscall (uint32_t a, uint32_t b, uint32_t c)	Stores three dwords at +0x31c, +0x320 and +0x324; nothing reaches it	verified	one	ui/button#unreached-button-code	
+0x779740	25	StoreDwords314		ui	unreached	void __thiscall (uint32_t a, uint32_t b)	Stores two dwords at +0x314 and +0x318; nothing reaches it	verified	one	ui/button#unreached-button-code	
+0x779760	34	StoreDwords31c		ui	unreached	void __thiscall (uint32_t a, uint32_t b, uint32_t c)	Stores three dwords at +0x31c, +0x320 and +0x324; nothing reaches it	verified	one	ui/button#unreached-button-code	
 0x779790	125	CSimpleButton::SetState		ui	orchestration		Stores the lock and, for a new state, swaps to that state's texture when it has one and refreshes the label	verified	one	ui/button#setting-the-state	
 0x779810	115	CSimpleButton::UpdateLabel		ui	orchestration		Offsets the label for PUSHED and gives it the disabled, highlight or normal font by state	verified	one	ui/button#the-label-and-its-fonts	
 0x779890	6	IsButtonClickRunning		ui	orchestration	uint32_t __cdecl (void)	Returns the flag that a button click is running from the mouse	verified	one	ui/button#running-a-click	
@@ -34134,7 +34134,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x787630	19	InitQuotient787630		ui	primitive	void __cdecl (void)	Stores 0.5 / 10 = 0.05 as a float in a global	verified	one	ui/initfloats#quotients	
 0x787650	5	InitInfinity787660Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x787660, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x787660	11	InitInfinity787660		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
-0x787670	635	ConstructScrollingMessageFrame		ui	primitive		Constructs a ScrollingMessageFrame frame and stores its two vtables	verified	one	ui/xmltypes#handler-names-by-type	
+0x787670	635	ConstructSimpleMessageScrollFrame		ui	primitive		Constructs a message scroll frame: runs the base constructor, then stores three tables, at +0, +0x24 and +0x338	verified	one	ui/xmltypes#handler-names-by-type	
 0x7878f0	22	FreeLineRecordText		ui	orchestration	void __thiscall ()	Frees the text of a scroll frame line record when set	verified	one	ui/messagemembers#scroll-frame-teardown	
 0x787910	45	IsTypeId787910		ui	orchestration		Answers 1 for the three type ids of its class and 0 for any other	verified	one	ui/containers#type-tests	
 0x787940	89	ScrollingMessageFrameIsTypeName		ui	orchestration	bool __thiscall (const char *name)	Answers whether a name is ScrollingMessageFrame or one of its bases, ignoring case	verified	one	ui/widgettype#type-chains	
