@@ -72,14 +72,16 @@ def run(module, call):
 # ---- IDA ----
 
 
-def ida():
+def ida_run(overwrite, preexisting):
+    """Runs the IDA script on a database where `preexisting` addresses already have a name and a
+    type; returns what the script did."""
     log = {
         "parse": [],
         "add_func": [],
         "names": {},
         "types": {},
-        "func_cmt": 0,
-        "cmt": 0,
+        "func_cmt": [],
+        "cmt": [],
         "refused_name": 0,
     }
     refused_type = {}
@@ -100,6 +102,7 @@ def ida():
 
     idc.parse_decls = parse_decls
     idc.SetType = set_type
+    idc.get_type = lambda a: "int x;" if a in preexisting else None
     idc.get_segm_start = lambda a: 0x400000 if 0x400000 <= a < 0xD06000 else BADADDR
 
     ida_name = types.ModuleType("ida_name")
@@ -124,16 +127,18 @@ def ida():
         return True
 
     def set_func_cmt(function, text, repeatable):
-        log["func_cmt"] += 1
+        log["func_cmt"].append((function, text, repeatable))
         return True
 
     ida_funcs.add_func = add_func
     ida_funcs.set_func_cmt = set_func_cmt
 
     ida_bytes = types.ModuleType("ida_bytes")
+    ida_bytes.get_flags = lambda a: a
+    ida_bytes.has_name = lambda flags: flags in preexisting
 
     def set_cmt(address, text, repeatable):
-        log["cmt"] += 1
+        log["cmt"].append((address, text, repeatable))
         return True
 
     ida_bytes.set_cmt = set_cmt
@@ -145,13 +150,24 @@ def ida():
     for module in (idc, ida_name, ida_funcs, ida_bytes, ida_nalt):
         sys.modules[module.__name__] = module
     script = load(os.path.join(OUT, "ida", "benilla_re.py"), "benilla_re_ida")
+    script.OVERWRITE_NAMES = overwrite
 
     first_typed = next(
-        int(r["address"], 16) for r in FUNCTIONS if int(r["address"], 16) in STATED
+        int(r["address"], 16)
+        for r in FUNCTIONS
+        if int(r["address"], 16) in STATED and int(r["address"], 16) not in preexisting
     )
     refused_type["address"] = first_typed
     code, text = run(script, script.main)
     expect(code == 0, "IDA: main returned %r\n%s" % (code, text))
+    log["script"], log["text"], log["ida_nalt"] = script, text, ida_nalt
+    return log
+
+
+def ida():
+    # A fresh database: every name is IDA's own, so every row is named, typed and commented.
+    log = ida_run(overwrite=False, preexisting=set())
+    script, text = log["script"], log["text"]
     expect(len(log["parse"]) == 1, "IDA: the structs are parsed once")
     parsed = log["parse"][0]
     for needle in ("typedef struct CCamera CCamera;", "#pragma pack(push, 1)", "struct CCamera {"):
@@ -180,28 +196,68 @@ def ida():
     for declaration in log["types"].values():
         expect(declaration.rstrip().endswith(";") and "BRE_" not in declaration, "IDA: declaration %r" % declaration)
     expect(any("__thiscall " in d for d in log["types"].values()), "IDA: conventions are keywords")
-    expect(log["func_cmt"] == len(FUNCTIONS) - 0, "IDA: every function is commented")
-    expect(log["cmt"] == len(GLOBALS), "IDA: every global is commented")
+    expect(len(log["func_cmt"]) == len(FUNCTIONS), "IDA: every function is commented")
+    expect(len(log["cmt"]) == len(GLOBALS), "IDA: every global is commented")
+    expect(
+        all(c[2] for c in log["func_cmt"] + log["cmt"]),
+        "IDA: the default writes repeatable comments only",
+    )
     expect("type refused" in text and "benilla-re: done" in text, "IDA: the refusal and the summary print")
     print("IDA ok: %d functions, %d globals, %d types" % (len(FUNCTIONS), len(GLOBALS), len(log["types"])))
 
+    # A database that already names (and types) some items, as vmangos/idb does.
+    mine = [int(r["address"], 16) for r in FUNCTIONS if r["name"]][:200]
+    mine += [int(r["address"], 16) for r in GLOBALS if r["name"]][:50]
+    old = set(mine)
+    kept = ida_run(overwrite=False, preexisting=old)
+    expect(not (old & set(kept["names"])), "IDA: a name already set is kept")
+    expect(not (old & set(kept["types"])), "IDA: a type already set is kept")
+    expect(
+        len(kept["names"]) == len(named) - len(old),
+        "IDA: every other row is named (%d)" % len(kept["names"]),
+    )
+    by_name = {int(r["address"], 16): r["name"] for r in FUNCTIONS + GLOBALS}
+    ours = {c[0]: c[1] for c in kept["cmt"]}
+    ours.update({c[0]: c[1] for c in kept["func_cmt"]})
+    # ida_funcs.get_func returns the start here, so the comment's key is the function's address.
+    for address in mine:
+        expect(
+            ours[address].startswith("benilla-re: %s\n" % by_name[address]),
+            "IDA: %#x keeps its name and takes ours as a comment" % address,
+        )
+    expect(all(c[2] for c in kept["func_cmt"] + kept["cmt"]), "IDA: kept items get repeatable comments")
+    print("IDA keeps %d names already set" % len(old))
+
+    # The overwrite flag names, types and comments everything.
+    over = ida_run(overwrite=True, preexisting=old)
+    expect(len(over["names"]) == len(named), "IDA: the overwrite flag renames every row")
+    expect(not any(c[2] for c in over["func_cmt"] + over["cmt"]), "IDA: overwrite writes regular comments")
+    expect(len(over["types"]) == STATED_FUNCTIONS + STATED_GLOBALS - 1, "IDA: overwrite retypes every row")
+
     # A database of another file is refused.
-    ida_nalt.retrieve_input_file_size = lambda: 1
-    code, text = run(script, script.main)
+    over["ida_nalt"].retrieve_input_file_size = lambda: 1
+    code, text = run(over["script"], over["script"].main)
     expect(code == 1 and "SHA-256" in text, "IDA: another file is refused")
 
 
 # ---- Binary Ninja ----
 
 
-def binja():
-    log = {"defined": [], "created": [], "symbols": [], "datavars": {}, "comments": 0}
+def binja_run(overwrite, preexisting):
+    """Runs the Binary Ninja script on a view where `preexisting` addresses already have a name of
+    their own and a comment; returns what the script did."""
+    log = {"created": [], "symbols": [], "datavars": {}, "comments": {}, "text": ""}
+
+    class Symbol:
+        def __init__(self, kind, address, name):
+            self.kind, self.address, self.name, self.auto = kind, address, name, False
 
     class Function:
-        def __init__(self, address):
+        def __init__(self, address, named):
             self.start = address
-            self.name = None
-            self.comment = None
+            self.symbol = Symbol("function", address, "mine_%x" % address) if named else Symbol("function", address, "sub_%x" % address)
+            self.name = self.symbol.name
+            self.comment = "old comment" if named else ""
             self.type = None
 
         def set_user_type(self, value):
@@ -213,7 +269,10 @@ def binja():
 
         def __init__(self):
             self.functions = {}
-            self.typed_together = 0
+            # The view's analysis found the functions that `preexisting` names.
+            for address in preexisting:
+                if address in FUNCTION_ADDRESSES:
+                    self.functions[address] = Function(address, True)
 
         def read(self, offset, length):
             return b"\0" * length
@@ -223,7 +282,7 @@ def binja():
 
         def create_user_function(self, address):
             log["created"].append(address)
-            self.functions[address] = Function(address)
+            self.functions[address] = Function(address, False)
             return self.functions[address]
 
         def parse_types_from_string(self, text):
@@ -237,7 +296,7 @@ def binja():
             return result
 
         def define_user_type(self, name, type_):
-            log["defined"].append(name)
+            log.setdefault("defined", []).append(name)
 
         def parse_type_string(self, declaration):
             if "lua_State" in declaration:
@@ -247,6 +306,14 @@ def binja():
         def is_valid_offset(self, address):
             return 0x400000 <= address < 0xD06000
 
+        def get_symbol_at(self, address):
+            if address in preexisting:
+                return Symbol("data", address, "mine_%x" % address)
+            return None
+
+        def get_comment_at(self, address):
+            return "old comment" if address in preexisting else ""
+
         def define_user_data_var(self, address, type_):
             log["datavars"][address] = type_
 
@@ -254,27 +321,35 @@ def binja():
             log["symbols"].append(symbol)
 
         def set_comment_at(self, address, text):
-            log["comments"] += 1
+            log["comments"][address] = text
 
     module = types.ModuleType("binaryninja")
 
     class SymbolType:
         DataSymbol = "data"
 
-    class Symbol:
-        def __init__(self, kind, address, name):
-            self.kind, self.address, self.name = kind, address, name
-
     module.Symbol, module.SymbolType = Symbol, SymbolType
     sys.modules["binaryninja"] = module
     script = load(os.path.join(OUT, "binja", "benilla_re.py"), "benilla_re_binja")
+    script.OVERWRITE_NAMES = overwrite
 
     view = View()
+    os.environ.pop("BENILLA_RE_FORCE", None)
     code, text = run(script, lambda: script.apply(view))
     expect(code == 1 and "SHA-256" in text, "Binja: another file is refused\n" + text)
     os.environ["BENILLA_RE_FORCE"] = "1"
     code, text = run(script, lambda: script.apply(view))
     expect(code == 0, "Binja: apply returned %r\n%s" % (code, text))
+    log["view"], log["text"], log["defined"] = view, text, log.get("defined", [])
+    return log
+
+
+FUNCTION_ADDRESSES = {int(r["address"], 16) for r in FUNCTIONS}
+
+
+def binja():
+    log = binja_run(overwrite=False, preexisting=set())
+    view, text = log["view"], log["text"]
     expect("CCamera" in log["defined"] and "uint32_t" not in log["defined"], "Binja: the structs, not the prelude, are defined")
     expect(len(log["created"]) == len(FUNCTIONS), "Binja: a function is made for each row")
     named = {int(r["address"], 16): r["name"] for r in FUNCTIONS if r["name"]}
@@ -289,9 +364,26 @@ def binja():
             expect("BRE_" not in function.type[1] and not function.type[1].endswith(";"), "Binja: declaration %r" % (function.type,))
     expect(len(log["symbols"]) == sum(1 for r in GLOBALS if r["name"]), "Binja: every named global gets a symbol")
     expect(len(log["datavars"]) == STATED_GLOBALS, "Binja: every stated global is typed")
-    expect(log["comments"] == len(GLOBALS), "Binja: every global is commented")
+    expect(len(log["comments"]) == len(GLOBALS), "Binja: every global is commented")
     expect("type refused" in text and "benilla-re: done" in text, "Binja: the refusal and the summary print")
     print("Binja ok: %d functions, %d globals, %d types" % (len(FUNCTIONS), len(GLOBALS), len(log["datavars"])))
+
+    # A view whose analysis or user already named some items keeps them and adds our name.
+    mine = [int(r["address"], 16) for r in FUNCTIONS if r["name"]][:200]
+    mine += [int(r["address"], 16) for r in GLOBALS if r["name"]][:50]
+    old = set(mine)
+    kept = binja_run(overwrite=False, preexisting=old)
+    for address in mine:
+        if address in FUNCTION_ADDRESSES:
+            f = kept["view"].functions[address]
+            expect(f.name == "mine_%x" % address and f.type is None, "Binja: %#x keeps its name and type" % address)
+            expect(f.comment.startswith("old comment\n\nbenilla-re: "), "Binja: %#x adds our name to its comment" % address)
+        else:
+            expect(address not in kept["datavars"] and all(s.address != address for s in kept["symbols"]), "Binja: global %#x kept" % address)
+            expect(kept["comments"][address].startswith("old comment\n\nbenilla-re: "), "Binja: global %#x comment" % address)
+    over = binja_run(overwrite=True, preexisting=old)
+    expect(all(over["view"].functions[a].name == named[a] for a in named), "Binja: overwrite renames every function")
+    print("Binja keeps %d items already named" % len(old))
 
 
 ida()

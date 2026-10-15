@@ -422,6 +422,7 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
 
     // Globals and prototypes.
     let mut globals = Vec::new();
+    let mut addresses = Vec::new();
     {
         let t = &symbols.globals;
         let (address, ty, name) = (t.column("address")?, t.column("type")?, t.column("name")?);
@@ -455,6 +456,7 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
             }
             writer.commit(&decl);
             writer.report.globals += 1;
+            addresses.push(format!("#define BRE_ADDR_{c} {a}"));
             globals.push(format!(
                 "/* {a} */ extern {};",
                 cdecl::with_name(&row[ty], &decl, &c)
@@ -462,6 +464,7 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
         }
     }
     let mut prototypes = Vec::new();
+    let mut pointers = Vec::new();
     {
         let t = &symbols.functions;
         let (address, name, signature) = (
@@ -480,9 +483,12 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
                 continue;
             }
             match prototype(&mut writer, n, &row[signature]) {
-                Ok(line) => {
+                Ok(proto) => {
                     writer.report.prototypes += 1;
-                    prototypes.push(format!("/* {a} */ {line}"));
+                    prototypes.push(format!("/* {a} */ {}", proto.line));
+                    addresses.push(format!("#define BRE_ADDR_{} {a}", proto.c));
+                    pointers.push(proto.pointer);
+                    pointers.extend(proto.fastcall_pointer);
                 }
                 Err(reason) => writer.leave_out(&reason, a, n),
             }
@@ -536,6 +542,20 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
     for line in &prototypes {
         let _ = writeln!(h, "{line}");
     }
+    h.push_str(
+        "\n/* Addresses: BRE_ADDR_<name>, the virtual address of a function or a global */\n",
+    );
+    for line in &addresses {
+        let _ = writeln!(h, "{line}");
+    }
+    h.push_str(
+        "\n/* Function pointer types: BRE_FN_<name> has the function's convention;\n \
+         * BRE_FNX_<name>, for a __thiscall function, is the __fastcall form that passes the dead\n \
+         * edx second */\n",
+    );
+    for line in &pointers {
+        let _ = writeln!(h, "{line}");
+    }
     h.push('\n');
     let _ = writeln!(
         h,
@@ -552,8 +572,20 @@ pub fn generate(symbols: &Symbols, origin: &Origin) -> Result<Header, String> {
     })
 }
 
-/// One prototype line without its address: `RET CONVENTION name(PARAMETERS);`.
-fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<String, String> {
+/// A function the header declares.
+struct Proto {
+    /// The C name.
+    c: String,
+    /// The prototype without its address: `RET CONVENTION name(PARAMETERS);`.
+    line: String,
+    /// The type of a pointer to it, with its convention.
+    pointer: String,
+    /// For a `__thiscall` function with a parameter: the `__fastcall` form of the same call, with
+    /// `this` first and the dead `edx` second.
+    fastcall_pointer: Option<String>,
+}
+
+fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<Proto, String> {
     if signature.contains("/*") {
         return Err("signature holds a comment".to_string());
     }
@@ -627,17 +659,36 @@ fn prototype(writer: &mut Writer, name: &str, signature: &str) -> Result<String,
     }
     let ret = cdecl::mangled(&parts.ret);
     let star = if ret.ends_with('*') { "" } else { " " };
+    let keyword =
+        |convention: &str| format!("BRE_{}", convention.trim_start_matches('_').to_uppercase());
+    let pointer_to = |convention: Option<String>, list: &str, tag: &str| {
+        let convention = convention.map(|m| format!("{m} ")).unwrap_or_default();
+        format!("typedef {ret}{star}({convention}*BRE_{tag}_{c})({list});")
+    };
     if variadic && parts.convention != "__cdecl" {
-        return Ok(format!(
-            "{ret}{star}{c}({list}); /* {}, variadic */",
-            parts.convention
-        ));
+        return Ok(Proto {
+            line: format!(
+                "{ret}{star}{c}({list}); /* {}, variadic */",
+                parts.convention
+            ),
+            pointer: pointer_to(None, &list, "FN"),
+            fastcall_pointer: None,
+            c,
+        });
     }
-    let macro_name = format!(
-        "BRE_{}",
-        parts.convention.trim_start_matches('_').to_uppercase()
-    );
-    Ok(format!("{ret}{star}{macro_name} {c}({list});"))
+    let macro_name = keyword(&parts.convention);
+    let fastcall_pointer = (parts.convention == "__thiscall" && !variadic && !params.is_empty())
+        .then(|| {
+            let mut all = vec![params[0].clone(), "void *bre_edx".to_string()];
+            all.extend(params[1..].iter().cloned());
+            pointer_to(Some(keyword("__fastcall")), &all.join(", "), "FNX")
+        });
+    Ok(Proto {
+        line: format!("{ret}{star}{macro_name} {c}({list});"),
+        pointer: pointer_to(Some(macro_name), &list, "FN"),
+        fastcall_pointer,
+        c,
+    })
 }
 
 fn banner(h: &mut String, origin: &Origin) {
@@ -659,6 +710,10 @@ fn banner(h: &mut String, origin: &Origin) {
  *   sits at its table offset. Define BENILLA_RE_LAYOUT_CHECK to assert every size and offset.
  * - A type the tables name but do not define is declared and left incomplete.
  * - Each prototype and global carries its address in the comment before it.
+ * - For a call from injected code, `((BRE_FN_name)BRE_ADDR_name)(args)`: every function has its
+ *   address and a pointer type with its convention; a global has its address. Where a compiler
+ *   has no __thiscall, BRE_FNX_name is the same call as a __fastcall with `this` first and the
+ *   unused edx second.
  * - The header is C.
  */
 #ifndef BENILLA_RE_H

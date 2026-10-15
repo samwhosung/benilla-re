@@ -108,14 +108,21 @@ writes the same bytes.
 
 - `benilla-re.h`: a C header of every struct at its table offsets (packed, with explicit
   `_pad` members for the gaps and `__vfptr` where a vtable exists), the prototypes whose types it
-  can state, and the globals. `::` is written `__`. Compile with `-DBENILLA_RE_LAYOUT_CHECK` to
-  assert every size and offset. A row it cannot state is left out and counted in the export's
-  output.
+  can state, and the globals. `::` is written `__`. For a call from injected code, each function
+  has `BRE_ADDR_<name>` (its address) and `BRE_FN_<name>` (a pointer type with its calling
+  convention, MSVC keywords under `_MSC_VER` and attributes for clang and gcc on i386), a
+  `__thiscall` one also `BRE_FNX_<name>`, the `__fastcall` form with a dead `edx`; each global has
+  its `BRE_ADDR_<name>`. Compile with `-DBENILLA_RE_LAYOUT_CHECK` to assert every size and
+  offset. A row it cannot state is left out and counted in the export's output.
 - `ghidra/`: `ApplySymbols.java` and `CreateFunctions.java` with the tables they read, and a
   README for running them on your own program.
 - `ida/benilla_re.py` for IDA 9 and `binja/benilla_re.py` for Binary Ninja: each loads the
-  header's types, then creates, names, types and comments every function and global. They read
-  `bundle/benilla-re.json` and `benilla-re.h` from beside them and need no checkout.
+  header's types, then creates, names, types and comments every function and global. On a
+  database that already has names (vmangos/idb) they keep a name that is not the tool's own
+  default and add ours as a comment; `OVERWRITE_NAMES` at the top of the script replaces instead.
+  They read `bundle/benilla-re.json` and `benilla-re.h` from beside them and need no checkout.
+- `x64dbg/WoW.exe.dd32`: an x64dbg database of labels and comments for module `wow.exe`, to
+  copy into x64dbg's `db` folder.
 - `bundle/`: `symbols/` and `tables/` as TSV, and `benilla-re.json`: `schema` (1), `exe` (name,
   version, `size`, `sha256`), `commit`, and `tables`, a map from a table's path
   (`symbols/functions`) to its `columns` and `rows`, every cell a string as in the file.

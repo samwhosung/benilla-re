@@ -5,6 +5,7 @@
 //! - `ida/benilla_re.py`, `binja/benilla_re.py`: scripts for IDA 9 and Binary Ninja that apply
 //!   the names, types and comments to the reader's own program.
 //! - `bundle/`: the tables as TSV and as one `benilla-re.json` (`bundle`).
+//! - `x64dbg/WoW.exe.dd32`: the labels and comments as an x64dbg database (`x64dbg`).
 //!
 //! The scripts are read from `tools/`; every output is a function of the tree, so the same tree
 //! writes the same bytes.
@@ -13,6 +14,7 @@ mod bundle;
 mod cdecl;
 mod header;
 mod table;
+mod x64dbg;
 
 use crate::exe;
 use header::{Origin, Report, Symbols};
@@ -154,6 +156,10 @@ pub fn build(sources: &Sources) -> Result<Built, String> {
     files.insert(
         "bundle/benilla-re.json".to_string(),
         bundle::json(&sources.origin, &listed),
+    );
+    files.insert(
+        "x64dbg/WoW.exe.dd32".to_string(),
+        x64dbg::database(&symbols.functions, &symbols.globals)?,
     );
     for (path, text) in &sources.scripts {
         files.insert(path.clone(), text.clone());

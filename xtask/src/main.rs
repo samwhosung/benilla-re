@@ -55,9 +55,9 @@ listing       writes the disassembly of WoW/WoW.exe (or $BENILLA_RE_WOW_EXE) the
 export        writes the symbol table as files other tools start from, the same bytes
               for the same tree: benilla-re.h (a C header of the structs, prototypes and
               globals), ghidra/ (the Ghidra scripts and the tables they read), ida/ and
-              binja/ (a script each, applying the names, types and comments), and bundle/
-              (the symbols/ and tables/ TSVs, and one benilla-re.json holding them all);
-              needs no exe
+              binja/ (a script each, applying the names, types and comments), x64dbg/ (a
+              database of labels and comments), and bundle/ (the symbols/ and tables/ TSVs,
+              and one benilla-re.json holding them all); needs no exe
 ";
 
 fn main() -> ExitCode {

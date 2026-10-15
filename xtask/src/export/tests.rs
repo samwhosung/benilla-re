@@ -174,6 +174,9 @@ fn arrays_and_function_pointers_carry_their_name_inside() {
         "extern CCamera **s_cameras;",
         "void BRE_CDECL Apply(void (*callback)(int, int), uint8_t digest[16], uint32_t *out[6]);",
         "typedef struct CCamera CCamera;",
+        "#define BRE_ADDR_Apply 0x401000",
+        "#define BRE_ADDR_s_hooks 0x801000",
+        "typedef void (BRE_CDECL *BRE_FN_Apply)(void (*callback)(int, int), uint8_t digest[16], uint32_t *out[6]);",
     ] {
         assert!(text.contains(expected), "{expected}");
     }
@@ -259,6 +262,12 @@ fn a_prototype_the_header_cannot_state_is_left_out_and_counted() {
         "void BRE_THISCALL Decorated__dtor(void *this);",
         "void BRE_CDECL Names(int a, int a_, int register_, Thing *Thing_);",
         "void BRE_THISCALL Empty(void);",
+        "#define BRE_ADDR_Fine 0x401000",
+        "typedef Thing *(BRE_FASTCALL *BRE_FN_Fine)(Thing *thing, lua_State *L);",
+        "typedef void (*BRE_FN_VariadicThis)(void *this, ...);",
+        "typedef void (BRE_THISCALL *BRE_FN_Decorated__dtor)(void *this);",
+        "typedef void (BRE_FASTCALL *BRE_FNX_Decorated__dtor)(void *this, void *bre_edx);",
+        "typedef void (BRE_CDECL *BRE_FN_Names)(int a, int a_, int register_, Thing *Thing_);",
     ] {
         assert!(text.contains(expected), "{expected}");
     }
@@ -369,9 +378,13 @@ fn clang() -> bool {
 /// Compiles the header with every layout assertion on, for a 32-bit x86 target.
 fn compile(dir: &Path, header: &str, target: &str) -> (bool, String) {
     std::fs::write(dir.join("benilla-re.h"), header).unwrap();
+    // A call through an address, as injected code makes it, and a global's address.
     std::fs::write(
         dir.join("check.c"),
-        "#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n",
+        "#define BENILLA_RE_LAYOUT_CHECK\n#include \"benilla-re.h\"\n\
+         BRE_FN_CDataStore__GetUInt8 put = (BRE_FN_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n\
+         BRE_FNX_CDataStore__GetUInt8 put_x = (BRE_FNX_CDataStore__GetUInt8)BRE_ADDR_CDataStore__GetUInt8;\n\
+         _Static_assert(BRE_ADDR_CDataStore__GetUInt8 == 0x418cb0, \"address\");\n",
     )
     .unwrap();
     let output = Command::new("clang")
@@ -466,4 +479,40 @@ fn the_ida_and_binary_ninja_scripts_walk_every_row_against_stand_in_apis() {
         "{said}"
     );
     let _ = std::fs::remove_dir_all(&dir);
+}
+
+#[test]
+fn the_x64dbg_database_labels_every_named_row_at_its_rva() {
+    let built = built();
+    let text = &built.files["x64dbg/WoW.exe.dd32"];
+    let value: serde_json::Value = serde_json::from_str(text).expect("x64dbg reads JSON");
+    let named = |file: &str| {
+        let t = Table::parse(file, &std::fs::read_to_string(root().join(file)).unwrap()).unwrap();
+        let name = t.column("name").unwrap();
+        t.rows.iter().filter(|r| !r[name].is_empty()).count()
+    };
+    let labels = value["labels"].as_array().unwrap();
+    assert_eq!(
+        labels.len(),
+        named("symbols/functions.tsv") + named("symbols/globals.tsv")
+    );
+    let comments = value["comments"].as_array().unwrap();
+    assert!(comments.len() > labels.len());
+    for entry in labels.iter().chain(comments) {
+        assert_eq!(entry["module"], "wow.exe");
+        assert_eq!(entry["manual"], true);
+        let rva = entry["address"].as_str().unwrap();
+        assert!(rva.starts_with("0x") && rva[2..].chars().all(|c| c.is_ascii_hexdigit()));
+        assert!(
+            u32::from_str_radix(&rva[2..], 16).unwrap() < 0x906000,
+            "{rva}"
+        );
+        assert!(entry["text"]
+            .as_str()
+            .is_some_and(|t| !t.is_empty() && t.len() < 512));
+    }
+    // CDataStore::PutInt8 is at 0x418070, an RVA of 0x18070.
+    assert!(labels
+        .iter()
+        .any(|l| l["address"] == "0x18070" && l["text"] == "CDataStore::PutInt8"));
 }
