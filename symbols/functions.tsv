@@ -18835,8 +18835,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5140	159	CGDynamicObject_C::CGDynamicObject_C		objectlayer	primitive	void * __thiscall (void *fields, void *movement)	Builds a dynamic object: lists, members, vtable, and the create message's position and facing	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d51e0	43	CGDynamicObject_C::DeletingDestructor		objectlayer	orchestration	void * __thiscall (uint32_t flags)	Destroys the dynamic object and frees it when bit 0 is set	verified	one	objectlayer/dynamicobjects#members-and-fields	
 0x5d5210	192	CGDynamicObject_C::~CGDynamicObject_C		objectlayer	orchestration	void __thiscall ()	Stops the area kit, empties the watcher lists and runs the base destructor	verified	one	objectlayer/dynamicobjects#members-and-fields	
-0x5d52d0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
-0x5d52e0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5d52d0	1	RegisterDynamicObjectWatchers		objectlayer	orchestration		Returns at once	verified	one	objectlayer/overview#small-bodies	
+0x5d52e0	1	DynamicObjectNoOp		objectlayer	unreached		Returns at once	verified	one	objectlayer/overview#small-bodies	
 0x5d52f0	294	CGDynamicObject_C::ModelLoaded		objectlayer	primitive	void __thiscall (void *model)	Records which animations the model has, sets the radius scale and plays animation 158 when it is the only one	verified	one	objectlayer/dynamicobjects#the-loaded-model	objectlayer::dy_dynobj_visual_scale_difftest, objectlayer::dy_dynobj_visual_scale_gates_difftest
 0x5d5420	283	CGDynamicObject_C::OnCreate		objectlayer	orchestration	void __thiscall (uint32_t time, void *movement, uint32_t flag)	Shows the object, sets the model callbacks, starts the area kit and the caster's far sight	verified	one	objectlayer/dynamicobjects#creation	
 0x5d5540	59	OnDynamicObjectModelEvent		objectlayer	orchestration		Resolves the dynamic object of a model event and plays its sound or shake	verified	one	objectlayer/dynamicobjects#model-events-and-looping	
@@ -18846,7 +18846,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d5700	32	DynamicObjectStopAreaKit		objectlayer	orchestration		Stops a dynamic object's emitter through 0x6ecf20 and tail-calls its sound stop	inferred	none	spell/visuals#area-shard-emitter-creation	
 0x5d5720	16	CGDynamicObject_C::Deactivate		objectlayer	orchestration	void __thiscall ()	Deactivates the object and stops its area kit	verified	one	objectlayer/dynamicobjects#creation	
 0x5d5730	43	CGDynamicObject_C::Reactivate		objectlayer	orchestration	void __thiscall ()	Reactivates the object, makes its node if a model exists and starts the area kit	verified	one	objectlayer/dynamicobjects#creation	
-0x5d5760	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
+0x5d5760	8	DynamicObjectSetFieldStub		objectlayer	unreached		Returns 1	verified	one	objectlayer/overview#small-bodies	
 0x5d5770	39			objectlayer	unreached		Runs DynamicObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d57a0	20			objectlayer	unreached		Runs DynamicObject_C.cpp code not read here	inferred	none	objectlayer/overview#unreached-functions	
 0x5d57c0	197	GetDynamicObjectEffectName		objectlayer	primitive	void * __thiscall ()	Finds the SpellVisualEffectName row of the object's spell, printing why it cannot	verified	one	objectlayer/dynamicobjects#the-model	
@@ -19006,23 +19006,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d7660	5	InitCorpseSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7670, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7670	19	InitCorpseSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d7690	41	CGCorpse_C::GetPosition		objectlayer	primitive	float * __thiscall (float *out)	Copies the corpse's position field into the output	verified	one	objectlayer/corpses#members-and-fields	
-0x5d76c0	10			objectlayer	orchestration		Returns the float at +0x8 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
+0x5d76c0	10	CGCorpse_C::GetFacing		objectlayer	orchestration		Returns the float at +0x8 of the block its +0x110 points to	verified	one	objectlayer/overview#small-bodies	
 0x5d76d0	28	CGCorpse_C::IsMouseoverable		objectlayer	primitive	uint32_t __thiscall ()	Tells whether the mouse may pick the corpse: not a skeleton, or one with loot	verified	one	objectlayer/corpses#selection-and-the-mouse	
-0x5d76f0	54			objectlayer	primitive		Points a container's slot section and watch copy past the item's	verified	one	objectlayer/items#the-container	
-0x5d7730	148			objectlayer	primitive	CGContainer_C * __thiscall (CGContainer_C *this, uint32_t time, void *block)	Builds a container: the item, 74 more watcher lists and the slot list	verified	one	objectlayer/items#the-container	
-0x5d77d0	187			objectlayer	primitive		Destroys a container and frees it on bit 0	verified	one	objectlayer/items#the-container	
-0x5d7890	65			objectlayer	primitive		Reactivates a container and the item in each slot	verified	one	objectlayer/items#the-container	
-0x5d78e0	1			objectlayer	orchestration		Returns at once	verified	one	objectlayer/items#the-container	
-0x5d78f0	1			objectlayer	unreached		Returns at once	verified	one	objectlayer/items#unreached-item-code	
-0x5d7900	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
-0x5d7910	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
-0x5d7920	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
-0x5d7930	7			objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
-0x5d7940	17			objectlayer	unreached		Returns a container's slot count capped at 4	verified	one	objectlayer/items#unreached-item-code	
-0x5d7960	13			objectlayer	unreached		Returns a container's slot count plus 3, over 4	verified	one	objectlayer/items#unreached-item-code	
-0x5d7970	8			objectlayer	unreached		Returns 1	verified	one	objectlayer/items#unreached-item-code	
-0x5d7980	39			objectlayer	unreached		Copies bytes into a container's slot section	verified	one	objectlayer/items#unreached-item-code	
-0x5d79b0	30			objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, 0xc0, else -1	verified	one	objectlayer/items#unreached-item-code	
+0x5d76f0	54	CGContainer_C::SetFieldPointers		objectlayer	primitive		Points a container's slot section and watch copy past the item's	verified	one	objectlayer/items#the-container	
+0x5d7730	148	CGContainer_C::CGContainer_C		objectlayer	primitive	CGContainer_C * __thiscall (CGContainer_C *this, uint32_t time, void *block)	Builds a container: the item, 74 more watcher lists and the slot list	verified	one	objectlayer/items#the-container	
+0x5d77d0	187	CGContainer_C::DeletingDestructor		objectlayer	primitive		Destroys a container and frees it on bit 0	verified	one	objectlayer/items#the-container	
+0x5d7890	65	CGContainer_C::Reactivate		objectlayer	primitive		Reactivates a container and the item in each slot	verified	one	objectlayer/items#the-container	
+0x5d78e0	1	RegisterContainerWatchers		objectlayer	orchestration		Returns at once	verified	one	objectlayer/items#the-container	
+0x5d78f0	1	ContainerNoOp		objectlayer	unreached		Returns at once	verified	one	objectlayer/items#unreached-item-code	
+0x5d7900	7	ContainerZeroFloatA		objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7910	7	ContainerZeroFloatB		objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7920	7	ContainerZeroFloatC		objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7930	7	ContainerZeroFloatD		objectlayer	unreached		Returns a global float	verified	one	objectlayer/items#unreached-item-code	
+0x5d7940	17	ContainerSlotCountCappedAt4		objectlayer	unreached		Returns a container's slot count capped at 4	verified	one	objectlayer/items#unreached-item-code	
+0x5d7960	13	ContainerSlotRowCount		objectlayer	unreached		Returns a container's slot count plus 3, over 4	verified	one	objectlayer/items#unreached-item-code	
+0x5d7970	8	ContainerSetFieldStub		objectlayer	unreached		Returns 1	verified	one	objectlayer/items#unreached-item-code	
+0x5d7980	39	CopyIntoContainerFields		objectlayer	unreached		Copies bytes into a container's slot section	verified	one	objectlayer/items#unreached-item-code	
+0x5d79b0	30	ContainerFieldSectionOffset		objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, 0xc0, else -1	verified	one	objectlayer/items#unreached-item-code	
 0x5d79d0	5	InitContainerCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d79e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d79e0	11	InitContainerCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d79f0	5	InitContainerDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7a00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -19083,88 +19083,88 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5d7ee0	19	InitContainerSquare17		objectlayer	primitive	void __cdecl (void)	Stores 40² = 1600 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5d7f00	5	InitContainerSquare18Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7f10, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f10	19	InitContainerSquare18		objectlayer	primitive	void __cdecl (void)	Stores 1.5² = 2.25 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d7f30	7			objectlayer	orchestration		Returns the address of +0x6c8 of its object	verified	one	objectlayer/items#the-container	
+0x5d7f30	7	CGContainer_C::GetInventory		objectlayer	orchestration		Returns the address of +0x6c8 of its object	verified	one	objectlayer/items#the-container	
 0x5d7f40	5	InitItemCopy1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d7f50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f50	11	InitItemCopy1		objectlayer	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	objectlayer/initializers#stored-constants	
 0x5d7f60	10	InitItemOther1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5d7f70, then jumps to 0x5d8030 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d7f70	190	InitInventoryArtTable		objectlayer	primitive	void __cdecl (void)	Builds an empty hash table global whose nodes hold inventory art	inferred	none	objectlayer/initializers#other-initializers	
 0x5d8030	12	InitItemRegisterExit2		objectlayer	orchestration	void __cdecl (void)	Registers 0x5d8040 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
 0x5d8040	359	ReleaseInventoryArtTable		objectlayer	host	void __cdecl (void)	Unlinks and frees the inventory art hash table's nodes and buckets, at exit	inferred	none	objectlayer/initializers#other-initializers	
-0x5d81b0	51			objectlayer	primitive		Points an item's field section and watch copy	verified	one	objectlayer/items#the-item-object	
-0x5d81f0	213			objectlayer	primitive	CGItem_C * __thiscall (CGItem_C *this, uint32_t time, void *block)	Builds an item: watcher lists, flags, expiries and the cached record bytes	verified	one	objectlayer/items#the-item-object	
-0x5d82d0	43			objectlayer	orchestration		Destroys an item and frees it on bit 0	verified	one	objectlayer/items#the-item-object	
-0x5d8300	138			objectlayer	primitive		Asks for an item's record; on a miss counts the owner's pending records	verified	one	objectlayer/items#the-item-record	
-0x5d8390	99			objectlayer	primitive		Hands an arrived item record to the item and lowers the owner's pending count	verified	one	objectlayer/items#the-item-record	
-0x5d8400	37			objectlayer	orchestration		Runs an item's creation and asks for its record	verified	one	objectlayer/items#the-item-record	
-0x5d8430	5			objectlayer	orchestration		Jumps to 0x5d8300	verified	one	objectlayer/overview#small-bodies	
-0x5d8440	533			objectlayer	primitive		Takes an item's arrived record: cached bytes, sound row, item lock and interface refreshes	verified	one	objectlayer/items#the-item-record	
-0x5d8660	367			objectlayer	primitive		Deactivates an item: drops cursor, cast, interface and text references and the record request	verified	one	objectlayer/items#item-slots	
-0x5d87d0	223			objectlayer	primitive		Tears an item down: record request, watcher lists and the object	verified	one	objectlayer/items#the-item-object	
-0x5d88b0	148			objectlayer	orchestration	const char * __fastcall (uint32_t displayId)	Returns an item display's inventory icon, cached, or INV_Misc_QuestionMark logging NOINVENTORYICON	verified	one	objectlayer/items#inventory-icons	
-0x5d8950	308			objectlayer	primitive		Inserts an icon name into the icon cache by display id	verified	one	objectlayer/items#inventory-icons	
-0x5d8a90	91			objectlayer	primitive		Returns the cached icon name of a display id, or 0	verified	one	objectlayer/items#inventory-icons	
-0x5d8af0	12			objectlayer	orchestration		Returns an item's inventory icon	verified	one	objectlayer/items#inventory-icons	
-0x5d8b00	181			objectlayer	orchestration	void __fastcall (char *out, uint32_t size, uint32_t entry, uint32_t propertyId)	Writes an item's name with its random property suffix	verified	one	objectlayer/items#item-names	
-0x5d8bc0	48			objectlayer	orchestration		Writes an item's name, without a suffix when it is wrapped	verified	one	objectlayer/items#item-names	
-0x5d8bf0	3			objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
-0x5d8c00	121			objectlayer	primitive		Returns whether an item's record has a use spell: a spell whose trigger is 0	verified	one	objectlayer/items#item-use-gates	
-0x5d8c80	125			objectlayer	primitive		Returns the first use spell of an item's record, or 0	verified	one	objectlayer/items#item-use-gates	
-0x5d8d00	1410			objectlayer	primitive	uint8_t __thiscall (CGItem_C *this, uint64_t *target, uint32_t confirmed)	Uses an item: wrapping, page text, control, equip, repair, disarm, form and bind gates, then casts	verified	one	objectlayer/items#using-an-item	
-0x5d9290	68			objectlayer	orchestration		Uses the item kept for a bind-on-use confirmation, confirmed	verified	one	objectlayer/items#item-use-gates	
-0x5d92e0	41			objectlayer	unreached		Passes an index below 6 to CGObject_C::SetUpdateField, else stores the value at +0xfc + 4 times it	verified	one	objectlayer/items#unreached-item-code	
-0x5d9310	39			objectlayer	unreached		Copies bytes into an item's field section	verified	one	objectlayer/items#unreached-item-code	
-0x5d9340	21			objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, else -1	verified	one	objectlayer/items#unreached-item-code	
-0x5d9360	154			objectlayer	orchestration		Registers the six item field watchers	verified	one	objectlayer/items#item-field-watchers	
-0x5d9400	319			objectlayer	orchestration		Watches ITEM_FIELD_STACK_COUNT: the item lock step and interface refreshes	verified	one	objectlayer/items#item-field-watchers	
-0x5d9540	88			objectlayer	orchestration		Watches ITEM_FIELD_SPELL_CHARGES: refreshes and signals BAG_UPDATE_COOLDOWN	verified	one	objectlayer/items#item-field-watchers	
-0x5d95a0	51			objectlayer	orchestration		Watches ITEM_FIELD_ENCHANTMENT: passes the item to the enchantment refresh	verified	one	objectlayer/items#item-field-watchers	
-0x5d95e0	201			objectlayer	orchestration		Watches OBJECT_FIELD_ENTRY: asks for the new record and refreshes	verified	one	objectlayer/items#item-field-watchers	
-0x5d96b0	47			objectlayer	orchestration		Refreshes the interface when a changed entry's record arrives	verified	one	objectlayer/items#item-field-watchers	
-0x5d96e0	219			objectlayer	primitive		Watches ITEM_FIELD_FLAGS: refreshes an equipped item whose bit 0x10 changed	verified	one	objectlayer/items#item-field-watchers	
-0x5d97c0	373			objectlayer	primitive		Watches ITEM_FIELD_DURABILITY: hides or shows a broken weapon or shield on the model	verified	one	objectlayer/items#item-field-watchers	
-0x5d9940	241			objectlayer	primitive		Removes the item field watchers and empties the icon cache	verified	one	objectlayer/items#item-field-watchers	
-0x5d9a40	12			objectlayer	unreached		Returns the material flag of an item's record	verified	one	objectlayer/items#unreached-item-code	
-0x5d9a50	39			objectlayer	orchestration	uint32_t __fastcall (uint32_t materialId)	Returns bit 0 of a Material.dbc row's flags	verified	one	objectlayer/items#record-getters	
-0x5d9a80	11			objectlayer	primitive		Sets ITEM_FIELD_FLAGS bit 0x2	verified	one	objectlayer/items#item-slots	
-0x5d9a90	216			objectlayer	orchestration		Refreshes an item's enchantment display and its equipped visual	verified	one	objectlayer/items#item-field-watchers	
-0x5d9b70	142			objectlayer	unreached		Returns an item's visual: -1 with an ItemVisuals row, else its first enchantment's	verified	one	objectlayer/items#unreached-item-code	
-0x5d9c00	55			objectlayer	primitive	void __thiscall (CGItem_C *this, int32_t seconds)	Sets an item's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d81b0	51	CGItem_C::SetFieldPointers		objectlayer	primitive		Points an item's field section and watch copy	verified	one	objectlayer/items#the-item-object	
+0x5d81f0	213	CGItem_C::CGItem_C		objectlayer	primitive	CGItem_C * __thiscall (CGItem_C *this, uint32_t time, void *block)	Builds an item: watcher lists, flags, expiries and the cached record bytes	verified	one	objectlayer/items#the-item-object	
+0x5d82d0	43	CGItem_C::DeletingDestructor		objectlayer	orchestration		Destroys an item and frees it on bit 0	verified	one	objectlayer/items#the-item-object	
+0x5d8300	138	CGItem_C::RequestRecord		objectlayer	primitive		Asks for an item's record; on a miss counts the owner's pending records	verified	one	objectlayer/items#the-item-record	
+0x5d8390	99	OnItemRecordArrived		objectlayer	primitive		Hands an arrived item record to the item and lowers the owner's pending count	verified	one	objectlayer/items#the-item-record	
+0x5d8400	37	CGItem_C::OnCreate		objectlayer	orchestration		Runs an item's creation and asks for its record	verified	one	objectlayer/items#the-item-record	
+0x5d8430	5	CGItem_C::EndReactivation		objectlayer	orchestration		Jumps to 0x5d8300	verified	one	objectlayer/overview#small-bodies	
+0x5d8440	533	CGItem_C::ApplyRecord		objectlayer	primitive		Takes an item's arrived record: cached bytes, sound row, item lock and interface refreshes	verified	one	objectlayer/items#the-item-record	
+0x5d8660	367	CGItem_C::Deactivate		objectlayer	primitive		Deactivates an item: drops cursor, cast, interface and text references and the record request	verified	one	objectlayer/items#item-slots	
+0x5d87d0	223	CGItem_C::~CGItem_C		objectlayer	primitive		Tears an item down: record request, watcher lists and the object	verified	one	objectlayer/items#the-item-object	
+0x5d88b0	148	GetInventoryIconByDisplayId		objectlayer	orchestration	const char * __fastcall (uint32_t displayId)	Returns an item display's inventory icon, cached, or INV_Misc_QuestionMark logging NOINVENTORYICON	verified	one	objectlayer/items#inventory-icons	
+0x5d8950	308	CacheInventoryIcon		objectlayer	primitive		Inserts an icon name into the icon cache by display id	verified	one	objectlayer/items#inventory-icons	
+0x5d8a90	91	FindCachedInventoryIcon		objectlayer	primitive		Returns the cached icon name of a display id, or 0	verified	one	objectlayer/items#inventory-icons	
+0x5d8af0	12	CGItem_C::GetInventoryIcon		objectlayer	orchestration		Returns an item's inventory icon	verified	one	objectlayer/items#inventory-icons	
+0x5d8b00	181	FormatItemName		objectlayer	orchestration	void __fastcall (char *out, uint32_t size, uint32_t entry, uint32_t propertyId)	Writes an item's name with its random property suffix	verified	one	objectlayer/items#item-names	
+0x5d8bc0	48	CGItem_C::GetFullName		objectlayer	orchestration		Writes an item's name, without a suffix when it is wrapped	verified	one	objectlayer/items#item-names	
+0x5d8bf0	3	CGItem_C::GetModelPath		objectlayer	orchestration		Returns 0	verified	one	objectlayer/overview#small-bodies	
+0x5d8c00	121	CGItem_C::HasUseSpell		objectlayer	primitive		Returns whether an item's record has a use spell: a spell whose trigger is 0	verified	one	objectlayer/items#item-use-gates	
+0x5d8c80	125	CGItem_C::GetUseSpell		objectlayer	primitive		Returns the first use spell of an item's record, or 0	verified	one	objectlayer/items#item-use-gates	
+0x5d8d00	1410	CGItem_C::Use		objectlayer	primitive	uint8_t __thiscall (CGItem_C *this, uint64_t *target, uint32_t confirmed)	Uses an item: wrapping, page text, control, equip, repair, disarm, form and bind gates, then casts	verified	one	objectlayer/items#using-an-item	
+0x5d9290	68	UseItemBindConfirmed		objectlayer	orchestration		Uses the item kept for a bind-on-use confirmation, confirmed	verified	one	objectlayer/items#item-use-gates	
+0x5d92e0	41	ItemSetField		objectlayer	unreached		Passes an index below 6 to CGObject_C::SetUpdateField, else stores the value at +0xfc + 4 times it	verified	one	objectlayer/items#unreached-item-code	
+0x5d9310	39	CopyIntoItemFields		objectlayer	unreached		Copies bytes into an item's field section	verified	one	objectlayer/items#unreached-item-code	
+0x5d9340	21	ItemFieldSectionOffset		objectlayer	unreached		Maps an update level to a section offset: 0, 0x18, else -1	verified	one	objectlayer/items#unreached-item-code	
+0x5d9360	154	RegisterItemWatchers		objectlayer	orchestration		Registers the six item field watchers	verified	one	objectlayer/items#item-field-watchers	
+0x5d9400	319	OnItemStackCountChanged		objectlayer	orchestration		Watches ITEM_FIELD_STACK_COUNT: the item lock step and interface refreshes	verified	one	objectlayer/items#item-field-watchers	
+0x5d9540	88	OnItemSpellChargesChanged		objectlayer	orchestration		Watches ITEM_FIELD_SPELL_CHARGES: refreshes and signals BAG_UPDATE_COOLDOWN	verified	one	objectlayer/items#item-field-watchers	
+0x5d95a0	51	OnItemEnchantmentChanged		objectlayer	orchestration		Watches ITEM_FIELD_ENCHANTMENT: passes the item to the enchantment refresh	verified	one	objectlayer/items#item-field-watchers	
+0x5d95e0	201	OnItemEntryChanged		objectlayer	orchestration		Watches OBJECT_FIELD_ENTRY: asks for the new record and refreshes	verified	one	objectlayer/items#item-field-watchers	
+0x5d96b0	47	OnChangedItemRecordArrived		objectlayer	orchestration		Refreshes the interface when a changed entry's record arrives	verified	one	objectlayer/items#item-field-watchers	
+0x5d96e0	219	OnItemFlagsChanged		objectlayer	primitive		Watches ITEM_FIELD_FLAGS: refreshes an equipped item whose bit 0x10 changed	verified	one	objectlayer/items#item-field-watchers	
+0x5d97c0	373	OnItemDurabilityChanged		objectlayer	primitive		Watches ITEM_FIELD_DURABILITY: hides or shows a broken weapon or shield on the model	verified	one	objectlayer/items#item-field-watchers	
+0x5d9940	241	RemoveItemWatchers		objectlayer	primitive		Removes the item field watchers and empties the icon cache	verified	one	objectlayer/items#item-field-watchers	
+0x5d9a40	12	ItemMaterialHasFlagBit0		objectlayer	unreached		Returns the material flag of an item's record	verified	one	objectlayer/items#unreached-item-code	
+0x5d9a50	39	MaterialHasFlagBit0		objectlayer	orchestration	uint32_t __fastcall (uint32_t materialId)	Returns bit 0 of a Material.dbc row's flags	verified	one	objectlayer/items#record-getters	
+0x5d9a80	11	CGItem_C::SetFlagsBit1		objectlayer	primitive		Sets ITEM_FIELD_FLAGS bit 0x2	verified	one	objectlayer/items#item-slots	
+0x5d9a90	216	RefreshItemEnchantmentVisual		objectlayer	orchestration		Refreshes an item's enchantment display and its equipped visual	verified	one	objectlayer/items#item-field-watchers	
+0x5d9b70	142	GetItemVisual		objectlayer	unreached		Returns an item's visual: -1 with an ItemVisuals row, else its first enchantment's	verified	one	objectlayer/items#unreached-item-code	
+0x5d9c00	55	CGItem_C::SetExpiry		objectlayer	primitive	void __thiscall (CGItem_C *this, int32_t seconds)	Sets an item's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c40	5	InitItemDouble1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9c50, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9c50	15	InitItemDouble1		objectlayer	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d9c60	40			objectlayer	primitive		Returns an item's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9c60	40	CGItem_C::GetRemainingMs		objectlayer	primitive		Returns an item's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
 0x5d9c90	5	InitItemQuotient1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5d9ca0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5d9ca0	19	InitItemQuotient1		objectlayer	primitive	void __cdecl (void)	Stores 1/6.2831855 = 0.15915494 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5d9cc0	63			objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t slot, int32_t seconds)	Sets an enchantment slot's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
-0x5d9d00	57			objectlayer	primitive		Returns an enchantment slot's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
-0x5d9d40	21			objectlayer	orchestration		Writes -1 and returns 1	verified	one	objectlayer/items#item-slots	
-0x5d9d60	164			objectlayer	orchestration		Sends opcode 0x107 with the item's GUID while the active player is alive	verified	one	objectlayer/items#item-slots	
-0x5d9e10	95			objectlayer	orchestration		Returns the page text id of an item's record, asking with a callback	verified	one	objectlayer/items#record-getters	
-0x5d9e70	89			objectlayer	orchestration		Returns an item's record name, or 0	verified	one	objectlayer/items#record-getters	
-0x5d9ed0	92			objectlayer	unreached		Returns the record dword +0x5c of an item	verified	one	objectlayer/items#unreached-item-code	
+0x5d9cc0	63	CGItem_C::SetEnchantmentExpiry		objectlayer	primitive	void __thiscall (CGItem_C *this, uint32_t slot, int32_t seconds)	Sets an enchantment slot's expiry to now plus the given seconds, or clears it for 0 or less	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9d00	57	CGItem_C::GetEnchantmentRemainingMs		objectlayer	primitive		Returns an enchantment slot's remaining ms before expiry, or 0	verified	one	objectlayer/items#item-and-enchantment-timers	
+0x5d9d40	21	CGItem_C::GetSelectionColor		objectlayer	orchestration		Writes -1 and returns 1	verified	one	objectlayer/items#item-slots	
+0x5d9d60	164	CGItem_C::Interact		objectlayer	orchestration		Sends opcode 0x107 with the item's GUID while the active player is alive	verified	one	objectlayer/items#item-slots	
+0x5d9e10	95	CGItem_C::GetPageTextId		objectlayer	orchestration		Returns the page text id of an item's record, asking with a callback	verified	one	objectlayer/items#record-getters	
+0x5d9e70	89	CGItem_C::GetName		objectlayer	orchestration		Returns an item's record name, or 0	verified	one	objectlayer/items#record-getters	
+0x5d9ed0	92	GetItemRecordDword5c		objectlayer	unreached		Returns the record dword +0x5c of an item	verified	one	objectlayer/items#unreached-item-code	
 0x5d9f30	88	GetItemClass		objectlayer	orchestration		Returns the class of an item's record	verified	one	objectlayer/items#the-item-object	
 0x5d9f90	89	GetItemSubClass		objectlayer	orchestration		Returns the subclass of an item's record	verified	one	objectlayer/items#the-item-object	
-0x5d9ff0	89			objectlayer	orchestration		Returns the inventory type of an item's record	verified	one	objectlayer/items#the-item-object	
-0x5da050	92			objectlayer	orchestration		Returns the bag family of an item's record	verified	one	objectlayer/items#record-getters	
-0x5da0b0	89			objectlayer	orchestration		Returns the display id of an item's record	verified	one	objectlayer/items#record-getters	
-0x5da110	92			objectlayer	orchestration		Returns the material of an item's record	verified	one	objectlayer/items#the-item-object	
-0x5da170	92			objectlayer	orchestration		Returns the record dword +0x1b4 of an item	verified	one	objectlayer/items#the-item-object	
-0x5da1d0	118			objectlayer	primitive	uint32_t __thiscall (CGItem_C *this, int32_t slot, uint32_t flag)	Returns whether an item fits an equipment slot by its inventory type mask	verified	one	objectlayer/items#equipment-slots	
-0x5da250	16			objectlayer	unreached		Returns whether the record dword +0x1b4 of an item is above 4	verified	one	objectlayer/items#unreached-item-code	
-0x5da260	64			objectlayer	orchestration		Returns an item's record, or 0	verified	one	objectlayer/items#record-getters	
-0x5da2a0	22			objectlayer	primitive		Returns the flags of an item's record through its secondary vtable	verified	one	objectlayer/items#record-getters	
-0x5da2c0	103			objectlayer	primitive		Returns whether an item is bound: flags bit 0 or a binding enchantment	verified	one	objectlayer/items#item-use-gates	
-0x5da330	450			objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	objectlayer::item_randprop_delta_difftest
-0x5da500	101			objectlayer	orchestration		Returns whether the record dword +0x1c8 is non-zero	verified	one	objectlayer/items#record-getters	
-0x5da570	101			objectlayer	orchestration		Returns whether the record dword +0x1cc is non-zero	verified	one	objectlayer/items#record-getters	
-0x5da5e0	456			objectlayer	primitive		Finds how the active player opens a lock: a spell of open-lock effect with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
-0x5da7b0	110			objectlayer	orchestration		Frees an icon cache node, its name and its links	verified	one	objectlayer/items#inventory-icons	
-0x5da820	182			objectlayer	primitive		Allocates an icon cache node and links it at the list's tail	verified	one	objectlayer/items#inventory-icons	
-0x5da8e0	189			objectlayer	primitive		Empties the icon cache: unlinks its nodes and buckets and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
-0x5da9a0	190			objectlayer	primitive		Destroys the icon cache table	verified	one	objectlayer/items#inventory-icons	
-0x5daa60	60			objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/items#inventory-icons	
-0x5daaa0	136			objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/items#inventory-icons	
-0x5dab30	108			objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/items#inventory-icons	
-0x5daba0	135			objectlayer	primitive		Unlinks every bucket list of the icon table and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
+0x5d9ff0	89	GetItemInventoryType		objectlayer	orchestration		Returns the inventory type of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5da050	92	GetItemBagFamily		objectlayer	orchestration		Returns the bag family of an item's record	verified	one	objectlayer/items#record-getters	
+0x5da0b0	89	GetItemDisplayId		objectlayer	orchestration		Returns the display id of an item's record	verified	one	objectlayer/items#record-getters	
+0x5da110	92	GetItemMaterial		objectlayer	orchestration		Returns the material of an item's record	verified	one	objectlayer/items#the-item-object	
+0x5da170	92	GetItemRecordDword1b4		objectlayer	orchestration		Returns the record dword +0x1b4 of an item	verified	one	objectlayer/items#the-item-object	
+0x5da1d0	118	CGItem_C::FitsSlot		objectlayer	primitive	uint32_t __thiscall (CGItem_C *this, int32_t slot, uint32_t flag)	Returns whether an item fits an equipment slot by its inventory type mask	verified	one	objectlayer/items#equipment-slots	
+0x5da250	16	ItemRecordDword1b4IsAbove4		objectlayer	unreached		Returns whether the record dword +0x1b4 of an item is above 4	verified	one	objectlayer/items#unreached-item-code	
+0x5da260	64	GetItemRecord		objectlayer	orchestration		Returns an item's record, or 0	verified	one	objectlayer/items#record-getters	
+0x5da2a0	22	ItemSecondaryGetRecordFlags		objectlayer	primitive		Returns the flags of an item's record through its secondary vtable	verified	one	objectlayer/items#record-getters	
+0x5da2c0	103	CGItem_C::IsBound		objectlayer	primitive		Returns whether an item is bound: flags bit 0 or a binding enchantment	verified	one	objectlayer/items#item-use-gates	
+0x5da330	450	CGItem_C::GetRepairCost		objectlayer	primitive		Returns an item's repair cost from durability, DurabilityCosts and DurabilityQuality, at least 1	verified	one	objectlayer/items#repair-cost	objectlayer::item_randprop_delta_difftest
+0x5da500	101	ItemRecordDword1c8IsSet		objectlayer	orchestration		Returns whether the record dword +0x1c8 is non-zero	verified	one	objectlayer/items#record-getters	
+0x5da570	101	ItemRecordDword1ccIsSet		objectlayer	orchestration		Returns whether the record dword +0x1cc is non-zero	verified	one	objectlayer/items#record-getters	
+0x5da5e0	456	FindLockOpener		objectlayer	primitive		Finds how the active player opens a lock: a spell of open-lock effect with enough skill, or a key item	verified	one	objectlayer/gameobjects#locks	
+0x5da7b0	110	DestroyInventoryArtNode		objectlayer	orchestration		Frees an icon cache node, its name and its links	verified	one	objectlayer/items#inventory-icons	
+0x5da820	182	NewInventoryArtNode		objectlayer	primitive		Allocates an icon cache node and links it at the list's tail	verified	one	objectlayer/items#inventory-icons	
+0x5da8e0	189	ClearInventoryArtTable		objectlayer	primitive		Empties the icon cache: unlinks its nodes and buckets and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
+0x5da9a0	190	DestroyInventoryArtTable		objectlayer	primitive		Destroys the icon cache table	verified	one	objectlayer/items#inventory-icons	
+0x5daa60	60	UnlinkInventoryArtLink		objectlayer	primitive		Unlinks a node from its list and clears its link	verified	one	objectlayer/items#inventory-icons	
+0x5daaa0	136	ClearInventoryArtList		objectlayer	primitive		Unlinks every node of a list and resets its end link	verified	one	objectlayer/items#inventory-icons	
+0x5dab30	108	SetInventoryArtListLinkOffset		objectlayer	primitive		Unlinks every node of a list and sets its link offset when it differs	verified	one	objectlayer/items#inventory-icons	
+0x5daba0	135	DestroyInventoryArtBuckets		objectlayer	primitive		Unlinks every bucket list of the icon table and frees the bucket array	verified	one	objectlayer/items#inventory-icons	
 0x5dac30	5	InitItemProduct1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dac40, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5dac40	19	InitItemProduct1		objectlayer	primitive	void __cdecl (void)	Stores −21·−0.027777778 = 0.58333331 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5dac60	5	InitItemProduct2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dac70, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
@@ -19175,19 +19175,19 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x5dacd0	19	InitItemProduct4		objectlayer	primitive	void __cdecl (void)	Stores 0.5·256 = 128 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5dacf0	5	InitItemQuotient2Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5dad00, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5dad00	19	InitItemQuotient2		objectlayer	primitive	void __cdecl (void)	Stores 1/4.1666665 = 0.24000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5dad20	41			objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
-0x5dad50	483			objectlayer	primitive		Doubles the icon cache's buckets and rehashes when an insert walks more than 13 nodes, up to mask 0x1fff	verified	one	objectlayer/items#inventory-icons	
-0x5daf40	25			objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/items#inventory-icons	
-0x5daf60	33			objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
-0x5daf90	181			objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/items#inventory-icons	
-0x5db050	77			objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/items#inventory-icons	
+0x5dad20	41	GetInventoryArtLink		objectlayer	primitive		Returns the link a node's link points at, or the end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5dad50	483	GrowInventoryArtTableOnLongChain		objectlayer	primitive		Doubles the icon cache's buckets and rehashes when an insert walks more than 13 nodes, up to mask 0x1fff	verified	one	objectlayer/items#inventory-icons	
+0x5daf40	25	InventoryArtNodeLink		objectlayer	primitive		Returns a node's link, or the list's end link for a null node	verified	one	objectlayer/items#inventory-icons	
+0x5daf60	33	InitInventoryArtListNoOffset		objectlayer	primitive		Makes an empty list: link offset 0 and an end link marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5daf90	181	LinkInventoryArtNode		objectlayer	primitive		Unlinks a node and links it before or after another	verified	one	objectlayer/items#inventory-icons	
+0x5db050	77	UnlinkInventoryArtListAll		objectlayer	primitive		Unlinks every node of a bucket list	verified	one	objectlayer/items#inventory-icons	
 0x5db0a0	5	InitItemSquare1Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5db0b0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db0b0	19	InitItemSquare1		objectlayer	primitive	void __cdecl (void)	Stores 10² = 100 as a float in a global	verified	one	objectlayer/initializers#float-constants	
 0x5db0d0	5	InitItemQuotient3Thunk		objectlayer	orchestration	void __cdecl (void)	Jumps to 0x5db0e0, a static initializer	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db0e0	19	InitItemQuotient3		objectlayer	primitive	void __cdecl (void)	Stores 0.5/10 = 0.050000001 as a float in a global	verified	one	objectlayer/initializers#float-constants	
-0x5db100	12			objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/items#inventory-icons	
-0x5db110	316			objectlayer	primitive		Sets the icon table's bucket count, making new buckets and unlinking removed ones	verified	one	objectlayer/items#inventory-icons	
-0x5db250	264			objectlayer	primitive		Reallocates the icon table's bucket array, moving each bucket list	verified	one	objectlayer/items#inventory-icons	
+0x5db100	12	InitInventoryArtListEnd		objectlayer	primitive		Points a list's end link at itself, marked by bit 0	verified	one	objectlayer/items#inventory-icons	
+0x5db110	316	ResizeInventoryArtBuckets		objectlayer	primitive		Sets the icon table's bucket count, making new buckets and unlinking removed ones	verified	one	objectlayer/items#inventory-icons	
+0x5db250	264	ReallocInventoryArtBuckets		objectlayer	primitive		Reallocates the icon table's bucket array, moving each bucket list	verified	one	objectlayer/items#inventory-icons	
 0x5db360	10	InitItemCountUnit1Thunk		objectlayer	orchestration	void __cdecl (void)	Calls 0x5db370, then jumps to 0x5db390 to register its exit callback	verified	one	objectlayer/initializers#initializer-thunks	
 0x5db370	22	InitItemCountUnit1		objectlayer	primitive	void __cdecl (void)	Counts one more user of a start-up count shared across files and calls 0x5b71c0 at the first	verified	one	objectlayer/initializers#start-up-counts	
 0x5db390	12	InitPlayerRegisterExit1		objectlayer	orchestration	void __cdecl (void)	Registers 0x5db3a0 with the C runtime's exit list	verified	one	objectlayer/initializers#exit-callbacks	
