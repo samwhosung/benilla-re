@@ -13,10 +13,11 @@ A row says the client signals `event` on the call path of the registered Lua bin
           0x4bd1d0, which calls 0x4bc940 (the reaction arm, signalling at 0x4bc956) and 0x4bc960
           (the Stay and Follow arm, signalling at 0x4bc979), both before the send at 0x4bd444.
           A right-click dispatcher that is no verb also calls 0x4bd1d0, so the walk cannot claim
-          it. The Attack arm's latch (0x4bd438) rides the attack validator and has no signal of
-          its own, so no site is listed for it. The generator checks that each traced site is a
-          signal site in a function `via` calls, and that the verb reaches `via` through
-          calls.tsv.
+          it. The Attack arm (command 2, jump-table slot 6 at 0x4bd3a3) latches 0x161 and signals
+          at 0x4bd438, inside 0x4bd1d0 itself, once the attack check passes; `PetAttack` reaches
+          it through 0x4bd630, and `CastPetAction` through the same dispatcher. The generator
+          checks that each traced site is a signal site in `via` or a function `via` calls, and
+          that the verb reaches `via` through calls.tsv.
 
 A verb is a row of bindings.tsv whose function lies outside the glue object files (0x46a000 to
 0x476000) and whose name does not start with `Get`: a getter's fire is a cache-miss re-query
@@ -34,7 +35,9 @@ the literal signal sites are read and `helper` stops one call deep.
 
 import collections
 
-from lib import (ROOT, Disasm, Functions, addr, note, parse_args, read_tsv, write_table)
+from pathlib import Path
+
+from lib import (Disasm, Functions, addr, note, parse_args, read_tsv, write_table)
 
 GLUE = (0x46A000, 0x476000)
 UNIT_WINDOW_FIELDS = 0xB6
@@ -43,7 +46,8 @@ SIGNALS = ('0x703e50', '0x703f50')
 
 # (verb, event, via, sites)
 TRACED = [
-    ('CastPetAction', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC956, 0x4BC979)),
+    ('CastPetAction', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC956, 0x4BC979, 0x4BD438)),
+    ('PetAttack', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BD438,)),
     ('PetAggressiveMode', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC956,)),
     ('PetDefensiveMode', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC956,)),
     ('PetFollow', 'PET_BAR_UPDATE', 0x4BD1D0, (0x4BC979,)),
@@ -56,14 +60,14 @@ def main():
     args = parse_args(__doc__, disasm=True)
     dis, fns = Disasm(args.disasm), Functions()
     callees = {int(r['function'], 16): [int(c, 16) for c in r['callees'].split('|')]
-               for r in read_tsv(ROOT / 'tables' / 'calls.tsv')}
+               for r in read_tsv(Path(args.tables) / 'calls.tsv')}
     callers = collections.defaultdict(set)
     for src, targets in callees.items():
         for t in targets:
             callers[t].add(src)
 
     verbs = {}
-    for r in read_tsv(ROOT / 'tables' / 'bindings.tsv'):
+    for r in read_tsv(Path(args.tables) / 'bindings.tsv'):
         fn = int(r['fn'], 16)
         if GLUE[0] <= fn < GLUE[1] or r['name'].startswith('Get'):
             continue
@@ -72,7 +76,7 @@ def main():
         raise SystemExit('verb_events: bindings.tsv gave only %d verbs' % len(verbs))
 
     sites = []
-    for r in read_tsv(ROOT / 'tables' / 'event_sites.tsv'):
+    for r in read_tsv(Path(args.tables) / 'event_sites.tsv'):
         va = int(r['site'], 16)
         if r['space'] == 'glue':
             continue
@@ -117,8 +121,8 @@ def main():
             raise SystemExit('verb_events: control failed: %s does not reach %s' % (verb, addr(via)))
         for site in traced:
             held = fns.holding(site)
-            if site not in signal_sites or held is None or held['address'] not in callees.get(via, ()):
-                raise SystemExit('verb_events: control failed: %s is no signal site in a function %s calls'
+            if site not in signal_sites or held is None or held['address'] != via and held['address'] not in callees.get(via, ()):
+                raise SystemExit('verb_events: control failed: %s is no signal site in %s or a function it calls'
                                  % (addr(site), addr(via)))
             add(verb, event, 'traced', addr(via), site)
 

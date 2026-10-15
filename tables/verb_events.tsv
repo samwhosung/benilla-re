@@ -1,7 +1,7 @@
 verb	event	shape	via	sites
 AddSkillUp	SKILL_LINES_CHANGED	helper	0x4d32d0	0x4d346f
 CancelSkillUps	SKILL_LINES_CHANGED	body	-	0x4d3e3a
-CastPetAction	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc956|0x4bc979
+CastPetAction	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc956|0x4bc979|0x4bd438
 ChangeActionBarPage	ACTIONBAR_PAGE_CHANGED	body	-	0x4e7655
 ChangeChatColor	UPDATE_CHAT_COLOR	body	-	0x4a098b
 CheckInbox	MAIL_INBOX_UPDATE	body	-	0x4aeaf8
@@ -24,6 +24,7 @@ ExpandQuestHeader	QUEST_LOG_UPDATE	helper	0x4ded30	0x4ded98|0x4dedba|0x4dedd6
 ExpandTradeSkillSubClass	TRADE_SKILL_UPDATE	helper	0x4fd750	0x4fd765
 ExpandTrainerSkillLine	TRAINER_UPDATE	helper	0x4d8cd0	0x4d8ce0
 PetAggressiveMode	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc956
+PetAttack	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bd438
 PetDefensiveMode	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc956
 PetDismiss	PET_DISMISS_START	helper	0x4bd6e0	0x4bd722
 PetFollow	PET_BAR_UPDATE	traced	0x4bd1d0	0x4bc979
