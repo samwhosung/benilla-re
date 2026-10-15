@@ -30,6 +30,10 @@ On a program already imported and analysed, run the two scripts alone with
 `-process WoW.exe -noanalysis` in place of `-import ...`. The scripts take the tables' folder as
 their one argument, so they run headless; the Script Manager passes none.
 
+Pass `keep` after the folder (`-postScript ApplySymbols.java symbols keep`) on a program that
+already has names of its own: an item whose name is not Ghidra's default keeps its name and its
+type, and takes ours as a repeatable comment. Without it every row is applied.
+
 ## What it prints
 
 One `ApplySymbols: FAIL` line for each row it could not apply, then a verification of every

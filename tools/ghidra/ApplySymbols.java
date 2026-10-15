@@ -3,8 +3,10 @@
 //   functions.tsv            names (Class::Method as namespaces), signatures where given, and a
 //                            plate comment with the meaning, the confidence and the finding
 //   globals.tsv              labels, their types, and a plate comment
-// Argument: the symbols directory. Prints one FAIL line per row it could not apply and, last, a
-// verification that every row's name is the name in the program.
+// Arguments: the symbols directory, and optionally `keep`. With `keep`, an item whose name is not
+// Ghidra's own default keeps its name and its type, and takes ours as a repeatable comment.
+// Prints one FAIL line per row it could not apply and, last, a verification that every row's name
+// is the name in the program.
 //
 // @category benilla
 
@@ -33,6 +35,8 @@ public class ApplySymbols extends GhidraScript {
     private SymbolTable symtab;
     private final Map<String, Structure> structs = new TreeMap<>();
     private int failures = 0;
+    private boolean keep = false;
+    private final Set<Long> kept = new HashSet<>();
 
     private void fail(String what) {
         failures++;
@@ -132,6 +136,12 @@ public class ApplySymbols extends GhidraScript {
         return (doc.equals("METHOD") ? "METHOD.md" : "systems/" + doc + ".md") + rest;
     }
 
+    // An item that keeps its name: ours goes in a repeatable comment.
+    private void commentKept(Address a, String name, String text) {
+        currentProgram.getListing().setComment(a, CommentType.REPEATABLE,
+                "benilla-re: " + (name.isEmpty() ? "(no name)" : name) + "\n" + text);
+    }
+
     private String comment(String[] c, int meaning, int confidence, int proof, int finding) {
         StringBuilder sb = new StringBuilder(c[meaning]);
         sb.append("\n").append(c[confidence]).append(", proof ").append(c[proof]);
@@ -229,6 +239,11 @@ public class ApplySymbols extends GhidraScript {
             Function f = getFunctionAt(a);
             if (f == null) { fail("function " + c[0] + " " + c[2] + ": no function"); continue; }
             try {
+                if (keep && f.getSymbol().getSource() != SourceType.DEFAULT) {
+                    kept.add(a.getOffset());
+                    commentKept(a, c[2], comment(c, 7, 8, 9, 10));
+                    continue;
+                }
                 if (!c[2].isEmpty()) {
                     List<String> q = qualifier(c[2]);
                     if (!q.isEmpty()) f.setParentNamespace(namespace(q));
@@ -256,6 +271,12 @@ public class ApplySymbols extends GhidraScript {
             Address a = toAddr(Long.parseLong(c[0].substring(2), 16));
             try {
                 if (!currentProgram.getMemory().contains(a)) { fail("global " + c[0] + " " + c[2] + ": not in memory"); continue; }
+                Symbol existing = symtab.getPrimarySymbol(a);
+                if (keep && existing != null && existing.getSource() != SourceType.DEFAULT) {
+                    kept.add(a.getOffset());
+                    commentKept(a, c[2], comment(c, 5, 6, 7, 8));
+                    continue;
+                }
                 DataType dt = type(c[1]);
                 if (dt == null) { fail("global " + c[0] + " " + c[2] + ": unknown type " + c[1]); continue; }
                 if (getInstructionContaining(a) != null) { fail("global " + c[0] + " " + c[2] + ": code at the address"); continue; }
@@ -283,7 +304,7 @@ public class ApplySymbols extends GhidraScript {
         int fOk = 0, fRows = 0, fNamed = 0, gOk = 0, gRows = 0, gNamed = 0;
         for (String[] c : read(dir, "functions.tsv")) {
             fRows++;
-            if (c[2].isEmpty()) continue;
+            if (c[2].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
             fNamed++;
             Function f = getFunctionAt(toAddr(Long.parseLong(c[0].substring(2), 16)));
             if (f != null && f.getName(true).equals(c[2])) fOk++;
@@ -291,7 +312,7 @@ public class ApplySymbols extends GhidraScript {
         }
         int sOk = 0, sRows = 0, shown = 0;
         for (String[] c : read(dir, "functions.tsv")) {
-            if (c[6].isEmpty()) continue;
+            if (c[6].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
             sRows++;
             Function f = getFunctionAt(toAddr(Long.parseLong(c[0].substring(2), 16)));
             Matcher m = SIGNATURE.matcher(c[6]);
@@ -306,12 +327,13 @@ public class ApplySymbols extends GhidraScript {
         println("ApplySymbols: verified signatures " + sOk + "/" + sRows);
         for (String[] c : read(dir, "globals.tsv")) {
             gRows++;
-            if (c[2].isEmpty()) continue;
+            if (c[2].isEmpty() || kept.contains(Long.parseLong(c[0].substring(2), 16))) continue;
             gNamed++;
             Symbol s = symtab.getPrimarySymbol(toAddr(Long.parseLong(c[0].substring(2), 16)));
             if (s != null && s.getName(true).equals(c[2])) gOk++;
             else println("ApplySymbols: MISMATCH global " + c[0] + ": row " + c[2] + ", program " + (s == null ? "none" : s.getName(true)));
         }
+        println("ApplySymbols: kept " + kept.size() + " items with names of their own");
         println("ApplySymbols: verified functions " + fOk + "/" + fNamed + " named rows (" + fRows
                 + " rows), globals " + gOk + "/" + gNamed + " named rows (" + gRows + " rows), failures " + failures);
     }
@@ -319,6 +341,8 @@ public class ApplySymbols extends GhidraScript {
     @Override
     public void run() throws Exception {
         String dir = getScriptArgs()[0];
+        keep = getScriptArgs().length > 1 && getScriptArgs()[1].equals("keep");
+        if (keep) println("ApplySymbols: keep");
         dtm = currentProgram.getDataTypeManager();
         symtab = currentProgram.getSymbolTable();
         applyStructs(dir);
