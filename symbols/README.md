@@ -1,48 +1,5 @@
 # The symbol table
 
-`cargo xtask check --exe` adds the stack: the sum of the bytes the signature puts on the stack is
-the `N` of every `ret N` the body reaches in its own extent, and a `__cdecl` body returns with
-`ret`. A struct returned by value through a hidden pointer (any size but 1, 2, 4 and 8) adds four
-bytes to `__stdcall` and `__thiscall`. A body that ends in a tail jump, as a thunk does, takes the
-`ret N` of the row it jumps to; a body that never returns is not compared.
-The convention is decided at the bytes on both sides of the call, by `tools/conventions.py`: the
-registers the body reads before it writes them, and what every direct caller loads into `ecx` and
-`edx` before the call. A function the client reaches through a pointer has the type of the
-registration, whatever its body reads: `int __fastcall (lua_State *L)` for a Lua C function,
-`__fastcall (const char *name, const char *args)` for a console command, and `__fastcall (void
-*param, uint32_t opcode, uint32_t time, CDataStore *msg)` for a message handler. Another function
-that no direct call reaches and whose body reads neither register keeps the registers of its older
-signature. Which test it applies, and how far its answer goes, is in the tool's
-header.
-- `RET` is a type with no name. `CONV` is `__cdecl`, `__stdcall`, `__fastcall` or `__thiscall`,
-  and no other word: a register is never written in the signature.
-- `PARAMS` is `void`, nothing, or parameters separated by `, `. A parameter is a type with an
-  optional name, unique in the signature. A function pointer parameter has no convention of
-  its own: `int (*fn)(lua_State *)`; a callee that takes a different convention is `void *`.
-- `...` ends the list and only `__cdecl` takes it.
-- No `/* */` comment, no `@`, no name before the parameter list.
-- Every type is built in (`void`, the C integer and float words), one of the fixed-width and
-  size types `bool`, `int8_t` to `int64_t`, `uint8_t` to `uint64_t`, `intptr_t`, `uintptr_t`,
-  `size_t`, `ptrdiff_t`, `wchar_t` and `va_list`, a row of `structs.tsv`, or a name behind a
-  pointer, which the header declares opaque. A type by value, the return included, is built in or
-  a struct row: a Windows handle is `void *`, and a `RECT` passed by value is its four `int32_t`.
-- `__thiscall` lists `T *this` first: the object in `ecx`. The rest are the stack arguments.
-  `T` is the type of the object `ecx` points to: the class when the method's name gives one,
-  else the struct or built-in type the body treats it as (`EvtContext *this`, `float *this`), else
-  `void`. A name's class does not give way to a type the body shows (`uint64_t *this` for
-  `CGGameUI::Target`, whose `ecx` is a guid pointer). A function that takes an integer in `ecx` is `__fastcall`. Only
-  `__thiscall` names a parameter `this`.
-- `__fastcall` takes its first two parameters of at most four bytes that are not `float` in `ecx`
-  and `edx`, and the rest on the stack. A register the body never reads still has its parameter
-  (`uint32_t unused`; `unused1` and `unused2` when both are), since the next parameter does not
-  move into it. A register parameter with no known name is `argN`, where N counts every
-  parameter of the signature from 1, `this` included.
-- Every parameter takes four bytes on the stack, rounded up: eight for `uint64_t`, `int64_t` and
-  `double`, a struct's size rounded up to four.
-A signature is `RET CONV (PARAMS)` and nothing else: the return type, one convention, the
-parameter list. Tools read it (the C header and the Ghidra, IDA and Binary Ninja imports), so
-the check holds every signature to this form.
-### The signature grammar
 Every known function, global, struct and struct field of `WoW.exe` 1.12.1.5875, one row each. A
 row says what the thing is in a line and links to the finding that proves it. The detail lives
 in the finding; the row is the index.
@@ -148,7 +105,7 @@ doc yet whose meaning a finding elsewhere derives.
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
 | `signature` | The C prototype without the name, in the grammar below: `uint32_t __fastcall (uint32_t x)`. Empty when not derived. |
-| `test` | The bit-exact tests that run this function against the exe, whole or a slice, `crate::test_fn` separated by `, `: a top-level test function of a file under `crates/<crate>/tests/` (`../CONTRIBUTING.md`, Adding a test). Empty when there is none. |
+| `test` | The bit-exact tests that run this function against the exe, whole or a slice, `crate::test_fn` separated by `, `: a top-level test function of a file under `crates/<crate>/tests/` (`../docs/CONTRIBUTING.md`, Adding a test). Empty when there is none. |
 
 A function row's address is a function start (`../docs/METHOD.md`, Completeness). Its body is every
 instruction reached from that entry by falling through (a `call` falls through), by the targets of
@@ -206,6 +163,54 @@ Classes:
 
 A class on a row with no `finding` is the classifier's, from `cargo xtask census`; a reading
 replaces it.
+
+### The signature grammar
+
+A signature is `RET CONV (PARAMS)` and nothing else: the return type, one convention, the
+parameter list. Tools read it (the C header and the Ghidra, IDA and Binary Ninja imports), so
+the check holds every signature to this form.
+
+- `RET` is a type with no name. `CONV` is `__cdecl`, `__stdcall`, `__fastcall` or `__thiscall`,
+  and no other word: a register is never written in the signature.
+- `PARAMS` is `void`, nothing, or parameters separated by `, `. A parameter is a type with an
+  optional name, unique in the signature. A function pointer parameter has no convention of
+  its own: `int (*fn)(lua_State *)`; a callee that takes a different convention is `void *`.
+- `...` ends the list and only `__cdecl` takes it.
+- No `/* */` comment, no `@`, no name before the parameter list.
+- Every type is built in (`void`, the C integer and float words), one of the fixed-width and
+  size types `bool`, `int8_t` to `int64_t`, `uint8_t` to `uint64_t`, `intptr_t`, `uintptr_t`,
+  `size_t`, `ptrdiff_t`, `wchar_t` and `va_list`, a row of `structs.tsv`, or a name behind a
+  pointer, which the header declares opaque. A type by value, the return included, is built in or
+  a struct row: a Windows handle is `void *`, and a `RECT` passed by value is its four `int32_t`.
+- `__thiscall` lists `T *this` first: the object in `ecx`. The rest are the stack arguments.
+  `T` is the type of the object `ecx` points to: the class when the method's name gives one,
+  else the struct or built-in type the body treats it as (`EvtContext *this`, `float *this`), else
+  `void`. A name's class does not give way to a type the body shows (`uint64_t *this` for
+  `CGGameUI::Target`, whose `ecx` is a guid pointer). A function that takes an integer in `ecx` is `__fastcall`. Only
+  `__thiscall` names a parameter `this`.
+- `__fastcall` takes its first two parameters of at most four bytes that are not `float` in `ecx`
+  and `edx`, and the rest on the stack. A register the body never reads still has its parameter
+  (`uint32_t unused`; `unused1` and `unused2` when both are), since the next parameter does not
+  move into it. A register parameter with no known name is `argN`, where N counts every
+  parameter of the signature from 1, `this` included.
+- Every parameter takes four bytes on the stack, rounded up: eight for `uint64_t`, `int64_t` and
+  `double`, a struct's size rounded up to four.
+
+`cargo xtask check --exe` adds the stack: the sum of the bytes the signature puts on the stack is
+the `N` of every `ret N` the body reaches in its own extent, and a `__cdecl` body returns with
+`ret`. A struct returned by value through a hidden pointer (any size but 1, 2, 4 and 8) adds four
+bytes to `__stdcall` and `__thiscall`. A body that ends in a tail jump, as a thunk does, takes the
+`ret N` of the row it jumps to; a body that never returns is not compared.
+
+The convention is decided at the bytes on both sides of the call, by `tools/conventions.py`: the
+registers the body reads before it writes them, and what every direct caller loads into `ecx` and
+`edx` before the call. A function the client reaches through a pointer has the type of the
+registration, whatever its body reads: `int __fastcall (lua_State *L)` for a Lua C function,
+`__fastcall (const char *name, const char *args)` for a console command, and `__fastcall (void
+*param, uint32_t opcode, uint32_t time, CDataStore *msg)` for a message handler. Another function
+that no direct call reaches and whose body reads neither register keeps the registers of its older
+signature. Which test it applies, and how far its answer goes, is in the tool's
+header.
 
 ## globals.tsv
 

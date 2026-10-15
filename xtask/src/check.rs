@@ -684,6 +684,14 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
         }
     }
 
+    let mut texts = Vec::new();
+    for path in &markdown {
+        if let Some(text) = read(tree, path, &mut p)? {
+            texts.push((*path, text));
+        }
+    }
+    paths::check(&files, &texts, &mut p);
+
     p.0.extend(crate::tables::check_headers(tree, &files)?);
 
     Ok(Checked {
@@ -1247,5 +1255,6 @@ fn check_doc(
     }
 }
 
+mod paths;
 #[cfg(test)]
 mod tests;

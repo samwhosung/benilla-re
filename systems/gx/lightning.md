@@ -1,6 +1,6 @@
 # gx: lightning
 
-`Lightning.cpp` (`0x7af5c0` through `0x7b0d90`, between the particle registries of `models` and the particle emitters) draws chain-lightning bolts: a jagged polyline between two points, swept into a camera-facing ribbon and drawn additively with a scrolling texture. A renderer object holds the bolts and hands out integer handles; the spell visuals (`spell/visuals.md`) create, move, show, update and render them. The file's static initializers are `0x7af990` (+∞), `0x7b0c10` (2π), `0x7b0c30` (1/2π) and `0x7af5c0`, which seeds its random generator at `0xcf57b0` with 0 once at start-up.
+`Lightning.cpp` (`0x7af5c0` through `0x7b0d90`, between the particle registries of `models` and the particle emitters) draws chain-lightning bolts: a jagged polyline between two points, swept into a camera-facing ribbon and drawn additively with a scrolling texture. A renderer object holds the bolts and hands out integer handles; the spell visuals (`spell/visuals`) create, move, show, update and render them. The file's static initializers are `0x7af990` (+∞), `0x7b0c10` (2π), `0x7b0c30` (1/2π) and `0x7af5c0`, which seeds its random generator at `0xcf57b0` with 0 once at start-up.
 
 Roots: `0x7b0760`, `0x7b0780`, `0x7b07f0`, `0x7b0950`, `0x7b0a40`, `0x7b0a80`, `0x7b0ac0`, `0x7b0bd0`, `0x7af5c0`
 
