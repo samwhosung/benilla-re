@@ -1551,21 +1551,21 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41a2c0	62	CStatus::GetErrorStrAlloc	idb	client			Runs Status.cpp code that calls CStatus::GetErrorStrLen, SMemAlloc, CStatus::GetErrorStr; not read here	inferred	none		
 0x41a300	5			client			Runs its object file code not read here	inferred	none		
 0x41a310	15			client			Runs its object file code not read here	inferred	none		
-0x41a320	5			client			Runs its object file code not read here	inferred	none		
-0x41a330	19			client			Runs its object file code not read here	inferred	none		
-0x41a350	338			client			Runs its object file code that calls 0x41a4b0, 0x41a520; not read here	inferred	none		
-0x41a4b0	106			client			Runs its object file code that calls 0x41a520; not read here	inferred	none		
-0x41a520	35			client			Runs its object file code not read here	inferred	none		
-0x41a550	238			client	unreached		Runs its object file code not read here	inferred	none		
-0x41a640	5			client			Runs its object file code not read here	inferred	none		
-0x41a650	11			client			Runs its object file code not read here	inferred	none		
-0x41a660	425			client			Runs its object file code not read here	inferred	none		
-0x41a830	226			client	unreached		Runs its object file code not read here	inferred	none		
-0x41a930	360			client			Runs its object file code not read here	inferred	none		
-0x41aab0	256	sgetu8	idb	client			Runs its object file code not read here	inferred	none		
-0x41abb0	234			client			Runs its object file code not read here	inferred	none		
-0x41aca0	5			client			Runs its object file code not read here	inferred	none		
-0x41acb0	15			client			Runs its object file code not read here	inferred	none		
+0x41a320	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41a330	19			unassigned			Runs its object file code not read here	inferred	none		
+0x41a350	338			unassigned			Runs its object file code that calls 0x41a4b0, 0x41a520; not read here	inferred	none		
+0x41a4b0	106			unassigned			Runs its object file code that calls 0x41a520; not read here	inferred	none		
+0x41a520	35			unassigned			Runs its object file code not read here	inferred	none		
+0x41a550	238			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41a640	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41a650	11			unassigned			Runs its object file code not read here	inferred	none		
+0x41a660	425			unassigned			Runs its object file code not read here	inferred	none		
+0x41a830	226			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41a930	360			unassigned			Runs its object file code not read here	inferred	none		
+0x41aab0	256	sgetu8	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x41abb0	234			unassigned			Runs its object file code not read here	inferred	none		
+0x41aca0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41acb0	15			unassigned			Runs its object file code not read here	inferred	none		
 0x41acc0	5			unassigned			Runs its object file code not read here	inferred	none		
 0x41acd0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x41acf0	5			unassigned			Runs its object file code not read here	inferred	none		
@@ -1596,8 +1596,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41af70	8	CompareHandles		base			Returns the difference of two handles shifted right by 2	inferred	none	models/scene#element-sort-orders	
 0x41af80	5			base			Runs its object file code not read here	inferred	none		
 0x41af90	15			base			Runs its object file code not read here	inferred	none		
-0x41afa0	5			base			Runs its object file code not read here	inferred	none		
-0x41afb0	19			base			Runs its object file code not read here	inferred	none		
+0x41afa0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41afb0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x41afd0	5			base			Runs its object file code not read here	inferred	none		
 0x41afe0	11			base			Runs its object file code not read here	inferred	none		
 0x41aff0	10			base			Runs its object file code that calls 0x41b000; not read here	inferred	none		
@@ -1650,25 +1650,25 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41cd40	181			base	unreached		Runs its object file code not read here	inferred	none		
 0x41ce00	5			base			Runs its object file code not read here	inferred	none		
 0x41ce10	15			base			Runs its object file code not read here	inferred	none		
-0x41ce20	5			base			Runs its object file code not read here	inferred	none		
-0x41ce30	19			base			Runs its object file code not read here	inferred	none		
-0x41ce50	25			base			Runs its object file code not read here	inferred	none		
-0x41ce70	181			base	unreached		Runs its object file code not read here	inferred	none		
-0x41cf30	41			base			Runs its object file code not read here	inferred	none		
-0x41cf60	12			base	unreached		Runs its object file code not read here	inferred	none		
-0x41cf70	483			base	unreached		Runs its object file code that calls 0x41d160, 0x41d1e0, 0x41d190 and 4 more; not read here	inferred	none		
-0x41d160	33			base	unreached		Runs its object file code not read here	inferred	none		
-0x41d190	77			base	unreached		Runs its object file code not read here	inferred	none		
-0x41d1e0	12			base	unreached		Runs its object file code not read here	inferred	none		
-0x41d1f0	477			base	unreached		Runs its object file code that calls 0x41cf60, 0x41cd20, 0x41c6e0 and 4 more; not read here	inferred	none		
-0x41d3d0	33			base	unreached		Runs its object file code not read here	inferred	none		
-0x41d400	176			base	unreached		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x41d4b0	316			base	unreached		Runs its object file code that calls 0x41d8c0, 0x41c6e0, 0x41c9d0; not read here	inferred	none		
-0x41d5f0	316			base	unreached		Runs its object file code that calls 0x41d9d0, 0x41ca00, 0x41cf30; not read here	inferred	none		
-0x41d730	319			base	unreached		Runs its object file code that calls 0x41c720, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		
-0x41d870	77			base	unreached		Runs its object file code not read here	inferred	none		
-0x41d8c0	264			base	unreached		Runs its object file code that calls 0x41d870, 0x41c6e0, SMemReAlloc and 3 more; not read here	inferred	none		
-0x41d9d0	264			base	unreached		Runs its object file code that calls 0x41d190, 0x41ca00, SMemReAlloc and 3 more; not read here	inferred	none		
+0x41ce20	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41ce30	19			unassigned			Runs its object file code not read here	inferred	none		
+0x41ce50	25			unassigned			Runs its object file code not read here	inferred	none		
+0x41ce70	181			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41cf30	41			unassigned			Runs its object file code not read here	inferred	none		
+0x41cf60	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41cf70	483			unassigned	unreached		Runs its object file code that calls 0x41d160, 0x41d1e0, 0x41d190 and 4 more; not read here	inferred	none		
+0x41d160	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41d190	77			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41d1e0	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41d1f0	477			unassigned	unreached		Runs its object file code that calls 0x41cf60, 0x41cd20, 0x41c6e0 and 4 more; not read here	inferred	none		
+0x41d3d0	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41d400	176			unassigned	unreached		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x41d4b0	316			unassigned	unreached		Runs its object file code that calls 0x41d8c0, 0x41c6e0, 0x41c9d0; not read here	inferred	none		
+0x41d5f0	316			unassigned	unreached		Runs its object file code that calls 0x41d9d0, 0x41ca00, 0x41cf30; not read here	inferred	none		
+0x41d730	319			unassigned	unreached		Runs its object file code that calls 0x41c720, SMemReAlloc, SMemAlloc and 3 more; not read here	inferred	none		
+0x41d870	77			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x41d8c0	264			unassigned	unreached		Runs its object file code that calls 0x41d870, 0x41c6e0, SMemReAlloc and 3 more; not read here	inferred	none		
+0x41d9d0	264			unassigned	unreached		Runs its object file code that calls 0x41d190, 0x41ca00, SMemReAlloc and 3 more; not read here	inferred	none		
 0x41dae0	19	CreateThreadPropSlot		base			Allocates the TLS slot of the thread properties and stores null in it	verified	one	core/threads#thread-properties	
 0x41db00	11	FreeThreadPropSlot		base			Frees the TLS slot of the thread properties	verified	one	core/threads#thread-properties	
 0x41db10	5			base			Runs its object file code not read here	inferred	none		
@@ -1681,8 +1681,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41dbb0	27	SetThreadProp		base			Stores element i of the calling thread's property array when there is one	verified	one	core/threads#thread-properties	
 0x41dbd0	5			base			Runs its object file code not read here	inferred	none		
 0x41dbe0	15			base			Runs its object file code not read here	inferred	none		
-0x41dbf0	5			base			Runs its object file code not read here	inferred	none		
-0x41dc00	19			base			Runs its object file code not read here	inferred	none		
+0x41dbf0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41dc00	19			unassigned			Runs its object file code not read here	inferred	none		
 0x41dc20	5			base			Runs its object file code not read here	inferred	none		
 0x41dc30	11			base			Runs its object file code not read here	inferred	none		
 0x41dc40	10			base			Runs its object file code that calls 0x41dc50; not read here	inferred	none		
@@ -1736,8 +1736,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x41f290	264			base			Runs its object file code that calls 0x41ef80, 0x41e9a0, SMemReAlloc and 3 more; not read here	inferred	none		
 0x41f3a0	5			base			Runs its object file code not read here	inferred	none		
 0x41f3b0	15			base			Runs its object file code not read here	inferred	none		
-0x41f3c0	5			base			Runs its object file code not read here	inferred	none		
-0x41f3d0	19			base			Runs its object file code not read here	inferred	none		
+0x41f3c0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x41f3d0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x41f3f0	12	DeleteObjectThroughSlot1		base			Calls slot 1 of a non-null object's vtable with 1, deleting it	verified	one	core/events#observer-classes	
 0x41f400	40			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x41f430	180			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
@@ -2141,14 +2141,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x4297c0	50	OsGetTimeZoneBias		os		int32_t __cdecl (void)	Returns minus the system time-zone bias in minutes, or 0 when the query fails	verified	one	net/login#logon-challenge	
 0x429800	5			os			Runs its object file code not read here	inferred	none		
 0x429810	15			os			Runs its object file code not read here	inferred	none		
-0x429820	5			os			Runs its object file code not read here	inferred	none		
-0x429830	19			os			Runs its object file code not read here	inferred	none		
-0x429850	39			os	unreached		Runs its object file code that calls GetCpuCapabilities; not read here	inferred	none		
-0x429880	86			os			Runs its object file code that calls ReadCpuid, strncmp; not read here	inferred	none		
+0x429820	5			unassigned			Runs its object file code not read here	inferred	none		
+0x429830	19			unassigned			Runs its object file code not read here	inferred	none		
+0x429850	39			unassigned	unreached		Runs its object file code that calls GetCpuCapabilities; not read here	inferred	none		
+0x429880	86			unassigned			Runs its object file code that calls ReadCpuid, strncmp; not read here	inferred	none		
 0x4298e0	204	ReadCpuid		os			Fills a block with CPUID's vendor, leaves 1 and 4 and extended leaves; returns 0 without them	inferred	none	core/time#multi-core-gate	
-0x4299b0	145			os			Runs its object file code that calls 0x64bf90; not read here	inferred	none		
-0x429a50	11			os			Runs its object file code not read here	inferred	none		
-0x429a60	294			os			Runs its object file code that calls OsCreateDirectory, SLogCreate, SLogWrite and 3 more; not read here	inferred	none		
+0x4299b0	145			unassigned			Runs its object file code that calls 0x64bf90; not read here	inferred	none		
+0x429a50	11			unassigned			Runs its object file code not read here	inferred	none		
+0x429a60	294			unassigned			Runs its object file code that calls OsCreateDirectory, SLogCreate, SLogWrite and 3 more; not read here	inferred	none		
 0x429b90	350	GetCpuCapabilities		os			Returns the processor capability word from CPUID; 0x40 marks more than one core	verified	one	core/time#multi-core-gate	
 0x429cf0	5			os			Runs its object file code not read here	inferred	none		
 0x429d00	11			os			Runs its object file code not read here	inferred	none		
@@ -2178,23 +2178,23 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42a380	133	FindTextSection		os			Stores the start and end of the exe .text section from its section table	verified	one	ui/luastate#the-c-function-contract	
 0x42a410	5			os			Runs its object file code not read here	inferred	none		
 0x42a420	15			os			Runs its object file code not read here	inferred	none		
-0x42a430	5			os			Runs its object file code not read here	inferred	none		
-0x42a440	19			os			Runs its object file code not read here	inferred	none		
-0x42a460	107			os			Runs its object file code that calls SUniConvertUTF8to16; not read here	inferred	none		
-0x42a4d0	8			os			Runs its object file code not read here	inferred	none		
+0x42a430	5			unassigned			Runs its object file code not read here	inferred	none		
+0x42a440	19			unassigned			Runs its object file code not read here	inferred	none		
+0x42a460	107			unassigned			Runs its object file code that calls SUniConvertUTF8to16; not read here	inferred	none		
+0x42a4d0	8			unassigned			Runs its object file code not read here	inferred	none		
 0x42a4e0	32	OsFileExists		os			Returns 1 when a path names an existing file that is not a directory	inferred	none		
 0x42a500	32	OsDirectoryExists		os			Returns 1 when a path names an existing directory	inferred	none		
-0x42a520	172			os			Runs its object file code that calls SErrSetLastError, 0x42a620; not read here	inferred	none		
-0x42a5d0	59			os			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x42a610	8			os	unreached		Runs its object file code not read here	inferred	none		
-0x42a620	75			os			Runs its object file code not read here	inferred	none		
-0x42a670	24			os			Runs its object file code not read here	inferred	none		
-0x42a690	23			os	unreached		Runs its object file code not read here	inferred	none		
-0x42a6b0	23			os	unreached		Runs its object file code not read here	inferred	none		
-0x42a6d0	115			os	unreached		Runs its object file code that calls 0x42a460, 0x42a690, 0x42a4d0; not read here	inferred	none		
-0x42a750	8			os	unreached		Runs its object file code not read here	inferred	none		
-0x42a760	70	OsGetFileAttributes	idb	os			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
-0x42a7b0	76			os			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
+0x42a520	172			unassigned			Runs its object file code that calls SErrSetLastError, 0x42a620; not read here	inferred	none		
+0x42a5d0	59			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x42a610	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42a620	75			unassigned			Runs its object file code not read here	inferred	none		
+0x42a670	24			unassigned			Runs its object file code not read here	inferred	none		
+0x42a690	23			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42a6b0	23			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42a6d0	115			unassigned	unreached		Runs its object file code that calls 0x42a460, 0x42a690, 0x42a4d0; not read here	inferred	none		
+0x42a750	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42a760	70	OsGetFileAttributes	idb	unassigned			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
+0x42a7b0	76			unassigned			Runs its object file code that calls SErrSetLastError, SUniConvertUTF8to16; not read here	inferred	none		
 0x42a800	5			os			Runs its object file code not read here	inferred	none		
 0x42a810	11			os			Runs its object file code not read here	inferred	none		
 0x42a820	127	OsMoveFile		os			Moves a file or folder with MoveFileW after converting both UTF-8 paths to UTF-16	inferred	none		
@@ -2384,373 +2384,373 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x42fb70	26			os	unreached		Runs its object file code that calls 0x42e510; not read here	inferred	none		
 0x42fb90	303			os	unreached		Runs its object file code that calls 0x42fcd0, 0x430040, 0x4365f0 and 6 more; not read here	inferred	none		
 0x42fcc0	14			os	unreached		Runs its object file code not read here	inferred	none		
-0x42fcd0	138			os	unreached		Runs its object file code that calls SErrSetLastError, 0x42fe90, 0x42fd60 and 1 more; not read here	inferred	none		
-0x42fd60	293			os	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x42fcd0	138			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x42fe90, 0x42fd60 and 1 more; not read here	inferred	none		
+0x42fd60	293			unassigned	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
 0x42fe90	11	GetWindowParentOf		os			Returns the parent window of the window handle stored at +4 of ecx	verified	one	core/input#message-filter-and-idle-sleep	
-0x42fea0	26			os	unreached		Runs its object file code that calls 0x42fec0; not read here	inferred	none		
-0x42fec0	117			os	unreached		Runs its object file code not read here	inferred	none		
-0x42ff40	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x42ff70	150			os	unreached		Runs its object file code that calls 0x436810, 0x436830; not read here	inferred	none		
-0x430010	39			os	unreached		Runs its object file code not read here	inferred	none		
-0x430040	51			os	unreached		Runs its object file code that calls 0x430080, 0x42fcc0; not read here	inferred	none		
-0x430080	138			os	unreached		Runs its object file code that calls 0x430010, 0x436830; not read here	inferred	none		
-0x430110	66			os			Runs its object file code not read here	inferred	none		
-0x430160	301			os			Runs its object file code that calls 0x430110, 0x4305e0, 0x431a50 and 5 more; not read here	inferred	none		
-0x430290	63			os	unreached		Runs its object file code that calls 0x430160; not read here	inferred	none		
-0x4302d0	36			os	unreached		Runs its object file code that calls 0x430300; not read here	inferred	none		
-0x430300	84			os	unreached		Runs its object file code not read here	inferred	none		
-0x430360	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x430380	30			os	unreached		Runs its object file code not read here	inferred	none		
-0x4303a0	25			os			Runs its object file code that calls OsGuiGetWindow; not read here	inferred	none		
-0x4303c0	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x4303d0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4303f0	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x430400	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x430410	25			os	unreached		Runs its object file code not read here	inferred	none		
-0x430430	36			os	unreached		Runs its object file code that calls 0x4303f0; not read here	inferred	none		
-0x430460	33			os	unreached		Runs its object file code not read here	inferred	none		
-0x430490	78			os	unreached		Runs its object file code not read here	inferred	none		
-0x4304e0	33			os			Runs its object file code not read here	inferred	none		
-0x430510	51			os	unreached		Runs its object file code that calls 0x435b20; not read here	inferred	none		
-0x430550	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x430570	49			os	unreached		Runs its object file code not read here	inferred	none		
-0x4305b0	21			os	unreached		Runs its object file code not read here	inferred	none		
-0x4305d0	6			os	unreached		Runs its object file code not read here	inferred	none		
-0x4305e0	62			os			Runs its object file code that calls 0x430760; not read here	inferred	none		
-0x430620	40			os	unreached		Runs its object file code not read here	inferred	none		
-0x430650	40			os	unreached		Runs its object file code not read here	inferred	none		
-0x430680	57			os	unreached		Runs its object file code that calls 0x430300, 0x430760; not read here	inferred	none		
-0x4306c0	153			os	unreached		Runs its object file code that calls 0x430300, 0x430760; not read here	inferred	none		
-0x430760	53			os			Runs its object file code not read here	inferred	none		
-0x4307a0	58			os			Runs its object file code not read here	inferred	none		
-0x4307e0	60			os	unreached		Runs its object file code that calls 0x42e600, SMemFree; not read here	inferred	none		
-0x430820	84			os	unreached		Runs its object file code that calls 0x430760; not read here	inferred	none		
-0x430880	19			os			Runs its object file code not read here	inferred	none		
-0x4308a0	46			os	unreached		Runs its object file code that calls 0x430110; not read here	inferred	none		
-0x4308d0	46			os	unreached		Runs its object file code that calls 0x430110; not read here	inferred	none		
-0x430900	57			os	unreached		Runs its object file code that calls 0x4309b0, 0x42ff70; not read here	inferred	none		
-0x430940	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x430970	49			os	unreached		Runs its object file code that calls 0x4309b0; not read here	inferred	none		
-0x4309b0	483			os	unreached		Runs its object file code that calls 0x430d30, 0x42f3b0; not read here	inferred	none		
-0x430bd0	65			os	unreached		Runs its object file code that calls 0x42fcc0, 0x42e600, SMemFree; not read here	inferred	none		
-0x430c20	62			os	unreached		Runs its object file code not read here	inferred	none		
-0x430c60	23			os	unreached		Runs its object file code not read here	inferred	none		
-0x430c80	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x430ca0	61			os	unreached		Runs its object file code not read here	inferred	none		
-0x430ce0	79			os			Runs its object file code that calls 0x430760; not read here	inferred	none		
-0x430d30	60			os	unreached		Runs its object file code not read here	inferred	none		
-0x430d70	37			os	unreached		Runs its object file code that calls OsGuiGetWindow; not read here	inferred	none		
-0x430da0	31			os	unreached		Runs its object file code that calls 0x430dc0; not read here	inferred	none		
-0x430dc0	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x430de0	32			os	unreached		Runs its object file code not read here	inferred	none		
-0x430e00	25			os	unreached		Runs its object file code not read here	inferred	none		
-0x430e20	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x430e30	124			os	unreached		Runs its object file code that calls SStrLen; not read here	inferred	none		
-0x430eb0	58			os	unreached		Runs its object file code that calls 0x430e00, 0x430e30; not read here	inferred	none		
-0x430ef0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x430f10	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x430f20	21			os	unreached		Runs its object file code not read here	inferred	none		
-0x430f40	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x430f50	33			os	unreached		Runs its object file code not read here	inferred	none		
-0x430f80	131			os	unreached		Runs its object file code that calls 0x435b20; not read here	inferred	none		
-0x431010	44			os	unreached		Runs its object file code not read here	inferred	none		
-0x431040	52			os	unreached		Runs its object file code not read here	inferred	none		
-0x431080	133			os	unreached		Runs its object file code that calls 0x431110, 0x42fea0, 0x4420b0; not read here	inferred	none		
-0x431110	22			os	unreached		Runs its object file code that calls 0x42fec0; not read here	inferred	none		
-0x431130	60			os	unreached		Runs its object file code that calls 0x42e600, SMemFree; not read here	inferred	none		
-0x431170	100			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x4311e0	22			os	unreached		Runs its object file code not read here	inferred	none		
-0x431200	44			os	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
-0x431230	49			os	unreached		Runs its object file code not read here	inferred	none		
-0x431270	47			os	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
-0x4312a0	45			os	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
-0x4312d0	40			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x431300	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x431330	30			os	unreached		Runs its object file code not read here	inferred	none		
-0x431350	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x431360	58			os	unreached		Runs its object file code that calls 0x430f40, 0x430f20; not read here	inferred	none		
-0x4313a0	40			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x4313d0	43			os	unreached		Runs its object file code that calls 0x431430, SMemFree; not read here	inferred	none		
-0x431400	40			os	unreached		Runs its object file code that calls 0x430970; not read here	inferred	none		
-0x431430	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x431440	31			os	unreached		Runs its object file code not read here	inferred	none		
-0x431460	81			os	unreached		Runs its object file code that calls 0x4314c0; not read here	inferred	none		
-0x4314c0	84			os	unreached		Runs its object file code not read here	inferred	none		
-0x431520	58			os	unreached		Runs its object file code that calls 0x430f40, 0x430f20; not read here	inferred	none		
-0x431560	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x431580	54			os	unreached		Runs its object file code that calls 0x430900, 0x431630; not read here	inferred	none		
-0x4315c0	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x4315f0	54			os	unreached		Runs its object file code that calls 0x430970, 0x431630; not read here	inferred	none		
-0x431630	5			os	unreached		Runs its object file code not read here	inferred	none		
-0x431640	77			os	unreached		Runs its object file code not read here	inferred	none		
-0x431690	39			os	unreached		Runs its object file code that calls 0x430c60; not read here	inferred	none		
-0x4316c0	74			os	unreached		Runs its object file code not read here	inferred	none		
-0x431710	38			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x431740	43			os	unreached		Runs its object file code that calls 0x431770, SMemFree; not read here	inferred	none		
-0x431770	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x431780	31			os	unreached		Runs its object file code not read here	inferred	none		
-0x4317a0	81			os	unreached		Runs its object file code that calls 0x4314c0; not read here	inferred	none		
-0x431800	74			os	unreached		Runs its object file code that calls 0x431040, 0x431010; not read here	inferred	none		
-0x431850	47			os	unreached		Runs its object file code that calls 0x430900, 0x4318e0; not read here	inferred	none		
-0x431880	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x4318b0	47			os	unreached		Runs its object file code that calls 0x430970, 0x4318e0; not read here	inferred	none		
-0x4318e0	29			os	unreached		Runs its object file code not read here	inferred	none		
-0x431900	111			os	unreached		Runs its object file code that calls 0x42e510, 0x431970; not read here	inferred	none		
-0x431970	29			os	unreached		Runs its object file code that calls 0x4319e0, 0x430ce0; not read here	inferred	none		
-0x431990	10			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x4319a0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4319c0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4319e0	39			os	unreached		Runs its object file code not read here	inferred	none		
-0x431a10	13			os	unreached		Runs its object file code not read here	inferred	none		
-0x431a20	42			os	unreached		Runs its object file code not read here	inferred	none		
-0x431a50	34			os			Runs its object file code that calls 0x431a80; not read here	inferred	none		
-0x431a80	165			os			Runs its object file code not read here	inferred	none		
-0x431b30	118			os	unreached		Runs its object file code that calls 0x4319e0; not read here	inferred	none		
-0x431bc0	182			os	unreached		Runs its object file code that calls 0x4319c0; not read here	inferred	none		
-0x431c90	77			os	unreached		Runs its object file code that calls 0x430900, 0x435ea0; not read here	inferred	none		
-0x431ce0	43			os	unreached		Runs its object file code that calls 0x431d10, SMemFree; not read here	inferred	none		
-0x431d10	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x431d20	34			os	unreached		Runs its object file code that calls 0x431010, 0x431e70; not read here	inferred	none		
-0x431d50	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x431d70	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x431d90	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x431db0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x431dd0	68			os	unreached		Runs its object file code that calls 0x431db0, 0x431e70; not read here	inferred	none		
-0x431e20	39			os	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
-0x431e50	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x431e70	76			os	unreached		Runs its object file code that calls 0x431e50, 0x431db0, 0x431040 and 1 more; not read here	inferred	none		
-0x431ec0	18			os	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
-0x431ee0	39			os	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
-0x431f10	34			os	unreached		Runs its object file code that calls 0x431ee0, 0x431dd0; not read here	inferred	none		
-0x431f40	40			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x431f70	43			os	unreached		Runs its object file code that calls 0x431fa0, SMemFree; not read here	inferred	none		
-0x431fa0	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x431fb0	48			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x431fe0	40			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x432010	50			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x432050	50			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x432090	72			os	unreached		Runs its object file code that calls SErrSetLastError, 0x432100, 0x432010; not read here	inferred	none		
-0x4320e0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x432100	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x432120	30			os	unreached		Runs its object file code not read here	inferred	none		
-0x432140	43			os	unreached		Runs its object file code that calls 0x432100; not read here	inferred	none		
-0x432170	34			os	unreached		Runs its object file code that calls 0x432140, 0x432120; not read here	inferred	none		
-0x4321a0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4321c0	60			os	unreached		Runs its object file code that calls 0x4321a0, SErrSetLastError; not read here	inferred	none		
-0x432200	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432220	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x432240	187			os	unreached		Runs its object file code that calls 0x430f80, 0x432100, 0x432090 and 3 more; not read here	inferred	none		
-0x432300	10			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x432310	59			os	unreached		Runs its object file code that calls 0x430900, 0x4324b0; not read here	inferred	none		
-0x432350	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x432380	59			os	unreached		Runs its object file code that calls 0x430970, 0x4324b0; not read here	inferred	none		
-0x4323c0	18			os	unreached		Runs its object file code not read here	inferred	none		
-0x4323e0	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x432410	26			os	unreached		Runs its object file code not read here	inferred	none		
-0x432430	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x432450	30			os	unreached		Runs its object file code not read here	inferred	none		
-0x432470	55			os	unreached		Runs its object file code that calls 0x432450, 0x430ca0; not read here	inferred	none		
-0x4324b0	96			os	unreached		Runs its object file code that calls 0x430eb0, 0x431040, 0x431010; not read here	inferred	none		
-0x432510	13			os	unreached		Runs its object file code not read here	inferred	none		
-0x432520	38			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x432550	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x432580	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4325a0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4325c0	38			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x4325f0	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x432620	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432640	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432660	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432680	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4326a0	85			os	unreached		Runs its object file code that calls 0x430900, 0x432790; not read here	inferred	none		
-0x432700	43			os	unreached		Runs its object file code that calls 0x4328a0, SMemFree; not read here	inferred	none		
-0x432730	85			os	unreached		Runs its object file code that calls 0x430970, 0x432790; not read here	inferred	none		
-0x432790	166			os	unreached		Runs its object file code that calls 0x432c80; not read here	inferred	none		
-0x432840	92			os	unreached		Runs its object file code that calls 0x42e510; not read here	inferred	none		
-0x4328a0	79			os	unreached		Runs its object file code that calls 0x4337f0, SMemFree; not read here	inferred	none		
-0x4328f0	44			os	unreached		Runs its object file code not read here	inferred	none		
-0x432920	23			os	unreached		Runs its object file code not read here	inferred	none		
-0x432940	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432960	103			os	unreached		Runs its object file code that calls 0x433ee0; not read here	inferred	none		
-0x4329d0	52			os	unreached		Runs its object file code not read here	inferred	none		
-0x432a10	58			os	unreached		Runs its object file code not read here	inferred	none		
-0x432a50	22			os	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
-0x432a70	19			os	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
-0x432a90	55			os	unreached		Runs its object file code that calls 0x433fa0, 0x433870; not read here	inferred	none		
-0x432ad0	41			os	unreached		Runs its object file code that calls 0x433fa0, 0x433870; not read here	inferred	none		
-0x432b00	24			os	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
-0x432b20	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x432b40	65			os	unreached		Runs its object file code not read here	inferred	none		
-0x432b90	70			os	unreached		Runs its object file code not read here	inferred	none		
-0x432be0	92			os	unreached		Runs its object file code that calls 0x432be0; not read here	inferred	none		
-0x432c40	50			os	unreached		Runs its object file code that calls 0x432be0; not read here	inferred	none		
-0x432c80	495			os	unreached		Runs its object file code that calls SErrSetLastError, 0x4314c0, 0x432e70 and 2 more; not read here	inferred	none		
+0x42fea0	26			unassigned	unreached		Runs its object file code that calls 0x42fec0; not read here	inferred	none		
+0x42fec0	117			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42ff40	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x42ff70	150			unassigned	unreached		Runs its object file code that calls 0x436810, 0x436830; not read here	inferred	none		
+0x430010	39			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430040	51			unassigned	unreached		Runs its object file code that calls 0x430080, 0x42fcc0; not read here	inferred	none		
+0x430080	138			unassigned	unreached		Runs its object file code that calls 0x430010, 0x436830; not read here	inferred	none		
+0x430110	66			unassigned			Runs its object file code not read here	inferred	none		
+0x430160	301			unassigned			Runs its object file code that calls 0x430110, 0x4305e0, 0x431a50 and 5 more; not read here	inferred	none		
+0x430290	63			unassigned	unreached		Runs its object file code that calls 0x430160; not read here	inferred	none		
+0x4302d0	36			unassigned	unreached		Runs its object file code that calls 0x430300; not read here	inferred	none		
+0x430300	84			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430360	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430380	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4303a0	25			unassigned			Runs its object file code that calls OsGuiGetWindow; not read here	inferred	none		
+0x4303c0	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4303d0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4303f0	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430400	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430410	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430430	36			unassigned	unreached		Runs its object file code that calls 0x4303f0; not read here	inferred	none		
+0x430460	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430490	78			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4304e0	33			unassigned			Runs its object file code not read here	inferred	none		
+0x430510	51			unassigned	unreached		Runs its object file code that calls 0x435b20; not read here	inferred	none		
+0x430550	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430570	49			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4305b0	21			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4305d0	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4305e0	62			unassigned			Runs its object file code that calls 0x430760; not read here	inferred	none		
+0x430620	40			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430650	40			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430680	57			unassigned	unreached		Runs its object file code that calls 0x430300, 0x430760; not read here	inferred	none		
+0x4306c0	153			unassigned	unreached		Runs its object file code that calls 0x430300, 0x430760; not read here	inferred	none		
+0x430760	53			unassigned			Runs its object file code not read here	inferred	none		
+0x4307a0	58			unassigned			Runs its object file code not read here	inferred	none		
+0x4307e0	60			unassigned	unreached		Runs its object file code that calls 0x42e600, SMemFree; not read here	inferred	none		
+0x430820	84			unassigned	unreached		Runs its object file code that calls 0x430760; not read here	inferred	none		
+0x430880	19			unassigned			Runs its object file code not read here	inferred	none		
+0x4308a0	46			unassigned	unreached		Runs its object file code that calls 0x430110; not read here	inferred	none		
+0x4308d0	46			unassigned	unreached		Runs its object file code that calls 0x430110; not read here	inferred	none		
+0x430900	57			unassigned	unreached		Runs its object file code that calls 0x4309b0, 0x42ff70; not read here	inferred	none		
+0x430940	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x430970	49			unassigned	unreached		Runs its object file code that calls 0x4309b0; not read here	inferred	none		
+0x4309b0	483			unassigned	unreached		Runs its object file code that calls 0x430d30, 0x42f3b0; not read here	inferred	none		
+0x430bd0	65			unassigned	unreached		Runs its object file code that calls 0x42fcc0, 0x42e600, SMemFree; not read here	inferred	none		
+0x430c20	62			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430c60	23			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430c80	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430ca0	61			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430ce0	79			unassigned			Runs its object file code that calls 0x430760; not read here	inferred	none		
+0x430d30	60			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430d70	37			unassigned	unreached		Runs its object file code that calls OsGuiGetWindow; not read here	inferred	none		
+0x430da0	31			unassigned	unreached		Runs its object file code that calls 0x430dc0; not read here	inferred	none		
+0x430dc0	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430de0	32			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430e00	25			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430e20	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430e30	124			unassigned	unreached		Runs its object file code that calls SStrLen; not read here	inferred	none		
+0x430eb0	58			unassigned	unreached		Runs its object file code that calls 0x430e00, 0x430e30; not read here	inferred	none		
+0x430ef0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430f10	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430f20	21			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430f40	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430f50	33			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x430f80	131			unassigned	unreached		Runs its object file code that calls 0x435b20; not read here	inferred	none		
+0x431010	44			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431040	52			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431080	133			unassigned	unreached		Runs its object file code that calls 0x431110, 0x42fea0, 0x4420b0; not read here	inferred	none		
+0x431110	22			unassigned	unreached		Runs its object file code that calls 0x42fec0; not read here	inferred	none		
+0x431130	60			unassigned	unreached		Runs its object file code that calls 0x42e600, SMemFree; not read here	inferred	none		
+0x431170	100			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x4311e0	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431200	44			unassigned	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
+0x431230	49			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431270	47			unassigned	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
+0x4312a0	45			unassigned	unreached		Runs its object file code that calls 0x431230, 0x430ce0; not read here	inferred	none		
+0x4312d0	40			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x431300	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x431330	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431350	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431360	58			unassigned	unreached		Runs its object file code that calls 0x430f40, 0x430f20; not read here	inferred	none		
+0x4313a0	40			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x4313d0	43			unassigned	unreached		Runs its object file code that calls 0x431430, SMemFree; not read here	inferred	none		
+0x431400	40			unassigned	unreached		Runs its object file code that calls 0x430970; not read here	inferred	none		
+0x431430	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431440	31			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431460	81			unassigned	unreached		Runs its object file code that calls 0x4314c0; not read here	inferred	none		
+0x4314c0	84			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431520	58			unassigned	unreached		Runs its object file code that calls 0x430f40, 0x430f20; not read here	inferred	none		
+0x431560	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431580	54			unassigned	unreached		Runs its object file code that calls 0x430900, 0x431630; not read here	inferred	none		
+0x4315c0	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x4315f0	54			unassigned	unreached		Runs its object file code that calls 0x430970, 0x431630; not read here	inferred	none		
+0x431630	5			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431640	77			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431690	39			unassigned	unreached		Runs its object file code that calls 0x430c60; not read here	inferred	none		
+0x4316c0	74			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431710	38			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x431740	43			unassigned	unreached		Runs its object file code that calls 0x431770, SMemFree; not read here	inferred	none		
+0x431770	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431780	31			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4317a0	81			unassigned	unreached		Runs its object file code that calls 0x4314c0; not read here	inferred	none		
+0x431800	74			unassigned	unreached		Runs its object file code that calls 0x431040, 0x431010; not read here	inferred	none		
+0x431850	47			unassigned	unreached		Runs its object file code that calls 0x430900, 0x4318e0; not read here	inferred	none		
+0x431880	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x4318b0	47			unassigned	unreached		Runs its object file code that calls 0x430970, 0x4318e0; not read here	inferred	none		
+0x4318e0	29			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431900	111			unassigned	unreached		Runs its object file code that calls 0x42e510, 0x431970; not read here	inferred	none		
+0x431970	29			unassigned	unreached		Runs its object file code that calls 0x4319e0, 0x430ce0; not read here	inferred	none		
+0x431990	10			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x4319a0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4319c0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4319e0	39			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431a10	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431a20	42			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431a50	34			unassigned			Runs its object file code that calls 0x431a80; not read here	inferred	none		
+0x431a80	165			unassigned			Runs its object file code not read here	inferred	none		
+0x431b30	118			unassigned	unreached		Runs its object file code that calls 0x4319e0; not read here	inferred	none		
+0x431bc0	182			unassigned	unreached		Runs its object file code that calls 0x4319c0; not read here	inferred	none		
+0x431c90	77			unassigned	unreached		Runs its object file code that calls 0x430900, 0x435ea0; not read here	inferred	none		
+0x431ce0	43			unassigned	unreached		Runs its object file code that calls 0x431d10, SMemFree; not read here	inferred	none		
+0x431d10	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431d20	34			unassigned	unreached		Runs its object file code that calls 0x431010, 0x431e70; not read here	inferred	none		
+0x431d50	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431d70	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431d90	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431db0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431dd0	68			unassigned	unreached		Runs its object file code that calls 0x431db0, 0x431e70; not read here	inferred	none		
+0x431e20	39			unassigned	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
+0x431e50	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431e70	76			unassigned	unreached		Runs its object file code that calls 0x431e50, 0x431db0, 0x431040 and 1 more; not read here	inferred	none		
+0x431ec0	18			unassigned	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
+0x431ee0	39			unassigned	unreached		Runs its object file code that calls 0x431e70; not read here	inferred	none		
+0x431f10	34			unassigned	unreached		Runs its object file code that calls 0x431ee0, 0x431dd0; not read here	inferred	none		
+0x431f40	40			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x431f70	43			unassigned	unreached		Runs its object file code that calls 0x431fa0, SMemFree; not read here	inferred	none		
+0x431fa0	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x431fb0	48			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x431fe0	40			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x432010	50			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x432050	50			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x432090	72			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x432100, 0x432010; not read here	inferred	none		
+0x4320e0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432100	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432120	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432140	43			unassigned	unreached		Runs its object file code that calls 0x432100; not read here	inferred	none		
+0x432170	34			unassigned	unreached		Runs its object file code that calls 0x432140, 0x432120; not read here	inferred	none		
+0x4321a0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4321c0	60			unassigned	unreached		Runs its object file code that calls 0x4321a0, SErrSetLastError; not read here	inferred	none		
+0x432200	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432220	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432240	187			unassigned	unreached		Runs its object file code that calls 0x430f80, 0x432100, 0x432090 and 3 more; not read here	inferred	none		
+0x432300	10			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x432310	59			unassigned	unreached		Runs its object file code that calls 0x430900, 0x4324b0; not read here	inferred	none		
+0x432350	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x432380	59			unassigned	unreached		Runs its object file code that calls 0x430970, 0x4324b0; not read here	inferred	none		
+0x4323c0	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4323e0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432410	26			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432430	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432450	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432470	55			unassigned	unreached		Runs its object file code that calls 0x432450, 0x430ca0; not read here	inferred	none		
+0x4324b0	96			unassigned	unreached		Runs its object file code that calls 0x430eb0, 0x431040, 0x431010; not read here	inferred	none		
+0x432510	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432520	38			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x432550	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x432580	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4325a0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4325c0	38			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x4325f0	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x432620	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432640	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432660	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432680	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4326a0	85			unassigned	unreached		Runs its object file code that calls 0x430900, 0x432790; not read here	inferred	none		
+0x432700	43			unassigned	unreached		Runs its object file code that calls 0x4328a0, SMemFree; not read here	inferred	none		
+0x432730	85			unassigned	unreached		Runs its object file code that calls 0x430970, 0x432790; not read here	inferred	none		
+0x432790	166			unassigned	unreached		Runs its object file code that calls 0x432c80; not read here	inferred	none		
+0x432840	92			unassigned	unreached		Runs its object file code that calls 0x42e510; not read here	inferred	none		
+0x4328a0	79			unassigned	unreached		Runs its object file code that calls 0x4337f0, SMemFree; not read here	inferred	none		
+0x4328f0	44			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432920	23			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432940	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432960	103			unassigned	unreached		Runs its object file code that calls 0x433ee0; not read here	inferred	none		
+0x4329d0	52			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432a10	58			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432a50	22			unassigned	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
+0x432a70	19			unassigned	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
+0x432a90	55			unassigned	unreached		Runs its object file code that calls 0x433fa0, 0x433870; not read here	inferred	none		
+0x432ad0	41			unassigned	unreached		Runs its object file code that calls 0x433fa0, 0x433870; not read here	inferred	none		
+0x432b00	24			unassigned	unreached		Runs its object file code that calls 0x433fa0; not read here	inferred	none		
+0x432b20	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432b40	65			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432b90	70			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x432be0	92			unassigned	unreached		Runs its object file code that calls 0x432be0; not read here	inferred	none		
+0x432c40	50			unassigned	unreached		Runs its object file code that calls 0x432be0; not read here	inferred	none		
+0x432c80	495			unassigned	unreached		Runs its object file code that calls SErrSetLastError, 0x4314c0, 0x432e70 and 2 more; not read here	inferred	none		
 0x432e70	389			os	unreached		Runs OsGui.cpp code that calls __alloca_probe, SMemAlloc, SMemFree; not read here	inferred	none		
-0x433000	38			os	unreached		Runs its object file code not read here	inferred	none		
-0x433030	34			os	unreached		Runs its object file code not read here	inferred	none		
-0x433060	1			os	unreached		Runs its object file code not read here	inferred	none		
-0x433070	22			os	unreached		Runs its object file code not read here	inferred	none		
-0x433090	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4330b0	54			os	unreached		Runs its object file code that calls 0x4331b0; not read here	inferred	none		
-0x4330f0	127			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x433170	59			os	unreached		Runs its object file code that calls 0x4330b0; not read here	inferred	none		
-0x4331b0	63			os	unreached		Runs its object file code that calls 0x432c40; not read here	inferred	none		
-0x4331f0	143			os	unreached		Runs its object file code that calls 0x433170, 0x432b20; not read here	inferred	none		
-0x433280	21			os	unreached		Runs its object file code that calls 0x432c40; not read here	inferred	none		
-0x4332a0	19			os	unreached		Runs its object file code that calls 0x4330f0; not read here	inferred	none		
-0x4332c0	37			os	unreached		Runs its object file code that calls 0x430d70; not read here	inferred	none		
-0x4332f0	62			os	unreached		Runs its object file code that calls 0x4333e0, 0x430d70; not read here	inferred	none		
-0x433330	169			os	unreached		Runs its object file code that calls 0x433ba0, 0x4333e0, 0x436010 and 3 more; not read here	inferred	none		
-0x4333e0	113			os	unreached		Runs its object file code that calls 0x435a20, 0x430f80; not read here	inferred	none		
-0x433460	49			os	unreached		Runs its object file code that calls 0x433700, 0x430ce0; not read here	inferred	none		
-0x4334a0	42			os	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
-0x4334d0	470			os	unreached		Runs its object file code that calls 0x433c50, 0x433c00, 0x430d70 and 7 more; not read here	inferred	none		
-0x433700	20			os			Runs its object file code not read here	inferred	none		
-0x433720	47			os	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
-0x433750	67			os	unreached		Runs its object file code not read here	inferred	none		
-0x4337a0	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x4337c0	40			os	unreached		Runs its object file code that calls 0x4337f0; not read here	inferred	none		
-0x4337f0	26			os	unreached		Runs its object file code not read here	inferred	none		
-0x433810	92			os	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
-0x433870	59			os	unreached		Runs its object file code not read here	inferred	none		
-0x4338b0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4338d0	65			os	unreached		Runs its object file code that calls 0x430c20, 0x433090; not read here	inferred	none		
-0x433920	24			os	unreached		Runs its object file code not read here	inferred	none		
-0x433940	249			os	unreached		Runs its object file code that calls 0x430d70, 0x4330f0, 0x433920 and 4 more; not read here	inferred	none		
-0x433a40	235			os	unreached		Runs its object file code that calls 0x430490, 0x430f80, 0x433810 and 1 more; not read here	inferred	none		
-0x433b30	48			os	unreached		Runs its object file code not read here	inferred	none		
-0x433b60	50			os	unreached		Runs its object file code not read here	inferred	none		
-0x433ba0	83			os	unreached		Runs its object file code that calls 0x4337f0, 0x433b30, 0x433b60 and 1 more; not read here	inferred	none		
-0x433c00	75			os	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
-0x433c50	40			os	unreached		Runs its object file code that calls 0x4329d0; not read here	inferred	none		
-0x433c80	13			os	unreached		Runs its object file code not read here	inferred	none		
-0x433c90	13			os	unreached		Runs its object file code not read here	inferred	none		
-0x433ca0	54			os	unreached		Runs its object file code not read here	inferred	none		
-0x433ce0	61			os			Runs its object file code that calls 0x433700, 0x431a80; not read here	inferred	none		
-0x433d20	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x433d40	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x433d60	323			os	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree and 1 more; not read here	inferred	none		
-0x433eb0	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x433ee0	191			os	unreached		Runs its object file code that calls 0x433eb0, 0x436950, 0x436990 and 2 more; not read here	inferred	none		
-0x433fa0	93			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x434000	87			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x434060	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x434090	316			os	unreached		Runs its object file code that calls 0x4341d0, 0x430e00, SStrLen; not read here	inferred	none		
-0x4341d0	23			os	unreached		Runs its object file code not read here	inferred	none		
-0x4341f0	15			os	unreached		Runs its object file code that calls 0x430c60; not read here	inferred	none		
-0x434200	202			os	unreached		Runs its object file code that calls 0x436a50, 0x430c60; not read here	inferred	none		
-0x4342d0	193			os	unreached		Runs its object file code that calls 0x4341d0; not read here	inferred	none		
-0x4343a0	47			os	unreached		Runs its object file code that calls 0x430900, 0x434430; not read here	inferred	none		
-0x4343d0	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x434400	47			os	unreached		Runs its object file code that calls 0x430970, 0x434430; not read here	inferred	none		
-0x434430	18			os	unreached		Runs its object file code not read here	inferred	none		
-0x434450	69			os	unreached		Runs its object file code that calls 0x42e510, 0x4344a0; not read here	inferred	none		
-0x4344a0	10			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x4344b0	30			os	unreached		Runs its object file code not read here	inferred	none		
-0x4344d0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4344f0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x434510	40			os	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
-0x434540	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x434570	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x4345a0	26			os	unreached		Runs its object file code not read here	inferred	none		
-0x4345c0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x4345e0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x434600	62			os	unreached		Runs its object file code that calls 0x434640; not read here	inferred	none		
-0x434640	20			os			Runs its object file code not read here	inferred	none		
-0x434660	82			os			Runs its object file code that calls 0x436010, 0x434640, 0x430ce0; not read here	inferred	none		
-0x4346c0	127			os	unreached		Runs its object file code that calls 0x430900, 0x42f3b0; not read here	inferred	none		
-0x434740	43			os	unreached		Runs its object file code that calls 0x434770, SMemFree; not read here	inferred	none		
-0x434770	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x434780	83			os	unreached		Runs its object file code that calls 0x434810; not read here	inferred	none		
-0x4347e0	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x434810	4			os	unreached		Runs its object file code not read here	inferred	none		
-0x434820	67			os	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
-0x434870	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x434890	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4348b0	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x4348d0	61			os	unreached		Runs its object file code not read here	inferred	none		
-0x434910	61			os	unreached		Runs its object file code not read here	inferred	none		
-0x434950	58			os	unreached		Runs its object file code not read here	inferred	none		
-0x434990	64			os	unreached		Runs its object file code not read here	inferred	none		
-0x4349d0	31			os	unreached		Runs its object file code not read here	inferred	none		
-0x4349f0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x434a10	48			os	unreached		Runs its object file code not read here	inferred	none		
-0x434a40	54			os	unreached		Runs its object file code not read here	inferred	none		
-0x434a80	75			os	unreached		Runs its object file code not read here	inferred	none		
-0x434ad0	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x434af0	96			os	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
-0x434b50	77			os	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
-0x434ba0	1			os	unreached		Runs its object file code not read here	inferred	none		
-0x434bb0	10			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x434bc0	18			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x434be0	286			os	unreached		Runs its object file code that calls 0x430ce0, 0x434bc0, 0x434910 and 2 more; not read here	inferred	none		
-0x434d00	10			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x434d10	47			os	unreached		Runs its object file code that calls 0x430900, 0x434dc0; not read here	inferred	none		
-0x434d40	43			os	unreached		Runs its object file code that calls 0x434da0, SMemFree; not read here	inferred	none		
-0x434d70	47			os	unreached		Runs its object file code that calls 0x430970, 0x434dc0; not read here	inferred	none		
-0x434da0	27			os	unreached		Runs its object file code not read here	inferred	none		
-0x434dc0	61			os	unreached		Runs its object file code not read here	inferred	none		
-0x434e00	38			os	unreached		Runs its object file code not read here	inferred	none		
-0x434e30	44			os	unreached		Runs its object file code not read here	inferred	none		
-0x434e60	30			os	unreached		Runs its object file code that calls 0x434f40, 0x434f20; not read here	inferred	none		
-0x434e80	74			os	unreached		Runs its object file code that calls 0x434f40; not read here	inferred	none		
-0x434ed0	78			os	unreached		Runs its object file code that calls 0x434f40; not read here	inferred	none		
-0x434f20	28			os	unreached		Runs its object file code not read here	inferred	none		
-0x434f40	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x434f60	205			os	unreached		Runs its object file code that calls 0x4314c0, 0x432e70, 0x430c60; not read here	inferred	none		
-0x435030	55			os	unreached		Runs its object file code not read here	inferred	none		
-0x435070	61			os	unreached		Runs its object file code not read here	inferred	none		
-0x4350b0	94			os	unreached		Runs its object file code not read here	inferred	none		
-0x435110	94			os	unreached		Runs its object file code not read here	inferred	none		
-0x435170	18			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x435190	47			os	unreached		Runs its object file code that calls 0x430900, 0x435220; not read here	inferred	none		
-0x4351c0	43			os	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
-0x4351f0	47			os	unreached		Runs its object file code that calls 0x430970, 0x435220; not read here	inferred	none		
-0x435220	32			os	unreached		Runs its object file code that calls 0x435260; not read here	inferred	none		
-0x435240	24			os	unreached		Runs its object file code that calls 0x4352a0; not read here	inferred	none		
-0x435260	64			os	unreached		Runs its object file code that calls 0x4352a0; not read here	inferred	none		
-0x4352a0	95			os	unreached		Runs its object file code not read here	inferred	none		
-0x435300	74			os	unreached		Runs its object file code not read here	inferred	none		
-0x435350	20			os	unreached		Runs its object file code not read here	inferred	none		
-0x435370	62			os	unreached		Runs its object file code that calls 0x4353b0, 0x435410, 0x430ce0; not read here	inferred	none		
-0x4353b0	63			os	unreached		Runs its object file code not read here	inferred	none		
-0x435410	159			os	unreached		Runs its object file code not read here	inferred	none		
-0x4354d0	82			os	unreached		Runs its object file code that calls 0x435410, 0x430ce0; not read here	inferred	none		
-0x435530	61			os	unreached		Runs its object file code that calls 0x430900, 0x4355f0; not read here	inferred	none		
-0x435570	43			os	unreached		Runs its object file code that calls 0x4355e0, SMemFree; not read here	inferred	none		
-0x4355a0	61			os	unreached		Runs its object file code that calls 0x430970, 0x4355f0; not read here	inferred	none		
-0x4355e0	11			os	unreached		Runs its object file code not read here	inferred	none		
-0x4355f0	40			os	unreached		Runs its object file code not read here	inferred	none		
-0x435620	124			os	unreached		Runs its object file code that calls 0x42e510, 0x435780, 0x435810 and 2 more; not read here	inferred	none		
-0x435760	29			os	unreached		Runs its object file code not read here	inferred	none		
-0x435780	139			os	unreached		Runs its object file code that calls 0x435a20, 0x435b20, 0x435760; not read here	inferred	none		
-0x435810	259			os	unreached		Runs its object file code that calls 0x435760, 0x435a20, 0x435ba0 and 1 more; not read here	inferred	none		
-0x435920	42			os	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
-0x435950	12			os	unreached		Runs its object file code not read here	inferred	none		
-0x435960	19			os	unreached		Runs its object file code not read here	inferred	none		
-0x435980	91			os	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x4359f0	17			os	unreached		Runs its object file code that calls 0x435980; not read here	inferred	none		
-0x435a10	8			os	unreached		Runs its object file code not read here	inferred	none		
-0x435a20	42			os	unreached		Runs its object file code not read here	inferred	none		
-0x435a50	81			os			Runs its object file code that calls 0x65b250, __alloca_probe, SUniConvertUTF8to16; not read here	inferred	none		
-0x435ab0	99			os	unreached		Runs its object file code not read here	inferred	none		
-0x435b20	122			os	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
-0x435ba0	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x435bd0	8			os	unreached		Runs its object file code not read here	inferred	none		
-0x435be0	35			os	unreached		Runs its object file code not read here	inferred	none		
-0x435c10	9			os	unreached		Runs its object file code not read here	inferred	none		
-0x435c20	8			os	unreached		Runs its object file code not read here	inferred	none		
+0x433000	38			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433030	34			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433060	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433070	22			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433090	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4330b0	54			unassigned	unreached		Runs its object file code that calls 0x4331b0; not read here	inferred	none		
+0x4330f0	127			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x433170	59			unassigned	unreached		Runs its object file code that calls 0x4330b0; not read here	inferred	none		
+0x4331b0	63			unassigned	unreached		Runs its object file code that calls 0x432c40; not read here	inferred	none		
+0x4331f0	143			unassigned	unreached		Runs its object file code that calls 0x433170, 0x432b20; not read here	inferred	none		
+0x433280	21			unassigned	unreached		Runs its object file code that calls 0x432c40; not read here	inferred	none		
+0x4332a0	19			unassigned	unreached		Runs its object file code that calls 0x4330f0; not read here	inferred	none		
+0x4332c0	37			unassigned	unreached		Runs its object file code that calls 0x430d70; not read here	inferred	none		
+0x4332f0	62			unassigned	unreached		Runs its object file code that calls 0x4333e0, 0x430d70; not read here	inferred	none		
+0x433330	169			unassigned	unreached		Runs its object file code that calls 0x433ba0, 0x4333e0, 0x436010 and 3 more; not read here	inferred	none		
+0x4333e0	113			unassigned	unreached		Runs its object file code that calls 0x435a20, 0x430f80; not read here	inferred	none		
+0x433460	49			unassigned	unreached		Runs its object file code that calls 0x433700, 0x430ce0; not read here	inferred	none		
+0x4334a0	42			unassigned	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
+0x4334d0	470			unassigned	unreached		Runs its object file code that calls 0x433c50, 0x433c00, 0x430d70 and 7 more; not read here	inferred	none		
+0x433700	20			unassigned			Runs its object file code not read here	inferred	none		
+0x433720	47			unassigned	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
+0x433750	67			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4337a0	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4337c0	40			unassigned	unreached		Runs its object file code that calls 0x4337f0; not read here	inferred	none		
+0x4337f0	26			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433810	92			unassigned	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
+0x433870	59			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4338b0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4338d0	65			unassigned	unreached		Runs its object file code that calls 0x430c20, 0x433090; not read here	inferred	none		
+0x433920	24			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433940	249			unassigned	unreached		Runs its object file code that calls 0x430d70, 0x4330f0, 0x433920 and 4 more; not read here	inferred	none		
+0x433a40	235			unassigned	unreached		Runs its object file code that calls 0x430490, 0x430f80, 0x433810 and 1 more; not read here	inferred	none		
+0x433b30	48			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433b60	50			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433ba0	83			unassigned	unreached		Runs its object file code that calls 0x4337f0, 0x433b30, 0x433b60 and 1 more; not read here	inferred	none		
+0x433c00	75			unassigned	unreached		Runs its object file code that calls 0x433700; not read here	inferred	none		
+0x433c50	40			unassigned	unreached		Runs its object file code that calls 0x4329d0; not read here	inferred	none		
+0x433c80	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433c90	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433ca0	54			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433ce0	61			unassigned			Runs its object file code that calls 0x433700, 0x431a80; not read here	inferred	none		
+0x433d20	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433d40	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433d60	323			unassigned	unreached		Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree and 1 more; not read here	inferred	none		
+0x433eb0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x433ee0	191			unassigned	unreached		Runs its object file code that calls 0x433eb0, 0x436950, 0x436990 and 2 more; not read here	inferred	none		
+0x433fa0	93			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x434000	87			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x434060	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x434090	316			unassigned	unreached		Runs its object file code that calls 0x4341d0, 0x430e00, SStrLen; not read here	inferred	none		
+0x4341d0	23			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4341f0	15			unassigned	unreached		Runs its object file code that calls 0x430c60; not read here	inferred	none		
+0x434200	202			unassigned	unreached		Runs its object file code that calls 0x436a50, 0x430c60; not read here	inferred	none		
+0x4342d0	193			unassigned	unreached		Runs its object file code that calls 0x4341d0; not read here	inferred	none		
+0x4343a0	47			unassigned	unreached		Runs its object file code that calls 0x430900, 0x434430; not read here	inferred	none		
+0x4343d0	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x434400	47			unassigned	unreached		Runs its object file code that calls 0x430970, 0x434430; not read here	inferred	none		
+0x434430	18			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434450	69			unassigned	unreached		Runs its object file code that calls 0x42e510, 0x4344a0; not read here	inferred	none		
+0x4344a0	10			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x4344b0	30			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4344d0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4344f0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434510	40			unassigned	unreached		Runs its object file code that calls 0x430900; not read here	inferred	none		
+0x434540	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x434570	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4345a0	26			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4345c0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4345e0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434600	62			unassigned	unreached		Runs its object file code that calls 0x434640; not read here	inferred	none		
+0x434640	20			unassigned			Runs its object file code not read here	inferred	none		
+0x434660	82			unassigned			Runs its object file code that calls 0x436010, 0x434640, 0x430ce0; not read here	inferred	none		
+0x4346c0	127			unassigned	unreached		Runs its object file code that calls 0x430900, 0x42f3b0; not read here	inferred	none		
+0x434740	43			unassigned	unreached		Runs its object file code that calls 0x434770, SMemFree; not read here	inferred	none		
+0x434770	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434780	83			unassigned	unreached		Runs its object file code that calls 0x434810; not read here	inferred	none		
+0x4347e0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434810	4			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434820	67			unassigned	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
+0x434870	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434890	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4348b0	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4348d0	61			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434910	61			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434950	58			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434990	64			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4349d0	31			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4349f0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434a10	48			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434a40	54			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434a80	75			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434ad0	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434af0	96			unassigned	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
+0x434b50	77			unassigned	unreached		Runs its object file code that calls 0x4348b0; not read here	inferred	none		
+0x434ba0	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434bb0	10			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x434bc0	18			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x434be0	286			unassigned	unreached		Runs its object file code that calls 0x430ce0, 0x434bc0, 0x434910 and 2 more; not read here	inferred	none		
+0x434d00	10			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x434d10	47			unassigned	unreached		Runs its object file code that calls 0x430900, 0x434dc0; not read here	inferred	none		
+0x434d40	43			unassigned	unreached		Runs its object file code that calls 0x434da0, SMemFree; not read here	inferred	none		
+0x434d70	47			unassigned	unreached		Runs its object file code that calls 0x430970, 0x434dc0; not read here	inferred	none		
+0x434da0	27			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434dc0	61			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434e00	38			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434e30	44			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434e60	30			unassigned	unreached		Runs its object file code that calls 0x434f40, 0x434f20; not read here	inferred	none		
+0x434e80	74			unassigned	unreached		Runs its object file code that calls 0x434f40; not read here	inferred	none		
+0x434ed0	78			unassigned	unreached		Runs its object file code that calls 0x434f40; not read here	inferred	none		
+0x434f20	28			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434f40	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x434f60	205			unassigned	unreached		Runs its object file code that calls 0x4314c0, 0x432e70, 0x430c60; not read here	inferred	none		
+0x435030	55			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435070	61			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4350b0	94			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435110	94			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435170	18			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x435190	47			unassigned	unreached		Runs its object file code that calls 0x430900, 0x435220; not read here	inferred	none		
+0x4351c0	43			unassigned	unreached		Runs its object file code that calls 0x430bd0, SMemFree; not read here	inferred	none		
+0x4351f0	47			unassigned	unreached		Runs its object file code that calls 0x430970, 0x435220; not read here	inferred	none		
+0x435220	32			unassigned	unreached		Runs its object file code that calls 0x435260; not read here	inferred	none		
+0x435240	24			unassigned	unreached		Runs its object file code that calls 0x4352a0; not read here	inferred	none		
+0x435260	64			unassigned	unreached		Runs its object file code that calls 0x4352a0; not read here	inferred	none		
+0x4352a0	95			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435300	74			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435350	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435370	62			unassigned	unreached		Runs its object file code that calls 0x4353b0, 0x435410, 0x430ce0; not read here	inferred	none		
+0x4353b0	63			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435410	159			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4354d0	82			unassigned	unreached		Runs its object file code that calls 0x435410, 0x430ce0; not read here	inferred	none		
+0x435530	61			unassigned	unreached		Runs its object file code that calls 0x430900, 0x4355f0; not read here	inferred	none		
+0x435570	43			unassigned	unreached		Runs its object file code that calls 0x4355e0, SMemFree; not read here	inferred	none		
+0x4355a0	61			unassigned	unreached		Runs its object file code that calls 0x430970, 0x4355f0; not read here	inferred	none		
+0x4355e0	11			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x4355f0	40			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435620	124			unassigned	unreached		Runs its object file code that calls 0x42e510, 0x435780, 0x435810 and 2 more; not read here	inferred	none		
+0x435760	29			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435780	139			unassigned	unreached		Runs its object file code that calls 0x435a20, 0x435b20, 0x435760; not read here	inferred	none		
+0x435810	259			unassigned	unreached		Runs its object file code that calls 0x435760, 0x435a20, 0x435ba0 and 1 more; not read here	inferred	none		
+0x435920	42			unassigned	unreached		Runs its object file code that calls 0x430ce0; not read here	inferred	none		
+0x435950	12			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435960	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435980	91			unassigned	unreached		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x4359f0	17			unassigned	unreached		Runs its object file code that calls 0x435980; not read here	inferred	none		
+0x435a10	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435a20	42			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435a50	81			unassigned			Runs its object file code that calls 0x65b250, __alloca_probe, SUniConvertUTF8to16; not read here	inferred	none		
+0x435ab0	99			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435b20	122			unassigned	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
+0x435ba0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435bd0	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435be0	35			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435c10	9			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435c20	8			unassigned	unreached		Runs its object file code not read here	inferred	none		
 0x435c30	32	OsGuiGetWindow	idb	os			Returns the game window for 0, the active window for 1, the foreground window for 2, else 0	verified	one	core/input#message-filter-and-idle-sleep	
-0x435c50	7			os			Runs its object file code not read here	inferred	none		
-0x435c60	59			os	unreached		Runs its object file code not read here	inferred	none		
-0x435ca0	39			os	unreached		Runs its object file code not read here	inferred	none		
-0x435cd0	56			os	unreached		Runs its object file code not read here	inferred	none		
-0x435d10	39			os	unreached		Runs its object file code not read here	inferred	none		
-0x435d40	84			os	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
-0x435da0	98			os	unreached		Runs its object file code that calls 0x4341d0; not read here	inferred	none		
-0x435e10	129			os	unreached		Runs its object file code that calls 0x435a20, 0x435b20; not read here	inferred	none		
-0x435ea0	80			os	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
-0x435ef0	9			os			Runs its object file code not read here	inferred	none		
+0x435c50	7			unassigned			Runs its object file code not read here	inferred	none		
+0x435c60	59			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435ca0	39			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435cd0	56			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435d10	39			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x435d40	84			unassigned	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
+0x435da0	98			unassigned	unreached		Runs its object file code that calls 0x4341d0; not read here	inferred	none		
+0x435e10	129			unassigned	unreached		Runs its object file code that calls 0x435a20, 0x435b20; not read here	inferred	none		
+0x435ea0	80			unassigned	unreached		Runs its object file code that calls 0x42fb50; not read here	inferred	none		
+0x435ef0	9			unassigned			Runs its object file code not read here	inferred	none		
 0x435f00	246	ShowErrorText		os			Shows a text with a caption to the player	inferred	none		
 0x436010	86	OsGetModifierDown		unassigned			Returns 1 when the Control (0), Shift (1) or Alt (2) key is down by GetKeyState, else 0	verified	one	core/input#key-messages-and-alt-f4	
 0x436070	22			unassigned	unreached		Runs its object file code that calls 0x42e830; not read here	inferred	none		
@@ -2803,22 +2803,22 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x436d70	8	OsTlsFree		unassigned			Frees a TLS slot with TlsFree	verified	one	core/threads#engine-thread-records	
 0x436d80	35	OsTlsGetValue	idb	unassigned			Returns the TLS value, raising error 0x57 and returning 0 when GetLastError is set	verified	one	core/threads#engine-thread-records	
 0x436db0	9	OsTlsSetValue		os			Stores a value in a TLS slot with TlsSetValue	verified	one	core/threads#engine-thread-records	
-0x436dc0	5			os			Runs its object file code not read here	inferred	none		
-0x436dd0	11			os			Runs its object file code not read here	inferred	none		
-0x436de0	5			os			Runs its object file code not read here	inferred	none		
-0x436df0	15			os			Runs its object file code not read here	inferred	none		
-0x436e00	5			os			Runs its object file code not read here	inferred	none		
-0x436e10	19			os			Runs its object file code not read here	inferred	none		
-0x436e30	10			os			Runs its object file code that calls 0x436e40; not read here	inferred	none		
-0x436e40	34			os			Runs its object file code not read here	inferred	none		
-0x436e70	12			os			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x436e80	145			os			Runs its object file code not read here	inferred	none		
-0x436f20	10			os			Runs its object file code that calls 0x436f30; not read here	inferred	none		
-0x436f30	34			os			Runs its object file code not read here	inferred	none		
-0x436f60	12			os			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x436f70	145			os			Runs its object file code not read here	inferred	none		
-0x437010	17			os	unreached		Runs its object file code that calls 0x437ad0; not read here	inferred	none		
-0x437030	43			os	unreached		Runs its object file code that calls 0x437a00; not read here	inferred	none		
+0x436dc0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x436dd0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x436de0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x436df0	15			unassigned			Runs its object file code not read here	inferred	none		
+0x436e00	5			unassigned			Runs its object file code not read here	inferred	none		
+0x436e10	19			unassigned			Runs its object file code not read here	inferred	none		
+0x436e30	10			unassigned			Runs its object file code that calls 0x436e40; not read here	inferred	none		
+0x436e40	34			unassigned			Runs its object file code not read here	inferred	none		
+0x436e70	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x436e80	145			unassigned			Runs its object file code not read here	inferred	none		
+0x436f20	10			unassigned			Runs its object file code that calls 0x436f30; not read here	inferred	none		
+0x436f30	34			unassigned			Runs its object file code not read here	inferred	none		
+0x436f60	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x436f70	145			unassigned			Runs its object file code not read here	inferred	none		
+0x437010	17			unassigned	unreached		Runs its object file code that calls 0x437ad0; not read here	inferred	none		
+0x437030	43			unassigned	unreached		Runs its object file code that calls 0x437a00; not read here	inferred	none		
 0x437060	377	RegisterEngineThread		os			Registers the calling thread: counts it, makes its record with id, handle and name, and links it	verified	one	core/threads#engine-thread-records	
 0x4371e0	237	UnregisterEngineThread		os			Unregisters the calling thread: clears its slot, closes its handle, unlinks and frees its record	verified	one	core/threads#engine-thread-records	
 0x4372d0	7			os	unreached		Runs OsCall.cpp code not read here	inferred	none		
@@ -2846,8 +2846,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x437d10	60			os			Runs its object file code not read here	inferred	none		
 0x437d50	5			os			Runs its object file code not read here	inferred	none		
 0x437d60	15			os			Runs its object file code not read here	inferred	none		
-0x437d70	5			os			Runs its object file code not read here	inferred	none		
-0x437d80	19			os			Runs its object file code not read here	inferred	none		
+0x437d70	5			unassigned			Runs its object file code not read here	inferred	none		
+0x437d80	19			unassigned			Runs its object file code not read here	inferred	none		
 0x437da0	5			os			Runs its object file code not read here	inferred	none		
 0x437db0	11			os			Runs its object file code not read here	inferred	none		
 0x437dc0	114			os			Runs its object file code that calls 0x441770; not read here	inferred	none		
@@ -3216,82 +3216,82 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x442a40	5			unassigned			Runs its object file code not read here	inferred	none		
 0x442a50	19			unassigned			Runs its object file code not read here	inferred	none		
 0x442a70	3	ReturnZero		client	orchestration	uint32_t __cdecl (void)	Returns 0; a shared vtable slot	verified	one	camera#lifetime	
-0x442a80	40			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x442ab0	5			client			Runs its object file code not read here	inferred	none		
-0x442ac0	11			client			Runs its object file code not read here	inferred	none		
-0x442ad0	42			client			Runs its object file code that calls HandleClose; not read here	inferred	none		
-0x442b00	68			client			Runs its object file code that calls 0x5c17f0, 0x42b650, 0x442b70; not read here	inferred	none		
-0x442b50	23			client			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x442b70	27			client			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x442b90	62			client			Runs its object file code that calls HandleClose, NDCToDDCHeight, TextBlockGenerateFont; not read here	inferred	none		
-0x442bd0	27			client			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
-0x442bf0	5			client			Runs its object file code not read here	inferred	none		
-0x442c00	15			client			Runs its object file code not read here	inferred	none		
-0x442c10	5			client			Runs its object file code not read here	inferred	none		
-0x442c20	19			client			Runs its object file code not read here	inferred	none		
-0x442c40	5			client			Runs its object file code not read here	inferred	none		
-0x442c50	11			client			Runs its object file code not read here	inferred	none		
-0x442c60	3			client	unreached		Runs its object file code not read here	inferred	none		
-0x442c70	3			client	unreached		Runs its object file code not read here	inferred	none		
-0x442c80	1			client			Runs its object file code not read here	inferred	none		
-0x442c90	1			client			Runs its object file code not read here	inferred	none		
-0x442ca0	1			client	unreached		Runs its object file code not read here	inferred	none		
-0x442cb0	1			client	unreached		Runs its object file code not read here	inferred	none		
-0x442cc0	1			client	unreached		Runs its object file code not read here	inferred	none		
-0x442cd0	6			client	unreached		Runs its object file code not read here	inferred	none		
-0x442ce0	6			client	unreached		Runs its object file code not read here	inferred	none		
-0x442cf0	7	ScrnPerfEnable	idb	client			Runs its object file code not read here	inferred	none		
-0x442d00	6			client			Runs its object file code not read here	inferred	none		
-0x442d10	5			client	unreached		Runs its object file code not read here	inferred	none		
-0x442d20	5			client	unreached		Runs its object file code not read here	inferred	none		
-0x442d30	20			client	unreached		Runs its object file code not read here	inferred	none		
-0x442d50	6			client	unreached		Runs its object file code not read here	inferred	none		
-0x442d60	1			client	unreached		Runs its object file code not read here	inferred	none		
-0x442d70	18			client	unreached		Runs its object file code that calls 0x442d90; not read here	inferred	none		
-0x442d90	1			client	unreached		Runs its object file code not read here	inferred	none		
-0x442da0	13			client	unreached		Runs its object file code not read here	inferred	none		
-0x442db0	1			client			Runs its object file code not read here	inferred	none		
-0x442dc0	1			client			Runs its object file code not read here	inferred	none		
-0x442dd0	5			client			Runs its object file code not read here	inferred	none		
-0x442de0	15			client			Runs its object file code not read here	inferred	none		
-0x442df0	5			client			Runs its object file code not read here	inferred	none		
-0x442e00	19			client			Runs its object file code not read here	inferred	none		
-0x442e20	10			client			Runs its object file code that calls 0x442e30; not read here	inferred	none		
-0x442e30	34			client			Runs its object file code not read here	inferred	none		
-0x442e60	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x442e70	165			client			Runs its object file code not read here	inferred	none		
-0x442f20	10			client			Runs its object file code that calls 0x442f30; not read here	inferred	none		
-0x442f30	34			client			Runs its object file code not read here	inferred	none		
-0x442f60	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x442f70	165			client			Runs its object file code not read here	inferred	none		
-0x443020	10			client			Runs its object file code that calls 0x443030; not read here	inferred	none		
-0x443030	34			client			Runs its object file code not read here	inferred	none		
-0x443060	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x443070	165			client			Runs its object file code not read here	inferred	none		
-0x443120	10			client			Runs its object file code that calls 0x443130; not read here	inferred	none		
-0x443130	10			client			Runs its object file code not read here	inferred	none		
-0x443140	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x443150	10			client			Runs its object file code not read here	inferred	none		
-0x443160	10			client			Runs its object file code that calls 0x443170; not read here	inferred	none		
-0x443170	10			client			Runs its object file code not read here	inferred	none		
-0x443180	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x443190	10			client			Runs its object file code not read here	inferred	none		
-0x4431a0	10			client			Runs its object file code that calls 0x4431b0; not read here	inferred	none		
-0x4431b0	15			client			Runs its object file code that calls 0x659a70; not read here	inferred	none		
-0x4431c0	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4431d0	10			client			Runs its object file code not read here	inferred	none		
-0x4431e0	10			client			Runs its object file code that calls 0x4431f0; not read here	inferred	none		
-0x4431f0	15			client			Runs its object file code that calls 0x659a70; not read here	inferred	none		
-0x443200	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x443210	10			client			Runs its object file code not read here	inferred	none		
-0x443220	10			client			Runs its object file code that calls 0x443230; not read here	inferred	none		
-0x443230	23			client			Runs its object file code not read here	inferred	none		
-0x443250	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x443260	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x443280	10			client			Runs its object file code that calls 0x443290; not read here	inferred	none		
-0x443290	23			client			Runs its object file code not read here	inferred	none		
-0x4432b0	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x4432c0	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x442a80	40			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x442ab0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442ac0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x442ad0	42			unassigned			Runs its object file code that calls HandleClose; not read here	inferred	none		
+0x442b00	68			unassigned			Runs its object file code that calls 0x5c17f0, 0x42b650, 0x442b70; not read here	inferred	none		
+0x442b50	23			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x442b70	27			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x442b90	62			unassigned			Runs its object file code that calls HandleClose, NDCToDDCHeight, TextBlockGenerateFont; not read here	inferred	none		
+0x442bd0	27			unassigned			Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
+0x442bf0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442c00	15			unassigned			Runs its object file code not read here	inferred	none		
+0x442c10	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442c20	19			unassigned			Runs its object file code not read here	inferred	none		
+0x442c40	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442c50	11			unassigned			Runs its object file code not read here	inferred	none		
+0x442c60	3			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442c70	3			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442c80	1			unassigned			Runs its object file code not read here	inferred	none		
+0x442c90	1			unassigned			Runs its object file code not read here	inferred	none		
+0x442ca0	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442cb0	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442cc0	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442cd0	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442ce0	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442cf0	7	ScrnPerfEnable	idb	unassigned			Runs its object file code not read here	inferred	none		
+0x442d00	6			unassigned			Runs its object file code not read here	inferred	none		
+0x442d10	5			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442d20	5			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442d30	20			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442d50	6			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442d60	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442d70	18			unassigned	unreached		Runs its object file code that calls 0x442d90; not read here	inferred	none		
+0x442d90	1			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442da0	13			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x442db0	1			unassigned			Runs its object file code not read here	inferred	none		
+0x442dc0	1			unassigned			Runs its object file code not read here	inferred	none		
+0x442dd0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442de0	15			unassigned			Runs its object file code not read here	inferred	none		
+0x442df0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x442e00	19			unassigned			Runs its object file code not read here	inferred	none		
+0x442e20	10			unassigned			Runs its object file code that calls 0x442e30; not read here	inferred	none		
+0x442e30	34			unassigned			Runs its object file code not read here	inferred	none		
+0x442e60	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x442e70	165			unassigned			Runs its object file code not read here	inferred	none		
+0x442f20	10			unassigned			Runs its object file code that calls 0x442f30; not read here	inferred	none		
+0x442f30	34			unassigned			Runs its object file code not read here	inferred	none		
+0x442f60	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x442f70	165			unassigned			Runs its object file code not read here	inferred	none		
+0x443020	10			unassigned			Runs its object file code that calls 0x443030; not read here	inferred	none		
+0x443030	34			unassigned			Runs its object file code not read here	inferred	none		
+0x443060	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x443070	165			unassigned			Runs its object file code not read here	inferred	none		
+0x443120	10			unassigned			Runs its object file code that calls 0x443130; not read here	inferred	none		
+0x443130	10			unassigned			Runs its object file code not read here	inferred	none		
+0x443140	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x443150	10			unassigned			Runs its object file code not read here	inferred	none		
+0x443160	10			unassigned			Runs its object file code that calls 0x443170; not read here	inferred	none		
+0x443170	10			unassigned			Runs its object file code not read here	inferred	none		
+0x443180	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x443190	10			unassigned			Runs its object file code not read here	inferred	none		
+0x4431a0	10			unassigned			Runs its object file code that calls 0x4431b0; not read here	inferred	none		
+0x4431b0	15			unassigned			Runs its object file code that calls 0x659a70; not read here	inferred	none		
+0x4431c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x4431d0	10			unassigned			Runs its object file code not read here	inferred	none		
+0x4431e0	10			unassigned			Runs its object file code that calls 0x4431f0; not read here	inferred	none		
+0x4431f0	15			unassigned			Runs its object file code that calls 0x659a70; not read here	inferred	none		
+0x443200	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x443210	10			unassigned			Runs its object file code not read here	inferred	none		
+0x443220	10			unassigned			Runs its object file code that calls 0x443230; not read here	inferred	none		
+0x443230	23			unassigned			Runs its object file code not read here	inferred	none		
+0x443250	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x443260	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x443280	10			unassigned			Runs its object file code that calls 0x443290; not read here	inferred	none		
+0x443290	23			unassigned			Runs its object file code not read here	inferred	none		
+0x4432b0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x4432c0	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x4432e0	5			client			Runs its object file code not read here	inferred	none		
 0x4432f0	11			client			Runs its object file code not read here	inferred	none		
 0x443300	93			client			Runs its object file code that calls EventRegisterEx, PropGetSelectedContext, 0x659ab0 and 1 more; not read here	inferred	none		
@@ -16237,14 +16237,14 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x588b40	15	InitDbcTwoPiC0EA4C		dbc	primitive	void __cdecl ()	Stores pi plus pi, as a float, in a word of the data section	inferred	none		
 0x588b50	5	InitDbcInvTwoPiC0EA48Thunk		dbc	orchestration	void __cdecl ()	Jumps to the 1/(2π) initializer of the record file	inferred	none		
 0x588b60	19	InitDbcInvTwoPiC0EA48		dbc	primitive	void __cdecl ()	Stores 1 divided by the 2 pi word in another word	inferred	none		
-0x588b80	10			dbc	orchestration		Runs its object file code that calls 0x588b90; not read here	inferred	none		
-0x588b90	31			dbc	primitive		Runs its object file code not read here	inferred	none		
-0x588bb0	12			dbc	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x588bc0	47			dbc	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x588bf0	257	SDBItemSubclassInitialize	idb	dbc	primitive		Runs its object file code that calls 0x588d40, 0x554a30; not read here	inferred	none		
+0x588b80	10			unassigned	orchestration		Runs its object file code that calls 0x588b90; not read here	inferred	none		
+0x588b90	31			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x588bb0	12			unassigned	orchestration		Runs its object file code that calls _atexit; not read here	inferred	none		
+0x588bc0	47			unassigned	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x588bf0	257	SDBItemSubclassInitialize	idb	unassigned	primitive		Runs its object file code that calls 0x588d40, 0x554a30; not read here	inferred	none		
 0x588d00	1	ZoneMusicRecDestruct2		dbc	orchestration	void __thiscall ()	Returns at once; the record has no destructor work	inferred	none		
-0x588d10	35			dbc	primitive		Runs its object file code not read here	inferred	none		
-0x588d40	23			dbc	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x588d10	35			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x588d40	23			unassigned	orchestration		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x588d60	5	InitDbcInfinityC0EB10Thunk		dbc	orchestration	void __cdecl ()	Jumps to the +inf initializer of the record file	inferred	none		
 0x588d70	11	InitDbcInfinityC0EB10		dbc	orchestration	void __cdecl ()	Copies the float +inf into a word of the data section	inferred	none		
 0x588d80	6	LightFloatBandGetFileName		dbc	orchestration	const char * __cdecl ()	Returns the path of the LightFloatBand table file	inferred	none		
@@ -23035,36 +23035,36 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6422a0	22			unassigned			Runs its object file code not read here	inferred	none		
 0x6422c0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
 0x6422d0	14			unassigned			Runs its object file code not read here	inferred	none		
-0x6422e0	5			base			Runs its object file code not read here	inferred	none		
-0x6422f0	11			base			Runs its object file code not read here	inferred	none		
-0x642300	30			base			Runs its object file code not read here	inferred	none		
-0x642320	130			base			Runs its object file code that calls 0x6423b0, _mktime; not read here	inferred	none		
-0x6423b0	3			base			Runs its object file code not read here	inferred	none		
-0x6423c0	198			base			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
-0x642490	33			base			Runs its object file code that calls _localtime; not read here	inferred	none		
-0x6424c0	22			base			Runs its object file code not read here	inferred	none		
-0x6424e0	25			base			Runs its object file code not read here	inferred	none		
-0x642500	57			base	unreached		Runs its object file code that calls 0x6424c0, 0x6423c0, 0x6424e0; not read here	inferred	none		
-0x642540	176			base	unreached		Runs its object file code that calls 0x6423c0, 0x642500, 0x6424c0 and 1 more; not read here	inferred	none		
-0x6425f0	39			base			Runs its object file code not read here	inferred	none		
-0x642620	39			base			Runs its object file code not read here	inferred	none		
-0x642650	39			base			Runs its object file code not read here	inferred	none		
-0x642680	39			base			Runs its object file code not read here	inferred	none		
-0x6426b0	39			base			Runs its object file code not read here	inferred	none		
-0x6426e0	37			base			Runs its object file code not read here	inferred	none		
-0x642710	95	WowTime::InRange	idb	base			Runs its object file code that calls 0x642880, 0x6429d0, 0x642770; not read here	inferred	none		
-0x642770	266			base			Runs its object file code that calls 0x6425f0, 0x642620, 0x642650 and 3 more; not read here	inferred	none		
-0x642880	51			base			Runs its object file code that calls 0x642a10, 0x642770; not read here	inferred	none		
-0x6428c0	266			base			Runs its object file code that calls 0x6425f0, 0x642620, 0x642650 and 3 more; not read here	inferred	none		
-0x6429d0	51			base			Runs its object file code that calls 0x642a10, 0x6428c0; not read here	inferred	none		
-0x642a10	162			base			Runs its object file code not read here	inferred	none		
-0x642ac0	21			base	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
-0x642ae0	80	WowTime::WowEncodeTime	idb	base			Runs its object file code not read here	inferred	none		
+0x6422e0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x6422f0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x642300	30			unassigned			Runs its object file code not read here	inferred	none		
+0x642320	130			unassigned			Runs its object file code that calls 0x6423b0, _mktime; not read here	inferred	none		
+0x6423b0	3			unassigned			Runs its object file code not read here	inferred	none		
+0x6423c0	198			unassigned			Runs its object file code that calls _mktime, 0x642490; not read here	inferred	none		
+0x642490	33			unassigned			Runs its object file code that calls _localtime; not read here	inferred	none		
+0x6424c0	22			unassigned			Runs its object file code not read here	inferred	none		
+0x6424e0	25			unassigned			Runs its object file code not read here	inferred	none		
+0x642500	57			unassigned	unreached		Runs its object file code that calls 0x6424c0, 0x6423c0, 0x6424e0; not read here	inferred	none		
+0x642540	176			unassigned	unreached		Runs its object file code that calls 0x6423c0, 0x642500, 0x6424c0 and 1 more; not read here	inferred	none		
+0x6425f0	39			unassigned			Runs its object file code not read here	inferred	none		
+0x642620	39			unassigned			Runs its object file code not read here	inferred	none		
+0x642650	39			unassigned			Runs its object file code not read here	inferred	none		
+0x642680	39			unassigned			Runs its object file code not read here	inferred	none		
+0x6426b0	39			unassigned			Runs its object file code not read here	inferred	none		
+0x6426e0	37			unassigned			Runs its object file code not read here	inferred	none		
+0x642710	95	WowTime::InRange	idb	unassigned			Runs its object file code that calls 0x642880, 0x6429d0, 0x642770; not read here	inferred	none		
+0x642770	266			unassigned			Runs its object file code that calls 0x6425f0, 0x642620, 0x642650 and 3 more; not read here	inferred	none		
+0x642880	51			unassigned			Runs its object file code that calls 0x642a10, 0x642770; not read here	inferred	none		
+0x6428c0	266			unassigned			Runs its object file code that calls 0x6425f0, 0x642620, 0x642650 and 3 more; not read here	inferred	none		
+0x6429d0	51			unassigned			Runs its object file code that calls 0x642a10, 0x6428c0; not read here	inferred	none		
+0x642a10	162			unassigned			Runs its object file code not read here	inferred	none		
+0x642ac0	21			unassigned	unreached		Runs its object file code that calls 0x642a10; not read here	inferred	none		
+0x642ae0	80	WowTime::WowEncodeTime	idb	unassigned			Runs its object file code not read here	inferred	none		
 0x642b30	211	WowTime::WowDecodeTime2	idb	base			Splits a packed date into minute, hour, weekday, day, month, year and a two-bit field, with -1 for all ones	verified	one	net/messages#time-speed-packet	
-0x642c10	32			base			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
+0x642c10	32			unassigned			Runs its object file code that calls WowTime::WowEncodeTime; not read here	inferred	none		
 0x642c30	30	WowTime::WowDecodeTime	idb	base			Decodes a packed date into a seven-field record by calling 0x642b30	verified	one	net/messages#time-speed-packet	
-0x642c50	38			base	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
-0x642c80	397			base			Runs its object file code that calls 0x642c10, SStrPrintf; not read here	inferred	none		
+0x642c50	38			unassigned	unreached		Runs its object file code that calls WowTime::WowDecodeTime, 0x642c80; not read here	inferred	none		
+0x642c80	397			unassigned			Runs its object file code that calls 0x642c10, SStrPrintf; not read here	inferred	none		
 0x642e10	118	PackGuidIntoStore		base			Appends a packed guid: a mask byte, then each nonzero byte from the lowest	verified	one	spell/cast#cast-request-packets	
 0x642e90	5			base			Runs its object file code not read here	inferred	none		
 0x642ea0	11			base			Runs its object file code not read here	inferred	none		
@@ -29478,8 +29478,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ed950	12	InitConstruct6ed940Register		ui	orchestration	void __cdecl (void)	Registers 0x6ed960 with the C runtime's exit list	verified	one	ui/initexits#exit-registrars	
 0x6ed960	10	InitConstruct6ed940Exit		ui	orchestration	void __cdecl (void)	Runs 0x6ed970 (j_CStatus::CStatus) on a global object	verified	one	ui/initexits#exit-calls	
 0x6ed970	5	JumpToCStatusDestroy		ui	orchestration	void __cdecl (void)	Jumps to 0x419e30, the destructor of a status	verified	one	ui/initexits#exit-calls	
-0x6ed980	37			ui	primitive		Runs its object file code not read here	inferred	none		
-0x6ed9b0	53			ui	orchestration		Runs its object file code that calls SStrVPrintf, 0x4420b0; not read here	inferred	none		
+0x6ed980	37			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x6ed9b0	53			unassigned	orchestration		Runs its object file code that calls SStrVPrintf, 0x4420b0; not read here	inferred	none		
 0x6ed9f0	43	DeletingDestructor6ed9f0		ui	orchestration		Destroys the object through 0x6ed970 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6eda20	10	InitConstruct6eda30Thunk		ui	orchestration	void __cdecl (void)	Calls 0x6eda30, then jumps to 0x6eda40 to register its exit callback	verified	one	ui/initthunks#call-thunks	
 0x6eda30	10	InitConstruct6eda30		ui	orchestration	void __cdecl (void)	Runs 0x6ef190 on a global object	verified	one	ui/initstores#object-constructors	
@@ -29500,8 +29500,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6ee280	632	CreateFrameFromXML		ui	primitive	CSimpleFrame * __fastcall (XMLNode *node, CSimpleFrame *parent, CStatus *status)	Creates a frame of a node's type under the parent attribute or argument and loads the node into it	verified	one	ui/framexml#creating-a-frame-from-xml	
 0x6ee500	492	RegisterXMLTemplate		ui	primitive		Keeps a virtual node by name with its context word, refusing a name the client's own code holds	verified	one	ui/framexml#templates	
 0x6ee6f0	137	FindXMLTemplate		ui	primitive	XMLNode * __fastcall (const char *name)	Returns the template node of a name, ignoring case, or null	verified	one	ui/framexml#templates	
-0x6ee780	113			ui	primitive		Runs its object file code that calls 0x6efd80; not read here	inferred	none		
-0x6ee800	113			ui	primitive		Runs its object file code that calls 0x6f01d0; not read here	inferred	none		
+0x6ee780	113			unassigned	primitive		Runs its object file code that calls 0x6efd80; not read here	inferred	none		
+0x6ee800	113			unassigned	primitive		Runs its object file code that calls 0x6f01d0; not read here	inferred	none		
 0x6ee880	376	FrameXML::RegisterFactory		ui	primitive		Registers a frame type factory by name with a one-shot flag, ignoring a name already taken	verified	one	ui/framexml#frame-types	
 0x6eea00	5	InitDouble6eea10Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6eea10, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6eea10	15	InitDouble6eea10		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
@@ -29526,35 +29526,35 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6eef90	109	Create_SimpleColorSelect	idb	ui	orchestration		Allocates a ColorSelect object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
 0x6ef000	109	Create_SimpleMovieFrame	idb	ui	orchestration		Allocates a MovieFrame object and constructs it, answering it or 0	verified	one	ui/framexml#the-frame-factories	
 0x6ef070	227	FrameXML::RegisterDefault	idb	ui	orchestration		Registers the 13 FrameXML frame types, Button to MovieFrame	verified	one	ui/framexml#frame-types	
-0x6ef160	37			ui	orchestration		Runs its object file code not read here	inferred	none		
+0x6ef160	37			unassigned	orchestration		Runs its object file code not read here	inferred	none		
 0x6ef190	180	InitTable6ef190		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef250	34	FreeRecord6ef250		ui	orchestration		Clears the record its argument points at through 0x6ef280 and frees it	verified	one	ui/containers#block-frees	
-0x6ef280	225			ui	primitive		Runs its object file code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
-0x6ef370	148			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x6ef410	25			ui	orchestration		Runs its object file code that calls 0x6eff00; not read here	inferred	none		
-0x6ef430	373			ui	primitive		Runs its object file code that calls 0x6f0210, 0x6efd80, 0x6efe00 and 1 more; not read here	inferred	none		
+0x6ef280	225			unassigned	primitive		Runs its object file code that calls 0x6f2b70, SMemFree; not read here	inferred	none		
+0x6ef370	148			unassigned	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6ef410	25			unassigned	orchestration		Runs its object file code that calls 0x6eff00; not read here	inferred	none		
+0x6ef430	373			unassigned	primitive		Runs its object file code that calls 0x6f0210, 0x6efd80, 0x6efe00 and 1 more; not read here	inferred	none		
 0x6ef5b0	189	EmptyTable6ef5b0		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x6ef670	180	InitTable6ef670		ui	primitive		Builds an empty hash table with mask -1	verified	one	ui/containers#hash-tables	
 0x6ef730	34	FreeRecord6ef730		ui	orchestration		Clears the record its argument points at through 0x6efce0 and frees it	verified	one	ui/containers#block-frees	
-0x6ef760	25			ui	orchestration		Runs its object file code that calls 0x6f00f0; not read here	inferred	none		
-0x6ef780	373			ui	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, 0x6efff0 and 1 more; not read here	inferred	none		
+0x6ef760	25			unassigned	orchestration		Runs its object file code that calls 0x6f00f0; not read here	inferred	none		
+0x6ef780	373			unassigned	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, 0x6efff0 and 1 more; not read here	inferred	none		
 0x6ef900	189	EmptyTable6ef900		ui	primitive		Empties the table, frees its buckets and sets the mask to -1	verified	one	ui/containers#hash-tables	
 0x6ef9c0	43	DeletingDestructor6ef9c0		ui	orchestration		Destroys the object through 0x6ef430 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6ef9f0	136	ClearList6ef9f0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
-0x6efa80	171			ui	primitive		Runs its object file code that calls 0x6f0210, 0x6efd80, SMemFree; not read here	inferred	none		
+0x6efa80	171			unassigned	primitive		Runs its object file code that calls 0x6f0210, 0x6efd80, SMemFree; not read here	inferred	none		
 0x6efb30	60	Unlink6efb30		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x6efb70	43	DeletingDestructor6efb70		ui	orchestration		Destroys the object through 0x6ef780 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6efba0	136	ClearList6efba0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
-0x6efc30	171			ui	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, SMemFree; not read here	inferred	none		
-0x6efce0	148			ui	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6efc30	171			unassigned	primitive		Runs its object file code that calls 0x6f02f0, 0x6f01d0, SMemFree; not read here	inferred	none		
+0x6efce0	148			unassigned	primitive		Runs its object file code that calls SMemFree; not read here	inferred	none		
 0x6efd80	60	Unlink6efd80		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x6efdc0	60	Unlink6efdc0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x6efe00	136	ClearList6efe00		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x6efe90	108	SetLinkOffset6efe90		ui	primitive		Sets a list's link offset, unlinking every node first when it differs	verified	one	ui/containers#lists	
-0x6eff00	227			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x6eff00	227			unassigned	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x6efff0	136	ClearList6efff0		ui	primitive		Unlinks every node of a list, then its head	verified	one	ui/containers#lists	
 0x6f0080	108	SetLinkOffset6f0080		ui	primitive		Sets a list's link offset, unlinking every node first when it differs	verified	one	ui/containers#lists	
-0x6f00f0	221			ui	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
+0x6f00f0	221			unassigned	primitive		Runs its object file code that calls SMemAlloc; not read here	inferred	none		
 0x6f01d0	60	Unlink6f01d0		ui	primitive		Unlinks a link from its list and clears it	verified	one	ui/containers#links	
 0x6f0210	25	LinkOrEnd6f0210		ui	primitive		Returns a node's link, or the list's end link for a null node	verified	one	ui/containers#links	
 0x6f0230	181	Relink6f0230		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
@@ -29562,33 +29562,33 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f0310	181	Relink6f0310		ui	primitive		Unlinks a node and links it again into a list by a placement argument	verified	one	ui/containers#links	
 0x6f03d0	139	ShouldGrow6f03d0		ui	primitive		Adds a bucket chain walk to the run counter and grows the table past 13	verified	one	ui/containers#hash-tables	
 0x6f0460	139	ShouldGrow6f0460		ui	primitive		Adds a bucket chain walk to the run counter and grows the table past 13	verified	one	ui/containers#hash-tables	
-0x6f04f0	562			ui	primitive		Runs its object file code that calls 0x6f07e0, 0x6f0210, 0x6efd80 and 4 more; not read here	inferred	none		
+0x6f04f0	562			unassigned	primitive		Runs its object file code that calls 0x6f07e0, 0x6f0210, 0x6efd80 and 4 more; not read here	inferred	none		
 0x6f0730	33	InitUnsetList6f0730		ui	primitive		Makes an empty list with the unset link offset 0xdddddddd	verified	one	ui/containers#lists	
 0x6f0760	43	DeletingDestructor6f0760		ui	orchestration		Destroys the object through 0x6ef9f0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6f0790	77	ClearBucket6f0790		ui	primitive		Unlinks every node of a bucket list	verified	one	ui/containers#lists	
 0x6f07e0	12	InitEndLink6f07e0		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
-0x6f07f0	317			ui	primitive		Runs its object file code that calls 0x6f0eb0, 0x6efd80, 0x6f0930; not read here	inferred	none		
+0x6f07f0	317			unassigned	primitive		Runs its object file code that calls 0x6f0eb0, 0x6efd80, 0x6f0930; not read here	inferred	none		
 0x6f0930	41	NextLink6f0930		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
-0x6f0960	562			ui	primitive		Runs its object file code that calls 0x6f0c50, 0x6f02f0, 0x6f01d0 and 4 more; not read here	inferred	none		
+0x6f0960	562			unassigned	primitive		Runs its object file code that calls 0x6f0c50, 0x6f02f0, 0x6f01d0 and 4 more; not read here	inferred	none		
 0x6f0ba0	33	InitUnsetList6f0ba0		ui	primitive		Makes an empty list with the unset link offset 0xdddddddd	verified	one	ui/containers#lists	
 0x6f0bd0	43	DeletingDestructor6f0bd0		ui	orchestration		Destroys the object through 0x6efba0 and frees it when bit 0 of the argument is set	verified	one	ui/containers#deleting-destructors	
 0x6f0c00	77	ClearBucket6f0c00		ui	primitive		Unlinks every node of a bucket list	verified	one	ui/containers#lists	
 0x6f0c50	12	InitEndLink6f0c50		ui	primitive		Points a list's end link at itself, marked by bit 0	verified	one	ui/containers#links	
-0x6f0c60	317			ui	primitive		Runs its object file code that calls 0x6f0fc0, 0x6f01d0, 0x6f0da0; not read here	inferred	none		
+0x6f0c60	317			unassigned	primitive		Runs its object file code that calls 0x6f0fc0, 0x6f01d0, 0x6f0da0; not read here	inferred	none		
 0x6f0da0	41	NextLink6f0da0		ui	primitive		Returns the address a link names, resolving negative offsets through the list's offset	verified	one	ui/containers#links	
-0x6f0dd0	109			ui	primitive		Runs its object file code that calls 0x6f0eb0; not read here	inferred	none		
-0x6f0e40	109			ui	primitive		Runs its object file code that calls 0x6f0fc0; not read here	inferred	none		
+0x6f0dd0	109			unassigned	primitive		Runs its object file code that calls 0x6f0eb0; not read here	inferred	none		
+0x6f0e40	109			unassigned	primitive		Runs its object file code that calls 0x6f0fc0; not read here	inferred	none		
 0x6f0eb0	264	ReallocBuckets6f0eb0		ui	primitive		Reallocates a bucket array, moving each bucket list	verified	one	ui/containers#hash-tables	
 0x6f0fc0	264	ReallocBuckets6f0fc0		ui	primitive		Reallocates a bucket array, moving each bucket list	verified	one	ui/containers#hash-tables	
 0x6f10d0	5	InitInfinity6f10e0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f10e0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f10e0	11	InitInfinity6f10e0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f10f0	268	CheckTocSignature		ui	orchestration		Checks a toc's .sig file: 0 unreadable, 1 bad size or verification, 2 digest differs, 3 good	verified	one	ui/framexml#building-the-game-interface	
-0x6f1200	108			ui	orchestration		Runs its object file code that calls MD5Init, 0x6f1270, SFile::Load and 3 more; not read here	inferred	none		
-0x6f1270	535			ui	primitive		Runs its object file code that calls SStrPrintf, SStrLen, 0x64b4f0 and 9 more; not read here	inferred	none		
-0x6f1490	101			ui	orchestration		Runs its object file code that calls SStrTokenize, 0x6f1270; not read here	inferred	none		
-0x6f1500	115			ui	primitive		Runs its object file code that calls 0x6f1580; not read here	inferred	none		
-0x6f1580	359			ui	primitive		Runs its object file code that calls SStrCmpI, 0x6f1270; not read here	inferred	none		
-0x6f16f0	129			ui	primitive		Runs its object file code that calls 0x66cdd0, 0x66ce30, 0x66ce40 and 2 more; not read here	inferred	none		
+0x6f1200	108			unassigned	orchestration		Runs its object file code that calls MD5Init, 0x6f1270, SFile::Load and 3 more; not read here	inferred	none		
+0x6f1270	535			unassigned	primitive		Runs its object file code that calls SStrPrintf, SStrLen, 0x64b4f0 and 9 more; not read here	inferred	none		
+0x6f1490	101			unassigned	orchestration		Runs its object file code that calls SStrTokenize, 0x6f1270; not read here	inferred	none		
+0x6f1500	115			unassigned	primitive		Runs its object file code that calls 0x6f1580; not read here	inferred	none		
+0x6f1580	359			unassigned	primitive		Runs its object file code that calls SStrCmpI, 0x6f1270; not read here	inferred	none		
+0x6f16f0	129			unassigned	primitive		Runs its object file code that calls 0x66cdd0, 0x66ce30, 0x66ce40 and 2 more; not read here	inferred	none		
 0x6f1780	5	InitDouble6f1790Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f1790, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f1790	15	InitDouble6f1790		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x6f17a0	5	InitQuotient6f17b0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f17b0, a static initializer	verified	one	ui/initthunks#jump-thunks	
@@ -29600,15 +29600,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f18b0	69	DrawLayerNameToId		ui	primitive	bool __fastcall (const char *name, int *id)	Looks a draw layer name up ignoring case and stores its index 0 to 4	verified	one	ui/draworder#regions-within-a-frame	
 0x6f1900	31	DrawLayerIdToName		ui	primitive	const char * __fastcall (int id)	Returns the name of a draw layer index, or UNKNOWN	verified	one	ui/draworder#regions-within-a-frame	
 0x6f1920	69	ParseBlendMode		ui	primitive		Looks a blend mode name up, ignoring case, in the five value and name pairs at 0x811aa8	verified	one	ui/button#checked-textures	
-0x6f1970	31			ui	primitive		Runs its object file code not read here	inferred	none		
+0x6f1970	31			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x6f1990	69	ParseJustify		ui	orchestration		Maps a justify name, ignoring case, to its bit	verified	one	ui/fontstring#justify	
 0x6f19e0	5	InitInfinity6f19f0Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f19f0, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f19f0	11	InitInfinity6f19f0		ui	orchestration	void __cdecl (void)	Copies the dword 0x7f800000 (+inf as a float) into a global	verified	one	ui/initstores#infinity-copies	
 0x6f1a00	31	GetJustifyName		ui	orchestration		Answers the name of the first justify bit set, else UNKNOWN	verified	one	ui/fontstring#justify	
 0x6f1a20	69	ParseOrientation		ui	orchestration		Maps HORIZONTAL or VERTICAL, ignoring case, to 0 or 1	verified	one	ui/slider#construction	
-0x6f1a70	31			ui	primitive		Runs its object file code not read here	inferred	none		
+0x6f1a70	31			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x6f1a90	53	ParseFontFlags		ui	orchestration		Reads font flags as substrings: OUTLINE 1, THICKOUTLINE 4, MONOCHROME 2	verified	one	ui/fontstring#setfont	
-0x6f1ad0	85			ui	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
+0x6f1ad0	85			unassigned	primitive		Runs its object file code that calls SStrPack; not read here	inferred	none		
 0x6f1b30	130	ParseXMLBool		ui	primitive	int __fastcall (const char *text)	Reads a flag: 1 to 9, t, T, y, Y, on or enabled is true, anything else false	verified	one	ui/addons#toc-directives	
 0x6f1c10	213	GetScriptFlagArg		ui	primitive	bool __stdcall (lua_State *L, int index, bool defaultValue)	Reads a script argument as a flag: nil 0, boolean itself, number truncated, string by first letter or keyword	verified	one	ui/actionuse#reading-a-script-flag	
 0x6f1d60	328	XmlReadValue		ui	primitive		Converts a length attribute of an XML element and stores it, or a relative value unconverted	verified	one	ui/backdrop#the-xml-element	ui::glue_6f1_metric_scale_divide
@@ -29622,8 +29622,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6f2820	15	InitDouble6f2820		ui	primitive	void __cdecl (void)	Stores 3.1415927 + 3.1415927 = 6.2831855 as a float in a global	verified	one	ui/initfloats#doubled-constants	
 0x6f2830	5	InitQuotient6f2840Thunk		ui	orchestration	void __cdecl (void)	Jumps to 0x6f2840, a static initializer	verified	one	ui/initthunks#jump-thunks	
 0x6f2840	19	InitQuotient6f2840		ui	primitive	void __cdecl (void)	Stores 1 / 6.2831855 = 0.15915494 as a float in a global	verified	one	ui/initfloats#quotients	
-0x6f2860	20			ui	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
-0x6f2880	20			ui	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
+0x6f2860	20			unassigned	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
+0x6f2880	20			unassigned	orchestration		Runs its object file code that calls CDataAllocator::PutData; not read here	inferred	none		
 0x6f28a0	279	XMLStartElement		ui	primitive		Appends a node for an element as the last child of the current one and copies its attributes	verified	one	ui/framexml#xml-trees	
 0x6f29c0	16	XMLEndElement		ui	orchestration		Makes the current node's parent current	verified	one	ui/framexml#xml-trees	
 0x6f29d0	86	XMLCharacterData		ui	primitive		Appends character data to the current node's body	verified	one	ui/framexml#xml-trees	
@@ -32527,8 +32527,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7602f0	69			base			Runs its object file code that calls 0x760290; not read here	inferred	none		
 0x760340	5			base			Runs its object file code not read here	inferred	none		
 0x760350	15			base			Runs its object file code not read here	inferred	none		
-0x760360	5			base			Runs its object file code not read here	inferred	none		
-0x760370	19			base			Runs its object file code not read here	inferred	none		
+0x760360	5			unassigned			Runs its object file code not read here	inferred	none		
+0x760370	19			unassigned			Runs its object file code not read here	inferred	none		
 0x760390	51	InitBlockPool		base		void __thiscall (void *this, uint32_t size, uint32_t perBlock)	Sets a block pool's element size (at least 4) and elements per block (at least 1) and empties it	verified	one	spell/tables#ability-node-pool	
 0x7603d0	5			base			Runs its object file code not read here	inferred	none		
 0x7603e0	11			base			Runs its object file code not read here	inferred	none		
@@ -32538,10 +32538,10 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7604f0	21	CDataAllocator::PutData	idb	base		void __thiscall (void *this, void *data, const char *tag, int32_t line)	Pushes an element back on a block pool's free list and decrements its count	verified	one	spell/tables#ability-node-pool	
 0x760510	5			base			Runs its object file code not read here	inferred	none		
 0x760520	15			base			Runs its object file code not read here	inferred	none		
-0x760530	5			base			Runs its object file code not read here	inferred	none		
-0x760540	19			base			Runs its object file code not read here	inferred	none		
-0x760560	5			base			Runs its object file code not read here	inferred	none		
-0x760570	11			base			Runs its object file code not read here	inferred	none		
+0x760530	5			unassigned			Runs its object file code not read here	inferred	none		
+0x760540	19			unassigned			Runs its object file code not read here	inferred	none		
+0x760560	5			unassigned			Runs its object file code not read here	inferred	none		
+0x760570	11			unassigned			Runs its object file code not read here	inferred	none		
 0x760580	10			unassigned			Runs its object file code that calls 0x760590; not read here	inferred	none		
 0x760590	11			unassigned			Runs its object file code not read here	inferred	none		
 0x7605a0	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
@@ -35039,64 +35039,64 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7a6ee0	21	HttpGetAsync		client			Starts a background HTTP download of a URL with a 5000 ms timeout and a chunk callback	inferred	none		
 0x7a6f00	5			client			Runs its object file code not read here	inferred	none		
 0x7a6f10	15			client			Runs its object file code not read here	inferred	none		
-0x7a6f20	5			client			Runs its object file code not read here	inferred	none		
-0x7a6f30	19			client			Runs its object file code not read here	inferred	none		
-0x7a6f50	8			client			Runs its object file code not read here	inferred	none		
-0x7a6f60	8			client			Runs its object file code not read here	inferred	none		
-0x7a6f70	9			client			Runs its object file code not read here	inferred	none		
-0x7a6f80	92			client	unreached		Runs its object file code that calls SStrCopy, SStrPrintf; not read here	inferred	none		
-0x7a6fe0	5			client			Runs its object file code not read here	inferred	none		
-0x7a6ff0	11			client			Runs its object file code not read here	inferred	none		
-0x7a7000	5			client			Runs its object file code not read here	inferred	none		
-0x7a7010	15			client			Runs its object file code not read here	inferred	none		
-0x7a7020	5			client			Runs its object file code not read here	inferred	none		
-0x7a7030	19			client			Runs its object file code not read here	inferred	none		
-0x7a7050	10			client			Runs its object file code that calls 0x7a7060; not read here	inferred	none		
-0x7a7060	23			client			Runs its object file code not read here	inferred	none		
-0x7a7080	12			client			Runs its object file code that calls _atexit; not read here	inferred	none		
-0x7a7090	25			client			Runs its object file code that calls SMemFree; not read here	inferred	none		
-0x7a70b0	284			client			Runs its object file code that calls 0x7a74b0; not read here	inferred	none		
-0x7a71d0	333			client			Runs its object file code that calls 0x7a70b0; not read here	inferred	none		
-0x7a7320	1			client			Runs its object file code not read here	inferred	none		
-0x7a7330	16			client	unreached		Runs its object file code not read here	inferred	none		
-0x7a7340	19			client	unreached		Runs its object file code not read here	inferred	none		
-0x7a7360	63			client	unreached		Runs its object file code not read here	inferred	none		
-0x7a73a0	21			client	unreached		Runs its object file code that calls 0x7a7360; not read here	inferred	none		
-0x7a73c0	194			client	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
-0x7a7490	5			client			Runs its object file code not read here	inferred	none		
-0x7a74a0	11			client			Runs its object file code not read here	inferred	none		
-0x7a74b0	157			client			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
-0x7a7550	5			client			Runs its object file code not read here	inferred	none		
-0x7a7560	15			client			Runs its object file code not read here	inferred	none		
-0x7a7570	5			client			Runs its object file code not read here	inferred	none		
-0x7a7580	19			client			Runs its object file code not read here	inferred	none		
-0x7a75a0	44			client			Runs its object file code not read here	inferred	none		
-0x7a75d0	8			client			Runs its object file code not read here	inferred	none		
-0x7a75e0	5			client			Runs its object file code not read here	inferred	none		
-0x7a75f0	11			client			Runs its object file code not read here	inferred	none		
-0x7a7600	5			client			Runs its object file code not read here	inferred	none		
-0x7a7610	15			client			Runs its object file code not read here	inferred	none		
-0x7a7620	5			client			Runs its object file code not read here	inferred	none		
-0x7a7630	19			client			Runs its object file code not read here	inferred	none		
-0x7a7650	5			client			Runs its object file code not read here	inferred	none		
-0x7a7660	11			client			Runs its object file code not read here	inferred	none		
-0x7a7670	5			client			Runs its object file code not read here	inferred	none		
-0x7a7680	15			client			Runs its object file code not read here	inferred	none		
+0x7a6f20	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6f30	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6f50	8			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6f60	8			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6f70	9			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6f80	92			unassigned	unreached		Runs its object file code that calls SStrCopy, SStrPrintf; not read here	inferred	none		
+0x7a6fe0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a6ff0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7000	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7010	15			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7020	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7030	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7050	10			unassigned			Runs its object file code that calls 0x7a7060; not read here	inferred	none		
+0x7a7060	23			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7080	12			unassigned			Runs its object file code that calls _atexit; not read here	inferred	none		
+0x7a7090	25			unassigned			Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x7a70b0	284			unassigned			Runs its object file code that calls 0x7a74b0; not read here	inferred	none		
+0x7a71d0	333			unassigned			Runs its object file code that calls 0x7a70b0; not read here	inferred	none		
+0x7a7320	1			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7330	16			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x7a7340	19			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x7a7360	63			unassigned	unreached		Runs its object file code not read here	inferred	none		
+0x7a73a0	21			unassigned	unreached		Runs its object file code that calls 0x7a7360; not read here	inferred	none		
+0x7a73c0	194			unassigned	unreached		Runs its object file code that calls __ftol; not read here	inferred	none		
+0x7a7490	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a74a0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7a74b0	157			unassigned			Runs its object file code that calls SMemReAlloc, SMemAlloc, SMemFree; not read here	inferred	none		
+0x7a7550	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7560	15			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7570	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7580	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7a75a0	44			unassigned			Runs its object file code not read here	inferred	none		
+0x7a75d0	8			unassigned			Runs its object file code not read here	inferred	none		
+0x7a75e0	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a75f0	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7600	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7610	15			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7620	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7630	19			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7650	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7660	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7670	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7680	15			unassigned			Runs its object file code not read here	inferred	none		
 0x7a7690	5			unassigned			Runs its object file code not read here	inferred	none		
 0x7a76a0	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7a76c0	225			unassigned	unreached		Runs its object file code that calls 0x589c90, GetACP, __alloca_probe and 1 more; not read here	inferred	none		
 0x7a77b0	236	OsClipboardGetString	idb	os			Runs OsClipboard.cpp code that calls 0x589c90, GetACP, __alloca_probe and 2 more; not read here	inferred	none		
 0x7a78a0	23			os			Runs OsClipboard.cpp code that calls SMemFree; not read here	inferred	none		
-0x7a78c0	260	OsClipboardPutString	idb	os			Runs its object file code that calls 0x589c90, SStrLen, __alloca_probe and 2 more; not read here	inferred	none		
-0x7a79d0	939			os			Runs its object file code that calls _sprintf, SErrDisplayAppFatal, 0x7a7d80; not read here	inferred	none		
-0x7a7d80	95			os			Runs its object file code not read here	inferred	none		
-0x7a7de0	49			os			Runs its object file code not read here	inferred	none		
-0x7a7e20	5			os			Runs its object file code not read here	inferred	none		
-0x7a7e30	11			os			Runs its object file code not read here	inferred	none		
-0x7a7e40	5			os			Runs its object file code not read here	inferred	none		
-0x7a7e50	15			os			Runs its object file code not read here	inferred	none		
-0x7a7e60	5			os			Runs its object file code not read here	inferred	none		
-0x7a7e70	19			os			Runs its object file code not read here	inferred	none		
+0x7a78c0	260	OsClipboardPutString	idb	unassigned			Runs its object file code that calls 0x589c90, SStrLen, __alloca_probe and 2 more; not read here	inferred	none		
+0x7a79d0	939			unassigned			Runs its object file code that calls _sprintf, SErrDisplayAppFatal, 0x7a7d80; not read here	inferred	none		
+0x7a7d80	95			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7de0	49			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e20	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e30	11			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e40	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e50	15			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e60	5			unassigned			Runs its object file code not read here	inferred	none		
+0x7a7e70	19			unassigned			Runs its object file code not read here	inferred	none		
 0x7a7e90	5			os			Runs its object file code not read here	inferred	none		
 0x7a7ea0	11			os			Runs its object file code not read here	inferred	none		
 0x7a7eb0	10			os			Runs its object file code that calls 0x7a7ec0; not read here	inferred	none		
@@ -36145,54 +36145,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8260	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c8280	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8290	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c82b0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c82c0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c82e0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c82f0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8310	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8320	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8340	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8350	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8370	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8380	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c83a0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c83b0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c83d0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c83e0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8400	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8410	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8430	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8440	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8460	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8470	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8490	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c84a0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c84c0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c84d0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c84f0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8500	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8510	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8520	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8540	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8550	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8570	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8580	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c85a0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c85b0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c85d0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c85e0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8600	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8610	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8630	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8640	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8660	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8670	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8690	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c86a0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c86c0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c86d0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c86f0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8700	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x7c82b0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c82c0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c82e0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c82f0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8310	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8320	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8340	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8350	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8370	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8380	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c83a0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c83b0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c83d0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c83e0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8400	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8410	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8430	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8440	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8460	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8470	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8490	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c84a0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c84c0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c84d0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c84f0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8500	11			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8510	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8520	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8540	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8550	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8570	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8580	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c85a0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c85b0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c85d0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c85e0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8600	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8610	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8630	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8640	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8660	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8670	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8690	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c86a0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c86c0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c86d0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c86f0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8700	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x7c8720	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8730	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8740	119			dbcache	primitive		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString; not read here	inferred	none		
@@ -36203,54 +36203,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c88c0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c88e0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c88f0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8910	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8920	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8940	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8950	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8970	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8980	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c89a0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c89b0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c89d0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c89e0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8a00	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8a10	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8a30	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8a40	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8a60	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8a70	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8a90	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8aa0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8ac0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8ad0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8af0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8b00	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8b20	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8b30	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8b50	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8b60	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8b70	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8b80	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8ba0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8bb0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8bd0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8be0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8c00	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8c10	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8c30	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8c40	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8c60	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8c70	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8c90	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8ca0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8cc0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8cd0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8cf0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8d00	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8d20	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8d30	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8d50	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8d60	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x7c8910	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8920	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8940	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8950	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8970	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8980	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c89a0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c89b0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c89d0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c89e0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8a00	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8a10	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8a30	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8a40	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8a60	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8a70	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8a90	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8aa0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8ac0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8ad0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8af0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8b00	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8b20	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8b30	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8b50	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8b60	11			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8b70	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8b80	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8ba0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8bb0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8bd0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8be0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8c00	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8c10	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8c30	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8c40	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8c60	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8c70	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8c90	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8ca0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8cc0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8cd0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8cf0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8d00	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8d20	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8d30	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8d50	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8d60	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x7c8d80	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8d90	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8da0	18			dbcache	orchestration		Runs its object file code that calls CDataStore::PutCString; not read here	inferred	none		
@@ -36261,54 +36261,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c8e30	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c8e50	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c8e60	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8e80	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8e90	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8eb0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8ec0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8ee0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8ef0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8f10	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8f20	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8f40	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8f50	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8f70	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8f80	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8fa0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8fb0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c8fd0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c8fe0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9000	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9010	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9030	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9040	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9060	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9070	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9090	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c90a0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c90c0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c90d0	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c90e0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c90f0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9110	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9120	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9140	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9150	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9170	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9180	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c91a0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c91b0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c91d0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c91e0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9200	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9210	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9230	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9240	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9260	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9270	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9290	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c92a0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c92c0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c92d0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x7c8e80	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8e90	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8eb0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8ec0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8ee0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8ef0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8f10	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8f20	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8f40	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8f50	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8f70	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8f80	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8fa0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8fb0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c8fd0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c8fe0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9000	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9010	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9030	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9040	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9060	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9070	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9090	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c90a0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c90c0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c90d0	11			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c90e0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c90f0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9110	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9120	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9140	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9150	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9170	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9180	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c91a0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c91b0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c91d0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c91e0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9200	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9210	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9230	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9240	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9260	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9270	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9290	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c92a0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c92c0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c92d0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x7c92f0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9300	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9310	813			dbcache	primitive		Runs its object file code that calls CDataStore::PutUInt32, CDataStore::PutCString, CDataStore::PutFloat; not read here	inferred	none		
@@ -36319,54 +36319,54 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x7c9a00	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
 0x7c9a20	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9a30	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9a50	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9a60	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9a80	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9a90	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9ab0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9ac0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9ae0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9af0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9b10	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9b20	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9b40	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9b50	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9b70	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9b80	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9ba0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9bb0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9bd0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9be0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9c00	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9c10	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9c30	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9c40	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9c60	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9c70	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9c90	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9ca0	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9cb0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9cc0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9ce0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9cf0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9d10	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9d20	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9d40	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9d50	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9d70	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9d80	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9da0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9db0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9dd0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9de0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9e00	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9e10	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9e30	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9e40	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9e60	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9e70	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
-0x7c9e90	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
-0x7c9ea0	19			dbcache	primitive		Runs its object file code not read here	inferred	none		
+0x7c9a50	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9a60	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9a80	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9a90	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9ab0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9ac0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9ae0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9af0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9b10	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9b20	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9b40	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9b50	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9b70	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9b80	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9ba0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9bb0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9bd0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9be0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9c00	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9c10	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9c30	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9c40	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9c60	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9c70	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9c90	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9ca0	11			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9cb0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9cc0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9ce0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9cf0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9d10	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9d20	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9d40	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9d50	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9d70	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9d80	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9da0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9db0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9dd0	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9de0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9e00	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9e10	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9e30	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9e40	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9e60	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9e70	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
+0x7c9e90	5			unassigned	orchestration		Runs its object file code not read here	inferred	none		
+0x7c9ea0	19			unassigned	primitive		Runs its object file code not read here	inferred	none		
 0x7c9ec0	5			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9ed0	11			dbcache	orchestration		Runs its object file code not read here	inferred	none		
 0x7c9ee0	192			dbcache	primitive		Runs its object file code that calls CDataStore::PutFloat, CDataStore::PutCString, CDataStore::PutUInt32; not read here	inferred	none		
