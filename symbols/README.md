@@ -1,5 +1,33 @@
 # The symbol table
 
+`cargo xtask check --exe` adds the stack: the sum of the bytes a `__stdcall`, `__thiscall` or
+`__fastcall` signature puts on the stack (`__thiscall` without `this`) is the `N` of every
+`ret N` the body reaches, and a `__cdecl` body returns with `ret`. A body with no `ret` (it ends in
+a tail jump) is not compared.
+- `RET` is a type with no name. `CONV` is `__cdecl`, `__stdcall`, `__fastcall` or `__thiscall`,
+  and no other word: a register is never written in the signature.
+- `PARAMS` is `void`, nothing, or parameters separated by `, `. A parameter is a type with an
+  optional name, unique in the signature. A function pointer parameter has no convention of
+  its own: `int (*fn)(lua_State *)`; a callee that takes a different convention is `void *`.
+- `...` ends the list and only `__cdecl` takes it.
+- No `/* */` comment, no `@`, no name before the parameter list.
+- Every type is built in (`void`, the C integer and float words), one of the fixed-width and
+  size types `bool`, `int8_t` to `int64_t`, `uint8_t` to `uint64_t`, `intptr_t`, `uintptr_t`,
+  `size_t`, `ptrdiff_t`, `wchar_t` and `va_list`, a row of `structs.tsv`, or a name behind a
+  pointer, which the header declares opaque. A type by value, the return included, is built in or
+  a struct row: a Windows handle is `void *`, and a `RECT` passed by value is its four `int32_t`.
+- `__thiscall` lists `T *this` first: the object in `ecx`. The rest are the stack arguments.
+  `T` is the class when the method's name gives one, else `void`. A function that takes an
+  integer in `ecx` is `__fastcall`.
+- `__fastcall` takes its first two parameters of at most four bytes that are not `float` in `ecx`
+  and `edx`, and the rest on the stack. A register the body never reads still has its parameter
+  (`uint32_t unused`), since the next parameter does not move into it.
+- Every parameter takes four bytes on the stack, rounded up: eight for `uint64_t`, `int64_t` and
+  `double`, a struct's size rounded up to four.
+A signature is `RET CONV (PARAMS)` and nothing else: the return type, one convention, the
+parameter list. Tools read it (the C header and the Ghidra, IDA and Binary Ninja imports), so
+the check holds every signature to this form.
+### The signature grammar
 Every known function, global, struct and struct field of `WoW.exe` 1.12.1.5875, one row each. A
 row says what the thing is in a line and links to the finding that proves it. The detail lives
 in the finding; the row is the index.
@@ -104,7 +132,7 @@ doc yet whose meaning a finding elsewhere derives.
 |---|---|
 | `size` | Decimal bytes from the entry to the end of the body's last instruction, by the rule below. A cited instruction address belongs to the function whose `[address, address + size)` holds it. |
 | `class` | `primitive`, `orchestration`, `host`, `boundary` or `unreached`. Required on every row of a system that has a doc; empty only for a row owned by a system not yet written. |
-| `signature` | The C prototype without the name: return type, calling convention, parameters. `uint32_t __fastcall (uint32_t x)`. `__thiscall` puts `this` first; `__fastcall` passes its first two parameters in `ecx` and `edx`. Empty when not derived. |
+| `signature` | The C prototype without the name, in the grammar below: `uint32_t __fastcall (uint32_t x)`. Empty when not derived. |
 | `test` | The bit-exact tests that run this function against the exe, whole or a slice, `crate::test_fn` separated by `, `: a top-level test function of a file under `crates/<crate>/tests/` (`../CONTRIBUTING.md`, Adding a test). Empty when there is none. |
 
 A function row's address is a function start (`../docs/METHOD.md`, Completeness). Its body is every
@@ -211,7 +239,7 @@ does not name is written as its named base followed by its own fields.
 | sorting | byte order of the keys above | parallel edits must merge |
 | `meaning` | 120 characters, one line, verb first, no final period | a cell is a gloss; the finding holds the detail |
 | `name` | 48 characters, the naming rule | applied to Ghidra as an identifier, and to the exports |
-| `signature` | 160 characters | one prototype, no commentary |
+| `signature` | 200 characters, and the grammar above | one prototype, no commentary |
 | banned in `meaning` | `?`, `TODO`, `probably`, `maybe`, `seems`, `likely` | a guess is `inferred`, said in the confidence column |
 | `verified` | needs `one` or `two`, and a `finding` | provenance is the point of the label |
 | `inferred` | needs `none`; a `finding` is allowed | a finding can name what it did not settle |
@@ -222,3 +250,4 @@ does not name is written as its named base followed by its own fields.
 | addresses | unique across functions and globals | one row per address |
 | addresses in `meaning` | each resolves to a row | a citation without a row cannot be looked up |
 | bodies | every function row starts a function and has its body's size (`--exe`) | a cited address belongs to the row whose extent holds it |
+| stack | the bytes a signature puts on the stack are the `ret N` of its body (`--exe`) | a caller cannot tell a missing parameter from a wrong convention |

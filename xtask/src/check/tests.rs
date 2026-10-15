@@ -51,6 +51,17 @@ fn plant(rule: &'static str, plant: impl Fn(&mut Files) + 'static, expect: &[&st
     }
 }
 
+/// A signature planted in the clean fixture's first row: it yields exactly one problem.
+fn sig_plant(rule: &'static str, signature: &'static str, message: &'static str) -> Plant {
+    plant(
+        rule,
+        move |files| swap(files, F, "int __stdcall (void *instance)", signature),
+        &[Box::leak(
+            format!("symbols/functions.tsv:2: {message}").into_boxed_str(),
+        )],
+    )
+}
+
 fn edit(file: &'static str, from: &'static str, to: &'static str) -> impl Fn(&mut Files) {
     move |files| swap(files, file, from, to)
 }
@@ -314,10 +325,97 @@ fn plants() -> Vec<Plant> {
         plant(
             "a signature's length",
             |f: &mut Files| {
-                let long = format!("uint32_t __thiscall (CDemo *this{})", ", int x".repeat(19));
+                let tail: String = (0..30).map(|i| format!(", int x{i}")).collect();
+                let long = format!("uint32_t __thiscall (CDemo *this{tail})");
                 swap(f, F, "uint32_t __thiscall (CDemo *this)", &long);
             },
-            &["symbols/functions.tsv:4: signature is over 160 characters"],
+            &["symbols/functions.tsv:4: signature is over 200 characters"],
+        ),
+        // The signature grammar: RET CONV (PARAMS).
+        sig_plant(
+            "a comment in a signature",
+            "void __fastcall (double *values /*ecx*/, int count /*edx*/)",
+            "signature holds a comment",
+        ),
+        sig_plant(
+            "a name inside a signature",
+            "void __stdcall SetHealer(uint64_t guid)",
+            "signature is not RET CONV (PARAMS): no convention, or a name before the parameter list",
+        ),
+        sig_plant(
+            "a signature with no convention",
+            "int (void)",
+            "signature is not RET CONV (PARAMS): no convention, or a name before the parameter list",
+        ),
+        sig_plant(
+            "a convention outside the four",
+            "void __userpurge (char *name, uint32_t size)",
+            "__userpurge is not a convention",
+        ),
+        sig_plant(
+            "a register annotation",
+            "void __fastcall (char *name@<ecx>)",
+            "signature holds a register annotation",
+        ),
+        sig_plant(
+            "a convention inside a function pointer",
+            "void __cdecl (uint32_t (__fastcall *alpha)(uint32_t))",
+            "a convention inside a parameter",
+        ),
+        sig_plant(
+            "a type passed by value and not declared",
+            "void __cdecl (HANDLE file)",
+            "parameter 1: HANDLE is not declared and is passed by value",
+        ),
+        sig_plant(
+            "a returned type not declared",
+            "RECT __cdecl (void)",
+            "return type: RECT is not declared and is passed by value",
+        ),
+        sig_plant(
+            "a name in the return type",
+            "int result __cdecl (void)",
+            "return type: holds a name",
+        ),
+        sig_plant(
+            "an ellipsis that is not last",
+            "int __cdecl (const char *format, ..., int x)",
+            "... is not last",
+        ),
+        sig_plant(
+            "an ellipsis outside __cdecl",
+            "int __stdcall (const char *format, ...)",
+            "... outside __cdecl",
+        ),
+        sig_plant(
+            "a __thiscall without this first",
+            "uint32_t __thiscall (CDemo *demo)",
+            "__thiscall lists `T *this` first",
+        ),
+        sig_plant(
+            "a __thiscall with no parameter",
+            "uint32_t __thiscall (void)",
+            "__thiscall lists `T *this` first",
+        ),
+        sig_plant(
+            "a this that is not a pointer",
+            "uint32_t __thiscall (uint32_t this)",
+            "__thiscall lists `T *this` first",
+        ),
+        sig_plant(
+            "void among other parameters",
+            "void __cdecl (void, int a)",
+            "void among other parameters",
+        ),
+        sig_plant(
+            "a parameter name used twice",
+            "void __cdecl (int a, int a)",
+            "parameter name a used twice",
+        ),
+        plant(
+            "a struct by value is declared",
+            edit(F, "int __stdcall (void *instance)", "int __stdcall (CSpare spare)"),
+            &[],
         ),
         // Types, structs and fields.
         plant(

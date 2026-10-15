@@ -1,6 +1,7 @@
 //! The exe-free half of the check: the symbol table and the system docs against the formats and
 //! limits in `symbols/README.md` and `systems/README.md`.
 
+use crate::sig;
 use crate::tree::Tree;
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
@@ -28,7 +29,7 @@ const CLASSES: [&str; 5] = [
 
 const MEANING: usize = 120;
 const NAME: usize = 48;
-const SIGNATURE: usize = 160;
+const SIGNATURE: usize = 200;
 const OVERVIEW: usize = 200;
 const TITLE: usize = 6;
 const CLAIM: usize = 120;
@@ -399,6 +400,10 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
         structs.insert(name, row);
     }
 
+    let struct_sizes: sig::Structs = structs_rows
+        .iter()
+        .filter_map(|r| Some((r.get("name"), r.get("size").parse().ok()?)))
+        .collect();
     let mut names: HashMap<&str, &str> = HashMap::new();
     let mut extents = Vec::new();
     for (kind, rows) in [(Kind::Functions, &functions), (Kind::Globals, &globals)] {
@@ -457,8 +462,14 @@ pub fn run(tree: &dyn Tree) -> io::Result<Checked> {
                 if !test.is_empty() && !test.split(", ").all(|t| TEST.is_match(t)) {
                     p.add(&place, format!("test '{test}' is not crate::test_fn"));
                 }
-                if row.get("signature").chars().count() > SIGNATURE {
+                let signature = row.get("signature");
+                if signature.chars().count() > SIGNATURE {
                     p.add(&place, format!("signature is over {SIGNATURE} characters"));
+                }
+                if !signature.is_empty() {
+                    if let Err(message) = sig::parse(signature, &struct_sizes) {
+                        p.add(&place, message);
+                    }
                 }
                 size
             } else {

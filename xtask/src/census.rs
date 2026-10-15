@@ -1157,6 +1157,7 @@ pub fn report(
                 place: format!("{:#x}", s.address),
                 address: s.address,
                 size: s.size?,
+                pops: None,
             })
         })
         .collect();

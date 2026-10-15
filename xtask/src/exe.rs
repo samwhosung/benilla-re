@@ -4,6 +4,7 @@
 
 use crate::bodies::{self, Image, Listing};
 use crate::check::{Checked, Problem};
+use crate::sig;
 use crate::tables;
 use regex::Regex;
 use sha2::{Digest, Sha256};
@@ -180,14 +181,23 @@ pub fn run(root: &Path, checked: &Checked) -> io::Result<Outcome> {
 
 /// The function rows, for the body check and the listing.
 pub fn functions(checked: &Checked) -> Vec<bodies::Function> {
+    let structs: sig::Structs = checked
+        .structs
+        .iter()
+        .filter_map(|r| Some((r.get("name"), r.get("size").parse().ok()?)))
+        .collect();
     checked
         .functions
         .iter()
         .filter_map(|row| {
+            let pops = sig::parse(row.get("signature"), &structs)
+                .ok()
+                .and_then(|s| sig::pops(&s, &structs));
             Some(bodies::Function {
                 place: row.place(),
                 address: u32::from_str_radix(row.get("address").strip_prefix("0x")?, 16).ok()?,
                 size: row.get("size").parse().ok()?,
+                pops,
             })
         })
         .collect()

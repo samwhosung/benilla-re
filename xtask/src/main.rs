@@ -11,6 +11,7 @@ mod globals;
 mod listing;
 mod matcher;
 mod objfiles;
+mod sig;
 mod signature;
 mod site;
 mod tables;

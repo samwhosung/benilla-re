@@ -12,7 +12,7 @@
 //! writes the same bytes.
 
 mod bundle;
-mod cdecl;
+pub(crate) mod cdecl;
 mod header;
 mod table;
 mod x64dbg;

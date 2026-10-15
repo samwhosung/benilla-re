@@ -756,6 +756,16 @@ pub struct Function {
     pub place: String,
     pub address: u32,
     pub size: u32,
+    /// The bytes the signature says the callee pops, when it has one to compare.
+    pub pops: Option<u32>,
+}
+
+/// The bytes a `ret` instruction pops, `None` for any other instruction.
+fn ret_bytes(instruction: &str) -> Option<u32> {
+    match instruction.strip_prefix("ret")?.trim() {
+        "" => Some(0),
+        n => u32::from_str_radix(n.strip_prefix("0x")?, 16).ok(),
+    }
 }
 
 /// What the whole listing says about one address, read once for every row.
@@ -930,6 +940,24 @@ pub fn check(rows: &[Function], listing: &Listing, image: &Image) -> Vec<Problem
         for why in &not_entry[i] {
             add(row, why.clone());
         }
+        if let Some(expected) = row.pops {
+            let mut popped: Vec<u32> = reached
+                .iter()
+                .filter_map(|&a| listing.get(a).and_then(ret_bytes))
+                .collect();
+            popped.sort_unstable();
+            popped.dedup();
+            if !popped.is_empty() && popped != [expected] {
+                let found: Vec<String> = popped.iter().map(u32::to_string).collect();
+                add(
+                    row,
+                    format!(
+                        "ret pops {} bytes, the signature takes {expected}",
+                        found.join(" and ")
+                    ),
+                );
+            }
+        }
         let last_reached = reached.last().copied().unwrap_or(entry);
         match end_of(
             listing,
@@ -1042,12 +1070,64 @@ WoW.exe:     file format pei-i386
                 place: format!("{address:#x}"),
                 address,
                 size,
+                pops: None,
             })
             .collect();
         check(&rows, &listing, &image)
             .iter()
             .map(|p| p.to_string())
             .collect()
+    }
+
+    /// One function at 0x401000 whose returns are `returns`, checked against `pops`.
+    fn popped(returns: &[&str], pops: Option<u32>) -> Vec<String> {
+        let mut text = String::from("\n00401000 <.text>:\n  401000:\tmov    eax,ecx\n");
+        let mut at = 0x401002;
+        let mut size = 2;
+        for (i, r) in returns.iter().enumerate() {
+            if i + 1 < returns.len() {
+                text.push_str(&format!("  {at:x}:\tje     {:#x}\n", at + 5));
+                at += 2;
+                size += 2;
+            }
+            text.push_str(&format!("  {at:x}:\t{r}\n"));
+            at += 3;
+            size += 3;
+        }
+        text.push_str(&format!("  {at:x}:\tint3\n"));
+        let listing = Listing::parse(text.as_bytes()).expect("parses");
+        let bytes = image_bytes();
+        let image = Image::new(&bytes).expect("a PE");
+        let rows = [Function {
+            place: "0x401000".to_string(),
+            address: 0x401000,
+            size,
+            pops,
+        }];
+        check(&rows, &listing, &image)
+            .iter()
+            .map(|p| p.to_string())
+            .collect()
+    }
+
+    #[test]
+    fn a_ret_agrees_with_the_signature_or_is_named() {
+        let none = Vec::<String>::new();
+        assert_eq!(popped(&["ret    0x8"], Some(8)), none);
+        assert_eq!(popped(&["ret"], Some(0)), none);
+        assert_eq!(popped(&["ret    0x8"], None), none);
+        assert_eq!(
+            popped(&["ret    0x8"], Some(4)),
+            ["0x401000: ret pops 8 bytes, the signature takes 4"]
+        );
+        assert_eq!(
+            popped(&["ret"], Some(4)),
+            ["0x401000: ret pops 0 bytes, the signature takes 4"]
+        );
+        assert_eq!(
+            popped(&["ret    0x4", "ret"], Some(4)),
+            ["0x401000: ret pops 0 and 4 bytes, the signature takes 4"]
+        );
     }
 
     const CLEAN: [(u32, u32); 3] = [(0x401000, 12), (0x401010, 21), (0x401040, 5)];
@@ -1221,6 +1301,7 @@ WoW.exe:     file format pei-i386
                 place: format!("{address:#x}"),
                 address,
                 size,
+                pops: None,
             })
             .collect();
         check(&rows, &listing, &image)
@@ -1321,6 +1402,7 @@ WoW.exe:     file format pei-i386
                     place: "0x74fa8a".to_string(),
                     address: 0x74fa8a,
                     size: 161,
+                    pops: None,
                 },
             );
         }

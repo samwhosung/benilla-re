@@ -56,4 +56,4 @@ it apply; the C builtins, the stdint types, `bool`, `...` and the SDK's `RECT`, 
 `MSG` are known. A row keeps its name and comment when its signature fails. Two reasons are
 defects of the table: `signature outside the grammar` (a name, a comment or a register note in
 the prototype) and `__thiscall without this` (a `__thiscall` row whose first parameter is not
-`this`); the summary marks them. A `__thiscall` row with no parameters applies as it is.
+`this`); the summary marks them. The check holds every row to the grammar, so neither occurs.

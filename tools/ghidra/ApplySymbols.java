@@ -42,7 +42,6 @@ public class ApplySymbols extends GhidraScript {
     private int failures = 0;
     private final Map<String, Integer> reasons = new TreeMap<>();
     private final Map<String, DataType> opaque = new TreeMap<>();
-    private int thiscallBare = 0;
     private final Set<Long> applied = new HashSet<>();
     private boolean keep = false;
     private final Set<Long> kept = new HashSet<>();
@@ -338,9 +337,7 @@ public class ApplySymbols extends GhidraScript {
         boolean varargs = !ps.isEmpty() && ps.get(ps.size() - 1).equals("...");
         if (varargs) ps.remove(ps.size() - 1);
         if (conv.equals("__thiscall")) {
-            if (ps.isEmpty()) {
-                thiscallBare++;
-            } else if (THIS.matcher(ps.get(0)).find()) {
+            if (!ps.isEmpty() && THIS.matcher(ps.get(0)).find()) {
                 ps.remove(0); // `this` is the convention's own parameter
             } else {
                 return new String[] {"__thiscall without this", sig};
@@ -514,7 +511,6 @@ public class ApplySymbols extends GhidraScript {
         println("ApplySymbols:   signatures applied " + applied.size() + ", in the program " + sOk + "/" + sRows
                 + " (parameter count and convention)");
         println("ApplySymbols:   global names in the program " + gOk + "/" + gNamed);
-        println("ApplySymbols:   __thiscall rows without parameters, applied as they are " + thiscallBare);
         println("ApplySymbols:   opaque types made " + opaque.size());
         println("ApplySymbols:   failures " + failures);
         for (Map.Entry<String, Integer> e : reasons.entrySet()) {
