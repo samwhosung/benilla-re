@@ -108,7 +108,8 @@ writes the same bytes.
 
 - `benilla-re.h`: a C header of every struct at its table offsets (packed, with explicit
   `_pad` members for the gaps and `__vfptr` where a vtable exists), the prototypes whose types it
-  can state, and the globals. `::` is written `__`. For a call from injected code, each function
+  can state (behind `BENILLA_RE_PROTOTYPES`, as no function can be linked), and the globals. It
+  compiles as C and as C++. `::` is written `__`. For a call from injected code, each function
   has `BRE_ADDR_<name>` (its address) and `BRE_FN_<name>` (a pointer type with its calling
   convention, MSVC keywords under `_MSC_VER` and attributes for clang and gcc on i386), a
   `__thiscall` one also `BRE_FNX_<name>`, the `__fastcall` form with a dead `edx`; each global has
