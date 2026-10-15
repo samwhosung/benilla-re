@@ -92,12 +92,23 @@ Test: `net::friends_compare`
 | 14, 15, 16 | 15 adds the guid to the ignores, 16 removes it | `ERR_IGNORE_ALREADY_S`, `ERR_IGNORE_ADDED_S`, `ERR_IGNORE_REMOVED_S` |
 | 17, 18 and up | none | `ERR_IGNORE_AMBIGUOUS`, `ERR_FRIEND_ERROR` |
 
-Addresses: `0x5add30`, `0x5acab0`, `0x5ae850`, `0x5ae910`, `0x5acac9`, `0x5acacf`, `0x5ace1c`, `0x5aea00`, `0x5aea60`, `0x5aeac0`, `0x5aeb30`, `0x5ace70`, `0x5acf40`, `0x5aeb70`, `0x5acdbd`, `0x496720`
+Addresses: `0x5add30`, `0x5acab0`, `0x5ae850`, `0x5ae910`, `0x5acac9`, `0x5acacf`, `0x5ace1c`, `0x5aea00`, `0x5aea60`, `0x5aeac0`, `0x5aeb30`, `0x5af650`, `0x5ace70`, `0x5acf40`, `0x5aeb70`, `0x5acdbd`, `0x496720`
 Confidence: verified
 Proof: one
-Test: none
+Test: `net::friends_status`
 
 `0x5acab9` `cmp eax,0x11; ja 0x5acd85` and `jmp [eax*4+0x5ace1c]` (18 entries). The ids passed to `0x496720` are `0x108`, `0x104`, `0x106`, `0x107`, `0x10a`, `0x105`, `0x10c`, `0x10d`, `0x109`, `0x10e`, `0x10f`, `0x110`, `0x111`, `0x112`, `0x113`, `0x114` and, past 17, `0x10b`; `tables/messages.tsv` names them from id 259. The id `0x103`, `ERR_FRIEND_DB_ERROR`, is never passed. A result that looks up a name calls `0x55f080` (`0x5acb97`): a cached name sets the name for result 6 or 7 (`0x5acdc3`), sorts the friends or ignores and shows the error with the name twice; a miss adds to `+0x640` or `+0x718` and the callback `0x5ace70` or `0x5acf40` finishes later: a found name is stored and the error shown unless the id is `0x1d1`; a name not found shows `ERR_FRIEND_ERROR` and sends the remove packet (`0x5ae760`, `0x5af4b0`) for the guid.
+
+## Friend slot claim
+
+Results 6, 7 and 8 find or claim the guid's slot (`0x5aea60`): the slot holding the guid, else the first empty one, which takes the guid and an online byte of 0. The scan stops at that empty slot. On a full list without the guid it writes the guid and a zero online byte as slot `-1`, in the 32 bytes before the object, and returns `-1`, so result 6 stores no fields. Result 2 instead matches the guid against all 50 slots, empty ones included. Result 16 (`0x5af650`) zeroes the first ignore holding the guid and sorts the ignores when nothing is pending.
+
+Addresses: `0x5aea60`, `0x5aea81`, `0x5aea92`, `0x5acb47`, `0x5acc20`, `0x5af650`, `0x5af691`
+Confidence: verified
+Proof: one
+Test: `net::friends_status`
+
+`0x5aea66` starts the index at `-1` (`or ebx,0xffffffff`); the loop returns a match at once (`0x5aea7f`) and takes an empty slot at `0x5aea81` to `0x5aea90`. Past 50 it falls to `0x5aea92`, which stores `+0xc`, `+8` and the byte `+0` at `index·0x20 + this` with the index still `-1`. `0x5acb47` `test eax,eax; jl` skips the fields. `0x5acc20` to `0x5acc36` compare all 50 guids with no stop at an empty one. `0x5af691` tests `+0x718` before `0x5ae910`.
 
 ## Friend script functions
 

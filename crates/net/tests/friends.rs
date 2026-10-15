@@ -3,7 +3,7 @@
 
 mod common;
 
-use benilla_re_difftest::Emu;
+use benilla_re_difftest::{Emu, RegisterX86};
 use benilla_re_net::{
     compare_friends, strnicmp, DataStore, Fetch, FriendCall, FriendList, FriendSlot,
 };
@@ -12,6 +12,8 @@ use common::{Lcg, Wow};
 const READ_FRIEND_LIST: u64 = 0x5ae350;
 const READ_IGNORE_LIST: u64 = 0x5af530;
 const ADD_IGNORE_SLOT: u64 = 0x5af5d0;
+const HANDLE_STATUS: u64 = 0x5acab0;
+const GAME_ERROR: u64 = 0x496720;
 const DEC_FRIENDS: u64 = 0x5aeb70;
 const DEC_IGNORES: u64 = 0x5aeb90;
 const COMPARE_FRIENDS: u64 = 0x5ae870;
@@ -33,24 +35,30 @@ struct Rig<'a> {
     fl: u64,
     store: u64,
     buf: u64,
-    /// The lookup island's log: a count, then four dwords a call.
+    /// The lookup island's log: a count, then five dwords a call in `0x20` bytes.
     log: u64,
 }
 
 impl<'a> Rig<'a> {
     fn new(wow: &'a Wow) -> Rig<'a> {
         let mut e = Emu::new(wow);
-        let fl = e.alloc(0x728);
+        let fl = e.alloc(0x748) + 0x20;
         let store = e.alloc(0x20);
         let buf = e.alloc(0x1000);
         let log = e.alloc(0x2000);
         let cnt = log as u32;
-        let base = cnt + 0x10;
+        let base = cnt + 0x20;
         let mut c = vec![0xa1];
         c.extend_from_slice(&cnt.to_le_bytes());
-        c.extend_from_slice(&[0xc1, 0xe0, 0x04, 0x05]);
+        c.extend_from_slice(&[0xc1, 0xe0, 0x05, 0x05]);
         c.extend_from_slice(&base.to_le_bytes());
-        for (i, off) in [(0x04u8, 0x00u8), (0x08, 0x04), (0x0c, 0x08), (0x10, 0x0c)] {
+        for (i, off) in [
+            (0x04u8, 0x00u8),
+            (0x08, 0x04),
+            (0x0c, 0x08),
+            (0x10, 0x0c),
+            (0x14, 0x10),
+        ] {
             c.extend_from_slice(&[0x8b, 0x4c, 0x24, i]);
             if off == 0 {
                 c.extend_from_slice(&[0x89, 0x08]);
@@ -73,6 +81,7 @@ impl<'a> Rig<'a> {
         e.stub(SMEMFREE, 1, 4);
         e.stub(FRIENDS_DONE, 0, 0);
         e.stub(IGNORES_DONE, 0, 0);
+        e.stub(GAME_ERROR, 0, 0);
         Rig {
             e,
             fl,
@@ -82,7 +91,16 @@ impl<'a> Rig<'a> {
         }
     }
 
+    /// Runs a member of the list with `EDI` and `ESI` zero, which a one-argument game error then
+    /// shows as its missing name.
+    fn call(&mut self, f: u64, args: &[u32]) {
+        self.e.set_reg(RegisterX86::EDI, 0);
+        self.e.set_reg(RegisterX86::ESI, 0);
+        self.e.call(f, self.fl as u32, 0, args);
+    }
+
     fn put(&mut self, f: &FriendList) {
+        self.e.write(self.fl - 0x20, &[0xa5; 0x20]);
         for (k, s) in f.slots.iter().enumerate() {
             let a = self.fl + 0x20 * k as u64;
             self.e.write(a, &[s.online, s.status, 0xa5, 0xa5]);
@@ -109,7 +127,17 @@ impl<'a> Rig<'a> {
             friends_pending: self.e.read_u32(self.fl + 0x640),
             ignores: [0; 25],
             ignores_pending: self.e.read_u32(self.fl + 0x718),
+            before: None,
         };
+        let margin = self.e.read(self.fl - 0x20, 0x20);
+        if margin != [0xa5; 0x20] {
+            let g = u64::from_le_bytes(margin[8..16].try_into().unwrap());
+            let mut want = [0xa5; 0x20];
+            want[0] = 0;
+            want[8..16].copy_from_slice(&g.to_le_bytes());
+            assert_eq!(margin, want, "the bytes before the object");
+            f.before = Some(g);
+        }
         for (k, s) in f.slots.iter_mut().enumerate() {
             let a = self.fl + 0x20 * k as u64;
             let b = self.e.read(a, 2);
@@ -151,6 +179,15 @@ impl<'a> Rig<'a> {
             .iter()
             .filter_map(|c| match c.addr {
                 SMEMFREE => Some(FriendCall::Free(c.args[0])),
+                SSTRDUPA => Some(FriendCall::Dup(c.args[0])),
+                GAME_ERROR => {
+                    let name = c.args[1];
+                    assert_eq!(c.args[2], name, "the name twice");
+                    Some(FriendCall::GameError {
+                        id: c.args[0],
+                        name: (name != 0).then_some(name),
+                    })
+                }
                 FRIENDS_DONE => Some(FriendCall::FriendsDone),
                 IGNORES_DONE => Some(FriendCall::IgnoresDone),
                 _ => None,
@@ -159,7 +196,7 @@ impl<'a> Rig<'a> {
         let n = self.e.read_u32(self.log);
         let lookups = (0..u64::from(n))
             .map(|i| {
-                let a = self.log + 0x10 + 0x10 * i;
+                let a = self.log + 0x20 + 0x20 * i;
                 let lo = self.e.read_u32(a);
                 let hi = self.e.read_u32(a + 4);
                 let at = u64::from(self.e.read_u32(a + 8));
@@ -171,6 +208,7 @@ impl<'a> Rig<'a> {
                     guid: u64::from(lo) | (u64::from(hi) << 32),
                     slot,
                     ignore: cb == 0x5acf40,
+                    id: self.e.read_u32(a + 16),
                 }
             })
             .collect();
@@ -198,6 +236,7 @@ fn list(g: &mut Lcg) -> FriendList {
         friends_pending: [0u32, 0, 1, 3][(g.next() >> 16) as usize % 4],
         ignores: [0; 25],
         ignores_pending: [0u32, 0, 1, 2][(g.next() >> 16) as usize % 4],
+        before: None,
     };
     for s in f.slots.iter_mut() {
         *s = FriendSlot {
@@ -219,6 +258,11 @@ fn list(g: &mut Lcg) -> FriendList {
         *x = if k < full { guid(g) | 1 } else { 0 };
     }
     f
+}
+
+/// The name cache: a guid whose low bit is set has [`NAME`].
+fn cached(guid: u64) -> Option<u32> {
+    (guid & 1 == 1).then_some(NAME)
 }
 
 fn plain(bytes: &[u8]) -> DataStore {
@@ -259,16 +303,12 @@ fn friends_read_list() {
         }
         r.put(&f);
         r.load_store(&bytes);
-        r.e.call(READ_FRIEND_LIST, r.fl as u32, 0, &[r.store as u32]);
+        r.call(READ_FRIEND_LIST, &[r.store as u32]);
         let mut n = 0;
-        let calls = f.read_friend_list(
-            &mut plain(&bytes),
-            |gd| gd & 1 == 1,
-            || {
-                n += 1;
-                (DUP_BASE + DUP_STRIDE * (n - 1)) as u32
-            },
-        );
+        let calls = f.read_friend_list(&mut plain(&bytes), cached, |_| {
+            n += 1;
+            (DUP_BASE + DUP_STRIDE * (n - 1)) as u32
+        });
         let ctx = format!("case {case} count {count}");
         assert_eq!(r.get(), f, "{ctx}: list");
         assert_eq!(r.calls(), split(calls), "{ctx}: calls");
@@ -296,8 +336,8 @@ fn friends_ignore_list() {
             }
             r.put(&f);
             r.load_store(&bytes);
-            r.e.call(READ_IGNORE_LIST, r.fl as u32, 0, &[r.store as u32]);
-            let calls = f.read_ignore_list(&mut plain(&bytes), |gd| gd & 1 == 1);
+            r.call(READ_IGNORE_LIST, &[r.store as u32]);
+            let calls = f.read_ignore_list(&mut plain(&bytes), cached);
             assert_eq!(r.get(), f, "{ctx}: list");
             assert_eq!(r.calls(), split(calls), "{ctx}: calls");
         } else {
@@ -305,14 +345,9 @@ fn friends_ignore_list() {
             let named = g.next() >> 31 == 0;
             r.put(&f);
             let flag = if named { g.next() | 1 } else { 0 };
-            r.e.call(
-                ADD_IGNORE_SLOT,
-                r.fl as u32,
-                0,
-                &[gd as u32, (gd >> 32) as u32, flag],
-            );
+            r.call(ADD_IGNORE_SLOT, &[gd as u32, (gd >> 32) as u32, flag]);
             let mut calls = Vec::new();
-            f.add_ignore_slot(gd, named, |x| x & 1 == 1, &mut calls);
+            f.add_ignore_slot(gd, named, cached, &mut calls);
             assert_eq!(r.get(), f, "{ctx}: add");
             assert_eq!(r.calls(), split(calls), "{ctx}: add calls");
         }
@@ -337,12 +372,7 @@ fn friends_pending_counts() {
                 f.friends_pending = n;
             }
             r.put(&f);
-            r.e.call(
-                if ignores { DEC_IGNORES } else { DEC_FRIENDS },
-                r.fl as u32,
-                0,
-                &[],
-            );
+            r.call(if ignores { DEC_IGNORES } else { DEC_FRIENDS }, &[]);
             let done = if ignores {
                 f.decrement_ignores_pending()
             } else {
@@ -357,6 +387,57 @@ fn friends_pending_counts() {
             };
             assert_eq!(r.calls().0, want, "{ctx}: sort");
         }
+    }
+}
+
+/// `FriendList::HandleStatus` whole on every result from 0 to 19 and large ones, for guids in a
+/// friend slot, in the ignores, new and 0, cached or not, against lists packed or scattered, from
+/// empty to full: the slots, the ignores, the pending counts, the bytes before the object, the
+/// names freed and copied, the lookups with their message ids, the sorts and the game errors.
+#[test]
+fn friends_status() {
+    let Some(wow) = Wow::load() else {
+        return;
+    };
+    let mut r = Rig::new(&wow);
+    let mut g = Lcg(0x57a7_0001);
+    for case in 0..8000 {
+        let mut f = list(&mut g);
+        if g.next() >> 31 == 0 {
+            let n = [0usize, 1, 10, 49, 50, 50][(g.next() >> 16) as usize % 6];
+            for (k, s) in f.slots.iter_mut().enumerate() {
+                s.guid = if k < n { guid(&mut g) | (1 << 33) } else { 0 };
+            }
+        }
+        let result = if g.next() >> 29 == 0 {
+            [18u32, 19, 0x100, 0x8000_0000, 0xffff_ffff][(g.next() >> 16) as usize % 5]
+        } else {
+            (g.next() >> 16) % 18
+        };
+        let gd = match g.next() >> 30 {
+            0 => f.slots[(g.next() >> 16) as usize % 50].guid,
+            1 => f.ignores[(g.next() >> 16) as usize % 25],
+            2 => guid(&mut g),
+            _ => guid(&mut g) & !1 | u64::from(g.next() >> 31),
+        };
+        let mut bytes = vec![(g.next() >> 24) as u8];
+        for _ in 0..3 {
+            bytes.extend(g.next().to_le_bytes());
+        }
+        r.put(&f);
+        r.load_store(&bytes);
+        r.call(
+            HANDLE_STATUS,
+            &[result, gd as u32, (gd >> 32) as u32, r.store as u32],
+        );
+        let mut n = 0;
+        let calls = f.handle_status(result, gd, &mut plain(&bytes), cached, |_| {
+            n += 1;
+            (DUP_BASE + DUP_STRIDE * (n - 1)) as u32
+        });
+        let ctx = format!("case {case} result {result} guid {gd:#x}");
+        assert_eq!(r.get(), f, "{ctx}: list");
+        assert_eq!(r.calls(), split(calls), "{ctx}: calls");
     }
 }
 
