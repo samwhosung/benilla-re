@@ -220,11 +220,11 @@ them. `0x7bae60` has 3 call sites, `0x7bb0e0` 1 (`0x7a4f8f`) and `0x7bb990` 5.
 ## Unreached matrix code
 
 Nothing live reaches these routines, which exist for the same shapes as the live ones: the 3×4
-compare `0x7baac0`, sums `0x7bab70`, `0x7bac10`, `0x7baca0`, differences `0x7bad30`, `0x7badd0`, scalar
+compare `0x7baac0`, sum `0x7bab70`, scalar sums `0x7bac10`, `0x7baca0`, difference `0x7bad30`, scalar difference `0x7badd0`, scalar
 products `0x7bafc0`, `0x7bb050`, `0x7bb9f0`, `0x7bba50`, vector and matrix products `0x7bb140`, `0x7bb1a0`, `0x7bb220`,
 `0x7bb290`, `0x7bb300`, builders `0x7bb4e0`, `0x7bb5d0`, `0x7bb710`, by-value wrappers `0x7bb3a0` to `0x7bb4a0`,
-the quaternion form `0x7bbb00`; the 4×4 compare `0x7bc0b0`, sums `0x7bc360`, `0x7bc430`, differences `0x7bc500`,
-`0x7bc5d0`, scalar products `0x7bc9b0`, `0x7bccd0`, vector product `0x7bcbd0`, wrappers `0x7bcdb0`, `0x7bcdf0`, `0x7bce70`, `0x7bceb0`,
+the quaternion form `0x7bbb00`; the 4×4 compare `0x7bc0b0`, scalar sums `0x7bc360`, `0x7bc430`, difference `0x7bc500`,
+scalar difference `0x7bc5d0`, scalar products `0x7bc9b0`, `0x7bccd0`, vector product `0x7bcbd0`, wrappers `0x7bcdb0`, `0x7bcdf0`, `0x7bce70`, `0x7bceb0`,
 transpose `0x7bcef0`, adjugate `0x7bd060`, builder `0x7bd980`; the 3×3 forms `0x7be120`, `0x7be320`, `0x7be3f0`, `0x7be5b0`,
 `0x7be610`, `0x7be770`, `0x7be860`, `0x7be890`, `0x7be8c0`, `0x7be8f0`; the Euler extractors `0x7be930`, `0x7be9e0`, `0x7bea80`,
 `0x7beb20`, `0x7bebd0`, `0x7bec80` and builders `0x7bed30`, `0x7beeb0`, `0x7bf030`, `0x7bf1b0`, `0x7bf330`.
@@ -238,6 +238,7 @@ The census is a scan of every `call`, `jmp` and `jcc` target in the listing and 
 the image for each address; the control is `0x7bc040`, found at 36 call sites. The only callers of
 these routines are other routines of the list (the wrappers call the sum, difference and product; the
 builders call `0x7bb990`, `0x7be6d0` and `0x7bdca0`). Their names come from the operations in
-their bodies: the compares are 12 or 16 `fcomp`, the sums 12 or 16 `fadd`, the Euler builders three
+their bodies: the compares are 12 or 16 `fcomp`, the sums 12 or 16 `fadd`, the scalar forms one `fld [ebp+0x8]`
+per entry with `fadd`, `fsub` or `fmul` of the entry of `edx`, stored to `ecx`, the Euler builders three
 `fsincos` and two `0x7bdfc0` products, the extractors `fpatan` pairs and the C runtime's `asin`; the
 semantics are not read through.
