@@ -129,7 +129,9 @@ BENILLA_RE_REQUIRE_EXE=1 cargo test --workspace --profile exetest
 ```
 
 `cargo xtask cited <path to a benilla checkout>` lists every client address the benilla tree
-cites that has neither a row nor a mention in a doc here: a report, not a check.
+cites that has neither a row nor a mention in a doc here: a report. With `--strict` it exits
+nonzero when any address has neither, the standing check that everything benilla cites is
+backed here.
 
 ## Adding a name
 
