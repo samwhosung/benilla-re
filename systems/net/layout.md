@@ -10,8 +10,9 @@ third, `0x5d1420` to `0x5d3f20`, holds the SHA-1 code, the SHA-1 random pool, SR
 big-number helpers. The files of the first two runs open their code with their static initializers;
 the third run's code has one, the +∞ `0x5d3b20` near its end, and starts at `0x5d1420`, the SHA-1
 compression, right after IGxuFontGlyph.cpp's last initializer. Of the 1,146 functions in the three
-runs, 552 are those initializers and their thunks, and 81 are unreached. The closure is not yet
-complete: 18 of its 321 primitives have a bit-exact test.
+runs, 552 are those initializers and their thunks, and 81 are unreached. Of the 313 primitives
+in the closure, 312 have a bit-exact test; the other, `0x5b8c40`, is a server's handler that only
+unreached code calls (`logonlink`, Server link commands).
 
 The system's other docs are `wire`, `threads`, `dispatch`, `messages`, `session`, `connection`, `login`, `logonlink`, `crypto`, `friends`, `who` and `accountdata`.
 
