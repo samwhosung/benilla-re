@@ -345,7 +345,7 @@ CM2Model	0x01e4	4	CM2Model *	m_nextSibling	models	Holds the next instance attach
 CM2Model	0x03b8	4	M2Lighting *	m_lighting	models	Holds the lighting record the instance draws with	verified	one	models/model#instance-object
 CM2Shared	0x0000	4	uint32_t	m_refCount	models	Holds the shared model's reference count	verified	one	models/shared#shared-model-object
 CM2Shared	0x0004	4	M2Cache *	m_cache	models	Holds the cache the shared model belongs to	verified	one	models/shared#shared-model-object
-CM2Shared	0x0008	4	uint32_t	m_flags	models	Holds flag 1 when loaded and flag 2 when loading asynchronously	verified	one	models/shared#shared-model-object
+CM2Shared	0x0008	4	uint32_t	m_flags	models	Holds flag 1 when loaded and flag 2 when the load's open flag allows loose files	verified	one	models/shared#shared-model-object
 CM2Shared	0x0020	260	char[260]	m_name	models	Holds the file name	verified	one	models/shared#shared-model-object
 CM2Shared	0x012c	4	uint32_t	m_hash	models	Holds the hash of the file name	verified	one	models/shared#shared-model-object
 CM2Shared	0x0130	4	void *	m_data	models	Holds the file data with its offsets fixed up	verified	one	models/shared#shared-model-object
@@ -843,6 +843,14 @@ LightningObject::Bolt	0x0002	2	uint16_t	m_to	spell	Holds the GUID index of the h
 LightningObject::Bolt	0x0004	4	uint32_t	m_startTime	spell	Holds the time the hop starts	verified	one	spell/visuals#chain-hop-table
 LightningObject::Bolt	0x0008	4	uint32_t	m_endTime	spell	Holds the time the hop ends	verified	one	spell/visuals#chain-hop-table
 LightningObject::Bolt	0x000c	4	uint32_t	m_handle	spell	Holds the renderer bolt handle, -1 for none	verified	one	spell/visuals#chain-update-per-frame
+LooseIndexEntry	0x0000	4	uint32_t	m_hash	storm	Holds SStrHashHT of the key	verified	two	storm/mount#loose-file-index
+LooseIndexEntry	0x0004	4	void *	m_bucketPrev	storm	Points at the previous link of its bucket chain	verified	two	storm/mount#index-lookup-and-open
+LooseIndexEntry	0x0008	4	LooseIndexEntry *	m_bucketNext	storm	Points at the next entry of its bucket chain, an odd value at the end	verified	two	storm/mount#index-lookup-and-open
+LooseIndexEntry	0x000c	4	void *	m_listPrev	storm	Points at the previous link of the table's list of all entries	verified	two	storm/mount#index-lookup-and-open
+LooseIndexEntry	0x0010	4	LooseIndexEntry *	m_listNext	storm	Points at the next entry of the table's list of all entries, an odd value at the end	verified	two	storm/mount#index-lookup-and-open
+LooseIndexEntry	0x0014	4	char *	m_key	storm	Points at the key: the path below the walked folder, a .bz or .MPQ suffix cut	verified	two	storm/mount#loose-file-index
+LooseIndexEntry	0x0018	4	char *	m_diskPath	storm	Points at the full disk path, extension kept	verified	two	storm/mount#loose-file-index
+LooseIndexEntry	0x001c	4	uint32_t	m_kind	storm	Holds 0 for a plain file, 1 for .bz, 2 for .MPQ	verified	two	storm/mount#loose-file-index
 M2Bone	0x0000	4	int32_t	m_keyBone	models	Holds the key bone id, -1 for none	verified	one	models/records#bone-record
 M2Bone	0x0004	4	uint32_t	m_flags	models	Holds the flags	verified	one	models/records#bone-record
 M2Bone	0x0008	2	uint16_t	m_parent	models	Holds the parent bone	verified	one	models/records#bone-record

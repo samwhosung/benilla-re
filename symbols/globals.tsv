@@ -2055,7 +2055,8 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0x865724	char[20]	s_pathWowClientDb		unassigned	Holds the path ..\DB/WowClientDB.h the table allocations name	verified	one	console/hardware#hardware-table
 0x865784	char[44]	s_textHardwareChanged		unassigned	Holds the text of the hardware change question	verified	one	console/hardware#hardware-change-check
 0x86582c	const char *[12]	s_missWordKeys		objectlayer	Holds the script text keys of miss outcomes 0 to 11, NONE to REFLECT	verified	one	objectlayer/unitnames#damage-and-miss-numbers
-0x865b44	uint8_t	s_keepLooseFlags		storm	Holds a byte that start-up clears so the open calls drop the loose-file flag bits	verified	one	storm/mount#loose-files
+0x865b40	uint32_t	s_extraOpenFlags		storm	Holds the flags every resolve adds; 1 in the file, 0 once start-up calls 0x648be0(0)	verified	two	storm/mount#loose-files
+0x865b44	uint8_t	s_keepLooseFlags		storm	Holds a byte that start-up clears so the open calls drop the loose-file flag bits	verified	two	storm/mount#loose-files
 0x866520	uint16_t	s_lookupLocale		storm	Holds the locale a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866522	uint8_t	s_lookupPlatform		storm	Holds the platform a name lookup asks for, 0; only unreached code writes it	verified	one	storm/format#hash-lookup
 0x866834	char[14]	s_textBlockTable		storm	Holds the string (block table), whose type 3 hash decrypts the block table	verified	one	storm/format#hash-and-block-tables
@@ -3963,9 +3964,15 @@ address	type	name	name_from	system	meaning	confidence	proof	finding
 0xc518a4	void *	s_fallbackHandler		console	Holds the handler for unknown commands; nothing sets it	verified	one	console/screen#writing-and-executing
 0xc518c8	uint32_t[5]	s_videoHardwareStore		unassigned	Holds the VideoHardware table: the rows, their count, the id index, the largest id and the loaded flag	verified	one	console/hardware#hardware-table
 0xc518e0	uint32_t[98]	s_hardwareFormats		unassigned	Holds the seven default device format records, 0x38 bytes each	verified	one	console/hardware#default-formats
-0xc521e8	void *	s_pathAliasTable		storm	Holds the hash table of path aliases a name is checked against when the open flags ask for it	inferred	none	storm/mount#loose-files
-0xc52418	uint8_t			storm	Holds a byte that SFile::GetBasePath reads; not read here	inferred	none	
-0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	one	storm/mount#loose-files
+0xc520c8	char[260]	s_dataPath		storm	Holds the data folder name, Data\ after start-up, which the loose-file index walks	verified	two	storm/mount#loose-file-index
+0xc521cc	void *	s_looseIndex		storm	Holds the loose-file index, a Storm hash table whose vtable pointer starts it	verified	two	storm/mount#index-lifetime
+0xc521e8	void *	s_looseIndexBuckets		storm	Points at the loose-file index's buckets, 12 bytes each, the chain head at +8	verified	two	storm/mount#loose-file-index
+0xc521f0	uint32_t	s_looseIndexMask		storm	Holds the loose-file index's bucket mask, 0xffffffff while it has no buckets	verified	two	storm/mount#loose-file-index
+0xc521f8	char[260]	s_looseIndexBasePath		storm	Holds the base path the loose-file index was built from	verified	two	storm/mount#index-lookup-and-open
+0xc52310	char[260]	s_extraIndexPath		storm	Holds a third folder for the loose-file index; only an unreached function writes it	verified	two	storm/mount#loose-file-index
+0xc52418	char[260]	s_basePath		storm	Holds the base path with a trailing backslash: the exe's folder unless the command line names one	verified	two	storm/mount#loose-file-index
+0xc5251c	uint8_t	s_looseIndexBuilt		storm	Holds 1 while the loose-file index is built; 0 makes the next resolve build it	verified	two	storm/mount#loose-file-index
+0xc5251d	uint8_t	s_diskPathMode		storm	Holds 0; its only writer is unreached, and a set value would send every name to the disk-path builder	verified	two	storm/mount#loose-files
 0xc52560	double[200]	s_pow10Table		storm	Holds k times 10 to the power -(r+1) at row r, column k, for the string-to-double conversion	verified	one	core/threads#string-conversion-table
 0xc52ba0	uint32_t	s_pow10TableBuilt		storm	Holds 1 once the power table is built	verified	one	core/threads#string-conversion-table
 0xc53f10	uint32_t	s_formatterMode		unassigned	Holds 1 when the client's own formatter runs, set by the start-up option 10	verified	one	ui/tooltipcontent#localized-lines

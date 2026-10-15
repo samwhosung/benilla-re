@@ -3481,7 +3481,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x449550	40			gx	orchestration		Runs Texture.cpp code that calls SStrCopy, 0x449580, SStrPack; not read here	inferred	none		
 0x449580	15			gx	orchestration		Runs Texture.cpp code that calls SStr::sub_64A450; not read here	inferred	none		
 0x449590	126	TextureSplitExtension		gx	primitive	uint32_t __fastcall (const char *name, char *copy, char **ext)	Copies the name and strips a dot four bytes from the end, returning 0 for tga and 1 otherwise	verified	one	gx/textures#texture-name-split	
-0x449610	470	TextureCreateFromFile		gx	orchestration	void * __fastcall (const char *path, uint32_t format, uint32_t deferred)	Opens path with .blp appended and returns an HTEXTURE handle whose pixels decode when the async read completes	verified	one	gx/textures#texture-file-creation	
+0x449610	470	TextureCreateFromFile		gx	orchestration	void * __fastcall (const char *path, uint32_t format, uint32_t loose)	Opens path with .blp appended and returns an HTEXTURE handle whose pixels decode when the async read completes	verified	one	gx/textures#texture-file-creation	
 0x4497f0	80	TextureFileReadDone		gx	orchestration	void __thiscall (void *this)	Decodes a file texture's bytes, closes the file and frees its async record	verified	one	gx/textures#texture-file-creation	
 0x449840	386	TextureDecodeFileBytes		gx	primitive	uint32_t __thiscall (void *this)	Opens the record's buffer as BLP, drops mips to the device limit and decodes the levels into a new buffer	verified	one	gx/textures#texture-file-creation	
 0x4499d0	62			gx	unreached		Runs Texture.cpp code that calls SErrSetLastError, 0x4490c0; not read here	inferred	none		
@@ -23296,18 +23296,18 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x646640	1			storm	unreached		Runs its object file code not read here	inferred	none		
 0x646650	85			storm	boundary		Runs its object file code not read here	inferred	none		
 0x6466b0	3			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6466c0	10			storm	boundary		Runs its object file code that calls 0x6466d0; not read here	inferred	none		
-0x6466d0	190			storm	boundary		Runs its object file code not read here	inferred	none		
-0x646790	12			storm	boundary		Runs its object file code that calls _atexit; not read here	inferred	none		
-0x6467a0	359			storm	boundary		Runs its object file code that calls 0x649820, 0x649380, 0x649510 and 1 more; not read here	inferred	none		
-0x646910	1143			storm	boundary		Runs SFile2.cpp code that calls SStrLen, SStrCopy, 0x667580 and 17 more; not read here	inferred	none		
-0x646d90	183			storm	boundary		Runs SFile2.cpp code that calls SUniConvertUTF8to16, 0x646e50, __wstat and 1 more; not read here	inferred	none		
+0x6466c0	10	InitLooseIndexThunk		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table and registers its destructor, a static initializer	verified	two	storm/mount#index-lifetime	
+0x6466d0	190	InitLooseIndex		storm	orchestration	void __cdecl (void)	Constructs the loose-file index table empty, with bucket mask 0xffffffff	verified	two	storm/mount#index-lifetime	
+0x646790	12	InitLooseIndexAtExit		storm	orchestration	void __cdecl (void)	Registers the loose-file index table's destructor with _atexit	verified	two	storm/mount#index-lifetime	
+0x6467a0	359	InitLooseIndexExit		storm	orchestration	void __cdecl (void)	Frees the loose-file index table's nodes and buckets at exit	verified	two	storm/mount#index-lifetime	
+0x646910	1143	IndexLooseFolder		storm	orchestration	void __fastcall (const char *root, const char *prefix, void *listing)	Adds a folder's files to the loose-file index keyed below the root, walking subfolders but a Data prefix	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
+0x646d90	183	SFileStat		storm	host	int32_t __fastcall (const char *path, void *st)	Fills a _stat record for a UTF-8 path through _wstat or _stat, returning 0 on success	verified	two	storm/mount#loose-file-index	
 0x646e50	55			storm	boundary		Runs SFile2.cpp code that calls 0x646650, _atexit; not read here	inferred	none		
 0x646e90	1			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
-0x646ea0	246			storm	boundary		Runs SFile2.cpp code that calls 0x6674a0, SStrCopy, 0x646910 and 2 more; not read here	inferred	none		
+0x646ea0	246	BuildLooseIndex		storm	orchestration	void __cdecl (void)	Builds the loose-file index from the base folder, then its Data folder, and marks it built	verified	two	storm/mount#loose-file-index	storm::resolve_matches_index, storm::index_falls_back_to_dot
 0x646fa0	20	SFileSetDiskPathMode		storm	unreached		Stores the byte that sends every name to the disk-path builder; nothing calls it	inferred	none	storm/mount#loose-files	
-0x646fc0	120			storm	boundary		Runs SFile2.cpp code that calls 0x649380; not read here	inferred	none		
-0x647040	120			storm	unreached		Runs SFile2.cpp code that calls 0x649380; not read here	inferred	none		
+0x646fc0	120	ClearLooseIndex		storm	orchestration	void __cdecl (void)	Empties the loose-file index and clears its built byte, so the next open builds it again	verified	two	storm/mount#index-lifetime	
+0x647040	120	EmptyLooseIndexKeepBuilt		storm	unreached	void __cdecl (void)	Empties the loose-file index and marks it built, so it stays empty; nothing calls it	verified	two	storm/mount#index-lifetime	
 0x6470c0	10			storm	boundary		Runs SFile2.cpp code that calls 0x6470d0; not read here	inferred	none		
 0x6470d0	15			storm	boundary		Runs SFile2.cpp code that calls 0x659a70; not read here	inferred	none		
 0x6470e0	12			storm	boundary		Runs SFile2.cpp code that calls _atexit; not read here	inferred	none		
@@ -23336,7 +23336,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6477a0	24	SFile::Open	idb	storm	boundary		Runs SFile2.cpp code that calls SFile::OpenEx; not read here	inferred	none		
 0x6477c0	1498	SFile::OpenEx	idb	storm	boundary		Runs SFile2.cpp code that calls 0x647e60, SMemAlloc, 0x647290 and 18 more; not read here	inferred	none		
 0x647db0	163			storm	boundary		Runs SFile2.cpp code that calls SUniConvertUTF8to16, 0x646e50, __wfopen and 1 more; not read here	inferred	none		
-0x647e60	796	SFileResolveOpen		storm	orchestration		Routes an open name to the disk-path builder, the alias table or the archive walk	verified	one	storm/mount#loose-files	
+0x647e60	796	SFileResolveOpen		storm	orchestration	int32_t __fastcall (const char *name, char *out, uint32_t size, uint32_t flags, uint32_t *kind, void **archive)	Resolves an open name through the disk-path builder, or the loose-file index and then the archives	verified	two	storm/mount#loose-files	storm::resolve_matches_index, storm::index_hit_has_no_fallback
 0x648180	725			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrPack, 0x646d90 and 3 more; not read here	inferred	none		
 0x648460	373	SFile::Read	idb	storm	boundary		Reads bytes from an open archive file	inferred	none		
 0x6485f0	36			storm	boundary		Runs SFile2.cpp code that calls SFile::Load; not read here	inferred	none		
@@ -23346,15 +23346,15 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x6487b0	59	SFileGetFileName		storm	orchestration		Copies an open file's name into a buffer	inferred	none	models/cache#shared-model-lookup	
 0x6487f0	129	SFile::GetFileSize	idb	storm	boundary		Runs SFile2.cpp code that calls __fstat, SFileGetFileSize, ZipFileGetFileSize; not read here	inferred	none		
 0x648890	30	SFile::GetBasePath	idb	storm	boundary		Runs SFile2.cpp code that calls SStrCopy; not read here	inferred	none		
-0x6488b0	106			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrLen, SStrPack and 1 more; not read here	inferred	none		
-0x648920	98			storm	boundary		Runs SFile2.cpp code that calls SStrCopy, SStrLen, SStrPack; not read here	inferred	none		
+0x6488b0	106	SFileSetBasePath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the base path with a trailing backslash and passes the path to 0x6571d0	verified	two	storm/mount#loose-file-index	
+0x648920	98	SFileSetDataPath		storm	orchestration	int32_t __stdcall (const char *path)	Stores the data folder name with a trailing backslash	verified	two	storm/mount#loose-file-index	
 0x648990	6			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
-0x6489a0	98			storm	unreached		Runs SFile2.cpp code that calls SStrCopy, SStrLen, SStrPack; not read here	inferred	none		
-0x648a10	18			storm	boundary		Runs SFile2.cpp code that calls 0x648a30; not read here	inferred	none		
-0x648a30	44			storm	boundary		Runs SFile2.cpp code that calls 0x647e60; not read here	inferred	none		
+0x6489a0	98	SFileSetExtraIndexPath		storm	unreached	int32_t __stdcall (const char *path)	Stores a third folder for the loose-file index; nothing calls it	verified	two	storm/mount#loose-file-index	
+0x648a10	18	SFileExists		storm	orchestration	int32_t __stdcall (const char *name)	Resolves a name with open flags 0, the archives only, and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
+0x648a30	44	SFileExistsEx		storm	orchestration	int32_t __stdcall (const char *name, uint32_t flags)	Resolves a name with open flags without opening it and returns 1 when it resolves	verified	two	storm/mount#which-opens-ask-the-index	
 0x648a60	359			storm	boundary		Runs SFile2.cpp code that calls __alloca_probe, SCritSect::Enter, _fseek and 7 more; not read here	inferred	none		
-0x648be0	56			storm	boundary		Runs SFile2.cpp code that calls 0x654850; not read here	inferred	none		
-0x648c20	8			storm	boundary		Runs SFile2.cpp code not read here	inferred	none		
+0x648be0	56	SFileSetExtraOpenFlags		storm	orchestration	int32_t __stdcall (uint32_t flags)	Sets the flags every resolve adds from argument bits 0 and 1, then passes the argument to 0x654850	verified	two	storm/mount#loose-files	
+0x648c20	8	SFileClearKeepLooseFlags		storm	orchestration	void __cdecl (void)	Clears the byte that lets the archive walk keep open flag bits 0 and 1	verified	two	storm/mount#loose-files	
 0x648c30	59			storm	boundary		Runs SFile2.cpp code that calls SMemAlloc, 0x659a70; not read here	inferred	none		
 0x648c70	50			storm	boundary		Runs SFile2.cpp code that calls SHandleCloseThunk, SMemFree; not read here	inferred	none		
 0x648cb0	18			storm	unreached		Runs SFile2.cpp code that calls 0x659ab0; not read here	inferred	none		
@@ -23423,8 +23423,8 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x64ae50	320	SStrTokenize	idb	storm	boundary		Runs its object file code that calls SErrSetLastError, SStrChr; not read here	inferred	none		
 0x64af90	199	SStrHash	idb	storm	boundary		Runs its object file code that calls SErrSetLastError; not read here	inferred	none		
 0x64b060	362			storm	unreached		Runs its object file code that calls SErrSetLastError, __allmul; not read here	inferred	none		
-0x64b1d0	493	bjhash	idb	storm	boundary		Runs its object file code not read here	inferred	none		
-0x64b3f0	100	SStrHashHT	idb	storm	boundary		Runs its object file code that calls bjhash; not read here	inferred	none		
+0x64b1d0	493	bjhash	idb	storm	primitive	uint32_t __fastcall (const uint8_t *key, uint32_t length, uint32_t initval)	Hashes bytes with Bob Jenkins' lookup2 from an initial value	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
+0x64b3f0	100	SStrHashHT	idb	storm	primitive	uint32_t __stdcall (const char *s)	Hashes a string folded to upper case with / read as \ through bjhash with initial value 0	verified	two	storm/mount#hash-table-string-hash	storm::str_hash_ht
 0x64b460	19	SStrUpper		storm	boundary	void __stdcall (char *text)	Converts a C string to upper case in place through the C runtime's _strupr	verified	one	net/login#logon-challenge	
 0x64b480	19	SStrLower		storm	boundary		Lowercases a string in place through _strlwr	verified	one	gx/textures#texture-name-split	
 0x64b4a0	80			storm	boundary		Runs its object file code that calls SErrSetLastError, SStrLen, SStrCmp; not read here	inferred	none		
@@ -24189,9 +24189,9 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x667440	58			storm	boundary		Runs its object file code that calls __alloca_probe, __vsnprintf; not read here	inferred	none		
 0x667480	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x667490	11			storm	boundary		Runs its object file code not read here	inferred	none		
-0x6674a0	223			storm	boundary		Runs SDir.cpp code that calls SMemAlloc, SUniConvertUTF8to16, SMemFree; not read here	inferred	none		
-0x667580	285			storm	boundary		Runs its object file code that calls SUniConvertUTF8to16, 0x65b080; not read here	inferred	none		
-0x6676a0	44			storm	boundary		Runs its object file code that calls SMemFree; not read here	inferred	none		
+0x6674a0	223	SDirOpen		storm	host	void * __stdcall (const char *path)	Allocates a listing of a folder's entries when the path is a folder, else returns 0	verified	two	storm/mount#loose-file-index	
+0x667580	285	SDirNext		storm	host	const char * __stdcall (void *listing)	Returns the next entry name of a folder listing, or 0 at its end	verified	two	storm/mount#loose-file-index	
+0x6676a0	44	SDirClose		storm	host	void __stdcall (void *listing)	Closes a folder listing and frees it	verified	two	storm/mount#loose-file-index	
 0x6676d0	5			storm	boundary		Runs its object file code not read here	inferred	none		
 0x6676e0	11			storm	boundary		Runs its object file code not read here	inferred	none		
 0x6676f0	5			storm	boundary		Runs its object file code not read here	inferred	none		
@@ -30550,7 +30550,7 @@ address	size	name	name_from	system	class	signature	meaning	confidence	proof	find
 0x71d330	255	CM2Shared::~CM2Shared		models	host		Unlinks a shared model from its bucket, closes its textures and frees its buffers and file data	verified	one	models/shared#shared-model-object	
 0x71d430	71	CM2Shared::AddRef		models	orchestration		Increments a shared model's count, taking it off the cache's release list when it was there	verified	one	models/cache#shared-model-lookup	
 0x71d480	91	CM2Shared::Release		models	host		Decrements a shared model's count; at zero queues it for eviction, or destroys it when uncached	verified	one	models/cache#release-and-eviction	
-0x71d4e0	192	CM2Shared::Load		models	primitive		Allocates a shared model's file buffer and starts reading the file, asynchronously when asked	verified	one	models/cache#shared-model-lookup	
+0x71d4e0	192	CM2Shared::Load		models	primitive		Allocates a shared model's file buffer, keeps the open flag as bit 1 of +8, and queues the file's read	verified	one	models/cache#shared-model-lookup	
 0x71d5a0	62	CM2Shared::AddInstance		models	orchestration		Initializes an instance at once when the shared model is loaded, else queues it until the load ends	verified	one	models/shared#loading	
 0x71d5e0	37	CM2Shared::OnReadDone		models	host		Closes the file and its read request, then finishes loading the shared model	verified	one	models/shared#loading	
 0x71d610	39	CM2Shared::ReadSync		models	host		Reads the whole file into the shared model's buffer, then finishes loading	verified	one	models/shared#loading	

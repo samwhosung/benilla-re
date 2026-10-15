@@ -61,6 +61,7 @@ ITEMCOOLDOWNHASHNODE		36		spell	Holds one item-cooldown hash node: key, slot lin
 LOADINGSCREENTAXIPATHINFO		8		loadingscreen	Holds a leg's first and last stop node ids	verified	one	loadingscreen/route#taxi-leg-table
 LightningObject		80		spell	Holds a chain effect: link, GUID and hop arrays, end time, chain record values, texture, spell, flag and references	verified	one	spell/visuals#chain-effect-creation
 LightningObject::Bolt		16		spell	Holds one hop of a chain: endpoint indices, start and end time and renderer handle	verified	one	spell/visuals#chain-hop-table
+LooseIndexEntry		32		storm	Holds one loose file of the index: its key hash, list links, key, full path and kind	verified	two	storm/mount#loose-file-index
 M2Bone		108		models	Holds a bone record of an MD20 file: key bone id, flags, parent, three tracks and pivot	verified	one	models/records#bone-record
 M2BoneState		280		models	Holds a bone state: three track states, the primary and blend slots, the fade and the active list link	verified	one	animation/clock#bone-state
 M2Cache		4152		models	Holds the model cache: features, shared model buckets, release list, helper thread and shaders	verified	one	models/cache#cache-object
