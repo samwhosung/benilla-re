@@ -72,9 +72,18 @@ def run(module, call):
 # ---- IDA ----
 
 
-def ida_run(overwrite, preexisting):
+def ida_run(overwrite, preexisting, db=None, edit=None):
     """Runs the IDA script on a database where `preexisting` addresses already have a name and a
-    type; returns what the script did."""
+    type, or on `db`, what an earlier run left; `edit` changes the tables the script reads.
+    Returns what the script did."""
+    if db is None:
+        db = {
+            "names": {a: "mine_%x" % a for a in preexisting},
+            "user": set(preexisting),
+            "types": set(preexisting),
+            "func_cmt": {},
+            "cmt": {},
+        }
     log = {
         "parse": [],
         "add_func": [],
@@ -98,11 +107,12 @@ def ida_run(overwrite, preexisting):
         if address == refused_type.get("address"):
             return 0
         log["types"][address] = declaration
+        db["types"].add(address)
         return 1
 
     idc.parse_decls = parse_decls
     idc.SetType = set_type
-    idc.get_type = lambda a: "int x;" if a in preexisting else None
+    idc.get_type = lambda a: "int x;" if a in db["types"] else None
     idc.get_segm_start = lambda a: 0x400000 if 0x400000 <= a < 0xD06000 else BADADDR
 
     ida_name = types.ModuleType("ida_name")
@@ -114,9 +124,12 @@ def ida_run(overwrite, preexisting):
             log["refused_name"] += 1
             return False
         log["names"][address] = name
+        db["names"][address] = name
+        db["user"].add(address)
         return True
 
     ida_name.set_name = set_name
+    ida_name.get_name = lambda a: db["names"].get(a, "sub_%x" % a)
 
     ida_funcs = types.ModuleType("ida_funcs")
     ida_funcs.get_func = lambda a: a if a in funcs else None
@@ -128,20 +141,26 @@ def ida_run(overwrite, preexisting):
 
     def set_func_cmt(function, text, repeatable):
         log["func_cmt"].append((function, text, repeatable))
+        db["func_cmt"][function] = text
         return True
 
     ida_funcs.add_func = add_func
+    ida_funcs.get_func_cmt = lambda function, repeatable: db["func_cmt"].get(function)
     ida_funcs.set_func_cmt = set_func_cmt
 
     ida_bytes = types.ModuleType("ida_bytes")
     ida_bytes.get_flags = lambda a: a
-    ida_bytes.has_name = lambda flags: flags in preexisting
+    ida_bytes.has_user_name = lambda flags: flags in db["user"]
+    # A name with no has_user_name is IDA's own; has_name is true for those too.
+    ida_bytes.has_name = lambda flags: True
 
     def set_cmt(address, text, repeatable):
         log["cmt"].append((address, text, repeatable))
+        db["cmt"][address] = text
         return True
 
     ida_bytes.set_cmt = set_cmt
+    ida_bytes.get_cmt = lambda address, repeatable: db["cmt"].get(address)
 
     ida_nalt = types.ModuleType("ida_nalt")
     ida_nalt.retrieve_input_file_sha256 = lambda: bytes.fromhex(EXE["sha256"])
@@ -151,6 +170,15 @@ def ida_run(overwrite, preexisting):
         sys.modules[module.__name__] = module
     script = load(os.path.join(OUT, "ida", "benilla_re.py"), "benilla_re_ida")
     script.OVERWRITE_NAMES = overwrite
+    if edit is not None:
+        original = script.load_bundle
+
+        def edited(path):
+            tables, document = original(path)
+            edit(tables)
+            return tables, document
+
+        script.load_bundle = edited
 
     first_typed = next(
         int(r["address"], 16)
@@ -160,7 +188,7 @@ def ida_run(overwrite, preexisting):
     refused_type["address"] = first_typed
     code, text = run(script, script.main)
     expect(code == 0, "IDA: main returned %r\n%s" % (code, text))
-    log["script"], log["text"], log["ida_nalt"] = script, text, ida_nalt
+    log["script"], log["text"], log["ida_nalt"], log["db"] = script, text, ida_nalt, db
     return log
 
 
@@ -228,6 +256,51 @@ def ida():
     expect(all(c[2] for c in kept["func_cmt"] + kept["cmt"]), "IDA: kept items get repeatable comments")
     print("IDA keeps %d names already set" % len(old))
 
+    # A comment of the user's stays, ours is added after it.
+    note = {mine[0]: "my note"}
+    db = {
+        "names": {a: "mine_%x" % a for a in old},
+        "user": set(old),
+        "types": set(old),
+        "func_cmt": dict(note),
+        "cmt": dict(note),
+    }
+    noted = ida_run(overwrite=False, preexisting=old, db=db)
+    expect(
+        db["func_cmt"].get(mine[0], db["cmt"].get(mine[0], "")).startswith("my note\n\nbenilla-re: "),
+        "IDA: a comment of the user's is kept and ours follows it",
+    )
+
+    # A second run with a newer table: the names the first run applied are updated, a name that
+    # was changed since is kept, and a comment holds one block.
+    edited = set()
+
+    def newer(tables):
+        for table in tables.values():
+            for row in table[:300]:
+                if row.get("name") and "address" in row:
+                    row["name"] += "_v2"
+                    row["meaning"] += " (newer)"
+                    edited.add(int(row["address"], 16))
+
+    first = ida_run(overwrite=False, preexisting=set())
+    db = first["db"]
+    changed = next(int(r["address"], 16) for r in FUNCTIONS[1:300] if r["name"])
+    db["names"][changed] = "my_own_name"
+    second = ida_run(overwrite=False, preexisting=set(), db=db, edit=newer)
+    expect(len(edited) > 250, "IDA: the newer table changes rows")
+    expect(changed not in second["names"], "IDA: a name changed since the last run is kept")
+    for address in edited - {changed}:
+        expect(second["names"][address].endswith("_v2"), "IDA: %#x updated" % address)
+    block = db["func_cmt"][int(FUNCTIONS[0]["address"], 16)]
+    expect(block.count("benilla-re:") == 1 and "(newer)" in block, "IDA: a comment holds one block")
+    third = ida_run(overwrite=False, preexisting=set(), db=db)
+    expect(
+        db["func_cmt"][int(FUNCTIONS[0]["address"], 16)].count("benilla-re:") == 1,
+        "IDA: a third run keeps one block",
+    )
+    print("IDA updates the names of an earlier run")
+
     # The overwrite flag names, types and comments everything.
     over = ida_run(overwrite=True, preexisting=old)
     expect(len(over["names"]) == len(named), "IDA: the overwrite flag renames every row")
@@ -243,9 +316,10 @@ def ida():
 # ---- Binary Ninja ----
 
 
-def binja_run(overwrite, preexisting):
+def binja_run(overwrite, preexisting, view=None, edit=None):
     """Runs the Binary Ninja script on a view where `preexisting` addresses already have a name of
-    their own and a comment; returns what the script did."""
+    their own and a comment, or on `view`, what an earlier run left; `edit` changes the tables the
+    script reads. Returns what the script did."""
     log = {"created": [], "symbols": [], "datavars": {}, "comments": {}, "text": ""}
 
     class Symbol:
@@ -256,9 +330,16 @@ def binja_run(overwrite, preexisting):
         def __init__(self, address, named):
             self.start = address
             self.symbol = Symbol("function", address, "mine_%x" % address) if named else Symbol("function", address, "sub_%x" % address)
-            self.name = self.symbol.name
             self.comment = "old comment" if named else ""
             self.type = None
+
+        @property
+        def name(self):
+            return self.symbol.name
+
+        @name.setter
+        def name(self, value):
+            self.symbol = Symbol("function", self.start, value)
 
         def set_user_type(self, value):
             self.type = value
@@ -269,6 +350,8 @@ def binja_run(overwrite, preexisting):
 
         def __init__(self):
             self.functions = {}
+            self.symbols = {}
+            self.comments = {a: "old comment" for a in preexisting}
             # The view's analysis found the functions that `preexisting` names.
             for address in preexisting:
                 if address in FUNCTION_ADDRESSES:
@@ -307,21 +390,25 @@ def binja_run(overwrite, preexisting):
             return 0x400000 <= address < 0xD06000
 
         def get_symbol_at(self, address):
+            if address in self.symbols:
+                return self.symbols[address]
             if address in preexisting:
                 return Symbol("data", address, "mine_%x" % address)
             return None
 
         def get_comment_at(self, address):
-            return "old comment" if address in preexisting else ""
+            return self.comments.get(address, "")
 
         def define_user_data_var(self, address, type_):
             log["datavars"][address] = type_
 
         def define_user_symbol(self, symbol):
             log["symbols"].append(symbol)
+            self.symbols[symbol.address] = symbol
 
         def set_comment_at(self, address, text):
             log["comments"][address] = text
+            self.comments[address] = text
 
     module = types.ModuleType("binaryninja")
 
@@ -332,8 +419,17 @@ def binja_run(overwrite, preexisting):
     sys.modules["binaryninja"] = module
     script = load(os.path.join(OUT, "binja", "benilla_re.py"), "benilla_re_binja")
     script.OVERWRITE_NAMES = overwrite
+    if edit is not None:
+        original = script.load_bundle
 
-    view = View()
+        def edited(path):
+            tables, document = original(path)
+            edit(tables)
+            return tables, document
+
+        script.load_bundle = edited
+
+    view = view or View()
     os.environ.pop("BENILLA_RE_FORCE", None)
     code, text = run(script, lambda: script.apply(view))
     expect(code == 1 and "SHA-256" in text, "Binja: another file is refused\n" + text)
@@ -381,6 +477,32 @@ def binja():
         else:
             expect(address not in kept["datavars"] and all(s.address != address for s in kept["symbols"]), "Binja: global %#x kept" % address)
             expect(kept["comments"][address].startswith("old comment\n\nbenilla-re: "), "Binja: global %#x comment" % address)
+    # A second run with a newer table: the names the first run applied are updated, a name that
+    # was changed since is kept, and a comment holds one block.
+    edited = set()
+
+    def newer(tables):
+        for table in tables.values():
+            for row in table[:300]:
+                if row.get("name") and "address" in row:
+                    row["name"] += "_v2"
+                    row["meaning"] += " (newer)"
+                    edited.add(int(row["address"], 16))
+
+    first = binja_run(overwrite=False, preexisting=set())
+    changed = next(int(r["address"], 16) for r in FUNCTIONS[1:300] if r["name"])
+    first["view"].functions[changed].name = "my_own_name"
+    second = binja_run(overwrite=False, preexisting=set(), view=first["view"], edit=newer)
+    functions = second["view"].functions
+    for address in edited & FUNCTION_ADDRESSES:
+        if address != changed:
+            expect(functions[address].name.endswith("_v2"), "Binja: %#x updated" % address)
+            expect(functions[address].comment.count("benilla-re:") == 1, "Binja: one block at %#x" % address)
+    expect(functions[changed].name == "my_own_name", "Binja: a name changed since the last run is kept")
+    for address in edited - FUNCTION_ADDRESSES:
+        expect(second["view"].symbols[address].name.endswith("_v2"), "Binja: global %#x updated" % address)
+    print("Binja updates the names of an earlier run")
+
     over = binja_run(overwrite=True, preexisting=old)
     expect(all(over["view"].functions[a].name == named[a] for a in named), "Binja: overwrite renames every function")
     print("Binja keeps %d items already named" % len(old))
@@ -388,3 +510,36 @@ def binja():
 
 ida()
 binja()
+
+
+# A headless run ends the process with the status; the GUI's run does not raise SystemExit.
+def binja_exit():
+    path = os.path.join(OUT, "binja", "benilla_re.py")
+    for gui in (False, True):
+        module = types.ModuleType("binaryninja")
+        module.Symbol = module.SymbolType = None
+        view = types.SimpleNamespace(
+            parent_view=None,
+            length=1,
+            read=lambda a, b: b"x",
+            file=types.SimpleNamespace(close=lambda: None),
+        )
+        module.load = lambda path: view
+        sys.modules["binaryninja"] = module
+        sys.argv = ["benilla_re.py", "WoW.exe"]
+        namespace = {"__name__": "__main__", "__file__": path, "__doc__": ""}
+        if gui:
+            namespace["bv"] = view
+        os.environ.pop("BENILLA_RE_FORCE", None)
+        out = io.StringIO()
+        raised = False
+        try:
+            with contextlib.redirect_stdout(out):
+                exec(compile(open(path, encoding="utf-8").read(), path, "exec"), namespace)
+        except SystemExit:
+            raised = True
+        expect(raised != gui, "Binja: SystemExit %r when gui is %r" % (raised, gui))
+    print("Binja exits only when headless")
+
+
+binja_exit()

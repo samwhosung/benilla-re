@@ -16,6 +16,10 @@ On a database that already has names the default keeps them: an item whose name 
 Ninja's own (sub_, data_ ...) keeps its name and its type, and our name is added to its comment.
 Set OVERWRITE_NAMES below, or BENILLA_RE_OVERWRITE=1, to name, type and comment every row.
 
+Each comment block starts with a `benilla-re: <name>` line. An item whose name is the one that
+line records was named by an earlier run, so a later run, with a newer table, names and types it
+again and replaces the block; a name you changed since is kept.
+
 The data is read from beside this script: benilla-re.json, and benilla-re.h one folder up or
 beside it. Keep the folders as the export wrote them (binja/ next to bundle/ and benilla-re.h), or
 put the two files next to the script; BENILLA_RE_DIR names the script's folder when `__file__` is
@@ -59,9 +63,12 @@ typedef int int32_t;
 typedef unsigned int uint32_t;
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
+typedef int intptr_t;
+typedef unsigned int uintptr_t;
 """
 PRELUDE_NAMES = {
     "int8_t", "uint8_t", "int16_t", "uint16_t", "int32_t", "uint32_t", "int64_t", "uint64_t",
+    "intptr_t", "uintptr_t",
 }
 
 CONVENTIONS = {
@@ -73,6 +80,7 @@ CONVENTIONS = {
 
 DECLARATION = re.compile(r"^/\* (0x[0-9a-f]{6}) \*/ (.*)$")
 TRAILING_COMMENT = re.compile(r"\s*/\*.*\*/\s*$")
+MARKER = "benilla-re:"
 DEFAULT_NAME = re.compile(r"^(?:j_)?(?:sub|data|loc|unknown)_[0-9a-fA-F]+$")
 STRUCT_BLOCK = re.compile(r"(?m)^(?=/\* \d+ bytes: )")
 
@@ -204,15 +212,29 @@ def made_by_analysis(symbol):
     return bool(getattr(symbol, "auto", False)) or bool(DEFAULT_NAME.match(symbol.name))
 
 
-def comment_for(row, existing, keep):
-    """The comment to set: ours, or, for an item that keeps its name, its own with ours added."""
-    text = comment_of(row)
-    if not keep:
-        return text
-    mine = "benilla-re: %s\n%s" % (row["name"], text) if row["name"] else text
-    if existing and mine in existing:
-        return existing
-    return "%s\n\n%s" % (existing, mine) if existing else mine
+def split_comment(existing):
+    """A comment as (the text outside our block, the name our block records or None). Our block
+    runs from its `benilla-re:` line to the next empty line."""
+    lines = (existing or "").split("\n")
+    for start, line in enumerate(lines):
+        if line.startswith(MARKER):
+            end = start
+            while end < len(lines) and lines[end] != "":
+                end += 1
+            others = "\n".join(lines[:start] + lines[end:]).strip("\n")
+            return others, line[len(MARKER) :].strip()
+    return (existing or "").strip("\n"), None
+
+
+def comment_for(row, others):
+    """The comment to set: our block, after the text of the item's own that is kept."""
+    block = "%s %s\n%s" % (MARKER, row["name"], comment_of(row))
+    return "%s\n\n%s" % (others, block) if others and not OVERWRITE_NAMES else block
+
+
+def named_by_us(recorded, symbol):
+    """Whether an earlier run named the item: its name is still the one the run recorded."""
+    return bool(recorded) and symbol is not None and symbol.name == recorded
 
 
 def apply_functions(bv, rows, declarations, summary):
@@ -229,7 +251,9 @@ def apply_functions(bv, rows, declarations, summary):
                     summary.failed(row["address"], name, "no function could be made")
                     continue
                 summary.add("functions created")
-            keep = not OVERWRITE_NAMES and not made_by_analysis(function.symbol)
+            others, recorded = split_comment(function.comment)
+            ours = named_by_us(recorded, function.symbol)
+            keep = not OVERWRITE_NAMES and not made_by_analysis(function.symbol) and not ours
             if keep:
                 summary.add("functions kept as they are")
             elif name:
@@ -245,7 +269,7 @@ def apply_functions(bv, rows, declarations, summary):
                     summary.add("functions typed")
                 except SyntaxError as error:
                     summary.failed(row["address"], name, "type refused: %s: %s" % (declaration, error))
-            function.comment = comment_for(row, function.comment, keep)
+            function.comment = comment_for(row, others)
         except Exception as error:
             summary.failed(row["address"], name, "error: %s" % error)
 
@@ -258,7 +282,10 @@ def apply_globals(bv, rows, declarations, summary):
             if not bv.is_valid_offset(address):
                 summary.failed(row["address"], name, "not in the view")
                 continue
-            keep = not OVERWRITE_NAMES and not made_by_analysis(bv.get_symbol_at(address))
+            symbol = bv.get_symbol_at(address)
+            others, recorded = split_comment(bv.get_comment_at(address))
+            ours = named_by_us(recorded, symbol)
+            keep = not OVERWRITE_NAMES and not made_by_analysis(symbol) and not ours
             declaration = declarations.get(address)
             if keep:
                 summary.add("globals kept as they are")
@@ -273,7 +300,7 @@ def apply_globals(bv, rows, declarations, summary):
             if name and not keep:
                 bv.define_user_symbol(Symbol(SymbolType.DataSymbol, address, name))
                 summary.add("globals named")
-            bv.set_comment_at(address, comment_for(row, bv.get_comment_at(address), keep))
+            bv.set_comment_at(address, comment_for(row, others))
         except Exception as error:
             summary.failed(row["address"], name, "error: %s" % error)
 
@@ -330,4 +357,6 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    status = main(sys.argv)
+    if "bv" not in globals():  # headless; in the GUI a SystemExit would end the console
+        sys.exit(status)

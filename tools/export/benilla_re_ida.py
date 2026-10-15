@@ -10,8 +10,12 @@ A row IDA refuses is printed and skipped; a summary ends the run.
 
 On a database that already has names (vmangos/idb, say) the default keeps them: an item whose name
 is not IDA's own (sub_, dword_, unk_, loc_ ...) keeps its name and its type, and takes ours as a
-repeatable comment; no comment of yours is replaced. Set OVERWRITE_NAMES below, or
+block of its repeatable comment; the rest of the comment stays. Set OVERWRITE_NAMES below, or
 BENILLA_RE_OVERWRITE=1, to name, type and comment every row.
+
+Each comment block starts with a `benilla-re: <name>` line. An item whose name is the one that
+line records was named by an earlier run, so a later run, with a newer table, names and types it
+again and replaces the block; a name you changed since is kept.
 
 The data is read from beside this script: benilla-re.json, and benilla-re.h one folder up or
 beside it. Keep the folders as the export wrote them (ida/ next to bundle/ and benilla-re.h), or
@@ -56,6 +60,8 @@ typedef int int32_t;
 typedef unsigned int uint32_t;
 typedef long long int64_t;
 typedef unsigned long long uint64_t;
+typedef int intptr_t;
+typedef unsigned int uintptr_t;
 """
 
 CONVENTIONS = {
@@ -66,6 +72,7 @@ CONVENTIONS = {
 }
 
 DECLARATION = re.compile(r"^/\* (0x[0-9a-f]{6}) \*/ (.*)$")
+MARKER = "benilla-re:"
 TRAILING_COMMENT = re.compile(r"\s*/\*.*\*/\s*$")
 
 
@@ -181,9 +188,9 @@ def apply_types(types):
     return errors
 
 
-def has_name(address):
-    """Whether the item has a name of its own, not IDA's sub_, dword_, unk_ ..."""
-    return bool(ida_bytes.has_name(ida_bytes.get_flags(address)))
+def has_user_name(address):
+    """Whether the item has a name somebody set, not IDA's sub_, dword_, unk_ ..."""
+    return bool(ida_bytes.has_user_name(ida_bytes.get_flags(address)))
 
 
 def has_type(address):
@@ -193,11 +200,32 @@ def has_type(address):
         return False
 
 
-def apply_row(address, row, declaration, summary, kind):
-    """Names, types and comments one item; false when a call failed."""
+def split_comment(existing):
+    """A comment as (the text outside our block, the name our block records or None). Our block
+    runs from its `benilla-re:` line to the next empty line."""
+    lines = (existing or "").split("\n")
+    for start, line in enumerate(lines):
+        if line.startswith(MARKER):
+            end = start
+            while end < len(lines) and lines[end] != "":
+                end += 1
+            others = "\n".join(lines[:start] + lines[end:]).strip("\n")
+            return others, line[len(MARKER) :].strip()
+    return (existing or "").strip("\n"), None
+
+
+def merge_comment(others, block):
+    return others + "\n\n" + block if others else block
+
+
+def apply_row(address, row, declaration, summary, kind, existing):
+    """Names, types and comments one item. Returns the comment to write."""
     name = row["name"]
-    keep = not OVERWRITE_NAMES and has_name(address)
-    ok = True
+    others, recorded = split_comment(existing)
+    # An earlier run named the item when its name is still the one the run recorded.
+    ours = bool(recorded) and recorded == ida_name.get_name(address)
+    keep = not OVERWRITE_NAMES and has_user_name(address) and not ours
+    applied = name
     if name:
         if keep:
             summary.add(kind + " names kept")
@@ -205,22 +233,20 @@ def apply_row(address, row, declaration, summary, kind):
             how = set_name(address, name)
             if how is None:
                 summary.failed(row["address"], name, "name refused")
-                ok = False
             else:
+                applied = name if how == "as is" else c_name(name)
                 summary.add(kind + " named " + how)
     if declaration is None:
         if kind == "globals" or row["signature"]:
             summary.add(kind + " the header does not state")
-    elif not OVERWRITE_NAMES and has_type(address):
+    elif not OVERWRITE_NAMES and not ours and has_type(address):
         summary.add(kind + " types kept")
     elif idc.SetType(address, declaration):
         summary.add(kind + " typed")
     else:
         summary.failed(row["address"], name, "type refused: " + declaration)
-    text = comment_of(row)
-    if keep and name:
-        text = "benilla-re: " + name + "\n" + text
-    return ok, text
+    block = "%s %s\n%s" % (MARKER, applied, comment_of(row))
+    return block if OVERWRITE_NAMES else merge_comment(others, block)
 
 
 def apply_functions(rows, declarations, summary):
@@ -236,7 +262,8 @@ def apply_functions(rows, declarations, summary):
             else:
                 summary.failed(row["address"], row["name"], "no function could be made")
                 continue
-        _, text = apply_row(address, row, declarations.get(address), summary, "functions")
+        existing = ida_funcs.get_func_cmt(function, True) if function is not None else ""
+        text = apply_row(address, row, declarations.get(address), summary, "functions", existing)
         if function is not None:
             ida_funcs.set_func_cmt(function, text, not OVERWRITE_NAMES)
 
@@ -247,7 +274,8 @@ def apply_globals(rows, declarations, summary):
         if idc.get_segm_start(address) == idc.BADADDR:
             summary.failed(row["address"], row["name"], "not in the database")
             continue
-        _, text = apply_row(address, row, declarations.get(address), summary, "globals")
+        existing = ida_bytes.get_cmt(address, True)
+        text = apply_row(address, row, declarations.get(address), summary, "globals", existing)
         ida_bytes.set_cmt(address, text, not OVERWRITE_NAMES)
 
 
